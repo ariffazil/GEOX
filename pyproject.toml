@@ -71,6 +71,10 @@ cigvis-viser = [
 cigvis-all = [
     "cigvis[all]>=0.2.0",
 ]
+apps = [
+    "fastmcp[apps]>=3.1.0",
+    "prefab-ui>=0.18.0",
+]
 dev = [
     "pytest>=7.4",
     "pytest-asyncio>=0.23",
