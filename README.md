@@ -1,91 +1,398 @@
-# GEOX: Earth Witness & Inverse Modelling Supervisor
+# GEOX — Earth Witness & Inverse Modelling Supervisor
 
-> **Version:** v0.4.2 · **Status:** 🔐 SEALED ✅
->
-> **DITEMPA BUKAN DIBERI** — *Forged, not given.*
->
-> GEOX is the **Earth Witness** organ in the arifOS federation.
-> It is the reality gatekeeper: every reasoning output and decision must be physically possible, geospatially grounded, and consistent with world-state evidence before it is sealed.
+> **Version:** v0.4.3 · **Status:** 🔐 SEALED ✅  
+> **Motto:** *DITEMPA BUKAN DIBERI* — Forged, not given.
 
----
-
-## 👁 Who Is This For?
-
-| Audience | What GEOX means to you |
-| :--- | :--- |
-| **Normal human / manager** | GEOX is the "sanity check" layer — it stops AI from giving physically impossible answers about the Earth. |
-| **Expert geologist** | GEOX enforces multi-model inverse reasoning, bias auditing (Bond et al. 2007), and physical-attribute grounding before any structural verdict is sealed. |
-| **AI agent / developer** | GEOX is a governed FastMCP server exposing bounded geoscience tools under the `geox.*` namespace with sealed telemetry on every output. |
-
----
-
-## 🧭 Forward vs Inverse Modelling
-
-Understanding these two modes is the foundation of GEOX's role:
-
-- **Forward modelling** — *"Given this Earth model, what data would we observe?"*
-  GEOX tools simulate seismic responses, structural geometries, and feasibility envelopes.
-
-- **Inverse modelling** — *"Given observed data, what Earth model best explains it?"*
-  @RIF (the reasoning organ) proposes hypotheses and calls GEOX tools to test them against real constraints.
-
-> For geologists: this mirrors the standard interpretation loop — you build a model, forward-model synthetic data, compare to real data, then update the model. GEOX formalises that loop inside arifOS.
-
-| Modelling Type | Description | Who Drives It? | MCP Role |
-| :--- | :--- | :--- | :--- |
-| **Forward** | Simulate Earth response from known inputs | **GEOX tools** | Exposed as MCP tools under `geox.*` |
-| **Inverse** | Infer model parameters from observed data | **@RIF** + GEOX | @RIF calls `geox.*` tools to constrain hypotheses |
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    GEOX CONSTITUTIONAL TELEMETRY                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  arifOS telemetry    : v2.1                                                 │
+│  pipeline            : 999 SEAL                                             │
+│  floors active       : F1 F2 F3 F4 F7 F9 F11 F13                            │
+│  confidence          : CLAIM                                                │
+│  P² (Peace²)         : 1.0                                                  │
+│  hold status         : CLEAR                                                │
+│  uncertainty band    : Ω₀ ∈ [0.03, 0.08]                                    │
+│  seal                : DITEMPA BUKAN DIBERI ✅                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 🧠 arifOS Federation — Where GEOX Sits
+## Table of Contents
 
-arifOS is **not a monolithic AI**. It is a constitutional federation of specialised organs, each with a bounded role:
-
-| Organ | Role | Plain-language analogy |
-| :--- | :--- | :--- |
-| **@RIF** | Reasoning & hypothesis generation | The geologist's brain |
-| **GEOX** | Earth verification & forward modelling | The lab that stress-tests every model |
-| **@WEALTH** | Economic & decision modelling | The economist |
-| **@WELL** | Human energy & wellbeing modelling | The safety officer |
-| **@PROMPT** | Task shaping & orchestration | The project manager |
-| **@JUDGE** | Human veto & governance | The final authority — always a human |
-
-No organ can override the **13 Binding Floors** (arifOS constitution). GEOX enforces **F1 Amanah** (reversibility), **F2 Truth** (≥99 % accuracy or declare band), and **F3 Tri-Witness** (Human + AI + Evidence alignment) on every sealed output.
-
----
-
-## 🧬 GEOX as a Governed MCP Agent
-
-GEOX is deployed as a **FastMCP server** — not a plugin, not a chatbot wrapper.
-
-**Three surfaces are exposed:**
-
-1. **Tool Surface** — callable geoscience functions under `geox.*`
-2. **Resource Surface** — terrain maps, climate data, logistics tables, subsurface repositories
-3. **System Prompt** — defines GEOX's identity, bounded role, and floor enforcement at runtime
-
-Every tool call returns a **sealed telemetry block** (arifOS v2.1 / pipeline `999 SEAL`), making every output audit-ready and reproducible.
-
-> It is not a plugin. It is a **Constitutional Firewall**.
+1. [What Is GEOX? (30-Second Briefing)](#what-is-geox-30-second-briefing)
+2. [Who Is This For?](#who-is-this-for)
+3. [GEOX in the arifOS Federation](#geox-in-the-arifos-federation)
+4. [Forward vs Inverse Modelling](#forward-vs-inverse-modelling)
+5. [The Theory of Anomalous Contrast (ToAC)](#the-theory-of-anomalous-contrast-toac)
+6. [The 13 Constitutional Floors in GEOX](#the-13-constitutional-floors-in-geox)
+7. [Tool Reference](#tool-reference)
+8. [Quick Start](#quick-start)
+9. [Deployment](#deployment)
+10. [Tri-App Architecture](#tri-app-architecture)
+11. [Repository Structure](#repository-structure)
+12. [Integration with arifOS](#integration-with-arifos)
+13. [Success Criteria](#success-criteria)
+14. [Roadmap](#roadmap)
+15. [References](#references)
 
 ---
 
-## 🛠 Toolset (v0.4.2)
+## What Is GEOX? (30-Second Briefing)
 
-| Tool | Geologist's plain-language role | Protocol tag | Namespace |
-| :--- | :--- | :--- | :--- |
-| `geox_load_seismic_line` | Load and display a seismic section for interpretation | FastMCP Visual | `geox.load_seismic_line` |
-| `geox_build_structural_candidates` | Generate multi-model structural hypotheses from seismic | Hardened Continuity | `geox.build_structural_candidates` |
-| `geox_feasibility_check` | Reject physically impossible scenarios before they propagate | 222_REFLECT | `geox.feasibility_check` |
-| `geox_verify_geospatial` | Validate coordinates, CRS, and spatial metadata | Coordinate Validation | `geox.verify_geospatial` |
-| `geox_evaluate_prospect` | Seal a final prospect verdict after bias audit | SEALED Audit | `geox.evaluate_prospect` |
+**GEOX is the Earth Witness organ in the arifOS constitutional federation.**
+
+It serves as the **reality gatekeeper** for all geoscience operations: every reasoning output, every structural interpretation, and every subsurface decision must be:
+
+- ✅ **Physically possible** (thermodynamics, rock mechanics)
+- ✅ **Geospatially grounded** (verified coordinates, CRS, jurisdiction)
+- ✅ **Consistent with world-state evidence** (seismic, well data, outcrops)
+
+Before any verdict is **SEALED**.
+
+### The One-Line Promise
+
+> *GEOX prevents AI from making physically impossible claims about the Earth by enforcing constitutional verification on every geoscience output.*
 
 ---
 
-## 🚀 Deployment (via FastMCP)
+## Who Is This For?
 
-### Quick Start — Development
+| Audience | What GEOX Means To You |
+|----------|------------------------|
+| **Geoscience Manager** | A "sanity check" layer that stops AI from giving physically impossible answers about subsurface prospects. Reduces technical risk before drilling decisions. |
+| **Expert Geologist** | Enforces multi-model inverse reasoning, bias auditing (Bond et al. 2007), and physical-attribute grounding before any structural verdict is sealed. |
+| **AI Agent / Developer** | A governed FastMCP server exposing bounded geoscience tools under the `geox.*` namespace with sealed telemetry on every output. |
+| **Data Scientist** | A framework for uncertainty quantification in geoscience interpretation with explicit confidence bounds and audit trails. |
+| **Regulatory / Compliance** | Immutable audit logs (999_VAULT) for every interpretation decision, enabling post-hoc review and regulatory compliance. |
+
+---
+
+## GEOX in the arifOS Federation
+
+arifOS is **not a monolithic AI**. It is a **constitutional federation** of specialized organs, each with a bounded role, governed by the 13 Binding Floors.
+
+### The Federation Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        arifOS CONSTITUTIONAL FEDERATION                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   HUMAN OPERATOR                                                            │
+│        │                                                                    │
+│        ▼                                                                    │
+│   ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐  │
+│   │  @RIF   │◄──►│  GEOX   │◄──►│ @WEALTH │◄──►│ @WELL   │◄──►│ @PROMPT │  │
+│   │ REASON  │    │ EARTH   │    │ ECONOMY │    │ HUMAN   │    │ ORCH    │  │
+│   │  ΔΩΨ    │    │ WITNESS │    │ MODEL   │    │ WELLBE  │    │ TASK    │  │
+│   └────┬────┘    └────┬────┘    └────┬────┘    └────┬────┘    └────┬────┘  │
+│        │              │              │              │              │       │
+│        └──────────────┴──────────────┴──────────────┴──────────────┘       │
+│                                   │                                         │
+│                                   ▼                                         │
+│                          ┌─────────────────┐                                │
+│                          │  13 FLOORS (Ω)  │                                │
+│                          │  F1-F13         │                                │
+│                          │  Constitutional │                                │
+│                          │  Law            │                                │
+│                          └────────┬────────┘                                │
+│                                   │                                         │
+│                                   ▼                                         │
+│                          ┌─────────────────┐                                │
+│                          │  999_VAULT      │                                │
+│                          │  Immutable      │                                │
+│                          │  Audit Log      │                                │
+│                          └─────────────────┘                                │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Organ Roles
+
+| Organ | Role | Plain-Language Analogy | Key Function |
+|-------|------|------------------------|--------------|
+| **@RIF** | Reasoning & hypothesis generation | The geologist's brain | Proposes structural models, interprets data |
+| **GEOX** | Earth verification & forward modelling | The lab that stress-tests every model | Validates physical possibility, grounds in evidence |
+| **@WEALTH** | Economic & decision modelling | The economist | Cost-benefit, NPV, portfolio optimization |
+| **@WELL** | Human energy & wellbeing modelling | The safety officer | Crew safety, operational risk |
+| **@PROMPT** | Task shaping & orchestration | The project manager | Workflow coordination, intent parsing |
+| **@JUDGE** | Human veto & governance | The final authority | Always human — 888_HOLD release |
+
+### Constitutional Governance
+
+No organ can override the **13 Binding Floors**. GEOX specifically enforces:
+
+| Floor | Name | GEOX Enforcement |
+|-------|------|------------------|
+| **F1** | AMANAH (Reversibility) | All interpretations are revisable; no irreversible claims without human signoff |
+| **F2** | TRUTH (≥99% accuracy) | Every claim grounded in evidence; uncertainty declared when <99% |
+| **F3** | TRI-WITNESS (W³ ≥ 0.95) | Human + AI + Evidence must agree before SEAL |
+| **F4** | CLARITY (ΔS ≤ 0) | Scale, CRS, provenance must be explicit or declared unknown |
+| **F7** | HUMILITY (Ω₀ ∈ [0.03, 0.08]) | Confidence bounded; overclaim prohibited |
+| **F9** | ANTI-HANTU | No consciousness claims; no anthropomorphization of geological processes |
+| **F11** | AUDITABILITY | Every decision logged with full provenance |
+| **F13** | SOVEREIGN | Human retains final veto (888_HOLD) |
+
+---
+
+## Forward vs Inverse Modelling
+
+Understanding these two modes is the foundation of GEOX's role in the interpretation loop.
+
+### Forward Modelling
+
+> **"Given this Earth model, what data would we observe?"**
+
+GEOX tools simulate:
+- Seismic responses from structural geometries
+- Feasibility envelopes for drilling scenarios
+- Physical constraints on rock properties
+
+**Driver:** GEOX tools  
+**MCP Role:** Exposed as `geox.*` tools
+
+### Inverse Modelling
+
+> **"Given observed data, what Earth model best explains it?"**
+
+@RIF (the reasoning organ) proposes hypotheses, calls GEOX tools to test them against real constraints.
+
+**Driver:** @RIF + GEOX collaboration  
+**MCP Role:** @RIF calls `geox.*` tools to constrain hypotheses
+
+### The Interpretation Loop
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    GEOX INTERPRETATION LOOP                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   OBSERVED DATA          INVERSE MODEL          FORWARD MODEL              │
+│   (seismic, wells)  ──►  (hypothesis)    ──►   (prediction)               │
+│        │                      │                      │                      │
+│        │                      │                      ▼                      │
+│        │                      │               SYNTHETIC DATA                │
+│        │                      │                      │                      │
+│        │                      ▼                      ▼                      │
+│        │               ┌─────────────────────────────────────┐              │
+│        │               │         GEOX VALIDATION             │              │
+│        │               │  • Physically possible? (F1)        │              │
+│        │               │  • Grounded in evidence? (F2)       │              │
+│        │               │  • Multi-model maintained? (F7)     │              │
+│        │               │  • Bias audited? (ToAC)             │              │
+│        │               └─────────────────────────────────────┘              │
+│        │                      │                                             │
+│        └──────────────────────┘                                             │
+│               COMPARE                                                       │
+│                                                                             │
+│   If mismatch: Update model → Repeat                                        │
+│   If match: Proceed to 888_JUDGE → 999_SEAL                                 │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Modelling Matrix
+
+| Type | Question | Driver | MCP Role |
+|------|----------|--------|----------|
+| **Forward** | "What would we observe?" | GEOX tools | `geox.*` namespace |
+| **Inverse** | "What model explains this?" | @RIF + GEOX | @RIF calls `geox.*` |
+
+---
+
+## The Theory of Anomalous Contrast (ToAC)
+
+### The Problem
+
+AI seismic interpretation fails not because of wrong physics, but because of **display artifacts and processing biases** — what GEOX calls **Anomalous Contrast**. These fool both human interpreters and AI models into seeing structures that do not exist.
+
+### Known Failure Modes
+
+| Artifact | Description | Risk |
+|----------|-------------|------|
+| **Polarity conventions** | Wrong impedance assumption | Misidentified fluid contacts |
+| **Gain artifacts** | AGC distortions | False amplitude anomalies |
+| **Migration smiles** | Processing artifacts | Phantom structures |
+| **Display stretch** | Vertical exaggeration | Misinterpreted dip angles |
+
+### The Contrast Canon
+
+GEOX formalizes three rules to prevent anomalous contrast:
+
+#### 1. Multi-Model Candidates (Non-Uniqueness Principle)
+
+> **Never collapse to a single inverse solution prematurely.**
+
+Maintain a ranked ensemble of structural hypotheses. The Earth is underdetermined — multiple models can explain the same data.
+
+#### 2. Physical Attributes First
+
+> **All visual interpretation must be anchored in deterministic physics.**
+
+- Coherence
+- Dip-azimuth
+- Curvature
+- Spectral decomposition
+
+**No interpretation from aesthetics alone.**
+
+#### 3. Bias Audit Before Seal
+
+> **Run an explicit professional bias check before `geox_evaluate_prospect` seals the verdict.**
+
+Reference: Bond et al. (2007) on cognitive bias in seismic interpretation.
+
+---
+
+## The 13 Constitutional Floors in GEOX
+
+### Floor Enforcement Matrix
+
+| Floor | Name | Threshold | GEOX Implementation |
+|-------|------|-----------|---------------------|
+| **F1** | AMANAH | Reversibility | All interpretations revisable; 888_HOLD on irreversible claims |
+| **F2** | TRUTH | τ ≥ 0.99 | Evidence grounding; uncertainty band declaration |
+| **F3** | TRI-WITNESS | W³ ≥ 0.95 | Human + AI + Evidence consensus before SEAL |
+| **F4** | CLARITY | ΔS ≤ 0 | Scale, CRS, provenance explicit or "UNKNOWN" declared |
+| **F5** | PEACE² | P² ≥ 1.0 | No destructive recommendations without mitigation |
+| **F6** | EMPATHY | κᵣ ≥ 0.95 | Stakeholder impact assessment |
+| **F7** | HUMILITY | Ω₀ ∈ [0.03, 0.08] | Confidence bounded; overclaim prohibited |
+| **F8** | GENIUS | G ≥ 0.80 | System health monitoring |
+| **F9** | ANTI-HANTU | C_dark < 0.30 | No anthropomorphization; physical processes remain physical |
+| **F10** | ONTOLOGY | Category lock | AI ≠ Human; Model ≠ Reality |
+| **F11** | AUDITABILITY | 100% logging | Every decision to 999_VAULT |
+| **F12** | INJECTION | Risk < 0.15 | Block adversarial inputs |
+| **F13** | SOVEREIGN | Human veto | 888_HOLD until human release |
+
+### 888 HOLD Triggers in GEOX
+
+The following conditions trigger an automatic **888_HOLD** (awaiting human decision):
+
+| Condition | Rationale |
+|-----------|-----------|
+| Borehole spacing > 10km | Continuity claims unreliable |
+| Unit correlation confidence < 0.6 | High uncertainty in stratigraphy |
+| Vertical exaggeration > 2x undisclosed | Misleading visual appearance |
+| Fault geometry not seismic-constrained | Unverified structural model |
+| Pinchout/truncation in interpreted zone | High-risk interpretation |
+| Interval of interest has zero well control | No ground truth |
+| Scale unknown or unverified | F4 violation |
+
+---
+
+## Tool Reference
+
+### GEOX Tool Surface (v0.4.3)
+
+| Tool | Purpose | Stage | Floors | Output |
+|------|---------|-------|--------|--------|
+| `geox_load_seismic_line` | Load seismic data with QC | 111_SENSE | F4, F11 | Interactive Seismic Section App |
+| `geox_build_structural_candidates` | Generate multi-model hypotheses | 333_MIND | F2, F7 | Multi-Model Candidates View |
+| `geox_feasibility_check` | Check physical possibility | 222_REFLECT | F1, F4, F7 | Constitutional Floor Panel |
+| `geox_verify_geospatial` | Validate coordinates/CRS | 111_SENSE | F4, F11 | Geospatial Verification Card |
+| `geox_evaluate_prospect` | Seal prospect verdict | 888_JUDGE | F1-F13 | Prospect Verdict Card |
+
+### Tool Details
+
+#### `geox_load_seismic_line`
+
+```python
+geox_load_seismic_line(
+    line_id: str,              # Seismic line identifier
+    survey_path: str,          # Path to survey data
+    generate_views: bool = True  # Generate interactive views
+) -> ToolResult
+```
+
+**Returns:** Interactive Seismic Section App with QC badges, ToAC warnings, and 888_HOLD checklist.
+
+#### `geox_build_structural_candidates`
+
+```python
+geox_build_structural_candidates(
+    line_id: str,              # Seismic line identifier
+    focus_area: str | None = None  # Optional focus region
+) -> ToolResult
+```
+
+**Returns:** Multi-model candidate ensemble with confidence scores. **Non-uniqueness principle enforced** — collapse to single model prohibited.
+
+#### `geox_feasibility_check`
+
+```python
+geox_feasibility_check(
+    plan_id: str,              # Plan identifier
+    constraints: list[str]     # Physical constraints to verify
+) -> ToolResult
+```
+
+**Returns:** Constitutional floor panel with F1-F13 status and SEAL/HOLD verdict.
+
+#### `geox_verify_geospatial`
+
+```python
+geox_verify_geospatial(
+    lat: float,                # Latitude (WGS84)
+    lon: float,                # Longitude (WGS84)
+    radius_m: float = 1000.0   # Verification radius
+) -> ToolResult
+```
+
+**Returns:** Geospatial verification card with province, jurisdiction, and F4/F11 compliance.
+
+#### `geox_evaluate_prospect`
+
+```python
+geox_evaluate_prospect(
+    prospect_id: str,          # Prospect identifier
+    interpretation_id: str     # Interpretation to evaluate
+) -> ToolResult
+```
+
+**Returns:** Prospect verdict card with 888_HOLD status, confidence, and required actions before SEAL.
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+```bash
+# Python 3.10+
+python --version
+
+# UV (recommended)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/ariffazil/GEOX.git
+cd GEOX
+
+# Install with uv
+uv pip install -e ".[dev]"
+
+# Or with pip
+pip install -e ".[dev]"
+```
+
+### Verify Installation
+
+```bash
+# CLI entry point should resolve
+which geox
+
+# Health check
+geox --health
+```
+
+### Development Mode
 
 ```bash
 # Auto-detects fastmcp.json
@@ -95,85 +402,264 @@ fastmcp run
 fastmcp dev
 ```
 
-### Network Deployment — HTTP
+---
+
+## Deployment
+
+### STDIO Mode (Default)
+
+```bash
+# Default transport for Claude Desktop
+python geox_mcp_server.py
+
+# Or via CLI
+geox --transport stdio
+```
+
+### HTTP Mode
 
 ```bash
 # Deploy as arifOS federation service
-fastmcp run --transport http --port 8000
+python geox_mcp_server.py --transport http --port 8000
+
+# Or via CLI
+geox --transport http --port 8000 --host 0.0.0.0
 ```
 
-### Manual Execution
+### Docker
 
 ```bash
-# STDIO (default)
-python geox_mcp_server.py
+# Build image
+docker build -t geox-earth-witness .
 
-# HTTP mode
-python geox_mcp_server.py --transport http --port 8000
+# Run
+docker run -p 8000:8000 geox-earth-witness
+```
+
+### Health Endpoints
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /health` | Minimal health check (returns "OK") |
+| `GET /health/details` | Structured health payload with version, mode, timestamp |
+
+---
+
+## Tri-App Architecture
+
+GEOX owns the **visual semantics**, not the LLM. The LLM handles intent; GEOX produces deterministic state.
+
+### Three Coordinated Views
+
+| App | Purpose | Data Source | Key Distinction |
+|-----|---------|-------------|-----------------|
+| **Map App** | Geographic context | Basin, coordinates, assets | Spatial overview |
+| **Cross Section App** | Interpreted earth model | Wells, tops, faults, stratigraphy | **INTERPRETED** — observed vs inferred |
+| **Seismic Section App** | Sensor evidence | Seismic image/line | **OBSERVATIONAL** — raw evidence |
+
+### Critical: Never Merge Cross Section and Seismic Section
+
+- **Geologic Cross Section**: Interpretive earth model product
+- **Seismic Section**: Observational sensor image
+- Confusing them leads to overclaim and bad UI semantics
+
+### Sync Mode
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         SPLIT-SCREEN SYNC MODE                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌─────────────────────────┐    ┌─────────────────────────┐               │
+│   │   CROSS SECTION APP     │    │   SEISMIC SECTION APP   │               │
+│   │   (Interpreted Model)   │◄──►│   (Observational Data)  │               │
+│   │                         │    │                         │               │
+│   │  • Wells with tops      │    │  • Seismic amplitude    │               │
+│   │  • Fault polygons       │    │  • Reflector picks      │               │
+│   │  • Stratigraphic units  │    │  • ToAC contrast        │               │
+│   │  • Observed vs inferred │    │  • QC badges            │               │
+│   │                         │    │                         │               │
+│   └─────────────────────────┘    └─────────────────────────┘               │
+│              │                              │                               │
+│              └──────────────┬───────────────┘                               │
+│                             │                                               │
+│                    SHARED PROFILE CURSOR                                    │
+│                                                                             │
+│   • Click well in cross section → highlight well tie in seismic            │
+│   • Fault selection synced between views                                   │
+│   • Distance coordinate synchronized along line                            │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🛡 Theory of Anomalous Contrast (ToAC)
-
-**The problem GEOX is solving:** AI seismic interpretation fails not because of wrong physics, but because of **display artifacts and processing biases** — what GEOX calls *Anomalous Contrast*. These fool both human interpreters and AI models into seeing structures that do not exist.
-
-> *For geologists:* This formalises known failure modes — polarity conventions, gain artefacts, migration smiles — as computable bias sources that must be audited before any interpretation is sealed. See Bond et al. (2007) on cognitive bias in seismic interpretation.
-
-The **Contrast Canon** mandates three rules:
-
-1. **Multi-Model Candidates** — Never collapse to a single inverse solution prematurely. Maintain a ranked ensemble of structural hypotheses.
-2. **Physical Attributes First** — All visual interpretation must be anchored in deterministic physics: coherence, dip-azimuth, curvature. No interpretation from aesthetics.
-3. **Bias Audit Before Seal** — Run an explicit professional bias check (Bond et al. 2007) before `geox_evaluate_prospect` seals the verdict.
-
----
-
-## 📁 Repo Structure
+## Repository Structure
 
 ```
 GEOX/
-├── geox_mcp_server.py        # FastMCP server entry point
-├── fastmcp.json              # Declarative deployment config
-├── pyproject.toml            # Package metadata & dependencies
-├── smithery.yaml             # Smithery registry config
-├── arifos/                   # arifOS constitution & floor definitions
-├── knowledge/                # Subsurface knowledge base
-├── ops/                      # Operational runbooks
-├── docs/                     # Extended documentation
-├── tests/                    # Test suite
-├── CHANGELOG.md              # Version history
-├── UNIFIED_ROADMAP.md        # Development roadmap
-├── WIRING_GUIDE.md           # Federation wiring instructions
-├── HARDENED_SEAL.md          # Seal protocol specification
-├── GEOX_SUCCESS_CRITERIA.md  # Acceptance criteria per tool
-└── SECURITY.md               # Security & disclosure policy
+├── geox_mcp_server.py          # FastMCP server entry point
+├── fastmcp.json                # Declarative deployment config
+├── pyproject.toml              # Package metadata & dependencies
+├── smithery.yaml               # Smithery registry config
+│
+├── arifos/                     # arifOS constitution integration
+│   └── geox/
+│       ├── seismic_image_ingest.py
+│       ├── contrast_wrapper.py
+│       ├── geox_validator.py
+│       ├── geox_hardened.py
+│       ├── schemas/            # Canonical schemas
+│       ├── governance/         # Floor enforcement
+│       ├── renderers/          # Visualization adapters
+│       └── examples/           # Demo workflows
+│
+├── knowledge/                  # Subsurface knowledge base
+│   └── basin_profiles/
+│
+├── ops/                        # Operational runbooks
+│   └── deployment/
+│
+├── tests/                      # Test suite
+│   ├── unit/
+│   └── integration/
+│
+├── docs/                       # Extended documentation
+│
+├── CHANGELOG.md                # Version history
+├── UNIFIED_ROADMAP.md          # Development roadmap
+├── WIRING_GUIDE.md             # Federation wiring instructions
+├── HARDENED_SEAL.md            # Seal protocol specification
+├── GEOX_SUCCESS_CRITERIA.md    # Acceptance criteria per tool
+└── SECURITY.md                 # Security & disclosure policy
 ```
 
 ---
 
-## 🔐 System State
+## Integration with arifOS
 
-```
-arifOS telemetry v2.1
-pipeline    : 999 SEAL
-floors      : F1 F2 F3 F4 F7
-confidence  : CLAIM
-P2          : 1.0
-hold        : CLEAR
-uncertainty : 0.03 – 0.08
-seal        : DITEMPA BUKAN DIBERI ✅
+### MCP Client Configuration
+
+```json
+{
+  "mcpServers": {
+    "geox": {
+      "command": "uvx",
+      "args": ["arifos-geox"],
+      "env": {
+        "GEOX_MODE": "federation",
+        "ARIFOS_VAULT_URL": "https://vault.arif-fazil.com"
+      }
+    }
+  }
+}
 ```
 
-GEOX v0.4.2 is production-hardened and ready for integration into the `trinity-000-999-pipeline`.
+### Federation Wiring
+
+See [WIRING_GUIDE.md](WIRING_GUIDE.md) for detailed integration instructions with:
+- @RIF (reasoning organ)
+- @WEALTH (economic organ)
+- @JUDGE (human veto)
+- 999_VAULT (audit log)
 
 ---
 
-## 📚 References
+## Success Criteria
 
-- Bond, C.E., Gibbs, A.D., Shipton, Z.K., Jones, S. (2007). *What do you think this is? "Conceptual uncertainty" in geoscience interpretation.* GSA Today, 17(11), 4–10.
-- FastMCP documentation: https://github.com/jlowin/fastmcp
-- arifOS architecture: see `arifos/` directory
+GEOX success is measured across six axes:
+
+| Axis | Target | Measurement |
+|------|--------|-------------|
+| **Usability** | Query → rendered view < 60s | E2E timer |
+| **Geological Quality** | 100% views show scale or "SCALE UNKNOWN" | F4 enforcement |
+| **Governance** | 100% out-of-scope requests trigger 888_HOLD | Floor monitoring |
+| **Interoperability** | Same state across ≥2 MCP hosts | Cross-host test |
+| **Performance** | Render latency < 5s | Benchmark suite |
+| **Repo Maturity** | Test coverage > 80% | CI/CD metrics |
+
+See [GEOX_SUCCESS_CRITERIA.md](GEOX_SUCCESS_CRITERIA.md) for full details.
 
 ---
 
-**DITEMPA BUKAN DIBERI.**
+## Roadmap
+
+### Current: v0.4.3 (SEALED)
+
+- ✅ FastMCP server with stdio/HTTP transports
+- ✅ 5 core tools with interactive Prefab UI
+- ✅ F1-F13 floor enforcement
+- ✅ 999_VAULT integration
+- ⚠️ Visualization: stubbed (awaiting cigvis integration)
+
+### Next: v0.5.0 (FORGE-3)
+
+- [ ] cigvis 3D seismic rendering integration
+- [ ] Full Tri-App architecture (Map + Cross Section + Seismic)
+- [ ] SEG-Y ingest pipeline
+- [ ] Well-tie calibration workflow
+
+### Future: v1.0.0 (SOVEREIGN)
+
+- [ ] Production hardening
+- [ ] Full test coverage
+- [ ] Regulatory compliance audit
+- [ ] Human-in-the-loop 888_HOLD release UI
+
+See [UNIFIED_ROADMAP.md](UNIFIED_ROADMAP.md) for detailed roadmap.
+
+---
+
+## References
+
+### Academic
+
+- **Bond, C.E., Gibbs, A.D., Shipton, Z.K., Jones, S. (2007).** "What do you think this is? 'Conceptual uncertainty' in geoscience interpretation." *GSA Today*, 17(11), 4–10.
+
+### Technical
+
+- **FastMCP:** https://github.com/jlowin/fastmcp
+- **cigvis:** https://github.com/cigvis (3D seismic visualization)
+- **arifOS Architecture:** See `arifos/` directory
+
+### Related Repositories
+
+| Repository | Relationship |
+|------------|--------------|
+| [arifOS](https://github.com/ariffazil/arifOS) | Constitutional federation kernel |
+| [APEX](https://github.com/ariffazil/APEX) | Theory & philosophy (CC0) |
+
+---
+
+## License
+
+```
+Theory (APEX):        CC0 (Public Domain)
+Runtime (GEOX):       AGPL-3.0
+Trademark (GEOX):     Proprietary
+```
+
+---
+
+## Contact
+
+**Muhammad Arif bin Fazil**  
+Sovereign Architect, arifOS & GEOX
+
+- GitHub: [@ariffazil](https://github.com/ariffazil)
+- Website: [arif-fazil.com](https://arif-fazil.com)
+- Email: arif@arif-fazil.com
+
+---
+
+**DITEMPA BUKAN DIBERI** — *Forged, Not Given*
+
+```
+ΔΩΨ | GEOX | 888_JUDGE | EARTH WITNESS
+```
+
+---
+
+*Version: v0.4.3*  
+*Status: SEALED ✅*  
+*Last Updated: 2026-04-01*
