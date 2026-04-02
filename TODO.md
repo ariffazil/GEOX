@@ -4,6 +4,45 @@
 
 ---
 
+## 🚨 AUDIT RESPONSE: Protocol Stability (CRITICAL)
+
+**External Audit Date:** April 3, 2026  
+**Status:** Findings Acknowledged | Action Required  
+**Full Report:** [AUDIT_2026-04-03_EXTERNAL.md](AUDIT_2026-04-03_EXTERNAL.md)  
+**Response:** [RESPONSE_TO_AUDIT.md](RESPONSE_TO_AUDIT.md)
+
+### Critical Findings (Fix Before Any Sale)
+
+#### arifOS: Transport Instability 🔴
+- [ ] **Fix transport/content-type negotiation** — Eliminate HTTP 424 errors
+- [ ] **Define canonical entrypoint** — Reduce 20+ surfaces to 5 primary endpoints
+- [ ] **Unified API envelope** — Standardize request/response schema
+- [ ] **Error taxonomy** — Structured JSON, no HTML leakage
+- [ ] **SSE/HTTP hardening** — Protocol negotiation stable
+
+**Impact:** -30% valuation ($600K–$900K) if not fixed  
+**Timeline:** 60-90 days  
+**Owner:** arifOS
+
+#### GEOX: Execution Maturity 🔴
+- [ ] **Project/session object model** — Move from atomic tools to object graph
+- [ ] **Well-log ingestion API** — LAS/DLIS support
+- [ ] **cigvis 3D visualization** — Replace text fallback
+- [ ] **Evidence graph schema** — Explicit ledger, not implicit
+
+**Impact:** -20% valuation ($300K–$600K) if not fixed  
+**Timeline:** 90 days  
+**Owner:** GEOX
+
+### Immediate Actions (Next 7 Days)
+- [ ] Inventory all arifOS entry points
+- [ ] Document current transport failures
+- [ ] Create canonical envelope specification
+- [ ] Inventory GEOX object model gaps
+- [ ] Research cigvis integration path
+
+---
+
 ## 🎯 Current Sprint: Deployment & Distribution
 
 ### MCP Server Deployment

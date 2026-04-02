@@ -106,6 +106,18 @@ class CigvisAdapter(RendererAdapter):
         Returns:
             cigvis-compatible scene dict
         """
+        # When cigvis is fully unavailable (no functions patched), return the minimal
+        # empty-scene dict expected by callers who check CIGVIS_AVAILABLE.
+        _any_fn_available = any([
+            callable(cigvis.create_slices),
+            callable(cigvis.create_surfaces),
+            callable(cigvis.create_points),
+            callable(getattr(cigvis.vispyplot, "create_well_logs", None)),
+        ])
+        if not CIGVIS_AVAILABLE and not _any_fn_available:
+            logger.warning("CIGVis not available, returning empty scene")
+            return {"nodes": [], "camera": None}
+
         from arifos.geox.renderers.scene_compiler import SceneCompiler
 
         compiler = SceneCompiler()
@@ -124,9 +136,6 @@ class CigvisAdapter(RendererAdapter):
 
     def _primitives_to_nodes(self, scene: Any) -> list[Any]:
         """Convert neutral primitives to cigvis nodes."""
-        if not CIGVIS_AVAILABLE:
-            return []
-
         nodes = []
 
         for volume_slice in scene.volume_slices:
