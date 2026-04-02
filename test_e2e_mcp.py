@@ -60,7 +60,7 @@ class GEOXMCPTestSuite:
         test_name = "Health Check (/health)"
         
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(headers={"Accept": "application/json"}) as client:
                 response = await client.get(
                     f"{self.base_url}/health",
                     timeout=10.0
@@ -87,7 +87,7 @@ class GEOXMCPTestSuite:
         test_name = "Health Details (/health/details)"
         
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(headers={"Accept": "application/json"}) as client:
                 response = await client.get(
                     f"{self.base_url}/health/details",
                     timeout=10.0
@@ -127,11 +127,19 @@ class GEOXMCPTestSuite:
             async with httpx.AsyncClient() as client:
                 response = await client.post(
                     self.mcp_url,
+                    headers={
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
                     json={
                         "jsonrpc": "2.0",
                         "id": 1,
                         "method": "initialize",
-                        "params": {}
+                        "params": {
+                            "protocolVersion": "2024-11-05",
+                            "capabilities": {},
+                            "clientInfo": {"name": "geox-e2e-test", "version": "1.0.0"}
+                        }
                     },
                     timeout=10.0
                 )
@@ -165,7 +173,7 @@ class GEOXMCPTestSuite:
         test_name = "MCP List Tools"
         
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(headers={"Accept": "application/json"}) as client:
                 response = await client.post(
                     self.mcp_url,
                     json={
@@ -216,7 +224,7 @@ class GEOXMCPTestSuite:
         test_name = "MCP Call Tool (geox_verify_geospatial)"
         
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(headers={"Accept": "application/json"}) as client:
                 response = await client.post(
                     self.mcp_url,
                     json={
@@ -275,7 +283,7 @@ class GEOXMCPTestSuite:
         test_name = "MCP Call Tool (geox_health)"
         
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(headers={"Accept": "application/json"}) as client:
                 response = await client.post(
                     self.mcp_url,
                     json={
@@ -333,7 +341,7 @@ class GEOXMCPTestSuite:
         # FastMCP 2.x and 3.x clients
         
         try:
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(headers={"Accept": "application/json"}) as client:
                 response = await client.post(
                     self.mcp_url,
                     json={

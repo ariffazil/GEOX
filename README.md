@@ -46,9 +46,8 @@
 11. [Repository Structure](#repository-structure)
 12. [Integration with arifOS](#integration-with-arifos)
 13. [Success Criteria](#success-criteria)
-14. [Commercial Strategy & Valuation](#commercial-strategy--valuation)
-15. [Roadmap](#roadmap)
-16. [References](#references)
+14. [Roadmap](#roadmap)
+15. [References](#references)
 
 ---
 
@@ -212,6 +211,30 @@ GEOX tools simulate:
 |------|----------|--------|----------|
 | **Forward** | "What would we observe?" | GEOX tools | `geox.*` namespace |
 | **Inverse** | "What model explains this?" | @RIF + GEOX | @RIF calls `geox.*` |
+
+---
+
+## 🌍 The Source of Earth (Canonical Reality)
+
+GEOX defines "Reality" through a buildable, open-source substrate. We do not depend on proprietary basemaps as our core anchor.
+
+| Layer | Canonical Source | Engine / Standard |
+| :--- | :--- | :--- |
+| **3D Earth** | **WGS84 High-Precision** | `CesiumJS` |
+| **2D Map** | **ArcGIS-Style GPU** | `MapLibre GL JS` |
+| **Basemap** | **OpenStreetMap** | `Protomaps (PMTiles)` |
+| **Terrain** | **Copernicus DEM** | `GLO-30 (30m Global)` |
+| **Imagery** | **Sentinel-2 / Landsat** | `COG / STAC` |
+| **Geology** | **Macrostrat** | `Macrostrat API v2` |
+
+---
+
+## 🏗️ Spatial Infrastructure (Body)
+
+The GEOX spatial backend is built for zero-latency, cloud-native data delivery:
+- **Serving:** `Martin` (Vector Tiles) + `TiTiler` (Raster/COG).
+- **Storage:** `PostGIS` + `GeoParquet`.
+- **Discovery:** `STAC` (SpatioTemporal Asset Catalog).
 
 ---
 
@@ -636,64 +659,6 @@ GEOX success is measured across six axes:
 | **Repo Maturity** | Test coverage > 80% | CI/CD metrics |
 
 See [GEOX_SUCCESS_CRITERIA.md](GEOX_SUCCESS_CRITERIA.md) for full details.
-
----
-
-## Commercial Strategy & Valuation
-
-> **Strategic Analysis:** April 2026  
-> **Current Point Estimate:** $2.0M – $2.5M (GEOX + arifOS combined)
-
-### Valuation Summary
-
-| Asset | As-Is | Worst Case | Stretch |
-|-------|-------|------------|---------|
-| **GEOX** | $400K – $900K | $100K – $250K | $1.2M – $1.5M |
-| **arifOS** | $800K – $1.8M | $250K – $600K | $2.5M – $3.5M |
-| **Combined** | **$1.5M – $3.0M** | **$400K – $900K** | **$4.0M – $5.5M** |
-
-### Key Asset Metrics
-
-| Metric | GEOX | arifOS |
-|--------|------|--------|
-| Commits | 50 | 163 |
-| Codebase | 34K LOC, 117 Python files | 149K LOC, 638 Python files |
-| Infrastructure | MCP server | 16-container Docker stack |
-| Deployment | ✅ FastMCP Horizon | ✅ Production-ready |
-| License | AGPL-3.0 | AGPL-3.0 |
-
-### The AGPL Reality
-
-**Cannot close-source existing code.** What is public under AGPL remains free forever.
-
-**Can sell:**
-- Future proprietary branch rights (Enterprise Edition)
-- Trademarks, domains, brand identity
-- Deployment know-how and runbooks
-- Founder transition and knowledge transfer
-- Hosted control plane IP
-
-### Strategic Paths
-
-| Path | Timeline | Target | Recommendation |
-|------|----------|--------|----------------|
-| **Fire Sale** | 30 days | $600K – $1.2M | Only if cash critical |
-| **Structured Sale** | 6-12 months | $2.5M – $5.0M | **Recommended** |
-| **Build & Raise** | 2-3 years | $10M – $50M | High risk (70% fail) |
-
-### Actions to Maximize Valuation
-
-#### Immediate (30 days)
-- [ ] IP hygiene audit — verify 100% personal ownership
-- [ ] Trademark filing — "GEOX", "arifOS", "DITEMPA BUKAN DIBERI"
-- [ ] Enterprise branch setup — private repo for proprietary code
-
-#### Short-term (3-6 months) — **HIGHEST ROI**
-- [ ] **cigvis integration** — 3D seismic visualization (+$500K value)
-- [ ] **Land one pilot** — Target: $10K/month with O&G firm
-- [ ] **Design partner LOI** — Non-binding from Shell, Petronas, etc.
-
-See [TODO.md](TODO.md) for complete valuation-focused action items.
 
 ---
 
