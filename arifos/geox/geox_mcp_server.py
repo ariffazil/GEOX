@@ -7,20 +7,31 @@ It operates under the arifOS constitutional framework, enforcing the
 Theory of Anomalous Contrast (ToAC) and physical reality checks.
 """
 
-import uuid
-from datetime import datetime
+import logging
+from datetime import datetime, timezone
+
 from fastmcp import FastMCP
 
 # Hardened Schemas & Governance
 from arifos.geox.ENGINE.contrast_wrapper import contrast_governed_tool
 from arifos.geox.schemas.geox_schemas import (
-    SeismicLineInput,
     interpretation_result_to_hardened,
 )
+from arifos.geox.tools.seismic.seismic_contrast_views import generate_contrast_views
 
 # Tools
 from arifos.geox.tools.seismic.seismic_single_line_tool import SeismicSingleLineTool
-from arifos.geox.tools.seismic.seismic_contrast_views import generate_contrast_views
+
+# Memory
+try:
+    from arifos.geox.geox_memory import GeoMemoryStore
+    _memory_store: "GeoMemoryStore | None" = GeoMemoryStore()
+    _HAS_MEMORY = True
+except Exception:
+    _memory_store = None
+    _HAS_MEMORY = False
+
+logger = logging.getLogger("geox.mcp")
 
 # ---------------------------------------------------------------------------
 # Server Initialisation
@@ -52,7 +63,7 @@ async def geox_load_seismic_line(
     """
     # Logic to load and extract views
     views = generate_contrast_views(line_id, survey_path)
-    
+
     return {
         "line_id": line_id,
         "status": "IGNITED",
@@ -77,7 +88,7 @@ async def geox_build_structural_candidates(
     """
     tool = SeismicSingleLineTool()
     result = tool.interpret(line_id, source_type="ORCHESTRATED")
-    
+
     # Return as hardened output
     return interpretation_result_to_hardened(result).to_dict()
 
@@ -145,6 +156,39 @@ async def geox_evaluate_prospect(
         "confidence": 0.45,
         "status": "888_HOLD",
         "reason": "Wait for well-tie calibration per F9 Anti-Hantu floor."
+    }
+
+
+@mcp.tool(name="geox_query_memory")
+@contrast_governed_tool(physical_axes=["geological_memory"])
+async def geox_query_memory(
+    query: str,
+    basin: str | None = None,
+    limit: int = 5,
+) -> dict:
+    """
+    Query the GEOX geological memory store for past evaluations.
+
+    Retrieves stored prospect evaluations and verdicts matching the query.
+    Grounds new reasoning in prior evidence per F10 Ontology.
+    """
+    limit = min(max(1, limit), 20)
+    results = []
+
+    if _HAS_MEMORY and _memory_store is not None:
+        try:
+            entries = await _memory_store.retrieve(query=query, basin=basin, limit=limit)
+            results = [e.to_dict() for e in entries]
+        except Exception as exc:
+            logger.warning("Memory retrieve failed: %s", exc)
+
+    return {
+        "query": query,
+        "basin_filter": basin,
+        "results": results,
+        "count": len(results),
+        "memory_backend": "GeoMemoryStore" if _HAS_MEMORY else "unavailable",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 

@@ -1,212 +1,233 @@
 # GEOX Unified Roadmap & TODO
+
 **"DITEMPA BUKAN DIBERI" — Forged, Not Given.**
 
-> **Version:** v0.4.1 — April 1, 2026
-> **Based on:** Deep research across 9 complement repositories
+> **Version:** v0.5.0 — April 2, 2026  
+> **Status:** ✅ DEPLOYED TO HORIZON  
 > **Authority:** 999 SEAL | Floors F1 F4 F7 | Confidence: CLAIM
 
 ---
 
-## Current Status (Audit v0.4)
+## Current Status (v0.5.0)
 
 | Dimension | Status | Notes |
 |-----------|--------|-------|
-| **Architecture** | ✅ 4-Plane Stack defined | Governance, Language, Perception, Earth |
-| **Pipeline** | ✅ 000-999 implemented | INIT→THINK→EXPLORE→HEART→REASON→AUDIT→SEAL |
-| **Governance** | ✅ F1-F13 Floors active | 888 HOLD mechanism |
-| **MCP Server** | ⚠️ Functional | stdio/HTTP transports working |
-| **Memory** | ⚠️ JSONL default, Qdrant optional | Needs production hardening |
-| **CI/CD** | ⚠️ Basic GitHub Actions | Needs coverage threshold |
-| **Visualization** | ❌ None | **CRITICAL GAP** |
-| **Tri-App Architecture** | 🆕 New | Map + Cross Section + Seismic Section |
+| **MCP Server** | ✅ DEPLOYED | FastMCP Horizon: `geoxarifOS.fastmcp.app` |
+| **Compatibility** | ✅ 2.x/3.x | ToolResult shim for version detection |
+| **E2E Tests** | ✅ 7/7 Passing | Full MCP compliance validation |
+| **Documentation** | ✅ Complete | Connection guides + manifesto + landing page |
+| **CI/CD** | ✅ GitHub Actions | Auto-test on push |
+| **Packaging** | ⚠️ Needs PyPI | Install from source only |
+| **Visualization** | ❌ None | **CRITICAL GAP** — cigvis pending |
+| **Real Data** | ❌ Mock only | Macrostrat API integration pending |
 
 ---
 
-## 🏛️ Tri-App Architecture (Map + Cross Section + Seismic Section)
+## 🎉 Forge 0: Deployment Complete (April 2026)
 
-GEOX owns the visual semantics, not the LLM. LLM handles intent; GEOX produces deterministic state.
+### MCP Server Deployment ✅
+- [x] FastMCP 2.x/3.x compatibility layer with ToolResult shim
+- [x] 6 MCP tools with health endpoints
+- [x] E2E test suite (`test_e2e_mcp.py`) — 7 tests passing
+- [x] FastMCP Horizon deployment: `https://geoxarifOS.fastmcp.app/mcp`
+- [x] Static landing page: `https://geoxarifOS.fastmcp.app/`
+- [x] Connection guides for ChatGPT, Claude, Cursor, Kimi, Gemini, VS Code
+- [x] Founder manifesto published
 
-### Three Coordinated Views
-
-| App | Purpose | Data Source | Key Distinction |
-|-----|---------|------------|-----------------|
-| **Map App** | Geographic context | Basin, coordinates, assets | Spatial overview |
-| **Cross Section App** | Interpreted earth model | Wells, tops, faults, stratigraphy | **INTERPRETED** — observed vs inferred |
-| **Seismic Section App** | Sensor evidence | Seismic image/line | **OBSERVATIONAL** — raw evidence |
-
-### Critical: Never Merge Cross Section and Seismic Section
-- **Geologic Cross Section**: Interpretive earth model product
-- **Seismic Section**: Observational sensor image
-- Confusing them leads to overclaim and bad UI semantics
-
-### Sync Mode
-- Split-screen: Cross Section + Seismic Section
-- Shared profile cursor
-- Clicking well in cross section highlights well tie in seismic
-- Fault selection synced between views
-- Distance coordinate synchronized along line
-
-### 888 HOLD Triggers for Cross Section
-- Borehole spacing > 10km — continuity claims unreliable
-- Unit correlation confidence < 0.6
-- Vertical exaggeration > 2x but not disclosed
-- Fault geometry not seismic-constrained
-- Pinchout/truncation in interpreted zone
-- Interval of interest has zero well control
+### Key Deliverables
+| File | Purpose |
+|------|---------|
+| `geox_mcp_server.py` | Main MCP server with version detection |
+| `test_e2e_mcp.py` | E2E test suite |
+| `CONNECT_TO_GEOX.md` | Platform connection guides |
+| `MANIFESTO.md` | Founder's thesis |
+| `geox-gui/public/index.html` | Polished landing page |
+| `geox-gui/public/manifesto.html` | Styled manifesto |
 
 ---
 
-## Integration Matrix: Adopt · Borrow · Wrap · Ignore
+## 🔨 Forge 1: Real Data Integration (May 2026)
 
-| Repository | Decision | Rationale |
-|------------|----------|-----------|
-| `blake365/usgs-quakes-mcp` | **ADOPT** (packaging) | Clean Claude Desktop integration, Smithery config |
-| `datalayer/earthdata-mcp-server` | **BORROW** (discovery) | Multi-mode download pattern (manifest→script→download) |
-| `datalayer/jupyter-earth-mcp-server` | **IGNORE** | Archived; merged into earthdata-mcp-server |
-| `microsoft/seismic-deeplearning` | **BORROW** (ML pipelines) | Segmentation models, SEGY prep; archived but instructive |
-| `intel/openseismic` | **IGNORE** | Discontinued May 2024; OpenVINO abandoned |
-| `lanl/mtl` | **BORROW** (task taxonomy) | Multi-task: DHR + RGT + Fault; proprietary but inspiring |
-| `cigvis` | **ADOPT** (visualization) | **HIGHEST PRIORITY** — 3D seismic rendering, fault/horizon overlays |
-| `dougwithseismic/withseismic-mcp` | **ADOPT** (server architecture) | Production TypeScript template, registry pattern |
-| `pathintegral-institute/mcp.science` | **BORROW** (ecosystem) | Monorepo structure, `uvx` execution pattern |
+### 1.1 Macrostrat API Integration
+**Priority: HIGHEST**
 
-### Decision Definitions
-- **ADOPT**: Direct integration into GEOX architecture
-- **BORROW**: Extract patterns/ideas, do not copy code directly
-- **WRAP**: Create adapters to use existing functionality
-- **IGNORE**: Do not use; archived, irrelevant, or substitutes exist
-
----
-
-## 🔨 Forge 1: Foundation Hardening (COMPLETED)
-
-### 1.1 Packaging & Installation ✅
-- [x] `pip install -e .` works via `uv`
-- [x] CLI entry point resolves at `/root/arifOS/.venv/bin/geox`
-- [x] Health check functional
-
-### 1.2 Smithery.ai Integration ✅
-- [x] `transport: stdio` for Claude Desktop
-- [x] All 10 MCP tools documented
-- [x] Installation via `pip install arifos-geox`
-
-### 1.3 Canonical State Schemas ✅
-- [x] `GeoXIntent` — Normalized user intent
-- [x] `GeoXAssetContext` — Asset and spatial context
-- [x] `GeoXDisplayState` — Viewer state
-- [x] `GeoXAnalysisState` — Observations, interpretations
-- [x] `GeoXAuditState` — Hold status, scope flags
-- [x] `GeoXUiState` — Combined UI state
-- [x] `GeoXCrossSectionState` — Geologic cross section
-- [x] `GeoXSeismicSectionState` — Seismic section
-- [x] `GeoXTriAppState` — Container for all three apps
-- [x] `CrossSectionHoldTriggers` — 888 HOLD triggers
-- [x] `ToolOutputEnvelope` — Standard tool contract
-
-### 1.4 Tests ✅
-- [x] 179 tests passing
-- [x] `ruff` clean (after auto-fix)
-- [x] `mypy` on canonical_state.py: 0 errors
-
----
-
-## 🔨 Forge 2: Visualization Gap (HIGHEST PRIORITY)
-
-**Decision: ADOPT from `cigvis`**
-
-### 2.1 Integrate cigvis
-- [ ] Add `cigvis>=0.2.0` to dependencies
-- [ ] Implement `SeismicVisualizationTool`
-- [ ] 2D/3D seismic volume rendering
-- [ ] Fault and horizon overlays
-- [ ] Well log trajectory visualization
-
-### 2.2 MCP Visualization Tools
-- [ ] `geox_render_inline` — Inline section rendering
-- [ ] `geox_render_timeslice` — Time slice rendering
-- [ ] `geox_render_3d` — 3D volume with overlays
-- [ ] Multi-backend: vispy (desktop), viser (web), plotly (Jupyter)
-
-### 2.3 Cross Section App
-- [ ] `geox_open_cross_section`
-- [ ] `geox_cross_section_build_model`
-- [ ] `geox_cross_section_get_uncertainty_zones`
-- [ ] Profile line selection in map
-
----
-
-## 🔨 Forge 3: Real Data Integration
-
-### 3.1 Macrostrat Integration
 - [ ] Real `MacrostratTool` with API v2
 - [ ] F2 Truth Anchor for spatial queries
 - [ ] CC-BY-4.0 attribution in reports
+- [ ] Cache layer for stratigraphic columns
+- [ ] Unit correlation confidence scoring
+- [ ] 888 HOLD triggers for sparse well control
 
-### 3.2 EarthData Discovery
-- [ ] `EarthDataDiscoveryTool` for NASA Earthdata/Copernicus
+```python
+# Target API
+geox_verify_geospatial(lat=4.5, lon=114.2)
+→ Province: Malay Basin
+→ Stratigraphy: ["Miocene", "Pliocene"]
+→ Confidence: 0.87
+→ Source: Macrostrat v2
+```
+
+### 1.2 EarthData Discovery
+**Priority: MEDIUM**
+
+- [ ] `EarthDataDiscoveryTool` for NASA Earthdata
+- [ ] Copernicus Open Access Hub integration
 - [ ] Multi-mode: manifest → script → download
-- [ ] OAuth authentication
+- [ ] OAuth2 authentication flow
+- [ ] F1 Amanah: Download reversibility
 
-### 3.3 SEG-Y Reader
-- [ ] Add `segypy` or `segyio` to dependencies
+### 1.3 SEG-Y Support
+**Priority: MEDIUM**
+
+- [ ] Add `segyio` to dependencies
 - [ ] `SegyIngestTool` for 2D/3D SEG-Y import
-- [ ] Dutch F3 dataset support
+- [ ] Header parsing and validation
+- [ ] Dutch F3 demo dataset
+- [ ] F4 Clarity: Explicit data bounds
 
 ---
 
-## 🔨 Forge 4: Seismic ML Pipeline
+## 🔨 Forge 2: Visualization Layer (June 2026)
+
+**Decision: ADOPT from `cigvis`**
+
+### 2.1 cigvis Integration
+- [ ] Add `cigvis>=0.2.0` to dependencies
+- [ ] `SeismicVisualizationTool` implementation
+- [ ] 2D seismic section rendering
+- [ ] 3D volume visualization with overlays
+- [ ] Well log trajectory plots
+- [ ] Multi-backend: vispy (desktop), viser (web)
+
+### 2.2 MCP Visualization Tools
+- [ ] `geox_render_inline` — Inline section
+- [ ] `geox_render_timeslice` — Time slice
+- [ ] `geox_render_3d` — 3D volume
+- [ ] `geox_render_cross_section` — Geologic interpretation
+
+### 2.3 Tri-App Architecture
+**Never merge Cross Section and Seismic Section**
+
+| App | Type | Data | Purpose |
+|-----|------|------|---------|
+| **Map App** | Overview | Basin, coordinates | Geographic context |
+| **Cross Section** | INTERPRETED | Wells, tops, faults | Earth model |
+| **Seismic Section** | OBSERVATIONAL | Raw seismic | Sensor evidence |
+
+- [ ] Sync mode: split-screen + shared cursor
+- [ ] Well tie highlighting
+- [ ] Fault selection sync
+- [ ] Distance coordinate synchronization
+
+---
+
+## 🔨 Forge 3: Seismic ML Pipeline (Q3 2026)
 
 **Decision: BORROW from `microsoft/seismic-deeplearning` + `lanl/mtl`**
 
-### 4.1 Seismic ML Tools
-- [ ] `SeismicMLTool` with fault detection, salt ID, facies
-- [ ] YACS-style config for model swapping
-- [ ] PyTorch backend (NOT OpenVINO)
+### 3.1 Seismic ML Tools
+- [ ] `SeismicMLTool` with PyTorch backend
+- [ ] Fault detection (location, dip, strike)
+- [ ] Salt identification
+- [ ] Facies classification
+- [ ] YACS-style configuration
 
-### 4.2 Multi-Task Inference
-- [ ] DHR: Denoised High-Resolution image
-- [ ] RGT: Relative Geological Time volume
-- [ ] Fault: Fault attributes (location, dip, strike)
+### 3.2 Multi-Task Inference
+| Task | Output | Use Case |
+|------|--------|----------|
+| DHR | Denoised High-Resolution image | Quality improvement |
+| RGT | Relative Geological Time volume | Chronostratigraphy |
+| Fault | Fault attributes | Structural interpretation |
 
-### 4.3 Model Backend
-| Model | Backend | Status |
-|-------|---------|--------|
-| Fault detection | PyTorch | Implement |
-| Salt identification | PyTorch | Implement |
-| Facies classification | PyTorch | Implement |
-| Intel OpenVINO | ~~Deprecated~~ | **DO NOT USE** |
+### 3.3 Model Backend
+- PyTorch (primary)
+- ONNX export support
+- **DO NOT USE OpenVINO** (discontinued)
 
 ---
 
-## 🗺️ Long-Term Roadmap (Months 6-24)
+## 🔨 Forge 4: Distribution & Growth (Ongoing)
 
-### Phase 2: Perception & Memory (Months 6-9)
-- [ ] LEM Integration (TerraFM or Prithvi-EO-2.0)
-- [ ] Qdrant production hardening
-- [ ] Schema-first synthesis
+### 4.1 Package Distribution
+- [ ] PyPI release: `pip install arifos-geox`
+- [ ] mcp-get registry submission
+- [ ] Smithery.ai auto-update
+- [ ] conda-forge package
 
-### Phase 3: Geology Adaptation (Months 9-18)
-- [ ] Constraint Graph (Chronostratigraphy ordering)
-- [ ] Alignment Pipeline (Macrostrat × EO tiles)
-- [ ] Multi-Task Heads
+### 4.2 Community
+- [ ] Awesome MCP Servers list
+- [ ] Hacker News launch
+- [ ] Reddit r/geology, r/geophysics
+- [ ] LinkedIn technical posts
+- [ ] Conference talks (AAPG, SEG, EAGE)
 
-### Phase 4: Verification & Governance (Months 18-24)
-- [ ] Benchmark Harness (GEO-Bench, Copernicus-Bench)
-- [ ] Model Registry + Model Cards
-- [ ] F13 Sovereign Dashboard
+### 4.3 Documentation
+- [ ] API reference (auto-generated)
+- [ ] Tutorial: First prospect evaluation
+- [ ] Tutorial: Seismic interpretation workflow
+- [ ] Video walkthroughs
+- [ ] Case study library
+
+---
+
+## 🗺️ Long-Term Roadmap (2026-2027)
+
+### Phase 1: Foundation (COMPLETE)
+- ✅ MCP server architecture
+- ✅ Constitutional governance (F1-F13)
+- ✅ E2E testing framework
+- ✅ Deployment pipeline
+
+### Phase 2: Real Data (Q2 2026)
+- Macrostrat integration
+- EarthData discovery
+- SEG-Y support
+- Basic visualization
+
+### Phase 3: Perception & ML (Q3 2026)
+- cigvis full integration
+- Seismic ML pipeline
+- LEM integration (TerraFM)
+- Qdrant production hardening
+
+### Phase 4: Verification & Scale (Q4 2026)
+- GEO-Bench benchmark harness
+- Model registry + Model Cards
+- F13 Sovereign Dashboard
+- Enterprise features
+
+### Phase 5: Ecosystem (2027)
+- Plugin architecture
+- Third-party tool integration
+- Industry partnerships
+- Open source foundation
+
+---
+
+## 🏛️ Integration Matrix: Adopt · Borrow · Wrap · Ignore
+
+| Repository | Decision | Rationale | Status |
+|------------|----------|-----------|--------|
+| `cigvis` | **ADOPT** | 3D seismic rendering — HIGHEST PRIORITY | Pending |
+| `macrostrat/macrostrat-api` | **ADOPT** | Real geological data — CRITICAL | Pending |
+| `nasa/earthdata` | **WRAP** | Satellite imagery discovery | Planned |
+| `microsoft/seismic-deeplearning` | **BORROW** | ML pipeline patterns | Reference |
+| `lanl/mtl` | **BORROW** | Multi-task taxonomy | Reference |
+| `blake365/usgs-quakes-mcp` | **BORROW** | Packaging patterns | Studied |
+| `intel/openseismic` | **IGNORE** | Discontinued May 2024 | Avoided |
 
 ---
 
 ## 🛡️ Constitutional Floor Mapping
 
-| Floor | Forge 1 | Forge 2 | Forge 3 | Forge 4 |
+| Floor | Forge 0 | Forge 1 | Forge 2 | Forge 3 |
 |-------|---------|---------|---------|---------|
-| F1 Amanah | Reversibility checks | Dual-memory audit | ML lineage | Full provenance |
-| F2 Truth | Canonical schemas | cigvis rendering | Fault/RGT inference | Benchmark validation |
-| F4 Clarity | Units in quantities | Embedding metadata | Multi-task outputs | Uncertainty propagation |
-| F7 Humility | API timeout handling | Visualization uncertainty | Model uncertainty | Calibrated confidence |
-| F9 Anti-Hantu | No phantom data | Real SEG-Y reader | Real ML models | Benchmark checks |
-| F13 Sovereign | Smithery integration | 888 HOLD on viz | HOLD on ML | Human review UI |
+| F1 Amanah | ✅ Reversibility | Download audit | Viz reversibility | ML lineage |
+| F2 Truth | ✅ Schema anchor | Macrostrat real | cigvis rendering | Benchmark validation |
+| F4 Clarity | ✅ Units explicit | Data bounds | Embedding metadata | Uncertainty propagation |
+| F7 Humility | ✅ API timeout | Sparse data | Viz uncertainty | Model calibration |
+| F9 Anti-Hantu | ✅ No phantom | Real data only | Real SEG-Y | Real ML models |
+| F13 Sovereign | ✅ MCP governance | Human review | HOLD on viz | Full dashboard |
 
 ---
 
@@ -214,25 +235,37 @@ GEOX owns the visual semantics, not the LLM. LLM handles intent; GEOX produces d
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
-| cigvis API changes | Low | Medium | Pin version, adapter pattern |
-| LEM backend unavailable | Medium | High | Mock fallback, pluggable |
-| Archived ML repos | High | Low | Use as reference only |
-| Macrostrat API changes | Medium | Medium | Version pinning |
-| OpenVINO avoidance | Done | N/A | Use ONNX/TensorRT |
+| FastMCP API changes | Low | Medium | Version pinning, shim layer ✅ |
+| Macrostrat API limits | Medium | Medium | Cache layer, rate limiting |
+| cigvis integration complexity | Medium | High | Phased approach, PoC first |
+| ML model availability | Medium | Medium | Multiple backends, mock fallbacks |
+| User adoption | Medium | High | Documentation, tutorials, community |
 
 ---
 
 ## ✅ Success Metrics
 
-| Metric | Current | Target (Forge 2) |
-|--------|---------|-----------------|
-| CI Pipeline | ✅ 179 tests | ✅ 80%+ coverage |
-| Visualization | ❌ None | ✅ cigvis rendering |
-| Real Data | ❌ Mock only | ✅ Macrostrat real |
-| Smithery Integration | ✅ Config exists | ✅ Auto-updates |
+| Metric | v0.4.x | v0.5.0 (Current) | v0.6.0 Target |
+|--------|--------|------------------|---------------|
+| MCP Server | ⚠️ Local | ✅ **DEPLOYED** | Stable |
+| Test Coverage | 60% | 60% | 80% |
+| Real Data Sources | 0 | 0 | 2+ |
+| Visualization | None | None | cigvis 2D |
+| PyPI Installs | N/A | N/A | 100+ |
+| Active Users | 0 | 0 | 10+ |
 
 ---
 
-*Ditempa Bukan Diberi* [ΔΩΨ | 888 | 999]
-*Updated: April 1, 2026*
-*Status: FORGE-1 COMPLETE | FORGE-2 READY
+## 🎯 Immediate Next Actions
+
+1. **PyPI Release** — Enable `pip install arifos-geox`
+2. **Macrostrat Integration** — Real geological data
+3. **cigvis PoC** — Prove visualization pipeline
+4. **Tutorial Content** — Lower barrier to entry
+5. **Community Outreach** — HN, Reddit, LinkedIn
+
+---
+
+*Ditempa Bukan Diberi* [ΔΩΨ | 888 | 999]  
+*Updated: April 2, 2026*  
+*Status: FORGE-0 COMPLETE | FORGE-1 READY*
