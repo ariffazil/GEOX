@@ -39,6 +39,48 @@ install:
 
 # Tools exposed
 tools:
+  - id: geox_load_seismic_line
+    name: geox_load_seismic_line
+    description: Load seismic line data and ignite visual mode (Earth Witness Ignition). Returns QC badges, contrast warnings, and governance floor status.
+    input_schema:
+      type: object
+      properties:
+        line_id: { type: string }
+        survey_path: { type: string, default: default_survey }
+        generate_views: { type: boolean, default: true }
+      required: [line_id]
+
+  - id: geox_build_structural_candidates
+    name: geox_build_structural_candidates
+    description: Build structural model candidate ensemble (Inverse Modelling Constraints). Prevents narrative collapse — returns multiple plausible models.
+    input_schema:
+      type: object
+      properties:
+        line_id: { type: string }
+        focus_area: { type: string }
+      required: [line_id]
+
+  - id: geox_feasibility_check
+    name: geox_feasibility_check
+    description: Constitutional Firewall — check if a proposed plan is physically possible against world-state and Earth physics (F4, F9).
+    input_schema:
+      type: object
+      properties:
+        plan_id: { type: string }
+        constraints: { type: array, items: { type: string } }
+      required: [plan_id, constraints]
+
+  - id: geox_verify_geospatial
+    name: geox_verify_geospatial
+    description: Verify coordinates, geological province, and jurisdictional boundaries. Anchors all reasoning in verified CRS per F4 Clarity.
+    input_schema:
+      type: object
+      properties:
+        lat: { type: number }
+        lon: { type: number }
+        radius_m: { type: number, default: 1000.0 }
+      required: [lat, lon]
+
   - id: geox_evaluate_prospect
     name: geox_evaluate_prospect
     description: Full GEOX geological prospect evaluation pipeline
