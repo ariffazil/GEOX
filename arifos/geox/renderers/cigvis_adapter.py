@@ -106,10 +106,6 @@ class CigvisAdapter(RendererAdapter):
         Returns:
             cigvis-compatible scene dict
         """
-        if not CIGVIS_AVAILABLE:
-            logger.warning("CIGVis not available, returning empty scene")
-            return {"nodes": [], "camera": None}
-
         from arifos.geox.renderers.scene_compiler import SceneCompiler
 
         compiler = SceneCompiler()
@@ -310,7 +306,7 @@ class CigvisAdapter(RendererAdapter):
                 errors=["No renderable nodes in scene"],
             )
 
-        if not CIGVIS_AVAILABLE:
+        if not callable(cigvis.plot3D):
             return RenderResult(
                 success=False,
                 errors=["CIGVis not installed. Run: pip install cigvis"],
@@ -379,7 +375,7 @@ class CigvisAdapter(RendererAdapter):
                 errors=["Interactive mode not supported by this adapter"],
             )
 
-        if not CIGVIS_AVAILABLE:
+        if not callable(getattr(cigvis.viserplot, "create_server", None)):
             return RenderResult(
                 success=False,
                 errors=["CIGVis not installed. Run: pip install cigvis"],
@@ -509,6 +505,11 @@ class StaticCigvisRenderer:
         Returns:
             RenderResult with artifact_path
         """
+        if not CIGVIS_AVAILABLE:
+            return RenderResult(
+                success=False,
+                errors=["CIGVis not installed. Run: pip install cigvis"],
+            )
         scene = self.adapter.compile_scene(canonical_state)
         return self.adapter.render_snapshot(scene, output_path, width, height)
 
