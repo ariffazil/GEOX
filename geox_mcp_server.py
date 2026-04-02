@@ -70,6 +70,12 @@ except Exception as _mem_exc:
     logger.info("Memory store unavailable — geox_query_memory will return stub results (%s)", _mem_exc)
 
 try:
+    from arifos.geox.kernel_client import GeoxKernelClient
+    _HAS_KERNEL_CLIENT = True
+except ImportError:
+    _HAS_KERNEL_CLIENT = False
+
+try:
     from arifos.geox.apps.prefab_views import (
         feasibility_check_view,
         geospatial_view,
@@ -377,14 +383,42 @@ async def geox_evaluate_prospect(
 ) -> dict:
     """
     Provide a governed verdict on a subsurface prospect (222_REFLECT).
-    
+
     Blocks ungrounded claims via Reality Firewall. Returns 888 HOLD status
     if physical grounding is insufficient per F9 Anti-Hantu.
+    Writes verdict to arifOS VAULT999 via kernel wiring (graceful degradation
+    if kernel is unreachable).
     """
     verdict = "PHYSICAL_GROUNDING_REQUIRED"
     confidence = 0.45
     status = "888_HOLD"
     reason = "Wait for well-tie calibration per F9 Anti-Hantu floor."
+    session_id: str | None = None
+    vault_sealed = False
+
+    # ── arifOS kernel wiring ────────────────────────────────────────────────
+    if _HAS_KERNEL_CLIENT:
+        try:
+            async with GeoxKernelClient() as kernel:
+                session_id = await kernel.init_anchor(
+                    identity="GEOX",
+                    task=f"prospect_evaluation:{prospect_id}",
+                )
+                vault_sealed = await kernel.vault_seal(
+                    session_id=session_id,
+                    payload={
+                        "prospect_id": prospect_id,
+                        "interpretation_id": interpretation_id,
+                        "verdict": verdict,
+                        "confidence": confidence,
+                        "status": status,
+                        "reason": reason,
+                        "floors_checked": ["F1", "F4", "F7", "F9", "F11", "F13"],
+                    },
+                )
+        except Exception as _k_exc:
+            logger.warning("Kernel wiring failed (standalone mode): %s", _k_exc)
+    # ────────────────────────────────────────────────────────────────────────
 
     structured = _build_prefab_view(
         "prospect_verdict",
@@ -395,13 +429,17 @@ async def geox_evaluate_prospect(
         status=status,
         reason=reason,
     )
+    if isinstance(structured, dict):
+        structured["session_id"] = session_id
+        structured["vault_sealed"] = vault_sealed
 
+    vault_note = "VAULT999 sealed." if vault_sealed else "VAULT999 write skipped (standalone mode)."
     result = ToolResult(
         content=(
             f"Prospect '{prospect_id}' evaluation: {status}. "
             f"Verdict: {verdict}. Confidence: {confidence:.0%}. "
             f"Reason: {reason} "
-            "Logged to 999_VAULT. Human signoff required before proceeding."
+            f"{vault_note} Human signoff required before proceeding."
         ),
         structured_content=structured,
     )

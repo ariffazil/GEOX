@@ -27,6 +27,7 @@ from arifos.geox.renderers.primitives import (
     ScaleBarPrimitive,
     SliceDirection,
     SurfacePrimitive,
+    UncertaintyZonePrimitive,
     UnitPolygonPrimitive,
     Vector3,
     VerticalExaggerationBadge,

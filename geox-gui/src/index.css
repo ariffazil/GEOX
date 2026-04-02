@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: "JetBrains Mono", "Consolas", monospace;
+  background-color: #0f1117;
+  color: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* MapLibre container must have explicit dimensions */
+.maplibregl-map {
+  position: absolute;
+  inset: 0;
+}
