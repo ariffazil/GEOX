@@ -63,6 +63,15 @@ logger = logging.getLogger("geox.mcp")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 try:
+    from arifos.geox.geox_memory import GeoMemoryStore
+    _memory_store: "GeoMemoryStore | None" = GeoMemoryStore()
+    _HAS_MEMORY = True
+except Exception as _mem_exc:
+    _memory_store = None
+    _HAS_MEMORY = False
+    logger.info("Memory store unavailable — geox_query_memory will return stub results (%s)", _mem_exc)
+
+try:
     from arifos.geox.apps.prefab_views import (
         feasibility_check_view,
         geospatial_view,
@@ -402,6 +411,58 @@ async def geox_evaluate_prospect(
     return _tool_result_to_dict(result)
 
 
+@mcp.tool(name="geox_query_memory")
+async def geox_query_memory(
+    query: str,
+    basin: str | None = None,
+    limit: int = 5,
+) -> dict:
+    """
+    Query the GEOX geological memory store for past evaluations.
+
+    Retrieves stored prospect evaluations, verdicts, and geological context
+    that match the query. Used to ground new reasoning in prior evidence.
+
+    Args:
+        query: Natural-language query (e.g. "Malay Basin structural traps")
+        basin: Optional basin filter (e.g. "Malay Basin", "Sabah Basin")
+        limit: Max results to return (default 5, max 20)
+    """
+    limit = min(max(1, limit), 20)
+
+    if _HAS_MEMORY and _memory_store is not None:
+        try:
+            entries = await _memory_store.retrieve(query=query, basin=basin, limit=limit)
+            results = [e.to_dict() for e in entries]
+            count = len(results)
+        except Exception as exc:
+            logger.warning("Memory retrieve failed: %s", exc)
+            results = []
+            count = 0
+    else:
+        results = []
+        count = 0
+
+    structured = {
+        "query": query,
+        "basin_filter": basin,
+        "results": results,
+        "count": count,
+        "memory_backend": "GeoMemoryStore" if _HAS_MEMORY else "unavailable",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+
+    content = (
+        f"Memory query '{query}' returned {count} result(s). "
+        + (f"Basin filter: {basin}. " if basin else "")
+        + ("F10 Ontology: past evaluations surfaced for grounding." if count > 0
+           else "No prior evaluations found — first assessment for this context.")
+    )
+
+    result = ToolResult(content=content, structured_content=structured)
+    return _tool_result_to_dict(result)
+
+
 @mcp.tool(name="geox_health")
 async def geox_health() -> dict:
     """Server health check with constitutional floor status."""
@@ -483,9 +544,10 @@ Examples:
         logger.info("Health: http://%s:%d/health", args.host, args.port)
     
     logger.info("=" * 60)
-    logger.info("Tools: geox_load_seismic_line, geox_build_structural_candidates,")
-    logger.info("       geox_feasibility_check, geox_verify_geospatial,")
-    logger.info("       geox_evaluate_prospect, geox_health")
+    logger.info("Memory Store: %s", "available" if _HAS_MEMORY else "unavailable")
+    logger.info("Tools (7): geox_load_seismic_line, geox_build_structural_candidates,")
+    logger.info("           geox_feasibility_check, geox_verify_geospatial,")
+    logger.info("           geox_evaluate_prospect, geox_query_memory, geox_health")
     logger.info("=" * 60)
     
     # Run with FastMCP
