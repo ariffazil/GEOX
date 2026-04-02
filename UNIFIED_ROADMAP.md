@@ -5,6 +5,9 @@
 > **Based on:** Deep research across 9 complement repositories
 > **Authority:** 999 SEAL | Floors F1 F4 F7 | Confidence: CLAIM
 
+⚠️ **EXECUTIVE OVERRIDE (April 2026):** 
+The primary strategic direction has shifted to prioritizing the **Governed Intelligence Kernel** and **Grounded Evidence Graph** over further UI polish. Please see [STRATEGIC_UPGRADE_PATH_Q2_2026.md](docs/STRATEGIC_UPGRADE_PATH_Q2_2026.md) for the definitive 12-month upgrade plan focusing on State, Memory, Policy, Uncertainty, and Multimodal Observability.
+
 ---
 
 ## Current Status (Audit v0.4)
