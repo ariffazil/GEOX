@@ -32,6 +32,7 @@
 8. [Quick Start](#quick-start)
 9. [Deployment](#deployment)
 10. [Tri-App Architecture](#tri-app-architecture)
+    - [RATLAS — Reference Atlas of Earth Materials](#ratlas--reference-atlas-of-earth-materials)
 11. [Repository Structure](#repository-structure)
 12. [Integration with arifOS](#integration-with-arifos)
 13. [Success Criteria](#success-criteria)
@@ -449,7 +450,50 @@ docker run -p 8000:8000 geox-earth-witness
 
 GEOX owns the **visual semantics**, not the LLM. The LLM handles intent; GEOX produces deterministic state.
 
-### Three Coordinated Views
+### Four Views
+
+| App | Purpose | Data Source | Key Distinction |
+|-----|---------|-------------|-----------------|
+| **Map App** | Geographic context | Basin, coordinates, assets | Spatial overview |
+| **Cross Section App** | Interpreted earth model | Wells, tops, faults, stratigraphy | **INTERPRETED** — observed vs inferred |
+| **Seismic Section App** | Sensor evidence | Seismic image/line | **OBSERVATIONAL** — raw evidence |
+| **RATLAS** | Physics reference atlas | 99-material database | **MATERIAL INTELLIGENCE** — symbolic + numeric |
+
+### RATLAS — Reference Atlas of Earth Materials
+
+RATLAS is GEOX's **material intelligence layer** — a physics-backed reference atlas of 99 canonical Earth material states across 11 families. It serves as the symbolic grounding layer for GEOX reasoning agents.
+
+**Scope:** Forward-modelled log responses (GR, CAL, DEN, NPHI, DT, RT), matrix physics, and symbolic token vocabulary for geo-reasoning.
+
+**Not a classifier.** RATLAS provides reference physics — actual formation evaluation requires calibrated field data.
+
+**Access:**
+- Live: https://aaa.arif-fazil.com/geox/geox_ratlas.html
+- CSV: https://aaa.arif-fazil.com/geox/geox_atlas_99_materials.csv
+- Source: [geox_ratlas.html](../geox_ratlas.html), [geox_atlas_99_materials.csv](../geox_atlas_99_materials.csv)
+
+**11 Material Families:**
+- Sedimentary Clastic (18) · Sedimentary Carbonate (9) · Sedimentary Chemical/Organic (9)
+- Igneous Felsic (9) · Igneous Intermediate/Mafic (9) · Igneous Ultramafic/Altered (9)
+- Metamorphic Foliated (9) · Metamorphic Non-Foliated (9)
+- Unconsolidated/Soil (9) · Engineered Materials (9)
+
+**Symbolic Token Set** — drives GEOX reasoning engine:
+- `SAND_QZ_CLEAN` · `SHALE_ILL` · `LIMESTONE_CC` · `DOLOMITE_DOL` · `ANHYDRITE` · `HALITE`
+- `GRANITE_K` · `BASALT_MAF` · `PERIDOTITE_OL` · `SERPENTINE` · `SCHIST_BT`
+- `STEEL_Fe` · `CONCRETE_RF` · `COAL_LIG` · `BITUMEN` · `CHERT_SIL`
+
+**Forward Models (reference only):**
+```
+ρb = (1−φ)·ρm + φ·ρf           # Bulk density mixing law
+NPHI ≈ φ·Σ(Si·HIi)             # Neutron hydrogen index
+Rt = a·Rw / (φm·Swⁿ)            # Archie resistivity (clean)
+Vsh = (GRlog − GRmin) / (GRmax − GRmin)  # Gamma ray shale index
+```
+
+**Constitutional alignment:** F1 Reversibility, F2 Truth (≥99%), F4 Clarity (scale/provenance explicit), F7 Humility (uncertainty bounded), F9 Anti-Hantu (no anthropomorphization), F13 Sovereign (human veto).
+
+> *"Anak Nusantara, bukan software Barat. Real data, physics law, constitutional verification."*
 
 | App | Purpose | Data Source | Key Distinction |
 |-----|---------|-------------|-----------------|
@@ -499,6 +543,8 @@ GEOX owns the **visual semantics**, not the LLM. The LLM handles intent; GEOX pr
 ```
 GEOX/
 ├── geox_mcp_server.py          # FastMCP server entry point
+├── geox_ratlas.html            # RATLAS — Earth Material Atlas (99 materials)
+├── geox_atlas_99_materials.csv # Material physics reference database
 ├── fastmcp.json                # Declarative deployment config
 ├── pyproject.toml              # Package metadata & dependencies
 ├── smithery.yaml               # Smithery registry config
