@@ -20,6 +20,16 @@
 
 ---
 
+## 📖 Founder's Thesis
+
+**New to GEOX?** Start with the founder's manifesto:
+- **[MANIFESTO.md](MANIFESTO.md)** — Why GEOX, Why Now, Why Not Plain LLMs, and Why arifOS
+- **[View Online](geox-gui/public/manifesto.html)** — Styled landing page version
+
+> *"GEOX makes AI see the Earth. arifOS makes sure it does not lie about what it sees."*
+
+---
+
 ## Table of Contents
 
 1. [What Is GEOX? (30-Second Briefing)](#what-is-geox-30-second-briefing)
