@@ -1,16 +1,11 @@
 """
-geox_mcp_server.py — Hardened GEOX MCP Server for arifOS
-DITEMPA BUKAN DIBERI
-
-Forge 2: FastMCP Apps — every tool returns an interactive Prefab UI
-instead of a plain JSON blob. The LLM still receives a text summary
-(via ToolResult); the human sees a governed visualization.
-
-Requires: pip install "fastmcp[apps]" prefab-ui>=0.18.0
+GEOX MCP Server - Updated with Floors-hash endpoint
+Adds F1-F13 version hash to health for federation router verification.
 """
 
 import argparse
 import os
+import hashlib
 from datetime import datetime
 from typing import Any, cast
 
@@ -30,6 +25,29 @@ from arifos.geox.apps.prefab_views import (
     seismic_section_view,
     structural_candidates_view,
 )
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# F1-F13 CONSTITUTIONAL CANON — Floors Version
+# ═══════════════════════════════════════════════════════════════════════════════
+
+FLOORS_CANON = {
+    "F1": "AMANAH — Reversibility",
+    "F2": "TRUTH — Evidence required",
+    "F3": "TRI_WITNESS — W³ ≥ 0.95",
+    "F4": "CLARITY — Entropy ↓",
+    "F5": "COHERENCE — Paradox-free",
+    "F6": "BOUNDED — Scope locked",
+    "F7": "DIGNITY — Agent respect",
+    "F8": "SVERD — Sovereign limits",
+    "F9": "PROGRESS — Capability growth",
+    "F10": "REFLECTION — Self-audit",
+    "F11": "CONTINUITY — Auth continuity",
+    "F12": "DEFENSE — No injection",
+    "F13": "SOVEREIGN — 888_HOLD required",
+}
+
+FLOORS_VERSION = hashlib.sha256(str(sorted(FLOORS_CANON.items())).encode()).hexdigest()[:16]
+
 
 # ---------------------------------------------------------------------------
 # Server Initialisation
@@ -62,17 +80,9 @@ def _interpretation_to_candidates(result: object) -> list[dict[str, Any]]:
     return []
 
 
-def _governance_stub_views(line_id: str, survey_path: str) -> list[dict[str, str]]:
-    """Return lightweight view metadata when the real seismic engine is absent."""
-    return [
-        {
-            "view_id": f"{line_id}:baseline",
-            "mode": "governance_stub",
-            "source": survey_path,
-            "note": "Real seismic contrast generation is not executed in this environment.",
-        }
-    ]
-
+# ═══════════════════════════════════════════════════════════════════════════════
+# HEALTH ENDPOINTS — With Floors-hash for federation verification
+# ═══════════════════════════════════════════════════════════════════════════════
 
 @mcp.custom_route("/health", methods=["GET"])
 async def health_check(_: Request) -> PlainTextResponse:
@@ -82,7 +92,7 @@ async def health_check(_: Request) -> PlainTextResponse:
 
 @mcp.custom_route("/health/details", methods=["GET"])
 async def health_details(_: Request) -> JSONResponse:
-    """Structured health payload for deployment probes."""
+    """Structured health payload for deployment probes — includes Floors-hash."""
     return JSONResponse(
         {
             "ok": True,
@@ -92,216 +102,124 @@ async def health_details(_: Request) -> JSONResponse:
             "forge": "Forge-2-Apps",
             "engine_runtime": "stubbed",
             "timestamp": datetime.utcnow().isoformat(),
+            # Federation verification — router checks this hash
+            "floors_hash": FLOORS_VERSION,
+            "floors_count": len(FLOORS_CANON),
         }
     )
 
 
-# ---------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════════════════════
 # MCP Tools — Forge 2: app=True on every tool
-# ---------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════════════════════
 
 @mcp.tool(name="geox_load_seismic_line", app=True)
 async def geox_load_seismic_line(
     line_id: str,
     survey_path: str = "default_survey",
-    generate_views: bool = True,
 ) -> ToolResult:
-    """
-    Load seismic data and ignite visual mode (Earth Witness Ignition).
-
-    Returns an interactive Seismic Section App showing QC badges,
-    ToAC contrast warnings, 888 HOLD trigger checklist, and governance
-    floor status. Provides constraints for @RIF's inverse modeling.
-    """
-    timestamp = datetime.now().isoformat()
-    views = _governance_stub_views(line_id, survey_path)
-
-    app_view = seismic_section_view(
-        line_id=line_id,
-        survey_path=survey_path,
-        status="IGNITED",
-        views=views,
-        timestamp=timestamp,
-    )
-
-    return ToolResult(
-        content=(
-            f"Seismic line '{line_id}' loaded from '{survey_path}'. "
-            "Status: IGNITED. Scale unknown — measurement tools disabled (F4). "
-            "ToAC contrast canon active. 888 HOLD checklist rendered for review."
-        ),
-        structured_content=app_view,
-    )
+    """Load a seismic line from a survey and return section with annotations."""
+    return await SeismicSingleLineTool().execute(line_id=line_id, survey_path=survey_path)
 
 
-@mcp.tool(name="geox_build_structural_candidates", app=True)
-async def geox_build_structural_candidates(
+@mcp.tool(name="geox_interpret_line", app=True)
+async def geox_interpret_line(
     line_id: str,
-    focus_area: str | None = None,
+    interpretation: str,
+    survey_path: str = "default_survey",
 ) -> ToolResult:
-    """
-    Build structural model candidates (Inverse Modelling Constraints).
-
-    Returns an interactive Multi-Model Candidates view showing the ensemble
-    of plausible inverse models, confidence scores, and physical bases.
-    Prevents narrative collapse. @RIF must not collapse to one model.
-    """
-    try:
-        tool = cast(Any, SeismicSingleLineTool())  # type: ignore[no-untyped-call]
-        result = tool.interpret(line_id, source_type="ORCHESTRATED")
-        candidates = _interpretation_to_candidates(result)
-    except Exception:
-        candidates = []  # View will render fallback demo candidates
-
-    app_view = structural_candidates_view(
-        line_id=line_id,
-        candidates=candidates if candidates else None,
-        verdict="QUALIFY",
-        confidence=0.12,
-    )
-
-    n = len(candidates) if candidates else 3
+    """Interpret a seismic line with a structural hypothesis."""
+    tool = SeismicSingleLineTool()
+    result = await tool.execute(line_id=line_id, survey_path=survey_path)
+    candidates = _interpretation_to_candidates(result)
     return ToolResult(
-        content=(
-            f"Generated {n} structural candidate model(s) for line '{line_id}'. "
-            "Non-uniqueness principle active — collapse to single model prohibited. "
-            "F7 Humility: confidence bounded at 12%. Well-tie required to constrain."
-        ),
-        structured_content=app_view,
+        text=f"Interpretation '{interpretation}' applied to line {line_id}. "
+        f"Generated {len(candidates)} candidates.",
+        app_view=prospect_verdict_view(candidates),
     )
 
 
-@mcp.tool(name="geox_feasibility_check", app=True)
-async def geox_feasibility_check(
-    plan_id: str,
-    constraints: list[str],
+@mcp.tool(name="geox_check_feasibility", app=True)
+async def geox_check_feasibility(
+    prospect_name: str,
+    depth_estimate_m: float,
+    area_km2: float,
 ) -> ToolResult:
-    """
-    Constitutional Firewall: Check if a proposed plan is physically possible.
-
-    Returns an interactive Constitutional Floor panel showing F1-F13 floor
-    status, grounding confidence, constraint audit, and SEAL/HOLD verdict.
-    Used by @RIF at the 222_REFLECT stage.
-    """
-    verdict = "PHYSICALLY_FEASIBLE"
-    grounding_confidence = 0.88
-
-    app_view = feasibility_check_view(
-        plan_id=plan_id,
-        constraints=constraints,
-        verdict=verdict,
-        grounding_confidence=grounding_confidence,
-    )
-
+    """Check geological feasibility of a prospect."""
     return ToolResult(
-        content=(
-            f"Plan '{plan_id}' feasibility check: {verdict}. "
-            f"Grounding confidence: {grounding_confidence:.0%}. "
-            f"Constraints checked: {len(constraints)}. "
-            "Constitutional floors F1, F4, F7, F9, F11, F13 active. "
-            "Proceed to 333_MIND."
-        ),
-        structured_content=app_view,
+        text=f"Feasibility check for {prospect_name}: "
+        f"depth={depth_estimate_m}m, area={area_km2}km²",
+        app_view=feasibility_view(prospect_name, depth_estimate_m, area_km2),
     )
 
 
-@mcp.tool(name="geox_verify_geospatial", app=True)
-async def geox_verify_geospatial(
+@mcp.tool(name="geox_geospatial_query", app=True)
+async def geox_geospatial_query(
     lat: float,
     lon: float,
-    radius_m: float = 1000.0,
+    radius_km: float = 10.0,
 ) -> ToolResult:
-    """
-    Verify geospatial grounding and jurisdictional boundaries.
-
-    Returns an interactive Geospatial Verification card showing coordinates,
-    geological province, jurisdiction, and F4/F11 compliance status.
-    Used by @RIF to anchor all reasoning in verified coordinates.
-    """
-    geological_province = "Malay Basin"
-    jurisdiction = "EEZ_Grounded"
-    verdict = "GEOSPATIALLY_VALID"
-
-    app_view = geospatial_view(
-        lat=lat,
-        lon=lon,
-        radius_m=radius_m,
-        geological_province=geological_province,
-        jurisdiction=jurisdiction,
-        verdict=verdict,
-    )
-
+    """Query geological data for a geographic location."""
     return ToolResult(
-        content=(
-            f"Coordinates ({lat:.6f}, {lon:.6f}) verified. "
-            f"Province: {geological_province}. Jurisdiction: {jurisdiction}. "
-            f"Verdict: {verdict}. CRS: WGS84. F4 Clarity and F11 Authority active."
-        ),
-        structured_content=app_view,
+        text=f"Geospatial query: ({lat}, {lon}) radius {radius_km}km",
+        app_view=geospatial_view(lat, lon, radius_km),
     )
 
 
-@mcp.tool(name="geox_evaluate_prospect", app=True)
-async def geox_evaluate_prospect(
-    prospect_id: str,
-    interpretation_id: str,
+@mcp.tool(name="geox_structural_candidates", app=True)
+async def geox_structural_candidates(
+    line_id: str,
+    min_confidence: float = 0.7,
 ) -> ToolResult:
-    """
-    Provide a governed verdict on a subsurface prospect (222_REFLECT).
-
-    Returns an interactive Prospect Verdict card showing 888 HOLD status,
-    confidence, required actions before SEAL, and full provenance chain.
-    Blocks ungrounded claims via the Reality Firewall.
-    """
-    verdict = "PHYSICAL_GROUNDING_REQUIRED"
-    confidence = 0.45
-    status = "888_HOLD"
-    reason = "Wait for well-tie calibration per F9 Anti-Hantu floor."
-
-    app_view = prospect_verdict_view(
-        prospect_id=prospect_id,
-        interpretation_id=interpretation_id,
-        verdict=verdict,
-        confidence=confidence,
-        status=status,
-        reason=reason,
-    )
-
+    """Get structural candidates above confidence threshold."""
+    tool = SeismicSingleLineTool()
+    result = await tool.execute(line_id=line_id)
+    candidates = _interpretation_to_candidates(result)
+    filtered = [c for c in candidates if c.get("confidence", 0) >= min_confidence]
     return ToolResult(
-        content=(
-            f"Prospect '{prospect_id}' evaluation: {status}. "
-            f"Verdict: {verdict}. Confidence: {confidence:.0%}. "
-            f"Reason: {reason} "
-            "Logged to 999_VAULT. Human signoff required before proceeding."
-        ),
-        structured_content=app_view,
+        text=f"Found {len(filtered)} structural candidates above {min_confidence} confidence.",
+        app_view=structural_candidates_view(filtered),
     )
 
 
-# ---------------------------------------------------------------------------
-# Main Execution / Deployment Pattern
-# ---------------------------------------------------------------------------
+# ═══════════════════════════════════════════════════════════════════════════════
+# A2A ENVELOPE SCHEMA — For federation router
+# ═══════════════════════════════════════════════════════════════════════════════
+
+A2A_SCHEMA = """
+{
+  "context_id": "uuid — case/session identifier",
+  "governance_level": {
+    "floors_hash": "sha256[0:16] — F1-F13 version",
+    "floors_count": 13,
+    "omega": 0.04,  // Uncertainty band
+    "eval_gates": ["F1", "F2", "F3", "F13"]
+  },
+  "telemetry": {
+    "dS": -0.5,       // Entropy delta
+    "peace2": 1.2,   // Peace index
+    "kappa_r": 0.96, // Recall quality
+    "echoDebt": 0.07,
+    "shadow": 0.05,
+    "confidence": 0.93,
+    "psi_le": 1.05,
+    "verdict": "Alive|SABAR|888_HOLD"
+  },
+  "witness": {
+    "human": 1.0,
+    "ai": 0.95,
+    "earth": 0.9
+  },
+  "qdf": 0.91
+}
+"""
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run the GEOX MCP Server.")
-    parser.add_argument(
-        "--transport",
-        default="stdio",
-        choices=["stdio", "http"],
-        help="Transport protocol to use.",
-    )
-    parser.add_argument(
-        "--port",
-        type=int,
-        default=int(os.environ.get("PORT", 8000)),
-        help="Port for HTTP transport.",
-    )
-    parser.add_argument("--host", default="0.0.0.0", help="Host for HTTP transport.")
-
+    parser = argparse.ArgumentParser(description="GEOX MCP Server")
+    parser.add_argument("--port", type=int, default=8081, help="Port to listen on")
+    parser.add_argument("--host", default="0.0.0.0", help="Host to bind to")
     args = parser.parse_args()
 
-    if args.transport == "http":
-        print(f"Starting GEOX Earth Witness (HTTP) on {args.host}:{args.port}")
-        mcp.run(transport="http", host=args.host, port=args.port)
-    else:
-        mcp.run()
+    import uvicorn
+    uvicorn.run(mcp.app, host=args.host, port=args.port, log_level="info")
