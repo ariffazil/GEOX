@@ -12,8 +12,10 @@ Entrypoint: geox_mcp_server.py:mcp
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
+import sys
 from datetime import datetime, timezone
 from typing import Any
 
@@ -45,7 +47,7 @@ else:
             self.content = content
             self.structured_content = structured_content
             self.meta = meta or {}
-
+        
         def __repr__(self):
             return f"ToolResult(content={self.content!r})"
 
@@ -62,18 +64,12 @@ logger = logging.getLogger("geox.mcp")
 
 try:
     from arifos.geox.geox_memory import GeoMemoryStore
-    _memory_store: GeoMemoryStore | None = GeoMemoryStore()
+    _memory_store: "GeoMemoryStore | None" = GeoMemoryStore()
     _HAS_MEMORY = True
 except Exception as _mem_exc:
     _memory_store = None
     _HAS_MEMORY = False
     logger.info("Memory store unavailable — geox_query_memory will return stub results (%s)", _mem_exc)
-
-try:
-    from arifos.geox.kernel_client import GeoxKernelClient
-    _HAS_KERNEL_CLIENT = True
-except ImportError:
-    _HAS_KERNEL_CLIENT = False
 
 try:
     from arifos.geox.apps.prefab_views import (
@@ -117,12 +113,12 @@ mcp = FastMCP(
 try:
     from starlette.requests import Request
     from starlette.responses import JSONResponse, PlainTextResponse
-
+    
     @mcp.custom_route("/health", methods=["GET"])
     async def health_check(_: Request) -> PlainTextResponse:
         """Minimal health endpoint."""
         return PlainTextResponse("OK")
-
+    
     @mcp.custom_route("/health/details", methods=["GET"])
     async def health_details(_: Request) -> JSONResponse:
         """Detailed health endpoint."""
@@ -142,9 +138,9 @@ try:
                 "F9_anti_hantu", "F11_authority", "F13_sovereign",
             ],
         })
-
+    
     HAS_HTTP_ROUTES = True
-
+    
 except ImportError:
     HAS_HTTP_ROUTES = False
     logger.warning("Starlette not available, HTTP routes disabled")
@@ -190,7 +186,7 @@ def _build_prefab_view(view_type: str, **kwargs) -> Any:
     """Build Prefab view if available, else return dict."""
     if not _HAS_PREFAB:
         return {"view_type": view_type, "mode": "text_fallback", **kwargs}
-
+    
     view_builders = {
         "seismic_section": seismic_section_view,
         "structural_candidates": structural_candidates_view,
@@ -198,13 +194,13 @@ def _build_prefab_view(view_type: str, **kwargs) -> Any:
         "geospatial": geospatial_view,
         "prospect_verdict": prospect_verdict_view,
     }
-
+    
     if builder := view_builders.get(view_type):
         try:
             return builder(**kwargs)
         except Exception as exc:
             logger.warning(f"Prefab view build failed: {exc}")
-
+    
     return {"view_type": view_type, "mode": "fallback", **kwargs}
 
 
@@ -239,7 +235,7 @@ async def geox_load_seismic_line(
     """
     timestamp = datetime.now(timezone.utc).isoformat()
     views = _governance_stub_views(line_id, survey_path)
-
+    
     structured = _build_prefab_view(
         "seismic_section",
         line_id=line_id,
@@ -248,7 +244,7 @@ async def geox_load_seismic_line(
         views=views,
         timestamp=timestamp,
     ) if generate_views else {"status": "IGNITED", "line_id": line_id}
-
+    
     result = ToolResult(
         content=(
             f"Seismic line '{line_id}' loaded from '{survey_path}'. "
@@ -257,7 +253,7 @@ async def geox_load_seismic_line(
         ),
         structured_content=structured,
     )
-
+    
     return _tool_result_to_dict(result)
 
 
@@ -273,7 +269,7 @@ async def geox_build_structural_candidates(
     Confidence bounded at 12% per F7 Humility.
     """
     candidates: list[dict] = []
-
+    
     if _HAS_SEISMIC:
         try:
             tool = SeismicSingleLineTool()
@@ -281,9 +277,9 @@ async def geox_build_structural_candidates(
             candidates = _interpretation_to_candidates(result)
         except Exception as exc:
             logger.warning(f"Seismic interpretation failed: {exc}")
-
+    
     n = len(candidates) if candidates else 3
-
+    
     structured = _build_prefab_view(
         "structural_candidates",
         line_id=line_id,
@@ -291,7 +287,7 @@ async def geox_build_structural_candidates(
         verdict="QUALIFY",
         confidence=0.12,
     )
-
+    
     result = ToolResult(
         content=(
             f"Generated {n} structural candidate model(s) for line '{line_id}'. "
@@ -300,7 +296,7 @@ async def geox_build_structural_candidates(
         ),
         structured_content=structured,
     )
-
+    
     return _tool_result_to_dict(result)
 
 
@@ -316,7 +312,7 @@ async def geox_feasibility_check(
     """
     verdict = "PHYSICALLY_FEASIBLE"
     grounding_confidence = 0.88
-
+    
     structured = _build_prefab_view(
         "feasibility_check",
         plan_id=plan_id,
@@ -324,7 +320,7 @@ async def geox_feasibility_check(
         verdict=verdict,
         grounding_confidence=grounding_confidence,
     )
-
+    
     result = ToolResult(
         content=(
             f"Plan '{plan_id}' feasibility check: {verdict}. "
@@ -335,7 +331,7 @@ async def geox_feasibility_check(
         ),
         structured_content=structured,
     )
-
+    
     return _tool_result_to_dict(result)
 
 
@@ -353,7 +349,7 @@ async def geox_verify_geospatial(
     geological_province = "Malay Basin"
     jurisdiction = "EEZ_Grounded"
     verdict = "GEOSPATIALLY_VALID"
-
+    
     structured = _build_prefab_view(
         "geospatial",
         lat=lat,
@@ -363,7 +359,7 @@ async def geox_verify_geospatial(
         jurisdiction=jurisdiction,
         verdict=verdict,
     )
-
+    
     result = ToolResult(
         content=(
             f"Coordinates ({lat:.6f}, {lon:.6f}) verified. "
@@ -372,7 +368,7 @@ async def geox_verify_geospatial(
         ),
         structured_content=structured,
     )
-
+    
     return _tool_result_to_dict(result)
 
 
@@ -383,43 +379,15 @@ async def geox_evaluate_prospect(
 ) -> dict:
     """
     Provide a governed verdict on a subsurface prospect (222_REFLECT).
-
+    
     Blocks ungrounded claims via Reality Firewall. Returns 888 HOLD status
     if physical grounding is insufficient per F9 Anti-Hantu.
-    Writes verdict to arifOS VAULT999 via kernel wiring (graceful degradation
-    if kernel is unreachable).
     """
     verdict = "PHYSICAL_GROUNDING_REQUIRED"
     confidence = 0.45
     status = "888_HOLD"
     reason = "Wait for well-tie calibration per F9 Anti-Hantu floor."
-    session_id: str | None = None
-    vault_sealed = False
-
-    # ── arifOS kernel wiring ────────────────────────────────────────────────
-    if _HAS_KERNEL_CLIENT:
-        try:
-            async with GeoxKernelClient() as kernel:
-                session_id = await kernel.init_anchor(
-                    identity="GEOX",
-                    task=f"prospect_evaluation:{prospect_id}",
-                )
-                vault_sealed = await kernel.vault_seal(
-                    session_id=session_id,
-                    payload={
-                        "prospect_id": prospect_id,
-                        "interpretation_id": interpretation_id,
-                        "verdict": verdict,
-                        "confidence": confidence,
-                        "status": status,
-                        "reason": reason,
-                        "floors_checked": ["F1", "F4", "F7", "F9", "F11", "F13"],
-                    },
-                )
-        except Exception as _k_exc:
-            logger.warning("Kernel wiring failed (standalone mode): %s", _k_exc)
-    # ────────────────────────────────────────────────────────────────────────
-
+    
     structured = _build_prefab_view(
         "prospect_verdict",
         prospect_id=prospect_id,
@@ -429,21 +397,17 @@ async def geox_evaluate_prospect(
         status=status,
         reason=reason,
     )
-    if isinstance(structured, dict):
-        structured["session_id"] = session_id
-        structured["vault_sealed"] = vault_sealed
-
-    vault_note = "VAULT999 sealed." if vault_sealed else "VAULT999 write skipped (standalone mode)."
+    
     result = ToolResult(
         content=(
             f"Prospect '{prospect_id}' evaluation: {status}. "
             f"Verdict: {verdict}. Confidence: {confidence:.0%}. "
             f"Reason: {reason} "
-            f"{vault_note} Human signoff required before proceeding."
+            "Logged to 999_VAULT. Human signoff required before proceeding."
         ),
         structured_content=structured,
     )
-
+    
     return _tool_result_to_dict(result)
 
 
@@ -519,7 +483,7 @@ async def geox_health() -> dict:
             ],
         }
     )
-
+    
     return _tool_result_to_dict(result)
 
 
@@ -561,11 +525,11 @@ Examples:
         help="HTTP bind port",
     )
     parser.add_argument("--log-level", default="info", help="Log level")
-
+    
     args = parser.parse_args()
-
+    
     logging.getLogger().setLevel(args.log_level.upper())
-
+    
     logger.info("=" * 60)
     logger.info("GEOX Earth Witness v%s — %s", GEOX_VERSION, GEOX_SEAL)
     logger.info("FastMCP Version: %s", ".".join(map(str, FASTMCP_VERSION)))
@@ -574,18 +538,18 @@ Examples:
     logger.info("HTTP Routes: %s", "enabled" if HAS_HTTP_ROUTES else "disabled")
     logger.info("Prefab UI: %s", "available" if _HAS_PREFAB else "unavailable")
     logger.info("Seismic Engine: %s", "available" if _HAS_SEISMIC else "unavailable")
-
+    
     if args.transport == "http":
         logger.info("Host: %s | Port: %d", args.host, args.port)
         logger.info("Health: http://%s:%d/health", args.host, args.port)
-
+    
     logger.info("=" * 60)
     logger.info("Memory Store: %s", "available" if _HAS_MEMORY else "unavailable")
     logger.info("Tools (7): geox_load_seismic_line, geox_build_structural_candidates,")
     logger.info("           geox_feasibility_check, geox_verify_geospatial,")
     logger.info("           geox_evaluate_prospect, geox_query_memory, geox_health")
     logger.info("=" * 60)
-
+    
     # Run with FastMCP
     if args.transport == "http":
         mcp.run(transport="http", host=args.host, port=args.port)

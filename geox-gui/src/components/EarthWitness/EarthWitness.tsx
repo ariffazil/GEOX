@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { GroundedBadge } from '../WitnessBadges/WitnessBadges';
-import { useGEOXStore, useActiveTab } from '../../store/geoxStore';
+import { useActiveTab } from '../../store/geoxStore';
 
 /**
  * EarthWitness Component

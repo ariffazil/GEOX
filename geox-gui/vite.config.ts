@@ -1,18 +1,32 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import cesium from 'vite-plugin-cesium';
+import path from 'path';
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 5173,
-    proxy: {
-      "/mcp": {
-        target: "http://localhost:8100",
-        changeOrigin: true,
+  plugins: [
+    react(),
+    cesium(),
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'maplibre': ['maplibre-gl'],
+          'd3': ['d3'],
+        },
       },
     },
   },
-  define: {
-    CESIUM_BASE_URL: JSON.stringify("/cesium"),
+  optimizeDeps: {
+    exclude: ['cesium'], // Cesium is handled by vite-plugin-cesium
   },
 });

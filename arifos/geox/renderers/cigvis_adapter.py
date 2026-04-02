@@ -43,39 +43,14 @@ logger = logging.getLogger("geox.renderers.cigvis")
 if "DISPLAY" not in os.environ:
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-try:
-    import numpy as np
-    _HAS_NUMPY = True
-except ImportError:
-    _HAS_NUMPY = False
-    np = None  # type: ignore[assignment]
-
-
-class _CigvisStub:
-    """
-    Monkeypatch-safe stub — replaces the cigvis namespace when the package
-    is not installed.  All leaf attributes are None so tests can replace them
-    with fakes via monkeypatch.setattr without hitting AttributeError.
-    """
-    create_slices = None
-    create_surfaces = None
-    create_points = None
-    plot3D = None
-
-    class vispyplot:
-        create_well_logs = None
-
-    class viserplot:
-        create_server = None
-        plot3D = None
-
-
 CIGVIS_AVAILABLE = True
 try:
-    import cigvis  # type: ignore[import]
+    import cigvis
+    import numpy as np
 except ImportError:
     CIGVIS_AVAILABLE = False
-    cigvis = _CigvisStub()  # type: ignore[assignment]
+    cigvis = None
+    np = None
 
 
 class CigvisAdapter(RendererAdapter):
@@ -106,15 +81,7 @@ class CigvisAdapter(RendererAdapter):
         Returns:
             cigvis-compatible scene dict
         """
-        # When cigvis is fully unavailable (no functions patched), return the minimal
-        # empty-scene dict expected by callers who check CIGVIS_AVAILABLE.
-        _any_fn_available = any([
-            callable(cigvis.create_slices),
-            callable(cigvis.create_surfaces),
-            callable(cigvis.create_points),
-            callable(getattr(cigvis.vispyplot, "create_well_logs", None)),
-        ])
-        if not CIGVIS_AVAILABLE and not _any_fn_available:
+        if not CIGVIS_AVAILABLE:
             logger.warning("CIGVis not available, returning empty scene")
             return {"nodes": [], "camera": None}
 
@@ -136,6 +103,9 @@ class CigvisAdapter(RendererAdapter):
 
     def _primitives_to_nodes(self, scene: Any) -> list[Any]:
         """Convert neutral primitives to cigvis nodes."""
+        if not CIGVIS_AVAILABLE:
+            return []
+
         nodes = []
 
         for volume_slice in scene.volume_slices:
@@ -165,7 +135,7 @@ class CigvisAdapter(RendererAdapter):
         Returns a list because cigvis.create_slices returns
         [AxisAlignedImage, InteractiveLine, ...] nodes.
         """
-        if not callable(cigvis.create_slices) or volume_slice.data is None:
+        if not CIGVIS_AVAILABLE or volume_slice.data is None:
             return []
 
         try:
@@ -201,7 +171,7 @@ class CigvisAdapter(RendererAdapter):
 
     def _surface_to_node(self, surface: Any) -> list[Any]:
         """Convert surface primitive to cigvis nodes."""
-        if not callable(cigvis.create_surfaces):
+        if not CIGVIS_AVAILABLE:
             return []
 
         try:
@@ -233,7 +203,7 @@ class CigvisAdapter(RendererAdapter):
 
     def _fault_to_node(self, fault: Any) -> list[Any]:
         """Convert fault primitive to cigvis nodes."""
-        if not callable(cigvis.create_points):
+        if not CIGVIS_AVAILABLE:
             return []
 
         try:
@@ -260,7 +230,7 @@ class CigvisAdapter(RendererAdapter):
 
     def _well_to_node(self, well: Any) -> list[Any]:
         """Convert well trajectory primitive to cigvis nodes."""
-        if not callable(getattr(cigvis.vispyplot, "create_well_logs", None)):
+        if not CIGVIS_AVAILABLE:
             return []
 
         try:
@@ -308,14 +278,7 @@ class CigvisAdapter(RendererAdapter):
         Returns:
             RenderResult with artifact_path
         """
-        nodes = scene.get("nodes", [])
-        if not nodes:
-            return RenderResult(
-                success=False,
-                errors=["No renderable nodes in scene"],
-            )
-
-        if not callable(cigvis.plot3D):
+        if not CIGVIS_AVAILABLE:
             return RenderResult(
                 success=False,
                 errors=["CIGVis not installed. Run: pip install cigvis"],
@@ -323,6 +286,14 @@ class CigvisAdapter(RendererAdapter):
 
         try:
             from datetime import datetime
+
+            nodes = scene.get("nodes", [])
+
+            if not nodes:
+                return RenderResult(
+                    success=False,
+                    errors=["No renderable nodes in scene"],
+                )
 
             if output_path is None:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -378,16 +349,16 @@ class CigvisAdapter(RendererAdapter):
         Returns:
             RenderResult with session and access_url
         """
+        if not CIGVIS_AVAILABLE:
+            return RenderResult(
+                success=False,
+                errors=["CIGVis not installed. Run: pip install cigvis"],
+            )
+
         if not self.supports_interactive:
             return RenderResult(
                 success=False,
                 errors=["Interactive mode not supported by this adapter"],
-            )
-
-        if not callable(getattr(cigvis.viserplot, "create_server", None)):
-            return RenderResult(
-                success=False,
-                errors=["CIGVis not installed. Run: pip install cigvis"],
             )
 
         try:
@@ -514,11 +485,6 @@ class StaticCigvisRenderer:
         Returns:
             RenderResult with artifact_path
         """
-        if not CIGVIS_AVAILABLE:
-            return RenderResult(
-                success=False,
-                errors=["CIGVis not installed. Run: pip install cigvis"],
-            )
         scene = self.adapter.compile_scene(canonical_state)
         return self.adapter.render_snapshot(scene, output_path, width, height)
 

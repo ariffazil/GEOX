@@ -12,7 +12,7 @@
 import React, { useState } from 'react';
 import { 
   Map, Globe, Activity, AlignLeft, Image as ImageIcon, 
-  Target, Shield, FileText, Settings, Search, Menu, X,
+  Target, Shield, FileText, Settings, Search,
   ChevronLeft, ChevronRight
 } from 'lucide-react';
 import * as Tabs from '@radix-ui/react-tabs';
@@ -22,6 +22,7 @@ import { EarthWitness } from '../EarthWitness/EarthWitness';
 import { EarthWitness3D } from '../EarthWitness/EarthWitness3D';
 import { useGEOXStore, useActiveTab, useGovernance } from '../../store/geoxStore';
 import type { Tab } from '../../types';
+
 
 // Tab configuration
 const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
