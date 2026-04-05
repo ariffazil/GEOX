@@ -101,7 +101,7 @@ Documentation = "https://github.com/ariffazil/GEOX/blob/main/docs/GEOX_AGENT_SPE
 Changelog = "https://github.com/ariffazil/GEOX/blob/main/CHANGELOG.md"
 
 [project.scripts]
-# geox = "arifos.geox.cli:main"  # TODO: implement in v0.3.0
+geox = "arifos.geox.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["arifos"]

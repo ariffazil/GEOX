@@ -18,6 +18,8 @@ from fastmcp import FastMCP
 from arifos.geox import HardenedGeoxAgent, ToolRegistry
 from arifos.geox.TOOLS.seismic.visual_tools import extract_seismic_views
 from arifos.geox.TOOLS.seismic.create_overlay import create_overlay
+from arifos.geox.geox_schemas import CoordinatePoint
+from arifos.geox.tools.earth_realtime_tool import EarthRealtimeTool
 
 # Initialize GEOX Core
 mcp = FastMCP(
@@ -186,6 +188,53 @@ def geox_telemetry_template() -> str:
     """Output telemetry string template for agents to append to responses."""
     g = geox_ctx.get("governance", {})
     return g.get("output_telemetry_format", "arifOS v{version} | SEALED")
+
+@mcp.tool
+async def geox_earth_signals(
+    latitude: float,
+    longitude: float,
+    radius_km: float = 300.0,
+    eq_limit: int = 10,
+) -> dict:
+    """
+    Live Earth observation signals for a prospect location.
+
+    Returns real-time data from:
+      • USGS Earthquake Hazards Program — seismic events near prospect
+      • Open-Meteo — surface climate state (temperature, pressure, precipitation)
+      • NOAA GeoMag — magnetic declination for borehole directional correction
+
+    Zero API keys required. All data CC0 / CC-BY 4.0.
+    Used at 100 SENSE stage for F2 TRUTH temporal grounding.
+
+    Args:
+        latitude: Decimal degrees, WGS-84
+        longitude: Decimal degrees, WGS-84
+        radius_km: Search radius for seismic events (default 300 km)
+        eq_limit: Maximum earthquake events to return (max 50)
+    """
+    tool = EarthRealtimeTool()
+    location = CoordinatePoint(latitude=latitude, longitude=longitude)
+    result = await tool.run({"location": location, "radius_km": radius_km, "eq_limit": eq_limit})
+    if not result.success:
+        return {"status": "ERROR", "error": result.error}
+
+    raw = result.raw_data or {}
+    return {
+        "status": "SEALED",
+        "verdict": "CLAIM",
+        "confidence": result.metadata.get("confidence", 0.0),
+        "location": {"latitude": latitude, "longitude": longitude},
+        "summary": raw.get("summary", ""),
+        "earthquakes": raw.get("earthquakes", {}),
+        "climate": raw.get("climate", {}),
+        "geomagnetic": raw.get("geomagnetic", {}),
+        "sources": raw.get("sources", {}),
+        "warnings": raw.get("warnings", []),
+        "quantities_count": len(result.quantities or []),
+        "seal": "DITEMPA BUKAN DIBERI 🔨",
+    }
+
 
 @mcp.tool
 async def geox_get_context_summary() -> dict:

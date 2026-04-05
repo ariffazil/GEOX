@@ -15,6 +15,10 @@ from typing import Any
 
 import httpx
 
+# In-process TTL cache: keyed by (endpoint, lat_4dp, lng_4dp)
+_CACHE: dict[str, tuple[float, Any]] = {}
+_CACHE_TTL_SECONDS: float = 3600.0  # 1 hour — geology doesn't change fast
+
 from arifos.geox.base_tool import (
     BaseTool,
     GeoToolResult,
@@ -115,7 +119,15 @@ class MacrostratTool(BaseTool):
             )
 
     async def _query_api(self, endpoint: str, location: CoordinatePoint) -> dict[str, Any]:
-        """Query stratigraphic columns at location."""
+        """Query stratigraphic columns at location. Results cached for 1 hour."""
+        cache_key = f"{endpoint}:{location.latitude:.4f}:{location.longitude:.4f}"
+        cached = _CACHE.get(cache_key)
+        if cached is not None:
+            cached_at, data = cached
+            if (time.monotonic() - cached_at) < _CACHE_TTL_SECONDS:
+                logger.debug("Macrostrat cache hit: %s", cache_key)
+                return data
+
         async with httpx.AsyncClient(timeout=30.0) as client:
             resp = await client.get(
                 f"{self.BASE_URL}/{endpoint}",
@@ -126,7 +138,11 @@ class MacrostratTool(BaseTool):
                 }
             )
             resp.raise_for_status()
-            return resp.json()
+            data = resp.json()
+
+        _CACHE[cache_key] = (time.monotonic(), data)
+        logger.debug("Macrostrat cache set: %s", cache_key)
+        return data
 
     def _parse_to_quantities(
         self,
