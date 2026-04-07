@@ -5,6 +5,9 @@
 > **Based on:** Deep research across 9 complement repositories
 > **Authority:** 999 SEAL | Floors F1 F4 F7 | Confidence: CLAIM
 
+⚠️ **EXECUTIVE OVERRIDE (April 2026):** 
+The primary strategic direction has shifted to prioritizing the **Governed Intelligence Kernel** and **Grounded Evidence Graph** over further UI polish. Please see [STRATEGIC_UPGRADE_PATH_Q2_2026.md](docs/STRATEGIC_UPGRADE_PATH_Q2_2026.md) for the definitive 12-month upgrade plan focusing on State, Memory, Policy, Uncertainty, and Multimodal Observability.
+
 ---
 
 ## Current Status (Audit v0.4)
@@ -77,6 +80,25 @@ GEOX owns the visual semantics, not the LLM. LLM handles intent; GEOX produces d
 - **IGNORE**: Do not use; archived, irrelevant, or substitutes exist
 
 ---
+
+## 🌍 Forge 3: Open Earth Integration (STRATEGIC)
+Standardize GEOX on open engines and data models to close the visualization gap.
+
+### 3.1 Core Engines
+- [ ] Integrate **CesiumJS** for high-precision WGS84 3D globe visualization.
+- [ ] Integrate **MapLibre GL JS** for GPU-accelerated 2D mapping.
+- [ ] Use **TerriaJS** as the catalog-driven UI shell.
+
+### 3.2 Data Standards & Infra
+- [ ] Implement **STAC** for geospatial asset discovery.
+- [ ] Standardize on **Cloud Optimized GeoTIFF (COG)** for raster/seismic delivery.
+- [ ] Deploy **Martin** (Vector Tiles) and **TiTiler** (Raster) serving layers.
+- [ ] Migrate spatial metadata to **PostGIS**.
+
+### 3.3 Canonical Earth Sourcing
+- [ ] Wire **OpenStreetMap (via Protomaps)** as the primary basemap.
+- [ ] Set **Copernicus DEM** as the global terrain source.
+- [ ] Automate **Macrostrat** API integration for geologic maps.
 
 ## 🔨 Forge 1: Foundation Hardening (COMPLETED)
 
