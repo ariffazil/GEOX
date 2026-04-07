@@ -9,14 +9,16 @@
 ├─────────────────────────────────────────────────────────────────────────────┤
 │  arifOS telemetry    : v2.1                                                 │
 │  pipeline            : 999 SEAL                                             │
-│  floors active       : F1 F2 F3 F4 F7 F9 F11 F13                            │
+│  floors active       : F1 F2 F3 F4 F7 F9 F11 F13 (now enforced for logs)   │
 │  confidence          : CLAIM                                                │
 │  P² (Peace²)         : 1.0                                                  │
 │  hold status         : CLEAR                                                │
-│  uncertainty band    : Ω₀ ∈ [0.03, 0.08]                                    │
+│  uncertainty band    : Ω₀ ∈ [0.03, 0.15] (petrophysics intervals)          │
 │  seal                : DITEMPA BUKAN DIBERI ✅                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+**Phase:** A — Petrophysics schemas, MCP resources, and log bundle/QC tools sealed (see [999_SEAL_PHASE_A.md](999_SEAL_PHASE_A.md)).
 
 ---
 
@@ -60,12 +62,15 @@ It serves as the **reality gatekeeper** for all geoscience operations: every rea
 - ✅ **Physically possible** (thermodynamics, rock mechanics)
 - ✅ **Geospatially grounded** (verified coordinates, CRS, jurisdiction)
 - ✅ **Consistent with world-state evidence** (seismic, well data, outcrops)
+- ✅ **Petrophysically grounded in well logs** (RATLAS + governed log interpretation) before pay/prospect verdicts
 
 Before any verdict is **SEALED**.
 
 ### The One-Line Promise
 
 > *GEOX prevents AI from making physically impossible claims about the Earth by enforcing constitutional verification on every geoscience output.*
+>
+> *GEOX now witnesses not just structure and maps, but also well logs — every porosity, saturation, and pay flag must pass physics + governance before it can influence a decision.*
 
 ---
 
@@ -214,6 +219,54 @@ GEOX tools simulate:
 
 ---
 
+## Petrophysics & Well Logs (Phase A)
+
+GEOX extends its Earth Witness mandate to well logs — the direct measurement of rock and fluid properties in the subsurface.
+
+### Phase A Status
+
+- **v0.6.0-PHASE-A** — Petrophysics schemas, well MCP resources, and log bundle/QC tools are sealed (see [999_SEAL_PHASE_A.md](999_SEAL_PHASE_A.md) and [GEOX_PETROPHYSICS_BLUEPRINT.md](GEOX_PETROPHYSICS_BLUEPRINT.md)).
+
+### New Ontology
+
+- `RockFluidState` — Complete rock/fluid state with uncertainty
+- `PorosityEstimate` — Porosity with confidence intervals (F7 Humility enforced)
+- `WaterSaturationEstimate` — Sw with model assumptions explicit (F2 Truth)
+- `CutoffPolicy` — Economic/policy decision thresholds, not magic numbers
+- `UncertaintyEnvelope` — Sensitivity and confidence propagation
+
+### MCP Resources (Data Surface)
+
+| Resource URI | Purpose | Provenance |
+|-------------|---------|------------|
+| `geox://well/{id}/las/bundle` | RAW LAS + QC metadata | RAW |
+| `geox://well/{id}/logs/canonical` | Environmentally-corrected curves | CORRECTED |
+| `geox://well/{id}/interval/{top}-{base}/rock-state` | Derived rock/fluid state | DERIVED |
+| `geox://well/{id}/cutoff-policy/{id}` | Economic/policy thresholds | POLICY |
+| `geox://well/{id}/qc/report` | Log quality findings | QC |
+
+### Tools
+
+**Phase A (Live):**
+- `geox_load_well_log_bundle` — LAS/DLIS ingest with mnemonic mapping
+- `geox_qc_logs` — Quality analysis (washouts, completeness, units)
+
+**Phase B (In Development):**
+- `geox_select_sw_model` — Archie/Simandoux/Indonesia/Dual-Water selection
+- `geox_compute_petrophysics` — φ, Sw, BVW, NTG with uncertainty
+- `geox_validate_cutoffs` — Apply CutoffPolicy to intervals
+- `geox_petrophysical_hold_check` — 888_HOLD triggers for logs
+
+### Constitutional Enforcement
+
+F2, F4, F7, F9, F11, and F13 now apply to logs:
+- **Units and provenance** are mandatory (F4)
+- **Uncertainty** is enforced — zero uncertainty rejected (F7)
+- **Cutoffs** modeled as economic/policy objects with calibration basis (F2)
+- **888_HOLD scaffolding** in place for Rw uncalibrated, model unsupported, etc. (F13)
+
+---
+
 ## 🌍 The Source of Earth (Canonical Reality)
 
 GEOX defines "Reality" through a buildable, open-source substrate. We do not depend on proprietary basemaps as our core anchor.
@@ -320,7 +373,7 @@ The following conditions trigger an automatic **888_HOLD** (awaiting human decis
 
 ## Tool Reference
 
-### GEOX Tool Surface (v0.4.3)
+### GEOX Tool Surface (v0.6.0)
 
 | Tool | Purpose | Stage | Floors | Output |
 |------|---------|-------|--------|--------|
@@ -329,6 +382,17 @@ The following conditions trigger an automatic **888_HOLD** (awaiting human decis
 | `geox_feasibility_check` | Check physical possibility | 222_REFLECT | F1, F4, F7 | Constitutional Floor Panel |
 | `geox_verify_geospatial` | Validate coordinates/CRS | 111_SENSE | F4, F11 | Geospatial Verification Card |
 | `geox_evaluate_prospect` | Seal prospect verdict | 888_JUDGE | F1-F13 | Prospect Verdict Card |
+
+#### Petrophysics Tools (Phase A/B)
+
+| Tool | Purpose | Stage | Floors | Output | Status |
+|------|---------|-------|--------|--------|--------|
+| `geox_load_well_log_bundle` | Load LAS/DLIS + metadata with QC | 111_SENSE | F4, F9, F11 | Well Log Bundle resource | ✅ Phase A |
+| `geox_qc_logs` | Analyze log quality + completeness | 111_SENSE | F4, F7, F9 | QC Report resource | ✅ Phase A |
+| `geox_select_sw_model` | Sw model admissibility (Archie/...) | 333_MIND | F2, F7, F9 | Model Selection Card | 🚧 Phase B |
+| `geox_compute_petrophysics` | Compute φ, Sw, BVW, NTG, etc. | 222_REFLECT | F2, F4, F7 | RockFluidState | 🚧 Phase B |
+| `geox_validate_cutoffs` | Apply CutoffPolicy to intervals | 888_JUDGE | F1, F2, F13 | Policy Application Card | 🚧 Phase B |
+| `geox_petrophysical_hold_check` | 888_HOLD triggers for logs | 888_JUDGE | F1–F13 | Petrophysical HOLD Verdict | 🚧 Phase B |
 
 ### Tool Details
 
@@ -585,11 +649,16 @@ GEOX/
 │
 ├── arifos/                     # arifOS constitution integration
 │   └── geox/
+│       ├── mcp_petrophysics_server.py  # FastMCP server with resources + tools (Phase A)
 │       ├── seismic_image_ingest.py
 │       ├── contrast_wrapper.py
 │       ├── geox_validator.py
 │       ├── geox_hardened.py
 │       ├── schemas/            # Canonical schemas
+│       │   └── petrophysics/   # RockFluidState, CutoffPolicy, UncertaintyEnvelope
+│       ├── resources/          # MCP resources for wells/logs/intervals
+│       ├── tools/              # Tool implementations
+│       │   └── petrophysics/   # Petrophysics tools (Phase A + stubs)
 │       ├── governance/         # Floor enforcement
 │       ├── renderers/          # Visualization adapters
 │       └── examples/           # Demo workflows
@@ -605,9 +674,13 @@ GEOX/
 │   └── integration/
 │
 ├── docs/                       # Extended documentation
+│   ├── GEOX_PETROPHYSICS_BLUEPRINT.md
+│   ├── PHASE_A_FORGE_MANIFEST.md
+│   └── ...
 │
 ├── CHANGELOG.md                # Version history
 ├── UNIFIED_ROADMAP.md          # Development roadmap
+├── 999_SEAL_PHASE_A.md         # Phase A attestation
 ├── WIRING_GUIDE.md             # Federation wiring instructions
 ├── HARDENED_SEAL.md            # Seal protocol specification
 ├── GEOX_SUCCESS_CRITERIA.md    # Acceptance criteria per tool
@@ -664,16 +737,21 @@ See [GEOX_SUCCESS_CRITERIA.md](GEOX_SUCCESS_CRITERIA.md) for full details.
 
 ## Roadmap
 
-### Current: v0.4.3 (SEALED)
+### Current: v0.6.0 (SEALED — Phase A Petrophysics MCP)
 
 - ✅ FastMCP server with stdio/HTTP transports
 - ✅ 5 core tools with interactive Prefab UI
 - ✅ F1-F13 floor enforcement
 - ✅ 999_VAULT integration
+- ✅ **Petrophysics schemas and MCP resources for well logs (Phase A)**
+- ✅ **geox_load_well_log_bundle and geox_qc_logs wired into FastMCP server**
 - ⚠️ Visualization: stubbed (awaiting cigvis integration)
 
-### Next: v0.5.0 (FORGE-3)
+### Next: v0.6.1–0.7.0 (Phase B — Physics Engine + Log Workbench)
 
+- [ ] Implement Archie, Simandoux, Indonesia, Dual-Water saturation models
+- [ ] `geox_select_sw_model`, `geox_compute_petrophysics`, `geox_validate_cutoffs`, `geox_petrophysical_hold_check`
+- [ ] GEOX Log Workbench: Observed/Physics/Governance modes for well logs
 - [ ] cigvis 3D seismic rendering integration
 - [ ] Full Tri-App architecture (Map + Cross Section + Seismic)
 - [ ] SEG-Y ingest pipeline

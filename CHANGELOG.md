@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.0] — 2026-04-07
+
+### Added (Phase A Petrophysics Forge)
+
+- **Petrophysics Schemas**: `RockFluidState`, `PorosityEstimate`, `WaterSaturationEstimate`, `CutoffPolicy`, `UncertaintyEnvelope` with constitutional enforcement (F2, F4, F7, F9, F11, F13).
+- **MCP Resources**: 5 URI schemes for well data (`las/bundle`, `logs/canonical`, `interval/{t}-{b}/rock-state`, `cutoff-policy/{id}`, `qc/report`) with provenance badges (RAW/CORRECTED/DERIVED/POLICY).
+- **LAS Loader**: `LogBundleLoader` with LAS 2.0 parsing, mnemonic mapping (GR/RHOB/NPHI/ILD/DT/CALI), depth reference detection.
+- **QC Engine**: `QCEngine` with washout detection, completeness analysis, unit validation, depth consistency checks.
+- **MCP Server**: `mcp_petrophysics_server.py` with FastMCP resources + tools, constitutional telemetry.
+- **Documentation**: `GEOX_PETROPHYSICS_BLUEPRINT.md`, `PHASE_A_FORGE_MANIFEST.md`, `999_SEAL_PHASE_A.md`.
+
+### Changed
+
+- **Version**: Bumped to v0.6.0-PHASE-A reflecting major petrophysics capability addition.
+- **Uncertainty Band**: Updated to Ω₀ ∈ [0.03, 0.15] for petrophysics intervals per F7 Humility implementation.
+
+### Constitutional Enforcement
+
+- **F4 Clarity**: Units explicit, provenance badges mandatory on all curves.
+- **F7 Humility**: Zero uncertainty rejected by `PorosityEstimate` validation.
+- **F2 Truth**: `CutoffPolicy` requires calibration_basis and economic_basis.
+- **F9 Anti-Hantu**: Source tracking for all measurements via `ProvenanceRecord`.
+
+---
+
 ## [0.4.2] — 2026-04-01
 
 ### Added
