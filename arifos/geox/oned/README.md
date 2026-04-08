@@ -31,6 +31,7 @@ Large Earth Model = Many 1D cells + lateral coupling
 | `reflectivity.py` | Seismic reflection | `ZoeppritzModel.compute_reflectivity()` |
 | `synthetic.py` | Wavelet convolution | `SyntheticSeismic.generate()` |
 | `inversion.py` | Joint inversion | `JointInversion1D.invert()` |
+| `contrast_essential.py` | **ToAC governance (ESSENTIAL)** | `check_tuning_risk()`, `dual_frequency_stability_test()` |
 | `demo.py` | Toy example | `main()` - gas sand detection |
 | `schema_000_999.json` | arifOS pipeline mapping | Complete 000-999 stage definitions |
 
@@ -104,6 +105,34 @@ Posterior: x*(z)
 | 999 | SEAL | Commit to VAULT999 | F1, F11, F13 |
 
 ---
+
+## Essential ToAC Governance (Minimal)
+
+ToAC in 1D is **simpler** than 2D:
+
+| Risk | 2D/3D | 1D |
+|------|-------|-----|
+| Display artifacts | Colormap, gain, AGC, migration | **Wavelet frequency, tuning** |
+| Critical threshold | Bed thickness < λ/4 | Same |
+| Uncertainty source | Velocity pull-up | **Time-depth conversion** |
+
+### Essential Functions (`contrast_essential.py`)
+
+```python
+# 1. Tuning detection (F2 Truth)
+alert = check_tuning_risk(bed_thickness=5.0, wavelet=Wavelet.ricker(30))
+# Returns Alert if bed < λ/4 - amplitude unreliable
+
+# 2. TDR uncertainty (F4 Clarity)
+profile = propagate_td_uncertainty(profile, td_time_std=0.005)
+# Adds depth_uncertainty to each sample
+
+# 3. Frequency stability (F7 Humility)
+score = dual_frequency_stability_test(profile, f1=25, f2=35)
+# If unstable → 888_HOLD recommendation
+```
+
+**That's it.** No over-engineering. Essential contrast only.
 
 ## Demo Usage
 
