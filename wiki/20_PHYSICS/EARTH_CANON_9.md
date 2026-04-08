@@ -1,17 +1,27 @@
-# EARTH.CANON_9 — Fundamental Geophysical Variables
+# EARTH.CANON_9 — Minimal Governed State Vector
 
 > **Type:** Physics  
 > **Epistemic Level:** OBS (observational foundation)  
 > **Confidence:** 1.0  
-> **Tags:** [physics, canon, geophysics, foundation, variables]  
+> **Tags:** [physics, canon, geophysics, foundation, variables, state-vector]  
 > **Sources:** [[raw/papers/earth_physics_canon.pdf]]  
 > **arifos_floor:** F2  
 
 ---
 
+## Design Principle: State vs. Constitutive Response
+
+> **EARTH.CANON_9 is the minimal governed state vector for Earth-material inference: {ρ, Vp, Vs, ρₑ, χ, k, P, T, φ}.**
+> 
+> Variables such as **permeability, elastic moduli, heat capacity, impedance, and strength** are treated as **derived constitutive responses**, not canonical state slots.
+
+This separation prevents **derived quantities from contaminating the base state** — essential for governed physics inference where causal clarity is required (F2 Truth, F4 Clarity).  
+
+---
+
 ## The Canon
 
-The 9 canonical physical quantities that **completely describe** any subsurface Earth material:
+The 9 canonical physical quantities that **completely describe the base state** of any subsurface Earth material:
 
 | # | Variable | Symbol | Unit | Physical Meaning | Primary Log/Source |
 |---|----------|--------|------|------------------|-------------------|
@@ -29,15 +39,18 @@ The 9 canonical physical quantities that **completely describe** any subsurface 
 
 ## Physics Completeness
 
-With these 9, you can derive **all exploration-grade geophysics**:
+With these 9 **state variables**, you can derive **all exploration-grade geophysics** as constitutive responses:
 
-### From Mechanical (ρ, Vp, Vs)
+### Constitutive Responses from Mechanical State (ρ, Vp, Vs)
+
+These are **derived**, not canonical:
+
 ```
-Acoustic Impedance:     I = ρ × Vp
-Poisson's Ratio:        ν = (Vp² - 2Vs²) / 2(Vp² - Vs²)
-Bulk Modulus:           K = ρ(Vp² - 4/3 Vs²)
-Shear Modulus:          μ = ρ × Vs²
-Seismic Reflectivity:   R = (I₂ - I₁) / (I₂ + I₁)
+Acoustic Impedance:     I = ρ × Vp                     [DERIVED]
+Poisson's Ratio:        ν = (Vp² - 2Vs²) / 2(Vp² - Vs²) [DERIVED]
+Bulk Modulus:           K = ρ(Vp² - 4/3 Vs²)           [DERIVED]
+Shear Modulus:          μ = ρ × Vs²                    [DERIVED]
+Seismic Reflectivity:   R = (I₂ - I₁) / (I₂ + I₁)      [DERIVED]
 ```
 
 ### From EM-Thermal (ρₑ, χ, k)
@@ -54,6 +67,19 @@ Water Saturation:       Sw = f(ρₑ, φ, Rw) [Archie]
 Thermal Gradient:       ∇T = ∂T/∂z
 Formation Volume Factor: B = f(P, T, fluid)
 ```
+
+### Constitutive Responses: NOT Canonical
+
+These **depend on** the 9 base state variables but are **not in the canon**:
+
+| Response | Depends On | Why Not Canonical |
+|----------|-----------|-------------------|
+| **Permeability (k)** | φ, P, T, pore geometry | Fabric-dependent, not state |
+| **Heat Capacity (Cp)** | Mineralogy, φ, fluids | Mixture property |
+| **Thermal Expansivity** | Mineralogy, T | Derived material property |
+| **Electrokinetic coupling** | ρₑ, k, fluid chemistry | Coupled phenomenon |
+
+**Rule:** If you need to know the material's **fabric, history, or mixture components** beyond the 9, it is constitutive, not canonical.
 
 ---
 
@@ -82,6 +108,16 @@ class EarthCanon9(BaseModel):
 ```
 
 ---
+
+## Why These 9? State vs. Derived
+
+| Category | Examples | Status in CANON_9 |
+|----------|----------|-------------------|
+| **Base State** | ρ, Vp, Vs, ρₑ, χ, k, P, T, φ | ✅ Canonical |
+| **Constitutive Response** | K, μ, I, ν, Sw, k_perm, Cp | ❌ Derived |
+| **Geometric** | Void ratio (e), aspect ratio | ❌ Alternative representation |
+
+**The rule:** If it can be computed unambiguously from the 9, it is **derived**, not canonical.
 
 ## Physics Note: Void Volume is the Primitive
 
@@ -116,11 +152,43 @@ EARTH.CANON_9 φ is **total porosity** (φt). Downstream distinction:
 
 ## Related Pages
 
-- [[20_PHYSICS/Acoustic_Impedance]] — Derivation from ρ, Vp
-- [[20_PHYSICS/Elastic_Moduli]] — K, μ, ν derivations
-- [[20_PHYSICS/Porosity_Types]] — φt, φe, φi deep-dive
-- [[20_PHYSICS/Saturation_Models]] — Sw from Archie equations
-- [[30_MATERIALS/RATLAS_Index]] — Material-specific Canon_9 values
+- [[20_PHYSICS/Acoustic_Impedance]] — Derivation from ρ, Vp **[DERIVED]**
+- [[20_PHYSICS/Elastic_Moduli]] — K, μ, ν derivations **[DERIVED]**
+- [[20_PHYSICS/Porosity_Types]] — φt vs φe distinction **[CANONICAL]**
+- [[20_PHYSICS/Saturation_Models]] — Sw from Archie equations **[DERIVED]**
+- [[30_MATERIALS/RATLAS_Index]] — Material-specific Canon_9 values **[CANONICAL]**
+
+---
+
+## Design Notes
+
+### Why Not Permeability in Canon?
+
+Permeability (k) is critically important for flow, but it is **not a base state variable** because:
+
+1. **Same φ, different k:** Two sandstones with φ = 0.20 can have k = 10 mD or k = 1000 mD depending on pore throat size
+2. **Stress dependence:** k decreases with effective stress (P) — it's not intrinsic
+3. **Fabric history:** Diagenesis, cementation, fracturing all change k without changing φ significantly
+
+**Canonical φ captures the void. Constitutive k captures the flow path.**
+
+### Why Not Elastic Moduli in Canon?
+
+If ρ, Vp, Vs are canonical, then:
+- K = ρ(Vp² - 4/3Vs²) is **derived**
+- μ = ρVs² is **derived**
+- E, ν are **derived**
+
+Adding moduli to canon would create **redundancy** and **potential inconsistency** (what if stored K ≠ computed K?).
+
+### The "Fundamental" Distinction
+
+> "Fundamental" in CANON_9 does **not** mean ontologically fundamental. It means:
+> - **Minimal** for governed physics inference
+> - **Stable** across measurement domains  
+> - **Sufficient** to derive higher-order engineering variables
+
+This is the **minimal governed state vector**, not the complete physics description.
 
 ---
 
@@ -132,4 +200,5 @@ EARTH.CANON_9 φ is **total porosity** (φt). Downstream distinction:
 
 ---
 
-*DITEMPA BUKAN DIBERI — Physics first, interpretation second.*
+*DITEMPA BUKAN DIBERI — Physics first, interpretation second.*  
+*State clearly. Derive carefully. Govern ruthlessly.*
