@@ -63,7 +63,7 @@ The 9 fundamental geophysical variables and their relationships.
 | [[20_PHYSICS/Elastic_Moduli]] | Derivation | K, μ, ν from Vp, Vs, ρ | Vp, Vs, ρ |
 | [[20_PHYSICS/Seismic_Reflectivity]] | Derivation | R = (I₂-I₁)/(I₂+I₁) | I |
 | [[20_PHYSICS/Porosity_Types]] | Classification | φt, φe, φi, φp, φs | φ |
-| [[20_PHYSICS/Saturation_Models]] | Models | Archie, Simandoux, Indonesia, Dual-Water | Sw |
+| [[20_PHYSICS/Saturation_Models]] | Models | Archie, Simandoux, Indonesia, Claims | ✅ Phase B |
 
 ---
 
@@ -138,6 +138,7 @@ F1-F13 floor enforcement and audit records.
 | [[70_GOVERNANCE/888_HOLD_Registry]] | F13 | Human sovereignty decisions |
 | [[70_GOVERNANCE/Conflation_Reports]] | F9 | ToAC violation documentation |
 | [[70_GOVERNANCE/Confidence_Bands]] | F7 | Ω₀ tracking and calibration |
+| [[70_GOVERNANCE/Claim_Tagging_System]] | F2, F7 | Epistemic status & 888_HOLD |
 | [[70_GOVERNANCE/Seals_and_Verdicts]] | All | SEAL, PARTIAL, SABAR, VOID records |
 
 ---
@@ -151,6 +152,9 @@ How GEOX connects to the constitutional federation.
 | [[80_INTEGRATION/Trinity_Architecture]] | [[arifos::Trinity_Architecture]] | Position in ΔΩΨ |
 | [[80_INTEGRATION/MCP_Integration]] | [[arifos::MCP_Tools]] | Tool surface specs |
 | [[80_INTEGRATION/VAULT999_Wiring]] | [[arifos::999_VAULT]] | Audit trail integration |
+| [[80_INTEGRATION/MCP_Apps_Architecture]] | All | 6-layer host-agnostic stack |
+| [[80_INTEGRATION/Agnostic_Orchestration_Prompts]] | All | Operator Protocol & Lock-in Radar |
+| [[80_INTEGRATION/MCP_Apps_Evidence_Matrix]] | All | Compliance with MCP Apps standards |
 | [[80_INTEGRATION/Cross_Wiki_Links]] | All arifOS wikis | Inter-wiki navigation |
 
 ---

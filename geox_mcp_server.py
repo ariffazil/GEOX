@@ -118,7 +118,7 @@ except ImportError as _petro_exc:
 # Server Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "0.5.0"
+GEOX_VERSION = "0.6.0"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
 mcp = FastMCP(
