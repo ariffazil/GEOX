@@ -12,11 +12,12 @@
 
 **New to Constitutional Earth Intelligence?** Follow this path:
 
-1. **[[00_INDEX/LLM_LEM_Manifesto]]** — Why LLM → LEM → arifOS is the foundation for next intelligence
-2. **[[00_INDEX/Quickstart]]** — "Is GEOX for me?" + 5-page reading journey
-3. **[[10_THEORY/Theory_of_Anomalous_Contrast]]** — The core theory preventing AI hallucination in geoscience
-4. **[[20_PHYSICS/EARTH_CANON_9]]** — The 9 fundamental geophysical variables
-5. **[[30_MATERIALS/RATLAS_Index]]** — Reference Atlas of 99 Earth Materials
+1. **[[00_INDEX/Spatial_Temporal_AGI_Manifesto]]** — Why space + time unlock AGI; how arifOS + GEOX solve it
+2. **[[00_INDEX/LLM_LEM_Manifesto]]** — Why LLM → LEM → arifOS is the foundation for next intelligence
+3. **[[00_INDEX/Quickstart]]** — "Is GEOX for me?" + 5-page reading journey
+4. **[[10_THEORY/Theory_of_Anomalous_Contrast]]** — The core theory preventing AI hallucination in geoscience
+5. **[[20_PHYSICS/EARTH_CANON_9]]** — The 9 fundamental geophysical variables
+6. **[[30_MATERIALS/RATLAS_Index]]** — Reference Atlas of 99 Earth Materials
 
 **Total time:** ~90 minutes for foundational understanding.
 
