@@ -47,6 +47,7 @@ Foundational theory everyone must understand. No prerequisites.
 | [[10_THEORY/Conflation_Taxonomy]] | Theory | Source → Transform → Proxy → Confidence | DER | F7 |
 | [[10_THEORY/Bond_2007_Cognitive_Bias]] | Theory | 79% expert failure rate analysis | OBS | F9 |
 | [[10_THEORY/Epistemic_Levels]] | Theory | OBS/DER/INT/SPEC classification system | OBS | F2, F9 |
+| [[10_THEORY/CANON_9_Literature_Grounding]] | Theory | Academic support & intellectual position | INT | F2 |
 
 ---
 
