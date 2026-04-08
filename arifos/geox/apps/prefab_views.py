@@ -550,3 +550,87 @@ def prospect_verdict_view(
                 _floor_table(_ACTIVE_FLOORS)
 
     return PrefabApp(view=view)
+
+
+# ---------------------------------------------------------------------------
+# View 6 — geox_compute_petrophysics
+# ---------------------------------------------------------------------------
+
+def petrophysics_view(
+    well_id: str,
+    sw_model: str,
+    sw_nominal: float,
+    sw_p10: float,
+    sw_p90: float,
+    phi_effective: float,
+    vcl: float,
+    claim_tag: str,
+    audit_id: str,
+) -> PrefabApp:
+    """
+    Petrophysics Profile view for Well Context Desk.
+    
+    Surfaces the physical grounding claim (CLAIM/PLAUSIBLE/HYPOTHESIS)
+    and the uncertainty propagation (P10-P90 range).
+    """
+    claim_variant = (
+        "success" if claim_tag == "CLAIM" 
+        else "warning" if claim_tag == "PLAUSIBLE" 
+        else "destructive"
+    )
+
+    with Column(gap=4, css_class="p-6") as view:
+        H2(f"Petrophysics Profile — {well_id}")
+        Muted(f"Audit ID: {audit_id}  ·  Model: {sw_model.upper()}")
+        Separator()
+
+        # --- Claim & Model Badge Strip ---
+        with Row(gap=2):
+            Badge(f"Epistemic Status: {claim_tag}", variant=claim_variant)
+            Badge(f"Vcl: {vcl:.1%}", variant="default")
+            Badge("F7 Humility Active", variant="warning")
+
+        # --- Saturation Metrics ---
+        with Row(gap=4):
+            with Card(css_class="flex-1"):
+                with CardHeader():
+                    CardTitle("Water Saturation (Sw)")
+                with CardContent():
+                    Metric(value=f"{sw_nominal:.1%}", label="Nominal P50")
+                    Muted(f"Uncertainty: P10={sw_p10:.1%} | P90={sw_p90:.1%}")
+                    Progress(value=int(sw_nominal * 100), max=100, css_class="mt-2")
+
+            with Card(css_class="flex-1"):
+                with CardHeader():
+                    CardTitle("Effective Porosity (PHIE)")
+                with CardContent():
+                    Metric(value=f"{phi_effective:.1%}", label="P50 Grounding")
+                    Progress(value=int(phi_effective * 100), max=100, css_class="mt-2")
+
+        # --- Claim Explanation ---
+        with Alert(variant=claim_variant if claim_tag != "CLAIM" else "default"):
+            AlertTitle(f"Grounding Verdict: {claim_tag}")
+            if claim_tag == "CLAIM":
+                AlertDescription(
+                    "High-fidelity rock model. Archie assumptions held for clean sand. "
+                    "Physical contrast strongly aligns with impedance model."
+                )
+            elif claim_tag == "PLAUSIBLE":
+                AlertDescription(
+                    "Governed shaly-sand model. Non-clay conductivity present but accounted for. "
+                    "Interpretation within normal geological variability."
+                )
+            else:
+                AlertDescription(
+                    "High-risk interpretation. Significant clay volume or washout detected. "
+                    "Conflation risk between display contrast and physical signal is HIGH."
+                )
+
+        # --- Constitutional Floors ---
+        with Card():
+            with CardHeader():
+                CardTitle("Petrophysical Governance (F1-F13)")
+            with CardContent():
+                _floor_table(["F2", "F4", "F7", "F9", "F11"])
+
+    return PrefabApp(view=view)
