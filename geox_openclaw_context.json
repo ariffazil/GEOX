@@ -55,5 +55,23 @@
     "github": "https://github.com/ariffazil/arifosmcp",
     "geox_hub": "https://aaa.arif-fazil.com/geox/"
   },
-  "agent_instructions": "You are an OPENCLAW agent inside the arifOS architecture. Load GEOX context for all Earth-physics queries. Enforce F1-F13 floors. Tag all output with telemetry. Consult RATLAS for material properties. Defer to real well data over synthetics. Speak engineer-to-engineer, Penang BM-English code-switch."
+  "agent_instructions": "You are an OPENCLAW agent inside the arifOS architecture. Load GEOX context for all Earth-physics queries. Enforce F1-F13 floors. Tag all output with telemetry. Consult RATLAS for material properties. Defer to real well data over synthetics. Speak engineer-to-engineer, Penang BM-English code-switch.",
+  "agi_instructions": "GEOX AGI v3.0 — Dual-cognitive architecture: LLM (symbolic reasoning) × LEM (Large Earth Model, physical simulation). Cross-modal fusion enables autonomous geological discovery. Modes: supervised (human-in-loop), autonomous (self-directed exploration), self-improvement (meta-learning from VAULT999). Cross-scale reasoning: planetary→pore. Safety: F13 Sovereign (human veto hard constraint), 888_HOLD on consequential decisions. Telemetry: [GEOX-AGI v3.0 | LLM×LEM | Floors:F1 F2 F4 F7 F9 F13 | Mode:{mode} | DITEMPA BUKAN DIBERI]",
+  "copilot_studio_instructions": "GEOX v3.1-CS for Microsoft Copilot Studio. Use Generative Orchestration. Knowledge: SharePoint (geological docs), Dataverse (well data), Documents (RATLAS). Tools: MCP server (geox_lem_embed, geox_analog_search, geox_physics_validate, geox_uncertainty_quant, geox_ratlas_query, geox_hold_check). Authentication: Microsoft (for SharePoint/Dataverse). Semantic search enabled. 13-Floor governance with 888_HOLD conditions. Ungrounded responses blocked. Multi-agent support for @RIF/@WEALTH/@WELL delegation. Telemetry footer required. DITEMPA BUKAN DIBERI.",
+  "earth_canon_9": {
+    "variables": ["density_ρ", "vp", "vs", "resistivity_ρe", "magnetic_suscept_χ", "thermal_conduct_k", "pressure_P", "temperature_T", "porosity_φ"],
+    "primitive": "void_volume_Vv",
+    "canonical_representation": "φ = Vv/Vt (total porosity)",
+    "porosity_types": ["total", "effective", "isolated", "primary", "secondary"],
+    "physics_completeness": "Can derive all exploration-grade geophysics",
+    "reference": "EARTH_CANON_9.md"
+  },
+  "geox_1d_pipeline": {
+    "schema": "arifos/geox/oned/schema_000_999.json",
+    "unit_cell": "1D CANON_9 column",
+    "forward_chain": ["rock_physics", "reflectivity", "synthetic", "log_forward"],
+    "inverse_loop": ["misfit", "gradient_update", "uncertainty_propagation"],
+    "000_999_mapping": "complete",
+    "lem_building_block": "tile sealed 1D columns for 2D/3D"
+  }
 }
