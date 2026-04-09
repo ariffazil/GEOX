@@ -98,7 +98,7 @@ except ImportError:
 # Server Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "0.5.0"
+GEOX_VERSION = "0.6.0"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
 mcp = FastMCP(
@@ -544,6 +544,49 @@ async def geox_health() -> dict:
     return _tool_result_to_dict(result)
 
 
+@mcp.tool(name="geox_calculate_saturation")
+async def geox_calculate_saturation(
+    model: str,
+    rw: float,
+    rt: float,
+    phi: float,
+    a: float = 1.0,
+    m: float = 2.0,
+    n: float = 2.0,
+    n_samples: int = 1000,
+) -> dict:
+    """
+    Calculate water saturation (Sw) using Archie, Simandoux, or Indonesia model
+    with Monte Carlo uncertainty propagation (P10/P50/P90).
+
+    Constitutional Floors: F2 Truth (physics grounded), F7 Humility (uncertainty bands),
+    F13 Sovereign (888_HOLD on physics violation).
+    """
+    try:
+        from arifos.geox.tools.core import geox_calculate_saturation as _core_calc
+        result = await _core_calc(
+            model=model,
+            params={"rw": rw, "rt": rt, "phi": phi, "a": a, "m": m, "n": n},
+            n_samples=n_samples,
+            physics_engine_available=True,
+        )
+        sc = result.model_dump(mode="json") if hasattr(result, "model_dump") else result
+    except Exception as exc:
+        logger.warning("geox_calculate_saturation error: %s", exc)
+        sc = {
+            "status": "888_HOLD",
+            "hold_triggers": [str(exc)],
+            "model": model,
+            "nominal_sw": None,
+        }
+
+    tr = ToolResult(
+        content=f"Sw calculation ({model}): status={sc.get('status')}",
+        structured_content=sc,
+    )
+    return _tool_result_to_dict(tr)
+
+
 @mcp.tool(name="geox_select_sw_model")
 async def geox_select_sw_model(
     interval_uri: str,
@@ -865,11 +908,12 @@ def create_server(
     logger.info("Prefab UI: %s", "available" if _HAS_PREFAB else "unavailable")
     logger.info("Seismic Engine: %s", "available" if _HAS_SEISMIC else "unavailable")
     logger.info("Memory Store: %s", "available" if _HAS_MEMORY else "unavailable")
-    logger.info("Tools (11): geox_load_seismic_line, geox_build_structural_candidates,")
+    logger.info("Tools (13): geox_load_seismic_line, geox_build_structural_candidates,")
     logger.info("            geox_feasibility_check, geox_verify_geospatial,")
     logger.info("            geox_evaluate_prospect, geox_query_memory, geox_health,")
-    logger.info("            geox_select_sw_model, geox_compute_petrophysics,")
-    logger.info("            geox_validate_cutoffs, geox_petrophysical_hold_check")
+    logger.info("            geox_calculate_saturation, geox_select_sw_model,")
+    logger.info("            geox_compute_petrophysics, geox_validate_cutoffs,")
+    logger.info("            geox_petrophysical_hold_check, geox_malay_basin_pilot")
     logger.info("=" * 60)
     
     return mcp
@@ -933,11 +977,12 @@ Examples:
     
     logger.info("=" * 60)
     logger.info("Memory Store: %s", "available" if _HAS_MEMORY else "unavailable")
-    logger.info("Tools (11): geox_load_seismic_line, geox_build_structural_candidates,")
+    logger.info("Tools (13): geox_load_seismic_line, geox_build_structural_candidates,")
     logger.info("            geox_feasibility_check, geox_verify_geospatial,")
     logger.info("            geox_evaluate_prospect, geox_query_memory, geox_health,")
-    logger.info("            geox_select_sw_model, geox_compute_petrophysics,")
-    logger.info("            geox_validate_cutoffs, geox_petrophysical_hold_check")
+    logger.info("            geox_calculate_saturation, geox_select_sw_model,")
+    logger.info("            geox_compute_petrophysics, geox_validate_cutoffs,")
+    logger.info("            geox_petrophysical_hold_check, geox_malay_basin_pilot")
     logger.info("=" * 60)
     
     # Run with FastMCP

@@ -21,7 +21,7 @@ services:
       - "8000:8000"
     
     environment:
-      - GEOX_VERSION=0.5.0
+      - GEOX_VERSION=0.6.0
       - GEOX_SEAL=DITEMPA BUKAN DIBERI
       - GEOX_TRANSPORT=http
       - GEOX_HOST=0.0.0.0
@@ -38,7 +38,7 @@ services:
     labels:
       - "traefik.enable=true"
       # Health and API routes
-      - "traefik.http.routers.geox-api.rule=Host(`geox.arif-fazil.com`) && (PathPrefix(`/health`) || PathPrefix(`/mcp`) || PathPrefix(`/sse`))"
+      - "traefik.http.routers.geox-api.rule=Host(`geox.arif-fazil.com`) && (PathPrefix(`/health`) || PathPrefix(`/mcp`))"
       - "traefik.http.routers.geox-api.entrypoints=websecure"
       - "traefik.http.routers.geox-api.tls=true"
       - "traefik.http.routers.geox-api.tls.certresolver=letsencrypt"
