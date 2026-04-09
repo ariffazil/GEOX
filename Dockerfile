@@ -21,7 +21,8 @@ COPY geox_mcp_server.py .
 COPY arifos/ arifos/
 
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir ".[apps]"
+    pip install --no-cache-dir ".[apps]" && \
+    pip install --no-cache-dir numpy prefab-ui
 
 
 FROM python:3.12-slim AS runtime

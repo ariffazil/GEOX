@@ -1,0 +1,58 @@
+# GEOX MCP Server — Docker Compose for VPS Deployment
+# DITEMPA BUKAN DIBERI
+#
+# Deploy: docker compose up -d geox_server
+# Logs:   docker compose logs -f geox_server
+# URL:    https://geox.arif-fazil.com/mcp
+
+version: "3.8"
+
+services:
+  geox_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: geox_server
+    restart: unless-stopped
+    
+    ports:
+      - "8000:8000"
+    
+    environment:
+      - GEOX_VERSION=0.5.0
+      - GEOX_SEAL=DITEMPA BUKAN DIBERI
+      - GEOX_TRANSPORT=http
+      - GEOX_HOST=0.0.0.0
+      - GEOX_PORT=8000
+      - GEOX_LOG_LEVEL=INFO
+    
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "--max-time", "3", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    
+    labels:
+      # Traefik routing for geox.arif-fazil.com
+      - "traefik.enable=true"
+      - "traefik.http.routers.geox.rule=Host(`geox.arif-fazil.com`)"
+      - "traefik.http.routers.geox.entrypoints=websecure"
+      - "traefik.http.routers.geox.tls=true"
+      - "traefik.http.routers.geox.tls.certresolver=letsencrypt"
+      - "traefik.http.services.geox.loadbalancer.server.port=8000"
+      # Middleware for security headers
+      - "traefik.http.middlewares.geox-security.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.geox-security.headers.forceSTSHeader=true"
+      - "traefik.http.routers.geox.middlewares=geox-security"
+    
+    networks:
+      - geox_network
+      - traefik_network
+
+networks:
+  geox_network:
+    driver: bridge
+  traefik_network:
+    external: true
+    name: traefik_network
