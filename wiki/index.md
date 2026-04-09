@@ -11,6 +11,7 @@ This wiki serves as the canonical Source of Truth for the GEOX platform-agnostic
 
 - [Agent Initialization Protocol](00_INDEX/Agent_Initialization_Protocol.md) — **START HERE** (Mandatory pre-flight).
 - [GEOX Unified Architecture](../docs/GEOX_UNIFIED_ARCHITECTURE.md) — The organizing principle (ToAC).
+- [App Interface Contracts](80_INTEGRATION/App_Interface_Contracts.md) — Manifest & Event Bus standards.
 - [Platform-Agnostic Blueprint](GEOX_HOST_ADAPTER_BLUEPRINT.md) — Cross-platform connectivity and adapter strategies.
 - [Session & Auth Contract](GEOX_SESSION_AUTH_CONTRACT.md) — Identity, context stability, and sovereignty.
 
