@@ -307,7 +307,7 @@ export interface UncertaintyState {
 // UI Types
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export type Tab = 'map' | '3d' | 'seismic' | 'wells' | 'outcrop' | 'prospect' | 'governance' | 'qc';
+export type Tab = 'map' | '3d' | 'seismic' | 'wells' | 'outcrop' | 'prospect' | 'governance' | 'qc' | 'pilot';
 
 export type ViewMode = '2d' | '3d';
 

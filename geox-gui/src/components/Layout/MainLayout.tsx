@@ -21,6 +21,7 @@ import { WitnessBadges, WitnessBadgesCompact } from '../WitnessBadges/WitnessBad
 import { EarthWitness } from '../EarthWitness/EarthWitness';
 import { EarthWitness3D } from '../EarthWitness/EarthWitness3D';
 import { AppIframeHost } from '../EarthWitness/AppIframeHost';
+import { MalayBasinPilotDashboard } from '../MalayBasinPilot/MalayBasinPilotDashboard';
 import { useGEOXStore, useActiveTab, useGovernance, useGEOXConnected } from '../../store/geoxStore';
 import type { Tab } from '../../types';
 
@@ -321,6 +322,10 @@ const MainWorkspace: React.FC = () => {
               <h2 className="text-2xl font-bold mb-4">QC / Audit Trail</h2>
               <p>VAULT999 integration for immutable audit logs.</p>
             </div>
+          </Tabs.Content>
+          
+          <Tabs.Content value="pilot" className="h-full">
+            <MalayBasinPilotDashboard />
           </Tabs.Content>
         </div>
       </Tabs.Root>

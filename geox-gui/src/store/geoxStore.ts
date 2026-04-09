@@ -143,6 +143,18 @@ const initialState: GEOXState = {
         crs: 'EPSG:4326',
       },
     },
+    {
+      id: 'malay_basin',
+      name: 'Malay Basin Pilot',
+      type: 'aoi',
+      visible: true,
+      opacity: 0.6,
+      metadata: {
+        source: 'GSM-702001 Archive',
+        lastUpdated: '2018-01-01',
+        crs: 'EPSG:4326',
+      },
+    },
   ],
   wells: [],
   seismicLines: [],
