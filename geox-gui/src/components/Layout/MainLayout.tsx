@@ -20,6 +20,7 @@ import * as Separator from '@radix-ui/react-separator';
 import { WitnessBadges, WitnessBadgesCompact } from '../WitnessBadges/WitnessBadges';
 import { EarthWitness } from '../EarthWitness/EarthWitness';
 import { EarthWitness3D } from '../EarthWitness/EarthWitness3D';
+import { AppIframeHost } from '../EarthWitness/AppIframeHost';
 import { useGEOXStore, useActiveTab, useGovernance } from '../../store/geoxStore';
 import type { Tab } from '../../types';
 

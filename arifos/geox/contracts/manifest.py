@@ -1,13 +1,20 @@
-# GEOX App Manifest Schema — The Sovereign Entry Point
-
+from __future__ import annotations
+from typing import Optional
 from pydantic import BaseModel, Field
 
 class UIEntry(BaseModel):
-    """Entry point configuration for the App UI."""
-    resource_uri: str = Field(..., description="The canonical URI for the app bundle.")
+    """Entry point configuration for the App UI. Aligned with GoFastMCP AppConfig."""
+    resource_uri: str = Field(..., description="The canonical URI or resource path (e.g. ui://...).")
     version: str = Field(..., description="Semantic version of the UI bundle.")
-    mode: str = Field("inline-or-external", description="Preferred rendering mode: inline, external, or both.")
-    csp_allow_list: list[str] = Field(default_factory=list, description="CSP origins required by the app.")
+    mode: str = Field("inline-or-external", description="Preferred rendering mode.")
+    visibility: str = Field("both", description="Visibility: 'model', 'app', or 'both'.")
+    csp: str = Field("default-src 'self'", description="Content Security Policy for the iframe.")
+    permissions: list[str] = Field(
+        default_factory=lambda: ["allow-scripts", "allow-forms"], 
+        description="Sandbox permissions."
+    )
+    domain: Optional[str] = Field(None, description="Stable origin for the sandbox.")
+    prefers_border: bool = Field(True, description="Whether the host should render a border.")
 
 class AppManifest(BaseModel):
     """

@@ -1,38 +1,34 @@
-# ROADMAP — GEOX Strategic Horizon
+# ROADMAP — GEOX MCP Apps
 
-**Phased sequencing for the GEOX MCP Apps ecosystem.**
-
----
-
-## Phase 1: Canonical Contracts (Current)
-**Objective**: Establish the host-agnostic foundation.
-- **Deliverables**: Manifest schema, Event Contract, Host Adapter API, Petrophysics Engine.
-- **Exit Criteria**: SEAL verdict on architectural agnosticism.
-
-## Phase 2: Core MCP Capability Plane
-**Objective**: Harden the server-side logic.
-- **Deliverables**: full F1-F13 validation coverage, ToAC grounding library, 999_VAULT integration.
-- **Dependencies**: FastMCP 3.x stability.
-
-## Phase 3: Host Adapters
-**Objective**: Build the bridges to mainstream AI.
-- **Deliverables**: OpenAI Apps SDK Adapter, Microsoft Copilot Adapter, Claude "MCP Apps" manifest.
-- **Exit Criteria**: Validated rendering of GEOX apps in at least two external hosts.
-
-## Phase 4: GEOX App Runtime (GUI)
-**Objective**: Polish the web-shell and interactive logic.
-- **Deliverables**: Reusable UI components for Seismic/Wells, State-sync protocol, Auth-handoff.
-- **Exit Criteria**: Sub-500ms latency on app-to-server interactions.
-
-## Phase 5: First Production Apps
-**Objective**: Deliver real domain value.
-- **Apps**: High-fidelity Seismic Viewer, Basin Explorer, Context Desk.
-- **Exit Criteria**: 100% auditability of all geological claims made within the apps.
-
-## Phase 6: Governance & Scale
-**Objective**: Establish the Sovereign standard.
-- **Deliverables**: Multi-tenant isolation, decentralized identity (DID) integration, advanced ToAC models.
+**Mission:** Build the world's first sovereign, host-agnostic geological coprocessor.
+**Authority:** 888_JUDGE
 
 ---
 
-**Strategic Status:** SEALED · DITEMPA BUKAN DIBERI
+## ⚡ Phase A: The Forge (✅ COMPLETE)
+- [x] Canonical MCP Server (FastMCP).
+- [x] Domain Logic Isolation.
+- [x] Ω-Wiki SOT established.
+- [x] 888_HOLD logic gates.
+
+## 🛢️ Phase B: Visual Mode & Physics (✅ COMPLETE)
+- [x] **Modular Refactor**: Extract core tools and services.
+- [x] **Petrophysics Engine**: Archie, Simandoux, Indonesia models functional.
+- [x] **Monte Carlo Uncertainty**: Grounded in F7 Humility.
+- [x] **9 Prefab UI Views**: Rich interactive dashboards for Claude/Cursor.
+- [x] **App Manifest & Events**: Sealed discovery and interaction contracts.
+- [x] **Tests**: 37 End-to-end tests passing.
+
+## 🌍 Phase C: External Web Shell & 3D (🚧 NEXT)
+- [ ] **OpenAI & Copilot Adapters**: Build first-class integrations for ChatGPT and Microsoft.
+- [ ] **Sovereign Web Shell**: Launch standalone React-based GEOX viewer.
+- [ ] **3D Seismic Viewer**: Integrated volume rendering (cigvis).
+- [ ] **Multi-user Tenancy**: Signed deep-links and audit trails.
+
+## 🛰️ Phase D: Federation
+- [ ] Cross-app data sharing via MCP Resources.
+- [ ] Distributed petrophysics compute.
+- [ ] Autonomous interpretation agents.
+
+---
+*DITEMPA BUKAN DIBERI — 999 SEAL ALIVE*

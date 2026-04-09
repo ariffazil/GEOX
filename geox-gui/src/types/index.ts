@@ -400,6 +400,62 @@ export interface GEOXState {
   geoxUrl: string;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// UI Bridge Event Types (JSON-RPC)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export type GeoxMethod = 
+  | 'app.initialize' 
+  | 'app.context.patch' 
+  | 'ui.action' 
+  | 'ui.state.sync' 
+  | 'tool.request' 
+  | 'tool.response';
+
+export interface GeoxEvent<T = any> {
+  jsonrpc: '2.0';
+  method: GeoxMethod;
+  params: T;
+  id?: string | number;
+  timestamp: string;
+}
+
+export interface AppInitializeParams {
+  app_id: string;
+  user_id: string;
+  host_capabilities: string[];
+  initial_context: Record<string, any>;
+}
+
+export interface ContextPatchParams {
+  basin?: string;
+  well_id?: string;
+  prospect_id?: string;
+  coordinates?: Coordinate;
+  depth?: number;
+  [key: string]: any;
+}
+
+export interface UIActionParams {
+  action: string;
+  payload: any;
+}
+
+export interface UIStateSyncParams {
+  state_delta: Partial<GEOXState>;
+}
+
+export interface ToolRequestParams {
+  tool: string;
+  arguments: Record<string, any>;
+}
+
+export interface ToolResponseParams {
+  tool: string;
+  result: any;
+  error?: string;
+}
+
 export type GEOXAction = 
   | { type: 'SET_ACTIVE_TAB'; payload: Tab }
   | { type: 'SET_VIEW_MODE'; payload: ViewMode }
