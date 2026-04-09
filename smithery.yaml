@@ -5,7 +5,7 @@
 # Registry: https://smithery.ai
 
 name: geox-earth-witness
-version: "0.6.0"
+version: "0.5.0"
 display_name: "GEOX — Geological Intelligence Coprocessor"
 description: |
   GEOX is a governed, agentic geological intelligence coprocessor for arifOS.
@@ -115,77 +115,47 @@ tools:
       type: object
       properties: {}
 
+  # Petrophysics Phase B (4 tools)
   - id: geox_select_sw_model
     name: geox_select_sw_model
-    description: Evaluate Sw model admissibility (Archie/Simandoux/Indonesia) from log QC flags. Returns HOLD on poor-quality logs per F4/F9.
+    description: Evaluate Archie vs shaly-sand saturation models against shale conductivity, mineralogy, and calibration support. Returns admissible models with confidence scores.
     input_schema:
       type: object
       properties:
-        well_id: { type: string }
-        sw_model: { type: string, enum: [archie, simandoux, indonesia] }
-        rt_ohm_m: { type: number }
-        rw_ohm_m: { type: number }
-        phi_frac: { type: number }
-        rsh_ohm_m: { type: number }
-        vsh_frac: { type: number }
-        qc_flags: { type: object }
-      required: [well_id, sw_model, rt_ohm_m, rw_ohm_m, phi_frac]
+        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
+        candidate_models: { type: array, items: { type: string }, default: ["archie", "simandoux", "indonesia", "dual_water"] }
+      required: [interval_uri]
 
   - id: geox_compute_petrophysics
     name: geox_compute_petrophysics
-    description: Full petrophysical property pipeline — Sw, PHIe, BVW, with Monte Carlo uncertainty bands (F7 Humility). HOLD on physically impossible results.
+    description: Compute Vsh, phi_t, phi_e, Sw, BVW, net, pay, RQI/FZI/HFU with uncertainty envelopes. Constitutional computation pipeline.
     input_schema:
       type: object
       properties:
-        well_id: { type: string }
-        sw_model: { type: string, enum: [archie, simandoux, indonesia] }
-        rt_ohm_m: { type: number }
-        rw_ohm_m: { type: number }
-        phi_frac: { type: number }
-        rsh_ohm_m: { type: number }
-        vsh_frac: { type: number }
-        a_tortuosity: { type: number }
-        m_cementation: { type: number }
-        n_saturation: { type: number }
-        run_monte_carlo: { type: boolean, default: false }
-        n_mc_samples: { type: integer, default: 500 }
-      required: [well_id, sw_model, rt_ohm_m, rw_ohm_m, phi_frac]
+        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
+        model_id: { type: string, description: "Saturation model to use (e.g., archie, simandoux)" }
+        model_params: { type: object, description: "Model parameters {a, m, n, rw, ...}" }
+        compute_uncertainty: { type: boolean, default: true }
+      required: [interval_uri, model_id]
 
   - id: geox_validate_cutoffs
     name: geox_validate_cutoffs
-    description: Apply CutoffPolicy to a computed petrophysical result — classify interval as pay/non-pay/marginal per POLICY provenance. Returns net-pay flag and failed cutoffs.
+    description: Apply economic/operational cutoffs as governed policy objects. Distinguishes physics from policy per F4 Clarity.
     input_schema:
       type: object
       properties:
-        well_id: { type: string }
-        interval_id: { type: string }
-        phi_frac: { type: number }
-        sw_frac: { type: number }
-        vsh_frac: { type: number }
-        cutoff_phi_min: { type: number }
-        cutoff_sw_max: { type: number }
-        cutoff_vsh_max: { type: number }
-        policy_name: { type: string }
-        policy_authority: { type: string }
-      required: [well_id, interval_id, phi_frac, sw_frac, vsh_frac]
+        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
+        cutoff_policy_id: { type: string, description: "Policy identifier to apply" }
+      required: [interval_uri, cutoff_policy_id]
 
   - id: geox_petrophysical_hold_check
     name: geox_petrophysical_hold_check
-    description: Trigger 888_HOLD scan on petrophysical results — checks F2/F4/F7/F9 floor compliance. Returns explicit PetrophysicsHold with severity and remediation steps.
+    description: Automatic 888_HOLD trigger detection for petrophysics. Checks Rw calibration, shale model support, environmental corrections, invasion handling, depth matching, and cutoff basis.
     input_schema:
       type: object
       properties:
-        well_id: { type: string }
-        sw_frac: { type: number }
-        phi_frac: { type: number }
-        vsh_frac: { type: number }
-        bvw: { type: number }
-        uncertainty_sw: { type: number }
-        provenance_tag: { type: string }
-        data_source: { type: string }
-        coordinates_provided: { type: boolean }
-        units_declared: { type: boolean }
-      required: [well_id, sw_frac, phi_frac]
+        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
+      required: [interval_uri]
 
 # Constitutional governance
 governance:
