@@ -21,7 +21,7 @@ import { WitnessBadges, WitnessBadgesCompact } from '../WitnessBadges/WitnessBad
 import { EarthWitness } from '../EarthWitness/EarthWitness';
 import { EarthWitness3D } from '../EarthWitness/EarthWitness3D';
 import { AppIframeHost } from '../EarthWitness/AppIframeHost';
-import { useGEOXStore, useActiveTab, useGovernance } from '../../store/geoxStore';
+import { useGEOXStore, useActiveTab, useGovernance, useGEOXConnected } from '../../store/geoxStore';
 import type { Tab } from '../../types';
 
 
@@ -83,12 +83,12 @@ const LeftSidebar: React.FC = () => {
           <div className="p-3 border-t border-slate-200">
             <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Filters</h4>
             <div className="space-y-2 text-sm">
-              <select className="w-full p-1.5 border border-slate-300 rounded text-sm">
+              <select className="w-full p-1.5 border border-slate-300 rounded text-sm" title="Formation Filter">
                 <option>All Formations</option>
                 <option>Carbonate</option>
                 <option>Clastic</option>
               </select>
-              <select className="w-full p-1.5 border border-slate-300 rounded text-sm">
+              <select className="w-full p-1.5 border border-slate-300 rounded text-sm" title="Interval Filter">
                 <option>All Intervals</option>
                 <option>Tertiary</option>
                 <option>Cretaceous</option>
@@ -339,39 +339,78 @@ const MainWorkspace: React.FC = () => {
   );
 };
 
-// Header
+// Header component
 const Header: React.FC = () => {
   const governance = useGovernance();
+  const geoxConnected = useGEOXConnected();
   
   return (
-    <header className="h-14 bg-slate-900 text-white flex items-center px-4 justify-between">
-      <div className="flex items-center gap-3">
-        <Globe className="w-6 h-6 text-blue-400" />
-        <div>
-          <h1 className="font-bold text-lg">GEOX Earth Witness</h1>
-          <p className="text-xs text-slate-400">DITEMPA BUKAN DIBERI</p>
+    <header className="h-14 bg-slate-900 text-white flex items-center px-4 justify-between border-b border-white/10 shadow-lg z-50">
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 group cursor-pointer">
+          <div className="p-2 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition-all">
+            <Globe className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />
+          </div>
+          <div>
+            <h1 className="font-black text-lg tracking-tight leading-none uppercase">GEOX <span className="text-blue-400">Earth Witness</span></h1>
+            <p className="text-[10px] text-slate-500 font-mono tracking-widest mt-0.5">DITEMPA BUKAN DIBERI</p>
+          </div>
         </div>
+
+        {/* Trinity Navigation */}
+        <nav className="hidden md:flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/10">
+          <HeaderAppLink href="https://arifosmcp.arif-fazil.com" icon={Shield} label="arifOS" />
+          <HeaderAppLink href="https://wiki.arif-fazil.com" icon={FileText} label="Ω-Wiki" />
+          <HeaderAppLink href="https://vault.arifosmcp.arif-fazil.com" icon={Target} label="Vault" />
+        </nav>
       </div>
       
-      <div className="flex items-center gap-4 text-sm">
-        <span className="text-slate-400">Project: <span className="text-white">Baram_North</span></span>
-        <span className="text-slate-400">Area: <span className="text-white">Prospect-K</span></span>
-        <span className="text-slate-400">User: <span className="text-white">Geologist</span></span>
-        <span className={`
-          px-2 py-1 rounded font-bold text-xs
-          ${governance.overallStatus === 'green' ? 'bg-green-600' : ''}
-          ${governance.overallStatus === 'amber' ? 'bg-amber-500' : ''}
-          ${governance.overallStatus === 'red' ? 'bg-red-600' : ''}
-          ${governance.overallStatus === 'grey' ? 'bg-gray-500' : ''}
+      <div className="flex items-center gap-6 text-sm">
+        <div className="hidden lg:flex flex-col items-end mr-2">
+           <span className="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">Current Context</span>
+           <span className="text-white font-medium text-xs">Baram_North / Prospect-K</span>
+        </div>
+        
+        {/* Connection Status Indicator */}
+        <div 
+          className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg border border-white/10 group hover:bg-white/10 transition-all cursor-help" 
+          title="Sovereign Connection Status"
+        >
+          <div className={`w-2 h-2 rounded-full ${geoxConnected ? 'bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]'}`} />
+          <span className="text-[10px] font-mono font-bold tracking-tight">
+            {geoxConnected ? 'AF-FORGE ONLINE' : 'DISCONNECTED'}
+          </span>
+        </div>
+
+        {/* Governance Badge */}
+        <div className={`
+          px-3 py-1.5 rounded-lg font-black text-[10px] tracking-widest uppercase border transition-all
+          ${governance.overallStatus === 'green' ? 'bg-green-500/20 text-green-400 border-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.1)]' : ''}
+          ${governance.overallStatus === 'amber' ? 'bg-amber-500/20 text-amber-400 border-amber-500/50' : ''}
+          ${governance.overallStatus === 'red' ? 'bg-red-500/20 text-red-400 border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.1)]' : ''}
+          ${governance.overallStatus === 'grey' ? 'bg-white/5 text-slate-400 border-white/10' : ''}
         `}>
           {governance.overallStatus === 'green' ? 'IGNITED' :
            governance.overallStatus === 'amber' ? 'QUALIFY' :
            governance.overallStatus === 'red' ? 'HOLD' : 'INITIALIZING'}
-        </span>
+        </div>
       </div>
     </header>
   );
 };
+
+// Internal Header Link component
+const HeaderAppLink: React.FC<{ href: string; icon: React.ElementType; label: string }> = ({ href, icon: Icon, label }) => (
+  <a 
+    href={href} 
+    target="_blank" 
+    rel="noopener noreferrer"
+    className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-all uppercase tracking-tighter"
+  >
+    <Icon className="w-3 h-3" />
+    {label}
+  </a>
+);
 
 // Toolbar
 const Toolbar: React.FC = () => (

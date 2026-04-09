@@ -1,9 +1,10 @@
 # GEOX MCP Server — Docker Compose for VPS Deployment
 # DITEMPA BUKAN DIBERI
 #
-# Deploy: docker compose up -d geox_server
-# Logs:   docker compose logs -f geox_server
-# URL:    https://geox.arif-fazil.com/mcp
+# Deploy: docker compose up -d
+# Logs:   docker compose logs -f
+# URLs:   https://geox.arif-fazil.com/ (GUI)
+#         https://geox.arif-fazil.com/health (API Health)
 
 version: "3.8"
 
@@ -12,6 +13,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: geox-server:latest
     container_name: geox_server
     restart: unless-stopped
     
@@ -34,18 +36,36 @@ services:
       retries: 3
     
     labels:
-      # Traefik routing for geox.arif-fazil.com
       - "traefik.enable=true"
-      - "traefik.http.routers.geox.rule=Host(`geox.arif-fazil.com`)"
-      - "traefik.http.routers.geox.entrypoints=websecure"
-      - "traefik.http.routers.geox.tls=true"
-      - "traefik.http.routers.geox.tls.certresolver=letsencrypt"
-      - "traefik.http.services.geox.loadbalancer.server.port=8000"
-      # Middleware for security headers
-      - "traefik.http.middlewares.geox-security.headers.stsSeconds=31536000"
-      - "traefik.http.middlewares.geox-security.headers.forceSTSHeader=true"
-      - "traefik.http.routers.geox.middlewares=geox-security"
+      # Health and API routes
+      - "traefik.http.routers.geox-api.rule=Host(`geox.arif-fazil.com`) && (PathPrefix(`/health`) || PathPrefix(`/mcp`) || PathPrefix(`/sse`))"
+      - "traefik.http.routers.geox-api.entrypoints=websecure"
+      - "traefik.http.routers.geox-api.tls=true"
+      - "traefik.http.routers.geox-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.geox-api.loadbalancer.server.port=8000"
+      
+    networks:
+      - geox_network
+      - traefik_network
+
+  geox_gui:
+    build:
+      context: ./geox-gui
+      dockerfile: Dockerfile
+    image: geox-gui:latest
+    container_name: geox_gui
+    restart: unless-stopped
     
+    labels:
+      - "traefik.enable=true"
+      # Main landing page / Dynamic Dashboard
+      - "traefik.http.routers.geox-gui.rule=Host(`geox.arif-fazil.com`)"
+      - "traefik.http.routers.geox-gui.entrypoints=websecure"
+      - "traefik.http.routers.geox-gui.tls=true"
+      - "traefik.http.routers.geox-gui.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.geox-gui.priority=10"
+      - "traefik.http.services.geox-gui.loadbalancer.server.port=80"
+      
     networks:
       - geox_network
       - traefik_network

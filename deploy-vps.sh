@@ -18,13 +18,15 @@ VPS_USER="root"
 DEPLOY_DIR="/opt/arifos/geox"
 DOMAIN="geox.arif-fazil.com"
 
-echo "Step 1: Building Docker image locally..."
-docker build -t geox:latest .
+echo "Step 1: Building Docker images locally..."
+docker build -t geox-server:latest .
+docker build -t geox-gui:latest ./geox-gui
 
 echo ""
 echo "Step 2: Pushing to VPS..."
-# Save and transfer image
-docker save geox:latest | ssh ${VPS_USER}@${VPS_HOST} "docker load"
+# Save and transfer images
+docker save geox-server:latest | ssh ${VPS_USER}@${VPS_HOST} "docker load"
+docker save geox-gui:latest | ssh ${VPS_USER}@${VPS_HOST} "docker load"
 
 echo ""
 echo "Step 3: Deploying on VPS..."
@@ -42,11 +44,11 @@ ssh ${VPS_USER}@${VPS_HOST} << EOF
   # Ensure Traefik network exists
   docker network create traefik_network 2>/dev/null || true
   
-  # Stop existing container
-  docker compose down geox_server 2>/dev/null || true
+  # Stop existing containers
+  docker compose down 2>/dev/null || true
   
-  # Start with new image
-  docker compose up -d geox_server
+  # Start with new images
+  docker compose up -d
   
   # Wait for health check
   echo "Waiting for health check..."
@@ -68,9 +70,10 @@ echo "Deployment Complete!"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 echo "Endpoints:"
-echo "  Health:  https://${DOMAIN}/health"
-echo "  Details: https://${DOMAIN}/health/details"
-echo "  MCP:     https://${DOMAIN}/mcp"
+echo "  Dashboard: https://${DOMAIN}/"
+echo "  Health:    https://${DOMAIN}/health"
+echo "  Details:   https://${DOMAIN}/health/details"
+echo "  MCP (SSE): https://${DOMAIN}/mcp"
 echo ""
 echo "Test with:"
 echo "  curl https://${DOMAIN}/health"

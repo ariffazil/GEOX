@@ -169,7 +169,12 @@ const initialState: GEOXState = {
     sources: [],
   },
   geoxConnected: false,
-  geoxUrl: 'https://geoxarifOS.fastmcp.app',
+  geoxUrl: typeof window !== 'undefined' ? window.location.origin : 'https://geox.arif-fazil.com',
+  metaLinks: [
+    { name: 'arifOS MCP', url: 'https://arifosmcp.arif-fazil.com' },
+    { name: 'GeoVault', url: 'https://vault.arifosmcp.arif-fazil.com' },
+    { name: 'Ω-Wiki', url: 'https://wiki.arif-fazil.com' },
+  ],
 };
 
 // Store interface
