@@ -28,6 +28,7 @@ from ...THEORY import (
     ContrastTaxonomy,
 )
 from .seismic_attribute_calculator import SeismicAttributeCalculator
+from .synthetic_generator import SeismicSyntheticGenerator
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -100,6 +101,7 @@ class SeismicSingleLineTool:
 
     def __init__(self):
         self.calculator = SeismicAttributeCalculator()
+        self.generator = SeismicSyntheticGenerator()
         self.registry = get_registry()
     
     async def run(self, params: dict[str, Any]) -> dict[str, Any]:
@@ -161,8 +163,10 @@ class SeismicSingleLineTool:
     def _ensure_ndarray(self, data: Any) -> np.ndarray:
         if isinstance(data, np.ndarray):
             return data
-        # For mock, return random data
-        return np.random.rand(100, 100)
+        
+        # ACTIVATE ENGINE: If no data, use the Synthetic Generator (ToAC Grounding)
+        logger.info("[GEOX] Seismic Engine Ignite: Generating synthetic extensional block.")
+        return self.generator.generate_extensional_block()
 
     def _compute_grounding_attributes(self, data: np.ndarray) -> dict[str, np.ndarray]:
         """Compute base physical attributes for grounding."""
