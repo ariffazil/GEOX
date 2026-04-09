@@ -29,7 +29,7 @@ class ContextPatch(GeoxEvent):
     method: Literal["app.context.patch"] = "app.context.patch"
     params: dict[str, any] = Field(..., description="The context update delta.")
 
-class ToolRequest(GeoxEvent):
-    """Emitted by the app to call an MCP tool via the host bridge."""
-    method: Literal["tool.request"] = "tool.request"
+class CallServerTool(GeoxEvent):
+    """Emitted by the app to call an MCP tool via the host bridge (Standard FastMCP)."""
+    method: Literal["callServerTool"] = "callServerTool"
     params: dict[str, any] = Field(..., description="Tool name and arguments.")

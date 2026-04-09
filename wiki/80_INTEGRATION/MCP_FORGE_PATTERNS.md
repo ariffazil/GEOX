@@ -11,13 +11,13 @@ This document identifies canonical patterns for building platform-agnostic MCP A
 
 ### 1. Capability Plane First
 The MCP server is the canonical capability plane. Tools, resources, and prompts should be fully functional in a text-only environment before being "decorated" with a UI.
-- **Reference:** `github/github-mcp-server`
-- **Pattern:** Logic stays in the server; UI is an optional "view" of that logic.
+- **Reference:** `github/github-mcp-server`, `gofastmcp.com/apps/interactive-apps`
+- **Pattern:** Use `@app.ui()` for LLM-visible entry points and `@app.tool(visibility=["app"])` for private UI-only backend tools.
 
 ### 2. Portable UI Microfrontends
 UI should be an interactive HTML/JS package that communicates with the host via a standard JSON-RPC/postMessage bridge.
 - **Reference:** `modelcontextprotocol/ext-apps`
-- **Pattern:** Use `_meta.ui.resourceUri` to point to a portable index.html inside a sandboxed iframe.
+- **Pattern:** Use `_meta.ui.resourceUri` to point to a portable index.html inside a sandboxed iframe. Register the resource with MIME type `text/html;profile=mcp-app`.
 
 ### 3. Modular Folder Structure
 Separate code by responsibility to ensure scalability and portability.

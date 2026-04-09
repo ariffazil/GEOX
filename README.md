@@ -33,7 +33,7 @@ GEOX is the **Earth Witness organ** in the arifOS constitutional federation. It 
 ## 3. Architecture Snapshot
 GEOX follows a **Sovereign Core** pattern where the domain logic and UI are isolated from AI-specific vendor SDKs using **Host Adapters**.
 
-Refer to [LLM_WIKI.md](LLM_WIKI.md) for deep technical specifications and the `wiki/` directory for theoretical foundations.
+Refer to [wiki/index.md](wiki/index.md) for deep technical specifications and the theoretical foundations of the system.
 
 ---
 
@@ -64,10 +64,10 @@ Refer to [LLM_WIKI.md](LLM_WIKI.md) for deep technical specifications and the `w
 ## 7. Documentation Map
 | File | Purpose |
 | :--- | :--- |
-| **LLM_WIKI.md** | Canonical architecture, contracts, and internal memory. |
-| **CHANGELOG.md** | Reverse chronological list of notable changes. |
-| **TODO.md** | Actionable task queue for the current sprint. |
-| **ROADMAP.md** | Strategic phases and milestones. |
+| [**wiki/index.md**](wiki/index.md) | Canonical navigation hub for all GEOX knowledge. |
+| [**wiki/00_INDEX/Agent_Initialization_Protocol.md**](wiki/00_INDEX/Agent_Initialization_Protocol.md) | **Start here** for any automated operator. |
+| [**CHANGELOG.md**](CHANGELOG.md) | Chronological transaction log of the forge. |
+| [**ROADMAP.md**](ROADMAP.md) | Strategic phases and milestones. |
 
 ---
 

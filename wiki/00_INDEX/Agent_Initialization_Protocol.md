@@ -14,9 +14,10 @@ Agent must identify its role based on `GEMINI.md`:
 
 ## 2. Context Grounding
 Agent must read the following files in order:
-1. `C:\ariffazil\GEOX\GEMINI.md`
-2. `C:\ariffazil\GEOX\wiki\INDEX.md`
-3. `C:\ariffazil\GEOX\wiki\GEOX_SESSION_AUTH_CONTRACT.md`
+1. `C:\ariffazil\GEOX\GEMINI.md` (Global Context)
+2. `C:\ariffazil\GEOX\wiki\index.md` (Wiki Root / SOT)
+3. `C:\ariffazil\GEOX\wiki\80_INTEGRATION\GEOX_SESSION_AUTH_CONTRACT.md` (Operational Standard)
+
 
 ## 3. Truth Verification (ToAC)
 If the task involves visualization or interpretation:

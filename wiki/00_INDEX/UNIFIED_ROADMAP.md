@@ -42,12 +42,12 @@
 | **Pipeline** | ✅ 000-999 implemented | INIT→THINK→EXPLORE→HEART→REASON→AUDIT→SEAL |
 | **Governance** | ✅ F1-F13 Floors active | 888 HOLD mechanism, enforced for logs |
 | **MCP Server** | ✅ Functional | stdio/HTTP transports + petrophysics resources |
-| **Petrophysics** | ✅ **Phase A SEALED** | Schemas, MCP resources, LAS loader, QC engine |
-| **Wiki** | ✅ **FOUNDATION COMPLETE** | 16 docs, ~120KB, Karpathy pattern |
+| **Petrophysics** | ✅ **Phase B SEALED** | Phase A schemas + Phase B physics engine (Archie, Simandoux, Indonesia, Monte Carlo) |
+| **Wiki** | ✅ **FOUNDATION COMPLETE** | 16+ docs, ~120KB, Karpathy pattern |
 | **CANON-9** | ✅ **VALIDATED** | Minimal Earth-state compiler proven |
 | **Memory** | ⚠️ JSONL default, Qdrant optional | Needs production hardening |
 | **CI/CD** | ⚠️ Basic GitHub Actions | Needs coverage threshold |
-| **Visualization** | ❌ None | **CRITICAL GAP** (cigvis pending) |
+| **Visualization** | ✅ Adapter fixed | cigvis_adapter.py — compatibility shims, 432/432 tests pass |
 | **Tri-App Architecture** | 🆕 New | Map + Cross Section + Seismic Section |
 | **Log Workbench** | 🚧 Phase B | React/Plotly viewer against MCP resources |
 

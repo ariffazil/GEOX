@@ -43,7 +43,7 @@ export function useGeoxBridge() {
   }, [sendMessage]);
 
   const sendToolRequest = useCallback((tool: string, args: any) => {
-    sendMessage('tool.request', { tool, arguments: args });
+    sendMessage('callServerTool', { tool, arguments: args });
   }, [sendMessage]);
 
   useEffect(() => {
