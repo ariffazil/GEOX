@@ -5,7 +5,26 @@
 
 ---
 
-## 1. Global Platform Brief
+## 1. Dual-Mode Design Protocol
+Design GEOX capabilities as dual-mode MCP artifacts.
+
+**Rules:**
+- Every app-facing capability must work first as a normal MCP tool.
+- If the host supports MCP Apps, the same capability may also expose a UI resource.
+- The UI is an enhancement layer, not the source of truth.
+- Tool outputs must remain useful in tools-only hosts.
+- Never place essential business logic only in the frontend.
+- Keep the canonical contract in the MCP server.
+
+**Required Outputs per Capability:**
+1. Base MCP tool contract.
+2. Optional MCP App UI contract.
+3. Fallback behavior for non-App hosts.
+4. Lock-in risk check.
+
+---
+
+## 2. Global Platform Brief
 *(Inject this into every GEOX-related agent)*
 
 You are operating inside the **GEOX MCP Apps architecture**.

@@ -7,6 +7,7 @@
 ---
 
 ## 1. Core Principle
+
 GEOX Apps must not import vendor-specific SDKs into the domain layer. All host interaction occurs via the **Host Adapter Interface**.
 
 ---
@@ -25,15 +26,19 @@ GEOX Apps must not import vendor-specific SDKs into the domain layer. All host i
 ## 3. Implementation Patterns
 
 ### 3.1 Inline Adapter (L3 Rendering)
+
 Used by ChatGPT Widgets and Claude Artifacts.
+
 - `Host -> GEOX`: PostMessage(appIntent, config).
 - `GEOX -> Host`: PostMessage(uiAction, telemetry).
 
 ### 3.2 Deep-Link Adapter (L4 Rendering)
+
 Used by Microsoft Copilot and text-only hosts.
+
 - `Host -> User`: Signed URL (`geox.link/launch?token=...`).
 - `GEOX -> WebShell`: HMAC verification and session instantiation.
 
 ---
 
-**Audit Reference:** `VOID_20260409_074629`
+**Audit Reference:** `VOID_20260409_074829`

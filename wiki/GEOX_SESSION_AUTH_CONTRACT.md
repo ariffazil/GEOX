@@ -1,53 +1,41 @@
-# GEOX_SESSION_AUTH_CONTRACT.md — Identity & Context Stability
+# GEOX Session & Auth Contract — Sovereign Identity
 
-> **DITEMPA BUKAN DIBERI** — *Forged, Not Given*
-> **Status:** PROPOSED | **Authority:** ΔΩΨ
-
-This contract defines how GEOX maintains session stability and identity across heterogeneous AI platforms (ChatGPT, Claude, etc.).
-
----
-
-## 🏛️ Identity Core
-
-### 1. Canonical Session Object (`GeoSession`)
-The `GeoSession` must be uniquely identifiable and must not rely solely on host-provided metadata.
-- `session_id`: Unified GEOX session ID.
-- `host_session_id`: Vendor-specific ID (e.g., `widgetSessionId`).
-- `user_id`: Authenticated user identity (mapped from OAuth/JWT).
-- `active_well_context`: The currently active borehole or project area.
-- `interpretation_depth`: Current depth or coordinate focus.
-- `audit_trail[]`: Pointers to 999_VAULT entries for the current session.
-
-### 2. Context Sync Flow
-When the host initializes the app:
-1. Host calls `app.initialize` via postMessage.
-2. Host passes `context` (e.g., chat_id, user_preferences, active_well_id).
-3. App updates internal state and returns a `session_ignited` event.
-4. Any future tool call includes the `GeoSession` context to ensure consistent reasoning.
+**Status:** ✅ SEALED
+**Authority:** 888_JUDGE
+**Epoch:** 2026-04-09
 
 ---
 
-## 🔐 Auth & Sovereignty
+## 1. Objective
 
-### 1. Managed Identity
-GEOX will support a "Managed Identity" pattern where the host provides a signed token that the GEOX adapter validates against a centralized OIDC provider.
-- **Reference:** `2389-research/mcp-socialmedia` (Session/Auth patterns)
-
-### 2. Capability Scoping
-Auth is not just binary (Yes/No). It is scoped to the geological context:
-- `READ`: Access to public/basin-level data.
-- `WRITE`: Capability to commit interpretations to the `999_VAULT`.
-- `ADMIN`: Permission to override 888_HOLD verdicts.
+Enable seamless, secure transition from a Host AI chat to a stand-alone GEOX Web Shell without losing context or violating tenant boundaries.
 
 ---
 
-## 🚦 Security Redlines
+## 2. The Sovereign Bridge
 
-- **No Secret Persistence:** The UI should never store API keys or high-security tokens in the host's `localStorage`.
-- **Session Bounding:** All sessions are transient by default; persistence requires an explicit **SEAL to VAULT** operation.
-- **Audit Requirement:** Every session ignition and context change must be recorded for constitutional telemetry.
+### 2.1 The Auth Token (JWT)
+
+The GEOX MCP server issues short-lived, signed JWTs containing:
+
+- `sub`: The host-specific user identifier.
+- `app_id`: The intention (e.g., `geox.view.seismic`).
+- `context_id`: Hash of the current chat session.
+- `floors`: The active constitutional floors for this user.
+
+### 2.2 Token Exchange
+
+1. **AI Host** requests a "Deep Link" tool.
+2. **GEOX Server** signs a token and returns a URL: `https://geox.apps/launch?token={JWT}`.
+3. **GEOX Web Shell** validates the JWT on the server before rendering protected geological data.
 
 ---
 
-*Sealed by: 888_JUDGE | 2026.04.09*
-*DITEMPA BUKAN DIBERI*
+## 3. Session Stability
+
+- **Context Preservation**: The Web Shell must request the latest "Context Patch" from the MCP server to replicate the LLM's current understanding.
+- **Audit Logging**: Every access via deep link is recorded in **999_VAULT**.
+
+---
+
+**Audit Reference:** `VOID_20260409_074829`

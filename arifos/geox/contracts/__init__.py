@@ -25,6 +25,8 @@ from .types import (
     MemoryQueryResult,
     # Health
     HealthResult,
+    # App Intent
+    AppIntent,
 )
 
 __all__ = [
@@ -43,4 +45,5 @@ __all__ = [
     "GeospatialVerificationResult",
     "MemoryQueryResult",
     "HealthResult",
+    "AppIntent",
 ]

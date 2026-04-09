@@ -11,7 +11,19 @@ GEOX MCP Apps are host-agnostic, interactive microfrontends designed to run insi
 
 ---
 
-## 2. The 6-Layer Stack
+## 2. The Dual-Mode Model (Capability + Enhancement)
+GEOX capabilities operate in two concurrent modes, ensuring they are functional in "Text-Only" hosts and premium in "App-Capable" hosts.
+
+- **Mode A: Normal MCP**: The tool returns high-signal Markdown and structured JSON. It is 100% useful without a UI.
+- **Mode B: MCP App**: The same tool attaches a UI resource URI (e.g., `_meta.ui.resourceUri`). Hosts supporting Apps render an interactive HTML interface on top of the data.
+
+### Design Rule:
+> **"If the UI disappears, the tool must still be useful."**
+Essential domain logic (physics models, governance checks) must live in the MCP server, never exclusively in the frontend.
+
+---
+
+## 3. The 6-Layer Stack
 
 | Layer | Component | Responsibility |
 | :--- | :--- | :--- |

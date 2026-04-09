@@ -7,6 +7,7 @@
 ---
 
 ## 1. Overview
+
 In GEOX, no statement is accepted as "Fact" without a declared proximity to source evidence. The Claim Tagging system forces the AI to declare the epistemic status of every subsurface assertion.
 
 ---
@@ -23,13 +24,16 @@ In GEOX, no statement is accepted as "Fact" without a declared proximity to sour
 ---
 
 ## 3. Governance Automata
-The `geox_mcp_server.py` automatically injects these tags into the `meta` field of tool results. 
+
+The `geox_mcp_server.py` automatically injects these tags into the `meta` field of tool results.
+
 - **F7 Veto**: If the AI attempts to present a **HYPOTHESIS** as a **CLAIM**, the system raises a constitutional warning.
 - **888_HOLD**: Any **HYPOTHESIS** or **UNKNOWN** status in a critical prospect verdict triggers a mandatory HOLD for human witness.
 
 ---
 
 ## 4. 888_HOLD Examples
+
 - $S_w > 1.0$ (Unphysical contrast).
 - Vertical exaggeration $> 2\times$ undisclosed.
 - Fault geometry not seismic-constrained.
@@ -37,4 +41,4 @@ The `geox_mcp_server.py` automatically injects these tags into the `meta` field 
 
 ---
 
-**Audit Reference:** `VOID_20260409_074257`
+**Audit Reference:** `VOID_20260409_074829`
