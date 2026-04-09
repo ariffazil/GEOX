@@ -35,6 +35,7 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'prospect', label: 'Prospect', icon: Target },
   { id: 'governance', label: 'Governance', icon: Shield },
   { id: 'qc', label: 'QC / Audit', icon: FileText },
+  { id: 'pilot', label: 'Malay Basin Pilot', icon: Target },
 ];
 
 // Left Sidebar - Data/Layers

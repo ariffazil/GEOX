@@ -109,6 +109,34 @@ mcp = FastMCP(
     instructions="Governed domain surface for subsurface inverse modelling. DITEMPA BUKAN DIBERI.",
 )
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# Malay Basin Pilot Tool
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@mcp.tool(name="geox_malay_basin_pilot")
+async def geox_malay_basin_pilot() -> dict:
+    """
+    Load Malay Basin Pilot Data (1968-2018).
+    
+    Includes 50-year exploration metrics, creaming curve phases, 
+    play types (P1-P9), field distribution, and geospatial pilot layers.
+    """
+    from arifos.geox.resources.malay_basin_pilot import MalayBasinPilotResource
+    resource = MalayBasinPilotResource()
+    data = await resource.read()
+    
+    result = ToolResult(
+        content=(
+            "Malay Basin Pilot Data (1968-2018) loaded. "
+            "181 discoveries, 14.8 bboe cumulative resources. "
+            "Creaming curve phases EDP1-5 active. P1-P9 play classification mapped."
+        ),
+        structured_content=data,
+    )
+    
+    return _tool_result_to_dict(result)
+
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Health Check Routes (FastMCP 2.x/3.x compatible)

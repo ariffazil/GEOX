@@ -43,6 +43,7 @@ services:
       - "traefik.http.routers.geox-api.tls=true"
       - "traefik.http.routers.geox-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.geox-api.loadbalancer.server.port=8000"
+      - "traefik.docker.network=traefik_network"
       
     networks:
       - geox_network
@@ -65,6 +66,7 @@ services:
       - "traefik.http.routers.geox-gui.tls.certresolver=letsencrypt"
       - "traefik.http.routers.geox-gui.priority=10"
       - "traefik.http.services.geox-gui.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik_network"
       
     networks:
       - geox_network

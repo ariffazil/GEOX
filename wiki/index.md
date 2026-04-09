@@ -54,6 +54,7 @@ This wiki is the canonical knowledge base for GEOX. It contains the philosophica
 
 ## 🔌 80_INTEGRATION — Connect & Bridge
 - [Agnostic Architecture](80_INTEGRATION/GEOX_MCP_APPS_ARCHITECTURE.md) — How GEOX survives host swaps.
+- [Trinity Deployment](80_INTEGRATION/Trinity_Deployment_Architecture.md) — Scaling to dedicated project stacks and Traefik linking.
 - [App Interface Contracts](80_INTEGRATION/App_Interface_Contracts.md) — Manifests & Event Bus (JSON-RPC).
 - [Host Adapter Blueprint](80_INTEGRATION/GEOX_HOST_ADAPTER_BLUEPRINT.md) — OpenAI, Copilot, and Custom bridge.
 - [Session & Auth Contract](80_INTEGRATION/GEOX_SESSION_AUTH_CONTRACT.md) — Sovereignty and context stability.
