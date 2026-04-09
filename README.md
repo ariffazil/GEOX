@@ -1,11 +1,11 @@
 # GEOX Earth Witness
 
 > **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
-> **Constitutional Geoscience Platform v0.5.0**
+> **Constitutional Geoscience Platform v0.6.1**
 
 [![Seal](https://img.shields.io/badge/SEAL-DITEMPA%20BUKAN%20DIBERI-gold)](./wiki/90_AUDITS/999_SEAL.md)
-[![Version](https://img.shields.io/badge/version-0.5.0-blue)](./CHANGELOG.md)
-[![Status](https://img.shields.io/badge/status-🟡%20PARTIAL-yellow)](./DEPLOYMENT_STATUS.md)
+[![Version](https://img.shields.io/badge/version-0.6.1-blue)](./CHANGELOG.md)
+[![Status](https://img.shields.io/badge/status-🟢%20ACTIVE-green)](./DEPLOYMENT_STATUS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
 **Live URL:** https://geox.arif-fazil.com
@@ -50,7 +50,7 @@ cd GEOX
 # Backend (requires uv)
 uv venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
-uv pip install -e .
+uv pip install -e ".[seismic,dev]"
 python geox_mcp_server.py
 
 # Frontend (requires node)
@@ -259,11 +259,11 @@ cd geox-gui && npm run dev
 
 | Aspect | Status | Notes |
 |--------|--------|-------|
-| Backend (VPS) | ✅ Operational | MCP Server v0.5.0 responding |
-| Frontend (VPS) | 🟡 Pending | Needs Docker rebuild |
-| Horizon Cloud | 🟡 Building | numpy fix committed |
+| Backend (VPS) | ✅ Operational | MCP Server v0.6.1 responding |
+| Frontend (VPS) | ✅ Operational | Pilot dashboard live |
+| Seismic Engine | ✅ Ignited | Synthetic Physics active |
 | MCP Tools | ✅ 13 tools | All phases implemented |
-| Malay Basin Pilot | ✅ Backend ready | GUI needs refresh |
+| Malay Basin Pilot | ✅ Full Stack | Live at geox.arif-fazil.com |
 
 **Next Actions:**
 1. Force rebuild VPS Docker image (includes latest GUI)
