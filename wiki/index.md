@@ -1,8 +1,9 @@
 # GEOX Ω-WIKI — Source of Truth (SOT)
 
 > **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
-> **Authority:** 888_JUDGE | **Status:** ACTIVE | **Version:** 2026.04.09  
-> **Live:** https://geox.arif-fazil.com
+> **Authority:** 888_JUDGE | **Status:** HEAVY WITNESS IGNITED | **Version:** v0.6.1  
+> **Live:** https://geox.arif-fazil.com  
+> **Seismic Engine:** ACTIVE | **Trinity:** CONNECTED
 
 This wiki is the canonical knowledge base for GEOX. It contains the philosophical, physical, and technical blueprints for the Earth Witness system. All agents MUST respect the standards defined here.
 
