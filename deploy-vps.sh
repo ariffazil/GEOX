@@ -18,9 +18,9 @@ VPS_USER="root"
 DEPLOY_DIR="/opt/arifos/geox"
 DOMAIN="geox.arif-fazil.com"
 
-echo "Step 1: Building Docker images locally..."
-docker build -t geox-server:latest .
-docker build -t geox-gui:latest ./geox-gui
+echo "Step 1: Building Docker images locally (Deep Forge)..."
+docker build --no-cache -t geox-server:latest .
+docker build --no-cache -t geox-gui:latest ./geox-gui
 
 echo ""
 echo "Step 2: Pushing to VPS..."
@@ -51,12 +51,10 @@ ssh ${VPS_USER}@${VPS_HOST} << EOF
   docker compose up -d
   
   # Wait for health check
-  echo "Waiting for health check..."
-  sleep 10
-  
-  # Verify deployment
-  echo ""
-  echo "Health check:"
+  echo "Waiting for health check (Expecting v0.6.0)..."
+  sleep 5
+  curl -s https://${DOMAIN}/health/details | grep "0.6.0" || { echo "❌ Version Mismatch or 504. Still stale!"; exit 1; }
+  echo "✅ v0.6.0 Verified Live"
   curl -s http://localhost:8000/health || echo "Health check failed"
   
   echo ""

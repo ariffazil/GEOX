@@ -12,10 +12,8 @@ Entrypoint: geox_mcp_server.py:mcp
 from __future__ import annotations
 
 import argparse
-import json
 import logging
 import os
-import sys
 from datetime import datetime, timezone
 from typing import Any
 
@@ -114,24 +112,51 @@ mcp = FastMCP(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 @mcp.tool(name="geox_malay_basin_pilot")
-async def geox_malay_basin_pilot() -> dict:
+async def geox_malay_basin_pilot(
+    query_type: str = "full", 
+    play_filter: str | None = None,
+    figure_ref: str | None = None
+) -> dict:
     """
     Load Malay Basin Pilot Data (1968-2018).
     
-    Includes 50-year exploration metrics, creaming curve phases, 
-    play types (P1-P9), field distribution, and geospatial pilot layers.
+    query_type: "stats", "plays", "creaming", "seismic_line", or "full".
+    play_filter: Filter by play code (e.g. "P1").
+    figure_ref: Reference ID for GSM figures (e.g. "gsm_702001_p005").
     """
     from arifos.geox.resources.malay_basin_pilot import MalayBasinPilotResource
     resource = MalayBasinPilotResource()
     data = await resource.read()
     
+    # Filter logic
+    if query_type == "stats":
+        output = {"stats": data["stats"]}
+    elif query_type == "plays":
+        plays = data["play_types"]
+        if play_filter:
+            plays = [p for p in plays if p["code"] == play_filter]
+        output = {"play_types": plays}
+    elif query_type == "creaming":
+        output = {"phases": data["phases"]}
+    elif query_type == "seismic_line" and figure_ref:
+        output = {
+            "image_url": f"/data/gsm_702001_demo/figures/{figure_ref}.png",
+            "geo_bounds": [103.5, 4.0, 105.5, 7.0],
+            "citation": "GSM-702001 (2021)",
+            "constitutional": {
+                "provenance": "GSM Validated",
+                "f11_audit": "GSM-702001_SEISMIC_01"
+            }
+        }
+    else:
+        output = data
+    
     result = ToolResult(
         content=(
-            "Malay Basin Pilot Data (1968-2018) loaded. "
-            "181 discoveries, 14.8 bboe cumulative resources. "
-            "Creaming curve phases EDP1-5 active. P1-P9 play classification mapped."
+            f"Malay Basin Pilot Data ({query_type}) loaded. "
+            "Foundations grounded in GSM-702001. DITEMPA BUKAN DIBERI."
         ),
-        structured_content=data,
+        structured_content=output,
     )
     
     return _tool_result_to_dict(result)
