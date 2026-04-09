@@ -1,142 +1,238 @@
-# GEOX MCP Server — Deployment Status
+# GEOX Deployment Status
 
-**DITEMPA BUKAN DIBERI**
-**Date:** 2026-04-09
-**Status:** 🟢 FULLY OPERATIONAL — v0.6.0 Phase A + B + CIGVis SEALED
-
----
-
-## Summary
-
-Phase A (7 domain tools) + Phase B (4 petrophysics tools) + CIGVis renderer adapter — all sealed.
-**432/432 tests passing, 0 failures.**
-Server ready for Docker deploy to `srv1325122.hstgr.cloud` (Hostinger VPS) behind Traefik at `geox.arif-fazil.com`.
-
----
-
-## Tool Inventory (12 tools — 11 domain + geox_health)
-
-| Tool | Phase | Status |
-|------|-------|--------|
-| `geox_load_seismic_line` | A | ✅ Active |
-| `geox_build_structural_candidates` | A | ✅ Active |
-| `geox_feasibility_check` | A | ✅ Active |
-| `geox_verify_geospatial` | A | ✅ Active |
-| `geox_evaluate_prospect` | A | ✅ Active |
-| `geox_calculate_saturation` | A | ✅ Active |
-| `geox_query_memory` | A | ✅ Active |
-| `geox_select_sw_model` | B | ✅ Active |
-| `geox_compute_petrophysics` | B | ✅ Active |
-| `geox_validate_cutoffs` | B | ✅ Active |
-| `geox_petrophysical_hold_check` | B | ✅ Active |
-| `geox_health` | — | ✅ Active |
-
----
-
-## Test Results
-
-| Suite | Passing | Failing |
-|-------|---------|---------|
-| **Full suite** | **432** | **0** |
-| Phase A tools | 22/22 | 0 |
-| Phase B petrophysics | 36/36 | 0 |
-| CIGVis renderer | 16/16 | 0 |
-| Physics unit tests | 12/12 | 0 |
-| Schemas / contracts | 21/21 | 0 |
-
----
-
-## Architecture (v0.6.0 Modular)
+> **Version:** 0.5.0 · **Status:** 🟡 PARTIAL (GUI Pending Rebuild)  
+> **Seal:** DITEMPA BUKAN DIBERI  
+> **Last Updated:** 2026-04-09
 
 ```
-geox_mcp_server.py              <- thin backward-compat wrapper (deprecated)
-arifos/geox/tools/
-  adapters/fastmcp_adapter.py   <- FastMCP @mcp.tool transport layer
-  core.py                       <- pure async domain functions (host-agnostic)
-  services/
-    constitutional.py           <- F2/F4/F7/F9 floor-check functions
-    petrophysics.py             <- clean MC engine (monte_carlo_sw)
-  contracts/types.py            <- Pydantic v2 result models (GeoXResult base)
-physics/
-  petrophysics.py               <- archie_sw, simandoux_sw, indonesia_sw
-  porosity_solvers.py           <- density/neutron/sonic solvers + permeability proxy
-schemas/
-  petrophysics_schemas.py       <- CutoffPolicy, LogQCFlags, SwModelAdmissibility
-renderers/
-  cigvis_adapter.py             <- CIGVis 3D renderer + compatibility shims
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    GEOX DEPLOYMENT STATUS                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Backend (VPS):         ✅ https://geox.arif-fazil.com/mcp                  │
+│  Health Endpoint:       ✅ /health returns 200 OK                           │
+│  MCP Protocol:          ✅ Responding                                       │
+│  Version:               ✅ v0.5.0                                           │
+│  Constitutional Seal:   ✅ DITEMPA BUKAN DIBERI                             │
+│  Malay Basin Pilot:     ✅ Backend deployed                                 │
+│  GUI Frontend:          ⚠️  Pre-Pilot build (needs refresh)                 │
+│  Horizon Cloud:         🟡 Building (numpy fix pending)                     │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Pre-Deployment Checklist
+## Deployment Targets
 
-- [x] FastMCP 2.x/3.x compatibility layer active
-- [x] All 12 tools registered + tested (432/432 passing)
-- [x] Health endpoint (geox_health)
-- [x] Pydantic v2 schemas with provenance tags (MEASURED/DERIVED/POLICY/INTERPRETED)
-- [x] Constitutional floors F1-F2-F4-F7-F9-F11-F13 active
-- [x] Version 0.6.0 in pyproject.toml, smithery.yaml, CHANGELOG.md
-- [x] CIGVis renderer adapter fixed + fully tested (16/16)
-- [x] Physics engine: Archie, Simandoux, Indonesia Sw + Monte Carlo uncertainty
-- [x] Dockerfile: multi-stage Python 3.12-slim, port 8000, HEALTHCHECK
+| Target | URL | Status | Notes |
+|--------|-----|--------|-------|
+| **VPS Production** | https://geox.arif-fazil.com | 🟡 PARTIAL | Backend ✅, GUI needs rebuild |
+| **Horizon (FastMCP Cloud)** | https://geoxarifOS.fastmcp.app/mcp | 🟡 BUILDING | numpy fix pending push |
+| **Claude Desktop** | Local | ✅ READY | MCP config available |
+| **Copilot** | Microsoft Cloud | ✅ READY | Adapter implemented |
 
 ---
 
-## VPS Environment Variables Required
+## VPS Status Detail
+
+### ✅ Backend Services (Operational)
+
+| Endpoint | URL | Status | Response |
+|----------|-----|--------|----------|
+| **Health** | `/health` | ✅ 200 OK | `OK` |
+| **Details** | `/health/details` | ✅ 200 OK | `{"version": "0.5.0", "seal": "DITEMPA BUKAN DIBERI", ...}` |
+| **MCP** | `/mcp` | ✅ Active | Protocol responsive |
+
+**Test Commands:**
+```bash
+# Health check
+curl https://geox.arif-fazil.com/health
+# Output: OK
+
+# Server details
+curl https://geox.arif-fazil.com/health/details
+# Output: {"ok": true, "version": "0.5.0", "service": "geox-earth-witness", ...}
+```
+
+### ⚠️ Frontend GUI (Needs Rebuild)
+
+| Check | Status | Finding |
+|-------|--------|---------|
+| **Pilot Tab** | ❌ NOT FOUND | Pre-Pilot build deployed |
+| **Malay Basin Content** | ❌ NOT FOUND | Needs GUI rebuild |
+| **Page Title** | ✅ FOUND | "GEOX Earth Witness — Constitutional Geoscience" |
+
+**Root Cause:** Docker cache issue — container has older GUI build.
+
+---
+
+## Fix Required
+
+### Immediate Action: Force Rebuild
 
 ```bash
-GEOX_ARIFOS_KERNEL_URL=http://arifosmcp_server:8000/mcp
-QDRANT_URL=http://qdrant_memory:6333
-GEOX_LOG_LEVEL=INFO
-GEOX_TRANSPORT=http
-```
+# SSH to VPS
+ssh srv1325122.hstgr.cloud
+cd /opt/arifos/geox
 
----
-
-## Deploy Commands (on VPS)
-
-```bash
+# Pull latest (ensure Malay Basin Pilot commit is present)
 git pull origin main
-docker compose up -d --build geox_server
+
+# Force rebuild with no cache
+docker compose down
+docker compose build --no-cache geox_server
+docker compose up -d geox_server
+
+# Verify
+docker compose logs --tail=50 geox_server
 curl https://geox.arif-fazil.com/health
 ```
 
-Expected response: `{"ok": true, "version": "0.6.0", "seal": "DITEMPA BUKAN DIBERI"}`
+### Or Use Deploy Script
+
+```bash
+./deploy-vps.sh --force-rebuild
+```
 
 ---
 
-## Constitutional Floors Active
+## Post-Fix Verification
 
-| Floor | Type | Status |
-|-------|------|--------|
-| F1 AMANAH | Hard | ✅ Active |
-| F2 TRUTH | Hard | ✅ Active |
-| F4 CLARITY | Soft | ✅ Active |
-| F7 HUMILITY | Soft | ✅ Active |
-| F9 ANTI-HANTU | Hard | ✅ Active |
-| F11 AUTHORITY | Hard | ✅ Active |
-| F13 SOVEREIGN | Hard | ✅ Active |
+```bash
+# 1. Health endpoint
+curl https://geox.arif-fazil.com/health
+# Expected: OK
 
----
+# 2. Pilot tab in HTML
+curl -s https://geox.arif-fazil.com/ | grep -i "pilot"
+# Expected: "Pilot" tab found
 
-## Key Commits (2026-04-09)
+# 3. Malay Basin content
+curl -s https://geox.arif-fazil.com/ | grep -i "malay basin"
+# Expected: Content found
 
-| Hash | Message |
-|------|---------|
-| `a6a0266` | fix: cigvis_adapter — attach shims for missing API surface |
-| `c188394` | fix: resolve all post-refactor test failures (36 Phase B + physics) |
-| `6341cdd` | Forge: Milestone v0.5.0 SEALed — Modular Architecture |
+# 4. Pilot tool available
+fastmcp list https://geox.arif-fazil.com/mcp | grep malay
+# Expected: geox_malay_basin_pilot
 
----
-
-## Sign-off
-
-**Status:** 🟢 READY FOR DEPLOYMENT
-**Authority:** 888_JUDGE | arifOS Constitutional Federation
-**Seal:** DITEMPA BUKAN DIBERI
-**Version:** 0.6.0
-**Tests:** 432/432 ✅
+# 5. Test Pilot tool
+fastmcp call https://geox.arif-fazil.com/mcp geox_malay_basin_pilot query_type="stats"
+# Expected: Basin statistics returned
+```
 
 ---
 
-*Deploy when ready.*
+## Horizon (FastMCP Cloud)
+
+| Aspect | Status |
+|--------|--------|
+| **URL** | https://geoxarifOS.fastmcp.app/mcp |
+| **Build Status** | 🟡 Rebuilding |
+| **Blocker** | numpy dependency (fixed in pyproject.toml) |
+| **Action Required** | Push to main, auto-rebuild |
+
+```bash
+# Push numpy fix to trigger rebuild
+git add pyproject.toml
+git commit -m "fix(deps): add numpy and prefab-ui to base deps"
+git push origin main
+```
+
+---
+
+## Configuration Files
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `pyproject.toml` | Python deps (numpy added) | ✅ |
+| `fastmcp.json` | CLI configuration | ✅ |
+| `Dockerfile` | Container build | ✅ |
+| `docker-compose.yml` | VPS orchestration | ✅ |
+| `deploy-vps.sh` | Automated deployment | ✅ |
+
+---
+
+## Deployment Checklist
+
+### Backend (✅ Complete)
+- [x] Dockerfile created
+- [x] Docker Compose configured
+- [x] Traefik labels added
+- [x] Deploy script created
+- [x] numpy added to dependencies
+- [x] prefab-ui added to dependencies
+- [x] Health checks configured
+- [x] Environment variables set
+- [x] VPS deployed
+- [x] Backend responding
+
+### Frontend (⚠️ Pending)
+- [x] Malay Basin Pilot implemented
+- [x] Pilot Dashboard component created
+- [x] MainLayout updated with Pilot tab
+- [x] Git pushed to main
+- [ ] Docker image rebuilt with latest GUI
+- [ ] Pilot tab visible in production
+
+### Horizon (🟡 In Progress)
+- [x] numpy fix committed
+- [ ] Pushed to main
+- [ ] Horizon rebuild triggered
+- [ ] Horizon deployment verified
+
+---
+
+## Troubleshooting
+
+### If Health Check Fails
+```bash
+# Check logs
+ssh srv1325122.hstgr.cloud 'cd /opt/arifos/geox && docker compose logs geox_server'
+
+# Restart
+ssh srv1325122.hstgr.cloud 'cd /opt/arifos/geox && docker compose restart geox_server'
+```
+
+### If GUI Doesn't Update
+```bash
+# Clear Docker cache
+docker system prune -f
+docker compose build --no-cache
+docker compose up -d
+```
+
+### If MCP Tools Missing
+```bash
+# Verify tool registration
+fastmcp list https://geox.arif-fazil.com/mcp
+
+# Check server logs for errors
+docker compose logs geox_server | grep -i error
+```
+
+---
+
+## Live Demo URL
+
+**Production:** https://geox.arif-fazil.com
+
+**Features to Demo:**
+1. Health endpoint (`/health`)
+2. Pilot tab in main workspace
+3. Malay Basin statistics
+4. EarthWitness map (auto-zoom to Malay Basin)
+5. 888_HOLD constitutional enforcement
+
+---
+
+## Next Actions
+
+| Priority | Action | Owner |
+|----------|--------|-------|
+| 🔴 HIGH | Force rebuild VPS Docker image | DevOps |
+| 🟡 MEDIUM | Push numpy fix to trigger Horizon rebuild | Developer |
+| 🟢 LOW | Verify Claude Desktop integration | QA |
+
+---
+
+*Last verified: 2026-04-09 01:37 UTC*  
+*Constitutional State: DITEMPA BUKAN DIBERI — 999 SEAL*
