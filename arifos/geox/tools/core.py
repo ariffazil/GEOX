@@ -213,7 +213,7 @@ async def geox_evaluate_prospect(
     reason = "Wait for well-tie calibration per F9 Anti-Hantu floor."
     
     return ProspectEvaluationResult(
-        status="HOLD",
+        status="888_HOLD",
         timestamp=timestamp,
         prospect_id=prospect_id,
         interpretation_id=interpretation_id,
@@ -283,7 +283,7 @@ async def geox_calculate_saturation(
     
     if not physics_engine_available:
         return SwCalculationResult(
-            status="HOLD",
+            status="888_HOLD",
             timestamp=timestamp,
             model=model,
             nominal_sw=1.0,
@@ -338,7 +338,7 @@ async def geox_select_sw_model(
     has_deep_resistivity: bool = True,
     has_shallow_resistivity: bool = False,
     available_curves: list[str] | None = None,
-    petro_schemas_available: bool = False,
+    petro_schemas_available: bool = True,
 ) -> SwModelAdmissibilityResult:
     """
     Evaluate Sw model admissibility from log QC flags.
@@ -405,7 +405,7 @@ async def geox_select_sw_model(
         confidence = min(confidence, 0.10)
     
     return SwModelAdmissibilityResult(
-        status="HOLD" if requires_hold else "SEAL",
+        status="888_HOLD" if requires_hold else "SEAL",
         timestamp=timestamp,
         well_id=well_id,
         recommended_model=recommended,
@@ -414,6 +414,7 @@ async def geox_select_sw_model(
         requires_hold=requires_hold,
         hold_reasons=hold_reasons,
         confidence=confidence,
+        provenance_tag="POLICY",
     )
 
 
@@ -430,8 +431,8 @@ async def geox_compute_petrophysics(
     archie_n: float = 2.0,
     run_monte_carlo: bool = True,
     mc_samples: int = 1000,
-    physics_engine_available: bool = False,
-    petro_schemas_available: bool = False,
+    physics_engine_available: bool = True,
+    petro_schemas_available: bool = True,
 ) -> PetrophysicsResult:
     """
     Full petrophysics property pipeline — Vsh, PHIe, Sw, BVW.
@@ -458,10 +459,10 @@ async def geox_compute_petrophysics(
     valid_models = ("archie", "simandoux", "indonesia")
     if sw_model not in valid_models:
         return PetrophysicsResult(
-            status="HOLD",
+            status="888_HOLD",
             timestamp=timestamp,
             well_id=well_id,
-            sw_model_used=sw_model,
+            sw_model_used="archie",  # fallback to valid enum value for schema compliance
             sw_nominal=1.0,
             phi_effective=phi_fraction,
             vcl=vcl_fraction,
@@ -519,7 +520,7 @@ async def geox_compute_petrophysics(
     audit_id = f"PETRO-{uuid.uuid4().hex[:8].upper()}"
     
     return PetrophysicsResult(
-        status="HOLD" if requires_hold else "SEAL",
+        status="888_HOLD" if requires_hold else "SEAL",
         timestamp=timestamp,
         well_id=well_id,
         sw_model_used=sw_model,
@@ -550,7 +551,7 @@ async def geox_validate_cutoffs(
     rt_cutoff: float | None = None,
     rt_tested: float | None = None,
     policy_basis: str = "analogue",
-    petro_schemas_available: bool = False,
+    petro_schemas_available: bool = True,
 ) -> CutoffValidationResult:
     """
     Apply a CutoffPolicy to petrophysical values and classify pay vs non-pay.
@@ -609,7 +610,7 @@ async def geox_validate_cutoffs(
     audit_id = f"CUT-{uuid.uuid4().hex[:8].upper()}"
     
     return CutoffValidationResult(
-        status="HOLD" if requires_hold else "SEAL",
+        status="888_HOLD" if requires_hold else "SEAL",
         timestamp=timestamp,
         well_id=well_id,
         policy_id=policy_id,
@@ -633,6 +634,7 @@ async def geox_validate_cutoffs(
         violations=violations,
         requires_hold=requires_hold,
         audit_id=audit_id,
+        provenance_tag="POLICY",
     )
 
 
@@ -645,11 +647,11 @@ async def geox_petrophysical_hold_check(
     has_deep_resistivity: bool = True,
     borehole_quality: str = "good",
     sw_model: str = "archie",
-    check_f2_truth: bool = True,
-    check_f4_clarity: bool = True,
-    check_f7_humility: bool = True,
-    check_f9_anti_hantu: bool = True,
-    petro_schemas_available: bool = False,
+    run_f2_check: bool = True,
+    run_f4_check: bool = True,
+    run_f7_check: bool = True,
+    run_f9_check: bool = True,
+    petro_schemas_available: bool = True,
 ) -> PetrophysicsHoldResult:
     """
     Constitutional floor check for petrophysical outputs — triggers 888_HOLD.
@@ -673,16 +675,16 @@ async def geox_petrophysical_hold_check(
     # Run individual checks
     checks = {}
     
-    if check_f2_truth:
+    if run_f2_check:
         checks["f2"] = check_f2_truth(sw_value, phi_value, vcl_value)
     
-    if check_f4_clarity:
+    if run_f4_check:
         checks["f4"] = check_f4_clarity(has_deep_resistivity)
     
-    if check_f7_humility:
+    if run_f7_check:
         checks["f7"] = check_f7_humility(uncertainty)
     
-    if check_f9_anti_hantu:
+    if run_f9_check:
         checks["f9"] = check_f9_anti_hantu(borehole_quality, sw_model)
     
     # Aggregate results
@@ -705,7 +707,7 @@ async def geox_petrophysical_hold_check(
     hold_id = f"HOLD-{uuid.uuid4().hex[:8].upper()}"
     
     return PetrophysicsHoldResult(
-        status="HOLD",
+        status="888_HOLD",
         timestamp=timestamp,
         well_id=well_id,
         hold_id=hold_id,

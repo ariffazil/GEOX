@@ -19,7 +19,9 @@ import pytest
 
 
 def _sc(result: Any) -> dict:
-    """Extract structured_content from a tool result (FastMCP 2 or 3)."""
+    """Extract structured_content from a tool result (FastMCP 2/3 or Pydantic model)."""
+    if hasattr(result, "model_dump"):
+        return result.model_dump(mode="json")
     if hasattr(result, "structured_content"):
         return result.structured_content  # type: ignore[return-value]
     if isinstance(result, dict):
@@ -517,7 +519,7 @@ class TestGeoxPetrophysicalHoldCheck:
         )
         sc = _sc(result)
         assert sc["status"] == "SEAL"
-        assert sc["floor_verdicts"]["F2_truth"] is True
+        assert sc["floor_verdicts"]["f2_truth"] is True
 
     async def test_sw_above_one_triggers_f2_hold(self):
         from geox_mcp_server import geox_petrophysical_hold_check

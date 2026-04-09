@@ -174,7 +174,7 @@ def archie_sw(
 
     Equation: Sw = ( (a * Rw) / (phi^m * Rt) )^(1/n)
     """
-    if phi <= 0 or rt <= 0 or rw <= 0:
+    if np.any(np.asarray(phi) <= 0) or np.any(np.asarray(rt) <= 0) or np.any(np.asarray(rw) <= 0):
         return 1.0
 
     # Floor check (F13 Sovereign) - will be handled by the caller
@@ -198,7 +198,7 @@ def simandoux_sw(
     Simplified form (assumes n=2 for the discriminant path):
     Sw = (a*Rw / 2*phi^m) * [sqrt((Vcl/Rsh)^2 + 4*phi^m / (a*Rw*Rt)) - Vcl/Rsh]
     """
-    if phi <= 0 or rt <= 0 or rw <= 0 or rsh <= 0:
+    if np.any(np.asarray(phi) <= 0) or np.any(np.asarray(rt) <= 0) or np.any(np.asarray(rw) <= 0) or np.any(np.asarray(rsh) <= 0):
         return 1.0
 
     if vcl < 0.01:  # Use Archie if very clean
@@ -233,7 +233,7 @@ def indonesia_sw(
 
     Equation: 1/sqrt(Rt) = (Vcl^(1-Vcl/2)/sqrt(Rsh) + phi^(m/2)/sqrt(a*Rw)) * Sw^(n/2)
     """
-    if phi <= 0 or rt <= 0 or rw <= 0 or rsh <= 0:
+    if np.any(np.asarray(phi) <= 0) or np.any(np.asarray(rt) <= 0) or np.any(np.asarray(rw) <= 0) or np.any(np.asarray(rsh) <= 0):
         return 1.0
 
     term_shale = (vcl**(1 - (vcl / 2))) / np.sqrt(rsh)

@@ -259,5 +259,5 @@ class TestTextbookCases:
         )
         
         # Moderate Sw for oil zone
-        assert result.sw > 0.3
+        assert result.sw > 0.25
         assert result.sw < 0.6

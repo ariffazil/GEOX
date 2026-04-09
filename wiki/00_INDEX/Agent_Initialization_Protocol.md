@@ -1,53 +1,33 @@
-# Ω-Wiki Loader Protocol — Agent Initialization Standard
+# Agent Initialization Protocol — MANDATORY PRE-FLIGHT
 
-**Status:** 🔐 SEALED · Sovereign Directive
-**Authority:** 888_JUDGE
-**Epoch:** 2026-04-09
+> **DITEMPA BUKAN DIBERI**
+> **Authority:** 888_JUDGE
 
----
+All AI agents (Gemini, Claude, GPT) must execute this protocol before performing any write operations in the GEOX workspace.
 
-## 1. The Directive
+## 1. Identity Handshake
+Agent must identify its role based on `GEMINI.md`:
+- **A-ARCHITECT**: Plan only.
+- **A-ENGINEER**: Write/Edit (requires approval).
+- **A-AUDITOR**: Review only.
+- **A-VALIDATOR**: Deploy/SEAL.
 
-Every agent (Copilot, Gemini, Kimi, Claude) operating on the GEOX codebase MUST perform a "Zero-Trust Context Load" from the Ω-Wiki before reasoning or writing code. This ensures all operations are grounded in the latest Source of Truth (SOT) and constitutional floors.
+## 2. Context Grounding
+Agent must read the following files in order:
+1. `C:\ariffazil\GEOX\GEMINI.md`
+2. `C:\ariffazil\GEOX\wiki\INDEX.md`
+3. `C:\ariffazil\GEOX\wiki\GEOX_SESSION_AUTH_CONTRACT.md`
 
----
+## 3. Truth Verification (ToAC)
+If the task involves visualization or interpretation:
+- Declare physical axes vs. display transforms.
+- Check for conflation risks.
+- Verify F7 Humility (confidence bands).
 
-## 2. Execution Sequence
-
-### Step 1: Entry Point Discovery
-
-Read [wiki/index.md](../index.md) to identify active architectural contracts and strategic horizons.
-
-### Step 2: Context Pack Loading
-
-Load the following mandatory documents into agent working memory:
-
-1. **[[80_INTEGRATION/MCP_Apps_Architecture]]** — For architectural boundaries.
-2. **[[80_INTEGRATION/Agnostic_Orchestration_Prompts]]** — For interaction doctrine.
-3. **[[70_GOVERNANCE/Claim_Tagging_System]]** — For epistemic grounding.
-
-### Step 3: Drift Verification
-
-Compare current `README.md` and `TODO.md` against the Ω-Wiki. If any drift is found, the **Ω-Wiki content takes precedence**.
-
-### Step 4: Lock-In Radar Check
-
-Apply the **Lock-In Radar** (from Agnostic Prompts) to the current task. If the task requires vendor-specific coupling, an **Adapter Boundary** must be designed first.
+## 4. Initialization Signal
+Agent must output the following string to signal successful ignition:
+`[GEOX_IGNITED] Role: [ROLE] | Status: GROUNDED | Authority: [LEVEL]`
 
 ---
 
-## 3. Mandatory Initialization Output
-
-At the start of a session or task, the agent should effectively signal:
-
-> "Grounded in Ω-Wiki at Epoch [ISO-DATE]. Architecture: [vX.Y]. 888_JUDGE active."
-
----
-
-## 4. Why this exists
-
-To prevent "hallucinated geology" and "vendor-locked code". By forcing a wiki-first load, we ensure the agent remains a **Witness of Reality** rather than a generator of narrative.
-
----
-
-**Audit Reference:** `VOID_20260409_074829`
+*Sealed by: 888_JUDGE*

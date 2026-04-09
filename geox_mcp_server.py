@@ -46,6 +46,7 @@ warnings.warn(
 from arifos.geox.tools.adapters.fastmcp_adapter import (
     mcp,
     main,
+    create_server,
     GEOX_VERSION,
     GEOX_SEAL,
     HAS_HTTP_ROUTES,
@@ -92,6 +93,7 @@ __all__ = [
     # Server
     "mcp",
     "main",
+    "create_server",
     "GEOX_VERSION",
     "GEOX_SEAL",
     "HAS_HTTP_ROUTES",

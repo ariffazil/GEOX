@@ -54,7 +54,7 @@ logger = logging.getLogger("geox.mcp")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 try:
-    from ...geox.geox_memory import GeoMemoryStore
+    from ...geox_memory import GeoMemoryStore
     _memory_store: "GeoMemoryStore | None" = GeoMemoryStore()
     _HAS_MEMORY = True
 except Exception as _mem_exc:
@@ -63,14 +63,14 @@ except Exception as _mem_exc:
     logger.info("Memory store unavailable (%s)", _mem_exc)
 
 try:
-    from ...geox.physics.petrophysics import monte_carlo_sw
+    from ...physics.petrophysics import monte_carlo_sw
     _HAS_PHYSICS = True
 except ImportError:
     _HAS_PHYSICS = False
     logger.info("Physics engine unavailable")
 
 try:
-    from ...geox.schemas.petrophysics_schemas import (
+    from ...schemas.petrophysics_schemas import (
         CutoffPolicy,
         CutoffValidationResult,
         LogQCFlags,
@@ -85,7 +85,7 @@ except ImportError as _petro_exc:
     logger.warning("Petrophysics schemas unavailable: %s", _petro_exc)
 
 try:
-    from ...geox.tools.seismic.seismic_single_line_tool import SeismicSingleLineTool
+    from ..seismic.seismic_single_line_tool import SeismicSingleLineTool
     _HAS_SEISMIC = True
 except ImportError:
     _HAS_SEISMIC = False
@@ -114,7 +114,7 @@ from ..core import (
 # Server Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "0.5.0"
+GEOX_VERSION = "0.6.0"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
 mcp = FastMCP(
@@ -493,6 +493,48 @@ try:
 except ImportError:
     HAS_HTTP_ROUTES = False
     logger.warning("Starlette not available, HTTP routes disabled")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Factory Function (for fastmcp run server.py:create_server)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def create_server(
+    transport: str = "stdio",
+    host: str = "0.0.0.0",
+    port: int = 8000,
+) -> FastMCP:
+    """
+    Factory function for creating a configured GEOX MCP server.
+
+    Used by FastMCP CLI:
+      fastmcp run arifos.geox.tools.adapters.fastmcp_adapter:create_server
+      fastmcp run arifos.geox.tools.adapters.fastmcp_adapter:create_server --transport http --port 9000
+
+    Returns the configured FastMCP instance. The CLI handles running it.
+    """
+    # Update server metadata based on config
+    # Note: mcp.name and mcp.version are read-only, but we can log the config
+
+    # Log configuration
+    logger.info("=" * 60)
+    logger.info("GEOX Earth Witness v%s — %s", GEOX_VERSION, GEOX_SEAL)
+    logger.info("FastMCP Version: %s", ".".join(map(str, FASTMCP_VERSION)))
+    logger.info("Factory Mode: transport=%s, host=%s, port=%d", transport, host, port)
+    logger.info("=" * 60)
+    logger.info("HTTP Routes: %s", "enabled" if HAS_HTTP_ROUTES else "disabled")
+    logger.info("Prefab UI: %s", "available" if _HAS_PREFAB else "unavailable")
+    logger.info("Physics Engine: %s", "available" if _HAS_PHYSICS else "unavailable")
+    logger.info("Seismic Engine: %s", "available" if _HAS_SEISMIC else "unavailable")
+    logger.info("Memory Store: %s", "available" if _HAS_MEMORY else "unavailable")
+    logger.info("Tools (11): geox_load_seismic_line, geox_build_structural_candidates,")
+    logger.info("           geox_feasibility_check, geox_verify_geospatial,")
+    logger.info("           geox_evaluate_prospect, geox_query_memory, geox_health,")
+    logger.info("           geox_select_sw_model, geox_compute_petrophysics,")
+    logger.info("           geox_validate_cutoffs, geox_petrophysical_hold_check")
+    logger.info("=" * 60)
+
+    return mcp
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

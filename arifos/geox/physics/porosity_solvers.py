@@ -238,7 +238,7 @@ class DensityNeutronSolver(PorositySolver):
         # Density porosity
         # phi_d = (rho_matrix - rho_bulk) / (rho_matrix - rho_fluid)
         phi_density = (self.rho_matrix - rhob) / (self.rho_matrix - self.rho_fluid)
-        phi_density = np.clip(phi_density, 0.0, 0.6)
+        phi_density = np.clip(phi_density, 0.0, 1.0)
         
         # Neutron porosity (if available)
         if nphi is not None:
@@ -388,9 +388,9 @@ def compute_permeability_proxy(
         (k_proxy_mD, method_description)
     """
     if method == "simple_power":
-        # Very simplified: k proportional to phi^6
-        # Real rocks: k = C * phi^m / S^2 where S is specific surface
-        k = 1000 * (phi ** 6)  # mD
+        # k ∝ phi^3 — Kozeny-Carman order-of-magnitude proxy
+        # phi=0.10 → ~1 mD, phi=0.25 → ~16 mD
+        k = 1000 * (phi ** 3)  # mD
         description = f"k = 1000 * phi^6 = {k:.2f} mD (order of magnitude only)"
     elif method == "timur_coates":
         # Timur/Coates: k = (100 * phi^2 / (1-phi))^2 * ((1-Sw)/Sw)^2

@@ -269,13 +269,11 @@ const MainWorkspace: React.FC = () => {
           </Tabs.Content>
           
           <Tabs.Content value="seismic" className="h-full">
-            <div className="h-full flex items-center justify-center bg-slate-900 rounded-lg">
-              <div className="text-center text-slate-400">
-                <Activity className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p>SeisView (WebGL)</p>
-                <p className="text-sm">Seismic interpretation viewer</p>
-              </div>
-            </div>
+            <AppIframeHost 
+              src="/apps/seismic_viewer/index.html" 
+              title="SeisView (WebGL)" 
+              appId="geox.seismic.viewer" 
+            />
           </Tabs.Content>
           
           <Tabs.Content value="wells" className="h-full">
