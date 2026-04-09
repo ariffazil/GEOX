@@ -1,0 +1,26 @@
+{
+  "app_id": "geox.seismic.viewer",
+  "version": "1.0.0",
+  "domain": "seismic",
+  "title": "Seismic Section Viewer",
+  "description": "Interactive visual mode for seismic cross-sections with ToAC contrast management and 888_HOLD sign-off.",
+  "ui_entry": {
+    "resource_uri": "index.html",
+    "version": "1.0.0",
+    "mode": "inline-or-external",
+    "csp_allow_list": ["https://cdn.tailwindcss.com", "https://fonts.googleapis.com"]
+  },
+  "tools_required": [
+    "geox_load_seismic_line",
+    "geox_build_structural_candidates"
+  ],
+  "events_published": [
+    "ui.action",
+    "ui.state.sync",
+    "app.initialize"
+  ],
+  "events_subscribed": [
+    "app.context.patch",
+    "tool.response"
+  ]
+}

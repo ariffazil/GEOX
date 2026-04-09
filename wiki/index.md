@@ -17,6 +17,7 @@ This wiki serves as the canonical Source of Truth for the GEOX platform-agnostic
 
 ## 🛠️ Implementation Guide
 
+- [Seismic Section Viewer](80_INTEGRATION/Seismic_Viewer_Spec.md) — First GEOX App (Phase B Visual Mode).
 - [MCP Forge Patterns](MCP_FORGE_PATTERNS.md) — Canonical patterns, repo structures, and stack discipline.
 - [MCP Forge Anti-Patterns](MCP_FORGE_ANTI_PATTERNS.md) — Vendor lock-in risks, coupling, and governance redlines.
 
