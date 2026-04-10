@@ -63,6 +63,15 @@ This wiki is the canonical knowledge base for GEOX. It contains the philosophica
 | [**Malay Basin**](40_BASINS/Malay_Basin.md) | **Primary operational domain** — Pilot project |
 | [**Sarawak Basin**](40_BASINS/Sarawak_Basin.md) | Secondary domain and analogies |
 
+---
+
+## 📚 60_CASES — Validation & Case Studies
+
+| Document | Purpose |
+|----------|---------|
+| [**Structural Interpretation Workflow**](60_CASES/Structural_Interpretation_Workflow.md) | Constitutional workflow demonstration (Malay Basin) |
+| [**Layang-Layang Validation**](60_CASES/Layang_Layang_Validation_2026_04_10.md) | **🆕 EUREKA-LEVEL** — GPT-5 constitutional firewall stress-test |
+
 ### Malay Basin Pilot
 
 The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
@@ -188,6 +197,8 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 - [**HARDENED_SEAL**](90_AUDITS/HARDENED_SEAL.md) — Security hardening verification
 - [**FORGE_SUMMARY_2026_04_08**](90_AUDITS/FORGE_SUMMARY_2026_04_08.md) — April 2026 forge status
 - [**FORGE_SUMMARY_2026_04_09_LANDING_LOGDOCK**](90_AUDITS/FORGE_SUMMARY_2026_04_09_LANDING_LOGDOCK.md) — Landing page + LogDock delivery
+- [**FORGE_SUMMARY_2026_04_10_VERSION_ALIGNMENT**](90_AUDITS/FORGE_SUMMARY_2026_04_10_VERSION_ALIGNMENT.md) — Version alignment
+- [**EUREKA_VALIDATION_2026_04_10**](90_AUDITS/EUREKA_VALIDATION_2026_04_10.md) — **🆕 GPT-5 constitutional firewall stress-test**
 - [**RELEASE_NOTES_v2**](90_AUDITS/RELEASE_NOTES_v2.md) — Version history
 - [**Weekly Lint Reports**](90_AUDITS/Weekly_Lint_Reports.md) — Code quality audits
 - [**log**](90_AUDITS/log.md) — Transaction log

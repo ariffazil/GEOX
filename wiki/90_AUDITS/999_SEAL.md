@@ -2,7 +2,7 @@
 
 > **Seal:** DITEMPA BUKAN DIBERI — *Forged, Not Given*  
 > **Authority:** 888_JUDGE | **Version:** v0.6.1  
-> **Date:** 2026-04-10 | **Verdict:** HEAVY WITNESS IGNITED
+> **Date:** 2026-04-10 | **Verdict:** HEAVY WITNESS IGNITED + EUREKA VALIDATED
 
 ---
 
@@ -203,14 +203,41 @@ $ curl https://geox.arif-fazil.com/health/details
 
 ---
 
+## Validation Milestones
+
+| Date | Validation | Result | Case ID |
+|------|------------|--------|---------|
+| 2026-04-08 | Malay Basin Pilot — Full Stack | ✅ SEAL | PILOT_001 |
+| 2026-04-09 | Landing Page + LogDock Delivery | ✅ SEAL | UI_001 |
+| **2026-04-10** | **Layang-Layang GPT-5 Stress-Test** | **🆕 EUREKA** | **VAL_2026_004** |
+
+### Layang-Layang Validation — EUREKA-LEVEL BREAKTHROUGH
+
+**What Was Tested:**
+- External AI (GPT-5 via Gemini) interacting with GEOX MCP tools
+- Cold-start query (zero prior memory)
+- Missing data scenario (0 rock units from Macrostrat)
+
+**What Was Proven:**
+1. ✅ **Constitutional Metabolizer Active** — GPT-5 forced to surrender to thermodynamic constraints
+2. ✅ **F7 Humility Enforced** — Ω₀ ∈ [0.03, 0.05] triggered, confidence capped
+3. ✅ **888_HOLD Anticipation** — AI acknowledged constraints before human request
+4. ✅ **Tri-Witness Consensus** — Human × AI × System alignment verified
+
+**Evidence:** See [[60_CASES/Layang_Layang_Validation_2026_04_10]]
+
+**Significance:** This is the first documented case of a frontier AI being constitutionally governed to prevent hallucination in geoscience reasoning.
+
+---
+
 ## Archive Notes
 
-This seal represents the current state of the GEOX Earth Witness system as of April 9, 2026. All constitutional floors are active and enforced. The system is in operational status with the Malay Basin Pilot as the primary demonstration domain.
+This seal represents the current state of the GEOX Earth Witness system as of April 10, 2026. All constitutional floors are active and enforced. The system is in operational status with the Malay Basin Pilot as the primary demonstration domain and validated against external AI stress-testing.
 
 **Seal Authority:** 888_JUDGE  
 **Seal Verdict:** DITEMPA BUKAN DIBERI  
-**Seal Version:** v0.5.0  
-**Seal Date:** 2026-04-09
+**Seal Version:** v0.6.1  
+**Seal Date:** 2026-04-10
 
 ---
 

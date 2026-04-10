@@ -266,11 +266,25 @@ cd geox-gui && npm run dev
 | Seismic Engine | ✅ Ignited | Synthetic Physics active |
 | MCP Tools | ✅ 13 tools | All phases implemented |
 | Malay Basin Pilot | ✅ Full Stack | Live at geox.arif-fazil.com |
+| **Constitutional Firewall** | **🆕 EUREKA** | **GPT-5 stress-test PASSED** |
+
+### 🎉 EUREKA-LEVEL Validation (2026-04-10)
+
+**GPT-5 Constitutional Firewall Stress-Test: PASSED**
+
+The GEOX system successfully blocked hallucination when GPT-5 (via Gemini) queried the Layang-Layang Basin with zero prior data:
+
+- ✅ **F7 Humility Enforced** — Confidence capped at Ω₀ ∈ [0.03, 0.05]
+- ✅ **888_HOLD Anticipated** — AI acknowledged constraints before human request
+- ✅ **Tri-Witness Consensus** — Human × AI × System alignment verified
+
+**Evidence:** [`wiki/90_AUDITS/EUREKA_VALIDATION_2026_04_10.md`](wiki/90_AUDITS/EUREKA_VALIDATION_2026_04_10.md)
 
 **Next Actions:**
-1. Deploy built `dist/` to VPS
-2. Connect LogDock to MCP backend for live LAS data
-3. Build Seismic Viewer (WebGL)
+1. Tune Ω₀ parameters for deepwater frontier zones
+2. Deploy built `dist/` to VPS
+3. Connect LogDock to MCP backend for live LAS data
+4. Build Seismic Viewer (WebGL)
 
 ---
 

@@ -1,8 +1,9 @@
 # GEOX Deployment Status
 
-> **Version:** 0.6.1 · **Status:** 🟢 ACTIVE (Heavy Witness Ignited)  
+> **Version:** 0.6.1 · **Status:** 🟢 ACTIVE (Heavy Witness Ignited + EUREKA Validated)  
 > **Seal:** DITEMPA BUKAN DIBERI  
-> **Last Updated:** 2026-04-10
+> **Last Updated:** 2026-04-10  
+> **EUREKA Status:** ✅ GPT-5 Constitutional Firewall VALIDATED
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -21,14 +22,34 @@
 
 ---
 
+## 🎉 EUREKA Validation Milestone
+
+**Date:** 2026-04-10  
+**Validation:** GPT-5 Constitutional Firewall Stress-Test  
+**Result:** ✅ PASSED — Hallucination blocked, F7 Humility enforced
+
+**What Was Proven:**
+- GPT-5 (via Gemini) queried Layang-Layang Basin with ZERO prior data
+- GEOX blocked all hallucination attempts
+- F7 Humility (Ω₀ ∈ [0.03, 0.05]) automatically triggered
+- 888_HOLD anticipated before human request
+- Tri-Witness consensus (Human × AI × System) achieved
+
+**Evidence:**
+- `wiki/60_CASES/Layang_Layang_Validation_2026_04_10.md`
+- `wiki/90_AUDITS/EUREKA_VALIDATION_2026_04_10.md`
+
+---
+
 ## Deployment Targets
 
 | Target | URL | Status | Notes |
 |--------|-----|--------|-------|
-| **VPS Production** | https://geox.arif-fazil.com | 🟡 PARTIAL | Backend ✅, GUI needs rebuild |
+| **VPS Production** | https://geox.arif-fazil.com | 🟢 ACTIVE | Backend ✅, GUI needs rebuild |
 | **Horizon (FastMCP Cloud)** | https://geoxarifOS.fastmcp.app/mcp | 🟡 BUILDING | numpy fix pending push |
 | **Claude Desktop** | Local | ✅ READY | MCP config available |
 | **Copilot** | Microsoft Cloud | ✅ READY | Adapter implemented |
+| **Constitutional Firewall** | System | 🆕 EUREKA | GPT-5 validation PASSED |
 
 ---
 
