@@ -1,20 +1,21 @@
 {
   "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
   "app_id": "geox.basin.explorer",
-  "version": "1.0.0",
+  "version": "1.0.0-AAA",
   "domain": "maps",
   "display_name": "Basin Map Explorer",
-  "description": "Basin-scale geological mapping with play fairway analysis",
-  "icon": "https://geox.arif-fazil.com/apps/basin-explorer/icon.svg",
+  "description": "Basin-scale geological mapping with play fairway analysis — AAA Grade",
+  "icon": "https://geox.arif-fazil.com/apps/basin_explorer/icon.svg",
   "required_tools": [
     "mcp.geox.query_memory",
     "mcp.geox.evaluate_prospect",
-    "mcp.geox.verify_geospatial"
+    "mcp.geox.verify_geospatial",
+    "mcp.geox.malay_basin_pilot"
   ],
   "optional_tools": [
     "mcp.geox.query_macrostrat",
-    "mcp.geox.malay_basin_pilot",
-    "mcp.geox.load_seismic_line"
+    "mcp.geox.load_seismic_line",
+    "mcp.geox.earth_signals"
   ],
   "ui_entry": {
     "resource_uri": "https://geox.arif-fazil.com/apps/basin_explorer/index.html",
@@ -23,25 +24,26 @@
       "webgl",
       "embedded_webview"
     ],
-    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.geox.arif-fazil.com https://tile.openstreetmap.org; img-src 'self' data: https://tile.openstreetmap.org;",
+    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; connect-src 'self' https://api.geox.arif-fazil.com https://tile.openstreetmap.org https://*.basemaps.cartocdn.com; img-src 'self' data: https://*.basemaps.cartocdn.com; style-src 'self' 'unsafe-inline' https://unpkg.com;",
     "sandbox": "allow-scripts allow-same-origin allow-popups",
     "inline_config": {
-      "max_width": 1200,
-      "max_height": 800,
+      "max_width": 1400,
+      "max_height": 900,
       "resize": true
     },
     "external_config": {
-      "window_features": "width=1400,height=900,menubar=no,toolbar=no"
+      "window_features": "width=1600,height=1000,menubar=no,toolbar=no"
     }
   },
   "auth": {
     "mode": "jwt",
-    "token_ttl_seconds": 300,
+    "token_ttl_seconds": 600,
     "scopes": [
       "tenant:{tenant_id}",
       "role:geoscientist|manager|viewer",
       "basin:read",
-      "prospect:read"
+      "prospect:read",
+      "well:read"
     ],
     "refreshable": true
   },
@@ -54,9 +56,14 @@
       "tool.result",
       "ui.action",
       "ui.state.change",
+      "map.click",
+      "map.select",
+      "play.selected",
+      "field.explore",
+      "prospect.evaluate",
       "auth.challenge",
       "auth.result",
-      "host.open.external",
+      "host.resize",
       "telemetry.emit"
     ],
     "max_payload_size": 1048576
@@ -68,8 +75,8 @@
       "card",
       "text"
     ],
-    "external_url": "https://geox.shell/apps/basin-explorer?session={session_id}",
-    "card_template": "/apps/basin-explorer/card.html"
+    "external_url": "https://geox.arif-fazil.com/apps/basin_explorer/?session={session_id}",
+    "card_template": "/apps/basin_explorer/card.html"
   },
   "arifos": {
     "required_floors": [
@@ -82,21 +89,23 @@
     "audit_level": "standard",
     "vault_route": "999_VAULT",
     "human_in_the_loop": [
-      "export_data"
+      "export_data",
+      "prospect_book"
     ]
   },
   "meta": {
     "author": "GEOX Platform Team",
     "license": "MIT",
     "repository": "https://github.com/ariffazil/arifos-geox",
-    "homepage": "https://geox.arif-fazil.com/apps/basin-explorer",
+    "homepage": "https://geox.arif-fazil.com/apps/basin_explorer/",
     "keywords": [
       "basin",
       "maps",
       "play-fairway",
-      "exploration"
+      "exploration",
+      "malay-basin"
     ],
-    "created_at": "2026-04-09T00:00:00Z",
-    "updated_at": "2026-04-09T00:00:00Z"
+    "created_at": "2026-04-10T00:00:00Z",
+    "updated_at": "2026-04-10T00:00:00Z"
   }
 }

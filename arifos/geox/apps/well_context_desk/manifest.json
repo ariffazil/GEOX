@@ -1,46 +1,47 @@
 {
   "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
   "app_id": "geox.well.context-desk",
-  "version": "1.0.0",
+  "version": "1.0.0-AAA",
   "domain": "wells",
   "display_name": "Well & Document Context Desk",
-  "description": "Integrated well data browser with document intelligence",
-  "icon": "https://geox.arif-fazil.com/apps/well-context-desk/icon.svg",
+  "description": "Integrated well data browser with document intelligence and petrophysics — AAA Grade",
+  "icon": "https://geox.arif-fazil.com/apps/well_context_desk/icon.svg",
   "required_tools": [
     "mcp.geox.query_memory",
-    "mcp.geox.compute_petrophysics",
-    "mcp.geox.select_sw_model"
+    "mcp.geox.compute_ac_risk"
   ],
   "optional_tools": [
     "mcp.geox.validate_cutoffs",
     "mcp.geox.petrophysical_hold_check",
-    "mcp.geox.query_memory"
+    "mcp.geox.load_seismic_line"
   ],
   "ui_entry": {
     "resource_uri": "https://geox.arif-fazil.com/apps/well_context_desk/index.html",
     "mode": "inline-or-external",
     "capability_required": [
-      "embedded_webview"
+      "embedded_webview",
+      "canvas"
     ],
-    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.geox.arif-fazil.com; img-src 'self' data: blob:; object-src 'self' blob:;",
+    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.geox.arif-fazil.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline';",
     "sandbox": "allow-scripts allow-same-origin allow-downloads",
     "inline_config": {
-      "max_width": 1200,
-      "max_height": 800,
+      "max_width": 1400,
+      "max_height": 900,
       "resize": true
     },
     "external_config": {
-      "window_features": "width=1400,height=900,menubar=no,toolbar=no"
+      "window_features": "width=1600,height=1000,menubar=no,toolbar=no"
     }
   },
   "auth": {
     "mode": "jwt",
-    "token_ttl_seconds": 300,
+    "token_ttl_seconds": 600,
     "scopes": [
       "tenant:{tenant_id}",
       "role:geoscientist|manager|viewer|admin",
       "well:read",
-      "document:read"
+      "document:read",
+      "petrophysics:read"
     ],
     "refreshable": true
   },
@@ -55,6 +56,11 @@
       "ui.action",
       "ui.state.change",
       "ui.error",
+      "well.selected",
+      "document.open",
+      "curve.toggle",
+      "petrophysics.run",
+      "ac_risk.check",
       "auth.challenge",
       "auth.result",
       "host.resize",
@@ -70,8 +76,8 @@
       "card",
       "text"
     ],
-    "external_url": "https://geox.shell/apps/well-context-desk?session={session_id}",
-    "card_template": "/apps/well-context-desk/card.html"
+    "external_url": "https://geox.arif-fazil.com/apps/well_context_desk/?session={session_id}",
+    "card_template": "/apps/well_context_desk/card.html"
   },
   "arifos": {
     "required_floors": [
@@ -87,21 +93,23 @@
     "vault_route": "999_VAULT",
     "human_in_the_loop": [
       "export_data",
-      "modify_production"
+      "modify_production",
+      "petrophysics_export"
     ]
   },
   "meta": {
     "author": "GEOX Platform Team",
     "license": "MIT",
     "repository": "https://github.com/ariffazil/arifos-geox",
-    "homepage": "https://geox.arif-fazil.com/apps/well-context-desk",
+    "homepage": "https://geox.arif-fazil.com/apps/well_context_desk/",
     "keywords": [
       "wells",
       "petrophysics",
       "documents",
-      "interpretation"
+      "interpretation",
+      "las"
     ],
-    "created_at": "2026-04-09T00:00:00Z",
-    "updated_at": "2026-04-09T00:00:00Z"
+    "created_at": "2026-04-10T00:00:00Z",
+    "updated_at": "2026-04-10T00:00:00Z"
   }
 }

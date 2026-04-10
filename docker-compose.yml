@@ -1,80 +1,33 @@
-# GEOX MCP Server — Docker Compose for VPS Deployment
+# GEOX Earth Intelligence Core — Research Deployment
 # DITEMPA BUKAN DIBERI
-#
-# Deploy: docker compose up -d
-# Logs:   docker compose logs -f
-# URLs:   https://geox.arif-fazil.com/ (GUI)
-#         https://geox.arif-fazil.com/health (API Health)
+# Version: v2026.04.10-EIC
 
-version: "3.8"
+version: '3.8'
 
 services:
-  geox_server:
+  geox:
     build:
       context: .
       dockerfile: Dockerfile
-    image: geox-server:latest
-    container_name: geox_server
-    restart: unless-stopped
-    
+    container_name: geox_eic
     ports:
       - "8000:8000"
-    
     environment:
-      - GEOX_VERSION=v2026.04.10
-      - GEOX_SEAL=DITEMPA BUKAN DIBERI
-      - GEOX_TRANSPORT=http
-      - GEOX_HOST=0.0.0.0
-      - GEOX_PORT=8000
-      - GEOX_LOG_LEVEL=INFO
-    
+      - GEOX_MODE=research
+      - GEOX_VERSION=v2026.04.10-EIC
+      - F13_HUMAN_VETO=required
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/data:ro
+      - vault_999:/app/999_vault
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "--max-time", "3", "http://localhost:8000/health"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
-      timeout: 5s
-      start_period: 20s
+      timeout: 10s
       retries: 3
-    
-    labels:
-      - "traefik.enable=true"
-      # Health and API routes
-      - "traefik.http.routers.geox-api.rule=Host(`geox.arif-fazil.com`) && (PathPrefix(`/health`) || PathPrefix(`/mcp`))"
-      - "traefik.http.routers.geox-api.entrypoints=websecure"
-      - "traefik.http.routers.geox-api.tls=true"
-      - "traefik.http.routers.geox-api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.geox-api.loadbalancer.server.port=8000"
-      - "traefik.docker.network=traefik_network"
-      
-    networks:
-      - geox_network
-      - traefik_network
-
-  geox_gui:
-    build:
-      context: ./geox-gui
-      dockerfile: Dockerfile
-    image: geox-gui:latest
-    container_name: geox_gui
+      start_period: 40s
     restart: unless-stopped
-    
-    labels:
-      - "traefik.enable=true"
-      # Main landing page / Dynamic Dashboard
-      - "traefik.http.routers.geox-gui.rule=Host(`geox.arif-fazil.com`)"
-      - "traefik.http.routers.geox-gui.entrypoints=websecure"
-      - "traefik.http.routers.geox-gui.tls=true"
-      - "traefik.http.routers.geox-gui.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.geox-gui.priority=10"
-      - "traefik.http.services.geox-gui.loadbalancer.server.port=80"
-      - "traefik.docker.network=traefik_network"
-      
-    networks:
-      - geox_network
-      - traefik_network
 
-networks:
-  geox_network:
-    driver: bridge
-  traefik_network:
-    external: true
-    name: traefik_network
+volumes:
+  vault_999:
+    driver: local
