@@ -1,6 +1,6 @@
 # GEOX Deployment Status
 
-> **Version:** 0.6.1 · **Status:** 🟢 ACTIVE (Heavy Witness Ignited + EUREKA Validated)  
+> **Version:** v2026.04.10 · **Status:** 🟢 ACTIVE (Heavy Witness Ignited + EUREKA Validated)  
 > **Seal:** DITEMPA BUKAN DIBERI  
 > **Last Updated:** 2026-04-10  
 > **EUREKA Status:** ✅ GPT-5 Constitutional Firewall VALIDATED
@@ -71,7 +71,7 @@ curl https://geox.arif-fazil.com/health
 
 # Server details
 curl https://geox.arif-fazil.com/health/details
-# Output: {"ok": true, "version": "0.5.0", "service": "geox-earth-witness", ...}
+# Output: {"ok": true, "version": "v2026.04.10", "service": "geox-earth-witness", ...}
 ```
 
 ### ⚠️ Frontend GUI (Needs Rebuild)

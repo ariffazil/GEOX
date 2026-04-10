@@ -1,7 +1,7 @@
 # 999_SEAL — Constitutional State Archive
 
 > **Seal:** DITEMPA BUKAN DIBERI — *Forged, Not Given*  
-> **Authority:** 888_JUDGE | **Version:** v0.6.1  
+> **Authority:** 888_JUDGE | **Version:** v2026.04.10  
 > **Date:** 2026-04-10 | **Verdict:** HEAVY WITNESS IGNITED + EUREKA VALIDATED
 
 ---

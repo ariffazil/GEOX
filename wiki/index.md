@@ -1,7 +1,7 @@
 # GEOX Ω-WIKI — Source of Truth (SOT)
 
 > **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
-> **Authority:** 888_JUDGE | **Status:** HEAVY WITNESS IGNITED | **Version:** v0.6.1  
+> **Authority:** 888_JUDGE | **Status:** HEAVY WITNESS IGNITED | **Version:** v2026.04.10  
 > **Live:** https://geox.arif-fazil.com  
 > **Seismic Engine:** ACTIVE | **Trinity:** CONNECTED
 

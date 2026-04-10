@@ -108,7 +108,7 @@ except Exception as _ms_exc:
 # Server Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "0.6.0"
+GEOX_VERSION = "v2026.04.10"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
 mcp = FastMCP(

@@ -1,6 +1,6 @@
 {
   "name": "@geox/ui-bridge",
-  "version": "0.5.0",
+  "version": "2026.04.10",
   "description": "GEOX UI Bridge — Host-agnostic communication layer for GEOX MCP Apps",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

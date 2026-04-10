@@ -1,10 +1,10 @@
 # GEOX Earth Witness
 
 > **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
-> **Constitutional Geoscience Platform v0.6.1**
+> **Constitutional Geoscience Platform v2026.04.10**
 
 [![Seal](https://img.shields.io/badge/SEAL-DITEMPA%20BUKAN%20DIBERI-gold)](./wiki/90_AUDITS/999_SEAL.md)
-[![Version](https://img.shields.io/badge/version-0.6.1-blue)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2026.04.10-blue)](./CHANGELOG.md)
 [![Status](https://img.shields.io/badge/status-🟢%20ACTIVE-green)](./DEPLOYMENT_STATUS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
@@ -259,7 +259,7 @@ cd geox-gui && npm run dev
 
 | Aspect | Status | Notes |
 |--------|--------|-------|
-| Backend (VPS) | ✅ Operational | MCP Server v0.6.1 responding |
+| Backend (VPS) | ✅ Operational | MCP Server v2026.04.10 responding |
 | Frontend (VPS) | ✅ Operational | Landing page + Cockpit live |
 | Landing Page | ✅ Complete | Clean entry point, not crammed cockpit |
 | Well Log Viewer | ✅ Complete | LogDock with petrophysics (Canvas/D3) |
