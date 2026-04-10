@@ -236,7 +236,7 @@ This seal represents the current state of the GEOX Earth Witness system as of Ap
 
 **Seal Authority:** 888_JUDGE  
 **Seal Verdict:** DITEMPA BUKAN DIBERI  
-**Seal Version:** v0.6.1  
+**Seal Version:** v2026.04.10  
 **Seal Date:** 2026-04-10
 
 ---

@@ -234,7 +234,7 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Live URL:     https://geox.arif-fazil.com                  │
-│  Version:      v0.6.1                                       │
+│  Version:      v2026.04.10                                  │
 │  Seal:         DITEMPA BUKAN DIBERI                         │
 │  Verdict:      999_SEAL                                     │
 │  Floors:       F1-F13 ACTIVE                                │
@@ -246,6 +246,6 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 
 ---
 
-*Sealed by: 888_JUDGE | 2026.04.09*  
+*Sealed by: 888_JUDGE | 2026.04.10*  
 *Constitutional Authority: Muhammad Arif bin Fazil*  
 *DITEMPA BUKAN DIBERI*

@@ -21,7 +21,7 @@ services:
       - "8000:8000"
     
     environment:
-      - GEOX_VERSION=0.6.0
+      - GEOX_VERSION=v2026.04.10
       - GEOX_SEAL=DITEMPA BUKAN DIBERI
       - GEOX_TRANSPORT=http
       - GEOX_HOST=0.0.0.0
