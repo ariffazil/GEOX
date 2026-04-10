@@ -17,6 +17,7 @@ import type {
   FloorId,
   FloorStatus,
   GovernanceState,
+  McpConnectionStatus,
 } from '../types';
 
 // Initial governance state with all F1-F13 floors
@@ -182,6 +183,12 @@ const initialState: GEOXState = {
   },
   geoxConnected: false,
   geoxUrl: typeof window !== 'undefined' ? window.location.origin : 'https://geox.arif-fazil.com',
+  mcpConnectionStatus: {
+    status: 'disconnected',
+    lastChecked: null,
+    toolsAvailable: 0,
+    latencyMs: null,
+  },
   metaLinks: [
     { name: 'arifOS MCP', url: 'https://arifosmcp.arif-fazil.com' },
     { name: 'GeoVault', url: 'https://vault.arifosmcp.arif-fazil.com' },
@@ -202,6 +209,7 @@ interface GEOXStore extends GEOXState {
   updateGroundingStatus: (update: Partial<GEOXState['groundingStatus']>) => void;
   setGEOXConnected: (connected: boolean) => void;
   setGEOXUrl: (url: string) => void;
+  setMcpConnectionStatus: (status: McpConnectionStatus) => void;
   toggleLayer: (layerId: string) => void;
   setLayerOpacity: (layerId: string, opacity: number) => void;
   resetGovernance: () => void;
@@ -271,6 +279,7 @@ export const useGEOXStore = create<GEOXStore>()(
 
         setGEOXConnected: (connected) => set((state) => { state.geoxConnected = connected; }),
         setGEOXUrl: (url) => set((state) => { state.geoxUrl = url; }),
+        setMcpConnectionStatus: (status) => set((state) => { state.mcpConnectionStatus = status; }),
 
         toggleLayer: (layerId) => set((state: GEOXState) => {
           const layer = state.layers.find((l: any) => l.id === layerId);
@@ -300,3 +309,4 @@ export const useGovernance = () => useGEOXStore((state) => state.governance);
 export const useFloorStatus = (floorId: FloorId) => useGEOXStore((state) => state.governance.floors[floorId]);
 export const useGEOXConnected = () => useGEOXStore((state) => state.geoxConnected);
 export const useSelectedCoordinate = () => useGEOXStore((state) => state.selectedCoordinate);
+export const useMcpConnectionStatus = () => useGEOXStore((state) => state.mcpConnectionStatus);

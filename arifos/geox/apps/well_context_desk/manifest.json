@@ -14,10 +14,10 @@
   "optional_tools": [
     "mcp.geox.validate_cutoffs",
     "mcp.geox.petrophysical_hold_check",
-    "mcp.geox.docs.query"
+    "mcp.geox.query_memory"
   ],
   "ui_entry": {
-    "resource_uri": "https://geox.apps/arifos/geox/apps/well_context_desk/index.html",
+    "resource_uri": "https://geox.arif-fazil.com/apps/well_context_desk/index.html",
     "mode": "inline-or-external",
     "capability_required": [
       "embedded_webview"

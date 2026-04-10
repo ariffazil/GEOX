@@ -260,15 +260,17 @@ cd geox-gui && npm run dev
 | Aspect | Status | Notes |
 |--------|--------|-------|
 | Backend (VPS) | ✅ Operational | MCP Server v0.6.1 responding |
-| Frontend (VPS) | ✅ Operational | Pilot dashboard live |
+| Frontend (VPS) | ✅ Operational | Landing page + Cockpit live |
+| Landing Page | ✅ Complete | Clean entry point, not crammed cockpit |
+| Well Log Viewer | ✅ Complete | LogDock with petrophysics (Canvas/D3) |
 | Seismic Engine | ✅ Ignited | Synthetic Physics active |
 | MCP Tools | ✅ 13 tools | All phases implemented |
 | Malay Basin Pilot | ✅ Full Stack | Live at geox.arif-fazil.com |
 
 **Next Actions:**
-1. Force rebuild VPS Docker image (includes latest GUI)
-2. Push numpy fix to trigger Horizon rebuild
-3. Verify Pilot tab visibility in production
+1. Deploy built `dist/` to VPS
+2. Connect LogDock to MCP backend for live LAS data
+3. Build Seismic Viewer (WebGL)
 
 ---
 
@@ -295,6 +297,8 @@ GEOX/
 ├── geox-gui/                    # React/TypeScript frontend
 │   └── src/
 │       └── components/
+│           ├── LandingPage/        # Clean entry point (NEW)
+│           ├── LogDock/            # Well log viewer (NEW)
 │           ├── MalayBasinPilotDashboard.tsx
 │           ├── EarthWitness.tsx
 │           └── MainLayout.tsx

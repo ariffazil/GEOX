@@ -371,33 +371,44 @@ export interface HealthStatus {
 // Store Types
 // ═══════════════════════════════════════════════════════════════════════════════
 
+export interface McpConnectionStatus {
+  status: 'connected' | 'disconnected' | 'error' | 'checking';
+  lastChecked: string | null;
+  toolsAvailable: number;
+  latencyMs: number | null;
+}
+
 export interface GEOXState {
   // View state
   activeTab: Tab;
   viewMode: ViewMode;
   panelConfig: PanelConfig;
-  
+
   // Data
   layers: MapLayer[];
   wells: Well[];
   seismicLines: SeismicLine[];
   prospects: Prospect[];
-  
+
   // Selection (synchronized)
   selectedCoordinate: Coordinate | null;
   selectedLine: string | null;
   selectedWell: string | null;
   selectedProspect: string | null;
   cursor: CursorState | null;
-  
+
   // Governance
   governance: GovernanceState;
   groundingStatus: GroundingStatus;
   uncertainty: UncertaintyState;
-  
+
   // Connection
   geoxConnected: boolean;
   geoxUrl: string;
+  mcpConnectionStatus: McpConnectionStatus;
+
+  // Meta
+  metaLinks: Array<{ name: string; url: string }>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

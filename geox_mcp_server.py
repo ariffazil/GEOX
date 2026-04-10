@@ -93,6 +93,16 @@ except ImportError:
     _HAS_SEISMIC = False
     logger.info("Seismic tools not available — using stub mode")
 
+try:
+    from arifos.geox.tools.macrostrat_tool import MacrostratTool
+    from arifos.geox.geox_schemas import CoordinatePoint
+    _macrostrat: "MacrostratTool | None" = MacrostratTool()
+    _HAS_MACROSTRAT = True
+except Exception as _ms_exc:
+    _macrostrat = None
+    _HAS_MACROSTRAT = False
+    logger.info("MacrostratTool unavailable: %s", _ms_exc)
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Server Configuration
@@ -400,12 +410,32 @@ async def geox_verify_geospatial(
 ) -> dict:
     """
     Verify geospatial grounding and jurisdictional boundaries.
-    
+
     Anchors all reasoning in verified coordinates per F4 Clarity.
+    If MacrostratTool is available, resolves the geological province
+    dynamically from coordinates. Falls back to "Unknown Province".
     """
-    geological_province = "Malay Basin"
     jurisdiction = "EEZ_Grounded"
     verdict = "GEOSPATIALLY_VALID"
+
+    # P1: resolve province from Macrostrat — no more hardcoded "Malay Basin"
+    # Response structure: success.data (GeoJSON FeatureCollection) → features[0].properties.col_name
+    # Falls back to "No Macrostrat Coverage" when location has no data (e.g. ASEAN).
+    geological_province = "No Macrostrat Coverage"
+    macrostrat_columns_found = 0
+    if _HAS_MACROSTRAT and _macrostrat is not None:
+        try:
+            location = CoordinatePoint(latitude=lat, longitude=lon)
+            _col_data = await _macrostrat._query_api("columns", location)
+            geo_data = _col_data.get("success", {}).get("data", {})
+            features = geo_data.get("features", []) if isinstance(geo_data, dict) else []
+            if features:
+                geological_province = (
+                    features[0].get("properties", {}).get("col_name", "Unknown Province")
+                )
+                macrostrat_columns_found = len(features)
+        except Exception as _prov_exc:
+            logger.warning("Province lookup failed: %s", _prov_exc)
     
     structured = _build_prefab_view(
         "geospatial",
@@ -517,6 +547,69 @@ async def geox_query_memory(
     )
 
     result = ToolResult(content=content, structured_content=structured)
+    return _tool_result_to_dict(result)
+
+
+@mcp.tool(name="geox_query_macrostrat")
+async def geox_query_macrostrat(
+    lat: float,
+    lon: float,
+) -> dict:
+    """
+    Query Macrostrat for regional stratigraphy and lithology at coordinates.
+
+    Returns stratigraphic columns, rock units (age, lithology), and a
+    CC-BY-4.0 attribution field. Used for 111_THINK (regional framework)
+    and 333_EXPLORE (basin screening) stages.
+
+    Constitutional Floors: F2 Truth (peer-reviewed data), F7 Humility
+    (regional scale — not well-log resolution), F11 Authority (provenance).
+
+    Attribution: Macrostrat (CC-BY-4.0) — Peters et al. 2018.
+    https://macrostrat.org
+    """
+    if not _HAS_MACROSTRAT or _macrostrat is None:
+        result = ToolResult(
+            content="MacrostratTool unavailable — check server logs.",
+            structured_content={"status": "unavailable"},
+        )
+        return _tool_result_to_dict(result)
+
+    location = CoordinatePoint(latitude=lat, longitude=lon)
+    geo_result = await _macrostrat.run({"location": location})
+
+    if not geo_result.success:
+        result = ToolResult(
+            content=f"Macrostrat query failed: {geo_result.error}",
+            structured_content={"status": "error", "error": geo_result.error},
+        )
+        return _tool_result_to_dict(result)
+
+    units_found = geo_result.metadata.get("units_found", 0)
+    columns_found = geo_result.metadata.get("columns_found", 0)
+
+    structured = {
+        **geo_result.metadata,
+        "coordinates": {"lat": lat, "lon": lon},
+        "quantities": [
+            q.model_dump(mode="json") if hasattr(q, "model_dump") else vars(q)
+            for q in geo_result.quantities
+        ],
+        "_attribution": (
+            "Macrostrat (CC-BY-4.0) — Peters et al. 2018. "
+            "https://macrostrat.org"
+        ),
+    }
+
+    result = ToolResult(
+        content=(
+            f"Macrostrat query at ({lat:.4f}, {lon:.4f}): "
+            f"{units_found} rock units, {columns_found} columns. "
+            "Source: macrostrat.org (CC-BY-4.0). "
+            "F7 Humility: regional scale only — well-log calibration required for drilling decisions."
+        ),
+        structured_content=structured,
+    )
     return _tool_result_to_dict(result)
 
 
@@ -908,9 +1001,10 @@ def create_server(
     logger.info("Prefab UI: %s", "available" if _HAS_PREFAB else "unavailable")
     logger.info("Seismic Engine: %s", "available" if _HAS_SEISMIC else "unavailable")
     logger.info("Memory Store: %s", "available" if _HAS_MEMORY else "unavailable")
-    logger.info("Tools (13): geox_load_seismic_line, geox_build_structural_candidates,")
+    logger.info("Tools (14): geox_load_seismic_line, geox_build_structural_candidates,")
     logger.info("            geox_feasibility_check, geox_verify_geospatial,")
-    logger.info("            geox_evaluate_prospect, geox_query_memory, geox_health,")
+    logger.info("            geox_evaluate_prospect, geox_query_memory,")
+    logger.info("            geox_query_macrostrat, geox_health,")
     logger.info("            geox_calculate_saturation, geox_select_sw_model,")
     logger.info("            geox_compute_petrophysics, geox_validate_cutoffs,")
     logger.info("            geox_petrophysical_hold_check, geox_malay_basin_pilot")
@@ -977,9 +1071,10 @@ Examples:
     
     logger.info("=" * 60)
     logger.info("Memory Store: %s", "available" if _HAS_MEMORY else "unavailable")
-    logger.info("Tools (13): geox_load_seismic_line, geox_build_structural_candidates,")
+    logger.info("Tools (14): geox_load_seismic_line, geox_build_structural_candidates,")
     logger.info("            geox_feasibility_check, geox_verify_geospatial,")
-    logger.info("            geox_evaluate_prospect, geox_query_memory, geox_health,")
+    logger.info("            geox_evaluate_prospect, geox_query_memory,")
+    logger.info("            geox_query_macrostrat, geox_health,")
     logger.info("            geox_calculate_saturation, geox_select_sw_model,")
     logger.info("            geox_compute_petrophysics, geox_validate_cutoffs,")
     logger.info("            geox_petrophysical_hold_check, geox_malay_basin_pilot")

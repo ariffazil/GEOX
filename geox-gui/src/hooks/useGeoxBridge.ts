@@ -12,8 +12,6 @@ import type {
   GeoxMethod,
   ContextPatchParams,
   ToolResponseParams,
-  UIActionParams,
-  UIStateSyncParams,
   ToolRequestParams
 } from '../types';
 
@@ -43,7 +41,7 @@ export function useGeoxBridge() {
   }, [sendMessage]);
 
   const sendToolRequest = useCallback((tool: string, args: any) => {
-    sendMessage('callServerTool', { tool, arguments: args });
+    sendMessage('tool.request', { tool, arguments: args } as ToolRequestParams);
   }, [sendMessage]);
 
   useEffect(() => {

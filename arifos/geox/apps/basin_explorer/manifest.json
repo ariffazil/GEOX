@@ -12,12 +12,12 @@
     "mcp.geox.verify_geospatial"
   ],
   "optional_tools": [
-    "mcp.geox.seismic.ingest",
-    "mcp.geox.wells.query",
-    "mcp.geox.economics.evaluate"
+    "mcp.geox.query_macrostrat",
+    "mcp.geox.malay_basin_pilot",
+    "mcp.geox.load_seismic_line"
   ],
   "ui_entry": {
-    "resource_uri": "https://geox.apps/arifos/geox/apps/basin_explorer/index.html",
+    "resource_uri": "https://geox.arif-fazil.com/apps/basin_explorer/index.html",
     "mode": "inline-or-external",
     "capability_required": [
       "webgl",

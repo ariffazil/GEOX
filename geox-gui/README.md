@@ -67,13 +67,16 @@ Open http://localhost:5173
 geox-gui/
 ├── src/
 │   ├── components/
-│   │   ├── EarthCanvas/      # 2D/3D map components
-│   │   ├── SeisView/         # Seismic viewer
-│   │   ├── LogDock/          # Well log viewer
-│   │   ├── OutcropLens/      # Image analysis
-│   │   ├── ProspectDesk/     # Prospect evaluation
+│   │   ├── LandingPage/      # Clean entry point (NEW)
+│   │   ├── EarthWitness/     # 2D map + 3D globe + iframe host
+│   │   ├── LogDock/          # Well log viewer with petrophysics (NEW)
+│   │   │   ├── LogDock.tsx
+│   │   │   ├── types.ts
+│   │   │   └── data/
+│   │   │       └── demoWellData.ts
+│   │   ├── MalayBasinPilot/  # Pilot dashboard
 │   │   ├── WitnessBadges/    # F1-F13 badges
-│   │   └── Layout/           # Main layout
+│   │   └── Layout/           # Main layout (3-panel cockpit)
 │   ├── store/
 │   │   └── geoxStore.ts      # Zustand store
 │   ├── hooks/                # Custom React hooks
@@ -174,21 +177,25 @@ POST https://geoxarifOS.fastmcp.app/mcp
 - [x] Layout components
 - [x] Governance badge system
 - [x] Zustand store
+- [x] Landing Page (clean entry point)
 
-### Phase 2: Maps
-- [ ] MapLibre GL JS integration
-- [ ] Layer tree UI
-- [ ] Coordinate inspection
+### Phase 2: Maps ✅
+- [x] MapLibre GL JS integration
+- [x] Layer tree UI
+- [x] Coordinate inspection
 
 ### Phase 3: Seismic
 - [ ] WebGL renderer
 - [ ] Candidate overlays
 - [ ] Picking system
 
-### Phase 4: Logs
-- [ ] Canvas-based tracks
+### Phase 4: Logs ✅
+- [x] Canvas-based tracks (LogDock)
+- [x] Petrophysics overlay (VSH, PHIe, Sw)
+- [x] Interactive cursor + zoom
 - [ ] Seismic-log tie
 - [ ] Depth-time sync
+- [ ] LAS file upload
 
 ### Phase 5: 3D
 - [ ] CesiumJS globe

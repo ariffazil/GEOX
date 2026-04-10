@@ -22,6 +22,7 @@ import { EarthWitness } from '../EarthWitness/EarthWitness';
 import { EarthWitness3D } from '../EarthWitness/EarthWitness3D';
 import { AppIframeHost } from '../EarthWitness/AppIframeHost';
 import { MalayBasinPilotDashboard } from '../MalayBasinPilot/MalayBasinPilotDashboard';
+import { LogDock } from '../LogDock/LogDock';
 import { useGEOXStore, useActiveTab, useGovernance, useGEOXConnected } from '../../store/geoxStore';
 import type { Tab } from '../../types';
 
@@ -279,13 +280,7 @@ const MainWorkspace: React.FC = () => {
           </Tabs.Content>
           
           <Tabs.Content value="wells" className="h-full">
-            <div className="h-full flex items-center justify-center bg-slate-100 rounded-lg border-2 border-dashed border-slate-300">
-              <div className="text-center text-slate-500">
-                <AlignLeft className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p>LogDock (D3.js + Canvas)</p>
-                <p className="text-sm">Well log viewer with seismic tie</p>
-              </div>
-            </div>
+            <LogDock />
           </Tabs.Content>
           
           <Tabs.Content value="outcrop" className="h-full">

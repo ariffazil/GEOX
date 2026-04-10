@@ -13,7 +13,7 @@ interface AppIframeHostProps {
  * Host component that renders an external GEOX App in a sandboxed iframe
  * and establishes the bidirectional event bridge.
  */
-export const AppIframeHost: React.FC<AppIframeHostProps> = ({ src, title, appId }) => {
+export const AppIframeHost: React.FC<AppIframeHostProps> = ({ src, title, appId: _appId }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { sendToApp } = useGeoxHostBridge(iframeRef);
 

@@ -1,8 +1,8 @@
 # GEOX Deployment Status
 
-> **Version:** 0.5.0 · **Status:** 🟡 PARTIAL (GUI Pending Rebuild)  
+> **Version:** 0.6.1 · **Status:** 🟢 ACTIVE (Heavy Witness Ignited)  
 > **Seal:** DITEMPA BUKAN DIBERI  
-> **Last Updated:** 2026-04-09
+> **Last Updated:** 2026-04-10
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐

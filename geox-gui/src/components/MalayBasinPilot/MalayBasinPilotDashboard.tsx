@@ -2,7 +2,6 @@ import React from 'react';
 import { 
   TrendingUp, 
   Database, 
-  Map as MapIcon, 
   Target, 
   Layers, 
   Info,

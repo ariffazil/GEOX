@@ -5,7 +5,7 @@
  * with embedded Microfrontends (Apps) via postMessage.
  */
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useGEOXStore } from '../store/geoxStore';
 import type { 
   GeoxEvent, 
