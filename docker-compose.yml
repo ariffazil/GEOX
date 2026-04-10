@@ -5,6 +5,7 @@
 version: '3.8'
 
 services:
+  # MCP Server (Earth Intelligence Core)
   geox:
     build:
       context: .
@@ -27,6 +28,18 @@ services:
       retries: 3
       start_period: 40s
     restart: unless-stopped
+
+  # GUI (React App with 4 MCP Apps)
+  gui:
+    image: geox/gui:v2026.04.10
+    container_name: geox_gui
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_GEOX_API_URL=http://localhost:8000
+    restart: unless-stopped
+    depends_on:
+      - geox
 
 volumes:
   vault_999:
