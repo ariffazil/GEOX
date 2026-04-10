@@ -17,6 +17,7 @@ This wiki is the canonical knowledge base for GEOX. It contains the philosophica
 | [**GEOX Manifesto**](00_INDEX/MANIFESTO.md) | Philosophical foundation |
 | [**Unified Roadmap**](00_INDEX/UNIFIED_ROADMAP.md) | Strategic trajectory & milestones |
 | [**Quickstart Guide**](00_INDEX/Quickstart.md) | Rapid onboarding for humans and agents |
+| [**Three Wikis Gateway**](00_INDEX/Three_Wikis_Gateway.md) | How GEOX, arifOS, and AF-FORGE fit together |
 | [**LLM/LEM Manifesto**](00_INDEX/LLM_LEM_Manifesto.md) | Constitutional grounding for language models |
 
 ---
@@ -161,7 +162,7 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 - [**MCP Apps Evidence Matrix**](80_INTEGRATION/MCP_Apps_Evidence_Matrix.md) — Platform evidence
 
 ### Navigation
-- [**Cross Wiki Links**](80_INTEGRATION/Cross_Wiki_Links.md) — Inter-document navigation
+- [**Cross Wiki Links**](80_INTEGRATION/Cross_Wiki_Links.md) — Inter-wiki federation navigation
 
 ---
 
@@ -183,6 +184,7 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 - [**000_INIT_ANCHOR**](90_AUDITS/000_INIT_ANCHOR.md) — Initial constitutional anchor
 - [**HARDENED_SEAL**](90_AUDITS/HARDENED_SEAL.md) — Security hardening verification
 - [**FORGE_SUMMARY_2026_04_08**](90_AUDITS/FORGE_SUMMARY_2026_04_08.md) — April 2026 forge status
+- [**FORGE_SUMMARY_2026_04_09_LANDING_LOGDOCK**](90_AUDITS/FORGE_SUMMARY_2026_04_09_LANDING_LOGDOCK.md) — Landing page + LogDock delivery
 - [**RELEASE_NOTES_v2**](90_AUDITS/RELEASE_NOTES_v2.md) — Version history
 - [**Weekly Lint Reports**](90_AUDITS/Weekly_Lint_Reports.md) — Code quality audits
 - [**log**](90_AUDITS/log.md) — Transaction log
@@ -218,10 +220,12 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Live URL:     https://geox.arif-fazil.com                  │
-│  Version:      v0.6.0                                       │
+│  Version:      v0.6.1                                       │
 │  Seal:         DITEMPA BUKAN DIBERI                         │
 │  Verdict:      999_SEAL                                     │
 │  Floors:       F1-F13 ACTIVE                                │
+│  Landing Page: ✅ Complete                                   │
+│  LogDock:      ✅ Complete (petrophysics active)             │
 │  Pilot:        Malay Basin OPERATIONAL                      │
 └─────────────────────────────────────────────────────────────┘
 ```

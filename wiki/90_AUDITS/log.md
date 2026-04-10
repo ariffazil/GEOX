@@ -50,6 +50,15 @@
 - Total wiki pages: 16 core documents
 - Status: WEEK_1_COMPLETE
 
+## [2026-04-10] federation | three-wiki navigation strengthened
+- Added [[00_INDEX/Three_Wikis_Gateway]] as a top-level GEOX federation entry point.
+- Rewrote [[80_INTEGRATION/Cross_Wiki_Links]] so it reflects the actual three-wiki stack:
+  - AF-FORGE = infrastructure forge
+  - arifOS = constitutional runtime
+  - GEOX = Earth witness
+- Updated `index.md` to surface federation navigation from the GEOX entry layer.
+- Status: FEDERATION_STRENGTHENED
+
 ---
 
 ## [2026-04-08] seal | Session complete — Wiki foundation + CANON-9 validation
