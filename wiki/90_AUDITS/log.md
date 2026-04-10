@@ -118,3 +118,28 @@
 ---
 
 *End of log. Future entries appended below.*
+
+---
+
+## [2026-04-10] forge | OpenAI Adapter SDK (v0.6.1)
+- **Scope:** ChatGPT Apps SDK integration — `window.openai` bridge
+- **Files Created:**
+  - `geox-gui/src/adapters/openai_types.ts` — Types + 7-tool registry
+  - `geox-gui/src/adapters/openai_adapter.ts` — Core adapter with F13 888_HOLD
+  - `geox-gui/src/adapters/useOpenAI.ts` — React hooks
+  - `geox-gui/src/adapters/index.ts` — Central exports
+  - `geox-gui/src/adapters/openai_manifest.json` — ChatGPT manifest
+- **Constitutional:**
+  - F7: Confidence capped at 0.90
+  - F11: Full audit logging
+  - F13: Auto-block high-risk operations
+- **Tools Mapped (7):**
+  1. geox_system_health → geox_health
+  2. geox_query_malay_basin → geox_malay_basin_pilot
+  3. geox_load_seismic → geox_load_seismic_line
+  4. geox_analyze_structure → geox_build_structural_candidates
+  5. geox_evaluate_prospect → geox_evaluate_prospect
+  6. geox_compute_saturation → geox_calculate_saturation
+  7. geox_query_geology → geox_query_macrostrat
+- **Wiki:** Added OPENAI_ADAPTER_GUIDE.md
+- **Verdict:** SEAL | Ready for GPT Store submission

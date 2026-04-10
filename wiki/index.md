@@ -137,6 +137,9 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 
 ## 🔌 80_INTEGRATION — Connect & Bridge
 
+### OpenAI Integration (NEW v0.6.1)
+- [**OpenAI Adapter Guide**](80_INTEGRATION/OPENAI_ADAPTER_GUIDE.md) — ChatGPT Apps SDK integration
+
 ### Architecture
 - [**GEOX MCP Apps Architecture**](80_INTEGRATION/GEOX_MCP_APPS_ARCHITECTURE.md) — Host-agnostic design specification
 - [**MCP Apps Architecture**](80_INTEGRATION/MCP_Apps_Architecture.md) — Standard MCP Apps patterns
