@@ -1,18 +1,18 @@
 /**
- * GEOX Landing Page
+ * GEOX Landing Page — Earth Intelligence Core
  * ═══════════════════════════════════════════════════════════════════════════════
  * DITEMPA BUKAN DIBERI
  *
- * Clean, focused entry point for GEOX Earth Witness.
- * Not a cockpit — a doorway. The cockpit is behind the "Enter" button.
+ * Clean entry point for GEOX EIC.
+ * No chaos. No redundant features. Only the 7 tools, 4 apps, F1-F13.
  */
 
 import React, { useState, useEffect } from 'react';
 import {
-  Globe, Activity, AlignLeft, Image as ImageIcon,
-  Target, Shield, ChevronRight, ExternalLink,
-  Zap, Layers, BarChart3, Radio, ArrowRight, Server,
-  BookOpen, Lock, Eye, Cpu, MapPin
+  Globe, Activity, AlignLeft, Shield,
+  Target, ChevronRight, ExternalLink, ArrowRight,
+  Zap, BarChart3, Server, BookOpen, Lock, Eye,
+  Cpu, MapPin, Gauge
 } from 'lucide-react';
 import { useGEOXStore } from '../../store/geoxStore';
 
@@ -20,9 +20,9 @@ interface LandingPageProps {
   onEnterCockpit: () => void;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
 // Hero Section
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
 
 const Hero: React.FC<{ onEnterCockpit: () => void }> = ({ onEnterCockpit }) => {
   const geoxConnected = useGEOXStore((state) => state.geoxConnected);
@@ -47,13 +47,13 @@ const Hero: React.FC<{ onEnterCockpit: () => void }> = ({ onEnterCockpit }) => {
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
           <div className={`w-2 h-2 rounded-full ${geoxConnected ? 'bg-green-500 animate-pulse' : 'bg-amber-500'} shadow-[0_0_8px_currentColor]`} />
           <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">
-            {geoxConnected ? 'System Online — v2026.04.10' : 'Connecting...'}
+            {geoxConnected ? 'EIC Online — v2026.04.10' : 'Connecting...'}
           </span>
         </div>
 
         {/* Main title */}
         <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-4 leading-tight">
-          GEOX <span className="text-blue-400">Earth Witness</span>
+          GEOX <span className="text-blue-400">Earth Intelligence</span>
         </h1>
 
         <p className="text-lg md:text-xl text-slate-400 mb-2 font-mono tracking-widest uppercase text-[10px] md:text-xs">
@@ -61,8 +61,8 @@ const Hero: React.FC<{ onEnterCockpit: () => void }> = ({ onEnterCockpit }) => {
         </p>
 
         <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-          A constitutional geoscience platform that uses multi-agent architecture
-          and tri-witness consensus to deliver verified geological interpretations.
+          Earth Intelligence Core. Seven essential tools. Four interactive apps. 
+          Constitutional governance F1-F13. Theory of Anomalous Contrast (ToAC) at the center.
         </p>
 
         {/* CTAs */}
@@ -77,13 +77,13 @@ const Hero: React.FC<{ onEnterCockpit: () => void }> = ({ onEnterCockpit }) => {
           </button>
 
           <a
-            href="https://wiki.arif-fazil.com"
+            href="https://github.com/ariffazil/GEOX/blob/main/docs/README.md"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-6 py-4 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 rounded-xl transition-all"
           >
             <BookOpen className="w-5 h-5" />
-            Ω-Wiki
+            Documentation
             <ExternalLink className="w-4 h-4" />
           </a>
         </div>
@@ -98,107 +98,86 @@ const Hero: React.FC<{ onEnterCockpit: () => void }> = ({ onEnterCockpit }) => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Capability Cards
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// The 4 Apps (replacing 6 Pillars)
+// ═══════════════════════════════════════════════════════════════════════════════
 
-const CAPABILITIES = [
+const APPS = [
+  {
+    icon: Gauge,
+    title: 'AC_Risk Console',
+    description: 'The flagship. Interactive Theory of Anomalous Contrast calculator. Real-time verdict display: SEAL, QUALIFY, HOLD, VOID.',
+    status: 'live',
+    color: 'amber',
+  },
   {
     icon: MapPin,
-    title: '2D Map Grounding',
-    description: 'MapLibre GL JS powered basin exploration with Malay Basin pilot data, AOI polygons, and real-time coordinate sync.',
+    title: 'Basin Explorer',
+    description: 'Interactive map-based basin analysis. Malay Basin pilot data, play fairways, prospect evaluation. Leaflet-powered.',
     status: 'live',
     color: 'blue',
   },
   {
-    icon: Globe,
-    title: '3D Earth Witness',
-    description: 'CesiumJS globe with terrain draping, well sticks, and structural visualization. Basin-scale context at your fingertips.',
-    status: 'skeleton',
-    color: 'indigo',
-  },
-  {
     icon: Activity,
     title: 'Seismic Viewer',
-    description: 'WebGL2 seismic interpretation with candidate overlays, fault detection, and horizon picking. Multiple models visible.',
-    status: 'shell',
+    description: '2D/3D seismic visualization with constitutional overlays. Contrast controls, 888_HOLD warnings, depth tracking.',
+    status: 'live',
     color: 'violet',
   },
   {
     icon: AlignLeft,
-    title: 'Well Log Analysis',
-    description: 'Canvas-based log tracks with petrophysical computations — Vsh, PHIe, Sw via Archie, Clavier-Fertl, and Wyllie methods.',
-    status: 'building',
+    title: 'Well Context Desk',
+    description: 'Well log analysis with petrophysics. Canvas-based tracks, AC_Risk widget, document browser.',
+    status: 'live',
     color: 'cyan',
-  },
-  {
-    icon: ImageIcon,
-    title: 'Outcrop Lens',
-    description: 'Field photo analysis with bedding, fracture, and fossil annotation. Analog grounding for subsurface interpretation.',
-    status: 'planned',
-    color: 'emerald',
-  },
-  {
-    icon: Target,
-    title: 'Prospect Desk',
-    description: 'Decision panel with risk matrix, evidence stack, and 888_HOLD human sovereignty gates. DRIL / DRO / HOLD verdicts.',
-    status: 'partial',
-    color: 'amber',
   },
 ];
 
 const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   const styles: Record<string, string> = {
     live: 'bg-green-500/10 text-green-400 border-green-500/30',
-    skeleton: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30',
-    shell: 'bg-violet-500/10 text-violet-400 border-violet-500/30',
-    building: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30 animate-pulse',
-    partial: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-    planned: 'bg-slate-500/10 text-slate-400 border-slate-500/30',
   };
 
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${styles[status] || styles.planned}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${styles[status] || styles.live}`}>
       {status}
     </span>
   );
 };
 
-const CapabilitiesSection: React.FC = () => (
+const AppsSection: React.FC = () => (
   <section className="py-20 px-6 bg-slate-950">
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Six Pillars of Interpretation</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Four MCP Apps</h2>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          GEOX integrates six evidence streams through constitutional governance.
-          Each pillar is independently grounded before contributing to the final verdict.
+          Interactive applications that render inside MCP hosts (Claude, Copilot) 
+          or standalone. Each app routes through AC_Risk for constitutional governance.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {CAPABILITIES.map((cap) => {
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {APPS.map((app) => {
           const colorClass = {
+            amber: 'bg-amber-500/10 text-amber-400',
             blue: 'bg-blue-500/10 text-blue-400',
-            indigo: 'bg-indigo-500/10 text-indigo-400',
             violet: 'bg-violet-500/10 text-violet-400',
             cyan: 'bg-cyan-500/10 text-cyan-400',
-            emerald: 'bg-emerald-500/10 text-emerald-400',
-            amber: 'bg-amber-500/10 text-amber-400',
-          }[cap.color] || 'bg-slate-500/10 text-slate-400';
+          }[app.color] || 'bg-slate-500/10 text-slate-400';
 
           return (
             <div
-              key={cap.title}
+              key={app.title}
               className="group p-6 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-slate-700 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className={`p-3 rounded-xl ${colorClass.split(' ')[0]}`}>
-                  <cap.icon className={`w-6 h-6 ${colorClass.split(' ')[1]}`} />
+                  <app.icon className={`w-6 h-6 ${colorClass.split(' ')[1]}`} />
                 </div>
-                <StatusBadge status={cap.status} />
+                <StatusBadge status={app.status} />
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">{cap.title}</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">{cap.description}</p>
+              <h3 className="text-lg font-bold text-white mb-2">{app.title}</h3>
+              <p className="text-sm text-slate-400 leading-relaxed">{app.description}</p>
             </div>
           );
         })}
@@ -207,25 +186,34 @@ const CapabilitiesSection: React.FC = () => (
   </section>
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MCP Tools Showcase
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// The 7 Essential Tools
+// ═══════════════════════════════════════════════════════════════════════════════
 
 const TOOL_CATEGORIES = [
   {
-    title: 'Foundation (Phase A)',
-    icon: Layers,
-    tools: ['geox_load_seismic_line', 'geox_build_structural_candidates', 'geox_evaluate_prospect', 'geox_feasibility_check', 'geox_verify_geospatial', 'geox_calculate_saturation'],
+    title: 'Core (ToAC)',
+    icon: Gauge,
+    tools: ['geox_compute_ac_risk'],
+    highlight: true,
   },
   {
-    title: 'Physics Engine (Phase B)',
-    icon: Cpu,
-    tools: ['geox_select_sw_model', 'geox_compute_petrophysics', 'geox_validate_cutoffs', 'geox_petrophysical_hold_check'],
-  },
-  {
-    title: 'Demo & System',
+    title: 'Foundation',
     icon: Server,
-    tools: ['geox_malay_basin_pilot', 'geox_health', 'geox_petrophysics_health'],
+    tools: [
+      'geox_load_seismic_line',
+      'geox_build_structural_candidates',
+      'geox_verify_geospatial',
+    ],
+  },
+  {
+    title: 'Governance',
+    icon: Shield,
+    tools: [
+      'geox_feasibility_check',
+      'geox_evaluate_prospect',
+      'geox_earth_signals',
+    ],
   },
 ];
 
@@ -233,18 +221,20 @@ const ToolsSection: React.FC = () => (
   <section className="py-20 px-6 bg-slate-900">
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">13 MCP Tools</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Seven Essential Tools</h2>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          Governed geoscience tools accessible via FastMCP. Each tool validates against F1-F13 constitutional floors before execution.
+          Governed geoscience tools accessible via FastMCP. Each tool validates 
+          against F1-F13 constitutional floors. AC_Risk is the core.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {TOOL_CATEGORIES.map((cat) => (
-          <div key={cat.title} className="p-6 rounded-2xl bg-slate-950/50 border border-slate-800">
+          <div key={cat.title} className={`p-6 rounded-2xl border ${cat.highlight ? 'bg-amber-950/30 border-amber-500/30' : 'bg-slate-950/50 border-slate-800'}`}>
             <div className="flex items-center gap-3 mb-4">
-              <cat.icon className="w-5 h-5 text-blue-400" />
+              <cat.icon className={`w-5 h-5 ${cat.highlight ? 'text-amber-400' : 'text-blue-400'}`} />
               <h3 className="font-bold text-white">{cat.title}</h3>
+              {cat.highlight && <span className="text-[10px] px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded uppercase">Core</span>}
             </div>
             <div className="space-y-2">
               {cat.tools.map((tool) => (
@@ -263,25 +253,24 @@ const ToolsSection: React.FC = () => (
           <Server className="w-4 h-4" />
           <span>MCP Endpoint</span>
         </div>
-        <code className="text-blue-400">fastmcp run https://geox.arif-fazil.com/mcp</code>
+        <code className="text-blue-400">https://geox.arif-fazil.com/mcp/v1/messages</code>
       </div>
     </div>
   </section>
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Constitutional Floors
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// Constitutional Floors (F1-F13 Canonical)
+// ═══════════════════════════════════════════════════════════════════════════════
 
 const FLOORS = [
-  { id: 'F1', name: 'AMANAH', desc: 'Reversible operations', icon: Lock },
-  { id: 'F2', name: 'TRUTH', desc: 'Evidence-based outputs', icon: Eye },
-  { id: 'F3', name: 'TRI-WITNESS', desc: 'Human × AI × System', icon: Layers },
-  { id: 'F4', name: 'CLARITY', desc: 'Zero entropy decisions', icon: Zap },
-  { id: 'F5', name: 'PEACE', desc: 'Non-adversarial', icon: Shield },
-  { id: 'F7', name: 'HUMILITY', desc: 'Confidence ≤ 0.90', icon: BarChart3 },
-  { id: 'F9', name: 'ANTI-HANTU', desc: 'Ghost detection', icon: Eye },
-  { id: 'F13', name: 'SOVEREIGN', desc: 'Human override', icon: Lock },
+  { id: 'F1', name: 'AMANAH', desc: 'Reversibility', icon: Lock },
+  { id: 'F2', name: 'TRUTH', desc: 'Uncertainty quantified', icon: Eye },
+  { id: 'F4', name: 'CLARITY', desc: 'Units validated', icon: Cpu },
+  { id: 'F7', name: 'HUMILITY', desc: 'Confidence ≤ 15%', icon: BarChart3 },
+  { id: 'F9', name: 'ANTI-HANTU', desc: 'Physics grounding', icon: Shield },
+  { id: 'F11', name: 'AUTHORITY', desc: 'Provenance required', icon: Server },
+  { id: 'F13', name: 'SOVEREIGN', desc: 'Human veto', icon: Lock },
 ];
 
 const GovernanceSection: React.FC = () => (
@@ -290,11 +279,12 @@ const GovernanceSection: React.FC = () => (
       <div className="text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Constitutional Governance</h2>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          13 floors of constitutional discipline. Every interpretation passes through F1-F13 validation gates.
+          Seven floors of constitutional discipline. Every interpretation passes 
+          through F1-F13 validation gates. AC_Risk ≥ 0.60 triggers 888_HOLD.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
         {FLOORS.map((floor) => (
           <div key={floor.id} className="p-4 rounded-xl bg-slate-900/50 border border-slate-800 text-center hover:border-blue-500/30 transition-colors">
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-500/10 mb-3">
@@ -306,13 +296,30 @@ const GovernanceSection: React.FC = () => (
           </div>
         ))}
       </div>
+
+      {/* AC_Risk Equation */}
+      <div className="mt-12 p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
+        <h3 className="text-center text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Theory of Anomalous Contrast (ToAC)</h3>
+        <div className="text-center font-mono text-lg text-white">
+          <span className="text-amber-400">AC_Risk</span> = 
+          <span className="text-blue-400"> U_phys</span> × 
+          <span className="text-violet-400"> D_transform</span> × 
+          <span className="text-cyan-400"> B_cog</span>
+        </div>
+        <div className="mt-4 flex justify-center gap-8 text-xs text-slate-500">
+          <span><span className="text-amber-400">SEAL</span> &lt; 0.15</span>
+          <span><span className="text-blue-400">QUALIFY</span> &lt; 0.35</span>
+          <span><span className="text-orange-400">HOLD</span> &lt; 0.60</span>
+          <span><span className="text-red-400">VOID</span> ≥ 0.60</span>
+        </div>
+      </div>
     </div>
   </section>
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Malay Basin Pilot Showcase
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// Malay Basin Pilot
+// ═══════════════════════════════════════════════════════════════════════════════
 
 const PilotSection: React.FC = () => (
   <section className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-950">
@@ -320,29 +327,28 @@ const PilotSection: React.FC = () => (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/30 mb-6">
-            <Radio className="w-3 h-3 text-green-400 animate-pulse" />
+            <Zap className="w-3 h-3 text-green-400 animate-pulse" />
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider">Live Pilot</span>
           </div>
 
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Malay Basin Petroleum Exploration</h2>
           <p className="text-slate-400 mb-6 leading-relaxed">
-            The live demonstration of GEOX capabilities. Real exploration metrics,
-            play type distribution, creaming curve analysis, and constitutional governance
-            applied to the Malay Basin — our primary operational domain.
+            The live demonstration of GEOX Earth Intelligence Core. Real exploration metrics,
+            play type distribution, and constitutional governance applied to the Malay Basin.
           </p>
 
           <div className="grid grid-cols-2 gap-4 mb-8">
             <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
-              <div className="text-2xl font-black text-white">500+</div>
-              <div className="text-xs text-slate-500 uppercase tracking-wider">MMBOE Cumulative</div>
+              <div className="text-2xl font-black text-white">12.4</div>
+              <div className="text-xs text-slate-500 uppercase tracking-wider">Bnboe Recoverable</div>
             </div>
             <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
-              <div className="text-2xl font-black text-white">4</div>
+              <div className="text-2xl font-black text-white">142</div>
+              <div className="text-xs text-slate-500 uppercase tracking-wider">Fields Discovered</div>
+            </div>
+            <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
+              <div className="text-2xl font-black text-white">48</div>
               <div className="text-xs text-slate-500 uppercase tracking-wider">Play Types</div>
-            </div>
-            <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
-              <div className="text-2xl font-black text-white">EDP15</div>
-              <div className="text-xs text-slate-500 uppercase tracking-wider">Baseline</div>
             </div>
             <div className="p-4 rounded-xl bg-slate-950/50 border border-slate-800">
               <div className="text-2xl font-black text-white">F1-F13</div>
@@ -353,7 +359,6 @@ const PilotSection: React.FC = () => (
 
         <div className="relative">
           <div className="aspect-video rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden relative">
-            {/* Stylized map preview */}
             <div className="absolute inset-0 bg-slate-950" />
             <div
               className="absolute inset-0 opacity-10"
@@ -362,7 +367,6 @@ const PilotSection: React.FC = () => (
                 backgroundSize: '40px 40px'
               }}
             />
-            {/* Mock basin polygon */}
             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 225">
               <polygon
                 points="80,60 200,30 320,70 280,160 120,180 60,120"
@@ -380,8 +384,6 @@ const PilotSection: React.FC = () => (
                 Malay Basin
               </text>
             </svg>
-
-            {/* Corner label */}
             <div className="absolute bottom-3 left-3 px-2 py-1 rounded bg-slate-950/80 border border-slate-800 text-[10px] font-mono text-slate-400">
               5.5°N, 104.5°E · WGS84
             </div>
@@ -392,9 +394,9 @@ const PilotSection: React.FC = () => (
   </section>
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
 // Footer
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
 
 const Footer: React.FC = () => (
   <footer className="py-12 px-6 bg-slate-950 border-t border-slate-900">
@@ -406,7 +408,7 @@ const Footer: React.FC = () => (
             <span className="font-black text-white">GEOX</span>
           </div>
           <p className="text-xs text-slate-500 leading-relaxed">
-            Constitutional geoscience platform. Forged through discipline, not granted by authority.
+            Earth Intelligence Core. Forged through discipline, not granted by authority.
           </p>
         </div>
 
@@ -422,8 +424,8 @@ const Footer: React.FC = () => (
         <div>
           <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Resources</h4>
           <div className="space-y-2 text-xs">
-            <a href="https://geox.arif-fazil.com/mcp" className="block text-slate-500 hover:text-blue-400 transition-colors">MCP Endpoint</a>
             <a href="https://geox.arif-fazil.com/health" className="block text-slate-500 hover:text-blue-400 transition-colors">Health Check</a>
+            <a href="https://geox.arif-fazil.com/tools" className="block text-slate-500 hover:text-blue-400 transition-colors">Tool Registry</a>
             <span className="block text-slate-600">GitHub (Private)</span>
           </div>
         </div>
@@ -432,22 +434,22 @@ const Footer: React.FC = () => (
           <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Seal</h4>
           <div className="text-xs text-slate-500">
             <p className="font-mono text-amber-500/80 mb-1">DITEMPA BUKAN DIBERI</p>
-            <p>v0.6.1 · AGPL-3.0</p>
-            <p className="mt-1">Muhammad Arif bin Fazil</p>
+            <p>v2026.04.10-EIC · MIT</p>
+            <p className="mt-1">arifOS Earth Intelligence</p>
           </div>
         </div>
       </div>
 
       <div className="pt-8 border-t border-slate-900 text-center text-[10px] text-slate-600 font-mono">
-        GEOX Earth Witness · Constitutional Geoscience Platform · 2026
+        GEOX Earth Intelligence Core · Constitutional Geoscience Platform · 2026
       </div>
     </div>
   </footer>
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
 // Main Landing Page
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onEnterCockpit }) => {
   const [showNav, setShowNav] = useState(false);
@@ -469,8 +471,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterCockpit }) => {
           </div>
 
           <div className="flex items-center gap-4">
-            <a href="https://wiki.arif-fazil.com" target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-white transition-colors hidden sm:block">
-              Ω-Wiki
+            <a href="https://github.com/ariffazil/GEOX/blob/main/docs/README.md" target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-white transition-colors hidden sm:block">
+              Docs
             </a>
             <button
               onClick={onEnterCockpit}
@@ -484,7 +486,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterCockpit }) => {
       </nav>
 
       <Hero onEnterCockpit={onEnterCockpit} />
-      <CapabilitiesSection />
+      <AppsSection />
       <ToolsSection />
       <GovernanceSection />
       <PilotSection />

@@ -123,7 +123,7 @@ const initialGovernance: GovernanceState = {
 
 // Initial state
 const initialState: GEOXState = {
-  activeTab: 'map',
+  activeTab: 'basin',
   viewMode: '2d',
   panelConfig: {
     leftWidth: 25,
