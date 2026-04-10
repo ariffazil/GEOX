@@ -1,6 +1,7 @@
 # ── GEOX GUI Microfrontend ────────────────────────────────────────────────────
 # The Earth Witness Visual Mode
 # DITEMPA BUKAN DIBERI
+# v2026.04.10-EIC
 # ──────────────────────────────────────────────────────────────────────────────
 
 # Build stage
@@ -17,11 +18,11 @@ RUN npm run build
 # Runtime stage
 FROM nginx:alpine
 
-# Copy built assets
+# Copy built assets (includes apps via public/ folder)
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Default Nginx config (supports SPA routing)
-RUN printf "server {\n  listen 80;\n  location / {\n    root /usr/share/nginx/html;\n    index index.html;\n    try_files \$uri \$uri/ /index.html;\n  }\n}\n" > /etc/nginx/conf.d/default.conf
+# Nginx config for SPA
+RUN echo 'server { listen 80; location / { root /usr/share/nginx/html; index index.html; try_files $uri $uri/ /index.html; } }' > /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
