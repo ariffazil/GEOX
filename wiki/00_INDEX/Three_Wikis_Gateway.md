@@ -29,7 +29,7 @@ It should be entered when the work involves:
 
 But GEOX does not stand alone.
 
-- **arifOS** provides the constitutional floors, verdicts, and human sovereignty.
+- **arifOS** provides the constitutional floors, verdicts, human sovereignty, and naming canon.
 - **AF-FORGE** provides the machine, deployment, services, and operational substrate.
 
 ---
@@ -55,6 +55,7 @@ Use arifOS when you need:
 
 Recommended entry points:
 - `/root/arifOS/wiki/index.md`
+- `Naming_Canon`
 - `What-is-arifOS`
 - `Floors`
 - `Trinity_Architecture`

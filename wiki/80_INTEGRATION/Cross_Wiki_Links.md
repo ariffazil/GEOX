@@ -39,6 +39,7 @@ Jump to arifOS for:
 
 Recommended arifOS entry points:
 - `/root/arifOS/wiki/index.md`
+- `Naming_Canon`
 - `What-is-arifOS`
 - `Floors`
 - `Trinity_Architecture`
