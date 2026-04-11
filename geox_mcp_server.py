@@ -221,6 +221,168 @@ async def geox_metabolize(
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# ACP (Agent Control Plane) Integration
+# ═══════════════════════════════════════════════════════════════════════════════
+
+try:
+    from geox_mcp_server_acp import (
+        acp,
+        acp_register_agent,
+        acp_submit_proposal,
+        acp_check_convergence,
+        acp_grant_seal,
+        acp_get_status,
+    )
+    _HAS_ACP = True
+    logger.info("ACP (Agent Control Plane) loaded — A2A enabled")
+except ImportError as e:
+    _HAS_ACP = False
+    logger.warning("ACP not available: %s", e)
+
+
+@mcp.tool(name="geox_acp_register_agent")
+async def geox_acp_register_agent(
+    agent_id: str,
+    role: str,
+    name: str,
+    resources: list[str] | None = None,
+    tools: list[str] | None = None
+) -> dict:
+    """
+    Register an AI agent with the GEOX Agent Control Plane (ACP).
+    
+    Enables A2A (Agent-to-Agent) communication and constitutional governance.
+    
+    agent_id: Unique identifier for the agent
+    role: Agent specialization (petrophysicist, geophysicist, geologist, etc.)
+    name: Human-readable agent name
+    resources: List of resource URIs to subscribe (e.g., ["geox://1d/triple-combo"])
+    tools: List of authorized tool names
+    """
+    if not _HAS_ACP:
+        return _build_hardened_result(
+            "geox_acp_register_agent",
+            structured_content={"status": "UNAVAILABLE"},
+            error="ACP module not loaded. A2A unavailable."
+        )
+    
+    result = await acp_register_agent(agent_id, role, name, resources, tools)
+    return _build_hardened_result(
+        "geox_acp_register_agent",
+        structured_content=result,
+        content=f"Agent {agent_id} registered with ACP. A2A ready."
+    )
+
+
+@mcp.tool(name="geox_acp_submit_proposal")
+async def geox_acp_submit_proposal(
+    agent_id: str,
+    proposal: dict[str, Any]
+) -> dict:
+    """
+    Submit an interpretation proposal for 888_JUDGE evaluation.
+    
+    The proposal undergoes F1-F13 constitutional validation.
+    If all floors pass, returns AC_Risk qualified status.
+    If critical floors fail, returns 888_HOLD.
+    
+    agent_id: Registered agent ID
+    proposal: Interpretation payload with uncertainty bounds
+    """
+    if not _HAS_ACP:
+        return _build_hardened_result(
+            "geox_acp_submit_proposal",
+            structured_content={"status": "UNAVAILABLE"},
+            error="ACP module not loaded."
+        )
+    
+    result = await acp_submit_proposal(agent_id, proposal)
+    return _build_hardened_result(
+        "geox_acp_submit_proposal",
+        structured_content=result,
+        content=f"Proposal evaluated. Verdict: {result.get('verdict', 'UNKNOWN')}"
+    )
+
+
+@mcp.tool(name="geox_acp_check_convergence")
+async def geox_acp_check_convergence(
+    resource: str
+) -> dict:
+    """
+    Check if agents subscribed to a resource have converged.
+    
+    Detects discordance (conflict) between agent interpretations.
+    Triggers A2A alert if variance exceeds F7 threshold (15%).
+    
+    resource: Resource URI to check (e.g., "geox://1d/triple-combo")
+    """
+    if not _HAS_ACP:
+        return _build_hardened_result(
+            "geox_acp_check_convergence",
+            structured_content={"status": "UNAVAILABLE"},
+            error="ACP module not loaded."
+        )
+    
+    result = await acp_check_convergence(resource)
+    return _build_hardened_result(
+        "geox_acp_check_convergence",
+        structured_content=result,
+        content=f"Convergence check: {result.get('message', 'Unknown')}"
+    )
+
+
+@mcp.tool(name="geox_acp_grant_seal")
+async def geox_acp_grant_seal(
+    proposal_id: str,
+    human_auth_token: str
+) -> dict:
+    """
+    Grant 999_SEAL (sovereign authority) to a proposal.
+    
+    REQUIRES human authorization (F13 SOVEREIGN).
+    The auth_token must be validated by the 888_JUDGE.
+    
+    proposal_id: ID of the proposal to seal
+    human_auth_token: Sovereign authority token (Wscar_*)
+    """
+    if not _HAS_ACP:
+        return _build_hardened_result(
+            "geox_acp_grant_seal",
+            structured_content={"status": "UNAVAILABLE"},
+            error="ACP module not loaded."
+        )
+    
+    result = acp_grant_seal(proposal_id, human_auth_token)
+    return _build_hardened_result(
+        "geox_acp_grant_seal",
+        structured_content=result,
+        content=result.get("message", "Seal processed")
+    )
+
+
+@mcp.tool(name="geox_acp_status")
+async def geox_acp_status() -> dict:
+    """
+    Get Agent Control Plane system status.
+    
+    Returns agent count, F7 bounds, and ACP health.
+    """
+    if not _HAS_ACP:
+        return _build_hardened_result(
+            "geox_acp_status",
+            structured_content={"status": "UNAVAILABLE", "acp_available": False},
+            error="ACP module not loaded"
+        )
+    
+    result = acp_get_status()
+    return _build_hardened_result(
+        "geox_acp_status",
+        structured_content=result,
+        content=f"ACP Online. Agents: {result.get('agents_registered', 0)}. Seal: {result.get('seal')}"
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # Malay Basin Pilot Tool
 # ═══════════════════════════════════════════════════════════════════════════════
 
