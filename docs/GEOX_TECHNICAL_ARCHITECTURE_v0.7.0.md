@@ -10,6 +10,7 @@ GEOX is NOT a visualization tool. It is an **evidence-graph orchestration layer*
 - **The Skin**: Open-web visualization (Wellioviz, Plotly, vtk.js).
 - **The Machinery**: Interpretation logic (GemPy, arifOS Metabolic Tools).
 - **The Contract**: MCP tools return **Interactive Manifests** (JSON-LD) that hydrate the skin, rather than opaque blobs.
+- **Legacy Layer**: The [Analog Digitization Mode](ANALOG_DIGITIZATION_MODE_SPEC.md) enables the injection of heritage analog data into the digital evidence graph.
 
 ---
 
@@ -18,11 +19,13 @@ GEOX is NOT a visualization tool. It is an **evidence-graph orchestration layer*
 ### 🟦 1D: Borehole Environment
 - **Parser**: `Wellio.js` (LAS 2.0 to JSON normalization).
 - **Renderer**: `Wellioviz` (SVG-based track rendering from JSON templates).
+- **Analog Forge**: `LogDigitizer` (CV-based digitization of scanned borehole logs into LAS).
 - **Governance**: F9 Anti-Hantu enforces rock-type physics on the log response.
 
 ### 🟩 2D: Planar Interpretation
 - **Analysis Speed**: `Plotly.js` for cross-plots, stratigraphic charts, and heatmap cross-sections.
 - **Seismic Scale**: Custom `WebGL/Canvas` path (referenced from `Seisvis`) for large-scale SEGY textures and attribute picking.
+- **Analog Forge**: `MapGeoreferencer` (GDAL-based warping of scanned maps and seismic sections).
 - **Coordination**: Proj4js for CRS normalization across maps and sections.
 
 ### 🟧 3D: Volume & Basin Modeling
