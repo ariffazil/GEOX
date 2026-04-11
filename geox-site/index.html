@@ -100,6 +100,7 @@
             </div>
             <nav>
                 <a href="index.html">Home</a>
+                <a href="tools/index.html">Tools</a>
                 <a href="platform/index.html">Platform</a>
                 <a href="workspaces/index.html">Workspaces</a>
                 <a href="status/index.html">Status</a>
@@ -277,6 +278,16 @@
             </div>
         </section>
 
+        <!-- TOOLS CTA -->
+        <section id="tools-cta" style="margin: 4rem 0; padding: 2rem; border: 1px solid var(--accent-color); background: rgba(253, 224, 71, 0.05);">
+            <h2 style="margin-bottom: 1rem;">🛠️ Tools Catalog</h2>
+            <p>Browse, test, and execute all <strong id="tools-cta-count">—</strong> MCP tools in the live interface.</p>
+            <p style="color: var(--muted-color); margin: 1rem 0;">
+                Each tool card shows parameters, accepts live input, and displays real-time results from the MCP server.
+            </p>
+            <a href="tools/index.html" class="btn" style="margin-top: 1rem;">Open Tools Catalog →</a>
+        </section>
+
         <!-- SKILLS PREVIEW -->
         <section id="skills-preview" style="margin: 4rem 0;">
             <h2 style="margin-bottom: 2rem;">Skills</h2>
@@ -291,7 +302,7 @@
             <p style="font-size: 0.85rem; color: var(--muted-color); margin-bottom: 1rem;">
                 <strong id="skills-tool-count">—</strong> MCP tools available across <strong id="skills-dimension-count">—</strong> dimensions.
             </p>
-            <a href="platform/index.html" class="btn">Browse Skills</a>
+            <a href="tools/index.html" class="btn">Browse Tools</a>
         </section>
 
         <!-- PLATFORM / API PREVIEW -->
@@ -483,6 +494,7 @@
             document.getElementById('tool-count-detail').textContent = toolCount;
             document.getElementById('skills-tool-count').textContent = toolCount;
             document.getElementById('skills-dimension-count').textContent = health?.enabled_dimensions?.length || '—';
+            document.getElementById('tools-cta-count').textContent = toolCount;
 
             // MCP Status in Four Surfaces
             if (tools !== null && health?.status === 'healthy') {
