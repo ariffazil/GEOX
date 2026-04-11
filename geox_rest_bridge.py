@@ -88,7 +88,10 @@ def create_app():
     
     # Mount MCP app at /mcp (if available)
     if hasattr(mcp, 'http_app'):
-        mcp_app = mcp.http_app
+        mcp_app = mcp.http_app(
+            path="/mcp",
+            transport="sse",
+        )
         app.mount("/mcp", mcp_app)
     else:
         # Add a placeholder MCP endpoint
