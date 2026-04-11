@@ -7,6 +7,31 @@ import { z } from 'zod';
  */
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// Dimensions & App Contracts
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export const DimensionEnum = z.enum([
+  'PROSPECT',  // Basin/Play scale, ranking, economics
+  'WELL',      // Borehole scale, logs, markers, petrophysics
+  'SECTION',   // 2D interpretation on Seismic/Transects
+  'EARTH_3D',  // Volumetric interpretation, attributes, surfaces
+  'TIME_4D',   // 4D seismic, production dynamics, reservoir history
+  'PHYSICS',   // Governance, thermodynamic audit, constitutional reality
+  'MAP',       // Transversal: Geospatial reference, CRS, navigation
+]);
+
+export type Dimension = z.infer<typeof DimensionEnum>;
+
+export const AppDomainEnum = z.enum([
+  'seismic',
+  'petrophysics',
+  'geology',
+  'economics',
+  'governance',
+  'general',
+]);
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // Foundational Primitives
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -127,6 +152,24 @@ export const AuditEventSchema = z.object({
   timestamp: z.string().datetime(),
 });
 
+export const AppManifestSchema = z.object({
+  appId: z.string().regex(/^geox\.[a-z][a-z0-9-]*\.[a-z][a-z0-9-]*$/),
+  version: z.string(),
+  dimension: DimensionEnum,
+  domain: AppDomainEnum,
+  title: z.string(),
+  description: z.string(),
+  uiEntry: z.object({
+    resourceUri: z.string(),
+    mode: z.enum(['inline', 'external', 'inline-or-external']),
+    visibility: z.enum(['model', 'app', 'both']),
+  }),
+  toolsRequired: z.array(z.string()),
+  eventsPublished: z.array(z.string()),
+  eventsSubscribed: z.array(z.string()),
+  metadata: z.record(z.string(), z.any()).optional(),
+});
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // TypeScript Types (Derived)
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -139,3 +182,4 @@ export type AuditEvent = z.infer<typeof AuditEventSchema>;
 export type XYPoint = z.infer<typeof XYPointSchema>;
 export type XYZPoint = z.infer<typeof XYZPointSchema>;
 export type BoundingBox = z.infer<typeof BoundingBoxSchema>;
+export type AppManifest = z.infer<typeof AppManifestSchema>;

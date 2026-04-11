@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Any, Literal
+
 
 from pydantic import BaseModel, Field, HttpUrl
 
@@ -16,15 +16,24 @@ from pydantic import BaseModel, Field, HttpUrl
 # Enums
 # ═══════════════════════════════════════════════════════════════════════════════
 
+class Dimension(str, Enum):
+    """The 7 canonical dimensions of GEOX."""
+    PROSPECT = "PROSPECT"
+    WELL = "WELL"
+    SECTION = "SECTION"
+    EARTH_3D = "EARTH_3D"
+    TIME_4D = "TIME_4D"
+    PHYSICS = "PHYSICS"
+    MAP = "MAP"
+
+
 class AppDomain(str, Enum):
     """Functional domains for GEOX apps."""
     SEISMIC = "seismic"
     PETROPHYSICS = "petrophysics"
     GEOLOGY = "geology"
-    MAPS = "maps"
-    WELLS = "wells"
-    DOCS = "docs"
     ECONOMICS = "economics"
+    GOVERNANCE = "governance"
     GENERAL = "general"
 
 
@@ -234,6 +243,7 @@ class GeoXAppManifest(BaseModel):
         pattern=r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*))?(?:\+([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*))?$",
         description="Semantic version"
     )
+    dimension: Dimension
     domain: AppDomain
     
     # Display
@@ -268,6 +278,7 @@ class GeoXAppManifest(BaseModel):
             "example": {
                 "app_id": "geox.seismic.viewer",
                 "version": "1.0.0",
+                "dimension": "EARTH_3D",
                 "domain": "seismic",
                 "display_name": "Seismic Viewer",
                 "description": "Interactive 2D/3D seismic data visualization",

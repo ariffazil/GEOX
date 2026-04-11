@@ -23,7 +23,8 @@ class AppManifest(BaseModel):
     """
     app_id: str = Field(..., description="Unique identifier: geox.[domain].[name]")
     version: str = Field(..., description="Version of the application.")
-    domain: str = Field(..., description="Geoscientific domain: seismic, wells, maps, etc.")
+    dimension: str = Field(..., description="The canonical dimension (PROSPECT, WELL, etc.)")
+    domain: str = Field(..., description="Geoscientific domain: seismic, petrophysics, geology, etc.")
     title: str = Field(..., description="Human-readable title.")
     description: str = Field(..., description="Deep description of the app's purpose.")
 
@@ -54,6 +55,7 @@ class AppManifest(BaseModel):
             "example": {
                 "app_id": "geox.seismic.viewer",
                 "version": "1.0.0",
+                "dimension": "EARTH_3D",
                 "domain": "seismic",
                 "title": "Seismic Section Viewer",
                 "ui_entry": {
