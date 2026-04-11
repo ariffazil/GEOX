@@ -508,12 +508,15 @@ def main():
     logger.info(f"   Tools: Bridge + Dimensional + ACP + ToAC + CANON_9")
     
     if args.transport == "http" or args.transport == "sse":
-        # Create a Starlette app with health endpoint and mount MCP
+        # Get the FastMCP HTTP app and wrap it with health endpoint
         from starlette.routing import Mount
         
+        mcp_app = mcp.http_app()
+        
+        # Create routes: health first, then mount MCP at /mcp
         routes = [
             Route("/health", health_endpoint),
-            Mount("/", app=mcp.http_app()),
+            Mount("/mcp", app=mcp_app),
         ]
         
         app = Starlette(routes=routes)
