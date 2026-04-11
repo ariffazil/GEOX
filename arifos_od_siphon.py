@@ -1,5 +1,5 @@
 """
-arifos_od_siphon.py — OpendTect-Resident Sovereign Siphon
+arifos_od_siphon.py — OpendTect-Resident Sovereign Siphon (v1.1)
 ═══════════════════════════════════════════════════════════════════════════════
 DITEMPA BUKAN DIBERI
 
@@ -12,12 +12,11 @@ import os
 import sys
 
 # Protocol: We attempt to import odbind. 
-# If running inside OpendTect's Python, this should succeed.
+# Fixed Bug 2: Correct module names from ODBind documentation.
 try:
     import odbind.survey as odsurvey
-    import odbind.seismic as odseismic
+    import odbind.horizon3d as odhor
     import odbind.well as odwell
-    import odbind.horizon as odhor
     OD_AVAILABLE = True
 except ImportError:
     OD_AVAILABLE = False
@@ -26,6 +25,7 @@ class ODSiphon:
     """
     The Siphon: Extracts truth from OpendTect mess into GEOX Causal Scenes.
     """
+    # Fixed Bug 1: Refactored to __init__
     def __init__(self, survey_name=None):
         if not OD_AVAILABLE:
             self.error = "odbind not found. Ensure this script runs inside OpendTect's Python environment."
@@ -37,54 +37,73 @@ class ODSiphon:
                 self.survey = odsurvey.Survey(survey_name)
             else:
                 self.survey = odsurvey.Survey.current()
+            
+            # Use the high-fidelity info struct from ODBind
+            self.info = self.survey.info
             self.error = None
         except Exception as e:
             self.error = f"Failed to attach to survey: {str(e)}"
 
     def distill_manifold(self) -> dict:
-        """The Manifold: Admissible spatial-temporal domain."""
+        """The Manifold: Standardized spatial-temporal domain."""
         if self.error: return {"error": self.error}
         
-        # ODBind metadata mapping
-        sm = self.survey.metadata
+        # ODBind metadata mapping via info object
+        zs = self.info.zsamp
+        ins = self.info.inlsamp
+        crs = self.info.crlsamp
+        
         return {
-            "manifold": {
-                "name": self.survey.name,
-                "crs": sm.get("CRS", "Unknown"),
-                "z_domain": sm.get("ZDomain", "TWT"),
-                "ranges": {
-                    "inl": [float(sm.get("FirstInl", 0)), float(sm.get("LastInl", 0))],
-                    "crl": [float(sm.get("FirstCrl", 0)), float(sm.get("LastCrl", 0))],
-                    "z": [float(sm.get("FirstZ", 0)), float(sm.get("LastZ", 0))]
-                },
-                "units": {
-                    "xy": sm.get("Units.XY", "m"),
-                    "z": sm.get("Units.Z", "ms")
-                }
-            },
-            "status": "SEALED",
+            "survey_name": self.survey.name,
+            "crs": self.info.cr_system.name if self.info.cr_system else "Unknown",
+            "xy_unit": self.info.xy_unit,
+            "z_unit": self.info.z_unit,
+            "z_domain": self.info.z_domain,
+            "inline":    {"start": ins.start, "step": ins.step, "count": ins.nr},
+            "crossline": {"start": crs.start, "step": crs.step, "count": crs.nr},
+            "z":         {"start": zs.start,  "step": zs.step,  "count": zs.nr},
             "seal": "DITEMPA_BUKAN_DIBERI"
         }
 
+    # Fixed Bug 3: CLI Non-blocking model
     def distill_claim(self, horizon_id: str) -> dict:
         """The Claim: Interpreted surface geometry."""
         if self.error: return {"error": self.error}
         
         try:
-            h = odhor.Horizon3D(self.survey, horizon_id)
+            h = odhor.Horizon3DSurveyObject(self.survey, horizon_id)
+            h_info = h.info
             return {
-                "claim": {
-                    "id": horizon_id,
-                    "type": "Horizon3D",
-                    "z_range": [float(h.min_z), float(h.max_z)],
-                    "provenance": {
-                        "created_by": h.metadata.get("Created.By", "Unknown"),
-                        "created_at": h.metadata.get("Created.At", "Unknown")
-                    }
+                "id": horizon_id,
+                "type": "Horizon3D",
+                "z_range": [float(h_info.z_min), float(h_info.z_max)],
+                "provenance": {
+                    "created_by": h_info.user_name,
+                    "created_at": getattr(h_info, 'created_at', 'Unknown')
                 }
             }
         except Exception as e:
             return {"error": f"Claim distillation failed: {str(e)}"}
+
+    def export_causal_scene(self, horizon_id=None, path=None):
+        """Packages everything into the final JSON manifold."""
+        scene = {
+            "manifold": self.distill_manifold(),
+            "claims": [],
+            "truth": [],
+            "status": "SEALED",
+            "metadata": {"origin": "arifos_od_siphon_v1.1"}
+        }
+        
+        if horizon_id:
+            scene["claims"].append(self.distill_claim(horizon_id))
+            
+        if path:
+            with open(path, 'w') as f:
+                json.dump(scene, f, indent=2)
+        else:
+            print(json.dumps(scene, indent=2))
+        return scene
 
 def main():
     """CLI Entrypoint for the GEOX Agent to pipe data."""
@@ -93,8 +112,9 @@ def main():
         print(json.dumps({"status": "FAILURE", "error": siphon.error}))
         sys.exit(1)
         
-    # Default behavior: Print Manifold
-    print(json.dumps(siphon.distill_manifold(), indent=2))
+    # Example usage: python arifos_od_siphon.py <hor_name>
+    hor_name = sys.argv[1] if len(sys.argv) > 1 else None
+    siphon.export_causal_scene(horizon_id=hor_name)
 
 if __name__ == "__main__":
     main()
