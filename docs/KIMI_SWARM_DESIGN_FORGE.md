@@ -33,13 +33,23 @@ You are tasked with forging the final interface manifest for the GEOX Command Ce
 - **Micro-animations**: Subtle transitions for context switching and data hydration.
 - **Consistency**: Unified headers, constitutional floor badges (F1, F2, F7, F11, etc.), and system status telemetry.
 
+## ANALOG-TO-DIGITAL SCALE & TEMPORAL CONSTITUTION
+The GEOX Forge must transform analog scans into **Digital Truth** anchored in 4D space:
+- **Earth True Scale (1D/2D/3D)**: Every pixel in an uploaded log (1D) or map/section (2D) must be calibrated to physical units (meters/feet) and georeferenced to global coordinates (latitude/longitude/TWT).
+- **Temporal Space (Chronostratigraphy)**: Vertical dimensions are not just depth; they are **Time**. Digitized features must be mappable to the geological timescale (Ma) via automated stratigraphic hydration (Macrostrat).
+- **Vision Intelligence**: Use computer vision to detect log tracks and map control points (GCPs), ensuring the "Digital Twin" is geomechanically and chronologically consistent.
+
 ## YOUR TASK: FORGE THE MANIFEST
+
 1.  **Refine the Core UI**: Standardize the shared component library across all apps.
-2.  **Hydrate with Complexity**: Ensure each app (Well Context, Seismic, Basin, Forge, Risk) feels like a professional-grade instrument.
-3.  **Seal the Interface**: Implement the final responsive layout, iconography, and spectral themes that define the v1.0.0 GEOX "Heavy Witness" state.
+2.  **Forge the Scale-Aware Layer**: Implement the recursive georeferencing logic for 1D/2D/3D analog-to-digital transformation. Ensure maps/logs are calibrated to Earth True Scale and Temporal Chronostratigraphy.
+3.  **Hydrate with Complexity**: Ensure each app (Well Context, Seismic, Basin, Forge, Risk) feels like a professional-grade instrument.
+4.  **Seal the Interface**: Implement the final responsive layout and spectral themes that define the v1.0.0 GEOX "Heavy Witness" state.
 
 ## GOLDEN AESTHETIC & INTELLIGENCE MANIFEST (CANONICAL DNA)
+
 The following React manifest serves as the **Canonical Specification** for both UI/UX and Intelligence Integration. Use its styling logic and LLM-coprocessor patterns as the ground truth.
+
 
 ```jsx
 // --- CANONICAL STYLING & INTELLIGENCE MANIFEST ---
