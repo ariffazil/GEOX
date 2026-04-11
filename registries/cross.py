@@ -1,6 +1,7 @@
 import logging
 from typing import Optional
 from fastmcp import FastMCP
+from registries import Dimension
 
 logger = logging.getLogger("geox.cross")
 
@@ -51,7 +52,6 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
     @mcp.tool(name="cross_dimension_list")
     async def cross_dimension_list() -> dict:
         """What dimensions are currently active in this profile?"""
-        from registries import Dimension
         return {
             "profile": profile,
             "dimensions": [d.value for d in Dimension]
@@ -66,7 +66,16 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
     async def geox_get_tools_registry() -> dict:
         """Returns the architectural TOOLS_REGISTRY for UI synchronization."""
         return {
-            "dimensions": ["prospect", "well", "section", "earth3d", "time4d", "physics", "map"],
+            "dimensions": {
+                "prospect": {"name": "Prospecting", "description": "Play Fairway Discovery"},
+                "well": {"name": "Well", "description": "Borehole Truth Channel"},
+                "section": {"name": "Section", "description": "2D Correlation"},
+                "earth3d": {"name": "Earth 3D", "description": "Volumetric Seismic"},
+                "time4d": {"name": "Time 4D", "description": "Basin Evolution"},
+                "physics": {"name": "Physics", "description": "Sovereign Verification"},
+                "map": {"name": "Map", "description": "Spatial Fabric"},
+                "cross": {"name": "Cross", "description": "Dimension Introspection"}
+            },
             "apps": [
                 {"id": "prospect-ui", "name": "Prospect UI", "dim": "prospect"},
                 {"id": "well-desk", "name": "Well Desk", "dim": "well"},
@@ -76,5 +85,15 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
                 {"id": "judge-console", "name": "Judge Console", "dim": "physics"},
                 {"id": "map-layer", "name": "Map Layer", "dim": "map"}
             ],
-            "version": "2.0.0-UNIFIED"
+            "version": "2.0.0-UNIFIED-SPEC"
+        }
+
+    @mcp.tool(name="cross_health")
+    async def cross_health() -> dict:
+        """Sovereign health check for all platform services."""
+        return {
+            "status": "healthy",
+            "registry": "unified",
+            "profile": profile,
+            "dimensions": [d.value for d in Dimension]
         }

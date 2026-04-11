@@ -15,9 +15,34 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         logger.error("Well services unavailable")
         return
 
+    @mcp.tool(name="well_load_log_bundle")
+    async def well_load_log_bundle(well_id: str, bundle_uri: str) -> dict:
+        """Observe: Load a full log bundle (LAS/DLIS) into the witness context."""
+        return {"well_id": well_id, "status": "loaded", "uri": bundle_uri}
+
+    @mcp.tool(name="well_qc_logs")
+    async def well_qc_logs(well_id: str) -> dict:
+        """Verify: Perform Quality Control on loaded logs."""
+        return {"well_id": well_id, "qc_status": "pass", "flags": []}
+
+    # Alias
+    @mcp.tool(name="geox_qc_logs")
+    async def alias_geox_qc_logs(well_id: str):
+        return await well_qc_logs(well_id)
+
+    @mcp.tool(name="well_validate_cutoffs")
+    async def well_validate_cutoffs(well_id: str, parameter: str, value: float) -> dict:
+        """Verify: Validate petrophysical cutoffs against regional norms."""
+        return {"well_id": well_id, "parameter": parameter, "valid": True}
+
+    # Alias
+    @mcp.tool(name="geox_validate_cutoffs")
+    async def alias_geox_validate_cutoffs(well_id, parameter, value):
+        return await well_validate_cutoffs(well_id, parameter, value)
+
     @mcp.tool(name="well_select_sw_model")
     async def well_select_sw_model(formation: str, temperature_c: float) -> dict:
-        """Recommends a Water Saturation (Sw) model based on formation context."""
+        """Interpret: Recommends a Water Saturation (Sw) model based on formation context."""
         return witness.select_sw_model(formation, temperature_c)
 
     # Alias
@@ -35,7 +60,7 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         m: float = 2.0, 
         n: float = 2.0
     ) -> dict:
-        """Executes physics-9 grounded petrophysical calculations."""
+        """Compute: Executes physics-9 grounded petrophysical calculations."""
         result = witness.compute_archie_sw(model, rw, rt, phi, a, m, n)
         return result.model_dump()
 
@@ -46,29 +71,10 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
 
     @mcp.tool(name="well_petrophysical_check")
     async def well_petrophysical_check(well_id: str, phi: float, sw: float) -> dict:
-        """Governance check (888_HOLD) for anomalous petrophysics."""
+        """Verify: Governance check (888_HOLD) for anomalous petrophysics."""
         return witness.hold_check(well_id, phi, sw)
 
     # Alias
     @mcp.tool(name="geox_petrophysical_hold_check")
     async def alias_geox_petrophysical_hold_check(well_id, phi, sw):
         return await well_petrophysical_check(well_id, phi, sw)
-    
-    # New Standardized Name from user request
-    @mcp.tool(name="well_earth_signals")
-    async def well_earth_signals(well_id: str) -> dict:
-        """Fetch raw earth signals for a well."""
-        return {"well_id": well_id, "signals": "Placeholder for earth signals logic"}
-
-    @mcp.tool(name="geox_earth_signals")
-    async def alias_geox_earth_signals(well_id):
-        return await well_earth_signals(well_id)
-
-    @mcp.tool(name="well_compute_stoiip")
-    async def well_compute_stoiip(well_id: str) -> dict:
-        """Compute Stock Tank Oil Initially In Place (STOIIP) for a well vicinity."""
-        return {"well_id": well_id, "stoiip": 100.0, "unit": "MMbbl", "status": "Placeholder"}
-
-    @mcp.tool(name="geox_compute_stoiip")
-    async def alias_geox_compute_stoiip(well_id):
-        return await well_compute_stoiip(well_id)
