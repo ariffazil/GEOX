@@ -189,6 +189,84 @@ async def geox_malay_basin_pilot(
 
 
 
+@mcp.tool(name="geox_compute_seismic_attributes")
+async def geox_compute_seismic_attributes(
+    volume_ref: str,
+    attribute_list: list[str],
+    config: dict[str, Any] | None = None,
+    well_ties: list[str] | None = None,
+) -> dict:
+    """
+    Compute classical and meta seismic attributes (coherence, curvature, envelope, etc.).
+    
+    volume_ref: Reference to seismic volume.
+    attribute_list: List of attributes (coherence, curvature_max, curvature_min, envelope, spectral_rms, sweetness, meta_fault_prob).
+    config: Window sizes, sample rates, and other params.
+    well_ties: List of well IDs for calibration (REQUIRED for meta-attributes).
+    """
+    try:
+        from arifos.geox.tools.seismic_attributes_tool import SeismicAttributesTool
+        tool = SeismicAttributesTool()
+        inputs = {
+            "volume_ref": volume_ref,
+            "attribute_list": attribute_list,
+            "config": config or {},
+            "well_ties": well_ties or [],
+        }
+        result = await tool.run(inputs)
+        sc = result.raw_output
+    except Exception as exc:
+        logger.warning("geox_compute_seismic_attributes error: %s", exc)
+        sc = {
+            "status": "888_HOLD",
+            "error": str(exc),
+            "attribute_list": attribute_list,
+        }
+
+    return _build_hardened_result(
+        "geox_compute_seismic_attributes",
+        structured_content=sc,
+        content=f"Seismic attributes {attribute_list} computed for {volume_ref}.",
+    )
+
+
+@mcp.tool(name="geox_calculate_prospect_economics")
+async def geox_calculate_prospect_economics(
+    volumetrics: dict[str, Any],
+    economics: dict[str, Any],
+    location: dict[str, float] | None = None,
+) -> dict:
+    """
+    Calculate prospect volumetrics (STOIIP) and economics (EMV, NPV) with uncertainty.
+    
+    volumetrics: {area_km2, h_m, phi, sw, ng, bo, rf}
+    economics: {price_per_bbl, capex_m_usd, opex_per_bbl, discount_rate, pos}
+    location: {latitude, longitude}
+    """
+    try:
+        from arifos.geox.tools.volumetrics_economics_tool import VolumetricsEconomicsTool
+        tool = VolumetricsEconomicsTool()
+        inputs = {
+            "volumetrics": volumetrics,
+            "economics": economics,
+            "location": location,
+        }
+        result = await tool.run(inputs)
+        sc = result.raw_output
+    except Exception as exc:
+        logger.warning("geox_calculate_prospect_economics error: %s", exc)
+        sc = {
+            "status": "888_HOLD",
+            "error": str(exc),
+        }
+
+    return _build_hardened_result(
+        "geox_calculate_prospect_economics",
+        structured_content=sc,
+        content=f"Prospect economics calculated. EMV: ${sc.get('economics', {}).get('emv_m_usd')}M.",
+    )
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # Health Check Routes (FastMCP 2.x/3.x compatible)
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1127,7 +1205,9 @@ Examples:
     
     logger.info("=" * 60)
     logger.info("Memory Store: %s", "available" if _HAS_MEMORY else "unavailable")
-    logger.info("Tools (14): geox_load_seismic_line, geox_build_structural_candidates,")
+    logger.info("Tools (16): geox_load_seismic_line, geox_build_structural_candidates,")
+    logger.info("            geox_compute_seismic_attributes,")
+    logger.info("            geox_calculate_prospect_economics,")
     logger.info("            geox_feasibility_check, geox_verify_geospatial,")
     logger.info("            geox_evaluate_prospect, geox_query_memory,")
     logger.info("            geox_query_macrostrat, geox_health,")

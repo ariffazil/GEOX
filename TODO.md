@@ -37,15 +37,21 @@ External AI (GPT-5 via Gemini) successfully blocked from hallucinating geologica
 - [x] **Sovereign Veto**: `888_HOLD` triggers functional in petrophysics pipeline.
 - [x] **Prefab UI**: 9 interactive views implemented in `prefab_views.py`.
 
-### P1: Next (Adapter Scaffolding)
-- [ ] **OpenAI Adapter SDK**: Scaffold the `window.openai` bridge in `geox-gui`.
-- [ ] **Copilot Adapter**: Define the JSON-LD / Adaptive Card Extensions for MS Copilot.
-- [ ] **Signed Deep-Links**: Implement HMAC signing for session-handoff to external Web Shell.
+### 1. Unified Interface (Command Center) 🏗️
+- [x] Create centralized hub for all 6 apps
+- [x] Implement cohesive dark-themed design system
+- [x] Deploy to trust surface (Vercel/Kimi/VPS)
+- [x] **New**: Restructured for 1D, 2D, and 3D Domain Categories
 
-### P2: Later (App Depth & 3D)
-- [ ] **Seismic Component**: Implement the multi-slice 2D view in `EarthWitness3D.tsx`.
-- [ ] **Basin Map**: Integrate Leaflet/OpenLayers for GeoJSON spatial rendering.
-- [ ] **Observability**: Implement custom `telemetry.emit` events for user interaction tracking.
+### 2. Domain Intelligence & Data (Next Focus) 🌊
+- [ ] Split apps into 1D (Well), 2D (Seismic), 3D (Basin) domains
+- [ ] Integrate RATLAS Materials into Well Context Desk
+- [ ] Implement Seismic Attribute Generation in 2D Viewer
+- [ ] Connect Basin Explorer to Real Macrostrat/Open Data
+- [ ] Replace synthetic data with Volve/F3/Malay Basin datasets
+- [ ] Achieve 999_SEAL deployment on VPS
+
+### 3. Agentic Governance (arifOS Integration) 🛡️
 - [ ] **cigvis 3D seismic integration** (Phase C).
 
 ---

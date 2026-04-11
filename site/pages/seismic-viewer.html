@@ -500,6 +500,44 @@
           </div>
         </div>
         
+        <!-- Seismic Attributes -->
+        <div class="control-panel p-4">
+          <h3 class="text-sm font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
+            <i data-lucide="wand-2" class="w-4 h-4 text-[#F59E0B]"></i>
+            Seismic Attributes
+          </h3>
+          
+          <div class="space-y-1">
+            <label class="horizon-item cursor-pointer">
+              <input type="checkbox" id="attr-coherence" class="w-4 h-4 rounded border-[#1E293B] bg-[#111418] text-[#F59E0B] focus:ring-[#F59E0B]" onchange="toggleAttribute('coherence')">
+              <i data-lucide="split" class="w-4 h-4 text-[#64748B]"></i>
+              <span class="text-sm text-[#94A3B8]">Coherence</span>
+              <span class="text-[10px] text-[#64748B] ml-auto">Fault Det.</span>
+            </label>
+            
+            <label class="horizon-item cursor-pointer">
+              <input type="checkbox" id="attr-rms" class="w-4 h-4 rounded border-[#1E293B] bg-[#111418] text-[#F59E0B] focus:ring-[#F59E0B]" onchange="toggleAttribute('rms')">
+              <i data-lucide="waves" class="w-4 h-4 text-[#64748B]"></i>
+              <span class="text-sm text-[#94A3B8]">Spectral RMS</span>
+              <span class="text-[10px] text-[#64748B] ml-auto">Amplitude</span>
+            </label>
+            
+            <label class="horizon-item cursor-pointer">
+              <input type="checkbox" id="attr-sweetness" class="w-4 h-4 rounded border-[#1E293B] bg-[#111418] text-[#F59E0B] focus:ring-[#F59E0B]" onchange="toggleAttribute('sweetness')">
+              <i data-lucide="sparkles" class="w-4 h-4 text-[#64748B]"></i>
+              <span class="text-sm text-[#94A3B8]">Sweetness</span>
+              <span class="text-[10px] text-[#64748B] ml-auto">DHI</span>
+            </label>
+          </div>
+          
+          <div class="mt-4 pt-4 border-t border-[#1E293B]">
+            <p class="text-[10px] text-[#64748B]">
+              <i data-lucide="info" class="w-3 h-3 inline mr-1"></i>
+              Computed via <code>SeismicAttributesTool</code> for real open-source data.
+            </p>
+          </div>
+        </div>
+        
         <!-- Info Panel -->
         <div class="control-panel p-4">
           <h3 class="text-sm font-semibold text-[#F8FAFC] mb-4 flex items-center gap-2">
