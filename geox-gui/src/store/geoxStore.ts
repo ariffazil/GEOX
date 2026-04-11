@@ -141,7 +141,7 @@ const initialGovernance: GovernanceState = {
 
 // Initial state
 const initialState: GEOXState = {
-  activeTab: 'basin',
+  activeTab: 'prospect',
   viewMode: '2d',
   panelConfig: {
     leftWidth: 25,
@@ -175,13 +175,36 @@ const initialState: GEOXState = {
       },
     },
   ],
-  wells: [],
+  wells: [
+    {
+      id: 'W-101',
+      name: 'W-101',
+      uwi: 'UWI-MB-101',
+      location: { lat: 5.4, lon: 101.2, datum: 'WGS84', crs: 'EPSG:4326', qcStatus: 'verified', source: 'GSM-702001 Archive' },
+      totalDepth: 2500,
+      status: 'completed'
+    }
+  ],
   seismicLines: [],
-  prospects: [],
+  prospects: [
+    {
+      id: 'PROSPECT_ALPHA',
+      name: 'PROSPECT_ALPHA',
+      play: 'Group J Clastics',
+      reservoir: 'J-20',
+      seal: 'Intra-J Shale',
+      trap: 'Structural',
+      charge: 'Migrated',
+      structuralCandidates: [],
+      closureType: '4-way',
+      coordinates: { lat: 5.4, lon: 101.2 },
+      area: { minLat: 5.38, minLon: 101.18, maxLat: 5.42, maxLon: 101.22 }
+    }
+  ],
   selectedCoordinate: null,
   selectedLine: null,
-  selectedWell: null,
-  selectedProspect: null,
+  selectedWell: 'W-101',
+  selectedProspect: 'PROSPECT_ALPHA',
   cursor: null,
   governance: initialGovernance,
   groundingStatus: {
@@ -316,6 +339,7 @@ export const useGEOXStore = create<GEOXStore>()(
           panelConfig: state.panelConfig,
           geoxUrl: state.geoxUrl,
           layers: state.layers,
+          governance: state.governance,
         }),
       }
     )

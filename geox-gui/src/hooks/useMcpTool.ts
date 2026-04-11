@@ -45,6 +45,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
     reject: (e: string) => void;
     id: string;
     timer: ReturnType<typeof setTimeout>;
+    handler?: (event: MessageEvent) => void;
   } | null>(null);
 
   const { updateFloorStatus } = useGEOXStore();
@@ -54,7 +55,9 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
       // Cancel any previous in-flight call
       if (pendingRef.current) {
         clearTimeout(pendingRef.current.timer);
-        window.removeEventListener('message', _handleResponse);
+        if (pendingRef.current.handler) {
+          window.removeEventListener('message', pendingRef.current.handler);
+        }
         pendingRef.current.reject(`Superseded by new call to ${toolName}`);
         pendingRef.current = null;
       }
@@ -71,7 +74,9 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
         updateFloorStatus('F11', 'amber', `${toolName} in progress…`);
 
         const timer = setTimeout(() => {
-          window.removeEventListener('message', _handleResponse);
+          if (pendingRef.current?.handler) {
+            window.removeEventListener('message', pendingRef.current.handler);
+          }
           pendingRef.current = null;
           const msg = `${toolName} timed out after ${TIMEOUT_MS / 1000}s`;
           setState(prev => ({ ...prev, status: 'error', error: msg }));
@@ -103,6 +108,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
           }
         }
 
+        pendingRef.current.handler = _handleResponse;
         window.addEventListener('message', _handleResponse);
 
         window.parent.postMessage(

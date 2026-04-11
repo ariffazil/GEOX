@@ -1,15 +1,13 @@
 import os
-import json
 import logging
+import sys
 import pandas as pd
 from typing import Optional
 from fastmcp import FastMCP
-from geox_schemas import (
-    OperatorKind, WitnessKind, SupportKind, ContrastOperatorSpec
-)
+from geox.shared.contracts.schemas import EvidenceObject, EvidenceRef, EvidenceKind
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GEOX Sovereign MCP Server (v1.9)
+# GEOX Sovereign MCP Server (v1.9.1) - PHYSICS9 CORE
 # ═══════════════════════════════════════════════════════════════════════════════
 # DITEMPA BUKAN DIBERI: Structured Response Contract Live
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -17,6 +15,37 @@ from geox_schemas import (
 mcp = FastMCP("geox")
 logger = logging.getLogger("geox_mcp")
 GEOX_SEAL = "999_SEAL_V1"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TOOLS_REGISTRY: Manifest for UI/Bridge Sync (Physics9 Alignment)
+# ═══════════════════════════════════════════════════════════════════════════════
+TOOLS_REGISTRY = {
+    "dimensions": ["prospect", "well", "section", "earth3d", "time4d", "physics", "map"],
+    "apps": [
+        {"id": "prospect-ui", "name": "Prospect UI", "dim": "prospect"},
+        {"id": "well-desk", "name": "Well Desk", "dim": "well"},
+        {"id": "section-canvas", "name": "Section Canvas", "dim": "section"},
+        {"id": "earth-volume", "name": "Earth Volume", "dim": "earth3d"},
+        {"id": "chronos-history", "name": "Chronos History", "dim": "time4d"},
+        {"id": "judge-console", "name": "Judge Console", "dim": "physics"},
+        {"id": "map-layer", "name": "Map Layer", "dim": "map"}
+    ],
+    "version": "2026.04.12-EIC"
+}
+
+# Inject arifOS Intelligence Layer
+try:
+    # Ensure arifosmcp is in path if not installed
+    arifos_path = r"C:\ariffazil\arifOS"
+    if arifos_path not in sys.path:
+        sys.path.append(arifos_path)
+    
+    from arifosmcp.runtime.thinking import ThinkingSessionManager
+    tsm = ThinkingSessionManager()
+    HAS_THINKING = True
+except (ImportError, ModuleNotFoundError) as e:
+    logger.warning(f"arifOS Thinking Module not functional: {e}")
+    HAS_THINKING = False
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # RESOURCES: Sovereign Reference Data
@@ -33,6 +62,18 @@ async def get_geox_materials() -> str:
 @mcp.resource("canon9://materials_atlas")
 async def get_geox_materials_legacy() -> str:
     return await get_geox_materials()
+
+@mcp.resource("geox://reasoning/traces/{session_id}")
+async def get_reasoning_trace_resource(session_id: str) -> str:
+    """Provides a markdown view of a specific reasoning trace."""
+    if not HAS_THINKING:
+        return "Thinking module disabled."
+    
+    session = tsm.get_session(session_id)
+    if not session:
+        return f"Session {session_id} not found."
+    
+    return session.export_markdown()
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PROMPTS: Sovereign Intelligence (Structured Contracts)
@@ -55,98 +96,230 @@ def geox_system_prompt() -> str:
     GOVERNANCE RULES:
     1. If scene status is 'HOLD', you MUST set BLOCKING: true and STANCE: HOLD.
     2. Never invent numbers. Reference only provided context.
-    3. State the dimension (1D/2D/3D/PHYSICS9).
+    3. State the dimension (PROSPECT/WELL/SECTION/EARTH3D/TIME4D/PHYSICS/MAP).
     """
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # BRIDGE: Governance & Synthesis
 # ═══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool(name="geox_fetch_authoritative_state")
-async def geox_fetch_authoritative_state() -> dict:
-    """
-    Fetches the 888_JUDGE authoritative scene state.
+# ═══════════════════════════════════════════════════════════════════════════════
+# SERVICES: Internal Business Logic
+# ═══════════════════════════════════════════════════════════════════════════════
+
+try:
+    from services.geo_fabric.engine import fabric
+    from services.evidence_store.store import store
+    from services.governance.judge import judge
+    from services.witness_engine.petrophysics import witness
+    HAS_SERVICES = True
+except ImportError as e:
+    logger.error(f"Failed to load core services: {e}")
+    HAS_SERVICES = False
+    # Print traceback for debugging
+    import traceback
+    traceback.print_exc()
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TOOLS: WITNESS (PETROPHYSICS)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@mcp.tool(name="geox_select_sw_model")
+async def geox_select_sw_model(formation: str, temperature_c: float) -> dict:
+    """Recommends a Water Saturation (Sw) model based on formation context."""
+    if not HAS_SERVICES:
+        return {"error": "Services unavailable"}
+    return witness.select_sw_model(formation, temperature_c)
+
+@mcp.tool(name="geox_compute_petrophysics")
+async def geox_compute_petrophysics(
+    model: str, 
+    rw: float, 
+    rt: float, 
+    phi: float, 
+    a: float = 1.0, 
+    m: float = 2.0, 
+    n: float = 2.0
+) -> dict:
+    """Executes physics-9 grounded petrophysical calculations."""
+    if not HAS_SERVICES:
+        return {"error": "Services unavailable"}
     
-    HONEST: Returns real scene if set, else explicit NO_ACTIVE_SCENE
-    """
-    # Check for user-set scene first (from memory/context)
-    # For now, be honest: no active scene without real user data
-    return {
-        "status": "NO_ACTIVE_SCENE",
-        "message": "No geological scene has been established. Use geox_set_scene() with real parameters from well logs, seismic, or core data.",
-        "governance": "arifOS F2 Truth — Cannot fabricate geological data",
-        "hint": "Provide actual reservoir parameters: area, thickness, porosity from real measurements"
-    }
+    result = witness.compute_archie_sw(model, rw, rt, phi, a, m, n)
+    return result.model_dump()
 
-@mcp.tool(name="geox_render_scene_context")
-async def geox_render_scene_context(domain: str) -> str:
-    """Deterministic summarizer: Distills the scene for LLM synthesis."""
-    state = await geox_fetch_authoritative_state()
-    scene = state.get("causal_scene", {})
-    return f"""
-    DOMAIN: {domain} | STATUS: {scene.get('status')} | EPOCH: {scene.get('epoch')}
-    HOLDS: {scene.get('holds', [])} | SIMS: {scene.get('simulation_flags', [])}
-    METRICS: {scene.get('manifold', {})}
-    """
+@mcp.tool(name="geox_petrophysical_hold_check")
+async def geox_petrophysical_hold_check(well_id: str, phi: float, sw: float) -> dict:
+    """Governance check (888_HOLD) for anomalous petrophysics."""
+    if not HAS_SERVICES:
+        return {"error": "Services unavailable"}
+    return witness.hold_check(well_id, phi, sw)
 
-@mcp.tool(name="geox_synthesize_causal_scene")
-async def geox_synthesize_causal_scene(domain: str, user_query: Optional[str] = None) -> str:
-    """Assembles distilled context into a structured synthesis prompt."""
-    context = await geox_render_scene_context(domain)
-    return f"""
-    Context: interpret_causal_scene call.
-    {context}
-    Query: {user_query or "NONE"}
+# ═══════════════════════════════════════════════════════════════════════════════
+# TOOLS: EVIDENCE & MANIFOLD
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@mcp.tool(name="geox_search_evidence")
+async def geox_search_evidence(kind: Optional[str] = None) -> list:
+    """List and filter evidence from the Sovereign Ledger."""
+    if not HAS_SERVICES:
+        return [{"error": "Services unavailable"}]
     
-    TASK: Generate the structured response contract according to the system prompt.
-    """
+    refs = store.list_evidence(kind=kind)
+    return [ref.model_dump() for ref in refs]
 
-@mcp.tool(name="geox_audit_hold_breach")
-async def geox_audit_hold_breach(operator: str, violations: list[str]) -> str:
-    """Structured audit for 888_HOLD breaches."""
-    return f"""
-    AUDIT_ALERT: {operator}
-    VIOLATIONS: {violations}
+@mcp.tool(name="geox_get_evidence_details")
+async def geox_get_evidence_details(evidence_id: str) -> dict:
+    """Fetch full evidence object including spatial context and payload."""
+    if not HAS_SERVICES:
+        return {"error": "Services unavailable"}
     
-    TASK: Generate the structured response contract. Classify as HARD (Block) or SOFT.
-    Explain the breach against F2/F8/F9.
-    """
+    obj = store.get_evidence(evidence_id)
+    if not obj:
+        return {"error": f"Evidence {evidence_id} not found."}
+    return obj.model_dump()
 
-@mcp.tool(name="geox_validate_operation")
-async def geox_validate_operation(op_kind: str, left_kind: str, left_support: str, right_kind: str, right_support: str) -> dict:
-    """Constitutional Firewall: Validates physical operation legality per F2/F8/F9."""
+# ═══════════════════════════════════════════════════════════════════════════════
+# TOOLS: GEO-FABRIC (SPATIAL LAWS)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@mcp.tool(name="geox_transform_coordinates")
+async def geox_transform_coordinates(x: float, y: float, from_epsg: int, to_epsg: int) -> dict:
+    """Project a point between coordinate systems."""
+    if not HAS_SERVICES:
+        return {"error": "Services unavailable"}
+    
     try:
-        spec = ContrastOperatorSpec(
-            op_kind=OperatorKind(op_kind),
-            left_kind=WitnessKind(left_kind),
-            left_support=SupportKind(left_support),
-            right_kind=WitnessKind(right_kind),
-            right_support=SupportKind(right_support),
-            rationale="Pre-flight audit."
-        )
-        return {"status": "LEGAL", "spec": spec.model_dump()}
+        xt, yt = fabric.transform_point(x, y, from_epsg, to_epsg)
+        return {"x": xt, "y": yt, "crs": f"EPSG:{to_epsg}"}
     except Exception as e:
-        return {"status": "HOLD", "holds": [str(e)], "blocking": True}
+        return {"error": str(e)}
+
+@mcp.tool(name="geox_project_well_trajectory")
+async def geox_project_well_trajectory(well_id: str, target_epsg: int = 4326) -> dict:
+    """Project a well trajectory into map coordinates (WGS84 default)."""
+    if not HAS_SERVICES:
+        return {"error": "Services unavailable"}
+
+    evidence = store.get_evidence(well_id)
+    if not evidence or evidence.ref.kind != "well":
+        return {"error": "Valid well evidence required"}
+
+    payload = evidence.payload
+    # Expected payload: { head: {x, y, epsg}, survey: {md: [], inc: [], azi: []} }
+    try:
+        head = payload["head"]
+        survey = payload["survey"]
+        
+        xyz_points = fabric.project_well_trajectory(
+            head_xy=(head["x"], head["y"]),
+            md_points=survey["md"],
+            incl_points=survey["inc"],
+            azim_points=survey["azi"]
+        )
+        
+        # Transform each point to target EPSG
+        head_epsg = head.get("epsg", 32648) # Default Malay Basin
+        projected = []
+        for p in xyz_points:
+            xt, yt = fabric.transform_point(p[0], p[1], head_epsg, target_epsg)
+            projected.append({"x": xt, "y": yt, "z": p[2]})
+            
+        return {"well_id": well_id, "points": projected, "crs": f"EPSG:{target_epsg}"}
+    except Exception as e:
+        return {"error": f"Projection failed: {e}"}
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# DIMENSIONAL KERNELS (Minimal v1)
+# TOOLS: GOVERNANCE (888_JUDGE)
 # ═══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool(name="geox_compute_stoiip")
-async def geox_compute_stoiip(area: float, thickness: float, phi: float, sw: float, fvf: float, witness_id: Optional[str] = None) -> dict:
-    """Computes Stock Tank Oil Initially In Place (STOIIP) reserves using volumetric method."""
-    stoiip = (6.2898 * area * thickness * phi * (1 - sw)) / fvf
-    return {"stoiip_stb": stoiip, "status": "VERIFIED" if witness_id else "SIMULATED"}
+@mcp.tool(name="geox_judge_verdict")
+async def geox_judge_verdict(
+    intent_id: str, 
+    well_id: str, 
+    prospect_id: str
+) -> dict:
+    """Execute the Sovereign 888_JUDGE on a Causal Scene."""
+    if not HAS_SERVICES:
+        return {"error": "Services unavailable"}
+    
+    well = store.get_evidence(well_id)
+    prospect = store.get_evidence(prospect_id)
+    
+    if not well or not prospect:
+        return {"error": f"Evidence not found: well={well_id}, prospect={prospect_id}"}
+    
+    verdict = judge.evaluate_well_prospect_fit(intent_id, well, prospect)
+    
+    # Audit the loop
+    store.save_evidence(EvidenceObject(
+        ref=EvidenceRef(
+            id=verdict.verdictId,
+            kind=EvidenceKind.verdict,
+            sourceUri=f"geox://verdicts/{verdict.verdictId}",
+            timestamp=verdict.timestamp
+        ),
+        context=well.context,
+        payload=verdict.model_dump()
+    ))
+    
+    return verdict.model_dump()
 
-@mcp.tool(name="geox_verify_physics")
-async def geox_verify_physics():
-    """Verifies physical consistency against Earth Canon 9 (physics9) thermodynamic basis."""
-    return {"status": "verified", "audit": "PASS", "floor": "F2_PHYSICS"}
+# ═══════════════════════════════════════════════════════════════════════════════
+# TOOLS: ACP GOVERNANCE (AGENT CONTROL PLANE)
+# ═══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool(name="geox_verify_canon")
-async def geox_verify_canon():
-    """Verifies state vector compliance against Earth Canon 9 constitutional basis."""
-    return await geox_verify_physics()
+try:
+    from geox_mcp_server_acp import (
+        acp_register_agent,
+        acp_submit_proposal,
+        acp_check_convergence,
+        acp_grant_seal,
+        acp_get_status
+    )
+    
+    @mcp.tool(name="acp_register_agent")
+    async def tool_acp_register_agent(
+        agent_id: str,
+        role: str,
+        name: str,
+        resources: Optional[list] = None,
+        tools: Optional[list] = None
+    ) -> dict:
+        """Register an agent with the Agent Control Plane."""
+        return await acp_register_agent(agent_id, role, name, resources, tools)
+
+    @mcp.tool(name="acp_submit_proposal")
+    async def tool_acp_submit_proposal(agent_id: str, proposal: dict) -> dict:
+        """Submit a proposal for 888_JUDGE evaluation."""
+        return await acp_submit_proposal(agent_id, proposal)
+
+    @mcp.tool(name="acp_check_convergence")
+    async def tool_acp_check_convergence(resource: str) -> dict:
+        """Check agent convergence on a resource."""
+        return await acp_check_convergence(resource)
+
+    @mcp.tool(name="acp_grant_seal")
+    async def tool_acp_grant_seal(proposal_id: str, human_auth_token: str) -> dict:
+        """Grant 999_SEAL (sovereign human authority)."""
+        return await acp_grant_seal(proposal_id, human_auth_token)
+
+    @mcp.tool(name="acp_get_status")
+    async def tool_acp_get_status() -> dict:
+        """Get ACP system status."""
+        return await acp_get_status()
+
+except ImportError as e:
+    logger.warning(f"ACP Governance modules not found: {e}")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# BRIDGE: Legacy & Registry
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@mcp.tool(name="geox_get_tools_registry")
+async def geox_get_tools_registry() -> dict:
+    """Returns the architectural TOOLS_REGISTRY for UI synchronization."""
+    return TOOLS_REGISTRY
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run()

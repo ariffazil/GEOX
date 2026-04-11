@@ -9,8 +9,8 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
 **Verified Live URLs:**
-- 🌐 https://geox.arif-fazil.com — Main web interface
-- 🔧 http://localhost:8000 — MCP endpoint (VPS direct)
+- 🌐 <https://geox.arif-fazil.com> — Main web interface
+- 🔧 <http://localhost:8000> — MCP endpoint (VPS direct)
 - ✅ Status: HTTP 200 verified 2026-04-12
 
 Physics9 is the world's first **Constitutional Subsurface Reasoning Layer**—a governed AI orchestration platform for Earth Intelligence. Built with a Python/FastMCP backend and a React/TypeScript frontend, it acts as a **Judgment Engine** that sits above existing subsurface stacks (like Petrel, Kingdom, or DecisionSpace). Physics9 enforces 13 constitutional floors (F1-F13) to separate observed data from inferred interpretation, ensuring subsurface decisions are physically grounded and audit-trail ready.
@@ -27,22 +27,24 @@ Unlike traditional subsurface OS environments (Petrel, DecisionSpace) which focu
 
 ## 🏛️ Architecture
 
-Physics9 implements a dimension-first sovereign architecture, separating borehole truth from basin-scale hydration:
+Physics9 implements a dimension-first sovereign architecture, separating borehole truth from basin-scale dynamics across 7 canonical dimensions:
 
-| Layer | Domain | Scale | Logic |
-|-------|--------|-------|-------|
-| `bridge` | Governance | Global | Seal, Sync, Audit |
-| `prospect` | Mapping | 2D/3D | Volumetrics (STOIIP) |
-| `dim1` | Borehole | 1D | Log Synthesis / MD-Scaling |
-| `dim2` | Seismic | 2D | Structural Analysis / DHI |
-| `dim3` | Basin | 3D | Stratigraphy / Macrostrat |
-| `physics9` | Metabolizer | Meta | PHYSICS_9 State Vector |
+| Dimension | Domain | Scale | Logic / Evidence Contract |
+| :--- | :--- | :--- | :--- |
+| **Prospect** | Volumetrics | Prospect | Deterministic STOIIP & Decision Gates |
+| **Well** | Borehole | 1D | High-fidelity ODSiphon Truth |
+| **Section** | Seismic/X-Sec | 2D | Structural & Stratigraphic Correlation |
+| **Earth3D** | Volume | 3D | Voxel Interpretation & Cube Integration |
+| **Time4D** | Evolution | 4D | Dynamic Simulation & Basin Maturation |
+| **Physics** | Metabolic | Meta | PHYSICS_9 State Vector Optimization |
+| **Map** | Geospatial | Global | Transversal Geospatial Reference Fabric |
 
 ---
 
 ## 🛠️ Sovereign MCP Tools (v1.9)
 
 ### Bridge & Governance
+
 | Tool | Purpose | Status |
 |------|---------|--------|
 | `bridge.sync_state` | Synchronize UI with the 888_JUDGE scene. | ACTIVE |

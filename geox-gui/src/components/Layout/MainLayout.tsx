@@ -8,19 +8,24 @@
  * - Center: Main workspace (4 apps)
  * - Right: Governance panel
  * 
- * EIC Tabs: 5 total (4 apps + pilot)
+ * EIC Tabs: 7 dimensions (Prospect, Well, Section, Earth3D, Time4D, Physics, Map)
  */
 
 import React, { useState } from 'react';
 import { 
-  Map, Activity, AlignLeft, Gauge, Target,
-  ChevronLeft, ChevronRight, Search, Shield,
-  Settings, FileText
+  Gauge, ChevronLeft, ChevronRight, Search, Shield,
+  Settings, FileText, Globe, Layers, Database, 
+  Clock, Layout, Zap, Map as MapIcon, Target
 } from 'lucide-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Separator from '@radix-ui/react-separator';
 import { WitnessBadges, WitnessBadgesCompact } from '../WitnessBadges/WitnessBadges';
 import { MalayBasinPilotDashboard } from '../MalayBasinPilot/MalayBasinPilotDashboard';
+import { WellContextDesk } from '../WellContextDesk/WellContextDesk';
+import { VerdictConsole } from '../VerdictConsole/VerdictConsole';
+import { ProspectUI } from '../ProspectUI/ProspectUI';
+import { SectionCanvas } from '../SectionCanvas/SectionCanvas';
+import { ChronosHistory } from '../ChronosHistory/ChronosHistory';
 import { AppIframeHost } from '../EarthWitness/AppIframeHost';
 import { useGEOXStore, useActiveTab, useGovernance, useGEOXConnected } from '../../store/geoxStore';
 import type { Tab } from '../../types';
@@ -31,11 +36,13 @@ import type { Tab } from '../../types';
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
-  { id: 'basin', label: 'Basin Explorer', icon: Map },
-  { id: 'seismic', label: 'Seismic Viewer', icon: Activity },
-  { id: 'wells', label: 'Well Context Desk', icon: AlignLeft },
-  { id: 'acrisk', label: 'AC_Risk Console', icon: Gauge },
-  { id: 'pilot', label: 'Malay Basin Pilot', icon: Target },
+  { id: 'prospect', label: 'Prospect Explore', icon: Globe },
+  { id: 'well', label: 'Well Context', icon: Database },
+  { id: 'section', label: 'Section View', icon: Layout },
+  { id: 'earth3d', label: 'Earth 3D', icon: Layers },
+  { id: 'time4d', label: 'Time 4D', icon: Clock },
+  { id: 'physics', label: 'Physics Console', icon: Zap },
+  { id: 'map', label: 'Map Registry', icon: MapIcon },
 ];
 
 function getEmbeddedAppSrc(appName: string): string {
@@ -165,46 +172,44 @@ const MainWorkspace: React.FC = () => {
           ))}
         </Tabs.List>
         
-        {/* Tab Content — The 4 MCP Apps */}
+        {/* Tab Content — The 7 GEOX Dimensions */}
         <div className="flex-1 overflow-hidden">
-          {/* Basin Explorer */}
-          <Tabs.Content value="basin" className="h-full">
-            <AppIframeHost 
-              src={getEmbeddedAppSrc('basin_explorer')}
-              title="Basin Explorer" 
-              appId="geox.basin.explorer" 
-            />
+          {/* 1. Prospect Explore */}
+          <Tabs.Content value="prospect" className="h-full">
+            <ProspectUI />
           </Tabs.Content>
           
-          {/* Seismic Viewer */}
-          <Tabs.Content value="seismic" className="h-full">
+          {/* 2. Well Context */}
+          <Tabs.Content value="well" className="h-full">
+            <WellContextDesk />
+          </Tabs.Content>
+          
+          {/* 3. Section View */}
+          <Tabs.Content value="section" className="h-full">
+            <SectionCanvas />
+          </Tabs.Content>
+
+          {/* 4. Earth 3D */}
+          <Tabs.Content value="earth3d" className="h-full">
             <AppIframeHost 
               src={getEmbeddedAppSrc('seismic_viewer')}
-              title="Seismic Viewer" 
-              appId="geox.seismic.viewer" 
+              title="Earth 3D" 
+              appId="geox.earth3d.viewer" 
             />
           </Tabs.Content>
           
-          {/* Well Context Desk */}
-          <Tabs.Content value="wells" className="h-full">
-            <AppIframeHost 
-              src={getEmbeddedAppSrc('well_context_desk')}
-              title="Well Context Desk" 
-              appId="geox.well.context-desk" 
-            />
+          {/* 5. Time 4D */}
+          <Tabs.Content value="time4d" className="h-full">
+            <ChronosHistory />
+          </Tabs.Content>
+
+          {/* 6. Physics Console */}
+          <Tabs.Content value="physics" className="h-full">
+            <VerdictConsole />
           </Tabs.Content>
           
-          {/* AC_Risk Console */}
-          <Tabs.Content value="acrisk" className="h-full">
-            <AppIframeHost 
-              src={getEmbeddedAppSrc('ac_risk_console')}
-              title="AC_Risk Console" 
-              appId="geox.ac_risk.console" 
-            />
-          </Tabs.Content>
-          
-          {/* Malay Basin Pilot */}
-          <Tabs.Content value="pilot" className="h-full">
+          {/* 7. Map Registry (Malay Basin Pilot) */}
+          <Tabs.Content value="map" className="h-full">
             <MalayBasinPilotDashboard />
           </Tabs.Content>
         </div>
@@ -302,12 +307,14 @@ const Toolbar: React.FC = () => (
   <div className="h-10 bg-white border-b border-slate-200 flex items-center px-2 gap-1">
     <ToolbarButton icon={Search} label="Search" />
     <ToolbarDivider />
-    <ToolbarButton icon={Map} label="Basin" />
-    <ToolbarButton icon={Activity} label="Seismic" />
-    <ToolbarButton icon={AlignLeft} label="Wells" />
-    <ToolbarButton icon={Gauge} label="AC_Risk" />
+    <ToolbarButton icon={Globe} label="Prospect" />
+    <ToolbarButton icon={Database} label="Well" />
+    <ToolbarButton icon={Layout} label="Section" />
+    <ToolbarButton icon={Layers} label="Earth3D" />
+    <ToolbarButton icon={Clock} label="Time4D" />
+    <ToolbarButton icon={Zap} label="Physics" />
     <ToolbarDivider />
-    <ToolbarButton icon={Target} label="Pilot" />
+    <ToolbarButton icon={MapIcon} label="Map" />
     <div className="flex-1" />
     <ToolbarButton icon={Settings} label="Settings" />
   </div>

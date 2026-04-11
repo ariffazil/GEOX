@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Activity, Layers, Box, Terminal, Shield, Zap, Target, 
   Cpu, Database, Clock, Globe, Network, Settings,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, AlignLeft, MapPin, Gauge
 } from 'lucide-react';
 import { DomainVoid } from './domains/DomainVoid';
 import { Domain1D } from './domains/Domain1D';
@@ -27,7 +27,7 @@ const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ childr
 };
 
 export const GeoxCore: React.FC = () => {
-  const [activeDomain, setActiveDomain] = useState('void');
+  const [activeDomain, setActiveDomain] = useState('prospect');
   const [time, setTime] = useState('');
   const interpretTool = useMcpTool<any, string>('bridge.interpret_causal_scene');
   const [terminalInput, setTerminalInput] = useState('');
@@ -67,11 +67,13 @@ export const GeoxCore: React.FC = () => {
   };
 
   const domains = [
-    { id: 'void', label: 'VOID [000-249]', icon: Activity },
-    { id: '1d', label: '1D_WELL [250-499]', icon: Target },
-    { id: '2d', label: '2D_SEIS [500-749]', icon: Layers },
-    { id: '3d', label: '3D_META [750-999]', icon: Box },
-    { id: 'lem', label: 'LEM_METABOLIZER', icon: Network },
+    { id: 'prospect', label: 'PROSPECT [000]', icon: Gauge },
+    { id: 'well', label: 'WELL_DESK [250]', icon: AlignLeft },
+    { id: 'section', label: 'SECTION [500]', icon: Globe },
+    { id: 'earth3d', label: 'EARTH_VOL [750]', icon: Activity },
+    { id: 'time4d', label: 'CHRONOS [999]', icon: Clock },
+    { id: 'physics', label: 'JUDGE_CORE', icon: Shield },
+    { id: 'map', label: 'MAP_LAYER', icon: MapPin },
   ];
 
   return (
@@ -129,7 +131,7 @@ export const GeoxCore: React.FC = () => {
             })}
           </div>
           
-          <div className="h-64 border-t border-gray-800 p-4 flex flex-col gap-2 bg-[#050608] hidden md:flex shrink-0">
+          <div className="h-64 border-t border-gray-800 p-4 flex-col gap-2 bg-[#050608] hidden md:flex shrink-0">
             <div className="text-[10px] font-mono text-gray-600 flex items-center gap-2 border-b border-gray-800 pb-2">
               <Zap className="w-3 h-3 text-amber-500" /> SOVEREIGN TERMINAL
             </div>
@@ -166,11 +168,81 @@ export const GeoxCore: React.FC = () => {
         </aside>
 
         <main className="flex-1 relative overflow-hidden bg-gradient-to-br from-[#0A0C0E] to-[#0d1117]">
-          {activeDomain === 'void' && <DomainVoid />}
-          {activeDomain === '1d' && <Domain1D />}
-          {activeDomain === '2d' && <Domain2D />}
-          {activeDomain === '3d' && <Domain3D />}
-          {activeDomain === 'lem' && <DomainLEM />}
+          {activeDomain === 'prospect' && <DomainVoid />}
+          {activeDomain === 'well' && <Domain1D />}
+          {activeDomain === 'section' && <Domain2D />}
+          {activeDomain === 'earth3d' && <Domain3D />}
+          {activeDomain === 'physics' && <DomainLEM />}
+          {activeDomain === 'time4d' && (
+            <div className="flex flex-col gap-6 p-8 h-full overflow-y-auto">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <h2 className="text-3xl font-light tracking-wider text-orange-400">4D DYNAMIC EVOLUTION</h2>
+                <div className="rounded-full bg-orange-400/20 px-4 py-1 text-xs font-bold text-orange-400">TIME MANIFOLD</div>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="rounded-xl border border-white/5 bg-white/5 p-6 backdrop-blur-md">
+                  <h3 className="mb-4 text-xl font-medium text-white/80">Basin Maturation Curve</h3>
+                  <div className="flex h-48 items-center justify-center rounded-lg border border-white/10 bg-black/40">
+                    <span className="text-white/40 italic">Syncing with Thermal Maturity Model...</span>
+                  </div>
+                </div>
+                
+                <div className="rounded-xl border border-white/5 bg-white/5 p-6 backdrop-blur-md">
+                  <h3 className="mb-4 text-xl font-medium text-white/80">Dynamic State Vector (vₜ)</h3>
+                  <p className="text-white/60 leading-relaxed text-sm">
+                    Real-time monitoring of reservoir depletion and pressure transients. 
+                    Governed by the <strong>Physics9 Meta-Kernel</strong> to ensure mass balance integrity.
+                  </p>
+                  <div className="mt-4 flex flex-col gap-2">
+                    <div className="h-2 rounded-full bg-orange-400/20"><div className="h-full w-2/3 rounded-full bg-orange-400 shadow-[0_0_10px_rgba(251,146,60,0.5)]"></div></div>
+                    <div className="h-2 rounded-full bg-orange-400/10"><div className="h-full w-1/3 rounded-full bg-orange-400/60 transition-all hover:w-1/2"></div></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 rounded-lg border border-white/10 bg-orange-900/10 p-4">
+                <p className="text-sm font-light text-orange-200/70">
+                  <span className="font-bold text-orange-400 uppercase">Status:</span> Calibrating 4D vintage correlation... F9 Physics Lock Active.
+                </p>
+              </div>
+            </div>
+          )}
+          {activeDomain === 'map' && (
+             <div className="flex flex-col gap-6 p-8 h-full overflow-y-auto">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <h2 className="text-3xl font-light tracking-wider text-emerald-400">GEOSPATIAL REFERENCE FABRIC</h2>
+                <div className="rounded-full bg-emerald-400/20 px-4 py-1 text-xs font-bold text-emerald-400">GLOBAL MAP</div>
+              </div>
+              
+              <div className="relative flex-1 min-h-[400px] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur-lg">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.1)_0,transparent_70%)]"></div>
+                <div className="flex h-full flex-col items-center justify-center gap-4">
+                  <div className="h-24 w-24 animate-pulse rounded-full border-2 border-emerald-400/30"></div>
+                  <p className="text-lg font-light tracking-widest text-emerald-400/80">IGNITING EARTHWITNESS ENGINE</p>
+                  <div className="flex gap-4">
+                    <span className="text-xs text-white/40 font-mono">LAT: 5.5000°N</span>
+                    <span className="text-xs text-white/40 font-mono">LON: 104.5000°E</span>
+                    <span className="text-xs text-white/40 font-mono">CRS: WGS84</span>
+                  </div>
+                </div>
+                
+                <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+                   <button className="h-10 w-10 border border-white/20 bg-black/60 text-white backdrop-blur-md hover:bg-emerald-400/20 text-xl flex items-center justify-center shadow-lg">+</button>
+                   <button className="h-10 w-10 border border-white/20 bg-black/60 text-white backdrop-blur-md hover:bg-emerald-400/20 text-xl flex items-center justify-center shadow-lg">-</button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 shrink-0">
+                {['CONCESSIONS', 'INFRASTRUCTURE', 'SURFACE_GEOLOGY'].map(layer => (
+                  <div key={layer} className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/5 p-3 text-xs text-white/60 hover:border-emerald-500/30 transition-colors cursor-pointer group">
+                     <div className="h-2 w-2 rounded-full bg-emerald-400 group-hover:shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div>
+                     {layer}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </main>
       </div>
 
