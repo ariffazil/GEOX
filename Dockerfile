@@ -22,10 +22,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy canonical GEOX
 COPY geox/ ./geox/
 COPY data/ ./data/
+COPY registries/ ./registries/
+COPY services/ ./services/
 COPY geox_unified.py .
 COPY geox_rest_bridge.py .
 COPY geox_mcp_server.py .
 COPY geox_schemas.py .
+COPY geox_atlas_99_materials.csv .
 COPY entrypoint.sh .
 
 # Create vault directory
