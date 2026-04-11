@@ -62,7 +62,7 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
     # ══════════════════════════════════════════════════════════════════════════════
     
     try:
-        from geox_mcp_server_acp import (
+        from .acp_logic import (
             acp_register_agent,
             acp_submit_proposal,
             acp_check_convergence,
