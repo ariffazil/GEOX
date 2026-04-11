@@ -23,6 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY geox/ ./geox/
 COPY data/ ./data/
 COPY geox_unified.py .
+COPY geox_rest_bridge.py .
 COPY geox_mcp_server.py .
 COPY geox_schemas.py .
 COPY entrypoint.sh .

@@ -35,21 +35,21 @@ services:
     labels:
       # Enable Traefik
       - "traefik.enable=true"
-      # MCP endpoint - HTTP
+      # MCP endpoint - HTTP (high priority)
       - "traefik.http.routers.geox-mcp.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/mcp`)"
       - "traefik.http.routers.geox-mcp.entrypoints=web"
       - "traefik.http.routers.geox-mcp.service=geox-mcp"
-      - "traefik.http.routers.geox-mcp.priority=10"
-      # Health endpoint - HTTP
+      - "traefik.http.routers.geox-mcp.priority=100"
+      # Health endpoint - HTTP (high priority)
       - "traefik.http.routers.geox-health.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/health`)"
       - "traefik.http.routers.geox-health.entrypoints=web"
       - "traefik.http.routers.geox-health.service=geox-mcp"
-      - "traefik.http.routers.geox-health.priority=10"
-      # Tools endpoint - HTTP (for GUI API calls)
+      - "traefik.http.routers.geox-health.priority=100"
+      # Tools endpoint - HTTP (high priority)
       - "traefik.http.routers.geox-tools.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/tools`)"
       - "traefik.http.routers.geox-tools.entrypoints=web"
       - "traefik.http.routers.geox-tools.service=geox-mcp"
-      - "traefik.http.routers.geox-tools.priority=10"
+      - "traefik.http.routers.geox-tools.priority=100"
       # Tools endpoint - HTTPS
       - "traefik.http.routers.geox-tools-secure.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/tools`)"
       - "traefik.http.routers.geox-tools-secure.entrypoints=websecure"
@@ -90,7 +90,9 @@ services:
       - "traefik.http.routers.geox-gui-secure.tls=true"
       - "traefik.http.routers.geox-gui-secure.service=geox-gui"
       - "traefik.http.services.geox-gui.loadbalancer.server.port=80"
+      # GUI catches all except API paths (lowest priority)
       - "traefik.http.routers.geox-gui.priority=1"
+      - "traefik.http.routers.geox-gui.rule=Host(`geox.arif-fazil.com`) && !PathPrefix(`/mcp`) && !PathPrefix(`/health`) && !PathPrefix(`/tools`) && !PathPrefix(`/invoke`)"
 
 volumes:
   vault_999:
