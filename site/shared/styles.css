@@ -1,0 +1,619 @@
+/* ============================================
+   GEOX Command Center - Global Styles
+   ============================================ */
+
+/* ------------------------------------------
+   CSS Variables (Design System)
+   ------------------------------------------ */
+:root {
+  /* Colors - Background */
+  --color-bg-primary: #0A0C0E;
+  --color-bg-secondary: #111418;
+  --color-bg-tertiary: #1A1F24;
+
+  /* Colors - Accent */
+  --color-accent-amber: #F59E0B;
+  --color-accent-amber-light: #FBBF24;
+
+  /* Colors - Text */
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+
+  /* Colors - Status */
+  --color-status-online: #10B981;
+  --color-status-warning: #F59E0B;
+  --color-status-error: #EF4444;
+
+  /* Colors - Border */
+  --color-border-default: #1E293B;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Animation Durations */
+  --duration-fast: 200ms;
+  --duration-normal: 300ms;
+  --duration-slow: 400ms;
+  --duration-pulse: 2000ms;
+
+  /* Typography */
+  --font-primary: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ------------------------------------------
+   Base Reset (Specific Selectors Only)
+   ------------------------------------------ */
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-primary);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* ------------------------------------------
+   Typography Utilities
+   ------------------------------------------ */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-h1 {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.text-h2 {
+  font-size: 36px;
+  font-weight: 600;
+}
+
+.text-h3 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.text-h4 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.text-body {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.text-small {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.text-caption {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-amber {
+  color: var(--color-accent-amber);
+}
+
+/* ------------------------------------------
+   Button Styles
+   ------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast) ease-out;
+}
+
+.btn-primary {
+  background-color: var(--color-accent-amber);
+  color: var(--color-bg-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-amber-light);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-accent-amber);
+  border: 1px solid var(--color-accent-amber);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(245, 158, 11, 0.1);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover {
+  color: var(--color-text-primary);
+}
+
+/* ------------------------------------------
+   Card Styles
+   ------------------------------------------ */
+.card {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: all var(--duration-normal) ease-out;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-accent-amber);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+}
+
+.card-elevated {
+  background-color: var(--color-bg-tertiary);
+}
+
+/* ------------------------------------------
+   Status Indicators
+   ------------------------------------------ */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-online {
+  background-color: var(--color-status-online);
+  animation: pulse-glow var(--duration-pulse) ease-in-out infinite;
+}
+
+.status-warning {
+  background-color: var(--color-status-warning);
+  animation: pulse-glow var(--duration-pulse) ease-in-out infinite;
+}
+
+.status-error {
+  background-color: var(--color-status-error);
+  animation: pulse-glow var(--duration-pulse) ease-in-out infinite;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge-live {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--color-status-online);
+}
+
+.status-badge-demo {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--color-status-warning);
+}
+
+.status-badge-core {
+  background-color: rgba(100, 116, 139, 0.15);
+  color: var(--color-text-muted);
+}
+
+/* ------------------------------------------
+   Form Elements
+   ------------------------------------------ */
+.input {
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  transition: border-color var(--duration-fast) ease-out;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-accent-amber);
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+/* ------------------------------------------
+   Navigation Styles
+   ------------------------------------------ */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast) ease-out;
+}
+
+.nav-link:hover {
+  color: var(--color-text-primary);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+  color: var(--color-accent-amber);
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+/* ------------------------------------------
+   Keyframe Animations
+   ------------------------------------------ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 8px 2px currentColor;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ------------------------------------------
+   Animation Utility Classes
+   ------------------------------------------ */
+.animate-fade-in {
+  animation: fade-in var(--duration-normal) ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in var(--duration-fast) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow var(--duration-pulse) ease-in-out infinite;
+}
+
+/* Animation Delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Initial states for scroll animations */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.scroll-animate.animated {
+  animation: slide-up var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ------------------------------------------
+   Layout Utilities
+   ------------------------------------------ */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: var(--space-8);
+    padding-right: var(--space-8);
+  }
+}
+
+/* ------------------------------------------
+   Background Utilities
+   ------------------------------------------ */
+.bg-gradient-hero {
+  background: radial-gradient(ellipse at top, #1a1f24 0%, #0a0c0e 70%);
+}
+
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(30, 41, 59, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 41, 59, 0.3) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ------------------------------------------
+   Scrollbar Styles
+   ------------------------------------------ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ------------------------------------------
+   Selection Styles
+   ------------------------------------------ */
+::selection {
+  background-color: rgba(245, 158, 11, 0.3);
+  color: var(--color-text-primary);
+}
+
+/* ------------------------------------------
+   Focus Styles (Accessibility)
+   ------------------------------------------ */
+:focus-visible {
+  outline: 2px solid var(--color-accent-amber);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------
+   Dropdown Menu Styles
+   ------------------------------------------ */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all var(--duration-fast) ease-out;
+  z-index: 100;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast) ease-out;
+}
+
+.dropdown-item:hover {
+  color: var(--color-text-primary);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ------------------------------------------
+   Mobile Menu Styles
+   ------------------------------------------ */
+.mobile-menu {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-bg-primary);
+  padding: var(--space-4);
+  transform: translateX(-100%);
+  transition: transform var(--duration-normal) ease-out;
+  z-index: 40;
+  overflow-y: auto;
+}
+
+.mobile-menu.active {
+  transform: translateX(0);
+}
+
+@media (min-width: 768px) {
+  .mobile-menu {
+    display: none;
+  }
+}
+
+/* ------------------------------------------
+   Divider Styles
+   ------------------------------------------ */
+.divider {
+  height: 1px;
+  background-color: var(--color-border-default);
+  margin: var(--space-4) 0;
+}
+
+/* ------------------------------------------
+   Seal/Text Styles
+   ------------------------------------------ */
+.seal-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.floor-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+}
