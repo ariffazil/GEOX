@@ -5,7 +5,7 @@
 FROM python:3.11-slim
 
 LABEL maintainer="arifOS"
-LABEL version="v2026.04.10-EIC"
+LABEL version="v2026.04.11-UNIFIED"
 LABEL seal="DITEMPA BUKAN DIBERI"
 
 WORKDIR /app
@@ -22,6 +22,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy canonical GEOX
 COPY geox/ ./geox/
 COPY data/ ./data/
+COPY geox_unified.py .
+COPY geox_mcp_server.py .
 COPY entrypoint.sh .
 
 # Create vault directory
