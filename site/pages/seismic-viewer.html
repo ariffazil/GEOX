@@ -814,8 +814,14 @@
       timeRange: 4.0, // 4 seconds
       isDragging: false,
       lastMouseX: 0,
-      lastMouseY: 0
+      lastMouseY: 0,
+      attributes: {
+        coherence: { visible: false },
+        rms: { visible: false },
+        sweetness: { visible: false }
+      }
     };
+
 
     const dataSourceInfo = {
       'line-a': { name: 'Synthetic Line A', traces: 500 },
@@ -999,6 +1005,7 @@
     function renderColorFill(traceSpacing, sampleSpacing) {
       const width = canvas.width;
       const height = canvas.height;
+      const activeAttr = Object.keys(state.attributes || {}).find(k => state.attributes[k].visible);
       
       for (let traceIdx = 0; traceIdx < state.numTraces; traceIdx++) {
         const trace = state.traces[traceIdx];
@@ -1007,30 +1014,54 @@
         if (x < -traceSpacing || x > width + traceSpacing) continue;
         
         for (let sampleIdx = 0; sampleIdx < state.numSamples; sampleIdx++) {
-          const amplitude = trace[sampleIdx] * state.gain;
-          const y = sampleIdx * sampleSpacing;
-          
-          // Color mapping: blue for negative, red for positive
-          const intensity = Math.min(1, Math.abs(amplitude));
-          
-          if (amplitude > 0) {
-            // Positive amplitude - red
-            const r = Math.floor(239 + (255 - 239) * (1 - intensity));
-            const g = Math.floor(68 * (1 - intensity));
-            const b = Math.floor(68 * (1 - intensity));
-            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${intensity * 0.7})`;
+          let val = trace[sampleIdx] * state.gain;
+          let color;
+          let intensity;
+
+          if (activeAttr === 'coherence') {
+            // Simulated Coherence (Edge detection via Sobel-like filter)
+            if (traceIdx > 0 && sampleIdx > 0) {
+              const diffX = Math.abs(trace[sampleIdx] - state.traces[traceIdx-1][sampleIdx]);
+              const diffY = Math.abs(trace[sampleIdx] - trace[sampleIdx-1]);
+              val = (diffX + diffY) * 5 * state.gain;
+            } else val = 0;
+            intensity = Math.min(1, val);
+            color = `rgba(0, 0, 0, ${intensity})`; // Black edges
+          } else if (activeAttr === 'rms') {
+            // Windowed RMS Amplitude
+            const window = 5;
+            let sum = 0;
+            for(let i = -window; i <= window; i++) {
+              const idx = Math.min(state.numSamples-1, Math.max(0, sampleIdx + i));
+              sum += trace[idx] * trace[idx];
+            }
+            val = Math.sqrt(sum / (window * 2 + 1)) * 3 * state.gain;
+            intensity = Math.min(1, val);
+            color = `rgba(245, 158, 11, ${intensity})`; // Heatmap
+          } else if (activeAttr === 'sweetness') {
+            // Simulated Sweetness (Amplitude / sqrt(Frequency))
+            // Here we use RMS / (Local Slope + constant) proxy
+            const rms = Math.abs(trace[sampleIdx]) * 5 * state.gain;
+            intensity = Math.min(1, rms);
+            color = `rgba(168, 85, 247, ${intensity})`; // Purple glow
           } else {
-            // Negative amplitude - blue
-            const r = Math.floor(59 * (1 - intensity));
-            const g = Math.floor(130 * (1 - intensity));
-            const b = Math.floor(246 + (255 - 246) * (1 - intensity));
-            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${intensity * 0.7})`;
+            // Standard Amplitude mapping
+            intensity = Math.min(1, Math.abs(val));
+            if (val > 0) {
+              const r = Math.floor(239 + (255 - 239) * (1 - intensity));
+              color = `rgba(${r}, ${Math.floor(68*(1-intensity))}, ${Math.floor(68*(1-intensity))}, ${intensity * 0.7})`;
+            } else {
+              const b = Math.floor(246 + (255 - 246) * (1 - intensity));
+              color = `rgba(${Math.floor(59*(1-intensity))}, ${Math.floor(130*(1-intensity))}, ${b}, ${intensity * 0.7})`;
+            }
           }
           
+          ctx.fillStyle = color;
           ctx.fillRect(x - traceSpacing / 2, y, traceSpacing, sampleSpacing + 1);
         }
       }
     }
+
 
     function renderWiggleTraces(traceSpacing, sampleSpacing) {
       const width = canvas.width;
@@ -1213,6 +1244,27 @@
       state.horizons[horizonKey].visible = checkbox.checked;
       render();
     }
+
+    function toggleAttribute(attrKey) {
+      const checkbox = document.getElementById('attr-' + attrKey);
+      // Only allow one attribute at a time for clarity in this demo
+      Object.keys(state.attributes).forEach(k => {
+        if (k !== attrKey) {
+          state.attributes[k].visible = false;
+          const otherCheckbox = document.getElementById('attr-' + k);
+          if (otherCheckbox) otherCheckbox.checked = false;
+        }
+      });
+      state.attributes[attrKey].visible = checkbox.checked;
+      
+      // If color mode isn't active, switch to both for attributes
+      if (checkbox.checked && state.displayMode === 'wiggle') {
+        setDisplayMode('both');
+      }
+      
+      render();
+    }
+
 
     function changeDataSource() {
       const selector = document.getElementById('dataSelector');

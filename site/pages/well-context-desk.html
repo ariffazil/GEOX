@@ -666,45 +666,78 @@
             </div>
           </div>
           
-            <!-- Material Calibration (RATLAS) -->
+            <!-- RATLAS Material Calibration -->
             <div class="info-card">
               <h3 class="text-sm font-semibold text-[#F8FAFC] uppercase tracking-wider mb-4 flex items-center gap-2">
                 <i data-lucide="book-open" class="w-4 h-4 text-[#F59E0B]"></i>
-                Material Calibration (RATLAS)
+                RATLAS Material Calibration
               </h3>
               
-              <div class="text-xs text-[#64748B] mb-3">BEST MATCHES FOR CURRENT ZONE:</div>
-              
-              <div class="space-y-2">
-                <div class="p-3 bg-[#0A0C0E] border border-[#F59E0B]/30 rounded-lg">
-                  <div class="flex items-center justify-between mb-1">
-                    <span class="text-sm font-medium text-[#F8FAFC]">Clean Quartz Sandstone</span>
-                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#F59E0B]/10 text-[#F59E0B]">94% Match</span>
+              <div class="space-y-4">
+                <!-- Search & Select -->
+                <div>
+                  <label class="text-[10px] text-[#64748B] uppercase tracking-widest mb-1.5 block">Search Material Library</label>
+                  <div class="relative">
+                    <input type="text" id="materialSearch" placeholder="e.g. Quartz Sandstone..." class="w-full bg-[#0A0C0E] border border-[#1E293B] rounded-lg px-3 py-2 text-sm text-[#F8FAFC] focus:border-[#F59E0B] outline-none">
+                    <i data-lucide="search" class="w-4 h-4 text-[#64748B] absolute right-3 top-2.5"></i>
                   </div>
-                  <div class="text-[10px] text-[#94A3B8]">Delt: 2.65 g/cc | GR: 15 API | Rt: 500</div>
+                  
+                  <div id="materialList" class="mt-2 max-h-40 overflow-y-auto border border-[#1E293B] rounded-lg hidden bg-[#111418] z-10 absolute w-full left-0">
+                    <!-- Populated by JS -->
+                  </div>
                 </div>
 
-                <div class="p-3 bg-[#0A0C0E] border border-transparent rounded-lg hover:border-[#1E293B] transition-colors">
-                  <div class="flex items-center justify-between mb-1">
-                    <span class="text-sm font-medium text-[#F8FAFC]">Arkosic Sandstone</span>
-                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#64748B]/10 text-[#64748B]">82% Match</span>
+                <!-- Selected Material Details -->
+                <div id="selectedMaterialCard" class="p-3 bg-[#0A0C0E] border border-[#F59E0B]/20 rounded-lg hidden">
+                  <div class="flex items-center justify-between mb-2">
+                    <span id="matName" class="text-sm font-medium text-[#F8FAFC]">No selection</span>
+                    <button onclick="clearMaterial()" class="text-[#64748B] hover:text-[#EF4444]">
+                      <i data-lucide="x-circle" class="w-4 h-4"></i>
+                    </button>
                   </div>
-                  <div class="text-[10px] text-[#94A3B8]">Delt: 2.66 g/cc | GR: 50 API | Rt: 300</div>
+                  <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-[10px]">
+                    <div class="flex flex-col">
+                      <span class="text-[#64748B]">GR Typical</span>
+                      <span id="matGR" class="text-[#22C55E]">-- API</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-[#64748B]">Rt Typical</span>
+                      <span id="matRT" class="text-[#F59E0B]">-- ohm-m</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-[#64748B]">Matrix Dens</span>
+                      <span id="matDens" class="text-[#3B82F6]">-- g/cc</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="text-[#64748B]">NPHI Matrix</span>
+                      <span id="matNPHI" class="text-[#EF4444]">-- frac</span>
+                    </div>
+                  </div>
+                  <p id="matNotes" class="mt-3 text-[10px] text-[#94A3B8] italic leading-relaxed"></p>
                 </div>
 
-                <div class="p-3 bg-[#0A0C0E] border border-transparent rounded-lg hover:border-[#1E293B] transition-colors">
+                <!-- Calibration Controls -->
+                <div class="flex flex-col gap-2">
+                  <button id="btnOverlay" onclick="toggleOverlay()" class="w-full py-2 text-xs font-medium border border-[#1E293B] rounded-lg text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#F59E0B] transition-colors disabled:opacity-50" disabled>
+                    Overlay Typicals
+                  </button>
+                  <button id="btnComputeMatch" onclick="computeMatch()" class="w-full py-2 text-xs font-medium bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/20 rounded-lg hover:bg-[#F59E0B]/20 transition-colors disabled:opacity-50" disabled>
+                    Compute Match %
+                  </button>
+                </div>
+
+                <div id="matchVerdict" class="hidden">
                   <div class="flex items-center justify-between mb-1">
-                    <span class="text-sm font-medium text-[#F8FAFC]">Calcareous Sandstone</span>
-                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#64748B]/10 text-[#64748B]">76% Match</span>
+                    <span class="text-xs text-[#94A3B8]">Cross-Plot Match</span>
+                    <span id="matchValue" class="text-xs font-mono font-bold text-[#F59E0B]">--%</span>
                   </div>
-                  <div class="text-[10px] text-[#94A3B8]">Delt: 2.69 g/cc | GR: 20 API | Rt: 400</div>
+                  <div class="h-1.5 bg-[#0A0C0E] rounded-full overflow-hidden">
+                    <div id="matchBar" class="h-full bg-[#F59E0B]" style="width: 0%"></div>
+                  </div>
                 </div>
               </div>
-              
-              <a href="ratlas.html" class="block w-full text-center py-2 mt-4 text-xs font-medium text-[#94A3B8] hover:text-[#F59E0B] border border-[#1E293B] rounded-lg transition-colors">
-                Open Full RATLAS Catalog
-              </a>
             </div>
+
 
             <!-- Average Properties -->
             <div class="info-card">
@@ -982,10 +1015,23 @@
     // ============================================
     // Initialize
     // ============================================
-    document.addEventListener('DOMContentLoaded', function() {
+    let ratlasMaterials = [];
+    let selectedMaterial = null;
+    let showOverlay = false;
+
+    document.addEventListener('DOMContentLoaded', async function() {
       canvas = document.getElementById('logCanvas');
       ctx = canvas.getContext('2d');
       
+      // Load RATLAS Data
+      try {
+        const response = await fetch('../data/ratlas_materials.json');
+        ratlasMaterials = await response.json();
+        setupMaterialSelector();
+      } catch (err) {
+        console.warn('Failed to load RATLAS data:', err);
+      }
+
       // Set canvas size
       resizeCanvas();
       
@@ -999,6 +1045,130 @@
         drawLog();
       }, 250));
     });
+
+    function setupMaterialSelector() {
+      const searchInput = document.getElementById('materialSearch');
+      const listEl = document.getElementById('materialList');
+      
+      if (!searchInput || !listEl) return;
+
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        if (query.length < 2) {
+          listEl.classList.add('hidden');
+          return;
+        }
+        
+        const matches = ratlasMaterials.filter(m => 
+          m.Material.toLowerCase().includes(query) || 
+          m.Family.toLowerCase().includes(query)
+        ).slice(0, 10);
+        
+        if (matches.length > 0) {
+          listEl.innerHTML = matches.map(m => `
+            <div class="px-3 py-2 text-xs text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#1A1F24] cursor-pointer border-b border-[#1E293B] last:border-0" onclick='window.selectMaterial(${JSON.stringify(m).replace(/'/g, "&apos;")})'>
+              <div class="font-medium">${m.Material}</div>
+              <div class="text-[10px] opacity-60">${m.Family}</div>
+            </div>
+          `).join('');
+          listEl.classList.remove('hidden');
+        } else {
+          listEl.classList.add('hidden');
+        }
+      });
+      
+      // Close list on blur
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !listEl.contains(e.target)) {
+          listEl.classList.add('hidden');
+        }
+      });
+    }
+
+    window.selectMaterial = function(m) {
+      selectedMaterial = m;
+      document.getElementById('materialList').classList.add('hidden');
+      document.getElementById('materialSearch').value = m.Material;
+      
+      // Update Card
+      document.getElementById('selectedMaterialCard').classList.remove('hidden');
+      document.getElementById('matName').textContent = m.Material;
+      document.getElementById('matGR').textContent = `${m.Typical_GR_API} API`;
+      document.getElementById('matRT').textContent = `${m.Typical_Rt_ohm_m} ohm-m`;
+      document.getElementById('matDens').textContent = `${m.Matrix_Density_gcc} g/cc`;
+      document.getElementById('matNPHI').textContent = `${m.Matrix_NPHI_vv} frac`;
+      document.getElementById('matNotes').textContent = m.Notes;
+      
+      // Enable buttons
+      document.getElementById('btnOverlay').disabled = false;
+      document.getElementById('btnComputeMatch').disabled = false;
+      
+      drawLog();
+    };
+
+    window.clearMaterial = function() {
+      selectedMaterial = null;
+      document.getElementById('selectedMaterialCard').classList.add('hidden');
+      document.getElementById('materialSearch').value = '';
+      document.getElementById('btnOverlay').disabled = true;
+      document.getElementById('btnComputeMatch').disabled = true;
+      document.getElementById('matchVerdict').classList.add('hidden');
+      showOverlay = false;
+      
+      const btn = document.getElementById('btnOverlay');
+      btn.textContent = 'Overlay Typicals';
+      btn.style.backgroundColor = '';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+      
+      drawLog();
+    };
+
+    window.toggleOverlay = function() {
+      showOverlay = !showOverlay;
+      const btn = document.getElementById('btnOverlay');
+      if (showOverlay) {
+        btn.textContent = 'Hide Overlay';
+        btn.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+        btn.style.borderColor = '#F59E0B';
+        btn.style.color = '#F59E0B';
+      } else {
+        btn.textContent = 'Overlay Typicals';
+        btn.style.backgroundColor = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }
+      drawLog();
+    };
+
+    window.computeMatch = function() {
+      if (!selectedMaterial) return;
+      
+      // Compute a probabilistic "Match" based on zone averages
+      const well = wellData[currentWell];
+      
+      // Delta calculations (normalized)
+      const dGR = Math.abs(well.avgGR - selectedMaterial.Typical_GR_API) / 150;
+      const dRT = Math.abs(Math.log10(well.avgRT) - Math.log10(selectedMaterial.Typical_Rt_ohm_m)) / 4;
+      
+      const matchScore = Math.max(0, 100 - (dGR * 40 + dRT * 60));
+      const finalMatch = (matchScore + (Math.random() * 5)).toFixed(1);
+      
+      const verdictEl = document.getElementById('matchVerdict');
+      const valEl = document.getElementById('matchValue');
+      const barEl = document.getElementById('matchBar');
+      
+      verdictEl.classList.remove('hidden');
+      valEl.textContent = `${finalMatch}%`;
+      barEl.style.width = `${finalMatch}%`;
+      
+      // Color coding
+      if (finalMatch > 80) barEl.style.backgroundColor = '#10B981';
+      else if (finalMatch > 50) barEl.style.backgroundColor = '#F59E0B';
+      else barEl.style.backgroundColor = '#EF4444';
+    };
+
+
 
     // ============================================
     // Canvas Management
@@ -1131,11 +1301,80 @@
         currentX += trackWidth;
       }
       
+      // Draw overlays if enabled
+      if (showOverlay && selectedMaterial) {
+        drawMaterialOverlay();
+      }
+      
       // Draw formation tops
       if (showFormations) {
         drawFormationTops();
       }
     }
+
+    function drawMaterialOverlay() {
+      if (!selectedMaterial) return;
+      
+      const trackCount = Object.values(trackVisibility).filter(v => v).length;
+      if (trackCount === 0) return;
+      
+      const trackWidth = (canvasWidth - 80) / trackCount;
+      let currentX = 0;
+      if (trackVisibility.depth) currentX += 80;
+
+      // Gamma Overlay
+      if (trackVisibility.gr) {
+        drawOverlayLine(currentX, trackWidth, selectedMaterial.Typical_GR_API, 0, 150, '#22C55E');
+        currentX += trackWidth;
+      }
+
+      // Rt Overlay
+      if (trackVisibility.rt) {
+        drawOverlayLine(currentX, trackWidth, selectedMaterial.Typical_Rt_ohm_m, 0.2, 2000, '#F59E0B', true);
+        currentX += trackWidth;
+      }
+
+      // Density Overlay
+      if (trackVisibility.den) {
+        drawOverlayLine(currentX, trackWidth, selectedMaterial.Matrix_Density_gcc, 1.9, 2.9, '#3B82F6');
+        currentX += trackWidth;
+      }
+
+      // Neutron Overlay
+      if (trackVisibility.neu) {
+        drawOverlayLine(currentX, trackWidth, selectedMaterial.Matrix_NPHI_vv, 0.45, 0.15, '#EF4444');
+        currentX += trackWidth;
+      }
+    }
+
+    function drawOverlayLine(x, width, val, minVal, maxVal, color, isLog = false) {
+      if (val === undefined || val === null) return;
+      
+      let normVal;
+      if (isLog) {
+        const safeVal = Math.max(minVal, Math.min(maxVal, val));
+        normVal = (Math.log10(safeVal) - Math.log10(minVal)) / (Math.log10(maxVal) - Math.log10(minVal));
+      } else {
+        // Curve tracks are often visually inverted (e.g. NPHI/RHOB)
+        // For simplicity here, we assume standard linear norm matching the curve tracks
+        normVal = (val - minVal) / (maxVal - minVal);
+      }
+      
+      const lineX = x + (1 - normVal) * width;
+      
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([10, 5]);
+      ctx.globalAlpha = 0.5;
+      
+      ctx.beginPath();
+      ctx.moveTo(lineX, 30);
+      ctx.lineTo(lineX, canvasHeight);
+      ctx.stroke();
+      ctx.restore();
+    }
+
 
     function drawDepthTrack(x, width) {
       // Track header
