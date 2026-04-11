@@ -66,16 +66,54 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
     async def alias_geox_earth_signals(location_id):
         return await map_earth_signals(location_id)
 
-    # Legacy project tools
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # LEGACY / SHARED TOOLS (Must remain for UI compatibility)
+    # ═══════════════════════════════════════════════════════════════════════════════
+
     @mcp.tool(name="map_project_well")
     async def map_project_well(well_id: str, target_epsg: int = 4326) -> dict:
-        """Project a well trajectory into map coordinates (WGS84 default)."""
+        """Project a well trajectory into map coordinates."""
         evidence = store.get_evidence(well_id)
         if not evidence or evidence.ref.kind != "well":
             return {"error": "Valid well evidence required"}
-        return {"well_id": well_id, "status": "projected", "crs": f"EPSG:{target_epsg}"}
+
+        payload = evidence.payload
+        try:
+            head = payload["head"]
+            survey = payload["survey"]
+            
+            xyz_points = fabric.project_well_trajectory(
+                head_xy=(head["x"], head["y"]),
+                md_points=survey["md"],
+                incl_points=survey["inc"],
+                azim_points=survey["azi"]
+            )
+            
+            head_epsg = head.get("epsg", 32648)
+            projected = []
+            for p in xyz_points:
+                xt, yt = fabric.transform_point(p[0], p[1], head_epsg, target_epsg)
+                projected.append({"x": xt, "y": yt, "z": p[2]})
+                
+            return {"well_id": well_id, "points": projected, "crs": f"EPSG:{target_epsg}"}
+        except Exception as e:
+            return {"error": f"Projection failed: {e}"}
+
+    # CRITICAL ALIAS for Cockpit UI
+    @mcp.tool(name="geox_project_well_trajectory")
+    async def alias_geox_project_well_trajectory(well_id: str, target_epsg: int = 4326):
+        return await map_project_well(well_id, target_epsg)
 
     @mcp.tool(name="map_transform_coordinates")
     async def map_transform_coordinates(x: float, y: float, from_epsg: int, to_epsg: int) -> dict:
         """Project a point between coordinate systems."""
-        return {"x": x, "y": y, "crs": f"EPSG:{to_epsg}"}
+        try:
+            xt, yt = fabric.transform_point(x, y, from_epsg, to_epsg)
+            return {"x": xt, "y": yt, "crs": f"EPSG:{to_epsg}"}
+        except Exception as e:
+            return {"error": str(e)}
+
+    # Alias
+    @mcp.tool(name="geox_transform_coordinates")
+    async def alias_geox_transform_coordinates(x, y, from_epsg, to_epsg):
+        return await map_transform_coordinates(x, y, from_epsg, to_epsg)
