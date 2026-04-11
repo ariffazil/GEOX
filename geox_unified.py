@@ -389,6 +389,105 @@ async def geox_metabolize(
     }
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# REST API ENDPOINTS (for frontend integration)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Tool registry for REST API
+TOOLS_REGISTRY = [
+    {
+        "name": "geox_compute_ac_risk",
+        "version": "1.0.0",
+        "status": "production",
+        "description": "Calculate Theory of Anomalous Contrast (ToAC) risk score.",
+        "long_description": "Computes AC_Risk = U_phys × D_transform × B_cog for any vision operation. Returns verdict (SEAL/QUALIFY/HOLD/VOID).",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "u_phys": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                "transform_stack": {"type": "array", "items": {"type": "string"}},
+                "bias_scenario": {"type": "string", "enum": ["unaided_expert", "multi_interpreter", "physics_validated", "ai_vision_only", "ai_with_physics"]},
+                "custom_b_cog": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+            },
+            "required": ["u_phys", "transform_stack"]
+        }
+    },
+    {
+        "name": "geox_metabolize",
+        "version": "1.0.0",
+        "status": "production",
+        "description": "Metabolize state vector through CANON_9 basis.",
+        "long_description": "Validates against EARTH_CANON_9: [ρ, Vp, Vs, ρe, χ, k, P, T, φ] with F7 humility bounds.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "state_vector": {"type": "object"},
+                "propagation_mode": {"type": "string", "default": "1d_to_3d"},
+                "uncertainty_floor": {"type": "number", "default": 0.04}
+            },
+            "required": ["state_vector"]
+        }
+    },
+    {
+        "name": "geox_compute_stoiip",
+        "version": "1.0.0",
+        "status": "production",
+        "description": "Compute STOIIP with uncertainty quantification.",
+        "long_description": "Stock Tank Oil Initially In Place with F7 humility bounds on area, thickness, porosity, and saturation.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "area_acres": {"type": "number"},
+                "thickness_ft": {"type": "number"},
+                "porosity": {"type": "number"},
+                "saturation": {"type": "number"},
+                "fvf": {"type": "number"}
+            },
+            "required": ["area_acres", "thickness_ft", "porosity", "saturation"]
+        }
+    },
+    {
+        "name": "geox_verify_physics",
+        "version": "1.0.0",
+        "status": "production",
+        "description": "Verify physical plausibility of a scene.",
+        "long_description": "Checks against canonical rock physics bounds (ρ, Vp, Vs, AI, SI, PR, Vp/Vs)."
+    },
+    {
+        "name": "geox_verify_canon",
+        "version": "1.0.0",
+        "status": "production",
+        "description": "Verify against material canon.",
+        "long_description": "Checks scene against PHysics9 materials atlas."
+    },
+    {
+        "name": "geox_synthesize_causal_scene",
+        "version": "1.0.0",
+        "status": "production",
+        "description": "Synthesize a Causal Scene from manifold + witness.",
+        "long_description": "Creates a governed scene with operator, support, and contrast specifications."
+    }
+]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# HEALTH CHECK ENDPOINT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+from starlette.applications import Starlette
+from starlette.routing import Route
+from starlette.responses import JSONResponse
+import uvicorn
+
+async def health_endpoint(request):
+    """Health check endpoint for Docker/container orchestration."""
+    return JSONResponse({
+        "status": "healthy",
+        "version": GEOX_VERSION,
+        "seal": GEOX_SEAL,
+        "governance": "arifOS F1-F13",
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    })
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # ENTRY POINT
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -408,7 +507,19 @@ def main():
     logger.info(f"   Governance: arifOS F1-F13")
     logger.info(f"   Tools: Bridge + Dimensional + ACP + ToAC + CANON_9")
     
-    mcp.run(transport=args.transport, port=args.port, host=args.host)
+    if args.transport == "http" or args.transport == "sse":
+        # Create a Starlette app with health endpoint and mount MCP
+        from starlette.routing import Mount
+        
+        routes = [
+            Route("/health", health_endpoint),
+            Mount("/", app=mcp.http_app()),
+        ]
+        
+        app = Starlette(routes=routes)
+        uvicorn.run(app, host=args.host, port=args.port)
+    else:
+        mcp.run(transport=args.transport, port=args.port, host=args.host)
 
 if __name__ == "__main__":
     main()
