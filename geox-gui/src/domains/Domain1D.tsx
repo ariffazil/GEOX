@@ -1,11 +1,6 @@
-/**
- * Domain1D — Borehole Intelligence (250-499)
- * ═══════════════════════════════════════════════════════════════════════════════
- * Triple Combo Logs & RATLAS
- */
-
 import React, { useState } from 'react';
-import { Target, CheckCircle2, AlertCircle, Zap, Sliders, ScanFace, Ruler } from 'lucide-react';
+import { Target, CheckCircle2, AlertCircle, Zap, ScanFace, Ruler, BarChart3, AlertTriangle } from 'lucide-react';
+import { useMcpTool } from '../hooks/useMcpTool';
 
 const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ children, color = "amber" }) => {
   const colors: Record<string, string> = {
@@ -22,21 +17,8 @@ const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ childr
   );
 };
 
-// Gemini API Hook
-const useGeminiAPI = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const generate = async (prompt: string, systemInstruction?: string): Promise<string> => {
-    setIsLoading(true);
-    await new Promise(r => setTimeout(r, 1500));
-    setIsLoading(false);
-    return "INTERPRETATION: Gas-bearing sandstone reservoir identified between 1540-1560m. Crossover indicates hydrocarbon effect. Water contact at 1580m. Confidence: 85%.";
-  };
-  return { generate, isLoading };
-};
-
 export const Domain1D: React.FC = () => {
-  const { generate, isLoading } = useGeminiAPI();
-  const [llmInterpret, setLlmInterpret] = useState('');
+  const interpretTool = useMcpTool<any, string>('bridge.interpret_causal_scene');
   const [isCalibrating, setIsCalibrating] = useState(false);
   const [calibrated, setCalibrated] = useState(false);
 
@@ -82,10 +64,10 @@ export const Domain1D: React.FC = () => {
     }).join(' ');
   };
 
-  const getCrossoverPolygon = () => {
+  const crossoverPaths = (() => {
     const polygonPoints: { xNeu: number; xDen: number; y: number }[] = [];
     let isCrossover = false;
-    const crossoverPaths: string[] = [];
+    const paths: string[] = [];
     const denMin = 1.95, denMax = 2.95;
     const neuMin = 0.45, neuMax = -0.15;
 
@@ -100,32 +82,25 @@ export const Domain1D: React.FC = () => {
       } else {
         if (isCrossover) {
           isCrossover = false;
-          const rightSide = [...polygonPoints].reverse().map(pt => `${pt.xDen},${pt.y}`);
-          const leftSide = polygonPoints.map(pt => `${pt.xNeu},${pt.y}`);
-          crossoverPaths.push([...leftSide, ...rightSide].join(' '));
+          const r = [...polygonPoints].reverse().map(pt => `${pt.xDen},${pt.y}`);
+          const l = polygonPoints.map(pt => `${pt.xNeu},${pt.y}`);
+          paths.push([...l, ...r].join(' '));
         }
       }
     });
-    
-    if (isCrossover) {
-      const rightSide = [...polygonPoints].reverse().map(pt => `${pt.xDen},${pt.y}`);
-      const leftSide = polygonPoints.map(pt => `${pt.xNeu},${pt.y}`);
-      crossoverPaths.push([...leftSide, ...rightSide].join(' '));
-    }
-    return crossoverPaths;
-  };
-
-  const crossoverPaths = getCrossoverPolygon();
+    return paths;
+  })();
 
   const handleAutoInterpret = async () => {
-    const response = await generate("Analyze triple combo logs");
-    setLlmInterpret(response);
+    await interpretTool.call({ domain: 'dim1', user_query: 'Phase tie analysis' });
   };
 
   const simulateCalibration = () => { 
     setIsCalibrating(true); 
     setTimeout(() => { setIsCalibrating(false); setCalibrated(true); }, 1500); 
   };
+
+  const isBlocked = interpretTool.data?.includes('HOLD');
 
   return (
     <div className="flex flex-col h-full gap-4 p-4">
@@ -134,11 +109,11 @@ export const Domain1D: React.FC = () => {
           <h2 className="text-xl font-bold tracking-widest flex items-center gap-2">
             <Target className="w-5 h-5 text-emerald-500" /> THE 1D INTERFACE [250-499]
           </h2>
-          <p className="text-xs text-gray-500 font-mono">TRIPLE COMBO LOGS & RATLAS</p>
+          <p className="text-xs text-gray-500 font-mono">SOVEREIGN BOREHOLE INTEL</p>
         </div>
         <div className="flex gap-2">
           {calibrated ? <Badge color="cyan">TRUE SCALE LOCKED</Badge> : <Badge color="crimson">UNSCALED</Badge>}
-          <Badge color="purple">LLM: ONLINE</Badge>
+          <Badge color="purple">MCP: {interpretTool.status === 'loading' ? 'SYNCING...' : 'ONLINE'}</Badge>
           <Badge color="emerald">F2: TRUTH</Badge>
         </div>
       </div>
@@ -147,68 +122,45 @@ export const Domain1D: React.FC = () => {
         <div className={`flex-1 glass-panel p-2 flex gap-1 relative h-full ${isCalibrating ? 'gcp-active' : ''}`}>
           <div className="scanline" />
           
-          {/* Track 1: Gamma Ray */}
           <div className="flex-1 border-r border-gray-800 flex flex-col">
              <div className="h-12 border-b border-gray-800 flex flex-col justify-between p-1 bg-black/40">
                 <div className="text-[10px] font-mono text-center text-green-500 font-bold">GR (API)</div>
                 <div className="flex justify-between text-[9px] font-mono text-gray-500"><span>0</span><span>150</span></div>
              </div>
              <div className="flex-1 relative overflow-hidden bg-[#050505]">
-                {[...Array(10)].map((_,i) => <div key={i} className="absolute w-full h-[1px] bg-gray-900" style={{top:`${i*10}%`}}/>)}
-                {[...Array(5)].map((_,i) => <div key={i} className="absolute h-full w-[1px] bg-gray-900" style={{left:`${i*25}%`}}/>)}
                 <svg width="100%" height="100%" preserveAspectRatio="none" viewBox={`0 0 ${trackWidth} ${trackHeight}`}>
                    <polyline points={getPoints('gr', 0, 150)} fill="none" stroke="#22c55e" strokeWidth="1.5" />
                 </svg>
              </div>
           </div>
           
-          {/* Track 2: Depth */}
           <div className="w-16 border-r border-gray-800 flex flex-col bg-gray-900/80 z-10 shadow-lg">
              <div className="h-12 border-b border-gray-800 flex flex-col justify-center items-center bg-black/40 gap-1">
-                <div className="flex flex-col text-[9px] font-mono text-gray-400 items-center">
-                  <Ruler size={12} className="text-cyan-500 mb-1"/> MD(m)
-                </div>
+                <div className="flex flex-col text-[9px] font-mono text-gray-400 items-center"><Ruler size={12} className="text-cyan-500 mb-1"/> MD(m)</div>
              </div>
              <div className="flex-1 flex flex-col justify-between py-2 text-[10px] font-mono text-center text-gray-500 relative">
                 {isCalibrating && <div className="absolute inset-0 bg-cyan-500/10 radar-sweep" />}
-                {[...Array(13)].map((_, i) => (
-                  <div key={i} className="px-1">
-                    <span className={calibrated ? "text-cyan-500 font-bold" : "text-gray-600"}>
-                      {calibrated ? 1500 + i * 10 : '----'}
-                    </span>
-                  </div>
-                ))}
+                {[...Array(13)].map((_, i) => <div key={i} className="px-1"><span className={calibrated ? "text-cyan-500 font-bold" : "text-gray-600"}>{calibrated ? 1500 + i * 10 : '----'}</span></div>)}
              </div>
           </div>
           
-          {/* Track 3: Resistivity */}
           <div className="flex-1 border-r border-gray-800 flex flex-col">
              <div className="h-12 border-b border-gray-800 flex flex-col justify-between p-1 bg-black/40">
-                <div className="text-[10px] font-mono text-center text-red-500 font-bold">RESISTIVITY (Ωm)</div>
+                <div className="text-[10px] font-mono text-center text-red-500 font-bold">RES (Ωm)</div>
                 <div className="flex justify-between text-[9px] font-mono text-gray-500"><span>0.2</span><span>2000</span></div>
              </div>
              <div className="flex-1 relative overflow-hidden bg-[#050505]">
-                {[...Array(4)].map((_,i) => <div key={i} className="absolute h-full w-[1px] bg-gray-800" style={{left:`${i*33.3}%`}}/>)}
-                {[...Array(10)].map((_,i) => <div key={i} className="absolute w-full h-[1px] bg-gray-900" style={{top:`${i*10}%`}}/>)}
                 <svg width="100%" height="100%" preserveAspectRatio="none" viewBox={`0 0 ${trackWidth} ${trackHeight}`}>
-                   <polyline points={getPoints('resShal', 0.2, 2000, true)} fill="none" stroke="#ef4444" strokeWidth="1" strokeDasharray="4,4" />
                    <polyline points={getPoints('resDeep', 0.2, 2000, true)} fill="none" stroke="#ef4444" strokeWidth="2" />
                 </svg>
              </div>
           </div>
 
-          {/* Track 4: Density-Neutron */}
           <div className="flex-1 flex flex-col">
              <div className="h-12 border-b border-gray-800 flex flex-col justify-between p-1 bg-black/40">
-                <div className="flex justify-between w-full px-1">
-                  <span className="text-[10px] font-mono text-blue-400 font-bold">NPHI</span>
-                  <span className="text-[10px] font-mono text-amber-500 font-bold">RHOB</span>
-                </div>
-                <div className="flex justify-between text-[9px] font-mono text-gray-500"><span>0.45 ↔ -0.15</span><span>1.95 ↔ 2.95</span></div>
+                <div className="flex justify-between w-full px-1"><span className="text-[10px] font-mono text-blue-400 font-bold">NPHI</span><span className="text-[10px] font-mono text-amber-500 font-bold">RHOB</span></div>
              </div>
              <div className="flex-1 relative overflow-hidden bg-[#050505]">
-                {[...Array(5)].map((_,i) => <div key={i} className="absolute h-full w-[1px] bg-gray-900" style={{left:`${i*25}%`}}/>)}
-                {[...Array(10)].map((_,i) => <div key={i} className="absolute w-full h-[1px] bg-gray-900" style={{top:`${i*10}%`}}/>)}
                 <svg width="100%" height="100%" preserveAspectRatio="none" viewBox={`0 0 ${trackWidth} ${trackHeight}`}>
                    {crossoverPaths.map((d, i) => <polygon key={i} points={d} fill="rgba(245, 158, 11, 0.3)" />)}
                    <polyline points={getPoints('den', 1.95, 2.95)} fill="none" stroke="#f59e0b" strokeWidth="2" />
@@ -225,29 +177,30 @@ export const Domain1D: React.FC = () => {
           <button 
             onClick={simulateCalibration} 
             disabled={isCalibrating || calibrated} 
-            className={`w-full py-2 border text-[10px] font-mono uppercase transition-colors flex justify-center items-center gap-2 ${
-              calibrated ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-gray-800/50 border-gray-700 text-gray-400 hover:bg-gray-800'
+            className={`w-full py-2 border text-[10px] font-mono uppercase flex justify-center items-center gap-2 ${
+              calibrated ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400' : 'bg-gray-800/50 border-gray-700 text-gray-400'
             }`}
           >
-            {isCalibrating ? 'EXTRACTING GCPs...' : calibrated ? 
-              <span className="flex items-center gap-2"><CheckCircle2 size={12}/> GEOREFERENCED</span> : 
-              <span className="flex items-center gap-2"><ScanFace size={12}/> CALIBRATE</span>
-            }
+            {isCalibrating ? 'EXTRACTING...' : calibrated ? 'GEOREFERENCED' : 'CALIBRATE'}
           </button>
-          {calibrated && (
-            <div className="p-2 border border-cyan-500/20 bg-cyan-500/5 text-[9px] font-mono text-cyan-300">
-               <div>MD RANGE: [1500m - 1620m]</div>
-               <div className="text-amber-500 mt-1 flex items-center gap-1"><AlertCircle size={10}/> CROSSOVER DETECTED</div>
-            </div>
-          )}
+          
           <button 
             onClick={handleAutoInterpret} 
-            disabled={isLoading || !calibrated} 
-            className="w-full py-2 bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[10px] font-mono uppercase hover:bg-purple-500/20 transition-colors flex justify-center items-center gap-2 disabled:opacity-50"
+            disabled={interpretTool.status === 'loading' || !calibrated} 
+            className="w-full py-2 bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[10px] font-mono uppercase flex justify-center items-center gap-2"
           >
-            {isLoading ? 'CALCULATING...' : '✨ AUTO-INTERPRET'}
+            {interpretTool.status === 'loading' ? 'ANALYZING...' : '✨ SOVEREIGN INTERPRET'}
           </button>
-          {llmInterpret && <div className="flex-1 overflow-y-auto mt-2 text-[11px] font-mono text-gray-300 leading-relaxed border-l-2 border-purple-500 pl-3">{llmInterpret}</div>}
+          
+          {interpretTool.data && (
+            <div className={`mt-2 p-3 border font-mono text-[11px] leading-relaxed ${isBlocked ? 'border-red-500/30 bg-red-500/5 text-red-200' : 'border-purple-500/30 bg-purple-500/5 text-purple-200'}`}>
+              <div className="text-[9px] mb-2 flex items-center gap-2">
+                {isBlocked ? <AlertTriangle size={12} className="text-red-500" /> : <BarChart3 size={12} />} 
+                {isBlocked ? '888_JUDGE HOLD' : 'INTERPRETATION'}
+              </div>
+              <pre className="whitespace-pre-wrap">{interpretTool.data}</pre>
+            </div>
+          )}
         </div>
       </div>
     </div>

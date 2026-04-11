@@ -1,11 +1,3 @@
-/**
- * GeoxCore — GEOX Earth Intelligence Core (000-1249)
- * ═══════════════════════════════════════════════════════════════════════════════
- * DITEMPA BUKAN DIBERI
- * 
- * Complete 5-domain dimensional architecture with AGI Terminal
- */
-
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Activity, Layers, Box, Terminal, Shield, Zap, Target, 
@@ -17,6 +9,7 @@ import { Domain1D } from './domains/Domain1D';
 import { Domain2D } from './domains/Domain2D';
 import { Domain3D } from './domains/Domain3D';
 import { DomainLEM } from './domains/DomainLEM';
+import { useMcpTool } from './hooks/useMcpTool';
 import './styles/designSystem.css';
 
 const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ children, color = "amber" }) => {
@@ -33,24 +26,13 @@ const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ childr
   );
 };
 
-const useGeminiAPI = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const generate = async (prompt: string): Promise<string> => {
-    setIsLoading(true);
-    await new Promise(r => setTimeout(r, 1000));
-    setIsLoading(false);
-    return `ACKNOWLEDGED. Processing: "${prompt.substring(0, 50)}..." [GEOX AGI v2026.04.11]`;
-  };
-  return { generate, isLoading };
-};
-
 export const GeoxCore: React.FC = () => {
   const [activeDomain, setActiveDomain] = useState('void');
   const [time, setTime] = useState('');
-  const { generate, isLoading } = useGeminiAPI();
+  const interpretTool = useMcpTool<any, string>('bridge.interpret_causal_scene');
   const [terminalInput, setTerminalInput] = useState('');
   const [terminalLog, setTerminalLog] = useState([
-    { sender: 'sys', text: '> CANON_9 Initialized...' },
+    { sender: 'sys', text: '> PHYSICS_9 Initialized...' },
     { sender: 'sys', text: '> Inverse Mapping Ready...' },
     { sender: 'sys', text: '> 888 Judge Acknowledged.' }
   ]);
@@ -66,18 +48,22 @@ export const GeoxCore: React.FC = () => {
 
   useEffect(() => {
     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [terminalLog, isLoading]);
+  }, [terminalLog, interpretTool.status]);
 
   const handleTerminalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!terminalInput.trim() || isLoading) return;
+    if (!terminalInput.trim() || interpretTool.status === 'loading') return;
 
     const userText = terminalInput.trim();
     setTerminalInput('');
     setTerminalLog(prev => [...prev, { sender: 'user', text: `> USER: ${userText}` }]);
 
-    const response = await generate(userText);
-    setTerminalLog(prev => [...prev, { sender: 'geox', text: `> GEOX: ${response}` }]);
+    try {
+      const response = await interpretTool.call({ domain: 'bridge', user_query: userText });
+      setTerminalLog(prev => [...prev, { sender: 'geox', text: `> GEOX: ${response}` }]);
+    } catch (err) {
+      setTerminalLog(prev => [...prev, { sender: 'sys', text: `> ERROR: ${err}` }]);
+    }
   };
 
   const domains = [
@@ -100,17 +86,16 @@ export const GeoxCore: React.FC = () => {
           <div className="hidden md:flex items-center gap-3 text-[10px] font-mono">
             <div className="flex items-center gap-1 text-emerald-500">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>ARIF_OS LINKED</span>
+              <span>SOVEREIGN MCP LINKED</span>
             </div>
             <span className="text-gray-600">|</span>
-            <span className="text-gray-400">ΔS: <span className="text-emerald-400">-0.12</span></span>
-            <span className="text-gray-400">Ω₀: <span className="text-amber-400">0.04</span></span>
+            <span className="text-gray-400">STATE: <span className="text-emerald-400">SYNCHRONIZED</span></span>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
           <div className="hidden md:flex gap-1">
-            <Badge color="cyan">CANON_9 LOCKED</Badge>
+            <Badge color="cyan">999_SEAL ACTIVE</Badge>
             <Badge color="slate">F9: ANTI-HANTU</Badge>
             <Badge color="emerald">F11: COMMAND AUTH</Badge>
           </div>
@@ -144,10 +129,9 @@ export const GeoxCore: React.FC = () => {
             })}
           </div>
           
-          {/* AGI Terminal */}
           <div className="h-64 border-t border-gray-800 p-4 flex flex-col gap-2 bg-[#050608] hidden md:flex shrink-0">
             <div className="text-[10px] font-mono text-gray-600 flex items-center gap-2 border-b border-gray-800 pb-2">
-              <Zap className="w-3 h-3 text-amber-500" /> AGI TERMINAL
+              <Zap className="w-3 h-3 text-amber-500" /> SOVEREIGN TERMINAL
             </div>
             
             <div className="flex-1 overflow-y-auto text-[9px] font-mono flex flex-col gap-1 pr-1">
@@ -159,7 +143,7 @@ export const GeoxCore: React.FC = () => {
                   {log.text}
                 </div>
               ))}
-              {isLoading && <div className="text-purple-500 animate-pulse">{'>'} SYNTHESIZING...</div>}
+              {interpretTool.status === 'loading' && <div className="text-purple-500 animate-pulse">{'>'} SYNTHESIZING...</div>}
               <div ref={terminalEndRef} />
             </div>
 
@@ -169,8 +153,8 @@ export const GeoxCore: React.FC = () => {
                 type="text"
                 value={terminalInput}
                 onChange={(e) => setTerminalInput(e.target.value)}
-                placeholder="✨ QUERY AGI..."
-                disabled={isLoading}
+                placeholder="✨ QUERY MCP..."
+                disabled={interpretTool.status === 'loading'}
                 className="bg-transparent border-none outline-none text-[9px] font-mono text-amber-100 w-full placeholder-gray-700 disabled:opacity-50"
               />
             </form>
@@ -192,7 +176,7 @@ export const GeoxCore: React.FC = () => {
 
       <footer className="h-8 border-t border-gray-800 bg-[#050608] flex items-center justify-between px-4 shrink-0 z-10">
         <span className="text-[9px] font-mono text-gray-600 tracking-[0.3em]">
-          GEOX_CORE_v2026.04.11 // THERMODYNAMIC STATE ENGINE
+          GEOX_CORE_v2026.04.11 // SOVEREIGN_MCP_GATEWAY
         </span>
         <span className="text-[9px] font-mono font-bold text-amber-600/80 tracking-widest uppercase">
           DITEMPA BUKAN DIBERI // 999_SEAL
