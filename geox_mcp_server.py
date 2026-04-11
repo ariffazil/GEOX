@@ -672,8 +672,97 @@ def _build_hardened_result(
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# MCP Tools
+# RATLAS Search Tool (99 Materials Atlas)
 # ═══════════════════════════════════════════════════════════════════════════════
+
+@mcp.tool(name="geox_search_ratlas")
+async def geox_search_ratlas(
+    gr_api: float,
+    rhob_gcc: float,
+    rt_ohmm: float,
+    nphi_vv: float | None = None,
+    top_n: int = 5
+) -> dict:
+    """
+    Search the RATLAS (99 Materials) for the best lithological matches.
+    
+    Uses a weighted Euclidean distance in [GR, RHOB, log10(RT)] space.
+    
+    gr_api: Gamma Ray (API units)
+    rhob_gcc: Bulk Density (g/cm3)
+    rt_ohmm: Resistivity (ohm.m)
+    nphi_vv: Neutron Porosity (v/v) - Optional
+    top_n: Number of matches to return (default 5)
+    """
+    import pandas as pd
+    import numpy as np
+    
+    # 888_HOLD: Physical impossibility check (Floor F4)
+    if rhob_gcc < 0.5 or rhob_gcc > 4.5:
+        return _build_hardened_result("geox_search_ratlas", 
+            structured_content={"status": "VOID", "reason": "Density outside physical bounds (0.5-4.5)"},
+            error="F4_ Amanah Violation: Density out of physical range.")
+    
+    if gr_api < 0 or gr_api > 500:
+        return _build_hardened_result("geox_search_ratlas", 
+            structured_content={"status": "VOID", "reason": "GR outside physical bounds (0-500)"},
+            error="F4_ Amanah Violation: Gamma Ray out of physical range.")
+
+    try:
+        # Load RATLAS - Resolve absolute path relative to this file
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        atlas_path = os.path.join(base_dir, "geox_atlas_99_materials.csv")
+        df = pd.read_csv(atlas_path)
+        
+        # 1. Feature Engineering: log10(Rt) because resistivity is exponential
+        target_v = [gr_api, rhob_gcc, np.log10(max(0.1, rt_ohmm))]
+        
+        # 2. Extract Atlas Vectors
+        atlas_vectors = df[['Typical_GR_API', 'Matrix_Density_gcc', 'Typical_Rt_ohm_m']].copy()
+        atlas_vectors['Typical_Rt_ohm_m'] = np.log10(atlas_vectors['Typical_Rt_ohm_m'].clip(lower=0.1))
+        
+        # 3. Normalization parameters
+        # GR range typ 150, RHOB 1.0, logRT 6.0
+        scales = np.array([150.0, 1.0, 6.0]) 
+        weights = np.array([0.8, 1.0, 0.5]) # Density is the heavy witness
+        
+        # 4. Weighted Euclidean Distance
+        v = atlas_vectors.values
+        target = np.array(target_v)
+        
+        dist = np.sqrt(np.sum( ( (v - target) / scales * weights )**2, axis=1))
+        
+        df['confidence_score'] = (1 / (1 + dist)).round(3)
+        matches_df = df.nlargest(top_n, 'confidence_score')
+        matches = matches_df.to_dict(orient='records')
+
+        # 5. Outcome & Verdicts
+        top_match = matches[0]['Material']
+        top_conf = matches[0]['confidence_score']
+        
+        sc = {
+            "search_parameters": {"gr": gr_api, "rhob": rhob_gcc, "rt": rt_ohmm},
+            "matches": matches,
+            "status": "QUALIFIED" if top_conf > 0.8 else "PLAUSIBLE",
+            "verdict": "DRIL" if top_conf > 0.9 else "CLAIM"
+        }
+
+        content = (
+            f"RATLAS search complete. Top match: {top_match} ({int(top_conf*100)}% confidence). "
+            f"Verified against Atlas-99. {GEOX_SEAL}"
+        )
+        
+        return _build_hardened_result(
+            "geox_search_ratlas",
+            structured_content=sc,
+            content=content
+        )
+        
+    except Exception as exc:
+        logger.error(f"RATLAS search failed: {exc}")
+        return _build_hardened_result("geox_search_ratlas", 
+            structured_content={"status": "FAILURE"},
+            error=f"Internal Search Error: {str(exc)}")
 
 @mcp.tool(name="geox_load_seismic_line")
 async def geox_load_seismic_line(
