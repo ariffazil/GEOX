@@ -1,14 +1,17 @@
 # GEOX Earth Witness
 
 > **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
-> **Constitutional Geoscience Platform v2026.04.10**
+> **Constitutional Geoscience Platform v2026.04.11**
 
 [![Seal](https://img.shields.io/badge/SEAL-DITEMPA%20BUKAN%20DIBERI-gold)](./wiki/90_AUDITS/999_SEAL.md)
-[![Version](https://img.shields.io/badge/version-2026.04.10-blue)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2026.04.11-blue)](./CHANGELOG.md)
 [![Status](https://img.shields.io/badge/status-🟢%20ACTIVE-green)](./DEPLOYMENT_STATUS.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
-**Live URL:** https://geox.arif-fazil.com
+**Verified Live URLs:**
+- 🌐 https://geox.arif-fazil.com — Main web interface
+- 🔧 http://localhost:8000 — MCP endpoint (VPS direct)
+- ✅ Status: HTTP 200 verified 2026-04-11
 
 GEOX is a constitutional geoscience platform that uses multi-agent architecture and tri-witness consensus to deliver verified geological interpretations. Built with Python/FastMCP backend and React/TypeScript frontend, it enforces 13 constitutional floors (F1-F13) including 888_HOLD safety vetoes.
 
@@ -351,3 +354,27 @@ DITEMPA BUKAN DIBERI — *Forged, Not Given*
 ---
 
 *"Forged through constitutional discipline, not granted by external authority."*
+
+---
+
+## 🏛️ Trinity Ecosystem — Live Links
+
+| Ring | Domain | Realm | Status |
+|------|--------|-------|--------|
+| **Ring 1** | [arif-fazil.com](https://arif-fazil.com) | **THE SOUL** | ✅ LIVE |
+| **Ring 2** | [arifos.arif-fazil.com](https://arifos.arif-fazil.com) | **THE MIND** | ✅ LIVE |
+| **Ring 3** | [aaa.arif-fazil.com](https://aaa.arif-fazil.com) | **THE BODY** | ✅ LIVE |
+
+### 🌐 Documentation & Interface
+- **Theory (APEX):** [https://apex.arif-fazil.com](https://apex.arif-fazil.com)
+- **Unified Wiki:** [https://wiki.arif-fazil.com](https://wiki.arif-fazil.com)
+- **Spatial (GEOX):** [https://geox.arif-fazil.com](https://geox.arif-fazil.com)
+- **Control Portal:** [https://forge.arif-fazil.com](https://forge.arif-fazil.com)
+- **Agent Workspace:** [https://waw.arif-fazil.com](https://waw.arif-fazil.com)
+
+### ⚡ arifOS MCP Endpoints
+- **MCP Server:** [https://arifosmcp.arif-fazil.com/mcp](https://arifosmcp.arif-fazil.com/mcp)
+- **Health:** [https://arifosmcp.arif-fazil.com/health](https://arifosmcp.arif-fazil.com/health)
+- **Tools:** [https://arifosmcp.arif-fazil.com/tools](https://arifosmcp.arif-fazil.com/tools)
+
+**Seal:** VAULT999 | **Verdict:** 999_SEAL | **Alignment:** ΔΩΨ

@@ -124,7 +124,7 @@ _floor_enforcer = FloorEnforcer() if _HAS_GOVERNANCE else None
 # Server Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.04.10"
+GEOX_VERSION = "v2026.04.10-EIC"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
 # ═══════════════════════════════════════════════════════════════════════════════

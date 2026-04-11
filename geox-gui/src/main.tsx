@@ -1,14 +1,16 @@
 /**
- * GEOX GUI Entry Point — DITEMPA BUKAN DIBERI
+ * GEOX GUI Main Entry — GeoxCore Edition
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * DITEMPA BUKAN DIBERI
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
+import GeoxCore from './GeoxCore';
+import './styles/designSystem.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <GeoxCore />
+  </React.StrictMode>
 );

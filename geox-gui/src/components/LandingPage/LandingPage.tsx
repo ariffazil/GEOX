@@ -47,7 +47,7 @@ const Hero: React.FC<{ onEnterCockpit: () => void }> = ({ onEnterCockpit }) => {
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
           <div className={`w-2 h-2 rounded-full ${geoxConnected ? 'bg-green-500 animate-pulse' : 'bg-amber-500'} shadow-[0_0_8px_currentColor]`} />
           <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">
-            {geoxConnected ? 'EIC Online — v2026.04.10' : 'Connecting...'}
+            {geoxConnected ? 'Earth Intelligence Core — v2026.04.10-EIC' : 'Connecting...'}
           </span>
         </div>
 
