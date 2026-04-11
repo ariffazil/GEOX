@@ -14,8 +14,11 @@ logger = logging.getLogger("geox.unified")
 mcp = FastMCP(
     name="GEOX",
     on_duplicate="error",
-    # strict_input_validation=True
+# strict_input_validation=True
 )
+
+GEOX_VERSION = "2.0.0-DIMENSION-NATIVE"
+GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PROFILE GATING CONFIGURATION

@@ -34,7 +34,7 @@ export const ProspectUI: React.FC = () => {
             console.error('Projection failed:', err);
             updateFloorStatus('F4', 'red', 'Spatial transformation failure');
         }
-    }, [selectedWell, projectWellTool, updateFloorStatus]);
+    }, [selectedWell, projectWellTool.call, updateFloorStatus]);
 
     useEffect(() => {
         if (selectedWell) {
