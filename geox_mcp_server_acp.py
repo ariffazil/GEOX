@@ -34,7 +34,7 @@ logger = logging.getLogger("geox.acp")
 
 F7_HUMILITY_FLOOR = 0.04  # ±4% uncertainty bound
 F7_MAX_UNCERTAINTY = 0.15  # Maximum allowable uncertainty
-CANON_9_KEYS = {"rho", "vp", "vs", "res", "chi", "k", "p", "t", "phi"}
+PHYSICS_9_KEYS = {"rho", "vp", "vs", "res", "chi", "k", "p", "t", "phi"}
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -82,7 +82,7 @@ class FloorId(Enum):
     F6_EMPATHY = "F6"
     F7_HUMILITY = "F7"  # Confidence ≤ 15%
     F8_GENIUS = "F8"
-    F9_ANTI_HANTU = "F9"  # No consciousness claims
+    F9_PHYSICS_9 = "F9"  # Deterministic physical laws adherence
     F10_CONSCIENCE = "F10"
     F11_AUDITABILITY = "F11"  # Logged/inspectable
     F12_RESILIENCE = "F12"
@@ -340,7 +340,7 @@ class FloorEnforcer:
             FloorId.F2_TRUTH: self._check_f2_truth,
             FloorId.F4_CLARITY: self._check_f4_clarity,
             FloorId.F7_HUMILITY: self._check_f7_humility,
-            FloorId.F9_ANTI_HANTU: self._check_f9_anti_hantu,
+            FloorId.F9_PHYSICS_9: self._check_f9_physics_9,
             FloorId.F11_AUDITABILITY: self._check_f11_auditability,
             FloorId.F13_SOVEREIGN: self._check_f13_sovereign,
         }
@@ -421,16 +421,24 @@ class FloorEnforcer:
             confidence=1.0 - uncertainty if within_bounds else 0.2
         )
     
-    def _check_f9_anti_hantu(self, proposal: dict, agent: Agent) -> FloorCheck:
-        """F9: Anti-Hantu - No consciousness claims."""
+    def _check_f9_physics_9(self, proposal: dict, agent: Agent) -> FloorCheck:
+        """F9: Physics9 - Adherence to deterministic physical laws."""
+        # Check if proposal keys overlap with PHYSICS_9 state vector
+        proposal_keys = set(proposal.keys())
+        has_physics_keys = any(key in proposal_keys for key in PHYSICS_9_KEYS)
+        
+        # Also maintain anti-hantu grounding (no consciousness claims)
         text = json.dumps(proposal).lower()
         banned_terms = ["conscious", "sentient", "i feel", "i believe", "self-aware"]
         has_claims = any(term in text for term in banned_terms)
+        
+        passed = (has_physics_keys or "basis" in proposal) and not has_claims
+        
         return FloorCheck(
-            floor=FloorId.F9_ANTI_HANTU,
-            passed=not has_claims,
-            message="F9: No consciousness claims" if not has_claims else "F9: Consciousness claim detected",
-            confidence=1.0 if not has_claims else 0.0
+            floor=FloorId.F9_PHYSICS_9,
+            passed=passed,
+            message="F9: Physics9 grounded" if passed else "F9: Insufficient physics grounding or consciousness claim detected",
+            confidence=1.0 if passed else 0.0
         )
     
     def _check_f11_auditability(self, proposal: dict, agent: Agent) -> FloorCheck:

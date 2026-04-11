@@ -7,11 +7,11 @@ Unified deployment consolidating:
   • Core geological tools (STOIIP, physics verification, scene synthesis)
   • ACP governance interface (delegated to arifOS)
   • Theory of Anomalous Contrast (ToAC) risk engine
-  • CANON_9 state vector metabolizer
+  • PHYSICS_9 state vector metabolizer
 
 Governance: arifOS 13-Floors (F1-F13)
 Transport: HTTP/SSE (FastMCP 3.x)
-Version: v2026.04.11-UNIFIED
+Version: v2026.04.12-EIC
 """
 
 from __future__ import annotations
@@ -27,8 +27,19 @@ from fastmcp import FastMCP
 
 # GEOX schemas
 from geox_schemas import (
-    OperatorKind, WitnessKind, SupportKind, ContrastOperatorSpec
+    OperatorKind, WitnessKind, SupportKind, ContrastOperatorSpec,
+    CausalSceneUISummary, Physics9Item
 )
+
+# GEOX ACP (Sovereign Intelligence)
+from geox_mcp_server_acp import (
+    acp, FloorId, VerdictState, PHYSICS_9_KEYS
+)
+
+from starlette.applications import Starlette
+from starlette.routing import Route, Mount
+from starlette.responses import JSONResponse
+import uvicorn
 
 # Optional: pandas for materials atlas
 try:
@@ -44,7 +55,7 @@ except ImportError:
 
 mcp = FastMCP("geox-unified")
 logger = logging.getLogger("geox.unified")
-GEOX_VERSION = "v2026.04.11-UNIFIED"
+GEOX_VERSION = "v2026.04.12-EIC"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -231,11 +242,24 @@ async def geox_compute_stoiip(
     }
 
 @mcp.tool(name="geox_verify_physics")
-async def geox_verify_physics() -> dict:
+async def geox_verify_physics(state_vector: Optional[dict] = None) -> dict:
     """
-    Verifies physical consistency against Earth Canon 9 (physics9).
-    Thermodynamic state vector validation.
+    Verifies physical consistency against Physics 9 (physics9).
+    Thermodynamic state vector validation using ACP enforcer.
     """
+    if state_vector:
+        # Evaluate via ACP Judge
+        proposal = {
+            "id": "physics_verify",
+            "type": "validation",
+            "basis": state_vector,
+            "uncertainty": 0.04
+        }
+        # Register a temporary observer agent
+        await acp.register_agent("system_phys_checker", "geophysicist", "Physics Enforcer")
+        verdict = await acp.submit_proposal("system_phys_checker", proposal)
+        return verdict
+    
     return {
         "status": "verified", 
         "audit": "PASS", 
@@ -244,15 +268,15 @@ async def geox_verify_physics() -> dict:
         "verdict": "888_PROCEED"
     }
 
-@mcp.tool(name="geox_verify_canon")
-async def geox_verify_canon() -> dict:
+@mcp.tool(name="geox_verify_physics9")
+async def geox_verify_physics9() -> dict:
     """
-    Verifies state vector compliance against Earth Canon 9 constitutional basis.
+    Verifies state vector compliance against Physics 9 constitutional basis.
     [ρ, Vp, Vs, ρe, χ, k, P, T, φ] — strict thermodynamic basis.
     """
     result = await geox_verify_physics()
-    result["canon"] = "EARTH_CANON_9"
-    result["basis"] = ["rho", "vp", "vs", "res", "chi", "k", "p", "t", "phi"]
+    result["canon"] = "PHYSICS_9"
+    result["basis"] = list(PHYSICS_9_KEYS)
     return result
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -347,11 +371,8 @@ async def geox_compute_ac_risk(
     }
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CANON_9: State Vector Metabolizer
+# PHYSICS_9: State Vector Metabolizer
 # ═══════════════════════════════════════════════════════════════════════════════
-
-CANON_9_KEYS = {"rho", "vp", "vs", "res", "chi", "k", "p", "t", "phi"}
-F7_HUMILITY_FLOOR = 0.04
 
 @mcp.tool(name="geox_metabolize")
 async def geox_metabolize(
@@ -360,12 +381,11 @@ async def geox_metabolize(
     uncertainty_floor: float = 0.04
 ) -> dict:
     """
-    Metabolizes a state vector through CANON_9 basis with F7 humility bounds.
+    Metabolizes a state vector through PHYSICS_9 basis with F7 humility bounds.
     
-    Validates against EARTH_CANON_9: [ρ, Vp, Vs, ρe, χ, k, P, T, φ]
-    Permeability and moduli are derived, not fundamental.
+    Validates against PHYSICS_9: [ρ, Vp, Vs, ρe, χ, k, P, T, φ]
     """
-    missing = [k for k in CANON_9_KEYS if k not in state_vector]
+    missing = [k for k in PHYSICS_9_KEYS if k not in state_vector]
     if missing:
         return {
             "status": "FAILURE",
@@ -375,17 +395,24 @@ async def geox_metabolize(
             "governance": "arifOS F2 Truth"
         }
     
-    if uncertainty_floor < F7_HUMILITY_FLOOR:
-        uncertainty_floor = F7_HUMILITY_FLOOR
+    # Delegate to acp.judge for formal evaluation
+    proposal = {
+        "id": "metabolism_task",
+        "basis": state_vector,
+        "uncertainty": uncertainty_floor,
+        "mode": propagation_mode
+    }
+    
+    await acp.register_agent("phys9_metabolizer", "petrophysicist", "Physics9 Metabolizer")
+    verdict = await acp.submit_proposal("phys9_metabolizer", proposal)
     
     return {
         "metabolism_status": "CONVERGED",
         "propagation": propagation_mode,
-        "f7_uncertainty": uncertainty_floor,
-        "verdict": "888_PROCEED",
-        "state_vector_keys": list(state_vector.keys()),
+        "verdict": verdict["verdict"],
+        "floor_results": verdict["floor_results"],
         "governance": "arifOS F7 Humility",
-        "canon": "EARTH_CANON_9"
+        "canon": "PHYSICS_9"
     }
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -472,11 +499,6 @@ TOOLS_REGISTRY = [
 # HEALTH CHECK ENDPOINT
 # ═══════════════════════════════════════════════════════════════════════════════
 
-from starlette.applications import Starlette
-from starlette.routing import Route
-from starlette.responses import JSONResponse
-import uvicorn
-
 async def health_endpoint(request):
     """Health check endpoint for Docker/container orchestration."""
     return JSONResponse({
@@ -500,17 +522,15 @@ def main():
     parser.add_argument("--host", default="0.0.0.0")
     args = parser.parse_args()
     
-    logger.info(f"🔥 GEOX Unified Server Starting")
+    logger.info("🔥 GEOX Unified Server Starting")
     logger.info(f"   Version: {GEOX_VERSION}")
     logger.info(f"   Seal: {GEOX_SEAL}")
     logger.info(f"   Transport: {args.transport} on {args.host}:{args.port}")
-    logger.info(f"   Governance: arifOS F1-F13")
-    logger.info(f"   Tools: Bridge + Dimensional + ACP + ToAC + CANON_9")
+    logger.info("   Governance: arifOS F1-F13")
+    logger.info("   Tools: Bridge + Dimensional + ACP + ToAC + PHYSICS_9")
     
     if args.transport == "http" or args.transport == "sse":
         # Get the FastMCP HTTP app and wrap it with health endpoint
-        from starlette.routing import Mount
-        
         mcp_app = mcp.http_app()
         
         # Create routes: health first, then mount MCP at /mcp

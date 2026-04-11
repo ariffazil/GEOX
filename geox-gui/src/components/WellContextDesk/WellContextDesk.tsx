@@ -7,7 +7,7 @@
  *   - Displays well log tracks via LogDock
  *   - Calls geox_compute_petrophysics + geox_select_sw_model via MCP bridge
  *   - Calls geox_petrophysical_hold_check before any result is accepted
- *   - Governed by F7 Humility (uncertainty bands) + F9 Anti-Hantu (no phantom picks)
+ *   - Governed by F7 Humility (uncertainty bands) + F9 Physics9 (no phantom picks)
  *
  * MCP tools used (from well_context_desk/manifest.json):
  *   Required: mcp.geox.query_memory, mcp.geox.compute_petrophysics, mcp.geox.select_sw_model
@@ -171,7 +171,7 @@ export const WellContextDesk: React.FC = () => {
     || holdTool.status === 'loading';
 
   const runPetrophysics = useCallback(async () => {
-    updateFloorStatus('F9', 'amber', 'Petrophysics run initiated — Anti-Hantu check active');
+    updateFloorStatus('F9', 'amber', 'Petrophysics run initiated — Physics9 check active');
 
     try {
       // 1. Select Sw model first
