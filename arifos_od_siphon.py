@@ -1,5 +1,5 @@
 """
-arifos_od_siphon.py — OpendTect-Resident Sovereign Siphon (v1.1)
+arifos_od_siphon.py — OpendTect-Resident Sovereign Siphon (v1.2)
 ═══════════════════════════════════════════════════════════════════════════════
 DITEMPA BUKAN DIBERI
 
@@ -11,8 +11,7 @@ import json
 import os
 import sys
 
-# Protocol: We attempt to import odbind. 
-# Fixed Bug 2: Correct module names from ODBind documentation.
+# Standard ODBind imports
 try:
     import odbind.survey as odsurvey
     import odbind.horizon3d as odhor
@@ -25,20 +24,13 @@ class ODSiphon:
     """
     The Siphon: Extracts truth from OpendTect mess into GEOX Causal Scenes.
     """
-    # Fixed Bug 1: Refactored to __init__
     def __init__(self, survey_name=None):
         if not OD_AVAILABLE:
-            self.error = "odbind not found. Ensure this script runs inside OpendTect's Python environment."
+            self.error = "odbind not found. Run inside OpendTect Python environment."
             return
             
         try:
-            # Use current survey if not specified
-            if survey_name:
-                self.survey = odsurvey.Survey(survey_name)
-            else:
-                self.survey = odsurvey.Survey.current()
-            
-            # Use the high-fidelity info struct from ODBind
+            self.survey = odsurvey.Survey.current() if not survey_name else odsurvey.Survey(survey_name)
             self.info = self.survey.info
             self.error = None
         except Exception as e:
@@ -48,7 +40,6 @@ class ODSiphon:
         """The Manifold: Standardized spatial-temporal domain."""
         if self.error: return {"error": self.error}
         
-        # ODBind metadata mapping via info object
         zs = self.info.zsamp
         ins = self.info.inlsamp
         crs = self.info.crlsamp
@@ -65,7 +56,6 @@ class ODSiphon:
             "seal": "DITEMPA_BUKAN_DIBERI"
         }
 
-    # Fixed Bug 3: CLI Non-blocking model
     def distill_claim(self, horizon_id: str) -> dict:
         """The Claim: Interpreted surface geometry."""
         if self.error: return {"error": self.error}
@@ -77,44 +67,71 @@ class ODSiphon:
                 "id": horizon_id,
                 "type": "Horizon3D",
                 "z_range": [float(h_info.z_min), float(h_info.z_max)],
-                "provenance": {
-                    "created_by": h_info.user_name,
-                    "created_at": getattr(h_info, 'created_at', 'Unknown')
-                }
+                "provenance": {"created_by": h_info.user_name}
             }
         except Exception as e:
             return {"error": f"Claim distillation failed: {str(e)}"}
 
-    def export_causal_scene(self, horizon_id=None, path=None):
-        """Packages everything into the final JSON manifold."""
+    def distill_truth(self, well_name):
+        """Extracts Well Markers (The Hard Witness) for F2 Truth."""
+        if self.error: return {"error": self.error}
+        try:
+            w = odwell.Well(self.survey, well_name)
+            markers = w.get_markers()
+            return [
+                {"name": m.name, "z_md": m.depth, "z_twt": m.twt} 
+                for m in markers
+            ]
+        except Exception as e:
+            return {"error": f"Truth extraction failed: {str(e)}"}
+
+    def distill_logs(self, well_name, log_names=['RHOB', 'DT']):
+        """Siphons raw logs for the D2T Synthetic Bridge."""
+        if self.error: return {"error": self.error}
+        try:
+            w = odwell.Well(self.survey, well_name)
+            results = {}
+            for ln in log_names:
+                try:
+                    log = w.get_log(ln)
+                    results[ln] = log.data.tolist()
+                except: continue
+            return results
+        except Exception as e:
+            return {"error": f"Log siphon failed: {str(e)}"}
+
+    def export_causal_scene(self, horizon_id=None, well_name=None, path=None):
+        """Full Causal Scene Generation."""
         scene = {
             "manifold": self.distill_manifold(),
             "claims": [],
             "truth": [],
+            "logs": {},
             "status": "SEALED",
-            "metadata": {"origin": "arifos_od_siphon_v1.1"}
+            "metadata": {"version": "v1.2"}
         }
         
-        if horizon_id:
-            scene["claims"].append(self.distill_claim(horizon_id))
+        if horizon_id: scene["claims"].append(self.distill_claim(horizon_id))
+        if well_name:
+            scene["truth"] = self.distill_truth(well_name)
+            scene["logs"] = self.distill_logs(well_name)
             
         if path:
-            with open(path, 'w') as f:
-                json.dump(scene, f, indent=2)
+            with open(path, 'w') as f: json.dump(scene, f, indent=2)
         else:
             print(json.dumps(scene, indent=2))
         return scene
 
 def main():
-    """CLI Entrypoint for the GEOX Agent to pipe data."""
     siphon = ODSiphon()
     if siphon.error:
         print(json.dumps({"status": "FAILURE", "error": siphon.error}))
         sys.exit(1)
         
-    # Example usage: python arifos_od_siphon.py <hor_name>
-    hor_name = sys.argv[1] if len(sys.argv) > 1 else None
-    siphon.export_causal_scene(horizon_id=hor_name)
+    # CLI: python arifos_od_siphon.py <hor_name> <well_name>
+    hor = sys.argv[1] if len(sys.argv) > 1 else None
+    well = sys.argv[2] if len(sys.argv) > 2 else None
+    siphon.export_causal_scene(horizon_id=hor, well_name=well)
 
 if __name__ == "__main__":
     main()
