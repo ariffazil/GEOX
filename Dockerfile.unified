@@ -56,5 +56,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-# Start Dimension-Native GEOX Server
-CMD ["python", "geox_unified_mcp_server.py"]
+# Start Dimension-Native GEOX Server in bridge mode
+CMD ["python", "geox_unified.py", "--mode", "bridge"]
