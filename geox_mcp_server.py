@@ -153,6 +153,28 @@ mcp = FastMCP(
 )
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# Resources (The Root of Truth)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@mcp.resource("geox://canon9/state")
+def get_canon9_state() -> str:
+    """Returns the current EARTH.CANON_9 state vector basis."""
+    import json
+    return json.dumps(EARTH_CANON_9, indent=2)
+
+@mcp.resource("geox://1d/triple-combo")
+def get_triple_combo() -> str:
+    """Returns the 1D Borehole (Heavy Truth) manifold state."""
+    return "1D Manifold: RHOB/NPHI/GR/RES (Active: Malay Basin Pilot)"
+
+@mcp.resource("geox://2d/seismic-plane")
+def get_seismic_plane() -> str:
+    """Returns the 2D Seismic (Planar Operations) manifold state."""
+    return "2D Manifold: Amplitude Vault (Active: SEG-Y 999_SEAL Line)"
+
+
+
 @mcp.tool(name="geox_metabolize")
 async def geox_metabolize(
     state_vector: dict[str, float],
