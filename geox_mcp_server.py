@@ -62,8 +62,8 @@ def geox_system_prompt() -> str:
 # BRIDGE: Governance & Synthesis
 # ═══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool(name="bridge.sync_state")
-async def bridge_sync_state() -> dict:
+@mcp.tool(name="geox_fetch_authoritative_state")
+async def geox_fetch_authoritative_state() -> dict:
     """Fetches the 888_JUDGE authoritative scene state."""
     gold_path = "gold_causal_scene.json"
     if os.path.exists(gold_path):
@@ -71,10 +71,10 @@ async def bridge_sync_state() -> dict:
             return {"causal_scene": json.load(f)}
     return {"status": "unverified"}
 
-@mcp.tool(name="bridge.render_card_context")
-async def bridge_render_card_context(domain: str) -> str:
+@mcp.tool(name="geox_render_scene_context")
+async def geox_render_scene_context(domain: str) -> str:
     """Deterministic summarizer: Distills the scene for LLM synthesis."""
-    state = await bridge_sync_state()
+    state = await geox_fetch_authoritative_state()
     scene = state.get("causal_scene", {})
     return f"""
     DOMAIN: {domain} | STATUS: {scene.get('status')} | EPOCH: {scene.get('epoch')}
@@ -82,10 +82,10 @@ async def bridge_render_card_context(domain: str) -> str:
     METRICS: {scene.get('manifold', {})}
     """
 
-@mcp.tool(name="bridge.interpret_causal_scene")
-async def bridge_interpret_causal_scene(domain: str, user_query: Optional[str] = None) -> str:
+@mcp.tool(name="geox_synthesize_causal_scene")
+async def geox_synthesize_causal_scene(domain: str, user_query: Optional[str] = None) -> str:
     """Assembles distilled context into a structured synthesis prompt."""
-    context = await bridge_render_card_context(domain)
+    context = await geox_render_scene_context(domain)
     return f"""
     Context: interpret_causal_scene call.
     {context}
@@ -94,8 +94,8 @@ async def bridge_interpret_causal_scene(domain: str, user_query: Optional[str] =
     TASK: Generate the structured response contract according to the system prompt.
     """
 
-@mcp.tool(name="bridge.audit_policy_violation")
-async def bridge_audit_policy_violation(operator: str, violations: list[str]) -> str:
+@mcp.tool(name="geox_audit_hold_breach")
+async def geox_audit_hold_breach(operator: str, violations: list[str]) -> str:
     """Structured audit for 888_HOLD breaches."""
     return f"""
     AUDIT_ALERT: {operator}
@@ -105,9 +105,9 @@ async def bridge_audit_policy_violation(operator: str, violations: list[str]) ->
     Explain the breach against F2/F8/F9.
     """
 
-@mcp.tool(name="bridge.check_operator_legality")
-async def bridge_check_operator_legality(op_kind: str, left_kind: str, left_support: str, right_kind: str, right_support: str) -> dict:
-    """Constitutional Firewall: Checks physical operation legality."""
+@mcp.tool(name="geox_validate_operation")
+async def geox_validate_operation(op_kind: str, left_kind: str, left_support: str, right_kind: str, right_support: str) -> dict:
+    """Constitutional Firewall: Validates physical operation legality per F2/F8/F9."""
     try:
         spec = ContrastOperatorSpec(
             op_kind=OperatorKind(op_kind),
@@ -125,18 +125,21 @@ async def bridge_check_operator_legality(op_kind: str, left_kind: str, left_supp
 # DIMENSIONAL KERNELS (Minimal v1)
 # ═══════════════════════════════════════════════════════════════════════════════
 
-@mcp.tool(name="prospect.compute_stoiip")
-async def prospect_compute_stoiip(area: float, thickness: float, phi: float, sw: float, fvf: float, witness_id: Optional[str] = None) -> dict:
+@mcp.tool(name="geox_compute_stoiip")
+async def geox_compute_stoiip(area: float, thickness: float, phi: float, sw: float, fvf: float, witness_id: Optional[str] = None) -> dict:
+    """Computes Stock Tank Oil Initially In Place (STOIIP) reserves using volumetric method."""
     stoiip = (6.2898 * area * thickness * phi * (1 - sw)) / fvf
     return {"stoiip_stb": stoiip, "status": "VERIFIED" if witness_id else "SIMULATED"}
 
-@mcp.tool(name="physics9.verify_state")
-async def physics9_verify_state():
+@mcp.tool(name="geox_verify_physics")
+async def geox_verify_physics():
+    """Verifies physical consistency against Earth Canon 9 (physics9) thermodynamic basis."""
     return {"status": "verified", "audit": "PASS", "floor": "F2_PHYSICS"}
 
-@mcp.tool(name="canon9.verify_state")
-async def canon9_verify_state():
-    return await physics9_verify_state()
+@mcp.tool(name="geox_verify_canon")
+async def geox_verify_canon():
+    """Verifies state vector compliance against Earth Canon 9 constitutional basis."""
+    return await geox_verify_physics()
 
 if __name__ == "__main__":
     mcp.run()
