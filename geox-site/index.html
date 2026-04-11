@@ -101,6 +101,7 @@
             <nav>
                 <a href="index.html">Home</a>
                 <a href="tools/index.html">Tools</a>
+                <a href="map/index.html">Map</a>
                 <a href="platform/index.html">Platform</a>
                 <a href="workspaces/index.html">Workspaces</a>
                 <a href="status/index.html">Status</a>
@@ -278,14 +279,23 @@
             </div>
         </section>
 
-        <!-- TOOLS CTA -->
-        <section id="tools-cta" style="margin: 4rem 0; padding: 2rem; border: 1px solid var(--accent-color); background: rgba(253, 224, 71, 0.05);">
-            <h2 style="margin-bottom: 1rem;">🛠️ Tools Catalog</h2>
-            <p>Browse, test, and execute all <strong id="tools-cta-count">—</strong> MCP tools in the live interface.</p>
-            <p style="color: var(--muted-color); margin: 1rem 0;">
-                Each tool card shows parameters, accepts live input, and displays real-time results from the MCP server.
-            </p>
-            <a href="tools/index.html" class="btn" style="margin-top: 1rem;">Open Tools Catalog →</a>
+        <!-- APPS GRID -->
+        <section id="apps-grid" style="margin: 4rem 0;">
+            <h2 style="margin-bottom: 2rem;">Platform Apps</h2>
+            <div class="grid">
+                <div class="card" style="border-color: var(--accent-color);">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">🛠️</div>
+                    <h3>Tools Catalog</h3>
+                    <p>Browse and execute all <strong id="tools-cta-count">—</strong> MCP tools with live parameter forms.</p>
+                    <a href="tools/index.html" class="btn" style="margin-top: 1rem;">Open Tools →</a>
+                </div>
+                <div class="card" style="border-color: #3b82f6;">
+                    <div style="font-size: 1.5rem; margin-bottom: 1rem;">🗺️</div>
+                    <h3>MAP Module</h3>
+                    <p>Interactive spatial interface. Click-to-query coordinates, context, and earth signals.</p>
+                    <a href="map/index.html" class="btn" style="margin-top: 1rem;">Open Map →</a>
+                </div>
+            </div>
         </section>
 
         <!-- SKILLS PREVIEW -->
