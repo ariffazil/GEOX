@@ -3,200 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basin Explorer | GEOX Command Center</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Basin Explorer — GEOX Command Center</title>
+    
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style type="text/tailwindcss">
-        @theme {
-            --color-bg-primary: #0A0C0E;
-            --color-bg-secondary: #111418;
-            --color-bg-tertiary: #1A1F24;
-            --color-accent-amber: #F59E0B;
-            --color-accent-amber-light: #FBBF24;
-            --color-text-primary: #F8FAFC;
-            --color-text-secondary: #94A3B8;
-            --color-text-muted: #64748B;
-            --color-status-online: #10B981;
-            --color-status-warning: #F59E0B;
-            --color-status-error: #EF4444;
-            --color-border-default: #1E293B;
-        }
-    </style>
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../shared/styles.css">
+    
     <style>
-        * {
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        body {
-            background-color: #0A0C0E;
-            color: #F8FAFC;
-        }
-        
-        /* Stratigraphic column patterns */
+        /* Stratigraphic column patterns maintained for geological accuracy */
         .pattern-sand {
-            background: repeating-linear-gradient(
-                0deg,
-                #D4A574 0px,
-                #D4A574 4px,
-                #C49A6C 4px,
-                #C49A6C 8px
-            );
+            background: repeating-linear-gradient(0deg, #D4A574 0px, #D4A574 4px, #C49A6C 4px, #C49A6C 8px);
         }
         .pattern-clay {
-            background: repeating-linear-gradient(
-                90deg,
-                #8B7355 0px,
-                #8B7355 2px,
-                #A0826D 2px,
-                #A0826D 6px
-            );
+            background: repeating-linear-gradient(90deg, #8B7355 0px, #8B7355 2px, #A0826D 2px, #A0826D 6px);
         }
         .pattern-sandstone {
             background: linear-gradient(135deg, #D4A574 0%, #C49A6C 50%, #B8956A 100%);
         }
         .pattern-shale {
-            background: repeating-linear-gradient(
-                0deg,
-                #4A5568 0px,
-                #4A5568 3px,
-                #3D4852 3px,
-                #3D4852 6px
-            );
+            background: repeating-linear-gradient(0deg, #4A5568 0px, #4A5568 3px, #3D4852 3px, #3D4852 6px);
         }
         .pattern-marl {
-            background: repeating-linear-gradient(
-                45deg,
-                #718096 0px,
-                #718096 4px,
-                #A0AEC0 4px,
-                #A0AEC0 8px
-            );
+            background: repeating-linear-gradient(45deg, #718096 0px, #718096 4px, #A0AEC0 4px, #A0AEC0 8px);
         }
         .pattern-chalk {
             background: linear-gradient(180deg, #E2E8F0 0%, #CBD5E0 100%);
         }
-        .pattern-chalk-shale {
-            background: repeating-linear-gradient(
-                0deg,
-                #E2E8F0 0px,
-                #E2E8F0 4px,
-                #4A5568 4px,
-                #4A5568 8px
-            );
-        }
         
-        /* Formation hover effect */
+        /* Interactive Elements */
         .formation-item {
-            transition: all 0.2s ease;
+            transition: all 0.2s var(--ease-out-expo);
             cursor: pointer;
+            border: 1px solid transparent;
         }
         .formation-item:hover {
             transform: translateX(4px);
-            box-shadow: 0 0 0 2px #F59E0B;
+            border-color: var(--plasma-primary);
+            background: var(--void-elevated);
         }
         .formation-item.selected {
-            box-shadow: 0 0 0 3px #F59E0B;
+            border-color: var(--plasma-primary);
+            background: var(--plasma-glow);
         }
-        
-        /* Scrollbar styling */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #111418;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #4B5563;
-        }
-        
-        /* Pulse animation for demo badge */
-        @keyframes pulse-amber {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        .pulse-demo {
-            animation: pulse-amber 2s ease-in-out infinite;
-        }
-        
-        /* Basin map well dots */
+
         .well-dot {
-            width: 8px;
-            height: 8px;
-            background: #F59E0B;
+            width: 10px;
+            height: 10px;
+            background: var(--plasma-primary);
+            border: 2px solid var(--void-base);
             border-radius: 50%;
             position: absolute;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s var(--ease-out-expo);
+            box-shadow: 0 0 10px var(--plasma-glow);
         }
         .well-dot:hover {
             transform: scale(1.5);
-            box-shadow: 0 0 8px #F59E0B;
-        }
-        
-        /* Card hover effect */
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            border-color: #F59E0B;
+            background: white;
+            box-shadow: 0 0 20px var(--plasma-glow);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="bg-void-base text-text-primary min-h-screen">
+    <!-- Visual Overlays -->
+    <div class="scanlines"></div>
+    <div class="radar-vortex"></div>
+
     <!-- Navigation Header -->
-    <nav class="fixed top-0 left-0 right-0 h-16 bg-[#0A0C0E]/95 backdrop-blur-xl border-b border-[#1E293B] z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-            <div class="flex items-center justify-between h-full">
-                <!-- Logo -->
-                <a href="../index.html" class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-[#F59E0B] rounded flex items-center justify-center">
-                        <i data-lucide="mountain" class="w-5 h-5 text-[#0A0C0E]"></i>
-                    </div>
-                    <span class="text-lg font-semibold text-[#F8FAFC]">GEOX</span>
-                </a>
-                
-                <!-- Navigation Links -->
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="../index.html" class="text-[#94A3B8] hover:text-[#F8FAFC] transition-colors text-sm font-medium">Home</a>
-                    <div class="relative group">
-                        <button class="flex items-center gap-1 text-[#F8FAFC] text-sm font-medium">
-                            Tools
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </button>
-                        <div class="absolute top-full left-0 mt-2 w-56 bg-[#111418] border border-[#1E293B] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                            <a href="ac-risk.html" class="flex items-center gap-3 px-4 py-3 text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#1A1F24] transition-colors text-sm">
-                                <i data-lucide="calculator" class="w-4 h-4"></i>
-                                AC Risk Calculator
-                            </a>
-                            <a href="ratlas.html" class="flex items-center gap-3 px-4 py-3 text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#1A1F24] transition-colors text-sm">
-                                <i data-lucide="database" class="w-4 h-4"></i>
-                                RATLAS Browser
-                            </a>
-                            <a href="basin-explorer.html" class="flex items-center gap-3 px-4 py-3 text-[#F8FAFC] bg-[#1A1F24] transition-colors text-sm">
-                                <i data-lucide="mountain" class="w-4 h-4 text-[#F59E0B]"></i>
-                                Basin Explorer
-                            </a>
-                            <a href="seismic-viewer.html" class="flex items-center gap-3 px-4 py-3 text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#1A1F24] transition-colors text-sm">
-                                <i data-lucide="activity" class="w-4 h-4"></i>
-                                Seismic Viewer
-                            </a>
-                            <a href="well-context-desk.html" class="flex items-center gap-3 px-4 py-3 text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#1A1F24] transition-colors text-sm">
-                                <i data-lucide="align-left" class="w-4 h-4"></i>
-                                Well Context Desk
-                            </a>
-                        </div>
-                    </div>
-                    <a href="#" class="text-[#94A3B8] hover:text-[#F8FAFC] transition-colors text-sm font-medium">About</a>
-                    <a href="#" class="text-[#94A3B8] hover:text-[#F8FAFC] transition-colors text-sm font-medium">Docs</a>
+    <nav class="fixed top-0 left-0 right-0 z-50 h-[var(--header-h)] glass border-b border-border-glass">
+        <div class="max-w-[var(--max-width)] mx-auto px-6 h-full flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-lg bg-plasma-primary flex items-center justify-center group-hover:shadow-[0_0_20px_var(--plasma-glow)] transition-all">
+                    <i data-lucide="globe" class="w-6 h-6 text-void-base"></i>
                 </div>
+                <div class="flex flex-col">
+                    <span class="font-bold text-xl tracking-tighter text-white">GEOX</span>
+                    <span class="text-[10px] uppercase tracking-widest text-integrity-emerald font-mono">Basin Explorer</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-10">
+                <a href="../index.html" class="text-text-secondary hover:text-white transition-colors text-sm font-semibold">COMMAND</a>
+                <a href="ac-risk.html" class="text-text-secondary hover:text-white transition-colors text-sm font-semibold">RISK</a>
+                <a href="ratlas.html" class="text-text-secondary hover:text-white transition-colors text-sm font-semibold">RATLAS</a>
+                <div class="h-4 w-px bg-border-glass"></div>
+                <a href="#" class="glass-pill px-4 py-1.5 text-xs font-mono text-integrity-emerald flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-integrity-emerald animate-pulse"></span>
+                    GEOSPATIAL_SYNCED
+                </a>
+            </div>
+        </div>
+    </nav>
                 
                 <!-- System Status -->
                 <div class="flex items-center gap-2">

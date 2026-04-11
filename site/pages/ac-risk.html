@@ -4,67 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AC Risk Calculator — GEOX Command Center</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'bg-primary': '#0A0C0E',
-                        'bg-secondary': '#111418',
-                        'bg-tertiary': '#1A1F24',
-                        'accent-amber': '#F59E0B',
-                        'accent-amber-light': '#FBBF24',
-                        'text-primary': '#F8FAFC',
-                        'text-secondary': '#94A3B8',
-                        'text-muted': '#64748B',
-                        'status-online': '#10B981',
-                        'status-warning': '#F59E0B',
-                        'status-error': '#EF4444',
-                        'border-default': '#1E293B',
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                        'mono': ['JetBrains Mono', 'monospace'],
-                    },
-                }
-            }
-        }
-    </script>
-    
+    <meta name="description" content="GEOX Command Center — Earth Intelligence Core. Real Tools, Zero Theater.">
+    <meta name="theme-color" content="#0A0C0E">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>G</text></svg>">
+
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../shared/styles.css">
     
     <style>
-        body {
-            background-color: #0A0C0E;
-            color: #F8FAFC;
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #111418;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1E293B;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
-        }
-        
         /* Range slider styling */
         input[type="range"] {
             -webkit-appearance: none;
@@ -178,33 +133,12 @@
         .var-bcog { background: rgba(16, 185, 129, 0.2); color: #34D399; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="bg-void-base text-text-primary min-h-screen">
+    <!-- Scientific Overlays -->
+    <div class="scanlines"></div>
+    <div class="radar-vortex"></div>
+
     <!-- Navigation Header -->
-    <nav class="fixed top-0 left-0 right-0 z-50 h-16 bg-bg-primary/95 backdrop-blur-xl border-b border-border-default">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-            <div class="flex items-center justify-between h-full">
-                <!-- Logo -->
-                <a href="../index.html" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-lg bg-accent-amber flex items-center justify-center group-hover:shadow-lg group-hover:shadow-accent-amber/30 transition-shadow">
-                        <i data-lucide="layers" class="w-6 h-6 text-bg-primary"></i>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-lg font-bold text-text-primary tracking-tight">GEOX</span>
-                        <span class="text-[10px] text-text-muted uppercase tracking-wider">Command Center</span>
-                    </div>
-                </a>
-                
-                <!-- Navigation Links -->
-                <div class="hidden md:flex items-center gap-1">
-                    <a href="../index.html" class="px-4 py-2 text-sm text-text-secondary hover:text-text-primary rounded-lg hover:bg-bg-tertiary transition-colors">
-                        Home
-                    </a>
-                    <div class="relative group">
-                        <button class="px-4 py-2 text-sm text-text-secondary hover:text-text-primary rounded-lg hover:bg-bg-tertiary transition-colors flex items-center gap-1">
-                            Tools
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </button>
-                        <div class="absolute top-full left-0 mt-2 w-56 bg-bg-secondary border border-border-default rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                             <div class="p-2">
                                 <a href="ac-risk.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-accent-amber/10 text-accent-amber">
                                     <i data-lucide="calculator" class="w-4 h-4"></i>
@@ -261,51 +195,53 @@
         <section class="py-8 sm:py-12 border-b border-border-default bg-gradient-to-b from-bg-tertiary/30 to-transparent">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Back Link -->
-                <a href="../index.html" class="inline-flex items-center gap-2 text-sm text-text-muted hover:text-accent-amber transition-colors mb-6 group">
-                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
-                    Back to Dashboard
-                </a>
-                
-                <!-- Title & Subtitle -->
-                <div class="animate-fade-in">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-12 h-12 rounded-xl bg-accent-amber/10 flex items-center justify-center">
-                            <i data-lucide="calculator" class="w-6 h-6 text-accent-amber"></i>
-                        </div>
-                        <div>
-                            <h1 class="text-3xl sm:text-4xl font-bold text-text-primary">AC Risk Calculator</h1>
-                        </div>
+        <!-- Hero Section -->
+        <section class="pt-32 pb-16">
+            <div class="container relative z-10">
+                <div class="max-w-3xl">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="glass-pill px-3 py-1 text-[10px] font-mono text-plasma-primary uppercase tracking-widest">Physics Platform</span>
+                        <div class="w-1 h-1 rounded-full bg-text-muted"></div>
+                        <span class="text-[10px] font-mono text-text-muted uppercase tracking-widest">Module: AC-01</span>
                     </div>
-                    <p class="text-text-secondary text-lg">Theory of Anomalous Contrast — real-time risk assessment</p>
+                    <h1 class="text-5xl sm:text-7xl mb-6 text-gradient">
+                        Theory of <br>Anomalous Contrast
+                    </h1>
+                    <p class="text-text-secondary text-lg font-light leading-relaxed">
+                        Deterministic risk assessment for subsurface anomalies. <br>
+                        Quantifying physical ambiguity, transform complexity, and cognitive parameters.
+                    </p>
                 </div>
             </div>
         </section>
 
         <!-- Calculator Section -->
-        <section class="py-8 sm:py-12">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section class="py-12">
+            <div class="container">
                 <div class="grid lg:grid-cols-5 gap-8">
                     <!-- Left Column: Inputs -->
                     <div class="lg:col-span-3 space-y-6">
                         <!-- Formula Display -->
-                        <div class="bg-bg-secondary border border-border-default rounded-xl p-6">
-                            <h3 class="text-sm font-medium text-text-muted uppercase tracking-wider mb-4">Formula</h3>
-                            <div class="text-center py-4">
-                                <div class="text-2xl sm:text-3xl font-mono font-medium">
+                        <div class="card-unit p-6">
+                            <h3 class="text-xs font-bold text-text-muted uppercase tracking-widest mb-6">Constitutional Formula</h3>
+                            <div class="text-center py-6">
+                                <div class="text-2xl sm:text-4xl font-mono font-medium tracking-tighter">
                                     <span class="text-text-primary">AC_Risk</span>
-                                    <span class="text-text-muted">=</span>
+                                    <span class="text-plasma-primary">=</span>
                                     <span class="formula-var var-uphys">U<sub class="text-xs">phys</sub></span>
                                     <span class="text-text-muted">×</span>
                                     <span class="formula-var var-dtrans">D<sub class="text-xs">transform</sub></span>
                                     <span class="text-text-muted">×</span>
                                     <span class="formula-var var-bcog">B<sub class="text-xs">cog</sub></span>
                                 </div>
-                                <p class="mt-4 text-sm text-text-muted">Anomalous Contrast Risk calculation based on physical ambiguity, transform complexity, and cognitive bias factors.</p>
+                                <p class="mt-6 text-sm text-text-muted font-light max-w-lg mx-auto italic">
+                                    Calculation grounded in deterministic geoscience protocols and thermodynamic governance.
+                                </p>
                             </div>
                         </div>
 
                         <!-- Calculator Form -->
-                        <div class="bg-bg-secondary border border-border-default rounded-xl p-6 space-y-6">
+                        <div class="card-unit p-8 space-y-8">
                             <!-- Input 1: Physical Ambiguity -->
                             <div>
                                 <label class="flex items-center justify-between text-sm font-medium text-text-primary mb-3">
@@ -396,46 +332,41 @@
                             </button>
                         </div>
                     </div>
-
                     <!-- Right Column: Result Display -->
                     <div class="lg:col-span-2">
-                        <div class="sticky top-24">
-                            <div class="bg-bg-secondary border border-border-default rounded-xl p-6">
-                                <h3 class="text-sm font-medium text-text-muted uppercase tracking-wider mb-6">Risk Assessment</h3>
+                        <div class="sticky top-24 space-y-6">
+                            <div class="card-unit p-8 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 p-4">
+                                    <i data-lucide="shield-check" class="w-12 h-12 text-integrity-emerald opacity-10"></i>
+                                </div>
+
+                                <h3 class="text-xs font-bold text-text-muted uppercase tracking-widest mb-8">Risk Intelligence</h3>
                                 
                                 <!-- Risk Score Display -->
-                                <div class="text-center py-8">
-                                    <div id="risk-score" class="text-6xl sm:text-7xl font-bold font-mono text-text-primary animate-count-up">
-                                        39.5<span class="text-3xl">%</span>
+                                <div class="text-center py-10">
+                                    <div class="text-[10px] font-mono text-text-muted uppercase tracking-[0.2em] mb-2">Calculated Probability</div>
+                                    <div id="risk-score" class="text-7xl sm:text-8xl font-black font-mono text-plasma-primary tracking-tighter">
+                                        39.5<span class="text-3xl font-light opacity-50">%</span>
                                     </div>
-                                    <div id="risk-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mt-4 badge-medium">
-                                        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-                                        <span>Medium Risk</span>
+                                    <div id="risk-badge" class="inline-flex items-center gap-2 px-4 py-1.5 glass-pill text-[10px] font-mono mt-6 uppercase tracking-widest text-plasma-primary">
+                                        <i data-lucide="activity" class="w-3 h-3"></i>
+                                        <span>Kinetic Risk: Medium</span>
                                     </div>
                                 </div>
 
                                 <!-- Risk Bar -->
-                                <div class="mt-6">
-                                    <div class="h-3 bg-bg-tertiary rounded-full overflow-hidden">
-                                        <div id="risk-bar" class="h-full bg-gradient-to-r from-status-online via-status-warning to-status-error rounded-full transition-all duration-500" style="width: 39.5%"></div>
+                                <div class="mt-8 space-y-3">
+                                    <div class="flex justify-between text-[10px] font-mono text-text-muted uppercase tracking-widest">
+                                        <span>Integrity</span>
+                                        <span>Entropy</span>
                                     </div>
-                                    <div class="flex justify-between mt-2 text-xs text-text-muted">
-                                        <span>0%</span>
-                                        <span>50%</span>
-                                        <span>100%</span>
+                                    <div class="h-1.5 bg-void-base rounded-full overflow-hidden border border-border-glass">
+                                        <div id="risk-bar" class="h-full bg-plasma-primary transition-all duration-700 ease-out-expo" style="width: 39.5%; box-shadow: 0 0 15px var(--plasma-glow);"></div>
                                     </div>
                                 </div>
 
-                                <!-- Interpretation -->
-                                <div id="risk-interpretation" class="mt-6 p-4 bg-bg-tertiary rounded-lg border border-border-default">
+                                <div class="mt-10 p-4 rounded-lg bg-void-base/50 border border-border-subtle">
                                     <div class="flex items-start gap-3">
-                                        <i data-lucide="info" class="w-5 h-5 text-accent-amber flex-shrink-0 mt-0.5"></i>
-                                        <div>
-                                            <h4 class="text-sm font-medium text-text-primary mb-1">Interpretation</h4>
-                                            <p class="text-sm text-text-secondary">Moderate risk level. Consider additional validation steps or multi-interpreter review to reduce cognitive bias impact.</p>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <!-- Formula Breakdown -->
                                 <div class="mt-6 pt-6 border-t border-border-default">
@@ -617,46 +548,31 @@
             breakResult.textContent = acRisk.toFixed(3);
             
             // Determine risk level
-            let riskLevel, badgeClass, interpretation;
+            let riskLevel, badgeClass, riskColorClass;
             
             if (riskPercentage <= 25) {
                 riskLevel = 'Low Risk';
-                badgeClass = 'badge-low';
-                interpretation = 'Low risk level. Standard interpretation protocols are sufficient. Continue with normal quality assurance measures.';
-                riskScore.className = 'text-6xl sm:text-7xl font-bold font-mono risk-low animate-count-up';
+                riskColorClass = 'text-integrity-emerald';
             } else if (riskPercentage <= 50) {
                 riskLevel = 'Medium Risk';
-                badgeClass = 'badge-medium';
-                interpretation = 'Moderate risk level. Consider additional validation steps or multi-interpreter review to reduce cognitive bias impact.';
-                riskScore.className = 'text-6xl sm:text-7xl font-bold font-mono risk-medium animate-count-up';
+                riskColorClass = 'text-plasma-primary';
             } else if (riskPercentage <= 75) {
                 riskLevel = 'High Risk';
-                badgeClass = 'badge-high';
-                interpretation = 'High risk level. Mandatory multi-interpreter validation required. Consider AI-assisted interpretation and physics validation.';
-                riskScore.className = 'text-6xl sm:text-7xl font-bold font-mono risk-high animate-count-up';
+                riskColorClass = 'text-plasma-primary'; // Amber for high too, but we can differentiate later
             } else {
                 riskLevel = 'Critical Risk';
-                badgeClass = 'badge-critical';
-                interpretation = 'Critical risk level. Full physics validation and expert panel review mandatory. Do not proceed without comprehensive validation protocol.';
-                riskScore.className = 'text-6xl sm:text-7xl font-bold font-mono risk-critical animate-count-up';
+                riskColorClass = 'text-spectral-ruby';
             }
             
-            // Update badge
-            riskBadge.className = `inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mt-4 ${badgeClass}`;
-            riskBadge.innerHTML = `
-                <i data-lucide="${riskPercentage > 50 ? 'alert-triangle' : 'check-circle'}" class="w-4 h-4"></i>
-                <span>${riskLevel}</span>
-            `;
+            // Update score
+            riskScore.className = `text-7xl sm:text-8xl font-black font-mono ${riskColorClass} tracking-tighter`;
+            riskScore.innerHTML = `${riskPercentage.toFixed(1)}<span class="text-3xl font-light opacity-50">%</span>`;
             
-            // Update interpretation
-            riskInterpretation.innerHTML = `
-                <div class="flex items-start gap-3">
-                    <i data-lucide="info" class="w-5 h-5 ${riskPercentage > 50 ? 'text-status-error' : 'text-accent-amber'} flex-shrink-0 mt-0.5"></i>
-                    <div>
-                        <h4 class="text-sm font-medium text-text-primary mb-1">Interpretation</h4>
-                        <p class="text-sm text-text-secondary">${interpretation}</p>
-                    </div>
-                </div>
+            // Update badge
+            riskBadge.className = `inline-flex items-center gap-2 px-4 py-1.5 glass-pill text-[10px] font-mono mt-6 uppercase tracking-widest ${riskColorClass}`;
+            riskBadge.innerHTML = `
+                <i data-lucide="${riskPercentage > 50 ? 'alert-triangle' : 'activity'}" class="w-3 h-3"></i>
+                <span>Kinetic Risk: ${riskLevel}</span>
             `;
             
             // Re-initialize icons
