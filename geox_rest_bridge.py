@@ -8,6 +8,7 @@ Endpoints:
   GET /health     → Health check
   GET /tools      → List available tools
   POST /invoke    → Invoke a tool
+  /mcp           → MCP StreamableHTTP endpoint
 
 DITEMPA BUKAN DIBERI
 """
@@ -77,26 +78,28 @@ async def invoke_handler(request):
 def create_app():
     """Create Starlette app with both REST and MCP endpoints."""
     
-    # Create Starlette app with REST routes
+    # Create MCP app first to get its lifespan
+    mcp_http_app = None
+    mcp_lifespan = None
+    if hasattr(mcp, 'http_app'):
+        mcp_http_app = mcp.http_app(
+            path="/",
+            transport="streamable-http",
+        )
+        mcp_lifespan = mcp_http_app.lifespan
+    
+    # Create Starlette app with REST routes and MCP lifespan
     rest_routes = [
         Route("/health", health_handler, methods=["GET"]),
         Route("/tools", tools_handler, methods=["GET"]),
         Route("/invoke", invoke_handler, methods=["POST"]),
     ]
     
-    app = Starlette(routes=rest_routes)
+    app = Starlette(routes=rest_routes, lifespan=mcp_lifespan)
     
     # Mount MCP app at /mcp (if available)
-    if hasattr(mcp, 'http_app'):
-        mcp_app = mcp.http_app
-        app.mount("/mcp", mcp_app)
-    else:
-        # Add a placeholder MCP endpoint
-        async def mcp_handler(request):
-            return JSONResponse({
-                "jsonrpc": "2.0",
-                "error": {"code": -32600, "message": "MCP available via stdio only"}
-            })
+    if mcp_http_app:
+        app.mount("/mcp", mcp_http_app)
     
     return app
 

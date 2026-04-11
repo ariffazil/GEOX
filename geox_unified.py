@@ -531,7 +531,10 @@ def main():
     
     if args.transport == "http" or args.transport == "sse":
         # Get the FastMCP HTTP app and wrap it with health endpoint
-        mcp_app = mcp.http_app()
+        mcp_app = mcp.http_app(
+            path="/mcp",
+            transport="sse",
+        )
         
         # Create routes: health first, then mount MCP at /mcp
         routes = [
