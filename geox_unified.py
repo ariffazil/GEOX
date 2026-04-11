@@ -27,6 +27,9 @@ logger = logging.getLogger("geox.unified")
 GEOX_VERSION = "v2026.04.11-HONEST"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
+# Empty registry for REST bridge compatibility
+TOOLS_REGISTRY = []
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # STATE MANAGEMENT: No fake defaults
 # ═══════════════════════════════════════════════════════════════════════════════
