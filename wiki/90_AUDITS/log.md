@@ -143,3 +143,21 @@
   7. geox_query_geology → geox_query_macrostrat
 - **Wiki:** Added OPENAI_ADAPTER_GUIDE.md
 - **Verdict:** SEAL | Ready for GPT Store submission
+
+---
+
+## [2026-04-11] map | repo-state component map and refactor guidance
+- Added [[80_INTEGRATION/GEOX_REPO_STATE_AND_COMPONENT_MAP]] as the canonical merge/refactor map for the live repository.
+- Updated `index.md` to surface the repo-state page from the main integration navigation.
+- Updated [[50_TOOLS/Tool_Index]] so it explicitly documents the canonical modular FastMCP surface instead of implying the whole repo is already unified.
+- Corrected [[80_INTEGRATION/FASTMCP_CLI_GUIDE]] to state that the root server path and modular adapter path are **not** identical today.
+- Status: REPO_STATE_MAPPED
+
+---
+
+## [2026-04-11] wire | four-surface platform integration documented
+- Added [[80_INTEGRATION/GEOX_PLATFORM_WIRING]] to document the sibling `geox-platform` stack.
+- Recorded that `geox-platform/services/mcp-server/geox_mcp_server.py` currently imports from root `geox_unified.py`.
+- Updated [[80_INTEGRATION/GEOX_REPO_STATE_AND_COMPONENT_MAP]] so the live platform wiring and the long-term canonical backend target are both explicit.
+- Updated `index.md` integration navigation to surface the new platform wiring page.
+- Status: PLATFORM_WIRING_MAPPED

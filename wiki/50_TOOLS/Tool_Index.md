@@ -2,20 +2,30 @@
 type: Tool
 tags: [index, tools, mcp, registry]
 epistemic_level: OBS
-last_sync: 2026-04-09
+last_sync: 2026-04-11
 ---
 
 # Tool Index
 
 > **Type:** Index  
 > **Epistemic Level:** OBS  
-> **Last Updated:** 2026-04-09  
+> **Last Updated:** 2026-04-11  
 > **Tags:** [index, tools, mcp, registry]  
 > **Version:** 0.6.0 — Phase A + Phase B SEALED
 
 ---
 
-## Complete Tool Registry (12 Tools Active)
+## Complete Tool Registry (12 Tools in the Canonical Modular Surface)
+
+This page documents the **canonical modular FastMCP surface** in:
+
+```text
+arifos/geox/tools/core.py
+        ↓
+arifos/geox/tools/adapters/fastmcp_adapter.py
+```
+
+The repository still contains other server files with overlapping or smaller tool sets. For merge/refactor work, use [[80_INTEGRATION/GEOX_REPO_STATE_AND_COMPONENT_MAP]] as the repo-state source of truth.
 
 | Tool | Phase | Risk Level | Primary Floors | Status | Page |
 |------|-------|-----------|----------------|--------|------|
@@ -121,20 +131,20 @@ geox_query_memory → [synthesis] → geox_evaluate_prospect
 ## Architecture (v0.6.0 Modular)
 
 ```
-geox_mcp_server.py          ← thin backward-compat re-export (deprecated)
+arifos/geox/tools/adapters/fastmcp_adapter.py  ← preferred FastMCP transport
     ↓
-fastmcp_adapter.py          ← @mcp.tool FastMCP transport layer
+arifos/geox/tools/core.py                      ← pure async domain functions
     ↓
-arifos/geox/tools/core.py   ← pure async domain functions (host-agnostic)
+contracts/types.py                             ← result models
     ↓
-contracts/types.py          ← Pydantic v2 result models (GeoXResult)
-    ↓
-services/                   ← constitutional, petrophysics engines
-physics/                    ← saturation models, porosity solvers
+services/                                      ← constitutional + petrophysics engines
+physics/                                       ← saturation models, porosity solvers
+
+root geox_mcp_server.py                        ← separate root server surface; do not assume
+                                                 it is already a thin re-export
 ```
 
 ---
 
 *Tool Index v2.0.0 · Phase A + Phase B SEALED · GEOX v0.6.0*  
 *DITEMPA BUKAN DIBERI*
-

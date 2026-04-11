@@ -1,7 +1,7 @@
 # GEOX Ω-WIKI — Source of Truth (SOT)
 
 > **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
-> **Authority:** 888_JUDGE | **Status:** HEAVY WITNESS IGNITED | **Version:** v2026.04.10  
+> **Authority:** 888_JUDGE | **Status:** HEAVY WITNESS IGNITED | **Version:** v2026.04.11  
 > **Live:** https://geox.arif-fazil.com  
 > **Seismic Engine:** ACTIVE | **Trinity:** CONNECTED
 
@@ -83,10 +83,12 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 
 ---
 
-## 🛠️ 50_TOOLS — MCP Capability Surface (13 tools)
+## 🛠️ 50_TOOLS — MCP Capability Surfaces
 
 ### Tool Index
 - [**Tool Index**](50_TOOLS/Tool_Index.md) — Complete catalog
+
+**Repo-state note:** GEOX currently contains multiple MCP/server surfaces from different generations. Use [**GEOX Repo State and Component Map**](80_INTEGRATION/GEOX_REPO_STATE_AND_COMPONENT_MAP.md) to see which tool surface is canonical today.
 
 ### Phase A — Foundation Tools
 - [**geox_load_seismic_line**](50_TOOLS/geox_load_seismic_line.md) — Visual mode ignition
@@ -150,6 +152,8 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 - [**OpenAI Adapter Guide**](80_INTEGRATION/OPENAI_ADAPTER_GUIDE.md) — ChatGPT Apps SDK integration
 
 ### Architecture
+- [**GEOX Repo State and Component Map**](80_INTEGRATION/GEOX_REPO_STATE_AND_COMPONENT_MAP.md) — **Start here for merge/refactor work**; identifies canonical vs duplicate vs legacy components
+- [**GEOX Platform Wiring**](80_INTEGRATION/GEOX_PLATFORM_WIRING.md) — Four-surface platform map for `geox-platform` and its current backend dependency
 - [**GEOX MCP Apps Architecture**](80_INTEGRATION/GEOX_MCP_APPS_ARCHITECTURE.md) — Host-agnostic design specification
 - [**MCP Apps Architecture**](80_INTEGRATION/MCP_Apps_Architecture.md) — Standard MCP Apps patterns
 - [**Host Adapter Blueprint**](80_INTEGRATION/GEOX_HOST_ADAPTER_BLUEPRINT.md) — OpenAI, Copilot, Custom bridges

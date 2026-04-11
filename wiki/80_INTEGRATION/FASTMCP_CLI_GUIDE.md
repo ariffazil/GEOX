@@ -455,17 +455,22 @@ fastmcp list https://geox.arif-fazil.com/mcp
 
 ### 7.3 Architecture Selection
 
-**Legacy (backward-compatible):**
+**Legacy / transitional root path:**
 ```bash
 fastmcp run geox_mcp_server.py
 ```
 
-**Modern (host-agnostic):**
+**Preferred modular path:**
 ```bash
 fastmcp run arifos.geox.tools.adapters.fastmcp_adapter:create_server
 ```
 
-Both work identically from CLI perspective. The modern path uses the refactored architecture.
+They do **not** represent the exact same tool surface today.
+
+- The **preferred modular path** is the refactor target and should be treated as canonical for new integration work.
+- The **root path** is still present for compatibility and historical reasons, but it has drifted into a separate server surface.
+
+If you are wiring GEOX into another system, prefer the modular adapter path unless you explicitly need the root transitional server.
 
 ---
 
