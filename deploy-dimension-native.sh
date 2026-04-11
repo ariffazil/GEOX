@@ -33,7 +33,7 @@ echo "────────────────────────�
 
 # Check required files exist
 required_files=(
-    "geox_unified_mcp_server.py"
+    "geox_unified.py"
     "registries/__init__.py"
     "registries/prospect.py"
     "registries/well.py"
@@ -105,7 +105,7 @@ echo "Step 6: Verifying Dimension Registry..."
 echo "───────────────────────────────────────────────────────────────"
 
 # Check profile status
-PROFILE_STATUS=$(curl -sf http://localhost:8000/geox://profile/status 2>/dev/null || echo "{}")
+PROFILE_STATUS=$(curl -sf http://localhost:8000/health 2>/dev/null || echo "{}")
 echo "Profile Status: $PROFILE_STATUS"
 
 echo ""
