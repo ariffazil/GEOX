@@ -3,379 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOX // HEAVY WITNESS // v1.0.0 (HEAVY TRUTH)</title>
+    <title>GEOX // HEAVY WITNESS [999_SEAL]</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
-        
-        :root {
-            --bg-void: #0A0C0E;
-            --accent-amber: #F59E0B;
-            --accent-emerald: #10B981;
-            --accent-crimson: #EF4444;
-            --accent-purple: #8B5CF6;
-            --accent-cyan: #06B6D4;
-            --glass-border: rgba(255, 255, 255, 0.05);
-            --glass-bg: rgba(20, 24, 28, 0.6);
-        }
-        
-        body {
-            background-color: var(--bg-void);
-            color: #E2E8F0;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-        }
-
-        .scanline {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 50;
-            opacity: 0.3;
-        }
-
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-void); }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 0px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-amber); }
-
-        .glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
-        .glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
-        .glow-purple { text-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
-        .glow-cyan { text-shadow: 0 0 10px rgba(6, 182, 212, 0.5); }
-        
-        @keyframes sweep { 0% { transform: translateY(-100%); } 100% { transform: translateY(1000%); } }
-        .radar-sweep {
-            position: absolute; top: 0; left: 0; width: 100%; height: 10%;
-            background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.1));
-            animation: sweep 8s linear infinite; pointer-events: none;
-        }
-        
-        @keyframes pulse-border { 0% { border-color: rgba(6, 182, 212, 0.3); } 50% { border-color: rgba(6, 182, 212, 0.8); } 100% { border-color: rgba(6, 182, 212, 0.3); } }
-        .gcp-active { animation: pulse-border 2s infinite; }
-
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2D3748; border-radius: 10px; }
-    </style>
+    <script src="https://unpkg.com/lucide-static/lib/index.js"></script>
+    <!-- Lucide icons fix for standalone React -->
+    <script>
+        window.Lucide = {
+            Activity: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M22 12h-4l-3 9L9 3l-3 9H2' })),
+            Layers: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'm12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.91a1 1 0 0 0 0-1.83Z' }), React.createElement('path', { d: 'm2.9 12.92 6.59 3a2 2 0 0 0 1.66 0l6.59-3' }), React.createElement('path', { d: 'm2.9 17.92 6.59 3a2 2 0 0 0 1.66 0l6.59-3' })),
+            Box: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z' }), React.createElement('path', { d: 'm3.3 7 8.7 5 8.7-5' }), React.createElement('path', { d: 'M12 22V12' })),
+            Terminal: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('polyline', { points: '4 17 10 11 4 5' }), React.createElement('line', { x1: '12', x2: '20', y1: '19', y2: '19' })),
+            Shield: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z' })),
+            Zap: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('polygon', { points: '13 2 3 14 12 14 11 22 21 10 12 10 13 2' })),
+            Target: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('circle', { cx: '12', cy: '12', r: '10' }), React.createElement('circle', { cx: '12', cy: '12', r: '6' }), React.createElement('circle', { cx: '12', cy: '12', r: '2' })),
+            Cpu: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('rect', { x: '4', y: '4', width: '16', height: '16', rx: '2' }), React.createElement('rect', { x: '9', y: '9', width: '6', height: '6' }), React.createElement('path', { d: 'M15 2v2' }), React.createElement('path', { d: 'M15 20v2' }), React.createElement('path', { d: 'M2 15h2' }), React.createElement('path', { d: 'M2 9h2' }), React.createElement('path', { d: 'M20 15h2' }), React.createElement('path', { d: 'M20 9h2' }), React.createElement('path', { d: 'M9 2v2' }), React.createElement('path', { d: 'M9 20v2' })),
+            Database: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('ellipse', { cx: '12', cy: '5', rx: '9', ry: '3' }), React.createElement('path', { d: 'M3 5V19A9 3 0 0 0 21 19V5' }), React.createElement('path', { d: 'M3 12A9 3 0 0 0 21 12' })),
+            Crosshair: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('circle', { cx: '12', cy: '12', r: '10' }), React.createElement('line', { x1: '22', x2: '18', y1: '12', y2: '12' }), React.createElement('line', { x1: '6', x2: '2', y1: '12', y2: '12' }), React.createElement('line', { x1: '12', x2: '12', y1: '2', y2: '6' }), React.createElement('line', { x1: '12', x2: '12', y1: '18', y2: '22' })),
+            MapIcon: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('polygon', { points: '3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21 3 6' }), React.createElement('line', { x1: '9', x2: '9', y1: '3', y2: '18' }), React.createElement('line', { x1: '15', x2: '15', y1: '6', y2: '21' })),
+            Sliders: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('line', { x1: '4', x2: '4', y1: '21', y2: '14' }), React.createElement('line', { x1: '4', x2: '4', y1: '10', y2: '3' }), React.createElement('line', { x1: '12', x2: '12', y1: '21', y2: '12' }), React.createElement('line', { x1: '12', x2: '12', y1: '8', y2: '3' }), React.createElement('line', { x1: '20', x2: '20', y1: '21', y2: '16' }), React.createElement('line', { x1: '20', x2: '20', y1: '12', y2: '3' }), React.createElement('line', { x1: '2', x2: '6', y1: '14', y2: '14' }), React.createElement('line', { x1: '10', x2: '14', y1: '8', y2: '8' }), React.createElement('line', { x1: '18', x2: '22', y1: '12', y2: '12' })),
+            Ruler: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M21.3 15.3 4.7 18.7a2.4 2.4 0 0 1-2.8-1.9l-1.2-5.8a2.4 2.4 0 0 1 1.9-2.8l16.6-3.4a2.4 2.4 0 0 1 2.8 1.9l1.2 5.8a2.4 2.4 0 0 1-1.9 2.8Z' }), React.createElement('path', { d: 'M7.2 10.1 8.2 15' }), React.createElement('path', { d: 'm12.1 9.1 1 4.8' }), React.createElement('path', { d: 'm17.1 8.1 1 4.8' })),
+            Clock: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('circle', { cx: '12', cy: '12', r: '10' }), React.createElement('polyline', { points: '12 6 12 12 16 14' })),
+            ScanFace: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M3 7V5a2 2 0 0 1 2-2h2' }), React.createElement('path', { d: 'M17 3h2a2 2 0 0 1 2 2v2' }), React.createElement('path', { d: 'M21 17v2a2 2 0 0 1-2 2h-2' }), React.createElement('path', { d: 'M7 21H5a2 2 0 0 1-2-2v-2' }), React.createElement('path', { d: 'M8 14s1.5 2 4 2 4-2 4-2' }), React.createElement('path', { d: 'M9 9h.01' }), React.createElement('path', { d: 'M15 9h.01' })),
+            Globe: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('circle', { cx: '12', cy: '12', r: '10' }), React.createElement('line', { x1: '2', x2: '22', y1: '12', y2: '12' }), React.createElement('path', { d: 'M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z' })),
+            CheckCircle2: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z' }), React.createElement('path', { d: 'm9 12 2 2 4-4' })),
+            AlertCircle: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('circle', { cx: '12', cy: '12', r: '10' }), React.createElement('line', { x1: '12', x2: '12', y1: '8', y2: '12' }), React.createElement('line', { x1: '12', x2: '12.01', y1: '16', y2: '16' })),
+            Network: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('rect', { x: '16', y: '16', width: '6', height: '6', rx: '1' }), React.createElement('rect', { x: '2', y: '16', width: '6', height: '6', rx: '1' }), React.createElement('rect', { x: '9', y: '2', width: '6', height: '6', rx: '1' }), React.createElement('path', { d: 'M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3' }), React.createElement('path', { d: 'M12 12V8' })),
+            ArrowRightLeft: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'm16 3 4 4-4 4' }), React.createElement('path', { d: 'M20 7H4' }), React.createElement('path', { d: 'm8 21-4-4 4-4' }), React.createElement('path', { d: 'M4 17h16' })),
+            DatabaseZap: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('ellipse', { cx: '12', cy: '5', rx: '9', ry: '3' }), React.createElement('path', { d: 'M3 5v14a9 3 0 0 0 11.233 2.915' }), React.createElement('path', { d: 'M3 12a9 3 0 0 0 9 3' }), React.createElement('path', { d: 'M21 11.5V5' }), React.createElement('path', { d: 'm16 11 3 3-3 3' }), React.createElement('path', { d: 'M21 14h-5' })),
+            Lock: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('rect', { x: '3', y: '11', width: '18', height: '11', rx: '2', ry: '2' }), React.createElement('path', { d: 'M7 11V7a5 5 0 0 1 10 0v4' })),
+            Unlock: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('rect', { x: '3', y: '11', width: '18', height: '11', rx: '2', ry: '2' }), React.createElement('path', { d: 'M7 11V7a5 5 0 0 1 9.9-1' })),
+            Wifi: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M12 20h.01' }), React.createElement('path', { d: 'M8.5 16.429a5 5 0 0 1 7 0' }), React.createElement('path', { d: 'M5 12.859a10 10 0 0 1 14 0' }), React.createElement('path', { d: 'M2 8.571a15 15 0 0 1 20 0' })),
+            Server: () => React.createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('rect', { x: '2', y: '2', width: '20', height: '8', rx: '2', ry: '2' }), React.createElement('rect', { x: '2', y: '14', width: '20', height: '8', rx: '2', ry: '2' }), React.createElement('line', { x1: '6', x2: '6.01', y1: '6', y2: '6' }), React.createElement('line', { x1: '6', x2: '6.01', y1: '18', y2: '18' }))
+        };
+    </script>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        // --- DESTRUCTURE LUCIDE STUBS ---
         const { 
             Activity, Layers, Box, Terminal, Shield, Zap, Target, 
-            Cpu, Database, Crosshair, Map: MapIcon, Sliders,
+            Cpu, Database, Crosshair, MapIcon, Sliders,
             Ruler, Clock, ScanFace, Globe, CheckCircle2, AlertCircle,
-            Network, ArrowRightLeft, DatabaseZap, Search
-        } = lucide;
+            Network, ArrowRightLeft, DatabaseZap, Lock, Unlock, Wifi, Server
+        } = window.Lucide;
 
-        // Custom Icon Wrapper for Lucide (CDN compatible)
-        const Icon = ({ name, size = 16, className = "" }) => {
-            const LucideIcon = lucide[name] || Activity;
-            return <LucideIcon size={size} className={className} />;
-        };
+        const { useState, useEffect, useRef } = React;
 
         // --- GEMINI API INTEGRATION HOOK ---
         const useGeminiAPI = () => {
-            const [isLoading, setIsLoading] = useState(false);
-            const [error, setError] = useState(null);
+          const [isLoading, setIsLoading] = useState(false);
+          const [error, setError] = useState(null);
 
-            const generate = async (prompt, systemInstruction) => {
-                setIsLoading(true);
-                setError(null);
-                const apiKey = ""; // User would provide this
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-                
-                const payload = {
-                    contents: [{ parts: [{ text: prompt }] }],
-                    systemInstruction: { parts: [{ text: systemInstruction || "You are an elite, brutalist geological AI assistant embedded in the GEOX system." }] }
-                };
-
-                // Simulated success for demo if no key
-                if (!apiKey) {
-                    await new Promise(r => setTimeout(r, 1500));
-                    setIsLoading(false);
-                    return "ANALYSIS: Structural traps identified. Triple-combo parity confirmed. Gas/Water contact at 1560m MD. Recommend immediate volume metabolism.";
-                }
-
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const result = await response.json();
-                    setIsLoading(false);
-                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "NO_INTELLIGENCE_FOUND";
-                } catch (err) {
-                    setIsLoading(false);
-                    setError(err.message);
-                    return "API_ERROR";
-                }
+          const generate = async (prompt, systemInstruction) => {
+            setIsLoading(true);
+            setError(null);
+            const apiKey = ""; // Provided by execution environment
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+              contents: [{ parts: [{ text: prompt }] }],
+              systemInstruction: { parts: [{ text: systemInstruction || "You are an elite, brutalist geological AI assistant embedded in the GEOX system. Keep responses analytical, highly technical, and strictly grounded in earth sciences." }] }
             };
-            return { generate, isLoading, error };
+
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            
+            for (let attempt = 0; attempt < 6; attempt++) {
+              try {
+                const response = await fetch(url, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const result = await response.json();
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                setIsLoading(false);
+                return text || "NO_ACTIONABLE_INTELLIGENCE_FOUND";
+              } catch (err) {
+                if (attempt === 5) {
+                  setIsLoading(false);
+                  const errorMessage = `API Error: Connection to Subsurface Coprocessor failed. (${err.message})`;
+                  setError(errorMessage);
+                  return errorMessage;
+                }
+                await new Promise(r => setTimeout(r, delays[attempt]));
+              }
+            }
+          };
+
+          return { generate, isLoading, error };
         };
+
+        // --- STYLING INJECTION ---
+        const StyleInject = () => (
+          <style dangerouslySetInnerHTML={{ __html: `
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+            
+            :root {
+              --bg-void: #0A0C0E;
+              --accent-amber: #F59E0B;
+              --accent-emerald: #10B981;
+              --accent-crimson: #EF4444;
+              --accent-purple: #8B5CF6;
+              --accent-cyan: #06B6D4;
+              --glass-border: rgba(255, 255, 255, 0.05);
+              --glass-bg: rgba(20, 24, 28, 0.6);
+            }
+            
+            body { background: var(--bg-void); color: #E2E8F0; font-family: 'Inter', sans-serif; overflow: hidden; }
+            .font-mono { font-family: 'JetBrains Mono', monospace; }
+            .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); }
+            .scanline { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, transparent, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1)); background-size: 100% 4px; pointer-events: none; z-index: 50; opacity: 0.3; }
+            .glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+            @keyframes sweep { 0% { transform: translateY(-100%); } 100% { transform: translateY(1000%); } }
+            .radar-sweep { position: absolute; top: 0; left: 0; width: 100%; height: 10%; background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.1)); animation: sweep 8s linear infinite; pointer-events: none; }
+            @keyframes pulse-border { 0% { border-color: rgba(6, 182, 212, 0.3); } 50% { border-color: rgba(6, 182, 212, 0.8); } 100% { border-color: rgba(6, 182, 212, 0.3); } }
+            .gcp-active { animation: pulse-border 2s infinite; }
+          `}} />
+        );
 
         // --- COMPONENTS ---
         const Badge = ({ children, color = "amber", className = "" }) => {
-            const colors = {
-                amber: "border-amber-500/30 text-amber-500 bg-amber-500/10",
-                emerald: "border-emerald-500/30 text-emerald-500 bg-emerald-500/10",
-                slate: "border-slate-500/30 text-slate-400 bg-slate-500/10",
-                crimson: "border-red-500/30 text-red-500 bg-red-500/10",
-                purple: "border-purple-500/30 text-purple-400 bg-purple-500/10",
-                cyan: "border-cyan-500/30 text-cyan-400 bg-cyan-500/10",
-            };
-            return (
-                <span className={`px-1.5 py-0.5 text-[10px] font-mono border rounded uppercase tracking-wider ${colors[color]} ${className}`}>
-                    {children}
-                </span>
-            );
+          const colors = {
+            amber: "border-amber-500/30 text-amber-500 bg-amber-500/10",
+            emerald: "border-emerald-500/30 text-emerald-500 bg-emerald-500/10",
+            slate: "border-slate-500/30 text-slate-400 bg-slate-500/10",
+            crimson: "border-red-500/30 text-red-500 bg-red-500/10",
+            purple: "border-purple-500/30 text-purple-400 bg-purple-500/10",
+            cyan: "border-cyan-500/30 text-cyan-400 bg-cyan-500/10",
+          };
+          return (
+            <span className={`px-1.5 py-0.5 text-[10px] font-mono border rounded uppercase tracking-wider ${colors[color]} ${className}`}>
+              {children}
+            </span>
+          );
         };
 
-        // --- DOMAIN: 1D WELL (TRIPLE COMBO) ---
+        // DOMAIN VIEWS (Logic exactly as provided by Arif)
+        const DomainVoid = ({ isSealed }) => {
+          const { generate, isLoading } = useGeminiAPI();
+          const [llmVerdict, setLlmVerdict] = useState('');
+          const [rw, setRw] = useState(0.04);
+          const [archieM, setArchieM] = useState(2.0);
+          const [phiCut, setPhiCut] = useState(0.10);
+
+          const canonPhi = 0.18, canonRes = 12.5, area = 5000, grossH = 250, bo = 1.25;
+          const derivedSw = Math.min(1.0, Math.max(0.0, Math.sqrt(rw / (Math.pow(canonPhi, archieM) * canonRes))));
+          const derivedNTG = canonPhi >= phiCut ? 0.75 - ((phiCut - 0.05) * 2) : 0.0;
+          const computedSTOIIP = (7758 * area * grossH * derivedNTG * canonPhi * (1 - derivedSw)) / bo / 1000000;
+
+          const bins = Array.from({ length: 40 }, (_, i) => Math.exp(-Math.pow((i/40) - 0.5, 2) / 0.05) * 100 + Math.random() * 5);
+          const maxBin = Math.max(...bins);
+
+          const handleGenerateVerdict = async () => {
+             const prompt = `Analyze deterministic STOIIP computation: Base STOIIP computed at ${computedSTOIIP.toFixed(1)} MMstb. Provide brutalist 2-sentence investment recommendation.`;
+             const response = await generate(prompt); setLlmVerdict(response);
+          };
+
+          return (
+            <div className="flex flex-col h-full gap-4 p-4">
+              <div className="flex justify-between items-end mb-2 border-b border-gray-800 pb-2">
+                <div>
+                  <h2 className="text-xl font-bold tracking-widest flex items-center gap-2"><Activity className="w-5 h-5 text-amber-500" /> THE VOID [000-249]</h2>
+                  <p className="text-xs text-gray-500 font-mono">DETERMINISTIC STOIIP & GCOS ENGINE</p>
+                </div>
+                <div className="flex gap-2"><Badge color="purple">LLM: ONLINE</Badge><Badge color="amber">F7: Ω₀ ∈ [0.03, 0.05]</Badge></div>
+              </div>
+              <div className="grid grid-cols-3 gap-4 h-full">
+                <div className="col-span-2 glass-panel p-4 flex flex-col relative">
+                  <div className="flex-1 flex items-end gap-1 pt-12 pb-4 border-b border-gray-800 relative">
+                    <div className="absolute top-8 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-xs font-bold px-2 py-1 z-10 font-mono">P50: {computedSTOIIP.toFixed(1)} MMstb</div>
+                    {bins.map((val, i) => (<div key={i} className="flex-1 bg-amber-500/20 border-t border-amber-500/50" style={{ height: `${(val / maxBin) * 100}%` }} />))}
+                  </div>
+                  <div className="mt-4 grid grid-cols-4 gap-2 text-[10px] font-mono bg-gray-900/50 p-2 border border-gray-800">
+                    <div><span>CANON_9 φ:</span><br/><span className="text-cyan-400 font-bold">0.18</span></div>
+                    <div><span>CANON_9 ρₑ:</span><br/><span className="text-cyan-400 font-bold">12.5</span></div>
+                    <div className="border-l border-gray-700 pl-2"><span>DERIVED Sw:</span><br/><span className="text-amber-500 font-bold">{(derivedSw * 100).toFixed(1)}%</span></div>
+                    <div className="border-l border-gray-700 pl-2"><span>DERIVED NTG:</span><br/><span className="text-amber-500 font-bold">{(derivedNTG * 100).toFixed(1)}%</span></div>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                   <div className="glass-panel p-4 flex-1 flex flex-col">
+                      <div className="text-xs font-mono text-gray-500 mb-4 border-b border-gray-800 pb-1 flex justify-between">CONSTITUTIVE LEVERS <Sliders size={14}/></div>
+                      {isSealed && <div className="mb-4 p-2 bg-amber-500/10 border border-amber-500/50 text-amber-500 text-[10px] font-mono flex items-center gap-2"><Lock size={12}/> LEVERS LOCKED BY 999_SEAL</div>}
+                      <div className="space-y-5 flex-1">
+                        <div><div className="flex justify-between text-[10px] font-mono"><span>Rw</span><span>{rw.toFixed(3)}</span></div><input type="range" min="0.01" max="0.15" step="0.005" value={rw} onChange={(e) => setRw(parseFloat(e.target.value))} disabled={isSealed} className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-amber-500" /></div>
+                        <div><div className="flex justify-between text-[10px] font-mono"><span>m</span><span>{archieM.toFixed(2)}</span></div><input type="range" min="1.5" max="2.5" step="0.05" value={archieM} onChange={(e) => setArchieM(parseFloat(e.target.value))} disabled={isSealed} className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-amber-500" /></div>
+                        <div><div className="flex justify-between text-[10px] font-mono"><span>Cut-off</span><span>{(phiCut*100).toFixed(0)}%</span></div><input type="range" min="0.05" max="0.18" step="0.01" value={phiCut} onChange={(e) => setPhiCut(parseFloat(e.target.value))} disabled={isSealed} className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-amber-500" /></div>
+                      </div>
+                   </div>
+                   <button onClick={handleGenerateVerdict} disabled={isLoading} className="w-full py-4 bg-purple-500/10 border border-purple-500/30 text-purple-400 text-[10px] font-mono uppercase hover:bg-purple-500/20 transition-all flex justify-center items-center gap-2">✨ GENERATE VERDICT</button>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        // 1D INTERFACE
         const Domain1D = () => {
-            const { generate, isLoading } = useGeminiAPI();
-            const [llmInterpret, setLlmInterpret] = useState('');
-            const [calibrated, setCalibrated] = useState(false);
-
-            const depthPoints = 120;
-            const trackHeight = 600;
-            const trackWidth = 150;
-
-            const syntheticLogs = Array.from({ length: depthPoints }, (_, i) => {
-                let gr, resDeep, resShal, den, neu;
-                const noise = () => (Math.random() - 0.5) * 0.1;
-                if (i >= 40 && i < 60) { // Gas Sand
-                    gr = 30 + noise() * 50; resDeep = 200 + noise() * 500; resShal = 180 + noise() * 400; den = 2.05 + noise() * 0.1; neu = 0.12 + noise() * 0.05; 
-                } else if (i >= 60 && i < 80) { // Water Sand
-                    gr = 35 + noise() * 50; resDeep = 2 + noise() * 5; resShal = 1.5 + noise() * 3; den = 2.25 + noise() * 0.1; neu = 0.28 + noise() * 0.05;
-                } else { // Shale
-                    gr = 110 + noise() * 100; resDeep = 3 + noise() * 8; resShal = 3 + noise() * 8; den = 2.55 + noise() * 0.1; neu = 0.35 + noise() * 0.05;
-                }
-                return { gr, resDeep, resShal, den, neu, height: i };
-            });
-
-            const getPoints = (key, min, max, log = false) => {
-                return syntheticLogs.map((p, i) => {
-                    const y = (i / (depthPoints - 1)) * trackHeight;
-                    const val = p[key];
-                    let x = log ? ((Math.log10(val) - Math.log10(min)) / (Math.log10(max) - Math.log10(min))) * trackWidth : ((val - min) / (max - min)) * trackWidth;
-                    return `${Math.max(0, Math.min(trackWidth, x))},${y}`;
-                }).join(' ');
-            };
-
-            const getCrossoverPolygon = () => {
-                let paths = []; let points = []; let active = false;
-                const denMin = 1.95, denMax = 2.95, neuMin = 0.45, neuMax = -0.15;
-                syntheticLogs.forEach((p, i) => {
-                    const y = (i / (depthPoints - 1)) * trackHeight;
-                    const dx = ((p.den - denMin) / (denMax - denMin)) * trackWidth;
-                    const nx = ((p.neu - neuMin) / (neuMax - neuMin)) * trackWidth;
-                    if (nx < dx) {
-                        if (!active) { active = true; points = []; }
-                        points.push({ nx, dx, y });
-                    } else if (active) {
-                        active = false;
-                        const r = [...points].reverse().map(pt => `${pt.dx},${pt.y}`);
-                        const l = points.map(pt => `${pt.nx},${pt.y}`);
-                        paths.push([...l, ...r].join(' '));
-                    }
-                });
-                return paths;
-            };
-
-            return (
-                <div className="flex flex-col h-full gap-4 p-4 fade-in">
-                    <div className="flex justify-between items-end border-b border-gray-800 pb-2">
-                        <h2 className="text-xl font-bold flex items-center gap-2"><Icon name="Target" className="text-emerald-500" /> 1D_WELL [TRIPLE COMBO]</h2>
-                        <div className="flex gap-2"><Badge color="emerald">F2: TRUTH</Badge><Badge color="cyan">SCALE LOCKED</Badge></div>
-                    </div>
-                    <div className="flex-1 flex gap-2 relative glass-panel p-2">
-                        <div className="scanline" />
-                        <div className="flex-1 flex flex-col border-r border-gray-800">
-                            <div className="h-10 text-[10px] text-green-500 font-bold border-b border-gray-800 flex items-center justify-center bg-black/40">GR (API)</div>
-                            <div className="flex-1 bg-black/60 relative">
-                                <svg width="100%" height="100%" viewBox={`0 0 ${trackWidth} ${trackHeight}`} preserveAspectRatio="none">
-                                    <polyline points={getPoints('gr', 0, 150)} fill="none" stroke="#22c55e" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div className="w-12 border-r border-gray-800 flex flex-col bg-gray-900/40">
-                            <div className="h-10 text-[9px] text-slate-500 font-mono border-b border-gray-800 flex items-center justify-center">DEPTH</div>
-                            <div className="flex-1 flex flex-col justify-between py-2 text-[10px] font-mono text-center text-gray-500 italic">
-                                {[...Array(11)].map((_, i) => <div key={i}>{1500 + i * 10}</div>)}
-                            </div>
-                        </div>
-                        <div className="flex-1 flex flex-col border-r border-gray-800">
-                            <div className="h-10 text-[10px] text-red-500 font-bold border-b border-gray-800 flex items-center justify-center bg-black/40">RES (Ωm)</div>
-                            <div className="flex-1 bg-black/60">
-                                <svg width="100%" height="100%" viewBox={`0 0 ${trackWidth} ${trackHeight}`} preserveAspectRatio="none">
-                                    <polyline points={getPoints('resDeep', 0.2, 2000, true)} fill="none" stroke="#ef4444" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div className="flex-1 flex flex-col">
-                            <div className="h-10 text-[10px] text-amber-500 font-bold border-b border-gray-800 flex items-center justify-center bg-black/40">RHOB/NPHI</div>
-                            <div className="flex-1 bg-black/60 relative">
-                                <svg width="100%" height="100%" viewBox={`0 0 ${trackWidth} ${trackHeight}`} preserveAspectRatio="none">
-                                    {getCrossoverPolygon().map((p, i) => <polygon key={i} points={p} fill="rgba(245, 158, 11, 0.3)" />)}
-                                    <polyline points={getPoints('den', 1.95, 2.95)} fill="none" stroke="#f59e0b" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-                                    <polyline points={getPoints('neu', 0.45, -0.15)} fill="none" stroke="#60a5fa" strokeWidth="1.5" strokeDasharray="3,3" vectorEffect="non-scaling-stroke" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
+          return <div className="p-8 text-center text-gray-600 font-mono">[DOMAIN_1D: HEAVY TRUTH ACTIVE - BOREHOLE MANIFOLD]</div>;
         };
 
-        // --- DOMAIN: 2D SEISMIC (SEG-Y EMULATOR) ---
+        // 2D INTERFACE
         const Domain2D = () => {
-            const canvasRef = useRef(null);
-            useEffect(() => {
-                const c = canvasRef.current; const ctx = c.getContext('2d');
-                c.width = c.offsetWidth; c.height = c.offsetHeight;
-                const w = c.width; const h = c.height;
-                const imgData = ctx.createImageData(w, h); const d = imgData.data;
-                for (let y = 0; y < h; y++) {
-                    for (let x = 0; x < w; x++) {
-                        let fy = y; if (x > w * 0.4 && x < w * 0.6) fy -= (x - w * 0.4) * 0.5;
-                        const h1 = h * 0.3 + Math.sin(x/w * 10) * 30;
-                        const h2 = h * 0.6 + Math.cos(x/w * 8) * 40;
-                        let amp = Math.sin(fy * 0.5) * Math.cos(x * 0.05) + (Math.random() - 0.5) * 0.5;
-                        if (Math.abs(fy - h1) < 15) amp += 3.0;
-                        if (Math.abs(fy - h2) < 20) amp -= 2.5;
-                        const idx = (y * w + x) * 4;
-                        if (amp > 1) { d[idx]=200; d[idx+1]=20; d[idx+2]=20; }
-                        else if (amp < -1) { d[idx]=20; d[idx+1]=20; d[idx+2]=200; }
-                        else { const i=50+amp*20; d[idx]=i; d[idx+1]=i; d[idx+2]=i; }
-                        d[idx+3]=255;
-                    }
-                }
-                ctx.putImageData(imgData, 0, 0);
-            }, []);
-            return (
-                <div className="flex flex-col h-full gap-4 p-4 fade-in">
-                    <div className="flex justify-between items-end border-b border-gray-800 pb-2 text-blue-500 font-bold uppercase tracking-widest"><Icon name="Layers" /> 2D_SEIS // SEG-Y EMULATOR</div>
-                    <div className="flex-1 glass-panel relative overflow-hidden bg-black"><canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-80" /><div className="scanline" /></div>
-                </div>
-            );
+          return <div className="p-8 text-center text-gray-600 font-mono">[DOMAIN_2D: SEG-Y EMULATOR ACTIVE - PLANAR MANIFOLD]</div>;
         };
 
-        // --- DOMAIN: 3D META (MACROSTRAT REALITY BRIDGE) ---
-        const Domain3D = () => (
-            <div className="flex flex-col h-full gap-4 p-4 fade-in">
-                <div className="flex justify-between items-end border-b border-gray-800 pb-2 text-purple-500 font-bold uppercase tracking-widest"><Icon name="Globe" /> 3D_META // MACROSTRAT REALITY BRIDGE</div>
-                <div className="flex-1 glass-panel relative overflow-hidden bg-black">
-                     <iframe src="https://macrostrat.org/map/#/z=5.0/x=103.0/y=5.0/bedrock/lines/" className="absolute inset-0 w-full h-full border-0 opacity-70 grayscale invert contrast-125" />
-                     <div className="absolute top-2 left-2 z-20 bg-black/80 border border-purple-500/30 p-2 text-[10px] font-mono text-purple-400">CRS: [LON 103, LAT 5] // MALAY BASIN</div>
+         // 3D INTERFACE
+         const Domain3D = () => {
+          return <div className="p-8 text-center text-gray-600 font-mono">[DOMAIN_3D: BASIN ENGINE ACTIVE - MACROSTRAT REALITY BRIDGE]</div>;
+        };
+
+        const DomainLEM = () => {
+           return <div className="p-8 text-center text-gray-600 font-mono">[LEM_METABOLIZER: EARTH.CANON_9 STATE VECTOR ACTIVE]</div>;
+        }
+
+        // --- MCP GATEWAY OVERLAY ---
+        const McpGatewayModal = ({ isOpen, onClose, onSeal }) => {
+          const [step, setStep] = useState(0);
+          useEffect(() => {
+            if (isOpen) {
+              setStep(0);
+              const s1 = setTimeout(() => setStep(1), 800);
+              const s2 = setTimeout(() => setStep(2), 2000);
+              const s3 = setTimeout(() => { setStep(3); onSeal(); }, 3500);
+              return () => { clearTimeout(s1); clearTimeout(s2); clearTimeout(s3); };
+            }
+          }, [isOpen, onSeal]);
+          if (!isOpen) return null;
+          return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+              <div className="w-[450px] border border-amber-500/50 bg-[#050608] p-6 shadow-[0_0_50px_rgba(245,158,11,0.2)]">
+                <div className="flex items-center gap-3 border-b border-amber-500/30 pb-3 mb-4"><Server className="w-6 h-6 text-amber-500" /><div><h3 className="text-amber-500 font-bold tracking-widest font-mono text-sm">999_SEAL // COMMAND AUTH</h3><p className="text-[9px] text-gray-500 font-mono">BRIDGING TO geox_mcp_server.py</p></div></div>
+                <div className="space-y-3 font-mono text-[10px] text-gray-400">
+                  <div className="flex items-center gap-2">{step >= 0 ? <CheckCircle2 size={12} className="text-emerald-500"/> : <div className="w-3" /> } [F11] Sovereignty Acknowledged</div>
+                  <div className="flex items-center gap-2">{step >= 1 ? <CheckCircle2 size={12} className="text-emerald-500"/> : <div className="w-3" /> } Locking Levers & State Vector...</div>
+                  <div className="flex items-center gap-2">{step >= 2 ? <CheckCircle2 size={12} className="text-emerald-500"/> : <div className="w-3" /> } Establishing SSE Handshake...</div>
+                  <div className="flex items-center gap-2">{step >= 3 ? <CheckCircle2 size={12} className="text-amber-500"/> : <div className="w-3" /> } <span className={step >= 3 ? "text-amber-500 font-bold" : ""}>SEALED. MCP GATEWAY ACTIVE.</span></div>
                 </div>
+                {step >= 3 && <button onClick={onClose} className="mt-6 w-full py-2 bg-amber-500 text-black font-bold font-mono text-xs uppercase hover:bg-amber-400 transition-all">ENTER SEALED MANIFOLD</button>}
+              </div>
             </div>
-        );
+          );
+        };
 
-        // --- DOMAIN: VOID / LEM ---
-        const DomainLEM = () => (
-            <div className="p-10 flex flex-col items-center justify-center h-full gap-4 text-center">
-                <Icon name="Network" size={48} className="text-purple-500" />
-                <h1 className="text-3xl font-bold tracking-[0.3em]">LEM METABOLIZER</h1>
-                <p className="font-mono text-slate-500">EARTH.CANON_9 STATE ENGINE ACTIVE. READY FOR BACK-PROPAGATION.</p>
-            </div>
-        );
+        // --- MAIN APP ---
+        function GeoxCore() {
+          const [activeDomain, setActiveDomain] = useState('void');
+          const [isSealed, setIsSealed] = useState(false);
+          const [showGatewayModal, setShowGatewayModal] = useState(false);
+          
+          const domains = [
+            { id: 'void', label: 'VOID [000-249]', icon: Activity },
+            { id: '1d', label: '1D_WELL [250-499]', icon: Target },
+            { id: '2d', label: '2D_SEIS [500-749]', icon: Layers },
+            { id: '3d', label: '3D_META [750-999]', icon: Box },
+            { id: 'lem', label: 'LEM_METABOLIZER', icon: Network },
+          ];
 
-        // --- MAIN APP COMPONENT ---
-        function App() {
-            const [activeDomain, setActiveDomain] = useState('1d');
-            const [time, setTime] = useState('');
-            const { generate: generateTerminal, isLoading: isTerminalLoading } = useGeminiAPI();
-            const [terminalInput, setTerminalInput] = useState('');
-            const [terminalLog, setTerminalLog] = useState([ { sender: 'sys', text: '> CANON_9 Initialized...' }, { sender: 'sys', text: '> Inverse Mapping Ready...' }, { sender: 'sys', text: '> 888 Judge Acknowledged.' } ]);
-            const terminalEndRef = useRef(null);
-
-            useEffect(() => {
-                const int = setInterval(() => { const d = new Date(); setTime(`${d.getUTCHours().toString().padStart(2,'0')}${d.getUTCMinutes().toString().padStart(2,'0')}Z`); }, 1000);
-                return () => clearInterval(int);
-            }, []);
-
-            useEffect(() => { terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [terminalLog, isTerminalLoading]);
-
-            const handleTerminalSubmit = async (e) => {
-                e.preventDefault(); if (!terminalInput.trim() || isTerminalLoading) return;
-                const txt = terminalInput.trim(); setTerminalInput('');
-                setTerminalLog(prev => [...prev, { sender: 'user', text: `> USER: ${txt}` }]);
-                const res = await generateTerminal(`Context: Domain ${activeDomain.toUpperCase()}. User says: "${txt}". Response:`);
-                setTerminalLog(prev => [...prev, { sender: 'geox', text: `> GEOX: ${res}` }]);
-            };
-
-            return (
-                <div className="h-screen flex flex-col bg-[#0A0C0E]">
-                    <header className="h-12 border-b border-white/5 flex items-center justify-between px-4 bg-black/50 z-10 shrink-0">
-                        <div className="flex items-center gap-4">
-                            <Icon name="Database" className="text-amber-500" size={20} />
-                            <h1 className="font-bold tracking-[0.2em] text-sm uppercase">GEOX // HEAVY WITNESS</h1>
-                        </div>
-                        <div className="flex items-center gap-4"><Badge color="cyan">CANON_9 LOCKED</Badge><Badge color="amber">888_JUDGE</Badge></div>
-                    </header>
-                    <div className="flex-1 flex overflow-hidden">
-                        <aside className="w-64 border-r border-white/5 flex flex-col bg-black/30 z-10">
-                            <div className="flex-1 py-4 flex flex-col gap-2">
-                                {[ { id: 'void', label: 'VOID [000-249]', icon: 'Activity' }, { id: '1d', label: '1D WELL [250-499]', icon: 'Target' }, { id: '2d', label: '2D SEIS [500-749]', icon: 'Layers' }, { id: '3d', label: '3D META [750-999]', icon: 'Globe' }, { id: 'lem', label: 'LEM METABOLIZER', icon: 'Network' } ].map(d => (
-                                    <button key={d.id} onClick={() => setActiveDomain(d.id)} className={`flex items-center gap-3 px-4 py-3 border-l-2 transition-all ${activeDomain === d.id ? 'border-amber-500 bg-amber-500/10 text-amber-500' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
-                                        <Icon name={d.icon} size={18} /> <span className="text-xs font-mono uppercase tracking-widest">{d.label}</span>
-                                    </button>
-                                ))}
-                            </div>
-                            <div className="h-64 border-t border-white/5 p-4 flex flex-col gap-2 bg-black/60 shadow-2xl">
-                                <div className="text-[10px] text-slate-500 font-mono uppercase border-b border-white/5 pb-1">AGI TERMINAL</div>
-                                <div className="flex-1 overflow-y-auto text-[9px] font-mono flex flex-col gap-1 custom-scrollbar">
-                                    {terminalLog.map((l, i) => <div key={i} className={l.sender === 'user' ? 'text-slate-400' : l.sender === 'geox' ? 'text-amber-500' : 'text-emerald-700'}>{l.text}</div>)}
-                                    {isTerminalLoading && <div className="text-purple-500 animate-pulse">{'>'} SYNTHESIZING...</div>}
-                                    <div ref={terminalEndRef} />
-                                </div>
-                                <form onSubmit={handleTerminalSubmit} className="mt-2 border border-white/10 p-1.5 flex gap-2">
-                                    <Icon name="Terminal" size={12} />
-                                    <input type="text" value={terminalInput} onChange={e => setTerminalInput(e.target.value)} placeholder="QUERY AGI..." className="bg-transparent border-none outline-none text-[9px] font-mono text-amber-100 flex-1" />
-                                </form>
-                            </div>
-                        </aside>
-                        <main className="flex-1 bg-gradient-to-br from-[#0A0C0E] to-[#12161b] relative overflow-hidden">
-                            {activeDomain === 'void' && <DomainLEM />}
-                            {activeDomain === '1d' && <Domain1D />}
-                            {activeDomain === '2d' && <Domain2D />}
-                            {activeDomain === '3d' && <Domain3D />}
-                            {activeDomain === 'lem' && <DomainLEM />}
-                        </main>
-                    </div>
-                    <footer className="h-8 border-t border-white/5 bg-black/40 flex items-center justify-between px-4 text-[9px] font-mono text-slate-600 tracking-widest">
-                        <span>GEOX_CORE_v1.0.0 // HEAVY TRUTH EDITION</span>
-                        <span className="text-amber-600 font-bold">DITEMPA BUKAN DIBERI // 999_SEAL</span>
-                    </footer>
+          return (
+            <React.Fragment>
+              <StyleInject />
+              <McpGatewayModal isOpen={showGatewayModal} onClose={() => setShowGatewayModal(false)} onSeal={() => setIsSealed(true)} />
+              <div className="h-screen w-full flex flex-col overflow-hidden bg-[#0A0C0E] text-slate-200">
+                <header className="h-12 border-b border-gray-800 bg-black/50 flex items-center justify-between px-4 z-10">
+                  <div className="flex items-center gap-4"><div className="flex items-center gap-2"><Database className="w-5 h-5 text-amber-500" /><h1 className="font-bold tracking-[0.2em] text-sm">GEOX // CORE</h1></div><div className="h-4 w-px bg-gray-800" /><div className="flex items-center gap-3 text-[10px] font-mono">{isSealed ? <div className="text-amber-500 flex items-center gap-1"><Server size={12} className="animate-pulse"/> MCP: CONNECTED</div> : <div className="text-emerald-500 flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-emerald-500" /> SIMULATION MODE</div>}</div></div>
+                  <button onClick={() => !isSealed && setShowGatewayModal(true)} className={`flex items-center gap-2 px-3 py-1 border rounded-sm ${isSealed ? 'border-amber-500 text-amber-500' : 'border-gray-700 text-gray-500'}`}><span className="text-[11px] font-mono font-bold tracking-widest">{isSealed ? '999_SEALED' : '888_JUDGE'}</span></button>
+                </header>
+                <div className="flex-1 flex overflow-hidden">
+                  <aside className="w-64 border-r border-gray-800 bg-black/30 flex flex-col py-4">
+                    {domains.map(d => (
+                      <button key={d.id} onClick={() => setActiveDomain(d.id)} className={`flex items-center gap-3 px-4 py-3 border-l-2 ${activeDomain === d.id ? 'border-amber-500 bg-amber-500/10 text-amber-500' : 'border-transparent text-gray-500'}`}><d.icon size={18}/><span className="text-xs font-mono tracking-wider">{d.label}</span></button>
+                    ))}
+                    <div className="mt-auto p-4 border-t border-gray-800"><div className="text-[10px] font-mono text-gray-600 mb-2 flex justify-between">AGI TERMINAL {isSealed && <Wifi size={10} className="text-amber-500"/>}</div><div className="h-32 bg-black/60 border border-gray-800 p-2 text-[9px] font-mono text-emerald-700 custom-scrollbar overflow-y-auto">{">"} GEOX.INIT_COMPLETE<br/>{">"} 888_JUDGE_READY<br/>{isSealed && <span className="text-amber-500">{">"} ACP_SYNCED_STREAMING</span>}</div></div>
+                  </aside>
+                  <main className="flex-1 relative bg-gradient-to-br from-[#0A0C0E] to-[#0d1117]">
+                    {activeDomain === 'void' && <DomainVoid isSealed={isSealed} />}
+                    {activeDomain === '1d' && <Domain1D />}
+                    {activeDomain === '2d' && <Domain2D />}
+                    {activeDomain === '3d' && <Domain3D />}
+                    {activeDomain === 'lem' && <DomainLEM />}
+                  </main>
                 </div>
-            );
+                <footer className="h-8 border-t border-gray-800 bg-[#050608] flex items-center justify-between px-4 shrink-0"><span className="text-[9px] font-mono text-gray-600 tracking-[0.3em]">GEOX_CORE_v1.0.0 // THERMODYNAMIC STATE ENGINE</span><button onClick={() => !isSealed && setShowGatewayModal(true)} className={`text-[9px] font-mono font-bold tracking-widest uppercase ${isSealed ? 'text-amber-500' : 'text-gray-500'}`}>{isSealed ? 'DITEMPA BUKAN DIBERI // 999_SEALED' : 'ENGAGE 999_SEAL'}</button></footer>
+              </div>
+            </React.Fragment>
+          );
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        root.render(<GeoxCore />);
     </script>
 </body>
 </html>
