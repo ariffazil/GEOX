@@ -38,6 +38,43 @@ You are tasked with forging the final interface manifest for the GEOX Command Ce
 2.  **Hydrate with Complexity**: Ensure each app (Well Context, Seismic, Basin, Forge, Risk) feels like a professional-grade instrument.
 3.  **Seal the Interface**: Implement the final responsive layout, iconography, and spectral themes that define the v1.0.0 GEOX "Heavy Witness" state.
 
+## GOLDEN AESTHETIC MANIFEST (REFERENCE REACT DNA)
+The following React manifest serves as the **Canonical UI Specification**. Use its styling logic, component architecture, and interaction patterns as the ground truth for forges within the 000-999 range.
+
+```jsx
+// --- CANONICAL STYLING & CORE COMPONENT MANIFEST ---
+// Use this as the "DNA" for all GEOX interfaces
+import React, { useState, useEffect, useRef } from 'react';
+import { Activity, Layers, Box, Terminal, Shield, Zap, Target, Cpu, Database, GitMerge, AlertTriangle, Maximize, BarChart2, Crosshair, Map as MapIcon, Sliders } from 'lucide-react';
+
+const StyleInject = () => (
+  <style dangerouslySetInnerHTML={{ __html: `
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    :root {
+      --bg-void: #0A0C0E;
+      --accent-amber: #F59E0B;
+      --accent-emerald: #10B981;
+      --accent-crimson: #EF4444;
+      --glass-border: rgba(255, 255, 255, 0.05);
+      --glass-bg: rgba(20, 24, 28, 0.6);
+    }
+    body { background-color: var(--bg-void); color: #E2E8F0; font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); }
+    .scanline { position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1)); background-size: 100% 4px; pointer-events: none; opacity: 0.3; }
+    .glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+    .glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+    @keyframes sweep { 0% { transform: translateY(-100%); } 100% { transform: translateY(1000%); } }
+    .radar-sweep { position: absolute; top:0; left:0; width:100%; height:10%; background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.1)); animation: sweep 8s linear infinite; pointer-events: none; }
+  `}} />
+);
+
+// [Components: DomainVoid (000-249), Domain1D (250-499), Domain2D (500-749), Domain3D (750-999)]
+// Refer to the attached source manifest for full implementation of Monte Carlo charts, SVG logTracks, and Isometric WebGL-style CSS.
+```
+
 ## SEAL
+
 DITEMPA BUKAN DIBERI. Proceed with the Design Forge.
+
 999_SEAL.

@@ -124,9 +124,44 @@
         .stagger-5 { animation-delay: 500ms; }
         .stagger-6 { animation-delay: 600ms; }
         
+        .radar-sweep {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 10%;
+            background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.05));
+            animation: sweep 8s linear infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 20;
+            opacity: 0.15;
+        }
+
+        .glass-panel {
+            background: rgba(20, 24, 28, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes sweep {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(1000%); }
+        }
+
+        .glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+        .glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+
         /* Card hover effect */
         .app-card {
             transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+            position: relative;
+            overflow: hidden;
         }
         
         .app-card:hover {
@@ -147,6 +182,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
         }
+
         
         .btn-secondary {
             background-color: transparent;
@@ -230,8 +266,13 @@
         }
     </style>
 </head>
-<body class="bg-bg-primary text-text-primary">
+<body class="bg-bg-primary text-text-primary relative min-h-screen">
+    <!-- Visual Overlays -->
+    <div class="scanline"></div>
+    <div class="radar-sweep"></div>
+
     <!-- Navigation Header -->
+
     <nav class="fixed top-0 left-0 right-0 z-50 h-16 border-b border-border-default" style="background-color: rgba(10, 12, 14, 0.95); backdrop-filter: blur(12px);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex items-center justify-between h-full">
@@ -390,7 +431,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Unit: Well Context Desk -->
-                    <a href="./pages/well-context-desk.html" class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <a href="./pages/well-context-desk.html" class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-accent-amber/10 flex items-center justify-center">
                                 <i data-lucide="align-left" class="w-6 h-6 text-accent-amber"></i>
@@ -409,7 +450,7 @@
                     </a>
                     
                     <!-- Unit: RATLAS Browser -->
-                    <a href="./pages/ratlas.html" class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <a href="./pages/ratlas.html" class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-accent-amber/10 flex items-center justify-center">
                                 <i data-lucide="database" class="w-6 h-6 text-accent-amber"></i>
@@ -438,7 +479,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Unit: Seismic Viewer -->
-                    <a href="./pages/seismic-viewer.html" class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <a href="./pages/seismic-viewer.html" class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-accent-amber/10 flex items-center justify-center">
                                 <i data-lucide="activity" class="w-6 h-6 text-accent-amber"></i>
@@ -457,7 +498,7 @@
                     </a>
                     
                     <!-- Unit: AC Risk Calculator -->
-                    <a href="./pages/ac-risk.html" class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <a href="./pages/ac-risk.html" class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-accent-amber/10 flex items-center justify-center">
                                 <i data-lucide="shield-check" class="w-6 h-6 text-accent-amber"></i>
@@ -476,7 +517,7 @@
                     </a>
 
                     <!-- Unit: Analog Digitization Forge -->
-                    <a href="./pages/analog-forge.html" class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <a href="./pages/analog-forge.html" class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-accent-amber/10 flex items-center justify-center">
                                 <i data-lucide="scan" class="w-6 h-6 text-accent-amber"></i>
@@ -506,7 +547,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Unit: Basin Explorer -->
-                    <a href="./pages/basin-explorer.html" class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <a href="./pages/basin-explorer.html" class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-accent-amber/10 flex items-center justify-center">
                                 <i data-lucide="mountain" class="w-6 h-6 text-accent-amber"></i>
@@ -525,7 +566,7 @@
                     </a>
                     
                     <!-- Unit: Volume Interpretation -->
-                    <div class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <div class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-indigo-500/10 flex items-center justify-center">
                                 <i data-lucide="layers" class="w-6 h-6 text-indigo-400"></i>
@@ -553,7 +594,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Unit: Risk & Reward -->
-                    <a href="./pages/risk-reward.html" class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <a href="./pages/risk-reward.html" class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-accent-amber/10 flex items-center justify-center">
                                 <i data-lucide="trending-up" class="w-6 h-6 text-accent-amber"></i>
@@ -572,7 +613,7 @@
                     </a>
                     
                     <!-- Unit: 888 HOLD Verdict -->
-                    <div class="app-card reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
+                    <div class="app-card glass-panel reveal bg-bg-secondary border border-border-default rounded-xl p-6 block">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center">
                                 <i data-lucide="gavel" class="w-6 h-6 text-red-500"></i>
