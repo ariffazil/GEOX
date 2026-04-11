@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.0] — 2026-04-11
+### Added
+- **GEOX Command Center**: New vanilla HTML/CSS website for operator interfaces.
+- **Operator Tooling**: Interactive pages for AC Risk, RATLAS, Basin Explorer, Seismic Viewer, and Well Context Desk.
+- **System Metrics**: Real-time status panel with resource usage monitoring.
+- **Lucide Icons & Tailwind v4**: Modern, dependency-free UI stack.
+- **6 Integrated Web Apps**: Connected all GEOX tools to a unified visual dashboard.
+
 ## [0.5.0] — 2026-04-09
 ### Added
 - **Modular Architecture**: Complete refactor into modular `arifos.geox` namespace.
