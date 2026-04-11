@@ -3,7 +3,7 @@ import json
 import logging
 import pandas as pd
 from typing import Optional
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 from geox_schemas import (
     OperatorKind, WitnessKind, SupportKind, ContrastOperatorSpec
 )
