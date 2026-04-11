@@ -1,25 +1,25 @@
-# EARTH.CANON_9 — Minimal Governed State Vector
+# PHYSICS_9 — Minimal Governed State Vector
 
 > **Type:** Physics  
 > **Epistemic Level:** OBS (observational foundation)  
 > **Confidence:** 1.0  
-> **Tags:** [physics, canon, geophysics, foundation, variables, state-vector]  
+> **Tags:** [physics, foundation, geophysics, state-vector]  
 > **Sources:** [[raw/papers/earth_physics_canon.pdf]]  
-> **arifos_floor:** F2  
+> **arifos_floor:** F2, F9
 
 ---
 
 ## Design Principle: State vs. Constitutive Response
 
-> **EARTH.CANON_9 is the minimal governed state vector for Earth-material inference: {ρ, Vp, Vs, ρₑ, χ, k, P, T, φ}.**
+> **PHYSICS_9 is the minimal governed state vector for Earth-material inference: {ρ, Vp, Vs, ρₑ, χ, k, P, T, φ}.**
 > 
 > Variables such as **permeability, elastic moduli, heat capacity, impedance, and strength** are treated as **derived constitutive responses**, not canonical state slots.
 
-This separation prevents **derived quantities from contaminating the base state** — essential for governed physics inference where causal clarity is required (F2 Truth, F4 Clarity).  
+This separation prevents **derived quantities from contaminating the base state** — essential for governed physics inference where causal clarity is required (F2 Truth, F9 Physics9).  
 
 ---
 
-## The Canon
+## The Physics 9
 
 The 9 canonical physical quantities that **completely describe the base state** of any subsurface Earth material:
 
@@ -86,7 +86,7 @@ These **depend on** the 9 base state variables but are **not in the canon**:
 ## Canonical Schema
 
 ```python
-class EarthCanon9(BaseModel):
+class Physics9(BaseModel):
     """
     The 9 fundamental geophysical variables.
     Minimal basis for forward-modeling crustal Earth.
@@ -111,7 +111,7 @@ class EarthCanon9(BaseModel):
 
 ## Why These 9? State vs. Derived
 
-| Category | Examples | Status in CANON_9 |
+| Category | Examples | Status in PHYSICS_9 |
 |----------|----------|-------------------|
 | **Base State** | ρ, Vp, Vs, ρₑ, χ, k, P, T, φ | ✅ Canonical |
 | **Constitutive Response** | K, μ, I, ν, Sw, k_perm, Cp | ❌ Derived |
@@ -121,32 +121,12 @@ class EarthCanon9(BaseModel):
 
 ## Physics Note: Void Volume is the Primitive
 
-At **F2 physics** level, the fundamental quantity is **void volume** (Vv).
+At **F9 Physics9** level, the fundamental quantity is **void volume** (Vv).
 
-**Canonical 9 uses φ (porosity)** as the field representation:
+**PHYSICS_9 uses φ (porosity)** as the field representation:
 - φ = Vv / Vt (void volume / total bulk volume)
 - Dimensionless, bounded [0, 1]
 - Invertible into saturation, permeability, formation factor
-
-**Alternative representations:**
-- **Void ratio** (soils): e = Vv / Vs
-- **Void volume** (absolute): Vv = φ × Vt
-
----
-
-## Porosity Types (Next Layer)
-
-EARTH.CANON_9 φ is **total porosity** (φt). Downstream distinction:
-
-| Type | Definition | Symbol |
-|------|------------|--------|
-| **Total** | All void space | φt |
-| **Effective** | Connected voids only | φe |
-| **Isolated** | Non-connected voids | φi = φt - φe |
-| **Primary** | Depositional | φp |
-| **Secondary** | Post-depositional | φs |
-
-**⚠️ 888_HOLD trigger:** Reporting φe as φt without disclosure (F2 violation).
 
 ---
 
@@ -156,7 +136,7 @@ EARTH.CANON_9 φ is **total porosity** (φt). Downstream distinction:
 - [[20_PHYSICS/Elastic_Moduli]] — K, μ, ν derivations **[DERIVED]**
 - [[20_PHYSICS/Porosity_Types]] — φt vs φe distinction **[CANONICAL]**
 - [[20_PHYSICS/Saturation_Models]] — Sw from Archie equations **[DERIVED]**
-- [[30_MATERIALS/RATLAS_Index]] — Material-specific Canon_9 values **[CANONICAL]**
+- [[30_MATERIALS/RATLAS_Index]] — Material-specific Physics_9 values **[CANONICAL]**
 
 ---
 
@@ -172,30 +152,12 @@ Permeability (k) is critically important for flow, but it is **not a base state 
 
 **Canonical φ captures the void. Constitutive k captures the flow path.**
 
-### Why Not Elastic Moduli in Canon?
-
-If ρ, Vp, Vs are canonical, then:
-- K = ρ(Vp² - 4/3Vs²) is **derived**
-- μ = ρVs² is **derived**
-- E, ν are **derived**
-
-Adding moduli to canon would create **redundancy** and **potential inconsistency** (what if stored K ≠ computed K?).
-
-### The "Fundamental" Distinction
-
-> "Fundamental" in CANON_9 does **not** mean ontologically fundamental. It means:
-> - **Minimal** for governed physics inference
-> - **Stable** across measurement domains  
-> - **Sufficient** to derive higher-order engineering variables
-
-This is the **minimal governed state vector**, not the complete physics description.
-
 ---
 
 ## Telemetry
 
 ```
-[EARTH.CANON_9 | ρ:2650.0 Vp:3500.0 Vs:1800.0 ρₑ:10.50 χ:0.0012 k:2.50 P:25.00MPa T:373.0K φ:0.150 | SEALED]
+[PHYSICS_9 | ρ:2650.0 Vp:3500.0 Vs:1800.0 ρₑ:10.50 χ:0.0012 k:2.50 P:25.00MPa T:373.0K φ:0.150 | SEALED]
 ```
 
 ---

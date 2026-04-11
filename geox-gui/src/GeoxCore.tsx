@@ -96,7 +96,7 @@ export const GeoxCore: React.FC = () => {
         <div className="flex items-center gap-4">
           <div className="hidden md:flex gap-1">
             <Badge color="cyan">999_SEAL ACTIVE</Badge>
-            <Badge color="slate">F9: ANTI-HANTU</Badge>
+            <Badge color="slate">F9: PHYSICS-9</Badge>
             <Badge color="emerald">F11: COMMAND AUTH</Badge>
           </div>
           <div className="flex items-center gap-2 px-3 py-1 bg-gray-900 border border-gray-700 rounded-sm">

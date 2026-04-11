@@ -105,7 +105,7 @@ Status: ✅ Pushed
 | F2 Truth | ✅ | AC_Risk in all outputs |
 | F4 Clarity | ✅ | Units validated |
 | F7 Humility | ✅ | Confidence bounded |
-| F9 Anti-Hantu | ✅ | Physics checks |
+| F9 Physics9 | ✅ | Physics checks |
 | F11 Authority | ✅ | Provenance logged |
 | F13 Sovereign | ✅ | 888_HOLD gates |
 

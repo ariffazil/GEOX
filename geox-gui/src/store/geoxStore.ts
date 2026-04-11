@@ -99,8 +99,8 @@ const initialGovernance: GovernanceState = {
     },
     F9: {
       id: 'F9',
-      name: 'ANTI-HANTU',
-      description: 'No consciousness claims',
+      name: 'PHYSICS-9',
+      description: 'Deterministic physical laws (rho, vp, vs, ...) verified',
       type: 'hard',
       status: 'green',
     },

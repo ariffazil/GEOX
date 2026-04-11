@@ -47,21 +47,19 @@ const Hero: React.FC<{ onEnterCockpit: () => void }> = ({ onEnterCockpit }) => {
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
           <div className={`w-2 h-2 rounded-full ${geoxConnected ? 'bg-green-500 animate-pulse' : 'bg-amber-500'} shadow-[0_0_8px_currentColor]`} />
           <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">
-            {geoxConnected ? 'Earth Intelligence Core — v2026.04.10-EIC' : 'Connecting...'}
+            {geoxConnected ? 'Physics9 Intelligence Core — v2026.04.12-EIC' : 'Connecting to Physics9...'}
           </span>
         </div>
 
         {/* Main title */}
-        <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-4 leading-tight">
-          GEOX <span className="text-blue-400">Earth Intelligence</span>
-        </h1>
+          GEOX <span className="text-blue-400">Physics9</span>
 
         <p className="text-lg md:text-xl text-slate-400 mb-2 font-mono tracking-widest uppercase text-[10px] md:text-xs">
           DITEMPA BUKAN DIBERI — Forged, Not Given
         </p>
 
         <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Earth Intelligence Core. Seven essential tools. Four interactive apps. 
+          Physics9 Intelligence Core. Seven essential tools. Four interactive apps. 
           Constitutional governance F1-F13. Theory of Anomalous Contrast (ToAC) at the center.
         </p>
 
@@ -268,7 +266,7 @@ const FLOORS = [
   { id: 'F2', name: 'TRUTH', desc: 'Uncertainty quantified', icon: Eye },
   { id: 'F4', name: 'CLARITY', desc: 'Units validated', icon: Cpu },
   { id: 'F7', name: 'HUMILITY', desc: 'Confidence ≤ 15%', icon: BarChart3 },
-  { id: 'F9', name: 'ANTI-HANTU', desc: 'Physics grounding', icon: Shield },
+  { id: 'F9', name: 'PHYSICS-9', desc: 'Deterministic physics', icon: Shield },
   { id: 'F11', name: 'AUTHORITY', desc: 'Provenance required', icon: Server },
   { id: 'F13', name: 'SOVEREIGN', desc: 'Human veto', icon: Lock },
 ];
@@ -331,9 +329,9 @@ const PilotSection: React.FC = () => (
             <span className="text-xs font-bold text-green-400 uppercase tracking-wider">Live Pilot</span>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Malay Basin Petroleum Exploration</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Malay Basin Pilot</h2>
           <p className="text-slate-400 mb-6 leading-relaxed">
-            The live demonstration of GEOX Earth Intelligence Core. Real exploration metrics,
+            Physics9 real-world demonstration. Exploration metrics,
             play type distribution, and constitutional governance applied to the Malay Basin.
           </p>
 
@@ -435,13 +433,13 @@ const Footer: React.FC = () => (
           <div className="text-xs text-slate-500">
             <p className="font-mono text-amber-500/80 mb-1">DITEMPA BUKAN DIBERI</p>
             <p>v2026.04.10-EIC · MIT</p>
-            <p className="mt-1">arifOS Earth Intelligence</p>
+            <p className="mt-1">Physics9 Intelligence Core</p>
           </div>
         </div>
       </div>
 
       <div className="pt-8 border-t border-slate-900 text-center text-[10px] text-slate-600 font-mono">
-        GEOX Earth Intelligence Core · Constitutional Geoscience Platform · 2026
+        GEOX Physics9 Core · Constitutional Geoscience Platform · 2026
       </div>
     </div>
   </footer>

@@ -69,7 +69,7 @@ GEOX has been elevated to **AAA GRADE — Large Earth Model** status. This repre
 │  │  • F2 Truth — ≥99% Accuracy                                          │   │
 │  │  • F4 Clarity — Units & Coordinates                                  │   │
 │  │  • F7 Humility — Confidence [0.03,0.15]                              │   │
-│  │  • F9 Anti-Hantu — No Phantom Geology                                │   │
+│  │  • F9 Physics9 — No Phantom Geology                                    │   │
 │  │  • F11 Authority — Provenance Mandatory                              │   │
 │  │  • F13 Sovereign — Human Veto Active                                 │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
@@ -234,7 +234,7 @@ curl http://localhost:8000/health/details
 ### F7 Humility — Confidence [0.03,0.15]
 ✅ Confidence scores bounded per ToAC requirements
 
-### F9 Anti-Hantu — No Phantom Geology
+### F9 Physics9 — No Phantom Geology
 ✅ Physical grounding checks enforced on all interpretations
 
 ### F11 Authority — Provenance Mandatory

@@ -1,4 +1,4 @@
-# EARTH.CANON_9: THE GEOX PHYSICS STATE VECTOR
+# PHYSICS.9: THE GEOX STATE VECTOR
 
 ## MISSION: THE MINIMAL SEMANTIC BASIS
 
@@ -8,9 +8,9 @@ GEOX rejects the "Rock-Physics Teaching Set" in favor of the **Metabolic State V
 
 ---
 
-## THE CANONICAL 9 (THE BASIS-9)
+## THE PHYSICS 9
 
-| # | VARIABLE | SYMBOL | UNIT | WHY IT IS CANONICAL |
+| # | VARIABLE | SYMBOL | UNIT | WHY IT IS PHYSICS CORE |
 | :--- | :--- | :--- | :--- | :--- |
 | **1** | **Density** | **ρ** | kg/m³ | Primary mass measure; drives gravity and acoustic impedance. |
 | **2** | **Compressional Velocity** | **Vp** | m/s | Primary mechanical signal; specifies longitudinal stiffness. |
@@ -26,7 +26,7 @@ GEOX rejects the "Rock-Physics Teaching Set" in favor of the **Metabolic State V
 
 ### CONSTITUTIONAL LOCK: DERIVED EXCLUSIONS
 
-To prevent **LLM Drift** and maintain the thermodynamic integrity of the Large Earth Model, the following variables are strictly **EXCLUDED** from the Canon-9 State Vector. They must be treated as **Constitutive Responses** computed via governed kernels:
+To prevent **LLM Drift** and maintain the thermodynamic integrity of the Large Earth Model, the following variables are strictly **EXCLUDED** from the Physics-9 State Vector. They must be treated as **Constitutive Responses** computed via governed kernels:
 
 - **Permeability ($k_{perm}$)**: An emergent transport property.
 - **Mechanical Moduli ($K, \mu, E, v$)**: Elastic responses derivable from ($\rho, V_p, V_s$).
@@ -51,13 +51,12 @@ For a Large Earth Model to achieve "Active Inference," it must understand **Caus
 - **Cause**: Change in P or T.
 - **Effect**: Changes in Vp, Vs, ρ, and ρₑ (D-fields).
 
-The `EARTH.CANON_9` vector is the only basis that supports this causal chain natively.
+The `PHYSICS_9` vector is the only basis that supports this causal chain natively.
 
 ---
 
 ## SEAL
 
-DITEMPA BUKAN DIBERI. This is the official physics anchor for GEOX v1.0.0.
+DITEMPA BUKAN DIBERI. This is the official physics anchor for Physics9 v1.0.0.
 
 999_SEAL.
-
