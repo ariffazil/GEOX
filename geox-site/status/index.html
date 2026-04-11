@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Status | GEOX</title>
+    <link rel="stylesheet" href="../css/geox-platform.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="mono" style="margin-bottom: 0.5rem; font-size: 0.7rem; color: var(--muted-color);">
+                GEOX_STATUS_PROTOCOL // PUBLIC_VERIFICATION
+            </div>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../platform/index.html">Platform</a>
+                <a href="../workspaces/index.html">Workspaces</a>
+                <a href="index.html">Status</a>
+            </nav>
+        </header>
+
+        <section>
+            <h1 style="margin-bottom: 2rem;">System Status</h1>
+            
+            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--success);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Site</h3>
+                    <span class="status-chip status-live"><span class="status-dot"></span> OPERATIONAL</span>
+                </div>
+                <p style="margin-top: 1rem;">HTTPS connectivity, HTML delivery, and navigation hubs are fully functional.</p>
+            </div>
+
+            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--success);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>WebMCP</h3>
+                    <span class="status-chip status-live"><span class="status-dot"></span> OPERATIONAL</span>
+                </div>
+                <div class="mono" style="font-size: 0.8rem; margin: 1rem 0; color: var(--success);">
+                    [OK] ROOT_MANIFEST: 200<br>
+                    [OK] APP_MANIFESTS: AVAILABLE
+                </div>
+                <p>Browser-native capability manifests are reachable for integrated agents.</p>
+            </div>
+
+            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--warning);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>MCP</h3>
+                    <span class="status-chip status-partial"><span class="status-dot"></span> PARTIAL</span>
+                </div>
+                <div class="mono" style="font-size: 0.8rem; margin: 1rem 0;">
+                    <span style="color: var(--success);">[OK] HEALTH_ENDPOINT: 200</span><br>
+                    <span style="color: var(--warning);">[!] TOOLS_ENDPOINT: IN_PROGRESS (SSE TIMEOUT TRACKED)</span>
+                </div>
+                <p>Execution layer is healthy, but public tool interaction over SSE is currently being optimized for high-latency environments.</p>
+            </div>
+
+            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--muted-color);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>A2A</h3>
+                    <span class="status-chip status-not-public"><span class="status-dot"></span> NOT PUBLIC</span>
+                </div>
+                <p style="margin-top: 1rem;">Agent-to-Agent routing is currently limited to internal secure tunnels. No public JSON endpoints are exposed yet.</p>
+            </div>
+
+            <div class="mono" style="padding: 2rem; border: 1px solid var(--border-color); font-size: 0.8rem; margin-top: 3rem;">
+                <div style="color: var(--muted-color); margin-bottom: 1rem;">VERIFICATION_METADATA</div>
+                VERSION: v2026.4.11-DIMENSION-NATIVE<br>
+                SEAL: DITEMPA BUKAN DIBERI<br>
+                CHECK_ORIGIN: arif-fazil.com<br>
+                LAST_UPDATED: 2026-04-11T10:47:11Z
+            </div>
+        </section>
+
+        <footer>
+            <div class="governance">888_HOLD ACTIVE</div>
+            <p>&copy; 2026 GEOX Subsurface Intelligence</p>
+        </footer>
+    </div>
+</body>
+</html>
