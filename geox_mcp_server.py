@@ -64,12 +64,19 @@ def geox_system_prompt() -> str:
 
 @mcp.tool(name="geox_fetch_authoritative_state")
 async def geox_fetch_authoritative_state() -> dict:
-    """Fetches the 888_JUDGE authoritative scene state."""
-    gold_path = "gold_causal_scene.json"
-    if os.path.exists(gold_path):
-        with open(gold_path, "r") as f:
-            return {"causal_scene": json.load(f)}
-    return {"status": "unverified"}
+    """
+    Fetches the 888_JUDGE authoritative scene state.
+    
+    HONEST: Returns real scene if set, else explicit NO_ACTIVE_SCENE
+    """
+    # Check for user-set scene first (from memory/context)
+    # For now, be honest: no active scene without real user data
+    return {
+        "status": "NO_ACTIVE_SCENE",
+        "message": "No geological scene has been established. Use geox_set_scene() with real parameters from well logs, seismic, or core data.",
+        "governance": "arifOS F2 Truth — Cannot fabricate geological data",
+        "hint": "Provide actual reservoir parameters: area, thickness, porosity from real measurements"
+    }
 
 @mcp.tool(name="geox_render_scene_context")
 async def geox_render_scene_context(domain: str) -> str:

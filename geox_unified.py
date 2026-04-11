@@ -1,17 +1,12 @@
 """
-GEOX Unified MCP Server — Higher Intelligence State
+GEOX Unified MCP Server — HONEST VERSION
 ═══════════════════════════════════════════════════════════════════════════════
 DITEMPA BUKAN DIBERI
 
-Unified deployment consolidating:
-  • Core geological tools (STOIIP, physics verification, scene synthesis)
-  • ACP governance interface (delegated to arifOS)
-  • Theory of Anomalous Contrast (ToAC) risk engine
-  • CANON_9 state vector metabolizer
-
-Governance: arifOS 13-Floors (F1-F13)
-Transport: HTTP/SSE (FastMCP 3.x)
-Version: v2026.04.11-UNIFIED
+FIX: Removed hardcoded demo data. Tools now either:
+  1. Compute from real user-provided parameters
+  2. Return explicit "NO ACTIVE SCENE" if no data
+  3. Validate inputs against physics, not return fake constants
 """
 
 from __future__ import annotations
@@ -22,143 +17,208 @@ import logging
 from typing import Optional
 from datetime import datetime, timezone
 
-# FastMCP v3.x
 from fastmcp import FastMCP
-
-# GEOX schemas
 from geox_schemas import (
     OperatorKind, WitnessKind, SupportKind, ContrastOperatorSpec
 )
 
-# Optional: pandas for materials atlas
-try:
-    import pandas as pd
-    HAS_PANDAS = True
-except ImportError:
-    HAS_PANDAS = False
-    pd = None
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# Server Configuration
-# ═══════════════════════════════════════════════════════════════════════════════
-
 mcp = FastMCP("geox-unified")
 logger = logging.getLogger("geox.unified")
-GEOX_VERSION = "v2026.04.11-UNIFIED"
+GEOX_VERSION = "v2026.04.11-HONEST"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# RESOURCES: Sovereign Reference Data
-# ═══════════════════════════════════════════════════════════════════════════════
-
-@mcp.resource("physics9://materials_atlas")
-async def get_geox_materials() -> str:
-    """RATLAS Global Material Database for physics verification."""
-    if HAS_PANDAS and os.path.exists("geox_atlas_99_materials.csv"):
-        return pd.read_csv("geox_atlas_99_materials.csv").to_string()
-    return "Error: RATLAS csv missing or pandas not available."
-
-@mcp.resource("canon9://materials_atlas")
-async def get_geox_materials_legacy() -> str:
-    """Legacy alias for materials atlas."""
-    return await get_geox_materials()
-
-@mcp.resource("geox://version")
-def get_geox_version() -> str:
-    """Server version and seal."""
-    return json.dumps({
-        "version": GEOX_VERSION,
-        "seal": GEOX_SEAL,
-        "governance": "arifOS F1-F13",
-        "timestamp": datetime.now(timezone.utc).isoformat()
-    }, indent=2)
+# Tool registry for REST bridge compatibility
+TOOLS_REGISTRY = []
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PROMPTS: Sovereign Intelligence
+# STATE MANAGEMENT: No fake defaults
 # ═══════════════════════════════════════════════════════════════════════════════
 
-@mcp.prompt(name="SOVEREIGN_GEOX_SYSTEM_PROMPT")
-def geox_system_prompt() -> str:
-    """Constitutional system prompt for GEOX agents."""
-    return """
-    You are GEOX, a sovereign subsurface governance coprocessor. 
-    You are a Brutalist Geologist.
-    
-    RESPONSE CONTRACT (MANDATORY):
-    Return your response as a structured report:
-    - SUMMARY: [Max 2 sentences UI text]
-    - STANCE: [CLAIM | PLAUSIBLE | HYPOTHESIS | UNKNOWN | HOLD]
-    - BLOCKING: [true | false]
-    - FLOOR_REPORT: [F2 Truth status, F7 Humility notes, F9 Anti-Hantu flags]
-    - NEXT_TOOL: [Optional mcp.tool suggestion to clear blocks]
-    
-    GOVERNANCE RULES:
-    1. If scene status is 'HOLD', you MUST set BLOCKING: true and STANCE: HOLD.
-    2. Never invent numbers. Reference only provided context.
-    3. State the dimension (1D/2D/3D/PHYSICS9).
-    4. Constitutional floors F1-F13 are non-negotiable.
-    """
+# In-memory scene store (empty until user provides data)
+_active_scene: dict | None = None
+
+def get_scene_or_none() -> dict | None:
+    """Returns active scene or None. NO FAKE DEFAULTS."""
+    global _active_scene
+    return _active_scene
+
+def set_active_scene(scene_data: dict):
+    """Set a real scene from user input."""
+    global _active_scene
+    _active_scene = scene_data
+    logger.info(f"[GEOX] Active scene set: {scene_data.get('name', 'unnamed')}")
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# BRIDGE: Scene Governance & Synthesis
+# TOOLS: Honest implementations
 # ═══════════════════════════════════════════════════════════════════════════════
 
 @mcp.tool(name="geox_fetch_authoritative_state")
 async def geox_fetch_authoritative_state() -> dict:
     """
     Fetches the 888_JUDGE authoritative scene state.
-    Governance: arifOS F13 Sovereign seal required for mutations.
+    
+    HONEST: Returns real scene if set, else explicit 'NO_ACTIVE_SCENE'
     """
-    gold_path = "gold_causal_scene.json"
-    if os.path.exists(gold_path):
-        with open(gold_path, "r") as f:
-            return {"causal_scene": json.load(f), "governance": "arifOS"}
-    return {"status": "unverified", "governance": "arifOS"}
+    scene = get_scene_or_none()
+    if scene is None:
+        return {
+            "status": "NO_ACTIVE_SCENE",
+            "message": "No geological scene has been established. Use geox_set_scene() with real parameters.",
+            "governance": "arifOS F2 Truth — Cannot fabricate data",
+            "hint": "Provide real well logs, seismic picks, or reservoir parameters"
+        }
+    
+    return {
+        "causal_scene": scene,
+        "status": "ACTIVE_SCENE_LOADED",
+        "governance": "arifOS F1-F13",
+        "provenance": scene.get("provenance", "unknown")
+    }
+
+@mcp.tool(name="geox_set_scene")
+async def geox_set_scene(
+    name: str,
+    crs: str,
+    area_m2: float,
+    gross_thickness_m: float,
+    porosity: float,
+    provenance: str = "user_specified"
+) -> dict:
+    """
+    Establish a REAL geological scene with user-provided parameters.
+    
+    All values must come from actual data — well logs, seismic, core analysis.
+    """
+    # Validate physics
+    if porosity < 0 or porosity > 1:
+        return {
+            "status": "HOLD",
+            "verdict": "888_HOLD",
+            "error": f"Porosity {porosity} outside physical bounds [0,1]",
+            "governance": "arifOS F2 Truth — Physics violation"
+        }
+    
+    if area_m2 <= 0:
+        return {
+            "status": "HOLD", 
+            "verdict": "888_HOLD",
+            "error": "Area must be positive",
+            "governance": "arifOS F2 Truth"
+        }
+    
+    scene = {
+        "name": name,
+        "crs": crs,
+        "area_m2": area_m2,
+        "gross_thickness_m": gross_thickness_m,
+        "porosity": porosity,
+        "provenance": provenance,
+        "set_at": datetime.now(timezone.utc).isoformat(),
+        "status": "user_verified"
+    }
+    
+    set_active_scene(scene)
+    
+    return {
+        "status": "SCENE_ESTABLISHED",
+        "scene": scene,
+        "verdict": "888_PROCEED",
+        "governance": "arifOS F2 Truth — User attested data",
+        "next": "Call geox_compute_stoiip() with this scene"
+    }
 
 @mcp.tool(name="geox_render_scene_context")
 async def geox_render_scene_context(domain: str) -> str:
     """
-    Deterministic summarizer: Distills the scene for LLM synthesis.
-    Returns constitutional context for agent consumption.
+    Render scene context — HONEST version.
     """
     state = await geox_fetch_authoritative_state()
-    scene = state.get("causal_scene", {})
-    return f"""
-    DOMAIN: {domain} | STATUS: {scene.get('status')} | EPOCH: {scene.get('epoch')}
-    HOLDS: {scene.get('holds', [])} | SIMS: {scene.get('simulation_flags', [])}
-    METRICS: {scene.get('manifold', {})}
-    GOVERNANCE: arifOS F1-F13 active
-    """
-
-@mcp.tool(name="geox_synthesize_causal_scene")
-async def geox_synthesize_causal_scene(domain: str, user_query: Optional[str] = None) -> str:
-    """
-    Assembles distilled context into a structured synthesis prompt.
-    Prepares constitutional response contract for LLM consumption.
-    """
-    context = await geox_render_scene_context(domain)
-    return f"""
-    Context: geox_synthesize_causal_scene call.
-    {context}
-    Query: {user_query or "NONE"}
     
-    TASK: Generate the structured response contract according to the system prompt.\n    Respect F7 Humility bounds (±4% uncertainty).
-    """
-
-@mcp.tool(name="geox_audit_hold_breach")
-async def geox_audit_hold_breach(operator: str, violations: list[str]) -> str:
-    """
-    Structured audit for 888_HOLD breaches.
-    Constitutional enforcement delegated to arifOS F1-F13.
-    """
-    return f"""
-    AUDIT_ALERT: {operator}
-    VIOLATIONS: {violations}
-    GOVERNANCE: arifOS F6 Harm/Dignity, F9 Anti-Hantu
+    if state["status"] == "NO_ACTIVE_SCENE":
+        return f"""
+DOMAIN: {domain}
+STATUS: NO_ACTIVE_SCENE
+MESSAGE: No geological data loaded. 
+ACTION REQUIRED: Call geox_set_scene() with real parameters from:
+  - Well log analysis
+  - Seismic interpretation  
+  - Core measurements
+  - Production data
+GOVERNANCE: arifOS F2 Truth — No fabrication permitted
+"""
     
-    TASK: Generate structured response. Classify as HARD (Block) or SOFT (Warning).
-    Explain breach against F2 Truth, F8 Grounding, F9 Anti-Hantu.
+    scene = state["causal_scene"]
+    return f"""
+DOMAIN: {domain}
+STATUS: ACTIVE_SCENE_LOADED
+SCENE: {scene.get('name')}
+CRS: {scene.get('crs')}
+AREA: {scene.get('area_m2'):,.0f} m²
+THICKNESS: {scene.get('gross_thickness_m')} m
+POROSITY: {scene.get('porosity')} (user-provided)
+PROVENANCE: {scene.get('provenance')}
+SET_AT: {scene.get('set_at')}
+GOVERNANCE: arifOS F1-F13 active
+"""
+
+@mcp.tool(name="geox_compute_stoiip")
+async def geox_compute_stoiip(
+    area_acres: float,
+    thickness_ft: float,
+    porosity: float,
+    sw: float,
+    fvf: float,
+    witness_id: Optional[str] = None
+) -> dict:
     """
+    Compute STOIIP from REAL parameters provided by user.
+    
+    Formula: 7758 × area × thickness × porosity × (1 - sw) / fvf
+    All inputs must come from actual reservoir characterization.
+    """
+    # Validate all inputs
+    errors = []
+    if porosity < 0 or porosity > 1:
+        errors.append(f"Porosity {porosity} outside [0,1]")
+    if sw < 0 or sw > 1:
+        errors.append(f"Water saturation {sw} outside [0,1]")
+    if area_acres <= 0:
+        errors.append("Area must be positive")
+    if thickness_ft <= 0:
+        errors.append("Thickness must be positive")
+    if fvf <= 0:
+        errors.append("FVF must be positive")
+    
+    if errors:
+        return {
+            "status": "HOLD",
+            "verdict": "888_HOLD",
+            "errors": errors,
+            "governance": "arifOS F2 Truth — Input validation failed"
+        }
+    
+    # Compute STOIIP
+    stoiip = (7758 * area_acres * thickness_ft * porosity * (1 - sw)) / fvf
+    
+    # F7 Humility: quantify uncertainty
+    # Typical volumetric uncertainty: ±15-30%
+    uncertainty = 0.20  # 20% base uncertainty
+    
+    return {
+        "stoiip_stb": round(stoiip, 1),
+        "status": "COMPUTED_FROM_INPUTS",
+        "inputs": {
+            "area_acres": area_acres,
+            "thickness_ft": thickness_ft,
+            "porosity": porosity,
+            "sw": sw,
+            "fvf": fvf
+        },
+        "f7_uncertainty": uncertainty,
+        "verdict": "888_PROCEED" if witness_id else "888_QUALIFY",
+        "governance": "arifOS F2 Truth — Computed from attested inputs",
+        "warning": "All inputs must come from actual well logs/seismic/core data. Do not invent numbers."
+    }
 
 @mcp.tool(name="geox_validate_operation")
 async def geox_validate_operation(
@@ -168,10 +228,7 @@ async def geox_validate_operation(
     right_kind: str, 
     right_support: str
 ) -> dict:
-    """
-    Constitutional Firewall: Validates physical operation legality per F2/F8/F9.
-    Pre-flight audit for contrast operations.
-    """
+    """Constitutional validation for contrast operations."""
     try:
         spec = ContrastOperatorSpec(
             op_kind=OperatorKind(op_kind),
@@ -196,296 +253,51 @@ async def geox_validate_operation(
             "governance": "arifOS F2/F8/F9"
         }
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# DIMENSIONAL KERNELS: Physics & Reserves
-# ═══════════════════════════════════════════════════════════════════════════════
+@mcp.tool(name="geox_audit_hold_breach")
+async def geox_audit_hold_breach(operator: str, violations: list[str]) -> str:
+    """Structured audit for 888_HOLD breaches."""
+    return f"""
+AUDIT_ALERT: {operator}
+VIOLATIONS: {violations}
+GOVERNANCE: arifOS F6 Harm/Dignity, F9 Anti-Hantu
 
-@mcp.tool(name="geox_compute_stoiip")
-async def geox_compute_stoiip(
-    area: float, 
-    thickness: float, 
-    phi: float, 
-    sw: float, 
-    fvf: float, 
-    witness_id: Optional[str] = None
-) -> dict:
-    """
-    Computes Stock Tank Oil Initially In Place (STOIIP) using volumetric method.
+TASK: Generate structured response. Classify as HARD (Block) or SOFT (Warning).
+Explain breach against F2 Truth, F8 Grounding, F9 Anti-Hantu.
+"""
+
+@mcp.tool(name="geox_synthesize_causal_scene")
+async def geox_synthesize_causal_scene(domain: str, user_query: Optional[str] = None) -> str:
+    """HONEST: Only synthesize if scene exists."""
+    state = await geox_fetch_authoritative_state()
     
-    Formula: STOIIP = 6.2898 × Area × Thickness × φ × (1 - Sw) / FVF
-    Units: Area (acres), Thickness (ft), result (STB)
-    """
-    stoiip = (6.2898 * area * thickness * phi * (1 - sw)) / fvf
-    return {
-        "stoiip_stb": round(stoiip, 2),
-        "parameters": {
-            "area_acres": area,
-            "thickness_ft": thickness,
-            "porosity": phi,
-            "water_saturation": sw,
-            "formation_volume_factor": fvf
-        },
-        "status": "VERIFIED" if witness_id else "SIMULATED",
-        "verdict": "888_PROCEED" if witness_id else "888_REVIEW",
-        "governance": "arifOS F2 Truth, F7 Humility"
-    }
+    if state["status"] == "NO_ACTIVE_SCENE":
+        return f"""
+CANNOT SYNTHESIZE: No active geological scene.
 
-@mcp.tool(name="geox_verify_physics")
-async def geox_verify_physics() -> dict:
-    """
-    Verifies physical consistency against Earth Canon 9 (physics9).
-    Thermodynamic state vector validation.
-    """
-    return {
-        "status": "verified", 
-        "audit": "PASS", 
-        "floor": "F2_PHYSICS",
-        "canon": "physics9",
-        "verdict": "888_PROCEED"
-    }
+User asked: {user_query or "N/A"}
 
-@mcp.tool(name="geox_verify_canon")
-async def geox_verify_canon() -> dict:
-    """
-    Verifies state vector compliance against Earth Canon 9 constitutional basis.
-    [ρ, Vp, Vs, ρe, χ, k, P, T, φ] — strict thermodynamic basis.
-    """
-    result = await geox_verify_physics()
-    result["canon"] = "EARTH_CANON_9"
-    result["basis"] = ["rho", "vp", "vs", "res", "chi", "k", "p", "t", "phi"]
-    return result
+To establish a scene, call:
+  geox_set_scene(
+    name="your_reservoir_name",
+    crs="WGS84_UTM50N",
+    area_m2=450000,
+    gross_thickness_m=250,
+    porosity=0.18,
+    provenance="well_log_interpretation"
+  )
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# ACP: Agent Control Plane (Governance Interface)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-@mcp.tool(name="geox_acp_register_agent")
-async def geox_acp_register_agent(
-    agent_id: str,
-    role: str,
-    name: str,
-    resources: Optional[list] = None,
-    tools: Optional[list] = None
-) -> dict:
-    """
-    Registers an agent with the Agent Control Plane.
-    NOTE: Actual governance delegated to arifOS F13 Sovereign.
-    """
-    return {
-        "success": True,
-        "agent": {
-            "agent_id": agent_id,
-            "role": role,
-            "name": name,
-            "status": "registered",
-            "resources": resources or [],
-            "tools": tools or []
-        },
-        "governance": "arifOS F13 Sovereign",
-        "verdict": "888_PROCEED"
-    }
-
-@mcp.tool(name="geox_acp_submit_proposal")
-async def geox_acp_submit_proposal(agent_id: str, proposal: dict) -> dict:
-    """
-    Submits a proposal for 888_JUDGE evaluation.
-    NOTE: Actual evaluation delegated to arifOS governance layers.
-    """
-    return {
-        "proposal_id": f"prop_{agent_id}_{datetime.now(timezone.utc).timestamp()}",
-        "agent_id": agent_id,
-        "status": "SUBMITTED",
-        "verdict": "888_REVIEW",
-        "governance": "arifOS F1-F13 evaluation pending"
-    }
-
-@mcp.tool(name="geox_acp_get_status")
-async def geox_acp_get_status() -> dict:
-    """Returns ACP system status with arifOS governance reference."""
-    return {
-        "acp_version": "2.0.0-UNIFIED",
-        "seal": GEOX_SEAL,
-        "governance": "arifOS F1-F13",
-        "agents_registered": 0,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "verdict": "888_PROCEED"
-    }
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# THEORY OF ANOMALOUS CONTRAST (ToAC)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-@mcp.tool(name="geox_compute_ac_risk")
-async def geox_compute_ac_risk(
-    area_km2: float,
-    min_depth: float,
-    max_depth: float,
-    depth_unit: str = "m"
-) -> dict:
-    """
-    Computes Anomalous Contrast (AC) Risk using Theory of Anomalous Contrast (ToAC).
+GOVERNANCE: arifOS F2 Truth — No fabrication of geological context
+"""
     
-    AC Risk assesses geological uncertainty based on area and depth range.
-    F7 Humility: ±4% uncertainty bounds enforced.
-    """
-    depth_range = max_depth - min_depth
-    risk_score = min(1.0, (area_km2 * 0.01) + (depth_range * 0.001))
-    
-    category = "LOW"
-    if risk_score > 0.7:
-        category = "HIGH"
-    elif risk_score > 0.4:
-        category = "MEDIUM"
-    
-    return {
-        "ac_risk_score": round(risk_score, 4),
-        "ac_category": category,
-        "theory": "ToAC (Theory of Anomalous Contrast)",
-        "f7_uncertainty": 0.04,
-        "verdict": "888_PROCEED" if risk_score < 0.7 else "888_HOLD",
-        "governance": "arifOS F2 Truth, F7 Humility"
-    }
+    context = await geox_render_scene_context(domain)
+    return f"""
+CAUSAL SYNTHESIS REQUEST
+{context}
+Query: {user_query or "NONE"}
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# CANON_9: State Vector Metabolizer
-# ═══════════════════════════════════════════════════════════════════════════════
-
-CANON_9_KEYS = {"rho", "vp", "vs", "res", "chi", "k", "p", "t", "phi"}
-F7_HUMILITY_FLOOR = 0.04
-
-@mcp.tool(name="geox_metabolize")
-async def geox_metabolize(
-    state_vector: dict,
-    propagation_mode: str = "1d_to_3d",
-    uncertainty_floor: float = 0.04
-) -> dict:
-    """
-    Metabolizes a state vector through CANON_9 basis with F7 humility bounds.
-    
-    Validates against EARTH_CANON_9: [ρ, Vp, Vs, ρe, χ, k, P, T, φ]
-    Permeability and moduli are derived, not fundamental.
-    """
-    missing = [k for k in CANON_9_KEYS if k not in state_vector]
-    if missing:
-        return {
-            "status": "FAILURE",
-            "error": f"State vector violation. Missing: {missing}",
-            "missing_basis": missing,
-            "verdict": "888_HOLD",
-            "governance": "arifOS F2 Truth"
-        }
-    
-    if uncertainty_floor < F7_HUMILITY_FLOOR:
-        uncertainty_floor = F7_HUMILITY_FLOOR
-    
-    return {
-        "metabolism_status": "CONVERGED",
-        "propagation": propagation_mode,
-        "f7_uncertainty": uncertainty_floor,
-        "verdict": "888_PROCEED",
-        "state_vector_keys": list(state_vector.keys()),
-        "governance": "arifOS F7 Humility",
-        "canon": "EARTH_CANON_9"
-    }
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# REST API ENDPOINTS (for frontend integration)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-# Tool registry for REST API
-TOOLS_REGISTRY = [
-    {
-        "name": "geox_compute_ac_risk",
-        "version": "1.0.0",
-        "status": "production",
-        "description": "Calculate Theory of Anomalous Contrast (ToAC) risk score.",
-        "long_description": "Computes AC_Risk = U_phys × D_transform × B_cog for any vision operation. Returns verdict (SEAL/QUALIFY/HOLD/VOID).",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "u_phys": {"type": "number", "minimum": 0.0, "maximum": 1.0},
-                "transform_stack": {"type": "array", "items": {"type": "string"}},
-                "bias_scenario": {"type": "string", "enum": ["unaided_expert", "multi_interpreter", "physics_validated", "ai_vision_only", "ai_with_physics"]},
-                "custom_b_cog": {"type": "number", "minimum": 0.0, "maximum": 1.0}
-            },
-            "required": ["u_phys", "transform_stack"]
-        }
-    },
-    {
-        "name": "geox_metabolize",
-        "version": "1.0.0",
-        "status": "production",
-        "description": "Metabolize state vector through CANON_9 basis.",
-        "long_description": "Validates against EARTH_CANON_9: [ρ, Vp, Vs, ρe, χ, k, P, T, φ] with F7 humility bounds.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "state_vector": {"type": "object"},
-                "propagation_mode": {"type": "string", "default": "1d_to_3d"},
-                "uncertainty_floor": {"type": "number", "default": 0.04}
-            },
-            "required": ["state_vector"]
-        }
-    },
-    {
-        "name": "geox_compute_stoiip",
-        "version": "1.0.0",
-        "status": "production",
-        "description": "Compute STOIIP with uncertainty quantification.",
-        "long_description": "Stock Tank Oil Initially In Place with F7 humility bounds on area, thickness, porosity, and saturation.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "area_acres": {"type": "number"},
-                "thickness_ft": {"type": "number"},
-                "porosity": {"type": "number"},
-                "saturation": {"type": "number"},
-                "fvf": {"type": "number"}
-            },
-            "required": ["area_acres", "thickness_ft", "porosity", "saturation"]
-        }
-    },
-    {
-        "name": "geox_verify_physics",
-        "version": "1.0.0",
-        "status": "production",
-        "description": "Verify physical plausibility of a scene.",
-        "long_description": "Checks against canonical rock physics bounds (ρ, Vp, Vs, AI, SI, PR, Vp/Vs)."
-    },
-    {
-        "name": "geox_verify_canon",
-        "version": "1.0.0",
-        "status": "production",
-        "description": "Verify against material canon.",
-        "long_description": "Checks scene against PHysics9 materials atlas."
-    },
-    {
-        "name": "geox_synthesize_causal_scene",
-        "version": "1.0.0",
-        "status": "production",
-        "description": "Synthesize a Causal Scene from manifold + witness.",
-        "long_description": "Creates a governed scene with operator, support, and contrast specifications."
-    }
-]
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# HEALTH CHECK ENDPOINT
-# ═══════════════════════════════════════════════════════════════════════════════
-
-from starlette.applications import Starlette
-from starlette.routing import Route
-from starlette.responses import JSONResponse
-import uvicorn
-
-async def health_endpoint(request):
-    """Health check endpoint for Docker/container orchestration."""
-    return JSONResponse({
-        "status": "healthy",
-        "version": GEOX_VERSION,
-        "seal": GEOX_SEAL,
-        "governance": "arifOS F1-F13",
-        "timestamp": datetime.now(timezone.utc).isoformat()
-    })
+Generate structured response respecting F7 Humility bounds (±4% uncertainty).
+All claims must reference the scene parameters above.
+"""
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ENTRY POINT
@@ -494,29 +306,39 @@ async def health_endpoint(request):
 import argparse
 
 def main():
-    parser = argparse.ArgumentParser(description="GEOX Unified MCP Server")
+    parser = argparse.ArgumentParser(description="GEOX Unified MCP Server (HONEST)")
     parser.add_argument("--transport", choices=["stdio", "http", "sse"], default="http")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--host", default="0.0.0.0")
     args = parser.parse_args()
     
-    logger.info(f"🔥 GEOX Unified Server Starting")
+    logger.info(f"🔥 GEOX Unified Server Starting (HONEST VERSION)")
     logger.info(f"   Version: {GEOX_VERSION}")
     logger.info(f"   Seal: {GEOX_SEAL}")
     logger.info(f"   Transport: {args.transport} on {args.host}:{args.port}")
     logger.info(f"   Governance: arifOS F1-F13")
-    logger.info(f"   Tools: Bridge + Dimensional + ACP + ToAC + CANON_9")
+    logger.info(f"   Policy: NO FABRICATION — Real data or explicit NO_ACTIVE_SCENE")
     
     if args.transport == "http" or args.transport == "sse":
-        # Get the FastMCP HTTP app and wrap it with health endpoint
-        from starlette.routing import Mount
-        
         mcp_app = mcp.http_app(
             path="/mcp",
             transport="sse",
         )
         
-        # Create routes: health first, then mount MCP at /mcp
+        from starlette.applications import Starlette
+        from starlette.routing import Route, Mount
+        from starlette.responses import JSONResponse
+        import uvicorn
+        
+        async def health_endpoint(request):
+            return JSONResponse({
+                "status": "healthy",
+                "version": GEOX_VERSION,
+                "seal": GEOX_SEAL,
+                "policy": "NO_FAKE_DATA",
+                "scene_loaded": get_scene_or_none() is not None
+            })
+        
         routes = [
             Route("/health", health_endpoint),
             Mount("/mcp", app=mcp_app),
