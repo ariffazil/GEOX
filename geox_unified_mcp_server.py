@@ -158,9 +158,13 @@ def geox_system_prompt() -> str:
     3. State the dimension (PROSPECT/WELL/SECTION/EARTH3D/TIME4D/PHYSICS/MAP).
     """
 
+
+def main() -> None:
+    mcp.run()
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # SERVER ENTRYPOINT
 # ═══════════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
-    mcp.run()
+    main()

@@ -16,11 +16,20 @@ dependencies = [
 ]
 
 [project.scripts]
-geox-server = "geox_mcp_server:mcp.run"
+geox-server = "geox_unified_mcp_server:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-py-modules = ["geox_mcp_server", "geox_schemas", "arifos_od_siphon"]
+py-modules = [
+    "geox_mcp_server",
+    "geox_schemas",
+    "arifos_od_siphon",
+    "geox_unified_mcp_server",
+    "geox_unified",
+]
+
+[tool.setuptools.packages.find]
+include = ["registries*"]
