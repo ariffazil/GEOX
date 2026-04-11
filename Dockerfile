@@ -24,6 +24,7 @@ COPY geox/ ./geox/
 COPY data/ ./data/
 COPY geox_unified.py .
 COPY geox_mcp_server.py .
+COPY geox_schemas.py .
 COPY entrypoint.sh .
 
 # Create vault directory

@@ -20,6 +20,24 @@ import type {
   McpConnectionStatus,
 } from '../types';
 
+const configuredGeoxUrl =
+  typeof import.meta !== 'undefined' && import.meta.env.VITE_GEOX_MCP_URL
+    ? import.meta.env.VITE_GEOX_MCP_URL.replace(/\/+$/, '')
+    : null;
+
+function inferDefaultGeoxUrl(): string {
+  if (typeof window === 'undefined') {
+    return 'https://geox.arif-fazil.com';
+  }
+
+  const { hostname, origin } = window.location;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'https://geox.arif-fazil.com';
+  }
+
+  return origin;
+}
+
 // Initial governance state with all F1-F13 floors
 const initialGovernance: GovernanceState = {
   floors: {
@@ -182,7 +200,8 @@ const initialState: GEOXState = {
     sources: [],
   },
   geoxConnected: false,
-  geoxUrl: typeof window !== 'undefined' ? window.location.origin : 'https://geox.arif-fazil.com',
+  geoxUrl:
+    configuredGeoxUrl ?? inferDefaultGeoxUrl(),
   mcpConnectionStatus: {
     status: 'disconnected',
     lastChecked: null,

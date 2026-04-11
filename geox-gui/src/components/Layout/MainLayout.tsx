@@ -20,9 +20,7 @@ import {
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Separator from '@radix-ui/react-separator';
 import { WitnessBadges, WitnessBadgesCompact } from '../WitnessBadges/WitnessBadges';
-import { EarthWitness } from '../EarthWitness/EarthWitness';
 import { MalayBasinPilotDashboard } from '../MalayBasinPilot/MalayBasinPilotDashboard';
-import { LogDock } from '../LogDock/LogDock';
 import { AppIframeHost } from '../EarthWitness/AppIframeHost';
 import { useGEOXStore, useActiveTab, useGovernance, useGEOXConnected } from '../../store/geoxStore';
 import type { Tab } from '../../types';
@@ -39,6 +37,14 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'acrisk', label: 'AC_Risk Console', icon: Gauge },
   { id: 'pilot', label: 'Malay Basin Pilot', icon: Target },
 ];
+
+function getEmbeddedAppSrc(appName: string): string {
+  const base = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+
+  return `${base}${appName}/index.html`;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Left Sidebar — Data/Layers
@@ -164,7 +170,7 @@ const MainWorkspace: React.FC = () => {
           {/* Basin Explorer */}
           <Tabs.Content value="basin" className="h-full">
             <AppIframeHost 
-              src="/apps/basin_explorer/index.html" 
+              src={getEmbeddedAppSrc('basin_explorer')}
               title="Basin Explorer" 
               appId="geox.basin.explorer" 
             />
@@ -173,7 +179,7 @@ const MainWorkspace: React.FC = () => {
           {/* Seismic Viewer */}
           <Tabs.Content value="seismic" className="h-full">
             <AppIframeHost 
-              src="/apps/seismic_viewer/index.html" 
+              src={getEmbeddedAppSrc('seismic_viewer')}
               title="Seismic Viewer" 
               appId="geox.seismic.viewer" 
             />
@@ -182,7 +188,7 @@ const MainWorkspace: React.FC = () => {
           {/* Well Context Desk */}
           <Tabs.Content value="wells" className="h-full">
             <AppIframeHost 
-              src="/apps/well_context_desk/index.html" 
+              src={getEmbeddedAppSrc('well_context_desk')}
               title="Well Context Desk" 
               appId="geox.well.context-desk" 
             />
@@ -191,7 +197,7 @@ const MainWorkspace: React.FC = () => {
           {/* AC_Risk Console */}
           <Tabs.Content value="acrisk" className="h-full">
             <AppIframeHost 
-              src="/apps/ac_risk_console/index.html" 
+              src={getEmbeddedAppSrc('ac_risk_console')}
               title="AC_Risk Console" 
               appId="geox.ac_risk.console" 
             />

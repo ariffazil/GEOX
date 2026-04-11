@@ -392,10 +392,23 @@ async def geox_metabolize(
 # ENTRY POINT
 # ═══════════════════════════════════════════════════════════════════════════════
 
-if __name__ == "__main__":
+import argparse
+
+def main():
+    parser = argparse.ArgumentParser(description="GEOX Unified MCP Server")
+    parser.add_argument("--transport", choices=["stdio", "http", "sse"], default="http")
+    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--host", default="0.0.0.0")
+    args = parser.parse_args()
+    
     logger.info(f"🔥 GEOX Unified Server Starting")
     logger.info(f"   Version: {GEOX_VERSION}")
     logger.info(f"   Seal: {GEOX_SEAL}")
+    logger.info(f"   Transport: {args.transport} on {args.host}:{args.port}")
     logger.info(f"   Governance: arifOS F1-F13")
     logger.info(f"   Tools: Bridge + Dimensional + ACP + ToAC + CANON_9")
-    mcp.run()
+    
+    mcp.run(transport=args.transport, port=args.port, host=args.host)
+
+if __name__ == "__main__":
+    main()

@@ -9,4 +9,9 @@ echo "   Transport: HTTP on port 8000"
 echo "   Governance: arifOS F1-F13"
 echo "   Tools: Bridge + Dimensional + ACP + ToAC + CANON_9"
 
+# Force HTTP transport
+export GEOX_TRANSPORT=http
+export GEOX_HOST=0.0.0.0
+export GEOX_PORT=8000
+
 exec python geox_unified.py

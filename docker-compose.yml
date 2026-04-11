@@ -1,11 +1,9 @@
-# GEOX Earth Intelligence Core — Research Deployment
+# GEOX Earth Intelligence Core — SSE Transport Deployment
 # DITEMPA BUKAN DIBERI
-# Version: v2026.04.10-EIC
-
-version: '3.8'
+# Version: v2026.04.11-SSE
 
 services:
-  # MCP Server (Earth Intelligence Core)
+  # MCP Server (Earth Intelligence Core + SSE Bridge)
   geox:
     build:
       context: .
@@ -15,21 +13,55 @@ services:
       - "8000:8000"
     environment:
       - GEOX_MODE=research
-      - GEOX_VERSION=v2026.04.10-EIC
+      - GEOX_VERSION=v2026.04.11-SSE
       - F13_HUMAN_VETO=required
       - PYTHONUNBUFFERED=1
+      - GEOX_HOST=0.0.0.0
+      - GEOX_PORT=8000
     volumes:
       - ./data:/data:ro
       - vault_999:/app/999_vault
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     restart: unless-stopped
+    networks:
+      - traefik_network
+      - arifos_trinity
+      - arifos_core_network
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+      # MCP endpoint - HTTP
+      - "traefik.http.routers.geox-mcp.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/mcp`)"
+      - "traefik.http.routers.geox-mcp.entrypoints=web"
+      - "traefik.http.routers.geox-mcp.service=geox-mcp"
+      - "traefik.http.routers.geox-mcp.priority=10"
+      # Health endpoint - HTTP
+      - "traefik.http.routers.geox-health.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/health`)"
+      - "traefik.http.routers.geox-health.entrypoints=web"
+      - "traefik.http.routers.geox-health.service=geox-mcp"
+      - "traefik.http.routers.geox-health.priority=10"
+      # Tools endpoint - HTTP (for GUI API calls)
+      - "traefik.http.routers.geox-tools.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/tools`)"
+      - "traefik.http.routers.geox-tools.entrypoints=web"
+      - "traefik.http.routers.geox-tools.service=geox-mcp"
+      - "traefik.http.routers.geox-tools.priority=10"
+      # Tools endpoint - HTTPS
+      - "traefik.http.routers.geox-tools-secure.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/tools`)"
+      - "traefik.http.routers.geox-tools-secure.entrypoints=websecure"
+      - "traefik.http.routers.geox-tools-secure.tls=true"
+      - "traefik.http.routers.geox-tools-secure.service=geox-mcp"
+      - "traefik.http.routers.geox-tools-secure.priority=10"
+      # Service definition
+      - "traefik.http.services.geox-mcp.loadbalancer.server.port=8000"
+      # Long timeout for SSE connections
+      - "traefik.http.services.geox-mcp.loadbalancer.responseForwarding.flushInterval=100ms"
 
-  # GUI (React App with 4 MCP Apps)
+  # GUI (React App with 5-Dimensional Interface)
   gui:
     build:
       context: ./geox-gui
@@ -45,13 +77,20 @@ services:
     networks:
       - traefik_network
       - arifos_trinity
+      - arifos_core_network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.geox.rule=Host(`geox.arif-fazil.com`)"
-      - "traefik.http.routers.geox.entrypoints=websecure"
-      - "traefik.http.routers.geox.tls=true"
-      - "traefik.http.routers.geox.tls.certresolver=letsencrypt"
-      - "traefik.http.services.geox.loadbalancer.server.port=80"
+      # GUI HTTP router
+      - "traefik.http.routers.geox-gui.rule=Host(`geox.arif-fazil.com`)"
+      - "traefik.http.routers.geox-gui.entrypoints=web"
+      - "traefik.http.routers.geox-gui.service=geox-gui"
+      # GUI HTTPS router (uses existing certificate)
+      - "traefik.http.routers.geox-gui-secure.rule=Host(`geox.arif-fazil.com`)"
+      - "traefik.http.routers.geox-gui-secure.entrypoints=websecure"
+      - "traefik.http.routers.geox-gui-secure.tls=true"
+      - "traefik.http.routers.geox-gui-secure.service=geox-gui"
+      - "traefik.http.services.geox-gui.loadbalancer.server.port=80"
+      - "traefik.http.routers.geox-gui.priority=1"
 
 volumes:
   vault_999:
@@ -61,4 +100,6 @@ networks:
   traefik_network:
     external: true
   arifos_trinity:
+    external: true
+  arifos_core_network:
     external: true

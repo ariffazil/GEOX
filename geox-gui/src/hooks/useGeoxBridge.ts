@@ -17,8 +17,13 @@ import type {
 
 export function useGeoxBridge() {
   const store = useGEOXStore();
+  const hostWindow = typeof window !== 'undefined' && window.parent !== window ? window.parent : null;
 
   const sendMessage = useCallback((method: GeoxMethod, params: any, id?: string | number) => {
+    if (!hostWindow) {
+      return;
+    }
+
     const event: GeoxEvent = {
       jsonrpc: '2.0',
       method,
@@ -28,8 +33,8 @@ export function useGeoxBridge() {
     };
 
     console.log(`[GEOX Bridge] Sending: ${method}`, event);
-    window.parent.postMessage(event, '*');
-  }, []);
+    hostWindow.postMessage(event, '*');
+  }, [hostWindow]);
 
   // UI helpers
   const sendUiAction = useCallback((action: string, payload: any) => {
@@ -89,17 +94,18 @@ export function useGeoxBridge() {
     };
 
     window.addEventListener('message', handleMessage);
-    
-    // Send app.initialize signal to host on mount
-    sendMessage('app.initialize', {
-      app_id: 'geox.gui.main',
-      user_id: 'local-user', // Should be dynamic
-      host_capabilities: ['inline-app', 'mcp-tools'],
-      initial_context: {}
-    });
+
+    if (hostWindow) {
+      sendMessage('app.initialize', {
+        app_id: 'geox.gui.main',
+        user_id: 'local-user', // Should be dynamic
+        host_capabilities: ['inline-app', 'mcp-tools'],
+        initial_context: {}
+      });
+    }
 
     return () => window.removeEventListener('message', handleMessage);
-  }, [store, sendMessage]);
+  }, [hostWindow, store, sendMessage]);
 
   return {
     sendUiAction,

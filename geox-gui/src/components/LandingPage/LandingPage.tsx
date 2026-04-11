@@ -10,7 +10,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Globe, Activity, AlignLeft, Shield,
-  Target, ChevronRight, ExternalLink, ArrowRight,
+  ChevronRight, ExternalLink, ArrowRight,
   Zap, BarChart3, Server, BookOpen, Lock, Eye,
   Cpu, MapPin, Gauge
 } from 'lucide-react';

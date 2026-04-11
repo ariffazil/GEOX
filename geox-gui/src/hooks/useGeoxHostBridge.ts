@@ -6,13 +6,14 @@
  */
 
 import { useEffect, useCallback } from 'react';
+import type { RefObject } from 'react';
 import { useGEOXStore } from '../store/geoxStore';
 import type { 
   GeoxEvent, 
   GeoxMethod,
 } from '../types';
 
-export function useGeoxHostBridge(iframeRef: React.RefObject<HTMLIFrameElement>) {
+export function useGeoxHostBridge(iframeRef: RefObject<HTMLIFrameElement>) {
   const store = useGEOXStore();
 
   const sendToApp = useCallback((method: GeoxMethod, params: any, id?: string | number) => {
