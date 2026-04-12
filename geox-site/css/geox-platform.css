@@ -1,9 +1,9 @@
 :root {
-    --bg-color: #0c0c0c;
-    --text-color: #e0e0e0;
-    --muted-color: #888;
-    --border-color: #222;
-    --accent-color: #333;
+    --bg-color: #080c08;
+    --text-color: #d4e0d4;
+    --muted-color: #6b7a6b;
+    --border-color: #1e2e1e;
+    --accent-color: #3d5c3d;
     --success: #4ade80;
     --warning: #fbbf24;
     --danger: #f87171;
@@ -22,10 +22,10 @@ body {
     color: var(--text-color);
     font-family: var(--font-sans);
     line-height: 1.6;
-    background-image: 
-        linear-gradient(var(--border-color) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-image:
+        radial-gradient(ellipse at 20% 80%, rgba(8, 20, 8, 0.7) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(6, 14, 20, 0.7) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 50%, rgba(4, 8, 4, 0.5) 0%, var(--bg-color) 100%);
     background-attachment: fixed;
 }
 

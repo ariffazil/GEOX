@@ -6,7 +6,7 @@ authors = [
     { name = "Arif Fazil", email = "arif@arifos.geo" }
 ]
 dependencies = [
-    "mcp[fastmcp]>=0.1.0",
+    "fastmcp>=3.0.0",
     "pydantic>=2.0.0",
     "pandas>=2.0.0",
     "numpy>=1.20.0",
@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.scripts]
-geox-server = "geox_unified_mcp_server:main"
+geox-server = "geox_unified:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -27,7 +27,6 @@ py-modules = [
     "geox_mcp_server",
     "geox_schemas",
     "arifos_od_siphon",
-    "geox_unified_mcp_server",
     "geox_unified",
 ]
 

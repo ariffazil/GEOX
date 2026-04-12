@@ -24,7 +24,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy Dimension-Native GEOX Architecture
-COPY geox_unified_mcp_server.py .
+COPY geox_unified.py .
 COPY geox_schemas.py .
 COPY geox_rest_bridge.py .
 

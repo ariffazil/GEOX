@@ -18,6 +18,12 @@ echo "Profile: $GEOX_PROFILE"
 echo "Domain: $DOMAIN"
 echo ""
 
+if docker compose version >/dev/null 2>&1; then
+    COMPOSE_CMD=(docker compose)
+else
+    COMPOSE_CMD=(docker-compose)
+fi
+
 # Check if we're on the VPS or local
 if [ "$(hostname)" = "srv1325122" ] || [ "$(hostname)" = "geox" ]; then
     echo "✓ Running on VPS — local deployment"
@@ -73,16 +79,16 @@ echo "Step 3: Building Docker Image..."
 echo "───────────────────────────────────────────────────────────────"
 
 # Stop existing containers
-docker-compose -f docker-compose.unified.yml down 2>/dev/null || true
+"${COMPOSE_CMD[@]}" -f docker-compose.unified.yml down 2>/dev/null || true
 
 # Build with new Dockerfile
-docker-compose -f docker-compose.unified.yml build --no-cache
+"${COMPOSE_CMD[@]}" -f docker-compose.unified.yml build --no-cache
 
 echo ""
 echo "Step 4: Starting Dimension-Native Services..."
 echo "───────────────────────────────────────────────────────────────"
 
-GEOX_PROFILE=$GEOX_PROFILE docker-compose -f docker-compose.unified.yml up -d
+GEOX_PROFILE=$GEOX_PROFILE "${COMPOSE_CMD[@]}" -f docker-compose.unified.yml up -d
 
 echo ""
 echo "Step 5: Health Verification..."
@@ -93,10 +99,11 @@ sleep 5
 # Check health
 if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
     echo "✓ Health endpoint responding"
-    curl -s http://localhost:8000/health | python3 -m json.tool 2>/dev/null || curl -s http://localhost:8000/health
+    echo "Health: $(curl -s http://localhost:8000/health)"
+    curl -s http://localhost:8000/health/details | python3 -m json.tool 2>/dev/null || true
 else
     echo "⚠ Health check failed — checking logs..."
-    docker-compose -f docker-compose.unified.yml logs --tail=50 geox
+    "${COMPOSE_CMD[@]}" -f docker-compose.unified.yml logs --tail=50 geox
     exit 1
 fi
 
@@ -105,7 +112,7 @@ echo "Step 6: Verifying Dimension Registry..."
 echo "───────────────────────────────────────────────────────────────"
 
 # Check profile status
-PROFILE_STATUS=$(curl -sf http://localhost:8000/health 2>/dev/null || echo "{}")
+PROFILE_STATUS=$(curl -sf http://localhost:8000/profile 2>/dev/null || echo "{}")
 echo "Profile Status: $PROFILE_STATUS"
 
 echo ""
@@ -141,6 +148,7 @@ esac
 echo ""
 echo "Test commands:"
 echo "  curl https://${DOMAIN}/health"
-echo "  fastmcp list https://${DOMAIN}/mcp"
+echo "  curl https://${DOMAIN}/profile"
+echo "  fastmcp list https://${DOMAIN}/mcp/"
 echo ""
 echo "DITEMPA BUKAN DIBERI — 999 SEAL ALIVE"
