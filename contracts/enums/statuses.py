@@ -1,6 +1,17 @@
 from typing import List, Dict, Any, Optional
 from enum import Enum
 
+class Dimension(str, Enum):
+    PROSPECT = "prospect"
+    WELL = "well"
+    EARTH3D = "earth3d"
+    MAP = "map"
+    CROSS = "cross"
+    SECTION = "section"
+    TIME4D = "time4d"
+    PHYSICS = "physics"
+    DASHBOARD = "dashboard"
+
 class ExecutionStatus(str, Enum):
     SUCCESS = "SUCCESS"
     ERROR = "ERROR"
@@ -13,6 +24,8 @@ class GovernanceStatus(str, Enum):
     VOID = "VOID"
     SEAL = "SEAL"
 
+Verdict = GovernanceStatus
+
 class ArtifactStatus(str, Enum):
     USABLE = "USABLE"
     STAGED = "STAGED"
@@ -23,6 +36,51 @@ class ArtifactStatus(str, Enum):
     COMPUTED = "COMPUTED"
     LOADED = "LOADED"
     IN_REVIEW = "IN_REVIEW"
+
+class FloorStatus(str, Enum):
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    VOID = "void"
+    HALT = "halt"
+
+class Runtime(str, Enum):
+    VPS = "vps"
+    FASTMCP = "fastmcp"
+    LOCAL = "local"
+
+class Transport(str, Enum):
+    HTTP = "http"
+    MCP = "mcp"
+    STDIO = "stdio"
+    SSE = "sse"
+
+class ToolCategory(str, Enum):
+    FOUNDATION = "foundation"
+    PHYSICS = "physics"
+    BRIDGE = "bridge"
+    DEMO = "demo"
+    SYSTEM = "system"
+
+class ProspectVerdict(str, Enum):
+    DRO = "DRO"
+    DRIL = "DRIL"
+    HOLD = "HOLD"
+    DROP = "DROP"
+
+class ClaimTag(str, Enum):
+    CLAIM = "CLAIM"
+    PLAUSIBLE = "PLAUSIBLE"
+    HYPOTHESIS = "HYPOTHESIS"
+
+# Type aliases
+VerdictCode = GovernanceStatus
+FloorCode = str
+DimensionCode = str
+
+# Constants
+CONSTITUTIONAL_FLOORS = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13"]
+CANONICAL_TOOLS = []
+SEAL = "DITEMPA BUKAN DIBERI"
 
 def get_standard_envelope(
     primary_artifact: Dict[str, Any], 
