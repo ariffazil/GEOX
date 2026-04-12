@@ -14,4 +14,4 @@ export GEOX_HOST=0.0.0.0
 export GEOX_PORT=8000
 export GEOX_PROFILE=vps
 
-exec python geox_unified.py --host 0.0.0.0 --port 8000 --mode bridge
+exec python geox_unified.py --host 0.0.0.0 --port 8000

@@ -1,8 +1,7 @@
 import logging
 from typing import Optional, List, Dict, Any
 from fastmcp import FastMCP
-from registries import Dimension
-from contracts.enums.statuses import get_standard_envelope, ExecutionStatus, GovernanceStatus, ArtifactStatus
+from contracts.enums.statuses import get_standard_envelope, ExecutionStatus, GovernanceStatus, ArtifactStatus, Dimension
 
 logger = logging.getLogger("geox.cross")
 
@@ -111,6 +110,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
 
     @mcp.tool(name="geox_cross_health")
     @mcp.tool(name="cross_health")
+    @mcp.tool(name="geox_health")
     async def cross_health() -> dict:
         """Observe: Sovereign health check for all platform services."""
         artifact = {

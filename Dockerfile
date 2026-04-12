@@ -1,11 +1,11 @@
-# GEOX Earth Intelligence Core
+# GEOX Earth Intelligence Core — Anti-Chaos Dimension-Native
 # DITEMPA BUKAN DIBERI
-# Version: v2026.04.10-EIC
+# Version: v2026.04.12-DIMENSION-NATIVE
 
 FROM python:3.11-slim
 
 LABEL maintainer="arifOS"
-LABEL version="v2026.04.11-UNIFIED"
+LABEL version="v2026.04.12-DIMENSION-NATIVE"
 LABEL seal="DITEMPA BUKAN DIBERI"
 
 WORKDIR /app
@@ -19,16 +19,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy canonical GEOX
-COPY geox/ ./geox/
-COPY data/ ./data/
-COPY registries/ ./registries/
+# Copy canonical GEOX — Anti-Chaos Structure
+# Contracts (Single Source of Truth)
+COPY contracts/ ./contracts/
+
+# Control Plane (Routing & Coordination)
+COPY control_plane/ ./control_plane/
+
+# Execution Plane (Calculations & Engines)
+COPY execution_plane/ ./execution_plane/
+
+# Compatibility Layer (Legacy Support)
+COPY compatibility/ ./compatibility/
+
+# Services (Evidence, Geo, Governance, Witness)
 COPY services/ ./services/
-COPY geox_unified.py .
-COPY geox_rest_bridge.py .
-COPY geox_mcp_server.py .
-COPY geox_schemas.py .
+
+# Data & Knowledge
+COPY data/ ./data/
 COPY geox_atlas_99_materials.csv .
+
+# Entrypoint Shim (imports from execution_plane)
+COPY geox_unified.py .
 COPY entrypoint.sh .
 
 # Create vault directory

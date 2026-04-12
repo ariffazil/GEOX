@@ -127,11 +127,39 @@ def build_status_payload() -> dict:
 async def health_handler(request):
     return JSONResponse(build_status_payload())
 
+async def run_legacy_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
+    # This server uses the canonical tools directly from registries
+    tool_result = await mcp.call_tool(name, arguments)
+    return {"success": True, "data": tool_result.content[0].text if tool_result.content else {}}
+
+async def legacy_mcp_handler(request):
+    try:
+        payload = await request.json()
+    except:
+        return JSONResponse({"error": "Parse error"}, status_code=400)
+    
+    method = payload.get("method")
+    params = payload.get("params", {})
+    response_id = payload.get("id")
+
+    if method == "tools/list":
+        tools = [{"name": t.name, "description": t.description} for t in await mcp.list_tools()]
+        return JSONResponse({"jsonrpc": "2.0", "id": response_id, "result": {"tools": tools}})
+    
+    if method == "tools/call":
+        name = params.get("name")
+        args = params.get("arguments", {})
+        result = await run_legacy_tool(name, args)
+        return JSONResponse({"jsonrpc": "2.0", "id": response_id, "result": {"content": [{"type": "text", "text": json.dumps(result)}]}})
+
+    return JSONResponse({"error": "Method not found"}, status_code=404)
+
 def create_app():
-    mcp_app = mcp.http_app(path="/mcp/stream", transport="streamable-http")
+    mcp_app = mcp.http_app(path="/mcp", transport="streamable-http")
     return Starlette(
         routes=[
             Route("/health", health_handler, methods=["GET"]),
+            Route("/mcp", legacy_mcp_handler, methods=["POST"]),
             Mount("/", mcp_app)
         ],
         lifespan=getattr(mcp_app, "lifespan", None),
@@ -140,7 +168,7 @@ def create_app():
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default="0.0.0.0")
-    parser.add_argument("--port", type=int, default=8001)  # Different port for sovereign
+    parser.add_argument("--port", type=int, default=8001)
     args = parser.parse_args()
     app = create_app()
     uvicorn.run(app, host=args.host, port=args.port)
