@@ -1,7 +1,7 @@
 # GEOX Ω-WIKI — Source of Truth (SOT)
 
 > **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
-> **Authority:** 888_JUDGE | **Status:** HEAVY WITNESS IGNITED | **Version:** v2026.04.11  
+> **Authority:** 888_JUDGE | **Status:** HEAVY WITNESS IGNITED | **Version:** v2.0.0 (2026.04.12)  
 > **Live:** https://geox.arif-fazil.com  
 > **Seismic Engine:** ACTIVE | **Trinity:** CONNECTED
 
@@ -196,6 +196,9 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 - [**REFACTOR_STEP1_SUMMARY**](90_AUDITS/REFACTOR_STEP1_SUMMARY.md) — Core tool extraction
 - [**REFACTOR_STEPS_2_3_SUMMARY**](90_AUDITS/REFACTOR_STEPS_2_3_SUMMARY.md) — App manifest & event bus
 
+### State of the Tree
+- [**SOT_2026-04-12**](90_AUDITS/SOT_2026-04-12.md) — **🆕 CURRENT** — Canonical repository state reference
+
 ### Historical
 - [**000_INIT_ANCHOR**](90_AUDITS/000_INIT_ANCHOR.md) — Initial constitutional anchor
 - [**HARDENED_SEAL**](90_AUDITS/HARDENED_SEAL.md) — Security hardening verification
@@ -238,7 +241,7 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Live URL:     https://geox.arif-fazil.com                  │
-│  Version:      v2026.04.10                                  │
+│  Version:      v2.0.0 (Dimension-Native)                    │
 │  Seal:         DITEMPA BUKAN DIBERI                         │
 │  Verdict:      999_SEAL                                     │
 │  Floors:       F1-F13 ACTIVE                                │
