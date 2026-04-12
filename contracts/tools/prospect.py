@@ -13,7 +13,7 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
     Naming convention: prospect_{action}_{target}
     """
     
-    @mcp.tool(name="geox.prospect.evaluate")
+    # Canonical tool: prospect_evaluate
     @mcp.tool(name="prospect_evaluate")
     async def prospect_evaluate(prospect_ref: str) -> dict:
         """Judge: Evaluate hydrocarbon potential based on 888_JUDGE verdict."""
@@ -28,17 +28,23 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://prospect-dashboard"
         )
 
+    # Aliases (separate functions required by FastMCP)
+    @mcp.tool(name="geox.prospect.evaluate")
+    async def _alias_geox_prospect_evaluate(prospect_ref: str) -> dict:
+        """Alias for prospect_evaluate."""
+        return await prospect_evaluate(prospect_ref)
+
     @mcp.tool(name="geox_evaluate_prospect")
-    async def geox_evaluate_prospect(area_id: str) -> dict:
+    async def _alias_geox_evaluate_prospect(area_id: str) -> dict:
         """[DEPRECATED] Alias for prospect_evaluate. Use prospect_evaluate instead."""
         return await prospect_evaluate(area_id)
 
     @mcp.tool(name="prospect_evaluate_prospect")
-    async def prospect_evaluate_prospect(area_id: str) -> dict:
+    async def _alias_prospect_evaluate_prospect(area_id: str) -> dict:
         """[DEPRECATED] Alias for prospect_evaluate. Use prospect_evaluate instead."""
         return await prospect_evaluate(area_id)
 
-    @mcp.tool(name="geox.prospect.build_structural_candidates")
+    # Canonical tool: prospect_build_structural_candidates
     @mcp.tool(name="prospect_build_structural_candidates")
     async def prospect_build_structural_candidates(prospect_ref: str) -> dict:
         """Interpret: Generate structural trap candidates for a prospect."""
@@ -52,12 +58,17 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://prospect-dashboard"
         )
 
+    @mcp.tool(name="geox.prospect.build_structural_candidates")
+    async def _alias_geox_prospect_build(prospect_ref: str) -> dict:
+        """Alias for prospect_build_structural_candidates."""
+        return await prospect_build_structural_candidates(prospect_ref)
+
     @mcp.tool(name="geox_build_structural_candidates")
-    async def geox_build_structural_candidates(area_id: str) -> dict:
+    async def _alias_geox_build_structural(area_id: str) -> dict:
         """[DEPRECATED] Alias for prospect_build_structural_candidates."""
         return await prospect_build_structural_candidates(area_id)
 
-    @mcp.tool(name="geox.prospect.verify_feasibility")
+    # Canonical tool: prospect_verify_feasibility
     @mcp.tool(name="prospect_verify_feasibility")
     async def prospect_verify_feasibility(prospect_ref: str) -> dict:
         """Verify: Technical and economic gating for the prospect."""
@@ -71,12 +82,17 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://prospect-dashboard"
         )
 
+    @mcp.tool(name="geox.prospect.verify_feasibility")
+    async def _alias_geox_prospect_verify(prospect_ref: str) -> dict:
+        """Alias for prospect_verify_feasibility."""
+        return await prospect_verify_feasibility(prospect_ref)
+
     @mcp.tool(name="geox_feasibility_check")
-    async def geox_feasibility_check(area_id: str) -> dict:
+    async def _alias_geox_feasibility_check(area_id: str) -> dict:
         """[DEPRECATED] Alias for prospect_verify_feasibility."""
         return await prospect_verify_feasibility(area_id)
 
     @mcp.tool(name="prospect_feasibility_check")
-    async def prospect_feasibility_check(area_id: str) -> dict:
+    async def _alias_prospect_feasibility_check(area_id: str) -> dict:
         """[DEPRECATED] Alias for prospect_verify_feasibility."""
         return await prospect_verify_feasibility(area_id)
