@@ -11,7 +11,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
     The glue between dimensions.
     
     Naming convention: cross_{action}_{target}
-    Most aliases removed - kept geox_get_tools_registry for UI compatibility.
+    Aliases maintained via separate wrapper functions (FastMCP limitation).
     """
     
     try:
@@ -21,8 +21,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
         return
 
     @mcp.tool(name="geox_cross_evidence_list")
-    @mcp.tool(name="cross_evidence_list")
-    async def cross_evidence_list(kind: Optional[str] = None) -> dict:
+    async def geox_cross_evidence_list(kind: Optional[str] = None) -> dict:
         """Observe: List and filter evidence from the Sovereign Ledger."""
         refs = store.list_evidence(kind=kind)
         artifact = [ref.model_dump() for ref in refs]
@@ -34,9 +33,13 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://cross-dashboard"
         )
 
+    # Alias wrapper (FastMCP limitation: only last decorator registers)
+    @mcp.tool(name="cross_evidence_list")
+    async def cross_evidence_list(kind: Optional[str] = None) -> dict:
+        return await geox_cross_evidence_list(kind)
+
     @mcp.tool(name="geox_cross_evidence_get")
-    @mcp.tool(name="cross_evidence_get")
-    async def cross_evidence_get(evidence_ref: str) -> dict:
+    async def geox_cross_evidence_get(evidence_ref: str) -> dict:
         """Observe: Fetch full evidence object including spatial context and payload."""
         obj = store.get_evidence(evidence_ref)
         if not obj:
@@ -57,9 +60,13 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://cross-dashboard"
         )
 
+    # Alias wrapper
+    @mcp.tool(name="cross_evidence_get")
+    async def cross_evidence_get(evidence_ref: str) -> dict:
+        return await geox_cross_evidence_get(evidence_ref)
+
     @mcp.tool(name="geox_cross_dimension_list")
-    @mcp.tool(name="cross_dimension_list")
-    async def cross_dimension_list() -> dict:
+    async def geox_cross_dimension_list() -> dict:
         """Observe: What dimensions are currently active in this profile?"""
         artifact = {
             "profile": profile,
@@ -73,10 +80,14 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://cross-dashboard"
         )
 
+    # Alias wrapper
+    @mcp.tool(name="cross_dimension_list")
+    async def cross_dimension_list() -> dict:
+        return await geox_cross_dimension_list()
+
     # CRITICAL: UI registry endpoint - DO NOT REMOVE
     @mcp.tool(name="geox_cross_get_tools_registry")
-    @mcp.tool(name="geox_get_tools_registry")
-    async def geox_get_tools_registry() -> dict:
+    async def geox_cross_get_tools_registry() -> dict:
         """Observe: Returns the architectural TOOLS_REGISTRY for UI synchronization."""
         artifact = {
             "dimensions": {
@@ -108,10 +119,14 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://cross-dashboard"
         )
 
+    # Legacy alias for UI compatibility
+    @mcp.tool(name="geox_get_tools_registry")
+    async def geox_get_tools_registry() -> dict:
+        return await geox_cross_get_tools_registry()
+
+    # PRIMARY: Canonical health endpoint
     @mcp.tool(name="geox_cross_health")
-    @mcp.tool(name="cross_health")
-    @mcp.tool(name="geox_health")
-    async def cross_health() -> dict:
+    async def geox_cross_health() -> dict:
         """Observe: Sovereign health check for all platform services."""
         artifact = {
             "status": "healthy",
@@ -126,3 +141,13 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             artifact_status=ArtifactStatus.VERIFIED,
             ui_resource_uri="ui://cross-dashboard"
         )
+
+    # Alias wrappers (FastMCP limitation)
+    @mcp.tool(name="cross_health")
+    async def cross_health() -> dict:
+        return await geox_cross_health()
+
+    @mcp.tool(name="geox_health")
+    async def geox_health() -> dict:
+        """Legacy alias for backward compatibility with Platform tests."""
+        return await geox_cross_health()
