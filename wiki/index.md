@@ -1,9 +1,9 @@
 # GEOX Ω-WIKI — Source of Truth (SOT)
 
 > **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
-> **Authority:** 888_JUDGE | **Status:** HEAVY WITNESS IGNITED | **Version:** v2.0.0 (2026.04.12)  
+> **Authority:** 888_JUDGE | **Status:** 999_SEAL CONFIRMED | **Version:** v2.1.0 (2026.04.12)  
 > **Live:** https://geox.arif-fazil.com  
-> **Seismic Engine:** ACTIVE | **Trinity:** CONNECTED
+> **Architecture:** Anti-Chaos | **Session:** SEALED | **Trinity:** CONNECTED
 
 This wiki is the canonical knowledge base for GEOX. It contains the philosophical, physical, and technical blueprints for the Earth Witness system. All agents MUST respect the standards defined here.
 
@@ -198,6 +198,7 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 
 ### State of the Tree
 - [**SOT_2026-04-12**](90_AUDITS/SOT_2026-04-12.md) — **🆕 CURRENT** — Canonical repository state reference
+- [**SESSION_SEAL_2026-04-12**](../../SESSION_SEAL_2026-04-12.md) — **🆕 SEALED** — Session seal (arifOS parent repo)
 
 ### Historical
 - [**000_INIT_ANCHOR**](90_AUDITS/000_INIT_ANCHOR.md) — Initial constitutional anchor
@@ -241,10 +242,11 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Live URL:     https://geox.arif-fazil.com                  │
-│  Version:      v2.0.0 (Dimension-Native)                    │
+│  Version:      v2.1.0 (Anti-Chaos)                          │
 │  Seal:         DITEMPA BUKAN DIBERI                         │
 │  Verdict:      999_SEAL                                     │
 │  Floors:       F1-F13 ACTIVE                                │
+│  Architecture: ✅ Anti-Chaos (contracts/control/exec)        │
 │  Landing Page: ✅ Complete                                   │
 │  LogDock:      ✅ Complete (petrophysics active)             │
 │  Pilot:        Malay Basin OPERATIONAL                      │
@@ -253,6 +255,6 @@ The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 
 ---
 
-*Sealed by: 888_JUDGE | 2026.04.10*  
+*Sealed by: 888_JUDGE | 2026.04.12*  
 *Constitutional Authority: Muhammad Arif bin Fazil*  
 *DITEMPA BUKAN DIBERI*

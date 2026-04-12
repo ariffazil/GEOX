@@ -3,13 +3,13 @@
   "description": "Sovereign subsurface governance and petrophysical analysis (arifOS).",
   "version": "1.0.0",
   "mcp_server": {
-    "url": "https://geox.arif-fazil.com/mcp/stream"
+    "url": "https://geox_arif-fazil.com/mcp/stream"
   },
   "tools": [
-    "geox.well.compute_petrophysics",
-    "geox.prospect.evaluate",
-    "geox.map.render_scene_context",
-    "geox.dashboard.open"
+    "geox_well.compute_petrophysics",
+    "geox_prospect.evaluate",
+    "geox_map.render_scene_context",
+    "geox_dashboard.open"
   ],
   "capabilities": {
     "ui": {

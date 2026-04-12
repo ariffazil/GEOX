@@ -14,7 +14,7 @@ def register_time4d_tools(mcp: FastMCP, profile: str = "full"):
     Aliases removed - use canonical names only.
     """
     
-    @mcp.tool(name="geox.time4d.simulate_burial")
+    @mcp.tool(name="geox_time4d_simulate_burial")
     @mcp.tool(name="time4d_simulate_burial")
     async def time4d_simulate_burial(prospect_ref: str) -> dict:
         """Compute: Simulate sediment burial and thermal maturation through time."""
@@ -27,7 +27,7 @@ def register_time4d_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://time4d-dashboard"
         )
 
-    @mcp.tool(name="geox.time4d.reconstruct_paleo")
+    @mcp.tool(name="geox_time4d_reconstruct_paleo")
     @mcp.tool(name="time4d_reconstruct_paleo")
     async def time4d_reconstruct_paleo(time_ma: float) -> dict:
         """Interpret: Reconstruct Paleo-geography at a specific point in time (Ma)."""
@@ -40,7 +40,7 @@ def register_time4d_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://time4d-dashboard"
         )
 
-    @mcp.tool(name="geox.time4d.verify_timing")
+    @mcp.tool(name="geox_time4d_verify_timing")
     @mcp.tool(name="time4d_verify_timing")
     async def time4d_verify_timing(trap_formation_ma: float, charge_ma: float) -> dict:
         """Verify: Check the temporal relationship between trap formation and charge."""

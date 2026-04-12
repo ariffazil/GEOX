@@ -21,7 +21,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
         logger.error("Cross services unavailable")
         return
 
-    @mcp.tool(name="geox.cross.evidence_list")
+    @mcp.tool(name="geox_cross_evidence_list")
     @mcp.tool(name="cross_evidence_list")
     async def cross_evidence_list(kind: Optional[str] = None) -> dict:
         """Observe: List and filter evidence from the Sovereign Ledger."""
@@ -35,7 +35,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://cross-dashboard"
         )
 
-    @mcp.tool(name="geox.cross.evidence_get")
+    @mcp.tool(name="geox_cross_evidence_get")
     @mcp.tool(name="cross_evidence_get")
     async def cross_evidence_get(evidence_ref: str) -> dict:
         """Observe: Fetch full evidence object including spatial context and payload."""
@@ -58,7 +58,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://cross-dashboard"
         )
 
-    @mcp.tool(name="geox.cross.dimension_list")
+    @mcp.tool(name="geox_cross_dimension_list")
     @mcp.tool(name="cross_dimension_list")
     async def cross_dimension_list() -> dict:
         """Observe: What dimensions are currently active in this profile?"""
@@ -75,7 +75,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
         )
 
     # CRITICAL: UI registry endpoint - DO NOT REMOVE
-    @mcp.tool(name="geox.cross.get_tools_registry")
+    @mcp.tool(name="geox_cross_get_tools_registry")
     @mcp.tool(name="geox_get_tools_registry")
     async def geox_get_tools_registry() -> dict:
         """Observe: Returns the architectural TOOLS_REGISTRY for UI synchronization."""
@@ -109,7 +109,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://cross-dashboard"
         )
 
-    @mcp.tool(name="geox.cross.health")
+    @mcp.tool(name="geox_cross_health")
     @mcp.tool(name="cross_health")
     async def cross_health() -> dict:
         """Observe: Sovereign health check for all platform services."""

@@ -29,7 +29,7 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
         )
 
     # Aliases (separate functions required by FastMCP)
-    @mcp.tool(name="geox.prospect.evaluate")
+    @mcp.tool(name="geox_prospect_evaluate")
     async def _alias_geox_prospect_evaluate(prospect_ref: str) -> dict:
         """Alias for prospect_evaluate."""
         return await prospect_evaluate(prospect_ref)
@@ -58,7 +58,7 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://prospect-dashboard"
         )
 
-    @mcp.tool(name="geox.prospect.build_structural_candidates")
+    @mcp.tool(name="geox_prospect_build_structural_candidates")
     async def _alias_geox_prospect_build(prospect_ref: str) -> dict:
         """Alias for prospect_build_structural_candidates."""
         return await prospect_build_structural_candidates(prospect_ref)
@@ -82,7 +82,7 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://prospect-dashboard"
         )
 
-    @mcp.tool(name="geox.prospect.verify_feasibility")
+    @mcp.tool(name="geox_prospect_verify_feasibility")
     async def _alias_geox_prospect_verify(prospect_ref: str) -> dict:
         """Alias for prospect_verify_feasibility."""
         return await prospect_verify_feasibility(prospect_ref)

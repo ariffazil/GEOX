@@ -21,7 +21,7 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
         logger.error("Map services unavailable")
         return
 
-    @mcp.tool(name="geox.map.verify_coordinates")
+    @mcp.tool(name="geox_map_verify_coordinates")
     @mcp.tool(name="map_verify_coordinates")
     async def map_verify_coordinates(x: float, y: float, epsg: int) -> dict:
         """Verify: Check if coordinates are within valid geospatial bounds."""
@@ -34,7 +34,7 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://map-dashboard"
         )
 
-    @mcp.tool(name="geox.map.get_context_summary")
+    @mcp.tool(name="geox_map_get_context_summary")
     @mcp.tool(name="map_get_context_summary")
     async def map_get_context_summary(bounds: list) -> dict:
         """Observe: Spatial fabric introspection. Get summary of spatial context within bounds."""
@@ -47,7 +47,7 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://map-dashboard"
         )
 
-    @mcp.tool(name="geox.map.render_scene_context")
+    @mcp.tool(name="geox_map_render_scene_context")
     @mcp.tool(name="map_render_scene_context")
     async def map_render_scene_context(scene_ref: str) -> dict:
         """Observe: Render a scene for the geospatial fabric."""
@@ -60,7 +60,7 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://map-dashboard"
         )
 
-    @mcp.tool(name="geox.map.synthesize_causal_scene")
+    @mcp.tool(name="geox_map_synthesize_causal_scene")
     @mcp.tool(name="map_synthesize_causal_scene")
     async def map_synthesize_causal_scene(elements: list) -> dict:
         """Interpret: Create a causal scene for 888_JUDGE from spatial elements."""
@@ -73,7 +73,7 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://map-dashboard"
         )
 
-    @mcp.tool(name="geox.map.earth_signals")
+    @mcp.tool(name="geox_map_earth_signals")
     @mcp.tool(name="map_earth_signals")
     async def map_earth_signals(location_ref: str) -> dict:
         """Observe: Live Earth observation = spatial context. Fetch raw earth signals."""
@@ -86,7 +86,7 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://map-dashboard"
         )
 
-    @mcp.tool(name="geox.map.project_well")
+    @mcp.tool(name="geox_map_project_well")
     @mcp.tool(name="map_project_well")
     async def map_project_well(well_ref: str, target_epsg: int = 4326) -> dict:
         """Project a well trajectory into map coordinates."""
@@ -142,7 +142,7 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
     async def alias_geox_project_well_trajectory(well_ref: str, target_epsg: int = 4326):
         return await map_project_well(well_ref, target_epsg)
 
-    @mcp.tool(name="geox.map.transform_coordinates")
+    @mcp.tool(name="geox_map_transform_coordinates")
     @mcp.tool(name="map_transform_coordinates")
     async def map_transform_coordinates(x: float, y: float, from_epsg: int, to_epsg: int) -> dict:
         """Project a point between coordinate systems."""

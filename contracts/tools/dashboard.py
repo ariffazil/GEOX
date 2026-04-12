@@ -9,7 +9,7 @@ def register_dashboard_tools(mcp: FastMCP, profile: str = "full"):
     DASHBOARD Registry: Entry point for MCP Apps UI.
     """
     
-    @mcp.tool(name="geox.dashboard.open")
+    @mcp.tool(name="geox_dashboard_open")
     async def dashboard_open(target: str = "main") -> dict:
         """Observe: Open the unified GEOX Kitchen Sink dashboard."""
         artifact = {
