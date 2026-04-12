@@ -1,8 +1,12 @@
-"""
-Legacy Entrypoint Shim.
-The actual FastMCP control plane server has moved to control_plane/fastmcp/server.py.
-This shim ensures existing GitHub Actions / MCP ecosystem wiring doesn't break.
-"""
-from control_plane.fastmcp.server import main
+# GEOX Forwarding Shim — FastMCP Server
+# DITEMPA BUKAN DIBERI
+#
+# This file is a backward-compatibility shim.
+# The canonical server is now at: control_plane.fastmcp.server
+
+from control_plane.fastmcp.server import mcp, create_app, main
+
+__all__ = ["mcp", "create_app", "main"]
+
 if __name__ == "__main__":
     main()

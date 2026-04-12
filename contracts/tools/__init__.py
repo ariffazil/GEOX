@@ -1,14 +1,32 @@
 # GEOX Dimension-Native Registry Package
 # DITEMPA BUKAN DIBERI
+#
+# This package now imports canonical enums from contracts.
 
-from enum import Enum
+from contracts.enums import (
+    Dimension,
+    Verdict,
+    FloorStatus,
+    Runtime,
+    Transport,
+    ToolCategory,
+    ProspectVerdict,
+    ClaimTag,
+    CONSTITUTIONAL_FLOORS,
+    CANONICAL_TOOLS,
+    SEAL,
+)
 
-class Dimension(Enum):
-    PROSPECT = "prospect"
-    WELL = "well"
-    SECTION = "section"
-    EARTH3D = "earth3d"
-    TIME4D = "time4d"
-    PHYSICS = "physics"
-    MAP = "map"
-    CROSS = "cross"
+__all__ = [
+    "Dimension",
+    "Verdict",
+    "FloorStatus",
+    "Runtime",
+    "Transport",
+    "ToolCategory",
+    "ProspectVerdict",
+    "ClaimTag",
+    "CONSTITUTIONAL_FLOORS",
+    "CANONICAL_TOOLS",
+    "SEAL",
+]
