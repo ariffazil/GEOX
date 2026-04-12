@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX | MAP Module</title>
+    <link rel="stylesheet" href="../css/geox-platform.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --map-height: 70vh;
+        }
+        
+        .map-container {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+            min-height: var(--map-height);
+        }
+        
+        .sidebar {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: var(--map-height);
+        }
+        
+        #map {
+            height: var(--map-height);
+            background: #1a1a1a;
+            border: 1px solid var(--border-color);
+        }
+        
+        .coord-display {
+            font-family: var(--mono-font);
+            font-size: 0.85rem;
+            background: rgba(0,0,0,0.3);
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .tool-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tool-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .tool-title {
+            font-family: var(--mono-font);
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+        
+        .input-group {
+            margin-bottom: 0.75rem;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--muted-color);
+            margin-bottom: 0.25rem;
+            font-family: var(--mono-font);
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem;
+            font-family: var(--mono-font);
+            font-size: 0.85rem;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .btn-full {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+        }
+        
+        .result-panel {
+            background: rgba(0,0,0,0.3);
+            border-left: 3px solid var(--border-color);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: var(--mono-font);
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .result-panel.show {
+            display: block;
+        }
+        
+        .result-panel.success {
+            border-left-color: #22c55e;
+        }
+        
+        .result-panel.error {
+            border-left-color: #ef4444;
+        }
+        
+        .layer-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .layer-toggle input[type="checkbox"] {
+            accent-color: var(--accent-color);
+        }
+        
+        .marker-label {
+            background: var(--bg-color);
+            border: 1px solid var(--accent-color);
+            padding: 0.25rem 0.5rem;
+            font-family: var(--mono-font);
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 0.75rem;
+            z-index: 1000;
+            font-family: var(--mono-font);
+            font-size: 0.75rem;
+        }
+        
+        .legend {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .legend-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .click-mode {
+            background: rgba(253, 224, 71, 0.1);
+            border: 1px solid var(--accent-color);
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .click-mode.active {
+            background: rgba(253, 224, 71, 0.2);
+        }
+
+        /* Leaflet customization */
+        .leaflet-container {
+            background: #1a1a1a;
+        }
+        .leaflet-popup-content-wrapper {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 0;
+        }
+        .leaflet-popup-tip {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="mono" style="margin-bottom: 0.5rem; font-size: 0.7rem; color: var(--muted-color);">
+                GEOX_MAP_MODULE // SPATIAL_INTERFACE_V1
+            </div>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../tools/index.html">Tools</a>
+                <a href="../platform/index.html">Platform</a>
+                <a href="../workspaces/index.html">Workspaces</a>
+                <a href="../status/index.html">Status</a>
+            </nav>
+        </header>
+
+        <section style="margin: 2rem 0;">
+            <h1>MAP Module</h1>
+            <p style="color: var(--muted-color);">
+                Interactive spatial interface for coordinate verification, context queries, and geospatial reasoning.
+            </p>
+        </section>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-indicator"></span>
+                <span id="map-status">MAP READY</span>
+            </div>
+            <div class="status-item mono" id="cursor-coords">
+                Cursor: —
+            </div>
+            <div class="status-item mono" id="click-coords">
+                Click: —
+            </div>
+        </div>
+
+        <!-- Main Interface -->
+        <div class="map-container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Current Selection -->
+                <div class="coord-display">
+                    <div style="margin-bottom: 0.5rem;"><strong>SELECTED COORDINATES</strong></div>
+                    <div class="mono" id="selected-lat">Lat: —</div>
+                    <div class="mono" id="selected-lon">Lon: —</div>
+                    <div class="mono" id="selected-epsg">EPSG: 4326</div>
+                </div>
+
+                <!-- Click Mode -->
+                <div class="click-mode" id="click-mode">
+                    <strong>🖱️ Click Mode:</strong> <span id="click-mode-text">Verify Coordinates</span>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--muted-color);">
+                        Click anywhere on the map to execute the selected tool
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="tool-section">
+                    <div class="tool-title">Quick Actions</div>
+                    <button class="btn btn-full btn-small" onclick="setClickMode('verify')">✓ Verify Coordinates</button>
+                    <button class="btn btn-full btn-small" onclick="setClickMode('context')">⊡ Get Context Summary</button>
+                    <button class="btn btn-full btn-small" onclick="setClickMode('signals')">📡 Earth Signals</button>
+                    <button class="btn btn-full btn-small" onclick="setClickMode('project')"> Project Well</button>
+                    <button class="btn btn-full btn-small" onclick="clearMarkers()">✕ Clear All Markers</button>
+                </div>
+
+                <!-- Coordinate Transform -->
+                <div class="tool-section">
+                    <div class="tool-title">Transform Coordinates</div>
+                    <div class="input-group">
+                        <label>X / Lon</label>
+                        <input type="number" id="transform-x" step="any" placeholder="0.0">
+                    </div>
+                    <div class="input-group">
+                        <label>Y / Lat</label>
+                        <input type="number" id="transform-y" step="any" placeholder="0.0">
+                    </div>
+                    <div class="input-group">
+                        <label>From EPSG</label>
+                        <input type="number" id="from-epsg" value="4326">
+                    </div>
+                    <div class="input-group">
+                        <label>To EPSG</label>
+                        <input type="number" id="to-epsg" value="32650">
+                    </div>
+                    <button class="btn btn-full btn-small" onclick="transformCoords()">Transform</button>
+                    <div class="result-panel" id="transform-result"></div>
+                </div>
+
+                <!-- Layer Controls -->
+                <div class="tool-section">
+                    <div class="tool-title">Layers</div>
+                    <div class="layer-toggle">
+                        <input type="checkbox" id="layer-osm" checked onchange="toggleLayer('osm')">
+                        <label for="layer-osm">OpenStreetMap Base</label>
+                    </div>
+                    <div class="layer-toggle">
+                        <input type="checkbox" id="layer-satellite" onchange="toggleLayer('satellite')">
+                        <label for="layer-satellite">Satellite Imagery</label>
+                    </div>
+                    <div class="layer-toggle">
+                        <input type="checkbox" id="layer-markers" checked onchange="toggleLayer('markers')">
+                        <label for="layer-markers">Query Markers</label>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <div class="tool-title">Legend</div>
+                    <div class="legend-item">
+                        <div class="legend-marker" style="background: #22c55e;"></div>
+                        <span>Valid Coordinate</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-marker" style="background: #ef4444;"></div>
+                        <span>Invalid/Error</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-marker" style="background: #f59e0b;"></div>
+                        <span>Context Point</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-marker" style="background: #3b82f6;"></div>
+                        <span>Signal Source</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div style="position: relative;">
+                <div id="map"></div>
+                <div class="map-overlay">
+                    <div class="mono">ZOOM: <span id="zoom-level">5</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div id="global-result" class="result-panel" style="margin-top: 1rem; max-height: 300px;"></div>
+
+        <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+            <div class="governance">DITEMPA BUKAN DIBERI</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.8rem; color: var(--muted-color);">
+                <span>GEOX MAP Module — Spatial reasoning interface</span>
+                <span class="mono">EPSG:4326 WGS84</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const API_BASE = '';
+        let map;
+        let markers = [];
+        let layers = {};
+        let currentClickMode = 'verify';
+        let selectedCoords = null;
+
+        // Initialize map
+        function initMap() {
+            // Center on SE Asia (Brunei/Indonesia region based on your code)
+            map = L.map('map').setView([4.5, 114.5], 5);
+
+            // Base layer
+            layers.osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Satellite layer (initially not added)
+            layers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© Esri',
+                maxZoom: 19
+            });
+
+            // Marker layer group
+            layers.markers = L.layerGroup().addTo(map);
+
+            // Map events
+            map.on('mousemove', (e) => {
+                document.getElementById('cursor-coords').textContent = 
+                    `Cursor: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+            });
+
+            map.on('click', (e) => {
+                handleMapClick(e.latlng);
+            });
+
+            map.on('zoomend', () => {
+                document.getElementById('zoom-level').textContent = map.getZoom();
+            });
+
+            // Set initial selected coords to center
+            selectedCoords = { lat: 4.5, lon: 114.5 };
+            updateSelectedDisplay();
+        }
+
+        // Handle map click based on current mode
+        async function handleMapClick(latlng) {
+            selectedCoords = { lat: latlng.lat, lon: latlng.lng };
+            updateSelectedDisplay();
+
+            const lat = latlng.lat;
+            const lon = latlng.lng;
+
+            // Update form inputs
+            document.getElementById('transform-x').value = lon;
+            document.getElementById('transform-y').value = lat;
+
+            document.getElementById('click-coords').textContent = 
+                `Click: ${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+
+            switch(currentClickMode) {
+                case 'verify':
+                    await verifyCoordinates(lon, lat);
+                    break;
+                case 'context':
+                    await getContextSummary(lat, lon);
+                    break;
+                case 'signals':
+                    await getEarthSignals(lat, lon);
+                    break;
+                case 'project':
+                    // For project well, we'd need a well_id - show prompt
+                    showResult('Project Well requires a well_id. Use the Tools Catalog to execute with parameters.', 'error');
+                    break;
+            }
+        }
+
+        // Update selected coordinate display
+        function updateSelectedDisplay() {
+            if (selectedCoords) {
+                document.getElementById('selected-lat').textContent = `Lat: ${selectedCoords.lat.toFixed(6)}`;
+                document.getElementById('selected-lon').textContent = `Lon: ${selectedCoords.lon.toFixed(6)}`;
+            }
+        }
+
+        // Set click mode
+        function setClickMode(mode) {
+            currentClickMode = mode;
+            const modeText = {
+                'verify': 'Verify Coordinates',
+                'context': 'Get Context Summary',
+                'signals': 'Earth Signals',
+                'project': 'Project Well'
+            };
+            document.getElementById('click-mode-text').textContent = modeText[mode];
+            document.getElementById('click-mode').classList.add('active');
+            setTimeout(() => document.getElementById('click-mode').classList.remove('active'), 300);
+        }
+
+        // Toggle layers
+        function toggleLayer(layerName) {
+            const checkbox = document.getElementById(`layer-${layerName}`);
+            if (layerName === 'markers') {
+                if (checkbox.checked) {
+                    map.addLayer(layers.markers);
+                } else {
+                    map.removeLayer(layers.markers);
+                }
+            } else if (layers[layerName]) {
+                if (checkbox.checked) {
+                    map.addLayer(layers[layerName]);
+                } else {
+                    map.removeLayer(layers[layerName]);
+                }
+            }
+        }
+
+        // Clear all markers
+        function clearMarkers() {
+            layers.markers.clearLayers();
+            markers = [];
+        }
+
+        // Add marker with popup
+        function addMarker(lat, lon, title, color = '#22c55e', popupContent = '') {
+            const marker = L.circleMarker([lat, lon], {
+                radius: 8,
+                fillColor: color,
+                color: '#000',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(layers.markers);
+
+            if (popupContent) {
+                marker.bindPopup(popupContent);
+            }
+
+            markers.push(marker);
+            return marker;
+        }
+
+        // Execute MCP tool
+        async function callTool(toolName, params) {
+            const response = await fetch(`${API_BASE}/mcp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    id: Date.now(),
+                    method: 'tools/call',
+                    params: {
+                        name: toolName,
+                        arguments: params
+                    }
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error.message);
+            }
+
+            // Extract content
+            let result = data.result;
+            if (result && result.content && result.content[0] && result.content[0].text) {
+                try {
+                    result = JSON.parse(result.content[0].text);
+                } catch {}
+            }
+
+            return result;
+        }
+
+        // Verify coordinates
+        async function verifyCoordinates(x, y) {
+            document.getElementById('map-status').textContent = 'VERIFYING...';
+            
+            try {
+                const result = await callTool('map_verify_coordinates', {
+                    x: x,
+                    y: y,
+                    epsg: 4326
+                });
+
+                const isValid = result.data?.is_valid || result.is_valid;
+                const color = isValid ? '#22c55e' : '#ef4444';
+                
+                const popupContent = `
+                    <strong>Coordinate Verification</strong><br>
+                    Lat: ${y.toFixed(5)}<br>
+                    Lon: ${x.toFixed(5)}<br>
+                    Valid: ${isValid ? '✓ YES' : '✗ NO'}<br>
+                    ${result.data?.geological_province ? `Province: ${result.data.geological_province}` : ''}
+                `;
+
+                addMarker(y, x, 'Verified', color, popupContent);
+                showResult(JSON.stringify(result, null, 2), 'success');
+                
+            } catch (err) {
+                addMarker(y, x, 'Error', '#ef4444', `Error: ${err.message}`);
+                showResult(`ERROR: ${err.message}`, 'error');
+            }
+            
+            document.getElementById('map-status').textContent = 'MAP READY';
+        }
+
+        // Get context summary
+        async function getContextSummary(lat, lon) {
+            document.getElementById('map-status').textContent = 'QUERYING CONTEXT...';
+            
+            try {
+                // Create bounds around the point (roughly 10km box)
+                const delta = 0.1;
+                const bounds = [
+                    [lon - delta, lat - delta],
+                    [lon + delta, lat + delta]
+                ];
+
+                const result = await callTool('map_get_context_summary', {
+                    bounds: bounds
+                });
+
+                const popupContent = `
+                    <strong>Context Summary</strong><br>
+                    Location: ${lat.toFixed(3)}, ${lon.toFixed(3)}<br>
+                    Bounds: ~10km radius
+                `;
+
+                addMarker(lat, lon, 'Context', '#f59e0b', popupContent);
+                showResult(JSON.stringify(result, null, 2), 'success');
+                
+            } catch (err) {
+                addMarker(lat, lon, 'Error', '#ef4444', `Error: ${err.message}`);
+                showResult(`ERROR: ${err.message}`, 'error');
+            }
+            
+            document.getElementById('map-status').textContent = 'MAP READY';
+        }
+
+        // Get earth signals
+        async function getEarthSignals(lat, lon) {
+            document.getElementById('map-status').textContent = 'FETCHING SIGNALS...';
+            
+            try {
+                // Generate a location ID from coords
+                const locationId = `loc_${lat.toFixed(4)}_${lon.toFixed(4)}`;
+                
+                const result = await callTool('map_earth_signals', {
+                    location_id: locationId
+                });
+
+                const popupContent = `
+                    <strong>Earth Signals</strong><br>
+                    Location ID: ${locationId}<br>
+                    Lat: ${lat.toFixed(5)}<br>
+                    Lon: ${lon.toFixed(5)}
+                `;
+
+                addMarker(lat, lon, 'Signals', '#3b82f6', popupContent);
+                showResult(JSON.stringify(result, null, 2), 'success');
+                
+            } catch (err) {
+                addMarker(lat, lon, 'Error', '#ef4444', `Error: ${err.message}`);
+                showResult(`ERROR: ${err.message}`, 'error');
+            }
+            
+            document.getElementById('map-status').textContent = 'MAP READY';
+        }
+
+        // Transform coordinates
+        async function transformCoords() {
+            const x = parseFloat(document.getElementById('transform-x').value);
+            const y = parseFloat(document.getElementById('transform-y').value);
+            const fromEpsg = parseInt(document.getElementById('from-epsg').value);
+            const toEpsg = parseInt(document.getElementById('to-epsg').value);
+
+            if (isNaN(x) || isNaN(y)) {
+                showResult('ERROR: Please enter valid coordinates', 'error');
+                return;
+            }
+
+            document.getElementById('map-status').textContent = 'TRANSFORMING...';
+
+            try {
+                const result = await callTool('map_transform_coordinates', {
+                    x: x,
+                    y: y,
+                    from_epsg: fromEpsg,
+                    to_epsg: toEpsg
+                });
+
+                const resultEl = document.getElementById('transform-result');
+                resultEl.textContent = JSON.stringify(result, null, 2);
+                resultEl.classList.add('show', 'success');
+                
+                showResult(JSON.stringify(result, null, 2), 'success');
+                
+            } catch (err) {
+                const resultEl = document.getElementById('transform-result');
+                resultEl.textContent = `ERROR: ${err.message}`;
+                resultEl.classList.add('show', 'error');
+                
+                showResult(`ERROR: ${err.message}`, 'error');
+            }
+            
+            document.getElementById('map-status').textContent = 'MAP READY';
+        }
+
+        // Show result in global panel
+        function showResult(content, type) {
+            const panel = document.getElementById('global-result');
+            panel.textContent = content;
+            panel.className = 'result-panel show ' + type;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+</body>
+</html>

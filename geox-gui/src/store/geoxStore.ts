@@ -17,7 +17,26 @@ import type {
   FloorId,
   FloorStatus,
   GovernanceState,
+  McpConnectionStatus,
 } from '../types';
+
+const configuredGeoxUrl =
+  typeof import.meta !== 'undefined' && import.meta.env.VITE_GEOX_MCP_URL
+    ? import.meta.env.VITE_GEOX_MCP_URL.replace(/\/+$/, '')
+    : null;
+
+function inferDefaultGeoxUrl(): string {
+  if (typeof window === 'undefined') {
+    return 'https://geox.arif-fazil.com';
+  }
+
+  const { hostname, origin } = window.location;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'https://geox.arif-fazil.com';
+  }
+
+  return origin;
+}
 
 // Initial governance state with all F1-F13 floors
 const initialGovernance: GovernanceState = {
@@ -80,8 +99,8 @@ const initialGovernance: GovernanceState = {
     },
     F9: {
       id: 'F9',
-      name: 'ANTI-HANTU',
-      description: 'No consciousness claims',
+      name: 'PHYSICS-9',
+      description: 'Deterministic physical laws (rho, vp, vs, ...) verified',
       type: 'hard',
       status: 'green',
     },
@@ -122,7 +141,7 @@ const initialGovernance: GovernanceState = {
 
 // Initial state
 const initialState: GEOXState = {
-  activeTab: 'map',
+  activeTab: 'prospect',
   viewMode: '2d',
   panelConfig: {
     leftWidth: 25,
@@ -143,14 +162,49 @@ const initialState: GEOXState = {
         crs: 'EPSG:4326',
       },
     },
+    {
+      id: 'malay_basin',
+      name: 'Malay Basin Pilot',
+      type: 'aoi',
+      visible: true,
+      opacity: 0.6,
+      metadata: {
+        source: 'GSM-702001 Archive',
+        lastUpdated: '2018-01-01',
+        crs: 'EPSG:4326',
+      },
+    },
   ],
-  wells: [],
+  wells: [
+    {
+      id: 'W-101',
+      name: 'W-101',
+      uwi: 'UWI-MB-101',
+      location: { lat: 5.4, lon: 101.2, datum: 'WGS84', crs: 'EPSG:4326', qcStatus: 'verified', source: 'GSM-702001 Archive' },
+      totalDepth: 2500,
+      status: 'completed'
+    }
+  ],
   seismicLines: [],
-  prospects: [],
+  prospects: [
+    {
+      id: 'PROSPECT_ALPHA',
+      name: 'PROSPECT_ALPHA',
+      play: 'Group J Clastics',
+      reservoir: 'J-20',
+      seal: 'Intra-J Shale',
+      trap: 'Structural',
+      charge: 'Migrated',
+      structuralCandidates: [],
+      closureType: '4-way',
+      coordinates: { lat: 5.4, lon: 101.2 },
+      area: { minLat: 5.38, minLon: 101.18, maxLat: 5.42, maxLon: 101.22 }
+    }
+  ],
   selectedCoordinate: null,
   selectedLine: null,
-  selectedWell: null,
-  selectedProspect: null,
+  selectedWell: 'W-101',
+  selectedProspect: 'PROSPECT_ALPHA',
   cursor: null,
   governance: initialGovernance,
   groundingStatus: {
@@ -169,7 +223,19 @@ const initialState: GEOXState = {
     sources: [],
   },
   geoxConnected: false,
-  geoxUrl: 'https://geoxarifOS.fastmcp.app',
+  geoxUrl:
+    configuredGeoxUrl ?? inferDefaultGeoxUrl(),
+  mcpConnectionStatus: {
+    status: 'disconnected',
+    lastChecked: null,
+    toolsAvailable: 0,
+    latencyMs: null,
+  },
+  metaLinks: [
+    { name: 'arifOS MCP', url: 'https://arifosmcp.arif-fazil.com' },
+    { name: 'GeoVault', url: 'https://vault.arifosmcp.arif-fazil.com' },
+    { name: 'Ω-Wiki', url: 'https://wiki.arif-fazil.com' },
+  ],
 };
 
 // Store interface
@@ -185,6 +251,7 @@ interface GEOXStore extends GEOXState {
   updateGroundingStatus: (update: Partial<GEOXState['groundingStatus']>) => void;
   setGEOXConnected: (connected: boolean) => void;
   setGEOXUrl: (url: string) => void;
+  setMcpConnectionStatus: (status: McpConnectionStatus) => void;
   toggleLayer: (layerId: string) => void;
   setLayerOpacity: (layerId: string, opacity: number) => void;
   resetGovernance: () => void;
@@ -254,6 +321,7 @@ export const useGEOXStore = create<GEOXStore>()(
 
         setGEOXConnected: (connected) => set((state) => { state.geoxConnected = connected; }),
         setGEOXUrl: (url) => set((state) => { state.geoxUrl = url; }),
+        setMcpConnectionStatus: (status) => set((state) => { state.mcpConnectionStatus = status; }),
 
         toggleLayer: (layerId) => set((state: GEOXState) => {
           const layer = state.layers.find((l: any) => l.id === layerId);
@@ -271,6 +339,7 @@ export const useGEOXStore = create<GEOXStore>()(
           panelConfig: state.panelConfig,
           geoxUrl: state.geoxUrl,
           layers: state.layers,
+          governance: state.governance,
         }),
       }
     )
@@ -283,3 +352,4 @@ export const useGovernance = () => useGEOXStore((state) => state.governance);
 export const useFloorStatus = (floorId: FloorId) => useGEOXStore((state) => state.governance.floors[floorId]);
 export const useGEOXConnected = () => useGEOXStore((state) => state.geoxConnected);
 export const useSelectedCoordinate = () => useGEOXStore((state) => state.selectedCoordinate);
+export const useMcpConnectionStatus = () => useGEOXStore((state) => state.mcpConnectionStatus);
