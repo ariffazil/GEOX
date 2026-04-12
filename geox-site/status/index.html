@@ -3,79 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Status | GEOX</title>
+    <title>GEOX | Runtime Status — SOT</title>
     <link rel="stylesheet" href="../css/geox-platform.css">
+    <style>
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .status-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+        .status-card h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+        .status-operational {
+            color: #4caf50;
+            font-weight: bold;
+        }
+        .status-degraded {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .status-down {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .sot-badge {
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+        .endpoint-list {
+            list-style: none;
+            padding: 0;
+        }
+        .endpoint-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .endpoint-list li:last-child {
+            border-bottom: none;
+        }
+        .endpoint-url {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .seal-banner {
+            background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffd700;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #ffd700;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+        .seal-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+        }
+        .meta-info {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 1rem;
+        }
+        pre {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="mono" style="margin-bottom: 0.5rem; font-size: 0.7rem; color: var(--muted-color);">
-                GEOX_STATUS_PROTOCOL // PUBLIC_VERIFICATION
-            </div>
-            <nav>
-                <a href="../index.html">Home</a>
-                <a href="../platform/index.html">Platform</a>
-                <a href="../workspaces/index.html">Workspaces</a>
-                <a href="index.html">Status</a>
+    <header class="nav-header">
+        <div class="container">
+            <a href="/" class="logo">GEOX</a>
+            <nav class="nav-links">
+                <a href="/platform/">Platform</a>
+                <a href="/prospect/">Prospect</a>
+                <a href="/map/">Map</a>
+                <a href="/tools/">Tools</a>
+                <a href="/status/">Status</a>
             </nav>
-        </header>
+        </div>
+    </header>
 
-        <section>
-            <h1 style="margin-bottom: 2rem;">System Status</h1>
-            
-            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--success);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Site</h3>
-                    <span class="status-chip status-live"><span class="status-dot"></span> OPERATIONAL</span>
-                </div>
-                <p style="margin-top: 1rem;">HTTPS connectivity, HTML delivery, and navigation hubs are fully functional.</p>
+    <main class="container">
+        <h1>Runtime Status <span class="sot-badge">SOT</span></h1>
+        <p class="subtitle">Single Source of Truth — Actual Deployed State</p>
+
+        <div class="seal-banner">
+            <div class="seal-text">💎 DITEMPA BUKAN DIBERI 🔥</div>
+            <div>Forged, Not Given — Runtime Verified</div>
+        </div>
+
+        <div class="status-grid">
+            <div class="status-card">
+                <h3>🌐 GEOX EIC</h3>
+                <p><strong>Status:</strong> <span class="status-operational">● OPERATIONAL</span></p>
+                <p><strong>Version:</strong> 2.0.0-DIMENSION-NATIVE</p>
+                <p><strong>Seal:</strong> DITEMPA BUKAN DIBERI</p>
+                <p><strong>Dimensions:</strong> 5 Active</p>
+                <ul>
+                    <li>Prospect — Play Fairway Discovery</li>
+                    <li>Well — Borehole Truth Channel</li>
+                    <li>Earth3D — Volumetric Seismic</li>
+                    <li>Map — Spatial Fabric</li>
+                    <li>Cross — Dimension Introspection</li>
+                </ul>
+                <p class="meta-info">Container: geox_eic<br>
+                Image: geox-geox:latest<br>
+                Ports: 8000:8000</p>
             </div>
 
-            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--success);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>WebMCP</h3>
-                    <span class="status-chip status-live"><span class="status-dot"></span> OPERATIONAL</span>
-                </div>
-                <div class="mono" style="font-size: 0.8rem; margin: 1rem 0; color: var(--success);">
-                    [OK] ROOT_MANIFEST: 200<br>
-                    [OK] APP_MANIFESTS: AVAILABLE
-                </div>
-                <p>Browser-native capability manifests are reachable for integrated agents.</p>
+            <div class="status-card">
+                <h3>⚖️ arifOS MCP</h3>
+                <p><strong>Status:</strong> <span class="status-operational">● OPERATIONAL</span></p>
+                <p><strong>Version:</strong> 2026.04.07</p>
+                <p><strong>Verdict:</strong> SEAL</p>
+                <p><strong>Tools:</strong> 17 Loaded</p>
+                <p><strong>Floors:</strong> F1-F13 Active</p>
+                <ul>
+                    <li>Constitutional AI Gateway</li>
+                    <li>WebMCP Transport</li>
+                    <li>Vault999 Persistence</li>
+                </ul>
+                <p class="meta-info">Container: arifosmcp<br>
+                Image: arifos/arifosmcp:latest<br>
+                Ports: 8080:8080, 8089:8089</p>
             </div>
 
-            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--warning);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>MCP</h3>
-                    <span class="status-chip status-partial"><span class="status-dot"></span> PARTIAL</span>
-                </div>
-                <div class="mono" style="font-size: 0.8rem; margin: 1rem 0;">
-                    <span style="color: var(--success);">[OK] HEALTH_ENDPOINT: 200</span><br>
-                    <span style="color: var(--warning);">[!] TOOLS_ENDPOINT: IN_PROGRESS (SSE TIMEOUT TRACKED)</span>
-                </div>
-                <p>Execution layer is healthy, but public tool interaction over SSE is currently being optimized for high-latency environments.</p>
+            <div class="status-card">
+                <h3>🚀 SOT Endpoints</h3>
+                <ul class="endpoint-list">
+                    <li>
+                        <span class="status-operational">●</span>
+                        <a href="https://arifosmcp.arif-fazil.com/" target="_blank" class="endpoint-url">
+                            arifosmcp.arif-fazil.com
+                        </a>
+                        <div>MCP Server SOT</div>
+                    </li>
+                    <li>
+                        <span class="status-operational">●</span>
+                        <a href="https://geox.arif-fazil.com/" target="_blank" class="endpoint-url">
+                            geox.arif-fazil.com
+                        </a>
+                        <div>GEOX APPS SOT</div>
+                    </li>
+                </ul>
             </div>
 
-            <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--muted-color);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>A2A</h3>
-                    <span class="status-chip status-not-public"><span class="status-dot"></span> NOT PUBLIC</span>
-                </div>
-                <p style="margin-top: 1rem;">Agent-to-Agent routing is currently limited to internal secure tunnels. No public JSON endpoints are exposed yet.</p>
+            <div class="status-card">
+                <h3>📊 Constitutional Floors</h3>
+                <table style="width: 100%;">
+                    <tr><td>F1 — Irreversible Change</td><td class="status-operational">●</td></tr>
+                    <tr><td>F2 — Truth</td><td class="status-operational">●</td></tr>
+                    <tr><td>F4 — Entropy</td><td class="status-operational">●</td></tr>
+                    <tr><td>F7 — Confidence</td><td class="status-operational">●</td></tr>
+                    <tr><td>F9 — Injection Guard</td><td class="status-operational">●</td></tr>
+                    <tr><td>F11 — Coherence</td><td class="status-operational">●</td></tr>
+                    <tr><td>F13 — Human Authority</td><td class="status-operational">●</td></tr>
+                </table>
             </div>
+        </div>
 
-            <div class="mono" style="padding: 2rem; border: 1px solid var(--border-color); font-size: 0.8rem; margin-top: 3rem;">
-                <div style="color: var(--muted-color); margin-bottom: 1rem;">VERIFICATION_METADATA</div>
-                VERSION: v2026.4.11-DIMENSION-NATIVE<br>
-                SEAL: DITEMPA BUKAN DIBERI<br>
-                CHECK_ORIGIN: arif-fazil.com<br>
-                LAST_UPDATED: 2026-04-11T10:47:11Z
-            </div>
-        </section>
+        <div class="status-card">
+            <h3>📋 Architecture</h3>
+            <pre>
+┌─────────────────────────────────────────────────────────────────┐
+│                    UNIFIED GEOX + arifOS PLATFORM                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   ┌──────────────┐      ┌──────────────┐      ┌──────────────┐  │
+│   │  GEOX Core   │◄────►│ arifOS MCP   │◄────►│ GEOX Platform│  │
+│   │  (Anti-Chaos)│      │ (F1-F13)     │      │ (44 Skills)  │  │
+│   └──────────────┘      └──────────────┘      └──────────────┘  │
+│          │                      │                      │         │
+│          └──────────────────────┼──────────────────────┘         │
+│                                 │                                │
+│                    ┌────────────┴────────────┐                   │
+│                    │  https://geox.arif-f    │                   │
+│                    │  azil.com/ (SOT)        │                   │
+│                    └─────────────────────────┘                   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+            </pre>
+            <p><strong>GEOX Core:</strong> /root/arifOS/geox/ — Dimension-native architecture (Contracts, Control Plane, Execution Plane)</p>
+            <p><strong>GEOX Platform:</strong> /root/geox/ — Skill platform (44 skills, 11 agents, Registry)</p>
+            <p><strong>arifOS:</strong> /root/arifOS/ — Constitutional MCP (17 tools, WebMCP, Vault999)</p>
+        </div>
 
-        <footer>
-            <div class="governance">888_HOLD ACTIVE</div>
-            <p>&copy; 2026 GEOX Subsurface Intelligence</p>
-        </footer>
-    </div>
+        <div class="status-card">
+            <h3>🔧 Git Source of Truth</h3>
+            <table style="width: 100%;">
+                <tr>
+                    <th>Repository</th>
+                    <th>Commit</th>
+                    <th>Branch</th>
+                </tr>
+                <tr>
+                    <td>arifOS</td>
+                    <td><code>6f7d9ec</code></td>
+                    <td>main</td>
+                </tr>
+                <tr>
+                    <td>GEOX</td>
+                    <td><code>76584ce</code></td>
+                    <td>main</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="status-card">
+            <h3>📡 API Endpoints</h3>
+            <table style="width: 100%;">
+                <tr>
+                    <th>Service</th>
+                    <th>Endpoint</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>GEOX Health</td>
+                    <td><code>GET /health</code></td>
+                    <td class="status-operational">200 OK</td>
+                </tr>
+                <tr>
+                    <td>GEOX MCP</td>
+                    <td><code>POST /mcp</code></td>
+                    <td class="status-operational">200 OK</td>
+                </tr>
+                <tr>
+                    <td>arifOS Health</td>
+                    <td><code>GET /health</code></td>
+                    <td class="status-operational">200 OK</td>
+                </tr>
+                <tr>
+                    <td>arifOS MCP</td>
+                    <td><code>POST /mcp</code></td>
+                    <td class="status-operational">200 OK</td>
+                </tr>
+            </table>
+        </div>
+
+        <p class="meta-info">
+            Schema: geox-runtime-sot/v1 | 
+            Generated: 2026-04-12T03:05:00Z | 
+            <a href="/status.json">Raw JSON</a>
+        </p>
+    </main>
+
+    <footer class="container" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+        <p style="text-align: center; color: #666;">
+            GEOX Earth Intelligence Platform — <em>Ditempa Bukan Diberi</em>
+        </p>
+    </footer>
 </body>
 </html>
