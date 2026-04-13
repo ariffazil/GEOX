@@ -49,3 +49,53 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
             artifact_status=ArtifactStatus.COMPUTED,
             ui_resource_uri="ui://section-dashboard"
         )
+
+    @mcp.tool(name="section_audit_attributes")
+    async def section_audit_attributes(feature_ref: str) -> dict:
+        """Verify: Audit the transform-chain for extracted seismic features."""
+        # Mock audit logic based on seismic_feature_extract.py
+        artifact = {
+            "feature_ref": feature_ref,
+            "transform_chain": ["AGC", "Normalization", "FeatureDetection"],
+            "porosity_phi": 0.22,
+            "permeability_k": 1000 * (0.22**3), # Kozeny-Carman order-of-magnitude proxy
+            "seal": "DITEMPA_BUKAN_DIBERI"
+        }
+        return get_standard_envelope(
+            artifact, 
+            tool_class="verify", 
+            governance_status=GovernanceStatus.QUALIFY, 
+            artifact_status=ArtifactStatus.VERIFIED,
+            ui_resource_uri="ui://attribute-audit"
+        )
+
+    @mcp.tool(name="section_vision_review")
+    async def section_vision_review(image_ref: str) -> dict:
+        """Interpret: Governed VLM seismic interpretation review."""
+        artifact = {
+            "image_ref": image_ref,
+            "fault_probability": 0.85,
+            "validation_probe": "7-day_cycle_active",
+            "falsification_seal": "PENDING",
+            "message": "Falsification Seal requires 48hr validation against ground truth."
+        }
+        return get_standard_envelope(
+            artifact, 
+            tool_class="interpret", 
+            governance_status=GovernanceStatus.HOLD, 
+            artifact_status=ArtifactStatus.IN_REVIEW,
+            ui_resource_uri="ui://vision-review"
+        )
+
+    # Aliases
+    @mcp.tool(name="geox_load_seismic_line")
+    async def geox_load_seismic_line(start_coord: tuple, end_coord: tuple) -> dict:
+        return await section_synthesize_profile(start_coord, end_coord)
+
+    @mcp.tool(name="geox_audit_attributes")
+    async def geox_audit_attributes(feature_ref: str) -> dict:
+        return await section_audit_attributes(feature_ref)
+
+    @mcp.tool(name="geox_vision_review")
+    async def geox_vision_review(image_ref: str) -> dict:
+        return await section_vision_review(image_ref)

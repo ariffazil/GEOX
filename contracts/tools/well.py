@@ -121,4 +121,25 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://well-dashboard"
         )
 
+    @mcp.tool(name="well_digitize_log")
+    async def well_digitize_log(image_ref: str) -> dict:
+        """Interpret: Trace analog well logs into governed digital outputs."""
+        artifact = {
+            "image_ref": image_ref,
+            "status": "Planned",
+            "message": "Analog Digitizer is currently in PLANNED stage. Neural curves extraction coming soon."
+        }
+        return get_standard_envelope(
+            artifact, 
+            tool_class="interpret", 
+            governance_status=GovernanceStatus.HOLD, 
+            artifact_status=ArtifactStatus.DRAFT,
+            ui_resource_uri="ui://analog-digitizer"
+        )
+
+    # Aliases
+    @mcp.tool(name="geox_compute_petrophysics")
+    async def geox_compute_petrophysics(well_ref: str) -> dict:
+        return await well_load_bundle(well_ref, "demo://bundle")
+
 

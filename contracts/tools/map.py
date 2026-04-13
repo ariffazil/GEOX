@@ -157,3 +157,30 @@ def register_map_tools(mcp: FastMCP, profile: str = "full"):
                 artifact_status=ArtifactStatus.REJECTED,
                 ui_resource_uri="ui://map-dashboard"
             )
+
+    @mcp.tool(name="map_georeference")
+    async def map_georeference(map_ref: str, control_points: list) -> dict:
+        """Interpret: Governed georeferencing of map context."""
+        artifact = {
+            "map_ref": map_ref,
+            "control_points_count": len(control_points),
+            "status": "Staged",
+            "grounding_seal": "PENDING",
+            "message": "Georeferencing actions are git-backed and reversible (F1 Amanah)."
+        }
+        return get_standard_envelope(
+            artifact, 
+            tool_class="interpret", 
+            governance_status=GovernanceStatus.QUALIFY, 
+            artifact_status=ArtifactStatus.STAGED,
+            ui_resource_uri="ui://georeference-map"
+        )
+
+    # Aliases
+    @mcp.tool(name="geox_verify_geospatial")
+    async def geox_verify_geospatial(x: float, y: float, epsg: int) -> dict:
+        return await map_verify_coordinates(x, y, epsg)
+
+    @mcp.tool(name="geox_georeference")
+    async def geox_georeference(map_ref: str, control_points: list) -> dict:
+        return await map_georeference(map_ref, control_points)
