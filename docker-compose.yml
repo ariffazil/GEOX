@@ -30,6 +30,9 @@ services:
       timeout: 10s
     labels:
     - traefik.enable=true
+    - traefik.docker.network=arifos_core_network
+    - traefik.http.middlewares.geox-strip.stripprefix.prefixes=/mcp
+    - traefik.http.routers.geox-mcp.middlewares=geox-strip
     - traefik.http.routers.geox-mcp.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/mcp`)
     - traefik.http.routers.geox-mcp.entrypoints=web
     - traefik.http.routers.geox-mcp.service=geox-mcp
