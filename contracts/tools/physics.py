@@ -21,7 +21,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
         logger.error("Physics services unavailable")
         return
 
-    @mcp.tool(name="geox_physics_judge_verdict")
     @mcp.tool(name="physics_judge_verdict")
     async def physics_judge_verdict(
         intent_ref: str, 
@@ -64,7 +63,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://physics-dashboard"
         )
 
-    @mcp.tool(name="geox_physics_validate_operation")
     @mcp.tool(name="physics_validate_operation")
     async def physics_validate_operation(operation_ref: str) -> dict:
         """Verify: Check if current operation adheres to safety and physical bounds."""
@@ -77,7 +75,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://physics-dashboard"
         )
 
-    @mcp.tool(name="geox_physics_audit_hold_breach")
     @mcp.tool(name="physics_audit_hold_breach")
     async def physics_audit_hold_breach(session_ref: str) -> dict:
         """Audit: Investigate if any 888_HOLD conditions were bypassed."""
@@ -90,7 +87,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://physics-dashboard"
         )
 
-    @mcp.tool(name="geox_physics_verify_physics")
     @mcp.tool(name="physics_verify_physics")
     async def physics_verify_physics(parameters: dict) -> dict:
         """Verify: Check physical parameters for consistency (e.g. Gardner density)."""
@@ -103,7 +99,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://physics-dashboard"
         )
 
-    @mcp.tool(name="geox_physics_compute_stoiip")
     @mcp.tool(name="physics_compute_stoiip")
     async def physics_compute_stoiip(inputs: dict) -> dict:
         """
@@ -168,7 +163,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-    @mcp.tool(name="geox_physics_fetch_authoritative_state")
     @mcp.tool(name="physics_fetch_authoritative_state")
     async def physics_fetch_authoritative_state() -> dict:
         """Observe: Fetch the ground-truth physical state vector from the vault."""
@@ -194,7 +188,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             acp_get_status
         )
 
-        @mcp.tool(name="geox_physics_acp_register")
         @mcp.tool(name="physics_acp_register")
         async def physics_acp_register(
             agent_ref: str,
@@ -213,7 +206,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-        @mcp.tool(name="geox_physics_acp_submit")
         @mcp.tool(name="physics_acp_submit")
         async def physics_acp_submit(agent_ref: str, proposal: dict) -> dict:
             """Submit a proposal for 888_JUDGE evaluation."""
@@ -226,7 +218,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-        @mcp.tool(name="geox_physics_acp_check_convergence")
         @mcp.tool(name="physics_acp_check_convergence")
         async def physics_acp_check_convergence(resource: str) -> dict:
             """Check agent convergence on a resource."""
@@ -239,7 +230,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-        @mcp.tool(name="geox_physics_acp_grant_seal")
         @mcp.tool(name="physics_acp_grant_seal")
         async def physics_acp_grant_seal(proposal_ref: str, human_auth_token: str) -> dict:
             """Grant 999_SEAL (sovereign human authority)."""
@@ -252,7 +242,6 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-        @mcp.tool(name="geox_physics_acp_status")
         @mcp.tool(name="physics_acp_status")
         async def physics_acp_status() -> dict:
             """Get ACP system status."""

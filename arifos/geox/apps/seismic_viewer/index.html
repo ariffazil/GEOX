@@ -136,30 +136,34 @@
     </main>
 
     <!-- UI Bridge Script -->
-    <script>
-        // GEOX UI Bridge Logic
+    <script type="module">
+        import { AppBridge } from 'https://unpkg.com/@modelcontextprotocol/ext-apps@latest/dist/index.mjs';
+
+        // Initialize MCP AppBridge
+        window.appBridge = null;
+        try {
+            window.appBridge = new AppBridge({
+                appId: "geox.seismic.viewer",
+                version: "1.0.0"
+            });
+            window.appBridge.connect();
+            console.log("[FastMCP AppBridge] Connected natively to MCP runtime.");
+        } catch (e) {
+            console.warn("[FastMCP AppBridge] Failed to connect.", e);
+        }
+
+        // GEOX UI Bridge Logic Adapter
         const bridge = {
             async emit(method, params = {}) {
-                const event = {
-                    jsonrpc: "2.0",
-                    method,
-                    params,
-                    timestamp: new Date().toISOString()
-                };
-                console.log(`[GEOX Bridge] Emitting: ${method}`, event);
-                
-                // standard postMessage pattern for iframes
-                if (window.parent !== window) {
-                    window.parent.postMessage(event, "*");
+                console.log(`[GEOX Bridge] Emitting via AppBridge: ${method}`, params);
+                if (window.appBridge) {
+                    // Normalize the legacy method name to an MCP tool call format
+                    const toolName = method.replace(/\./g, '_');
+                    window.appBridge.callTool(toolName, params);
                 }
             },
-            
             init() {
-                this.emit("app.initialize", {
-                    app_id: "geox.seismic.viewer",
-                    version: "1.0.0",
-                    host_capabilities: ["mcp_tools", "artifacts"]
-                });
+                // MCP Connect validates initialization
             }
         };
 
