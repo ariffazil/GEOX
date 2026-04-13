@@ -3,6 +3,9 @@ from typing import Any
 
 from arifos.geox.geox_hardened import HardenedGeoxAgent
 
+import pytest
+
+@pytest.mark.asyncio
 async def test_hardened_agent():
     agent = HardenedGeoxAgent(session_id="ARIF_GEO_FORGE")
     

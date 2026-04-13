@@ -1,5 +1,5 @@
 """
-GEOX Petrophysics MCP Server — Phase A
+[DEPRECATED] GEOX Petrophysics MCP Server — Phase A
 DITEMPA BUKAN DIBERI
 
 MCP server with resources and tools for governed petrophysics.
@@ -17,6 +17,13 @@ URI Schemes:
 from __future__ import annotations
 
 import os
+import warnings
+warnings.warn(
+    "mcp_petrophysics_server.py is deprecated. The canonical unified surface is geox_unified_mcp_server.py "
+    "and the execution plane is execution_plane/vps/server.py. Do not build new dependencies here.",
+    DeprecationWarning, stacklevel=2
+)
+
 from datetime import datetime
 from typing import Any
 

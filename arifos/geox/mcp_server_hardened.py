@@ -1,5 +1,5 @@
 """
-GEOX Hardened MCP Server - Production-Grade Earth Witness
+[DEPRECATED] GEOX Hardened MCP Server - Production-Grade Earth Witness
 DITEMPA BUKAN DIBERI
 
 A governed, discoverable MCP server with:
@@ -13,6 +13,13 @@ A governed, discoverable MCP server with:
 from __future__ import annotations
 
 import os
+import warnings
+warnings.warn(
+    "mcp_server_hardened.py is deprecated. The canonical unified surface is geox_unified_mcp_server.py "
+    "and the execution plane is execution_plane/vps/server.py. Do not build new dependencies here.",
+    DeprecationWarning, stacklevel=2
+)
+
 import json
 import traceback
 from datetime import datetime

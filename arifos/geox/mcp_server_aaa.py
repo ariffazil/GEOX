@@ -1,5 +1,5 @@
 """
-GEOX MCP Server — AAA GRADE / Large Earth Model
+[DEPRECATED] GEOX MCP Server — AAA GRADE / Large Earth Model
 ════════════════════════════════════════════════════════════════════════════════
 DITEMPA BUKAN DIBERI — Forged, Not Given
 Version: v2026.04.10-AAA
@@ -18,6 +18,13 @@ Architecture:
 """
 
 from __future__ import annotations
+
+import warnings
+warnings.warn(
+    "mcp_server_aaa.py is deprecated. The canonical unified surface is geox_unified_mcp_server.py "
+    "and the execution plane is execution_plane/vps/server.py. Do not build new dependencies here.",
+    DeprecationWarning, stacklevel=2
+)
 
 import argparse
 import asyncio

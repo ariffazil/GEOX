@@ -19,7 +19,6 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         logger.error("Well services unavailable")
         witness = None
 
-    @mcp.tool(name="geox_well_load_bundle")
     @mcp.tool(name="well_load_bundle")
     async def well_load_bundle(well_ref: str, bundle_uri: str) -> dict:
         """Observe: Load a full log bundle (LAS/DLIS) into the witness context."""
@@ -33,12 +32,7 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://well-dashboard"
         )
 
-    @mcp.tool(name="well_load_log_bundle")
-    async def well_load_log_bundle(well_id: str, bundle_uri: str) -> dict:
-        """[DEPRECATED] Alias for well_load_bundle."""
-        return await well_load_bundle(well_id, bundle_uri)
 
-    @mcp.tool(name="geox_well_qc_logs")
     @mcp.tool(name="well_qc_logs")
     async def well_qc_logs(well_ref: str) -> dict:
         """Verify: Perform Quality Control on loaded logs."""
@@ -52,12 +46,7 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://well-dashboard"
         )
 
-    @mcp.tool(name="geox_qc_logs")
-    async def geox_qc_logs(well_id: str) -> dict:
-        """[DEPRECATED] Alias for well_qc_logs."""
-        return await well_qc_logs(well_id)
 
-    @mcp.tool(name="geox_well_validate_cutoffs")
     @mcp.tool(name="well_validate_cutoffs")
     async def well_validate_cutoffs(well_ref: str, parameter: str, value: float) -> dict:
         """Verify: Validate petrophysical cutoffs against regional norms."""
@@ -71,12 +60,7 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://well-dashboard"
         )
 
-    @mcp.tool(name="geox_validate_cutoffs")
-    async def geox_validate_cutoffs(well_id: str, parameter: str, value: float) -> dict:
-        """[DEPRECATED] Alias for well_validate_cutoffs."""
-        return await well_validate_cutoffs(well_id, parameter, value)
 
-    @mcp.tool(name="geox_well_select_sw_model")
     @mcp.tool(name="well_select_sw_model")
     async def well_select_sw_model(formation: str, temperature_c: float) -> dict:
         """Interpret: Recommends a Water Saturation (Sw) model based on formation context."""
@@ -93,12 +77,7 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://well-dashboard"
         )
 
-    @mcp.tool(name="geox_select_sw_model")
-    async def geox_select_sw_model(formation: str, temperature_c: float) -> dict:
-        """[DEPRECATED] Alias for well_select_sw_model."""
-        return await well_select_sw_model(formation, temperature_c)
 
-    @mcp.tool(name="geox_well_compute_petrophysics")
     @mcp.tool(name="well_compute_petrophysics")
     async def well_compute_petrophysics(
         model: str, 
@@ -125,20 +104,7 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://well-dashboard"
         )
 
-    @mcp.tool(name="geox_compute_petrophysics")
-    async def geox_compute_petrophysics(
-        model: str, 
-        rw: float, 
-        rt: float, 
-        phi: float, 
-        a: float = 1.0, 
-        m: float = 2.0, 
-        n: float = 2.0
-    ) -> dict:
-        """[DEPRECATED] Alias for well_compute_petrophysics."""
-        return await well_compute_petrophysics(model, rw, rt, phi, a, m, n)
 
-    @mcp.tool(name="geox_well_verify_petrophysics")
     @mcp.tool(name="well_verify_petrophysics")
     async def well_verify_petrophysics(well_ref: str, phi: float, sw: float) -> dict:
         """Verify: Governance check (888_HOLD) for anomalous petrophysics."""
@@ -155,12 +121,4 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://well-dashboard"
         )
 
-    @mcp.tool(name="well_petrophysical_check")
-    async def well_petrophysical_check(well_id: str, phi: float, sw: float) -> dict:
-        """[DEPRECATED] Alias for well_verify_petrophysics."""
-        return await well_verify_petrophysics(well_id, phi, sw)
 
-    @mcp.tool(name="geox_petrophysical_hold_check")
-    async def geox_petrophysical_hold_check(well_id: str, phi: float, sw: float) -> dict:
-        """[DEPRECATED] Alias for well_verify_petrophysics."""
-        return await well_verify_petrophysics(well_id, phi, sw)

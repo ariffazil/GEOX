@@ -39,6 +39,18 @@ Physics9 implements a dimension-first sovereign architecture, separating borehol
 | **Physics** | Metabolic | Meta | PHYSICS_9 State Vector Optimization |
 | **Map** | Geospatial | Global | Transversal Geospatial Reference Fabric |
 
+## ⚠️ Canonical vs Legacy Server Surfaces
+
+The GEOX project has migrated to a strict, dimension-native FastMCP architecture.
+- **Canonical API Server & Routing:** `geox_unified_mcp_server.py`
+- **Canonical Execution Plane (VPS / Apps):** `execution_plane/vps/server.py`
+- **Deprecated (Compatibility Only):** 
+  - `arifos/geox/mcp_server_aaa.py`
+  - `arifos/geox/mcp_server_hardened.py`
+  - `arifos/geox/mcp_petrophysics_server.py`
+  - `arifos/geox/tools/adapters/fastmcp_adapter.py`
+  *(These legacy surfaces act only as test-collection stubs and should not be used as discovery targets.)*
+
 ---
 
 ## 🛠️ Sovereign MCP Tools (v1.9)

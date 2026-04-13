@@ -500,12 +500,9 @@
                 const play = item.dataset.play;
                 console.log('Selected play:', play);
                 
-                // Notify parent
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        type: 'play_selected',
-                        data: { play_code: play }
-                    }, '*');
+                // FastMCP AppBridge SDK
+                if (window.appBridge) {
+                    window.appBridge.callTool("basin_select_play", { play_code: play });
                 }
             });
         });
@@ -513,21 +510,15 @@
         // Functions
         function exploreField(fieldName) {
             console.log('Exploring field:', fieldName);
-            if (window.parent !== window) {
-                window.parent.postMessage({
-                    type: 'field_explore',
-                    data: { field_name: fieldName }
-                }, '*');
+            if (window.appBridge) {
+                window.appBridge.callTool("basin_explore_field", { field_name: fieldName });
             }
         }
 
         function evaluateProspect(lat, lon) {
             console.log('Evaluating prospect at:', lat, lon);
-            if (window.parent !== window) {
-                window.parent.postMessage({
-                    type: 'evaluate_prospect',
-                    data: { lat, lon }
-                }, '*');
+            if (window.appBridge) {
+                window.appBridge.callTool("basin_evaluate_prospect", { lat, lon });
             }
         }
 
@@ -538,6 +529,22 @@
         });
 
         console.log('🔥 GEOX Basin Explorer — AAA Grade Initialized');
+    </script>
+    
+    <!-- FastMCP AppBridge SDK Integration -->
+    <script type="module">
+        import { AppBridge } from 'https://unpkg.com/@modelcontextprotocol/ext-apps@latest/dist/index.mjs';
+        
+        try {
+            window.appBridge = new AppBridge({
+                appId: "geox.basin_explorer",
+                version: "1.0.0"
+            });
+            window.appBridge.connect();
+            console.log("[FastMCP AppBridge] Connected natively to MCP runtime.");
+        } catch (e) {
+            console.warn("[FastMCP AppBridge] Failed to connect.", e);
+        }
     </script>
 </body>
 </html>

@@ -14,7 +14,6 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
     Aliases removed - use canonical names only.
     """
     
-    @mcp.tool(name="geox_section_interpret_strata")
     @mcp.tool(name="section_interpret_strata")
     async def section_interpret_strata(section_ref: str) -> dict:
         """Interpret: Correlate stratigraphic units across multiple wells in a section."""
@@ -27,7 +26,6 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://section-dashboard"
         )
 
-    @mcp.tool(name="geox_section_observe_well_correlation")
     @mcp.tool(name="section_observe_well_correlation")
     async def section_observe_well_correlation(well_refs: list) -> dict:
         """Observe: Fetch raw correlation data between specified wells."""
@@ -40,7 +38,6 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://section-dashboard"
         )
 
-    @mcp.tool(name="geox_section_synthesize_profile")
     @mcp.tool(name="section_synthesize_profile")
     async def section_synthesize_profile(start_coord: tuple, end_coord: tuple) -> dict:
         """Compute: Synthesize a 2D vertical profile from the Earth model."""

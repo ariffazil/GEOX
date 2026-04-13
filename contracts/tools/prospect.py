@@ -29,20 +29,11 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
         )
 
     # Aliases (separate functions required by FastMCP)
-    @mcp.tool(name="geox_prospect_evaluate")
     async def _alias_geox_prospect_evaluate(prospect_ref: str) -> dict:
         """Alias for prospect_evaluate."""
         return await prospect_evaluate(prospect_ref)
 
-    @mcp.tool(name="geox_evaluate_prospect")
-    async def _alias_geox_evaluate_prospect(area_id: str) -> dict:
-        """[DEPRECATED] Alias for prospect_evaluate. Use prospect_evaluate instead."""
-        return await prospect_evaluate(area_id)
 
-    @mcp.tool(name="prospect_evaluate_prospect")
-    async def _alias_prospect_evaluate_prospect(area_id: str) -> dict:
-        """[DEPRECATED] Alias for prospect_evaluate. Use prospect_evaluate instead."""
-        return await prospect_evaluate(area_id)
 
     # Canonical tool: prospect_build_structural_candidates
     @mcp.tool(name="prospect_build_structural_candidates")
@@ -58,15 +49,10 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://prospect-dashboard"
         )
 
-    @mcp.tool(name="geox_prospect_build_structural_candidates")
     async def _alias_geox_prospect_build(prospect_ref: str) -> dict:
         """Alias for prospect_build_structural_candidates."""
         return await prospect_build_structural_candidates(prospect_ref)
 
-    @mcp.tool(name="geox_build_structural_candidates")
-    async def _alias_geox_build_structural(area_id: str) -> dict:
-        """[DEPRECATED] Alias for prospect_build_structural_candidates."""
-        return await prospect_build_structural_candidates(area_id)
 
     # Canonical tool: prospect_verify_feasibility
     @mcp.tool(name="prospect_verify_feasibility")
@@ -82,17 +68,8 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://prospect-dashboard"
         )
 
-    @mcp.tool(name="geox_prospect_verify_feasibility")
     async def _alias_geox_prospect_verify(prospect_ref: str) -> dict:
         """Alias for prospect_verify_feasibility."""
         return await prospect_verify_feasibility(prospect_ref)
 
-    @mcp.tool(name="geox_feasibility_check")
-    async def _alias_geox_feasibility_check(area_id: str) -> dict:
-        """[DEPRECATED] Alias for prospect_verify_feasibility."""
-        return await prospect_verify_feasibility(area_id)
 
-    @mcp.tool(name="prospect_feasibility_check")
-    async def _alias_prospect_feasibility_check(area_id: str) -> dict:
-        """[DEPRECATED] Alias for prospect_verify_feasibility."""
-        return await prospect_verify_feasibility(area_id)

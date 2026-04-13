@@ -1,5 +1,5 @@
 """
-GEOX FastMCP Adapter — Thin transport wrapper for GEOX core tools.
+[DEPRECATED] GEOX FastMCP Adapter — Thin transport wrapper for GEOX core tools.
 
 This module provides the FastMCP-specific binding layer. It:
 1. Imports host-agnostic tools from geox.tools.core
@@ -14,6 +14,13 @@ DITEMPA BUKAN DIBERI
 """
 
 from __future__ import annotations
+
+import warnings
+warnings.warn(
+    "fastmcp_adapter.py is deprecated. The canonical unified surface is geox_unified_mcp_server.py "
+    "and the execution plane is execution_plane/vps/server.py. Do not build new dependencies here.",
+    DeprecationWarning, stacklevel=2
+)
 
 import argparse
 import json
