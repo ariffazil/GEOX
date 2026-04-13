@@ -1,20 +1,26 @@
 /**
  * GEOX GUI App — DITEMPA BUKAN DIBERI
- * 
+ *
  * Main application component for GEOX Earth Witness.
+ * Landing page first, then cockpit on demand.
  */
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MainLayout } from './components/Layout/MainLayout';
+import { LandingPage } from './components/LandingPage/LandingPage';
 import { useGEOXStore } from './store/geoxStore';
+import { useGeoxBridge } from './hooks/useGeoxBridge';
 import './App.css';
 
-// App component
 function App() {
+  const [showCockpit, setShowCockpit] = useState(false);
   const { setGEOXConnected, geoxUrl } = useGEOXStore();
+  const { sendUiAction } = useGeoxBridge();
 
   // Check GEOX connection on mount
   useEffect(() => {
+    sendUiAction('app.mounted', { timestamp: new Date().toISOString() });
+
     const checkConnection = async () => {
       try {
         const response = await fetch(`${geoxUrl}/health`, {
@@ -40,11 +46,15 @@ function App() {
     // Check connection every 30 seconds
     const interval = setInterval(checkConnection, 30000);
     return () => clearInterval(interval);
-  }, [geoxUrl, setGEOXConnected]);
+  }, [geoxUrl, setGEOXConnected, sendUiAction]);
 
   return (
     <div className="app">
-      <MainLayout />
+      {showCockpit ? (
+        <MainLayout />
+      ) : (
+        <LandingPage onEnterCockpit={() => setShowCockpit(true)} />
+      )}
     </div>
   );
 }

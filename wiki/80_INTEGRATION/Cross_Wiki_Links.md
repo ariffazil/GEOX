@@ -1,104 +1,93 @@
-# Cross-Wiki Links — arifOS Federation
+# Cross-Wiki Links — Three-Wiki Federation
 
-> **Type:** Integration  
-> **Purpose:** Navigation between federated wikis  
-> **Tags:** [federation, navigation, arifos, integration]  
+> **Purpose:** Navigation across GEOX, arifOS, and AF-FORGE as one working system.  
+> **Status:** ACTIVE  
+> **Authority:** 888_JUDGE
 
 ---
 
 ## The Federation
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    arifOS FEDERATED KNOWLEDGE GRAPH                         │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐      │
-│   │   arifOS/wiki/  │◄───►│   GEOX/wiki/    │◄───►│  @WEALTH/wiki/  │      │
-│   │   (Constitution)│     │   (Earth)       │     │   (Economics)   │      │
-│   └─────────────────┘     └─────────────────┘     └─────────────────┘      │
-│          ▲                       ▲                       ▲                  │
-│          │                       │                       │                  │
-│          └───────────────────────┴───────────────────────┘                  │
-│                                                                             │
-│                    [[arifos::index]]                                        │
-│                    [[geox::index]]        ← You are here                    │
-│                    [[wealth::index]]                                        │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+```text
+AF-FORGE -> machine, services, deployment, recovery
+arifOS   -> governance, floors, verdicts, runtime law
+GEOX     -> Earth truth, physics, basins, petrophysics
 ```
 
----
-
-## Link Syntax
-
-| Target | Syntax | Example |
-|--------|--------|---------|
-| arifOS wiki | `[[arifos::Page_Name]]` | `[[arifos::Floors]]` |
-| GEOX wiki (self) | `[[Page_Name]]` | `[[Theory_of_Anomalous_Contrast]]` |
-| @WEALTH wiki | `[[wealth::Page_Name]]` | `[[wealth::NPV_Models]]` |
-| Raw source | `[[raw/filename]]` | `[[raw/papers/bond_2007.pdf]]` |
+These are not competing wikis.
+They are three organs of one larger intelligence system.
 
 ---
 
-## Key arifOS → GEOX Links
+## Role Separation
 
-| arifOS Page | GEOX Destination | Purpose |
-|-------------|------------------|---------|
-| [[arifos::GEOX]] | [[index]] | Entry point to Earth knowledge |
-| [[arifos::Floors#F2]] | [[70_GOVERNANCE/Floor_Enforcement_Log]] | Truth enforcement in geoscience |
-| [[arifos::Floors#F4]] | [[10_THEORY/Epistemic_Levels]] | Clarity in OBS/DER/INT/SPEC |
-| [[arifos::Floors#F7]] | [[70_GOVERNANCE/Confidence_Bands]] | Humility in uncertainty |
-| [[arifos::Floors#F9]] | [[10_THEORY/Theory_of_Anomalous_Contrast]] | Anti-hantu in geoscience |
-| [[arifos::888_JUDGE]] | [[70_GOVERNANCE/888_HOLD_Registry]] | Human sovereignty gates |
-| [[arifos::999_VAULT]] | [[80_INTEGRATION/VAULT999_Wiring]] | Audit trail integration |
-| [[arifos::Trinity_Architecture]] | [[80_INTEGRATION/Trinity_Architecture]] | Position in ΔΩΨ |
+| Wiki | Role | Use it when... |
+|------|------|----------------|
+| **AF-FORGE** | infrastructure forge | the issue is VPS state, services, ports, recovery, deployment, components |
+| **arifOS** | constitutional runtime | the issue is authority, floors, verdicts, permissions, or execution boundaries |
+| **GEOX** | Earth witness | the issue is geological truth, physics, uncertainty, wells, seismic, basins |
 
 ---
 
-## Key GEOX → arifOS Links
+## Practical Routes
 
-| GEOX Page | arifOS Destination | Purpose |
-|-----------|-------------------|---------|
-| All governance pages | [[arifos::Floors]] | Constitutional foundation |
-| All tool specs | [[arifos::MCP_Tools]] | Tool surface alignment |
-| All cases | [[arifos::999_VAULT]] | Audit architecture |
-| [[80_INTEGRATION/Trinity_Architecture]] | [[arifos::Trinity_Architecture]] | Federation position |
+### GEOX -> arifOS
+Jump to arifOS for:
+- F1-F13 floor logic
+- verdicts and hold conditions
+- runtime governance and tool boundaries
+
+Recommended arifOS entry points:
+- `/root/arifOS/wiki/index.md`
+- `Naming_Canon`
+- `What-is-arifOS`
+- `Floors`
+- `Trinity_Architecture`
+- `Federation_Three_Wikis`
+
+### GEOX -> AF-FORGE
+Jump to AF-FORGE for:
+- live VPS context
+- service/component topology
+- infrastructure failures or recovery
+- deployment reality that may affect GEOX execution
+
+Recommended AF-FORGE entry points:
+- `/root/af-forge/wiki/index.md`
+- `20_BLUEPRINTS/Stack_Components`
+- `60_TEMPERATURES/Live_Status`
+- `50_CRACKS/Intelligence_Gaps`
+
+### arifOS / AF-FORGE -> GEOX
+Jump back into GEOX when the work needs:
+- Earth Canon 9
+- Theory of Anomalous Contrast
+- petrophysics and saturation model discipline
+- basin-level grounded interpretation
+
+Recommended GEOX entry points:
+- `00_INDEX/Quickstart.md`
+- `10_THEORY/Theory_of_Anomalous_Contrast.md`
+- `20_PHYSICS/EARTH_CANON_9.md`
+- `50_TOOLS/Tool_Index.md`
 
 ---
 
-## Synchronization Protocol
+## Federation Rule
 
-| Event | Source Wiki | Target Wiki | Action |
-|-------|-------------|-------------|--------|
-| 888_HOLD triggered | GEOX | arifOS | Update [[arifos::888_JUDGE]] registry |
-| Floor violation | GEOX | arifOS | Log in [[arifos::Floors]] enforcement |
-| New tool added | arifOS | GEOX | Create [[50_TOOLS/tool_name]] spec |
-| New seal issued | arifOS | GEOX | Update [[70_GOVERNANCE/Seals_and_Verdicts]] |
-| Weekly lint | GEOX | — | Update [[90_AUDITS/Weekly_Lint_Reports]] |
+For multi-system tasks, prefer this order:
+1. **AF-FORGE** for machine reality
+2. **arifOS** for governance and permission boundaries
+3. **GEOX** for Earth-domain truth
 
----
-
-## Navigation Quick Reference
-
-### Start Here
-- **New to arifOS?** → [[arifos::Quickstart]]
-- **New to GEOX?** → [[00_INDEX/Quickstart]]
-- **The intelligence stack?** → [[00_INDEX/LLM_LEM_Manifesto]]
-
-### Constitutional
-- **13 Floors** → [[arifos::Floors]]
-- **F9 Anti-Hantu** → [[10_THEORY/Theory_of_Anomalous_Contrast]]
-
-### Technical
-- **MCP Tools** → [[arifos::MCP_Tools]]
-- **GEOX Tools** → [[50_TOOLS/geox_evaluate_prospect]]
-
-### Governance
-- **888_JUDGE** → [[arifos::888_JUDGE]]
-- **888_HOLD Registry** → [[70_GOVERNANCE/888_HOLD_Registry]]
+This avoids three common failures:
+- domain truth without machine feasibility
+- machine action without constitutional judgment
+- governance talk without domain grounding
 
 ---
 
-*Federated Knowledge Graph*  
-*Constitutional Intelligence Across Wikis*
+## Related
+- [Three Wikis Gateway](../00_INDEX/Three_Wikis_Gateway.md)
+- [Agent Initialization Protocol](../00_INDEX/Agent_Initialization_Protocol.md)
+- [Deployment Checklist](DEPLOYMENT_CHECKLIST.md)

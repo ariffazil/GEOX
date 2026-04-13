@@ -159,7 +159,7 @@ For standalone local dev, the MCP server runs without the kernel (graceful degra
 | F2 Truth | τ ≥ 0.99 — no ungrounded claims | Coordinates + CRS required on all inputs |
 | F4 Clarity | Units + coordinates mandatory | Rejects bare pixel values without physical proxy |
 | F7 Humility | Uncertainty must be calibrated | Forces uncertainty band on every estimate |
-| F9 Anti-Hantu | No hallucinated geology | Physical plausibility check on every structure claim |
+| F9 Physics9 | No phantom geology | Physical grounding checks |
 | F11 Authority | Provenance mandatory | Data source must be declared |
 | F13 Sovereign | Human veto hook active | Prospect gate requires human confirmation |
 

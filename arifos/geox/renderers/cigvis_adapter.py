@@ -49,8 +49,74 @@ try:
     import numpy as np
 except ImportError:
     CIGVIS_AVAILABLE = False
-    cigvis = None
-    np = None
+    cigvis = None  # type: ignore[assignment]
+    np = None  # type: ignore[assignment]
+
+# ── Compatibility shims ───────────────────────────────────────────────────────
+# The installed cigvis may not expose create_slices / create_surfaces /
+# create_points / plot3D / vispyplot / viserplot (depends on extras installed).
+# We attach lightweight shim objects so that:
+#   1. monkeypatch.setattr() can override them in unit tests (raising=True safe)
+#   2. Production calls log a warning and degrade gracefully rather than crash.
+# ─────────────────────────────────────────────────────────────────────────────
+
+if CIGVIS_AVAILABLE and cigvis is not None:
+    import types as _types
+
+    def _shim_create_slices(volume: "np.ndarray", **kwargs: object) -> list[object]:
+        logger.warning("cigvis.create_slices not available; install cigvis[vispy]")
+        return []
+
+    def _shim_create_surfaces(surfaces: list[object], **kwargs: object) -> list[object]:
+        logger.warning("cigvis.create_surfaces not available; install cigvis[vispy]")
+        return []
+
+    def _shim_create_points(points: "np.ndarray", **kwargs: object) -> list[object]:
+        logger.warning("cigvis.create_points not available; install cigvis[vispy]")
+        return []
+
+    def _shim_plot3D(nodes: list[object], **kwargs: object) -> None:
+        logger.warning("cigvis.plot3D not available; install cigvis[vispy]")
+
+    _vispyplot_shim = _types.SimpleNamespace(
+        create_well_logs=lambda points, **kw: (
+            logger.warning("cigvis.vispyplot.create_well_logs unavailable") or []
+        )
+    )
+
+    _viserplot_shim = _types.SimpleNamespace(
+        create_server=lambda port=8100: (
+            logger.warning("cigvis.viserplot.create_server unavailable") or {"port": port}
+        ),
+        plot3D=lambda nodes, **kw: logger.warning("cigvis.viserplot.plot3D unavailable"),
+    )
+
+    for _attr, _shim in [
+        ("create_slices", _shim_create_slices),
+        ("create_surfaces", _shim_create_surfaces),
+        ("create_points", _shim_create_points),
+        ("plot3D", _shim_plot3D),
+    ]:
+        if not hasattr(cigvis, _attr):
+            setattr(cigvis, _attr, _shim)
+
+    # vispyplot and viserplot may be ExceptionWrapper objects — always replace
+    # with a real shim so monkeypatch can set sub-attributes.
+    try:
+        _vp = cigvis.vispyplot
+        if not hasattr(_vp, "create_well_logs"):
+            setattr(cigvis, "vispyplot", _vispyplot_shim)
+    except Exception:
+        setattr(cigvis, "vispyplot", _vispyplot_shim)
+
+    try:
+        _vr = cigvis.viserplot
+        if not hasattr(_vr, "create_server"):
+            setattr(cigvis, "viserplot", _viserplot_shim)
+        elif not hasattr(_vr, "plot3D"):
+            _vr.plot3D = _viserplot_shim.plot3D  # type: ignore[attr-defined]
+    except Exception:
+        setattr(cigvis, "viserplot", _viserplot_shim)
 
 
 class CigvisAdapter(RendererAdapter):

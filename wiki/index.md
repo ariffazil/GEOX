@@ -1,224 +1,260 @@
-# GEOX Ω-Wiki Index — Large Earth Model
+# GEOX Ω-WIKI — Source of Truth (SOT)
 
-> **Last Updated:** 2026-04-08  
-> **Total Pages:** 36 (projected)  
-> **System Status:** INIT — FORGING  
-> **Parent:** [[arifos::index]] | [[arifos::Ω-Wiki_Index]]  
-> **Version:** v1.0.0  
+> **DITEMPA BUKAN DIBERI** — *Forged, Not Given*  
+> **Authority:** 888_JUDGE | **Status:** 999_SEAL CONFIRMED | **Version:** v2.1.0 (2026.04.12)  
+> **Live:** https://geox.arif-fazil.com  
+> **Architecture:** Anti-Chaos | **Session:** SEALED | **Trinity:** CONNECTED
 
----
-
-## 🎯 Start Here — The Intelligence Stack
-
-**New to Constitutional Earth Intelligence?** Follow this path:
-
-1. **[[00_INDEX/Spatial_Temporal_AGI_Manifesto]]** — Why space + time unlock AGI; how arifOS + GEOX solve it
-2. **[[00_INDEX/LLM_LEM_Manifesto]]** — Why LLM → LEM → arifOS is the foundation for next intelligence
-3. **[[00_INDEX/Quickstart]]** — "Is GEOX for me?" + 5-page reading journey
-4. **[[10_THEORY/Theory_of_Anomalous_Contrast]]** — The core theory preventing AI hallucination in geoscience
-5. **[[20_PHYSICS/EARTH_CANON_9]]** — The 9 fundamental geophysical variables
-6. **[[30_MATERIALS/RATLAS_Index]]** — Reference Atlas of 99 Earth Materials
-
-**Total time:** ~90 minutes for foundational understanding.
+This wiki is the canonical knowledge base for GEOX. It contains the philosophical, physical, and technical blueprints for the Earth Witness system. All agents MUST respect the standards defined here.
 
 ---
 
-## 00 — INDEX & ENTRY POINTS
+## 🏛️ 00_INDEX — The Gateway
 
-Navigation and getting-started guides.
-
-| Page | Type | Description | Confidence |
-|------|------|-------------|------------|
-| [[00_INDEX/Quickstart]] | Index | First-time user journey | 1.0 |
-| [[00_INDEX/Prerequisite_Map]] | Index | Dependency graph of all pages | 1.0 |
-| [[00_INDEX/Basin_Directory]] | Index | Global basin index | 0.95 |
-| [[00_INDEX/LLM_LEM_Manifesto]] | Philosophy | The LLM → LEM → arifOS intelligence stack | 1.0 |
-
----
-
-## 10 — THEORY — Core Geoscience Principles
-
-Foundational theory everyone must understand. No prerequisites.
-
-| Page | Type | Description | Epistemic | Floors |
-|------|------|-------------|-----------|--------|
-| [[10_THEORY/Theory_of_Anomalous_Contrast]] | Theory | ToAC: Visual contrast ≠ Physical reality | DER | F2, F4, F9 |
-| [[10_THEORY/Forward_vs_Inverse_Modelling]] | Theory | Forward prediction vs inverse inference | OBS | F4 |
-| [[10_THEORY/Contrast_Canon]] | Theory | Physical vs Display vs Perceptual domains | DER | F4, F9 |
-| [[10_THEORY/Conflation_Taxonomy]] | Theory | Source → Transform → Proxy → Confidence | DER | F7 |
-| [[10_THEORY/Bond_2007_Cognitive_Bias]] | Theory | 79% expert failure rate analysis | OBS | F9 |
-| [[10_THEORY/Epistemic_Levels]] | Theory | OBS/DER/INT/SPEC classification system | OBS | F2, F9 |
-| [[10_THEORY/CANON_9_Literature_Grounding]] | Theory | Academic support & intellectual position | INT | F2 |
+| Document | Purpose |
+|----------|---------|
+| [**Agent Initialization Protocol**](00_INDEX/Agent_Initialization_Protocol.md) | **START HERE** — Mandatory pre-flight for all operators |
+| [**GEOX Manifesto**](00_INDEX/MANIFESTO.md) | Philosophical foundation |
+| [**Unified Roadmap**](00_INDEX/UNIFIED_ROADMAP.md) | Strategic trajectory & milestones |
+| [**Quickstart Guide**](00_INDEX/Quickstart.md) | Rapid onboarding for humans and agents |
+| [**Three Wikis Gateway**](00_INDEX/Three_Wikis_Gateway.md) | How GEOX, arifOS, and AF-FORGE fit together |
+| [**LLM/LEM Manifesto**](00_INDEX/LLM_LEM_Manifesto.md) | Constitutional grounding for language models |
 
 ---
 
-## 20 — PHYSICS — EARTH.CANON_9 & Derivations
+## 📖 10_THEORY — Foundations of Perception
 
-The 9 fundamental geophysical variables and their relationships.
-
-| Page | Type | Description | Variables |
-|------|------|-------------|-----------|
-| [[20_PHYSICS/EARTH_CANON_9]] | Physics | The 9 canonical variables | ρ, Vp, Vs, ρₑ, χ, k, P, T, φ |
-| [[20_PHYSICS/Acoustic_Impedance]] | Derivation | I = ρ × Vp | ρ, Vp |
-| [[20_PHYSICS/Elastic_Moduli]] | Derivation | K, μ, ν from Vp, Vs, ρ | Vp, Vs, ρ |
-| [[20_PHYSICS/Seismic_Reflectivity]] | Derivation | R = (I₂-I₁)/(I₂+I₁) | I |
-| [[20_PHYSICS/Porosity_Types]] | Classification | φt, φe, φi, φp, φs | φ |
-| [[20_PHYSICS/Saturation_Models]] | Models | Archie, Simandoux, Indonesia, Dual-Water | Sw |
-
----
-
-## 30 — MATERIALS — RATLAS Reference Atlas
-
-Physics-backed material intelligence layer.
-
-| Page | Type | Materials | Status |
-|------|------|-----------|--------|
-| [[30_MATERIALS/RATLAS_Index]] | Index | Complete 99-material catalog | ✅ |
-| [[30_MATERIALS/Sedimentary_Clastics]] | Family | Sandstone, shale, siltstone (18) | ✅ |
-| [[30_MATERIALS/Sedimentary_Carbonates]] | Family | Limestone, dolomite, evaporites (9) | 🚧 |
-| [[30_MATERIALS/Igneous_Felsic]] | Family | Granite, rhyolite (9) | 🚧 |
-| [[30_MATERIALS/Igneous_Mafic]] | Family | Basalt, gabbro (9) | 🚧 |
-
-**Symbolic Token Examples:**
-- `SAND_QZ_CLEAN` — Clean quartz sandstone
-- `SHALE_ILL` — Illitic shale
-- `LIMESTONE_CC` — Calcitic limestone
-- `GRANITE_K` — Potassic granite
+| Document | Purpose |
+|----------|---------|
+| [**Theory of Anomalous Contrast (ToAC)**](10_THEORY/Theory_of_Anomalous_Contrast.md) | The organizing principle of GEOX |
+| [**Contrast Canon**](10_THEORY/Contrast_Canon.md) | Rules for visual vs. physical signal |
+| [**Epistemic Levels**](10_THEORY/Epistemic_Levels.md) | Defining certainty in geoscience |
+| [**Bond (2007) Bias Analysis**](10_THEORY/Bond_2007_Cognitive_Bias.md) | Cognitive risks in interpretation |
+| [**Forward vs Inverse Modelling**](10_THEORY/Forward_vs_Inverse_Modelling.md) | Two modes of geological reasoning |
+| [**GEOX Platform-Agnostic Prompts**](10_THEORY/GEOX_PLATFORM_AGNOSTIC_PROMPTS.md) | Agent instruction templates |
+| [**CANON_9 Literature Grounding**](10_THEORY/CANON_9_Literature_Grounding.md) | Scientific citation canon |
 
 ---
 
-## 40 — BASINS — Regional Geoscience Knowledge
+## ⚛️ 20_PHYSICS — The Reality Firewall
 
-Earth knowledge organized by geographic region.
-
-| Basin | Region | Status | Wells | Key Formations |
-|-------|--------|--------|-------|----------------|
-| [[40_BASINS/Malay_Basin]] | SE Asia | ✅ | 500+ | Group K, Group M |
-| [[40_BASINS/Sarawak_Basin]] | Borneo | 🚧 | 300+ | Belait, Setap |
-| [[40_BASINS/Gulf_of_Mexico]] | N America | 📋 | 10,000+ | Multiple |
-
-**Status:** 🚧 = In progress | 📋 = Planned | ✅ = Complete
+| Document | Purpose |
+|----------|---------|
+| [**Earth Canon 9**](20_PHYSICS/EARTH_CANON_9.md) | The 9 physical laws governing the forge |
+| [**Saturation Models**](20_PHYSICS/Saturation_Models.md) | Archie, Simandoux, Indonesia implementations |
+| [**Acoustic Impedance**](20_PHYSICS/Acoustic_Impedance.md) | Seismic-to-rock property mapping |
 
 ---
 
-## 50 — TOOLS — MCP Tool Specifications
+## 🪨 30_MATERIALS — Geological Catalog
 
-GEOX tool surface specifications and usage patterns.
-
-| Tool | Stage | Risk Tier | Status |
-|------|-------|-----------|--------|
-| [[50_TOOLS/geox_load_seismic_line]] | 111_SENSE | Safe | ✅ |
-| [[50_TOOLS/geox_build_structural_candidates]] | 333_MIND | Guarded | ✅ |
-| [[50_TOOLS/geox_evaluate_prospect]] | 888_JUDGE | High Risk | ✅ |
-| [[50_TOOLS/geox_load_well_log_bundle]] | 111_SENSE | Safe | ✅ Phase A |
-| [[50_TOOLS/geox_qc_logs]] | 111_SENSE | Safe | ✅ Phase A |
-| [[50_TOOLS/geox_select_sw_model]] | 333_MIND | Guarded | 🚧 Phase B |
-| [[50_TOOLS/geox_compute_petrophysics]] | 222_REFLECT | Guarded | 🚧 Phase B |
+| Document | Purpose |
+|----------|---------|
+| [**RATLAS Index**](30_MATERIALS/RATLAS_Index.md) | Reference Atlas of subsurface materials |
+| [**Sedimentary Clastics**](30_MATERIALS/Sedimentary_Clastics.md) | Sand/Shale physics |
+| [**Sedimentary Carbonates**](30_MATERIALS/Sedimentary_Carbonates.md) | Porosity and mineralogy rules |
 
 ---
 
-## 60 — CASES — Interpretation Case Studies
+## 🌍 40_BASINS — Regional Knowledge
 
-Real interpretation workflows with 888_HOLD decisions.
-
-| Case | Basin | Type | Verdict | Date |
-|------|-------|------|---------|------|
-| [[60_CASES/Structural_Interpretation_Workflow]] | Generic | Workflow | — | 2026 |
-| [[60_CASES/Petrophysical_Analysis_Example]] | Generic | Workflow | — | 2026 |
+| Document | Purpose |
+|----------|---------|
+| [**Malay Basin**](40_BASINS/Malay_Basin.md) | **Primary operational domain** — Pilot project |
+| [**Sarawak Basin**](40_BASINS/Sarawak_Basin.md) | Secondary domain and analogies |
 
 ---
 
-## 70 — GOVERNANCE — Constitutional Enforcement
+## 📚 60_CASES — Validation & Case Studies
 
-F1-F13 floor enforcement and audit records.
+| Document | Purpose |
+|----------|---------|
+| [**Structural Interpretation Workflow**](60_CASES/Structural_Interpretation_Workflow.md) | Constitutional workflow demonstration (Malay Basin) |
+| [**Layang-Layang Validation**](60_CASES/Layang_Layang_Validation_2026_04_10.md) | **🆕 EUREKA-LEVEL** — GPT-5 constitutional firewall stress-test |
 
-| Page | Floor(s) | Purpose |
-|------|----------|---------|
-| [[70_GOVERNANCE/Floor_Enforcement_Log]] | All | Record of floor violations |
-| [[70_GOVERNANCE/888_HOLD_Registry]] | F13 | Human sovereignty decisions |
-| [[70_GOVERNANCE/Conflation_Reports]] | F9 | ToAC violation documentation |
-| [[70_GOVERNANCE/Confidence_Bands]] | F7 | Ω₀ tracking and calibration |
-| [[70_GOVERNANCE/Seals_and_Verdicts]] | All | SEAL, PARTIAL, SABAR, VOID records |
+### Malay Basin Pilot
 
----
+The **Malay Basin Petroleum Exploration Pilot** is the live demo implementation:
 
-## 80 — INTEGRATION — arifOS Federation
-
-How GEOX connects to the constitutional federation.
-
-| Page | Links To | Purpose |
-|------|----------|---------|
-| [[80_INTEGRATION/Trinity_Architecture]] | [[arifos::Trinity_Architecture]] | Position in ΔΩΨ |
-| [[80_INTEGRATION/MCP_Integration]] | [[arifos::MCP_Tools]] | Tool surface specs |
-| [[80_INTEGRATION/VAULT999_Wiring]] | [[arifos::999_VAULT]] | Audit trail integration |
-| [[80_INTEGRATION/Cross_Wiki_Links]] | All arifOS wikis | Inter-wiki navigation |
+- Backend: `arifos/geox/resources/malay_basin_pilot.py`
+- GUI: `geox-gui/src/components/MalayBasinPilotDashboard.tsx`
+- MCP Tool: `geox_malay_basin_pilot`
+- Live URL: https://geox.arif-fazil.com (click "Pilot" tab)
 
 ---
 
-## 90 — AUDITS — Quality Assurance
+## 🛠️ 50_TOOLS — MCP Capability Surfaces
 
-Wiki health monitoring and drift detection.
+### Tool Index
+- [**Tool Index**](50_TOOLS/Tool_Index.md) — Complete catalog
 
-| Page | Purpose | Frequency |
-|------|---------|-----------|
-| [[90_AUDITS/Contradiction_Log]] | Track page contradictions | Weekly |
-| [[90_AUDITS/Orphan_Pages]] | Pages without inbound links | Weekly |
-| [[90_AUDITS/Data_Gaps]] | Missing source documents | Monthly |
-| [[90_AUDITS/Weekly_Lint_Reports]] | Comprehensive health check | Weekly |
+**Repo-state note:** GEOX currently contains multiple MCP/server surfaces from different generations. Use [**GEOX Repo State and Component Map**](80_INTEGRATION/GEOX_REPO_STATE_AND_COMPONENT_MAP.md) to see which tool surface is canonical today.
+
+### Phase A — Foundation Tools
+- [**geox_load_seismic_line**](50_TOOLS/geox_load_seismic_line.md) — Visual mode ignition
+- [**geox_build_structural_candidates**](50_TOOLS/geox_build_structural_candidates.md) — Inverse modelling constraints
+- [**geox_evaluate_prospect**](50_TOOLS/geox_evaluate_prospect.md) — Governed prospect verdicts
+- geox_feasibility_check — Physical possibility firewall
+- geox_verify_geospatial — CRS & jurisdiction verification
+- geox_calculate_saturation — Monte Carlo Sw calculations
+- geox_query_memory — Geological memory retrieval
+
+### Phase B — Physics Engine Tools
+- [**geox_select_sw_model**](50_TOOLS/geox_select_sw_model.md) — SW model admissibility from log QC
+- [**geox_compute_petrophysics**](50_TOOLS/geox_compute_petrophysics.md) — Full petrophysics property pipeline
+- [**geox_validate_cutoffs**](50_TOOLS/geox_validate_cutoffs.md) — Apply CutoffPolicy schema
+- [**geox_petrophysical_hold_check**](50_TOOLS/geox_petrophysical_hold_check.md) — Trigger 888_HOLD on floor violations
+
+### Pilot — Demo Tools
+- **geox_malay_basin_pilot** — Malay Basin demo data & statistics
+
+### System
+- geox_health — Server health & constitutional status
 
 ---
 
-## 📊 Wiki Statistics
+## ⚖️ 70_GOVERNANCE — Constitutional Enforcement
+
+| Document | Purpose |
+|----------|---------|
+| [**888_HOLD Registry**](70_GOVERNANCE/888_HOLD_Registry.md) | History of active safety vetoes |
+| [**Floor Enforcement Log**](70_GOVERNANCE/Floor_Enforcement_Log.md) | F1-F13 verification status |
+| [**AGI Safety Instructions**](70_GOVERNANCE/GEOX_AGI_INSTRUCTIONS.md) | Safety-critical constraints |
+| [**Copilot Instructions**](70_GOVERNANCE/GEOX_COPILOT_INSTRUCTIONS.md) | Microsoft Copilot-specific guidance |
+| [**Copilot Studio AGI**](70_GOVERNANCE/GEOX_COPILOT_STUDIO_AGI.md) | Studio integration patterns |
+| [**Success Criteria**](70_GOVERNANCE/GEOX_SUCCESS_CRITERIA.md) | How we measure "Forged" quality |
+| [**Claim Tagging System**](70_GOVERNANCE/Claim_Tagging_System.md) | Evidence taxonomy (CLAIM/PLAUSIBLE/HYPOTHESIS) |
+| [**Seals and Verdicts**](70_GOVERNANCE/Seals_and_Verdicts.md) | Constitutional verdict definitions |
+
+### Constitutional Floors Quick Reference
+
+| Floor | Name | Status |
+|-------|------|--------|
+| F1 | Amanah (Trust) | ✅ Active |
+| F2 | Truth | ✅ Active |
+| F3 | Tri-Witness | ✅ Active |
+| F4 | Clarity | ✅ Active |
+| F5 | Peace | ✅ Active |
+| F6 | Empathy | ✅ Active |
+| F7 | Humility | ✅ Active |
+| F8 | Genius | ✅ Active |
+| F9 | Anti-Hantu | ✅ Active |
+| F10 | Ontology | ✅ Active |
+| F11 | Audit | ✅ Active |
+| F12 | Injection Guard | ✅ Active |
+| F13 | Sovereign (Human Override) | ✅ Active |
+
+---
+
+## 🔌 80_INTEGRATION — Connect & Bridge
+
+### OpenAI Integration (NEW v0.6.1)
+- [**OpenAI Adapter Guide**](80_INTEGRATION/OPENAI_ADAPTER_GUIDE.md) — ChatGPT Apps SDK integration
+
+### Architecture
+- [**GEOX Repo State and Component Map**](80_INTEGRATION/GEOX_REPO_STATE_AND_COMPONENT_MAP.md) — **Start here for merge/refactor work**; identifies canonical vs duplicate vs legacy components
+- [**GEOX Platform Wiring**](80_INTEGRATION/GEOX_PLATFORM_WIRING.md) — Four-surface platform map for `geox-platform` and its current backend dependency
+- [**GEOX MCP Apps Architecture**](80_INTEGRATION/GEOX_MCP_APPS_ARCHITECTURE.md) — Host-agnostic design specification
+- [**MCP Apps Architecture**](80_INTEGRATION/MCP_Apps_Architecture.md) — Standard MCP Apps patterns
+- [**Host Adapter Blueprint**](80_INTEGRATION/GEOX_HOST_ADAPTER_BLUEPRINT.md) — OpenAI, Copilot, Custom bridges
+- [**Agnostic Orchestration Prompts**](80_INTEGRATION/Agnostic_Orchestration_Prompts.md) — Cross-platform agent prompts
+
+### Contracts & Protocols
+- [**App Interface Contracts**](80_INTEGRATION/App_Interface_Contracts.md) — Manifests & Event Bus (JSON-RPC)
+- [**Session & Auth Contract**](80_INTEGRATION/GEOX_SESSION_AUTH_CONTRACT.md) — Sovereignty and context stability
+- [**SCHEMA**](80_INTEGRATION/SCHEMA.md) — Data schemas and validation
+
+### Deployment
+- [**Trinity Deployment Architecture**](80_INTEGRATION/Trinity_Deployment_Architecture.md) — Scaling with Traefik
+- [**FASTMCP CLI Guide**](80_INTEGRATION/FASTMCP_CLI_GUIDE.md) — CLI usage & operations
+- [**Wiring Guide**](80_INTEGRATION/WIRING_GUIDE.md) — Component connection patterns
+- [**CONNECT_TO_GEOX**](80_INTEGRATION/CONNECT_TO_GEOX.md) — Integration guide
+- [**Deployment Checklist**](80_INTEGRATION/DEPLOYMENT_CHECKLIST.md) — Pre-flight verification
+
+### Specifications
+- [**Seismic Viewer Spec**](80_INTEGRATION/Seismic_Viewer_Spec.md) — Microfrontend implementation
+- [**MCP Forge Patterns**](80_INTEGRATION/MCP_FORGE_PATTERNS.md) — Design patterns
+- [**MCP Forge Anti-Patterns**](80_INTEGRATION/MCP_FORGE_ANTI_PATTERNS.md) — Common pitfalls
+- [**MCP Apps Evidence Matrix**](80_INTEGRATION/MCP_Apps_Evidence_Matrix.md) — Platform evidence
+
+### Navigation
+- [**Cross Wiki Links**](80_INTEGRATION/Cross_Wiki_Links.md) — Inter-wiki federation navigation
+
+---
+
+## 🔍 90_AUDITS — Historical Transaction Log
+
+### Current State
+- [**999_SEAL**](90_AUDITS/999_SEAL.md) — Current constitutional state
+- [**DEPLOYMENT_STATUS**](90_AUDITS/DEPLOYMENT_STATUS.md) — Live deployment status
+
+### Phase Milestones
+- [**999_SEAL_PHASE_A**](90_AUDITS/999_SEAL_PHASE_A.md) — Logic & Core Tools completion
+- [**999_SEAL_PHASE_B_PHYSICS**](90_AUDITS/999_SEAL_PHASE_B_PHYSICS.md) — Physics & Visuals completion
+
+### Refactor Audits
+- [**REFACTOR_STEP1_SUMMARY**](90_AUDITS/REFACTOR_STEP1_SUMMARY.md) — Core tool extraction
+- [**REFACTOR_STEPS_2_3_SUMMARY**](90_AUDITS/REFACTOR_STEPS_2_3_SUMMARY.md) — App manifest & event bus
+
+### State of the Tree
+- [**SOT_2026-04-12**](90_AUDITS/SOT_2026-04-12.md) — **🆕 CURRENT** — Canonical repository state reference
+- [**SESSION_SEAL_2026-04-12**](../../SESSION_SEAL_2026-04-12.md) — **🆕 SEALED** — Session seal (arifOS parent repo)
+
+### Historical
+- [**000_INIT_ANCHOR**](90_AUDITS/000_INIT_ANCHOR.md) — Initial constitutional anchor
+- [**HARDENED_SEAL**](90_AUDITS/HARDENED_SEAL.md) — Security hardening verification
+- [**FORGE_SUMMARY_2026_04_08**](90_AUDITS/FORGE_SUMMARY_2026_04_08.md) — April 2026 forge status
+- [**FORGE_SUMMARY_2026_04_09_LANDING_LOGDOCK**](90_AUDITS/FORGE_SUMMARY_2026_04_09_LANDING_LOGDOCK.md) — Landing page + LogDock delivery
+- [**FORGE_SUMMARY_2026_04_10_VERSION_ALIGNMENT**](90_AUDITS/FORGE_SUMMARY_2026_04_10_VERSION_ALIGNMENT.md) — Version alignment
+- [**EUREKA_VALIDATION_2026_04_10**](90_AUDITS/EUREKA_VALIDATION_2026_04_10.md) — **🆕 GPT-5 constitutional firewall stress-test**
+- [**RELEASE_NOTES_v2**](90_AUDITS/RELEASE_NOTES_v2.md) — Version history
+- [**Weekly Lint Reports**](90_AUDITS/Weekly_Lint_Reports.md) — Code quality audits
+- [**log**](90_AUDITS/log.md) — Transaction log
+
+---
+
+## 🚀 Quick Navigation
+
+### For New Operators
+1. Start: [Agent Initialization Protocol](00_INDEX/Agent_Initialization_Protocol.md)
+2. Philosophy: [GEOX Manifesto](00_INDEX/MANIFESTO.md)
+3. Quickstart: [Quickstart Guide](00_INDEX/Quickstart.md)
+
+### For Developers
+1. Architecture: [GEOX MCP Apps Architecture](80_INTEGRATION/GEOX_MCP_APPS_ARCHITECTURE.md)
+2. CLI Guide: [FASTMCP CLI Guide](80_INTEGRATION/FASTMCP_CLI_GUIDE.md)
+3. Deployment: [Deployment Checklist](80_INTEGRATION/DEPLOYMENT_CHECKLIST.md)
+
+### For Geoscientists
+1. Theory: [Theory of Anomalous Contrast](10_THEORY/Theory_of_Anomalous_Contrast.md)
+2. Physics: [Earth Canon 9](20_PHYSICS/EARTH_CANON_9.md)
+3. Tools: [Tool Index](50_TOOLS/Tool_Index.md)
+
+### For Agents
+1. Prompts: [GEOX Platform-Agnostic Prompts](10_THEORY/GEOX_PLATFORM_AGNOSTIC_PROMPTS.md)
+2. Safety: [AGI Safety Instructions](70_GOVERNANCE/GEOX_AGI_INSTRUCTIONS.md)
+3. Constitution: [Floor Enforcement Log](70_GOVERNANCE/Floor_Enforcement_Log.md)
+
+---
+
+## 📊 System Status
 
 ```
-Tier Distribution:
-  00_INDEX      ███ (4 pages)
-  10_THEORY     ██████ (6 pages)
-  20_PHYSICS    ██████ (6 pages)
-  30_MATERIALS  ██ (5 pages projected)
-  40_BASINS     ██ (3+ pages projected)
-  50_TOOLS      ███████ (7 pages)
-  60_CASES      ██ (2+ pages projected)
-  70_GOVERNANCE █████ (5 pages)
-  80_INTEGRATION ████ (4 pages)
-  90_AUDITS     ████ (4 pages)
-  
-Total: 36+ pages projected
+┌─────────────────────────────────────────────────────────────┐
+│  Live URL:     https://geox.arif-fazil.com                  │
+│  Version:      v2.1.0 (Anti-Chaos)                          │
+│  Seal:         DITEMPA BUKAN DIBERI                         │
+│  Verdict:      999_SEAL                                     │
+│  Floors:       F1-F13 ACTIVE                                │
+│  Architecture: ✅ Anti-Chaos (contracts/control/exec)        │
+│  Landing Page: ✅ Complete                                   │
+│  LogDock:      ✅ Complete (petrophysics active)             │
+│  Pilot:        Malay Basin OPERATIONAL                      │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔄 Recently Modified
-
-| Date | Change | Pages Affected |
-|------|--------|----------------|
-| 2026-04-08 | Wiki initialized | All |
-| 2026-04-08 | SCHEMA.md created | — |
-| 2026-04-08 | index.md created | — |
-| 2026-04-08 | LLM_LEM_Manifesto created | 00_INDEX/ |
-
----
-
-## 🔗 External Links
-
-| Resource | URL | Purpose |
-|----------|-----|---------|
-| GEOX Repository | https://github.com/ariffazil/GEOX | Source code |
-| arifOS Repository | https://github.com/ariffazil/arifOS | Constitutional kernel |
-| RATLAS Live | https://aaa.arif-fazil.com/geox/geox_ratlas.html | Material atlas GUI |
-| Karpathy Wiki Pattern | https://gist.github.com/karpathy/... | Wiki methodology |
-
----
-
-> [!NOTE]
-> **GEOX Wiki Status:** INIT — Foundation laid, ready for population.
-> 
-> **Next Actions:** 
-> 1. Populate 10_THEORY with core documents
-> 2. Create RATLAS material pages
-> 3. Link to arifOS wiki via cross-wiki references
-
----
-
-*GEOX Large Earth Model · arifOS Constitutional Federation*  
-*DITEMPA BUKAN DIBERI — Forged, not given.*
+*Sealed by: 888_JUDGE | 2026.04.12*  
+*Constitutional Authority: Muhammad Arif bin Fazil*  
+*DITEMPA BUKAN DIBERI*
