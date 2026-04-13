@@ -5,7 +5,7 @@
 # Registry: https://smithery.ai
 
 name: geox-earth-witness
-version: "0.4.0"
+version: "0.5.0"
 display_name: "GEOX — Geological Intelligence Coprocessor"
 description: |
   GEOX is a governed, agentic geological intelligence coprocessor for arifOS.
@@ -114,6 +114,48 @@ tools:
     input_schema:
       type: object
       properties: {}
+
+  # Petrophysics Phase B (4 tools)
+  - id: geox_select_sw_model
+    name: geox_select_sw_model
+    description: Evaluate Archie vs shaly-sand saturation models against shale conductivity, mineralogy, and calibration support. Returns admissible models with confidence scores.
+    input_schema:
+      type: object
+      properties:
+        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
+        candidate_models: { type: array, items: { type: string }, default: ["archie", "simandoux", "indonesia", "dual_water"] }
+      required: [interval_uri]
+
+  - id: geox_compute_petrophysics
+    name: geox_compute_petrophysics
+    description: Compute Vsh, phi_t, phi_e, Sw, BVW, net, pay, RQI/FZI/HFU with uncertainty envelopes. Constitutional computation pipeline.
+    input_schema:
+      type: object
+      properties:
+        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
+        model_id: { type: string, description: "Saturation model to use (e.g., archie, simandoux)" }
+        model_params: { type: object, description: "Model parameters {a, m, n, rw, ...}" }
+        compute_uncertainty: { type: boolean, default: true }
+      required: [interval_uri, model_id]
+
+  - id: geox_validate_cutoffs
+    name: geox_validate_cutoffs
+    description: Apply economic/operational cutoffs as governed policy objects. Distinguishes physics from policy per F4 Clarity.
+    input_schema:
+      type: object
+      properties:
+        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
+        cutoff_policy_id: { type: string, description: "Policy identifier to apply" }
+      required: [interval_uri, cutoff_policy_id]
+
+  - id: geox_petrophysical_hold_check
+    name: geox_petrophysical_hold_check
+    description: Automatic 888_HOLD trigger detection for petrophysics. Checks Rw calibration, shale model support, environmental corrections, invasion handling, depth matching, and cutoff basis.
+    input_schema:
+      type: object
+      properties:
+        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
+      required: [interval_uri]
 
 # Constitutional governance
 governance:

@@ -2,7 +2,7 @@
 arifos/geox/geox_init.py — GEOX Foundation Hardening
 
 This module provides the "Ignition State" for GEOX, ensuring:
-- Operational environment verification (F9 Anti-Hantu)
+- Operational environment verification (F9 Physics9)
 - Identity anchoring (F11 Authority)
 - System health and dependency checks
 - arifOS Constitutional alignment
@@ -79,7 +79,7 @@ class GEOXFoundation:
             "verdict": "CLEAR"
         }
 
-        # 1. Python Version Check (F9 Anti-Hantu)
+        # 1. Python Version Check (F9 Physics9)
         if sys.version_info < cls.REQUIRED_PY_VERSION:
             status["checks"]["python_version"] = "FAIL"
             status["verdict"] = "VOID"
@@ -87,7 +87,7 @@ class GEOXFoundation:
         else:
             status["checks"]["python_version"] = "OK"
 
-        # 2. Dependency Verification (F9 Anti-Hantu)
+        # 2. Dependency Verification (F9 Physics9)
         essential_deps = ["pydantic", "httpx", "yaml", "arifosmcp"]
         missing_deps = []
         for dep in essential_deps:

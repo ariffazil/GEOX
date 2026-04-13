@@ -1,224 +1,247 @@
-# GEOX MCP Server — Deployment Ready ✅
+# GEOX Deployment Status
 
-**DITEMPA BUKAN DIBERI**  
-**Date:** 2026-04-02  
-**Status:** READY FOR HORIZON DEPLOYMENT
+> **Version:** 0.6.1 · **Status:** 🟢 ACTIVE (Heavy Witness Ignited)  
+> **Seal:** DITEMPA BUKAN DIBERI  
+> **Last Updated:** 2026-04-10
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    GEOX DEPLOYMENT STATUS                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Backend (VPS):         ✅ https://geox.arif-fazil.com/mcp                  │
+│  Health Endpoint:       ✅ /health returns 200 OK                           │
+│  MCP Protocol:          ✅ Responding                                       │
+│  Version:               ✅ v0.5.0                                           │
+│  Constitutional Seal:   ✅ DITEMPA BUKAN DIBERI                             │
+│  Malay Basin Pilot:     ✅ Backend deployed                                 │
+│  GUI Frontend:          ⚠️  Pre-Pilot build (needs refresh)                 │
+│  Horizon Cloud:         🟡 Building (numpy fix pending)                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Summary
+## Deployment Targets
 
-All E2E tests completed successfully. The GEOX MCP server is ready for deployment to FastMCP (Horizon).
+| Target | URL | Status | Notes |
+|--------|-----|--------|-------|
+| **VPS Production** | https://geox.arif-fazil.com | 🟡 PARTIAL | Backend ✅, GUI needs rebuild |
+| **Horizon (FastMCP Cloud)** | https://geoxarifOS.fastmcp.app/mcp | 🟡 BUILDING | numpy fix pending push |
+| **Claude Desktop** | Local | ✅ READY | MCP config available |
+| **Copilot** | Microsoft Cloud | ✅ READY | Adapter implemented |
 
 ---
 
-## Test Results
+## VPS Status Detail
 
-### Code Structure Verification ✅
+### ✅ Backend Services (Operational)
 
-| Check | Result |
-|-------|--------|
-| FastMCP import | ✅ PASS |
-| ToolResult compatibility | ✅ PASS |
-| IS_FASTMCP_3 detection | ✅ PASS |
-| Health routes | ✅ PASS |
-| MCP tools | ✅ PASS |
-| GEOX_VERSION | ✅ PASS |
-| GEOX_SEAL | ✅ PASS |
-| Constitutional floors | ✅ PASS |
-| Async tools | ✅ PASS |
-| Main guard | ✅ PASS |
+| Endpoint | URL | Status | Response |
+|----------|-----|--------|----------|
+| **Health** | `/health` | ✅ 200 OK | `OK` |
+| **Details** | `/health/details` | ✅ 200 OK | `{"version": "0.5.0", "seal": "DITEMPA BUKAN DIBERI", ...}` |
+| **MCP** | `/mcp` | ✅ Active | Protocol responsive |
 
-**Score:** 10/10 tests passed
+**Test Commands:**
+```bash
+# Health check
+curl https://geox.arif-fazil.com/health
+# Output: OK
+
+# Server details
+curl https://geox.arif-fazil.com/health/details
+# Output: {"ok": true, "version": "0.5.0", "service": "geox-earth-witness", ...}
+```
+
+### ⚠️ Frontend GUI (Needs Rebuild)
+
+| Check | Status | Finding |
+|-------|--------|---------|
+| **Pilot Tab** | ❌ NOT FOUND | Pre-Pilot build deployed |
+| **Malay Basin Content** | ❌ NOT FOUND | Needs GUI rebuild |
+| **Page Title** | ✅ FOUND | "GEOX Earth Witness — Constitutional Geoscience" |
+
+**Root Cause:** Docker cache issue — container has older GUI build.
+
+---
+
+## Fix Required
+
+### Immediate Action: Force Rebuild
+
+```bash
+# SSH to VPS
+ssh srv1325122.hstgr.cloud
+cd /opt/arifos/geox
+
+# Pull latest (ensure Malay Basin Pilot commit is present)
+git pull origin main
+
+# Force rebuild with no cache
+docker compose down
+docker compose build --no-cache geox_server
+docker compose up -d geox_server
+
+# Verify
+docker compose logs --tail=50 geox_server
+curl https://geox.arif-fazil.com/health
+```
+
+### Or Use Deploy Script
+
+```bash
+./deploy-vps.sh --force-rebuild
+```
+
+---
+
+## Post-Fix Verification
+
+```bash
+# 1. Health endpoint
+curl https://geox.arif-fazil.com/health
+# Expected: OK
+
+# 2. Pilot tab in HTML
+curl -s https://geox.arif-fazil.com/ | grep -i "pilot"
+# Expected: "Pilot" tab found
+
+# 3. Malay Basin content
+curl -s https://geox.arif-fazil.com/ | grep -i "malay basin"
+# Expected: Content found
+
+# 4. Pilot tool available
+fastmcp list https://geox.arif-fazil.com/mcp | grep malay
+# Expected: geox_malay_basin_pilot
+
+# 5. Test Pilot tool
+fastmcp call https://geox.arif-fazil.com/mcp geox_malay_basin_pilot query_type="stats"
+# Expected: Basin statistics returned
+```
+
+---
+
+## Horizon (FastMCP Cloud)
+
+| Aspect | Status |
+|--------|--------|
+| **URL** | https://geoxarifOS.fastmcp.app/mcp |
+| **Build Status** | 🟡 Rebuilding |
+| **Blocker** | numpy dependency (fixed in pyproject.toml) |
+| **Action Required** | Push to main, auto-rebuild |
+
+```bash
+# Push numpy fix to trigger rebuild
+git add pyproject.toml
+git commit -m "fix(deps): add numpy and prefab-ui to base deps"
+git push origin main
+```
+
+---
+
+## Configuration Files
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `pyproject.toml` | Python deps (numpy added) | ✅ |
+| `fastmcp.json` | CLI configuration | ✅ |
+| `Dockerfile` | Container build | ✅ |
+| `docker-compose.yml` | VPS orchestration | ✅ |
+| `deploy-vps.sh` | Automated deployment | ✅ |
 
 ---
 
 ## Deployment Checklist
 
-### Pre-Deployment ✅
+### Backend (✅ Complete)
+- [x] Dockerfile created
+- [x] Docker Compose configured
+- [x] Traefik labels added
+- [x] Deploy script created
+- [x] numpy added to dependencies
+- [x] prefab-ui added to dependencies
+- [x] Health checks configured
+- [x] Environment variables set
+- [x] VPS deployed
+- [x] Backend responding
 
-- [x] FastMCP 2.x/3.x compatibility layer implemented
-- [x] All 6 MCP tools registered
-- [x] Health endpoints (`/health`, `/health/details`) configured
-- [x] Type annotations with Pydantic Fields
-- [x] Constitutional seal present
-- [x] Version bumped to `0.5.0`
-- [x] pyproject.toml dependencies correct
-- [x] E2E test suite created
-- [x] Deployment checklist created
+### Frontend (⚠️ Pending)
+- [x] Malay Basin Pilot implemented
+- [x] Pilot Dashboard component created
+- [x] MainLayout updated with Pilot tab
+- [x] Git pushed to main
+- [ ] Docker image rebuilt with latest GUI
+- [ ] Pilot tab visible in production
 
-### GitHub Repository ✅
-
-- [x] Code committed to `main` branch
-- [x] Commit: `6377a03` — test: add E2E test suite and deployment checklist
-- [x] Repository: https://github.com/ariffazil/GEOX
-- [x] Files pushed:
-  - `geox_mcp_server.py` (FastMCP 2.x/3.x compatible)
-  - `pyproject.toml` (version 0.5.0)
-  - `test_e2e_mcp.py` (E2E test suite)
-  - `DEPLOYMENT_CHECKLIST.md`
+### Horizon (🟡 In Progress)
+- [x] numpy fix committed
+- [ ] Pushed to main
+- [ ] Horizon rebuild triggered
+- [ ] Horizon deployment verified
 
 ---
 
-## Deployment Steps
+## Troubleshooting
 
-### 1. Trigger Horizon Build
-
-Go to: https://fastmcp.io
-
-Or use Horizon CLI:
+### If Health Check Fails
 ```bash
-fastmcp deploy geoxarifOS
+# Check logs
+ssh srv1325122.hstgr.cloud 'cd /opt/arifos/geox && docker compose logs geox_server'
+
+# Restart
+ssh srv1325122.hstgr.cloud 'cd /opt/arifos/geox && docker compose restart geox_server'
 ```
 
-### 2. Monitor Build Logs
-
-Expected output:
-```
-✓ Installing fastmcp==2.12.3
-✓ Installing arifos-geox==0.5.0
-✓ Building Docker image
-✓ fastmcp inspect passed
-✓ Server started on port 8081
-✓ Health check: OK
-```
-
-### 3. Verify Deployment
-
+### If GUI Doesn't Update
 ```bash
-# Health check
-curl https://geoxarifOS.fastmcp.app/health
-# → OK
-
-# Health details
-curl https://geoxarifOS.fastmcp.app/health/details | jq
-# → {"ok": true, "version": "0.5.0", "seal": "DITEMPA BUKAN DIBERI", ...}
+# Clear Docker cache
+docker system prune -f
+docker compose build --no-cache
+docker compose up -d
 ```
 
-### 4. Run E2E Tests
-
+### If MCP Tools Missing
 ```bash
-python test_e2e_mcp.py --url https://geoxarifOS.fastmcp.app
-```
+# Verify tool registration
+fastmcp list https://geox.arif-fazil.com/mcp
 
-Expected:
-```
-Results: 7/7 tests passed
-Status: ✓ ALL TESTS PASSED
-```
-
----
-
-## Tool Inventory
-
-| Tool | Description | Status |
-|------|-------------|--------|
-| `geox_load_seismic_line` | Load seismic data with visualization | ✅ Ready |
-| `geox_build_structural_candidates` | Build structural model candidates | ✅ Ready |
-| `geox_feasibility_check` | Constitutional feasibility check | ✅ Ready |
-| `geox_verify_geospatial` | Verify coordinates & return province | ✅ Ready |
-| `geox_evaluate_prospect` | Full prospect evaluation | ✅ Ready |
-| `geox_health` | Server health check | ✅ Ready |
-
----
-
-## Constitutional Floors Active
-
-| Floor | Type | Status |
-|-------|------|--------|
-| F1 AMANAH | Hard | ✅ Active |
-| F2 TRUTH | Hard | ✅ Active |
-| F4 CLARITY | Soft | ✅ Active |
-| F7 HUMILITY | Soft | ✅ Active |
-| F9 ANTI-HANTU | Hard | ✅ Active |
-| F13 SOVEREIGN | Hard | ✅ Active |
-
----
-
-## Key Fixes Applied
-
-### FastMCP Compatibility
-
-**Problem:** Horizon uses FastMCP 2.12.3, but code imported `ToolResult` from `fastmcp.tools` (3.x only)
-
-**Solution:** Added compatibility layer:
-```python
-if IS_FASTMCP_3:
-    from fastmcp.tools import ToolResult
-else:
-    class ToolResult:
-        """Compatible ToolResult for FastMCP 2.x"""
-        def __init__(self, content: str, structured_content: Any = None, meta: dict = None):
-            self.content = content
-            self.structured_content = structured_content
-            self.meta = meta or {}
+# Check server logs for errors
+docker compose logs geox_server | grep -i error
 ```
 
 ---
 
-## Files Delivered
+## Live Demo URL
 
-| File | Purpose | Status |
-|------|---------|--------|
-| `geox_mcp_server.py` | Main MCP server with 6 tools | ✅ Ready |
-| `pyproject.toml` | Package config, version 0.5.0 | ✅ Ready |
-| `test_e2e_mcp.py` | E2E test suite (7 tests) | ✅ Added |
-| `DEPLOYMENT_CHECKLIST.md` | Step-by-step deployment guide | ✅ Added |
-| `DEPLOYMENT_STATUS.md` | This file | ✅ Added |
+**Production:** https://geox.arif-fazil.com
 
----
-
-## URLs After Deployment
-
-| Endpoint | URL |
-|----------|-----|
-| Root | `https://geoxarifOS.fastmcp.app` |
-| Health | `https://geoxarifOS.fastmcp.app/health` |
-| Health Details | `https://geoxarifOS.fastmcp.app/health/details` |
-| MCP | `https://geoxarifOS.fastmcp.app/mcp` |
-
----
-
-## Rollback Plan
-
-If issues occur:
-
-1. **Auto-rollback:** Horizon automatically rolls back to last successful build
-2. **Manual rollback:** Use Horizon dashboard → Deployments → Rollback
-3. **Local testing:**
-   ```bash
-   python geox_mcp_server.py --transport http --port 8000
-   ```
+**Features to Demo:**
+1. Health endpoint (`/health`)
+2. Pilot tab in main workspace
+3. Malay Basin statistics
+4. EarthWitness map (auto-zoom to Malay Basin)
+5. 888_HOLD constitutional enforcement
 
 ---
 
 ## Next Actions
 
-### Immediate (You)
-
-1. ✅ Review this status document
-2. ⏳ Trigger deployment on Horizon
-3. ⏳ Monitor build logs
-4. ⏳ Verify health endpoints
-5. ⏳ Run E2E tests against production
-
-### Post-Deployment (Optional)
-
-1. Update OpenAI Agents SDK integration to use production URL
-2. Test GEOX GUI connection to production server
-3. Announce deployment to team
+| Priority | Action | Owner |
+|----------|--------|-------|
+| 🔴 HIGH | Force rebuild VPS Docker image | DevOps |
+| 🟡 MEDIUM | Push numpy fix to trigger Horizon rebuild | Developer |
+| 🟢 LOW | Verify Claude Desktop integration | QA |
 
 ---
 
-## Sign-off
+## Related Documentation
 
-**Status:** ✅ READY FOR DEPLOYMENT
-
-**Authority:** ΔΩΨ Trinity Architecture  
-**Seal:** DITEMPA BUKAN DIBERI  
-**Version:** 0.5.0  
-**Commit:** 6377a03
+- [Wiki Index](./wiki/index.md) — Complete Source of Truth
+- [999_SEAL](./wiki/90_AUDITS/999_SEAL.md) — Constitutional state
+- [FASTMCP CLI Guide](./wiki/80_INTEGRATION/FASTMCP_CLI_GUIDE.md) — CLI operations
+- [Deployment Checklist](./DEPLOYMENT_CHECKLIST.md) — Detailed checklist
 
 ---
 
-**Deploy when ready.** 🚀
+*Last verified: 2026-04-09 01:37 UTC*  
+*Constitutional State: DITEMPA BUKAN DIBERI — 999 SEAL*

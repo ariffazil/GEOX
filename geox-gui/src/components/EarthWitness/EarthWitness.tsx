@@ -54,10 +54,75 @@ export const EarthWitness: React.FC = () => {
 
     map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
 
+    const pilotData = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "id": "basin_boundary",
+          "properties": {"name": "Malay Basin Boundary", "type": "Basin"},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[
+              [102.0, 5.0], [105.0, 7.5], [107.0, 5.0], [105.0, 3.0], [102.0, 5.0]
+            ]]
+          }
+        },
+        {
+          "type": "Feature",
+          "id": "p1_zone",
+          "properties": {"name": "P1: Basin-centre Anticline", "play": "P1", "fill": "#ff4444"},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[
+              [103.5, 5.5], [105.0, 6.0], [105.5, 5.5], [104.5, 4.5], [103.5, 5.5]
+            ]]
+          }
+        }
+      ]
+    };
+
+    map.current.on('load', () => {
+      if (!map.current) return;
+
+      map.current.addSource('malay_basin_pilot', {
+        type: 'geojson',
+        data: pilotData as any
+      });
+
+      map.current.addLayer({
+        id: 'malay_basin_fill',
+        type: 'fill',
+        source: 'malay_basin_pilot',
+        paint: {
+          'fill-color': ['coalesce', ['get', 'fill'], '#3b82f6'],
+          'fill-opacity': 0.2
+        }
+      });
+
+      map.current.addLayer({
+        id: 'malay_basin_outline',
+        type: 'line',
+        source: 'malay_basin_pilot',
+        paint: {
+          'line-color': ['coalesce', ['get', 'fill'], '#3b82f6'],
+          'line-width': 2
+        }
+      });
+
+      if (activeTab === 'pilot') {
+        map.current.flyTo({
+          center: [104.5, 5.5],
+          zoom: 6.5,
+          duration: 2000
+        });
+      }
+    });
+
     return () => {
       map.current?.remove();
     };
-  }, [lng, lat, zoom]);
+  }, [lng, lat, zoom, activeTab]);
 
   return (
     <div className="relative w-full h-full min-h-[400px] border border-slate-800 rounded-lg overflow-hidden">

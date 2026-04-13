@@ -1,31 +1,45 @@
 """
-GEOX Volume App — DITEMPA BUKAN DIBERI
+GEOX Apps — Host-agnostic interactive applications.
 
-App module for volume context and 3D visualization.
+This package contains GEOX MCP Apps with their manifests and implementations.
+Each app is self-contained and portable across hosts.
 
-This is the user-facing app that uses the renderer adapters
-to provide volume context views.
-
-Architecture:
-  GEOX tools → VolumeApp → SceneCompiler → CigvisAdapter → cigvis
+DITEMPA BUKAN DIBERI
 """
 
-from arifos.geox.apps.volume_app.app import VolumeApp
-from arifos.geox.apps.volume_app.tools import (
-    geox_open_volume_context,
-    geox_volume_compile_scene,
-    geox_volume_render_snapshot,
-    geox_volume_launch_interactive,
-    geox_volume_add_horizon,
-    geox_volume_add_wells,
-)
+from pathlib import Path
+import json
 
-__all__ = [
-    "VolumeApp",
-    "geox_open_volume_context",
-    "geox_volume_compile_scene",
-    "geox_volume_render_snapshot",
-    "geox_volume_launch_interactive",
-    "geox_volume_add_horizon",
-    "geox_volume_add_wells",
-]
+from ..contracts.app_manifest import GeoXAppManifest, get_app_registry
+
+
+def load_app_manifest(app_name: str) -> GeoXAppManifest:
+    """
+    Load an app manifest by name.
+    
+    Args:
+        app_name: App directory name (e.g., 'seismic_viewer')
+    
+    Returns:
+        Parsed GeoXAppManifest
+    """
+    manifest_path = Path(__file__).parent / app_name / "manifest.json"
+    return GeoXAppManifest.parse_file(manifest_path)
+
+
+def register_all_apps() -> None:
+    """Register all built-in GEOX apps."""
+    registry = get_app_registry()
+    
+    apps_dir = Path(__file__).parent
+    for app_dir in apps_dir.iterdir():
+        if app_dir.is_dir() and (app_dir / "manifest.json").exists():
+            try:
+                manifest = GeoXAppManifest.parse_file(app_dir / "manifest.json")
+                registry.register(manifest)
+            except Exception as e:
+                print(f"[GEOX Apps] Failed to load {app_dir.name}: {e}")
+
+
+# Auto-register on import
+register_all_apps()

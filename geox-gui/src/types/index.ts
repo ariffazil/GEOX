@@ -307,7 +307,7 @@ export interface UncertaintyState {
 // UI Types
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export type Tab = 'map' | '3d' | 'seismic' | 'wells' | 'outcrop' | 'prospect' | 'governance' | 'qc';
+export type Tab = 'prospect' | 'well' | 'section' | 'earth3d' | 'time4d' | 'physics' | 'map';
 
 export type ViewMode = '2d' | '3d';
 
@@ -371,33 +371,100 @@ export interface HealthStatus {
 // Store Types
 // ═══════════════════════════════════════════════════════════════════════════════
 
+export interface McpConnectionStatus {
+  status: 'connected' | 'disconnected' | 'error' | 'checking';
+  lastChecked: string | null;
+  toolsAvailable: number;
+  latencyMs: number | null;
+}
+
 export interface GEOXState {
   // View state
   activeTab: Tab;
   viewMode: ViewMode;
   panelConfig: PanelConfig;
-  
+
   // Data
   layers: MapLayer[];
   wells: Well[];
   seismicLines: SeismicLine[];
   prospects: Prospect[];
-  
+
   // Selection (synchronized)
   selectedCoordinate: Coordinate | null;
   selectedLine: string | null;
   selectedWell: string | null;
   selectedProspect: string | null;
   cursor: CursorState | null;
-  
+
   // Governance
   governance: GovernanceState;
   groundingStatus: GroundingStatus;
   uncertainty: UncertaintyState;
-  
+
   // Connection
   geoxConnected: boolean;
   geoxUrl: string;
+  mcpConnectionStatus: McpConnectionStatus;
+
+  // Meta
+  metaLinks: Array<{ name: string; url: string }>;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UI Bridge Event Types (JSON-RPC)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export type GeoxMethod = 
+  | 'app.initialize' 
+  | 'app.context.patch' 
+  | 'ui.action' 
+  | 'ui.state.sync' 
+  | 'tool.request' 
+  | 'tool.response';
+
+export interface GeoxEvent<T = any> {
+  jsonrpc: '2.0';
+  method: GeoxMethod;
+  params: T;
+  id?: string | number;
+  timestamp: string;
+}
+
+export interface AppInitializeParams {
+  app_id: string;
+  user_id: string;
+  host_capabilities: string[];
+  initial_context: Record<string, any>;
+}
+
+export interface ContextPatchParams {
+  basin?: string;
+  well_id?: string;
+  prospect_id?: string;
+  coordinates?: Coordinate;
+  depth?: number;
+  [key: string]: any;
+}
+
+export interface UIActionParams {
+  action: string;
+  payload: any;
+}
+
+export interface UIStateSyncParams {
+  state_delta: Partial<GEOXState>;
+}
+
+export interface ToolRequestParams {
+  tool: string;
+  arguments: Record<string, any>;
+}
+
+export interface ToolResponseParams {
+  tool: string;
+  result: any;
+  error?: string;
 }
 
 export type GEOXAction = 

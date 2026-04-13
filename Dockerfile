@@ -1,51 +1,64 @@
-# ── GEOX MCP Server ───────────────────────────────────────────────────────────
-# Geospatial earth-witness co-agent for arifOS Trinity Architecture
-# DITEMPA BUKAN DIBERI [ΔΩΨ | ARIF]
-# ──────────────────────────────────────────────────────────────────────────────
+# GEOX Earth Intelligence Core — Anti-Chaos Dimension-Native
+# DITEMPA BUKAN DIBERI
+# Version: v2026.04.12-DIMENSION-NATIVE
 
-FROM python:3.12-slim AS build
+FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-WORKDIR /build
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY pyproject.toml .
-COPY README.md .
-COPY geox_mcp_server.py .
-COPY arifos/ arifos/
-
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir ".[apps]"
-
-
-FROM python:3.12-slim AS runtime
-
-RUN groupadd -g 1000 arifos && \
-    useradd -u 1000 -g arifos -m -s /bin/bash arifos
+LABEL maintainer="arifOS"
+LABEL version="v2026.04.12-DIMENSION-NATIVE"
+LABEL seal="DITEMPA BUKAN DIBERI"
 
 WORKDIR /app
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /usr/local /usr/local
-COPY --from=build /build /app
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir -p /app/data && chown -R arifos:arifos /app
+# Copy canonical GEOX — Anti-Chaos Structure
+# Contracts (Single Source of Truth)
+COPY contracts/ ./contracts/
 
-USER arifos
+# Control Plane (Routing & Coordination)
+COPY control_plane/ ./control_plane/
 
+# Execution Plane (Calculations & Engines)
+COPY execution_plane/ ./execution_plane/
+
+# Compatibility Layer (Legacy Support)
+COPY compatibility/ ./compatibility/
+
+# Services (Evidence, Geo, Governance, Witness)
+COPY services/ ./services/
+
+# Data & Knowledge
+COPY data/ ./data/
+COPY geox_atlas_99_materials.csv .
+
+# Entrypoint Shim (imports from execution_plane)
+COPY geox_unified.py .
+COPY entrypoint.sh .
+
+# Create vault directory
+RUN mkdir -p /app/999_vault
+
+# Non-root user for security
+RUN useradd -m -u 1000 geox && \
+    chown -R geox:geox /app && \
+    chmod +x /app/entrypoint.sh
+
+USER geox
+
+# Expose MCP server port
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD curl -fsS --max-time 3 http://localhost:8000/health || exit 1
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
 
-CMD ["python", "geox_mcp_server.py", "--transport", "http", "--port", "8000", "--host", "0.0.0.0"]
+# Start Earth Intelligence Core
+CMD ["/app/entrypoint.sh"]

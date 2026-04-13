@@ -27,6 +27,7 @@ from prefab_ui.components import (
     CardHeader,
     CardTitle,
     Column,
+    Grid,
     H2,
     H3,
     Markdown,
@@ -548,5 +549,368 @@ def prospect_verdict_view(
                 CardTitle("Constitutional Floors")
             with CardContent():
                 _floor_table(_ACTIVE_FLOORS)
+
+    return PrefabApp(view=view)
+
+
+# ---------------------------------------------------------------------------
+# View 6 — geox_select_sw_model (Petrophysics Phase B)
+# ---------------------------------------------------------------------------
+
+def sw_model_selector_view(
+    interval_uri: str,
+    admissible_models: list[dict],
+    rejected_models: list[dict],
+    recommended_model: str | None,
+) -> PrefabApp:
+    """
+    Saturation Model Selector view.
+
+    Shows admissible vs rejected Sw models with confidence scores,
+    physical basis, and violations for rejected models.
+    """
+    with Column(gap=4, css_class="p-6") as view:
+        H2("Saturation Model Selection")
+        Muted(f"Interval: {interval_uri}")
+        Separator()
+
+        # --- Recommendation badge ---
+        if recommended_model:
+            with Alert(variant="success"):
+                AlertTitle(f"Recommended: {recommended_model}")
+                AlertDescription(
+                    "This model has the highest confidence based on calibration data "
+                    "and formation characteristics per F7 Humility."
+                )
+
+        # --- Admissible models table ---
+        with Card():
+            with CardHeader():
+                CardTitle("Admissible Models")
+            with CardContent():
+                if admissible_models:
+                    with Table():
+                        with TableHeader():
+                            with TableRow():
+                                TableHead("Model")
+                                TableHead("Confidence")
+                                TableHead("Justification")
+                        with TableBody():
+                            for m in admissible_models:
+                                conf = m.get("confidence", 0.0)
+                                conf_variant = (
+                                    "success" if conf >= 0.8
+                                    else "warning" if conf >= 0.5
+                                    else "default"
+                                )
+                                with TableRow():
+                                    TableCell(m.get("model", "—"))
+                                    with TableCell():
+                                        Badge(f"{conf:.0%}", variant=conf_variant)
+                                    TableCell(m.get("justification", "—"))
+                else:
+                    Muted("No admissible models found. Check calibration data.")
+
+        # --- Rejected models table ---
+        if rejected_models:
+            with Card():
+                with CardHeader():
+                    CardTitle("Rejected Models")
+                with CardContent():
+                    with Table():
+                        with TableHeader():
+                            with TableRow():
+                                TableHead("Model")
+                                TableHead("Rejection Reason")
+                                TableHead("Violations")
+                        with TableBody():
+                            for m in rejected_models:
+                                with TableRow():
+                                    TableCell(m.get("model", "—"))
+                                    TableCell(m.get("reason", "—"))
+                                    violations = m.get("violations", [])
+                                    with TableCell():
+                                        if violations:
+                                            for v in violations:
+                                                Badge(v, variant="destructive")
+                                        else:
+                                            Text("—")
+
+        # --- F7 Humility note ---
+        with Alert(variant="default"):
+            AlertTitle("F7 Humility — Confidence Calibration")
+            AlertDescription(
+                "Confidence scores are bounded by data quality and calibration coverage. "
+                "Models with confidence <50% require additional calibration before use."
+            )
+
+    return PrefabApp(view=view)
+
+
+# ---------------------------------------------------------------------------
+# View 7 — geox_compute_petrophysics (Petrophysics Phase B)
+# ---------------------------------------------------------------------------
+
+def petrophysics_compute_view(
+    interval_uri: str,
+    model_used: str,
+    results: dict,
+    verdict: str,
+    compute_uncertainty: bool,
+) -> PrefabApp:
+    """
+    Petrophysics Computation Results view.
+
+    Shows computed Vsh, phi_t, phi_e, Sw, BVW with uncertainty envelopes.
+    """
+    with Column(gap=4, css_class="p-6") as view:
+        H2("Petrophysics Computation Results")
+        Muted(f"Model: {model_used}  ·  Interval: {interval_uri}")
+        Separator()
+
+        # --- Verdict badge ---
+        verdict_variant = _verdict_variant(verdict)
+        with Row(gap=2):
+            Badge(f"Verdict: {verdict}", variant=verdict_variant)
+            if compute_uncertainty:
+                Badge("Uncertainty: Enabled", variant="success")
+            else:
+                Badge("Uncertainty: Disabled", variant="warning")
+
+        # --- Results metrics ---
+        with Card():
+            with CardHeader():
+                CardTitle("Computed Properties")
+            with CardContent():
+                # Extract ranges
+                vsh = results.get("vsh_range", [0, 0])
+                phi_t = results.get("phi_t_range", [0, 0])
+                phi_e = results.get("phi_e_range", [0, 0])
+                sw = results.get("sw_range", [0, 0])
+                bvw = results.get("bvw_range", [0, 0])
+
+                with Grid(columns=2, gap=4):
+                    with Card():
+                        with CardContent():
+                            Text("Vsh (Shale Volume)", css_class="text-sm text-muted-foreground")
+                            Metric(value=f"{vsh[0]:.2f}–{vsh[1]:.2f}", label="fraction")
+                    with Card():
+                        with CardContent():
+                            Text("φt (Total Porosity)", css_class="text-sm text-muted-foreground")
+                            Metric(value=f"{phi_t[0]:.2f}–{phi_t[1]:.2f}", label="fraction")
+                    with Card():
+                        with CardContent():
+                            Text("φe (Effective Porosity)", css_class="text-sm text-muted-foreground")
+                            Metric(value=f"{phi_e[0]:.2f}–{phi_e[1]:.2f}", label="fraction")
+                    with Card():
+                        with CardContent():
+                            Text("Sw (Water Saturation)", css_class="text-sm text-muted-foreground")
+                            Metric(value=f"{sw[0]:.2f}–{sw[1]:.2f}", label="fraction")
+
+                with Card(css_class="mt-4"):
+                    with CardContent():
+                        Text("BVW (Bulk Volume Water)", css_class="text-sm text-muted-foreground")
+                        Metric(value=f"{bvw[0]:.3f}–{bvw[1]:.3f}", label="fraction")
+
+        # --- Uncertainty note ---
+        if compute_uncertainty:
+            with Alert(variant="default"):
+                AlertTitle("F7 Humility — Uncertainty Envelopes")
+                AlertDescription(
+                    "Ranges shown represent 10th–90th percentile confidence intervals. "
+                    "Interpretations should account for uncertainty in all derived quantities."
+                )
+        else:
+            with Alert(variant="warning"):
+                AlertTitle("Uncertainty Disabled")
+                AlertDescription(
+                    "Point estimates only. Confidence intervals not computed. "
+                    "Enable uncertainty for production interpretations."
+                )
+
+    return PrefabApp(view=view)
+
+
+# ---------------------------------------------------------------------------
+# View 8 — geox_validate_cutoffs (Petrophysics Phase B)
+# ---------------------------------------------------------------------------
+
+def cutoff_validation_view(
+    interval_uri: str,
+    policy_id: str,
+    net_pay_flags: dict,
+    cutoffs_applied: dict,
+) -> PrefabApp:
+    """
+    Cutoff Policy Validation view.
+
+    Shows net/pay thickness, net-to-gross, and applied cutoffs.
+    Distinguishes physics from policy per F4 Clarity.
+    """
+    with Column(gap=4, css_class="p-6") as view:
+        H2("Cutoff Policy Validation")
+        Muted(f"Policy: {policy_id}  ·  Interval: {interval_uri}")
+        Separator()
+
+        # --- Status badge ---
+        with Row(gap=2):
+            Badge("Status: VALIDATED", variant="success")
+            Badge("F4 Clarity: Physics ≠ Policy", variant="default")
+
+        # --- Net/Pay metrics ---
+        with Card():
+            with CardHeader():
+                CardTitle("Net / Pay Summary")
+            with CardContent():
+                net_thick = net_pay_flags.get("net_thickness_m", 0)
+                pay_thick = net_pay_flags.get("pay_thickness_m", 0)
+                ntg = net_pay_flags.get("net_to_gross", 0)
+
+                with Grid(columns=3, gap=4):
+                    with Card():
+                        with CardContent():
+                            Text("Net Thickness", css_class="text-sm text-muted-foreground")
+                            Metric(value=f"{net_thick:.1f}", label="meters")
+                    with Card():
+                        with CardContent():
+                            Text("Pay Thickness", css_class="text-sm text-muted-foreground")
+                            Metric(value=f"{pay_thick:.1f}", label="meters")
+                    with Card():
+                        with CardContent():
+                            Text("Net-to-Gross", css_class="text-sm text-muted-foreground")
+                            Metric(value=f"{ntg:.2f}", label="ratio")
+
+        # --- Cutoffs applied ---
+        with Card():
+            with CardHeader():
+                CardTitle("Applied Cutoffs (Policy)")
+            with CardContent():
+                vsh_max = cutoffs_applied.get("vsh_max", 0)
+                phi_min = cutoffs_applied.get("phi_min", 0)
+                sw_max = cutoffs_applied.get("sw_max", 0)
+
+                with Table():
+                    with TableBody():
+                        with TableRow():
+                            TableCell("Vsh Maximum")
+                            TableCell(f"≤ {vsh_max:.2f}")
+                            TableCell("Shale volume cutoff")
+                        with TableRow():
+                            TableCell("φ Minimum")
+                            TableCell(f"≥ {phi_min:.2f}")
+                            TableCell("Porosity cutoff")
+                        with TableRow():
+                            TableCell("Sw Maximum")
+                            TableCell(f"≤ {sw_max:.2f}")
+                            TableCell("Water saturation cutoff")
+
+        # --- F4 Clarity notice ---
+        with Alert(variant="default"):
+            AlertTitle("F4 Clarity — Physics vs Policy")
+            AlertDescription(
+                "Cutoffs are policy decisions, not physical laws. Net/pay flags "
+                "represent economic/operational criteria applied to physically computed properties."
+            )
+
+    return PrefabApp(view=view)
+
+
+# ---------------------------------------------------------------------------
+# View 9 — geox_petrophysical_hold_check (Petrophysics Phase B)
+# ---------------------------------------------------------------------------
+
+def petrophysical_hold_view(
+    interval_uri: str,
+    verdict: str,
+    triggers: list[str],
+    required_actions: list[str],
+    can_override: bool,
+) -> PrefabApp:
+    """
+    Petrophysical 888 HOLD Check view.
+
+    Shows automatic hold triggers and required actions before SEAL.
+    """
+    verdict_variant = _verdict_variant(verdict)
+    is_hold = verdict in ("888_HOLD", "HOLD", "BLOCK")
+
+    with Column(gap=4, css_class="p-6") as view:
+        H2("Petrophysical HOLD Check")
+        Muted(f"Interval: {interval_uri}")
+        Separator()
+
+        # --- Verdict badge ---
+        with Row(gap=2):
+            Badge(f"Verdict: {verdict}", variant=verdict_variant)
+            if can_override:
+                Badge("Override: F13 Sovereign", variant="warning")
+
+        # --- Hold alert ---
+        if is_hold:
+            with Alert(variant="destructive"):
+                AlertTitle("888 HOLD — Pipeline Halted")
+                AlertDescription(
+                    "Automatic hold triggers detected. Petrophysical interpretation "
+                    "cannot proceed to SEAL until all triggers are resolved."
+                )
+        else:
+            with Alert(variant="success"):
+                AlertTitle("QUALIFY — Proceed to SEAL")
+                AlertDescription(
+                    "No hold triggers detected. Physical grounding sufficient "
+                    "for interpretation at current confidence level."
+                )
+
+        # --- Triggers table ---
+        if triggers:
+            with Card():
+                with CardHeader():
+                    CardTitle("Hold Triggers Detected")
+                with CardContent():
+                    for trigger in triggers:
+                        with Row(gap=2, css_class="mb-2"):
+                            Badge(trigger, variant="destructive")
+        else:
+            with Card():
+                with CardHeader():
+                    CardTitle("Hold Triggers")
+                with CardContent():
+                    Muted("No triggers detected.")
+
+        # --- Required actions ---
+        with Card():
+            with CardHeader():
+                CardTitle("Required Actions Before SEAL")
+            with CardContent():
+                if required_actions:
+                    md = "\n".join(f"- [ ] {action}" for action in required_actions)
+                    Markdown(md)
+                else:
+                    default_checks = [
+                        "Rw calibrated from SP or water sample",
+                        "Shale model supported by core/XRD data",
+                        "Environmental corrections applied",
+                        "Invasion effects evaluated",
+                        "Depth matching verified (MD/TVD/TVDSS)",
+                        "Cutoffs have economic basis",
+                    ]
+                    md = "\n".join(f"- [ ] {check}" for check in default_checks)
+                    Markdown(md)
+
+        # --- Override notice ---
+        if can_override:
+            with Alert(variant="warning"):
+                AlertTitle("F13 Sovereign — Human Override Available")
+                AlertDescription(
+                    "This hold can be overridden by authorized personnel. "
+                    "Override requires documented justification and sign-off."
+                )
+
+        # --- Constitutional floors ---
+        with Card():
+            with CardHeader():
+                CardTitle("Constitutional Floors")
+            with CardContent():
+                _floor_table(["F1", "F9", "F13"])
 
     return PrefabApp(view=view)
