@@ -68,8 +68,9 @@ def register_prospect_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://prospect-dashboard"
         )
 
-    async def _alias_geox_prospect_verify(prospect_ref: str) -> dict:
-        """Alias for prospect_verify_feasibility."""
-        return await prospect_verify_feasibility(prospect_ref)
+    @mcp.tool(name="geox_evaluate_prospect")
+    async def geox_evaluate_prospect(prospect_ref: str) -> dict:
+        """Alias for prospect_evaluate."""
+        return await prospect_evaluate(prospect_ref)
 
 

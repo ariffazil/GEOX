@@ -80,27 +80,52 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
 
     @mcp.tool(name="well_compute_petrophysics")
     async def well_compute_petrophysics(
+        well_id: str,
         model: str, 
         rw: float, 
         rt: float, 
         phi: float, 
         a: float = 1.0, 
         m: float = 2.0, 
-        n: float = 2.0
+        n: float = 2.0,
+        u_phys: float = 0.3,
+        transform_stack: List[str] = ["linear_scaling"],
+        bias_scenario: str = "physics_validated"
     ) -> dict:
-        """Compute: Executes physics-9 grounded petrophysical calculations."""
+        """Compute: Executes physics-9 grounded petrophysical calculations with ToAC audit."""
+        
+        # 1. Execute Core Physics
         if witness:
             result_obj = witness.compute_archie_sw(model, rw, rt, phi, a, m, n)
             artifact = result_obj.model_dump()
+            artifact["well_id"] = well_id
         else:
             sw = (a * rw / (rt * phi**m))**(1/n)
-            artifact = {"sw": sw, "phi": phi, "rw": rw, "rt": rt, "model": model}
+            artifact = {"well_id": well_id, "sw": round(sw, 4), "phi": phi, "rw": rw, "rt": rt, "model": model}
+        
+        # 2. Forge ToAC Payload
+        try:
+            from arifos.geox.ENGINE.ac_risk import ACRiskCalculator
+            ac_result = ACRiskCalculator.calculate(
+                u_phys=u_phys,
+                transform_stack=transform_stack,
+                bias_scenario=bias_scenario
+            )
+            toac_payload = ac_result.to_dict()
+            artifact["toac_payload"] = toac_payload
+            verdict = ac_result.verdict.value
+        except Exception as e:
+            logger.warning(f"ToAC calculation failed for petrophysics: {e}")
+            verdict = GovernanceStatus.QUALIFY.value
+            artifact["toac_payload"] = {"error": str(e)}
+
+        # 3. Emit Governed Envelope
         return get_standard_envelope(
             artifact, 
             tool_class="compute", 
-            governance_status=GovernanceStatus.QUALIFY, 
+            governance_status=verdict, 
             artifact_status=ArtifactStatus.COMPUTED, 
-            uncertainty="Moderate",
+            uncertainty=u_phys,
             ui_resource_uri="ui://well-dashboard"
         )
 
@@ -120,5 +145,26 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             uncertainty="High",
             ui_resource_uri="ui://well-dashboard"
         )
+
+    @mcp.tool(name="well_digitize_log")
+    async def well_digitize_log(image_ref: str) -> dict:
+        """Interpret: Trace analog well logs into governed digital outputs."""
+        artifact = {
+            "image_ref": image_ref,
+            "status": "Planned",
+            "message": "Analog Digitizer is currently in PLANNED stage. Neural curves extraction coming soon."
+        }
+        return get_standard_envelope(
+            artifact, 
+            tool_class="interpret", 
+            governance_status=GovernanceStatus.HOLD, 
+            artifact_status=ArtifactStatus.DRAFT,
+            ui_resource_uri="ui://analog-digitizer"
+        )
+
+    # Aliases
+    @mcp.tool(name="geox_compute_petrophysics")
+    async def geox_compute_petrophysics(well_ref: str) -> dict:
+        return await well_load_bundle(well_ref, "demo://bundle")
 
 

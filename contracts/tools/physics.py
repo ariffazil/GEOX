@@ -253,6 +253,61 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 artifact_status=ArtifactStatus.LOADED,
                 ui_resource_uri="ui://physics-dashboard"
             )
+
     except ImportError:
         logger.error("ACP logic unavailable")
+
+    @mcp.tool(name="physics_compute_ac_risk")
+    async def physics_compute_ac_risk(
+        u_phys: float,
+        transform_stack: list[str],
+        bias_scenario: str = "ai_vision_only"
+    ) -> dict:
+        """
+        Compute: Anomalous Contrast Risk (AC_Risk) per ToAC.
+        Formula: AC_Risk = U_phys x D_transform x B_cog
+        """
+        try:
+            from arifos.geox.ENGINE.ac_risk import ACRiskCalculator
+            
+            # Anti-Hantu check: prevent consciousness claims in transform logic
+            for t in transform_stack:
+                if any(banned in t.lower() for banned in ["conscious", "sentient", "feel"]):
+                    artifact = {"error": "Anti-Hantu Violation: Consciousness claim detected in transform stack."}
+                    return get_standard_envelope(
+                        artifact,
+                        tool_class="govern",
+                        governance_status=GovernanceStatus.VOID,
+                        artifact_status=ArtifactStatus.REJECTED,
+                        ui_resource_uri="ui://judge-console"
+                    )
+
+            result = ACRiskCalculator.calculate(
+                u_phys=u_phys,
+                transform_stack=transform_stack,
+                bias_scenario=bias_scenario
+            )
+            
+            artifact = result.to_dict()
+            return get_standard_envelope(
+                artifact, 
+                tool_class="govern", 
+                governance_status=result.verdict.value, 
+                artifact_status=ArtifactStatus.COMPUTED,
+                ui_resource_uri="ui://judge-console"
+            )
+        except Exception as e:
+            logger.error(f"AC_Risk calculation failed: {e}")
+            artifact = {"error": str(e)}
+            return get_standard_envelope(
+                artifact, 
+                tool_class="govern", 
+                governance_status=GovernanceStatus.HOLD, 
+                artifact_status=ArtifactStatus.REJECTED,
+                ui_resource_uri="ui://judge-console"
+            )
+
+    # Aliases
+    async def alias_geox_compute_ac_risk(u_phys: float, transform_stack: list[str], bias_scenario: str = "ai_vision_only"):
+        return await physics_compute_ac_risk(u_phys, transform_stack, bias_scenario)
 
