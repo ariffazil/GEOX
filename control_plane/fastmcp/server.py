@@ -40,12 +40,17 @@ mcp = FastMCP(
     version=GEOX_VERSION,
     on_duplicate="error",
     instructions="""Canonical GEOX Registry & MCP App Control Plane.
-    
+
     This server acts as the dashboard-ready entry point for all GEOX dimensions.
-    It provides discovery for Prospect, Well, Earth3D, Section, Time4D, Physics, Map, and Cross.
-    
-    All tools follow the <dimension>_<action> naming convention and return 
-    standardized artifact envelopes.
+    It provides discovery for Map, Earth3D, Section, Well, Time4D, Physics, Prospect, and Cross.
+
+    All canonical tools follow the <dimension>_<verb>_<target> naming convention
+    using only six verbs: observe, interpret, compute, verify, judge, audit.
+
+    Every tool is mapped to an arifOS metabolic stage (000–999), a dimension,
+    and a nature (physics, math, linguistic, forward, inverse, metabolizer).
+
+    Governed Earth decisions under uncertainty. DITEMPA BUKAN DIBERI.
     """,
 )
 
@@ -121,6 +126,42 @@ async def get_profile_status() -> dict:
         "version": GEOX_VERSION,
         "seal": GEOX_SEAL
     }
+
+@mcp.resource("geox://registry/tools")
+async def list_canonical_tools() -> dict:
+    """Return the canonical orthogonal tool taxonomy."""
+    try:
+        from geox.core.tool_registry import ToolRegistry
+        return {
+            "tools": ToolRegistry.list_tools_dict(include_scaffold=False),
+            "taxonomy": ToolRegistry.get_capabilities().get("taxonomy", {}),
+            "seal": GEOX_SEAL,
+        }
+    except Exception as e:
+        logger.error(f"Failed to load tool taxonomy: {e}")
+        return {"tools": [], "error": str(e), "seal": GEOX_SEAL}
+
+@mcp.resource("geox://registry/tools/by_dimension/{dimension}")
+async def list_tools_by_dimension(dimension: str) -> dict:
+    """Return canonical tools for a specific dimension."""
+    try:
+        from geox.core.tool_registry import ToolRegistry
+        tools = [t.to_dict() for t in ToolRegistry.list_by_dimension(dimension)]
+        return {"dimension": dimension, "tools": tools, "count": len(tools), "seal": GEOX_SEAL}
+    except Exception as e:
+        logger.error(f"Failed to load tools for dimension {dimension}: {e}")
+        return {"dimension": dimension, "tools": [], "error": str(e), "seal": GEOX_SEAL}
+
+@mcp.resource("geox://registry/tools/by_stage/{stage}")
+async def list_tools_by_stage(stage: str) -> dict:
+    """Return canonical tools for a specific metabolic stage (000–999)."""
+    try:
+        from geox.core.tool_registry import ToolRegistry
+        tools = [t.to_dict() for t in ToolRegistry.list_by_stage(stage)]
+        return {"stage": stage, "tools": tools, "count": len(tools), "seal": GEOX_SEAL}
+    except Exception as e:
+        logger.error(f"Failed to load tools for stage {stage}: {e}")
+        return {"stage": stage, "tools": [], "error": str(e), "seal": GEOX_SEAL}
 
 @mcp.resource("ui://{app_id}")
 async def get_ui_resource(app_id: str) -> str:
