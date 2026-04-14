@@ -1,9 +1,40 @@
 [project]
 name = "geox-sovereign-backend"
 version = "1.9.0"
-description = "Sovereign subsurface intelligence bridge for OpendTect and React."
+description = "Sovereign subsurface intelligence bridge for OpendTect and React. Governed geoscience coprocessor under arifOS constitutional floors."
 authors = [
     { name = "Arif Fazil", email = "arif@arifos.geo" }
+]
+readme = "README.md"
+requires-python = ">=3.11"
+license = "AGPL-3.0-only"
+keywords = [
+    "geoscience",
+    "petrophysics",
+    "seismic-interpretation",
+    "geological-modeling",
+    "prospect-evaluation",
+    "constitutional-ai",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "arifos",
+    "governance",
+    "vault999",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Geology",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 dependencies = [
     "fastmcp>=3.0.0",
@@ -12,11 +43,21 @@ dependencies = [
     "numpy>=1.20.0",
     "asyncio>=3.4.3",
     "pyproj>=3.0.0",
-    "shapely>=2.0.0"
+    "shapely>=2.0.0",
+    "uvicorn[standard]>=0.23.0",
+    "python-dotenv>=1.0.0"
 ]
 
 [project.scripts]
 geox-server = "geox_unified:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -29,6 +70,28 @@ py-modules = [
     "arifos_od_siphon",
     "geox_unified",
 ]
+include-package-data = true
 
 [tool.setuptools.packages.find]
-include = ["registries*"]
+where = ["."]
+include = ["geox*", "registries*"]
+exclude = ["tests*", "*.tests*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["tests/**", ".archive/**"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "N", "B"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

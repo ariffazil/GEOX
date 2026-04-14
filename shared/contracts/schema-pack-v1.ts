@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Dimensions & App Contracts
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════
 
 export const DimensionEnum = z.enum([
   'PROSPECT',  // Basin/Play scale, ranking, economics
@@ -21,6 +21,15 @@ export const DimensionEnum = z.enum([
 ]);
 
 export type Dimension = z.infer<typeof DimensionEnum>;
+
+export const VerdictEnum = z.enum([
+  "SEAL",     // ≥ 0.80 Confidence, auto-proceed
+  "PARTIAL",  // ≥ 0.50 Confidence, caveats apply
+  "SABAR",    // ≥ 0.25 Confidence, hold for data
+  "VOID",     // < 0.25 Confidence, blocked
+  "888_HOLD"  // Sovereign override / high-risk pause
+]);
+export type VerdictCode = z.infer<typeof VerdictEnum>;
 
 export const AppDomainEnum = z.enum([
   'seismic',
@@ -53,8 +62,15 @@ export const XYZPointSchema = z.object({
 });
 
 export const BoundingBoxSchema = z.object({
-  min: XYZPointSchema,
-  max: XYZPointSchema,
+  min: XYZPointSchema.optional(), // Older version used min_x, newer uses min: XYZPoint
+  max: XYZPointSchema.optional(),
+  min_x: z.number().optional(),
+  max_x: z.number().optional(),
+  min_y: z.number().optional(),
+  max_y: z.number().optional(),
+  min_z: z.number().optional(),
+  max_z: z.number().optional(),
+  unit: z.string().default("m"),
   crs: z.string().optional(),
 });
 
@@ -63,15 +79,38 @@ export const BoundingBoxSchema = z.object({
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const GeoContextSchema = z.object({
-  crsName: z.string(),
-  crsEpsg: z.number().int().positive(),
-  verticalDomain: z.enum(['twt_ms', 'tvdss_m', 'md_m', 'tvd_m']),
-  isTimeDomain: z.boolean(),
+  crsName: z.string().optional(),
+  crsEpsg: z.number().int().positive().optional(),
+  verticalDomain: z.enum(['twt_ms', 'tvdss_m', 'md_m', 'tvd_m']).optional(),
+  isTimeDomain: z.boolean().optional(),
   units: z.object({
     horizontal: UnitRefSchema,
     vertical: UnitRefSchema,
-  }),
+  }).optional(),
+  // Taxonomy additions
+  dimension: DimensionEnum.optional(),
+  crs: z.string().default("WGS84"),
+  epoch: z.string().optional(),
+  precision_level: z.number().min(0).max(1).default(1.0),
+  is_simulated: z.boolean().default(false)
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Physics9 — The Orthogonal Stack
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export const Physics9Schema = z.object({
+  density: z.number().describe("ρ (kg/m³)"),
+  vp: z.number().describe("Vp (m/s)"),
+  vs: z.number().describe("Vs (m/s)"),
+  resistivity: z.number().describe("ρₑ (Ω·m)"),
+  susceptibility: z.number().describe("χ (SI)"),
+  thermal_conductivity: z.number().describe("k (W/m·K)"),
+  pore_pressure: z.number().describe("P (Pa)"),
+  temperature: z.number().describe("T (K)"),
+  porosity: z.number().min(0).max(1).describe("φ (0-1)")
+});
+export type Physics9 = z.infer<typeof Physics9Schema>;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Evidence — Observation References
@@ -79,16 +118,20 @@ export const GeoContextSchema = z.object({
 
 export const EvidenceRefSchema = z.object({
   id: z.string(),
-  kind: z.enum(['well', 'seismic', 'map', 'log', 'top', 'verdict']),
-  sourceUri: z.string(), // e.g. "opendtect://Well/A1" or "geox://storage/prospect_alpha"
-  timestamp: z.string().datetime(),
+  kind: z.enum(['well', 'seismic', 'map', 'log', 'top', 'verdict', 'MANIFOLD', 'TRUTH', 'CLAIM', 'TEXTURE']),
+  sourceUri: z.string().optional(),
+  source_path: z.string().optional(),
+  timestamp: z.string().datetime().optional(),
   version: z.string().optional(),
+  owner: z.string().optional(),
+  hash: z.string().optional(),
+  name: z.string().optional(),
 });
 
 export const EvidenceObjectSchema = z.object({
   ref: EvidenceRefSchema,
   context: GeoContextSchema,
-  payload: z.any(), // Specific app-side parsing per kind
+  payload: z.any(),
   metadata: z.record(z.string(), z.any()).optional(),
 });
 
@@ -97,18 +140,30 @@ export const EvidenceObjectSchema = z.object({
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const TransformRequestSchema = z.object({
-  requestId: z.string(),
-  sourceContext: GeoContextSchema,
-  targetContext: GeoContextSchema,
-  dataToTransform: z.array(XYZPointSchema),
+  requestId: z.string().optional(),
+  request_id: z.string().uuid().optional(),
+  sourceContext: GeoContextSchema.optional(),
+  targetContext: GeoContextSchema.optional(),
+  context: GeoContextSchema.optional(),
+  dataToTransform: z.array(XYZPointSchema).optional(),
+  sources: z.array(EvidenceRefSchema).optional(),
   method: z.string().default('bilinear'),
+  operator: z.string().optional(),
+  parameters: z.record(z.string(), z.any()).default({}),
+  priority: z.number().default(5)
 });
 
 export const TransformResultSchema = z.object({
-  requestId: z.string(),
-  transformedData: z.array(XYZPointSchema),
+  requestId: z.string().optional(),
+  request_id: z.string().uuid().optional(),
+  transformedData: z.array(XYZPointSchema).optional(),
   errorRms: z.number().optional(),
-  status: z.enum(['SUCCESS', 'PARTIAL', 'FAILED']),
+  status: z.enum(['SUCCESS', 'PARTIAL', 'FAILED']).optional(),
+  verdict: VerdictEnum.optional(),
+  confidence: z.number().min(0).max(1).optional(),
+  outputs: z.array(EvidenceRefSchema).optional(),
+  physics_drift: z.number().optional(),
+  commentary: z.string().optional()
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -116,40 +171,52 @@ export const TransformResultSchema = z.object({
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const ConstraintSetSchema = z.object({
-  laws: z.array(z.string()), // e.g. ["F2_TRUTH", "F7_HUMILITY"]
-  thresholds: z.record(z.string(), z.number()),
+  laws: z.array(z.string()).optional(),
+  thresholds: z.record(z.string(), z.number()).optional(),
+  floor_checks: z.record(z.string(), z.boolean()).optional(),
+  hard_limits: z.record(z.string(), z.tuple([z.number(), z.number()])).optional(),
+  governance_level: z.number().min(0).max(11).default(1)
 });
 
 export const RiskAssessmentSchema = z.object({
-  score: z.number().min(0).max(1), // 0 is safe, 1 is VOID
+  score: z.number().min(0).max(1).optional(),
   factors: z.array(z.object({
     key: z.string(),
     impact: z.number(),
     reason: z.string(),
-  })),
+  })).optional(),
+  uncertainty_p10: z.number().optional(),
+  uncertainty_p50: z.number().optional(),
+  uncertainty_p90: z.number().optional(),
+  conflation_risk: z.number().min(0).max(1).optional(),
+  mitigation_strategy: z.string().optional()
 });
 
 export const VerdictSchema = z.object({
-  verdictId: z.string(),
-  intentId: z.string(),
-  status: z.enum(['SEAL', 'PARTIAL', 'SABAR', 'VOID', '888_HOLD']),
+  verdictId: z.string().optional(),
+  intentId: z.string().optional(),
+  status: VerdictEnum,
   confidence: z.number().min(0).max(1),
   author: z.string(),
   rationale: z.string(),
   risk: RiskAssessmentSchema,
-  auditTraceId: z.string(),
+  auditTraceId: z.string().optional(),
   timestamp: z.string().datetime(),
 });
 
 export const AuditEventSchema = z.object({
-  eventId: z.string(),
-  actor: z.string(),
-  tool: z.string(),
-  evidenceRefs: z.array(z.string()),
+  eventId: z.string().optional(),
+  actor: z.string().optional(),
+  tool: z.string().optional(),
+  evidenceRefs: z.array(z.string()).optional(),
   verdictId: z.string().optional(),
-  inputSnapshot: z.any(),
-  outputSnapshot: z.any(),
+  inputSnapshot: z.any().optional(),
+  outputSnapshot: z.any().optional(),
   timestamp: z.string().datetime(),
+  author: z.string().optional(),
+  action: z.string().optional(),
+  verdict: VerdictEnum.optional(),
+  note: z.string().optional()
 });
 
 export const AppManifestSchema = z.object({
@@ -171,6 +238,21 @@ export const AppManifestSchema = z.object({
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// Composite Contracts
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export const VerdictContractSchema = z.object({
+  verdict_id: z.string().uuid(),
+  code: VerdictEnum,
+  rationale: z.string(),
+  constraints: ConstraintSetSchema,
+  risk: RiskAssessmentSchema,
+  audit: z.array(AuditEventSchema),
+  sealed_by: z.string().optional(),
+  sealed_at: z.string().datetime().optional()
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // TypeScript Types (Derived)
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -183,3 +265,4 @@ export type XYPoint = z.infer<typeof XYPointSchema>;
 export type XYZPoint = z.infer<typeof XYZPointSchema>;
 export type BoundingBox = z.infer<typeof BoundingBoxSchema>;
 export type AppManifest = z.infer<typeof AppManifestSchema>;
+export type VerdictContract = z.infer<typeof VerdictContractSchema>;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # GEOX Earth Intelligence Core — Anti-Chaos Dimension-Native
 # DITEMPA BUKAN DIBERI
 # Version: v2026.04.12-DIMENSION-NATIVE
@@ -62,3 +63,13 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 
 # Start Earth Intelligence Core
 CMD ["/app/entrypoint.sh"]
+=======
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . /app/geox/
+ENV PYTHONPATH=/app
+EXPOSE 8765
+CMD ["python", "-m", "geox.mcp.server"]
+>>>>>>> 0c38334 (feat(mcp): 3-layer tool taxonomy — geox public surface, internal pipeline, arifOS routing)
