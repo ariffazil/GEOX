@@ -3,7 +3,10 @@
   "name": "geox-earth-witness",
   "version": "0.5.0",
   "description": "GEOX — Geological Intelligence Coprocessor for arifOS. Constitutional, event-sourced agent runtime for subsurface evaluation.",
-  "entrypoint": "geox_mcp_server.py:mcp",
+  "source": {
+    "path": "geox_mcp_server.py",
+    "entrypoint": "mcp"
+  },
   "transport": {
     "stdio": {
       "enabled": true

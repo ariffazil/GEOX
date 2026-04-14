@@ -9,6 +9,7 @@ Used to harden the MCP server and provide rich discovery.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any
 
 
@@ -33,6 +34,54 @@ class ToolMetadata:
             "error_codes": self.error_codes,
             "tags": self.tags,
         }
+
+
+class ToolStatus(str, Enum):
+    """Lifecycle status for a tool."""
+    production = "production"
+    preview = "preview"
+    scaffold = "scaffold"
+    deprecated = "deprecated"
+
+
+class ErrorCode(str, Enum):
+    """Standardized GEOX error codes."""
+    UNKNOWN_ERROR = "UNKNOWN_ERROR"
+    PHYSICS_VIOLATION = "PHYSICS_VIOLATION"
+    FILE_NOT_FOUND = "FILE_NOT_FOUND"
+    INVALID_FORMAT = "INVALID_FORMAT"
+    SCALE_UNKNOWN = "SCALE_UNKNOWN"
+    INTERPRETATION_FAILED = "INTERPRETATION_FAILED"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    INVALID_COMPONENTS = "INVALID_COMPONENTS"
+    MISSING_TRANSFORM = "MISSING_TRANSFORM"
+    CONSTRAINT_MISMATCH = "CONSTRAINT_MISMATCH"
+    OUT_OF_RANGE = "OUT_OF_RANGE"
+    OUT_OF_BOUNDS = "OUT_OF_BOUNDS"
+    PROJECTION_ERROR = "PROJECTION_ERROR"
+    INSUFFICIENT_GROUNDING = "INSUFFICIENT_GROUNDING"
+    VERDICT_VOID = "VERDICT_VOID"
+    QUERY_FAILED = "QUERY_FAILED"
+    STORE_UNAVAILABLE = "STORE_UNAVAILABLE"
+    MACROSTRAT_API_ERROR = "MACROSTRAT_API_ERROR"
+    NO_COVERAGE = "NO_COVERAGE"
+    SW_MODEL_ERROR = "SW_MODEL_ERROR"
+    PARAMETER_OUT_OF_RANGE = "PARAMETER_OUT_OF_RANGE"
+    DATA_UNAVAILABLE = "DATA_UNAVAILABLE"
+
+
+def create_standardized_error(
+    code: ErrorCode,
+    detail: str | None = None,
+    context: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Create a standardized GEOX error payload."""
+    return {
+        "error": True,
+        "code": code.value,
+        "message": detail or code.value,
+        "context": context or {},
+    }
 
 
 class UnifiedToolRegistry:
@@ -129,3 +178,38 @@ class UnifiedToolRegistry:
     @classmethod
     def list_tools(cls) -> list[ToolMetadata]:
         return list(cls._registry.values())
+
+    @classmethod
+    def list_tools_dict(
+        cls,
+        status_filter: ToolStatus | None = None,
+        include_scaffold: bool = False,
+    ) -> list[dict[str, Any]]:
+        """List tools as dictionaries with status metadata."""
+        tools = []
+        for tool in cls._registry.values():
+            status = ToolStatus.production
+            if not include_scaffold and status == ToolStatus.scaffold:
+                continue
+            if status_filter and status != status_filter:
+                continue
+            tools.append({
+                **tool.to_dict(),
+                "status": status.value,
+            })
+        return tools
+
+    @classmethod
+    def get_capabilities(cls) -> dict[str, Any]:
+        """Return server capability summary."""
+        total = len(cls._registry)
+        return {
+            "server": {"name": "GEOX", "version": "1.0.0", "seal": "DITEMPA BUKAN DIBERI"},
+            "tool_count": {"total": total, "production": total, "preview": 0, "scaffold": 0},
+            "governance": {"floors_active": ["F1", "F2", "F4", "F7", "F9", "F13"], "ac_risk_enabled": True}
+        }
+
+
+# Backward-compatible aliases used by legacy servers
+ToolRegistry = UnifiedToolRegistry
+GEOX_TOOLS: dict[str, ToolMetadata] = UnifiedToolRegistry._registry

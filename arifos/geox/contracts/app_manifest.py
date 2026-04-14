@@ -9,7 +9,7 @@ from datetime import datetime
 from enum import Enum
 
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -25,6 +25,8 @@ class Dimension(str, Enum):
     TIME_4D = "TIME_4D"
     PHYSICS = "PHYSICS"
     MAP = "MAP"
+    CROSS = "CROSS"
+    DASHBOARD = "DASHBOARD"
 
 
 class AppDomain(str, Enum):
@@ -35,6 +37,8 @@ class AppDomain(str, Enum):
     ECONOMICS = "economics"
     GOVERNANCE = "governance"
     GENERAL = "general"
+    WELLS = "wells"
+    MAPS = "maps"
 
 
 class UiMode(str, Enum):
@@ -53,6 +57,7 @@ class Capability(str, Enum):
     WEBRTC = "webrtc"
     FILE_SYSTEM = "file_system"
     NOTIFICATIONS = "notifications"
+    CANVAS = "canvas"
 
 
 class AuthMode(str, Enum):
@@ -94,6 +99,24 @@ class EventType(str, Enum):
     # Telemetry
     TELEMETRY_EMIT = "telemetry.emit"
     TELEMETRY_FLUSH = "telemetry.flush"
+    
+    # Custom app events (AC_Risk)
+    AC_RISK_CALCULATED = "ac_risk.calculated"
+    AC_RISK_RESET = "ac_risk.reset"
+    AC_RISK_CHECK = "ac_risk.check"
+    
+    # Custom app events (Well)
+    WELL_SELECTED = "well.selected"
+    DOCUMENT_OPEN = "document.open"
+    CURVE_TOGGLE = "curve.toggle"
+    PETROPHYSICS_RUN = "petrophysics.run"
+    
+    # Custom app events (Map / Basin)
+    MAP_CLICK = "map.click"
+    MAP_SELECT = "map.select"
+    PLAY_SELECTED = "play.selected"
+    FIELD_EXPLORE = "field.explore"
+    PROSPECT_EVALUATE = "prospect.evaluate"
 
 
 class FallbackType(str, Enum):
@@ -135,6 +158,10 @@ class HitlTrigger(str, Enum):
     EXPORT_DATA = "export_data"
     MODIFY_PRODUCTION = "modify_production"
     HIGH_CONFIDENCE_THRESHOLD = "high_confidence_threshold"
+    EXPORT_RISK_REPORT = "export_risk_report"
+    APPLY_TO_PRODUCTION = "apply_to_production"
+    PETROPHYSICS_EXPORT = "petrophysics_export"
+    PROSPECT_BOOK = "prospect_book"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -235,7 +262,7 @@ class GeoXAppManifest(BaseModel):
     # Identity
     app_id: str = Field(
         ...,
-        pattern=r"^geox\.[a-z][a-z0-9-]*\.[a-z][a-z0-9-]*$",
+        pattern=r"^geox\.[a-z][a-z0-9_-]*\.[a-z][a-z0-9_-]*$",
         description="Unique app identifier in geox.{domain}.{name} format"
     )
     version: str = Field(
@@ -243,7 +270,7 @@ class GeoXAppManifest(BaseModel):
         pattern=r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*))?(?:\+([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*))?$",
         description="Semantic version"
     )
-    dimension: Dimension
+    dimension: Dimension = Field(default=Dimension.DASHBOARD)
     domain: AppDomain
     
     # Display
@@ -273,8 +300,8 @@ class GeoXAppManifest(BaseModel):
     # Metadata
     meta: AppMeta | None = None
     
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "app_id": "geox.seismic.viewer",
                 "version": "1.0.0",
@@ -309,6 +336,7 @@ class GeoXAppManifest(BaseModel):
                 }
             }
         }
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
