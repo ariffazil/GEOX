@@ -80,6 +80,7 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
 
     @mcp.tool(name="well_compute_petrophysics")
     async def well_compute_petrophysics(
+        well_id: str,
         model: str, 
         rw: float, 
         rt: float, 
@@ -97,9 +98,10 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         if witness:
             result_obj = witness.compute_archie_sw(model, rw, rt, phi, a, m, n)
             artifact = result_obj.model_dump()
+            artifact["well_id"] = well_id
         else:
             sw = (a * rw / (rt * phi**m))**(1/n)
-            artifact = {"sw": sw, "phi": phi, "rw": rw, "rt": rt, "model": model}
+            artifact = {"well_id": well_id, "sw": round(sw, 4), "phi": phi, "rw": rw, "rt": rt, "model": model}
         
         # 2. Forge ToAC Payload
         try:
