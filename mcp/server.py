@@ -20,6 +20,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Literal
 
+import httpx
+
 from mcp.server.fastmcp import FastMCP
 
 from geox.core.ac_risk import (
@@ -341,6 +343,84 @@ def geox_cross_summarize_evidence(prospect_id: str) -> dict:
 
 
 # =============================================================================
+# LAYER 1b — GEOX tools forwarded to AF-FORGE TypeScript bridge
+# These tools live in the geox namespace but delegate to the AF-FORGE
+# TypeScript runtime for execution.
+# =============================================================================
+
+
+BRIDGE_URL = os.environ.get("AF_FORGE_BRIDGE_URL", "http://af-forge-bridge:7071")
+
+
+async def call_af_forge_log_interpreter(payload: dict) -> dict:
+    """Call geox_log_interpreter on the AF-FORGE TypeScript bridge."""
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.post(f"{BRIDGE_URL}/geox/log_interpreter", json=payload)
+        resp.raise_for_status()
+        return resp.json()
+
+
+@mcp.tool()
+def geox_log_interpreter(
+    GR: list = None,
+    RT: list = None,
+    RHOB: list = None,
+    NPHI: list = None,
+    SP: list = None,
+    DT: list = None,
+    CAL: list = None,
+    depth: list = None,
+    GR_clean: float = 20.0,
+    GR_shale: float = 120.0,
+    RW: float = 0.055,
+    matrix: str = "limestone",
+) -> dict:
+    """Interpret triple-combo wireline logs (GR, RT, RHOB, NPHI) using anomalous contrast theory.
+    Delegates to AF-FORGE TypeScript runtime (af-forge-bridge:7071/geox/log_interpreter).
+    Returns Vsh, PHIE, SW, BVW, fluid type (WATER/GAS/OIL), lithology, anomaly quality,
+    and anomalous contrast metrics (kappa_GR, kappa_RHOB, kappa_NPHI, kappa_RT, composite).
+    All outputs tagged ESTIMATE/HYPOTHESIS/UNKNOWN per F8 grounding.
+
+    Minimum required: GR, RHOB, NPHI arrays (same length).
+    Optional: RT, SP, DT, CAL, depth.
+    """
+    payload = {}
+    if GR is not None:
+        payload["GR"] = GR
+    if RT is not None:
+        payload["RT"] = RT
+    if RHOB is not None:
+        payload["RHOB"] = RHOB
+    if NPHI is not None:
+        payload["NPHI"] = NPHI
+    if SP is not None:
+        payload["SP"] = SP
+    if DT is not None:
+        payload["DT"] = DT
+    if CAL is not None:
+        payload["CAL"] = CAL
+    if depth is not None:
+        payload["depth"] = depth
+    payload["GR_clean"] = GR_clean
+    payload["GR_shale"] = GR_shale
+    payload["RW"] = RW
+    payload["matrix"] = matrix
+
+    try:
+        import asyncio
+
+        result = asyncio.get_event_loop().run_until_complete(call_af_forge_log_interpreter(payload))
+        return result.get("result", result)
+    except Exception as e:
+        return {
+            "error": str(e),
+            "fallback": "geox_log_interpreter requires AF-FORGE bridge (af-forge-bridge:7071). "
+            "Ensure af-forge-bridge is running and AF_FORGE_BRIDGE_URL is set.",
+            "claim_tag": "UNKNOWN",
+        }
+
+
+# =============================================================================
 # LAYER 2 — INTERNAL PIPELINE (geox_<domain>_<verb>_stage, hidden)
 # These are pipeline nodes. Not agent-facing in public tool listings.
 # =============================================================================
@@ -540,20 +620,104 @@ def geox_skill_dependencies(skill_id: str) -> dict:
 # =============================================================================
 
 
+# =============================================================================
+# HOLD REGISTRY — manages 888_HOLD lifecycle (v1.5.0)
+# =============================================================================
+
+
+class HoldRegistry:
+    """In-memory registry for tracking 888_HOLD states and timeouts."""
+
+    _holds = {}
+
+    @classmethod
+    def register(cls, action: str, risk_class: str) -> dict:
+        import time
+
+        hold_id = f"HLD-{int(time.time())}"
+        hold_data = {
+            "hold_id": hold_id,
+            "action": action,
+            "risk_class": risk_class,
+            "status": "ACTIVE",
+            "escalation_level": 0,
+            "created_at": time.time(),
+            "expires_at": time.time() + 3600,  # 1 hour default
+        }
+        cls._holds[hold_id] = hold_data
+        return hold_data
+
+    @classmethod
+    def get_status(cls, hold_id: str) -> dict:
+        import time
+
+        hold = cls._holds.get(hold_id)
+        if not hold:
+            return {"error": "Hold not found"}
+
+        # Simulate escalation if older than 5 minutes (for demo)
+        elapsed = time.time() - hold["created_at"]
+        if elapsed > 300 and hold["escalation_level"] == 0:
+            hold["escalation_level"] = 1
+            hold["status"] = "ESCALATED_TO_MANAGER"
+
+        return hold
+
+
 @mcp.tool()
 def arifos_check_hold(action: str, risk_class: str) -> dict:
-    """Check if action requires 888 HOLD human approval.
-    ROUTED — actual hold authority lives in arifOS, not GEOX.
-    """
-    high_risk = risk_class in ["high", "critical"]
+    """Check if action requires 888 HOLD and register it in the lifecycle registry."""
+    high_risk = risk_class in ["high", "critical", "TOAC_RISK_EXCEEDED", "MODEL_COLLAPSE_F7_BREACH"]
+
+    if high_risk:
+        hold_record = HoldRegistry.register(action, risk_class)
+        return {
+            "action": action,
+            "risk_class": risk_class,
+            "requires_approval": True,
+            "hold_id": hold_record["hold_id"],
+            "status": hold_record["status"],
+            "message": f"HUMAN APPROVAL REQUIRED: {hold_record['hold_id']}",
+            "expires_at": hold_record["expires_at"],
+            "_routed_to": "arifOS",
+        }
+
     return {
         "action": action,
         "risk_class": risk_class,
-        "requires_approval": high_risk,
-        "hold_type": "888_HOLD" if high_risk else "AUTO_APPROVE",
-        "message": "HUMAN APPROVAL REQUIRED" if high_risk else "Auto-approved",
+        "requires_approval": False,
+        "hold_type": "AUTO_APPROVE",
+        "message": "Auto-approved",
         "_routed_to": "arifOS",
     }
+
+
+@mcp.tool()
+def arifos_manage_hold(hold_id: str, command: Literal["status", "escalate", "release"]) -> dict:
+    """Manage the lifecycle of an existing 888_HOLD."""
+    hold = HoldRegistry.get_status(hold_id)
+    if "error" in hold:
+        return hold
+
+    if command == "escalate":
+        hold["escalation_level"] += 1
+        hold["status"] = "ESCALATED_ADMIN"
+    elif command == "release":
+        hold["status"] = "RELEASED"
+        hold["released_at"] = import_time()
+
+    return {
+        "hold_id": hold_id,
+        "current_status": hold["status"],
+        "escalation_level": hold["escalation_level"],
+        "_routed_to": "arifOS",
+    }
+
+
+def import_time():
+    import time
+
+    return time.time()
 
 
 @mcp.tool()
