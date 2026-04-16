@@ -21,7 +21,7 @@ from pathlib import Path
 
 from typing import Literal
 
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 from geox.core.ac_risk import (
     compute_ac_risk as _compute_ac_risk,
