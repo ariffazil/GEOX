@@ -18,21 +18,21 @@ import json
 import os
 from enum import Enum
 from pathlib import Path
-from typing import Any, Literal
+
+from typing import Literal
 
 from mcp.server.fastmcp import FastMCP
 
-from ..core.ac_risk import (
+from geox.core.ac_risk import (
     compute_ac_risk as _compute_ac_risk,
     compute_ac_risk_governed as _compute_ac_risk_governed,
-    GovernedACRiskResult,
 )
 
 mcp = FastMCP("geox")
 
-REGISTRY_PATH = Path(__file__).parent.parent / "registry" / "registry.json"
-SKILLS_PATH = Path(__file__).parent.parent / "skills"
-APPS_PATH = Path(__file__).parent.parent / "apps"
+REGISTRY_PATH = Path(__file__).resolve().parent.parent / "registry" / "registry.json"
+SKILLS_PATH = Path(__file__).resolve().parent.parent / "skills"
+APPS_PATH = Path(__file__).resolve().parent.parent / "apps"
 
 
 # =============================================================================
@@ -395,11 +395,12 @@ def geox_seismic_vision_review(volume_id: str, line_id: str = None) -> dict:
         "stage_222_reflect": "PENDING — Physical Firewall not yet active",
         "validation_probe": {
             "status": "requires_human_gt_upload",
-            "target": "≥80% major fault identification within 48h",
+            "target": ">=80% major fault ident. within 48h",
         },
         "layer": "internal",
         "governance": {
-            "note": "No CLAIM allowed. Only PLAUSIBLE/HYPOTHESIS permitted until 7-day probe complete.",
+            "note": "No CLAIM allowed. Only PLAUSIBLE/HYPOTHESIS permitted "
+            "until 7-day probe complete.",
         },
     }
 

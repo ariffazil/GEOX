@@ -1,0 +1,10 @@
+[    1185ms] [LOG] [GEOX Bridge] Sending: app.initialize {jsonrpc: 2.0, method: app.initialize, params: Object, id: y8i7h, timestamp: 2026-04-09T01:37:18.822Z} @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1185ms] [LOG] [GEOX Bridge] Sending: ui.action {jsonrpc: 2.0, method: ui.action, params: Object, id: b7k5nl, timestamp: 2026-04-09T01:37:18.823Z} @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1216ms] [LOG] [GEOX Bridge] Received: app.initialize {jsonrpc: 2.0, method: app.initialize, params: Object, id: y8i7h, timestamp: 2026-04-09T01:37:18.822Z} @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1216ms] [LOG] [GEOX Bridge] App re-initialization requested @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1216ms] [LOG] [GEOX Bridge] Received: ui.action {jsonrpc: 2.0, method: ui.action, params: Object, id: b7k5nl, timestamp: 2026-04-09T01:37:18.823Z} @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1216ms] [WARNING] [GEOX Bridge] Unknown method: ui.action @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1644ms] [LOG] [GEOX] Connected to: https://geox.arif-fazil.com @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1654ms] [LOG] [GEOX Bridge] Sending: app.initialize {jsonrpc: 2.0, method: app.initialize, params: Object, id: r0o0fk, timestamp: 2026-04-09T01:37:19.292Z} @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1672ms] [LOG] [GEOX Bridge] Received: app.initialize {jsonrpc: 2.0, method: app.initialize, params: Object, id: r0o0fk, timestamp: 2026-04-09T01:37:19.292Z} @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
+[    1672ms] [LOG] [GEOX Bridge] App re-initialization requested @ https://geox.arif-fazil.com/assets/index-Di6N3A7n.js:211
