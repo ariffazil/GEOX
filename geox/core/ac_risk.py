@@ -19,6 +19,7 @@ Verdict thresholds:
 """
 
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List, Dict, Any, Optional
 
 
@@ -54,6 +55,9 @@ TRANSFORM_RISK_MAP = {
     "policy_translation": 1.35,
     "stochastic_realization_single": 1.80,
     "stochastic_realization_ensemble": 1.10,
+    "openquake_gmpe_logic_tree": 1.15,
+    "site_amplification": 1.20,
+    "source_model_declustering": 1.10,
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -68,6 +72,10 @@ BIAS_MAP = {
     "ai_vision_only": 0.42,
     "executive_pressure": 0.55,
     "single_model_collapse": 0.65,
+    "confirmation_bias": 0.50,
+    "authority_bias": 0.48,
+    "anchoring_bias": 0.45,
+    "pressure_collapse_conflation": 0.70,
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -135,8 +143,7 @@ def estimate_u_phys(
     Estimate U_phys from five proxies, weighted per TOAC_AC_RISK_SPEC.md.
     Applies calibration adjustments if available.
     """
-    # Base proxies
-    S = 1.0 - min(1.0, data_density * 2.0)  # simplified lambda=2
+    S = 1.0 - min(1.0, data_density * 2.0)
     S = max(0.0, min(1.0, S))
     P = max(0.0, min(1.0, parameter_ignorance_ratio))
     R = max(0.0, min(1.0, 0.5 * (calibration_residual / max(signal_range, 1e-9))))
@@ -145,7 +152,6 @@ def estimate_u_phys(
 
     u_phys = 0.30 * S + 0.25 * P + 0.25 * R + 0.15 * B + 0.05 * T
 
-    # Calibration adjustment
     adj = get_calibration_adjustment(engine, basin, product_type)
     u_phys += adj.get("u_phys_adjustment", 0.0)
     u_phys = max(0.0, min(1.0, u_phys))
@@ -175,11 +181,47 @@ def compute_d_transform(transform_stack: List[str]) -> float:
     return min(d_transform, 3.0)
 
 
-def compute_b_cog(bias_scenario: str, custom_b_cog: Optional[float] = None) -> float:
-    """Compute B_cog from scenario or custom value."""
+def compute_b_cog(
+    bias_scenario: str,
+    custom_b_cog: Optional[float] = None,
+    session_history: Optional[List[Dict[str, Any]]] = None,
+    hypotheses_count: int = 1,
+    deadline: Optional[datetime] = None,
+    complexity_score: float = 0.5,
+    auto_detect_bias: bool = False,
+) -> Dict[str, Any]:
+    """
+    Compute B_cog from scenario or custom value.
+    If auto_detect_bias=True, runs BiasDetector heuristics.
+    """
     if custom_b_cog is not None:
-        return max(0.0, min(1.0, custom_b_cog))
-    return BIAS_MAP.get(bias_scenario, 0.42)
+        return {
+            "b_cog": max(0.0, min(1.0, custom_b_cog)),
+            "scenario": "custom",
+            "modifiers": [],
+        }
+
+    if auto_detect_bias and session_history is not None:
+        from geox.core.bias_detector import BiasDetector
+        detection = BiasDetector.detect(
+            claimed_scenario=bias_scenario,
+            session_history=session_history,
+            hypotheses_count=hypotheses_count,
+            deadline=deadline,
+            complexity_score=complexity_score,
+        )
+        return {
+            "b_cog": detection["b_cog"],
+            "scenario": detection["detected_scenario"],
+            "modifiers": detection["modifiers"],
+            "audit": detection.get("audit"),
+        }
+
+    return {
+        "b_cog": BIAS_MAP.get(bias_scenario, 0.42),
+        "scenario": bias_scenario,
+        "modifiers": [],
+    }
 
 
 def compute_ac_risk(
@@ -190,41 +232,36 @@ def compute_ac_risk(
     engine: str = "",
     basin: str = "",
     product_type: str = "",
+    session_history: Optional[List[Dict[str, Any]]] = None,
+    hypotheses_count: int = 1,
+    deadline: Optional[datetime] = None,
+    complexity_score: float = 0.5,
+    auto_detect_bias: bool = False,
 ) -> AC_RiskResult:
     """
     Calculate Theory of Anomalous Contrast (ToAC) risk score.
-
-    Args:
-        u_phys: Physical ambiguity [0.0, 1.0]
-        transform_stack: List of applied transforms
-        bias_scenario: Cognitive bias scenario
-        custom_b_cog: Override B_cog value
-        engine: Physics engine name (for calibration lookup)
-        basin: Basin/region name (for calibration lookup)
-        product_type: Product type (for calibration lookup)
-
-    Returns:
-        AC_RiskResult with score, verdict, and explanation
     """
-    # Validate inputs
     u_phys = max(0.0, min(1.0, u_phys))
 
-    # Compute D_transform
     d_transform = compute_d_transform(transform_stack)
-
-    # Apply calibration penalty to D_transform if any
     adj = get_calibration_adjustment(engine, basin, product_type)
     d_transform += adj.get("d_transform_penalty", 0.0)
     d_transform = min(d_transform, 3.0)
 
-    # Compute B_cog
-    b_cog = compute_b_cog(bias_scenario, custom_b_cog)
+    b_cog_result = compute_b_cog(
+        bias_scenario=bias_scenario,
+        custom_b_cog=custom_b_cog,
+        session_history=session_history,
+        hypotheses_count=hypotheses_count,
+        deadline=deadline,
+        complexity_score=complexity_score,
+        auto_detect_bias=auto_detect_bias,
+    )
+    b_cog = b_cog_result["b_cog"]
 
-    # Calculate AC_Risk
     ac_risk = u_phys * d_transform * b_cog
     ac_risk = max(0.0, min(1.0, ac_risk))
 
-    # Determine verdict
     if ac_risk < 0.15:
         verdict = "SEAL"
         explanation = (
@@ -250,6 +287,19 @@ def compute_ac_risk(
             "Acquire better data or ground-truth validation."
         )
 
+    components = {
+        "u_phys": round(u_phys, 4),
+        "d_transform": round(d_transform, 4),
+        "b_cog": round(b_cog, 4),
+        "transform_stack": transform_stack,
+        "bias_scenario": b_cog_result.get("scenario", bias_scenario),
+        "calibration_events": adj.get("events", 0),
+    }
+    if b_cog_result.get("modifiers"):
+        components["bias_modifiers"] = b_cog_result["modifiers"]
+    if b_cog_result.get("audit"):
+        components["bias_audit"] = b_cog_result["audit"]
+
     return AC_RiskResult(
         ac_risk=round(ac_risk, 4),
         verdict=verdict,
@@ -257,15 +307,86 @@ def compute_ac_risk(
         u_phys=round(u_phys, 4),
         d_transform=round(d_transform, 4),
         b_cog=round(b_cog, 4),
-        components={
-            "u_phys": round(u_phys, 4),
-            "d_transform": round(d_transform, 4),
-            "b_cog": round(b_cog, 4),
-            "transform_stack": transform_stack,
-            "bias_scenario": bias_scenario,
-            "calibration_events": adj.get("events", 0),
-        },
+        components=components,
     )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Backward-Compatible ACRiskCalculator Class Wrapper
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class ACRiskCalculator:
+    """
+    Class-based wrapper around compute_ac_risk for backward compatibility
+    with tools that call ACRiskCalculator.calculate(...).
+    """
+
+    @staticmethod
+    def calculate(
+        u_phys: float,
+        transform_stack: List[str],
+        bias_scenario: str = "ai_vision_only",
+        custom_b_cog: Optional[float] = None,
+        engine: str = "",
+        basin: str = "",
+        product_type: str = "",
+        session_history: Optional[List[Dict[str, Any]]] = None,
+        auto_detect_bias: bool = False,
+    ) -> "ACRiskResultCompat":
+        result = compute_ac_risk(
+            u_phys=u_phys,
+            transform_stack=transform_stack,
+            bias_scenario=bias_scenario,
+            custom_b_cog=custom_b_cog,
+            engine=engine,
+            basin=basin,
+            product_type=product_type,
+            session_history=session_history,
+            auto_detect_bias=auto_detect_bias,
+        )
+        # Return a compat object with .verdict.value access patterns
+        return ACRiskResultCompat(result)
+
+
+class ACRiskResultCompat:
+    """
+    Compatibility shim that exposes both dict-like and object-like interfaces
+    expected by existing callers (e.g., contracts.tools.well).
+    """
+
+    def __init__(self, result: AC_RiskResult):
+        self._result = result
+        self.ac_risk = result.ac_risk
+        self.verdict = _VerdictCompat(result.verdict)
+        self.explanation = result.explanation
+        self.u_phys = result.u_phys
+        self.d_transform = result.d_transform
+        self.b_cog = result.b_cog
+        self.components = result.components
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "ac_risk": self.ac_risk,
+            "verdict": self.verdict.value,
+            "explanation": self.explanation,
+            "u_phys": self.u_phys,
+            "d_transform": self.d_transform,
+            "b_cog": self.b_cog,
+            "components": self.components,
+        }
+
+
+class _VerdictCompat:
+    def __init__(self, value: str):
+        self.value = value
+
+    def __str__(self):
+        return self.value
+
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.value == other
+        return False
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -284,13 +405,6 @@ def evaluate_verdict(
     """
     Compute final verdict with floor overrides per TOAC_AC_RISK_SPEC.md.
     """
-    base_verdict = compute_ac_risk(
-        u_phys=u_phys,
-        transform_stack=[],  # d_transform already computed
-        custom_b_cog=b_cog,
-    ).verdict
-
-    # Recompute based on raw ac_risk if passed directly
     if ac_risk >= 0.60:
         base_verdict = "VOID"
     elif ac_risk >= 0.35:
@@ -302,28 +416,23 @@ def evaluate_verdict(
 
     overrides = []
 
-    # F2 Truth: U_phys > 0.40 on truth claim
     if u_phys > 0.40:
         if base_verdict == "SEAL":
             base_verdict = "QUALIFY"
         overrides.append("F2")
 
-    # F7 Humility: U_phys > 0.60
     if u_phys > 0.60 and base_verdict in ("SEAL", "QUALIFY"):
         base_verdict = "HOLD"
         overrides.append("F7")
 
-    # F9 Anti-Hantu
     if (b_cog > 0.50 or d_transform > 2.5) and base_verdict in ("SEAL", "QUALIFY"):
         base_verdict = "HOLD"
         overrides.append("F9")
 
-    # F1 Amanah: destructive transforms
     if d_transform >= 1.80 and base_verdict in ("SEAL", "QUALIFY"):
         base_verdict = "HOLD"
         overrides.append("F1")
 
-    # Upstream inheritance
     if upstream_verdicts:
         severity = {"SEAL": 0, "QUALIFY": 1, "HOLD": 2, "VOID": 3}
         worst = max(upstream_verdicts, key=lambda v: severity.get(v, 0))
@@ -331,13 +440,11 @@ def evaluate_verdict(
             base_verdict = worst
             overrides.append("UPSTREAM")
 
-    # Calibration misprediction auto-downgrade
     if calibration_misprediction_ratio is not None and calibration_misprediction_ratio > 2.0:
         downgrade = {"SEAL": "QUALIFY", "QUALIFY": "HOLD", "HOLD": "VOID", "VOID": "VOID"}
         base_verdict = downgrade.get(base_verdict, "VOID")
         overrides.append("CALIBRATION")
 
-    # F13 Sovereign: mandatory 888_HOLD
     if mandatory_888_hold:
         base_verdict = "HOLD"
         overrides.append("F13")
