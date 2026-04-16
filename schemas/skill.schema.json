@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://geox.arif-fazil.com/schemas/skill.schema.json",
+  "title": "GEOX Skill",
+  "description": "Schema for a single GEOX skill with frontmatter and content",
+  "type": "object",
+  "required": ["id", "title", "domain", "version", "surface", "risk", "content"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^geox\\.[a-z]+\\.[a-z-]+$",
+      "description": "Skill ID in dot notation, e.g. geox.mobility.route-viability"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable skill title"
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["sensing", "geodesy", "terrain", "water", "atmosphere", "mobility", "infrastructure", "hazards", "governance", "time", "orchestration"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "surface": {
+      "type": "object",
+      "properties": {
+        "site": { "type": "boolean" },
+        "mcp_resource": { "type": "boolean" },
+        "mcp_prompt": { "type": "boolean" },
+        "mcp_tool": { "type": "boolean" }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "required": ["class", "human_confirmation"],
+      "properties": {
+        "class": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "human_confirmation": { "type": "boolean" }
+      }
+    },
+    "substrates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["human", "machine-fixed", "machine-mobile", "infrastructure", "orbital", "environment-field", "celestial", "void"]
+      },
+      "minItems": 1
+    },
+    "scales": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["site", "corridor", "district", "region", "nation", "maritime"]
+      },
+      "minItems": 1
+    },
+    "horizons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["immediate", "short", "medium", "long"]
+      },
+      "minItems": 1
+    },
+    "inputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Input data types this skill consumes"
+    },
+    "outputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Output data types this skill produces"
+    },
+    "depends_on": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Skill IDs this skill depends on"
+    },
+    "legal_domain": {
+      "type": "string",
+      "enum": ["public", "civil", "maritime", "international"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "approved", "active", "deprecated"]
+    },
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "cache_ttl_sec": { "type": "integer" },
+        "read_only": { "type": "boolean" }
+      }
+    },
+    "content": {
+      "type": "string",
+      "description": "Skill description and documentation content"
+    }
+  }
+}
