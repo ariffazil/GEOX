@@ -35,6 +35,37 @@ mcp = FastMCP("geox")
 REGISTRY_PATH = Path(__file__).parent.parent / "registry" / "registry.json"
 SKILLS_PATH = Path(__file__).parent.parent / "skills"
 APPS_PATH = Path(__file__).parent.parent / "apps"
+KNOWN_WELL_IDS = {"DUL-A1", "TIO-3", "BEK-2", "SEL-1"}
+
+
+def _load_registry() -> dict:
+    with open(REGISTRY_PATH) as f:
+        return json.load(f)
+
+
+def _registry_skills() -> list[dict]:
+    skills = _load_registry().get("skills", [])
+    if isinstance(skills, dict):
+        skills = list(skills.values())
+    return [skill for skill in skills if isinstance(skill, dict)]
+
+
+def _normalize_transform_stack(transform_stack) -> list[str]:
+    normalized: list[str] = []
+    for item in transform_stack or []:
+        if isinstance(item, dict):
+            normalized.append(
+                str(
+                    item.get("transform")
+                    or item.get("kind")
+                    or item.get("name")
+                    or item.get("id")
+                    or "unknown_transform"
+                )
+            )
+        else:
+            normalized.append(str(item))
+    return normalized
 
 
 # =============================================================================
@@ -193,6 +224,15 @@ Awaiting approval response with CONFIRM or REJECT.
 @mcp.tool()
 def geox_well_load_bundle(well_id: str) -> dict:
     """Load a full log bundle (LAS/DLIS) into witness context."""
+    if well_id not in KNOWN_WELL_IDS:
+        return {
+            "well_id": well_id,
+            "status": "not_found",
+            "claim_tag": "VOID",
+            "stages": [],
+            "error": f"Unknown well_id: {well_id}",
+            "known_well_ids": sorted(KNOWN_WELL_IDS),
+        }
     return {
         "well_id": well_id,
         "status": "loaded",
@@ -296,9 +336,19 @@ def geox_earth3d_model_geometries(volume_id: str) -> dict:
 @mcp.tool()
 def geox_map_get_context_summary(bounds: dict) -> dict:
     """Spatial fabric introspection — get summary of spatial context within bounds."""
+    xmin = float(bounds.get("xmin", 0))
+    ymin = float(bounds.get("ymin", 0))
+    xmax = float(bounds.get("xmax", xmin))
+    ymax = float(bounds.get("ymax", ymin))
     return {
         "bounds": bounds,
-        "summary": {},
+        "summary": {
+            "bbox": [xmin, ymin, xmax, ymax],
+            "width": max(0.0, xmax - xmin),
+            "height": max(0.0, ymax - ymin),
+            "area": max(0.0, xmax - xmin) * max(0.0, ymax - ymin),
+            "spatial_context": "Bounds received for map-context introspection.",
+        },
         "claim_tag": "OBSERVED",
     }
 
@@ -563,10 +613,7 @@ def geox_list_skills(domain: str = None, substrate: str = None) -> dict:
     """List GEOX skills with optional filters.
     Discovery tool — not a mission reasoning tool.
     """
-    with open(REGISTRY_PATH) as f:
-        registry = json.load(f)
-
-    skills = registry["skills"]
+    skills = _registry_skills()
     if domain:
         skills = [s for s in skills if s["domain"] == domain]
     if substrate:
@@ -583,10 +630,7 @@ def geox_skill_metadata(skill_id: str) -> dict:
     """Get detailed metadata for a specific skill.
     Discovery tool — not a mission reasoning tool.
     """
-    with open(REGISTRY_PATH) as f:
-        registry = json.load(f)
-
-    for skill in registry["skills"]:
+    for skill in _registry_skills():
         if skill["id"] == skill_id:
             return skill
 
@@ -598,13 +642,11 @@ def geox_skill_dependencies(skill_id: str) -> dict:
     """Get skill dependencies.
     Discovery tool — not a mission reasoning tool.
     """
-    with open(REGISTRY_PATH) as f:
-        registry = json.load(f)
-
-    for skill in registry["skills"]:
+    skills = _registry_skills()
+    for skill in skills:
         if skill["id"] == skill_id:
             deps = skill.get("depends_on", [])
-            dep_skills = [s for s in registry["skills"] if s["id"] in deps]
+            dep_skills = [s for s in skills if s["id"] in deps]
             return {
                 "skill": skill_id,
                 "depends_on": [{"id": s["id"], "title": s["title"]} for s in dep_skills],
@@ -732,7 +774,7 @@ def arifos_compute_risk(
     """
     result = _compute_ac_risk(
         u_phys=u_phys,
-        transform_stack=transform_stack,
+        transform_stack=_normalize_transform_stack(transform_stack),
         bias_scenario=bias_scenario,
         custom_b_cog=custom_b_cog,
     )
