@@ -28,6 +28,14 @@ from geox.core.ac_risk import (
     compute_ac_risk_governed as _compute_ac_risk_governed,
 )
 
+try:
+    from geox.ingest.las_reader import load_las, curve_manifest_from_bundle
+    _HAS_LAS = True
+except Exception:
+    _HAS_LAS = False
+    load_las = None
+    curve_manifest_from_bundle = None
+
 mcp = FastMCP("geox")
 
 REGISTRY_PATH = Path(__file__).resolve().parent.parent / "registry" / "registry.json"
@@ -220,8 +228,59 @@ Awaiting approval response with CONFIRM or REJECT.
 
 
 @mcp.tool()
-def geox_well_load_bundle(well_id: str) -> dict:
-    """Load a full log bundle (LAS/DLIS) into witness context."""
+def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
+    """Load a full log bundle (LAS/DLIS) into witness context.
+
+    Args:
+        well_id: Well identifier.
+        las_path: Optional path to a real .las file. If provided, GEOX
+                 parses actual measured curves (GR, RT, RHOB, NPHI) from
+                 the file. If omitted, uses scaffold fixture data.
+
+    Returns:
+        Structured bundle with curve_manifest and provenance.
+    """
+    if las_path and _HAS_LAS:
+        try:
+            bundle = load_las(las_path, well_id)
+            manifest = curve_manifest_from_bundle(bundle)
+            return {
+                "well_id": well_id,
+                "status": "loaded",
+                "claim_tag": "OBSERVED",
+                "stages": ["load", "qc"],
+                "provenance": f"las_file:{os.path.basename(las_path)}",
+                "depth_range": list(bundle.depth_range),
+                "curve_manifest": [
+                    {
+                        "mnemonic": e.mnemonic,
+                        "unit": e.unit,
+                        "null_pct": e.null_pct,
+                        "range": [e.range_min, e.range_max],
+                    }
+                    for e in manifest
+                ],
+            }
+        except FileNotFoundError as e:
+            return {
+                "well_id": well_id,
+                "status": "error",
+                "claim_tag": "VOID",
+                "stages": [],
+                "error": str(e),
+                "known_well_ids": sorted(KNOWN_WELL_IDS),
+            }
+        except Exception as e:
+            return {
+                "well_id": well_id,
+                "status": "error",
+                "claim_tag": "HYPOTHESIS",
+                "stages": [],
+                "error": f"LAS parse failed: {e}",
+                "known_well_ids": sorted(KNOWN_WELL_IDS),
+            }
+
+    # Scaffold path
     if well_id not in KNOWN_WELL_IDS:
         return {
             "well_id": well_id,
@@ -236,6 +295,8 @@ def geox_well_load_bundle(well_id: str) -> dict:
         "status": "loaded",
         "claim_tag": "OBSERVED",
         "stages": ["load", "qc"],
+        "provenance": "scaffold_fixture",
+        "depth_range": [1500.0, 2500.0],
         "curve_manifest": [
             {"mnemonic": "DEPTH_MD", "unit": "m", "null_pct": 0.0, "range": [1500.0, 2500.0]},
             {"mnemonic": "GR", "unit": "gAPI", "null_pct": 0.1, "range": [20.0, 150.0]},
