@@ -63,7 +63,7 @@ ariffazil/GEOX
 
 ---
 
-## The 11 Domains — 33 Skills
+## The 12 Domains — 39 Skills
 
 GEOX reasoning spans these canonical domains:
 
@@ -80,8 +80,87 @@ GEOX reasoning spans these canonical domains:
 | **governance** | human, machine-fixed | all | all |
 | **time** | human, machine-fixed | all | all |
 | **orchestration** | human, machine-fixed | all | all |
+| **subsurface** | wireline, seismic, geochemical, thermal-history | well → basin | medium → long |
 
 Full skill definitions: [`registry/registry.json`](registry/registry.json)
+
+---
+
+## Subsurface Epistemic Layer (2026-Q2)
+
+**Audit Reference:** Session 2026-04-18
+**Purpose:** Formalize Bayesian graph, encode dependencies explicitly, enforce hard physics constraints, quantify refusal triggers.
+
+### 6 Subsurface Skill Domains
+
+| Skill ID | Title | Purpose |
+|----------|-------|---------|
+| `geox.subsurface.formation-evaluation` | Formation Evaluation | Vsh, POR, Sw via Archie/Indonesia/Simandoux. Physics bounds enforced. |
+| `geox.subsurface.seismic-interpretation` | Seismic Interpretation | Horizon picking + amplitude analysis. Never collapse posterior to single horizon. |
+| `geox.subsurface.reservoir-dynamics` | Reservoir Dynamics | Fluid mechanics, PVT, material balance. Net pay requires Sw + POR + Vsh all pass. |
+| `geox.subsurface.basin-charge` | Basin Charge | Thermal maturity, migration, charge timing. charge_ma ≤ trap_ma enforced. |
+| `geox.subsurface.prospect-risk` | Prospect Risk | PoS = P(reservoir) × P(trap) × P(seal) × P(charge) × P(retention). Coupling detection required. |
+| `geox.subsurface.posterior-integrity` | Posterior Integrity | AlphaFold pLDDT equivalent. integrity_score < 0.3 → AUTO_HOLD. |
+
+### PhysicsGuard (`geox/core/physics_guard.py`)
+
+Hard physics constraint enforcement — **runs before 888_HOLD queue**. Physically impossible outputs never reach human review.
+
+```python
+from geox.core.physics_guard import PhysicsGuard
+
+guard = PhysicsGuard()
+
+# Bounds check — rejects impossible values
+guard.validate({"porosity": 0.55, "sw": 1.5})
+# → {"status": "PHYSICS_VIOLATION", "hold": True}
+
+# Posterior breadth — P90/P10 ratio must ≤ 5.0
+guard.check_posterior_breadth(p10=10, p50=100, p90=600)
+# → {"status": "POSTERIOR_TOO_BROAD", "hold": True}
+
+# Net pay — ALL THREE criteria required simultaneously
+guard.check_net_pay(sw=0.25, por=0.18, vsh=0.20)
+# → PASS: net pay confirmed
+
+# Charge timing — charge must precede or coincide with trap formation
+guard.check_charge_timing(charge_ma=50, trap_ma=60)
+# → PASS
+guard.check_charge_timing(charge_ma=70, trap_ma=60)
+# → {"status": "TIMING_VIOLATION", "hold": True}
+```
+
+**Physics bounds enforced:**
+
+| Parameter | Min | Max | Violation |
+|-----------|-----|-----|-----------|
+| Porosity | 0.02 | 0.45 | REJECT |
+| Water saturation | 0.0 | 1.0 | REJECT |
+| Vsh | 0.0 | 1.0 | REJECT |
+| Ro oil window | 0.6% | 1.3% | WARNING |
+| P90/P10 ratio | — | 5.0 | HOLD |
+
+### Posterior Integrity Scoring
+
+Every subsurface output that flows to WEALTH must carry:
+
+```json
+{
+  "integrity_score": 0.74,
+  "posterior_breadth": 4.0,
+  "evidence_density": 2.3,
+  "model_lineage_hash": "geox_v2_baseline_run_001",
+  "recommendation": "CLAIM"
+}
+```
+
+**Thresholds:**
+
+| Integrity Score | Action |
+|----------------|--------|
+| < 0.3 | **AUTO_HOLD** — do not pass to WEALTH |
+| 0.3 – 0.6 | **PLAUSIBLE** — pass with warning |
+| > 0.6 | **CLAIM** — pass to WEALTH normally |
 
 ---
 
