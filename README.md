@@ -131,6 +131,10 @@ Every AC_Risk result is wrapped in:
 | `geox_verify_geospatial` | Coordinate + CRS grounding | **PROD** |
 | `geox_feasibility_check` | Constitutional F1-F13 pre-check | **PROD** |
 | `geox_earth_signals` | Live Earth observations | **PROD** |
+| `geox_well_load_bundle` | Ingest LAS/DLIS well log bundles | **PROD** |
+| `geox_well_qc_logs` | Quality control — spike, flatline, range detection | **PROD** |
+| `geox_section_interpret_strata` | Multi-well stratigraphic correlation | **PROD** |
+| `geox_cross_summarize_evidence` | Causal evidence synthesis for 888_JUDGE | **PROD** |
 | `geox_attribute_audit` | Kozeny-Carman permeability proxy audit | **PREVIEW** |
 | `geox_seismic_vision_review` | AI fault pick scaffold | **SCAFFOLD** |
 | `geox_georeference_map` | Map georeferencing plan | **SCAFFOLD** |
@@ -272,7 +276,9 @@ GEOX ships scaffold well data for testing:
 | `SEL-1` | HC CONFIRMED | 75m net pay |
 | `TIO-3` | UNCLEAR | No resistivity anomaly — possible water leg |
 
-These are **scaffold fixtures** — not production data. Load real LAS/DLIS files to get production-grade results.
+These are **scaffold fixtures** — computed aggregates, not depth-indexed LAS traces. Expected scaffold behaviour: `correlations: []` (empty) until real LAS files are ingested.
+
+For production use: load real LAS/DLIS files via `geox_well_load_bundle`.
 
 ---
 
