@@ -3,9 +3,9 @@
 GEOX MCP Server Entry Point
 ═════════════════════════════════════════════════════════════════════════════════
 
-FastMCP Cloud deployment entrypoint.
-Sets PYTHONPATH correctly for the geox package.
-Adds /health endpoint and optional Bearer token auth.
+FastMCP 3.x deployment entrypoint.
+Mounts FastMCP on /mcp with Starlette middleware for auth.
+Adds /health, /ready, / routes.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
@@ -30,72 +30,73 @@ sys.path.insert(0, PYTHONPATH)
 
 from geox.geox_mcp.fastmcp_server import mcp
 
-app = mcp.streamable_http_app()
+# FastMCP 3.x — http_app() returns Starlette app with /mcp already mounted
+app = mcp.http_app()
 
 # Optional Bearer token auth — set GEOX_SECRET_TOKEN env var to enable
 _secret = os.environ.get("GEOX_SECRET_TOKEN", "")
 
 
-async def verify_token(request):
-    if not _secret:
-        return None
-    auth = request.headers.get("authorization", "")
-    if auth != f"Bearer {_secret}":
-        from fastapi import HTTPException
-        raise HTTPException(status_code=401, detail="Unauthorized")
+async def health(request):
+    from starlette.responses import JSONResponse
+    return JSONResponse({"status": "ok", "seal": "DITEMPA BUKAN DIBERI", "service": "geox-mcp"})
+
+
+async def ready(request):
+    from starlette.responses import JSONResponse
+    return JSONResponse({"status": "ready"})
+
+
+async def root(request):
+    from starlette.responses import JSONResponse
+    return JSONResponse({
+        "service": "GEOX MCP Server",
+        "version": "0.1.0",
+        "seal": "DITEMPA BUKAN DIBERI",
+        "endpoints": ["/health", "/ready", "/mcp"],
+    })
+
+
+# Add routes to Starlette app (app is a Starlette instance from mcp.http_app())
+app.add_route("/health", health, methods=["GET"])
+app.add_route("/ready", ready, methods=["GET"])
+app.add_route("/", root, methods=["GET"])
+
+
+if _secret:
+
+    async def auth_dispatch(request, call_next):
+        from starlette.responses import JSONResponse
+
+        # Public routes — no auth required
+        if request.url.path in ("/health", "/healthz", "/ready", "/"):
+            return await call_next(request)
+
+        # MCP endpoint — require Bearer token
+        if request.url.path.startswith("/mcp"):
+            auth = request.headers.get("authorization", "")
+            if auth != f"Bearer {_secret}":
+                return JSONResponse(status_code=401, content={"error": "Unauthorized"})
+
+        return await call_next(request)
+
+    from starlette.middleware.base import BaseHTTPMiddleware
+
+    app.add_middleware(BaseHTTPMiddleware, dispatch=auth_dispatch)
+    print("Bearer token auth: ENABLED")
 
 
 if __name__ == "__main__":
     import uvicorn
-    from fastapi import FastAPI, Request, HTTPException
-    from starlette.middleware.base import BaseHTTPMiddleware
-    from starlette.responses import JSONResponse
 
     port = int(os.environ.get("PORT", 8081))
     host = os.environ.get("HOST", "0.0.0.0")
 
-    # Wrap FastMCP app with FastAPI for /health + auth middleware
-    api = FastAPI(title="GEOX MCP Server")
-
-    if _secret:
-
-        @api.middleware("http")
-        async def auth_middleware(request: Request, call_next):
-            if request.url.path in ("/health", "/healthz", "/ready"):
-                return await call_next(request)
-            if request.url.path.startswith("/mcp"):
-                auth = request.headers.get("authorization", "")
-                if auth != f"Bearer {_secret}":
-                    return JSONResponse(status_code=401, content={"error": "Unauthorized"})
-            return await call_next(request)
-
-    @api.get("/health")
-    async def health():
-        return {"status": "ok", "seal": "DITEMPA BUKAN DIBERI", "service": "geox-mcp"}
-
-    @api.get("/ready")
-    async def ready():
-        return {"status": "ready"}
-
-    @api.get("/")
-    async def root():
-        return {
-            "service": "GEOX MCP Server",
-            "version": "0.1.0",
-            "seal": "DITEMPA BUKAN DIBERI",
-            "endpoints": ["/health", "/ready", "/mcp"],
-        }
-
-    # Mount FastMCP on /mcp
-    api.mount("/mcp", app)
-
     print(f"Starting GEOX MCP Server on {host}:{port}")
     print(f"PYTHONPATH={os.environ.get('PYTHONPATH')}")
-    if _secret:
-        print("Bearer token auth: ENABLED")
 
     uvicorn.run(
-        api,
+        app,
         host=host,
         port=port,
         log_level="info",
