@@ -68,4 +68,52 @@ New metadata entries registered:
 
 ## 3. Remaining Work — Acceptance Criteria
 (Rest of the file remains same...)
+
+---
+
+## 4. Phase: Subsurface Epistemic Layer (2026-Q2)
+
+**Audit Reference:** Session 2026-04-18
+**Purpose:** Formalize Bayesian graph, encode dependencies explicitly, enforce hard physics constraints, quantify refusal triggers, model basin-level correlation.
+
+### 4.1 Subsurface Skill Domains (6 Registered)
+
+| Skill ID | Title | Status |
+|----------|-------|--------|
+| `geox.subsurface.formation-evaluation` | Formation Evaluation | ✅ ACTIVE |
+| `geox.subsurface.seismic-interpretation` | Seismic Interpretation | ✅ ACTIVE |
+| `geox.subsurface.reservoir-dynamics` | Reservoir Dynamics | ✅ ACTIVE |
+| `geox.subsurface.basin-charge` | Basin Charge | ✅ ACTIVE |
+| `geox.subsurface.prospect-risk` | Prospect Risk | ✅ ACTIVE |
+| `geox.subsurface.posterior-integrity` | Posterior Integrity | ✅ ACTIVE |
+
+**Physics Constraints Enforced (not advisory):**
+- Porosity: 0.02 ≤ POR ≤ 0.45
+- Water saturation: 0.0 ≤ Sw ≤ 1.0
+- Vsh: 0.0 ≤ Vsh ≤ 1.0
+- Ro oil window: 0.6% – 1.3%
+- Ro gas floor: > 1.3%
+
+### 4.2 PhysicsGuard Module
+
+**File:** `geox/core/physics_guard.py`
+
+Implements:
+- `validate()` — Check output against physical bounds
+- `check_posterior_breadth()` — Enforce P90/P10 ratio ≤ 5.0
+- `check_net_pay()` — ALL THREE criteria required (Sw, POR, Vsh)
+- `check_charge_timing()` — charge_ma ≤ trap_ma
+- `validate_prospect_input()` — Full prospect validation
+
+**Unit Tests:** `tests/test_physics_guard.py` ✅
+
+### 4.3 Remaining Work
+
+- [ ] Per-element confidence scoring (pLDDT equivalent)
+- [ ] Independence checker for PoS components
+- [ ] WEALTH posterior distribution pipeline
+- [ ] Portfolio correlation tracker
+
+---
+
 *Seal: DITEMPA BUKAN DIBERI — 999 SEAL ALIVE*
