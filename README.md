@@ -201,24 +201,36 @@ SYNTHESIZED — Assembled from cross-domain evidence
 
 ## Quickstart
 
-### Installation
+### Docker (Recommended)
 
 ```bash
-pip install geox
-# or from source
-git clone https://github.com/ariffazil/GEOX.git
-cd GEOX && pip install -e ".[dev]"
+# Build
+docker build -t geox .
+
+# Run with auth
+docker run -p 8081:8081 \
+  -e GEOX_SECRET_TOKEN=your_token_here \
+  -e PORT=8081 \
+  geox
 ```
 
-### Start MCP Server
+### Local Development
 
 ```bash
-# STDIO mode (for Claude Desktop, etc.)
+pip install -e ".[dev]"   # fastmcp>=0.7.0, lasio>=0.31, uvicorn
 python geox_mcp_server.py
-
-# HTTP mode (for remote agents)
-python geox_mcp_server.py --transport http --port 8000
+# Server starts on http://0.0.0.0:8081
 ```
+
+### MCP Endpoint
+
+```
+POST /mcp   (Streamable HTTP v2 — FastMCP 3.x)
+GET  /health → {"status":"ok","seal":"DITEMPA BUKAN DIBERI","service":"geox-mcp"}
+GET  /ready
+```
+
+Auth: `Authorization: Bearer <GEOX_SECRET_TOKEN>` on `/mcp` endpoints.
 
 ### Python API
 
@@ -226,42 +238,82 @@ python geox_mcp_server.py --transport http --port 8000
 from geox.core.ac_risk import compute_ac_risk, compute_ac_risk_governed
 
 # Basic AC_Risk
-result = compute_ac_risk(u_phys=0.30, d_transform=1.5, b_cog=0.35)
-# result.ac_risk = 0.1575 → SEAL
+result = compute_ac_risk(u_ambiguity=0.30, transform_stack=[], b_cog=0.35)
+# result.ac_risk = SEAL if low ambiguity + low transform + rational bias
 
 # Full governed result (includes TEARFRAME, Anti-Hantu, 888_HOLD)
 governed = compute_ac_risk_governed(
-    u_phys=0.85,
-    d_transform=2.5,
-    b_cog=0.42,
-    irreversible_action=False,
+    u_ambiguity=0.45,
+    transform_stack=["load", "qc", "petrophysics"],
+    evidence_credit=1.05,   # full pipeline: well+seismic+petrophysics+section
+    bias_scenario="ai_vision_only",
+    truth_score=0.85,
+    echo_score=0.80,
     amanah_locked=True,
-    text_to_screen="HC zone confirmed 3/4 wells, Horizon A continuous"
+    rasa_present=True,
+    model_text="HC zone confirmed 3/4 wells, Horizon A continuous"
 )
-# governed.ac_risk, governed.verdict, governed.hold_enforced, governed.vault_payload
+# governed.verdict, governed.ac_risk, governed.hold_enforced, governed.vault_payload
 ```
 
 ### MCP Tools via FastMCP Client
 
 ```python
-from geox.geox_mcp.server import mcp
+from geox.geox_mcp.fastmcp_server import mcp
 
-# Compute AC_Risk
-result = mcp.call_tool("geox_compute_ac_risk", {
-    "u_phys": 0.30,
-    "d_transform": 1.5,
-    "b_cog": 0.35
+# Load real LAS file → real depth curves
+bundle = mcp.call_tool("geox_well_load_bundle", {
+    "well_id": "BEK-2",
+    "las_path": "/data/BEK-2.las"   # omit for scaffold fixture
 })
 
-# Evaluate prospect with full governance
-result = mcp.call_tool("geox_evaluate_prospect", {
-    "u_phys": 0.85,
-    "d_transform": 2.5,
-    "b_cog": 0.42,
+# Run depth-indexed petrophysics
+petro = mcp.call_tool("geox_well_compute_petrophysics", {
+    "well_id": "BEK-2",
+    "volume_id": "BEK_VOL",
+    "saturation_model": "Archie"
+})
+# petro["curves"] → 91 depth points (2040–2220m, 2m step)
+# petro["summary"]["net_pay_intervals"] → [{top, bot}, ...]
+
+# Full prospect judgment with evidence credit
+judged = mcp.call_tool("arifos_judge_prospect", {
+    "u_ambiguity": 0.45,
+    "transform_stack": [
+        {"kind": "load_volume"},
+        {"transform": "compute_petrophysics"},
+        "section_correlation"
+    ],
+    "evidence_credit": 1.05,
     "amanah_locked": True,
-    "text_to_screen": "HC zone confirmed 3/4 wells"
+    "truth_score": 0.85,
+    "echo_score": 0.80,
+    "model_text": "HC zone confirmed 3/4 wells"
 })
+# judged["verdict"] → SEAL / QUALIFY / HOLD / VOID
+# judged["hold_enforced"] → True/False
 ```
+
+---
+
+## Evidence Credit
+
+Each verified tool in the pipeline reduces `D_transform` by a governed credit amount.
+A fully-evidenced prospect can reach SEAL instead of being trapped at VOID.
+
+| Tool Called | Credit | Cumulative |
+|-------------|--------|------------|
+| `geox_well_load_bundle` | +0.20 | 0.20 |
+| `geox_well_qc_logs` | +0.15 | 0.35 |
+| `geox_well_compute_petrophysics` | +0.40 | 0.75 |
+| `geox_seismic_load_line` / `load_volume` | +0.30 | 1.05 |
+| `geox_section_interpret_strata` | +0.30 | 1.35 |
+
+```
+D_transform_effective = max(1.0, D_transform_base − evidence_credit)
+```
+
+Max credit = **1.35** → penalty floors at 1.0. SEAL reachable for well-evidenced prospects.
 
 ---
 
@@ -271,14 +323,19 @@ GEOX ships scaffold well data for testing:
 
 | Well | Status | Notes |
 |------|--------|-------|
-| `BEK-2` | HC CONFIRMED | φ=0.22, Sw=0.35, 80m net pay |
+| `BEK-2` | HC CONFIRMED | φ=0.22, Sw=0.35, 82m core HC + 4m fringe |
 | `DUL-A1` | HC CONFIRMED | 75m net pay |
 | `SEL-1` | HC CONFIRMED | 75m net pay |
 | `TIO-3` | UNCLEAR | No resistivity anomaly — possible water leg |
 
-These are **scaffold fixtures** — computed aggregates, not depth-indexed LAS traces. Expected scaffold behaviour: `correlations: []` (empty) until real LAS files are ingested.
+Scaffold returns **depth-indexed curves** (91 points, 2040–2220m MD) with correct zone flags.
+Load a real `.las` file to replace scaffold with measured data:
 
-For production use: load real LAS/DLIS files via `geox_well_load_bundle`.
+```python
+geox_well_load_bundle(well_id="BEK-2", las_path="/path/to/BEK-2.las")
+# provenance: "las_file:BEK-2.las"  ← real data
+# vs scaffold: provenance: "scaffold_fixture"
+```
 
 ---
 
