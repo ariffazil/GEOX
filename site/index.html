@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOX — Earth Intelligence Skills</title>
+  <meta name="description" content="GEOX: Constitutional Earth Intelligence cockpit. 44 skills, 11 domains, 6 substrates. Forged, not given.">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .landing-hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .landing-hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    .landing-hero h1 span {
+      color: var(--accent);
+    }
+    .landing-hero p {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      max-width: 500px;
+      margin-bottom: 2rem;
+    }
+    .landing-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--accent-dim);
+      text-decoration: none;
+    }
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      border-color: var(--text-dim);
+      text-decoration: none;
+    }
+    .landing-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .eureka-section {
+      max-width: 800px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    .eureka-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .eureka-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      text-align: left;
+    }
+    .eureka-card {
+      padding: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .eureka-card h3 {
+      font-size: 0.9rem;
+      color: var(--amber);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .eureka-card p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+    @media (max-width: 768px) {
+      .landing-hero h1 { font-size: 2rem; }
+      .landing-stats { gap: 1.5rem; }
+      .eureka-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="landing-hero">
+    <h1>Earth Intelligence<br><span>Grounded in Physics</span></h1>
+    <p>Constitutional geoscience cockpit. 44 skills across 11 domains. Four-surface architecture. Honest data or explicit absence.</p>
+    
+    <div class="landing-actions">
+      <a href="catalog.html" class="btn btn-primary">
+        Browse Skills
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+      <a href="wiki.html" class="btn btn-secondary">
+        Read Doctrine
+      </a>
+      <a href="network.html" class="btn btn-secondary">
+        Network Map
+      </a>
+      <a href="https://geox.arif-fazil.com" class="btn btn-secondary" target="_blank">
+        Enter Cockpit
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+        </svg>
+      </a>
+    </div>
+    
+    <div class="landing-stats">
+      <div class="stat-item">
+        <div class="stat-value">44</div>
+        <div class="stat-label">Skills</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">11</div>
+        <div class="stat-label">Domains</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Substrates</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Surfaces</div>
+      </div>
+    </div>
+  </main>
+
+  <section class="eureka-section">
+    <h2>Eureka Insights</h2>
+    <div class="eureka-grid">
+      <div class="eureka-card">
+        <h3>Four-Surface Architecture</h3>
+        <p>Site + WebMCP + MCP + A2A. One capability, many surfaces. Same skill exposed as documentation, browser widget, agent tool, and delegatable task.</p>
+      </div>
+      <div class="eureka-card">
+        <h3>Honest Data Principle</h3>
+        <p>No fabrication. When data is missing, return <code>NO_ACTIVE_SCENE</code> with guidance. Every computation requires attested provenance.</p>
+      </div>
+      <div class="eureka-card">
+        <h3>Physics First</h3>
+        <p>Validate inputs against physical bounds before computation. Porosity ∈ [0,1]. Areas positive. Fail fast with physics errors.</p>
+      </div>
+      <div class="eureka-card">
+        <h3>Constitutional Defaults</h3>
+        <p>Default to 888_HOLD. Confidence must be earned through evidence. Human authority (F13) on consequential decisions.</p>
+      </div>
+    </div>
+    <p style="margin-top: 2rem; color: var(--text-muted); font-size: 0.9rem;">
+      <a href="wiki.html#eureka">Read all 8 insights →</a>
+    </p>
+  </section>
+
+  <footer style="text-align: center; padding: 3rem 0; border-top: 1px solid var(--border);">
+    <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--amber); letter-spacing: 0.15em;">
+      DITEMPA BUKAN DIBERI — 999 SEAL
+    </div>
+  </footer>
+</body>
+</html>

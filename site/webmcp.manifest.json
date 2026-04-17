@@ -1,0 +1,169 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/webmcp.manifest.schema.json",
+  "manifest_version": "2026-04",
+  "origin": "https://geox.arif-fazil.com",
+  "capabilities": [
+    {
+      "id": "openProspect",
+      "name": "Open Prospect View",
+      "description": "Open a basin prospect in the interactive map view",
+      "handler": "js_function",
+      "schema": {
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "basin_id": { "type": "string" },
+            "prospect_name": { "type": "string" },
+            "coordinates": {
+              "type": "object",
+              "properties": {
+                "lat": { "type": "number" },
+                "lon": { "type": "number" }
+              }
+            }
+          },
+          "required": ["basin_id"]
+        },
+        "outputs": {
+          "type": "object",
+          "properties": {
+            "view_id": { "type": "string" },
+            "layers_loaded": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "ui": {
+        "requires_user_activation": false,
+        "modal": false
+      },
+      "session": {
+        "requires_auth": true,
+        "scope": "geox:prospect:read",
+        "ttl_seconds": 3600
+      }
+    },
+    {
+      "id": "filterBasinLayer",
+      "name": "Filter Basin Layer",
+      "description": "Apply filters to the active basin data layer",
+      "handler": "js_function",
+      "schema": {
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "layer": { "type": "string", "enum": ["wells", "seismic", "facilities", "hazards"] },
+            "filter": { "type": "object" }
+          },
+          "required": ["layer"]
+        },
+        "outputs": {
+          "type": "object",
+          "properties": {
+            "features_matched": { "type": "integer" },
+            "features_visible": { "type": "integer" }
+          }
+        }
+      },
+      "ui": {
+        "requires_user_activation": false
+      },
+      "session": {
+        "requires_auth": true,
+        "scope": "geox:data:read"
+      }
+    },
+    {
+      "id": "showWellTrack",
+      "name": "Show Well Track",
+      "description": "Display well trajectory and log data in the section view",
+      "handler": "js_function",
+      "schema": {
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "well_id": { "type": "string" },
+            "logs": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["well_id"]
+        },
+        "outputs": {
+          "type": "object",
+          "properties": {
+            "view_url": { "type": "string" },
+            "logs_available": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "ui": {
+        "requires_user_activation": false
+      }
+    },
+    {
+      "id": "scoreRiskScenario",
+      "name": "Score Risk Scenario",
+      "description": "Run constitutional risk scoring on a scenario",
+      "handler": "js_function",
+      "schema": {
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "scenario_type": { "type": "string", "enum": ["flood", "seismic", "mobility", "maritime"] },
+            "parameters": { "type": "object" }
+          },
+          "required": ["scenario_type", "parameters"]
+        },
+        "outputs": {
+          "type": "object",
+          "properties": {
+            "score": { "type": "number" },
+            "verdict": { "type": "string", "enum": ["888_SEAL", "888_QUALIFY", "888_HOLD", "888_VOID"] },
+            "evidence": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "ui": {
+        "requires_user_activation": true,
+        "confirmation_text": "This will submit a risk scenario for constitutional scoring. Continue?"
+      },
+      "session": {
+        "requires_auth": true,
+        "scope": "geox:risk:score"
+      }
+    },
+    {
+      "id": "exportEvidencePack",
+      "name": "Export Evidence Pack",
+      "description": "Generate and download an auditable evidence package",
+      "handler": "js_function",
+      "schema": {
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "session_id": { "type": "string" },
+            "format": { "type": "string", "enum": ["pdf", "json", "zip"] }
+          },
+          "required": ["session_id"]
+        },
+        "outputs": {
+          "type": "object",
+          "properties": {
+            "download_url": { "type": "string" },
+            "expires_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      },
+      "ui": {
+        "requires_user_activation": true,
+        "modal": true
+      },
+      "session": {
+        "requires_auth": true,
+        "scope": "geox:audit:export"
+      }
+    }
+  ],
+  "fallback": {
+    "message": "WebMCP capabilities require a compatible browser session. Please use the GEOX Cockpit for full functionality.",
+    "link": "https://geox.arif-fazil.com/cockpit"
+  }
+}

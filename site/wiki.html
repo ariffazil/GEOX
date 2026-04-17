@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOX Wiki — Earth Intelligence Doctrine</title>
+  <meta name="description" content="LLM wiki for Earth intelligence: ontology, substrate model, constitutional governance, and operational doctrine.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        GEOX
+      </a>
+      <nav class="nav-links">
+        <a href="catalog.html">Skills</a>
+        <a href="wiki.html" class="active">Wiki</a>
+        <a href="network.html">Network</a>
+        <a href="https://geox.arif-fazil.com" target="_blank">Cockpit →</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wiki-page">
+    <header class="wiki-header">
+      <h1>Earth Intelligence Doctrine</h1>
+      <p>An LLM wiki for geospatial operations: ontology, substrate model, and constitutional governance.</p>
+    </header>
+
+    <nav class="wiki-toc">
+      <h3>Contents</h3>
+      <ul>
+        <li><a href="#what-is">What is Earth Intelligence</a></li>
+        <li><a href="#four-surface">Four-Surface Architecture</a></li>
+        <li><a href="#honest">The Honest Data Principle</a></li>
+        <li><a href="#substrate">The Substrate Model</a></li>
+        <li><a href="#observation">Observation to Action</a></li>
+        <li><a href="#skills">44 Skills / 11 Domains</a></li>
+        <li><a href="#governance">Constitutional Governance</a></li>
+        <li><a href="#mcp">MCP Integration</a></li>
+        <li><a href="#risk">Risk Classes & 888 HOLD</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+      </ul>
+    </nav>
+
+    <article class="wiki-content">
+      <h2 id="what-is">What is Earth Intelligence</h2>
+      
+      <p>Earth Intelligence is the discipline of deriving actionable understanding from geospatial data. Unlike traditional GIS, which focuses on storage and visualization, Earth Intelligence emphasizes <em>inference</em>—the transformation of raw observation into structured knowledge that can drive decisions.</p>
+      
+      <p>GEOX operationalizes this through a substrate-aware architecture. We recognize that intelligence flows through multiple mediums: human analysts, machine agents, physical infrastructure, orbital platforms, environmental sensors, and the void spaces where communication breaks down. Each substrate has distinct capabilities, constraints, and failure modes.</p>
+      
+      <blockquote>
+        <p>"The map is not the territory, but the territory is not the data either. Intelligence sits in the transformation between them."</p>
+      </blockquote>
+
+      <h2 id="four-surface">Four-Surface Architecture</h2>
+      
+      <p>GEOX is packaged as a <strong>four-surface platform</strong> where each surface serves distinct purposes while sharing a unified ontology and registry:</p>
+      
+      <table>
+        <tr><th>Surface</th><th>Protocol</th><th>Purpose</th></tr>
+        <tr><td><strong>Site</strong></td><td>Static HTML/CSS/JS</td><td>Human-facing trust, docs, wiki, catalog</td></tr>
+        <tr><td><strong>WebMCP</strong></td><td>Browser-native manifest</td><td>User-in-session capabilities (openProspect, filterLayer, scoreRisk)</td></tr>
+        <tr><td><strong>MCP</strong></td><td>Model Context Protocol</td><td>Agent-to-tool runtime access (search, compute, validate)</td></tr>
+        <tr><td><strong>A2A</strong></td><td>Agent-to-Agent Protocol</td><td>Multi-agent coordination and delegation</td></tr>
+      </table>
+      
+      <p>The insight: <em>One capability, many surfaces.</em> A flood model skill appears as documentation on the Site, as an interactive widget via WebMCP, as a callable tool through MCP, and as a delegatable task over A2A—all from the same registry entry.</p>
+      
+      <p>This architecture separates concerns without fragmenting knowledge. The Site builds trust. WebMCP enables browser-native workflows. MCP connects AI hosts. A2A enables multi-agent missions. All share the same 44-skill registry, the same constitutional gates, the same telemetry format.</p>
+
+      <h2 id="honest">The Honest Data Principle</h2>
+      
+      <p>The foundational eureka: <strong>GEOX refuses to fabricate data.</strong></p>
+      
+      <p>Traditional systems return placeholder values when data is missing—zeros, averages, or "synthetic" approximations. GEOX does not. When no geological scene has been established, GEOX tools return an explicit <code>NO_ACTIVE_SCENE</code> status with guidance on how to provide real parameters.</p>
+      
+      <pre><code>{
+  "status": "NO_ACTIVE_SCENE",
+  "message": "No geological scene has been established.",
+  "governance": "arifOS F2 Truth — Cannot fabricate data",
+  "hint": "Provide real well logs, seismic picks, or reservoir parameters"
+}</code></pre>
+      
+      <p>This is not a limitation. It is a <strong>feature of integrity</strong>. Every computation in GEOX requires explicit user attestation of data provenance. The <code>geox_set_scene()</code> tool demands:</p>
+      
+      <ul>
+        <li>Area from actual mapping (not estimates)</li>
+        <li>Thickness from well logs or seismic (not assumptions)</li>
+        <li>Porosity from core analysis (not regional averages)</li>
+        <li>Provenance documentation (where did this data come from?)</li>
+      </ul>
+      
+      <p>The result: every STOIIP calculation, every risk score, every verdict carries an evidence chain. If the inputs are real, the outputs are trustworthy. If the inputs are missing, the system says so explicitly. There is no hidden interpolation, no silent defaults, no hallucinated geology.</p>
+      
+      <p><strong>Physics First:</strong> All inputs are validated against physical bounds before computation. Porosity must be in [0,1]. Areas must be positive. CRS must be specified. Violations return <code>888_HOLD</code> with specific physics errors—not computed results with caveats.</p>
+
+      <h2 id="substrate">The Substrate Model</h2>
+      
+      <p>GEOX recognizes eight substrates through which intelligence operates:</p>
+      
+      <ul>
+        <li><strong>Human</strong> — Analysts, decision-makers, field operators. Strength: contextual judgment, ethical reasoning. Weakness: bandwidth, bias, fatigue.</li>
+        <li><strong>Machine-Fixed</strong> — Algorithms, models, automated processors on fixed infrastructure. Strength: scale, consistency. Weakness: edge cases, overconfidence.</li>
+        <li><strong>Machine-Mobile</strong> — Autonomous systems in motion: drones, vehicles, vessels. Strength: dynamic positioning, in-situ sensing. Weakness: power constraints, communication limits.</li>
+        <li><strong>Infrastructure</strong> — Networks, storage, compute, telemetry backbone. Strength: persistence, throughput. Weakness: fragility, single points of failure.</li>
+        <li><strong>Orbital</strong> — Satellites, constellations, space-based sensors. Strength: coverage, revisit. Weakness: latency, cost, vulnerability.</li>
+        <li><strong>Environment-Field</strong> — Physical terrain, atmosphere, hydrology. Strength: ground truth. Weakness: unpredictability, hazard.</li>
+        <li><strong>Celestial</strong> — Solar, lunar, astronomical influences. Strength: predictable cycles, gravitational reference. Weakness: long-period cycles.</li>
+        <li><strong>Void</strong> — Communication gaps, sensor shadows, unknown states. Not an absence but a presence requiring special handling.</li>
+      </ul>
+      
+      <p>Every GEOX skill declares which substrates it operates across. A flood model may ingest orbital imagery (orbital), process on cloud infrastructure (infrastructure), be validated by human experts (human), and issue alerts to autonomous systems (machine)—while explicitly handling void regions where terrain data is missing.</p>
+
+      <h2 id="observation">Observation to Action</h2>
+      
+      <p>The GEOX pipeline follows a canonical flow:</p>
+      
+      <ol>
+        <li><strong>Sense</strong> — Data acquisition from any substrate</li>
+        <li><strong>Process</strong> — Transformation into analysable form</li>
+        <li><strong>Understand</strong> — Extraction of patterns and meaning</li>
+        <li><strong>Decide</strong> — Evaluation of options with constraints</li>
+        <li><strong>Act</strong> — Execution with monitoring and feedback</li>
+      </ol>
+      
+      <p>Each stage has associated skills. Sensing uses <code>signal_acquisition</code> and <code>telemetry_link</code>. Processing chains <code>atmospheric_correction</code> and <code>coordinate_transform</code>. Understanding applies <code>surface_classify</code> and <code>change_detect</code>. Decision incorporates <code>risk_assessment</code> and <code>constitutional_gate</code>. Action deploys <code>route_optimize</code> or <code>agent_coordination</code>.</p>
+
+      <h2 id="skills">44 Skills / 11 Domains</h2>
+      
+      <p>The GEOX skill taxonomy organizes 44 capabilities into 11 domains. Each skill is a contract: typed inputs, validated outputs, declared substrates, and explicit uncertainty bounds.</p>
+      
+      <ul>
+        <li><strong>Sensing & Signals</strong> — Raw data acquisition and telemetry</li>
+        <li><strong>Geodesy & Position</strong> — Coordinate systems and precision positioning</li>
+        <li><strong>Terrain & Surface</strong> — Elevation, land cover, roughness</li>
+        <li><strong>Water & Hydrology</strong> — Floods, drainage, watersheds, tides</li>
+        <li><strong>Atmosphere & Weather</strong> — Meteorology, climate, correction</li>
+        <li><strong>Mobility & Routing</strong> — Path planning and accessibility</li>
+        <li><strong>Infrastructure & Built</strong> — Assets, networks, urban systems</li>
+        <li><strong>Hazards & Risk</strong> — Seismic, landslide, volcanic, multi-hazard</li>
+        <li><strong>Governance & Policy</strong> — Boundaries, rights, compliance</li>
+        <li><strong>Time & Change</strong> — Temporal analysis and forecasting</li>
+        <li><strong>Orchestration & Void</strong> — Multi-agent coordination and edge handling</li>
+      </ul>
+      
+      <p>Each skill declares inputs, outputs, complexity (1-5), substrate affinity, and MCP resource URI. See the <a href="catalog.html">Skills Catalog</a> for searchable details.</p>
+
+      <h2 id="governance">Constitutional Governance</h2>
+      
+      <p>GEOX implements arifOS constitutional constraints (F1-F13) at the skill level:</p>
+      
+      <ul>
+        <li><strong>F1 Reversible</strong> — Every action can be undone or mitigated</li>
+        <li><strong>F2 Truth</strong> — Claims must be grounded in physical evidence</li>
+        <li><strong>F3 Clear</strong> — Uncertainty is explicit, not hidden</li>
+        <li><strong>F4 Accountable</strong> — Every operation has attribution</li>
+        <li><strong>F5 Sovereign</strong> — Human holds final authority on consequential decisions</li>
+        <li><strong>F6 Harmless</strong> — No operation should knowingly cause harm</li>
+        <li><strong>F7 Humble</strong> — Confidence thresholds prevent overclaim</li>
+        <li><strong>F8 Valid</strong> — Inputs are validated before processing</li>
+        <li><strong>F9 Transparent</strong> — Reasoning is inspectable, not opaque</li>
+        <li><strong>F10 Minimal</strong> — Only necessary data is collected</li>
+        <li><strong>F11 Auditable</strong> — Full lineage for every output</li>
+        <li><strong>F12 Durable</strong> — Outputs remain interpretable over time</li>
+        <li><strong>F13 Governed</strong> — Constitutional gates enforce all above</li>
+      </ul>
+
+      <h2 id="mcp">MCP & Four-Surface Integration</h2>
+      
+      <p>GEOX implements a <strong>wired architecture</strong>: the MCP server imports directly from the GEOX unified backend. When you call <code>geox_compute_stoiip</code> through MCP, you are executing the same physics-validated code that runs in the browser cockpit.</p>
+      
+      <p>Key integration patterns:</p>
+      
+      <ul>
+        <li><strong>Resources</strong> (<code>geox://registry</code>, <code>geox://scene/state</code>) — Static data and live state</li>
+        <li><strong>Tools</strong> (<code>geox_set_scene</code>, <code>geox_compute_stoiip</code>) — Executable operations with typed schemas</li>
+        <li><strong>Prompts</strong> (<code>geox_interpret_prospect</code>, <code>geox_issue_verdict</code>) — Pre-defined constitutional workflows</li>
+      </ul>
+      
+      <p>The wiring extends to A2A: agents discover capabilities through agent cards, delegate via task envelopes, and execute through MCP tools. The telemetry format is unified across all surfaces:</p>
+      
+      <pre><code>{
+  "epoch": "2026-04-11T08:30:00Z",
+  "capability_id": "geox.water.flood-model",
+  "surface": "mcp",
+  "dS": 0.03, "peace2": 1.02, "kappa_r": 0.18,
+  "confidence": 0.81,
+  "verdict": "888_QUALIFY",
+  "witness": {"human": true, "ai": true, "earth": true}
+}</code></pre>
+      
+      <p>This enables <strong>cross-surface auditability</strong>: a computation started by a human in the browser, delegated to an AI agent over A2A, validated by a governance agent, and finalized with human approval—all emit the same telemetry format with full lineage.</p>
+      
+      <ul>
+        <li><strong>Resources</strong> — Static data and configurations (e.g., <code>geox://resources/terrain/dem</code>)</li>
+        <li><strong>Tools</strong> — Executable operations with typed inputs/outputs</li>
+        <li><strong>Prompts</strong> — Pre-defined workflows for common tasks</li>
+      </ul>
+      
+      <p>The MCP server runs at <code>geox.arif-fazil.com/mcp</code> with SSE streaming. Clients can discover capabilities via the registry endpoint and invoke skills with JSON-RPC.</p>
+
+      <h2 id="risk">Risk Classes & 888 HOLD</h2>
+      
+      <p>GEOX classifies operations into risk tiers:</p>
+      
+      <ul>
+        <li><strong>888 SEAL</strong> — Approved, low risk, proceed</li>
+        <li><strong>888 QUALIFY</strong> — Approved with noted conditions</li>
+        <li><strong>888 HOLD</strong> — Paused pending human review</li>
+        <li><strong>888 VOID</strong> — Rejected, violates constitutional constraint</li>
+      </ul>
+      
+      <p>The <code>constitutional_gate</code> skill enforces these verdicts based on cumulative risk scoring across the operation chain. A single high-risk input can trigger HOLD. A constitutional violation triggers VOID.</p>
+
+      <h2 id="glossary">Glossary</h2>
+      
+      <dl>
+        <dt>Substrate</dt>
+        <dd>A medium through which intelligence operates: human, machine, infrastructure, orbital, environment, or void.</dd>
+        
+        <dt>Skill</dt>
+        <dd>An atomic operational capability with declared inputs, outputs, and substrate affinities.</dd>
+        
+        <dt>Domain</dt>
+        <dd>A thematic grouping of related skills (e.g., Water, Hazards, Governance).</dd>
+        
+        <dt>Void</dt>
+        <dd>A substrate representing unknown states, communication gaps, and sensor shadows—not absence but presence requiring handling.</dd>
+        
+        <dt>GEOX</dt>
+        <dd>Geospatial Earth Intelligence Operations eXtended—a constitutional cockpit for exploration and analysis.</dd>
+        
+        <dt>arifOS</dt>
+        <dd>The constitutional kernel providing governance, memory, and orchestration across the Trinity Network.</dd>
+        
+        <dt>Four-Surface</dt>
+        <dd>The architecture pattern: Site + WebMCP + MCP + A2A, unified by shared registry and contracts.</dd>
+        
+        <dt>Honest Data</dt>
+        <dd>The principle that systems must not fabricate data; absence is explicit (<code>NO_ACTIVE_SCENE</code>), presence is attested.</dd>
+        
+        <dt>888 HOLD</dt>
+        <dd>A constitutional verdict pausing operations for human review when risk thresholds or authority levels are exceeded.</dd>
+        
+        <dt>Wiring</dt>
+        <dd>Direct code integration between layers (e.g., MCP server importing from unified backend) ensuring no semantic drift.</dd>
+      </dl>
+      
+      <h2 id="eureka">Eureka Insights</h2>
+      
+      <p>The distilled insights from building GEOX:</p>
+      
+      <ol>
+        <li><strong>Contracts First:</strong> Protocol surfaces drift faster than domain ontology. Define schemas (skill, tool, telemetry) before implementations.</li>
+        
+        <li><strong>One Capability, Many Surfaces:</strong> A flood model should not be reimplemented for web, API, and agents. One registry entry, multiple protocol adapters.</li>
+        
+        <li><strong>Absence is Information:</strong> <code>NO_ACTIVE_SCENE</code> is more valuable than synthetic defaults. Explicit gaps enable proper handling.</li>
+        
+        <li><strong>Physics Before Computation:</strong> Validate inputs against physical bounds (porosity ∈ [0,1]) before any calculation. Fail fast with physics errors.</li>
+        
+        <li><strong>Constitutional Defaults:</strong> Default behavior should be restrictive (888_HOLD). Confidence must be earned through evidence, not assumed.</li>
+        
+        <li><strong>Substrate Awareness:</strong> Every operation crosses mediums (human→machine→infrastructure). Declare these explicitly; handle voids gracefully.</li>
+        
+        <li><strong>Unified Telemetry:</strong> Browser clicks, MCP tool calls, and A2A delegations should emit the same observability format. Cross-surface tracing requires this.</li>
+        
+        <li><strong>Human in the Loop:</strong> The F13 Sovereign floor mandates human authority on consequential decisions. Design for escalation, not automation.</li>
+      </ol>
+      
+      <blockquote>
+        <p>"The future of web is not a website. It is a protocol-native knowledge platform where static pages, browser tools, agent tools, and agent coordination all derive from one ontology."</p>
+      </blockquote>
+    </article>
+
+    <footer class="site-footer" style="margin-top: 4rem;">
+      <div class="footer-seal">DITEMPA BUKAN DIBERI — 999 SEAL</div>
+      <div class="footer-copy">Last updated: 2026-04-11</div>
+    </footer>
+  </main>
+</body>
+</html>

@@ -3,130 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GEOX Skills Catalog</title>
+  <title>GEOX Skills — Earth Intelligence Catalog</title>
+  <meta name="description" content="44 Earth intelligence skills across 11 domains. Searchable skill registry for geospatial operations.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <div class="container">
-      <div class="logo">GEOX</div>
-      <div class="tagline">Earth Intelligence Skills Registry</div>
-      <nav>
-        <a href="#home" class="active">Home</a>
-        <a href="#catalog">Catalog</a>
-        <a href="#domains">Domains</a>
-        <a href="#graph">Graph</a>
-        <a href="#scenarios">Scenarios</a>
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        GEOX
+      </a>
+      <nav class="nav-links">
+        <a href="catalog.html" class="active">Skills</a>
+        <a href="wiki.html">Wiki</a>
+        <a href="network.html">Network</a>
+        <a href="https://geox.arif-fazil.com" target="_blank">Cockpit →</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section id="home" class="view active">
+    <!-- Hero -->
+    <section class="hero">
       <div class="container">
-        <div class="hero">
-          <h1>GEOX Skills Registry</h1>
-          <p class="subtitle">33 skills across 11 domains — forged for earth intelligence, human-machine-void orchestration</p>
-          <div class="stats">
-            <div class="stat">
-              <span class="stat-number">33</span>
-              <span class="stat-label">Skills</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">11</span>
-              <span class="stat-label">Domains</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">3</span>
-              <span class="stat-label">Per Domain</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">8</span>
-              <span class="stat-label">Substrates</span>
-            </div>
-          </div>
-        </div>
+        <h1>Earth Intelligence Skills</h1>
+        <p>44 operational skills across 11 domains. For humans, machines, and the spaces between.</p>
+        <div class="seal">DITEMPA BUKAN DIBERI — Forged, Not Given</div>
+      </div>
+    </section>
 
-        <div class="substrate-model">
-          <h2>Substrate Model</h2>
-          <div class="substrate-grid">
-            <div class="substrate-tag human">human</div>
-            <div class="substrate-tag machine-fixed">machine-fixed</div>
-            <div class="substrate-tag machine-mobile">machine-mobile</div>
-            <div class="substrate-tag infrastructure">infrastructure</div>
-            <div class="substrate-tag orbital">orbital</div>
-            <div class="substrate-tag environment-field">environment-field</div>
-            <div class="substrate-tag celestial">celestial</div>
-            <div class="substrate-tag void">void</div>
-          </div>
-        </div>
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div><strong id="stats-count">44 skills</strong> total</div>
+      <div><strong>11</strong> domains</div>
+      <div><strong>6</strong> substrates</div>
+    </div>
 
-        <div class="domains-preview">
-          <h2>11 Domains</h2>
-          <div class="domain-cards" id="domainCardsHome"></div>
+    <!-- Search & Filters -->
+    <section class="search-section">
+      <div class="container">
+        <div class="search-box">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          <input type="text" id="skill-search" placeholder="Search skills, inputs, outputs..." autocomplete="off">
+        </div>
+        
+        <div class="filter-chips" id="domain-filters">
+          <!-- Populated by JS -->
+        </div>
+        
+        <div class="filter-chips" id="substrate-filters" style="margin-top: 0.75rem;">
+          <!-- Populated by JS -->
         </div>
       </div>
     </section>
 
-    <section id="catalog" class="view">
-      <div class="container">
-        <h1>Skill Catalog</h1>
-        <div class="filters">
-          <input type="text" id="searchInput" placeholder="Search skills...">
-          <select id="domainFilter">
-            <option value="">All Domains</option>
-          </select>
-          <select id="substrateFilter">
-            <option value="">All Substrates</option>
-          </select>
-          <select id="riskFilter">
-            <option value="">All Risk Classes</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </div>
-        <div class="skill-grid" id="skillGrid"></div>
-      </div>
-    </section>
-
-    <section id="domains" class="view">
-      <div class="container">
-        <h1>Domains</h1>
-        <div class="domains-list" id="domainsList"></div>
-      </div>
-    </section>
-
-    <section id="graph" class="view">
-      <div class="container">
-        <h1>Dependency Graph</h1>
-        <p class="graph-description">Skill dependencies and cross-domain relationships</p>
-        <div class="graph-container" id="graphContainer">
-          <svg id="dependencyGraph" width="100%" height="600"></svg>
-        </div>
-      </div>
-    </section>
-
-    <section id="scenarios" class="view">
-      <div class="container">
-        <h1>Scenarios</h1>
-        <p class="scenarios-description">Curated skill bundles for operational scenarios</p>
-        <div class="scenario-cards" id="scenarioCards"></div>
-      </div>
-    </section>
-
-    <section id="skill-detail" class="view">
-      <div class="container">
-        <button class="back-btn" onclick="showView('catalog')">← Back to Catalog</button>
-        <div id="skillDetailContent"></div>
+    <!-- Skills Grid -->
+    <section class="skills-section">
+      <div class="container" id="skills-container">
+        <!-- Populated by JS -->
       </div>
     </section>
   </main>
 
-  <footer>
-    <div class="container">
-      <p>GEOX Skills Registry — Ditempa Bukan Diberi — 999 SEAL ALIVE</p>
-    </div>
+  <footer class="site-footer">
+    <div class="footer-seal">ΔΩΨ — SOUL · MIND · VOID</div>
+    <div class="footer-copy">GEOX Earth Intelligence Core · 2026</div>
   </footer>
 
   <script src="app.js"></script>

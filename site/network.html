@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trinity Network Map — GEOX</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .network-page { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .network-hero { text-align: center; margin-bottom: 3rem; }
+    .network-hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .network-hero p { color: var(--text-dim); }
+    
+    .ascii-diagram {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.4;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      color: var(--text-dim);
+      margin: 2rem 0;
+    }
+    .ascii-diagram .highlight { color: var(--accent); font-weight: bold; }
+    .ascii-diagram .soul { color: #60a5fa; }
+    .ascii-diagram .mind { color: #a78bfa; }
+    .ascii-diagram .body { color: #34d399; }
+    .ascii-diagram .field { color: #fbbf24; }
+    
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .tier-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .tier-card h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      margin-bottom: 0.75rem;
+    }
+    .tier-card .domain {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .tier-card .url {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+    .tier-card .desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 0.5rem;
+    }
+    
+    .agent-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin: 1.5rem 0;
+    }
+    .agent-table th {
+      text-align: left;
+      padding: 0.75rem;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    .agent-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .agent-table tr:hover td {
+      background: var(--bg-elev);
+    }
+    .authority-5 { color: #ef4444; font-weight: bold; }
+    .authority-4 { color: #f59e0b; font-weight: bold; }
+    .authority-3 { color: #3b82f6; }
+    .authority-2 { color: #10b981; }
+    
+    .quick-ref {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .quick-ref-section h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .quick-ref-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .quick-ref-section li {
+      padding: 0.35rem 0;
+      font-size: 0.9rem;
+    }
+    .quick-ref-section a {
+      color: var(--text-dim);
+    }
+    .quick-ref-section a:hover {
+      color: var(--accent);
+    }
+    
+    .seal-banner {
+      text-align: center;
+      padding: 3rem 0;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .seal-text {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--amber);
+      letter-spacing: 0.2em;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        GEOX
+      </a>
+      <nav class="nav-links">
+        <a href="catalog.html">Skills</a>
+        <a href="wiki.html">Wiki</a>
+        <a href="network.html" class="active">Network</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="network-page">
+    <div class="network-hero">
+      <h1>Trinity Network Map</h1>
+      <p>Unified reference for all sites, agents, and human touchpoints.</p>
+    </div>
+
+    <div class="ascii-diagram">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           <span class="highlight">TRINITY NETWORK</span>                                │
+│                  <span class="soul">Ψ SOUL</span> · <span class="mind">Ω MIND</span> · <span class="body">Δ BODY</span> · <span class="field">Φ FIELD</span>                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+    ┌───────────────────────────────┼───────────────────────────────┐
+    │                               │                               │
+    ▼                               ▼                               ▼
+┌──────────┐                ┌──────────┐                ┌──────────┐
+│ <span class="soul">Ψ SOUL</span>   │◄──────────────►│ <span class="mind">Ω MIND</span>   │◄──────────────►│ <span class="body">Δ BODY</span>   │
+│  Human   │    Identity    │Constitute│   Execution    │ Runtime  │
+│          │                │          │                │          │
+│arif-fazil│                │arifos.   │                │arifosmcp.│
+│  .com    │                │arif-fazil│                │arif-fazil│
+└────┬─────┘                │  .com    │                │  .com    │
+     │                      └────┬─────┘                └────┬─────┘
+     │                           │                           │
+     │                      ┌────┴─────┐                     │
+     │                      │ <span class="field">Φ FIELD</span>  │◄────────────────────┘
+     │                      │  GEOX    │
+     │                      │          │
+     │                      │geox.arif │
+     │                      │-fazil.com│
+     │                      └──────────┘
+     │
+     └──────────────────────┬──────────────────────┐
+                            │                      │
+                            ▼                      ▼
+                    ┌──────────┐          ┌──────────┐
+                    │  FORGE   │          │  APEX    │
+                    │ Workbench│          │Coordination
+                    │          │          │          │
+                    │forge.    │          │apex.     │
+                    │arif-fazil│          │arif-fazil│
+                    │  .com    │          │  .com    │
+                    └──────────┘          └──────────┘
+    </div>
+
+    <h2>Four-Surface Architecture (GEOX)</h2>
+    <div class="tier-grid">
+      <div class="tier-card">
+        <h3>Surface 1</h3>
+        <div class="domain">Site</div>
+        <div class="url">geox.arif-fazil.com</div>
+        <div class="desc">Human-facing trust, docs, wiki, skill catalog. Static HTML/CSS/JS.</div>
+      </div>
+      <div class="tier-card">
+        <h3>Surface 2</h3>
+        <div class="domain">WebMCP</div>
+        <div class="url">geox.arif-fazil.com/webmcp.manifest.json</div>
+        <div class="desc">Browser-native capabilities for user-in-session work. openProspect, filterLayer, scoreRisk.</div>
+      </div>
+      <div class="tier-card">
+        <h3>Surface 3</h3>
+        <div class="domain">MCP</div>
+        <div class="url">geox.arif-fazil.com/mcp</div>
+        <div class="desc">Agent-to-tool runtime. WIRED to GEOX backend. 44 skills as tools/resources/prompts.</div>
+      </div>
+      <div class="tier-card">
+        <h3>Surface 4</h3>
+        <div class="domain">A2A</div>
+        <div class="url">geox.arif-fazil.com/a2a</div>
+        <div class="desc">Agent-to-agent coordination. Planner, Terrain, Hazard, Governance agents.</div>
+      </div>
+    </div>
+
+    <h2>Agent Registry</h2>
+    <table class="agent-table">
+      <thead>
+        <tr>
+          <th>Agent ID</th>
+          <th>Domain</th>
+          <th>Authority</th>
+          <th>Primary Skills</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>geox-planner</strong></td>
+          <td>Orchestration</td>
+          <td class="authority-4">Level 4</td>
+          <td>Mission decomposition, agent delegation, resource allocation</td>
+        </tr>
+        <tr>
+          <td><strong>geox-terrain</strong></td>
+          <td>Terrain</td>
+          <td class="authority-2">Level 2</td>
+          <td>DEM processing, surface classify, roughness, slope</td>
+        </tr>
+        <tr>
+          <td><strong>geox-hazard</strong></td>
+          <td>Hazards</td>
+          <td class="authority-3">Level 3</td>
+          <td>Seismic, flood, landslide, multi-risk assessment</td>
+        </tr>
+        <tr>
+          <td><strong>geox-governance</strong></td>
+          <td>Governance</td>
+          <td class="authority-5">Level 5</td>
+          <td>Constitutional gate, compliance, rights mapping</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Trinity Core (ΨΩΔΦ)</h2>
+    <div class="tier-grid">
+      <div class="tier-card">
+        <h3 style="color: #60a5fa;">Ψ SOUL</h3>
+        <div class="domain">Human Anchor</div>
+        <div class="url">arif-fazil.com</div>
+        <div class="desc">Personal site, trust anchor, human identity. The "who" behind the system.</div>
+      </div>
+      <div class="tier-card">
+        <h3 style="color: #a78bfa;">Ω MIND</h3>
+        <div class="domain">Constitutional Kernel</div>
+        <div class="url">arifos.arif-fazil.com</div>
+        <div class="desc">F1-F13 governance, ontology, memory. The "what" and "why" of decisions.</div>
+      </div>
+      <div class="tier-card">
+        <h3 style="color: #34d399;">Δ BODY</h3>
+        <div class="domain">MCP Runtime</div>
+        <div class="url">arifosmcp.arif-fazil.com</div>
+        <div class="desc">Tool execution, skill registry, prompts. The "how" of operations.</div>
+      </div>
+      <div class="tier-card">
+        <h3 style="color: #fbbf24;">Φ FIELD</h3>
+        <div class="domain">Domain Geoscience</div>
+        <div class="url">geox.arif-fazil.com</div>
+        <div class="desc">Earth intelligence, 44 skills, four-surface platform. The "where" of application.</div>
+      </div>
+    </div>
+
+    <h2>Quick Reference</h2>
+    <div class="quick-ref">
+      <div class="quick-ref-section">
+        <h4>For Humans</h4>
+        <ul>
+          <li><a href="https://geox.arif-fazil.com">Browse skills →</a></li>
+          <li><a href="wiki.html">Read doctrine →</a></li>
+          <li><a href="https://geox.arif-fazil.com">Enter cockpit →</a></li>
+          <li><a href="catalog.html">Skill catalog →</a></li>
+        </ul>
+      </div>
+      <div class="quick-ref-section">
+        <h4>For Agents</h4>
+        <ul>
+          <li>GET geox://registry</li>
+          <li>geox_compute_stoiip()</li>
+          <li>geox_constitutional_gate()</li>
+          <li>POST a2a.geox.arif-fazil.com/tasks</li>
+        </ul>
+      </div>
+      <div class="quick-ref-section">
+        <h4>For Developers</h4>
+        <ul>
+          <li><a href="https://github.com/ariffazil/geox-platform">Repository →</a></li>
+          <li>packages/schemas/</li>
+          <li>agents/*/agent-card.json</li>
+          <li>webmcp.manifest.json</li>
+        </ul>
+      </div>
+      <div class="quick-ref-section">
+        <h4>Key Contracts</h4>
+        <ul>
+          <li>44 skills, 11 domains</li>
+          <li>6 substrates</li>
+          <li>4 surfaces</li>
+          <li>F1-F13 constitution</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Constitutional Floors</h2>
+    <table class="agent-table">
+      <thead>
+        <tr>
+          <th>Floor</th>
+          <th>Name</th>
+          <th>Trigger</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>F1</td><td>REVERSIBLE</td><td>Irreversible action</td><td>888_HOLD</td></tr>
+        <tr><td>F2</td><td>TRUTH</td><td>Ungrounded claim</td><td>888_VOID</td></tr>
+        <tr><td>F3</td><td>CLARITY</td><td>Unclear input</td><td>SABAR</td></tr>
+        <tr><td>F6</td><td>HARM/DIGNITY</td><td>Potential harm</td><td>888_VOID</td></tr>
+        <tr><td>F7</td><td>HUMILITY</td><td>Overconfidence</td><td>888_HOLD</td></tr>
+        <tr><td>F13</td><td>SOVEREIGN</td><td>Human authority needed</td><td>888_HOLD</td></tr>
+      </tbody>
+    </table>
+
+    <div class="seal-banner">
+      <div class="seal-text">ΔΩΨ — SOUL · MIND · VOID</div>
+      <div style="margin-top: 0.5rem; font-size: 0.7rem; color: var(--text-muted);">999 SEAL — Network mapped</div>
+    </div>
+  </main>
+</body>
+</html>
