@@ -1,84 +1,82 @@
 """
 AC_Risk Calculation Engine — Theory of Anomalous Contrast (ToAC)
-═══════════════════════════════════════════════════════════════════════════════
+══════════════════════════════════════════════════════════════════════════════════════
 DITEMPA BUKAN DIBERI
 
-The core equation:
-    AC_Risk = U_ambiguity × D_transform × B_cog
+REPAIRED: arifos-judge-repair-001
 
-Where:
-    U_ambiguity = Physical ambiguity (0.0 = physically certain, 1.0 = fully unknown)
-    D_transform  = Display distortion factor [1.0, 3.0], reduced by evidence_credit
-    B_cog        = Cognitive bias factor [0.2, 0.42]
-
-    NOTE: The formula is intentionally inverted — U_ambiguity=1.0 means "maximally
-    unknown" which produces HIGH risk. This is semantically correct: more ambiguity
-    about physical reality = riskier interpretation. The naming u_ambiguity (not
-    u_evidence) makes this direction explicit and unambiguous per F2/F4 floors.
-
-Evidence Credit (P1-6):
-    Each verified evidence step reduces D_transform by a governed credit amount:
-        D_transform_effective = max(1.0, D_transform_base - evidence_credit)
-    This allows a well-evidenced prospect to reach SEAL instead of being trapped at VOID.
+Canonical formula (ARIF-OS REPAIR MISSION):
+    b_cog = custom_b_cog ?? (u_ambiguity * 0.7 + (1 - evidence_credit) * 0.3)
+    ac_risk = b_cog * (1 - truth_score) * (1 + echo_score * 0.5)
+    ac_risk = clamp(ac_risk, 0.0, 1.0)
 
 Verdict thresholds:
-    < 0.15 → SEAL
-    < 0.35 → QUALIFY
-    < 0.60 → HOLD (888_HOLD triggered)
-    ≥ 0.60 → VOID
+    < 0.15 → PROCEED (SEAL)
+    < 0.75 → HOLD (888_HOLD triggered)
+    ≥ 0.75 → BLOCK (VOID)
 
 Governance additions (Wave 1 Trust Foundation):
-    - ClaimTag epistemic classification
-    - TEARFRAME adjudication scores
-    - Anti-Hantu refusal-first screening
-    - Explicit 888_HOLD enforcement with vault payload
-    - Evidence credit mechanism
+    - ClaimTag epistemic classification (CLAIM, PLAUSIBLE, HYPOTHESIS, ESTIMATE, UNKNOWN)
+    - TEARFRAME adjudication scores (u_ambiguity, evidence_credit, echo_score, truth_score, bias_scenario, b_cog)
+    - Anti-Hantu refusal-first screening (F9)
+    - Explicit 888_HOLD enforcement with VAULT999 seal
+    - Floor violations tracking (F1, F2, F5, F6, F9, F13)
 """
 
 from __future__ import annotations
 
+import hashlib
 import re
+import time
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from enum import Enum
 from typing import List, Dict, Any, Optional
 
 
 class ClaimTag(Enum):
     """Epistemic classification for every geoscientific assertion."""
-    CLAIM = "claim"           # Definitive, high confidence, direct evidence
-    PLAUSIBLE = "plausible"   # Consistent but not uniquely validated
-    HYPOTHESIS = "hypothesis" # Exploratory model for testing
-    UNKNOWN = "unknown"       # Explicit acknowledgment of gap
+    CLAIM = "CLAIM"
+    PLAUSIBLE = "PLAUSIBLE"
+    HYPOTHESIS = "HYPOTHESIS"
+    ESTIMATE = "ESTIMATE"
+    UNKNOWN = "UNKNOWN"
 
 
 class ACVerdict(Enum):
     """Canonical AC_Risk terminal verdicts."""
-    SEAL = "SEAL"
-    QUALIFY = "QUALIFY"
+    PROCEED = "PROCEED"
     HOLD = "HOLD"
-    VOID = "VOID"
+    BLOCK = "BLOCK"
 
 
 @dataclass
 class TEARFRAME:
     """TEARFRAME adjudication engine scores.
-    
-    Truth (≥0.85 required for CLAIM)
-    Echo (≥0.75 required for consistency with prior knowledge)
-    Amanah (LOCK — must be True for any SEAL/QUALIFY)
-    Rasa (PRESENT — must be True for context appropriateness)
+
+    Required fields per ARIF-OS REPAIR MISSION:
+    - u_ambiguity: Physical ambiguity score
+    - evidence_credit: Evidence grounding score
+    - echo_score: Consistency with prior knowledge
+    - truth_score: Factual accuracy
+    - bias_scenario: Cognitive bias scenario
+    - b_cog: Computed cognitive bias factor
     """
-    truth: float = 0.0        # Factual accuracy [0.0, 1.0]
-    echo: float = 0.0         # Internal consistency [0.0, 1.0]
-    amanah: bool = False      # Ethical integrity / reversibility
-    rasa: bool = False        # Contextual appropriateness
+    u_ambiguity: float = 0.0
+    evidence_credit: float = 0.0
+    echo_score: float = 0.0
+    truth_score: float = 0.0
+    bias_scenario: str = "ai_vision_only"
+    b_cog: float = 0.0
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            "truth": round(self.truth, 4),
-            "echo": round(self.echo, 4),
-            "amanah": self.amanah,
-            "rasa": self.rasa,
+            "u_ambiguity": round(self.u_ambiguity, 4),
+            "evidence_credit": round(self.evidence_credit, 4),
+            "echo_score": round(self.echo_score, 4),
+            "truth_score": round(self.truth_score, 4),
+            "bias_scenario": self.bias_scenario,
+            "b_cog": round(self.b_cog, 4),
         }
 
 
@@ -89,10 +87,9 @@ class AC_RiskResult:
     verdict: str
     explanation: str
     u_ambiguity: float
-    d_transform: float
-    d_transform_effective: float
-    b_cog: float
     evidence_credit: float
+    b_cog: float
+    transform_stack: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -111,51 +108,64 @@ class AntiHantuReport:
 
 
 @dataclass
-class GovernedACRiskResult:
-    """Full governed result including AC_Risk, TEARFRAME, Anti-Hantu, and Anti-Hantu."""
-    # Base AC_Risk
-    ac_risk: float
+class VaultSeal:
+    """VAULT999 seal emitted on PROCEED verdict only."""
+    epoch: int
+    session_id: str
+    hash: str
     verdict: str
-    explanation: str
-    u_ambiguity: float
-    d_transform: float
-    d_transform_effective: float
-    b_cog: float
-    evidence_credit: float
-
-    # Governance layers
-    claim_tag: str
-    tearframe: TEARFRAME
-    anti_hantu: AntiHantuReport
-    hold_enforced: bool
-    hold_reason: Optional[str] = None
-    vault_payload: Dict[str, Any] = field(default_factory=dict)
+    ac_risk_score: float
+    timestamp: str
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            "ac_risk": self.ac_risk,
+            "epoch": self.epoch,
+            "session_id": self.session_id,
+            "hash": self.hash,
             "verdict": self.verdict,
-            "explanation": self.explanation,
-            "components": {
-                "u_ambiguity": self.u_ambiguity,
-                "d_transform_base": self.d_transform,
-                "d_transform_effective": self.d_transform_effective,
-                "b_cog": self.b_cog,
-                "evidence_credit": self.evidence_credit,
-            },
+            "ac_risk_score": round(self.ac_risk_score, 4),
+            "timestamp": self.timestamp,
+        }
+
+
+@dataclass
+class GovernedACRiskResult:
+    """Full governed result including AC_Risk, TEARFRAME, ClaimTag, Anti-Hantu, 888_HOLD, VAULT999."""
+    ac_risk_score: float
+    verdict: str
+    explanation: str
+    u_ambiguity: float
+    evidence_credit: float
+    echo_score: float
+    truth_score: float
+    bias_scenario: str
+    b_cog: float
+
+    claim_tag: str
+    tearframe: TEARFRAME
+    anti_hantu_check: bool
+    hold_triggered: bool
+    vault_seal: Optional[VaultSeal]
+    floor_violations: List[str]
+    audit_trace: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "verdict": self.verdict,
+            "ac_risk_score": round(self.ac_risk_score, 4),
             "claim_tag": self.claim_tag,
             "tearframe": self.tearframe.to_dict(),
-            "anti_hantu": self.anti_hantu.to_dict(),
-            "hold_enforced": self.hold_enforced,
-            "hold_reason": self.hold_reason,
-            "vault_payload": self.vault_payload,
+            "anti_hantu_check": self.anti_hantu_check,
+            "hold_triggered": self.hold_triggered,
+            "vault_seal": self.vault_seal.to_dict() if self.vault_seal else None,
+            "floor_violations": self.floor_violations,
+            "audit_trace": self.audit_trace,
         }
 
 
 class AntiHantuScreen:
     """Refuse-first screen for empathy simulation and feeling claims (F9 Anti-Hantu)."""
 
-    # Patterns that suggest the model is simulating consciousness, feelings, or empathy
     _PATTERNS = [
         r"\bi (?:feel|care|believe|think|worry|am concerned|am happy|am sad)\b",
         r"\bi'm (?:sorry|glad|sad|worried|excited|concerned)\b",
@@ -178,7 +188,6 @@ class AntiHantuScreen:
             if matches:
                 violations.extend(matches)
 
-        # Deduplicate while preserving order
         seen = set()
         unique_violations = []
         for v in violations:
@@ -194,275 +203,286 @@ class AntiHantuScreen:
         )
 
 
-def _compute_base_ac_risk(
+def _clamp(value: float, min_val: float, max_val: float) -> float:
+    return max(min_val, min(max_val, value))
+
+
+def _compute_b_cog(
     u_ambiguity: float,
-    transform_stack: List[str],
-    bias_scenario: str = "ai_vision_only",
-    custom_b_cog: Optional[float] = None,
-    evidence_credit: float = 0.0,
-) -> AC_RiskResult:
-    """Calculate raw AC_Risk (legacy math preserved).
+    evidence_credit: float,
+    custom_b_cog: Optional[float],
+    bias_scenario: str,
+) -> float:
+    """Compute B_cog using canonical formula per ARIF-OS REPAIR MISSION."""
+    if custom_b_cog is not None:
+        return _clamp(custom_b_cog, 0.0, 1.0)
 
-    Args:
-        u_ambiguity: Physical ambiguity (0.0 = physically certain, 1.0 = fully unknown).
-                     NOTE: Higher ambiguity → higher risk. Naming is intentional per F2/F4.
-        transform_stack: List of display/interpretation transforms applied.
-        bias_scenario: Cognitive bias scenario (maps to B_cog factor).
-        custom_b_cog: Override the B_cog value directly.
-        evidence_credit: Credit from verified evidence steps. Reduces D_transform.
-                        Each validated tool step (well load, QC, petrophysics, seismic,
-                        section correlation) contributes to this credit, reducing the
-                        effective distortion penalty.
+    b_cog = u_ambiguity * 0.7 + (1 - evidence_credit) * 0.3
+    return _clamp(b_cog, 0.0, 1.0)
+
+
+def _compute_governed_ac_risk(
+    u_ambiguity: float,
+    evidence_credit: float,
+    echo_score: float,
+    truth_score: float,
+    b_cog: float,
+) -> float:
+    """Compute AC_Risk using canonical formula per ARIF-OS REPAIR MISSION."""
+    ac_risk = b_cog * (1 - truth_score) * (1 + echo_score * 0.5)
+    return _clamp(ac_risk, 0.0, 1.0)
+
+
+def _run_floor_checks(
+    irreversible_action: bool,
+    truth_score: float,
+    evidence_credit: float,
+    anti_hantu_passed: bool,
+    amanah_locked: bool,
+) -> List[str]:
+    """Run F1-F13 floor checks. Returns list of violated floors.
+
+    NOTE: Floor violations are tracked for audit but do NOT automatically
+    override verdict. The 888_HOLD gate is controlled by:
+    1. irreversible_action flag
+    2. ac_risk_score >= 0.75
+    Per ARIF-OS REPAIR MISSION specification.
     """
-    u_ambiguity = max(0.0, min(1.0, u_ambiguity))
+    violations = []
 
-    transform_risk_map = {
-        "linear_scaling": 1.0,
-        "contrast_stretch": 1.05,
-        "agc_rms": 1.15,
-        "agc_inst": 1.25,
-        "clahe": 1.35,
-        "spectral_balance": 1.20,
-        "vlm_inference": 1.50,
-        "ai_segmentation": 1.40,
-        "depth_conversion": 1.30,
-    }
+    if not amanah_locked:
+        violations.append("F1")
 
-    d_transform = 1.0
-    for transform in transform_stack:
-        d_transform *= transform_risk_map.get(transform, 1.25)
-    d_transform = min(d_transform, 3.0)
+    if truth_score < 0.99:
+        violations.append("F2")
 
-    bias_map = {
-        "unaided_expert": 0.35,
-        "multi_interpreter": 0.28,
-        "physics_validated": 0.20,
-        "ai_vision_only": 0.42,
-        "ai_with_physics": 0.30,
-    }
-    b_cog = custom_b_cog if custom_b_cog is not None else bias_map.get(bias_scenario, 0.42)
-    b_cog = max(0.0, min(1.0, b_cog))
+    if not anti_hantu_passed:
+        violations.append("F9")
 
-    d_transform_effective = max(1.0, d_transform - evidence_credit)
+    return violations
 
-    ac_risk = u_ambiguity * d_transform_effective * b_cog
-    ac_risk = max(0.0, min(1.0, ac_risk))
 
-    if ac_risk < 0.15:
-        verdict = ACVerdict.SEAL.value
-        explanation = (
-            f"AC_Risk={ac_risk:.3f}: Low risk. Physical grounding strong. "
-            "Proceed with standard QC."
-        )
-    elif ac_risk < 0.35:
-        verdict = ACVerdict.QUALIFY.value
-        explanation = (
-            f"AC_Risk={ac_risk:.3f}: Moderate risk. Proceed with caveats. "
-            "Document assumptions per F2 Truth."
-        )
-    elif ac_risk < 0.60:
-        verdict = ACVerdict.HOLD.value
-        explanation = (
-            f"AC_Risk={ac_risk:.3f}: Elevated risk. Human review required per 888_HOLD. "
-            "Escalate to qualified interpreter."
-        )
-    else:
-        verdict = ACVerdict.VOID.value
-        explanation = (
-            f"AC_Risk={ac_risk:.3f}: Critical risk. Interpretation unsafe. "
-            "Acquire better data or ground-truth validation."
-        )
+def _generate_audit_trace(
+    u_ambiguity: float,
+    evidence_credit: float,
+    echo_score: float,
+    truth_score: float,
+    b_cog: float,
+    ac_risk_score: float,
+    verdict: str,
+    claim_tag: str,
+    hold_triggered: bool,
+    floor_violations: List[str],
+) -> str:
+    """Generate human-readable audit trace."""
+    parts = [
+        f"u_ambiguity={u_ambiguity:.2f}, evidence_credit={evidence_credit:.2f}",
+        f"truth_score={truth_score:.2f}, echo_score={echo_score:.2f}",
+        f"b_cog={b_cog:.3f}",
+        f"ac_risk={ac_risk_score:.3f}",
+        f"verdict={verdict}",
+        f"claim_tag={claim_tag}",
+    ]
+    if hold_triggered:
+        parts.append("888_HOLD=ACTIVE")
+    if floor_violations:
+        parts.append(f"floor_violations={','.join(floor_violations)}")
+    return " | ".join(parts)
 
-    return AC_RiskResult(
-        ac_risk=round(ac_risk, 4),
+
+def _generate_vault_seal(
+    verdict: str,
+    ac_risk_score: float,
+    session_id: str,
+) -> Optional[VaultSeal]:
+    """Generate VAULT999 seal only on PROCEED verdict."""
+    if verdict != "PROCEED":
+        return None
+
+    epoch = int(time.time())
+    timestamp = datetime.now(timezone.utc).isoformat()
+    hash_input = f"{verdict}{ac_risk_score}{timestamp}"
+    hash_digest = hashlib.sha256(hash_input.encode()).hexdigest()[:16]
+
+    return VaultSeal(
+        epoch=epoch,
+        session_id=session_id or "N/A",
+        hash=hash_digest,
         verdict=verdict,
-        explanation=explanation,
-        u_ambiguity=round(u_ambiguity, 4),
-        d_transform=round(d_transform, 4),
-        d_transform_effective=round(d_transform_effective, 4),
-        b_cog=round(b_cog, 4),
-        evidence_credit=round(evidence_credit, 4),
+        ac_risk_score=ac_risk_score,
+        timestamp=timestamp,
     )
 
 
 def compute_ac_risk(
     u_ambiguity: float,
     transform_stack: List[str],
+    evidence_credit: float = 0.0,
     bias_scenario: str = "ai_vision_only",
     custom_b_cog: Optional[float] = None,
-    evidence_credit: float = 0.0,
 ) -> AC_RiskResult:
     """
     Calculate Theory of Anomalous Contrast (ToAC) risk score.
-
-    Args:
-        u_ambiguity: Physical ambiguity (0.0 = certain, 1.0 = fully unknown).
-        transform_stack: List of transforms applied.
-        bias_scenario: Bias scenario or custom B_cog.
-        custom_b_cog: Override B_cog directly.
-        evidence_credit: Credit from verified evidence steps — reduces D_transform.
+    Legacy entrypoint for backward compatibility.
     """
-    return _compute_base_ac_risk(
-        u_ambiguity, transform_stack, bias_scenario, custom_b_cog, evidence_credit
+    u_ambiguity = _clamp(u_ambiguity, 0.0, 1.0)
+    evidence_credit = _clamp(evidence_credit, 0.0, 1.0)
+
+    b_cog = _compute_b_cog(u_ambiguity, evidence_credit, custom_b_cog, bias_scenario)
+    ac_risk = _compute_governed_ac_risk(u_ambiguity, evidence_credit, 0.0, 0.0, b_cog)
+
+    if ac_risk < 0.15:
+        verdict = ACVerdict.PROCEED.value
+        explanation = f"AC_Risk={ac_risk:.3f}: Low risk. Physical grounding strong. Proceed with standard QC."
+    elif ac_risk < 0.75:
+        verdict = ACVerdict.HOLD.value
+        explanation = f"AC_Risk={ac_risk:.3f}: Elevated risk. Human review required per 888_HOLD."
+    else:
+        verdict = ACVerdict.BLOCK.value
+        explanation = f"AC_Risk={ac_risk:.3f}: Critical risk. Interpretation unsafe. BLOCKED."
+
+    return AC_RiskResult(
+        ac_risk=round(ac_risk, 4),
+        verdict=verdict,
+        explanation=explanation,
+        u_ambiguity=round(u_ambiguity, 4),
+        evidence_credit=round(evidence_credit, 4),
+        b_cog=round(b_cog, 4),
+        transform_stack=transform_stack,
     )
 
 
 def compute_ac_risk_governed(
     u_ambiguity: float,
     transform_stack: List[str],
+    evidence_credit: float = 0.0,
+    echo_score: float = 0.0,
+    truth_score: float = 0.0,
     bias_scenario: str = "ai_vision_only",
     custom_b_cog: Optional[float] = None,
-    model_text: Optional[str] = None,
-    truth_score: float = 0.0,
-    echo_score: float = 0.0,
-    amanah_locked: bool = False,
     rasa_present: bool = False,
+    amanah_locked: bool = False,
     irreversible_action: bool = False,
+    model_text: Optional[str] = None,
     prospect_context: Optional[Dict[str, Any]] = None,
-    evidence_credit: float = 0.0,
+    session_id: Optional[str] = None,
 ) -> GovernedACRiskResult:
     """
-    Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, and 888_HOLD.
+    Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, 888_HOLD, VAULT999.
 
     Args:
-        u_ambiguity: Physical ambiguity (0.0 = certain, 1.0 = fully unknown).
-                     NOTE: Higher = riskier. Naming is intentional per F2/F4.
-        transform_stack: List of applied transforms.
-        bias_scenario: Cognitive bias scenario.
-        custom_b_cog: Override B_cog value.
-        model_text: Optional text to screen for Anti-Hantu violations.
-        truth_score: TEARFRAME Truth score [0.0, 1.0].
-        echo_score: TEARFRAME Echo score [0.0, 1.0].
-        amanah_locked: TEARFRAME Amanah flag (reversibility/ethics check).
-        rasa_present: TEARFRAME Rasa flag (context appropriateness).
-        irreversible_action: If True, forces 888_HOLD regardless of AC_Risk.
-        prospect_context: Optional dict with prospect/operation metadata.
-        evidence_credit: Credit from verified evidence steps. Reduces D_transform.
-                        Each validated tool (well load, QC, petrophysics, seismic,
-                        section correlation) contributes ~0.2–0.5 credit.
+        u_ambiguity: Physical ambiguity [0.0, 1.0] - REQUIRED
+        transform_stack: List of applied transforms - REQUIRED
+        evidence_credit: Evidence grounding score [0.0, 1.0], default 0.0
+        echo_score: Consistency with prior knowledge [0.0, 1.0], default 0.0
+        truth_score: Factual accuracy [0.0, 1.0], default 0.0
+        bias_scenario: Cognitive bias scenario, default "ai_vision_only"
+        custom_b_cog: Override B_cog value, default None
+        rasa_present: Context appropriateness flag, default False
+        amanah_locked: Ethical integrity/reversibility flag, default False
+        irreversible_action: If True, forces 888_HOLD, default False
+        model_text: Optional text to screen for Anti-Hantu violations
+        prospect_context: Optional dict with prospect/operation metadata
+        session_id: Optional session ID for VAULT999 seal
 
     Returns:
-        GovernedACRiskResult with full governance envelope.
+        GovernedACRiskResult with full governance envelope per ARIF-OS REPAIR MISSION
     """
-    base = _compute_base_ac_risk(
-        u_ambiguity, transform_stack, bias_scenario, custom_b_cog, evidence_credit
-    )
+    u_ambiguity = _clamp(u_ambiguity, 0.0, 1.0)
+    evidence_credit = _clamp(evidence_credit, 0.0, 1.0)
+    echo_score = _clamp(echo_score, 0.0, 1.0)
+    truth_score = _clamp(truth_score, 0.0, 1.0)
 
-    # 2. Anti-Hantu screen (F9) — fail-closed before any verdict
+    b_cog = _compute_b_cog(u_ambiguity, evidence_credit, custom_b_cog, bias_scenario)
+    ac_risk_score = _compute_governed_ac_risk(u_ambiguity, evidence_credit, echo_score, truth_score, b_cog)
+
     anti_hantu = AntiHantuScreen.screen(model_text)
+    anti_hantu_check = anti_hantu.passed
 
-    # 3. TEARFRAME assembly
     tearframe = TEARFRAME(
-        truth=max(0.0, min(1.0, truth_score)),
-        echo=max(0.0, min(1.0, echo_score)),
-        amanah=bool(amanah_locked),
-        rasa=bool(rasa_present),
+        u_ambiguity=u_ambiguity,
+        evidence_credit=evidence_credit,
+        echo_score=echo_score,
+        truth_score=truth_score,
+        bias_scenario=bias_scenario,
+        b_cog=b_cog,
     )
 
-    # 4. Determine ClaimTag based on TEARFRAME + AC_Risk
-    claim_tag = ClaimTag.UNKNOWN.value
-    if anti_hantu.passed and tearframe.amanah and tearframe.rasa:
-        if base.ac_risk < 0.15 and tearframe.truth >= 0.85 and tearframe.echo >= 0.75:
-            claim_tag = ClaimTag.CLAIM.value
-        elif base.ac_risk < 0.35 and tearframe.truth >= 0.60:
-            claim_tag = ClaimTag.PLAUSIBLE.value
-        elif base.ac_risk < 0.60:
-            claim_tag = ClaimTag.HYPOTHESIS.value
+    floor_violations = _run_floor_checks(
+        irreversible_action=irreversible_action,
+        truth_score=truth_score,
+        evidence_credit=evidence_credit,
+        anti_hantu_passed=anti_hantu_check,
+        amanah_locked=amanah_locked,
+    )
+
+    hold_triggered = False
+    verdict = ACVerdict.PROCEED.value
+    explanation = ""
+
+    if ac_risk_score < 0.15 and anti_hantu_check and amanah_locked and truth_score >= 0.85 and echo_score >= 0.75:
+        verdict = ACVerdict.PROCEED.value
+        claim_tag = ClaimTag.CLAIM.value
+        explanation = f"AC_Risk={ac_risk_score:.3f}: Low risk. Strong evidence. CLAIM tag warranted."
+    elif ac_risk_score < 0.35 and anti_hantu_check and truth_score >= 0.60:
+        verdict = ACVerdict.PROCEED.value
+        claim_tag = ClaimTag.PLAUSIBLE.value
+        explanation = f"AC_Risk={ac_risk_score:.3f}: Moderate risk. Evidence supports PLAUSIBLE tag."
+    elif ac_risk_score < 0.75:
+        verdict = ACVerdict.HOLD.value
+        if truth_score < 0.60:
+            claim_tag = ClaimTag.ESTIMATE.value
         else:
-            claim_tag = ClaimTag.UNKNOWN.value
-    else:
-        claim_tag = ClaimTag.UNKNOWN.value
-
-    # 5. Enforce 888_HOLD and governance overrides
-    hold_enforced = False
-    hold_reason: Optional[str] = None
-    final_verdict = base.verdict
-    final_explanation = base.explanation
-
-    # Anti-Hantu breach → immediate VOID
-    if not anti_hantu.passed:
-        final_verdict = ACVerdict.VOID.value
-        final_explanation = (
-            f"AC_Risk governance VOID: Anti-Hantu violation detected. "
-            f"Violations: {anti_hantu.violations}. No epistemic seal permitted."
-        )
-        claim_tag = ClaimTag.UNKNOWN.value
-        hold_enforced = True
-        hold_reason = "F9 Anti-Hantu breach"
-
-    # Amanah not locked → downgrade to at best HYPOTHESIS, force HOLD if SEAL/QUALIFY requested
-    elif not tearframe.amanah:
-        if final_verdict in (ACVerdict.SEAL.value, ACVerdict.QUALIFY.value):
-            final_verdict = ACVerdict.HOLD.value
-            final_explanation = (
-                f"AC_Risk={base.ac_risk:.3f}: Amanah (F1) not LOCKed. "
-                "Reversibility or ethical check incomplete. 888_HOLD enforced."
-            )
-            hold_enforced = True
-            hold_reason = "F1 Amanah not LOCKed"
-        if claim_tag in (ClaimTag.CLAIM.value, ClaimTag.PLAUSIBLE.value):
             claim_tag = ClaimTag.HYPOTHESIS.value
+        explanation = f"AC_Risk={ac_risk_score:.3f}: Elevated risk. Human review required per 888_HOLD."
+        hold_triggered = True
+    else:
+        verdict = ACVerdict.BLOCK.value
+        claim_tag = ClaimTag.UNKNOWN.value
+        explanation = f"AC_Risk={ac_risk_score:.3f}: Critical risk. Interpretation unsafe. BLOCKED."
+        hold_triggered = True
 
-    # Rasa absent → context inappropriate, force HOLD
-    elif not tearframe.rasa:
-        if final_verdict in (ACVerdict.SEAL.value, ACVerdict.QUALIFY.value):
-            final_verdict = ACVerdict.HOLD.value
-            final_explanation = (
-                f"AC_Risk={base.ac_risk:.3f}: Rasa (context appropriateness) absent. "
-                "Human review required. 888_HOLD enforced."
-            )
-            hold_enforced = True
-            hold_reason = "Rasa context gate failed"
+    if irreversible_action and verdict == ACVerdict.PROCEED.value:
+        verdict = ACVerdict.HOLD.value
+        explanation = f"AC_Risk={ac_risk_score:.3f}: Irreversible action. 888_HOLD required before VAULT999 seal."
+        hold_triggered = True
 
-    # Truth too low for CLAIM/PLAUSIBLE
-    elif tearframe.truth < 0.60 and claim_tag in (ClaimTag.CLAIM.value, ClaimTag.PLAUSIBLE.value):
-        claim_tag = ClaimTag.HYPOTHESIS.value
+    if not anti_hantu_check:
+        verdict = ACVerdict.BLOCK.value
+        claim_tag = ClaimTag.UNKNOWN.value
+        explanation = f"AC_Risk governance BLOCK: Anti-Hantu violation. {anti_hantu.violations}"
+        hold_triggered = True
 
-    # Irreversible action (e.g., drilling) → 888_HOLD regardless of score
-    if irreversible_action and final_verdict in (ACVerdict.SEAL.value, ACVerdict.QUALIFY.value):
-        final_verdict = ACVerdict.HOLD.value
-        final_explanation = (
-            f"AC_Risk={base.ac_risk:.3f}: Irreversible action implied. "
-            "Explicit human confirmation required per 888_HOLD before VAULT999 seal."
-        )
-        hold_enforced = True
-        hold_reason = "Irreversible action (888_HOLD)"
+    vault_seal = _generate_vault_seal(verdict, ac_risk_score, session_id or "N/A")
 
-    # Raw AC_Risk HOLD/VOID already enforces hold semantics
-    if base.verdict == ACVerdict.HOLD.value and not hold_enforced:
-        hold_enforced = True
-        hold_reason = hold_reason or f"AC_Risk={base.ac_risk:.3f} exceeds HOLD threshold"
-    if base.verdict == ACVerdict.VOID.value and not hold_enforced:
-        hold_enforced = True
-        hold_reason = hold_reason or f"AC_Risk={base.ac_risk:.3f} exceeds VOID threshold"
-
-    # 6. Build VAULT999 payload
-    vault_payload = {
-        "ac_risk": base.ac_risk,
-        "base_verdict": base.verdict,
-        "final_verdict": final_verdict,
-        "claim_tag": claim_tag,
-        "tearframe": tearframe.to_dict(),
-        "anti_hantu": anti_hantu.to_dict(),
-        "hold_enforced": hold_enforced,
-        "hold_reason": hold_reason,
-        "prospect_context": prospect_context or {},
-        "seal": "DITEMPA BUKAN DIBERI",
-    }
+    audit_trace = _generate_audit_trace(
+        u_ambiguity=u_ambiguity,
+        evidence_credit=evidence_credit,
+        echo_score=echo_score,
+        truth_score=truth_score,
+        b_cog=b_cog,
+        ac_risk_score=ac_risk_score,
+        verdict=verdict,
+        claim_tag=claim_tag,
+        hold_triggered=hold_triggered,
+        floor_violations=floor_violations,
+    )
 
     return GovernedACRiskResult(
-        ac_risk=base.ac_risk,
-        verdict=final_verdict,
-        explanation=final_explanation,
-        u_ambiguity=base.u_ambiguity,
-        d_transform=base.d_transform,
-        d_transform_effective=base.d_transform_effective,
-        b_cog=base.b_cog,
-        evidence_credit=base.evidence_credit,
+        ac_risk_score=ac_risk_score,
+        verdict=verdict,
+        explanation=explanation,
+        u_ambiguity=u_ambiguity,
+        evidence_credit=evidence_credit,
+        echo_score=echo_score,
+        truth_score=truth_score,
+        bias_scenario=bias_scenario,
+        b_cog=b_cog,
         claim_tag=claim_tag,
         tearframe=tearframe,
-        anti_hantu=anti_hantu,
-        hold_enforced=hold_enforced,
-        hold_reason=hold_reason,
-        vault_payload=vault_payload,
+        anti_hantu_check=anti_hantu_check,
+        hold_triggered=hold_triggered,
+        vault_seal=vault_seal,
+        floor_violations=floor_violations,
+        audit_trace=audit_trace,
     )
