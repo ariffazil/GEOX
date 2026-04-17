@@ -28,9 +28,12 @@ def test_geox_well_load_bundle_rejects_unknown_well():
 
 def test_arifos_compute_risk_accepts_structured_transform_stack():
     result = arifos_compute_risk(
-        u_phys=0.2,
+        u_ambiguity=0.2,
         transform_stack=[{"kind": "ai_segmentation"}, {"transform": "clahe"}],
         bias_scenario="ai_vision_only",
+        evidence_credit=0.5,
     )
     assert "ac_risk" in result
     assert result["verdict"] in {"SEAL", "QUALIFY", "HOLD", "VOID"}
+    assert "d_transform_effective" in result["components"]
+    assert "evidence_credit" in result["components"]

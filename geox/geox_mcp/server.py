@@ -735,28 +735,37 @@ def arifos_check_hold(action: str, risk_class: str) -> dict:
 
 @mcp.tool()
 def arifos_compute_risk(
-    u_phys: float,
+    u_ambiguity: float,
     transform_stack: list,
     bias_scenario: str = "ai_vision_only",
     custom_b_cog: float = None,
+    evidence_credit: float = 0.0,
 ) -> dict:
     """Calculate Theory of Anomalous Contrast (ToAC) risk score.
     ROUTED — actual AC_Risk computation routes through arifOS constitutional layer.
+
+    Args:
+        u_ambiguity: Physical ambiguity (0.0 = certain, 1.0 = fully unknown).
+        transform_stack: Applied transforms (strings or dicts).
+        evidence_credit: Credit from verified evidence — reduces D_transform.
     """
     result = _compute_ac_risk(
-        u_phys=u_phys,
+        u_ambiguity=u_ambiguity,
         transform_stack=_normalize_transform_stack(transform_stack),
         bias_scenario=bias_scenario,
         custom_b_cog=custom_b_cog,
+        evidence_credit=evidence_credit,
     )
     return {
         "ac_risk": result.ac_risk,
         "verdict": result.verdict,
         "explanation": result.explanation,
         "components": {
-            "u_phys": result.u_phys,
-            "d_transform": result.d_transform,
+            "u_ambiguity": result.u_ambiguity,
+            "d_transform_base": result.d_transform,
+            "d_transform_effective": result.d_transform_effective,
             "b_cog": result.b_cog,
+            "evidence_credit": result.evidence_credit,
         },
         "_routed_to": "arifOS",
     }
@@ -764,7 +773,7 @@ def arifos_compute_risk(
 
 @mcp.tool()
 def arifos_judge_prospect(
-    u_phys: float,
+    u_ambiguity: float,
     transform_stack: list,
     bias_scenario: str = "ai_vision_only",
     custom_b_cog: float = None,
@@ -775,14 +784,22 @@ def arifos_judge_prospect(
     rasa_present: bool = False,
     irreversible_action: bool = False,
     prospect_context: dict = None,
+    evidence_credit: float = 0.0,
 ) -> dict:
     """Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, and 888_HOLD.
     ROUTED — Every prospect evaluation routes through arifOS for VAULT999 sealing.
     GEOX does not hold verdict authority.
+
+    Args:
+        u_ambiguity: Physical ambiguity (0.0 = certain, 1.0 = fully unknown).
+        transform_stack: Applied transforms (strings or dicts with name/kind/id).
+        evidence_credit: Credit from verified evidence steps — reduces D_transform.
+                        Guidelines: well_load=0.2, qc_pass=0.15, petrophysics=0.4,
+                        seismic_load=0.3, section_correlation=0.3.
     """
     result = _compute_ac_risk_governed(
-        u_phys=u_phys,
-        transform_stack=transform_stack,
+        u_ambiguity=u_ambiguity,
+        transform_stack=_normalize_transform_stack(transform_stack),
         bias_scenario=bias_scenario,
         custom_b_cog=custom_b_cog,
         model_text=model_text,
@@ -792,6 +809,7 @@ def arifos_judge_prospect(
         rasa_present=rasa_present,
         irreversible_action=irreversible_action,
         prospect_context=prospect_context,
+        evidence_credit=evidence_credit,
     )
     output = result.to_dict()
     output["_routed_to"] = "arifOS"

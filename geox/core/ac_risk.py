@@ -4,12 +4,22 @@ AC_Risk Calculation Engine — Theory of Anomalous Contrast (ToAC)
 DITEMPA BUKAN DIBERI
 
 The core equation:
-    AC_Risk = U_phys × D_transform × B_cog
+    AC_Risk = U_ambiguity × D_transform × B_cog
 
 Where:
-    U_phys = Physical ambiguity [0.0, 1.0]
-    D_transform = Display distortion factor [1.0, 3.0]
-    B_cog = Cognitive bias factor [0.2, 0.42]
+    U_ambiguity = Physical ambiguity (0.0 = physically certain, 1.0 = fully unknown)
+    D_transform  = Display distortion factor [1.0, 3.0], reduced by evidence_credit
+    B_cog        = Cognitive bias factor [0.2, 0.42]
+
+    NOTE: The formula is intentionally inverted — U_ambiguity=1.0 means "maximally
+    unknown" which produces HIGH risk. This is semantically correct: more ambiguity
+    about physical reality = riskier interpretation. The naming u_ambiguity (not
+    u_evidence) makes this direction explicit and unambiguous per F2/F4 floors.
+
+Evidence Credit (P1-6):
+    Each verified evidence step reduces D_transform by a governed credit amount:
+        D_transform_effective = max(1.0, D_transform_base - evidence_credit)
+    This allows a well-evidenced prospect to reach SEAL instead of being trapped at VOID.
 
 Verdict thresholds:
     < 0.15 → SEAL
@@ -22,6 +32,7 @@ Governance additions (Wave 1 Trust Foundation):
     - TEARFRAME adjudication scores
     - Anti-Hantu refusal-first screening
     - Explicit 888_HOLD enforcement with vault payload
+    - Evidence credit mechanism
 """
 
 from __future__ import annotations
@@ -77,9 +88,11 @@ class AC_RiskResult:
     ac_risk: float
     verdict: str
     explanation: str
-    u_phys: float
+    u_ambiguity: float
     d_transform: float
+    d_transform_effective: float
     b_cog: float
+    evidence_credit: float
 
 
 @dataclass
@@ -99,14 +112,16 @@ class AntiHantuReport:
 
 @dataclass
 class GovernedACRiskResult:
-    """Full governed result including AC_Risk, TEARFRAME, ClaimTag, and Anti-Hantu."""
+    """Full governed result including AC_Risk, TEARFRAME, Anti-Hantu, and Anti-Hantu."""
     # Base AC_Risk
     ac_risk: float
     verdict: str
     explanation: str
-    u_phys: float
+    u_ambiguity: float
     d_transform: float
+    d_transform_effective: float
     b_cog: float
+    evidence_credit: float
 
     # Governance layers
     claim_tag: str
@@ -122,9 +137,11 @@ class GovernedACRiskResult:
             "verdict": self.verdict,
             "explanation": self.explanation,
             "components": {
-                "u_phys": self.u_phys,
-                "d_transform": self.d_transform,
+                "u_ambiguity": self.u_ambiguity,
+                "d_transform_base": self.d_transform,
+                "d_transform_effective": self.d_transform_effective,
                 "b_cog": self.b_cog,
+                "evidence_credit": self.evidence_credit,
             },
             "claim_tag": self.claim_tag,
             "tearframe": self.tearframe.to_dict(),
@@ -178,13 +195,26 @@ class AntiHantuScreen:
 
 
 def _compute_base_ac_risk(
-    u_phys: float,
+    u_ambiguity: float,
     transform_stack: List[str],
     bias_scenario: str = "ai_vision_only",
     custom_b_cog: Optional[float] = None,
+    evidence_credit: float = 0.0,
 ) -> AC_RiskResult:
-    """Calculate raw AC_Risk (legacy math preserved)."""
-    u_phys = max(0.0, min(1.0, u_phys))
+    """Calculate raw AC_Risk (legacy math preserved).
+
+    Args:
+        u_ambiguity: Physical ambiguity (0.0 = physically certain, 1.0 = fully unknown).
+                     NOTE: Higher ambiguity → higher risk. Naming is intentional per F2/F4.
+        transform_stack: List of display/interpretation transforms applied.
+        bias_scenario: Cognitive bias scenario (maps to B_cog factor).
+        custom_b_cog: Override the B_cog value directly.
+        evidence_credit: Credit from verified evidence steps. Reduces D_transform.
+                        Each validated tool step (well load, QC, petrophysics, seismic,
+                        section correlation) contributes to this credit, reducing the
+                        effective distortion penalty.
+    """
+    u_ambiguity = max(0.0, min(1.0, u_ambiguity))
 
     transform_risk_map = {
         "linear_scaling": 1.0,
@@ -213,7 +243,9 @@ def _compute_base_ac_risk(
     b_cog = custom_b_cog if custom_b_cog is not None else bias_map.get(bias_scenario, 0.42)
     b_cog = max(0.0, min(1.0, b_cog))
 
-    ac_risk = u_phys * d_transform * b_cog
+    d_transform_effective = max(1.0, d_transform - evidence_credit)
+
+    ac_risk = u_ambiguity * d_transform_effective * b_cog
     ac_risk = max(0.0, min(1.0, ac_risk))
 
     if ac_risk < 0.15:
@@ -245,27 +277,38 @@ def _compute_base_ac_risk(
         ac_risk=round(ac_risk, 4),
         verdict=verdict,
         explanation=explanation,
-        u_phys=round(u_phys, 4),
+        u_ambiguity=round(u_ambiguity, 4),
         d_transform=round(d_transform, 4),
+        d_transform_effective=round(d_transform_effective, 4),
         b_cog=round(b_cog, 4),
+        evidence_credit=round(evidence_credit, 4),
     )
 
 
 def compute_ac_risk(
-    u_phys: float,
+    u_ambiguity: float,
     transform_stack: List[str],
     bias_scenario: str = "ai_vision_only",
     custom_b_cog: Optional[float] = None,
+    evidence_credit: float = 0.0,
 ) -> AC_RiskResult:
     """
     Calculate Theory of Anomalous Contrast (ToAC) risk score.
-    Legacy entrypoint — preserved for backward compatibility.
+
+    Args:
+        u_ambiguity: Physical ambiguity (0.0 = certain, 1.0 = fully unknown).
+        transform_stack: List of transforms applied.
+        bias_scenario: Bias scenario or custom B_cog.
+        custom_b_cog: Override B_cog directly.
+        evidence_credit: Credit from verified evidence steps — reduces D_transform.
     """
-    return _compute_base_ac_risk(u_phys, transform_stack, bias_scenario, custom_b_cog)
+    return _compute_base_ac_risk(
+        u_ambiguity, transform_stack, bias_scenario, custom_b_cog, evidence_credit
+    )
 
 
 def compute_ac_risk_governed(
-    u_phys: float,
+    u_ambiguity: float,
     transform_stack: List[str],
     bias_scenario: str = "ai_vision_only",
     custom_b_cog: Optional[float] = None,
@@ -276,28 +319,34 @@ def compute_ac_risk_governed(
     rasa_present: bool = False,
     irreversible_action: bool = False,
     prospect_context: Optional[Dict[str, Any]] = None,
+    evidence_credit: float = 0.0,
 ) -> GovernedACRiskResult:
     """
     Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, and 888_HOLD.
 
     Args:
-        u_phys: Physical ambiguity [0.0, 1.0]
-        transform_stack: List of applied transforms
-        bias_scenario: Cognitive bias scenario
-        custom_b_cog: Override B_cog value
-        model_text: Optional text to screen for Anti-Hantu violations
-        truth_score: TEARFRAME Truth score [0.0, 1.0]
-        echo_score: TEARFRAME Echo score [0.0, 1.0]
-        amanah_locked: TEARFRAME Amanah flag (reversibility/ethics check)
-        rasa_present: TEARFRAME Rasa flag (context appropriateness)
-        irreversible_action: If True, forces 888_HOLD regardless of AC_Risk
-        prospect_context: Optional dict with prospect/operation metadata
+        u_ambiguity: Physical ambiguity (0.0 = certain, 1.0 = fully unknown).
+                     NOTE: Higher = riskier. Naming is intentional per F2/F4.
+        transform_stack: List of applied transforms.
+        bias_scenario: Cognitive bias scenario.
+        custom_b_cog: Override B_cog value.
+        model_text: Optional text to screen for Anti-Hantu violations.
+        truth_score: TEARFRAME Truth score [0.0, 1.0].
+        echo_score: TEARFRAME Echo score [0.0, 1.0].
+        amanah_locked: TEARFRAME Amanah flag (reversibility/ethics check).
+        rasa_present: TEARFRAME Rasa flag (context appropriateness).
+        irreversible_action: If True, forces 888_HOLD regardless of AC_Risk.
+        prospect_context: Optional dict with prospect/operation metadata.
+        evidence_credit: Credit from verified evidence steps. Reduces D_transform.
+                        Each validated tool (well load, QC, petrophysics, seismic,
+                        section correlation) contributes ~0.2–0.5 credit.
 
     Returns:
-        GovernedACRiskResult with full governance envelope
+        GovernedACRiskResult with full governance envelope.
     """
-    # 1. Base AC_Risk
-    base = _compute_base_ac_risk(u_phys, transform_stack, bias_scenario, custom_b_cog)
+    base = _compute_base_ac_risk(
+        u_ambiguity, transform_stack, bias_scenario, custom_b_cog, evidence_credit
+    )
 
     # 2. Anti-Hantu screen (F9) — fail-closed before any verdict
     anti_hantu = AntiHantuScreen.screen(model_text)
@@ -405,9 +454,11 @@ def compute_ac_risk_governed(
         ac_risk=base.ac_risk,
         verdict=final_verdict,
         explanation=final_explanation,
-        u_phys=base.u_phys,
+        u_ambiguity=base.u_ambiguity,
         d_transform=base.d_transform,
+        d_transform_effective=base.d_transform_effective,
         b_cog=base.b_cog,
+        evidence_credit=base.evidence_credit,
         claim_tag=claim_tag,
         tearframe=tearframe,
         anti_hantu=anti_hantu,
