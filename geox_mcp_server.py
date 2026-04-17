@@ -86,6 +86,45 @@ if _secret:
     print("Bearer token auth: ENABLED")
 
 
+from starlette.responses import PlainTextResponse, JSONResponse, FileResponse
+
+_STATIC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+
+async def robots_txt(request):
+    path = os.path.join(_STATIC, "robots.txt")
+    if os.path.exists(path):
+        return PlainTextResponse(open(path).read())
+    return JSONResponse({"error": "not found"}, status_code=404)
+
+
+async def llms_txt(request):
+    path = os.path.join(_STATIC, "llms.txt")
+    if os.path.exists(path):
+        return PlainTextResponse(open(path).read())
+    return JSONResponse({"error": "not found"}, status_code=404)
+
+
+async def well_known_agent(request):
+    path = os.path.join(_STATIC, ".well-known", "agent.json")
+    if os.path.exists(path):
+        return FileResponse(path, media_type="application/json")
+    return JSONResponse({"error": "not found"}, status_code=404)
+
+
+async def well_known_arifos(request):
+    path = os.path.join(_STATIC, ".well-known", "arifos.json")
+    if os.path.exists(path):
+        return FileResponse(path, media_type="application/json")
+    return JSONResponse({"error": "not found"}, status_code=404)
+
+
+# Add discovery routes
+app.add_route("/robots.txt", robots_txt, methods=["GET"])
+app.add_route("/llms.txt", llms_txt, methods=["GET"])
+app.add_route("/.well-known/agent.json", well_known_agent, methods=["GET"])
+app.add_route("/.well-known/arifos.json", well_known_arifos, methods=["GET"])
+
 if __name__ == "__main__":
     import uvicorn
 

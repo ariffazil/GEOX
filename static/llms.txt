@@ -1,0 +1,19 @@
+# GEOX — Governed Earth Intelligence
+> Role: Geological prospect evaluation and earth intelligence coprocessor
+> URL: https://geox.arif-fazil.com
+> Service: http://72.62.71.199:8000
+> Health: {"status":"ok","seal":"DITEMPA BUKAN DIBERI"}
+> MCP: https://mcp.arif-fazil.com/mcp
+> Identity: https://arif-fazil.com/llms.txt
+> Source: https://github.com/ariffazil/GEOX
+> Seal: DITEMPA BUKAN DIBERI
+> Epoch: 2026-04-18
+
+## Capabilities
+Well log loading: LAS, DLIS formats
+QC: curve manifest, provenance, gap detection
+Petrophysics: Archie, Indonesia, Simandoux models
+Seismic: line loading, 3D volume, horizon picking
+Geometry: architectural model building from horizons
+Prospect: evaluate, timing, risk scoring, evidence synthesis
+Vault: every SEAL verdict chains to VAULT999
