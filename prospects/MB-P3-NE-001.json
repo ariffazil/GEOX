@@ -1,0 +1,29 @@
+{
+  "id": "MB-P3-NE-001",
+  "basin": "Malay Basin",
+  "play": "P3",
+  "well_analogue": "SEL-1",
+  "status": "scaffold — awaiting real LAS",
+  "seal_hash": "7955439d85855695",
+  "epoch": "2026-04-18",
+  "petrophysics": {
+    "net_pay_m": 80.0,
+    "avg_porosity": 0.298,
+    "avg_sw": 0.331,
+    "hc_zone_top_md": 2075.0,
+    "hc_zone_base_md": 2150.0,
+    "saturation_model": "Archie",
+    "qc_status": "passed"
+  },
+  "geology": {
+    "volume_p10": 8.0,
+    "volume_p50": 24.0,
+    "volume_p90": 55.0,
+    "depth_m": 2100,
+    "reservoir_group": "D/E",
+    "fluid": "gas + condensate",
+    "co2_risk": "moderate",
+    "source": "Madon (2021) GSM Bulletin Vol.72"
+  },
+  "next": "real LAS → WELD-007C"
+}
