@@ -31,7 +31,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import List, Dict, Any, Optional
+from typing import Any
 
 
 class ClaimTag(Enum):
@@ -69,7 +69,7 @@ class TEARFRAME:
     bias_scenario: str = "ai_vision_only"
     b_cog: float = 0.0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "u_ambiguity": round(self.u_ambiguity, 4),
             "evidence_credit": round(self.evidence_credit, 4),
@@ -89,17 +89,17 @@ class AC_RiskResult:
     u_ambiguity: float
     evidence_credit: float
     b_cog: float
-    transform_stack: List[str] = field(default_factory=list)
+    transform_stack: list[str] = field(default_factory=list)
 
 
 @dataclass
 class AntiHantuReport:
     """Anti-Hantu (F9) screening report."""
     passed: bool
-    violations: List[str] = field(default_factory=list)
+    violations: list[str] = field(default_factory=list)
     screened_text_snippet: str = ""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "passed": self.passed,
             "violations": self.violations,
@@ -117,7 +117,7 @@ class VaultSeal:
     ac_risk_score: float
     timestamp: str
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "epoch": self.epoch,
             "session_id": self.session_id,
@@ -148,8 +148,9 @@ class GovernedACRiskResult:
     vault_seal: Optional[VaultSeal]
     floor_violations: List[str]
     audit_trace: str
+    physics_validation: Optional[ValidationResult] = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "verdict": self.verdict,
             "ac_risk_score": round(self.ac_risk_score, 4),
@@ -407,6 +408,14 @@ def compute_ac_risk_governed(
         bias_scenario=bias_scenario,
         b_cog=b_cog,
     )
+
+    physics_validation = None
+    if prospect_context:
+        guard = PhysicsGuard()
+        physics_validation = guard.validate_prospect_input(prospect_context)
+        if physics_validation.hold:
+            hold_triggered = True
+            floor_violations.append(f"PHYSICS_EPISTEMIC_VIOLATION: {physics_validation.reason}")
 
     floor_violations = _run_floor_checks(
         irreversible_action=irreversible_action,

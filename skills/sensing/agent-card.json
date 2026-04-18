@@ -1,0 +1,48 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-sensing",
+  "description": "Sensing and signals specialist. Acquires, calibrates, and processes sensor data from orbital, aerial, and ground platforms.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/sensing",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "signal_acquisition",
+      "name": "Signal Acquisition",
+      "description": "Acquire raw sensor signals from orbital, aerial, or ground platforms",
+      "tags": ["sensing", "acquisition", "signal"]
+    },
+    {
+      "id": "telemetry_link",
+      "name": "Telemetry Link",
+      "description": "Establish and maintain data telemetry from remote sensors",
+      "tags": ["sensing", "telemetry", "link"]
+    },
+    {
+      "id": "sensor_calibration",
+      "name": "Sensor Calibration",
+      "description": "Calibrate sensor outputs against ground truth references",
+      "tags": ["sensing", "calibration", "quality"]
+    },
+    {
+      "id": "noise_filtering",
+      "name": "Noise Filtering",
+      "description": "Filter atmospheric, electronic, and systematic noise from signals",
+      "tags": ["sensing", "noise", "filtering"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/sensing-certs.pem"
+  },
+  "_geox": {
+    "domain": "sensing",
+    "substrates": ["machine", "infrastructure", "orbital"],
+    "authority_level": 2,
+    "constitutional_floor": "F3_INPUT_CLARITY"
+  }
+}

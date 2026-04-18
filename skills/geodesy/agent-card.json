@@ -1,0 +1,48 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-geodesy",
+  "description": "Geodesy and positioning specialist. Transforms coordinates, aligns datums, and provides high-precision GPS positioning.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/geodesy",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "coordinate_transform",
+      "name": "Coordinate Transform",
+      "description": "Transform coordinates between CRS, datums, and projections",
+      "tags": ["geodesy", "coordinate", "transform"]
+    },
+    {
+      "id": "datum_alignment",
+      "name": "Datum Alignment",
+      "description": "Align datasets to common geodetic datum",
+      "tags": ["geodesy", "datum", "alignment"]
+    },
+    {
+      "id": "gps_rtk",
+      "name": "GPS RTK Positioning",
+      "description": "Real-time kinematic GPS for centimeter-level positioning",
+      "tags": ["geodesy", "gps", "rtk", "positioning"]
+    },
+    {
+      "id": "gravity_model",
+      "name": "Gravity Model",
+      "description": "Compute geoid, gravity anomalies, and vertical datums",
+      "tags": ["geodesy", "gravity", "geoid"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/geodesy-certs.pem"
+  },
+  "_geox": {
+    "domain": "geodesy",
+    "substrates": ["machine", "orbital"],
+    "authority_level": 2,
+    "constitutional_floor": "F8_GROUNDING"
+  }
+}

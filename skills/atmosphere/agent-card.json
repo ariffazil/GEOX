@@ -1,0 +1,48 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-atmosphere",
+  "description": "Atmosphere and weather specialist. Processes meteorological data, climate trends, and atmospheric conditions for operations.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/atmosphere",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "weather_ingest",
+      "name": "Weather Ingest",
+      "description": "Ingest and standardize meteorological data feeds",
+      "tags": ["atmosphere", "weather", "meteorological"]
+    },
+    {
+      "id": "atmospheric_correction",
+      "name": "Atmospheric Correction",
+      "description": "Correct imagery for atmospheric effects",
+      "tags": ["atmosphere", "correction", "imagery"]
+    },
+    {
+      "id": "climate_trend",
+      "name": "Climate Trend Analysis",
+      "description": "Analyze long-term climate trends and anomalies",
+      "tags": ["atmosphere", "climate", "trend"]
+    },
+    {
+      "id": "storm_track",
+      "name": "Storm Tracking",
+      "description": "Track and forecast storm paths and intensity",
+      "tags": ["atmosphere", "storm", "tracking", "hazard"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/atmosphere-certs.pem"
+  },
+  "_geox": {
+    "domain": "atmosphere",
+    "substrates": ["machine", "orbital", "environment"],
+    "authority_level": 2,
+    "constitutional_floor": "F2_TRUTH"
+  }
+}

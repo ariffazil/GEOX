@@ -7,8 +7,12 @@ Physically impossible outputs never reach human review.
 
 from __future__ import annotations
 
+import os
+import sys
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
+
+from geox.core.epistemic_integrity import EpistemicIntegrity, EpistemicResult
 
 
 @dataclass
@@ -26,8 +30,9 @@ class ValidationResult:
     violations: list[PhysicsViolation] = field(default_factory=list)
     hold: bool = False
     posterior_breadth_violation: bool = False
-    posterior_breadth_ratio: Optional[float] = None
-    reason: Optional[str] = None
+    posterior_breadth_ratio: float | None = None
+    reason: str | None = None
+    epistemic_integrity: EpistemicResult | None = None
 
     def to_dict(self) -> dict[str, Any]:
         result: dict[str, Any] = {"status": self.status}
@@ -50,6 +55,8 @@ class ValidationResult:
             result["posterior_breadth_ratio"] = self.posterior_breadth_ratio
         if self.reason:
             result["reason"] = self.reason
+        if self.epistemic_integrity:
+            result["epistemic_integrity"] = self.epistemic_integrity.to_dict()
         return result
 
 
@@ -73,6 +80,7 @@ class PhysicsGuard:
 
     def __init__(self, max_posterior_ratio: float = 5.0) -> None:
         self.max_posterior_ratio = max_posterior_ratio
+        self.epistemic = EpistemicIntegrity()
 
     def validate(self, output: dict[str, Any]) -> ValidationResult:
         """
@@ -144,7 +152,7 @@ class PhysicsGuard:
         return violations
 
     def check_posterior_breadth(
-        self, p10: float, p50: float, p90: float, max_ratio: Optional[float] = None
+        self, p10: float, p50: float, p90: float, max_ratio: float | None = None
     ) -> ValidationResult:
         """
         Returns {"hold": True, "reason": "POSTERIOR_TOO_BROAD"}
@@ -186,7 +194,7 @@ class PhysicsGuard:
         )
 
     def check_volumetric_output(
-        self, stoiip: dict[str, Any], max_ratio: Optional[float] = None
+        self, stoiip: dict[str, Any], max_ratio: float | None = None
     ) -> ValidationResult:
         """
         Check a volumetric output dict with p10/p50/p90 values.
@@ -297,7 +305,10 @@ class PhysicsGuard:
             return ValidationResult(
                 status="TIMING_VIOLATION",
                 hold=True,
-                reason=f"CHARGE_BEFORE_TRAP_VIOLATION: charge_ma ({charge_ma}) > trap_ma ({trap_ma})",
+                reason=(
+                    f"CHARGE_BEFORE_TRAP_VIOLATION: charge_ma ({charge_ma}) > "
+                    f"trap_ma ({trap_ma})"
+                ),
             )
 
         return ValidationResult(status="PASS")
@@ -316,8 +327,9 @@ class PhysicsGuard:
         """
         all_violations: list[PhysicsViolation] = []
         posterior_breadth_violation = False
-        posterior_breadth_ratio: Optional[float] = None
+        posterior_breadth_ratio: float | None = None
         reasons: list[str] = []
+        epistemic_result = None
 
         if any(k in prospect for k in ("porosity", "por", "sw", "vsh")):
             basic_result = self.validate(prospect)
@@ -332,14 +344,34 @@ class PhysicsGuard:
                 if stoiip_result.reason:
                     reasons.append(stoiip_result.reason)
 
-        if all_violations or reasons:
+        # Epistemic Integrity Check
+        stoiip_data = prospect.get("stoiip", {})
+        well_density = prospect.get("well_density", 0.0)
+        model_lineage = prospect.get("model_lineage", ["unknown"])
+        pos_components = prospect.get("pos_components")
+
+        epistemic_result = self.epistemic.compute_integrity(
+            outputs=stoiip_data if isinstance(stoiip_data, dict) else {},
+            well_density=well_density,
+            model_lineage=model_lineage,
+            pos_components=pos_components
+        )
+
+        if epistemic_result.hold:
+            reasons.append(epistemic_result.recommendation)
+
+        if all_violations or reasons or epistemic_result.hold:
             return ValidationResult(
-                status="PHYSICS_VIOLATION",
+                status="PHYSICS_VIOLATION" if all_violations else "EPISTEMIC_VIOLATION",
                 violations=all_violations,
                 hold=True,
                 posterior_breadth_violation=posterior_breadth_violation,
                 posterior_breadth_ratio=posterior_breadth_ratio,
-                reason="; ".join(reasons) if reasons else "Physical bounds exceeded",
+                reason="; ".join(reasons) if reasons else "Physical/Epistemic violation",
+                epistemic_integrity=epistemic_result
             )
 
-        return ValidationResult(status="PASS")
+        return ValidationResult(
+            status="PASS",
+            epistemic_integrity=epistemic_result
+        )

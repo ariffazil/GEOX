@@ -1,0 +1,22 @@
+{
+  "seal_id": "GEOX-999-20260411",
+  "timestamp": "2026-04-11T09:07:11+00:00",
+  "version": "2026.04.11",
+  "platform": "geox-platform",
+  "constitutional_floors": ["F1", "F2", "F3", "F4", "F6", "F7", "F8", "F9", "F11", "F13"],
+  "domains": 11,
+  "skills": 44,
+  "agents": 11,
+  "surfaces": ["site", "webmcp", "mcp", "a2a"],
+  "artifacts": {
+    "registry": "00bc700a3fc5696566ce409d1dcc8a3de49b4556dd34741d61591565a6d93bac",
+    "schemas": "70c33dc314abee194048f667f8eb6325ef9da39d8faf3eff5350ecce71f62cc0+481ca7c8cbf6a865f021e658d193abe114a4db3fc64419e62aa22ea513a71c66+4a73f25b26462c0170b572a9080041b44fad14804828ed6a4e72f1800e158f01+a882f5889632913a39ab291d5067b3d71c2dcfcae158a9ad3b4ea19a941370d9+38874043f1647ef6059392fb515bf19b7482c222c86df1230f205679ff5331f6+a9f239fc10b34905d3d10169d2849fe0063157cf3736a61ecca2ff611c057d12+4fcd7babe75b2050a51fde2948098944871af8fcd16332299e56bfbab365e655+",
+    "mcp_server": "648bed7bea13917553fb975265623ebac26f3583155581ffb3867368c88ff2fd",
+    "a2a_gateway": "60b3287dc0a0d80b0801d3838c04d128d50d077d87350d9648a5e1611e0ca373"
+  },
+  "authorization": {
+    "sovereign": "Arif",
+    "method": "explicit_approval",
+    "date": "2026-04-11"
+  }
+}
