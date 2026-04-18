@@ -30,7 +30,13 @@ from .core.ac_risk import (
     TEARFRAME,
     AntiHantuScreen,
 )
+from .core.basin_charge import BasinChargeSimulator
+from .core.petro_ensemble import PetroEnsemble
+from .core.sensitivity import SensitivitySweep
+from .core.volumetrics import ProbabilisticVolumetrics
 from .core.tool_registry import ToolRegistry, ToolStatus, ErrorCode
+from .services.asset_memory import AssetMemoryStore
+from .services.las_ingestor import LASIngestor
 
 __all__ = [
     "__version__",
@@ -42,6 +48,12 @@ __all__ = [
     "ClaimTag",
     "TEARFRAME",
     "AntiHantuScreen",
+    "PetroEnsemble",
+    "LASIngestor",
+    "ProbabilisticVolumetrics",
+    "BasinChargeSimulator",
+    "AssetMemoryStore",
+    "SensitivitySweep",
     "ToolRegistry",
     "ToolStatus",
     "ErrorCode",

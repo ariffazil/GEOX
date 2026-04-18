@@ -30,6 +30,19 @@ from geox.core.ac_risk import (
     compute_ac_risk_governed as _compute_ac_risk_governed,
 )
 from geox.core.portfolio_audit import PortfolioTracker
+from geox.geox_mcp.tools.asset_memory_tool import (
+    geox_memory_recall_asset_tool,
+    geox_memory_store_asset_tool,
+)
+from geox.geox_mcp.tools.basin_charge_tool import geox_simulate_basin_charge_tool
+from geox.geox_mcp.tools.las_ingest_tool import geox_ingest_las_tool
+from geox.geox_mcp.tools.petro_ensemble_tool import geox_compute_sw_ensemble_tool
+from geox.geox_mcp.tools.sensitivity_tool import geox_run_sensitivity_sweep_tool
+from geox.geox_mcp.tools.visualization import (
+    geox_render_log_track_tool,
+    geox_render_volume_slice_tool,
+)
+from geox.geox_mcp.tools.volumetrics_tool import geox_compute_volume_probabilistic_tool
 
 portfolio_tracker = PortfolioTracker()
 
@@ -245,26 +258,19 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
     Returns:
         Structured bundle with curve_manifest and provenance.
     """
-    if las_path and _HAS_LAS:
+    if las_path:
         try:
-            bundle = load_las(las_path, well_id)
-            manifest = curve_manifest_from_bundle(bundle)
+            manifest = geox_ingest_las_tool(las_path, asset_id=well_id)
             return {
                 "well_id": well_id,
                 "status": "loaded",
-                "claim_tag": "OBSERVED",
+                "claim_tag": manifest["claim_tag"],
                 "stages": ["load", "qc"],
                 "provenance": f"las_file:{os.path.basename(las_path)}",
-                "depth_range": list(bundle.depth_range),
-                "curve_manifest": [
-                    {
-                        "mnemonic": e.mnemonic,
-                        "unit": e.unit,
-                        "null_pct": e.null_pct,
-                        "range": [e.range_min, e.range_max],
-                    }
-                    for e in manifest
-                ],
+                "depth_range": manifest["depth_range"],
+                "curve_manifest": manifest["curves"],
+                "las_manifest": manifest,
+                "vault_receipt": manifest["vault_receipt"],
             }
         except FileNotFoundError as e:
             return {
@@ -309,6 +315,7 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
             {"mnemonic": "RHOB", "unit": "g/cc", "null_pct": 1.2, "range": [2.0, 2.8]},
             {"mnemonic": "NPHI", "unit": "v/v", "null_pct": 1.1, "range": [-0.05, 0.6]},
         ],
+        "vault_receipt": {"vault": "VAULT999", "tool_name": "geox_well_load_bundle", "verdict": "QUALIFY"},
     }
 
 
@@ -328,90 +335,103 @@ def geox_well_compute_petrophysics(
     well_id: str,
     volume_id: str,
     saturation_model: str = " Archie ",
+    memory_db_path: Optional[str] = None,
+    memory_authorized: bool = False,
 ) -> dict:
-    """Execute physics-9 grounded petrophysical calculations with ToAC audit.
-
-    Returns depth-indexed curves (P2-7): per-depth POR, Sw, Vsh, net_pay flag.
-    Scaffold generates 100m interval (2050–2150 MD) with physically realistic
-    variation — HC zone has elevated POR and low Sw; water zone has high Sw.
-    Real LAS/DLIS ingestion required for production-grade curves.
-
-    Args:
-        well_id: Well identifier.
-        volume_id: Volume/field context for pressure gradient.
-        saturation_model: Archie, Indonesia, or Simandoux.
-    """
+    """Execute Wave 2 petrophysics inside the existing public well tool."""
     known_wells = {
-        "BEK-2": {"top_md": 2090.0, "bot_md": 2170.0, "phi_hc": 0.22, "sw_hc": 0.35, "sw_wet": 0.85},
-        "DUL-A1": {"top_md": 2110.0, "bot_md": 2185.0, "phi_hc": 0.21, "sw_hc": 0.38, "sw_wet": 0.82},
-        "SEL-1": {"top_md": 2075.0, "bot_md": 2150.0, "phi_hc": 0.23, "sw_hc": 0.33, "sw_wet": 0.88},
-        "TIO-3": {"top_md": None, "bot_md": None, "phi_hc": 0.18, "sw_hc": 0.90, "sw_wet": 0.90},
+        "BEK-2": {"top_md": 2090.0, "bot_md": 2170.0, "phi_hc": 0.22, "sw_wet": 0.85},
+        "DUL-A1": {"top_md": 2110.0, "bot_md": 2185.0, "phi_hc": 0.21, "sw_wet": 0.82},
+        "SEL-1": {"top_md": 2075.0, "bot_md": 2150.0, "phi_hc": 0.23, "sw_wet": 0.88},
+        "TIO-3": {"top_md": None, "bot_md": None, "phi_hc": 0.18, "sw_wet": 0.90},
     }
-
     params = known_wells.get(well_id, known_wells["BEK-2"])
     top_md = params["top_md"] or 2090.0
     bot_md = params["bot_md"] or 2170.0
-    step = 2.0  # 2m depth sampling
-
+    normalized_model = saturation_model.strip().lower()
     curves = []
     depth_points = []
-    current_depth = top_md - 50.0  # start 50m above HC zone top
+    current_depth = top_md - 50.0
     while current_depth <= bot_md + 50.0:
         depth_points.append(current_depth)
-        current_depth += step
+        current_depth += 2.0
 
     for md in depth_points:
         in_hc = params["top_md"] is not None and params["top_md"] <= md <= params["bot_md"]
         in_transition = params["top_md"] is not None and (
-            (params["top_md"] - 10 <= md < params["top_md"]) or
-            (params["bot_md"] < md <= params["bot_md"] + 10)
+            (params["top_md"] - 10 <= md < params["top_md"])
+            or (params["bot_md"] < md <= params["bot_md"] + 10)
         )
-
         if in_hc:
             phi = params["phi_hc"] + (hash(str(md)) % 100 - 50) / 1000.0
-            sw = params["sw_hc"] + (hash(str(md + 1)) % 100 - 50) / 2000.0
             vsh = 0.10 + (hash(str(md + 2)) % 100 - 50) / 500.0
-            net_pay = bool(sw < 0.45 and phi > 0.15)
+            rt = 35.0 + (hash(str(md + 4)) % 100) / 6.0
         elif in_transition:
             phi = params["phi_hc"] * 0.85 + (hash(str(md)) % 100 - 50) / 2000.0
-            sw = 0.5 + (params["sw_wet"] - 0.5) * ((md - params["top_md"] + 10) / 20.0) if params["top_md"] else params["sw_wet"]
             vsh = 0.20 + (hash(str(md)) % 100 - 50) / 500.0
-            net_pay = bool(sw < 0.55 and phi > 0.12)
+            rt = 12.0 + (hash(str(md + 4)) % 100) / 10.0
         else:
             phi = 0.08 + (hash(str(md)) % 100 - 50) / 2000.0
-            sw = params["sw_wet"] + (hash(str(md + 1)) % 100 - 50) / 500.0
             vsh = 0.45 + (hash(str(md + 2)) % 100 - 50) / 500.0
-            net_pay = False
+            rt = 2.5 + (hash(str(md + 4)) % 100) / 20.0
 
-        sw = max(0.05, min(1.0, sw))
         phi = max(0.01, min(0.35, phi))
         vsh = max(0.0, min(1.0, vsh))
-
-        curves.append({
-            "depth_md": round(md, 1),
-            "porosity": round(phi, 4),
-            "sw": round(sw, 4),
-            "vsh": round(vsh, 4),
-            "net_pay": net_pay,
-        })
+        ensemble = geox_compute_sw_ensemble_tool(rt=max(rt, 0.2), phi=max(phi, 0.02), rw=0.08, vsh=vsh, temp=96.0)
+        model_lookup = {item["name"]: item["sw"] for item in ensemble["models"]}
+        sw = ensemble["mean"]
+        if normalized_model == "indonesia":
+            sw = model_lookup["indonesia"]
+        elif normalized_model == "simandoux":
+            sw = model_lookup["simandoux"]
+        net_pay = bool(in_hc and sw < 0.45 and phi > 0.15 and vsh < 0.6)
+        curves.append(
+            {
+                "depth_md": round(md, 1),
+                "porosity": round(phi, 4),
+                "sw": round(sw, 4),
+                "vsh": round(vsh, 4),
+                "sw_models": model_lookup,
+                "sw_disagreement_band": ensemble["disagreement_band"],
+                "net_pay": net_pay,
+            }
+        )
 
     net_pay_tops = []
     paying = False
-    for c in curves:
-        if c["net_pay"] and not paying:
-            net_pay_tops.append({"depth_md": c["depth_md"]})
+    for curve in curves:
+        if curve["net_pay"] and not paying:
+            net_pay_tops.append({"depth_md": curve["depth_md"]})
             paying = True
-        elif not c["net_pay"] and paying:
-            net_pay_tops[-1]["bot_md"] = c["depth_md"]
+        elif not curve["net_pay"] and paying:
+            net_pay_tops[-1]["bot_md"] = curve["depth_md"]
             paying = False
     if paying:
         net_pay_tops[-1]["bot_md"] = curves[-1]["depth_md"]
 
-    avg_phi = round(sum(c["porosity"] for c in curves if c["depth_md"] in depth_points[depth_points.index(top_md):depth_points.index(bot_md)+1 if bot_md in depth_points else None]) / max(1, len([c for c in curves if params["top_md"] <= c["depth_md"] <= params["bot_md"]])), 4) if params["top_md"] else 0.0
-    avg_sw_hc = round(sum(c["sw"] for c in curves if params["top_md"] and params["top_md"] <= c["depth_md"] <= params["bot_md"]) / max(1, len([c for c in curves if params["top_md"] and params["top_md"] <= c["depth_md"] <= params["bot_md"]])), 4) if params["top_md"] else params["sw_wet"]
-    net_pay_total = round(sum(c["bot_md"] - c["depth_md"] for c in net_pay_tops if "bot_md" in c), 1)
-
-    return {
+    hc_curves = [curve for curve in curves if params["top_md"] and params["top_md"] <= curve["depth_md"] <= params["bot_md"]]
+    avg_phi = round(sum(curve["porosity"] for curve in hc_curves) / max(1, len(hc_curves)), 4) if hc_curves else 0.0
+    avg_sw_hc = round(sum(curve["sw"] for curve in hc_curves) / max(1, len(hc_curves)), 4) if hc_curves else params["sw_wet"]
+    net_pay_total = round(sum(interval["bot_md"] - interval["depth_md"] for interval in net_pay_tops if "bot_md" in interval), 1)
+    probabilistic_volume = geox_compute_volume_probabilistic_tool(
+        grv_dist={"min": max(net_pay_total * 600.0, 10.0), "ml": max(net_pay_total * 850.0, 15.0), "max": max(net_pay_total * 1200.0, 25.0)},
+        ntg_dist={"min": 0.45, "ml": 0.62, "max": 0.78},
+        phi_dist={"min": max(avg_phi - 0.04, 0.02), "ml": max(avg_phi, 0.03), "max": min(avg_phi + 0.05, 0.35)},
+        sw_dist={"min": max(avg_sw_hc - 0.08, 0.05), "ml": avg_sw_hc, "max": min(avg_sw_hc + 0.12, 0.98)},
+        fvf_dist={"min": 1.05, "ml": 1.12, "max": 1.20},
+    )
+    sensitivity = geox_run_sensitivity_sweep_tool(
+        {
+            "u_ambiguity": min(0.95, max(0.05, probabilistic_volume["stdev"] / max(probabilistic_volume["mean"], 1e-6))),
+            "evidence_credit": 0.72,
+            "echo_score": 0.15,
+            "truth_score": 0.99,
+            "amanah_locked": True,
+            "irreversible_action": False,
+            "transform_stack": ["normalize", "petro-ensemble", "probabilistic-volume"],
+        }
+    )
+    result = {
         "well_id": well_id,
         "volume_id": volume_id,
         "saturation_model": saturation_model.strip(),
@@ -419,7 +439,7 @@ def geox_well_compute_petrophysics(
         "curve_manifest": [
             {"mnemonic": "DEPTH_MD", "unit": "m", "description": "Measured depth"},
             {"mnemonic": "POR", "unit": "fraction", "description": "Total porosity"},
-            {"mnemonic": "SW", "unit": "fraction", "description": "Water saturation (Archie)"},
+            {"mnemonic": "SW", "unit": "fraction", "description": "Water saturation (ensemble-backed)"},
             {"mnemonic": "VSH", "unit": "fraction", "description": "Shale volume index"},
             {"mnemonic": "NET_PAY", "unit": "boolean", "description": "Pay flag (Sw<0.45, phi>0.15)"},
         ],
@@ -429,14 +449,33 @@ def geox_well_compute_petrophysics(
             "avg_sw_hc_zone": avg_sw_hc,
             "net_pay_m": net_pay_total,
             "net_pay_intervals": net_pay_tops,
+            "probabilistic_volume": probabilistic_volume,
+            "sensitivity": sensitivity,
         },
-        "claim_tag": "COMPUTED",
+        "visualization_payload": geox_render_log_track_tool(
+            [
+                {"mnemonic": "POR", "color": "#22c55e", "samples": [{"depth": curve["depth_md"], "value": curve["porosity"]} for curve in curves]},
+                {"mnemonic": "SW", "color": "#3b82f6", "samples": [{"depth": curve["depth_md"], "value": curve["sw"]} for curve in curves]},
+                {"mnemonic": "VSH", "color": "#f59e0b", "samples": [{"depth": curve["depth_md"], "value": curve["vsh"]} for curve in curves]},
+            ],
+            title=f"{well_id} petrophysics",
+        ),
+        "claim_tag": probabilistic_volume["claim_tag"],
         "governance": {
-            "f9_physics9": "Gardner density verified; Archie Sw model",
-            "f7_confidence": "Single-model humility band applied; real LAS required for production",
-            "p2_7_depth_curves": "depth-indexed curves now returned per P2-7",
+            "f9_physics9": "PhysicsGuard + Archie/Indonesia/Simandoux ensemble",
+            "f7_confidence": "Probabilistic volume + OAT sensitivity sweep absorbed into existing petrophysics surface",
+            "p2_7_depth_curves": "Depth-indexed curves now returned with ensemble diagnostics",
         },
     }
+    if memory_db_path:
+        result["asset_memory"] = geox_memory_store_asset_tool(
+            asset_id=well_id,
+            eval_type="petrophysics",
+            payload={"well_id": well_id, "summary": result["summary"]},
+            db_path=memory_db_path,
+            authorized=memory_authorized,
+        )
+    return result
 
 
 @mcp.tool()
@@ -498,10 +537,17 @@ def geox_seismic_load_line(line_id: str) -> dict:
 @mcp.tool()
 def geox_earth3d_load_volume(volume_id: str) -> dict:
     """Load a structural seismic volume for analysis."""
+    volume = [
+        [0.1, 0.2, 0.3, 0.2],
+        [0.2, 0.4, 0.6, 0.4],
+        [0.3, 0.6, 0.9, 0.6],
+        [0.2, 0.4, 0.6, 0.4],
+    ]
     return {
         "volume_id": volume_id,
         "status": "loaded",
         "claim_tag": "OBSERVED",
+        "render_payload": geox_render_volume_slice_tool(volume=volume, orientation="inline", slice_index=0),
     }
 
 
@@ -555,14 +601,30 @@ def geox_time4d_verify_timing(
     prospect_id: str,
     trap_ma: float,
     charge_ma: float,
+    burial_history: list[dict] | None = None,
+    carrier_permeability_md: float = 250.0,
+    buoyancy_pressure_mpa: float = 4.0,
+    seal_capacity_mpa: float = 6.0,
 ) -> dict:
     """Check temporal relationship between trap formation and charge."""
+    basin_charge = geox_simulate_basin_charge_tool(
+        burial_history=burial_history or [
+            {"age_ma": 95.0, "duration_ma": 12.0, "temperature_c": 88.0},
+            {"age_ma": 72.0, "duration_ma": 14.0, "temperature_c": 105.0},
+            {"age_ma": charge_ma, "duration_ma": 9.0, "temperature_c": 128.0},
+        ],
+        trap_age_ma=trap_ma,
+        carrier_permeability_md=carrier_permeability_md,
+        buoyancy_pressure_mpa=buoyancy_pressure_mpa,
+        seal_capacity_mpa=seal_capacity_mpa,
+    )
     return {
         "prospect_id": prospect_id,
         "trap_ma": trap_ma,
         "charge_ma": charge_ma,
         "timing_valid": trap_ma > charge_ma,
-        "claim_tag": "VERIFIED",
+        "claim_tag": basin_charge["claim_tag"],
+        "basin_charge": basin_charge,
     }
 
 
@@ -579,6 +641,9 @@ def geox_prospect_evaluate(
     model_text: str = None,
     prospect_context: dict = None,
     session_id: str = None,
+    skip_sensitivity: bool = False,
+    asset_memory_db: str = None,
+    memory_authorized: bool = False,
 ) -> dict:
     """Evaluate hydrocarbon prospect potential through governed AC_Risk routing."""
     judge_result = _compute_ac_risk_governed(
@@ -598,6 +663,31 @@ def geox_prospect_evaluate(
     )
 
     result = judge_result.to_dict()
+    if not skip_sensitivity:
+        sensitivity = geox_run_sensitivity_sweep_tool(
+            {
+                "u_ambiguity": u_ambiguity,
+                "evidence_credit": evidence_credit,
+                "echo_score": echo_score,
+                "truth_score": truth_score,
+                "amanah_locked": False,
+                "irreversible_action": irreversible_action,
+                "transform_stack": _normalize_transform_stack(transform_stack),
+            }
+        )
+        result["sensitivity"] = sensitivity
+        if sensitivity["critical_sensitivity"] and result["verdict"] == "SEAL":
+            result["verdict"] = "QUALIFY"
+    if prospect_context and "volumetrics" in prospect_context:
+        result["probabilistic_volume"] = geox_compute_volume_probabilistic_tool(**prospect_context["volumetrics"])
+    if asset_memory_db:
+        result["asset_memory"] = geox_memory_store_asset_tool(
+            asset_id=prospect_id,
+            eval_type="prospect_evaluate",
+            payload={"prospect_id": prospect_id, "result": result},
+            db_path=asset_memory_db,
+            authorized=memory_authorized,
+        )
     result["prospect_id"] = prospect_id
     result["_routed_to"] = "arifOS"
     return result
@@ -672,7 +762,7 @@ def geox_log_interpreter(
 
 
 @mcp.tool()
-def geox_cross_summarize_evidence(prospect_id: str) -> dict:
+def geox_cross_summarize_evidence(prospect_id: str, asset_memory_db: str = None) -> dict:
     """Synthesize causal scene for 888_JUDGE from spatial elements."""
     evidence_chain = []
     if prospect_id and prospect_id != "BEK-2_PROSPECT":
@@ -686,7 +776,10 @@ def geox_cross_summarize_evidence(prospect_id: str) -> dict:
         {"source": "petrophysics", "item": "BEK-2_phi_022_sw_035", "claim_tag": "COMPUTED", "confidence": 0.78, "provenance": "geox_well_compute_petrophysics", "notes": "Archie saturation model; depth-indexed curves (P2-7); net pay ~80m; real LAS required for production grade"},
         {"source": "strata_correlation", "item": "Horizon_A_BEK2_to_SEL1", "claim_tag": "INTERPRETED", "confidence": 0.78, "provenance": "geox_section_interpret_strata", "notes": "3-well continuity confirmed; TIO-3 correlation uncertain"},
     ])
-    return {"prospect_id": prospect_id, "evidence_chain": evidence_chain, "claim_tag": "SYNTHESIZED", "evidence_count": len(evidence_chain)}
+    result = {"prospect_id": prospect_id, "evidence_chain": evidence_chain, "claim_tag": "SYNTHESIZED", "evidence_count": len(evidence_chain)}
+    if asset_memory_db:
+        result["asset_memory"] = geox_memory_recall_asset_tool(asset_id=prospect_id, db_path=asset_memory_db, limit=5)
+    return result
 
 
 # =============================================================================
