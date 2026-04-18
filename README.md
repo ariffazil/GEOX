@@ -37,11 +37,14 @@ GEOX operates as the **Ψ (Psi/Earth) node** — sensing physical reality, compu
 ```
 ariffazil/GEOX
 │
-├── geox/
-│   ├── __init__.py              # Package entry
+├── geox/                        # Core Python package
+│   ├── __init__.py
 │   ├── core/
 │   │   ├── ac_risk.py          # ToAC AC_Risk calculation engine
 │   │   ├── bias_detector.py    # Bond et al. (2007) cognitive bias audit
+│   │   ├── epistemic_integrity.py  # Posterior integrity scoring (AlphaFold pLDDT equiv)
+│   │   ├── portfolio_audit.py  # Portfolio risk tracking + PoS coupling detection
+│   │   ├── physics_guard.py    # Hard physics constraint enforcement
 │   │   └── tool_registry.py    # Unified tool registry with metadata
 │   └── geox_mcp/
 │       ├── server.py            # FastMCP server entry
@@ -49,12 +52,81 @@ ariffazil/GEOX
 │       ├── adapters/            # Skill adapters
 │       └── policies/            # Risk policy enforcement
 │
-├── registry/
-│   └── registry.json            # 33 skills across 11 domains
+├── WELL/                        # Biological substrate — operator sovereignty
+│   ├── server.py               # WELL cognitive pressure monitor
+│   ├── vault_bridge.py          # WELL ↔ arifOS ↔ A-FORGE bridge
+│   ├── gate/well_gate.py       # Constitutional gate before forge
+│   └── CHARTER.md              # Operator sovereignty charter
 │
-├── skills/                      # MCP skill definitions
-├── apps/                        # MCP App manifests (AC_Risk Console, etc.)
+├── sealkit/                     # Constitutional SEAL ritual
+│   ├── seal.sh                 # Shell script SEAL ceremony
+│   ├── SEAL.md                 # SEAL protocol documentation
+│   └── manifest.json/.sig      # SEAL manifest + signature
+│
+├── services/
+│   └── a2a-gateway/            # Agent-to-Agent mesh protocol
+│       ├── server.js           # Node.js A2A gateway
+│       └── docker-compose.a2a.yml
+│
+├── skills/                      # 12 domain skill definitions
+│   ├── atmosphere/             # Atmospheric physics + satellite sensing
+│   ├── geodesy/               # Geodetic control + coordinate systems
+│   ├── governance/            # Constitutional compliance verification
+│   ├── hazards/               # Multi-hazard assessment
+│   ├── infrastructure/        # Infrastructure spatial analysis
+│   ├── mobility/              # Movement pattern analysis
+│   ├── orchestration/         # Multi-agent coordination
+│   ├── planner/              # Trajectory + scenario planning
+│   ├── sensing/              # Human + machine sensing fusion
+│   ├── subsurface/           # 6 subsurface skill domains
+│   │   ├── basin-charge.md
+│   │   ├── formation-evaluation.md
+│   │   ├── posterior-integrity.md
+│   │   ├── prospect-risk.md
+│   │   ├── reservoir-dynamics.md
+│   │   └── seismic-interpretation.md
+│   ├── terrain/              # Terrain + surface analysis
+│   ├── time/                 # Temporal reasoning
+│   └── water/               # Hydrological systems
+│
+├── wiki/                        # 20 wiki pages — governance + domains
+│   ├── arifos.md              # arifOS constitutional framework
+│   ├── 888-hold.md           # 888 HOLD protocol
+│   ├── earth-intelligence.md
+│   ├── atmosphere.md, geodesy.md, governance.md, hazards.md
+│   ├── infrastructure.md, mobility.md, orchestration.md
+│   ├── sensing.md, terrain.md, time.md, water.md
+│   └── [domain wikis]
+│
+├── geox-gui/                   # React + Cesium GUI
+│   ├── dist/                  # Pre-built Cesium viewer + apps
+│   └── src/
+│       ├── components/MainLayout.tsx  # Seven Dimensions tabs
+│       ├── geoxStore.ts       # Zustand state — Seven Dimensions
+│       └── types.ts           # TypeScript definitions
+│
+├── sdk/ts/                      # TypeScript bridge
+│   ├── GEOXEngine.ts          # Geoscience TS engine
+│   └── GEOXTools.ts          # Tool bindings
+│
+├── infra/                       # Infrastructure as code
+│   └── geox-static.yml       # Traefik static config
+│
+├── site/                        # Generated skill marketplace
+│   ├── index.html, catalog.html, network.html
+│   ├── skills/*.html          # 44 skill pages (auto-generated)
+│   └── scripts/generate_skills.py
+│
+├── registry/
+│   └── registry.json           # 47 skills across 12 domains
+│
+├── apps/                        # MCP App manifests
 ├── tests/                       # Constitutional validation suite
+│
+├── mcp/                         # MCP protocol bindings
+├── schemas/                     # JSON schemas (A2A, registry, skill, telemetry)
+├── jobs/                        # Deployment scripts
+├── docs/                        # Documentation
 │
 ├── geox_mcp_server.py          # CLI entry point
 ├── fastmcp.json                # FastMCP deployment config
@@ -63,7 +135,7 @@ ariffazil/GEOX
 
 ---
 
-## The 12 Domains — 39 Skills
+## The 13 Domains — 47 Skills
 
 GEOX reasoning spans these canonical domains:
 
@@ -164,6 +236,54 @@ Every subsurface output that flows to WEALTH must carry:
 
 ---
 
+## WELL — Biological Substrate (Operator Sovereignty)
+
+WELL is the biological substrate that ensures operator (arif) sovereignty over all GEOX operations. It monitors cognitive pressure and enforces the constitutional hierarchy: **WELL informs. arifOS judges. A-FORGE executes.**
+
+```
+WELL/
+├── server.py          # Cognitive pressure monitor
+├── vault_bridge.py    # Bridge to arifOS VAULT999
+├── gate/well_gate.py  # Constitutional gate
+└── CHARTER.md        # Operator sovereignty charter
+```
+
+**Hierarchy Invariant:**
+- WELL holds no veto — it holds a mirror
+- arifOS holds judgment authority
+- A-FORGE holds execution authority
+- Human (W0) holds ultimate sovereignty (F13)
+
+---
+
+## SEALKIT — Constitutional SEAL Ritual
+
+`sealkit/` implements the 999 SEAL protocol — proof-of-work ceremony that validates operator intent before irreversible actions.
+
+```
+sealkit/
+├── seal.sh          # Shell ceremony
+├── SEAL.md         # Protocol documentation
+├── manifest.json    # Intent manifest
+└── manifest.sig     # Cryptographic signature
+```
+
+---
+
+## A2A Gateway — Agent-to-Agent Mesh
+
+`services/a2a-gateway/` provides the agent-to-agent protocol mesh for GEOX multi-agent operations.
+
+```javascript
+// services/a2a-gateway/server.js
+// Node.js A2A gateway — port 3002
+// Routes between agents using agent-card.json registry
+```
+
+**Surfaces:** Site · WebMCP · MCP · A2A
+
+---
+
 ## Core Engine: AC_Risk (Theory of Anomalous Contrast)
 
 ### The Equation
@@ -204,13 +324,15 @@ Every AC_Risk result is wrapped in:
 | Tool | Purpose | Status |
 |------|---------|--------|
 | `geox_compute_ac_risk` | ToAC calculation | **PROD** |
-| `geox_evaluate_prospect` | Full governance verdict + VAULT999 seal | **PROD** |
+| `geox_prospect_evaluate` | Full prospect verdict via _compute_ac_risk_governed | **PROD** |
+| `geox_time4d_verify_timing` | 4D trajectory temporal consistency check | **PROD** |
 | `geox_load_seismic_line` | Seismic with F4 scale verification | **PROD** |
 | `geox_build_structural_candidates` | Multi-model interpretation | **PROD** |
 | `geox_verify_geospatial` | Coordinate + CRS grounding | **PROD** |
 | `geox_feasibility_check` | Constitutional F1-F13 pre-check | **PROD** |
 | `geox_earth_signals` | Live Earth observations | **PROD** |
 | `geox_well_load_bundle` | Ingest LAS/DLIS well log bundles | **PROD** |
+| `geox_well_compute_petrophysics` | Depth-indexed POR, Sw, Vsh curves | **PROD** |
 | `geox_well_qc_logs` | Quality control — spike, flatline, range detection | **PROD** |
 | `geox_section_interpret_strata` | Multi-well stratigraphic correlation | **PROD** |
 | `geox_cross_summarize_evidence` | Causal evidence synthesis for 888_JUDGE | **PROD** |
@@ -333,6 +455,24 @@ governed = compute_ac_risk_governed(
     model_text="HC zone confirmed 3/4 wells, Horizon A continuous"
 )
 # governed.verdict, governed.ac_risk, governed.hold_enforced, governed.vault_payload
+
+# Prospect evaluation via MCP (routes to arifOS arifos_judge_prospect)
+prospect_result = geox_prospect_evaluate(
+    prospect_id="MB-P3-NE-001",
+    u_ambiguity=0.45,
+    transform_stack=["load_volume", "compute_petrophysics", "section_correlation"],
+    evidence_credit=1.05,
+    echo_score=0.80,
+    truth_score=0.85,
+    bias_scenario="ai_vision_only",
+    irreversible_action=False,
+    model_text="HC zone confirmed 3/4 wells",
+    prospect_context={"volume_id": "MB_P3_NE"},
+    session_id="sid_sess-example"
+)
+# prospect_result["verdict"] → SEAL / QUALIFY / HOLD / VOID
+# prospect_result["claim_tag"] → CLAIM / PLAUSIBLE / HYPOTHESIS / UNKNOWN
+# prospect_result["_routed_to"] → "arifOS"
 ```
 
 ### MCP Tools via FastMCP Client
