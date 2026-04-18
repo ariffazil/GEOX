@@ -16,6 +16,7 @@ GRAMMAR LAW:
 
 import json
 import os
+import time
 from enum import Enum
 from pathlib import Path
 from typing import Any, Literal, Optional
@@ -300,7 +301,11 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
             {"mnemonic": "RHOB", "unit": "g/cc", "null_pct": 1.2, "range": [2.0, 2.8]},
             {"mnemonic": "NPHI", "unit": "v/v", "null_pct": 1.1, "range": [-0.05, 0.6]},
         ],
-        "vault_receipt": {"vault": "VAULT999", "tool_name": "geox_well_load_bundle", "verdict": "QUALIFY"},
+        "vault_receipt": {
+            "vault": "VAULT999",
+            "tool_name": "geox_well_load_bundle",
+            "verdict": "QUALIFY",
+        },
     }
 
 
@@ -362,7 +367,9 @@ def geox_well_compute_petrophysics(
 
         phi = max(0.01, min(0.35, phi))
         vsh = max(0.0, min(1.0, vsh))
-        ensemble = geox_compute_sw_ensemble_tool(rt=max(rt, 0.2), phi=max(phi, 0.02), rw=0.08, vsh=vsh, temp=96.0)
+        ensemble = geox_compute_sw_ensemble_tool(
+            rt=max(rt, 0.2), phi=max(phi, 0.02), rw=0.08, vsh=vsh, temp=96.0
+        )
         model_lookup = {item["name"]: item["sw"] for item in ensemble["models"]}
         sw = ensemble["mean"]
         if normalized_model == "indonesia":
@@ -394,20 +401,54 @@ def geox_well_compute_petrophysics(
     if paying:
         net_pay_tops[-1]["bot_md"] = curves[-1]["depth_md"]
 
-    hc_curves = [curve for curve in curves if params["top_md"] and params["top_md"] <= curve["depth_md"] <= params["bot_md"]]
-    avg_phi = round(sum(curve["porosity"] for curve in hc_curves) / max(1, len(hc_curves)), 4) if hc_curves else 0.0
-    avg_sw_hc = round(sum(curve["sw"] for curve in hc_curves) / max(1, len(hc_curves)), 4) if hc_curves else params["sw_wet"]
-    net_pay_total = round(sum(interval["bot_md"] - interval["depth_md"] for interval in net_pay_tops if "bot_md" in interval), 1)
+    hc_curves = [
+        curve
+        for curve in curves
+        if params["top_md"] and params["top_md"] <= curve["depth_md"] <= params["bot_md"]
+    ]
+    avg_phi = (
+        round(sum(curve["porosity"] for curve in hc_curves) / max(1, len(hc_curves)), 4)
+        if hc_curves
+        else 0.0
+    )
+    avg_sw_hc = (
+        round(sum(curve["sw"] for curve in hc_curves) / max(1, len(hc_curves)), 4)
+        if hc_curves
+        else params["sw_wet"]
+    )
+    net_pay_total = round(
+        sum(
+            interval["bot_md"] - interval["depth_md"]
+            for interval in net_pay_tops
+            if "bot_md" in interval
+        ),
+        1,
+    )
     probabilistic_volume = geox_compute_volume_probabilistic_tool(
-        grv_dist={"min": max(net_pay_total * 600.0, 10.0), "ml": max(net_pay_total * 850.0, 15.0), "max": max(net_pay_total * 1200.0, 25.0)},
+        grv_dist={
+            "min": max(net_pay_total * 600.0, 10.0),
+            "ml": max(net_pay_total * 850.0, 15.0),
+            "max": max(net_pay_total * 1200.0, 25.0),
+        },
         ntg_dist={"min": 0.45, "ml": 0.62, "max": 0.78},
-        phi_dist={"min": max(avg_phi - 0.04, 0.02), "ml": max(avg_phi, 0.03), "max": min(avg_phi + 0.05, 0.35)},
-        sw_dist={"min": max(avg_sw_hc - 0.08, 0.05), "ml": avg_sw_hc, "max": min(avg_sw_hc + 0.12, 0.98)},
+        phi_dist={
+            "min": max(avg_phi - 0.04, 0.02),
+            "ml": max(avg_phi, 0.03),
+            "max": min(avg_phi + 0.05, 0.35),
+        },
+        sw_dist={
+            "min": max(avg_sw_hc - 0.08, 0.05),
+            "ml": avg_sw_hc,
+            "max": min(avg_sw_hc + 0.12, 0.98),
+        },
         fvf_dist={"min": 1.05, "ml": 1.12, "max": 1.20},
     )
     sensitivity = geox_run_sensitivity_sweep_tool(
         {
-            "u_ambiguity": min(0.95, max(0.05, probabilistic_volume["stdev"] / max(probabilistic_volume["mean"], 1e-6))),
+            "u_ambiguity": min(
+                0.95,
+                max(0.05, probabilistic_volume["stdev"] / max(probabilistic_volume["mean"], 1e-6)),
+            ),
             "evidence_credit": 0.72,
             "echo_score": 0.15,
             "truth_score": 0.99,
@@ -424,9 +465,17 @@ def geox_well_compute_petrophysics(
         "curve_manifest": [
             {"mnemonic": "DEPTH_MD", "unit": "m", "description": "Measured depth"},
             {"mnemonic": "POR", "unit": "fraction", "description": "Total porosity"},
-            {"mnemonic": "SW", "unit": "fraction", "description": "Water saturation (ensemble-backed)"},
+            {
+                "mnemonic": "SW",
+                "unit": "fraction",
+                "description": "Water saturation (ensemble-backed)",
+            },
             {"mnemonic": "VSH", "unit": "fraction", "description": "Shale volume index"},
-            {"mnemonic": "NET_PAY", "unit": "boolean", "description": "Pay flag (Sw<0.45, phi>0.15)"},
+            {
+                "mnemonic": "NET_PAY",
+                "unit": "boolean",
+                "description": "Pay flag (Sw<0.45, phi>0.15)",
+            },
         ],
         "interval_maybe": {"top_md": top_md, "bot_md": bot_md},
         "summary": {
@@ -439,9 +488,27 @@ def geox_well_compute_petrophysics(
         },
         "visualization_payload": geox_render_log_track_tool(
             [
-                {"mnemonic": "POR", "color": "#22c55e", "samples": [{"depth": curve["depth_md"], "value": curve["porosity"]} for curve in curves]},
-                {"mnemonic": "SW", "color": "#3b82f6", "samples": [{"depth": curve["depth_md"], "value": curve["sw"]} for curve in curves]},
-                {"mnemonic": "VSH", "color": "#f59e0b", "samples": [{"depth": curve["depth_md"], "value": curve["vsh"]} for curve in curves]},
+                {
+                    "mnemonic": "POR",
+                    "color": "#22c55e",
+                    "samples": [
+                        {"depth": curve["depth_md"], "value": curve["porosity"]} for curve in curves
+                    ],
+                },
+                {
+                    "mnemonic": "SW",
+                    "color": "#3b82f6",
+                    "samples": [
+                        {"depth": curve["depth_md"], "value": curve["sw"]} for curve in curves
+                    ],
+                },
+                {
+                    "mnemonic": "VSH",
+                    "color": "#f59e0b",
+                    "samples": [
+                        {"depth": curve["depth_md"], "value": curve["vsh"]} for curve in curves
+                    ],
+                },
             ],
             title=f"{well_id} petrophysics",
         ),
@@ -563,7 +630,9 @@ def geox_earth3d_load_volume(volume_id: str) -> dict:
         "volume_id": volume_id,
         "status": "loaded",
         "claim_tag": "OBSERVED",
-        "render_payload": geox_render_volume_slice_tool(volume=volume, orientation="inline", slice_index=0),
+        "render_payload": geox_render_volume_slice_tool(
+            volume=volume, orientation="inline", slice_index=0
+        ),
     }
 
 
@@ -624,7 +693,8 @@ def geox_time4d_verify_timing(
 ) -> dict:
     """Check temporal relationship between trap formation and charge."""
     basin_charge = geox_simulate_basin_charge_tool(
-        burial_history=burial_history or [
+        burial_history=burial_history
+        or [
             {"age_ma": 95.0, "duration_ma": 12.0, "temperature_c": 88.0},
             {"age_ma": 72.0, "duration_ma": 14.0, "temperature_c": 105.0},
             {"age_ma": charge_ma, "duration_ma": 9.0, "temperature_c": 128.0},
@@ -690,6 +760,8 @@ def geox_prospect_evaluate(
         floor_violations: [...]
         audit_trace: str
     """
+    if not session_id or session_id == "global":
+        session_id = f"anon-{int(time.time())}"
     judge_result = _compute_ac_risk_governed(
         u_ambiguity=u_ambiguity,
         transform_stack=transform_stack,
@@ -723,7 +795,9 @@ def geox_prospect_evaluate(
         if sensitivity["critical_sensitivity"] and result["verdict"] == "SEAL":
             result["verdict"] = "QUALIFY"
     if prospect_context and "volumetrics" in prospect_context:
-        result["probabilistic_volume"] = geox_compute_volume_probabilistic_tool(**prospect_context["volumetrics"])
+        result["probabilistic_volume"] = geox_compute_volume_probabilistic_tool(
+            **prospect_context["volumetrics"]
+        )
     if asset_memory_db:
         result["asset_memory"] = geox_memory_store_asset_tool(
             asset_id=prospect_id,

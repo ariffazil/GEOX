@@ -48,6 +48,7 @@ portfolio_tracker = PortfolioTracker()
 
 try:
     from geox.ingest.las_reader import load_las, curve_manifest_from_bundle
+
     _HAS_LAS = True
 except Exception:
     _HAS_LAS = False
@@ -315,7 +316,11 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
             {"mnemonic": "RHOB", "unit": "g/cc", "null_pct": 1.2, "range": [2.0, 2.8]},
             {"mnemonic": "NPHI", "unit": "v/v", "null_pct": 1.1, "range": [-0.05, 0.6]},
         ],
-        "vault_receipt": {"vault": "VAULT999", "tool_name": "geox_well_load_bundle", "verdict": "QUALIFY"},
+        "vault_receipt": {
+            "vault": "VAULT999",
+            "tool_name": "geox_well_load_bundle",
+            "verdict": "QUALIFY",
+        },
     }
 
 
@@ -377,7 +382,9 @@ def geox_well_compute_petrophysics(
 
         phi = max(0.01, min(0.35, phi))
         vsh = max(0.0, min(1.0, vsh))
-        ensemble = geox_compute_sw_ensemble_tool(rt=max(rt, 0.2), phi=max(phi, 0.02), rw=0.08, vsh=vsh, temp=96.0)
+        ensemble = geox_compute_sw_ensemble_tool(
+            rt=max(rt, 0.2), phi=max(phi, 0.02), rw=0.08, vsh=vsh, temp=96.0
+        )
         model_lookup = {item["name"]: item["sw"] for item in ensemble["models"]}
         sw = ensemble["mean"]
         if normalized_model == "indonesia":
@@ -409,20 +416,54 @@ def geox_well_compute_petrophysics(
     if paying:
         net_pay_tops[-1]["bot_md"] = curves[-1]["depth_md"]
 
-    hc_curves = [curve for curve in curves if params["top_md"] and params["top_md"] <= curve["depth_md"] <= params["bot_md"]]
-    avg_phi = round(sum(curve["porosity"] for curve in hc_curves) / max(1, len(hc_curves)), 4) if hc_curves else 0.0
-    avg_sw_hc = round(sum(curve["sw"] for curve in hc_curves) / max(1, len(hc_curves)), 4) if hc_curves else params["sw_wet"]
-    net_pay_total = round(sum(interval["bot_md"] - interval["depth_md"] for interval in net_pay_tops if "bot_md" in interval), 1)
+    hc_curves = [
+        curve
+        for curve in curves
+        if params["top_md"] and params["top_md"] <= curve["depth_md"] <= params["bot_md"]
+    ]
+    avg_phi = (
+        round(sum(curve["porosity"] for curve in hc_curves) / max(1, len(hc_curves)), 4)
+        if hc_curves
+        else 0.0
+    )
+    avg_sw_hc = (
+        round(sum(curve["sw"] for curve in hc_curves) / max(1, len(hc_curves)), 4)
+        if hc_curves
+        else params["sw_wet"]
+    )
+    net_pay_total = round(
+        sum(
+            interval["bot_md"] - interval["depth_md"]
+            for interval in net_pay_tops
+            if "bot_md" in interval
+        ),
+        1,
+    )
     probabilistic_volume = geox_compute_volume_probabilistic_tool(
-        grv_dist={"min": max(net_pay_total * 600.0, 10.0), "ml": max(net_pay_total * 850.0, 15.0), "max": max(net_pay_total * 1200.0, 25.0)},
+        grv_dist={
+            "min": max(net_pay_total * 600.0, 10.0),
+            "ml": max(net_pay_total * 850.0, 15.0),
+            "max": max(net_pay_total * 1200.0, 25.0),
+        },
         ntg_dist={"min": 0.45, "ml": 0.62, "max": 0.78},
-        phi_dist={"min": max(avg_phi - 0.04, 0.02), "ml": max(avg_phi, 0.03), "max": min(avg_phi + 0.05, 0.35)},
-        sw_dist={"min": max(avg_sw_hc - 0.08, 0.05), "ml": avg_sw_hc, "max": min(avg_sw_hc + 0.12, 0.98)},
+        phi_dist={
+            "min": max(avg_phi - 0.04, 0.02),
+            "ml": max(avg_phi, 0.03),
+            "max": min(avg_phi + 0.05, 0.35),
+        },
+        sw_dist={
+            "min": max(avg_sw_hc - 0.08, 0.05),
+            "ml": avg_sw_hc,
+            "max": min(avg_sw_hc + 0.12, 0.98),
+        },
         fvf_dist={"min": 1.05, "ml": 1.12, "max": 1.20},
     )
     sensitivity = geox_run_sensitivity_sweep_tool(
         {
-            "u_ambiguity": min(0.95, max(0.05, probabilistic_volume["stdev"] / max(probabilistic_volume["mean"], 1e-6))),
+            "u_ambiguity": min(
+                0.95,
+                max(0.05, probabilistic_volume["stdev"] / max(probabilistic_volume["mean"], 1e-6)),
+            ),
             "evidence_credit": 0.72,
             "echo_score": 0.15,
             "truth_score": 0.99,
@@ -439,9 +480,17 @@ def geox_well_compute_petrophysics(
         "curve_manifest": [
             {"mnemonic": "DEPTH_MD", "unit": "m", "description": "Measured depth"},
             {"mnemonic": "POR", "unit": "fraction", "description": "Total porosity"},
-            {"mnemonic": "SW", "unit": "fraction", "description": "Water saturation (ensemble-backed)"},
+            {
+                "mnemonic": "SW",
+                "unit": "fraction",
+                "description": "Water saturation (ensemble-backed)",
+            },
             {"mnemonic": "VSH", "unit": "fraction", "description": "Shale volume index"},
-            {"mnemonic": "NET_PAY", "unit": "boolean", "description": "Pay flag (Sw<0.45, phi>0.15)"},
+            {
+                "mnemonic": "NET_PAY",
+                "unit": "boolean",
+                "description": "Pay flag (Sw<0.45, phi>0.15)",
+            },
         ],
         "interval_maybe": {"top_md": top_md, "bot_md": bot_md},
         "summary": {
@@ -454,9 +503,27 @@ def geox_well_compute_petrophysics(
         },
         "visualization_payload": geox_render_log_track_tool(
             [
-                {"mnemonic": "POR", "color": "#22c55e", "samples": [{"depth": curve["depth_md"], "value": curve["porosity"]} for curve in curves]},
-                {"mnemonic": "SW", "color": "#3b82f6", "samples": [{"depth": curve["depth_md"], "value": curve["sw"]} for curve in curves]},
-                {"mnemonic": "VSH", "color": "#f59e0b", "samples": [{"depth": curve["depth_md"], "value": curve["vsh"]} for curve in curves]},
+                {
+                    "mnemonic": "POR",
+                    "color": "#22c55e",
+                    "samples": [
+                        {"depth": curve["depth_md"], "value": curve["porosity"]} for curve in curves
+                    ],
+                },
+                {
+                    "mnemonic": "SW",
+                    "color": "#3b82f6",
+                    "samples": [
+                        {"depth": curve["depth_md"], "value": curve["sw"]} for curve in curves
+                    ],
+                },
+                {
+                    "mnemonic": "VSH",
+                    "color": "#f59e0b",
+                    "samples": [
+                        {"depth": curve["depth_md"], "value": curve["vsh"]} for curve in curves
+                    ],
+                },
             ],
             title=f"{well_id} petrophysics",
         ),
@@ -485,7 +552,14 @@ def geox_section_interpret_strata(
 ) -> dict:
     """Correlate stratigraphic units across multiple wells in a section."""
     if not well_ids:
-        return {"well_ids": [], "section_type": section_type, "correlations": [], "claim_tag": "UNKNOWN", "confidence": 0.0, "error": "No well_ids provided"}
+        return {
+            "well_ids": [],
+            "section_type": section_type,
+            "correlations": [],
+            "claim_tag": "UNKNOWN",
+            "confidence": 0.0,
+            "error": "No well_ids provided",
+        }
 
     scaffold_markers = [
         {"marker_name": "Horizon A", "family": "seismic_reflector"},
@@ -501,26 +575,36 @@ def geox_section_interpret_strata(
             offset = well_depth_offsets.get(well_id)
             if offset is None:
                 continue
-            tie_points.append({
-                "well_id": well_id,
-                "depth_md": round(base_depth + offset, 1),
-                "twt_ms": round((base_depth + offset) * 1.5, 1),
-                "confidence": round(0.78 + (0.05 if well_id in ("BEK-2", "DUL-A1", "SEL-1") else 0.0), 3),
-            })
+            tie_points.append(
+                {
+                    "well_id": well_id,
+                    "depth_md": round(base_depth + offset, 1),
+                    "twt_ms": round((base_depth + offset) * 1.5, 1),
+                    "confidence": round(
+                        0.78 + (0.05 if well_id in ("BEK-2", "DUL-A1", "SEL-1") else 0.0), 3
+                    ),
+                }
+            )
         if tie_points:
-            correlations.append({
-                "marker_name": marker["marker_name"],
-                "marker_family": marker["family"],
-                "tie_points": tie_points,
-                "lateral_continuity": len(tie_points) / max(len(well_ids), 1),
-                "dip_character": "gentle_east" if len(tie_points) >= 2 else None,
-            })
+            correlations.append(
+                {
+                    "marker_name": marker["marker_name"],
+                    "marker_family": marker["family"],
+                    "tie_points": tie_points,
+                    "lateral_continuity": len(tie_points) / max(len(well_ids), 1),
+                    "dip_character": "gentle_east" if len(tie_points) >= 2 else None,
+                }
+            )
     return {
         "well_ids": well_ids,
         "section_type": section_type,
         "correlations": correlations,
         "claim_tag": "INTERPRETED" if correlations else "HYPOTHESIS",
-        "confidence": round(sum(c["lateral_continuity"] for c in correlations) / max(len(correlations), 1), 3) if correlations else 0.0,
+        "confidence": round(
+            sum(c["lateral_continuity"] for c in correlations) / max(len(correlations), 1), 3
+        )
+        if correlations
+        else 0.0,
     }
 
 
@@ -547,7 +631,9 @@ def geox_earth3d_load_volume(volume_id: str) -> dict:
         "volume_id": volume_id,
         "status": "loaded",
         "claim_tag": "OBSERVED",
-        "render_payload": geox_render_volume_slice_tool(volume=volume, orientation="inline", slice_index=0),
+        "render_payload": geox_render_volume_slice_tool(
+            volume=volume, orientation="inline", slice_index=0
+        ),
     }
 
 
@@ -608,7 +694,8 @@ def geox_time4d_verify_timing(
 ) -> dict:
     """Check temporal relationship between trap formation and charge."""
     basin_charge = geox_simulate_basin_charge_tool(
-        burial_history=burial_history or [
+        burial_history=burial_history
+        or [
             {"age_ma": 95.0, "duration_ma": 12.0, "temperature_c": 88.0},
             {"age_ma": 72.0, "duration_ma": 14.0, "temperature_c": 105.0},
             {"age_ma": charge_ma, "duration_ma": 9.0, "temperature_c": 128.0},
@@ -646,6 +733,8 @@ def geox_prospect_evaluate(
     memory_authorized: bool = False,
 ) -> dict:
     """Evaluate hydrocarbon prospect potential through governed AC_Risk routing."""
+    if not session_id or session_id == "global":
+        session_id = f"anon-{int(time.time())}"
     judge_result = _compute_ac_risk_governed(
         u_ambiguity=u_ambiguity,
         transform_stack=_normalize_transform_stack(transform_stack),
@@ -679,7 +768,9 @@ def geox_prospect_evaluate(
         if sensitivity["critical_sensitivity"] and result["verdict"] == "SEAL":
             result["verdict"] = "QUALIFY"
     if prospect_context and "volumetrics" in prospect_context:
-        result["probabilistic_volume"] = geox_compute_volume_probabilistic_tool(**prospect_context["volumetrics"])
+        result["probabilistic_volume"] = geox_compute_volume_probabilistic_tool(
+            **prospect_context["volumetrics"]
+        )
     if asset_memory_db:
         result["asset_memory"] = geox_memory_store_asset_tool(
             asset_id=prospect_id,
@@ -766,19 +857,85 @@ def geox_cross_summarize_evidence(prospect_id: str, asset_memory_db: str = None)
     """Synthesize causal scene for 888_JUDGE from spatial elements."""
     evidence_chain = []
     if prospect_id and prospect_id != "BEK-2_PROSPECT":
-        evidence_chain.append({"source": "prospect_id", "item": prospect_id, "claim_tag": "PLAUSIBLE", "confidence": 0.75, "provenance": "user_provided"})
-    evidence_chain.extend([
-        {"source": "well_bundle", "item": "BEK-2", "claim_tag": "OBSERVED", "confidence": 0.90, "provenance": "scaffold_fixture", "notes": "HC zone confirmed: phi=0.22, Sw=0.35, 80m net pay"},
-        {"source": "well_bundle", "item": "DUL-A1", "claim_tag": "OBSERVED", "confidence": 0.88, "provenance": "scaffold_fixture", "notes": "HC zone confirmed: 75m net pay"},
-        {"source": "well_bundle", "item": "SEL-1", "claim_tag": "OBSERVED", "confidence": 0.88, "provenance": "scaffold_fixture", "notes": "HC zone confirmed: 75m net pay"},
-        {"source": "well_bundle", "item": "TIO-3", "claim_tag": "HYPOTHESIS", "confidence": 0.55, "provenance": "scaffold_fixture", "notes": "No resistivity anomaly — possible water leg or downdip of contact"},
-        {"source": "qc_logs", "item": "all_loaded_wells", "claim_tag": "VERIFIED", "confidence": 0.92, "provenance": "geox_well_qc_logs", "notes": "Zero QC flags across all loaded wells"},
-        {"source": "petrophysics", "item": "BEK-2_phi_022_sw_035", "claim_tag": "COMPUTED", "confidence": 0.78, "provenance": "geox_well_compute_petrophysics", "notes": "Archie saturation model; depth-indexed curves (P2-7); net pay ~80m; real LAS required for production grade"},
-        {"source": "strata_correlation", "item": "Horizon_A_BEK2_to_SEL1", "claim_tag": "INTERPRETED", "confidence": 0.78, "provenance": "geox_section_interpret_strata", "notes": "3-well continuity confirmed; TIO-3 correlation uncertain"},
-    ])
-    result = {"prospect_id": prospect_id, "evidence_chain": evidence_chain, "claim_tag": "SYNTHESIZED", "evidence_count": len(evidence_chain)}
+        evidence_chain.append(
+            {
+                "source": "prospect_id",
+                "item": prospect_id,
+                "claim_tag": "PLAUSIBLE",
+                "confidence": 0.75,
+                "provenance": "user_provided",
+            }
+        )
+    evidence_chain.extend(
+        [
+            {
+                "source": "well_bundle",
+                "item": "BEK-2",
+                "claim_tag": "OBSERVED",
+                "confidence": 0.90,
+                "provenance": "scaffold_fixture",
+                "notes": "HC zone confirmed: phi=0.22, Sw=0.35, 80m net pay",
+            },
+            {
+                "source": "well_bundle",
+                "item": "DUL-A1",
+                "claim_tag": "OBSERVED",
+                "confidence": 0.88,
+                "provenance": "scaffold_fixture",
+                "notes": "HC zone confirmed: 75m net pay",
+            },
+            {
+                "source": "well_bundle",
+                "item": "SEL-1",
+                "claim_tag": "OBSERVED",
+                "confidence": 0.88,
+                "provenance": "scaffold_fixture",
+                "notes": "HC zone confirmed: 75m net pay",
+            },
+            {
+                "source": "well_bundle",
+                "item": "TIO-3",
+                "claim_tag": "HYPOTHESIS",
+                "confidence": 0.55,
+                "provenance": "scaffold_fixture",
+                "notes": "No resistivity anomaly — possible water leg or downdip of contact",
+            },
+            {
+                "source": "qc_logs",
+                "item": "all_loaded_wells",
+                "claim_tag": "VERIFIED",
+                "confidence": 0.92,
+                "provenance": "geox_well_qc_logs",
+                "notes": "Zero QC flags across all loaded wells",
+            },
+            {
+                "source": "petrophysics",
+                "item": "BEK-2_phi_022_sw_035",
+                "claim_tag": "COMPUTED",
+                "confidence": 0.78,
+                "provenance": "geox_well_compute_petrophysics",
+                "notes": "Archie saturation model; depth-indexed curves (P2-7); net pay ~80m; real LAS required for production grade",
+            },
+            {
+                "source": "strata_correlation",
+                "item": "Horizon_A_BEK2_to_SEL1",
+                "claim_tag": "INTERPRETED",
+                "confidence": 0.78,
+                "provenance": "geox_section_interpret_strata",
+                "notes": "3-well continuity confirmed; TIO-3 correlation uncertain",
+            },
+        ]
+    )
+    result = {
+        "prospect_id": prospect_id,
+        "evidence_chain": evidence_chain,
+        "claim_tag": "SYNTHESIZED",
+        "evidence_count": len(evidence_chain),
+    }
     if asset_memory_db:
-        result["asset_memory"] = geox_memory_recall_asset_tool(asset_id=prospect_id, db_path=asset_memory_db, limit=5)
+        result["asset_memory"] = geox_memory_recall_asset_tool(
+            asset_id=prospect_id, db_path=asset_memory_db, limit=5
+        )
     return result
 
 
@@ -1066,10 +1223,26 @@ def arifos_judge_prospect(
 
 if os.getenv("GEOX_ENABLE_SCAFFOLD", "").lower() == "true":
     _scaffold_tools = [
-        (geox_attribute_audit, "geox_attribute_audit", "Attribute Audit — PREVIEW. Computes Kozeny-Carman permeability proxy and transform-chain audit."),
-        (geox_seismic_vision_review, "geox_seismic_vision_review", "Seismic Vision Review — SCAFFOLD. Mock fault picks with mandatory HYPOTHESIS ClaimTag."),
-        (geox_map_georeference, "geox_map_georeference", "Georeference Map — SCAFFOLD. Reversible georeferencing plan from map image."),
-        (geox_well_digitize_log, "geox_well_digitize_log", "Analog Digitizer — PLANNED. Scanned log image to structured curve tasks."),
+        (
+            geox_attribute_audit,
+            "geox_attribute_audit",
+            "Attribute Audit — PREVIEW. Computes Kozeny-Carman permeability proxy and transform-chain audit.",
+        ),
+        (
+            geox_seismic_vision_review,
+            "geox_seismic_vision_review",
+            "Seismic Vision Review — SCAFFOLD. Mock fault picks with mandatory HYPOTHESIS ClaimTag.",
+        ),
+        (
+            geox_map_georeference,
+            "geox_map_georeference",
+            "Georeference Map — SCAFFOLD. Reversible georeferencing plan from map image.",
+        ),
+        (
+            geox_well_digitize_log,
+            "geox_well_digitize_log",
+            "Analog Digitizer — PLANNED. Scanned log image to structured curve tasks.",
+        ),
     ]
     for fn, name, desc in _scaffold_tools:
         mcp.add_tool(fn, name=name, description=desc)
