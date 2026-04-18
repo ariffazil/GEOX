@@ -361,8 +361,13 @@ class PhysicsGuard:
             reasons.append(epistemic_result.recommendation)
 
         if all_violations or reasons or epistemic_result.hold:
+            status = (
+                "PHYSICS_VIOLATION"
+                if all_violations or posterior_breadth_violation
+                else "EPISTEMIC_VIOLATION"
+            )
             return ValidationResult(
-                status="PHYSICS_VIOLATION" if all_violations else "EPISTEMIC_VIOLATION",
+                status=status,
                 violations=all_violations,
                 hold=True,
                 posterior_breadth_violation=posterior_breadth_violation,

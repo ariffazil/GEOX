@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 
 // Load agent cards
-const AGENTS_DIR = process.env.AGENTS_DIR || path.join(__dirname, 'agents');
+const AGENTS_DIR = process.env.AGENTS_DIR || path.join(__dirname, 'skills');
 const agentCards = new Map();
 
 function loadAgentCards() {

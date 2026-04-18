@@ -1011,14 +1011,15 @@ def arifos_compute_risk(
         custom_b_cog=custom_b_cog,
         evidence_credit=evidence_credit,
     )
+    transform_count = len(result.transform_stack)
     return {
         "ac_risk": result.ac_risk,
         "verdict": result.verdict,
         "explanation": result.explanation,
         "components": {
             "u_ambiguity": result.u_ambiguity,
-            "d_transform_base": result.d_transform,
-            "d_transform_effective": result.d_transform_effective,
+            "d_transform_base": transform_count,
+            "d_transform_effective": transform_count,
             "b_cog": result.b_cog,
             "evidence_credit": result.evidence_credit,
         },

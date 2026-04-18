@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   a2a:
     build:
@@ -13,6 +11,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3002
+      - AGENTS_DIR=/app/skills
       - ALLOWED_ORIGINS=https://geox.arif-fazil.com,https://apps.geox.arif-fazil.com
     volumes:
       - a2a-data:/app/data

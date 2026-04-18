@@ -21,6 +21,8 @@ from pathlib import Path
 
 from typing import Literal, Optional
 
+import httpx
+
 from fastmcp import FastMCP
 
 from geox.core.ac_risk import (
@@ -565,16 +567,108 @@ def geox_time4d_verify_timing(
 
 
 @mcp.tool()
-def geox_prospect_evaluate(prospect_id: str, ac_risk_score: float = 0.0) -> dict:
-    """Evaluate hydrocarbon potential based on 888_JUDGE verdict.
-    Routes through arifOS constitutional layer — not direct seal.
-    """
-    return {
-        "prospect_id": prospect_id,
-        "ac_risk_score": ac_risk_score,
-        "verdict": "PENDING_ARIFOS_JUDGE",
-        "claim_tag": "PENDING",
-    }
+def geox_prospect_evaluate(
+    prospect_id: str,
+    u_ambiguity: float,
+    transform_stack: list,
+    evidence_credit: float = 0.0,
+    echo_score: float = 0.0,
+    truth_score: float = 0.0,
+    bias_scenario: str = "ai_vision_only",
+    irreversible_action: bool = False,
+    model_text: str = None,
+    prospect_context: dict = None,
+    session_id: str = None,
+) -> dict:
+    """Evaluate hydrocarbon prospect potential through governed AC_Risk routing."""
+    judge_result = _compute_ac_risk_governed(
+        u_ambiguity=u_ambiguity,
+        transform_stack=_normalize_transform_stack(transform_stack),
+        evidence_credit=evidence_credit,
+        bias_scenario=bias_scenario,
+        custom_b_cog=None,
+        model_text=model_text,
+        truth_score=truth_score,
+        echo_score=echo_score,
+        amanah_locked=False,
+        rasa_present=False,
+        irreversible_action=irreversible_action,
+        prospect_context=prospect_context,
+        session_id=session_id,
+    )
+
+    result = judge_result.to_dict()
+    result["prospect_id"] = prospect_id
+    result["_routed_to"] = "arifOS"
+    return result
+
+
+# =============================================================================
+# LAYER 1b — GEOX tools forwarded to AF-FORGE TypeScript bridge
+# =============================================================================
+
+
+BRIDGE_URL = os.environ.get("AF_FORGE_BRIDGE_URL", "http://af-forge-bridge:7071")
+
+
+async def call_af_forge_log_interpreter(payload: dict) -> dict:
+    """Call geox_log_interpreter on the AF-FORGE TypeScript bridge."""
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        resp = await client.post(f"{BRIDGE_URL}/geox/log_interpreter", json=payload)
+        resp.raise_for_status()
+        return resp.json()
+
+
+@mcp.tool()
+def geox_log_interpreter(
+    GR: list = None,
+    RT: list = None,
+    RHOB: list = None,
+    NPHI: list = None,
+    SP: list = None,
+    DT: list = None,
+    CAL: list = None,
+    depth: list = None,
+    GR_clean: float = 20.0,
+    GR_shale: float = 120.0,
+    RW: float = 0.055,
+    matrix: str = "limestone",
+) -> dict:
+    """Interpret wireline logs via the AF-FORGE bridge runtime."""
+    payload = {}
+    if GR is not None:
+        payload["GR"] = GR
+    if RT is not None:
+        payload["RT"] = RT
+    if RHOB is not None:
+        payload["RHOB"] = RHOB
+    if NPHI is not None:
+        payload["NPHI"] = NPHI
+    if SP is not None:
+        payload["SP"] = SP
+    if DT is not None:
+        payload["DT"] = DT
+    if CAL is not None:
+        payload["CAL"] = CAL
+    if depth is not None:
+        payload["depth"] = depth
+    payload["GR_clean"] = GR_clean
+    payload["GR_shale"] = GR_shale
+    payload["RW"] = RW
+    payload["matrix"] = matrix
+
+    try:
+        import asyncio
+
+        result = asyncio.get_event_loop().run_until_complete(call_af_forge_log_interpreter(payload))
+        return result.get("result", result)
+    except Exception as e:
+        return {
+            "error": str(e),
+            "fallback": "geox_log_interpreter requires AF-FORGE bridge (af-forge-bridge:7071). "
+            "Ensure af-forge-bridge is running and AF_FORGE_BRIDGE_URL is set.",
+            "claim_tag": "UNKNOWN",
+        }
 
 
 @mcp.tool()
@@ -818,14 +912,15 @@ def arifos_compute_risk(
         custom_b_cog=custom_b_cog,
         evidence_credit=evidence_credit,
     )
+    transform_count = len(result.transform_stack)
     return {
         "ac_risk": result.ac_risk,
         "verdict": result.verdict,
         "explanation": result.explanation,
         "components": {
             "u_ambiguity": result.u_ambiguity,
-            "d_transform_base": result.d_transform,
-            "d_transform_effective": result.d_transform_effective,
+            "d_transform_base": transform_count,
+            "d_transform_effective": transform_count,
             "b_cog": result.b_cog,
             "evidence_credit": result.evidence_credit,
         },
