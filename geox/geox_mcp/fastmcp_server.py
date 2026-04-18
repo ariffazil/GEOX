@@ -27,6 +27,9 @@ from geox.core.ac_risk import (
     compute_ac_risk as _compute_ac_risk,
     compute_ac_risk_governed as _compute_ac_risk_governed,
 )
+from geox.core.portfolio_audit import PortfolioTracker
+
+portfolio_tracker = PortfolioTracker()
 
 try:
     from geox.ingest.las_reader import load_las, curve_manifest_from_bundle

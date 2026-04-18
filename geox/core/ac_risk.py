@@ -355,18 +355,18 @@ def compute_ac_risk(
 
 def compute_ac_risk_governed(
     u_ambiguity: float,
-    transform_stack: List[str],
+    transform_stack: list[str],
     evidence_credit: float = 0.0,
     echo_score: float = 0.0,
     truth_score: float = 0.0,
     bias_scenario: str = "ai_vision_only",
-    custom_b_cog: Optional[float] = None,
+    custom_b_cog: float | None = None,
     rasa_present: bool = False,
     amanah_locked: bool = False,
     irreversible_action: bool = False,
-    model_text: Optional[str] = None,
-    prospect_context: Optional[Dict[str, Any]] = None,
-    session_id: Optional[str] = None,
+    model_text: str | None = None,
+    prospect_context: dict[str, Any] | None = None,
+    session_id: str | None = None,
 ) -> GovernedACRiskResult:
     """
     Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, 888_HOLD, VAULT999.
