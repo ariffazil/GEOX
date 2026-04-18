@@ -370,16 +370,68 @@ def geox_time4d_verify_timing(
 
 
 @mcp.tool()
-def geox_prospect_evaluate(prospect_id: str, ac_risk_score: float = 0.0) -> dict:
-    """Evaluate hydrocarbon potential based on 888_JUDGE verdict.
-    Routes through arifOS constitutional layer — not direct seal.
+def geox_prospect_evaluate(
+    prospect_id: str,
+    u_ambiguity: float,
+    transform_stack: list,
+    evidence_credit: float = 0.0,
+    echo_score: float = 0.0,
+    truth_score: float = 0.0,
+    bias_scenario: str = "ai_vision_only",
+    irreversible_action: bool = False,
+    model_text: str = None,
+    prospect_context: dict = None,
+    session_id: str = None,
+) -> dict:
     """
-    return {
-        "prospect_id": prospect_id,
-        "ac_risk_score": ac_risk_score,
-        "verdict": "PENDING_ARIFOS_JUDGE",
-        "claim_tag": "PENDING",
-    }
+    Evaluate hydrocarbon prospect potential.
+    Routes through arifOS arifos_judge_prospect for constitutional verdict.
+    GEOX does not hold verdict authority — verdict comes from arifOS.
+
+    INPUT:
+        prospect_id: REQUIRED — prospect identifier
+        u_ambiguity: REQUIRED — physical ambiguity 0.0-1.0
+        transform_stack: REQUIRED — list of applied transforms
+        evidence_credit: float, default 0.0
+        echo_score: float, default 0.0
+        truth_score: float, default 0.0
+        bias_scenario: str, default "ai_vision_only"
+        irreversible_action: bool, default False — if True, triggers 888_HOLD
+        model_text: str, optional — text for Anti-Hantu screening
+        prospect_context: dict, optional — metadata for judge
+        session_id: str, optional — session ID for VAULT999
+
+    OUTPUT (from arifos_judge_prospect):
+        verdict: PROCEED | HOLD | BLOCK
+        ac_risk_score: float
+        claim_tag: CLAIM | PLAUSIBLE | HYPOTHESIS | ESTIMATE | UNKNOWN
+        tearframe: {...}
+        anti_hantu_check: bool
+        hold_triggered: bool
+        vault_seal: {...} | null
+        floor_violations: [...]
+        audit_trace: str
+    """
+    judge_result = _compute_ac_risk_governed(
+        u_ambiguity=u_ambiguity,
+        transform_stack=transform_stack,
+        evidence_credit=evidence_credit,
+        bias_scenario=bias_scenario,
+        custom_b_cog=None,
+        model_text=model_text,
+        truth_score=truth_score,
+        echo_score=echo_score,
+        amanah_locked=False,
+        rasa_present=False,
+        irreversible_action=irreversible_action,
+        prospect_context=prospect_context,
+        session_id=session_id,
+    )
+
+    result = judge_result.to_dict()
+    result["prospect_id"] = prospect_id
+    result["_routed_to"] = "arifOS"
+    return result
 
 
 @mcp.tool()

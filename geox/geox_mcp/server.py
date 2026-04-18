@@ -30,6 +30,7 @@ from ..core.ac_risk import (
 
 try:
     from ..ingest.las_reader import load_las, curve_manifest_from_bundle
+
     _HAS_LAS = True
 except Exception:
     _HAS_LAS = False
@@ -318,9 +319,27 @@ def geox_well_compute_petrophysics(
     Returns depth-indexed curves (P2-7): per-depth POR, Sw, Vsh, net_pay flag.
     """
     known_wells = {
-        "BEK-2": {"top_md": 2090.0, "bot_md": 2170.0, "phi_hc": 0.22, "sw_hc": 0.35, "sw_wet": 0.85},
-        "DUL-A1": {"top_md": 2110.0, "bot_md": 2185.0, "phi_hc": 0.21, "sw_hc": 0.38, "sw_wet": 0.82},
-        "SEL-1": {"top_md": 2075.0, "bot_md": 2150.0, "phi_hc": 0.23, "sw_hc": 0.33, "sw_wet": 0.88},
+        "BEK-2": {
+            "top_md": 2090.0,
+            "bot_md": 2170.0,
+            "phi_hc": 0.22,
+            "sw_hc": 0.35,
+            "sw_wet": 0.85,
+        },
+        "DUL-A1": {
+            "top_md": 2110.0,
+            "bot_md": 2185.0,
+            "phi_hc": 0.21,
+            "sw_hc": 0.38,
+            "sw_wet": 0.82,
+        },
+        "SEL-1": {
+            "top_md": 2075.0,
+            "bot_md": 2150.0,
+            "phi_hc": 0.23,
+            "sw_hc": 0.33,
+            "sw_wet": 0.88,
+        },
         "TIO-3": {"top_md": None, "bot_md": None, "phi_hc": 0.18, "sw_hc": 0.90, "sw_wet": 0.90},
     }
 
@@ -339,8 +358,8 @@ def geox_well_compute_petrophysics(
     for md in depth_points:
         in_hc = params["top_md"] is not None and params["top_md"] <= md <= params["bot_md"]
         in_transition = params["top_md"] is not None and (
-            (params["top_md"] - 10 <= md < params["top_md"]) or
-            (params["bot_md"] < md <= params["bot_md"] + 10)
+            (params["top_md"] - 10 <= md < params["top_md"])
+            or (params["bot_md"] < md <= params["bot_md"] + 10)
         )
 
         if in_hc:
@@ -350,7 +369,11 @@ def geox_well_compute_petrophysics(
             net_pay = bool(sw < 0.45 and phi > 0.15)
         elif in_transition:
             phi = params["phi_hc"] * 0.85 + (hash(str(md)) % 100 - 50) / 2000.0
-            sw = 0.5 + (params["sw_wet"] - 0.5) * ((md - params["top_md"] + 10) / 20.0) if params["top_md"] else params["sw_wet"]
+            sw = (
+                0.5 + (params["sw_wet"] - 0.5) * ((md - params["top_md"] + 10) / 20.0)
+                if params["top_md"]
+                else params["sw_wet"]
+            )
             vsh = 0.20 + (hash(str(md)) % 100 - 50) / 500.0
             net_pay = bool(sw < 0.55 and phi > 0.12)
         else:
@@ -363,13 +386,15 @@ def geox_well_compute_petrophysics(
         phi = max(0.01, min(0.35, phi))
         vsh = max(0.0, min(1.0, vsh))
 
-        curves.append({
-            "depth_md": round(md, 1),
-            "porosity": round(phi, 4),
-            "sw": round(sw, 4),
-            "vsh": round(vsh, 4),
-            "net_pay": net_pay,
-        })
+        curves.append(
+            {
+                "depth_md": round(md, 1),
+                "porosity": round(phi, 4),
+                "sw": round(sw, 4),
+                "vsh": round(vsh, 4),
+                "net_pay": net_pay,
+            }
+        )
 
     net_pay_tops = []
     paying = False
@@ -383,10 +408,25 @@ def geox_well_compute_petrophysics(
     if paying:
         net_pay_tops[-1]["bot_md"] = curves[-1]["depth_md"]
 
-    hc_curves = [c for c in curves if params["top_md"] and params["top_md"] <= c["depth_md"] <= params["bot_md"]]
-    avg_phi = round(sum(c["porosity"] for c in hc_curves) / max(1, len(hc_curves)), 4) if hc_curves else 0.0
-    avg_sw_hc = round(sum(c["sw"] for c in hc_curves) / max(1, len(hc_curves)), 4) if hc_curves else params["sw_wet"]
-    net_pay_total = round(sum(c.get("bot_md", c["depth_md"]) - c["depth_md"] for c in net_pay_tops if "bot_md" in c), 1)
+    hc_curves = [
+        c
+        for c in curves
+        if params["top_md"] and params["top_md"] <= c["depth_md"] <= params["bot_md"]
+    ]
+    avg_phi = (
+        round(sum(c["porosity"] for c in hc_curves) / max(1, len(hc_curves)), 4)
+        if hc_curves
+        else 0.0
+    )
+    avg_sw_hc = (
+        round(sum(c["sw"] for c in hc_curves) / max(1, len(hc_curves)), 4)
+        if hc_curves
+        else params["sw_wet"]
+    )
+    net_pay_total = round(
+        sum(c.get("bot_md", c["depth_md"]) - c["depth_md"] for c in net_pay_tops if "bot_md" in c),
+        1,
+    )
 
     return {
         "well_id": well_id,
@@ -398,7 +438,11 @@ def geox_well_compute_petrophysics(
             {"mnemonic": "POR", "unit": "fraction", "description": "Total porosity"},
             {"mnemonic": "SW", "unit": "fraction", "description": "Water saturation (Archie)"},
             {"mnemonic": "VSH", "unit": "fraction", "description": "Shale volume index"},
-            {"mnemonic": "NET_PAY", "unit": "boolean", "description": "Pay flag (Sw<0.45, phi>0.15)"},
+            {
+                "mnemonic": "NET_PAY",
+                "unit": "boolean",
+                "description": "Pay flag (Sw<0.45, phi>0.15)",
+            },
         ],
         "interval_maybe": {"top_md": top_md, "bot_md": bot_md},
         "summary": {
@@ -458,28 +502,38 @@ def geox_section_interpret_strata(
             offset = well_depth_offsets.get(well_id)
             if offset is None:
                 continue
-            tie_points.append({
-                "well_id": well_id,
-                "depth_md": round(base_depth + offset, 1),
-                "twt_ms": round((base_depth + offset) * 1.5, 1),
-                "confidence": round(0.78 + (0.05 if well_id in ("BEK-2", "DUL-A1", "SEL-1") else 0.0), 3),
-            })
+            tie_points.append(
+                {
+                    "well_id": well_id,
+                    "depth_md": round(base_depth + offset, 1),
+                    "twt_ms": round((base_depth + offset) * 1.5, 1),
+                    "confidence": round(
+                        0.78 + (0.05 if well_id in ("BEK-2", "DUL-A1", "SEL-1") else 0.0), 3
+                    ),
+                }
+            )
 
         if tie_points:
-            correlations.append({
-                "marker_name": marker["marker_name"],
-                "marker_family": marker["family"],
-                "tie_points": tie_points,
-                "lateral_continuity": len(tie_points) / max(len(well_ids), 1),
-                "dip_character": "gentle_east" if len(tie_points) >= 2 else None,
-            })
+            correlations.append(
+                {
+                    "marker_name": marker["marker_name"],
+                    "marker_family": marker["family"],
+                    "tie_points": tie_points,
+                    "lateral_continuity": len(tie_points) / max(len(well_ids), 1),
+                    "dip_character": "gentle_east" if len(tie_points) >= 2 else None,
+                }
+            )
 
     return {
         "well_ids": well_ids,
         "section_type": section_type,
         "correlations": correlations,
         "claim_tag": "INTERPRETED" if correlations else "HYPOTHESIS",
-        "confidence": round(sum(c["lateral_continuity"] for c in correlations) / max(len(correlations), 1), 3) if correlations else 0.0,
+        "confidence": round(
+            sum(c["lateral_continuity"] for c in correlations) / max(len(correlations), 1), 3
+        )
+        if correlations
+        else 0.0,
     }
 
 
@@ -565,16 +619,68 @@ def geox_time4d_verify_timing(
 
 
 @mcp.tool()
-def geox_prospect_evaluate(prospect_id: str, ac_risk_score: float = 0.0) -> dict:
-    """Evaluate hydrocarbon potential based on 888_JUDGE verdict.
-    Routes through arifOS constitutional layer — not direct seal.
+def geox_prospect_evaluate(
+    prospect_id: str,
+    u_ambiguity: float,
+    transform_stack: list,
+    evidence_credit: float = 0.0,
+    echo_score: float = 0.0,
+    truth_score: float = 0.0,
+    bias_scenario: str = "ai_vision_only",
+    irreversible_action: bool = False,
+    model_text: str = None,
+    prospect_context: dict = None,
+    session_id: str = None,
+) -> dict:
     """
-    return {
-        "prospect_id": prospect_id,
-        "ac_risk_score": ac_risk_score,
-        "verdict": "PENDING_ARIFOS_JUDGE",
-        "claim_tag": "PENDING",
-    }
+    Evaluate hydrocarbon prospect potential.
+    Routes through arifOS arifos_judge_prospect for constitutional verdict.
+    GEOX does not hold verdict authority — verdict comes from arifOS.
+
+    INPUT:
+        prospect_id: REQUIRED — prospect identifier
+        u_ambiguity: REQUIRED — physical ambiguity 0.0-1.0
+        transform_stack: REQUIRED — list of applied transforms
+        evidence_credit: float, default 0.0
+        echo_score: float, default 0.0
+        truth_score: float, default 0.0
+        bias_scenario: str, default "ai_vision_only"
+        irreversible_action: bool, default False — if True, triggers 888_HOLD
+        model_text: str, optional — text for Anti-Hantu screening
+        prospect_context: dict, optional — metadata for judge
+        session_id: str, optional — session ID for VAULT999
+
+    OUTPUT (from arifos_judge_prospect):
+        verdict: PROCEED | HOLD | BLOCK
+        ac_risk_score: float
+        claim_tag: CLAIM | PLAUSIBLE | HYPOTHESIS | ESTIMATE | UNKNOWN
+        tearframe: {...}
+        anti_hantu_check: bool
+        hold_triggered: bool
+        vault_seal: {...} | null
+        floor_violations: [...]
+        audit_trace: str
+    """
+    judge_result = _compute_ac_risk_governed(
+        u_ambiguity=u_ambiguity,
+        transform_stack=transform_stack,
+        evidence_credit=evidence_credit,
+        bias_scenario=bias_scenario,
+        custom_b_cog=None,
+        model_text=model_text,
+        truth_score=truth_score,
+        echo_score=echo_score,
+        amanah_locked=False,
+        rasa_present=False,
+        irreversible_action=irreversible_action,
+        prospect_context=prospect_context,
+        session_id=session_id,
+    )
+
+    result = judge_result.to_dict()
+    result["prospect_id"] = prospect_id
+    result["_routed_to"] = "arifOS"
+    return result
 
 
 @mcp.tool()
@@ -591,72 +697,76 @@ def geox_cross_summarize_evidence(prospect_id: str) -> dict:
     evidence_chain = []
 
     if prospect_id and prospect_id != "BEK-2_PROSPECT":
-        evidence_chain.append({
-            "source": "prospect_id",
-            "item": prospect_id,
-            "claim_tag": "PLAUSIBLE",
-            "confidence": 0.75,
-            "provenance": "user_provided",
-        })
+        evidence_chain.append(
+            {
+                "source": "prospect_id",
+                "item": prospect_id,
+                "claim_tag": "PLAUSIBLE",
+                "confidence": 0.75,
+                "provenance": "user_provided",
+            }
+        )
 
-    evidence_chain.extend([
-        {
-            "source": "well_bundle",
-            "item": "BEK-2",
-            "claim_tag": "OBSERVED",
-            "confidence": 0.90,
-            "provenance": "scaffold_fixture",
-            "notes": "HC zone confirmed: phi=0.22, Sw=0.35, 80m net pay",
-        },
-        {
-            "source": "well_bundle",
-            "item": "DUL-A1",
-            "claim_tag": "OBSERVED",
-            "confidence": 0.88,
-            "provenance": "scaffold_fixture",
-            "notes": "HC zone confirmed: 75m net pay",
-        },
-        {
-            "source": "well_bundle",
-            "item": "SEL-1",
-            "claim_tag": "OBSERVED",
-            "confidence": 0.88,
-            "provenance": "scaffold_fixture",
-            "notes": "HC zone confirmed: 75m net pay",
-        },
-        {
-            "source": "well_bundle",
-            "item": "TIO-3",
-            "claim_tag": "HYPOTHESIS",
-            "confidence": 0.55,
-            "provenance": "scaffold_fixture",
-            "notes": "No resistivity anomaly — possible water leg or downdip of contact",
-        },
-        {
-            "source": "qc_logs",
-            "item": "all_loaded_wells",
-            "claim_tag": "VERIFIED",
-            "confidence": 0.92,
-            "provenance": "geox_well_qc_logs",
-            "notes": "Zero QC flags across all loaded wells",
-        },
-        {
-            "source": "petrophysics",
-            "item": "BEK-2_phi_022_sw_035",
-            "claim_tag": "COMPUTED",
-            "confidence": 0.78,
-            "provenance": "geox_well_compute_petrophysics",
-            "notes": "Archie saturation model; depth-indexed curves (P2-7); net pay ~80m; real LAS required for production grade",
-        },
-        {
-            "source": "strata_correlation",
-            "item": "Horizon_A_BEK2_to_SEL1",
-            "claim_tag": "INTERPRETED",
-            "confidence": 0.78,
-            "provenance": "geox_section_interpret_strata",
-            "notes": "3-well continuity confirmed; TIO-3 correlation uncertain",
-        },
-    ])
+    evidence_chain.extend(
+        [
+            {
+                "source": "well_bundle",
+                "item": "BEK-2",
+                "claim_tag": "OBSERVED",
+                "confidence": 0.90,
+                "provenance": "scaffold_fixture",
+                "notes": "HC zone confirmed: phi=0.22, Sw=0.35, 80m net pay",
+            },
+            {
+                "source": "well_bundle",
+                "item": "DUL-A1",
+                "claim_tag": "OBSERVED",
+                "confidence": 0.88,
+                "provenance": "scaffold_fixture",
+                "notes": "HC zone confirmed: 75m net pay",
+            },
+            {
+                "source": "well_bundle",
+                "item": "SEL-1",
+                "claim_tag": "OBSERVED",
+                "confidence": 0.88,
+                "provenance": "scaffold_fixture",
+                "notes": "HC zone confirmed: 75m net pay",
+            },
+            {
+                "source": "well_bundle",
+                "item": "TIO-3",
+                "claim_tag": "HYPOTHESIS",
+                "confidence": 0.55,
+                "provenance": "scaffold_fixture",
+                "notes": "No resistivity anomaly — possible water leg or downdip of contact",
+            },
+            {
+                "source": "qc_logs",
+                "item": "all_loaded_wells",
+                "claim_tag": "VERIFIED",
+                "confidence": 0.92,
+                "provenance": "geox_well_qc_logs",
+                "notes": "Zero QC flags across all loaded wells",
+            },
+            {
+                "source": "petrophysics",
+                "item": "BEK-2_phi_022_sw_035",
+                "claim_tag": "COMPUTED",
+                "confidence": 0.78,
+                "provenance": "geox_well_compute_petrophysics",
+                "notes": "Archie saturation model; depth-indexed curves (P2-7); net pay ~80m; real LAS required for production grade",
+            },
+            {
+                "source": "strata_correlation",
+                "item": "Horizon_A_BEK2_to_SEL1",
+                "claim_tag": "INTERPRETED",
+                "confidence": 0.78,
+                "provenance": "geox_section_interpret_strata",
+                "notes": "3-well continuity confirmed; TIO-3 correlation uncertain",
+            },
+        ]
+    )
 
     return {
         "prospect_id": prospect_id,
