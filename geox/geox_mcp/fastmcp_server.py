@@ -742,7 +742,8 @@ def geox_well_compute_petrophysics(
     return result
 
 
-@mcp.tool()
+# QUARANTINED — stub, not production-deployable until VAULT999 receipting is proven.
+# @mcp.tool()
 def geox_section_interpret_strata(
     well_ids: list[str],
     section_type: str = "log correlation",
@@ -805,7 +806,8 @@ def geox_section_interpret_strata(
     }
 
 
-@mcp.tool()
+# QUARANTINED — stub, not production-deployable until SEG-Y pipeline is proven.
+# @mcp.tool()
 def geox_seismic_load_line(line_id: str) -> dict:
     """Load a seismic line into witness context."""
     return {
@@ -815,7 +817,8 @@ def geox_seismic_load_line(line_id: str) -> dict:
     }
 
 
-@mcp.tool()
+# QUARANTINED — stub, not production-deployable until VAULT999 receipting is proven.
+# @mcp.tool()
 def geox_earth3d_load_volume(volume_id: str) -> dict:
     """Load a structural seismic volume for analysis."""
     volume = [
@@ -1014,7 +1017,8 @@ def geox_seismic_render_slice(
     return result
 
 
-@mcp.tool()
+# QUARANTINED — stub, not production-deployable until VAULT999 receipting is proven.
+# @mcp.tool()
 def geox_earth3d_interpret_horizons(
     volume_id: str,
     mode: Literal["auto", "manual"] = "auto",
@@ -1029,7 +1033,8 @@ def geox_earth3d_interpret_horizons(
     }
 
 
-@mcp.tool()
+# QUARANTINED — stub, not production-deployable until VAULT999 receipting is proven.
+# @mcp.tool()
 def geox_earth3d_model_geometries(volume_id: str) -> dict:
     """Build architectural geometries from interpreted horizons."""
     return {
@@ -1165,75 +1170,14 @@ def geox_prospect_evaluate(
     return result
 
 
-# =============================================================================
-# LAYER 1b — GEOX tools forwarded to AF-FORGE TypeScript bridge
-# =============================================================================
+# TODO: Raw-array log ingestion from deleted geox_log_interpreter should be merged
+# into geox_well_compute_petrophysics as an optional raw_curves pathway.
 
 
-BRIDGE_URL = os.environ.get("AF_FORGE_BRIDGE_URL", "http://af-forge-bridge:7071")
-
-
-async def call_af_forge_log_interpreter(payload: dict) -> dict:
-    """Call geox_log_interpreter on the AF-FORGE TypeScript bridge."""
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        resp = await client.post(f"{BRIDGE_URL}/geox/log_interpreter", json=payload)
-        resp.raise_for_status()
-        return resp.json()
-
-
-@mcp.tool()
-def geox_log_interpreter(
-    GR: list = None,
-    RT: list = None,
-    RHOB: list = None,
-    NPHI: list = None,
-    SP: list = None,
-    DT: list = None,
-    CAL: list = None,
-    depth: list = None,
-    GR_clean: float = 20.0,
-    GR_shale: float = 120.0,
-    RW: float = 0.055,
-    matrix: str = "limestone",
-) -> dict:
-    """Interpret wireline logs via the AF-FORGE bridge runtime."""
-    payload = {}
-    if GR is not None:
-        payload["GR"] = GR
-    if RT is not None:
-        payload["RT"] = RT
-    if RHOB is not None:
-        payload["RHOB"] = RHOB
-    if NPHI is not None:
-        payload["NPHI"] = NPHI
-    if SP is not None:
-        payload["SP"] = SP
-    if DT is not None:
-        payload["DT"] = DT
-    if CAL is not None:
-        payload["CAL"] = CAL
-    if depth is not None:
-        payload["depth"] = depth
-    payload["GR_clean"] = GR_clean
-    payload["GR_shale"] = GR_shale
-    payload["RW"] = RW
-    payload["matrix"] = matrix
-
-    try:
-        import asyncio
-
-        result = asyncio.get_event_loop().run_until_complete(call_af_forge_log_interpreter(payload))
-        return result.get("result", result)
-    except Exception as e:
-        return {
-            "error": str(e),
-            "fallback": "geox_log_interpreter requires AF-FORGE bridge (af-forge-bridge:7071). "
-            "Ensure af-forge-bridge is running and AF_FORGE_BRIDGE_URL is set.",
-            "claim_tag": "UNKNOWN",
-        }
-
-
-@mcp.tool()
+# QUARANTINED — geox_cross_summarize_evidence is off the public MCP surface.
+# It does NOT emit independent verdicts. Output is a synthesis payload only.
+# Re-enable only after routing through a true arifOS 888_JUDGE gateway.
+# @mcp.tool()
 def geox_cross_summarize_evidence(prospect_id: str, asset_memory_db: str = None) -> dict:
     """Synthesize causal scene for 888_JUDGE from spatial elements."""
     evidence_chain = []
