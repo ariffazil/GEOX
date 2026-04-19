@@ -71,6 +71,48 @@ def _registry_skills() -> list[dict]:
     return [skill for skill in skills if isinstance(skill, dict)]
 
 
+# ── F1 Amanah: Path boundary enforcement ────────────────────────────────────
+
+_SAFE_ROOTS: tuple[Path, ...] = (
+    Path("/root/GEOX/data").resolve(),
+    Path("/tmp").resolve(),
+    Path(os.getcwd()).resolve(),
+)
+
+
+def _sanitize_path(raw_path: str | None, must_exist: bool = False) -> Path | None:
+    """Resolve and bound a filesystem path to safe roots.
+
+    Returns None if the path is unsafe or outside all safe roots.
+    Prevents path traversal (../../../etc/passwd) and symlink escapes.
+    """
+    if raw_path is None:
+        return None
+    try:
+        p = Path(raw_path).expanduser().resolve()
+    except (OSError, ValueError):
+        return None
+
+    # Reject any component that looks like traversal
+    if ".." in raw_path:
+        return None
+
+    # Must be under at least one safe root
+    for root in _SAFE_ROOTS:
+        try:
+            p.relative_to(root)
+            break
+        except ValueError:
+            continue
+    else:
+        return None
+
+    if must_exist and not p.exists():
+        return None
+
+    return p
+
+
 def _normalize_transform_stack(transform_stack) -> list[str]:
     normalized: list[str] = []
     for item in transform_stack or []:
@@ -245,9 +287,19 @@ Awaiting approval response with CONFIRM or REJECT.
 @mcp.tool()
 def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
     """Load a full log bundle (LAS/DLIS) into witness context."""
-    if las_path:
+    # F1 Amanah: bound filesystem access
+    safe_las = _sanitize_path(las_path, must_exist=False)
+    if las_path and safe_las is None:
+        return {
+            "well_id": well_id,
+            "status": "error",
+            "claim_tag": "VOID",
+            "stages": [],
+            "error": "F1_HALT: las_path outside safe boundary",
+        }
+    if safe_las:
         try:
-            manifest = geox_ingest_las_tool(las_path, asset_id=well_id)
+            manifest = geox_ingest_las_tool(str(safe_las), asset_id=well_id)
             return {
                 "well_id": well_id,
                 "status": "loaded",
@@ -762,6 +814,8 @@ def geox_prospect_evaluate(
     """
     if not session_id or session_id == "global":
         session_id = f"anon-{int(time.time())}"
+    # F1 Amanah: lock if action is irreversible (server-side, not client-overridable)
+    amanah_locked = bool(irreversible_action)
     judge_result = _compute_ac_risk_governed(
         u_ambiguity=u_ambiguity,
         transform_stack=transform_stack,
@@ -771,7 +825,7 @@ def geox_prospect_evaluate(
         model_text=model_text,
         truth_score=truth_score,
         echo_score=echo_score,
-        amanah_locked=False,
+        amanah_locked=amanah_locked,
         rasa_present=False,
         irreversible_action=irreversible_action,
         prospect_context=prospect_context,
@@ -786,7 +840,7 @@ def geox_prospect_evaluate(
                 "evidence_credit": evidence_credit,
                 "echo_score": echo_score,
                 "truth_score": truth_score,
-                "amanah_locked": False,
+                "amanah_locked": amanah_locked,
                 "irreversible_action": irreversible_action,
                 "transform_stack": _normalize_transform_stack(transform_stack),
             }
@@ -798,12 +852,15 @@ def geox_prospect_evaluate(
         result["probabilistic_volume"] = geox_compute_volume_probabilistic_tool(
             **prospect_context["volumetrics"]
         )
-    if asset_memory_db:
+    safe_db = _sanitize_path(asset_memory_db, must_exist=False)
+    if asset_memory_db and safe_db is None:
+        result["asset_memory_error"] = "F1_HALT: asset_memory_db outside safe boundary"
+    elif safe_db:
         result["asset_memory"] = geox_memory_store_asset_tool(
             asset_id=prospect_id,
             eval_type="prospect_evaluate",
             payload={"prospect_id": prospect_id, "result": result},
-            db_path=asset_memory_db,
+            db_path=str(safe_db),
             authorized=memory_authorized,
         )
     result["prospect_id"] = prospect_id
@@ -902,10 +959,13 @@ def geox_cross_summarize_evidence(prospect_id: str, asset_memory_db: str = None)
         "claim_tag": "SYNTHESIZED",
         "evidence_count": len(evidence_chain),
     }
-    if asset_memory_db:
+    safe_db = _sanitize_path(asset_memory_db, must_exist=False)
+    if asset_memory_db and safe_db is None:
+        result["asset_memory_error"] = "F1_HALT: asset_memory_db outside safe boundary"
+    elif safe_db:
         result["asset_memory"] = geox_memory_recall_asset_tool(
             asset_id=prospect_id,
-            db_path=asset_memory_db,
+            db_path=str(safe_db),
             limit=5,
         )
     return result

@@ -33,13 +33,26 @@ from geox.geox_mcp.fastmcp_server import mcp
 # FastMCP 3.x — http_app() returns Starlette app with /mcp already mounted
 app = mcp.http_app()
 
-# Optional Bearer token auth — set GEOX_SECRET_TOKEN env var to enable
+# Mandatory Bearer token auth — GEOX_SECRET_TOKEN must be set
 _secret = os.environ.get("GEOX_SECRET_TOKEN", "")
+
+# F1 Amanah / F13 Sovereign: Fail closed if secret is missing
+if not _secret:
+    import logging
+    _logger = logging.getLogger("geox.mcp")
+    _logger.critical("F1_HALT: GEOX_SECRET_TOKEN is not set — server refusing all MCP requests")
 
 
 async def health(request):
     from starlette.responses import JSONResponse
-    return JSONResponse({"status": "ok", "seal": "DITEMPA BUKAN DIBERI", "service": "geox-mcp"})
+    tool_count = 0
+    try:
+        from geox.geox_mcp.fastmcp_server import mcp
+        tools = mcp.list_tools()
+        tool_count = len(tools) if hasattr(tools, '__len__') else 0
+    except Exception:
+        pass
+    return JSONResponse({"status": "ok", "seal": "DITEMPA BUKAN DIBERI", "service": "geox-mcp", "tool_count": tool_count})
 
 
 async def ready(request):
@@ -63,27 +76,31 @@ app.add_route("/ready", ready, methods=["GET"])
 app.add_route("/", root, methods=["GET"])
 
 
-if _secret:
+async def auth_dispatch(request, call_next):
+    from starlette.responses import JSONResponse
 
-    async def auth_dispatch(request, call_next):
-        from starlette.responses import JSONResponse
-
-        # Public routes — no auth required
-        if request.url.path in ("/health", "/healthz", "/ready", "/"):
-            return await call_next(request)
-
-        # MCP endpoint — require Bearer token
-        if request.url.path.startswith("/mcp"):
-            auth = request.headers.get("authorization", "")
-            if auth != f"Bearer {_secret}":
-                return JSONResponse(status_code=401, content={"error": "Unauthorized"})
-
+    # Public routes — no auth required
+    if request.url.path in ("/health", "/healthz", "/ready", "/"):
         return await call_next(request)
 
-    from starlette.middleware.base import BaseHTTPMiddleware
+    # MCP endpoint — require Bearer token (mandatory, fail closed)
+    if request.url.path.startswith("/mcp"):
+        auth = request.headers.get("authorization", "")
+        # F1: No secret configured → unconditional rejection
+        if not _secret:
+            return JSONResponse(
+                status_code=503,
+                content={"error": "F1_HALT: GEOX_SECRET_TOKEN not configured — MCP unavailable"},
+            )
+        if auth != f"Bearer {_secret}":
+            return JSONResponse(status_code=401, content={"error": "Unauthorized"})
 
-    app.add_middleware(BaseHTTPMiddleware, dispatch=auth_dispatch)
-    print("Bearer token auth: ENABLED")
+    return await call_next(request)
+
+from starlette.middleware.base import BaseHTTPMiddleware
+
+app.add_middleware(BaseHTTPMiddleware, dispatch=auth_dispatch)
+print("Bearer token auth: ENABLED" if _secret else "Bearer token auth: F1_HALT — GEOX_SECRET_TOKEN not set")
 
 
 from starlette.responses import PlainTextResponse, JSONResponse, FileResponse

@@ -82,6 +82,48 @@ def _registry_skills() -> list[dict]:
     return [skill for skill in skills if isinstance(skill, dict)]
 
 
+# ── F1 Amanah: Path boundary enforcement ────────────────────────────────────
+
+_SAFE_ROOTS: tuple[Path, ...] = (
+    Path("/root/GEOX/data").resolve(),
+    Path("/tmp").resolve(),
+    Path(os.getcwd()).resolve(),
+)
+
+
+def _sanitize_path(raw_path: str | None, must_exist: bool = False) -> Path | None:
+    """Resolve and bound a filesystem path to safe roots.
+
+    Returns None if the path is unsafe or outside all safe roots.
+    Prevents path traversal (../../../etc/passwd) and symlink escapes.
+    """
+    if raw_path is None:
+        return None
+    try:
+        p = Path(raw_path).expanduser().resolve()
+    except (OSError, ValueError):
+        return None
+
+    # Reject any component that looks like traversal
+    if ".." in raw_path:
+        return None
+
+    # Must be under at least one safe root
+    for root in _SAFE_ROOTS:
+        try:
+            p.relative_to(root)
+            break
+        except ValueError:
+            continue
+    else:
+        return None
+
+    if must_exist and not p.exists():
+        return None
+
+    return p
+
+
 def _normalize_transform_stack(transform_stack) -> list[str]:
     normalized: list[str] = []
     for item in transform_stack or []:
@@ -247,7 +289,16 @@ def geox_registry() -> str:
 @mcp.resource("geox://skills/{skill_id}")
 def geox_skill(skill_id: str) -> str:
     """A specific skill document."""
+    # F12 Defense: sanitize skill_id to prevent path traversal
+    if ".." in skill_id or "/" in skill_id or "\\" in skill_id or not skill_id.replace(".", "").replace("-", "").replace("_", "").isalnum():
+        return json.dumps({"error": "Invalid skill_id format"})
     skill_path = SKILLS_PATH / skill_id.replace(".", "/") + ".md"
+    # Ensure resolved path is still within SKILLS_PATH
+    try:
+        if not str(skill_path.resolve()).startswith(str(SKILLS_PATH.resolve())):
+            return json.dumps({"error": "Invalid skill_id path"})
+    except (OSError, ValueError):
+        return json.dumps({"error": "Invalid skill_id path"})
     if not skill_path.exists():
         return json.dumps({"error": f"Skill not found: {skill_id}"})
     with open(skill_path) as f:
@@ -257,7 +308,15 @@ def geox_skill(skill_id: str) -> str:
 @mcp.resource("geox://domains/{domain}")
 def geox_domain_skills(domain: str) -> str:
     """All skills in a domain."""
+    # F12 Defense: sanitize domain to prevent path traversal
+    if ".." in domain or "/" in domain or "\\" in domain or not domain.replace("-", "").replace("_", "").isalnum():
+        return json.dumps({"error": "Invalid domain format"})
     domain_path = SKILLS_PATH / domain
+    try:
+        if not str(domain_path.resolve()).startswith(str(SKILLS_PATH.resolve())):
+            return json.dumps({"error": "Invalid domain path"})
+    except (OSError, ValueError):
+        return json.dumps({"error": "Invalid domain path"})
     if not domain_path.exists():
         return json.dumps({"error": f"Domain not found: {domain}"})
 
@@ -384,15 +443,25 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
     Returns:
         Structured bundle with curve_manifest and provenance.
     """
-    if las_path:
+    # F1 Amanah: bound filesystem access
+    safe_las = _sanitize_path(las_path, must_exist=False)
+    if las_path and safe_las is None:
+        return {
+            "well_id": well_id,
+            "status": "error",
+            "claim_tag": "VOID",
+            "stages": [],
+            "error": "F1_HALT: las_path outside safe boundary",
+        }
+    if safe_las:
         try:
-            manifest = geox_ingest_las_tool(las_path, asset_id=well_id)
+            manifest = geox_ingest_las_tool(str(safe_las), asset_id=well_id)
             return {
                 "well_id": well_id,
                 "status": "loaded",
                 "claim_tag": manifest["claim_tag"],
                 "stages": ["load", "qc"],
-                "provenance": f"las_file:{os.path.basename(las_path)}",
+                "provenance": f"las_file:{os.path.basename(str(safe_las))}",
                 "depth_range": manifest["depth_range"],
                 "curve_manifest": manifest["curves"],
                 "las_manifest": manifest,
@@ -430,7 +499,7 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
     return {
         "well_id": well_id,
         "status": "loaded",
-        "claim_tag": "OBSERVED",
+        "claim_tag": "HYPOTHESIS",
         "stages": ["load", "qc"],
         "provenance": "scaffold_fixture",
         "depth_range": [1500.0, 2500.0],
@@ -466,9 +535,12 @@ def geox_well_compute_petrophysics(
     volume_id: str,
     saturation_model: str = " Archie ",
     memory_db_path: Optional[str] = None,
-    memory_authorized: bool = False,
 ) -> dict:
-    """Execute Wave 2 petrophysics inside the existing public well tool."""
+    """Execute Wave 2 petrophysics inside the existing public well tool.
+    
+    Note: asset memory writes are disabled (authorized=False) to enforce F1 Amanah.
+    """
+    memory_authorized = False  # F1 Amanah — client cannot override write authorization
     known_wells = {
         "BEK-2": {"top_md": 2090.0, "bot_md": 2170.0, "phi_hc": 0.22, "sw_wet": 0.85},
         "DUL-A1": {"top_md": 2110.0, "bot_md": 2185.0, "phi_hc": 0.21, "sw_wet": 0.82},
@@ -665,7 +737,7 @@ def geox_well_compute_petrophysics(
             eval_type="petrophysics",
             payload={"well_id": well_id, "summary": result["summary"]},
             db_path=memory_db_path,
-            authorized=memory_authorized,
+            authorized=False,  # F1 Amanah — hardcoded
         )
     return result
 
@@ -1035,11 +1107,12 @@ def geox_prospect_evaluate(
     session_id: str = None,
     skip_sensitivity: bool = False,
     asset_memory_db: str = None,
-    memory_authorized: bool = False,
 ) -> dict:
     """Evaluate hydrocarbon prospect potential through governed AC_Risk routing."""
     if not session_id or session_id == "global":
         session_id = f"anon-{int(time.time())}"
+    # F1 Amanah: lock amanah if action is irreversible or if no explicit override
+    amanah_locked = bool(irreversible_action)
     judge_result = _compute_ac_risk_governed(
         u_ambiguity=u_ambiguity,
         transform_stack=_normalize_transform_stack(transform_stack),
@@ -1049,7 +1122,7 @@ def geox_prospect_evaluate(
         model_text=model_text,
         truth_score=truth_score,
         echo_score=echo_score,
-        amanah_locked=False,
+        amanah_locked=amanah_locked,
         rasa_present=False,
         irreversible_action=irreversible_action,
         prospect_context=prospect_context,
@@ -1064,7 +1137,7 @@ def geox_prospect_evaluate(
                 "evidence_credit": evidence_credit,
                 "echo_score": echo_score,
                 "truth_score": truth_score,
-                "amanah_locked": False,
+                "amanah_locked": amanah_locked,
                 "irreversible_action": irreversible_action,
                 "transform_stack": _normalize_transform_stack(transform_stack),
             }
@@ -1076,13 +1149,16 @@ def geox_prospect_evaluate(
         result["probabilistic_volume"] = geox_compute_volume_probabilistic_tool(
             **prospect_context["volumetrics"]
         )
-    if asset_memory_db:
+    safe_db = _sanitize_path(asset_memory_db, must_exist=False)
+    if asset_memory_db and safe_db is None:
+        result["asset_memory_error"] = "F1_HALT: asset_memory_db outside safe boundary"
+    elif safe_db:
         result["asset_memory"] = geox_memory_store_asset_tool(
             asset_id=prospect_id,
             eval_type="prospect_evaluate",
             payload={"prospect_id": prospect_id, "result": result},
-            db_path=asset_memory_db,
-            authorized=memory_authorized,
+            db_path=str(safe_db),
+            authorized=False,  # F1 Amanah — hardcoded
         )
     result["prospect_id"] = prospect_id
     result["_routed_to"] = "arifOS"
@@ -1237,9 +1313,12 @@ def geox_cross_summarize_evidence(prospect_id: str, asset_memory_db: str = None)
         "claim_tag": "SYNTHESIZED",
         "evidence_count": len(evidence_chain),
     }
-    if asset_memory_db:
+    safe_db = _sanitize_path(asset_memory_db, must_exist=False)
+    if asset_memory_db and safe_db is None:
+        result["asset_memory_error"] = "F1_HALT: asset_memory_db outside safe boundary"
+    elif safe_db:
         result["asset_memory"] = geox_memory_recall_asset_tool(
-            asset_id=prospect_id, db_path=asset_memory_db, limit=5
+            asset_id=prospect_id, db_path=str(safe_db), limit=5
         )
     return result
 
@@ -1449,6 +1528,99 @@ def arifos_check_hold(action: str, risk_class: str) -> dict:
     }
 
 
+# =============================================================================
+# LAYER 3 — arifOS Constitutional: 888_HOLD registry (ported from mcp/fastmcp_server.py)
+# =============================================================================
+
+class HoldRegistry:
+    """In-memory registry for tracking 888_HOLD states and timeouts."""
+
+    _holds = {}
+
+    @classmethod
+    def register(cls, action: str, risk_class: str) -> dict:
+        import time
+
+        hold_id = f"HLD-{int(time.time())}"
+        hold_data = {
+            "hold_id": hold_id,
+            "action": action,
+            "risk_class": risk_class,
+            "status": "ACTIVE",
+            "escalation_level": 0,
+            "created_at": time.time(),
+            "expires_at": time.time() + 3600,  # 1 hour default
+        }
+        cls._holds[hold_id] = hold_data
+        return hold_data
+
+    @classmethod
+    def get_status(cls, hold_id: str) -> dict:
+        import time
+
+        hold = cls._holds.get(hold_id)
+        if not hold:
+            return {"error": "Hold not found"}
+
+        # Simulate escalation if older than 5 minutes (for demo)
+        elapsed = time.time() - hold["created_at"]
+        if elapsed > 300 and hold["escalation_level"] == 0:
+            hold["escalation_level"] = 1
+            hold["status"] = "ESCALATED_TO_MANAGER"
+
+        return hold
+
+
+@mcp.tool()
+def arifos_check_hold(action: str, risk_class: str) -> dict:
+    """Check if action requires 888 HOLD and register it in the lifecycle registry."""
+    high_risk = risk_class in ["high", "critical", "TOAC_RISK_EXCEEDED", "MODEL_COLLAPSE_F7_BREACH"]
+
+    if high_risk:
+        hold_record = HoldRegistry.register(action, risk_class)
+        return {
+            "action": action,
+            "risk_class": risk_class,
+            "requires_approval": True,
+            "hold_id": hold_record["hold_id"],
+            "status": hold_record["status"],
+            "message": f"HUMAN APPROVAL REQUIRED: {hold_record['hold_id']}",
+            "expires_at": hold_record["expires_at"],
+            "_routed_to": "arifOS",
+        }
+
+    return {
+        "action": action,
+        "risk_class": risk_class,
+        "requires_approval": False,
+        "hold_type": "AUTO_APPROVE",
+        "message": "Auto-approved",
+        "_routed_to": "arifOS",
+    }
+
+
+@mcp.tool()
+def arifos_manage_hold(hold_id: str, command: Literal["status", "escalate", "release"]) -> dict:
+    """Manage the lifecycle of an existing 888_HOLD."""
+    hold = HoldRegistry.get_status(hold_id)
+    if "error" in hold:
+        return hold
+
+    if command == "escalate":
+        hold["escalation_level"] += 1
+        hold["status"] = "ESCALATED_ADMIN"
+    elif command == "release":
+        hold["status"] = "RELEASED"
+        hold["released_at"] = time.time()
+
+    return {
+        "hold_id": hold_id,
+        "current_status": hold["status"],
+        "escalation_level": hold["escalation_level"],
+        "_routed_to": "arifOS",
+    }
+
+
 @mcp.tool()
 def arifos_compute_risk(
     u_ambiguity: float,
@@ -1501,6 +1673,11 @@ def arifos_judge_prospect(
     """Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, and 888_HOLD.
     ROUTED — Every prospect evaluation routes through arifOS for VAULT999 sealing.
     GEOX does not hold verdict authority.
+
+    WARNING (F13 Sovereign / F3 Tri-Witness): This tool currently computes AC_Risk
+    locally within GEOX. True constitutional routing requires an HTTP call to the
+    arifOS kernel (core/governance_kernel.py) so that judgment is not self-computed.
+    TODO: Replace local _compute_ac_risk_governed() with arifOS bridge call.
     """
     result = _compute_ac_risk_governed(
         u_ambiguity=u_ambiguity,
