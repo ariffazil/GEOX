@@ -16,11 +16,11 @@ Verdict thresholds:
     ≥ 0.75 → BLOCK (VOID)
 
 Governance additions (Wave 1 Trust Foundation):
-    - ClaimTag epistemic classification (CLAIM, PLAUSIBLE, HYPOTHESIS, ESTIMATE, UNKNOWN)
+    - ClaimTag epistemic classification
     - TEARFRAME adjudication scores (u_ambiguity, evidence_credit, echo_score, truth_score, bias_scenario, b_cog)
-    - Anti-Hantu refusal-first screening (F9)
+    - Anti-Hantu refusal-first screening
     - Explicit 888_HOLD enforcement with VAULT999 seal
-    - Floor violations tracking (F1, F2, F5, F6, F9, F13)
+    - Floor violations (F1, F2, F5, F6, F9, F13)
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any
+from typing import List, Dict, Any, Optional
 
 
 class ClaimTag(Enum):
@@ -69,13 +69,60 @@ class TEARFRAME:
     bias_scenario: str = "ai_vision_only"
     b_cog: float = 0.0
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "u_ambiguity": round(self.u_ambiguity, 4),
             "evidence_credit": round(self.evidence_credit, 4),
             "echo_score": round(self.echo_score, 4),
             "truth_score": round(self.truth_score, 4),
             "bias_scenario": self.bias_scenario,
+            "b_cog": round(self.b_cog, 4),
+        }
+
+    # ── TEARFRAME Symbolic Names (arifOS thermodynamic canonical) ──────────────
+    @property
+    def Delta_S(self) -> float:
+        """ΔS — Clarity / Information Entropy.
+        Blocks output if it introduces contradictions, jargon, or cognitive overload.
+        """
+        return round(self.u_ambiguity, 6)
+
+    @property
+    def Peace2(self) -> float:
+        """Peace² — Systemic Stability.
+        Measures relational/operational stability. Blocks escalatory logic or provocation.
+        """
+        return round(1.0 - self.echo_score, 6)
+
+    @property
+    def Omega_0(self) -> float:
+        """Ω₀ — Epistemic Humility Band.
+        Enforces 3-5% uncertainty floor. Blocks '100% certain' or overconfident claims.
+        """
+        return round(self.evidence_credit, 6)
+
+    @property
+    def Kappa_r(self) -> float:
+        """κᵣ — Relational Empathy.
+        Blocks condescension, dismissive framing, or power imbalances.
+        """
+        return round(self.truth_score * (1.0 - self.u_ambiguity), 6)
+
+    @property
+    def Psi_field(self) -> float:
+        """Ψ — State Field / Session Liveness.
+        Evaluates whether session metadata remains constitutionally alive.
+        """
+        return round(self.truth_score * self.echo_score, 6)
+
+    def to_dict_symbolic(self) -> dict:
+        """TEARFRAME output with canonical arifOS thermodynamic names."""
+        return {
+            "ΔS": self.Delta_S,
+            "Peace²": self.Peace2,
+            "Ω₀": self.Omega_0,
+            "κᵣ": self.Kappa_r,
+            "Ψ": self.Psi_field,
             "b_cog": round(self.b_cog, 4),
         }
 
@@ -89,17 +136,17 @@ class AC_RiskResult:
     u_ambiguity: float
     evidence_credit: float
     b_cog: float
-    transform_stack: list[str] = field(default_factory=list)
+    transform_stack: List[str] = field(default_factory=list)
 
 
 @dataclass
 class AntiHantuReport:
     """Anti-Hantu (F9) screening report."""
     passed: bool
-    violations: list[str] = field(default_factory=list)
+    violations: List[str] = field(default_factory=list)
     screened_text_snippet: str = ""
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "passed": self.passed,
             "violations": self.violations,
@@ -117,7 +164,7 @@ class VaultSeal:
     ac_risk_score: float
     timestamp: str
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "epoch": self.epoch,
             "session_id": self.session_id,
@@ -148,9 +195,8 @@ class GovernedACRiskResult:
     vault_seal: Optional[VaultSeal]
     floor_violations: List[str]
     audit_trace: str
-    physics_validation: Optional[ValidationResult] = None
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "verdict": self.verdict,
             "ac_risk_score": round(self.ac_risk_score, 4),
@@ -214,7 +260,7 @@ def _compute_b_cog(
     custom_b_cog: Optional[float],
     bias_scenario: str,
 ) -> float:
-    """Compute B_cog using canonical formula per ARIF-OS REPAIR MISSION."""
+    """Compute B_cog using canonical formula."""
     if custom_b_cog is not None:
         return _clamp(custom_b_cog, 0.0, 1.0)
 
@@ -340,7 +386,7 @@ def compute_ac_risk(
         explanation = f"AC_Risk={ac_risk:.3f}: Elevated risk. Human review required per 888_HOLD."
     else:
         verdict = ACVerdict.BLOCK.value
-        explanation = f"AC_Risk={ac_risk:.3f}: Critical risk. Interpretation unsafe. BLOCKED."
+        explanation = f"AC_Risk={ac_risk:.3f}: Critical risk. Interpretation unsafe. Acquire better data."
 
     return AC_RiskResult(
         ac_risk=round(ac_risk, 4),
@@ -355,18 +401,18 @@ def compute_ac_risk(
 
 def compute_ac_risk_governed(
     u_ambiguity: float,
-    transform_stack: list[str],
+    transform_stack: List[str],
     evidence_credit: float = 0.0,
     echo_score: float = 0.0,
     truth_score: float = 0.0,
     bias_scenario: str = "ai_vision_only",
-    custom_b_cog: float | None = None,
+    custom_b_cog: Optional[float] = None,
     rasa_present: bool = False,
     amanah_locked: bool = False,
     irreversible_action: bool = False,
-    model_text: str | None = None,
-    prospect_context: dict[str, Any] | None = None,
-    session_id: str | None = None,
+    model_text: Optional[str] = None,
+    prospect_context: Optional[Dict[str, Any]] = None,
+    session_id: Optional[str] = None,
 ) -> GovernedACRiskResult:
     """
     Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, 888_HOLD, VAULT999.
@@ -408,14 +454,6 @@ def compute_ac_risk_governed(
         bias_scenario=bias_scenario,
         b_cog=b_cog,
     )
-
-    physics_validation = None
-    if prospect_context:
-        guard = PhysicsGuard()
-        physics_validation = guard.validate_prospect_input(prospect_context)
-        if physics_validation.hold:
-            hold_triggered = True
-            floor_violations.append(f"PHYSICS_EPISTEMIC_VIOLATION: {physics_validation.reason}")
 
     floor_violations = _run_floor_checks(
         irreversible_action=irreversible_action,

@@ -1046,21 +1046,48 @@ def geox_earth3d_model_geometries(volume_id: str) -> dict:
 
 @mcp.tool()
 def geox_map_get_context_summary(bounds: dict) -> dict:
-    """Spatial fabric introspection — get summary of spatial context within bounds."""
+    """
+    Spatial fabric introspection — get summary of spatial context within bounds.
+    
+    v2 spec: provenance, limitations, claim_state, bounds validation.
+    Discovery tool — must remain descriptive, non-interpretive.
+    """
     xmin = float(bounds.get("xmin", 0))
     ymin = float(bounds.get("ymin", 0))
     xmax = float(bounds.get("xmax", xmin))
     ymax = float(bounds.get("ymax", ymin))
+    
+    # v2: provenance + limitations
+    provenance = "fixture" if xmin == 0 and ymin == 0 else "user_bounds"
+    limitations = []
+    if xmax <= xmin or ymax <= ymin:
+        limitations.append("Invalid bounds: max must exceed min — returning zero area")
+    
+    width = max(0.0, xmax - xmin)
+    height = max(0.0, ymax - ymin)
+    area = width * height
+    
+    # v2: claim_state — spatial query is always OBSERVED
+    claim_state = "OBSERVED"
+    human_decision_point = (
+        "Map context is descriptive only. " 
+        "Do not derive geological certainty from bounding box queries alone."
+    )
+    
     return {
+        "tool": "geox_map_get_context_summary",
         "bounds": bounds,
         "summary": {
             "bbox": [xmin, ymin, xmax, ymax],
-            "width": max(0.0, xmax - xmin),
-            "height": max(0.0, ymax - ymin),
-            "area": max(0.0, xmax - xmin) * max(0.0, ymax - ymin),
+            "width": round(width, 4),
+            "height": round(height, 4),
+            "area": round(area, 4),
             "spatial_context": "Bounds received for map-context introspection.",
         },
-        "claim_tag": "OBSERVED",
+        "provenance": provenance,
+        "claim_state": claim_state,
+        "limitations": limitations,
+        "human_decision_point": human_decision_point,
     }
 
 
@@ -1074,26 +1101,34 @@ def geox_time4d_verify_timing(
     buoyancy_pressure_mpa: float = 4.0,
     seal_capacity_mpa: float = 6.0,
 ) -> dict:
-    """Check temporal relationship between trap formation and charge."""
-    basin_charge = geox_simulate_basin_charge_tool(
-        burial_history=burial_history
-        or [
-            {"age_ma": 95.0, "duration_ma": 12.0, "temperature_c": 88.0},
-            {"age_ma": 72.0, "duration_ma": 14.0, "temperature_c": 105.0},
-            {"age_ma": charge_ma, "duration_ma": 9.0, "temperature_c": 128.0},
-        ],
+    """
+    Check temporal relationship between trap formation and charge.
+    
+    v2 spec: verdict, reversal_conditions, burial_carrier_assumptions,
+    claim_state, limitations, human_decision_point, vault_receipt.
+    Calls geox_time4d_verify_timing_tool for full v2 output.
+    """
+    from geox.geox_mcp.tools.basin_charge_tool import geox_time4d_verify_timing_tool
+    
+    burial = burial_history or [
+        {"age_ma": 95.0, "duration_ma": 12.0, "temperature_c": 88.0},
+        {"age_ma": 72.0, "duration_ma": 14.0, "temperature_c": 105.0},
+        {"age_ma": charge_ma, "duration_ma": 9.0, "temperature_c": 128.0},
+    ]
+    
+    result = geox_time4d_verify_timing_tool(
+        burial_history=burial,
         trap_age_ma=trap_ma,
         carrier_permeability_md=carrier_permeability_md,
         buoyancy_pressure_mpa=buoyancy_pressure_mpa,
         seal_capacity_mpa=seal_capacity_mpa,
     )
+    
     return {
         "prospect_id": prospect_id,
         "trap_ma": trap_ma,
         "charge_ma": charge_ma,
-        "timing_valid": trap_ma > charge_ma,
-        "claim_tag": basin_charge["claim_tag"],
-        "basin_charge": basin_charge,
+        **result,
     }
 
 
