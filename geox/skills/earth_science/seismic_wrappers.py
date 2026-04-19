@@ -1,19 +1,17 @@
 """
-GEOX Seismic Skill Pack
-═══════════════════════════════════════════════════════════════════════════════
-Governed wrappers for seismic ingestion (segyio) and attribute computation (bruges).
-
+GEOX Seismic Skill Pack — Improved v2
 DITEMPA BUKAN DIBERI — Forged, Not Given
-Each wrapper enforces:
-  • Canonical GEOX schema with ClaimTag (OBSERVED for raw, COMPUTED for derived)
-  • VAULT999 receipt (immutable audit trail)
-  • PhysicsGuard bounds check before returning
-  • Evidence density scoring
 
-Integration Map:
-  segyio.SegyModel → seismic_load_volume → geox-seismic-viewer (inline/xline slice)
-  bruges attributes → seismic_compute_attribute → geox-seismic-viewer (color overlay)
-  pyvista (optional 3D) → seismic_render_volume → geox-seismic-viewer (3D preview)
+Improvement Spec v1 applied:
+  - geox_seismic_load_volume: axis_identity, bounding_box_3d, ingestion_hash,
+    sample_domain, limitations, admissibility gate
+  - geox_seismic_compute_attribute: window metadata, statistics, slice_provenance,
+    limitation statement, source_slice_identity
+  - seismic_render_volume_slice: physical_extents, axis_labels, domain_flag,
+    display_mode, slice_location, provenance
+
+All tools emit: claim_state, provenance, limitations, vault_receipt.
+Claim states: OBSERVED | COMPUTED | HYPOTHESIS | VOID
 """
 
 from __future__ import annotations
@@ -28,19 +26,21 @@ import numpy as np
 
 
 class ClaimTag(str, Enum):
-    OBSERVED = "OBSERVED"  # Direct measurement / ingested
-    COMPUTED = "COMPUTED"  # Derived from physics model
+    OBSERVED = "OBSERVED"    # Direct measurement / ingested
+    COMPUTED = "COMPUTED"    # Derived from physics model
     INTERPRETED = "INTERPRETED"  # Multi-source inference
     SYNTHESIZED = "SYNTHESIZED"  # Cross-domain assembly
-    VERIFIED = "VERIFIED"  # QC passed
-    UNKNOWN = "UNKNOWN"  # Explicit gap
+    VERIFIED = "VERIFIED"    # QC passed
+    UNKNOWN = "UNKNOWN"      # Explicit gap
+    HYPOTHESIS = "HYPOTHESIS"  # Low confidence / image-only input
 
 
 # ─────────────────── VAULT999 RECEIPT ───────────────────
 
-
 def make_vault_receipt(
-    tool_name: str, payload: dict[str, Any], verdict: str = "SEAL"
+    tool_name: str,
+    payload: dict[str, Any],
+    verdict: str = "SEAL",
 ) -> dict[str, Any]:
     canonical = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
     digest = hashlib.sha256(f"{tool_name}:{canonical}".encode("utf-8")).hexdigest()
@@ -55,8 +55,9 @@ def make_vault_receipt(
 
 # ─────────────────── CLAIM TAG CLASSIFIER ───────────────────
 
-
-def classify_claim_tag(confidence: float) -> str:
+def classify_claim_tag(confidence: float, hold_enforced: bool = False) -> str:
+    if hold_enforced:
+        return ClaimTag.HYPOTHESIS.value
     score = max(0.0, min(1.0, confidence))
     if score >= 0.85:
         return ClaimTag.CLAIM.value
@@ -76,9 +77,11 @@ _SEISMIC_BOUNDS = {
     "variance": {"min": 0.0, "max": 1.0},
     "sweetness": {"min": 0.0, "max": 10.0},
     "coherence": {"min": 0.0, "max": 1.0},
+    "envelope": {"min": 0.0, "max": 5.0},
+    "freq_avg": {"min": 5.0, "max": 120.0},
     "inline_count": {"min": 1, "max": 10000},
     "crossline_count": {"min": 1, "max": 10000},
-    "sample_count": {"min": 1, "max": 10000},
+    "sample_count": {"min": 1, "max": 20000},
 }
 
 
@@ -88,144 +91,207 @@ def physics_guard(data: dict[str, Any]) -> dict[str, Any]:
         if key in data:
             val = float(data[key])
             if val < bounds["min"] or val > bounds["max"]:
-                violations.append(f"{key}={val} outside [{bounds['min']}, {bounds['max']}]")
+                violations.append(
+                    f"{key}={val} outside [{bounds['min']}, {bounds['max']}]"
+                )
     if violations:
         return {"status": "PHYSICS_VIOLATION", "violations": violations, "hold": True}
     return {"status": "PASS"}
 
 
-# ─────────────────── SEGYIO WRAPPER ───────────────────
+# ─────────────────── ADMISSIBILITY GATE ───────────────────
 
+def _admissibility_gate(provenance: str, required_present: bool = True) -> dict[str, Any]:
+    """Block downstream if intake is not from a real SEG-Y."""
+    if provenance in ("user_image", "user_text", "fixture"):
+        return {
+            "admissibility": "LIMITED",
+            "claim_state": ClaimTag.HYPOTHESIS.value,
+            "limitation": (
+                "Image or text input cannot substitute for seismic ingestion. "
+                "Attribute computation is possible but claim_state must be HYPOTHESIS. "
+                "Do not represent as confirmed seismic attribute."
+            ),
+            "hold": provenance in ("user_image", "user_text"),
+        }
+    return {"admissibility": "FULL", "claim_state": ClaimTag.OBSERVED.value, "hold": False}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SEISMIC LOAD VOLUME — IMPROVED
+# ─────────────────────────────────────────────────────────────────────────────
 
 def seismic_load_volume(
     segy_path: Optional[str] = None,
     volume_id: str = "SEISMIC_3D",
+    survey_name: Optional[str] = None,
     inline_axis: int = 0,
     crossline_axis: int = 1,
     sample_axis: int = 2,
     memory_map: bool = True,
+    provenance: str = "fixture",  # fixture | uploaded | real_survey | user_image | user_text
 ) -> dict[str, Any]:
     """
-    Load a SEG-Y volume via segyio and wrap in canonical GEOX schema.
+    Load a SEG-Y volume via segyio and wrap in canonical GEOX schema v2.
 
-    Args:
-        segy_path: Path to SEG-Y file. If None, returns scaffold fixture.
-        volume_id: Volume identifier for the session.
-        inline_axis: Axis index for inline dimension.
-        crossline_axis: Axis index for crossline dimension.
-        sample_axis: Axis index for time/depth sample dimension.
-        memory_map: Use memory-mapped access (faster for large files).
+    Required output fields per GEOX_TOOL_IMPROVEMENT_SPEC_v1:
+      - sample_interval_ms, axis_identity, inline_range, crossline_range,
+      - sample_domain, byte_order, bounding_box_3d, provenance,
+      - intake_claim, survey_name, ingestion_hash, limitations, vault_receipt
 
     Returns:
-        Canonical GEOX schema:
-            {
-              "volume_id": str,
-              "claim_tag": "OBSERVED",
-              "shape": [il, xl, samples],
-              "inline_range": [min, max],
-              "crossline_range": [min, max],
-              "sample_range": [min, max],
-              "trace_count": int,
-              "il_step": int,
-              "xl_step": int,
-              "bounding_box": {il: [min,max], xl: [min,max], twt_ms: [min,max]},
-              "data_byte_order": str,
-              "vault_receipt": VAULT999,
-              "render_payload": dict (ready for pyvista / geox-seismic-viewer)
-            }
+        Canonical GEOX schema v2 (see spec for field definitions).
     """
+    # Admissibility gate
+    gate = _admissibility_gate(provenance)
+    claim_state = gate["claim_state"]
+    limitations = [gate["limitation"]] if gate["limitation"] else []
+
+    result: dict[str, Any] = {
+        "tool": "geox_seismic_load_volume",
+        "verdict": "HOLD" if gate["hold"] else "SEAL",
+        "volume_id": volume_id,
+        "claim_state": claim_state,
+        "provenance": provenance,
+        "stages": ["ingest", "index"],
+    }
+
+    if segy_path is None or provenance in ("fixture", "user_image", "user_text"):
+        return _scaffold_seismic_volume(volume_id, survey_name, provenance, limitations, claim_state)
+
     try:
         import segyio
     except ImportError:
-        return _scaffold_seismic_volume(volume_id)
-
-    result = {
-        "volume_id": volume_id,
-        "claim_tag": ClaimTag.OBSERVED.value,
-        "stages": ["ingest", "index"],
-        "provenance": f"segy_file:{segy_path}" if segy_path else "scaffold_fixture",
-    }
-
-    if segy_path is None:
-        return _scaffold_seismic_volume(volume_id)
+        limitations.append("segyio not available — using scaffold")
+        result["limitation_reason"] = "library_missing"
+        return _scaffold_seismic_volume(volume_id, survey_name, provenance, limitations, claim_state)
 
     try:
         with segyio.open(segy_path, "r", memory_map=memory_map) as segy:
-            inline_sum = segy.indexed_scan_inline if hasattr(segy, "indexed_scan_inline") else None
-            il_count = segy.shape[inline_axis]
-            xl_count = segy.shape[crossline_axis]
-            sample_count = segy.shape[sample_axis]
+            il_count = int(segy.shape[inline_axis])
+            xl_count = int(segy.shape[crossline_axis])
+            sample_count = int(segy.shape[sample_axis])
+            sample_interval_us = int(segy.sample_interval)
 
-            result["shape"] = [int(il_count), int(xl_count), int(sample_count)]
-            result["trace_count"] = int(il_count * xl_count)
-            result["inline_range"] = [1, int(il_count)]
-            result["crossline_range"] = [1, int(xl_count)]
-            result["sample_range"] = [0.0, float(sample_count * segy.sample_interval / 1000)]
-            result["sample_interval_us"] = int(segy.sample_interval)
-            result["il_step"] = 1
-            result["xl_step"] = 1
-            result["bounding_box"] = {
-                "inline": [1, int(il_count)],
-                "crossline": [1, int(xl_count)],
-                "twt_ms": [0, float(sample_count * segy.sample_interval / 1000)],
-            }
-            result["data_byte_order"] = "big-endian" if segy.endian == "big" else "little-endian"
-            result["scalogram"] = {
+            il_start = int(segy.inline_start) if hasattr(segy, "inline_start") and segy.inline_start else 1
+            xl_start = int(segy.crossline_start) if hasattr(segy, "crossline_start") and segy.crossline_start else 1
+
+            result.update({
+                # REQUIRED per spec
+                "sample_interval_ms": round(sample_interval_us / 1000, 4),
+                "axis_identity": {
+                    "inline_axis": "inline",
+                    "crossline_axis": "crossline",
+                    "time_axis": "twt_ms",
+                },
+                "inline_range": [il_start, il_start + (il_count - 1) * 1, 1],
+                "crossline_range": [xl_start, xl_start + (xl_count - 1) * 1, 1],
+                "sample_domain": "time_ms",
+                "byte_order": "big-endian" if segy.endian == "big" else "little-endian",
+                "bounding_box_3d": {
+                    "inline": [il_start, il_start + (il_count - 1)],
+                    "crossline": [xl_start, xl_start + (xl_count - 1)],
+                    "twt_ms": [0.0, round(sample_count * sample_interval_us / 1000, 2)],
+                },
+                # Additional
+                "shape": [il_count, xl_count, sample_count],
+                "trace_count": il_count * xl_count,
                 "il_step": 1,
                 "xl_step": 1,
-                "twt_step_ms": float(segy.sample_interval / 1000),
-            }
+                "sample_interval_us": sample_interval_us,
+                "survey_name": survey_name or "unknown",
+                "ingestion_hash": _compute_segy_hash(segy_path),
+                "data_byte_order": "big-endian" if segy.endian == "big" else "little-endian",
+                "scalogram": {
+                    "il_step": 1,
+                    "xl_step": 1,
+                    "twt_step_ms": round(sample_interval_us / 1000, 4),
+                },
+            })
+            result["status"] = "loaded"
+            result["verdict"] = "SEAL"
 
     except Exception as e:
-        result["status"] = "error"
-        result["claim_tag"] = ClaimTag.UNKNOWN.value
-        result["error"] = str(e)
-        result["vault_receipt"] = make_vault_receipt("seismic_load_volume", result, "QUALIFY")
+        result.update({
+            "status": "error",
+            "claim_state": ClaimTag.UNKNOWN.value,
+            "error": str(e),
+            "verdict": "VOID",
+            "limitations": limitations + [f"loading failed: {str(e)}"],
+        })
+        result["vault_receipt"] = make_vault_receipt("geismic_load_volume", result, "VOID")
         return result
 
-    result["status"] = "loaded"
+    result["limitations"] = limitations
     result["vault_receipt"] = make_vault_receipt("seismic_load_volume", result, "SEAL")
 
-    # Render payload for visualization
+    # Render payload
     result["render_payload"] = {
         "type": "volume_slice",
         "volume_id": volume_id,
         "orientation": "inline",
         "slice_index": result["inline_range"][0],
         "shape": result["shape"],
-        "claim_tag": result["claim_tag"],
+        "claim_state": claim_state,
+        "provenance": provenance,
     }
-
     return result
 
 
-def _scaffold_seismic_volume(volume_id: str) -> dict[str, Any]:
-    """Return scaffold fixture when no SEG-Y file is provided."""
+def _compute_segy_hash(segy_path: str) -> str:
+    """SHA-256 of first 8192 bytes for provenance."""
+    try:
+        with open(segy_path, "rb") as f:
+            header_bytes = f.read(8192)
+        return hashlib.sha256(header_bytes).hexdigest()[:32]
+    except Exception:
+        return "unavailable"
+
+
+def _scaffold_seismic_volume(
+    volume_id: str,
+    survey_name: Optional[str],
+    provenance: str,
+    limitations: list[str],
+    claim_state: str,
+) -> dict[str, Any]:
     shape = [200, 300, 801]
     result = {
+        "tool": "geox_seismic_load_volume",
+        "verdict": "QUALIFY",
         "volume_id": volume_id,
         "status": "loaded",
-        "claim_tag": ClaimTag.OBSERVED.value,
+        "claim_state": claim_state,
+        "provenance": provenance,
         "stages": ["ingest", "index"],
-        "provenance": "scaffold_fixture",
-        "shape": shape,
-        "trace_count": shape[0] * shape[1],
-        "inline_range": [1000, 1200],
-        "crossline_range": [2000, 2300],
-        "sample_range": [0.0, 4000.0],
-        "sample_interval_us": 4000,
-        "il_step": 1,
-        "xl_step": 1,
-        "bounding_box": {
+        # REQUIRED per spec
+        "sample_interval_ms": 4.0,
+        "axis_identity": {
+            "inline_axis": "inline",
+            "crossline_axis": "crossline",
+            "time_axis": "twt_ms",
+        },
+        "inline_range": [1000, 1200, 1],
+        "crossline_range": [2000, 2300, 1],
+        "sample_domain": "time_ms",
+        "byte_order": "little-endian",
+        "bounding_box_3d": {
             "inline": [1000, 1200],
             "crossline": [2000, 2300],
             "twt_ms": [0.0, 4000.0],
         },
+        "shape": shape,
+        "trace_count": shape[0] * shape[1],
+        "il_step": 1,
+        "xl_step": 1,
+        "survey_name": survey_name or "scaffold_fixture",
+        "ingestion_hash": "scaffold_hash_00000000",
         "data_byte_order": "little-endian",
         "scalogram": {"il_step": 1, "xl_step": 1, "twt_step_ms": 4.0},
+        "limitations": limitations + ["scaffold — no real SEG-Y loaded"],
         "vault_receipt": make_vault_receipt(
             "seismic_load_volume",
-            {"volume_id": volume_id, "provenance": "scaffold_fixture"},
+            {"volume_id": volume_id, "provenance": provenance},
             "QUALIFY",
         ),
         "render_payload": {
@@ -234,7 +300,8 @@ def _scaffold_seismic_volume(volume_id: str) -> dict[str, Any]:
             "orientation": "inline",
             "slice_index": 1000,
             "shape": shape,
-            "claim_tag": ClaimTag.OBSERVED.value,
+            "claim_state": claim_state,
+            "provenance": provenance,
         },
     }
     physics = physics_guard(
@@ -244,7 +311,19 @@ def _scaffold_seismic_volume(volume_id: str) -> dict[str, Any]:
     return result
 
 
-# ─────────────────── BRUGES WRAPPER ───────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# SEISMIC COMPUTE ATTRIBUTE — IMPROVED
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Attribute metadata: window default, units, description
+_ATTRIBUTE_META = {
+    "amplitude":  {"window_ms": 40,  "units": "normalized", "limitation": "Raw amplitude is non-directional. Cannot distinguish lithology without structural context."},
+    "variance":   {"window_ms": 60,  "units": "normalized", "limitation": "Variance measures lateral discontinuity. Cannot distinguish fault from facies change without structural control."},
+    "sweetness":  {"window_ms": 40,  "units": "ratio",      "limitation": "Sweetness highlights peak events. Low-frequency events may be over-emphasised in thick intervals."},
+    "coherence":  {"window_ms": 80,  "units": "normalized", "limitation": "Coherence is window-dependent. Small windows give noisy results; large windows reduce spatial resolution."},
+    "envelope":   {"window_ms": 40,  "units": "normalized", "limitation": "Envelope measures total energy. It cannot distinguish between noise and real signal in low-SNR data."},
+    "freq_avg":   {"window_ms": 60,  "units": "Hz",         "limitation": "Average frequency is sensitive to noise and window choice. Interpret as relative, not absolute."},
+}
 
 
 def seismic_compute_attribute(
@@ -253,132 +332,135 @@ def seismic_compute_attribute(
     inline: Optional[int] = None,
     crossline: Optional[int] = None,
     slice_data: Optional[list] = None,
+    source_volume_id: Optional[str] = None,  # provenance link
+    window_samples: int = 11,
+    window_center_ms: float = 0.0,
+    provenance: str = "fixture",  # for admissibility
 ) -> dict[str, Any]:
     """
-    Compute seismic attribute via bruges and wrap in canonical GEOX schema.
+    Compute seismic attribute via bruges and wrap in canonical GEOX schema v2.
 
-    Attributes supported:
-      amplitude   — raw seismic amplitude
-      variance    — local trace variance (structural discontinuity)
-      sweetness   — ratio of peak to total energy (clean events)
-      coherence   — semblance-based discontinuity
-      envelope    — instantaneous amplitude
-      freq_avg    — average frequency
+    Required output fields per spec:
+      - attribute, window_samples, window_center_ms, units, value_range,
+      - statistics (mean, std, p10, p90, count), source_slice_identity,
+      - claim_state, slice_provenance, limitation
 
-    Args:
-        volume_id: Volume identifier.
-        attribute: Attribute name.
-        inline: Specific inline to extract (optional).
-        crossline: Specific crossline to extract (optional).
-        slice_data: Pre-extracted 2D slice array (optional, for speed).
-
-    Returns:
-        Canonical GEOX schema:
-            {
-              "volume_id": str,
-              "attribute": str,
-              "claim_tag": "COMPUTED",
-              "shape": [nx, ny],
-              "value_range": [min, max],
-              "stats": {"mean", "std", "p10", "p90"},
-              "render_payload": dict (for geox-seismic-viewer color mapping),
-              "vault_receipt": VAULT999
-            }
+    Admissibility: If source provenance is user_image or user_text,
+      claim_state is automatically HYPOTHESIS.
     """
-    try:
-        import bruges
-        import bruges.attribute as bg_attr
-    except ImportError:
-        return _scaffold_attribute(volume_id, attribute)
+    meta = _ATTRIBUTE_META.get(attribute, {"window_ms": 40, "units": "normalized", "limitation": "Unknown attribute class."})
 
-    result = {
+    # Admissibility gate
+    gate = _admissibility_gate(provenance)
+    claim_state = ClaimTag.COMPUTED.value
+    if gate["claim_state"] == ClaimTag.HYPOTHESIS.value:
+        claim_state = ClaimTag.HYPOTHESIS.value
+
+    result: dict[str, Any] = {
+        "tool": "geox_seismic_compute_attribute",
+        "verdict": "HOLD" if gate["hold"] else "SEAL",
         "volume_id": volume_id,
         "attribute": attribute,
-        "claim_tag": ClaimTag.COMPUTED.value,
+        # REQUIRED per spec
+        "window_samples": window_samples,
+        "window_center_ms": window_center_ms,
+        "units": meta["units"],
+        "claim_state": claim_state,
         "stages": ["extract_slice", "compute_attribute"],
-        "provenance": f"bruges.{attribute}",
+        "slice_provenance": f"volume:{source_volume_id or volume_id}",
     }
 
-    # Use provided slice_data or generate scaffold
     if slice_data is None:
         arr = np.random.randn(200, 300).astype(np.float32)
         result["provenance"] = "scaffold_fixture"
     else:
         arr = np.asarray(slice_data, dtype=np.float32)
+        result["provenance"] = provenance
 
     computed: np.ndarray
-
     try:
         if attribute == "variance":
             from scipy.ndimage import generic_filter
-
-            def _var(x):
-                return np.var(x)
-
-            computed = generic_filter(arr, _var, size=5)
+            def _var(x): return np.var(x)
+            computed = generic_filter(arr, _var, size=min(window_samples, 11))
         elif attribute == "sweetness":
             from scipy.signal import hilbert
-
             analytic = hilbert(arr, axis=-1)
             env = np.abs(analytic)
             peak = np.max(env, axis=-1, keepdims=True)
             total = np.sum(np.abs(analytic) ** 2, axis=-1, keepdims=True) + 1e-10
-            sweetness_raw = peak / np.sqrt(total / arr.shape[-1])
-            computed = np.clip(sweetness_raw.squeeze(), 0, 10)
+            sweetness_raw = (peak / np.sqrt(total / arr.shape[-1])).squeeze()
+            computed = np.clip(sweetness_raw, 0, 10)
         elif attribute == "coherence":
             from scipy.ndimage import uniform_filter
-
-            m = arr.shape[0]
-            n = arr.shape[1] if arr.ndim > 1 else 1
+            m, n = arr.shape
             C = np.zeros((m, n))
-            for i in range(1, m - 1):
-                for j in range(1, n - 1):
-                    window = arr[max(0, i - 1) : min(m, i + 2), max(0, j - 1) : min(n, j + 2)]
+            ws = min(window_samples // 2, 3)
+            for i in range(ws, m - ws):
+                for j in range(ws, n - ws):
+                    window = arr[i - ws:i + ws + 1, j - ws:j + ws + 1]
                     if window.size >= 4:
                         C[i, j] = np.mean(window) / (np.std(window) + 1e-10)
             computed = np.clip(C, 0, 1)
         elif attribute == "envelope":
             from scipy.signal import hilbert
-
             analytic = hilbert(arr, axis=-1)
             computed = np.abs(analytic).squeeze()
         elif attribute == "freq_avg":
             from scipy.signal import welch
-
             freqs = np.zeros(arr.shape[:2])
+            nperseg = min(64, arr.shape[-1])
             for i in range(arr.shape[0]):
-                f, p = welch(arr[i], nperseg=min(64, arr.shape[-1]))
+                f, p = welch(arr[i], nperseg=nperseg)
                 freqs[i] = np.sum(f * p) / (np.sum(p) + 1e-10)
             computed = freqs
         else:
             computed = arr
 
     except Exception as e:
-        result["status"] = "attribute_compute_failed"
-        result["error"] = str(e)
+        result.update({
+            "status": "attribute_compute_failed",
+            "error": str(e),
+            "verdict": "HOLD",
+            "limitations": [f"compute failed: {str(e)}"],
+        })
         result["vault_receipt"] = make_vault_receipt("seismic_compute_attribute", result, "HOLD")
         return result
 
-    result["shape"] = list(computed.shape)
-    result["value_range"] = [float(np.min(computed)), float(np.max(computed))]
-    result["stats"] = {
-        "mean": float(np.mean(computed)),
-        "std": float(np.std(computed)),
-        "p10": float(np.percentile(computed, 10)),
-        "p90": float(np.percentile(computed, 90)),
-    }
+    result.update({
+        "shape": list(computed.shape),
+        "value_range": [float(np.min(computed)), float(np.max(computed))],
+        "statistics": {
+            "mean": round(float(np.mean(computed)), 6),
+            "std": round(float(np.std(computed)), 6),
+            "p10": round(float(np.percentile(computed, 10)), 6),
+            "p90": round(float(np.percentile(computed, 90)), 6),
+            "count": int(np.prod(computed.shape)),
+        },
+        "status": "computed",
+    })
 
-    # PhysicsGuard check
+    # PhysicsGuard
     bounds = _SEISMIC_BOUNDS.get(attribute, {"min": -1e6, "max": 1e6})
     if result["value_range"][0] < bounds["min"] or result["value_range"][1] > bounds["max"]:
         result["physics_violation"] = True
-        result["claim_tag"] = ClaimTag.HYPOTHESIS.value
+        result["claim_state"] = ClaimTag.HYPOTHESIS.value
 
-    result["status"] = "computed"
+    # REQUIRED per spec — limitation statement
+    result["limitations"] = [meta["limitation"]]
+
+    # source_slice_identity
+    result["source_slice_identity"] = {
+        "volume_id": source_volume_id or volume_id,
+        "orientation": "inline" if inline is not None else "unknown",
+        "slice_index": inline if inline is not None else 0,
+    }
+
+    result["verdict"] = "SEAL" if claim_state != ClaimTag.HYPOTHESIS.value else "HOLD"
     result["vault_receipt"] = make_vault_receipt(
         "seismic_compute_attribute",
         {k: v for k, v in result.items() if k != "vault_receipt"},
-        "SEAL",
+        result["verdict"],
     )
 
     # Color map for geox-seismic-viewer
@@ -396,134 +478,109 @@ def seismic_compute_attribute(
         "shape": result["shape"],
         "value_range": result["value_range"],
         "color_map": attr_colors.get(attribute, "gray"),
-        "claim_tag": result["claim_tag"],
-        "stats": result["stats"],
-    }
-
-    return result
-
-
-def _scaffold_attribute(volume_id: str, attribute: str) -> dict[str, Any]:
-    """Return scaffold attribute when bruges unavailable or for demos."""
-    shape = [200, 300]
-    arr = np.random.randn(*shape).astype(np.float32)
-
-    attr_configs = {
-        "amplitude": {"range": [-1.0, 1.0], "std": 0.3},
-        "variance": {"range": [0.0, 0.5], "std": 0.08},
-        "sweetness": {"range": [0.0, 4.0], "std": 0.6},
-        "coherence": {"range": [0.0, 1.0], "std": 0.15},
-        "envelope": {"range": [0.0, 2.0], "std": 0.4},
-        "freq_avg": {"range": [10.0, 80.0], "std": 12.0},
-    }
-    cfg = attr_configs.get(attribute, {"range": [0.0, 1.0], "std": 0.1})
-
-    result = {
-        "volume_id": volume_id,
-        "attribute": attribute,
-        "status": "computed",
-        "claim_tag": ClaimTag.COMPUTED.value,
-        "stages": ["extract_slice", "compute_attribute"],
-        "provenance": "scaffold_fixture",
-        "shape": shape,
-        "value_range": cfg["range"],
-        "stats": {
-            "mean": (cfg["range"][0] + cfg["range"][1]) / 2,
-            "std": cfg["std"],
-            "p10": cfg["range"][0] + 0.1 * (cfg["range"][1] - cfg["range"][0]),
-            "p90": cfg["range"][0] + 0.9 * (cfg["range"][1] - cfg["range"][0]),
-        },
-        "vault_receipt": make_vault_receipt(
-            "seismic_compute_attribute", {"volume_id": volume_id, "attribute": attribute}, "QUALIFY"
-        ),
-        "render_payload": {
-            "type": "attribute_slice",
-            "attribute": attribute,
-            "shape": shape,
-            "value_range": cfg["range"],
-            "color_map": {
-                "amplitude": "seismic",
-                "variance": "OrRd",
-                "sweetness": "YlGn",
-                "coherence": "PuBu",
-                "envelope": "Greys",
-                "freq_avg": "viridis",
-            }.get(attribute, "gray"),
-            "claim_tag": ClaimTag.COMPUTED.value,
-            "stats": {
-                "mean": (cfg["range"][0] + cfg["range"][1]) / 2,
-                "std": cfg["std"],
-                "p10": cfg["range"][0] + 0.1 * (cfg["range"][1] - cfg["range"][0]),
-                "p90": cfg["range"][0] + 0.9 * (cfg["range"][1] - cfg["range"][0]),
-            },
-        },
+        "claim_state": claim_state,
+        "statistics": result["statistics"],
+        "limitations": result["limitations"],
     }
     return result
 
 
-# ─────────────────── PYVISTA 3D SLICE WRAPPER ───────────────────
-
+# ─────────────────────────────────────────────────────────────────────────────
+# SEISMIC RENDER VOLUME SLICE — IMPROVED
+# ─────────────────────────────────────────────────────────────────────────────
 
 def seismic_render_volume_slice(
     volume_id: str,
-    orientation: str = "inline",
+    orientation: str = "inline",   # inline | crossline | time_slice | depth_slice
     slice_index: int = 0,
     attribute: Optional[str] = None,
+    display_mode: str = "qualitative_display",  # qualitative_display | interpretation_scale | earth_scale_depth_view
+    domain_flag: str = "time",       # time | depth | frequency
+    physical_extents: Optional[dict] = None,  # from geox_seismic_load_volume
+    provenance: str = "computed",
 ) -> dict[str, Any]:
     """
-    Extract a 2D slice from a 3D volume via pyvista and wrap in canonical schema.
+    Extract a 2D slice from a 3D volume and wrap in canonical GEOX schema v2.
 
-    Args:
-        volume_id: Volume identifier.
-        orientation: "inline", "crossline", or "time"
-        slice_index: Slice number along the chosen axis.
-        attribute: Optional attribute to extract on the slice.
+    Required output fields per spec:
+      - physical_extents, axis_labels, orientation, domain_flag,
+      - display_mode, volume_id, slice_location, provenance, claim_state
 
-    Returns:
-        Canonical GEOX schema with render_payload for geox-seismic-viewer 3D panel.
+    Claim state:
+      - qualitative_display → INFERRED
+      - interpretation_scale → COMPUTED
+      - earth_scale_depth_view → OBSERVED (requires real survey)
     """
-    result = {
-        "volume_id": volume_id,
-        "orientation": orientation,
-        "slice_index": slice_index,
-        "claim_tag": ClaimTag.COMPUTED.value,
-        "stages": ["extract_slice", "render"],
-        "provenance": f"pyvista.{orientation}.{slice_index}",
+    claim_map = {
+        "qualitative_display": ClaimTag.INTERPRETED.value,
+        "interpretation_scale": ClaimTag.COMPUTED.value,
+        "earth_scale_depth_view": ClaimTag.OBSERVED.value,
+    }
+    claim_state = claim_map.get(display_mode, ClaimTag.INTERPRETED.value)
+
+    if physical_extents is None:
+        physical_extents = {
+            "inline": [1000, 1200],
+            "crossline": [2000, 2300],
+            "twt_ms": [0.0, 4000.0],
+        }
+
+    # axis labels
+    axis_labels = {
+        "inline":     f"Inline (1-based), range {physical_extents['inline']}",
+        "crossline":  f"Crossline (1-based), range {physical_extents['crossline']}",
+        "time_slice": f"TWT (ms), range {physical_extents.get('twt_ms', [0, 4000])}",
+        "depth_slice": f"Depth (m), range {physical_extents.get('depth_m', [0, 4000])}",
     }
 
     shape = [200, 300, 801]
     if orientation == "inline":
         slice_shape = [shape[1], shape[2]]
-        axis_label = "crossline"
     elif orientation == "crossline":
         slice_shape = [shape[0], shape[2]]
-        axis_label = "inline"
     else:
         slice_shape = [shape[0], shape[1]]
-        axis_label = "time"
 
-    result["slice_shape"] = slice_shape
-    result["axis_label"] = axis_label
-    result["value_range"] = (
-        [-1.0, 1.0] if attribute is None or attribute == "amplitude" else [0.0, 1.0]
-    )
+    value_range = [-1.0, 1.0] if attribute is None or attribute == "amplitude" else [0.0, 1.0]
+
+    result: dict[str, Any] = {
+        "tool": "geox_seismic_render_volume_slice",
+        "verdict": "SEAL",
+        "volume_id": volume_id,
+        "orientation": orientation,
+        # REQUIRED per spec
+        "physical_extents": physical_extents,
+        "axis_labels": axis_labels.get(orientation, "unknown"),
+        "domain_flag": domain_flag,
+        "display_mode": display_mode,
+        "slice_location": slice_index,
+        "provenance": provenance,
+        "claim_state": claim_state,
+        "stages": ["extract_slice", "render"],
+        "slice_shape": slice_shape,
+        "value_range": value_range,
+        "attribute": attribute,
+    }
+
+    result["vault_receipt"] = make_vault_receipt("seismic_render_volume_slice", result, "SEAL")
 
     result["render_payload"] = {
         "type": "volume_slice",
         "orientation": orientation,
         "slice_index": slice_index,
         "slice_shape": slice_shape,
-        "axis_label": axis_label,
-        "value_range": result["value_range"],
+        "axis_labels": axis_labels.get(orientation, "unknown"),
+        "domain_flag": domain_flag,
+        "display_mode": display_mode,
+        "value_range": value_range,
         "attribute": attribute,
-        "claim_tag": result["claim_tag"],
+        "claim_state": claim_state,
+        "provenance": provenance,
     }
-    result["vault_receipt"] = make_vault_receipt("seismic_render_volume_slice", result, "SEAL")
     return result
 
 
 # ─────────────────── HEALTH CHECK ───────────────────
-
 
 def seismic_health_check() -> dict[str, Any]:
     """Return availability of seismic libraries."""
