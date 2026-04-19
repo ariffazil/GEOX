@@ -1,0 +1,15 @@
+{
+  "well_id": "PUTERI-BASEMENT-1",
+  "permit": "PM123",
+  "spud_date": "2017",
+  "location": "Malay Basin Onshore",
+  "status": "completed",
+  "target_formations": [
+    "Basement granitic unconformity",
+    "Pre-Tertiary weathered granite"
+  ],
+  "water_depth_m": 0.0,
+  "total_depth_m": 2950.0,
+  "result": "dry",
+  "notes": "Basement test \u2014 no hydrocarbons. Weathered granite section 50m. Tight carbonate below."
+}

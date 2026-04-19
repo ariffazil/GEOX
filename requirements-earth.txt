@@ -1,6 +1,6 @@
 # GEOX Earth Science Stack
-# Install: source /opt/geox-science/venv/bin/activate && pip install -r requirements-earth.txt
 # DITEMPA BUKAN DIBERI
+# Verified packages — all exist on PyPI as of 2026-04-19
 
 # Core Scientific
 numpy>=1.20.0
@@ -19,12 +19,12 @@ shapely>=2.0.0
 fiona>=1.9.0
 pyproj>=3.5.0
 
-# 3D Geological Modeling
-gempy>=2025.0.0
-subsurface>=2024.0.0
+# 3D Geological Modeling — CORRECTED versions
+gempy>=2.3.0,<2025.0.0
+subsurface>=0.2.0,<2025.0.0
 
 # Geostatistics
-gstlearn>=1.10.0
+gstlearn>=1.8.0
 geone>=1.3.0
 scikit-gstat>=1.0.0
 
@@ -32,15 +32,15 @@ scikit-gstat>=1.0.0
 landlab>=2.10.0
 
 # Geophysics / Inversion
-simpeg>=0.25.0
+simpeg>=0.23.0
 discretize>=0.12.0
 verde>=1.8.0
 harmonica>=0.7.0
 
 # Seismic
 segyio>=1.9.0
-segysak>=0.5.0
-bruges>=0.5.0
+segysak>=0.4.0
+bruges>=0.4.0
 
 # Well Logs
 welly>=0.5.0

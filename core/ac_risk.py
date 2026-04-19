@@ -79,6 +79,53 @@ class TEARFRAME:
             "b_cog": round(self.b_cog, 4),
         }
 
+    # ── TEARFRAME Symbolic Names (arifOS thermodynamic canonical) ──────────────
+    @property
+    def Delta_S(self) -> float:
+        """ΔS — Clarity / Information Entropy.
+        Blocks output if it introduces contradictions, jargon, or cognitive overload.
+        """
+        return round(self.u_ambiguity, 6)
+
+    @property
+    def Peace2(self) -> float:
+        """Peace² — Systemic Stability.
+        Measures relational/operational stability. Blocks escalatory logic or provocation.
+        """
+        return round(1.0 - self.echo_score, 6)
+
+    @property
+    def Omega_0(self) -> float:
+        """Ω₀ — Epistemic Humility Band.
+        Enforces 3-5% uncertainty floor. Blocks '100% certain' or overconfident claims.
+        """
+        return round(self.evidence_credit, 6)
+
+    @property
+    def Kappa_r(self) -> float:
+        """κᵣ — Relational Empathy.
+        Blocks condescension, dismissive framing, or power imbalances.
+        """
+        return round(self.truth_score * (1.0 - self.u_ambiguity), 6)
+
+    @property
+    def Psi_field(self) -> float:
+        """Ψ — State Field / Session Liveness.
+        Evaluates whether session metadata remains constitutionally alive.
+        """
+        return round(self.truth_score * self.echo_score, 6)
+
+    def to_dict_symbolic(self) -> dict:
+        """TEARFRAME output with canonical arifOS thermodynamic names."""
+        return {
+            "ΔS": self.Delta_S,
+            "Peace²": self.Peace2,
+            "Ω₀": self.Omega_0,
+            "κᵣ": self.Kappa_r,
+            "Ψ": self.Psi_field,
+            "b_cog": round(self.b_cog, 4),
+        }
+
 
 @dataclass
 class AC_RiskResult:

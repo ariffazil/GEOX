@@ -1,0 +1,15 @@
+{
+  "well_id": "BUNGA-TASBIH-1",
+  "permit": "MBR+",
+  "spud_date": "2024",
+  "location": "Sabah Basin Offshore",
+  "status": "completed",
+  "target_formations": [
+    "Lower Miocene turbidite",
+    "Eocene deltaic"
+  ],
+  "water_depth_m": 1120.0,
+  "total_depth_m": 4100.0,
+  "result": "oil_discover",
+  "notes": "57m net oil pay in Lower Miocene channel. API 38. Secondary gas cap."
+}
