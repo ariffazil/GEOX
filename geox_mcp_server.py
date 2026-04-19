@@ -48,8 +48,9 @@ async def health(request):
     tool_count = 0
     try:
         from geox.geox_mcp.fastmcp_server import mcp
-        tools = mcp.list_tools()
-        tool_count = len(tools) if hasattr(tools, '__len__') else 0
+        lp = getattr(mcp, '_local_provider', None)
+        if lp and hasattr(lp, '_components'):
+            tool_count = sum(1 for k in lp._components if k.startswith('tool:'))
     except Exception:
         pass
     return JSONResponse({"status": "ok", "seal": "DITEMPA BUKAN DIBERI", "service": "geox-mcp", "tool_count": tool_count})
