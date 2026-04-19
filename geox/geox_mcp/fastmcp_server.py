@@ -290,7 +290,12 @@ def geox_registry() -> str:
 def geox_skill(skill_id: str) -> str:
     """A specific skill document."""
     # F12 Defense: sanitize skill_id to prevent path traversal
-    if ".." in skill_id or "/" in skill_id or "\\" in skill_id or not skill_id.replace(".", "").replace("-", "").replace("_", "").isalnum():
+    if (
+        ".." in skill_id
+        or "/" in skill_id
+        or "\\" in skill_id
+        or not skill_id.replace(".", "").replace("-", "").replace("_", "").isalnum()
+    ):
         return json.dumps({"error": "Invalid skill_id format"})
     skill_path = SKILLS_PATH / skill_id.replace(".", "/") + ".md"
     # Ensure resolved path is still within SKILLS_PATH
@@ -309,7 +314,12 @@ def geox_skill(skill_id: str) -> str:
 def geox_domain_skills(domain: str) -> str:
     """All skills in a domain."""
     # F12 Defense: sanitize domain to prevent path traversal
-    if ".." in domain or "/" in domain or "\\" in domain or not domain.replace("-", "").replace("_", "").isalnum():
+    if (
+        ".." in domain
+        or "/" in domain
+        or "\\" in domain
+        or not domain.replace("-", "").replace("_", "").isalnum()
+    ):
         return json.dumps({"error": "Invalid domain format"})
     domain_path = SKILLS_PATH / domain
     try:
@@ -537,7 +547,7 @@ def geox_well_compute_petrophysics(
     memory_db_path: Optional[str] = None,
 ) -> dict:
     """Execute Wave 2 petrophysics inside the existing public well tool.
-    
+
     Note: asset memory writes are disabled (authorized=False) to enforce F1 Amanah.
     """
     memory_authorized = False  # F1 Amanah — client cannot override write authorization
@@ -1048,7 +1058,7 @@ def geox_earth3d_model_geometries(volume_id: str) -> dict:
 def geox_map_get_context_summary(bounds: dict) -> dict:
     """
     Spatial fabric introspection — get summary of spatial context within bounds.
-    
+
     v2 spec: provenance, limitations, claim_state, bounds validation.
     Discovery tool — must remain descriptive, non-interpretive.
     """
@@ -1056,24 +1066,24 @@ def geox_map_get_context_summary(bounds: dict) -> dict:
     ymin = float(bounds.get("ymin", 0))
     xmax = float(bounds.get("xmax", xmin))
     ymax = float(bounds.get("ymax", ymin))
-    
+
     # v2: provenance + limitations
     provenance = "fixture" if xmin == 0 and ymin == 0 else "user_bounds"
     limitations = []
     if xmax <= xmin or ymax <= ymin:
         limitations.append("Invalid bounds: max must exceed min — returning zero area")
-    
+
     width = max(0.0, xmax - xmin)
     height = max(0.0, ymax - ymin)
     area = width * height
-    
+
     # v2: claim_state — spatial query is always OBSERVED
     claim_state = "OBSERVED"
     human_decision_point = (
-        "Map context is descriptive only. " 
+        "Map context is descriptive only. "
         "Do not derive geological certainty from bounding box queries alone."
     )
-    
+
     return {
         "tool": "geox_map_get_context_summary",
         "bounds": bounds,
@@ -1103,19 +1113,19 @@ def geox_time4d_verify_timing(
 ) -> dict:
     """
     Check temporal relationship between trap formation and charge.
-    
+
     v2 spec: verdict, reversal_conditions, burial_carrier_assumptions,
     claim_state, limitations, human_decision_point, vault_receipt.
     Calls geox_time4d_verify_timing_tool for full v2 output.
     """
     from geox.geox_mcp.tools.basin_charge_tool import geox_time4d_verify_timing_tool
-    
+
     burial = burial_history or [
         {"age_ma": 95.0, "duration_ma": 12.0, "temperature_c": 88.0},
         {"age_ma": 72.0, "duration_ma": 14.0, "temperature_c": 105.0},
         {"age_ma": charge_ma, "duration_ma": 9.0, "temperature_c": 128.0},
     ]
-    
+
     result = geox_time4d_verify_timing_tool(
         burial_history=burial,
         trap_age_ma=trap_ma,
@@ -1123,7 +1133,7 @@ def geox_time4d_verify_timing(
         buoyancy_pressure_mpa=buoyancy_pressure_mpa,
         seal_capacity_mpa=seal_capacity_mpa,
     )
-    
+
     return {
         "prospect_id": prospect_id,
         "trap_ma": trap_ma,
@@ -1511,6 +1521,7 @@ def arifos_check_hold(action: str, risk_class: str) -> dict:
 # LAYER 3 — arifOS Constitutional: 888_HOLD registry (ported from mcp/fastmcp_server.py)
 # =============================================================================
 
+
 class HoldRegistry:
     """In-memory registry for tracking 888_HOLD states and timeouts."""
 
@@ -1548,34 +1559,6 @@ class HoldRegistry:
             hold["status"] = "ESCALATED_TO_MANAGER"
 
         return hold
-
-
-@mcp.tool()
-def arifos_check_hold(action: str, risk_class: str) -> dict:
-    """Check if action requires 888 HOLD and register it in the lifecycle registry."""
-    high_risk = risk_class in ["high", "critical", "TOAC_RISK_EXCEEDED", "MODEL_COLLAPSE_F7_BREACH"]
-
-    if high_risk:
-        hold_record = HoldRegistry.register(action, risk_class)
-        return {
-            "action": action,
-            "risk_class": risk_class,
-            "requires_approval": True,
-            "hold_id": hold_record["hold_id"],
-            "status": hold_record["status"],
-            "message": f"HUMAN APPROVAL REQUIRED: {hold_record['hold_id']}",
-            "expires_at": hold_record["expires_at"],
-            "_routed_to": "arifOS",
-        }
-
-    return {
-        "action": action,
-        "risk_class": risk_class,
-        "requires_approval": False,
-        "hold_type": "AUTO_APPROVE",
-        "message": "Auto-approved",
-        "_routed_to": "arifOS",
-    }
 
 
 @mcp.tool()
