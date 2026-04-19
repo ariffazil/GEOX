@@ -86,6 +86,9 @@ async def auth_dispatch(request, call_next):
 
     # MCP endpoint — require Bearer token (mandatory, fail closed)
     if request.url.path.startswith("/mcp"):
+        # DEMO MODE: Skip auth check if GEOX_DEMO_MODE=true
+        if os.environ.get("GEOX_DEMO_MODE") == "true":
+            return await call_next(request)
         auth = request.headers.get("authorization", "")
         # F1: No secret configured → unconditional rejection
         if not _secret:
@@ -101,7 +104,8 @@ async def auth_dispatch(request, call_next):
 from starlette.middleware.base import BaseHTTPMiddleware
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=auth_dispatch)
-print("Bearer token auth: ENABLED" if _secret else "Bearer token auth: F1_HALT — GEOX_SECRET_TOKEN not set")
+demo = os.environ.get("GEOX_DEMO_MODE") == "true"
+print("Bearer token auth: ENABLED" if _secret and not demo else ("DEMO MODE — no auth" if demo else "Bearer token auth: F1_HALT — GEOX_SECRET_TOKEN not set"))
 
 
 from starlette.responses import PlainTextResponse, JSONResponse, FileResponse
