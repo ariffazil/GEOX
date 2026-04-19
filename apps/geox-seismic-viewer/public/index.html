@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX Seismic Viewer v0.1 — First Visual Earth Organ</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --accent-gold: #d4af37;
+            --accent-cyan: #00d4aa;
+            --accent-red: #ff4757;
+            --accent-blue: #3b82f6;
+            --accent-orange: #ffa502;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090a0;
+            --border-color: #2a2a3a;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .seal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--accent-gold);
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .view-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .view-controls label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .view-controls input, .view-controls select {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: var(--font-mono);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover { border-color: var(--accent-cyan); }
+        .btn.primary { background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan); }
+        .btn.primary:hover { background: #00e6b8; }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 260px 1fr 300px;
+            overflow: hidden;
+        }
+
+        /* Left Panel - Navigation */
+        .left-panel {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .panel-section h3 {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Inline/Crossline Selector */
+        .coord-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .coord-group label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .coord-group input {
+            width: 100%;
+            padding: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+            font-size: 14px;
+        }
+
+        /* Attribute Selector */
+        .attr-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .attr-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .attr-item:hover { border-color: var(--accent-cyan); }
+        .attr-item.active { border-color: var(--accent-gold); background: rgba(212, 175, 55, 0.08); }
+
+        .attr-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .attr-item .attr-name {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .attr-item .attr-desc {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Horizon List */
+        .horizon-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .horizon-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .horizon-item input[type="checkbox"] {
+            accent-color: var(--accent-cyan);
+        }
+
+        /* Center Panel - Seismic Canvas */
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .canvas-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .depth-time-toggle {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .depth-time-toggle button {
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .depth-time-toggle button.active {
+            background: var(--accent-cyan);
+            color: #000;
+        }
+
+        .seismic-canvas-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #seismicCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .canvas-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .overlay-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: var(--font-mono);
+        }
+
+        .overlay-tag .label { color: var(--text-secondary); }
+        .overlay-tag .value { color: var(--accent-cyan); }
+
+        /* Right Panel - Info & Tools */
+        .right-panel {
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            overflow-y: auto;
+        }
+
+        /* Slice Info */
+        .info-card {
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .info-card .label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .info-card .value {
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        /* QC Metrics */
+        .qc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .qc-item {
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .qc-item .qc-value {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .qc-item .qc-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .qc-item.good .qc-value { color: var(--accent-cyan); }
+        .qc-item.warn .qc-value { color: var(--accent-orange); }
+        .qc-item.bad .qc-value { color: var(--accent-red); }
+
+        /* AC_Risk Widget */
+        .ac-risk-widget {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(0, 212, 170, 0.05));
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .ac-risk-widget .score {
+            font-family: var(--font-mono);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .ac-risk-widget .verdict {
+            display: inline-block;
+            padding: 3px 10px;
+            background: var(--accent-cyan);
+            color: #000;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .ac-risk-widget .verdict.seal { background: var(--accent-cyan); }
+        .ac-risk-widget .verdict.hold { background: var(--accent-orange); }
+        .ac-risk-widget .verdict.void { background: var(--accent-red); }
+
+        /* Action Buttons */
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 170, 0.05);
+        }
+
+        .action-btn.primary {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>🌊 GEOX Seismic Viewer v0.1</h1>
+                <span class="seal-badge">🏛️ DITEMPA BUKAN DIBERI</span>
+            </div>
+            <div class="view-controls">
+                <label>Line:</label>
+                <input type="text" id="lineId" value="L1000" placeholder="line_id" style="width:100px;">
+                <button class="btn" id="loadBtn">Load Seismic</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel -->
+            <aside class="left-panel">
+                <div class="panel-section">
+                    <h3>📍 Navigation</h3>
+                    <div class="coord-input">
+                        <div class="coord-group">
+                            <label>Inline</label>
+                            <input type="number" id="inlineInput" value="1000" min="0" step="100">
+                        </div>
+                        <div class="coord-group">
+                            <label>Crossline</label>
+                            <input type="number" id="crosslineInput" value="500" min="0" step="100">
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn" id="prevInlineBtn">◀ Inline</button>
+                        <button class="btn" id="nextInlineBtn">Inline ▶</button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>📊 Attribute</h3>
+                    <div class="attr-list">
+                        <div class="attr-item active" data-attr="amplitude">
+                            <div class="attr-dot" style="background:#00d4aa;"></div>
+                            <div>
+                                <div class="attr-name">Amplitude</div>
+                                <div class="attr-desc">Raw seismic amplitude</div>
+                            </div>
+                        </div>
+                        <div class="attr-item" data-attr="variance">
+                            <div class="attr-dot" style="background:#d4af37;"></div>
+                            <div>
+                                <div class="attr-name">Variance</div>
+                                <div class="attr-desc">Structural variance</div>
+                            </div>
+                        </div>
+                        <div class="attr-item" data-attr="sweetness">
+                            <div class="attr-dot" style="background:#3b82f6;"></div>
+                            <div>
+                                <div class="attr-name">Sweetness</div>
+                                <div class="attr-desc">Seismic clarity proxy</div>
+                            </div>
+                        </div>
+                        <div class="attr-item" data-attr="coherence">
+                            <div class="attr-dot" style="background:#a55eea;"></div>
+                            <div>
+                                <div class="attr-name">Coherence</div>
+                                <div class="attr-desc">Discontinuity detector</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>🎯 Horizons</h3>
+                    <div class="horizon-list">
+                        <label class="horizon-item">
+                            <input type="checkbox" id="horizonA" checked>
+                            Horizon A (Top Bekantat)
+                        </label>
+                        <label class="horizon-item">
+                            <input type="checkbox" id="horizonB">
+                            Horizon B (MFS 211)
+                        </label>
+                        <label class="horizon-item">
+                            <input type="checkbox" id="horizonC">
+                            Horizon C (Base)
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Panel - Seismic Canvas -->
+            <main class="center-panel">
+                <div class="canvas-toolbar">
+                    <div class="toolbar-group">
+                        <button class="btn" id="zoomInBtn">🔍+</button>
+                        <button class="btn" id="zoomOutBtn">🔍-</button>
+                    </div>
+                    <div class="depth-time-toggle">
+                        <button class="active" id="timeBtn">TWT (ms)</button>
+                        <button id="depthBtn">Depth (m)</button>
+                    </div>
+                    <div style="flex:1;"></div>
+                    <span id="cursorPos" style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);">Inline: 1000 | Xline: 500</span>
+                </div>
+                <div class="seismic-canvas-container">
+                    <canvas id="seismicCanvas"></canvas>
+                    <div class="canvas-overlay">
+                        <div class="overlay-tag">
+                            <span class="label">INLINE:</span>
+                            <span class="value" id="overlayInline">1000</span>
+                        </div>
+                        <div class="overlay-tag">
+                            <span class="label">XLINE:</span>
+                            <span class="value" id="overlayXline">500</span>
+                        </div>
+                        <div class="overlay-tag">
+                            <span class="label">RANGE:</span>
+                            <span class="value" id="overlayRange">0-4000ms</span>
+                        </div>
+                        <div class="overlay-tag">
+                            <span class="label">CLAIM:</span>
+                            <span class="value" id="overlayClaim">OBSERVED</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Panel -->
+            <aside class="right-panel">
+                <div class="panel-section">
+                    <h3>📋 Slice Info</h3>
+                    <div class="info-card">
+                        <div class="label">Inline</div>
+                        <div class="value" id="infoInline">1000</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Crossline</div>
+                        <div class="value" id="infoXline">500</div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>📐 QC Metrics</h3>
+                    <div class="qc-grid">
+                        <div class="qc-item good">
+                            <div class="qc-value">98%</div>
+                            <div class="qc-label">Trace Quality</div>
+                        </div>
+                        <div class="qc-item good">
+                            <div class="qc-value">1.2</div>
+                            <div class="qc-label">S/N Ratio</div>
+                        </div>
+                        <div class="qc-item warn">
+                            <div class="qc-value">3</div>
+                            <div class="qc-label">Dead Traces</div>
+                        </div>
+                        <div class="qc-item good">
+                            <div class="qc-value">OK</div>
+                            <div class="qc-label">Gain</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>🛡️ AC_Risk</h3>
+                    <div class="ac-risk-widget">
+                        <div class="score" id="acRiskScore">0.08</div>
+                        <div class="verdict seal" id="acRiskVerdict">SEAL</div>
+                        <div style="margin-top:8px;font-size:11px;color:var(--text-secondary);">
+                            Low ambiguity · Clean transform
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>⚡ Actions</h3>
+                    <div class="action-list">
+                        <button class="action-btn primary" id="runAcRiskBtn">🛡️ Run AC_Risk</button>
+                        <button class="action-btn" id="exportBtn">📥 Export Section</button>
+                        <button class="action-btn" id="saveHorizonBtn">💾 Save Horizon</button>
+                        <button class="action-btn" id="syncBtn">🔄 Sync to Host</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // GEOX Seismic Viewer v0.1 — First Visual Earth Organ
+        // DITEMPA BUKAN DIBERI
+
+        const state = {
+            lineId: 'L1000',
+            inline: 1000,
+            crossline: 500,
+            attribute: 'amplitude',
+            depthMode: 'time',
+            horizonOverlay: true,
+            zoom: 1.0,
+            sliceData: null
+        };
+
+        // Canvas setup
+        const canvas = document.getElementById('seismicCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            drawSeismic();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // Generate synthetic seismic data
+        function generateSeismicData() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const traces = 60;
+            const samples = 200;
+            const data = [];
+
+            for (let t = 0; t < traces; t++) {
+                const trace = [];
+                for (let s = 0; s < samples; s++) {
+                    // Synthetic seismic: reflection coefficient model
+                    const s_rel = s / samples;
+                    let amp = Math.sin(s_rel * Math.PI * 8) * 0.3;
+                    amp += Math.sin(s_rel * Math.PI * 15) * 0.15;
+                    // Add events at specific positions (horizon reflections)
+                    if (Math.abs(s_rel - 0.3) < 0.02) amp += 0.8;
+                    if (Math.abs(s_rel - 0.55) < 0.025) amp += 0.6;
+                    if (Math.abs(s_rel - 0.72) < 0.015) amp += 0.9;
+                    // Noise
+                    amp += (Math.random() - 0.5) * 0.1;
+                    trace.push(Math.max(-1, Math.min(1, amp)));
+                }
+                data.push(trace);
+            }
+            return { data, traces, samples };
+        }
+
+        function drawSeismic() {
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Clear
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw time grid
+            ctx.strokeStyle = '#1a1a25';
+            ctx.lineWidth = 1;
+            for (let y = 0; y < height; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+            for (let x = 0; x < width; x += 60) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+
+            // Generate and draw seismic
+            const { data, traces, samples } = generateSeismicData();
+            const traceWidth = width / traces;
+            const sampleHeight = height / samples;
+
+            // Wigmets color scale
+            const posColor = '#d4af37';
+            const negColor = '#3b82f6';
+            const bgColor = '#0a0a0f';
+
+            for (let t = 0; t < traces; t++) {
+                const x = t * traceWidth;
+                for (let s = 0; s < samples - 1; s++) {
+                    const amp = data[t][s];
+                    const ampNext = data[t][s + 1];
+                    const y1 = s * sampleHeight;
+                    const y2 = (s + 1) * sampleHeight;
+
+                    if (amp >= 0) {
+                        ctx.strokeStyle = posColor;
+                        ctx.globalAlpha = Math.min(1, amp * 1.5);
+                    } else {
+                        ctx.strokeStyle = negColor;
+                        ctx.globalAlpha = Math.min(1, Math.abs(amp) * 1.5);
+                    }
+                    ctx.lineWidth = Math.max(0.5, Math.abs(amp) * 1.5);
+                    ctx.beginPath();
+                    ctx.moveTo(x, y1);
+                    ctx.lineTo(x + traceWidth * 0.8, y2);
+                    ctx.stroke();
+                }
+            }
+            ctx.globalAlpha = 1;
+
+            // Draw horizon overlay
+            if (state.horizonOverlay) {
+                const horizons = [
+                    { y: 0.30, color: '#00d4aa', label: 'Horizon A' },
+                    { y: 0.55, color: '#d4af37', label: 'Horizon B' },
+                    { y: 0.72, color: '#ff4757', label: 'Horizon C' }
+                ];
+
+                horizons.forEach(h => {
+                    const yPos = h.y * height;
+                    ctx.strokeStyle = h.color;
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(0, yPos);
+                    ctx.lineTo(width, yPos);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Label
+                    ctx.fillStyle = h.color;
+                    ctx.font = '10px sans-serif';
+                    ctx.fillText(h.label, 8, yPos - 4);
+                });
+            }
+
+            // Scale bar
+            ctx.fillStyle = '#9090a0';
+            ctx.font = '10px sans-serif';
+            ctx.fillText('0 ms', 5, height - 5);
+            ctx.fillText('4000 ms', 5, 15);
+        }
+
+        // MCP Bridge - emit events to host
+        const bridge = {
+            emit(method, params = {}) {
+                const event = {
+                    jsonrpc: '2.0',
+                    method,
+                    params,
+                    timestamp: new Date().toISOString(),
+                    _geoxt: true
+                };
+                if (window.parent !== window) {
+                    window.parent.postMessage(event, '*');
+                }
+                console.log('[GEOX SeismicViewer]', method, params);
+            }
+        };
+
+        // Initialize
+        bridge.emit('app.initialize', {
+            app_id: 'geox.seismic.viewer',
+            version: '0.1.0',
+            claim_tag: 'OBSERVED',
+            domain: 'subsurface'
+        });
+
+        // Event handlers
+        document.getElementById('loadBtn').addEventListener('click', () => {
+            const lineId = document.getElementById('lineId').value;
+            state.lineId = lineId;
+            bridge.emit('tool.request', {
+                tool: 'mcp.geox.geox_seismic_load_line',
+                args: { line_id: lineId }
+            });
+            resizeCanvas();
+        });
+
+        document.getElementById('inlineInput').addEventListener('change', (e) => {
+            state.inline = parseInt(e.target.value) || 0;
+            document.getElementById('overlayInline').textContent = state.inline;
+            document.getElementById('infoInline').textContent = state.inline;
+            bridge.emit('ui.state.change', { inline: state.inline });
+        });
+
+        document.getElementById('crosslineInput').addEventListener('change', (e) => {
+            state.crossline = parseInt(e.target.value) || 0;
+            document.getElementById('overlayXline').textContent = state.crossline;
+            document.getElementById('infoXline').textContent = state.crossline;
+            bridge.emit('ui.state.change', { crossline: state.crossline });
+        });
+
+        document.querySelectorAll('.attr-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.attr-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                state.attribute = item.dataset.attr;
+                bridge.emit('attribute.change', { attribute: state.attribute });
+            });
+        });
+
+        document.querySelectorAll('.horizon-item input').forEach(cb => {
+            cb.addEventListener('change', () => {
+                state.horizonOverlay = cb.checked;
+                drawSeismic();
+            });
+        });
+
+        document.getElementById('timeBtn').addEventListener('click', () => {
+            state.depthMode = 'time';
+            document.getElementById('timeBtn').classList.add('active');
+            document.getElementById('depthBtn').classList.remove('active');
+        });
+
+        document.getElementById('depthBtn').addEventListener('click', () => {
+            state.depthMode = 'depth';
+            document.getElementById('depthBtn').classList.add('active');
+            document.getElementById('timeBtn').classList.remove('active');
+        });
+
+        document.getElementById('runAcRiskBtn').addEventListener('click', () => {
+            bridge.emit('tool.request', {
+                tool: 'mcp.arifos.arifos_compute_risk',
+                args: {
+                    u_ambiguity: 0.08,
+                    transform_stack: ['load_seismic', 'display_slice'],
+                    bias_scenario: 'seismic_interpretation'
+                }
+            });
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            bridge.emit('ui.action', { action: 'export_seismic_section' });
+        });
+
+        document.getElementById('saveHorizonBtn').addEventListener('click', () => {
+            bridge.emit('ui.action', { action: 'save_horizon', horizon: 'current' });
+        });
+
+        document.getElementById('syncBtn').addEventListener('click', () => {
+            bridge.emit('ui.state.sync', {
+                app_id: 'geox.seismic.viewer',
+                inline: state.inline,
+                crossline: state.crossline,
+                attribute: state.attribute,
+                claim_tag: 'OBSERVED'
+            });
+        });
+
+        document.getElementById('prevInlineBtn').addEventListener('click', () => {
+            state.inline = Math.max(0, state.inline - 100);
+            document.getElementById('inlineInput').value = state.inline;
+            document.getElementById('overlayInline').textContent = state.inline;
+            document.getElementById('infoInline').textContent = state.inline;
+            bridge.emit('ui.state.change', { inline: state.inline });
+            drawSeismic();
+        });
+
+        document.getElementById('nextInlineBtn').addEventListener('click', () => {
+            state.inline += 100;
+            document.getElementById('inlineInput').value = state.inline;
+            document.getElementById('overlayInline').textContent = state.inline;
+            document.getElementById('infoInline').textContent = state.inline;
+            bridge.emit('ui.state.change', { inline: state.inline });
+            drawSeismic();
+        });
+
+        document.getElementById('zoomInBtn').addEventListener('click', () => {
+            state.zoom = Math.min(3, state.zoom + 0.2);
+            drawSeismic();
+        });
+
+        document.getElementById('zoomOutBtn').addEventListener('click', () => {
+            state.zoom = Math.max(0.5, state.zoom - 0.2);
+            drawSeismic();
+        });
+
+        // Initial draw
+        resizeCanvas();
+
+        console.log('🌊 GEOX Seismic Viewer v0.1 — First Visual Earth Organ initialized');
+        console.log('   DITEMPA BUKAN DIBERI — 999 SEAL ALIVE');
+    </script>
+</body>
+</html>

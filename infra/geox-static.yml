@@ -12,6 +12,10 @@ http:
       rule: "Host(`geox.arif-fazil.com`) && PathPrefix(`/health`)"
       service: geox-mcp-svc
       tls: {}
+    geox-mcp-apps:
+      rule: "Host(`geox.arif-fazil.com`) && PathPrefix(`/mcp-apps`)"
+      service: geox-mcp-apps-svc
+      tls: {}
   services:
     geox-gui-svc:
       loadBalancer:
@@ -21,3 +25,24 @@ http:
       loadBalancer:
         servers:
           - url: "http://172.20.0.2:8000"
+    geox-mcp-apps-svc:
+      loadBalancer:
+        servers:
+          - url: "http://172.20.0.2:8081"
+  middlewares:
+    geox-csp:
+      headers:
+        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://geox.arif-fazil.com"
+        secureHeaders: {}
+
+tcp:
+  routers:
+    geox-mcp-tcp:
+      rule: "HostSNI(`*`)"
+      service: geox-mcp-tcp-svc
+      tls: {}
+  services:
+    geox-mcp-tcp-svc:
+      loadBalancer:
+        servers:
+          - url: "http://172.20.0.2:8081"

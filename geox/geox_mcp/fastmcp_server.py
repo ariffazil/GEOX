@@ -43,6 +43,13 @@ from geox.geox_mcp.tools.visualization import (
     geox_render_volume_slice_tool,
 )
 from geox.geox_mcp.tools.volumetrics_tool import geox_compute_volume_probabilistic_tool
+from geox.skills.earth_science.seismic_wrappers import (
+    seismic_load_volume,
+    seismic_compute_attribute,
+    seismic_render_volume_slice,
+    ClaimTag,
+)
+from geox.telemetry.geox_telemetry import telemetry_emit, get_telemetry_emitter
 
 portfolio_tracker = PortfolioTracker()
 
@@ -118,6 +125,114 @@ def geox_health() -> str:
             "service": "geox-mcp",
             "version": "0.1.0",
             "seal": "DITEMPA BUKAN DIBERI",
+            "capabilities": {
+                "io.modelcontextprotocol/ui": {
+                    "enabled": True,
+                    "apps": [
+                        {
+                            "uri": "ui://geox_seismic_viewer",
+                            "app_id": "geox.seismic.viewer",
+                            "version": "0.1.0",
+                        },
+                        {
+                            "uri": "ui://ac_risk",
+                            "app_id": "geox.ac_risk.console",
+                            "version": "1.0.0",
+                        },
+                        {
+                            "uri": "ui://attribute_audit",
+                            "app_id": "geox.attribute.audit",
+                            "version": "1.0.0",
+                        },
+                        {
+                            "uri": "ui://seismic_vision_review",
+                            "app_id": "geox.seismic.vision.review",
+                            "version": "0.5.0",
+                        },
+                        {
+                            "uri": "ui://georeference_map",
+                            "app_id": "geox.georeference.map",
+                            "version": "1.0.0",
+                        },
+                        {
+                            "uri": "ui://analog_digitizer",
+                            "app_id": "geox.analog.digitizer",
+                            "version": "1.0.0",
+                        },
+                    ],
+                    "host_path": "/srv/mcp/apps/",
+                    "protocol": "inline-or-external",
+                    "events": [
+                        "app.initialize",
+                        "app.state.sync",
+                        "tool.request",
+                        "tool.result",
+                        "ui.action",
+                    ],
+                }
+            },
+        }
+    )
+
+
+@mcp.resource("geox://capabilities")
+def geox_capabilities() -> str:
+    """GEOX MCP server capabilities advertisement — arifOS MCP Apps plane integration."""
+    return json.dumps(
+        {
+            "organ": "GEOX",
+            "domain": "subsurface/earth_intelligence",
+            "version": "0.1.0",
+            "capabilities": {
+                "io.modelcontextprotocol/ui": {
+                    "enabled": True,
+                    "advertised": True,
+                    "apps": [
+                        {
+                            "uri": "ui://geox_seismic_viewer",
+                            "app_id": "geox.seismic.viewer",
+                            "version": "0.1.0",
+                            "domain": "subsurface",
+                        },
+                        {
+                            "uri": "ui://ac_risk",
+                            "app_id": "geox.ac_risk.console",
+                            "version": "1.0.0",
+                            "domain": "governance",
+                        },
+                    ],
+                },
+                "seismic_tools": {
+                    "geox_seismic_load_volume": {"segy_path": True, "volume_id": True},
+                    "geox_seismic_compute_attribute": {
+                        "attribute": [
+                            "amplitude",
+                            "variance",
+                            "sweetness",
+                            "coherence",
+                            "envelope",
+                            "freq_avg",
+                        ]
+                    },
+                    "geox_seismic_render_slice": {"orientation": ["inline", "crossline", "time"]},
+                },
+                "well_tools": {
+                    "geox_well_load_bundle": {"las_path": True},
+                    "geox_well_compute_petrophysics": {
+                        "saturation_model": ["Archie", "Indonesia", "Simandoux"]
+                    },
+                },
+                "arifos_routing": {
+                    "arifos_check_hold": True,
+                    "arifos_compute_risk": True,
+                    "arifos_judge_prospect": True,
+                },
+            },
+            "arifos_integration": {
+                "vault_route": "VAULT999",
+                "human_in_loop": ["export_data", "modify_production", "petrophysics_export"],
+                "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+            },
         }
     )
 
@@ -202,6 +317,16 @@ def ui_analog_digitizer() -> str:
         with open(app_html) as f:
             return f.read()
     return json.dumps({"error": "Analog Digitizer UI not found"})
+
+
+@mcp.resource("ui://geox_seismic_viewer")
+def ui_geox_seismic_viewer() -> str:
+    """GEOX Seismic Viewer v0.1 — First Visual Earth Organ."""
+    app_html = APPS_PATH / "geox-seismic-viewer" / "public" / "index.html"
+    if app_html.exists():
+        with open(app_html) as f:
+            return f.read()
+    return json.dumps({"error": "geox-seismic-viewer not found"})
 
 
 # =============================================================================
@@ -635,6 +760,186 @@ def geox_earth3d_load_volume(volume_id: str) -> dict:
             volume=volume, orientation="inline", slice_index=0
         ),
     }
+
+
+@mcp.tool()
+def geox_seismic_load_volume(
+    volume_id: str,
+    segy_path: Optional[str] = None,
+    inline_axis: int = 0,
+    crossline_axis: int = 1,
+    sample_axis: int = 2,
+) -> dict:
+    """
+    Load a SEG-Y volume via segyio and launch the GEOX Seismic Viewer MCP App.
+
+    This is the primary ingestion tool for seismic data. When called, it:
+      1. Ingest SEG-Y via segyio (or scaffold fixture if no file)
+      2. Index inline/crossline/sample dimensions
+      3. Enforce PhysicsGuard bounds
+      4. Emit VAULT999 receipt
+      5. Return ui/resourceUri to trigger geox-seismic-viewer
+
+    Args:
+        volume_id: Volume identifier for the session.
+        segy_path: Optional path to SEG-Y file. If omitted, uses scaffold fixture.
+        inline_axis: Axis index for inline dimension (default 0).
+        crossline_axis: Axis index for crossline dimension (default 1).
+        sample_axis: Axis index for time/depth sample dimension (default 2).
+
+    Returns:
+        Canonical GEOX schema with ui/resourceUri:
+            {
+              "volume_id": str,
+              "claim_tag": "OBSERVED",
+              "shape": [il, xl, samples],
+              "inline_range": [min, max],
+              "crossline_range": [min, max],
+              "sample_range": [min, max],
+              "trace_count": int,
+              "ui": {"resourceUri": "ui://geox_seismic_viewer"},
+              "vault_receipt": VAULT999,
+              "render_payload": dict
+            }
+    """
+    result = seismic_load_volume(
+        segy_path=segy_path,
+        volume_id=volume_id,
+        inline_axis=inline_axis,
+        crossline_axis=crossline_axis,
+        sample_axis=sample_axis,
+        memory_map=True,
+    )
+
+    result["ui"] = {
+        "resourceUri": "ui://geox_seismic_viewer",
+        "mode": "inline-or-external",
+        "app_id": "geox.seismic.viewer",
+        "version": "0.1.0",
+    }
+    result["verdict"] = result.get("vault_receipt", {}).get("verdict", "SEAL")
+    result["_telemetry"] = telemetry_emit(
+        event_type="seismic_result",
+        volume_id=volume_id,
+        attribute="amplitude",
+        claim_tag=result.get("claim_tag", "OBSERVED"),
+    )
+    return result
+
+
+@mcp.tool()
+def geox_seismic_compute_attribute(
+    volume_id: str,
+    attribute: str = "amplitude",
+    inline: Optional[int] = None,
+    crossline: Optional[int] = None,
+) -> dict:
+    """
+    Compute seismic attribute via bruges and update the GEOX Seismic Viewer.
+
+    Supported attributes: amplitude, variance, sweetness, coherence, envelope, freq_avg.
+
+    When called, it:
+      1. Extract slice via pyvista (or scaffold)
+      2. Compute attribute via bruges
+      3. Enforce PhysicsGuard bounds
+      4. Emit VAULT999 receipt
+      5. Return ui/resourceUri with render_payload for color mapping
+
+    Args:
+        volume_id: Volume identifier.
+        attribute: Attribute name (default amplitude).
+        inline: Specific inline to extract (optional).
+        crossline: Specific crossline to extract (optional).
+
+    Returns:
+        Canonical GEOX schema with ui/resourceUri and render_payload:
+            {
+              "volume_id": str,
+              "attribute": str,
+              "claim_tag": "COMPUTED",
+              "shape": [nx, ny],
+              "value_range": [min, max],
+              "stats": {"mean", "std", "p10", "p90"},
+              "ui": {"resourceUri": "ui://geox_seismic_viewer"},
+              "vault_receipt": VAULT999,
+              "render_payload": {
+                "type": "attribute_slice",
+                "attribute": str,
+                "color_map": str,
+                "value_range": [min, max],
+                "claim_tag": "COMPUTED"
+              }
+            }
+    """
+    result = seismic_compute_attribute(
+        volume_id=volume_id,
+        attribute=attribute,
+        inline=inline,
+        crossline=crossline,
+        slice_data=None,
+    )
+
+    result["ui"] = {
+        "resourceUri": "ui://geox_seismic_viewer",
+        "mode": "inline-or-external",
+        "app_id": "geox.seismic.viewer",
+        "version": "0.1.0",
+        "event": "attribute.change",
+        "params": {"attribute": attribute},
+    }
+    result["verdict"] = result.get("vault_receipt", {}).get("verdict", "SEAL")
+    result["_telemetry"] = telemetry_emit(
+        event_type="seismic_result",
+        volume_id=volume_id,
+        attribute=attribute,
+        claim_tag=result.get("claim_tag", "COMPUTED"),
+    )
+    return result
+
+
+@mcp.tool()
+def geox_seismic_render_slice(
+    volume_id: str,
+    orientation: str = "inline",
+    slice_index: int = 0,
+    attribute: Optional[str] = None,
+) -> dict:
+    """
+    Extract and render a 2D slice from a 3D volume via pyvista.
+
+    Args:
+        volume_id: Volume identifier.
+        orientation: "inline", "crossline", or "time".
+        slice_index: Slice number along the chosen axis.
+        attribute: Optional attribute to render on the slice.
+
+    Returns:
+        Canonical GEOX schema with ui/resourceUri for 3D slice display.
+    """
+    result = seismic_render_volume_slice(
+        volume_id=volume_id,
+        orientation=orientation,
+        slice_index=slice_index,
+        attribute=attribute,
+    )
+
+    result["ui"] = {
+        "resourceUri": "ui://geox_seismic_viewer",
+        "mode": "inline-or-external",
+        "app_id": "geox.seismic.viewer",
+        "version": "0.1.0",
+        "event": "seismic.slice.change",
+        "params": {"orientation": orientation, "slice_index": slice_index},
+    }
+    result["verdict"] = result.get("vault_receipt", {}).get("verdict", "SEAL")
+    result["_telemetry"] = telemetry_emit(
+        event_type="seismic_result",
+        volume_id=volume_id,
+        attribute=attribute or "amplitude",
+        claim_tag=result.get("claim_tag", "COMPUTED"),
+    )
+    return result
 
 
 @mcp.tool()
