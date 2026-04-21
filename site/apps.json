@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "schema": "geox-app-registry/v1",
+    "generated_at": "2026-04-15T10:00:00Z",
+    "authority": "GEOX Sovereign Surface",
+    "seal": "DITEMPA BUKAN DIBERI"
+  },
+  "statuses": {
+    "LIVE": "Usable now with tested or clearly exposed functionality.",
+    "PREVIEW": "Visible and informative, but not yet production-complete.",
+    "SCAFFOLD": "Public shell exists, but the workflow is still thin or mocked.",
+    "PLANNED": "Documented only; not yet available as a working operator surface."
+  },
+  "apps": [
+    {
+      "id": "arifos-kernel",
+      "title": "arifOS Metabolic Kernel",
+      "status": "LIVE",
+      "grade": "v0.1-Sovereign",
+      "route": "/theory/REPLY_PROTOCOL.md",
+      "summary": "The 000-999 metabolic orchestrator and constitutional state machine.",
+      "dimensions": ["governance", "metabolism", "sovereignty"],
+      "evidence": ["src/engine/ArifOSKernel.ts"],
+      "notes": "Metabolic loop active. F13 Sovereign gate enforced."
+    },
+    {
+      "id": "basin-explorer",
+      "title": "Basin Map Explorer (Prospect Forge)",
+      "status": "LIVE",
+      "grade": "AAA",
+      "route": "/apps/prospect-ui/",
+      "summary": "The flagship decision cockpit for prospect maturation. Integrates Georeferencing, B_cog Bias Referee, and Governed Verdicts.",
+      "dimensions": ["map", "prospect", "governance"],
+      "evidence": ["contracts/tools/map.py", "geox/core/bias_detector.py", "contracts/tools/prospect.py"],
+      "notes": "Unified surface: Georeferencing now folded into Basin context. F2 Truth and F7 Humility enforced."
+    },
+    {
+      "id": "well-desk",
+      "title": "Well & Document Context Desk",
+      "status": "LIVE",
+      "grade": "AAA",
+      "route": "/apps/well-desk/",
+      "summary": "Integrated well data browser with petrophysical ToAC audit and document intelligence.",
+      "dimensions": ["well", "physics", "memory"],
+      "evidence": ["contracts/tools/well.py", "geox/mcp/server.py"],
+      "notes": "Full audit level active. Routed to 999_VAULT."
+    },
+    {
+      "id": "wealth-judge",
+      "title": "Capital Judge (WEALTH)",
+      "status": "PREVIEW",
+      "grade": "v1.3.1",
+      "route": "/WEALTH/apps/capital-judge/",
+      "summary": "Sovereign Capital Allocation Cockpit. Bridges Earth Truth to Capital Consequence using the CapitalX Engine.",
+      "dimensions": ["finance", "allocation", "sovereignty"],
+      "evidence": ["WEALTH/server.py", "contracts/bridge/earth_to_capital.py"],
+      "notes": "Sovereign peer app. Integrates 888_HOLD for leverage and dignity breaches."
+    },
+    {
+      "id": "seismic-review",
+      "title": "Seismic Vision Review",
+      "status": "PREVIEW",
+      "grade": "AAA-Prototype",
+      "route": "/apps/seismic-review/",
+      "summary": "Governed seismic interpretation with VLM integration and active falsification probes.",
+      "dimensions": ["section", "physics", "vision"],
+      "evidence": ["contracts/tools/section.py"],
+      "notes": "Now supports REJECTED status for physically impossible interpretations."
+    },
+    {
+      "id": "ac-risk",
+      "title": "AC_Risk Console",
+      "status": "LIVE",
+      "route": "/apps/ac-risk/",
+      "summary": "Stand-alone evaluation of anomalous contrast risk across physical and cognitive domains.",
+      "dimensions": ["physics", "governance"],
+      "evidence": ["geox/core/ac_risk.py"],
+      "notes": "Core logic now integrated into Basin Explorer and Well Desk."
+    },
+    {
+      "id": "analog-digitizer",
+      "title": "Analog Digitizer",
+      "status": "SCAFFOLD",
+      "route": "/apps/analog-digitizer/",
+      "summary": "Workflow for tracing analog logs into governed digital outputs. Design spike complete.",
+      "dimensions": ["well", "digitization"],
+      "evidence": ["contracts/tools/well.py"],
+      "notes": "Pipeline defined: Preprocess -> Neural Interpretation -> Vectorization -> LAS Export."
+    }
+  ]
+}

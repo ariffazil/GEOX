@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta charset="UTF-8">
+    <meta name="description" content="GEOX — Governed geoscience and earth physics intelligence under arifOS constitutional floors.">
+    <link rel="canonical" href="https://geox.arif-fazil.com/viewer/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX — Petrophysics & RATLAS · arifOS</title>
+    <link rel="stylesheet" href="../css/geox-platform.css?v=20260421d">
+    <style>
+        .viewer-hero { 
+            padding: 4rem 0; 
+            margin-bottom: 2rem; 
+        }
+        .viewer-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 2rem; 
+            margin-bottom: 4rem;
+        }
+        .viewer-card { 
+            background: rgba(10, 10, 10, 0.8); 
+            border: 1px solid var(--border-color); 
+            padding: 2rem; 
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .viewer-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(194, 164, 106, 0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .viewer-card:hover { 
+            border-color: var(--earth-gold); 
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(194, 164, 106, 0.1);
+        }
+        .viewer-card:hover::before {
+            opacity: 1;
+        }
+        .viewer-card h3 { 
+            margin-bottom: 1rem; 
+            color: var(--text-color); 
+            font-size: 1.25rem;
+        }
+        .viewer-card p { 
+            color: var(--muted-color); 
+            font-size: 0.9rem; 
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .tag { 
+            font-family: var(--font-mono);
+            font-size: 0.65rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.08em; 
+            padding: 0.25rem 0.6rem; 
+            border: 1px solid rgba(194, 164, 106, 0.2);
+            background: rgba(194, 164, 106, 0.05); 
+            color: var(--earth-gold); 
+        }
+        .card-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- GEOX Site Header -->
+<header class="site-header">
+    <div class="container site-header-inner">
+        <a href="/" class="site-wordmark">GEOX <span>// AF-FORGE</span></a>
+        <nav class="nav-links">
+            <a href="/">Overview</a>
+            <a href="/apps/">Apps</a>
+            <a href="/map/">Map</a>
+            <a href="/viewer/" class="active">Viewer</a>
+            <a href="/cockpit/">Cockpit</a>
+            <a href="/tools/">Tools</a>
+            <a href="/theory/">Theory</a>
+            <a href="/docs/">Docs</a>
+            <a href="/status/">Status</a>
+            <a href="/wiki/">Wiki</a>
+        </nav>
+    </div>
+</header>
+<!-- System strip -->
+<div class="system-strip">
+    <div class="container strip-inner">
+        <div class="strip-left"><span class="live-dot"></span><span>GEOX</span></div>
+        <div class="strip-mid">VAULT_999_CONNECTED</div>
+    </div>
+</div>
+
+    <div class="container">
+                
+
+        <section class="viewer-hero">
+            <div class="hero-kicker">Subsurface Evidence Layer</div>
+            <h1>Petrophysics & Earth Materials</h1>
+            <p class="section-lead">
+                Calibrated subsurface interpretation requires a commitment to physical truth. 
+                Browse well logs, correlate zones, and explore canonical material responses 
+                under arifOS constitutional governance.
+            </p>
+        </section>
+
+        <div class="viewer-grid">
+            <div class="viewer-card">
+                <div>
+                    <div class="status-chip status-live" style="margin-bottom: 1rem;"><span class="status-dot"></span> LIVE</div>
+                    <h3>Well Log Viewer</h3>
+                    <p>Interactive multi-track display for Well 15/9-19 Q15. Includes 23 curves with DAK-derived structural dip and petrophysical decomposition.</p>
+                    <div class="tag-group">
+                        <span class="tag">Real Data</span>
+                        <span class="tag">Multi-Track</span>
+                        <span class="tag">Dip Viewer</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="geox_well_viewer.html" class="btn btn-sm">Open Viewer →</a>
+                </div>
+            </div>
+
+            <div class="viewer-card">
+                <div>
+                    <div class="status-chip status-live" style="margin-bottom: 1rem;"><span class="status-dot"></span> LIVE</div>
+                    <h3>Upload & Interpret LAS</h3>
+                    <p>Evidence-first LAS interpreter. GEOX returns zone summaries, derived curves, and a constitutional verdict across F1–F13 floors.</p>
+                    <div class="tag-group">
+                        <span class="tag">AI Reasoning</span>
+                        <span class="tag">Zone Triage</span>
+                        <span class="tag">Audit Chain</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="interpret.html" class="btn btn-sm">Open Interpreter →</a>
+                </div>
+            </div>
+
+            <div class="viewer-card">
+                <div>
+                    <div class="status-chip status-live" style="margin-bottom: 1rem;"><span class="status-dot"></span> LIVE</div>
+                    <h3>RATLAS Reference</h3>
+                    <p>The Reference Atlas of Earth Materials. 99 canonical material states across 11 families with triple-combo responses and symbolic tokens.</p>
+                    <div class="tag-group">
+                        <span class="tag">Physics Canon</span>
+                        <span class="tag">99 States</span>
+                        <span class="tag">Materials Wiki</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="geox_ratlas.html" class="btn btn-sm">Open RATLAS →</a>
+                    <a href="geox_atlas_99_materials.csv" class="btn btn-sm" style="border-color: var(--muted-color);">CSV ↓</a>
+                </div>
+            </div>
+
+            <div class="viewer-card">
+                <div>
+                    <div class="status-chip status-preview" style="margin-bottom: 1rem;"><span class="status-dot"></span> DATASET</div>
+                    <h3>Sample Evidence</h3>
+                    <p>Verified subsurface datasets for testing and calibration, including Q15 real interpretation and the synthetic ERMAI-killer suite.</p>
+                    <div class="tag-group">
+                        <span class="tag">LAS 2.0</span>
+                        <span class="tag">Benchmarks</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="q15_dak_petro.las" class="btn btn-sm">Q15 LAS ↓</a>
+                    <a href="synthetic_ermai_killer.las" class="btn btn-sm">ERMAI ↓</a>
+                </div>
+            </div>
+        </div>
+
+                <footer>
+            <div class="governance">DITEMPA BUKAN DIBERI</div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 2rem;">
+                <div>
+                    <p>&copy; 2026 GEOX — Dimension-Native Earth Intelligence</p>
+                    <p class="mono">VER: 1.0.0-FORGE</p>
+                </div>
+                <div class="mono" style="text-align: right;">
+                    <a href="/status/" style="color: var(--muted-color); font-size: 0.7rem;">SYSTEM_STATUS: [LIVE]</a>
+                    <br>
+                    <a href="https://github.com/ariffazil/GEOX" style="color: var(--muted-color); font-size: 0.7rem;" target="_blank" rel="noopener">SOURCE: GitHub</a>
+                </div>
+            </div>
+            <div class="constellation-footer" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.7rem; color: var(--muted-color); display: flex; gap: 1rem; flex-wrap: wrap;">
+                <span>CONSTELLATION:</span>
+                <a href="https://soul.arif-fazil.com" style="color: inherit;">SOUL</a>
+                <a href="https://mind.arif-fazil.com" style="color: inherit;">MIND</a>
+                <a href="https://body.arif-fazil.com" style="color: inherit;">BODY</a>
+                <a href="https://mcp.arif-fazil.com" style="color: inherit;">KERNEL</a>
+                <a href="https://aaa.arif-fazil.com" style="color: inherit;">FORGE</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

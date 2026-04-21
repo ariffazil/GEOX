@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://geox.arif-fazil.com/apps/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX — Apps Registry · arifOS</title>
+    <meta name="description" content="GEOX — Governed geoscience and earth physics intelligence under arifOS constitutional floors.">
+    <link rel="stylesheet" href="../css/geox-platform.css?v=20260421d">
+    <style>
+        .registry-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+        .registry-meta code {
+            color: var(--text-color);
+        }
+        .app-card .app-route {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--muted-color);
+            margin-bottom: 0.75rem;
+        }
+        .app-card ul {
+            padding-left: 1.2rem;
+            margin-bottom: 1.25rem;
+            color: var(--muted-color);
+        }
+        .app-card li {
+            margin-bottom: 0.35rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- GEOX Site Header -->
+<header class="site-header">
+    <div class="container site-header-inner">
+        <a href="/" class="site-wordmark">GEOX <span>// AF-FORGE</span></a>
+        <nav class="nav-links">
+            <a href="/">Overview</a>
+            <a href="/apps/" class="active">Apps</a>
+            <a href="/map/">Map</a>
+            <a href="/viewer/">Viewer</a>
+            <a href="/cockpit/">Cockpit</a>
+            <a href="/tools/">Tools</a>
+            <a href="/theory/">Theory</a>
+            <a href="/docs/">Docs</a>
+            <a href="/status/">Status</a>
+            <a href="/wiki/">Wiki</a>
+        </nav>
+    </div>
+</header>
+<!-- System strip -->
+<div class="system-strip">
+    <div class="container strip-inner">
+        <div class="strip-left"><span class="live-dot"></span><span>GEOX</span></div>
+        <div class="strip-mid">VAULT_999_CONNECTED</div>
+    </div>
+</div>
+
+    <div class="container">
+                                
+
+        <section class="hero">
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <h1>Operator apps</h1>
+                    <p>One truthful registry for GEOX app discovery.</p>
+                    <p class="section-lead">
+                        This page renders from <code>/apps.json</code>. Each card exposes the current capability
+                        state so product discoverability does not drift away from runtime truth.
+                    </p>
+                    <div class="cta-group">
+                        <a href="/apps.json" class="btn">Open apps.json</a>
+                        <a href="/tools/" class="btn">Machine interface</a>
+                    </div>
+                </div>
+                <div class="earth-visual" aria-hidden="true">
+                    <div class="earth-orb">
+                        <div class="earth-ring"></div>
+                        <div class="earth-ring ring-2"></div>
+                        <div class="earth-latitude"></div>
+                        <div class="earth-longitude"></div>
+                        <div class="earth-contour"></div>
+                        <div class="earth-scanline"></div>
+                        <div class="earth-marker marker-1"></div>
+                        <div class="earth-marker marker-2"></div>
+                        <div class="earth-marker marker-3"></div>
+                    </div>
+                    <div class="earth-caption">
+                        <h3>Registry across the earth layer</h3>
+                        <p>Maps, interpretation, and operator tooling now read as one GEOX surface.</p>
+                        <div class="earth-meta">
+                            <span>Registry</span>
+                            <span>Map-ready</span>
+                            <span>Operator UX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Status taxonomy</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="status-chip status-live"><span class="status-dot"></span> LIVE</span></td><td>Usable now with tested or clearly exposed functionality.</td></tr>
+                    <tr><td><span class="status-chip status-preview"><span class="status-dot"></span> PREVIEW</span></td><td>Visible and informative, but not yet production-complete.</td></tr>
+                    <tr><td><span class="status-chip status-scaffold"><span class="status-dot"></span> SCAFFOLD</span></td><td>Public shell exists, but the workflow is still thin or mocked.</td></tr>
+                    <tr><td><span class="status-chip status-planned"><span class="status-dot"></span> PLANNED</span></td><td>Documented only; not yet available as a working operator surface.</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <div class="registry-meta">
+                <div class="callout"><strong>Authority:</strong> GEOX public surface</div>
+                <div class="callout"><strong>Source:</strong> <code>/apps.json</code></div>
+                <div class="callout"><strong>Seal:</strong> DITEMPA BUKAN DIBERI</div>
+            </div>
+            <div class="grid" id="apps-grid">
+                <div class="card">Loading app registry...</div>
+            </div>
+        </section>
+
+                                <footer>
+            <div class="governance">DITEMPA BUKAN DIBERI</div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 2rem;">
+                <div>
+                    <p>&copy; 2026 GEOX — Dimension-Native Earth Intelligence</p>
+                    <p class="mono">VER: 1.0.0-FORGE</p>
+                </div>
+                <div class="mono" style="text-align: right;">
+                    <a href="/status/" style="color: var(--muted-color); font-size: 0.7rem;">SYSTEM_STATUS: [LIVE]</a>
+                    <br>
+                    <a href="https://github.com/ariffazil/GEOX" style="color: var(--muted-color); font-size: 0.7rem;" target="_blank" rel="noopener">SOURCE: GitHub</a>
+                </div>
+            </div>
+            <div class="constellation-footer" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.7rem; color: var(--muted-color); display: flex; gap: 1rem; flex-wrap: wrap;">
+                <span>CONSTELLATION:</span>
+                <a href="https://soul.arif-fazil.com" style="color: inherit;">SOUL</a>
+                <a href="https://mind.arif-fazil.com" style="color: inherit;">MIND</a>
+                <a href="https://body.arif-fazil.com" style="color: inherit;">BODY</a>
+                <a href="https://mcp.arif-fazil.com" style="color: inherit;">KERNEL</a>
+                <a href="https://aaa.arif-fazil.com" style="color: inherit;">FORGE</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const chipClass = {
+            LIVE: "status-live",
+            PREVIEW: "status-preview",
+            SCAFFOLD: "status-scaffold",
+            PLANNED: "status-planned"
+        };
+
+        fetch("/apps.json")
+            .then((response) => response.json())
+            .then((registry) => {
+                const grid = document.getElementById("apps-grid");
+                grid.innerHTML = registry.apps.map((app) => `
+                    <article class="card app-card">
+                        <div class="status-chip ${chipClass[app.status] || "status-not-public"}" style="margin-bottom: 1rem;">
+                            <span class="status-dot"></span> ${app.status}
+                        </div>
+                        <h3>${app.title}</h3>
+                        <div class="app-route">${app.route}</div>
+                        <p>${app.summary}</p>
+                        <ul>
+                            <li><strong>Dimensions:</strong> ${app.dimensions.join(", ")}</li>
+                            <li><strong>Evidence:</strong> ${app.evidence.length ? app.evidence.join(", ") : "Architecture only"}</li>
+                            <li><strong>Note:</strong> ${app.notes}</li>
+                        </ul>
+                        <a href="${app.route}" class="btn">Open surface</a>
+                    </article>
+                `).join("");
+            })
+            .catch(() => {
+                document.getElementById("apps-grid").innerHTML = `
+                    <div class="card">
+                        <div class="status-chip status-partial" style="margin-bottom: 1rem;"><span class="status-dot"></span> REGISTRY_ERROR</div>
+                        <h3>App registry unavailable</h3>
+                        <p>The site could not load <code>/apps.json</code>. Route truth cannot be guaranteed until the registry is available.</p>
+                    </div>
+                `;
+            });
+    </script>
+</body>
+</html>

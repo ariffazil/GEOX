@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta charset="UTF-8">
+    <meta name="description" content="GEOX — Governed geoscience and earth physics intelligence under arifOS constitutional floors.">
+    <link rel="canonical" href="https://geox.arif-fazil.com/viewer/geox_well_viewer.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX — 15/9-19 Q15 North Sea · arifOS</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --bg: #0f0d0a;
+            --panel: #1c1710;
+            --track-bg: #141009;
+            --border: #3d3018;
+            --ochre: #c4791a;
+            --gold: #d4a843;
+            --teal: #4a9e8e;
+            --clay: #b5542a;
+            --sage: #8aab86;
+            --text: #e0d4c0;
+            --muted: #8a7a60;
+            --cream: #f0e6d3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ---- SITE NAV (self-contained, no external theme dep) ---- */
+        .site-nav {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            font-size: 0.72rem;
+        }
+        .site-nav .brand {
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+        }
+        .site-nav nav { display: flex; gap: 0; }
+        .site-nav nav a {
+            padding: 4px 10px;
+            color: var(--muted);
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 3px;
+            transition: color 0.15s;
+        }
+        .site-nav nav a:hover { color: var(--cream); }
+        .site-nav nav a.active { color: var(--ochre); }
+
+        /* ---- TOP BAR ---- */
+        .topbar {
+            background: linear-gradient(180deg, var(--panel) 0%, var(--bg) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            gap: 16px;
+        }
+
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+
+        .geox-tag {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: var(--ochre);
+            color: var(--bg);
+            padding: 4px 10px;
+            border-radius: 3px;
+        }
+
+        .well-id {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--cream);
+        }
+        .well-id small {
+            font-size: 0.7rem;
+            color: var(--muted);
+            font-weight: 400;
+            margin-left: 8px;
+        }
+
+        .topbar-meta {
+            display: flex;
+            gap: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.68rem;
+            color: var(--muted);
+        }
+        .topbar-meta strong { color: var(--gold); }
+
+        .topbar-right { display: flex; gap: 8px; }
+
+        .btn {
+            padding: 6px 14px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            transition: all 0.15s;
+        }
+        .btn:hover { border-color: var(--ochre); }
+        .btn-ochre {
+            background: var(--ochre);
+            color: var(--bg);
+            border-color: var(--ochre);
+            font-weight: 600;
+        }
+
+        /* ---- MAIN AREA ---- */
+        .main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ---- TRACKS SCROLLER ---- */
+        .tracks {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            gap: 3px;
+        }
+
+        /* ---- TRACK ---- */
+        .track {
+            background: var(--track-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+        }
+        .track.w200 { min-width: 200px; }
+        .track.w140 { min-width: 140px; }
+
+        .track-hdr {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            padding: 7px 5px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .track-title {
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--ochre);
+        }
+        .track-sub {
+            font-size: 8px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .track-body {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        .track-body canvas { display: block; width: 100%; }
+
+        /* ---- SIDEBAR ---- */
+        .sidebar {
+            width: 280px;
+            min-width: 280px;
+            background: var(--panel);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .panel {
+            background: var(--track-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .panel-hdr {
+            background: rgba(196,121,26,0.08);
+            padding: 7px 11px;
+            border-bottom: 1px solid var(--border);
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--ochre);
+        }
+        .panel-body { padding: 10px 11px; }
+
+        .info-table { width: 100%; font-size: 0.72rem; }
+        .info-table td { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .info-table td:first-child { color: var(--muted); font-size: 0.68rem; }
+        .info-table td:last-child {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            color: var(--gold);
+        }
+        .info-table tr:last-child td { border-bottom: none; }
+
+        .zone-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.72rem;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .zone-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+        .zone-name { font-weight: 600; color: var(--cream); flex: 1; }
+        .zone-vals { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--muted); }
+
+        .floor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .floor-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.65rem;
+            padding: 4px 6px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+        .floor-id {
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-weight: 700;
+        }
+        .floor-pass .floor-id { background: var(--ochre); color: var(--bg); }
+        .floor-warn .floor-id { background: var(--gold); color: var(--bg); }
+
+        .verdict {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-top: 8px;
+        }
+        .verdict-hold {
+            background: rgba(196,121,26,0.12);
+            border: 1px solid rgba(196,121,26,0.3);
+            color: var(--ochre);
+        }
+        .verdict-seal {
+            background: rgba(74,158,142,0.12);
+            border: 1px solid rgba(74,158,142,0.3);
+            color: var(--teal);
+        }
+
+        .toac-note {
+            background: rgba(196,121,26,0.06);
+            border: 1px solid rgba(196,121,26,0.2);
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-size: 0.68rem;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+        .toac-note strong {
+            font-family: 'Courier New', monospace;
+            font-size: 7px;
+            letter-spacing: 1px;
+            color: var(--ochre);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        /* ---- MINERAL STACK ---- */
+        .mineral-stack { display: flex; flex-direction: column; gap: 6px; }
+        .mineral-row { display: flex; align-items: center; gap: 8px; font-size: 0.68rem; }
+        .mineral-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+        .mineral-name { flex: 1; color: var(--muted); }
+        .mineral-val { font-family: 'Courier New', monospace; color: var(--gold); }
+        .mineral-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+        }
+        .mineral-seg { height: 100%; }
+
+        /* ---- CUTOFF CONTROLS ---- */
+        .cutoff-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 7px;
+            font-size: 0.68rem;
+        }
+        .cutoff-row label { color: var(--muted); min-width: 52px; }
+        .cutoff-row input[type=range] {
+            flex: 1;
+            accent-color: var(--ochre);
+            cursor: pointer;
+        }
+        .cutoff-row .cut-val {
+            font-family: 'Courier New', monospace;
+            font-size: 0.68rem;
+            color: var(--gold);
+            min-width: 32px;
+            text-align: right;
+        }
+        #pay-summary {
+            font-family: 'Courier New', monospace;
+            font-size: 0.68rem;
+            color: var(--gold);
+            line-height: 1.6;
+            margin-top: 6px;
+        }
+
+        /* ---- SCROLLBAR ---- */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--ochre); }
+
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+
+<!-- SITE NAV -->
+<div class="site-nav">
+    <span class="brand">GEOX_PLATFORM // 15/9-19_Q15_NORTH_SEA</span>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/apps/">Apps</a>
+        <a href="/map/">Map</a>
+        <a href="/viewer/" class="active">Viewer</a>
+        <a href="/cockpit/">Cockpit</a>
+        <a href="/tools/">Tools</a>
+        <a href="/docs/">Docs</a>
+    </nav>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div class="topbar-left">
+        <span class="geox-tag">GEOX</span>
+        <span id="dataStatus" style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:1px;padding:2px 7px;border-radius:3px;background:rgba(196,121,26,0.08);color:#f59e0b;border:1px solid rgba(196,121,26,0.3);">LOADING</span>
+        <span class="well-id">15/9-19 <small>Q15 · Danish North Sea · Real Open Source Data</small></span>
+        <div class="topbar-meta">
+            <span><strong>MD:</strong> 3615–4637 m</span>
+            <span><strong>Curves:</strong> 25</span>
+            <span><strong>Data:</strong> LAS 2.0</span>
+            <span id="sw-model-label" style="color:var(--teal)"><strong>SW:</strong> Archie</span>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <button class="btn btn-ochre" onclick="toggleMap()">Map</button>
+        <button class="btn" onclick="toggleGrid()">Grid</button>
+        <button class="btn" onclick="scrollToPay()">Jump Pay</button>
+        <button class="btn" onclick="exportTxt()">Export</button>
+        <a href="../" class="btn">← Back</a>
+    </div>
+</div>
+
+<div class="main">
+    <div class="tracks" id="tracks">
+
+        <!-- Track 1: GR + VSHALE -->
+        <div class="track">
+            <div class="track-hdr">
+                <div class="track-title">GR / VSHALE</div>
+                <div class="track-sub">GAPI · v/v</div>
+            </div>
+            <div class="track-body"><canvas id="c-gr"></canvas></div>
+        </div>
+
+        <!-- Track 2: RDEP + RMED (dual — invasion separation) -->
+        <div class="track w200">
+            <div class="track-hdr">
+                <div class="track-title">RDEP / RMED</div>
+                <div class="track-sub">Deep · Med · log ohm.m</div>
+            </div>
+            <div class="track-body"><canvas id="c-res"></canvas></div>
+        </div>
+
+        <!-- Track 3: AC + PHI_SN -->
+        <div class="track w200">
+            <div class="track-hdr">
+                <div class="track-title">AC / PHI_SN</div>
+                <div class="track-sub">µs/ft · Wyllie v/v</div>
+            </div>
+            <div class="track-body"><canvas id="c-ac"></canvas></div>
+        </div>
+
+        <!-- Track 4: DEN + PHI_RH -->
+        <div class="track w200">
+            <div class="track-hdr">
+                <div class="track-title">DEN / PHI_RH</div>
+                <div class="track-sub">g/cm³ · v/v</div>
+            </div>
+            <div class="track-body"><canvas id="c-den"></canvas></div>
+        </div>
+
+        <!-- Track 5: NEU + PHI_DN -->
+        <div class="track w200">
+            <div class="track-hdr">
+                <div class="track-title">NEU / PHI_DN</div>
+                <div class="track-sub">% · crossplot v/v</div>
+            </div>
+            <div class="track-body"><canvas id="c-neu"></canvas></div>
+        </div>
+
+        <!-- Track 6: CALIPER -->
+        <div class="track">
+            <div class="track-hdr">
+                <div class="track-title">CALI</div>
+                <div class="track-sub">inches (bit=8.5")</div>
+            </div>
+            <div class="track-body"><canvas id="c-cali"></canvas></div>
+        </div>
+
+        <!-- Track 7: SW -->
+        <div class="track">
+            <div class="track-hdr">
+                <div class="track-title">SW</div>
+                <div class="track-sub" id="sw-track-sub">Archie/Simandoux</div>
+            </div>
+            <div class="track-body"><canvas id="c-sw"></canvas></div>
+        </div>
+
+        <!-- Track 8: BULK VOLUMES -->
+        <div class="track w200">
+            <div class="track-hdr">
+                <div class="track-title">BULK VOLUMES</div>
+                <div class="track-sub">VBW · VHC · Vgrain</div>
+            </div>
+            <div class="track-body"><canvas id="c-bv"></canvas></div>
+        </div>
+
+        <!-- Track 9: MINERAL LOGIC -->
+        <div class="track w200">
+            <div class="track-hdr">
+                <div class="track-title">MINERAL LOGIC</div>
+                <div class="track-sub">Vq · Vsh · Vcaco3 · Phi</div>
+            </div>
+            <div class="track-body"><canvas id="c-min"></canvas></div>
+        </div>
+
+        <!-- Track 10: PERMEABILITY -->
+        <div class="track">
+            <div class="track-hdr">
+                <div class="track-title">K (PERM)</div>
+                <div class="track-sub">mD · log scale</div>
+            </div>
+            <div class="track-body"><canvas id="c-k"></canvas></div>
+        </div>
+
+        <!-- Track 11: DAK MRS + MRL -->
+        <div class="track w200">
+            <div class="track-hdr">
+                <div class="track-title">DAK MICRO-RES</div>
+                <div class="track-sub">Short · Long ohm.m</div>
+            </div>
+            <div class="track-body"><canvas id="c-dak"></canvas></div>
+        </div>
+
+        <!-- Track 12: DIP + FRA -->
+        <div class="track w200">
+            <div class="track-hdr">
+                <div class="track-title">DIP / FRA_IDX</div>
+                <div class="track-sub">Deg · index</div>
+            </div>
+            <div class="track-body"><canvas id="c-dip"></canvas></div>
+        </div>
+
+        <!-- Track 13: CROSS + NET/PAY -->
+        <div class="track">
+            <div class="track-hdr">
+                <div class="track-title">CROSS + PAY</div>
+                <div class="track-sub">NEU−DEN · NET · PAY</div>
+            </div>
+            <div class="track-body"><canvas id="c-cpay"></canvas></div>
+        </div>
+
+    </div><!-- /tracks -->
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="panel">
+            <div class="panel-hdr">WELL DATA</div>
+            <div class="panel-body">
+                <table class="info-table">
+                    <tr><td>Well</td><td>15/9-19</td></tr>
+                    <tr><td>Field</td><td>Q15 Danish North Sea</td></tr>
+                    <tr><td>MD</td><td>3615–4637 m</td></tr>
+                    <tr><td>Source</td><td>Open Source LAS (Real)</td></tr>
+                    <tr><td>Interpretation</td><td>GEOX v0.5.0</td></tr>
+                    <tr><td>Status</td><td>Openhole Wireline</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- NET / PAY CUTOFF CONTROLS -->
+        <div class="panel">
+            <div class="panel-hdr">NET / PAY CUTOFFS</div>
+            <div class="panel-body">
+                <div class="cutoff-row">
+                    <label>Vsh &lt;</label>
+                    <input type="range" id="cut-vsh" min="0.20" max="0.80" step="0.05" value="0.40"
+                           oninput="document.getElementById('cv-vsh').textContent=parseFloat(this.value).toFixed(2)">
+                    <span class="cut-val" id="cv-vsh">0.40</span>
+                </div>
+                <div class="cutoff-row">
+                    <label>Phi &gt;</label>
+                    <input type="range" id="cut-phi" min="0.04" max="0.25" step="0.01" value="0.10"
+                           oninput="document.getElementById('cv-phi').textContent=parseFloat(this.value).toFixed(2)">
+                    <span class="cut-val" id="cv-phi">0.10</span>
+                </div>
+                <div class="cutoff-row">
+                    <label>Sw &lt;</label>
+                    <input type="range" id="cut-sw" min="0.30" max="0.90" step="0.05" value="0.60"
+                           oninput="document.getElementById('cv-sw').textContent=parseFloat(this.value).toFixed(2)">
+                    <span class="cut-val" id="cv-sw">0.60</span>
+                </div>
+                <button class="btn" style="margin-top:4px;width:100%;font-size:0.7rem" onclick="recomputePayFlags()">↺ Recompute NET/PAY</button>
+                <div id="pay-summary"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-hdr">INPUT + DERIVED CURVES</div>
+            <div class="panel-body">
+                <table class="info-table">
+                    <tr><td>AC</td><td>Sonic Transit Time</td></tr>
+                    <tr><td>CALI</td><td>Caliper (borehole size)</td></tr>
+                    <tr><td>DEN</td><td>Bulk Density</td></tr>
+                    <tr><td>GR</td><td>Gamma Ray</td></tr>
+                    <tr><td>NEU</td><td>Neutron Porosity</td></tr>
+                    <tr><td>RDEP / RMED</td><td>Deep / Med Induction</td></tr>
+                    <tr><td>PHI_SN</td><td>Sonic Porosity (Wyllie)</td></tr>
+                    <tr><td>PHI_RH</td><td>Density Porosity</td></tr>
+                    <tr><td>PHI_DN</td><td>Crossplot (Avg) Porosity</td></tr>
+                    <tr><td>VSHALE</td><td>Shale Vol (GR Linear)</td></tr>
+                    <tr><td>SW</td><td>Archie (Vsh&lt;0.1) / Simandoux</td></tr>
+                    <tr><td>VBW / VHC</td><td>Bulk Water / HC Volume</td></tr>
+                    <tr><td>CROSS</td><td>PHI_NEU − PHI_DEN</td></tr>
+                    <tr><td>K</td><td>Perm (Timur, mD)</td></tr>
+                    <tr><td>NET / PAY</td><td>Cutoff flags</td></tr>
+                    <tr><td>DAK_MRS/MRL</td><td>Micro-Res Short/Long</td></tr>
+                    <tr><td>DIP_ANG/AZI</td><td>Structural Dip</td></tr>
+                    <tr><td>FRA_IDX</td><td>Fracture Index</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-hdr">ZONE INTERPRETATION</div>
+            <div class="panel-body">
+                <div class="zone-row">
+                    <div class="zone-dot" style="background:#c4791a"></div>
+                    <div class="zone-name">Zone A</div>
+                    <div class="zone-vals">Phi 0.30 · Sw 0.96 · Wet</div>
+                </div>
+                <div class="zone-row">
+                    <div class="zone-dot" style="background:#4a9e8e"></div>
+                    <div class="zone-name">Zone B</div>
+                    <div class="zone-vals">Phi 0.10 · Sw 0.94 · 2 pay</div>
+                </div>
+                <div class="zone-row">
+                    <div class="zone-dot" style="background:#b5542a"></div>
+                    <div class="zone-name">Zone C</div>
+                    <div class="zone-vals">Phi 0.07 · Sw 0.97 · Tight</div>
+                </div>
+                <div class="zone-row">
+                    <div class="zone-dot" style="background:#8aab86"></div>
+                    <div class="zone-name">Zone D ★</div>
+                    <div class="zone-vals">Phi 0.13 · Sw ~0.89 · Best</div>
+                </div>
+                <div class="zone-row">
+                    <div class="zone-dot" style="background:#a78bfa"></div>
+                    <div class="zone-name">Zone E</div>
+                    <div class="zone-vals">Phi 0.15 · Sw 1.00 · Wet</div>
+                </div>
+                <div class="zone-row">
+                    <div class="zone-dot" style="background:#64748b"></div>
+                    <div class="zone-name">Zone F</div>
+                    <div class="zone-vals">Basement · Wet</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-hdr">MINERAL DECOMPOSITION (Zone D)</div>
+            <div class="panel-body">
+                <div class="mineral-stack">
+                    <div class="mineral-row">
+                        <div class="mineral-swatch" style="background:#4a9e8e"></div>
+                        <div class="mineral-name">Vquartz (sand matrix)</div>
+                        <div class="mineral-val" id="min-vquartz">—</div>
+                    </div>
+                    <div class="mineral-row">
+                        <div class="mineral-swatch" style="background:#d4a843"></div>
+                        <div class="mineral-name">Vclay (shale)</div>
+                        <div class="mineral-val" id="min-vclay">—</div>
+                    </div>
+                    <div class="mineral-row">
+                        <div class="mineral-swatch" style="background:#b5542a"></div>
+                        <div class="mineral-name">Vcaco3 (carbonate)</div>
+                        <div class="mineral-val" id="min-vcaco3">—</div>
+                    </div>
+                    <div class="mineral-row">
+                        <div class="mineral-swatch" style="background:#8aab86"></div>
+                        <div class="mineral-name">Porosity (Phi)</div>
+                        <div class="mineral-val" id="min-phi">—</div>
+                    </div>
+                    <div class="mineral-row">
+                        <div class="mineral-swatch" style="background:#3b82f6"></div>
+                        <div class="mineral-name">Sw (model)</div>
+                        <div class="mineral-val" id="min-sw">—</div>
+                    </div>
+                    <div class="mineral-row">
+                        <div class="mineral-swatch" style="background:#c4791a"></div>
+                        <div class="mineral-name">VHC (hydrocarbon vol)</div>
+                        <div class="mineral-val" id="min-vhc">—</div>
+                    </div>
+                    <div class="mineral-row">
+                        <div class="mineral-swatch" style="background:#f59e0b"></div>
+                        <div class="mineral-name">K (permeability)</div>
+                        <div class="mineral-val" id="min-k">—</div>
+                    </div>
+                </div>
+                <div class="mineral-bar" id="min-bar" style="margin-top:8px">
+                    <div class="mineral-seg" id="mbar-q" style="background:#4a9e8e"></div>
+                    <div class="mineral-seg" id="mbar-c" style="background:#d4a843"></div>
+                    <div class="mineral-seg" id="mbar-a" style="background:#b5542a"></div>
+                    <div class="mineral-seg" id="mbar-p" style="background:#8aab86"></div>
+                </div>
+                <div style="font-family:'Courier New',monospace;font-size:7px;color:var(--muted);margin-top:4px;text-align:right" id="closure-check">Σ = —</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-hdr">GEOX CONSTITUTIONAL VERDICT</div>
+            <div class="panel-body">
+                <div class="floor-grid">
+                    <div class="floor-item floor-pass"><span class="floor-id">F1</span> Amanah</div>
+                    <div class="floor-item floor-pass"><span class="floor-id">F2</span> Truth</div>
+                    <div class="floor-item floor-pass"><span class="floor-id">F4</span> Clarity</div>
+                    <div class="floor-item floor-pass"><span class="floor-id">F7</span> Humility</div>
+                    <div class="floor-item floor-warn"><span class="floor-id">F9</span> Anti-Hantu</div>
+                    <div class="floor-item floor-pass"><span class="floor-id">F13</span> Sovereign</div>
+                </div>
+                <div class="toac-note">
+                    <strong>⚠ ToAC REMINDER</strong>
+                    SW uses Archie for Vsh &lt;0.1 (clean), Simandoux for shaly sands.
+                    Mineral closure: Vq + Vclay + Vcaco3 + Phi = 1.0 enforced.
+                    K from Timur approximation. PVT required for real fluid properties.
+                    This is interpretation, not measurement.
+                </div>
+                <div class="verdict verdict-hold">888_HOLD · Human review required</div>
+            </div>
+        </div>
+
+        <div class="panel" style="border-color:rgba(196,121,26,0.4)">
+            <div class="panel-hdr" style="color:var(--ochre)">DITEMPA BUKAN DIBERI</div>
+            <div class="panel-body">
+                <table class="info-table">
+                    <tr><td>Target</td><td style="color:var(--ochre)">RM 30 JUTA</td></tr>
+                    <tr><td>Scope</td><td>Full petrophysics + DAK</td></tr>
+                    <tr><td>Mineral Logic</td><td>Vq/Vclay/Vcaco3 · Σ=1</td></tr>
+                    <tr><td>SW Model</td><td>Archie + Simandoux</td></tr>
+                    <tr><td>Permeability</td><td>Timur (K mD)</td></tr>
+                    <tr><td>Compliance</td><td>F1–F13 + ToAC</td></tr>
+                </table>
+            </div>
+        </div>
+
+    </div><!-- /sidebar -->
+
+    <!-- MAP OVERLAY — North Sea -->
+    <div id="mapPanel" style="display:none; position:absolute; top:50px; right:10px; width:380px; height:480px; z-index:100; border:2px solid var(--ochre); border-radius:8px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.7);">
+        <div style="background:var(--panel); padding:6px 10px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border);">
+            <span style="font-family:'Courier New',monospace;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--ochre);">NORTH SEA · Q15 · OSM</span>
+            <button onclick="toggleMap()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;">×</button>
+        </div>
+        <div id="mapContainer" style="width:100%; height:calc(100% - 50px);"></div>
+        <div style="background:var(--panel); padding:5px 10px; border-top:1px solid var(--border); font-family:'Courier New',monospace;font-size:8px;color:var(--muted);">
+            <span id="mapWellName" style="color:var(--gold);">Well 15/9-19</span> · Q15 Danish North Sea · <span id="mapCoords">56.850°N, 3.150°E</span>
+        </div>
+    </div>
+</div><!-- /main -->
+
+<script>
+// ===== PETRO PARAMETERS =====
+const P = {
+    Rw:       0.02,   // Formation water resistivity, ohm.m
+    Rsh:      4.0,    // Shale resistivity, ohm.m (Simandoux)
+    a:        1.0,    // Tortuosity factor (Archie)
+    m:        2.0,    // Cementation exponent
+    n:        2.0,    // Saturation exponent
+    GR_clean: 20,     // Clean sand GR, GAPI
+    GR_shale: 150,    // Pure shale GR, GAPI
+    AC_ma:    55.5,   // Matrix transit time, µs/ft (sandstone)
+    AC_fl:    189.0,  // Fluid transit time, µs/ft
+    RHO_ma:   2.65,   // Matrix density, g/cm³ (quartz)
+    RHO_fl:   1.0,    // Fluid density, g/cm³ (water)
+    CARB_FRAC: 0.10,  // Fraction of clean solid volume that is carbonate
+    BIT_SIZE:  8.5,   // Nominal bit size, inches
+};
+
+// ===== GLOBAL DATA ARRAYS =====
+const NULLV = -999.25;
+const DEPTH = [], AC = [], CALI = [], DEN = [], GR = [], NEU = [];
+const RDEP = [], RMED = [];
+const PHI_DN = [], PHI_RH = [], PHI_SN = [];
+const VSHALE = [], VSAND = [], SW = [], VBW = [], VHC = [], CROSS = [];
+const NET = [], PAY = [];
+const DIP_ANG = [], DIP_AZI = [];
+const DAK_MRS = [], DAK_MRL = [], FRA_IDX = [];
+const VQUARTZ = [], VCLAY = [], VCACO3 = [];
+const K_PERM = [];
+
+// ===== GEOLOGICAL ZONES =====
+const ZONES = [
+    { min: 3615, max: 3800, color: '#c4791a', name: 'Zone A', wet: true },
+    { min: 3800, max: 4000, color: '#4a9e8e', name: 'Zone B', wet: false },
+    { min: 4000, max: 4200, color: '#b5542a', name: 'Zone C', wet: true },
+    { min: 4200, max: 4400, color: '#8aab86', name: 'Zone D ★', wet: false },
+    { min: 4400, max: 4500, color: '#a78bfa', name: 'Zone E', wet: true },
+    { min: 4500, max: 4637, color: '#64748b', name: 'Zone F', wet: true },
+];
+
+function zoneAt(d) {
+    for (const z of ZONES) if (d >= z.min && d < z.max) return z;
+    return ZONES[ZONES.length - 1];
+}
+
+// ===== SATURATION MODELS =====
+// Archie: SW = ((a * Rw) / (phi^m * Rt))^(1/n)
+// Simandoux: quadratic in SW — for shaly sands (Vsh >= 0.1)
+//   (phi^m * SW^2) / (a * Rw) + (Vsh * SW) / Rsh = 1 / Rt
+//   => A*SW^2 + B*SW - C = 0  =>  SW = (-B + sqrt(B^2 + 4AC)) / (2A)
+function calcSW(phi, rt, vsh) {
+    if (phi <= 0 || rt <= 0) return 1.0;
+    if (vsh < 0.1) {
+        // Clean sand — Archie
+        const sw = Math.pow((P.a * P.Rw) / (Math.pow(phi, P.m) * rt), 1 / P.n);
+        return Math.max(0.0, Math.min(1.0, sw));
+    }
+    // Shaly sand — Simandoux
+    const A = Math.pow(phi, P.m) / (P.a * P.Rw);
+    const B = vsh / P.Rsh;
+    const C = 1.0 / rt;
+    const disc = B * B + 4.0 * A * C;
+    if (disc < 0) return 1.0;
+    const sw = (-B + Math.sqrt(disc)) / (2.0 * A);
+    return Math.max(0.0, Math.min(1.0, sw));
+}
+
+// Inverse: compute Rt from SW (Simandoux if shaly, Archie if clean)
+// Used to generate internally-consistent synthetic Rt from known phi/sw/vsh.
+function calcRt(phi, sw, vsh) {
+    if (phi <= 0 || sw <= 0) return 0.1;
+    if (vsh < 0.1) {
+        return (P.a * P.Rw) / (Math.pow(phi, P.m) * Math.pow(sw, P.n));
+    }
+    const cond = (Math.pow(phi, P.m) * sw * sw) / (P.a * P.Rw) + (vsh * sw) / P.Rsh;
+    return cond > 0 ? 1.0 / cond : 100.0;
+}
+
+// Timur permeability: K (mD) = 100 * phi^2 / Sw^2
+// Physically meaningful for 0.001–1000 mD range in clastic reservoirs
+function calcK(phi, sw) {
+    if (phi <= 0 || sw <= 0) return 0.001;
+    return Math.max(0.001, 100.0 * phi * phi / (sw * sw));
+}
+
+// Wyllie sonic porosity
+function calcPhiSN(ac) {
+    return Math.max(0, Math.min(0.5, (ac - P.AC_ma) / (P.AC_fl - P.AC_ma)));
+}
+
+// Density porosity
+function calcPhiRH(den) {
+    return Math.max(0, Math.min(0.5, (P.RHO_ma - den) / (P.RHO_ma - P.RHO_fl)));
+}
+
+// Mineral volumes — closure-correct: Vq + Vclay + Vcaco3 + Phi = 1.0
+// Vclay  = Vshale  (bulk-volume fraction — from GR)
+// Vsolid_clean = 1 - Vshale - Phi  (non-clay solid)
+// Vquartz  = Vsolid_clean * (1 - CARB_FRAC)
+// Vcaco3   = Vsolid_clean * CARB_FRAC
+function calcMinerals(vsh, phi) {
+    const vclay = Math.min(vsh, 1 - phi);
+    const vsolid_clean = Math.max(0, 1 - vclay - phi);
+    return {
+        vquartz: vsolid_clean * (1 - P.CARB_FRAC),
+        vclay:   vclay,
+        vcaco3:  vsolid_clean * P.CARB_FRAC,
+    };
+}
+
+// ===== FETCH DATA — JSON first, fallback to synthetic =====
+async function load() {
+    let loaded = false;
+    try {
+        const r = await fetch('geox_data.json');
+        if (!r.ok) throw new Error('not found');
+        const j = await r.json();
+        const d = j.data || {};
+        // Map DEPT → DEPTH (LAS convention)
+        const src_depth = d.DEPT || d.DEPTH || [];
+        if (src_depth.length > 100) {
+            // Push into global arrays via .push() (respects const refs)
+            src_depth.forEach(v => DEPTH.push(v));
+            (d.AC   || []).forEach(v => AC.push(v));
+            (d.CALI || []).forEach(v => CALI.push(v));
+            (d.DEN  || []).forEach(v => DEN.push(v));
+            (d.GR   || []).forEach(v => GR.push(v));
+            (d.NEU  || []).forEach(v => NEU.push(v));
+            (d.RDEP || []).forEach(v => RDEP.push(v));
+            (d.RMED || []).forEach(v => RMED.push(v));
+            // Derive all computed curves from measurements
+            for (let i = 0; i < DEPTH.length; i++) {
+                const gr  = GR[i]   || 50;
+                const ac  = AC[i]   || 80;
+                const den = DEN[i]  || 2.4;
+                const neu = NEU[i]  || 20;
+                const rt  = RDEP[i] || 1.0;
+                const cali = CALI[i] || P.BIT_SIZE;
+
+                // Shale volume — GR linear
+                const vsh = Math.max(0, Math.min(1,
+                    (gr - P.GR_clean) / (P.GR_shale - P.GR_clean)));
+
+                // Porosity
+                const phi_rh = calcPhiRH(den);
+                const phi_sn = calcPhiSN(ac);
+                const phi_neu = Math.max(0, Math.min(0.5, neu / 100));
+                const phi_dn  = (phi_neu + phi_rh) / 2;
+
+                // Saturation (Archie clean / Simandoux shaly)
+                const sw = calcSW(phi_dn, rt, vsh);
+
+                // Minerals — closure-correct
+                const min = calcMinerals(vsh, phi_dn);
+
+                // Permeability
+                const k = calcK(phi_dn, sw);
+
+                VSHALE.push(vsh);
+                VSAND.push(1 - vsh);
+                PHI_RH.push(phi_rh);
+                PHI_SN.push(phi_sn);
+                PHI_DN.push(phi_dn);
+                SW.push(sw);
+                VBW.push(phi_dn * sw);
+                VHC.push(phi_dn * (1 - sw));
+                CROSS.push(phi_neu - phi_rh);  // positive = gas/light HC
+                VQUARTZ.push(min.vquartz);
+                VCLAY.push(min.vclay);
+                VCACO3.push(min.vcaco3);
+                K_PERM.push(k);
+            }
+            // PAY flags using default cutoffs
+            applyPayFlags(0.40, 0.10, 0.60);
+            window.DATA_STATUS = 'REAL_JSON';
+            loaded = true;
+        }
+    } catch (e) {
+        console.warn('JSON fetch failed:', e.message, '— using synthetic stats');
+    }
+
+    if (!loaded) {
+        generateFromStats();
+        window.DATA_STATUS = 'FALLBACK';
+    }
+
+    drawAll();
+    updateSidebar();
+
+    const s = document.getElementById('dataStatus');
+    if (s) {
+        s.textContent = window.DATA_STATUS || 'FALLBACK';
+        s.style.color = (window.DATA_STATUS === 'REAL_JSON') ? '#4a9e8e' : '#f59e0b';
+    }
+    const swLabel = document.getElementById('sw-model-label');
+    if (swLabel) swLabel.innerHTML = '<strong>SW:</strong> Archie+Simandoux';
+}
+
+// ===== SYNTHETIC DATA GENERATOR =====
+function generateFromStats() {
+    const rng = (s) => {
+        let x = s * 16807 % 2147483647;
+        return () => { x = x * 16807 % 2147483647; return (x - 1) / 2147483646; };
+    };
+    const rand = rng(7);
+    const D_MIN = 3615, D_MAX = 4637, STEP = 0.1524;
+    const nPts = Math.round((D_MAX - D_MIN) / STEP);
+
+    for (let i = 0; i < nPts; i++) {
+        const d = D_MIN + i * STEP;
+
+        let phi_m, vsh_m, sw_m, gas;
+        if      (d < 3800) { phi_m = 0.30; vsh_m = 0.49; sw_m = 0.96; gas = false; }
+        else if (d < 4000) { phi_m = 0.10; vsh_m = 0.10; sw_m = 0.94; gas = false; }
+        else if (d < 4200) { phi_m = 0.07; vsh_m = 0.18; sw_m = 0.97; gas = false; }
+        else if (d < 4400) { phi_m = 0.13; vsh_m = 0.67; sw_m = 0.89; gas = true;  }
+        else if (d < 4500) { phi_m = 0.15; vsh_m = 0.70; sw_m = 1.00; gas = false; }
+        else               { phi_m = 0.08; vsh_m = 0.80; sw_m = 1.00; gas = false; }
+
+        const n1 = rand() - 0.5;
+        const n2 = rand() - 0.5;
+
+        const vsh  = Math.max(0,    Math.min(1.0,  vsh_m + n1 * 0.08));
+        const phi  = Math.max(0.01, Math.min(0.45, phi_m + n2 * 0.025));
+        // Compute Rt consistently from the saturation model (Simandoux inverse)
+        const rt_base = calcRt(phi, sw_m, vsh);
+        const rt_noise = 1 + n1 * 0.12;
+        const rdep = Math.max(0.1, rt_base * rt_noise);
+        const rmed = Math.max(0.1, rt_base * 0.78 * (1 + n1 * 0.08));  // shallower = lower Rt
+        // Recover SW from computed Rt (self-consistent)
+        const sw = calcSW(phi, rdep, vsh);
+
+        // GR from Vshale
+        const gr  = Math.max(0, P.GR_clean + vsh * (P.GR_shale - P.GR_clean) + n1 * 12);
+        // Sonic: Wyllie — solve for AC from phi
+        // PHI_SN = (AC - AC_ma) / (AC_fl - AC_ma)  => AC = PHI_SN * (AC_fl - AC_ma) + AC_ma
+        const ac  = Math.max(40, phi * (P.AC_fl - P.AC_ma) + P.AC_ma + n2 * 6);
+        // Density: RHO_b = RHO_ma*(1-phi) + RHO_fl*phi
+        const den = Math.max(1.9, Math.min(2.9, P.RHO_ma * (1 - phi) + P.RHO_fl * phi + n2 * 0.02));
+        // Neutron: in % (gas effect reduces apparent NEU)
+        const neu = Math.max(2,  Math.min(50, phi * 100 + n2 * 3 + (gas ? -12 : 0)));
+        // Caliper: near bit-size with occasional washout
+        const cali = Math.max(6, Math.min(18, P.BIT_SIZE + n1 * 0.3 + (vsh > 0.6 ? Math.abs(n2) * 1.5 : 0)));
+
+        // Derived curves
+        const phi_rh = calcPhiRH(den);
+        const phi_sn = calcPhiSN(ac);
+        const phi_neu = Math.max(0, Math.min(0.5, neu / 100));
+        const cross  = phi_neu - phi_rh;           // NEU - DEN crossover: positive = gas
+
+        const min = calcMinerals(vsh, phi);
+        const k   = calcK(phi, sw);
+
+        // Store all
+        DEPTH.push(d);
+        GR.push(gr);
+        AC.push(ac);
+        DEN.push(den);
+        NEU.push(neu);
+        RDEP.push(rdep);
+        RMED.push(rmed);
+        CALI.push(cali);
+        VSHALE.push(vsh);
+        VSAND.push(1 - vsh);
+        PHI_RH.push(phi_rh);
+        PHI_SN.push(phi_sn);
+        PHI_DN.push(phi);     // crossplot average as primary porosity
+        SW.push(sw);
+        VBW.push(phi * sw);
+        VHC.push(phi * (1 - sw));
+        CROSS.push(cross);
+        VQUARTZ.push(min.vquartz);
+        VCLAY.push(min.vclay);
+        VCACO3.push(min.vcaco3);
+        K_PERM.push(k);
+        DIP_ANG.push(Math.max(0, Math.min(85, 15 + 20 * Math.sin(d / 200) + n2 * 5)));
+        DIP_AZI.push(((90 + 45 * Math.sin(d / 350) + n1 * 15) % 360 + 360) % 360);
+        DAK_MRS.push(Math.max(0.1, rdep * 0.8  * (1 + 0.3 * Math.sin(d / 50 + n2 * 2))));
+        DAK_MRL.push(Math.max(0.1, rdep * 1.2  * (1 + 0.2 * Math.sin(d / 80))));
+        FRA_IDX.push(Math.abs(n1 * n2) > 0.3 ? Math.min(10, Math.abs(n1 * n2) * 8) : 0);
+    }
+    applyPayFlags(0.40, 0.10, 0.60);
+}
+
+// ===== NET / PAY FLAGS =====
+function applyPayFlags(vshCut, phiCut, swCut) {
+    NET.length = 0;
+    PAY.length = 0;
+    for (let i = 0; i < VSHALE.length; i++) {
+        const isNet = VSHALE[i] < vshCut && PHI_DN[i] > phiCut;
+        const isPay = isNet && SW[i] < swCut;
+        NET.push(isNet ? 1 : 0);
+        PAY.push(isPay ? 1 : 0);
+    }
+}
+
+function recomputePayFlags() {
+    const vshCut = parseFloat(document.getElementById('cut-vsh').value);
+    const phiCut = parseFloat(document.getElementById('cut-phi').value);
+    const swCut  = parseFloat(document.getElementById('cut-sw').value);
+    applyPayFlags(vshCut, phiCut, swCut);
+    drawCPay('c-cpay');
+
+    const step = DEPTH.length > 1 ? (DEPTH[DEPTH.length-1] - DEPTH[0]) / (DEPTH.length - 1) : 0.1524;
+    const netN = NET.reduce((a, b) => a + b, 0);
+    const payN = PAY.reduce((a, b) => a + b, 0);
+    const netFt = (netN * step * 3.28084).toFixed(1);
+    const payFt = (payN * step * 3.28084).toFixed(1);
+    document.getElementById('pay-summary').innerHTML =
+        `NET: ${netN} pts · ${netFt} ft<br>PAY: ${payN} pts · ${payFt} ft`;
+}
+
+// ===== SIDEBAR UPDATE =====
+function updateSidebar() {
+    // Zone D stats (4200–4400m)
+    let vsVals = [], phiVals = [], swVals = [], kVals = [], vhcVals = [];
+    let vqVals = [], vcVals = [], vaVals = [];
+    for (let i = 0; i < DEPTH.length; i++) {
+        const d = DEPTH[i];
+        if (d >= 4200 && d < 4400) {
+            if (VSHALE[i]  != null) vsVals.push(VSHALE[i]);
+            if (PHI_DN[i]  != null) phiVals.push(PHI_DN[i]);
+            if (SW[i]      != null) swVals.push(SW[i]);
+            if (K_PERM[i]  != null) kVals.push(K_PERM[i]);
+            if (VHC[i]     != null) vhcVals.push(VHC[i]);
+            if (VQUARTZ[i] != null) vqVals.push(VQUARTZ[i]);
+            if (VCLAY[i]   != null) vcVals.push(VCLAY[i]);
+            if (VCACO3[i]  != null) vaVals.push(VCACO3[i]);
+        }
+    }
+    const avg = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0;
+    const vq  = avg(vqVals),  vc  = avg(vcVals), va  = avg(vaVals);
+    const phi = avg(phiVals), sw  = avg(swVals),  vhc = avg(vhcVals);
+    const k   = avg(kVals);
+    const sum = vq + vc + va + phi;
+
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('min-vquartz', vq.toFixed(3));
+    set('min-vclay',   vc.toFixed(3));
+    set('min-vcaco3',  va.toFixed(3));
+    set('min-phi',     phi.toFixed(3));
+    set('min-sw',      sw.toFixed(3));
+    set('min-vhc',     vhc.toFixed(4));
+    set('min-k',       k.toFixed(2) + ' mD');
+    set('closure-check', `Σ = ${sum.toFixed(3)} ${Math.abs(sum-1.0)<0.01 ? '✓' : '⚠'}`);
+
+    // Mineral bar proportions
+    if (sum > 0) {
+        ['mbar-q','mbar-c','mbar-a','mbar-p'].forEach((id, idx) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const frac = [vq, vc, va, phi][idx] / sum;
+            el.style.width = (frac * 100).toFixed(1) + '%';
+        });
+    }
+    // Initial pay summary
+    recomputePayFlags();
+}
+
+// ===== DRAW ENGINE =====
+// FIX: d2y maps shallow depth → top (y≈0), deep → bottom (y≈H)
+// This is consistent with the curve draw loop where i=0 (shallowest) → y=0 (top).
+const D_MIN = 3615, D_MAX = 4637;
+function d2y(d, H) {
+    return H * (d - D_MIN) / (D_MAX - D_MIN);
+}
+
+function drawBg(ctx, W, H, zoneShading) {
+    ctx.fillStyle = '#141009';
+    ctx.fillRect(0, 0, W, H);
+    if (zoneShading) {
+        const n = DEPTH.length;
+        for (let i = 0; i < n; i++) {
+            ctx.fillStyle = zoneAt(DEPTH[i]).color + '18';
+            ctx.fillRect(0, i, W, 1);
+        }
+    }
+}
+
+function drawGrid(ctx, W, H, step) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#5a4a30';
+    ctx.font = '11px monospace';
+    for (let d = 3600; d <= 4700; d += (step || 200)) {
+        const y = d2y(d, H);
+        if (y < 0 || y > H) continue;
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        ctx.fillText(d + 'm', 3, y + 10);
+    }
+}
+
+// Single-curve draw
+function draw(canvasId, data, opts = {}) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || data.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = data.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+
+    const { color = '#c4791a', fill = false, minV = 0, maxV = 1,
+            log = false, lw = 2, fillOp = 0.1, zoneColor = false,
+            gridStep = 200, fillLeft = false } = opts;
+
+    drawBg(ctx, W, H, zoneColor);
+    drawGrid(ctx, W, H, gridStep);
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lw;
+    ctx.beginPath();
+    let started = false, lastX = 0, lastI = 0;
+
+    for (let i = 0; i < n; i++) {
+        const v = data[i];
+        if (v == null || v === NULLV || isNaN(v)) {
+            if (started) { ctx.stroke(); ctx.beginPath(); started = false; }
+            continue;
+        }
+        let norm;
+        if (log) norm = (Math.log10(Math.max(v, 0.001)) - Math.log10(minV)) / (Math.log10(maxV) - Math.log10(minV));
+        else     norm = (v - minV) / (maxV - minV);
+        norm = Math.max(0, Math.min(1, norm));
+        const x = norm * (W - 10) + 5;
+        if (!started) { ctx.moveTo(x, i); started = true; }
+        else ctx.lineTo(x, i);
+        lastX = x; lastI = i;
+    }
+    ctx.stroke();
+
+    // Fill toward right (or left for SW)
+    if (fill && started) {
+        ctx.save();
+        ctx.globalAlpha = fillOp;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        // Retrace the curve
+        for (let i = 0; i < n; i++) {
+            const v = data[i];
+            if (v == null || v === NULLV || isNaN(v)) continue;
+            let norm;
+            if (log) norm = (Math.log10(Math.max(v, 0.001)) - Math.log10(minV)) / (Math.log10(maxV) - Math.log10(minV));
+            else     norm = (v - minV) / (maxV - minV);
+            norm = Math.max(0, Math.min(1, norm));
+            const x = norm * (W - 10) + 5;
+            if (i === 0) ctx.moveTo(x, i);
+            else ctx.lineTo(x, i);
+        }
+        if (fillLeft) {
+            ctx.lineTo(5, lastI); ctx.lineTo(5, 0);
+        } else {
+            ctx.lineTo(W - 5, lastI); ctx.lineTo(W - 5, 0);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Axis labels
+    ctx.fillStyle = '#8a7a60'; ctx.font = '11px monospace';
+    ctx.fillText(log ? maxV : (maxV >= 1 ? maxV.toFixed(1) : maxV.toFixed(2)), W - 26, 12);
+    ctx.fillText(log ? minV : (minV >= 1 ? minV.toFixed(1) : minV.toFixed(2)), W - 26, H - 3);
+}
+
+// Dual-curve draw (side-by-side in same track, each gets half width)
+function drawDual(canvasId, d1, d2, o1, o2) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || d1.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = d1.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+
+    drawBg(ctx, W, H, true);
+    drawGrid(ctx, W, H, 200);
+
+    const drawCurve = (data, opts, xOffset, xWidth) => {
+        const { color, minV, maxV, log: useLog } = opts;
+        ctx.strokeStyle = color; ctx.lineWidth = 2;
+        ctx.beginPath();
+        let started = false;
+        for (let i = 0; i < data.length; i++) {
+            const v = data[i];
+            if (v == null || v === NULLV || isNaN(v)) {
+                if (started) { ctx.stroke(); ctx.beginPath(); started = false; }
+                continue;
+            }
+            let norm;
+            if (useLog) norm = (Math.log10(Math.max(v, 0.001)) - Math.log10(minV)) / (Math.log10(maxV) - Math.log10(minV));
+            else        norm = (v - minV) / (maxV - minV);
+            norm = Math.max(0, Math.min(1, norm));
+            const x = xOffset + norm * xWidth;
+            if (!started) { ctx.moveTo(x, i); started = true; }
+            else ctx.lineTo(x, i);
+        }
+        ctx.stroke();
+        // Axis labels
+        ctx.fillStyle = color; ctx.font = '11px monospace';
+        const lbl_max = useLog ? maxV : (maxV >= 1 ? maxV.toFixed(1) : maxV.toFixed(2));
+        const lbl_min = useLog ? minV : (minV >= 1 ? minV.toFixed(1) : minV.toFixed(2));
+        ctx.fillText(lbl_max, xOffset + 2, 12);
+        ctx.fillText(lbl_min, xOffset + 2, H - 3);
+    };
+
+    drawCurve(d1, o1, W * 0.03, W * 0.44);
+    drawCurve(d2, o2, W * 0.53, W * 0.44);
+}
+
+// Caliper track
+function drawCali(canvasId) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || CALI.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = CALI.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+
+    drawBg(ctx, W, H, true);
+    drawGrid(ctx, W, H, 200);
+
+    // Bit size reference line
+    const bit_norm = (P.BIT_SIZE - 6) / 12;
+    const bit_x = bit_norm * (W - 10) + 5;
+    ctx.strokeStyle = 'rgba(212,168,67,0.3)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(bit_x, 0); ctx.lineTo(bit_x, H); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // CALI curve — batch by color band (washout=red, gauge=teal)
+    // Two passes: one per color. Avoids per-iteration ctx.stroke() (6700+ calls).
+    ctx.lineWidth = 2;
+    ['#4a9e8e', '#b5542a'].forEach(band => {
+        const isWashout = band === '#b5542a';
+        ctx.strokeStyle = band;
+        ctx.beginPath();
+        let s = false;
+        for (let i = 0; i < n; i++) {
+            const v = CALI[i];
+            if (v == null || isNaN(v)) { if (s) { ctx.stroke(); ctx.beginPath(); s = false; } continue; }
+            const inBand = isWashout ? v > P.BIT_SIZE + 0.5 : v <= P.BIT_SIZE + 0.5;
+            if (!inBand) { if (s) { ctx.stroke(); ctx.beginPath(); s = false; } continue; }
+            const x = Math.max(0, Math.min(1, (v - 6) / 12)) * (W - 10) + 5;
+            if (!s) { ctx.moveTo(x, i); s = true; } else ctx.lineTo(x, i);
+        }
+        ctx.stroke();
+    });
+    ctx.fillStyle = '#8a7a60'; ctx.font = '11px monospace';
+    ctx.fillText('18"', W - 20, 12);
+    ctx.fillText('6"', W - 16, H - 3);
+    ctx.fillStyle = 'rgba(212,168,67,0.6)';
+    ctx.fillText('⬤', bit_x - 5, H / 2);
+}
+
+// Permeability track (log scale, 0.001–1000 mD)
+function drawK(canvasId) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || K_PERM.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = K_PERM.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+
+    drawBg(ctx, W, H, true);
+    drawGrid(ctx, W, H, 200);
+
+    // Decade grid lines at 0.01, 0.1, 1, 10, 100 mD
+    [0.01, 0.1, 1, 10, 100].forEach(kv => {
+        const norm = (Math.log10(kv) + 3) / 6;  // log scale 0.001–1000
+        const x = norm * (W - 10) + 5;
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        ctx.fillStyle = '#5a4a30'; ctx.font = '10px monospace';
+        ctx.fillText(kv >= 1 ? kv + '' : kv, x + 1, 22);
+    });
+
+    // K curve — colored by productivity band (4 passes).
+    // ctx.strokeStyle cannot be compared after assignment (browser normalizes hex→rgb).
+    // Batch by band instead — avoids the comparison entirely.
+    ctx.lineWidth = 2;
+    const K_BANDS = [
+        { color: '#b5542a', test: v => v <= 0.1  },   // tight  <0.1 mD
+        { color: '#c4791a', test: v => v > 0.1 && v <= 1   },   // poor   0.1–1 mD
+        { color: '#4a9e8e', test: v => v > 1   && v <= 10  },   // fair   1–10 mD
+        { color: '#8aab86', test: v => v > 10               },   // good  >10 mD
+    ];
+    K_BANDS.forEach(({ color, test }) => {
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        let s = false, lx = 0, li = 0;
+        for (let i = 0; i < n; i++) {
+            const v = K_PERM[i];
+            if (v == null || isNaN(v) || v <= 0 || !test(v)) {
+                if (s) { ctx.stroke(); ctx.beginPath(); s = false; }
+                continue;
+            }
+            const x = Math.max(0, Math.min(1, (Math.log10(v) + 3) / 6)) * (W - 10) + 5;
+            if (!s) { ctx.moveTo(x, i); s = true; } else ctx.lineTo(x, i);
+            lx = x; li = i;
+        }
+        ctx.stroke();
+    });
+    ctx.fillStyle = '#8a7a60'; ctx.font = '11px monospace';
+    ctx.fillText('1000', W - 36, 12);
+    ctx.fillText('0.001', W - 36, H - 3);
+}
+
+// Bulk volume stack: VBW | VHC | Vgrain (proportional bars)
+function drawStack(canvasId) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || VBW.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = VBW.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+    ctx.fillStyle = '#141009';
+    ctx.fillRect(0, 0, W, H);
+
+    for (let i = 0; i < n; i++) {
+        const vbw  = VBW[i]  || 0;
+        const vhc  = VHC[i]  || 0;
+        const vsh  = VCLAY[i] || 0;
+        const phi  = PHI_DN[i] || 0;
+        // Bulk volumes sum to 1.0: VBW + VHC + Vclay + V_clean_solid = 1
+        const vsolid = Math.max(0, 1 - vbw - vhc - vsh);
+        const total = vbw + vhc + vsh + vsolid;
+        const scale = W / Math.max(total, 0.001);
+
+        const wW = vbw * scale;
+        const wH = vhc * scale;
+        const wC = vsh * scale;
+        const wS = vsolid * scale;
+
+        ctx.fillStyle = '#3b82f6';
+        ctx.fillRect(0, i, wW, 1);
+        ctx.fillStyle = '#c4791a';
+        ctx.fillRect(wW, i, wH, 1);
+        ctx.fillStyle = '#d4a843';
+        ctx.fillRect(wW + wH, i, wC, 1);
+        ctx.fillStyle = '#4a9e8e';
+        ctx.fillRect(wW + wH + wC, i, wS, 1);
+
+        // Zone boundary
+        if (i > 0 && zoneAt(DEPTH[i]) !== zoneAt(DEPTH[i-1])) {
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke();
+        }
+    }
+    ctx.fillStyle = '#3b82f6'; ctx.font = '11px monospace'; ctx.fillText('VBW', 2, H - 18);
+    ctx.fillStyle = '#c4791a'; ctx.fillText('VHC', 38, H - 18);
+    ctx.fillStyle = '#d4a843'; ctx.fillText('Vclay', 74, H - 18);
+    ctx.fillStyle = '#4a9e8e'; ctx.fillText('Vgrain', 122, H - 18);
+}
+
+// Mineral decomposition: Vquartz | Vclay | Vcaco3 | Phi — sums to 1.0
+function drawMin(canvasId) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || VQUARTZ.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = VQUARTZ.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+    ctx.fillStyle = '#141009';
+    ctx.fillRect(0, 0, W, H);
+
+    for (let i = 0; i < n; i++) {
+        const vq  = VQUARTZ[i] || 0;
+        const vc  = VCLAY[i]   || 0;
+        const va  = VCACO3[i]  || 0;
+        const phi = PHI_DN[i]  || 0;
+        const total = vq + vc + va + phi;
+        const scale = W / Math.max(total, 0.001);
+
+        ctx.fillStyle = '#4a9e8e';  ctx.fillRect(0,  i, vq  * scale, 1);
+        ctx.fillStyle = '#d4a843';  ctx.fillRect(vq  * scale, i, vc * scale, 1);
+        ctx.fillStyle = '#b5542a';  ctx.fillRect((vq+vc) * scale, i, va * scale, 1);
+        ctx.fillStyle = '#8aab86';  ctx.fillRect((vq+vc+va) * scale, i, phi * scale, 1);
+    }
+    ctx.fillStyle = '#4a9e8e'; ctx.font = '11px monospace'; ctx.fillText('Vq', 2, H - 18);
+    ctx.fillStyle = '#d4a843'; ctx.fillText('Vclay', 28, H - 18);
+    ctx.fillStyle = '#b5542a'; ctx.fillText('Vca', 82, H - 18);
+    ctx.fillStyle = '#8aab86'; ctx.fillText('Phi', 116, H - 18);
+}
+
+// DAK micro-resistivity
+function drawDAK(canvasId) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || DAK_MRS.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = DAK_MRS.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+
+    drawBg(ctx, W, H, true);
+    drawGrid(ctx, W, H, 200);
+
+    const drawCv = (arr, color, lw, dash) => {
+        ctx.strokeStyle = color; ctx.lineWidth = lw;
+        if (dash) ctx.setLineDash([4, 4]); else ctx.setLineDash([]);
+        ctx.beginPath(); let s = false;
+        for (let i = 0; i < n; i++) {
+            const v = arr[i];
+            if (v == null || v === NULLV) { if (s) { ctx.stroke(); ctx.beginPath(); s = false; } continue; }
+            const norm = Math.max(0, Math.min(1, (Math.log10(Math.max(v, 0.1)) + 1) / 2.5));
+            const x = norm * (W * 0.44) + W * 0.03;
+            if (!s) { ctx.moveTo(x, i); s = true; } else ctx.lineTo(x, i);
+        }
+        ctx.stroke(); ctx.setLineDash([]);
+    };
+    drawCv(DAK_MRS, '#c4791a', 1.5, false);
+    drawCv(DAK_MRL, '#d4a843', 1.5, true);
+
+    // FRA_IDX as bars
+    ctx.fillStyle = '#b5542a';
+    for (let i = 0; i < n; i++) {
+        const f = FRA_IDX[i] || 0;
+        if (f > 1.5) {
+            ctx.globalAlpha = 0.6;
+            ctx.fillRect(W * 0.7, i, Math.min(f / 10 * W * 0.3, W * 0.28), 1.5);
+            ctx.globalAlpha = 1;
+        }
+    }
+    ctx.fillStyle = '#c4791a'; ctx.font = '11px monospace'; ctx.fillText('MRS', 4, H - 18);
+    ctx.fillStyle = '#d4a843'; ctx.fillText('MRL', 46, H - 18);
+    ctx.fillStyle = '#b5542a'; ctx.fillText('Fra', W * 0.7 + 2, H - 18);
+}
+
+// Dip + fracture
+function drawDip(canvasId) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || DIP_ANG.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = DIP_ANG.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+
+    drawBg(ctx, W, H, false);
+    drawGrid(ctx, W, H, 200);
+
+    ctx.strokeStyle = '#4a9e8e'; ctx.lineWidth = 2;
+    ctx.beginPath(); let started = false;
+    for (let i = 0; i < n; i++) {
+        const v = DIP_ANG[i];
+        if (v == null || v === NULLV) continue;
+        const x = Math.max(0, Math.min(1, v / 90)) * (W - 10) + 5;
+        if (!started) { ctx.moveTo(x, i); started = true; } else ctx.lineTo(x, i);
+    }
+    ctx.stroke();
+
+    // FRA spikes
+    ctx.fillStyle = '#b5542a';
+    for (let i = 0; i < n; i++) {
+        const f = FRA_IDX[i] || 0;
+        if (f > 2) {
+            ctx.globalAlpha = Math.min(f / 10, 1) * 0.7;
+            ctx.fillRect(0, i, 8, 1.5);
+            ctx.globalAlpha = 1;
+        }
+    }
+    ctx.fillStyle = '#4a9e8e'; ctx.font = '11px monospace';
+    ctx.fillText('Dip(°)', 4, H - 18);
+    ctx.fillText('0   90', W - 50, 12);
+}
+
+// Crossover + NET/PAY
+function drawCPay(canvasId) {
+    const cv = document.getElementById(canvasId);
+    if (!cv || CROSS.length === 0) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.offsetWidth * 2;
+    const n = CROSS.length;
+    const H = n;
+    cv.width = W; cv.height = H;
+
+    drawBg(ctx, W, H, true);
+    drawGrid(ctx, W, H, 200);
+
+    // Zero-line
+    const zx = 0.5 * (W - 6) + 3;
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(zx, 0); ctx.lineTo(zx, H); ctx.stroke();
+
+    // CROSS curve (centre = 0, positive = gas crossover to left)
+    ctx.strokeStyle = '#c4791a'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); let started = false;
+    for (let i = 0; i < n; i++) {
+        const v = CROSS[i];
+        if (v == null || v === NULLV) { if (started) { ctx.stroke(); ctx.beginPath(); started = false; } continue; }
+        // CROSS range: -0.3 to +0.3, zero at centre
+        const norm = 0.5 + (v / 0.30) * 0.45;
+        const x = Math.max(3, Math.min(W - 3, norm * (W - 6) + 3));
+        if (!started) { ctx.moveTo(x, i); started = true; } else ctx.lineTo(x, i);
+    }
+    ctx.stroke();
+
+    // NET (teal strip) + PAY (sage strip) on right 30%
+    for (let i = 0; i < n; i++) {
+        if (NET[i] > 0) {
+            ctx.fillStyle = 'rgba(74,158,142,0.45)';
+            ctx.fillRect(W * 0.70, i, W * 0.15, 1);
+        }
+        if (PAY[i] > 0) {
+            ctx.fillStyle = '#8aab86';
+            ctx.fillRect(W * 0.85, i, W * 0.15, 1);
+        }
+    }
+    ctx.fillStyle = '#c4791a'; ctx.font = '11px monospace'; ctx.fillText('CROSS', 3, H - 18);
+    ctx.fillStyle = '#4a9e8e'; ctx.fillText('NET', W * 0.70 + 2, H - 18);
+    ctx.fillStyle = '#8aab86'; ctx.fillText('PAY', W * 0.85 + 2, H - 18);
+}
+
+// ===== DRAW ALL TRACKS =====
+function drawAll() {
+    if (DEPTH.length === 0) return;
+
+    draw('c-gr', GR,   { color: '#4a9e8e', fill: true,  minV: 0,   maxV: 150,  fillOp: 0.12, zoneColor: true });
+
+    // FIX: RDEP + RMED dual resistivity (invasion separation visible)
+    drawDual('c-res', RDEP, RMED,
+        { color: '#c4791a', minV: 0.2, maxV: 500, log: true },
+        { color: '#d4a843', minV: 0.2, maxV: 500, log: true });
+
+    // FIX: AC (left) + PHI_SN Wyllie (right)
+    drawDual('c-ac', AC, PHI_SN,
+        { color: '#3b82f6', minV: 40, maxV: 160, log: false },
+        { color: '#8aab86', minV: 0,  maxV: 0.4, log: false });
+
+    drawDual('c-den', DEN, PHI_RH,
+        { color: '#d4a843', minV: 1.9, maxV: 2.9, log: false },
+        { color: '#3b82f6', minV: 0,   maxV: 0.4, log: false });
+
+    drawDual('c-neu', NEU, PHI_DN,
+        { color: '#a78bfa', minV: 0, maxV: 50,  log: false },
+        { color: '#8aab86', minV: 0, maxV: 0.4, log: false });
+
+    drawCali('c-cali');
+
+    // SW — fill left (hydrocarbon side = low Sw = left)
+    draw('c-sw', SW, { color: '#3b82f6', fill: true, fillLeft: true, minV: 0, maxV: 1.0, fillOp: 0.15, zoneColor: true });
+
+    drawStack('c-bv');
+    drawMin('c-min');
+    drawK('c-k');
+    drawDAK('c-dak');
+    drawDip('c-dip');
+    drawCPay('c-cpay');
+}
+
+// ===== CONTROLS =====
+let gridOn = true;
+function toggleGrid() {
+    gridOn = !gridOn;
+    document.querySelectorAll('canvas').forEach(c => c.style.opacity = gridOn ? '1' : '0.5');
+}
+
+function scrollToPay() {
+    const el = document.getElementById('tracks');
+    const payIdx = PAY.findIndex(v => v > 0.5);
+    if (payIdx > 0) el.scrollTop = Math.max(0, payIdx - el.clientHeight / 2);
+}
+
+function exportTxt() {
+    const step = DEPTH.length > 1 ? (DEPTH[DEPTH.length-1] - DEPTH[0]) / (DEPTH.length - 1) : 0.1524;
+    const netN = NET.reduce((a,b)=>a+b,0);
+    const payN = PAY.reduce((a,b)=>a+b,0);
+    const netFt = (netN * step * 3.28084).toFixed(1);
+    const payFt = (payN * step * 3.28084).toFixed(1);
+    const vshCut = parseFloat(document.getElementById('cut-vsh').value);
+    const phiCut = parseFloat(document.getElementById('cut-phi').value);
+    const swCut  = parseFloat(document.getElementById('cut-sw').value);
+
+    const lines = [
+        'GEOX WELL INTERPRETATION REPORT',
+        `Well: 15/9-19 | Field: Q15 North Sea Danish`,
+        `Date: ${new Date().toISOString().split('T')[0]} | Software: GEOX v0.5.0`,
+        `Depth: 3615–4637 m MD | Curves: 25 | Data: ${window.DATA_STATUS || 'FALLBACK'}`,
+        '',
+        'PETRO PARAMETERS:',
+        `  Rw=${P.Rw} ohm.m | a=${P.a} | m=${P.m} | n=${P.n} | Rsh=${P.Rsh} ohm.m`,
+        `  SW model: Archie (Vsh<0.1) + Simandoux (shaly sands)`,
+        `  K model:  Timur (K = 100 * phi^2 / Sw^2, mD)`,
+        `  Mineral closure: Vq + Vclay + Vcaco3 + Phi = 1.0`,
+        '',
+        'INPUT LOGS: AC, CALI, DEN, GR, NEU, RDEP, RMED',
+        'DERIVED:    PHI_SN (Wyllie), PHI_RH (density), PHI_DN (crossplot)',
+        '            VSHALE (GR linear), SW, VBW, VHC, CROSS (NEU-DEN)',
+        '            VQUARTZ, VCLAY, VCACO3, K_PERM',
+        '            DAK_MRS, DAK_MRL, FRA_IDX, DIP_ANG, DIP_AZI',
+        '',
+        'NET/PAY CUTOFFS:',
+        `  Vsh < ${vshCut} | Phi > ${phiCut} | Sw < ${swCut}`,
+        '',
+        'ZONE SUMMARY:',
+        '  Zone A (3615-3800m): Phi~30%, Vsh~49%, Sw~96% - WET',
+        '  Zone B (3800-4000m): Phi~10%, Vsh~10%, Sw~94% - Low pay',
+        '  Zone C (4000-4200m): Phi~7%,  Vsh~18%, Sw~97% - TIGHT',
+        '  Zone D (4200-4400m): Phi~13%, Vsh~67%, Sw~89% - BEST ZONE',
+        '  Zone E (4400-4500m): Phi~15%, Vsh~70%, Sw~100% - WET',
+        '  Zone F (4500-4637m): Phi~8%,  Vsh~80%, Sw~100% - BASEMENT',
+        '',
+        `NET SAND: ${netN} samples · ${netFt} ft`,
+        `NET PAY:  ${payN} samples · ${payFt} ft`,
+        '',
+        'GEOX VERDICT: 888_HOLD',
+        'Human review required for drilling decision.',
+        '',
+        'DITEMPA BUKAN DIBERI',
+        'GEOX v0.5.0 · arifOS v2026',
+        'Built by Arif Fazil · Kuala Lumpur, Malaysia',
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'GEOX_15_9_19_Report.txt';
+    a.click();
+}
+
+let resizeT;
+window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(drawAll, 200); });
+
+// ===== LEAFLET MAP — North Sea =====
+let map = null, mapReady = false;
+
+const NORTH_SEA_WELLS = [
+    { name: '15/9-19 Q15', lat: 56.850, lon: 3.150,  status: 'producer',    country: '🇩🇰 Danish' },
+    { name: '15/9-17',     lat: 56.820, lon: 3.080,  status: 'producer',    country: '🇩🇰 Danish' },
+    { name: '16/1-2',      lat: 57.220, lon: 2.950,  status: 'exploration', country: '🇬🇧 UKCS' },
+    { name: '15/12-1',     lat: 56.610, lon: 3.450,  status: 'exploration', country: '🇩🇰 Danish' },
+    { name: 'Halfdan-A',   lat: 56.920, lon: 3.320,  status: 'producer',    country: '🇩🇰 Danish' },
+    { name: 'Dan-A',       lat: 55.455, lon: 4.750,  status: 'producer',    country: '🇩🇰 Danish' },
+];
+
+function initMap() {
+    if (map) return;
+    // FIX: Centre on North Sea (56.85°N, 3.15°E) — not Malay Basin
+    map = L.map('mapContainer').setView([56.85, 3.15], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 14,
+    }).addTo(map);
+
+    NORTH_SEA_WELLS.forEach(w => {
+        const color = w.status === 'producer' ? '#4a9e8e' : '#c4791a';
+        const icon  = w.status === 'producer' ? '●' : '◉';
+        L.circleMarker([w.lat, w.lon], {
+            radius: w.name.includes('15/9-19') ? 10 : 7,
+            fillColor: color,
+            color: w.name.includes('15/9-19') ? '#f0e6d3' : color,
+            weight: w.name.includes('15/9-19') ? 2 : 1,
+            fillOpacity: 0.9,
+        }).addTo(map).bindPopup(
+            `<div style="font-family:'Courier New',monospace;font-size:11px;background:#1c1710;color:#f0e6d3;border:1px solid #3d3018;padding:8px;border-radius:4px;min-width:150px;">` +
+            `<strong style="color:${color}">${icon} ${w.name}</strong><br>` +
+            `<span style="color:#8a7a60;font-size:9px">${w.country}</span><br>` +
+            `<span style="color:#d4a843;font-size:9px">${w.lat.toFixed(3)}°N, ${w.lon.toFixed(3)}°E</span><br>` +
+            `<span style="color:${color};font-size:8px;letter-spacing:1px">${w.status.toUpperCase()}</span>` +
+            `</div>`
+        );
+    });
+    mapReady = true;
+}
+
+function toggleMap() {
+    const panel = document.getElementById('mapPanel');
+    if (!panel) return;
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        if (!mapReady) initMap();
+        else if (map) map.invalidateSize();
+        document.getElementById('mapWellName').textContent = 'Well 15/9-19';
+        document.getElementById('mapCoords').textContent = '56.850°N, 3.150°E';
+    } else {
+        panel.style.display = 'none';
+    }
+}
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>load();</script>
+</body>
+</html>
