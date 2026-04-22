@@ -43,6 +43,7 @@ ariffazil/GEOX
 │   │   ├── ac_risk.py            # ToAC AC_Risk calculation engine
 │   │   ├── bias_detector.py      # Bond et al. (2007) cognitive bias audit
 │   │   ├── epistemic_integrity.py # Posterior integrity scoring (AlphaFold pLDDT equiv)
+│   │   ├── physics9.py           # ★ NEW: Physics9 engine — 9-var state, AAA/RAW grade
 │   │   ├── portfolio_audit.py    # Portfolio risk tracking + PoS coupling detection
 │   │   ├── physics_guard.py      # Hard physics constraint enforcement
 │   │   ├── governed_output.py    # ClaimTag + VAULT999 receipt builder
@@ -101,19 +102,34 @@ ariffazil/GEOX
 │   ├── dist/                   # Pre-built Cesium viewer + apps
 │   └── src/
 │
-├── apps/                        # MCP App manifests + HTML UIs
-│   ├── geox-seismic-viewer/   # First living MCP App organ
-│   │   ├── manifest.json      # arifOS F1–F13 compliant app manifest
-│   │   ├── mcp-app.config.json
-│   │   └── public/index.html  # Interactive seismic viewer (WebGL canvas)
-│   ├── well-desk/             # AAA-grade well context desk
-│   ├── seismic-vision-review/  # AI fault pick scaffold
-│   ├── judge-console/         # AC_Risk Console
-│   └── [other MCP apps]
+├── geox/apps/                   # ★ MCP App manifests + HTML UIs (under geox/ package)
+│   ├── well-desk/             # 1D WellDesk — physics9 per EarthLayer
+│   │   ├── index.html
+│   │   └── manifest.json
+│   ├── seismic-vision-review/ # 2D SeismicVision — AC_Risk per horizon
+│   │   ├── index.html
+│   │   └── manifest.json
+│   ├── earth-volume/          # 3D EarthVolume — physics9 + AC_Risk matrix
+│   │   ├── index.html
+│   │   └── manifest.json
+│   ├── judge-console/         # 4D JudgeConsole — AC_Risk on Gassmann fluid sub
+│   │   ├── index.html
+│   │   └── manifest.json
+│   ├── attribute-audit/       # 2.5D AttributeAudit — Kozeny-Carman proxy
+│   │   ├── index.html
+│   │   └── manifest.json
+│   ├── georeference-map/      # GeoProbe — time-depth + physics9 velocity model
+│   │   ├── index.html
+│   │   └── manifest.json
+│   ├── analog-digitizer/      # Analog log → structured curve
+│   │   └── index.html
+│   ├── prospect-ui/           # Prospect evaluation UI
+│   │   └── index.html
+│   └── seismic-vision-review/ # Seismic vision + fault pick scaffold
 │
 ├── contracts/
 │   └── mcp/                   # Canonical MCP tool contracts
-│       ├── geox_ui_tool_contract.json           # Master schema for GEOX UI tools
+│       ├── geox_ui_tool_contract.json
 │       └── geox_seismic_load_volume_contract.json
 │
 ├── infra/
@@ -129,6 +145,163 @@ ariffazil/GEOX
 ├── geox_mcp_server.py         # CLI entry point
 ├── fastmcp.json               # FastMCP deployment config
 └── pyproject.toml             # Python package manifest
+```
+
+---
+
+## ★ Physics9 Engine (`geox/core/physics9.py`)
+
+The missing core engine — built April 2026. All 5 MCP Apps import from here.
+
+```python
+from geox.core.physics9 import (
+    Physics9State,
+    forward_physics9,
+    build_lithology_model,
+    anomaly_contrast_theory,
+    inverse_physics9,
+    metabolic_loop,
+    EARTH_MATERIAL_CATALOG,
+)
+```
+
+### Physics9State — 9 Canonical Variables
+
+| Variable | Unit | Grade Gate |
+|----------|------|-----------|
+| `vp` | m/s | 1500–7000 |
+| `vs` | m/s | 0–4500 |
+| `rho` | g/cc | 1.0–3.5 |
+| `porosity` | fraction | 0.0–0.45 |
+| `sw` | fraction | 0.0–1.0 |
+| `vsh` | fraction | 0.0–1.0 |
+| `temperature` | °C | 0–400 |
+| `pressure` | MPa | 0–200 |
+| `permeability` | mD | 0.001–10000 |
+
+`grade()` → `AAA` (all in bounds) or `RAW` (violation). RAW never reaches VAULT999.
+
+### EARTH_MATERIAL_CATALOG — 8 Real Materials
+
+`Sandstone → Shale → Limestone → Dolomite → Salt → Anhydrite → Coal → Basement`
+
+### AC_Risk Formula (real, not mocked)
+
+```
+AC_Risk = U_ambiguity × D_transform × B_cog
+```
+
+`anomaly_contrast_theory()` computes this with real material-anchored U values. No fake PASS tables.
+
+### Metabolic Loop
+
+`metabolic_loop()` runs `forward → inverse` convergence up to 50 iterations. Stops when state delta < tolerance or grade = AAA.
+
+---
+
+## GEOX MCP App Deployment Checklist
+
+Status as of **2026-04-22**. Use this as the pre-deployment gate for each app.
+
+### What an MCP App Requires
+
+Per the `io.modelcontextprotocol/ui` capability spec:
+
+1. **`manifest.json`** — `app_id`, `version`, `ui_entry.resource_uri`, `events.supported`, `auth`, `fallback.chain`
+2. **`index.html`** — self-contained, no external CDN deps, `postMessage` bridge to MCP host
+3. **`ui://` resource** in `fastmcp_server.py` — returns the HTML for that app
+4. **Tool returns `ui: {resourceUri}`** — the MCP host reads this to render the app
+5. **arifOS floors** — `arifos.required_floors` in manifest, enforced at runtime
+6. **VAULT999 receipt** — every tool call emits telemetry + vault receipt
+7. **CSP policy** — `csp_policy` in `ui_entry`, no unsafe external connects
+8. **Fallback chain** — `inline → external → card → text`
+
+### 5-App Status Matrix
+
+| # | App | Dim | `manifest.json` | `index.html` | `ui://` resource | Tool `ui:` key | `postMessage` bridge | physics9 wired | PhysicsGuard wired | VAULT999 | Deploy Ready |
+|---|-----|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| 1 | `well-desk` | 1D | ✅ | ✅ | ⚠️ missing | ⚠️ partial | ✅ | ✅ | ❌ | ⚠️ partial | **PARTIAL** |
+| 2 | `seismic-vision-review` | 2D | ✅ | ✅ (stub) | ✅ exists | ⚠️ partial | ❌ | ✅ | ❌ | ⚠️ partial | **PARTIAL** |
+| 3 | `earth-volume` | 3D | ✅ | ✅ | ❌ missing | ❌ | ❌ | ✅ | ❌ | ⚠️ partial | **NOT READY** |
+| 4 | `judge-console` | 4D | ✅ | ✅ | ✅ (`ui://ac_risk`) | ✅ | ✅ | ✅ | ❌ | ✅ | **CLOSEST** |
+| 5 | `attribute-audit` | 2.5D | ✅ | ✅ | ✅ exists | ⚠️ partial | ❌ | ✅ | ❌ | ⚠️ partial | **PARTIAL** |
+
+### What's Still Needed Per App
+
+**App 1 — well-desk (1D WellDesk)**
+- [ ] Add `ui://well_desk` resource to `fastmcp_server.py`
+- [ ] `geox_well_load_bundle` must return `ui: {resourceUri: "ui://well_desk"}`
+- [ ] Wire `epistemic_integrity.py` PhysicsGuard into Streamlit tabs (C3 unresolved)
+- [ ] `postMessage` bridge already present — validate event schema against manifest
+
+**App 2 — seismic-vision-review (2D SeismicVision)**
+- [ ] `index.html` is 4KB stub — needs real amplitude + AC_Risk per horizon UI
+- [ ] Add `postMessage` bridge (missing)
+- [ ] `geox_seismic_vision_review` is QUARANTINED — needs VAULT999 proof before un-quarantine
+- [ ] Wire PhysicsGuard amplitude bounds check
+
+**App 3 — earth-volume (3D EarthVolume)**
+- [ ] Add `ui://earth_volume` resource to `fastmcp_server.py`
+- [ ] Identify or create the tool that returns `ui: {resourceUri: "ui://earth_volume"}`
+- [ ] Add `postMessage` bridge
+- [ ] Wire PhysicsGuard + VAULT999
+
+**App 4 — judge-console (4D AC_Risk Console) — CLOSEST TO DEPLOY**
+- [ ] Wire `epistemic_integrity.py` PhysicsGuard posterior ratio check into the Streamlit tab (C3 — the real 888_JUDGE work)
+- [ ] Replace local `biasMap` JS calc with live `geox_prospect_evaluate` MCP tool call
+- [ ] Validate `auth.mode: jwt` — token endpoint must exist at `https://api.geox.arif-fazil.com`
+
+**App 5 — attribute-audit (2.5D GeoProbe)**
+- [ ] Add `postMessage` bridge (missing)
+- [ ] Tool launcher for this app not confirmed in `fastmcp_server.py`
+- [ ] Wire physics9 velocity model per horizon (C5 — cross-app cube not yet session-persistent)
+
+### Global Gaps (All 5 Apps)
+
+| Gap | Description | Priority |
+|-----|-------------|----------|
+| **G1 — PhysicsGuard** | `epistemic_integrity.py` not wired into any Streamlit tab | CRITICAL |
+| **G2 — Session Cube** | Cross-app state (C5) still per-app, not session-persistent | HIGH |
+| **G3 — JWT Auth Endpoint** | `https://api.geox.arif-fazil.com` auth endpoint not confirmed live | HIGH |
+| **G4 — CSP Validation** | CSP policies in manifests not tested against actual host environments | MEDIUM |
+| **G5 — card.html fallback** | `fallback.card_template` referenced in manifests, files don't exist | MEDIUM |
+| **G6 — icon.svg** | All manifests reference `icon.svg` at `geox.arif-fazil.com` — not confirmed live | LOW |
+| **G7 — geox-seismic-viewer** | Lives under `geox-gui/dist/` not `geox/apps/` — path mismatch in server | HIGH |
+
+### Deployment Sequence (Recommended Order)
+
+```
+1. SEAL judge-console first  — manifest + ui resource + tool launcher all exist
+2. SEAL well-desk second     — just needs ui:// resource added to fastmcp_server.py
+3. SEAL attribute-audit      — add postMessage bridge + confirm tool launcher
+4. earth-volume              — needs ui:// resource + tool launcher wired
+5. seismic-vision-review     — needs real index.html before deploy
+```
+
+### MCP App Manifest Schema (Reference)
+
+Every GEOX MCP App `manifest.json` must contain:
+
+```json
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
+  "app_id": "geox.<domain>.<name>",
+  "version": "x.y.z",
+  "ui_entry": {
+    "resource_uri": "https://geox.arif-fazil.com/apps/<name>/index.html",
+    "mode": "inline-or-external",
+    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.geox.arif-fazil.com; style-src 'self' 'unsafe-inline';",
+    "sandbox": "allow-scripts allow-same-origin"
+  },
+  "auth": { "mode": "jwt", "token_ttl_seconds": 600, "refreshable": true },
+  "events": { "supported": ["app.initialize", "app.state.sync", "tool.request", "tool.result", "ui.action"] },
+  "fallback": { "chain": ["inline", "external", "card", "text"] },
+  "arifos": {
+    "required_floors": ["F1","F2","F4","F7","F9","F11","F13"],
+    "vault_route": "999_VAULT",
+    "human_in_the_loop": ["<irreversible_actions>"]
+  }
+}
 ```
 
 ---
@@ -162,14 +335,15 @@ GEOX MCP Apps are domain-native UI surfaces rendered via the MCP `io.modelcontex
 
 ### Live MCP Apps
 
-| App | Purpose | Launched By |
-|-----|---------|-------------|
-| `geox-seismic-viewer` | Interactive seismic section viewer (inline/crossline, amplitude attributes, horizon overlay) | `geox_seismic_load_volume` |
-| `well-desk` | Well context desk with LAS curves, petrophysics results, AC_Risk widget | `geox_well_load_bundle` |
-| `judge-console` | AC_Risk Console for ToAC calculation + verdict display | `arifos_compute_risk` |
-| `seismic-vision-review` | AI-assisted fault pick review scaffold | `geox_seismic_vision_review_stub` |
-| `georeference-map` | Map georeferencing plan | `geox_georeference_map` |
-| `attribute-audit` | Kozeny-Carman permeability proxy audit | `geox_attribute_audit` |
+| App | Purpose | Launched By | Status |
+|-----|---------|-------------|--------|
+| `geox-seismic-viewer` | Interactive seismic section viewer (inline/crossline, amplitude attributes, horizon overlay) | `geox_seismic_load_volume` | **PROD** |
+| `well-desk` | Well context desk with LAS curves, petrophysics results, AC_Risk widget | `geox_well_load_bundle` | **PARTIAL** |
+| `judge-console` | AC_Risk Console for ToAC calculation + verdict display | `arifos_compute_risk` | **CLOSEST** |
+| `seismic-vision-review` | AI-assisted fault pick review scaffold | `geox_seismic_vision_review_stub` | **STUB** |
+| `earth-volume` | 3D volume + physics9 engine tab + AC_Risk matrix + volumetrics | TBD | **NOT READY** |
+| `attribute-audit` | Kozeny-Carman permeability proxy audit | `geox_attribute_audit` | **PARTIAL** |
+| `georeference-map` | Map georeferencing plan | `geox_georeference_map` | **SCAFFOLD** |
 
 ### App Manifest Schema
 
@@ -180,6 +354,7 @@ Every GEOX MCP App carries a `manifest.json` with:
 - `events.supported`: `app.initialize`, `ui.state.sync`, `tool.request`, `tool.result`
 - `auth.mode`: JWT with scoped permissions
 - `vault_route`: VAULT999 immutable sealing
+- `fallback.chain`: `inline → external → card → text`
 
 Apps are deployed to `/srv/mcp/apps/<appname>/dist/` and served via the Traefik `geox-mcp-apps` router on port 8081.
 
@@ -208,14 +383,14 @@ Apps are deployed to `/srv/mcp/apps/<appname>/dist/` and served via the Traefik 
 | `geox_seismic_load_volume` | SEG-Y volume ingest → VTF tile pyramid → geox-seismic-viewer | **PROD** |
 | `geox_seismic_compute_attribute` | Compute amplitude/variance/sweetness/coherence via bruges | **PROD** |
 | `geox_seismic_render_slice` | Extract inline/crossline/time slice via pyvista | **PROD** |
-| `geox_seismic_vision_review` | AI fault pick scaffold | **SCAFFOLD** |
+| `geox_seismic_vision_review` | AI fault pick scaffold | **QUARANTINED** |
 | `geox_georeference_map` | Map georeferencing plan | **SCAFFOLD** |
 | `geox_analog_digitizer` | Analog log → structured curve | **SCAFFOLD** |
 
 ### arifOS Governance Tools (`arifos_*`)
 
 | Tool | Purpose |
-|------|---------|
+|------|---------| 
 | `arifos_check_hold` | 888 HOLD authority check |
 | `arifos_compute_risk` | ToAC AC_Risk score |
 | `arifos_judge_prospect` | Full verdict — routes to VAULT999 |
@@ -223,13 +398,16 @@ Apps are deployed to `/srv/mcp/apps/<appname>/dist/` and served via the Traefik 
 ### MCP Resource URIs
 
 | URI | Returns |
-|-----|---------|
+|-----|---------| 
 | `geox://health` | Server health + `io.modelcontextprotocol/ui` capability advertisement |
 | `geox://capabilities` | Full GEOX tool + app + arifOS integration manifest |
 | `geox://registry` | Full skill registry |
 | `ui://geox_seismic_viewer` | geox-seismic-viewer HTML |
 | `ui://ac_risk` | AC_Risk Console HTML |
+| `ui://attribute_audit` | Attribute Audit HTML |
 | `ui://seismic_vision_review` | Seismic Vision Review HTML |
+| `ui://georeference_map` | Georeference Map HTML |
+| `ui://analog_digitizer` | Analog Digitizer HTML |
 
 ---
 
@@ -240,7 +418,7 @@ GEOX exposes open-source geoscience libraries via governed skill pack wrappers i
 ### Installed Libraries (`requirements-earth.txt`)
 
 | Library | Purpose |
-|---------|---------|
+|---------|---------| 
 | `segyio` | SEG-Y binary I/O for seismic volumes |
 | `bruges` | Seismic attributes (amplitude, variance, sweetness, coherence, envelope, freq_avg) |
 | `welly` | Well log analysis and multi-well correlation |
@@ -283,13 +461,13 @@ attr = seismic_compute_attribute("MB_3D", attribute="variance")
 
 ## Subsurface Epistemic Layer
 
-**Audit Reference:** Session 2026-04-18
+**Audit Reference:** Session 2026-04-18 / 2026-04-22
 **Purpose:** Formalize Bayesian graph, encode dependencies explicitly, enforce hard physics constraints, quantify refusal triggers.
 
 ### 6 Subsurface Skill Domains
 
 | Skill ID | Title | Purpose |
-|----------|-------|---------|
+|----------|-------|---------| 
 | `geox.subsurface.formation-evaluation` | Formation Evaluation | Vsh, POR, Sw via Archie/Indonesia/Simandoux. Physics bounds enforced. |
 | `geox.subsurface.seismic-interpretation` | Seismic Interpretation | Horizon picking + amplitude analysis. Never collapse posterior to single horizon. |
 | `geox.subsurface.reservoir-dynamics` | Reservoir Dynamics | Fluid mechanics, PVT, material balance. Net pay requires Sw + POR + Vsh all pass. |
@@ -328,7 +506,7 @@ guard.check_charge_timing(charge_ma=70, trap_ma=60)
 **Physics bounds enforced:**
 
 | Parameter | Min | Max | Violation |
-|-----------|-----|-----|-----------|
+|-----------|-----|-----|-----------| 
 | Porosity | 0.02 | 0.45 | REJECT |
 | Water saturation | 0.0 | 1.0 | REJECT |
 | Vsh | 0.0 | 1.0 | REJECT |
@@ -352,7 +530,7 @@ Every subsurface output that flows to WEALTH carries:
 **Thresholds:**
 
 | Integrity Score | Action |
-|----------------|--------|
+|----------------|--------| 
 | < 0.3 | **AUTO_HOLD** — do not pass to WEALTH |
 | 0.3 – 0.6 | **PLAUSIBLE** — pass with warning |
 | > 0.6 | **CLAIM** — pass to WEALTH normally |
@@ -383,7 +561,7 @@ Verdict Thresholds:
 Every AC_Risk result is wrapped in:
 
 | Layer | Purpose |
-|-------|---------|
+|-------|---------| 
 | **ClaimTag** | Epistemic classification: `CLAIM`, `PLAUSIBLE`, `HYPOTHESIS`, `UNKNOWN` |
 | **TEARFRAME** | Truth (≥0.85 for CLAIM), Echo (≥0.75 consistency), Amanah (LOCK required for SEAL), Rasa (context fit) |
 | **Anti-Hantu** | F9 screen — fail-closed on empathy/feeling attribution |
@@ -416,7 +594,7 @@ F13 SOVEREIGN  Human holds final veto — always supreme
 Each verified tool in the pipeline reduces `D_transform` by a governed credit amount. A fully-evidenced prospect can reach SEAL instead of being trapped at VOID.
 
 | Tool Called | Credit | Cumulative |
-|-------------|--------|------------|
+|-------------|--------|-----------|
 | `geox_well_load_bundle` | +0.20 | 0.20 |
 | `geox_well_qc_logs` | +0.15 | 0.35 |
 | `geox_well_compute_petrophysics` | +0.40 | 0.75 |
@@ -522,6 +700,22 @@ governed = compute_ac_risk_governed(
 # governed.verdict, governed.ac_risk, governed.hold_enforced, governed.vault_payload
 ```
 
+### Physics9 API
+
+```python
+from geox.core.physics9 import forward_physics9, Physics9State, anomaly_contrast_theory
+
+# Forward physics9 — compute K, G, E, nu, AI, vp_vs, thermal_diff, fatigue
+state = Physics9State(vp=3500, vs=1800, rho=2.3, porosity=0.22, sw=0.35,
+                       vsh=0.15, temperature=95, pressure=35, permeability=120)
+result = forward_physics9(state)
+# result.grade() → "AAA" if all bounds pass, "RAW" if any violation
+
+# AC_Risk from real physics9 values
+ac = anomaly_contrast_theory(state, transform_stack=["agc_rms", "depth_conversion"])
+# ac["ac_risk"], ac["verdict"], ac["u_ambiguity"]
+```
+
 ### MCP Tools via FastMCP Client
 
 ```python
@@ -564,7 +758,7 @@ petro = mcp.call_tool("geox_well_compute_petrophysics", {
 GEOX ships scaffold well data for testing:
 
 | Well | Status | Notes |
-|------|--------|-------|
+|------|--------|-------| 
 | `BEK-2` | HC CONFIRMED | φ=0.22, Sw=0.35, 82m core HC + 4m fringe |
 | `DUL-A1` | HC CONFIRMED | 75m net pay |
 | `SEL-1` | HC CONFIRMED | 75m net pay |
