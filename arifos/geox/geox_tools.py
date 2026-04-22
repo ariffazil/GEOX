@@ -45,6 +45,7 @@ from arifos.geox.geox_schemas import (
 )
 from arifos.geox.tools.lem_bridge import LEMBridgeTool
 from arifos.geox.tools.macrostrat_tool import MacrostratTool
+from arifos.geox.tools.earth_realtime_tool import EarthRealtimeTool
 from arifos.geox.tools.seismic_visual_filter import SeismicVisualFilterTool
 from arifos.geox.tools.seismic import SeismicSingleLineTool
 from arifos.geox.tools.single_line_interpreter import SingleLineInterpreter
@@ -1134,6 +1135,7 @@ class ToolRegistry:
         registry.register(GeoRAGTool())
         registry.register(MacrostratTool())
         registry.register(LEMBridgeTool())
+        registry.register(EarthRealtimeTool())
         registry.register(SeismicVisualFilterTool())
         registry.register(SeismicAttributesTool())
         registry.register(SingleLineInterpreter(), name="SingleLineInterpreter")

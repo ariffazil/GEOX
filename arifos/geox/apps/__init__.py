@@ -1,31 +1,67 @@
 """
-GEOX Volume App — DITEMPA BUKAN DIBERI
+GEOX Apps — Host-agnostic interactive applications.
 
-App module for volume context and 3D visualization.
+This package contains GEOX MCP Apps with their manifests and implementations.
+Each app is self-contained and portable across hosts.
 
-This is the user-facing app that uses the renderer adapters
-to provide volume context views.
-
-Architecture:
-  GEOX tools → VolumeApp → SceneCompiler → CigvisAdapter → cigvis
+DITEMPA BUKAN DIBERI
 """
 
-from arifos.geox.apps.volume_app.app import VolumeApp
-from arifos.geox.apps.volume_app.tools import (
-    geox_open_volume_context,
-    geox_volume_compile_scene,
-    geox_volume_render_snapshot,
-    geox_volume_launch_interactive,
-    geox_volume_add_horizon,
-    geox_volume_add_wells,
-)
+from pathlib import Path
+import json
+import typing
 
-__all__ = [
-    "VolumeApp",
-    "geox_open_volume_context",
-    "geox_volume_compile_scene",
-    "geox_volume_render_snapshot",
-    "geox_volume_launch_interactive",
-    "geox_volume_add_horizon",
-    "geox_volume_add_wells",
-]
+from ..contracts.app_manifest import GeoXAppManifest, get_app_registry, Dimension, AppDomain
+
+
+def _normalize_manifest(raw: dict) -> dict:
+    """Normalize legacy manifest fields before Pydantic validation."""
+    # Ensure dimension exists
+    if "dimension" not in raw:
+        domain = raw.get("domain", "")
+        dimension_map = {
+            "seismic": Dimension.EARTH_3D,
+            "petrophysics": Dimension.WELL,
+            "geology": Dimension.SECTION,
+            "economics": Dimension.PROSPECT,
+            "governance": Dimension.DASHBOARD,
+            "general": Dimension.DASHBOARD,
+            "wells": Dimension.WELL,
+            "maps": Dimension.MAP,
+        }
+        raw["dimension"] = dimension_map.get(domain, Dimension.DASHBOARD).value
+    return raw
+
+
+def load_app_manifest(app_name: str) -> GeoXAppManifest:
+    """
+    Load an app manifest by name.
+    
+    Args:
+        app_name: App directory name (e.g., 'seismic_viewer')
+    
+    Returns:
+        Parsed GeoXAppManifest
+    """
+    manifest_path = Path(__file__).parent / app_name / "manifest.json"
+    raw = json.loads(manifest_path.read_text(encoding="utf-8"))
+    normalized = _normalize_manifest(raw)
+    return GeoXAppManifest.model_validate(normalized)
+
+
+def register_all_apps() -> None:
+    """Register all built-in GEOX apps."""
+    registry = get_app_registry()
+    
+    apps_dir = Path(__file__).parent
+    for app_dir in apps_dir.iterdir():
+        if app_dir.is_dir() and (app_dir / "manifest.json").exists():
+            try:
+                manifest = load_app_manifest(app_dir.name)
+                registry.register(manifest)
+            except Exception as e:
+                print(f"[GEOX Apps] Failed to load {app_dir.name}: {e}")
+
+
+# Auto-register on import
+register_all_apps()

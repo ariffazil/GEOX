@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOX Skills Catalog</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">GEOX</div>
+      <div class="tagline">Earth Intelligence Skills Registry</div>
+      <nav>
+        <a href="#home" class="active">Home</a>
+        <a href="#catalog">Catalog</a>
+        <a href="#domains">Domains</a>
+        <a href="#graph">Graph</a>
+        <a href="#scenarios">Scenarios</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="view active">
+      <div class="container">
+        <div class="hero">
+          <h1>GEOX Skills Registry</h1>
+          <p class="subtitle">33 skills across 11 domains — forged for earth intelligence, human-machine-void orchestration</p>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-number">33</span>
+              <span class="stat-label">Skills</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">11</span>
+              <span class="stat-label">Domains</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">3</span>
+              <span class="stat-label">Per Domain</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">8</span>
+              <span class="stat-label">Substrates</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="substrate-model">
+          <h2>Substrate Model</h2>
+          <div class="substrate-grid">
+            <div class="substrate-tag human">human</div>
+            <div class="substrate-tag machine-fixed">machine-fixed</div>
+            <div class="substrate-tag machine-mobile">machine-mobile</div>
+            <div class="substrate-tag infrastructure">infrastructure</div>
+            <div class="substrate-tag orbital">orbital</div>
+            <div class="substrate-tag environment-field">environment-field</div>
+            <div class="substrate-tag celestial">celestial</div>
+            <div class="substrate-tag void">void</div>
+          </div>
+        </div>
+
+        <div class="domains-preview">
+          <h2>11 Domains</h2>
+          <div class="domain-cards" id="domainCardsHome"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalog" class="view">
+      <div class="container">
+        <h1>Skill Catalog</h1>
+        <div class="filters">
+          <input type="text" id="searchInput" placeholder="Search skills...">
+          <select id="domainFilter">
+            <option value="">All Domains</option>
+          </select>
+          <select id="substrateFilter">
+            <option value="">All Substrates</option>
+          </select>
+          <select id="riskFilter">
+            <option value="">All Risk Classes</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="skill-grid" id="skillGrid"></div>
+      </div>
+    </section>
+
+    <section id="domains" class="view">
+      <div class="container">
+        <h1>Domains</h1>
+        <div class="domains-list" id="domainsList"></div>
+      </div>
+    </section>
+
+    <section id="graph" class="view">
+      <div class="container">
+        <h1>Dependency Graph</h1>
+        <p class="graph-description">Skill dependencies and cross-domain relationships</p>
+        <div class="graph-container" id="graphContainer">
+          <svg id="dependencyGraph" width="100%" height="600"></svg>
+        </div>
+      </div>
+    </section>
+
+    <section id="scenarios" class="view">
+      <div class="container">
+        <h1>Scenarios</h1>
+        <p class="scenarios-description">Curated skill bundles for operational scenarios</p>
+        <div class="scenario-cards" id="scenarioCards"></div>
+      </div>
+    </section>
+
+    <section id="skill-detail" class="view">
+      <div class="container">
+        <button class="back-btn" onclick="showView('catalog')">← Back to Catalog</button>
+        <div id="skillDetailContent"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>GEOX Skills Registry — Ditempa Bukan Diberi — 999 SEAL ALIVE</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

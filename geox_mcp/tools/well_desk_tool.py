@@ -1,6 +1,6 @@
 """
 well_desk_tool.py — FastMCP Tool: geox_well_desk_launch
-========================================================
+=======================================================
 Wires WellDesk app into MCP host. All compute routes through
 rock_physics_engine.py. Every call emits vault_receipt.
 
@@ -35,6 +35,29 @@ except ImportError:
 
 
 _TOOL_NAME = "geox_well_desk_launch"
+
+VOLVE_F1B_SCAFFOLD = {
+    "well_id": "15/9-F-1B",
+    "field": "Volve",
+    "basin": "North Sea",
+    "country": "Norway",
+    "operator": "Equinor (decommissioned 2016)",
+    "license_note": "Synthetic approximation. Real data: data.equinor.com (CC BY-NC)",
+    "depth_range_m": (2000, 3500),
+    "sample_interval_m": 0.5,
+    "hc_zone": {"Name": "Heimdal Fm", "top_m": 2080, "base_m": 2120},
+    "petro_summary": {
+        "porosity_avg": 0.28,
+        "sw_avg": 0.25,
+        "vsh_avg": 0.08,
+        "net_pay_m": 32.0,
+        "fluid_type": "gas"
+    },
+    "rock_type": "quartz_sandstone",
+    "las_path": "geox/apps/well-desk/data/samples/15_9_F1B_synthetic.las",
+    "provenance": "synthetic_from_published_statistics"
+}
+
 _APP_ID = "geox.subsurface.well-desk"
 
 
@@ -65,7 +88,16 @@ class WellDeskTool:
             physics_params: Optional forward/inverse parameters
         """
         # ── Load state ────────────────────────────────────────────────────────
-        if las_path and lasio and os.path.exists(las_path):
+        # ── Volve F-1B synthetic well ────────────────────────────────────────
+        if well_id in ("15/9-F-1B", "VOLVE-F-1B", "volve_f1b"):
+            scaffold = self.engine.load_scaffold("bek_2")  # base scaffold
+            scaffold.porosity = 0.28
+            scaffold.sw = 0.25
+            scaffold.vsh = 0.08
+            scaffold.fluid_type = "gas"
+            scaffold.pressure_mpa = 22.0
+            state = scaffold
+        elif las_path and lasio and os.path.exists(las_path):
             state = self._load_las(las_path, well_id)
         else:
             state = self.engine.load_scaffold(well_id)

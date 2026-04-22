@@ -1,0 +1,133 @@
+name: GEOX Forge Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install jsonschema pyyaml
+
+      - name: Validate registry.json
+        run: |
+          python -c "
+          import json, jsonschema
+          from pathlib import Path
+          with open('registry/registry.json') as f:
+              registry = json.load(f)
+          with open('schemas/registry.schema.json') as f:
+              schema = json.load(f)
+          jsonschema.validate(registry, schema)
+          print(f'Registry valid: {registry[\"total_skills\"]} skills, {registry[\"total_domains\"]} domains')
+          "
+
+      - name: Validate skill count
+        run: |
+          python -c "
+          import json
+          from pathlib import Path
+          with open('registry/registry.json') as f:
+              registry = json.load(f)
+          skill_count = len(registry['skills'])
+          assert skill_count == 33, f'Expected 33 skills, got {skill_count}'
+          print(f'Skill count: {skill_count} ✓')
+          "
+
+      - name: Validate all skill files exist
+        run: |
+          python -c "
+          import json
+          from pathlib import Path
+          with open('registry/registry.json') as f:
+              registry = json.load(f)
+          missing = []
+          for skill in registry['skills']:
+              path = Path('skills') / skill['domain'] / skill['filename']
+              if not path.exists():
+                  missing.append(str(path))
+          if missing:
+              print(f'Missing skill files: {missing}')
+              exit(1)
+          print(f'All {len(registry[\"skills\"])} skill files exist ✓')
+          "
+
+  build-site:
+    name: Build Static Site
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate registry loads in site
+        run: |
+          node -e "
+          const fs = require('fs');
+          const registry = JSON.parse(fs.readFileSync('registry/registry.json', 'utf8'));
+          console.log('Registry loaded:', registry.total_skills, 'skills');
+          "
+
+      - name: Build site assets
+        run: |
+          mkdir -p _site
+          cp site/*.html site/*.css site/*.js _site/
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy-site:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-site
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        uses: actions/deploy-pages@v4
+        id: deployment
+
+  test-mcp:
+    name: Test MCP Server
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install MCP
+        run: |
+          pip install mcp
+
+      - name: Test MCP server imports
+        run: |
+          cd mcp
+          python -c "
+          from server import mcp, list_skills, get_skill_metadata
+          print('MCP server imports OK')
+          result = list_skills()
+          print(f'list_skills returned {result[\"count\"]} skills')
+          "

@@ -35,6 +35,24 @@ class SourceDomain(Enum):
         return self in (SourceDomain.EARTH, SourceDomain.SENSOR)
 
 
+class ClaimTag(Enum):
+    """
+    Non-negotiable claim classification for all GEOX assertions.
+    
+    Ensures that every claim made by the system is explicitly categorized
+    by its epistemic status.
+    
+    CLAIMS: Fact-based, verified against physical models (F2 Truth).
+    PLAUSIBLE: Follows logical trends but lacks high-res calibration.
+    HYPOTHESIS: Speculative, based on visual similarity (High Conflation Risk).
+    UNKNOWN: Data gap or model failure.
+    """
+    CLAIM = auto()
+    PLAUSIBLE = auto()
+    HYPOTHESIS = auto()
+    UNKNOWN = auto()
+
+
 @dataclass(frozen=True)
 class VisualTransform:
     """

@@ -1,6 +1,6 @@
 """
 rock_physics_engine.py — GEOX WellDesk Rock Physics Engine
-===========================================================
+==========================================================
 Three-mode physics compute: FORWARD / METABOLIC / INVERSE
 Aligned with Physics9 constitutional engine. All outputs pass PhysicsGuard.
 
@@ -38,6 +38,10 @@ class Mineral(Enum):
     DOLOMITE = ("dolomite", 94.9, 45.0, 2.870)
     CLAY     = ("clay",     20.9,  6.85, 2.550)  # Illite-smectite average
     FELDSPAR = ("feldspar", 37.5, 15.0, 2.630)
+    SALT     = ("salt",     24.8, 14.9, 2.160)   # Halite — caprock
+    ANHYDRITE= ("anhydrite",56.0, 29.0, 2.980)   # Evaporite seal
+    COAL     = ("coal",      3.7,  2.4, 1.350)   # Organic — low impedance marker
+    BASEMENT = ("basement",  75.0, 33.0, 2.650)  # Granite — acoustic floor
 
     def __init__(self, label: str, bulk_mod: float, shear_mod: float, rho: float):
         self.label = label
@@ -48,9 +52,9 @@ class Mineral(Enum):
 
 class Fluid(Enum):
     """Pore fluid end-members at standard conditions."""
-    BRINE = ("brine", 2.50, 1.024, 0.0)   # K, rho, viscosity placeholder
-    OIL   = ("oil",   1.50, 0.850, 0.0)
-    GAS   = ("gas",   0.02, 0.100, 0.0)   # K very low for gas
+    BRINE = ("brine", 2.38, 1.090, 0.0)   # K, rho — Mavko 80kppm NaCl
+    OIL   = ("oil",   0.72, 0.780, 0.0)   # K, rho — API 35 light crude
+    GAS   = ("gas",   0.02, 0.150, 0.0)   # K, rho — dry gas at reservoir P/T
 
     def __init__(self, label: str, bulk_mod: float, rho: float, _visc: float):
         self.label = label
@@ -58,7 +62,7 @@ class Fluid(Enum):
         self.rho = rho              # g/cm³
 
 
-# PhysicsGuard hard bounds — measured physical limits
+# PhysicsGuard hard bounds — measured physical limits (Mavko et al.)
 GUARD = {
     "vp_min": 1500.0,    # m/s — brine velocity
     "vp_max": 7000.0,    # m/s — dolomite upper
@@ -66,10 +70,16 @@ GUARD = {
     "vs_max": 4500.0,    # m/s — dolomite upper
     "rho_min": 1.00,     # g/cm³ — gas near-surface
     "rho_max": 3.50,     # g/cm³ — pyrite upper bound
-    "por_min": 0.0,
-    "por_max": 0.50,     # 50% — unconsolidated sand limit
+    "por_min": 0.01,     # 1% — practical minimum porosity
+    "por_max": 0.45,     # 45% — unconsolidated sand limit
     "sw_min": 0.0,
     "sw_max": 1.0,
+    "temp_min_c": 0.0,   # °C — surface
+    "temp_max_c": 400.0,  # °C — deep basin
+    "pres_min_mpa": 0.0,  # MPa — surface
+    "pres_max_mpa": 200.0, # MPa — ultra-deep
+    "perm_min_md": 0.001, # mD — tight carbonate
+    "perm_max_md": 10000, # mD — high-perm sand
 }
 
 

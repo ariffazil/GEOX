@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://geox.arif-fazil.com/schemas/graph.schema.json",
+  "title": "GEOX Dependency Graph",
+  "description": "Schema for the GEOX skill dependency graph",
+  "type": "object",
+  "required": ["nodes", "edges"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "domain", "title"],
+        "properties": {
+          "id": { "type": "string" },
+          "domain": { "type": "string" },
+          "title": { "type": "string" },
+          "status": { "type": "string" },
+          "risk_class": { "type": "string" }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "type": { "type": "string", "enum": ["depends_on", "supports", "triggers"] }
+        }
+      }
+    }
+  }
+}
