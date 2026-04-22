@@ -63,7 +63,7 @@ sys.path.append(os.getcwd())
 DIMENSION_GATES = {
     "core": ["physics", "map"],
     "vps": ["prospect", "well", "earth3d", "map", "cross", "dashboard"],
-    "full": ["prospect", "well", "section", "earth3d", "time4d", "physics", "map", "cross", "dashboard"]
+    "full": ["prospect", "well", "section", "earth3d", "time4d", "physics", "map", "cross", "dashboard", "well_desk"]
 }
 
 ENABLED_DIMENSIONS = DIMENSION_GATES.get(GEOX_PROFILE, ["physics", "map", "dashboard"])
@@ -78,7 +78,8 @@ def bootstrap_registries():
         "physics": "contracts.tools.physics",
         "map": "contracts.tools.map",
         "cross": "contracts.tools.cross",
-        "dashboard": "contracts.tools.dashboard"
+        "dashboard": "contracts.tools.dashboard",
+        "well_desk": "geox_mcp.tools.well_desk_tool"
     }
 
     for dim in ENABLED_DIMENSIONS:
@@ -167,21 +168,27 @@ async def list_tools_by_stage(stage: str) -> dict:
 async def get_ui_resource(app_id: str) -> str:
     """Serve UI resources from the ui/ directory for MCP Apps."""
     ui_dir = "ui"
-    # Map app_id to filename if needed, or assume app_id.html
     filename = f"{app_id}.html"
     file_path = os.path.join(ui_dir, filename)
-    
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
             return f.read()
-    
-    # Fallback to a generic well-dashboard if app_id not found for demo purposes
     fallback_path = os.path.join(ui_dir, "well-dashboard.html")
     if os.path.exists(fallback_path):
         with open(fallback_path, "r") as f:
             return f.read()
-            
     return f"Error: UI resource {app_id} not found."
+
+
+@mcp.resource("ui://well_desk")
+async def get_well_desk_ui() -> str:
+    """Serve GEOX WellDesk HTML app for MCP App rendering."""
+    # Serve from flat apps/ path (what gets built into container)
+    well_desk_path = "apps/well-desk/index.html"
+    if os.path.exists(well_desk_path):
+        with open(well_desk_path, "r") as f:
+            return f.read()
+    return "<html><body>WellDesk: index.html not found at apps/well-desk/</body></html>"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # HEALTH & LEGACY BRIDGE
