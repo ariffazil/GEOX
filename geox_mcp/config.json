@@ -1,0 +1,72 @@
+{
+  "mcp_server": {
+    "name": "geox-local",
+    "version": "0.1.0",
+    "description": "GEOX Earth Intelligence Skills MCP Server",
+    "transport": "streamable_http",
+    "read_only_by_default": true,
+    "phases": {
+      "1": "static_site_only",
+      "2": "mcp_resources_only",
+      "3": "mcp_prompts",
+      "4": "mcp_tools_transforms",
+      "5": "mcp_tools_operational_888hold",
+      "6": "multi_agent_loops"
+    }
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8765,
+    "auth": {
+      "required": false,
+      "note": "Enable auth in production"
+    }
+  },
+  "resources": {
+    "registry_uri": "geox://registry",
+    "skills_uri_prefix": "geox://skills/",
+    "domains_uri_prefix": "geox://domains/"
+  },
+  "policies": {
+    "dangerous_tools_require_approval": true,
+    "log_all_invocations": true,
+    "signed_releases_only": false,
+    "tool_allowlist": [],
+    "read_only_default": true
+  },
+  "skill_surface_mapping": {
+    "geox.sensing.observation-intake": { "resource": true, "prompt": false, "tool": true },
+    "geox.sensing.signal-classification": { "resource": true, "prompt": false, "tool": true },
+    "geox.sensing.observation-qc": { "resource": true, "prompt": false, "tool": true },
+    "geox.geodesy.coordinate-frames": { "resource": true, "prompt": false, "tool": true },
+    "geox.geodesy.position-fix-fusion": { "resource": true, "prompt": false, "tool": true },
+    "geox.geodesy.scale-and-tiling": { "resource": true, "prompt": false, "tool": true },
+    "geox.terrain.relief-and-slope": { "resource": true, "prompt": false, "tool": true },
+    "geox.terrain.surface-access": { "resource": true, "prompt": false, "tool": true },
+    "geox.terrain.drainage-structure": { "resource": true, "prompt": false, "tool": true },
+    "geox.water.hydrology-basics": { "resource": true, "prompt": false, "tool": true },
+    "geox.water.floodplain-and-flow": { "resource": true, "prompt": false, "tool": true },
+    "geox.water.maritime-state": { "resource": true, "prompt": false, "tool": true },
+    "geox.atmosphere.weather-state": { "resource": true, "prompt": false, "tool": true },
+    "geox.atmosphere.radiation-and-solar": { "resource": true, "prompt": false, "tool": true },
+    "geox.atmosphere.seasonality-and-monsoon": { "resource": true, "prompt": false, "tool": true },
+    "geox.mobility.route-viability": { "resource": true, "prompt": true, "tool": true },
+    "geox.mobility.chokepoint-detection": { "resource": true, "prompt": false, "tool": true },
+    "geox.mobility.fleet-patterns": { "resource": true, "prompt": false, "tool": true },
+    "geox.infrastructure.network-topology": { "resource": true, "prompt": false, "tool": true },
+    "geox.infrastructure.critical-node-watch": { "resource": true, "prompt": false, "tool": true },
+    "geox.infrastructure.capacity-and-failure": { "resource": true, "prompt": false, "tool": true },
+    "geox.hazards.anomaly-detection": { "resource": true, "prompt": false, "tool": true },
+    "geox.hazards.seismic-and-ground-shift": { "resource": true, "prompt": false, "tool": true },
+    "geox.hazards.multi-risk-escalation": { "resource": true, "prompt": false, "tool": true },
+    "geox.governance.legal-jurisdiction": { "resource": true, "prompt": true, "tool": false },
+    "geox.governance.human-in-loop-888": { "resource": true, "prompt": true, "tool": false },
+    "geox.governance.peace-maruah-screen": { "resource": true, "prompt": true, "tool": false },
+    "geox.time.regime-shift": { "resource": true, "prompt": false, "tool": true },
+    "geox.time.forecast-branching": { "resource": true, "prompt": true, "tool": true },
+    "geox.time.monitoring-triggers": { "resource": true, "prompt": true, "tool": true },
+    "geox.orchestration.world-model-sync": { "resource": true, "prompt": false, "tool": true },
+    "geox.orchestration.multi-agent-decomposition": { "resource": true, "prompt": true, "tool": false },
+    "geox.orchestration.void-and-data-denial": { "resource": true, "prompt": true, "tool": false }
+  }
+}

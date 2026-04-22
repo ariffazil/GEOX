@@ -1,12 +1,18 @@
-# GEOX Forwarding Shim — FastMCP Server
-# DITEMPA BUKAN DIBERI
-#
-# This file is a backward-compatibility shim.
-# The canonical server is now at: control_plane.fastmcp.server
+"""
+GEOX Unified MCP Server Shim
+DITEMPA BUKAN DIBERI
 
-from control_plane.fastmcp.server import mcp, create_app, main
+Canonical server: geox_mcp.server
+This shim maintains backward compatibility.
+"""
 
-__all__ = ["mcp", "create_app", "main"]
+from geox_mcp.server import mcp
 
-if __name__ == "__main__":
-    main()
+def main():
+    """Run the GEOX MCP server."""
+    import uvicorn
+    port = int(os.environ.get("PORT", 8081))
+    app = mcp.streamable_http_app()
+    uvicorn.run(app, host="0.0.0.0", port=port)
+
+__all__ = ["mcp", "main"]

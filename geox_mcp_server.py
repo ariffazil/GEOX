@@ -1,23 +1,29 @@
 """
-Backward-compatible GEOX MCP entrypoint.
+GEOX MCP Server — Backward-Compatible Entry Point
+DITEMPA BUKAN DIBERI
 
-Canonical public server: geox_unified_mcp_server.py
+Canonical server: geox_mcp.server
 """
 
 from __future__ import annotations
 
-import fastmcp
+import os
+import uvicorn
 
-from geox_unified_mcp_server import *  # noqa: F401,F403
-from geox_unified_mcp_server import __all__ as _UNIFIED_ALL
+# Import the canonical server's MCP instance
+from geox_mcp.server import mcp
 
-IS_FASTMCP_3 = tuple(int(part) for part in fastmcp.__version__.split(".")[:2]) >= (3, 0)
-
-__all__ = [
-    *_UNIFIED_ALL,
-    "IS_FASTMCP_3",
-]
-
+def main():
+    """Run the GEOX MCP server."""
+    port = int(os.environ.get("PORT", 8081))
+    app = mcp.streamable_http_app()
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=port,
+        log_level="info",
+        proxy_headers=True,
+    )
 
 if __name__ == "__main__":
     main()
