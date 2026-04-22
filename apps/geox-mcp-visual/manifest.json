@@ -1,0 +1,23 @@
+{
+  "app_id": "geox.mcp-visual",
+  "version": "1.0.0",
+  "domain": "geox",
+  "display_name": "GEOX Visual Output Hub",
+  "description": "5-in-1 visual dashboard: WellDesk 1D + SeisVis 2D + CubeProbe 3D + TimeLapse 4D + PhysicCore CANON_9. Renders all GEOX dimensional outputs via Plotly.",
+  "ui_entry": {
+    "resource_uri": "https://geox.arif-fazil.com/apps/geox-mcp-visual/index.html",
+    "mode": "inline-or-external",
+    "capability_required": ["embedded_webview", "canvas"]
+  },
+  "required_tools": [],
+  "optional_tools": [],
+  "arifos": {
+    "required_floors": ["F2", "F4", "F8", "F9"],
+    "human_in_the_loop": []
+  },
+  "meta": {
+    "author": "arifOS_bot / OMEGA",
+    "repository": "https://github.com/ariffazil/GEOX",
+    "created_at": "2026-04-22T00:00:00Z"
+  }
+}

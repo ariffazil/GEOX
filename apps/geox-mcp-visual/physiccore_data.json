@@ -1,0 +1,295 @@
+{
+  "materials": [
+    {
+      "name": "Recent Sediments",
+      "rho": 1850,
+      "vp": 1650,
+      "vs": 460,
+      "resistivity": 2.0,
+      "magnetic_suscept": 0.0,
+      "thermal_conductivity": 1.2,
+      "pressure_MPa": 0.0,
+      "temperature_C": 25,
+      "porosity": 0.38,
+      "material_id": "recent_sediments",
+      "K_GPa": 4.51,
+      "mu_GPa": 0.39,
+      "E_GPa": 1.14,
+      "nu": 0.458,
+      "I_Pa_s_m": 3052500,
+      "formation_factor": 434.3,
+      "k_perm_mD": 124.7
+    },
+    {
+      "name": "Shale",
+      "rho": 2350,
+      "vp": 2450,
+      "vs": 1050,
+      "resistivity": 15.0,
+      "magnetic_suscept": 0.003,
+      "thermal_conductivity": 1.8,
+      "pressure_MPa": 10,
+      "temperature_C": 45,
+      "porosity": 0.32,
+      "material_id": "shale",
+      "K_GPa": 10.65,
+      "mu_GPa": 2.59,
+      "E_GPa": 7.19,
+      "nu": 0.388,
+      "I_Pa_s_m": 5757500,
+      "formation_factor": 959.6,
+      "k_perm_mD": 64.3
+    },
+    {
+      "name": "Sandstone",
+      "rho": 2420,
+      "vp": 2950,
+      "vs": 1680,
+      "resistivity": 500.0,
+      "magnetic_suscept": 0.0005,
+      "thermal_conductivity": 3.5,
+      "pressure_MPa": 20,
+      "temperature_C": 70,
+      "porosity": 0.28,
+      "material_id": "sandstone",
+      "K_GPa": 11.95,
+      "mu_GPa": 6.83,
+      "E_GPa": 17.21,
+      "nu": 0.26,
+      "I_Pa_s_m": 7139000,
+      "formation_factor": 1700.3,
+      "k_perm_mD": 39.3
+    },
+    {
+      "name": "Limestone",
+      "rho": 2710,
+      "vp": 4300,
+      "vs": 2500,
+      "resistivity": 1000.0,
+      "magnetic_suscept": 0.0001,
+      "thermal_conductivity": 3.0,
+      "pressure_MPa": 30,
+      "temperature_C": 90,
+      "porosity": 0.12,
+      "material_id": "limestone",
+      "K_GPa": 27.52,
+      "mu_GPa": 16.94,
+      "E_GPa": 42.16,
+      "nu": 0.245,
+      "I_Pa_s_m": 11653000,
+      "formation_factor": 39437.0,
+      "k_perm_mD": 2.2
+    },
+    {
+      "name": "Dolomite",
+      "rho": 2850,
+      "vp": 5400,
+      "vs": 2900,
+      "resistivity": 800.0,
+      "magnetic_suscept": 0.0001,
+      "thermal_conductivity": 3.5,
+      "pressure_MPa": 40,
+      "temperature_C": 110,
+      "porosity": 0.08,
+      "material_id": "dolomite",
+      "K_GPa": 51.15,
+      "mu_GPa": 23.97,
+      "E_GPa": 62.19,
+      "nu": 0.297,
+      "I_Pa_s_m": 15390000,
+      "formation_factor": 152087.5,
+      "k_perm_mD": 0.6
+    },
+    {
+      "name": "Anhydrite",
+      "rho": 2970,
+      "vp": 6000,
+      "vs": 3200,
+      "resistivity": 50000.0,
+      "magnetic_suscept": 0.0001,
+      "thermal_conductivity": 4.5,
+      "pressure_MPa": 45,
+      "temperature_C": 120,
+      "porosity": 0.01,
+      "material_id": "anhydrite",
+      "K_GPa": 66.37,
+      "mu_GPa": 30.41,
+      "E_GPa": 79.15,
+      "nu": 0.301,
+      "I_Pa_s_m": 17820000,
+      "formation_factor": 0,
+      "k_perm_mD": 0
+    },
+    {
+      "name": "Basement",
+      "rho": 2900,
+      "vp": 5800,
+      "vs": 3400,
+      "resistivity": 5000.0,
+      "magnetic_suscept": 0.01,
+      "thermal_conductivity": 3.0,
+      "pressure_MPa": 80,
+      "temperature_C": 200,
+      "porosity": 0.02,
+      "material_id": "basement",
+      "K_GPa": 52.86,
+      "mu_GPa": 33.52,
+      "E_GPa": 83.02,
+      "nu": 0.238,
+      "I_Pa_s_m": 16820000,
+      "formation_factor": 0,
+      "k_perm_mD": 0
+    },
+    {
+      "name": "Salt",
+      "rho": 2160,
+      "vp": 4500,
+      "vs": 2500,
+      "resistivity": 50000.0,
+      "magnetic_suscept": 0.0,
+      "thermal_conductivity": 5.5,
+      "pressure_MPa": 35,
+      "temperature_C": 100,
+      "porosity": 0.01,
+      "material_id": "salt",
+      "K_GPa": 25.74,
+      "mu_GPa": 13.5,
+      "E_GPa": 34.47,
+      "nu": 0.277,
+      "I_Pa_s_m": 9720000,
+      "formation_factor": 0,
+      "k_perm_mD": 0
+    }
+  ],
+  "canon9_schema": [
+    {
+      "sym": "rho",
+      "name": "Density",
+      "unit": "kg/m3"
+    },
+    {
+      "sym": "vp",
+      "name": "P-wave Velocity",
+      "unit": "m/s"
+    },
+    {
+      "sym": "vs",
+      "name": "S-wave Velocity",
+      "unit": "m/s"
+    },
+    {
+      "sym": "resistivity",
+      "name": "Electrical Resistivity",
+      "unit": "ohm.m"
+    },
+    {
+      "sym": "magnetic_suscept",
+      "name": "Magnetic Susceptibility",
+      "unit": "SI"
+    },
+    {
+      "sym": "thermal_conductivity",
+      "name": "Thermal Conductivity",
+      "unit": "W/(m.K)"
+    },
+    {
+      "sym": "pressure_MPa",
+      "name": "Pressure",
+      "unit": "MPa"
+    },
+    {
+      "sym": "temperature_C",
+      "name": "Temperature",
+      "unit": "C"
+    },
+    {
+      "sym": "porosity",
+      "name": "Porosity",
+      "unit": "fraction"
+    }
+  ],
+  "ac_matrix": [
+    {
+      "name": "well_physics",
+      "u_ambiguity": 0.3,
+      "d_transform": 1.0,
+      "b_cog": 0.25,
+      "evidence_credit": 0.75,
+      "desc": "Triple-combo logs",
+      "d_eff": 1.0,
+      "ac_risk": 0.075,
+      "verdict": "SEAL"
+    },
+    {
+      "name": "seismic_ai",
+      "u_ambiguity": 0.55,
+      "d_transform": 1.4,
+      "b_cog": 0.42,
+      "evidence_credit": 0.0,
+      "desc": "AI vision only",
+      "d_eff": 1.4,
+      "ac_risk": 0.3234,
+      "verdict": "QUALIFY"
+    },
+    {
+      "name": "integrated",
+      "u_ambiguity": 0.3,
+      "d_transform": 1.05,
+      "b_cog": 0.28,
+      "evidence_credit": 0.55,
+      "desc": "Well+seismic+physics",
+      "d_eff": 1.0,
+      "ac_risk": 0.084,
+      "verdict": "SEAL"
+    }
+  ],
+  "metabolic_loop": {
+    "phases": [
+      {
+        "phase": "000_INTENT",
+        "label": "Problem defined"
+      },
+      {
+        "phase": "111_SENSE",
+        "label": "Earth observed"
+      },
+      {
+        "phase": "222_REFLECT",
+        "label": "Contrast computed"
+      },
+      {
+        "phase": "333_SYNTHESIZE",
+        "label": "Forward model"
+      },
+      {
+        "phase": "444_KERNEL",
+        "label": "Verdict delivered"
+      },
+      {
+        "phase": "555_EXECUTE",
+        "label": "Decision executed"
+      },
+      {
+        "phase": "666_HEART",
+        "label": "Consequence measured"
+      },
+      {
+        "phase": "777_REASON",
+        "label": "Audit verified"
+      },
+      {
+        "phase": "888_JUDGE",
+        "label": "SEAL/HOLD/VOID"
+      },
+      {
+        "phase": "999_VAULT",
+        "label": "Immutable record"
+      }
+    ],
+    "verdict": "SEAL",
+    "confidence": 0.82
+  },
+  "constitution": "888_JUDGE",
+  "dimension": "CANON",
+  "arifos_version": "v1.3.1"
+}

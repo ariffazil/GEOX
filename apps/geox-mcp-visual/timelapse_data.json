@@ -1,0 +1,56 @@
+{
+  "gassmann": {
+    "vp_before": 2638.0,
+    "vp_after": 2447.8,
+    "vs_before": 59.4,
+    "vs_after": 55.1,
+    "rho_before": 2.043,
+    "rho_after": 2.373,
+    "ai_change_pct": 7.77,
+    "fluid_indicator": "MIXED"
+  },
+  "forward": {
+    "initial_pressure_bar": 250.0,
+    "final_pressure_bar": 250.09,
+    "pressure_increase_bar": 0.09,
+    "initial_saturation_sw": 0.9,
+    "final_saturation_sw": 0.901,
+    "ai_change_pct": 0.0,
+    "detectable": false
+  },
+  "difference": {
+    "hotspot_count": 0,
+    "hotspot_percentage": 0.0
+  },
+  "surveys": {
+    "years": [
+      2018,
+      2020,
+      2022,
+      2024
+    ],
+    "pressures_bar": [
+      250,
+      255,
+      262,
+      270
+    ],
+    "amplitudes": [
+      0.5,
+      0.52,
+      0.55,
+      0.53
+    ],
+    "nrms_pct": 8.5,
+    "repeatable": true
+  },
+  "physics9": {
+    "rho": 2.35,
+    "vp": 3100.0,
+    "vs": 1750.0,
+    "porosity": 0.25
+  },
+  "constitution": "888_JUDGE",
+  "dimension": "4D",
+  "arifos_version": "v1.3.1"
+}
