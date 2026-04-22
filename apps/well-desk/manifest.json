@@ -1,115 +1,43 @@
 {
-  "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
-  "app_id": "geox.well.context-desk",
-  "version": "1.0.0-AAA",
-  "domain": "wells",
-  "display_name": "Well & Document Context Desk",
-  "description": "Integrated well data browser with document intelligence and petrophysics — AAA Grade",
-  "icon": "https://geox.arif-fazil.com/apps/well_context_desk/icon.svg",
-  "required_tools": [
-    "mcp.geox.query_memory",
-    "mcp.geox.compute_ac_risk"
-  ],
-  "optional_tools": [
-    "mcp.geox.validate_cutoffs",
-    "mcp.geox.petrophysical_hold_check",
-    "mcp.geox.load_seismic_line"
-  ],
+  "schema_version": "io.modelcontextprotocol/ui/1.0",
+  "app_id": "geox.subsurface.well-desk",
+  "name": "GEOX WellDesk",
+  "version": "1.0.0-skeleton",
+  "description": "1D + 2D well log viewer with forward/metabolic/inverse rock physics engine. Earth-domain coprocessor for the arifOS constitutional federation.",
   "ui_entry": {
-    "resource_uri": "https://geox.arif-fazil.com/apps/well_context_desk/index.html",
-    "mode": "inline-or-external",
-    "capability_required": [
-      "embedded_webview",
-      "canvas"
-    ],
-    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.geox.arif-fazil.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline';",
-    "sandbox": "allow-scripts allow-same-origin allow-downloads",
-    "inline_config": {
-      "max_width": 1400,
-      "max_height": 900,
-      "resize": true
-    },
-    "external_config": {
-      "window_features": "width=1600,height=1000,menubar=no,toolbar=no"
-    }
+    "type": "resource_uri",
+    "resource_uri": "https://geox.arif-fazil.com/apps/well-desk/index.html"
   },
-  "auth": {
-    "mode": "jwt",
-    "token_ttl_seconds": 600,
-    "scopes": [
-      "tenant:{tenant_id}",
-      "role:geoscientist|manager|viewer|admin",
-      "well:read",
-      "document:read",
-      "petrophysics:read"
-    ],
-    "refreshable": true
-  },
-  "events": {
-    "supported": [
+  "capabilities": {
+    "events": [
       "app.initialize",
-      "app.context.patch",
       "app.state.sync",
       "tool.request",
       "tool.result",
-      "tool.progress",
       "ui.action",
-      "ui.state.change",
-      "ui.error",
-      "well.selected",
-      "document.open",
-      "curve.toggle",
-      "petrophysics.run",
-      "ac_risk.check",
-      "auth.challenge",
-      "auth.result",
-      "host.resize",
-      "host.focus",
-      "telemetry.emit"
+      "physics.result",
+      "vault.seal"
     ],
-    "max_payload_size": 5242880
-  },
-  "fallback": {
-    "chain": [
-      "inline",
-      "external",
-      "card",
-      "text"
-    ],
-    "external_url": "https://geox.arif-fazil.com/apps/well_context_desk/?session={session_id}",
-    "card_template": "/apps/well_context_desk/card.html"
+    "tools": ["geox_well_desk_launch"],
+    "render_modes": ["1d_track", "2d_correlation", "crossplot", "forward", "inverse", "metabolic"]
   },
   "arifos": {
-    "required_floors": [
-      "F1",
-      "F2",
-      "F4",
-      "F7",
-      "F9",
-      "F11",
-      "F13"
-    ],
-    "audit_level": "full",
+    "constitutional_federation": "geox",
+    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "physics_engine": "physics9",
     "vault_route": "999_VAULT",
-    "human_in_the_loop": [
-      "export_data",
-      "modify_production",
-      "petrophysics_export"
-    ]
+    "human_judge": "888"
   },
-  "meta": {
-    "author": "GEOX Platform Team",
-    "license": "MIT",
-    "repository": "https://github.com/ariffazil/arifos-geox",
-    "homepage": "https://geox.arif-fazil.com/apps/well_context_desk/",
-    "keywords": [
-      "wells",
-      "petrophysics",
-      "documents",
-      "interpretation",
-      "las"
-    ],
-    "created_at": "2026-04-10T00:00:00Z",
-    "updated_at": "2026-04-10T00:00:00Z"
+  "fallback": {
+    "chain": ["inline", "external", "card", "text"]
+  },
+  "permissions": {
+    "file_system": ["read_las", "read_lis", "write_las", "export_png"],
+    "compute": ["forward_rock_physics", "inverse_rock_physics", "metabolic_convergence"],
+    "network": ["vault_999_submit"]
+  },
+  "schemas": {
+    "events": "./schemas/well_desk_event_schema.json",
+    "vault_receipt": "./schemas/vault999_receipt_schema.json"
   }
 }

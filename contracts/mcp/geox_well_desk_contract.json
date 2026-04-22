@@ -1,0 +1,112 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/tool/2024-11-05",
+  "name": "geox_well_desk_launch",
+  "description": "Launch GEOX WellDesk for 1D/2D well log visualization and rock physics computation. Supports forward Gassmann fluid substitution, metabolic iterative convergence, and inverse rock physics inversion. All outputs pass through PhysicsGuard and seal to VAULT999.",
+  "inputSchema": {
+    "type": "object",
+    "required": ["well_id", "mode"],
+    "properties": {
+      "well_id": {
+        "type": "string",
+        "description": "Well identifier. Use 'BEK-2' for scaffold fixture (no real data required)."
+      },
+      "las_path": {
+        "type": ["string", "null"],
+        "description": "Path to LAS file. If null, scaffold fixture loads with default parameters."
+      },
+      "mode": {
+        "type": "string",
+        "enum": ["1d", "2d", "forward", "inverse", "metabolic"],
+        "description": "Operating mode: 1d=track view, 2d=multi-well correlation, forward=Gassmann compute, inverse=invert Vp/Vs/rho to por/Sw/fluid, metabolic=iterative convergence to AAA grade."
+      },
+      "depth_range": {
+        "type": "object",
+        "properties": {
+          "top_m": { "type": "number" },
+          "base_m": { "type": "number" }
+        }
+      },
+      "physics_params": {
+        "type": "object",
+        "description": "Parameters for forward/inverse/metabolic modes",
+        "properties": {
+          "porosity": { "type": "number", "minimum": 0, "maximum": 0.5 },
+          "sw": { "type": "number", "minimum": 0, "maximum": 1 },
+          "vsh": { "type": "number", "minimum": 0, "maximum": 1 },
+          "fluid_type": { "type": "string", "enum": ["brine", "oil", "gas"] },
+          "pressure_mpa": { "type": "number", "minimum": 0, "maximum": 200 },
+          "temp_c": { "type": "number", "minimum": 0, "maximum": 300 }
+        }
+      }
+    }
+  },
+  "outputSchema": {
+    "type": "object",
+    "required": ["ui", "vault_receipt", "physics9_state"],
+    "properties": {
+      "ui": {
+        "type": "object",
+        "properties": {
+          "resourceUri": { "type": "string", "const": "ui://well_desk" },
+          "render_mode": { "type": "string" },
+          "track_count": { "type": "integer" }
+        }
+      },
+      "vault_receipt": {
+        "type": "object",
+        "description": "VAULT999 receipt mirroring schema"
+      },
+      "physics9_state": {
+        "type": "object",
+        "properties": {
+          "grade": { "type": "string", "enum": ["AAA", "AA", "A", "RAW", "PHYSICS_VIOLATION"] },
+          "forward_result": {
+            "type": "object",
+            "properties": {
+              "vp": { "type": "number" },
+              "vs": { "type": "number" },
+              "rho": { "type": "number" },
+              "ai": { "type": "number" },
+              "vp_vs_ratio": { "type": "number" },
+              "bulk_modulus": { "type": "number" },
+              "shear_modulus": { "type": "number" }
+            }
+          },
+          "inverse_result": {
+            "type": "object",
+            "properties": {
+              "est_porosity": { "type": "number" },
+              "est_sw": { "type": "number" },
+              "est_fluid": { "type": "string" },
+              "uncertainty_band": { "type": "object" },
+              "integrity_score": { "type": "number" }
+            }
+          },
+          "metabolic_log": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "iteration": { "type": "integer" },
+                "delta_state": { "type": "number" },
+                "grade": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "floors_enforced": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+  "floor_descriptions": {
+    "F1": "Reversibility check — all computations must be invertible within tolerance",
+    "F2": "Epistemic boundary — unknown geology returns UNKNOWN, not hallucinated",
+    "F4": "Constitutional audit trail — every operation logged with full provenance",
+    "F7": "Dual-key integrity — AI never autonomously seals final interpretation",
+    "F9": "Anti-hallucination — no fabricated geological scenarios; PhysicsGuard validates bounds",
+    "F11": "Vault log — every compute emits receipt to VAULT999",
+    "F13": "Human veto — 888 Judge (ARIF) holds final seal authority"
+  },
+  "vault_route": "999_VAULT",
+  "human_in_the_loop": ["seal_interpretation", "grade_aaa_promotion", "inverse_map_accept"]
+}
