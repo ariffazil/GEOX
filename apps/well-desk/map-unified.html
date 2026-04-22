@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEOX // EARTH INTELLIGENCE MAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --bg:       #080c10;
+    --panel:    #0d1117;
+    --border:   #1c2a3a;
+    --accent:   #00e5a0;
+    --amber:    #f0a500;
+    --red:      #ff4c4c;
+    --blue:     #4cc9f0;
+    --text:     #c8d8e8;
+    --muted:    #4a6070;
+    --panel-w:  320px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    width:100%; height:100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    overflow: hidden;
+  }
+
+  /* ── TOPBAR ─────────────────────────────────── */
+  #topbar {
+    position: fixed; top:0; left:0; right:0; height:44px;
+    background: rgba(8,12,16,0.96);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 16px; gap:20px; z-index: 2000;
+    backdrop-filter: blur(8px);
+  }
+  #topbar .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 14px;
+    color: var(--accent); letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  #topbar .logo span { color: var(--muted); }
+  #topbar .sep { width:1px; height:24px; background: var(--border); }
+
+  .tab-group { display:flex; gap:2px; }
+  .tab-btn {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'Space Mono', monospace;
+    font-size: 10px; padding: 4px 10px; cursor:pointer;
+    transition: all .15s; letter-spacing:.06em;
+    text-transform: uppercase;
+  }
+  .tab-btn:hover { color: var(--text); border-color: var(--muted); }
+  .tab-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(0,229,160,.07); }
+
+  .coord-display {
+    font-size: 10px; color: var(--muted);
+    letter-spacing: .04em; margin-left:auto;
+    white-space:nowrap;
+  }
+  .coord-display span { color: var(--text); }
+  .status-dot { width:6px; height:6px; border-radius:50%;
+    background: var(--accent); box-shadow: 0 0 6px var(--accent);
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot { 0%,100%{opacity:1}50%{opacity:.4} }
+
+  /* ── MAP CONTAINER ───────────────────────────── */
+  #map-wrap {
+    position: fixed;
+    top: 44px; bottom: 0;
+    left: 0; right: var(--panel-w);
+    z-index: 1;
+    transition: right .3s;
+  }
+  #map-wrap.panel-hidden { right: 0; }
+  #map { width:100%; height:100%; }
+
+  /* ── LAYER CONTROL STRIP (left of map) ────────── */
+  #layer-strip {
+    position: fixed; left:0; top:44px; bottom:0;
+    width: 40px; z-index: 500;
+    display: flex; flex-direction:column;
+    align-items:center; padding: 10px 0; gap:6px;
+    background: rgba(8,12,16,0.85);
+    border-right: 1px solid var(--border);
+    backdrop-filter: blur(4px);
+  }
+  .lbtn {
+    width:28px; height:28px; border-radius:4px;
+    border: 1px solid var(--border);
+    background: transparent; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; transition: all .15s; position:relative;
+  }
+  .lbtn:hover { border-color: var(--accent); background: rgba(0,229,160,.08); }
+  .lbtn.active { border-color: var(--accent); background: rgba(0,229,160,.15); }
+  .lbtn .tooltip {
+    position:absolute; left:36px; top:50%; transform:translateY(-50%);
+    background: var(--panel); border: 1px solid var(--border);
+    font-family: 'Space Mono', monospace; font-size:9px;
+    color: var(--text); padding: 3px 7px; white-space:nowrap;
+    pointer-events:none; opacity:0; transition: opacity .15s;
+    letter-spacing:.04em;
+  }
+  .lbtn:hover .tooltip { opacity:1; }
+  .lstrip-sep { width:20px; height:1px; background: var(--border); }
+
+  /* ── RIGHT PANEL ─────────────────────────────── */
+  #right-panel {
+    position: fixed; top:44px; right:0; bottom:0;
+    width: var(--panel-w);
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    z-index: 1000; display:flex; flex-direction:column;
+    overflow: hidden; transition: transform .3s;
+  }
+  #right-panel.hidden { transform: translateX(100%); }
+
+  .panel-tabs {
+    display:flex; border-bottom: 1px solid var(--border);
+    flex-shrink:0;
+  }
+  .ptab {
+    flex:1; padding: 10px 4px; background:transparent;
+    border:none; border-bottom: 2px solid transparent;
+    color: var(--muted); font-family: 'Space Mono',monospace;
+    font-size:9px; letter-spacing:.07em; cursor:pointer;
+    text-transform:uppercase; transition: all .15s;
+  }
+  .ptab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .panel-body {
+    flex:1; overflow-y:auto; padding:12px;
+    display:none;
+  }
+  .panel-body.active { display:block; }
+  .panel-body::-webkit-scrollbar { width:3px; }
+  .panel-body::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* ── PANEL COMPONENTS ────────────────────────── */
+  .pblock {
+    border: 1px solid var(--border);
+    border-radius:4px; margin-bottom:10px; overflow:hidden;
+  }
+  .pblock-hdr {
+    background: rgba(255,255,255,.03);
+    border-bottom: 1px solid var(--border);
+    padding: 6px 10px;
+    font-size:9px; color: var(--muted);
+    letter-spacing:.08em; text-transform:uppercase;
+    display:flex; align-items:center; gap:6px;
+  }
+  .pblock-hdr .dot {
+    width:6px;height:6px;border-radius:50%;
+    background:var(--muted);
+  }
+  .pblock-hdr .dot.green { background:var(--accent); box-shadow:0 0 4px var(--accent); }
+  .pblock-hdr .dot.amber { background:var(--amber); }
+  .pblock-hdr .dot.red   { background:var(--red); }
+  .pblock-body { padding: 10px; font-size:11px; line-height:1.6; }
+
+  .kv { display:flex; justify-content:space-between; align-items:center;
+    padding: 3px 0; border-bottom:1px solid rgba(255,255,255,.03); }
+  .kv:last-child { border:none; }
+  .kv .k { color:var(--muted); font-size:10px; }
+  .kv .v { color:var(--text); font-size:10px; font-weight:700; }
+  .kv .v.green { color:var(--accent); }
+  .kv .v.amber { color:var(--amber); }
+  .kv .v.red   { color:var(--red); }
+
+  .verdict-badge {
+    display:inline-block; padding: 3px 8px;
+    font-size:10px; font-weight:700; border-radius:3px;
+    letter-spacing:.08em;
+  }
+  .verdict-badge.SEAL { background:rgba(0,229,160,.15); color:var(--accent); border:1px solid var(--accent); }
+  .verdict-badge.HOLD { background:rgba(240,165,0,.12); color:var(--amber); border:1px solid var(--amber); }
+  .verdict-badge.VOID { background:rgba(255,76,76,.12); color:var(--red); border:1px solid var(--red); }
+  .verdict-badge.UNKNOWN { background:rgba(74,96,112,.2); color:var(--muted); border:1px solid var(--border); }
+
+  /* Play bars */
+  .play-row {
+    display:flex; align-items:center; gap:8px;
+    padding: 5px 0; border-bottom:1px solid rgba(255,255,255,.03);
+  }
+  .play-row:last-child{border:none}
+  .play-id {
+    font-size:9px; font-weight:700; color:var(--accent);
+    min-width:22px;
+  }
+  .play-name { flex:1; font-size:10px; color:var(--text); }
+  .play-bar-wrap { width:60px; height:4px; background: var(--border); border-radius:2px; }
+  .play-bar { height:100%; border-radius:2px; }
+
+  /* MacroStrat result */
+  #macrostrat-result {
+    font-size:10px; line-height:1.7; color:var(--text);
+    min-height:60px;
+  }
+  #macrostrat-result .empty { color:var(--muted); font-style:italic; }
+
+  /* Georef section */
+  #georef-dropzone {
+    border: 2px dashed var(--border); border-radius:4px;
+    padding: 20px; text-align:center; cursor:pointer;
+    transition: border-color .2s; margin-bottom:8px;
+    font-size:10px; color:var(--muted);
+  }
+  #georef-dropzone:hover { border-color:var(--accent); color:var(--text); }
+  #georef-dropzone.has-image { border-color:var(--accent); border-style:solid; padding:6px; }
+  #georef-preview { max-width:100%; border-radius:2px; display:none; }
+  #georef-opacity { width:100%; margin-top:6px; accent-color:var(--accent); }
+  #georef-controls { display:none; }
+  .mini-btn {
+    background: rgba(255,255,255,.05); border:1px solid var(--border);
+    color:var(--text); font-family:'Space Mono',monospace; font-size:9px;
+    padding:4px 8px; cursor:pointer; border-radius:3px;
+    transition:all .15s; letter-spacing:.05em;
+  }
+  .mini-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* USGS earthquakes */
+  .eq-row {
+    font-size:10px; padding: 4px 0;
+    border-bottom:1px solid rgba(255,255,255,.03);
+    display:flex; gap:8px;
+  }
+  .eq-mag { font-weight:700; min-width:28px; }
+  .eq-mag.high { color:var(--red); }
+  .eq-mag.mid  { color:var(--amber); }
+  .eq-mag.low  { color:var(--text); }
+  .eq-place { color:var(--muted); font-size:9px; flex:1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+
+  /* Prospect form */
+  .pform-row { margin-bottom:8px; }
+  .pform-row label { display:block; font-size:9px; color:var(--muted); margin-bottom:3px; letter-spacing:.05em; text-transform:uppercase; }
+  .pform-row input, .pform-row select {
+    width:100%; background: rgba(255,255,255,.04);
+    border:1px solid var(--border); color:var(--text);
+    font-family:'Space Mono',monospace; font-size:10px;
+    padding: 5px 8px; border-radius:3px; outline:none;
+    transition: border-color .15s;
+  }
+  .pform-row input:focus, .pform-row select:focus { border-color:var(--accent); }
+  .pform-row select option { background:#0d1117; }
+
+  .ac-risk-meter {
+    height:6px; background:var(--border); border-radius:3px; margin:8px 0; overflow:hidden;
+  }
+  .ac-risk-fill {
+    height:100%; border-radius:3px; transition: width .5s ease;
+    background: linear-gradient(90deg, var(--accent), var(--amber), var(--red));
+  }
+
+  /* ── FLOATING INFO TOAST ─────────────────────── */
+  #toast {
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background: var(--panel); border:1px solid var(--border);
+    padding: 8px 16px; font-size:10px; color:var(--text);
+    border-radius:4px; z-index:3000; opacity:0;
+    transition: opacity .3s; pointer-events:none;
+    letter-spacing:.04em;
+  }
+  #toast.show { opacity:1; }
+
+  /* ── MAP SCALE BAR (Leaflet override) ─────────── */
+  .leaflet-control-scale-line {
+    font-family: 'Space Mono', monospace !important;
+    font-size:9px !important; color:var(--text) !important;
+    border-color: var(--accent) !important;
+    background: rgba(8,12,16,.8) !important;
+  }
+  .leaflet-control-zoom a {
+    font-family:'Space Mono',monospace !important;
+    background: var(--panel) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+  }
+  .leaflet-control-zoom a:hover {
+    background: rgba(0,229,160,.15) !important;
+    color: var(--accent) !important;
+  }
+  .leaflet-popup-content-wrapper {
+    background: var(--panel) !important;
+    border: 1px solid var(--accent) !important;
+    border-radius:4px !important;
+    box-shadow: 0 0 20px rgba(0,229,160,.15) !important;
+  }
+  .leaflet-popup-tip { background: var(--panel) !important; }
+  .leaflet-popup-content { font-family:'Space Mono',monospace; font-size:11px; color:var(--text); }
+
+  /* ── GEOREF IMAGE OVERLAY CONTROLS ──────────── */
+  #georef-widget {
+    position:fixed; left:50px; bottom:20px;
+    background: var(--panel); border:1px solid var(--border);
+    padding:10px 14px; border-radius:4px; z-index:1500;
+    display:none; font-size:10px;
+    backdrop-filter:blur(4px);
+  }
+  #georef-widget label { color:var(--muted); display:block; margin-bottom:4px; font-size:9px; }
+  #georef-widget input[type=range] { width:160px; accent-color:var(--accent); }
+
+  /* ── PANEL TOGGLE BTN ────────────────────────── */
+  #panel-toggle {
+    position:fixed; right: var(--panel-w); top:50%;
+    transform:translateY(-50%);
+    width:16px; height:48px; z-index:1100;
+    background:var(--panel); border:1px solid var(--border);
+    border-right:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:10px; color:var(--muted);
+    transition: right .3s, color .15s;
+    border-radius:4px 0 0 4px;
+  }
+  #panel-toggle:hover { color:var(--accent); }
+  #panel-toggle.hidden { right:0; }
+
+  /* ── BASEMAP SELECTOR ────────────────────────── */
+  #basemap-bar {
+    position:fixed; bottom:12px; left:50px;
+    display:flex; gap:4px; z-index:500;
+  }
+  .bm-btn {
+    background:rgba(8,12,16,.85); border:1px solid var(--border);
+    color:var(--muted); font-family:'Space Mono',monospace;
+    font-size:9px; padding:4px 8px; cursor:pointer;
+    transition:all .15s; border-radius:3px;
+    backdrop-filter:blur(4px); letter-spacing:.05em;
+  }
+  .bm-btn:hover { color:var(--text); }
+  .bm-btn.active { color:var(--accent); border-color:var(--accent); }
+
+  /* ── MACROSTRAT PROBE CURSOR ────────────────── */
+  #map.probe-mode { cursor: crosshair; }
+
+  /* ── GEOREF CORNER HANDLES ───────────────────── */
+  .georef-handle {
+    width:12px;height:12px;background:var(--accent);
+    border-radius:50%;cursor:grab;
+    box-shadow:0 0 6px var(--accent);
+  }
+
+  /* ── AC RISK WIDGET ON MAP ───────────────────── */
+  .ac-popup {
+    font-family:'Space Mono',monospace;
+    font-size:10px; line-height:1.6;
+  }
+  .ac-popup .v-badge {
+    display:inline-block; padding:2px 6px;
+    border-radius:2px; font-weight:700;
+    font-size:9px; letter-spacing:.06em;
+  }
+  .ac-popup .SEAL { background:rgba(0,229,160,.2); color:#00e5a0; }
+  .ac-popup .HOLD { background:rgba(240,165,0,.2); color:#f0a500; }
+  .ac-popup .VOID { background:rgba(255,76,76,.2); color:#ff4c4c; }
+
+  /* animations */
+  @keyframes scanline {
+    0%{top:-100%} 100%{top:100%}
+  }
+  .scan-overlay {
+    position:absolute; top:0;left:0;right:0;bottom:0;
+    pointer-events:none; z-index:999; overflow:hidden;
+  }
+  .scan-overlay::after {
+    content:'';
+    position:absolute; left:0; right:0; height:2px;
+    background:linear-gradient(transparent,rgba(0,229,160,.15),transparent);
+    animation:scanline 6s linear infinite;
+  }
+
+  /* Responsive hide panel on small screens */
+  @media(max-width:700px){
+    :root { --panel-w: 0px; }
+    #right-panel { display:none; }
+    #panel-toggle { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ─────────────────────────────────── -->
+<div id="topbar">
+  <div class="logo">GEOX<span> // </span>EARTH INTELLIGENCE</div>
+  <div class="sep"></div>
+  <div class="tab-group">
+    <button class="tab-btn active" onclick="setMode('inspect')">INSPECT</button>
+    <button class="tab-btn" onclick="setMode('prospect')">PROSPECT</button>
+    <button class="tab-btn" onclick="setMode('georef')">GEOREF</button>
+    <button class="tab-btn" onclick="setMode('macro')">MACROSTRAT</button>
+  </div>
+  <div class="sep"></div>
+  <div class="status-dot"></div>
+  <div class="coord-display">
+    LAT <span id="top-lat">—</span> &nbsp;
+    LON <span id="top-lon">—</span> &nbsp;
+    ZOOM <span id="top-zoom">5</span>
+  </div>
+</div>
+
+<!-- ── LAYER STRIP ────────────────────────────── -->
+<div id="layer-strip">
+  <div class="lbtn active" id="lbtn-osm" onclick="toggleLayer('osm')">🗺
+    <span class="tooltip">OpenStreetMap</span>
+  </div>
+  <div class="lbtn" id="lbtn-sat" onclick="toggleLayer('sat')">🛰
+    <span class="tooltip">Satellite</span>
+  </div>
+  <div class="lstrip-sep"></div>
+  <div class="lbtn" id="lbtn-macro" onclick="toggleLayer('macro')">🪨
+    <span class="tooltip">MacroStrat Geology</span>
+  </div>
+  <div class="lbtn" id="lbtn-gebco" onclick="toggleLayer('gebco')">🌊
+    <span class="tooltip">GEBCO Bathymetry</span>
+  </div>
+  <div class="lbtn" id="lbtn-faults" onclick="toggleLayer('faults')">⚡
+    <span class="tooltip">GEM Active Faults</span>
+  </div>
+  <div class="lstrip-sep"></div>
+  <div class="lbtn" id="lbtn-eq" onclick="toggleLayer('eq')">🔴
+    <span class="tooltip">Earthquakes M4.5+</span>
+  </div>
+  <div class="lbtn" id="lbtn-wells" onclick="toggleLayer('wells')">🛢
+    <span class="tooltip">Well Locations</span>
+  </div>
+  <div class="lbtn" id="lbtn-prospects" onclick="toggleLayer('prospects')">🎯
+    <span class="tooltip">Prospects</span>
+  </div>
+  <div class="lstrip-sep"></div>
+  <div class="lbtn" id="lbtn-georef-img" style="opacity:.4" onclick="showToast('Drop image in GEOREF tab first')">🖼
+    <span class="tooltip">Georef Image</span>
+  </div>
+</div>
+
+<!-- ── MAP ───────────────────────────────────── -->
+<div id="map-wrap">
+  <div id="map"></div>
+  <div class="scan-overlay"></div>
+</div>
+
+<!-- ── BASEMAP BAR ────────────────────────────── -->
+<div id="basemap-bar">
+  <button class="bm-btn active" onclick="setBasemap('osm')">OSM</button>
+  <button class="bm-btn" onclick="setBasemap('sat')">SAT</button>
+  <button class="bm-btn" onclick="setBasemap('topo')">TOPO</button>
+  <button class="bm-btn" onclick="setBasemap('dark')">DARK</button>
+</div>
+
+<!-- ── PANEL TOGGLE ───────────────────────────── -->
+<div id="panel-toggle" onclick="togglePanel()">◀</div>
+
+<!-- ── RIGHT PANEL ───────────────────────────── -->
+<div id="right-panel">
+  <div class="panel-tabs">
+    <button class="ptab active" onclick="switchPTab(this,'pt-inspect')">INSPECT</button>
+    <button class="ptab" onclick="switchPTab(this,'pt-prospect')">PROSPECT</button>
+    <button class="ptab" onclick="switchPTab(this,'pt-georef')">GEOREF</button>
+    <button class="ptab" onclick="switchPTab(this,'pt-macro')">MACROSTRAT</button>
+  </div>
+
+  <!-- INSPECT TAB -->
+  <div id="pt-inspect" class="panel-body active">
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot green"></span>POINT COORDINATES</div>
+      <div class="pblock-body">
+        <div class="kv"><span class="k">LATITUDE</span><span class="v" id="p-lat">—</span></div>
+        <div class="kv"><span class="k">LONGITUDE</span><span class="v" id="p-lon">—</span></div>
+        <div class="kv"><span class="k">CRS</span><span class="v">EPSG:4326 WGS84</span></div>
+        <div class="kv"><span class="k">TIMESTAMP</span><span class="v" id="p-ts">—</span></div>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot green"></span>MACROSTRAT GEOLOGY</div>
+      <div class="pblock-body">
+        <div id="macrostrat-inspect">
+          <span class="empty" style="font-size:10px;color:#4a6070;font-style:italic">Click map to probe geology</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot amber"></span>USGS EARTHQUAKES (50km)</div>
+      <div class="pblock-body" id="eq-panel">
+        <span style="font-size:10px;color:#4a6070;font-style:italic">Click map to query</span>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot"></span>HANDOFF</div>
+      <div class="pblock-body" style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="mini-btn" onclick="handoff('well')">→ WELL DESK</button>
+        <button class="mini-btn" onclick="handoff('cross')">→ CROSS SECTION</button>
+        <button class="mini-btn" onclick="copyCoords()">COPY COORDS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROSPECT TAB -->
+  <div id="pt-prospect" class="panel-body">
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot amber"></span>AC_RISK ENGINE</div>
+      <div class="pblock-body">
+        <div class="pform-row">
+          <label>Rock Type</label>
+          <select id="pr-rock">
+            <option value="quartz_sandstone">Quartz Sandstone</option>
+            <option value="limestone">Limestone</option>
+            <option value="dolomite">Dolomite</option>
+            <option value="shale">Shale</option>
+            <option value="basement">Fractured Basement</option>
+          </select>
+        </div>
+        <div class="pform-row">
+          <label>Fluid Type</label>
+          <select id="pr-fluid">
+            <option value="gas">Gas</option>
+            <option value="oil">Oil</option>
+            <option value="brine">Brine (wet)</option>
+          </select>
+        </div>
+        <div class="pform-row">
+          <label>Porosity φ (0.01–0.45)</label>
+          <input type="range" id="pr-phi" min="0.01" max="0.45" step="0.01" value="0.22" oninput="updateProspect()">
+          <span id="pr-phi-val" style="font-size:10px;color:var(--accent)">0.22</span>
+        </div>
+        <div class="pform-row">
+          <label>Water Sat Sw (0–1)</label>
+          <input type="range" id="pr-sw" min="0" max="1" step="0.01" value="0.35" oninput="updateProspect()">
+          <span id="pr-sw-val" style="font-size:10px;color:var(--accent)">0.35</span>
+        </div>
+        <div class="pform-row">
+          <label>Trap Confidence (0–1)</label>
+          <input type="range" id="pr-trap" min="0" max="1" step="0.01" value="0.7" oninput="updateProspect()">
+          <span id="pr-trap-val" style="font-size:10px;color:var(--accent)">0.70</span>
+        </div>
+        <div class="pform-row">
+          <label>Cognitive Bias B_cog</label>
+          <input type="range" id="pr-bcog" min="0.20" max="0.60" step="0.01" value="0.28" oninput="updateProspect()">
+          <span id="pr-bcog-val" style="font-size:10px;color:var(--accent)">0.28</span>
+        </div>
+        <div class="ac-risk-meter">
+          <div class="ac-risk-fill" id="ac-fill" style="width:20%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+          <div>
+            <div style="font-size:9px;color:var(--muted)">AC_RISK</div>
+            <div style="font-size:18px;font-weight:700;color:var(--accent);font-family:'Syne',sans-serif" id="ac-score">0.18</div>
+          </div>
+          <div>
+            <span class="verdict-badge SEAL" id="ac-verdict">SEAL</span>
+          </div>
+        </div>
+        <div style="margin-top:8px">
+          <div class="kv"><span class="k">Vp (est)</span><span class="v green" id="pr-vp">—</span></div>
+          <div class="kv"><span class="k">Vs (est)</span><span class="v" id="pr-vs">—</span></div>
+          <div class="kv"><span class="k">ρ_sat</span><span class="v" id="pr-rho">—</span></div>
+          <div class="kv"><span class="k">AI</span><span class="v" id="pr-ai">—</span></div>
+          <div class="kv"><span class="k">Physics grade</span><span class="v green" id="pr-grade">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot green"></span>PLAY FAIRWAYS</div>
+      <div class="pblock-body" id="play-list">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot"></span>PIN PROSPECT ON MAP</div>
+      <div class="pblock-body">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Click map to place prospect pin. AC_Risk will auto-compute.</div>
+        <button class="mini-btn" onclick="enableProspectPin()" id="pin-btn">ENABLE PIN MODE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GEOREF TAB -->
+  <div id="pt-georef" class="panel-body">
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot amber"></span>GEOREFERENCE IMAGE</div>
+      <div class="pblock-body">
+        <div id="georef-dropzone" onclick="document.getElementById('georef-file').click()"
+          ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+          ondragleave="this.style.borderColor='var(--border)'"
+          ondrop="handleGeoreffDrop(event)">
+          <div style="font-size:18px;margin-bottom:6px">🖼</div>
+          <div>DROP ANALOG MAP IMAGE</div>
+          <div style="font-size:9px;margin-top:3px">or click to select · PNG / JPG / PDF scan</div>
+        </div>
+        <input type="file" id="georef-file" accept="image/*" style="display:none" onchange="loadGeorefImage(event)">
+        <img id="georef-preview">
+        <div id="georef-controls">
+          <div style="margin:8px 0">
+            <label style="font-size:9px;color:var(--muted)">OPACITY</label>
+            <input type="range" id="georef-opacity" min="0" max="1" step="0.05" value="0.7" oninput="updateGeorefOpacity(this.value)">
+          </div>
+          <div class="pform-row">
+            <label>NORTH LAT (top)</label>
+            <input type="number" id="gr-n" placeholder="e.g. 7.0" step="0.1">
+          </div>
+          <div class="pform-row">
+            <label>SOUTH LAT (bottom)</label>
+            <input type="number" id="gr-s" placeholder="e.g. 2.0" step="0.1">
+          </div>
+          <div class="pform-row">
+            <label>WEST LON (left)</label>
+            <input type="number" id="gr-w" placeholder="e.g. 100.0" step="0.1">
+          </div>
+          <div class="pform-row">
+            <label>EAST LON (right)</label>
+            <input type="number" id="gr-e" placeholder="e.g. 107.0" step="0.1">
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="mini-btn" onclick="placeGeorefOverlay()" style="flex:1">▶ PLACE ON MAP</button>
+            <button class="mini-btn" onclick="removeGeorefOverlay()">✕ REMOVE</button>
+          </div>
+          <div id="georef-status" style="font-size:9px;color:var(--muted);margin-top:6px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot"></span>GEOREF GUIDE</div>
+      <div class="pblock-body" style="font-size:9px;color:var(--muted);line-height:1.8">
+        1. Drop scanned map image<br>
+        2. Enter bounding box coordinates<br>
+        3. Click PLACE ON MAP<br>
+        4. Adjust opacity to see fit<br>
+        5. F9: reported corners only — no hallucinated georef
+      </div>
+    </div>
+  </div>
+
+  <!-- MACROSTRAT TAB -->
+  <div id="pt-macro" class="panel-body">
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot green"></span>MACROSTRAT PROBE</div>
+      <div class="pblock-body">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:8px">
+          Click map to probe geologic units. Live query: macrostrat.org API v2.
+        </div>
+        <div id="macro-result">
+          <span style="font-size:10px;color:#4a6070;font-style:italic">Click map to probe...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot amber"></span>TILE LAYERS</div>
+      <div class="pblock-body">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:8px">
+          MacroStrat vector tiles (CC BY 4.0). Toggle in layer strip (🪨).
+        </div>
+        <div class="kv"><span class="k">Endpoint</span><span class="v" style="font-size:9px">tiles.macrostrat.org</span></div>
+        <div class="kv"><span class="k">Scale</span><span class="v">carto (seamless)</span></div>
+        <div class="kv"><span class="k">Format</span><span class="v">PNG raster</span></div>
+        <div class="kv"><span class="k">License</span><span class="v green">CC BY 4.0</span></div>
+        <button class="mini-btn" style="margin-top:8px;width:100%" onclick="toggleLayer('macro')">TOGGLE GEOLOGY LAYER</button>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <div class="pblock-hdr"><span class="dot"></span>RECENT PROBES</div>
+      <div class="pblock-body" id="macro-log" style="font-size:10px;color:var(--muted)">
+        No probes yet.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GEOREF MAP WIDGET -->
+<div id="georef-widget">
+  <label>GEOREF OPACITY</label>
+  <input type="range" min="0" max="1" step="0.05" value="0.7" oninput="updateGeorefOpacity(this.value)">
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── CONSTANTS ───────────────────────────────────
+const MINERAL_K = {
+  quartz_sandstone: { Km:36.6, Gm:45.0, rho:2.65 },
+  limestone:        { Km:76.8, Gm:32.0, rho:2.71 },
+  dolomite:         { Km:94.9, Gm:45.0, rho:2.87 },
+  shale:            { Km:21.0, Gm:7.0,  rho:2.55 },
+  basement:         { Km:75.0, Gm:33.0, rho:2.65 }
+};
+const FLUID_K = {
+  gas:   { Kf:0.02,  rho:0.15 },
+  oil:   { Kf:0.72,  rho:0.78 },
+  brine: { Kf:2.38,  rho:1.09 }
+};
+const PLAYS = [
+  { id:'P1', name:'Clastic Reservoirs',    risk:0.15, color:'#00e5a0' },
+  { id:'P2', name:'Carbonate Buildups',    risk:0.38, color:'#f0a500' },
+  { id:'P3', name:'Fractured Basement',    risk:0.62, color:'#ff4c4c' },
+  { id:'P4', name:'Deepwater Turbidites',  risk:0.28, color:'#4cc9f0' }
+];
+
+// ── MAP INIT ────────────────────────────────────
+const MAP = L.map('map', {
+  center: [4.0, 108.0],
+  zoom: 5,
+  zoomControl: true,
+  attributionControl: false
+});
+L.control.scale({ imperial:false, position:'bottomright' }).addTo(MAP);
+
+// ── BASEMAPS ─────────────────────────────────────
+const BASEMAPS = {
+  osm:  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          { maxZoom:18 }),
+  sat:  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+          { maxZoom:18 }),
+  topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+          { maxZoom:15 }),
+  dark: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',
+          { maxZoom:18 })
+};
+let currentBasemap = 'osm';
+BASEMAPS.osm.addTo(MAP);
+
+function setBasemap(name) {
+  BASEMAPS[currentBasemap].remove();
+  BASEMAPS[name].addTo(MAP);
+  MAP.eachLayer(l => { if(l !== BASEMAPS[name]) MAP.removeLayer(l); });
+  BASEMAPS[name].addTo(MAP);
+  currentBasemap = name;
+  // Re-add active overlay layers
+  Object.entries(overlayState).forEach(([k,v]) => { if(v && OVERLAYS[k]) OVERLAYS[k].addTo(MAP); });
+  document.querySelectorAll('.bm-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.bm-btn[onclick="setBasemap('${name}')"]`)?.classList.add('active');
+}
+
+// ── OVERLAY LAYERS ────────────────────────────────
+const OVERLAYS = {
+  macro: L.tileLayer('https://tiles.macrostrat.org/carto/{z}/{x}/{y}.png',
+           { opacity:0.6, maxZoom:16, attribution:'MacroStrat CC BY 4.0' }),
+  gebco: L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv',
+           { layers:'GEBCO_LATEST', format:'image/png', transparent:true, opacity:0.5,
+             attribution:'GEBCO 2024' }),
+  faults: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',
+            { opacity:0, maxZoom:16 }), // placeholder — real GEM requires CORS proxy
+  eq:     L.layerGroup(),
+  wells:  L.layerGroup(),
+  prospects: L.layerGroup()
+};
+
+const overlayState = { macro:false, gebco:false, faults:false, eq:false, wells:false, prospects:false };
+
+function toggleLayer(name) {
+  const btn = document.getElementById('lbtn-' + name);
+  if (!OVERLAYS[name]) return;
+  if (overlayState[name]) {
+    MAP.removeLayer(OVERLAYS[name]);
+    overlayState[name] = false;
+    btn?.classList.remove('active');
+  } else {
+    OVERLAYS[name].addTo(MAP);
+    overlayState[name] = true;
+    btn?.classList.add('active');
+  }
+}
+
+// ── SAMPLE WELLS (Malay Basin approximate) ────────
+const SAMPLE_WELLS = [
+  { name:'Bekantan-1',    lat:4.82, lng:103.91, type:'Gas', phi:0.22, sw:0.30 },
+  { name:'Dulang-A1',     lat:5.41, lng:103.55, type:'Oil', phi:0.24, sw:0.28 },
+  { name:'Seligi-1',      lat:5.10, lng:103.40, type:'Oil', phi:0.21, sw:0.32 },
+  { name:'Tiong-3',       lat:4.62, lng:103.20, type:'Gas', phi:0.19, sw:0.45 },
+  { name:'Lebah Emas-1',  lat:5.90, lng:104.20, type:'Gas', phi:0.26, sw:0.25 }
+];
+
+SAMPLE_WELLS.forEach(w => {
+  const marker = L.circleMarker([w.lat, w.lng], {
+    radius:6, color:'#f0a500', fillColor:'#f0a500', fillOpacity:0.8, weight:2
+  }).bindPopup(`
+    <div class="ac-popup">
+      <b>${w.name}</b><br>
+      TYPE: ${w.type} &nbsp; φ=${w.phi} &nbsp; Sw=${w.sw}<br>
+      <button onclick="window.location='/apps/well-desk/'" 
+        style="margin-top:4px;background:rgba(240,165,0,.15);border:1px solid #f0a500;
+        color:#f0a500;font-family:monospace;font-size:9px;padding:2px 6px;cursor:pointer">
+        → WELL DESK
+      </button>
+    </div>`);
+  OVERLAYS.wells.addLayer(marker);
+});
+
+// ── SAMPLE PROSPECTS ──────────────────────────────
+const SAMPLE_PROSPECTS = [
+  { name:'Prospect ALPHA', lat:5.2, lng:104.5, phi:0.24, sw:0.25, trap:0.75, bcog:0.28, rock:'quartz_sandstone', fluid:'gas' },
+  { name:'Prospect BETA',  lat:3.8, lng:103.1, phi:0.16, sw:0.55, trap:0.50, bcog:0.35, rock:'limestone',        fluid:'oil' },
+  { name:'Prospect GAMMA', lat:6.1, lng:105.0, phi:0.12, sw:0.40, trap:0.60, bcog:0.30, rock:'dolomite',         fluid:'gas' }
+];
+
+SAMPLE_PROSPECTS.forEach(p => {
+  const result = gassmann(p.rock, p.fluid, p.phi, p.sw);
+  const ac = acRisk(p.phi, p.sw, p.trap, p.bcog, p.rock);
+  const vclass = ac < 0.15 ? 'SEAL' : ac < 0.35 ? 'SEAL' : ac < 0.60 ? 'HOLD' : 'VOID';
+  const marker = L.marker([p.lat, p.lng], {
+    icon: L.divIcon({
+      className:'',
+      html:`<div style="width:10px;height:10px;background:${vclass==='SEAL'?'#00e5a0':vclass==='HOLD'?'#f0a500':'#ff4c4c'};
+            border-radius:50%;box-shadow:0 0 8px ${vclass==='SEAL'?'#00e5a0':vclass==='HOLD'?'#f0a500':'#ff4c4c'}"></div>`,
+      iconSize:[10,10]
+    })
+  }).bindPopup(`
+    <div class="ac-popup">
+      <b>${p.name}</b><br>
+      AC_Risk: <b>${ac.toFixed(3)}</b> &nbsp;
+      <span class="v-badge ${vclass}">${vclass}</span><br>
+      Vp: ${result.vp.toFixed(0)} m/s &nbsp; Vs: ${result.vs.toFixed(0)} m/s<br>
+      ρ: ${result.rho.toFixed(3)} g/cc &nbsp; AI: ${(result.vp*result.rho).toFixed(0)}<br>
+      Grade: <b style="color:${result.grade==='AAA'?'#00e5a0':'#ff4c4c'}">${result.grade}</b>
+    </div>`);
+  OVERLAYS.prospects.addLayer(marker);
+});
+
+// ── ROCK PHYSICS ENGINE (Gassmann) ────────────────
+function gassmann(rock, fluid, phi, sw) {
+  const m = MINERAL_K[rock] || MINERAL_K.quartz_sandstone;
+  const f = FLUID_K[fluid] || FLUID_K.gas;
+  // VRH mineral average
+  const Km = m.Km, Gm = m.Gm, rho_m = m.rho;
+  const Kf = f.Kf, rho_f = f.rho;
+  // Critical porosity dry frame (simplified)
+  const phi_c = rock === 'basement' ? 0.05 : 0.40;
+  const f_crit = Math.max(0, 1 - phi/phi_c);
+  const Kdry = Km * f_crit * (1-phi);
+  const Gdry = Gm * f_crit * (1-phi);
+  // Gassmann
+  const num = (1 - Kdry/Km)**2;
+  const den = phi/Kf + (1-phi)/Km - Kdry/(Km*Km);
+  const Ksat = Math.max(0.001, Kdry + (den > 0 ? num/den : 0));
+  const Gsat = Gdry; // shear invariant
+  const rho = (1-phi)*rho_m + phi*((sw*1.09) + (1-sw)*f.rho);
+  const Vp = 1000 * Math.sqrt((Ksat + 4/3*Gsat) / rho); // m/s
+  const Vs = 1000 * Math.sqrt(Gsat / rho);
+  // PhysicsGuard
+  const grade = (Vp>=1500&&Vp<=7000&&Vs>=0&&Vs<=4500&&rho>=1.0&&rho<=3.5&&phi>=0.01&&phi<=0.45) ? 'AAA' : 'RAW';
+  return { Ksat, Gsat, rho, vp:Vp, vs:Vs, ai:Vp*rho, grade };
+}
+
+function acRisk(phi, sw, trap, bcog, rock) {
+  // U_ambiguity: lower porosity + higher Sw = more ambiguous
+  const U = Math.min(1, (1-phi)*0.4 + sw*0.3 + (rock==='shale'?0.3:0));
+  // D_transform: baseline 1.0 (no transform stack in this simple calc)
+  const D = 1.0;
+  // B_cog
+  const B = bcog;
+  // trap confidence reduces risk
+  const ac = U * D * B * (1 - trap*0.4);
+  return Math.min(0.99, Math.max(0.01, ac));
+}
+
+// ── PROSPECT PANEL LOGIC ──────────────────────────
+function updateProspect() {
+  const phi  = parseFloat(document.getElementById('pr-phi').value);
+  const sw   = parseFloat(document.getElementById('pr-sw').value);
+  const trap = parseFloat(document.getElementById('pr-trap').value);
+  const bcog = parseFloat(document.getElementById('pr-bcog').value);
+  const rock = document.getElementById('pr-rock').value;
+  const fluid= document.getElementById('pr-fluid').value;
+
+  document.getElementById('pr-phi-val').textContent  = phi.toFixed(2);
+  document.getElementById('pr-sw-val').textContent   = sw.toFixed(2);
+  document.getElementById('pr-trap-val').textContent = trap.toFixed(2);
+  document.getElementById('pr-bcog-val').textContent = bcog.toFixed(2);
+
+  const r = gassmann(rock, fluid, phi, sw);
+  const ac = acRisk(phi, sw, trap, bcog, rock);
+  const verdict = ac < 0.15 ? 'SEAL' : ac < 0.35 ? 'SEAL' : ac < 0.60 ? 'HOLD' : 'VOID';
+
+  document.getElementById('ac-score').textContent = ac.toFixed(3);
+  document.getElementById('ac-fill').style.width = (ac*100).toFixed(0)+'%';
+  const vb = document.getElementById('ac-verdict');
+  vb.textContent = verdict;
+  vb.className = 'verdict-badge '+verdict;
+
+  document.getElementById('pr-vp').textContent   = r.vp.toFixed(0)+' m/s';
+  document.getElementById('pr-vs').textContent   = r.vs.toFixed(0)+' m/s';
+  document.getElementById('pr-rho').textContent  = r.rho.toFixed(3)+' g/cc';
+  document.getElementById('pr-ai').textContent   = (r.vp*r.rho).toFixed(0);
+  document.getElementById('pr-grade').textContent= r.grade;
+  document.getElementById('pr-grade').style.color= r.grade==='AAA'?'var(--accent)':'var(--red)';
+}
+
+// ── PLAYS LIST ─────────────────────────────────────
+function renderPlays() {
+  const el = document.getElementById('play-list');
+  el.innerHTML = PLAYS.map(p => `
+    <div class="play-row">
+      <div class="play-id">${p.id}</div>
+      <div class="play-name">${p.name}</div>
+      <div class="play-bar-wrap">
+        <div class="play-bar" style="width:${p.risk*100}%;background:${p.color}"></div>
+      </div>
+    </div>`).join('');
+}
+renderPlays();
+updateProspect();
+
+// ── MAP EVENTS ─────────────────────────────────────
+let currentMode = 'inspect';
+let prospectPinMode = false;
+let macroLog = [];
+
+MAP.on('mousemove', e => {
+  document.getElementById('top-lat').textContent = e.latlng.lat.toFixed(4);
+  document.getElementById('top-lon').textContent = e.latlng.lng.toFixed(4);
+});
+MAP.on('zoomend', () => {
+  document.getElementById('top-zoom').textContent = MAP.getZoom();
+});
+
+MAP.on('click', e => {
+  const {lat,lng} = e.latlng;
+
+  // Update coords
+  document.getElementById('p-lat').textContent = lat.toFixed(5);
+  document.getElementById('p-lon').textContent = lng.toFixed(5);
+  document.getElementById('p-ts').textContent  = new Date().toISOString().slice(11,19)+' UTC';
+
+  if (prospectPinMode) {
+    placeProspectPin(lat, lng);
+    return;
+  }
+
+  if (currentMode === 'inspect' || currentMode === 'macro') {
+    probeGeology(lat, lng);
+    probeEarthquakes(lat, lng);
+  }
+});
+
+// ── MACROSTRAT PROBE ────────────────────────────────
+async function probeGeology(lat, lng) {
+  const el  = document.getElementById('macrostrat-inspect');
+  const el2 = document.getElementById('macro-result');
+  const loading = '<span style="color:var(--muted);font-size:10px">Probing macrostrat...</span>';
+  el.innerHTML = loading; el2.innerHTML = loading;
+
+  try {
+    const url = `https://macrostrat.org/api/v2/geologic_units/map?lat=${lat.toFixed(4)}&lng=${lng.toFixed(4)}&scale=medium&format=json`;
+    const r = await fetch(url);
+    const d = await r.json();
+    const units = d.success?.data || d.data || [];
+    if (!units.length) {
+      const msg = '<span style="color:var(--muted);font-size:10px;font-style:italic">No units at this point (ocean or no coverage)</span>';
+      el.innerHTML = msg; el2.innerHTML = msg;
+      return;
+    }
+    const u = units[0];
+    const html = `
+      <div class="kv"><span class="k">FORMATION</span><span class="v green">${u.map_unit_name||u.strat_name||'—'}</span></div>
+      <div class="kv"><span class="k">AGE</span><span class="v">${u.best_age_top||'—'} – ${u.best_age_bottom||'—'} Ma</span></div>
+      <div class="kv"><span class="k">LITH</span><span class="v">${u.lith||u.lith_type||'—'}</span></div>
+      <div class="kv"><span class="k">ENVIRONMENT</span><span class="v">${u.environ||'—'}</span></div>
+      <div class="kv"><span class="k">MAP SOURCE</span><span class="v">${u.ref?.pub_year||'MacroStrat'}</span></div>`;
+    el.innerHTML = html; el2.innerHTML = html;
+
+    // Log
+    const logEl = document.getElementById('macro-log');
+    macroLog.unshift(`${lat.toFixed(3)},${lng.toFixed(3)} → ${u.map_unit_name||'?'}`);
+    macroLog = macroLog.slice(0,5);
+    logEl.innerHTML = macroLog.map(l=>`<div style="padding:2px 0;border-bottom:1px solid var(--border)">${l}</div>`).join('');
+
+  } catch(err) {
+    const msg = `<span style="color:var(--amber);font-size:10px">MacroStrat API unavailable (CORS/network)</span>`;
+    el.innerHTML = msg; el2.innerHTML = msg;
+  }
+}
+
+// ── EARTHQUAKE PROBE ────────────────────────────────
+async function probeEarthquakes(lat, lng) {
+  const el = document.getElementById('eq-panel');
+  el.innerHTML = '<span style="font-size:10px;color:var(--muted)">Querying USGS...</span>';
+  try {
+    const end = new Date().toISOString().split('T')[0];
+    const start = new Date(Date.now() - 30*86400000).toISOString().split('T')[0];
+    const url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=${lat}&longitude=${lng}&maxradius=0.5&minmagnitude=4.5&starttime=${start}&endtime=${end}&limit=5`;
+    const r = await fetch(url);
+    const d = await r.json();
+    const eq = d.features || [];
+    if (!eq.length) {
+      el.innerHTML = '<span style="font-size:10px;color:var(--muted);font-style:italic">No M4.5+ within 50km (30 days)</span>';
+      return;
+    }
+    el.innerHTML = eq.map(e => {
+      const m = e.properties.mag;
+      const cls = m>=6?'high':m>=5?'mid':'low';
+      return `<div class="eq-row">
+        <span class="eq-mag ${cls}">M${m.toFixed(1)}</span>
+        <span class="eq-place">${e.properties.place}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<span style="font-size:10px;color:var(--amber)">USGS unavailable</span>';
+  }
+}
+
+// ── PROSPECT PIN ────────────────────────────────────
+function enableProspectPin() {
+  prospectPinMode = true;
+  document.getElementById('pin-btn').textContent = 'CLICK MAP TO PLACE →';
+  document.getElementById('pin-btn').style.borderColor = 'var(--accent)';
+  document.getElementById('pin-btn').style.color = 'var(--accent)';
+  document.getElementById('map').style.cursor = 'crosshair';
+  showToast('Click map to place prospect pin');
+}
+
+function placeProspectPin(lat, lng) {
+  prospectPinMode = false;
+  document.getElementById('pin-btn').textContent = 'ENABLE PIN MODE';
+  document.getElementById('pin-btn').style.borderColor = '';
+  document.getElementById('pin-btn').style.color = '';
+  document.getElementById('map').style.cursor = '';
+
+  const phi  = parseFloat(document.getElementById('pr-phi').value);
+  const sw   = parseFloat(document.getElementById('pr-sw').value);
+  const trap = parseFloat(document.getElementById('pr-trap').value);
+  const bcog = parseFloat(document.getElementById('pr-bcog').value);
+  const rock = document.getElementById('pr-rock').value;
+  const fluid= document.getElementById('pr-fluid').value;
+
+  const r  = gassmann(rock, fluid, phi, sw);
+  const ac = acRisk(phi, sw, trap, bcog, rock);
+  const v  = ac < 0.35 ? 'SEAL' : ac < 0.60 ? 'HOLD' : 'VOID';
+  const col= v==='SEAL'?'#00e5a0':v==='HOLD'?'#f0a500':'#ff4c4c';
+
+  const marker = L.marker([lat, lng], {
+    icon: L.divIcon({
+      className:'',
+      html:`<div style="width:14px;height:14px;background:${col};border-radius:50%;
+            border:2px solid white;box-shadow:0 0 10px ${col}"></div>`,
+      iconSize:[14,14], iconAnchor:[7,7]
+    })
+  }).bindPopup(`
+    <div class="ac-popup">
+      <b>PINNED PROSPECT</b><br>
+      ${lat.toFixed(4)}, ${lng.toFixed(4)}<br>
+      AC_Risk: <b>${ac.toFixed(3)}</b> &nbsp; <span class="v-badge ${v}">${v}</span><br>
+      Vp: ${r.vp.toFixed(0)} m/s &nbsp; Grade: <b>${r.grade}</b>
+    </div>`).addTo(MAP).openPopup();
+
+  if (!overlayState.prospects) { OVERLAYS.prospects.addTo(MAP); overlayState.prospects=true; }
+  showToast(`Prospect pinned — AC_Risk: ${ac.toFixed(3)} [${v}]`);
+}
+
+// ── GEOREF IMAGE OVERLAY ────────────────────────────
+let georefLayer = null;
+let georefImageUrl = null;
+
+function handleGeoreffDrop(event) {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadGeorefFile(file);
+}
+
+function loadGeorefImage(event) {
+  const file = event.target.files[0];
+  if (file) loadGeorefFile(file);
+}
+
+function loadGeorefFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    georefImageUrl = e.target.result;
+    const dz = document.getElementById('georef-dropzone');
+    const prev = document.getElementById('georef-preview');
+    const ctrl = document.getElementById('georef-controls');
+    dz.classList.add('has-image');
+    dz.innerHTML = `<div style="font-size:9px;color:var(--accent)">${file.name}</div>`;
+    prev.src = georefImageUrl;
+    prev.style.display = 'block';
+    ctrl.style.display = 'block';
+    document.getElementById('lbtn-georef-img').style.opacity = '1';
+    showToast('Image loaded — enter bounds and click PLACE ON MAP');
+  };
+  reader.readAsDataURL(file);
+}
+
+function placeGeorefOverlay() {
+  if (!georefImageUrl) { showToast('No image loaded'); return; }
+  const n = parseFloat(document.getElementById('gr-n').value);
+  const s = parseFloat(document.getElementById('gr-s').value);
+  const w = parseFloat(document.getElementById('gr-w').value);
+  const e_ = parseFloat(document.getElementById('gr-e').value);
+  if ([n,s,w,e_].some(isNaN)) { showToast('Enter all 4 bounds first'); return; }
+  if (n<=s || e_<=w) { showToast('Check bounds — N must > S, E must > W'); return; }
+
+  if (georefLayer) MAP.removeLayer(georefLayer);
+  georefLayer = L.imageOverlay(georefImageUrl, [[s,w],[n,e_]], {
+    opacity: parseFloat(document.getElementById('georef-opacity').value),
+    interactive: true
+  }).addTo(MAP);
+
+  MAP.fitBounds([[s,w],[n,e_]]);
+  document.getElementById('georef-status').textContent = `Placed: [${s},${w}] → [${n},${e_}]`;
+  document.getElementById('georef-widget').style.display = 'block';
+  showToast('Georef image placed on map');
+}
+
+function removeGeorefOverlay() {
+  if (georefLayer) { MAP.removeLayer(georefLayer); georefLayer = null; }
+  document.getElementById('georef-widget').style.display = 'none';
+  document.getElementById('georef-status').textContent = 'Removed from map';
+}
+
+function updateGeorefOpacity(val) {
+  if (georefLayer) georefLayer.setOpacity(parseFloat(val));
+}
+
+// ── UI CONTROLS ─────────────────────────────────────
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Sync panel tab
+  const tabMap = { inspect:'pt-inspect', prospect:'pt-prospect', georef:'pt-georef', macro:'pt-macro' };
+  const ptname = tabMap[mode];
+  if (ptname) {
+    document.querySelectorAll('.ptab').forEach((b,i) => {
+      const bodies = ['pt-inspect','pt-prospect','pt-georef','pt-macro'];
+      b.classList.toggle('active', bodies[i]===ptname);
+    });
+    document.querySelectorAll('.panel-body').forEach(b => {
+      b.classList.toggle('active', b.id===ptname);
+    });
+  }
+  if (mode==='georef') document.getElementById('map').style.cursor='default';
+  if (mode==='macro') showToast('Click map to probe MacroStrat geology');
+}
+
+function switchPTab(btn, bodyId) {
+  document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.panel-body').forEach(b => {
+    b.classList.toggle('active', b.id===bodyId);
+  });
+}
+
+let panelVisible = true;
+function togglePanel() {
+  panelVisible = !panelVisible;
+  const panel = document.getElementById('right-panel');
+  const mapw  = document.getElementById('map-wrap');
+  const tog   = document.getElementById('panel-toggle');
+  panel.classList.toggle('hidden', !panelVisible);
+  mapw.classList.toggle('panel-hidden', !panelVisible);
+  tog.textContent = panelVisible ? '◀' : '▶';
+  tog.style.right = panelVisible ? 'var(--panel-w)' : '0';
+  setTimeout(() => MAP.invalidateSize(), 310);
+}
+
+function handoff(type) {
+  const lat = document.getElementById('p-lat').textContent;
+  const lon = document.getElementById('p-lon').textContent;
+  if (lat === '—') { showToast('Click map first to set coordinates'); return; }
+  const urls = {
+    well:  `/apps/well-desk/?lat=${lat}&lng=${lon}`,
+    cross: `/apps/cross-section/?lat=${lat}&lng=${lon}`
+  };
+  showToast(`Handoff to ${type.toUpperCase()} — coords ${lat}, ${lon}`);
+}
+
+function copyCoords() {
+  const lat = document.getElementById('p-lat').textContent;
+  const lon = document.getElementById('p-lon').textContent;
+  if (lat==='—') { showToast('Click map first'); return; }
+  navigator.clipboard.writeText(`${lat}, ${lon}`).then(()=>showToast('Coords copied'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── INIT ─────────────────────────────────────────────
+// Auto-enable wells + prospects layers on load
+toggleLayer('wells');
+toggleLayer('prospects');
+</script>
+</body>
+</html>
