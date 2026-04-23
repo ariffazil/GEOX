@@ -6,7 +6,7 @@
 [![Status](https://img.shields.io/badge/Backend-Operational-brightgreen)](https://geox.arif-fazil.com)
 [![Status](https://img.shields.io/badge/MCP%20Tools-13%20Active-blue)](https://geox.arif-fazil.com)
 [![Constitutional](https://img.shields.io/badge/Constitutional%20Floors-F1--F13-orange)](https://github.com/ariffazil/GEOX/blob/main/wiki/70_GOVERNANCE)
-[![License](https://img.shields.io/badge/License-MIT-gray)](./LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue)](./LICENSE)
 [![EUREKA](https://img.shields.io/badge/GPT--5%20Stress%20Test-PASSED-gold)](https://github.com/ariffazil/GEOX/blob/main/wiki/90_AUDITS/EUREKA_VALIDATION_2026_04_10.md)
 
 ---
