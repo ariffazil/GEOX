@@ -1,0 +1,102 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
+  "app_id": "geox.georeference.map",
+  "version": "0.5.0-SCAFFOLD",
+  "domain": "maps",
+  "display_name": "Georeference Map",
+  "description": "Governed georeferencing tool for scanned maps with reversible, git-backed operations",
+  "icon": "https://geox.arif-fazil.com/apps/georeference_map/icon.svg",
+  "required_tools": [
+    "mcp.geox.geox_georeference_map_stub"
+  ],
+  "optional_tools": [
+    "mcp.geox.compute_ac_risk",
+    "mcp.geox.evaluate_ac_risk_governed"
+  ],
+  "ui_entry": {
+    "resource_uri": "https://geox.arif-fazil.com/apps/georeference_map/index.html",
+    "mode": "inline-or-external",
+    "capability_required": [
+      "embedded_webview"
+    ],
+    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.geox.arif-fazil.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;",
+    "sandbox": "allow-scripts allow-same-origin",
+    "inline_config": {
+      "max_width": 1200,
+      "max_height": 900,
+      "resize": true
+    },
+    "external_config": {
+      "window_features": "width=1400,height=1000,menubar=no,toolbar=no"
+    }
+  },
+  "auth": {
+    "mode": "jwt",
+    "token_ttl_seconds": 600,
+    "scopes": [
+      "tenant:{tenant_id}",
+      "role:geoscientist|manager|viewer",
+      "governance:read",
+      "maps:write"
+    ],
+    "refreshable": true
+  },
+  "events": {
+    "supported": [
+      "app.initialize",
+      "app.context.patch",
+      "app.state.sync",
+      "tool.request",
+      "tool.result",
+      "ui.action",
+      "ui.state.change",
+      "map.control_point_added",
+      "map.solve_requested",
+      "auth.challenge",
+      "auth.result",
+      "host.resize",
+      "telemetry.emit"
+    ],
+    "max_payload_size": 524288
+  },
+  "fallback": {
+    "chain": [
+      "inline",
+      "external",
+      "card",
+      "text"
+    ],
+    "external_url": "https://geox.arif-fazil.com/apps/georeference_map/?session={session_id}",
+    "card_template": "/apps/georeference_map/card.html"
+  },
+  "arifos": {
+    "required_floors": [
+      "F1",
+      "F2",
+      "F10",
+      "F11",
+      "F13"
+    ],
+    "audit_level": "full",
+    "vault_route": "999_VAULT",
+    "human_in_the_loop": [
+      "commit_georeference",
+      "overwrite_source_map"
+    ]
+  },
+  "meta": {
+    "author": "GEOX Platform Team",
+    "license": "MIT",
+    "repository": "https://github.com/ariffazil/arifos-geox",
+    "homepage": "https://geox.arif-fazil.com/apps/georeference_map/",
+    "keywords": [
+      "georeference",
+      "maps",
+      "control_points",
+      "epsg",
+      "governance"
+    ],
+    "created_at": "2026-04-13T00:00:00Z",
+    "updated_at": "2026-04-13T00:00:00Z"
+  }
+}

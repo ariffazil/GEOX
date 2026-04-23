@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-04-13T13:04:11.083185+00:00",
+  "seal": "DITEMPA BUKAN DIBERI",
+  "services": {
+    "arifosmcp": {
+      "docker": "down",
+      "api": "error_502"
+    },
+    "geox_eic": {
+      "docker": "running",
+      "api": "error_404"
+    }
+  },
+  "integrity": {
+    "skills_linked": true,
+    "submodule_sync": true
+  }
+}

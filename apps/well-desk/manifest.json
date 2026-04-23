@@ -1,0 +1,43 @@
+{
+  "schema_version": "io.modelcontextprotocol/ui/1.0",
+  "app_id": "geox.subsurface.well-desk",
+  "name": "GEOX WellDesk",
+  "version": "1.0.0-skeleton",
+  "description": "1D + 2D well log viewer with forward/metabolic/inverse rock physics engine. Earth-domain coprocessor for the arifOS constitutional federation.",
+  "ui_entry": {
+    "type": "resource_uri",
+    "resource_uri": "https://geox.arif-fazil.com/apps/well-desk/index.html"
+  },
+  "capabilities": {
+    "events": [
+      "app.initialize",
+      "app.state.sync",
+      "tool.request",
+      "tool.result",
+      "ui.action",
+      "physics.result",
+      "vault.seal"
+    ],
+    "tools": ["geox_well_desk_launch"],
+    "render_modes": ["1d_track", "2d_correlation", "crossplot", "forward", "inverse", "metabolic"]
+  },
+  "arifos": {
+    "constitutional_federation": "geox",
+    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "physics_engine": "physics9",
+    "vault_route": "999_VAULT",
+    "human_judge": "888"
+  },
+  "fallback": {
+    "chain": ["inline", "external", "card", "text"]
+  },
+  "permissions": {
+    "file_system": ["read_las", "read_lis", "write_las", "export_png"],
+    "compute": ["forward_rock_physics", "inverse_rock_physics", "metabolic_convergence"],
+    "network": ["vault_999_submit"]
+  },
+  "schemas": {
+    "events": "./schemas/well_desk_event_schema.json",
+    "vault_receipt": "./schemas/vault999_receipt_schema.json"
+  }
+}
