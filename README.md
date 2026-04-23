@@ -4,7 +4,7 @@
 > DITEMPA BUKAN DIBERI — Forged, Not Given
 
 [![Status](https://img.shields.io/badge/Backend-Operational-brightgreen)](https://geox.arif-fazil.com)
-[![Status](https://img.shields.io/badge/MCP%20Tools-13%20Active-blue)](https://geox.arif-fazil.com)
+[![Status](https://img.shields.io/badge/MCP%20Tools-24%20Active-blue)](https://github.com/ariffazil/GEOX/blob/main/geox_mcp/server.py)
 [![Constitutional](https://img.shields.io/badge/Constitutional%20Floors-F1--F13-orange)](https://github.com/ariffazil/GEOX/blob/main/wiki/70_GOVERNANCE)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue)](./LICENSE)
 [![EUREKA](https://img.shields.io/badge/GPT--5%20Stress%20Test-PASSED-gold)](https://github.com/ariffazil/GEOX/blob/main/wiki/90_AUDITS/EUREKA_VALIDATION_2026_04_10.md)
@@ -29,11 +29,14 @@ Observed Data → Physics9 Constitutional Filter → Governed Interpretation →
 
 | Surface | URL | Status |
 |---|---|---|
-| Main Web Interface | [geox.arif-fazil.com](https://geox.arif-fazil.com) | ✅ LIVE |
-| MCP Endpoint (VPS) | [arifosmcp.arif-fazil.com/mcp](https://arifosmcp.arif-fazil.com/mcp) | ✅ LIVE |
-| Health Check | [geox.arif-fazil.com/health](https://geox.arif-fazil.com/health) | ✅ HTTP 200 |
-| Unified Wiki | [wiki.arif-fazil.com](https://wiki.arif-fazil.com) | ✅ LIVE |
-| Theory (APEX) | [apex.arif-fazil.com](https://apex.arif-fazil.com) | ✅ LIVE |
+| Main Web Interface | [geox.arif-fazil.com](https://geox.arif-fazil.com) | ⚠️ DEGRADED — VPS restart pending |
+| MCP Endpoint (VPS) | [arifosmcp.arif-fazil.com/mcp](https://arifosmcp.arif-fazil.com/mcp) | ⚠️ 502 — VPS offline |
+| Health Check | [geox.arif-fazil.com/health](https://geox.arif-fazil.com/health) | ⚠️ VPS offline |
+| Unified Wiki | [wiki.arif-fazil.com](https://wiki.arif-fazil.com) | ⚠️ VPS offline |
+| Theory (APEX) | [apex.arif-fazil.com](https://apex.arif-fazil.com) | ⚠️ VPS offline |
+
+> **VPS Status (2026-04-23):** Server is offline. Hostinger panel access required to restore.
+> Run `pm2 restart all` after VPS is back online to restore MCP endpoint.
 
 ---
 
@@ -45,7 +48,7 @@ Physics9 is not a feature expansion of existing subsurface tools. It is a **caus
 |---|---|---|
 | Primary goal | Feature breadth, automation speed | Causal integrity, epistemic governance |
 | Interpretation output | Analyst-authored narrative | Verdict-based (HOLD / DRO / DRIL) |
-| AI hallucination control | None by default | F9 Physics9 + 888_HOLD enforcement |
+| AI hallucination control | None by default | F9 + 888_HOLD enforcement |
 | Audit trail | Manual | Constitutional, auto-logged |
 | Human override | Implicit | F13 Sovereign — explicit, formal |
 
@@ -65,89 +68,97 @@ Physics9 implements a **dimension-first sovereign architecture**, separating bor
 | **Physics** | Metabolic | Meta | PHYSICS_9 State Vector Optimization |
 | **Map** | Geospatial | Global | Transversal Geospatial Reference Fabric |
 
-### Server Architecture
+### MCP Server Architecture
 
 ```
-geox_unified_mcp_server.py     ← Canonical API Server & Routing
-execution_plane/vps/server.py  ← Canonical Execution Plane (VPS / Apps)
+geox_mcp/server.py    ← Canonical MCP server (24 tools + resources + prompts)
 ```
-
-> ⚠️ **Deprecated (Compatibility Only):** `mcp_server_aaa.py`, `mcp_server_hardened.py`,
-> `mcp_petrophysics_server.py`, `fastmcp_adapter.py` — these are test-collection stubs only.
-> Do not use as discovery targets.
 
 ---
 
-## MCP Tools (v1.9 — 13 Active)
+## MCP Tools (v2.1.0 — 24 Active Tools)
 
-### Bridge & Governance
+### System Resources
+| Resource | Purpose |
+|---|---|
+| `geox://health` | Kernel health and 999_SEAL heartbeat |
+| `geox://registry` | Full tool registry |
+| `geox://skills/{skill_id}` | Skill loader by ID |
+| `geox://domains/{domain}` | Domain skill index |
 
+### UI Resources (Non-Agent Tools)
+| Resource | Purpose |
+|---|---|
+| `ui://ac_risk` | AC Risk dashboard |
+| `ui://attribute_audit` | Attribute audit viewer |
+| `ui://seismic_vision_review` | Seismic vision interface |
+| `ui://georeference_map` | Georeference map viewer |
+| `ui://analog_digitizer` | Analog digitizer tool |
+
+### Prompts
+| Prompt | Purpose |
+|---|---|
+| `geox_mission_template` | Structured mission scenario builder |
+| `arifos_human_approval_request` | F1/F13 human sovereign approval request |
+
+### Tool: Well (Borehole Truth)
 | Tool | Purpose |
 |---|---|
-| `bridge.sync_state` | Synchronize UI with the 888_JUDGE scene |
-| `bridge.interpret_causal_scene` | Structured synthesis of multiple witnesses |
-| `bridge.audit_policy_violation` | Formally audit breach of F2/F8/F9 floors |
-| `bridge.check_operator_legality` | Constitutional pre-flight on physical operations |
+| `geox_well_load_bundle` | Load LAS log bundle |
+| `geox_well_qc_logs` | Quality control log data |
+| `geox_well_compute_petrophysics` | Full petrophysics pipeline (Sw, Phi, Vsh) |
 
-### Dimensional Kernels
-
-| Tool | Purpose | Scale |
-|---|---|---|
-| `prospect.compute_stoiip` | Deterministic volumetric integration | Prospect |
-| `dim1.borehole_synthesis` | 1D Truth extraction via ODSiphon | Borehole |
-| `dim2.seismic_interpret` | 2D Structural/DHI interpretation logic | Seismic |
-| `dim3.basin_regional` | 3D Basin-scale stratigraphy & play context | Basin |
-| `physics9.verify_state` | Validate thermodynamic equilibrium (F2_PHYSICS) | Meta |
-
-### Foundation (Phase A)
-
+### Tool: Section (2D Seismic Interpretation)
 | Tool | Purpose |
 |---|---|
-| `geox_load_seismic_line` | Visual mode ignition with P-wave analysis |
-| `geox_build_structural_candidates` | Inverse modelling constraints |
-| `geox_evaluate_prospect` | Governed prospect verdicts (DRO/DRIL/HOLD) |
-| `geox_feasibility_check` | Physical possibility firewall |
-| `geox_verify_geospatial` | CRS & jurisdiction verification |
-| `geox_calculate_saturation` | Monte Carlo Sw calculations |
-| `geox_query_memory` | Geological memory retrieval |
+| `geox_section_interpret_strata` | Seismic sequence stratigraphy interpretation |
 
-### Physics Engine (Phase B)
-
+### Tool: Earth3D (Volume Interpretation)
 | Tool | Purpose |
 |---|---|
-| `geox_select_sw_model` | Sw model admissibility from log QC |
-| `geox_compute_petrophysics` | Full petrophysics property pipeline |
-| `geox_validate_cutoffs` | Apply CutoffPolicy schema |
-| `geox_petrophysical_hold_check` | Trigger 888_HOLD on floor violations |
+| `geox_seismic_load_line` | Load seismic line by ID |
+| `geox_earth3d_load_volume` | Load 3D volume |
+| `geox_earth3d_interpret_horizons` | Horizon interpretation on volume |
+| `geox_earth3d_model_geometries` | Structural geometry modeling |
 
-### System
-
+### Tool: Map (Geospatial)
 | Tool | Purpose |
 |---|---|
-| `geox_health` | Kernel health and 999_SEAL heartbeat |
-| `geox_malay_basin_pilot` | Malay Basin petroleum exploration demo data |
+| `geox_map_get_context_summary` | Map context summary from bounding box |
+
+### Tool: Time4D (Kinetic Bridge)
+| Tool | Purpose |
+|---|---|
+| `geox_time4d_verify_timing` | Verify trap formation timing vs charge window |
+
+### Tool: Prospect (Valuation)
+| Tool | Purpose |
+|---|---|
+| `geox_prospect_evaluate` | Governed prospect verdict (DRO/DRIL/HOLD) |
 
 ---
 
 ## Constitutional Floors (F1–F13)
 
-All Physics9 operations are governed by 13 constitutional floors. Any violation triggers an **888_HOLD** — a hard stop requiring human confirmation before execution continues.
+All Physics9 operations are governed by 13 constitutional floors via the arifOS constitutional_guard middleware.
 
-| Floor | Name | Enforcement Contract |
+| Floor | Name | Enforcement |
 |---|---|---|
-| **F1** | Amanah | Reversible, audited operations only |
-| **F2** | Truth | Verdict-based outputs: HOLD / DRO / DRIL |
-| **F3** | Tri-Witness | Human × AI × System consensus required |
-| **F4** | Clarity | Zero entropy — 5-line maximum per decision |
-| **F5** | Peace | Non-adversarial reasoning enforced |
-| **F6** | Empathy | Care envelope for all stakeholders |
-| **F7** | Humility | Confidence hard cap at Ω ≤ 0.90 |
-| **F8** | Genius | Multiplicative wisdom: G = A × P × X × E² |
-| **F9** | Physics9 | Deterministic physical law adherence |
-| **F10** | Ontology | Knowledge graph grounded — no free-floating claims |
-| **F11** | Audit | Full transaction logging |
-| **F12** | Injection | Input sanitization — no prompt injection |
-| **F13** | Sovereign | Human emergency override — always final |
+| **F1** | Amanah | Reversible operations only — irreversible → 888_HOLD |
+| **F2** | Truth | truth_score ≥ 0.99 — F2 hard floor, VOID on failure |
+| **F3** | Tri-Witness | tri_witness_score ≥ 0.95 (human × AI × earth signal) |
+| **F4** | Clarity | Scale, CRS, provenance explicitly declared |
+| **F5** | Peace² | Harm potential ≥ 1.0 before execution |
+| **F6** | Empathy | Stakeholder safety ≥ 0.90 |
+| **F7** | Humility | omega_0 ∈ [0.03, 0.15] — F7 hard floor, HOLD on breach |
+| **F8** | Governance | 888_JUDGE is sole SEAL authority |
+| **F9** | Anti-Hantu | floor_9_signal evaluated — F9 hard floor, VOID on failure |
+| **F10** | Ontology | AI=tool, Model≠Reality, no consciousness claims |
+| **F11** | Audit | Full transaction logging, zkpc_receipt required |
+| **F12** | Continuity | amanah_lock must be True — F12 hard floor, VOID on failure |
+| **F13** | Sovereign | Human holds final veto — always accessible |
+
+**Current runtime state (2026-04-23):** 6/13 floors have runtime evaluation in `arifOS/constitutional_guard.py` (F2, F3, F7, F9, F11, F12). F1/F4/F7 are string-injected in pre-loop. F5/F6/F8/F10/F13 are documented but not yet wired.
 
 ---
 
@@ -155,12 +166,13 @@ All Physics9 operations are governed by 13 constitutional floors. Any violation 
 
 The **Malay Basin Petroleum Exploration Pilot** is the live demonstration of Physics9 at full-stack operation.
 
-- **Live:** [geox.arif-fazil.com](https://geox.arif-fazil.com) → "Pilot" tab
-- **Coordinates:** Auto-zoom to 5.5°N, 104.5°E (EarthWitness map)
+- **Demo Coordinates:** Auto-zoom to 5.5°N, 104.5°E (EarthWitness map)
 - **Reserves:** 500+ MMBOE cumulative reserves tracked in real-time
 - **Play Types:** MMP, LPS, PBD, Fluvial
 - **Creaming Curve:** EDP15 baseline phases
 - **Constitutional Badges:** F2 Truth · F9 Physics9 · F13 Sovereign
+
+> ⚠️ Pilot is paused until VPS is restored.
 
 ---
 
@@ -176,151 +188,68 @@ Physics9 blocked AI hallucination when GPT-5 (via Gemini) queried the **Layang-L
 | 888_HOLD | ✅ Anticipated before human request |
 | Tri-Witness (F3) | ✅ Human × AI × System alignment verified |
 
-**Evidence:** [EUREKA_VALIDATION_2026_04_10.md](https://github.com/ariffazil/GEOX/blob/main/wiki/90_AUDITS/EUREKA_VALIDATION_2026_04_10.md)
-
-**Next Actions:**
-- Tune Ω₀ parameters for deepwater frontier zones
-- Deploy built `dist/` to VPS
-- Connect LogDock to MCP backend for live LAS data
-- Build Seismic Viewer (WebGL)
-
----
-
-## Current Status
-
-| Aspect | Status | Notes |
-|---|---|---|
-| Backend (VPS) | ✅ Operational | MCP Server v2026.04.12 |
-| Frontend (VPS) | ✅ Operational | Landing Page + Cockpit live |
-| Well Log Viewer | ✅ Complete | LogDock with petrophysics (Canvas/D3) |
-| Seismic Engine | ✅ Ignited | Synthetic Physics active |
-| MCP Tools | ✅ 13 tools | All phases implemented |
-| Malay Basin Pilot | ✅ Full Stack | Live at geox.arif-fazil.com |
-| Constitutional Firewall | 🏆 EUREKA | GPT-5 stress-test PASSED |
-
 ---
 
 ## Quick Start
 
 ```bash
-# Health check
+# Local MCP server
+python geox_mcp/server.py
+
+# Health check (when VPS is online)
 curl https://geox.arif-fazil.com/health
 
-# Backend (local dev)
-python geox_mcp_server.py
-
-# Frontend (local dev)
-cd geox-gui && npm run dev
-
-# Run full test suite
+# Local test suite
 pytest
 
-# MCP server test
-python test_mcp_server.py
-
-# End-to-end test
-python test_e2e_mcp.py
-```
-
-```bash
-# Deploy to VPS
+# Deploy to VPS (after VPS is restored)
 ./deploy-vps.sh
-
-# Force rebuild (use when GUI needs refresh)
-./deploy-vps.sh --force-rebuild
-
-# Deploy to Horizon (FastMCP Cloud)
-git push origin main   # Auto-deploys on push to main
 ```
 
 ---
 
-## Project Structure
+## Federation Index Map
 
-```
-GEOX/
-├── arifos/                          # Constitutional architecture
-│   └── geox/
-│       ├── tools/
-│       │   ├── core.py              # Domain logic (host-agnostic)
-│       │   └── adapters/
-│       │       └── fastmcp_adapter.py
-│       ├── contracts/
-│       │   ├── types.py             # Pydantic models
-│       │   └── app_manifest.py      # App interface schema
-│       ├── ui_bridge/
-│       │   └── src/
-│       │       └── event_bus.ts     # TypeScript JSON-RPC
-│       ├── adapters/
-│       │   └── copilot_adapter.py
-│       └── resources/
-│           └── malay_basin_pilot.py
-├── geox-gui/                        # React/TypeScript frontend
-│   └── src/
-│       └── components/
-│           ├── LandingPage/
-│           ├── LogDock/             # Well log viewer
-│           ├── MalayBasinPilotDashboard.tsx
-│           ├── EarthWitness.tsx
-│           └── MainLayout.tsx
-├── wiki/                            # Ω-Wiki — canonical documentation
-│   ├── 00_INDEX/                    # Gateway & quickstart
-│   ├── 10_THEORY/                   # Theory of Anomalous Contrast
-│   ├── 20_PHYSICS/                  # Physics9, physical laws
-│   ├── 30_MATERIALS/                # RATLAS, geological materials
-│   ├── 40_BASINS/                   # Regional geology (Malay Basin)
-│   ├── 50_TOOLS/                    # Complete tool documentation
-│   ├── 70_GOVERNANCE/               # Constitutional enforcement
-│   ├── 80_INTEGRATION/              # Architecture & deployment
-│   └── 90_AUDITS/                   # Historical seals & logs
-├── tests/
-├── geox_unified_mcp_server.py       # Canonical MCP server entry
-├── execution_plane/vps/server.py    # Canonical VPS execution plane
-├── fastmcp.json
-├── pyproject.toml
-├── Dockerfile
-└── docker-compose.yml
-```
-
----
-
-## Wiki (Source of Truth)
-
-| Section | Purpose |
-|---|---|
-| [00_INDEX](https://github.com/ariffazil/GEOX/blob/main/wiki/00_INDEX) | Gateway & quickstart |
-| [10_THEORY](https://github.com/ariffazil/GEOX/blob/main/wiki/10_THEORY) | Theory of Anomalous Contrast |
-| [20_PHYSICS](https://github.com/ariffazil/GEOX/blob/main/wiki/20_PHYSICS) | Physics9 canonical laws |
-| [30_MATERIALS](https://github.com/ariffazil/GEOX/blob/main/wiki/30_MATERIALS) | RATLAS geological materials |
-| [40_BASINS](https://github.com/ariffazil/GEOX/blob/main/wiki/40_BASINS) | Malay Basin & regional geology |
-| [50_TOOLS](https://github.com/ariffazil/GEOX/blob/main/wiki/50_TOOLS) | Complete MCP tool documentation |
-| [70_GOVERNANCE](https://github.com/ariffazil/GEOX/blob/main/wiki/70_GOVERNANCE) | Constitutional enforcement |
-| [80_INTEGRATION](https://github.com/ariffazil/GEOX/blob/main/wiki/80_INTEGRATION) | Architecture & deployment |
-| [90_AUDITS](https://github.com/ariffazil/GEOX/blob/main/wiki/90_AUDITS) | Historical seals & logs |
-
-**Key Documents:**
-- [Agent Initialization Protocol](https://github.com/ariffazil/GEOX/blob/main/wiki/00_INDEX/Agent_Initialization_Protocol.md)
-- [Physics9 Manifesto](https://github.com/ariffazil/GEOX/blob/main/wiki/00_INDEX/MANIFESTO.md)
-- [Theory of Anomalous Contrast](https://github.com/ariffazil/GEOX/blob/main/wiki/10_THEORY/Theory_of_Anomalous_Contrast.md)
-- [Physics9 Basis Vector — EARTH_CANON_9](https://github.com/ariffazil/GEOX/blob/main/wiki/20_PHYSICS/EARTH_CANON_9.md)
-- [MCP Apps Architecture](https://github.com/ariffazil/GEOX/blob/main/wiki/80_INTEGRATION/GEOX_MCP_APPS_ARCHITECTURE.md)
-- [FastMCP CLI Guide](https://github.com/ariffazil/GEOX/blob/main/wiki/80_INTEGRATION/FASTMCP_CLI_GUIDE.md)
-
----
-
-## Trinity Ecosystem
-
-| Ring | Domain | Realm | Status |
+| Layer | System | URL | Purpose |
 |---|---|---|---|
-| Ring 1 | [arif-fazil.com](https://arif-fazil.com) | THE SOUL | ✅ LIVE |
-| Ring 2 | [arifos.arif-fazil.com](https://arifos.arif-fazil.com) | THE MIND | ✅ LIVE |
-| Ring 3 | [aaa.arif-fazil.com](https://aaa.arif-fazil.com) | THE BODY | ✅ LIVE |
+| **Ω APPS/MCP** | arifOS MCP Kernel | [mcp.arif-fazil.com](https://mcp.arif-fazil.com) | Governance runtime |
+| **Ω FORGE** | A-FORGE | [forge.arif-fazil.com](https://forge.arif-fazil.com) | Intelligence forge |
+| **Δ THEORY** | APEX | [apex.arif-fazil.com](https://apex.arif-fazil.com) | Constitutional theory |
+| **Δ AAA** | AAA Body | [aaa.arif-fazil.com](https://aaa.arif-fazil.com) | arifOS workspace |
+| **Ψ HUMAN** | Arif Hub | [arif-fazil.com](https://arif-fazil.com) | Personal hub |
+| **⚡ GEOX** | This system | [geox.arif-fazil.com](https://geox.arif-fazil.com) | Earth intelligence |
+| **📊 WEALTH** | Capital Engine | [waw.arif-fazil.com](https://waw.arif-fazil.com) | Capital allocation |
+
+| arifOS Floor Doc | Path |
+|---|---|
+| 888_JUDGE | [docs/wiki/arifos/888_JUDGE.md](https://github.com/ariffazil/AAA/blob/main/docs/wiki/arifos/888_JUDGE.md) |
+| 999_VAULT | [docs/wiki/arifos/999_VAULT.md](https://github.com/ariffazil/AAA/blob/main/docs/wiki/arifos/999_VAULT.md) |
+| FLOORS | [docs/wiki/arifos/FLOORS.md](https://github.com/ariffazil/AAA/blob/main/docs/wiki/arifos/FLOORS.md) |
+| VERDICTS | [docs/wiki/arifos/VERDICTS.md](https://github.com/ariffazil/AAA/blob/main/docs/wiki/arifos/VERDICTS.md) |
+| AAA Charter | [AAA_CHARTER.md](https://github.com/ariffazil/AAA/blob/main/AAA_CHARTER.md) |
 
 ---
 
-## License & Author
+## Wiki (Source of Truth — On-Disk)
 
-**MIT License** — See [LICENSE](./LICENSE)
+| Section | Path |
+|---|---|
+| Index | `wiki/00_INDEX/` |
+| Theory | `wiki/10_THEORY/` |
+| Physics | `wiki/20_PHYSICS/` |
+| Materials | `wiki/30_MATERIALS/` |
+| Basins | `wiki/40_BASINS/` |
+| **Tools** | `wiki/50_TOOLS/` |
+| Governance | `wiki/70_GOVERNANCE/` |
+| Integration | `wiki/80_INTEGRATION/` |
+| Audits | `wiki/90_AUDITS/` |
+
+---
+
+## License
+
+**Apache 2.0** — Commercial embedding allowed. Attribution required.
+See [LICENSE](./LICENSE)
 
 **Muhammad Arif bin Fazil**
 Constitutional Authority — Physics9 Earth Witness
