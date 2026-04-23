@@ -1,44 +1,54 @@
-from fastmcp import FastMCP
+"""
+GEOX MCP Server — THE NINEFOLD SUBSTRATE
+DITEMPA BUKAN DIBERI | 888_JUDGE SEAL
+"""
 import logging
+from fastmcp import FastMCP
 
-mcp = FastMCP("GEOX — Earth Intelligence Organ")
+# --- 1. X-1D Core (Material) ---
+from geox.canonical.geox_lithos_tool import geox_lithos_tool
+from geox.canonical.geox_pore_fluid_tools import geox_pore_tool, geox_fluid_tool
 
-@mcp.tool()
-async def borehole_load(las_path: str) -> dict:
-    """T02_30: Load borehole data and logs into the local environment."""
-    from GEOX.internal.well_log_tool import load_las # Placeholder for absorbed logic
-    return {"status": "LOADED", "borehole": las_path}
+# --- 2. X-2D Geometry (Structure) ---
+from geox.canonical.geox_geometry_tools import geox_strata_tool, geox_break_tool, geox_elastic_tool
 
-@mcp.tool()
-async def borehole_interpret() -> dict:
-    """T02_31: Perform stratigraphic and lithological interpretation."""
-    return {"status": "INTERPRETED"}
+# --- 3. X-3D State (Dynamics) ---
+from geox.canonical.geox_kinetic_tool import geox_kinetic_tool
+from geox.canonical.geox_state_tools import geox_stress_tool, geox_flow_tool
 
-@mcp.tool()
-async def petrophysics_compute() -> dict:
-    """T02_32: Compute porosity, saturation, and net-pay (includes QC Pre-flight)."""
-    return {"status": "COMPUTED"}
+# --- Decision Layer (Convergence & Wealth) ---
+from geox.canonical.geox_coupling_engine import geox_convergence_metabolic_loop
+from geox.wealth.wealth_score_kernel import geox_to_wealth_score
 
-@mcp.tool()
-async def seismic_attribute() -> dict:
-    """T02_33: Generate seismic attributes for structural and stratigraphic analysis."""
-    return {"status": "ATTRIBUTES_GENERATED"}
+# --- MCP Initialization ---
+mcp = FastMCP("GEOX")
 
-@mcp.tool()
-async def basin_model() -> dict:
-    """T02_34: Execute basin-scale thermal and burial history modeling."""
-    return {"status": "BASIN_SIMULATED"}
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# CANONICAL REGISTER (The Ninefold Substrate)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-@mcp.tool()
-async def prospect_judge() -> dict:
-    """T02_35: Final prospect ranking and volumetrics judgment."""
-    from GEOX.internal.prospect_judge import calculate_pg
-    return calculate_pg(source=0.8, reservoir=0.7, trap=0.9, seal=0.8, migration=0.9)
+# X-1D: Material Substrates
+mcp.tool()(geox_lithos_tool)
+mcp.tool()(geox_pore_tool)
+mcp.tool()(geox_fluid_tool)
 
-@mcp.tool()
-async def physics_guard() -> dict:
-    """T02_36: Enforce physical invariants and ToAC compliance across all tools."""
-    return {"status": "GUARD_ACTIVE"}
+# X-2D: Geometry Substrates
+mcp.tool()(geox_strata_tool)
+mcp.tool()(geox_break_tool)
+mcp.tool()(geox_elastic_tool)
+
+# X-3D: State Substrates
+mcp.tool()(geox_kinetic_tool)
+mcp.tool()(geox_stress_tool)
+mcp.tool()(geox_flow_tool)
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# DECISION REGISTER (Convergence & Wealth)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+mcp.tool()(geox_convergence_metabolic_loop)
+mcp.tool()(geox_to_wealth_score)
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     mcp.run()
