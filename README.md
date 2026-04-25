@@ -1,5 +1,19 @@
 # GEOX — Governed Earth Intelligence
 
+<!-- SOT:version_info -->
+| Field | Value |
+|-------|-------|
+| VERSION | 0.1.0 |
+| GOVERNING_KERNEL | arifOS F1–F13 |
+| ENGINE | Physics9 — 9-var state engine |
+| MCP_TOOLS | 28 |
+| SKILL_DOMAINS | 12 |
+| MCP_APPS | 8 |
+| REGISTRY_ENTRIES | 47 skills across 12 domains |
+
+_Auto-generated from `pyproject.toml` + `geox/geox_mcp/fastmcp_server.py`_
+<!-- /SOT:version_info -->
+
 ```
 Physics > Narrative.
 Maruah > Convenience.
@@ -34,58 +48,29 @@ GEOX operates as the **Ψ (Psi/Earth) node** — sensing physical reality, compu
 
 ## Architecture
 
+<!-- SOT:file_structure -->
 ```
 ariffazil/GEOX
 │
 ├── geox/                          # Core Python package
-│   ├── __init__.py
-│   ├── core/
-│   │   ├── ac_risk.py            # ToAC AC_Risk calculation engine
-│   │   ├── bias_detector.py      # Bond et al. (2007) cognitive bias audit
-│   │   ├── epistemic_integrity.py # Posterior integrity scoring (AlphaFold pLDDT equiv)
-│   │   ├── physics9.py           # ★ NEW: Physics9 engine — 9-var state, AAA/RAW grade
-│   │   ├── portfolio_audit.py    # Portfolio risk tracking + PoS coupling detection
-│   │   ├── physics_guard.py      # Hard physics constraint enforcement
-│   │   ├── governed_output.py    # ClaimTag + VAULT999 receipt builder
-│   │   └── tool_registry.py      # Unified tool registry with metadata
-│   ├── geox_mcp/
-│   │   ├── server.py             # FastMCP server entry
-│   │   ├── fastmcp_server.py    # FastMCP transport layer (15 public tools)
-│   │   ├── tools/                # Tool implementations
-│   │   │   ├── las_ingest_tool.py
-│   │   │   ├── petro_ensemble_tool.py
-│   │   │   ├── basin_charge_tool.py
-│   │   │   ├── sensitivity_tool.py
-│   │   │   ├── volumetrics_tool.py
-│   │   │   ├── visualization.py
-│   │   │   └── asset_memory_tool.py
-│   │   └── adapters/
-│   ├── skills/
-│   │   ├── earth_science/        # Earth science skill pack
-│   │   │   ├── __init__.py
-│   │   │   └── seismic_wrappers.py  # segyio + bruges wrappers, ClaimTag, VAULT999
-│   │   └── [12 domain skill dirs]   # atmosphere, geodesy, hazards, etc.
-│   ├── telemetry/
-│   │   └── geox_telemetry.py     # GEOX → arifOS metabolic heartbeat emitter
-│   └── core/doctrine/
-│       └── geox_core_prompt.py  # Sovereign system identity (F1–F13 compliant)
+│   ├── core/                     # Physics9, AC_Risk, epistemic_integrity, physics_guard
+│   ├── geox_mcp/                # FastMCP server (28 public tools)
+│   │   ├── server.py            # Entry point
+│   │   ├── fastmcp_server.py    # 28 public tool implementations
+│   │   └── tools/               # 7 tool modules (LAS, petro, basin, volume, etc.)
+│   └── apps/                    # 8 MCP App manifests + HTML UIs
 │
 ├── WELL/                         # Biological substrate — operator sovereignty
 │   ├── server.py                # WELL cognitive pressure monitor
-│   ├── vault_bridge.py           # WELL ↔ arifOS ↔ A-FORGE bridge
-│   ├── gate/well_gate.py         # Constitutional gate before forge
-│   └── CHARTER.md               # Operator sovereignty charter
+│   ├── vault_bridge.py          # WELL ↔ arifOS ↔ A-FORGE bridge
+│   └── gate/well_gate.py        # Constitutional gate before forge
 │
-├── sealkit/                      # Constitutional SEAL ritual
-│   ├── seal.sh                  # Shell script SEAL ceremony
-│   ├── SEAL.md                  # SEAL protocol documentation
-│   └── manifest.json/.sig        # SEAL manifest + signature
-│
-├── services/
-│   └── a2a-gateway/             # Agent-to-Agent mesh protocol
-│
-├── skills/                       # 12 domain skill definitions
+├── sealkit/                     # Constitutional SEAL ritual
+├── services/a2a-gateway/        # Agent-to-Agent mesh protocol
+├── registry/                    # 47 skills across 12 domains
+├── skills/                     # 12 domain skill definitions
 │   ├── atmosphere/
+│   ├── earth_science/
 │   ├── geodesy/
 │   ├── governance/
 │   ├── hazards/
@@ -93,63 +78,64 @@ ariffazil/GEOX
 │   ├── mobility/
 │   ├── orchestration/
 │   ├── sensing/
-│   ├── subsurface/              # 6 subsurface skill domains
+│   ├── subsurface/
 │   ├── terrain/
 │   ├── time/
 │   └── water/
-│
-├── geox-gui/                    # React + Cesium GUI
-│   ├── dist/                   # Pre-built Cesium viewer + apps
-│   └── src/
-│
-├── geox/apps/                   # ★ MCP App manifests + HTML UIs (under geox/ package)
-│   ├── well-desk/             # 1D WellDesk — physics9 per EarthLayer
-│   │   ├── index.html
-│   │   └── manifest.json
-│   ├── seismic-vision-review/ # 2D SeismicVision — AC_Risk per horizon
-│   │   ├── index.html
-│   │   └── manifest.json
-│   ├── earth-volume/          # 3D EarthVolume — physics9 + AC_Risk matrix
-│   │   ├── index.html
-│   │   └── manifest.json
-│   ├── judge-console/         # 4D JudgeConsole — AC_Risk on Gassmann fluid sub
-│   │   ├── index.html
-│   │   └── manifest.json
-│   ├── attribute-audit/       # 2.5D AttributeAudit — Kozeny-Carman proxy
-│   │   ├── index.html
-│   │   └── manifest.json
-│   ├── georeference-map/      # GeoProbe — time-depth + physics9 velocity model
-│   │   ├── index.html
-│   │   └── manifest.json
-│   ├── analog-digitizer/      # Analog log → structured curve
-│   │   └── index.html
-│   ├── prospect-ui/           # Prospect evaluation UI
-│   │   └── index.html
-│   └── seismic-vision-review/ # Seismic vision + fault pick scaffold
-│
-├── contracts/
-│   └── mcp/                   # Canonical MCP tool contracts
-│       ├── geox_ui_tool_contract.json
-│       └── geox_seismic_load_volume_contract.json
-│
-├── infra/
-│   └── geox-static.yml       # Traefik config (MCP Apps plane routes)
-│
-├── registry/
-│   └── registry.json          # 47 skills across 12 domains
-│
-├── docs/
-│   ├── deploy.md             # Docker, Railway, Fly.io deployment
-│   └── [other docs]
-│
-├── geox_mcp_server.py         # CLI entry point
-├── fastmcp.json               # FastMCP deployment config
-└── pyproject.toml             # Python package manifest
+└── geox-gui/                   # React + Cesium GUI
 ```
+<!-- /SOT:file_structure -->
+
+
+## Tool Surface
+
+<!-- SOT:tool_surface -->
+**Total FastMCP Tools:** 28
+
+| Domain | Tools |
+|--------|-------|
+| **Health** | `geox_health`, `geox_capabilities`, `geox_registry` |
+| **Skills** | `geox_skill`, `geox_domain_skills`, `geox_list_skills`, `geox_skill_metadata`, `geox_skill_dependencies` |
+| **Mission** | `geox_mission_template` |
+| **Well** | `geox_well_load_bundle`, `geox_well_qc_logs`, `geox_well_compute_petrophysics`, `geox_well_digitize_log` |
+| **Section** | `geox_section_interpret_strata` |
+| **Seismic** | `geox_seismic_load_line`, `geox_seismic_load_volume`, `geox_seismic_compute_attribute`, `geox_seismic_render_slice`, `geox_seismic_vision_review` |
+| **3D Earth** | `geox_earth3d_load_volume`, `geox_earth3d_interpret_horizons`, `geox_earth3d_model_geometries` |
+| **Map** | `geox_map_get_context_summary`, `geox_map_georeference` |
+| **Analysis** | `geox_attribute_audit`, `geox_time4d_verify_timing`, `geox_prospect_evaluate`, `geox_cross_summarize_evidence` |
+| **UI** | `ui_geox_seismic_viewer` |
+
+_Auto-generated from `geox/geox_mcp/fastmcp_server.py`_
+<!-- /SOT:tool_surface -->
+
+
+## MCP Apps (8)
+
+<!-- SOT:apps_inventory -->
+| App | Dimension | Purpose |
+|-----|-----------|---------|
+| `well-desk` | 1D | physics9 per EarthLayer |
+| `seismic-vision-review` | 2D | AC_Risk per horizon |
+| `earth-volume` | 3D | physics9 + AC_Risk matrix |
+| `judge-console` | 4D | AC_Risk on Gassmann fluid substitution |
+| `attribute-audit` | 2.5D | Kozeny-Carman porosity proxy |
+| `georeference-map` | Geo | time-depth + physics9 velocity model |
+| `analog-digitizer` | 1D→D | Analog log → structured curve |
+| `prospect-ui` | — | Prospect evaluation UI |
+
+<!-- /SOT:apps_inventory -->
+
+
+## 12 Skill Domains
+
+<!-- SOT:skills_inventory -->
+`atmosphere` · `earth_science` · `geodesy` · `governance` · `hazards` · `infrastructure` · `mobility` · `orchestration` · `sensing` · `subsurface` · `terrain` · `time` · `water`
+<!-- /SOT:skills_inventory -->
+
 
 ---
 
-## ★ Physics9 Engine (`geox/core/physics9.py`)
+## ★ Physics9 Engine (`geox/core/physics9.py`) (`geox/core/physics9.py`)
 
 The missing core engine — built April 2026. All 5 MCP Apps import from here.
 
