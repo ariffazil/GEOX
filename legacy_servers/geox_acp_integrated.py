@@ -23,7 +23,7 @@ from typing import Any, Optional
 from fastmcp import FastMCP
 
 # Import ACP components
-from geox_mcp_server_acp import (
+from contracts.tools.acp_logic import (
     acp,
     acp_register_agent,
     acp_submit_proposal,
@@ -34,9 +34,23 @@ from geox_mcp_server_acp import (
     F7_MAX_UNCERTAINTY,
 )
 
+CANON_9_KEYS = ("rho", "vp", "vs", "res", "chi", "k", "p", "t", "phi")
+EARTH_CANON_9 = {
+    "rho": "density (kg/m3)",
+    "vp": "compressional velocity (m/s)",
+    "vs": "shear velocity (m/s)",
+    "res": "electrical resistivity (ohm.m)",
+    "chi": "magnetic susceptibility (SI)",
+    "k": "thermal conductivity (W/mK)",
+    "p": "pore pressure (Pa)",
+    "t": "temperature (K)",
+    "phi": "porosity (0-1)",
+}
+
 # Import base GEOX tools
 from geox.core.ac_risk import compute_ac_risk, AC_RiskResult
-from geox.core.tool_registry import ToolRegistry, ErrorCode, create_standardized_error
+from geox.core.tool_registry import ToolRegistry, ErrorCode
+# create_standardized_error removed — does not exist in geox.core.tool_registry
 
 # Logging
 logging.basicConfig(
@@ -156,7 +170,7 @@ async def geox_metabolize(
     """
     Metabolize a state vector through CANON_9 basis with F7 humility bounds.
     """
-    from geox_mcp_server_acp import CANON_9_KEYS
+
     
     missing = [k for k in CANON_9_KEYS if k not in state_vector]
     if missing:
@@ -185,7 +199,7 @@ async def geox_metabolize(
 
 @mcp.resource("geox://canon9/state")
 def get_canon9_state() -> str:
-    from geox_mcp_server_acp import EARTH_CANON_9
+
     return json.dumps(EARTH_CANON_9, indent=2)
 
 

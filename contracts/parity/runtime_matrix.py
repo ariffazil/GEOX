@@ -19,88 +19,88 @@ ParityStatus = Literal["FULL", "PARTIAL", "DEPRECATED"]
 
 RUNTIME_PARITY_MATRIX: Dict[str, Dict[str, str | bool | List[str]]] = {
     # ─── PROSPECT DIMENSION ──────────────────────────────────────────
-    "prospect_evaluate": {
+    "geox_prospect_evaluate": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "prospect_build_structural_candidates": {
+    "geox_prospect_build_structural_candidates": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "prospect_verify_feasibility": {
+    "geox_prospect_verify_feasibility": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
 
     # ─── WELL DIMENSION ──────────────────────────────────────────────
-    "well_load_bundle": {
+    "geox_well_load_bundle": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "well_qc_logs": {
+    "geox_well_qc_logs": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "well_select_sw_model": {
+    "geox_well_select_sw_model": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "well_compute_petrophysics": {
+    "geox_well_compute_petrophysics": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "well_validate_cutoffs": {
+    "geox_well_validate_cutoffs": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "well_verify_petrophysics": {
+    "geox_well_verify_petrophysics": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
 
     # ─── EARTH3D DIMENSION ───────────────────────────────────────────
-    "earth3d_load_volume": {
+    "geox_earth3d_load_volume": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "earth3d_interpret_horizons": {
+    "geox_earth3d_interpret_horizons": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "earth3d_model_geometries": {
+    "geox_earth3d_model_geometries": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
-    "earth3d_verify_structural_integrity": {
+    "geox_earth3d_verify_structural_integrity": {
         "fastmcp": "FULL",
         "vps": "FULL",
         "public": True
     },
 
     # ─── TIME4D DIMENSION ────────────────────────────────────────────
-    "time4d_simulate_burial": {
+    "geox_time4d_simulate_burial": {
         "fastmcp": "FULL",
         "vps": "PARTIAL",  # Example: Not active in default VPS
         "public": True
     },
-    "time4d_reconstruct_paleo": {
+    "geox_time4d_reconstruct_paleo": {
         "fastmcp": "FULL",
         "vps": "PARTIAL",
         "public": True
     },
-    "time4d_verify_timing": {
+    "geox_time4d_verify_timing": {
         "fastmcp": "FULL",
         "vps": "PARTIAL",
         "public": True

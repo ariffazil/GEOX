@@ -11,6 +11,13 @@ Constitutional contract:
 """
 
 from typing import TypedDict
+import sys
+from pathlib import Path
+
+# Attempt to locate arifos_types from the arifOS workspace if present
+_arifos_types_path = Path("/root/arifOS/packages/arifos-types/py")
+if _arifos_types_path.exists():
+    sys.path.insert(0, str(_arifos_types_path))
 
 try:
     from arifos_types import (
@@ -53,7 +60,7 @@ class AdmissibilityError(Exception):
 
 def geox_to_wealth(node: "ResourceNode", telemetry: "TelemetryPayload", verdict: "Verdict") -> WealthInput:
     """
-    GEOX prospect_evaluate → WEALTH score_kernel adapter.
+    GEOX geox_prospect_evaluate → WEALTH score_kernel adapter.
 
     Args:
         node: ResourceNode from GEOX geology pipeline

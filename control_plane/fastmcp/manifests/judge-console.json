@@ -5,12 +5,12 @@
   "icon": "gavel",
   "description": "Physics validation engine and volume computation.",
   "tools": [
-    "physics_judge_verdict",
-    "physics_validate_operation",
-    "physics_audit_hold_breach",
-    "physics_verify_physics",
-    "physics_compute_stoiip",
-    "physics_compute_ac_risk"
+    "geox_physics_judge_verdict",
+    "geox_physics_validate_operation",
+    "geox_physics_audit_hold_breach",
+    "geox_physics_verify_physics",
+    "geox_physics_compute_stoiip",
+    "geox_physics_compute_ac_risk"
   ],
   "supported_artifacts": [
     "PhysicsValidationArtifact",

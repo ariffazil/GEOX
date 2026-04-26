@@ -29,17 +29,37 @@ from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.middleware.cors import CORSMiddleware
 
 # Import ACP components
-from geox_mcp_server_acp import (
-    acp,
-    acp_register_agent,
-    acp_submit_proposal,
-    acp_check_convergence,
-    acp_grant_seal,
-    acp_get_status,
-    F7_HUMILITY_FLOOR,
-    F7_MAX_UNCERTAINTY,
-    CANON_9_KEYS,
-)
+try:
+    from contracts.tools.acp_logic import (
+        acp_register_agent,
+        acp_submit_proposal,
+        acp_check_convergence,
+        acp_grant_seal,
+        acp_get_status,
+        F7_HUMILITY_FLOOR,
+        F7_MAX_UNCERTAINTY,
+    )
+except ImportError:
+    # Graceful fallback stubs if ACP logic is unavailable
+    async def acp_register_agent(*args, **kwargs):
+        return {"error": "ACP unavailable"}
+
+    async def acp_submit_proposal(*args, **kwargs):
+        return {"error": "ACP unavailable"}
+
+    async def acp_check_convergence(*args, **kwargs):
+        return {"error": "ACP unavailable"}
+
+    def acp_grant_seal(*args, **kwargs):
+        return {"error": "ACP unavailable"}
+
+    async def acp_get_status(*args, **kwargs):
+        return {"error": "ACP unavailable"}
+
+    F7_HUMILITY_FLOOR = 0.04
+    F7_MAX_UNCERTAINTY = 0.15
+
+CANON_9_KEYS = ("rho", "vp", "vs", "res", "chi", "k", "p", "t", "phi")
 
 # Import base GEOX tools
 from geox.core.ac_risk import compute_ac_risk
@@ -171,13 +191,16 @@ async def geox_compute_ac_risk(
     Theory of Anomalous Contrast (ToAC) core calculation.
     """
     try:
-        result = compute_ac_risk(area_km2, min_depth, max_depth, depth_unit)
+        result = compute_ac_risk(
+            u_ambiguity=area_km2,
+            transform_stack=[f"depth_range:{min_depth}-{max_depth}{depth_unit}"],
+        )
         return {
-            "ac_risk_score": result.risk_score,
-            "ac_category": result.category,
-            "confidence": result.confidence,
+            "ac_risk_score": result.ac_risk,
+            "ac_category": result.verdict,
+            "confidence": max(0.0, 1.0 - result.ac_risk),
             "theory": "ToAC",
-            "verdict": "888_PROCEED" if result.risk_score < 0.7 else "888_HOLD",
+            "verdict": "888_PROCEED" if result.ac_risk < 0.7 else "888_HOLD",
         }
     except Exception as e:
         return {

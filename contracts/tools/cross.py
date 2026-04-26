@@ -20,70 +20,70 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
         logger.error("Cross services unavailable")
         return
 
-    async def geox_cross_evidence_list(kind: Optional[str] = None) -> dict:
+    async def _geox_cross_evidence_list(kind: Optional[str] = None) -> dict:
         """Observe: List and filter evidence from the Sovereign Ledger."""
         refs = store.list_evidence(kind=kind)
         artifact = [ref.model_dump() for ref in refs]
         return get_standard_envelope(
-            artifact, 
-            tool_class="observe", 
-            governance_status=GovernanceStatus.QUALIFY, 
+            artifact,
+            tool_class="observe",
+            governance_status=GovernanceStatus.QUALIFY,
             artifact_status=ArtifactStatus.LOADED,
             ui_resource_uri="ui://cross-dashboard"
         )
 
     # Alias wrapper (FastMCP limitation: only last decorator registers)
-    @mcp.tool(name="cross_evidence_list")
-    async def cross_evidence_list(kind: Optional[str] = None) -> dict:
-        return await geox_cross_evidence_list(kind)
+    @mcp.tool(name="geox_cross_evidence_list")
+    async def geox_cross_evidence_list(kind: Optional[str] = None) -> dict:
+        return await _geox_cross_evidence_list(kind)
 
-    async def geox_cross_evidence_get(evidence_ref: str) -> dict:
+    async def _geox_cross_evidence_get(evidence_ref: str) -> dict:
         """Observe: Fetch full evidence object including spatial context and payload."""
         obj = store.get_evidence(evidence_ref)
         if not obj:
             artifact = {"error": f"Evidence {evidence_ref} not found."}
             return get_standard_envelope(
-                artifact, 
-                tool_class="observe", 
-                governance_status=GovernanceStatus.HOLD, 
+                artifact,
+                tool_class="observe",
+                governance_status=GovernanceStatus.HOLD,
                 artifact_status=ArtifactStatus.REJECTED,
                 ui_resource_uri="ui://cross-dashboard"
             )
         artifact = obj.model_dump()
         return get_standard_envelope(
-            artifact, 
-            tool_class="observe", 
-            governance_status=GovernanceStatus.QUALIFY, 
+            artifact,
+            tool_class="observe",
+            governance_status=GovernanceStatus.QUALIFY,
             artifact_status=ArtifactStatus.LOADED,
             ui_resource_uri="ui://cross-dashboard"
         )
 
     # Alias wrapper
-    @mcp.tool(name="cross_evidence_get")
-    async def cross_evidence_get(evidence_ref: str) -> dict:
-        return await geox_cross_evidence_get(evidence_ref)
+    @mcp.tool(name="geox_cross_evidence_get")
+    async def geox_cross_evidence_get(evidence_ref: str) -> dict:
+        return await _geox_cross_evidence_get(evidence_ref)
 
-    async def geox_cross_dimension_list() -> dict:
+    async def _geox_cross_dimension_list() -> dict:
         """Observe: What dimensions are currently active in this profile?"""
         artifact = {
             "profile": profile,
             "dimensions": [d.value for d in Dimension]
         }
         return get_standard_envelope(
-            artifact, 
-            tool_class="observe", 
-            governance_status=GovernanceStatus.QUALIFY, 
+            artifact,
+            tool_class="observe",
+            governance_status=GovernanceStatus.QUALIFY,
             artifact_status=ArtifactStatus.VERIFIED,
             ui_resource_uri="ui://cross-dashboard"
         )
 
     # Alias wrapper
-    @mcp.tool(name="cross_dimension_list")
-    async def cross_dimension_list() -> dict:
-        return await geox_cross_dimension_list()
+    @mcp.tool(name="geox_cross_dimension_list")
+    async def geox_cross_dimension_list() -> dict:
+        return await _geox_cross_dimension_list()
 
     # CRITICAL: UI registry endpoint - DO NOT REMOVE
-    async def geox_cross_get_tools_registry() -> dict:
+    async def _geox_cross_get_tools_registry() -> dict:
         """Observe: Returns the architectural TOOLS_REGISTRY for UI synchronization."""
         artifact = {
             "dimensions": {
@@ -108,19 +108,19 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             "version": "2.0.0-UNIFIED-SPEC"
         }
         return get_standard_envelope(
-            artifact, 
-            tool_class="observe", 
-            governance_status=GovernanceStatus.QUALIFY, 
+            artifact,
+            tool_class="observe",
+            governance_status=GovernanceStatus.QUALIFY,
             artifact_status=ArtifactStatus.VERIFIED,
             ui_resource_uri="ui://cross-dashboard"
         )
 
     # Legacy alias for UI compatibility
     async def geox_get_tools_registry() -> dict:
-        return await geox_cross_get_tools_registry()
+        return await _geox_cross_get_tools_registry()
 
     # PRIMARY: Canonical health endpoint
-    async def geox_cross_health() -> dict:
+    async def _geox_cross_health() -> dict:
         """Observe: Sovereign health check for all platform services."""
         artifact = {
             "status": "healthy",
@@ -129,15 +129,15 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
             "dimensions": [d.value for d in Dimension]
         }
         return get_standard_envelope(
-            artifact, 
-            tool_class="observe", 
-            governance_status=GovernanceStatus.QUALIFY, 
+            artifact,
+            tool_class="observe",
+            governance_status=GovernanceStatus.QUALIFY,
             artifact_status=ArtifactStatus.VERIFIED,
             ui_resource_uri="ui://cross-dashboard"
         )
 
     # Alias wrappers (FastMCP limitation)
-    @mcp.tool(name="cross_health")
-    async def cross_health() -> dict:
-        return await geox_cross_health()
+    @mcp.tool(name="geox_cross_health")
+    async def geox_cross_health() -> dict:
+        return await _geox_cross_health()
 

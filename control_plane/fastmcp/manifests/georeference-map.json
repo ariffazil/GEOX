@@ -5,9 +5,9 @@
   "icon": "map",
   "description": "Spatial grounding of map context via control point identification and geodetic validation.",
   "tools": [
-    "map_georeference",
-    "map_verify_coordinates",
-    "physics_compute_ac_risk"
+    "geox_map_georeference",
+    "geox_map_verify_coordinates",
+    "geox_physics_compute_ac_risk"
   ],
   "supported_artifacts": [
     "GeoreferenceArtifact",

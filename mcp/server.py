@@ -24,8 +24,9 @@ import httpx
 
 from mcp.server.fastmcp import FastMCP
 
-from GEOX.core.ac_risk import (
+from geox.core.ac_risk import (
     compute_ac_risk_governed as _compute_ac_risk_governed,
+    compute_ac_risk,
     GovernedACRiskResult,
 )
 
@@ -823,7 +824,7 @@ def arifos_compute_risk(
     """Calculate Theory of Anomalous Contrast (ToAC) risk score.
     ROUTED — actual AC_Risk computation routes through arifOS constitutional layer.
     """
-    result = _compute_ac_risk(
+    result = compute_ac_risk(
         u_phys=u_phys,
         transform_stack=_normalize_transform_stack(transform_stack),
         bias_scenario=bias_scenario,

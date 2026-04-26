@@ -24,7 +24,7 @@ These 5 rules are **hard gates**. No map, model, section, or volume may influenc
 - `0.35 ≤ AC_Risk < 0.60` → `HOLD` (must pass 888_HOLD before externalization)
 - `AC_Risk ≥ 0.60` → `VOID` (blocked; acquire better data or reduce transforms)
 
-**Enforcement point:** Metabolic stage `666` ALIGN. The `physics_compute_ac_risk` metabolizer must run before any `judge` or `audit` tool.
+**Enforcement point:** Metabolic stage `666` ALIGN. The `geox_physics_compute_ac_risk` metabolizer must run before any `judge` or `audit` tool.
 
 ---
 
@@ -33,11 +33,11 @@ These 5 rules are **hard gates**. No map, model, section, or volume may influenc
 > **No-Go:** Any interpretation (`interpret` verb) or inverse inference that lacks a preceding `verify` check against physical laws is **blocked**.
 
 **Go conditions:**
-- For `EARTH3D.interpret_horizons`: `earth3d_verify_structural_integrity` must pass.
+- For `EARTH3D.interpret_horizons`: `geox_earth3d_verify_structural_integrity` must pass.
 - For `SECTION.interpret_strata`: `section_verify_attributes` must pass.
-- For `MAP.interpret_causal_scene`: `physics_verify_parameters` or `map_verify_coordinates` must pass.
+- For `MAP.interpret_causal_scene`: `physics_verify_parameters` or `geox_map_verify_coordinates` must pass.
 - For `PROSPECT.interpret_structural_candidates`: `physics_verify_parameters` must pass.
-- For AI/VLM-assisted interpretation (`section_vision_review`): F9 anti-hantu flag must be `false` or explicitly downgraded.
+- For AI/VLM-assisted interpretation (`geox_section_vision_review`): F9 anti-hantu flag must be `false` or explicitly downgraded.
 
 **Rationale:** Math and AI can fit patterns that violate physics. The `verify` gate ensures the pattern is physically possible before it becomes a belief.
 
@@ -94,7 +94,7 @@ These 5 rules are **hard gates**. No map, model, section, or volume may influenc
 
 **Rationale:** Some decisions affect cities, water security, and national reserves. No algorithm, however low its AC_Risk, may bypass human sovereignty on these outputs (F13).
 
-**Enforcement point:** Metabolic stage `888` AUDIT. The `physics_judge_verdict` metabolizer auto-flags mandatory HOLD products before they reach `999` SEAL.
+**Enforcement point:** Metabolic stage `888` AUDIT. The `geox_physics_judge_verdict` metabolizer auto-flags mandatory HOLD products before they reach `999` SEAL.
 
 ---
 

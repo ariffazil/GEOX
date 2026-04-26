@@ -5,8 +5,15 @@ Plane: X-1D (Sight)
 """
 import uuid
 from datetime import datetime
-from geox.legacy_skills import petro_ensemble_tool
-from arifos.kernel import physics_guard
+try:
+    from geox.legacy_skills import petro_ensemble_tool
+except ImportError:
+    class _PetroEnsembleStub:
+        @staticmethod
+        async def execute_petrophysics(well_id, curves):
+            return {"phie": 0.0, "sw": 1.0, "lithology": "unknown", "uncertainty_model": {}, "lineage_id": "none"}
+    petro_ensemble_tool = _PetroEnsembleStub()
+from geox.laws.physics_guard import physics_guard
 
 def generate_ses_id():
     return str(uuid.uuid4())

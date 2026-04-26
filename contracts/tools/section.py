@@ -14,8 +14,8 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
     Aliases removed - use canonical names only.
     """
     
-    @mcp.tool(name="section_interpret_strata")
-    async def section_interpret_strata(section_ref: str) -> dict:
+    @mcp.tool(name="geox_section_interpret_strata")
+    async def geox_section_interpret_strata(section_ref: str) -> dict:
         """Interpret: Correlate stratigraphic units across multiple wells in a section."""
         artifact = {"section_ref": section_ref, "units": ["Oligocene", "Miocene_Lower"], "status": "Interpolated"}
         return get_standard_envelope(
@@ -26,8 +26,8 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://section-dashboard"
         )
 
-    @mcp.tool(name="section_observe_well_correlation")
-    async def section_observe_well_correlation(well_refs: list) -> dict:
+    @mcp.tool(name="geox_section_observe_well_correlation")
+    async def geox_section_observe_well_correlation(well_refs: list) -> dict:
         """Observe: Fetch raw correlation data between specified wells."""
         artifact = {"well_refs": well_refs, "correlation_indices": [0.92, 0.85, 0.77]}
         return get_standard_envelope(
@@ -38,8 +38,8 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://section-dashboard"
         )
 
-    @mcp.tool(name="section_synthesize_profile")
-    async def section_synthesize_profile(start_coord: tuple, end_coord: tuple) -> dict:
+    @mcp.tool(name="geox_section_synthesize_profile")
+    async def geox_section_synthesize_profile(start_coord: tuple, end_coord: tuple) -> dict:
         """Compute: Synthesize a 2D vertical profile from the Earth model."""
         artifact = {"profile_ref": "profile_syn_001", "length_km": 15.5}
         return get_standard_envelope(
@@ -50,8 +50,8 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://section-dashboard"
         )
 
-    @mcp.tool(name="section_audit_attributes")
-    async def section_audit_attributes(feature_ref: str) -> dict:
+    @mcp.tool(name="geox_section_audit_attributes")
+    async def geox_section_audit_attributes(feature_ref: str) -> dict:
         """Verify: Audit the transform-chain for extracted seismic features."""
         # Mock audit logic based on seismic_feature_extract.py
         artifact = {
@@ -69,8 +69,8 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://attribute-audit"
         )
 
-    @mcp.tool(name="section_vision_review")
-    async def section_vision_review(image_ref: str) -> dict:
+    @mcp.tool(name="geox_section_vision_review")
+    async def geox_section_vision_review(image_ref: str) -> dict:
         """Interpret: Governed VLM seismic interpretation review."""
         artifact = {
             "image_ref": image_ref,
@@ -90,12 +90,12 @@ def register_section_tools(mcp: FastMCP, profile: str = "full"):
     # Aliases
     @mcp.tool(name="geox_load_seismic_line")
     async def geox_load_seismic_line(start_coord: tuple, end_coord: tuple) -> dict:
-        return await section_synthesize_profile(start_coord, end_coord)
+        return await geox_section_synthesize_profile(start_coord, end_coord)
 
     @mcp.tool(name="geox_audit_attributes")
     async def geox_audit_attributes(feature_ref: str) -> dict:
-        return await section_audit_attributes(feature_ref)
+        return await geox_section_audit_attributes(feature_ref)
 
     @mcp.tool(name="geox_vision_review")
     async def geox_vision_review(image_ref: str) -> dict:
-        return await section_vision_review(image_ref)
+        return await geox_section_vision_review(image_ref)

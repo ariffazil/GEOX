@@ -138,9 +138,9 @@ DEPENDENCY_GRAPH = [
 ]
 
 SEAL_CHECKLISTS: dict[str, list[str]] = {
-    "map": ["map_verify_coordinates", "map_interpret_georeference", "cross_audit_transform_lineage"],
-    "well": ["well_verify_petrophysics", "well_audit_qc", "well_verify_cutoffs", "cross_audit_transform_lineage"],
-    "ccs": ["ccs_verify_caprock_integrity", "ccs_audit_hydro_dependency", "physics_compute_ac_risk", "cross_audit_transform_lineage"],
+    "map": ["geox_map_verify_coordinates", "map_interpret_georeference", "cross_audit_transform_lineage"],
+    "well": ["geox_well_verify_petrophysics", "well_audit_qc", "well_verify_cutoffs", "cross_audit_transform_lineage"],
+    "ccs": ["ccs_verify_caprock_integrity", "ccs_audit_hydro_dependency", "geox_physics_compute_ac_risk", "cross_audit_transform_lineage"],
 }
 
 MANDATORY_888HOLD_DIMENSIONS = {"hazard", "hydro", "ccs", "prospect"}

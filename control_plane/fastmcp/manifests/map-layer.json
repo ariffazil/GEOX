@@ -5,13 +5,13 @@
   "icon": "map",
   "description": "Geographic mapping, coordinate transforms, and scene synthesis.",
   "tools": [
-    "map_verify_coordinates",
-    "map_get_context_summary",
-    "map_render_scene_context",
-    "map_synthesize_causal_scene",
-    "map_earth_signals",
-    "map_project_well",
-    "map_transform_coordinates"
+    "geox_map_verify_coordinates",
+    "geox_map_get_context_summary",
+    "geox_map_render_scene_context",
+    "geox_map_synthesize_causal_scene",
+    "geox_map_earth_signals",
+    "geox_map_project_well",
+    "geox_map_transform_coordinates"
   ],
   "supported_artifacts": [
     "MapContextArtifact",

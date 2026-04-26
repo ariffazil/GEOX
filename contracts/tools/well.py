@@ -19,8 +19,8 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         logger.error("Well services unavailable")
         witness = None
 
-    @mcp.tool(name="well_load_bundle")
-    async def well_load_bundle(well_ref: str, bundle_uri: str) -> dict:
+    @mcp.tool(name="geox_well_load_bundle")
+    async def geox_well_load_bundle(well_ref: str, bundle_uri: str) -> dict:
         """Observe: Load a full log bundle (LAS/DLIS) into the witness context."""
         artifact = {"well_ref": well_ref, "status": "loaded", "uri": bundle_uri}
         return get_standard_envelope(
@@ -33,8 +33,8 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         )
 
 
-    @mcp.tool(name="well_qc_logs")
-    async def well_qc_logs(well_ref: str) -> dict:
+    @mcp.tool(name="geox_well_qc_logs")
+    async def geox_well_qc_logs(well_ref: str) -> dict:
         """Verify: Perform Quality Control on loaded logs."""
         artifact = {"well_ref": well_ref, "qc_status": "pass", "flags": []}
         return get_standard_envelope(
@@ -47,8 +47,8 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         )
 
 
-    @mcp.tool(name="well_validate_cutoffs")
-    async def well_validate_cutoffs(well_ref: str, parameter: str, value: float) -> dict:
+    @mcp.tool(name="geox_well_validate_cutoffs")
+    async def geox_well_validate_cutoffs(well_ref: str, parameter: str, value: float) -> dict:
         """Verify: Validate petrophysical cutoffs against regional norms."""
         artifact = {"well_ref": well_ref, "parameter": parameter, "valid": True}
         return get_standard_envelope(
@@ -61,8 +61,8 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         )
 
 
-    @mcp.tool(name="well_select_sw_model")
-    async def well_select_sw_model(formation: str, temperature_c: float) -> dict:
+    @mcp.tool(name="geox_well_select_sw_model")
+    async def geox_well_select_sw_model(formation: str, temperature_c: float) -> dict:
         """Interpret: Recommends a Water Saturation (Sw) model based on formation context."""
         if witness:
             result = witness.select_sw_model(formation, temperature_c)
@@ -78,8 +78,8 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         )
 
 
-    @mcp.tool(name="well_compute_petrophysics")
-    async def well_compute_petrophysics(
+    @mcp.tool(name="geox_well_compute_petrophysics")
+    async def geox_well_compute_petrophysics(
         well_id: str,
         model: str, 
         rw: float, 
@@ -130,8 +130,8 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
         )
 
 
-    @mcp.tool(name="well_verify_petrophysics")
-    async def well_verify_petrophysics(well_ref: str, phi: float, sw: float) -> dict:
+    @mcp.tool(name="geox_well_verify_petrophysics")
+    async def geox_well_verify_petrophysics(well_ref: str, phi: float, sw: float) -> dict:
         """Verify: Governance check (888_HOLD) for anomalous petrophysics."""
         if witness:
             artifact = witness.hold_check(well_ref, phi, sw)
@@ -146,8 +146,8 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://well-dashboard"
         )
 
-    @mcp.tool(name="well_digitize_log")
-    async def well_digitize_log(image_ref: str) -> dict:
+    @mcp.tool(name="geox_well_digitize_log")
+    async def geox_well_digitize_log(image_ref: str) -> dict:
         """Interpret: Trace analog well logs into governed digital outputs."""
         artifact = {
             "image_ref": image_ref,
@@ -165,6 +165,6 @@ def register_well_tools(mcp: FastMCP, profile: str = "full"):
     # Aliases
     @mcp.tool(name="geox_compute_petrophysics")
     async def geox_compute_petrophysics(well_ref: str) -> dict:
-        return await well_load_bundle(well_ref, "demo://bundle")
+        return await geox_well_load_bundle(well_ref, "demo://bundle")
 
 

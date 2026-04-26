@@ -5,8 +5,15 @@ Plane: X-2D (Sense)
 """
 import uuid
 from datetime import datetime
-from geox.legacy_skills import visualization as map_viz
-from arifos.kernel import physics_guard
+try:
+    from geox.legacy_skills import visualization as map_viz
+except ImportError:
+    class _MapVizStub:
+        @staticmethod
+        async def get_geospatial_grid(area_id, crs, resolution):
+            return {"id": "none", "binary_values": [], "extents": {}}
+    map_viz = _MapVizStub()
+from geox.laws.physics_guard import physics_guard
 
 def generate_ses_id():
     return str(uuid.uuid4())

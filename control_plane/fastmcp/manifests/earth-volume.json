@@ -5,10 +5,10 @@
   "icon": "cube",
   "description": "3D seismic interpretation and structural geometry modeling.",
   "tools": [
-    "earth3d_load_volume",
-    "earth3d_interpret_horizons",
-    "earth3d_model_geometries",
-    "earth3d_verify_structural_integrity"
+    "geox_earth3d_load_volume",
+    "geox_earth3d_interpret_horizons",
+    "geox_earth3d_model_geometries",
+    "geox_earth3d_verify_structural_integrity"
   ],
   "supported_artifacts": [
     "SeismicVolumeArtifact",

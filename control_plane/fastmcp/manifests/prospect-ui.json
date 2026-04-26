@@ -5,9 +5,9 @@
   "icon": "earth",
   "description": "Exploration and play fairway analysis dashboard.",
   "tools": [
-    "prospect_evaluate",
-    "prospect_build_structural_candidates",
-    "prospect_verify_feasibility"
+    "geox_prospect_evaluate",
+    "geox_prospect_build_structural_candidates",
+    "geox_prospect_verify_feasibility"
   ],
   "supported_artifacts": [
     "ProspectEvaluationArtifact",

@@ -263,7 +263,7 @@ async def geox_workflow_map_georeference(
         
         return {
             "status": "SEALED",
-            "workflow": "map_georeference",
+            "workflow": "geox_map_georeference",
             "image": image_path,
             "map_type": map_type,
             "georeferenced": True,
@@ -344,7 +344,7 @@ def get_workflows() -> str:
             "steps": ["load", "build_candidates", "ac_risk", "verdict"],
             "tool": "geox_workflow_seismic_full"
         },
-        "map_georeference": {
+        "geox_map_georeference": {
             "description": "Map georeferencing with AC_Risk assessment",
             "steps": ["load", "ocr", "georeference", "validate", "ac_risk"],
             "tool": "geox_workflow_map_georeference"

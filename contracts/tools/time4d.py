@@ -14,8 +14,8 @@ def register_time4d_tools(mcp: FastMCP, profile: str = "full"):
     Aliases removed - use canonical names only.
     """
     
-    @mcp.tool(name="time4d_simulate_burial")
-    async def time4d_simulate_burial(prospect_ref: str) -> dict:
+    @mcp.tool(name="geox_time4d_simulate_burial")
+    async def geox_time4d_simulate_burial(prospect_ref: str) -> dict:
         """Compute: Simulate sediment burial and thermal maturation through time."""
         artifact = {"prospect_ref": prospect_ref, "heat_flow": "standard", "maturity": "Oil_Window"}
         return get_standard_envelope(
@@ -26,8 +26,8 @@ def register_time4d_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://time4d-dashboard"
         )
 
-    @mcp.tool(name="time4d_reconstruct_paleo")
-    async def time4d_reconstruct_paleo(time_ma: float) -> dict:
+    @mcp.tool(name="geox_time4d_reconstruct_paleo")
+    async def geox_time4d_reconstruct_paleo(time_ma: float) -> dict:
         """Interpret: Reconstruct Paleo-geography at a specific point in time (Ma)."""
         artifact = {"ma": time_ma, "paleo_env": "Deep_Marine", "confidence": 0.75}
         return get_standard_envelope(
@@ -38,8 +38,8 @@ def register_time4d_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://time4d-dashboard"
         )
 
-    @mcp.tool(name="time4d_verify_timing")
-    async def time4d_verify_timing(trap_formation_ma: float, charge_ma: float) -> dict:
+    @mcp.tool(name="geox_time4d_verify_timing")
+    async def geox_time4d_verify_timing(trap_formation_ma: float, charge_ma: float) -> dict:
         """Verify: Check the temporal relationship between trap formation and charge."""
         valid = trap_formation_ma > charge_ma
         artifact = {"synchronized": valid, "delta": trap_formation_ma - charge_ma, "verdict": "valid_trap_charge_seq" if valid else "failed_timing_check"}

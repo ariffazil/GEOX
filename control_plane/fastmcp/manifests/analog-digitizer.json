@@ -5,8 +5,8 @@
   "icon": "scanner",
   "description": "Transforming dark data from paper archives into standard LAS formats using neural interpretation.",
   "tools": [
-    "well_digitize_log",
-    "physics_compute_ac_risk"
+    "geox_well_digitize_log",
+    "geox_physics_compute_ac_risk"
   ],
   "supported_artifacts": [
     "DigitizedLogArtifact",

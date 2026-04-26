@@ -5,8 +5,8 @@
   "icon": "visibility",
   "description": "Governed seismic interpretation using Vision Language Models (VLMs) and physical firewalls.",
   "tools": [
-    "section_vision_review",
-    "physics_compute_ac_risk"
+    "geox_section_vision_review",
+    "geox_physics_compute_ac_risk"
   ],
   "supported_artifacts": [
     "GovernedInterpretationArtifact",

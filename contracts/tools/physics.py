@@ -21,8 +21,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
         logger.error("Physics services unavailable")
         return
 
-    @mcp.tool(name="physics_judge_verdict")
-    async def physics_judge_verdict(
+    @mcp.tool(name="geox_physics_judge_verdict")
+    async def geox_physics_judge_verdict(
         intent_ref: str, 
         well_ref: str, 
         prospect_ref: str
@@ -63,8 +63,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://physics-dashboard"
         )
 
-    @mcp.tool(name="physics_validate_operation")
-    async def physics_validate_operation(operation_ref: str) -> dict:
+    @mcp.tool(name="geox_physics_validate_operation")
+    async def geox_physics_validate_operation(operation_ref: str) -> dict:
         """Verify: Check if current operation adheres to safety and physical bounds."""
         artifact = {"operation_ref": operation_ref, "status": "validated", "seal": "F9_PHYSICS_9"}
         return get_standard_envelope(
@@ -75,8 +75,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://physics-dashboard"
         )
 
-    @mcp.tool(name="physics_audit_hold_breach")
-    async def physics_audit_hold_breach(session_ref: str) -> dict:
+    @mcp.tool(name="geox_physics_audit_hold_breach")
+    async def geox_physics_audit_hold_breach(session_ref: str) -> dict:
         """Audit: Investigate if any 888_HOLD conditions were bypassed."""
         artifact = {"session_ref": session_ref, "breach_detected": False}
         return get_standard_envelope(
@@ -87,8 +87,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://physics-dashboard"
         )
 
-    @mcp.tool(name="physics_verify_physics")
-    async def physics_verify_physics(parameters: dict) -> dict:
+    @mcp.tool(name="geox_physics_verify_physics")
+    async def geox_physics_verify_physics(parameters: dict) -> dict:
         """Verify: Check physical parameters for consistency (e.g. Gardner density)."""
         artifact = {"consistent": True, "method": "Gardner"}
         return get_standard_envelope(
@@ -99,8 +99,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             ui_resource_uri="ui://physics-dashboard"
         )
 
-    @mcp.tool(name="physics_compute_stoiip")
-    async def physics_compute_stoiip(inputs: dict) -> dict:
+    @mcp.tool(name="geox_physics_compute_stoiip")
+    async def geox_physics_compute_stoiip(inputs: dict) -> dict:
         """
         Compute: Reservoir calculation over physical parameters (Stock Tank Oil Initially In Place).
         """
@@ -163,8 +163,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-    @mcp.tool(name="physics_fetch_authoritative_state")
-    async def physics_fetch_authoritative_state() -> dict:
+    @mcp.tool(name="geox_physics_fetch_authoritative_state")
+    async def geox_physics_fetch_authoritative_state() -> dict:
         """Observe: Fetch the ground-truth physical state vector from the vault."""
         artifact = {"state": "nominal", "vault": "VAULT-999", "canon": "Physics9"}
         return get_standard_envelope(
@@ -188,8 +188,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
             acp_get_status
         )
 
-        @mcp.tool(name="physics_acp_register")
-        async def physics_acp_register(
+        @mcp.tool(name="geox_physics_acp_register")
+        async def geox_physics_acp_register(
             agent_ref: str,
             role: str,
             name: str,
@@ -206,8 +206,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-        @mcp.tool(name="physics_acp_submit")
-        async def physics_acp_submit(agent_ref: str, proposal: dict) -> dict:
+        @mcp.tool(name="geox_physics_acp_submit")
+        async def geox_physics_acp_submit(agent_ref: str, proposal: dict) -> dict:
             """Submit a proposal for 888_JUDGE evaluation."""
             artifact = await acp_submit_proposal(agent_ref, proposal)
             return get_standard_envelope(
@@ -218,8 +218,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-        @mcp.tool(name="physics_acp_check_convergence")
-        async def physics_acp_check_convergence(resource: str) -> dict:
+        @mcp.tool(name="geox_physics_acp_check_convergence")
+        async def geox_physics_acp_check_convergence(resource: str) -> dict:
             """Check agent convergence on a resource."""
             artifact = await acp_check_convergence(resource)
             return get_standard_envelope(
@@ -230,8 +230,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-        @mcp.tool(name="physics_acp_grant_seal")
-        async def physics_acp_grant_seal(proposal_ref: str, human_auth_token: str) -> dict:
+        @mcp.tool(name="geox_physics_acp_grant_seal")
+        async def geox_physics_acp_grant_seal(proposal_ref: str, human_auth_token: str) -> dict:
             """Grant 999_SEAL (sovereign human authority)."""
             artifact = await acp_grant_seal(proposal_ref, human_auth_token)
             return get_standard_envelope(
@@ -242,8 +242,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
                 ui_resource_uri="ui://physics-dashboard"
             )
 
-        @mcp.tool(name="physics_acp_status")
-        async def physics_acp_status() -> dict:
+        @mcp.tool(name="geox_physics_acp_status")
+        async def geox_physics_acp_status() -> dict:
             """Get ACP system status."""
             artifact = await acp_get_status()
             return get_standard_envelope(
@@ -257,8 +257,8 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
     except ImportError:
         logger.error("ACP logic unavailable")
 
-    @mcp.tool(name="physics_compute_ac_risk")
-    async def physics_compute_ac_risk(
+    @mcp.tool(name="geox_physics_compute_ac_risk")
+    async def geox_physics_compute_ac_risk(
         u_phys: float,
         transform_stack: list[str],
         bias_scenario: str = "ai_vision_only"
@@ -309,5 +309,5 @@ def register_physics_tools(mcp: FastMCP, profile: str = "full"):
 
     # Aliases
     async def alias_geox_compute_ac_risk(u_phys: float, transform_stack: list[str], bias_scenario: str = "ai_vision_only"):
-        return await physics_compute_ac_risk(u_phys, transform_stack, bias_scenario)
+        return await geox_physics_compute_ac_risk(u_phys, transform_stack, bias_scenario)
 

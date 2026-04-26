@@ -5,8 +5,20 @@ Plane: X-3D (Signal)
 """
 import uuid
 from datetime import datetime
-from geox.legacy_skills import prospect_evaluate_tool, volumetrics_tool
-from arifos.kernel import physics_guard
+try:
+    from geox.legacy_skills import prospect_evaluate_tool, volumetrics_tool
+except ImportError:
+    class _ProspectEvaluateStub:
+        @staticmethod
+        async def generate_mesh(model_id, risk_params):
+            return {"id": "none", "geometry": {}, "risk_tags": []}
+    class _VolumetricsStub:
+        @staticmethod
+        async def calculate_grv(model_id):
+            return {"id": "none", "gross_rock_volume": 0.0, "uncertainty": 0.0}
+    prospect_evaluate_tool = _ProspectEvaluateStub()
+    volumetrics_tool = _VolumetricsStub()
+from geox.laws.physics_guard import physics_guard
 
 def generate_ses_id():
     return str(uuid.uuid4())

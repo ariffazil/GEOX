@@ -26,13 +26,13 @@ The repository has been restructured to enforce a strict separation of concerns 
 
 | Canonical Tool Name | Dimension | Status |
 |---------------------|-----------|--------|
-| `prospect_evaluate` | Prospect | ✅ FULL PARITY |
-| `well_compute_petrophysics` | Well | ✅ FULL PARITY |
-| `earth3d_load_volume` | Earth3D | ✅ FULL PARITY |
-| `map_transform_coordinates` | Map | ✅ FULL PARITY |
-| `physics_judge_verdict` | Physics | ✅ FULL PARITY |
+| `geox_prospect_evaluate` | Prospect | ✅ FULL PARITY |
+| `geox_well_compute_petrophysics` | Well | ✅ FULL PARITY |
+| `geox_earth3d_load_volume` | Earth3D | ✅ FULL PARITY |
+| `geox_map_transform_coordinates` | Map | ✅ FULL PARITY |
+| `geox_physics_judge_verdict` | Physics | ✅ FULL PARITY |
 
-**Naming Law:** `<dimension>_<action>` (e.g., `well_qc_logs`).  
+**Naming Law:** `<dimension>_<action>` (e.g., `geox_well_qc_logs`).  
 **Return Law:** Standardized Artifact Envelope with `execution_status`, `tool_class`, and `governance_status`.
 
 ---

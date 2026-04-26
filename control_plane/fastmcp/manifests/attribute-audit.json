@@ -5,8 +5,8 @@
   "icon": "analytics",
   "description": "Inspection surface for extracted seismic attributes and transform-chain audit.",
   "tools": [
-    "section_audit_attributes",
-    "physics_compute_ac_risk"
+    "geox_section_audit_attributes",
+    "geox_physics_compute_ac_risk"
   ],
   "supported_artifacts": [
     "SeismicFeatureSet",

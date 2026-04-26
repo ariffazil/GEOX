@@ -5,12 +5,12 @@
   "icon": "well",
   "description": "Comprehensive well data log analysis, QC, and petrophysics.",
   "tools": [
-    "well_load_bundle",
-    "well_qc_logs",
-    "well_select_sw_model",
-    "well_compute_petrophysics",
-    "well_validate_cutoffs",
-    "well_verify_petrophysics"
+    "geox_well_load_bundle",
+    "geox_well_qc_logs",
+    "geox_well_select_sw_model",
+    "geox_well_compute_petrophysics",
+    "geox_well_validate_cutoffs",
+    "geox_well_verify_petrophysics"
   ],
   "supported_artifacts": [
     "WellBundleArtifact",

@@ -5,8 +5,15 @@ Plane: X-1D (Sense)
 """
 import uuid
 from datetime import datetime
-from geox.legacy_skills import las_ingest_tool
-from arifos.kernel import physics_guard
+try:
+    from geox.legacy_skills import las_ingest_tool
+except ImportError:
+    class _LasIngestStub:
+        @staticmethod
+        async def ingest(uwi: str):
+            return {"header": {}, "tops": [], "intervals": []}
+    las_ingest_tool = _LasIngestStub()
+from geox.laws.physics_guard import physics_guard
 
 def generate_ses_id():
     return str(uuid.uuid4())

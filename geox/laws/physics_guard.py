@@ -24,6 +24,11 @@ class PhysicsGuard:
         return True
 
     @staticmethod
+    async def verify_preconditions(*args, **kwargs) -> bool:
+        """Stub: precondition verification not yet implemented."""
+        return True
+
+    @staticmethod
     async def evaluate_epistemic_gate(background: Physics9State, observed: Physics9State) -> Dict[str, Any]:
         """
         Hard-gate for the Wealth Bridge using the Theory of Anomalous Contrast.
@@ -39,3 +44,5 @@ class PhysicsGuard:
             ac_result["admissibility"] = "ALLOWED"
             
         return ac_result
+
+physics_guard = PhysicsGuard()

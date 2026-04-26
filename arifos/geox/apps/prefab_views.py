@@ -16,34 +16,76 @@ from __future__ import annotations
 
 from typing import Any
 
-from prefab_ui import PrefabApp
-from prefab_ui.components import (
-    Alert,
-    AlertDescription,
-    AlertTitle,
-    Badge,
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    Column,
-    Grid,
-    H2,
-    H3,
-    Markdown,
-    Metric,
-    Muted,
-    Progress,
-    Row,
-    Separator,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-    Text,
-)
+try:
+    from prefab_ui import PrefabApp
+    from prefab_ui.components import (
+        Alert,
+        AlertDescription,
+        AlertTitle,
+        Badge,
+        Card,
+        CardContent,
+        CardHeader,
+        CardTitle,
+        Column,
+        Grid,
+        H2,
+        H3,
+        Markdown,
+        Metric,
+        Muted,
+        Progress,
+        Row,
+        Separator,
+        Table,
+        TableBody,
+        TableCell,
+        TableHead,
+        TableHeader,
+        TableRow,
+        Text,
+    )
+except ImportError:
+    # Graceful fallback: stub classes that allow module import without prefab-ui installed
+    class _PrefabStub:
+        def __init__(self, *args, **kwargs):
+            pass
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            pass
+        def __call__(self, *args, **kwargs):
+            return self
+
+    class PrefabApp:
+        def __init__(self, view):
+            self.view = view
+
+    Alert = _PrefabStub
+    AlertDescription = _PrefabStub
+    AlertTitle = _PrefabStub
+    Badge = _PrefabStub
+    Card = _PrefabStub
+    CardContent = _PrefabStub
+    CardHeader = _PrefabStub
+    CardTitle = _PrefabStub
+    Column = _PrefabStub
+    Grid = _PrefabStub
+    H2 = _PrefabStub
+    H3 = _PrefabStub
+    Markdown = _PrefabStub
+    Metric = _PrefabStub
+    Muted = _PrefabStub
+    Progress = _PrefabStub
+    Row = _PrefabStub
+    Separator = _PrefabStub
+    Table = _PrefabStub
+    TableBody = _PrefabStub
+    TableCell = _PrefabStub
+    TableHead = _PrefabStub
+    TableHeader = _PrefabStub
+    TableRow = _PrefabStub
+    Text = _PrefabStub
 
 # ---------------------------------------------------------------------------
 # Shared helpers

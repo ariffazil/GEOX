@@ -5,9 +5,9 @@
   "icon": "clock",
   "description": "4D basin modeling, burial history, and paleo-reconstruction.",
   "tools": [
-    "time4d_simulate_burial",
-    "time4d_reconstruct_paleo",
-    "time4d_verify_timing"
+    "geox_time4d_simulate_burial",
+    "geox_time4d_reconstruct_paleo",
+    "geox_time4d_verify_timing"
   ],
   "supported_artifacts": [
     "BasinHistoryArtifact",

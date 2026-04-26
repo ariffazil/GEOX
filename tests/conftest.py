@@ -1,3 +1,4 @@
+import sys, pprint; pprint.pprint(sys.path)
 """
 GEOX Test Conftest
 DITEMPA BUKAN DIBERI
