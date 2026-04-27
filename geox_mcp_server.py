@@ -24,6 +24,14 @@ from geox.geox_mcp.fastmcp_server import mcp
 # FastMCP 3.x — http_app() returns Starlette app with /mcp already mounted
 app = mcp.http_app()
 
+# Health endpoint for drift-detector / container orchestration
+from starlette.responses import JSONResponse
+
+async def health_handler(request):
+    return JSONResponse({"status": "healthy", "service": "geox-mcp", "version": "2.0.0"})
+
+app.add_route("/health", health_handler, methods=["GET"])
+
 # Bearer token auth — GEOX_SECRET_TOKEN must be set
 _secret = os.environ.get("GEOX_SECRET_TOKEN", "")
 
