@@ -399,3 +399,259 @@ class LASIngestor:
         )
         result.vault_receipt = _make_vault_receipt("geox_well_qc_logs", result.to_dict(), "HOLD" if qc_overall == "FAIL" else "SEAL")
         return result
+
+
+# ─────────────────── OCR INGESTOR ─────────────────────────────────────────────
+
+class OCRIngestor:
+    """
+    Analog log digitizer — Stage 1 OCR using pytesseract.
+    
+    Accepts a scanned image of a paper log, extracts curve data via OCR,
+    and returns a WellDigitizeResult with:
+      - extracted text (raw)
+      - parsed curve values (depth-indexed numpy arrays)
+      - digitize confidence
+      - suitability assessment
+
+    This is Stage 1 of the geox_well_digitize_log pipeline.
+    Neural interpretation (Stage 2) is planned separately.
+    """
+
+    # Known GR API range for sanity check
+    GR_PHYSICAL_MIN = 0.0
+    GR_PHYSICAL_MAX = 300.0
+    # Resistivity physical range (ohm.m)
+    RT_PHYSICAL_MIN = 0.1
+    RT_PHYSICAL_MAX = 100000.0
+    # Porosity physical range (v/v)
+    PHI_PHYSICAL_MIN = 0.0
+    PHI_PHYSICAL_MAX = 0.50
+
+    def __init__(self, guard: PhysicsGuard | None = None) -> None:
+        self.guard = guard or PhysicsGuard()
+        self.spike_threshold = 150.0
+
+    def _require_deps(self):
+        try:
+            from PIL import Image
+            import pytesseract
+        except ImportError as e:
+            raise RuntimeError(
+                f"OCR dependencies not available: {e}. "
+                "Ensure PIL and pytesseract are installed in the container."
+            )
+
+    def _parse_depth_from_text(self, text_lines: list[str]) -> tuple[list[float], list[int]]:
+        """
+        Attempt to extract depth values from OCR text.
+        Returns (depths, line_indices) where line_indices map to text_lines.
+        Uses regex to find depth patterns like '2500' or '2500.5'.
+        """
+        import re
+        depth_pattern = re.compile(r'^\s*(\d{3,5}(?:\.\d+)?)\s*$')
+        depths: list[float] = []
+        line_indices: list[int] = []
+
+        for i, line in enumerate(text_lines):
+            m = depth_pattern.match(line.strip())
+            if m:
+                try:
+                    d = float(m.group(1))
+                    if 100 <= d <= 10000:  # reasonable depth in meters
+                        depths.append(d)
+                        line_indices.append(i)
+                except ValueError:
+                    pass
+        return depths, line_indices
+
+    def _parse_curve_value(self, token: str) -> float | None:
+        """Parse a single numeric token from OCR text."""
+        import re
+        m = re.search(r'[-+]?\d*\.\d+|\d+', token)
+        if not m:
+            return None
+        try:
+            return float(m.group())
+        except ValueError:
+            return None
+
+    def _detect_curve_type_from_text(self, text: str) -> dict[str, list[str]]:
+        """
+        Scan OCR text to identify which curve columns appear present.
+        Returns {curve_mnemonic: [extracted_values]}.
+        """
+        import re
+        # GR column patterns
+        gr_matches = re.findall(r'\b(?:GR|GAMMA|CGR|SGR)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
+        rt_matches = re.findall(r'\b(?:RT|RD|RS|ILD|AT[0-9]+)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
+        rho_matches = re.findall(r'\b(?:RHO|RHOB|DEN)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
+        nphi_matches = re.findall(r'\b(?:NPHI|PHI|POR)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
+        dt_matches = re.findall(r'\b(?:DT|AC|DTC)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
+
+        detected = {}
+        if gr_matches: detected['GR'] = gr_matches[:100]
+        if rt_matches: detected['RT'] = rt_matches[:100]
+        if rho_matches: detected['RHOB'] = rho_matches[:100]
+        if nphi_matches: detected['NPHI'] = nphi_matches[:100]
+        if dt_matches: detected['DT'] = dt_matches[:100]
+        return detected
+
+    def ingest(self, image_path: str, asset_id: str | None = None) -> 'WellDigitizeResult':
+        """
+        Main entry point: ingest a scanned log image.
+        Returns WellDigitizeResult with claim_state, suitability, and limitations.
+        """
+        from PIL import Image
+        import pytesseract
+
+        self._require_deps()
+        source = Path(image_path)
+
+        if not source.exists():
+            raise FileNotFoundError(f"Image not found: {image_path}")
+
+        # ── OCR extraction ──────────────────────────────────────────
+        img = Image.open(source)
+        raw_text: str = pytesseract.image_to_string(img, config='--psm 6')
+        text_lines = [ln.strip() for ln in raw_text.split('\n') if ln.strip()]
+
+        # ── Parse detected curves ────────────────────────────────────
+        detected_curves = self._detect_curve_type_from_text(raw_text)
+
+        # ── Attempt depth extraction ─────────────────────────────────
+        depths, depth_line_indices = self._parse_depth_from_text(text_lines)
+
+        # ── Compute digitize confidence ────────────────────────────
+        confidence_scores: list[float] = []
+
+        if text_lines:
+            # Confidence from non-empty lines ratio
+            ocr_completeness = len(text_lines) / max(len(text_lines), 1)
+            confidence_scores.append(ocr_completeness)
+        else:
+            confidence_scores.append(0.0)
+
+        if detected_curves:
+            # More curve types detected = higher confidence
+            curve_confidence = min(len(detected_curves) / 3.0, 1.0)
+            confidence_scores.append(curve_confidence)
+        else:
+            confidence_scores.append(0.1)
+
+        if depths:
+            # Depth coverage — more depth values = higher confidence
+            depth_confidence = min(len(depths) / 100.0, 1.0)
+            confidence_scores.append(depth_confidence)
+        else:
+            confidence_scores.append(0.0)
+
+        digitize_confidence = sum(confidence_scores) / len(confidence_scores) if confidence_scores else 0.0
+
+        # ── Suitability determination ───────────────────────────────
+        num_curves_detected = len(detected_curves)
+        num_depths = len(depths)
+        has_good_ocr = len(text_lines) > 5 and digitize_confidence > 0.3
+
+        if num_curves_detected >= 2 and num_depths >= 10 and digitize_confidence > 0.5:
+            suitability = "decision_ready"
+        elif num_curves_detected >= 1 and num_depths >= 5 and digitize_confidence > 0.3:
+            suitability = "screening_only"
+        else:
+            suitability = "void"
+
+        # ── Claim state ─────────────────────────────────────────────
+        if suitability == "decision_ready":
+            claim_state = ClaimTag.COMPUTED
+        elif suitability == "screening_only":
+            claim_state = ClaimTag.HYPOTHESIS
+        else:
+            claim_state = ClaimTag.UNKNOWN
+
+        # ── Limitations ────────────────────────────────────────────
+        limitations: list[str] = []
+        if not detected_curves:
+            limitations.append("No standard log curves (GR, RT, RHOB, NPHI, DT) detected in image. OCR may need clearer scan or manual annotation.")
+        if not depths:
+            limitations.append("No depth values extracted from image. Manual depth calibration required before LAS export.")
+        if num_curves_detected < 2:
+            limitations.append(f"Only {num_curves_detected} curve type(s) detected. Archie saturation requires at least GR + RT + porosity curves.")
+        if digitize_confidence < 0.4:
+            limitations.append(f"OCR confidence is low ({digitize_confidence:.1%}). Extracted values are approximate — verify against original image before use.")
+
+        # ── Well ID ────────────────────────────────────────────────
+        well_id = asset_id or source.stem
+
+        # ── Vault receipt ──────────────────────────────────────────
+        payload = {
+            "tool": "geox_well_digitize_log",
+            "well_id": well_id,
+            "image_path": str(image_path),
+            "source_type": "digitized",
+            "detected_curves": list(detected_curves.keys()),
+            "depth_points_extracted": num_depths,
+            "digitize_confidence": round(digitize_confidence, 4),
+            "suitability": suitability,
+            "claim_state": claim_state,
+            "limitations": limitations,
+        }
+        vault_receipt = _make_vault_receipt(
+            "geox_well_digitize_log",
+            payload,
+            verdict="HOLD" if suitability == "void" else "SEAL",
+        )
+
+        result = WellDigitizeResult(
+            tool="geox_well_digitize_log",
+            well_id=well_id,
+            image_path=str(image_path),
+            source_type="digitized",
+            detected_curves=list(detected_curves.keys()),
+            detected_curve_values=detected_curves,
+            depth_points_extracted=num_depths,
+            depth_values=depths,
+            raw_ocr_text='\n'.join(text_lines[:50]),  # first 50 lines
+            digitize_confidence=round(digitize_confidence, 4),
+            suitability=suitability,
+            claim_state=claim_state,
+            limitations=limitations,
+            vault_receipt=vault_receipt,
+        )
+        return result
+
+
+@dataclass
+class WellDigitizeResult:
+    """Output schema for geox_well_digitize_log — Stage 1 OCR."""
+    tool: str = "geox_well_digitize_log"
+    well_id: str = ""
+    image_path: str = ""
+    source_type: str = "digitized"  # digitized | fixture | LAS
+    detected_curves: list[str] = field(default_factory=list)
+    detected_curve_values: dict[str, list[str]] = field(default_factory=dict)  # mnemonic -> raw string values
+    depth_points_extracted: int = 0
+    depth_values: list[float] = field(default_factory=list)
+    raw_ocr_text: str = ""
+    digitize_confidence: float = 0.0
+    suitability: str = "void"  # decision_ready | screening_only | void
+    claim_state: str = ClaimTag.UNKNOWN
+    limitations: list[str] = field(default_factory=list)
+    vault_receipt: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "tool": self.tool,
+            "well_id": self.well_id,
+            "image_path": self.image_path,
+            "source_type": self.source_type,
+            "detected_curves": self.detected_curves,
+            "detected_curve_values": self.detected_curve_values,
+            "depth_points_extracted": self.depth_points_extracted,
+            "depth_values": self.depth_values,
+            "raw_ocr_text": self.raw_ocr_text,
+            "digitize_confidence": self.digitize_confidence,
+            "suitability": self.suitability,
+            "claim_state": self.claim_state,
+            "limitations": self.limitations,
+            "vault_receipt": self.vault_receipt,
+        }

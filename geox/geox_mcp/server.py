@@ -1064,43 +1064,77 @@ def geox_map_georeference(image_path: str, map_type: str = "geological") -> dict
 
 @mcp.tool()
 def geox_well_digitize_log(image_path: str, curve_types: list = None) -> dict:
-    """Analog Digitizer — PLANNED design spike.
-    Accepts scanned log image and returns structured tasks only.
-    NOT agent-facing in public listings.
+    """Analog Log Digitizer — OCR Stage 1.
+    
+    Accepts a scanned image of a paper well log and returns extracted curve
+    data via pytesseract OCR. Output feeds into geox_well_qc_logs for
+    structured validation before petrophysics computation.
+    
+    Stage 1 (this tool): pytesseract OCR → raw text + detected curves + depth values.
+    Stage 2 (planned): neural curve tracking + vectorization.
+    
+    Governance:
+      - Truth ≥ 0.99 required before any SEALED LAS used for business decisions.
+      - F1 Amanah: All digitization must be git-backed and reversible.
+      - claim_state = COMPUTED (OCR-derived) or UNKNOWN (low confidence).
+      - suitability = decision_ready | screening_only | void.
+    
+    Args:
+        image_path: Path to scanned log image (PNG, JPG, TIFF, WebP).
+        curve_types: Optional list of expected curve types to bias detection.
+                    Supported: gamma_ray, resistivity, density, porosity, sonic.
+    
+    Returns:
+        WellDigitizeResult with detected_curves, depth_values,
+        digitize_confidence, suitability, limitations, vault_receipt.
     """
-    return {
-        "image_path": image_path,
-        "curve_types": curve_types or ["gamma_ray", "resistivity"],
-        "status": "design_spike",
-        "claim_tag": "HYPOTHESIS",
-        "pipeline": [
-            {
-                "stage": "preprocess",
-                "status": "pending",
-                "description": "Image alignment, denoising, grid isolation",
-            },
-            {
-                "stage": "neural_interpretation",
-                "status": "pending",
-                "description": "CNN/RNN curve tracking",
-            },
-            {
-                "stage": "vectorization",
-                "status": "pending",
-                "description": "Pixel paths to mathematical vectors",
-            },
-            {
-                "stage": "las_export",
-                "status": "pending",
-                "description": "Map to depth and scale values",
-            },
-        ],
-        "layer": "internal",
-        "governance": {
-            "note": "Truth ≥0.99 required before any SEALED LAS used for business decisions.",
-            "f1_amanah": "All digitization must be git-backed and reversible",
-        },
-    }
+    from geox.services.las_ingestor import OCRIngestor, WellDigitizeResult, ClaimTag
+    
+    try:
+        ocr = OCRIngestor()
+        result = ocr.ingest(image_path=image_path, asset_id=None)
+        response = result.to_dict()
+        
+        # Inject optional curve type filter (bias detection toward requested types)
+        if curve_types:
+            curve_type_aliases = {
+                "gamma_ray": ["GR", "GAMMA", "CGR", "SGR"],
+                "resistivity": ["RT", "RD", "RS", "ILD", "AT90"],
+                "density": ["RHO", "RHOB", "DEN"],
+                "porosity": ["NPHI", "PHI", "POR"],
+                "sonic": ["DT", "AC", "DTC"],
+            }
+            allowed_mnemonics = set()
+            for ct in curve_types:
+                allowed_mnemonics.update(curve_type_aliases.get(ct.lower(), []))
+            if allowed_mnemonics:
+                # Filter detected_curves to only those in allowed_mnemonics
+                filtered = [c for c in response.get("detected_curves", []) if c in allowed_mnemonics]
+                response["detected_curves"] = filtered if filtered else response["detected_curves"]
+                response["_curve_filter_applied"] = list(allowed_mnemonics)
+        
+        return response
+        
+    except FileNotFoundError as e:
+        return {
+            "tool": "geox_well_digitize_log",
+            "status": "error",
+            "error": str(e),
+            "claim_state": ClaimTag.UNKNOWN,
+            "suitability": "void",
+            "limitations": [f"Image file not found: {image_path}"],
+            "vault_receipt": {},
+        }
+    except RuntimeError as e:
+        return {
+            "tool": "geox_well_digitize_log",
+            "status": "error",
+            "error": str(e),
+            "claim_state": ClaimTag.UNKNOWN,
+            "suitability": "void",
+            "limitations": ["OCR dependencies (PIL/pytesseract) not available in container."],
+            "vault_receipt": {},
+        }
 
 
 # =============================================================================
