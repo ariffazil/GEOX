@@ -4,8 +4,8 @@ Substrate: Lithos (The Matrix) | Constant: Mass (rho_b)
 """
 from geox.envelopes.ses_evidence import SESEvidenceObject
 from geox.laws.physics_guard import PhysicsGuard
-from geox.legacy_skills.petro import las_ingest
-from geox.legacy_skills.subsurface import stress_geomechanics
+from geox.skills.subsurface.petro import las_ingest
+from geox.skills.subsurface import stress_geomechanics
 
 @mcp.tool(name="geox_lithos_tool")
 async def geox_lithos_tool(uwi: str):

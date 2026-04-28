@@ -6,7 +6,7 @@ Plane: X-3D (Signal)
 import uuid
 from datetime import datetime
 try:
-    from geox.legacy_skills import prospect_evaluate_tool, volumetrics_tool
+    from geox.skills.subsurface import prospect_evaluate_tool, volumetrics_tool
 except ImportError:
     class _ProspectEvaluateStub:
         @staticmethod

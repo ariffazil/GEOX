@@ -6,7 +6,7 @@ Plane: X-1D (Sense)
 import uuid
 from datetime import datetime
 try:
-    from geox.legacy_skills import las_ingest_tool
+    from geox.skills.subsurface import las_ingest_tool
 except ImportError:
     class _LasIngestStub:
         @staticmethod

@@ -4,7 +4,7 @@ Substrate: Stress (Pressure) & Flow (Flux)
 """
 from geox.envelopes.ses_evidence import SESEvidenceObject
 from geox.laws.physics_guard import PhysicsGuard
-from geox.legacy_skills.subsurface import stress_geomechanics, reservoir_dynamics
+from geox.skills.subsurface import stress_geomechanics, reservoir_dynamics
 
 @mcp.tool(name="geox_stress_tool")
 async def geox_stress_tool(well_id: str, depth: float):

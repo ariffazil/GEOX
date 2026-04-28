@@ -6,7 +6,7 @@ Plane: X-1D (Sight)
 import uuid
 from datetime import datetime
 try:
-    from geox.legacy_skills import petro_ensemble_tool
+    from geox.skills.subsurface import petro_ensemble_tool
 except ImportError:
     class _PetroEnsembleStub:
         @staticmethod

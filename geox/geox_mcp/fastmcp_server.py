@@ -31,6 +31,7 @@ from geox.core.ac_risk import (
     compute_ac_risk_governed as _compute_ac_risk_governed,
 )
 from geox.core.portfolio_audit import PortfolioTracker
+from geox.skills.subsurface.petro.gr_intervals import run_gr_cognitive_pipeline
 from geox.geox_mcp.tools.asset_memory_tool import (
     geox_memory_recall_asset_tool,
     geox_memory_store_asset_tool,
@@ -44,6 +45,20 @@ from geox.geox_mcp.tools.visualization import (
     geox_render_volume_slice_tool,
 )
 from geox.geox_mcp.tools.volumetrics_tool import geox_compute_volume_probabilistic_tool
+from geox.geox_mcp.tools.spglobal_tool import (
+    geox_well_load_spglobal as _spg_well_load,
+    geox_well_search_spglobal as _spg_well_search,
+    geox_basin_observe_spglobal as _spg_basin_observe,
+    geox_price_observe_spglobal as _spg_price_observe,
+    geox_production_observe_spglobal as _spg_production_observe,
+)
+from geox.geox_mcp.tools.open_energy_tool import (
+    geox_price_observe_eia as _eia_price_observe,
+    geox_production_observe_eia as _eia_production_observe,
+    geox_well_load_npd as _npd_well_load,
+    geox_field_observe_npd as _npd_field_observe,
+    geox_production_observe_npd as _npd_production_observe,
+)
 from geox.skills.earth_science.seismic_wrappers import (
     seismic_load_volume,
     seismic_compute_attribute,
@@ -441,6 +456,26 @@ Awaiting approval response with CONFIRM or REJECT.
 # =============================================================================
 
 
+@mcp.resource("geox://wells/{well_id}/gr-intervals")
+def geox_resource_well_gr_intervals(well_id: str) -> str:
+    """Fetch human-scale cognitive GR intervals for a specific well.
+    Returns the stratigraphic motif breakdown (BLOCKY/BELL/FUNNEL).
+    """
+    # This resource leverages the existing compute petrophysics logic 
+    # but returns ONLY the stratigraphic interpretation layer.
+    res = geox_well_compute_petrophysics(well_id=well_id, volume_id="state_discovery")
+    if "error" in res:
+        return json.dumps(res)
+    
+    return json.dumps({
+        "well_id": well_id,
+        "intervals": res.get("gr_intervals", {}).get("interval_table", []),
+        "qc": res.get("gr_intervals", {}).get("qc", {}),
+        "claim_tag": "INTERPRETED",
+        "governance": "WELL.GR_INTERVAL_COGNITIVE"
+    }, indent=2)
+
+
 @mcp.tool()
 def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
     """Load a full log bundle (LAS/DLIS) into witness context.
@@ -467,6 +502,25 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
     if safe_las:
         try:
             manifest = geox_ingest_las_tool(str(safe_las), asset_id=well_id)
+            bundle = None
+            gr_intervals = None
+            if _HAS_LAS:
+                try:
+                    bundle = load_las(str(safe_las), well_id)
+                    if bundle.gr is not None:
+                        # run cognitive GR interval extraction
+                        import numpy as np
+                        # ensure no NaNs for the pipeline
+                        valid_idx = ~np.isnan(bundle.depth_md) & ~np.isnan(bundle.gr)
+                        if np.any(valid_idx):
+                            gr_intervals = run_gr_cognitive_pipeline(
+                                bundle.depth_md[valid_idx],
+                                gr_array=bundle.gr[valid_idx],
+                                min_interval_m=10.0
+                            )
+                except Exception as e:
+                    pass  # skip cognitive if load fails
+
             return {
                 "well_id": well_id,
                 "status": "loaded",
@@ -476,7 +530,11 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
                 "depth_range": manifest["depth_range"],
                 "curve_manifest": manifest["curves"],
                 "las_manifest": manifest,
+                "gr_intervals": gr_intervals,
                 "vault_receipt": manifest["vault_receipt"],
+                "governance": {
+                    "well_gr_cognitive": "Human-scale intervals extracted" if gr_intervals else "No GR curve found or extraction failed"
+                }
             }
         except FileNotFoundError as e:
             return {
@@ -546,11 +604,14 @@ def geox_well_compute_petrophysics(
     volume_id: str,
     saturation_model: str = " Archie ",
     memory_db_path: Optional[str] = None,
+    biostrat: Optional[list[dict]] = None,
 ) -> dict:
     """Execute Wave 2 petrophysics inside the existing public well tool.
+    Includes cognitive GR interval extraction (WELL.GR_INTERVAL_COGNITIVE).
 
     Note: asset memory writes are disabled (authorized=False) to enforce F1 Amanah.
     """
+    import numpy as np
     memory_authorized = False  # F1 Amanah — client cannot override write authorization
     known_wells = {
         "BEK-2": {"top_md": 2090.0, "bot_md": 2170.0, "phi_hc": 0.22, "sw_wet": 0.85},
@@ -569,6 +630,7 @@ def geox_well_compute_petrophysics(
         depth_points.append(current_depth)
         current_depth += 2.0
 
+    gr_values = []
     for md in depth_points:
         in_hc = params["top_md"] is not None and params["top_md"] <= md <= params["bot_md"]
         in_transition = params["top_md"] is not None and (
@@ -590,6 +652,11 @@ def geox_well_compute_petrophysics(
 
         phi = max(0.01, min(0.35, phi))
         vsh = max(0.0, min(1.0, vsh))
+        
+        # Synthetic GR based on Vsh
+        gr = 20 + vsh * 100 + (hash(str(md + 6)) % 20 - 10)
+        gr_values.append(gr)
+
         ensemble = geox_compute_sw_ensemble_tool(
             rt=max(rt, 0.2), phi=max(phi, 0.02), rw=0.08, vsh=vsh, temp=96.0
         )
@@ -603,6 +670,7 @@ def geox_well_compute_petrophysics(
         curves.append(
             {
                 "depth_md": round(md, 1),
+                "gr": round(gr, 1),
                 "porosity": round(phi, 4),
                 "sw": round(sw, 4),
                 "vsh": round(vsh, 4),
@@ -611,6 +679,14 @@ def geox_well_compute_petrophysics(
                 "net_pay": net_pay,
             }
         )
+
+    # run GR cognitive pipeline
+    gr_intervals = run_gr_cognitive_pipeline(
+        np.array(depth_points),
+        gr_array=np.array(gr_values),
+        biostrat=biostrat,
+        min_interval_m=10.0,  # cognitive human scale
+    )
 
     net_pay_tops = []
     paying = False
@@ -685,8 +761,10 @@ def geox_well_compute_petrophysics(
         "volume_id": volume_id,
         "saturation_model": saturation_model.strip(),
         "curves": curves,
+        "gr_intervals": gr_intervals,
         "curve_manifest": [
             {"mnemonic": "DEPTH_MD", "unit": "m", "description": "Measured depth"},
+            {"mnemonic": "GR", "unit": "gAPI", "description": "Gamma Ray (synthetic)"},
             {"mnemonic": "POR", "unit": "fraction", "description": "Total porosity"},
             {
                 "mnemonic": "SW",
@@ -712,6 +790,13 @@ def geox_well_compute_petrophysics(
         "visualization_payload": geox_render_log_track_tool(
             [
                 {
+                    "mnemonic": "GR",
+                    "color": "#7f7f7f",
+                    "samples": [
+                        {"depth": curve["depth_md"], "value": curve["gr"]} for curve in curves
+                    ],
+                },
+                {
                     "mnemonic": "POR",
                     "color": "#22c55e",
                     "samples": [
@@ -734,12 +819,14 @@ def geox_well_compute_petrophysics(
                 },
             ],
             title=f"{well_id} petrophysics",
+            intervals=gr_intervals.get("interval_table", []),
         ),
         "claim_tag": probabilistic_volume["claim_tag"],
         "governance": {
             "f9_physics9": "PhysicsGuard + Archie/Indonesia/Simandoux ensemble",
             "f7_confidence": "Probabilistic volume + OAT sensitivity sweep absorbed into existing petrophysics surface",
             "p2_7_depth_curves": "Depth-indexed curves now returned with ensemble diagnostics",
+            "f2_truth": "WELL.GR_INTERVAL_COGNITIVE: Human-scale cognitive intervals extracted",
         },
     }
     if memory_db_path:
@@ -1216,8 +1303,63 @@ def geox_prospect_evaluate(
     return result
 
 
-# TODO: Raw-array log ingestion from deleted geox_log_interpreter should be merged
-# into geox_well_compute_petrophysics as an optional raw_curves pathway.
+@mcp.tool()
+def geox_log_interpreter(
+    GR: Optional[list[float]] = None,
+    RT: Optional[list[float]] = None,
+    RHOB: Optional[list[float]] = None,
+    NPHI: Optional[list[float]] = None,
+    depth: Optional[list[float]] = None,
+    biostrat: Optional[list[dict]] = None,
+    GR_clean: float = 20.0,
+    GR_shale: float = 120.0,
+) -> dict:
+    """Interpret raw log arrays with cognitive GR interval extraction.
+    DITEMPA BUKAN DIBERI — Human-scale cognitive extraction.
+
+    Args:
+        GR: Gamma Ray array (gAPI)
+        RT: Resistivity array (ohm.m)
+        RHOB: Density array (g/cc)
+        NPHI: Neutron porosity array (v/v)
+        depth: Depth array (m)
+        biostrat: Optional biostrat picks [{depth, nn_zone}]
+    """
+    import numpy as np
+    
+    if depth is None or GR is None:
+        return {"error": "Depth and GR arrays are required", "claim_tag": "VOID"}
+    
+    depth_arr = np.array(depth)
+    gr_arr = np.array(GR)
+    
+    # Run cognitive pipeline
+    gr_intervals = run_gr_cognitive_pipeline(
+        depth_arr,
+        gr_array=gr_arr,
+        biostrat=biostrat,
+        min_interval_m=10.0
+    )
+    
+    # Basic petrophysics estimation if other logs present
+    vsh = (gr_arr - GR_clean) / (GR_shale - GR_clean)
+    vsh = np.clip(vsh, 0, 1)
+    
+    result = {
+        "status": "computed",
+        "claim_tag": "COMPUTED",
+        "gr_intervals": gr_intervals,
+        "summary": {
+            "vsh_avg": float(np.nanmean(vsh)),
+            "depth_range": [float(np.nanmin(depth_arr)), float(np.nanmax(depth_arr))],
+        },
+        "governance": {
+            "well_gr_cognitive": "Human-scale intervals extracted from raw arrays",
+            "f2_truth": "Signal-only motifs assigned (BLOCKY/BELL/FUNNEL/HETEROLITHIC)",
+        }
+    }
+    
+    return result
 
 
 # QUARANTINED — geox_cross_summarize_evidence is off the public MCP surface.
@@ -1659,6 +1801,126 @@ def arifos_judge_prospect(
     output = result.to_dict()
     output["_routed_to"] = "arifOS"
     return output
+
+
+# =============================================================================
+# LAYER 1b — FREE / OPEN ENERGY DATA SURFACE
+# EIA (free with registration) + NPD (zero auth) + OGIM-ready stubs.
+# Miskin-friendly. No enterprise contracts.
+# =============================================================================
+
+
+@mcp.tool()
+def geox_price_observe_eia(
+    commodity: str = "wti",
+    frequency: str = "daily",
+    api_key: Optional[str] = None,
+    start: Optional[str] = None,
+    end: Optional[str] = None,
+) -> dict:
+    """Observe petroleum spot prices from the FREE U.S. EIA API (eia.gov/opendata)."""
+    return _eia_price_observe(commodity, frequency, api_key, start, end)
+
+
+@mcp.tool()
+def geox_production_observe_eia(
+    data_type: str = "crude_oil",
+    area: str = "US",
+    frequency: str = "monthly",
+    api_key: Optional[str] = None,
+    start: Optional[str] = None,
+    end: Optional[str] = None,
+) -> dict:
+    """Observe U.S. production data from the FREE EIA API."""
+    return _eia_production_observe(data_type, area, frequency, api_key, start, end)
+
+
+@mcp.tool()
+def geox_well_load_npd(
+    well_name: Optional[str] = None,
+    include_production: bool = False,
+) -> dict:
+    """Load wellbore data from the FREE Norwegian Offshore Directorate (NO API KEY)."""
+    return _npd_well_load(well_name, include_production)
+
+
+@mcp.tool()
+def geox_field_observe_npd(
+    field_name: Optional[str] = None,
+    include_production: bool = False,
+) -> dict:
+    """Observe field data from NPD (Norwegian Continental Shelf, zero auth)."""
+    return _npd_field_observe(field_name, include_production)
+
+
+@mcp.tool()
+def geox_production_observe_npd(
+    field_name: str,
+) -> dict:
+    """Observe monthly production for a field from NPD (zero auth)."""
+    return _npd_production_observe(field_name)
+
+
+# =============================================================================
+# LAYER 1c — S&P GLOBAL ENTERPRISE DATA SURFACE
+# Read-only bridge to S&P Global Commodity Insights & Energy Portal.
+# Requires enterprise subscription. Quarantined behind SPGLOBAL_API_KEY.
+# =============================================================================
+
+
+@mcp.tool()
+def geox_well_load_spglobal(
+    well_id: str,
+    api_key: Optional[str] = None,
+    include_production: bool = False,
+    include_logs: bool = False,
+) -> dict:
+    """Load well header data from S&P Global Energy Portal into witness context."""
+    return _spg_well_load(well_id, api_key, include_production, include_logs)
+
+
+@mcp.tool()
+def geox_well_search_spglobal(
+    min_lat: float,
+    max_lat: float,
+    min_lon: float,
+    max_lon: float,
+    api_key: Optional[str] = None,
+    limit: int = 100,
+) -> dict:
+    """Search S&P Global well inventory by geographic bounding box."""
+    return _spg_well_search(min_lat, max_lat, min_lon, max_lon, api_key, limit)
+
+
+@mcp.tool()
+def geox_basin_observe_spglobal(
+    basin_name: str,
+    api_key: Optional[str] = None,
+) -> dict:
+    """Retrieve basin-level summary from S&P Global (425+ basins covered)."""
+    return _spg_basin_observe(basin_name, api_key)
+
+
+@mcp.tool()
+def geox_price_observe_spglobal(
+    commodity: str = "brent",
+    assessment_date: Optional[str] = None,
+    api_key: Optional[str] = None,
+    currency: str = "USD",
+) -> dict:
+    """Observe S&P Global Platts benchmark price assessment."""
+    return _spg_price_observe(commodity, assessment_date, api_key, currency)
+
+
+@mcp.tool()
+def geox_production_observe_spglobal(
+    well_id: str,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    api_key: Optional[str] = None,
+) -> dict:
+    """Observe monthly production volumes for a well from S&P Global."""
+    return _spg_production_observe(well_id, start_date, end_date, api_key)
 
 
 # =============================================================================

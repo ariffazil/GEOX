@@ -4,8 +4,8 @@ Substrate: THE STRATA / THE BREAK / THE ELASTIC
 """
 from geox.envelopes.ses_evidence import SESEvidenceObject
 from geox.laws.physics_guard import PhysicsGuard
-from geox.legacy_skills.subsurface import stratigraphy_sequence
-from geox.legacy_skills.seismic import structural_interpretation
+from geox.skills.subsurface import stratigraphy_sequence
+from geox.skills.subsurface.seismic import structural_interpretation
 import numpy as np
 
 async def geox_strata_tool(well_id: str, depths: list):

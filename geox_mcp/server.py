@@ -320,15 +320,34 @@ def geox_time4d_verify_timing(
 
 
 @mcp.tool()
-def geox_prospect_evaluate(prospect_id: str, ac_risk_score: float = 0.0) -> dict:
-    """Evaluate hydrocarbon potential based on 888_JUDGE verdict.
-    Routes through arifOS constitutional layer — not direct seal.
+def geox_prospect_evaluate(
+    prospect_id: str,
+    trap_pos: float = 1.0,
+    reservoir_pos: float = 1.0,
+    seal_pos: float = 1.0,
+    charge_pos: float = 1.0,
+    ac_risk_score: float = 0.0,
+) -> dict:
     """
+    Evaluate hydrocarbon potential based on subsurface probabilities.
+    Returns structured prospect metrics for WEALTH EMV/EVOI consumption.
+    """
+    composite_pos = trap_pos * reservoir_pos * seal_pos * charge_pos
+    
     return {
         "prospect_id": prospect_id,
         "ac_risk_score": ac_risk_score,
+        "composite_pos": round(composite_pos, 4),
+        "prospect_metrics": {
+            "trap_pos": trap_pos,
+            "reservoir_pos": reservoir_pos,
+            "seal_pos": seal_pos,
+            "charge_pos": charge_pos,
+            "composite_pos": composite_pos,
+        },
         "verdict": "PENDING_ARIFOS_JUDGE",
-        "claim_tag": "PENDING",
+        "claim_tag": "ESTIMATE",
+        "w0": "GEOX informs. WEALTH values. arifOS judges.",
     }
 
 

@@ -4,7 +4,7 @@ Substrate: Kinetic (Energy) | Constant: Temperature (T)
 """
 from geox.envelopes.ses_evidence import SESEvidenceObject
 from geox.laws.physics_guard import PhysicsGuard
-from geox.legacy_skills.subsurface import maturity_kinetics
+from geox.skills.subsurface import maturity_kinetics
 
 @mcp.tool(name="geox_kinetic_tool")
 async def geox_kinetic_tool(uwi: str, burial_history: list[dict[str, float]]):

@@ -6,7 +6,7 @@ Plane: X-2D (Sense)
 import uuid
 from datetime import datetime
 try:
-    from geox.legacy_skills import visualization as map_viz
+    from geox.skills.subsurface import visualization as map_viz
 except ImportError:
     class _MapVizStub:
         @staticmethod

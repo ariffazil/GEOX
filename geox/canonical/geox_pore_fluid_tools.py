@@ -4,7 +4,7 @@ Substrate: Pores (Void) & Fluids (Charge)
 """
 from geox.envelopes.ses_evidence import SESEvidenceObject
 from geox.laws.physics_guard import PhysicsGuard
-from geox.legacy_skills.subsurface import reservoir_dynamics
+from geox.skills.subsurface import reservoir_dynamics
 
 @mcp.tool(name="geox_pore_tool")
 async def geox_pore_tool(well_id: str, phi_avg: float = 0.2):

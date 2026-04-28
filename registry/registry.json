@@ -4,6 +4,7 @@
   "total_domains": 11,
   "skills_per_domain": 3,
   "domains": [
+    "subsurface",
     "sensing",
     "geodesy",
     "terrain",
@@ -41,6 +42,43 @@
     "long"
   ],
   "skills": [
+    {
+      "id": "geox.subsurface.gr-interval-cognitive",
+      "title": "Cognitive GR Interval Extraction",
+      "domain": "subsurface",
+      "filename": "subsurface-gr-interval-cognitive.md",
+      "substrates": [
+        "environment-field",
+        "human"
+      ],
+      "scales": [
+        "site"
+      ],
+      "horizons": [
+        "immediate",
+        "short"
+      ],
+      "inputs": [
+        "gamma-ray-log",
+        "depth-md",
+        "biostrat-nn-picks"
+      ],
+      "outputs": [
+        "cognitive-intervals",
+        "stratigraphic-motifs",
+        "shale-side-shading"
+      ],
+      "depends_on": [],
+      "mcp_resource": true,
+      "mcp_prompt": false,
+      "mcp_tool": true,
+      "risk_class": "low",
+      "human_confirmation": false,
+      "drift_sensitivity": "medium",
+      "legal_domain": "public",
+      "status": "production",
+      "impl_file": "gr_intervals.py"
+    },
     {
       "id": "geox.sensing.observation-intake",
       "title": "Observation Intake",
