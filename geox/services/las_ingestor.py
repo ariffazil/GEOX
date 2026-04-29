@@ -91,17 +91,64 @@ class WellLoadResult:
     limitations: list[str] = field(default_factory=list)
     vault_receipt: dict = field(default_factory=dict)
 
+    @property
+    def asset_id(self) -> str:
+        return self.well_id
+
+    @property
+    def uwi(self) -> str:
+        return self.permit if self.permit != "UNKNOWN" else self.well_id
+
+    @property
+    def curves(self) -> list[Any]:
+        return [type("CurveManifest", (), {"mnemonic": curve})() for curve in self.loaded_curves]
+
+    @property
+    def depth_range_m(self) -> list[float]:
+        return self.depth_range
+
+    @property
+    def n_depth_samples(self) -> int:
+        return getattr(self, "_n_depth_samples", 0)
+
+    @property
+    def n_curves(self) -> int:
+        return len(self.loaded_curves)
+
+    @property
+    def claim_tag(self) -> str:
+        return {
+            ClaimTag.OBSERVED: "CLAIM",
+            ClaimTag.COMPUTED: "ESTIMATE",
+            ClaimTag.HYPOTHESIS: "HYPOTHESIS",
+            ClaimTag.UNKNOWN: "UNKNOWN",
+        }.get(self.claim_state, "UNKNOWN")
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "tool": self.tool,
+            "asset_id": self.well_id,
             "well_id": self.well_id,
+            "uwi": self.permit if self.permit != "UNKNOWN" else self.well_id,
             "permit": self.permit,
             "source_type": self.source_type,
             "loaded_curves": self.loaded_curves,
+            "curves": [{"mnemonic": curve} for curve in self.loaded_curves],
+            "curve_count": len(self.loaded_curves),
+            "n_curves": len(self.loaded_curves),
             "depth_range": self.depth_range,
+            "depth_range_m": self.depth_range,
+            "n_depth_samples": getattr(self, "_n_depth_samples", 0),
             "missing_channels": self.missing_channels,
+            "qcfail_count": 0 if self.suitability != "void" else 1,
             "suitability": self.suitability,
             "claim_state": self.claim_state,
+            "claim_tag": {
+                ClaimTag.OBSERVED: "CLAIM",
+                ClaimTag.COMPUTED: "ESTIMATE",
+                ClaimTag.HYPOTHESIS: "HYPOTHESIS",
+                ClaimTag.UNKNOWN: "UNKNOWN",
+            }.get(self.claim_state, "UNKNOWN"),
             "qc_prerequisite_met": self.qc_prerequisite_met,
             "limitations": self.limitations,
             "vault_receipt": self.vault_receipt,
@@ -317,6 +364,7 @@ class LASIngestor:
             limitations=limitations,
             vault_receipt={},
         )
+        result._n_depth_samples = int(depth_curve.size)  # type: ignore[attr-defined]
         result.vault_receipt = _make_vault_receipt("geox_well_load_bundle", result.to_dict(), "HOLD" if suitability == "void" else "SEAL")
         return result
 

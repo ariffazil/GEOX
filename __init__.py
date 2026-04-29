@@ -21,6 +21,12 @@ Constitutional Floors: F1, F2, F4, F7, F9, F11, F13
 __version__ = "v2026.04.10-EIC"
 __seal__ = "DITEMPA BUKAN DIBERI"
 
+from pathlib import Path
+
+_NESTED_PACKAGE = Path(__file__).with_name("geox")
+if _NESTED_PACKAGE.is_dir() and str(_NESTED_PACKAGE) not in __path__:
+    __path__.insert(0, str(_NESTED_PACKAGE))
+
 from geox.core.ac_risk import (
     compute_ac_risk,
     compute_ac_risk_governed,

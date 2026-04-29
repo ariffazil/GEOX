@@ -244,3 +244,27 @@ class ToolRegistry:
     # Maintain compatibility with geox/__init__.py
     ToolStatus = ToolStatus
     ErrorCode = ErrorCode
+
+
+for _wave2_name, _wave2_desc in {
+    "geox_compute_sw_ensemble": "Compute Archie/Indonesia/Simandoux water saturation ensemble.",
+    "geox_compute_volume_probabilistic": "Compute probabilistic hydrocarbon pore volume.",
+    "geox_simulate_basin_charge": "Simulate basin charge timing and probability.",
+    "geox_run_sensitivity_sweep": "Run one-at-a-time sensitivity analysis.",
+    "geox_ingest_las": "Ingest LAS well-log files with QC manifest.",
+    "geox_memory_store_asset": "Store asset evaluation memory with Amanah lock.",
+    "geox_memory_recall_asset": "Recall asset evaluation memory.",
+    "geox_render_log_track": "Build JSON log-track visualization payload.",
+    "geox_render_volume_slice": "Build JSON volume-slice visualization payload.",
+}.items():
+    ToolRegistry._tools.setdefault(
+        _wave2_name,
+        ToolMetadata(
+            name=_wave2_name,
+            version="2026.04-wave2",
+            status=ToolStatus.PREVIEW,
+            description=_wave2_desc,
+            dimension="subsurface",
+            metabolic_stage="333",
+        ),
+    )

@@ -14,6 +14,25 @@ from geox.core.physics_guard import PhysicsGuard
 
 
 @dataclass
+class TriangularDist:
+    min: float
+    ml: float
+    max: float
+
+    def to_spec(self) -> dict[str, float]:
+        return {"min": self.min, "ml": self.ml, "max": self.max}
+
+
+@dataclass
+class LognormalDist:
+    mean: float
+    stddev: float
+
+    def to_spec(self) -> dict[str, float | str]:
+        return {"mean": self.mean, "stddev": self.stddev, "kind": "lognormal"}
+
+
+@dataclass
 class VolumeDistribution:
     p10: float
     p50: float
@@ -28,6 +47,26 @@ class VolumeDistribution:
     vault_receipt: dict[str, Any]
     physics_validation: dict[str, Any]
 
+    @property
+    def n_valid(self) -> int:
+        return self.valid_draws
+
+    @property
+    def n_draws(self) -> int:
+        return self.valid_draws + self.rejected_draws
+
+    @property
+    def posterior_ratio(self) -> float:
+        return self.p90 / max(self.p10, 1e-9)
+
+    @property
+    def tornado_data(self) -> list[dict[str, float | str]]:
+        rows = [
+            {"parameter": key, "impact": value, "abs_impact": abs(value)}
+            for key, value in self.tornado.items()
+        ]
+        return sorted(rows, key=lambda row: float(row["abs_impact"]), reverse=True)
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "p10": round(self.p10, 4),
@@ -37,9 +76,13 @@ class VolumeDistribution:
             "stdev": round(self.stdev, 4),
             "valid_draws": self.valid_draws,
             "rejected_draws": self.rejected_draws,
+            "n_valid": self.n_valid,
+            "n_draws": self.n_draws,
+            "posterior_ratio": round(self.posterior_ratio, 4),
             "hold_enforced": self.hold_enforced,
             "claim_tag": self.claim_tag,
             "tornado": {key: round(value, 4) for key, value in self.tornado.items()},
+            "tornado_data": self.tornado_data,
             "vault_receipt": self.vault_receipt,
             "physics_validation": self.physics_validation,
         }
@@ -48,12 +91,20 @@ class VolumeDistribution:
 class ProbabilisticVolumetrics:
     """Monte Carlo HCPV calculator with PhysicsGuard validation."""
 
-    def __init__(self, guard: PhysicsGuard | None = None, draws: int = 10_000, seed: int = 7) -> None:
+    def __init__(
+        self,
+        guard: PhysicsGuard | None = None,
+        draws: int = 10_000,
+        seed: int = 7,
+        n_draws: int | None = None,
+    ) -> None:
         self.guard = guard or PhysicsGuard()
-        self.draws = draws
+        self.draws = n_draws if n_draws is not None else draws
         self.rng = np.random.default_rng(seed)
 
     def _sample_distribution(self, spec: float | dict[str, float]) -> np.ndarray:
+        if hasattr(spec, "to_spec"):
+            spec = spec.to_spec()
         if isinstance(spec, (int, float)):
             return np.full(self.draws, float(spec), dtype=float)
         if {"min", "ml", "max"}.issubset(spec):
@@ -71,13 +122,17 @@ class ProbabilisticVolumetrics:
         ntg_dist: float | dict[str, float],
         phi_dist: float | dict[str, float],
         sw_dist: float | dict[str, float],
-        fvf_dist: float | dict[str, float],
+        fvf_dist: float | dict[str, float] | None = None,
+        fvf: float | None = None,
     ) -> VolumeDistribution:
         grv = self._sample_distribution(grv_dist)
         ntg = self._sample_distribution(ntg_dist)
         phi = self._sample_distribution(phi_dist)
         sw = self._sample_distribution(sw_dist)
-        fvf = np.maximum(self._sample_distribution(fvf_dist), 1e-6)
+        fvf_spec = fvf if fvf is not None else fvf_dist
+        if fvf_spec is None:
+            fvf_spec = 1.0
+        fvf = np.maximum(self._sample_distribution(fvf_spec), 1e-6)
 
         hcpv_samples: list[float] = []
         rejected_draws = 0

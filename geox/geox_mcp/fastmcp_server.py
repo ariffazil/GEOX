@@ -16,6 +16,7 @@ GRAMMAR LAW:
 
 import json
 import os
+import re
 import time
 from enum import Enum
 from pathlib import Path
@@ -84,6 +85,29 @@ REGISTRY_PATH = Path(__file__).resolve().parent.parent / "registry" / "registry.
 SKILLS_PATH = Path(__file__).resolve().parent.parent / "skills"
 APPS_PATH = Path(__file__).resolve().parent.parent / "apps"
 KNOWN_WELL_IDS = {"DUL-A1", "TIO-3", "BEK-2", "SEL-1"}
+WELL_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
+
+
+def _validate_well_id(well_id: str) -> dict | None:
+    if not isinstance(well_id, str) or not WELL_ID_RE.fullmatch(well_id):
+        return {
+            "well_id": str(well_id),
+            "status": "error",
+            "qc_status": "failed",
+            "claim_tag": "VOID",
+            "flags": ["F12_INVALID_WELL_ID"],
+            "error": "Invalid well_id. Use a short identifier containing only letters, numbers, _, -, or .",
+        }
+    if "/" in well_id or "\\" in well_id or ".." in well_id:
+        return {
+            "well_id": well_id,
+            "status": "error",
+            "qc_status": "failed",
+            "claim_tag": "VOID",
+            "flags": ["F12_PATH_TRAVERSAL_SIGNAL"],
+            "error": "well_id must be an identifier, not a path.",
+        }
+    return None
 
 
 def _load_registry() -> dict:
@@ -489,6 +513,11 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
     Returns:
         Structured bundle with curve_manifest and provenance.
     """
+    invalid = _validate_well_id(well_id)
+    if invalid:
+        invalid["stages"] = []
+        return invalid
+
     # F1 Amanah: bound filesystem access
     safe_las = _sanitize_path(las_path, must_exist=False)
     if las_path and safe_las is None:
@@ -590,6 +619,17 @@ def geox_well_load_bundle(well_id: str, las_path: Optional[str] = None) -> dict:
 @mcp.tool()
 def geox_well_qc_logs(well_id: str) -> dict:
     """Quality Control on loaded logs."""
+    invalid = _validate_well_id(well_id)
+    if invalid:
+        return invalid
+    if well_id not in KNOWN_WELL_IDS:
+        return {
+            "well_id": well_id,
+            "qc_status": "failed",
+            "claim_tag": "VOID",
+            "flags": ["UNKNOWN_WELL_ID"],
+            "known_well_ids": sorted(KNOWN_WELL_IDS),
+        }
     return {
         "well_id": well_id,
         "qc_status": "passed",
@@ -660,7 +700,10 @@ def geox_well_compute_petrophysics(
         ensemble = geox_compute_sw_ensemble_tool(
             rt=max(rt, 0.2), phi=max(phi, 0.02), rw=0.08, vsh=vsh, temp=96.0
         )
-        model_lookup = {item["name"]: item["sw"] for item in ensemble["models"]}
+        if isinstance(ensemble.get("models"), dict):
+            model_lookup = dict(ensemble["models"])
+        else:
+            model_lookup = {item["name"]: item["sw"] for item in ensemble["models"]}
         sw = ensemble["mean"]
         if normalized_model == "indonesia":
             sw = model_lookup["indonesia"]

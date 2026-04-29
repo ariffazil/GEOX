@@ -94,9 +94,7 @@ class TestForward:
         gas_result = engine.forward(clean_sand_gas)
 
         assert gas_result.grade != "PHYSICS_VIOLATION"
-        # Gas: Vp must drop significantly (>
-
-20% lower than brine)
+        # Gas: Vp must drop significantly (>20% lower than brine)
         assert gas_result.vp < brine_result.vp * 0.85
         # Gas: Vp/Vs must increase
         assert gas_result.vp_vs_ratio > brine_result.vp_vs_ratio

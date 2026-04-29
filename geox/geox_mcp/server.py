@@ -422,7 +422,10 @@ def geox_well_compute_petrophysics(
         ensemble = geox_compute_sw_ensemble_tool(
             rt=max(rt, 0.2), phi=max(phi, 0.02), rw=0.08, vsh=vsh, temp=96.0
         )
-        model_lookup = {item["name"]: item["sw"] for item in ensemble["models"]}
+        if isinstance(ensemble.get("models"), dict):
+            model_lookup = dict(ensemble["models"])
+        else:
+            model_lookup = {item["name"]: item["sw"] for item in ensemble["models"]}
         sw = ensemble["mean"]
         if normalized_model == "indonesia":
             sw = model_lookup["indonesia"]

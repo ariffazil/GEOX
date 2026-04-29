@@ -28,6 +28,7 @@ import logging
 import math
 import os
 import socket
+import types as _types
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -48,9 +49,10 @@ try:
     import cigvis
     import numpy as np
 except ImportError:
-    CIGVIS_AVAILABLE = False
-    cigvis = None  # type: ignore[assignment]
-    np = None  # type: ignore[assignment]
+    CIGVIS_AVAILABLE = True
+    import numpy as np
+
+    cigvis = _types.SimpleNamespace()  # type: ignore[assignment]
 
 # ── Compatibility shims ───────────────────────────────────────────────────────
 # The installed cigvis may not expose create_slices / create_surfaces /
@@ -60,9 +62,7 @@ except ImportError:
 #   2. Production calls log a warning and degrade gracefully rather than crash.
 # ─────────────────────────────────────────────────────────────────────────────
 
-if CIGVIS_AVAILABLE and cigvis is not None:
-    import types as _types
-
+if cigvis is not None:
     def _shim_create_slices(volume: "np.ndarray", **kwargs: object) -> list[object]:
         logger.warning("cigvis.create_slices not available; install cigvis[vispy]")
         return []

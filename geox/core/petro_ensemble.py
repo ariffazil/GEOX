@@ -67,7 +67,8 @@ class PetroEnsembleResult:
     confidence_limitations: list[str] = field(default_factory=list)
     prerequisite_qc_state: str = ""      # reference to geox_well_qc_logs output
     # Computed values
-    models: list[EnsembleModelResult] = field(default_factory=list)
+    models: dict[str, float] = field(default_factory=dict)
+    model_details: list[EnsembleModelResult] = field(default_factory=list)
     mean: float = 0.0
     p10: float = 0.0
     p50: float = 0.0
@@ -82,6 +83,20 @@ class PetroEnsembleResult:
     human_decision_point: str = ""
     vault_receipt: dict = field(default_factory=dict)
 
+    @property
+    def claim_tag(self) -> str:
+        return {
+            ClaimTag.OBSERVED: "CLAIM",
+            ClaimTag.COMPUTED: "ESTIMATE",
+            ClaimTag.HYPOTHESIS: "ESTIMATE",
+            ClaimTag.UNKNOWN: "UNKNOWN",
+            ClaimTag.VOID: "UNKNOWN",
+        }.get(self.claim_state, "UNKNOWN")
+
+    @property
+    def physics_status(self) -> str:
+        return "PHYSICS_VIOLATION" if self.hold_enforced else "PASS"
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "tool": self.tool,
@@ -92,7 +107,8 @@ class PetroEnsembleResult:
             "interval_coverage": self.interval_coverage,
             "confidence_limitations": self.confidence_limitations,
             "prerequisite_qc_state": self.prerequisite_qc_state,
-            "models": [m.to_dict() for m in self.models],
+            "models": self.models,
+            "model_details": [m.to_dict() for m in self.model_details],
             "mean": round(self.mean, 4),
             "p10": round(self.p10, 4),
             "p50": round(self.p50, 4),
@@ -172,7 +188,7 @@ class PetroEnsemble:
         phi: float,
         rw: float,
         vsh: float,
-        temp: float,
+        temp: float = 80.0,
         a: float = 1.0,
         m: float = 2.0,
         n: float = 2.0,
@@ -319,7 +335,8 @@ class PetroEnsemble:
             interval_coverage={"top_md": top_md, "bottom_md": bottom_md, "net_m": net_m} if top_md else {},
             confidence_limitations=limitations,
             prerequisite_qc_state=qc_state_ref,
-            models=models,
+            models={m.name: float(m.sw) for m in models},
+            model_details=models,
             mean=float(sw_values.mean()),
             p10=float(p10),
             p50=float(p50),

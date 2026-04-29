@@ -47,6 +47,16 @@ class BasinChargeResult:
     timing_validation: dict = field(default_factory=dict)
     vault_receipt: dict = field(default_factory=dict)
 
+    @property
+    def maturity_window(self) -> str:
+        if self.easy_ro < 0.5:
+            return "IMMATURE"
+        if self.easy_ro < 1.3:
+            return "OIL_WINDOW"
+        if self.easy_ro < 2.0:
+            return "GAS_WINDOW"
+        return "OVERMATURE"
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "tool": self.tool,
@@ -120,7 +130,27 @@ class BasinChargeSimulator:
     def __init__(self, guard: PhysicsGuard | None = None) -> None:
         self.guard = guard or PhysicsGuard()
 
+    def _normalize_burial(self, burial_history: list[dict[str, float]]) -> list[dict[str, float]]:
+        normalized: list[dict[str, float]] = []
+        for step in burial_history:
+            if "temperature_c" in step and "duration_ma" in step:
+                normalized.append(dict(step))
+                continue
+            age_start = float(step.get("age_ma_start", step.get("age_start_ma", 0.0)))
+            age_end = float(step.get("age_ma_end", step.get("age_end_ma", 0.0)))
+            temp_start = float(step.get("temp_start_c", step.get("temperature_c", 20.0)))
+            temp_end = float(step.get("temp_end_c", step.get("temperature_c", temp_start)))
+            normalized.append(
+                {
+                    "age_ma": max(age_start, age_end),
+                    "duration_ma": abs(age_start - age_end),
+                    "temperature_c": (temp_start + temp_end) / 2.0,
+                }
+            )
+        return normalized
+
     def compute_tti(self, burial_history: list[dict[str, float]]) -> float:
+        burial_history = self._normalize_burial(burial_history)
         tti = 0.0
         for step in burial_history:
             temp_c = step["temperature_c"]
@@ -180,6 +210,7 @@ class BasinChargeSimulator:
         fault_density: float = 0.1,
     ) -> TimingVerificationResult:
         """
+        burial_history = self._normalize_burial(burial_history)
         Full geox_time4d_verify_timing output — v2 spec.
         Returns verdict, scenario context, reversal conditions, claim state.
         """
@@ -299,10 +330,10 @@ class BasinChargeSimulator:
     def simulate(
         self,
         burial_history: list[dict[str, float]],
-        trap_age_ma: float,
-        carrier_permeability_md: float,
-        buoyancy_pressure_mpa: float,
-        seal_capacity_mpa: float,
+        trap_age_ma: float = 70.0,
+        carrier_permeability_md: float = 100.0,
+        buoyancy_pressure_mpa: float = 10.0,
+        seal_capacity_mpa: float = 25.0,
         fault_density: float = 0.1,
     ) -> BasinChargeResult:
         """Legacy simulate() — delegates to verify_timing for full output."""
@@ -323,7 +354,27 @@ class BasinChargeSimulator:
             seal_integrity_estimate=full.basin_charge_result.get("seal_integrity_estimate", 0.0),
             charge_age_ma=full.charge_age_ma,
             hold_enforced=full.verdict == "improbable",
-            claim_tag=full.claim_state,
+            claim_tag={
+                ClaimTag.OBSERVED: "CLAIM",
+                ClaimTag.COMPUTED: "ESTIMATE",
+                ClaimTag.HYPOTHESIS: "HYPOTHESIS",
+                ClaimTag.UNKNOWN: "UNKNOWN",
+                ClaimTag.VOID: "UNKNOWN",
+            }.get(full.claim_state, "UNKNOWN"),
             timing_validation={},
             vault_receipt=full.vault_receipt,
         )
+
+
+def compute_tti(burial_history: list[dict[str, float]]) -> float:
+    return BasinChargeSimulator().compute_tti(burial_history)
+
+
+def compute_easy_ro(burial_history: list[dict[str, float]] | float) -> float:
+    simulator = BasinChargeSimulator()
+    tti = burial_history if isinstance(burial_history, (int, float)) else simulator.compute_tti(burial_history)
+    return simulator.compute_easy_ro(float(tti))
+
+
+class BasinCharge(BasinChargeSimulator):
+    """Compatibility name for Wave2 tests and older callers."""

@@ -18,6 +18,7 @@ class SensitivityCase:
     base_score: float
     high_score: float
     sensitivity_index: float
+    rank: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -26,6 +27,7 @@ class SensitivityCase:
             "base_score": round(self.base_score, 4),
             "high_score": round(self.high_score, 4),
             "sensitivity_index": round(self.sensitivity_index, 4),
+            "rank": self.rank,
         }
 
 
@@ -38,11 +40,33 @@ class SensitivitySweepResult:
     claim_tag: str
     vault_receipt: dict[str, Any]
 
+    @property
+    def entries(self) -> list[SensitivityCase]:
+        return self.cases
+
+    @property
+    def top_si(self) -> float:
+        return self.cases[0].sensitivity_index if self.cases else 0.0
+
+    @property
+    def base_verdict(self) -> str:
+        return "PROCEED" if self.base_score < 0.15 else "HOLD"
+
+    @property
+    def demoted_verdict(self) -> str:
+        if self.critical_sensitivity and self.base_verdict == "PROCEED":
+            return "PARTIAL"
+        return self.base_verdict
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "base_score": round(self.base_score, 4),
             "cases": [case.to_dict() for case in self.cases],
+            "entries": [case.to_dict() for case in self.entries],
+            "top_si": round(self.top_si, 4),
             "critical_sensitivity": self.critical_sensitivity,
+            "base_verdict": self.base_verdict,
+            "demoted_verdict": self.demoted_verdict,
             "recommended_verdict": self.recommended_verdict,
             "claim_tag": self.claim_tag,
             "vault_receipt": self.vault_receipt,
@@ -69,7 +93,20 @@ class SensitivitySweep:
         )
         return result.ac_risk_score
 
-    def run(self, base_inputs: dict[str, Any], percent_delta: float = 0.2) -> SensitivitySweepResult:
+    def run(self, *args: Any, percent_delta: float = 0.2, **kwargs: Any) -> SensitivitySweepResult:
+        if args and isinstance(args[0], dict):
+            base_inputs = dict(args[0])
+        elif args and len(args) >= 4:
+            base_inputs = {
+                "u_ambiguity": args[0],
+                "evidence_credit": args[1],
+                "echo_score": args[2],
+                "truth_score": args[3],
+            }
+        elif "base_inputs" in kwargs and isinstance(kwargs["base_inputs"], dict):
+            base_inputs = dict(kwargs["base_inputs"])
+        else:
+            base_inputs = dict(kwargs)
         base_score = self._score(base_inputs)
         cases: list[SensitivityCase] = []
         for parameter, value in base_inputs.items():
@@ -94,6 +131,8 @@ class SensitivitySweep:
             )
 
         cases.sort(key=lambda case: case.sensitivity_index, reverse=True)
+        for index, case in enumerate(cases, start=1):
+            case.rank = index
         critical_sensitivity = bool(cases and cases[0].sensitivity_index > 0.4)
         recommended_verdict = "QUALIFY" if critical_sensitivity else "SEAL"
         payload = {
