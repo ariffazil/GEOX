@@ -283,7 +283,7 @@ def geox_capabilities() -> str:
                 "arifos_routing": {
                     "arifos_check_hold": True,
                     "arifos_compute_risk": True,
-                    "arifos_judge_prospect": True,
+                    "geox_local_risk_preview": True,
                 },
             },
             "arifos_integration": {
@@ -1761,7 +1761,7 @@ def arifos_compute_risk(
 
 
 @mcp.tool()
-def arifos_judge_prospect(
+def geox_local_risk_preview(
     u_ambiguity: float,
     transform_stack: list,
     bias_scenario: str = "ai_vision_only",

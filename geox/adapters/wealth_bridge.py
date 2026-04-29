@@ -65,7 +65,7 @@ def geox_to_wealth(node: "ResourceNode", telemetry: "TelemetryPayload", verdict:
     Args:
         node: ResourceNode from GEOX geology pipeline
         telemetry: TelemetryPayload from GEOX session
-        verdict: Verdict from arifos_judge_prospect
+        verdict: Verdict from geox_local_risk_preview
 
     Returns:
         WealthInput dictionary for WEALTH score_kernel

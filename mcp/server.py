@@ -385,7 +385,7 @@ def geox_prospect_evaluate(
 ) -> dict:
     """
     Evaluate hydrocarbon prospect potential.
-    Routes through arifOS arifos_judge_prospect for constitutional verdict.
+    Routes through arifOS geox_local_risk_preview for constitutional verdict.
     GEOX does not hold verdict authority — verdict comes from arifOS.
 
     INPUT:
@@ -401,7 +401,7 @@ def geox_prospect_evaluate(
         prospect_context: dict, optional — metadata for judge
         session_id: str, optional — session ID for VAULT999
 
-    OUTPUT (from arifos_judge_prospect):
+    OUTPUT (from geox_local_risk_preview):
         verdict: PROCEED | HOLD | BLOCK
         ac_risk_score: float
         claim_tag: CLAIM | PLAUSIBLE | HYPOTHESIS | ESTIMATE | UNKNOWN
@@ -844,7 +844,7 @@ def arifos_compute_risk(
 
 
 @mcp.tool()
-def arifos_judge_prospect(
+def geox_local_risk_preview(
     u_ambiguity: float,
     transform_stack: list,
     evidence_credit: float = 0.0,
