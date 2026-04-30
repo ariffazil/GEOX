@@ -1,839 +1,147 @@
 # GEOX — Governed Earth Intelligence
 
-<!-- SOT:version_info -->
-| Field | Value |
-|-------|-------|
-| VERSION | 0.1.0 |
-| GOVERNING_KERNEL | arifOS F1–F13 |
-| ENGINE | Physics9 — 9-var state engine |
-| MCP_TOOLS | 28 |
-| SKILL_DOMAINS | 12 |
-| MCP_APPS | 8 |
-| REGISTRY_ENTRIES | 47 skills across 12 domains |
+> **Physics before narrative. Maruah before convenience.**
+> **DITEMPA BUKAN DIBERI — 999 SEAL ALIVE**
 
-_Auto-generated from `pyproject.toml` + `geox/geox_mcp/fastmcp_server.py`_
-<!-- /SOT:version_info -->
-
-```
-Physics > Narrative.
-Maruah > Convenience.
-DITEMPA BUKAN DIBERI — 999 SEAL ALIVE
-```
+[![GEOX](https://img.shields.io/badge/GEOX-F1%E2%80%93F13_Governed-22C75A?style=flat-square)](https://github.com/ariffazil/geox)
+[![MCP](https://img.shields.io/badge/MCP-FastMCP_3.2.4-7C3AED?style=flat-square)](https://github.com/ariffazil/geox)
+[![Engine](https://img.shields.io/badge/Physics_Engine-9%E2%88%92var-1a1a1a?style=flat-square)](./geox/core/physics9.py)
+[![License](https://img.shields.io/badge/License-AGPL_V3-4EAF0C?style=flat-square)](./LICENSE)
 
 ---
 
 ## What GEOX Is
 
-**GEOX is the Earth-domain reasoning instrument of the [arifOS](https://github.com/ariffazil/arifOS) constitutional federation** — a governed geoscience coprocessor that reads subsurface evidence, maps spatial trajectories, and issues physics-verified verdicts under hard constitutional law.
+GEOX is the **earth-domain reasoning instrument** of the [arifOS](https://github.com/ariffazil/arifOS) constitutional federation — a governed geoscience coprocessor that reads subsurface evidence, maps spatial trajectories, and issues physics-verified verdicts under hard constitutional law.
 
-It is **not** a viewer. It is **not** a feelings engine. It is a **reasoning instrument** built on the doctrine that every interpretation must be grounded in physical evidence before it can be sealed.
+GEOX is not a viewer. It is not a feelings engine. It is a **reasoning instrument** built on the doctrine that every interpretation must be grounded in physical evidence before it can be sealed.
 
 > *"In geology, the earth remembers everything — every sediment layer, every pressure event, every fracture. But memory without interpretation is just noise."*
 > — Arif Fazil, Sovereign Architect
 
 ---
 
-## Position in arifOS Trinity
+## Position in the arifOS Trinity
 
 ```
 ΔΩΨ — Trinity Model
-├── ARIF-Δ   Human Sovereign      → F13 veto authority
-├── ADAM-Ω   Constitutional Kernel → F1–F13 floors enforced
-└── GEOX-Ψ   Earth Coprocessor    → This repository
+├── ARIF-Δ   Human Sovereign       → F13 veto authority
+├── arifOS-Ω Constitutional Kernel → F1–F13 floors enforced
+└── GEOX-Ψ   Earth Coprocessor    → This repository — Ψ node
 ```
 
-GEOX operates as the **Ψ (Psi/Earth) node** — sensing physical reality, computing trajectory options, and routing every verdict through the arifOS constitutional layer before sealing to VAULT999.
+GEOX operates as the **Ψ (Psi/Earth) node** — sensing physical reality, computing trajectory options, routing verdicts through arifOS, and sealing to VAULT999.
+
+---
+
+## Current Source of Truth
+
+| Field | Value |
+|-------|-------|
+| Canonical repository | `https://github.com/ariffazil/geox` |
+| Package version | `0.1.0` |
+| Governing kernel | `arifOS F1–F13` |
+| Physics engine | `Physics9` — 9-variable state engine |
+| MCP tools | 28 public tools |
+| Skill domains | 12 domains |
+| MCP Apps | 8 |
+| Registry entries | 47 skills across 12 domains |
+| Homepage | https://geox.arif-fazil.com/ |
+
+---
+
+## Tool Surface — 28 Earth Intelligence Tools
+
+| Domain | Tools | Purpose |
+|--------|-------|---------|
+| **Petrophysics** | `geox_petro_evaluate`, `geox_compute_sw_ensemble` | Water saturation, Archie, ensemble uncertainty |
+| **Volume** | `geox_compute_volume_probabilistic`, `geox_render_volume_slice` | Gross rock volume, probabilistic thickness |
+| **Basin** | `geox_simulate_basin_charge` | Basin maturity, hydrocarbon generation |
+| **LAS Ingest** | `geox_ingest_las_tool` | Load LAS/DLIS logs, curve manifests |
+| **Sensitivity** | `geox_run_sensitivity_sweep_tool` | Parameter sensitivity across ranges |
+| **Visualization** | `geox_render_log_track`, `geox_render_volume_slice` | Log tracks, cross-sections, maps |
+| **Well Bundle** | `geox_well_load_bundle` | Full bundle load with vault receipts |
+| **Asset Memory** | `geox_memory_recall_asset`, `geox_memory_store_asset` | Geobody and well asset memory |
 
 ---
 
 ## Architecture
 
-<!-- SOT:file_structure -->
 ```
-ariffazil/GEOX
+ariffazil/geox
+├── geox/                    # Core Python package
+│   ├── core/               # Physics9, AC_Risk, epistemic_integrity
+│   ├── geox_mcp/           # FastMCP server (28 public tools)
+│   │   ├── server.py       # Entry point
+│   │   └── fastmcp_server.py  # Tool implementations
+│   └── apps/               # 8 MCP App manifests + HTML UIs
 │
-├── geox/                          # Core Python package
-│   ├── core/                     # Physics9, AC_Risk, epistemic_integrity, physics_guard
-│   ├── geox_mcp/                # FastMCP server (28 public tools)
-│   │   ├── server.py            # Entry point
-│   │   ├── fastmcp_server.py    # 28 public tool implementations
-│   │   └── tools/               # 7 tool modules (LAS, petro, basin, volume, etc.)
-│   └── apps/                    # 8 MCP App manifests + HTML UIs
+├── WELL/                    # Biological substrate (WELL organ)
+│   ├── server.py           # Cognitive pressure monitor
+│   └── vault_bridge.py    # WELL ↔ arifOS ↔ A-FORGE bridge
 │
-├── WELL/                         # Biological substrate — operator sovereignty
-│   ├── server.py                # WELL cognitive pressure monitor
-│   ├── vault_bridge.py          # WELL ↔ arifOS ↔ A-FORGE bridge
-│   └── gate/well_gate.py        # Constitutional gate before forge
-│
-├── sealkit/                     # Constitutional SEAL ritual
-├── services/a2a-gateway/        # Agent-to-Agent mesh protocol
-├── registry/                    # 47 skills across 12 domains
-├── skills/                     # 12 domain skill definitions
-│   ├── atmosphere/
-│   ├── earth_science/
-│   ├── geodesy/
-│   ├── governance/
-│   ├── hazards/
-│   ├── infrastructure/
-│   ├── mobility/
-│   ├── orchestration/
-│   ├── sensing/
-│   ├── subsurface/
-│   ├── terrain/
-│   ├── time/
-│   └── water/
-└── geox-gui/                   # React + Cesium GUI
-```
-<!-- /SOT:file_structure -->
-
-
-## Tool Surface
-
-<!-- SOT:tool_surface -->
-**Total FastMCP Tools:** 28
-
-| Domain | Tools |
-|--------|-------|
-| **Health** | `geox_health`, `geox_capabilities`, `geox_registry` |
-| **Skills** | `geox_skill`, `geox_domain_skills`, `geox_list_skills`, `geox_skill_metadata`, `geox_skill_dependencies` |
-| **Mission** | `geox_mission_template` |
-| **Well** | `geox_well_load_bundle`, `geox_well_qc_logs`, `geox_well_compute_petrophysics`, `geox_well_digitize_log` |
-| **Section** | `geox_section_interpret_strata` |
-| **Seismic** | `geox_seismic_load_line`, `geox_seismic_load_volume`, `geox_seismic_compute_attribute`, `geox_seismic_render_slice`, `geox_seismic_vision_review` |
-| **3D Earth** | `geox_earth3d_load_volume`, `geox_earth3d_interpret_horizons`, `geox_earth3d_model_geometries` |
-| **Map** | `geox_map_get_context_summary`, `geox_map_georeference` |
-| **Analysis** | `geox_attribute_audit`, `geox_time4d_verify_timing`, `geox_prospect_evaluate`, `geox_cross_summarize_evidence` |
-| **UI** | `ui_geox_seismic_viewer` |
-
-_Auto-generated from `geox/geox_mcp/fastmcp_server.py`_
-<!-- /SOT:tool_surface -->
-
-
-## MCP Apps (8)
-
-<!-- SOT:apps_inventory -->
-| App | Dimension | Purpose |
-|-----|-----------|---------|
-| `well-desk` | 1D | physics9 per EarthLayer |
-| `seismic-vision-review` | 2D | AC_Risk per horizon |
-| `earth-volume` | 3D | physics9 + AC_Risk matrix |
-| `judge-console` | 4D | AC_Risk on Gassmann fluid substitution |
-| `attribute-audit` | 2.5D | Kozeny-Carman porosity proxy |
-| `georeference-map` | Geo | time-depth + physics9 velocity model |
-| `analog-digitizer` | 1D→D | Analog log → structured curve |
-| `prospect-ui` | — | Prospect evaluation UI |
-
-<!-- /SOT:apps_inventory -->
-
-
-## 12 Skill Domains
-
-<!-- SOT:skills_inventory -->
-`atmosphere` · `earth_science` · `geodesy` · `governance` · `hazards` · `infrastructure` · `mobility` · `orchestration` · `sensing` · `subsurface` · `terrain` · `time` · `water`
-<!-- /SOT:skills_inventory -->
-
-
----
-
-## ★ Physics9 Engine (`geox/core/physics9.py`) (`geox/core/physics9.py`)
-
-The missing core engine — built April 2026. All 5 MCP Apps import from here.
-
-```python
-from geox.core.physics9 import (
-    Physics9State,
-    forward_physics9,
-    build_lithology_model,
-    anomaly_contrast_theory,
-    inverse_physics9,
-    metabolic_loop,
-    EARTH_MATERIAL_CATALOG,
-)
-```
-
-### Physics9State — 9 Canonical Variables
-
-| Variable | Unit | Grade Gate |
-|----------|------|-----------|
-| `vp` | m/s | 1500–7000 |
-| `vs` | m/s | 0–4500 |
-| `rho` | g/cc | 1.0–3.5 |
-| `porosity` | fraction | 0.0–0.45 |
-| `sw` | fraction | 0.0–1.0 |
-| `vsh` | fraction | 0.0–1.0 |
-| `temperature` | °C | 0–400 |
-| `pressure` | MPa | 0–200 |
-| `permeability` | mD | 0.001–10000 |
-
-`grade()` → `AAA` (all in bounds) or `RAW` (violation). RAW never reaches VAULT999.
-
-### EARTH_MATERIAL_CATALOG — 8 Real Materials
-
-`Sandstone → Shale → Limestone → Dolomite → Salt → Anhydrite → Coal → Basement`
-
-### AC_Risk Formula (real, not mocked)
-
-```
-AC_Risk = U_ambiguity × D_transform × B_cog
-```
-
-`anomaly_contrast_theory()` computes this with real material-anchored U values. No fake PASS tables.
-
-### Metabolic Loop
-
-`metabolic_loop()` runs `forward → inverse` convergence up to 50 iterations. Stops when state delta < tolerance or grade = AAA.
-
----
-
-## GEOX MCP App Deployment Checklist
-
-Status as of **2026-04-22**. Use this as the pre-deployment gate for each app.
-
-### What an MCP App Requires
-
-Per the `io.modelcontextprotocol/ui` capability spec:
-
-1. **`manifest.json`** — `app_id`, `version`, `ui_entry.resource_uri`, `events.supported`, `auth`, `fallback.chain`
-2. **`index.html`** — self-contained, no external CDN deps, `postMessage` bridge to MCP host
-3. **`ui://` resource** in `fastmcp_server.py` — returns the HTML for that app
-4. **Tool returns `ui: {resourceUri}`** — the MCP host reads this to render the app
-5. **arifOS floors** — `arifos.required_floors` in manifest, enforced at runtime
-6. **VAULT999 receipt** — every tool call emits telemetry + vault receipt
-7. **CSP policy** — `csp_policy` in `ui_entry`, no unsafe external connects
-8. **Fallback chain** — `inline → external → card → text`
-
-### 5-App Status Matrix
-
-| # | App | Dim | `manifest.json` | `index.html` | `ui://` resource | Tool `ui:` key | `postMessage` bridge | physics9 wired | PhysicsGuard wired | VAULT999 | Deploy Ready |
-|---|-----|-----|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| 1 | `well-desk` | 1D | ✅ | ✅ | ⚠️ missing | ⚠️ partial | ✅ | ✅ | ❌ | ⚠️ partial | **PARTIAL** |
-| 2 | `seismic-vision-review` | 2D | ✅ | ✅ (stub) | ✅ exists | ⚠️ partial | ❌ | ✅ | ❌ | ⚠️ partial | **PARTIAL** |
-| 3 | `earth-volume` | 3D | ✅ | ✅ | ❌ missing | ❌ | ❌ | ✅ | ❌ | ⚠️ partial | **NOT READY** |
-| 4 | `judge-console` | 4D | ✅ | ✅ | ✅ (`ui://ac_risk`) | ✅ | ✅ | ✅ | ❌ | ✅ | **CLOSEST** |
-| 5 | `attribute-audit` | 2.5D | ✅ | ✅ | ✅ exists | ⚠️ partial | ❌ | ✅ | ❌ | ⚠️ partial | **PARTIAL** |
-
-### What's Still Needed Per App
-
-**App 1 — well-desk (1D WellDesk)**
-- [ ] Add `ui://well_desk` resource to `fastmcp_server.py`
-- [ ] `geox_well_load_bundle` must return `ui: {resourceUri: "ui://well_desk"}`
-- [ ] Wire `epistemic_integrity.py` PhysicsGuard into Streamlit tabs (C3 unresolved)
-- [ ] `postMessage` bridge already present — validate event schema against manifest
-
-**App 2 — seismic-vision-review (2D SeismicVision)**
-- [ ] `index.html` is 4KB stub — needs real amplitude + AC_Risk per horizon UI
-- [ ] Add `postMessage` bridge (missing)
-- [ ] `geox_seismic_vision_review` is QUARANTINED — needs VAULT999 proof before un-quarantine
-- [ ] Wire PhysicsGuard amplitude bounds check
-
-**App 3 — earth-volume (3D EarthVolume)**
-- [ ] Add `ui://earth_volume` resource to `fastmcp_server.py`
-- [ ] Identify or create the tool that returns `ui: {resourceUri: "ui://earth_volume"}`
-- [ ] Add `postMessage` bridge
-- [ ] Wire PhysicsGuard + VAULT999
-
-**App 4 — judge-console (4D AC_Risk Console) — CLOSEST TO DEPLOY**
-- [ ] Wire `epistemic_integrity.py` PhysicsGuard posterior ratio check into the Streamlit tab (C3 — the real 888_JUDGE work)
-- [ ] Replace local `biasMap` JS calc with live `geox_prospect_evaluate` MCP tool call
-- [ ] Validate `auth.mode: jwt` — token endpoint must exist at `https://api.geox.arif-fazil.com`
-
-**App 5 — attribute-audit (2.5D GeoProbe)**
-- [ ] Add `postMessage` bridge (missing)
-- [ ] Tool launcher for this app not confirmed in `fastmcp_server.py`
-- [ ] Wire physics9 velocity model per horizon (C5 — cross-app cube not yet session-persistent)
-
-### Global Gaps (All 5 Apps)
-
-| Gap | Description | Priority |
-|-----|-------------|----------|
-| **G1 — PhysicsGuard** | `epistemic_integrity.py` not wired into any Streamlit tab | CRITICAL |
-| **G2 — Session Cube** | Cross-app state (C5) still per-app, not session-persistent | HIGH |
-| **G3 — JWT Auth Endpoint** | `https://api.geox.arif-fazil.com` auth endpoint not confirmed live | HIGH |
-| **G4 — CSP Validation** | CSP policies in manifests not tested against actual host environments | MEDIUM |
-| **G5 — card.html fallback** | `fallback.card_template` referenced in manifests, files don't exist | MEDIUM |
-| **G6 — icon.svg** | All manifests reference `icon.svg` at `geox.arif-fazil.com` — not confirmed live | LOW |
-| **G7 — geox-seismic-viewer** | Lives under `geox-gui/dist/` not `geox/apps/` — path mismatch in server | HIGH |
-
-### Deployment Sequence (Recommended Order)
-
-```
-1. SEAL judge-console first  — manifest + ui resource + tool launcher all exist
-2. SEAL well-desk second     — just needs ui:// resource added to fastmcp_server.py
-3. SEAL attribute-audit      — add postMessage bridge + confirm tool launcher
-4. earth-volume              — needs ui:// resource + tool launcher wired
-5. seismic-vision-review     — needs real index.html before deploy
-```
-
-### MCP App Manifest Schema (Reference)
-
-Every GEOX MCP App `manifest.json` must contain:
-
-```json
-{
-  "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
-  "app_id": "geox.<domain>.<name>",
-  "version": "x.y.z",
-  "ui_entry": {
-    "resource_uri": "https://geox.arif-fazil.com/apps/<name>/index.html",
-    "mode": "inline-or-external",
-    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.geox.arif-fazil.com; style-src 'self' 'unsafe-inline';",
-    "sandbox": "allow-scripts allow-same-origin"
-  },
-  "auth": { "mode": "jwt", "token_ttl_seconds": 600, "refreshable": true },
-  "events": { "supported": ["app.initialize", "app.state.sync", "tool.request", "tool.result", "ui.action"] },
-  "fallback": { "chain": ["inline", "external", "card", "text"] },
-  "arifos": {
-    "required_floors": ["F1","F2","F4","F7","F9","F11","F13"],
-    "vault_route": "999_VAULT",
-    "human_in_the_loop": ["<irreversible_actions>"]
-  }
-}
+├── sealkit/                # Constitutional SEAL ritual
+├── services/a2a-gateway/   # Agent-to-Agent mesh protocol
+├── registry/              # 47 skills across 12 domains
+└── skills/                 # 12 domain skill definitions
+    ├── atmosphere/
+    ├── earth_science/
+    ├── geodesy/
+    ├── governance/
+    ├── hazards/
+    ├── infrastructure/
+    ├── mobility/
+    ├── orchestration/
+    └── sensing/
 ```
 
 ---
 
-## The 13 Domains — 47 Skills
+## Constitutional Posture
 
-GEOX reasoning spans canonical domains across scales from site to basin:
+GEOX routes every high-risk verdict through **arifOS 888_JUDGE** before sealing. It does not hold verdict authority — it is a specialist reasoning organ, not a court.
 
-| Domain | Substrates | Scales | Horizons |
-|--------|------------|--------|----------|
-| **sensing** | human, machine-fixed, orbital | site → region | immediate, short |
-| **geodesy** | machine-fixed, infrastructure | site → corridor | immediate |
-| **terrain** | environment-field, orbital | site → district | short, medium |
-| **water** | machine-fixed, environment-field | corridor → region | medium, long |
-| **atmosphere** | orbital, machine-mobile | district → nation | medium, long |
-| **mobility** | machine-mobile, infrastructure | corridor → region | short, medium |
-| **infrastructure** | machine-fixed, infrastructure | site → corridor | medium, long |
-| **hazards** | environment-field, void | site → maritime | immediate → long |
-| **governance** | human, machine-fixed | all | all |
-| **time** | human, machine-fixed | all | all |
-| **orchestration** | human, machine-fixed | all | all |
-| **subsurface** | wireline, seismic, geochemical, thermal-history | well → basin | medium → long |
+```
+GEOX Evidence → arifOS F1–F13 floors → arifOS 888_JUDGE → SEAL/HOLD/VOID → VAULT999
+```
 
-Full skill definitions: [`registry/registry.json`](registry/registry.json)
+AC_Risk (Anomalous Contrast Risk) is computed locally by GEOX, but the final verdict is always arifOS's.
 
 ---
 
-## MCP Apps Plane — Visual Earth Organs
+## Governance Floors
 
-GEOX MCP Apps are domain-native UI surfaces rendered via the MCP `io.modelcontextprotocol/ui` capability. Each app is launched by a tool that returns `ui: {resourceUri: "ui://..."}` — bridging the physics layer to the visual layer.
+GEOX operates under all arifOS constitutional floors, with particular emphasis on:
 
-### Live MCP Apps
-
-| App | Purpose | Launched By | Status |
-|-----|---------|-------------|--------|
-| `geox-seismic-viewer` | Interactive seismic section viewer (inline/crossline, amplitude attributes, horizon overlay) | `geox_seismic_load_volume` | **PROD** |
-| `well-desk` | Well context desk with LAS curves, petrophysics results, AC_Risk widget | `geox_well_load_bundle` | **PARTIAL** |
-| `judge-console` | AC_Risk Console for ToAC calculation + verdict display | `arifos_compute_risk` | **CLOSEST** |
-| `seismic-vision-review` | AI-assisted fault pick review scaffold | `geox_seismic_vision_review_stub` | **STUB** |
-| `earth-volume` | 3D volume + physics9 engine tab + AC_Risk matrix + volumetrics | TBD | **NOT READY** |
-| `attribute-audit` | Kozeny-Carman permeability proxy audit | `geox_attribute_audit` | **PARTIAL** |
-| `georeference-map` | Map georeferencing plan | `geox_georeference_map` | **SCAFFOLD** |
-
-### App Manifest Schema
-
-Every GEOX MCP App carries a `manifest.json` with:
-
-- `arifOS.required_floors`: F1–F13 enforcement
-- `ui_entry.mode`: `inline-or-external`
-- `events.supported`: `app.initialize`, `ui.state.sync`, `tool.request`, `tool.result`
-- `auth.mode`: JWT with scoped permissions
-- `vault_route`: VAULT999 immutable sealing
-- `fallback.chain`: `inline → external → card → text`
-
-Apps are deployed to `/srv/mcp/apps/<appname>/dist/` and served via the Traefik `geox-mcp-apps` router on port 8081.
+| Floor | Application in GEOX |
+|-------|---------------------|
+| F02 TRUTH | Every geophysical claim requires traceable curve evidence |
+| F03 WITNESS | Seismic and log data must be provenance-tagged |
+| F08 GENIUS | Elegant geological models — not over-parameterized |
+| F09 ANTIHANTU | No false seismic certainty — ambiguity is labeled |
+| F10 ONTOLOGY | Stratigraphic ontology must be consistent across tools |
 
 ---
 
-## MCP Tools
+## Sibling Organ READMEs
 
-### Public Earth Tools (`geox_*`)
-
-| Tool | Purpose | Status |
-|------|---------|--------|
-| `geox_compute_ac_risk` | ToAC AC_Risk calculation | **PROD** |
-| `geox_prospect_evaluate` | Full prospect verdict via `_compute_ac_risk_governed` | **PROD** |
-| `geox_time4d_verify_timing` | 4D trajectory temporal consistency check | **PROD** |
-| `geox_load_seismic_line` | Seismic line load with F4 scale verification | **PROD** |
-| `geox_build_structural_candidates` | Multi-model structural interpretation | **PROD** |
-| `geox_verify_geospatial` | Coordinate + CRS grounding | **PROD** |
-| `geox_feasibility_check` | Constitutional F1–F13 pre-check | **PROD** |
-| `geox_earth_signals` | Live Earth observations | **PROD** |
-| `geox_well_load_bundle` | Ingest LAS/DLIS well log bundles | **PROD** |
-| `geox_well_compute_petrophysics` | Depth-indexed POR, Sw, Vsh curves | **PROD** |
-| `geox_well_qc_logs` | QC — spike, flatline, range detection | **PROD** |
-| `geox_section_interpret_strata` | Multi-well stratigraphic correlation | **PROD** |
-| `geox_cross_summarize_evidence` | Causal evidence synthesis for 888_JUDGE | **PROD** |
-| `geox_attribute_audit` | Kozeny-Carman permeability proxy audit | **PREVIEW** |
-| `geox_seismic_load_volume` | SEG-Y volume ingest → VTF tile pyramid → geox-seismic-viewer | **PROD** |
-| `geox_seismic_compute_attribute` | Compute amplitude/variance/sweetness/coherence via bruges | **PROD** |
-| `geox_seismic_render_slice` | Extract inline/crossline/time slice via pyvista | **PROD** |
-| `geox_seismic_vision_review` | AI fault pick scaffold | **QUARANTINED** |
-| `geox_georeference_map` | Map georeferencing plan | **SCAFFOLD** |
-| `geox_analog_digitizer` | Analog log → structured curve | **SCAFFOLD** |
-
-### arifOS Governance Tools (`arifos_*`)
-
-| Tool | Purpose |
-|------|---------| 
-| `arifos_check_hold` | 888 HOLD authority check |
-| `arifos_compute_risk` | ToAC AC_Risk score |
-| `arifos_judge_prospect` | Full verdict — routes to VAULT999 |
-
-### MCP Resource URIs
-
-| URI | Returns |
-|-----|---------| 
-| `geox://health` | Server health + `io.modelcontextprotocol/ui` capability advertisement |
-| `geox://capabilities` | Full GEOX tool + app + arifOS integration manifest |
-| `geox://registry` | Full skill registry |
-| `ui://geox_seismic_viewer` | geox-seismic-viewer HTML |
-| `ui://ac_risk` | AC_Risk Console HTML |
-| `ui://attribute_audit` | Attribute Audit HTML |
-| `ui://seismic_vision_review` | Seismic Vision Review HTML |
-| `ui://georeference_map` | Georeference Map HTML |
-| `ui://analog_digitizer` | Analog Digitizer HTML |
+| Organ | One-liner |
+|-------|----------|
+| [`arifOS`](https://github.com/ariffazil/arifOS) | Constitutional kernel — F1–F13 floors, 13 tools, VAULT999 |
+| [`AAA`](https://github.com/ariffazil/AAA) | Identity, A2A federation gateway, and operator control plane |
+| [`A-FORGE`](https://github.com/ariffazil/A-FORGE) | Execution shell, orchestration, and operator observability |
+| [`WEALTH`](https://github.com/ariffazil/wealth) | Capital intelligence — NPV, IRR, EMV, crisis triage |
+| [`WELL`](https://github.com/ariffazil/well) | Biological substrate governance — human readiness mirroring |
 
 ---
 
-## Earth Science Stack — Skill Packs
-
-GEOX exposes open-source geoscience libraries via governed skill pack wrappers in `geox/skills/earth_science/`.
-
-### Installed Libraries (`requirements-earth.txt`)
-
-| Library | Purpose |
-|---------|---------| 
-| `segyio` | SEG-Y binary I/O for seismic volumes |
-| `bruges` | Seismic attributes (amplitude, variance, sweetness, coherence, envelope, freq_avg) |
-| `welly` | Well log analysis and multi-well correlation |
-| `lasio` | LAS file reading (LAS 2.0/3.0) |
-| `gempy` | Implicit 3D geological modeling |
-| `gstlearn` | Geostatistics + ML (kriging, simulation, variograms) |
-| `geone` | Stochastic simulation |
-| `landlab` | Landscape evolution modeling |
-| `pyvista` | 3D visualization (VTK wrapper) |
-| `simpeg` | Geophysical inversion |
-| `scikit-gstat` | Variography and geostatistical estimation |
-
-### Seismic Wrappers (`seismic_wrappers.py`)
-
-Each wrapper enforces:
-
-- **ClaimTag**: `OBSERVED` (segyio ingest) or `COMPUTED` (bruges attribute)
-- **VAULT999 receipt**: immutable audit trail with SHA256 hash
-- **PhysicsGuard bounds**: amplitude/variance/sweetness/coherence ranges enforced
-
-```python
-from geox.skills.earth_science.seismic_wrappers import (
-    seismic_load_volume,
-    seismic_compute_attribute,
-    ClaimTag,
-)
-
-# Ingest SEG-Y → OBSERVED, VAULT999, render_payload
-result = seismic_load_volume(volume_id="MB_3D", segy_path="/data/MB_3D.sgy")
-# result["claim_tag"] = "OBSERVED"
-# result["render_payload"] = {"type": "volume_slice", "shape": [200,300,801]}
-
-# Compute attribute → COMPUTED, VAULT999, color_map
-attr = seismic_compute_attribute("MB_3D", attribute="variance")
-# attr["claim_tag"] = "COMPUTED"
-# attr["render_payload"]["color_map"] = "OrRd"
-```
-
----
-
-## Subsurface Epistemic Layer
-
-**Audit Reference:** Session 2026-04-18 / 2026-04-22
-**Purpose:** Formalize Bayesian graph, encode dependencies explicitly, enforce hard physics constraints, quantify refusal triggers.
-
-### 6 Subsurface Skill Domains
-
-| Skill ID | Title | Purpose |
-|----------|-------|---------| 
-| `geox.subsurface.formation-evaluation` | Formation Evaluation | Vsh, POR, Sw via Archie/Indonesia/Simandoux. Physics bounds enforced. |
-| `geox.subsurface.seismic-interpretation` | Seismic Interpretation | Horizon picking + amplitude analysis. Never collapse posterior to single horizon. |
-| `geox.subsurface.reservoir-dynamics` | Reservoir Dynamics | Fluid mechanics, PVT, material balance. Net pay requires Sw + POR + Vsh all pass. |
-| `geox.subsurface.basin-charge` | Basin Charge | Thermal maturity, migration, charge timing. `charge_ma ≤ trap_ma` enforced. |
-| `geox.subsurface.prospect-risk` | Prospect Risk | PoS = P(reservoir) × P(trap) × P(seal) × P(charge) × P(retention). Coupling detection required. |
-| `geox.subsurface.posterior-integrity` | Posterior Integrity | AlphaFold pLDDT equivalent. `integrity_score < 0.3` → AUTO_HOLD. |
-
-### PhysicsGuard (`geox/core/physics_guard.py`)
-
-Hard physics constraint enforcement — runs before 888_HOLD queue. Physically impossible outputs never reach human review.
-
-```python
-from geox.core.physics_guard import PhysicsGuard
-
-guard = PhysicsGuard()
-
-# Bounds check — rejects impossible values
-guard.validate({"porosity": 0.55, "sw": 1.5})
-# → {"status": "PHYSICS_VIOLATION", "hold": True}
-
-# Posterior breadth — P90/P10 ratio must ≤ 5.0
-guard.check_posterior_breadth(p10=10, p50=100, p90=600)
-# → {"status": "POSTERIOR_TOO_BROAD", "hold": True}
-
-# Net pay — ALL THREE criteria required simultaneously
-guard.check_net_pay(sw=0.25, por=0.18, vsh=0.20)
-# → PASS: net pay confirmed
-
-# Charge timing — charge must precede or coincide with trap formation
-guard.check_charge_timing(charge_ma=50, trap_ma=60)
-# → PASS
-guard.check_charge_timing(charge_ma=70, trap_ma=60)
-# → {"status": "TIMING_VIOLATION", "hold": True}
-```
-
-**Physics bounds enforced:**
-
-| Parameter | Min | Max | Violation |
-|-----------|-----|-----|-----------| 
-| Porosity | 0.02 | 0.45 | REJECT |
-| Water saturation | 0.0 | 1.0 | REJECT |
-| Vsh | 0.0 | 1.0 | REJECT |
-| Ro oil window | 0.6% | 1.3% | WARNING |
-| P90/P10 ratio | — | 5.0 | HOLD |
-
-### Posterior Integrity Scoring
-
-Every subsurface output that flows to WEALTH carries:
-
-```json
-{
-  "integrity_score": 0.74,
-  "posterior_breadth": 4.0,
-  "evidence_density": 2.3,
-  "model_lineage_hash": "geox_v2_baseline_run_001",
-  "recommendation": "CLAIM"
-}
-```
-
-**Thresholds:**
-
-| Integrity Score | Action |
-|----------------|--------| 
-| < 0.3 | **AUTO_HOLD** — do not pass to WEALTH |
-| 0.3 – 0.6 | **PLAUSIBLE** — pass with warning |
-| > 0.6 | **CLAIM** — pass to WEALTH normally |
-
----
-
-## Core Engine: AC_Risk (Theory of Anomalous Contrast)
-
-### The Equation
-
-```
-AC_Risk = U_phys × D_transform × B_cog
-
-Where:
-    U_phys      = Physical ambiguity (0.0 = certain, 1.0 = fully ambiguous)
-    D_transform = Display distortion factor (1.0 = clean, 3.0 = severely distorted)
-    B_cog       = Cognitive bias factor (0.20 = rational, 0.42 = biased)
-
-Verdict Thresholds:
-    < 0.15  →  SEAL      (safe to proceed)
-    < 0.35  →  QUALIFY   (proceed with documented caveats)
-    < 0.60  →  HOLD      (888_HOLD triggered — human approval required)
-    ≥ 0.60  →  VOID      (physically impossible or governance violation)
-```
-
-### Governance Layers
-
-Every AC_Risk result is wrapped in:
-
-| Layer | Purpose |
-|-------|---------| 
-| **ClaimTag** | Epistemic classification: `CLAIM`, `PLAUSIBLE`, `HYPOTHESIS`, `UNKNOWN` |
-| **TEARFRAME** | Truth (≥0.85 for CLAIM), Echo (≥0.75 consistency), Amanah (LOCK required for SEAL), Rasa (context fit) |
-| **Anti-Hantu** | F9 screen — fail-closed on empathy/feeling attribution |
-| **888_HOLD** | Irreversible actions or `amanah_locked=False` → mandatory human veto |
-| **VAULT999** | Every verdict sealed to immutable ledger |
-
----
-
-## Constitutional Floors Enforced
-
-GEOX enforces arifOS F1–F13 on every operation. Non-negotiable:
-
-```
-F1  AMANAH     Reversibility first — irreversible claims → 888_HOLD
-F2  TRUTH      τ ≥ 0.99 for CLAIM — or declare uncertainty band
-F4  CLARITY    Scale, CRS, provenance explicit or tagged UNKNOWN
-F6  MARUAH     ASEAN/MY context — stakeholder dignity protected
-F7  HUMILITY   Confidence bounded 0.03–0.15 — overclaim prohibited
-F8  SAFETY     Law and safety compliance verified
-F9  ANTI-HANTU Zero hallucination tolerance — physics or VOID
-F10 ONTOLOGY   AI = tool, Model ≠ Reality
-F11 AUDIT      Every decision logged with full provenance
-F13 SOVEREIGN  Human holds final veto — always supreme
-```
-
----
-
-## Evidence Credit
-
-Each verified tool in the pipeline reduces `D_transform` by a governed credit amount. A fully-evidenced prospect can reach SEAL instead of being trapped at VOID.
-
-| Tool Called | Credit | Cumulative |
-|-------------|--------|-----------|
-| `geox_well_load_bundle` | +0.20 | 0.20 |
-| `geox_well_qc_logs` | +0.15 | 0.35 |
-| `geox_well_compute_petrophysics` | +0.40 | 0.75 |
-| `geox_seismic_load_line` / `load_volume` | +0.30 | 1.05 |
-| `geox_section_interpret_strata` | +0.30 | 1.35 |
-
-```
-D_transform_effective = max(1.0, D_transform_base − evidence_credit)
-```
-
-Max credit = **1.35** → penalty floors at 1.0. SEAL reachable for well-evidenced prospects.
-
----
-
-## WELL — Biological Substrate (Operator Sovereignty)
-
-WELL is the biological substrate that ensures operator (arif) sovereignty over all GEOX operations. It monitors cognitive pressure and enforces the constitutional hierarchy: **WELL informs. arifOS judges. A-FORGE executes.**
-
-```
-WELL/
-├── server.py          # Cognitive pressure monitor
-├── vault_bridge.py     # Bridge to arifOS VAULT999
-├── gate/well_gate.py   # Constitutional gate
-└── CHARTER.md         # Operator sovereignty charter
-```
-
-**Hierarchy Invariant:**
-- WELL holds no veto — it holds a mirror
-- arifOS holds judgment authority
-- A-FORGE holds execution authority
-- Human (W0) holds ultimate sovereignty (F13)
-
----
-
-## SEALKIT — Constitutional SEAL Ritual
-
-`sealkit/` implements the 999 SEAL protocol — proof-of-work ceremony that validates operator intent before irreversible actions.
-
-```
-sealkit/
-├── seal.sh          # Shell ceremony
-├── SEAL.md         # SEAL protocol documentation
-├── manifest.json    # Intent manifest
-└── manifest.sig     # Cryptographic signature
-```
-
----
-
-## Quickstart
-
-### Docker (Recommended)
-
-```bash
-# Build
-docker build -t geox .
-
-# Run with auth
-docker run -p 8081:8081 \
-  -e GEOX_SECRET_TOKEN=your_token_here \
-  -e PORT=8081 \
-  geox
-```
-
-### Local Development
-
-```bash
-pip install -r requirements.txt
-python geox_mcp_server.py
-# Server starts on http://0.0.0.0:8081
-```
-
-### MCP Endpoint
-
-```
-POST /mcp   (Streamable HTTP v2 — FastMCP 3.x)
-GET  /health → {"status":"ok","seal":"DITEMPA BUKAN DIBERI","service":"geox-mcp"}
-GET  /ready
-```
-
-Auth: `Authorization: Bearer <GEOX_SECRET_TOKEN>` on `/mcp` endpoints.
-
-### Python API
-
-```python
-from geox.core.ac_risk import compute_ac_risk, compute_ac_risk_governed
-
-# Basic AC_Risk
-result = compute_ac_risk(u_ambiguity=0.30, transform_stack=[], b_cog=0.35)
-# result.ac_risk = SEAL if low ambiguity + low transform + rational bias
-
-# Full governed result (includes TEARFRAME, Anti-Hantu, 888_HOLD)
-governed = compute_ac_risk_governed(
-    u_ambiguity=0.45,
-    transform_stack=["load", "qc", "petrophysics"],
-    evidence_credit=1.05,
-    bias_scenario="ai_vision_only",
-    truth_score=0.85,
-    echo_score=0.80,
-    amanah_locked=True,
-    rasa_present=True,
-    model_text="HC zone confirmed 3/4 wells, Horizon A continuous"
-)
-# governed.verdict, governed.ac_risk, governed.hold_enforced, governed.vault_payload
-```
-
-### Physics9 API
-
-```python
-from geox.core.physics9 import forward_physics9, Physics9State, anomaly_contrast_theory
-
-# Forward physics9 — compute K, G, E, nu, AI, vp_vs, thermal_diff, fatigue
-state = Physics9State(vp=3500, vs=1800, rho=2.3, porosity=0.22, sw=0.35,
-                       vsh=0.15, temperature=95, pressure=35, permeability=120)
-result = forward_physics9(state)
-# result.grade() → "AAA" if all bounds pass, "RAW" if any violation
-
-# AC_Risk from real physics9 values
-ac = anomaly_contrast_theory(state, transform_stack=["agc_rms", "depth_conversion"])
-# ac["ac_risk"], ac["verdict"], ac["u_ambiguity"]
-```
-
-### MCP Tools via FastMCP Client
-
-```python
-from geox.geox_mcp.fastmcp_server import mcp
-
-# Load seismic volume → launch geox-seismic-viewer
-volume = mcp.call_tool("geox_seismic_load_volume", {
-    "volume_id": "MB_3D",
-    "segy_path": "/data/MB_3D.sgy"   # omit for scaffold fixture
-})
-# volume["ui"] → {"resourceUri": "ui://geox_seismic_viewer", "verdict": "SEAL"}
-# volume["vault_receipt"] → VAULT999 receipt
-
-# Compute seismic attribute → update viewer with color overlay
-attr = mcp.call_tool("geox_seismic_compute_attribute", {
-    "volume_id": "MB_3D",
-    "attribute": "variance"  # amplitude | variance | sweetness | coherence
-})
-# attr["render_payload"]["color_map"] = "OrRd"
-
-# Load well bundle → real depth curves
-bundle = mcp.call_tool("geox_well_load_bundle", {
-    "well_id": "BEK-2",
-    "las_path": "/data/BEK-2.las"   # omit for scaffold fixture
-})
-
-# Run depth-indexed petrophysics
-petro = mcp.call_tool("geox_well_compute_petrophysics", {
-    "well_id": "BEK-2",
-    "volume_id": "BEK_VOL",
-    "saturation_model": "Archie"
-})
-# petro["curves"] → depth-indexed POR, Sw, Vsh curves
-```
-
----
-
-## Well Test Fixtures
-
-GEOX ships scaffold well data for testing:
-
-| Well | Status | Notes |
-|------|--------|-------| 
-| `BEK-2` | HC CONFIRMED | φ=0.22, Sw=0.35, 82m core HC + 4m fringe |
-| `DUL-A1` | HC CONFIRMED | 75m net pay |
-| `SEL-1` | HC CONFIRMED | 75m net pay |
-| `TIO-3` | UNCLEAR | No resistivity anomaly — possible water leg |
-
-Scaffold returns **depth-indexed curves** (91 points, 2040–2220m MD) with correct zone flags. Load a real `.las` file to replace scaffold with measured data:
-
-```python
-geox_well_load_bundle(well_id="BEK-2", las_path="/path/to/BEK-2.las")
-# provenance: "las_file:BEK-2.las"  ← real data
-# vs scaffold: provenance: "scaffold_fixture"
-```
-
----
-
-## RATLAS — Reference Atlas of Earth Materials
-
-GEOX reasoning is anchored by **RATLAS** — 99 canonical material states across 11 physics families:
-
-```
-ρb = (1−φ)·ρm + φ·ρf                # Bulk density mixing law
-NPHI ≈ φ·Σ(Si·HIi)                  # Neutron hydrogen index
-Rt = a·Rw / (φm·Swⁿ)                # Archie resistivity (clean sandstone)
-Vsh = (GRlog − GRmin) / (GRmax − GRmin)  # Shale volume index
-```
-
-11 families: Sedimentary Clastic · Sedimentary Carbonate · Sedimentary Chemical/Organic · Igneous Felsic · Igneous Mafic · Igneous Ultramafic · Metamorphic Foliated · Metamorphic Non-Foliated · Unconsolidated/Soil · Engineered Materials
-
----
-
-## Telemetry — arifOS Metabolic Pipeline
-
-`geox/telemetry/geox_telemetry.py` emits GEOX vital signs to arifOS so the constitutional kernel can see the organ's metabolic state:
-
-```python
-from geox.telemetry.geox_telemetry import telemetry_emit, get_telemetry_emitter
-
-# Emit tool use → vault receipt
-telemetry_emit(event_type="tool_use", tool_name="geox_seismic_load_volume")
-
-# Full diagnostic for arifOS capability map
-diag = get_telemetry_emitter().full_diagnostic()
-# {
-#   "organ": "GEOX",
-#   "mcp_apps_plane": {"connected": True, "host_path": "/srv/mcp/apps/"},
-#   "arifos_integration": {"vault_route": "VAULT999", "registered": True},
-#   "vital_signs": {"entropy_delta": 0.05, "peace_sq": 1.0, "dominant_claim": "OBSERVED"},
-#   "usage": {"tools_used": 3, "vault_receipts": 3}
-# }
-```
-
-Every seismic tool call automatically emits telemetry with the verdict, claim_tag, and VAULT999 receipt.
-
----
-
-## arifOS Ecosystem
-
-| Component | URL |
-|-----------|-----|
-| arifOS Kernel | [github.com/ariffazil/arifOS](https://github.com/ariffazil/arifOS) |
-| APEX Codex | [github.com/ariffazil/APEX](https://github.com/ariffazil/APEX) |
-| AAA Dataset | [huggingface.co/datasets/ariffazil/AAA](https://huggingface.co/datasets/ariffazil/AAA) |
-| GEOX MCP Server | `geoxarifOS.fastmcp.app/mcp` |
-| Author | [arif-fazil.com](https://arif-fazil.com) |
-
----
-
-## Author
-
-**Muhammad Arif bin Fazil**
-Sovereign Architect — arifOS & GEOX
-13+ years subsurface exploration · Malay Basin, ASEAN
-Builder of constitutional AI governance from geological first principles
-
----
-
-## License
-
-```
-APEX Theory (Constitution):  CC0 (Public Domain)
-GEOX Runtime:               AGPL-3.0
-Trademark:                  Proprietary
-```
-
-Physics is not negotiable. Maruah is not optional. Every verdict sealed — 999.
-
----
-
-```
-DITEMPA BUKAN DIBERI — 999 SEAL ALIVE
-ΔΩΨ | GEOX | 888_JUDGE | EARTH WITNESS
-```
+## Live Sites
+
+| Surface | URL |
+|---------|-----|
+| GEOX App | https://geox.arif-fazil.com/ |
+| arifOS Doctrine | https://arifos.arif-fazil.com/ |
+| Human | https://arif-fazil.com/ |
+
+*The earth does not explain itself. GEOX makes the fragments legible.*
+*DITEMPA BUKAN DIBERI — Capacity is forged through discipline.*
