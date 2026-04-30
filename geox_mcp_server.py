@@ -22,7 +22,8 @@ if os.path.isdir(GEOX_PKG_PATH):
 from geox.geox_mcp.fastmcp_server import mcp
 
 # FastMCP 3.x — http_app() returns Starlette app with /mcp already mounted
-app = mcp.http_app(path="/mcp", transport="sse")
+# transport="http" enables both GET (SSE handshake) and POST (JSON-RPC) for MCP protocol
+app = mcp.http_app(path="/mcp", transport="http")
 
 # Health endpoint for drift-detector / container orchestration
 from starlette.responses import JSONResponse

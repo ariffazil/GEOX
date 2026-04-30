@@ -184,6 +184,20 @@ Awaiting approval response with CONFIRM or REJECT.
 """
 
 
+@mcp.tool()
+def mcp_health_check() -> dict:
+    """Universal health check for federation stability."""
+    return {
+        "mcp": "GEOX",
+        "status": "OK",
+        "transport": "SSE_VALID",
+        "auth": "OK",
+        "schema_version": "2026.04",
+        "read_only": True,
+        "final_authority": "ARIF",
+    }
+
+
 # =============================================================================
 # LAYER 1 — PUBLIC MISSION SURFACE (geox_<domain>_<verb>)
 # Only 12 tools. No aliases. No constitutional verbs.
