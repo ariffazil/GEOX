@@ -21,7 +21,7 @@ warnings.warn(
 )
 
 import json
-import traceback
+import logging
 from datetime import datetime
 from typing import Any
 
@@ -36,6 +36,7 @@ from arifos.geox.ENGINE.ac_risk import ACRiskCalculator, Verdict
 SERVER_NAME = "GEOX Earth Witness"
 SERVER_VERSION = "1.0.0"
 SERVER_SEAL = "DITEMPA BUKAN DIBERI"
+logger = logging.getLogger(__name__)
 
 mcp = FastMCP(
     name=SERVER_NAME,
@@ -78,10 +79,11 @@ async def geox_list_tools(
             "seal": SERVER_SEAL
         }
     except Exception as e:
+        logger.error("Tool registration failed: %s", e, exc_info=True)
         return create_standardized_error(
             ErrorCode.INTERNAL_ERROR,
-            detail=str(e),
-            context={"traceback": traceback.format_exc()}
+            detail="Internal server error during tool registration",
+            context={"error_type": type(e).__name__}
         )
 
 
