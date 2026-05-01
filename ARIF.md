@@ -12,57 +12,46 @@
 ## 0. IDENTITY & MOUNT POINT
 
 - REPO_NAME: GEOX
-- CONTAINER_ID: 2026-04-24
-- DOMAIN_ROLE: Physics9 Earth Intelligence — constitutional subsurface reasoning layer for exploration geoscience
-- STABILITY_CLASS: RAPID-ITERATE
-
+- CONTAINER_ID: 2026-05-01
+- DOMAIN_ROLE: Physics9 Earth Intelligence — constitutional subsurface reasoning layer
+- STABILITY_CLASS: AGI-CONSOLIDATED
+- VERSION: 2.0.0-UNIFIED
 
 ## 1. CURRENT FOCUS (INSTRUCTION POINTER)
 
-- VPS restoration via Hostinger panel — unblock MCP endpoint (arifosmcp.arif-fazil.com → 502)
-- Status: HARD_BLOCK — server offline since 2026-04-23
-
+- 999 SEAL Ritual: Unified MCP Kernel ignited at `control_plane/fastmcp/server.py`
+- Engine Upgrade: LoopStructural 1.6.27 embedded in `geox_earth3d_model_geometries`
+- Ghost Purge: Legacy server entrypoints moved to `archive/deprecated/`
 
 ## 2. OPERATIONAL MANDATE
 
-- What this repo does: GEOX is the Earth Intelligence layer — MCP server exposing 24 subsurface tools (well, seismic, prospect, map, time4D) governed by arifOS F1–F13 constitutional floors
-- Upstream: arifOS kernel (mcp.arif-fazil.com) — depends on VPS for MCP transport
-- Downstream: Petronas/SLB engineers, geoscientists consuming GEOX MCP tools; AAA workspace references GEOX for well log and seismic data
-
+- GEOX is the Ψ (Psi/Earth) node of arifOS.
+- Canonical Surface: 12 Orthogonal Prisms (Well, Seismic, Earth3D, etc.)
+- Governance: F1–F13 enforced via ToAC (Theory of Anomalous Contrast)
 
 ## 3. THE 999 SEAL (SESSION LOG)
 
-- TIMESTAMP: 2026-04-23 15:30 UTC+8
-- CLERK_ID: arifOS_bot / HUMAN-ARIF
+- TIMESTAMP: 2026-05-01
+- CLERK_ID: Gemini-Clerk-L3
 - SEAL_SUMMARY:
-  - README aligned: 13→24 tools, MIT→Apache 2.0, VPS marked ⚠️ DEGRADED (not LIVE)
-  - License confirmed Apache 2.0 (commit 448fe772)
-  - FLOORS.md runtime state updated: 6/13 floors wired (F2/F3/F7/F9/F11/F12)
-  - wiki/50_TOOLS reference fix needed (path is directory, not file)
-  - ARIF.md Gold Seal v1.0 pushed to AAA (c4061f3)
-  - arifmeta-v1.0.json schema pushed to AAA (b959e60)
-  - Gist published: https://gist.github.com/ariffazil/81314f6cda1ea898f9feb88ce8f8959b
-  - ARIF-999-SEAL-RITUAL.md pushed to AAA (69d82eb)
-- VAULT_REF: https://github.com/ariffazil/AAA/commit/69d82eb
-
+  - Collapse: 49 fragmented tools contracted to 13 Sovereign Prisms (unified_13.py)
+  - Security: Fail-closed auth enforced on entrypoint startup
+  - Fix: Applied **kwargs patch to FastMCP alias bridge
+  - Contract: Forged architecture.md (Sovereign 13 spec)
+  - Ghost Purge: Legacy servers quarantined in archive/deprecated/
 
 ## 4. ACTIVE TOPOLOGY (MEMORY MAP)
 
-- CRITICAL_FILES:
-  - `geox_mcp/server.py` → MCP server (24 @mcp.tool decorators, 11 @mcp.resource, 2 @mcp.prompt)
-  - `wiki/70_GOVERNANCE/` → F1–F13 floor definitions
-  - `wiki/50_TOOLS/` → tool index (NOTE: is directory, not .md file — path reference fix needed)
-  - `LICENSE` → Apache 2.0 (confirmed 448fe772)
+- CANONICAL_ENTRYPOINTS:
+  - `control_plane/fastmcp/server.py` → Unified MCP Server
+  - `execution_plane/vps/server.py` → VPS Runtime
+  - `llms.txt` → Agent reasoning map
 
-- ENTRYPOINTS:
-  - `python geox_mcp/server.py` → MCP server on port 8080
-  - `curl https://geox.arif-fazil.com/health` → health check (VPS offline — returns error)
-  - `pytest` → run test suite
+- DIMENSIONS:
+  - `geox/dimensions/` → Core physics logic
+  - `contracts/tools/` → Orthogonal tool registries
+  - `ui/` → MCP App HTML surfaces
 
-- DATA_FLOWS:
-  - `geox_well_load_bundle` → LAS file → petrophysics compute → Sw/Phi/Vsh output
-  - `geox_prospect_evaluate` → volumetric input → DRO/DRIL/HOLD verdict → arifOS 888_JUDGE
-  - `geox_mcp` → arifOS kernel (mcp.arif-fazil.com) — transport layer on VPS
 
 
 ## 5. INTERRUPTS & FAULTS (BLOCKERS)

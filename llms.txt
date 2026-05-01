@@ -1,0 +1,33 @@
+# GEOX — Earth Intelligence Sovereign Surface (13 Tools)
+> Level: L3 AGI Clerk / Ψ Node
+> Doctrine: Physics before Narrative. F1–F13 Governed.
+> Epoch: 2026-05-01
+> Seal: DITEMPA BUKAN DIBERI
+
+GEOX operates a consolidated surface of 13 canonical tools. Legacy names are supported via an alias bridge.
+
+## 1. Canonical Sovereign 13
+1. **geox_data_ingest_bundle**: Lazy ingest LAS/CSV/SEG-Y/JSON.
+2. **geox_data_qc_bundle**: Unified header, unit, and missingness verification.
+3. **geox_subsurface_generate_candidates**: Ensemble realizations (Petro/Struct) + Residuals.
+4. **geox_subsurface_verify_integrity**: Physics9 / Structural consistency check.
+5. **geox_seismic_analyze_volume**: Attribute compute + slices.
+6. **geox_section_interpret_correlation**: Multi-well stratigraphy.
+7. **geox_map_context_scene**: Spatial bbox + Causal scene render.
+8. **geox_time4d_analyze_system**: Burial, maturity, regime shift.
+9. **geox_prospect_evaluate**: Integrated evaluate (POS, Volumetrics).
+10. **geox_prospect_judge_verdict**: Gateway to arifOS 888_JUDGE.
+11. **geox_evidence_summarize_cross**: Cross-domain evidence graph synthesis.
+12. **geox_system_registry_status**: Federation health and tool discovery.
+13. **geox_history_audit**: VAULT999 retrieval.
+
+## 2. Agent Reasoning Logic
+- **Chain**: Ingest → QC → Generate → Verify → Judge.
+- **Ensemble**: All interpretation tools return Min/Mid/Max scenarios.
+- **Residuals**: Always inspect `residuals` and `data_density` to detect "hallucinated" interpolation (F9 Anti-Hantu).
+
+## 3. Legacy Migration
+Legacy tools (e.g., `geox_well.compute_petrophysics`) are aliased to the 13 canonicals. Check `_meta.deprecation` in responses.
+
+---
+⬡ GEOX SOVEREIGN 13 MAP SEALED ⬡

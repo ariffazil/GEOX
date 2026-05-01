@@ -1,21 +1,20 @@
 {
   "id": "prospect-ui",
-  "title": "Prospect UI",
-  "dimension": "prospect",
-  "icon": "earth",
-  "description": "Exploration and play fairway analysis dashboard.",
-  "tools": [
+  "name": "Prospect UI",
+  "version": "2.0.0",
+  "description": "Play Fairway Discovery & Volumetrics",
+  "required_tools": [
     "geox_prospect_evaluate",
-    "geox_prospect_build_structural_candidates",
-    "geox_prospect_verify_feasibility"
+    "geox_prospect_judge_verdict",
+    "geox_data_ingest_bundle",
+    "geox_evidence_summarize_cross"
   ],
-  "supported_artifacts": [
-    "ProspectEvaluationArtifact",
-    "StructuralCandidatesArtifact"
-  ],
-  "runtime": {
-    "control_plane": "fastmcp",
-    "execution_plane": "vps"
+  "ui": {
+    "entry": "ui://prospect-ui",
+    "components": ["FairwayMap", "StoiipDistribution", "RiskTable"]
   },
-  "readiness": "dashboard_ready"
+  "governance": {
+    "floor_requirement": "F9_ANTI_HANTU",
+    "uncertainty_display": true
+  }
 }

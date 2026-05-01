@@ -1,11 +1,6 @@
 """
-GEOX Unified MCP Server — Canonical Registry & Control Plane
+GEOX Unified MCP Server — Sovereign 13 Kernel
 ═══════════════════════════════════════════════════════════════════════════════
-
-The "GEOX" surface from your audit.
-Acts as the Dashboard / MCP Apps control plane and Registry.
-
-Version: 2.0.0-UNIFIED-SPEC
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
@@ -14,12 +9,11 @@ from __future__ import annotations
 import os
 import logging
 import sys
-import argparse
 import json
 import uvicorn
 from fastmcp import FastMCP
 from starlette.applications import Starlette
-from starlette.responses import JSONResponse, PlainTextResponse
+from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
 from datetime import datetime, timezone
 from typing import Any
@@ -31,75 +25,79 @@ from typing import Any
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("geox.unified")
 
+# [MANDATORY] FAIL-CLOSED AUTH
+GEOX_SECRET_TOKEN = os.getenv("GEOX_SECRET_TOKEN")
+if not GEOX_SECRET_TOKEN:
+    logger.critical("F1_AMANAH_BREACH: GEOX_SECRET_TOKEN is missing. Aborting startup to prevent fail-open exposure.")
+    sys.exit(1)
+
 GEOX_VERSION = "2.0.0-UNIFIED-SPEC"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
+GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
+GEOX_PORT = int(os.getenv("GEOX_PORT", os.getenv("PORT", "8081")))
 
 mcp = FastMCP(
     name="GEOX",
     version=GEOX_VERSION,
     on_duplicate="error",
-    instructions="""Canonical GEOX Registry & MCP App Control Plane.
-
-    This server acts as the dashboard-ready entry point for all GEOX dimensions.
-    It provides discovery for Map, Earth3D, Section, Well, Time4D, Physics, Prospect, and Cross.
-
-    All canonical tools follow the <dimension>_<verb>_<target> naming convention
-    using only six verbs: observe, interpret, compute, verify, judge, audit.
-
-    Every tool is mapped to an arifOS metabolic stage (000–999), a dimension,
-    and a nature (physics, math, linguistic, forward, inverse, metabolizer).
-
-    Governed Earth decisions under uncertainty. DITEMPA BUKAN DIBERI.
+    instructions="""Canonical GEOX Registry & MCP App Control Plane (Sovereign 13).
+    DITEMPA BUKAN DIBERI — One Sovereign Kernel.
     """,
 )
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# DIMENSION REGISTRIES BOOTSTRAP
+# SOVEREIGN 13 BOOTSTRAP
 # ═══════════════════════════════════════════════════════════════════════════════
 
 sys.path.append(os.getcwd())
 
-DIMENSION_GATES = {
-    "core": ["physics", "map"],
-    "vps": ["prospect", "well", "earth3d", "map", "cross", "dashboard"],
-    "full": ["prospect", "well", "section", "earth3d", "time4d", "physics", "map", "cross", "dashboard", "well_desk"]
-}
-
-ENABLED_DIMENSIONS = DIMENSION_GATES.get(GEOX_PROFILE, ["physics", "map", "dashboard"])
-
 def bootstrap_registries():
-    registry_map = {
-        "prospect": "contracts.tools.prospect",
-        "well": "contracts.tools.well",
-        "section": "contracts.tools.section",
-        "earth3d": "contracts.tools.earth3d",
-        "time4d": "contracts.tools.time4d",
-        "physics": "contracts.tools.physics",
-        "map": "contracts.tools.map",
-        "cross": "contracts.tools.cross",
-        "dashboard": "contracts.tools.dashboard",
-        "well_desk": "geox_mcp.tools.well_desk_tool"
-    }
-
-    for dim in ENABLED_DIMENSIONS:
-        if dim in registry_map:
-            module_name = registry_map[dim]
-            try:
-                import importlib
-                module = importlib.import_module(module_name)
-                func_name = f"register_{dim}_tools"
-                if hasattr(module, func_name):
-                    register_func = getattr(module, func_name)
-                    register_func(mcp, profile=GEOX_PROFILE)
-                    logger.info(f"Registered {dim.upper()} tools")
-            except Exception as e:
-                logger.error(f"Failed to bootstrap {dim} registry: {e}")
+    """Initializes the Sovereign 13 tool surface and alias bridge."""
+    try:
+        from contracts.tools.unified_13 import register_unified_tools
+        from compatibility.legacy_aliases import LEGACY_ALIAS_MAP
+        register_unified_tools(mcp, profile=GEOX_PROFILE)
+        logger.info(f"Sovereign 13 tool surface: IGNITED (13 Tools, {len(LEGACY_ALIAS_MAP)} Aliases)")
+    except Exception as e:
+        logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
+        sys.exit(1)
 
 bootstrap_registries()
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# DASHBOARD / MCP APTS METADATA
+# HEALTH & STATUS HARDENING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def build_status_payload() -> dict:
+    from compatibility.legacy_aliases import LEGACY_ALIAS_MAP
+    return {
+        "status": "ok",
+        "service": "geox-mcp-kernel",
+        "version": GEOX_VERSION,
+        "contract_epoch": "2026-05-01",
+        "canonical_tools": 13,
+        "legacy_aliases": len(LEGACY_ALIAS_MAP),
+        "auth_mode": "fail_closed",
+        "profile": GEOX_PROFILE,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "seal": GEOX_SEAL
+    }
+
+async def health_handler(request):
+    """Liveness check."""
+    return JSONResponse({"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat()})
+
+async def ready_handler(request):
+    """Readiness check: Ensure registry is loaded."""
+    return JSONResponse(build_status_payload())
+
+async def status_handler(request):
+    """Full contract status."""
+    return JSONResponse(build_status_payload())
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# LEGACY BRIDGE & RESOURCES
 # ═══════════════════════════════════════════════════════════════════════════════
 
 @mcp.resource("geox://registry/apps")
@@ -117,102 +115,8 @@ async def list_geox_apps() -> list[dict]:
                     logger.error(f"Failed to load manifest {filename}: {e}")
     return apps
 
-@mcp.resource("geox://profile/status")
-async def get_profile_status() -> dict:
-    return {
-        "status": "healthy",
-        "registry": "unified",
-        "profile": GEOX_PROFILE,
-        "enabled_dimensions": ENABLED_DIMENSIONS,
-        "version": GEOX_VERSION,
-        "seal": GEOX_SEAL
-    }
-
-@mcp.resource("geox://registry/tools")
-async def list_canonical_tools() -> dict:
-    """Return the canonical orthogonal tool taxonomy."""
-    try:
-        from geox.core.tool_registry import ToolRegistry
-        return {
-            "tools": ToolRegistry.list_tools_dict(include_scaffold=False),
-            "taxonomy": ToolRegistry.get_capabilities().get("taxonomy", {}),
-            "seal": GEOX_SEAL,
-        }
-    except Exception as e:
-        logger.error(f"Failed to load tool taxonomy: {e}")
-        return {"tools": [], "error": str(e), "seal": GEOX_SEAL}
-
-@mcp.resource("geox://registry/tools/by_dimension/{dimension}")
-async def list_tools_by_dimension(dimension: str) -> dict:
-    """Return canonical tools for a specific dimension."""
-    try:
-        from geox.core.tool_registry import ToolRegistry
-        tools = [t.to_dict() for t in ToolRegistry.list_by_dimension(dimension)]
-        return {"dimension": dimension, "tools": tools, "count": len(tools), "seal": GEOX_SEAL}
-    except Exception as e:
-        logger.error(f"Failed to load tools for dimension {dimension}: {e}")
-        return {"dimension": dimension, "tools": [], "error": str(e), "seal": GEOX_SEAL}
-
-@mcp.resource("geox://registry/tools/by_stage/{stage}")
-async def list_tools_by_stage(stage: str) -> dict:
-    """Return canonical tools for a specific metabolic stage (000–999)."""
-    try:
-        from geox.core.tool_registry import ToolRegistry
-        tools = [t.to_dict() for t in ToolRegistry.list_by_stage(stage)]
-        return {"stage": stage, "tools": tools, "count": len(tools), "seal": GEOX_SEAL}
-    except Exception as e:
-        logger.error(f"Failed to load tools for stage {stage}: {e}")
-        return {"stage": stage, "tools": [], "error": str(e), "seal": GEOX_SEAL}
-
-@mcp.resource("ui://{app_id}")
-async def get_ui_resource(app_id: str) -> str:
-    """Serve UI resources from the ui/ directory for MCP Apps."""
-    ui_dir = "ui"
-    filename = f"{app_id}.html"
-    file_path = os.path.join(ui_dir, filename)
-    if os.path.exists(file_path):
-        with open(file_path, "r") as f:
-            return f.read()
-    fallback_path = os.path.join(ui_dir, "well-dashboard.html")
-    if os.path.exists(fallback_path):
-        with open(fallback_path, "r") as f:
-            return f.read()
-    return f"Error: UI resource {app_id} not found."
-
-
-@mcp.resource("ui://well_desk")
-async def get_well_desk_ui() -> str:
-    """Serve GEOX WellDesk HTML app for MCP App rendering."""
-    # Serve from flat apps/ path (what gets built into container)
-    well_desk_path = "apps/well-desk/index.html"
-    if os.path.exists(well_desk_path):
-        with open(well_desk_path, "r") as f:
-            return f.read()
-    return "<html><body>WellDesk: index.html not found at apps/well-desk/</body></html>"
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# HEALTH & LEGACY BRIDGE
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def build_status_payload() -> dict:
-    return {
-        "status": "healthy",
-        "registry": "unified",
-        "service": "geox-unified-mcp",
-        "version": GEOX_VERSION,
-        "profile": GEOX_PROFILE,
-        "enabled_dimensions": ENABLED_DIMENSIONS,
-        "seal": GEOX_SEAL,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    }
-
-async def health_handler(request):
-    return JSONResponse(build_status_payload())
-
 async def run_legacy_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
-    # This server uses the canonical tools directly from registries
     tool_result = await mcp.call_tool(name, arguments)
-    # FastMCP call_tool returns a ToolResult object
     return {"success": True, "data": tool_result.content[0].text if tool_result.content else {}}
 
 async def legacy_mcp_handler(request):
@@ -237,11 +141,17 @@ async def legacy_mcp_handler(request):
 
     return JSONResponse({"error": "Method not found"}, status_code=404)
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# APP CREATION & ENTRYPOINT
+# ═══════════════════════════════════════════════════════════════════════════════
+
 def create_app():
     mcp_app = mcp.http_app(path="/mcp/stream", transport="streamable-http")
     return Starlette(
         routes=[
             Route("/health", health_handler, methods=["GET"]),
+            Route("/ready", ready_handler, methods=["GET"]),
+            Route("/status", status_handler, methods=["GET"]),
             Route("/mcp", legacy_mcp_handler, methods=["POST"]),
             Mount("/", mcp_app)
         ],
@@ -249,12 +159,15 @@ def create_app():
     )
 
 def main() -> None:
+    import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--host", default="0.0.0.0")
-    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--host", default=GEOX_HOST)
+    parser.add_argument("--port", type=int, default=GEOX_PORT)
     args = parser.parse_args()
+    
     app = create_app()
-    uvicorn.run(app, host=args.host, port=args.port)
+    logger.info(f"GEOX Sovereign 13 Kernel starting on {args.host}:{args.port}")
+    uvicorn.run(app, host=args.host, port=args.port, log_level="info")
 
 if __name__ == "__main__":
     main()

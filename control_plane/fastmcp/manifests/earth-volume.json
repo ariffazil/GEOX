@@ -7,8 +7,8 @@
   "tools": [
     "geox_earth3d_load_volume",
     "geox_earth3d_interpret_horizons",
-    "geox_earth3d_model_geometries",
-    "geox_earth3d_verify_structural_integrity"
+    "geox_subsurface_generate_candidates",
+    "geox_subsurface_verify_integrity"
   ],
   "supported_artifacts": [
     "SeismicVolumeArtifact",

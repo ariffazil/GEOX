@@ -1,24 +1,20 @@
 {
   "id": "well-desk",
-  "title": "Well Desk",
-  "dimension": "well",
-  "icon": "well",
-  "description": "Comprehensive well data log analysis, QC, and petrophysics.",
-  "tools": [
-    "geox_well_load_bundle",
-    "geox_well_qc_logs",
-    "geox_well_select_sw_model",
-    "geox_well_compute_petrophysics",
-    "geox_well_validate_cutoffs",
-    "geox_well_verify_petrophysics"
+  "name": "Well Desk",
+  "version": "2.0.0",
+  "description": "Borehole Truth Channel & Log Analysis",
+  "required_tools": [
+    "geox_data_ingest_bundle",
+    "geox_data_qc_bundle",
+    "geox_subsurface_generate_candidates",
+    "geox_subsurface_verify_integrity"
   ],
-  "supported_artifacts": [
-    "WellBundleArtifact",
-    "PetrophysicsArtifact"
-  ],
-  "runtime": {
-    "control_plane": "fastmcp",
-    "execution_plane": "vps"
+  "ui": {
+    "entry": "ui://well_desk",
+    "components": ["LogPlot", "CrossPlot", "EnsembleSummary"]
   },
-  "readiness": "dashboard_ready"
+  "governance": {
+    "floor_requirement": "F2_TRUTH",
+    "uncertainty_display": true
+  }
 }
