@@ -14,3 +14,6 @@ geox-gui/node_modules/
 **/__pycache__/
 **/*.pyc
 .playwright-mcp*.log
+/data/fixtures/
+/data/geox_panels/
+/data/wells/

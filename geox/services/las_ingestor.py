@@ -208,10 +208,30 @@ def _make_vault_receipt(tool_name: str, payload: dict, verdict: str) -> dict:
 
 # ─────────────────── INGESTOR ───────────────────
 
+def _las_header_str(las_well, *keys) -> str:
+    """Extract a string value from LAS well header, trying keys in order."""
+    for key in keys:
+        item = las_well.get(key)
+        if item is not None:
+            val = getattr(item, 'value', item)
+            if val and str(val).strip():
+                return str(val).strip()
+    return "UNKNOWN"
+
+
 class LASIngestor:
     """Read LAS 2.0/3.0 files and produce v2 JSON-safe manifests."""
 
-    REQUIRED_CURVES = {"GR": "gamma_ray", "ILD": "resistivity", "PHI": "porosity"}
+    REQUIRED_CURVES = {
+        "GR":   "gamma_ray",
+        "RT":   "resistivity",   # canonical; RT/ILD/LLD/RDEP all map here
+        "RHOB": "bulk_density",
+        "NPHI": "neutron_porosity",
+    }
+    RESISTIVITY_ALIASES = frozenset({"ILD", "LLD", "RDEP", "RESDEEP", "AT90", "RESD", "RT"})
+    POROSITY_ALIASES    = frozenset({"NPHI", "NEUT", "TNPH", "CNCF", "PHI"})
+    GR_ALIASES          = frozenset({"GR", "GAMMA", "CGR", "SGR"})
+    DENSITY_ALIASES     = frozenset({"RHOB", "DEN", "DENS", "ZDEN"})
 
     def __init__(self, guard: PhysicsGuard | None = None) -> None:
         self.guard = guard or PhysicsGuard()
@@ -311,22 +331,27 @@ class LASIngestor:
             all_issues.extend(issues)
 
         # UWI / well name
-        uwi = None
-        if "UWI" in las.well:
-            uwi = str(las.well["UWI"].value)
+        permit = _las_header_str(las.well, "PERMIT", "FLD", "COMP")
+        uwi_str = _las_header_str(las.well, "UWI", "WELL", "API")
         well_name = None
         if "WELL" in las.well:
             well_name = str(las.well["WELL"].value)
         elif well is not None:
             well_name = getattr(well, "name", None)
 
-        well_id = asset_id or (uwi or source.stem)
-        permit = str(las.well.get("PERMIT", las.well.get("FLD", "UNKNOWN")))
+        well_id = asset_id or (uwi_str if uwi_str != "UNKNOWN" else source.stem)
 
-        # Missing channels
-        required = set(self.REQUIRED_CURVES.keys())
+        # Missing channels — use canonical alias expansion
         loaded_set = set(loaded_curves)
-        missing = [c for c in required if c not in loaded_set]
+        missing = []
+        if not loaded_set.intersection(self.GR_ALIASES):
+            missing.append("GR")
+        if not loaded_set.intersection(self.RESISTIVITY_ALIASES):
+            missing.append("RT")
+        if not loaded_set.intersection(self.DENSITY_ALIASES):
+            missing.append("RHOB")
+        if not loaded_set.intersection(self.POROSITY_ALIASES):
+            missing.append("NPHI")
 
         # Suitability
         qcfail_count = sum(1 for c in curve_qc_results if c.status == "FAIL")

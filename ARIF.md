@@ -19,6 +19,7 @@
 
 ## 1. CURRENT FOCUS (INSTRUCTION POINTER)
 
+- Governance: Adopted GEOX Well Logs Operating Laws v1.0 (`GOVERNANCE.md`)
 - 999 SEAL Ritual: Unified MCP Kernel ignited at `control_plane/fastmcp/server.py`
 - Engine Upgrade: LoopStructural 1.6.27 embedded in `geox_earth3d_model_geometries`
 - Ghost Purge: Legacy server entrypoints moved to `archive/deprecated/`
@@ -27,7 +28,7 @@
 
 - GEOX is the Ψ (Psi/Earth) node of arifOS.
 - Canonical Surface: 12 Orthogonal Prisms (Well, Seismic, Earth3D, etc.)
-- Governance: F1–F13 enforced via ToAC (Theory of Anomalous Contrast)
+- Governance: F1–F13 enforced via ToAC and GEOX Well Logs Operating Laws.
 
 ## 3. THE 999 SEAL (SESSION LOG)
 

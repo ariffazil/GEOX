@@ -167,7 +167,8 @@ def archie_sw(
     phi: float,
     a: float = 1.0,
     m: float = 2.0,
-    n: float = 2.0
+    n: float = 2.0,
+    **kwargs
 ) -> float:
     """
     Archie (1942) Water Saturation Model for clean formations.

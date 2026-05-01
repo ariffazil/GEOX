@@ -423,9 +423,23 @@ def build_correlation_panel(
     basins = check_cross_basin(wells)
     if len(basins) > 1:
         all_warnings.append(
-            f"Wells appear from different basins/sources: {basas}. "
+            f"Wells appear from different basins/sources: {basins}. "
             f"Correlation is visual/testing only."
         )
+
+    # Pre-render guard: fail if no wells loaded
+    wells_loaded_count = sum(1 for w in wells if w.loaded)
+    if wells_loaded_count == 0:
+        return {
+            "status": "ERROR",
+            "error_code": "NO_WELLS_LOADED",
+            "message": "Correlation panel could not be generated — no LAS files were loaded.",
+            "recoverable": True,
+            "warnings": all_warnings,
+            "artifact": None,
+            "wells_loaded": 0,
+            "claim_state": ClaimState.UNKNOWN,
+        }
 
     # Render
     result = render_correlation_panel(

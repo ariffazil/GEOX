@@ -39,7 +39,8 @@ services:
         soft: 65535
         hard: 65535
     volumes:
-    - ./data:/data:ro
+    - ./data:/data:rw
+    - ./fixtures:/app/fixtures:ro
     - vault_999:/app/999_vault
   gui:
     container_name: geox_gui
