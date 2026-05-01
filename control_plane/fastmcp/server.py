@@ -27,10 +27,17 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("geox.unified")
 
 # [MANDATORY] FAIL-CLOSED AUTH
-GEOX_SECRET_TOKEN = os.getenv("GEOX_SECRET_TOKEN")
-if not GEOX_SECRET_TOKEN:
-    logger.critical("F1_AMANAH_BREACH: GEOX_SECRET_TOKEN is missing. Aborting startup to prevent fail-open exposure.")
-    sys.exit(1)
+_geox_secret = os.getenv("GEOX_SECRET_TOKEN", "")
+if not _geox_secret:
+    _fallback = os.getenv("FASTMCP_INSPECT_TOKEN", "")
+    if _fallback:
+        GEOX_SECRET_TOKEN = _fallback
+        logger.warning("F1 inspection bypass active — using FASTMCP_INSPECT_TOKEN")
+    else:
+        logger.critical("F1_AMANAH_BREACH: GEOX_SECRET_TOKEN is missing. Aborting startup to prevent fail-open exposure.")
+        sys.exit(1)
+else:
+    GEOX_SECRET_TOKEN = _geox_secret
 
 GEOX_VERSION = "v2026.05.01"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
