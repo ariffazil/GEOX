@@ -13,8 +13,6 @@ from __future__ import annotations
 import hashlib
 import logging
 import os
-import tempfile
-import urllib.request
 from datetime import datetime, timezone
 from typing import Any, Optional
 
@@ -95,6 +93,7 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
             }
         """
         from geox.artifacts.writer import ArtifactValidationError, validate_output_path
+        from geox.artifacts.las_sources import LASSourceError, materialize_las_source
         from geox.plot_specs.schemas import PlotSpecValidationError
         from geox.plot_specs.validators import build_well_panel_plot_spec
         from geox.renderers.base import RenderRequest
@@ -110,29 +109,14 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
 
         # Resolve paths: accept absolute, /data/relative, or HTTPS URL
         resolved_paths: list[str] = []
-        for p in las_paths:
-            # URL — download to temp file
-            if p.startswith("http://") or p.startswith("https://"):
-                try:
-                    suffix = os.path.splitext(p)[1] or ".las"
-                    fd, tmp_path = tempfile.mkstemp(suffix=suffix)
-                    os.close(fd)
-                    urllib.request.urlretrieve(p, tmp_path)
-                    resolved_paths.append(tmp_path)
-                except Exception as exc:
-                    logger.warning(f"Failed to download {p}: {exc}")
-                    # Fall through — let the engine report the error
-                    resolved_paths.append(p)
-            elif os.path.isabs(p) and os.path.exists(p):
-                resolved_paths.append(p)
-            elif os.path.exists(f"/data/{p}"):
-                resolved_paths.append(f"/data/{p}")
-            elif os.path.exists(os.path.join(os.getcwd(), p)):
-                resolved_paths.append(os.path.join(os.getcwd(), p))
-            elif os.path.exists(f"/app/fixtures/{os.path.basename(p)}"):
-                resolved_paths.append(f"/app/fixtures/{os.path.basename(p)}")
-            else:
-                # Try as-is even if not found — let the engine report
+        for index, p in enumerate(las_paths):
+            try:
+                resolved_paths.append(
+                    materialize_las_source(p, artifact_id=f"panel_las_{index}")
+                )
+            except (FileNotFoundError, LASSourceError) as exc:
+                logger.warning("Could not materialize LAS source %s: %s", p, exc)
+                # Try as-is even if not found — let the engine report no wells loaded.
                 resolved_paths.append(p)
 
         # Default output dir
@@ -294,17 +278,16 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
               "claim_state": "OBSERVED"
             }
         """
+        from geox.artifacts.las_sources import LASSourceError, materialize_las_source
         from geox.ingest.plotting import CURVE_ALIASES, load_well_bundle
 
         # Resolve path
-        if os.path.isabs(las_path) and os.path.exists(las_path):
-            resolved = las_path
-        elif os.path.exists(f"/data/{las_path}"):
-            resolved = f"/data/{las_path}"
-        else:
+        try:
+            resolved = materialize_las_source(las_path, artifact_id=well_id)
+        except (FileNotFoundError, LASSourceError) as exc:
             return _error_response(
                 error_code="FILE_NOT_FOUND",
-                message=f"LAS file not found: {las_path}",
+                message=str(exc),
                 wells_failed=[las_path],
             )
 

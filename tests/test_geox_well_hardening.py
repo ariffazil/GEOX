@@ -18,6 +18,8 @@ DITEMPA BUKAN DIBERI
 from __future__ import annotations
 
 import asyncio
+import base64
+import json
 import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock
@@ -421,6 +423,94 @@ def test_J_ingest_qc_candidate_preserve_artifact_ref():
     assert qc_data.get("error_code") != "ARTIFACT_NOT_FOUND", qc_data
     assert cand_data.get("error_code") != "EVIDENCE_REF_NOT_FOUND", cand_data
     assert cand_data.get("artifact_ref") == "FLOW_WELL"
+
+
+def test_J2_candidate_holds_when_latest_qc_failed():
+    """Candidate generation must not return plain SUCCESS after failed latest QC."""
+    _reset_registry()
+
+    from fastmcp import FastMCP
+    from contracts.tools.unified_13 import (
+        _get_artifact,
+        _record_latest_qc,
+        _register_artifact,
+        register_unified_tools,
+    )
+
+    _register_artifact("QC_FAIL_WELL", curves=["GR", "RT"], las_path=SMOKE_LAS)
+    _record_latest_qc(
+        "QC_FAIL_WELL",
+        {
+            "qc_overall": "FAIL",
+            "qc_passed": False,
+            "flags": ["CURVE_FAIL_STATE", "SUITABILITY_VOID"],
+            "limitations": ["3 curve(s) in FAIL state"],
+            "claim_state": "RAW_OBSERVATION",
+        },
+    )
+
+    mcp = FastMCP(name="test_geox_qc_candidate_gate")
+    register_unified_tools(mcp)
+
+    async def run():
+        return await mcp.call_tool("geox_subsurface_generate_candidates", {
+            "target_class": "petrophysics",
+            "evidence_refs": ["QC_FAIL_WELL"],
+            "realizations": 3,
+        })
+
+    result = _run(run())
+    data = json.loads(result.content[0].text)
+    if isinstance(data, dict) and "data" in data:
+        data = data["data"]
+
+    entry = _get_artifact("QC_FAIL_WELL")
+    assert entry["latest_qc"]["qc_passed"] is False
+    assert data.get("execution_status") == "HOLD", data
+    assert data.get("error_code") == "QC_FAILED_HUMAN_REVIEW_REQUIRED", data
+    assert data.get("claim_state") == "HUMAN_REVIEW_REQUIRED", data
+    assert data.get("requires_human_review") is True
+    assert data.get("artifact_ref") == "QC_FAIL_WELL"
+
+
+def test_J3_file_upload_import_makes_las_server_visible():
+    """Base64 LAS upload should write /data-visible evidence and register artifact_ref."""
+    _reset_registry()
+
+    from fastmcp import FastMCP
+    from contracts.tools.unified_13 import register_unified_tools
+
+    payload = base64.b64encode(Path(SMOKE_LAS).read_bytes()).decode("ascii")
+    mcp = FastMCP(name="test_geox_file_upload_import")
+    register_unified_tools(mcp)
+
+    async def run():
+        imported = await mcp.call_tool("geox_file_upload_import", {
+            "filename": "UPLOAD_SMOKE.las",
+            "content_base64": payload,
+            "target_dir": "/data/geox_las_pytest",
+            "well_id": "UPLOAD_SMOKE",
+            "overwrite": True,
+        })
+        import_data = json.loads(imported.content[0].text)
+
+        inventory = await mcp.call_tool("geox_las_curve_inventory", {
+            "las_path": import_data["stored_path"],
+            "well_id": "UPLOAD_SMOKE",
+        })
+        return import_data, json.loads(inventory.content[0].text)
+
+    import_data, inventory_data = _run(run())
+    if isinstance(import_data, dict) and "data" in import_data:
+        import_data = import_data["data"]
+    if isinstance(inventory_data, dict) and "data" in inventory_data:
+        inventory_data = inventory_data["data"]
+
+    assert import_data["status"] == "OK", import_data
+    assert import_data["artifact_ref"] == "well_las:UPLOAD_SMOKE"
+    assert Path(import_data["stored_path"]).exists()
+    assert inventory_data["ok"] is True, inventory_data
+    assert inventory_data["well_id"] == "UPLOAD_SMOKE"
 
 
 def test_K_correlation_panel_accepts_output_png(tmp_path):

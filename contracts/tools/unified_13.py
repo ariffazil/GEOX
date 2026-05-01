@@ -1,10 +1,10 @@
 import csv
+import base64
 import hashlib
 import io
 import logging
 import os
 import json
-import tempfile
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -14,6 +14,7 @@ from contracts.enums.statuses import get_standard_envelope, GovernanceStatus, Ar
 from compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 
 logger = logging.getLogger("geox.unified13")
+MAX_UPLOAD_BYTES = int(os.environ.get("GEOX_MAX_UPLOAD_BYTES", str(25 * 1024 * 1024)))
 
 # ─── In-memory artifact registry (MVP — no persistence) ────────────────────────
 # Tracks artifact IDs that have been successfully ingested.
@@ -143,6 +144,76 @@ def _artifact_exists(artifact_id: str) -> bool:
     if _get_artifact(ref) is not None:
         return True
     return any(alias in _artifact_registry for alias in _artifact_aliases(ref))
+
+
+def _record_latest_qc(artifact_ref: str, qc: dict[str, Any]) -> None:
+    """Persist the latest QC verdict on the canonical artifact entry and aliases."""
+    entry = _get_artifact(artifact_ref)
+    if not entry:
+        return
+    latest_qc = {
+        "qc_passed": bool(qc.get("qc_passed", False)),
+        "qc_overall": qc.get("qc_overall", "UNKNOWN"),
+        "flags": list(qc.get("flags") or []),
+        "limitations": list(qc.get("limitations") or []),
+        "claim_state": qc.get("claim_state", "RAW_OBSERVATION"),
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+    }
+    entry["latest_qc"] = latest_qc
+    entry["qc"] = latest_qc
+    entry["claim_state"] = latest_qc["claim_state"]
+    for alias in entry.get("aliases", []):
+        if isinstance(alias, str) and alias:
+            _artifact_store[alias] = entry
+    canonical_ref = entry.get("artifact_ref") or _normalize_artifact_ref(artifact_ref)
+    if canonical_ref:
+        _artifact_store[canonical_ref] = entry
+    _persist_artifact_registry()
+
+
+def _latest_qc_failed_refs(evidence_refs: list[str]) -> list[dict[str, Any]]:
+    failed: list[dict[str, Any]] = []
+    for ref in evidence_refs:
+        entry = _get_artifact(ref)
+        latest_qc = entry.get("latest_qc") if entry else None
+        if isinstance(latest_qc, dict) and latest_qc.get("qc_passed") is False:
+            failed.append(
+                {
+                    "artifact_ref": entry.get("artifact_ref", ref),
+                    "qc_overall": latest_qc.get("qc_overall", "UNKNOWN"),
+                    "flags": latest_qc.get("flags", []),
+                    "limitations": latest_qc.get("limitations", []),
+                    "claim_state": latest_qc.get("claim_state", "RAW_OBSERVATION"),
+                }
+            )
+    return failed
+
+
+def _safe_upload_path(filename: str, target_dir: str) -> Path:
+    safe_name = Path(filename or "").name
+    if not safe_name:
+        raise ValueError("filename is required")
+    if Path(safe_name).suffix.lower() != ".las":
+        raise ValueError("only .las files are accepted")
+
+    target_root = Path(target_dir or "/data/geox_las").expanduser().resolve()
+    data_root = Path("/data").resolve()
+    if not (target_root == data_root or target_root.is_relative_to(data_root)):
+        raise ValueError("target_dir must be under /data")
+    target_root.mkdir(parents=True, exist_ok=True)
+    return target_root / safe_name
+
+
+def _decode_upload_content(content_base64: str) -> bytes:
+    try:
+        payload = base64.b64decode(content_base64.strip(), validate=True)
+    except Exception as exc:
+        raise ValueError(f"content_base64 is not valid base64: {exc}") from exc
+    if not payload:
+        raise ValueError("decoded upload payload is empty")
+    if len(payload) > MAX_UPLOAD_BYTES:
+        raise ValueError(f"decoded upload payload exceeds {MAX_UPLOAD_BYTES} byte limit")
+    return payload
 
 
 # ─── Claim-state ladder (Arif's spec) ─────────────────────────────────────────
@@ -766,6 +837,130 @@ def _classify_lithology_from_store(artifact_ref: str) -> dict:
 def register_unified_tools(mcp: FastMCP, profile: str = "full"):
     """Registers the 13 Canonical Sovereign tools and the Legacy Alias Bridge."""
 
+    # --- 0. FILE INGRESS ---
+    @mcp.tool(name="geox_file_upload_import")
+    async def geox_file_upload_import(
+        filename: str,
+        content_base64: Optional[str] = None,
+        source_url: Optional[str] = None,
+        target_dir: str = "/data/geox_las",
+        overwrite: bool = False,
+        well_id: Optional[str] = None,
+    ) -> dict:
+        """Import a LAS file into GEOX server-visible /data storage.
+
+        This bridges clients whose local paths, such as /mnt/data, are not mounted
+        inside the GEOX runtime. It accepts either base64 LAS content or an HTTPS URL,
+        writes the file under /data, validates LAS readability, and registers an
+        artifact_ref that downstream tools can use.
+        """
+        if bool(content_base64) == bool(source_url):
+            return {
+                "status": "ERROR",
+                "tool": "geox_file_upload_import",
+                "error_code": "INVALID_INPUT",
+                "message": "Provide exactly one of content_base64 or source_url.",
+                "claim_state": "NO_VALID_EVIDENCE",
+            }
+
+        try:
+            target_path = _safe_upload_path(filename, target_dir)
+        except ValueError as exc:
+            return {
+                "status": "ERROR",
+                "tool": "geox_file_upload_import",
+                "error_code": "INVALID_OUTPUT_PATH",
+                "message": str(exc),
+                "claim_state": "NO_VALID_EVIDENCE",
+            }
+
+        if target_path.exists() and not overwrite:
+            return {
+                "status": "ERROR",
+                "tool": "geox_file_upload_import",
+                "error_code": "FILE_EXISTS",
+                "message": f"File already exists: {target_path}",
+                "stored_path": str(target_path),
+                "claim_state": "NO_VALID_EVIDENCE",
+            }
+
+        try:
+            if content_base64:
+                payload = _decode_upload_content(content_base64)
+            else:
+                from geox.artifacts.las_sources import materialize_las_source
+
+                fetched_path = Path(
+                    materialize_las_source(source_url or "", artifact_id=well_id)
+                )
+                payload = fetched_path.read_bytes()
+                if len(payload) > MAX_UPLOAD_BYTES:
+                    raise ValueError(
+                        f"downloaded LAS payload exceeds {MAX_UPLOAD_BYTES} byte limit"
+                    )
+            target_path.write_bytes(payload)
+        except Exception as exc:
+            return {
+                "status": "ERROR",
+                "tool": "geox_file_upload_import",
+                "error_code": "IMPORT_FAILED",
+                "message": str(exc),
+                "claim_state": "NO_VALID_EVIDENCE",
+            }
+
+        sha256 = hashlib.sha256(target_path.read_bytes()).hexdigest()
+        derived_well_id = well_id or target_path.stem
+
+        try:
+            from geox.services.las_ingestor import LASIngestor
+
+            ingest_result = LASIngestor().ingest(path=str(target_path), asset_id=derived_well_id)
+            ingest_dict = ingest_result.to_dict()
+        except Exception as exc:
+            return {
+                "status": "ERROR",
+                "tool": "geox_file_upload_import",
+                "error_code": "LAS_PARSE_FAILED",
+                "message": f"File stored but could not be parsed as LAS: {exc}",
+                "stored_path": str(target_path),
+                "sha256": sha256,
+                "claim_state": "NO_VALID_EVIDENCE",
+            }
+
+        loaded_curves = ingest_dict.get("loaded_curves", [])
+        diagnostics = {
+            "qcfail_count": ingest_dict.get("qcfail_count", 0),
+            "suitability": ingest_dict.get("suitability"),
+            "limitations": ingest_dict.get("limitations", []),
+            "missing_channels": ingest_dict.get("missing_channels", []),
+            "n_depth_samples": ingest_dict.get("n_depth_samples", 0),
+            "depth_range_m": ingest_dict.get("depth_range_m")
+            or ingest_dict.get("depth_range"),
+            "sha256": sha256,
+        }
+        artifact_ref = _register_artifact(
+            f"well_las:{derived_well_id}",
+            curves=loaded_curves,
+            las_path=str(target_path),
+            claim_state="FILE_IMPORTED",
+            diagnostics=diagnostics,
+            source_uri=source_url or "inline_base64_upload",
+            artifact_type="well_log",
+        )
+
+        return {
+            "status": "OK",
+            "tool": "geox_file_upload_import",
+            "stored_path": str(target_path),
+            "artifact_ref": artifact_ref,
+            "well_id": derived_well_id,
+            "sha256": sha256,
+            "loaded_curves": loaded_curves,
+            "curve_count": len(loaded_curves),
+            "depth_range_m": diagnostics["depth_range_m"],
+            "claim_state": "FILE_IMPORTED",
+        }
+
     # --- 1. DATA INGEST ---
     @mcp.tool(name="geox_data_ingest_bundle")
     async def geox_data_ingest_bundle(
@@ -867,45 +1062,39 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
             }
 
         # ── Well / seismic / earth3d / auto path ────────────────────────────
-        local_path = source_uri
+        source_name = os.path.basename(source_uri.split("?", 1)[0]) or "inline_las"
+        derived_well_id = well_id or Path(source_name).stem.replace(".las", "").replace(".LAS", "")
+        try:
+            from geox.artifacts.las_sources import LASSourceError, materialize_las_source
 
-        # Download from URL if needed
-        if source_uri.startswith("http://") or source_uri.startswith("https://"):
-            try:
-                import urllib.request
-                import os as _os
-                suffix = _os.path.splitext(source_uri)[1] or ".las"
-                fd, local_path = tempfile.mkstemp(suffix=suffix)
-                _os.close(fd)
-                urllib.request.urlretrieve(source_uri, local_path)
-            except Exception as exc:
-                return {
-                    "tool": "geox_data_ingest_bundle",
-                    "status": "ERROR",
-                    "error_code": "URL_FETCH_FAILED",
-                    "message": f"Could not fetch {source_uri}: {exc}",
-                    "recoverable": True,
-                    "suggested_action": "Check URL accessibility or use local file path.",
-                }
-        else:
-            # Resolve relative fixture path
-            if not os.path.isabs(local_path):
-                fixture_path = f"/app/fixtures/{os.path.basename(local_path)}"
-                if os.path.exists(fixture_path):
-                    local_path = fixture_path
-
-            if not os.path.exists(local_path):
-                return {
-                    "tool": "geox_data_ingest_bundle",
-                    "status": "ERROR",
-                    "error_code": "FILE_NOT_FOUND",
-                    "message": f"File not found: {local_path}",
-                    "recoverable": True,
-                    "suggested_action": "Verify the file path exists on the server.",
-                }
-
-        # Derive well_id from filename if not provided
-        derived_well_id = well_id or Path(local_path).stem.replace(".las", "").replace(".LAS", "")
+            local_path = materialize_las_source(source_uri, artifact_id=derived_well_id)
+        except FileNotFoundError as exc:
+            return {
+                "tool": "geox_data_ingest_bundle",
+                "status": "ERROR",
+                "error_code": "FILE_NOT_FOUND",
+                "message": str(exc),
+                "recoverable": True,
+                "suggested_action": (
+                    "Use a server-visible path, HTTPS URL, data: URI, or base64: LAS payload."
+                ),
+            }
+        except LASSourceError as exc:
+            error_code = (
+                "URL_FETCH_FAILED"
+                if source_uri.startswith(("http://", "https://"))
+                else "LAS_SOURCE_UNAVAILABLE"
+            )
+            return {
+                "tool": "geox_data_ingest_bundle",
+                "status": "ERROR",
+                "error_code": error_code,
+                "message": str(exc),
+                "recoverable": True,
+                "suggested_action": (
+                    "Use an HTTPS URL or inline base64 LAS payload when local paths are not mounted."
+                ),
+            }
 
         # Check /app/fixtures if file not found locally
         if not os.path.exists(local_path):
@@ -1065,6 +1254,16 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
 
         # If no path stored (e.g. manually registered artifact), return shallow pass
         if not las_path or not os.path.exists(las_path):
+            _record_latest_qc(
+                artifact_ref,
+                {
+                    "qc_overall": "SHALLOW",
+                    "qc_passed": True,
+                    "flags": ["QC_ENGINE_SKIPPED: no LAS path in store"],
+                    "limitations": ["Artifact registered but LAS path unavailable."],
+                    "claim_state": "QC_VERIFIED",
+                },
+            )
             return {
                 "tool": "geox_data_qc_bundle",
                 "execution_status": "SUCCESS",
@@ -1238,15 +1437,16 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
                 claim_state = "QC_VERIFIED_WITH_WARNINGS"
                 qc_passed = True
 
-            if artifact_ref in _artifact_store:
-                _artifact_store[artifact_ref]["claim_state"] = claim_state
-                _artifact_store[artifact_ref]["qc"] = {
+            _record_latest_qc(
+                artifact_ref,
+                {
                     "qc_overall": qc_overall,
                     "qc_passed": qc_passed,
                     "flags": flags,
                     "limitations": limitations,
-                }
-                _persist_artifact_registry()
+                    "claim_state": claim_state,
+                },
+            )
 
             response = {
                 "tool": "geox_data_qc_bundle",
@@ -1285,6 +1485,16 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
             return response
 
         except Exception as exc:
+            _record_latest_qc(
+                artifact_ref,
+                {
+                    "qc_overall": "ERROR",
+                    "qc_passed": False,
+                    "flags": ["QC_ENGINE_FAILED"],
+                    "limitations": [f"QC engine error: {exc}"],
+                    "claim_state": "RAW_OBSERVATION",
+                },
+            )
             return {
                 "tool": "geox_data_qc_bundle",
                 "execution_status": "ERROR",
@@ -1367,6 +1577,23 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
             }
 
         primary_ref = evidence_refs[0]
+        failed_qc_refs = _latest_qc_failed_refs(evidence_refs)
+        if failed_qc_refs:
+            return {
+                "tool": "geox_subsurface_generate_candidates",
+                "execution_status": "HOLD",
+                "error_code": "QC_FAILED_HUMAN_REVIEW_REQUIRED",
+                "message": (
+                    "Evidence exists, but latest QC failed. Candidate generation requires "
+                    "human review before derived outputs can be trusted."
+                ),
+                "target_class": target_class,
+                "artifact_ref": primary_ref,
+                "failed_qc_refs": failed_qc_refs,
+                "requires_human_review": True,
+                "artifact_status": "HOLD",
+                "claim_state": CLAIM_STATES["HUMAN_REVIEW_REQUIRED"],
+            }
 
         # ── New target classes with real computation ─────────────────────────
         if target_class == "vsh":
@@ -1861,7 +2088,9 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
         artifact = {
             "status": "healthy",
             "epoch": "2026-05-01",
-            "tools_count": 13,
+            "tools_count": 14,
+            "canonical_tools": 13,
+            "ingress_tools": ["geox_file_upload_import"],
             "contract": "SOVEREIGN_13_SPEC",
             "legacy_aliases": LEGACY_ALIAS_MAP
         }

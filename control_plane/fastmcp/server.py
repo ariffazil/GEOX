@@ -65,7 +65,10 @@ def bootstrap_registries():
         from contracts.tools.unified_13 import register_unified_tools
         from compatibility.legacy_aliases import LEGACY_ALIAS_MAP
         register_unified_tools(mcp, profile=GEOX_PROFILE)
-        logger.info(f"Sovereign 13 tool surface: IGNITED (13 Tools, {len(LEGACY_ALIAS_MAP)} Aliases)")
+        logger.info(
+            f"Sovereign 13 tool surface: IGNITED (13 Canonical + file ingress, "
+            f"{len(LEGACY_ALIAS_MAP)} Aliases)"
+        )
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -84,6 +87,7 @@ def build_status_payload() -> dict:
         "version": GEOX_VERSION,
         "contract_epoch": "2026-05-01",
         "canonical_tools": 13,
+        "ingress_tools": ["geox_file_upload_import"],
         "legacy_aliases": len(LEGACY_ALIAS_MAP),
         "auth_mode": "fail_closed",
         "profile": GEOX_PROFILE,
