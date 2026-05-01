@@ -1,7 +1,7 @@
 {
   "id": "well-desk",
   "name": "Well Desk",
-  "version": "2.0.0",
+  "version": "v2026.05.01",
   "description": "Borehole Truth Channel & Log Analysis",
   "required_tools": [
     "geox_data_ingest_bundle",

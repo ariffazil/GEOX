@@ -1,5 +1,5 @@
 # GEOX Sovereign 13 Contract
-> Version: 2.0.0-UNIFIED
+> Version: v2026.05.01
 > Doctrine: Physics before Narrative. F1–F13 Governed.
 > Epoch: 2026-05-01
 > Seal: DITEMPA BUKAN DIBERI

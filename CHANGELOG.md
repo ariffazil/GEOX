@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0-UNIFIED] - 2026-05-01
+## [v2026.05.01] - 2026-05-01
 ### Added
-- **Sovereign 13 Surface**: Consolidated 49 endpoints into 13 canonical tools.
+- **Temporal Earth Dating**: Rebranded versioning to reflect aging earth date (2026.05.01).
+- **Sovereign 13 Surface**: Consolidated 49 fragmented endpoints into 13 canonical tools.
+- **Epistemic Anchorage**: Versioning now reflects planetary time, grounding the kernel in geological reality.
 - **Alias Bridge**: Support for 40+ legacy names with `_meta.deprecation` metadata.
 - **Fail-Closed Auth**: Server now aborts if `GEOX_SECRET_TOKEN` is missing.
 - **LoopStructural Integration**: Implicit 3D modeling for `geox_subsurface_generate_candidates`.

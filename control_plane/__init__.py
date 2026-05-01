@@ -4,5 +4,5 @@
 # The control plane routes requests and exposes apps.
 # It does NOT perform calculations — it delegates to the execution plane.
 
-__version__ = "2.0.0"
+__version__ = "v2026.05.01"
 __seal__ = "DITEMPA BUKAN DIBERI"

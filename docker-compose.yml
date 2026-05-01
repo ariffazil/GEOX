@@ -1,23 +1,21 @@
 networks:
   arifos_core_network:
     external: true
-  arifos_trinity:
-    external: true
-  traefik_network:
-    external: true
 services:
   geox:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: geox_eic
+    env_file:
+    - .env
     environment:
     - GEOX_MODE=research
-    - GEOX_VERSION=v2026.04.11-SSE
+    - GEOX_VERSION=v2.0.0-UNIFIED
     - F13_HUMAN_VETO=required
     - PYTHONUNBUFFERED=1
     - GEOX_HOST=0.0.0.0
-    - GEOX_PORT=8000
+    - GEOX_PORT=8081
     healthcheck:
       interval: 30s
       retries: 3
@@ -26,38 +24,12 @@ services:
       - CMD
       - curl
       - -f
-      - http://localhost:8000/health
+      - http://localhost:8081/health
       timeout: 10s
-    labels:
-    - traefik.enable=true
-    - traefik.docker.network=arifos_core_network
-    - traefik.http.middlewares.geox-strip.stripprefix.prefixes=/mcp
-    - traefik.http.routers.geox-mcp.middlewares=geox-strip
-    - traefik.http.routers.geox-mcp.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/mcp`)
-    - traefik.http.routers.geox-mcp.entrypoints=web
-    - traefik.http.routers.geox-mcp.service=geox-mcp
-    - traefik.http.routers.geox-mcp.priority=100
-    - traefik.http.routers.geox-health.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/health`)
-    - traefik.http.routers.geox-health.entrypoints=web
-    - traefik.http.routers.geox-health.service=geox-mcp
-    - traefik.http.routers.geox-health.priority=100
-    - traefik.http.routers.geox-tools.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/tools`)
-    - traefik.http.routers.geox-tools.entrypoints=web
-    - traefik.http.routers.geox-tools.service=geox-mcp
-    - traefik.http.routers.geox-tools.priority=100
-    - traefik.http.routers.geox-tools-secure.rule=Host(`geox.arif-fazil.com`) && PathPrefix(`/tools`)
-    - traefik.http.routers.geox-tools-secure.entrypoints=websecure
-    - traefik.http.routers.geox-tools-secure.tls=true
-    - traefik.http.routers.geox-tools-secure.service=geox-mcp
-    - traefik.http.routers.geox-tools-secure.priority=10
-    - traefik.http.services.geox-mcp.loadbalancer.server.port=8000
-    - traefik.http.services.geox-mcp.loadbalancer.responseForwarding.flushInterval=100ms
     networks:
-    - traefik_network
-    - arifos_trinity
     - arifos_core_network
     ports:
-    - 8000:8000
+    - 0.0.0.0:8081:8081
     restart: unless-stopped
     ulimits:
       nofile:
@@ -77,8 +49,6 @@ services:
     - '80'
     image: nginx:alpine
     networks:
-    - traefik_network
-    - arifos_trinity
     - arifos_core_network
     restart: unless-stopped
     volumes:

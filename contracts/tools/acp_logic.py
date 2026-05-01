@@ -721,7 +721,7 @@ class GEOSXACP:
     def get_status(self) -> dict:
         """Get ACP system status."""
         return {
-            "acp_version": "2.0.0-UNIFIED-SPEC",
+            "acp_version": "v2026.05.01",
             "seal": "999_SEAL_ACP",
             "agents_registered": len(self.registry.list_agents()),
             "f7_humility_floor": F7_HUMILITY_FLOOR,

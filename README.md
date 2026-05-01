@@ -1,61 +1,109 @@
 # GEOX — Earth Intelligence Sovereign Kernel (13 Tools)
 
-> **Physics before narrative. Maruah before convenience.**
-> **DITEMPA BUKAN DIBERI — One Sovereign Kernel.**
+**Physics before narrative. Maruah before convenience.  
+DITEMPA BUKAN DIBERI — One Sovereign Kernel.**
 
-GEOX is the subsurface reasoning Ψ (Psi) node of arifOS. It has been refactored into a high-grade AGI kernel, collapsing 49 fragmented legacy endpoints into exactly 13 canonical tools.
+GEOX is the subsurface reasoning **Ψ-node** of arifOS: a governed kernel for wells, seismic, maps, time, and prospects.  
+The legacy surface (49 endpoints across multiple files) has been **contracted into exactly 13 canonical tools**, with a governed alias bridge for backward compatibility.
 
-## 1. Sovereign 13 Surface
+***
 
-All agents and UIs should use these canonical tools. Legacy names are supported via an alias bridge.
+## 1. Sovereign 13 Tool Surface
 
-| Canonical Tool | Purpose |
-| :--- | :--- |
-| `geox_data_ingest_bundle` | Lazy ingest LAS/SEG-Y/JSON. |
-| `geox_data_qc_bundle` | Unified header/unit/anomalous verification. |
-| `geox_subsurface_generate_candidates` | Ensemble realizations (Petro/Struct) + Residuals. |
-| `geox_subsurface_verify_integrity` | Physics9 / structural paradox checks. |
-| `geox_seismic_analyze_volume` | Attribute compute + slice extraction. |
-| `geox_section_interpret_correlation` | Multi-well stratigraphy correlation. |
-| `geox_map_context_scene` | Spatial bbox + causal scene rendering. |
-| `geox_time4d_analyze_system` | Burial, maturity, regime shift modeling. |
-| `geox_prospect_evaluate` | Probabilistic volumetrics + POS evaluation. |
-| `geox_prospect_judge_verdict` | Gateway to arifOS 888_JUDGE (SEAL/VOID). |
-| `geox_evidence_summarize_cross` | Cross-domain causal evidence synthesis. |
-| `geox_system_registry_status` | Federation health and discovery. |
-| `geox_history_audit` | VAULT999 retrieval of past decisions. |
+**All agents and UIs must target these canonical tools.**  
+Legacy names remain available via an alias bridge for a limited migration window.
 
-## 2. Quick Start (Deployment)
+| Canonical Tool                       | Purpose                                                                 |
+|--------------------------------------|-------------------------------------------------------------------------|
+| `geox_data_ingest_bundle`            | Lazy ingest for LAS / SEG-Y / CSV / Parquet / JSON subsurface payloads. |
+| `geox_data_qc_bundle`                | Unified header / unit / CRS / anomaly and missingness verification.     |
+| `geox_subsurface_generate_candidates`| Ensemble petrophysics & structures (Min/Mid/Max) + residual misfit maps.|
+| `geox_subsurface_verify_integrity`   | Physics / structural integrity checks and paradox detection.            |
+| `geox_seismic_analyze_volume`        | Seismic attribute computation (e.g. Bruges) and slice extraction.       |
+| `geox_section_interpret_correlation` | Multi-well stratigraphic correlation and marker interpretation.         |
+| `geox_map_context_scene`             | Spatial bounding box, CRS checks, and causal scene rendering.           |
+| `geox_time4d_analyze_system`         | Burial history, maturity, and regime-shift / timing analysis.           |
+| `geox_prospect_evaluate`             | Probabilistic volumetrics (GRV/NTG/Recov) and POS evaluation.           |
+| `geox_prospect_judge_verdict`        | Gateway to arifOS 888_JUDGE (SEAL / PARTIAL / SABAR / VOID / 888 HOLD). |
+| `geox_evidence_summarize_cross`      | Cross-domain causal evidence synthesis (well + seismic + map + time).   |
+| `geox_system_registry_status`        | Federation health, registry discovery, and contract epoch reporting.    |
+| `geox_history_audit`                 | VAULT999 retrieval of prior runs, evaluations, and decisions.           |
+
+***
+
+## 2. Topology & Control Plane
+
+- **Control Plane (MCP entrypoint)**  
+  `control_plane/fastmcp/server.py`
+
+- **Sovereign Registry (13 tools)**  
+  `contracts/tools/unified_13.py`
+
+- **Alias Bridge (legacy names → 13 tools)**  
+  `compatibility/legacy_aliases.py`
+
+- **Quarantine (ghost servers / deprecated files)**  
+  `archive/deprecated/`
+
+Kernel law:
+- One MCP server.
+- One registry.
+- No direct use of deprecated entrypoints.
+
+***
+
+## 3. Quick Start (Local / VPS)
 
 ### Prerequisites
-- Python 3.13+
-- `pip install -r requirements-earth.txt`
+- Python **3.13+**
+- GEOX dependencies: `pip install -r requirements-earth.txt`
 
-### Startup
-1. Copy `.env.example` to `.env` and set `GEOX_SECRET_TOKEN`.
-2. Run the kernel:
-   ```bash
-   export GEOX_SECRET_TOKEN="your_token"
-   python3 control_plane/fastmcp/server.py
-   ```
+### Configuration
+1. Copy `.env.example` → `.env`.
+2. Set required environment variables (minimum):
+```bash
+export GEOX_SECRET_TOKEN="your_strong_token"
+export GEOX_HOST="0.0.0.0"     # optional, default: 0.0.0.0
+export GEOX_PORT="8081"        # optional, default: 8081
+```
 
-## 3. Operational Health
+### Start the kernel
+```bash
+python3 control_plane/fastmcp/server.py
+```
+Fail-closed behavior: If `GEOX_SECRET_TOKEN` is **missing**, the process logs an F1_HALT error and **exits before binding** to any port.
 
-The kernel provides three health endpoints:
-- `GET /health`: Liveness check.
-- `GET /ready`: Readiness check (Registry + Auth).
-- `GET /status`: Full contract status.
+***
 
-### Troubleshooting (502 / Empty Output)
-- **Fail-Closed Auth**: The server will abort if `GEOX_SECRET_TOKEN` is missing.
-- **Port Binding**: Default is `8081`. Ensure your firewall allows this.
-- **Reverse Proxy**: If using Nginx/Caddy, ensure the proxy points to `http://0.0.0.0:8081`.
+## 4. Health & Status
 
-## 4. Migration & Compatibility
+The kernel exposes three health surfaces:
+- `GET /health`: Liveness probe.
+- `GET /ready`: Readiness probe (Registry + Auth).
+- `GET /status`: Contract status (epoch, tool count, alias count).
 
-- **Alias Bridge**: 40+ legacy names are supported during the migration epoch.
-- **Sunset Date**: Legacy names will be removed after **2026-06-01**.
-- **Deprecation**: Inspect `_meta.deprecation` in responses for upgrade guidance.
+### Common deployment issues
+- **Empty health / 502 from proxy**: Verify server is bound to `0.0.0.0:8081` and proxy points to the same.
+- **Immediate exit on startup**: Check `GEOX_SECRET_TOKEN` presence.
 
----
-⬡ GEOX SOVEREIGN 13 SEALED ⬡
+***
+
+## 5. Migration & Compatibility
+
+### Alias bridge
+- All 49 supported legacy tool names resolve to the correct canonical tool and **return deprecation metadata**.
+- Example `_meta` payload:
+```json
+"_meta": {
+  "deprecation": "Tool 'geox_well_ingest_bundle' is aliased to 'geox_data_ingest_bundle'. Update by 2026-06-01."
+}
+```
+
+### Sunset policy
+- Planned removal window: **after 2026-06-01**.
+- New agents and UIs **must** call the 13 canonical tools directly.
+
+***
+
+⬡ **GEOX SOVEREIGN 13 SEALED** ⬡  
+DITEMPA BUKAN DIBERI — 999 SEAL ALIVE

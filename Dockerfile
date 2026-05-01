@@ -11,9 +11,9 @@ COPY . .
 
 # Production defaults
 ENV PYTHONPATH=/app
-ENV PORT=8081
+ENV PORT=8000
 ENV HOST=0.0.0.0
 
-EXPOSE 8081
+EXPOSE 8000
 
-CMD ["python", "geox_mcp_server.py"]
+CMD ["python", "control_plane/fastmcp/server.py"]

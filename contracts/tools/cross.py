@@ -105,7 +105,7 @@ def register_cross_tools(mcp: FastMCP, profile: str = "full"):
                 {"id": "judge-console", "name": "Judge Console", "dim": "physics"},
                 {"id": "map-layer", "name": "Map Layer", "dim": "map"}
             ],
-            "version": "2.0.0-UNIFIED-SPEC"
+            "version": "v2026.05.01"
         }
         return get_standard_envelope(
             artifact,

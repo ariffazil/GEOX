@@ -117,7 +117,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
     # --- 12. SYSTEM REGISTRY STATUS ---
     @mcp.tool(name="geox_system_registry_status")
     async def geox_system_registry_status() -> dict:
-        """Discovery of 13 tools, health, aliases, and contract epoch."""
+        """Discovery of 13 tools, health, and contract epoch."""
+        from compatibility.legacy_aliases import LEGACY_ALIAS_MAP
         artifact = {
             "status": "healthy", 
             "epoch": "2026-05-01", 

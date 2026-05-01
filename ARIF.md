@@ -15,7 +15,7 @@
 - CONTAINER_ID: 2026-05-01
 - DOMAIN_ROLE: Physics9 Earth Intelligence — constitutional subsurface reasoning layer
 - STABILITY_CLASS: AGI-CONSOLIDATED
-- VERSION: 2.0.0-UNIFIED
+- VERSION: v2026.05.01
 
 ## 1. CURRENT FOCUS (INSTRUCTION POINTER)
 
@@ -56,14 +56,14 @@
 
 ## 5. INTERRUPTS & FAULTS (BLOCKERS)
 
-- HARD_BLOCK: VPS offline (CF ERROR 1000, port 22 timeout) → MCP endpoint 502, geox.arif-fazil.com down → impact: full MCP transport blocked → workaround: none until Hostinger panel access restored
-- SOFT_FRICTION: wiki/50_TOOLS path is directory not file → impact: broken cross-link in README → workaround: update wiki index to point to correct path
-
+- HARD_BLOCK: VPS port 8081 reachable behind CF/Proxy but inducing intermittent 421 (HTTP/2 coalescing).
+- INFRA_LAW: WELL container is intentionally REMOVED per Sovereign Rebuild Decision.
+- GHOST_TOOL: Phantom 'mcp_health_check' on arifOS is a client/proxy cache issue (NOT on server).
 
 ## 6. RECENT SCARS (W_scar)
 
-- [README claimed 13 tools but code has 24] → [Ran full tool audit via grep] → [Always audit actual decorators, not marketing docs] → [Never trust README over code]
-- [VPS marked LIVE in README but actual status is 502] → [Added ⚠️ DEGRADED badge] → [Status badges must reflect real state, not aspirational]
+- [421 Error detected in validator] -> [Cloudflare HTTP/2 coalescing suspected] -> [Recommendation: Switch to Grey Cloud for geox.arif-fazil.com]
+- [Phantom tools detected] -> [Added 'shadow_tools' field to geox_system_registry_status to catch proxy cache noise]
 
 
 ## 7. EXECUTION BUFFER (COMMANDS)

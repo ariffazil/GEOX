@@ -31,7 +31,7 @@ if not GEOX_SECRET_TOKEN:
     logger.critical("F1_AMANAH_BREACH: GEOX_SECRET_TOKEN is missing. Aborting startup to prevent fail-open exposure.")
     sys.exit(1)
 
-GEOX_VERSION = "2.0.0-UNIFIED-SPEC"
+GEOX_VERSION = "v2026.05.01"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
