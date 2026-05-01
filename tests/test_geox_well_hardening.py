@@ -472,3 +472,73 @@ def test_L_tool_schema_matches_correlation_callable():
     assert len(panel_tools) == 1, f"Expected one panel tool registration, got {len(panel_tools)}"
     schema_props = panel_tools[0].parameters.get("properties", {})
     assert "output_png" in schema_props, panel_tools[0].parameters
+
+
+def test_M_correlation_panel_outputs_svg_pdf_json_audit(tmp_path):
+    """Plotting layer should generate and validate deterministic companion artifacts."""
+    _reset_registry()
+
+    from fastmcp import FastMCP
+    from contracts.tools.unified_13 import register_unified_tools
+
+    mcp = FastMCP(name="test_geox_plot_artifacts")
+    register_unified_tools(mcp)
+    output_png = tmp_path / "governed_panel.png"
+
+    async def run():
+        return await mcp.call_tool("geox_well_correlation_panel", {
+            "las_paths": [SMOKE_LAS],
+            "well_names": ["Smoke-01"],
+            "tracks": ["GR", "RT"],
+            "output_png": str(output_png),
+            "output_formats": ["png", "svg", "pdf", "csv_summary", "json_audit"],
+        })
+
+    result = _run(run())
+    import json
+    data = json.loads(result.content[0].text)
+    if isinstance(data, dict) and "data" in data:
+        data = data["data"]
+
+    artifact = data.get("artifact", {})
+    assert data.get("ok") is True, data
+    assert artifact.get("png_path") == str(output_png)
+    assert artifact.get("svg_path") == str(output_png.with_suffix(".svg"))
+    assert artifact.get("pdf_path") == str(output_png.with_suffix(".pdf"))
+    assert artifact.get("json_audit_path") == str(output_png.with_suffix(".json"))
+    for key in ("png_path", "svg_path", "pdf_path", "csv_summary_path", "json_audit_path"):
+        assert data.get("artifact_validation", {}).get(key, {}).get("status") == "VALID"
+    assert data.get("telemetry", {}).get("artifact_status") == "VALID"
+
+
+def test_N_plotspec_rejects_arbitrary_code_field(tmp_path):
+    """Declarative PlotSpec must reject executable/script fields."""
+    _reset_registry()
+
+    from fastmcp import FastMCP
+    from contracts.tools.unified_13 import register_unified_tools
+
+    mcp = FastMCP(name="test_geox_plotspec_reject")
+    register_unified_tools(mcp)
+
+    async def run():
+        return await mcp.call_tool("geox_well_correlation_panel", {
+            "las_paths": [SMOKE_LAS],
+            "output_png": str(tmp_path / "blocked.png"),
+            "plot_spec": {
+                "plot_type": "well_correlation_panel",
+                "las_paths": [SMOKE_LAS],
+                "tracks": [{"name": "GR", "curves": ["GR"]}],
+                "python_code": "import os; os.system('whoami')",
+            },
+        })
+
+    result = _run(run())
+    import json
+    data = json.loads(result.content[0].text)
+    if isinstance(data, dict) and "data" in data:
+        data = data["data"]
+
+    assert data.get("ok") is False
+    assert data.get("error_code") == "PLOTSPEC_REJECTED"
+    assert "Executable PlotSpec field rejected" in data.get("error_message", "")

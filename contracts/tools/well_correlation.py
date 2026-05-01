@@ -13,11 +13,9 @@ from __future__ import annotations
 import hashlib
 import logging
 import os
-import shutil
 import tempfile
 import urllib.request
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any, Optional
 
 from fastmcp import FastMCP
@@ -44,6 +42,8 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
         well_ids: Optional[list[str]] = None,
         output_dir: Optional[str] = None,
         output_png: Optional[str] = None,
+        output_formats: Optional[list[str]] = None,
+        plot_spec: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
         """
         Generate a multi-well log correlation panel PNG.
@@ -70,6 +70,8 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
             output_dir: Directory for output files.
                          Default: /data/geox_panels (persistent, accessible on host).
             output_png: Exact PNG path to create. If provided, it wins over output_dir.
+            output_formats: Static/audit outputs: png, svg, pdf, csv_summary, json_audit.
+            plot_spec: Optional declarative PlotSpec. Executable/code fields are rejected.
 
         Returns:
             {
@@ -92,7 +94,11 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
               "claim_state": "EXPLORATORY_VISUALIZATION"
             }
         """
-        from geox.ingest.plotting import render_correlation_panel
+        from geox.artifacts.writer import ArtifactValidationError, validate_output_path
+        from geox.plot_specs.schemas import PlotSpecValidationError
+        from geox.plot_specs.validators import build_well_panel_plot_spec
+        from geox.renderers.base import RenderRequest
+        from geox.renderers.matplotlib_logs import render_multiwell_correlation_panel
 
         # ── Input normalisation ─────────────────────────────────────────────
         if not las_paths:
@@ -131,23 +137,92 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
 
         # Default output dir
         if output_png:
+            try:
+                output_png = validate_output_path(output_png, must_have_suffix=".png")
+            except ArtifactValidationError as exc:
+                return _error_response(
+                    error_code="INVALID_OUTPUT_PATH",
+                    message=str(exc),
+                    wells_failed=[],
+                )
             output_dir = os.path.dirname(output_png) or "."
         elif output_dir is None:
             output_dir = "/data/geox_panels"
+        else:
+            try:
+                validate_output_path(
+                    os.path.join(output_dir, "geox_probe.png"),
+                    must_have_suffix=".png",
+                )
+            except ArtifactValidationError as exc:
+                return _error_response(
+                    error_code="INVALID_OUTPUT_PATH",
+                    message=str(exc),
+                    wells_failed=[],
+                )
+
+        try:
+            spec = build_well_panel_plot_spec(
+                las_paths=resolved_paths,
+                tracks=tracks or ["GR", "RT"],
+                depth_range=depth_range,
+                output_formats=output_formats or ["png", "csv_summary", "json_audit"],
+                raw_plot_spec=plot_spec,
+            )
+        except PlotSpecValidationError as exc:
+            return _error_response(
+                error_code="PLOTSPEC_REJECTED",
+                message=str(exc),
+                wells_failed=[],
+            )
 
         # ── Render ───────────────────────────────────────────────────────────
         try:
-            result = render_correlation_panel(
-                las_paths=resolved_paths,
-                well_names=well_names,
-                tracks=tracks or ["GR", "RT"],
-                output_dir=output_dir,
-                depth_range=depth_range,
-                tops=tops,
-                normalize=normalize,
-                basin_hint=basin_hint,
-                well_ids=well_ids,
+            render_result = render_multiwell_correlation_panel(
+                RenderRequest(
+                    plot_spec=spec,
+                    output_dir=output_dir,
+                    output_png=output_png,
+                    well_names=well_names,
+                    tops=tops,
+                    basin_hint=basin_hint,
+                    well_ids=well_ids,
+                    normalize=normalize,
+                )
             )
+            response = render_result.payload
+            response["artifact"] = render_result.artifacts
+            response["artifact_validation"] = render_result.validation
+            response["plot_spec"] = spec.model_dump()
+            response["facts"] = {
+                "wells_loaded": response.get("wells_loaded", 0),
+                "curves_rendered": len(response.get("tracks_rendered", [])),
+                "depth_basis": spec.depth.basis,
+                "renderer": spec.renderer.primary,
+            }
+            response["interpretation"] = (
+                "Exploratory visualization. Human geologist review required."
+            )
+            response["unknown"] = [
+                "Datum correction not applied unless source metadata explicitly supplies it.",
+                "TVD/TVDSS unavailable unless supplied by source data.",
+            ]
+            response["parameters_used"] = {
+                "renderer": spec.renderer.primary,
+                "outputs": spec.outputs,
+                "depth": spec.depth.model_dump(),
+                "tracks": [track.model_dump() for track in spec.tracks],
+            }
+            response["telemetry"] = {
+                "verdict": "SEAL" if render_result.ok else "PARTIAL",
+                "confidence": "MED" if render_result.ok else "LOW",
+                "claim_state": render_result.claim_state,
+                "wells_loaded": response.get("wells_loaded", 0),
+                "curves_rendered": len(response.get("tracks_rendered", [])),
+                "renderer": spec.renderer.primary,
+                "artifact_status": "VALID" if render_result.ok else "INVALID",
+                "human_review_required": True,
+            }
         except Exception as exc:
             logger.exception("geox_well_correlation_panel render failed")
             return _error_response(
@@ -156,37 +231,27 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
                 wells_failed=las_paths,
             )
 
-        # ── Build response ──────────────────────────────────────────────────
-        response = result.to_dict()
-
-        if output_png and response.get("ok"):
-            artifact = response.get("artifact") or {}
-            produced_png = artifact.get("png_path")
-            if produced_png and os.path.abspath(produced_png) != os.path.abspath(output_png):
-                os.makedirs(os.path.dirname(output_png) or ".", exist_ok=True)
-                shutil.move(produced_png, output_png)
-                artifact["png_path"] = output_png
-
-                produced_csv = artifact.get("csv_summary_path")
-                if produced_csv and os.path.exists(produced_csv):
-                    csv_target = os.path.splitext(output_png)[0] + ".csv"
-                    shutil.move(produced_csv, csv_target)
-                    artifact["csv_summary_path"] = csv_target
-                response["artifact"] = artifact
-
+        # Backward-compatible output_png relocation is handled by renderer.
         # FAIL-CLOSED: wells_loaded must be > 0 — blank panel is not an artifact
         wells_loaded = response.get("wells_loaded", 0)
         if wells_loaded == 0:
             return {
                 "ok": False,
                 "error_code": "NO_WELLS_LOADED",
-                "error_message": "Correlation panel could not be generated because no LAS files were loaded.",
+                "error_message": (
+                    "Correlation panel could not be generated because no LAS files were loaded."
+                ),
                 "wells_loaded": 0,
                 "wells_failed": response.get("wells_failed", las_paths),
                 "artifact": None,
                 "warnings": response.get("qc_warnings", []),
                 "claim_state": "NO_VALID_EVIDENCE",
             }
+
+        if not render_result.ok:
+            response["ok"] = False
+            response["error_code"] = "ARTIFACT_VALIDATION_FAILED"
+            response["error_message"] = "One or more required artifacts failed validation."
 
         # Vault receipt
         response["vault_receipt"] = _make_vault_receipt("geox_well_correlation_panel", response)
@@ -229,7 +294,7 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
               "claim_state": "OBSERVED"
             }
         """
-        from geox.ingest.plotting import load_well_bundle, CURVE_ALIASES
+        from geox.ingest.plotting import CURVE_ALIASES, load_well_bundle
 
         # Resolve path
         if os.path.isabs(las_path) and os.path.exists(las_path):
@@ -334,7 +399,11 @@ def _make_vault_receipt(tool_name: str, payload: dict) -> dict:
             "hash": digest,
         }
     except Exception:
-        return {"vault": "VAULT999", "tool": tool_name, "timestamp": datetime.now(timezone.utc).isoformat()}
+        return {
+            "vault": "VAULT999",
+            "tool": tool_name,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
 
 
 def _json_deterministic(obj: dict) -> str:

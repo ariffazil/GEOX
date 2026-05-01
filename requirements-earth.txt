@@ -7,6 +7,14 @@ numpy>=1.20.0
 scipy>=1.10.0
 pandas>=2.0.0
 matplotlib>=3.7.0
+pillow>=10.0.0
+plotly>=5.20.0
+kaleido>=0.2.1
+panel>=1.4.0
+hvplot>=0.9.0
+holoviews>=1.18.0
+bokeh>=3.4.0
+datashader>=0.16.0
 xarray>=2024.0.0
 dask>=2024.0.0
 h5py>=3.8.0
@@ -45,6 +53,7 @@ bruges>=0.4.0
 # Well Logs
 welly>=0.5.0
 lasio>=0.31
+striplog>=0.9.2
 
 # 3D Visualization
 pyvista>=0.47.0

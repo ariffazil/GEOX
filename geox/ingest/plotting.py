@@ -80,6 +80,7 @@ class PanelConfig:
     tops: Optional[dict[str, float]] = None  # well_id → {marker_name: depth}
     normalize: bool = True
     output_format: str = "png"
+    output_formats: list[str] = field(default_factory=lambda: ["png", "csv_summary"])
     basin_hint: Optional[str] = None  # for cross-basin guardrail
     well_names: Optional[list[str]] = None  # display names per well
 
@@ -89,6 +90,8 @@ class PanelResult:
     """Output of a panel render."""
     ok: bool
     png_path: Optional[str] = None
+    svg_path: Optional[str] = None
+    pdf_path: Optional[str] = None
     csv_summary_path: Optional[str] = None
     wells_loaded: int = 0
     wells_failed: list[str] = field(default_factory=list)
@@ -110,8 +113,11 @@ class PanelResult:
         if self.ok:
             out["artifact"] = {
                 "png_path": self.png_path,
+                "svg_path": self.svg_path,
+                "pdf_path": self.pdf_path,
                 "csv_summary_path": self.csv_summary_path,
             }
+            out["artifact"] = {k: v for k, v in out["artifact"].items() if v}
             out["curve_summary"] = self.curve_summary
         else:
             out["error_code"] = self.error_code
@@ -358,7 +364,15 @@ def _render_panel(
     fig.suptitle("GEOX Well Correlation Panel — Exploratory Visualization",
                  fontsize=11, y=0.99)
     plt.tight_layout(rect=[0, 0.02, 1, 0.97])
-    fig.savefig(png_path, dpi=150, bbox_inches="tight", format=config.output_format)
+    fig.savefig(png_path, dpi=150, bbox_inches="tight", format="png")
+    svg_path = None
+    pdf_path = None
+    if "svg" in config.output_formats:
+        svg_path = os.path.splitext(png_path)[0] + ".svg"
+        fig.savefig(svg_path, bbox_inches="tight", format="svg")
+    if "pdf" in config.output_formats:
+        pdf_path = os.path.splitext(png_path)[0] + ".pdf"
+        fig.savefig(pdf_path, bbox_inches="tight", format="pdf")
     plt.close(fig)
 
     # Write CSV summary
@@ -367,6 +381,8 @@ def _render_panel(
     return PanelResult(
         ok=True,
         png_path=png_path,
+        svg_path=svg_path,
+        pdf_path=pdf_path,
         csv_summary_path=csv_path,
         wells_loaded=n_wells,
         tracks_rendered=config.tracks,
@@ -422,6 +438,7 @@ def render_correlation_panel(
     normalize: bool = True,
     basin_hint: Optional[str] = None,
     well_ids: Optional[list[str]] = None,
+    output_formats: Optional[list[str]] = None,
 ) -> PanelResult:
     """
     Generate a multi-well correlation panel PNG.
@@ -490,6 +507,7 @@ def render_correlation_panel(
         normalize=normalize,
         basin_hint=basin_hint,
         well_names=well_names,
+        output_formats=output_formats or ["png", "csv_summary"],
     )
 
     result = _render_panel(bundles, config, output_dir)
