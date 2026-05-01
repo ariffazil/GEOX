@@ -1,6 +1,8 @@
+import hashlib
 import logging
 import os
 import json
+from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional, Literal
 from fastmcp import FastMCP
 from contracts.enums.statuses import get_standard_envelope, GovernanceStatus, ArtifactStatus
@@ -18,18 +20,89 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
     # --- 1. DATA INGEST ---
     @mcp.tool(name="geox_data_ingest_bundle")
     async def geox_data_ingest_bundle(
-        source_uri: str, 
+        source_uri: str,
         source_type: Literal["well", "seismic", "earth3d", "auto"] = "auto",
         well_id: Optional[str] = None
     ) -> dict:
-        """Lazy ingestion for LAS, CSV, Parquet, SEG-Y, and structural payloads."""
-        artifact = {
-            "well_id": well_id,
-            "source_uri": source_uri,
-            "source_type": source_type,
-            "status": "INGESTED",
-            "nature": f"{source_type}_observed"
-        }
+        """Lazy ingestion for LAS, CSV, Parquet, SEG-Y, and structural payloads.
+
+        Args:
+            source_uri: File path (e.g. /mnt/data/15-9-19_SR_COMP.LAS) or HTTPS URL.
+            source_type: Hint for payload type; "auto" detects from extension.
+            well_id: Optional identifier; derived from filename if omitted.
+        """
+        from pathlib import Path
+
+        local_path = source_uri
+
+        # Download from URL if needed
+        if source_uri.startswith("http://") or source_uri.startswith("https://"):
+            try:
+                import urllib.request
+                suffix = os.path.splitext(source_uri)[1] or ".las"
+                fd, local_path = tempfile.mkstemp(suffix=suffix)
+                os.close(fd)
+                urllib.request.urlretrieve(source_uri, local_path)
+            except Exception as exc:
+                return {
+                    "tool": "geox_data_ingest_bundle",
+                    "status": "ERROR",
+                    "error_code": "URL_FETCH_FAILED",
+                    "message": f"Could not fetch {source_uri}: {exc}",
+                    "recoverable": True,
+                    "suggested_action": "Check URL accessibility or use local file path.",
+                }
+        else:
+            if not os.path.exists(local_path):
+                return {
+                    "tool": "geox_data_ingest_bundle",
+                    "status": "ERROR",
+                    "error_code": "FILE_NOT_FOUND",
+                    "message": f"File not found: {local_path}",
+                    "recoverable": True,
+                    "suggested_action": "Verify the file path exists on the server.",
+                }
+
+        # Derive well_id from filename if not provided
+        derived_well_id = well_id or Path(local_path).stem.replace(".las", "").replace(".LAS", "")
+
+        # Auto-detect source_type from extension
+        detected_type = source_type
+        if source_type == "auto":
+            ext = os.path.splitext(local_path)[1].lower()
+            detected_type = {"las": "well"}.get(ext, "well")
+
+        try:
+            from geox.services.las_ingestor import LASIngestor
+            result = LASIngestor().ingest(path=local_path, asset_id=derived_well_id)
+            out = result.to_dict()
+            # Overlay MCP context
+            out["tool"] = "geox_data_ingest_bundle"
+            out["source_uri"] = source_uri
+            out["source_type"] = detected_type
+            out["well_id"] = derived_well_id
+            # VAULT999 receipt
+            payload_str = json.dumps(out, sort_keys=True, default=str, separators=(",", ":"))
+            digest = hashlib.sha256(payload_str.encode()).hexdigest()[:16]
+            out["vault_receipt"] = {
+                "vault": "VAULT999",
+                "tool": "geox_data_ingest_bundle",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "hash": digest,
+            }
+            return out
+        except Exception as exc:
+            return {
+                "tool": "geox_data_ingest_bundle",
+                "status": "ERROR",
+                "error_code": "LAS_PARSE_FAILED",
+                "message": f"Could not parse LAS file: {exc}",
+                "file": local_path,
+                "recoverable": True,
+                "suggested_action": "Check file encoding, LAS header, or whether the file is a valid LAS 1.2/2.0 format.",
+                "well_id": derived_well_id,
+                "source_uri": source_uri,
+            }
         return get_standard_envelope(artifact, tool_class="observe", artifact_status=ArtifactStatus.LOADED)
 
     # --- 2. DATA QC ---
@@ -134,6 +207,70 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
         """VAULT999 retrieval of past runs and decision lineage."""
         artifact = {"query": query, "records": [], "vault": "VAULT999"}
         return get_standard_envelope(artifact, tool_class="system")
+
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # BONUS — WELL CORRELATION PANEL (Priority 1 GEOX heartbeat test)
+    # ──────────────────────────────────────────────────────────────────────────
+    @mcp.tool(name="geox_well_correlation_panel")
+    async def geox_well_correlation_panel(
+        las_paths: List[str],
+        well_names: Optional[List[str]] = None,
+        tracks: Optional[List[str]] = None,
+        output_png: str = "/tmp/geox_correlation_panel.png",
+        depth_range_min: Optional[float] = None,
+        depth_range_max: Optional[float] = None,
+        normalize: bool = True,
+    ) -> dict:
+        """Render a multi-well correlation panel PNG from LAS files.
+
+        Domain guardrails enforced:
+          - Cross-basin warning if wells from different sources
+          - Depth basis always MD (no TVDSS claim)
+          - All picks labeled AUTO_PICK_CANDIDATE or EXPLORATORY_VISUALIZATION
+
+        Args:
+            las_paths: List of absolute paths to LAS files.
+            well_names: Display names per well. Derived from filenames if None.
+            tracks: Canonical track names to render (GR, RT, RHOB, NPHI). All if None.
+            output_png: Output PNG path.
+            depth_range_min: Min depth in metres. Auto-detected if None.
+            depth_range_max: Max depth in metres. Auto-detected if None.
+            normalize: Apply shared depth normalisation.
+
+        Returns:
+            {status, artifact, wells_loaded, tracks_rendered, warnings, claim_state}
+        """
+        import tempfile
+        from geox.engines.correlation_panel import build_correlation_panel
+
+        depth_range = None
+        if depth_range_min is not None and depth_range_max is not None:
+            depth_range = (depth_range_min, depth_range_max)
+
+        out_png = output_png
+        if not out_png.endswith(".png"):
+            out_png = out_png + ".png"
+
+        result = build_correlation_panel(
+            las_paths=las_paths,
+            well_names=well_names,
+            tracks=tracks,
+            output_png=out_png,
+            depth_range=depth_range,
+        )
+
+        # Attach VAULT999 receipt
+        payload_str = json.dumps(result, sort_keys=True, default=str, separators=(",", ":"))
+        digest = hashlib.sha256(payload_str.encode()).hexdigest()[:16]
+        result["vault_receipt"] = {
+            "vault": "VAULT999",
+            "tool": "geox_well_correlation_panel",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "hash": digest,
+        }
+
+        return result
 
 
     # ══════════════════════════════════════════════════════════════════════════════

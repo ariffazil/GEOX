@@ -22,9 +22,9 @@ services:
       start_period: 40s
       test:
       - CMD
-      - curl
-      - -f
-      - http://localhost:8081/health
+      - python3
+      - -c
+      - import urllib.request; urllib.request.urlopen('http://localhost:8081/health')
       timeout: 10s
     networks:
     - arifos_core_network

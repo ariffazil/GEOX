@@ -164,17 +164,13 @@ async def legacy_mcp_handler(request):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def create_app():
-    mcp_app = mcp.http_app(path="/mcp/stream", transport="streamable-http")
-    return Starlette(
-        routes=[
-            Route("/health", health_handler, methods=["GET"]),
-            Route("/ready", ready_handler, methods=["GET"]),
-            Route("/status", status_handler, methods=["GET"]),
-            Route("/mcp", legacy_mcp_handler, methods=["GET", "POST"]),
-            Mount("/", mcp_app)
-        ],
-        lifespan=getattr(mcp_app, "lifespan", None),
-    )
+    # arifOS pattern: FastMCP http_app as root app, custom routes added directly
+    mcp_app = mcp.http_app(stateless_http=True)
+    # Add custom routes directly to FastMCP ASGI app
+    mcp_app.add_route("/health", health_handler, methods=["GET"])
+    mcp_app.add_route("/ready", ready_handler, methods=["GET"])
+    mcp_app.add_route("/status", status_handler, methods=["GET"])
+    return mcp_app
 
 def main() -> None:
     parser = argparse.ArgumentParser()
