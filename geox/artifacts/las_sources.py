@@ -32,6 +32,20 @@ def materialize_las_source(source: str, *, artifact_id: str | None = None) -> st
         )
 
     if source.startswith(("http://", "https://")):
+        # Red Team Fix: Basic SSRF protection
+        from urllib.parse import urlparse
+        import socket
+        
+        parsed = urlparse(source)
+        hostname = parsed.hostname
+        if not hostname:
+            raise LASSourceError("Invalid URL: no hostname")
+        
+        # Block common internal addresses
+        blocked_hosts = {"localhost", "127.0.0.1", "169.254.169.254"}
+        if hostname.lower() in blocked_hosts:
+            raise LASSourceError(f"Access to {hostname} is blocked for security reasons (SSRF protection)")
+            
         suffix = Path(source.split("?", 1)[0]).suffix or ".las"
         target = _target_path(artifact_id, suffix=suffix)
         try:
@@ -41,12 +55,26 @@ def materialize_las_source(source: str, *, artifact_id: str | None = None) -> st
         return str(target)
 
     local_path = source
-    if not os.path.isabs(local_path):
+    # Red Team Fix: Block absolute paths to prevent arbitrary file read
+    if os.path.isabs(local_path):
+        # We only allow absolute paths if they are under /data or /app/fixtures
+        resolved = Path(local_path).resolve()
+        is_safe = False
+        for safe_root in [Path("/data"), Path("/app/fixtures")]:
+            if resolved == safe_root or resolved.is_relative_to(safe_root):
+                is_safe = True
+                break
+        if not is_safe:
+            raise LASSourceError(f"Absolute path {local_path} is not under an allowed directory (/data or /app/fixtures)")
+    else:
+        # Relative paths are checked against /app/fixtures then /data
         fixture_path = f"/app/fixtures/{os.path.basename(local_path)}"
         if os.path.exists(fixture_path):
             local_path = fixture_path
         elif os.path.exists(f"/data/{local_path}"):
             local_path = f"/data/{local_path}"
+        else:
+            raise FileNotFoundError(f"LAS file not found: {local_path}")
 
     if not os.path.exists(local_path):
         raise FileNotFoundError(f"LAS file not found: {local_path}")

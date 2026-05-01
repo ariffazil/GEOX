@@ -36,10 +36,10 @@
 - CLERK_ID: Gemini-Clerk-L3
 - SEAL_SUMMARY:
   - Collapse: 49 fragmented tools contracted to 13 Sovereign Prisms (unified_13.py)
-  - Security: Fail-closed auth enforced on entrypoint startup
-  - Fix: Applied **kwargs patch to FastMCP alias bridge
-  - Contract: Forged architecture.md (Sovereign 13 spec)
-  - Ghost Purge: Legacy servers quarantined in archive/deprecated/
+  - Security: Blocked arbitrary file exfiltration and SSRF in `geox_file_upload_import`
+  - Governance: Hardened `geox_data_qc_bundle` to fail-closed on range/monotonicity issues
+  - Stability: Implemented depth-aware zone filtering and empty-array guards in candidate tools
+  - Logic: Unified `qc_overall` schema to reflect `FAIL` when physically impossible data is detected
 
 ## 4. ACTIVE TOPOLOGY (MEMORY MAP)
 

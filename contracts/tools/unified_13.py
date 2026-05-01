@@ -321,24 +321,19 @@ def _compute_vsh_from_store(
     gr_clean: float,
     gr_shale: float,
     method: str,
+    zone_top_m: Optional[float] = None,
+    zone_base_m: Optional[float] = None,
 ) -> dict:
     """Compute Vsh from stored LAS data. Returns stats dict or error dict."""
-    import sys
-    sys.path.insert(0, "/root/geox")
     import numpy as np
+    from geox.core.geox_1d import compute_vsh_gr
 
-    entry = _get_artifact(artifact_ref)
-    if not entry or not entry.get("las_path"):
-        return {"error": "NO_LAS_PATH", "artifact_ref": artifact_ref}
-    las_path = entry["las_path"]
-    if not os.path.exists(las_path):
-        return {"error": "LAS_FILE_MISSING", "las_path": las_path}
+    data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
+    if "error" in data:
+        return data
 
-    from geox.core.geox_1d import process_las_file, compute_vsh_gr
-
-    curves = process_las_file(las_path)
-    if "ERROR" in curves:
-        return {"error": "LAS_PARSE_FAILED", "detail": str(curves["ERROR"][0])}
+    curves = data["curves"]
+    depth = data["depth"]
 
     # Find GR using canonical aliases
     gr = None
@@ -368,26 +363,32 @@ def _compute_vsh_from_store(
     vsh = np.clip(vsh, 0, 1)
     # Replace any NaN from clavier with 0 or 1
     vsh = np.where(np.isnan(vsh), 0.5, vsh)
-    valid = ~np.isnan(vsh)
+    valid_mask = ~np.isnan(vsh)
+    n_valid = int(valid_mask.sum())
+
+    if n_valid == 0:
+        return {"error": "NO_VALID_SAMPLES_IN_ZONE", "artifact_ref": artifact_ref}
 
     return {
         "gr_mnemonic_used": gr_mnemonic,
         "method": method,
         "gr_clean": gr_clean,
         "gr_shale": gr_shale,
-        "n_samples": int(valid.sum()),
-        "vsh_mean": float(np.nanmean(vsh)),
-        "vsh_p10": float(np.nanpercentile(vsh, 10)),
-        "vsh_p50": float(np.nanpercentile(vsh, 50)),
-        "vsh_p90": float(np.nanpercentile(vsh, 90)),
-        "net_sand_fraction": float((vsh < 0.5).mean()),
+        "n_samples": n_valid,
+        "vsh_mean": _safe_reduction(np.nanmean, vsh),
+        "vsh_p10": _safe_reduction(lambda x: np.nanpercentile(x, 10), vsh),
+        "vsh_p50": _safe_reduction(lambda x: np.nanpercentile(x, 50), vsh),
+        "vsh_p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), vsh),
+        "net_sand_fraction": _safe_reduction(lambda x: (x < 0.5).mean(), vsh),
+        "depth_range_m": [float(depth[0]), float(depth[-1])],
         "curve_stats": {
-            "gr_min": float(np.nanmin(gr)),
-            "gr_max": float(np.nanmax(gr)),
+            "gr_min": _safe_reduction(np.nanmin, gr),
+            "gr_max": _safe_reduction(np.nanmax, gr),
         },
-        "_vsh_array": vsh,   # internal — not serialized in final output
-        "_gr_array": gr,     # internal
-        "_curves": curves,   # internal — full curves dict for downstream
+        "_vsh_array": vsh,
+        "_gr_array": gr,
+        "_curves": curves,
+        "_depth": depth,
     }
 
 
@@ -395,24 +396,19 @@ def _compute_porosity_from_store(
     artifact_ref: str,
     matrix_density: float,
     fluid_density: float,
+    zone_top_m: Optional[float] = None,
+    zone_base_m: Optional[float] = None,
 ) -> dict:
     """Compute PHIT from stored LAS data using RHOB and/or NPHI. Returns stats dict."""
-    import sys
-    sys.path.insert(0, "/root/geox")
     import numpy as np
+    from geox.core.geox_1d import compute_porosity_rhob, compute_porosity_neutron
 
-    entry = _get_artifact(artifact_ref)
-    if not entry or not entry.get("las_path"):
-        return {"error": "NO_LAS_PATH", "artifact_ref": artifact_ref}
-    las_path = entry["las_path"]
-    if not os.path.exists(las_path):
-        return {"error": "LAS_FILE_MISSING", "las_path": las_path}
+    data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
+    if "error" in data:
+        return data
 
-    from geox.core.geox_1d import process_las_file, compute_porosity_rhob, compute_porosity_neutron
-
-    curves = process_las_file(las_path)
-    if "ERROR" in curves:
-        return {"error": "LAS_PARSE_FAILED", "detail": str(curves["ERROR"][0])}
+    curves = data["curves"]
+    depth = data["depth"]
 
     phit = None
     methods_used = []
@@ -447,9 +443,12 @@ def _compute_porosity_from_store(
     if phit is None:
         return {"error": "NO_POROSITY_CURVES", "available": list(curves.keys())}
 
-    import numpy as _np
-    phit = _np.clip(phit, 0, 0.6)
-    valid = ~_np.isnan(phit)
+    phit = np.clip(phit, 0, 0.6)
+    valid_mask = ~np.isnan(phit)
+    n_valid = int(valid_mask.sum())
+
+    if n_valid == 0:
+        return {"error": "NO_VALID_POROSITY_SAMPLES", "artifact_ref": artifact_ref}
 
     return {
         "methods_used": methods_used,
@@ -457,14 +456,16 @@ def _compute_porosity_from_store(
         "nphi_mnemonic_used": nphi_mnemonic,
         "matrix_density": matrix_density,
         "fluid_density": fluid_density,
-        "n_samples": int(valid.sum()),
-        "phit_mean": float(_np.nanmean(phit)),
-        "phit_p10": float(_np.nanpercentile(phit, 10)),
-        "phit_p50": float(_np.nanpercentile(phit, 50)),
-        "phit_p90": float(_np.nanpercentile(phit, 90)),
-        "phit_max": float(_np.nanmax(phit)),
+        "n_samples": n_valid,
+        "phit_mean": _safe_reduction(np.nanmean, phit),
+        "phit_p10": _safe_reduction(lambda x: np.nanpercentile(x, 10), phit),
+        "phit_p50": _safe_reduction(lambda x: np.nanpercentile(x, 50), phit),
+        "phit_p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), phit),
+        "phit_max": _safe_reduction(np.nanmax, phit),
+        "depth_range_m": [float(depth[0]), float(depth[-1])],
         "_phit_array": phit,   # internal
         "_curves": curves,     # internal
+        "_depth": depth,       # internal
     }
 
 
@@ -477,31 +478,22 @@ def _compute_saturation_from_store(
     n: float,
     vsh_result: dict | None = None,
     phit_result: dict | None = None,
+    zone_top_m: Optional[float] = None,
+    zone_base_m: Optional[float] = None,
 ) -> dict:
     """Compute Sw from stored LAS data. Returns stats dict."""
-    import sys
-    sys.path.insert(0, "/root/geox")
     import numpy as np
+    from geox.core.geox_1d import compute_sw_archie, compute_sw_indonesian
 
-    entry = _get_artifact(artifact_ref)
-    if not entry or not entry.get("las_path"):
-        return {"error": "NO_LAS_PATH", "artifact_ref": artifact_ref}
-    las_path = entry["las_path"]
-    if not os.path.exists(las_path):
-        return {"error": "LAS_FILE_MISSING", "las_path": las_path}
-
-    from geox.core.geox_1d import process_las_file, compute_sw_archie, compute_sw_indonesian
-
-    # Use pre-computed curves if available, else reload
-    if vsh_result and "_curves" in vsh_result:
-        curves = vsh_result["_curves"]
-    elif phit_result and "_curves" in phit_result:
-        curves = phit_result["_curves"]
+    if (vsh_result and "_curves" in vsh_result) or (phit_result and "_curves" in phit_result):
+        curves = (vsh_result or {}).get("_curves") or (phit_result or {}).get("_curves")
+        depth = (vsh_result or {}).get("_depth") or (phit_result or {}).get("_depth")
     else:
-        curves = process_las_file(las_path)
-
-    if "ERROR" in curves:
-        return {"error": "LAS_PARSE_FAILED", "detail": str(curves["ERROR"][0])}
+        data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
+        if "error" in data:
+            return data
+        curves = data["curves"]
+        depth = data["depth"]
 
     # Find RT
     rt = None
@@ -543,7 +535,11 @@ def _compute_saturation_from_store(
         sw = compute_sw_archie(rt, rn_dummy, phi, rw=rw, a=a, m=m, n=n)
 
     sw = np.clip(sw, 0, 1)
-    valid = ~np.isnan(sw)
+    valid_mask = ~np.isnan(sw)
+    n_valid = int(valid_mask.sum())
+
+    if n_valid == 0:
+        return {"error": "NO_VALID_SATURATION_SAMPLES", "artifact_ref": artifact_ref}
 
     return {
         "sw_model": sw_model,
@@ -552,15 +548,17 @@ def _compute_saturation_from_store(
         "archie_a": a,
         "archie_m": m,
         "archie_n": n,
-        "n_samples": int(valid.sum()),
-        "sw_mean": float(np.nanmean(sw)),
-        "sw_p10": float(np.nanpercentile(sw, 10)),
-        "sw_p50": float(np.nanpercentile(sw, 50)),
-        "sw_p90": float(np.nanpercentile(sw, 90)),
-        "so_mean": float(1.0 - np.nanmean(sw)),
-        "_sw_array": sw,   # internal
+        "n_samples": n_valid,
+        "sw_mean": _safe_reduction(np.nanmean, sw),
+        "sw_p10": _safe_reduction(lambda x: np.nanpercentile(x, 10), sw),
+        "sw_p50": _safe_reduction(lambda x: np.nanpercentile(x, 50), sw),
+        "sw_p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), sw),
+        "so_mean": _safe_reduction(lambda x: 1.0 - np.nanmean(x), sw),
+        "depth_range_m": [float(depth[0]), float(depth[-1])],
+        "_sw_array": sw,
         "_phi_array": phi,
         "_rt_array": rt,
+        "_depth": depth,
     }
 
 
@@ -762,21 +760,20 @@ def _classify_gr_motif(
     }
 
 
-def _classify_lithology_from_store(artifact_ref: str) -> dict:
+def _classify_lithology_from_store(
+    artifact_ref: str,
+    zone_top_m: Optional[float] = None,
+    zone_base_m: Optional[float] = None,
+) -> dict:
     """Classify lithology from RHOB-NPHI crossplot zones."""
-    import sys
-    sys.path.insert(0, "/root/geox")
     import numpy as np
 
-    entry = _get_artifact(artifact_ref)
-    if not entry or not entry.get("las_path"):
-        return {"error": "NO_LAS_PATH"}
-    las_path = entry["las_path"]
+    data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
+    if "error" in data:
+        return data
 
-    from geox.core.geox_1d import process_las_file
-    curves = process_las_file(las_path)
-    if "ERROR" in curves:
-        return {"error": "LAS_PARSE_FAILED"}
+    curves = data["curves"]
+    depth = data["depth"]
 
     rhob = None
     for alias in CANONICAL_ALIASES.get("RHOB", ["RHOB"]):
@@ -793,6 +790,9 @@ def _classify_lithology_from_store(artifact_ref: str) -> dict:
         return {"error": "RHOB_OR_NPHI_NOT_FOUND", "available": list(curves.keys())}
 
     n = min(len(rhob), len(nphi))
+    if n == 0:
+        return {"error": "NO_SAMPLES_IN_ZONE"}
+
     rhob = rhob[:n]
     nphi = nphi[:n]
 
@@ -818,13 +818,17 @@ def _classify_lithology_from_store(artifact_ref: str) -> dict:
         else:
             litho_counts["sandstone"] += 1  # default to sandstone
 
-    dominant = max(litho_counts, key=litho_counts.get)
     total = sum(litho_counts.values())
+    if total == 0:
+        return {"error": "NO_VALID_LITHOLOGY_SAMPLES"}
+
+    dominant = max(litho_counts, key=litho_counts.get)
 
     return {
         "dominant_lithology": dominant,
-        "lithology_fractions": {k: round(v / total, 3) if total > 0 else 0.0 for k, v in litho_counts.items()},
+        "lithology_fractions": {k: round(v / total, 3) for k, v in litho_counts.items()},
         "n_samples": n,
+        "depth_range_m": [float(depth[0]), float(depth[-1])],
         "claim_state": "DERIVED_CANDIDATE",
         "risk": "RHOB-NPHI lithology classification requires core calibration for confirmation",
     }
@@ -833,6 +837,72 @@ def _classify_lithology_from_store(artifact_ref: str) -> dict:
 # ═══════════════════════════════════════════════════════════════════════════════
 # SOVEREIGN 13 IMPLEMENTATION
 # ═══════════════════════════════════════════════════════════════════════════════
+
+def _safe_reduction(func, arr, default=None):
+    """Safely apply a numpy reduction, returning default if array is empty."""
+    import numpy as np
+    if arr is None or (isinstance(arr, np.ndarray) and arr.size == 0):
+        return default
+    try:
+        res = func(arr)
+        if np.isnan(res):
+            return default
+        return float(res)
+    except:
+        return default
+
+
+def _get_well_data_with_depth(
+    artifact_ref: str,
+    zone_top: Optional[float] = None,
+    zone_base: Optional[float] = None,
+) -> dict:
+    """Helper to load LAS curves and apply depth filtering."""
+    import os
+    import numpy as np
+    from geox.core.geox_1d import process_las_file
+
+    entry = _get_artifact(artifact_ref)
+    if not entry or not entry.get("las_path"):
+        return {"error": "NO_LAS_PATH"}
+
+    las_path = entry["las_path"]
+    if not os.path.exists(las_path):
+        return {"error": "LAS_FILE_MISSING"}
+
+    curves = process_las_file(las_path)
+    if "ERROR" in curves:
+        return {"error": "LAS_PARSE_FAILED", "detail": str(curves["ERROR"][0])}
+
+    # Identify depth curve
+    depth = None
+    depth_mnemonic = None
+    for dk in ["DEPT", "DEPTH", "MD", "DEPTH_MD"]:
+        if dk in curves:
+            depth = curves[dk]
+            depth_mnemonic = dk
+            break
+
+    if depth is None:
+        return {"error": "DEPTH_CURVE_NOT_FOUND"}
+
+    # Filter by zone if requested
+    mask = np.ones(len(depth), dtype=bool)
+    if zone_top is not None:
+        mask &= (depth >= zone_top)
+    if zone_base is not None:
+        mask &= (depth <= zone_base)
+
+    if not np.any(mask):
+        return {"error": "NO_SAMPLES_IN_ZONE", "depth_range": [float(depth[0]), float(depth[-1])]}
+
+    filtered_curves = {k: v[mask] for k, v in curves.items()}
+    return {
+        "curves": filtered_curves,
+        "depth": depth[mask],
+        "depth_mnemonic": depth_mnemonic,
+        "mask": mask,
+    }
 
 def register_unified_tools(mcp: FastMCP, profile: str = "full"):
     """Registers the 13 Canonical Sovereign tools and the Legacy Alias Bridge."""
@@ -1236,6 +1306,14 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
                 - "completeness": which canonical curves present vs missing.
                 - "full" (default): all of the above.
         """
+        # Red Team Fix: Initialize these to ensure they are available for the fail-closed check
+        curve_warnings = []
+        depth_qc = {}
+        header_checks = {}
+        present_curves = []
+        missing_curves = []
+        completeness_score = 0.0
+
         if not artifact_ref or not _artifact_exists(artifact_ref):
             return {
                 "tool": "geox_data_qc_bundle",
@@ -1424,9 +1502,15 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
             flags = sorted(set(engine_flags + curve_state_flags + inherited_flags))
             limitations = sorted(set(list(qc_dict.get("limitations", [])) + inherited_limitations))
 
-            if inherited_suitability == "void" or inherited_qcfail_count > 0 or qc_overall == "FAIL":
+            # Red Team Fix: Include curve_warnings and depth_qc in failure logic
+            has_range_issues = bool(curve_warnings)
+            has_depth_issues = not depth_qc.get("monotonic", True)
+
+            if inherited_suitability == "void" or inherited_qcfail_count > 0 or qc_overall == "FAIL" or has_range_issues or has_depth_issues:
                 claim_state = "RAW_OBSERVATION"
                 qc_passed = False
+                if has_range_issues or has_depth_issues:
+                    qc_overall = "FAIL"
             elif qc_overall == "PASS" and not flags and not limitations:
                 claim_state = "QC_VERIFIED"
                 qc_passed = True
@@ -1597,7 +1681,7 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
 
         # ── New target classes with real computation ─────────────────────────
         if target_class == "vsh":
-            result = _compute_vsh_from_store(primary_ref, gr_clean, gr_shale, vsh_method)
+            result = _compute_vsh_from_store(primary_ref, gr_clean, gr_shale, vsh_method, zone_top_m, zone_base_m)
             if "error" in result:
                 return {
                     "tool": "geox_subsurface_generate_candidates",

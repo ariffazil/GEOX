@@ -30,7 +30,7 @@ def process_las_file(filepath: str) -> Dict[str, np.ndarray]:
     """
     try:
         import lasio
-        las = lasio.read(filepath, ignore_data=True)
+        las = lasio.read(filepath)
         curves = {}
         for key in las.keys():
             curves[key.upper()] = np.array(las[key].data)
