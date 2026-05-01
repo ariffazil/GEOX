@@ -1,7 +1,7 @@
 [project]
 name = "geox"
-version = "0.1.0"
-description = "GEOX — Governed geoscience coprocessor under arifOS constitutional floors. Dimension-native earth intelligence with physics-9 verification, 888_HOLD veto, and VAULT999 sealing."
+version = "2026.05.01"
+description = "GEOX — Earth Intelligence Sovereign Kernel. Governed geoscience coprocessor under arifOS constitutional floors. 13 canonical MCP tools, 13 constitutional floors (F01-F13)."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
