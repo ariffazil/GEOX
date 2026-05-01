@@ -41,7 +41,6 @@ GEOX_PORT = int(os.getenv("GEOX_PORT", os.getenv("PORT", "8081")))
 mcp = FastMCP(
     name="GEOX",
     version=GEOX_VERSION,
-    on_duplicate="error",
     instructions="""Canonical GEOX Registry & MCP App Control Plane (Sovereign 13).
     DITEMPA BUKAN DIBERI — One Sovereign Kernel.
     """,

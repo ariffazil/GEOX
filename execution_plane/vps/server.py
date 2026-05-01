@@ -60,7 +60,6 @@ well_app = FastMCPApp("Well Desk") if HAS_FASTMCP_APPS else None
 _mcp_kwargs = dict(
     name="GEOX by arifOS",
     version=GEOX_VERSION,
-    on_duplicate="error",
     instructions="""Sovereign GEOX Execution Plane.
     
     This server provides high-integrity governed execution for geological tools.
