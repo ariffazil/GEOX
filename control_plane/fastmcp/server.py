@@ -11,6 +11,7 @@ import logging
 import sys
 import json
 import uvicorn
+import argparse
 from fastmcp import FastMCP
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
@@ -120,10 +121,21 @@ async def run_legacy_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any
     return {"success": True, "data": tool_result.content[0].text if tool_result.content else {}}
 
 async def legacy_mcp_handler(request):
+    """Unified handler for MCP legacy/health probes and tool calls."""
+    if request.method == "GET":
+        return JSONResponse({
+            "mcp": "GEOX",
+            "kernel": "Sovereign 13",
+            "version": GEOX_VERSION,
+            "status": "active",
+            "transport": "streamable-http",
+            "note": "Use POST for JSON-RPC tool calls"
+        })
+
     try:
         payload = await request.json()
     except:
-        return JSONResponse({"error": "Parse error"}, status_code=400)
+        return JSONResponse({"error": "Parse error (empty or invalid JSON)"}, status_code=400)
     
     method = payload.get("method")
     params = payload.get("params", {})
@@ -152,14 +164,13 @@ def create_app():
             Route("/health", health_handler, methods=["GET"]),
             Route("/ready", ready_handler, methods=["GET"]),
             Route("/status", status_handler, methods=["GET"]),
-            Route("/mcp", legacy_mcp_handler, methods=["POST"]),
+            Route("/mcp", legacy_mcp_handler, methods=["GET", "POST"]),
             Mount("/", mcp_app)
         ],
         lifespan=getattr(mcp_app, "lifespan", None),
     )
 
 def main() -> None:
-    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default=GEOX_HOST)
     parser.add_argument("--port", type=int, default=GEOX_PORT)
