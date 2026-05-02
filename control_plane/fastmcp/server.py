@@ -54,6 +54,40 @@ mcp = FastMCP(
 )
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# GEOX Identity Invariant (F10 Coherence + F01 Amanah)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def is_geox() -> bool:
+    """
+    Verify that the GEOX server carries the canonical organ identity.
+    Returns True only if all constitutional identity fields are present and valid.
+    F02 Truth Floor enforcement at the organ identity layer.
+    """
+    return (
+        GEOX_VERSION.startswith("v2026.")
+        and GEOX_SEAL == "DITEMPA BUKAN DIBERI"
+        and GEOX_SECRET_TOKEN != ""
+        and GEOX_PROFILE in ("full", "lite")
+    )
+
+
+def _enforce_geox() -> dict[str, Any] | None:
+    """
+    Return an error payload if GEOX identity is corrupted or startup was invalid.
+    Otherwise return None (pass through).
+    """
+    if not is_geox():
+        return {
+            "ok": False,
+            "verdict": "NOT_GEOX",
+            "error": "GEOX identity invariant failed. Constitutional seal compromised or fail-open startup detected.",
+            "authority": "TERRAIN_WITNESS",
+            "seal": GEOX_SEAL,
+        }
+    return None
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # SOVEREIGN 13 BOOTSTRAP
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -92,7 +126,11 @@ def build_status_payload() -> dict:
         "auth_mode": "fail_closed",
         "profile": GEOX_PROFILE,
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "seal": GEOX_SEAL
+        "seal": GEOX_SEAL,
+        "identity_pass": is_geox(),
+        "identity": "GEOX",
+        "role": "Earth Substrate Witness",
+        "authority": "TERRAIN_WITNESS",
     }
 
 async def health_handler(request):
@@ -100,8 +138,13 @@ async def health_handler(request):
     return JSONResponse({"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat()})
 
 async def ready_handler(request):
-    """Readiness check: Ensure registry is loaded."""
-    return JSONResponse(build_status_payload())
+    """Readiness check: Ensure registry is loaded and GEOX identity is intact."""
+    payload = build_status_payload()
+    if not is_geox():
+        payload["status"] = "compromised"
+        payload["verdict"] = "NOT_GEOX"
+        return JSONResponse(payload, status_code=503)
+    return JSONResponse(payload)
 
 async def status_handler(request):
     """Full contract status."""
@@ -110,6 +153,26 @@ async def status_handler(request):
 # ═══════════════════════════════════════════════════════════════════════════════
 # LEGACY BRIDGE & RESOURCES
 # ═══════════════════════════════════════════════════════════════════════════════
+
+@mcp.resource("geox://identity")
+async def geox_identity() -> dict:
+    """
+    GEOX organ identity resource — F02 Truth Floor invariant.
+    Returns identity state. Fails closed if identity is compromised.
+    """
+    identity_state = {
+        "identity": "GEOX",
+        "role": "Earth Substrate Witness",
+        "authority": "TERRAIN_WITNESS",
+        "seal": GEOX_SEAL,
+        "version": GEOX_VERSION,
+        "profile": GEOX_PROFILE,
+        "identity_pass": is_geox(),
+    }
+    enforcement = _enforce_geox()
+    if enforcement:
+        identity_state["_enforcement"] = enforcement
+    return identity_state
 
 @mcp.resource("geox://registry/apps")
 async def list_geox_apps() -> list[dict]:
