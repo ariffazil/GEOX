@@ -28,7 +28,7 @@ Legacy names remain available via an alias bridge for a limited migration window
 | `geox_map_context_scene`             | Spatial bounding box, CRS checks, and causal scene rendering.           |
 | `geox_time4d_analyze_system`         | Burial history, maturity, and regime-shift / timing analysis.           |
 | `geox_prospect_evaluate`             | Probabilistic volumetrics (GRV/NTG/Recov) and POS evaluation.           |
-| `geox_prospect_judge_verdict`        | Gateway to arifOS 888_JUDGE (SEAL / PARTIAL / SABAR / VOID / 888 HOLD). ⚠️ F11 AUTH required — requires proven identity and PIN before invocation. |
+| `geox_prospect_judge_verdict`        | Gateway to arifOS 888_JUDGE (SEAL / HOLD / VOID). ⚠️ F11 AUTH required — requires proven identity and PIN before invocation. |
 | `geox_evidence_summarize_cross`      | Cross-domain causal evidence synthesis (well + seismic + map + time).   |
 | `geox_system_registry_status`        | Federation health, registry discovery, and contract epoch reporting.    |
 | `geox_history_audit`                 | VAULT999 retrieval of prior runs, evaluations, and decisions.           |
@@ -138,5 +138,37 @@ Arif (F13) → arif_session_init → arif_sense_observe → arif_evidence_fetch
 - **Epistemic tags**: Numeric outputs from GEOX tools carry CLAIM/PLAUSIBLE/HYPOTHESIS/ESTIMATE epistemic tags per F02. Min/Mid/Max ensemble outputs satisfy F07 Humility requirements natively.
 
 ***
+
+## arifOS Federation
+
+arifOS is part of a federated AI governance system. Each organ has a narrow responsibility so no single agent becomes uncontrolled, unaccountable, or self-authorizing.
+
+| Organ | Human Meaning | System Role | Docs |
+|---|---|---|---|
+| **ARIF / APEX** | Final human authority | F13 sovereign veto, approval, override, terminal judgment | [arif-fazil.com](https://arif-fazil.com) |
+| **AAA** | Operator cockpit | Identity, A2A federation gateway, session control, agent supervision | [README](https://github.com/ariffazil/AAA) |
+| **A-FORGE** | Execution shell | Runs tools, performs dry-runs, executes approved actions, reports outcomes | [README](https://github.com/ariffazil/A-FORGE) |
+| **arifOS** | Governance kernel | Checks evidence, risk, authority, verdicts, and auditability before action | [README](https://github.com/ariffazil/arifOS) |
+| **GEOX** | Earth intelligence | Seismic, petrophysics, basin, subsurface, and physics-grounded evidence | [README](https://github.com/ariffazil/geox) |
+| **WEALTH** | Capital intelligence | NPV, IRR, EMV, risk scoring, crisis triage, economic judgment | [README](https://github.com/ariffazil/wealth) |
+| **WELL** | Human readiness mirror | Operator pressure, biological state, cognitive load, human-system safety | — |
+| **Ω-Wiki** | Knowledge base | Persistent compiled knowledge, doctrine, references, and memory surfaces | [wiki.arif-fazil.com](https://wiki.arif-fazil.com) |
+
+### How the organs work together
+
+A governed action should not move directly from prompt to execution.
+
+```
+Human / Agent request
+→ AAA identifies the session
+→ arifOS judges the request
+→ GEOX / WEALTH / WELL provide domain evidence when needed
+→ A-FORGE executes only approved actions
+→ VAULT999 records the receipt
+→ APEX / Human can veto at any time
+```
+
+> **AAA controls the session. arifOS judges. Domain organs provide evidence. A-FORGE executes. VAULT999 records. The human remains sovereign.**
+
 ⬡ **GEOX SOVEREIGN 13 SEALED** ⬡
 DITEMPA BUKAN DIBERI — 999 SEAL ALIVE
