@@ -876,7 +876,7 @@ def geox_local_risk_preview(
     output = result.to_dict()
     output["_routed_to"] = "arifOS"
     output["_f13_local_computation"] = True
-    output["_f13_warning"] = "F13_TRI_WITNESS: verdict computed locally â route to arifos_judge for authoritative VAULT999 seal"
+    output["_f13_warning"] = "F13_TRI_WITNESS: verdict computed locally — route to arifos_judge for authoritative VAULT999 seal"
     return output
 
 
