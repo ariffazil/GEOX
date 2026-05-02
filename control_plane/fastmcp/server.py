@@ -175,12 +175,13 @@ def create_app():
         return await legacy_mcp_handler(request)
     root_router = Router(
         routes=[
-            Mount("/mcp", routes=[
-                Route("/health", health_handler, methods=["GET"]),
-                Route("/ready", ready_handler, methods=["GET"]),
-                Route("/status", status_handler, methods=["GET"]),
-                Route("/mcp", mcp_handler, methods=["GET", "POST"]),
-            ]),
+            # Root-level routes for Caddy proxy
+            # geox.arif-fazil.com/health → /health (GET)
+            Route("/health", health_handler, methods=["GET"]),
+            Route("/ready", ready_handler, methods=["GET"]),
+            Route("/status", status_handler, methods=["GET"]),
+            # MCP JSON-RPC endpoint: POST /mcp (with trailing slash removed via Caddy strip)
+            Route("/mcp", mcp_handler, methods=["GET", "POST"]),
         ]
     )
     return root_router
