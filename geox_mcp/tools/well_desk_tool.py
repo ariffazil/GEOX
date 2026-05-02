@@ -13,11 +13,12 @@ import os
 import sys
 from pathlib import Path
 
-# Add core to path for physics engine import
-_GEOX_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(_GEOX_ROOT / "core"))
+# Add geox package root to path to allow absolute imports (e.g. from core.xxx).
+_GEOX_ROOT = "/root/geox"
+if _GEOX_ROOT not in sys.path:
+    sys.path.insert(0, _GEOX_ROOT)
 
-from rock_physics_engine import (
+from core.rock_physics_engine import (
     RockPhysicsEngine, Physics9State, PhysicsGuard, VaultReceipt
 )
 
