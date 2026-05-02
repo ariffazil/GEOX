@@ -80,7 +80,8 @@ def _enforce_geox() -> dict[str, Any] | None:
         return {
             "ok": False,
             "verdict": "NOT_GEOX",
-            "error": "GEOX identity invariant failed. Constitutional seal compromised or fail-open startup detected.",
+            "error": "GEOX identity invariant failed. Constitutional seal compromised "
+                     "or fail-open startup detected.",
             "authority": "TERRAIN_WITNESS",
             "seal": GEOX_SEAL,
         }
