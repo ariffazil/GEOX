@@ -168,13 +168,22 @@ async def legacy_mcp_handler(request):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def create_app():
-    # arifOS pattern: FastMCP http_app as root app, custom routes added directly
-    mcp_app = mcp.http_app(stateless_http=True)
-    # Add custom routes directly to FastMCP ASGI app
-    mcp_app.add_route("/health", health_handler, methods=["GET"])
-    mcp_app.add_route("/ready", ready_handler, methods=["GET"])
-    mcp_app.add_route("/status", status_handler, methods=["GET"])
-    return mcp_app
+    # arifOS pattern: Starlette Router wraps FastMCP at /mcp for Caddy proxy compatibility
+    # FastMCP ASGI app handles MCP JSON-RPC protocol natively
+    from starlette.routing import Route, Mount, Router
+    async def mcp_handler(request):
+        return await legacy_mcp_handler(request)
+    root_router = Router(
+        routes=[
+            Mount("/mcp", routes=[
+                Route("/health", health_handler, methods=["GET"]),
+                Route("/ready", ready_handler, methods=["GET"]),
+                Route("/status", status_handler, methods=["GET"]),
+                Route("/mcp", mcp_handler, methods=["GET", "POST"]),
+            ]),
+        ]
+    )
+    return root_router
 
 def main() -> None:
     parser = argparse.ArgumentParser()
