@@ -443,8 +443,18 @@ def seismic_compute_attribute(
     # PhysicsGuard
     bounds = _SEISMIC_BOUNDS.get(attribute, {"min": -1e6, "max": 1e6})
     if result["value_range"][0] < bounds["min"] or result["value_range"][1] > bounds["max"]:
-        result["physics_violation"] = True
-        result["claim_state"] = ClaimTag.HYPOTHESIS.value
+        void_result = {
+            "tool": "geox_seismic_compute_attribute",
+            "verdict": "VOID",
+            "physics_violation": True,
+            "attribute": attribute,
+            "volume_id": volume_id,
+            "claim_state": ClaimTag.UNKNOWN.value,
+            "error": f"PhysicsGuard BLOCK: value_range {result['value_range']} exceeds bounds {bounds}",
+            "limitations": ["PhysicsGuard hard-blocked: out-of-range values cannot be returned"],
+        }
+        void_result["vault_receipt"] = make_vault_receipt("seismic_compute_attribute", void_result, "VOID")
+        return void_result
 
     # REQUIRED per spec — limitation statement
     result["limitations"] = [meta["limitation"]]

@@ -33,7 +33,8 @@ def smooth_gr(gr, depth, window_m=7.0, poly=2):
         window_pts += 1
     if len(gr) < window_pts:
         return gr
-    return savgol_filter(gr, window_pts, poly)
+    safe_poly = min(poly, window_pts - 1)
+    return savgol_filter(gr, window_pts, safe_poly)
 
 def detect_boundaries(depth, gr_smooth, min_interval=5.0):
     """Derivative-based segmentation for stable boundaries."""

@@ -231,7 +231,6 @@ def geox_well_load_bundle(well_id: str) -> dict:
             "claim_tag": "VOID",
             "stages": [],
             "error": f"Unknown well_id: {well_id}",
-            "known_well_ids": sorted(KNOWN_WELL_IDS),
         }
     return {
         "well_id": well_id,
@@ -761,7 +760,7 @@ class HoldRegistry:
 @mcp.tool()
 def arifos_check_hold(action: str, risk_class: str) -> dict:
     """Check if action requires 888 HOLD and register it in the lifecycle registry."""
-    high_risk = risk_class in ["high", "critical", "TOAC_RISK_EXCEEDED", "MODEL_COLLAPSE_F7_BREACH"]
+    high_risk = risk_class.lower() in ["high", "critical", "toac_risk_exceeded", "model_collapse_f7_breach"]
 
     if high_risk:
         hold_record = HoldRegistry.register(action, risk_class)
@@ -876,6 +875,8 @@ def geox_local_risk_preview(
     )
     output = result.to_dict()
     output["_routed_to"] = "arifOS"
+    output["_f13_local_computation"] = True
+    output["_f13_warning"] = "F13_TRI_WITNESS: verdict computed locally â route to arifos_judge for authoritative VAULT999 seal"
     return output
 
 

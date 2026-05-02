@@ -372,7 +372,9 @@ def compute_ac_risk(
     Calculate Theory of Anomalous Contrast (ToAC) risk score.
     Legacy entrypoint for backward compatibility.
     """
-    u_ambiguity = _clamp(u_ambiguity, 0.0, 1.0)
+    if not (0.0 <= u_ambiguity <= 1.0):
+        raise ValueError(f"u_ambiguity={u_ambiguity!r} out of range [0.0, 1.0]")
+    u_ambiguity = float(u_ambiguity)
     evidence_credit = _clamp(evidence_credit, 0.0, 1.0)
 
     b_cog = _compute_b_cog(u_ambiguity, evidence_credit, custom_b_cog, bias_scenario)
@@ -492,6 +494,12 @@ def compute_ac_risk_governed(
     if irreversible_action and verdict == ACVerdict.PROCEED.value:
         verdict = ACVerdict.HOLD.value
         explanation = f"AC_Risk={ac_risk_score:.3f}: Irreversible action. 888_HOLD required before VAULT999 seal."
+        hold_triggered = True
+
+    if "F1" in floor_violations and verdict == ACVerdict.PROCEED.value:
+        verdict = ACVerdict.HOLD.value
+        claim_tag = ClaimTag.HYPOTHESIS.value
+        explanation += " | F1_AMANAH_BREACH: amanah_locked required for PROCEED."
         hold_triggered = True
 
     if not anti_hantu_check:
