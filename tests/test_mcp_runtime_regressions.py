@@ -14,9 +14,7 @@ def test_geox_list_skills_returns_registry_entries():
 
 
 def test_geox_map_context_summary_is_not_empty():
-    result = geox_map_get_context_summary(
-        {"xmin": 0, "ymin": 0, "xmax": 10, "ymax": 5}
-    )
+    result = geox_map_get_context_summary({"xmin": 0, "ymin": 0, "xmax": 10, "ymax": 5})
     assert result["summary"]["area"] == 50
     assert result["summary"]["spatial_context"]
 
@@ -61,3 +59,59 @@ def test_geox_well_load_bundle_returns_curve_manifest():
     assert "RT" in mnemonics
     assert "RHOB" in mnemonics
     assert "NPHI" in mnemonics
+
+
+# ── L1: geox_map_get_context_summary bounds handling ────────────────────────
+
+
+def test_geox_map_context_none_bounds_returns_error():
+    """L1: None bounds must return error, not crash with AttributeError."""
+    result = geox_map_get_context_summary(None)
+    assert result["summary"]["claim_tag"] == "UNKNOWN"
+    assert result["summary"]["error"] in ("bounds_required", "bounds_must_be_dict")
+    assert result["summary"]["area"] == 0.0
+
+
+def test_geox_map_context_norwegian_shelf_has_positive_area():
+    """L1: Norwegian shelf bounds (59-62N, 2-5E) must compute positive area."""
+    result = geox_map_get_context_summary({"xmin": 2, "ymin": 59, "xmax": 5, "ymax": 62})
+    assert result["summary"]["area"] > 0
+    assert result["summary"].get("area_unit") == "degrees_squared"
+    assert result["summary"]["spatial_context"] == "bbox[2.0,59.0,5.0,62.0]"
+
+
+def test_geox_map_context_has_width_and_height():
+    """L1: Response should include width_deg and height_deg for transparency."""
+    result = geox_map_get_context_summary({"xmin": 0, "ymin": 0, "xmax": 10, "ymax": 5})
+    s = result["summary"]
+    assert "width_deg" in s
+    assert "height_deg" in s
+    assert s["width_deg"] * s["height_deg"] == s["area"]
+
+
+# ── M6: geox_well_compute_petrophysics null-handling ──────────────────────────
+
+
+def test_geox_well_petrophysics_has_rhob_null_in_curves():
+    """M6: Every curve must have explicit rhob=None (nullable RHOB curve)."""
+    result = geox_well_compute_petrophysics("BEK-2", "BEK_VOL")
+    assert all(c.get("rhob") is None for c in result["curves"]), "RHOB must be null-safe"
+
+
+def test_geox_well_petrophysics_curve_manifest_has_nullable_rhob():
+    """M6: curve_manifest must declare RHOB as nullable."""
+    result = geox_well_compute_petrophysics("BEK-2", "BEK_VOL")
+    rhob_entry = next((c for c in result["curve_manifest"] if c["mnemonic"] == "RHOB"), None)
+    assert rhob_entry is not None, "RHOB must be in curve_manifest"
+    assert rhob_entry.get("nullable") is True
+
+
+def test_geox_well_petrophysics_has_data_origin():
+    """M6: result must carry data_origin field (OBSERVED or SYNTHETIC_FIXTURE)."""
+    result = geox_well_compute_petrophysics("BEK-2", "BEK_VOL")
+    assert "data_origin" in result
+    assert result["data_origin"] in ("OBSERVED", "SYNTHETIC_FIXTURE")
+
+
+# ── L2: uncertainty propagation via p10_p90_spread ──────────────────────────
+# (Tested via integrated call; unit via test_npd_eia_structured_errors)

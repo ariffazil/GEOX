@@ -1719,6 +1719,13 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
             clean["artifact_ref"] = primary_ref
             clean["claim_state"] = "DERIVED_CANDIDATE"
             clean["risk"] = "Porosity derived from log — core plug calibration required for confidence"
+            clean["uncertainty"] = {
+                "propagation": "cumulative",
+                "input_null_pct": data.get("null_pct", {}),
+                "phit_uncertainty": "p10_p90_spread",
+                "p10_p90_spread": float(clean.get("phit_p90", 0) or 0) - float(clean.get("phit_p10", 0) or 0),
+                "confidence_label": "LOW" if (float(clean.get("phit_p90", 0) or 0) - float(clean.get("phit_p10", 0) or 0)) > 0.08 else "MEDIUM" if (float(clean.get("phit_p90", 0) or 0) - float(clean.get("phit_p10", 0) or 0)) > 0.04 else "HIGH",
+            }
             return clean
 
         if target_class == "saturation":
@@ -1744,6 +1751,14 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full"):
             clean["artifact_ref"] = primary_ref
             clean["claim_state"] = "DERIVED_CANDIDATE"
             clean["risk"] = f"Sw computed via {sw_model} model — assumes homogeneous formation; shaly sands may require Indonesia equation"
+            clean["uncertainty"] = {
+                "propagation": "cumulative",
+                "input_null_pct": data.get("null_pct", {}),
+                "sw_uncertainty": "p10_p90_spread",
+                "p10_p90_spread": float(clean.get("sw_p90", 0) or 0) - float(clean.get("sw_p10", 0) or 0),
+                "confidence_label": "LOW" if (float(clean.get("sw_p90", 0) or 0) - float(clean.get("sw_p10", 0) or 0)) > 0.2 else "MEDIUM" if (float(clean.get("sw_p90", 0) or 0) - float(clean.get("sw_p10", 0) or 0)) > 0.1 else "HIGH",
+                "cumulative_from": ["vsh", "phit"],
+            }
             return clean
 
         if target_class == "netpay":

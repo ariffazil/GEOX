@@ -56,10 +56,12 @@ def _make_vault_receipt(tool_name: str, payload: dict, verdict: str) -> dict:
 
 
 def _determine_claim_tag(error: bool) -> str:
-    return ClaimTag.VOID.value if error else ClaimTag.OBSERVED.value
+    return ClaimTag.UNKNOWN.value if error else ClaimTag.OBSERVED.value
 
 
-def _build_limitations(source: str, data_type: str, error: bool, error_detail: str | None = None) -> list[str]:
+def _build_limitations(
+    source: str, data_type: str, error: bool, error_detail: str | None = None
+) -> list[str]:
     limitations: list[str] = []
     if source == "eia":
         limitations.append("EIA data is U.S.-centric; global coverage is limited to select benchmarks")
@@ -74,6 +76,116 @@ def _build_limitations(source: str, data_type: str, error: bool, error_detail: s
     if error and error_detail:
         limitations.append(f"API error: {error_detail}")
     return limitations
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Structured error schema (M5)
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Every failure path in this module emits exactly one of these shapes:
+#
+#   {"error": "upstream_unavailable", "source": "npd.no", "retry_hint": "later"}
+#   {"error": "bad_request",          "source": "eia.gov", "http_status": 400, "details": "..."}
+#   {"error": "config_missing",       "source": "eia.gov", "details": "EIA_API_KEY not set"}
+#   {"error": "timeout",              "source": "npd.no",  "retry_hint": "later"}
+#   {"error": "unsupported_query",    "source": "npd.no",  "details": "..."}
+#
+# The tool wrapper (_wrap_tool_error) adds claim_tag, vault_receipt, limitations,
+# governance, data_origin=None, and any context fields (commodity, field_name, etc.).
+
+
+def _build_structured_error(
+    error_code: str,
+    source: str,
+    http_status: int | None = None,
+    details: str | None = None,
+    retry_hint: str | None = None,
+) -> dict[str, Any]:
+    """Return a minimal, machine-parseable error descriptor."""
+    err: dict[str, Any] = {"error": error_code, "source": source, "data_origin": None}
+    if http_status is not None:
+        err["http_status"] = http_status
+    if details:
+        err["details"] = details[:300]
+    if retry_hint:
+        err["retry_hint"] = retry_hint
+    return err
+
+
+def _eia_client_error_to_schema(client_result: dict[str, Any]) -> dict[str, Any]:
+    """Map EIA client error dict (_eia_* keys) to canonical structured error."""
+    status = client_result.get("_eia_status", 0)
+    detail = str(client_result.get("_eia_detail", ""))
+    if status == 401 or "missing_api_key" in detail:
+        return _build_structured_error(
+            "config_missing",
+            "eia.gov",
+            http_status=status,
+            details="EIA_API_KEY not configured — register free at https://www.eia.gov/opendata/",
+        )
+    if status == 0:
+        return _build_structured_error(
+            "upstream_unavailable", "eia.gov", details=detail or None, retry_hint="later"
+        )
+    try:
+        status_int = int(status)
+    except (TypeError, ValueError):
+        status_int = 0
+    if 400 <= status_int < 500:
+        return _build_structured_error(
+            "bad_request", "eia.gov", http_status=status_int, details=detail or None
+        )
+    return _build_structured_error(
+        "upstream_unavailable", "eia.gov", http_status=status_int or None, retry_hint="later"
+    )
+
+
+def _npd_client_error_to_schema(client_result: dict[str, Any]) -> dict[str, Any]:
+    """Map NPD client error dict (_npd_* keys) to canonical structured error."""
+    status = client_result.get("_npd_status", 0)
+    detail = str(client_result.get("_npd_detail", ""))
+    if "Unknown endpoint" in detail:
+        return _build_structured_error("unsupported_query", "npd.no", details=detail)
+    if status == 0:
+        return _build_structured_error(
+            "upstream_unavailable", "npd.no", details=detail or None, retry_hint="later"
+        )
+    try:
+        status_int = int(status)
+    except (TypeError, ValueError):
+        status_int = 0
+    if 400 <= status_int < 500:
+        return _build_structured_error(
+            "bad_request", "npd.no", http_status=status_int, details=detail or None
+        )
+    return _build_structured_error(
+        "upstream_unavailable", "npd.no", http_status=status_int or None, retry_hint="later"
+    )
+
+
+def _wrap_tool_error(
+    error_schema: dict[str, Any],
+    tool_name: str,
+    context_fields: dict[str, Any],
+    upstream_source: str,
+    data_type: str,
+) -> dict[str, Any]:
+    """
+    Attach GEOX canonical envelope (claim_tag, vault_receipt, limitations,
+    governance) to a structured error payload.
+    """
+    result: dict[str, Any] = {
+        **context_fields,
+        "status": "error",
+        "claim_tag": ClaimTag.UNKNOWN.value,
+        **error_schema,
+    }
+    result["vault_receipt"] = _make_vault_receipt(tool_name, context_fields, "VOID")
+    result["limitations"] = _build_limitations(
+        upstream_source, data_type, True, error_schema.get("details")
+    )
+    result["governance"] = {"f1_amanah": "read_only", "f2_truth": "source_unavailable"}
+    return result
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -100,7 +212,9 @@ def geox_price_observe_eia(
 
     Returns:
         Canonical GEOX dict with prices, claim_tag, provenance, vault_receipt.
+        On failure: structured error object with error/source/details fields.
     """
+    context = {"commodity": commodity, "frequency": frequency, "start": start, "end": end}
     client = EIAClient(api_key=api_key)
     try:
         result = asyncio.run(
@@ -113,31 +227,25 @@ def geox_price_observe_eia(
         )
     except Exception as exc:
         logger.exception("geox_price_observe_eia failed")
-        return {
-            "commodity": commodity,
-            "status": "error",
-            "claim_tag": ClaimTag.VOID.value,
-            "error": str(exc),
-            "vault_receipt": _make_vault_receipt("geox_price_observe_eia", {"commodity": commodity}, "VOID"),
-            "limitations": ["Client exception — check network and EIA_API_KEY"],
-            "governance": {"f1_amanah": "read_only", "f2_truth": "source_unavailable"},
-        }
+        schema = _build_structured_error(
+            "upstream_unavailable", "eia.gov", details=str(exc)[:300], retry_hint="later"
+        )
+        return _wrap_tool_error(schema, "geox_price_observe_eia", context, "eia", "price")
 
-    error = result.get("_eia_error", False)
-    claim_tag = _determine_claim_tag(error)
-    verdict = "SEAL" if claim_tag == ClaimTag.OBSERVED.value else "HOLD"
-    payload = {"commodity": commodity, "frequency": frequency, "start": start, "end": end}
+    if result.get("_eia_error"):
+        schema = _eia_client_error_to_schema(result)
+        return _wrap_tool_error(schema, "geox_price_observe_eia", context, "eia", "price")
 
+    payload = context
     return {
         "commodity": commodity,
-        "status": "loaded" if not error else "void",
-        "claim_tag": claim_tag,
+        "status": "loaded",
+        "claim_tag": ClaimTag.OBSERVED.value,
+        "data_origin": "OBSERVED",
         "provenance": result.get("_eia_provenance", {}),
         "prices": result.get("prices", []),
-        "eia_error": error,
-        "eia_status": result.get("_eia_status"),
-        "vault_receipt": _make_vault_receipt("geox_price_observe_eia", payload, verdict),
-        "limitations": _build_limitations("eia", "price", error, result.get("_eia_detail")),
+        "vault_receipt": _make_vault_receipt("geox_price_observe_eia", payload, "SEAL"),
+        "limitations": _build_limitations("eia", "price", False),
         "governance": {
             "f1_amanah": "read_only",
             "f2_truth": "eia_gov_api",
@@ -165,7 +273,12 @@ def geox_production_observe_eia(
         api_key: Optional EIA_API_KEY override.
         start: Optional YYYY-MM-DD.
         end: Optional YYYY-MM-DD.
+
+    Returns:
+        Canonical GEOX dict with production records.
+        On failure: structured error object with error/source/details fields.
     """
+    context = {"data_type": data_type, "area": area, "frequency": frequency}
     client = EIAClient(api_key=api_key)
     try:
         if data_type == "crude_oil":
@@ -174,37 +287,36 @@ def geox_production_observe_eia(
             )
         else:
             result = asyncio.run(
-                client.fetch_natural_gas_production(area=area, frequency=frequency, start=start, end=end)
+                client.fetch_natural_gas_production(
+                    area=area, frequency=frequency, start=start, end=end
+                )
             )
     except Exception as exc:
         logger.exception("geox_production_observe_eia failed")
-        return {
-            "data_type": data_type,
-            "area": area,
-            "status": "error",
-            "claim_tag": ClaimTag.VOID.value,
-            "error": str(exc),
-            "vault_receipt": _make_vault_receipt("geox_production_observe_eia", {"data_type": data_type, "area": area}, "VOID"),
-            "limitations": ["Client exception — check network and EIA_API_KEY"],
-            "governance": {"f1_amanah": "read_only", "f2_truth": "source_unavailable"},
-        }
+        schema = _build_structured_error(
+            "upstream_unavailable", "eia.gov", details=str(exc)[:300], retry_hint="later"
+        )
+        return _wrap_tool_error(
+            schema, "geox_production_observe_eia", context, "eia", "production"
+        )
 
-    error = result.get("_eia_error", False)
-    claim_tag = _determine_claim_tag(error)
-    verdict = "SEAL" if claim_tag == ClaimTag.OBSERVED.value else "HOLD"
-    payload = {"data_type": data_type, "area": area, "frequency": frequency}
+    if result.get("_eia_error"):
+        schema = _eia_client_error_to_schema(result)
+        return _wrap_tool_error(
+            schema, "geox_production_observe_eia", context, "eia", "production"
+        )
 
+    payload = context
     return {
         "data_type": data_type,
         "area": area,
-        "status": "loaded" if not error else "void",
-        "claim_tag": claim_tag,
+        "status": "loaded",
+        "claim_tag": ClaimTag.OBSERVED.value,
+        "data_origin": "OBSERVED",
         "provenance": result.get("_eia_provenance", {}),
         "production": result.get("production", []),
-        "eia_error": error,
-        "eia_status": result.get("_eia_status"),
-        "vault_receipt": _make_vault_receipt("geox_production_observe_eia", payload, verdict),
-        "limitations": _build_limitations("eia", "production", error, result.get("_eia_detail")),
+        "vault_receipt": _make_vault_receipt("geox_production_observe_eia", payload, "SEAL"),
+        "limitations": _build_limitations("eia", "production", False),
         "governance": {
             "f1_amanah": "read_only",
             "f2_truth": "eia_gov_api",
@@ -232,52 +344,47 @@ def geox_well_load_npd(
 
     Returns:
         Canonical GEOX dict with wellbore data, claim_tag, provenance.
+        On failure: structured error object with error/source/details fields.
     """
+    context = {"well_name": well_name, "include_production": include_production}
     client = NPDClient()
     try:
         if well_name:
             result = asyncio.run(client.search_wellbore_by_name(well_name))
         else:
-            # Return a sample of recent exploration wellbores (first 50)
             res = asyncio.run(client.fetch_wellbores_exploration())
-            if "_npd_error" in res:
-                result = res
-            else:
-                rows = res.get("_npd_data", [])[:50]
-                result = {
-                    "query": "*",
-                    "count": len(rows),
-                    "wellbores": [{"source": "wellbore_exploration", **r} for r in rows],
-                    "_npd_provenance": res.get("_npd_provenance", {}),
-                }
+            if res.get("_npd_error"):
+                schema = _npd_client_error_to_schema(res)
+                return _wrap_tool_error(schema, "geox_well_load_npd", context, "npd", "well")
+            rows = res.get("_npd_data", [])[:50]
+            result = {
+                "query": "*",
+                "count": len(rows),
+                "wellbores": [{"source": "wellbore_exploration", **r} for r in rows],
+                "_npd_provenance": res.get("_npd_provenance", {}),
+            }
     except Exception as exc:
         logger.exception("geox_well_load_npd failed")
-        return {
-            "well_name": well_name,
-            "status": "error",
-            "claim_tag": ClaimTag.VOID.value,
-            "error": str(exc),
-            "vault_receipt": _make_vault_receipt("geox_well_load_npd", {"well_name": well_name}, "VOID"),
-            "limitations": ["Client exception — check network connectivity to NPD"],
-            "governance": {"f1_amanah": "read_only", "f2_truth": "source_unavailable"},
-        }
+        schema = _build_structured_error(
+            "upstream_unavailable", "npd.no", details=str(exc)[:300], retry_hint="later"
+        )
+        return _wrap_tool_error(schema, "geox_well_load_npd", context, "npd", "well")
 
-    error = result.get("_npd_error", False)
-    claim_tag = _determine_claim_tag(error)
-    verdict = "SEAL" if claim_tag == ClaimTag.OBSERVED.value else "HOLD"
-    payload = {"well_name": well_name, "include_production": include_production}
+    if result.get("_npd_error"):
+        schema = _npd_client_error_to_schema(result)
+        return _wrap_tool_error(schema, "geox_well_load_npd", context, "npd", "well")
 
+    payload = context
     return {
         "well_name": well_name,
-        "status": "loaded" if not error else "void",
-        "claim_tag": claim_tag,
+        "status": "loaded",
+        "claim_tag": ClaimTag.OBSERVED.value,
+        "data_origin": "OBSERVED",
         "provenance": result.get("_npd_provenance", {}),
         "wellbores": result.get("wellbores", []),
         "count": result.get("count", 0),
-        "npd_error": error,
-        "npd_status": result.get("_npd_status"),
-        "vault_receipt": _make_vault_receipt("geox_well_load_npd", payload, verdict),
-        "limitations": _build_limitations("npd", "well", error, result.get("_npd_detail")),
+        "vault_receipt": _make_vault_receipt("geox_well_load_npd", payload, "SEAL"),
+        "limitations": _build_limitations("npd", "well", False),
         "governance": {
             "f1_amanah": "read_only",
             "f2_truth": "npd_norway_public",
@@ -301,56 +408,53 @@ def geox_field_observe_npd(
 
     Returns:
         Canonical GEOX dict with field summaries and optional production.
+        On failure: structured error object with error/source/details fields.
     """
+    context = {"field_name": field_name, "include_production": include_production}
     client = NPDClient()
     try:
         fields_res = asyncio.run(client.fetch_fields())
-        if "_npd_error" in fields_res:
-            return {
-                "field_name": field_name,
-                "status": "error",
-                "claim_tag": ClaimTag.VOID.value,
-                "npd_error": True,
-                "npd_status": fields_res.get("_npd_status"),
-                "vault_receipt": _make_vault_receipt("geox_field_observe_npd", {"field_name": field_name}, "VOID"),
-                "limitations": _build_limitations("npd", "field", True, fields_res.get("_npd_detail")),
-                "governance": {"f1_amanah": "read_only", "f2_truth": "npd_norway_public"},
-            }
+        if fields_res.get("_npd_error"):
+            schema = _npd_client_error_to_schema(fields_res)
+            return _wrap_tool_error(schema, "geox_field_observe_npd", context, "npd", "field")
 
         all_fields = fields_res.get("_npd_data", [])
         if field_name:
             matched = [
-                f for f in all_fields
-                if field_name.lower() in str(f.get("fldName") or f.get("Field") or f.get("name", "")).lower()
+                f
+                for f in all_fields
+                if field_name.lower()
+                in str(
+                    f.get("fldName") or f.get("Field") or f.get("name", "")
+                ).lower()
             ]
         else:
-            matched = all_fields[:100]  # cap at 100 if no filter
+            matched = all_fields[:100]
 
         production = []
         if include_production and matched:
-            # Fetch production and filter for the first matched field
-            first_name = str(matched[0].get("fldName") or matched[0].get("Field") or matched[0].get("name", ""))
+            first_name = str(
+                matched[0].get("fldName")
+                or matched[0].get("Field")
+                or matched[0].get("name", "")
+            )
             prod_res = asyncio.run(client.get_field_production(first_name))
-            if "_npd_error" not in prod_res:
+            if not prod_res.get("_npd_error"):
                 production = prod_res.get("production", [])
 
     except Exception as exc:
         logger.exception("geox_field_observe_npd failed")
-        return {
-            "field_name": field_name,
-            "status": "error",
-            "claim_tag": ClaimTag.VOID.value,
-            "error": str(exc),
-            "vault_receipt": _make_vault_receipt("geox_field_observe_npd", {"field_name": field_name}, "VOID"),
-            "limitations": ["Client exception — check network connectivity to NPD"],
-            "governance": {"f1_amanah": "read_only", "f2_truth": "source_unavailable"},
-        }
+        schema = _build_structured_error(
+            "upstream_unavailable", "npd.no", details=str(exc)[:300], retry_hint="later"
+        )
+        return _wrap_tool_error(schema, "geox_field_observe_npd", context, "npd", "field")
 
-    payload = {"field_name": field_name, "include_production": include_production}
+    payload = context
     return {
         "field_name": field_name,
         "status": "loaded",
         "claim_tag": ClaimTag.OBSERVED.value,
+        "data_origin": "OBSERVED",
         "provenance": fields_res.get("_npd_provenance", {}),
         "fields": matched,
         "count": len(matched),
@@ -378,38 +482,38 @@ def geox_production_observe_npd(
 
     Returns:
         Canonical GEOX dict with monthly production records.
+        On failure: structured error object with error/source/details fields.
     """
+    context = {"field_name": field_name}
     client = NPDClient()
     try:
         result = asyncio.run(client.get_field_production(field_name))
     except Exception as exc:
         logger.exception("geox_production_observe_npd failed")
-        return {
-            "field_name": field_name,
-            "status": "error",
-            "claim_tag": ClaimTag.VOID.value,
-            "error": str(exc),
-            "vault_receipt": _make_vault_receipt("geox_production_observe_npd", {"field_name": field_name}, "VOID"),
-            "limitations": ["Client exception — check network connectivity to NPD"],
-            "governance": {"f1_amanah": "read_only", "f2_truth": "source_unavailable"},
-        }
+        schema = _build_structured_error(
+            "upstream_unavailable", "npd.no", details=str(exc)[:300], retry_hint="later"
+        )
+        return _wrap_tool_error(
+            schema, "geox_production_observe_npd", context, "npd", "production"
+        )
 
-    error = result.get("_npd_error", False)
-    claim_tag = _determine_claim_tag(error)
-    verdict = "SEAL" if claim_tag == ClaimTag.OBSERVED.value else "HOLD"
-    payload = {"field_name": field_name}
+    if result.get("_npd_error"):
+        schema = _npd_client_error_to_schema(result)
+        return _wrap_tool_error(
+            schema, "geox_production_observe_npd", context, "npd", "production"
+        )
 
+    payload = context
     return {
         "field_name": field_name,
-        "status": "loaded" if not error else "void",
-        "claim_tag": claim_tag,
+        "status": "loaded",
+        "claim_tag": ClaimTag.OBSERVED.value,
+        "data_origin": "OBSERVED",
         "provenance": result.get("_npd_provenance", {}),
         "production": result.get("production", []),
         "count": result.get("count", 0),
-        "npd_error": error,
-        "npd_status": result.get("_npd_status"),
-        "vault_receipt": _make_vault_receipt("geox_production_observe_npd", payload, verdict),
-        "limitations": _build_limitations("npd", "production", error, result.get("_npd_detail")),
+        "vault_receipt": _make_vault_receipt("geox_production_observe_npd", payload, "SEAL"),
+        "limitations": _build_limitations("npd", "production", False),
         "governance": {
             "f1_amanah": "read_only",
             "f2_truth": "npd_norway_public",

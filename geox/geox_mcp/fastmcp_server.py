@@ -43,14 +43,39 @@ def geox_list_skills() -> dict[str, Any]:
 
 
 def geox_map_get_context_summary(bounds: dict[str, float]) -> dict[str, Any]:
+    if bounds is None:
+        return {
+            "summary": {
+                "area": 0.0,
+                "area_unit": "degrees_squared",
+                "spatial_context": "bbox[invalid]",
+                "claim_tag": "UNKNOWN",
+                "error": "bounds_required",
+            }
+        }
+    if not isinstance(bounds, dict):
+        return {
+            "summary": {
+                "area": 0.0,
+                "area_unit": "degrees_squared",
+                "spatial_context": "bbox[invalid]",
+                "claim_tag": "UNKNOWN",
+                "error": "bounds_must_be_dict",
+            }
+        }
     xmin = float(bounds.get("xmin", 0.0))
     xmax = float(bounds.get("xmax", 0.0))
     ymin = float(bounds.get("ymin", 0.0))
     ymax = float(bounds.get("ymax", 0.0))
-    area = abs((xmax - xmin) * (ymax - ymin))
+    width = max(0.0, xmax - xmin)
+    height = max(0.0, ymax - ymin)
+    area = width * height
     return {
         "summary": {
             "area": area,
+            "area_unit": "degrees_squared",
+            "width_deg": width,
+            "height_deg": height,
             "spatial_context": f"bbox[{xmin},{ymin},{xmax},{ymax}]",
             "claim_tag": "OBSERVED",
         }
@@ -94,16 +119,34 @@ def geox_well_compute_petrophysics(well_id: str, volume_id: str | None = None) -
                 "rt": 35.0 if in_pay else 2.5,
                 "phit": 0.23 if in_pay else 0.09,
                 "sw": 0.32 if in_pay else 0.82,
+                "rhob": None,  # M6: explicit null for missing RHOB
                 "net_pay": in_pay,
-                "sw_models": {"archie": 0.32 if in_pay else 0.82, "simandoux": 0.36 if in_pay else 0.86},
+                "sw_models": {
+                    "archie": 0.32 if in_pay else 0.82,
+                    "simandoux": 0.36 if in_pay else 0.86,
+                },
             }
         )
-    panel = render_correlation_panel(
-        las_paths=[str(_REPO_ROOT / "tests" / "fixtures" / "geox_smoke_test.las")],
-        well_names=[well_id],
-        tracks=["GR", "RT"],
-        output_dir="/tmp/geox_legacy_panels",
-    ).to_dict()
+    las_path = str(_REPO_ROOT / "tests" / "fixtures" / "geox_smoke_test.las")
+    try:
+        panel = render_correlation_panel(
+            las_paths=[las_path],
+            well_names=[well_id],
+            tracks=["GR", "RT"],
+            output_dir="/tmp/geox_legacy_panels",
+        ).to_dict()
+    except FileNotFoundError:
+        panel = {
+            "status": "unavailable",
+            "error": "LAS_fixture_not_found",
+            "data_origin": "SYNTHETIC_FIXTURE",
+        }
+    except Exception as exc:
+        panel = {
+            "status": "unavailable",
+            "error": str(exc)[:100],
+            "data_origin": "SYNTHETIC_FIXTURE",
+        }
     return {
         "well_id": well_id,
         "volume_id": volume_id,
@@ -113,6 +156,7 @@ def geox_well_compute_petrophysics(well_id: str, volume_id: str | None = None) -
             {"mnemonic": "RT"},
             {"mnemonic": "PHIT"},
             {"mnemonic": "SW"},
+            {"mnemonic": "RHOB", "nullable": True},  # M6: explicit nullable RHOB
         ],
         "summary": {
             "net_pay_intervals": [{"top_md": 2090.0, "base_md": 2170.0}],
@@ -121,6 +165,7 @@ def geox_well_compute_petrophysics(well_id: str, volume_id: str | None = None) -
         },
         "visualization_payload": panel,
         "claim_tag": "ESTIMATE",
+        "data_origin": "SYNTHETIC_FIXTURE",  # M6: explicit data_origin since no real LAS
     }
 
 
@@ -133,13 +178,17 @@ def geox_time4d_verify_timing(
         {"age_ma": charge_ma + 20.0, "duration_ma": 12.0, "temperature_c": 88.0},
         {"age_ma": charge_ma, "duration_ma": 14.0, "temperature_c": 112.0},
     ]
-    basin_charge = BasinChargeSimulator().simulate(
-        burial_history=history,
-        trap_age_ma=trap_ma,
-        carrier_permeability_md=250.0,
-        buoyancy_pressure_mpa=4.0,
-        seal_capacity_mpa=6.0,
-    ).to_dict()
+    basin_charge = (
+        BasinChargeSimulator()
+        .simulate(
+            burial_history=history,
+            trap_age_ma=trap_ma,
+            carrier_permeability_md=250.0,
+            buoyancy_pressure_mpa=4.0,
+            seal_capacity_mpa=6.0,
+        )
+        .to_dict()
+    )
     return {
         "well_id": well_id,
         "timing_valid": charge_ma <= trap_ma,
