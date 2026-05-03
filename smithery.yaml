@@ -25,137 +25,152 @@ category: science
 subcategory: geology
 
 # MCP protocol
-mcp_version: "2024-11-05"
-transport: stdio
+mcp_version: "2025-11-25"
+transport: http
 command: python
-args: ["/full/path/to/server.py"]
+args: ["server.py"]
 
 # Installation
 install:
   method: pip
   package: arifos-geox
-  source: https://github.com/ariffazil/GEOX
-  python_version: ">=3.10"
+  source: https://github.com/ariffazil/geox
+  python_version: ">=3.11"
 
-# Tools exposed
+# Sovereign 13 Tools — canonical public surface locked at 13
 tools:
-  - id: geox_load_seismic_line
-    name: geox_load_seismic_line
-    description: Load seismic line data and ignite visual mode (Earth Witness Ignition). Returns QC badges, contrast warnings, and governance floor status.
+  - id: geox_data_ingest_bundle
+    name: geox_data_ingest_bundle
+    description: Lazy ingest LAS/CSV/SEG-Y/JSON/GeoJSON/Parquet/analog log into the artifact store. Returns artifact_ref for downstream tools.
     input_schema:
       type: object
       properties:
-        line_id: { type: string }
-        survey_path: { type: string, default: default_survey }
-        generate_views: { type: boolean, default: true }
-      required: [line_id]
+        file_path: { type: string, description: "Path or URL to the data file" }
+        format: { type: string, enum: [las, csv, segy, json, geojson, parquet, analog] }
+        artifact_label: { type: string }
+      required: [file_path, format]
 
-  - id: geox_build_structural_candidates
-    name: geox_build_structural_candidates
-    description: Build structural model candidate ensemble (Inverse Modelling Constraints). Prevents narrative collapse — returns multiple plausible models.
+  - id: geox_data_qc_bundle
+    name: geox_data_qc_bundle
+    description: Unified QC gate — header, unit, missingness, spike, and range verification. Promotes artifact_ref to QC_VERIFIED on pass; blocks on fail.
     input_schema:
       type: object
       properties:
-        line_id: { type: string }
-        focus_area: { type: string }
-      required: [line_id]
+        artifact_ref: { type: string }
+      required: [artifact_ref]
 
-  - id: geox_feasibility_check
-    name: geox_feasibility_check
-    description: Constitutional Firewall — check if a proposed plan is physically possible against world-state and Earth physics (F4, F9).
+  - id: geox_subsurface_generate_candidates
+    name: geox_subsurface_generate_candidates
+    description: Petrophysics + structural geometry ensemble (MIN/MID/MAX realizations) with residuals, evidence_density, and assumptions. Requires QC_VERIFIED input.
     input_schema:
       type: object
       properties:
-        plan_id: { type: string }
-        constraints: { type: array, items: { type: string } }
-      required: [plan_id, constraints]
+        target_class: { type: string, enum: [petrophysics, structure, flattening, vsh, porosity, saturation, netpay, permeability, gr_motif, lithology] }
+        evidence_refs: { type: array, items: { type: string } }
+        realizations: { type: integer, default: 3 }
+      required: [target_class, evidence_refs]
 
-  - id: geox_verify_geospatial
-    name: geox_verify_geospatial
-    description: Verify coordinates, geological province, and jurisdictional boundaries. Anchors all reasoning in verified CRS per F4 Clarity.
+  - id: geox_subsurface_verify_integrity
+    name: geox_subsurface_verify_integrity
+    description: Physics-9 integrity gate — enforces nine physical law constraints on candidate outputs. SEAL/FAIL/HOLD verdict. Requires geox:governance scope.
     input_schema:
       type: object
       properties:
-        lat: { type: number }
-        lon: { type: number }
-        radius_m: { type: number, default: 1000.0 }
-      required: [lat, lon]
+        candidate_ref: { type: string }
+        domain: { type: string, enum: [petrophysics, structure, seismic, geochemistry] }
+      required: [candidate_ref, domain]
 
-  - id: geox_evaluate_prospect
-    name: geox_evaluate_prospect
-    description: Full GEOX geological prospect evaluation pipeline
+  - id: geox_seismic_analyze_volume
+    name: geox_seismic_analyze_volume
+    description: Seismic attribute computation (RMS, variance, sweetness, coherence), slice rendering, vision review, and viewer payload preparation.
     input_schema:
       type: object
       properties:
-        query: { type: string }
-        prospect_name: { type: string }
-        latitude: { type: number }
-        longitude: { type: number }
-        basin: { type: string }
-        play_type: { type: string, enum: [stratigraphic, structural, combination] }
-        risk_tolerance: { type: string, enum: [low, medium, high] }
-        requester_id: { type: string }
-      required: [query, prospect_name, latitude, longitude, basin, play_type, risk_tolerance, requester_id]
+        volume_ref: { type: string }
+        mode: { type: string, enum: [load_line, load_volume, compute_attribute, render_slice, vision_review, viewer_payload], default: compute_attribute }
+        attribute: { type: string, default: rms }
+      required: [volume_ref]
 
-  - id: geox_query_memory
-    name: geox_query_memory
-    description: Query the GEOX geological memory store
+  - id: geox_section_interpret_correlation
+    name: geox_section_interpret_correlation
+    description: Multi-well stratigraphic correlation and marker interpretation. Returns formation tops, GR motifs, sequence boundaries.
     input_schema:
       type: object
       properties:
-        query: { type: string }
-        basin: { type: string }
-        limit: { type: integer, default: 5 }
-      required: [query]
+        section_ref: { type: string }
+        well_refs: { type: array, items: { type: string } }
+        mode: { type: string, enum: [correlation, gr_motif, sequence_stratigraphy], default: correlation }
+      required: [section_ref, well_refs]
 
-  - id: geox_health
-    name: geox_health
-    description: GEOX server health check
-    input_schema:
-      type: object
-      properties: {}
-
-  # Petrophysics Phase B (4 tools)
-  - id: geox_select_sw_model
-    name: geox_select_sw_model
-    description: Evaluate Archie vs shaly-sand saturation models against shale conductivity, mineralogy, and calibration support. Returns admissible models with confidence scores.
+  - id: geox_map_context_scene
+    name: geox_map_context_scene
+    description: Geospatial context, CRS validation, georeferencing, basin atlas lookup, and F6 Maruah territory flag for community/indigenous overlap.
     input_schema:
       type: object
       properties:
-        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
-        candidate_models: { type: array, items: { type: string }, default: ["archie", "simandoux", "indonesia", "dual_water"] }
-      required: [interval_uri]
+        bbox: { type: array, items: { type: number }, description: "[min_lon, min_lat, max_lon, max_lat]" }
+        crs: { type: string, default: "EPSG:4326" }
+      required: [bbox]
 
-  - id: geox_compute_petrophysics
-    name: geox_compute_petrophysics
-    description: Compute Vsh, phi_t, phi_e, Sw, BVW, net, pay, RQI/FZI/HFU with uncertainty envelopes. Constitutional computation pipeline.
+  - id: geox_time4d_analyze_system
+    name: geox_time4d_analyze_system
+    description: Burial history, thermal maturity (Ro%), trap-charge timing, and regime shift analysis. Returns petroleum system timeline.
     input_schema:
       type: object
       properties:
-        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
-        model_id: { type: string, description: "Saturation model to use (e.g., archie, simandoux)" }
-        model_params: { type: object, description: "Model parameters {a, m, n, rw, ...}" }
-        compute_uncertainty: { type: boolean, default: true }
-      required: [interval_uri, model_id]
+        basin_ref: { type: string }
+        mode: { type: string, enum: [burial_history, maturity, trap_timing, regime_shift], default: burial_history }
+      required: [basin_ref]
 
-  - id: geox_validate_cutoffs
-    name: geox_validate_cutoffs
-    description: Apply economic/operational cutoffs as governed policy objects. Distinguishes physics from policy per F4 Clarity.
+  - id: geox_prospect_evaluate
+    name: geox_prospect_evaluate
+    description: Integrated P10/P50/P90 volumetrics, Probability of Success (POS), Expected Value of Information (EVOI), and risk matrix. Returns requires_governance true.
     input_schema:
       type: object
       properties:
-        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
-        cutoff_policy_id: { type: string, description: "Policy identifier to apply" }
-      required: [interval_uri, cutoff_policy_id]
+        prospect_ref: { type: string }
+        mode: { type: string, enum: [volumetrics, pos, evoi, risk_matrix], default: volumetrics }
+      required: [prospect_ref]
 
-  - id: geox_petrophysical_hold_check
-    name: geox_petrophysical_hold_check
-    description: Automatic 888_HOLD trigger detection for petrophysics. Checks Rw calibration, shale model support, environmental corrections, invasion handling, depth matching, and cutoff basis.
+  - id: geox_prospect_judge_verdict
+    name: geox_prospect_judge_verdict
+    description: Governance verdict gate — emits SEAL/PARTIAL/SABAR/VOID/888_HOLD. Routes to arif_judge_deliberate. Requires ack_irreversible=true and geox:governance scope.
     input_schema:
       type: object
       properties:
-        interval_uri: { type: string, description: "geox://well/{id}/interval/{top}-{base}/rock-state" }
-      required: [interval_uri]
+        prospect_ref: { type: string }
+        ac_risk_score: { type: number, minimum: 0, maximum: 1 }
+        ack_irreversible: { type: boolean, description: "Must be true to proceed past RT-3 guard" }
+      required: [prospect_ref, ac_risk_score, ack_irreversible]
+
+  - id: geox_evidence_summarize_cross
+    name: geox_evidence_summarize_cross
+    description: Cross-domain synthesis — evidence graph, contradiction detection, residual analysis, and federation handoff. Rejects HYPOTHESIS/DERIVED_CANDIDATE inputs.
+    input_schema:
+      type: object
+      properties:
+        evidence_refs: { type: array, items: { type: string } }
+        export_format: { type: string, enum: [json, markdown, graph], default: json }
+      required: [evidence_refs]
+
+  - id: geox_system_registry_status
+    name: geox_system_registry_status
+    description: Contract introspection — tool count, alias table, manifest parity, health, and federation status. Returns canonical_tool_count=13.
+    input_schema:
+      type: object
+      properties:
+        include_aliases: { type: boolean, default: false }
+      required: []
+
+  - id: geox_history_audit
+    name: geox_history_audit
+    description: VAULT999 lineage retrieval — prior runs, provenance chain, artifact versions, and decision delta for a prospect or artifact_ref.
+    input_schema:
+      type: object
+      properties:
+        artifact_ref: { type: string }
+        depth: { type: integer, default: 10, description: "Max history entries to return" }
+      required: [artifact_ref]
 
 # Constitutional governance
 governance:

@@ -10,6 +10,10 @@ Shared fixtures for the GEOX test suite:
 
 from __future__ import annotations
 
+import os
+# Bypass the root-owned .env file so FastMCP settings load without PermissionError in CI.
+os.environ.setdefault("FASTMCP_ENV_FILE", "")
+
 import sys
 from pathlib import Path
 
