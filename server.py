@@ -625,7 +625,7 @@ async def legacy_mcp_handler(request):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def create_app():
-    mcp_app = mcp.http_app(path="/", transport="streamable-http")
+    mcp_app = mcp.http_app(path="/", transport="streamable-http", json_response=True, stateless_http=True)
     app = Starlette(
         routes=[
             Route("/health", health_handler, methods=["GET"]),
