@@ -21,7 +21,7 @@ GEOX is now fully grounded in the arifOS Truth-Status Kernel.
 - **VAULT999 Binding:** Every canonical product (hazard maps, hydro models, prospect evals) is now a governed, versioned, replayable object anchored in the Merkle ledger.
 
 ### 3. Identity & Control Plane Hardening
-- **Unified Entrypoint:** Authenticated MCP Kernel live at `control_plane/fastmcp/server.py`.
+- **Unified Entrypoint:** Authenticated MCP Kernel live at `server.py` (single canonical entrypoint).
 - **Fail-Closed Security:** Enforced `GEOX_SECRET_TOKEN` validation on startup; F1_HALT on missing credentials.
 - **Alias Bridge:** Maintained backward compatibility for 49 legacy tools with explicit deprecation metadata (Sunset: 2026-06-01).
 

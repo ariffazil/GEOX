@@ -11,7 +11,7 @@
 3. Set secret and ignite:
    ```bash
    export GEOX_SECRET_TOKEN="your_seal"
-   python3 control_plane/fastmcp/server.py --port 8081
+    python3 server.py --port 8081
    ```
 
 ## 2. VPS Deployment (Docker/PM2)
@@ -19,7 +19,7 @@ The kernel should bind to `0.0.0.0` to allow proxy pass.
 
 ### PM2 Setup
 ```bash
-pm2 start control_plane/fastmcp/server.py --name geox-kernel --interpreter python3 -- --port 8081
+pm2 start server.py --name geox-kernel --interpreter python3 -- --port 8081
 ```
 
 ### Docker

@@ -52,6 +52,15 @@ LEGACY_ALIAS_MAP = {
     "geox_prospect.evaluate": "geox_prospect_evaluate",
     "geox_map.render_scene_context": "geox_map_context_scene",
     "geox_dashboard.open": "geox_system_registry_status",
+
+    # smithery.yaml legacy entries (2026-05-01 consolidation)
+    "geox_load_seismic_line": "geox_data_ingest_bundle",
+    "geox_compute_petrophysics": "geox_subsurface_generate_candidates",
+    "geox_petrophysical_hold_check": "geox_subsurface_verify_integrity",
+    "geox_validate_cutoffs": "geox_subsurface_verify_integrity",
+    "geox_feasibility_check": "geox_prospect_evaluate",
+    "geox_query_memory": "geox_system_registry_status",
+    "geox_select_sw_model": "geox_subsurface_generate_candidates",
 }
 
 def get_alias_metadata(old_name: str, new_name: str) -> dict:

@@ -38,7 +38,7 @@ SMOKE_LAS = str(Path(__file__).parent / "fixtures" / "geox_smoke_test.las")
 
 def _reset_registry():
     """Clear the in-memory artifact registry between tests."""
-    from contracts.tools.unified_13 import _artifact_registry, _well_curves_registry, _artifact_store
+    from contracts.tools.canonical._helpers import _artifact_registry, _well_curves_registry, _artifact_store
     _artifact_registry.clear()
     _well_curves_registry.clear()
     _artifact_store.clear()
@@ -58,7 +58,8 @@ def test_A_local_las_ingest_succeeds(tmp_path):
 
     # Wire up a minimal FastMCP so register_unified_tools can register tools
     from fastmcp import FastMCP
-    from contracts.tools.unified_13 import register_unified_tools, _artifact_exists
+    from contracts.tools.canonical._helpers import _artifact_exists
+    from contracts.tools.unified_13 import register_unified_tools
 
     mcp = FastMCP(name="test_geox")
     register_unified_tools(mcp)
@@ -100,7 +101,8 @@ def test_B_url_las_fetch_mocked_succeeds(tmp_path):
         shutil.copyfile(SMOKE_LAS, dest)
 
     from fastmcp import FastMCP
-    from contracts.tools.unified_13 import register_unified_tools, _artifact_exists
+    from contracts.tools.canonical._helpers import _artifact_exists
+    from contracts.tools.unified_13 import register_unified_tools
 
     mcp = FastMCP(name="test_geox_url")
     register_unified_tools(mcp)
@@ -238,7 +240,8 @@ def test_F_qc_passes_for_registered_ref():
     _reset_registry()
 
     from fastmcp import FastMCP
-    from contracts.tools.unified_13 import register_unified_tools, _register_artifact
+    from contracts.tools.canonical._helpers import _register_artifact
+    from contracts.tools.unified_13 import register_unified_tools
 
     mcp = FastMCP(name="test_geox_qc_f")
     register_unified_tools(mcp)
@@ -352,7 +355,8 @@ def test_I_petrophysics_computation_succeeds():
     _reset_registry()
 
     from fastmcp import FastMCP
-    from contracts.tools.unified_13 import register_unified_tools, _register_artifact
+    from contracts.tools.canonical._helpers import _register_artifact
+    from contracts.tools.unified_13 import register_unified_tools
 
     mcp = FastMCP(name="test_geox_petro")
     register_unified_tools(mcp)

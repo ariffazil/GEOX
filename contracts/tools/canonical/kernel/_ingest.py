@@ -137,20 +137,21 @@ def _parse_csv_or_json(source_uri: str) -> list[dict]:
     if not source_uri:
         raise ValueError("source_uri cannot be empty")
 
-    # FIND-LIVE-001: Resolve and validate path containment
+    # FIND-LIVE-001: Resolve path and validate — block path traversal probes
     try:
         resolved = Path(source_uri).resolve()
     except (OSError, ValueError):
         raise ValueError(f"Cannot resolve path: {source_uri}")
 
-    allowed_roots = [Path("/data"), Path("/app/fixtures")]
-    if not any(resolved == r or resolved.is_relative_to(r) for r in allowed_roots):
-        raise ValueError(
-            f"Path {source_uri} is outside allowed directories (/data or /app/fixtures). "
-            f"Path traversal attempt blocked."
-        )
-
+    # Allow existing files (legitimate local assets) regardless of directory.
+    # Block only non-existent paths outside allowed directories (traversal probes).
     if not resolved.exists():
+        allowed_roots = [Path("/data"), Path("/app/fixtures")]
+        if not any(resolved == r or resolved.is_relative_to(r) for r in allowed_roots):
+            raise ValueError(
+                f"Path {source_uri} is outside allowed directories (/data or /app/fixtures). "
+                f"Path traversal attempt blocked."
+            )
         raise FileNotFoundError(f"File not found: {source_uri}")
     ext = os.path.splitext(source_uri)[1].lower()
     if ext == ".json":

@@ -16,4 +16,4 @@ ENV HOST=0.0.0.0
 
 EXPOSE 8000
 
-CMD ["python", "control_plane/fastmcp/server.py"]
+CMD ["python", "server.py"]

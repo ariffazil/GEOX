@@ -2,7 +2,7 @@
   "$schema": "https://gofastmcp.com/public/schemas/fastmcp.json/v1.json",
   "source": {
     "type": "filesystem",
-    "path": "geox_mcp_server.py",
+    "path": "server.py",
     "entrypoint": "mcp"
   },
   "environment": {

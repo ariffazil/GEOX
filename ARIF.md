@@ -20,7 +20,7 @@
 ## 1. CURRENT FOCUS (INSTRUCTION POINTER)
 
 - Governance: Adopted GEOX Well Logs Operating Laws v1.0 (`GOVERNANCE.md`)
-- 999 SEAL Ritual: Unified MCP Kernel ignited at `control_plane/fastmcp/server.py`
+- 999 SEAL Ritual: Unified MCP Kernel ignited at `server.py`
 - Engine Upgrade: LoopStructural 1.6.27 embedded in `geox_earth3d_model_geometries`
 - Ghost Purge: Legacy server entrypoints moved to `archive/deprecated/`
 
@@ -44,8 +44,7 @@
 ## 4. ACTIVE TOPOLOGY (MEMORY MAP)
 
 - CANONICAL_ENTRYPOINTS:
-  - `control_plane/fastmcp/server.py` → Unified MCP Server
-  - `execution_plane/vps/server.py` → VPS Runtime
+  - `server.py` → Unified MCP Server (single canonical entrypoint)
   - `llms.txt` → Agent reasoning map
 
 - DIMENSIONS:

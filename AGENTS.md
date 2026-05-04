@@ -104,14 +104,10 @@ geox-gui/src/
 
 | File | Role |
 |------|------|
-| `control_plane/fastmcp/server.py` | **Canonical FastMCP server** — primary MCP entrypoint for Smithery / Claude Desktop |
-| `execution_plane/vps/server.py` | **Canonical VPS execution plane** — production HTTP server |
-| `geox_unified_mcp_server.py` | Backward-compatible shim → `control_plane/fastmcp/server` |
-| `geox_unified.py` | Backward-compatible shim → `execution_plane/vps/server` |
-| `geox_mcp_server.py` | Legacy public entrypoint (re-exports from unified server) |
-| `entrypoint.sh` | Docker container startup script (invokes `geox_unified.py`) |
+| `server.py` | **Canonical unified MCP server** — single entrypoint for Smithery / Claude Desktop / MCP Apps. Combines Sovereign 13 tools + dimension registries + MCP Apps. |
+| `entrypoint.sh` | Docker container startup script (invokes `server.py`) |
 
-When adding new tools or routes, prefer modifying the canonical servers inside `control_plane/` and `execution_plane/` rather than the root-level shims.
+All tool registrations live in `contracts/tools/`.
 
 ---
 
@@ -133,13 +129,13 @@ pytest tests/ -k "test_name" -q
 pytest tests/ --cov=arifos.geox
 
 # Lint
-ruff check geox_mcp_server.py arifos/geox/
+ruff check server.py arifos/geox/
 
 # Format
 ruff format arifos/geox/
 
 # Type check
-mypy geox_mcp_server.py arifos/geox/
+mypy server.py arifos/geox/
 ```
 
 **Test configuration notes:**
@@ -227,7 +223,7 @@ The script:
 On every push and pull request:
 1. **Security:** TruffleHog secret scan.
 2. **Python:** Install editable package, run `pip-audit`, `ruff check`, `mypy`, `pytest`.
-3. **Smoke test:** Start `geox_mcp_server.py` in HTTP mode and verify `/health` returns `200 OK` and `/mcp` is reachable.
+3. **Smoke test:** Start `server.py` in HTTP mode and verify `/health` returns `200 OK` and `/mcp` is reachable.
 
 ---
 
@@ -255,15 +251,13 @@ A violation of any floor triggers an **`888_HOLD`** — a hard stop requiring ex
 
 | Task | Command / Location |
 |------|-------------------|
-| Run canonical MCP server (stdio) | `python control_plane/fastmcp/server.py` |
-| Run canonical MCP server (HTTP) | `python execution_plane/vps/server.py --host 0.0.0.0 --port 8000` |
-| Run legacy entrypoint | `python geox_mcp_server.py` |
+| Run canonical MCP server | `python server.py` |
 | Run frontend dev | `cd geox-gui && npm run dev` |
 | Run tests | `pytest tests/ -q` |
 | Run tests with coverage | `pytest tests/ --cov=arifos.geox` |
-| Lint Python | `ruff check geox_mcp_server.py arifos/geox/` |
+| Lint Python | `ruff check server.py arifos/geox/` |
 | Format Python | `ruff format arifos/geox/` |
-| Type-check Python | `mypy geox_mcp_server.py arifos/geox/` |
+| Type-check Python | `mypy server.py arifos/geox/` |
 | Lint frontend | `cd geox-gui && npm run lint` |
 | Type-check frontend | `cd geox-gui && npm run typecheck` |
 | Deploy to VPS | `./deploy-vps.sh` |

@@ -24,12 +24,12 @@ jobs:
         run: |
           pip install pip-audit
           pip-audit --desc --fix-applied || true
-      - run: ruff check geox_mcp_server.py arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
-      - run: mypy geox_mcp_server.py arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
+      - run: ruff check server.py arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
+      - run: mypy server.py arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
       - run: pytest tests/ -v --tb=short
       - name: FastMCP HTTP smoke test
         run: |
-          python geox_mcp_server.py --transport http --host 127.0.0.1 --port 8765 > /tmp/geox-fastmcp.log 2>&1 &
+          python server.py --transport http --host 127.0.0.1 --port 8765 > /tmp/geox-fastmcp.log 2>&1 &
           SERVER_PID=$!
           trap "kill $SERVER_PID" EXIT
           python - <<'PY'

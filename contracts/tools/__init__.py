@@ -1,7 +1,8 @@
 # GEOX Dimension-Native Registry Package
 # DITEMPA BUKAN DIBERI
 #
-# This package now imports canonical enums from contracts.
+# Canonical surface: 13 sovereign public tools (per EPOCH GEOX-11TOOLS-v0.3).
+# Infrastructure tools (geox_file_upload_import) are excluded from public surface count.
 
 from contracts.enums import (
     Dimension,
@@ -13,9 +14,10 @@ from contracts.enums import (
     ProspectVerdict,
     ClaimTag,
     CONSTITUTIONAL_FLOORS,
-    CANONICAL_TOOLS,
     SEAL,
 )
+
+from contracts.enums.statuses import CANONICAL_TOOLS
 
 __all__ = [
     "Dimension",

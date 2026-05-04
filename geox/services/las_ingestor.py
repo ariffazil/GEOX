@@ -17,6 +17,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+import json
+
 import numpy as np
 
 from geox.core.physics_guard import PhysicsGuard

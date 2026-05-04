@@ -29,5 +29,16 @@ GEOX operates a consolidated surface of 13 canonical tools. Legacy names are sup
 ## 3. Legacy Migration
 Legacy tools (e.g., `geox_well.compute_petrophysics`) are aliased to the 13 canonicals. Check `_meta.deprecation` in responses.
 
+## 4. Resource Update Model (Sprint 1–2)
+
+`resources.subscribe` is **false** in server capabilities until Sprint 3. The notification pipeline (subscription state, VAULT999 version-hash anchoring, `resources/updated` fanout) is not yet implemented.
+
+To detect resource updates, clients should:
+- Poll `resources/list` on session start
+- Compare `version` field against cached version
+- Re-fetch resource content on version mismatch
+
+Subscribable resources (`biology://bio/zones`, `biology://bio/ecosystem_signals`, `earth://spatial/crs`, `earth://spatial/basin_atlas`, `earth://time/ics_timescale`) carry `subscribable: true` as GEOX metadata — this is NOT a server capability declaration. Subscription notifications (`notifications/resources/updated`) will be enabled in Sprint 3.
+
 ---
 ⬡ GEOX SOVEREIGN 13 MAP SEALED ⬡

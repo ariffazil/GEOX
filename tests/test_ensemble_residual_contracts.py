@@ -21,7 +21,7 @@ import sys
 sys.path.insert(0, ".")
 
 import pytest
-from contracts.tools.unified_13 import _inject_ensemble_residual_evidence
+from contracts.tools.canonical._helpers import _inject_ensemble_residual_evidence
 
 
 def _make_success_result(**overrides) -> dict:

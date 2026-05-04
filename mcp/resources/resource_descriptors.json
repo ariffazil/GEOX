@@ -1,0 +1,239 @@
+{
+  "$schema": "https://modelcontextprotocol.io/specification/2025-11-25/schemas/resource_definition",
+  "version": "GEOX-11TOOLS-v0.4",
+  "epoch": "2026-05-01",
+  "resources": [
+    {
+      "uri": "physics://elastic/bounds",
+      "name": "Elastic Rock Physics Bounds",
+      "description": "Vp, Vs, density, and Poisson ratio physical bounds by lithology and fluid substitution. Used for range validation in QC and Physics9 guard.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "Mavko (2023) Rock Physics Handbook",
+      "coverage": ["sandstone", "limestone", "dolomite", "shale"],
+      "fields": {
+        "Vp": {"unit": "m/s", "range_by_lithology": true},
+        "Vs": {"unit": "m/s", "range_by_lithology": true},
+        "density": {"unit": "g/cc", "range_by_lithology": true},
+        "Poisson_ratio": {"unit": "dimensionless", "range": [0.0, 0.5]}
+      }
+    },
+    {
+      "uri": "physics://fluid/pvt",
+      "name": "Fluid PVT Properties",
+      "description": "PVT tables, GOR, API gravity, and Gassmann fluid modulus bounds. Used for fluid substitution in rock physics.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "GEOX Internal — Petrophysics Standards v2026.01",
+      "fields": {
+        "API_gravity": {"unit": "API", "range": [10.0, 60.0]},
+        "GOR": {"unit": "scf/stb", "range": [0.0, 10000.0]},
+        "Bo": {"unit": "rb/stb", "range": [1.0, 2.5]},
+        "Bt": {"unit": "rb/stb", "range": [1.0, 3.0]},
+        "compressibility_oil": {"unit": "1/psi", "range": [1e-6, 1e-4]},
+        "compressibility_water": {"unit": "1/psi", "range": [3e-7, 5e-7]},
+        "compressibility_gas": {"unit": "1/psi", "range": [1e-4, 1e-2]}
+      }
+    },
+    {
+      "uri": "physics://thermal/maturation",
+      "name": "Thermal Maturation Parameters",
+      "description": "Heat flow, Arrhenius kinetics parameters, and Ro% correlation tables for basin maturity modeling.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "Sweeney & Burnham (1990) EASY%Ro model",
+      "fields": {
+        "heat_flow": {"unit": "mW/m2", "range": [30.0, 150.0]},
+        "Ro_percent": {"unit": "%", "range": [0.1, 5.0]},
+        "Tmax": {"unit": "C", "range": [300.0, 600.0]},
+        "Ea": {"unit": "kJ/mol", "range": [180.0, 220.0]}
+      }
+    },
+    {
+      "uri": "physics://gravity/constants",
+      "name": "Gravitational and Geodetic Constants",
+      "description": "Gravitational constant, EGM2008 geoid model parameters, and standard Bouguer reduction constants.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "CODATA 2018 / USGS EGM2008",
+      "fields": {
+        "G": {"unit": "m3/(kg s2)", "value": 6.67430e-11},
+        "g_n": {"unit": "m/s2", "value": 9.80665},
+        "bouguer_plate_density": {"unit": "kg/m3", "value": 2670.0}
+      }
+    },
+    {
+      "uri": "physics://geomechanics/stress",
+      "name": "Geomechanics and Stress Parameters",
+      "description": "Mohr-Coulomb failure criteria, effective stress coefficients, and compaction curves by lithology.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "Zoback (2010) Reservoir Geomechanics",
+      "fields": {
+        "sv_gradient": {"unit": "kPa/m", "range": [22.0, 26.0]},
+        "shmin_gradient": {"unit": "kPa/m", "range": [16.0, 24.0]},
+        "SHmax_gradient": {"unit": "kPa/m", "range": [18.0, 30.0]},
+        "pore_pressure_gradient": {"unit": "kPa/m", "range": [9.8, 14.0]}
+      }
+    },
+    {
+      "uri": "physics://seismic/wavelet_library",
+      "name": "Seismic Wavelet Library",
+      "description": "Ricker, Ormsby, and zero-phase wavelets parameterized by dominant frequency. Used for synthetic seismogram generation.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "GEOX Internal — Seismic Processing Standards v2026.01",
+      "wavelet_types": ["ricker", "ormsby", "zero_phase", "minimum_phase"],
+      "frequency_range_hz": {"unit": "Hz", "range": [5.0, 120.0]}
+    },
+    {
+      "uri": "chemistry://geochem/source_rock_params",
+      "name": "Source Rock Geochemistry Parameters",
+      "description": "TOC, HI, OI thresholds and kerogen type classification for source rock evaluation.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "Peters (1986) Geochemical Biomarker Handbook",
+      "fields": {
+        "TOC_range": {"unit": "wt%", "range": [0.0, 20.0]},
+        "HI_poor": {"unit": "mgHC/gTOC", "range": [0.0, 100.0]},
+        "HI_fair": {"unit": "mgHC/gTOC", "range": [100.0, 250.0]},
+        "HI_good": {"unit": "mgHC/gTOC", "range": [250.0, 700.0]},
+        "kerogen_types": ["Type I", "Type II", "Type III", "Type IV"]
+      }
+    },
+    {
+      "uri": "chemistry://geochem/fluid_composition",
+      "name": "Fluid Composition and Classification",
+      "description": "API gravity, GOR, H2S/CO2 mole fraction bounds, and fluid type classification (black oil vs volatile oil vs gas).",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "McCain (1990) Petroleum Fluid Properties",
+      "fields": {
+        "API_gravity": {"unit": "API", "range": [10.0, 70.0]},
+        "GOR": {"unit": "scf/stb", "range": [0.0, 50000.0]},
+        "H2S_mole_fraction": {"unit": "ppm", "range": [0.0, 100000.0]},
+        "CO2_mole_fraction": {"unit": "ppm", "range": [0.0, 300000.0]}
+      }
+    },
+    {
+      "uri": "chemistry://geochem/diagenesis_rules",
+      "name": "Diagenesis and Cementation Rules",
+      "description": "Porosity loss due to mechanical compaction, quartz cementation, and carbonate cementation windows by lithology.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "Ehrenberg (1989) / Worden (2018)",
+      "porosity_loss_models": ["mechanical_compaction", "quartz_cementation", "carbonate_cementation"],
+      "depth_range": {"unit": "m", "range": [0.0, 10000.0]}
+    },
+    {
+      "uri": "biology://bio/zones",
+      "name": "Biostratigraphic Zone Lookup",
+      "description": "Fossil assemblage to geological age to paleo-environment mapping using ICS 2023 timescale.",
+      "mimeType": "application/json",
+      "version": "ICS-2023",
+      "subscribable": true,
+      "update_policy": "annual",
+      "last_updated": "2026-01-01",
+      "source": "International Chronostratigraphic Chart 2023",
+      "ics_version": "ICS-2023",
+      "note": "Subscribable — GEOX emits resources/updated notification when new ICS version is released"
+    },
+    {
+      "uri": "biology://bio/kerogen_types",
+      "name": "Kerogen Type Classification",
+      "description": "Kerogen Type I/II/III/IV classification with HI/OI ranges, generation potential, and depositional environment.",
+      "mimeType": "application/json",
+      "version": "v1.0",
+      "subscribable": false,
+      "update_policy": "static",
+      "last_updated": "2026-05-01",
+      "source": "Tissot & Welte (1984)"
+    },
+    {
+      "uri": "biology://bio/ecosystem_signals",
+      "name": "Ecosystem Remote Sensing Signals",
+      "description": "NDVI, biomass, and carbon flux proxies by biome type for surface expression correlation.",
+      "mimeType": "application/json",
+      "version": "v2024",
+      "subscribable": true,
+      "update_policy": "annual",
+      "last_updated": "2024-01-01",
+      "source": "MODIS / Copernicus Global Land",
+      "biomes": ["tropical_forest", "temperate_forest", "boreal_forest", "grassland", "desert", "tundra"]
+    },
+    {
+      "uri": "earth://spatial/crs",
+      "name": "EPSG Coordinate Reference System Registry",
+      "description": "EPSG geodetic parameter registry with CRS validation, datum, and projection parameters.",
+      "mimeType": "application/json",
+      "version": "EPSG-v11.004",
+      "subscribable": true,
+      "update_policy": "quarterly",
+      "last_updated": "2026-01-01",
+      "source": "EPSG Geodetic Parameter Dataset v11.004",
+      "note": "Subscribable — GEOX emits resources/updated on quarterly EPSG releases"
+    },
+    {
+      "uri": "earth://spatial/basin_atlas",
+      "name": "Global Basin and Tectonic Atlas",
+      "description": "Global basin outlines, tectonic plate boundaries, and structural domain classifications as GeoJSON FeatureCollection.",
+      "mimeType": "application/geo+json",
+      "version": "v2024",
+      "subscribable": true,
+      "update_policy": "annual",
+      "last_updated": "2024-01-01",
+      "source": "GEOX Internal — Basin Atlas v2024"
+    },
+    {
+      "uri": "earth://time/ics_timescale",
+      "name": "ICS 2023 Geological Timescale",
+      "description": "Full International Chronostratigraphic Chart 2023 — all periods, epochs, and stage boundaries with radiometric age constraints.",
+      "mimeType": "application/json",
+      "version": "ICS-2023",
+      "subscribable": true,
+      "update_policy": "annual",
+      "last_updated": "2026-01-01",
+      "source": "International Chronostratigraphic Chart 2023 (ICS)",
+      "ics_url": "https://stratigraphy.org/ICS2023",
+      "note": "Subscribable — emit resources/updated when ICS publishes new version"
+    }
+  ],
+  "metadata": {
+    "total_resources": 15,
+    "subscribable_count": 5,
+    "static_count": 10,
+    "domains": {
+      "physics": 6,
+      "chemistry": 3,
+      "biology": 3,
+      "earth": 3
+    }
+  }
+}

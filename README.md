@@ -38,7 +38,7 @@ Legacy names remain available via an alias bridge for a limited migration window
 ## 2. Topology & Control Plane
 
 - **Control Plane (MCP entrypoint)**  
-  `control_plane/fastmcp/server.py`
+  `server.py`
 
 - **Sovereign Registry (13 tools)**  
   `contracts/tools/unified_13.py`
@@ -73,7 +73,7 @@ export GEOX_PORT="8081"        # optional, default: 8081
 
 ### Start the kernel
 ```bash
-python3 control_plane/fastmcp/server.py
+python3 server.py
 ```
 Fail-closed behavior: If `GEOX_SECRET_TOKEN` is **missing**, the process logs an F1_HALT error and **exits before binding** to any port.
 
