@@ -620,11 +620,32 @@ async def legacy_mcp_handler(request):
 
     return JSONResponse({"error": "Method not found"}, status_code=404)
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# APP CREATION & ENTRYPOINT
-# ═══════════════════════════════════════════════════════════════════════════════
+# ── Monkey-patch: Accept */* when json_response is enabled ──────────────────
+# Fixes MCP SDK probe that sends Accept: */* but FastMCP requires explicit
+# application/json. Without this, /mcp returns HTTP 406 when called by generic
+# HTTP clients (curl, browser fetch, MCP Apps).
+from mcp.server.streamable_http import StreamableHTTPServerTransport
+
+_orig_check = StreamableHTTPServerTransport._check_accept_headers
+
+def _patched_check(self, request):
+    accept = request.headers.get("Accept", "")
+    if accept == "*/*" and self._is_json_response_enabled:
+        return  # Skip strict Accept validation — json_response=True means JSON is fine
+    return _orig_check(self, request)
+
+StreamableHTTPServerTransport._check_accept_headers = _patched_check
+# ─────────────────────────────────────────────────────────────────────────────
+
 
 def create_app():
+    # FastMCP HTTP handler for /mcp — proper streamable-http with SSE + JSON support
+    mcp_http_handler = mcp.http_app(
+        path="/mcp",
+        transport="streamable-http",
+        json_response=True,
+        stateless_http=True,
+    )
     mcp_app = mcp.http_app(path="/", transport="streamable-http", json_response=True, stateless_http=True)
     app = Starlette(
         routes=[
@@ -633,8 +654,8 @@ def create_app():
             Route("/status", status_handler, methods=["GET"]),
             Route("/.well-known/mcp/server.json", discovery_handler, methods=["GET"]),
             Route("/tools", tools_list_handler, methods=["GET"]),
-            Route("/mcp", legacy_mcp_handler, methods=["GET", "POST"]),
-            Route("/mcp/stream", legacy_mcp_handler, methods=["GET", "POST"]),
+            Route("/mcp", mcp_http_handler, methods=["GET", "POST"]),
+            Route("/mcp/stream", mcp_http_handler, methods=["GET", "POST"]),
             Mount("/", mcp_app),
         ],
         lifespan=getattr(mcp_app, "lifespan", None),
