@@ -640,25 +640,16 @@ StreamableHTTPServerTransport._check_accept_headers = _patched_check
 
 
 def create_app():
-    # FastMCP HTTP handler for /mcp — proper streamable-http with SSE + JSON support
-    # NOTE: stateless_http=False is required so GET is allowed for SSE stream initialization.
-    # The MCP SDK probe sends GET /mcp with Accept: text/event-stream.
+    # FastMCP HTTP handler — streamable-http, fully stateless (arifOS-compatible).
+    # stateless_http=True: no session tracking, no session ID validation, no "Missing session ID" errors.
+    # This is the same architecture as arifOS server.py line 560.
     mcp_http_handler = mcp.http_app(
         path="/mcp",
         transport="streamable-http",
         json_response=True,
-        stateless_http=False,
+        stateless_http=True,  # ← was False; stateful mode breaks MCP handshake (server creates
+        # session, then validates it before sending session ID to client — chicken-and-egg bug).
     )
-    mcp_app = mcp.http_app(path="/", transport="streamable-http", json_response=True, stateless_http=True)
-
-    # Combined lifespan: both session managers must run for their respective endpoints to work.
-    # mcp_http_handler (stateless_http=False) needs its session manager for GET /mcp SSE.
-    # mcp_app (stateless_http=True) is stateless but still needs lifespan for FastMCP internals.
-    @asynccontextmanager
-    async def combined_lifespan(app: Starlette) -> AsyncGenerator[None, None]:
-        async with mcp_http_handler.lifespan(mcp_http_handler):
-            async with mcp_app.lifespan(mcp_app):
-                yield
 
     app = Starlette(
         routes=[
@@ -669,9 +660,8 @@ def create_app():
             Route("/tools", tools_list_handler, methods=["GET"]),
             Route("/mcp", mcp_http_handler, methods=["GET", "POST"]),
             Route("/mcp/stream", mcp_http_handler, methods=["GET", "POST"]),
-            Mount("/", mcp_app),
         ],
-        lifespan=combined_lifespan,
+        lifespan=mcp_http_handler.lifespan,
     )
     return app
 
