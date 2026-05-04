@@ -41,10 +41,35 @@ def materialize_las_source(source: str, *, artifact_id: str | None = None) -> st
         if not hostname:
             raise LASSourceError("Invalid URL: no hostname")
         
-        # Block common internal addresses
-        blocked_hosts = {"localhost", "127.0.0.1", "169.254.169.254"}
-        if hostname.lower() in blocked_hosts:
-            raise LASSourceError(f"Access to {hostname} is blocked for security reasons (SSRF protection)")
+        # FIND-LIVE-002 FIX: Comprehensive SSRF blocklist
+        # Block all private, loopback, and metadata IP ranges
+        hostname_lower = hostname.lower()
+        if hostname_lower in ("localhost", "127.0.0.1", "::1"):
+            raise LASSourceError(f"Access to {hostname} is blocked (loopback)")
+
+        # Check for IPv4 private ranges (10/8, 172.16/12, 192.168/16)
+        if hostname_lower.startswith(("10.", "192.168.", "172.")):
+            if hostname_lower.startswith("172."):
+                try:
+                    second_octet = int(hostname_lower.split(".")[1])
+                    if 16 <= second_octet <= 31:
+                        raise LASSourceError(f"Access to {hostname} is blocked (private IP range 172.16/12)")
+                except (IndexError, ValueError):
+                    pass
+            else:
+                raise LASSourceError(f"Access to {hostname} is blocked (private IP range)")
+
+        # Block169.254.0.0/16 (AWS metadata, link-local)
+        if hostname_lower.startswith(("169.254.", "0.")):
+            raise LASSourceError(f"Access to {hostname} is blocked (link-local/metadata range)")
+
+        # Block IPv6 link-local and unique local
+        if ":" in hostname and not hostname_lower.startswith(("2a0", "2001:db8")):
+            raise LASSourceError(f"Access to {hostname} is blocked (IPv6 internal range)")
+
+        # Block URLs with credentials (credential injection)
+        if parsed.port or "@" in source:
+            raise LASSourceError(f"URL with port or credentials not allowed")
             
         suffix = Path(source.split("?", 1)[0]).suffix or ".las"
         target = _target_path(artifact_id, suffix=suffix)
