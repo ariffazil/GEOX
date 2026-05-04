@@ -12,13 +12,13 @@ def get_llms_txt_tools():
         in_canonical_section = False
         for line in f:
             line = line.strip()
-            if "1. Canonical Sovereign 13" in line or "## 1. Canonical Sovereign 13" in line:
+            if "1. Canonical Sovereign 14" in line or "## 1. Canonical Sovereign 14" in line:
                 in_canonical_section = True
                 continue
             if in_canonical_section:
                 if "## 2." in line:
                     break
-                if line.startswith(tuple(f"{i}." for i in range(1, 14))):
+                if line.startswith(tuple(f"{i}." for i in range(1, 15))):
                     raw = line.split(".", 1)[1].strip()
                     # Strip bold markdown (**name**) and trailing colon
                     tool_name = raw.split(" ", 1)[0].strip("*:").strip()

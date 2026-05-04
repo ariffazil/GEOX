@@ -104,7 +104,7 @@ geox-gui/src/
 
 | File | Role |
 |------|------|
-| `server.py` | **Canonical unified MCP server** — single entrypoint for Smithery / Claude Desktop / MCP Apps. Combines Sovereign 13 tools + dimension registries + MCP Apps. |
+| `server.py` | **Canonical unified MCP server** — single entrypoint for Smithery / Claude Desktop / MCP Apps. Sovereign 15 tools (14 canonical + DST ingest). Dimension registries archived in chaos cleanup. |
 | `entrypoint.sh` | Docker container startup script (invokes `server.py`) |
 
 All tool registrations live in `contracts/tools/`.

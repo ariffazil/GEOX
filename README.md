@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (13 Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (15 Tools)
 
 **Physics before narrative. Maruah before convenience.  
 DITEMPA BUKAN DIBERI — One Sovereign Kernel.**
@@ -8,11 +8,11 @@ DITEMPA BUKAN DIBERI — One Sovereign Kernel.**
 [![arifOS](https://img.shields.io/badge/arifOS-F1%E2%80%93F13_Governed-FF6B00?style=flat-square)](https://github.com/ariffazil/arifOS)
 
 GEOX is the subsurface reasoning **Ψ-node** of arifOS: a governed kernel for wells, seismic, maps, time, and prospects.
-The legacy surface (37 legacy aliases across multiple files) has been **contracted into 13 canonical tools + 1 file ingress tool**, with a governed alias bridge for backward compatibility.
+The legacy surface (37 legacy aliases across multiple files) has been **contracted into 14 canonical tools + 1 DST ingestion tool**, with a governed alias bridge for backward compatibility.
 
 ***
 
-## 1. Sovereign 13 Tool Surface
+## 1. Sovereign 15 Tool Surface
 
 **All agents and UIs must target these canonical tools.**  
 Legacy names remain available via an alias bridge for a limited migration window.
@@ -28,7 +28,9 @@ Legacy names remain available via an alias bridge for a limited migration window
 | `geox_map_context_scene`             | Spatial bounding box, CRS checks, and causal scene rendering.           |
 | `geox_time4d_analyze_system`         | Burial history, maturity, and regime-shift / timing analysis.           |
 | `geox_prospect_evaluate`             | Probabilistic volumetrics (GRV/NTG/Recov) and POS evaluation.           |
-| `geox_prospect_judge_verdict`        | Gateway to arifOS 888_JUDGE (SEAL / HOLD / VOID). ⚠️ F11 AUTH required — requires proven identity and PIN before invocation. |
+| `geox_prospect_judge_preview`        | Reversible advisory verdict (DRAFT/HOLD). No ack required — safe for automation.                          |
+| `geox_prospect_judge_seal`           | Irreversible arifOS 888_JUDGE gateway (SEAL / VOID). ⚠️ F11 AUTH required — `ack_irreversible=True` mandatory. |
+| `geox_dst_ingest_test`               | Structured DST ingestion — computes CGR, WGR, drawdown, CO₂/H₂S classification.                           |
 | `geox_evidence_summarize_cross`      | Cross-domain causal evidence synthesis (well + seismic + map + time).   |
 | `geox_system_registry_status`        | Federation health, registry discovery, and contract epoch reporting.    |
 | `geox_history_audit`                 | VAULT999 retrieval of prior runs, evaluations, and decisions.           |
@@ -40,10 +42,10 @@ Legacy names remain available via an alias bridge for a limited migration window
 - **Control Plane (MCP entrypoint)**  
   `server.py`
 
-- **Sovereign Registry (13 tools)**  
+- **Sovereign Registry (15 tools)**  
   `contracts/tools/unified_13.py`
 
-- **Alias Bridge (legacy names → 13 tools)**  
+- **Alias Bridge (legacy names → 15 tools)**  
   `compatibility/legacy_aliases.py`
 
 - **Quarantine (ghost servers / deprecated files)**  
@@ -105,7 +107,7 @@ The kernel exposes three health surfaces:
 
 ### Sunset policy
 - Planned removal window: **after 2026-06-01**.
-- New agents and UIs **must** call the 13 canonical tools directly.
+- New agents and UIs **must** call the 15 canonical tools directly.
 
 ***
 
@@ -122,18 +124,19 @@ Arif (F13) → arif_session_init → arif_sense_observe → arif_evidence_fetch
                                                        ↓
                            arif_evidence_fetch → arif_mind_reason → arif_heart_critique → arif_judge_deliberate
                                                                                               ↓
-                                          geox_prospect_judge_verdict ← gateway to 888_JUDGE
+                                          geox_prospect_judge_seal ← irreversible gateway to 888_JUDGE
 ```
 
 **Two entry points:**
 - **222 EVIDENCE** — `geox_evidence_summarize_cross` + `geox_prospect_evaluate` feed `earth_evidence` into `arif_evidence_fetch`
-- **888 JUDGE** — `geox_prospect_judge_verdict` is the direct gateway to `arif_judge_deliberate` (F11 AUTH required)
+- **888 JUDGE** — `geox_prospect_judge_seal` is the irreversible gateway to `arif_judge_deliberate` (F11 AUTH required). `geox_prospect_judge_preview` provides reversible advisory upstream.
 
 **F3 Tri-Witness:** GEOX's earth evidence (seismic + well + map + time) constitutes the `earth` witness leg of the constitutional Tri-Witness check at 888_JUDGE.
 
 ## 7. Constitutional Notes
 
-- **`geox_prospect_judge_verdict`**: Direct gateway to arifOS 888_JUDGE. Requires F11 AUTH (PIN/identity verification) before invocation. This is the only organ with a direct judge-bypass path.
+- **`geox_prospect_judge_preview`**: Reversible advisory — returns `JUDGE_PREVIEW` / `HOLD` without consuming sovereign ack budget. Safe for automated pipelines.
+- **`geox_prospect_judge_seal`**: Irreversible gateway to arifOS 888_JUDGE. Requires `ack_irreversible=True` + F11 AUTH before invocation. This is the only organ with a direct judge-bypass path.
 - **Identity guard**: Unlike WELL's `is_well()` invariant, GEOX relies on the `GEOX_SECRET_TOKEN` fail-closed startup and `/ready` endpoint for identity verification. A formal `is_geox()` identity function is a planned hardening item.
 - **Epistemic tags**: Numeric outputs from GEOX tools carry CLAIM/PLAUSIBLE/HYPOTHESIS/ESTIMATE epistemic tags per F02. Min/Mid/Max ensemble outputs satisfy F07 Humility requirements natively.
 

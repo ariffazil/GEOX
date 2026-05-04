@@ -29,6 +29,7 @@ from typing import Any, AsyncGenerator
 import uvicorn
 from fastmcp import FastMCP
 from starlette.applications import Starlette
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
 
@@ -146,47 +147,77 @@ def bootstrap_sovereign_13():
         from contracts.tools.unified_13 import register_unified_tools
         register_unified_tools(mcp, profile=GEOX_PROFILE)
         # Assert against the canonical public tools count
-        assert len(CANONICAL_PUBLIC_TOOLS) == 13, \
-            f"F0_CONSTITUTION_BREACH: Expected 13 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
-        logger.info(f"Sovereign 13 tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical Tools)")
+        assert len(CANONICAL_PUBLIC_TOOLS) == 14, \
+            f"F0_CONSTITUTION_BREACH: Expected 14 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
+        logger.info(f"Sovereign 14 tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical Tools)")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
 
-# ─── DIMENSION REGISTRIES — add unique tools on top of Sovereign 13 ────────────
-# Call each registry's register function. FastMCP handles duplicates internally
-# with a warning ("warn" mode is default). No duplicate tools will be added.
-
-def bootstrap_dimension_registries():
-    registry_map = {
-        "contracts.tools.prospect": "register_prospect_tools",
-        "contracts.tools.well": "register_well_tools",
-        "contracts.tools.earth3d": "register_earth3d_tools",
-        "contracts.tools.map": "register_map_tools",
-        "contracts.tools.cross": "register_cross_tools",
-        "contracts.tools.physics": "register_physics_tools",
-        "contracts.tools.section": "register_section_tools",
-        "geox.canonical": "register_canonical_tools",
-    }
-    for module_name, func_name in registry_map.items():
-        try:
-            import importlib
-            mod = importlib.import_module(module_name)
-            register_fn = getattr(mod, func_name)
-            register_fn(mcp, profile=GEOX_PROFILE)
-            logger.info(f"  {module_name.split('.')[-1]}: OK")
-        except Exception as e:
-            logger.warning(f"  {module_name}: skipped ({e})")
-
-# Boot: Sovereign 13 first, then dimension registries
+# ═══════════════════════════════════════════════════════════════════════════════
+# BOOT — Canonical surface only (chaos cleanup: dimension registries archived)
+# ═══════════════════════════════════════════════════════════════════════════════
+logger.info("Canonical surface loading...")
 bootstrap_sovereign_13()
-logger.info("Dimension registries loading...")
-bootstrap_dimension_registries()
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# UNIVERSAL OUTPUT CONTRACT v0.4 — Wrap all tool outputs
+# MCP SURFACE PRUNE — Remove non-canonical tools (aliases, duplicates, noise)
+# F8 GENIUS: elegant surface. F10 ONTOLOGY: structural coherence.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _prune_mcp_surface(mcp_server) -> None:
+    """Strip non-canonical tools from the MCP registry after bootstrap."""
+    from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
+
+    # Sacred surface: canonical 13 + judge split + DST + history audit
+    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | {
+        "geox_dst_ingest_test",
+    }
+    provider = getattr(mcp_server, "_local_provider", None)
+    if not provider:
+        return
+    components = getattr(provider, "_components", {})
+    removed: list[str] = []
+    for key in list(components.keys()):
+        if key.startswith("tool:"):
+            # FastMCP keys use format "tool:name@" — strip prefix and suffix
+            name = key[5:].rstrip("@")
+            if name not in SACRED_SURFACE:
+                del components[key]
+                removed.append(name)
+    if removed:
+        logger.info(f"MCP surface pruned: {len(removed)} non-canonical tools removed ({removed[:5]}...)")
+    logger.info(f"MCP surface clean: {len(SACRED_SURFACE)} canonical tools exposed")
+
+_prune_mcp_surface(mcp)
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# GLOBAL PANIC MIDDLEWARE (F1 Amanah — fail closed on unhandled exceptions)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class GlobalPanicMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        try:
+            return await call_next(request)
+        except Exception as exc:
+            logger.exception("GEOX kernel panic caught")
+            return JSONResponse(
+                {
+                    "status": "void",
+                    "tool": "kernel_panic_handler",
+                    "error": str(exc)[:500],
+                    "floor": "F10_COHERENCE",
+                    "message": "Unhandled server exception. Request voided.",
+                },
+                status_code=500,
+            )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# UNIVERSAL OUTPUT CONTRACT v0.5 — Wrap all tool outputs
 # Injects: claim_tag, confidence_band, physics_guard, evidence_refs,
 # uncertainty, audit_receipt, humility_score (F7), maruah_flag (F6)
+# CHANGED v0.5: confidence_band defaults to None (not fake zeros)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def _wrap_tool_outputs(mcp_server):
@@ -216,7 +247,7 @@ def _wrap_tool_outputs(mcp_server):
             now = datetime.now(timezone.utc).isoformat()
             defaults = {
                 "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
-                "confidence_band": result.get("confidence_band", {"p10": 0.0, "p50": 0.0, "p90": 0.0}),
+                "confidence_band": result.get("confidence_band"),  # v0.5: None means not computed
                 "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.01"}),
                 "evidence_refs": result.get("evidence_refs", []),
                 "uncertainty": result.get("uncertainty", "Moderate"),
@@ -236,6 +267,15 @@ def _wrap_tool_outputs(mcp_server):
             for k, v in defaults.items():
                 if k not in result:
                     result[k] = v
+            # F7 Humility: if confidence_band is None, inject explanation instead of zeros
+            if result.get("confidence_band") is None:
+                result["confidence_band"] = {
+                    "computed": False,
+                    "reason": "No volumetric distribution or statistical method supplied",
+                    "p10": None,
+                    "p50": None,
+                    "p90": None,
+                }
             return result
 
         tool.fn = _universal_wrapper
@@ -630,9 +670,8 @@ from mcp.server.streamable_http import StreamableHTTPServerTransport
 _orig_check = StreamableHTTPServerTransport._check_accept_headers
 
 def _patched_check(self, request):
-    accept = request.headers.get("Accept", "")
-    if accept == "*/*" and self.is_json_response_enabled:
-        return  # Skip strict Accept validation — json_response=True means JSON is fine
+    if self.is_json_response_enabled:
+        return True, True  # json_response=True: accept both JSON and SSE (FastMCP will still prefer JSON)
     return _orig_check(self, request)
 
 StreamableHTTPServerTransport._check_accept_headers = _patched_check
@@ -663,6 +702,7 @@ def create_app():
         ],
         lifespan=mcp_http_handler.lifespan,
     )
+    app.add_middleware(GlobalPanicMiddleware)
     return app
 
 def main() -> None:

@@ -46,22 +46,36 @@ logger = logging.getLogger("geox.canonical.registry")
 
 
 async def geox_system_registry_status() -> dict:
-    """Discovery of 13 tools, health, and contract epoch."""
-    from compatibility.legacy_aliases import LEGACY_ALIAS_MAP
+    """Discovery of canonical tools, health, and contract epoch.
+
+    Reports the ACTUAL live MCP surface — no phantom aliases, no ghost ingress tools.
+    F2 Truth: the registry must not lie about what is callable.
+    """
+    import os
+    from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
+
+    _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
+
     artifact = {
         "status": "healthy",
         "epoch": "2026-05-01",
-        "tools_count": 13,
-        "canonical_tools": 13,
-        "ingress_tools": ["geox_file_upload_import"],
+        "tools_count": len(CANONICAL_PUBLIC_TOOLS) + 1,  # +1 for geox_dst_ingest_test
+        "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
+        "ingress_tools": [],
         "contract": "SOVEREIGN_13_SPEC",
-        "legacy_aliases": LEGACY_ALIAS_MAP
+        "legacy_aliases": {} if not _show_legacy else {},
+        "note": "Legacy aliases are hidden. Call aliases via canonical names only.",
     }
     return get_standard_envelope(artifact, tool_class="system")
 
 
 
-async def geox_history_audit(query: str) -> dict:
+async def geox_history_audit(
+    query: str,
+    limit: int = 10,
+    actor_id: str | None = None,
+    session_id: str | None = None,
+) -> dict:
     """VAULT999 retrieval of past runs and decision lineage.
 
     Each returned record must include:
@@ -71,16 +85,48 @@ async def geox_history_audit(query: str) -> dict:
     - depth_basis: MD/TVD/TVDSS
     These fields are required for all records involving visual artifacts.
     """
-    artifact = {
-        "query": query,
-        "records": [],
-        "vault": "VAULT999",
-        "renderer_lineage_policy": (
-            "Records involving visual artifacts must include renderer_name + artifact_hash. "
-            "Missing renderer info = lineage incomplete. "
-            "SHA-256 hash of the artifact file must be present."
-        ),
-    }
-    return get_standard_envelope(artifact, tool_class="system")
+    import logging
+    logger = logging.getLogger("geox.history_audit")
+
+    # F1 Amanah: defensive input sanitization
+    clean_query = query[:1000] if query else ""
+    clean_query = clean_query.replace("\x00", "")
+    safe_limit = max(1, min(limit, 50))
+
+    try:
+        # TODO: wire to actual VAULT999 / evidence_store query
+        # For now, return empty but governed response instead of 502
+        artifact = {
+            "query": clean_query,
+            "records": [],
+            "vault": "VAULT999",
+            "renderer_lineage_policy": (
+                "Records involving visual artifacts must include renderer_name + artifact_hash. "
+                "Missing renderer info = lineage incomplete. "
+                "SHA-256 hash of the artifact file must be present."
+            ),
+        }
+        return get_standard_envelope(
+            artifact,
+            tool_class="system",
+            claim_tag="HYPOTHESIS",
+            claim_state="NO_VALID_EVIDENCE",
+        )
+    except Exception as exc:
+        logger.exception("geox_history_audit failed")
+        return get_standard_envelope(
+            {
+                "tool": "geox_history_audit",
+                "error_code": "HISTORY_AUDIT_FAILED",
+                "message": str(exc)[:300],
+                "retryable": False,
+            },
+            tool_class="system",
+            execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS",
+            claim_state="NO_VALID_EVIDENCE",
+        )
 
 

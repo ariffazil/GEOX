@@ -10,6 +10,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any
 
 from fastmcp import FastMCP
@@ -30,6 +31,8 @@ from contracts.tools.canonical.map_context import geox_map_context_scene
 from contracts.tools.canonical.time4d import geox_time4d_analyze_system
 from contracts.tools.canonical.prospect import (
     geox_prospect_evaluate,
+    geox_prospect_judge_preview,
+    geox_prospect_judge_seal,
     geox_prospect_judge_verdict,
 )
 from contracts.tools.canonical.evidence import geox_evidence_summarize_cross
@@ -37,6 +40,7 @@ from contracts.tools.canonical.registry import (
     geox_system_registry_status,
     geox_history_audit,
 )
+from contracts.tools.canonical.dst import geox_dst_ingest_test
 
 logger = logging.getLogger("geox.unified13")
 
@@ -82,10 +86,13 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_map_context_scene", geox_map_context_scene),
     ("geox_time4d_analyze_system", geox_time4d_analyze_system),
     ("geox_prospect_evaluate", geox_prospect_evaluate),
+    ("geox_prospect_judge_preview", geox_prospect_judge_preview),
+    ("geox_prospect_judge_seal", geox_prospect_judge_seal),
     ("geox_prospect_judge_verdict", geox_prospect_judge_verdict),
     ("geox_evidence_summarize_cross", geox_evidence_summarize_cross),
     ("geox_system_registry_status", geox_system_registry_status),
     ("geox_history_audit", geox_history_audit),
+    ("geox_dst_ingest_test", geox_dst_ingest_test),
 ]
 
 
@@ -97,12 +104,17 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(name=name)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    assert len(CANONICAL_PUBLIC_TOOLS) == 13, (
-        f"F0_CONSTITUTION_BREACH: Expected 13 sovereign tools, "
+    # Count is 14: 13 original sovereign tools + history_audit
+    assert len(CANONICAL_PUBLIC_TOOLS) == 14, (
+        f"F0_CONSTITUTION_BREACH: Expected 14 sovereign tools, "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
     # ── Legacy alias bridge ──────────────────────────────────────────────────
+    _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
+    if not _show_legacy:
+        logger.info("Legacy aliases hidden (GEOX_SHOW_LEGACY_ALIASES=false). Expose only canonical 13 + preview/seal.")
+
     for old_name, new_name in LEGACY_ALIAS_MAP.items():
         if "." in old_name:
             continue
@@ -127,11 +139,12 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
             alias_func.__doc__ = f"Legacy Alias for {n} (Deprecated)."
             return alias_func
 
-        mcp.tool(
-            name=old_name,
-            description=f"[DEPRECATED] Alias for {new_name}. Update calling contract by 2026-06-01.",
-            annotations={"deprecated": True, "canonical_name": new_name},
-        )(make_alias())
+        if _show_legacy:
+            mcp.tool(
+                name=old_name,
+                description=f"[DEPRECATED] Alias for {new_name}. Update calling contract by 2026-06-01.",
+                annotations={"deprecated": True, "canonical_name": new_name},
+            )(make_alias())
 
     # ── Well correlation tools (non-canonical, kept for compatibility) ───────
     from contracts.tools.well_correlation import register_well_correlation_tools

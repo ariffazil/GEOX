@@ -89,12 +89,46 @@ CANONICAL_TOOLS = [
     "geox_map_context_scene",
     "geox_time4d_analyze_system",
     "geox_prospect_evaluate",
+    "geox_prospect_judge_preview",
+    "geox_prospect_judge_seal",
     "geox_prospect_judge_verdict",
     "geox_evidence_summarize_cross",
     "geox_system_registry_status",
     "geox_history_audit",
 ]
 SEAL = "DITEMPA BUKAN DIBERI"
+
+def enforce_claim_state(
+    result: Dict[str, Any],
+    evidence_refs: Optional[List[str]] = None,
+) -> Dict[str, Any]:
+    """F2 Truth + F7 Humility: prevent semantic overclaiming.
+
+    Hard rules:
+    - No evidence_refs → artifact_status cannot be VERIFIED or SEAL
+    - claim_state HYPOTHESIS/INGESTED/NO_VALID_EVIDENCE → artifact_status must be DRAFT or lower
+    - confidence_band must be None (or have computed=False) when no evidence
+    """
+    refs = evidence_refs or result.get("evidence_refs") or []
+    artifact_status = result.get("artifact_status", "DRAFT")
+    claim_state = result.get("claim_state", "INGESTED")
+
+    if not refs and artifact_status in ("VERIFIED", "SEAL", "COMPUTED"):
+        result["artifact_status"] = "DRAFT"
+        result["_claim_corrected"] = {
+            "reason": "No evidence_refs supplied — downgraded from overclaimed status",
+            "original_status": artifact_status,
+        }
+
+    if claim_state in ("HYPOTHESIS", "INGESTED", "NO_VALID_EVIDENCE") and artifact_status == "VERIFIED":
+        result["artifact_status"] = "DRAFT"
+        result["_claim_corrected"] = {
+            "reason": "claim_state contradicts artifact_status",
+            "original_status": "VERIFIED",
+        }
+
+    return result
+
 
 def get_standard_envelope(
     primary_artifact: Dict[str, Any],
@@ -108,19 +142,20 @@ def get_standard_envelope(
     ui_resource_uri: Optional[str] = None,
     claim_tag: str = "HYPOTHESIS",
     claim_state: str = "INGESTED",
-    confidence_band: Optional[Dict[str, float]] = None,
+    confidence_band: Optional[Dict[str, Any]] = None,
     physics_guard: Optional[Dict[str, Any]] = None,
     audit_receipt: Optional[Dict[str, str]] = None,
     humility_score: float = 0.0,
     maruah_flag: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
-    Canonical MCP Apps Response Envelope — Universal Output Contract v0.4.
+    Canonical MCP Apps Response Envelope — Universal Output Contract v0.5.
     Follows MCP spec + arifOS Governance + MCP Apps UI.
     Required fields: claim_tag, claim_state, confidence_band, physics_guard, evidence_refs,
     uncertainty, audit_receipt, humility_score (F7), maruah_flag (F6).
 
     Lifecycle claim_state values:
+        NO_VALID_EVIDENCE    — no evidence supplied
         INGESTED             — artifact received, not yet QC'd
         QC_VERIFIED         — passed QC gate (Tool 02)
         PLOTTED             — visual artifact produced
@@ -137,7 +172,7 @@ def get_standard_envelope(
         "primary_artifact": primary_artifact,
         "claim_tag": claim_tag,
         "claim_state": claim_state,
-        "confidence_band": confidence_band or {"p10": 0.0, "p50": 0.0, "p90": 0.0},
+        "confidence_band": confidence_band,  # v0.5: None means not computed (no fake zeros)
         "physics_guard": physics_guard or {"guard_passed": True, "physics_version": "geox-v2026.05.01"},
         "uncertainty": uncertainty,
         "evidence_refs": evidence_refs or [],
@@ -150,6 +185,9 @@ def get_standard_envelope(
         "maruah_flag": maruah_flag or {"maruah_flag": "CLEAR", "territory_risk": "none", "recommended_action": "Proceed with standard consent protocols.", "confidence": "HIGH"},
         "diagnostics": diagnostics or {}
     }
+
+    # F2 Truth gate: auto-downgrade overclaimed states
+    response = enforce_claim_state(response, evidence_refs=evidence_refs)
 
     if ui_resource_uri:
         response["_meta"] = {

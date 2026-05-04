@@ -70,7 +70,28 @@ async def geox_subsurface_generate_candidates(
     zone_top_m: Optional[float] = None,
     zone_base_m: Optional[float] = None,
 ) -> dict:
-    """Generates ensemble subsurface outputs with residuals and data-density maps."""
+    """Generates ensemble subsurface outputs with residuals and data-density maps.
+
+    Fails closed: empty evidence_refs → VALIDATION_ERROR/NO_VALID_EVIDENCE.
+    """
+    # F1 Amanah + F2 Truth: fail closed on empty evidence
+    if not evidence_refs:
+        return get_standard_envelope(
+            {
+                "tool": "geox_subsurface_generate_candidates",
+                "error_code": "NO_VALID_EVIDENCE",
+                "message": f"target_class='{target_class}' requires at least one QC-verified evidence_ref.",
+                "required_evidence": "LAS curves, DST table, or seismic volume ref",
+            },
+            tool_class="compute",
+            execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS",
+            claim_state="NO_VALID_EVIDENCE",
+            evidence_refs=[],
+        )
+
     result = await _compute_subsurface_candidates(
         target_class, evidence_refs, realizations,
         gr_clean, gr_shale, vsh_method, matrix_density, fluid_density,
@@ -102,8 +123,38 @@ async def geox_subsurface_generate_candidates(
 
 
 async def geox_subsurface_verify_integrity(candidate_ref: str, domain: str) -> dict:
-    """Enforces Physics9 boundary limits and detects structural paradoxes."""
+    """Enforces Physics9 boundary limits and detects structural paradoxes.
+
+    Never returns SEAL without verified evidence. If candidate_ref is not
+    found in the artifact store, returns HOLD/NO_VALID_EVIDENCE.
+    """
+    # F2 Truth gate: verify evidence exists before claiming physical feasibility
+    exists = _artifact_exists(candidate_ref)
+    if not exists:
+        return get_standard_envelope(
+            {
+                "ref": candidate_ref,
+                "domain": domain,
+                "verdict": "CANDIDATE_NOT_FOUND",
+                "message": f"Candidate '{candidate_ref}' not found in artifact store. Verify ingest + QC passed.",
+            },
+            tool_class="verify",
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS",
+            claim_state="NO_VALID_EVIDENCE",
+            evidence_refs=[],
+        )
+
     artifact = {"ref": candidate_ref, "domain": domain, "consistent": True, "verdict": "PHYSICALLY_FEASIBLE"}
-    return get_standard_envelope(artifact, tool_class="verify", governance_status=GovernanceStatus.SEAL)
+    return get_standard_envelope(
+        artifact,
+        tool_class="verify",
+        governance_status=GovernanceStatus.QUALIFY,
+        artifact_status=ArtifactStatus.STAGED,
+        claim_tag="CLAIM",
+        claim_state="COMPUTED",
+        evidence_refs=[candidate_ref],
+    )
 
 

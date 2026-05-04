@@ -115,13 +115,13 @@ async def geox_data_qc_bundle(
                 "artifact_status": "REGISTERED_NO_PATH",
                 "qc_passed": True,
                 "flags": ["QC_ENGINE_SKIPPED: no LAS path in store"],
-                "claim_state": "QC_VERIFIED",
-                "warning": "Artifact registered but LAS path unavailable — shallow pass only.",
+                "claim_state": "INGESTED",
+                "warning": "Artifact registered but LAS path unavailable — shallow pass only. NOT QC_VERIFIED.",
             },
             tool_class="qc",
             execution_status=ExecutionStatus.SUCCESS,
-            artifact_status=ArtifactStatus.VERIFIED,
-            claim_tag="CLAIM",
+            artifact_status=ArtifactStatus.DRAFT,
+            claim_tag="HYPOTHESIS",
         )
 
     # ── Mode-specific QC ─────────────────────────────────────────────────

@@ -35,7 +35,8 @@ logger = logging.getLogger("geox.dispatch_guard")
 # Any new irreversible tool MUST be added here.
 
 _IRREVERSIBLE_TOOLS: set[str] = {
-    "geox_prospect_judge_verdict",   # SEAL/VOID/SABAR — constitutional adjudication only
+    "geox_prospect_judge_verdict",   # backward-compat alias for seal
+    "geox_prospect_judge_seal",      # canonical irreversible adjudication
 }
 
 # ─── RT-1 GUARD ───────────────────────────────────────────────────────────────

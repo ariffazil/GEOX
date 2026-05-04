@@ -1,13 +1,13 @@
 # GEOX — Governed Earth Intelligence
 > Role: Geological prospect evaluation and earth intelligence coprocessor
 > URL: https://geox.arif-fazil.com
-> Service: http://72.62.71.199:8000
+> Service: https://geox.arif-fazil.com
 > Health: {"status":"ok","seal":"DITEMPA BUKAN DIBERI"}
 > MCP: https://mcp.arif-fazil.com/mcp
 > Identity: https://arif-fazil.com/llms.txt
 > Source: https://github.com/ariffazil/GEOX
 > Seal: DITEMPA BUKAN DIBERI
-> Epoch: 2026-04-18
+> Epoch: 2026-05-04
 
 ## Capabilities
 Well log loading: LAS, DLIS formats

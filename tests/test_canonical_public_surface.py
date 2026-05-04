@@ -18,7 +18,7 @@ async def test_canonical_public_surface_count(mcp_server):
     """Verify that exactly 13 sovereign public tools are exposed."""
     registered_tools = await mcp_server.list_tools()
     public_tools = [t.name for t in registered_tools if t.name in CANONICAL_PUBLIC_TOOLS]
-    assert len(public_tools) == 13, f"Expected 13 public tools, found {len(public_tools)}: {public_tools}"
+    assert len(public_tools) == 14, f"Expected 14 public tools, found {len(public_tools)}: {public_tools}"
 
 
 @pytest.mark.asyncio
