@@ -22,8 +22,9 @@ import logging
 import sys
 import json
 import argparse
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, AsyncGenerator
 
 import uvicorn
 from fastmcp import FastMCP
@@ -630,7 +631,7 @@ _orig_check = StreamableHTTPServerTransport._check_accept_headers
 
 def _patched_check(self, request):
     accept = request.headers.get("Accept", "")
-    if accept == "*/*" and self._is_json_response_enabled:
+    if accept == "*/*" and self.is_json_response_enabled:
         return  # Skip strict Accept validation — json_response=True means JSON is fine
     return _orig_check(self, request)
 
@@ -640,13 +641,25 @@ StreamableHTTPServerTransport._check_accept_headers = _patched_check
 
 def create_app():
     # FastMCP HTTP handler for /mcp — proper streamable-http with SSE + JSON support
+    # NOTE: stateless_http=False is required so GET is allowed for SSE stream initialization.
+    # The MCP SDK probe sends GET /mcp with Accept: text/event-stream.
     mcp_http_handler = mcp.http_app(
         path="/mcp",
         transport="streamable-http",
         json_response=True,
-        stateless_http=True,
+        stateless_http=False,
     )
     mcp_app = mcp.http_app(path="/", transport="streamable-http", json_response=True, stateless_http=True)
+
+    # Combined lifespan: both session managers must run for their respective endpoints to work.
+    # mcp_http_handler (stateless_http=False) needs its session manager for GET /mcp SSE.
+    # mcp_app (stateless_http=True) is stateless but still needs lifespan for FastMCP internals.
+    @asynccontextmanager
+    async def combined_lifespan(app: Starlette) -> AsyncGenerator[None, None]:
+        async with mcp_http_handler.lifespan(mcp_http_handler):
+            async with mcp_app.lifespan(mcp_app):
+                yield
+
     app = Starlette(
         routes=[
             Route("/health", health_handler, methods=["GET"]),
@@ -658,7 +671,7 @@ def create_app():
             Route("/mcp/stream", mcp_http_handler, methods=["GET", "POST"]),
             Mount("/", mcp_app),
         ],
-        lifespan=getattr(mcp_app, "lifespan", None),
+        lifespan=combined_lifespan,
     )
     return app
 
