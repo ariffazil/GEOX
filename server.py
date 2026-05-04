@@ -455,7 +455,7 @@ GEOX_TOOL_CATEGORIES = {
         "description": "Volumetrics, POS, EVOI, prospect evaluation and scorecard",
     },
     "geox_governance_audit": {
-        "canonical": ["geox_prospect_judge_verdict", "geox_evidence_summarize_cross"],
+        "canonical": ["geox_prospect_judge_preview", "geox_prospect_judge_seal", "geox_evidence_summarize_cross"],
         "description": "AC_Risk, 888_HOLD, verdict gateway, VAULT999, evidence graph",
     },
 }

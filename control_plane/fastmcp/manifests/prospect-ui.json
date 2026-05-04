@@ -5,7 +5,7 @@
   "description": "Play Fairway Discovery & Volumetrics",
   "required_tools": [
     "geox_prospect_evaluate",
-    "geox_prospect_judge_verdict",
+    "geox_prospect_judge_preview",
     "geox_data_ingest_bundle",
     "geox_evidence_summarize_cross"
   ],

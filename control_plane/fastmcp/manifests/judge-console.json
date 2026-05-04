@@ -5,7 +5,7 @@
   "icon": "gavel",
   "description": "Physics validation engine and volume computation.",
   "tools": [
-    "geox_physics_judge_verdict",
+    "geox_physics_judge_preview",
     "geox_physics_validate_operation",
     "geox_physics_audit_hold_breach",
     "geox_physics_verify_physics",

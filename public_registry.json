@@ -1,22 +1,25 @@
 {
-  "epoch": "GEOX-13TOOLS-v0.4",
-  "generated_at": "2026-05-03T19:26:40.601904+00:00",
-  "canonical_tool_count": 13,
-  "registry_hash": "9c3e6d869acee426eadcc81df6a758599f548a97050ba2bad899542a4405b39a",
-  "tools": [
-    "geox_data_ingest_bundle",
-    "geox_data_qc_bundle",
-    "geox_evidence_summarize_cross",
-    "geox_history_audit",
-    "geox_map_context_scene",
-    "geox_prospect_evaluate",
-    "geox_prospect_judge_verdict",
-    "geox_section_interpret_correlation",
-    "geox_seismic_analyze_volume",
-    "geox_subsurface_generate_candidates",
-    "geox_subsurface_verify_integrity",
-    "geox_system_registry_status",
-    "geox_time4d_analyze_system"
-  ],
-  "manifest_hash_source": "SHA-256(canonical_tools_sorted)"
+    "epoch": "GEOX-15TOOLS-v0.5",
+    "generated_at": "2026-05-04T16:38:41.000866+00:00",
+    "canonical_tool_count": 14,
+    "total_tool_count": 15,
+    "tools": [
+        "geox_data_ingest_bundle",
+        "geox_data_qc_bundle",
+        "geox_dst_ingest_test",
+        "geox_evidence_summarize_cross",
+        "geox_history_audit",
+        "geox_map_context_scene",
+        "geox_prospect_evaluate",
+        "geox_prospect_judge_preview",
+        "geox_prospect_judge_seal",
+        "geox_section_interpret_correlation",
+        "geox_seismic_analyze_volume",
+        "geox_subsurface_generate_candidates",
+        "geox_subsurface_verify_integrity",
+        "geox_system_registry_status",
+        "geox_time4d_analyze_system"
+    ],
+    "manifest_hash_source": "SHA-256(canonical_tools_sorted)",
+    "registry_hash": "d2ddb57eaa0cdafd26283d0f0a94fa258943bb2e8fd0c368863054c5f5079c2e"
 }

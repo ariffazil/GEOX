@@ -37,7 +37,7 @@ install:
   source: https://github.com/ariffazil/geox
   python_version: ">=3.11"
 
-# Sovereign 13 Tools — canonical public surface locked at 13
+# Sovereign 15 Tools — 14 canonical + 1 DST ingestion specialist
 tools:
   - id: geox_data_ingest_bundle
     name: geox_data_ingest_bundle
@@ -132,9 +132,19 @@ tools:
         mode: { type: string, enum: [volumetrics, pos, evoi, risk_matrix], default: volumetrics }
       required: [prospect_ref]
 
-  - id: geox_prospect_judge_verdict
-    name: geox_prospect_judge_verdict
-    description: Governance verdict gate — emits SEAL/PARTIAL/SABAR/VOID/888_HOLD. Routes to arif_judge_deliberate. Requires ack_irreversible=true and geox:governance scope.
+  - id: geox_prospect_judge_preview
+    name: geox_prospect_judge_preview
+    description: Reversible advisory verdict — returns JUDGE_PREVIEW/HOLD without consuming sovereign ack. Safe for automation.
+    input_schema:
+      type: object
+      properties:
+        prospect_ref: { type: string }
+        ac_risk_score: { type: number, minimum: 0, maximum: 1 }
+      required: [prospect_ref, ac_risk_score]
+
+  - id: geox_prospect_judge_seal
+    name: geox_prospect_judge_seal
+    description: Irreversible governance verdict gate — emits SEAL/PARTIAL/SABAR/VOID/888_HOLD. Routes to arif_judge_deliberate. Requires ack_irreversible=true and geox:governance scope.
     input_schema:
       type: object
       properties:
@@ -142,6 +152,20 @@ tools:
         ac_risk_score: { type: number, minimum: 0, maximum: 1 }
         ack_irreversible: { type: boolean, description: "Must be true to proceed past RT-3 guard" }
       required: [prospect_ref, ac_risk_score, ack_irreversible]
+
+  - id: geox_dst_ingest_test
+    name: geox_dst_ingest_test
+    description: Structured Drill-Stem Test ingestion — computes CGR, WGR, hydrocarbon gas, drawdown proxy, and CO2/H2S classification.
+    input_schema:
+      type: object
+      properties:
+        well_id: { type: string }
+        gas_rate_mmscfd: { type: number }
+        condensate_rate_stbd: { type: number }
+        water_rate_stbd: { type: number }
+        bhp_psi: { type: number }
+        whp_psi: { type: number }
+      required: [well_id]
 
   - id: geox_evidence_summarize_cross
     name: geox_evidence_summarize_cross
@@ -155,7 +179,7 @@ tools:
 
   - id: geox_system_registry_status
     name: geox_system_registry_status
-    description: Contract introspection — tool count, alias table, manifest parity, health, and federation status. Returns canonical_tool_count=13.
+    description: Contract introspection — tool count, alias table, manifest parity, health, and federation status. Returns canonical_tool_count=14, total_tools=15.
     input_schema:
       type: object
       properties:
