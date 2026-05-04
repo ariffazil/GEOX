@@ -81,13 +81,11 @@ def materialize_las_source(source: str, *, artifact_id: str | None = None) -> st
 
     local_path = source
     # FIND-LIVE-001: Block path traversal via absolute paths to sensitive system files.
-    # Allow absolute paths that point to REAL, EXISTING accessible files (legitimate local assets).
-    # Block only: non-existent paths outside /data or /app/fixtures (potential traversal probes).
+    # Allow existing files in any location (legitimate local assets).
+    # Block non-existent paths outside /data or /app/fixtures (potential traversal probes).
     if os.path.isabs(local_path):
         resolved = Path(local_path).resolve()
-        if resolved.exists():
-            pass  # Existing file — allow, LAS reader will validate format
-        else:
+        if not resolved.exists():
             # Non-existent absolute path — block unless within an allowed directory
             is_safe = False
             for safe_root in [Path("/data"), Path("/app/fixtures")]:
@@ -96,6 +94,8 @@ def materialize_las_source(source: str, *, artifact_id: str | None = None) -> st
                     break
             if not is_safe:
                 raise LASSourceError(f"Absolute path {local_path} is not under an allowed directory (/data or /app/fixtures)")
+            # Within allowed directory but doesn't exist — let it through for normal FileNotFound handling
+        # Existing file — allow regardless of location, LAS reader validates format
     else:
         # Relative paths are checked against /app/fixtures then /data
         fixture_path = f"/app/fixtures/{os.path.basename(local_path)}"
