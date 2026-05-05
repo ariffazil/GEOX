@@ -1,119 +1,264 @@
-# GEOX Governed Agentic Apps — Roadmap
+# GEOX — Roadmap H1–H4
 
-> **Status:** Wave 1 Trust Foundation — MCP Deployment ACTIVE
-> **Motto:** *Ditempa Bukan Diberi* — Forged, Not Given
-> **Constitutional Kernel:** arifOS F1–F13
-> **Ledger:** VAULT999
-> **MCP Server:** FastMCP v3.2.4 · HTTP transport on :8000 · SSE
-> **Last Updated:** 2026-04-16
-
----
-
-## 1. Executive Summary
-
-This roadmap translates the Gemini strategic design spec into an implementable, governed trajectory for five GEOX applications. The work is phased by governance maturity, not merely feature count.
-
-| App | Status | Target Phase | Governance Grade |
-|---|---|---|---|
-| **AC_Risk Console** | LIVE | Reference implementation | AAA |
-| **Attribute Audit** | PREVIEW | Working prototype | AA |
-| **Seismic Vision Review** | SCAFFOLD | Governed stub | A |
-| **Georeference Map** | SCAFFOLD | Governed stub | A |
-| **Analog Digitizer** | PLANNED | Design spike | B |
+**Version:** v2026.05.06  
+**Organ:** GEOX (Earth · Ψ Node)  
+**Maturity:** PRODUCTION (387 commits)  
+**Role:** Earth-domain coprocessor — geoscience, petrophysics, physics-9 verification  
+**Status:** SEALED — pending APEX ratification
 
 ---
 
-## 2. What Was Delivered in This Commit
+## Executive Summary
 
-### 2.1 AC_Risk Governance Hardening (Option A)
-**Files:** `geox/core/ac_risk.py`, `geox/geox_mcp/fastmcp_server.py`, `geox/core/tool_registry.py`
+GEOX is the Earth-domain coprocessor of the arifOS federation — the Ψ node for subsurface intelligence. It is PRODUCTION-mature with solid domain organ architecture. H1–H4 focuses on: real-time sensor ingestion, uncertainty quantification standards, and physics solver integration.
 
-- **ClaimTag enum** added (`CLAIM`, `PLAUSIBLE`, `HYPOTHESIS`, `UNKNOWN`).
-- **TEARFRAME dataclass** added (`truth`, `echo`, `amanah`, `rasa`).
-- **Anti-Hantu screen** (`AntiHantuScreen`) with regex patterns to detect empathy/feeling claims. Fail-closed → `VOID`.
-- **888_HOLD enforcement**:
-  - Raw AC_Risk `HOLD`/`VOID` triggers `hold_enforced=True`.
-  - `irreversible_action=True` forces `HOLD` regardless of score.
-  - `amanah_locked=False` forces `HOLD` for `SEAL`/`QUALIFY`.
-- **VAULT999 payload** embedded in every governed result.
-- **MCP tool exposure:**
-  - `geox_compute_ac_risk` — backward-compatible basic tool.
-  - `geox_evaluate_prospect` — Canonical governance entrypoint with 888_HOLD and VAULT999 sealing.
-  - `geox_load_seismic_line` — Seismic with F4 clarity verification.
-  - `geox_build_structural_candidates` — Multi-model interpretation (non-uniqueness principle).
-  - `geox_verify_geospatial` — Coordinate grounding with CRS validation.
-  - `geox_feasibility_check` — Constitutional firewall (F1-F13 pre-check).
-  - `geox_earth_signals` — Live Earth observations.
-  - `arifos_*` tools — arifOS routing layer (routed, not direct).
+**GEOX responsibilities by horizon:**
 
-### 2.2 MCP App Stubs + UI Bridge (Options B, C, D)
-**Files:** `geox/apps/*/manifest.json`, `geox/apps/*/index.html`
-
-Four new app directories created, each with:
-- `manifest.json` aligned to the app-manifest schema.
-- `index.html` with `ui_bridge` postMessage contract.
-- `ui://` resources exposed in server.
-
-### 2.3 Tool Registry Updates
-**File:** `geox/core/tool_registry.py`
-
-New metadata entries registered:
-- `geox_evaluate_ac_risk_governed` (PROD)
-- `geox_attribute_audit_stub` (PREVIEW)
-- `geox_seismic_vision_review_stub` (SCAFFOLD)
-- `geox_georeference_map_stub` (SCAFFOLD)
-- `geox_analog_digitizer_stub` (SCAFFOLD)
+| Horizon | Theme | GEOX Milestones |
+|---------|-------|-----------------|
+| **H1** (Q2–Q3 2026) | Substrate Hardening | Real-time sensor bridge, uncertainty quantification |
+| **H2** (Q4 2026–Q1 2027) | Recursive Governance | Physics solver integration, proof-carrying evidence |
+| **H3** (Q2–Q3 2027) | AGI-Scale Runtime | Real-time planetary boundary monitoring with WEALTH |
+| **H4** (Q4 2027+) | Foundational Substrate | Cross-federation earth data standard |
 
 ---
 
-## 3. Remaining Work — Acceptance Criteria
-(Rest of the file remains same...)
+## H1: Substrate Hardening (Q2–Q3 2026)
+
+### H1.1 Real-Time Sensor Bridge
+
+Move from file-batch ingestion to streaming sensor ingestion for live seismic and environmental monitoring.
+
+**Current state:** File-based batch ingestion (LAS files, SEG-Y, CSV)  
+**Target state:** MQTT/IoT streaming + REST polling for live sensors
+
+**Architecture:**
+
+```
+Sensors ( seismometers, GPS, pressure gauges )
+         │
+         ▼ (MQTT / OSC / HTTP)
+┌─────────────────────────┐
+│  GEOX Sensor Bridge     │
+│  - Protocol adapters    │
+│  - Normalization layer   │
+│  - Quality control       │
+│  - Drift correction      │
+└────────────┬────────────┘
+             │ (normalized readings)
+             ▼
+┌─────────────────────────┐
+│  GEOX Evidence Store     │
+│  - Time-series DB        │
+│  - Uncertainty metadata  │
+│  - arifOS verdict ready  │
+└────────────┬────────────┘
+             │ (MCP call)
+             ▼
+       arifOS 888 JUDGE
+```
+
+**Sensor protocols to support:**
+- MQTT (primary for IoT sensors)
+- OSC (OpenSound Control — seismic instruments)
+- HTTP/REST polling (weather stations, satellite feeds)
+- WebSocket (near-real-time satellite data)
+
+**Quality flags:**
+```python
+@dataclass
+class SensorReading:
+    sensor_id: str
+    timestamp: datetime
+    value: float
+    unit: str
+    quality_flags: list[QualityFlag]
+    uncertainty_m: float  # Measurement uncertainty (±)
+    drift_corrected: bool
+
+class QualityFlag(Enum):
+    VALID = "valid"
+    SUSPECT = "suspect"       # Calibration drift detected
+    GAP = "gap"               # Missing data in window
+    SPIKE = "spike"           # Anomalous spike detected
+    CALIBRATED = "calibrated" # Post-calibration correction applied
+```
+
+**Owner:** GEOX infrastructure team  
+**Target:** August 2026  
+**Dependency:** arifOS MCP tool `arif_evidence_fetch` must accept streaming inputs
+
+### H1.2 Uncertainty Quantification Standard
+
+Every GEOX output must carry explicit confidence intervals and epistemic/aleatory uncertainty decomposition.
+
+**arifOS ignores point estimates without variance.**
+
+**Required output schema for all GEOX tools:**
+
+```python
+@dataclass
+class UncertaintyQuantifiedOutput:
+    # Point estimate
+    value: float
+    unit: str
+
+    # Aleatory uncertainty (irreducible — natural variability)
+    aleatory_std: float
+    aleatory_ci_95: tuple[float, float]  # Lower, upper bound
+
+    # Epistemic uncertainty (reducible with more data)
+    epistemic_std: float | None = None
+    epistemic_ci_95: tuple[float, float] | None = None
+
+    # Combined uncertainty
+    total_std: float
+    total_ci_95: tuple[float, float]
+
+    # Dominant uncertainty type
+    dominant_uncertainty: Literal["aleatory", "epistemic", "mixed"]
+
+    # Evidence quality
+    data_points: int
+    coverage_ratio: float  # % of domain covered by data
+    model_confidence: float  # 0–1 internal model confidence
+
+    # arifOS will reject outputs where:
+    # - total_ci_95 width > 20% of value magnitude
+    # - epistemic_std > aleatory_std (means more data would significantly change result)
+    # - coverage_ratio < 0.6 (insufficient spatial coverage)
+```
+
+**Existing tools to update:**
+- `geox_porosity_calculate`
+- `geox_saturation_calculate`
+- `geox_lithos_interpret`
+- `geox_fluid_mapping`
+- `geox_pressure_gradient`
+
+**Owner:** GEOX science team  
+**Target:** July 2026
+
+### H1.3 Physics Solver Integration
+
+Hard-link GEOX to deterministic physics engines (OpenFOAM, SeisSol) so AI-generated interpretations can be grounded against first-principles simulation.
+
+**Integration levels:**
+
+```yaml
+# Level 1 — Validation (H2, Q4 2026)
+GEOX outputs a result →
+Physics solver runs independently →
+Results compared →
+GEOX flags large discrepancies (Δ > 2σ)
+
+# Level 2 — Guidance (H3, Q2 2027)
+arifOS routes uncertain cases to physics solver first →
+Physics result becomes primary evidence →
+GEOX AI interpretation secondary
+
+# Level 3 — Fusion (H4, Q4 2027+)
+Joint AI + physics inversion ( Ensemble Kalman Filter )
+Real-time updating as sensor data streams
+```
+
+**Physics engines:**
+- **OpenFOAM** — Computational fluid dynamics (reservoir simulation)
+- **SeisSol** — Dynamic earthquake rupture simulation
+- **Specfem** — Seismic wave propagation
+- **MRst** — MATLAB Reservoir simulation toolbox
+
+**Owner:** GEOX science team  
+**Target:** December 2026 (Level 1)
 
 ---
 
-## 4. Phase: Subsurface Epistemic Layer (2026-Q2)
+## H2: Recursive Governance (Q4 2026 – Q1 2027)
 
-**Audit Reference:** Session 2026-04-18
-**Purpose:** Formalize Bayesian graph, encode dependencies explicitly, enforce hard physics constraints, quantify refusal triggers, model basin-level correlation.
+### H2.1 Proof-Carrying Evidence
 
-### 4.1 Subsurface Skill Domains (6 Registered)
+Every GEOX evidence output must include a verifiable justification trace for arifOS 888_JUDGE.
 
-| Skill ID | Title | Status |
-|----------|-------|--------|
-| `geox.subsurface.formation-evaluation` | Formation Evaluation | ✅ ACTIVE |
-| `geox.subsurface.seismic-interpretation` | Seismic Interpretation | ✅ ACTIVE |
-| `geox.subsurface.reservoir-dynamics` | Reservoir Dynamics | ✅ ACTIVE |
-| `geox.subsurface.basin-charge` | Basin Charge | ✅ ACTIVE |
-| `geox.subsurface.prospect-risk` | Prospect Risk | ✅ ACTIVE |
-| `geox.subsurface.posterior-integrity` | Posterior Integrity | ✅ ACTIVE |
+**Required proof components for GEOX:**
+1. **Data lineage:** Raw sensor/file → processed → interpreted with full trace
+2. **Model identification:** Which petrophysical model used (Archie, Simandoux, etc.)
+3. **Assumption inventory:** Every assumption with explicit confidence
+4. **Alternative considered:** At least one alternative interpretation that was rejected
+5. **Physical consistency:** Cross-check against physics solver results
+6. **Uncertainty budget:** Full epistemic/aleatory decomposition
 
-**Physics Constraints Enforced (not advisory):**
-- Porosity: 0.02 ≤ POR ≤ 0.45
-- Water saturation: 0.0 ≤ Sw ≤ 1.0
-- Vsh: 0.0 ≤ Vsh ≤ 1.0
-- Ro oil window: 0.6% – 1.3%
-- Ro gas floor: > 1.3%
+### H2.2 WEALTH ↔ GEOX Coupling
 
-### 4.2 PhysicsGuard Module
+Price ecological damage in real time: GEOX outputs feed directly into WEALTH `wealth_future_steward` for planetary boundary valuation.
 
-**File:** `geox/core/physics_guard.py`
+**Coupling specification:**
 
-Implements:
-- `validate()` — Check output against physical bounds
-- `check_posterior_breadth()` — Enforce P90/P10 ratio ≤ 5.0
-- `check_net_pay()` — ALL THREE criteria required (Sw, POR, Vsh)
-- `check_charge_timing()` — charge_ma ≤ trap_ma
-- `validate_prospect_input()` — Full prospect validation
-
-**Unit Tests:** `tests/test_physics_guard.py` ✅
-
-### 4.3 Remaining Work
-
-- [ ] Per-element confidence scoring (pLDDT equivalent)
-- [ ] Independence checker for PoS components
-- [ ] WEALTH posterior distribution pipeline
-- [ ] Portfolio correlation tracker
+```
+GEOX (real-time):
+  - Seismic activity index
+  - Groundwater depletion rate
+  - Soil erosion flux
+  - Carbon storage change
+         │
+         ▼ (每小时 MCP call)
+WEALTH (wealth_future_steward):
+  - Price ecological externalities
+  - Update planetary boundary indicators
+  - Trigger alerts if thresholds exceeded
+```
 
 ---
 
-*Seal: DITEMPA BUKAN DIBERI — 999 SEAL ALIVE*
+## H3: AGI-Scale Runtime (Q2–Q3 2027)
+
+### H3.1 Real-Time Planetary Boundary Monitoring
+
+GEOX + WEALTH loop running continuously, monitoring:
+- Planetary boundaries (Rockström et al. 2009)
+- Subsurface stability indices
+- Resource extraction rates vs. renewal rates
+
+### H3.2 Interpretability Organ (LENS) Integration
+
+GEOX outputs fed to LENS (new organ) for causal attribution in earth-domain judgments.
+
+---
+
+## H4: Foundational Substrate (Q4 2027+)
+
+### H4.1 Cross-Federation Earth Data Standard
+
+GEOX data schemas adopted as the federation standard for earth/subsurface evidence exchange.
+
+---
+
+## Immediate Actions (This Week)
+
+- [ ] **Sensor inventory** — List all sensor types, protocols, data rates currently in use
+- [ ] **Uncertainty schema** — Draft `UncertaintyQuantifiedOutput` schema for review
+- [ ] **Physics solver candidates** — Identify Level 1 integration targets (OpenFOAM or SeisSol)
+
+---
+
+## Dependency Chain
+
+```
+[H1.1 Sensor Bridge] ──► [H1.2 Uncertainty Quant]
+         │
+         └──────► [H2.2 WEALTH-GEOX Coupling]
+                              │
+                              ▼
+               [H3.1 Real-time Planetary Monitoring]
+```
+
+---
+
+## Tool Count Note
+
+GEOX claims 15 MCP tools. This must be reconciled in the unified `MCP_ENDPOINT_REGISTRY` v2.0 (AAA ownership, June 2026).
+
+---
+
+**DITEMPA BUKAN DIBERI — Earth intelligence is forged, not given.**
+
+*SEALED: 2026-05-06 | GEOX Earth Domain*
