@@ -1,3 +1,4 @@
+import pytest
 """
 test_missing_curve_warning_contract.py — Artifact Contract Test #3
 ═══════════════════════════════════════════════════════════════════════

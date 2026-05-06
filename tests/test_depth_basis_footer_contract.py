@@ -1,3 +1,4 @@
+import pytest
 """
 test_depth_basis_footer_contract.py — Artifact Contract Test #4
 ═══════════════════════════════════════════════════════════════════════
