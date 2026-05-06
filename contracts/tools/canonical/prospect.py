@@ -132,6 +132,12 @@ async def geox_prospect_judge_preview(
         "preview_verdict": verdict,
         "reversible": True,
         "note": "This is a preview only. Call geox_prospect_judge_seal to make irreversible.",
+        "f13_compliance": {
+            "Recommendation": "Proceed" if verdict == GovernanceStatus.SEAL else "Hold / Rework",
+            "Uncertainty": f"AC_Risk Score: {ac_risk_score}",
+            "Consequence": "Preview Mode - No physical capital committed.",
+            "Authority": "HUMAN"
+        }
     }
     return get_standard_envelope(
         artifact,
@@ -195,7 +201,18 @@ async def geox_prospect_judge_seal(
             claim_tag="HYPOTHESIS",
         )
     verdict = GovernanceStatus.SEAL if ac_risk_score < 0.5 else GovernanceStatus.HOLD
-    artifact = {"ref": prospect_ref, "ac_risk": ac_risk_score, "verdict": verdict, "sealed": True}
+    artifact = {
+        "ref": prospect_ref, 
+        "ac_risk": ac_risk_score, 
+        "verdict": verdict, 
+        "sealed": True,
+        "f13_compliance": {
+            "Recommendation": "Proceed to Capital Execution" if verdict == GovernanceStatus.SEAL else "Hold / Reject Prospect",
+            "Uncertainty": f"Residual AC_Risk: {ac_risk_score}",
+            "Consequence": "Irreversible Capital and Safety Risk Bound to this Decision.",
+            "Authority": "HUMAN"
+        }
+    }
     return get_standard_envelope(
         artifact,
         tool_class="judge",

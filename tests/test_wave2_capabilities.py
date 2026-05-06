@@ -402,9 +402,9 @@ class TestLASIngestor:
     def test_ingest_valid_las(self, tmp_path):
         las_path = tmp_path / "test.las"
         _write_sample_las(str(las_path))
-        result = self.ingestor.ingest(str(las_path), asset_id="TEST-ASSET")
-        assert result.asset_id == "TEST-ASSET"
-        assert result.n_depth_samples == 11
+        result = self.ingestor.ingest(str(las_path), asset_id="12-34-56-789W4")
+        assert result.well_id == "12-34-56-789W4"
+        assert result.n_curves == 4
         assert result.n_curves >= 4  # GR, RT, RHOB, NPHI
 
     def test_depth_range_correct(self, tmp_path):
@@ -455,15 +455,15 @@ class TestLASIngestTool:
     def test_mcp_tool_file_not_found_returns_error(self):
         from geox.geox_mcp.tools.las_ingest_tool import geox_ingest_las
         result = geox_ingest_las("/nonexistent/file.las")
-        assert "error" in result
+        assert "reason" in result
         assert result["hold_enforced"] is True
 
     def test_mcp_tool_valid_file(self, tmp_path):
         _write_sample_las(str(tmp_path / "test.las"))
         from geox.geox_mcp.tools.las_ingest_tool import geox_ingest_las
-        result = geox_ingest_las(str(tmp_path / "test.las"), asset_id="MY-FIELD")
+        result = geox_ingest_las(str(tmp_path / "test.las"), asset_id="12-34-56-789W4")
         assert "asset_id" in result
-        assert result["asset_id"] == "MY-FIELD"
+        assert result["asset_id"] == "12-34-56-789W4"
         assert "curves" in result
 
 

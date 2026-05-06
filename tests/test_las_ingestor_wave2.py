@@ -32,8 +32,8 @@ LAS_SAMPLE = """~Version Information
 def test_las_ingestor_parses_manifest(tmp_path: Path):
     las_path = tmp_path / "test.las"
     las_path.write_text(LAS_SAMPLE)
-    manifest = LASIngestor().ingest(str(las_path), asset_id="asset-1").to_dict()
-    assert manifest["asset_id"] == "asset-1"
+    manifest = LASIngestor().ingest(str(las_path), asset_id="TEST-UWI").to_dict()
+    assert manifest["asset_id"] == "TEST-UWI"
     assert manifest["curve_count"] if "curve_count" in manifest else len(manifest["curves"]) >= 3
     assert manifest["depth_range"][0] == 1000.0
 
