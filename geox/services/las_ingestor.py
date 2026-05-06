@@ -22,9 +22,12 @@ import json
 import numpy as np
 
 from geox.core.physics_guard import PhysicsGuard
+from geox.core.truth_ledger import TruthLedger
+from geox.core.artefact_emission import ArtefactEmitter
 
 try:
     import lasio
+
 except ImportError:
     lasio = None
 
@@ -208,6 +211,16 @@ def _make_vault_receipt(tool_name: str, payload: dict, verdict: str) -> dict:
     }
 
 
+# ─────────────────── EXCEPTIONS ───────────────────
+
+class ConstitutionalRefusal(Exception):
+    """Raised when an operation violates the arifOS Earth Kernel invariants (WAJIB)."""
+    def __init__(self, reason: str, evidence: dict | None = None):
+        self.reason = reason
+        self.evidence = evidence or {}
+        super().__init__(self.reason)
+
+
 # ─────────────────── INGESTOR ───────────────────
 
 def _las_header_str(las_well, *keys) -> str:
@@ -306,6 +319,43 @@ class LASIngestor:
         well = Well.from_las(str(source)) if Well is not None else None
 
         depth_curve = np.asarray(las.index, dtype=float)
+        
+        # ── CONSTITUTIONAL GATE 1: Depth Integrity (F07 Physics) ──
+        if depth_curve.size < 2:
+            raise ConstitutionalRefusal("Insufficient depth samples (<2)", {"path": str(path)})
+        
+        # Check monotonicity
+        depth_diffs = np.diff(depth_curve)
+        if np.any(depth_diffs <= 0):
+            raise ConstitutionalRefusal("Non-monotonic depth sequence detected (Depth must strictly increase)", {"path": str(path)})
+
+        # ── CONSTITUTIONAL GATE 2: UWI Verification (F04 Truth) ──
+        uwi_header = _las_header_str(las.well, "UWI", "API").strip()
+        well_header = _las_header_str(las.well, "WELL").strip()
+        
+        if asset_id:
+            # If asset_id provided, it MUST exist in headers or we refuse
+            if uwi_header == "UNKNOWN" and well_header == "UNKNOWN":
+                 raise ConstitutionalRefusal("LAS missing both UWI and WELL headers. Identity unproven.", {"path": str(path)})
+            
+            # If headers exist, they must not conflict with asset_id (Sovereign Truth)
+            if uwi_header != "UNKNOWN" and asset_id != uwi_header:
+                 # Check if asset_id is well_name or part of UWI
+                 if asset_id != well_header:
+                     raise ConstitutionalRefusal(
+                         f"Identity Mismatch: Requested '{asset_id}' but found UWI='{uwi_header}' WELL='{well_header}'",
+                         {"requested": asset_id, "found_uwi": uwi_header, "found_well": well_header}
+                     )
+
+        # ── CONSTITUTIONAL GATE 3: Unit Governance (F05 Peace) ──
+        depth_unit = _las_header_str(las.well, "UNIT", "STRT", "STOP").upper()
+        # Common pattern: STRT.M 100.00
+        if "M" not in depth_unit and "FT" not in depth_unit and "FEET" not in depth_unit:
+             # Try to find unit in curve header for depth
+             depth_curve_unit = str(las.curves[0].unit or "").upper()
+             if "M" not in depth_curve_unit and "FT" not in depth_curve_unit:
+                 raise ConstitutionalRefusal("Depth units missing or ambiguous. Refusing to guess between M/FT.", {"path": str(path)})
+
         loaded_curves: list[str] = []
         curve_qc_results: list[CurveQCResult] = []
         all_issues: list[QCIssue] = []
