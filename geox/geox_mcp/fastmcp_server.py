@@ -234,6 +234,7 @@ def arifos_compute_risk(
     evidence_credit: float = 0.5,
     truth_score: float = 0.99,
     echo_score: float = 0.0,
+    advisory_mode: bool = False,
     **kwargs: Any,
 ) -> dict[str, Any]:
     transforms = [
@@ -251,8 +252,11 @@ def arifos_compute_risk(
         echo_score=echo_score,
         amanah_locked=bool(kwargs.get("amanah_locked", False)),
         irreversible_action=bool(kwargs.get("irreversible_action", False)),
+        model_text=kwargs.get("model_text"),
+        prospect_context=kwargs.get("prospect_context"),
+        advisory_mode=advisory_mode,
     )
-    verdict_map = {"PROCEED": "SEAL", "HOLD": "HOLD", "BLOCK": "VOID"}
+    verdict_map = {"PROCEED": "SEAL", "HOLD": "HOLD", "BLOCK": "VOID", "ADVISORY_HOLD": "ADVISORY_HOLD", "ADVISORY_BLOCK": "ADVISORY_BLOCK"}
     return {
         "ac_risk": result.ac_risk_score,
         "verdict": verdict_map.get(result.verdict, "QUALIFY"),
@@ -261,6 +265,7 @@ def arifos_compute_risk(
             "evidence_credit": evidence_credit,
             "b_cog": result.b_cog,
         },
+        "explanation": result.explanation,
         "claim_tag": result.claim_tag,
     }
 
