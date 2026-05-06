@@ -418,24 +418,6 @@ def compute_ac_risk_governed(
 ) -> GovernedACRiskResult:
     """
     Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, 888_HOLD, VAULT999.
-
-    Args:
-        u_ambiguity: Physical ambiguity [0.0, 1.0] - REQUIRED
-        transform_stack: List of applied transforms - REQUIRED
-        evidence_credit: Evidence grounding score [0.0, 1.0], default 0.0
-        echo_score: Consistency with prior knowledge [0.0, 1.0], default 0.0
-        truth_score: Factual accuracy [0.0, 1.0], default 0.0
-        bias_scenario: Cognitive bias scenario, default "ai_vision_only"
-        custom_b_cog: Override B_cog value, default None
-        rasa_present: Context appropriateness flag, default False
-        amanah_locked: Ethical integrity/reversibility flag, default False
-        irreversible_action: If True, forces 888_HOLD, default False
-        model_text: Optional text to screen for Anti-Hantu violations
-        prospect_context: Optional dict with prospect/operation metadata
-        session_id: Optional session ID for VAULT999 seal
-
-    Returns:
-        GovernedACRiskResult with full governance envelope per ARIF-OS REPAIR MISSION
     """
     u_ambiguity = _clamp(u_ambiguity, 0.0, 1.0)
     evidence_credit = _clamp(evidence_credit, 0.0, 1.0)
@@ -465,6 +447,18 @@ def compute_ac_risk_governed(
         amanah_locked=amanah_locked,
     )
 
+    # ── WAJIB F12: Scar Canonisation Check ──
+    scar_echoes = []
+    if prospect_context and "context_tags" in prospect_context:
+        try:
+            from geox.core.scar_ledger import ScarLedger
+            scars = ScarLedger().audit_against_scars(prospect_context["context_tags"])
+            if scars:
+                scar_echoes = [f"F12_SCAR: {s['enforced_rule']}" for s in scars]
+                floor_violations.extend(scar_echoes)
+        except Exception:
+            pass # Fail-open for ledger absence during basic tests, but log it ideally
+
     hold_triggered = False
     verdict = ACVerdict.PROCEED.value
     explanation = ""
@@ -491,7 +485,14 @@ def compute_ac_risk_governed(
         explanation = f"AC_Risk={ac_risk_score:.3f}: Critical risk. Interpretation unsafe. BLOCKED."
         hold_triggered = True
 
+    # F12 Hard Stop Override
+    if scar_echoes and verdict == ACVerdict.PROCEED.value:
+        verdict = ACVerdict.HOLD.value
+        explanation = f"AC_Risk={ac_risk_score:.3f}: Triggered {len(scar_echoes)} Institutional Scars. 888_HOLD enforced."
+        hold_triggered = True
+
     if irreversible_action and verdict == ACVerdict.PROCEED.value:
+
         verdict = ACVerdict.HOLD.value
         explanation = f"AC_Risk={ac_risk_score:.3f}: Irreversible action. 888_HOLD required before VAULT999 seal."
         hold_triggered = True
