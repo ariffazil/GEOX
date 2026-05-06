@@ -415,9 +415,11 @@ def compute_ac_risk_governed(
     model_text: Optional[str] = None,
     prospect_context: Optional[Dict[str, Any]] = None,
     session_id: Optional[str] = None,
+    advisory_mode: bool = False,
 ) -> GovernedACRiskResult:
     """
     Calculate governed AC_Risk with ClaimTag, TEARFRAME, Anti-Hantu, 888_HOLD, VAULT999.
+    SUNNAH: Advisory / shadow reviewer mode.
     """
     u_ambiguity = _clamp(u_ambiguity, 0.0, 1.0)
     evidence_credit = _clamp(evidence_credit, 0.0, 1.0)
@@ -492,7 +494,6 @@ def compute_ac_risk_governed(
         hold_triggered = True
 
     if irreversible_action and verdict == ACVerdict.PROCEED.value:
-
         verdict = ACVerdict.HOLD.value
         explanation = f"AC_Risk={ac_risk_score:.3f}: Irreversible action. 888_HOLD required before VAULT999 seal."
         hold_triggered = True
@@ -508,6 +509,17 @@ def compute_ac_risk_governed(
         claim_tag = ClaimTag.UNKNOWN.value
         explanation = f"AC_Risk governance BLOCK: Anti-Hantu violation. {anti_hantu.violations}"
         hold_triggered = True
+
+    # SUNNAH: Advisory Mode (Shadow Reviewer)
+    if advisory_mode:
+        if verdict == ACVerdict.HOLD.value:
+            verdict = "ADVISORY_HOLD"
+            explanation = "[ADVISORY MODE] " + explanation
+            hold_triggered = False # Do not enforce hard stop in the pipeline
+        elif verdict == ACVerdict.BLOCK.value:
+            verdict = "ADVISORY_BLOCK"
+            explanation = "[ADVISORY MODE] " + explanation
+            hold_triggered = False
 
     vault_seal = _generate_vault_seal(verdict, ac_risk_score, session_id or "N/A")
 
