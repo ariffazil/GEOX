@@ -3,7 +3,7 @@
 **Physics before narrative. Maruah before convenience.  
 DITEMPA BUKAN DIBERI — One Sovereign Kernel.**
 
-[![GEOX](https://img.shields.io/badge/GEOX-v2026.05.01--KANON-00D4AA?style=flat-square)](https://github.com/ariffazil/geox)
+[![GEOX](https://img.shields.io/badge/GEOX-v2026.05.10-00D4AA?style=flat-square)](https://github.com/ariffazil/geox)
 [![MCP](https://img.shields.io/badge/MCP-FastMCP-7C3AED?style=flat-square)](https://github.com/ariffazil/geox)
 [![arifOS](https://img.shields.io/badge/arifOS-F1%E2%80%93F13_Governed-FF6B00?style=flat-square)](https://github.com/ariffazil/arifOS)
 
