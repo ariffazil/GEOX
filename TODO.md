@@ -1,67 +1,95 @@
-# TODO — GEOX Execution Queue
+# TODO — GEOX Earth Intelligence
 
-**Actionable tasks for the current sprint.**
-> **Last Updated:** 2026-04-10  
-> **EUREKA Status:** ✅ GPT-5 Constitutional Firewall VALIDATED  
+> **Last Updated:** 2026-05-10  
+> **Session:** Governance Attestation + Sensor Bridge Planning  
 > **Seal:** DITEMPA BUKAN DIBERI
 
 ---
 
-## 🎉 EUREKA Validation — COMPLETE (2026-04-10)
+## ✅ Completed This Session
 
-**Layang-Layang GPT-5 Stress-Test: PASSED**
-
-External AI (GPT-5 via Gemini) successfully blocked from hallucinating geological data:
-- ✅ **F2 Truth** — No fabrication when data missing
-- ✅ **F7 Humility** — Ω₀ ∈ [0.03, 0.05] enforced  
-- ✅ **888_HOLD** — AI anticipated constraints before human request
-- ✅ **Tri-Witness** — Human × AI × System consensus verified
-
-**Evidence:**
-- Case Study: `wiki/60_CASES/Layang_Layang_Validation_2026_04_10.md`
-- Audit: `wiki/90_AUDITS/EUREKA_VALIDATION_2026_04_10.md`
-
-**Significance:** First documented case of frontier AI constitutionally governed to prevent geoscience hallucination.
+- [x] **arifOS embodiment contracts** deployed — GEOX tools respect lane/tier gating at kernel + REST levels
+- [x] **Model registry** fixed — governance attestation now resolves `gpt-5.5-thinking`
+- [x] **EUREKA validation** — GPT-5 constitutional firewall validated (Layang-Layang stress test)
+- [x] **Physics engine** — Archie, Simandoux, Indonesia models + Monte Carlo uncertainty
 
 ---
 
-## Phase B: Physics Engine (✅ COMPLETE)
+## 🔴 P0 — Critical (Before Next Session)
 
-### P0: Now (Governance & Physics)
-- [x] **Archie saturation model** (clean formations) — *Implemented in logic layer*
-- [x] **Simandoux model** (dispersed shaly sand) — *Implemented in logic layer*
-- [x] **Indonesia model** (mixed/laminated) — *Implemented in logic layer*
-- [x] **Uncertainty propagation** (Monte Carlo n=1000)
-- [x] **Validate Capability Matrix**: 37 End-to-end tests passing.
-- [x] **Extract Schemas**: Functional Pydantic definitions in `arifos/geox/contracts/types.py`.
-- [x] **Sovereign Veto**: `888_HOLD` triggers functional in petrophysics pipeline.
-- [x] **Prefab UI**: 9 interactive views implemented in `prefab_views.py`.
+### Real-Time Sensor Bridge (H1.1)
+Move from file-batch to streaming ingestion.
 
-### 1. Unified Interface (Command Center) 🏗️
-- [x] Create centralized hub for all 6 apps
-- [x] Implement cohesive dark-themed design system
-- [x] Deploy to trust surface (Vercel/Kimi/VPS)
-- [x] **New**: Restructured for 1D, 2D, and 3D Domain Categories
+- [ ] **MQTT adapter** — for IoT seismometers, GPS, pressure gauges
+- [ ] **OSC adapter** — OpenSound Control for seismic instruments
+- [ ] **HTTP/REST polling** — weather stations, satellite feeds
+- [ ] **WebSocket** — near-real-time satellite data
+- [ ] **Quality flags** — VALID, SUSPECT, GAP, SPIKE, CALIBRATED
+- [ ] **Drift correction** — auto-detect and flag calibration drift
 
-### 2. Domain Intelligence & Data (Next Focus) 🌊
-- [ ] Split apps into 1D (Well), 2D (Seismic), 3D (Basin) domains
-- [ ] Integrate RATLAS Materials into Well Context Desk
-- [ ] Implement Seismic Attribute Generation in 2D Viewer
-- [ ] Connect Basin Explorer to Real Macrostrat/Open Data
-- [ ] Replace synthetic data with Volve/F3/Malay Basin datasets
-- [ ] Achieve 999_SEAL deployment on VPS
+### Uncertainty Quantification Standard (H1.2)
+Every GEOX output must carry explicit confidence intervals.
 
-### 3. Agentic Governance (arifOS Integration) 🛡️
-- [ ] **cigvis 3D seismic integration** (Phase C).
+- [ ] **UncertaintyQuantifiedOutput schema** — aleatory + epistemic decomposition
+- [ ] **Update existing tools:**
+  - `geox_porosity_calculate`
+  - `geox_saturation_calculate`
+  - `geox_lithos_interpret`
+  - `geox_fluid_mapping`
+  - `geox_pressure_gradient`
+- [ ] **arifOS rejection criteria:**
+  - `total_ci_95` width > 20% of value magnitude → HOLD
+  - `epistemic_std` > `aleatory_std` → flag "more data needed"
+  - `coverage_ratio` < 0.6 → HOLD
 
 ---
 
-## Recently Completed (Session 2026-04-09)
-- [x] **GEOX MCP Apps Architecture** forged and SEALED (G=0.92).
-- [x] **Canonical Contracts** defined (Manifest, Adapter API, Event Contract).
-- [x] **Petrophysics Engine** hardened with automated Claim Tagging.
-- [x] **Documentation Suite** (README, LLM_WIKI, CHANGELOG, TODO, ROADMAP) synchronized.
+## 🟠 P1 — High (Next 7 Days)
+
+### Physics Solver Integration (H1.3)
+Ground AI interpretations against first-principles simulation.
+
+- [ ] **OpenFOAM** — reservoir simulation CFD
+- [ ] **SeisSol** — dynamic earthquake rupture
+- [ ] **Specfem** — seismic wave propagation
+- [ ] **Validation loop (Level 1):**
+  - GEOX outputs result → physics solver runs independently → compare → flag Δ > 2σ
+
+### Proof-Carrying Evidence (H2.1)
+Every GEOX evidence output must include verifiable justification trace.
+
+- [ ] **Data lineage** — raw sensor/file → processed → interpreted with full trace
+- [ ] **Model identification** — which petrophysical model used
+- [ ] **Assumption inventory** — every assumption with explicit confidence
+- [ ] **Alternative considered** — at least one rejected interpretation + reason
+- [ ] **Physical consistency** — cross-check against physics solver results
 
 ---
 
-**Policy:** Do NOT add aspirations here. Keep it actionable.
+## 🟡 P2 — Medium (Next 30 Days)
+
+### Domain Intelligence Split
+- [ ] **1D Well Context Desk** — integrate RATLAS materials
+- [ ] **2D Seismic Viewer** — attribute generation, real data (Volve/F3/Malay Basin)
+- [ ] **3D Basin Explorer** — connect to Macrostrat/Open Data
+- [ ] **Replace synthetic data** with real datasets
+
+### WEALTH ↔ GEOX Coupling (H2.2)
+- [ ] **Planetary boundary feed** — hourly MCP loop to WEALTH `wealth_future_steward`
+- [ ] **Price ecological damage** — real-time MYR/year valuation
+- [ ] **Alert integration** — arifOS triggers alerts when boundaries exceeded
+
+---
+
+## 🟢 P3 — Backlog (H2 2026)
+
+### cigvis 3D Seismic Integration
+- [ ] **Phase C** — 3D seismic rendering in browser
+- [ ] **Performance budget** — <2s load for 100MB seismic cube
+
+### Cross-Federation Earth Data Standard (H4)
+- [ ] **Standardize GEOX schemas** as federation default for earth/subsurface evidence
+
+---
+
+**DITEMPA BUKAN DIBERI — Earth intelligence is forged, not given.**

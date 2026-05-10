@@ -1,31 +1,57 @@
 # GEOX — Roadmap H1–H4
 
-**Version:** v2026.05.06  
+**Version:** v2026.05.10  
 **Organ:** GEOX (Earth · Ψ Node)  
 **Maturity:** PRODUCTION (387 commits)  
 **Role:** Earth-domain coprocessor — geoscience, petrophysics, physics-9 verification  
-**Status:** SEALED — pending APEX ratification
+**Status:** SEALED — pending APEX ratification — **EMBODIMENT-AWARE EARTH INTELLIGENCE**
 
 ---
 
 ## Executive Summary
 
-GEOX is the Earth-domain coprocessor of the arifOS federation — the Ψ node for subsurface intelligence. It is PRODUCTION-mature with solid domain organ architecture. H1–H4 focuses on: real-time sensor ingestion, uncertainty quantification standards, and physics solver integration.
+GEOX is the Earth-domain coprocessor of the arifOS federation — the Ψ node for subsurface intelligence. As of 2026-05-10, GEOX benefits from kernel-level tool embodiment contracts deployed in arifOS, meaning all geoscience tool calls are now lane/tier-verified before execution. The EUREKA validation (Layang-Layang stress test) proved the constitutional firewall can prevent frontier-AI geoscience hallucination. H1–H4 focuses on: real-time sensor ingestion, uncertainty quantification standards, and physics solver integration.
 
 **GEOX responsibilities by horizon:**
 
 | Horizon | Theme | GEOX Milestones |
 |---------|-------|-----------------|
-| **H1** (Q2–Q3 2026) | Substrate Hardening | Real-time sensor bridge, uncertainty quantification |
-| **H2** (Q4 2026–Q1 2027) | Recursive Governance | Physics solver integration, proof-carrying evidence |
+| **H1** (Q2–Q3 2026) | Substrate Hardening | Real-time sensor bridge, uncertainty quantification, **embodiment compliance** |
+| **H2** (Q4 2026 – Q1 2027) | Recursive Governance | Physics solver integration, proof-carrying evidence |
 | **H3** (Q2–Q3 2027) | AGI-Scale Runtime | Real-time planetary boundary monitoring with WEALTH |
 | **H4** (Q4 2027+) | Foundational Substrate | Cross-federation earth data standard |
 
 ---
 
+## What Changed (2026-05-10)
+
+### ✅ Deployed
+- **arifOS embodiment contracts** — GEOX tools now respect lane/tier gating at kernel + REST levels
+- **Model registry fix** — `gpt-5.5-thinking` resolves for governance attestation
+- **EUREKA validation** — GPT-5 constitutional firewall validated (Layang-Layang)
+
+### 🔄 Active Frontier
+- Real-time sensor bridge (MQTT, OSC, HTTP polling, WebSocket)
+- UncertaintyQuantifiedOutput schema for all tools
+- Physics solver integration (OpenFOAM, SeisSol)
+
+---
+
 ## H1: Substrate Hardening (Q2–Q3 2026)
 
-### H1.1 Real-Time Sensor Bridge
+### H1.0 — Embodiment Compliance (✅ LIVE)
+
+All GEOX tools are now embodiment-verified:
+
+- `geox_porosity_calculate` — lane: AGI, tier: SOVEREIGN, reversible: true
+- `geox_saturation_calculate` — lane: AGI, tier: SOVEREIGN, reversible: true
+- `geox_lithos_interpret` — lane: AGI, tier: SOVEREIGN, reversible: false
+- `geox_fluid_mapping` — lane: AGI, tier: SOVEREIGN, reversible: false
+- `geox_pressure_gradient` — lane: AGI, tier: SOVEREIGN, reversible: true
+
+Any tool call without proper lane/tier will return `EMBODIMENT_HOLD` from arifOS before reaching GEOX.
+
+### H1.1 — Real-Time Sensor Bridge
 
 Move from file-batch ingestion to streaming sensor ingestion for live seismic and environmental monitoring.
 
@@ -85,10 +111,9 @@ class QualityFlag(Enum):
 ```
 
 **Owner:** GEOX infrastructure team  
-**Target:** August 2026  
-**Dependency:** arifOS MCP tool `arif_evidence_fetch` must accept streaming inputs
+**Target:** August 2026
 
-### H1.2 Uncertainty Quantification Standard
+### H1.2 — Uncertainty Quantification Standard
 
 Every GEOX output must carry explicit confidence intervals and epistemic/aleatory uncertainty decomposition.
 
@@ -99,35 +124,24 @@ Every GEOX output must carry explicit confidence intervals and epistemic/aleator
 ```python
 @dataclass
 class UncertaintyQuantifiedOutput:
-    # Point estimate
     value: float
     unit: str
-
-    # Aleatory uncertainty (irreducible — natural variability)
     aleatory_std: float
-    aleatory_ci_95: tuple[float, float]  # Lower, upper bound
-
-    # Epistemic uncertainty (reducible with more data)
+    aleatory_ci_95: tuple[float, float]
     epistemic_std: float | None = None
     epistemic_ci_95: tuple[float, float] | None = None
-
-    # Combined uncertainty
     total_std: float
     total_ci_95: tuple[float, float]
-
-    # Dominant uncertainty type
     dominant_uncertainty: Literal["aleatory", "epistemic", "mixed"]
-
-    # Evidence quality
     data_points: int
     coverage_ratio: float  # % of domain covered by data
     model_confidence: float  # 0–1 internal model confidence
-
-    # arifOS will reject outputs where:
-    # - total_ci_95 width > 20% of value magnitude
-    # - epistemic_std > aleatory_std (means more data would significantly change result)
-    # - coverage_ratio < 0.6 (insufficient spatial coverage)
 ```
+
+**arifOS will reject outputs where:**
+- `total_ci_95` width > 20% of value magnitude
+- `epistemic_std` > `aleatory_std` (means more data would significantly change result)
+- `coverage_ratio` < 0.6 (insufficient spatial coverage)
 
 **Existing tools to update:**
 - `geox_porosity_calculate`
@@ -139,9 +153,9 @@ class UncertaintyQuantifiedOutput:
 **Owner:** GEOX science team  
 **Target:** July 2026
 
-### H1.3 Physics Solver Integration
+### H1.3 — Physics Solver Integration
 
-Hard-link GEOX to deterministic physics engines (OpenFOAM, SeisSol) so AI-generated interpretations can be grounded against first-principles simulation.
+Hard-link GEOX to deterministic physics engines so AI-generated interpretations can be grounded against first-principles simulation.
 
 **Integration levels:**
 
@@ -158,7 +172,7 @@ Physics result becomes primary evidence →
 GEOX AI interpretation secondary
 
 # Level 3 — Fusion (H4, Q4 2027+)
-Joint AI + physics inversion ( Ensemble Kalman Filter )
+Joint AI + physics inversion (Ensemble Kalman Filter)
 Real-time updating as sensor data streams
 ```
 
@@ -175,7 +189,7 @@ Real-time updating as sensor data streams
 
 ## H2: Recursive Governance (Q4 2026 – Q1 2027)
 
-### H2.1 Proof-Carrying Evidence
+### H2.1 — Proof-Carrying Evidence
 
 Every GEOX evidence output must include a verifiable justification trace for arifOS 888_JUDGE.
 
@@ -187,9 +201,9 @@ Every GEOX evidence output must include a verifiable justification trace for ari
 5. **Physical consistency:** Cross-check against physics solver results
 6. **Uncertainty budget:** Full epistemic/aleatory decomposition
 
-### H2.2 WEALTH ↔ GEOX Coupling
+### H2.2 — WEALTH ↔ GEOX Coupling
 
-Price ecological damage in real time: GEOX outputs feed directly into WEALTH `wealth_future_steward` for planetary boundary valuation.
+Price ecological damage in real time: GEOX outputs feed directly into WEALTH `wealth_future_steward`.
 
 **Coupling specification:**
 
@@ -211,14 +225,14 @@ WEALTH (wealth_future_steward):
 
 ## H3: AGI-Scale Runtime (Q2–Q3 2027)
 
-### H3.1 Real-Time Planetary Boundary Monitoring
+### H3.1 — Real-Time Planetary Boundary Monitoring
 
 GEOX + WEALTH loop running continuously, monitoring:
 - Planetary boundaries (Rockström et al. 2009)
 - Subsurface stability indices
 - Resource extraction rates vs. renewal rates
 
-### H3.2 Interpretability Organ (LENS) Integration
+### H3.2 — Interpretability Organ (LENS) Integration
 
 GEOX outputs fed to LENS (new organ) for causal attribution in earth-domain judgments.
 
@@ -226,17 +240,9 @@ GEOX outputs fed to LENS (new organ) for causal attribution in earth-domain judg
 
 ## H4: Foundational Substrate (Q4 2027+)
 
-### H4.1 Cross-Federation Earth Data Standard
+### H4.1 — Cross-Federation Earth Data Standard
 
 GEOX data schemas adopted as the federation standard for earth/subsurface evidence exchange.
-
----
-
-## Immediate Actions (This Week)
-
-- [ ] **Sensor inventory** — List all sensor types, protocols, data rates currently in use
-- [ ] **Uncertainty schema** — Draft `UncertaintyQuantifiedOutput` schema for review
-- [ ] **Physics solver candidates** — Identify Level 1 integration targets (OpenFOAM or SeisSol)
 
 ---
 
@@ -261,4 +267,4 @@ GEOX claims 15 MCP tools. This must be reconciled in the unified `MCP_ENDPOINT_R
 
 **DITEMPA BUKAN DIBERI — Earth intelligence is forged, not given.**
 
-*SEALED: 2026-05-06 | GEOX Earth Domain*
+*SEALED: 2026-05-10 | GEOX Earth Domain — Embodiment-Aware*
