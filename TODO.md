@@ -1,94 +1,100 @@
 # TODO — GEOX Earth Intelligence
 
+> **Roadmap:** ARIFOS_NEXT_HORIZON_2026  
+> **Execution Status:** HOLD until contracts frozen  
 > **Last Updated:** 2026-05-10  
-> **Session:** Governance Attestation + Sensor Bridge Planning  
 > **Seal:** DITEMPA BUKAN DIBERI
 
 ---
 
-## ✅ Completed This Session
+## ✅ Embodiment Attestation (Completed Earlier Today)
 
-- [x] **arifOS embodiment contracts** deployed — GEOX tools respect lane/tier gating at kernel + REST levels
-- [x] **Model registry** fixed — governance attestation now resolves `gpt-5.5-thinking`
-- [x] **EUREKA validation** — GPT-5 constitutional firewall validated (Layang-Layang stress test)
-- [x] **Physics engine** — Archie, Simandoux, Indonesia models + Monte Carlo uncertainty
+- [x] arifOS embodiment contracts deployed
+- [x] Model registry fix
+- [x] EUREKA validation (Layang-Layang stress test)
+- [x] Physics engine (Archie, Simandoux, Indonesia models)
 
 ---
 
-## 🔴 P0 — Critical (Before Next Session)
+## 🔴 P0 — Horizon 0: Canon Lock (Days 0–14)
 
-### Real-Time Sensor Bridge (H1.1)
-Move from file-batch to streaming ingestion.
+**Gate: No new features until contracts are frozen.**
 
-- [ ] **MQTT adapter** — for IoT seismometers, GPS, pressure gauges
-- [ ] **OSC adapter** — OpenSound Control for seismic instruments
+### Authority Freeze
+- [ ] **Create `REPO_AUTHORITY_MATRIX.md`** — what GEOX may own / must not own
+- [ ] **Tool inventory** — 15 canonical tools + alias sunset plan
+- [ ] **Schema inventory** — map all evidence schemas
+- [ ] **Legacy alias audit** — plan sunset for 37 legacy aliases
+
+---
+
+## 🟠 P1 — Horizon 1: Security + Session Spine (Days 15–45)
+
+**Gate: Every output has source, timestamp, uncertainty, method, confidence.**
+
+### Evidence Schemas
+- [ ] **Create `/schemas/earth_evidence.schema.json`** — structured earth evidence object
+- [ ] **Create `/schemas/prospect_uncertainty.schema.json`** — uncertainty quantification
+- [ ] **Evidence provenance enforcement** — every output carries:
+  - `source` — where the data came from
+  - `timestamp` — when evidence was gathered
+  - `method` — which model/algorithm was used
+  - `confidence` — epistemic/aleatory uncertainty decomposition
+  - `coverage_ratio` — spatial/data coverage
+
+### Sensor Bridge
+- [ ] **MQTT adapter** — IoT seismometers, GPS, pressure gauges
+- [ ] **OSC adapter** — seismic instruments
 - [ ] **HTTP/REST polling** — weather stations, satellite feeds
 - [ ] **WebSocket** — near-real-time satellite data
-- [ ] **Quality flags** — VALID, SUSPECT, GAP, SPIKE, CALIBRATED
-- [ ] **Drift correction** — auto-detect and flag calibration drift
-
-### Uncertainty Quantification Standard (H1.2)
-Every GEOX output must carry explicit confidence intervals.
-
-- [ ] **UncertaintyQuantifiedOutput schema** — aleatory + epistemic decomposition
-- [ ] **Update existing tools:**
-  - `geox_porosity_calculate`
-  - `geox_saturation_calculate`
-  - `geox_lithos_interpret`
-  - `geox_fluid_mapping`
-  - `geox_pressure_gradient`
-- [ ] **arifOS rejection criteria:**
-  - `total_ci_95` width > 20% of value magnitude → HOLD
-  - `epistemic_std` > `aleatory_std` → flag "more data needed"
-  - `coverage_ratio` < 0.6 → HOLD
 
 ---
 
-## 🟠 P1 — High (Next 7 Days)
+## 🟡 P2 — Horizon 2: Deterministic Judge (Days 46–90)
 
-### Physics Solver Integration (H1.3)
-Ground AI interpretations against first-principles simulation.
+**Gate: Every GEOX output consumable by arifOS without prompt translation.**
 
-- [ ] **OpenFOAM** — reservoir simulation CFD
+### Ontology + Sunset
+- [ ] **Create `/ontology/sweet_map.yaml`** — SWEET-compatible concept map
+- [ ] **Legacy alias sunset** — fully migrate 37 → 15 canonical tools
+- [ ] **Evidence contract tests** — `/tests/evidence_contract_tests.py`
+
+### Physics Solver Integration
+- [ ] **OpenFOAM** — reservoir simulation CFD (Level 1 validation)
 - [ ] **SeisSol** — dynamic earthquake rupture
 - [ ] **Specfem** — seismic wave propagation
-- [ ] **Validation loop (Level 1):**
-  - GEOX outputs result → physics solver runs independently → compare → flag Δ > 2σ
-
-### Proof-Carrying Evidence (H2.1)
-Every GEOX evidence output must include verifiable justification trace.
-
-- [ ] **Data lineage** — raw sensor/file → processed → interpreted with full trace
-- [ ] **Model identification** — which petrophysical model used
-- [ ] **Assumption inventory** — every assumption with explicit confidence
-- [ ] **Alternative considered** — at least one rejected interpretation + reason
-- [ ] **Physical consistency** — cross-check against physics solver results
+- [ ] **Validation loop:** GEOX output → physics solver → compare → flag Δ > 2σ
 
 ---
 
-## 🟡 P2 — Medium (Next 30 Days)
+## 🟢 P3 — Horizon 3: Semantic Federation (Days 91–135)
 
-### Domain Intelligence Split
-- [ ] **1D Well Context Desk** — integrate RATLAS materials
-- [ ] **2D Seismic Viewer** — attribute generation, real data (Volve/F3/Malay Basin)
-- [ ] **3D Basin Explorer** — connect to Macrostrat/Open Data
-- [ ] **Replace synthetic data** with real datasets
+**Gate: One GEOX uncertainty produces one WEALTH risk witness without manual prompt glue.**
 
-### WEALTH ↔ GEOX Coupling (H2.2)
-- [ ] **Planetary boundary feed** — hourly MCP loop to WEALTH `wealth_future_steward`
-- [ ] **Price ecological damage** — real-time MYR/year valuation
-- [ ] **Alert integration** — arifOS triggers alerts when boundaries exceeded
+### GEOX → WEALTH Bridge
+- [ ] **Define bridge contract** — GEOX evidence maps to WEALTH evidence
+- [ ] **`earth_evidence.schema.json`** — export format for cross-domain use
+- [ ] **SWEET mapping v1** — semantic concept alignment
+- [ ] **First cross-domain demo** — real subsurface uncertainty → capital risk witness
+
+### Pipeline
+- [ ] GEOX detects subsurface uncertainty
+- [ ] arifOS requests evidence
+- [ ] WEALTH calculates EMV / downside / option value
+- [ ] arifOS judges
+- [ ] A-FORGE executes report generation only
+- [ ] VAULT999 seals trace
 
 ---
 
-## 🟢 P3 — Backlog (H2 2026)
+## 🔵 P4 — Horizon 4: Self-Healing + Release (Days 136–180)
 
-### cigvis 3D Seismic Integration
-- [ ] **Phase C** — 3D seismic rendering in browser
-- [ ] **Performance budget** — <2s load for 100MB seismic cube
+**Gate: GEOX evidence feeds causal decision intelligence.**
 
-### Cross-Federation Earth Data Standard (H4)
-- [ ] **Standardize GEOX schemas** as federation default for earth/subsurface evidence
+- [ ] **Causal template integration** — GEOX → WEALTH reservoir uncertainty affects EMV
+- [ ] **Proof-carrying evidence** — full justification trace for arifOS 888_JUDGE
+- [ ] **Public docs cleanup**
+- [ ] **Release tag `vNext-Horizon-0`**
 
 ---
 
