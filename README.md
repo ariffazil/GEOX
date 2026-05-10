@@ -12,6 +12,15 @@ The legacy surface (37 legacy aliases across multiple files) has been **contract
 
 ***
 
+## What Changed (2026-05-10)
+
+- arifOS embodiment contracts now gate GEOX tool calls before execution.
+- Governance attestation picks up the current model registry correctly.
+- EUREKA validation (Layang-Layang) hardened the constitutional firewall story for frontier geoscience workloads.
+- The active frontier is real-time sensor ingestion, uncertainty-quantified outputs, and physics-solver integration.
+
+***
+
 ## 1. Sovereign 15 Tool Surface
 
 **All agents and UIs must target these canonical tools.**  
