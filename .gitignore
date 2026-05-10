@@ -17,3 +17,4 @@ geox-gui/node_modules/
 /data/fixtures/
 /data/geox_panels/
 /data/wells/
+ops/reports/*.csv
