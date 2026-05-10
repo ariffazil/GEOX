@@ -18,3 +18,4 @@ geox-gui/node_modules/
 /data/geox_panels/
 /data/wells/
 ops/reports/*.csv
+asset_memory.db
