@@ -43,7 +43,7 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.05.01-KANON"
+GEOX_VERSION = "v2026.05.10-KANON"
 # Patch A - Fix epoch string
 GEOX_CONTRACT_EPOCH = "2026-05-01-GEOX-13TOOLS-v0.4"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
@@ -248,7 +248,7 @@ def _wrap_tool_outputs(mcp_server):
             defaults = {
                 "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
                 "confidence_band": result.get("confidence_band"),  # v0.5: None means not computed
-                "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.01"}),
+                "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}),
                 "evidence_refs": result.get("evidence_refs", []),
                 "uncertainty": result.get("uncertainty", "Moderate"),
                 "audit_receipt": result.get("audit_receipt", {
