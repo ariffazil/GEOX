@@ -1,66 +1,46 @@
-# GEOX State of the Tree (SOT) — 2026-04-12 (Post-Refactor)
+# GEOX State of the Tree (SOT) — 2026-05-11
 
-> **Canonical reference for GEOX repository state after Anti-Chaos Refactor**  
-> **Seal:** DITEMPA BUKAN DIBERI  
-> **Version:** v2.1.0-MULTI-PLANE
-> **Architecture:** Multi-Plane Contract (Contract / Control / Execution / Domain / Governance)
-
----
-
-## Repository Architecture (New SOT)
-
-The repository has been restructured to enforce a strict separation of concerns across functional planes.
-
-| Plane | Path | Responsibility |
-|-------|------|----------------|
-| **Contract** | `contracts/` | **Single Source of Truth.** Tool names, schemas, enums, artifacts. |
-| **Control** | `control_plane/` | **Registry & Discovery.** FastMCP server, App manifests, Dashboard routing. |
-| **Execution** | `execution_plane/` | **Governed Worker.** VPS runtime, heavy compute, sovereign logic. |
-| **Domain** | `domain/` | **Scientific Logic.** Pure geological/physical math and reasoning. |
-| **Governance** | `governance/` | **Constitutional Logic.** F1-F13 floors, 888_HOLD logic. |
-| **Compatibility**| `compatibility/` | **Quarantine.** Legacy aliases and deprecated shims. |
+> **Canonical runtime reference for GEOX**
+> **Seal:** DITEMPA BUKAN DIBERI
+> **Version:** `v2026.05.10-KANON`
+> **Authority posture:** `fail_closed`
 
 ---
 
-## Tool Registry & Contract (Verified)
+## Quick Reference
 
-| Canonical Tool Name | Dimension | Status |
-|---------------------|-----------|--------|
-| `geox_prospect_evaluate` | Prospect | ✅ FULL PARITY |
-| `geox_well_compute_petrophysics` | Well | ✅ FULL PARITY |
-| `geox_earth3d_load_volume` | Earth3D | ✅ FULL PARITY |
-| `geox_map_transform_coordinates` | Map | ✅ FULL PARITY |
-| `geox_physics_judge_verdict` | Physics | ✅ FULL PARITY |
-
-**Naming Law:** `<dimension>_<action>` (e.g., `geox_well_qc_logs`).  
-**Return Law:** Standardized Artifact Envelope with `execution_status`, `tool_class`, and `governance_status`.
-
----
-
-## MCP Apps Readiness (Verified)
-
-The following apps are declared in the Control Plane (`control_plane/fastmcp/manifests/`):
-- ✅ `prospect-ui`
-- ✅ `well-desk`
-- ✅ `section-canvas`
-- ✅ `earth-volume`
-- ✅ `chronos-history`
-- ✅ `judge-console`
-- ✅ `map-layer`
+| Attribute | Value |
+|-----------|-------|
+| Canonical repository | `https://github.com/ariffazil/geox` |
+| Canonical branch | `main` |
+| Repo head audited | `a7807bcb` |
+| Public health | `https://geox.arif-fazil.com/health` |
+| Public ready | `https://geox.arif-fazil.com/ready` |
+| Public MCP | `https://geox.arif-fazil.com/mcp` |
+| Ready status | `ok` |
+| Canonical tools | `14` |
+| Legacy aliases | `85` |
+| Contract epoch | `2026-05-01-GEOX-13TOOLS-v0.4` |
 
 ---
 
-## Recent Transitions (2026-04-12)
+## Live Runtime Truth
 
-1.  **Restructured Repo:** Moved from flat `registries/` to 5-plane architecture.
-2.  **Contract Unification:** Centralized `contracts/enums/statuses.py` as the universal response envelope.
-3.  **Alias Quarantine:** Moved `geox_` prefixed tools to the compatibility layer.
-4.  **App Manifests:** Created JSON manifests for all dashboard-ready applications.
+| Field | Value |
+|---|---|
+| Service | `geox-mcp-kernel` |
+| Identity | `GEOX` |
+| Role | `Earth Substrate Witness` |
+| Authority | `TERRAIN_WITNESS` |
+| Profile | `full` |
+| Enabled dimensions | `prospect`, `well`, `earth3d`, `map`, `cross`, `physics`, `section`, `canonical` |
+| Auth mode | `fail_closed` |
+| Caddy upstream | `127.0.0.1:8081` |
 
 ---
 
-## Action Items
+## Canonical Guidance
 
-- [ ] Update top-level `README.md` to reflect **Multi-Plane Architecture**.
-- [ ] Rebuild Docker images to reflect the new internal folder structure.
-- [ ] Deprecate old `geox_unified*.py` scripts in favor of `control_plane/` and `execution_plane/` entrypoints.
+- GEOX public truth is the readiness contract exposed at `/ready`; the README and contract tree must stay aligned with that count.
+- Legacy aliases remain callable for compatibility, but the canonical surface is 14 tools.
+- Public ingress is now host-safe through localhost proxying rather than Docker-only service names.
