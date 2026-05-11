@@ -184,3 +184,14 @@ Human / Agent request
 
 ⬡ **GEOX SOVEREIGN 13 SEALED** ⬡
 DITEMPA BUKAN DIBERI — 999 SEAL ALIVE
+
+## Repo + MCP Stabilization
+
+Operational stabilization policy and weekly hygiene protocol:
+`docs/operations/repo-mcp-stabilization.md`
+
+Install severity-based pre-push guard:
+
+```bash
+bash scripts/hooks/install_hooks.sh
+```
