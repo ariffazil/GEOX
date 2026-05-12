@@ -195,6 +195,42 @@ _prune_mcp_surface(mcp)
 # GLOBAL PANIC MIDDLEWARE (F1 Amanah — fail closed on unhandled exceptions)
 # ═══════════════════════════════════════════════════════════════════════════════
 
+class EarthAnchorMiddleware(BaseHTTPMiddleware):
+    """Inject ATLAS13 Earth event anchor into every MCP tool result."""
+
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        if request.url.path in ("/mcp", "/mcp/stream") and request.method == "POST":
+            body = b""
+            async for chunk in response.body_iterator:
+                body += chunk
+            if body:
+                try:
+                    payload = json.loads(body)
+                    if "result" in payload:
+                        result = payload["result"]
+                        content = result.get("content", [])
+                        for item in content:
+                            txt = item.get("text", "")
+                            if txt and txt.startswith("{") and "earth_event_anchor" not in txt:
+                                try:
+                                    data = json.loads(txt)
+                                    if isinstance(data, dict):
+                                        tool_name = data.get("tool") or ""
+                                        anchor = _earth_event_for_tool(tool_name)
+                                        data["earth_event_anchor"] = anchor
+                                        item["text"] = json.dumps(data)
+                                        result["structuredContent"]["earth_event_anchor"] = anchor
+                                except (json.JSONDecodeError, TypeError):
+                                    pass
+                        payload["result"] = result
+                    body = json.dumps(payload).encode()
+                except (json.JSONDecodeError, TypeError):
+                    pass
+            return JSONResponse(json.loads(body.decode())) if body else response
+        return response
+
+
 class GlobalPanicMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         try:
@@ -219,6 +255,185 @@ class GlobalPanicMiddleware(BaseHTTPMiddleware):
 # uncertainty, audit_receipt, humility_score (F7), maruah_flag (F6)
 # CHANGED v0.5: confidence_band defaults to None (not fake zeros)
 # ═══════════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ATLAS13 — Earth Memory Anchors for GEOX (13 canonical Earth events)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+ATLAS13_EARTH_EVENTS = [
+    {
+        "event_id": "GEOX-EARTH-001",
+        "event_name": "Moon-forming impact",
+        "time_anchor": "~4.5 Ga",
+        "earth_domain": ["planetary formation", "impact physics", "mantle differentiation"],
+        "organism_witness": "no organism — event created Earth-Moon stability field inherited by all later life",
+        "machine_witness": "orbital mechanics, angular momentum, isotope ratios, planetary simulation",
+        "geox_lesson": "Earth systems may appear stable only after catastrophic reorganization.",
+        "nine_signal_mapping": {"delta": "physical Earth state changed by impact", "psi": "no governance yet — pre-biological", "omega": "stability after collision is not given, it is forged"},
+    },
+    {
+        "event_id": "GEOX-EARTH-002",
+        "event_name": "Late Heavy Bombardment",
+        "time_anchor": "~4.1–3.8 Ga",
+        "earth_domain": ["impact cratering", "early crust", "planetary hazard"],
+        "organism_witness": "pre-biological or early-biological survival boundary",
+        "machine_witness": "crater record, lunar proxy evidence, impact modeling",
+        "geox_lesson": "A surface is not sovereign; it is exposed.",
+        "nine_signal_mapping": {"delta": "crust repeatedly disrupted", "psi": "no constraint system yet", "omega": "survival requires shielding"},
+    },
+    {
+        "event_id": "GEOX-EARTH-003",
+        "event_name": "Formation of stable oceans",
+        "time_anchor": "~4.4–3.8 Ga",
+        "earth_domain": ["hydrosphere", "atmosphere", "habitability"],
+        "organism_witness": "water becomes the medium of metabolism",
+        "machine_witness": "isotopes, zircons, sedimentary record, climate models",
+        "geox_lesson": "Water is Earth's first operating system for life.",
+        "nine_signal_mapping": {"delta": "hydrosphere stabilized", "psi": "planetary chemistry constrained", "omega": "habitability is a physical condition, not a guarantee"},
+    },
+    {
+        "event_id": "GEOX-EARTH-004",
+        "event_name": "Great Oxidation Event",
+        "time_anchor": "~2.4 Ga",
+        "earth_domain": ["atmosphere", "redox chemistry", "biosphere"],
+        "organism_witness": "anaerobic worlds collapsed; aerobic futures opened",
+        "machine_witness": "banded iron formations, sulfur isotopes, atmospheric chemistry",
+        "geox_lesson": "Life can transform the planet that hosts it. Small process + long time = planetary regime shift.",
+        "nine_signal_mapping": {"delta": "atmospheric chemistry measurably altered", "psi": "biological activity rewrote planetary constraints", "omega": "small causes can produce epochal effects"},
+    },
+    {
+        "event_id": "GEOX-EARTH-005",
+        "event_name": "Snowball Earth glaciations",
+        "time_anchor": "~720–635 Ma",
+        "earth_domain": ["climate extremes", "ice-albedo feedback", "carbon cycle"],
+        "organism_witness": "survival under planetary-scale constraint",
+        "machine_witness": "glacial deposits, cap carbonates, climate instability models",
+        "geox_lesson": "Feedback can freeze the world before balance returns.",
+        "nine_signal_mapping": {"delta": "climate locked into extreme state", "psi": "feedback overwhelmed containment", "omega": "stability is not the default; it is maintained"},
+    },
+    {
+        "event_id": "GEOX-EARTH-006",
+        "event_name": "Cambrian Explosion",
+        "time_anchor": "~541 Ma",
+        "earth_domain": ["evolution", "sedimentary record", "oxygenation", "ecology"],
+        "organism_witness": "body plans diversified; perception, predation, shells, motion intensified",
+        "machine_witness": "fossil record, stratigraphy, geochemical proxies",
+        "geox_lesson": "Complexity appears when Earth permits enough energy, oxygen, and structure.",
+        "nine_signal_mapping": {"delta": "Earth system conditions permitted rapid diversification", "psi": "ecological constraints emerged with complexity", "omega": "complexity is enabled, not willed"},
+    },
+    {
+        "event_id": "GEOX-EARTH-007",
+        "event_name": "End-Ordovician extinction",
+        "time_anchor": "~444 Ma",
+        "earth_domain": ["glaciation", "sea-level fall", "marine extinction"],
+        "organism_witness": "shallow marine life suffered collapse",
+        "machine_witness": "stratigraphy, isotope excursions, sedimentary basin shifts",
+        "geox_lesson": "A cooling Earth can be as lethal as a burning one.",
+        "nine_signal_mapping": {"delta": "sea level and ocean chemistry shifted", "psi": "climate boundary exceeded", "omega": "cooling is not safety"},
+    },
+    {
+        "event_id": "GEOX-EARTH-008",
+        "event_name": "Late Devonian crisis",
+        "time_anchor": "~372–359 Ma",
+        "earth_domain": ["reef collapse", "ocean anoxia", "terrestrial plant expansion"],
+        "organism_witness": "marine ecosystems destabilized over prolonged stress",
+        "machine_witness": "black shales, redox proxies, reef stratigraphy",
+        "geox_lesson": "Slow crisis is still crisis. Not every catastrophic Earth event is instant.",
+        "nine_signal_mapping": {"delta": "reef systems degraded over millions of years", "psi": "prolonged stress is still a governance failure", "omega": "duration does not dilute severity"},
+    },
+    {
+        "event_id": "GEOX-EARTH-009",
+        "event_name": "Permian–Triassic extinction",
+        "time_anchor": "~252 Ma",
+        "earth_domain": ["volcanism", "carbon cycle", "ocean anoxia", "mass extinction"],
+        "organism_witness": "largest known mass extinction; survival bottleneck",
+        "machine_witness": "Siberian Traps, mercury anomalies, carbon isotope shifts, temperature proxies",
+        "geox_lesson": "When carbon, heat, ocean chemistry, and volcanism couple, life pays the debt.",
+        "nine_signal_mapping": {"delta": "Earth systems cascaded", "psi": "planetary constraints catastrophically breached", "omega": "coupled crises exceed any single discipline"},
+    },
+    {
+        "event_id": "GEOX-EARTH-010",
+        "event_name": "Chicxulub impact / K–Pg extinction",
+        "time_anchor": "~66 Ma",
+        "earth_domain": ["impact physics", "extinction", "ejecta", "atmospheric opacity"],
+        "organism_witness": "dinosaur dominance ended; mammals inherited opportunity",
+        "machine_witness": "iridium layer, shocked quartz, crater imaging, global ejecta",
+        "geox_lesson": "Dominance is not permanence. Scale can be overruled by shock.",
+        "nine_signal_mapping": {"delta": "sudden global forcing", "psi": "no governance could have prevented it", "omega": "humility before abrupt Earth response"},
+    },
+    {
+        "event_id": "GEOX-EARTH-011",
+        "event_name": "Paleocene–Eocene Thermal Maximum",
+        "time_anchor": "~56 Ma",
+        "earth_domain": ["carbon release", "warming", "ocean acidification", "migration"],
+        "organism_witness": "ecosystems reorganized under rapid warming",
+        "machine_witness": "carbon isotope excursion, benthic foram records, temperature proxies",
+        "geox_lesson": "Carbon is not only chemistry; carbon is destiny under constraint.",
+        "nine_signal_mapping": {"delta": "carbon pulse drove thermal response", "psi": "carbon cycle governance is planetary", "omega": "geochemistry becomes history"},
+    },
+    {
+        "event_id": "GEOX-EARTH-012",
+        "event_name": "Toba supereruption",
+        "time_anchor": "~74 ka",
+        "earth_domain": ["volcanology", "ash dispersal", "atmospheric forcing"],
+        "organism_witness": "regional devastation, climate stress, survival pressure",
+        "machine_witness": "ash layers, volcanic glass, climate modeling, eruption volume",
+        "geox_lesson": "Atmosphere turns local violence into distributed consequence.",
+        "nine_signal_mapping": {"delta": "volcanic aerosol globally dispersed", "psi": "no governance — pure geological forcing", "omega": "local events can have planetary reach"},
+    },
+    {
+        "event_id": "GEOX-EARTH-013",
+        "event_name": "2004 Sumatra–Andaman megathrust earthquake and tsunami",
+        "time_anchor": "2004-12-26",
+        "earth_domain": ["plate tectonics", "megathrust rupture", "tsunami", "hazard"],
+        "organism_witness": "immediate human and ecological loss across the Indian Ocean",
+        "machine_witness": "seismometers, tide gauges, GPS displacement, tsunami warning systems",
+        "geox_lesson": "Earth motion becomes cascading consequence. The ocean carried the judgment outward.",
+        "nine_signal_mapping": {"delta": "plate boundary ruptured", "psi": "hazard governance tested at scale", "omega": "Earth does not negotiate with infrastructure"},
+    },
+]
+
+ATLAS13_BY_NAME: dict[str, dict] = {}
+for e in ATLAS13_EARTH_EVENTS:
+    name = e["event_name"].replace("\u2013", "-").replace("\u2014", "-").replace("\u2018", "'").replace("\u2019", "'")
+    ATLAS13_BY_NAME[name] = e
+    ATLAS13_BY_NAME[e["event_name"]] = e
+ATLAS13_BY_ID: dict[str, dict] = {e["event_id"]: e for e in ATLAS13_EARTH_EVENTS}
+
+
+def _lookup_atlas(event_name: str) -> dict | None:
+    """Look up an Earth event by name, normalizing special characters."""
+    for e in ATLAS13_EARTH_EVENTS:
+        en = e["event_name"]
+        if en == event_name:
+            return e
+        if en.replace("\u2013", "-") == event_name or en.replace("\u2014", "-") == event_name:
+            return e
+    return ATLAS13_BY_NAME.get(event_name)
+
+
+def _earth_event_for_tool(tool_name: str) -> dict:
+    """Return a stable Earth event anchor for a given GEOX tool name."""
+    tool_to_event = [
+        ("geox_seismic", "Chicxulub impact / K-Pg extinction"),
+        ("geox_prospect", "Permian-Triassic extinction"),
+        ("geox_subsurface", "Late Heavy Bombardment"),
+        ("geox_section", "Cambrian Explosion"),
+        ("geox_map_context", "Formation of stable oceans"),
+        ("geox_time4d", "Snowball Earth glaciations"),
+        ("geox_evidence_summarize", "End-Ordovician extinction"),
+        ("geox_data_ingest", "Toba supereruption"),
+        ("geox_data_qc", "Paleocene-Eocene Thermal Maximum"),
+        ("geox_history", "Great Oxidation Event"),
+        ("geox_system_registry", "Moon-forming impact"),
+    ]
+    for prefix, event_name in tool_to_event:
+        if tool_name.startswith(prefix):
+            anchor = _lookup_atlas(event_name)
+            if anchor:
+                return anchor
+    return ATLAS13_EARTH_EVENTS[3]  # default: Great Oxidation Event
+
 
 def _wrap_tool_outputs(mcp_server):
     """Monkey-patch all registered tool functions to inject universal output contract."""
@@ -245,9 +460,10 @@ def _wrap_tool_outputs(mcp_server):
 
             # Only inject if missing — respect tools that already set these
             now = datetime.now(timezone.utc).isoformat()
+            tool_name = getattr(tool, "name", "")
             defaults = {
                 "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
-                "confidence_band": result.get("confidence_band"),  # v0.5: None means not computed
+                "confidence_band": result.get("confidence_band"),
                 "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}),
                 "evidence_refs": result.get("evidence_refs", []),
                 "uncertainty": result.get("uncertainty", "Moderate"),
@@ -263,11 +479,11 @@ def _wrap_tool_outputs(mcp_server):
                     "recommended_action": "Proceed with standard consent protocols.",
                     "confidence": "HIGH",
                 }),
+                "earth_event_anchor": result.get("earth_event_anchor", _earth_event_for_tool(tool_name)),
             }
             for k, v in defaults.items():
                 if k not in result:
                     result[k] = v
-            # F7 Humility: if confidence_band is None, inject explanation instead of zeros
             if result.get("confidence_band") is None:
                 result["confidence_band"] = {
                     "computed": False,
@@ -461,39 +677,60 @@ GEOX_TOOL_CATEGORIES = {
 }
 
 async def tools_list_handler(request):
-    """Return the public tool surface: 13 sovereign tools grouped by 11 categories.
+    """Return the public tool surface: 15 sovereign tools with full MCP 2025-11-25 metadata.
 
     Internal dimension/substrate tools are callable but NOT advertised here.
     Aliases are listed separately with deprecation metadata.
     """
-    # Use canonical registry for LEGACY_ALIAS_MAP and CANONICAL_PUBLIC_TOOLS
-    # from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP # Already imported
+    from contracts.schemas.output_schemas import get_tool_metadata
 
     all_tools = {t.name: t for t in await mcp.list_tools()}
 
-    # ── PUBLIC surface: 13 sovereign tools only ────────────────────────────
+    # ── PUBLIC surface: sovereign tools with full metadata ─────────────────
     categories = []
     seen_public = set()
     for cat_name, cat_info in GEOX_TOOL_CATEGORIES.items():
         cat_tools = []
         for tool_name in cat_info["canonical"]:
             t = all_tools.get(tool_name)
-            if t and tool_name in CANONICAL_PUBLIC_TOOLS and tool_name not in seen_public: # Ensure it's in the canonical list
+            if t and tool_name in CANONICAL_PUBLIC_TOOLS and tool_name not in seen_public:
                 seen_public.add(tool_name)
-                cat_tools.append({"name": t.name, "description": t.description})
+                meta = get_tool_metadata(tool_name) or {}
+                tool_entry = {
+                    "name": t.name,
+                    "description": t.description,
+                }
+                if meta.get("title"):
+                    tool_entry["title"] = meta["title"]
+                if meta.get("outputSchema"):
+                    tool_entry["outputSchema"] = meta["outputSchema"]
+                if meta.get("annotations"):
+                    tool_entry["annotations"] = meta["annotations"]
+                cat_tools.append(tool_entry)
         if cat_tools:
             categories.append({
                 "category": cat_name,
                 "description": cat_info["description"],
                 "tools": cat_tools,
-                "visibility": "public", # All GEOX_TOOL_CATEGORIES are public
+                "visibility": "public",
             })
 
-    # ── INTERNAL surface: dimension + substrate tools (callable, not advertised) ──
+    # ── INTERNAL surface: dimension + substrate tools ────────────────────────
     internal_tools = []
     for t in all_tools.values():
         if t.name not in CANONICAL_PUBLIC_TOOLS and t.name not in LEGACY_ALIAS_MAP:
-            internal_tools.append({"name": t.name, "description": t.description})
+            meta = get_tool_metadata(t.name) or {}
+            tool_entry = {
+                "name": t.name,
+                "description": t.description,
+            }
+            if meta.get("title"):
+                tool_entry["title"] = meta["title"]
+            if meta.get("outputSchema"):
+                tool_entry["outputSchema"] = meta["outputSchema"]
+            if meta.get("annotations"):
+                tool_entry["annotations"] = meta["annotations"]
+            internal_tools.append(tool_entry)
     if internal_tools:
         categories.append({
             "category": "internal",
@@ -506,7 +743,7 @@ async def tools_list_handler(request):
     aliases = []
     for alias_name, canonical_name in LEGACY_ALIAS_MAP.items():
         t = all_tools.get(alias_name)
-        if t: # Only include if the tool is actually registered in MCP
+        if t:
             aliases.append({
                 "name": alias_name,
                 "description": t.description,
@@ -519,14 +756,16 @@ async def tools_list_handler(request):
     return JSONResponse({
         "organ": "GEOX",
         "schema": "geox-tool-registry/v2",
+        "schema_version": "geox-output-v0.6",
+        "mcp_spec": "2025-11-25",
         "categories": categories,
-        "public_count": len(CANONICAL_PUBLIC_TOOLS), # Directly from canonical registry
+        "public_count": len(CANONICAL_PUBLIC_TOOLS),
         "internal_count": len(internal_tools),
         "alias_count": len(aliases),
         "total_runtime": len(all_tools),
-        "natural_tools": 11, # This is a conceptual count, keep as is for now
+        "natural_tools": 11,
         "seal": "DITEMPA BUKAN DIBERI",
-        "public_surface": "13 sovereign tools",
+        "public_surface": "15 sovereign tools",
     })
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -590,8 +829,14 @@ async def get_profile_status() -> str:
 
 async def run_legacy_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
     tool_result = await mcp.call_tool(name, arguments)
-    # Patch C - Tool call wire-shape note: Embed result in content block
-    return {"success": True, "data": {"content": [{"type": "json", "json": json.loads(tool_result.content[0].text)}] if tool_result.content else {}}, "isError": False if tool_result.status == "SUCCESS" else True}
+    parsed = json.loads(tool_result.content[0].text) if tool_result.content else {}
+    # MCP 2025-11-25: dual content — structuredContent (typed JSON) + content (legacy text)
+    return {
+        "success": True,
+        "structuredContent": parsed,
+        "data": {"content": [{"type": "json", "json": parsed}]},
+        "isError": False if tool_result.status == "SUCCESS" else True,
+    }
 
 async def legacy_mcp_handler(request):
     if request.method == "GET":
@@ -702,6 +947,7 @@ def create_app():
         ],
         lifespan=mcp_http_handler.lifespan,
     )
+    app.add_middleware(EarthAnchorMiddleware)
     app.add_middleware(GlobalPanicMiddleware)
     return app
 
