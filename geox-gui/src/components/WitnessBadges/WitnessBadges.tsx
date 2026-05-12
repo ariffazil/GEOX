@@ -8,10 +8,11 @@
  */
 
 import React from 'react';
-import { Shield, AlertTriangle, CheckCircle, XCircle, HelpCircle } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, XCircle, HelpCircle, Eye } from 'lucide-react';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { useGovernance } from '../../store/geoxStore';
-import type { ConstitutionalFloor, FloorStatus, FloorId } from '../../types';
+import { useGovernance, useToACReport } from '../../store/geoxStore';
+import type { ConstitutionalFloor, FloorStatus, FloorId, PerceptionClass, EvidenceTag, Canon9 } from '../../types';
+import { PERCEPTION_CLASS_META, CANON9_META } from '../../types';
 
 // Badge color configurations
 const statusColors: Record<FloorStatus, { bg: string; border: string; icon: string; label: string }> = {
@@ -144,7 +145,7 @@ const StatusRibbon: React.FC = () => {
     grey: { bg: 'bg-gray-500', text: 'text-white', label: 'INITIALIZING', icon: HelpCircle },
   };
   
-  const config = ribbonConfig[governance.overallStatus];
+  const config = ribbonConfig[governance.overallStatus as keyof typeof ribbonConfig] || ribbonConfig.grey;
   const Icon = config.icon;
   
   return (
@@ -153,6 +154,96 @@ const StatusRibbon: React.FC = () => {
       <span>{config.label}</span>
       <span className="text-xs opacity-75 ml-2">| {governance.seal}</span>
     </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ToAC Perception Badge
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PerceptionBadge: React.FC = () => {
+  const report = useToACReport();
+  if (!report) return null;
+
+  const meta = PERCEPTION_CLASS_META[report.perception_class as keyof typeof PERCEPTION_CLASS_META] || PERCEPTION_CLASS_META.HYPOTHESIS;
+  const evidenceColors: Record<string, string> = {
+    EVIDENCE_DIRECT: 'bg-green-100 text-green-700 border-green-300',
+    EVIDENCE_MULTI_ZONE: 'bg-blue-100 text-blue-700 border-blue-300',
+    INTERPRET_FROM_LITHOLOGY: 'bg-amber-100 text-amber-700 border-amber-300',
+    UNKNOWN: 'bg-gray-100 text-gray-500 border-gray-300',
+  };
+  const evColor = evidenceColors[report.evidence_tag] || evidenceColors.UNKNOWN;
+
+  return (
+    <Tooltip.Provider delayDuration={100}>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 cursor-help transition-all duration-200 hover:shadow-md ${meta.bg} border-slate-300`}>
+            <Eye className={`w-4 h-4 ${meta.color}`} />
+            <div className="flex flex-col">
+              <span className={`text-xs font-bold ${meta.color}`}>
+                {meta.label}
+              </span>
+              <span className={`text-[10px] ${meta.color} opacity-75`}>
+                {report.evidence_tag}
+              </span>
+            </div>
+            {report.canon_9_touched.length > 0 && (
+              <div className="flex gap-0.5 ml-1">
+                {report.canon_9_touched.slice(0, 3).map((q: Canon9) => {
+                  const c9 = CANON9_META[q];
+                  return (
+                    <span key={q} className="text-[9px] font-mono bg-white/60 px-1 rounded border border-slate-300 text-slate-600" title={`${c9.name} (${c9.unit})`}>
+                      {c9.symbol}
+                    </span>
+                  );
+                })}
+                {report.canon_9_touched.length > 3 && (
+                  <span className="text-[9px] text-slate-400">+{report.canon_9_touched.length - 3}</span>
+                )}
+              </div>
+            )}
+          </div>
+        </Tooltip.Trigger>
+
+        <Tooltip.Portal>
+          <Tooltip.Content className="bg-slate-900 text-white px-4 py-3 rounded-lg shadow-xl max-w-xs z-50" sideOffset={5}>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Eye className="w-4 h-4 text-cyan-400" />
+                <span className="font-bold">ToAC Perception Bridge</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div className="text-slate-400">Class:</div>
+                <div className={`font-bold ${meta.color.replace('text-', 'text-')}`}>{report.perception_class}</div>
+                <div className="text-slate-400">Evidence:</div>
+                <div className="font-bold text-cyan-300">{report.evidence_tag}</div>
+                {report.canon_9_touched.length > 0 && (
+                  <>
+                    <div className="text-slate-400">CANON_9:</div>
+                    <div className="font-mono text-xs">{report.canon_9_touched.join(', ')}</div>
+                  </>
+                )}
+                {report.vertical_trend !== 'UNKNOWN' && (
+                  <>
+                    <div className="text-slate-400">Trend:</div>
+                    <div className="font-bold text-amber-300">{report.vertical_trend}</div>
+                  </>
+                )}
+                {report.litho_class !== 'UNKNOWN' && (
+                  <>
+                    <div className="text-slate-400">Litho:</div>
+                    <div className="font-bold">{report.litho_class}</div>
+                  </>
+                )}
+              </div>
+              <div className="text-xs text-slate-400 pt-1 border-t border-slate-700">{meta.description}</div>
+            </div>
+            <Tooltip.Arrow className="fill-slate-900" />
+          </Tooltip.Content>
+        </Tooltip.Portal>
+      </Tooltip.Root>
+    </Tooltip.Provider>
   );
 };
 
@@ -174,6 +265,14 @@ export const WitnessBadges: React.FC = () => {
       {/* Overall Status */}
       <StatusRibbon />
       
+      {/* ToAC Perception Badge */}
+      <div className="mt-2">
+        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 block">
+          Perception (ToAC v1)
+        </span>
+        <PerceptionBadge />
+      </div>
+
       {/* Priority Floor Badges */}
       <div className="flex flex-col gap-2 mt-2">
         <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">

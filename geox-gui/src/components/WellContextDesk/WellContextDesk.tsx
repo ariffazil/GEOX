@@ -17,11 +17,12 @@
 import React, { useState, useCallback } from 'react';
 import {
   FlaskConical, Cpu, AlertTriangle, CheckCircle,
-  RefreshCw, ChevronDown, ChevronUp, Loader2
+  RefreshCw, ChevronDown, ChevronUp, Loader2, Eye, Layers
 } from 'lucide-react';
 import { LogDock } from '../LogDock/LogDock';
 import { useMcpTool } from '../../hooks/useMcpTool';
-import { useGEOXStore } from '../../store/geoxStore';
+import { useGEOXStore, useToACReport } from '../../store/geoxStore';
+import { PERCEPTION_CLASS_META } from '../../types';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -66,6 +67,38 @@ const ResultRow: React.FC<{ label: string; value: React.ReactNode }> = ({ label,
   </div>
 );
 
+// ── ToAC Result Badge ────────────────────────────────────────────────────
+
+const ToACResultBadge: React.FC<{ result: Record<string, unknown> | null }> = ({ result }) => {
+  if (!result) return null;
+  const pc = result['perception_class'] as string | undefined;
+  const et = result['evidence_tag'] as string | undefined;
+  const c9 = result['canon_9_touched'] as string[] | undefined;
+  if (!pc && !et && !c9) return null;
+
+  const meta = pc ? PERCEPTION_CLASS_META[pc as keyof typeof PERCEPTION_CLASS_META] : null;
+
+  return (
+    <div className="flex items-center gap-2 px-2 py-1 rounded bg-slate-800/50 border border-slate-700">
+      <Eye className="w-3 h-3 text-cyan-400" />
+      {meta && (
+        <span className={`text-[10px] font-bold px-1 py-0.5 rounded ${meta.bg} ${meta.color}`}>
+          {meta.label}
+        </span>
+      )}
+      {et && <span className="text-[9px] font-mono text-slate-400">{et}</span>}
+      {c9 && c9.length > 0 && (
+        <div className="flex gap-0.5">
+          {c9.slice(0, 3).map((q) => (
+            <span key={q} className="text-[8px] font-mono bg-slate-700 px-1 rounded text-slate-400">{q}</span>
+          ))}
+          {c9.length > 3 && <span className="text-[8px] text-slate-500">+{c9.length - 3}</span>}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const McpResultPanel: React.FC<{
   petro: PetrophysicsResult | null;
   swModel: SwModelResult | null;
@@ -88,8 +121,10 @@ const McpResultPanel: React.FC<{
         <span className="text-xs font-bold text-slate-200">
           {is888Hold ? '888 HOLD — Human review required' : 'MCP Petrophysics Result'}
         </span>
+        <div className="flex-1" />
+          <ToACResultBadge result={petro as unknown as Record<string, unknown>} />
         {petro?.verdict && (
-          <span className={`ml-auto text-xs px-2 py-0.5 rounded font-bold ${
+          <span className={`text-xs px-2 py-0.5 rounded font-bold ${
             petro.verdict === 'SEAL' ? 'bg-green-800 text-green-200' :
             petro.verdict === 'PARTIAL' ? 'bg-blue-800 text-blue-200' :
             'bg-amber-800 text-amber-200'
@@ -149,7 +184,7 @@ const McpResultPanel: React.FC<{
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const WellContextDesk: React.FC = () => {
-  const { selectedWell, updateFloorStatus } = useGEOXStore();
+  const { selectedWell, updateFloorStatus, setToACReport } = useGEOXStore();
   const [showMcpPanel, setShowMcpPanel] = useState(true);
 
   // Petrophysics parameters (simplified — real impl reads from LogDock cursor)
@@ -169,6 +204,23 @@ export const WellContextDesk: React.FC = () => {
   const isRunning = swModelTool.status === 'loading'
     || petroTool.status === 'loading'
     || holdTool.status === 'loading';
+
+  // Wire ToAC report from MCP results (after petroTool is declared)
+  React.useEffect(() => {
+    if (petroTool.data) {
+      const d = petroTool.data as any;
+      if (d && (d['perception_class'] || d['evidence_tag'])) {
+        setToACReport({
+          perception_class: d['perception_class'] || 'HYPOTHESIS',
+          evidence_tag: d['evidence_tag'] || 'UNKNOWN',
+          canon_9_touched: d['canon_9_touched'] || [],
+          vertical_trend: d['vertical_trend'] || 'UNKNOWN',
+          litho_class: d['litho_class'] || 'UNKNOWN',
+          strat_standard: d['strat_standard'] || { scheme: 'NN_zone', reference_chart: '' },
+        } as any);
+      }
+    }
+  }, [petroTool.data, setToACReport]);
 
   const runPetrophysics = useCallback(async () => {
     updateFloorStatus('F9', 'amber', 'Petrophysics run initiated — Physics9 check active');
