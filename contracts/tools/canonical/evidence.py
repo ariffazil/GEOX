@@ -69,7 +69,13 @@ async def geox_evidence_summarize_cross(
             "physical evidence without explicit unit + depth + QC verification."
         ),
     }
-    result = get_standard_envelope(artifact, tool_class="compute")
+    result = get_standard_envelope(
+        artifact,
+        tool_class="compute",
+        claim_tag="DERIVED",
+        claim_state="INTERPRETED",
+        perception_class="DERIVED",
+    )
 
     if output_path:
         try:

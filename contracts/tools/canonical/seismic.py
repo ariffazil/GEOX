@@ -64,6 +64,12 @@ async def geox_seismic_analyze_volume(
         attribute: Seismic attribute to compute (e.g. "rms", "variance", "sweetness", "coherence").
     """
     artifact = {"volume_ref": volume_ref, "mode": mode, "attribute": attribute, "status": "Computed"}
-    return get_standard_envelope(artifact, tool_class="compute")
+    return get_standard_envelope(
+        artifact,
+        tool_class="compute",
+        claim_tag="HYPOTHESIS",
+        claim_state="INTERPRETED",
+        perception_class="DISPLAY",
+    )
 
 
