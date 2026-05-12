@@ -43,9 +43,9 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.05.10-KANON"
+GEOX_VERSION = "v2026.05.12-KANON"
 # Patch A - Fix epoch string
-GEOX_CONTRACT_EPOCH = "2026-05-01-GEOX-13TOOLS-v0.4"
+GEOX_CONTRACT_EPOCH = "2026-05-12-GEOX-13TOOLS-v0.7"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -779,6 +779,8 @@ async def tools_list_handler(request):
 
 @mcp.resource("geox://identity")
 async def geox_identity() -> dict:
+    from contracts.canonical_registry import CANON9_TOOL_MAP
+    from contracts.enums.statuses import GDE_VOCAB
     identity_state = {
         "identity": "GEOX",
         "role": "Earth Substrate Witness",
@@ -787,6 +789,21 @@ async def geox_identity() -> dict:
         "version": GEOX_VERSION,
         "profile": GEOX_PROFILE,
         "identity_pass": is_geox(),
+        "canon_9": {
+            "quantities": ["rho", "Vp", "Vs", "rho_e", "chi", "k", "P", "T", "phi"],
+            "tool_map": {k: v for k, v in sorted(CANON9_TOOL_MAP.items())},
+            "description": "EARTH.CANON_9 — nine invariant subsurface quantities. Every tool declares which it touches.",
+        },
+        "gde_vocabulary": {
+            "entries": len(GDE_VOCAB),
+            "description": "Geological Depositional Environment vocabulary for paleoenvironment mapping.",
+        },
+        "strat_standards": {
+            "supported": ["NN_zone", "NP_zone", "Stage_Sabah", "Cycle_Sarawak", "custom"],
+            "description": "Stratigraphic reference schemes. NN_zone (GPTS2020) is the default anchor.",
+        },
+        "toac_version": "v1",
+        "schema_version": "geox-output-v0.7",
     }
     enforcement = _enforce_geox()
     if enforcement:

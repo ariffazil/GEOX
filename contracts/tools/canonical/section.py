@@ -48,10 +48,12 @@ logger = logging.getLogger("geox.canonical.section")
 async def geox_section_interpret_correlation(
     section_ref: str,
     well_refs: List[str],
-    mode: Literal["correlation", "gr_motif", "sequence_stratigraphy"] = "correlation",
+    mode: Literal["correlation", "gr_motif", "sequence_stratigraphy", "gde_trend"] = "correlation",
     well_las_paths: Optional[List[str]] = None,
     tops: Optional[dict] = None,
     zone_definitions: Optional[dict] = None,
+    strat_standard: Optional[dict] = None,
+    paleoenvironment_input: Optional[List[dict]] = None,
 ) -> dict:
     """Multi-well stratigraphic correlation and marker interpretation.
 
@@ -62,9 +64,12 @@ async def geox_section_interpret_correlation(
             - "correlation": standard marker correlation (default).
             - "gr_motif": classify GR motif per well with EOD hints.
             - "sequence_stratigraphy": identify candidate SB/TS/MFS surfaces.
+            - "gde_trend": calculate vertical paleoenvironment trends from GDE stacks.
         well_las_paths: Optional LAS file paths for gr_motif/sequence modes.
         tops: {well_id: {marker_name: depth_m}} for annotation.
         zone_definitions: {zone_name: {top_m, base_m}} for zone-level motif.
+        strat_standard: Stratigraphic reference scheme. e.g. {"scheme": "NN_zone", "reference_chart": "GPTS2020"}.
+        paleoenvironment_input: List of {well_id, depth_m, gde_code, gde_index} for gde_trend mode.
     """
     import sys
     sys.path.insert(0, "/root/geox")
@@ -87,6 +92,68 @@ async def geox_section_interpret_correlation(
             claim_tag="HYPOTHESIS",
             claim_state="INTERPRETED",
             perception_class="DERIVED",
+            evidence_tag="EVIDENCE_DIRECT",
+            strat_standard=strat_standard or {"scheme": "NN_zone", "reference_chart": ""},
+        )
+
+    # ── GDE trend mode (ToAC v1: vertical paleoenvironment trend from GDE stacks) ──
+    if mode == "gde_trend":
+        if not paleoenvironment_input:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_section_interpret_correlation",
+                    "error_code": "NO_GDE_INPUT",
+                    "message": "gde_trend mode requires paleoenvironment_input: [{well_id, depth_m, gde_code, gde_index}]",
+                    "claim_state": "NO_VALID_EVIDENCE",
+                },
+                tool_class="interpret",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+            )
+
+        # Calculate vertical trend from GDE indices using 3-bin sliding window
+        # (same algorithm as Kinabalu Basin 10 m biostrat workbook)
+        trend_results: dict[str, list[dict]] = {}
+        for entry in paleoenvironment_input:
+            wid = entry.get("well_id", "UNKNOWN")
+            if wid not in trend_results:
+                trend_results[wid] = []
+            trend_results[wid].append(entry)
+
+        for wid, gde_entries in trend_results.items():
+            gde_entries.sort(key=lambda e: e.get("depth_m", 0))
+            gde_indices = np.array([e.get("gde_index", -1) for e in gde_entries], dtype=float)
+            for pos in range(len(gde_entries)):
+                window_before = gde_indices[max(0, pos - 2): pos + 1]
+                window_after = gde_indices[pos: min(len(gde_entries), pos + 3)]
+                shallow = np.nanmean(window_before[window_before >= 0]) if np.any(window_before >= 0) else np.nan
+                deep = np.nanmean(window_after[window_after >= 0]) if np.any(window_after >= 0) else np.nan
+                if np.isnan(shallow) or np.isnan(deep) or abs(shallow - deep) < 0.75:
+                    trend = "STABLE_OR_AMBIGUOUS"
+                elif shallow > deep:
+                    trend = "DEEPENING_UPWARD"
+                else:
+                    trend = "SHALLOWING_UPWARD"
+                gde_entries[pos]["vertical_trend"] = trend
+
+        return get_standard_envelope(
+            {
+                "tool": "geox_section_interpret_correlation",
+                "section_ref": section_ref,
+                "mode": "gde_trend",
+                "trend_results": trend_results,
+                "claim_state": "DERIVED_CANDIDATE",
+                "risk": "Vertical GDE trend is derived from 3-bin sliding window. Requires biostrat/lithology GDE picks as input.",
+            },
+            tool_class="interpret",
+            execution_status=ExecutionStatus.SUCCESS,
+            artifact_status=ArtifactStatus.COMPUTED,
+            claim_tag="PLAUSIBLE",
+            vertical_trend="COMPOSITE",
+            perception_class="DERIVED",
+            strat_standard=strat_standard or {"scheme": "NN_zone", "reference_chart": ""},
         )
 
     # ── GR motif / sequence stratigraphy ─────────────────────────────────
