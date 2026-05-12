@@ -32,6 +32,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Migration Notes
 - UI components must be updated to reference the new `primary_artifact` envelope.
 - Check `llms.txt` for the updated agent reasoning map.
+## [v2026.05.12] - 2026-05-12
+### Added
+- **ToAC v1 Perception Bridge**: `perception_class`, `evidence_tag`, `canon_9_touched`, `vertical_trend`, `litho_class`, `strat_standard` fields across all 16 tool output schemas.
+- **EARTH.CANON_9 State Vector**: Nine invariant subsurface quantities (ρ, Vp, Vs, ρₑ, χ, k, P, T, φ) with `CANON9_TOOL_MAP` declaring tool-level dependencies.
+- **Biostratigraphy Parsing**: `kernel/_biostrat.py` — NN zone parsing (regex + GPTS2020 lookup), GDE mapping (12-rule vocabulary), lithology classification. Exported via `_helpers.py` shim.
+- **GDE Trend Mode**: `geox_section_interpret_correlation` gains `mode="gde_trend"` — 3-bin sliding window vertical paleoenvironment trend from GDE index stacks. Same algorithm as Kinabalu Basin 10 m biostrat workbook.
+- **Strat Standard Parameter**: `geox_section_interpret_correlation` accepts `strat_standard` dict (scheme + reference_chart URI) for NN-anchored correlation.
+- **MCP Completions Capability**: Declared `"completions": {}` for argument autocompletion support.
+- **GDE Vocabulary and CANON_9 Discovery**: `geox://identity` resource now exposes `canon_9.tool_map`, `gde_vocabulary`, `strat_standards`, and `toac_version: "v1"`.
+- **Schema Version Bump**: Universal output contract now `geox-output-v0.7`.
+
+### Security
+- All new fields flow through existing F2 Truth (enforce_claim_state) and F7 Humility (evidence_tag) gates.
 
 ---
+
 ⬡ DITEMPA BUKAN DIBERI — 999 SEAL ALIVE ⬡

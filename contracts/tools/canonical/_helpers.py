@@ -18,6 +18,7 @@ from .kernel import _evidence
 from .kernel import _ingest
 from .kernel import _petrophysics
 from .kernel import _candidates
+from .kernel import _biostrat
 
 # ─── Global state (lives in kernel/_registry.py) ─────────────────────────
 # These are the in-memory stores — imported from kernel for backward compat
@@ -96,3 +97,13 @@ __all__.append("_get_well_data_with_depth")
 # ─── Async candidates (kernel/_candidates.py) ────────────────────────────
 _compute_subsurface_candidates = _candidates._compute_subsurface_candidates
 __all__.append("_compute_subsurface_candidates")
+
+# ─── Biostrat (kernel/_biostrat.py) ──────────────────────────────────────
+parse_nn_zone = _biostrat.parse_nn_zone
+__all__.append("parse_nn_zone")
+nn_age = _biostrat.nn_age
+__all__.append("nn_age")
+map_gde = _biostrat.map_gde
+__all__.append("map_gde")
+lithology_class = _biostrat.lithology_class
+__all__.append("lithology_class")
