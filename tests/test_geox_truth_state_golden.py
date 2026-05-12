@@ -75,20 +75,31 @@ async def test_judge_seal_blocks_without_ack():
 
 @pytest.mark.asyncio
 async def test_no_evidence_no_verified():
-    """String-only prospect_ref must not produce VERIFIED or SEAL."""
+    """String-only prospect_ref must not produce VERIFIED or SEAL.
+
+    v0.6: screen mode produces INTERPRETED artifact (qualitative screening),
+    but artifact_status is downgraded to DRAFT by enforce_claim_state since no
+    evidence_refs were provided. Screen mode is always qualitative.
+    """
     result = await geox_prospect_evaluate(prospect_ref="StringOnly")
     assert result["artifact_status"] != "VERIFIED"
-    assert result["claim_state"] in ("HYPOTHESIS", "NO_VALID_EVIDENCE")
+    assert result["claim_state"] == "INTERPRETED"
     assert result["primary_artifact"]["score_type"] == "heuristic_screening"
+    assert result["uncertainty"] == "High"
 
 
 @pytest.mark.asyncio
 async def test_time4d_no_evidence_undetermined():
-    """time4d without evidence_refs must return UNDETERMINED."""
+    """time4d without evidence_refs returns UNDETERMINED maturity.
+
+    v0.6: claim_state is INTERPRETED (tool produced an artifact), but
+    artifact_status is downgraded to DRAFT since no evidence_refs were provided.
+    """
     result = await geox_time4d_analyze_system(prospect_ref="TEST", mode="burial")
     assert result["primary_artifact"]["maturity"] == "UNDETERMINED"
-    assert result["claim_state"] == "NO_VALID_EVIDENCE"
+    assert result["claim_state"] == "INTERPRETED"
     assert result["artifact_status"] != "VERIFIED"
+    assert result["uncertainty"] == "High"
 
 
 @pytest.mark.asyncio

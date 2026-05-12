@@ -166,13 +166,14 @@ bootstrap_sovereign_13()
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def _prune_mcp_surface(mcp_server) -> None:
-    """Strip non-canonical tools from the MCP registry after bootstrap."""
-    from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
+    """Strip non-canonical tools from the MCP registry after bootstrap.
 
-    # Sacred surface: canonical 13 + judge split + DST + history audit
-    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | {
-        "geox_dst_ingest_test",
-    }
+    Uses FEDERATION_TOOLS manifest (is_tool_somatic) from
+    /federation/tool_manifest.py as single source of truth.
+    Falls back to SACRED_SURFACE set if federation manifest unavailable.
+    """
+    from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
+    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | {"geox_dst_ingest_test"}
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
         return
@@ -180,14 +181,18 @@ def _prune_mcp_surface(mcp_server) -> None:
     removed: list[str] = []
     for key in list(components.keys()):
         if key.startswith("tool:"):
-            # FastMCP keys use format "tool:name@" — strip prefix and suffix
             name = key[5:].rstrip("@")
-            if name not in SACRED_SURFACE:
+            try:
+                from federation.tool_manifest import is_tool_somatic
+                visible = is_tool_somatic(name)
+            except Exception:
+                visible = name in SACRED_SURFACE
+            if not visible:
                 del components[key]
                 removed.append(name)
     if removed:
-        logger.info(f"MCP surface pruned: {len(removed)} non-canonical tools removed ({removed[:5]}...)")
-    logger.info(f"MCP surface clean: {len(SACRED_SURFACE)} canonical tools exposed")
+        logger.info(f"MCP surface pruned: {len(removed)} non-canonical tools removed")
+    logger.info(f"MCP surface clean: {len(components)} canonical tools exposed")
 
 _prune_mcp_surface(mcp)
 

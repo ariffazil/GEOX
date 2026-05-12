@@ -71,6 +71,13 @@ async def geox_map_context_scene(
         "crs": crs,
         "scene_rendered": True,
     }
-    return get_standard_envelope(artifact, tool_class="observe", maruah_flag=maruah_flag)
+    return get_standard_envelope(
+        artifact,
+        tool_class="observe",
+        claim_tag="HYPOTHESIS",
+        claim_state="INTERPRETED",
+        perception_class="DISPLAY",
+        maruah_flag=maruah_flag,
+    )
 
 

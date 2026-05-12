@@ -67,7 +67,9 @@ async def geox_time4d_analyze_system(
             artifact,
             tool_class="compute",
             claim_tag="HYPOTHESIS",
-            claim_state="NO_VALID_EVIDENCE",
+            claim_state="INTERPRETED",
+            uncertainty="High",
+            humility_score=0.5,
             evidence_refs=[],
         )
     artifact = {

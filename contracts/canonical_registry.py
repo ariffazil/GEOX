@@ -1,8 +1,8 @@
 from typing import List, Dict, Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GEOX SOVEREIGN 13 — CANONICAL PUBLIC TOOLS
-# The official, fixed set of 13 tools exposed on the public MCP surface.
+# GEOX SOVEREIGN — CANONICAL PUBLIC TOOLS WITH COGNITIVE AXES
+# 14 canonical + 1 DST test = 15 visible tools.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 CANONICAL_PUBLIC_TOOLS: List[str] = [
@@ -20,6 +20,24 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_evidence_summarize_cross",
     "geox_system_registry_status",
     "geox_history_audit",
+]
+
+GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
+    {"name": "geox_data_ingest_bundle",             "axis": "observe",  "expose": True},
+    {"name": "geox_data_qc_bundle",                 "axis": "verify",   "expose": True},
+    {"name": "geox_subsurface_generate_candidates", "axis": "reason",   "expose": True},
+    {"name": "geox_subsurface_verify_integrity",     "axis": "verify",   "expose": True},
+    {"name": "geox_seismic_analyze_volume",          "axis": "reason",   "expose": True},
+    {"name": "geox_section_interpret_correlation",   "axis": "boundary", "expose": True},
+    {"name": "geox_map_context_scene",              "axis": "boundary", "expose": True},
+    {"name": "geox_time4d_analyze_system",           "axis": "vitality", "expose": True},
+    {"name": "geox_prospect_evaluate",              "axis": "judge",    "expose": True},
+    {"name": "geox_prospect_judge_preview",         "axis": "judge",    "expose": True},
+    {"name": "geox_prospect_judge_seal",            "axis": "seal",     "expose": True},
+    {"name": "geox_evidence_summarize_cross",        "axis": "critique","expose": True},
+    {"name": "geox_system_registry_status",         "axis": "identity", "expose": True},
+    {"name": "geox_history_audit",                  "axis": "trace",    "expose": True},
+    {"name": "geox_dst_ingest_test",                "axis": "observe",  "expose": True},
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -140,5 +158,6 @@ GEOX_CAPABILITIES: Dict[str, Any] = {
     "prompts": {
         "listChanged": False,   # 6 static workflow prompts
     },
+    "completions": {},          # MCP completion/complete — well names, artifact refs, depth basis, NN zones
     "logging": {},              # MCP logging capability — emits notifications/message
 }

@@ -81,7 +81,13 @@ async def geox_section_interpret_correlation(
                 "Untagged markers default to hypothesized."
             ),
         }
-        return get_standard_envelope(artifact, tool_class="interpret")
+        return get_standard_envelope(
+            artifact,
+            tool_class="interpret",
+            claim_tag="HYPOTHESIS",
+            claim_state="INTERPRETED",
+            perception_class="DERIVED",
+        )
 
     # ── GR motif / sequence stratigraphy ─────────────────────────────────
     from geox.core.geox_1d import process_las_file
