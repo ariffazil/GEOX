@@ -441,9 +441,13 @@ def _earth_event_for_tool(tool_name: str) -> dict:
 
 
 def _wrap_tool_outputs(mcp_server):
-    """Monkey-patch all registered tool functions to inject universal output contract."""
+    """Monkey-patch all registered tool functions to inject universal output contract.
+    MCP 2025-11-25 dual output: content (legacy text) + structuredContent (typed JSON).
+    """
     import inspect
+    import json
     from datetime import datetime, timezone
+    from mcp.types import CallToolResult, TextContent
 
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
@@ -463,7 +467,6 @@ def _wrap_tool_outputs(mcp_server):
             if not isinstance(result, dict):
                 return result
 
-            # Only inject if missing — respect tools that already set these
             now = datetime.now(timezone.utc).isoformat()
             tool_name = getattr(tool, "name", "")
             defaults = {
@@ -497,7 +500,13 @@ def _wrap_tool_outputs(mcp_server):
                     "p50": None,
                     "p90": None,
                 }
-            return result
+
+            # MCP 2025-11-25: return CallToolResult with dual content + structuredContent
+            return CallToolResult(
+                content=[TextContent(type="text", text=json.dumps(result, default=str))],
+                structuredContent=result,
+                isError=result.get("execution_status") == "ERROR",
+            )
 
         tool.fn = _universal_wrapper
 
