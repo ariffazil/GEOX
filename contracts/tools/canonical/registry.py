@@ -84,34 +84,140 @@ async def geox_history_audit(
     - claim_state: lifecycle state at time of generation
     - depth_basis: MD/TVD/TVDSS
     These fields are required for all records involving visual artifacts.
+
+    Queries in order:
+      1. VAULT999 SEALED_EVENTS.jsonl (canonical governance ledger)
+      2. GEOX _artifact_store (in-memory tool execution history)
+      3. EvidenceStore file-backed store (future)
     """
     import logging
+    import json
+    import os
+    from datetime import datetime, timezone
+
     logger = logging.getLogger("geox.history_audit")
 
-    # F1 Amanah: defensive input sanitization
     clean_query = query[:1000] if query else ""
     clean_query = clean_query.replace("\x00", "")
     safe_limit = max(1, min(limit, 50))
+    query_lower = clean_query.lower()
 
     try:
-        # TODO: wire to actual VAULT999 / evidence_store query
-        # For now, return empty but governed response instead of 502
+        records: list[dict] = []
+        seen: set[str] = set()
+
+        # ── Source 1: VAULT999 SEALED_EVENTS.jsonl ──────────────────────────
+        vault_paths = [
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))), "arifOS", "arifosmcp", "VAULT999", "SEALED_EVENTS.jsonl"),
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))), "arifOS", "VAULT999", "outcomes.jsonl"),
+            "/root/arifOS/arifosmcp/VAULT999/SEALED_EVENTS.jsonl",
+            "/root/arifOS/VAULT999/outcomes.jsonl",
+            "/root/.local/share/arifos/vault999/outcomes.jsonl",
+        ]
+
+        for vpath in vault_paths:
+            if not os.path.exists(vpath):
+                continue
+            try:
+                with open(vpath, "r") as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            entry = json.loads(line)
+                            entry_str = json.dumps(entry, default=str).lower()
+                            if query_lower and query_lower not in entry_str:
+                                continue
+                            eid = str(entry.get("id", entry.get("event_id", entry.get("decision_id", ""))))
+                            if eid in seen:
+                                continue
+                            seen.add(eid)
+                            records.append({
+                                "source": os.path.basename(vpath),
+                                "event_id": eid,
+                                "event_type": entry.get("event_type", entry.get("type", entry.get("verdict_issued", "unknown"))),
+                                "verdict": entry.get("verdict", entry.get("verdict_issued", "UNKNOWN")),
+                                "actor_id": entry.get("actor_id", entry.get("operator_override", "unknown")),
+                                "session_id": entry.get("session_id", ""),
+                                "stage": entry.get("stage", ""),
+                                "timestamp": entry.get("sealed_at", entry.get("timestamp", entry.get("timestamp_decision", ""))),
+                                "claim_state": "SEALED",
+                                "payload": entry.get("payload", {}),
+                                "floors": entry.get("floors", entry.get("constitutional_floors_checked", entry.get("floor_attribution", []))),
+                                "chain_hash": entry.get("chain_hash", ""),
+                                "risk_tier": entry.get("risk_tier", entry.get("harm_detected", "unknown")),
+                            })
+                        except json.JSONDecodeError:
+                            continue
+            except Exception as e:
+                logger.warning("Failed to read VAULT999 %s: %s", vpath, e)
+
+        # ── Source 2: GEOX _artifact_store (in-memory tool executions) ──
+        all_artifacts: list[dict] = []
+        for ref, entry in _artifact_store.items():
+            if ref != entry.get("artifact_ref", ref):
+                continue
+            entry_str = json.dumps(entry, default=str).lower()
+            if query_lower and query_lower not in entry_str:
+                continue
+            all_artifacts.append(entry)
+
+        for entry in all_artifacts:
+            ref = entry.get("artifact_ref", "unknown")
+            if ref in seen:
+                continue
+            seen.add(ref)
+            latest_qc = entry.get("latest_qc") or entry.get("qc") or {}
+            evidence_item = {
+                "source": "geox_artifact_store",
+                "event_id": ref,
+                "event_type": "artifact_ingest",
+                "verdict": latest_qc.get("qc_overall", "PENDING"),
+                "actor_id": entry.get("diagnostics", {}).get("agent", "geox"),
+                "session_id": entry.get("diagnostics", {}).get("session_id", ""),
+                "stage": "INGEST",
+                "timestamp": entry.get("registered_at", ""),
+                "claim_state": entry.get("claim_state", "INGESTED"),
+                "artifact_type": entry.get("artifact_type", ""),
+                "las_path": entry.get("las_path", ""),
+                "source_uri": entry.get("source_uri", ""),
+                "qc_passed": latest_qc.get("qc_passed", False),
+                "qc_flags": list(latest_qc.get("flags", [])),
+                "qc_limitations": list(latest_qc.get("limitations", [])),
+                "curves": list(entry.get("curves", [])),
+            }
+            records.append(evidence_item)
+
+        # ── Apply limit and cursor pagination ────────────────────────────────
+        records.sort(key=lambda r: str(r.get("timestamp", "")), reverse=True)
+        total = len(records)
+        records = records[:safe_limit]
+
+        # Compute nextCursor if more records exist (opaque base64 token)
+        next_cursor = None
+        if total > safe_limit:
+            import base64
+            cursor_payload = json.dumps({"offset": safe_limit, "query": clean_query})
+            next_cursor = base64.b64encode(cursor_payload.encode()).decode()
+
         artifact = {
             "query": clean_query,
-            "records": [],
-            "vault": "VAULT999",
-            "renderer_lineage_policy": (
-                "Records involving visual artifacts must include renderer_name + artifact_hash. "
-                "Missing renderer info = lineage incomplete. "
-                "SHA-256 hash of the artifact file must be present."
-            ),
+            "records": records,
+            "record_count": len(records),
+            "total_matching": total,
+            "nextCursor": next_cursor,
+            "vault": "VAULT999 + geox_artifact_store",
+            "sources_queried": [os.path.basename(p) for p in vault_paths if os.path.exists(p)] + ["geox_artifact_store"],
         }
+
         return get_standard_envelope(
             artifact,
             tool_class="system",
-            claim_tag="HYPOTHESIS",
-            claim_state="NO_VALID_EVIDENCE",
+            claim_tag="CLAIM" if records else "HYPOTHESIS",
+            claim_state="COMPUTED" if records else "NO_VALID_EVIDENCE",
         )
+
     except Exception as exc:
         logger.exception("geox_history_audit failed")
         return get_standard_envelope(
