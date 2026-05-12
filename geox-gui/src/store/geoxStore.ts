@@ -18,6 +18,8 @@ import type {
   FloorStatus,
   GovernanceState,
   McpConnectionStatus,
+  ToACState,
+  ToACReport,
 } from '../types';
 
 const configuredGeoxUrl =
@@ -231,6 +233,17 @@ const initialState: GEOXState = {
     toolsAvailable: 0,
     latencyMs: null,
   },
+  toac: {
+    currentReport: null,
+    history: [],
+    toolCounts: {
+      withPerceptionClass: 16,
+      withEvidenceTag: 16,
+      withCanon9: 11,
+      withVerticalTrend: 4,
+      withLithoClass: 4,
+    },
+  },
   metaLinks: [
     { name: 'arifOS MCP', url: 'https://arifosmcp.arif-fazil.com' },
     { name: 'GeoVault', url: 'https://vault.arifosmcp.arif-fazil.com' },
@@ -256,6 +269,8 @@ interface GEOXStore extends GEOXState {
   setLayerOpacity: (layerId: string, opacity: number) => void;
   resetGovernance: () => void;
   getOverallStatus: () => FloorStatus;
+  setToACReport: (report: ToACReport) => void;
+  clearToACReport: () => void;
 }
 
 // Helper function
@@ -319,6 +334,24 @@ export const useGEOXStore = create<GEOXStore>()(
 
         getOverallStatus: () => calculateOverallStatus(get().governance),
 
+        setToACReport: (report) => set((state) => {
+          state.toac.currentReport = report;
+          state.toac.history.push(report);
+          if (state.toac.history.length > 100) {
+            state.toac.history = state.toac.history.slice(-100);
+          }
+          state.governance.floors.F9.status = report.perception_class === 'MEASURED' || report.perception_class === 'CORROBORATED' ? 'green' : 'amber';
+          state.governance.floors.F9.message = `Perception: ${report.perception_class} | Evidence: ${report.evidence_tag}`;
+          if (report.canon_9_touched.length > 0) {
+            state.governance.floors.F9.description = `CANON_9: ${report.canon_9_touched.join(', ')}`;
+          }
+          state.governance.overallStatus = calculateOverallStatus(state.governance);
+        }),
+
+        clearToACReport: () => set((state) => {
+          state.toac.currentReport = null;
+        }),
+
         setGEOXConnected: (connected) => set((state) => { state.geoxConnected = connected; }),
         setGEOXUrl: (url) => set((state) => { state.geoxUrl = url; }),
         setMcpConnectionStatus: (status) => set((state) => { state.mcpConnectionStatus = status; }),
@@ -353,3 +386,5 @@ export const useFloorStatus = (floorId: FloorId) => useGEOXStore((state) => stat
 export const useGEOXConnected = () => useGEOXStore((state) => state.geoxConnected);
 export const useSelectedCoordinate = () => useGEOXStore((state) => state.selectedCoordinate);
 export const useMcpConnectionStatus = () => useGEOXStore((state) => state.mcpConnectionStatus);
+export const useToACReport = () => useGEOXStore((state) => state.toac.currentReport);
+export const useToACState = () => useGEOXStore((state) => state.toac);

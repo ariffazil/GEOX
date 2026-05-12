@@ -18,6 +18,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { useGEOXStore } from '../store/geoxStore';
+import type { ToACReport } from '../types';
 
 export type McpToolStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -48,7 +49,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
     handler?: (event: MessageEvent) => void;
   } | null>(null);
 
-  const { updateFloorStatus } = useGEOXStore();
+  const { updateFloorStatus, setToACReport } = useGEOXStore();
 
   const call = useCallback(
     (args: TArgs): Promise<TResult> => {
@@ -104,6 +105,20 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
             const result = data.params.result as TResult;
             setState(prev => ({ ...prev, data: result, status: 'success', error: null }));
             updateFloorStatus('F11', 'green', `${toolName} completed`);
+
+            // Extract ToAC v1 fields from result and propagate to store
+            const r = result as Record<string, unknown>;
+            if (r && (r['perception_class'] || r['evidence_tag'])) {
+              setToACReport({
+                perception_class: (r['perception_class'] as ToACReport['perception_class']) || 'HYPOTHESIS',
+                evidence_tag: (r['evidence_tag'] as ToACReport['evidence_tag']) || 'UNKNOWN',
+                canon_9_touched: (r['canon_9_touched'] as ToACReport['canon_9_touched']) || [],
+                vertical_trend: (r['vertical_trend'] as ToACReport['vertical_trend']) || 'UNKNOWN',
+                litho_class: (r['litho_class'] as ToACReport['litho_class']) || 'UNKNOWN',
+                strat_standard: (r['strat_standard'] as ToACReport['strat_standard']) || { scheme: 'NN_zone', reference_chart: '' },
+              });
+            }
+
             resolve(result);
           }
         }
