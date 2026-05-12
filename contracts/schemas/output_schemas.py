@@ -576,8 +576,9 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
     "geox_history_audit": {
         "description": (
             "VAULT999 retrieval of past runs and decision lineage. "
-            "Records involving visual artifacts must include renderer_name + artifact_hash + "
-            "claim_state + depth_basis. Read-only — no state change."
+            "Queries VAULT999 SEALED_EVENTS.jsonl + GEOX artifact store. "
+            "Each record includes claim_state, verdict, actor_id, session_id, timestamp. "
+            "Supports cursor-based pagination via nextCursor. Read-only — no state change."
         ),
         "outputSchema": {
             "type": "object",
@@ -591,10 +592,13 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
                 "primary_artifact": {
                     "type": "object",
                     "properties": {
-                        "query":        {"type": "string"},
-                        "records":      {"type": "array"},
-                        "nextCursor":   {"type": "string"},
-                        "totalResults": {"type": "integer"},
+                        "query":          {"type": "string", "description": "Sanitized search query"},
+                        "records":        {"type": "array", "description": "Matched decision lineage and artifact records"},
+                        "record_count":   {"type": "integer"},
+                        "total_matching": {"type": "integer"},
+                        "nextCursor":     {"type": "string", "description": "Opaque cursor for pagination"},
+                        "vault":          {"type": "string"},
+                        "sources_queried":{"type": "array", "items": {"type": "string"}},
                     },
                 },
                 "provenance":        PROVENANCE_BLOCK,
