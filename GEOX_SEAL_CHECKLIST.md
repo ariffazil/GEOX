@@ -1,5 +1,6 @@
 # GEOX SEAL Checklist
-**Version:** 2026.04.14-CHECKLIST  
+**Version:** 2026.05.13-CHECKLIST  
+**Surface:** 21 canonical tools  
 **Seal:** 999_SEAL  
 
 ---

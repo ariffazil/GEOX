@@ -1,45 +1,68 @@
-# GEOX — Earth Intelligence Sovereign Surface (14 Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (21 Tools)
 > Level: L3 AGI Clerk / Ψ Node
 > Doctrine: Physics before Narrative. F1–F13 Governed.
-> Epoch: 2026-05-01
+> Epoch: 2026-05-13
 > Seal: DITEMPA BUKAN DIBERI
+> Surface: 21 canonical tools (15 original + 4 well stratigraphy + 2 pipeline)
 
-GEOX operates a consolidated surface of 14 canonical tools. Legacy names are supported via an alias bridge.
+GEOX operates a consolidated surface of 21 canonical tools. Legacy names are supported via alias bridge (85 aliases → canonical).
 
-## 1. Canonical Sovereign 14
+## 1. Canonical Tool Surface
+
+### Data Intake & QC
 1. **geox_data_ingest_bundle**: Lazy ingest LAS/CSV/SEG-Y/JSON.
 2. **geox_data_qc_bundle**: Unified header, unit, and missingness verification.
-3. **geox_subsurface_generate_candidates**: Ensemble realizations (Petro/Struct) + Residuals.
-4. **geox_subsurface_verify_integrity**: Physics9 / Structural consistency check.
-5. **geox_seismic_analyze_volume**: Attribute compute + slices.
-6. **geox_section_interpret_correlation**: Multi-well stratigraphy.
-7. **geox_map_context_scene**: Spatial bbox + Causal scene render.
-8. **geox_time4d_analyze_system**: Burial, maturity, regime shift.
-9. **geox_prospect_evaluate**: Integrated evaluate (POS, Volumetrics).
-10. **geox_prospect_judge_preview**: Reversible advisory (no ack required).
-11. **geox_prospect_judge_seal**: Irreversible arifOS 888_JUDGE gateway (ack required).
-12. **geox_evidence_summarize_cross**: Cross-domain evidence graph synthesis.
-13. **geox_system_registry_status**: Federation health and tool discovery.
-14. **geox_history_audit**: VAULT999 retrieval.
+3. **geox_dst_ingest_test**: Structured Drill Stem Test ingestion (CGR, WGR, drawdown, CO2/H2S).
+
+### Subsurface & Petrophysics
+4. **geox_subsurface_generate_candidates**: Ensemble realizations (Petro/Struct) + Residuals.
+5. **geox_subsurface_verify_integrity**: Physics9 / Structural consistency check.
+
+### Seismic & Maps
+6. **geox_seismic_analyze_volume**: Attribute compute + slices.
+7. **geox_map_context_scene**: Spatial bbox + Causal scene render + F6 Maruah territory checks.
+
+### Stratigraphy & Time
+8. **geox_section_interpret_correlation**: Multi-well stratigraphy correlation.
+9. **geox_time4d_analyze_system**: Burial, maturity, regime shift.
+10. **geox_well_compute_gr_bins**: L1 — 10 m GR sensing bins with P10/P50/P90 + motif classification.
+11. **geox_well_build_packages**: L2 — Geological package builder from 10 m bins.
+12. **geox_well_infer_seq_strat**: L3 — Systems tract inference (LST/TST/HST/FSST/CS).
+13. **geox_well_analyze_sequence**: Full L1+L2+L3 pipeline for one well.
+
+### Prospect Evaluation & Governance
+14. **geox_prospect_evaluate**: Integrated evaluate (POS, Volumetrics).
+15. **geox_prospect_judge_preview**: Reversible advisory (DRAFT/HOLD, no ack required).
+16. **geox_prospect_judge_seal**: Irreversible 888_JUDGE gateway (F11 PIN + F13 confirm required).
+17. **geox_evidence_summarize_cross**: Cross-domain evidence graph synthesis.
+
+### Pipeline Orchestration
+18. **geox_stratigraphy_run_pipeline**: Full multi-well L1-L3 stratigraphy — accepts YAML config, returns XLSX (5 sheets) + PNGs (per-well + correlation panel).
+19. **geox_stratigraphy_preview_config**: Validate YAML config without running pipeline.
+
+### System & Registry
+20. **geox_system_registry_status**: Federation health and tool discovery.
+21. **geox_history_audit**: VAULT999 retrieval.
 
 ## 2. Agent Reasoning Logic
 - **Chain**: Ingest → QC → Generate → Verify → Judge.
 - **Ensemble**: All interpretation tools return Min/Mid/Max scenarios.
-- **Residuals**: Always inspect `residuals` and `data_density` to detect "hallucinated" interpolation (F9 Anti-Hantu).
+- **Residuals**: Always inspect `residuals` and `data_density` to detect interpolated noise (F9 Anti-Hantu).
+- **Stratigraphy**: L1 sensing → L2 packages → L3 seq strat. Config-driven via project.yaml.
 
-## 3. Legacy Migration
-Legacy tools (e.g., `geox_well.compute_petrophysics`) are aliased to the 13 canonicals. Check `_meta.deprecation` in responses.
+## 3. Well Stratigraphy Pipeline (New)
+- Accepts any well set with interval definitions.
+- Config-driven: no hardcoded wells, intervals, or depo envs.
+- Outputs: XLSX (01_GEO_PACKAGES, 03_WELL_SUMMARY, 05_COLOR_LEGEND), per-well PNG (6 tracks), correlation panel PNG.
+- Motif vocabulary: Fining Upward, Coaserning Upward, Blocky, Serated_Irregular Pattern, Crecentric, Heterolithic.
+- Governance: NO PRETENDING. UNKNOWN=UNKNOWN. Heterolithic replaces UNKNOWN for log motif.
 
-## 4. Resource Update Model (Sprint 1–2)
+## 4. Authentication
+- HTTP remote: requires `GEOX_SECRET_TOKEN` (fail-closed).
+- Local stdio: no token required — auto-detected.
 
-`resources.subscribe` is **false** in server capabilities until Sprint 3. The notification pipeline (subscription state, VAULT999 version-hash anchoring, `resources/updated` fanout) is not yet implemented.
-
-To detect resource updates, clients should:
-- Poll `resources/list` on session start
-- Compare `version` field against cached version
-- Re-fetch resource content on version mismatch
-
-Subscribable resources (`biology://bio/zones`, `biology://bio/ecosystem_signals`, `earth://spatial/crs`, `earth://spatial/basin_atlas`, `earth://time/ics_timescale`) carry `subscribable: true` as GEOX metadata — this is NOT a server capability declaration. Subscription notifications (`notifications/resources/updated`) will be enabled in Sprint 3.
+## 5. Resource Update Model (Sprint 1–2)
+`resources.subscribe` is **false** until Sprint 3. Poll `resources/list` on session start.
 
 ---
-⬡ GEOX SOVEREIGN 13 MAP SEALED ⬡
+⬡ GEOX SOVEREIGN 21 — SEALED ⬡
