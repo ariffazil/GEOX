@@ -1,8 +1,8 @@
 # GEOX Status & Strategic Focus
 
-> **Date:** 2026-04-10  
-> **Assessment:** External audit integrated  
-> **Strategic Pivot:** MCP-first, governance-core  
+> **Date:** 2026-05-13  
+> **Assessment:** 21 tools live on VPS; stratigraphy pipeline deployed  
+> **Strategic Pivot:** MCP-first, governance-core, general-purpose stratigraphy  
 > **Seal:** DITEMPA BUKAN DIBERI
 
 ---
@@ -14,7 +14,8 @@
 | Component | Grade | Focus |
 |-----------|-------|-------|
 | Governance (ToAC, AC_Risk) | ✅ PRODUCTION | Maintain, integrate |
-| MCP Server (Tools) | 🟡 PRODUCTION-CAPABLE | **HARDEN NOW** |
+| MCP Server (Tools) | ✅ PRODUCTION (21 tools) | Stratigraphy pipeline, auth relaxation |
+| Well Stratigraphy (L1-L3) | ✅ DEPLOYED | Generalized config-driven pipeline |
 | MCP Apps (UI) | 🔴 ARCHITECTURE ONLY | **Forge one flagship** |
 | Web Site | 🟡 SPEC'D | Defer until MCP locked |
 

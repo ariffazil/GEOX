@@ -13,9 +13,11 @@ This document is the canonical reference for AI coding agents working in this re
 
 Every output must be physically grounded, geospatially verified, and audit-trail ready before it receives a verdict (`SEAL`, `PARTIAL`, `SABAR`, or `VOID`).
 
+- **GHCR:** `ghcr.io/ariffazil/geox:latest`
 - **Live site:** https://geox.arif-fazil.com
-- **MCP endpoint:** https://arifosmcp.arif-fazil.com/mcp
+- **MCP endpoint:** https://geox.arif-fazil.com/mcp
 - **Health check:** https://geox.arif-fazil.com/health
+- **Auth:** Local stdio — no token. Remote HTTP — `GEOX_SECRET_TOKEN` required.
 
 ---
 
@@ -104,10 +106,38 @@ geox-gui/src/
 
 | File | Role |
 |------|------|
-| `server.py` | **Canonical unified MCP server** — single entrypoint for Smithery / Claude Desktop / MCP Apps. Sovereign 15 tools (14 canonical + DST ingest). Dimension registries archived in chaos cleanup. |
+| `server.py` | **Canonical unified MCP server** — single entrypoint. Sovereign 21 tools (15 original + 4 well tools + 2 stratigraphy pipeline). |
 | `entrypoint.sh` | Docker container startup script (invokes `server.py`) |
+| `contracts/canonical_registry.py` | Canonical tool registry + `GEOX_TOOL_MANIFEST` with cognitive axes |
+| `geox/well/mcp_tools.py` | Well stratigraphy tool registration (L1-L3) |
+| `geox/well/mcp_stratigraphy.py` | Generalized pipeline tool registration |
+| `geox/well/stratigraphy/` | Full L1-L3 pipeline engine (10 modules) |
 
-All tool registrations live in `contracts/tools/`.
+**Tool surface:** 21 visible, 85 legacy aliases hidden (redirect via `LEGACY_ALIAS_MAP`).
+
+| # | Tool | Axis | Domain |
+|---|------|------|--------|
+| 1 | `geox_data_ingest_bundle` | observe | Data |
+| 2 | `geox_data_qc_bundle` | verify | Data |
+| 3 | `geox_dst_ingest_test` | observe | Data |
+| 4 | `geox_subsurface_generate_candidates` | reason | Subsurface |
+| 5 | `geox_subsurface_verify_integrity` | verify | Subsurface |
+| 6 | `geox_seismic_analyze_volume` | reason | Seismic |
+| 7 | `geox_section_interpret_correlation` | boundary | Section |
+| 8 | `geox_map_context_scene` | boundary | Map |
+| 9 | `geox_time4d_analyze_system` | vitality | Time4D |
+| 10 | `geox_well_compute_gr_bins` | reason | Well (L1 sensing) |
+| 11 | `geox_well_build_packages` | reason | Well (L2 packages) |
+| 12 | `geox_well_infer_seq_strat` | reason | Well (L3 seq strat) |
+| 13 | `geox_well_analyze_sequence` | reason | Well (full pipeline) |
+| 14 | `geox_prospect_evaluate` | judge | Prospect |
+| 15 | `geox_prospect_judge_preview` | judge | Prospect |
+| 16 | `geox_prospect_judge_seal` | seal | Prospect |
+| 17 | `geox_evidence_summarize_cross` | critique | Evidence |
+| 18 | `geox_stratigraphy_run_pipeline` | reason | Pipeline |
+| 19 | `geox_stratigraphy_preview_config` | reason | Pipeline |
+| 20 | `geox_system_registry_status` | identity | System |
+| 21 | `geox_history_audit` | trace | History |
 
 ---
 
@@ -265,5 +295,5 @@ A violation of any floor triggers an **`888_HOLD`** — a hard stop requiring ex
 
 ---
 
-*Last updated: 2026-04-14*  
+*Last updated: 2026-05-13*  
 *Seal: DITEMPA BUKAN DIBERI*
