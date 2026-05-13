@@ -46,6 +46,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - All new fields flow through existing F2 Truth (enforce_claim_state) and F7 Humility (evidence_tag) gates.
 
+## [v2026.05.13] - 2026-05-13
+### Added
+- **Well Stratigraphy Tools (4)**: `geox_well_compute_gr_bins` (L1 sensing), `geox_well_build_packages` (L2 packages), `geox_well_infer_seq_strat` (L3 systems tracts), `geox_well_analyze_sequence` (full pipeline).
+- **Generalized Stratigraphy Pipeline (2)**: `geox_stratigraphy_run_pipeline` (config-driven multi-well L1-L3), `geox_stratigraphy_preview_config` (YAML validation).
+- **`geox/well/stratigraphy/` Module**: 10-module pipeline engine (config, loader, sensing, packages, seqstrat, plot, excel, codec, pipeline orchestrator).
+- **FEDERATION_TOOLS Manifest**: `GEOX_TOOL_MANIFEST` with cognitive_axis tags for all 21 tools.
+- **SACRED_SURFACE Update**: Well + stratigraphy tools added to canonical surface (21 total).
+- **Relaxed Auth**: stdio mode bypasses `GEOX_SECRET_TOKEN` (local VS Code use).
+
+### Changed
+- **Surface**: 15 → 21 canonical tools (15 original + 4 well + 2 pipeline).
+- **Auth**: Fail-closed only for remote HTTP; stdio auto-detected.
+- **Docs**: README.md, llms.txt, AGENTS.md updated to 21-tool surface.
+
+### Security
+- `GEOX_SECRET_TOKEN` no longer required for local stdio (detected automatically).
+
 ---
 
 ⬡ DITEMPA BUKAN DIBERI — 999 SEAL ALIVE ⬡
