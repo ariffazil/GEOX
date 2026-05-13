@@ -147,9 +147,16 @@ def bootstrap_sovereign_13():
         from contracts.tools.unified_13 import register_unified_tools
         register_unified_tools(mcp, profile=GEOX_PROFILE)
         # Assert against the canonical public tools count
-        assert len(CANONICAL_PUBLIC_TOOLS) == 14, \
-            f"F0_CONSTITUTION_BREACH: Expected 14 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
-        logger.info(f"Sovereign 14 tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical Tools)")
+        assert len(CANONICAL_PUBLIC_TOOLS) >= 14, \
+            f"F0_CONSTITUTION_BREACH: Expected at least 14 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
+        logger.info(f"Sovereign tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical + well stratigraphy Tools)")
+        # Register well stratigraphy tools
+        try:
+            from geox.well.mcp_tools import register_well_tools
+            register_well_tools(mcp)
+            logger.info("Well stratigraphy tools registered successfully")
+        except Exception as e:
+            logger.warning(f"Well stratigraphy tools not loaded: {e}")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -173,7 +180,13 @@ def _prune_mcp_surface(mcp_server) -> None:
     Falls back to SACRED_SURFACE set if federation manifest unavailable.
     """
     from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
-    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | {"geox_dst_ingest_test"}
+    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | {
+        "geox_dst_ingest_test",
+        "geox_well_compute_gr_bins",
+        "geox_well_build_packages",
+        "geox_well_infer_seq_strat",
+        "geox_well_analyze_sequence",
+    }
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
         return

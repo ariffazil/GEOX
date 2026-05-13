@@ -38,6 +38,11 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_system_registry_status",         "axis": "identity", "expose": True},
     {"name": "geox_history_audit",                  "axis": "trace",    "expose": True},
     {"name": "geox_dst_ingest_test",                "axis": "observe",  "expose": True},
+    # Well stratigraphy tools
+    {"name": "geox_well_compute_gr_bins",           "axis": "reason",   "expose": True},
+    {"name": "geox_well_build_packages",            "axis": "reason",   "expose": True},
+    {"name": "geox_well_infer_seq_strat",           "axis": "reason",   "expose": True},
+    {"name": "geox_well_analyze_sequence",          "axis": "reason",   "expose": True},
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
