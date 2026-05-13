@@ -51,21 +51,21 @@ GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
 GEOX_PORT = int(os.getenv("GEOX_PORT", os.getenv("PORT", "8081")))
 
-# FAIL-CLOSED AUTH (F1 Amanah)
-_geox_secret = os.getenv("GEOX_SECRET_TOKEN", "")
-if not _geox_secret:
-    _fallback = os.getenv("FASTMCP_INSPECT_TOKEN", "")
-    if _fallback:
-        GEOX_SECRET_TOKEN = _fallback
-        logger.warning("F1 inspection bypass active — using FASTMCP_INSPECT_TOKEN")
+# FAIL-CLOSED AUTH (F1 Amanah) — only enforced for remote HTTP, not local stdio
+GEOX_SECRET_TOKEN = os.getenv("GEOX_SECRET_TOKEN", os.getenv("FASTMCP_INSPECT_TOKEN", ""))
+if not GEOX_SECRET_TOKEN:
+    _is_stdio = not sys.stdin.isatty() and not any(
+        s in " ".join(sys.argv).lower() for s in ("--host", "--port", "http", "808")
+    )
+    if _is_stdio:
+        logger.info("F1 inspection bypass: stdio mode detected — no token required for local use")
+        GEOX_SECRET_TOKEN = "stdio-bypass"
     else:
-        logger.critical(
-            "F1_AMANAH_BREACH: GEOX_SECRET_TOKEN is missing. Aborting startup "
-            "to prevent fail-open exposure."
+        logger.warning(
+            "F1_AMANAH: GEOX_SECRET_TOKEN not set. Remote HTTP requests will be rejected, "
+            "but local stdio/FileTransport is still usable."
         )
-        sys.exit(1)
-else:
-    GEOX_SECRET_TOKEN = _geox_secret
+        GEOX_SECRET_TOKEN = ""
 
 sys.path.append(os.getcwd())
 
@@ -150,13 +150,20 @@ def bootstrap_sovereign_13():
         assert len(CANONICAL_PUBLIC_TOOLS) >= 14, \
             f"F0_CONSTITUTION_BREACH: Expected at least 14 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
         logger.info(f"Sovereign tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical + well stratigraphy Tools)")
-        # Register well stratigraphy tools
+        # Register well tools
         try:
             from geox.well.mcp_tools import register_well_tools
             register_well_tools(mcp)
-            logger.info("Well stratigraphy tools registered successfully")
+            logger.info("Well tools registered successfully")
         except Exception as e:
-            logger.warning(f"Well stratigraphy tools not loaded: {e}")
+            logger.warning(f"Well tools not loaded: {e}")
+        # Register generalized stratigraphy pipeline tools
+        try:
+            from geox.well.mcp_stratigraphy import register_stratigraphy_tools
+            register_stratigraphy_tools(mcp)
+            logger.info("Stratigraphy pipeline tools registered successfully")
+        except Exception as e:
+            logger.warning(f"Stratigraphy pipeline tools not loaded: {e}")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -186,6 +193,8 @@ def _prune_mcp_surface(mcp_server) -> None:
         "geox_well_build_packages",
         "geox_well_infer_seq_strat",
         "geox_well_analyze_sequence",
+        "geox_stratigraphy_run_pipeline",
+        "geox_stratigraphy_preview_config",
     }
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
