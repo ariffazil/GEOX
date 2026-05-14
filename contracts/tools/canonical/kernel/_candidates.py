@@ -2,13 +2,43 @@
 # Extracted from _helpers.py (lines 1043–1363)
 # NO FastMCP imports. Pure business logic.
 
+from ._ingest import CANONICAL_ALIASES, CLAIM_STATES
 from ._registry import _artifact_exists, _get_artifact, _latest_qc_failed_refs
+from ._unit_registry import validate_curve, value_contract
 from ._petrophysics import (
     _compute_vsh_from_store, _compute_porosity_from_store,
     _compute_saturation_from_store, _compute_netpay_from_store,
     _classify_gr_motif, _classify_lithology_from_store,
 )
-from typing import Any, Dict, List, Literal, Optional
+from contracts.enums.statuses import ArtifactStatus, get_standard_envelope
+from typing import Any, List, Optional
+
+
+def _candidate_error(
+    error_code: str,
+    *,
+    target_class: str,
+    artifact_ref: str | None = None,
+    physics_guard: dict[str, Any] | None = None,
+    message: str | None = None,
+    **extra: Any,
+) -> dict[str, Any]:
+    result = {
+        "tool": "geox_subsurface_generate_candidates",
+        "execution_status": "ERROR",
+        "error_code": error_code,
+        "target_class": target_class,
+        "artifact_ref": artifact_ref,
+        "artifact_status": "REJECTED",
+        "claim_state": "NO_VALID_EVIDENCE",
+        "message": message or error_code,
+    }
+    if physics_guard:
+        result["physics_guard"] = physics_guard
+    result.update(extra)
+    return result
+
+
 async def _compute_subsurface_candidates(
     target_class: str,
     evidence_refs: List[str],
@@ -38,17 +68,14 @@ async def _compute_subsurface_candidates(
     # Evidence validation — all refs must be resolvable
     missing_refs = [ref for ref in evidence_refs if not ref or not _artifact_exists(ref)]
     if missing_refs:
-        return {
-            "tool": "geox_subsurface_generate_candidates",
-            "execution_status": "ERROR",
-            "error_code": "EVIDENCE_REF_NOT_FOUND",
-            "message": f"Cannot generate subsurface candidates — missing evidence: {missing_refs}",
-            "missing_refs": missing_refs,
-            "artifact_status": "NOT_COMPUTED",
-            "primary_artifact": None,
-            "uncertainty": "High",
-            "claim_state": "NO_VALID_EVIDENCE"
-        }
+        return _candidate_error(
+            "EVIDENCE_REF_NOT_FOUND",
+            target_class=target_class,
+            message=f"Cannot generate subsurface candidates — missing evidence: {missing_refs}",
+            missing_refs=missing_refs,
+            primary_artifact=None,
+            uncertainty="High",
+        )
 
     primary_ref = evidence_refs[0]
     failed_qc_refs = _latest_qc_failed_refs(evidence_refs)
@@ -68,19 +95,48 @@ async def _compute_subsurface_candidates(
             "artifact_status": "HOLD",
             "claim_state": CLAIM_STATES["HUMAN_REVIEW_REQUIRED"],
         }
+    qc_required_targets = {
+        "vsh",
+        "porosity",
+        "saturation",
+        "netpay",
+        "permeability",
+        "petrophysics",
+    }
+    if target_class in qc_required_targets:
+        unverified_refs = []
+        for ref in evidence_refs:
+            entry = _get_artifact(ref)
+            latest_qc = entry.get("latest_qc") if entry else None
+            if not isinstance(latest_qc, dict) or latest_qc.get("qc_passed") is not True:
+                unverified_refs.append(ref)
+        if unverified_refs:
+            return {
+                "tool": "geox_subsurface_generate_candidates",
+                "execution_status": "HOLD",
+                "error_code": "QC_REQUIRED_BEFORE_PETROPHYSICS",
+                "message": (
+                    "Petrophysics target classes require geox_data_qc_bundle to pass "
+                    "before derived reservoir properties can be computed."
+                ),
+                "target_class": target_class,
+                "artifact_ref": primary_ref,
+                "unverified_refs": unverified_refs,
+                "requires_qc": True,
+                "artifact_status": "HOLD",
+                "claim_state": CLAIM_STATES["HUMAN_REVIEW_REQUIRED"],
+            }
 
     # ── New target classes with real computation ─────────────────────────
     if target_class == "vsh":
         result = _compute_vsh_from_store(primary_ref, gr_clean, gr_shale, vsh_method, zone_top_m, zone_base_m)
         if "error" in result:
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": result["error"],
-                "target_class": "vsh",
-                "artifact_ref": primary_ref,
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            return _candidate_error(
+                result["error"],
+                target_class="vsh",
+                artifact_ref=primary_ref,
+                physics_guard=result.get("physics_guard"),
+            )
         # Remove internal arrays from output
         clean = {k: v for k, v in result.items() if not k.startswith("_")}
         clean["tool"] = "geox_subsurface_generate_candidates"
@@ -94,14 +150,12 @@ async def _compute_subsurface_candidates(
     if target_class == "porosity":
         result = _compute_porosity_from_store(primary_ref, matrix_density, fluid_density)
         if "error" in result:
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": result["error"],
-                "target_class": "porosity",
-                "artifact_ref": primary_ref,
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            return _candidate_error(
+                result["error"],
+                target_class="porosity",
+                artifact_ref=primary_ref,
+                physics_guard=result.get("physics_guard"),
+            )
         clean = {k: v for k, v in result.items() if not k.startswith("_")}
         clean["tool"] = "geox_subsurface_generate_candidates"
         clean["execution_status"] = "SUCCESS"
@@ -126,14 +180,12 @@ async def _compute_subsurface_candidates(
             vsh_result=vsh_r, phit_result=phit_r,
         )
         if "error" in result:
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": result["error"],
-                "target_class": "saturation",
-                "artifact_ref": primary_ref,
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            return _candidate_error(
+                result["error"],
+                target_class="saturation",
+                artifact_ref=primary_ref,
+                physics_guard=result.get("physics_guard"),
+            )
         clean = {k: v for k, v in result.items() if not k.startswith("_")}
         clean["tool"] = "geox_subsurface_generate_candidates"
         clean["execution_status"] = "SUCCESS"
@@ -157,14 +209,12 @@ async def _compute_subsurface_candidates(
             gr_clean, gr_shale, sw_model, rw, matrix_density, fluid_density,
         )
         if "error" in result:
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": result["error"],
-                "target_class": "netpay",
-                "artifact_ref": primary_ref,
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            return _candidate_error(
+                result["error"],
+                target_class="netpay",
+                artifact_ref=primary_ref,
+                physics_guard=result.get("physics_guard"),
+            )
         result["tool"] = "geox_subsurface_generate_candidates"
         result["execution_status"] = "SUCCESS"
         result["target_class"] = "netpay"
@@ -177,13 +227,7 @@ async def _compute_subsurface_candidates(
         from geox.core.geox_1d import process_las_file
         entry = _get_artifact(primary_ref)
         if not entry or not entry.get("las_path"):
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": "NO_LAS_PATH",
-                "target_class": "permeability",
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            return _candidate_error("NO_LAS_PATH", target_class="permeability", artifact_ref=primary_ref)
 
         vsh_r = _compute_vsh_from_store(primary_ref, gr_clean, gr_shale, vsh_method)
         phit_r = _compute_porosity_from_store(primary_ref, matrix_density, fluid_density)
@@ -192,13 +236,14 @@ async def _compute_subsurface_candidates(
             vsh_result=vsh_r, phit_result=phit_r,
         )
         if any("error" in r for r in [vsh_r, phit_r, sw_r]):
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": "PETROPHYSICS_FAILED",
-                "target_class": "permeability",
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            failed = next(r for r in [vsh_r, phit_r, sw_r] if "error" in r)
+            return _candidate_error(
+                "PETROPHYSICS_FAILED",
+                target_class="permeability",
+                artifact_ref=primary_ref,
+                physics_guard=failed.get("physics_guard"),
+                failed_step=failed.get("error"),
+            )
 
         phi = phit_r["_phit_array"]
         sw = sw_r["_sw_array"]
@@ -207,6 +252,14 @@ async def _compute_subsurface_candidates(
         k_proxy = (phi ** 4.5) * ((1 - sw_safe) ** 2) / (sw_safe ** 2) * 100
         k_proxy = np.clip(k_proxy, 0, 10000)
         valid = k_proxy[~np.isnan(k_proxy)]
+        k_guard = validate_curve(k_proxy, "K")
+        if not k_guard["guard_passed"]:
+            return _candidate_error(
+                "PERMEABILITY_BOUNDS_VIOLATION",
+                target_class="permeability",
+                artifact_ref=primary_ref,
+                physics_guard=k_guard,
+            )
 
         return {
             "tool": "geox_subsurface_generate_candidates",
@@ -220,6 +273,17 @@ async def _compute_subsurface_candidates(
             "k_p90_md": round(float(np.nanpercentile(k_proxy, 90)), 2),
             "n_samples": len(valid),
             "claim_state": "DERIVED_CANDIDATE",
+            "value_contract": value_contract(
+                "K",
+                method="Timur-Coates proxy",
+                source_curves=["PHI", "SW"],
+                uncertainty_band={
+                    "p10": round(float(np.nanpercentile(k_proxy, 10)), 2),
+                    "p50": round(float(np.nanpercentile(k_proxy, 50)), 2),
+                    "p90": round(float(np.nanpercentile(k_proxy, 90)), 2),
+                },
+            ),
+            "physics_guard": k_guard,
             "risk": "Proxy permeability — core plug calibration required; Timur-Coates may over/underestimate by 1-2 orders of magnitude",
         }
 
@@ -227,13 +291,7 @@ async def _compute_subsurface_candidates(
         from geox.core.geox_1d import process_las_file
         entry = _get_artifact(primary_ref)
         if not entry or not entry.get("las_path"):
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": "NO_LAS_PATH",
-                "target_class": "gr_motif",
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            return _candidate_error("NO_LAS_PATH", target_class="gr_motif", artifact_ref=primary_ref)
         curves = process_las_file(entry["las_path"])
         gr = None
         for alias in CANONICAL_ALIASES.get("GR", ["GR"]):
@@ -246,13 +304,7 @@ async def _compute_subsurface_candidates(
                 depth = curves[dk]
                 break
         if gr is None or depth is None:
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": "GR_OR_DEPTH_NOT_FOUND",
-                "target_class": "gr_motif",
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            return _candidate_error("GR_OR_DEPTH_NOT_FOUND", target_class="gr_motif", artifact_ref=primary_ref)
         motif_result = _classify_gr_motif(gr, depth, zone_top_m, zone_base_m)
         motif_result["tool"] = "geox_subsurface_generate_candidates"
         motif_result["execution_status"] = "SUCCESS"
@@ -263,13 +315,7 @@ async def _compute_subsurface_candidates(
     if target_class == "lithology":
         result = _classify_lithology_from_store(primary_ref)
         if "error" in result:
-            return {
-                "tool": "geox_subsurface_generate_candidates",
-                "execution_status": "ERROR",
-                "error_code": result["error"],
-                "target_class": "lithology",
-                "claim_state": "NO_VALID_EVIDENCE",
-            }
+            return _candidate_error(result["error"], target_class="lithology", artifact_ref=primary_ref)
         result["tool"] = "geox_subsurface_generate_candidates"
         result["execution_status"] = "SUCCESS"
         result["target_class"] = "lithology"
@@ -328,4 +374,3 @@ async def _compute_subsurface_candidates(
         "f7_humility": "Ensemble realizations provided — verify against raw evidence."
     }
     return get_standard_envelope(artifact, tool_class="compute", artifact_status=ArtifactStatus.COMPUTED)
-

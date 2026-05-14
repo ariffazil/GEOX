@@ -148,7 +148,7 @@ def bootstrap_sovereign_13():
         register_unified_tools(mcp, profile=GEOX_PROFILE)
         # Assert against the canonical public tools count
         assert len(CANONICAL_PUBLIC_TOOLS) >= 14, \
-            f"F0_CONSTITUTION_BREACH: Expected at least 14 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
+            f"F0_CONSTITUTION_BREACH: Expected at least 15 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
         logger.info(f"Sovereign tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical + well stratigraphy Tools)")
         # Register well tools
         try:

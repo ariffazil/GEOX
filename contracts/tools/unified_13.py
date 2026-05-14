@@ -73,10 +73,28 @@ async def dispatch_alias(old_name: str, canonical_name: str, **kwargs: Any) -> d
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+async def mcp_health_check() -> dict:
+    """Universal health check for federation stability."""
+    try:
+        from server import GEOX_VERSION as _v
+    except Exception:
+        _v = "v2026.05.14-REFORGE"
+    return {
+        "mcp": "GEOX",
+        "status": "healthy",
+        "service": "geox-unified",
+        "version": _v,
+        "transport": "streamable-http",
+        "tools_loaded": len(CANONICAL_PUBLIC_TOOLS),
+        "timestamp": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+    }
+
 # REGISTRATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 _TOOL_REGISTRY: list[tuple[str, Any]] = [
+    ("mcp_health_check", mcp_health_check),
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),
     ("geox_data_qc_bundle", geox_data_qc_bundle),
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
@@ -105,8 +123,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
 
     # ── Assert canonical count ───────────────────────────────────────────────
     # Count is 14: 13 original sovereign tools + history_audit
-    assert len(CANONICAL_PUBLIC_TOOLS) == 14, (
-        f"F0_CONSTITUTION_BREACH: Expected 14 sovereign tools, "
+    assert len(CANONICAL_PUBLIC_TOOLS) == 15, (
+        f"F0_CONSTITUTION_BREACH: Expected 15 sovereign tools, "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 

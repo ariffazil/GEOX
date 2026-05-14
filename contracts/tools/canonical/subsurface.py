@@ -111,12 +111,27 @@ async def geox_subsurface_generate_candidates(
         },
     })
     if "tool_class" not in result:
+        if result.get("execution_status") in {"ERROR", "HOLD"}:
+            return get_standard_envelope(
+                result,
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state=result.get("claim_state", "NO_VALID_EVIDENCE"),
+                evidence_refs=evidence_refs,
+                physics_guard=result.get("physics_guard"),
+                uncertainty="High",
+            )
         result = get_standard_envelope(
             result,
             tool_class="compute",
             artifact_status=ArtifactStatus.COMPUTED,
             claim_tag="CLAIM",
             evidence_refs=evidence_refs,
+            physics_guard=result.get("physics_guard"),
+            confidence_band=(result.get("value_contract") or {}).get("uncertainty_band"),
         )
     return result
 
@@ -156,5 +171,4 @@ async def geox_subsurface_verify_integrity(candidate_ref: str, domain: str) -> d
         claim_state="COMPUTED",
         evidence_refs=[candidate_ref],
     )
-
 

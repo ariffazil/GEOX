@@ -19,6 +19,7 @@ from .kernel import _ingest
 from .kernel import _petrophysics
 from .kernel import _candidates
 from .kernel import _biostrat
+from .kernel import _unit_registry
 
 # ─── Global state (lives in kernel/_registry.py) ─────────────────────────
 # These are the in-memory stores — imported from kernel for backward compat
@@ -93,6 +94,18 @@ _safe_reduction = _petrophysics._safe_reduction
 __all__.append("_safe_reduction")
 _get_well_data_with_depth = _petrophysics._get_well_data_with_depth
 __all__.append("_get_well_data_with_depth")
+
+# ─── Unit / bounds registry ──────────────────────────────────────────────
+CURVE_BOUNDS = _unit_registry.CURVE_BOUNDS
+__all__.append("CURVE_BOUNDS")
+RATLAS_REF = _unit_registry.RATLAS_REF
+__all__.append("RATLAS_REF")
+validate_curve = _unit_registry.validate_curve
+__all__.append("validate_curve")
+validate_scalar = _unit_registry.validate_scalar
+__all__.append("validate_scalar")
+value_contract = _unit_registry.value_contract
+__all__.append("value_contract")
 
 # ─── Async candidates (kernel/_candidates.py) ────────────────────────────
 _compute_subsurface_candidates = _candidates._compute_subsurface_candidates
