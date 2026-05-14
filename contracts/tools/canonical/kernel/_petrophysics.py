@@ -2,10 +2,19 @@
 # Extracted from _helpers.py (lines 453–1042)
 # NO FastMCP imports. Pure business logic.
 # Imports geox.core.geox_1d (business logic, not FastMCP).
-import os
-
+from ._ingest import CANONICAL_ALIASES
 from ._registry import _get_artifact
-from typing import Any, Dict, List, Literal, Optional
+from ._unit_registry import merge_guards, validate_curve, validate_scalar, value_contract
+from typing import Any, Optional
+
+
+def _guard_error(error: str, *, physics_guard: dict[str, Any] | None = None, **extra) -> dict:
+    payload = {"error": error}
+    if physics_guard:
+        payload["physics_guard"] = physics_guard
+    payload.update(extra)
+    return payload
+
 
 def _compute_vsh_from_store(
     artifact_ref: str,
@@ -37,6 +46,18 @@ def _compute_vsh_from_store(
 
     if gr is None:
         return {"error": "GR_CURVE_NOT_FOUND", "available": list(curves.keys())}
+    gr_guard = validate_curve(gr, "GR")
+    if not gr_guard["guard_passed"]:
+        return _guard_error("GR_BOUNDS_VIOLATION", physics_guard=merge_guards(gr_guard))
+    if gr_clean >= gr_shale:
+        return _guard_error(
+            "INVALID_GR_ENDPOINTS",
+            physics_guard={
+                "guard_passed": False,
+                "physics_version": "geox-unit-registry-v2026.05.14",
+                "violations": ["GR_CLEAN_MUST_BE_LESS_THAN_GR_SHALE"],
+            },
+        )
 
     # Apply Vsh method
     igr = np.clip((gr - gr_clean) / max(gr_shale - gr_clean, 1e-6), 0, 1)
@@ -59,6 +80,9 @@ def _compute_vsh_from_store(
 
     if n_valid == 0:
         return {"error": "NO_VALID_SAMPLES_IN_ZONE", "artifact_ref": artifact_ref}
+    vsh_guard = validate_curve(vsh, "VSH")
+    if not vsh_guard["guard_passed"]:
+        return _guard_error("VSH_BOUNDS_VIOLATION", physics_guard=merge_guards(vsh_guard))
 
     return {
         "gr_mnemonic_used": gr_mnemonic,
@@ -76,6 +100,17 @@ def _compute_vsh_from_store(
             "gr_min": _safe_reduction(np.nanmin, gr),
             "gr_max": _safe_reduction(np.nanmax, gr),
         },
+        "value_contract": value_contract(
+            "VSH",
+            method=f"GR:{method}",
+            source_curves=[gr_mnemonic],
+            uncertainty_band={
+                "p10": _safe_reduction(lambda x: np.nanpercentile(x, 10), vsh),
+                "p50": _safe_reduction(lambda x: np.nanpercentile(x, 50), vsh),
+                "p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), vsh),
+            },
+        ),
+        "physics_guard": merge_guards(gr_guard, vsh_guard),
         "_vsh_array": vsh,
         "_gr_array": gr,
         "_curves": curves,
@@ -105,12 +140,35 @@ def _compute_porosity_from_store(
     methods_used = []
     rhob_mnemonic = None
     nphi_mnemonic = None
+    rhob_guard = None
+    nphi_guard = None
 
     # Try RHOB first
     for alias in CANONICAL_ALIASES.get("RHOB", ["RHOB"]):
         if alias in curves:
             rhob = curves[alias]
             rhob_mnemonic = alias
+            rhob_guard = validate_curve(rhob, "RHOB")
+            if not rhob_guard["guard_passed"]:
+                return _guard_error("RHOB_BOUNDS_VIOLATION", physics_guard=merge_guards(rhob_guard))
+            if matrix_density <= fluid_density:
+                return _guard_error(
+                    "INVALID_DENSITY_ENDPOINTS",
+                    physics_guard={
+                        "guard_passed": False,
+                        "physics_version": "geox-unit-registry-v2026.05.14",
+                        "violations": ["MATRIX_DENSITY_MUST_EXCEED_FLUID_DENSITY"],
+                    },
+                )
+            if bool(np.any(rhob > matrix_density)) or bool(np.any(rhob < fluid_density)):
+                return _guard_error(
+                    "RHOB_INCONSISTENT_WITH_DENSITY_ENDPOINTS",
+                    physics_guard={
+                        "guard_passed": False,
+                        "physics_version": "geox-unit-registry-v2026.05.14",
+                        "violations": ["RHOB_OUTSIDE_FLUID_MATRIX_DENSITY_WINDOW"],
+                    },
+                )
             phi_rhob = compute_porosity_rhob(rhob, matrix_density, fluid_density)
             phit = phi_rhob
             methods_used.append(f"density({alias})")
@@ -121,6 +179,9 @@ def _compute_porosity_from_store(
         if alias in curves:
             nphi_raw = curves[alias]
             nphi_mnemonic = alias
+            nphi_guard = validate_curve(nphi_raw, "NPHI")
+            if not nphi_guard["guard_passed"]:
+                return _guard_error("NPHI_BOUNDS_VIOLATION", physics_guard=merge_guards(nphi_guard))
             phi_nphi = compute_porosity_neutron(nphi_raw)
             if phit is not None:
                 # Average density + neutron (standard crossplot approach)
@@ -140,6 +201,9 @@ def _compute_porosity_from_store(
 
     if n_valid == 0:
         return {"error": "NO_VALID_POROSITY_SAMPLES", "artifact_ref": artifact_ref}
+    phi_guard = validate_curve(phit, "PHI")
+    if not phi_guard["guard_passed"]:
+        return _guard_error("PHI_BOUNDS_VIOLATION", physics_guard=merge_guards(phi_guard))
 
     return {
         "methods_used": methods_used,
@@ -154,6 +218,19 @@ def _compute_porosity_from_store(
         "phit_p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), phit),
         "phit_max": _safe_reduction(np.nanmax, phit),
         "depth_range_m": [float(depth[0]), float(depth[-1])],
+        "value_contract": value_contract(
+            "PHI",
+            method="+".join(methods_used),
+            source_curves=[c for c in [rhob_mnemonic, nphi_mnemonic] if c],
+            uncertainty_band={
+                "p10": _safe_reduction(lambda x: np.nanpercentile(x, 10), phit),
+                "p50": _safe_reduction(lambda x: np.nanpercentile(x, 50), phit),
+                "p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), phit),
+            },
+        ),
+        "physics_guard": merge_guards(
+            *(g for g in [rhob_guard, nphi_guard, phi_guard] if g)
+        ),
         "_phit_array": phit,   # internal
         "_curves": curves,     # internal
         "_depth": depth,       # internal
@@ -178,7 +255,9 @@ def _compute_saturation_from_store(
 
     if (vsh_result and "_curves" in vsh_result) or (phit_result and "_curves" in phit_result):
         curves = (vsh_result or {}).get("_curves") or (phit_result or {}).get("_curves")
-        depth = (vsh_result or {}).get("_depth") or (phit_result or {}).get("_depth")
+        depth = (vsh_result or {}).get("_depth")
+        if depth is None:
+            depth = (phit_result or {}).get("_depth")
     else:
         data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
         if "error" in data:
@@ -197,6 +276,18 @@ def _compute_saturation_from_store(
 
     if rt is None:
         return {"error": "RT_CURVE_NOT_FOUND", "available": list(curves.keys())}
+    rt_guard = validate_curve(rt, "RT")
+    if not rt_guard["guard_passed"]:
+        return _guard_error("RT_BOUNDS_VIOLATION", physics_guard=merge_guards(rt_guard))
+    if rw <= 0 or a <= 0 or m <= 0 or n <= 0:
+        return _guard_error(
+            "INVALID_ARCHIE_PARAMETERS",
+            physics_guard={
+                "guard_passed": False,
+                "physics_version": "geox-unit-registry-v2026.05.14",
+                "violations": ["RW_A_M_N_MUST_BE_POSITIVE"],
+            },
+        )
 
     # Get phi from pre-computed or compute fresh
     if phit_result and "_phit_array" in phit_result:
@@ -209,7 +300,7 @@ def _compute_saturation_from_store(
                 phi = compute_porosity_rhob(curves[alias])
                 break
         if phi is None:
-            phi = np.full(len(rt), 0.2)  # fallback
+            return {"error": "PHI_REQUIRED_FOR_SATURATION", "available": list(curves.keys())}
 
     # Get vsh from pre-computed if available
     vsh = None
@@ -231,6 +322,12 @@ def _compute_saturation_from_store(
 
     if n_valid == 0:
         return {"error": "NO_VALID_SATURATION_SAMPLES", "artifact_ref": artifact_ref}
+    phi_guard = validate_curve(phi, "PHI")
+    vsh_guard = validate_curve(vsh, "VSH")
+    sw_guard = validate_curve(sw, "SW")
+    physics_guard = merge_guards(rt_guard, phi_guard, vsh_guard, sw_guard)
+    if not physics_guard["guard_passed"]:
+        return _guard_error("SW_PHYSICS_BOUNDS_VIOLATION", physics_guard=physics_guard)
 
     return {
         "sw_model": sw_model,
@@ -245,7 +342,20 @@ def _compute_saturation_from_store(
         "sw_p50": _safe_reduction(lambda x: np.nanpercentile(x, 50), sw),
         "sw_p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), sw),
         "so_mean": _safe_reduction(lambda x: 1.0 - np.nanmean(x), sw),
+        "sg_mean": 0.0,
+        "fluid_fraction_sum": _safe_reduction(lambda x: np.nanmean(x + (1.0 - x)), sw),
         "depth_range_m": [float(depth[0]), float(depth[-1])],
+        "value_contract": value_contract(
+            "SW",
+            method=sw_model,
+            source_curves=[rt_mnemonic, "PHI", "VSH"],
+            uncertainty_band={
+                "p10": _safe_reduction(lambda x: np.nanpercentile(x, 10), sw),
+                "p50": _safe_reduction(lambda x: np.nanpercentile(x, 50), sw),
+                "p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), sw),
+            },
+        ),
+        "physics_guard": physics_guard,
         "_sw_array": sw,
         "_phi_array": phi,
         "_rt_array": rt,
@@ -270,6 +380,14 @@ def _compute_netpay_from_store(
     import sys
     sys.path.insert(0, "/root/geox")
     import numpy as np
+    cutoff_guard = merge_guards(
+        validate_scalar(vsh_cutoff, "VSH"),
+        validate_scalar(phi_cutoff, "PHI"),
+        validate_scalar(sw_cutoff, "SW"),
+        validate_scalar(rt_cutoff, "RT"),
+    )
+    if not cutoff_guard["guard_passed"]:
+        return {"error": "CUTOFF_BOUNDS_VIOLATION", "physics_guard": cutoff_guard}
 
     entry = _get_artifact(artifact_ref)
     if not entry or not entry.get("las_path"):
@@ -316,7 +434,6 @@ def _compute_netpay_from_store(
     rt = sw_result.get("_rt_array")
 
     # 4. Apply cutoffs
-    n = len(depth)
     min_len = min(len(vsh), len(phi), len(sw), len(depth))
     vsh = vsh[:min_len]
     phi = phi[:min_len]
@@ -386,12 +503,19 @@ def _compute_netpay_from_store(
             "mean": round(float(np.nanmean(sw)), 3),
             "p50": round(float(np.nanpercentile(sw, 50)), 3),
         },
+        "value_contract": value_contract(
+            "PHI",
+            method="cutoff_netpay",
+            source_curves=["VSH", "PHI", "SW", "RT"],
+            uncertainty_band={"p10": None, "p50": round(ntg, 4), "p90": None},
+        ),
+        "physics_guard": cutoff_guard,
     }
 
 
 def _classify_gr_motif(
-    gr: "np.ndarray",
-    depth: "np.ndarray",
+    gr: Any,
+    depth: Any,
     zone_top: float | None = None,
     zone_base: float | None = None,
 ) -> dict:
@@ -406,7 +530,6 @@ def _classify_gr_motif(
     if len(gr) < 5:
         return {"motif": "INSUFFICIENT_DATA", "confidence": 0.0, "claim_state": "DERIVED_CANDIDATE"}
 
-    mid = len(gr) // 2
     gr_std = float(np.nanstd(gr))
     gr_range = float(np.nanmax(gr) - np.nanmin(gr))
 
@@ -594,5 +717,3 @@ def _get_well_data_with_depth(
         "depth_mnemonic": depth_mnemonic,
         "mask": mask,
     }
-
-

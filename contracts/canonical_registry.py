@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX SOVEREIGN — CANONICAL PUBLIC TOOLS WITH COGNITIVE AXES
-# 14 canonical + 1 DST test = 15 visible tools.
+# 15 canonical + 1 DST test = 16 visible tools.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 CANONICAL_PUBLIC_TOOLS: List[str] = [
@@ -18,6 +18,7 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_prospect_judge_preview",
     "geox_prospect_judge_seal",
     "geox_evidence_summarize_cross",
+    "mcp_health_check",
     "geox_system_registry_status",
     "geox_history_audit",
 ]
@@ -35,6 +36,7 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_prospect_judge_preview",         "axis": "judge",    "expose": True},
     {"name": "geox_prospect_judge_seal",            "axis": "seal",     "expose": True},
     {"name": "geox_evidence_summarize_cross",        "axis": "critique","expose": True},
+    {"name": "mcp_health_check",                     "axis": "identity", "expose": True},
     {"name": "geox_system_registry_status",         "axis": "identity", "expose": True},
     {"name": "geox_history_audit",                  "axis": "trace",    "expose": True},
     {"name": "geox_dst_ingest_test",                "axis": "observe",  "expose": True},
