@@ -2,6 +2,7 @@ from typing import List, Dict, Any, Optional
 from enum import Enum
 import os
 
+
 class Dimension(str, Enum):
     PROSPECT = "prospect"
     WELL = "well"
@@ -13,10 +14,12 @@ class Dimension(str, Enum):
     PHYSICS = "physics"
     DASHBOARD = "dashboard"
 
+
 class ExecutionStatus(str, Enum):
     SUCCESS = "SUCCESS"
     ERROR = "ERROR"
     HALT = "HALT"
+
 
 class GovernanceStatus(str, Enum):
     APPROVED = "APPROVED"
@@ -25,7 +28,9 @@ class GovernanceStatus(str, Enum):
     VOID = "VOID"
     SEAL = "SEAL"
 
+
 Verdict = GovernanceStatus
+
 
 class ArtifactStatus(str, Enum):
     USABLE = "USABLE"
@@ -38,22 +43,26 @@ class ArtifactStatus(str, Enum):
     LOADED = "LOADED"
     IN_REVIEW = "IN_REVIEW"
 
+
 class FloorStatus(str, Enum):
     ACTIVE = "active"
     INACTIVE = "inactive"
     VOID = "void"
     HALT = "halt"
 
+
 class Runtime(str, Enum):
     VPS = "vps"
     FASTMCP = "fastmcp"
     LOCAL = "local"
+
 
 class Transport(str, Enum):
     HTTP = "http"
     MCP = "mcp"
     STDIO = "stdio"
     SSE = "sse"
+
 
 class ToolCategory(str, Enum):
     FOUNDATION = "foundation"
@@ -62,16 +71,19 @@ class ToolCategory(str, Enum):
     DEMO = "demo"
     SYSTEM = "system"
 
+
 class ProspectVerdict(str, Enum):
     DRO = "DRO"
     DRIL = "DRIL"
     HOLD = "HOLD"
     DROP = "DROP"
 
+
 class ClaimTag(str, Enum):
     CLAIM = "CLAIM"
     PLAUSIBLE = "PLAUSIBLE"
     HYPOTHESIS = "HYPOTHESIS"
+
 
 class EvidenceTag(str, Enum):
     EVIDENCE_DIRECT = "EVIDENCE_DIRECT"
@@ -84,6 +96,7 @@ class EvidenceTag(str, Enum):
     PROXY_FROM_CONTEXT = "PROXY_FROM_CONTEXT"
     UNKNOWN = "UNKNOWN"
 
+
 class LithoClass(str, Enum):
     CARBONATE = "CARBONATE"
     HETEROLITHIC = "HETEROLITHIC"
@@ -94,16 +107,19 @@ class LithoClass(str, Enum):
     MIXED_OR_UNSPECIFIED = "MIXED_OR_UNSPECIFIED"
     UNKNOWN = "UNKNOWN"
 
+
 class VerticalTrend(str, Enum):
     DEEPENING_UPWARD = "DEEPENING_UPWARD"
     SHALLOWING_UPWARD = "SHALLOWING_UPWARD"
     STABLE_OR_AMBIGUOUS = "STABLE_OR_AMBIGUOUS"
     UNKNOWN = "UNKNOWN"
 
+
 class DepthBasis(str, Enum):
     MD = "MD"
     TVD = "TVD"
     TVDSS = "TVDSS"
+
 
 class PerceptionClass(str, Enum):
     MEASURED = "MEASURED"
@@ -112,37 +128,40 @@ class PerceptionClass(str, Enum):
     CORROBORATED = "CORROBORATED"
     HYPOTHESIS = "HYPOTHESIS"
 
+
 # EARTH.CANON_9 — Nine invariant subsurface quantities
 # Every tool that touches subsurface data declares which it reads/writes/constrains.
 class Canon9(str, Enum):
-    RHO = "rho"          # Bulk density (ρ)
-    VP = "Vp"            # P-wave velocity
-    VS = "Vs"            # S-wave velocity
-    RHO_E = "rho_e"      # Electrical resistivity (ρₑ)
-    CHI = "chi"          # Magnetic susceptibility (χ)
-    K = "k"              # Permeability
-    P = "P"              # Pressure
-    T = "T"              # Temperature
-    PHI = "phi"          # Porosity (φₜ vs φₑ)
+    RHO = "rho"  # Bulk density (ρ)
+    VP = "Vp"  # P-wave velocity
+    VS = "Vs"  # S-wave velocity
+    RHO_E = "rho_e"  # Electrical resistivity (ρₑ)
+    CHI = "chi"  # Magnetic susceptibility (χ)
+    K = "k"  # Permeability
+    P = "P"  # Pressure
+    T = "T"  # Temperature
+    PHI = "phi"  # Porosity (φₜ vs φₑ)
+
 
 # Which tools touch which Canon9 quantities
 CANON9_TOOL_MAP: dict[str, list[str]] = {
     "geox_data_ingest_bundle": ["rho", "rho_e", "phi"],
-    "geox_data_qc_bundle":     ["rho", "Vp", "Vs", "rho_e", "chi", "k", "P", "T", "phi"],
+    "geox_data_qc_bundle": ["rho", "Vp", "Vs", "rho_e", "chi", "k", "P", "T", "phi"],
     "geox_subsurface_generate_candidates": ["rho", "rho_e", "phi", "k"],
-    "geox_subsurface_verify_integrity":    ["Vp", "Vs", "rho", "phi"],
-    "geox_seismic_analyze_volume":         ["Vp", "Vs", "rho"],
-    "geox_section_interpret_correlation":  [],
-    "geox_map_context_scene":              ["chi"],
-    "geox_time4d_analyze_system":          ["P", "T"],
-    "geox_prospect_evaluate":              ["k", "phi"],
-    "geox_prospect_judge_preview":         [],
-    "geox_prospect_judge_seal":            [],
-    "geox_evidence_summarize_cross":       [],
-    "geox_system_registry_status":         [],
-    "geox_history_audit":                  [],
-    "geox_dst_ingest_test":                ["k", "P", "T"],
+    "geox_subsurface_verify_integrity": ["Vp", "Vs", "rho", "phi"],
+    "geox_seismic_analyze_volume": ["Vp", "Vs", "rho"],
+    "geox_section_interpret_correlation": [],
+    "geox_map_context_scene": ["chi"],
+    "geox_time4d_analyze_system": ["P", "T"],
+    "geox_prospect_evaluate": ["k", "phi"],
+    "geox_prospect_judge_preview": [],
+    "geox_prospect_judge_seal": [],
+    "geox_evidence_summarize_cross": [],
+    "geox_system_registry_status": [],
+    "geox_history_audit": [],
+    "geox_dst_ingest_test": ["k", "P", "T"],
 }
+
 
 # Stratigraphic standard schemes (Kinabalu Basin NN-anchor)
 class StratStandard(str, Enum):
@@ -152,20 +171,93 @@ class StratStandard(str, Enum):
     CYCLE_SARAWAK = "Cycle_Sarawak"
     CUSTOM = "custom"
 
+
 # GDE (Geological Depositional Environment) vocabulary
 GDE_VOCAB: list[dict[str, Any]] = [
-    {"pattern": "alluvial|fluvial|floodplain",   "code": "2026_COL",   "label": "Continental / alluvial plain",         "index": 0, "rationale": "Continental fluvial to floodplain system"},
-    {"pattern": "lower coastal|coastal plain",   "code": "2026_LCP",   "label": "Lower coastal plain",                  "index": 1, "rationale": "Coastal plain to paralic transition"},
-    {"pattern": "supralittoral|littoral|beach|shoreface", "code": "2026_LIT", "label": "Littoral / shoreface",   "index": 2, "rationale": "Littoral to shoreface belt"},
-    {"pattern": "intertidal|tidal|estuar|lagoon|mangrove", "code": "2026_TIDAL", "label": "Tidal flat / estuarine", "index": 3, "rationale": "Tidal-flat, estuarine, or restricted marginal marine"},
-    {"pattern": "inner neritic|inner sublittoral", "code": "2026_HIN", "label": "Inner neritic",                "index": 4, "rationale": "Shallow marine inner shelf"},
-    {"pattern": "middle neritic|middle sublittoral", "code": "2026_HMN", "label": "Middle neritic",              "index": 5, "rationale": "Open marine middle shelf"},
-    {"pattern": "outer neritic|outer sublittoral",   "code": "2026_HON", "label": "Outer neritic",              "index": 6, "rationale": "Open marine outer shelf"},
-    {"pattern": "upper.*bathyal",                   "code": "2026_UBT", "label": "Upper bathyal",                "index": 7, "rationale": "Upper slope / deep marine"},
-    {"pattern": "middle.*bathyal",                  "code": "2026_MBT", "label": "Middle bathyal",               "index": 8, "rationale": "Middle slope / deep marine"},
-    {"pattern": "lower.*bathyal",                   "code": "2026_LBT", "label": "Lower bathyal",                "index": 9, "rationale": "Lower slope to basin-floor deep marine"},
-    {"pattern": "bathyal",                          "code": "2026_UBT-MBT", "label": "Bathyal undifferentiated", "index": 8, "rationale": "Deep marine bathyal setting"},
-    {"pattern": "marine",                           "code": "2026_MARINE", "label": "Marine undifferentiated",    "index": 5, "rationale": "Marine, depth not tightly constrained"},
+    {
+        "pattern": "alluvial|fluvial|floodplain",
+        "code": "2026_COL",
+        "label": "Continental / alluvial plain",
+        "index": 0,
+        "rationale": "Continental fluvial to floodplain system",
+    },
+    {
+        "pattern": "lower coastal|coastal plain",
+        "code": "2026_LCP",
+        "label": "Lower coastal plain",
+        "index": 1,
+        "rationale": "Coastal plain to paralic transition",
+    },
+    {
+        "pattern": "supralittoral|littoral|beach|shoreface",
+        "code": "2026_LIT",
+        "label": "Littoral / shoreface",
+        "index": 2,
+        "rationale": "Littoral to shoreface belt",
+    },
+    {
+        "pattern": "intertidal|tidal|estuar|lagoon|mangrove",
+        "code": "2026_TIDAL",
+        "label": "Tidal flat / estuarine",
+        "index": 3,
+        "rationale": "Tidal-flat, estuarine, or restricted marginal marine",
+    },
+    {
+        "pattern": "inner neritic|inner sublittoral",
+        "code": "2026_HIN",
+        "label": "Inner neritic",
+        "index": 4,
+        "rationale": "Shallow marine inner shelf",
+    },
+    {
+        "pattern": "middle neritic|middle sublittoral",
+        "code": "2026_HMN",
+        "label": "Middle neritic",
+        "index": 5,
+        "rationale": "Open marine middle shelf",
+    },
+    {
+        "pattern": "outer neritic|outer sublittoral",
+        "code": "2026_HON",
+        "label": "Outer neritic",
+        "index": 6,
+        "rationale": "Open marine outer shelf",
+    },
+    {
+        "pattern": "upper.*bathyal",
+        "code": "2026_UBT",
+        "label": "Upper bathyal",
+        "index": 7,
+        "rationale": "Upper slope / deep marine",
+    },
+    {
+        "pattern": "middle.*bathyal",
+        "code": "2026_MBT",
+        "label": "Middle bathyal",
+        "index": 8,
+        "rationale": "Middle slope / deep marine",
+    },
+    {
+        "pattern": "lower.*bathyal",
+        "code": "2026_LBT",
+        "label": "Lower bathyal",
+        "index": 9,
+        "rationale": "Lower slope to basin-floor deep marine",
+    },
+    {
+        "pattern": "bathyal",
+        "code": "2026_UBT-MBT",
+        "label": "Bathyal undifferentiated",
+        "index": 8,
+        "rationale": "Deep marine bathyal setting",
+    },
+    {
+        "pattern": "marine",
+        "code": "2026_MARINE",
+        "label": "Marine undifferentiated",
+        "index": 5,
+        "rationale": "Marine, depth not tightly constrained",
+    },
 ]
 
 # Type aliases
@@ -174,7 +266,21 @@ FloorCode = str
 DimensionCode = str
 
 # Constants
-CONSTITUTIONAL_FLOORS = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13"]
+CONSTITUTIONAL_FLOORS = [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "F9",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+]
 CANONICAL_TOOLS = [
     "geox_data_ingest_bundle",
     "geox_data_qc_bundle",
@@ -193,6 +299,7 @@ CANONICAL_TOOLS = [
     "geox_history_audit",
 ]
 SEAL = "DITEMPA BUKAN DIBERI"
+
 
 def enforce_claim_state(
     result: Dict[str, Any],
@@ -216,7 +323,10 @@ def enforce_claim_state(
             "original_status": artifact_status,
         }
 
-    if claim_state in ("HYPOTHESIS", "INGESTED", "NO_VALID_EVIDENCE") and artifact_status == "VERIFIED":
+    if (
+        claim_state in ("HYPOTHESIS", "INGESTED", "NO_VALID_EVIDENCE")
+        and artifact_status == "VERIFIED"
+    ):
         result["artifact_status"] = "DRAFT"
         result["_claim_corrected"] = {
             "reason": "claim_state contradicts artifact_status",
@@ -296,28 +406,44 @@ def get_standard_envelope(
         "depth_datum": depth_datum or "",
         "timestamp_utc": now,
         "evidence_refs": evidence_refs or [],
-        "session_id": audit_receipt.get("session_id", "geox-anon") if audit_receipt else "geox-anon",
+        "session_id": audit_receipt.get("session_id", "geox-no-session")
+        if audit_receipt
+        else "geox-no-session",
     }
 
     response = {
-        "execution_status": execution_status.value if isinstance(execution_status, ExecutionStatus) else execution_status,
+        "execution_status": execution_status.value
+        if isinstance(execution_status, ExecutionStatus)
+        else execution_status,
         "tool_class": tool_class,
-        "governance_status": governance_status.value if isinstance(governance_status, GovernanceStatus) else governance_status,
-        "artifact_status": artifact_status.value if isinstance(artifact_status, ArtifactStatus) else artifact_status,
+        "governance_status": governance_status.value
+        if isinstance(governance_status, GovernanceStatus)
+        else governance_status,
+        "artifact_status": artifact_status.value
+        if isinstance(artifact_status, ArtifactStatus)
+        else artifact_status,
         "primary_artifact": primary_artifact,
         "claim_tag": claim_tag,
         "claim_state": claim_state,
         "confidence_band": confidence_band,
-        "physics_guard": physics_guard or {"guard_passed": True, "physics_version": "geox-v2026.05.10"},
+        "physics_guard": physics_guard
+        or {"guard_passed": True, "physics_version": "geox-v2026.05.10"},
         "uncertainty": uncertainty,
         "evidence_refs": evidence_refs or [],
-        "audit_receipt": audit_receipt or {
+        "audit_receipt": audit_receipt
+        or {
             "vault999_ref": "VAULT999-PENDING",
             "timestamp": now,
-            "session_id": "geox-anon",
+            "session_id": "geox-no-session",
         },
         "humility_score": humility_score,
-        "maruah_flag": maruah_flag or {"maruah_flag": "CLEAR", "territory_risk": "none", "recommended_action": "Proceed with standard consent protocols.", "confidence": "HIGH"},
+        "maruah_flag": maruah_flag
+        or {
+            "maruah_flag": "CLEAR",
+            "territory_risk": "none",
+            "recommended_action": "Proceed with standard consent protocols.",
+            "confidence": "HIGH",
+        },
         "diagnostics": diagnostics or {},
         "provenance": provenance,
         "schema_version": "geox-output-v0.7",
@@ -334,10 +460,6 @@ def get_standard_envelope(
     response = enforce_claim_state(response, evidence_refs=evidence_refs)
 
     if ui_resource_uri:
-        response["_meta"] = {
-            "ui": {
-                "resourceUri": ui_resource_uri
-            }
-        }
+        response["_meta"] = {"ui": {"resourceUri": ui_resource_uri}}
 
     return response
