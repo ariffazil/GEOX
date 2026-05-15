@@ -81,6 +81,7 @@ try:
     from prefab_ui.components.cards import StatCard
     from prefab_ui.actions.mcp import CallTool
     from prefab_ui.actions import ShowToast, SetState
+
     HAS_FASTMCP_APPS = True
 except Exception:
     FastMCPApp = None
@@ -120,6 +121,7 @@ mcp = FastMCP(**_mcp_kwargs)
 # GEOX Identity Invariant (F10 Coherence + F01 Amanah)
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def is_geox() -> bool:
     return (
         GEOX_VERSION.startswith("v2026.")
@@ -140,19 +142,26 @@ def _enforce_geox() -> dict[str, Any] | None:
         }
     return None
 
+
 # ─── SOVEREIGN 13 BOOTSTRAP ───────────────────────────────────────────────────
+
 
 def bootstrap_sovereign_13():
     try:
         from contracts.tools.unified_13 import register_unified_tools
+
         register_unified_tools(mcp, profile=GEOX_PROFILE)
         # Assert against the canonical public tools count
-        assert len(CANONICAL_PUBLIC_TOOLS) >= 14, \
+        assert len(CANONICAL_PUBLIC_TOOLS) >= 14, (
             f"F0_CONSTITUTION_BREACH: Expected at least 15 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
-        logger.info(f"Sovereign tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical + well stratigraphy Tools)")
+        )
+        logger.info(
+            f"Sovereign tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical + well stratigraphy Tools)"
+        )
         # Register well tools
         try:
             from geox.well.mcp_tools import register_well_tools
+
             register_well_tools(mcp)
             logger.info("Well tools registered successfully")
         except Exception as e:
@@ -160,6 +169,7 @@ def bootstrap_sovereign_13():
         # Register generalized stratigraphy pipeline tools
         try:
             from geox.well.mcp_stratigraphy import register_stratigraphy_tools
+
             register_stratigraphy_tools(mcp)
             logger.info("Stratigraphy pipeline tools registered successfully")
         except Exception as e:
@@ -167,6 +177,7 @@ def bootstrap_sovereign_13():
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # BOOT — Canonical surface only (chaos cleanup: dimension registries archived)
@@ -179,6 +190,7 @@ bootstrap_sovereign_13()
 # F8 GENIUS: elegant surface. F10 ONTOLOGY: structural coherence.
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def _prune_mcp_surface(mcp_server) -> None:
     """Strip non-canonical tools from the MCP registry after bootstrap.
 
@@ -187,6 +199,7 @@ def _prune_mcp_surface(mcp_server) -> None:
     Falls back to SACRED_SURFACE set if federation manifest unavailable.
     """
     from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
+
     SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | {
         "geox_dst_ingest_test",
         "geox_well_compute_gr_bins",
@@ -206,6 +219,7 @@ def _prune_mcp_surface(mcp_server) -> None:
             name = key[5:].rstrip("@")
             try:
                 from federation.tool_manifest import is_tool_somatic
+
                 visible = is_tool_somatic(name)
             except Exception:
                 visible = name in SACRED_SURFACE
@@ -216,11 +230,13 @@ def _prune_mcp_surface(mcp_server) -> None:
         logger.info(f"MCP surface pruned: {len(removed)} non-canonical tools removed")
     logger.info(f"MCP surface clean: {len(components)} canonical tools exposed")
 
+
 _prune_mcp_surface(mcp)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GLOBAL PANIC MIDDLEWARE (F1 Amanah — fail closed on unhandled exceptions)
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 class EarthAnchorMiddleware(BaseHTTPMiddleware):
     """Inject ATLAS13 Earth event anchor into every MCP tool result."""
@@ -296,7 +312,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "no organism — event created Earth-Moon stability field inherited by all later life",
         "machine_witness": "orbital mechanics, angular momentum, isotope ratios, planetary simulation",
         "geox_lesson": "Earth systems may appear stable only after catastrophic reorganization.",
-        "nine_signal_mapping": {"delta": "physical Earth state changed by impact", "psi": "no governance yet — pre-biological", "omega": "stability after collision is not given, it is forged"},
+        "nine_signal_mapping": {
+            "delta": "physical Earth state changed by impact",
+            "psi": "no governance yet — pre-biological",
+            "omega": "stability after collision is not given, it is forged",
+        },
     },
     {
         "event_id": "GEOX-EARTH-002",
@@ -306,7 +326,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "pre-biological or early-biological survival boundary",
         "machine_witness": "crater record, lunar proxy evidence, impact modeling",
         "geox_lesson": "A surface is not sovereign; it is exposed.",
-        "nine_signal_mapping": {"delta": "crust repeatedly disrupted", "psi": "no constraint system yet", "omega": "survival requires shielding"},
+        "nine_signal_mapping": {
+            "delta": "crust repeatedly disrupted",
+            "psi": "no constraint system yet",
+            "omega": "survival requires shielding",
+        },
     },
     {
         "event_id": "GEOX-EARTH-003",
@@ -316,7 +340,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "water becomes the medium of metabolism",
         "machine_witness": "isotopes, zircons, sedimentary record, climate models",
         "geox_lesson": "Water is Earth's first operating system for life.",
-        "nine_signal_mapping": {"delta": "hydrosphere stabilized", "psi": "planetary chemistry constrained", "omega": "habitability is a physical condition, not a guarantee"},
+        "nine_signal_mapping": {
+            "delta": "hydrosphere stabilized",
+            "psi": "planetary chemistry constrained",
+            "omega": "habitability is a physical condition, not a guarantee",
+        },
     },
     {
         "event_id": "GEOX-EARTH-004",
@@ -326,7 +354,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "anaerobic worlds collapsed; aerobic futures opened",
         "machine_witness": "banded iron formations, sulfur isotopes, atmospheric chemistry",
         "geox_lesson": "Life can transform the planet that hosts it. Small process + long time = planetary regime shift.",
-        "nine_signal_mapping": {"delta": "atmospheric chemistry measurably altered", "psi": "biological activity rewrote planetary constraints", "omega": "small causes can produce epochal effects"},
+        "nine_signal_mapping": {
+            "delta": "atmospheric chemistry measurably altered",
+            "psi": "biological activity rewrote planetary constraints",
+            "omega": "small causes can produce epochal effects",
+        },
     },
     {
         "event_id": "GEOX-EARTH-005",
@@ -336,7 +368,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "survival under planetary-scale constraint",
         "machine_witness": "glacial deposits, cap carbonates, climate instability models",
         "geox_lesson": "Feedback can freeze the world before balance returns.",
-        "nine_signal_mapping": {"delta": "climate locked into extreme state", "psi": "feedback overwhelmed containment", "omega": "stability is not the default; it is maintained"},
+        "nine_signal_mapping": {
+            "delta": "climate locked into extreme state",
+            "psi": "feedback overwhelmed containment",
+            "omega": "stability is not the default; it is maintained",
+        },
     },
     {
         "event_id": "GEOX-EARTH-006",
@@ -346,7 +382,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "body plans diversified; perception, predation, shells, motion intensified",
         "machine_witness": "fossil record, stratigraphy, geochemical proxies",
         "geox_lesson": "Complexity appears when Earth permits enough energy, oxygen, and structure.",
-        "nine_signal_mapping": {"delta": "Earth system conditions permitted rapid diversification", "psi": "ecological constraints emerged with complexity", "omega": "complexity is enabled, not willed"},
+        "nine_signal_mapping": {
+            "delta": "Earth system conditions permitted rapid diversification",
+            "psi": "ecological constraints emerged with complexity",
+            "omega": "complexity is enabled, not willed",
+        },
     },
     {
         "event_id": "GEOX-EARTH-007",
@@ -356,7 +396,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "shallow marine life suffered collapse",
         "machine_witness": "stratigraphy, isotope excursions, sedimentary basin shifts",
         "geox_lesson": "A cooling Earth can be as lethal as a burning one.",
-        "nine_signal_mapping": {"delta": "sea level and ocean chemistry shifted", "psi": "climate boundary exceeded", "omega": "cooling is not safety"},
+        "nine_signal_mapping": {
+            "delta": "sea level and ocean chemistry shifted",
+            "psi": "climate boundary exceeded",
+            "omega": "cooling is not safety",
+        },
     },
     {
         "event_id": "GEOX-EARTH-008",
@@ -366,7 +410,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "marine ecosystems destabilized over prolonged stress",
         "machine_witness": "black shales, redox proxies, reef stratigraphy",
         "geox_lesson": "Slow crisis is still crisis. Not every catastrophic Earth event is instant.",
-        "nine_signal_mapping": {"delta": "reef systems degraded over millions of years", "psi": "prolonged stress is still a governance failure", "omega": "duration does not dilute severity"},
+        "nine_signal_mapping": {
+            "delta": "reef systems degraded over millions of years",
+            "psi": "prolonged stress is still a governance failure",
+            "omega": "duration does not dilute severity",
+        },
     },
     {
         "event_id": "GEOX-EARTH-009",
@@ -376,7 +424,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "largest known mass extinction; survival bottleneck",
         "machine_witness": "Siberian Traps, mercury anomalies, carbon isotope shifts, temperature proxies",
         "geox_lesson": "When carbon, heat, ocean chemistry, and volcanism couple, life pays the debt.",
-        "nine_signal_mapping": {"delta": "Earth systems cascaded", "psi": "planetary constraints catastrophically breached", "omega": "coupled crises exceed any single discipline"},
+        "nine_signal_mapping": {
+            "delta": "Earth systems cascaded",
+            "psi": "planetary constraints catastrophically breached",
+            "omega": "coupled crises exceed any single discipline",
+        },
     },
     {
         "event_id": "GEOX-EARTH-010",
@@ -386,7 +438,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "dinosaur dominance ended; mammals inherited opportunity",
         "machine_witness": "iridium layer, shocked quartz, crater imaging, global ejecta",
         "geox_lesson": "Dominance is not permanence. Scale can be overruled by shock.",
-        "nine_signal_mapping": {"delta": "sudden global forcing", "psi": "no governance could have prevented it", "omega": "humility before abrupt Earth response"},
+        "nine_signal_mapping": {
+            "delta": "sudden global forcing",
+            "psi": "no governance could have prevented it",
+            "omega": "humility before abrupt Earth response",
+        },
     },
     {
         "event_id": "GEOX-EARTH-011",
@@ -396,7 +452,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "ecosystems reorganized under rapid warming",
         "machine_witness": "carbon isotope excursion, benthic foram records, temperature proxies",
         "geox_lesson": "Carbon is not only chemistry; carbon is destiny under constraint.",
-        "nine_signal_mapping": {"delta": "carbon pulse drove thermal response", "psi": "carbon cycle governance is planetary", "omega": "geochemistry becomes history"},
+        "nine_signal_mapping": {
+            "delta": "carbon pulse drove thermal response",
+            "psi": "carbon cycle governance is planetary",
+            "omega": "geochemistry becomes history",
+        },
     },
     {
         "event_id": "GEOX-EARTH-012",
@@ -406,7 +466,11 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "regional devastation, climate stress, survival pressure",
         "machine_witness": "ash layers, volcanic glass, climate modeling, eruption volume",
         "geox_lesson": "Atmosphere turns local violence into distributed consequence.",
-        "nine_signal_mapping": {"delta": "volcanic aerosol globally dispersed", "psi": "no governance — pure geological forcing", "omega": "local events can have planetary reach"},
+        "nine_signal_mapping": {
+            "delta": "volcanic aerosol globally dispersed",
+            "psi": "no governance — pure geological forcing",
+            "omega": "local events can have planetary reach",
+        },
     },
     {
         "event_id": "GEOX-EARTH-013",
@@ -416,13 +480,23 @@ ATLAS13_EARTH_EVENTS = [
         "organism_witness": "immediate human and ecological loss across the Indian Ocean",
         "machine_witness": "seismometers, tide gauges, GPS displacement, tsunami warning systems",
         "geox_lesson": "Earth motion becomes cascading consequence. The ocean carried the judgment outward.",
-        "nine_signal_mapping": {"delta": "plate boundary ruptured", "psi": "hazard governance tested at scale", "omega": "Earth does not negotiate with infrastructure"},
+        "nine_signal_mapping": {
+            "delta": "plate boundary ruptured",
+            "psi": "hazard governance tested at scale",
+            "omega": "Earth does not negotiate with infrastructure",
+        },
     },
 ]
 
 ATLAS13_BY_NAME: dict[str, dict] = {}
 for e in ATLAS13_EARTH_EVENTS:
-    name = e["event_name"].replace("\u2013", "-").replace("\u2014", "-").replace("\u2018", "'").replace("\u2019", "'")
+    name = (
+        e["event_name"]
+        .replace("\u2013", "-")
+        .replace("\u2014", "-")
+        .replace("\u2018", "'")
+        .replace("\u2019", "'")
+    )
     ATLAS13_BY_NAME[name] = e
     ATLAS13_BY_NAME[e["event_name"]] = e
 ATLAS13_BY_ID: dict[str, dict] = {e["event_id"]: e for e in ATLAS13_EARTH_EVENTS}
@@ -494,22 +568,32 @@ def _wrap_tool_outputs(mcp_server):
             defaults = {
                 "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
                 "confidence_band": result.get("confidence_band"),
-                "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}),
+                "physics_guard": result.get(
+                    "physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}
+                ),
                 "evidence_refs": result.get("evidence_refs", []),
                 "uncertainty": result.get("uncertainty", "Moderate"),
-                "audit_receipt": result.get("audit_receipt", {
-                    "vault999_ref": "VAULT999-PENDING",
-                    "timestamp": now,
-                    "session_id": "geox-anon",
-                }),
+                "audit_receipt": result.get(
+                    "audit_receipt",
+                    {
+                        "vault999_ref": "VAULT999-PENDING",
+                        "timestamp": now,
+                        "session_id": "geox-no-session",
+                    },
+                ),
                 "humility_score": result.get("humility_score", 0.0),
-                "maruah_flag": result.get("maruah_flag", {
-                    "maruah_flag": "CLEAR",
-                    "territory_risk": "none",
-                    "recommended_action": "Proceed with standard consent protocols.",
-                    "confidence": "HIGH",
-                }),
-                "earth_event_anchor": result.get("earth_event_anchor", _earth_event_for_tool(tool_name)),
+                "maruah_flag": result.get(
+                    "maruah_flag",
+                    {
+                        "maruah_flag": "CLEAR",
+                        "territory_risk": "none",
+                        "recommended_action": "Proceed with standard consent protocols.",
+                        "confidence": "HIGH",
+                    },
+                ),
+                "earth_event_anchor": result.get(
+                    "earth_event_anchor", _earth_event_for_tool(tool_name)
+                ),
             }
             for k, v in defaults.items():
                 if k not in result:
@@ -532,6 +616,7 @@ def _wrap_tool_outputs(mcp_server):
 
         tool.fn = _universal_wrapper
 
+
 logger.info("Applying universal output contract v0.4...")
 _wrap_tool_outputs(mcp)
 logger.info("Universal output contract applied to all tools.")
@@ -545,8 +630,20 @@ if HAS_FASTMCP_APPS and geox_app is not None:
     @geox_app.tool()
     async def evaluate_mission_trajectories(mission_id: str) -> list[dict]:
         return [
-            {"id": "TRJ-A", "name": "Delta-9 Anticline", "risk": "Low", "eta": "2 Days", "seal": "Required"},
-            {"id": "TRJ-B", "name": "Deepwater Carbonate", "risk": "High", "eta": "14 Days", "seal": "Required (888_HOLD)"},
+            {
+                "id": "TRJ-A",
+                "name": "Delta-9 Anticline",
+                "risk": "Low",
+                "eta": "2 Days",
+                "seal": "Required",
+            },
+            {
+                "id": "TRJ-B",
+                "name": "Deepwater Carbonate",
+                "risk": "High",
+                "eta": "14 Days",
+                "seal": "Required (888_HOLD)",
+            },
         ]
 
     @geox_app.tool()
@@ -556,8 +653,20 @@ if HAS_FASTMCP_APPS and geox_app is not None:
     @geox_app.ui()
     def mission_board(mission: str) -> PrefabApp:
         options = [
-            {"id": "TRJ-A", "name": "Delta-9 Anticline", "risk": "Low", "eta": "2 Days", "seal": "Required"},
-            {"id": "TRJ-B", "name": "Deepwater Carbonate", "risk": "High", "eta": "14 Days", "seal": "Required (888_HOLD)"},
+            {
+                "id": "TRJ-A",
+                "name": "Delta-9 Anticline",
+                "risk": "Low",
+                "eta": "2 Days",
+                "seal": "Required",
+            },
+            {
+                "id": "TRJ-B",
+                "name": "Deepwater Carbonate",
+                "risk": "High",
+                "eta": "14 Days",
+                "seal": "Required (888_HOLD)",
+            },
         ]
         with Column(gap=4, css_class="p-6") as view:
             Heading(f"GEOX Mission Board: {mission}")
@@ -609,6 +718,7 @@ if HAS_FASTMCP_APPS and geox_app is not None:
 # HEALTH & STATUS ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def build_status_payload() -> dict:
     # Use canonical registry for tool count and aliases
     # from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP # Already imported at the top
@@ -617,7 +727,7 @@ def build_status_payload() -> dict:
         "status": "ok",
         "service": "geox-mcp-kernel",
         "version": GEOX_VERSION,
-        "contract_epoch": GEOX_CONTRACT_EPOCH, # Use the new contract epoch
+        "contract_epoch": GEOX_CONTRACT_EPOCH,  # Use the new contract epoch
         "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
         "legacy_aliases": len(LEGACY_ALIAS_MAP),
         "auth_mode": "fail_closed",
@@ -628,7 +738,16 @@ def build_status_payload() -> dict:
         "identity": "GEOX",
         "role": "Earth Substrate Witness",
         "authority": "TERRAIN_WITNESS",
-        "enabled_dimensions": ["prospect", "well", "earth3d", "map", "cross", "physics", "section", "canonical"],
+        "enabled_dimensions": [
+            "prospect",
+            "well",
+            "earth3d",
+            "map",
+            "cross",
+            "physics",
+            "section",
+            "canonical",
+        ],
         "fastmcp_apps": {
             "enabled": HAS_FASTMCP_APPS,
             "mission_board": bool(geox_app),
@@ -636,8 +755,10 @@ def build_status_payload() -> dict:
         },
     }
 
+
 async def health_handler(request):
     return JSONResponse({"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat()})
+
 
 async def ready_handler(request):
     payload = build_status_payload()
@@ -647,24 +768,43 @@ async def ready_handler(request):
         return JSONResponse(payload, status_code=503)
     return JSONResponse(payload)
 
+
 async def status_handler(request):
     return JSONResponse(build_status_payload())
+
 
 async def discovery_handler(request):
     # Use canonical registry for tool count and aliases
     from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
 
-    return JSONResponse({
-        "organ": "GEOX",
-        "version": GEOX_VERSION,
-        "git_sha": os.getenv("GIT_SHA", "unknown")[:8],
-        "transport": "streamable-http",
-        "mcp_endpoint": "https://geox.arif-fazil.com/mcp",
-        "tool_count": len(CANONICAL_PUBLIC_TOOLS), # Report canonical public tools
-        "floors": ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13"],
-        "discovery": "stateless",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-    })
+    return JSONResponse(
+        {
+            "organ": "GEOX",
+            "version": GEOX_VERSION,
+            "git_sha": os.getenv("GIT_SHA", "unknown")[:8],
+            "transport": "streamable-http",
+            "mcp_endpoint": "https://geox.arif-fazil.com/mcp",
+            "tool_count": len(CANONICAL_PUBLIC_TOOLS),  # Report canonical public tools
+            "floors": [
+                "F1",
+                "F2",
+                "F3",
+                "F4",
+                "F5",
+                "F6",
+                "F7",
+                "F8",
+                "F9",
+                "F10",
+                "F11",
+                "F12",
+                "F13",
+            ],
+            "discovery": "stateless",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+    )
+
 
 # 11 Natural Whole Earth Categories — PUBLIC surface (13 sovereign tools)
 # These are the ONLY tools advertised in the public registry.
@@ -707,10 +847,15 @@ GEOX_TOOL_CATEGORIES = {
         "description": "Volumetrics, POS, EVOI, prospect evaluation and scorecard",
     },
     "geox_governance_audit": {
-        "canonical": ["geox_prospect_judge_preview", "geox_prospect_judge_seal", "geox_evidence_summarize_cross"],
+        "canonical": [
+            "geox_prospect_judge_preview",
+            "geox_prospect_judge_seal",
+            "geox_evidence_summarize_cross",
+        ],
         "description": "AC_Risk, 888_HOLD, verdict gateway, VAULT999, evidence graph",
     },
 }
+
 
 async def tools_list_handler(request):
     """Return the public tool surface: 15 sovereign tools with full MCP 2025-11-25 metadata.
@@ -744,12 +889,14 @@ async def tools_list_handler(request):
                     tool_entry["annotations"] = meta["annotations"]
                 cat_tools.append(tool_entry)
         if cat_tools:
-            categories.append({
-                "category": cat_name,
-                "description": cat_info["description"],
-                "tools": cat_tools,
-                "visibility": "public",
-            })
+            categories.append(
+                {
+                    "category": cat_name,
+                    "description": cat_info["description"],
+                    "tools": cat_tools,
+                    "visibility": "public",
+                }
+            )
 
     # ── INTERNAL surface: dimension + substrate tools ────────────────────────
     internal_tools = []
@@ -768,50 +915,59 @@ async def tools_list_handler(request):
                 tool_entry["annotations"] = meta["annotations"]
             internal_tools.append(tool_entry)
     if internal_tools:
-        categories.append({
-            "category": "internal",
-            "description": "Dimension registry and substrate tools — callable but not part of public surface",
-            "tools": internal_tools,
-            "visibility": "internal",
-        })
+        categories.append(
+            {
+                "category": "internal",
+                "description": "Dimension registry and substrate tools — callable but not part of public surface",
+                "tools": internal_tools,
+                "visibility": "internal",
+            }
+        )
 
     # ── ALIASES (deprecated) ──────────────────────────────────────────────
     aliases = []
     for alias_name, canonical_name in LEGACY_ALIAS_MAP.items():
         t = all_tools.get(alias_name)
         if t:
-            aliases.append({
-                "name": alias_name,
-                "description": t.description,
-                "deprecated": True,
-                "canonical_name": canonical_name,
-                "deprecated_since": "2026-05-01",
-                "removal_target": "2026-06-01",
-            })
+            aliases.append(
+                {
+                    "name": alias_name,
+                    "description": t.description,
+                    "deprecated": True,
+                    "canonical_name": canonical_name,
+                    "deprecated_since": "2026-05-01",
+                    "removal_target": "2026-06-01",
+                }
+            )
 
-    return JSONResponse({
-        "organ": "GEOX",
-        "schema": "geox-tool-registry/v2",
-        "schema_version": "geox-output-v0.6",
-        "mcp_spec": "2025-11-25",
-        "categories": categories,
-        "public_count": len(CANONICAL_PUBLIC_TOOLS),
-        "internal_count": len(internal_tools),
-        "alias_count": len(aliases),
-        "total_runtime": len(all_tools),
-        "natural_tools": 11,
-        "seal": "DITEMPA BUKAN DIBERI",
-        "public_surface": "15 sovereign tools",
-    })
+    return JSONResponse(
+        {
+            "organ": "GEOX",
+            "schema": "geox-tool-registry/v2",
+            "schema_version": "geox-output-v0.6",
+            "mcp_spec": "2025-11-25",
+            "categories": categories,
+            "public_count": len(CANONICAL_PUBLIC_TOOLS),
+            "internal_count": len(internal_tools),
+            "alias_count": len(aliases),
+            "total_runtime": len(all_tools),
+            "natural_tools": 11,
+            "seal": "DITEMPA BUKAN DIBERI",
+            "public_surface": "15 sovereign tools",
+        }
+    )
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # RESOURCES
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 @mcp.resource("geox://identity")
 async def geox_identity() -> dict:
     from contracts.canonical_registry import CANON9_TOOL_MAP
     from contracts.enums.statuses import GDE_VOCAB
+
     identity_state = {
         "identity": "GEOX",
         "role": "Earth Substrate Witness",
@@ -841,6 +997,7 @@ async def geox_identity() -> dict:
         identity_state["_enforcement"] = enforcement
     return identity_state
 
+
 @mcp.resource("geox://registry/apps")
 async def list_geox_apps() -> list[dict]:
     manifest_dir = "control_plane/fastmcp/manifests"
@@ -855,6 +1012,7 @@ async def list_geox_apps() -> list[dict]:
                     logger.error(f"Failed to load manifest {filename}: {e}")
     return apps
 
+
 @mcp.resource("geox://apps/earth-panel")
 async def get_earth_panel() -> str:
     try:
@@ -864,21 +1022,26 @@ async def get_earth_panel() -> str:
     except Exception as e:
         return f"Error loading earth panel UI: {e}"
 
+
 @mcp.resource("geox://profile/status")
 async def get_profile_status() -> str:
-    return json.dumps({
-        "status": "healthy",
-        "service": "geox-unified",
-        "profile": GEOX_PROFILE,
-        "enabled_dimensions": ["prospect", "well", "earth3d", "map", "cross"],
-        "version": GEOX_VERSION,
-        "seal": GEOX_SEAL,
-        "constitutional_floors": "F1-F13 ACTIVE",
-    })
+    return json.dumps(
+        {
+            "status": "healthy",
+            "service": "geox-unified",
+            "profile": GEOX_PROFILE,
+            "enabled_dimensions": ["prospect", "well", "earth3d", "map", "cross"],
+            "version": GEOX_VERSION,
+            "seal": GEOX_SEAL,
+            "constitutional_floors": "F1-F13 ACTIVE",
+        }
+    )
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # LEGACY MCP HANDLER (for backward compatibility with existing POST /mcp callers)
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 async def run_legacy_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
     tool_result = await mcp.call_tool(name, arguments)
@@ -891,16 +1054,19 @@ async def run_legacy_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any
         "isError": False if tool_result.status == "SUCCESS" else True,
     }
 
+
 async def legacy_mcp_handler(request):
     if request.method == "GET":
-        return JSONResponse({
-            "mcp": "GEOX",
-            "kernel": "Sovereign 13 + Dimension Native",
-            "version": GEOX_VERSION,
-            "status": "active",
-            "transport": "streamable-http",
-            "note": "Use POST for JSON-RPC tool calls",
-        })
+        return JSONResponse(
+            {
+                "mcp": "GEOX",
+                "kernel": "Sovereign 13 + Dimension Native",
+                "version": GEOX_VERSION,
+                "status": "active",
+                "transport": "streamable-http",
+                "note": "Use POST for JSON-RPC tool calls",
+            }
+        )
     try:
         payload = await request.json()
     except Exception:
@@ -913,7 +1079,11 @@ async def legacy_mcp_handler(request):
     if method == "tools/list":
         # Use canonical public tools for listing
         all_tools = {t.name: t for t in await mcp.list_tools()}
-        tools = [{"name": t.name, "description": t.description} for t_name in CANONICAL_PUBLIC_TOOLS if (t:=all_tools.get(t_name))]
+        tools = [
+            {"name": t.name, "description": t.description}
+            for t_name in CANONICAL_PUBLIC_TOOLS
+            if (t := all_tools.get(t_name))
+        ]
         return JSONResponse({"jsonrpc": "2.0", "id": response_id, "result": {"tools": tools}})
 
     if method == "tools/call":
@@ -923,26 +1093,32 @@ async def legacy_mcp_handler(request):
         # Patch E - Resolve dashboard.open: Alias is handled here by LEGACY_ALIAS_MAP
         resolved_name = LEGACY_ALIAS_MAP.get(name, name)
         if resolved_name not in CANONICAL_PUBLIC_TOOLS and resolved_name != name:
-             return JSONResponse(
-                {
-                    "jsonrpc": "2.0",
-                    "id": response_id,
-                    "error": {
-                        "code": -32001,
-                        "message": f"RT1_GUARD: Tool \'{name}\' is a retired alias and no longer supported.",
-                        "data": {"guard": "RETIRED_ALIAS", "tool": name, "canonical_name": resolved_name},
-                    },
-                },
-                status_code=403,
-            )
-        elif resolved_name not in CANONICAL_PUBLIC_TOOLS: # If it\'s not an alias and not in canonical tools
             return JSONResponse(
                 {
                     "jsonrpc": "2.0",
                     "id": response_id,
                     "error": {
                         "code": -32001,
-                        "message": f"RT1_GUARD: Tool \'{name}\' is not a declared sovereign tool.",
+                        "message": f"RT1_GUARD: Tool '{name}' is a retired alias and no longer supported.",
+                        "data": {
+                            "guard": "RETIRED_ALIAS",
+                            "tool": name,
+                            "canonical_name": resolved_name,
+                        },
+                    },
+                },
+                status_code=403,
+            )
+        elif (
+            resolved_name not in CANONICAL_PUBLIC_TOOLS
+        ):  # If it\'s not an alias and not in canonical tools
+            return JSONResponse(
+                {
+                    "jsonrpc": "2.0",
+                    "id": response_id,
+                    "error": {
+                        "code": -32001,
+                        "message": f"RT1_GUARD: Tool '{name}' is not a declared sovereign tool.",
                         "data": {"guard": "RT1", "tool": name},
                     },
                 },
@@ -951,13 +1127,21 @@ async def legacy_mcp_handler(request):
 
         # RT-3: irreversible operations require explicit human ack
         from control_plane_server_patch import rt3_guard
+
         rt3_blocked = rt3_guard(name, args)
         if rt3_blocked is not None:
             return rt3_blocked
-        result = await run_legacy_tool(resolved_name, args) # Call with resolved name
-        return JSONResponse({"jsonrpc": "2.0", "id": response_id, "result": {"content": [{"type": "text", "text": json.dumps(result)}]}})
+        result = await run_legacy_tool(resolved_name, args)  # Call with resolved name
+        return JSONResponse(
+            {
+                "jsonrpc": "2.0",
+                "id": response_id,
+                "result": {"content": [{"type": "text", "text": json.dumps(result)}]},
+            }
+        )
 
     return JSONResponse({"error": "Method not found"}, status_code=404)
+
 
 # ── Monkey-patch: Accept */* when json_response is enabled ──────────────────
 # Fixes MCP SDK probe that sends Accept: */* but FastMCP requires explicit
@@ -967,10 +1151,15 @@ from mcp.server.streamable_http import StreamableHTTPServerTransport
 
 _orig_check = StreamableHTTPServerTransport._check_accept_headers
 
+
 def _patched_check(self, request):
     if self.is_json_response_enabled:
-        return True, True  # json_response=True: accept both JSON and SSE (FastMCP will still prefer JSON)
+        return (
+            True,
+            True,
+        )  # json_response=True: accept both JSON and SSE (FastMCP will still prefer JSON)
     return _orig_check(self, request)
+
 
 StreamableHTTPServerTransport._check_accept_headers = _patched_check
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1004,6 +1193,7 @@ def create_app():
     app.add_middleware(GlobalPanicMiddleware)
     return app
 
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default=GEOX_HOST)
@@ -1016,6 +1206,7 @@ def main() -> None:
     logger.info(f"  Dimensions: ['prospect', 'well', 'earth3d', 'map', 'cross']")
     logger.info(f"  MCP Apps: {'enabled' if HAS_FASTMCP_APPS else 'disabled'}")
     uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+
 
 if __name__ == "__main__":
     main()
