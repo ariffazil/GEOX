@@ -123,8 +123,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
 
     # ── Assert canonical count ───────────────────────────────────────────────
     # Count is 14: 13 original sovereign tools + history_audit
-    assert len(CANONICAL_PUBLIC_TOOLS) == 15, (
-        f"F0_CONSTITUTION_BREACH: Expected 15 sovereign tools, "
+    assert len(CANONICAL_PUBLIC_TOOLS) == 19, (
+        f"F0_CONSTITUTION_BREACH: Expected 19 sovereign tools (15 core + 4 well-strat), "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
