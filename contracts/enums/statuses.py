@@ -19,6 +19,8 @@ class ExecutionStatus(str, Enum):
     SUCCESS = "SUCCESS"
     ERROR = "ERROR"
     HALT = "HALT"
+    # RECOVERABLE_ERROR: agentic upgrade - failures become reroutes (Arif 2026-05-16)
+    RECOVERABLE_ERROR = "RECOVERABLE_ERROR"
 
 
 class GovernanceStatus(str, Enum):
@@ -323,10 +325,7 @@ def enforce_claim_state(
             "original_status": artifact_status,
         }
 
-    if (
-        claim_state in ("HYPOTHESIS", "INGESTED", "NO_VALID_EVIDENCE")
-        and artifact_status == "VERIFIED"
-    ):
+    if claim_state in ("HYPOTHESIS", "INGESTED", "NO_VALID_EVIDENCE") and artifact_status == "VERIFIED":
         result["artifact_status"] = "DRAFT"
         result["_claim_corrected"] = {
             "reason": "claim_state contradicts artifact_status",
@@ -357,6 +356,19 @@ def get_standard_envelope(
     artifact_hash: Optional[str] = None,
     depth_basis: Optional[str] = None,
     depth_datum: Optional[str] = None,
+    # Session propagation (Fix #2 - Arif 2026-05-16)
+    session_id: Optional[str] = None,
+    trace_id: Optional[str] = None,
+    parent_trace_id: Optional[str] = None,
+    constitution_hash: Optional[str] = None,
+    # Agentic recovery (Fix #1, #4 - Arif 2026-05-16)
+    next_best_actions: Optional[List[Dict[str, Any]]] = None,
+    suggested_tool: Optional[str] = None,
+    can_auto_retry: bool = False,
+    # missing_inputs_schema: structured input gaps for agentic rerun (Arif 2026-05-16)
+    missing_inputs_schema: Optional[List[Dict[str, Any]]] = None,
+    # confidence_policy: what confidence means for this tool output (Arif 2026-05-16)
+    confidence_policy: Optional[Dict[str, Any]] = None,
     # ToAC perception bridge fields
     perception_class: Optional[str] = None,
     evidence_tag: Optional[str] = None,
@@ -393,9 +405,17 @@ def get_standard_envelope(
     strat_standard: Stratigraphic reference scheme + chart URI
     """
     from datetime import datetime, timezone
+    import uuid
 
     tool_version = tool_version or os.environ.get("GEOX_VERSION", "geox-v2026.05.10")
     now = datetime.now(timezone.utc).isoformat()
+
+    # Session propagation (Fix #2 - Arif 2026-05-16)
+    # Use explicitly passed session_id, fallback to audit_receipt, fallback to auto-generated
+    _session_id = session_id or (audit_receipt.get("session_id") if audit_receipt else None) or "geox-no-session"
+    _trace_id = trace_id or f"trace-{uuid.uuid4().hex[:16]}"
+    _parent_trace_id = parent_trace_id or None
+    _constitution_hash = constitution_hash or os.environ.get("GEOX_CONSTITUTION_HASH", "unknown")
 
     provenance = {
         "tool_name": primary_artifact.get("tool", "unknown"),
@@ -406,35 +426,31 @@ def get_standard_envelope(
         "depth_datum": depth_datum or "",
         "timestamp_utc": now,
         "evidence_refs": evidence_refs or [],
-        "session_id": audit_receipt.get("session_id", "geox-no-session")
-        if audit_receipt
-        else "geox-no-session",
+        # Session propagation fields
+        "session_id": _session_id,
+        "trace_id": _trace_id,
+        "parent_trace_id": _parent_trace_id,
+        "constitution_hash": _constitution_hash,
     }
 
     response = {
-        "execution_status": execution_status.value
-        if isinstance(execution_status, ExecutionStatus)
-        else execution_status,
+        "execution_status": execution_status.value if isinstance(execution_status, ExecutionStatus) else execution_status,
         "tool_class": tool_class,
-        "governance_status": governance_status.value
-        if isinstance(governance_status, GovernanceStatus)
-        else governance_status,
-        "artifact_status": artifact_status.value
-        if isinstance(artifact_status, ArtifactStatus)
-        else artifact_status,
+        "governance_status": governance_status.value if isinstance(governance_status, GovernanceStatus) else governance_status,
+        "artifact_status": artifact_status.value if isinstance(artifact_status, ArtifactStatus) else artifact_status,
         "primary_artifact": primary_artifact,
         "claim_tag": claim_tag,
         "claim_state": claim_state,
         "confidence_band": confidence_band,
-        "physics_guard": physics_guard
-        or {"guard_passed": True, "physics_version": "geox-v2026.05.10"},
+        "physics_guard": physics_guard or {"guard_passed": True, "physics_version": "geox-v2026.05.10"},
         "uncertainty": uncertainty,
         "evidence_refs": evidence_refs or [],
         "audit_receipt": audit_receipt
         or {
             "vault999_ref": "VAULT999-PENDING",
             "timestamp": now,
-            "session_id": "geox-no-session",
+            "session_id": _session_id,
+            "trace_id": _trace_id,
         },
         "humility_score": humility_score,
         "maruah_flag": maruah_flag
@@ -446,7 +462,7 @@ def get_standard_envelope(
         },
         "diagnostics": diagnostics or {},
         "provenance": provenance,
-        "schema_version": "geox-output-v0.7",
+        "schema_version": "geox-output-v0.8",  # Bumped for agentic fields
         # ToAC v1 perception fields
         "perception_class": perception_class or "HYPOTHESIS",
         "evidence_tag": evidence_tag or "UNKNOWN",
@@ -454,6 +470,19 @@ def get_standard_envelope(
         "vertical_trend": vertical_trend or "UNKNOWN",
         "litho_class": litho_class or "UNKNOWN",
         "strat_standard": strat_standard or {"scheme": "NN_zone", "reference_chart": ""},
+        # Session propagation (Fix #2)
+        "session_id": _session_id,
+        "trace_id": _trace_id,
+        "parent_trace_id": _parent_trace_id,
+        "constitution_hash": _constitution_hash,
+        # Agentic recovery (Fix #1, #4 - Arif 2026-05-16)
+        "next_best_actions": next_best_actions or [],
+        "suggested_tool": suggested_tool,
+        "can_auto_retry": can_auto_retry,
+        # missing_inputs_schema: structured input gaps for agentic rerun (Arif 2026-05-16)
+        "missing_inputs_schema": missing_inputs_schema or [],
+        # confidence_policy: what confidence means for this output (Arif 2026-05-16)
+        "confidence_policy": confidence_policy or {},
     }
 
     # F2 Truth gate: auto-downgrade overclaimed states
