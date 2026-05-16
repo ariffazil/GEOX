@@ -9,6 +9,7 @@ from contracts.enums.statuses import (
     GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    enrich_envelope_with_metabolic,
 )
 from contracts.tools.canonical._helpers import (
     _get_artifact,
@@ -47,7 +48,9 @@ logger = logging.getLogger("geox.canonical.seismic")
 
 async def geox_seismic_analyze_volume(
     volume_ref: str,
-    mode: Literal["load_line", "load_volume", "compute_attribute", "render_slice", "vision_review", "viewer_payload"] = "compute_attribute",
+    mode: Literal[
+        "load_line", "load_volume", "compute_attribute", "render_slice", "vision_review", "viewer_payload"
+    ] = "compute_attribute",
     attribute: str = "rms",
 ) -> dict:
     """Seismic attribute computation, slice rendering, and interpretation support.
@@ -64,12 +67,11 @@ async def geox_seismic_analyze_volume(
         attribute: Seismic attribute to compute (e.g. "rms", "variance", "sweetness", "coherence").
     """
     artifact = {"volume_ref": volume_ref, "mode": mode, "attribute": attribute, "status": "Computed"}
-    return get_standard_envelope(
+    envelope = get_standard_envelope(
         artifact,
         tool_class="compute",
         claim_tag="HYPOTHESIS",
         claim_state="INTERPRETED",
         perception_class="DISPLAY",
     )
-
-
+    return enrich_envelope_with_metabolic(envelope, "geox_seismic_analyze_volume")

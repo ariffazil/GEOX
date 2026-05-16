@@ -492,3 +492,261 @@ def get_standard_envelope(
         response["_meta"] = {"ui": {"resourceUri": ui_resource_uri}}
 
     return response
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# METABOLIC OUTPUT ENRICHMENT — GEOX Phase 1 adoption
+# ──────────────────────────────────────────────────────────────────────────────
+# Injects a "metabolic" key into a standard GEOX envelope.
+#
+# This is the Phase 1 bridge: GEOX tool envelopes gain the universal
+# metabolic contract fields (metabolic.v1) so arifOS can read them uniformly.
+#
+# NOT a canonical-copy section — lives in GEOX only.
+# Do NOT call this from arifOS or other organs.
+#
+# DITEMPA BUKAN DIBERI — Forged, Not Given
+
+
+from datetime import datetime, timezone
+
+
+# Map GEOX internal claim_state values → metabolic ClaimState
+_CLAIM_STATE_MAP = {
+    # GEOX internal claim_state → MetabolicOutput.claim_state value
+    "RAW_OBSERVATION": "OBSERVED",
+    "FILE_IMPORTED": "OBSERVED",
+    "INGESTED": "OBSERVED",
+    "NO_VALID_EVIDENCE": "HOLD",
+    "QC_VERIFIED": "VERIFIED",
+    "QC_VERIFIED_WITH_WARNINGS": "QUALIFIED",
+    "COMPUTED": "HYPOTHESIS",
+    "INTERPRETED": "HYPOTHESIS",
+    "DERIVED_CANDIDATE": "HYPOTHESIS",
+    "HYPOTHESIS": "HYPOTHESIS",
+    "QUALIFIED": "QUALIFIED",
+    "VERIFIED": "VERIFIED",
+    "SEALED": "SEALED",
+    "888_HOLD": "HOLD",
+    "VOID": "HOLD",
+}
+
+# Map metabolic ClaimState → ConfidenceLevel
+_CLAIM_TO_CONFIDENCE = {
+    "OBSERVED": "LOW",
+    "HYPOTHESIS": "LOW",
+    "QUALIFIED": "MODERATE",
+    "VERIFIED": "HIGH",
+    "SEALED": "VERIFIED",
+    "HOLD": "UNKNOWN",
+}
+
+# Per-tool next_best_tool and required_next_tests defaults
+_TOOL_METABOLIC_DEFAULTS = {
+    "geox_data_ingest_bundle": {
+        "next_best_tool": "geox_data_qc_bundle",
+        "required_next_tests": [
+            "QC header check",
+            "Depth monotonicity check",
+            "Canonical curves completeness check",
+        ],
+    },
+    "geox_data_qc_bundle": {
+        "next_best_tool": "geox_subsurface_generate_candidates",
+        "required_next_tests": [],
+    },
+    "geox_subsurface_generate_candidates": {
+        "next_best_tool": "geox_seismic_analyze_volume",
+        "required_next_tests": [
+            "Cross-validate with analog data",
+            "Petrophysical cutoff sensitivity analysis",
+        ],
+    },
+    "geox_seismic_analyze_volume": {
+        "next_best_tool": "geox_subsurface_generate_candidates",
+        "required_next_tests": [
+            "Well-to-seismic tie",
+            "Amplitude-vs-offset analysis",
+        ],
+    },
+}
+
+
+def _claim_to_metabolic(claim_state: str) -> str:
+    """Map a GEOX internal claim_state to metabolic ClaimState value."""
+    return _CLAIM_STATE_MAP.get(claim_state, "HYPOTHESIS")
+
+
+def _get_confidence_for_claim(claim_state: str) -> str:
+    """Infer shared ConfidenceLevel from the resolved metabolic claim_state."""
+    metabolic_state = _claim_to_metabolic(claim_state)
+    return _CLAIM_TO_CONFIDENCE.get(metabolic_state, "MODERATE")
+
+
+def enrich_envelope_with_metabolic(
+    envelope: Dict[str, Any],
+    tool_name: str,
+    *,
+    witness_type: str | None = None,
+    witness_status: str = "RAW",
+    decoded_entities: List[Any] | None = None,
+    anomalous_contrasts: List[Any] | None = None,
+    candidate_meanings: List[Any] | None = None,
+    constraints_checked: List[Any] | None = None,
+    model_updates: List[Any] | None = None,
+    required_next_tests: List[str] | None = None,
+    next_best_tool: str = "",
+    cross_organ_handoff: Dict[str, Any] | None = None,
+    session_id: str | None = None,
+) -> Dict[str, Any]:
+    """
+    Enrich a GEOX standard envelope with metabolic.v1 output fields.
+
+    Call this after ``get_standard_envelope()`` to inject the universal
+    metabolic contract into the returned envelope.
+
+    Parameters
+    ----------
+    envelope : dict
+        The envelope returned by ``get_standard_envelope()``.
+    tool_name : str
+        Canonical GEOX tool name (e.g. "geox_data_ingest_bundle").
+    witness_type : str, optional
+        Override for the witness type (e.g. "log", "seismic", "signal").
+        If None, inferred from tool_name.
+    witness_status : str, default "RAW"
+        WitnessStatus value for the metabolic output.
+    decoded_entities : list, optional
+        List of decoded entity dicts.
+    anomalous_contrasts : list, optional
+        List of anomalous contrast dicts.
+    candidate_meanings : list, optional
+        List of candidate meaning dicts.
+    constraints_checked : list, optional
+        List of constraint check dicts.
+    model_updates : list, optional
+        List of model update dicts.
+    required_next_tests : list[str], optional
+        Override for required next tests.
+    next_best_tool : str, optional
+        Override for next best tool.
+    cross_organ_handoff : dict, optional
+        Override for the cross-organ handoff dict.
+    session_id : str, optional
+        Governed session ID to propagate.
+
+    Returns
+    -------
+    dict
+        The envelope with a new top-level key ``"metabolic"`` containing
+        the MetabolicOutput-compatible dict.
+    """
+    # Resolve claim_state: check primary_artifact first (where tools put it),
+    # then fall back to envelope top-level (where get_standard_envelope puts it)
+    primary = envelope.get("primary_artifact", {})
+    envelope_claim_state = primary.get("claim_state", envelope.get("claim_state", "INGESTED"))
+    metabolic_claim_state = _claim_to_metabolic(envelope_claim_state)
+    confidence = _get_confidence_for_claim(envelope_claim_state)
+
+    # Per-tool defaults
+    tool_defaults = _TOOL_METABOLIC_DEFAULTS.get(tool_name, {})
+    resolved_next_tool = next_best_tool or tool_defaults.get("next_best_tool", "")
+    resolved_tests = required_next_tests if required_next_tests is not None else tool_defaults.get("required_next_tests", [])
+
+    # Resolve witness_type from tool or override
+    _TOOL_WITNESS_TYPE = {
+        "geox_data_ingest_bundle": "log",
+        "geox_data_qc_bundle": "log",
+        "geox_subsurface_generate_candidates": "signal",
+        "geox_seismic_analyze_volume": "seismic",
+    }
+    resolved_witness_type = witness_type or _TOOL_WITNESS_TYPE.get(tool_name, "sensor")
+
+    # Uncertainty range by confidence
+    _CONFIDENCE_UNCERTAINTY = {
+        "LOW": ([0.0, 0.5], ["Evidence not cross-checked"]),
+        "MODERATE": ([0.3, 0.7], []),
+        "HIGH": ([0.6, 0.9], []),
+        "VERIFIED": ([0.7, 0.95], []),
+        "UNKNOWN": ([0.0, 1.0], ["Cannot assess without evidence"]),
+    }
+    uncertainty_range, major_unknowns = _CONFIDENCE_UNCERTAINTY.get(confidence, ([0.0, 1.0], []))
+
+    now = datetime.now(timezone.utc).isoformat()
+
+    metabolic = {
+        "organ": "GEOX",
+        "tool_name": tool_name,
+        "session_id": session_id,
+        # Witness layer
+        "witness_type": resolved_witness_type,
+        "witness_status": witness_status,
+        "witnesses_ingested": [],
+        # Decoded layer
+        "decoded_entities": decoded_entities or [],
+        # Contrast layer
+        "anomalous_contrasts": anomalous_contrasts or [],
+        # Meaning layer
+        "candidate_meanings": candidate_meanings or [],
+        # Constraint layer
+        "constraints_checked": constraints_checked or [],
+        # Model update layer
+        "model_updates": model_updates or [],
+        "model_target": "Earth",
+        # Uncertainty
+        "uncertainty": {
+            "omega_0": 0.05,
+            "uncertainty_range": uncertainty_range,
+            "major_unknowns": major_unknowns,
+            "key_missing_evidence": [],
+            "claim_too_certain_flag": False,
+        },
+        # Evidence freshness
+        "evidence_freshness": {
+            "as_of": primary.get("vault_receipt", {}).get("timestamp", now)
+            if isinstance(primary.get("vault_receipt"), dict)
+            else now,
+            "expires_after_seconds": None,
+            "staleness_risk": "LOW",
+            "requires_refresh": False,
+            "refresh_recommendation": (
+                "Re-ingest only if a new file version is suspected or geological interpretation changes significantly."
+            ),
+        },
+        # Next steps
+        "required_next_tests": resolved_tests,
+        "next_best_tool": resolved_next_tool,
+        # Cross-organ handoff
+        "cross_organ_handoff": cross_organ_handoff
+        or {
+            "next_best_organ": "GEOX",
+            "handoff_reason": ("GEOX subsurface tools can refine the interpretation with physics-based petrophysical analysis."),
+            "handoff_payload": {
+                "artifact_ref": primary.get("artifact_ref", ""),
+                "well_id": primary.get("well_id", ""),
+                "source_type": primary.get("source_type", ""),
+            },
+            "blocked_organs": [],
+            "blocked_reason": "",
+            "confidence_at_handoff": confidence,
+        },
+        # Claim state
+        "claim_state": metabolic_claim_state,
+        # Conflict flags
+        "conflict_flags": [],
+        # Confidence level
+        "confidence_level": confidence,
+        # Audit
+        "audit_receipt": primary.get("vault_receipt", ""),
+        # Sovereignty boundary
+        "recommendation_only": True,
+        "execution_authorized": False,
+        "human_final_authority": "Arif",
+        "requires_888_judge": False,
+        # Provenance
+        "timestamp_utc": now,
+        "constitution_hash": "",
+    }
+
+    envelope["metabolic"] = metabolic
+    return envelope

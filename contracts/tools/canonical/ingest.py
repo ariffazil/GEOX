@@ -14,6 +14,7 @@ from contracts.enums.statuses import (
     GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    enrich_envelope_with_metabolic,
 )
 from contracts.tools.canonical._helpers import (
     _get_artifact,
@@ -50,16 +51,34 @@ from compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 logger = logging.getLogger("geox.canonical.ingest")
 
 
+def _metabolic_return(
+    envelope: dict,
+    witness_status: str = "RAW",
+    **kwargs,
+) -> dict:
+    """Add metabolic.v1 output to a GEOX ingest envelope and return it.
+
+    Phase 1 adoption bridge: wraps get_standard_envelope() output with
+    the universal metabolic contract so arifOS can read it uniformly.
+    """
+    return enrich_envelope_with_metabolic(
+        envelope,
+        "geox_data_ingest_bundle",
+        witness_status=witness_status,
+        **kwargs,
+    )
+
+
 async def geox_data_ingest_bundle(
     source_uri: Optional[str] = None,
     source_type: Literal["well", "seismic", "earth3d", "auto", "tops", "biostrat", "checkshot"] = "auto",
     well_id: Optional[str] = None,
     standardize_curves: bool = True,
     normalize_units: bool = True,
-    content_base64: Optional[str] = None, # New: support for base64 encoded content
-    filename: Optional[str] = None, # Required if content_base64 is provided
-    target_dir: str = "/data/geox_las", # Required if content_base64 is provided
-    overwrite: bool = False, # Required if content_base64 is provided
+    content_base64: Optional[str] = None,  # New: support for base64 encoded content
+    filename: Optional[str] = None,  # Required if content_base64 is provided
+    target_dir: str = "/data/geox_las",  # Required if content_base64 is provided
+    overwrite: bool = False,  # Required if content_base64 is provided
 ) -> dict:
     """Lazy ingestion for LAS, CSV, Parquet, SEG-Y, and structural payloads.
     Also supports direct base64 upload for LAS files (absorbing geox_file_upload_import).
@@ -80,88 +99,98 @@ async def geox_data_ingest_bundle(
     # --- Handle content_base64 upload first (new functionality from geox_file_upload_import) ---
     if content_base64:
         if source_uri:
-             return get_standard_envelope(
-                {
-                    "status": "ERROR",
-                    "tool": "geox_data_ingest_bundle",
-                    "error_code": "INVALID_INPUT",
-                    "message": "Provide exactly one of content_base64 or source_uri, not both.",
-                    "claim_state": "NO_VALID_EVIDENCE",
-                },
-                tool_class="ingress",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "status": "ERROR",
+                        "tool": "geox_data_ingest_bundle",
+                        "error_code": "INVALID_INPUT",
+                        "message": "Provide exactly one of content_base64 or source_uri, not both.",
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingress",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
         if not filename:
-            return get_standard_envelope(
-                {
-                    "status": "ERROR",
-                    "tool": "geox_data_ingest_bundle",
-                    "error_code": "MISSING_FILENAME",
-                    "message": "Filename is required when content_base64 is provided.",
-                    "claim_state": "NO_VALID_EVIDENCE",
-                },
-                tool_class="ingress",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "status": "ERROR",
+                        "tool": "geox_data_ingest_bundle",
+                        "error_code": "MISSING_FILENAME",
+                        "message": "Filename is required when content_base64 is provided.",
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingress",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
 
         try:
             target_path = _safe_upload_path(filename, target_dir)
         except ValueError as exc:
-            return get_standard_envelope(
-                {
-                    "status": "ERROR",
-                    "tool": "geox_data_ingest_bundle",
-                    "error_code": "INVALID_OUTPUT_PATH",
-                    "message": str(exc),
-                    "claim_state": "NO_VALID_EVIDENCE",
-                },
-                tool_class="ingress",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "status": "ERROR",
+                        "tool": "geox_data_ingest_bundle",
+                        "error_code": "INVALID_OUTPUT_PATH",
+                        "message": str(exc),
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingress",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
 
         if target_path.exists() and not overwrite:
-            return get_standard_envelope(
-                {
-                    "status": "ERROR",
-                    "tool": "geox_data_ingest_bundle",
-                    "error_code": "FILE_EXISTS",
-                    "message": f"File already exists: {target_path}",
-                    "stored_path": str(target_path),
-                    "claim_state": "NO_VALID_EVIDENCE",
-                },
-                tool_class="ingress",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "status": "ERROR",
+                        "tool": "geox_data_ingest_bundle",
+                        "error_code": "FILE_EXISTS",
+                        "message": f"File already exists: {target_path}",
+                        "stored_path": str(target_path),
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingress",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
 
         try:
             payload = _decode_upload_content(content_base64)
             target_path.write_bytes(payload)
         except Exception as exc:
-            return get_standard_envelope(
-                {
-                    "status": "ERROR",
-                    "tool": "geox_data_ingest_bundle",
-                    "error_code": "IMPORT_FAILED",
-                    "message": str(exc),
-                    "claim_state": "NO_VALID_EVIDENCE",
-                },
-                tool_class="ingress",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "status": "ERROR",
+                        "tool": "geox_data_ingest_bundle",
+                        "error_code": "IMPORT_FAILED",
+                        "message": str(exc),
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingress",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
 
         sha256 = hashlib.sha256(target_path.read_bytes()).hexdigest()
@@ -173,21 +202,23 @@ async def geox_data_ingest_bundle(
             ingest_result = LASIngestor().ingest(path=str(target_path), asset_id=derived_well_id)
             ingest_dict = ingest_result.to_dict()
         except Exception as exc:
-            return get_standard_envelope(
-                {
-                    "status": "ERROR",
-                    "tool": "geox_data_ingest_bundle",
-                    "error_code": "LAS_PARSE_FAILED",
-                    "message": f"File stored but could not be parsed as LAS: {exc}",
-                    "stored_path": str(target_path),
-                    "sha256": sha256,
-                    "claim_state": "NO_VALID_EVIDENCE",
-                },
-                tool_class="ingress",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "status": "ERROR",
+                        "tool": "geox_data_ingest_bundle",
+                        "error_code": "LAS_PARSE_FAILED",
+                        "message": f"File stored but could not be parsed as LAS: {exc}",
+                        "stored_path": str(target_path),
+                        "sha256": sha256,
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingress",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
 
         loaded_curves = ingest_dict.get("loaded_curves", [])
@@ -197,8 +228,7 @@ async def geox_data_ingest_bundle(
             "limitations": ingest_dict.get("limitations", []),
             "missing_channels": ingest_dict.get("missing_channels", []),
             "n_depth_samples": ingest_dict.get("n_depth_samples", 0),
-            "depth_range_m": ingest_dict.get("depth_range_m")
-            or ingest_dict.get("depth_range"),
+            "depth_range_m": ingest_dict.get("depth_range_m") or ingest_dict.get("depth_range"),
             "sha256": sha256,
         }
         artifact_ref = _register_artifact(
@@ -211,40 +241,44 @@ async def geox_data_ingest_bundle(
             artifact_type="well_log",
         )
 
-        return get_standard_envelope(
-            {
-                "status": "OK",
-                "tool": "geox_data_ingest_bundle",
-                "stored_path": str(target_path),
-                "artifact_ref": artifact_ref,
-                "well_id": derived_well_id,
-                "sha256": sha256,
-                "loaded_curves": loaded_curves,
-                "curve_count": len(loaded_curves),
-                "depth_range_m": diagnostics["depth_range_m"],
-                "claim_state": "FILE_IMPORTED",
-            },
-            tool_class="ingress",
-            execution_status=ExecutionStatus.SUCCESS,
-            artifact_status=ArtifactStatus.LOADED,
-            claim_tag="CLAIM",
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "status": "OK",
+                    "tool": "geox_data_ingest_bundle",
+                    "stored_path": str(target_path),
+                    "artifact_ref": artifact_ref,
+                    "well_id": derived_well_id,
+                    "sha256": sha256,
+                    "loaded_curves": loaded_curves,
+                    "curve_count": len(loaded_curves),
+                    "depth_range_m": diagnostics["depth_range_m"],
+                    "claim_state": "FILE_IMPORTED",
+                },
+                tool_class="ingress",
+                execution_status=ExecutionStatus.SUCCESS,
+                artifact_status=ArtifactStatus.LOADED,
+                claim_tag="CLAIM",
+            )
         )
 
     # --- Original geox_data_ingest_bundle logic (for source_uri) ---
     if not source_uri:
-        return get_standard_envelope(
-            {
-                "status": "ERROR",
-                "tool": "geox_data_ingest_bundle",
-                "error_code": "MISSING_SOURCE",
-                "message": "Either source_uri or content_base64 must be provided.",
-                "claim_state": "NO_VALID_EVIDENCE",
-            },
-            tool_class="ingress",
-            execution_status=ExecutionStatus.ERROR,
-            governance_status=GovernanceStatus.HOLD,
-            artifact_status=ArtifactStatus.REJECTED,
-            claim_tag="HYPOTHESIS",
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "status": "ERROR",
+                    "tool": "geox_data_ingest_bundle",
+                    "error_code": "MISSING_SOURCE",
+                    "message": "Either source_uri or content_base64 must be provided.",
+                    "claim_state": "NO_VALID_EVIDENCE",
+                },
+                tool_class="ingress",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+            )
         )
 
     from pathlib import Path
@@ -256,115 +290,130 @@ async def geox_data_ingest_bundle(
         try:
             rows = _parse_csv_or_json(source_uri)
         except Exception as exc:
-            return get_standard_envelope(
-                {
-                    "tool": "geox_data_ingest_bundle",
-                    "status": "ERROR",
-                    "error_code": "FILE_NOT_FOUND" if "not found" in str(exc).lower() else "PARSE_FAILED",
-                    "message": str(exc),
-                    "source_type": "tops",
-                },
-                tool_class="ingest",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "tool": "geox_data_ingest_bundle",
+                        "status": "ERROR",
+                        "error_code": "FILE_NOT_FOUND" if "not found" in str(exc).lower() else "PARSE_FAILED",
+                        "message": str(exc),
+                        "source_type": "tops",
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingest",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
         formations = [r.get("formation_name", r.get("FORMATION_NAME", "")) for r in rows]
         _register_artifact(derived_id, claim_state="RAW_OBSERVATION")
         _artifact_store[derived_id]["type"] = "tops"
         _artifact_store[derived_id]["rows"] = rows
-        return get_standard_envelope(
-            {
-                "tool": "geox_data_ingest_bundle",
-                "status": "SUCCESS",
-                "artifact_ref": derived_id,
-                "source_type": "tops",
-                "formation_count": len(rows),
-                "formations": formations,
-                "claim_state": "RAW_OBSERVATION",
-            },
-            tool_class="ingest",
-            execution_status=ExecutionStatus.SUCCESS,
-            artifact_status=ArtifactStatus.LOADED,
-            claim_tag="CLAIM",
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "tool": "geox_data_ingest_bundle",
+                    "status": "SUCCESS",
+                    "artifact_ref": derived_id,
+                    "source_type": "tops",
+                    "formation_count": len(rows),
+                    "formations": formations,
+                    "claim_state": "RAW_OBSERVATION",
+                },
+                tool_class="ingest",
+                execution_status=ExecutionStatus.SUCCESS,
+                artifact_status=ArtifactStatus.LOADED,
+                claim_tag="CLAIM",
+            )
         )
 
     if source_type == "biostrat":
         try:
             rows = _parse_csv_or_json(source_uri)
         except Exception as exc:
-            return get_standard_envelope(
-                {
-                    "tool": "geox_data_ingest_bundle",
-                    "status": "ERROR",
-                    "error_code": "FILE_NOT_FOUND" if "not found" in str(exc).lower() else "PARSE_FAILED",
-                    "message": str(exc),
-                    "source_type": "biostrat",
-                },
-                tool_class="ingest",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "tool": "geox_data_ingest_bundle",
+                        "status": "ERROR",
+                        "error_code": "FILE_NOT_FOUND" if "not found" in str(exc).lower() else "PARSE_FAILED",
+                        "message": str(exc),
+                        "source_type": "biostrat",
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingest",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
         biozones = list({r.get("biozone", r.get("BIOZONE", "")) for r in rows if r.get("biozone") or r.get("BIOZONE")})
         _register_artifact(derived_id, claim_state="RAW_OBSERVATION")
         _artifact_store[derived_id]["type"] = "biostrat"
         _artifact_store[derived_id]["rows"] = rows
-        return get_standard_envelope(
-            {
-                "tool": "geox_data_ingest_bundle",
-                "status": "SUCCESS",
-                "artifact_ref": derived_id,
-                "source_type": "biostrat",
-                "sample_count": len(rows),
-                "biozones": biozones,
-                "claim_state": "RAW_OBSERVATION",
-            },
-            tool_class="ingest",
-            execution_status=ExecutionStatus.SUCCESS,
-            artifact_status=ArtifactStatus.LOADED,
-            claim_tag="CLAIM",
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "tool": "geox_data_ingest_bundle",
+                    "status": "SUCCESS",
+                    "artifact_ref": derived_id,
+                    "source_type": "biostrat",
+                    "sample_count": len(rows),
+                    "biozones": biozones,
+                    "claim_state": "RAW_OBSERVATION",
+                },
+                tool_class="ingest",
+                execution_status=ExecutionStatus.SUCCESS,
+                artifact_status=ArtifactStatus.LOADED,
+                claim_tag="CLAIM",
+            )
         )
 
     if source_type == "checkshot":
         try:
             rows = _parse_csv_or_json(source_uri)
         except Exception as exc:
-            return get_standard_envelope(
-                {
-                    "tool": "geox_data_ingest_bundle",
-                    "status": "ERROR",
-                    "error_code": "FILE_NOT_FOUND" if "not found" in str(exc).lower() else "PARSE_FAILED",
-                    "message": str(exc),
-                    "source_type": "checkshot",
-                },
-                tool_class="ingest",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
+            return _metabolic_return(
+                get_standard_envelope(
+                    {
+                        "tool": "geox_data_ingest_bundle",
+                        "status": "ERROR",
+                        "error_code": "FILE_NOT_FOUND" if "not found" in str(exc).lower() else "PARSE_FAILED",
+                        "message": str(exc),
+                        "source_type": "checkshot",
+                        "claim_state": "NO_VALID_EVIDENCE",
+                    },
+                    tool_class="ingest",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                )
             )
         depths = [float(r.get("depth_md", r.get("DEPTH_MD", 0))) for r in rows if r.get("depth_md") or r.get("DEPTH_MD")]
         _register_artifact(derived_id, claim_state="RAW_OBSERVATION")
         _artifact_store[derived_id]["type"] = "checkshot"
         _artifact_store[derived_id]["rows"] = rows
         depth_range = [min(depths), max(depths)] if depths else [0, 0]
-        return get_standard_envelope(
-            {
-                "tool": "geox_data_ingest_bundle",
-                "status": "SUCCESS",
-                "artifact_ref": derived_id,
-                "source_type": "checkshot",
-                "point_count": len(rows),
-                "depth_range_m": depth_range,
-                "claim_state": "RAW_OBSERVATION",
-            },
-            tool_class="ingest",
-            execution_status=ExecutionStatus.SUCCESS,
-            artifact_status=ArtifactStatus.LOADED,
-            claim_tag="CLAIM",
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "tool": "geox_data_ingest_bundle",
+                    "status": "SUCCESS",
+                    "artifact_ref": derived_id,
+                    "source_type": "checkshot",
+                    "point_count": len(rows),
+                    "depth_range_m": depth_range,
+                    "claim_state": "RAW_OBSERVATION",
+                },
+                tool_class="ingest",
+                execution_status=ExecutionStatus.SUCCESS,
+                artifact_status=ArtifactStatus.LOADED,
+                claim_tag="CLAIM",
+            )
         )
 
     # ── Well / seismic / earth3d / auto path ────────────────────────────
@@ -375,45 +424,43 @@ async def geox_data_ingest_bundle(
 
         local_path = materialize_las_source(source_uri, artifact_id=derived_well_id)
     except FileNotFoundError as exc:
-        return get_standard_envelope(
-            {
-                "tool": "geox_data_ingest_bundle",
-                "status": "ERROR",
-                "error_code": "FILE_NOT_FOUND",
-                "message": str(exc),
-                "recoverable": True,
-                "suggested_action": (
-                    "Use a server-visible path, HTTPS URL, data: URI, or base64: LAS payload."
-                ),
-            },
-            tool_class="ingest",
-            execution_status=ExecutionStatus.ERROR,
-            governance_status=GovernanceStatus.HOLD,
-            artifact_status=ArtifactStatus.REJECTED,
-            claim_tag="HYPOTHESIS",
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "tool": "geox_data_ingest_bundle",
+                    "status": "ERROR",
+                    "error_code": "FILE_NOT_FOUND",
+                    "message": str(exc),
+                    "recoverable": True,
+                    "suggested_action": ("Use a server-visible path, HTTPS URL, data: URI, or base64: LAS payload."),
+                    "claim_state": "NO_VALID_EVIDENCE",
+                },
+                tool_class="ingest",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+            )
         )
     except LASSourceError as exc:
-        error_code = (
-            "URL_FETCH_FAILED"
-            if source_uri.startswith(("http://", "https://"))
-            else "LAS_SOURCE_UNAVAILABLE"
-        )
-        return get_standard_envelope(
-            {
-                "tool": "geox_data_ingest_bundle",
-                "status": "ERROR",
-                "error_code": error_code,
-                "message": str(exc),
-                "recoverable": True,
-                "suggested_action": (
-                    "Use an HTTPS URL or inline base64 LAS payload when local paths are not mounted."
-                ),
-            },
-            tool_class="ingest",
-            execution_status=ExecutionStatus.ERROR,
-            governance_status=GovernanceStatus.HOLD,
-            artifact_status=ArtifactStatus.REJECTED,
-            claim_tag="HYPOTHESIS",
+        error_code = "URL_FETCH_FAILED" if source_uri.startswith(("http://", "https://")) else "LAS_SOURCE_UNAVAILABLE"
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "tool": "geox_data_ingest_bundle",
+                    "status": "ERROR",
+                    "error_code": error_code,
+                    "message": str(exc),
+                    "recoverable": True,
+                    "suggested_action": ("Use an HTTPS URL or inline base64 LAS payload when local paths are not mounted."),
+                    "claim_state": "NO_VALID_EVIDENCE",
+                },
+                tool_class="ingest",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+            )
         )
 
     # Check /app/fixtures if file not found locally
@@ -431,6 +478,7 @@ async def geox_data_ingest_bundle(
 
     try:
         from geox.services.las_ingestor import LASIngestor
+
         result = LASIngestor().ingest(path=local_path, asset_id=derived_well_id)
         out = result.to_dict()
 
@@ -442,6 +490,7 @@ async def geox_data_ingest_bundle(
                 stable_path = stable_dir / f"{_safe_artifact_filename(derived_well_id)}.las"
                 if Path(local_path) != stable_path:
                     import shutil
+
                     shutil.copyfile(local_path, stable_path)
                     local_path = str(stable_path)
             except Exception:
@@ -478,10 +527,7 @@ async def geox_data_ingest_bundle(
         depth_conversion_applied = False
         depth_unit_normalized = depth_unit_original
 
-        needs_conversion = (
-            normalize_units
-            and depth_unit_original.upper() in ("FT", "FEET", "FOOT")
-        )
+        needs_conversion = normalize_units and depth_unit_original.upper() in ("FT", "FEET", "FOOT")
         if needs_conversion:
             # Multiply stored depth values (apply 0.3048 ft→m)
             depth_unit_normalized = "M"
@@ -520,31 +566,34 @@ async def geox_data_ingest_bundle(
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "hash": digest,
         }
-        return get_standard_envelope(
-            out,
-            tool_class="ingest",
-            execution_status=ExecutionStatus.SUCCESS,
-            artifact_status=ArtifactStatus.LOADED,
-            claim_tag="CLAIM",
+        return _metabolic_return(
+            get_standard_envelope(
+                out,
+                tool_class="ingest",
+                execution_status=ExecutionStatus.SUCCESS,
+                artifact_status=ArtifactStatus.LOADED,
+                claim_tag="CLAIM",
+            )
         )
     except Exception as exc:
-        return get_standard_envelope(
-            {
-                "tool": "geox_data_ingest_bundle",
-                "status": "ERROR",
-                "error_code": "LAS_PARSE_FAILED",
-                "message": f"Could not parse LAS file: {exc}",
-                "file": local_path,
-                "recoverable": True,
-                "suggested_action": "Check file encoding, LAS header, or whether the file is a valid LAS 1.2/2.0 format.",
-                "well_id": derived_well_id,
-                "source_uri": source_uri,
-            },
-            tool_class="ingest",
-            execution_status=ExecutionStatus.ERROR,
-            governance_status=GovernanceStatus.HOLD,
-            artifact_status=ArtifactStatus.REJECTED,
-            claim_tag="HYPOTHESIS",
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "tool": "geox_data_ingest_bundle",
+                    "status": "ERROR",
+                    "error_code": "LAS_PARSE_FAILED",
+                    "message": f"Could not parse LAS file: {exc}",
+                    "file": local_path,
+                    "recoverable": True,
+                    "suggested_action": "Check file encoding, LAS header, or whether the file is a valid LAS 1.2/2.0 format.",
+                    "well_id": derived_well_id,
+                    "source_uri": source_uri,
+                    "claim_state": "NO_VALID_EVIDENCE",
+                },
+                tool_class="ingest",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+            )
         )
-
-

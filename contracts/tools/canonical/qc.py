@@ -9,6 +9,7 @@ from contracts.enums.statuses import (
     GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    enrich_envelope_with_metabolic,
 )
 from contracts.tools.canonical._helpers import (
     _get_artifact,
@@ -74,7 +75,7 @@ async def geox_data_qc_bundle(
     completeness_score = 0.0
 
     if not artifact_ref or not _artifact_exists(artifact_ref):
-        return get_standard_envelope(
+        envelope = get_standard_envelope(
             {
                 "tool": "geox_data_qc_bundle",
                 "error_code": "ARTIFACT_NOT_FOUND",
@@ -91,6 +92,7 @@ async def geox_data_qc_bundle(
             artifact_status=ArtifactStatus.REJECTED,
             claim_tag="HYPOTHESIS",
         )
+        return enrich_envelope_with_metabolic(envelope, "geox_data_qc_bundle")
 
     store_entry = _get_artifact(artifact_ref)
     las_path = store_entry.get("las_path") if store_entry else None
@@ -107,7 +109,7 @@ async def geox_data_qc_bundle(
                 "claim_state": "QC_VERIFIED",
             },
         )
-        return get_standard_envelope(
+        envelope = get_standard_envelope(
             {
                 "tool": "geox_data_qc_bundle",
                 "artifact_ref": artifact_ref,
@@ -123,14 +125,17 @@ async def geox_data_qc_bundle(
             artifact_status=ArtifactStatus.DRAFT,
             claim_tag="HYPOTHESIS",
         )
+        return enrich_envelope_with_metabolic(envelope, "geox_data_qc_bundle")
 
     # ── Mode-specific QC ─────────────────────────────────────────────────
     import sys
+
     sys.path.insert(0, "/root/geox")
     import numpy as np
 
     try:
         import lasio
+
         las = lasio.read(las_path)
         raw_curves = {}
         for key in las.keys():
@@ -152,13 +157,15 @@ async def geox_data_qc_bundle(
             datum = str(las.well.get("DATUM", "")).strip()
             depth_unit = _detect_depth_unit(las_path)
 
-            checks_passed = sum([
-                bool(well_name and well_name not in ("", "None")),
-                bool(uwi and uwi not in ("", "None")),
-                bool(loc and loc not in ("", "None")),
-                bool(datum and datum not in ("", "None")),
-                bool(depth_unit and depth_unit not in ("UNKNOWN", "", "None")),
-            ])
+            checks_passed = sum(
+                [
+                    bool(well_name and well_name not in ("", "None")),
+                    bool(uwi and uwi not in ("", "None")),
+                    bool(loc and loc not in ("", "None")),
+                    bool(datum and datum not in ("", "None")),
+                    bool(depth_unit and depth_unit not in ("UNKNOWN", "", "None")),
+                ]
+            )
             header_score = round(checks_passed / 5.0, 2)
             header_checks = {
                 "well_name": well_name or "MISSING",
@@ -211,13 +218,9 @@ async def geox_data_qc_bundle(
                     curve_warnings.append(f"{canon}: all values NaN")
                     continue
                 if lo is not None and float(np.min(valid)) < lo:
-                    curve_warnings.append(
-                        f"{canon}: min={float(np.min(valid)):.2f} below {lo} {unit}"
-                    )
+                    curve_warnings.append(f"{canon}: min={float(np.min(valid)):.2f} below {lo} {unit}")
                 if hi is not None and float(np.max(valid)) > hi:
-                    curve_warnings.append(
-                        f"{canon}: max={float(np.max(valid)):.2f} above {hi} {unit}"
-                    )
+                    curve_warnings.append(f"{canon}: max={float(np.max(valid)):.2f} above {hi} {unit}")
                 if canon == "RT" and float(np.min(valid)) <= 0:
                     curve_warnings.append(f"{canon}: non-positive resistivity values found")
 
@@ -240,6 +243,7 @@ async def geox_data_qc_bundle(
     # Always also run LASIngestor QC as the base
     try:
         from geox.services.las_ingestor import LASIngestor
+
         ingestor = LASIngestor()
         well_result = ingestor.ingest(path=las_path, asset_id=artifact_ref)
         qc_result = ingestor.qc_logs(well_result, las_path)
@@ -251,11 +255,7 @@ async def geox_data_qc_bundle(
         inherited_suitability = inherited_diagnostics.get("suitability")
         inherited_qcfail_count = int(inherited_diagnostics.get("qcfail_count") or 0)
 
-        engine_flags = [
-            issue.type
-            for c in qc_result.curve_results
-            for issue in (c.issues if hasattr(c, "issues") else [])
-        ]
+        engine_flags = [issue.type for c in qc_result.curve_results for issue in (c.issues if hasattr(c, "issues") else [])]
         curve_state_flags = [
             f"CURVE_{c.status}_STATE:{c.mnemonic}"
             for c in qc_result.curve_results
@@ -276,7 +276,13 @@ async def geox_data_qc_bundle(
         has_range_issues = bool(curve_warnings)
         has_depth_issues = not depth_qc.get("monotonic", True)
 
-        if inherited_suitability == "void" or inherited_qcfail_count > 0 or qc_overall == "FAIL" or has_range_issues or has_depth_issues:
+        if (
+            inherited_suitability == "void"
+            or inherited_qcfail_count > 0
+            or qc_overall == "FAIL"
+            or has_range_issues
+            or has_depth_issues
+        ):
             claim_state = "RAW_OBSERVATION"
             qc_passed = False
             if has_range_issues or has_depth_issues:
@@ -341,7 +347,7 @@ async def geox_data_qc_bundle(
         except NameError:
             pass  # mode-specific vars not set (exception above)
 
-        return response
+        return enrich_envelope_with_metabolic(response, "geox_data_qc_bundle")
 
     except Exception as exc:
         _record_latest_qc(
@@ -354,7 +360,7 @@ async def geox_data_qc_bundle(
                 "claim_state": "RAW_OBSERVATION",
             },
         )
-        return get_standard_envelope(
+        envelope = get_standard_envelope(
             {
                 "tool": "geox_data_qc_bundle",
                 "error_code": "QC_ENGINE_FAILED",
@@ -370,5 +376,4 @@ async def geox_data_qc_bundle(
             artifact_status=ArtifactStatus.REJECTED,
             claim_tag="HYPOTHESIS",
         )
-
-
+        return enrich_envelope_with_metabolic(envelope, "geox_data_qc_bundle")

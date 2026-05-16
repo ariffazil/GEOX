@@ -9,6 +9,7 @@ from contracts.enums.statuses import (
     GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    enrich_envelope_with_metabolic,
 )
 from contracts.tools.canonical._helpers import (
     _get_artifact,
@@ -48,8 +49,16 @@ logger = logging.getLogger("geox.canonical.subsurface")
 
 async def geox_subsurface_generate_candidates(
     target_class: Literal[
-        "petrophysics", "structure", "flattening", "vsh", "porosity",
-        "saturation", "netpay", "permeability", "gr_motif", "lithology",
+        "petrophysics",
+        "structure",
+        "flattening",
+        "vsh",
+        "porosity",
+        "saturation",
+        "netpay",
+        "permeability",
+        "gr_motif",
+        "lithology",
     ],
     evidence_refs: List[str],
     realizations: int = 3,
@@ -76,7 +85,7 @@ async def geox_subsurface_generate_candidates(
     """
     # F1 Amanah + F2 Truth: fail closed on empty evidence
     if not evidence_refs:
-        return get_standard_envelope(
+        envelope = get_standard_envelope(
             {
                 "tool": "geox_subsurface_generate_candidates",
                 "error_code": "NO_VALID_EVIDENCE",
@@ -91,28 +100,47 @@ async def geox_subsurface_generate_candidates(
             claim_state="NO_VALID_EVIDENCE",
             evidence_refs=[],
         )
+        return enrich_envelope_with_metabolic(envelope, "geox_subsurface_generate_candidates")
 
     result = await _compute_subsurface_candidates(
-        target_class, evidence_refs, realizations,
-        gr_clean, gr_shale, vsh_method, matrix_density, fluid_density,
-        sw_model, rw, archie_a, archie_m, archie_n,
-        vsh_cutoff, phi_cutoff, sw_cutoff, rt_cutoff,
-        zone_top_m, zone_base_m,
+        target_class,
+        evidence_refs,
+        realizations,
+        gr_clean,
+        gr_shale,
+        vsh_method,
+        matrix_density,
+        fluid_density,
+        sw_model,
+        rw,
+        archie_a,
+        archie_m,
+        archie_n,
+        vsh_cutoff,
+        phi_cutoff,
+        sw_cutoff,
+        rt_cutoff,
+        zone_top_m,
+        zone_base_m,
     )
-    result = _inject_ensemble_residual_evidence(result, realizations, assumptions={
-        "target_class": target_class,
-        "rock_model": vsh_method,
-        "fluid_model": sw_model,
-        "cutoffs": {
-            "vsh": vsh_cutoff,
-            "phi": phi_cutoff,
-            "sw": sw_cutoff,
-            "rt": rt_cutoff,
+    result = _inject_ensemble_residual_evidence(
+        result,
+        realizations,
+        assumptions={
+            "target_class": target_class,
+            "rock_model": vsh_method,
+            "fluid_model": sw_model,
+            "cutoffs": {
+                "vsh": vsh_cutoff,
+                "phi": phi_cutoff,
+                "sw": sw_cutoff,
+                "rt": rt_cutoff,
+            },
         },
-    })
+    )
     if "tool_class" not in result:
         if result.get("execution_status") in {"ERROR", "HOLD"}:
-            return get_standard_envelope(
+            envelope = get_standard_envelope(
                 result,
                 tool_class="compute",
                 execution_status=ExecutionStatus.ERROR,
@@ -124,6 +152,10 @@ async def geox_subsurface_generate_candidates(
                 physics_guard=result.get("physics_guard"),
                 uncertainty="High",
             )
+            return enrich_envelope_with_metabolic(
+                envelope,
+                "geox_subsurface_generate_candidates",
+            )
         result = get_standard_envelope(
             result,
             tool_class="compute",
@@ -133,8 +165,7 @@ async def geox_subsurface_generate_candidates(
             physics_guard=result.get("physics_guard"),
             confidence_band=(result.get("value_contract") or {}).get("uncertainty_band"),
         )
-    return result
-
+    return enrich_envelope_with_metabolic(result, "geox_subsurface_generate_candidates")
 
 
 async def geox_subsurface_verify_integrity(candidate_ref: str, domain: str) -> dict:
@@ -171,4 +202,3 @@ async def geox_subsurface_verify_integrity(candidate_ref: str, domain: str) -> d
         claim_state="COMPUTED",
         evidence_refs=[candidate_ref],
     )
-
