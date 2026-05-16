@@ -543,8 +543,6 @@ def _wrap_tool_outputs(mcp_server):
     import json
     from datetime import datetime
 
-    from mcp.types import CallToolResult, TextContent
-
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
         return
@@ -607,12 +605,10 @@ def _wrap_tool_outputs(mcp_server):
                     "p90": None,
                 }
 
-            # MCP 2025-11-25: return CallToolResult with dual content + structuredContent
-            return CallToolResult(
-                content=[TextContent(type="text", text=json.dumps(result, default=str))],
-                structuredContent=result,
-                isError=result.get("execution_status") == "ERROR",
-            )
+            # Return plain dict — FastMCP serializes with by_alias=True, exclude_none=True.
+            # Returning mcp.types.CallToolResult caused annotations:null and _meta:null
+            # on the wire (pydantic_core.to_jsonable_python includes all null fields).
+            return result
 
         tool.fn = _universal_wrapper
 
