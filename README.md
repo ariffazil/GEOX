@@ -2,24 +2,20 @@
 
 > **Status:** OPERATIONAL | **Organ:** FIELD (Φ) | **Authority:** arifOS
 
-## 🏛️ Current Role
-The physical organ of the federation. Manages geoscientific data integration, spatial intelligence, and earth-scale telemetry.
+## 🏛️ What this repo is
+The physical organ of the federation. Manages geoscientific data integration and spatial intelligence.
 
-## 🏗️ Federation Placement
-- **Upstream:** arifOS
-- **Downstream:** A-FORGE (Deployment)
-
-## 📂 Current Topology
+## 🏗️ Current Structure
 - src/: Spatial logic and geodata kernels.
 - specs/: Physical data contracts.
 - docs/: Field manuals and spatial documentation.
 
-## 🚀 Entrypoints
-- python src/geox_server.py: Start the GEOX spatial node.
+## 🚀 Verified Commands
+- `python src/tools/georeference_map.py`: Run verified spatial tool.
 
-## 🔄 Federation Loop
+## 🔗 Federation Loop
 - [arifOS](https://github.com/ariffazil/arifOS) (Kernel)
 - [A-FORGE](https://github.com/ariffazil/A-FORGE) (Forge)
 
 ---
-*Ditempa Bukan Diberi — 999 SEAL ALIVE*
+*Last Verified: 2026.05.16 | 999 SEAL ALIVE*
