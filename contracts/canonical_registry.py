@@ -2,7 +2,9 @@ from typing import List, Dict, Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX SOVEREIGN — CANONICAL PUBLIC TOOLS WITH COGNITIVE AXES
-# 15 canonical + 1 DST test = 16 visible tools.
+# 15 core + 4 well-stratigraphy + 1 DST test = 20 visible tools.
+# Stratigraphy tools canonicalized 2026-05-16 — verified callable, evidence-state
+# compliant (returns HYPOTHESIS/NO_VALID_EVIDENCE on bad input, not silent failure).
 # ═══════════════════════════════════════════════════════════════════════════════
 
 CANONICAL_PUBLIC_TOOLS: List[str] = [
@@ -21,6 +23,11 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "mcp_health_check",
     "geox_system_registry_status",
     "geox_history_audit",
+    # Well stratigraphy pipeline — GR binning → sedimentary packages → sequence stratigraphy
+    "geox_well_compute_gr_bins",
+    "geox_well_build_packages",
+    "geox_well_infer_seq_strat",
+    "geox_well_analyze_sequence",
 ]
 
 GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [

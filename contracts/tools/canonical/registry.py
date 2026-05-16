@@ -45,26 +45,61 @@ from compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 logger = logging.getLogger("geox.canonical.registry")
 
 
-async def geox_system_registry_status() -> dict:
+async def geox_system_registry_status(
+    session_id: str | None = None,
+    actor_id: str | None = None,
+) -> dict:
     """Discovery of canonical tools, health, and contract epoch.
 
     Reports the ACTUAL live MCP surface — no phantom aliases, no ghost ingress tools.
     F2 Truth: the registry must not lie about what is callable.
+
+    Parameters:
+      session_id — optional SEAL-* canonical session ID (from arif_session_init)
+      actor_id   — optional actor binding; omit for anonymous read-only discovery
     """
     import os
-    from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
+    from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
 
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
+
+    # Resolve session context — anonymous mode is allowed for read-only discovery
+    _session_id = session_id or "geox-anon"
+    _anonymous = session_id is None
+    _actor_id = actor_id or ("anonymous" if _anonymous else "unknown")
+
+    # Callability probe — cross-check manifest expose=True against CANONICAL_PUBLIC_TOOLS
+    _manifest_exposed = {e["name"] for e in GEOX_TOOL_MANIFEST if e.get("expose", True)}
+    _canonical_set = set(CANONICAL_PUBLIC_TOOLS) | {"geox_dst_ingest_test"}
+    _probe_passed = sorted(_manifest_exposed & _canonical_set)
+    _probe_missing = sorted(_manifest_exposed - _canonical_set)
+
+    callability_probe = {
+        "method": "manifest_cross_check",
+        "tested": len(_manifest_exposed),
+        "passed": len(_probe_passed),
+        "failed": len(_probe_missing),
+        "missing_from_canonical_list": _probe_missing,
+        "registry_truth": "PASS" if not _probe_missing else "WARN",
+    }
 
     artifact = {
         "status": "healthy",
         "epoch": "2026-05-01",
-        "tools_count": len(CANONICAL_PUBLIC_TOOLS) + 1,  # +1 for geox_dst_ingest_test
+        "tools_count": len(CANONICAL_PUBLIC_TOOLS) + 1,  # +1 for geox_dst_ingest_test (live but not canonical)
         "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
         "ingress_tools": [],
         "contract": "SOVEREIGN_13_SPEC",
         "legacy_aliases": {} if not _show_legacy else {},
         "note": "Legacy aliases are hidden. Call aliases via canonical names only.",
+        "callability_probe": callability_probe,
+        "session_context": {
+            "session_id": _session_id,
+            "actor_id": _actor_id,
+            "anonymous_mode": _anonymous,
+            "anonymous_mode_allowed": True,
+            "anonymous_scope": "read_only_discovery" if _anonymous else None,
+        },
     }
     return get_standard_envelope(artifact, tool_class="system")
 
