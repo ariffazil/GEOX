@@ -48,12 +48,25 @@ logger = logging.getLogger("geox.canonical.section")
 async def geox_section_interpret_correlation(
     section_ref: str,
     well_refs: List[str],
-    mode: Literal["correlation", "gr_motif", "sequence_stratigraphy", "gde_trend"] = "correlation",
+    mode: Literal["correlation", "gr_motif", "sequence_stratigraphy", "gde_trend", "well_tie"] = "correlation",
     well_las_paths: Optional[List[str]] = None,
     tops: Optional[dict] = None,
     zone_definitions: Optional[dict] = None,
     strat_standard: Optional[dict] = None,
     paleoenvironment_input: Optional[List[dict]] = None,
+    # ── well_tie parameters ──────────────────────────────────────────────────
+    checkshot_ref: Optional[str] = None,
+    wavelet_mode: Literal["ricker", "ormsby", "klauder", "estimated"] = "ricker",
+    wavelet_freq_hz: Optional[List[float]] = None,
+    phase_degrees: float = 0.0,
+    polarity: Literal["SEG_NORMAL", "SEG_REVERSE"] = "SEG_NORMAL",
+    synthetics_output: bool = False,
+    tie_qc_report: bool = True,
+    seismic_ref: Optional[str] = None,
+    sonic_curve: Optional[str] = "DT",
+    density_curve: Optional[str] = "RHOB",
+    matrix_density: float = 2.65,
+    fluid_density: float = 1.0,
 ) -> dict:
     """Multi-well stratigraphic correlation and marker interpretation.
 
@@ -65,15 +78,130 @@ async def geox_section_interpret_correlation(
             - "gr_motif": classify GR motif per well with EOD hints.
             - "sequence_stratigraphy": identify candidate SB/TS/MFS surfaces.
             - "gde_trend": calculate vertical paleoenvironment trends from GDE stacks.
+            - "well_tie": full well-to-seismic tie with synthetic seismogram generation.
         well_las_paths: Optional LAS file paths for gr_motif/sequence modes.
         tops: {well_id: {marker_name: depth_m}} for annotation.
         zone_definitions: {zone_name: {top_m, base_m}} for zone-level motif.
         strat_standard: Stratigraphic reference scheme. e.g. {"scheme": "NN_zone", "reference_chart": "GPTS2020"}.
         paleoenvironment_input: List of {well_id, depth_m, gde_code, gde_index} for gde_trend mode.
+
+        # well_tie-specific args
+        checkshot_ref: Artifact ref for checkshot table (depth_md → twt_ms).
+            Required for accurate T-D conversion. If absent, uses average-velocity from sonic.
+        wavelet_mode: Wavelet type: "ricker" | "ormsby" | "klauder" | "estimated".
+        wavelet_freq_hz: Wavelet frequency Hz. Scalar for ricker/klauder; [f1,f2,f3,f4] for ormsby.
+        phase_degrees: Phase rotation to apply to synthetic trace (degrees).
+        polarity: "SEG_NORMAL" (default) or "SEG_REVERSE" (inverts RC sign).
+        synthetics_output: If True, register and return synthetic trace artifact ref.
+        tie_qc_report: If True, include correlation traces in output.
+        seismic_ref: Optional seismic trace artifact for cross-correlation QC.
+        sonic_curve: LAS mnemonic for sonic curve (default "DT", also "DT4").
+        density_curve: LAS mnemonic for density curve (default "RHOB").
+        matrix_density: g/cm³ fallback matrix density when no RHOB available.
+        fluid_density: g/cm³ fallback fluid density when no RHOB available.
     """
     import sys
+
     sys.path.insert(0, "/root/geox")
     import numpy as np
+
+    # ── well_tie mode ────────────────────────────────────────────────────────
+    if mode == "well_tie":
+        from geox.core.welltie import compute_welltie
+        from contracts.tools.canonical._helpers import _get_artifact
+
+        if not well_refs:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_section_interpret_correlation",
+                    "error_code": "NO_WELL_REF",
+                    "message": "well_tie mode requires at least one well_ref.",
+                },
+                tool_class="interpret",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
+            )
+
+        # Resolve LAS path from first well_ref
+        first_ref = well_refs[0]
+        las_entry = _get_artifact(first_ref)
+        if las_entry and las_entry.get("las_path"):
+            las_path = las_entry["las_path"]
+        elif well_las_paths and len(well_las_paths) > 0:
+            las_path = well_las_paths[0]
+        else:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_section_interpret_correlation",
+                    "error_code": "NO_LAS_PATH",
+                    "message": ("well_tie mode requires a well_ref with a registered LAS path or a well_las_paths argument."),
+                },
+                tool_class="interpret",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
+            )
+
+        try:
+            artifact = compute_welltie(
+                las_path=las_path,
+                checkshot_ref=checkshot_ref,
+                wavelet_mode=wavelet_mode,
+                wavelet_freq_hz=wavelet_freq_hz,
+                phase_degrees=phase_degrees,
+                polarity=polarity,
+                seismic_ref=seismic_ref,
+                sonic_curve=sonic_curve or "DT",
+                density_curve=density_curve or "RHOB",
+                matrix_density=matrix_density,
+                fluid_density=fluid_density,
+            )
+        except ValueError as e:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_section_interpret_correlation",
+                    "error_code": "WELLTIE_COMPUTATION_ERROR",
+                    "message": str(e),
+                },
+                tool_class="interpret",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
+            )
+
+        # Determine claim_state based on tie verdict
+        tie_verdict = artifact.get("tie_quality_verdict", "UNDETERMINED")
+        if tie_verdict == "UNDETERMINED":
+            claim_state = "DERIVED_CANDIDATE"
+            execution_status = ExecutionStatus.SUCCESS
+            governance_status = GovernanceStatus.HOLD
+            artifact_status = ArtifactStatus.COMPUTED
+            claim_tag = "HYPOTHESIS"
+        else:
+            claim_state = "INTERPRETED"
+            execution_status = ExecutionStatus.SUCCESS
+            governance_status = GovernanceStatus.QUALIFY
+            artifact_status = ArtifactStatus.COMPUTED
+            claim_tag = "PLAUSIBLE"
+
+        return get_standard_envelope(
+            artifact,
+            tool_class="interpret",
+            execution_status=execution_status,
+            governance_status=governance_status,
+            artifact_status=artifact_status,
+            claim_tag=claim_tag,
+            claim_state=claim_state,
+            perception_class="DERIVED",
+            uncertainty="Moderate" if tie_verdict == "UNDETERMINED" else "Low",
+        )
 
     if mode == "correlation":
         artifact = {
@@ -104,13 +232,13 @@ async def geox_section_interpret_correlation(
                     "tool": "geox_section_interpret_correlation",
                     "error_code": "NO_GDE_INPUT",
                     "message": "gde_trend mode requires paleoenvironment_input: [{well_id, depth_m, gde_code, gde_index}]",
-                    "claim_state": "NO_VALID_EVIDENCE",
                 },
                 tool_class="interpret",
                 execution_status=ExecutionStatus.ERROR,
                 governance_status=GovernanceStatus.HOLD,
                 artifact_status=ArtifactStatus.REJECTED,
                 claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
             )
 
         # Calculate vertical trend from GDE indices using 3-bin sliding window
@@ -126,8 +254,8 @@ async def geox_section_interpret_correlation(
             gde_entries.sort(key=lambda e: e.get("depth_m", 0))
             gde_indices = np.array([e.get("gde_index", -1) for e in gde_entries], dtype=float)
             for pos in range(len(gde_entries)):
-                window_before = gde_indices[max(0, pos - 2): pos + 1]
-                window_after = gde_indices[pos: min(len(gde_entries), pos + 3)]
+                window_before = gde_indices[max(0, pos - 2) : pos + 1]
+                window_after = gde_indices[pos : min(len(gde_entries), pos + 3)]
                 shallow = np.nanmean(window_before[window_before >= 0]) if np.any(window_before >= 0) else np.nan
                 deep = np.nanmean(window_after[window_after >= 0]) if np.any(window_after >= 0) else np.nan
                 if np.isnan(shallow) or np.isnan(deep) or abs(shallow - deep) < 0.75:
@@ -258,23 +386,27 @@ async def geox_section_interpret_correlation(
 
         # Look for pattern-based surface candidates
         if m == "BELL":
-            candidate_surfaces.append({
-                "well_id": well_id,
-                "surface_type": "TS_CANDIDATE",
-                "evidence": "Bell motif — fining-upward suggests possible Transgressive Surface",
-                "confidence": motif.get("confidence", 0.5),
-                "depth_m": float(depth_arr[0]) if depth_arr is not None and len(depth_arr) > 0 else None,
-                "claim_state": "DERIVED_CANDIDATE",
-            })
+            candidate_surfaces.append(
+                {
+                    "well_id": well_id,
+                    "surface_type": "TS_CANDIDATE",
+                    "evidence": "Bell motif — fining-upward suggests possible Transgressive Surface",
+                    "confidence": motif.get("confidence", 0.5),
+                    "depth_m": float(depth_arr[0]) if depth_arr is not None and len(depth_arr) > 0 else None,
+                    "claim_state": "DERIVED_CANDIDATE",
+                }
+            )
         elif m == "FUNNEL":
-            candidate_surfaces.append({
-                "well_id": well_id,
-                "surface_type": "MFS_CANDIDATE",
-                "evidence": "Funnel motif — coarsening-upward suggests progradation below possible MFS",
-                "confidence": motif.get("confidence", 0.5),
-                "depth_m": float(depth_arr[0]) if depth_arr is not None and len(depth_arr) > 0 else None,
-                "claim_state": "DERIVED_CANDIDATE",
-            })
+            candidate_surfaces.append(
+                {
+                    "well_id": well_id,
+                    "surface_type": "MFS_CANDIDATE",
+                    "evidence": "Funnel motif — coarsening-upward suggests progradation below possible MFS",
+                    "confidence": motif.get("confidence", 0.5),
+                    "depth_m": float(depth_arr[0]) if depth_arr is not None and len(depth_arr) > 0 else None,
+                    "claim_state": "DERIVED_CANDIDATE",
+                }
+            )
 
         # Check tops for gaps suggesting SB
         if tops and well_id in tops:
@@ -285,14 +417,16 @@ async def geox_section_interpret_correlation(
                 mk_b, dep_b = sorted_tops[i + 1]
                 gap = dep_b - dep_a
                 if gap > 100:  # arbitrary threshold for missing section
-                    candidate_surfaces.append({
-                        "well_id": well_id,
-                        "surface_type": "SB_CANDIDATE",
-                        "evidence": f"Gap of {gap:.0f}m between {mk_a} and {mk_b} — possible erosional truncation / SB",
-                        "confidence": 0.4,
-                        "depth_m": dep_a,
-                        "claim_state": "DERIVED_CANDIDATE",
-                    })
+                    candidate_surfaces.append(
+                        {
+                            "well_id": well_id,
+                            "surface_type": "SB_CANDIDATE",
+                            "evidence": f"Gap of {gap:.0f}m between {mk_a} and {mk_b} — possible erosional truncation / SB",
+                            "confidence": 0.4,
+                            "depth_m": dep_a,
+                            "claim_state": "DERIVED_CANDIDATE",
+                        }
+                    )
 
     return get_standard_envelope(
         {
@@ -310,5 +444,3 @@ async def geox_section_interpret_correlation(
         artifact_status=ArtifactStatus.COMPUTED,
         claim_tag="PLAUSIBLE",
     )
-
-
