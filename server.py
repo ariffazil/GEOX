@@ -17,24 +17,23 @@ Transport: streamable-http
 
 from __future__ import annotations
 
-import os
-import logging
-import sys
-import json
 import argparse
-from contextlib import asynccontextmanager
-from datetime import datetime, timezone
-from typing import Any, AsyncGenerator
+import json
+import logging
+import os
+import sys
+from datetime import UTC, datetime
+from typing import Any
 
 import uvicorn
+
+# Import canonical registry for source-of-truth
+from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
 from fastmcp import FastMCP
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
-from starlette.routing import Mount, Route
-
-# Import canonical registry for source-of-truth
-from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP, GEOX_CAPABILITIES
+from starlette.routing import Route
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("geox.unified")
@@ -75,12 +74,12 @@ sys.path.append(os.getcwd())
 
 try:
     from fastmcp import FastMCPApp
-    from prefab_ui.app import PrefabApp
-    from prefab_ui.components import Column, Heading, Row, Text, Separator, Badge
-    from prefab_ui.components.tables import Table, TableColumn
-    from prefab_ui.components.cards import StatCard
+    from prefab_ui.actions import SetState, ShowToast
     from prefab_ui.actions.mcp import CallTool
-    from prefab_ui.actions import ShowToast, SetState
+    from prefab_ui.app import PrefabApp
+    from prefab_ui.components import Badge, Column, Heading, Row, Separator, Text
+    from prefab_ui.components.cards import StatCard
+    from prefab_ui.components.tables import Table, TableColumn
 
     HAS_FASTMCP_APPS = True
 except Exception:
@@ -542,7 +541,8 @@ def _wrap_tool_outputs(mcp_server):
     """
     import inspect
     import json
-    from datetime import datetime, timezone
+    from datetime import datetime
+
     from mcp.types import CallToolResult, TextContent
 
     provider = getattr(mcp_server, "_local_provider", None)
@@ -556,15 +556,15 @@ def _wrap_tool_outputs(mcp_server):
         if not original_fn:
             continue
 
-        async def _universal_wrapper(*args, __orig=original_fn, **kwargs):
+        async def _universal_wrapper(*args, __orig=original_fn, __tool=tool, **kwargs):
             result = __orig(*args, **kwargs)
             if inspect.isawaitable(result):
                 result = await result
             if not isinstance(result, dict):
                 return result
 
-            now = datetime.now(timezone.utc).isoformat()
-            tool_name = getattr(tool, "name", "")
+            now = datetime.now(UTC).isoformat()
+            tool_name = getattr(__tool, "name", "")
             defaults = {
                 "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
                 "confidence_band": result.get("confidence_band"),
@@ -732,7 +732,7 @@ def build_status_payload() -> dict:
         "legacy_aliases": len(LEGACY_ALIAS_MAP),
         "auth_mode": "fail_closed",
         "profile": GEOX_PROFILE,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "seal": GEOX_SEAL,
         "identity_pass": is_geox(),
         "identity": "GEOX",
@@ -757,7 +757,7 @@ def build_status_payload() -> dict:
 
 
 async def health_handler(request):
-    return JSONResponse({"status": "healthy", "timestamp": datetime.now(timezone.utc).isoformat()})
+    return JSONResponse({"status": "healthy", "timestamp": datetime.now(UTC).isoformat()})
 
 
 async def ready_handler(request):
@@ -801,7 +801,7 @@ async def discovery_handler(request):
                 "F13",
             ],
             "discovery": "stateless",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
     )
 
@@ -1006,7 +1006,7 @@ async def list_geox_apps() -> list[dict]:
         for filename in os.listdir(manifest_dir):
             if filename.endswith(".json"):
                 try:
-                    with open(os.path.join(manifest_dir, filename), "r") as f:
+                    with open(os.path.join(manifest_dir, filename)) as f:
                         apps.append(json.load(f))
                 except Exception as e:
                     logger.error(f"Failed to load manifest {filename}: {e}")
@@ -1017,7 +1017,7 @@ async def list_geox_apps() -> list[dict]:
 async def get_earth_panel() -> str:
     try:
         ui_path = os.path.join(os.getcwd(), "ui", "earth-panel", "index.html")
-        with open(ui_path, "r", encoding="utf-8") as f:
+        with open(ui_path, encoding="utf-8") as f:
             return f.read()
     except Exception as e:
         return f"Error loading earth panel UI: {e}"
@@ -1203,7 +1203,7 @@ def main() -> None:
     logger.info(f"GEOX Unified Server starting on {args.host}:{args.port}")
     logger.info(f"  Version: {GEOX_VERSION}")
     logger.info(f"  Profile: {GEOX_PROFILE}")
-    logger.info(f"  Dimensions: ['prospect', 'well', 'earth3d', 'map', 'cross']")
+    logger.info("  Dimensions: ['prospect', 'well', 'earth3d', 'map', 'cross']")
     logger.info(f"  MCP Apps: {'enabled' if HAS_FASTMCP_APPS else 'disabled'}")
     uvicorn.run(app, host=args.host, port=args.port, log_level="info")
 

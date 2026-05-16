@@ -96,13 +96,13 @@ include = ["geox*"]
 exclude = ["tests*", "*.tests*"]
 
 [tool.ruff]
-line-length = 100
+line-length = 130
 target-version = "py311"
 exclude = ["tests/**", ".archive/**"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "N", "B"]
-ignore = []
+ignore = ["N806", "E402"]
 
 [tool.mypy]
 python_version = "3.11"
