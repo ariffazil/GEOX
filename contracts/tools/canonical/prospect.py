@@ -63,6 +63,8 @@ async def geox_prospect_evaluate(
     refs = evidence_refs or []
 
     if mode in ("appraise", "develop") and not refs:
+        # Agentic recovery (Fix #1, #5 - Arif 2026-05-16)
+        # RECOVERABLE_ERROR: failure has an exit path — downgrade or evidence workflow
         return get_standard_envelope(
             {
                 "tool": "geox_prospect_evaluate",
@@ -77,14 +79,64 @@ async def geox_prospect_evaluate(
                     "contacts",
                     "net pay / petrophysics",
                 ],
+                # Downgrade path: allow screen mode without evidence
+                "downgrade_available": True,
+                "downgrade_mode": "screen",
+                "downgrade_note": "Use mode='screen' for qualitative screening without evidence. Results will be HYPOTHESIS-level.",
             },
             tool_class="compute",
-            execution_status=ExecutionStatus.ERROR,
+            execution_status=ExecutionStatus.RECOVERABLE_ERROR,  # Changed from ERROR
             governance_status=GovernanceStatus.HOLD,
             artifact_status=ArtifactStatus.REJECTED,
             claim_tag="HYPOTHESIS",
             claim_state="NO_VALID_EVIDENCE",
             evidence_refs=[],
+            # Agentic recovery fields (Fix #1, #4 - Arif 2026-05-16)
+            next_best_actions=[
+                {
+                    "mode": "downgrade",
+                    "action": "Use screen mode for qualitative screening without evidence",
+                    "tool_hint": "geox.prospect_evaluate",
+                    "parameters": {"mode": "screen"},
+                    "rank": 0,
+                },
+                {
+                    "mode": "evidence_request",
+                    "action": "Ingest DST, PVT, seismic data to unlock appraise/develop modes",
+                    "tool_hint": "geox.data.ingest",
+                    "evidence_required": [
+                        "DST table",
+                        "PVT / gas composition",
+                        "seismic interpretation",
+                    ],
+                    "rank": 1,
+                },
+                {
+                    "mode": "evidence_request",
+                    "action": "QC verify ingested artifacts before appraisal",
+                    "tool_hint": "geox.data.qc",
+                    "rank": 2,
+                },
+            ],
+            suggested_tool="geox.data.ingest",
+            can_auto_retry=True,
+            # Structured missing inputs (Fix #8 - Arif 2026-05-16)
+            missing_inputs_schema=[
+                {
+                    "name": "evidence_refs",
+                    "type": "string[]",
+                    "acceptable_sources": ["QC_VERIFIED_LAS", "QC_VERIFIED_DST", "QC_VERIFIED_SEISMIC", "QC_VERIFIED_PVT"],
+                    "unlock_stage": "appraisal",
+                    "description": "QC-verified artifacts required for appraise/develop modes",
+                }
+            ],
+            # Confidence policy (Fix #9 - Arif 2026-05-16)
+            confidence_policy={
+                "confidence_band": "not_computed",
+                "reason": "No QC-verified evidence_refs supplied for appraisal",
+                "allowed_claims": ["qualitative screening", "hypothesis framing"],
+                "disallowed_claims": ["POS", "STOIIP", "P10/P50/P90", "commercial decision", "prospect ranking"],
+            },
         )
 
     if mode == "screen" and not refs:
@@ -104,6 +156,16 @@ async def geox_prospect_evaluate(
             uncertainty="High",
             humility_score=0.5,
             evidence_refs=[],
+            # Confidence policy for screen mode (Fix #9 - Arif 2026-05-16)
+            confidence_policy={
+                "confidence_band": "qualitative",
+                "reason": "Screen mode — no quantitative evidence available",
+                "allowed_claims": ["qualitative screening", "relative ranking", "hypothesis framing"],
+                "disallowed_claims": ["POS", "STOIIP", "P10/P50/P90", "commercial decision"],
+            },
+            # Agentic: screen mode is the safe downgrade
+            suggested_tool=None,
+            can_auto_retry=True,
         )
 
     # Evidence-present path (placeholder for real computation)
@@ -138,8 +200,8 @@ async def geox_prospect_judge_preview(
             "Recommendation": "Proceed" if verdict == GovernanceStatus.SEAL else "Hold / Rework",
             "Uncertainty": f"AC_Risk Score: {ac_risk_score}",
             "Consequence": "Preview Mode - No physical capital committed.",
-            "Authority": "HUMAN"
-        }
+            "Authority": "HUMAN",
+        },
     }
     return get_standard_envelope(
         artifact,
@@ -164,6 +226,7 @@ async def geox_prospect_judge_seal(
     """
     # FIND-LIVE-004: F11 constant-time PIN gate
     import hmac, os
+
     _expected_pin = os.environ.get("GEOX_JUDGE_PIN", "")
     if _expected_pin:
         if not judge_pin or not hmac.compare_digest(str(judge_pin), _expected_pin):
@@ -204,16 +267,16 @@ async def geox_prospect_judge_seal(
         )
     verdict = GovernanceStatus.SEAL if ac_risk_score < 0.5 else GovernanceStatus.HOLD
     artifact = {
-        "ref": prospect_ref, 
-        "ac_risk": ac_risk_score, 
-        "verdict": verdict, 
+        "ref": prospect_ref,
+        "ac_risk": ac_risk_score,
+        "verdict": verdict,
         "sealed": True,
         "f13_compliance": {
             "Recommendation": "Proceed to Capital Execution" if verdict == GovernanceStatus.SEAL else "Hold / Reject Prospect",
             "Uncertainty": f"Residual AC_Risk: {ac_risk_score}",
             "Consequence": "Irreversible Capital and Safety Risk Bound to this Decision.",
-            "Authority": "HUMAN"
-        }
+            "Authority": "HUMAN",
+        },
     }
     return get_standard_envelope(
         artifact,
@@ -223,8 +286,6 @@ async def geox_prospect_judge_seal(
         claim_tag="CLAIM",
         claim_state="SEALED",
     )
-
-
 
 
 # ── Backward-compat alias: canonical 13 name → seal implementation ──
