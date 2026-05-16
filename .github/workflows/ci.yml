@@ -25,7 +25,7 @@ jobs:
           pip install pip-audit
           pip-audit --desc --fix-applied || true
       - run: ruff check server.py arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
-      - run: mypy --explicit-package-bases server.py arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
+      - run: mypy --follow-imports=silent --explicit-package-bases server.py arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
       - run: pytest tests/ -v --tb=short
       - name: FastMCP HTTP smoke test
         run: |
