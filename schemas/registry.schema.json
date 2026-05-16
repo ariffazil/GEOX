@@ -12,11 +12,11 @@
     },
     "total_skills": {
       "type": "integer",
-      "const": 33
+      "const": 34
     },
     "total_domains": {
       "type": "integer",
-      "const": 11
+      "const": 12
     },
     "skills_per_domain": {
       "type": "integer",
@@ -26,10 +26,10 @@
       "type": "array",
       "items": {
         "type": "string",
-        "enum": ["sensing", "geodesy", "terrain", "water", "atmosphere", "mobility", "infrastructure", "hazards", "governance", "time", "orchestration"]
+        "enum": ["sensing", "geodesy", "terrain", "water", "atmosphere", "mobility", "infrastructure", "hazards", "governance", "time", "orchestration", "subsurface"]
       },
-      "minItems": 11,
-      "maxItems": 11
+      "minItems": 12,
+      "maxItems": 12
     },
     "substrates": {
       "type": "array",
@@ -46,8 +46,8 @@
     "skills": {
       "type": "array",
       "items": { "$ref": "#/definitions/skillEntry" },
-      "minItems": 33,
-      "maxItems": 33
+      "minItems": 34,
+      "maxItems": 34
     },
     "recommended_first_nine": {
       "type": "array",
@@ -75,7 +75,7 @@
         "human_confirmation": { "type": "boolean" },
         "drift_sensitivity": { "type": "string", "enum": ["low", "medium", "high"] },
         "legal_domain": { "type": "string" },
-        "status": { "type": "string", "enum": ["draft", "review", "approved", "active", "deprecated"] }
+        "status": { "type": "string", "enum": ["draft", "review", "approved", "active", "deprecated", "scaffold", "production"] }
       }
     }
   }
