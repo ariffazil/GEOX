@@ -43,7 +43,7 @@ jobs:
           with open('registry/registry.json') as f:
               registry = json.load(f)
           skill_count = len(registry['skills'])
-          assert skill_count == 33, f'Expected 33 skills, got {skill_count}'
+          assert skill_count == 34, f'Expected 34 skills, got {skill_count}'
           print(f'Skill count: {skill_count} ✓')
           "
 

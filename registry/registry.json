@@ -1,7 +1,7 @@
 {
   "geox_version": "0.1.0",
-  "total_skills": 33,
-  "total_domains": 11,
+  "total_skills": 34,
+  "total_domains": 12,
   "skills_per_domain": 3,
   "domains": [
     "subsurface",
