@@ -26,14 +26,14 @@ from datetime import UTC, datetime
 from typing import Any
 
 import uvicorn
-
-# Import canonical registry for source-of-truth
-from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
 from fastmcp import FastMCP
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+
+# Import canonical registry for source-of-truth
+from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("geox.unified")
