@@ -63,6 +63,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - `GEOX_SECRET_TOKEN` no longer required for local stdio (detected automatically).
 
+## [v2026.05.17] - 2026-05-16
+### Added
+- **Well-to-Seismic Tie Engine** (`geox/core/welltie.py`): Full welltie computation — Vp from sonic, AI, reflectivity, wavelet generation (Ricker/Ormsby/Klauder), synthetic trace, phase rotation, cross-correlation, tie quality assessment (EXCELLENT/GOOD/MODERATE/POOR tiers).
+- **`mode=well_tie`** in `geox_section_interpret_correlation`: 11 new parameters (wavelet_mode, phase_degrees, polarity, depth_range, depth_unit, corr_threshold, quality_flags, confidence_weight, phase_range, phase_step, corr_step).
+- **Anomalous Contrast Detection** (`geox_contrast_report`): Rolling 14-day baseline, z-score anomaly detection, severity tiers (NORMAL/WATCH/CONCERN/CRITICAL), pattern-matched biological hypotheses, W-floor guard routing.
+- **`geox-output-v0.8` Schema**: Schema version bumped across all tool outputs.
+
+### Changed
+- **`get_standard_envelope` claim_state fix**: Error branches now pass `claim_state` as explicit kwarg instead of embedding in `primary_artifact` dict (prevents INGESTED default from overriding NO_VALID_EVIDENCE).
+- **`ExecutionStatus` enum**: Added `RECOVERABLE_ERROR` status.
+- **Blocked response enrichment**: `missing_inputs_schema`, `confidence_policy`, `suggested_tool`, `can_auto_retry` fields on all blocked responses; `session_id/trace_id/parent_trace_id/constitution_hash` propagated in all responses.
+
+### Fixed
+- **`geox_prospect_evaluate` blocked response**: All agentic patterns now included in blocked output.
+- **Contrast severity CRITICAL threshold**: Requires simultaneous well_score degradation AND violations acceleration (not just one or the other).
+
+### Security
+- All contrast outputs are HYPOTHESIS-tagged; recommended_action is advisory only.
+
 ---
 
 ⬡ DITEMPA BUKAN DIBERI — 999 SEAL ALIVE ⬡

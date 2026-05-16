@@ -42,7 +42,7 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.05.12-KANON"
+GEOX_VERSION = "v2026.05.17"
 # Patch A - Fix epoch string
 GEOX_CONTRACT_EPOCH = "2026-05-12-GEOX-13TOOLS-v0.7"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
@@ -53,9 +53,7 @@ GEOX_PORT = int(os.getenv("GEOX_PORT", os.getenv("PORT", "8081")))
 # FAIL-CLOSED AUTH (F1 Amanah) — only enforced for remote HTTP, not local stdio
 GEOX_SECRET_TOKEN = os.getenv("GEOX_SECRET_TOKEN", os.getenv("FASTMCP_INSPECT_TOKEN", ""))
 if not GEOX_SECRET_TOKEN:
-    _is_stdio = not sys.stdin.isatty() and not any(
-        s in " ".join(sys.argv).lower() for s in ("--host", "--port", "http", "808")
-    )
+    _is_stdio = not sys.stdin.isatty() and not any(s in " ".join(sys.argv).lower() for s in ("--host", "--port", "http", "808"))
     if _is_stdio:
         logger.info("F1 inspection bypass: stdio mode detected — no token required for local use")
         GEOX_SECRET_TOKEN = "stdio-bypass"
@@ -98,8 +96,7 @@ _mcp_kwargs: dict[str, Any] = {
     "name": "GEOX",
     "version": GEOX_VERSION,
     "instructions": (
-        "Canonical GEOX Registry & MCP App Control Plane (Sovereign 13). "
-        "DITEMPA BUKAN DIBERI — One Sovereign Kernel."
+        "Canonical GEOX Registry & MCP App Control Plane (Sovereign 13). DITEMPA BUKAN DIBERI — One Sovereign Kernel."
     ),
 }
 
@@ -154,9 +151,7 @@ def bootstrap_sovereign_13():
         assert len(CANONICAL_PUBLIC_TOOLS) >= 14, (
             f"F0_CONSTITUTION_BREACH: Expected at least 15 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
         )
-        logger.info(
-            f"Sovereign tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical + well stratigraphy Tools)"
-        )
+        logger.info(f"Sovereign tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical + well stratigraphy Tools)")
         # Register well tools
         try:
             from geox.well.mcp_tools import register_well_tools
@@ -489,13 +484,7 @@ ATLAS13_EARTH_EVENTS = [
 
 ATLAS13_BY_NAME: dict[str, dict] = {}
 for e in ATLAS13_EARTH_EVENTS:
-    name = (
-        e["event_name"]
-        .replace("\u2013", "-")
-        .replace("\u2014", "-")
-        .replace("\u2018", "'")
-        .replace("\u2019", "'")
-    )
+    name = e["event_name"].replace("\u2013", "-").replace("\u2014", "-").replace("\u2018", "'").replace("\u2019", "'")
     ATLAS13_BY_NAME[name] = e
     ATLAS13_BY_NAME[e["event_name"]] = e
 ATLAS13_BY_ID: dict[str, dict] = {e["event_id"]: e for e in ATLAS13_EARTH_EVENTS}
@@ -566,9 +555,7 @@ def _wrap_tool_outputs(mcp_server):
             defaults = {
                 "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
                 "confidence_band": result.get("confidence_band"),
-                "physics_guard": result.get(
-                    "physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}
-                ),
+                "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}),
                 "evidence_refs": result.get("evidence_refs", []),
                 "uncertainty": result.get("uncertainty", "Moderate"),
                 "audit_receipt": result.get(
@@ -589,9 +576,7 @@ def _wrap_tool_outputs(mcp_server):
                         "confidence": "HIGH",
                     },
                 ),
-                "earth_event_anchor": result.get(
-                    "earth_event_anchor", _earth_event_for_tool(tool_name)
-                ),
+                "earth_event_anchor": result.get("earth_event_anchor", _earth_event_for_tool(tool_name)),
             }
             for k, v in defaults.items():
                 if k not in result:
@@ -1076,9 +1061,7 @@ async def legacy_mcp_handler(request):
         # Use canonical public tools for listing
         all_tools = {t.name: t for t in await mcp.list_tools()}
         tools = [
-            {"name": t.name, "description": t.description}
-            for t_name in CANONICAL_PUBLIC_TOOLS
-            if (t := all_tools.get(t_name))
+            {"name": t.name, "description": t.description} for t_name in CANONICAL_PUBLIC_TOOLS if (t := all_tools.get(t_name))
         ]
         return JSONResponse({"jsonrpc": "2.0", "id": response_id, "result": {"tools": tools}})
 
@@ -1105,9 +1088,7 @@ async def legacy_mcp_handler(request):
                 },
                 status_code=403,
             )
-        elif (
-            resolved_name not in CANONICAL_PUBLIC_TOOLS
-        ):  # If it\'s not an alias and not in canonical tools
+        elif resolved_name not in CANONICAL_PUBLIC_TOOLS:  # If it\'s not an alias and not in canonical tools
             return JSONResponse(
                 {
                     "jsonrpc": "2.0",
