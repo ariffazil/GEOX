@@ -9,6 +9,8 @@ The geoscientific domain coprocessor for the arifOS federation. GEOX prepares ea
 
 **GEOX owns the FIELD — the empirical grounding layer for earth sciences within the federation.**
 
+> **MCP Surface (live test 2026-05-17):** 22 tools — `mcp_health_check` + 21 sovereign GEOX tools. Internal legacy aliases add 85+ hidden tool paths.
+
 ## 📦 Ownership
 
 - **Owns**: Well log processing (lasio, welly), petrophysical calculations, formation evaluation, geophysical evidence preparation.
@@ -18,7 +20,7 @@ The geoscientific domain coprocessor for the arifOS federation. GEOX prepares ea
 
 ```
 GEOX/
-├── server.py                 # Unified FastMCP server (15 tools)
+├── server.py                 # Unified FastMCP server (22 live tools)
 ├── contracts/              # Pydantic schemas, tool contracts, parity matrices
 ├── control_plane/         # API routing, FastMCP canonical server
 ├── execution_plane/       # Calculation engines, VPS server
