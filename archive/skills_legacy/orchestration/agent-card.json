@@ -1,0 +1,48 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-orchestration",
+  "description": "Orchestration specialist. Coordinates multi-agent operations, handles void states, edge cases, and fallback modes.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/orchestration",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "agent_coordination",
+      "name": "Agent Coordination",
+      "description": "Coordinate multiple agents in distributed operations",
+      "tags": ["orchestration", "coordination", "multi-agent"]
+    },
+    {
+      "id": "void_detect",
+      "name": "Void Detection",
+      "description": "Detect and characterize void states in operations",
+      "tags": ["orchestration", "void", "edge"]
+    },
+    {
+      "id": "edge_handle",
+      "name": "Edge Case Handling",
+      "description": "Handle boundary conditions and edge cases gracefully",
+      "tags": ["orchestration", "edge", "handling"]
+    },
+    {
+      "id": "fallback_orchestrate",
+      "name": "Fallback Orchestration",
+      "description": "Orchestrate degraded-mode operation when primary fails",
+      "tags": ["orchestration", "fallback", "resilience"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/orchestration-certs.pem"
+  },
+  "_geox": {
+    "domain": "orchestration",
+    "substrates": ["machine", "void"],
+    "authority_level": 4,
+    "constitutional_floor": "F13_SOVEREIGN"
+  }
+}

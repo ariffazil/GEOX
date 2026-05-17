@@ -1,0 +1,46 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-planner",
+  "description": "Coordinates multi-domain Earth intelligence missions. Decomposes high-level objectives into skill sequences and delegates to specialist agents.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/planner",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "mission_decomposition",
+      "name": "Mission Decomposition",
+      "description": "Break complex missions into executable skill chains",
+      "tags": ["planning", "orchestration"],
+      "examples": [
+        "Decompose flood response into sensing, routing, and hazard assessment",
+        "Plan seismic survey with terrain, geodesy, and governance checks"
+      ]
+    },
+    {
+      "id": "agent_delegation",
+      "name": "Agent Delegation",
+      "description": "Delegate subtasks to appropriate specialist agents",
+      "tags": ["delegation", "coordination"]
+    },
+    {
+      "id": "resource_allocation",
+      "name": "Resource Allocation",
+      "description": "Optimize compute, data, and agent resources for mission",
+      "tags": ["optimization", "scheduling"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["bearer", "mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/jwks.json"
+  },
+  "_geox": {
+    "domain": "orchestration",
+    "substrates": ["machine", "human"],
+    "authority_level": 4,
+    "constitutional_floor": "F13_SOVEREIGN"
+  }
+}

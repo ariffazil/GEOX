@@ -1,0 +1,42 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-governance",
+  "description": "Constitutional enforcement and policy gatekeeper. Evaluates operations against arifOS F1-F13 constraints and issues binding verdicts.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/governance",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "constitutional_gate",
+      "name": "Constitutional Gate",
+      "description": "Enforce arifOS constitutional constraints on operations",
+      "tags": ["governance", "constitutional", "verdict"]
+    },
+    {
+      "id": "compliance_check",
+      "name": "Compliance Check",
+      "description": "Check operations against regulatory constraints",
+      "tags": ["compliance", "policy"]
+    },
+    {
+      "id": "rights_mapping",
+      "name": "Rights Mapping",
+      "description": "Map tenure, access rights, and restrictions",
+      "tags": ["rights", "boundaries", "policy"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/governance-certs.pem"
+  },
+  "_geox": {
+    "domain": "governance",
+    "substrates": ["machine", "human", "void"],
+    "authority_level": 5,
+    "constitutional_floor": "F13_SOVEREIGN"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12",
+  "title": "geox_seismic_load_volume — Tool Contract",
+  "description": "MCP tool contract for geox_seismic_load_volume — SEG-Y ingestion tool that launches geox-seismic-viewer. DITEMPA BUKAN DIBERI",
+  "version": "1.0.0",
+  "tool_id": "geox_seismic_load_volume",
+  "domain": "subsurface/seismic",
+  "claim_tag": "OBSERVED",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "volume_id": {
+        "type": "string",
+        "description": "Volume identifier for the session"
+      },
+      "segy_path": {
+        "type": "string",
+        "description": "Optional path to SEG-Y file. If omitted, uses scaffold fixture."
+      },
+      "inline_axis": {
+        "type": "integer",
+        "default": 0,
+        "description": "Axis index for inline dimension"
+      },
+      "crossline_axis": {
+        "type": "integer",
+        "default": 1,
+        "description": "Axis index for crossline dimension"
+      },
+      "sample_axis": {
+        "type": "integer",
+        "default": 2,
+        "description": "Axis index for time/depth sample dimension"
+      }
+    },
+    "required": ["volume_id"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "volume_id": {"type": "string"},
+      "claim_tag": {"type": "string", "enum": ["OBSERVED", "COMPUTED"]},
+      "shape": {"type": "array", "items": {"type": "integer"}},
+      "trace_count": {"type": "integer"},
+      "inline_range": {"type": "array", "items": {"type": "integer"}},
+      "crossline_range": {"type": "array", "items": {"type": "integer"}},
+      "sample_range": {"type": "array", "items": {"type": "number"}},
+      "ui": {
+        "type": "object",
+        "properties": {
+          "resourceUri": {"type": "string", "const": "ui://geox_seismic_viewer"},
+          "mode": {"type": "string", "const": "inline-or-external"},
+          "app_id": {"type": "string", "const": "geox.seismic.viewer"},
+          "version": {"type": "string", "const": "0.1.0"}
+        }
+      },
+      "vault_receipt": {
+        "type": "object",
+        "properties": {
+          "vault": {"type": "string", "const": "VAULT999"},
+          "tool_name": {"type": "string"},
+          "verdict": {"type": "string"},
+          "timestamp": {"type": "string", "format": "date-time"},
+          "hash": {"type": "string"}
+        }
+      },
+      "render_payload": {
+        "type": "object",
+        "properties": {
+          "type": {"type": "string", "const": "volume_slice"},
+          "volume_id": {"type": "string"},
+          "orientation": {"type": "string"},
+          "slice_index": {"type": "integer"},
+          "shape": {"type": "array", "items": {"type": "integer"}},
+          "claim_tag": {"type": "string"}
+        }
+      },
+      "_telemetry": {"type": "object"},
+      "verdict": {"type": "string"}
+    }
+  },
+  "arifos": {
+    "floors_required": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "human_in_loop": ["export_seismic", "save_horizon"],
+    "vault_route": "VAULT999"
+  },
+  "view_type": "seismic_section",
+  "mcp_apps_plane": {
+    "app_id": "geox.seismic.viewer",
+    "app_version": "0.1.0",
+    "resource_uri": "ui://geox_seismic_viewer",
+    "host_path": "/srv/mcp/apps/geox-seismic-viewer/dist/",
+    "events": ["app.initialize", "app.state.sync", "seismic.slice.change", "attribute.change"]
+  }
+}

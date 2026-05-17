@@ -1,0 +1,47 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-terrain",
+  "description": "Terrain and surface intelligence specialist. Handles DEM processing, land cover classification, roughness analysis, and slope computation.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/terrain",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "dem_processing",
+      "name": "DEM Processing",
+      "description": "Process digital elevation models from multiple sources",
+      "tags": ["terrain", "elevation"]
+    },
+    {
+      "id": "surface_classify",
+      "name": "Surface Classification",
+      "description": "Classify land cover and surface types from imagery",
+      "tags": ["classification", "imagery"]
+    },
+    {
+      "id": "roughness_analysis",
+      "name": "Roughness Analysis",
+      "description": "Compute terrain roughness indices for mobility and hazard",
+      "tags": ["terrain", "mobility", "hazard"]
+    },
+    {
+      "id": "slope_aspect",
+      "name": "Slope & Aspect",
+      "description": "Compute slope gradient and aspect from elevation",
+      "tags": ["terrain", "analysis"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["bearer"]
+  },
+  "_geox": {
+    "domain": "terrain",
+    "substrates": ["machine", "orbital"],
+    "authority_level": 2,
+    "constitutional_floor": "F2_TRUTH"
+  }
+}

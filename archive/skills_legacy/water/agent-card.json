@@ -1,0 +1,48 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-water",
+  "description": "Water and hydrology specialist. Models flood, watershed, drainage, and tidal processes for earth intelligence operations.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/water",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "flood_model",
+      "name": "Flood Modeling",
+      "description": "Simulate flood extent and depth from rainfall or breach",
+      "tags": ["water", "flood", "hydrology", "simulation"]
+    },
+    {
+      "id": "watershed_delineate",
+      "name": "Watershed Delineation",
+      "description": "Delineate watershed boundaries and stream networks",
+      "tags": ["water", "watershed", "drainage"]
+    },
+    {
+      "id": "drainage_analysis",
+      "name": "Drainage Analysis",
+      "description": "Analyze flow accumulation, direction, and drainage patterns",
+      "tags": ["water", "drainage", "flow"]
+    },
+    {
+      "id": "tidal_model",
+      "name": "Tidal Modeling",
+      "description": "Model tidal heights, currents, and storm surge",
+      "tags": ["water", "tides", "maritime", "surge"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/water-certs.pem"
+  },
+  "_geox": {
+    "domain": "water",
+    "substrates": ["machine", "environment"],
+    "authority_level": 3,
+    "constitutional_floor": "F6_HARM"
+  }
+}

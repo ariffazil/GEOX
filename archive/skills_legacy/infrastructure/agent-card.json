@@ -1,0 +1,48 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-infrastructure",
+  "description": "Infrastructure and built environment specialist. Maps assets, traces networks, models urban growth, and optimizes facility siting.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/infrastructure",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "asset_inventory",
+      "name": "Asset Inventory",
+      "description": "Inventory and catalog infrastructure assets",
+      "tags": ["infrastructure", "asset", "inventory"]
+    },
+    {
+      "id": "network_trace",
+      "name": "Network Tracing",
+      "description": "Trace connectivity through utility and transport networks",
+      "tags": ["infrastructure", "network", "trace"]
+    },
+    {
+      "id": "urban_growth",
+      "name": "Urban Growth Modeling",
+      "description": "Model and project urban expansion patterns",
+      "tags": ["infrastructure", "urban", "growth"]
+    },
+    {
+      "id": "facility_siting",
+      "name": "Facility Siting",
+      "description": "Optimal site selection for facilities with multi-criteria constraints",
+      "tags": ["infrastructure", "siting", "optimization"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/infrastructure-certs.pem"
+  },
+  "_geox": {
+    "domain": "infrastructure",
+    "substrates": ["machine", "human"],
+    "authority_level": 3,
+    "constitutional_floor": "F11_COHERENCE"
+  }
+}

@@ -1,0 +1,11 @@
+fastmcp>=0.7.0
+lasio>=0.31
+pydantic>=2.0.0
+uvicorn>=0.23.0
+python-dotenv>=1.0.0
+numpy>=1.20.0
+httpx>=0.25.0
+asyncpg>=0.29.0
+
+# Earth Science Stack (auto-generated 2026-04-19)
+-r requirements-earth.txt
