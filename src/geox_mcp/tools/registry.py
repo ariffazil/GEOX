@@ -5,13 +5,13 @@ from pathlib import Path
 from typing import Any, List, Dict, Optional, Literal
 
 from fastmcp import FastMCP
-from contracts.enums.statuses import (
+from geox_core.enums.statuses import (
     get_standard_envelope,
     GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
 )
-from contracts.tools.canonical._helpers import (
+from geox_mcp.tools._helpers import (
     _get_artifact,
     _artifact_exists,
     _register_artifact,
@@ -41,7 +41,7 @@ from contracts.tools.canonical._helpers import (
     _ARTIFACT_REGISTRY_PATH,
     MAX_UPLOAD_BYTES,
 )
-from compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
+from geox_core.compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 
 logger = logging.getLogger("geox.canonical.registry")
 
@@ -60,7 +60,7 @@ async def geox_system_registry_status(
       actor_id   — optional actor binding; omit for anonymous read-only discovery
     """
     import os
-    from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
+    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
 
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
 
