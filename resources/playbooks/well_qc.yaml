@@ -1,0 +1,49 @@
+# GEOX Playbook: Well QC
+# DITEMPA BUKAN DIBERI
+
+name: well_qc
+version: "1.0"
+description: "Standard well log quality control workflow"
+epistemic_layers: [OBSERVED]
+
+steps:
+  - id: ingest
+    tool: geox_data_ingest_bundle
+    inputs:
+      source_uri: "${well_las_path}"
+      source_type: well
+      standardize_curves: true
+      normalize_units: true
+    outputs: [artifact_ref, curve_inventory]
+    next: qc
+
+  - id: qc
+    tool: geox_data_qc_bundle
+    inputs:
+      artifact_ref: "${step.ingest.artifact_ref}"
+      qc_mode: full
+    outputs: [qc_report, missing_curves, depth_valid]
+    gates:
+      - condition: "qc_report.qc_overall == FAIL"
+        action: HOLD
+        message: "QC failed. Do not proceed."
+    next: curve_inventory
+
+  - id: curve_inventory
+    tool: geox_curve_inventory
+    inputs:
+      artifact_ref: "${step.ingest.artifact_ref}"
+    outputs: [curves, aliases, null_pct]
+    next: contradiction_scan
+
+  - id: contradiction_scan
+    tool: geox_evidence_contradiction_scan
+    inputs:
+      evidence_refs: ["${step.ingest.artifact_ref}", "${step.qc.qc_report}"]
+    outputs: [contradictions, warnings]
+    next: END
+
+claim_limits:
+  - "This playbook produces OBSERVED claim state only."
+  - "No petrophysics, no interpretation, no decision support."
+  - "If QC fails, the well cannot proceed to any downstream playbook."

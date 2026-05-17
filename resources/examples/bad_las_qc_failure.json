@@ -1,0 +1,22 @@
+{
+  "example_type": "QC_FAILURE",
+  "well_id": "BAD-01",
+  "failure_mode": "DEPTH_NON_MONOTONIC",
+  "qc_report": {
+    "qc_overall": "FAIL",
+    "flags": [
+      "Depth decreases at 2345.6 m (duplicate / reversed)",
+      "GR null_pct = 45% (exceeds 30% threshold)",
+      "RHOB unit mismatch: file says g/cm3, values suggest kg/m3"
+    ],
+    "claim_state": "NO_VALID_EVIDENCE",
+    "next_best_actions": [
+      {
+        "tool": "geox_data_ingest_bundle",
+        "reason": "Re-ingest with depth_sort=true and unit_override",
+        "priority": "critical"
+      }
+    ]
+  },
+  "lesson": "Never proceed to petrophysics with QC=FAIL. The physics engine cannot produce valid output from invalid input."
+}

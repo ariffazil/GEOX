@@ -1,0 +1,52 @@
+# GEOX Playbook: Petrophysics Evaluation
+# DITEMPA BUKAN DIBERI
+
+name: petrophysics
+version: "1.0"
+description: "Full petrophysical evaluation from QC'd well logs"
+epistemic_layers: [DERIVED]
+
+prerequisites:
+  playbook: well_qc
+  condition: "qc_overall == PASS"
+
+steps:
+  - id: generate_candidates
+    tool: geox_subsurface_generate_candidates
+    inputs:
+      evidence_refs: ["${prereq.well_qc.artifact_ref}"]
+      zone_top: "${zone_top}"
+      zone_base: "${zone_base}"
+      vsh_method: linear
+      phi_method: density_neutron
+      sw_model: archie
+    outputs: [vsh, phi, sw, ai, ng, netpay]
+    next: verify_integrity
+
+  - id: verify_integrity
+    tool: geox_subsurface_verify_integrity
+    inputs:
+      evidence_refs: ["${step.generate_candidates}"]
+    outputs: [canon9_state, physics_guard_status]
+    gates:
+      - condition: "physics_guard_status == FAIL"
+        action: VOID
+        message: "Physics guard failed. Results rejected."
+    next: stoiip
+
+  - id: stoiip
+    tool: geox_physics_compute_stoiip
+    inputs:
+      evidence_refs: ["${step.generate_candidates}", "${step.verify_integrity}"]
+      area_km2: "${area_km2}"
+      h_m: "${netpay}"
+      phi: "${phi}"
+      sw: "${sw}"
+      bo: "${formation_volume_factor}"
+    outputs: [stoiip_mmstb, p10, p50, p90]
+    next: END
+
+claim_limits:
+  - "All outputs are DERIVED, not OBSERVED."
+  - "Cutoffs are model choices — declare them explicitly."
+  - "STOIIP requires area and thickness assumptions."

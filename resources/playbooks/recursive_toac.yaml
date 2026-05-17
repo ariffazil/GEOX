@@ -1,0 +1,44 @@
+# GEOX Playbook: Recursive ToAC Sequence Stratigraphy
+# DITEMPA BUKAN DIBERI
+
+name: recursive_toac
+version: "1.0"
+description: "Single-well sequence stratigraphy via ToAC segmentation"
+epistemic_layers: [OBSERVED, DERIVED, INTERPRETED_LOCAL]
+
+prerequisites:
+  playbook: well_qc
+  condition: "qc_overall == PASS"
+
+steps:
+  - id: motif_segment
+    tool: geox_well_recursive_toac_analyze
+    inputs:
+      evidence_refs: ["${prereq.well_qc.artifact_ref}"]
+      interval: ["${zone_top}", "${zone_base}"]
+      depo_env: "${depo_context}"
+    outputs: [segments, candidate_surfaces, motif_classes]
+    next: surface_rank
+
+  - id: surface_rank
+    tool: geox_section_interpret_correlation
+    inputs:
+      evidence_refs: ["${step.motif_segment.segments}"]
+      wells: ["${well_id}"]
+    outputs: [ranked_surfaces, correlation_confidence]
+    next: evidence_summary
+
+  - id: evidence_summary
+    tool: geox_evidence_summarize_cross
+    inputs:
+      evidence_refs:
+        - "${prereq.well_qc.artifact_ref}"
+        - "${step.motif_segment.segments}"
+        - "${step.surface_rank.ranked_surfaces}"
+    outputs: [summary, contradictions, missing_tests]
+    next: END
+
+claim_limits:
+  - "Single-well MFS is candidate only."
+  - "No systems tract assignment without multi-well correlation."
+  - "GR-only motif cannot prove lithology — use RHOB/NPHI/RT where available."

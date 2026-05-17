@@ -1,0 +1,54 @@
+# GEOX Example: Process Abduction — Shoreface Case
+# DITEMPA BUKAN DIBERI
+
+project: "Danum-1 Shoreface Test"
+well_id: "DANUM-1"
+interval_m: [1200, 1450]
+depo_context: shoreface
+scale: parasequence
+
+input_evidence:
+  - artifact_ref: "geox://artifact/DATA-LAS-DANUM1-QIDB2025"
+  - qc_ref: "qc_report:DANUM1-2025"
+  - motif_ref: "motif_segment:DANUM1-1200-1450"
+
+expected_hypotheses:
+  - process: "shoreface progradation"
+    confidence: moderate
+    evidence_for:
+      - "GR decreases upward from 110 to 65 gAPI"
+      - "Vclay decreases upward from 0.28 to 0.08"
+      - "Rhob increases upward from 2.45 to 2.62 g/cm3"
+      - "Net-to-gross = 0.62"
+    evidence_against:
+      - "Single well only — no lateral control"
+      - "No core description available"
+      - "No biostratigraphic control"
+    expected_additional_signatures:
+      - "Offshore marine shale below the interval"
+      - "More continuous sand body in 3D seismic"
+      - "Dipmeter showing low-angle offshore dip"
+    missing_tests:
+      - "Correlate to DANUM-2 and DANUM-3"
+      - "Core or cuttings description"
+      - "Dipmeter or image log"
+
+  - process: "delta front mouth bar"
+    confidence: low-moderate
+    evidence_for:
+      - "Funnel motif matches mouth bar progradation"
+      - "Sandier-upward pattern"
+    evidence_against:
+      - "No distributary channel evidence above or below"
+      - "No dipmeter to confirm radial progradation"
+    expected_additional_signatures:
+      - "Crevasse splay deposits nearby"
+      - "Interbedded shale-sand heterolithics"
+    missing_tests:
+      - "3D seismic amplitude extraction"
+      - "Adjacent well correlation"
+
+claim_limits:
+  - "Both hypotheses are PROCESS_HYPOTHESIS only."
+  - "No systems tract assignment without correlation."
+  - "No final depositional environment without core."

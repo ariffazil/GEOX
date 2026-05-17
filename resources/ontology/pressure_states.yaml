@@ -1,0 +1,41 @@
+# GEOX Pressure States — Eaton Calibration Rules
+# DITEMPA BUKAN DIBERI
+
+states:
+  hydrostatic:
+    description: "Pore pressure equals hydrostatic gradient (~0.465 psi/ft or ~10.5 MPa/km for fresh water; ~0.433 psi/ft or ~9.8 MPa/km for seawater)."
+    eaton_exponent: 1.0
+    indicators:
+      - "DTC follows normal compaction trend"
+      - "No separation between resistivity and sonic trends"
+      - "No kicks or wellbore breathing"
+    claim_limit: "Normal pressure does not guarantee seal integrity."
+
+  overpressure:
+    description: "Pore pressure exceeds hydrostatic. Causes: undercompaction, hydrocarbon generation, aquathermal pressuring, tectonic loading."
+    eaton_exponent: [1.0, 3.0]
+    indicators:
+      - "DTC reversal (sonic slow-down with depth)"
+      - "Resistivity-separation (Rsh increases while DTC stays high)"
+      - "Well kicks, ballooning, or flow"
+    calibration_required:
+      - "At least 3 calibration points (DST, RFT, or MDT)"
+      - "Eaton exponent fitted per formation"
+    forbidden_overclaims:
+      - "Do not predict overpressure from single curve without calibration."
+      - "Do not extrapolate Eaton model beyond calibration interval."
+
+  underpressure:
+    description: "Pore pressure below hydrostatic. Causes: depletion, cooling, uplift and erosion."
+    eaton_exponent: [0.5, 1.0]
+    indicators:
+      - "DTC faster than normal trend"
+      - "Lost circulation (in extreme cases)"
+    claim_limit: "Underpressure may indicate depleted reservoir or seal breach."
+
+  depletion:
+    description: "Pressure reduction due to production. Not a natural state."
+    indicators:
+      - "Repeat formation tests show declining pressure over time"
+      - "Production history matches pressure decline"
+    claim_limit: "Depletion requires production data — cannot be inferred from logs alone."

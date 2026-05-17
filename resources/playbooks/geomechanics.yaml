@@ -1,0 +1,43 @@
+# GEOX Playbook: Geomechanics Evaluation
+# DITEMPA BUKAN DIBERI
+
+name: geomechanics
+version: "1.0"
+description: "Pore pressure and fracture gradient from sonic and density"
+epistemic_layers: [DERIVED]
+
+prerequisites:
+  playbook: well_qc
+  condition: "qc_overall == PASS and DTC_available == true"
+
+steps:
+  - id: eaton_pressure
+    tool: geox_subsurface_generate_candidates
+    inputs:
+      evidence_refs: ["${prereq.well_qc.artifact_ref}"]
+      compute_pressure: true
+      eaton_exponent: "${eaton_exponent}"
+    outputs: [pore_pressure_gradient, overpressure_zones]
+    next: fracture_gradient
+
+  - id: fracture_gradient
+    tool: geox_physics_compute_acrisk
+    inputs:
+      evidence_refs: ["${step.eaton_pressure}"]
+      compute_fracture: true
+    outputs: [fracture_gradient, drilling_window]
+    next: geomech_summary
+
+  - id: geomech_summary
+    tool: geox_evidence_summarize_cross
+    inputs:
+      evidence_refs:
+        - "${step.eaton_pressure}"
+        - "${step.fracture_gradient}"
+    outputs: [summary, risks]
+    next: END
+
+claim_limits:
+  - "Eaton model requires calibration — minimum 3 calibration points."
+  - "Do not extrapolate beyond calibration interval."
+  - "Fracture gradient is model-dependent — declare assumptions."

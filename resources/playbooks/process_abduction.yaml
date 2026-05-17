@@ -1,0 +1,48 @@
+# GEOX Playbook: Process Abduction
+# DITEMPA BUKAN DIBERI
+
+name: process_abduction
+version: "1.0"
+description: "From evidence to ranked geological process hypotheses"
+epistemic_layers: [PROCESS_HYPOTHESIS]
+
+prerequisites:
+  - playbook: well_qc
+    condition: "qc_overall == PASS"
+  - playbook: recursive_toac
+    condition: "motif_segmented == true"
+
+steps:
+  - id: abduction
+    tool: geox_process_abduction
+    inputs:
+      evidence_refs:
+        - "${prereq.well_qc.artifact_ref}"
+        - "${prereq.recursive_toac.segments}"
+      scale: "${scale}"
+      depo_context: "${depo_context}"
+      claim_strictness: "${strictness}"
+    outputs: [process_hypotheses, claim_limits, missing_tests]
+    next: contradiction_scan
+
+  - id: contradiction_scan
+    tool: geox_evidence_contradiction_scan
+    inputs:
+      evidence_refs: ["${step.abduction.process_hypotheses}"]
+    outputs: [contradictions, penalty_scores]
+    next: evidence_summary
+
+  - id: evidence_summary
+    tool: geox_evidence_summarize_cross
+    inputs:
+      evidence_refs:
+        - "${step.abduction.process_hypotheses}"
+        - "${step.contradiction_scan.contradictions}"
+    outputs: [final_ranking, recommended_tests]
+    next: END
+
+claim_limits:
+  - "All outputs are PROCESS_HYPOTHESIS, not DECISION_SUPPORT."
+  - "Minimum 2 hypotheses required when ACRisk > 0.40."
+  - "Do not assign systems tract without multi-well correlation."
+  - "Do not call final depositional environment without core."

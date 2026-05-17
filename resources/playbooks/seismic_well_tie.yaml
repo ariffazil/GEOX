@@ -1,0 +1,52 @@
+# GEOX Playbook: Seismic Well Tie
+# DITEMPA BUKAN DIBERI
+
+name: seismic_well_tie
+version: "1.0"
+description: "Synthetic seismogram generation and well-to-seismic tie with ACRisk"
+epistemic_layers: [DERIVED, INTERPRETED_LOCAL]
+
+prerequisites:
+  playbook: well_qc
+  condition: "qc_overall == PASS and RHOB_available and DTC_available"
+
+steps:
+  - id: synthetic
+    tool: geox_seismic_analyze_volume
+    inputs:
+      evidence_refs: ["${prereq.well_qc.artifact_ref}"]
+      mode: well_tie
+      wavelet: ricker
+      wavelet_freq_hz: ["${freq_lo}", "${freq_hi}"]
+    outputs: [synthetic_trace, reflectivity_series]
+    next: multi_view_acrisk
+
+  - id: multi_view_acrisk
+    tool: geox_physics_compute_acrisk
+    inputs:
+      evidence_refs: ["${step.synthetic}"]
+      compute_transform_risk: true
+    outputs: [acrisk, transform_log, multi_view_consistency]
+    next: attribute_audit
+
+  - id: attribute_audit
+    tool: geox_seismic_analyze_volume
+    inputs:
+      evidence_refs: ["${step.multi_view_acrisk}"]
+      mode: compute_attribute
+      attributes: [rms, variance, sweetness]
+    outputs: [attribute_volumes, quality_flags]
+    next: structural_candidates
+
+  - id: structural_candidates
+    tool: geox_subsurface_generate_candidates
+    inputs:
+      evidence_refs: ["${step.attribute_audit}"]
+      target_class: structure
+    outputs: [structural_hypotheses, fault_candidates, horizon_candidates]
+    next: END
+
+claim_limits:
+  - "Well tie is model-dependent — wavelet choice matters."
+  - "Multi-view ACRisk must be < 0.50 for structural interpretation."
+  - "Attribute volumes are DERIVED, not OBSERVED."

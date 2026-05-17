@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GEOX Evidence Reference",
+  "description": "Stable reference format for evidence artifacts in GEOX. Replaces raw file paths.",
+  "type": "string",
+  "pattern": "^(geox://artifact/[A-Z0-9-]+|well_las:[a-zA-Z0-9_-]+|qc_report:[a-zA-Z0-9_-]+|petro_result:[a-zA-Z0-9_-]+|motif_segment:[a-zA-Z0-9_-]+|process_hypothesis:[a-zA-Z0-9_-]+)$"
+}

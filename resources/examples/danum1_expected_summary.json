@@ -1,0 +1,50 @@
+{
+  "project": "Danum-1 Golden Test",
+  "well_id": "DANUM-1",
+  "interval_m": [1200, 1450],
+  "steps_completed": [
+    "geox_data_ingest_bundle",
+    "geox_data_qc_bundle",
+    "geox_curve_inventory",
+    "geox_well_recursive_toac_analyze",
+    "geox_process_abduction",
+    "geox_evidence_contradiction_scan",
+    "geox_evidence_summarize_cross"
+  ],
+  "expected_outputs": {
+    "observed": {
+      "gr_trend": "upward-decreasing from 110 to 65 gAPI",
+      "rhob_trend": "upward-increasing from 2.45 to 2.62 g/cm3",
+      "interval_thickness_m": 250
+    },
+    "derived": {
+      "mean_vclay": 0.12,
+      "mean_phi": 0.18,
+      "mean_sw": 0.35,
+      "net_to_gross": 0.62
+    },
+    "local_interpretation": {
+      "motif": "funnel / coarsening-upward",
+      "facies_candidates": ["shoreface", "mouth_bar"]
+    },
+    "process_hypotheses": [
+      {
+        "process": "shoreface progradation",
+        "confidence": "moderate",
+        "evidence_for": ["coarsening-upward GR", "upward-decreasing Vclay", "blocky sand top"],
+        "evidence_against": ["no core", "no biostrat", "single well only"],
+        "missing_tests": ["adjacent well correlation", "core description", "dipmeter"]
+      }
+    ],
+    "decision_support": {
+      "reservoir_candidate": true,
+      "seal_candidate": false,
+      "risk": "lateral continuity uncertain — no correlation"
+    }
+  },
+  "claim_limits": [
+    "Single-well interpretation only.",
+    "No systems tract assignment without correlation.",
+    "No final depositional environment without core."
+  ]
+}
