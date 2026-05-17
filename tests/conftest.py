@@ -23,12 +23,37 @@ import pytest_asyncio
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
-# Legacy test compatibility: arifos/ is archived but tests still import from it
+
+# New spine compatibility
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+# Legacy test compatibility: arifos/ and geox/ are archived
 ARCHIVE_ROOT = REPO_ROOT / "archive"
 if str(ARCHIVE_ROOT) not in sys.path:
     sys.path.insert(0, str(ARCHIVE_ROOT))
 
-from arifos.geox.geox_schemas import CoordinatePoint, GeoRequest
+# Handle arifos legacy structure
+ARIFOS_LEGACY = ARCHIVE_ROOT / "arifos"
+if str(ARIFOS_LEGACY) not in sys.path and ARIFOS_LEGACY.exists():
+    sys.path.insert(0, str(ARIFOS_LEGACY))
+
+# Handle geox legacy structure
+GEOX_LEGACY = ARCHIVE_ROOT / "geox_legacy"
+if str(GEOX_LEGACY) not in sys.path and GEOX_LEGACY.exists():
+    sys.path.insert(0, str(GEOX_LEGACY))
+
+try:
+    from geox_core.schemas.well import CoordinatePoint, GeoRequest
+    from geox_core.core.ac_risk import ACRisk
+except ImportError:
+    # Fallback to legacy if migration didn't move everything yet
+    try:
+        from arifos.geox.geox_schemas import CoordinatePoint, GeoRequest
+    except ImportError:
+        pass
+
 from arifos.geox.geox_agent import GeoXAgent, GeoXConfig
 from arifos.geox.geox_validator import GeoXValidator
 from arifos.geox.geox_memory import GeoMemoryStore

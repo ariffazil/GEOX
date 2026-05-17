@@ -21,7 +21,23 @@ Constitutional Floors: F1, F2, F4, F7, F9, F11, F13
 __version__ = "v2026.04.10-EIC"
 __seal__ = "DITEMPA BUKAN DIBERI"
 
+import sys
+import importlib
 from pathlib import Path
+
+class LegacyBridgeFinder:
+    def find_spec(self, fullname, path, target=None):
+        if fullname.startswith("geox."):
+            mapped_name = "geox_core." + fullname[5:]
+            try:
+                mod = importlib.import_module(mapped_name)
+                sys.modules[fullname] = mod
+                return mod.__spec__
+            except Exception:
+                pass
+        return None
+
+sys.meta_path.insert(0, LegacyBridgeFinder())
 
 _NESTED_PACKAGE = Path(__file__).with_name("geox")
 if _NESTED_PACKAGE.is_dir() and str(_NESTED_PACKAGE) not in __path__:
