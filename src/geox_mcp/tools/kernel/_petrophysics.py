@@ -26,7 +26,7 @@ def _compute_vsh_from_store(
 ) -> dict:
     """Compute Vsh from stored LAS data. Returns stats dict or error dict."""
     import numpy as np
-    from geox_core.core.geox_1d import compute_vsh_gr
+    from geox.core.geox_1d import compute_vsh_gr
 
     data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
     if "error" in data:
@@ -127,7 +127,7 @@ def _compute_porosity_from_store(
 ) -> dict:
     """Compute PHIT from stored LAS data using RHOB and/or NPHI. Returns stats dict."""
     import numpy as np
-    from geox_core.core.geox_1d import compute_porosity_rhob, compute_porosity_neutron
+    from geox.core.geox_1d import compute_porosity_rhob, compute_porosity_neutron
 
     data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
     if "error" in data:
@@ -251,7 +251,7 @@ def _compute_saturation_from_store(
 ) -> dict:
     """Compute Sw from stored LAS data. Returns stats dict."""
     import numpy as np
-    from geox_core.core.geox_1d import compute_sw_archie, compute_sw_indonesian
+    from geox.core.geox_1d import compute_sw_archie, compute_sw_indonesian
 
     if (vsh_result and "_curves" in vsh_result) or (phit_result and "_curves" in phit_result):
         curves = (vsh_result or {}).get("_curves") or (phit_result or {}).get("_curves")
@@ -293,7 +293,7 @@ def _compute_saturation_from_store(
     if phit_result and "_phit_array" in phit_result:
         phi = phit_result["_phit_array"]
     else:
-        from geox_core.core.geox_1d import compute_porosity_rhob
+        from geox.core.geox_1d import compute_porosity_rhob
         phi = None
         for alias in CANONICAL_ALIASES.get("RHOB", ["RHOB"]):
             if alias in curves:
@@ -394,7 +394,7 @@ def _compute_netpay_from_store(
         return {"error": "NO_LAS_PATH", "artifact_ref": artifact_ref}
     las_path = entry["las_path"]
 
-    from geox_core.core.geox_1d import process_las_file
+    from geox.core.geox_1d import process_las_file
 
     curves = process_las_file(las_path)
     if "ERROR" in curves:
@@ -674,7 +674,7 @@ def _get_well_data_with_depth(
     """Helper to load LAS curves and apply depth filtering."""
     import os
     import numpy as np
-    from geox_core.core.geox_1d import process_las_file
+    from geox.core.geox_1d import process_las_file
 
     entry = _get_artifact(artifact_ref)
     if not entry or not entry.get("las_path"):

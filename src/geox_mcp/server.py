@@ -35,6 +35,7 @@ from starlette.routing import Route
 
 # Import canonical registry for source-of-truth
 from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
+from geox_mcp.skills_resources import register_skill_resources
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("geox.unified")
@@ -190,6 +191,15 @@ def bootstrap_sovereign_13():
             logger.info("Background task tools registered successfully")
         except Exception as e:
             logger.warning(f"Background task tools not loaded: {e}")
+
+        # B — Register domain skills as MCP resources (wiki sync)
+        try:
+            from geox_mcp.skills_resources import register_geox_skills
+
+            register_geox_skills(mcp)
+            logger.info("Domain skill resources registered successfully")
+        except Exception as e:
+            logger.warning(f"Skill resources not loaded: {e}")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -560,6 +570,14 @@ def _wrap_tool_outputs(mcp_server):
     if not provider:
         return
 
+    _UI_FALLBACKS = {
+        "geox_prospect_evaluate": "[HYPOTHESIS] Prospect evaluation completed. Open in host with UI support for full visualization.",
+        "geox_seismic_analyze_volume": "[HYPOTHESIS] Seismic volume analysis completed. Open in host with UI support for full visualization.",
+        "geox_map_context_scene": "[HYPOTHESIS] Map context scene rendered. Open in host with UI support for full visualization.",
+        "geox_data_ingest_bundle": "[CLAIM] Data ingestion bundle processed. Open in host with UI support for full visualization.",
+        "geox_subsurface_generate_candidates": "[CLAIM] Subsurface candidate generation completed. Open in host with UI support for full visualization.",
+    }
+
     for key, tool in getattr(provider, "_components", {}).items():
         if not key.startswith("tool:"):
             continue
@@ -576,6 +594,9 @@ def _wrap_tool_outputs(mcp_server):
 
             now = datetime.now(UTC).isoformat()
             tool_name = getattr(__tool, "name", "")
+            # Gap 5: inject UI fallback for tools with app links
+            if tool_name in _UI_FALLBACKS and "_ui_fallback" not in result:
+                result["_ui_fallback"] = _UI_FALLBACKS[tool_name]
             defaults = {
                 "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
                 "confidence_band": result.get("confidence_band"),
@@ -1245,6 +1266,12 @@ async def geox_resources_index() -> str:
             files = [f.name for f in cat_dir.iterdir() if f.is_file()]
             index[category] = sorted(files)
     return json.dumps(index, indent=2)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# LIVE SKILL RESOURCES — geox_core/skills exposed as MCP resources & prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+register_skill_resources(mcp)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
