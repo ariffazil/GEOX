@@ -1,0 +1,47 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-hazard",
+  "description": "Multi-hazard risk assessment specialist. Evaluates seismic, flood, landslide, and volcanic threats with composite risk scoring.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/hazard",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "seismic_hazard",
+      "name": "Seismic Hazard",
+      "description": "Assess earthquake hazard and ground motion",
+      "tags": ["seismic", "hazard", "risk"]
+    },
+    {
+      "id": "flood_model",
+      "name": "Flood Modeling",
+      "description": "Simulate flood extent and depth from rainfall or breach",
+      "tags": ["flood", "hydrology", "simulation"]
+    },
+    {
+      "id": "landslide_susceptibility",
+      "name": "Landslide Susceptibility",
+      "description": "Map landslide susceptibility from terrain factors",
+      "tags": ["landslide", "terrain", "risk"]
+    },
+    {
+      "id": "multi_risk",
+      "name": "Multi-Risk Assessment",
+      "description": "Integrate multiple hazards into composite risk",
+      "tags": ["risk", "integration", "assessment"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["bearer", "mtls"]
+  },
+  "_geox": {
+    "domain": "hazards",
+    "substrates": ["machine", "environment"],
+    "authority_level": 3,
+    "constitutional_floor": "F6_HARMLESS"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/a2a-agent-card.schema.json",
+  "name": "geox-mobility",
+  "description": "Mobility and routing specialist. Optimizes routes, analyzes traffic patterns, and enables terrain navigation for ground operations.",
+  "url": "https://a2a.geox.arif-fazil.com/agents/mobility",
+  "version": "2026.04.11",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "skills": [
+    {
+      "id": "route_optimize",
+      "name": "Route Optimization",
+      "description": "Find optimal routes considering terrain, constraints, and objectives",
+      "tags": ["mobility", "routing", "optimization"]
+    },
+    {
+      "id": "accessibility_map",
+      "name": "Accessibility Mapping",
+      "description": "Compute accessibility surfaces and isochrones",
+      "tags": ["mobility", "accessibility", "surface"]
+    },
+    {
+      "id": "traffic_pattern",
+      "name": "Traffic Pattern Analysis",
+      "description": "Analyze and predict traffic patterns from movement data",
+      "tags": ["mobility", "traffic", "pattern"]
+    },
+    {
+      "id": "terrain_navigate",
+      "name": "Terrain Navigation",
+      "description": "Navigate across unmapped or poorly-mapped terrain",
+      "tags": ["mobility", "navigation", "terrain", "void"]
+    }
+  ],
+  "authentication": {
+    "schemes": ["mtls"],
+    "credentials": "https://a2a.geox.arif-fazil.com/.well-known/mobility-certs.pem"
+  },
+  "_geox": {
+    "domain": "mobility",
+    "substrates": ["machine", "human", "void"],
+    "authority_level": 3,
+    "constitutional_floor": "F1_AMANAH"
+  }
+}

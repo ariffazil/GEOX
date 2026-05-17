@@ -1,0 +1,19 @@
+{
+  "schema": "arifos-agent-manifest/v1",
+  "name": "GEOX — Governed Earth Intelligence",
+  "role": "geox_engine",
+  "url": "https://geox.arif-fazil.com",
+  "service": "http://72.62.71.199:8000",
+  "mcp_endpoint": "https://mcp.arif-fazil.com/mcp",
+  "transport": ["streamable-http"],
+  "capabilities": {
+    "tools": true,
+    "domains": ["well_logs", "seismic", "petrophysics", "prospect_evaluation"],
+    "vault": true
+  },
+  "seal": "DITEMPA BUKAN DIBERI",
+  "identity": "https://arif-fazil.com/llms.txt",
+  "wells": "https://arif-fazil.com/wells.json",
+  "sealed": true,
+  "epoch": "2026-04-18"
+}

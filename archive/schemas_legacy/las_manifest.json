@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LASManifest",
+  "type": "object",
+  "required": ["asset_id", "source_path", "depth_range", "curves", "chunk_count", "qcfail_count"],
+  "properties": {
+    "asset_id": { "type": "string" },
+    "source_path": { "type": "string" },
+    "uwi": { "type": ["string", "null"] },
+    "well_name": { "type": ["string", "null"] },
+    "depth_range": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "curves": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["mnemonic", "unit", "sample_count", "null_count", "qc_flags"],
+        "properties": {
+          "mnemonic": { "type": "string" },
+          "unit": { "type": "string" },
+          "sample_count": { "type": "integer" },
+          "null_count": { "type": "integer" },
+          "qc_flags": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "chunk_count": { "type": "integer" },
+    "qcfail_count": { "type": "integer" },
+    "claim_tag": { "type": "string" },
+    "vault_receipt": { "type": "object" }
+  }
+}

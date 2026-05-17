@@ -1,0 +1,10 @@
+{
+  "name": "GEOX Earth Intelligence",
+  "role": "geox_engine",
+  "url": "https://geox.arif-fazil.com",
+  "canonical": "https://arif-fazil.com/.well-known/arifos.json",
+  "mcp": "https://mcp.arif-fazil.com/mcp",
+  "service": "http://72.62.71.199:8000",
+  "sealed": true,
+  "epoch": "2026-04-18"
+}
