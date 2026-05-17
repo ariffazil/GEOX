@@ -1,9 +1,9 @@
 # GEOX — Earth Intelligence Sovereign Kernel (21 Tools)
 > Level: L3 AGI Clerk / Ψ Node
 > Doctrine: Physics before Narrative. F1–F13 Governed.
-> Epoch: 2026-05-13
+> Epoch: 2026-05-17
 > Seal: DITEMPA BUKAN DIBERI
-> Surface: 21 canonical tools (15 original + 4 well stratigraphy + 2 pipeline)
+> Surface: 21 canonical tools (15 core + 4 well stratigraphy + 2 abduction)
 
 GEOX operates a consolidated surface of 21 canonical tools. Legacy names are supported via alias bridge (85 aliases → canonical).
 
@@ -12,7 +12,7 @@ GEOX operates a consolidated surface of 21 canonical tools. Legacy names are sup
 ### Data Intake & QC
 1. **geox_data_ingest_bundle**: Lazy ingest LAS/CSV/SEG-Y/JSON.
 2. **geox_data_qc_bundle**: Unified header, unit, and missingness verification.
-3. **geox_dst_ingest_test**: Structured Drill Stem Test ingestion (CGR, WGR, drawdown, CO2/H2S).
+3. **mcp_health_check**: Federation health and tool discovery.
 
 ### Subsurface & Petrophysics
 4. **geox_subsurface_generate_candidates**: Ensemble realizations (Petro/Struct) + Residuals.
@@ -36,9 +36,9 @@ GEOX operates a consolidated surface of 21 canonical tools. Legacy names are sup
 16. **geox_prospect_judge_seal**: Irreversible 888_JUDGE gateway (F11 PIN + F13 confirm required).
 17. **geox_evidence_summarize_cross**: Cross-domain evidence graph synthesis.
 
-### Pipeline Orchestration
-18. **geox_stratigraphy_run_pipeline**: Full multi-well L1-L3 stratigraphy — accepts YAML config, returns XLSX (5 sheets) + PNGs (per-well + correlation panel).
-19. **geox_stratigraphy_preview_config**: Validate YAML config without running pipeline.
+### Earth Abduction (Tier 4 — PROCESS_HYPOTHESIS)
+18. **geox_process_abduction**: Generate ranked competing geological process hypotheses from evidence refs.
+19. **geox_evidence_contradiction_scan**: Systematically attack hypotheses, surface contradictions, re-rank.
 
 ### System & Registry
 20. **geox_system_registry_status**: Federation health and tool discovery.
