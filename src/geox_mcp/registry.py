@@ -36,6 +36,8 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_contradiction_registry_status",
     "geox_test_receipt_status",
     "geox_bundle_security_audit",
+    # Resource layer — machine-checkable manifest
+    "geox_resource_registry_status",
 ]
 
 GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
@@ -65,6 +67,7 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_contradiction_registry_status",  "axis": "verify",   "expose": True},
     {"name": "geox_test_receipt_status",            "axis": "trace",    "expose": True},
     {"name": "geox_bundle_security_audit",          "axis": "verify",   "expose": True},
+    {"name": "geox_resource_registry_status",       "axis": "identity", "expose": True},
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════

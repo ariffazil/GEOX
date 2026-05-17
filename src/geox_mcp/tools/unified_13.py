@@ -42,6 +42,7 @@ from geox_mcp.tools.registry import (
     geox_contradiction_registry_status,
     geox_test_receipt_status,
     geox_bundle_security_audit,
+    geox_resource_registry_status,
 )
 from geox_mcp.tools.dst import geox_dst_ingest_test
 
@@ -117,6 +118,7 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_contradiction_registry_status", geox_contradiction_registry_status),
     ("geox_test_receipt_status", geox_test_receipt_status),
     ("geox_bundle_security_audit", geox_bundle_security_audit),
+    ("geox_resource_registry_status", geox_resource_registry_status),
 ]
 
 _TOOL_ANNOTATIONS: dict[str, dict] = {
@@ -140,8 +142,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
 
     # ── Assert canonical count ───────────────────────────────────────────────
     # Count is 14: 13 original sovereign tools + history_audit
-    assert len(CANONICAL_PUBLIC_TOOLS) == 24, (
-        f"F0_CONSTITUTION_BREACH: Expected 24 sovereign tools (15 core + 4 well-strat + 2 abduction + 3 registry), "
+    assert len(CANONICAL_PUBLIC_TOOLS) == 25, (
+        f"F0_CONSTITUTION_BREACH: Expected 25 sovereign tools (15 core + 4 well-strat + 2 abduction + 3 registry + 1 resource), "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
