@@ -50,3 +50,8 @@ claim_limits:
   - "All outputs are DERIVED, not OBSERVED."
   - "Cutoffs are model choices — declare them explicitly."
   - "STOIIP requires area and thickness assumptions."
+  - "PINN mode (physics-informed neural network): L_total = L_data + λ × L_physics.
+    L_physics enforces Archie, density-porosity, Gardner constraints from CANON-9 bounds.
+    Validated by Pothana & Ling (2025, Energy Geoscience) — mineral/porosity estimation
+    with reduced uncertainty vs. pure data-driven models."
+  - "PINN physics residual > threshold → 888HOLD: physics_guard triggered, emit missing_inputs_schema."
