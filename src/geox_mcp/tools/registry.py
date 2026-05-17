@@ -390,7 +390,7 @@ async def geox_bundle_security_audit() -> dict:
     import os
     from pathlib import Path
 
-    repo_root = Path("/root/geox")
+    repo_root = Path(__file__).resolve().parents[3]
     mcpignore_path = repo_root / ".mcpignore"
 
     mcpignore_present = mcpignore_path.exists()
