@@ -23,6 +23,9 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "mcp_health_check",
     "geox_system_registry_status",
     "geox_history_audit",
+    # Earth abduction — Tier 4 process hypothesis generation
+    "geox_process_abduction",
+    "geox_evidence_contradiction_scan",
     # Well stratigraphy pipeline — GR binning → sedimentary packages → sequence stratigraphy
     "geox_well_compute_gr_bins",
     "geox_well_build_packages",
@@ -46,6 +49,8 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "mcp_health_check",                     "axis": "identity", "expose": True},
     {"name": "geox_system_registry_status",         "axis": "identity", "expose": True},
     {"name": "geox_history_audit",                  "axis": "trace",    "expose": True},
+    {"name": "geox_process_abduction",              "axis": "reason",   "expose": True},
+    {"name": "geox_evidence_contradiction_scan",    "axis": "critique", "expose": True},
     {"name": "geox_dst_ingest_test",                "axis": "observe",  "expose": True},
     # Well stratigraphy tools
     {"name": "geox_well_compute_gr_bins",           "axis": "reason",   "expose": True},

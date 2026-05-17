@@ -10,6 +10,23 @@ def mcp_server():
     mcp = FastMCP(name="GEOX_Test", version="test")
     register_unified_tools(mcp)
     register_well_correlation_tools(mcp)
+    # Register well stratigraphy tools (canonical since 2026-05-16)
+    try:
+        from geox_mcp.tools.well import register_well_tools
+        register_well_tools(mcp)
+    except Exception:
+        pass
+    try:
+        from geox_mcp.tools.stratigraphy import register_stratigraphy_tools
+        register_stratigraphy_tools(mcp)
+    except Exception:
+        pass
+    try:
+        from geox_mcp.tools.abduction import geox_process_abduction, geox_evidence_contradiction_scan
+        mcp.tool()(geox_process_abduction)
+        mcp.tool()(geox_evidence_contradiction_scan)
+    except Exception:
+        pass
     return mcp
 
 
@@ -18,7 +35,7 @@ async def test_canonical_public_surface_count(mcp_server):
     """Verify that exactly 13 sovereign public tools are exposed."""
     registered_tools = await mcp_server.list_tools()
     public_tools = [t.name for t in registered_tools if t.name in CANONICAL_PUBLIC_TOOLS]
-    assert len(public_tools) == 14, f"Expected 14 public tools, found {len(public_tools)}: {public_tools}"
+    assert len(public_tools) == len(CANONICAL_PUBLIC_TOOLS), f"Expected {len(CANONICAL_PUBLIC_TOOLS)} public tools, found {len(public_tools)}: {public_tools}"
 
 
 @pytest.mark.asyncio

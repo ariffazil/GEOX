@@ -12,17 +12,18 @@ def get_llms_txt_tools():
         in_canonical_section = False
         for line in f:
             line = line.strip()
-            if "1. Canonical Sovereign 14" in line or "## 1. Canonical Sovereign 14" in line:
+            if "1. Canonical Tool Surface" in line or "## 1. Canonical Tool Surface" in line:
                 in_canonical_section = True
                 continue
             if in_canonical_section:
                 if "## 2." in line:
                     break
-                if line.startswith(tuple(f"{i}." for i in range(1, 15))):
-                    raw = line.split(".", 1)[1].strip()
-                    # Strip bold markdown (**name**) and trailing colon
-                    tool_name = raw.split(" ", 1)[0].strip("*:").strip()
-                    if tool_name.startswith("geox_"):
+                # Match numbered tool lines like "20. **geox_tool_name**: description"
+                import re
+                match = re.match(r"^\d+\.\s+\*\*(\w+)\*\*", line)
+                if match:
+                    tool_name = match.group(1)
+                    if tool_name.startswith("geox_") or tool_name == "mcp_health_check":
                         tools.append(tool_name)
     return tools
 

@@ -23,6 +23,10 @@ import pytest_asyncio
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+# Legacy test compatibility: arifos/ is archived but tests still import from it
+ARCHIVE_ROOT = REPO_ROOT / "archive"
+if str(ARCHIVE_ROOT) not in sys.path:
+    sys.path.insert(0, str(ARCHIVE_ROOT))
 
 from arifos.geox.geox_schemas import CoordinatePoint, GeoRequest
 from arifos.geox.geox_agent import GeoXAgent, GeoXConfig
