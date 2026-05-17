@@ -21,6 +21,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import * as Separator from '@radix-ui/react-separator';
 import { WitnessBadges, WitnessBadgesCompact } from '../WitnessBadges/WitnessBadges';
 import { MalayBasinPilotDashboard } from '../MalayBasinPilot/MalayBasinPilotDashboard';
+import { EarthVisionPanel } from '../EarthVision/EarthVisionPanel';
 import { WellContextDesk } from '../WellContextDesk/WellContextDesk';
 import { VerdictConsole } from '../VerdictConsole/VerdictConsole';
 import { ProspectUI } from '../ProspectUI/ProspectUI';
@@ -208,9 +209,9 @@ const MainWorkspace: React.FC = () => {
             <VerdictConsole />
           </Tabs.Content>
           
-          {/* 7. Map Registry (Malay Basin Pilot) */}
+          {/* 7. Map Registry — EarthVision Layered EO */}
           <Tabs.Content value="map" className="h-full">
-            <MalayBasinPilotDashboard />
+            <EarthVisionPanel />
           </Tabs.Content>
         </div>
       </Tabs.Root>
