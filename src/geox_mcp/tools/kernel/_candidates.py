@@ -10,7 +10,7 @@ from ._petrophysics import (
     _compute_saturation_from_store, _compute_netpay_from_store,
     _classify_gr_motif, _classify_lithology_from_store,
 )
-from geox_core.enums.statuses import ArtifactStatus, get_standard_envelope
+from contracts.enums.statuses import ArtifactStatus, get_standard_envelope
 from typing import Any, List, Optional
 
 
@@ -224,7 +224,7 @@ async def _compute_subsurface_candidates(
         return result
 
     if target_class == "permeability":
-        from geox_core.core.geox_1d import process_las_file
+        from geox.core.geox_1d import process_las_file
         entry = _get_artifact(primary_ref)
         if not entry or not entry.get("las_path"):
             return _candidate_error("NO_LAS_PATH", target_class="permeability", artifact_ref=primary_ref)
@@ -288,7 +288,7 @@ async def _compute_subsurface_candidates(
         }
 
     if target_class == "gr_motif":
-        from geox_core.core.geox_1d import process_las_file
+        from geox.core.geox_1d import process_las_file
         entry = _get_artifact(primary_ref)
         if not entry or not entry.get("las_path"):
             return _candidate_error("NO_LAS_PATH", target_class="gr_motif", artifact_ref=primary_ref)
@@ -323,43 +323,24 @@ async def _compute_subsurface_candidates(
         return result
 
     if target_class == "petrophysics":
-        try:
-            from geox_core.physics.petrophysics import compute_petrophysics_logic
-            from geox_core.schemas.petrophysics_schemas import PetrophysicsInput
-        except ImportError:
-            # Fallback: arifos-based petrophysics engine not migrated to canonical core
-            compute_petrophysics_logic = None
-            PetrophysicsInput = None
+        from arifos.geox.physics.petrophysics import compute_petrophysics_logic
+        from arifos.geox.schemas.petrophysics_schemas import PetrophysicsInput
 
-        if compute_petrophysics_logic is not None:
-            # Fake an input using the cutoffs/defaults since the v1 MCP API doesn't pass full log arrays yet
-            inp = PetrophysicsInput(
-                well_id=primary_ref,
-                rt_ohm_m=rt_cutoff * 2.0,
-                phi_fraction=phi_cutoff * 1.5,
-                vcl_fraction=vsh_cutoff * 0.5,
-                rw_ohm_m=rw,
-                sw_model=sw_model if sw_model in ["archie", "simandoux", "indonesia"] else "archie",
-                archie_a=archie_a,
-                archie_m=archie_m,
-                archie_n=archie_n,
-            )
-            phys_out = compute_petrophysics_logic(inp)
-            result = phys_out.dict()
-        else:
-            # Graceful fallback when petrophysics engine is unavailable
-            result = {
-                "well_id": primary_ref,
-                "sw_model_used": sw_model,
-                "sw_nominal": 0.5,
-                "phi_effective": phi_cutoff * 1.5,
-                "vcl": vsh_cutoff * 0.5,
-                "bvw": 0.25,
-                "uncertainty": 0.12,
-                "hold_triggers": ["Petrophysics engine not available in canonical core — use geox_subsurface_generate_candidates with full evidence_refs"],
-                "requires_hold": True,
-            }
+        # Fake an input using the cutoffs/defaults since the v1 MCP API doesn't pass full log arrays yet
+        inp = PetrophysicsInput(
+            well_id=primary_ref,
+            rt_ohm_m=rt_cutoff * 2.0,
+            phi_fraction=phi_cutoff * 1.5,
+            vcl_fraction=vsh_cutoff * 0.5,
+            rw_ohm_m=rw,
+            sw_model=sw_model if sw_model in ["archie", "simandoux", "indonesia"] else "archie",
+            archie_a=archie_a,
+            archie_m=archie_m,
+            archie_n=archie_n,
+        )
+        phys_out = compute_petrophysics_logic(inp)
 
+        result = phys_out.dict()
         result["tool"] = "geox_subsurface_generate_candidates"
         result["execution_status"] = "SUCCESS"
         result["target_class"] = "petrophysics"

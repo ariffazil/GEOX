@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, List, Optional
 
-from geox_core.enums.statuses import (
+from contracts.enums.statuses import (
     get_standard_envelope,
     GovernanceStatus,
     ArtifactStatus,

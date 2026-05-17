@@ -4,14 +4,14 @@ import logging
 from typing import Any, List, Dict, Optional, Literal
 
 from fastmcp import FastMCP
-from geox_core.enums.statuses import (
+from contracts.enums.statuses import (
     get_standard_envelope,
     GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
     enrich_envelope_with_metabolic,
 )
-from geox_mcp.tools._helpers import (
+from contracts.tools.canonical._helpers import (
     _get_artifact,
     _artifact_exists,
     _register_artifact,
@@ -41,7 +41,7 @@ from geox_mcp.tools._helpers import (
     _ARTIFACT_REGISTRY_PATH,
     MAX_UPLOAD_BYTES,
 )
-from geox_core.compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
+from compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 
 logger = logging.getLogger("geox.canonical.seismic")
 

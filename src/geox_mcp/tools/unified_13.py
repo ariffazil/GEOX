@@ -113,13 +113,24 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_dst_ingest_test", geox_dst_ingest_test),
 ]
 
+_TOOL_ANNOTATIONS: dict[str, dict] = {
+    "geox_prospect_evaluate": {"ui": {"resourceUri": "ui://judge-console"}},
+    "geox_seismic_analyze_volume": {"ui": {"resourceUri": "ui://seismic_vision_review"}},
+    "geox_map_context_scene": {"ui": {"resourceUri": "ui://georeference_map"}},
+    "geox_data_ingest_bundle": {"ui": {"resourceUri": "ui://well_desk"}},
+    "geox_subsurface_generate_candidates": {"ui": {"resourceUri": "ui://earth_volume"}},
+}
+
 
 def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
     """Registers the 13 Canonical Sovereign tools and the Legacy Alias Bridge."""
 
     # ── Register canonical 13 ────────────────────────────────────────────────
     for name, func in _TOOL_REGISTRY:
-        mcp.tool(name=name)(func)
+        kwargs: dict[str, Any] = {"name": name}
+        if name in _TOOL_ANNOTATIONS:
+            kwargs["annotations"] = _TOOL_ANNOTATIONS[name]
+        mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
     # Count is 14: 13 original sovereign tools + history_audit
