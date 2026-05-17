@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GEOX WellDesk Event Schema",
+  "description": "postMessage event contract between WellDesk app and MCP host",
+  "events": {
+    "app.initialize": {
+      "direction": "host->app",
+      "payload": {
+        "type": "object",
+        "required": ["well_id", "mode"],
+        "properties": {
+          "well_id": { "type": "string" },
+          "mode": { "type": "string", "enum": ["1d", "2d", "forward", "inverse", "metabolic"] },
+          "las_url": { "type": ["string", "null"] },
+          "auth_token": { "type": "string" }
+        }
+      }
+    },
+    "app.state.sync": {
+      "direction": "bidirectional",
+      "payload": {
+        "type": "object",
+        "required": ["well_id", "physics9_state"],
+        "properties": {
+          "well_id": { "type": "string" },
+          "depth_range": {
+            "type": "object",
+            "properties": {
+              "top_m": { "type": "number" },
+              "base_m": { "type": "number" }
+            }
+          },
+          "active_tracks": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "physics9_state": { "$ref": "#/definitions/physics9_state" }
+        }
+      }
+    },
+    "tool.request": {
+      "direction": "app->host",
+      "payload": {
+        "type": "object",
+        "required": ["tool_name", "params", "request_id"],
+        "properties": {
+          "tool_name": { "type": "string", "const": "geox_well_desk_launch" },
+          "params": {
+            "type": "object",
+            "properties": {
+              "well_id": { "type": "string" },
+              "mode": { "type": "string" },
+              "physics_params": { "type": "object" }
+            }
+          },
+          "request_id": { "type": "string" }
+        }
+      }
+    },
+    "tool.result": {
+      "direction": "host->app",
+      "payload": {
+        "type": "object",
+        "required": ["request_id", "result"],
+        "properties": {
+          "request_id": { "type": "string" },
+          "result": { "type": "object" },
+          "vault_receipt": { "$ref": "#/definitions/vault_receipt" },
+          "physics9_state": { "$ref": "#/definitions/physics9_state" }
+        }
+      }
+    },
+    "ui.action": {
+      "direction": "app->host",
+      "payload": {
+        "type": "object",
+        "required": ["action_type", "params"],
+        "properties": {
+          "action_type": {
+            "type": "string",
+            "enum": ["run_forward", "run_inverse", "run_metabolic", "export_las", "share_view", "depth_zoom"]
+          },
+          "params": { "type": "object" }
+        }
+      }
+    },
+    "physics.result": {
+      "direction": "host->app",
+      "payload": {
+        "type": "object",
+        "required": ["physics9_state"],
+        "properties": {
+          "physics9_state": { "$ref": "#/definitions/physics9_state" },
+          "integrity_score": { "type": "number" },
+          "grade": { "type": "string", "enum": ["AAA", "AA", "A", "RAW", "PHYSICS_VIOLATION"] }
+        }
+      }
+    },
+    "vault.seal": {
+      "direction": "host->app",
+      "payload": {
+        "type": "object",
+        "required": ["receipt_id", "status"],
+        "properties": {
+          "receipt_id": { "type": "string" },
+          "status": { "type": "string", "enum": ["pending", "sealed", "vetoed_888"] },
+          "timestamp": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "physics9_state": {
+      "type": "object",
+      "properties": {
+        "grade": { "type": "string" },
+        "forward_result": {
+          "type": "object",
+          "properties": {
+            "vp": { "type": "number" },
+            "vs": { "type": "number" },
+            "rho": { "type": "number" },
+            "ai": { "type": "number" },
+            "vp_vs_ratio": { "type": "number" },
+            "bulk_modulus": { "type": "number" },
+            "shear_modulus": { "type": "number" }
+          }
+        },
+        "inverse_result": {
+          "type": "object",
+          "properties": {
+            "est_porosity": { "type": "number" },
+            "est_sw": { "type": "number" },
+            "est_fluid": { "type": "string" },
+            "uncertainty_band": { "type": "object" },
+            "integrity_score": { "type": "number" }
+          }
+        },
+        "metabolic_log": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "iteration": { "type": "integer" },
+              "delta_state": { "type": "number" },
+              "grade": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "vault_receipt": {
+      "type": "object",
+      "properties": {
+        "receipt_id": { "type": "string" },
+        "vault_route": { "type": "string", "const": "999_VAULT" },
+        "app_id": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "physics9_state": { "$ref": "#/definitions/physics9_state" },
+        "floor_checks": {
+          "type": "object",
+          "properties": {
+            "F1": { "type": "boolean" },
+            "F2": { "type": "boolean" },
+            "F4": { "type": "boolean" },
+            "F7": { "type": "boolean" },
+            "F9": { "type": "boolean" },
+            "F11": { "type": "boolean" },
+            "F13": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

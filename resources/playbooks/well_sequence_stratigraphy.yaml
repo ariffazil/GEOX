@@ -1,0 +1,24 @@
+name: well_sequence_stratigraphy
+domain: subsurface_stratigraphy
+goal: Interpret GR motif and candidate sequence surfaces from a well.
+required_tools:
+  - geox_data_ingest_bundle
+  - geox_data_qc_bundle
+  - geox_well_analyze_sequence
+required_evidence:
+  - LAS or CSV
+  - GR curve
+  - depth_basis
+recommended_evidence:
+  - VCLAY
+  - RHOB
+  - NPHI
+  - RT
+  - tops
+  - core
+  - biostrat
+  - nearby_wells for correlation
+claim_limits:
+  - Single-well MFS is candidate only.
+  - GR-only motif cannot prove lithology.
+  - Sequence boundaries require independent evidence.

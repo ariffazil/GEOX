@@ -1,0 +1,22 @@
+name: prospect_evaluation
+domain: prospect
+goal: Screen, appraise, or develop a petroleum prospect.
+required_tools:
+  - geox_data_ingest_bundle
+  - geox_data_qc_bundle
+  - geox_subsurface_generate_candidates
+  - geox_map_context_scene
+  - geox_prospect_evaluate
+required_evidence:
+  - well_logs
+  - seismic
+  - structural_map
+recommended_evidence:
+  - dst_results
+  - pvt_data
+  - charge_model
+  - regional_correlation
+claim_limits:
+  - Screen mode is heuristic only.
+  - Appraise requires QC_VERIFIED evidence.
+  - Develop requires full evidence + prior appraisal.

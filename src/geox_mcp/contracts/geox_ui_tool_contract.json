@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12",
+  "title": "GEOX UI Tool Contract",
+  "description": "Canonical schema for GEOX MCP tools that launch UI apps. All GEOX tools that return ui/resourceUri must conform to this contract. DITEMPA BUKAN DIBERI — Forged, Not Given",
+  "version": "1.0.0",
+  "type": "object",
+  "properties": {
+    "tool_name": {
+      "type": "string",
+      "description": "Canonical GEOX tool name (e.g., geox_seismic_load_volume)"
+    },
+    "claim_tag": {
+      "type": "string",
+      "enum": ["OBSERVED", "COMPUTED", "INTERPRETED", "SYNTHESIZED", "VERIFIED", "CLAIM", "PLAUSIBLE", "HYPOTHESIS", "ESTIMATE", "UNKNOWN"],
+      "description": "Epistemic classification of the output"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["SEAL", "QUALIFY", "HOLD", "VOID", "888_HOLD"],
+      "description": "Constitutional verdict from AC_Risk computation"
+    },
+    "ui": {
+      "type": "object",
+      "description": "UI launch instruction for MCP Apps plane",
+      "properties": {
+        "resourceUri": {
+          "type": "string",
+          "pattern": "^ui://",
+          "description": "MCP resource URI for the app (e.g., ui://geox_seismic_viewer)"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["inline", "external", "inline-or-external"],
+          "description": "How the host should render the app"
+        },
+        "app_id": {
+          "type": "string",
+          "description": "Unique app identifier (e.g., geox.seismic.viewer)"
+        },
+        "version": {
+          "type": "string",
+          "description": "Semantic version (e.g., 0.1.0)"
+        },
+        "event": {
+          "type": "string",
+          "description": "Optional event name to emit on app launch (e.g., attribute.change)"
+        },
+        "params": {
+          "type": "object",
+          "description": "Optional parameters to pass to the app on launch"
+        }
+      },
+      "required": ["resourceUri", "mode", "app_id", "version"]
+    },
+    "vault_receipt": {
+      "type": "object",
+      "description": "VAULT999 immutable audit receipt",
+      "properties": {
+        "vault": {
+          "type": "string",
+          "const": "VAULT999"
+        },
+        "tool_name": {
+          "type": "string"
+        },
+        "verdict": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "hash": {
+          "type": "string",
+          "description": "SHA256 digest of payload (first 16 chars)"
+        }
+      },
+      "required": ["vault", "tool_name", "verdict", "timestamp", "hash"]
+    },
+    "render_payload": {
+      "type": "object",
+      "description": "Visualization data for the UI app to render",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["volume_slice", "attribute_slice", "log_track", "map_view", "cross_section", "strat_column", "dashboard"]
+        },
+        "volume_id": {
+          "type": "string"
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["inline", "crossline", "time", "depth"]
+        },
+        "slice_index": {
+          "type": "integer"
+        },
+        "attribute": {
+          "type": "string"
+        },
+        "color_map": {
+          "type": "string"
+        },
+        "shape": {
+          "type": "array",
+          "items": {"type": "integer"},
+          "description": "[nx, ny] or [nx, ny, nz] shape"
+        },
+        "value_range": {
+          "type": "array",
+          "items": {"type": "number"},
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "claim_tag": {
+          "type": "string"
+        },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "mean": {"type": "number"},
+            "std": {"type": "number"},
+            "p10": {"type": "number"},
+            "p90": {"type": "number"}
+          }
+        }
+      }
+    },
+    "arifos": {
+      "type": "object",
+      "description": "arifOS constitutional metadata",
+      "properties": {
+        "floors_required": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "F1-F13 floors that must be satisfied"
+        },
+        "human_in_loop": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Actions requiring explicit human confirmation"
+        },
+        "vault_route": {
+          "type": "string",
+          "const": "VAULT999"
+        }
+      }
+    },
+    "_telemetry": {
+      "type": "object",
+      "description": "Meteorological heartbeat for arifOS vital signs"
+    },
+    "stages": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Pipeline stages this tool passed through"
+    },
+    "provenance": {
+      "type": "string",
+      "description": "Origin of the data (e.g., segy_file:field_3d.sgy, scaffold_fixture)"
+    }
+  },
+  "required": ["tool_name", "claim_tag", "verdict", "ui", "vault_receipt"],
+  "additionalProperties": true
+}

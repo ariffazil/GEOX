@@ -1,0 +1,19 @@
+project: DANUM1_SeqStrat
+bin_size_m: 10.0
+min_package_thickness_m: 20.0
+p50_shift_thresh_gapi: 15.0
+gr_cut_api: 75.0
+gr_min_api: 0.0
+gr_max_api: 150.0
+well_order:
+  - DANUM-1
+wells:
+  - name: DANUM-1
+    path: /data/DANUM-1.las
+    format: LAS
+intervals:
+  DANUM-1:
+    - zone: UBT
+      top: 1200
+      base: 1800
+      depo_env: SHOREFACE
