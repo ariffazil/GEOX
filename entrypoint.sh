@@ -7,10 +7,11 @@ echo "   Version: v2026.05.01-KANON"
 echo "   Seal: DITEMPA BUKAN DIBERI"
 echo "   Transport: streamable-http on port 8081"
 echo "   Governance: arifOS F1-F13"
-echo "   Canonical entrypoint: server.py"
+echo "   Canonical entrypoint: src/geox_mcp/server.py"
 
 export GEOX_HOST=0.0.0.0
 export GEOX_PORT=8081
 export GEOX_PROFILE=full
+export PYTHONPATH=src
 
-exec python server.py --host 0.0.0.0 --port 8081
+exec python -m geox_mcp.server --host 0.0.0.0 --port 8081

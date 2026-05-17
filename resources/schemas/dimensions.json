@@ -1,0 +1,92 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/dimensions.schema.json",
+  "dimensions": [
+    {
+      "id": "prospect",
+      "name": "Prospect",
+      "description": "Play fairway discovery and ToAC scaling",
+      "icon": "Globe",
+      "color": "#3b82f6",
+      "app": "ProspectExplore",
+      "core_function": "Play fairway discovery & ToAC scaling",
+      "capabilities": ["well_correlation", "seismic_mapping", "play_ risking", "toac_scaling"],
+      "substrates": ["human", "machine", "orbital", "environment"],
+      "mcp_tools": ["geox_ prospect_analyze", "geox_play_risk", "geox_toac_scale"]
+    },
+    {
+      "id": "well",
+      "name": "Well",
+      "description": "Truth Witness: Borehole and log analysis",
+      "icon": "Database",
+      "color": "#22c55e",
+      "app": "WellContext",
+      "core_function": "Truth Witness: Borehole & log analysis",
+      "capabilities": ["log_analysis", "petrophysics", "biostratigraphy", "core_description"],
+      "substrates": ["human", "machine", "infrastructure"],
+      "mcp_tools": ["geox_well_logs", "geox_petrophysics", "geox_biostrat"]
+    },
+    {
+      "id": "section",
+      "name": "Section",
+      "description": "Stratigraphic continuity and 2D correlation",
+      "icon": "Layout",
+      "color": "#a855f7",
+      "app": "SectionView",
+      "core_function": "Stratigraphic continuity & 2D correlation",
+      "capabilities": ["seismic_section", "well_tie", "horizon_picking", "fault_ interpretation"],
+      "substrates": ["human", "machine", "infrastructure"],
+      "mcp_tools": ["geox_section_view", "geox_well_tie", "geox_horizon_pick"]
+    },
+    {
+      "id": "earth3d",
+      "name": "Earth 3D",
+      "description": "Volumetric synthesis and seismic interpretation",
+      "icon": "Layers",
+      "color": "#f59e0b",
+      "app": "Earth3D",
+      "core_function": "Volumetric synthesis & seismic interpretation",
+      "capabilities": ["3d_visualization", "volume_render", "seismic_interp", "structure_mapping"],
+      "substrates": ["machine", "infrastructure", "orbital"],
+      "mcp_tools": ["geox_earth3d_render", "geox_volume_calc", "geox_seismic_interp"]
+    },
+    {
+      "id": "time4d",
+      "name": "Time 4D",
+      "description": "Basin evolution and play cycle timing",
+      "icon": "Clock",
+      "color": "#ef4444",
+      "app": "Time4D",
+      "core_function": "Basin evolution & play cycle timing",
+      "capabilities": ["burial_history", "thermal_modeling", "play_timing", "charge_analysis"],
+      "substrates": ["machine", "human"],
+      "mcp_tools": ["geox_burial_history", "geox_thermal_model", "geox_play_timing"]
+    },
+    {
+      "id": "physics",
+      "name": "Physics",
+      "description": "888_JUDGE governance and state verification",
+      "icon": "Zap",
+      "color": "#ec4899",
+      "app": "PhysicsConsole",
+      "core_function": "888_JUDGE governance & state verification",
+      "capabilities": ["stoiip_calculation", "physics_validation", "verdict_console", "state_verification"],
+      "substrates": ["machine", "human", "void"],
+      "mcp_tools": ["geox_compute_stoiip", "geox_validate_operation", "geox_audit_hold_breach"]
+    },
+    {
+      "id": "map",
+      "name": "Map",
+      "description": "Transversal spatial fabric (Malay Basin Pilot)",
+      "icon": "Map",
+      "color": "#06b6d4",
+      "app": "MapRegistry",
+      "core_function": "Transversal spatial fabric (Malay Basin Pilot)",
+      "capabilities": ["map_display", "spatial_query", "basin_outline", "regional_geology"],
+      "substrates": ["human", "machine", "infrastructure", "orbital"],
+      "mcp_tools": ["geox_map_view", "geox_spatial_query", "geox_basin_outline"]
+    }
+  ],
+  "version": "2026.04.11",
+  "seal": "DITEMPA BUKAN DIBERI",
+  "constitutional_floor": "F13_SOVEREIGN"
+}

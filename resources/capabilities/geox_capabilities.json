@@ -1,0 +1,162 @@
+{
+  "domain": "earth_intelligence",
+  "version": "2026.05.17",
+  "seal": "DITEMPA BUKAN DIBERI",
+  "tools": [
+    {
+      "name": "geox_data_ingest_bundle",
+      "domain": "data_ingest",
+      "required_inputs": [
+        "source_uri OR content_base64"
+      ],
+      "optional_inputs": [
+        "well_id",
+        "source_type",
+        "standardize_curves",
+        "normalize_units"
+      ],
+      "outputs": [
+        "artifact_ref",
+        "sha256",
+        "curve_inventory",
+        "depth_range_m",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "FILE_IMPORT means mechanical load, not geological validation."
+      ],
+      "next_best_tools": [
+        "geox_data_qc_bundle",
+        "geox_las_curve_inventory"
+      ]
+    },
+    {
+      "name": "geox_data_qc_bundle",
+      "domain": "data_qc",
+      "required_inputs": [
+        "artifact_ref",
+        "artifact_type"
+      ],
+      "optional_inputs": [
+        "qc_mode"
+      ],
+      "outputs": [
+        "qc_overall",
+        "qc_passed",
+        "claim_state",
+        "flags",
+        "limitations"
+      ],
+      "claim_limits": [
+        "QC_VERIFIED means mechanical checks passed, not geological truth."
+      ],
+      "next_best_tools": [
+        "geox_subsurface_generate_candidates",
+        "geox_well_analyze_sequence"
+      ]
+    },
+    {
+      "name": "geox_well_analyze_sequence",
+      "domain": "well_stratigraphy",
+      "required_inputs": [
+        "source",
+        "zone_top",
+        "zone_base"
+      ],
+      "optional_inputs": [
+        "depo_env_code",
+        "bin_size_m",
+        "min_package_thickness_m",
+        "p50_shift_api",
+        "gr_cutoff_api"
+      ],
+      "outputs": [
+        "bins",
+        "packages",
+        "systems_tracts",
+        "surfaces",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Single-well sequence surfaces are candidates only.",
+        "MFS requires correlation or independent strat evidence.",
+        "GR-only motif cannot prove lithology."
+      ],
+      "next_best_tools": [
+        "geox_section_interpret_correlation",
+        "geox_evidence_summarize_cross"
+      ]
+    },
+    {
+      "name": "geox_subsurface_generate_candidates",
+      "domain": "petrophysics",
+      "required_inputs": [
+        "target_class",
+        "evidence_refs"
+      ],
+      "optional_inputs": [
+        "zone_top_m",
+        "zone_base_m",
+        "realizations",
+        "archie params"
+      ],
+      "outputs": [
+        "candidates",
+        "residuals",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Candidates are hypotheses until verified by independent evidence."
+      ],
+      "next_best_tools": [
+        "geox_subsurface_verify_integrity",
+        "geox_evidence_summarize_cross"
+      ]
+    },
+    {
+      "name": "geox_prospect_evaluate",
+      "domain": "prospect",
+      "required_inputs": [
+        "prospect_ref"
+      ],
+      "optional_inputs": [
+        "mode",
+        "evidence_refs"
+      ],
+      "outputs": [
+        "evaluation",
+        "pos",
+        "evoi",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Screen mode is heuristic only. Appraise/develop require QC_VERIFIED evidence."
+      ],
+      "next_best_tools": [
+        "geox_prospect_judge_preview"
+      ]
+    },
+    {
+      "name": "geox_evidence_summarize_cross",
+      "domain": "cross_dimension",
+      "required_inputs": [
+        "evidence_refs"
+      ],
+      "optional_inputs": [
+        "export_format",
+        "output_path"
+      ],
+      "outputs": [
+        "causal_graph",
+        "summary",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Cross-domain synthesis is only as strong as the weakest evidence ref."
+      ],
+      "next_best_tools": [
+        "geox_prospect_judge_preview"
+      ]
+    }
+  ]
+}

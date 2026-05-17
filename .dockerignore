@@ -1,0 +1,44 @@
+# GEOX .dockerignore — Low-Entropy Build
+# Exclude entropy from Docker context
+
+# Archive / legacy
+archive/
+docs/
+999_vault/
+
+# Frontend build artifacts
+node_modules/
+dist/
+build/
+geox-gui/node_modules/
+geox-gui/dist/
+
+# Cache
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# Data (mounted as volumes)
+data/raw/
+data/geox_las/*.las
+data/geox_panels/*.png
+
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

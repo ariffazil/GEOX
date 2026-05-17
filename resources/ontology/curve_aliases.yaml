@@ -1,0 +1,29 @@
+curve_aliases:
+  gamma_ray:
+    canonical: GR
+    aliases: [GR, GR_P, GAMMA, CGR, SGR, GRC, GAPI, GAMMA_RAY]
+    unit: gAPI
+  resistivity_deep:
+    canonical: RT
+    aliases: [RT, RESD, RES_D, RDEP, ILD, RES_DEEP]
+    unit: ohm.m
+  density:
+    canonical: RHOB
+    aliases: [RHOB, DENS, DEN, RHOB]
+    unit: g/cm3
+  neutron_porosity:
+    canonical: NPHI
+    aliases: [NPHI, NEU, NPOR, PHIN]
+    unit: v/v
+  sonic:
+    canonical: DT
+    aliases: [DT, DTC, SONIC, AC, DT4]
+    unit: us/ft
+  caliper:
+    canonical: CAL
+    aliases: [CAL, CALI, CALX]
+    unit: in
+  spontaneous_potential:
+    canonical: SP
+    aliases: [SP, SPONT, SPL]
+    unit: mV

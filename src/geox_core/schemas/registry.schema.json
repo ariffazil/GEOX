@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://geox.arif-fazil.com/schemas/registry.schema.json",
+  "title": "GEOX Registry",
+  "description": "Schema for the GEOX skills registry.json",
+  "type": "object",
+  "required": ["geox_version", "total_skills", "total_domains", "skills"],
+  "properties": {
+    "geox_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "total_skills": {
+      "type": "integer",
+      "const": 33
+    },
+    "total_domains": {
+      "type": "integer",
+      "const": 11
+    },
+    "skills_per_domain": {
+      "type": "integer",
+      "const": 3
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["sensing", "geodesy", "terrain", "water", "atmosphere", "mobility", "infrastructure", "hazards", "governance", "time", "orchestration"]
+      },
+      "minItems": 11,
+      "maxItems": 11
+    },
+    "substrates": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "scales": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "horizons": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "skills": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/skillEntry" },
+      "minItems": 33,
+      "maxItems": 33
+    },
+    "recommended_first_nine": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 9,
+      "maxItems": 9
+    }
+  },
+  "definitions": {
+    "skillEntry": {
+      "type": "object",
+      "required": ["id", "title", "domain", "filename", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "domain": { "type": "string" },
+        "filename": { "type": "string" },
+        "substrates": { "type": "array", "items": { "type": "string" } },
+        "scales": { "type": "array", "items": { "type": "string" } },
+        "horizons": { "type": "array", "items": { "type": "string" } },
+        "inputs": { "type": "array", "items": { "type": "string" } },
+        "outputs": { "type": "array", "items": { "type": "string" } },
+        "depends_on": { "type": "array", "items": { "type": "string" } },
+        "risk_class": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "human_confirmation": { "type": "boolean" },
+        "drift_sensitivity": { "type": "string", "enum": ["low", "medium", "high"] },
+        "legal_domain": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "review", "approved", "active", "deprecated"] }
+      }
+    }
+  }
+}

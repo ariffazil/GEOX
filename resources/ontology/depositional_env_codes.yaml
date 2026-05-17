@@ -1,0 +1,7 @@
+depositional_env_codes:
+  FLUVIAL: [LST, TST, HST]
+  TIDAL: [LST, TST, HST]
+  SHOREFACE: [LST, TST, HST, FSST]
+  SHELF: [LST, TST, HST, FSST]
+  DEEPWATER: [LST, TST, HST]
+  CARBONATE: [LST, TST, HST]
