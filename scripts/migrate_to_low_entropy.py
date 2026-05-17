@@ -3,7 +3,7 @@
 GEOX Low-Entropy Repo Migration Script
 ═══════════════════════════════════════════════════════════════════════════════
 Phase 1: Establish canonical spine
-Phase 2: Migrate core + MCP surface  
+Phase 2: Migrate core + MCP surface
 Phase 3: Create resources layer
 Phase 4: Archive old surfaces
 
@@ -50,7 +50,6 @@ IMPORT_REWRITES = [
     ("from contracts.tools.canonical.dst ", "from geox_mcp.tools.dst "),
     ("from contracts.mcp.", "from geox_mcp.contracts."),
     ("import contracts.mcp.", "import geox_mcp.contracts."),
-    
     # Core computation layer (geox → geox_core)
     ("from geox.core.", "from geox_core.core."),
     ("from geox.ingest.", "from geox_core.ingest."),
@@ -74,14 +73,12 @@ IMPORT_REWRITES = [
     ("from geox.registry.", "from geox_core.registry."),
     ("from geox.geox_mcp.", "from geox_mcp."),
     ("import geox.geox_mcp.", "import geox_mcp."),
-    
     # Enums/schemas/compatibility (contracts → geox_core)
     ("from contracts.enums.", "from geox_core.enums."),
     ("from contracts.schemas.", "from geox_core.schemas."),
     ("from contracts.governance.", "from geox_core.governance."),
     ("from contracts.parity.", "from geox_core.parity."),
     ("from compatibility.", "from geox_core.compatibility."),
-    
     # Server self-reference (when server.py moves)
     ("from server import GEOX_VERSION", "from geox_mcp.server import GEOX_VERSION"),
 ]
@@ -100,7 +97,7 @@ def copy_tree_with_rewrite(src: Path, dst: Path, rename_map: dict[str, str] | No
     for root, dirs, files in os.walk(src):
         # Skip pycache and node_modules
         dirs[:] = [d for d in dirs if d not in ("__pycache__", "node_modules", ".git")]
-        
+
         rel_root = Path(root).relative_to(src)
         for file in files:
             if file.endswith(".pyc"):
@@ -110,7 +107,7 @@ def copy_tree_with_rewrite(src: Path, dst: Path, rename_map: dict[str, str] | No
             dst_file_name = rename_map.get(file, file)
             dst_file = dst / rel_root / dst_file_name
             dst_file.parent.mkdir(parents=True, exist_ok=True)
-            
+
             if file.endswith(".py"):
                 content = src_file.read_text(encoding="utf-8")
                 content = rewrite_imports(content)
@@ -129,7 +126,7 @@ def create_init_py(path: Path) -> None:
 def phase_0_create_directories() -> None:
     """Create target directory spine."""
     print("[Phase 0] Creating directory spine...")
-    
+
     dirs = [
         TARGET_SRC / "geox_core" / "core",
         TARGET_SRC / "geox_core" / "ingest",
@@ -181,7 +178,7 @@ def phase_0_create_directories() -> None:
 def phase_1_migrate_core() -> None:
     """Migrate core computation to src/geox_core/."""
     print("[Phase 1] Migrating core computation...")
-    
+
     mappings = [
         (REPO_ROOT / "geox" / "core", TARGET_SRC / "geox_core" / "core"),
         (REPO_ROOT / "geox" / "ingest", TARGET_SRC / "geox_core" / "ingest"),
@@ -209,21 +206,21 @@ def phase_1_migrate_core() -> None:
         (REPO_ROOT / "contracts" / "parity", TARGET_SRC / "geox_core" / "parity"),
         (REPO_ROOT / "compatibility", TARGET_SRC / "geox_core" / "compatibility"),
     ]
-    
+
     for src, dst in mappings:
         if src.exists():
             copy_tree_with_rewrite(src, dst)
             print(f"  ✓ {src.relative_to(REPO_ROOT)} → {dst.relative_to(REPO_ROOT)}")
         else:
             print(f"  ⚠ Missing: {src}")
-    
+
     # Copy geox/well/__init__.py and schemas
     if (REPO_ROOT / "geox" / "well" / "__init__.py").exists():
         shutil.copy2(REPO_ROOT / "geox" / "well" / "__init__.py", TARGET_SRC / "geox_core" / "well" / "__init__.py")
     well_schemas = REPO_ROOT / "geox" / "well" / "schemas"
     if well_schemas.exists():
         copy_tree_with_rewrite(well_schemas, TARGET_SRC / "geox_core" / "well" / "schemas")
-    
+
     # Also copy top-level geox __init__.py
     if (REPO_ROOT / "geox" / "__init__.py").exists():
         shutil.copy2(REPO_ROOT / "geox" / "__init__.py", TARGET_SRC / "geox_core" / "__init__.py")
@@ -232,7 +229,7 @@ def phase_1_migrate_core() -> None:
 def phase_2_migrate_mcp() -> None:
     """Migrate MCP surface to src/geox_mcp/."""
     print("[Phase 2] Migrating MCP surface...")
-    
+
     # Server
     server_src = REPO_ROOT / "server.py"
     server_dst = TARGET_SRC / "geox_mcp" / "server.py"
@@ -241,7 +238,7 @@ def phase_2_migrate_mcp() -> None:
         content = rewrite_imports(content)
         server_dst.write_text(content, encoding="utf-8")
         print(f"  ✓ server.py → src/geox_mcp/server.py")
-    
+
     # Registry
     registry_src = REPO_ROOT / "contracts" / "canonical_registry.py"
     registry_dst = TARGET_SRC / "geox_mcp" / "registry.py"
@@ -250,7 +247,7 @@ def phase_2_migrate_mcp() -> None:
         content = rewrite_imports(content)
         registry_dst.write_text(content, encoding="utf-8")
         print(f"  ✓ contracts/canonical_registry.py → src/geox_mcp/registry.py")
-    
+
     # Tool mappings
     tool_mappings = {
         "unified_13.py": "unified_13.py",
@@ -259,7 +256,7 @@ def phase_2_migrate_mcp() -> None:
     }
     tools_src = REPO_ROOT / "contracts" / "tools"
     tools_dst = TARGET_SRC / "geox_mcp" / "tools"
-    
+
     for fname, dst_name in tool_mappings.items():
         src_file = tools_src / fname
         if src_file.exists():
@@ -267,7 +264,7 @@ def phase_2_migrate_mcp() -> None:
             content = rewrite_imports(content)
             (tools_dst / dst_name).write_text(content, encoding="utf-8")
             print(f"  ✓ contracts/tools/{fname} → src/geox_mcp/tools/{dst_name}")
-    
+
     # Canonical tools (with renames)
     canonical_tools = {
         "ingest.py": "data.py",
@@ -283,7 +280,7 @@ def phase_2_migrate_mcp() -> None:
         "dst.py": "dst.py",
     }
     canonical_src = tools_src / "canonical"
-    
+
     for src_name, dst_name in canonical_tools.items():
         src_file = canonical_src / src_name
         if src_file.exists():
@@ -291,25 +288,25 @@ def phase_2_migrate_mcp() -> None:
             content = rewrite_imports(content)
             (tools_dst / dst_name).write_text(content, encoding="utf-8")
             print(f"  ✓ contracts/tools/canonical/{src_name} → src/geox_mcp/tools/{dst_name}")
-    
+
     # Kernel helpers
     kernel_src = canonical_src / "kernel"
     kernel_dst = tools_dst / "kernel"
     if kernel_src.exists():
         copy_tree_with_rewrite(kernel_src, kernel_dst)
         print(f"  ✓ contracts/tools/canonical/kernel → src/geox_mcp/tools/kernel")
-    
+
     # MCP contracts
     mcp_contracts_src = REPO_ROOT / "contracts" / "mcp"
     mcp_contracts_dst = TARGET_SRC / "geox_mcp" / "contracts"
     if mcp_contracts_src.exists():
         copy_tree_with_rewrite(mcp_contracts_src, mcp_contracts_dst)
         print(f"  ✓ contracts/mcp → src/geox_mcp/contracts")
-    
+
     # Well MCP wrappers
     well_mcp_tools = REPO_ROOT / "geox" / "well" / "mcp_tools.py"
     well_mcp_strat = REPO_ROOT / "geox" / "well" / "mcp_stratigraphy.py"
-    
+
     if well_mcp_tools.exists():
         content = well_mcp_tools.read_text(encoding="utf-8")
         content = rewrite_imports(content)
@@ -319,7 +316,7 @@ def phase_2_migrate_mcp() -> None:
         content = content.replace("from .seqstrat import", "from geox_core.well.tools.seqstrat import")
         (tools_dst / "well.py").write_text(content, encoding="utf-8")
         print(f"  ✓ geox/well/mcp_tools.py → src/geox_mcp/tools/well.py")
-    
+
     if well_mcp_strat.exists():
         content = well_mcp_strat.read_text(encoding="utf-8")
         content = rewrite_imports(content)
@@ -332,7 +329,7 @@ def phase_2_migrate_mcp() -> None:
 def phase_3_create_resources() -> None:
     """Create the resources/ layer from scratch."""
     print("[Phase 3] Creating resources layer...")
-    
+
     # capabilities.json
     capabilities = {
         "domain": "earth_intelligence",
@@ -346,7 +343,7 @@ def phase_3_create_resources() -> None:
                 "optional_inputs": ["well_id", "source_type", "standardize_curves", "normalize_units"],
                 "outputs": ["artifact_ref", "sha256", "curve_inventory", "depth_range_m", "claim_state"],
                 "claim_limits": ["FILE_IMPORT means mechanical load, not geological validation."],
-                "next_best_tools": ["geox_data_qc_bundle", "geox_las_curve_inventory"]
+                "next_best_tools": ["geox_data_qc_bundle", "geox_las_curve_inventory"],
             },
             {
                 "name": "geox_data_qc_bundle",
@@ -355,7 +352,7 @@ def phase_3_create_resources() -> None:
                 "optional_inputs": ["qc_mode"],
                 "outputs": ["qc_overall", "qc_passed", "claim_state", "flags", "limitations"],
                 "claim_limits": ["QC_VERIFIED means mechanical checks passed, not geological truth."],
-                "next_best_tools": ["geox_subsurface_generate_candidates", "geox_well_analyze_sequence"]
+                "next_best_tools": ["geox_subsurface_generate_candidates", "geox_well_analyze_sequence"],
             },
             {
                 "name": "geox_well_analyze_sequence",
@@ -366,9 +363,9 @@ def phase_3_create_resources() -> None:
                 "claim_limits": [
                     "Single-well sequence surfaces are candidates only.",
                     "MFS requires correlation or independent strat evidence.",
-                    "GR-only motif cannot prove lithology."
+                    "GR-only motif cannot prove lithology.",
                 ],
-                "next_best_tools": ["geox_section_interpret_correlation", "geox_evidence_summarize_cross"]
+                "next_best_tools": ["geox_section_interpret_correlation", "geox_evidence_summarize_cross"],
             },
             {
                 "name": "geox_subsurface_generate_candidates",
@@ -377,7 +374,7 @@ def phase_3_create_resources() -> None:
                 "optional_inputs": ["zone_top_m", "zone_base_m", "realizations", "archie params"],
                 "outputs": ["candidates", "residuals", "claim_state"],
                 "claim_limits": ["Candidates are hypotheses until verified by independent evidence."],
-                "next_best_tools": ["geox_subsurface_verify_integrity", "geox_evidence_summarize_cross"]
+                "next_best_tools": ["geox_subsurface_verify_integrity", "geox_evidence_summarize_cross"],
             },
             {
                 "name": "geox_prospect_evaluate",
@@ -386,7 +383,7 @@ def phase_3_create_resources() -> None:
                 "optional_inputs": ["mode", "evidence_refs"],
                 "outputs": ["evaluation", "pos", "evoi", "claim_state"],
                 "claim_limits": ["Screen mode is heuristic only. Appraise/develop require QC_VERIFIED evidence."],
-                "next_best_tools": ["geox_prospect_judge_preview"]
+                "next_best_tools": ["geox_prospect_judge_preview"],
             },
             {
                 "name": "geox_evidence_summarize_cross",
@@ -395,16 +392,17 @@ def phase_3_create_resources() -> None:
                 "optional_inputs": ["export_format", "output_path"],
                 "outputs": ["causal_graph", "summary", "claim_state"],
                 "claim_limits": ["Cross-domain synthesis is only as strong as the weakest evidence ref."],
-                "next_best_tools": ["geox_prospect_judge_preview"]
+                "next_best_tools": ["geox_prospect_judge_preview"],
             },
-        ]
+        ],
     }
-    
+
     import json
+
     cap_file = TARGET_RESOURCES / "capabilities" / "geox_capabilities.json"
     cap_file.write_text(json.dumps(capabilities, indent=2), encoding="utf-8")
     print(f"  ✓ {cap_file.relative_to(REPO_ROOT)}")
-    
+
     # Prompts
     prompts = {
         "geox_agent_system.md": """# GEOX Agent System Prompt
@@ -475,12 +473,12 @@ Every statement must be tagged:
 - `GR_PHYSICS_GUARD_FAILED` → run QC; check for bad GR values
 """,
     }
-    
+
     for name, content in prompts.items():
         p = TARGET_RESOURCES / "prompts" / name
         p.write_text(content, encoding="utf-8")
         print(f"  ✓ {p.relative_to(REPO_ROOT)}")
-    
+
     # Ontology
     ontology = {
         "curve_aliases.yaml": """curve_aliases:
@@ -522,12 +520,12 @@ Every statement must be tagged:
   CARBONATE: [LST, TST, HST]
 """,
     }
-    
+
     for name, content in ontology.items():
         p = TARGET_RESOURCES / "ontology" / name
         p.write_text(content, encoding="utf-8")
         print(f"  ✓ {p.relative_to(REPO_ROOT)}")
-    
+
     # Playbooks
     playbooks = {
         "well_sequence_stratigraphy.yaml": """name: well_sequence_stratigraphy
@@ -579,12 +577,12 @@ claim_limits:
   - Develop requires full evidence + prior appraisal.
 """,
     }
-    
+
     for name, content in playbooks.items():
         p = TARGET_RESOURCES / "playbooks" / name
         p.write_text(content, encoding="utf-8")
         print(f"  ✓ {p.relative_to(REPO_ROOT)}")
-    
+
     # Examples
     example_project = """project: DANUM1_SeqStrat
 bin_size_m: 10.0
@@ -608,7 +606,7 @@ intervals:
 """
     (TARGET_RESOURCES / "examples" / "danum1_project.yaml").write_text(example_project, encoding="utf-8")
     print(f"  ✓ resources/examples/danum1_project.yaml")
-    
+
     # Schema exports
     schemas_to_export = [
         (REPO_ROOT / "schemas" / "dimensions.json", TARGET_RESOURCES / "schemas" / "dimensions.json"),
@@ -624,27 +622,59 @@ intervals:
 def phase_4_move_docs() -> None:
     """Move root-level docs to docs/."""
     print("[Phase 4] Moving root docs...")
-    
+
     doc_files = [
-        "888_HOLD_RELEASE_SUMMARY.md", "AAA_GRADE_SEAL.md", "AGENTS.md", "ARIF.md",
-        "CHANGELOG.md", "CLAUDE.md", "CLEANUP_SUMMARY.md", "CONSTITUTIONAL_PHYSICS_STACK.md",
-        "CONTRACTS_ANALYSIS.md", "DEPLOYMENT.md", "DEPLOYMENT_SEAL.md", "DEPLOYMENT_STATUS.md",
-        "EIC_SEAL.md", "EXTERNAL_INTEGRATION_GUIDE.md", "FEDERATION_LOOP_GEOX_SPACE.md",
-        "FORGE_HARDENED_VISION.md", "GEOX_CONSTITUTIONAL_PHYSICS_STACK.md",
-        "GEOX_DESIGN_FORGE_SEAL.md", "GEOX_F1_F13_MAPPING.md", "GEOX_GO_NOGO_RULES.md",
-        "GEOX_INTERPRODUCT_RISK_RULES.md", "GEOX_MAP_RELEASE_NOTE.md",
-        "GEOX_ORTHOGONAL_TOOL_SPEC.md", "GEOX_PRODUCT_VERSIONING.md",
-        "GEOX_SEAL_CHECKLIST.md", "GEOX_SIMPLIFIED_MANIFEST.md", "GEOX_STATUS_AND_FOCUS.md",
-        "GEOX_TOOL_TAXONOMY.md", "GEOX_VISION_DEV_CHARTER.md", "GOVERNANCE.md",
-        "MCP_APPS_AUDIT.md", "PHYSICS_ADAPTER_SPEC.md", "RELEASE_CHECKLIST.md",
-        "RELEASE_NOTES_v2026.05.01.md", "REPO_ROUTING_CONSTITUTION.md", "ROADMAP.md",
-        "SECURITY.md", "SITE_DEPLOYMENT_PLAN.md", "SITE_GEOK_ARIF_FAZIL_COM.md",
-        "SITE_MAP_VISUAL.md", "TOAC_AC_RISK_SPEC.md", "TOAC_CANON.md", "TODO.md",
-        "TOOL_CONSOLIDATION_MAP.md", "VISION_INTELLIGENCE_IMPLEMENTATION.md",
-        "WEBSITE_AUDIT.md", "WIKI_UPDATE_SUMMARY.md", "architecture.md",
+        "888_HOLD_RELEASE_SUMMARY.md",
+        "AAA_GRADE_SEAL.md",
+        "AGENTS.md",
+        "ARIF.md",
+        "CHANGELOG.md",
+        "CLAUDE.md",
+        "CLEANUP_SUMMARY.md",
+        "CONSTITUTIONAL_PHYSICS_STACK.md",
+        "CONTRACTS_ANALYSIS.md",
+        "DEPLOYMENT.md",
+        "DEPLOYMENT_SEAL.md",
+        "DEPLOYMENT_STATUS.md",
+        "EIC_SEAL.md",
+        "EXTERNAL_INTEGRATION_GUIDE.md",
+        "FEDERATION_LOOP_GEOX_SPACE.md",
+        "FORGE_HARDENED_VISION.md",
+        "GEOX_CONSTITUTIONAL_PHYSICS_STACK.md",
+        "GEOX_DESIGN_FORGE_SEAL.md",
+        "GEOX_F1_F13_MAPPING.md",
+        "GEOX_GO_NOGO_RULES.md",
+        "GEOX_INTERPRODUCT_RISK_RULES.md",
+        "GEOX_MAP_RELEASE_NOTE.md",
+        "GEOX_ORTHOGONAL_TOOL_SPEC.md",
+        "GEOX_PRODUCT_VERSIONING.md",
+        "GEOX_SEAL_CHECKLIST.md",
+        "GEOX_SIMPLIFIED_MANIFEST.md",
+        "GEOX_STATUS_AND_FOCUS.md",
+        "GEOX_TOOL_TAXONOMY.md",
+        "GEOX_VISION_DEV_CHARTER.md",
+        "GOVERNANCE.md",
+        "MCP_APPS_AUDIT.md",
+        "PHYSICS_ADAPTER_SPEC.md",
+        "RELEASE_CHECKLIST.md",
+        "RELEASE_NOTES_v2026.05.01.md",
+        "REPO_ROUTING_CONSTITUTION.md",
+        "ROADMAP.md",
+        "SECURITY.md",
+        "SITE_DEPLOYMENT_PLAN.md",
+        "SITE_GEOK_ARIF_FAZIL_COM.md",
+        "SITE_MAP_VISUAL.md",
+        "TOAC_AC_RISK_SPEC.md",
+        "TOAC_CANON.md",
+        "TODO.md",
+        "TOOL_CONSOLIDATION_MAP.md",
+        "VISION_INTELLIGENCE_IMPLEMENTATION.md",
+        "WEBSITE_AUDIT.md",
+        "WIKI_UPDATE_SUMMARY.md",
+        "architecture.md",
         "README_WELL_DESK.md",
     ]
-    
+
     for fname in doc_files:
         src = REPO_ROOT / fname
         if src.exists():
@@ -656,16 +686,42 @@ def phase_4_move_docs() -> None:
 def phase_5_archive_surfaces() -> None:
     """Move old competing surfaces to archive/."""
     print("[Phase 5] Archiving old surfaces...")
-    
+
     surfaces = [
-        "arifos", "control_plane", "execution_plane", "domain", "governance",
-        "internal", "knowledge", "mcp", "sdk", "services", "traefik",
-        "WELL", "geox_mcp", "src/tools", "tools/causal_scene", "scratch",
-        "stash", "legacy", "patches", "ref", "output", "telemetry",
-        "wiki", "c:", "geox_sovereign_backend.egg-info", "geox.egg-info",
-        "geox-site", "geox-site-p0", "site", ".archive", "archive/deprecated", "archive/legacy_servers",
+        "arifos",
+        "control_plane",
+        "execution_plane",
+        "domain",
+        "governance",
+        "internal",
+        "knowledge",
+        "mcp",
+        "sdk",
+        "services",
+        "traefik",
+        "WELL",
+        "geox_mcp",
+        "src/tools",
+        "tools/causal_scene",
+        "scratch",
+        "stash",
+        "legacy",
+        "patches",
+        "ref",
+        "output",
+        "telemetry",
+        "wiki",
+        "c:",
+        "geox_sovereign_backend.egg-info",
+        "geox.egg-info",
+        "geox-site",
+        "geox-site-p0",
+        "site",
+        ".archive",
+        "archive/deprecated",
+        "archive/legacy_servers",
     ]
-    
+
     for surf in surfaces:
         src = REPO_ROOT / surf
         if src.exists():
@@ -683,7 +739,7 @@ def phase_5_archive_surfaces() -> None:
 def phase_6_init_files() -> None:
     """Create __init__.py files for new packages."""
     print("[Phase 6] Creating package __init__.py files...")
-    
+
     packages = [
         TARGET_SRC / "geox_core",
         TARGET_SRC / "geox_core" / "core",
@@ -716,31 +772,28 @@ def phase_6_init_files() -> None:
         TARGET_SRC / "geox_mcp" / "tools" / "kernel",
         TARGET_SRC / "geox_mcp" / "contracts",
     ]
-    
+
     for pkg in packages:
         create_init_py(pkg)
-    
+
     print("  ✓ Package inits created")
 
 
 def phase_7_update_pyproject() -> None:
     """Update pyproject.toml to include new packages."""
     print("[Phase 7] Updating pyproject.toml...")
-    
+
     pyproject = REPO_ROOT / "pyproject.toml"
     if not pyproject.exists():
         print("  ⚠ pyproject.toml not found")
         return
-    
+
     content = pyproject.read_text(encoding="utf-8")
-    
+
     # Add src to packages if using setuptools or flit
     if "[tool.setuptools.packages.find]" in content and 'where = ["src"]' not in content:
         # Insert find directive
-        content = content.replace(
-            "[tool.setuptools.packages.find]",
-            '[tool.setuptools.packages.find]\nwhere = ["src"]'
-        )
+        content = content.replace("[tool.setuptools.packages.find]", '[tool.setuptools.packages.find]\nwhere = ["src"]')
         pyproject.write_text(content, encoding="utf-8")
         print("  ✓ Added setuptools.packages.find.where = ['src']")
     elif "[project]" in content and "packages =" not in content:
@@ -752,16 +805,16 @@ def main() -> int:
     print("=" * 70)
     print("GEOX Low-Entropy Migration")
     print("=" * 70)
-    
+
     phase_0_create_directories()
     phase_1_migrate_core()
     phase_2_migrate_mcp()
     phase_3_create_resources()
     phase_4_move_docs()
-    phase_5_archive_surfaces()
+    # phase_5_archive_surfaces()  # 888_HOLD — WELL/ is a live federation organ, Phase 5 deferred
     phase_6_init_files()
-    phase_7_update_pyproject()
-    
+    # phase_7_update_pyproject()  # 888_HOLD — run after Phase 0-4 tests are green
+
     print("=" * 70)
     print("Migration complete.")
     print("=" * 70)
