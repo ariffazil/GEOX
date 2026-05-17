@@ -208,8 +208,12 @@ def _load_artifact(artifact_ref: str) -> dict[str, Any]:
 
 
 def _extract_evidence_summary(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
-    """Extract simplified evidence summary from loaded artifacts."""
-    summary = {
+    """Extract simplified evidence summary from loaded artifacts.
+
+    Hardened for contradiction scan: derives lithology signals from
+    GR motif, density-neutron crossplot, and petrophysics metadata.
+    """
+    summary: dict[str, Any] = {
         "gr_trend": "unknown",
         "vclay_trend": "unknown",
         "rhob_trend": "unknown",
@@ -223,6 +227,17 @@ def _extract_evidence_summary(artifacts: list[dict[str, Any]]) -> dict[str, Any]
         "has_biostrat": False,
         "has_correlation": False,
         "well_count": 1,
+        # Hardened fields — curve-based lithology signals
+        "gr_mean_api": None,
+        "gr_motif_class": None,
+        "dn_dominant_lithology": None,
+        "dn_lithology_fractions": {},
+        "rt_mean_ohmm": None,
+        "vsh_mean": None,
+        "phi_mean": None,
+        "sw_mean": None,
+        "phi_density_mean": None,
+        "phi_sonic_mean": None,
     }
 
     for art in artifacts:
@@ -232,6 +247,34 @@ def _extract_evidence_summary(artifacts: list[dict[str, Any]]) -> dict[str, Any]
             for key in summary:
                 if key in meta:
                     summary[key] = meta[key]
+
+        # Hardened: extract curve-derived lithology from artifact payload
+        payload = art.get("payload", art)
+        if isinstance(payload, dict):
+            # GR motif results
+            if "gr_mean" in payload:
+                summary["gr_mean_api"] = payload["gr_mean"]
+            if "motif" in payload:
+                summary["gr_motif_class"] = payload["motif"]
+            # Lithology classification results
+            if "dominant_lithology" in payload:
+                summary["dn_dominant_lithology"] = payload["dominant_lithology"]
+            if "lithology_fractions" in payload:
+                summary["dn_lithology_fractions"] = payload["lithology_fractions"]
+            # Petrophysics results
+            if "vsh_mean" in payload:
+                summary["vsh_mean"] = payload["vsh_mean"]
+            if "phi_mean" in payload:
+                summary["phi_mean"] = payload["phi_mean"]
+            if "sw_mean" in payload:
+                summary["sw_mean"] = payload["sw_mean"]
+            if "rt_mean" in payload:
+                summary["rt_mean_ohmm"] = payload["rt_mean"]
+            # Porosity from different methods
+            if "phi_density_mean" in payload:
+                summary["phi_density_mean"] = payload["phi_density_mean"]
+            if "phi_sonic_mean" in payload:
+                summary["phi_sonic_mean"] = payload["phi_sonic_mean"]
 
     # Count wells from refs
     wells = set()
@@ -380,53 +423,197 @@ def _score_to_confidence(score: float) -> str:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
+def _derive_gr_lithology(gr_mean_api: float | None) -> str | None:
+    """Derive lithology from GR mean: sand < 75, shale > 120, interbedded in between."""
+    if gr_mean_api is None:
+        return None
+    if gr_mean_api < 75:
+        return "sand"
+    if gr_mean_api > 120:
+        return "shale"
+    return "interbedded"
+
+
+def _derive_rt_lithology(rt_mean_ohmm: float | None) -> str | None:
+    """Derive lithology from RT mean: resistive > 10 (sand/carb), conductive < 2 (shale)."""
+    if rt_mean_ohmm is None:
+        return None
+    if rt_mean_ohmm > 10:
+        return "resistive"
+    if rt_mean_ohmm < 2:
+        return "conductive"
+    return "intermediate"
+
+
 def _contradiction_scan(hypotheses: list[dict[str, Any]], evidence: dict[str, Any]) -> dict[str, Any]:
-    """Systematically attack hypotheses and surface contradictions."""
+    """Systematically attack hypotheses and surface contradictions.
+
+    Hardened detectors:
+      C1-C4: Original context/process contradictions
+      C5:    GR lithology vs Density-Neutron lithology mismatch
+      C6:    GR lithology vs Resistivity lithology mismatch
+      C7:    Porosity method inconsistency (density vs sonic)
+      C8:    Vsh vs φ contradiction (shale cannot have high porosity)
+      C9:    Trend contradiction (coarsening vs fining)
+      C10:   Thickness vs process scale mismatch
+      C11:   Lateral extent vs process continuity mismatch
+    """
     contradictions = []
     penalty_scores = []
+    auto_hold_triggers: list[dict[str, Any]] = []
+
+    # Pre-compute derived lithology signals
+    gr_litho = _derive_gr_lithology(evidence.get("gr_mean_api"))
+    dn_litho = evidence.get("dn_dominant_lithology")
+    rt_litho = _derive_rt_lithology(evidence.get("rt_mean_ohmm"))
+    vsh_mean = evidence.get("vsh_mean")
+    phi_mean = evidence.get("phi_mean")
+    phi_density = evidence.get("phi_density_mean")
+    phi_sonic = evidence.get("phi_sonic_mean")
+    thickness = evidence.get("thickness_m")
+    motif = evidence.get("motif")
+    gr_trend = evidence.get("gr_trend")
 
     for i, hyp in enumerate(hypotheses):
         penalties = 0.0
         issues = []
 
-        # Contradiction 1: If process predicts marine shale below but evidence says terrestrial
+        # ═══════════════════════════════════════════════════════════════════════
+        # C1: Marine shale below vs terrestrial evidence
+        # ═══════════════════════════════════════════════════════════════════════
         if "marine_shale_below" in str(hyp.get("expected_additional_signatures", [])):
             if evidence.get("has_marine_shale_below") is False:
                 penalties += 0.25
-                issues.append("Predicts marine shale below but evidence indicates terrestrial")
+                issues.append("C1: Predicts marine shale below but evidence indicates terrestrial")
 
-        # Contradiction 2: If process requires deepwater but context is shoreface
+        # ═══════════════════════════════════════════════════════════════════════
+        # C2: Deepwater process in shoreface context
+        # ═══════════════════════════════════════════════════════════════════════
         if hyp["process"] in ["fan lobe progradation", "turbidite lobe"]:
             if evidence.get("depo_context") == "shoreface":
                 penalties += 0.30
-                issues.append("Deepwater process incompatible with shoreface context")
+                issues.append("C2: Deepwater process incompatible with shoreface context")
+                auto_hold_triggers.append({"code": "C2", "severity": "critical", "detail": hyp["process"] + " in shoreface"})
 
-        # Contradiction 3: If confidence is high but critical evidence is missing
+        # ═══════════════════════════════════════════════════════════════════════
+        # C3: High confidence without core or biostrat
+        # ═══════════════════════════════════════════════════════════════════════
         if hyp["confidence"] in ["high", "moderate-high"]:
             if not evidence.get("has_core") and not evidence.get("has_biostrat"):
                 penalties += 0.20
-                issues.append("High confidence claimed without core or biostrat")
+                issues.append("C3: High confidence claimed without core or biostrat")
 
-        # Contradiction 4: Incompatible process pairs
+        # ═══════════════════════════════════════════════════════════════════════
+        # C4: Incompatible process pairs
+        # ═══════════════════════════════════════════════════════════════════════
         for j, other in enumerate(hypotheses):
             if i >= j:
                 continue
             if _processes_incompatible(hyp["process"], other["process"]):
                 penalties += 0.15
-                issues.append(f"Incompatible with hypothesis '{other['process']}'")
+                issues.append(f"C4: Incompatible with hypothesis '{other['process']}'")
+
+        # ═══════════════════════════════════════════════════════════════════════
+        # C5: GR lithology vs Density-Neutron lithology mismatch
+        # GR says Sand + DN says Shale  →  auto 888HOLD
+        # ═══════════════════════════════════════════════════════════════════════
+        if gr_litho and dn_litho:
+            if gr_litho == "sand" and dn_litho == "shale":
+                penalties += 0.35
+                issues.append("C5: GR indicates sand but density-neutron indicates shale")
+                auto_hold_triggers.append({"code": "C5", "severity": "critical", "detail": "GR sand vs DN shale"})
+            elif gr_litho == "shale" and dn_litho == "sandstone":
+                penalties += 0.30
+                issues.append("C5: GR indicates shale but density-neutron indicates sandstone")
+                auto_hold_triggers.append({"code": "C5", "severity": "high", "detail": "GR shale vs DN sandstone"})
+
+        # ═══════════════════════════════════════════════════════════════════════
+        # C6: GR lithology vs Resistivity lithology mismatch
+        # GR says Shale + RT says Resistive  →  contradiction (shale is conductive)
+        # ═══════════════════════════════════════════════════════════════════════
+        if gr_litho and rt_litho:
+            if gr_litho == "shale" and rt_litho == "resistive":
+                penalties += 0.30
+                issues.append("C6: GR indicates shale but resistivity is resistive (sand/carbonate signature)")
+                auto_hold_triggers.append({"code": "C6", "severity": "high", "detail": "GR shale vs RT resistive"})
+            elif gr_litho == "sand" and rt_litho == "conductive":
+                penalties += 0.25
+                issues.append("C6: GR indicates sand but resistivity is conductive (shale signature)")
+
+        # ═══════════════════════════════════════════════════════════════════════
+        # C7: Porosity method inconsistency
+        # Density porosity high but sonic porosity low  →  contradiction
+        # ═══════════════════════════════════════════════════════════════════════
+        if phi_density is not None and phi_sonic is not None:
+            if abs(phi_density - phi_sonic) > 0.10:
+                penalties += 0.25
+                issues.append(f"C7: Density porosity ({phi_density:.3f}) vs sonic porosity ({phi_sonic:.3f}) disagree by >0.10")
+
+        # ═══════════════════════════════════════════════════════════════════════
+        # C8: Vsh vs φ contradiction
+        # High Vsh (>0.5) with high φ (>0.25) → shale cannot have clean-sand porosity
+        # ═══════════════════════════════════════════════════════════════════════
+        if vsh_mean is not None and phi_mean is not None:
+            if vsh_mean > 0.5 and phi_mean > 0.25:
+                penalties += 0.30
+                issues.append(f"C8: High Vsh ({vsh_mean:.2f}) incompatible with high porosity ({phi_mean:.3f})")
+                auto_hold_triggers.append({"code": "C8", "severity": "high", "detail": f"Vsh={vsh_mean:.2f} vs phi={phi_mean:.3f}"})
+
+        # ═══════════════════════════════════════════════════════════════════════
+        # C9: Trend contradiction
+        # Coarsening-upward (FUNNEL motif) but GR trend increasing (fining)
+        # ═══════════════════════════════════════════════════════════════════════
+        if motif == "FUNNEL" and gr_trend == "increasing_upward":
+            penalties += 0.25
+            issues.append("C9: FUNNEL motif (coarsening-upward) contradicts increasing GR trend (fining-upward)")
+        elif motif == "BELL" and gr_trend == "decreasing_upward":
+            penalties += 0.25
+            issues.append("C9: BELL motif (fining-upward) contradicts decreasing GR trend (coarsening-upward)")
+
+        # ═══════════════════════════════════════════════════════════════════════
+        # C10: Thickness vs process scale mismatch
+        # Shoreface/delta front in < 2m interval  →  scale mismatch
+        # ═══════════════════════════════════════════════════════════════════════
+        if thickness is not None and thickness != "unknown":
+            try:
+                t = float(thickness)
+                if t < 2.0 and hyp["process"] in ["shoreface progradation", "delta front mouth bar"]:
+                    penalties += 0.20
+                    issues.append(f"C10: {hyp['process']} claimed in {t:.1f}m interval — too thin for process scale")
+            except (ValueError, TypeError):
+                pass
+
+        # ═══════════════════════════════════════════════════════════════════════
+        # C11: Lateral extent vs process continuity mismatch
+        # Shoreface requires lateral continuity; discontinuous evidence contradicts
+        # ═══════════════════════════════════════════════════════════════════════
+        lateral = evidence.get("lateral_extent")
+        if lateral == "discontinuous" and hyp["process"] in ["shoreface progradation", "delta front mouth bar"]:
+            penalties += 0.20
+            issues.append("C11: Shoreface/delta-front process incompatible with discontinuous lateral extent")
 
         contradictions.append({
             "process": hyp["process"],
             "issues": issues,
-            "penalty": penalties,
+            "penalty": round(penalties, 3),
         })
         penalty_scores.append(penalties)
+
+    max_penalty = max(penalty_scores) if penalty_scores else 0.0
+    recommendation = (
+        "888HOLD triggered — severe contradictions detected"
+        if auto_hold_triggers else
+        "Re-rank hypotheses after penalty application" if any(p > 0 for p in penalty_scores) else
+        "No major contradictions detected"
+    )
 
     return {
         "contradictions": contradictions,
         "penalty_scores": penalty_scores,
-        "max_penalty": max(penalty_scores) if penalty_scores else 0.0,
-        "recommendation": "Re-rank hypotheses after penalty application" if any(p > 0 for p in penalty_scores) else "No major contradictions detected",
+        "max_penalty": max_penalty,
+        "recommendation": recommendation,
+        "auto_hold_triggers": auto_hold_triggers,
+        "auto_hold": len(auto_hold_triggers) > 0,
     }
 
 
@@ -602,10 +789,24 @@ async def geox_evidence_contradiction_scan(
     confidence_rank = {"high": 5, "moderate-high": 4, "moderate": 3, "low-moderate": 2, "low": 1}
     hypotheses.sort(key=lambda h: confidence_rank.get(h["confidence"], 0), reverse=True)
 
+    # Auto-888HOLD: severe contradictions override DECISION_SUPPORT
+    if scan.get("auto_hold"):
+        claim_state = "888_HOLD"
+        execution_status = "HOLD"
+        verdict = "VOID"
+        acrisk = 0.85
+        floors = ["F2 TRUTH", "F9 ANTI-HANTU"]
+    else:
+        claim_state = "DECISION_SUPPORT"
+        execution_status = "SUCCESS"
+        verdict = "QUALIFY" if scan["max_penalty"] < 0.30 else "HOLD"
+        acrisk = 0.35 + scan["max_penalty"] * 0.5
+        floors = []
+
     return {
-        "execution_status": "SUCCESS",
+        "execution_status": execution_status,
         "tool_class": "audit",
-        "claim_state": "DECISION_SUPPORT",
+        "claim_state": claim_state,
         "observed": {},
         "derived": {},
         "local_interpretation": {},
@@ -614,20 +815,24 @@ async def geox_evidence_contradiction_scan(
             "contradictions": scan["contradictions"],
             "max_penalty": scan["max_penalty"],
             "recommendation": scan["recommendation"],
+            "auto_hold_triggers": scan.get("auto_hold_triggers", []),
         },
         "artifact_refs": {},
         "evidence_refs": evidence_refs,
         "claim_limits": [
             "Contradiction scan is DECISION_SUPPORT, not geological truth.",
             "Penalties are heuristic — not physics-based.",
+            "Auto-888HOLD fires when curve contradictions exceed safety threshold.",
         ],
         "next_best_actions": [
             {"tool": "geox_evidence_summarize_cross", "reason": "Synthesize final ranking", "priority": "high"}
+            if not scan.get("auto_hold") else
+            {"tool": "geox_data_qc_bundle", "reason": "Re-QC conflicting curves before re-abduction", "priority": "critical"}
         ],
         "audit_receipt": {
-            "acrisk": 0.35 + scan["max_penalty"] * 0.5,
-            "verdict": "QUALIFY" if scan["max_penalty"] < 0.30 else "HOLD",
-            "floors": [],
+            "acrisk": acrisk,
+            "verdict": verdict,
+            "floors": floors,
         },
         "human_final_authority": "Arif",
     }
