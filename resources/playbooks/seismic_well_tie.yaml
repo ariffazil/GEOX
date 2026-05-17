@@ -50,3 +50,7 @@ claim_limits:
   - "Well tie is model-dependent — wavelet choice matters."
   - "Multi-view ACRisk must be < 0.50 for structural interpretation."
   - "Attribute volumes are DERIVED, not OBSERVED."
+  - "PRISM zero-shot: OOD basins degrade 15% — validate with local well tie before seismic-only claims."
+  - "SAM-Fault IoU 61.3% zero-shot — dense fault networks require multi-scale coherence voting."
+  - "TGS offshore model: 23% improvement floor vs incumbent — use as claim_limit benchmark."
+  - "Seismic-only structural interpretation: DERIVED (not OBSERVED) — always require well tie anchor."
