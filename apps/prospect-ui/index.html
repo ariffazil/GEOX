@@ -905,14 +905,5 @@
 
         console.log('🔥 GEOX Basin Explorer — AAA Grade Initialized');
     </script>
-<script type="module">
-try {
-  const App = (await import('https://cdn.jsdelivr.net/npm/@modelcontextprotocol/ext-apps/dist/index.mjs')).App;
-  const app = new App();
-  app.on('ui/notifications/tool-input', (data) => { console.log('tool-input', data); });
-  app.on('ui/notifications/tool-result', (data) => { console.log('tool-result', data); });
-  await app.initialize();
-} catch(e) { console.warn('MCP Apps not supported in this host', e); }
-</script>
 </body>
 </html>

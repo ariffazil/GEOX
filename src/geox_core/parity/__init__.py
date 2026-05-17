@@ -1,7 +1,7 @@
 # GEOX Contracts — Parity
 # DITEMPA BUKAN DIBERI
 
-from contracts.parity.runtime_matrix import (
+from geox_core.parity.runtime_matrix import (
     RUNTIME_PARITY_MATRIX,
 )
 
