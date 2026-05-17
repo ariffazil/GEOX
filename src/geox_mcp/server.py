@@ -169,6 +169,15 @@ def bootstrap_sovereign_13():
             logger.info("Stratigraphy pipeline tools registered successfully")
         except Exception as e:
             logger.warning(f"Stratigraphy pipeline tools not loaded: {e}")
+        # Register Earth abduction tools (Tier 4 — PROCESS_HYPOTHESIS)
+        try:
+            from geox_mcp.tools.abduction import geox_process_abduction, geox_evidence_contradiction_scan
+
+            mcp.tool()(geox_process_abduction)
+            mcp.tool()(geox_evidence_contradiction_scan)
+            logger.info("Earth abduction tools registered successfully")
+        except Exception as e:
+            logger.warning(f"Earth abduction tools not loaded: {e}")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -1143,6 +1152,87 @@ async def geox_tree777_scar(name: str) -> str:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# RESOURCES — Agent Knowledge Pack
+# Exposes resources/ directory as MCP resources for agent ingestion.
+# DITEMPA BUKAN DIBERI — Intelligence is forged, not given.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+RESOURCES_DIR = Path(os.getcwd()) / "resources"
+
+
+@mcp.resource(
+    "geox://capabilities",
+    description="Full GEOX capability map: tools, domains, claim limits, next best actions. Read at session start.",
+)
+async def geox_capabilities() -> str:
+    path = RESOURCES_DIR / "capabilities" / "geox_capabilities.json"
+    if not path.exists():
+        return json.dumps({"error": "Capabilities not found"})
+    return path.read_text()
+
+
+@mcp.resource(
+    "geox://resources/{category}/{name}",
+    description=(
+        "Agent knowledge pack: ontology, playbooks, schemas, examples. "
+        "Categories: ontology, playbooks, schemas, examples. "
+        "Example: geox://resources/ontology/curve_aliases"
+    ),
+)
+async def geox_resource(category: str, name: str) -> str:
+    """Serve any file from the resources/ directory as an MCP resource."""
+    # Security: restrict to known categories and file extensions
+    allowed_categories = {"ontology", "playbooks", "schemas", "examples", "prompts"}
+    if category not in allowed_categories:
+        return json.dumps({"error": f"Invalid category: {category}"})
+
+    file_path = RESOURCES_DIR / category / name
+    # Prevent directory traversal
+    try:
+        file_path = file_path.resolve()
+        resources_root = RESOURCES_DIR.resolve()
+        if not str(file_path).startswith(str(resources_root)):
+            return json.dumps({"error": "Invalid resource path"})
+    except Exception:
+        return json.dumps({"error": "Invalid resource path"})
+
+    if not file_path.exists():
+        # Try common extensions
+        for ext in [".yaml", ".yml", ".json", ".md", ".csv"]:
+            alt = file_path.with_suffix(ext)
+            if alt.exists():
+                file_path = alt
+                break
+
+    if not file_path.exists():
+        return json.dumps({"error": f"Resource not found: {category}/{name}"})
+
+    try:
+        content = file_path.read_text()
+        return json.dumps({
+            "uri": f"geox://resources/{category}/{name}",
+            "content": content,
+            "format": file_path.suffix.lstrip("."),
+        })
+    except Exception as e:
+        return json.dumps({"error": f"Failed to read resource: {e}"})
+
+
+@mcp.resource(
+    "geox://resources/index",
+    description="Index of all available resources in the GEOX knowledge pack.",
+)
+async def geox_resources_index() -> str:
+    index = {}
+    for category in ["ontology", "playbooks", "schemas", "examples", "prompts"]:
+        cat_dir = RESOURCES_DIR / category
+        if cat_dir.exists():
+            files = [f.name for f in cat_dir.iterdir() if f.is_file()]
+            index[category] = sorted(files)
+    return json.dumps(index, indent=2)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # MCP PROMPTS — GEOX Domain Rituals
 # User-controlled structured interactions (not model-controlled like tools)
 # Arif triggers these; the model prepares the packet; the tool evaluates.
@@ -1241,6 +1331,69 @@ def prompt_prospect_review_packet(prospect_name: str = "", block: str = "", stat
 Produce a PROSPECT REVIEW PACKET ready for Arif's verdict.
 """
     return prompt
+
+
+@mcp.prompt()
+def prompt_claim_discipline() -> str:
+    """Core epistemic ladder — enforce claim-state separation."""
+    path = RESOURCES_DIR / "prompts" / "claim_discipline.md"
+    if path.exists():
+        return path.read_text()
+    return "# Claim Discipline\n\nOBSERVED ≠ DERIVED ≠ INTERPRETED ≠ PROVEN.\n"
+
+
+@mcp.prompt()
+def prompt_earth_reasoning_protocol() -> str:
+    """Mandatory abductive loop for geological tool calls."""
+    path = RESOURCES_DIR / "prompts" / "earth_reasoning_protocol.md"
+    if path.exists():
+        return path.read_text()
+    return "# Earth Reasoning Protocol\n\nObserve → Derive → Hypothesize → Test → Rank → Missing Evidence.\n"
+
+
+@mcp.prompt()
+def prompt_red_team_reviewer() -> str:
+    """Self-attack protocol before accepting any interpretation."""
+    path = RESOURCES_DIR / "prompts" / "red_team_reviewer.md"
+    if path.exists():
+        return path.read_text()
+    return "# Red Team Reviewer\n\nWhat evidence would break this hypothesis?\n"
+
+
+@mcp.prompt()
+def prompt_failure_policy() -> str:
+    """Failure modes and recovery actions for GEOX tools."""
+    path = RESOURCES_DIR / "prompts" / "failure_policy.md"
+    if path.exists():
+        return path.read_text()
+    return "# Failure Policy\n\nMissing curves → emit missing_inputs_schema. Sw=0/1 → 888HOLD.\n"
+
+
+@mcp.prompt()
+def prompt_geox_agent_system() -> str:
+    """Master system prompt for GEOX agent behavior."""
+    path = RESOURCES_DIR / "prompts" / "geox_agent_system.md"
+    if path.exists():
+        return path.read_text()
+    return "# GEOX Agent System\n\nYou are GEOX. Orchestrate tools. Enforce claim discipline. Route 888HOLD to Arif.\n"
+
+
+@mcp.prompt()
+def prompt_tool_selection() -> str:
+    """Routing logic: given evidence state, which tool to call next."""
+    path = RESOURCES_DIR / "prompts" / "tool_selection.md"
+    if path.exists():
+        return path.read_text()
+    return "# Tool Selection\n\nIf LAS ingested → QC. If QC passed → curve_inventory.\n"
+
+
+@mcp.prompt()
+def prompt_report_writer() -> str:
+    """Structured output template for geological reports."""
+    path = RESOURCES_DIR / "prompts" / "report_writer.md"
+    if path.exists():
+        return path.read_text()
+    return "# Report Writer\n\nSection 1: Data Quality. Section 2: Petrophysics. Section 3: Interpretation.\n"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

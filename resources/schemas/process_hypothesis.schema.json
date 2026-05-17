@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GEOX Process Hypothesis",
+  "description": "Structured geological process hypothesis with evidence, contradictions, and missing tests.",
+  "type": "object",
+  "required": ["process", "confidence", "claim_state"],
+  "properties": {
+    "process": {
+      "type": "string",
+      "description": "Geological process name: progradation, retrogradation, aggradation, transgression, forced regression, channel avulsion, lobe switching, condensation, erosion, bypass"
+    },
+    "mechanism": {
+      "type": "string",
+      "description": "Physical mechanism driving the process"
+    },
+    "evidence_for": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Observations and derived properties supporting this hypothesis"
+    },
+    "evidence_against": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Observations and derived properties contradicting this hypothesis"
+    },
+    "expected_additional_signatures": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "What this hypothesis predicts should also be visible in adjacent wells or seismic"
+    },
+    "missing_tests": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Specific tests that would strengthen or weaken this hypothesis"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "low-moderate", "moderate", "moderate-high", "high"]
+    },
+    "claim_state": {
+      "type": "string",
+      "enum": ["PROCESS_HYPOTHESIS"]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+# GEOX Risk Verdicts — Thresholds, Floor Triggers, Release Conditions
+# DITEMPA BUKAN DIBERI
+
+verdicts:
+  SEAL:
+    description: "Evidence is sufficient, physics is closed, ACRisk is low. Decision can proceed."
+    acrisk_max: 0.35
+    floor_requirements:
+      - "F2 TRUTH: All claims trace to artifact_ref"
+      - "F4 HUMILITY: Uncertainty bands declared"
+      - "F7 GENIUS: Simplest correct interpretation selected"
+      - "F9 ANTI-HANTU: No physics violations"
+    release_condition: "Auto-release. No human hold required."
+    claim_state: "SEALED"
+
+  QUALIFY:
+    description: "Evidence is mostly sufficient but has known gaps. Decision can proceed with conditions."
+    acrisk_range: [0.35, 0.60]
+    floor_requirements:
+      - "F2 TRUTH: Most claims trace to artifact_ref"
+      - "F4 HUMILITY: Gaps explicitly stated"
+      - "F7 GENIUS: No over-complicated models"
+    release_condition: "Proceed with listed qualifiers and next_best_actions."
+    claim_state: "QUALIFIED"
+
+  HOLD:
+    description: "Evidence is insufficient or ACRisk exceeds appraisal threshold. Human decision required."
+    acrisk_range: [0.60, 0.75]
+    floor_triggers:
+      - "F2 TRUTH: Missing critical evidence"
+      - "F4 HUMILITY: Confidence exceeds evidence"
+      - "F7 GENIUS: Multiple incompatible models fit data"
+      - "F9 ANTI-HANTU: Physics guard triggered but not fatal"
+    release_condition: "888HOLD — requires Arif explicit acknowledgment."
+    claim_state: "888_HOLD"
+
+  VOID:
+    description: "Evidence contradicts the hypothesis or ACRisk is catastrophically high. Narrative rejected."
+    acrisk_min: 0.75
+    floor_triggers:
+      - "F2 TRUTH: Claims falsified by evidence"
+      - "F9 ANTI-HANTU: Physics violation (impossible Vp/Vs, Sw=0/1, etc.)"
+      - "F13 SOVEREIGN: Arif veto invoked"
+    release_condition: "Cannot be released without new evidence that overturns the contradiction."
+    claim_state: "VOID"

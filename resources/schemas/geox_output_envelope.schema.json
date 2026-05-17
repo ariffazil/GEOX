@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GEOX Canonical Output Envelope",
+  "description": "Universal output contract for all GEOX MCP tools. Every tool must return this envelope or a compatible subset.",
+  "type": "object",
+  "required": ["execution_status", "tool_class", "claim_state", "claim_limits", "next_best_actions"],
+  "properties": {
+    "execution_status": {
+      "type": "string",
+      "enum": ["SUCCESS", "PARTIAL", "ERROR", "HOLD", "VOID"]
+    },
+    "tool_class": {
+      "type": "string",
+      "enum": ["observe", "compute", "interpret", "abduct", "decide", "audit", "identity"]
+    },
+    "claim_state": {
+      "type": "string",
+      "enum": ["OBSERVED", "DERIVED", "INTERPRETED_LOCAL", "PROCESS_HYPOTHESIS", "EARTH_MODEL", "DECISION_SUPPORT", "888_HOLD", "VOID"]
+    },
+    "observed": { "type": "object" },
+    "derived": { "type": "object" },
+    "local_interpretation": { "type": "object" },
+    "process_hypotheses": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/process_hypothesis" }
+    },
+    "earth_model": { "type": "object" },
+    "decision_support": { "type": "object" },
+    "artifact_refs": {
+      "type": "object",
+      "description": "Stable artifact references produced by this tool call"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "References to evidence consumed by this tool"
+    },
+    "claim_limits": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit boundaries on what this result can assert"
+    },
+    "next_best_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tool": { "type": "string" },
+          "reason": { "type": "string" },
+          "priority": { "type": "string", "enum": ["critical", "high", "medium", "low"] }
+        }
+      }
+    },
+    "audit_receipt": {
+      "type": "object",
+      "properties": {
+        "acrisk": { "type": "number", "minimum": 0, "maximum": 1 },
+        "verdict": { "type": "string", "enum": ["SEAL", "QUALIFY", "HOLD", "VOID"] },
+        "floors": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "human_final_authority": {
+      "type": "string",
+      "enum": ["Arif"]
+    }
+  },
+  "definitions": {
+    "process_hypothesis": {
+      "type": "object",
+      "required": ["process", "confidence", "claim_state"],
+      "properties": {
+        "process": { "type": "string" },
+        "mechanism": { "type": "string" },
+        "evidence_for": { "type": "array", "items": { "type": "string" } },
+        "evidence_against": { "type": "array", "items": { "type": "string" } },
+        "expected_additional_signatures": { "type": "array", "items": { "type": "string" } },
+        "missing_tests": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "type": "string", "enum": ["low", "low-moderate", "moderate", "moderate-high", "high"] },
+        "claim_state": { "type": "string", "enum": ["PROCESS_HYPOTHESIS"] }
+      }
+    }
+  }
+}

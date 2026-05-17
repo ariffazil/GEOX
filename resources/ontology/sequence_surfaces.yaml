@@ -1,0 +1,59 @@
+# GEOX Sequence Surfaces — Definitions, Evidence, Forbidden Overclaims
+# DITEMPA BUKAN DIBERI
+
+surfaces:
+  sb:
+    name: "Sequence Boundary (SB)"
+    definition: "Erosional or non-depositional surface separating older rocks below from younger rocks above, representing a basinward shift of facies."
+    required_evidence:
+      - "Erosional truncation or onlap below"
+      - "Lithology break (coarse below / fine above OR fine below / coarse above)"
+      - "Biostratigraphic gap or condensed section"
+      - "Seismic reflector terminations (onlap, toplap, downlap)"
+    forbidden_overclaims:
+      - "Do not call SB from GR shift alone without lithology evidence."
+      - "Do not call SB from single well without seismic or correlation."
+    confidence_drivers:
+      positive: ["seismic terminations", "regional correlation", "biostrat gap"]
+      negative: ["single well only", "no core", "no biostrat"]
+
+  ts:
+    name: "Transgressive Surface (TS)"
+    definition: "First flooding surface above the lowstand systems tract, marking the start of transgression."
+    required_evidence:
+      - "First marine flooding above LST deposits"
+      - "Retrogradational stacking pattern above"
+      - "Marine fauna above, terrestrial or shallow below"
+    forbidden_overclaims:
+      - "Do not call TS without evidence of preceding LST."
+      - "Do not call TS from GR increase alone."
+    confidence_drivers:
+      positive: ["biostrat marine flooding", "retrogradational stacking", "regional correlation"]
+      negative: ["single well", "no biostrat", "ambiguous stacking"]
+
+  mfs:
+    name: "Maximum Flooding Surface (MFS)"
+    definition: "Surface of maximum transgression, typically marked by condensed section, deepest water facies, and highest gamma ray."
+    required_evidence:
+      - "Condensed section or deepest water facies"
+      - "Highest GR in cycle (if shale-prone)"
+      - "Downlap terminations on seismic"
+      - "Regional correlation of condensed interval"
+    forbidden_overclaims:
+      - "Do not call MFS from highest GR alone — uranium enrichment can mimic."
+      - "Do not call MFS without regional correlation."
+    confidence_drivers:
+      positive: ["condensed section", "downlap on seismic", "regional correlation", "biostrat"]
+      negative: ["single well", "no seismic", "no biostrat", "uranium-prone interval"]
+
+  fs:
+    name: "Flooding Surface (FS)"
+    definition: "Any surface marking an abrupt increase in water depth. Less specific than TS or MFS."
+    required_evidence:
+      - "Abrupt deepening facies shift"
+      - "Marine indicators above, shallower below"
+    forbidden_overclaims:
+      - "FS is a generic term — do not confuse with TS or MFS without additional evidence."
+    confidence_drivers:
+      positive: ["clear facies shift", "marine flooding indicators"]
+      negative: ["gradual transition", "diagenetic overprint"]

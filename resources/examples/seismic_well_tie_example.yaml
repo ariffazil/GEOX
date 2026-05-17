@@ -1,0 +1,29 @@
+# GEOX Example: Seismic Well Tie with ACRisk QUALIFY
+# DITEMPA BUKAN DIBERI
+
+project: "Layang-Layang Tie"
+well_id: "LL-01"
+seismic_volume: "layang_3d_2024"
+
+steps:
+  - tool: geox_seismic_analyze_volume
+    mode: well_tie
+    wavelet: ricker
+    wavelet_freq_hz: [25, 35]
+    result: synthetic_trace
+
+  - tool: geox_physics_compute_acrisk
+    compute_transform_risk: true
+    result:
+      acrisk: 0.42
+      verdict: QUALIFY
+      transform_log:
+        - "AGC applied (Dtransform = 1.2)"
+        - "Color map: seismic-colormap (Dtransform = 1.1)"
+        - "Expert bias: moderate (Bcog = 1.3)"
+      multi_view_consistency: "3 of 4 views agree within 0.05 correlation"
+
+claim_limits:
+  - "ACRisk 0.42 = QUALIFY. Proceed with caution."
+  - "AGC and color map are invertibility-degrading transforms."
+  - "Structural interpretation requires ACRisk < 0.50."
