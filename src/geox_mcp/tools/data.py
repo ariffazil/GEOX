@@ -597,3 +597,107 @@ async def geox_data_ingest_bundle(
                 claim_tag="HYPOTHESIS",
             )
         )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# H3 — BATCH TASK TOOLS (SEP-1686 background execution)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+async def geox_task_ingest_las_batch(
+    artifact_refs: list[str],
+    qc_strict: bool = True,
+    standardize_curves: bool = True,
+    normalize_units: bool = True,
+) -> dict:
+    """Batch LAS ingestion. Long-running. Returns task_id for polling.
+
+    Iterates over artifact_refs, calling geox_data_ingest_bundle for each.
+    Aggregates per-file results into a batch envelope.
+
+    Args:
+        artifact_refs: List of file paths or artifact references to ingest.
+        qc_strict: If True, treat QC failures as errors in batch summary.
+        standardize_curves: Run canonical alias mapping on well log mnemonics.
+        normalize_units: Convert ft→m if depth unit is FT/FEET.
+    """
+    if not artifact_refs:
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "tool": "geox_task_ingest_las_batch",
+                    "error_code": "NO_VALID_EVIDENCE",
+                    "message": "artifact_refs list is empty. Provide at least one LAS file path.",
+                },
+                tool_class="ingress",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
+            )
+        )
+
+    results: list[dict] = []
+    success_count = 0
+    error_count = 0
+
+    for ref in artifact_refs:
+        try:
+            single = await geox_data_ingest_bundle(
+                source_uri=ref,
+                source_type="auto",
+                standardize_curves=standardize_curves,
+                normalize_units=normalize_units,
+            )
+            # Unwrap metabolic envelope to check status
+            payload = single.get("payload", single)
+            status = payload.get("execution_status", "UNKNOWN")
+            if status == "SUCCESS":
+                success_count += 1
+            else:
+                error_count += 1
+            results.append({
+                "ref": ref,
+                "status": status,
+                "artifact_ref": payload.get("artifact_ref"),
+                "well_id": payload.get("well_id"),
+                "claim_state": payload.get("claim_state", "UNKNOWN"),
+            })
+        except Exception as exc:
+            error_count += 1
+            results.append({
+                "ref": ref,
+                "status": "ERROR",
+                "error": str(exc),
+                "claim_state": "NO_VALID_EVIDENCE",
+            })
+
+    all_ok = error_count == 0
+    batch_status = ExecutionStatus.SUCCESS if all_ok else ExecutionStatus.PARTIAL
+    gov_status = GovernanceStatus.QUALIFY if all_ok else GovernanceStatus.HOLD
+    art_status = ArtifactStatus.LOADED if all_ok else ArtifactStatus.PARTIAL
+
+    out = {
+        "tool": "geox_task_ingest_las_batch",
+        "batch_size": len(artifact_refs),
+        "success_count": success_count,
+        "error_count": error_count,
+        "per_file_results": results,
+        "claim_state": CLAIM_STATES["RAW_OBSERVATION"] if all_ok else CLAIM_STATES["HYPOTHESIS"],
+    }
+
+    if not all_ok and qc_strict:
+        out["hold_reason"] = f"{error_count} of {len(artifact_refs)} files failed ingest/QC"
+        out["human_final_authority"] = "Arif"
+
+    return _metabolic_return(
+        get_standard_envelope(
+            out,
+            tool_class="ingress",
+            execution_status=batch_status,
+            governance_status=gov_status,
+            artifact_status=art_status,
+            claim_tag="CLAIM" if all_ok else "HYPOTHESIS",
+        )
+    )

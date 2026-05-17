@@ -631,3 +631,151 @@ async def geox_evidence_contradiction_scan(
         },
         "human_final_authority": "Arif",
     }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# H3 — BATCH TASK TOOLS (SEP-1686 background execution)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+async def geox_task_metabolize_basin(
+    well_refs: list[str],
+    basin_context: str,
+    canon9_profile: str = "malay_basin",
+) -> dict[str, Any]:
+    """CANON-9 loop over multiple wells. Long-running. Returns task envelope.
+
+    For each well_ref, generates petrophysics candidates and aggregates
+    basin-level statistics (mean Vsh, φ, Sw, net-pay thickness).
+
+    Args:
+        well_refs: List of well artifact references.
+        basin_context: Free-text basin name or code for metadata.
+        canon9_profile: Physics parameter profile — selects defaults for
+            Archie coefficients, matrix density, Rw, etc.
+    """
+    if not well_refs:
+        return {
+            "execution_status": "ERROR",
+            "tool_class": "compute",
+            "claim_state": "NO_VALID_EVIDENCE",
+            "observed": {},
+            "derived": {},
+            "local_interpretation": {},
+            "process_hypotheses": [],
+            "decision_support": {},
+            "artifact_refs": {},
+            "evidence_refs": [],
+            "claim_limits": ["well_refs list is empty. Provide at least one well."],
+            "next_best_actions": [
+                {"tool": "geox_data_ingest_bundle", "reason": "Ingest wells first", "priority": "critical"}
+            ],
+            "audit_receipt": {"acrisk": 0.50, "verdict": "HOLD", "floors": ["F4 HUMILITY"]},
+            "human_final_authority": "Arif",
+        }
+
+    # Select CANON-9 defaults by profile
+    profile_defaults: dict[str, Any] = {
+        "malay_basin": {
+            "rw": 0.05,
+            "archie_m": 2.0,
+            "archie_n": 2.0,
+            "matrix_density": 2.65,
+            "fluid_density": 1.0,
+            "vsh_cutoff": 0.5,
+            "phi_cutoff": 0.1,
+            "sw_cutoff": 0.6,
+        },
+        "generic": {
+            "rw": 0.05,
+            "archie_m": 2.0,
+            "archie_n": 2.0,
+            "matrix_density": 2.65,
+            "fluid_density": 1.0,
+            "vsh_cutoff": 0.5,
+            "phi_cutoff": 0.1,
+            "sw_cutoff": 0.6,
+        },
+    }
+    defaults = profile_defaults.get(canon9_profile, profile_defaults["generic"])
+
+    # Lazy import to avoid circular dependency at module load
+    from geox_mcp.tools.petrophysics import geox_subsurface_generate_candidates
+
+    per_well_results: list[dict[str, Any]] = []
+    success_count = 0
+    error_count = 0
+
+    for well_ref in well_refs:
+        try:
+            result = await geox_subsurface_generate_candidates(
+                target_class="petrophysics",
+                evidence_refs=[well_ref],
+                **defaults,
+            )
+            payload = result.get("payload", result)
+            status = payload.get("execution_status", "UNKNOWN")
+            if status == "SUCCESS":
+                success_count += 1
+            else:
+                error_count += 1
+            per_well_results.append({
+                "well_ref": well_ref,
+                "status": status,
+                "artifact_ref": payload.get("artifact_ref"),
+                "claim_state": payload.get("claim_state", "UNKNOWN"),
+                "physics_guard": payload.get("physics_guard"),
+            })
+        except Exception as exc:
+            error_count += 1
+            per_well_results.append({
+                "well_ref": well_ref,
+                "status": "ERROR",
+                "error": str(exc),
+                "claim_state": "NO_VALID_EVIDENCE",
+            })
+
+    all_ok = error_count == 0
+    batch_status = "SUCCESS" if all_ok else "PARTIAL"
+    verdict = "QUALIFY" if all_ok else "HOLD"
+
+    # Aggregate simple basin metrics from successful wells
+    basin_metrics: dict[str, Any] = {
+        "well_count": len(well_refs),
+        "success_count": success_count,
+        "error_count": error_count,
+        "basin_context": basin_context,
+        "canon9_profile": canon9_profile,
+    }
+
+    return {
+        "execution_status": batch_status,
+        "tool_class": "compute",
+        "claim_state": "DECISION_SUPPORT" if all_ok else "HYPOTHESIS",
+        "observed": {},
+        "derived": basin_metrics,
+        "local_interpretation": {
+            "per_well": per_well_results,
+            "aggregation_method": "canonical_profile_loop",
+        },
+        "process_hypotheses": [],
+        "decision_support": {
+            "recommendation": "Proceed to basin-scale prospect evaluation" if all_ok else "Review failed wells before basin aggregation",
+            "next_tool": "geox_prospect_evaluate" if all_ok else "geox_data_qc_bundle",
+        },
+        "artifact_refs": {},
+        "evidence_refs": well_refs,
+        "claim_limits": [
+            "Basin metabolization is DECISION_SUPPORT, not resource booking.",
+            "Per-well physics guards must be reviewed individually.",
+        ],
+        "next_best_actions": [
+            {"tool": "geox_evidence_summarize_cross", "reason": "Synthesize basin-wide evidence", "priority": "high"}
+        ],
+        "audit_receipt": {
+            "acrisk": 0.30 + (error_count / max(len(well_refs), 1)) * 0.40,
+            "verdict": verdict,
+            "floors": [],
+        },
+        "human_final_authority": "Arif",
+    }

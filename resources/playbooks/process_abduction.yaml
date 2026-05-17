@@ -46,3 +46,9 @@ claim_limits:
   - "Minimum 2 hypotheses required when ACRisk > 0.40."
   - "Do not assign systems tract without multi-well correlation."
   - "Do not call final depositional environment without core."
+  - "WLFM (Qi et al. 2025) produces emergent layer-awareness and cross-well invariant
+    embeddings via stratigraphy-aware contrastive learning (SCL). GEOX's process_abduction
+    engine uses the same codebook vocabulary — geological tokens map directly to
+    depositional motifs (e.g., coarsening-upward = progradation token cluster)."
+  - "WLFM token clustering achieves ARI=0.78 and 82.3% purity vs. lithofacies labels
+    in unsupervised setting — use this as the baseline expectation for motif classification."
