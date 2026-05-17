@@ -22,3 +22,5 @@ claim_limits:
   - Single-well MFS is candidate only.
   - GR-only motif cannot prove lithology.
   - Sequence boundaries require independent evidence.
+  - "WLFM (Qi et al. 2025, arxiv:2509.18152) achieves 78.10% lithology accuracy and 0.0038 porosity MSE with fine-tuning on 1,200 wells — peer-reviewed benchmark for well-log foundation model performance."
+  - "WLFM failure modes: thinly interbedded/noisy intervals produce fragmented lithology predictions. Apply geox_evidence_contradiction_scan before accepting lithology output in complex stratigraphy."

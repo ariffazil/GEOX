@@ -99,6 +99,7 @@ _mcp_kwargs: dict[str, Any] = {
     "instructions": (
         "Canonical GEOX Registry & MCP App Control Plane (Sovereign 13). DITEMPA BUKAN DIBERI — One Sovereign Kernel."
     ),
+    "tasks": True,  # H3: Enable SEP-1686 background task execution
 }
 
 if HAS_FASTMCP_APPS:
@@ -178,6 +179,17 @@ def bootstrap_sovereign_13():
             logger.info("Earth abduction tools registered successfully")
         except Exception as e:
             logger.warning(f"Earth abduction tools not loaded: {e}")
+
+        # H3 — Register background task tools (SEP-1686)
+        try:
+            from geox_mcp.tools.data import geox_task_ingest_las_batch
+            from geox_mcp.tools.abduction import geox_task_metabolize_basin
+
+            mcp.tool(name="geox_task_ingest_las_batch", task=True)(geox_task_ingest_las_batch)
+            mcp.tool(name="geox_task_metabolize_basin", task=True)(geox_task_metabolize_basin)
+            logger.info("Background task tools registered successfully")
+        except Exception as e:
+            logger.warning(f"Background task tools not loaded: {e}")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -212,6 +224,9 @@ def _prune_mcp_surface(mcp_server) -> None:
         "geox_well_analyze_sequence",
         "geox_stratigraphy_run_pipeline",
         "geox_stratigraphy_preview_config",
+        # H3 — Background task tools (SEP-1686)
+        "geox_task_ingest_las_batch",
+        "geox_task_metabolize_basin",
     }
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
