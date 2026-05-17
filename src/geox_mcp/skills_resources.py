@@ -1,126 +1,135 @@
 """
-GEOX Skill Resources — Live MCP resource surface for domain skills.
-====================================================================
-Scans src/geox_core/skills/ for markdown skill definitions and exposes
-them as MCP resources under geox://skills/<domain>/<name>.
-
+GEOX Skill Resources — Expose geox_core/skills as live MCP resources and prompts.
+================================================================================
 DITEMPA BUKAN DIBERI — Forged, Not Given
+
+Walks src/geox_core/skills/ recursively, parses YAML frontmatter from every
+.md file, and registers eligible skills as:
+
+  - MCP resources  (surface.mcp_resource == true)  → geox://skills/{domain}/{name}
+  - MCP prompts    (surface.mcp_prompt   == true)  → named prompt
 """
 
 from __future__ import annotations
 
+import json
 import logging
 from pathlib import Path
 from typing import Any
 
 try:
     import yaml
-    HAS_YAML = True
-except Exception:
-    yaml = None
-    HAS_YAML = False
+except Exception:  # pragma: no cover
+    yaml = None  # type: ignore[assignment]
 
-logger = logging.getLogger("geox.skills_resources")
+logger = logging.getLogger("geox.unified")
 
-SKILLS_ROOT = Path(__file__).resolve().parent.parent / "geox_core" / "skills"
+_SKILLS_DIR = Path(__file__).parent.parent / "geox_core" / "skills"
 
 
-def _parse_skill_md(path: Path) -> dict[str, Any] | None:
-    """Parse a skill markdown file and return frontmatter + body metadata."""
+def _parse_frontmatter(content: str) -> tuple[dict[str, Any] | None, str]:
+    """Extract YAML frontmatter and markdown body from file content."""
+    if not content.startswith("---"):
+        return None, content
+
+    end = content.find("\n---\n", 4)
+    if end == -1:
+        return None, content
+
+    raw_yaml = content[4:end]
+    body = content[end + 5 :]
+
+    if yaml is None:
+        logger.warning("PyYAML not available; cannot parse frontmatter")
+        return None, content
+
     try:
-        text = path.read_text(encoding="utf-8")
+        data = yaml.safe_load(raw_yaml)
     except Exception as exc:
-        logger.warning(f"Cannot read skill file {path}: {exc}")
-        return None
+        logger.debug("YAML parse error: %s", exc)
+        return None, content
 
-    if not text.startswith("---"):
-        return None
-
-    # Split frontmatter
-    parts = text.split("---", 2)
-    if len(parts) < 3:
-        return None
-
-    frontmatter_text = parts[1].strip()
-    body = parts[2].strip()
-
-    if HAS_YAML:
-        try:
-            meta = yaml.safe_load(frontmatter_text) or {}
-        except Exception as exc:
-            logger.warning(f"YAML parse error in {path}: {exc}")
-            return None
-    else:
-        # Fallback: basic key-value extraction
-        meta = {}
-        for line in frontmatter_text.splitlines():
-            if ":" in line and not line.startswith("#"):
-                k, v = line.split(":", 1)
-                meta[k.strip()] = v.strip()
-
-    if not meta.get("id"):
-        return None
-
-    # Derive URI from id or path
-    skill_id = meta["id"]
-    uri = f"geox://skills/{skill_id.replace('.', '/')}"
-
-    return {
-        "uri": uri,
-        "name": meta.get("title", path.stem),
-        "description": body.split("\n")[0].lstrip("# ").strip() if body else "",
-        "mimeType": "text/markdown",
-        "meta": meta,
-        "path": str(path),
-    }
+    return data if isinstance(data, dict) else None, body
 
 
-def _collect_skills() -> list[dict[str, Any]]:
-    """Walk SKILLS_ROOT and collect all valid skill definitions."""
-    skills: list[dict[str, Any]] = []
-    if not SKILLS_ROOT.exists():
-        logger.warning(f"Skills root not found: {SKILLS_ROOT}")
-        return skills
-
-    for md_path in SKILLS_ROOT.rglob("*.md"):
-        skill = _parse_skill_md(md_path)
-        if skill:
-            skills.append(skill)
-
-    logger.info(f"Discovered {len(skills)} domain skills in {SKILLS_ROOT}")
-    return skills
+def _resource_payload(frontmatter: dict[str, Any], body: str) -> str:
+    """Serialize metadata + markdown body for an MCP resource response."""
+    return json.dumps(
+        {
+            "metadata": frontmatter,
+            "body": body.strip(),
+        },
+        indent=2,
+        default=str,
+    )
 
 
-def register_geox_skills(mcp_server) -> None:
-    """Register all geox_core skills as MCP resources on the given FastMCP server."""
-    skills = _collect_skills()
-    if not skills:
-        logger.info("No skills to register.")
+def _build_resource_handler(frontmatter: dict[str, Any], body: str) -> Any:
+    """Return a parameter-less async function suitable for mcp.resource()."""
+
+    async def _handler() -> str:
+        return _resource_payload(frontmatter, body)
+
+    return _handler
+
+
+def _build_prompt_handler(body: str) -> Any:
+    """Return a parameter-less async function suitable for mcp.prompt()."""
+
+    async def _handler() -> str:
+        return body.strip()
+
+    return _handler
+
+
+def register_skill_resources(mcp: Any) -> None:
+    """Discover skill markdown files and register them as MCP resources and prompts."""
+    if not _SKILLS_DIR.exists():
+        logger.warning("Skills directory not found: %s", _SKILLS_DIR)
         return
 
-    for skill in skills:
-        uri = skill["uri"]
-        name = skill["name"]
-        meta = skill["meta"]
+    resource_count = 0
+    prompt_count = 0
 
-        # Build resource text: frontmatter summary + full markdown body
-        def _make_resource(path=skill["path"], metadata=meta) -> str:
-            try:
-                return Path(path).read_text(encoding="utf-8")
-            except Exception as exc:
-                return f"# Skill Error\n\nFailed to load skill: {exc}"
+    for md_path in _SKILLS_DIR.rglob("*.md"):
+        if not md_path.is_file():
+            continue
 
-        # FastMCP add_resource expects a callable that returns the resource content
+        rel_parts = md_path.parent.relative_to(_SKILLS_DIR).parts
+        domain = rel_parts[0] if rel_parts else "general"
+        skill_name = md_path.stem
+
         try:
-            mcp_server.add_resource(
-                uri=uri,
-                name=name,
-                description=skill.get("description", ""),
-                mime_type="text/markdown",
-                fn=_make_resource,
-            )
-            logger.info(f"Registered skill resource: {uri}")
+            raw = md_path.read_text(encoding="utf-8")
         except Exception as exc:
-            logger.warning(f"Failed to register skill resource {uri}: {exc}")
+            logger.warning("Failed to read %s: %s", md_path, exc)
+            continue
 
-    logger.info(f"Skill resource surface: {len(skills)} domains registered.")
+        frontmatter, body = _parse_frontmatter(raw)
+        if frontmatter is None:
+            continue
+
+        surface = frontmatter.get("surface") or {}
+
+        # ── MCP resource ───────────────────────────────────────────────────────
+        if surface.get("mcp_resource"):
+            uri = f"geox://skills/{domain}/{skill_name}"
+            description = frontmatter.get("title") or f"GEOX skill: {skill_name}"
+            handler = _build_resource_handler(frontmatter, body)
+            mcp.resource(uri, description=description)(handler)
+            resource_count += 1
+
+        # ── MCP prompt ─────────────────────────────────────────────────────────
+        if surface.get("mcp_prompt"):
+            prompt_name = f"skill_{domain}_{skill_name}".replace("-", "_")
+            prompt_description = frontmatter.get("title") or f"GEOX skill prompt: {skill_name}"
+            handler = _build_prompt_handler(body)
+            mcp.prompt(name=prompt_name, description=prompt_description)(handler)
+            prompt_count += 1
+
+    logger.info(
+        "Skill surface registered: %s resources, %s prompts from %s",
+        resource_count,
+        prompt_count,
+        _SKILLS_DIR,
+    )
