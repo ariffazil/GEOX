@@ -529,7 +529,6 @@ def _wrap_tool_outputs(mcp_server):
     MCP 2025-11-25 dual output: content (legacy text) + structuredContent (typed JSON).
     """
     import inspect
-    import json
     from datetime import datetime
 
     provider = getattr(mcp_server, "_local_provider", None)
