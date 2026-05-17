@@ -1,7 +1,7 @@
 # GEOX Contracts — Enums
 # DITEMPA BUKAN DIBERI
 
-from geox_core.enums.statuses import (
+from contracts.enums.statuses import (
     Dimension,
     Verdict,
     FloorStatus,
