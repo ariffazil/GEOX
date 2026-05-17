@@ -39,6 +39,9 @@ from geox_mcp.tools.evidence import geox_evidence_summarize_cross
 from geox_mcp.tools.registry import (
     geox_system_registry_status,
     geox_history_audit,
+    geox_contradiction_registry_status,
+    geox_test_receipt_status,
+    geox_bundle_security_audit,
 )
 from geox_mcp.tools.dst import geox_dst_ingest_test
 
@@ -111,6 +114,9 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_system_registry_status", geox_system_registry_status),
     ("geox_history_audit", geox_history_audit),
     ("geox_dst_ingest_test", geox_dst_ingest_test),
+    ("geox_contradiction_registry_status", geox_contradiction_registry_status),
+    ("geox_test_receipt_status", geox_test_receipt_status),
+    ("geox_bundle_security_audit", geox_bundle_security_audit),
 ]
 
 _TOOL_ANNOTATIONS: dict[str, dict] = {
@@ -134,8 +140,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
 
     # ── Assert canonical count ───────────────────────────────────────────────
     # Count is 14: 13 original sovereign tools + history_audit
-    assert len(CANONICAL_PUBLIC_TOOLS) == 21, (
-        f"F0_CONSTITUTION_BREACH: Expected 21 sovereign tools (15 core + 4 well-strat + 2 abduction), "
+    assert len(CANONICAL_PUBLIC_TOOLS) == 24, (
+        f"F0_CONSTITUTION_BREACH: Expected 24 sovereign tools (15 core + 4 well-strat + 2 abduction + 3 registry), "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 

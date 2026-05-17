@@ -2,9 +2,10 @@ from typing import List, Dict, Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX SOVEREIGN — CANONICAL PUBLIC TOOLS WITH COGNITIVE AXES
-# 15 core + 4 well-stratigraphy + 1 DST test = 20 visible tools.
+# 15 core + 4 well-stratigraphy + 1 DST test + 3 registry/status = 23 canonical tools.
 # Stratigraphy tools canonicalized 2026-05-16 — verified callable, evidence-state
 # compliant (returns HYPOTHESIS/NO_VALID_EVIDENCE on bad input, not silent failure).
+# Registry/status tools added 2026-05-18 — machine-checkable validation surface.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 CANONICAL_PUBLIC_TOOLS: List[str] = [
@@ -31,6 +32,10 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_well_build_packages",
     "geox_well_infer_seq_strat",
     "geox_well_analyze_sequence",
+    # Registry / status — machine-checkable validation surface
+    "geox_contradiction_registry_status",
+    "geox_test_receipt_status",
+    "geox_bundle_security_audit",
 ]
 
 GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
@@ -57,6 +62,9 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_well_build_packages",            "axis": "reason",   "expose": True},
     {"name": "geox_well_infer_seq_strat",           "axis": "reason",   "expose": True},
     {"name": "geox_well_analyze_sequence",          "axis": "reason",   "expose": True},
+    {"name": "geox_contradiction_registry_status",  "axis": "verify",   "expose": True},
+    {"name": "geox_test_receipt_status",            "axis": "trace",    "expose": True},
+    {"name": "geox_bundle_security_audit",          "axis": "verify",   "expose": True},
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
