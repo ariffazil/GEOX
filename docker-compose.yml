@@ -48,6 +48,9 @@ services:
     - geox
     expose:
     - '80'
+    build:
+      context: ./geox-gui
+      dockerfile: Dockerfile
     image: geox-gui:latest
     networks:
     - arifos_core_network
