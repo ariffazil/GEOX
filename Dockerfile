@@ -41,6 +41,12 @@ COPY fixtures/ ./fixtures/
 COPY pyproject.toml requirements.txt requirements-earth.txt ./
 COPY entrypoint.sh ./
 
+# Build-time git provenance (optional — enables test receipt commit binding)
+ARG GIT_SHA=""
+ARG GIT_DATE=""
+ENV GIT_SHA=${GIT_SHA}
+ENV GIT_DATE=${GIT_DATE}
+
 # Production defaults
 ENV PYTHONPATH=/app/src
 ENV PORT=8081
