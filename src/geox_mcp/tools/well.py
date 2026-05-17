@@ -342,7 +342,7 @@ def register_well_tools(mcp: FastMCP) -> None:
         )
 
     # ── L2: Geological Package Builder ────────────────────────────────────
-    @mcp.tool()
+    @mcp.tool(task=True)
     async def geox_well_build_packages(
         gr_bins: list[dict[str, Any]],
         min_package_thickness_m: float = 20.0,
@@ -520,7 +520,7 @@ def register_well_tools(mcp: FastMCP) -> None:
         )
 
     # ── Full pipeline: L1 + L2 + L3 ──────────────────────────────────────
-    @mcp.tool()
+    @mcp.tool(task=True)
     async def geox_well_analyze_sequence(
         source: str,
         zone_top: float,
