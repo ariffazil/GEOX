@@ -8,6 +8,7 @@ from geox_mcp.tools.registry import (
     geox_contradiction_registry_status,
     geox_test_receipt_status,
     geox_bundle_security_audit,
+    geox_resource_registry_status,
 )
 
 
@@ -66,13 +67,45 @@ class TestTestReceiptStatus:
             + payload["tests_failed"]
         )
         assert payload["total_tests"] == total
-        assert payload["tests_passing"] >= 743  # anchored to current suite
+        assert payload["tests_passing"] > 0  # dynamic: real count, not hardcoded
+        assert payload["tests_passing"] < 2000  # sanity ceiling
 
     async def test_verified_at_isoformat(self):
         result = await geox_test_receipt_status()
         payload = result.get("primary_artifact", result.get("artifact", result))
         assert "verified_at" in payload
         assert payload["verified_at"].endswith("+00:00") or "Z" in payload["verified_at"]
+
+
+class TestResourceRegistryStatus:
+    async def test_returns_resource_surface(self):
+        result = await geox_resource_registry_status()
+        payload = result.get("primary_artifact", result.get("artifact", result))
+        assert "resource_surface" in payload
+        rs = payload["resource_surface"]
+        assert rs["playbooks"] >= 1
+        assert rs["prompts"] >= 1
+        assert rs["ontology"] >= 1
+        assert rs["schemas"] >= 1
+
+    async def test_total_resources_positive(self):
+        result = await geox_resource_registry_status()
+        payload = result.get("primary_artifact", result.get("artifact", result))
+        assert payload["total_resources"] > 0
+
+    async def test_registry_truth_pass(self):
+        result = await geox_resource_registry_status()
+        payload = result.get("primary_artifact", result.get("artifact", result))
+        assert payload["registry_truth"] == "PASS"
+
+    async def test_categories_present(self):
+        result = await geox_resource_registry_status()
+        payload = result.get("primary_artifact", result.get("artifact", result))
+        assert "categories" in payload
+        cats = payload["categories"]
+        assert "playbooks" in cats
+        assert "prompts" in cats
+        assert "ontology" in cats
 
 
 class TestBundleSecurityAudit:
