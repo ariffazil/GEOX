@@ -1,0 +1,43 @@
+schema_version: 1
+kind: arifos.mcp_surface
+owner_repo: GEOX
+status: contract
+last_verified: "2026-05-19"
+runtime_surface:
+  primary_transport: streamable_http
+  primary_port: 8081
+  public_domain: https://geox.arif-fazil.com
+authority:
+  owns:
+    - earth_evidence
+    - well_log_qc
+    - petrophysics
+    - seismic_and_maps
+    - prospect_risk
+  excludes:
+    - constitutional_judgment
+    - capital_allocation_decision
+    - deployment_substrate
+    - final_seal
+expected_tools_or_routes:
+  - geox_data_ingest_bundle
+  - geox_data_qc_bundle
+  - geox_well_analyze_sequence
+  - geox_subsurface_generate_candidates
+  - geox_subsurface_verify_integrity
+  - geox_seismic_analyze_volume
+  - geox_map_context_scene
+  - geox_process_abduction
+  - geox_evidence_contradiction_scan
+  - geox_prospect_evaluate
+  - geox_history_audit
+artifact_policy:
+  machine_readable: required
+  human_readable: required_for_reports
+  evidence_refs: required
+  uncertainty_limits: required
+hold_conditions:
+  - missing_primary_evidence
+  - physics_boundary_violation
+  - coordinate_or_unit_ambiguity
+  - claim_exceeds_observed_data

@@ -349,3 +349,55 @@ screening_defaults:
       VSH: 0.15
       K: 0.001
       confidence: low
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNITS + VALID RANGES + EPISTEMIC STATUS
+# ─────────────────────────────────────────────────────────────────────────────
+
+units:
+  Sw: "fraction — water saturation (v/v, not %)"
+  PHIE: "fraction — effective porosity (v/v, not %)"
+  VSH: "fraction — shale volume (v/v, not %)"
+  K: "mD — permeability"
+  Pc: "psi — capillary pressure"
+  h: "m or ft — height above FWL"
+  lambda_bc: "dimensionless — Brooks-Corey pore size distribution index"
+  Pc_entry: "psi — entry capillary pressure"
+  porosity: "fraction (v/v, not %)"
+
+valid_ranges:
+  Sw: [0.0, 1.0]
+  PHIE_fraction: [0.0, 0.50]
+  VSH_fraction: [0.0, 1.0]
+  K_mD: [0.00001, 50000]
+  Pc_psi: [0, 500]
+  h_FWL_m: [0, 5000]
+  lambda_bc: [0.2, 10.0]
+  Pc_entry_psi: [0.1, 300]
+  Sw_cutoff_range: [0.30, 0.80]
+  PHIE_min_range: [0.02, 0.20]
+  VSH_max_range: [0.15, 0.60]
+  K_min_mD_range: [0.0001, 100]
+
+epistemic_tags:
+  brooks_corey_model:
+    status: empirical_derived
+    calibrated_for: "drainage capillary pressure (initial hydrocarbon migration)"
+    data_source: "Brooks & Corey 1966; SPE benchmarks"
+    caution: "Valid for drainage only — imbibition (waterflood) requires van Genuchten or lab data"
+  screening_defaults:
+    status: empirical_compiled
+    calibrated_for: "11 depositional environments across clastic and carbonate"
+    data_source: "Regional database of SCAL + analogue fields"
+    confidence: MEDIUM
+    caution: "No substitute for actual SCAL capillary pressure — use as initial estimate only"
+  percolation_threshold:
+    status: theoretical_physics
+    calibrated_for: "any connected pore network"
+    data_source: "Percolation theory (Stauer, 1957; Kirkpatrick, 1973)"
+    caution: "3D cubic lattice assumption — real pore networks vary"
+  net_pay_procedure:
+    status: procedural
+    calibrated_for: "geox_1d.py compute_net_pay() implementation"
+    data_source: "Standard industry practice (Asquith & Krygowski, 2004)"
+    caution: "Result depends on cutoff inputs — garbage in, garbage out"

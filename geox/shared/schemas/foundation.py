@@ -1,0 +1,1 @@
+../../../src/geox_core/shared/schemas/foundation.py

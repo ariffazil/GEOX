@@ -9,8 +9,8 @@ import sys, os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geox.core.geox_2d import build_2d_section, interpret_horizons, amplitude_analysis
-from geox.core.physics9 import anomaly_contrast_theory, Physics9State, EARTH_MATERIAL_CATALOG
+from geox_core.core.geox_2d import build_2d_section, interpret_horizons, amplitude_analysis
+from geox_core.core.physics9 import anomaly_contrast_theory, Physics9State, EARTH_MATERIAL_CATALOG
 
 def physics9_seismic_section(section):
     """Augment seismic section with physics9 horizon annotations."""

@@ -316,3 +316,63 @@ quick_defaults:
       m: 2.80
       n: 2.80
       notes: "Coal bed methane — cleat system dominates conductivity"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNITS + VALID RANGES + EPISTEMIC STATUS
+# ─────────────────────────────────────────────────────────────────────────────
+
+units:
+  m: "dimensionless — cementation exponent"
+  n: "dimensionless — saturation exponent"
+  a: "dimensionless — tortuosity factor"
+  k: "mD — permeability"
+  phi: "fraction — porosity (v/v, not %)"
+  Rw: "ohm.m — formation water resistivity"
+  contact_angle: "degrees — measured through wetting phase"
+  IFT: "dynes/cm — interfacial tension"
+
+valid_ranges:
+  porosity_fraction: [0.0, 0.50]
+  permeability_mD: [0.00001, 50000]
+  tortuosity_factor: [0.5, 5.0]
+  m_cementation: [1.4, 6.0]
+  n_saturation: [1.0, 8.0]
+  a_tortuosity: [0.50, 2.00]
+  contact_angle_deg: [0, 180]
+  IFT_air_water_dynes_cm: [65, 75]
+  IFT_oil_water_dynes_cm: [15, 55]
+  resistivity_ohm_m: [0.001, 10000]
+  Amott_Iw: [-0.30, 1.0]
+  T2_us: [0.1, 10000]
+
+epistemic_tags:
+  m_siliciclastic:
+    status: empirical_calibrated
+    calibrated_for: "siliciclastic sandstone (clean to shaley)"
+    data_source: "Darby & Gately 1992 meta-analysis, 10000+ core samples"
+    caution: "Carbonate dual-porosity violates Kozeny-Carman assumption"
+  m_carbonate:
+    status: empirical_calibrated
+    calibrated_for: "carbonate rock types (interparticle, vuggy, fractured)"
+    data_source: "Ouenes 1995, SND model; porosity-range-binned core data"
+    caution: "Vuggy/fractured systems require dual-porosity model"
+  n_water_wet:
+    status: empirical_calibrated
+    calibrated_for: "water-wet sandstone and limestone"
+    data_source: "Amott cell measurements, Archie experiments"
+    caution: "Mixed-wet and oil-wet require SCAL — Archie unreliable"
+  n_mixed_wet:
+    status: empirical_estimated
+    calibrated_for: "mixed-wet carbonate and sandstone"
+    data_source: "SPE-174904 (Yong-Su Choi, 2017)"
+    caution: "Amott test required for accurate n — log-based estimates unreliable"
+  a_parameter:
+    status: empirical_calibrated
+    calibrated_for: "both siliciclastic and carbonate"
+    data_source: "F-φ log-log regression from core"
+    caution: "a < 0.8 implies well-sorted clean sand; a > 1.3 implies shale or compaction"
+  NMR_T2_PTSD:
+    status: semi_empirical
+    calibrated_for: "NMR-equipped LWD/MWD runs"
+    data_source: "Coates 1999, T2 geometric mean correlation"
+    caution: "Requires NMR T2 distribution — not available in all wells"

@@ -324,3 +324,53 @@ dual_water_model:
     - "SP response is suppressed (kaolinite illite cementation)"
     - "Rw_back_calculation from Archie gives inconsistent results"
     - "Resistivity log shows high Rt but gamma ray shows clean sand — suspect clay conduction"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNITS + VALID RANGES + EPISTEMIC STATUS
+# ─────────────────────────────────────────────────────────────────────────────
+
+units:
+  Rw: "ohm.m — formation water resistivity at specified T,P"
+  T: "°C or °F — temperature"
+  P: "psi or MPa — pressure"
+  salinity: "ppm (mg/L) — total dissolved solids"
+  conductivity: "mmho/cm — electrical conductivity"
+  IFT: "dynes/cm — interfacial tension"
+  density: "g/cm³ — fluid density"
+  gamma_ray: "API — gamma ray log units"
+
+valid_ranges:
+  Rw_ohm_m: [0.005, 5.0]
+  temperature_C: [20, 200]
+  pressure_psi: [100, 30000]
+  salinity_ppm: [100, 350000]
+  conductivity_mmho_cm: [0.1, 1000]
+  IFT_oil_water_dynes_cm: [15, 55]
+  water_density_g_cm3: [0.95, 1.20]
+  SP_mV: [-200, 100]
+
+epistemic_tags:
+  Rw_reference:
+    status: measured
+    calibrated_for: "Sabah, Malay, Sunda basins + Carteia"
+    data_source: "DST samples + RFT (41 Labang, 23 Sandakan, etc.)"
+    confidence: HIGH
+    caution: "Non-NaCl brines (carbonate, evaporite) require ionic composition analysis"
+  Rw_general_model:
+    status: semi_empirical
+    calibrated_for: "any formation with known T,P,salinity"
+    data_source: "Sen-Glos API RP-45 / extended form"
+    confidence: MEDIUM
+    caution: "Assumes NaCl-equivalent brine — correct for most siliciclastics"
+  dual_water_model:
+    status: theoretical_derived
+    calibrated_for: "clay-bearing formations where Archie fails"
+    data_source: "Waxman-Smits 1968, Juhasz 1979"
+    confidence: MEDIUM
+    caution: "Requires CEC or Qv — estimate from SP or cross-plot if no core"
+  SP_derived_Rw:
+    status: empirical_estimated
+    calibrated_for: "clean sand-shale sequences with NaCl system"
+    data_source: "SP deflection vs Rw reference"
+    confidence: LOW-MEDIUM
+    caution: "Invasion, bed thickness, and Rmf/Rw ratio all affect SP response"

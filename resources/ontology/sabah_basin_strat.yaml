@@ -398,3 +398,53 @@ regional_notes:
       Kendalian: 4500
       Panas_Thicknessnam: 5800
     notes: "Panas Thicknessnam may be organic-rich — check cuttings for fluorescence"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNITS + VALID RANGES + EPISTEMIC STATUS
+# ─────────────────────────────────────────────────────────────────────────────
+
+units:
+  age: "Ma — millions of years before present"
+  depth: "mTVDRSS or mMD — meters referenced to TVDSS or measured depth"
+  thickness: "m — meters"
+  Vp: "km/s — P-wave velocity"
+  GR: "API — gamma ray units"
+  resistivity: "ohm.m — formation resistivity"
+  porosity: "fraction — porosity (v/v)"
+  permeability: "mD — permeability"
+
+valid_ranges:
+  age_ma: [0, 66]
+  depth_mTVDRSS: [0, 10000]
+  thickness_m: [0, 5000]
+  Vp_km_s: [1.5, 6.5]
+  GR_API: [10, 200]
+  resistivity_ohm_m: [0.5, 10000]
+  porosity_fraction: [0.0, 0.50]
+  permeability_mD: [0.001, 10000]
+
+epistemic_tags:
+  megasequence_tops:
+    status: sample_based_estimate
+    calibrated_for: "Sabah Basin — seismic-well tie with check-shot calibration"
+    data_source: "Wireline logs, biostrat, seismic reflectors"
+    confidence: MEDIUM-HIGH
+    caution: "Formation tops vary across basin due to tectonic complexity — proximal vs distal wells differ"
+  seismic_velocity_model:
+    status: empirical_inverted
+    calibrated_for: "Sabah Basin — check-shot + well velocity surveys"
+    data_source: "Interval velocity from seismic depth conversion + checkshot data"
+    confidence: MEDIUM
+    caution: "Velocity varies laterally due to structural complexity — use regional velocity model only"
+  biozonation:
+    status: paleontological_absolute
+    calibrated_for: "global biostratigraphic event scale"
+    data_source: "FO/F LO (First Occurrence / Last Occurrence) of microfossils"
+    confidence: HIGH
+    caution: "Biozones can overlap — use LBF + CNN together for age calibration, not verification"
+  reservoir_quality_estimates:
+    status: empirical_compiled
+    calibrated_for: "Sabah Basin analogue fields"
+    data_source: "Production data + SCAL + wireline log correlations"
+    confidence: MEDIUM
+    caution: "Actual reservoir quality varies significantly within each formation"
