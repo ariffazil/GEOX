@@ -1,0 +1,329 @@
+# GEOX Petrophysical Assumptions Registry
+# DITEMPA BUKAN DIBERI
+#
+# PURPOSE: Central registry of default assumptions used in STOIIP and Sw computations.
+#   Every assumption is explicit, with uncertainty bounds and epistemic status.
+#   This file makes STOIIP / Sw outputs AUDIT-READY.
+#
+#   F4 CLARITY: Every parameter used in computation must be declared here.
+#   F7 HUMILITY: Every empirical correlation must be tagged with calibration range.
+#
+# CLAIM LIMITS:
+#   All defaults are ORDER-OF-MAGNITUDE estimates for conceptual modeling.
+#   Final STOIIP / Sw MUST use core-calibrated parameters where available.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ARCHIE PARAMETERS (a, m, n)
+# ─────────────────────────────────────────────────────────────────────────────
+
+archie_defaults:
+  description: "Archie saturation parameters — use CORE-CALIBRATED values in final interpretation"
+
+  a_tortuosity_factor:
+    description: "Tortuosity factor — encodes pore throat shape deviation from capillary bundle"
+    default: 0.81
+    range: [0.62, 1.30]
+    siliciclastic_default: 0.81
+    carbonate_default: 1.00
+    source: "F-φ log-log regression from core; Archie 1942 original value a=1"
+    epistemic_status: empirical_calibrated
+    caution: "a < 0.8: clean sorted sand; a > 1.0: shaley or compacted"
+    use_case: "Only when no core data — always prefer core-derived a"
+
+  m_cementation_exponent:
+    description: "Cementation exponent — encodes connectivity of pore network"
+    default: 2.00
+    range: [1.4, 6.0]
+    siliciclastic_clean: 1.80
+    siliciclastic_typical: 2.00
+    siliciclastic_shale: 2.20
+    carbonate_interparticle: 2.15
+    carbonate_vuggy: 2.60
+    carbonate_fractured: 3.50
+    source: "Pickett plot slope or K-φ cross-plot from core"
+    epistemic_status: empirical_calibrated
+    caution: "DO NOT use 2.0 as default — always derive from core if available"
+    use_case: "Default 2.0 ONLY for quick-look when no core calibration exists"
+
+  n_saturation_exponent:
+    description: "Saturation exponent — encodes wettability and pore throat distribution"
+    default: 2.00
+    range: [1.0, 8.0]
+    water_wet: [1.7, 2.2]
+    mixed_wet: [2.2, 3.5]
+    oil_wet: [3.5, 8.0]
+    source: "Steady-state desaturation SCAL experiment"
+    epistemic_status: empirical_calibrated
+    caution: "n varies with wettability — Archie breaks down for oil-wet systems"
+    use_case: "Default 2.0 ONLY when no SCAL — state assumption explicitly in report"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FORMATION WATER (Rw)
+# ─────────────────────────────────────────────────────────────────────────────
+
+formation_water_defaults:
+  description: "Formation water resistivity — ALWAYS validate with DST or RFT water sample"
+
+  Rw_sabah_typical:
+    description: "Sabah Basin average Rw at formation temperature"
+    Rw_ohm_m: 0.025
+    salinity_ppm: 18000
+    T_C: 120
+    P_psi: 2500
+    source: "DST + RFT database (41 Labang, 23 Sandakan samples)"
+    epistemic_status: measured
+    confidence: HIGH
+    caution: "Rw varies by formation and field — use formation-specific values"
+
+  Rw_malay_typical:
+    description: "Malay Basin average Rw at formation temperature"
+    Rw_ohm_m: 0.035
+    salinity_ppm: 12000
+    T_C: 110
+    P_psi: 2200
+    source: "DST database (35 K/J Sands samples)"
+    epistemic_status: measured
+    confidence: HIGH
+
+  Rw_sunda_typical:
+    description: "Sunda Basin average Rw at formation temperature"
+    Rw_ohm_m: 0.040
+    salinity_ppm: 10000
+    T_C: 100
+    P_psi: 1500
+    source: "DST database (17 Batu Pahat samples)"
+    epistemic_status: measured
+    confidence: MEDIUM
+
+  Rw_unconstrained:
+    description: "When no water sample available — use SP method as fallback"
+    method: "SP-derived Rw = Rw_mud_filtrate × 10^(-SP / K)"
+    K_value_mV: 71.0
+    Rw_SP_confidence: LOW-MEDIUM
+    caution: "SP method requires Rmf/Rw > 3, clean sand, no invasion — verify conditions"
+
+  Rw_temperature_correction:
+    description: "Rw must be normalized to measurement temperature before use"
+    equation: "Rw(T2) = Rw(T1) × (T1 + 6.77) / (T2 + 6.77)"
+    units: "T in °F"
+    caution: "Always normalize Rw to log measurement temperature — never compare Rw at different T"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TEMPERATURE GRADIENT
+# ─────────────────────────────────────────────────────────────────────────────
+
+temperature_gradients:
+  description: "Geothermal gradients by basin — use BHT survey for accurate gradient"
+
+  default_geothermal_gradient:
+    value_F_per_ft: 0.015
+    value_C_per_m: 0.028
+    range: [0.010, 0.030]
+    source: "Global sediment average (API RP-45)"
+    epistemic_status: empirical_compiled
+    caution: "Sabah Basin runs hotter due to tectonic heat — use 0.018–0.022 °F/ft locally"
+
+  sabah_gradient:
+    value_F_per_ft: 0.020
+    value_C_per_m: 0.036
+    formations: "Sandakan, Labang, Bongaya, Gomantong"
+    source: "BHT surveys from exploration wells"
+    epistemic_status: measured
+    confidence: MEDIUM-HIGH
+
+  surface_temperature_reference:
+    description: "Surface temperature for gradient calculation"
+    sea_level_C: 27.0
+    sea_level_F: 80.6
+    reference_pressure_psi: 14.7
+
+  BHT_correction:
+    description: "BHT is always lower than static formation temperature"
+    correction_method: "Horner plot from MDT/RFT repeat formation tester"
+    typical_BHT_uncertainty_C: [5, 15]
+    caution: "Use Horner-corrected temperature, not raw BHT"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SALINITY ASSUMPTIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+salinity_defaults:
+  description: "Formation water salinity — governs Rw and ionic activity"
+
+  seawater_NaCl:
+    TDS_ppm: 35000
+    Rw_ohm_m_at_25C: 0.065
+    notes: "Modern seawater standard"
+
+  sabah_fresh_water:
+    description: "Meteoric water influence in proximal deltaic settings"
+    TDS_ppm: [5000, 15000]
+    notes: "Sandakan proximal; Labang deepwater distal is saline"
+
+  carbonate_formation_water:
+    description: "Often CaCl2 or NaHCO3 type — different activity coefficients"
+    TDS_ppm: [15000, 50000]
+    Rw_ohm_m: [0.015, 0.040]
+    ionic_correction: 0.88
+    notes: "Apply ionic correction to Sen-Glos model if non-NaCl"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# POROSITY CUTOFFS
+# ─────────────────────────────────────────────────────────────────────────────
+
+porosity_cutoffs:
+  description: "Default porosity cutoffs — use for screening only"
+
+  net_pay_default:
+    PHIE_min: 0.08
+    VSH_max: 0.40
+    K_min_mD: 0.10
+    Sw_max: 0.60
+    source: "Industry standard (North Sea analogue)"
+    epistemic_status: empirical_compiled
+    caution: "Cutoffs must match depositional environment — deepwater needs stricter Sw"
+
+  by_environment:
+    fluvial_channel:
+      PHIE_min: 0.12
+      Sw_max: 0.50
+    deltaic:
+      PHIE_min: 0.10
+      Sw_max: 0.55
+    shoreface:
+      PHIE_min: 0.14
+      Sw_max: 0.50
+    deepwater_turbidite:
+      PHIE_min: 0.08
+      Sw_max: 0.60
+    tight_gas_sand:
+      PHIE_min: 0.04
+      Sw_max: 0.65
+    carbonate_interparticle:
+      PHIE_min: 0.06
+      Sw_max: 0.50
+    carbonate_vuggy:
+      PHIE_min: 0.05
+      Sw_max: 0.55
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PERMEABILITY ESTIMATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+permeability_defaults:
+  description: "Permeability estimation when no core/NMR available"
+
+  Timur_Coates:
+    description: "Porosity-permeability transform for water-wet sandstone"
+    equation: "k = (PHIE^4.4) / (Swir^2) × 10000"
+    Swir_assumption: 0.25
+    epistemic_status: empirical_correlation
+    caution: "Only valid for water-wet sandstone — carbonate and mixed-wet need different model"
+
+  Kozeny_Carman:
+    description: "Physics-based permeability from porosity and surface area"
+    equation: "k = (φ³) / (τ² × (1-φ)²)"
+    tau_default: 1.47
+    epistemic_status: theoretical_derived
+    caution: "Requires estimate of tortuosity — use only when core k data unavailable"
+
+  NMR_T2_geom_mean:
+    description: "Permeability from NMR T2 distribution"
+    equation: "k = a × φ^b × T2gm^c"
+    a_b_c_coefficients: [10, 4, 2]
+    T2gm_unit: "ms"
+    epistemic_status: semi_empirical
+    caution: "Coefficients are site-specific — use local calibration"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CAPILLARY PRESSURE DEFAULTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+capillary_pressure_defaults:
+  description: "Default Pc parameters when no SCAL available"
+
+  Brooks_Corey_defaults:
+    Pc_entry_siliciclastic_psi: 5.0
+    lambda_siliciclastic: 2.5
+    Swir_siliciclastic: 0.20
+    Pc_entry_carbonate_psi: 15.0
+    lambda_carbonate: 2.0
+    Swir_carbonate: 0.25
+    epistemic_status: empirical_compiled
+    caution: "Use SCAL data when available — these are only for conceptual modeling"
+
+  transition_zone_estimate:
+    description: "Height of transition zone from FWL to 100% mobile oil"
+    equation: "h = Pc_entry / (0.433 × (ρw - ρo))"
+    default_water_density_g_cm3: 1.02
+    default_oil_density_g_cm3: 0.85
+    typical_transition_zone_ft: [10, 50]
+    heavy_transition_zone_ft: [50, 200]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FLUID PROPERTIES DEFAULTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+fluid_defaults:
+  description: "Default PVT properties — use PVT report when available"
+
+  oil_standard:
+    API_gravity: 38.0
+    GOR_scf_stb: 500
+    Bo_rb_stb: 1.30
+    viscosity_cp: 2.0
+    bubblepoint_psi: 1500
+    source: "Sabah heavy oil standard — replace with field PVT"
+    epistemic_status: measured_analogue
+
+  gas_standard:
+    gamma_g: 0.65
+    H2S_ppm: 0
+    CO2_percent: 0
+    Bg_rb_scf: 0.001
+    source: "Sabah associated gas — replace with field PVT"
+    epistemic_status: measured_analogue
+
+  water_standard:
+    Rw_ohm_m: 0.025
+    Bw_rb_stb: 1.00
+    compressibility_1_psi: 3.0e-6
+    viscosity_cp: 0.50
+    source: "Sabah formation water average"
+    epistemic_status: measured_analogue
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNITS + VALID RANGES + EPISTEMIC TAGS
+# ─────────────────────────────────────────────────────────────────────────────
+
+units:
+  porosity: "fraction (v/v, not %)"
+  permeability: "mD"
+  resistivity: "ohm.m"
+  saturation: "fraction (v/v)"
+  pressure: "psi"
+  temperature: "°F or °C"
+  salinity: "ppm (mg/L)"
+  compressibility: "1/psi"
+  capillary_pressure: "psi"
+  viscosity: "cp"
+  formation_volume_factor: "rb/STB or rb/SCF"
+
+valid_ranges:
+  porosity_fraction: [0.0, 0.50]
+  permeability_mD: [0.00001, 50000]
+  resistivity_ohm_m: [0.005, 100]
+  saturation_fraction: [0.0, 1.0]
+  pressure_psi: [100, 30000]
+  temperature_F: [40, 400]
+  salinity_ppm: [100, 350000]
+  compressibility_1_psi: [1e-7, 1e-3]
+  capillary_pressure_psi: [0, 500]
+  viscosity_cp: [0.1, 100000]
+  Bo_rb_stb: [0.85, 2.50]
+
+epistemic_tags:
+  all_defaults:
+    status: compiled_defaults
+    calibrated_for: "ORDER-OF-MAGNITUDE ESTIMATES — not for reserves"
+    caution: "Every final interpretation must replace these defaults with core-calibrated values"
