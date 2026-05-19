@@ -1,0 +1,431 @@
+# GEOX Borehole Environmental Corrections
+# DITEMPA BUKAN DIBERI
+#
+# PHYSICS-9 CLAIM:
+#   Borehole logs measure properties IN THE BOREHOLE — not in the formation.
+#   The borehole environment (hole size, mud weight, invaded zone, temperature)
+#   DISTORTS every measurement.
+#
+#   Environmental corrections are NOT optional — they are REQUIRED
+#   before the log can be used for quantitative interpretation.
+#
+#   Using raw logs without correction = measuring the borehole, not the formation.
+#
+#   HIERARCHY OF IMPORTANCE (which corrections matter most):
+#     (1) RHOB: Mud filtrate invasion effect (most critical)
+#     (2) NPHI: Borehole size + mud weight (especially in washouts)
+#     (3) RT: Invasion effect dominates deep measurements
+#     (4) CAL: Hole shape determines all other corrections
+#     (5) SP: Static SP only valid after environmental correction
+#
+#   RULE: Always apply corrections in order: CAL → NPHI → RHOB → RT → SP
+#         Skipping corrections = cumulative error propagation.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BOREHOLE GEOMETRY — CALIPER LOG
+# ─────────────────────────────────────────────────────────────────────────────
+
+caliper_log:
+  description: |
+    Measures borehole diameter using spring-loaded arms.
+    Detects: washouts (enlarged hole), breakouts (stress-induced collapse),
+    key seats (tool wear groove), drilling-induced fractures.
+  measurement_principle: "Mechanical arm extension → electrical signal"
+  units: "inches (in) or centimeters (cm)"
+  expected_vs_nominal:
+    nominal_drill_bit: "8.5 in (21.6 cm) — typical for 5.5–5.75 in casing"
+    gauge_hole_tolerance: "± 0.125 in (± 0.3 cm)"
+    washout_threshold: "> nominal + 0.5 in"
+    breakout_threshold: "< nominal - 0.25 in"
+  caliper_uses:
+    hole_size_for_NPHI_correction: "Use actual hole diameter, not nominal"
+    invasion_diameter_estimation: "CAL + 2× mud filtrate invasion depth"
+    volume_of_washout: "Calculated for mud loss estimation"
+    hole_condition_for_RHOB: "Washouts = RHOB reads mud filtrate (light)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DENSITY LOG (RHOB) — ENVIRONMENTAL CORRECTIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+density_log:
+  measurement_principle: |
+    Gamma ray scattering (Cs-137 source, 662 keV).
+    Detects electron density of formation → correlates to bulk density (RHOB).
+    Source intensity halves every 30 years (decay correction needed).
+  source: "Cs-137 (gamma ray), activity ~100 mCi"
+  depth_of_investigation: [4, 8]  # inches — shallow
+  vertical_resolution: [8, 12]  # inches
+  pad_size: "Small faceplate (3.5 × 7 in typical)"
+
+  environmental_distortions:
+    borehole_size_effect:
+      description: |
+        Washouts: detector sees less formation (more mud) → RHOB reads LOW.
+        Under-gauge hole: detector sees more formation → RHOB reads HIGH.
+      correction_needed: "YES — use caliper-measured diameter"
+      magnitude: |
+        Washout of +2 in (12.5 in hole): RHOB can read 0.05–0.15 g/cm³ LOW.
+        Under-gauge of -0.25 in (8.0 in hole): RHOB can read 0.02–0.05 g/cm³ HIGH.
+      correction_method: "Borehole correction chart (Schlumberger chart RHOB-corr or equivalent)"
+      equation_approximation: |
+        RHOB_corrected = RHOB_measured + f(diameter_mud, hole_diameter, mud_density)
+        where f is empirically derived from test pits
+
+    mud_filtrate_invasion_effect:
+      description: |
+        In invaded zone (flushed zone + transition): RHOB reads mud filtrate density.
+        Light mud filtrate (water-based, 1.00–1.05 g/cm³) → RHOB reads LOW.
+        Heavy mud (barite, 1.20–1.50 g/cm³) → RHOB reads HIGH.
+      invasion_diameter: [4, 20]  # inches from borehole wall
+      depth_of_investigation_RHOB: [4, 8]  # inches — near wellbore only
+      significance: "HIGH for BVI calculation — RHOB used for porosity"
+      correction_needed: "YES for invasion > 4 in diameter"
+
+    mud_cake_effect:
+      description: "Thin mud cake on borehole wall: minimal effect on RHOB (already accounted in calibration)"
+      typical_mud_cake_thickness: [0.04, 0.25]  # inches
+      significance: "LOW — detector sees through mud cake to formation"
+
+    formation_pressure_effect:
+      description: "Compacted formations: RHOB reads correctly.
+        Undercompacted (shale, high porosity): Compton scattering reduced."
+      compaction_correction: "Use sonic or neutron for validation"
+
+    washout_volume_calculation:
+      equation: |
+        Washout_vol_ft = π × (D_hole² - D_bit²) / 4 × 1 ft
+        where D in inches (convert to feet)
+      significance: "Mud loss volume estimation, cement volume calculation"
+
+  correction_procedure:
+    step1: "Read caliper log (CAL) — actual borehole diameter"
+    step2: "Compare CAL to nominal drill bit size"
+    step3: "If washout > 0.5 in: apply borehole correction chart"
+    step4: "Enter chart with: hole diameter, mud density, RHOB_measured"
+    step5: "Read RHOB_corrected from chart"
+    step6: "Validate with sonic porosity (φs) — should agree within 2 p.u."
+    tools: "Schlumberger chart RHOB-2 (compaction-corrected), RHOB-3 ( borehole size)"
+
+  matrix_densities_for_calibration:
+    quartz: 2.65  # g/cm³
+    calcite: 2.71
+    dolomite: 2.87
+    anhydrite: 2.98
+    barite: 4.50  # mud weighting agent
+    halite: 2.08
+    gypsum: 2.35
+    coal: [1.30, 1.80]  # varies with rank
+    water: 1.00  # at surface
+    mud_filtrate_wbm: [1.00, 1.10]  # water-based
+    mud_filtrate_obm: [0.80, 1.00]  # oil-based (lighter)
+    barite_mud: [1.20, 1.50]  # weighted
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NEUTRON LOG (NPHI) — ENVIRONMENTAL CORRECTIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+neutron_log:
+  measurement_principle: |
+    Measures hydrogen index (HI) via neutron moderation.
+    Source: AmBe (alpha-beryllium) — 4–5 Curie.
+    Detector: He-3 proportional counters (thermal neutron capture).
+    HI = 1.0 for fresh water at 75°F; HI = 0 for quartz, calcite.
+  source: "Am-241/Be (americium-beryllium), 4–5 Curie"
+  depth_of_investigation: [6, 12]  # inches — deeper than density
+  vertical_resolution: [12, 24]  # inches — lower than density
+  pad_type: "Focused pad (CNL) or array (APS)"
+
+  environmental_distortions:
+    borehole_size_effect:
+      description: |
+        Large borehole: more hydrogen (mud + borehole) → NPHI reads HIGH.
+        Effect INCREASES with hole size — most critical correction.
+      correction_needed: "YES — always required for quantitative work"
+      magnitude: |
+        12.25 in hole vs 8.5 in hole: NPHI can read 3–5 p.u. HIGH.
+        Requires calibration to known lithology (limestone or sandstone).
+      correction_method: "Schlumberger chart NPHI-corr (borehole size + mud weight)"
+
+    mud_weight_effect:
+      description: |
+        Heavy mud (barite): fewer hydrogen atoms per unit volume → NPHI reads LOW.
+        Light mud (KCl/polymer): minimal effect.
+      significance: "HIGH — barite mud requires significant correction"
+      magnitude: |
+        19 lbm/gal barite mud vs 9 lbm/gal water: NPHI reads 2–4 p.u. LOW.
+
+    mud_filtrate_invasion_effect:
+      description: |
+        In invaded zone: neutron sees mud filtrate hydrogen.
+        Fresh water filtrate (HI = 1.0) → NPHI reads same as formation water.
+        Salt water (Cl absorbs neutrons) → NPHI reads LOW (but Cl signal distinct).
+      invasion_diameter: [4, 20]  # inches
+      significance: "MODERATE — less critical than borehole size effect"
+
+    formation_pressure_effect:
+      description: |
+        High-pressure formations: hydrogen atoms compressed → HI slightly reduced.
+        Effect is small (< 0.5 p.u.) but noticeable at > 10,000 psi.
+      significance: "LOW to MODERATE for HPHT wells"
+
+    temperature_effect:
+      description: |
+        Hydrogen index of water decreases with temperature above 75°F.
+        At 200°F: HI_water ≈ 0.95 (not 1.0).
+        Most neutron tools are calibrated to 75°F fresh water = 1.0.
+      significance: "MODERATE — use temperature correction chart"
+      magnitude: |
+        At 300°F vs 75°F: NPHI can read 1–2 p.u. different.
+
+    standoff_effect:
+      description: "Tool not touching borehole wall (eccentered in washout)"
+      significance: "HIGH in washouts — causes 3–10 p.u. error"
+      solution: "Use eccentered correction or array neutron with standoff measurement"
+
+    lithology_effect:
+      description: |
+        NPHI is lithology-dependent even in clean formations:
+        Sandstone (quartz): NPHI ≈ 0.00 (neutron sees only pore fluid)
+        Limestone (calcite): NPHI ≈ 0.00
+        Dolomite: NPHI ≈ 0.01–0.02 (some Mg)
+        Anhydrite: NPHI ≈ -0.02 to 0.00
+        Halite: NPHI ≈ 0.00
+        Gypsum: NPHI ≈ 0.02–0.04 (water of crystallization)
+        Shale: NPHI ≈ 0.30–0.50 (bound water in clay)
+      note: "Neutron shale correction uses offset from matrix line"
+
+  correction_procedure:
+    step1: "Enter chart with: hole diameter, mud weight, NPHI_measured"
+    step2: "Read NPHI_corrected from chart (standard limestone or sandstone)"
+    step3: "Convert to sandstone or limestone matrix if needed (chart selection)"
+    step4: "Correct for temperature if T > 200°F"
+    step5: "Apply standoff correction if tool eccentered"
+    step6: "Validate with density porosity (φD) — ND separation should match lithology"
+    tools: "Schlumberger chart NPHI-1 (limestone matrix), NPHI-2 (sandstone matrix)"
+
+  neutron_density_cross_plot:
+    description: |
+      NPHI-RHOB cross-plot for lithology and porosity.
+      Matrix points:
+        Sandstone: NPHI=0.00, RHOB=2.65
+        Limestone: NPHI=0.00, RHOB=2.71
+        Dolomite: NPHI=0.03, RHOB=2.87
+      Separation indicates: shale (positive), gas (negative), anhydrite (negative)
+    gas_effect: |
+      Gas reduces NPHI significantly (hydrogen index < oil/water).
+      Gas effect: Δ(NPHI) = -5 to -15 p.u. (depends on porosity and gas saturation)
+      Gas effect on RHOB: smaller, -0.05 to -0.15 g/cm³.
+      ND separation in gas zone: -5 to -15 p.u. (negative separation).
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SPONTANEOUS POTENTIAL (SP) — ENVIRONMENTAL CORRECTIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+sp_log:
+  measurement_principle: |
+    Measures natural DC voltage between borehole and surface electrode.
+    Caused by: electrochemical potential (ion diffusion) + electrofiltration (mud filtrate flow).
+    Static SP (SSP) = maximum SP deflection opposite clean permeable beds.
+  units: "Millivolts (mV)"
+  electrode: "Moving electrode in borehole vs fixed reference at surface"
+  vertical_resolution: [12, 24]  # inches — low
+
+  environmental_distortions:
+    borehole_resistance_effect:
+      description: |
+        SP amplitude reduced by borehole fluid column resistance.
+        High Rm (resistive mud, oil-based, saltwater): SP amplitude reduced.
+        Low Rm (freshwater mud): minimal reduction.
+      correction_needed: "YES — calculate SP reduction factor"
+      equation: |
+        SP_reduction = Rm / (Rm + 0.5 × Rw × (D_hole / d_electrodem)²)
+        Correction factor typically 0.7–0.95 for water-based muds
+
+    invasion_effect:
+      description: "SP measures potential at filtrate-formation interface (dynamic invasion)"
+      Rmf_Rw_ratio: "SSP only valid when Rmf/Rw > 3 (fresh formation water)"
+      significance: "HIGH — if formation water is salty (Rw low), SP is reduced"
+
+    bed_thickness_effect:
+      description: |
+        Thin beds (< 4 ft): SP is suppressed (not reaching full SSP).
+        SP amplitude reduced by: SP_measured = SSP × (1 - e^(-thickness/8ft))
+      significance: "HIGH for thin beds"
+      correction: "Apply bed thickness correction chart"
+
+    shale baseline drift:
+      description: "SP shale baseline may shift with depth (temperature, salinity gradients)"
+      significance: "MODERATE — re-establish baseline in thick shale sections"
+      correction: "Use shale baseline as reference — SP anomaly = SSP opposite sand"
+
+    static_SP_calculation:
+      description: |
+        SSP = SP_max - SP_shale_baseline (opposite clean permeable bed)
+        SSP correlates to Rmf/Rw ratio and formation temperature.
+      equation: |
+        SSP = -K × log10(Rmf/Rw)
+        where K = 60 + 0.133 × T_F (in mV)
+        For NaCl mud: K ≈ 61–71 mV at typical temperatures
+      valid_conditions: |
+        Rmf/Rw > 3 (fresh formation water)
+        Bed thickness > 4 ft
+        No invading gas or oil (changes ionic composition)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RESISTIVITY (RT, RXO) — ENVIRONMENTAL CORRECTIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+resistivity_log:
+  measurement_principle: |
+    Measures electrical resistance of formation (R) or conductivity (C = 1/R).
+    Laterolog (focused): injects current into formation, measures deep
+    Induction (unfocused): measures conductivity by electromagnetic induction.
+    Array tools: multiple depths (shallow to deep) for invasion profiling.
+  units: "Ohm-meters (Ω·m) or millimhos/m (C = 1000/R)"
+  depth_of_investigation:
+    shallow_induction: [5, 15]  # inches
+    deep_induction: [30, 60]  # inches
+    laterolog_shallow: [10, 20]  # inches
+    laterolog_deep: [40, 80]  # inches
+  vertical_resolution: [12, 24]  # inches
+
+  environmental_distortions:
+    invasion_effect:
+      description: |
+        Mud filtrate replaces formation water in invaded zone.
+        RXO (shallow) → Rxo ≈Rf (flushed zone resistivity)
+        RT (deep) → Rt (true formation resistivity if invasion is shallow)
+        Intermediate:Rm (transition zone resistivity)
+      invasion_diameter: [4, 20]  # inches
+      significance: "CRITICAL — resistivity is ALWAYS affected by invasion"
+      correction_needed: "YES — use multiple depths to profile invasion"
+      workflow: |
+        1. Compare shallow vs deep resistivity (ratio indicates invasion)
+        2. If shallow much lower than deep: flushed zone with conductive mud filtrate
+        3. If shallow equals deep: invasion is minimal — use either
+        4. Use invasion correction charts or inversion to get Rt
+
+    borehole_effect:
+      description: |
+        Borehole adds parallel conduction path (mud column).
+        Effect is small for deep readings but significant for shallow in high-Rt formations.
+      significance: "LOW for deep induction/laterolog"
+      correction_needed: "YES for shallow in high-Rt (> 100 Ω·m)"
+
+    shoulder_effect:
+      description: "Adjacent conductive beds (shale) pull current, reducing apparent Rt"
+      significance: "HIGH in thin beds (< 5 ft)"
+      correction: "Use thin bed correction charts or array tool processing"
+
+    temperature_effect:
+      description: |
+        Rt increases with temperature (formation water becomes more conductive).
+        Correction: Rt(T) = Rt(T_ref) × (T_ref + 6.77) / (T + 6.77)
+        where T in °F.
+      significance: "HIGH — always normalize to reference temperature"
+      correction: "Arp approximation for temperature correction of resistivity"
+
+    conductivity_units:
+      description: |
+        Conductivity (C) = 1000 / Rt (in mmhos/m)
+        For low Rt (high conductivity): use conductivity
+        For high Rt (low conductivity): use resistivity
+        Conversion: Rt_Ωm = 1000 / C_mmhos × 0.001 = 1 / C_mmhos × 1000 (check units)
+
+    invasion_severity_indicators:
+      mild_invasion: "RT/RXO ratio 1.1–2.0 (diameter < 2× mud filtrate depth)"
+      moderate_invasion: "RT/RXO ratio 2.0–5.0"
+      severe_invasion: "RT/RXO ratio > 5.0 (needs invasion correction)"
+      methodology: |
+        Dual-water / Simandoux models separate clay conductivity from pore fluid conductivity
+        Use array resistivity for invasion profile inversion
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SONIC LOG (DT) — ENVIRONMENTAL CORRECTIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+sonic_log:
+  measurement_principle: |
+    Measures compressional transit time (Δt = 1/Vp).
+    Transmitter fires acoustic pulse → receivers detect first arrival.
+    Compensated for borehole effects (long-spaced, array tools).
+  source: "Piezoelectric transmitter (piezo)"
+  units: "Microseconds per foot (μsec/ft) or μsec/m"
+  depth_of_investigation: [0.5, 1.0]  # inches — very shallow (near wellbore)
+  vertical_resolution: [12, 24]  # inches
+
+  environmental_distortions:
+    borehole_effect:
+      description: |
+        Soft formations (high Δt): borehole signal arrivals faster (bypassing formation).
+        Washouts: DT reads too high (low velocity) — tool sees mud.
+      significance: "HIGH in unconsolidated formations"
+      correction_needed: "YES — use long-spaced or array sonic"
+
+    mud_slowness_effect:
+      description: "Mud transit time (Δtm): ~53–57 μsec/ft (water + cuttings)"
+      correction: "Subtract mud transit time from total"
+      significance: "LOW if tool is correctly calibrated"
+
+    invasion_effect:
+      description: |
+        Sonic measures near-wellbore (flushed zone).
+        Gas in flushed zone: DT reads HIGH (gas has low velocity).
+        This can cause sonic porosity > neutron-density porosity (gas effect).
+      significance: "MODERATE to HIGH in gas-bearing formations"
+
+    compaction_effect:
+      description: |
+        Undercompacted shale: DT reads HIGH (slow velocity).
+        Overcompacted sandstone: DT reads LOW (fast velocity).
+      significance: "HIGH in abnormal pressure zones"
+      correction: "Use compaction correction: Δt_comp = Δt_measured / (0.7 + 0.003 × D) where D = depth in feet (valid for normal compaction trend)"
+
+    fracture_detection:
+      description: "Dipole sonic imager (DSI) detects flexural wave splitting in fractures"
+      significance: "CRITICAL for fractured reservoir evaluation"
+      methodology: "STC (slowness time coherence) processing for arrival times"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CORRECTION FLOWCHART — DECISION TREE
+# ─────────────────────────────────────────────────────────────────────────────
+
+correction_flowchart:
+  description: "Apply corrections in this order for best results"
+
+  step1_CAL:
+    tool: "Caliper (CAL)"
+    action: "Read hole diameter — identify washouts and gauge sections"
+    threshold: "If CAL > nominal + 0.5 in → washout correction needed for NPHI"
+
+  step2_NPHI:
+    tool: "Neutron (NPHI)"
+    corrections_applied: ["borehole size", "mud weight", "standoff", "temperature"]
+    order: "Borehole size first, then mud weight, then temperature"
+    output: "NPHI_corrected (limestone or sandstone matrix, specify which)"
+
+  step3_RHOB:
+    tool: "Density (RHOB)"
+    corrections_applied: ["borehole size", "mud filtrate invasion"]
+    order: "Borehole size first, then invasion"
+    output: "RHOB_corrected (g/cm³)"
+    validation: "φD should agree with φN within 2 p.u. (sandstone) or 3 p.u. (carbonate)"
+
+  step4_DT:
+    tool: "Sonic (DT)"
+    corrections_applied: ["borehole (BHC)", "compaction"]
+    order: "Borehole correction first, then compaction (if needed)"
+    output: "Δt_corrected (μsec/ft)"
+    validation: "φS vs φD vs φN — ND-S separation indicates gas"
+
+  step5_RT:
+    tool: "Resistivity (RT, RXO)"
+    corrections_applied: ["borehole (if shallow)", "invasion (dual-water model)"]
+    output: "Rt (true resistivity)"
+    invasion_assessment: "RT/RXO ratio → invasion severity → which reading to trust"
+
+  step6_SP:
+    tool: "Spontaneous Potential (SP)"
+    corrections_applied: ["bed thickness", "borehole resistance"]
+    output: "SSP (static SP) in mV"
+    validation: "SSP positive for NaCl system with fresher mud filtrate"

@@ -1,0 +1,351 @@
+# GEOX Net Pay Cutoffs — Physics-9 Capillary Pressure Formulation
+# DITEMPA BUKAN DIBERI
+#
+# PHYSICS-9 CLAIM:
+#   Classical net pay cutoffs (Vsh < 0.35, PHIE > 0.10, Sw < 0.65) are rules of thumb
+#   derived from decades of North Sea/ onshore Texas experience.
+#   They work for those specific settings but are WRONG for:
+#     (a) Deepwater clastics (fine-grained turbidites — need lower Sw cutoffs)
+#     (b) Carbonates (pore geometry controls flow, not Vsh)
+#     (c) Tight gas (permeability-driven, not Sw-driven)
+#     (d) Unconventionals (nanodarcy matrix — no economic production without frac)
+#
+#   REAL PHYSICS:
+#   Net pay is defined by the PERCOLATION THRESHOLD of the conductive network:
+#     A rock is productive if and only if a connected pathway exists from inlet to outlet.
+#     For a network with coordination number z and bond probability p:
+#       percolation threshold pc ≈ 1/(z-1)   [site percolation, 3D cubic lattice]
+#     For pore throat networks: pc corresponds to Sw at which Rt/Rw = 2 (not Sw = 100%)
+#
+#   The Sw-height function (capillary pressure curve) defines the transition zone:
+#     Pc = (2·γ·cos_θ) / r_e   [Young-Laplace equation]
+#     where r_e = effective pore throat radius
+#     Sw(Pc) = Swir + (1 - Swir) × (Pc / Pc_entry)^(-λ)
+#     where λ = Brooks-Corey pore size distribution index
+#
+#   DEFINTION: Net pay = depth interval where Sw < Sw_percolation
+#   where Sw_percolation is the Sw at which percolation-first conductance = percolation threshold.
+#   This is PHYSICALLY DEFINED, not empirically chosen.
+#
+# CLAIM LIMITS:
+#   - Capillary pressure curves require SCAL data (centrifuge or porous plate)
+#   - If no SCAL: use percolation-estimated defaults from this table
+#   - Cutoffs by zone height above FWL (free water level): net pay increases with height
+#   - For heavy oil (API < 20°): lower Sw cutoff may be needed due to high viscosity
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CAPILLARY PRESSURE — BROOKS-COREY MODEL
+# ─────────────────────────────────────────────────────────────────────────────
+
+capillary_pressure_model:
+  brooks_corey:
+    formula: "Pc = Pc_entry × (Sw - Swir) / (1 - Swir)^(-1/λ)"
+    rearranged: "Sw = Swir + (1 - Swir) × (Pc / Pc_entry)^(-λ)"
+    parameters:
+      Pc_entry: "Entry capillary pressure (psi) — defines the percolation threshold"
+      Swir: "Irreducible water saturation (fraction)"
+      λ: "Brooks-Corey pore size distribution index (dimensionless)"
+    λ_values:
+      coarse_pore: [3.0, 8.0]   # well-sorted, high permeability
+      medium_pore: [1.5, 3.0]   # typical sandstone
+      fine_pore: [0.5, 1.5]    # silty, low permeability
+      microporous: [0.2, 0.5]   # clay-rich, very tight
+
+  Pc_entry_from_permeability:
+    description: "Estimate Pc_entry from permeability (Darby, 1974 empirical correlation)"
+    formula: "Pc_entry = 6.9 / sqrt(k / 1000)   [psi]"
+    k_unit: "mD"
+    valid_range: "k: 0.01–10,000 mD"
+    notes:
+      - "Coarse sand (k > 1000 mD): Pc_entry < 1 psi → water column 10–20 ft"
+      - "Fine sand (k < 10 mD): Pc_entry 10–100 psi → water column 100–500 ft"
+      - "Siltstone (k < 1 mD): Pc_entry > 100 psi → transition zone 500–2000 ft"
+
+  Sw_height_function:
+    description: "Sw as function of height above FWL"
+    formula: |
+      h = (Pc / (ρw - ρo) / 0.433)   [ft]
+      Sw(h) = Swir + (1 - Swir) × (h / h_entry)^(-λ)
+    where:
+      h: "height above FWL (ft)"
+      h_entry: "height at entry pressure: Pc_entry / (0.433 × (ρw - ρo))"
+      ρw, ρo: "water and oil density (g/cm³)"
+    warning: |
+      "This is for drainage (imbibition if waterflood) — verify scan direction!"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NET PAY CUTOFFS BY LITHOLOGY AND ENVIRONMENT
+# ─────────────────────────────────────────────────────────────────────────────
+
+net_pay_cutoffs:
+  description: |
+    Cutoffs are PHYSICAL THRESHOLDS derived from percolation theory.
+    Net pay = rock volume where conductive network PERCOLATES.
+    This happens at Sw < Sw_percolation, NOT at arbitrary Vsh/PHI cutoffs.
+    The values in this table are BROOKS-COREY DERIVED for each facies.
+
+  siliciclastic:
+    shallow_marine_shelf:
+      description: "Prodelta to shelf — turbidite and storm deposits"
+      Sw_percolation_max: 0.55
+      Sw_cutoff: 0.55
+      PHIE_min: 0.08
+      VSH_max: 0.40
+      K_min_mD: 0.10
+      h_FWL_m: 5.0   # minimum height above FWL for production
+      capillary_entry_Pc_psi: [2.0, 15.0]
+      lambda_bc: [1.5, 4.0]
+      notes:
+        - "Fine-grained turbidites: tight — use Sw < 0.50, PHIE > 0.08"
+        - "Medium sand turbidites: typical — use table defaults"
+        - "Deepwater fan channel: excellent — Sw < 0.60, PHIE > 0.12"
+        - "Percolation threshold shifts lower in fine-grained rocks"
+
+    fluvial_channel:
+      description: "Point bar, braided river — blocky or fining-upward"
+      Sw_cutoff: 0.50
+      PHIE_min: 0.12
+      VSH_max: 0.35
+      K_min_mD: 10.0
+      h_FWL_m: 3.0
+      capillary_entry_Pc_psi: [0.5, 5.0]
+      lambda_bc: [3.0, 8.0]
+      notes:
+        - "Clean channel sands: low Sw cutoff, high PHIE — excellent reservoir"
+        - "Floodplain mudstones: VSH > 0.35 is seal, not pay"
+
+    estuarine_tidal:
+      description: "Tidal bar, lagoon — wavy/ribbon geometry"
+      Sw_cutoff: 0.52
+      PHIE_min: 0.10
+      VSH_max: 0.38
+      K_min_mD: 5.0
+      h_FWL_m: 4.0
+      capillary_entry_Pc_psi: [1.0, 8.0]
+      lambda_bc: [2.0, 5.0]
+      notes:
+        - "Tidal channels: moderate heterogeneity — net pay is more variable"
+        - "Check gamma ray motif: serrated → lower net/gross"
+
+    deltaic:
+      description: "Delta front, prodelta — coarsening-upward parasequences"
+      Sw_cutoff: 0.55
+      PHIE_min: 0.10
+      VSH_max: 0.40
+      K_min_mD: 1.0
+      h_FWL_m: 4.5
+      capillary_entry_Pc_psi: [1.5, 12.0]
+      lambda_bc: [1.5, 4.0]
+      notes:
+        - "Delta front: typically net/gross 0.4–0.7"
+        - "Prodelta mudstone: no pay — use VSH > 0.50 as seal"
+
+    shoreface:
+      description: "Upper shoreface to foreshore — coarsening-upward"
+      Sw_cutoff: 0.50
+      PHIE_min: 0.14
+      VSH_max: 0.30
+      K_min_mD: 100.0
+      h_FWL_m: 2.5
+      capillary_entry_Pc_psi: [0.3, 3.0]
+      lambda_bc: [4.0, 9.0]
+      notes:
+        - "Best reservoir quality: high PHIE, low VSH, high K"
+        - "Lower shoreface: may be too silty — apply stricter VSH"
+
+    deepwater_turbidite:
+      description: "Turbidite channel, lobe — thin-bedded turbidites"
+      Sw_cutoff: 0.60
+      PHIE_min: 0.08
+      VSH_max: 0.45
+      K_min_mD: 0.05
+      h_FWL_m: 8.0
+      capillary_entry_Pc_psi: [5.0, 30.0]
+      lambda_bc: [1.0, 3.0]
+      notes:
+        - "Thin-bedded: STOIIP may be volumetrically significant if bulk volume is large"
+        - "Deepwater fans: use Sw < 0.55 if no SCAL data"
+        - "Net pay stacking: multiple thin lobes can aggregate to commercial rates"
+
+    tight_gas_sand:
+      description: "Overpressured, deeply buried (> 4000 mMD)"
+      Sw_cutoff: 0.65
+      PHIE_min: 0.04
+      VSH_max: 0.55
+      K_min_mD: 0.001
+      h_FWL_m: 50.0   # large transition zone
+      capillary_entry_Pc_psi: [20.0, 200.0]
+      lambda_bc: [0.3, 1.5]
+      notes:
+        - "Tight gas: percolation threshold is Sw < 0.70 (not 0.55)"
+        - "Must hydraulic fracture to produce — no natural deliverability"
+        - "Use Timur-Coates permeability: k = (PHIE^4.5) / (Swir^2) × 1000"
+
+  carbonate:
+    limestone_interparticle:
+      description: "Interparticle porosity — primary depositional"
+      Sw_cutoff: 0.50
+      PHIE_min: 0.06
+      VSH_max: 0.25
+      K_min_mD: 0.5
+      h_FWL_m: 3.0
+      capillary_entry_Pc_psi: [3.0, 20.0]
+      lambda_bc: [2.0, 5.0]
+      notes:
+        - "Vuggy porosity: if density-neutron separation > 5 pu → add 2 pu to PHIE"
+        - "Check NPHI-RHOB crossover: should be tight for clean limestone"
+
+    limestone_vuggy:
+      description: "Moldic/vuggy secondary porosity"
+      Sw_cutoff: 0.55
+      PHIE_min: 0.05
+      VSH_max: 0.20
+      K_min_mD: 1.0
+      h_FWL_m: 4.0
+      capillary_entry_Pc_psi: [5.0, 30.0]
+      lambda_bc: [1.5, 3.5]
+      notes:
+        - "Vugs: if vug porosity > 3% of total → use dual-porosity model"
+        - "Vuggy limestone: effective permeability > matrix permeability alone"
+        - "PHIE_min can be lower than vuggy-free limestone because vugs add storage"
+
+    dolomite:
+      description: "Dolomitized carbonate — intercrystalline porosity"
+      Sw_cutoff: 0.50
+      PHIE_min: 0.06
+      VSH_max: 0.20
+      K_min_mD: 0.5
+      h_FWL_m: 3.5
+      capillary_entry_Pc_psi: [4.0, 25.0]
+      lambda_bc: [2.0, 5.0]
+      notes:
+        - "Dolomite: slightly higher capillary pressure than limestone"
+        - "Rhombic pore throats: m = 2.1–2.3 typically"
+
+    chalk:
+      description: "Nannofossil chalk — North Sea Ekofisk-type"
+      Sw_cutoff: 0.60
+      PHIE_min: 0.02
+      VSH_max: 0.15
+      K_min_mD: 0.001
+      h_FWL_m: 10.0
+      capillary_entry_Pc_psi: [30.0, 100.0]
+      lambda_bc: [0.5, 1.5]
+      notes:
+        - "Chalk: ultra-low K but high PHIE → percolation threshold Sw < 0.65"
+        - "Waterflood sweep efficiency is poor — consider gas injection"
+        - "Porosity > 0.30: chalk is mechanically unstable → compaction drive"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NET PAY PROCEDURE — STEP BY STEP
+# ─────────────────────────────────────────────────────────────────────────────
+
+net_pay_procedure:
+  description: |
+    Step 1: Identify FWL (Free Water Level) from:
+      (a) Log: deepest transition zone point where Sw = 1.0 (100% water)
+      (b) Drill stem test: direct pressure measurement
+      (c) Capillary pressure: convert Pc curve to height above FWL
+
+    Step 2: Apply cutoffs at each depth point:
+      Net = 1 if: Sw ≤ Sw_cutoff AND PHIE ≥ PHIE_min AND VSH ≤ VSH_max AND k ≥ K_min
+
+    Step 3: Compute height above FWL:
+      h(z) = (Pc(z) / (ρw - ρo) / 0.433)  [ft]
+      where ρw, ρo from PVT or estimated
+
+    Step 4: Adjust Sw_cutoff by height:
+      Sw_at_h(h) = Swir + (1 - Swir) × (h / h_entry)^(-λ)
+      If Sw(z) < Sw_at_h(h(z)) → rock is in transition zone → not pay unless h > h_FWL_min
+
+    Step 5: Sum net pay:
+      Gross = depth_base - depth_top
+      Net = Σ(net_flag × depth_step)
+      Net/Gross = Net / Gross
+
+  geox_1d_integration: |
+    geox_1d.py compute_net_pay() function implements this procedure.
+    Inputs: Sw, PHIE, VSH, K, FWL depth, fluid densities
+    Outputs: net_flag_array, gross_m, net_m, net_gross_ratio, pay_flag
+
+  percolation_threshold_check:
+    description: |
+      For each depth interval, verify percolation threshold:
+      ρc = 1 / (z - 1)   [3D cubic lattice, z = coordination number]
+      For pore networks: conductive bond exists when Sw > Sw_percolation
+      Sw_percolation ≈ 0.25 for clean sand (z = 6); ≈ 0.40 for shaley (z = 4)
+      If modeled Sw > Sw_percolation → rock CAN conduct → may be pay
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCREENING TABLE (when no SCAL or core data)
+# ─────────────────────────────────────────────────────────────────────────────
+
+screening_defaults:
+  description: "Use when no calibration data exists — label as MEDIUM confidence"
+  by_depositional_environment:
+    - env: fluvial
+      Sw: 0.50
+      PHIE: 0.12
+      VSH: 0.35
+      K: 10.0
+      confidence: medium
+    - env: estuarine_tidal
+      Sw: 0.52
+      PHIE: 0.10
+      VSH: 0.38
+      K: 5.0
+      confidence: medium
+    - env: deltaic
+      Sw: 0.55
+      PHIE: 0.10
+      VSH: 0.40
+      K: 1.0
+      confidence: medium
+    - env: shoreface
+      Sw: 0.50
+      PHIE: 0.14
+      VSH: 0.30
+      K: 100.0
+      confidence: medium
+    - env: shallow_marine
+      Sw: 0.55
+      PHIE: 0.08
+      VSH: 0.40
+      K: 0.10
+      confidence: medium
+    - env: deepwater_turbidite
+      Sw: 0.60
+      PHIE: 0.08
+      VSH: 0.45
+      K: 0.05
+      confidence: medium
+    - env: tight_gas
+      Sw: 0.65
+      PHIE: 0.04
+      VSH: 0.55
+      K: 0.001
+      confidence: low
+    - env: limestone_interparticle
+      Sw: 0.50
+      PHIE: 0.06
+      VSH: 0.25
+      K: 0.5
+      confidence: medium
+    - env: limestone_vuggy
+      Sw: 0.55
+      PHIE: 0.05
+      VSH: 0.20
+      K: 1.0
+      confidence: medium
+    - env: dolomite
+      Sw: 0.50
+      PHIE: 0.06
+      VSH: 0.20
+      K: 0.5
+      confidence: medium
+    - env: chalk
+      Sw: 0.60
+      PHIE: 0.02
+      VSH: 0.15
+      K: 0.001
+      confidence: low

@@ -35,15 +35,12 @@ steps:
     next: stoiip
 
   - id: stoiip
-    tool: geox_physics_compute_stoiip
+    tool: geox_prospect_evaluate
     inputs:
+      prospect_ref: "${step.generate_candidates.artifact_ref}"
+      mode: appraise
       evidence_refs: ["${step.generate_candidates}", "${step.verify_integrity}"]
-      area_km2: "${area_km2}"
-      h_m: "${netpay}"
-      phi: "${phi}"
-      sw: "${sw}"
-      bo: "${formation_volume_factor}"
-    outputs: [stoiip_mmstb, p10, p50, p90]
+    outputs: [stoiip_mmstb, p10, p50, p90, volumetric_quality]
     next: END
 
 claim_limits:

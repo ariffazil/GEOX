@@ -1,0 +1,432 @@
+# GEOX SCAL Correlations — Special Core Analysis
+# DITEMPA BUKAN DIBERI
+#
+# PHYSICS-9 CLAIM:
+#   SCAL (Special Core Analysis) measurements are the GROUND TRUTH for:
+#     (a) Relative permeability (krw, kro, krg)
+#     (b) Capillary pressure (Pc)
+#     (c) Resistivity index (RI)
+#     (d) Compressibility (Cf)
+#
+#   Correlations are INFERIOR to measurements — but measurements are expensive.
+#   The correct approach: USE MEASUREMENTS where available, CORRELATIONS elsewhere.
+#
+#   RULE:
+#     (1) Core-derived Pc(Sw) function is the ONLY ground truth for height above FWL
+#     (2) J-function is a dimensional normalization, NOT a physical model
+#     (3) Klinkenberg correction is for gas permeability only — not for oil or water
+#     (4) All correlations have calibration ranges — never extrapolate
+#
+#   HIERARCHY OF TRUST:
+#     1. Laboratory SCAL measurements (centrifuge, porous plate, steady state)
+#     2. Core-derived correlations calibrated to SCAL (e.g., kro(Sw) from J-function)
+#     3. Generalized correlations (Brooks-Corey, van Genuchten — only if no core)
+#     4. Rule-of-thumb (only for conceptual modeling, not for reserves)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CAPILLARY PRESSURE — PHYSICS
+# ─────────────────────────────────────────────────────────────────────────────
+
+capillary_pressure:
+  description: |
+    Pc = Pnw = Pnon-wetting - Pwetting
+    The pressure required to force non-wetting fluid (gas or oil) into a
+    water-saturated pore network.
+    PHYSICS: Pc is determined by:
+      (1) Interfacial tension (γ, dynes/cm)
+      (2) Contact angle (θ, degrees — measured through wetting phase)
+      (3) Pore throat radius (r, μm)
+    Equation: Pc = (2 × γ × cos θ) / r
+    Units: psi (field) or dynes/cm² (lab)
+    Conversion: 1 psi = 6894.76 dynes/cm²
+
+  physics_derivation:
+    young_laplace_equation: |
+      Pc = γ × (1/r1 + 1/r2)
+      where r1, r2 = principal radii of curvature of the interface
+      For a cylindrical pore: Pc = (2 × γ × cos θ) / r
+      For a throat: r = throat radius (μm)
+    interfacial_tension:
+      air_water_IFT: [70, 72]  # dynes/cm at 20°C
+      oil_water_IFT: [20, 50]  # dynes/cm (depends on oil composition)
+      gas_oil_IFT: [10, 35]  # dynes/cm (depends on GOR)
+      temperature_effect: "IFT decreases with T (critical near Tc)"
+      pressure_effect: "IFT decreases with P (to zero at critical point)"
+    contact_angle:
+      water_wet: [0, 15]  # degrees — strongly water-wet
+      mixed_wet: [30, 70]  # degrees — neutral or mixed wet
+      oil_wet: [110, 180]  # degrees — strongly oil-wet
+      measurement: "Contact angle goniometer on smooth mineral surface"
+      significance: "cos θ determines sign and magnitude of Pc"
+      note: "θ is measured through the wetting phase"
+
+  measurement_methods:
+    porous_plate:
+      description: "Membrane method — non-wetting phase pressure applied incrementally"
+      pressure_range: [0, 1000]  # psi
+      Sw_range: [0.0, 1.0]
+      accuracy: "BEST — most reliable SCAL method"
+      equilibration_time: [24, 72]  # hours per pressure step
+      applications: "Brine-oil, brine-gas capillary pressure"
+      advantages: "True equilibrium, direct Pc-Sw relationship"
+      disadvantages: "Slow, expensive, limited pressure range"
+
+    centrifuge:
+      description: "Centrifugal force simulates capillary pressure"
+      pressure_range: [0, 3000]  # psi (depends on speed and radius)
+      Sw_range: [0.05, 1.0]  # Cannot achieve very low Sw (water retained)
+      accuracy: "GOOD — widely used for oil-water systems"
+      applications: "Oil-water, gas-oil (USUALLY gas is wetting in gas-oil)"
+      advantages: "Fast (vs porous plate), can reach high pressures"
+      disadvantages: "End effects, assumes wettability (must know a priori)"
+      conversion_equation: |
+        Pc = 0.000001 × Δρ × ω² × (r_avg × r_tip - 0.5 × r_tip²)
+        where:
+          Δρ = density difference (g/cm³)
+          ω = angular velocity (rad/s)
+          r_avg = average radius of rotation (cm)
+          r_tip = distance from rotation axis to sample tip (cm)
+
+    mercury_injection:
+      description: "Non-wetting mercury injected into evacuated core"
+      pressure_range: [0, 60000]  # psi (up to 60,000 psi for small pores)
+      pore_throat_range: [0.003, 360]  # μm (mercury fills all pore throats)
+      accuracy: "MODERATE — not representative of reservoir wettability"
+      applications: "Pore throat size distribution, air-mercury Pc curve"
+      advantages: "Fast (30 min), very wide pressure range, no saturation history"
+      disadvantages: |
+        Mercury is non-wetting in all rocks (θ = 140°, γ = 480 dynes/cm).
+        Cannot simulate reservoir wettability.
+        Use ONLY for pore throat distribution, NOT for reservoir Pc-Sw.
+      conversion_to_reservoir: |
+        Pc_reservoir = Pc_Hg × (γ_reservoir × cos θ_reservoir) / (γ_Hg × cos θ_Hg)
+        Typically: Pc_reservoir ≈ Pc_Hg / 6 to / 10 (for oil-water systems)
+
+    dust_capillary_pressure:
+      description: "For unconsolidated sands — use specialized methods"
+      application: "Heavy oil, tar mats, unconsolidated formations"
+      note: "Often combined with consolidation techniques"
+
+  drainage_vs_imbibition:
+    drainage:
+      description: "Non-wetting phase displaces wetting phase (e.g., gas displacing water)"
+      direction: "Sw decreases from 1.0 to irreducible (Swc)"
+      Pc: "Increases from 0 to entry pressure (Pc_entry)"
+      history: "Initial water displacement by hydrocarbon migration"
+      endpoint: "Swc (irreducible water saturation)"
+    imbibition:
+      description: "Wetting phase displaces non-wetting phase (e.g., water displacing oil)"
+      direction: "Sw increases from Swc to 1.0 (or Sor)"
+      Pc: "Decreases (if wettability is water-wet)"
+      history: "Waterflooding, aquifer influx"
+      endpoint: "Sor (residual oil saturation)"
+    wettability_impact:
+      water_wet: "Drainage Pc > Imbibition Pc for same Sw"
+      oil_wet: "Imbibition Pc can be NEGATIVE (capillary suction of water)"
+      mixed_wet: "Complex Pc curve — requires laboratory measurement"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LEVERETT J-FUNCTION — DIMENSIONAL NORMALIZATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+leverett_j_function:
+  description: |
+    J(Sw) = (Pc / γ × cos θ) × sqrt(K/φ)
+    Dimensional normalization to combine Pc curves from different rocks.
+    Allows comparison of capillary behavior across permeability and porosity ranges.
+    USAGE: Only for drainage (initial migration) — NOT for imbibition (waterflood).
+    VALIDITY: Only if wettability is uniform across samples.
+  units: "Dimensionless (when using consistent units)"
+  equation: "J(Sw) = Pc × sqrt(K/φ) / (γ × cos θ)"
+  where:
+    Pc: "Capillary pressure (psi or dynes/cm² — be consistent)"
+    K: "Absolute permeability (mD)"
+    φ: "Porosity (fraction, not %)"
+    γ: "Interfacial tension (dynes/cm)"
+    θ: "Contact angle (degrees through wetting phase)"
+  typical_J_values:
+    Sw_100_percent: "J = 0 (no non-wetting phase present)"
+    Sw_entry: "J_entry ≈ 1–3 (typical for unconsolidated sand)"
+    Swc_irreducible: "J_Swc ≈ 5–20 (depends on pore structure)"
+  J_function_limitations:
+    - "Assumes pore geometry is similar across samples (geometric similarity)"
+    - "Wettability must be the same for all samples"
+    - "Does NOT account for wettability alteration with oil chemistry"
+    - "VALID for drainage only — NOT for imbibition (waterflood)"
+    - "Use with caution — not a substitute for core-derived Pc curves"
+
+  J_function_application:
+    step1: "Select reference rock (best core sample, representative K and φ)"
+    step2: "Measure Pc(Sw) on reference rock (porous plate or centrifuge)"
+    step3: "Calculate J(Sw) for reference rock"
+    step4: "Measure K and φ for other rocks (routine core analysis)"
+    step5: "Back-calculate Pc(Sw) for other rocks using J function"
+    equation_backcalc: "Pc_new(Sw) = J(Sw) × (γ_new × cos θ_new) / sqrt(K_new/φ_new)"
+    uncertainty: "±30–50% — use only for conceptual modeling, not for reserves"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BROOKS-COREY MODEL — EMPIRICAL PC-SW RELATIONSHIP
+# ─────────────────────────────────────────────────────────────────────────────
+
+brooks_corey:
+  description: |
+    Empirical model for drainage capillary pressure.
+    Pc(Sw) = Pc_entry × (Sw - Swc) / (1 - Swc)^(-λ)
+    where:
+      Pc_entry = entry pressure (psi)
+      Swc = irreducible water saturation (fraction)
+      λ = pore size distribution index (dimensionless)
+  equation: |
+    Pc = Pc_entry × ((Sw - Swc) / (1 - Swc))^(-1/λ)
+    or equivalently:
+    Sw = Swc + (1 - Swc) × (Pc_entry / Pc)^(λ)
+  parameters:
+    Pc_entry:
+      description: "Threshold pressure — minimum Pc to enter largest pores"
+      typical_range_psi: [0.5, 50]  # psi
+      measurement: "First plateau on Pc curve or mercury injection entry"
+      K_correlation: "Pc_entry ≈ 5–10 / K^0.5 (for sandstones)"
+    Swc:
+      description: "Irreducible water saturation — water that cannot be displaced"
+      typical_range: [0.05, 0.40]
+      controlling_factors: ["Clay content (Vsh)", "Pore throat size", "Wettability"]
+      measurement: "End point of drainage Pc curve"
+    lambda_λ:
+      description: "Pore size distribution index — measures uniformity of pore throats"
+      uniform_pores: "λ > 3 (well-sorted, clean sand)"
+      heterogeneous: "λ = 1–2 (shaly sand, carbonate)"
+      very_heterogeneous: "λ < 1 (carbonates, vuggy, fractured)"
+      measurement: "Fit to Pc(Sw) data on log-log plot (slope = -1/λ)"
+  typical_values_by_lithology:
+    sandstone_clean: "Swc: 0.05–0.15, λ: 2–5, Pc_entry: 1–10 psi"
+    sandstone_shaly: "Swc: 0.15–0.35, λ: 1.5–3, Pc_entry: 5–20 psi"
+    limestone_microporous: "Swc: 0.10–0.30, λ: 1–2.5, Pc_entry: 10–50 psi"
+    carbonate_vuggy: "Swc: 0.05–0.20, λ: 0.5–1.5, Pc_entry: 5–30 psi (bimodal)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VAN GENUCHTEN MODEL — FOR IMBIBITION
+# ─────────────────────────────────────────────────────────────────────────────
+
+van_genuchten:
+  description: |
+    Empirical model for imbibition (waterflood, aquifer influx).
+    More accurate than Brooks-Corey for water-wet systems during imbibition.
+  equation: |
+    Se = (1 + (Pc × Pc_c)^(1/(1-λ)))^(-λ)
+    where:
+      Se = (Sw - Swc) / (1 - Swc) = effective saturation
+      Pc_c = critical capillary pressure (entry pressure for imbibition)
+      λ = van Genuchten exponent (same concept as Brooks-Corey λ)
+  typical_λ_values: [0.5, 0.8]  # Lower than drainage (wettability effect)
+  Swr_term: "Swr = Swc (residual water saturation)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RELATIVE PERMEABILITY
+# ─────────────────────────────────────────────────────────────────────────────
+
+relative_permeability:
+  description: |
+    krw(Sw), kro(Sw), krg(Sg) — permeability to each phase in the presence of others.
+    Normalized: kro(Sw) = kro(Sw) / kro@Swc (oil relative to irreducible water)
+    krw(Sw) = krw(Sw) / kro@Swc × kro_max
+    Sum of relative permeabilities < 1 (total flow capacity reduced by phase interference)
+
+  key_concepts:
+    endpoint_saturations:
+      Swc: "Irreducible water saturation — water cannot be displaced (oil only flows)"
+      Sor: "Residual oil saturation — oil trapped after waterflood (water only flows)"
+      Sgr: "Residual gas saturation — gas trapped after waterflood"
+    endpoint_permeabilities:
+      kro_Swc: "Oil permeability at Swc (maximum oil relative permeability)"
+      krw_Sor: "Water permeability at Sor (maximum water relative permeability)"
+      krg_Sgc: "Gas permeability at Sgc (maximum gas relative permeability)"
+      kro_Sor: "Oil permeability at Sor (minimum — near zero in water-wet)"
+    kro_krw_ratio:
+      description: "kro_Swc / krw_Sor — mobility ratio indicator"
+      typical_water_wet: [10, 100]  # Water-wet rock: oil flows much better than water
+      typical_oil_wet: [1, 5]  # Oil-wet: more similar relative permeability
+      typical_mixed_wet: [5, 20]
+    mobility_ratio_M:
+      equation: "M = (krw/μw) / (kro/μo)"
+      favorable_M: "< 1 (water drives oil efficiently)"
+      unfavorable_M: "> 1 (water bypasses oil — viscous fingering)"
+      extremely_unfavorable: "> 10 (channeling, early water breakthrough)"
+
+  Corey_based_correlations:
+    oil_water_system_water_wet:
+      equation_kro: "kro = kro_Swc × ((1 - Sw - Sorw) / (1 - Swc - Sorw))^no"
+      equation_krw: "krw = krw_Sor × ((Sw - Sorw) / (1 - Swc - Sorw))^nw"
+      typical_exponents: "no: 2–4, nw: 2–5"
+      note: "Exponents reflect pore size distribution (λ from Pc curve)"
+    gas_oil_system:
+      equation_kro: "kro = kro_Sgc × ((1 - Sg - Sorg) / (1 - Sgc - Sorg))^no"
+      equation_krg: "krg = krg_Sor × ((Sg - Sorg) / (1 - Sgc - Sorg))^ng"
+      typical_exponents: "no: 1.5–3, ng: 1.5–3"
+
+  three_phase_relative_permeability:
+    description: "Oil-water-gas simultaneously — more complex"
+    satura_hashin_shtrikman_model:
+      description: "Upper-lower bound method for 3-phase"
+      usage: "Calculate 3-phase from 2-phase (ow, og) data"
+    wag_cycle:
+      description: "Water-Alternating-Gas injection — cyclic saturation changes"
+      effect: "Trapped gas saturation (Sgt) increases with each WAG cycle"
+      Sgt_increment: [0.01, 0.05]  # per WAG cycle (depends on rock)
+
+  wettability_effects:
+    water_wet:
+      characteristics: |
+        Water coats grain surfaces, oil occupies pore centers.
+        Swc high (water remains as films).
+        Sor moderate (oil trapped in pores).
+        kro_Swc / krw_Sor ratio high.
+      kr_curve_shape: "kro decreases gradually, krw increases rapidly after Sor"
+    oil_wet:
+      characteristics: |
+        Oil coats grain surfaces, water occupies pore corners.
+        Swc low (water in corners only).
+        Sor high (oil remains as films after waterflood).
+        kro_Swc / krw_Sor ratio low.
+      kr_curve_shape: "krw decreases gradually, kro lower at all Sw"
+    mixed_wet:
+      characteristics: |
+        Heterogeneous wettability — some pores water-wet, some oil-wet.
+        Typically: small pores water-wet, large pores oil-wet.
+        Lowest Sor achievable (oil can flow through oil-wet large pores even at low Sw).
+        Highest recovery potential.
+      kr_curve_shape: "Intermediate between water-wet and oil-wet"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KLINKENBERG GAS PERMEABILITY CORRECTION
+# ─────────────────────────────────────────────────────────────────────────────
+
+klinkenberg:
+  description: |
+    Gas slippage effect — gas molecules slip along pore walls at low pressure.
+    Measured permeability (K_measured) > true liquid permeability (K_liquid).
+    PHYSICS: At low pressure, mean free path of gas molecules increases.
+    Gas molecules "slip" along pore walls, bypassing viscous flow.
+    Effect is significant at: mean pressure < 10 atm (147 psi).
+  equation: |
+    K_measured = K_liquid × (1 + b/Pm)
+    where:
+      K_measured = measured gas permeability (mD)
+      K_liquid = equivalent liquid permeability (mD)
+      b = Klinkenberg slip factor (psi)
+      Pm = mean pressure = (P_inlet + P_outlet) / 2 (psi)
+  slip_factor_b:
+    description: "Empirical constant — proportional to mean free path of gas"
+    equation: "b = c × (γ / r)^0.5"
+    where:
+      c = constant (~0.6–0.9)
+      γ = gas viscosity (cp)
+      r = pore radius (μm)
+    typical_values:
+      air_Klinkenberg: [0.5, 1.5]  # MPa (roughly 70–200 psi)
+      N2: [0.4, 1.3]
+      CO2: [0.3, 0.9]  # CO2 is denser, less slip
+    temperature_effect: "b increases with T (viscosity increases)"
+    pressure_effect: "b decreases as 1/sqrt(P) at high pressure"
+
+  permeability_correction_procedure:
+    step1: "Measure K_gas at multiple mean pressures (P1, P2, P3)"
+    step2: "Plot K_measured vs 1/Pm — should be linear: K = K_liquid + K_liquid × b × (1/Pm)"
+    step3: "Extrapolate to 1/Pm = 0 (infinite pressure) → K_liquid (y-intercept)"
+    step4: "b = slope / K_liquid"
+    step5: "Correct all K_gas measurements: K_liquid = K_gas / (1 + b/Pm)"
+    accuracy: "±5–10% if multiple pressures used"
+    single_point_correction: "K_liquid = K_gas × (P / (P + b))"  # less accurate
+
+  Klinkenberg_correction_applications:
+    gas_reservoir_permeability: "Use K_linken (corrected) for gas-in-place calculations"
+    liquid_permeability_estimate: "K_linken ≈ K_ آب (for water saturation)"
+    low_permeability_rocks: "b is larger (smaller pores) — effect more pronounced"
+    high_permeability_rocks: "b is smaller — effect minimal above 1000 mD"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RESISTIVITY INDEX (RI) — FORMATION RESISTIVITY FACTOR
+# ─────────────────────────────────────────────────────────────────────────────
+
+resistivity_index:
+  description: |
+    RI = Rt / Ro = Ro_corr / Ro_measured
+    where:
+      Rt = true formation resistivity at Sw < 1
+      Ro = formation resistivity at Sw = 1 (100% water)
+    RI is a measure of how much more resistive the formation becomes
+    as hydrocarbon replaces water.
+  equation: "RI = Rt / Ro = 1 / Sw^n"  # n = saturation exponent
+  Archie_law: "Sw = (Ro / Rt)^(1/n) = (a / (Rt × φ^m))^1/n"  # a=tortuosity factor, m=cementation exponent, n=saturation exponent
+  saturation_exponent_n:
+    description: "Exponent relating RI to Sw — Archie saturation parameter"
+    water_wet: [1.8, 2.5]  # Water-wet rock: RI increases rapidly with decreasing Sw
+    oil_wet: [1.2, 1.6]  # Oil-wet: RI increases more slowly
+    mixed_wet: [1.5, 2.2]
+    measurement: "Steady-state desaturation experiment (oil displaces brine at Sw > Swc)"
+    accuracy: "±0.1–0.2 in n value — significant uncertainty in Sw calculation"
+
+  saturation_equation_summary:
+    Archie: "Sw = (a × Rw) / (Rt × φ^m))^1/n"
+    standard_form: "Sw^n = Ro / Rt = 1 / RI"
+    parameters:
+      a: [0.6, 1.4]  # Tortuosity factor — check with core
+      m: [1.5, 2.5]  # Cementation exponent — use core-derived m (not 2.0!)
+      n: [1.5, 2.5]  # Saturation exponent — use core-derived n
+    cementation_exponent_m_from_core: |
+      From K-φ cross-plot or resistivity-porosity cross-plot (Pickett plot).
+      m affects Sw calculation significantly — don't use default 2.0.
+      Typical: m = 1.8–2.0 for clean sandstones; m = 2.0–2.5 for carbonates.
+
+  Pickett_plot_analysis:
+    description: "Log-log plot of Rt vs φ to determine m and n simultaneously"
+    x_axis: "φ (porosity, linear or log)"
+    y_axis: "Rt (resistivity, log)"
+    for_100%_water_zone: |
+      log(Ro) = log(a × Rw) - m × log(φ)
+      Slope = -m (on log-log)
+      y-intercept → a × Rw
+    for_hydrocarbon_zone: |
+      Points below water line (lower Rt than water zone)
+      Distance from water line → Sw
+      n from slope of saturation lines
+    methodology: |
+      (1) Identify water zone (100% Sw) → draw water line (slope = -m)
+      (2) Use water line to determine Rw and m
+      (3) For hydrocarbon zones, points below water line → calculate Sw
+      (4) Multiple hydrocarbon zones give different RI → solve for n
+    limitations: "Requires thick water zone for water line; assumes same m for all zones"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COMPRESSIBILITY — ROCK AND PORE VOLUME
+# ─────────────────────────────────────────────────────────────────────────────
+
+compressibility:
+  description: |
+    Cf = (1/V) × (dV/dP) at constant temperature
+    Rock compressibility: matrix (grain) vs pore compressibility.
+    Pore compressibility dominates in unconsolidated and soft formations.
+  rock_compressibility_Cf:
+    units: "1/psi"
+    typical_values:
+      unconsolidated_sand: [1e-4, 5e-4]  # Very high — compaction significant
+      sandstone_consolidated: [1e-6, 1e-5]  # Moderate
+      limestone: [1e-6, 5e-6]
+      dolomite: [5e-7, 2e-6]
+    compaction_effect: "Cf decreases with depth (rock becomes less compressible)"
+    equation: "Cf = 0.0001 × 10^(-0.00002 × depth_ft)"  # Approximate
+  pore_volume_compressibility:
+    description: "Change in pore volume (porosity) with pressure"
+    units: "1/psi"
+    typical_Cp: [5e-6, 50e-6]  # psi^-1
+    effective_stress: "Pore pressure vs overburden pressure"
+    compaction_correction_in_SoC: "Must account for pore compressibility in material balance"
+
+  overburden_correction:
+    description: "Laboratory measurements at surface conditions vs reservoir conditions"
+    overburden_gradient: [0.8, 1.0]  # psi/ft (depending on rock density)
+    typical_overburden: "0.9 psi/ft (for 2.5 g/cm³ rock average)"
+    procedure: |
+      (1) Measure φ at reservoir P (net overburden = overburden - pore pressure)
+      (2) Compare to surface-measured φ
+      (3) Apply overburden correction: φ_reservoir = φ_surface × (1 - Cf × ΔP_overburden)
+    significance: "±1–3 p.u. correction for deep reservoirs (> 10,000 ft)"
