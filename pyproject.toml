@@ -61,6 +61,9 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.0.0",
 ]
+pinn = [
+    "torch>=2.0.0",
+]
 all = [
     "numpy>=1.20.0",
     "lasio>=0.31",
