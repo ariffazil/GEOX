@@ -26,6 +26,11 @@ from geox_mcp.tools.petrophysics import (
     geox_subsurface_verify_integrity,
 )
 from geox_mcp.tools.seismic import geox_seismic_analyze_volume
+from geox_mcp.tools.seismic_well_tie import (
+    geox_seismic_well_tie_compute,
+    geox_time_depth_anchor,
+)
+from geox_mcp.tools.seismic_vision import geox_vision_time_to_depth
 from geox_mcp.tools.section import geox_section_interpret_correlation
 from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.time4d import geox_time4d_analyze_system
@@ -104,6 +109,9 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
     ("geox_subsurface_verify_integrity", geox_subsurface_verify_integrity),
     ("geox_seismic_analyze_volume", geox_seismic_analyze_volume),
+    ("geox_seismic_well_tie_compute", geox_seismic_well_tie_compute),
+    ("geox_time_depth_anchor", geox_time_depth_anchor),
+    ("geox_vision_time_to_depth", geox_vision_time_to_depth),
     ("geox_section_interpret_correlation", geox_section_interpret_correlation),
     ("geox_map_context_scene", geox_map_context_scene),
     ("geox_time4d_analyze_system", geox_time4d_analyze_system),
@@ -141,9 +149,9 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    # Count is 14: 13 original sovereign tools + history_audit
-    assert len(CANONICAL_PUBLIC_TOOLS) == 25, (
-        f"F0_CONSTITUTION_BREACH: Expected 25 sovereign tools (15 core + 4 well-strat + 2 abduction + 3 registry + 1 resource), "
+    # Count is 28: 15 core + 3 seismic + 4 well-strat + 2 abduction + 3 registry + 1 resource
+    assert len(CANONICAL_PUBLIC_TOOLS) == 28, (
+        f"F0_CONSTITUTION_BREACH: Expected 28 sovereign tools, "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 

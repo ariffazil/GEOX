@@ -25,8 +25,11 @@ FROM python:3.12-slim AS runtime
 WORKDIR /app
 
 # Install only runtime OS deps
+# libgl1-mesa-gl: OpenCV headless rendering backend
+# libpq5: asyncpg PostgreSQL driver
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
+    libgl1-mesa-gl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy venv from builder — only the isolated packages, not the system Python

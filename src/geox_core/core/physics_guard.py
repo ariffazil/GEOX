@@ -313,6 +313,87 @@ class PhysicsGuard:
 
         return ValidationResult(status="PASS")
 
+    def check_tie_correlation(self, r_tie: float, threshold: float = 0.70) -> str:
+        """
+        Enforces epistemic integrity on Time-Depth reality bridging.
+        """
+        if r_tie < threshold:
+            return "HOLD"  # Escalate to 888 (Arif). Do not proceed with sub-par tie.
+        return "QUALIFY"
+
+    def validate_velocity_sanity(self, v_stretched: np.ndarray, z_depth: np.ndarray) -> ValidationResult:
+        """
+        Prevents human interpreters from making rocks physically impossible 
+        during stretch/squeeze operations.
+        """
+        violations = []
+        
+        # 1. Check for absolute rock physics boundaries [m/s]
+        # v_water approx 1480, v_matrix_limit (Sabah) max approx 5500
+        if np.any(v_stretched > 5500.0) or np.any(v_stretched < 1480.0):
+            violations.append(
+                PhysicsViolation(
+                    parameter="velocity_absolute",
+                    value=float(np.max(v_stretched) if np.any(v_stretched > 5500.0) else np.min(v_stretched)),
+                    min_bound=1480.0,
+                    max_bound=5500.0,
+                    severity="CRITICAL"
+                )
+            )
+
+        # 2. Check for local distortion anomalies (extreme acceleration)
+        # dv/dz shouldn't exceed local physical limits of rock change
+        # Threshold 50.0 (m/s)/m is a proxy for extreme unphysical distortion
+        dv_dz = np.abs(np.diff(v_stretched) / np.diff(z_depth))
+        if np.any(dv_dz > 50.0):
+            violations.append(
+                PhysicsViolation(
+                    parameter="velocity_gradient_acceleration",
+                    value=float(np.max(dv_dz)),
+                    min_bound=0.0,
+                    max_bound=50.0,
+                    severity="CRITICAL"
+                )
+            )
+
+        if violations:
+            return ValidationResult(
+                status="PHYSICS_VIOLATION",
+                violations=violations,
+                hold=True,
+                reason="Unphysical velocity stretch/squeeze detected."
+            )
+        
+        return ValidationResult(status="PASS")
+
+    def validate_drift_sanity(self, drift_ms: np.ndarray, z_depth: np.ndarray, threshold_curvature: float = 0.5) -> ValidationResult:
+        """
+        Checks for unphysical spikes in the drift curve.
+        Linear or slow-varying drift is physical (dispersion).
+        Jagged spikes indicate bad checkshot picks.
+        """
+        # Calculate second derivative of drift wrt depth
+        d_drift_dz = np.diff(drift_ms) / np.diff(z_depth)
+        d2_drift_dz2 = np.abs(np.diff(d_drift_dz) / np.diff(z_depth[:-1]))
+        
+        if np.any(d2_drift_dz2 > threshold_curvature):
+            return ValidationResult(
+                status="DRIFT_VIOLATION",
+                hold=True,
+                reason=f"Drift curve curvature {np.max(d2_drift_dz2):.4f} exceeds threshold {threshold_curvature}. Checkshot quality audit required.",
+                violations=[
+                    PhysicsViolation(
+                        parameter="drift_curvature",
+                        value=float(np.max(d2_drift_dz2)),
+                        min_bound=0.0,
+                        max_bound=threshold_curvature,
+                        severity="CRITICAL"
+                    )
+                ]
+            )
+            
+        return ValidationResult(status="PASS")
+
     def validate_prospect_input(
         self, prospect: dict[str, Any]
     ) -> ValidationResult:

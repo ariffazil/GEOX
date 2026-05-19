@@ -35,14 +35,29 @@ class Physics9State:
     P: float         # Pa pressure
     T: float         # K temperature
     phi: float       # fraction porosity
+    
+    # Anisotropy (Thomsen parameters)
+    epsilon: float = 0.0  # P-wave anisotropy
+    delta: float = 0.0    # Wavefront shape / depth scaling
+    gamma: float = 0.0    # S-wave anisotropy
+    
+    # Attenuation (Quality Factors)
+    qp: float = 100.0     # P-wave Q
+    qs: float = 50.0      # S-wave Q
 
     def to_vector(self) -> List[float]:
-        return [self.rho, self.vp, self.vs, self.rho_e, self.chi, self.k, self.P, self.T, self.phi]
+        return [self.rho, self.vp, self.vs, self.rho_e, self.chi, self.k, self.P, self.T, self.phi,
+                self.epsilon, self.delta, self.gamma, self.qp, self.qs]
 
     @classmethod
     def from_vector(cls, v: List[float]) -> "Physics9State":
         return cls(rho=v[0], vp=v[1], vs=v[2], rho_e=v[3],
-                   chi=v[4], k=v[5], P=v[6], T=v[7], phi=v[8])
+                   chi=v[4], k=v[5], P=v[6], T=v[7], phi=v[8],
+                   epsilon=v[9] if len(v) > 9 else 0.0,
+                   delta=v[10] if len(v) > 10 else 0.0,
+                   gamma=v[11] if len(v) > 11 else 0.0,
+                   qp=v[12] if len(v) > 12 else 100.0,
+                   qs=v[13] if len(v) > 13 else 50.0)
 
     def arifos_grade(self) -> str:
         # Real quality gate — not performative
@@ -60,6 +75,8 @@ class Physics9State:
             "rho": self.rho, "vp": self.vp, "vs": self.vs,
             "rho_e": self.rho_e, "chi": self.chi, "k": self.k,
             "P": self.P, "T": self.T, "phi": self.phi,
+            "epsilon": self.epsilon, "delta": self.delta, "gamma": self.gamma,
+            "qp": self.qp, "qs": self.qs,
             "grade": self.arifos_grade(),
         }
 
