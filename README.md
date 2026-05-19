@@ -1,4 +1,14 @@
-﻿# 🪨 GEOX — Earth Intelligence Engine
+﻿<!-- SOT-MANIFEST
+owner: Arif
+last_verified: 2026-05-19
+valid_from: 2026-05-19
+valid_until: 2026-06-19
+confidence: high
+scope: /root/geox
+epistemic_status: CLAIM
+-->
+
+# 🪨 GEOX — Earth Intelligence Engine
 
 > **Governed subsurface coprocessor for the arifOS federation.**
 > Domain: `geox.arif-fazil.com` | Organ: FIELD (γ) | Authority: Arif Fazil
