@@ -199,13 +199,27 @@ tools:
 # Constitutional governance
 governance:
   floors:
-    - id: F1; name: Amanah; description: Reversibility
-    - id: F2; name: Truth; description: All claims Earth-verified
-    - id: F4; name: Clarity; description: Units + coordinates required
-    - id: F7; name: Humility; description: Uncertainty calibrated
-    - id: F9; name: Anti-Hantu; description: No hallucinated geology
-    - id: F11; name: Authority; description: Provenance mandatory
-    - id: F13; name: Sovereign; description: Human veto hook active
+    - id: F1
+      name: Amanah
+      description: Reversibility
+    - id: F2
+      name: Truth
+      description: All claims Earth-verified
+    - id: F4
+      name: Clarity
+      description: Units and coordinates required
+    - id: F7
+      name: Humility
+      description: Uncertainty calibrated
+    - id: F9
+      name: Anti-Hantu
+      description: No hallucinated geology
+    - id: F11
+      name: Authority
+      description: Provenance mandatory
+    - id: F13
+      name: Sovereign
+      description: Human veto hook active
 
 # Verdict system
 verdicts:
