@@ -39,7 +39,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "fastmcp[tasks]>=0.1.0",
+    "fastmcp>=3.2.4,<4.0",
     "pydantic>=2.0.0",
     "uvicorn[standard]>=0.23.0",
     "python-dotenv>=1.0.0",
