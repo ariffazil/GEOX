@@ -361,3 +361,79 @@ cross_plot_matrix:
       RHOB_g_cm3: [2.20, 2.50]
       GR_API: [100, 200]
       notes: "Low RHOB due to organic matter (density < 1 g/cm3)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNITS + VALID RANGES + EPISTEMIC STATUS
+# ─────────────────────────────────────────────────────────────────────────────
+
+units:
+  GR: "API — gamma ray"
+  RT: "ohm.m — deep resistivity"
+  NPHI: "v/v — neutron porosity (fraction, limestone matrix)"
+  RHOB: "g/cm³ — bulk density"
+  Vsh: "fraction — shale volume (v/v)"
+  Sw: "fraction — water saturation (v/v)"
+  API: "API — gamma ray units"
+
+valid_ranges:
+  GR_API: [10, 200]
+  RT_ohm_m: [0.5, 10000]
+  NPHI_fraction: [-0.05, 0.70]
+  RHOB_g_cm3: [1.80, 3.20]
+  Vsh_fraction: [0.0, 1.0]
+  Sw_fraction: [0.0, 1.0]
+  porosity_fraction: [0.0, 0.45]
+  permeability_mD: [0.001, 10000]
+  bed_thickness_m: [0.1, 100]
+
+epistemic_tags:
+  GR_motif_catalog:
+    status: empirical_genetic
+    calibrated_for: " siliciclastic and carbonate depositional environments"
+    data_source: "Outcrop analog + wireline log motif catalog (Rider 1996, Etheridge 2015)"
+    confidence: MEDIUM-HIGH
+    caution: "GR motif alone is insufficient — always cross-validate with RT, NPHI-RHOB, SP"
+  cross_plot_matrix:
+    status: empirical_physical
+    calibrated_for: "wireline log responses across lithologies"
+    data_source: "Schlumberger chart books, core-log calibration studies"
+    confidence: HIGH
+    caution: "NPHI matrix must match — sandstone vs limestone vs dolomite"
+  combination_patterns:
+    status: empirical_genetic_sequence
+    calibrated_for: "stacked parasequence architectures"
+    data_source: "Sequence stratigraphy literature (Catuneanu 2006)"
+    confidence: MEDIUM
+    caution: "Patterns are idealized — actual stacking varies with A/S ratio and tectonic setting"
+  NMR_T2_as_PTSD_proxy:
+    status: semi_empirical
+    calibrated_for: "NMR-equipped wells"
+    data_source: "Coates 1999, Kleinberg & Vinegar 1996"
+    caution: "T2 cutoff values are rock-specific — use local calibration if available"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CROSS-REFERENCE TO SABAH BASIN STRATIGRAPHY
+# ─────────────────────────────────────────────────────────────────────────────
+
+supported_megasequences:
+  description: |
+    These GR motifs are calibrated for use with sabah_basin_strat.yaml megasequences.
+    Cross-reference enables automated facies-to-sequence consistency validation.
+  megasequence_references:
+    MS1_Ophiolite: "Ophiolite basement — NO ELECTROFACIES (acoustic basement)"
+    MS2_Panas_Thicknessnam: "Deepwater turbidite system — serrated GR motif dominant"
+    MS3_Kellaneous: "Deltaic to shallow marine — blocky, funnel, bell motifs common"
+    MS4_Gomantong: "Carbonate platform — low GR, NPHI-RHOB matrix identification critical"
+    MS5_Labang: "Marine shale + turbidite — serrated + blocky motifs"
+    MS6_Sandakan: "Deltaic — funnel (coarsening-upward) dominant, distributary channels"
+
+  facies_sequence_consistency:
+    description: |
+      Valid motif-sequence combinations:
+        Funnel motif → MS6 Sandakan (deltaic progradation)
+        Blocky motif → MS3 Kendalian (channelized estuarine)
+        Serrated motif → MS2 Panas_Thicknessnam (turbidite)
+        Low GR spike motif → MS4 Gomantong (carbonate platform)
+      Invalid combinations (flag as QC warning):
+        Funnel motif at Ophiolite depth → impossible
+        Low GR clean carbonate motif → MS4 or deeper only"
