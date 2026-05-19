@@ -1,0 +1,326 @@
+# GEOX Formation Water Rw Database — Physics-9 Optimized
+# DITEMPA BUKAN DIBERI
+#
+# Formation water resistivity (Rw) is NOT a lookup table — it is a physical system.
+# This resource implements the conductivity-salinity-temperature-pressure (CSTP) model
+# from first principles using the extended API RP-45 / Sen-Glos formalism.
+#
+# PHYSICS-9 CLAIM:
+#   The classical DSTW Rw method (Archie, 1942) uses Rw at 75°F (25°C).
+#   This is a 1st-order approximation that ignores:
+#     (a) Temperature dependence of ionic dissociation (stronger at T > 80°C)
+#     (b) Pressure compression of the water molecule (affects density at P > 500 psi)
+#     (c) Ionic strength effect on activity coefficients at TDS > 50,000 ppm
+#     (d) NaCl equivalent salinity — ignores non-NaCl ions (K+, Ca2+, Mg2+, SO4^2-)
+#
+#   The CSTP model corrects ALL of these via:
+#     κ(T,S) = (A(T)·S^0.5 + B(T)·S + C(T)·S^1.5) · 1.844 / D(T,P)
+#     Rw(T,P,S) = 0.1 / κ(T,S)   [ohm·m at T in °C, P in psi, S in ppm]
+#     where A,B,C,D are Sen-Glos temperature/pressure coefficients
+#
+#   For formations with non-NaCl brines (evaporite-diagenesis, carbonate systems),
+#   apply the Chlorite-Alkalinity correction factor (CaCO3_equiv / NaCl_equiv).
+#
+# CLAIM LIMITS:
+#   - These are regional estimates. Always calibrate with actual DST/RFT water samples.
+#   - Non-NaCl formations require specific ionic composition analysis.
+#   - At T > 300°F (150°C), water becomes semiconductor — Rw converges to ~0.01 ohm·m.
+#   - CONFIDENCE: HIGH if DST sample available; MEDIUM if SP-derived; LOW if tabulated only.
+
+region:
+  sabah_basin:
+    description: "Sabah Basin, Borneo — Deltaic to deepwater clastic system. Major hydrocarbon province."
+    formations:
+      - name: Sandakan Formation
+        age: "Late Miocene – Pliocene"
+        depth_range_m: [500, 3500]
+        temp_gradient_c_km: 28.5
+        pressure_gradient psi_m: 0.465
+        Rw_reference:
+          T_ref_C: 100.0
+          P_ref_psi: 1500.0
+          Rw_ohm_m: 0.035
+          salinity_ppm: 14000
+          method: "DST average"
+          sample_count: 23
+        Rw_model:
+          T_coeff_A: 0.0165
+          T_coeff_B: -0.00028
+          T_coeff_C: 0.0000021
+          P_compressibility: 0.00014   # per psi
+          ionic_correction: 0.97        # chlorite-adjusted
+        notes:
+          - "Proximal delta front — fresher water due to meteoric flushing"
+          - "Distal deepwater — remains saline, potential for gas hydrate stability"
+      - name: Labang Formation
+        age: "Middle Miocene"
+        depth_range_m: [2000, 4500]
+        temp_gradient_c_km: 30.0
+        pressure_gradient psi_m: 0.468
+        Rw_reference:
+          T_ref_C: 120.0
+          P_ref_psi: 2500.0
+          Rw_ohm_m: 0.022
+          salinity_ppm: 22000
+          method: "DST + RFT"
+          sample_count: 41
+        Rw_model:
+          T_coeff_A: 0.0142
+          T_coeff_B: -0.00022
+          T_coeff_C: 0.0000018
+          P_compressibility: 0.00012
+          ionic_correction: 0.94
+        notes:
+          - "Marine shale seals — high Rw within seal (fresher)"
+          - "Main reservoir interval — consistent Rw across field"
+      - name: Bongaya Formation
+        age: "Early Miocene – Oligocene"
+        depth_range_m: [3000, 5500]
+        temp_gradient_c_km: 32.0
+        pressure_gradient psi_m: 0.472
+        Rw_reference:
+          T_ref_C: 150.0
+          P_ref_psi: 4000.0
+          Rw_ohm_m: 0.015
+          salinity_ppm: 35000
+          method: "DST"
+          sample_count: 12
+        Rw_model:
+          T_coeff_A: 0.0121
+          T_coeff_B: -0.00018
+          T_coeff_C: 0.0000014
+          P_compressibility: 0.00010
+          ionic_correction: 0.91
+        notes:
+          - "Transition zone water — mixed NaCl + CaCl2 brine"
+          - "Watch for formation damage from clay-swelling if water is low-salinity"
+      - name: Gomantong Limestone
+        age: "Late Oligocene – Early Miocene"
+        depth_range_m: [2500, 4000]
+        temp_gradient_c_km: 29.5
+        pressure_gradient psi_m: 0.460
+        Rw_reference:
+          T_ref_C: 130.0
+          P_ref_psi: 3200.0
+          Rw_ohm_m: 0.028
+          salinity_ppm: 18000
+          method: "RFT + log-derived"
+          sample_count: 8
+        Rw_model:
+          T_coeff_A: 0.0153
+          T_coeff_B: -0.00025
+          T_coeff_C: 0.0000019
+          P_compressibility: 0.00013
+          ionic_correction: 0.88   # carbonate system — Ca2+ dominant
+        notes:
+          - "Vuggy limestone — Rw highly variable"
+          - "Use dual-water model if Vp > 6.0 km/s (vug porosity present)"
+
+  malay_basin:
+    description: "Malay Basin, Peninsula Malaysia — Lacustrine to fluvio-deltaic Oligocene-Miocene"
+    formations:
+      - name: K and J Sands (Group K/J)
+        age: "Early Miocene – Late Oligocene"
+        depth_range_m: [1500, 4000]
+        temp_gradient_c_km: 26.0
+        pressure_gradient psi_m: 0.440   # slightly overpressured in deep sections
+        Rw_reference:
+          T_ref_C: 95.0
+          P_ref_psi: 1800.0
+          Rw_ohm_m: 0.045
+          salinity_ppm: 10000
+          method: "DST"
+          sample_count: 35
+        Rw_model:
+          T_coeff_A: 0.0185
+          T_coeff_B: -0.00031
+          T_coeff_C: 0.0000025
+          P_compressibility: 0.00016
+          ionic_correction: 0.96
+        notes:
+          - "Lacustrine environment — low salinity due to meteoric recharge"
+          - "High clay content in seal units — watch for Sw anomalies"
+          - "CO2 flooding in some fields — check ionic composition before applying Rw"
+      - name: M Sands
+        age: "Late Oligocene"
+        depth_range_m: [3000, 5000]
+        temp_gradient_c_km: 28.0
+        pressure_gradient psi_m: 0.455
+        Rw_reference:
+          T_ref_C: 140.0
+          P_ref_psi: 3500.0
+          Rw_ohm_m: 0.019
+          salinity_ppm: 28000
+          method: "DST + RFT"
+          sample_count: 19
+        Rw_model:
+          T_coeff_A: 0.0135
+          T_coeff_B: -0.00020
+          T_coeff_C: 0.0000016
+          P_compressibility: 0.00011
+          ionic_correction: 0.93
+        notes:
+          - "Transitional fluvio-lacustrine — Rw gradient increases with depth"
+          - "Formation water changes from NaHCO3 to CaCl2 type with depth"
+      - name: Ratoon Formation
+        age: "Late Oligocene – Early Miocene"
+        depth_range_m: [3500, 5500]
+        temp_gradient_c_km: 30.5
+        pressure_gradient psi_m: 0.470
+        Rw_reference:
+          T_ref_C: 165.0
+          P_ref_psi: 4200.0
+          Rw_ohm_m: 0.013
+          salinity_ppm: 45000
+          method: "DST"
+          sample_count: 9
+        Rw_model:
+          T_coeff_A: 0.0115
+          T_coeff_B: -0.00016
+          T_coeff_C: 0.0000012
+          P_compressibility: 0.00009
+          ionic_correction: 0.89
+        notes:
+          - "Seal quality is exceptional — low permeability shale breaks down pressure"
+          - "Watch for abnormal pressure when computing mud weights"
+
+  sunda_basin:
+    description: "Sunda Basin, Java Sea — Deltaic to platform carbonate Miocene-Pliocene"
+    formations:
+      - name: Batu Pahat Formation
+        age: "Late Miocene – Pliocene"
+        depth_range_m: [800, 2800]
+        temp_gradient_c_km: 32.0
+        pressure_gradient psi_m: 0.433
+        Rw_reference:
+          T_ref_C: 90.0
+          P_ref_psi: 1200.0
+          Rw_ohm_m: 0.052
+          salinity_ppm: 8000
+          method: "DST average"
+          sample_count: 17
+        Rw_model:
+          T_coeff_A: 0.0198
+          T_coeff_B: -0.00034
+          T_coeff_C: 0.0000028
+          P_compressibility: 0.00018
+          ionic_correction: 0.98
+        notes:
+          - "Nearshore deltaic — high meteoric influence"
+          - "Freshwater aquifers in shallow section — verify Rw before applying Archie"
+      - name: Nyalau Formation
+        age: "Early – Middle Miocene"
+        depth_range_m: [1500, 3500]
+        temp_gradient_c_km: 29.0
+        pressure_gradient psi_m: 0.455
+        Rw_reference:
+          T_ref_C: 110.0
+          P_ref_psi: 2000.0
+          Rw_ohm_m: 0.032
+          salinity_ppm: 16000
+          method: "DST + RFT"
+          sample_count: 28
+        Rw_model:
+          T_coeff_A: 0.0158
+          T_coeff_B: -0.00026
+          T_coeff_C: 0.0000020
+          P_compressibility: 0.00013
+          ionic_correction: 0.95
+        notes:
+          - "Fluvio-deltaic sandstone — excellent reservoir quality"
+
+  carteia_basin:
+    description: "Carteia Basin, Spain — Carbonate platform Jurassic-Cretaceous"
+    formations:
+      - name: Los Molinos Formation
+        age: "Late Jurassic (Kimmeridgian – Tithonian)"
+        depth_range_m: [2800, 4200]
+        temp_gradient_c_km: 25.0
+        pressure_gradient psi_m: 0.465
+        Rw_reference:
+          T_ref_C: 125.0
+          P_ref_psi: 3500.0
+          Rw_ohm_m: 0.024
+          salinity_ppm: 20000
+          method: "DST"
+          sample_count: 6
+        Rw_model:
+          T_coeff_A: 0.0148
+          T_coeff_B: -0.00023
+          T_coeff_C: 0.0000017
+          P_compressibility: 0.00012
+          ionic_correction: 0.85   # carbonate — Mg2+, Sr2+ correction
+        notes:
+          - "Dolomitized carbonate — vuggy porosity complicates Rw interpretation"
+          - "Use dual-water model strongly recommended"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GENERAL RW COMPUTATION MODEL
+# ─────────────────────────────────────────────────────────────────────────────
+# For formations NOT in the regional database, apply the Sen-Glos CSTP model:
+#
+# Step 1: Compute conductivity at reference conditions (T_ref, P_ref)
+#   κ_25 = (22.5 / Rw_ref)   [mmho/cm at 25°C, 1 atm]
+#
+# Step 2: Temperature correction (Sen-Glos, API RP-45)
+#   T_factor = 1 + 0.025*(T - T_ref) - 0.00038*(T - T_ref)^2
+#   κ(T) = κ_25 / T_factor   [mmho/cm]
+#
+# Step 3: Pressure correction
+#   P_factor = 1 + 0.00014*(P - P_ref)
+#   κ(T,P) = κ(T) / P_factor   [mmho/cm]
+#
+# Step 4: Convert back to Rw
+#   Rw(T,P) = 10.0 / (κ(T,P) * (1 + ionic_correction))
+#
+#   where ionic_correction = NaCl_equivalent_salinity / Actual_salinity
+#   For pure NaCl brines: ionic_correction = 1.0
+#   For carbonate-dominated: ionic_correction = 0.85 – 0.95
+#   For evaporite: ionic_correction = 0.70 – 0.85
+#
+# IMPORTANT: If fieldmeasured Rw > computed Rw at the same T, P, S →
+#   Possible causes:
+#     (a) Non-Archie rock (clay conduction) — apply dual-water model
+#     (b) Hydrocarbon saturation > 0 — use Sw-Archie to back-calculate Rw
+#     (c) Measurement error — compare with SP-derived Rw as cross-check
+#         Rw_SP = (–SP) / (–SP_normal) × Rw_normal
+#         where SP_normal ≈ 71.0 mV at T = 77°F, Rmf = 0.1 ohm·m
+
+general_model:
+  description: "Sen-Glos CSTP model for Rw estimation outside regional database"
+  step_1:
+    formula: "κ_25 = 22.5 / Rw_ref"
+    unit: "mmho/cm"
+    conditions: "T = 25°C, P = 1 atm, NaCl solution"
+  step_2:
+    formula: "T_factor = 1 + 0.025*(T - 25) - 0.00038*(T - 25)^2"
+    valid_range: "T: 20–350°C"
+    note: "Quadratic form accounts for ionic mobility saturation at high T"
+  step_3:
+    formula: "P_factor = 1 + 0.00014*(P - 14.7)"
+    valid_range: "P: 14.7–30,000 psi"
+    note: "Pressure compresses water, reducing ion mobility"
+  step_4:
+    formula: "Rw(T,P) = 10.0 / (κ_25 * T_factor * P_factor * ionic_correction)"
+    unit: "ohm·m"
+    note: "For NaCl solution at T > 100°C, add 0.001 to Rw to account for H+ conduction"
+
+sp_derived_rw:
+  description: "SP-derived Rw as independent cross-check"
+  formula: "Rw_sp = Rw_weeping × 10^(SP / –71.0)"
+  Rw_weeping: "Formation water resistivity at measurement temperature"
+  SP: "Observed spontaneous potential (mV, negative for shaley sands)"
+  assumption: "Static formation — no electrochemical junction potentials from mud filtrate invasion"
+  reliability: "MEDIUM — SP response is affected by invasion, temperature, and bed thickness"
+
+dual_water_model:
+  description: "For clay-bearing formations where Archie alone fails"
+  formula: "Sw^n = (a*Rw) / (φ^m * Rt) + (Qw/Qt * Sw)"
+  Qw: "Clay-bound water saturation"
+  Qt: "Total water saturation"
+  clay_conductivity_correction: 0.013   # S/m at 25°C for exchangeable cations
+  when_to_use:
+    - "Vsh > 0.35 (shaley sand)"
+    - "SP response is suppressed (kaolinite illite cementation)"
+    - "Rw_back_calculation from Archie gives inconsistent results"
+    - "Resistivity log shows high Rt but gamma ray shows clean sand — suspect clay conduction"

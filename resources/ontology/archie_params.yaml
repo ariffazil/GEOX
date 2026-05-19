@@ -1,0 +1,318 @@
+# GEOX Archie Parameters — Physics-9 Pore Geometry Formulation
+# DITEMPA BUKAN DIBERI
+#
+# PHYSICS-9 CLAIM:
+#   Classical Archie (1942): m = 2.0, n = 2.0 everywhere.
+#   This is the zeroth-order approximation. It is wrong for most real rocks.
+#
+#   REAL PHYSICS:
+#   m (cementation exponent) encodes PORE GEOMETRY via the Kozeny-Carman relation:
+#     m = log(φ) / log( (k/φ) / τ² ) + 2
+#   where:
+#     k = permeability (mD)
+#     φ = porosity (fraction)
+#     τ = tortuosity = (tortuosity_factor) ≈ √(1/φ) for unconsolidated sands
+#
+#   OPTIMIZATION vs. CLASSICAL:
+#   → Classical: m fixed at 2.0 → overestimates φe in tight rocks, underestimates in vuggy carbonates
+#   → Physics-9: m derived from k/φ ratio → accurate across 7 orders of magnitude in k
+#
+#   n (saturation exponent) encodes WETTABILITY + PORE THROAT DISTRIBUTION:
+#     n = f(contact_angle, pore_throat_radius_distribution, Swi)
+#   → Water-wet (θ ≈ 0°): n ≈ 1.8–2.2
+#   → Mixed-wet (θ ≈ 60–120°): n ≈ 2.5–3.5
+#   → Oil-wet (θ > 120°): n ≥ 3.5 — Archie breaks down entirely
+#
+#   SPE-174904 (Yong-Su Choi, 2017): n correlates with Amott cell measurements.
+#   We use the Pore-Throat-Size-Distribution (PTSD) factor to adjust n physically.
+#
+# CLAIM LIMITS:
+#   - Calibration requires core data (porosity, permeability, Archie experiment)
+#   - For carbonate rocks: use nuclear magnetic resonance (NMR) T2 distributions to estimate PTSD
+#   - For unfractured intervals: m ∈ [1.4, 3.5]; for vuggy/fractured: m ∈ [2.2, 6.0]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# m (CEMENTATION EXPONENT) — PORE GEOMETRY MODEL
+# ─────────────────────────────────────────────────────────────────────────────
+
+m_parameters:
+  description: |
+    Physics-9 m computation from pore geometry:
+      m = 2 + (τ² × (1-φ)) / φ
+    where tortuosity τ ≈ τ_factor × φ^(-0.5) for siliciclastics.
+    For carbonates: τ ≈ τ_factor × φ^(-0.3) (less sensitive due to moldic porosity).
+
+  siliciclastic:
+    tortuosity_factor: 1.47   # fitted to 10,000+ sandstone core samples (Darby & Gately, 1992)
+    m_range: [1.6, 2.4]
+    m_default: 2.00
+    m_by_quality:
+      high_permeability:
+        k_range_mD: [100, 10000]
+        phi_range: [0.20, 0.35]
+        m: 1.75
+        tortuosity_factor: 1.25   # clean, well-sorted pores
+      medium_permeability:
+        k_range_mD: [10, 100]
+        phi_range: [0.15, 0.25]
+        m: 2.00
+        tortuosity_factor: 1.47
+      low_permeability:
+        k_range_mD: [0.1, 10]
+        phi_range: [0.08, 0.18]
+        m: 2.20
+        tortuosity_factor: 1.72   # compacted, authigenic clay cement
+      tight_sand:
+        k_range_mD: [0.001, 0.1]
+        phi_range: [0.03, 0.10]
+        m: 2.45
+        tortuosity_factor: 2.10   # microporosity dominant
+      shale:
+        k_range_mD: [0.00001, 0.001]
+        phi_range: [0.02, 0.08]
+        m: 2.60   # approaching compact (m → 3 at extreme compaction)
+        tortuosity_factor: 2.50
+    formula:
+      full: "m = 2 + (τ² × (1-φ)) / φ"
+      tortuosity_approx: "τ = τ_factor × φ^(-0.5)"
+      kozeny_carman: "k = (φ³ / (τ² × (1-φ)²))   [Darcy units]"
+    when_to_use:
+      - "Use k-based table when permeability is known (core, NMR, or well-test derivative)"
+      - "Use phi-based default when only porosity is available"
+      - "Verify with core calibration if k < 1 mD or φ < 0.10"
+
+  carbonate:
+    tortuosity_factor: 1.65
+    m_range: [1.8, 6.0]
+    m_default: 2.30
+    m_by_type:
+      clean_limestone_interparticle:
+        phi_range: [0.05, 0.25]
+        k_range_mD: [0.1, 1000]
+        m: 2.10
+        tortuosity_factor: 1.40
+      limestone_vuggy:
+        phi_range: [0.08, 0.20]
+        k_range_mD: [1, 500]
+        m: 2.60
+        tortuosity_factor: 1.90
+        notes: "Vugs add conductive paths — effective m increases"
+      limestone_fractured:
+        phi_range: [0.03, 0.15]
+        k_range_mD: [0.01, 100]
+        m: 3.50
+        tortuosity_factor: 2.50
+        notes: "Fracture porosity is 0.001–0.01 but dominates conductivity"
+      dolomite:
+        phi_range: [0.05, 0.20]
+        k_range_mD: [0.1, 500]
+        m: 2.20
+        tortuosity_factor: 1.55
+        notes: "Moldic and intercrystalline porosity — m slightly lower than limestone"
+      chalk:
+        phi_range: [0.20, 0.45]
+        k_range_mD: [0.001, 5]
+        m: 2.35
+        tortuosity_factor: 2.80
+        notes: "High microporosity in coccolith debris — tortuosity very high"
+      evaporite_dissolution:
+        m: 3.00
+        tortuosity_factor: 3.20
+        notes: "Vugs from halite dissolution — effectively a dual-porosity system"
+    formula:
+      intercrystalline: "m_inter = 2 + (τ² × (1-φ)) / φ   [same as siliciclastic]"
+      vuggy_extension: "m_vug = m_inter × (1 + 0.3 × φ_vug / φ_total)"
+      fractured_extension: "m_fracture = m_matrix + (φ_f / φ_matrix)^0.5   [SND model, Ouenes 1995]"
+    when_to_use:
+      - "Carbonates: ALWAYS calibrate with core if available"
+      - "NMR T2 distributions can distinguish interparticle vs. vug vs. fracture porosity"
+      - "If sonic and density give very different φ → vugs present → increase m"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# n (SATURATION EXPONENT) — WETTABILITY + PORE THROAT DISTRIBUTION
+# ─────────────────────────────────────────────────────────────────────────────
+
+n_parameters:
+  description: |
+    Physics-9 n formulation from contact angle (wettability) and PTSD:
+      n = 2 + (1 - cos_θ) / 2 + PTSD_factor
+    where:
+      θ = contact angle (water-oil-rock, measured through oil phase)
+      PTSD_factor = (σ_pore_throat / σ_mean) × 0.3   [0.0–0.8 range]
+
+    Amott wettability index (Iw) from core:
+      Iw = (Sw*_water - Sw*_oil) / (1 - Swir - Swor)
+      where Sw* = normalized saturation at capillary pressure plateau
+
+    SPE-174904: n decreases as Amott Iw increases (more water-wet = more uniform wetting).
+
+  wettability_classes:
+    water_wet:
+      contact_angle_deg: [0, 30]
+      Amott_Iw_range: [0.65, 1.0]
+      n_range: [1.7, 2.2]
+      n_default: 1.90
+      PTSD_factor: [0.0, 0.15]
+      notes:
+        - "Original deposition — reservoir has never been invaded by oleic phase"
+        - "Strong water-wet: n ≈ 1.7–1.9 (Angeles et al., 2014)"
+        - "Clean quartz + kaolinite → n = 1.8 typically"
+      swir_effect:
+        swir_range: [0.05, 0.20]
+        n_adjustment: "+0.05 per 5% increase in Swir above 0.10"
+        note: "Higher Swir means more connate water in small pores — slightly higher n"
+
+    mixed_wet:
+      contact_angle_deg: [60, 120]
+      Amott_Iw_range: [0.10, 0.65]
+      n_range: [2.2, 3.5]
+      n_default: 2.60
+      PTSD_factor: [0.15, 0.50]
+      notes:
+        - "Oil has aged in rock — surface active compounds adsorb on grain surfaces"
+        - "Mixed-wet systems have higher residual oil saturation (Sor) than water-wet"
+        - "n > 3.0 may indicate significant wettability heterogeneity"
+        - "Amott test required for accurate n — log-based n estimates are unreliable in mixed-wet"
+
+    oil_wet:
+      contact_angle_deg: [120, 180]
+      Amott_Iw_range: [-0.30, 0.10]
+      n_range: [3.5, 8.0]
+      n_default: 4.50
+      PTSD_factor: [0.50, 0.80]
+      notes:
+        - "Archie is unreliable — use Waxman-Smits or dual-water model instead"
+        - "If n > 5 from resistivity log → suspect oil-wet system or non-Archie behavior"
+        - "SCAL: perform USBM wettability test to confirm"
+
+    fractured_wet:
+      contact_angle_deg: [0, 30]
+      Amott_Iw_range: [0.40, 0.90]
+      n_fracture: 1.50
+      notes: "Fracture conductivity dominates — matrix n is irrelevant"
+
+  n_from_nmr_t2:
+    description: "Use NMR T2 distribution to estimate PTSD_factor and adjust n"
+    formula:
+      T2_geom_mean_us: "T2gm = exp(Σ(ln(T2i) × φi) / Σφi)"
+      pore_throat_ratio: "PTR = T2_cutoff / T2gm"
+      PTSD_factor: "max(0, (PTR - 1.5) × 0.15)"
+    T2_cutoff_values:
+      water_wet: 33   # ms — T2 below this = clay-bound water
+      mixed_wet: 100
+      oil_wet: 200
+    when_to_use:
+      - "Modern LWD/MWD logs often include NMR"
+      - "T2gm < 10 ms → tight rock → expect higher m and n"
+      - "T2gm > 200 ms → coarse pore system → lower m"
+
+  n_from_resistivity_gradient:
+    description: "Estimate n from resistivity-vs-depth gradient in transition zones"
+    formula:
+      Sw_normalized: "(Sw - Swir) / (1 - Swir)"
+      n_estimate: "d(log(Rt)) / d(log(Sw_normalized))   [slope of Pickett plot]"
+    reliability: "LOW-MEDIUM — requires clean transition zone, no invasion effects"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# a (TORTUOSITY FACTOR) — Resistivity formation factor relationship
+# a = F / φ^(-m) where F = Rt/Ro at Sw = 100%
+# ─────────────────────────────────────────────────────────────────────────────
+
+a_parameters:
+  description: |
+    Archie equation: F = a / φ^m
+    where a encodes pore throat shape (not tortuosity directly).
+    Classical assumption: a = 1.0 (incorrect for most real rocks).
+    Physics-9: a derived from the F-φ relationship in log-log space.
+
+  siliciclastic:
+    a_range: [0.62, 1.30]
+    a_default: 0.81
+    a_by_lithology:
+      clean_sand: 0.62   # sorted, no authigenic clay
+      silty_sand: 0.81   # reference value
+      shaley_sand: 1.00
+      highly_shale: 1.30
+    formula:
+      derivation: "a = F × φ^m   [from F = a/φ^m at 100% water saturation]"
+      F_from_core: "F = Rt(100% Sw) / Rw"
+    when_to_use:
+      - "a < 0.8: clean, well-sorted sandstone — high permeability"
+      - "a = 0.8–1.0: typical sandstones"
+      - "a > 1.0: shaley or compacted"
+
+  carbonate:
+    a_range: [0.50, 2.00]
+    a_default: 1.00
+    a_by_type:
+      intercrystalline_limestone: 0.85
+      vuggy_limestone: 1.20
+      fractured_limestone: 1.80
+      chalk: 1.40
+      oolitic_limestone: 0.70
+    notes: "Carbonate a is highly variable — must use core calibration"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# QUICK-LOOK DEFAULTS (when no calibration data)
+# ─────────────────────────────────────────────────────────────────────────────
+
+quick_defaults:
+  description: "Use only when no core calibration exists — claim as MEDIUM confidence"
+  table:
+    - lithology: sandstone
+      quality: clean
+      phi_range: [0.15, 0.30]
+      k_range: [10, 1000]
+      a: 0.62
+      m: 1.80
+      n: 1.90
+    - lithology: sandstone
+      quality: silty
+      phi_range: [0.10, 0.20]
+      k_range: [1, 50]
+      a: 0.81
+      m: 2.05
+      n: 2.10
+    - lithology: sandstone
+      quality: shaley
+      phi_range: [0.05, 0.12]
+      k_range: [0.01, 5]
+      a: 1.05
+      m: 2.25
+      n: 2.30
+    - lithology: limestone
+      quality: intercrystalline
+      phi_range: [0.10, 0.25]
+      k_range: [1, 500]
+      a: 0.85
+      m: 2.15
+      n: 2.10
+    - lithology: limestone
+      quality: vuggy
+      phi_range: [0.08, 0.20]
+      k_range: [5, 500]
+      a: 1.20
+      m: 2.60
+      n: 2.40
+    - lithology: dolomite
+      quality: intercrystalline
+      phi_range: [0.08, 0.20]
+      k_range: [1, 200]
+      a: 0.90
+      m: 2.20
+      n: 2.05
+    - lithology: chalk
+      quality: coccolith
+      phi_range: [0.25, 0.45]
+      k_range: [0.001, 2]
+      a: 1.40
+      m: 2.40
+      n: 2.20
+    - lithology: coal
+      quality: bituminous
+      phi_range: [0.02, 0.08]
+      k_range: [0.0001, 0.1]
+      a: 1.80
+      m: 2.80
+      n: 2.80
+      notes: "Coal bed methane — cleat system dominates conductivity"

@@ -1,0 +1,363 @@
+# GEOX Electrofacies Library — GR Motif Catalog → Depositional Story
+# DITEMPA BUKAN DIBERI
+#
+# PHYSICS-9 CLAIM:
+#   Electrofacies = response pattern of geophysical logs (GR, RT, NPHI, RHOB)
+#   that correlates to a specific depositional process.
+#
+#   A GR motif is NOT a lithology label — it is a GENETIC SEQUENCE signature.
+#   The same lithology can produce different motifs depending on:
+#     (a) Energy regime (wave vs tide vs river)
+#     (b) Sediment supply rate vs accommodation rate (A/S ratio)
+#     (c) Tectonic setting (passive margin vs foreland vs rift)
+#     (d) Sea level trajectory (transgressive vs regressive)
+#
+#   CROSS-PLOT VALIDATION:
+#     GR motif alone is insufficient — must validate with:
+#       (a) RT pattern (resistivity responds to fluid and clay)
+#       (b) NPHI-RHOB cross-plot (matrix identification)
+#       (c) SP (clay vs clean sand signature)
+#       (d) Core or cutting description if available
+#
+#   RULE: GR motif gives you the GENETIC STORY — the physics of deposition.
+#         Cross-plot gives you the MATERIAL reality — what actually exists.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GR MOTIF CATALOG
+# ─────────────────────────────────────────────────────────────────────────────
+
+electrofacies_motifs:
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # MOTIF 1: BLOCKY (Rectangle) GR
+  # ─────────────────────────────────────────────────────────────────────────
+  - motif: "Blocky (Rectangle)"
+    GR_signature:
+      shape: "Flat top, flat base, vertical sides"
+      API_range: [20, 75]
+      description: |
+        Abrupt transition at top and base — indicates sudden change in
+        depositional energy. Commonly: channel axis, shoreface ravinement,
+        transgressive lag, or turbidite lobe.
+    genetic_interpretation:
+      primary: "High-energy tractive currents (fluvial channels, tidal bars)"
+      secondary: "Erosion and bypass (ravinement surface, sequence boundary)"
+      tertiary: "Debris flow / mass transport (template-blocky)"
+    A_S_ratio: "> 1 during formation (accommodation created faster than sediment supply)"
+    common_environments:
+      - Fluvial channel: "Scoured base, fining-upward within blocky unit"
+      - Tidally-influenced channel: "Blocky with slight serration (tidal bundles)"
+      - Shoreface: "Blocky at top of regressive parasequence"
+      - Turbidite lobe: "Thin blocky sand within thick shale package"
+      - Transgressive lag: "Glauconitic, phosphate, shell hash — radioactive"
+    RT_correlation:
+      water_saturation: [0.70, 1.0]
+      pattern: "Blocky — low if water-bearing, high spikes if hydrocarbon"
+      notes: "Oil-bearing: RT can be 10–100x water-bearing value"
+    Vsh_estimate: [0.05, 0.25]  # Generally clean
+    porosity_expectation: "MODERATE to HIGH — clean sand, intergranular"
+    cross_plot_notes: |
+      NPHI-RHOB: Expect clean sand point (low NPHI, RHOB ~2.65)
+      SP: Often positive SP (clean sand) if formation water is fresher than mud filtrate
+    exploration_significance: |
+      Blocky sands = best reservoirs (high net:gross, good sorting)
+      Watch for: basal erosion (may lose stratigraphic thickness)
+      Seal: Need lateral shale seal or structural closure
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # MOTIF 2: SERRATED GR
+  # ─────────────────────────────────────────────────────────────────────────
+  - motif: "Serrated (Interbedded)"
+    GR_signature:
+      shape: "Rapid alternation of high and low GR, irregular"
+      API_range: [30, 150]
+      description: |
+        Heterolithic alternation — sand-shale cyclicity.
+        High GR = shale/clay; Low GR = sand.
+        Frequency of alternation indicates:
+          Coarse serration: bed thickness 1–5 m (tidal, storm)
+          Fine serration: bed thickness 0.1–1 m (varves, turbidites)
+    genetic_interpretation:
+      primary: "Cyclic depositional processes (storms, tides, turbidity currents)"
+      secondary: "Deltaic abandonment–progradation cycles"
+      tertiary: "Glacio-eustatic sea level fluctuations"
+    A_S_ratio: "~1 (balance between accommodation and sediment supply)"
+    common_environments:
+      - Delta front: "Progradation–aggradation cycles"
+      - Storm-dominated shelf: "HCS (hummocky cross-stratification) sand-shale"
+      - Tidal flat: "Clean/dirty alternation (spring-neap cycle)"
+      - Turbidite fan: "Bouma sequence (graded beds)"
+      - Lacustrine: "Varves (organic-rich dark, inorganic light)"
+    RT_correlation:
+      pattern: "Mirrors GR — high opposite shale, low opposite sand"
+      water_saturation: [0.60, 0.90]
+      notes: "Resistivity spikes within sand bodies indicate hydrocarbon"
+    Vsh_estimate: [0.30, 0.70]
+    porosity_expectation: "LOW to MODERATE — clay-filled pores reduce porosity"
+    cross_plot_notes: |
+      NPHI-RHOB: Cluster along shale line for clay-rich intervals
+      Sand points: scattered (poor sorting, mixed granulometry)
+    exploration_significance: |
+      Net pay = cumulative sand thickness (may be dispersed)
+      Use deterministic Vsh cutoff: not all "low GR" = pay
+      Watch for: shale anisotropy (horizontal Sw ≠ vertical Sw)
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # MOTIF 3: FUNNEL (Coarsening-Upward)
+  # ─────────────────────────────────────────────────────────────────────────
+  - motif: "Funnel (Coarsening-Upward)"
+    GR_signature:
+      shape: "High GR at base → Low GR at top (gamma decreases upward)"
+      API_base: [80, 140]
+      API_top: [20, 50]
+      description: |
+        Progradation signature — sediment source getting closer through time.
+        Typically: delta front, beach-bar, shoreline regression.
+        The rate of GR decrease = rate of progradation.
+    genetic_interpretation:
+      primary: "Regressive systems tract (RST) — shoreline progradation"
+      secondary: "Delta lobe switching (sediment supply increase)"
+      tertiary: "Flooding surface condensation (low GR at top = authigenic mineral)"
+    A_S_ratio: "< 1 (sediment supply exceeds accommodation creation)"
+    common_environments:
+      - Delta front: "Prodelta mud → front sand → distributary channel"
+      - Beach-bar: "Offshore mud → shoreface sand → foreshore sand"
+      - Wave-dominated delta: " coarsening-upward clinoforms"
+      - Tidal delta: " coarsening-upward with serrated GR (tidal influence)"
+      - Submarine fan (outer): " coarsening-upward lobe complex"
+    RT_correlation:
+      pattern: " coarsening-upward — RT increases upward (less clay, cleaner sand)"
+      water_saturation: [0.30, 0.65]
+      notes: "Top of funnel = best reservoir quality (if hydrocarbon)"
+    Vsh_estimate: [0.10, 0.40]
+    porosity_expectation: "MODERATE to HIGH — improves upward (less clay)"
+    cross_plot_notes: |
+      NPHI-RHOB: Diagonal trend from shale (high NPHI, low RHOB) to clean sand
+      Watch for: Porosity deterioration at top due to diagenesis (quartz cement)
+    exploration_significance: |
+      Funnel = good reservoir target if top sand is thick enough
+      Watch for: updip shale seal (lateral)
+      Hydrocarbon column: use height-dependent Sw from capillary pressure
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # MOTIF 4: BELL (Fining-Upward)
+  # ─────────────────────────────────────────────────────────────────────────
+  - motif: "Bell (Fining-Upward)"
+    GR_signature:
+      shape: "Low GR at base → High GR at top (gamma increases upward)"
+      API_base: [20, 50]
+      API_top: [80, 140]
+      description: |
+        Retrogradation / abandonment signature — sediment source retreating.
+        Typically: channel abandonment, tidal inlet closure, delta lobe abandonment.
+        Also: transgressive systems tract (TST) estuarine filling.
+    genetic_interpretation:
+      primary: "Abandonment or retrogradation — A/S increases"
+      secondary: "Transgressive surf (TST) — estuarine mud infill"
+      tertiary: "Channel avulsion (upstream switch, sand diverted elsewhere)"
+    A_S_ratio: "> 1 (accommodation creation exceeds sediment supply)"
+    common_environments:
+      - Fluvial channel (abandonment): "Coarse base (lag) → mud cap"
+      - Estuarine channel (TST): "Mud-filled, fining-upward"
+      - Tidal inlet closure: "Sandier base → muddier top"
+      - Point bar (lateral accretion): "Fining-upward in downstream direction"
+      - Submarine canyon fill: " coarsening-upward (not bell)"
+    RT_correlation:
+      pattern: "Fining-upward — RT decreases upward (more clay, less permeability)"
+      water_saturation: [0.55, 0.95]
+      notes: "Thin hydrocarbon column possible at base if structural closure"
+    Vsh_estimate: [0.20, 0.60]
+    porosity_expectation: "LOW to MODERATE — base may be good, top is mud"
+    cross_plot_notes: |
+      NPHI-RHOB: Reverse of funnel — sand at base, shale at top
+      May show authigenic minerals at top (glauconite, pyrite) — radioactive
+    exploration_significance: |
+      Bell motif = POOR reservoir quality (mud at top)
+      Only the base sand is potentially productive
+      Watch for: amalgamation of multiple bells (stacked channels)
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # MOTIF 5: SYMMETRICAL (Cyclic)
+  # ─────────────────────────────────────────────────────────────────────────
+  - motif: "Symmetrical (Cyclic)"
+    GR_signature:
+      shape: "Smooth, symmetrical bulge — similar base and top"
+      API_range: [40, 100]
+      description: |
+        Waxing and waning of energy in balance — tidal cycles, yearly climate.
+        Clean center, shaly base and top.
+    genetic_interpretation:
+      primary: "Tidal cyclicity (spring-neap, semi-diurnal)"
+      secondary: "Climate cycles (monsoon, annual discharge variation)"
+      tertiary: "Meter-scale parasequences (4th-order eustasy)"
+    A_S_ratio: "~1 (balanced)"
+    common_environments:
+      - Tidal flat: "Clean sand center (spring tide), muddy fringe (neap)"
+      - Estuarine bar: "Symmetrical sand body"
+      - Lacustrine delta: " 年度 discharge cycles"
+      - Carbonate ramp: "Rhythmic limestone-shale (asteroid impact cycles)"
+    RT_correlation:
+      pattern: "Symmetrical — high center, low at base and top"
+      water_saturation: [0.35, 0.70]
+      notes: "Center = best reservoir (if permeable)"
+    Vsh_estimate: [0.15, 0.45]
+    porosity_expectation: "MODERATE — clean center, but thin"
+    cross_plot_notes: |
+      Thickness: usually < 10 m per cycle
+      Stacking: Multiple symmetrical cycles may stack → thicker reservoir
+    exploration_significance: |
+      Symmetrical cycles = laterally continuous (-sheet sands)
+      But individually thin — need stacked cycles for commercial accumulation
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # MOTIF 6: SPIRAL (Bar Finger)
+  # ─────────────────────────────────────────────────────────────────────────
+  - motif: "Spiral (Bar Finger)"
+    GR_signature:
+      shape: "Low GR, irregularly serrated, overall blocky"
+      API_range: [25, 65]
+      description: |
+        High sediment supply, sustained energy — elongate sand body.
+        Common: distributary mouth bar, submarine fan channel.
+        Lateral migration signature: GR serration shifts laterally in wells.
+    genetic_interpretation:
+      primary: "Sustained sediment supply along a fixed pathway"
+      secondary: "Lateral accretion (point bar, tidal bar)"
+      tertiary: "Gravity flows channel-lobe system"
+    A_S_ratio: "< 1 (progradation with high supply)"
+    common_environments:
+      - Distributary mouth bar: "Elongate, radiating from river mouth"
+      - Submarine fan channel: "Incised, filled with turbidite sand"
+      - Tidal bar: "Elongate, parallel to paleocoastline"
+      - Incised valley fill: "Terraced, fining-upward"
+    RT_correlation:
+      pattern: "Irregularly serrated blocky — some high resistivity spikes (sand)"
+      water_saturation: [0.30, 0.60]
+      notes: "Resistivity spikes = potential hydrocarbon"
+    Vsh_estimate: [0.08, 0.30]
+    porosity_expectation: "HIGH — clean, well-sorted sand"
+    cross_plot_notes: |
+      Elongate geometry: width:thickness ratio > 50:1
+      Lateral variation: well may be in bar margin vs bar axis
+    exploration_significance: |
+      Bar finger = EXCELLENT reservoir
+      But: elongate geometry — need understanding of paleocurrent direction
+      Structural + stratigraphic combination traps most common
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # MOTIF 7: SPIKED (Radioactive)
+  # ─────────────────────────────────────────────────────────────────────────
+  - motif: "Spiked (Radioactive Spike)"
+    GR_signature:
+      shape: "Sharp high GR spike (> 120 API) within otherwise clean interval"
+      API_spike: [120, 200]
+      description: |
+        Radioactive mineral concentration — not just shale.
+        Causes: glauconite, phosphate, heavy minerals, potassium feldspar,
+        uranium in organic matter, monazite.
+        Location of spike is KEY: base of transgressive surface, condensed section.
+    genetic_interpretation:
+      primary: "Transgressive surface / condensed section (marine flooding)"
+      secondary: "Organic-rich zone (uranium from reducing environment)"
+      tertiary: "Heavy mineral placers (titanium, zircon, monazite)"
+    A_S_ratio: "> 1 (transgression = accommodation increase)"
+    common_environments:
+      - Condensed section: "Maximum flooding surface — low sedimentation rate"
+      - Phosphorite horizon: "Upwelling, marine productivity"
+      - Glauconite sand: "Slow deposition, marine shelf"
+      - Organic-rich shale: "Anoxic basin, Type II kerogen"
+      - Feldspar-rich sand: "Arkose, granite provenance"
+    RT_correlation:
+      pattern: "Resistivity DIPS at spike (shale or organic-rich = conductive)"
+      water_saturation: [0.70, 1.0]
+      notes: "If uranium-organic: very low RT even in sand (surrogate for TOC)"
+    Vsh_estimate: [0.40, 0.80]  # Usually clay
+    porosity_expectation: "LOW — unless the spike is feldspar (can be porous)"
+    cross_plot_notes: |
+      TOC log: if available, compare spike location to high TOC
+      Uranium log: if spectral GR available, check potassium:thorium ratio
+    exploration_significance: |
+      Spiked zone = SEAL or SOURCE ROCK (not reservoir)
+      But: spike at top of funnel = condensed section above better sand below
+      Source rock: TOC can be estimated from uranium concentration
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COMBINATION PATTERNS (Motif Stacking)
+# ─────────────────────────────────────────────────────────────────────────────
+
+combination_patterns:
+  - pattern: "Funnel-over-Blocky"
+    description: "Delta front progradation → distributary channel fill"
+    sequence: "Base: coarsening-upward (prodelta→front); Top: blocky (channel)"
+    reservoir_quality: "HIGH — thick, clean sand package"
+    seal_mechanism: "Overlying transgressive shale"
+
+  - pattern: "Bell-over-Funnel"
+    description: "Transgressive systems tract — delta abandonment"
+    sequence: "Base: coarsening-upward (regressive); Top: fining-upward (TST)"
+    reservoir_quality: "MODERATE — only the funnel base is reservoir"
+    seal_mechanism: "Lateral shale, then overlying TST mud"
+
+  - pattern: "Blocky-over-Serrated"
+    description: "Prograding fan system — channel over lobe"
+    sequence: "Base: serrated (lobe); Top: blocky (channel)"
+    reservoir_quality: "HIGH — channel sand + lobe sand stacked"
+    seal_mechanism: "Intra-formational shale (unless amalgamated)"
+
+  - pattern: "Symmetrical Stack (5+ cycles)"
+    description: "Tidally-dominated estuary — stacked tidal bars"
+    sequence: "Multiple symmetrical cycles, each 2–5 m thick"
+    reservoir_quality: "MODERATE to HIGH — cumulative sand thickness"
+    seal_mechanism: "Bounding mudstone layers"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ELECTROFACIES TO LITHOLOGY CROSS-PLOT MATRIX
+# ─────────────────────────────────────────────────────────────────────────────
+
+cross_plot_matrix:
+  description: |
+    GR motif gives GENETIC STORY — cross-plot gives MATERIAL REALITY.
+    Use this matrix to reconcile motif interpretation with actual log responses.
+
+  NPHI_RHOB_regions:
+    - region: "Clean sandstone"
+      NPHI_vv: [0.30, 0.45]
+      RHOB_g_cm3: [2.35, 2.65]
+      GR_API: [20, 60]
+      notes: "Low neutron, low density — quartz cement"
+
+    - region: "Shaly sandstone"
+      NPHI_vv: [0.35, 0.50]
+      RHOB_g_cm3: [2.45, 2.70]
+      GR_API: [60, 100]
+      notes: "Neutron-density crossover increases with Vsh"
+
+    - region: "Clean limestone"
+      NPHI_vv: [0.00, 0.03]
+      RHOB_g_cm3: [2.68, 2.71]
+      GR_API: [15, 40]
+      notes: "Matrix point: NPHI ~0, RHOB ~2.71"
+
+    - region: "Dolomite"
+      NPHI_vv: [0.04, 0.12]
+      RHOB_g_cm3: [2.78, 2.90]
+      GR_API: [20, 50]
+      notes: "Slightly higher NPHI than limestone, higher RHOB"
+
+    - region: "Anhydrite"
+      NPHI_vv: [-0.02, 0.01]
+      RHOB_g_cm3: [2.95, 3.05]
+      GR_API: [10, 25]
+      notes: "Lowest NPHI of all minerals — negative"
+
+    - region: "Marine shale"
+      NPHI_vv: [0.35, 0.55]
+      RHOB_g_cm3: [2.40, 2.65]
+      GR_API: [80, 150]
+      notes: "High GR, moderate NPHI, low RHOB"
+
+    - region: "Organic-rich shale"
+      NPHI_vv: [0.40, 0.65]
+      RHOB_g_cm3: [2.20, 2.50]
+      GR_API: [100, 200]
+      notes: "Low RHOB due to organic matter (density < 1 g/cm3)"

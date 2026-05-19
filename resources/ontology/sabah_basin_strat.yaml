@@ -1,0 +1,400 @@
+# GEOX Sabah Basin Stratigraphy Reference — Physics-9 Seismic-Well Tie
+# DITEMPA BUKAN DIBERI
+#
+# PHYSICS-9 CLAIM:
+#   Stratigraphy is not a lookup table — it is a 4D tectonic-stratigraphic system.
+#   Formation tops are NOT fixed in time — they migrate due to:
+#     (a) Paleobathymetry changes (eustasy + subsidence)
+#     (b) Tectonic uplift/erosion (unconformities)
+#     (c) Lateral facies migration (depositional environment shifts)
+#     (d) Salt diaperism / mud diapirism (in deepwater)
+#
+#   This resource provides SEISMIC-ANCHORED stratigraphy:
+#     → Formation names are keyed to seismic reflector character and velocity model
+#     → Time-depth relationships vary across the basin due to structural complexity
+#     → Biozones anchor the CHRONOSTRATIGRAPHY independently of lithology
+#
+#   The ONLY fixed points are:
+#     1. Biostratigraphic events (first/last occurrence of microfossils) — geologically instant
+#     2. Unconformities mapped on seismic — physically verifiable
+#     3. Absolute ages from radiometric dating — geochronologically anchored
+#
+# CLAIM LIMITS:
+#   - These are SAMPLE-BASED estimates — different wells may penetrate at different true stratigraphic depths
+#   - Biozonation scheme: Larger Benthic Foraminifera (LBF) for shallow (< 2500 m TVDSS);
+#     Calcareous Nannoplankton (CNN) for deeper section
+#   - Always use biostrat to CALIBRATE not VERIFY — different biozones may overlap
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BASIN CONTEXT
+# ─────────────────────────────────────────────────────────────────────────────
+
+basin:
+  name: Sabah Basin (North Borneo Trough)
+  location: "Northern Sabah, East Malaysia — offshore and onshore"
+  tectonic_setting: |
+    Sabah sits at the collision zone between the Eurasian Plate and the Philippine Sea Plate.
+    The basin evolved through:
+    (1) Late Eocene–Oligocene: Rifting, ophiolite emplacement ( basement)
+    (2) Late Oligocene–Early Miocene: Passive margin, deltaic clastic deposition
+    (3) Middle–Late Miocene: Collision, uplift, inversion
+    (4) Pliocene–Recent: Reactivation, wrench tectonics, continued sedimentation
+
+  structural_elements:
+    - name: Kota Kinabalu High
+      type: Basement high
+      description: "Northwestern structural high — may expose basement rocks"
+    - name: Tampakan Depression
+      type: Sedimentary depocenter
+      description: "Major Miocene–Pliocene depocenter, up to 12 km sediment thickness"
+    - name: Inversion Structures
+      type: Structural inversion
+      description: "Middle–Late Miocene inversion created structural traps"
+
+  seismic_velocity_model:
+    description: "Time-depth conversion requires variable velocity model"
+    units:
+      - layer: "Shallow allochthonous (0–1500 m)"
+        Vp_km_s: [1.5, 2.0]
+        description: "Unconsolidated sediments, high velocity gradient"
+      - layer: "Shallow Sandakan Formation (500–2500 m)"
+        Vp_km_s: [2.0, 2.8]
+        description: "Late Miocene–Pliocene shelfal clastics"
+      - layer: "Middle Labang Group (2500–4500 m)"
+        Vp_km_s: [2.8, 3.5]
+        description: "Middle Miocene deltaic–marine clastics"
+      - layer: "Deep Bongaya / base Tertiary (4500–6000 m)"
+        Vp_km_s: [3.5, 4.5]
+        description: "Oligocene–Early Miocene deepwater clastics"
+      - layer: "Ophiolite basement"
+        Vp_km_s: [5.0, 6.0]
+        description: "Ultramafic–mafic igneous basement"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STRATIGRAPHIC COLUMN
+# ─────────────────────────────────────────────────────────────────────────────
+
+stratigraphy:
+  description: |
+    Sabah Basin stratigraphic column from Late Eocene to Recent.
+    Key Megasequences bounded by unconformities mapped on seismic.
+
+  megasequences:
+
+    - sequence: "Ophiolite Complex (Basement)"
+      age_ma: [165.0, 50.0]
+      type: "Igneous/Metamorphic"
+      description: |
+        Oceanic crust obducted during Late Cretaceous–Eocene.
+        Composed of: harzburgite, dunite, gabbro, basalt, pelagic sediment.
+        Acts as acoustic basement — no seismic penetration below.
+      seismic_character: |
+        Top: High-amplitude, irregular, often with diffractions (rough topography)
+        Character: Transparent to chaotic below
+      velocity_Vp_km_s: [5.0, 6.5]
+      formation_tops_TVDSS_m: null
+      reservoir_quality: "NONE"
+      seal_quality: "NONE"
+      notes:
+        - "Onlap termination: sediments onlap onto basement highs"
+        - "Formation name: Sabah Ophiolite — not formally subdivided into formations"
+
+    - sequence: "Panas Thicknessnam Formation"
+      age_ma: [40.0, 28.0]
+      type: "Deepwater siliciclastics (turbidites)"
+      depth_range_mTVDRSS: [5000, 7000]
+      description: |
+        Post-rift thermal subsidence — deepwater fan system.
+        Organic-rich dark shale (potential source rock).
+        Interbedded fine-grained turbidites.
+      GR_character: "Serrated, moderate to high GR (shale-prone)"
+      resistivity_character: "Low RT (< 10 ohm·m) due to water-bearing"
+      seismic_character: |
+        Low-frequency, continuous parallel reflections
+        Onlaps onto basement at basin margins
+      velocity_Vp_km_s: [3.8, 4.3]
+      thickness_m: [200, 1500]
+      formation_tops_TVDSS_m:
+        proximal_well_A: 5650
+        distal_well_B: 6100
+      biozones:
+        LBF: "Peneropolis–Nummulites spp. (Late Eocene)"
+        CNN: "NP21–NP23 (Late Eocene)"
+      reservoir_quality:
+        Sw: 0.85
+        Vsh: 0.40
+        porosity_range: [0.04, 0.08]
+        permeability_mD: [0.01, 0.1]
+      seal_quality: "HIGH"
+      notes:
+        - "Source rock: TOC 0.5–3.0%, Type II kerogen"
+        - "Not a primary reservoir target"
+
+    - sequence: "Kellaneous Formation"
+      age_ma: [28.0, 23.0]
+      type: "Shallow marine to deltaic"
+      depth_range_mTVDRSS: [4000, 5500]
+      description: |
+        Transgressive Systems Tract (TST).
+        Sandy shelf to delta front — BEST RESERVOIR QUALITY in the Oligocene section.
+      GR_character: "Blocky to fining-upward, variable (deltaic heterogenity)"
+      resistivity_character: "Variable RT 10–1000 ohm·m"
+      seismic_character: |
+        Medium-frequency, parallel-ondlaping reflections
+        Clinoformal geometry at shelf margin
+      velocity_Vp_km_s: [3.2, 3.8]
+      thickness_m: [300, 1200]
+      formation_tops_TVDSS_m:
+        well_001: 4250
+        well_002: 4800
+      biozones:
+        LBF: "Ammonia–Elphidium spp. (Oligocene)"
+        CNN: "NP24–NP25 (Early Oligocene)"
+      reservoir_quality:
+        Sw: [0.30, 0.55]
+        Vsh: [0.10, 0.35]
+        porosity_range: [0.12, 0.22]
+        permeability_mD: [50, 800]
+        notes: "Best quality: upper shoreface to estuarine channel sands"
+      seal_quality: "MEDIUM"
+      notes:
+        - "Prolific reservoir in Central Sabah fields"
+        - "Pore pressure: normal to slightly overpressured"
+        - "Watch for CO2 in structural closures"
+
+    - sequence: "Gomantong Limestone"
+      age_ma: [23.0, 16.0]
+      type: "Carbonate platform / reefal"
+      depth_range_mTVDRSS: [2500, 4000]
+      description: |
+        Carbonate platform developed on transgressive surface.
+        Reefal and shoalwater carbonate buildups.
+        Major regional seal above Kendalian reservoir.
+      GR_character: "Low GR (< 30 API) — clean carbonate signature"
+      resistivity_character: "High RT (> 1000 ohm·m if hydrocarbon-filled)"
+      NPHI_character: "Low NPHI (limestone matrix ~0.00 v/v)"
+      RHOB_character: "High RHOB (limestone matrix ~2.71 g/cm³)"
+      neutron_density_separation:
+        description: |
+          Clean limestone: NPHI ≈ 0.00, RHOB ≈ 2.71
+          Dolomite: NPHI ≈ 0.02, RHOB ≈ 2.85
+          Vuggy: density-neutron separation increases
+      seismic_character: |
+        High-amplitude, continuous reflector
+        Platform geometry: mounded at shelf margin
+        Buildups: isolated high-amplitude mounds
+      velocity_Vp_km_s: [4.0, 5.5]
+      thickness_m: [50, 600]
+      formation_tops_TVDSS_m:
+        well_003: 2950
+        well_004: 3800
+      biozones:
+        LBF: "Miogypsinoides–Lepidocyclina spp. (Early Miocene)"
+        CNN: "NN3–NN4 (Early Miocene)"
+      reservoir_quality:
+        porosity_range: [0.05, 0.18]
+        permeability_mD: [1, 100]
+        notes: |
+          Platform crest: moldic + interparticle porosity
+          Flank: depositional vugs + karst dissolution
+          Fractures from structural compression: critical for permeability
+      seal_quality: "HIGH"
+      notes:
+        - "Regional seal: Labang Shale above Gomantog"
+        - "Watch for karst dissolution: can cause massive voids and lost circulation"
+        - "Inversion anticlines: best exploration targets"
+
+    - sequence: "Labang Shale"
+      age_ma: [16.0, 12.0]
+      type: "Marine shale / seal"
+      depth_range_mTVDRSS: [2500, 4500]
+      description: |
+        Transgressive Systems Tract.
+        Deepwater marine shale — PRIMARY REGIONAL SEAL.
+        Protects underlying carbonate reservoir.
+      GR_character: "High, serrated GR (80–140 API) — marine shale"
+      resistivity_character: "Low to medium RT (5–30 ohm·m)"
+      seismic_character: |
+        Low-frequency, continuous, parallel reflections
+        Regional top-seal mapping horizon
+      velocity_Vp_km_s: [2.8, 3.5]
+      thickness_m: [200, 800]
+      formation_tops_TVDSS_m:
+        well_005: 2650
+      biozones:
+        LBF: "Miogypsina spp. (Middle Miocene)"
+        CNN: "NN5a–NN5b (Middle Miocene)"
+      reservoir_quality: "NONE"
+      seal_quality: "EXCEPTIONAL"
+      notes:
+        - "Labang Shale is the critical seal for carbonate plays"
+        - "Thickness > 200 m: sufficient seal capacity for gas columns > 1000 m"
+        - "Regional extent: maps across entire Sabah Basin"
+
+    - sequence: "Labang Sandstone"
+      age_ma: [16.0, 12.0]
+      type: "Turbidite / deepwater fan"
+      depth_range_mTVDRSS: [2800, 4800]
+      description: |
+        Sandstones within the Labang Shale — isolated turbidite channels and lobe complexes.
+        Heterolithic: interbedded shale/sand packages.
+      GR_character: "Serrated, interbedded high/low (turbidite alternation)"
+      resistivity_character: "Variable RT (10–500 ohm·m depending on sand/shale ratio)"
+      seismic_character: |
+        Medium-frequency, mounded to sheet-like geometries
+        Channel complexes visible on amplitude maps
+      velocity_Vp_km_s: [2.8, 3.4]
+      thickness_m: [20, 200]
+      formation_tops_TVDSS_m:
+        well_006: 3100
+      biozones:
+        LBF: "Same as Labang Shale"
+        CNN: "Same as Labang Shale"
+      reservoir_quality:
+        Sw: [0.40, 0.60]
+        Vsh: [0.15, 0.45]
+        porosity_range: [0.08, 0.16]
+        permeability_mD: [5, 100]
+        notes: "Deepwater fan: typically fine-grained, turbidites"
+      seal_quality: "MEDIUM"
+      notes:
+        - "Net/gross varies significantly across fan system"
+        - "Channel axis: better quality; channel margin: poor"
+
+    - sequence: "Sandakan Formation"
+      age_ma: [12.0, 2.6]
+      type: "Prodelta to deltaic clastics"
+      depth_range_mTVDRSS: [500, 3500]
+      description: |
+        Major deltaic clastic input from the north.
+        Thick prodelta and delta front sands.
+        Primary reservoir in offshore Sabah.
+      GR_character: "Coarsening-upward (delta progradation) — clean tops"
+      resistivity_character: "High RT (50–1000 ohm·m in clean sand)"
+      seismic_character: |
+        High-amplitude, parallel reflections (shelfal)
+        Clinoformal geometry at shelf edge
+        Prograding wedge geometry
+      velocity_Vp_km_s: [2.0, 2.8]
+      thickness_m: [1000, 4000]
+      formation_tops_TVDSS_m:
+        offshore_well_A: 1500
+        onshore_well_B: 2200
+      biozones:
+        LBF: "Cycloclypeus–Miogypsina spp. (Late Miocene)"
+        CNN: "NN10–NN11 (Late Miocene)"
+      reservoir_quality:
+        Sw: [0.25, 0.50]
+        Vsh: [0.08, 0.30]
+        porosity_range: [0.15, 0.28]
+        permeability_mD: [100, 2000]
+        notes: "Best quality: upper delta front and distributary channels"
+      seal_quality: "MEDIUM"
+      notes:
+        - "Gas fields: main reservoir in offshore Sabah"
+        - "Watch for shallow gas (Pliocene < 1000 mMD)"
+        - "Sand injectites: can cross-cut shale barriers"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KEY SEISMIC HORIZONS (mapped regionally)
+# ─────────────────────────────────────────────────────────────────────────────
+
+seismic_horizons:
+  - horizon: "MIO_UNC"
+    age_ma: 12.0
+    description: "Major unconformity — marks end of carbonate platform"
+    seismic_character: "High-amplitude, continuous, regionally mappable"
+    flattening_tie: "Gomantong Limestone top → use for flattening"
+
+  - horizon: "BASE_LABANG"
+    age_ma: 16.0
+    description: "Top of carbonate platform / base of Labang seal"
+    seismic_character: "High-amplitude peak/trough doublet"
+    flattening_tie: "Gomantong Limestone top → regional marker"
+
+  - horizon: "BASE_OLIGOCENE"
+    age_ma: 28.0
+    description: "Post-rift onset — marks transition to deepwater"
+    seismic_character: "High-amplitude, irregular (basement topography)"
+    flattening_tie: "Ophiolite top → onlap surface"
+
+  - horizon: "BASE_TERTIARY"
+    age_ma: 66.0
+    description: "Cretaceous/Paleogene boundary"
+    seismic_character: "Transition from chaotic (basement) to parallel reflections"
+    flattening_tie: "Use only if well penetration confirms"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BIOZONATION SCHEMES
+# ─────────────────────────────────────────────────────────────────────────────
+
+biozonation:
+  LBF:
+    description: "Larger Benthic Foraminifera — for shelfal carbonates and clastics"
+    scheme:
+      - zone: "Peneropolis spp."
+        age: "Late Eocene"
+        depth_range_m: [4500, 6000]
+        notes: "Shallow neritic (< 200 m water depth)"
+      - zone: "Nummulites spp."
+        age: "Late Eocene–Early Oligocene"
+        depth_range_m: [4000, 5500]
+        notes: "Shallow marine, bank carbonates"
+      - zone: "Miogypsinoides–Lepidocyclina"
+        age: "Early Miocene"
+        depth_range_m: [2500, 4000]
+        notes: "Shelfal carbonate platform"
+      - zone: "Miogypsina spp."
+        age: "Early–Middle Miocene"
+        depth_range_m: [2200, 3500]
+        notes: "Warm shallow water"
+      - zone: "Cycloclypeus"
+        age: "Late Miocene"
+        depth_range_m: [1000, 2500]
+        notes: "Upper bathyal (< 500 m)"
+      - zone: "Globigerinid bloom"
+        age: "Late Miocene–Pliocene"
+        depth_range_m: [500, 2000]
+        notes: "Deepwater (> 500 m) — planktonic foraminifera"
+
+  CNN:
+    description: "Calcareous Nannoplankton — for deepwater and age calibration"
+    scheme:
+      - zone: "NP21"
+        age: "Late Eocene"
+      - zone: "NP23"
+        age: "Late Eocene–Early Oligocene"
+      - zone: "NN1–NN2"
+        age: "Early Miocene"
+      - zone: "NN3–NN5b"
+        age: "Early–Middle Miocene"
+      - zone: "NN6–NN9"
+        age: "Late Miocene"
+      - zone: "NN10–NN11"
+        age: "Late Miocene–Pliocene"
+      - zone: "NN12–NN15"
+        age: "Pliocene"
+      - zone: "NN16–NN21"
+        age: "Pleistocene"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# REGIONAL CORRELATION NOTES
+# ─────────────────────────────────────────────────────────────────────────────
+
+regional_notes:
+  - well_name: "SKULL HILL"
+    description: "Structural high — Gomantong Limestone at 2500 m TVDSS"
+    key_tops:
+      Sandakan: 1200
+      Labang_Shale: 2500
+      Gomantong_Limestone: 2650
+      Kendalian: 4000
+    notes: "Best reservoir: Sandakan Formation on structural high"
+
+  - well_name: "DEEP_VALLEY"
+    description: "Deeper section — Oligocene penetration"
+    key_tops:
+      Gomantong_Limestone: 3600
+      Kendalian: 4500
+      Panas_Thicknessnam: 5800
+    notes: "Panas Thicknessnam may be organic-rich — check cuttings for fluorescence"

@@ -1,0 +1,354 @@
+# GEOX Fluid PVT — Pressure-Volume-Temperature Properties
+# DITEMPA BUKAN DIBERI
+#
+# PHYSICS-9 CLAIM:
+#   PVT properties (Bo, Rs, Bg, μo, μg, μw) are NOT table lookups —
+#   they are thermodynamic state functions derived from EoS.
+#
+#   The correlations below (Beggs & Robinson, Vasquez & Beggs, Petrosky)
+#   are empirically-fitted to laboratory data — they have REGRESSIVE LIMITS.
+#
+#   Using a correlation outside its calibration range = WRONG ANSWER.
+#
+#   RULE:
+#     Always specify the EoS model and its calibration range.
+#     Always validate against actual PVT data when available.
+#     Sensitivity analysis: Run at minimum 3 pressure points.
+#
+#   COMMON MISTAKES:
+#     (1) Using solution gas-oil ratio (Rs) at atmospheric pressure (it's pressure-dependent)
+#     (2) Mixing Bo in barrels at surface conditions with reservoir barrels
+#     (3) Using oil formation volume factor (Bo) without specifying units
+#     (4) Ignoring temperature effect on viscosity (oil viscosity halves every 10°C)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OIL PVT — DEAD OIL PROPERTIES
+# ─────────────────────────────────────────────────────────────────────────────
+
+oil_pvt:
+  description: |
+    Dead oil (no dissolved gas) — laboratory flash separator test.
+    These are SURFACE conditions (60°F / 15.6°C, 14.7 psi / 1 atm).
+
+  api_gravity:
+    description: |
+      API = (141.5 / SG_oil) - 131.5
+      where SG_oil = density_oil / density_water (at 60°F)
+    classification:
+      - category: "Light oil"
+        API_range: [31, 45]
+        SG_range: [0.87, 0.85]
+        viscosity_cp: [1, 5]
+        Bo_stb_bbl: [1.10, 1.60]
+        notes: "Low viscosity, high API — easy to produce"
+
+      - category: "Medium oil"
+        API_range: [22, 31]
+        SG_range: [0.92, 0.87]
+        viscosity_cp: [5, 50]
+        Bo_stb_bbl: [1.02, 1.20]
+        notes: "Moderate viscosity — standard offshore production"
+
+      - category: "Heavy oil"
+        API_range: [10, 22]
+        SG_range: [1.00, 0.92]
+        viscosity_cp: [50, 10000]
+        Bo_stb_bbl: [0.85, 1.02]
+        notes: "High viscosity — thermal recovery may be needed"
+
+      - category: "Extra-heavy / bitumen"
+        API_range: [< 10]
+        SG_range: ["gt 1.00"]
+        viscosity_cp: [10000, 100000]
+        Bo_stb_bbl: [< 0.85]
+        notes: "Mining or thermal EOR only"
+
+  density_conversion:
+    # kg/m³ = SG × 1000 (water = 1000 kg/m³ at 4°C)
+    oil_density_kg_m3: "SG_oil * 1000"
+    oil_density_lb_ft3: "SG_oil * 62.4"
+    oil_density_API: "(141.5 / SG_oil) - 131.5"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OIL PVT — LIVE OIL (DISSOLVED GAS)
+# ─────────────────────────────────────────────────────────────────────────────
+
+live_oil_pvt:
+  description: |
+    Live oil (saturated with dissolved gas) at reservoir conditions.
+    Rs, Bo, Btd (total formation volume factor) are all pressure-dependent.
+
+  solution_gas_oil_ratio_Rs:
+    description: |
+      SCF gas dissolved in STB oil at given pressure and temperature.
+      Rs increases with pressure (more gas dissolves) until saturation pressure (Pb).
+      Above Pb: Rs = Rsb (constant), free gas exists.
+
+    Beggs_Robinson_correlation:
+      equation: |
+        Rs = (0.0362 × γ_g × Pg^1.0937 × (10^(0.0134 × T - 0.0002 × API)))^(1/0.83)
+        where:
+          Rs = solution gas-oil ratio (SCF/STB)
+          γ_g = gas specific gravity (air = 1.0)
+          Pg = pressure (psia)
+          T = temperature (°F)
+          API = oil API gravity
+      valid_range:
+        pressure_psi: [0, 5000]
+        temperature_F: [70, 250]
+        API: [15, 60]
+        Rs_scf_stb: [0, 2000]
+      accuracy: "±15% of laboratory data"
+
+    Petrosky_correlation:
+      equation: |
+        Rs = (0.1781 × γ_g^0.83 × Pg^1.28 / (10^(0.0008 × T + 0.0014 × API)))^0.5
+      valid_range:
+        pressure_psi: [0, 10000]
+        temperature_F: [70, 300]
+        API: [15, 45]
+      accuracy: "±20% of laboratory data"
+
+    saturation_pressure_Pb:
+      description: |
+        Bubblepoint pressure — pressure at which first gas bubble forms.
+        Below Pb: single-phase oil (undersaturated)
+        Above Pb: two-phase (oil + free gas)
+      correlation:
+        # Lasater correlation
+        equation: |
+          Pb = (0.0194 × T + 0.0173 × API - 0.0018 × γ_g × T - 1.56) / 0.0009
+        valid_range:
+          pressure_psi: [100, 5000]
+          temperature_F: [70, 280]
+        notes: "Higher T and lower API → higher Pb"
+
+  oil_formation_volume_factor_Bo:
+    description: |
+      Volume of 1 STB of oil at reservoir conditions (including dissolved gas).
+      Bo > 1.0 (oil expands when gas dissolves at high P)
+      Bo decreases above Pb (oil compresses, gas evolves)
+      Temperature effect: oil expands → Bo increases with T
+    units: "bbl of oil at reservoir conditions per STB (rb/STB)"
+    correlation:
+      Beggs_Robinson:
+        equation: |
+          Bo = 0.9759 + 12e-6 × (Rs × (γ_g / SG_oil)^0.5 + 1.25 × T)^1.2
+        valid_range:
+          Rs_scf_stb: [0, 2000]
+          T_F: [70, 250]
+        accuracy: "±5%"
+      valid_range:
+        Bo_rb_stb: [1.00, 2.00]
+        pressure_effect: "Increases up to Pb, then decreases (oil compression + gas evolution)"
+        temperature_effect: "Increases with T (thermal expansion)"
+      notes: |
+        "At Pb: maximum Bo (maximum dissolved gas)"
+        "Above Pb: oil compresses, Bo decreases slightly"
+        "Below Pb: oil + dissolved gas shrinks as gas comes out"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GAS PVT — DRY GAS PROPERTIES
+# ─────────────────────────────────────────────────────────────────────────────
+
+gas_pvt:
+  description: |
+    Dry gas (methane-dominated, no liquid condensate at surface).
+    All properties derived from real gas law with Z-factor correction.
+
+  gas_specific_gravity:
+    description: "γ_g = density_gas / density_air (air = 1.0 at 60°F, 14.7 psi)"
+    composition_effect: |
+      Methane (C1): γ_g ~ 0.55–0.60
+      Ethane (C2): γ_g ~ 1.04
+      Propane (C3): γ_g ~ 1.52
+      CO2: γ_g ~ 1.52
+      H2S: γ_g ~ 1.19
+    typical_values:
+      Associated gas: [0.7, 1.2]
+      Non-associated gas: [0.55, 0.70]
+      Coal seam methane: [0.55, 0.65]
+
+  gas_formation_volume_factor_Bg:
+    description: "Volume of 1 SCF of gas at reservoir conditions"
+    units: "bbl of gas at reservoir conditions per SCF (rb/SCF)"
+    equation: "Bg = 0.02827 × Z × T_res_R / P_res_psia"
+    Z_factor_correlation:
+      description: "Compressibility factor — deviation from ideal gas law"
+      direct_correlation:
+        # Papay correlation (simple, widely used)
+        equation: "Z = 1 - (3.52 × P_pr) / (10^(0.9813 × T_pr)) + (0.274 × P_pr^2) / (10^(0.8157 × T_pr))"
+        valid_range:
+          P_pr: [0, 15]
+          T_pr: [1.05, 3.0]
+      Standing_correlation:
+        # Standing-Katz chart fit
+        equation: "Z = a0 + a1/P_pr + a2/T_pr + a3/T_pr^2 + a4×P_pr/T_pr"
+        constants:
+          a0: 0.001
+          a1: 0.002
+          a2: 0.001
+          a3: -0.001
+          a4: 0.001
+      notes: "Use Standing-Katz chart or Dranchuk-Abou-Kassem EoS for Z-factor"
+    typical_values:
+      shallow_gas_1000_psi: [0.0008, 0.0010]  # rb/SCF
+      deep_gas_5000_psi: [0.0003, 0.0005]
+      very_deep_10000_psi: [0.00015, 0.00025]
+    conversion: "Bg (rb/SCF) = 0.02827 × Z × T_R / P_psia"
+
+  gas_viscosity_ug:
+    description: "Dynamic viscosity of gas — from gas kinetic theory"
+    units: "centipoise (cp) or micropoise (μP)"
+    correlation:
+      # Lee-Gonzalez-Eakin correlation
+      equation: |
+        μg = 10^(-4) × (0.00715 × T_R^0.93 + 0.00276) × Y
+        where:
+          Y = 10^(-4) × (9.4 + 0.34 + 0.001 × T_R) × Pg^((0.74 + 0.001 × T_R))
+          T_R = temperature (°R)
+          Pg = pressure (psia)
+      valid_range:
+        T_F: [100, 300]
+        P_psi: [100, 8000]
+      accuracy: "±5%"
+    typical_values:
+      at_1000_psi_100F: [0.010, 0.015]  # cp
+      at_5000_psi_200F: [0.025, 0.035]
+      at_10000_psi_250F: [0.040, 0.055]
+    temperature_effect: "μg increases with T (viscosity increases with kinetic energy)"
+    pressure_effect: "μg increases with P (gas molecules packed closer)"
+
+  gas_compressibility_cg:
+    description: "Isothermal gas compressibility — 1/cg = P × (dZ/dP)_T"
+    units: "1/psi"
+    equation: |
+      cg = (1/P) - (1/Z) × (dZ/dP)_T
+      For ideal gas (Z=1): cg = 1/P
+    Standing_correction: "cg = 1/P + (0.001 × P_pr^0.5) / (10^(0.0008 × T_pr))"
+    typical_values:
+      at_1000_psi: [8e-4, 1e-3]  # 1/psi
+      at_5000_psi: [1.5e-4, 2.5e-4]
+      at_10000_psi: [7e-5, 1e-4]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WATER PVT
+# ─────────────────────────────────────────────────────────────────────────────
+
+water_pvt:
+  description: |
+    Formation water PVT at reservoir conditions.
+    Water is nearly incompressible — Bw ≈ 1.0 (very small variation).
+
+  water_formation_volume_factor_Bw:
+    description: "Volume of 1 STB of water at reservoir conditions"
+    units: "rb/STB"
+    equation: |
+      Bw = 1 + (1.0000148e-6 × ΔP + 1.2e-7 × T_F) × (P - P_atm)
+      where:
+        ΔP = compressibility of water (~3.5e-6 /psi at 200°F)
+        T_F = temperature (°F)
+        P = pressure (psia)
+    typical_values: [0.99, 1.06]  # rb/STB
+    temperature_effect: "Bw increases slightly with T (thermal expansion)"
+    pressure_effect: "Bw decreases slightly with P (compression)"
+
+  water_viscosity_uw:
+    description: "Dynamic viscosity of formation water"
+    units: "centipoise (cp)"
+    equation: |
+      uw = 0.000264 × 10^(779.1 / (T_F + 200))
+      (valid for pure water, 40–300°F, 0–10000 psi)
+    correction_for_salinity:
+      equation: "uw_salt = uw_pure × (1 + 0.001 × salinity_ppm / 1000)"
+    typical_values:
+      at_100F: [0.50, 0.60]  # cp
+      at_200F: [0.25, 0.35]
+      at_300F: [0.15, 0.20]
+    temperature_effect: "uw decreases significantly with T (halves every ~20°C)"
+
+  water_compressibility_cw:
+    description: "Isothermal water compressibility"
+    units: "1/psi"
+    typical_values: [2.5e-6, 4.5e-6]  # 1/psi
+    pressure_effect: "cw decreases slightly with P"
+    temperature_effect: "cw increases with T"
+    salinity_effect: "cw decreases with salinity"
+
+  dissolved_gas_in_water_Rsw:
+    description: "SCF gas dissolved in STB water at reservoir conditions"
+    equation: |
+      Rsw = 0.0137 × γ_g × P_psia^0.84 × 10^(0.0007 × T_F)
+    typical_values: [0.0, 2.0]  # SCF/STB (much less than oil)
+    notes: "Water dissolves much less gas than oil"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FLUID BEHAVIOR — COMPOSITIONAL GRADIENTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+compositional_gradients:
+  description: |
+    In a reservoir with oil column, fluid properties vary with depth due to:
+      (1) Pressure gradient (hydrostatic + fluid density)
+      (2) Temperature gradient (geothermal)
+      (3) Compositional variation (gas cap, aquifer, biodegradation)
+
+  pressure_gradient:
+    equation: "dP/dz = ρ_fluid × g (with depth)"
+    oil_gradient: [0.30, 0.45]  # psi/ft (depends on API, Rs, T)
+    gas_gradient: [0.05, 0.15]  # psi/ft (depends on Z, T)
+    water_gradient: [0.43, 0.46]  # psi/ft (near-constant)
+    significance: "Pressure gradient variation = fluid type indicator"
+
+  temperature_gradient:
+    typical_geothermal: [0.010, 0.020]  # °F/ft
+    significance: "Affects all PVT properties (especially viscosity)"
+    note: "Use actual BHT data — geothermal gradient varies regionally"
+
+  fluid_contacts:
+    description: "Depths at which fluid phases change"
+    GOC: "Gas-Oil Contact — transition from gas cap to oil"
+    OWC: "Oil-Water Contact — transition from oil to water"
+    GWC: "Gas-Water Contact — in gas reservoirs without oil rim"
+    transition_zone: |
+      Capillary pressure holds water above free water level (FWL).
+      Transition zone thickness = FWL to 100% mobile oil.
+      Height above FWL (h) ↔ Sw (height-dependent Sw function).
+
+  oil_column_variation:
+    description: "Oil properties vary with depth in column"
+    density_gradient: "Oil becomes denser with depth (gas comes out of solution)"
+    viscosity_gradient: "Oil becomes more viscous with depth (gas loss)"
+    API_gradient: "API decreases with depth (heavier components at base)"
+    significance: "PVT sampling should be at multiple depths for long columns"
+
+  gas_cap_drive:
+    description: "Oil below gas cap has different properties"
+    solution_gas_ratio: "Higher Rs at top of oil column (more gas available)"
+    oil_density: "Lower density at top (gas expansion)"
+    viscosity: "Lower viscosity at top (gas dissolution reduces viscosity)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EOR FLUID CONSIDERATIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+eor_considerations:
+  description: "Enhanced Oil Recovery fluid modifications"
+
+  co2_flooding:
+    co2_density: [0.0015, 0.0025]  # g/cm³ at reservoir conditions
+    co2_viscosity: [0.02, 0.08]  # cp
+    swelling_factor: "Oil can swell 10–30% with CO2 dissolution"
+    miscibility: "CO2 becomes miscible with oil at ~1200 psi (MMP)"
+
+  waterflooding:
+    residual_oil_Sor: [0.20, 0.45]  # fraction
+    water_oil_ratio_WOR: "Increases over time as oil production declines"
+    mobility_ratio: "λ_water / λ_oil = (krw/μw) / (kro/μo)"
+    sweep_efficiency: "Depends on permeability contrast (Kmax/Kmin)"
+
+  thermal_steam:
+    steam_temperature: [300, 600]  # °F
+    steam_pressure: [100, 300]  # psig
+    heat_content: [300, 700]  # BTU/lb
+    heavy_oil_viscosity_reduction: "Viscosity can reduce 100x with steam"
