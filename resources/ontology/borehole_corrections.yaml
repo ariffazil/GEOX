@@ -429,3 +429,65 @@ correction_flowchart:
     corrections_applied: ["bed thickness", "borehole resistance"]
     output: "SSP (static SP) in mV"
     validation: "SSP positive for NaCl system with fresher mud filtrate"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNITS + VALID RANGES + EPISTEMIC STATUS
+# ─────────────────────────────────────────────────────────────────────────────
+
+units:
+  CAL: "inches — borehole caliper"
+  RHOB: "g/cm³ — bulk density"
+  NPHI: "v/v — neutron porosity (fraction, limestone matrix)"
+  RT: "ohm.m — deep resistivity"
+  RXO: "ohm.m — flushed zone resistivity"
+  DT: "μsec/ft — compressional transit time"
+  SP: "mV — spontaneous potential"
+  standoff: "inches — tool-eccentricity distance"
+  mud_weight: "lbm/gal — mud density"
+  mud_cake: "inches — mud cake thickness"
+
+valid_ranges:
+  CAL_inches: [5.0, 30.0]
+  RHOB_g_cm3: [1.50, 4.50]
+  NPHI_fraction: [-0.05, 0.70]
+  RT_ohm_m: [0.5, 10000]
+  RXO_ohm_m: [0.5, 10000]
+  DT_us_ft: [30, 200]
+  SP_mV: [-200, 100]
+  standoff_inches: [0, 2.0]
+  mud_weight_lbm_gal: [8.0, 22.0]
+  mud_cake_inches: [0.01, 0.50]
+  hole_size_inches: [6.0, 26.0]
+  mud_filtrate_invasion_inches: [2, 25]
+
+epistemic_tags:
+  RHOB_corrections:
+    status: empirical_chart
+    calibrated_for: "Cs-137 density tool, various borehole sizes and mud weights"
+    data_source: "Schlumberger chart RHOB-corr series; test pit calibrations"
+    confidence: HIGH
+    caution: "Washouts > 2 in: RHOB may be irrecoverable — use sonic-density instead"
+  NPHI_corrections:
+    status: empirical_chart
+    calibrated_for: "AmBe neutron tool, limestone matrix, various borehole sizes"
+    data_source: "Schlumberger chart NPHI-corr series"
+    confidence: HIGH
+    caution: "Barite mud weighting: NPHI correction can be 3–5 p.u. — always apply"
+  SP_static:
+    status: empirical_derived
+    calibrated_for: "NaCl mud-freshwater formation systems"
+    data_source: "SP electrochemistry, API RP-45"
+    confidence: MEDIUM
+    caution: "SSP only valid when Rmf/Rw > 3 — if not, SP underestimates Rw"
+  RT_invasion_correction:
+    status: semi_empirical_inversion
+    calibrated_for: "array resistivity tools (ARI, AIT, HRLA)"
+    data_source: "Multiple-depth resistivity processing (Schlumberger MAXIS)"
+    confidence: MEDIUM
+    caution: "Severe invasion (RT/RXO > 10): Rt inversion becomes unstable"
+  sonic_compaction:
+    status: empirical_derived
+    calibrated_for: "shaly sandstones, D > 4000 ft"
+    data_source: "Regression from sonic vs density porosity in compacted sections"
+    confidence: MEDIUM
+    caution: "Carbonate compaction trend differs — use local calibration"

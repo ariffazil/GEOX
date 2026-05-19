@@ -1,0 +1,1 @@
+../../src/geox_core/services/asset_memory.py
