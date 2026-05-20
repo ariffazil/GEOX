@@ -1,2 +1,0 @@
-[console_scripts]
-geox-server = geox_unified:main

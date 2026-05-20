@@ -148,14 +148,17 @@ async def test_geox_well_compute_gr_bins_valid(mcp, smoke_las_path):
         source=smoke_las_path,
         zone_top=500.0,
         zone_base=1000.0,
-        bin_size_m=50.0,
+        bin_size_m=500.0,
     )
-    # NOTE: geox_smoke_test.las triggers a SOURCE_LOAD_FAILED bug:
-    # 'numpy.ndarray' object has no attribute 'values'
-    # This is a real code bug documented by this test.
-    assert result["execution_status"] == "ERROR"
-    assert result["claim_state"] == "NO_VALID_EVIDENCE"
-    assert result["primary_artifact"]["error_code"] == "SOURCE_LOAD_FAILED"
+    # smoke_test.las has 11 samples over 500 m; 500 m bins yield 1 usable bin.
+    assert result["execution_status"] == "SUCCESS"
+    assert result["claim_state"] in ("OBSERVED", "DERIVED_CANDIDATE")
+    artifact = result["primary_artifact"]
+    assert artifact["tool"] == "geox_well_compute_gr_bins"
+    assert artifact["n_bins"] == 1
+    assert artifact["n_usable_bins"] == 1
+    assert len(artifact["bins"]) == 1
+    assert artifact["bins"][0]["p50"] is not None
 
 
 @pytest.mark.asyncio

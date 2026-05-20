@@ -38,7 +38,6 @@ from geox_mcp.tools.prospect import (
     geox_prospect_evaluate,
     geox_prospect_judge_preview,
     geox_prospect_judge_seal,
-    geox_prospect_judge_verdict,
 )
 from geox_mcp.tools.evidence import geox_evidence_summarize_cross
 from geox_mcp.tools.registry import (
@@ -49,6 +48,11 @@ from geox_mcp.tools.registry import (
     geox_bundle_security_audit,
     geox_resource_registry_status,
 )
+from geox_mcp.tools.abduction import (
+    geox_process_abduction,
+    geox_evidence_contradiction_scan,
+)
+from geox_mcp.tools.well import register_well_tools
 from geox_mcp.tools.dst import geox_dst_ingest_test
 
 logger = logging.getLogger("geox.unified13")
@@ -118,10 +122,11 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_prospect_evaluate", geox_prospect_evaluate),
     ("geox_prospect_judge_preview", geox_prospect_judge_preview),
     ("geox_prospect_judge_seal", geox_prospect_judge_seal),
-    ("geox_prospect_judge_verdict", geox_prospect_judge_verdict),
     ("geox_evidence_summarize_cross", geox_evidence_summarize_cross),
     ("geox_system_registry_status", geox_system_registry_status),
     ("geox_history_audit", geox_history_audit),
+    ("geox_process_abduction", geox_process_abduction),
+    ("geox_evidence_contradiction_scan", geox_evidence_contradiction_scan),
     ("geox_dst_ingest_test", geox_dst_ingest_test),
     ("geox_contradiction_registry_status", geox_contradiction_registry_status),
     ("geox_test_receipt_status", geox_test_receipt_status),
@@ -192,6 +197,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
             )(make_alias())
 
     # ── Well correlation tools (non-canonical, kept for compatibility) ───────
+    from geox_mcp.tools.well import register_well_tools
     from geox_mcp.tools.well_correlation import register_well_correlation_tools
 
+    register_well_tools(mcp)
     register_well_correlation_tools(mcp)

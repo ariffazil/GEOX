@@ -592,6 +592,27 @@ def _contradiction_scan(hypotheses: list[dict[str, Any]], evidence: dict[str, An
             penalties += 0.20
             issues.append("C11: Shoreface/delta-front process incompatible with discontinuous lateral extent")
 
+        # ═══════════════════════════════════════════════════════════════════════
+        # C12: Seismic-Well Tie Mismatch & Eureka Vectors
+        # Correlation < 0.70 → Audit mismatch reasons
+        # ═══════════════════════════════════════════════════════════════════════
+        tie_corr = evidence.get("max_cross_correlation")
+        if tie_corr is not None and tie_corr < 0.70:
+            penalties += 0.25
+            issues.append(f"C12: Low seismic-well tie correlation ({tie_corr:.2f})")
+            
+            # Eureka Vector 1: Geomechanical Mismatch
+            if evidence.get("caliper_deviation", 0) > 2.0:
+                issues.append("Eureka 1: Borehole washouts detected — density log likely compromised, creating AI bias.")
+            
+            # Eureka Vector 2: Fluid Substitution
+            if evidence.get("is_gas_zone") and evidence.get("velocity_drop_anomaly"):
+                issues.append("Eureka 2: Unseen gas cloud suspected — lowering velocity and breaking regional T-D assumption.")
+            
+            # Eureka Vector 3: Structural Reality
+            if evidence.get("seismic_discontinuity") == "high":
+                issues.append("Eureka 3: Sub-seismic faulting suspected — acoustic wave smearing detected.")
+
         contradictions.append({
             "process": hyp["process"],
             "issues": issues,
