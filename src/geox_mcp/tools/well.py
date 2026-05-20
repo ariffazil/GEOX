@@ -150,16 +150,25 @@ def register_well_tools(mcp: FastMCP) -> None:
             try:
                 import lasio
                 las = lasio.read(str(path))
-                depth = las.index.values.astype(float)
+                depth = las.index
+                if hasattr(depth, 'values'):
+                    depth = depth.values
+                depth = depth.astype(float)
                 # Find GR curve (try common mnemonics)
                 for alias in ["GR", "GRC", "SGR", "CGR", "GAPI", "GAMMA", "GAMMA_RAY"]:
                     if alias in las.keys():
-                        gr = las[alias].values.astype(float)
+                        gr = las[alias]
+                        if hasattr(gr, 'values'):
+                            gr = gr.values
+                        gr = gr.astype(float)
                         break
                 else:
                     # Use first curve if no GR found
-                    gr = list(las.keys())[0]
-                    gr = las[gr].values.astype(float)
+                    gr_name = list(las.keys())[0]
+                    gr = las[gr_name]
+                    if hasattr(gr, 'values'):
+                        gr = gr.values
+                    gr = gr.astype(float)
                 meta = {
                     "well": las.well.WELL.value if hasattr(las.well, 'WELL') else path.stem,
                     "source": str(path),
@@ -342,7 +351,7 @@ def register_well_tools(mcp: FastMCP) -> None:
         )
 
     # ── L2: Geological Package Builder ────────────────────────────────────
-    @mcp.tool(task=True)
+    @mcp.tool()
     async def geox_well_build_packages(
         gr_bins: list[dict[str, Any]],
         min_package_thickness_m: float = 20.0,
@@ -520,7 +529,7 @@ def register_well_tools(mcp: FastMCP) -> None:
         )
 
     # ── Full pipeline: L1 + L2 + L3 ──────────────────────────────────────
-    @mcp.tool(task=True)
+    @mcp.tool()
     async def geox_well_analyze_sequence(
         source: str,
         zone_top: float,

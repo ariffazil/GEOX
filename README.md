@@ -67,7 +67,7 @@ Every output passes through the **F3 WITNESS floor** before reaching the reasoni
 
 ```
 PYTHONPATH=src python -m geox_mcp.server
-→ 21 canonical tools exposed (no internal legacy aliases)
+→ 28 canonical tools exposed (no internal legacy aliases)
 → Universal output contract v0.4
 → Version v2026.05.17
 ```
@@ -80,15 +80,17 @@ PYTHONPATH=src python -m geox_mcp.server
 | `well` | `geox_well_analyze_sequence`, `geox_well_infer_seq_strat` | Well log interpretation |
 | `well` | `geox_well_build_packages`, `geox_well_compute_gr_bins` | GR binning and package building |
 | `subsurface` | `geox_subsurface_generate_candidates`, `geox_subsurface_verify_integrity` | Petrophysical candidates |
-| `seismic` | `geox_seismic_analyze_volume` | Seismic evidence preparation |
+| `seismic` | `geox_seismic_analyze_volume`, `geox_seismic_well_tie_compute` | Seismic evidence preparation |
+| `seismic` | `geox_vision_time_to_depth`, `geox_time_depth_anchor` | Vision depth conversion |
 | `section` | `geox_section_interpret_correlation` | Cross-section correlation |
 | `map` | `geox_map_context_scene` | Geospatial grounding |
 | `time4d` | `geox_time4d_analyze_system` | 4D systems tract analysis |
 | `abduction` | `geox_process_abduction`, `geox_evidence_contradiction_scan` | Geological process hypothesis + red-team |
 | `cross` | `geox_evidence_summarize_cross` | Cross-domain synthesis |
 | `prospect` | `geox_prospect_evaluate`, `geox_prospect_judge_preview`, `geox_prospect_judge_seal` | Risk quantification and verdict |
-| `history` | `geox_history_audit` | Immutable audit trail |
-| `registry` | `geox_system_registry_status` | Registry health |
+| `registry` | `geox_system_registry_status`, `geox_history_audit` | Registry health and audit trail |
+| `registry` | `geox_contradiction_registry_status`, `geox_test_receipt_status` | Validation and test receipts |
+| `registry` | `geox_bundle_security_audit`, `geox_resource_registry_status` | Security and manifest audit |
 | `governance` | `mcp_health_check` | F1–F13 enforcement, 888HOLD |
 
 ### Universal Output Envelope (v0.4)
@@ -139,7 +141,7 @@ geox/
 │       ├── server.py           # THE canonical FastMCP entrypoint
 │       ├── registry.py         # Single tool registry — one source of truth
 │       ├── contracts/          # MCP protocol contracts
-│       └── tools/             # 21 canonical tools (one module per domain)
+│       └── tools/             # 28 canonical tools (one module per domain)
 │
 ├── resources/                  # Agent Knowledge Pack
 │   ├── capabilities/

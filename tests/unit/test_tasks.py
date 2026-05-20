@@ -8,7 +8,15 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 import pytest
+import fastmcp
 from fastmcp import FastMCP
+
+
+# FastMCP 3.x removed the tasks= parameter and task_config support.
+# Skip the entire module if running against FastMCP >= 3.0.
+_FMC_VERSION = tuple(int(x) for x in fastmcp.__version__.split(".")[:2])
+if _FMC_VERSION >= (3, 0):
+    pytest.skip("FastMCP 3.x removed background task support (tasks=True, task_config)", allow_module_level=True)
 
 
 @pytest.fixture

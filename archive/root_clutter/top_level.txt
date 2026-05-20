@@ -1,5 +1,0 @@
-geox
-geox-gui
-geox-site
-geox-site-p0
-geox_mcp

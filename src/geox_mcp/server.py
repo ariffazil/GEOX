@@ -181,12 +181,13 @@ def bootstrap_sovereign_13():
             logger.warning(f"Earth abduction tools not loaded: {e}")
 
         # H3 — Register background task tools (SEP-1686)
+        # FastMCP 3.x removed task=True; register as normal tools.
         try:
             from geox_mcp.tools.data import geox_task_ingest_las_batch
             from geox_mcp.tools.abduction import geox_task_metabolize_basin
 
-            mcp.tool(name="geox_task_ingest_las_batch", task=True)(geox_task_ingest_las_batch)
-            mcp.tool(name="geox_task_metabolize_basin", task=True)(geox_task_metabolize_basin)
+            mcp.tool(name="geox_task_ingest_las_batch")(geox_task_ingest_las_batch)
+            mcp.tool(name="geox_task_metabolize_basin")(geox_task_metabolize_basin)
             logger.info("Background task tools registered successfully")
         except Exception as e:
             logger.warning(f"Background task tools not loaded: {e}")

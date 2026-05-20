@@ -2,7 +2,8 @@ from typing import List, Dict, Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX SOVEREIGN — CANONICAL PUBLIC TOOLS WITH COGNITIVE AXES
-# 15 core + 4 well-stratigraphy + 1 DST test + 3 registry/status = 23 canonical tools.
+# 15 core + 5 well-seismic + 3 abduction/critique + 4 registry/status +
+# 1 resource = 28 canonical tools.
 # Stratigraphy tools canonicalized 2026-05-16 — verified callable, evidence-state
 # compliant (returns HYPOTHESIS/NO_VALID_EVIDENCE on bad input, not silent failure).
 # Registry/status tools added 2026-05-18 — machine-checkable validation surface.
