@@ -25,6 +25,19 @@ The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-groun
 - **Runtime:** Python 3.11+
 - **Framework:** FastMCP + Pydantic + Uvicorn
 
+### System Doctrine (Canonical)
+
+The founding charter lives in `GENESIS/` and is binding for all agents operating in this repo:
+
+| File | Purpose |
+|------|---------|
+| `GENESIS/000_MANIFESTO.md` | Regime change declaration — why GEOX exists |
+| `GENESIS/001_KILL_MAP.md` | DSG displacement architecture — what fails and how GEOX replaces it |
+| `GENESIS/002_FIRST_PRINCIPLES.md` | L1–L5 system stack, execution model, failure design |
+| `GENESIS/003_CONSTITUTIONAL_ALIGNMENT.md` | F1–F13 → geological operations → enforcement status |
+
+**Rule:** If code changes contradict a `GENESIS/` principle, the principle wins. File an 888_HOLD and escalate to Arif.
+
 ## Authority & Autonomy
 
 ### Autonomous
@@ -64,6 +77,7 @@ cd geox-gui && npm install && npm run build
 
 | Path | Purpose |
 |------|---------|
+| `GENESIS/` | **Canonical system doctrine** — manifesto, kill map, first principles, constitutional alignment |
 | `server.py` | Canonical unified MCP server (~1,413 lines, 21 tools) |
 | `geox/core/` | Unified tool registry, AC-risk engine, doctrine |
 | `geox/well/` | Well stratigraphy (L1-L3), schemas, tools |
