@@ -228,6 +228,9 @@ def _prune_mcp_surface(mcp_server) -> None:
         # H3 — Background task tools (SEP-1686)
         "geox_task_ingest_las_batch",
         "geox_task_metabolize_basin",
+        # LC#28 — Anomalous contrast + forward model
+        "geox_forward_model_synthetic",
+        "geox_anomalous_contrast_detector",
     }
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:

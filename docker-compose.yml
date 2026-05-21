@@ -24,7 +24,11 @@ services:
       - CMD
       - python3
       - -c
-      - import urllib.request; urllib.request.urlopen('http://localhost:8081/health')
+      - |
+        import urllib.request, json;
+        r = urllib.request.urlopen('http://localhost:8081/health');
+        d = json.loads(r.read().decode());
+        assert d.get('status') == 'healthy', f"Health failed: {d}"
       timeout: 10s
     networks:
     - arifos_core_network

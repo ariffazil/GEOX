@@ -55,6 +55,8 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_seismic_analyze_volume",          "axis": "reason",   "expose": True},
     {"name": "geox_seismic_well_tie_compute",        "axis": "reason",   "expose": True},
     {"name": "geox_time_depth_anchor",               "axis": "verify",   "expose": True},
+    {"name": "geox_forward_model_synthetic",         "axis": "reason",   "expose": True},
+    {"name": "geox_anomalous_contrast_detector",     "axis": "critique", "expose": True},
     {"name": "geox_vision_time_to_depth",            "axis": "reason",   "expose": True},
     {"name": "geox_section_interpret_correlation",   "axis": "boundary", "expose": True},
     {"name": "geox_map_context_scene",              "axis": "boundary", "expose": True},
@@ -78,8 +80,6 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_test_receipt_status",            "axis": "trace",    "expose": True},
     {"name": "geox_bundle_security_audit",          "axis": "verify",   "expose": True},
     {"name": "geox_resource_registry_status",       "axis": "identity", "expose": True},
-    {"name": "geox_forward_model_synthetic",        "axis": "reason",   "expose": True},
-    {"name": "geox_anomalous_contrast_detector",    "axis": "reason",   "expose": True},
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
