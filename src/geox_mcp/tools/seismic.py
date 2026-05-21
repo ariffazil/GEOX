@@ -66,12 +66,41 @@ async def geox_seismic_analyze_volume(
             - "viewer_payload": Prepare payload for seismic viewer app.
         attribute: Seismic attribute to compute (e.g. "rms", "variance", "sweetness", "coherence").
     """
-    artifact = {"volume_ref": volume_ref, "mode": mode, "attribute": attribute, "status": "Computed"}
+    # FORGET: Removed mock "status": "Computed". F9-Rahmah: no fabrication.
+    if not _artifact_exists(volume_ref):
+        return get_standard_envelope(
+            {"tool": "geox_seismic_analyze_volume", "error_code": "NO_VALID_EVIDENCE",
+             "message": f"Seismic volume '{volume_ref}' not found. Ingest SEG-Y via geox_data_ingest_bundle first."},
+            tool_class="compute", execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+            evidence_refs=[volume_ref],
+        )
+
+    # Honest status: volume ingested but attribute computation engine is pending
+    artifact = {
+        "volume_ref": volume_ref,
+        "mode": mode,
+        "attribute": attribute,
+        "status": "PENDING_ENGINE",
+        "note": "Volume evidence present. Real attribute computation (RMS/variance/sweetness) requires SEG-Y engine activation.",
+    }
     envelope = get_standard_envelope(
         artifact,
         tool_class="compute",
         claim_tag="HYPOTHESIS",
-        claim_state="INTERPRETED",
+        claim_state="INGESTED",
         perception_class="DISPLAY",
+        evidence_refs=[volume_ref],
+        physics_guard={
+            "guard_passed": True,
+            "physics_version": "geox-seismic-v2026.05.21",
+            "equations_used": [],
+            "assumptions": ["Volume loaded but attribute computation not yet implemented"],
+        },
     )
+    envelope["confidence"] = {
+        "level": "UNKNOWN",
+        "sensitivity_to": ["seg_y_engine_availability", "attribute_algorithm_selection"],
+    }
     return enrich_envelope_with_metabolic(envelope, "geox_seismic_analyze_volume")
