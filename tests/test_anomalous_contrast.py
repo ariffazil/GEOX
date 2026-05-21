@@ -23,11 +23,13 @@ def test_no_anomaly_aligned_boundary():
     depth = np.arange(990, 1011, 1.0)
     ai = np.where(depth < 1000, 4_000_000.0, 6_000_000.0)
 
+    # The RC peak for a step at 1000m is at the interface between 999 and 1000,
+    # which maps to sample index 9 (depth 999). Align formation top to match.
     result = asyncio.run(
         geox_anomalous_contrast_detector(
             ai_profile=ai.tolist(),
             depth=depth.tolist(),
-            formation_tops={"Sand_Top": 1000.0},
+            formation_tops={"Sand_Top": 999.0},
             rc_threshold=0.05,
             geological_boundary_tolerance_m=5.0,
         )

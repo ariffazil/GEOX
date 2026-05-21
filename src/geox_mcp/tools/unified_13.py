@@ -158,9 +158,9 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    # Count is 28: 15 core + 3 seismic + 4 well-strat + 2 abduction + 3 registry + 1 resource
-    assert len(CANONICAL_PUBLIC_TOOLS) == 28, (
-        f"F0_CONSTITUTION_BREACH: Expected 28 sovereign tools, "
+    # Count is 30: 15 core + 3 seismic + 4 well-strat + 2 abduction + 3 registry + 1 resource + 2 synthetic
+    assert len(CANONICAL_PUBLIC_TOOLS) == 30, (
+        f"F0_CONSTITUTION_BREACH: Expected 30 sovereign tools, "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
