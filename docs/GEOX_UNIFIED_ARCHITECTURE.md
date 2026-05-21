@@ -71,9 +71,9 @@ ToAC applies across domains:
 │  ├── Taxonomy: Source → Transform → Proxy → Confidence             │
 │  └── Governance: HOLD if Conflation Risk > Threshold               │
 │                                                                     │
-│  Files: geox/theory/contrast_theory.py                              │
-│         geox/theory/contrast_taxonomy.py                            │
-│         geox/theory/contrast_governance.py                          │
+│  Files: GEOX/theory/contrast_theory.py                              │
+│         GEOX/theory/contrast_taxonomy.py                            │
+│         GEOX/theory/contrast_governance.py                          │
 │                                                                     │
 ├─────────────────────────────────────────────────────────────────────┤
 │  LAYER 2: ENGINE (333_MIND)                                         │
@@ -84,9 +84,9 @@ ToAC applies across domains:
 │  ├── TransformRegistry: Visual transforms with risk metadata       │
 │  └── AnomalyDetector: Identifies potential conflation errors       │
 │                                                                     │
-│  Files: geox/engine/contrast_space.py                               │
-│         geox/engine/transform_registry.py                           │
-│         geox/engine/anomaly_detector.py                             │
+│  Files: GEOX/engine/contrast_space.py                               │
+│         GEOX/engine/transform_registry.py                           │
+│         GEOX/engine/anomaly_detector.py                             │
 │                                                                     │
 ├─────────────────────────────────────────────────────────────────────┤
 │  LAYER 3: TOOLS (555_HEART / 777_FORGE)                             │
@@ -115,7 +115,7 @@ GEOX/
 ├── README.md                          # Public entry point
 ├── pyproject.toml                     # Package config
 │
-├── arifos/geox/
+├── arifos/GEOX/
 │   ├── __init__.py
 │   ├── cli.py                         # Unified CLI
 │   │
@@ -208,7 +208,7 @@ class ContrastMetadata(BaseModel):
 ### 4. Domain Is Just a Parameter
 ```python
 # Same tool, different domain
-from geox.tools.generic import ContrastAwareInterpreter
+from GEOX.tools.generic import ContrastAwareInterpreter
 
 seismic_result = await ContrastAwareInterpreter(
     domain="seismic",
@@ -229,7 +229,7 @@ medical_result = await ContrastAwareInterpreter(
 
 ### Current State (Chaos)
 ```
-arifos/geox/
+arifos/GEOX/
 ├── contrast_wrapper.py              # ← Duplicated concepts
 ├── seismic_attribute_taxonomy.py    # ← Domain-specific, not unified
 ├── seismic_image_ingest.py          # ← Root-level clutter
@@ -250,7 +250,7 @@ arifos/geox/
 
 ### Target State (Unified)
 ```
-arifos/geox/
+arifos/GEOX/
 ├── THEORY/
 │   ├── contrast_theory.py           # ← Unified ToAC
 │   └── contrast_taxonomy.py         # ← Universal taxonomy
@@ -297,7 +297,7 @@ arifos/geox/
 ## Example: Seismic as ONE Domain
 
 ```python
-from arifos.geox import GEOX
+from arifos.GEOX import GEOX
 
 # Seismic is just a domain parameter
 result = await GEOX.interpret(

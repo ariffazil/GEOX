@@ -2,9 +2,11 @@ from typing import List, Dict, Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX SOVEREIGN — CANONICAL PUBLIC TOOLS WITH COGNITIVE AXES
-# 15 core + 4 well-stratigraphy + 1 DST test = 20 visible tools.
+# 15 core + 5 well-seismic + 3 abduction/critique + 4 registry/status +
+# 1 resource = 28 canonical tools.
 # Stratigraphy tools canonicalized 2026-05-16 — verified callable, evidence-state
 # compliant (returns HYPOTHESIS/NO_VALID_EVIDENCE on bad input, not silent failure).
+# Registry/status tools added 2026-05-18 — machine-checkable validation surface.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 CANONICAL_PUBLIC_TOOLS: List[str] = [
@@ -13,6 +15,9 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_subsurface_generate_candidates",
     "geox_subsurface_verify_integrity",
     "geox_seismic_analyze_volume",
+    "geox_seismic_well_tie_compute",
+    "geox_time_depth_anchor",
+    "geox_vision_time_to_depth",
     "geox_section_interpret_correlation",
     "geox_map_context_scene",
     "geox_time4d_analyze_system",
@@ -31,6 +36,12 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_well_build_packages",
     "geox_well_infer_seq_strat",
     "geox_well_analyze_sequence",
+    # Registry / status — machine-checkable validation surface
+    "geox_contradiction_registry_status",
+    "geox_test_receipt_status",
+    "geox_bundle_security_audit",
+    # Resource layer — machine-checkable manifest
+    "geox_resource_registry_status",
 ]
 
 GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
@@ -39,6 +50,9 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_subsurface_generate_candidates", "axis": "reason",   "expose": True},
     {"name": "geox_subsurface_verify_integrity",     "axis": "verify",   "expose": True},
     {"name": "geox_seismic_analyze_volume",          "axis": "reason",   "expose": True},
+    {"name": "geox_seismic_well_tie_compute",        "axis": "reason",   "expose": True},
+    {"name": "geox_time_depth_anchor",               "axis": "verify",   "expose": True},
+    {"name": "geox_vision_time_to_depth",            "axis": "reason",   "expose": True},
     {"name": "geox_section_interpret_correlation",   "axis": "boundary", "expose": True},
     {"name": "geox_map_context_scene",              "axis": "boundary", "expose": True},
     {"name": "geox_time4d_analyze_system",           "axis": "vitality", "expose": True},
@@ -57,6 +71,10 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_well_build_packages",            "axis": "reason",   "expose": True},
     {"name": "geox_well_infer_seq_strat",           "axis": "reason",   "expose": True},
     {"name": "geox_well_analyze_sequence",          "axis": "reason",   "expose": True},
+    {"name": "geox_contradiction_registry_status",  "axis": "verify",   "expose": True},
+    {"name": "geox_test_receipt_status",            "axis": "trace",    "expose": True},
+    {"name": "geox_bundle_security_audit",          "axis": "verify",   "expose": True},
+    {"name": "geox_resource_registry_status",       "axis": "identity", "expose": True},
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════

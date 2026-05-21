@@ -9,13 +9,13 @@ import sys, os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geox.core.geox_4d import (
+from geox_core.core.geox_4d import (
     gassmann_fluid_substitution, build_4d_cube_difference,
     forward_4d_simulation, inverse_4d_from_observations,
     compute_4d_uncertainty, detect_4d_amplitude_anomaly
 )
-from geox.core.geox_2d import build_2d_section
-from geox.core.physics9 import Physics9State, anomaly_contrast_theory, forward_physics9
+from geox_core.core.geox_2d import build_2d_section
+from geox_core.core.physics9 import Physics9State, anomaly_contrast_theory, forward_physics9
 
 def build_judge_console_app():
     st.set_page_config(page_title="GEOX JudgeConsole — 4D", layout="wide")

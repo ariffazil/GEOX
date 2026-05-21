@@ -52,7 +52,7 @@
 ├─────────────────────────────────────────────┤
 │  PLANE 3: LANGUAGE/AGENT (arifOS kernel)    │
 │  ├─ 000→111→333→555→777→888→999 pipeline    │
-│  └─ GeoXAgent orchestrator                  │
+│  └─ GEOXAgent orchestrator                  │
 ├─────────────────────────────────────────────┤
 │  PLANE 2: PERCEPTION (VLM Bridge)           │
 │  ├─ SeismicVLMTool · EOFoundationModelTool  │
@@ -75,9 +75,9 @@
 
 | arifOS Component | GEOX Equivalent | Purpose |
 |------------------|-----------------|---------|
-| `agi_mind (333)` | `GeoXAgent.plan()` | Tool sequence planning |
-| `asi_heart (666)` | `GeoXAgent.synthesise()` | Empathy/VLM bridge |
-| `apex_soul (888)` | `GeoXValidator.validate_batch()` | Verdict rendering |
+| `agi_mind (333)` | `GEOXAgent.plan()` | Tool sequence planning |
+| `asi_heart (666)` | `GEOXAgent.synthesise()` | Empathy/VLM bridge |
+| `apex_soul (888)` | `GEOXValidator.validate_batch()` | Verdict rendering |
 | `vault_ledger (999)` | `audit_sink` callback | Immutable audit trail |
 | `physics_reality (111)` | `EarthModelTool` | Earth-grounded truth |
 | `engineering_memory (555)` | `GeoMemoryStore` | Geological context memory |
@@ -157,13 +157,13 @@ arifOS/
 ### GEOX (Domain Coprocessor)
 ```
 GEOX/
-├── arifos/geox/             # Domain-specific tools
-│   ├── geox_agent.py        # Pipeline orchestrator
-│   ├── geox_schemas.py      # Pydantic models
-│   ├── geox_validator.py    # Earth→Language contract
-│   ├── geox_tools.py        # Earth/VLM tools
-│   ├── geox_memory.py       # GeoMemoryStore
-│   └── geox_mcp_server.py   # MCP server (port 8100)
+├── arifos/GEOX/             # Domain-specific tools
+│   ├── GEOX_agent.py        # Pipeline orchestrator
+│   ├── GEOX_schemas.py      # Pydantic models
+│   ├── GEOX_validator.py    # Earth→Language contract
+│   ├── GEOX_tools.py        # Earth/VLM tools
+│   ├── GEOX_memory.py       # GeoMemoryStore
+│   └── GEOX_mcp_server.py   # MCP server (port 8100)
 ├── docs/                    # Architecture docs
 └── tests/                   # Domain-specific tests
 ```
@@ -202,7 +202,7 @@ GEOX/
 │         ┌────────────────┴────────────────┐                 │
 │         ▼                                 ▼                 │
 │  ┌─────────────────┐            ┌─────────────────┐        │
-│  │  geox_evaluate  │◄──────────►│   GeoXAgent     │        │
+│  │  GEOX_evaluate  │◄──────────►│   GEOXAgent     │        │
 │  │  _prospect      │  MCP call  │   (GEOX)        │        │
 │  └─────────────────┘            └─────────────────┘        │
 │                                          │                  │
@@ -245,7 +245,7 @@ C:\ariffazil\                    ← Your root
 **Verdict:** ✅ **GEOX is correctly placed as a sibling to arifOS**
 
 **Why NOT nested?**
-1. GEOX is a **separate installable package** (`pip install arifos-geox`)
+1. GEOX is a **separate installable package** (`pip install arifos-GEOX`)
 2. It has its own **independent release cycle**
 3. It can be deployed **standalone** or **integrated**
 4. Nested would create circular dependency confusion
@@ -259,12 +259,12 @@ C:\ariffazil\                    ← Your root
 cd C:\ariffazil\GEOX
 pip install -e ".[dev]"
 ```
-GEOX becomes importable as `arifos.geox` in Python.
+GEOX becomes importable as `arifos.GEOX` in Python.
 
 ### Option B: Docker Compose Integration
 Add to arifOS `docker-compose.yml`:
 ```yaml
-geox_server:
+GEOX_server:
   build: ../GEOX
   ports:
     - "8100:8100"
@@ -276,7 +276,7 @@ geox_server:
 If you want arifOS to "own" GEOX commits:
 ```bash
 cd C:\ariffazil\arifOS
-git subtree add --prefix=extensions/geox https://github.com/ariffazil/GEOX.git main
+git subtree add --prefix=extensions/GEOX https://github.com/ariffazil/GEOX.git main
 ```
 
 **Recommendation:** Use **Option A** for development, **Option B** for production.
@@ -288,8 +288,8 @@ git subtree add --prefix=extensions/geox https://github.com/ariffazil/GEOX.git m
 | Current | Should Be | Status |
 |---------|-----------|--------|
 | `GEOX` (folder) | `GEOX` | ✅ Correct |
-| `arifos-geox` (repo) | `GEOX` or `arifos-geox` | ✅ Acceptable |
-| Package name | `arifos.geox` | ✅ Pythonic |
+| `arifos-GEOX` (repo) | `GEOX` or `arifos-GEOX` | ✅ Acceptable |
+| Package name | `arifos.GEOX` | ✅ Pythonic |
 
 **No rename needed.** The folder name `GEOX` is clear and unambiguous.
 

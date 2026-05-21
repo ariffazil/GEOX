@@ -1,7 +1,68 @@
 /**
  * GEOX App Shells — 3 Apps / 9 Substrates
  * DITEMPA BUKAN DIBERI
+ *
+ * Re-exports from types/index.ts for backward compatibility.
+ * All canonical types live in types/index.ts.
  */
+
+// Re-export everything from canonical types module
+export type {
+  Coordinate,
+  CoordinateWithMeta,
+  BoundingBox,
+  MapLayerType,
+  MapLayer,
+  GeoSelection,
+  SeismicLine,
+  SeismicGrounding,
+  SeismicData,
+  DisplayMode,
+  HorizonPick,
+  StructuralCandidate,
+  Well,
+  LogCurveType,
+  WellLog,
+  LogCurve,
+  LogTrack,
+  SeismicLogTie,
+  DepthCursor,
+  OutcropImage,
+  Annotation,
+  AISuggestion,
+  Prospect,
+  DecisionGate,
+  EvidenceStack,
+  EvidenceItem,
+  RiskMatrix,
+  RiskLevel,
+  MissingConstraint,
+  FloorId,
+  FloorStatus,
+  FloorType,
+  ConstitutionalFloor,
+  GovernanceState,
+  GroundingStatus,
+  UncertaintyState,
+  Tab,
+  ViewMode,
+  CursorState,
+  PanelConfig,
+  GeospatialVerification,
+  ProspectEvaluation,
+  HealthStatus,
+  McpConnectionStatus,
+  GEOXState,
+  GeoxMethod,
+  GeoxEvent,
+  AppInitializeParams,
+  ContextPatchParams,
+  UIActionParams,
+  UIStateSyncParams,
+  ToolRequestParams,
+  ToolResponseParams,
+  GEOXAction,
+} from './types/index.js';
 
 export type AppId = 'x1d' | 'x2d' | 'x3d' | 'arifos';
 

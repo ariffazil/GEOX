@@ -1,0 +1,1 @@
+../src/geox_core/core/artefact_emission.py

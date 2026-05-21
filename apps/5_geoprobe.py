@@ -9,11 +9,11 @@ import sys, os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geox.core.geox_25d import (
+from geox_core.core.geox_25d import (
     compute_geoid_anomalies, compute_geoid_surface,
     build_attribute_volume, time_to_depth_conversion
 )
-from geox.core.physics9 import Physics9State, anomaly_contrast_theory, forward_physics9
+from geox_core.core.physics9 import Physics9State, anomaly_contrast_theory, forward_physics9
 
 def plot_map(data, x, y, title, colorscale="viridis"):
     fig = go.Figure(go.Heatmap(z=data, x=x, y=y, colorscale=colorscale, zmid=0))

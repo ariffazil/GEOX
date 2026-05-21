@@ -1,0 +1,30 @@
+{
+  "_description": "Golden baseline for PINN prediction on learnable synthetic well log data. Generated 2026-05-17. Update with GEOX_UPDATE_GOLDEN=1 if PINN architecture or physics loss changes.",
+  "inputs_shape": [20, 5],
+  "input_curves": ["GR", "RHOB", "NPHI", "RT", "DT"],
+  "training": {
+    "epochs": 2000,
+    "hidden_dims": [64, 32],
+    "lambda_archie": 0.0,
+    "lambda_density": 0.0,
+    "lambda_phys": 1.0,
+    "lr": 0.001
+  },
+  "expected_ranges": {
+    "vsh_mean": {"min": 0.40, "max": 0.70, "target": 0.54},
+    "phi_mean": {"min": 0.12, "max": 0.25, "target": 0.17},
+    "sw_mean": {"min": 0.40, "max": 0.75, "target": 0.58}
+  },
+  "expected_mse_max": 1e-04,
+  "expected_structure": {
+    "has_vsh": true,
+    "has_phi": true,
+    "has_sw": true,
+    "has_physics_violation": true,
+    "has_confidence": true,
+    "has_canon9_profile": true,
+    "has_violation_details": true
+  },
+  "expected_canon9_profile_keys": ["rw", "archie_a", "archie_m", "archie_n", "phi_max"],
+  "expected_confidence": "high"
+}

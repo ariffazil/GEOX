@@ -12,15 +12,11 @@
     },
     "total_skills": {
       "type": "integer",
-      "const": 34
+      "minimum": 1
     },
     "total_domains": {
       "type": "integer",
-      "const": 12
-    },
-    "skills_per_domain": {
-      "type": "integer",
-      "const": 3
+      "minimum": 1
     },
     "domains": {
       "type": "array",
@@ -46,8 +42,7 @@
     "skills": {
       "type": "array",
       "items": { "$ref": "#/definitions/skillEntry" },
-      "minItems": 34,
-      "maxItems": 34
+      "minItems": 1
     },
     "recommended_first_nine": {
       "type": "array",

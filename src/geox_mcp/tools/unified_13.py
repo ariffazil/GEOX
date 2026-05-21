@@ -26,6 +26,11 @@ from geox_mcp.tools.petrophysics import (
     geox_subsurface_verify_integrity,
 )
 from geox_mcp.tools.seismic import geox_seismic_analyze_volume
+from geox_mcp.tools.seismic_well_tie import (
+    geox_seismic_well_tie_compute,
+    geox_time_depth_anchor,
+)
+from geox_mcp.tools.seismic_vision import geox_vision_time_to_depth
 from geox_mcp.tools.section import geox_section_interpret_correlation
 from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.time4d import geox_time4d_analyze_system
@@ -33,13 +38,21 @@ from geox_mcp.tools.prospect import (
     geox_prospect_evaluate,
     geox_prospect_judge_preview,
     geox_prospect_judge_seal,
-    geox_prospect_judge_verdict,
 )
 from geox_mcp.tools.evidence import geox_evidence_summarize_cross
 from geox_mcp.tools.registry import (
     geox_system_registry_status,
     geox_history_audit,
+    geox_contradiction_registry_status,
+    geox_test_receipt_status,
+    geox_bundle_security_audit,
+    geox_resource_registry_status,
 )
+from geox_mcp.tools.abduction import (
+    geox_process_abduction,
+    geox_evidence_contradiction_scan,
+)
+from geox_mcp.tools.well import register_well_tools
 from geox_mcp.tools.dst import geox_dst_ingest_test
 
 logger = logging.getLogger("geox.unified13")
@@ -100,18 +113,34 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
     ("geox_subsurface_verify_integrity", geox_subsurface_verify_integrity),
     ("geox_seismic_analyze_volume", geox_seismic_analyze_volume),
+    ("geox_seismic_well_tie_compute", geox_seismic_well_tie_compute),
+    ("geox_time_depth_anchor", geox_time_depth_anchor),
+    ("geox_vision_time_to_depth", geox_vision_time_to_depth),
     ("geox_section_interpret_correlation", geox_section_interpret_correlation),
     ("geox_map_context_scene", geox_map_context_scene),
     ("geox_time4d_analyze_system", geox_time4d_analyze_system),
     ("geox_prospect_evaluate", geox_prospect_evaluate),
     ("geox_prospect_judge_preview", geox_prospect_judge_preview),
     ("geox_prospect_judge_seal", geox_prospect_judge_seal),
-    ("geox_prospect_judge_verdict", geox_prospect_judge_verdict),
     ("geox_evidence_summarize_cross", geox_evidence_summarize_cross),
     ("geox_system_registry_status", geox_system_registry_status),
     ("geox_history_audit", geox_history_audit),
+    ("geox_process_abduction", geox_process_abduction),
+    ("geox_evidence_contradiction_scan", geox_evidence_contradiction_scan),
     ("geox_dst_ingest_test", geox_dst_ingest_test),
+    ("geox_contradiction_registry_status", geox_contradiction_registry_status),
+    ("geox_test_receipt_status", geox_test_receipt_status),
+    ("geox_bundle_security_audit", geox_bundle_security_audit),
+    ("geox_resource_registry_status", geox_resource_registry_status),
 ]
+
+_TOOL_ANNOTATIONS: dict[str, dict] = {
+    "geox_prospect_evaluate": {"ui": {"resourceUri": "ui://judge-console"}},
+    "geox_seismic_analyze_volume": {"ui": {"resourceUri": "ui://seismic_vision_review"}},
+    "geox_map_context_scene": {"ui": {"resourceUri": "ui://georeference_map"}},
+    "geox_data_ingest_bundle": {"ui": {"resourceUri": "ui://well_desk"}},
+    "geox_subsurface_generate_candidates": {"ui": {"resourceUri": "ui://earth_volume"}},
+}
 
 
 def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
@@ -119,12 +148,15 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
 
     # ── Register canonical 13 ────────────────────────────────────────────────
     for name, func in _TOOL_REGISTRY:
-        mcp.tool(name=name)(func)
+        kwargs: dict[str, Any] = {"name": name}
+        if name in _TOOL_ANNOTATIONS:
+            kwargs["annotations"] = _TOOL_ANNOTATIONS[name]
+        mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    # Count is 14: 13 original sovereign tools + history_audit
-    assert len(CANONICAL_PUBLIC_TOOLS) == 21, (
-        f"F0_CONSTITUTION_BREACH: Expected 21 sovereign tools (15 core + 4 well-strat + 2 abduction), "
+    # Count is 28: 15 core + 3 seismic + 4 well-strat + 2 abduction + 3 registry + 1 resource
+    assert len(CANONICAL_PUBLIC_TOOLS) == 28, (
+        f"F0_CONSTITUTION_BREACH: Expected 28 sovereign tools, "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
@@ -165,6 +197,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
             )(make_alias())
 
     # ── Well correlation tools (non-canonical, kept for compatibility) ───────
+    from geox_mcp.tools.well import register_well_tools
     from geox_mcp.tools.well_correlation import register_well_correlation_tools
 
+    register_well_tools(mcp)
     register_well_correlation_tools(mcp)

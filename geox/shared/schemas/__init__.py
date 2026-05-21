@@ -1,1 +1,1 @@
-from geox.shared.schemas.foundation import *
+../../../src/geox_core/shared/schemas/__init__.py

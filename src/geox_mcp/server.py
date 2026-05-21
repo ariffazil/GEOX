@@ -99,6 +99,7 @@ _mcp_kwargs: dict[str, Any] = {
     "instructions": (
         "Canonical GEOX Registry & MCP App Control Plane (Sovereign 13). DITEMPA BUKAN DIBERI — One Sovereign Kernel."
     ),
+    "tasks": True,  # H3: Enable SEP-1686 background task execution
 }
 
 if HAS_FASTMCP_APPS:
@@ -178,6 +179,18 @@ def bootstrap_sovereign_13():
             logger.info("Earth abduction tools registered successfully")
         except Exception as e:
             logger.warning(f"Earth abduction tools not loaded: {e}")
+
+        # H3 — Register background task tools (SEP-1686)
+        # FastMCP 3.x removed task=True; register as normal tools.
+        try:
+            from geox_mcp.tools.data import geox_task_ingest_las_batch
+            from geox_mcp.tools.abduction import geox_task_metabolize_basin
+
+            mcp.tool(name="geox_task_ingest_las_batch")(geox_task_ingest_las_batch)
+            mcp.tool(name="geox_task_metabolize_basin")(geox_task_metabolize_basin)
+            logger.info("Background task tools registered successfully")
+        except Exception as e:
+            logger.warning(f"Background task tools not loaded: {e}")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -212,6 +225,9 @@ def _prune_mcp_surface(mcp_server) -> None:
         "geox_well_analyze_sequence",
         "geox_stratigraphy_run_pipeline",
         "geox_stratigraphy_preview_config",
+        # H3 — Background task tools (SEP-1686)
+        "geox_task_ingest_las_batch",
+        "geox_task_metabolize_basin",
     }
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
@@ -1241,7 +1257,7 @@ async def geox_resources_index() -> str:
 
 
 @mcp.prompt()
-def prompt_review_petrophysics(formation: str = "", depth_md: float = 0, phi: float = 0, sw: float = 0) -> str:
+async def prompt_review_petrophysics(formation: str = "", depth_md: float = 0, phi: float = 0, sw: float = 0) -> str:
     """
     Petrophysics review ritual for Arif.
     User-controlled prompt — Arif triggers this, not the model.
@@ -1271,7 +1287,7 @@ Provide a PETROPHYSICS VERDICT:
 
 
 @mcp.prompt()
-def prompt_geo_uncertainty_check(prospect_name: str = "", pos: float = 0, uncertainty_band: str = "moderate") -> str:
+async def prompt_geo_uncertainty_check(prospect_name: str = "", pos: float = 0, uncertainty_band: str = "moderate") -> str:
     """
     Geological uncertainty check for Arif.
     User-controlled prompt — Arif triggers this, not the model.
@@ -1302,7 +1318,7 @@ Provide a UNCERTAINTY VERDICT:
 
 
 @mcp.prompt()
-def prompt_prospect_review_packet(prospect_name: str = "", block: str = "", status: str = "screening") -> str:
+async def prompt_prospect_review_packet(prospect_name: str = "", block: str = "", status: str = "screening") -> str:
     """
     Prospect review packet preparation for Arif.
     User-controlled prompt — Arif triggers this, not the model.
@@ -1334,7 +1350,7 @@ Produce a PROSPECT REVIEW PACKET ready for Arif's verdict.
 
 
 @mcp.prompt()
-def prompt_claim_discipline() -> str:
+async def prompt_claim_discipline() -> str:
     """Core epistemic ladder — enforce claim-state separation."""
     path = RESOURCES_DIR / "prompts" / "claim_discipline.md"
     if path.exists():
@@ -1343,7 +1359,7 @@ def prompt_claim_discipline() -> str:
 
 
 @mcp.prompt()
-def prompt_earth_reasoning_protocol() -> str:
+async def prompt_earth_reasoning_protocol() -> str:
     """Mandatory abductive loop for geological tool calls."""
     path = RESOURCES_DIR / "prompts" / "earth_reasoning_protocol.md"
     if path.exists():
@@ -1352,7 +1368,7 @@ def prompt_earth_reasoning_protocol() -> str:
 
 
 @mcp.prompt()
-def prompt_red_team_reviewer() -> str:
+async def prompt_red_team_reviewer() -> str:
     """Self-attack protocol before accepting any interpretation."""
     path = RESOURCES_DIR / "prompts" / "red_team_reviewer.md"
     if path.exists():
@@ -1361,7 +1377,7 @@ def prompt_red_team_reviewer() -> str:
 
 
 @mcp.prompt()
-def prompt_failure_policy() -> str:
+async def prompt_failure_policy() -> str:
     """Failure modes and recovery actions for GEOX tools."""
     path = RESOURCES_DIR / "prompts" / "failure_policy.md"
     if path.exists():
@@ -1370,7 +1386,7 @@ def prompt_failure_policy() -> str:
 
 
 @mcp.prompt()
-def prompt_geox_agent_system() -> str:
+async def prompt_geox_agent_system() -> str:
     """Master system prompt for GEOX agent behavior."""
     path = RESOURCES_DIR / "prompts" / "geox_agent_system.md"
     if path.exists():
@@ -1379,7 +1395,7 @@ def prompt_geox_agent_system() -> str:
 
 
 @mcp.prompt()
-def prompt_tool_selection() -> str:
+async def prompt_tool_selection() -> str:
     """Routing logic: given evidence state, which tool to call next."""
     path = RESOURCES_DIR / "prompts" / "tool_selection.md"
     if path.exists():
@@ -1388,7 +1404,7 @@ def prompt_tool_selection() -> str:
 
 
 @mcp.prompt()
-def prompt_report_writer() -> str:
+async def prompt_report_writer() -> str:
     """Structured output template for geological reports."""
     path = RESOURCES_DIR / "prompts" / "report_writer.md"
     if path.exists():

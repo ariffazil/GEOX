@@ -1,1 +1,1 @@
-# GEOX Core — Earth Intelligence Engine
+../../src/geox_core/core/__init__.py

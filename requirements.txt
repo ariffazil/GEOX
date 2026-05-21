@@ -1,11 +1,37 @@
-fastmcp>=0.7.0
-lasio>=0.31
+# GEOX MCP — Minimal Production Stack
+# DITEMPA BUKAN DIBERI
+# Arif Spec: Low-entropy, physics-grounded, no bloatware
+
+# Core Computational & Spatial Physics
+numpy>=1.24.0
+scipy>=1.10.0
+pandas>=2.0.0
+
+# Visual Abstraction & Imaging Membrane (headless = no GUI bloat)
+opencv-python-headless>=4.7.0
+matplotlib>=3.7.0
+
+# MCP Framework
+fastmcp>=3.2.4,<4.0
 pydantic>=2.0.0
 uvicorn>=0.23.0
-python-dotenv>=1.0.0
-numpy>=1.20.0
+
+# Data Ingestion
+lasio>=0.31
+openpyxl>=3.1.0
+
+# HTTP & async
 httpx>=0.25.0
+python-dotenv>=1.0.0
+
+# Database
 asyncpg>=0.29.0
 
-# Earth Science Stack (auto-generated 2026-04-19)
+# LLM Integration (LEM Layer)
+google-genai>=0.1.0
+
+# Production Seismic I/O (SEGY)
+segyio>=1.9.0
+
+# Earth Science Stack (trimmed — production only)
 -r requirements-earth.txt
