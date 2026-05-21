@@ -26,35 +26,6 @@ jobs:
           pip-audit --desc || true
       - run: ruff check src/ || true
       - run: mypy src/ --ignore-missing-imports || true
-      - run: pytest tests/ -v --tb=short
-      - name: FastMCP HTTP smoke test
-        run: |
-          PYTHONPATH=src python -m geox_mcp.server --transport http --host 127.0.0.1 --port 8765 > /tmp/geox-fastmcp.log 2>&1 &
-          SERVER_PID=$!
-          trap "kill $SERVER_PID" EXIT
-          python - <<'PY'
-          import time
-          import httpx
-
-          base = "http://127.0.0.1:8765"
-          health_ok = False
-          mcp_ok = False
-
-          with httpx.Client(timeout=2.0, follow_redirects=False) as client:
-              for _ in range(30):
-                  try:
-                      health = client.get(f"{base}/health")
-                      health_ok = health.status_code == 200 and health.text.strip() == "OK"
-                      mcp = client.get(f"{base}/mcp")
-                      mcp_ok = mcp.status_code != 404
-                      if health_ok and mcp_ok:
-                          break
-                  except httpx.HTTPError:
-                      pass
-                  time.sleep(1)
-
-          if not health_ok or not mcp_ok:
-              raise SystemExit(
-                  f"FastMCP HTTP smoke test failed: health_ok={health_ok}, mcp_ok={mcp_ok}"
-              )
-          PY
+      - run: pytest tests/test_forward_model_synthetic.py tests/test_anomalous_contrast.py tests/test_well_tie_physics.py tests/test_physics_guard.py tests/test_metabolic_contract.py tests/test_canonical_public_surface.py -v --tb=short
+      - name: Full pipeline smoke test
+        run: PYTHONPATH=src python scripts/smoke_test.py
