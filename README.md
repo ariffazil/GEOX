@@ -1,8 +1,8 @@
 ﻿<!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-05-19
-valid_from: 2026-05-19
-valid_until: 2026-06-19
+last_verified: 2026-05-22
+valid_from: 2026-05-22
+valid_until: 2026-06-22
 confidence: high
 scope: /root/geox
 epistemic_status: CLAIM
@@ -190,7 +190,7 @@ mypy src/geox_mcp/server.py
 ### Connect via FastMCP CLI
 
 ```bash
-# List all 21 tools
+# List all 28 tools
 fastmcp list src/geox_mcp/server.py
 
 # Call a tool
@@ -372,3 +372,13 @@ Golden tests anchor agent behavior — tool output shape, claim_state correctnes
 *Last Verified: 2026-05-18 | 999 SEAL ALIVE*
 
 **DITEMPA BUKAN DIBERI — Forged, Not Given.**
+
+---
+
+## TREE777 Wiki
+
+Full federation knowledge base — architecture decisions, earth-intelligence theory, agent documentation:
+→ **https://wiki.arif-fazil.com**
+
+*Last Verified: 2026-05-22 | 999 SEAL ALIVE*
+**DITEMPA BUKAN DIBERI — Intelligence is forged, not given.**
