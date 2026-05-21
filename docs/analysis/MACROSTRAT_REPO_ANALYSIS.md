@@ -125,7 +125,7 @@ hc <- get_map_outcrop(strat_name_id = hc_def$strat_name_id, sf = TRUE)
 
 ### Option 1: Simple HTTP Client (Recommended)
 
-Create `arifos/geox/tools/macrostrat_tool.py` that calls the API directly:
+Create `arifos/GEOX/tools/macrostrat_tool.py` that calls the API directly:
 
 ```python
 import httpx
@@ -160,8 +160,8 @@ pip search macrostrat  # or check PyPI
 ### Week 1: Build the Tool
 
 ```python
-# arifos/geox/tools/macrostrat_tool.py
-from arifos.geox.geox_tools import BaseTool, GeoToolResult
+# arifos/GEOX/tools/macrostrat_tool.py
+from arifos.GEOX.GEOX_tools import BaseTool, GeoToolResult
 import httpx
 
 class MacrostratTool(BaseTool):
