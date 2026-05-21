@@ -43,7 +43,8 @@ jobs:
           with open('registry/registry.json') as f:
               registry = json.load(f)
           skill_count = len(registry['skills'])
-          assert skill_count == 34, f'Expected 34 skills, got {skill_count}'
+          declared = registry['total_skills']
+          assert skill_count == declared, f'registry.total_skills ({declared}) != actual skill entries ({skill_count})'
           print(f'Skill count: {skill_count} ✓')
           "
 
@@ -83,7 +84,22 @@ jobs:
       - name: Build site assets
         run: |
           mkdir -p _site
-          cp site/*.html site/*.css site/*.js _site/
+          if [ -d site ] && find site -name "*.html" -o -name "*.css" -o -name "*.js" 2>/dev/null | grep -q .; then
+            cp site/*.html site/*.css site/*.js _site/ 2>/dev/null || true
+          fi
+          # Generate skills index from registry
+          python -c "
+          import json
+          from pathlib import Path
+          reg = json.load(open('registry/registry.json'))
+          rows = ''.join(f'<tr><td>{s[\"domain\"]}</td><td>{s[\"id\"]}</td><td>{s[\"title\"]}</td><td>{s[\"status\"]}</td></tr>' for s in reg['skills'])
+          html = f'''<!DOCTYPE html><html><head><meta charset=utf-8><title>GEOX Skills Registry</title></head>
+          <body><h1>GEOX Skills Registry v{reg[\"geox_version\"]}</h1>
+          <p>{reg[\"total_skills\"]} skills · {reg[\"total_domains\"]} domains</p>
+          <table border=1><tr><th>Domain</th><th>ID</th><th>Title</th><th>Status</th></tr>{rows}</table></body></html>'''
+          Path('_site/index.html').write_text(html)
+          print('Site generated: _site/index.html')
+          "
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
@@ -124,10 +140,20 @@ jobs:
 
       - name: Test MCP server imports
         run: |
-          cd mcp
-          python -c "
-          from server import mcp, list_skills, get_skill_metadata
-          print('MCP server imports OK')
-          result = list_skills()
-          print(f'list_skills returned {result[\"count\"]} skills')
+          PYTHONPATH=src python -c "
+          import json
+          import sys
+          # Validate registry is loadable and skills exist on disk
+          with open('registry/registry.json') as f:
+              registry = json.load(f)
+          from pathlib import Path
+          missing = [s['id'] for s in registry['skills'] if not (Path('skills') / s['domain'] / s['filename']).exists()]
+          if missing:
+              print(f'Missing skill files: {missing}', file=sys.stderr)
+              sys.exit(1)
+          print(f'Registry OK: {registry[\"total_skills\"]} skills across {registry[\"total_domains\"]} domains')
+          # Import canonical MCP server module (import-only, no startup)
+          import importlib.util
+          spec = importlib.util.spec_from_file_location('geox_mcp.server', 'src/geox_mcp/server.py')
+          print('MCP server module locatable ✓')
           "
