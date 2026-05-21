@@ -29,7 +29,9 @@ from geox_mcp.tools.seismic import geox_seismic_analyze_volume
 from geox_mcp.tools.seismic_well_tie import (
     geox_seismic_well_tie_compute,
     geox_time_depth_anchor,
+    geox_forward_model_synthetic,
 )
+from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
 from geox_mcp.tools.seismic_vision import geox_vision_time_to_depth
 from geox_mcp.tools.section import geox_section_interpret_correlation
 from geox_mcp.tools.map_context import geox_map_context_scene
@@ -117,6 +119,8 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_seismic_analyze_volume", geox_seismic_analyze_volume),
     ("geox_seismic_well_tie_compute", geox_seismic_well_tie_compute),
     ("geox_time_depth_anchor", geox_time_depth_anchor),
+    ("geox_forward_model_synthetic", geox_forward_model_synthetic),
+    ("geox_anomalous_contrast_detector", geox_anomalous_contrast_detector),
     ("geox_vision_time_to_depth", geox_vision_time_to_depth),
     ("geox_section_interpret_correlation", geox_section_interpret_correlation),
     ("geox_map_context_scene", geox_map_context_scene),
