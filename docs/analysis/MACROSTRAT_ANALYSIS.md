@@ -69,7 +69,7 @@ Since Macrostrat provides a **REST API**, you can integrate directly without clo
 
 ### Option 1: Direct API Client (Recommended)
 
-Add a `MacrostratTool` to GEOX's `geox_tools.py`:
+Add a `MacrostratTool` to GEOX's `GEOX_tools.py`:
 
 ```python
 import httpx
@@ -166,7 +166,7 @@ Store in your `CIV/@GEOX` GDrive folder for GEOX RAG ingestion.
 ## Implementation Sketch
 
 ```python
-# In GEOX: arifos/geox/geox_tools.py
+# In GEOX: arifos/GEOX/GEOX_tools.py
 
 class MacrostratTool(BaseTool):
     """
@@ -221,13 +221,13 @@ class MacrostratTool(BaseTool):
 
 ### Immediate (Today)
 1. ✅ **NO CLONE NEEDED** — Use REST API directly
-2. Add `MacrostratTool` to GEOX's `geox_tools.py`
+2. Add `MacrostratTool` to GEOX's `GEOX_tools.py`
 3. Test API calls with Malay Basin coordinates
 
 ### Short-term (This Week)
 1. Cache frequently accessed regions (Malay Basin, Sabah Basin)
 2. Add Macrostrat attribution to GEOX reports (CC-BY-4.0 requirement)
-3. Document uncertainty bounds in `geox_schemas.py`
+3. Document uncertainty bounds in `GEOX_schemas.py`
 
 ### Long-term (Future)
 1. Contribute Malaysian geological data back to Macrostrat (collaboration)

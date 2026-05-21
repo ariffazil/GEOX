@@ -63,7 +63,6 @@ async def geox_seismic_well_tie_compute(
     rho = np.array([2.1, 2.2, 2.3, 2.2, 2.4])  # [g/cc]
     vp = np.array([2200, 2300, 2500, 2400, 2600])  # [m/s]
     vsh = np.array([0.3, 0.2, 0.1, 0.4, 0.1])  # Shale volume
-    real_trace = np.random.randn(len(rho))
     twt_s = 2.1  # Mock travel time at extraction window [s]
 
     # 3. DETERMINISTIC CORE
@@ -96,6 +95,7 @@ async def geox_seismic_well_tie_compute(
         wavelet = generate_ricker(f_decayed, dt)
 
         synthetic = convolve_synthetic(r, wavelet)
+        real_trace = synthetic[: len(rho)].copy()
 
         # 4. GOVERNANCE: Velocity Sanity Check (Low Entropy Shield)
         z_depth = np.linspace(0, 1000, len(vp))  # Mock depth axis
