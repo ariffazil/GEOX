@@ -1,0 +1,316 @@
+{
+  "geox_version": "0.8.0",
+  "generated": "2026-05-21T00:00:00Z",
+  "total_skills": 42,
+  "total_domains": 12,
+  "domains": [
+    "atmosphere",
+    "geodesy",
+    "governance",
+    "hazards",
+    "infrastructure",
+    "mobility",
+    "orchestration",
+    "sensing",
+    "subsurface",
+    "terrain",
+    "time",
+    "water"
+  ],
+  "skills": [
+    {
+      "id": "geox.atmosphere.atmo-radiation-and-solar",
+      "domain": "atmosphere",
+      "filename": "atmo-radiation-and-solar.md",
+      "title": "Atmo Radiation And Solar",
+      "status": "active"
+    },
+    {
+      "id": "geox.atmosphere.atmo-seasonality-and-monsoon",
+      "domain": "atmosphere",
+      "filename": "atmo-seasonality-and-monsoon.md",
+      "title": "Atmo Seasonality And Monsoon",
+      "status": "active"
+    },
+    {
+      "id": "geox.atmosphere.atmo-weather-state",
+      "domain": "atmosphere",
+      "filename": "atmo-weather-state.md",
+      "title": "Atmo Weather State",
+      "status": "active"
+    },
+    {
+      "id": "geox.geodesy.geo-coordinate-frames",
+      "domain": "geodesy",
+      "filename": "geo-coordinate-frames.md",
+      "title": "Geo Coordinate Frames",
+      "status": "active"
+    },
+    {
+      "id": "geox.geodesy.geo-position-fix-fusion",
+      "domain": "geodesy",
+      "filename": "geo-position-fix-fusion.md",
+      "title": "Geo Position Fix Fusion",
+      "status": "active"
+    },
+    {
+      "id": "geox.geodesy.geo-scale-and-tiling",
+      "domain": "geodesy",
+      "filename": "geo-scale-and-tiling.md",
+      "title": "Geo Scale And Tiling",
+      "status": "active"
+    },
+    {
+      "id": "geox.governance.gov-human-in-loop-888",
+      "domain": "governance",
+      "filename": "gov-human-in-loop-888.md",
+      "title": "Gov Human In Loop 888",
+      "status": "active"
+    },
+    {
+      "id": "geox.governance.gov-legal-jurisdiction",
+      "domain": "governance",
+      "filename": "gov-legal-jurisdiction.md",
+      "title": "Gov Legal Jurisdiction",
+      "status": "active"
+    },
+    {
+      "id": "geox.governance.gov-peace-maruah-screen",
+      "domain": "governance",
+      "filename": "gov-peace-maruah-screen.md",
+      "title": "Gov Peace Maruah Screen",
+      "status": "active"
+    },
+    {
+      "id": "geox.hazards.hazard-anomaly-detection",
+      "domain": "hazards",
+      "filename": "hazard-anomaly-detection.md",
+      "title": "Hazard Anomaly Detection",
+      "status": "active"
+    },
+    {
+      "id": "geox.hazards.hazard-multi-risk-escalation",
+      "domain": "hazards",
+      "filename": "hazard-multi-risk-escalation.md",
+      "title": "Hazard Multi Risk Escalation",
+      "status": "active"
+    },
+    {
+      "id": "geox.hazards.hazard-seismic-and-ground-shift",
+      "domain": "hazards",
+      "filename": "hazard-seismic-and-ground-shift.md",
+      "title": "Hazard Seismic And Ground Shift",
+      "status": "active"
+    },
+    {
+      "id": "geox.infrastructure.infra-capacity-and-failure",
+      "domain": "infrastructure",
+      "filename": "infra-capacity-and-failure.md",
+      "title": "Infra Capacity And Failure",
+      "status": "active"
+    },
+    {
+      "id": "geox.infrastructure.infra-critical-node-watch",
+      "domain": "infrastructure",
+      "filename": "infra-critical-node-watch.md",
+      "title": "Infra Critical Node Watch",
+      "status": "active"
+    },
+    {
+      "id": "geox.infrastructure.infra-network-topology",
+      "domain": "infrastructure",
+      "filename": "infra-network-topology.md",
+      "title": "Infra Network Topology",
+      "status": "active"
+    },
+    {
+      "id": "geox.mobility.mobility-chokepoint-detection",
+      "domain": "mobility",
+      "filename": "mobility-chokepoint-detection.md",
+      "title": "Mobility Chokepoint Detection",
+      "status": "active"
+    },
+    {
+      "id": "geox.mobility.mobility-fleet-patterns",
+      "domain": "mobility",
+      "filename": "mobility-fleet-patterns.md",
+      "title": "Mobility Fleet Patterns",
+      "status": "active"
+    },
+    {
+      "id": "geox.mobility.mobility-route-viability",
+      "domain": "mobility",
+      "filename": "mobility-route-viability.md",
+      "title": "Mobility Route Viability",
+      "status": "active"
+    },
+    {
+      "id": "geox.orchestration.forge_geox_mcp_app",
+      "domain": "orchestration",
+      "filename": "forge_geox_mcp_app.md",
+      "title": "Forge Geox Mcp App",
+      "status": "active"
+    },
+    {
+      "id": "geox.orchestration.orch-multi-agent-decomposition",
+      "domain": "orchestration",
+      "filename": "orch-multi-agent-decomposition.md",
+      "title": "Orch Multi Agent Decomposition",
+      "status": "active"
+    },
+    {
+      "id": "geox.orchestration.orch-void-and-data-denial",
+      "domain": "orchestration",
+      "filename": "orch-void-and-data-denial.md",
+      "title": "Orch Void And Data Denial",
+      "status": "active"
+    },
+    {
+      "id": "geox.orchestration.orch-world-model-sync",
+      "domain": "orchestration",
+      "filename": "orch-world-model-sync.md",
+      "title": "Orch World Model Sync",
+      "status": "active"
+    },
+    {
+      "id": "geox.sensing.sense-observation-intake",
+      "domain": "sensing",
+      "filename": "sense-observation-intake.md",
+      "title": "Sense Observation Intake",
+      "status": "active"
+    },
+    {
+      "id": "geox.sensing.sense-observation-qc",
+      "domain": "sensing",
+      "filename": "sense-observation-qc.md",
+      "title": "Sense Observation Qc",
+      "status": "active"
+    },
+    {
+      "id": "geox.sensing.sense-signal-classification",
+      "domain": "sensing",
+      "filename": "sense-signal-classification.md",
+      "title": "Sense Signal Classification",
+      "status": "active"
+    },
+    {
+      "id": "geox.subsurface.basin-charge",
+      "domain": "subsurface",
+      "filename": "basin-charge.md",
+      "title": "Basin Charge",
+      "status": "active"
+    },
+    {
+      "id": "geox.subsurface.formation-evaluation",
+      "domain": "subsurface",
+      "filename": "formation-evaluation.md",
+      "title": "Formation Evaluation",
+      "status": "active"
+    },
+    {
+      "id": "geox.subsurface.posterior-integrity",
+      "domain": "subsurface",
+      "filename": "posterior-integrity.md",
+      "title": "Posterior Integrity",
+      "status": "active"
+    },
+    {
+      "id": "geox.subsurface.prospect-risk",
+      "domain": "subsurface",
+      "filename": "prospect-risk.md",
+      "title": "Prospect Risk",
+      "status": "active"
+    },
+    {
+      "id": "geox.subsurface.reservoir-dynamics",
+      "domain": "subsurface",
+      "filename": "reservoir-dynamics.md",
+      "title": "Reservoir Dynamics",
+      "status": "active"
+    },
+    {
+      "id": "geox.subsurface.seismic-interpretation",
+      "domain": "subsurface",
+      "filename": "seismic-interpretation.md",
+      "title": "Seismic Interpretation",
+      "status": "active"
+    },
+    {
+      "id": "geox.subsurface.subsurface-gr-interval-cognitive",
+      "domain": "subsurface",
+      "filename": "subsurface-gr-interval-cognitive.md",
+      "title": "Subsurface Gr Interval Cognitive",
+      "status": "active"
+    },
+    {
+      "id": "geox.terrain.terrain-drainage-structure",
+      "domain": "terrain",
+      "filename": "terrain-drainage-structure.md",
+      "title": "Terrain Drainage Structure",
+      "status": "active"
+    },
+    {
+      "id": "geox.terrain.terrain-relief-and-slope",
+      "domain": "terrain",
+      "filename": "terrain-relief-and-slope.md",
+      "title": "Terrain Relief And Slope",
+      "status": "active"
+    },
+    {
+      "id": "geox.terrain.terrain-surface-access",
+      "domain": "terrain",
+      "filename": "terrain-surface-access.md",
+      "title": "Terrain Surface Access",
+      "status": "active"
+    },
+    {
+      "id": "geox.time.time-forecast-branching",
+      "domain": "time",
+      "filename": "time-forecast-branching.md",
+      "title": "Time Forecast Branching",
+      "status": "active"
+    },
+    {
+      "id": "geox.time.time-monitoring-triggers",
+      "domain": "time",
+      "filename": "time-monitoring-triggers.md",
+      "title": "Time Monitoring Triggers",
+      "status": "active"
+    },
+    {
+      "id": "geox.time.time-regime-shift",
+      "domain": "time",
+      "filename": "time-regime-shift.md",
+      "title": "Time Regime Shift",
+      "status": "active"
+    },
+    {
+      "id": "geox.water.flood_model",
+      "domain": "water",
+      "filename": "flood_model.md",
+      "title": "Flood Model",
+      "status": "active"
+    },
+    {
+      "id": "geox.water.water-floodplain-and-flow",
+      "domain": "water",
+      "filename": "water-floodplain-and-flow.md",
+      "title": "Water Floodplain And Flow",
+      "status": "active"
+    },
+    {
+      "id": "geox.water.water-hydrology-basics",
+      "domain": "water",
+      "filename": "water-hydrology-basics.md",
+      "title": "Water Hydrology Basics",
+      "status": "active"
+    },
+    {
+      "id": "geox.water.water-maritime-state",
+      "domain": "water",
+      "filename": "water-maritime-state.md",
+      "title": "Water Maritime State",
+      "status": "active"
+    }
+  ]
+}
