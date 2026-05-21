@@ -10,9 +10,9 @@ from typing import Dict
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geox.core.geox_3d import generate_3d_seismic_cube, extract_horizon_from_cube, compute_coherence_volume
-from geox.core.geox_25d import probe_3d_cube_at_section
-from geox.core.physics9 import (
+from geox_core.core.geox_3d import generate_3d_seismic_cube, extract_horizon_from_cube, compute_coherence_volume
+from geox_core.core.geox_25d import probe_3d_cube_at_section
+from geox_core.core.physics9 import (
     Physics9State, compute_earth_material_catalog, anomaly_contrast_theory,
     forward_physics9, build_lithology_model, metabolic_loop, EARTH_MATERIAL_CATALOG
 )

@@ -1,0 +1,166 @@
+# GEOX Earth Intelligence Tool Registry
+# SOT: ariffazil/geox — Governed World Model
+# Last verified: 2026-05-19
+
+schema_version: "2026.05.19"
+organ: GEOX
+authority: ariffazil/geox
+mcp_transport: streamable-http
+mcp_endpoint: http://localhost:8081/mcp
+health_endpoint: http://localhost:8081/health
+
+floor_enforcement: delegated-to-arifos
+physics_boundary: Physics9
+
+ tools:
+  geox_system_registry_status:
+    category: geox_registry_contract
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Discovery of canonical tools, health, and contract epoch
+
+  geox_history_audit:
+    category: geox_registry_contract
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: VAULT999 retrieval of past runs and decision lineage
+
+  geox_data_ingest_bundle:
+    category: geox_ingest
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Lazy ingestion for LAS, CSV, Parquet, SEG-Y payloads
+
+  geox_data_qc_bundle:
+    category: geox_ingest
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Real QC — depth monotonicity, null %, physical range checks
+
+  geox_subsurface_generate_candidates:
+    category: geox_subsurface
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Ensemble subsurface outputs with residuals and data-density maps
+
+  geox_subsurface_verify_integrity:
+    category: geox_subsurface
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Physics9 boundary limits and structural paradox detection
+
+  geox_seismic_analyze_volume:
+    category: geox_subsurface
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Seismic attribute computation, slice rendering, interpretation support
+
+  geox_section_interpret_correlation:
+    category: geox_subsurface
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Multi-well stratigraphic correlation and marker interpretation
+
+  geox_map_context_scene:
+    category: geox_spatial
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Spatial bbox context, CRS checks, causal scene rendering
+
+  geox_time4d_analyze_system:
+    category: geox_temporal
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Burial history, maturity modeling, regime shift analysis
+
+  geox_prospect_evaluate:
+    category: geox_prospect
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Integrated prospect evaluation (Volumetrics, POS, EVOI)
+
+  geox_prospect_judge_preview:
+    category: geox_prospect
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Reversible advisory verdict preview
+
+  geox_prospect_judge_seal:
+    category: geox_prospect
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: 888_JUDSEAL gateway — irreversible constitutional adjudication
+
+  geox_evidence_summarize_cross:
+    category: geox_evidence
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Cross-domain synthesis into causal evidence graph
+
+  geox_dst_ingest_test:
+    category: geox_evidence
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Structured DST ingestion with derived metrics and flags
+
+  geox_stratigraphy_run_pipeline:
+    category: geox_well
+    owner_repo: ariffazil/geox
+    runtime_surface: geox/well/
+    tests_present: true
+    status: sealed
+    description: Full L1-L3 sequence stratigraphy pipeline
+
+  geox_stratigraphy_preview_config:
+    category: geox_well
+    owner_repo: ariffazil/geox
+    runtime_surface: geox/well/
+    tests_present: true
+    status: sealed
+    description: Validate and preview stratigraphy project configuration
+
+  geox_task_ingest_las_batch:
+    category: geox_batch
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: Batch LAS ingestion with aggregated results
+
+  geox_task_metabolize_basin:
+    category: geox_batch
+    owner_repo: ariffazil/geox
+    runtime_surface: server.py
+    tests_present: true
+    status: sealed
+    description: CANON-9 loop — basin-level statistics from well evidence

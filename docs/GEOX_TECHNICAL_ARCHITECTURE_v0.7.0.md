@@ -50,7 +50,7 @@ graph LR
 ### Manifest Schema Example (Interpretation Contract)
 ```json
 {
-  "geox_type": "well_track_manifest",
+  "GEOX_type": "well_track_manifest",
   "provenance": { "floor": "F11_AUTHORITY", "source": "well_01.las" },
   "tracks": [
     { "id": "GR", "unit": "gAPI", "range": [0, 150], "data_ref": "token_gr_001" },
@@ -67,18 +67,18 @@ graph LR
 ## 4. MCP Tool Registry & Build Order
 
 ### Phase 1: 1D Ignition (Q2-2026)
-- **Tool**: `geox_normalize_logs` (Uses Wellio.js on backend).
-- **Tool**: `geox_generate_well_manifest` (Returns Wellioviz-compatible config).
+- **Tool**: `GEOX_normalize_logs` (Uses Wellio.js on backend).
+- **Tool**: `GEOX_generate_well_manifest` (Returns Wellioviz-compatible config).
 - **UI**: Port Well Context Desk to Wellioviz-native rendering.
 
 ### Phase 2: 2D Perception & Attributes (Q3-2026)
-- **Tool**: `geox_compute_seismic_attributes` (Finished).
-- **Tool**: `geox_generate_crossplot` (Returns Plotly figure JSON).
+- **Tool**: `GEOX_compute_seismic_attributes` (Finished).
+- **Tool**: `GEOX_generate_crossplot` (Returns Plotly figure JSON).
 - **UI**: Implementation of full Plotly integration for seismic attribute histograms.
 
 ### Phase 3: 3D Structural Seal (Q4-2026)
-- **Tool**: `geox_model_structural_gempy` (Implicit structural modeling from horizons/faults).
-- **Tool**: `geox_fetch_3d_mesh` (Returns VTK.js/GemPy meshes).
+- **Tool**: `GEOX_model_structural_gempy` (Implicit structural modeling from horizons/faults).
+- **Tool**: `GEOX_fetch_3d_mesh` (Returns VTK.js/GemPy meshes).
 - **UI**: Full vtk.js integration in Basin Explorer.
 
 ---

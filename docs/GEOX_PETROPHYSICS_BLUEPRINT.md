@@ -35,7 +35,7 @@ The goal: invert for `PHYSICAL_PROPERTIES` given `LOG_RESPONSE` and some model `
 ### 2.1 Core Entities (Must Be First-Class Objects)
 
 ```python
-# arifos/geox/schemas/petrophysics.py — THE ONTOLOGY
+# arifos/GEOX/schemas/petrophysics.py — THE ONTOLOGY
 
 class RockFluidSystem(BaseModel):
     """
@@ -230,7 +230,7 @@ class CutoffPolicy(BaseModel):
 ### 3.2 Saturation Physics: The Model Hierarchy
 
 ```python
-# arifos/geox/physics/saturation_models.py
+# arifos/GEOX/physics/saturation_models.py
 
 class SaturationModel(ABC):
     """
@@ -514,7 +514,7 @@ class CutoffDefinition(BaseModel):
 ### 5.2 New Tools to Forge
 
 ```python
-# arifos/geox/tools/petrophysics/multimineral_solver.py
+# arifos/GEOX/tools/petrophysics/multimineral_solver.py
 
 class MultiMineralSolverTool(BaseTool):
     """
@@ -529,7 +529,7 @@ class MultiMineralSolverTool(BaseTool):
     pass
 
 
-# arifos/geox/tools/petrophysics/nmr_processor.py
+# arifos/GEOX/tools/petrophysics/nmr_processor.py
 
 class NMRProcessorTool(BaseTool):
     """
@@ -542,7 +542,7 @@ class NMRProcessorTool(BaseTool):
     pass
 
 
-# arifos/geox/tools/petrophysics/cutoff_calibrator.py
+# arifos/GEOX/tools/petrophysics/cutoff_calibrator.py
 
 class CutoffCalibratorTool(BaseTool):
     """
@@ -556,7 +556,7 @@ class CutoffCalibratorTool(BaseTool):
     pass
 
 
-# arifos/geox/tools/petrophysics/uncertainty_propagator.py
+# arifos/GEOX/tools/petrophysics/uncertainty_propagator.py
 
 class UncertaintyPropagatorTool(BaseTool):
     """
@@ -570,7 +570,7 @@ class UncertaintyPropagatorTool(BaseTool):
     pass
 
 
-# arifos/geox/tools/petrophysics/rock_typer.py
+# arifos/GEOX/tools/petrophysics/rock_typer.py
 
 class RockTyperTool(BaseTool):
     """
@@ -583,7 +583,7 @@ class RockTyperTool(BaseTool):
     pass
 
 
-# arifos/geox/tools/petrophysics/capillary_integrator.py
+# arifos/GEOX/tools/petrophysics/capillary_integrator.py
 
 class CapillaryIntegratorTool(BaseTool):
     """
@@ -598,7 +598,7 @@ class CapillaryIntegratorTool(BaseTool):
 ### 5.3 Schema Extensions
 
 ```python
-# arifos/geox/schemas/petrophysics/rock_types.py
+# arifos/GEOX/schemas/petrophysics/rock_types.py
 
 class HydraulicFlowUnit(BaseModel):
     """
@@ -733,7 +733,7 @@ Do not guess when data is insufficient.
 ### 7.2 Automatic 888_HOLD Triggers for Petrophysics
 
 ```python
-# arifos/geox/governance/petrophysics_hold_triggers.py
+# arifos/GEOX/governance/petrophysics_hold_triggers.py
 
 PETROPHYSICS_HOLD_TRIGGERS = {
     # Physics violations
@@ -804,7 +804,7 @@ async def evaluate_prospect_petrophysics(well_id: str, interval: tuple[float, fl
     
     # 3. Check F9 Anti-Hantu: Validate assumptions
     if model_selection.assumption_violations:
-        return GeoxVerdictResult(
+        return GEOXVerdictResult(
             verdict=Verdict.HOLD,
             explanation=f"Model assumptions violated: {model_selection.assumption_violations}",
             audit_id="F9-HANTU-PETRO-001"
@@ -830,7 +830,7 @@ async def evaluate_prospect_petrophysics(well_id: str, interval: tuple[float, fl
     
     # 6. Check F7 Humility: Uncertainty declared?
     if results.porosity.uncertainty is None or results.saturation.uncertainty is None:
-        return GeoxVerdictResult(
+        return GEOXVerdictResult(
             verdict=Verdict.HOLD,
             explanation="F7 Humility: Uncertainty not propagated",
             audit_id="F7-HUMILITY-PETRO-001"
@@ -842,7 +842,7 @@ async def evaluate_prospect_petrophysics(well_id: str, interval: tuple[float, fl
     
     # 8. Check F2 Truth: Cutoffs justified?
     if not cutoff_policy.calibration_basis:
-        return GeoxVerdictResult(
+        return GEOXVerdictResult(
             verdict=Verdict.HOLD,
             explanation="F2 Truth: Cutoffs not calibrated to local data",
             audit_id="F2-TRUTH-PETRO-001"
@@ -861,7 +861,7 @@ async def evaluate_prospect_petrophysics(well_id: str, interval: tuple[float, fl
     
     # 10. JUDGE: Human approval for proved reserves
     if reserves.category == "proved":
-        return GeoxVerdictResult(
+        return GEOXVerdictResult(
             verdict=Verdict.HOLD,
             explanation="F13 Sovereign: Proved reserves require human signoff",
             audit_id="F13-SOVEREIGN-001",
@@ -869,7 +869,7 @@ async def evaluate_prospect_petrophysics(well_id: str, interval: tuple[float, fl
         )
     
     # 11. SEAL: All floors passed
-    return GeoxVerdictResult(
+    return GEOXVerdictResult(
         verdict=Verdict.SEAL,
         explanation="All constitutional floors passed. Petrophysics SEALED.",
         audit_id="SEAL-PETRO-001",

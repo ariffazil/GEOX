@@ -1,8 +1,35 @@
 /**
  * GEOX GUI Types — DITEMPA BUKAN DIBERI
- * 
+ *
  * TypeScript type definitions for the GEOX Geologist GUI.
+ *
+ * Note: ToAC types (PerceptionClass, Canon9, ToACState, etc.) are defined
+ * in ../types.ts and re-exported here for convenience. They are imported as
+ * type-only to avoid circular dependency issues.
  */
+
+// ToAC v1 types (from ../types.ts to avoid duplication)
+import type {
+  PerceptionClass,
+  Canon9,
+  EvidenceTag,
+  VerticalTrend,
+  LithoClass,
+  ToACReport,
+  ToACState,
+} from '../types.js';
+
+// Re-export ToAC types for consumers of types/index.ts
+export type {
+  PerceptionClass,
+  Canon9,
+  EvidenceTag,
+  VerticalTrend,
+  LithoClass,
+  ToACReport,
+};
+export type { ToACState } from '../types.js';
+export { PERCEPTION_CLASS_META, CANON9_META } from '../types.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Geospatial Types
@@ -406,6 +433,9 @@ export interface GEOXState {
   geoxConnected: boolean;
   geoxUrl: string;
   mcpConnectionStatus: McpConnectionStatus;
+
+  // ToAC
+  toac: ToACState;
 
   // Meta
   metaLinks: Array<{ name: string; url: string }>;

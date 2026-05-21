@@ -1,0 +1,1 @@
+../../src/geox_core/well/stratigraphy/config.py

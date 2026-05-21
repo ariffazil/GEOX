@@ -1,2 +1,1 @@
-"""GEOX skill package namespace."""
-
+../../src/geox_core/skills/__init__.py

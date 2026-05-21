@@ -1,0 +1,37 @@
+{
+  "_description": "Golden baseline for geox_process_abduction on Danum-1 shoreface evidence. Generated 2026-05-17. Update with GEOX_UPDATE_GOLDEN=1 if grammar rules change intentionally.",
+  "evidence": {
+    "gr_trend": "decreasing_upward",
+    "vclay_trend": "decreasing_upward",
+    "rhob_trend": "increasing_upward",
+    "motif": "FUNNEL",
+    "gr_shape": "funnel",
+    "gr_value": "moderate",
+    "base_contact": "gradational",
+    "thickness_m": 250,
+    "lateral_extent": "unknown",
+    "has_core": false,
+    "has_biostrat": false,
+    "has_correlation": false,
+    "well_count": 1,
+    "depo_context": "shoreface",
+    "scale": "parasequence"
+  },
+  "expected_hypothesis_count": 3,
+  "expected_top_process": "delta front mouth bar",
+  "expected_processes": [
+    "delta front mouth bar",
+    "shoreface progradation",
+    "fan lobe progradation"
+  ],
+  "expected_confidence_range": {
+    "min": "low",
+    "max": "low-moderate"
+  },
+  "expected_claim_state": "PROCESS_HYPOTHESIS",
+  "expected_evidence_for_patterns": [
+    "gr_trend: decreasing_upward",
+    "vclay_trend: decreasing_upward",
+    "rhob_trend: increasing_upward"
+  ]
+}

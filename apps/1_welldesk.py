@@ -10,13 +10,13 @@ import sys, os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geox.core.geox_1d import (
+from geox_core.core.geox_1d import (
     generate_well_curve, inverse_petrophysics,
     analyze_petrophysics_results, summarize_inversion,
     compute_vsh_gr
 )
-from geox.core.geox_data import DEFAULT_STRATIGRAPHY, assign_layer
-from geox.core.physics9 import Physics9State, forward_physics9, build_lithology_model
+from geox_core.core.geox_data import DEFAULT_STRATIGRAPHY, assign_layer
+from geox_core.core.physics9 import Physics9State, forward_physics9, build_lithology_model
 
 # ── 888_JUDGE physics9 helper ────────────────────────────────────────────────
 

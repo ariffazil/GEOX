@@ -1,2 +1,1 @@
-"""Service layer for GEOX Wave 2."""
-
+../../src/geox_core/services/__init__.py

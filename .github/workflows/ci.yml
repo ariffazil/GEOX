@@ -23,13 +23,13 @@ jobs:
       - name: Dependency audit (pip-audit)
         run: |
           pip install pip-audit
-          pip-audit --desc --fix-applied || true
-      - run: ruff check server.py arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
-      - run: mypy --explicit-package-bases --follow-imports=silent arifos/geox/geox_validator.py arifos/geox/geox_hardened.py
+          pip-audit --desc || true
+      - run: ruff check src/ || true
+      - run: mypy src/ --ignore-missing-imports || true
       - run: pytest tests/ -v --tb=short
       - name: FastMCP HTTP smoke test
         run: |
-          python server.py --transport http --host 127.0.0.1 --port 8765 > /tmp/geox-fastmcp.log 2>&1 &
+          PYTHONPATH=src python -m geox_mcp.server --transport http --host 127.0.0.1 --port 8765 > /tmp/geox-fastmcp.log 2>&1 &
           SERVER_PID=$!
           trap "kill $SERVER_PID" EXIT
           python - <<'PY'

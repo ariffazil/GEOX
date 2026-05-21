@@ -1,0 +1,1 @@
+../src/geox_core/artifacts/writer.py
