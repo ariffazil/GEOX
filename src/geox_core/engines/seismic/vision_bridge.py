@@ -105,7 +105,7 @@ class GEOXVisionDepthEngine:
     def compute_attested_depth(self, twt_ms: np.ndarray, v_rms: np.ndarray) -> np.ndarray:
         """
         [ATTESTATION LAYER]
-        Converts the time vector into verified depth positions using Dix parameters.
+        Converts the time vector into verified interval velocities using Dix parameters.
         Enforces physical rock velocity bounds.
         """
         twt_sec = twt_ms / 1000.0
@@ -124,14 +124,14 @@ class GEOXVisionDepthEngine:
                 num = (v_rms[i]**2 * twt_sec[i]) - (v_rms[i-1]**2 * twt_sec[i-1])
                 v_int[i] = np.sqrt(max(num, 0) / dt)
             
-        # Physics Guard Rail: Velocity must be bounded by real earth lithology properties
+        # Physics Guard Rail: Velocity must be bounded by real earth lithology properties.
+        # Keep the first sample at the fluid floor when TWT starts at zero so callers that
+        # validate velocity bounds do not receive a non-physical zero placeholder.
         for i in range(len(v_int)):
-            if v_int[i] > 6000.0 or v_int[i] < 1400.0:
-                v_int[i] = np.clip(v_int[i], 1450.0, 5500.0) # Reset to fluid/basement bounds
-                
-        # One-way depth integration: Depth = (V_int * TWT) / 2
-        depth_m = (v_int * twt_sec) / 2.0
-        return depth_m
+            if v_int[i] > 5500.0 or v_int[i] < 1480.0:
+                v_int[i] = np.clip(v_int[i], 1480.0, 5500.0)
+
+        return v_int
 
     def calculate_scale_invariant_error(self, v_int: np.ndarray) -> Dict[str, float]:
         """
@@ -178,8 +178,9 @@ class GEOXVisionDepthEngine:
             # Map the RMS tracking array across the vertical execution range
             v_rms_array = np.interp(normalized_twt, np.linspace(0, max_time_ms, len(v_rms_anchor)), v_rms_anchor)
             
-            # Execute physical depth transformation
-            calculated_depths = self.compute_attested_depth(normalized_twt, v_rms_array)
+            # Execute physical velocity transformation, then integrate to depth.
+            attested_v_int = self.compute_attested_depth(normalized_twt, v_rms_array)
+            calculated_depths = (attested_v_int * (normalized_twt / 1000.0)) / 2.0
             
             # F2 Validity Check (Scale Invariant Error)
             v_int_profile = self.compute_attested_depth(np.linspace(0, max_time_ms, 100), 

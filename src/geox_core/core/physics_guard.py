@@ -12,6 +12,8 @@ import sys
 from dataclasses import dataclass, field
 from typing import Any
 
+import numpy as np
+
 from geox_core.core.epistemic_integrity import EpistemicIntegrity, EpistemicResult
 
 

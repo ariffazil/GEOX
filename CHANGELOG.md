@@ -2,6 +2,17 @@
 
 > **DITEMPA BUKAN DIBERI**
 
+## [2026.05.22-pre] — 2026-05-22
+
+### Pre-release
+- Added birthday pre-release notes for the 2026-05-22 repo-hygiene branch.
+- Repaired the shared federation layout contract.
+- Added a 2026-05-21 repo hygiene audit ledger.
+- Fixed GEOX seismic/physics test blockers while preserving the public tool boundary.
+- Verified `pytest tests/ -q`: 51 passed, 1 skipped.
+
+> **DITEMPA BUKAN DIBERI**
+
 ## [2026.05.19] — 2026-05-19
 
 ### Operational
