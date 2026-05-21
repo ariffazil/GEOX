@@ -369,6 +369,8 @@ def get_standard_envelope(
     missing_inputs_schema: Optional[List[Dict[str, Any]]] = None,
     # confidence_policy: what confidence means for this tool output (Arif 2026-05-16)
     confidence_policy: Optional[Dict[str, Any]] = None,
+    equations_used: Optional[List[str]] = None,
+    sensitivity_to: Optional[List[str]] = None,
     # ToAC perception bridge fields
     perception_class: Optional[str] = None,
     evidence_tag: Optional[str] = None,
@@ -378,7 +380,7 @@ def get_standard_envelope(
     strat_standard: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
-    Canonical MCP Apps Response Envelope — Universal Output Contract v0.7.
+    Canonical MCP Apps Response Envelope — Universal Output Contract v0.81.
     MCP 2025-11-25 alignment: provenance block, structuredContent contract.
     ToAC v1: perception bridge, evidence tag, CANON_9, vertical trend, litho class.
 
@@ -431,6 +433,8 @@ def get_standard_envelope(
         "trace_id": _trace_id,
         "parent_trace_id": _parent_trace_id,
         "constitution_hash": _constitution_hash,
+        # LEM contract v0.8
+        "equations_used": equations_used or [],
     }
 
     response = {
@@ -462,7 +466,7 @@ def get_standard_envelope(
         },
         "diagnostics": diagnostics or {},
         "provenance": provenance,
-        "schema_version": "geox-output-v0.8",  # Bumped for agentic fields
+        "schema_version": "geox-output-v0.81",  # Bumped for LEM contract (equations_used, sensitivity_to)
         # ToAC v1 perception fields
         "perception_class": perception_class or "HYPOTHESIS",
         "evidence_tag": evidence_tag or "UNKNOWN",
@@ -483,6 +487,8 @@ def get_standard_envelope(
         "missing_inputs_schema": missing_inputs_schema or [],
         # confidence_policy: what confidence means for this output (Arif 2026-05-16)
         "confidence_policy": confidence_policy or {},
+        "equations_used": equations_used or [],
+        "sensitivity_to": sensitivity_to or [],
     }
 
     # F2 Truth gate: auto-downgrade overclaimed states

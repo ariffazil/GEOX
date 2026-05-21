@@ -42,6 +42,9 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_bundle_security_audit",
     # Resource layer — machine-checkable manifest
     "geox_resource_registry_status",
+    # Synthetic seismic + Anomalous Contrast (LC#28) — forged 2026-05-21
+    "geox_forward_model_synthetic",
+    "geox_anomalous_contrast_detector",
 ]
 
 GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
@@ -75,6 +78,8 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_test_receipt_status",            "axis": "trace",    "expose": True},
     {"name": "geox_bundle_security_audit",          "axis": "verify",   "expose": True},
     {"name": "geox_resource_registry_status",       "axis": "identity", "expose": True},
+    {"name": "geox_forward_model_synthetic",        "axis": "reason",   "expose": True},
+    {"name": "geox_anomalous_contrast_detector",    "axis": "reason",   "expose": True},
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
