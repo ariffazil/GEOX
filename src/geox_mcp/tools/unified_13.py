@@ -138,8 +138,6 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_test_receipt_status", geox_test_receipt_status),
     ("geox_bundle_security_audit", geox_bundle_security_audit),
     ("geox_resource_registry_status", geox_resource_registry_status),
-    ("geox_forward_model_synthetic", geox_forward_model_synthetic),
-    ("geox_anomalous_contrast_detector", geox_anomalous_contrast_detector),
 ]
 
 _TOOL_ANNOTATIONS: dict[str, dict] = {

@@ -45,9 +45,9 @@ logger = logging.getLogger("geox.canonical.forward_model")
 
 
 async def geox_forward_model_synthetic(
-    vp: List[float],
-    rho: List[float],
-    depth: List[float],
+    vp: Optional[List[float]] = None,
+    rho: Optional[List[float]] = None,
+    depth: Optional[List[float]] = None,
     wavelet_type: Literal["ricker", "ormsby", "klauder"] = "ricker",
     wavelet_freq: float = 20.0,
     wavelet_params: Optional[Dict[str, Any]] = None,

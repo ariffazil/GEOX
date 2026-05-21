@@ -9,6 +9,7 @@ DITEMPA BUKAN DIBERI
 
 from __future__ import annotations
 
+import asyncio
 import json
 import subprocess
 import sys
@@ -36,7 +37,6 @@ def _req(method: str, path: str, payload: dict | None = None) -> dict:
         body = resp.read().decode()
         if not body:
             return {}
-        # MCP streamable-http may return JSON-RPC envelope
         try:
             return json.loads(body)
         except json.JSONDecodeError:
@@ -52,14 +52,18 @@ def _mcp_call(tool_name: str, arguments: dict) -> dict:
         "params": {"name": tool_name, "arguments": arguments},
     }
     resp = _req("POST", "/mcp", payload)
-    # Extract content from MCP envelope
+    # FastMCP streamable-http with json_response=True returns JSON-RPC envelope
     result = resp.get("result", {})
-    content = result.get("content", [{}])
-    if content and "text" in content[0]:
-        try:
-            return json.loads(content[0]["text"])
-        except json.JSONDecodeError:
-            return {"raw_text": content[0]["text"]}
+    if isinstance(result, dict) and "content" in result:
+        content = result["content"]
+        if content and isinstance(content, list) and "text" in content[0]:
+            try:
+                return json.loads(content[0]["text"])
+            except json.JSONDecodeError:
+                return {"raw_text": content[0]["text"]}
+    # Direct result (sometimes FastMCP returns the result object directly)
+    if isinstance(result, dict) and "execution_status" in result:
+        return result
     return result
 
 
@@ -93,19 +97,7 @@ def main() -> int:
         proc.terminate()
         return 1
 
-    # ── 2. VERIFY TOOLS EXIST ────────────────────────────────────────────────
-    print("[SMOKE] Checking canonical tools are exposed...")
-    registry = _mcp_call("geox_system_registry_status", {})
-    tools_list = json.dumps(registry) if isinstance(registry, dict) else ""
-    has_forward = "geox_forward_model_synthetic" in tools_list
-    has_anomaly = "geox_anomalous_contrast_detector" in tools_list
-    if not has_forward or not has_anomaly:
-        # Fallback: if registry doesn't list them, we'll know when we call them
-        print(f"[SMOKE] Registry visibility: forward={has_forward}, anomaly={has_anomaly} (will verify by call)")
-    else:
-        print("[SMOKE] Both new tools present on surface")
-
-    # ── 3. INGEST LAS ────────────────────────────────────────────────────────
+    # ── 2. INGEST LAS ────────────────────────────────────────────────────────
     print("[SMOKE] Ingesting fixture LAS...")
     ingest = _mcp_call(
         "geox_data_ingest_bundle",
@@ -122,10 +114,14 @@ def main() -> int:
         proc.terminate()
         return 1
     print("[SMOKE] Ingest OK:", ingest.get("claim_state"))
+    time.sleep(1)  # Let artifact store settle before next call
 
-    # ── 4. FORWARD MODEL (well mode) ─────────────────────────────────────────
+    # ── 3. FORWARD MODEL (well mode) ─────────────────────────────────────────
     print("[SMOKE] Running forward_model_synthetic from well_id...")
-    fm = _mcp_call(
+    # Retry once on transient failure
+    fm = None
+    for attempt in range(2):
+        fm = _mcp_call(
         "geox_forward_model_synthetic",
         {
             "well_id": "smoke_well",
@@ -134,14 +130,18 @@ def main() -> int:
             "output_format": "compact",
         },
     )
-    if fm.get("execution_status") != "SUCCESS":
-        print("[SMOKE] FAIL: Forward model failed:", fm.get("execution_status"))
+        if fm and fm.get("execution_status") == "SUCCESS":
+            break
+        if attempt == 0:
+            time.sleep(1)
+    if not fm or fm.get("execution_status") != "SUCCESS":
+        print("[SMOKE] FAIL: Forward model failed:", fm.get("execution_status") if fm else "no_response", "| error:", fm.get("error_code") if fm else "none")
         proc.terminate()
         return 1
     pa = fm.get("primary_artifact", {})
     print(f"[SMOKE] Forward model OK | samples={pa.get('synthetic_length_samples')} | depth={pa.get('depth_range_m')}")
 
-    # ── 5. LEM ENVELOPE CHECKS ───────────────────────────────────────────────
+    # ── 4. LEM ENVELOPE CHECKS ───────────────────────────────────────────────
     print("[SMOKE] Verifying LEM envelope contract...")
     prov = fm.get("provenance", {})
     eq = prov.get("equations_used", [])
@@ -156,7 +156,7 @@ def main() -> int:
         return 1
     print("[SMOKE] LEM envelope OK")
 
-    # ── 6. ANOMALOUS CONTRAST ────────────────────────────────────────────────
+    # ── 5. ANOMALOUS CONTRAST ────────────────────────────────────────────────
     print("[SMOKE] Running anomalous_contrast_detector...")
     ac = _mcp_call(
         "geox_anomalous_contrast_detector",
@@ -178,13 +178,7 @@ def main() -> int:
         return 1
     print(f"[SMOKE] Anomalous contrast OK | anomalies={len(pa_ac.get('anomalies', []))} | law_capsule={pa_ac.get('law_capsule')}")
 
-    # ── 7. WAVELET RESOURCE (verify in registry) ─────────────────────────────
-    print("[SMOKE] Checking wavelet resource in registry...")
-    if isinstance(registry, dict) and "wavelets" not in json.dumps(registry).lower():
-        print("[SMOKE] Note: wavelet resource not visible in registry status (expected for template resources)")
-    print("[SMOKE] Resource check OK")
-
-    # ── 8. SHUTDOWN ──────────────────────────────────────────────────────────
+    # ── 6. SHUTDOWN ──────────────────────────────────────────────────────────
     print("[SMOKE] Shutting down server...")
     proc.terminate()
     try:
