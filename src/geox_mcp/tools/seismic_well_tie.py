@@ -57,33 +57,98 @@ async def geox_seismic_well_tie_compute(
 
     # 1. ATTESTATION: Check for raw evidence
     if not _artifact_exists(well_id):
-        return {"execution_status": "HOLD", "error": f"Well evidence '{well_id}' missing."}
+        return get_standard_envelope(
+            {"tool": "geox_seismic_well_tie_compute", "error_code": "NO_VALID_EVIDENCE",
+             "message": f"Well evidence '{well_id}' missing."},
+            tool_class="compute", execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+            evidence_refs=[well_id, volume_ref],
+        )
 
-    # 2. FETCH DATA (Mocked for preflight)
-    rho = np.array([2.1, 2.2, 2.3, 2.2, 2.4])  # [g/cc]
-    vp = np.array([2200, 2300, 2500, 2400, 2600])  # [m/s]
-    vsh = np.array([0.3, 0.2, 0.1, 0.4, 0.1])  # Shale volume
-    twt_s = 2.1  # Mock travel time at extraction window [s]
+    # 2. FETCH DATA from artifact store (FORGET mock arrays)
+    loaded = _get_well_data_with_depth(well_id)
+    if "error" in loaded:
+        return get_standard_envelope(
+            {"tool": "geox_seismic_well_tie_compute", "error_code": "LAS_LOAD_FAILED",
+             "message": loaded["error"], "detail": loaded.get("detail", "")},
+            tool_class="compute", execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+            evidence_refs=[well_id, volume_ref],
+        )
+
+    curves = loaded["curves"]
+    depth_arr = loaded["depth"]
+
+    # Resolve VP from DT or VP mnemonic
+    vp = None
+    vp_mnemonic = None
+    for mnemonic in ["VP", "DT", "DTC", "DTCO"]:
+        if mnemonic in curves:
+            if mnemonic == "DT":
+                vp = 1e6 / np.clip(curves[mnemonic], 40, 300)
+            else:
+                vp = curves[mnemonic]
+            vp_mnemonic = mnemonic
+            break
+    if vp is None:
+        return get_standard_envelope(
+            {"tool": "geox_seismic_well_tie_compute", "error_code": "VP_CURVE_MISSING",
+             "message": "No VP or DT curve found in well artifact.", "available": list(curves.keys())},
+            tool_class="compute", execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+            evidence_refs=[well_id, volume_ref],
+        )
+
+    # Resolve density
+    rho = None
+    rho_mnemonic = None
+    for mnemonic in ["RHOB", "RHOZ", "DEN"]:
+        if mnemonic in curves:
+            rho = curves[mnemonic]
+            rho_mnemonic = mnemonic
+            break
+    gardner_flag = False
+    if rho is None:
+        if apply_gardner_fallback:
+            rho = gardner_density(vp) / 1000.0
+            gardner_flag = True
+            logger.info("F2: Gardner fallback applied for density.")
+        else:
+            return get_standard_envelope(
+                {"tool": "geox_seismic_well_tie_compute", "error_code": "RHOB_CURVE_MISSING",
+                 "message": "No RHOB curve found. Set apply_gardner_fallback=True to estimate from Vp.",
+                 "available": list(curves.keys())},
+                tool_class="compute", execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+                evidence_refs=[well_id, volume_ref],
+            )
+
+    # Resolve Vsh for anisotropy estimation
+    vsh = np.full_like(vp, 0.2)
+    for mnemonic in ["VSH", "VCL", "VCLAY"]:
+        if mnemonic in curves:
+            vsh = curves[mnemonic]
+            break
+
+    # Two-way time at max depth (approximate extraction window centre)
+    twt_s = float(2.0 * depth_arr[-1] / np.mean(vp) / 1000.0)
 
     # 3. DETERMINISTIC CORE
-    # Instantiate guard early — used in velocity sanity check
     guard = PhysicsGuard()
 
     try:
-        # Fallback logic
-        if apply_gardner_fallback:
-            logger.info("F2: Applying Gardner's Equation fallback for density.")
-            rho = gardner_density(vp) / 1000.0
-
         # Anisotropy Logic
         thomsen = {"epsilon": 0, "delta": 0}
         if apply_anisotropy_correction:
             logger.info("F2: Estimating Thomsen parameters for lateral anisotropy correction.")
             thomsen = _estimate_thomsen_parameters(vp, vsh)
-            # Adjust velocity for delta effect on depth-to-time
             vp = vp * (1 + thomsen["delta"])
 
-        z = calculate_acoustic_impedance(rho, vp)
+        z = calculate_acoustic_impedance(rho * 1000.0, vp)
         r = calculate_reflectivity(z)
 
         # Spectral Decay Logic
@@ -98,16 +163,15 @@ async def geox_seismic_well_tie_compute(
         real_trace = synthetic[: len(rho)].copy()
 
         # 4. GOVERNANCE: Velocity Sanity Check (Low Entropy Shield)
-        z_depth = np.linspace(0, 1000, len(vp))  # Mock depth axis
-        vel_result = guard.validate_velocity_sanity(vp, z_depth)
+        vel_result = guard.validate_velocity_sanity(vp, depth_arr)
         if vel_result.hold:
-            return {
-                "execution_status": "HOLD",
-                "tool_class": "seismic_well_tie",
-                "claim_state": "VOID",
-                "reason": vel_result.reason,
-                "violations": vel_result.to_dict()["violations"],
-            }
+            return get_standard_envelope(
+                {"tool": "geox_seismic_well_tie_compute", "error_code": "VELOCITY_SANITY_HOLD",
+                 "reason": vel_result.reason, "violations": vel_result.to_dict()["violations"]},
+                tool_class="compute", execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="VOID", claim_state="VOID", evidence_refs=[well_id, volume_ref],
+            )
 
         # 5. CROSS-CORRELATION (R_tie)
         r_tie = float(np.corrcoef(synthetic[: len(real_trace)], real_trace)[0, 1])
@@ -115,34 +179,74 @@ async def geox_seismic_well_tie_compute(
         verdict = guard.check_tie_correlation(r_tie)
 
     except Exception as e:
-        return {"execution_status": "HOLD", "error": f"Deterministic engine failure: {str(e)}"}
+        return get_standard_envelope(
+            {"tool": "geox_seismic_well_tie_compute", "error_code": "ENGINE_FAILURE",
+             "message": f"Deterministic engine failure: {str(e)}"},
+            tool_class="compute", execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+            evidence_refs=[well_id, volume_ref],
+        )
 
-    observed = {"sonic_coverage": "92%", "density_coverage": "88%", "seismic_snr": "High"}
+    observed = {
+        "sonic_coverage_pct": round(float(np.sum(~np.isnan(vp)) / len(vp) * 100), 1),
+        "density_coverage_pct": round(float(np.sum(~np.isnan(rho)) / len(rho) * 100), 1),
+        "depth_range_m": [float(depth_arr[0]), float(depth_arr[-1])],
+        "samples": len(vp),
+        "vp_mnemonic": vp_mnemonic,
+        "rho_mnemonic": rho_mnemonic or "Gardner_fallback",
+        "gardner_fallback_used": gardner_flag,
+    }
 
     derived = {
         "acoustic_impedance_variance": float(np.var(z)),
         "max_cross_correlation": r_tie,
-        "dominant_frequency_hz": f_decayed,
+        "dominant_frequency_hz": round(f_decayed, 2),
+        "twt_at_max_depth_s": round(twt_s, 3),
+        "thomsen_delta": round(thomsen["delta"], 4) if apply_anisotropy_correction else 0.0,
     }
 
-    interpreted = {"tie_quality": verdict, "mismatch_zones": ["Possible fluid effect at 2100m TVD"] if r_tie < 0.70 else []}
+    interpreted = {
+        "tie_quality": verdict,
+        "mismatch_zones": [f"Possible fluid effect at {float(depth_arr[int(len(depth_arr)*0.5)])}m TVD"] if r_tie < 0.70 else [],
+    }
 
     envelope = get_standard_envelope(
         observed,
         tool_class="seismic_well_tie",
         claim_tag="COMPUTED",
         claim_state=verdict,
+        evidence_refs=[well_id, volume_ref],
+        physics_guard={
+            "guard_passed": True,
+            "physics_version": "geox-convolution-v2026.05.21",
+            "equations_used": [
+                "AI = Vp × ρ",
+                "RC = (AI₂ - AI₁) / (AI₂ + AI₁)",
+                "Synthetic = RC ∗ W",
+            ],
+        },
     )
 
     envelope["derived"] = derived
     envelope["interpreted"] = interpreted
-    envelope["evidence_refs"] = [well_id, volume_ref]
     envelope["execution_status"] = "SUCCESS" if verdict == "QUALIFY" else "HOLD"
     envelope["audit_receipt"] = {
-        "deterministic_engine": "geox-convolution-v2",
+        "deterministic_engine": "geox-convolution-v2026.05.21",
         "residual_error": round(1.0 - abs(r_tie), 4),
         "drift_correction_applied": False,
+        "gardner_fallback": gardner_flag,
+        "thomsen_correction": apply_anisotropy_correction,
     }
+    envelope["confidence"] = {
+        "level": "HIGH" if r_tie > 0.8 else "MEDIUM" if r_tie > 0.6 else "LOW",
+        "sensitivity_to": ["wavelet_frequency", "vp_model_accuracy", "density_curve_quality"],
+    }
+    envelope["provenance"]["equations_used"] = [
+        "AI = Vp × ρ",
+        "RC = (AI₂ - AI₁) / (AI₂ + AI₁)",
+        "Synthetic = RC ∗ W",
+    ]
 
     return enrich_envelope_with_metabolic(envelope, "geox_seismic_well_tie_compute")
 
