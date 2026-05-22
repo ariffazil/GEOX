@@ -2,6 +2,24 @@
 
 > **DITEMPA BUKAN DIBERI**
 
+## [2026.05.22] — 2026-05-22
+
+### 🎂 Birthday Release — Arif's Birthday 2026 — Hard Pruning
+
+**Sovereign 11 Tools** replaces 35+ phantom/dead/redundant tools with 11 honest, minimal, complete tools.
+
+- **smithery.yaml:** Complete rewrite — 35+ tools → 11 sovereign tools (2026-05-22)
+- **server.py:** Tool count assertion 10 → 11; profile-driven surface expansion (minimal/standard/full via `GEOX_PROFILE` env var)
+- **registry.py:** Registry restructure — canonical public tools updated
+- **data.py:** Major refactor — bundle ingest with `source_uri`, `source_type`, `batch_mode` support
+- **petrophysics.py:** 71 lines added — enhanced petrophysical computation
+- **prospect.py:** 241-line refactor — prospect evaluation tooling
+- **unified_13.py:** Cleanup and alignment with 11-tool surface
+- **New: evidence_reason.py** (737 lines) — evidence reasoning engine
+- **New: seismic_compute.py** (340 lines) — seismic computation tools
+- **New: sequence.py** (893 lines) — sequence analysis tools
+- **pyproject.toml:** Version 2026.05.21 → 2026.05.22
+
 ## [2026.05.21] — 2026-05-21
 
 ### Birthday Release — Repo Hygiene

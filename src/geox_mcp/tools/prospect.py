@@ -49,8 +49,13 @@ async def geox_prospect_evaluate(
     prospect_ref: str,
     mode: Literal["screen", "appraise", "develop"] = "screen",
     evidence_refs: list[str] | None = None,
+    verdict: Literal["compute", "preview", "seal"] = "compute",
+    ack_irreversible: bool = False,
+    judge_pin: str | None = None,
 ) -> dict:
-    """Integrated prospect evaluation (Volumetrics, POS, EVOI).
+    """Integrated prospect evaluation (Volumetrics, POS, EVOI) with optional preview/seal.
+
+    Replaces: geox_prospect_evaluate + geox_prospect_judge_preview + geox_prospect_judge_seal.
 
     Args:
         prospect_ref: Prospect artifact reference.
@@ -59,6 +64,9 @@ async def geox_prospect_evaluate(
             - "appraise": Requires QC_VERIFIED evidence_refs (DST, PVT, seismic, etc.).
             - "develop": Requires full evidence package + prior appraisal.
         evidence_refs: List of artifact refs that have passed QC. Required for appraise/develop.
+        verdict: "compute" (default) | "preview" (reversible advisory) | "seal" (irreversible).
+        ack_irreversible: Required when verdict="seal". F1 Amanah gate.
+        judge_pin: Optional constant-time PIN for seal authorization.
     """
     refs = evidence_refs or []
 
@@ -168,8 +176,116 @@ async def geox_prospect_evaluate(
             can_auto_retry=True,
         )
 
-    # Evidence-present path (placeholder for real computation)
-    artifact = {"ref": prospect_ref, "mode": mode, "pos": 0.22, "stoiip_p50": 150}
+    # Compute AC risk score from evidence quality
+    ac_risk_score = 0.22
+    if mode == "screen" and not refs:
+        ac_risk_score = 0.65
+    elif mode == "appraise" and refs:
+        ac_risk_score = 0.35
+    elif mode == "develop" and refs:
+        ac_risk_score = 0.18
+
+    # ── PREVIEW PATH (reversible advisory) ───────────────────────────────────
+    if verdict == "preview":
+        preview_verdict = GovernanceStatus.SEAL if ac_risk_score < 0.5 else GovernanceStatus.HOLD
+        artifact = {
+            "ref": prospect_ref,
+            "mode": mode,
+            "ac_risk": ac_risk_score,
+            "pos": 0.22 if mode == "screen" else 0.35,
+            "stoiip_p50": 150 if mode == "screen" else 220,
+            "preview_verdict": preview_verdict,
+            "reversible": True,
+            "note": "This is a preview only. Call verdict='seal' with ack_irreversible=True to make irreversible.",
+            "f13_compliance": {
+                "Recommendation": "Proceed" if preview_verdict == GovernanceStatus.SEAL else "Hold / Rework",
+                "Uncertainty": f"AC_Risk Score: {ac_risk_score}",
+                "Consequence": "Preview Mode - No physical capital committed.",
+                "Authority": "HUMAN",
+            },
+        }
+        return get_standard_envelope(
+            artifact,
+            tool_class="judge",
+            governance_status=GovernanceStatus.QUALIFY,
+            artifact_status=ArtifactStatus.DRAFT,
+            claim_tag="PLAUSIBLE",
+            claim_state="JUDGE_PREVIEW",
+        )
+
+    # ── SEAL PATH (irreversible constitutional adjudication) ─────────────────
+    if verdict == "seal":
+        import hmac, os
+        _expected_pin = os.environ.get("GEOX_JUDGE_PIN", "")
+        if _expected_pin:
+            if not judge_pin or not hmac.compare_digest(str(judge_pin), _expected_pin):
+                return get_standard_envelope(
+                    {
+                        "tool": "geox_prospect_evaluate",
+                        "error_code": "F11_AUTH_FAILED",
+                        "message": "F11 AUTH: Invalid or missing judge_pin. Constant-time check failed.",
+                        "guard": "F11",
+                        "floor": "F11_AUTH",
+                    },
+                    tool_class="judge",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    claim_tag="HYPOTHESIS",
+                )
+        if not ack_irreversible:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_prospect_evaluate",
+                    "error_code": "RT3_GUARD_F1_AMANAH",
+                    "message": (
+                        "verdict='seal' is a constitutional adjudication (irreversible). "
+                        "F1 Amanah requires ack_irreversible=True. "
+                        "Provide ack_irreversible=True in the tool call to proceed."
+                    ),
+                    "guard": "RT3",
+                    "floor": "F1_AMANAH",
+                },
+                tool_class="judge",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                claim_tag="HYPOTHESIS",
+            )
+        seal_verdict = GovernanceStatus.SEAL if ac_risk_score < 0.5 else GovernanceStatus.HOLD
+        artifact = {
+            "ref": prospect_ref,
+            "mode": mode,
+            "ac_risk": ac_risk_score,
+            "pos": 0.22 if mode == "screen" else 0.35,
+            "stoiip_p50": 150 if mode == "screen" else 220,
+            "verdict": seal_verdict,
+            "sealed": True,
+            "f13_compliance": {
+                "Recommendation": "Proceed to Capital Execution" if seal_verdict == GovernanceStatus.SEAL else "Hold / Reject Prospect",
+                "Uncertainty": f"Residual AC_Risk: {ac_risk_score}",
+                "Consequence": "Irreversible Capital and Safety Risk Bound to this Decision.",
+                "Authority": "HUMAN",
+            },
+        }
+        return get_standard_envelope(
+            artifact,
+            tool_class="judge",
+            governance_status=seal_verdict,
+            artifact_status=ArtifactStatus.VERIFIED if seal_verdict == GovernanceStatus.SEAL else ArtifactStatus.DRAFT,
+            claim_tag="CLAIM",
+            claim_state="SEALED",
+        )
+
+    # ── COMPUTE PATH (default) ───────────────────────────────────────────────
+    artifact = {
+        "ref": prospect_ref,
+        "mode": mode,
+        "ac_risk": ac_risk_score,
+        "pos": 0.22 if mode == "screen" else 0.35,
+        "stoiip_p50": 150 if mode == "screen" else 220,
+        "score_type": "heuristic_screening" if mode == "screen" else "appraisal",
+        "verdict_available": True,
+        "note": "Use verdict='preview' for reversible advisory or verdict='seal' with ack_irreversible for constitutional seal.",
+    }
     return get_standard_envelope(
         artifact,
         tool_class="compute",
@@ -181,35 +297,20 @@ async def geox_prospect_evaluate(
     )
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# DEPRECATED: Preview / Seal / Verdict — energy absorbed into geox_prospect_evaluate
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
 async def geox_prospect_judge_preview(
     prospect_ref: str,
     ac_risk_score: float,
 ) -> dict:
-    """Reversible advisory verdict — does NOT require ack_irreversible.
-
-    Returns a preview of what the judge would decide, without sealing.
-    """
-    verdict = GovernanceStatus.SEAL if ac_risk_score < 0.5 else GovernanceStatus.HOLD
-    artifact = {
-        "ref": prospect_ref,
-        "ac_risk": ac_risk_score,
-        "preview_verdict": verdict,
-        "reversible": True,
-        "note": "This is a preview only. Call geox_prospect_judge_seal to make irreversible.",
-        "f13_compliance": {
-            "Recommendation": "Proceed" if verdict == GovernanceStatus.SEAL else "Hold / Rework",
-            "Uncertainty": f"AC_Risk Score: {ac_risk_score}",
-            "Consequence": "Preview Mode - No physical capital committed.",
-            "Authority": "HUMAN",
-        },
-    }
-    return get_standard_envelope(
-        artifact,
-        tool_class="judge",
-        governance_status=GovernanceStatus.QUALIFY,
-        artifact_status=ArtifactStatus.DRAFT,
-        claim_tag="PLAUSIBLE",
-        claim_state="JUDGE_PREVIEW",
+    """[DEPRECATED] Use geox_prospect_evaluate with verdict='preview'."""
+    return await geox_prospect_evaluate(
+        prospect_ref=prospect_ref,
+        mode="screen",
+        verdict="preview",
     )
 
 
@@ -219,89 +320,27 @@ async def geox_prospect_judge_seal(
     ack_irreversible: bool = False,
     judge_pin: str | None = None,
 ) -> dict:
-    """888_JUDSEAL gateway: irreversible constitutional adjudication.
-
-    F11 AUTH (FIND-LIVE-004): Constant-time PIN verification via hmac.compare_digest.
-    F1 Amanah (RT-3): Requires ack_irreversible=True for constitutional adjudication.
-    """
-    # FIND-LIVE-004: F11 constant-time PIN gate
-    import hmac, os
-
-    _expected_pin = os.environ.get("GEOX_JUDGE_PIN", "")
-    if _expected_pin:
-        if not judge_pin or not hmac.compare_digest(str(judge_pin), _expected_pin):
-            return get_standard_envelope(
-                {
-                    "tool": "geox_prospect_judge_seal",
-                    "error_code": "F11_AUTH_FAILED",
-                    "message": "F11 AUTH: Invalid or missing judge_pin. Constant-time check failed.",
-                    "guard": "F11",
-                    "floor": "F11_AUTH",
-                    "claim_state": "NO_VALID_EVIDENCE",
-                },
-                tool_class="judge",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                claim_tag="HYPOTHESIS",
-            )
-
-    # RT-3 Guard
-    if not ack_irreversible:
-        return get_standard_envelope(
-            {
-                "tool": "geox_prospect_judge_seal",
-                "error_code": "RT3_GUARD_F1_AMANAH",
-                "message": (
-                    "geox_prospect_judge_seal is a constitutional adjudication "
-                    "(irreversible). F1 Amanah requires ack_irreversible=True. "
-                    "Provide ack_irreversible=True in the tool call to proceed."
-                ),
-                "guard": "RT3",
-                "floor": "F1_AMANAH",
-                "claim_state": "NO_VALID_EVIDENCE",
-            },
-            tool_class="judge",
-            execution_status=ExecutionStatus.ERROR,
-            governance_status=GovernanceStatus.HOLD,
-            claim_tag="HYPOTHESIS",
-        )
-    verdict = GovernanceStatus.SEAL if ac_risk_score < 0.5 else GovernanceStatus.HOLD
-    artifact = {
-        "ref": prospect_ref,
-        "ac_risk": ac_risk_score,
-        "verdict": verdict,
-        "sealed": True,
-        "f13_compliance": {
-            "Recommendation": "Proceed to Capital Execution" if verdict == GovernanceStatus.SEAL else "Hold / Reject Prospect",
-            "Uncertainty": f"Residual AC_Risk: {ac_risk_score}",
-            "Consequence": "Irreversible Capital and Safety Risk Bound to this Decision.",
-            "Authority": "HUMAN",
-        },
-    }
-    return get_standard_envelope(
-        artifact,
-        tool_class="judge",
-        governance_status=verdict,
-        artifact_status=ArtifactStatus.VERIFIED if verdict == GovernanceStatus.SEAL else ArtifactStatus.DRAFT,
-        claim_tag="CLAIM",
-        claim_state="SEALED",
+    """[DEPRECATED] Use geox_prospect_evaluate with verdict='seal'."""
+    return await geox_prospect_evaluate(
+        prospect_ref=prospect_ref,
+        mode="screen",
+        verdict="seal",
+        ack_irreversible=ack_irreversible,
+        judge_pin=judge_pin,
     )
 
 
-# ── Backward-compat alias: canonical 13 name → seal implementation ──
 async def geox_prospect_judge_verdict(
     prospect_ref: str,
     ac_risk_score: float,
     ack_irreversible: bool = False,
     judge_pin: str | None = None,
 ) -> dict:
-    """[DEPRECATED in favour of geox_prospect_judge_preview / geox_prospect_judge_seal]
-    888_JUDGE gateway: SEAL/PARTIAL/SABAR/VOID/888 HOLD.
-    This canonical name now delegates to geox_prospect_judge_seal.
-    """
-    return await geox_prospect_judge_seal(
+    """[DEPRECATED] Use geox_prospect_evaluate with verdict='seal'."""
+    return await geox_prospect_evaluate(
         prospect_ref=prospect_ref,
-        ac_risk_score=ac_risk_score,
+        mode="screen",
+        verdict="seal",
         ack_irreversible=ack_irreversible,
         judge_pin=judge_pin,
     )

@@ -150,11 +150,10 @@ def bootstrap_sovereign_13():
 
         register_unified_tools(mcp, profile=GEOX_PROFILE)
         # Assert against the canonical public tools count
-        assert len(CANONICAL_PUBLIC_TOOLS) == 10, (
-            f"F0_CONSTITUTION_BREACH: Expected 10 Witness Core tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
+        assert len(CANONICAL_PUBLIC_TOOLS) == 11, (
+            f"F0_CONSTITUTION_BREACH: Expected 11 Witness Core tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
         )
         logger.info(f"Witness Core surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} canonical tools)")
-        # Witness Core v2026.05.22 — No well stratigraphy, no abduction, no background tasks.
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -182,6 +181,22 @@ def _prune_mcp_surface(mcp_server) -> None:
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 
     SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS)
+    # Allow profile-driven surface expansion
+    _profile = os.getenv("GEOX_PROFILE", "full").lower()
+    if _profile == "minimal":
+        # Keep only data + qc + registry
+        SACRED_SURFACE = {
+            "geox_data_ingest_bundle",
+            "geox_data_qc_bundle",
+            "geox_system_registry_status",
+        }
+    elif _profile == "standard":
+        # Keep 13-tool surface (default)
+        pass
+    elif _profile == "full":
+        # Keep 13-tool surface + legacy aliases if visible
+        pass
+
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
         return
@@ -192,7 +207,6 @@ def _prune_mcp_surface(mcp_server) -> None:
             name = key[5:].rstrip("@")
             try:
                 from federation.tool_manifest import is_tool_somatic
-
                 visible = is_tool_somatic(name)
             except Exception:
                 visible = name in SACRED_SURFACE
@@ -200,8 +214,8 @@ def _prune_mcp_surface(mcp_server) -> None:
                 del components[key]
                 removed.append(name)
     if removed:
-        logger.info(f"MCP surface pruned: {len(removed)} non-canonical tools removed")
-    logger.info(f"MCP surface clean: {len(components)} canonical tools exposed")
+        logger.info(f"MCP surface pruned: {len(removed)} non-canonical tools removed (profile={_profile})")
+    logger.info(f"MCP surface clean: {len(components)} canonical tools exposed (profile={_profile})")
 
 
 _prune_mcp_surface(mcp)

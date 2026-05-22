@@ -75,28 +75,94 @@ async def geox_data_ingest_bundle(
     well_id: Optional[str] = None,
     standardize_curves: bool = True,
     normalize_units: bool = True,
-    content_base64: Optional[str] = None,  # New: support for base64 encoded content
-    filename: Optional[str] = None,  # Required if content_base64 is provided
-    target_dir: str = "/data/geox_las",  # Required if content_base64 is provided
-    overwrite: bool = False,  # Required if content_base64 is provided
+    content_base64: Optional[str] = None,
+    filename: Optional[str] = None,
+    target_dir: str = "/data/geox_las",
+    overwrite: bool = False,
+    # Batch mode (absorbs geox_task_ingest_las_batch)
+    batch_mode: bool = False,
+    artifact_refs: list[str] | None = None,
+    qc_strict: bool = True,
 ) -> dict:
     """Lazy ingestion for LAS, CSV, Parquet, SEG-Y, and structural payloads.
-    Also supports direct base64 upload for LAS files (absorbing geox_file_upload_import).
+    Also supports direct base64 upload and batch mode.
+
+    Replaces: geox_data_ingest_bundle + geox_task_ingest_las_batch.
 
     Args:
-        source_uri: File path (e.g. /mnt/data/15-9-19_SR_COMP.LAS) or HTTPS URL. Mutually exclusive with content_base64.
+        source_uri: File path or HTTPS URL. Mutually exclusive with batch_mode.
         source_type: Hint for payload type; "auto" detects from extension.
-                     Supports: well, seismic, earth3d, auto, tops, biostrat, checkshot.
         well_id: Optional identifier; derived from filename if omitted.
         standardize_curves: Run canonical alias mapping on well log mnemonics.
         normalize_units: Convert ft→m if depth unit is FT/FEET.
-        content_base64: Optional: Base64 encoded file content (e.g., LAS file). Mutually exclusive with source_uri.
-        filename: Optional: Required if content_base64 is provided. The original filename.
-        target_dir: Optional: Directory to save the uploaded file if content_base64 is used. Defaults to /data/geox_las.
-        overwrite: Optional: Whether to overwrite existing file if content_base64 is used. Defaults to False.
+        content_base64: Base64 encoded file content. Mutually exclusive with source_uri.
+        filename: Required if content_base64 is provided.
+        target_dir: Directory to save uploaded file. Defaults to /data/geox_las.
+        overwrite: Whether to overwrite existing file.
+        batch_mode: If True, iterate over artifact_refs instead of single source_uri.
+        artifact_refs: List of file paths or artifact references for batch_mode.
+        qc_strict: If True, treat QC failures as errors in batch summary.
     """
 
-    # --- Handle content_base64 upload first (new functionality from geox_file_upload_import) ---
+    # --- Batch mode (absorbs geox_task_ingest_las_batch) ---
+    if batch_mode:
+        refs = artifact_refs or []
+        if not refs:
+            return _metabolic_return(
+                get_standard_envelope(
+                    {"tool": "geox_data_ingest_bundle", "error_code": "NO_VALID_EVIDENCE",
+                     "message": "batch_mode=True requires artifact_refs list."},
+                    tool_class="ingress", execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+                )
+            )
+        results: list[dict] = []
+        success_count = 0
+        error_count = 0
+        for ref in refs:
+            try:
+                single = await geox_data_ingest_bundle(
+                    source_uri=ref, source_type="auto",
+                    standardize_curves=standardize_curves, normalize_units=normalize_units,
+                )
+                payload = single.get("payload", single)
+                status = payload.get("execution_status", "UNKNOWN")
+                if status == "SUCCESS":
+                    success_count += 1
+                else:
+                    error_count += 1
+                results.append({
+                    "ref": ref, "status": status,
+                    "artifact_ref": payload.get("artifact_ref"),
+                    "well_id": payload.get("well_id"),
+                    "claim_state": payload.get("claim_state", "UNKNOWN"),
+                })
+            except Exception as exc:
+                error_count += 1
+                results.append({"ref": ref, "status": "ERROR", "error": str(exc), "claim_state": "NO_VALID_EVIDENCE"})
+        all_ok = error_count == 0
+        batch_status = ExecutionStatus.SUCCESS if all_ok else ExecutionStatus.PARTIAL
+        gov_status = GovernanceStatus.QUALIFY if all_ok else GovernanceStatus.HOLD
+        art_status = ArtifactStatus.LOADED if all_ok else ArtifactStatus.PARTIAL
+        out = {
+            "tool": "geox_data_ingest_bundle", "batch_mode": True,
+            "batch_size": len(refs), "success_count": success_count, "error_count": error_count,
+            "per_file_results": results,
+            "claim_state": CLAIM_STATES["RAW_OBSERVATION"] if all_ok else CLAIM_STATES["HYPOTHESIS"],
+        }
+        if not all_ok and qc_strict:
+            out["hold_reason"] = f"{error_count} of {len(refs)} files failed ingest/QC"
+            out["human_final_authority"] = "Arif"
+        return _metabolic_return(
+            get_standard_envelope(
+                out, tool_class="ingress", execution_status=batch_status,
+                governance_status=gov_status, artifact_status=art_status,
+                claim_tag="CLAIM" if all_ok else "HYPOTHESIS",
+            )
+        )
+
+    # --- Handle content_base64 upload first ---
     if content_base64:
         if source_uri:
             return _metabolic_return(
@@ -600,7 +666,7 @@ async def geox_data_ingest_bundle(
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# H3 — BATCH TASK TOOLS (SEP-1686 background execution)
+# DEPRECATED: geox_task_ingest_las_batch — energy absorbed into geox_data_ingest_bundle
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -610,94 +676,11 @@ async def geox_task_ingest_las_batch(
     standardize_curves: bool = True,
     normalize_units: bool = True,
 ) -> dict:
-    """Batch LAS ingestion. Long-running. Returns task_id for polling.
-
-    Iterates over artifact_refs, calling geox_data_ingest_bundle for each.
-    Aggregates per-file results into a batch envelope.
-
-    Args:
-        artifact_refs: List of file paths or artifact references to ingest.
-        qc_strict: If True, treat QC failures as errors in batch summary.
-        standardize_curves: Run canonical alias mapping on well log mnemonics.
-        normalize_units: Convert ft→m if depth unit is FT/FEET.
-    """
-    if not artifact_refs:
-        return _metabolic_return(
-            get_standard_envelope(
-                {
-                    "tool": "geox_task_ingest_las_batch",
-                    "error_code": "NO_VALID_EVIDENCE",
-                    "message": "artifact_refs list is empty. Provide at least one LAS file path.",
-                },
-                tool_class="ingress",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS",
-                claim_state="NO_VALID_EVIDENCE",
-            )
-        )
-
-    results: list[dict] = []
-    success_count = 0
-    error_count = 0
-
-    for ref in artifact_refs:
-        try:
-            single = await geox_data_ingest_bundle(
-                source_uri=ref,
-                source_type="auto",
-                standardize_curves=standardize_curves,
-                normalize_units=normalize_units,
-            )
-            # Unwrap metabolic envelope to check status
-            payload = single.get("payload", single)
-            status = payload.get("execution_status", "UNKNOWN")
-            if status == "SUCCESS":
-                success_count += 1
-            else:
-                error_count += 1
-            results.append({
-                "ref": ref,
-                "status": status,
-                "artifact_ref": payload.get("artifact_ref"),
-                "well_id": payload.get("well_id"),
-                "claim_state": payload.get("claim_state", "UNKNOWN"),
-            })
-        except Exception as exc:
-            error_count += 1
-            results.append({
-                "ref": ref,
-                "status": "ERROR",
-                "error": str(exc),
-                "claim_state": "NO_VALID_EVIDENCE",
-            })
-
-    all_ok = error_count == 0
-    batch_status = ExecutionStatus.SUCCESS if all_ok else ExecutionStatus.PARTIAL
-    gov_status = GovernanceStatus.QUALIFY if all_ok else GovernanceStatus.HOLD
-    art_status = ArtifactStatus.LOADED if all_ok else ArtifactStatus.PARTIAL
-
-    out = {
-        "tool": "geox_task_ingest_las_batch",
-        "batch_size": len(artifact_refs),
-        "success_count": success_count,
-        "error_count": error_count,
-        "per_file_results": results,
-        "claim_state": CLAIM_STATES["RAW_OBSERVATION"] if all_ok else CLAIM_STATES["HYPOTHESIS"],
-    }
-
-    if not all_ok and qc_strict:
-        out["hold_reason"] = f"{error_count} of {len(artifact_refs)} files failed ingest/QC"
-        out["human_final_authority"] = "Arif"
-
-    return _metabolic_return(
-        get_standard_envelope(
-            out,
-            tool_class="ingress",
-            execution_status=batch_status,
-            governance_status=gov_status,
-            artifact_status=art_status,
-            claim_tag="CLAIM" if all_ok else "HYPOTHESIS",
-        )
+    """[DEPRECATED] Batch LAS ingestion. Use geox_data_ingest_bundle with batch_mode=True."""
+    return await geox_data_ingest_bundle(
+        batch_mode=True,
+        artifact_refs=artifact_refs,
+        qc_strict=qc_strict,
+        standardize_curves=standardize_curves,
+        normalize_units=normalize_units,
     )

@@ -13,11 +13,16 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     # Physics-9 domain engines
     "geox_subsurface_generate_candidates",
     "geox_subsurface_verify_integrity",
-    # Seismic physics
-    "geox_seismic_well_tie_compute",
-    "geox_time_depth_anchor",
-    "geox_forward_model_synthetic",
-    "geox_anomalous_contrast_detector",
+    # Unified seismic physics
+    "geox_seismic_compute",
+    # Unified sequence stratigraphy
+    "geox_sequence_interpret",
+    # Unified evidence reasoning
+    "geox_evidence_reason",
+    # Prospect evaluation with governance
+    "geox_prospect_evaluate",
+    # Spatial context
+    "geox_map_context_scene",
     # Machine-checkable truth
     "geox_system_registry_status",
 ]
@@ -28,10 +33,11 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_dst_ingest_test",                "axis": "observe",  "expose": True},
     {"name": "geox_subsurface_generate_candidates", "axis": "reason",   "expose": True},
     {"name": "geox_subsurface_verify_integrity",    "axis": "verify",   "expose": True},
-    {"name": "geox_seismic_well_tie_compute",       "axis": "reason",   "expose": True},
-    {"name": "geox_time_depth_anchor",              "axis": "verify",   "expose": True},
-    {"name": "geox_forward_model_synthetic",        "axis": "reason",   "expose": True},
-    {"name": "geox_anomalous_contrast_detector",    "axis": "critique", "expose": True},
+    {"name": "geox_seismic_compute",                "axis": "reason",   "expose": True},
+    {"name": "geox_sequence_interpret",             "axis": "reason",   "expose": True},
+    {"name": "geox_evidence_reason",                "axis": "reason",   "expose": True},
+    {"name": "geox_prospect_evaluate",              "axis": "reason",   "expose": True},
+    {"name": "geox_map_context_scene",              "axis": "observe",  "expose": True},
     {"name": "geox_system_registry_status",         "axis": "identity", "expose": True},
 ]
 
@@ -41,11 +47,28 @@ LEGACY_ALIAS_MAP: Dict[str, str] = {
     "geox_qc_bundle": "geox_data_qc_bundle",
     "geox_subsurface_candidates": "geox_subsurface_generate_candidates",
     "geox_petrophysics": "geox_subsurface_generate_candidates",
-    "geox_seismic_tie": "geox_seismic_well_tie_compute",
-    "geox_well_tie": "geox_seismic_well_tie_compute",
-    "geox_td_anchor": "geox_time_depth_anchor",
-    "geox_forward_model": "geox_forward_model_synthetic",
-    "geox_anomalous_contrast": "geox_anomalous_contrast_detector",
-    "geox_ac_detector": "geox_anomalous_contrast_detector",
+    "geox_seismic_tie": "geox_seismic_compute",
+    "geox_well_tie": "geox_seismic_compute",
+    "geox_td_anchor": "geox_seismic_compute",
+    "geox_forward_model": "geox_seismic_compute",
+    "geox_anomalous_contrast": "geox_seismic_compute",
+    "geox_ac_detector": "geox_seismic_compute",
+    "geox_seismic_analyze_volume": "geox_seismic_compute",
+    "geox_sequence_stratigraphy": "geox_sequence_interpret",
+    "geox_well_compute_gr_bins": "geox_sequence_interpret",
+    "geox_well_build_packages": "geox_sequence_interpret",
+    "geox_well_infer_seq_strat": "geox_sequence_interpret",
+    "geox_well_analyze_sequence": "geox_sequence_interpret",
+    "geox_stratigraphy_run_pipeline": "geox_sequence_interpret",
+    "geox_stratigraphy_preview_config": "geox_sequence_interpret",
+    "geox_section_interpret_correlation": "geox_sequence_interpret",
+    "geox_evidence_summarize_cross": "geox_evidence_reason",
+    "geox_process_abduction": "geox_evidence_reason",
+    "geox_evidence_contradiction_scan": "geox_evidence_reason",
+    "geox_prospect_judge_preview": "geox_prospect_evaluate",
+    "geox_prospect_judge_seal": "geox_prospect_evaluate",
+    "geox_prospect_judge_verdict": "geox_prospect_evaluate",
+    "geox_task_ingest_las_batch": "geox_data_ingest_bundle",
+    "geox_task_metabolize_basin": "geox_subsurface_generate_candidates",
     "geox_registry": "geox_system_registry_status",
 }
