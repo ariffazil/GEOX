@@ -1,6 +1,5 @@
 """
 Test Anomalous Contrast Detector — LC#28 Verification
-═══════════════════════════════════════════════════════════════════════════════
 Verifies Theory of Anomalous Contrast detection on known synthetic cases.
 DITEMPA BUKAN DIBERI
 """
@@ -19,12 +18,9 @@ from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
 
 def test_no_anomaly_aligned_boundary():
     """Geological top aligns with strongest reflector → no anomaly."""
-    # Uniform shale (AI=4M) then clean sand (AI=6M) — sharp contrast at 1000m
     depth = np.arange(990, 1011, 1.0)
     ai = np.where(depth < 1000, 4_000_000.0, 6_000_000.0)
 
-    # The RC peak for a step at 1000m is at the interface between 999 and 1000,
-    # which maps to sample index 9 (depth 999). Align formation top to match.
     result = asyncio.run(
         geox_anomalous_contrast_detector(
             ai_profile=ai.tolist(),
@@ -35,23 +31,21 @@ def test_no_anomaly_aligned_boundary():
         )
     )
 
-    assert result["execution_status"] == "SUCCESS"
-    anomalies = result["primary_artifact"]["anomalies"]
+    assert "error" not in result
+    anomalies = result["anomalies"]
     assert len(anomalies) == 0, f"Expected no anomaly, got {anomalies}"
-    picks = result["primary_artifact"]["recommended_picks"]
-    assert picks[0]["verification_required"] == "none"
+    picks = result["recommended_picks"]
+    assert picks[0]["reason"] == "Geological top aligns with strongest reflector within tolerance."
     print("test_no_anomaly_aligned_boundary: PASSED")
 
 
 def test_anomaly_displaced_reflector():
     """Strongest reflector is displaced from geological top → anomaly detected."""
-    # Carbonate with transparent cap: shale (4M) → porous carbonate (4.2M) → tight carbonate (6M)
-    # Geological top at 1000m (shale→porous carbonate), but strong reflector at 1005m (porous→tight)
     depth = np.arange(990, 1016, 1.0)
     ai = np.zeros_like(depth)
-    ai[depth < 1000] = 4_000_000.0          # Shale
-    ai[(depth >= 1000) & (depth < 1005)] = 4_200_000.0   # Porous carbonate (weak contrast with shale)
-    ai[depth >= 1005] = 6_000_000.0         # Tight carbonate (strong contrast)
+    ai[depth < 1000] = 4_000_000.0
+    ai[(depth >= 1000) & (depth < 1005)] = 4_200_000.0
+    ai[depth >= 1005] = 6_000_000.0
 
     result = asyncio.run(
         geox_anomalous_contrast_detector(
@@ -63,22 +57,21 @@ def test_anomaly_displaced_reflector():
         )
     )
 
-    assert result["execution_status"] == "SUCCESS"
-    anomalies = result["primary_artifact"]["anomalies"]
+    assert "error" not in result
+    anomalies = result["anomalies"]
     assert len(anomalies) == 1, f"Expected 1 anomaly, got {len(anomalies)}"
     assert anomalies[0]["formation"] == "Carbonate_Top"
     assert anomalies[0]["depth_geological_m"] == 1000.0
-    # Strongest reflector should be at ~1005m
     assert anomalies[0]["depth_seismic_m"] > 1000.0
     assert anomalies[0]["mistie_m"] > 0
-    assert "LC#28" in result["primary_artifact"]["law_capsule"]
+    assert "physics" in result
+    assert "RC = (AI₂ - AI₁) / (AI₂ + AI₁)" in result["physics"]["equations_used"]
     print("test_anomaly_displaced_reflector: PASSED")
 
 
 def test_megah1_quantified_case():
-    """Reproduce Megah-1 numbers from artifact: 10m mistie, 39% stronger RC."""
+    """Reproduce Megah-1 numbers: significant mistie, stronger RC."""
     depth = np.arange(4700, 4731, 1.0, dtype=float)
-    # Shale above: AI ~ 4.0M; Upper Reef (porous): AI ~ 4.5M; Main Reef: AI ~ 6.5M
     ai = np.zeros_like(depth)
     ai[depth < 4710] = 4_000_000.0
     ai[(depth >= 4710) & (depth < 4720)] = 4_500_000.0
@@ -94,9 +87,8 @@ def test_megah1_quantified_case():
         )
     )
 
-    anomalies = result["primary_artifact"]["anomalies"]
+    anomalies = result["anomalies"]
     assert len(anomalies) >= 1
-    # The strongest reflector should be at the 4720m interface, not 4710m
     mistie = anomalies[0]["mistie_m"]
     assert mistie > 5.0, f"Expected significant mistie, got {mistie}m"
     rc_ratio = anomalies[0]["rc_ratio"]
@@ -105,19 +97,20 @@ def test_megah1_quantified_case():
 
 
 def test_invalid_input_fail_closed():
-    """Empty arrays → fail closed with NO_VALID_EVIDENCE."""
+    """Empty arrays → fail closed with empty result."""
     result = asyncio.run(
         geox_anomalous_contrast_detector(
             ai_profile=[], depth=[], formation_tops={}
         )
     )
-    assert result["execution_status"] == "ERROR"
-    assert result["claim_state"] == "NO_VALID_EVIDENCE"
+    assert "error" in result
+    assert result["anomalies"] == []
+    assert result["recommended_picks"] == []
     print("test_invalid_input_fail_closed: PASSED")
 
 
-def test_lem_envelope_contract():
-    """Verify LEM fields present: confidence, sensitivity_to, equations_used."""
+def test_plain_output_contract():
+    """Verify clean output fields: no envelope, no claim_state, no metabolic."""
     depth = [1000.0, 1005.0, 1010.0]
     ai = [4_000_000.0, 4_200_000.0, 6_000_000.0]
 
@@ -127,14 +120,21 @@ def test_lem_envelope_contract():
         )
     )
 
-    assert "confidence" in result
-    assert "level" in result["confidence"]
-    assert "sensitivity_to" in result["confidence"]
-    assert "equations_used" in result["provenance"]
-    assert "law_capsule" in result["provenance"]
-    assert result["provenance"]["law_capsule"] == "LC#28"
-    assert "metabolic" in result
-    print("test_lem_envelope_contract: PASSED")
+    # Should NOT contain old envelope fields
+    assert "claim_state" not in result
+    assert "execution_status" not in result
+    assert "metabolic" not in result
+    assert "provenance" not in result
+    assert "law_capsule" not in result
+
+    # Should contain clean physics output
+    assert "anomalies" in result
+    assert "recommended_picks" in result
+    assert "volumetric_impact" in result
+    assert "physics" in result
+    assert "equations_used" in result["physics"]
+    assert "limitations" in result["physics"]
+    print("test_plain_output_contract: PASSED")
 
 
 if __name__ == "__main__":
@@ -142,5 +142,5 @@ if __name__ == "__main__":
     test_anomaly_displaced_reflector()
     test_megah1_quantified_case()
     test_invalid_input_fail_closed()
-    test_lem_envelope_contract()
+    test_plain_output_contract()
     print("\nAll anomalous_contrast tests PASSED.")

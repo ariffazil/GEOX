@@ -35,9 +35,9 @@ logger = logging.getLogger("geox.stratigraphy.plot")
 
 SHORT_MOTIF = {
     "Fining Upward": "↑ FU",
-    "Coaserning Upward": "↓ CU",
+    "Coarsening Upward": "↓ CU",
     "Blocky": "▬ BLK",
-    "Serated_Irregular Pattern": "≋ SER",
+    "Serrated / Irregular Pattern": "≋ SER",
     "Crecentric": "◉ CRE",
     "Heterolithic": "≈ HET",
 }
@@ -83,13 +83,13 @@ def _draw_motif_schematic(ax, motif, color, top_d, base_d,
     if motif == "Fining Upward":
         xr = np.linspace(x0 + span * 0.08, x1, n)
         ax.fill_betweenx(y, x0, xr, color=color, alpha=alp, zorder=4, lw=0)
-    elif motif == "Coaserning Upward":
+    elif motif == "Coarsening Upward":
         xr = np.linspace(x1, x0 + span * 0.08, n)
         ax.fill_betweenx(y, x0, xr, color=color, alpha=alp, zorder=4, lw=0)
     elif motif == "Blocky":
         ax.fill_betweenx([top_d, base_d], x0, x0 + span * 0.62,
                          color=color, alpha=alp, zorder=4, lw=0)
-    elif motif == "Serated_Irregular Pattern":
+    elif motif == "Serrated / Irregular Pattern":
         n_t = max(4, int((base_d - top_d) / 12))
         xr = (x0 + span * 0.46 *
               (1 + np.sin(np.linspace(0, n_t * np.pi, n)))).clip(x0, x1)

@@ -134,7 +134,7 @@ def run_pipeline(
                 conf = (
                     "High" if pkg_raw["VARIABILITY"] == "Low"
                     and pkg_raw["N_BINS"] >= 4
-                    and pkg_raw["HUMAN_MOTIF"] not in ("Heterolithic", "Serated_Irregular Pattern")
+                    and pkg_raw["HUMAN_MOTIF"] not in ("Heterolithic", "Serrated / Irregular Pattern")
                     else "Low" if pkg_raw["N_BINS"] < 3
                     else "Medium"
                 )

@@ -75,7 +75,7 @@ def infer_seq_strat(
         )
 
     # HST: Coarsening Upward in shallow = prograding highstand
-    if motif == "Coaserning Upward" and rank <= 7:
+    if motif == "Coarsening Upward" and rank <= 7:
         return (
             "HST",
             "Highstand systems tract — prograding shallowing-upward "
@@ -83,7 +83,7 @@ def infer_seq_strat(
         )
 
     # FSST: Coarsening Upward in deep setting = falling-stage turbidite lobe
-    if motif == "Coaserning Upward" and rank >= 8:
+    if motif == "Coarsening Upward" and rank >= 8:
         return (
             "FSST",
             "Falling stage systems tract — prograding turbidite lobe; "
@@ -99,7 +99,7 @@ def infer_seq_strat(
         )
 
     # Serrated in deep water = slope apron / condensed
-    if motif == "Serated_Irregular Pattern" and rank >= 8:
+    if motif == "Serrated / Irregular Pattern" and rank >= 8:
         if gr > 90:
             return (
                 "CS",
@@ -113,7 +113,7 @@ def infer_seq_strat(
         )
 
     # Serrated in proximal = heterolithic coastal / tidal
-    if motif == "Serated_Irregular Pattern" and rank <= 4:
+    if motif == "Serrated / Irregular Pattern" and rank <= 4:
         return (
             "UNCERTAIN",
             "Heterolithic coastal/tidal plain — high-frequency cyclicity; "

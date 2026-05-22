@@ -33,11 +33,11 @@ from geox_mcp.tools._helpers import (
     _artifact_exists,
     _get_well_data_with_depth,
 )
-from geox_core.engines.seismic.well_tie import (
-    calculate_acoustic_impedance,
-    calculate_reflectivity,
-    generate_ricker,
-    convolve_synthetic,
+from geox_core.physics import (
+    impedance_array as calculate_acoustic_impedance,
+    reflectivity_array as calculate_reflectivity,
+    ricker_wavelet as generate_ricker,
+    convolve_trace as convolve_synthetic,
 )
 from geox_core.core.geox_2d import build_wavelet
 

@@ -150,47 +150,11 @@ def bootstrap_sovereign_13():
 
         register_unified_tools(mcp, profile=GEOX_PROFILE)
         # Assert against the canonical public tools count
-        assert len(CANONICAL_PUBLIC_TOOLS) >= 14, (
-            f"F0_CONSTITUTION_BREACH: Expected at least 15 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
+        assert len(CANONICAL_PUBLIC_TOOLS) == 10, (
+            f"F0_CONSTITUTION_BREACH: Expected 10 Witness Core tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
         )
-        logger.info(f"Sovereign tool surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} Canonical + well stratigraphy Tools)")
-        # Register well tools
-        try:
-            from geox_mcp.tools.well import register_well_tools
-
-            register_well_tools(mcp)
-            logger.info("Well tools registered successfully")
-        except Exception as e:
-            logger.warning(f"Well tools not loaded: {e}")
-        # Register generalized stratigraphy pipeline tools
-        try:
-            from geox_mcp.tools.stratigraphy import register_stratigraphy_tools
-
-            register_stratigraphy_tools(mcp)
-            logger.info("Stratigraphy pipeline tools registered successfully")
-        except Exception as e:
-            logger.warning(f"Stratigraphy pipeline tools not loaded: {e}")
-        # Register Earth abduction tools (Tier 4 — PROCESS_HYPOTHESIS)
-        try:
-            from geox_mcp.tools.abduction import geox_process_abduction, geox_evidence_contradiction_scan
-
-            mcp.tool()(geox_process_abduction)
-            mcp.tool()(geox_evidence_contradiction_scan)
-            logger.info("Earth abduction tools registered successfully")
-        except Exception as e:
-            logger.warning(f"Earth abduction tools not loaded: {e}")
-
-        # H3 — Register background task tools (SEP-1686)
-        # FastMCP 3.x removed task=True; register as normal tools.
-        try:
-            from geox_mcp.tools.data import geox_task_ingest_las_batch
-            from geox_mcp.tools.abduction import geox_task_metabolize_basin
-
-            mcp.tool(name="geox_task_ingest_las_batch")(geox_task_ingest_las_batch)
-            mcp.tool(name="geox_task_metabolize_basin")(geox_task_metabolize_basin)
-            logger.info("Background task tools registered successfully")
-        except Exception as e:
-            logger.warning(f"Background task tools not loaded: {e}")
+        logger.info(f"Witness Core surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} canonical tools)")
+        # Witness Core v2026.05.22 — No well stratigraphy, no abduction, no background tasks.
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 13 registry: {e}")
         sys.exit(1)
@@ -217,21 +181,7 @@ def _prune_mcp_surface(mcp_server) -> None:
     """
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 
-    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | {
-        "geox_dst_ingest_test",
-        "geox_well_compute_gr_bins",
-        "geox_well_build_packages",
-        "geox_well_infer_seq_strat",
-        "geox_well_analyze_sequence",
-        "geox_stratigraphy_run_pipeline",
-        "geox_stratigraphy_preview_config",
-        # H3 — Background task tools (SEP-1686)
-        "geox_task_ingest_las_batch",
-        "geox_task_metabolize_basin",
-        # LC#28 — Anomalous contrast + forward model
-        "geox_forward_model_synthetic",
-        "geox_anomalous_contrast_detector",
-    }
+    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS)
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
         return
@@ -530,21 +480,21 @@ def _lookup_atlas(event_name: str) -> dict | None:
     return ATLAS13_BY_NAME.get(event_name)
 
 
-def _earth_event_for_tool(tool_name: str) -> dict:
-    """Return a stable Earth event anchor for a given GEOX tool name."""
+def _earth_event_for_tool(tool_name: str) -> dict | None:
+    """Return a stable Earth event anchor for a given GEOX tool name.
+
+    System/registry tools receive None — they are infrastructure, not Earth science.
+    """
     tool_to_event = [
         ("geox_seismic", "Chicxulub impact / K-Pg extinction"),
-        ("geox_prospect", "Permian-Triassic extinction"),
         ("geox_subsurface", "Late Heavy Bombardment"),
-        ("geox_section", "Cambrian Explosion"),
-        ("geox_map_context", "Formation of stable oceans"),
-        ("geox_time4d", "Snowball Earth glaciations"),
-        ("geox_evidence_summarize", "End-Ordovician extinction"),
         ("geox_data_ingest", "Toba supereruption"),
         ("geox_data_qc", "Paleocene-Eocene Thermal Maximum"),
-        ("geox_history", "Great Oxidation Event"),
-        ("geox_system_registry", "Moon-forming impact"),
+        ("geox_dst_ingest", "Deccan Traps flood basalt"),
     ]
+    # System/registry tools: no Earth-event anchor (infrastructure, not geoscience)
+    if tool_name.startswith("geox_system_registry"):
+        return None
     for prefix, event_name in tool_to_event:
         if tool_name.startswith(prefix):
             anchor = _lookup_atlas(event_name)
@@ -603,43 +553,52 @@ def _wrap_tool_outputs(mcp_server):
 
             now = datetime.now(UTC).isoformat()
             tool_name = getattr(__tool, "name", "")
-            defaults = {
-                "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
-                "confidence_band": result.get("confidence_band"),
-                "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}),
-                "evidence_refs": result.get("evidence_refs", []),
-                "uncertainty": result.get("uncertainty", "Moderate"),
-                "audit_receipt": result.get(
-                    "audit_receipt",
-                    {
-                        "vault999_ref": "VAULT999-PENDING",
-                        "timestamp": now,
-                        "session_id": "geox-no-session",
-                    },
-                ),
-                "humility_score": result.get("humility_score", 0.0),
-                "maruah_flag": result.get(
-                    "maruah_flag",
-                    {
-                        "maruah_flag": "CLEAR",
-                        "territory_risk": "none",
-                        "recommended_action": "Proceed with standard consent protocols.",
-                        "confidence": "HIGH",
-                    },
-                ),
-                "earth_event_anchor": result.get("earth_event_anchor", _earth_event_for_tool(tool_name)),
-            }
-            for k, v in defaults.items():
-                if k not in result:
-                    result[k] = v
-            if result.get("confidence_band") is None:
-                result["confidence_band"] = {
-                    "computed": False,
-                    "reason": "No volumetric distribution or statistical method supplied",
-                    "p10": None,
-                    "p50": None,
-                    "p90": None,
+
+            # Registry tools: minimal envelope — skip decorative defaults
+            _is_registry_tool = tool_name.startswith("geox_system_registry")
+
+            if not _is_registry_tool:
+                defaults = {
+                    "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
+                    "confidence_band": result.get("confidence_band"),
+                    "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}),
+                    "evidence_refs": result.get("evidence_refs", []),
+                    "uncertainty": result.get("uncertainty", "Moderate"),
+                    "audit_receipt": result.get(
+                        "audit_receipt",
+                        {
+                            "vault999_ref": "VAULT999-PENDING",
+                            "timestamp": now,
+                            "session_id": "geox-no-session",
+                        },
+                    ),
+                    "humility_score": result.get("humility_score", 0.0),
+                    "maruah_flag": result.get(
+                        "maruah_flag",
+                        {
+                            "maruah_flag": "CLEAR",
+                            "territory_risk": "none",
+                            "recommended_action": "Proceed with standard consent protocols.",
+                            "confidence": "HIGH",
+                        },
+                    ),
                 }
+                for k, v in defaults.items():
+                    if k not in result:
+                        result[k] = v
+                # Inject Earth event anchor only for geoscience tools (skip system/registry)
+                if "earth_event_anchor" not in result:
+                    _anchor = _earth_event_for_tool(tool_name)
+                    if _anchor is not None:
+                        result["earth_event_anchor"] = _anchor
+                if result.get("confidence_band") is None:
+                    result["confidence_band"] = {
+                        "computed": False,
+                        "reason": "No volumetric distribution or statistical method supplied",
+                        "p10": None,
+                        "p50": None,
+                        "p90": None,
+                    }
 
             # Return plain dict — FastMCP serializes with by_alias=True, exclude_none=True.
             # Returning mcp.types.CallToolResult caused annotations:null and _meta:null
@@ -844,17 +803,17 @@ async def discovery_handler(request):
     )
 
 
-# 11 Natural Whole Earth Categories — PUBLIC surface (13 sovereign tools)
+# 5 Witness Core Categories — PUBLIC surface (10 sovereign tools)
 # These are the ONLY tools advertised in the public registry.
 # Dimension/substrate/internal tools remain callable but are not listed here.
 GEOX_TOOL_CATEGORIES = {
     "geox_registry_contract": {
-        "canonical": ["geox_system_registry_status", "geox_history_audit"],
-        "description": "Discover tools, contracts, health, metadata, dependencies, and VAULT999 lineage",
+        "canonical": ["geox_system_registry_status"],
+        "description": "Machine-checkable tool manifest and registry truth",
     },
     "geox_data_intake": {
-        "canonical": ["geox_data_ingest_bundle"],
-        "description": "Import, ingest, inventory, and register Earth evidence artifacts",
+        "canonical": ["geox_data_ingest_bundle", "geox_dst_ingest_test"],
+        "description": "Ingest Earth evidence artifacts and observed test data",
     },
     "geox_data_qc": {
         "canonical": ["geox_data_qc_bundle"],
@@ -862,41 +821,22 @@ GEOX_TOOL_CATEGORIES = {
     },
     "geox_well_rock_properties": {
         "canonical": ["geox_subsurface_generate_candidates", "geox_subsurface_verify_integrity"],
-        "description": "Well logs, petrophysics, Vsh, porosity, Sw, net pay, permeability, lithology",
+        "description": "Well logs, petrophysics, Vsh, porosity, Sw, net pay, permeability",
     },
-    "geox_seismic_volume": {
-        "canonical": ["geox_seismic_analyze_volume"],
-        "description": "SEG-Y loading, attributes, slices, viewer payloads",
-    },
-    "geox_stratigraphy_section": {
-        "canonical": ["geox_section_interpret_correlation"],
-        "description": "Correlation, GR motifs, sequence stratigraphy, multi-well panels",
-    },
-    "geox_map_scene": {
-        "canonical": ["geox_map_context_scene"],
-        "description": "CRS, bbox, map context, georeferencing, spatial scene rendering",
-    },
-    "geox_time4d_system": {
-        "canonical": ["geox_time4d_analyze_system"],
-        "description": "Burial, maturity, trap-charge timing, regime shifts",
-    },
-    "geox_prospect_assessment": {
-        "canonical": ["geox_prospect_evaluate"],
-        "description": "Volumetrics, POS, EVOI, prospect evaluation and scorecard",
-    },
-    "geox_governance_audit": {
+    "geox_seismic_physics": {
         "canonical": [
-            "geox_prospect_judge_preview",
-            "geox_prospect_judge_seal",
-            "geox_evidence_summarize_cross",
+            "geox_seismic_well_tie_compute",
+            "geox_time_depth_anchor",
+            "geox_forward_model_synthetic",
+            "geox_anomalous_contrast_detector",
         ],
-        "description": "AC_Risk, 888_HOLD, verdict gateway, VAULT999, evidence graph",
+        "description": "Deterministic seismic-to-well tie, T-D anchoring, synthetic, AC theory",
     },
 }
 
 
 async def tools_list_handler(request):
-    """Return the public tool surface: 15 sovereign tools with full MCP 2025-11-25 metadata.
+    """Return the public tool surface: 10 Witness Core tools with full MCP 2025-11-25 metadata.
 
     Internal dimension/substrate tools are callable but NOT advertised here.
     Aliases are listed separately with deprecation metadata.
@@ -991,7 +931,7 @@ async def tools_list_handler(request):
             "total_runtime": len(all_tools),
             "natural_tools": 11,
             "seal": "DITEMPA BUKAN DIBERI",
-            "public_surface": "15 sovereign tools",
+            "public_surface": "10 Witness Core tools",
         }
     )
 

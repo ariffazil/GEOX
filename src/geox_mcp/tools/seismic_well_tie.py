@@ -15,15 +15,15 @@ from geox_mcp.tools._helpers import (
     _get_artifact,
     _artifact_exists,
 )
-from geox_core.engines.seismic.well_tie import (
-    calculate_acoustic_impedance,
-    calculate_reflectivity,
-    generate_ricker,
-    convolve_synthetic,
+from geox_core.physics import (
+    impedance_array as calculate_acoustic_impedance,
+    reflectivity_array as calculate_reflectivity,
+    ricker_wavelet as generate_ricker,
+    convolve_trace as convolve_synthetic,
 )
 from geox_core.io.checkshot_reader import apply_td_anchor
-from geox_core.engines.petrophysics.rock_physics import gardner_density
-from geox_core.core.physics_guard import PhysicsGuard
+from geox_core.physics import gardner_density
+from geox_core.physics.guards import PhysicsGuard
 from geox_core.core.welltie import compute_welltie
 
 logger = logging.getLogger("geox.canonical.seismic_well_tie")

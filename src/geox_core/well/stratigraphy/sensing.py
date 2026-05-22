@@ -14,6 +14,7 @@ from typing import Any, Optional
 
 import numpy as np
 from scipy import stats as scipy_stats
+from scipy.signal import savgol_filter
 
 
 def sense_bins(
@@ -71,6 +72,16 @@ def sense_bins(
     d_zone = depth[mask]
     gr_zone = gr[mask]
 
+    # Smooth GR with Savitzky-Golay filter to reduce high-frequency noise
+    # before motif classification (Arif 2026-05-22)
+    if len(gr_zone) >= 5:
+        window = min(21, len(gr_zone) // 2 * 2 + 1)  # odd window, max 21
+        window = max(5, window)
+        try:
+            gr_zone = savgol_filter(gr_zone, window_length=window, polyorder=2)
+        except Exception:
+            pass  # fallback to raw GR if filter fails
+
     if len(d_zone) < 2:
         start = np.floor(zone_top / bin_size_m) * bin_size_m
         d = start
@@ -115,9 +126,9 @@ def sense_bins(
             if mean < 50:
                 micro = "Blocky"
             elif mean < 90:
-                micro = "Serated_Irregular Pattern"
+                micro = "Serrated / Irregular Pattern"
             else:
-                micro = "Serated_Irregular Pattern"
+                micro = "Serrated / Irregular Pattern"
             p10 = mean
             p90 = mean
             rng = 0.0
@@ -156,11 +167,11 @@ def _classify_micro_motif(
     Heterolithic is the fallback for ambiguous/no-data bins.
     """
     if mean > gr_cut + 15 and rng < 30:
-        return "Serated_Irregular Pattern"
+        return "Serrated / Irregular Pattern"
     if slope < -0.25:
         return "Fining Upward"
     if slope > 0.25:
-        return "Coaserning Upward"
+        return "Coarsening Upward"
     if rng < 18:
         return "Blocky"
-    return "Serated_Irregular Pattern"
+    return "Serrated / Irregular Pattern"

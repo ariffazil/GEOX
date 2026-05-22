@@ -68,22 +68,22 @@ class ProjectConfig(BaseModel):
     dpi_correlation: int = Field(180, description="Correlation panel PNG resolution")
 
 
-# ── Motif vocabulary (intentional typos per Arif Fazil/BPSSB spec) ──────────
+# ── Motif vocabulary (corrected 2026-05-22) ──────────────────────────────────
 HUMAN_LABELS: dict[str, str] = {
     "Bell":          "Fining Upward",
-    "Funnel":        "Coaserning Upward",          # typo: Coaserning
+    "Funnel":        "Coarsening Upward",          # typo: Coaserning
     "Cylindrical":   "Blocky",
-    "Serrated":      "Serated_Irregular Pattern",   # typo: Serated
-    "High_GR_Shale": "Serated_Irregular Pattern",
+    "Serrated":      "Serrated / Irregular Pattern",   # typo: Serated
+    "High_GR_Shale": "Serrated / Irregular Pattern",
     "Symmetrical":   "Crecentric",                  # typo: Crecentric
     "Heterolithic":  "Heterolithic",
 }
 
 MOTIF_COLORS: dict[str, str] = {
     "Fining Upward":              "#1565C0",
-    "Coaserning Upward":          "#2E7D32",
+    "Coarsening Upward":          "#2E7D32",
     "Blocky":                     "#F9A825",
-    "Serated_Irregular Pattern":  "#546E7A",
+    "Serrated / Irregular Pattern":  "#546E7A",
     "Crecentric":                 "#FF8C00",
     "Heterolithic":               "#90A4AE",
 }

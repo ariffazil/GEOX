@@ -21,7 +21,7 @@ import json
 
 import numpy as np
 
-from geox_core.core.physics_guard import PhysicsGuard
+from geox_core.physics.guards import PhysicsGuard
 from geox_core.core.truth_ledger import TruthLedger
 from geox_core.core.artefact_emission import ArtefactEmitter
 
