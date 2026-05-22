@@ -572,6 +572,29 @@ def _wrap_tool_outputs(mcp_server):
             continue
 
         async def _universal_wrapper(*args, __orig=original_fn, __tool=tool, **kwargs):
+            # ORGAN_GOVERNANCE: arifOS F1-F13 check for C2+/IRREVERSIBLE tools.
+            # This runs inside FastMCP's tool execution, catching ALL tool calls.
+            tool_name = getattr(__tool, "name", "")
+            arguments = kwargs if kwargs else (args[0] if args else {})
+            
+            # Import here to avoid circular imports
+            from geox_mcp.organ_governance import check_governance
+            gov_verdict, gov_error = check_governance(
+                tool_name=tool_name,
+                arguments=arguments,
+                actor_id="geox-mcp",
+            )
+            if gov_error is not None:
+                return {
+                "tool": tool_name,
+                "error_code": "ORGAN_GOVERNANCE_BLOCKED",
+                "governance_status": gov_verdict,
+                "message": f"arifOS {gov_verdict}: governance check blocked execution",
+                "guard": "ORGAN_GOVERNANCE",
+                "floor": "F1-F13",
+                "claim_state": "NO_VALID_EVIDENCE",
+                }
+
             result = __orig(*args, **kwargs)
             if inspect.isawaitable(result):
                 result = await result
@@ -1504,6 +1527,20 @@ async def legacy_mcp_handler(request):
         rt3_blocked = rt3_guard(name, args)
         if rt3_blocked is not None:
             return rt3_blocked
+
+        # ORGAN_GOVERNANCE: arifOS F1-F13 check for C2+/IRREVERSIBLE tools
+        # After RT-3 passes (ack_irreversible verified for irreversible tools),
+        # call arifOS kernel to get SEAL/HOLD/VOID before execution.
+        from geox_mcp.organ_governance import check_governance
+
+        gov_verdict, gov_error = check_governance(
+            tool_name=resolved_name,
+            arguments=args,
+            actor_id="geox-mcp",
+        )
+        if gov_error is not None:
+            return gov_error
+
         result = await run_legacy_tool(resolved_name, args)  # Call with resolved name
         return JSONResponse(
             {
