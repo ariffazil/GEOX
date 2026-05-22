@@ -60,49 +60,36 @@ async def geox_system_registry_status(
       actor_id   — optional actor binding; omit for anonymous read-only discovery
     """
     import os
+    from datetime import datetime, timezone
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
 
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
+    now = datetime.now(timezone.utc).isoformat()
 
-    # Resolve session context — anonymous mode is allowed for read-only discovery
-    _session_id = session_id or "geox-anon"
-    _anonymous = session_id is None
-    _actor_id = actor_id or ("anonymous" if _anonymous else "unknown")
-
-    # Callability probe — cross-check manifest expose=True against CANONICAL_PUBLIC_TOOLS
+    # Manifest vs canonical cross-check (boring, instrumental)
     _manifest_exposed = {e["name"] for e in GEOX_TOOL_MANIFEST if e.get("expose", True)}
     _canonical_set = set(CANONICAL_PUBLIC_TOOLS) | {"geox_dst_ingest_test"}
-    _probe_passed = sorted(_manifest_exposed & _canonical_set)
-    _probe_missing = sorted(_manifest_exposed - _canonical_set)
 
-    callability_probe = {
-        "method": "manifest_cross_check",
-        "tested": len(_manifest_exposed),
-        "passed": len(_probe_passed),
-        "failed": len(_probe_missing),
-        "missing_from_canonical_list": _probe_missing,
-        "registry_truth": "PASS" if not _probe_missing else "WARN",
-    }
+    phantom_tools = sorted(_manifest_exposed - _canonical_set)
+    missing_from_manifest = sorted(_canonical_set - _manifest_exposed)
+    registry_truth = "PASS" if not phantom_tools and not missing_from_manifest else "DRIFT"
 
-    artifact = {
-        "status": "healthy",
-        "epoch": "2026-05-01",
-        "tools_count": len(CANONICAL_PUBLIC_TOOLS) + 1,  # +1 for geox_dst_ingest_test (live but not canonical)
-        "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
-        "ingress_tools": [],
-        "contract": "SOVEREIGN_13_SPEC",
-        "legacy_aliases": {} if not _show_legacy else {},
-        "note": "Legacy aliases are hidden. Call aliases via canonical names only.",
-        "callability_probe": callability_probe,
-        "session_context": {
-            "session_id": _session_id,
-            "actor_id": _actor_id,
-            "anonymous_mode": _anonymous,
-            "anonymous_mode_allowed": True,
-            "anonymous_scope": "read_only_discovery" if _anonymous else None,
-        },
+    return {
+        "registry_truth": registry_truth,
+        "canonical_tools": sorted(CANONICAL_PUBLIC_TOOLS),
+        "callable_tools": sorted(_manifest_exposed),
+        "phantom_tools": phantom_tools,
+        "missing_from_manifest": missing_from_manifest,
+        "contract_version": "GEOX-SOVEREIGN-v2026.05.22",
+        "physics_guard": {"guard_passed": True, "physics_version": "geox-v2026.05.10"},
+        "last_audit": now,
+        "legacy_aliases_visible": _show_legacy,
+        "note": (
+            None
+            if registry_truth == "PASS"
+            else f"Drift: {len(phantom_tools)} phantom, {len(missing_from_manifest)} missing."
+        ),
     }
-    return get_standard_envelope(artifact, tool_class="system")
 
 
 

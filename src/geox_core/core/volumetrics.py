@@ -10,7 +10,7 @@ from typing import Any
 import numpy as np
 
 from geox_core.core.governed_output import classify_claim_tag, make_vault_receipt
-from geox_core.core.physics_guard import PhysicsGuard
+from geox_core.physics.guards import PhysicsGuard
 
 
 @dataclass

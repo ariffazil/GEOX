@@ -3,7 +3,7 @@ GEOX PhysicsGuard: The Constitutional Gatekeeper
 F2 Truth | F3 Tri-Witness | F9 Ethics 
 """
 from typing import Dict, Any
-from geox_core.core.physics9 import Physics9State, anomaly_contrast_theory
+from geox_core.physics import Physics9State, anomaly_contrast_theory
 
 class PhysicsGuard:
     """Enforces physical and epistemic invariants before capital allocation."""

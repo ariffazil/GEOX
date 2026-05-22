@@ -1,8 +1,7 @@
 """
-GEOX Sovereign 13 — Canonical Tool Orchestrator
+GEOX Witness Core — Canonical Tool Orchestrator
 ═══════════════════════════════════════════════════════════════════════════════
-Thin registration layer. All tool implementations live in
-contracts.tools.canonical.* modules.
+10 tools. Physics-9 foundation. No interpretation. No narrative.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
@@ -25,39 +24,14 @@ from geox_mcp.tools.petrophysics import (
     geox_subsurface_generate_candidates,
     geox_subsurface_verify_integrity,
 )
-from geox_mcp.tools.seismic import geox_seismic_analyze_volume
 from geox_mcp.tools.seismic_well_tie import (
     geox_seismic_well_tie_compute,
     geox_time_depth_anchor,
     geox_forward_model_synthetic,
 )
 from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
-from geox_mcp.tools.seismic_vision import geox_vision_time_to_depth
-from geox_mcp.tools.section import geox_section_interpret_correlation
-from geox_mcp.tools.map_context import geox_map_context_scene
-from geox_mcp.tools.time4d import geox_time4d_analyze_system
-from geox_mcp.tools.prospect import (
-    geox_prospect_evaluate,
-    geox_prospect_judge_preview,
-    geox_prospect_judge_seal,
-)
-from geox_mcp.tools.evidence import geox_evidence_summarize_cross
-from geox_mcp.tools.registry import (
-    geox_system_registry_status,
-    geox_history_audit,
-    geox_contradiction_registry_status,
-    geox_test_receipt_status,
-    geox_bundle_security_audit,
-    geox_resource_registry_status,
-)
-from geox_mcp.tools.abduction import (
-    geox_process_abduction,
-    geox_evidence_contradiction_scan,
-)
-from geox_mcp.tools.well import register_well_tools
 from geox_mcp.tools.dst import geox_dst_ingest_test
-from geox_mcp.tools.forward_model_synthetic import geox_forward_model_synthetic
-from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
+from geox_mcp.tools.registry import geox_system_registry_status
 
 logger = logging.getLogger("geox.unified13")
 
@@ -79,8 +53,6 @@ async def dispatch_alias(old_name: str, canonical_name: str, **kwargs: Any) -> d
         res = await geox_subsurface_generate_candidates(target_class=target, evidence_refs=refs)
     elif canonical_name == "geox_system_registry_status":
         res = await geox_system_registry_status()
-    elif canonical_name == "geox_prospect_evaluate":
-        res = await geox_prospect_evaluate(kwargs.get("prospect_ref", "N/A"))
     else:
         res = {"status": "SUCCESS", "message": f"Aliased from {old_name} to {canonical_name}"}
 
@@ -90,69 +62,32 @@ async def dispatch_alias(old_name: str, canonical_name: str, **kwargs: Any) -> d
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-async def mcp_health_check() -> dict:
-    """Universal health check for federation stability."""
-    try:
-        from geox_mcp.server import GEOX_VERSION as _v
-    except Exception:
-        _v = "v2026.05.14-REFORGE"
-    return {
-        "mcp": "GEOX",
-        "status": "healthy",
-        "service": "geox-unified",
-        "version": _v,
-        "transport": "streamable-http",
-        "tools_loaded": len(CANONICAL_PUBLIC_TOOLS),
-        "timestamp": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
-    }
-
 # REGISTRATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-
 _TOOL_REGISTRY: list[tuple[str, Any]] = [
-    ("mcp_health_check", mcp_health_check),
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),
     ("geox_data_qc_bundle", geox_data_qc_bundle),
+    ("geox_dst_ingest_test", geox_dst_ingest_test),
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
     ("geox_subsurface_verify_integrity", geox_subsurface_verify_integrity),
-    ("geox_seismic_analyze_volume", geox_seismic_analyze_volume),
     ("geox_seismic_well_tie_compute", geox_seismic_well_tie_compute),
     ("geox_time_depth_anchor", geox_time_depth_anchor),
     ("geox_forward_model_synthetic", geox_forward_model_synthetic),
     ("geox_anomalous_contrast_detector", geox_anomalous_contrast_detector),
-    ("geox_vision_time_to_depth", geox_vision_time_to_depth),
-    ("geox_section_interpret_correlation", geox_section_interpret_correlation),
-    ("geox_map_context_scene", geox_map_context_scene),
-    ("geox_time4d_analyze_system", geox_time4d_analyze_system),
-    ("geox_prospect_evaluate", geox_prospect_evaluate),
-    ("geox_prospect_judge_preview", geox_prospect_judge_preview),
-    ("geox_prospect_judge_seal", geox_prospect_judge_seal),
-    ("geox_evidence_summarize_cross", geox_evidence_summarize_cross),
     ("geox_system_registry_status", geox_system_registry_status),
-    ("geox_history_audit", geox_history_audit),
-    ("geox_process_abduction", geox_process_abduction),
-    ("geox_evidence_contradiction_scan", geox_evidence_contradiction_scan),
-    ("geox_dst_ingest_test", geox_dst_ingest_test),
-    ("geox_contradiction_registry_status", geox_contradiction_registry_status),
-    ("geox_test_receipt_status", geox_test_receipt_status),
-    ("geox_bundle_security_audit", geox_bundle_security_audit),
-    ("geox_resource_registry_status", geox_resource_registry_status),
 ]
 
 _TOOL_ANNOTATIONS: dict[str, dict] = {
-    "geox_prospect_evaluate": {"ui": {"resourceUri": "ui://judge-console"}},
-    "geox_seismic_analyze_volume": {"ui": {"resourceUri": "ui://seismic_vision_review"}},
-    "geox_map_context_scene": {"ui": {"resourceUri": "ui://georeference_map"}},
     "geox_data_ingest_bundle": {"ui": {"resourceUri": "ui://well_desk"}},
     "geox_subsurface_generate_candidates": {"ui": {"resourceUri": "ui://earth_volume"}},
 }
 
 
 def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
-    """Registers the 13 Canonical Sovereign tools and the Legacy Alias Bridge."""
+    """Registers the 10 Witness Core tools."""
 
-    # ── Register canonical 13 ────────────────────────────────────────────────
+    # ── Register canonical 10 ────────────────────────────────────────────────
     for name, func in _TOOL_REGISTRY:
         kwargs: dict[str, Any] = {"name": name}
         if name in _TOOL_ANNOTATIONS:
@@ -160,16 +95,15 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    # Count is 30: 15 core + 3 seismic + 4 well-strat + 2 abduction + 3 registry + 1 resource + 2 synthetic
-    assert len(CANONICAL_PUBLIC_TOOLS) == 30, (
-        f"F0_CONSTITUTION_BREACH: Expected 30 sovereign tools, "
+    assert len(CANONICAL_PUBLIC_TOOLS) == 10, (
+        f"F0_CONSTITUTION_BREACH: Expected 10 sovereign tools, "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
     # ── Legacy alias bridge ──────────────────────────────────────────────────
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
     if not _show_legacy:
-        logger.info("Legacy aliases hidden (GEOX_SHOW_LEGACY_ALIASES=false). Expose only canonical 13 + preview/seal.")
+        logger.info("Legacy aliases hidden (GEOX_SHOW_LEGACY_ALIASES=false).")
 
     for old_name, new_name in LEGACY_ALIAS_MAP.items():
         if "." in old_name:
@@ -201,10 +135,3 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
                 description=f"[DEPRECATED] Alias for {new_name}. Update calling contract by 2026-06-01.",
                 annotations={"deprecated": True, "canonical_name": new_name},
             )(make_alias())
-
-    # ── Well correlation tools (non-canonical, kept for compatibility) ───────
-    from geox_mcp.tools.well import register_well_tools
-    from geox_mcp.tools.well_correlation import register_well_correlation_tools
-
-    register_well_tools(mcp)
-    register_well_correlation_tools(mcp)

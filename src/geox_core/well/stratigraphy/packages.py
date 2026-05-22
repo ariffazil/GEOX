@@ -61,7 +61,7 @@ def build_packages(
         )
         mot_inversion = (
             {b["MICRO_MOTIF"], last["MICRO_MOTIF"]}
-            == {"Fining Upward", "Coaserning Upward"}
+            == {"Fining Upward", "Coarsening Upward"}
         )
         thickness_now = abs(current[0]["TOP"] - current[-1]["BASE"])
         if p50_break or mot_inversion or thickness_now >= max_pkg_m:
@@ -128,7 +128,7 @@ def _finalize_package(bins: list[dict[str, Any]]) -> dict[str, Any]:
         human_motif = "Fining Upward"
         rider_motif = "Bell"
     elif net_slope > 0.18:
-        human_motif = "Coaserning Upward"
+        human_motif = "Coarsening Upward"
         rider_motif = "Funnel"
     elif rng_mean < 18:
         human_motif = "Blocky"
@@ -139,7 +139,7 @@ def _finalize_package(bins: list[dict[str, Any]]) -> dict[str, Any]:
             human_motif = dom
             rider_motif = {v: k for k, v in HUMAN_LABELS.items()}.get(dom, "Serrated")
         else:
-            human_motif = "Serated_Irregular Pattern"
+            human_motif = "Serrated / Irregular Pattern"
             rider_motif = "Serrated"
 
     variability = "Low" if rng_mean < 15 else ("Moderate" if rng_mean < 35 else "High")
@@ -156,7 +156,7 @@ def _finalize_package(bins: list[dict[str, Any]]) -> dict[str, Any]:
         "HUMAN_MOTIF": human_motif,
         "RIDER_MOTIF": rider_motif,
         "NET_TREND": ("Net Fining Upward" if human_motif == "Fining Upward"
-                      else "Net Coarsening Upward" if human_motif == "Coaserning Upward"
+                      else "Net Coarsening Upward" if human_motif == "Coarsening Upward"
                       else "Aggradational"),
         "VARIABILITY": variability,
         "GR_BASELINE_SHIFT": baseline_shift,
