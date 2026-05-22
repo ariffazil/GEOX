@@ -37,18 +37,20 @@ install:
   source: https://github.com/ariffazil/geox
   python_version: ">=3.11"
 
-# Sovereign 15 Tools — 14 canonical + 1 DST ingestion specialist
+# Sovereign 11 Tools — Forged Surface (2026-05-22)
+# Replaces 35+ phantom/dead/redundant tools with 11 honest, minimal, complete tools.
 tools:
   - id: geox_data_ingest_bundle
     name: geox_data_ingest_bundle
-    description: Lazy ingest LAS/CSV/SEG-Y/JSON/GeoJSON/Parquet/analog log into the artifact store. Returns artifact_ref for downstream tools.
+    description: Lazy ingest LAS/CSV/SEG-Y/JSON/GeoJSON/Parquet/analog log into the artifact store. Supports single-file and batch_mode. Returns artifact_ref for downstream tools.
     input_schema:
       type: object
       properties:
-        file_path: { type: string, description: "Path or URL to the data file" }
-        format: { type: string, enum: [las, csv, segy, json, geojson, parquet, analog] }
-        artifact_label: { type: string }
-      required: [file_path, format]
+        source_uri: { type: string, description: "Path or URL to the data file" }
+        source_type: { type: string, enum: [well, seismic, earth3d, auto, tops, biostrat, checkshot] }
+        batch_mode: { type: boolean, default: false }
+        artifact_refs: { type: array, items: { type: string }, description: "Required when batch_mode=true" }
+      required: [source_uri]
 
   - id: geox_data_qc_bundle
     name: geox_data_qc_bundle
@@ -57,101 +59,8 @@ tools:
       type: object
       properties:
         artifact_ref: { type: string }
+        qc_mode: { type: string, enum: [full, header, curves, depth, completeness], default: full }
       required: [artifact_ref]
-
-  - id: geox_subsurface_generate_candidates
-    name: geox_subsurface_generate_candidates
-    description: Petrophysics + structural geometry ensemble (MIN/MID/MAX realizations) with residuals, evidence_density, and assumptions. Requires QC_VERIFIED input.
-    input_schema:
-      type: object
-      properties:
-        target_class: { type: string, enum: [petrophysics, structure, flattening, vsh, porosity, saturation, netpay, permeability, gr_motif, lithology] }
-        evidence_refs: { type: array, items: { type: string } }
-        realizations: { type: integer, default: 3 }
-      required: [target_class, evidence_refs]
-
-  - id: geox_subsurface_verify_integrity
-    name: geox_subsurface_verify_integrity
-    description: Physics-9 integrity gate — enforces nine physical law constraints on candidate outputs. SEAL/FAIL/HOLD verdict. Requires geox:governance scope.
-    input_schema:
-      type: object
-      properties:
-        candidate_ref: { type: string }
-        domain: { type: string, enum: [petrophysics, structure, seismic, geochemistry] }
-      required: [candidate_ref, domain]
-
-  - id: geox_seismic_analyze_volume
-    name: geox_seismic_analyze_volume
-    description: Seismic attribute computation (RMS, variance, sweetness, coherence), slice rendering, vision review, and viewer payload preparation.
-    input_schema:
-      type: object
-      properties:
-        volume_ref: { type: string }
-        mode: { type: string, enum: [load_line, load_volume, compute_attribute, render_slice, vision_review, viewer_payload], default: compute_attribute }
-        attribute: { type: string, default: rms }
-      required: [volume_ref]
-
-  - id: geox_section_interpret_correlation
-    name: geox_section_interpret_correlation
-    description: Multi-well stratigraphic correlation and marker interpretation. Returns formation tops, GR motifs, sequence boundaries.
-    input_schema:
-      type: object
-      properties:
-        section_ref: { type: string }
-        well_refs: { type: array, items: { type: string } }
-        mode: { type: string, enum: [correlation, gr_motif, sequence_stratigraphy], default: correlation }
-      required: [section_ref, well_refs]
-
-  - id: geox_map_context_scene
-    name: geox_map_context_scene
-    description: Geospatial context, CRS validation, georeferencing, basin atlas lookup, and F6 Maruah territory flag for community/indigenous overlap.
-    input_schema:
-      type: object
-      properties:
-        bbox: { type: array, items: { type: number }, description: "[min_lon, min_lat, max_lon, max_lat]" }
-        crs: { type: string, default: "EPSG:4326" }
-      required: [bbox]
-
-  - id: geox_time4d_analyze_system
-    name: geox_time4d_analyze_system
-    description: Burial history, thermal maturity (Ro%), trap-charge timing, and regime shift analysis. Returns petroleum system timeline.
-    input_schema:
-      type: object
-      properties:
-        basin_ref: { type: string }
-        mode: { type: string, enum: [burial_history, maturity, trap_timing, regime_shift], default: burial_history }
-      required: [basin_ref]
-
-  - id: geox_prospect_evaluate
-    name: geox_prospect_evaluate
-    description: Integrated P10/P50/P90 volumetrics, Probability of Success (POS), Expected Value of Information (EVOI), and risk matrix. Returns requires_governance true.
-    input_schema:
-      type: object
-      properties:
-        prospect_ref: { type: string }
-        mode: { type: string, enum: [volumetrics, pos, evoi, risk_matrix], default: volumetrics }
-      required: [prospect_ref]
-
-  - id: geox_prospect_judge_preview
-    name: geox_prospect_judge_preview
-    description: Reversible advisory verdict — returns JUDGE_PREVIEW/HOLD without consuming sovereign ack. Safe for automation.
-    input_schema:
-      type: object
-      properties:
-        prospect_ref: { type: string }
-        ac_risk_score: { type: number, minimum: 0, maximum: 1 }
-      required: [prospect_ref, ac_risk_score]
-
-  - id: geox_prospect_judge_seal
-    name: geox_prospect_judge_seal
-    description: Irreversible governance verdict gate — emits SEAL/PARTIAL/SABAR/VOID/888_HOLD. Routes to arif_judge_deliberate. Requires ack_irreversible=true and geox:governance scope.
-    input_schema:
-      type: object
-      properties:
-        prospect_ref: { type: string }
-        ac_risk_score: { type: number, minimum: 0, maximum: 1 }
-        ack_irreversible: { type: boolean, description: "Must be true to proceed past RT-3 guard" }
-      required: [prospect_ref, ac_risk_score, ack_irreversible]
 
   - id: geox_dst_ingest_test
     name: geox_dst_ingest_test
@@ -160,30 +69,88 @@ tools:
       type: object
       properties:
         well_id: { type: string }
-        gas_rate_mmscfd: { type: number }
-        condensate_rate_stbd: { type: number }
-        water_rate_stbd: { type: number }
-        bhp_psi: { type: number }
-        whp_psi: { type: number }
       required: [well_id]
 
-  - id: geox_evidence_summarize_cross
-    name: geox_evidence_summarize_cross
-    description: Cross-domain synthesis — evidence graph, contradiction detection, residual analysis, and federation handoff. Rejects HYPOTHESIS/DERIVED_CANDIDATE inputs.
+  - id: geox_subsurface_generate_candidates
+    name: geox_subsurface_generate_candidates
+    description: Petrophysics + structural geometry ensemble (MIN/MID/MAX realizations) with residuals, evidence_density, and assumptions. Supports multi-well basin metabolize mode.
     input_schema:
       type: object
       properties:
+        target_class: { type: string, enum: [petrophysics, structure, flattening, vsh, porosity, saturation, netpay, permeability, gr_motif, lithology] }
         evidence_refs: { type: array, items: { type: string } }
-        export_format: { type: string, enum: [json, markdown, graph], default: json }
+        basin_context: { type: string, description: "Enable basin metabolize mode when set" }
+      required: [target_class, evidence_refs]
+
+  - id: geox_subsurface_verify_integrity
+    name: geox_subsurface_verify_integrity
+    description: Physics-9 integrity gate — enforces nine physical law constraints on candidate outputs. SEAL/FAIL/HOLD verdict.
+    input_schema:
+      type: object
+      properties:
+        candidate_ref: { type: string }
+        domain: { type: string, enum: [petrophysics, structure, seismic, geochemistry] }
+      required: [candidate_ref, domain]
+
+  - id: geox_seismic_compute
+    name: geox_seismic_compute
+    description: Unified seismic physics engine. Modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute (honest placeholder).
+    input_schema:
+      type: object
+      properties:
+        mode: { type: string, enum: [synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute] }
+        well_id: { type: string }
+      required: [mode]
+
+  - id: geox_sequence_interpret
+    name: geox_sequence_interpret
+    description: Unified sequence stratigraphy engine. Workflows: single_well, project, preview, section_correlation. Replaces 7 predecessor tools.
+    input_schema:
+      type: object
+      properties:
+        workflow: { type: string, enum: [single_well, project, preview, section_correlation] }
+        source: { type: string }
+        project_yaml: { type: string }
+      required: [workflow]
+
+  - id: geox_evidence_reason
+    name: geox_evidence_reason
+    description: Unified evidence synthesis, abduction, and contradiction engine. Phases: synthesize, abduct, contradict, full.
+    input_schema:
+      type: object
+      properties:
+        phase: { type: string, enum: [synthesize, abduct, contradict, full], default: full }
+        evidence_refs: { type: array, items: { type: string } }
       required: [evidence_refs]
+
+  - id: geox_prospect_evaluate
+    name: geox_prospect_evaluate
+    description: Integrated prospect evaluation with reversible preview and irreversible seal. Modes: screen, appraise, develop. Verdicts: compute, preview, seal.
+    input_schema:
+      type: object
+      properties:
+        prospect_ref: { type: string }
+        mode: { type: string, enum: [screen, appraise, develop], default: screen }
+        verdict: { type: string, enum: [compute, preview, seal], default: compute }
+        ack_irreversible: { type: boolean, default: false }
+      required: [prospect_ref]
+
+  - id: geox_map_context_scene
+    name: geox_map_context_scene
+    description: Geospatial context, CRS validation, georeferencing, basin atlas lookup, and F6 Maruah territory flag.
+    input_schema:
+      type: object
+      properties:
+        bbox: { type: array, items: { type: number }, description: "[min_lon, min_lat, max_lon, max_lat]" }
+        mode: { type: string, enum: [bbox_context, crs_check, render_scene, scene_summary, georeference_map, coordinate_guardrail], default: bbox_context }
+      required: [bbox]
 
   - id: geox_system_registry_status
     name: geox_system_registry_status
-    description: Contract introspection — tool count, alias table, manifest parity, health, and federation status. Returns canonical_tool_count=14, total_tools=15.
+    description: Contract introspection — tool count, alias table, manifest parity, health, and federation status. Returns canonical_tool_count=11.
     input_schema:
       type: object
-      properties:
-        include_aliases: { type: boolean, default: false }
+      properties: {}
       required: []
 
   - id: geox_history_audit

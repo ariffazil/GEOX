@@ -1,6 +1,6 @@
 [project]
 name = "geox"
-version = "2026.05.21"
+version = "2026.05.22"
 description = "GEOX — Earth Intelligence Sovereign Kernel. Governed geoscience coprocessor under arifOS constitutional floors. 13 canonical MCP tools, 13 constitutional floors (F01-F13)."
 readme = "README.md"
 requires-python = ">=3.11"

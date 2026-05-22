@@ -78,6 +78,9 @@ async def geox_subsurface_generate_candidates(
     rt_cutoff: float = 2.0,
     zone_top_m: Optional[float] = None,
     zone_base_m: Optional[float] = None,
+    # Basin metabolize mode (absorbs geox_task_metabolize_basin)
+    basin_context: str | None = None,
+    canon9_profile: str = "malay_basin",
 ) -> dict:
     """Generates ensemble subsurface outputs with residuals and data-density maps.
 
@@ -102,6 +105,74 @@ async def geox_subsurface_generate_candidates(
         )
         return enrich_envelope_with_metabolic(envelope, "geox_subsurface_generate_candidates")
 
+    # ── Basin metabolize mode (absorbs geox_task_metabolize_basin) ───────────
+    if basin_context is not None and len(evidence_refs) > 1:
+        profile_defaults: dict[str, Any] = {
+            "malay_basin": {
+                "rw": 0.05, "archie_m": 2.0, "archie_n": 2.0,
+                "matrix_density": 2.65, "fluid_density": 1.0,
+                "vsh_cutoff": 0.5, "phi_cutoff": 0.1, "sw_cutoff": 0.6,
+            },
+            "generic": {
+                "rw": 0.05, "archie_m": 2.0, "archie_n": 2.0,
+                "matrix_density": 2.65, "fluid_density": 1.0,
+                "vsh_cutoff": 0.5, "phi_cutoff": 0.1, "sw_cutoff": 0.6,
+            },
+        }
+        defaults = profile_defaults.get(canon9_profile, profile_defaults["generic"])
+        per_well_results: list[dict[str, Any]] = []
+        success_count = 0
+        error_count = 0
+        for well_ref in evidence_refs:
+            try:
+                single = await geox_subsurface_generate_candidates(
+                    target_class=target_class,
+                    evidence_refs=[well_ref],
+                    realizations=realizations,
+                    **defaults,
+                )
+                payload = single.get("payload", single)
+                status = payload.get("execution_status", "UNKNOWN")
+                if status == "SUCCESS":
+                    success_count += 1
+                else:
+                    error_count += 1
+                per_well_results.append({
+                    "well_ref": well_ref,
+                    "status": status,
+                    "artifact_ref": payload.get("artifact_ref"),
+                    "claim_state": payload.get("claim_state", "UNKNOWN"),
+                    "physics_guard": payload.get("physics_guard"),
+                })
+            except Exception as exc:
+                error_count += 1
+                per_well_results.append({"well_ref": well_ref, "status": "ERROR", "error": str(exc), "claim_state": "NO_VALID_EVIDENCE"})
+        all_ok = error_count == 0
+        batch_status = "SUCCESS" if all_ok else "PARTIAL"
+        verdict = "QUALIFY" if all_ok else "HOLD"
+        basin_metrics = {
+            "well_count": len(evidence_refs),
+            "success_count": success_count,
+            "error_count": error_count,
+            "basin_context": basin_context,
+            "canon9_profile": canon9_profile,
+        }
+        return get_standard_envelope(
+            {
+                "tool": "geox_subsurface_generate_candidates",
+                "basin_mode": True,
+                "basin_metrics": basin_metrics,
+                "per_well_results": per_well_results,
+            },
+            tool_class="compute",
+            execution_status=batch_status,
+            governance_status=verdict,
+            claim_tag="CLAIM" if all_ok else "HYPOTHESIS",
+            claim_state="DECISION_SUPPORT" if all_ok else "HYPOTHESIS",
+            evidence_refs=evidence_refs,
+        )
+
+    # ── Single-well mode ─────────────────────────────────────────────────────
     result = await _compute_subsurface_candidates(
         target_class,
         evidence_refs,

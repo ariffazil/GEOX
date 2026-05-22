@@ -1,7 +1,7 @@
 """
-GEOX Witness Core — Canonical Tool Orchestrator
-═══════════════════════════════════════════════════════════════════════════════
-10 tools. Physics-9 foundation. No interpretation. No narrative.
+GEOX Witness Core — Canonical 13-Tool Orchestrator
+══════════════════════════════════════════════════
+13 tools. Physics-9 foundation. No interpretation. No narrative.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
@@ -20,17 +20,16 @@ from geox_core.compatibility.legacy_aliases import get_alias_metadata
 # ── Canonical tool implementations ───────────────────────────────────────────
 from geox_mcp.tools.data import geox_data_ingest_bundle
 from geox_mcp.tools.qc import geox_data_qc_bundle
+from geox_mcp.tools.dst import geox_dst_ingest_test
 from geox_mcp.tools.petrophysics import (
     geox_subsurface_generate_candidates,
     geox_subsurface_verify_integrity,
 )
-from geox_mcp.tools.seismic_well_tie import (
-    geox_seismic_well_tie_compute,
-    geox_time_depth_anchor,
-    geox_forward_model_synthetic,
-)
-from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
-from geox_mcp.tools.dst import geox_dst_ingest_test
+from geox_mcp.tools.seismic_compute import geox_seismic_compute
+from geox_mcp.tools.sequence import geox_sequence_interpret
+from geox_mcp.tools.evidence_reason import geox_evidence_reason
+from geox_mcp.tools.prospect import geox_prospect_evaluate
+from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.registry import geox_system_registry_status
 
 logger = logging.getLogger("geox.unified13")
@@ -38,6 +37,7 @@ logger = logging.getLogger("geox.unified13")
 # ═══════════════════════════════════════════════════════════════════════════════
 # ALIAS DISPATCH
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 async def dispatch_alias(old_name: str, canonical_name: str, **kwargs: Any) -> dict:
     """Centralized dispatcher for aliases with deprecation metadata."""
@@ -71,10 +71,11 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_dst_ingest_test", geox_dst_ingest_test),
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
     ("geox_subsurface_verify_integrity", geox_subsurface_verify_integrity),
-    ("geox_seismic_well_tie_compute", geox_seismic_well_tie_compute),
-    ("geox_time_depth_anchor", geox_time_depth_anchor),
-    ("geox_forward_model_synthetic", geox_forward_model_synthetic),
-    ("geox_anomalous_contrast_detector", geox_anomalous_contrast_detector),
+    ("geox_seismic_compute", geox_seismic_compute),
+    ("geox_sequence_interpret", geox_sequence_interpret),
+    ("geox_evidence_reason", geox_evidence_reason),
+    ("geox_prospect_evaluate", geox_prospect_evaluate),
+    ("geox_map_context_scene", geox_map_context_scene),
     ("geox_system_registry_status", geox_system_registry_status),
 ]
 
@@ -85,9 +86,9 @@ _TOOL_ANNOTATIONS: dict[str, dict] = {
 
 
 def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
-    """Registers the 10 Witness Core tools."""
+    """Registers the 13 Witness Core tools."""
 
-    # ── Register canonical 10 ────────────────────────────────────────────────
+    # ── Register canonical 13 ────────────────────────────────────────────────
     for name, func in _TOOL_REGISTRY:
         kwargs: dict[str, Any] = {"name": name}
         if name in _TOOL_ANNOTATIONS:
@@ -95,8 +96,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    assert len(CANONICAL_PUBLIC_TOOLS) == 10, (
-        f"F0_CONSTITUTION_BREACH: Expected 10 sovereign tools, "
+    assert len(CANONICAL_PUBLIC_TOOLS) == 11, (
+        f"F0_CONSTITUTION_BREACH: Expected 11 sovereign tools, "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
