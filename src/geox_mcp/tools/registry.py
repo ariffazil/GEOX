@@ -328,10 +328,18 @@ async def geox_test_receipt_status() -> dict:
     import subprocess
     import os
     import re
+    from pathlib import Path
 
-    repo_root = Path("/root/geox")
+    # Resolve repo root: inside container /app, on host /root/geox
+    _candidates = [Path("/app"), Path("/root/geox"), Path(__file__).resolve().parents[3], Path.cwd()]
+    repo_root = next((p for p in _candidates if (p / "src").exists() or (p / "pyproject.toml").exists()), Path("/app"))
+
+    # Prefer /app/tests (container) then /root/geox/tests (host)
+    tests_candidates = [repo_root / "tests", Path("/app/tests"), Path("/root/geox/tests")]
+    tests_dir = next((p for p in tests_candidates if p.exists()), repo_root / "tests")
+
     # Fallback search paths for git repo
-    git_dirs = [repo_root, Path("/app"), Path.cwd()]
+    git_dirs = [repo_root, Path("/root/geox"), Path("/app"), Path.cwd()]
     commit_hash = "unknown"
     commit_date = "unknown"
     for git_dir in git_dirs:
@@ -367,20 +375,21 @@ async def geox_test_receipt_status() -> dict:
     # Detect if we're already inside a pytest session — avoid recursive pytest invocation
     in_pytest_session = os.environ.get("PYTEST_CURRENT_TEST") is not None
 
+    source_note = "collect_only_fallback"
     try:
         result = subprocess.run(
-            ["python", "-m", "pytest", "tests/", "-q", "--co"],
+            ["python", "-m", "pytest", str(tests_dir), "-q", "--co", "--tb=no"],
             cwd=str(repo_root),
             capture_output=True,
             text=True,
             timeout=30,
         )
-        collect_match = re.search(r'(\d+) tests collected', result.stdout)
+        collect_match = re.search(r'(\d+) tests? collected', result.stdout)
         if collect_match:
             total_tests = int(collect_match.group(1))
         else:
             total_tests = result.stdout.count("<Test ")
-    except Exception as e:
+    except Exception:
         total_tests = 0
 
     if in_pytest_session:
@@ -394,7 +403,7 @@ async def geox_test_receipt_status() -> dict:
         # Host runtime: run pytest to get actual pass/fail/skip/xfail counts
         try:
             result = subprocess.run(
-                ["python", "-m", "pytest", "tests/", "-q", "--tb=no"],
+                ["python", "-m", "pytest", str(tests_dir), "-q", "--tb=no"],
                 cwd=str(repo_root),
                 capture_output=True,
                 text=True,

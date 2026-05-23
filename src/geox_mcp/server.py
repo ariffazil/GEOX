@@ -572,20 +572,51 @@ def _wrap_tool_outputs(mcp_server):
             _is_registry_tool = tool_name.startswith("geox_system_registry")
 
             if not _is_registry_tool:
+                # Helper to find a value in arguments or kwargs or result
+                def _find_field(field_name, default_val=None):
+                    if kwargs and field_name in kwargs:
+                        return kwargs[field_name]
+                    if args and isinstance(args[0], dict) and field_name in args[0]:
+                        return args[0][field_name]
+                    if isinstance(result, dict):
+                        if field_name in result:
+                            return result[field_name]
+                        if "audit_receipt" in result and isinstance(result["audit_receipt"], dict) and field_name in result["audit_receipt"]:
+                            return result["audit_receipt"][field_name]
+                    return default_val
+
+                s_id = _find_field("session_id") or "geox-no-session"
+                a_id = _find_field("actor_id") or "unknown"
+                t_id = _find_field("trace_id") or "unknown"
+                pt_id = _find_field("parent_trace_id") or "unknown"
+                c_hash = _find_field("constitution_hash") or "unknown"
+                art_hash = _find_field("artifact_hash") or "unknown"
+                t_ver = _find_field("tool_version") or "geox-v2026.05.10"
+                cl_state = _find_field("claim_state") or result.get("claim_tag", "HYPOTHESIS")
+                ev_refs = _find_field("evidence_refs") or result.get("evidence_refs", [])
+
+                audit_receipt = {
+                    "vault999_ref": "VAULT999-PENDING",
+                    "timestamp": now,
+                    "session_id": s_id,
+                    "actor_id": a_id,
+                    "tool_name": tool_name,
+                    "tool_version": t_ver,
+                    "trace_id": t_id,
+                    "parent_trace_id": pt_id,
+                    "constitution_hash": c_hash,
+                    "artifact_hash": art_hash,
+                    "claim_state": cl_state,
+                    "evidence_refs": ev_refs,
+                }
+
                 defaults = {
                     "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
                     "confidence_band": result.get("confidence_band"),
                     "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}),
-                    "evidence_refs": result.get("evidence_refs", []),
+                    "evidence_refs": ev_refs,
                     "uncertainty": result.get("uncertainty", "Moderate"),
-                    "audit_receipt": result.get(
-                        "audit_receipt",
-                        {
-                            "vault999_ref": "VAULT999-PENDING",
-                            "timestamp": now,
-                            "session_id": "geox-no-session",
-                        },
-                    ),
+                    "audit_receipt": audit_receipt,
                     "humility_score": result.get("humility_score", 0.0),
                     "maruah_flag": result.get(
                         "maruah_flag",
@@ -600,6 +631,7 @@ def _wrap_tool_outputs(mcp_server):
                 for k, v in defaults.items():
                     if k not in result:
                         result[k] = v
+                result["audit_receipt"] = audit_receipt
                 # Inject Earth event anchor only for geoscience tools (skip system/registry)
                 if "earth_event_anchor" not in result:
                     _anchor = _earth_event_for_tool(tool_name)

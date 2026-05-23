@@ -1,51 +1,40 @@
-# GEOX MCP Ignore — Files invisible to agent ingestion
-# DITEMPA BUKAN DIBERI
-
-# Archives and legacy surfaces
-archive/
-.archive/
-
-# Secrets and vaults
-vault/
-*.env
+# secrets
+.env
 .env.*
-secrets/
+*.pem
+*.key
+*.crt
+*secret*
+*token*
+*credential*
 
-# Raw data and generated outputs
-output/
+# vaults / ledgers
+VAULT999/
+vault/
+ledger/
+*.jsonl
+
+# raw geoscience data
+*.LAS
 *.las
-data/
+*.segy
+*.sgy
+*.parquet
 *.csv
-*.png
-*.xlsx
+/data/
+/raw/
+/private/
 
-# Frontend build artifacts
-node_modules/
+# build / cache
+__pycache__/
+.pytest_cache/
 dist/
 build/
-*.map
+*.egg-info/
+node_modules/
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-.egg-info/
-
-# Git and CI
+# git / local state
 .git/
-.github/
 .gitignore
-
-# IDE
-.vscode/
-.idea/
-*.swp
-
-# Docker
-Dockerfile*
-docker-compose*
-
-# Documentation drafts and personal notes
-drafts/
-scratch/
-stash/
+.mypy_cache/
+.ruff_cache/
