@@ -24,7 +24,7 @@ PYTHONPATH=src python -m geox_mcp.server
 Or with explicit transport:
 
 ```bash
-PYTHONPATH=src python src/geox_mcp/server.py --transport streamable-http --host 0.0.0.0 --port 8081
+PYTHONPATH=src python src/geox_mcp/server.py --transport streamable-http --host 0.0.0.0 --port 18081
 ```
 
 ## What Changed

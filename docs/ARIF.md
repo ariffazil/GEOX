@@ -56,7 +56,7 @@
 
 ## 5. INTERRUPTS & FAULTS (BLOCKERS)
 
-- HARD_BLOCK: VPS port 8081 reachable behind CF/Proxy but inducing intermittent 421 (HTTP/2 coalescing).
+- HARD_BLOCK: ~~VPS port 8081~~ (RESOLVED: migrated to 18081) was reachable behind CF/Proxy but inducing intermittent 421 (HTTP/2 coalescing).
 - INFRA_LAW: WELL container is intentionally REMOVED per Sovereign Rebuild Decision.
 - GHOST_TOOL: Phantom 'mcp_health_check' on arifOS is a client/proxy cache issue (NOT on server).
 

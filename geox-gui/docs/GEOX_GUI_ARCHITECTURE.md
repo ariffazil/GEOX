@@ -76,8 +76,8 @@ A governed geologist cockpit with constitutional governance (F1-F13) integration
 | Service | Protocol | Endpoint |
 |---------|----------|----------|
 | **GEOX MCP** | HTTP/SSE | `https://geoxarifOS.fastmcp.app/mcp` |
-| **VAULT999** | REST | `http://localhost:8080/vault` |
-| **arifOS Kernel** | WebSocket | `ws://localhost:8080/ws` |
+| **VAULT999** | REST | `http://localhost:8088/vault` |
+| **arifOS Kernel** | WebSocket | `ws://localhost:8088/ws` |
 
 ---
 
