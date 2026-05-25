@@ -15,7 +15,6 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, List, Optional
 
-import numpy as np
 
 from geox_core.physics import (
     impedance_array as calculate_acoustic_impedance,
@@ -49,6 +48,8 @@ async def geox_anomalous_contrast_detector(
     Returns:
         Plain dict with anomalies, recommended picks, and volumetric impact.
     """
+
+    import numpy as np
 
     # ── 1. INPUT VALIDATION ──────────────────────────────────────────────────
     if not ai_profile or not depth or len(ai_profile) != len(depth) or len(ai_profile) < 2:
