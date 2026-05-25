@@ -17,6 +17,12 @@ Transport: streamable-http
 
 from __future__ import annotations
 
+try:
+    import uvloop
+    uvloop.install()
+except ImportError:
+    pass  # Windows / dev fallback
+
 import argparse
 import json
 import logging

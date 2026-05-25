@@ -91,6 +91,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
           const data = event.data;
           if (data?.jsonrpc !== '2.0' || data?.method !== 'tool.response') return;
           if (data?.params?.tool !== toolName) return;
+          if (data?.id !== callId) return;  // Critical: correlate by callId to prevent misrouting
 
           clearTimeout(timer);
           window.removeEventListener('message', _handleResponse);
