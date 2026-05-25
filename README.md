@@ -13,6 +13,9 @@ epistemic_status: CLAIM
 > **Governed subsurface coprocessor for the arifOS federation.**
 > Domain: `geox.arif-fazil.com` | Organ: FIELD (γ) | Authority: Arif Fazil
 > Status: OPERATIONAL | Seal: DITEMPA BUKAN DIBERI
+>
+> ⚠️ **For live/degraded/disabled status of ALL federation organs, see:**
+> **`ariffazil/arifOS/FEDERATION_STATUS.md`** — canonical source of truth.
 
 ***
 
