@@ -35,7 +35,7 @@
 | Profile | `full` |
 | Enabled dimensions | `prospect`, `well`, `earth3d`, `map`, `cross`, `physics`, `section`, `canonical` |
 | Auth mode | `fail_closed` |
-| Caddy upstream | `127.0.0.1:8081` |
+| Caddy upstream | `127.0.0.1:18081` |
 
 ---
 

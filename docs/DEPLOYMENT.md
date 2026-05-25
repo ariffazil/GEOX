@@ -19,7 +19,7 @@ The kernel should bind to `0.0.0.0` to allow proxy pass.
 
 ### PM2 Setup
 ```bash
-pm2 start server.py --name geox-kernel --interpreter python3 -- --port 8081
+pm2 start server.py --name geox-kernel --interpreter python3 -- --port 18081
 ```
 
 ### Docker
@@ -27,8 +27,8 @@ Ensure `GEOX_SECRET_TOKEN` is passed via Docker Secrets or Environment.
 
 ## 3. Health Verification
 After deployment, run these checks:
-- `curl http://localhost:8081/health` -> Expect 200 `{status: "healthy"}`
-- `curl http://localhost:8081/status` -> Expect 200 `{canonical_tools: 13, legacy_aliases: 40}`
+- `curl http://localhost:18081/health` -> Expect 200 `{status: "healthy"}`
+- `curl http://localhost:18081/status` -> Expect 200 `{canonical_tools: 13, legacy_aliases: 40}`
 
 ## 4. Rollback Plan
 If critical failure:

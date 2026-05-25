@@ -57,7 +57,7 @@ scope: /
 
 ## Canonical Tool Surface (Live)
 
-20 tools exposed on port 8081:
+20 tools exposed on port 18081:
 `geox_system_registry_status`, `geox_history_audit`, `geox_data_ingest_bundle`, `geox_data_qc_bundle`, `geox_subsurface_generate_candidates`, `geox_subsurface_verify_integrity`, `geox_seismic_analyze_volume`, `geox_section_interpret_correlation`, `geox_map_context_scene`, `geox_time4d_analyze_system`, `geox_prospect_evaluate`, `geox_prospect_judge_preview`, `geox_prospect_judge_seal`, `geox_evidence_summarize_cross`, `geox_dst_ingest_test`, `geox_stratigraphy_run_pipeline`, `geox_stratigraphy_preview_config`, `geox_task_ingest_las_batch`, `geox_task_metabolize_basin`
 
 ## Canonical Surfaces
