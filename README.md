@@ -362,7 +362,7 @@ Golden tests anchor agent behavior — tool output shape, claim_state correctnes
 |----------|---------|-------------|
 | `PYTHONPATH` | `src` | Required — must include `src/` for imports |
 | `GEOX_HOST` | `0.0.0.0` | HTTP bind host |
-| `GEOX_PORT` | `8081` | HTTP bind port |
+| `GEOX_PORT` | `18081` | HTTP bind port (organ-standard) |
 | `GEOX_TRANSPORT` | `streamable-http` | `stdio` or `streamable-http` |
 | `GEOX_LOG_LEVEL` | `INFO` | Logging level |
 | `GEOX_SECRET_TOKEN` | `stdio-bypass` | Fail-closed auth for HTTP transport |
