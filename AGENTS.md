@@ -21,7 +21,7 @@ The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-groun
 
 **21 sovereign tools** across subsurface, sensing, stratigraphy, seismic, and prospect evaluation.
 
-- **Port:** 8081
+- **Port:** 18081 (live daemon; NOT 8081)
 - **Runtime:** Python 3.11+
 - **Framework:** FastMCP + Pydantic + Uvicorn
 
