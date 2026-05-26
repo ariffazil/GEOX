@@ -44,9 +44,7 @@ async def dispatch_alias(old_name: str, canonical_name: str, **kwargs: Any) -> d
     if canonical_name == "geox_data_ingest_bundle":
         stype = "well" if "well" in old_name else "seismic" if "seismic" in old_name else "earth3d"
         uri = kwargs.get("source_uri") or kwargs.get("volume_ref") or kwargs.get("bundle_uri")
-        res = await geox_data_ingest_bundle(
-            source_uri=uri, source_type=stype, well_id=kwargs.get("well_id")
-        )
+        res = await geox_data_ingest_bundle(source_uri=uri, source_type=stype, well_id=kwargs.get("well_id"))
     elif canonical_name == "geox_subsurface_generate_candidates":
         target = "petrophysics" if "petrophysics" in old_name or "petro" in old_name else "structure"
         refs = [kwargs.get("well_id") or kwargs.get("volume_ref") or "N/A"]
@@ -80,8 +78,75 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
 ]
 
 _TOOL_ANNOTATIONS: dict[str, dict] = {
-    "geox_data_ingest_bundle": {"ui": {"resourceUri": "ui://well_desk"}},
-    "geox_subsurface_generate_candidates": {"ui": {"resourceUri": "ui://earth_volume"}},
+    # MCP 2025-11-25 spec annotations per tool
+    "geox_data_ingest_bundle": {
+        "ui": {"resourceUri": "ui://well_desk"},
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_data_qc_bundle": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_dst_ingest_test": {
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_subsurface_generate_candidates": {
+        "ui": {"resourceUri": "ui://earth_volume"},
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_subsurface_verify_integrity": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_seismic_compute": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_sequence_interpret": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_evidence_reason": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_prospect_evaluate": {
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_map_context_scene": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_system_registry_status": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
 }
 
 
@@ -89,16 +154,24 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
     """Registers the 13 Witness Core tools."""
 
     # ── Register canonical 13 ────────────────────────────────────────────────
+    from geox_mcp.organ_governance import GEOX_RISK_MAP, RiskTier
+
     for name, func in _TOOL_REGISTRY:
         kwargs: dict[str, Any] = {"name": name}
+
+        # Inject [REQUIRES_888_HOLD: true] into description for high-risk tools
+        risk = GEOX_RISK_MAP.get(name, RiskTier.C1_ADVISORY)
+        if risk in (RiskTier.C2_EXECUTE, RiskTier.IRREVERSIBLE):
+            doc = func.__doc__ or ""
+            kwargs["description"] = f"{doc}\n\n[REQUIRES_888_HOLD: true]"
+
         if name in _TOOL_ANNOTATIONS:
             kwargs["annotations"] = _TOOL_ANNOTATIONS[name]
         mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
     assert len(CANONICAL_PUBLIC_TOOLS) == 11, (
-        f"F0_CONSTITUTION_BREACH: Expected 11 sovereign tools, "
-        f"got {len(CANONICAL_PUBLIC_TOOLS)}"
+        f"F0_CONSTITUTION_BREACH: Expected 11 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
     # ── Legacy alias bridge ──────────────────────────────────────────────────
