@@ -25,6 +25,7 @@ except ImportError:
     pass  # Windows / dev fallback
 
 import argparse
+import asyncio
 import json
 import logging
 import os
@@ -57,6 +58,24 @@ GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
 GEOX_PORT = int(os.getenv("GEOX_PORT", os.getenv("PORT", "8081")))
+
+# ─── Per-tool execution timeouts (Sprint 2C) ─────────────────────────────────
+# Default: 60s. Heavy seismic/sequence tools: 90-120s.
+# TimeoutError → VOID response with TIMEOUT guard.
+TOOL_TIMEOUTS: dict[str, float] = {
+    "geox_data_ingest_bundle": 60.0,
+    "geox_data_qc_bundle": 30.0,
+    "geox_dst_ingest_test": 30.0,
+    "geox_subsurface_generate_candidates": 60.0,
+    "geox_subsurface_verify_integrity": 30.0,
+    "geox_seismic_compute": 120.0,
+    "geox_sequence_interpret": 90.0,
+    "geox_evidence_reason": 60.0,
+    "geox_prospect_evaluate": 60.0,
+    "geox_map_context_scene": 30.0,
+    "geox_system_registry_status": 10.0,
+}
+TOOL_TIMEOUT_DEFAULT = 60.0
 
 # FAIL-CLOSED AUTH (F1 Amanah) — only enforced for remote HTTP, not local stdio
 GEOX_SECRET_TOKEN = os.getenv("GEOX_SECRET_TOKEN", os.getenv("FASTMCP_INSPECT_TOKEN", ""))
@@ -251,7 +270,41 @@ def _prune_mcp_surface(mcp_server) -> None:
     logger.info(f"MCP surface clean: {len(components)} canonical tools exposed (profile={_profile})")
 
 
+# ─── listChanged notification (Sprint 2A) ───────────────────────────────────
+# MCP protocol: server sends listChanged notification when tool/resource list changes.
+# For HTTP transport (no persistent client connections), we log the notification
+# and provide a hook for SSE/WebSocket transports to push it to connected clients.
+# The actual JSON-RPC notification payload is constructed here.
+
+
+def _build_list_changed_payload() -> dict:
+    """Build the JSON-RPC listChanged notification payload."""
+    return {
+        "jsonrpc": "2.0",
+        "method": "notifications/list_changed",
+        "params": {},
+    }
+
+
+def _emit_list_changed_notification() -> None:
+    """
+    Emit MCP listChanged notification.
+    Called after any tool registry mutation (tool add/remove/prune).
+    HTTP transport: logs the notification payload as MCP requires clients to
+    re-call tools/list on next request. SSE/WebSocket transports can override
+    this to push directly to connected clients.
+    """
+    payload = _build_list_changed_payload()
+    logger.info(
+        "listChanged emitted — clients should call tools/list to refresh. "  # noqa: G004
+        f"Payload: {json.dumps(payload)}"
+    )
+
+
 _prune_mcp_surface(mcp)
+
+# Emit listChanged after initial tool registration so clients refresh their cache.
+_emit_list_changed_notification()
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GLOBAL PANIC MIDDLEWARE (F1 Amanah — fail closed on unhandled exceptions)
@@ -593,9 +646,23 @@ def _wrap_tool_outputs(mcp_server):
                     "claim_state": "NO_VALID_EVIDENCE",
                 }
 
-            result = __orig(*args, **kwargs)
-            if inspect.isawaitable(result):
-                result = await result
+            # Sprint 2C: Per-tool timeout via asyncio.wait_for
+            timeout = TOOL_TIMEOUTS.get(tool_name, TOOL_TIMEOUT_DEFAULT)
+            try:
+                result = __orig(*args, **kwargs)
+                if inspect.isawaitable(result):
+                    result = await asyncio.wait_for(result, timeout=timeout)
+            except asyncio.TimeoutError:
+                logger.warning(f"GEOX tool timeout: {tool_name} exceeded {timeout}s")
+                return {
+                    "tool": tool_name,
+                    "error_code": "TOOL_TIMEOUT",
+                    "guard": "TOOL_TIMEOUT_GUARD",
+                    "floor": "F1-F13",
+                    "claim_state": "NO_VALID_EVIDENCE",
+                    "message": f"Tool execution exceeded {timeout}s timeout.",
+                    "timeout_seconds": timeout,
+                }
             if not isinstance(result, dict):
                 return result
 

@@ -124,6 +124,7 @@ def _load_las_or_csv(source: str) -> tuple[np.ndarray, np.ndarray, dict]:
     if ext in (".las", ".LAS"):
         try:
             import lasio
+
             las = lasio.read(str(path))
             depth = las.index
             if hasattr(depth, "values"):
@@ -170,6 +171,7 @@ def _load_las_or_csv(source: str) -> tuple[np.ndarray, np.ndarray, dict]:
 
     elif ext in (".csv", ".CSV", ".txt"):
         import csv
+
         with open(path) as f:
             reader = csv.DictReader(f)
             rows = list(reader)
@@ -177,7 +179,9 @@ def _load_las_or_csv(source: str) -> tuple[np.ndarray, np.ndarray, dict]:
             raise ValueError(f"Empty CSV: {source}")
         cols = list(rows[0].keys())
         depth_col = next((c for c in cols if c.lower() in ("depth", "dept", "md", "td")), cols[0])
-        gr_col = next((c for c in cols if c.lower() in ("gr", "grc", "sgr", "gamma", "gamma_ray")), cols[1] if len(cols) > 1 else cols[0])
+        gr_col = next(
+            (c for c in cols if c.lower() in ("gr", "grc", "sgr", "gamma", "gamma_ray")), cols[1] if len(cols) > 1 else cols[0]
+        )
         depth = np.array([float(r[depth_col]) for r in rows], dtype=float)
         gr = np.array([float(r[gr_col]) for r in rows], dtype=float)
         meta = {
@@ -229,6 +233,189 @@ def _error_envelope(error_code: str, message: str, diagnostics: dict | None = No
 # ═══════════════════════════════════════════════════════════════════════════════
 # WORKFLOW: single_well (absorbs well_compute_gr_bins + build_packages + infer_seq_strat + analyze_sequence)
 # ═══════════════════════════════════════════════════════════════════════════════
+
+# ─── Sprint 3b: Epistemic provenance helper ────────────────────────────────────
+# Builds the EPISTEMIC_PROVENANCE_BLOCK for geox_sequence_interpret.
+# Maps each detail_level to its rung position on the epistemic ladder.
+# Iron law: Rung 2 observation (bins) outranks Rung 3-4 interpretation (full).
+
+
+def _epistemic_provenance_for_sequence(
+    detail_level: str,
+    source_sha256: str,
+) -> dict:
+    """
+    Build the epistemic_provenance block for geox_sequence_interpret output.
+    Sprint 3b: wires the Sprint 3a schema into the tool output as a pilot.
+
+    detail_level → rung mapping:
+      bins     → L1 GR bin computation: input [1], output 2, ascent
+      packages → L2 package assembly:   input [1,2], output 3, ascent
+      full     → L3 sequence surfaces:  input [1,2,3], output 4, ascent
+    """
+    # Grounding anchors: raw evidence refs used
+    evidence_refs = [source_sha256] if source_sha256 else []
+
+    provenance_by_level = {
+        "bins": {
+            "output_rung": 2,
+            "input_rungs": [1],
+            "ladder_direction": "ascent",
+            "rung_delta": 1,
+            "assumptions_added": [
+                {
+                    "assumption_id": "SEQ-BINS-GR-PROXY",
+                    "type": "proxy_validity",
+                    "description": "GR curve is a valid lithology proxy in this interval",
+                    "source": "domain_knowledge",
+                    "rung_origin": 2,
+                    "value_used": "GR > cutoffs",
+                    "alternatives": ["GR influenced by fluid, mineralogy, borehole"],
+                    "sensitivity": "HIGH",
+                    "status": "active",
+                },
+                {
+                    "assumption_id": "SEQ-BINS-MD-REFERENCE",
+                    "type": "depth_reference",
+                    "description": "Depths are in MD relative to KB or RT",
+                    "source": "user_input",
+                    "rung_origin": 1,
+                    "value_used": "MD",
+                    "alternatives": ["TVDSS", "TVD"],
+                    "sensitivity": "LOW",
+                    "status": "active",
+                },
+            ],
+            "assumptions_falsified": [],
+            "evidence_chain": [
+                {
+                    "evidence_ref": source_sha256,
+                    "evidence_type": "primary",
+                    "rung": 1,
+                    "description": "Raw GR curve from LAS/CSV",
+                }
+            ],
+        },
+        "packages": {
+            "output_rung": 3,
+            "input_rungs": [1, 2],
+            "ladder_direction": "ascent",
+            "rung_delta": 2,
+            "assumptions_added": [
+                {
+                    "assumption_id": "SEQ-PKG-COHERENCE",
+                    "type": "pattern_coherence",
+                    "description": "Adjacent GR bins with similar values form a coherent package",
+                    "source": "algorithm",
+                    "rung_origin": 3,
+                    "value_used": "coherence threshold",
+                    "alternatives": ["noisy / erratic GR may produce false packages"],
+                    "sensitivity": "MEDIUM",
+                    "status": "active",
+                },
+                {
+                    "assumption_id": "SEQ-PKG-THICKNESS",
+                    "type": "parameter",
+                    "description": f"min_package_thickness_m threshold separates genetic units",
+                    "source": "user_input",
+                    "rung_origin": 3,
+                    "value_used": "min_package_thickness_m",
+                    "alternatives": ["thinner packages may be missed"],
+                    "sensitivity": "LOW",
+                    "status": "active",
+                },
+            ],
+            "assumptions_falsified": [],
+            "evidence_chain": [
+                {
+                    "evidence_ref": source_sha256,
+                    "evidence_type": "primary",
+                    "rung": 1,
+                    "description": "Raw GR curve from LAS/CSV",
+                },
+                {
+                    "evidence_ref": "GR-bins-computed",
+                    "evidence_type": "derived",
+                    "rung": 2,
+                    "description": "GR bins at bin_size_m resolution",
+                },
+            ],
+        },
+        "full": {
+            "output_rung": 4,
+            "input_rungs": [1, 2, 3],
+            "ladder_direction": "ascent",
+            "rung_delta": 3,
+            "assumptions_added": [
+                {
+                    "assumption_id": "SEQ-FULL-SEQ-STRAT",
+                    "type": "interpretive_model",
+                    "description": "GR motif patterns correspond to sequence stratigraphic surfaces",
+                    "source": "domain_knowledge",
+                    "rung_origin": 4,
+                    "value_used": "depo_env_code",
+                    "alternatives": ["motif may be non-unique, fluid effects, borehole washout"],
+                    "sensitivity": "HIGH",
+                    "status": "active",
+                },
+                {
+                    "assumption_id": "SEQ-FULL-MFS-POSITION",
+                    "type": "interpretive_inference",
+                    "description": "Maximum flooding surface corresponds to peak GR within transgressive interval",
+                    "source": "sequence_stratigraphy_theory",
+                    "rung_origin": 4,
+                    "value_used": "MFS_marker",
+                    "alternatives": ["MFS may not coincide with peak GR in all settings"],
+                    "sensitivity": "HIGH",
+                    "status": "active",
+                },
+                {
+                    "assumption_id": "SEQ-FULL-DATURM",
+                    "type": "depth_reference",
+                    "description": "Sequence surfaces are correlative across the well section",
+                    "source": "correlationassumption",
+                    "rung_origin": 4,
+                    "value_used": "intra-well correlation",
+                    "alternatives": ["surfaces may be diachronous or missing"],
+                    "sensitivity": "MEDIUM",
+                    "status": "active",
+                },
+            ],
+            "assumptions_falsified": [],
+            "evidence_chain": [
+                {
+                    "evidence_ref": source_sha256,
+                    "evidence_type": "primary",
+                    "rung": 1,
+                    "description": "Raw GR curve from LAS/CSV",
+                },
+                {
+                    "evidence_ref": "GR-bins-computed",
+                    "evidence_type": "derived",
+                    "rung": 2,
+                    "description": "GR bins at bin_size_m resolution",
+                },
+                {
+                    "evidence_ref": "GR-packages-built",
+                    "evidence_type": "derived",
+                    "rung": 3,
+                    "description": "GR packages with stacking patterns",
+                },
+            ],
+        },
+    }
+
+    prov = provenance_by_level.get(detail_level, provenance_by_level["full"]).copy()
+    # Add uncertainty budget (required field)
+    prov["uncertainty_budget"] = {
+        "total_epistemic_uncertainty": "Moderate" if detail_level == "bins" else "High",
+        "dominant_uncertainty_source": (
+            "measurement" if detail_level == "bins" else "interpretation" if detail_level == "full" else "parameter"
+        ),
+        "uncertainty_sources": [],
+    }
+    prov["iron_law_violations"] = []
+    return prov
 
 
 async def _workflow_single_well(
@@ -282,7 +469,7 @@ async def _workflow_single_well(
         )
 
     if detail_level == "bins":
-        return get_standard_envelope(
+        result = get_standard_envelope(
             primary_artifact={
                 "tool": TOOL_NAME,
                 "workflow": "single_well",
@@ -313,6 +500,9 @@ async def _workflow_single_well(
             evidence_tag="EVIDENCE_DIRECT",
             canon_9_touched=["GR"],
         )
+        # Sprint 3b: inject epistemic_provenance
+        result["epistemic_provenance"] = _epistemic_provenance_for_sequence("bins", meta.get("source_sha256", ""))
+        return result
 
     # L2
     packages = build_packages(bins, min_package_thickness_m, p50_shift_api)
@@ -324,7 +514,7 @@ async def _workflow_single_well(
         )
 
     if detail_level == "packages":
-        return get_standard_envelope(
+        result = get_standard_envelope(
             primary_artifact={
                 "tool": TOOL_NAME,
                 "workflow": "single_well",
@@ -348,13 +538,16 @@ async def _workflow_single_well(
             evidence_tag="INTERPRET_FROM_LITHOLOGY",
             canon_9_touched=["GR"],
         )
+        # Sprint 3b: inject epistemic_provenance
+        result["epistemic_provenance"] = _epistemic_provenance_for_sequence("packages", meta.get("source_sha256", ""))
+        return result
 
     # L3
     seq_strat = infer_seq_strat(packages, depo_env_code, gr_cutoff_api)
     if not seq_strat.get("systems_tracts"):
         return _error_envelope("NO_SYSTEMS_TRACTS", "Package evidence was insufficient for sequence stratigraphy inference.")
 
-    return get_standard_envelope(
+    result = get_standard_envelope(
         primary_artifact={
             "tool": TOOL_NAME,
             "workflow": "single_well",
@@ -389,6 +582,9 @@ async def _workflow_single_well(
         evidence_tag="INTERPRET_FROM_LITHOLOGY",
         canon_9_touched=["GR"],
     )
+    # Sprint 3b: inject epistemic_provenance
+    result["epistemic_provenance"] = _epistemic_provenance_for_sequence("full", meta.get("source_sha256", ""))
+    return result
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -404,6 +600,7 @@ async def _workflow_project(project_yaml: str, output_dir: str | None) -> dict[s
 
     try:
         from geox_core.well.stratigraphy.config import ProjectConfig, WellSource, ProjectInterval
+
         wells = [WellSource(**w) for w in config_dict.get("wells", [])]
         intervals = {}
         for well_id, ivls in config_dict.get("intervals", {}).items():
@@ -431,6 +628,7 @@ async def _workflow_project(project_yaml: str, output_dir: str | None) -> dict[s
         return _error_envelope("CONFIG_VALIDATION_ERROR", str(e))
 
     from geox_core.well.stratigraphy.pipeline import run_pipeline
+
     try:
         result = run_pipeline(config, output_dir=config.output_dir, dpi=config.dpi, dpi_corr=config.dpi_correlation)
         return get_standard_envelope(
@@ -460,8 +658,7 @@ async def _workflow_preview(project_yaml: str) -> dict[str, Any]:
     interval_summary = {}
     for well_id, ivls in config_dict.get("intervals", {}).items():
         interval_summary[well_id] = [
-            {"zone": i["zone"], "top": i["top"], "base": i["base"], "depo_env": i.get("depo_env", "?")}
-            for i in ivls
+            {"zone": i["zone"], "top": i["top"], "base": i["base"], "depo_env": i.get("depo_env", "?")} for i in ivls
         ]
 
     return {
@@ -511,6 +708,7 @@ async def _workflow_section_correlation(
     fluid_density: float,
 ) -> dict[str, Any]:
     import sys
+
     sys.path.insert(0, "/root/geox")
 
     # well_tie mode
@@ -525,10 +723,13 @@ async def _workflow_section_correlation(
         elif well_las_paths and len(well_las_paths) > 0:
             las_path = well_las_paths[0]
         if not las_path:
-            return _error_envelope("NO_LAS_PATH", "well_tie mode requires a well_ref with a registered LAS path or a well_las_paths argument.")
+            return _error_envelope(
+                "NO_LAS_PATH", "well_tie mode requires a well_ref with a registered LAS path or a well_las_paths argument."
+            )
 
         try:
             from geox_core.core.welltie import compute_welltie
+
             artifact = compute_welltie(
                 las_path=las_path,
                 checkshot_ref=checkshot_ref,
@@ -629,6 +830,7 @@ async def _workflow_section_correlation(
 
     # GR motif / sequence stratigraphy modes
     from geox_core.core.geox_1d import process_las_file
+
     well_sources: list[tuple[str, str]] = []
     for i, ref in enumerate(well_refs):
         entry = _get_artifact(ref)
@@ -641,7 +843,9 @@ async def _workflow_section_correlation(
             wid = well_refs[i] if i < len(well_refs) else f"well_{i}"
             well_sources.append((wid, lp))
     if not well_sources:
-        return _error_envelope("NO_LAS_SOURCES", "No LAS paths available. Provide well_refs with registered artifacts or well_las_paths.")
+        return _error_envelope(
+            "NO_LAS_SOURCES", "No LAS paths available. Provide well_refs with registered artifacts or well_las_paths."
+        )
 
     motifs_by_well: dict[str, dict] = {}
     for well_id, las_path in well_sources:
@@ -708,23 +912,27 @@ async def _workflow_section_correlation(
             if depth_arr is not None:
                 break
         if m == "BELL":
-            candidate_surfaces.append({
-                "well_id": well_id,
-                "surface_type": "TS_CANDIDATE",
-                "evidence": "Bell motif — fining-upward suggests possible Transgressive Surface",
-                "confidence": motif.get("confidence", 0.5),
-                "depth_m": float(depth_arr[0]) if depth_arr is not None and len(depth_arr) > 0 else None,
-                "claim_state": "DERIVED_CANDIDATE",
-            })
+            candidate_surfaces.append(
+                {
+                    "well_id": well_id,
+                    "surface_type": "TS_CANDIDATE",
+                    "evidence": "Bell motif — fining-upward suggests possible Transgressive Surface",
+                    "confidence": motif.get("confidence", 0.5),
+                    "depth_m": float(depth_arr[0]) if depth_arr is not None and len(depth_arr) > 0 else None,
+                    "claim_state": "DERIVED_CANDIDATE",
+                }
+            )
         elif m == "FUNNEL":
-            candidate_surfaces.append({
-                "well_id": well_id,
-                "surface_type": "MFS_CANDIDATE",
-                "evidence": "Funnel motif — coarsening-upward suggests progradation below possible MFS",
-                "confidence": motif.get("confidence", 0.5),
-                "depth_m": float(depth_arr[0]) if depth_arr is not None and len(depth_arr) > 0 else None,
-                "claim_state": "DERIVED_CANDIDATE",
-            })
+            candidate_surfaces.append(
+                {
+                    "well_id": well_id,
+                    "surface_type": "MFS_CANDIDATE",
+                    "evidence": "Funnel motif — coarsening-upward suggests progradation below possible MFS",
+                    "confidence": motif.get("confidence", 0.5),
+                    "depth_m": float(depth_arr[0]) if depth_arr is not None and len(depth_arr) > 0 else None,
+                    "claim_state": "DERIVED_CANDIDATE",
+                }
+            )
         if tops and well_id in tops:
             well_tops = tops[well_id]
             sorted_tops = sorted(well_tops.items(), key=lambda x: x[1])
@@ -733,14 +941,16 @@ async def _workflow_section_correlation(
                 mk_b, dep_b = sorted_tops[i + 1]
                 gap = dep_b - dep_a
                 if gap > 100:
-                    candidate_surfaces.append({
-                        "well_id": well_id,
-                        "surface_type": "SB_CANDIDATE",
-                        "evidence": f"Gap of {gap:.0f}m between {mk_a} and {mk_b} — possible erosional truncation / SB",
-                        "confidence": 0.4,
-                        "depth_m": dep_a,
-                        "claim_state": "DERIVED_CANDIDATE",
-                    })
+                    candidate_surfaces.append(
+                        {
+                            "well_id": well_id,
+                            "surface_type": "SB_CANDIDATE",
+                            "evidence": f"Gap of {gap:.0f}m between {mk_a} and {mk_b} — possible erosional truncation / SB",
+                            "confidence": 0.4,
+                            "depth_m": dep_a,
+                            "claim_state": "DERIVED_CANDIDATE",
+                        }
+                    )
 
     return get_standard_envelope(
         {
