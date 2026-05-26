@@ -1,8 +1,27 @@
 from __future__ import annotations
 
 import logging
+import subprocess
 from pathlib import Path
 from typing import Any, List, Dict, Optional, Literal
+
+
+def _get_git_version() -> str:
+    """Return geox-<short-sha> from git, or 'geox-unknown' if not a git repo."""
+    try:
+        return (
+            "geox-"
+            + subprocess.check_output(
+                ["git", "rev-parse", "--short", "HEAD"],
+                cwd=str(Path(__file__).parent),
+                timeout=5,
+            )
+            .decode()
+            .strip()
+        )
+    except Exception:
+        return "geox-unknown"
+
 
 from fastmcp import FastMCP
 from geox_core.enums.statuses import (
@@ -81,16 +100,13 @@ async def geox_system_registry_status(
         "phantom_tools": phantom_tools,
         "missing_from_manifest": missing_from_manifest,
         "contract_version": "GEOX-SOVEREIGN-v2026.05.22",
-        "physics_guard": {"guard_passed": True, "physics_version": "geox-v2026.05.10"},
+        "physics_guard": {"guard_passed": True, "physics_version": _get_git_version()},
         "last_audit": now,
         "legacy_aliases_visible": _show_legacy,
         "note": (
-            None
-            if registry_truth == "PASS"
-            else f"Drift: {len(phantom_tools)} phantom, {len(missing_from_manifest)} missing."
+            None if registry_truth == "PASS" else f"Drift: {len(phantom_tools)} phantom, {len(missing_from_manifest)} missing."
         ),
     }
-
 
 
 async def geox_history_audit(
@@ -131,7 +147,13 @@ async def geox_history_audit(
 
         # ── Source 1: VAULT999 SEALED_EVENTS.jsonl ──────────────────────────
         vault_paths = [
-            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))), "arifOS", "arifosmcp", "VAULT999", "SEALED_EVENTS.jsonl"),
+            os.path.join(
+                os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))),
+                "arifOS",
+                "arifosmcp",
+                "VAULT999",
+                "SEALED_EVENTS.jsonl",
+            ),
             os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))), "arifOS", "VAULT999", "outcomes.jsonl"),
             "/root/arifOS/arifosmcp/VAULT999/SEALED_EVENTS.jsonl",
             "/root/arifOS/VAULT999/outcomes.jsonl",
@@ -156,21 +178,29 @@ async def geox_history_audit(
                             if eid in seen:
                                 continue
                             seen.add(eid)
-                            records.append({
-                                "source": os.path.basename(vpath),
-                                "event_id": eid,
-                                "event_type": entry.get("event_type", entry.get("type", entry.get("verdict_issued", "unknown"))),
-                                "verdict": entry.get("verdict", entry.get("verdict_issued", "UNKNOWN")),
-                                "actor_id": entry.get("actor_id", entry.get("operator_override", "unknown")),
-                                "session_id": entry.get("session_id", ""),
-                                "stage": entry.get("stage", ""),
-                                "timestamp": entry.get("sealed_at", entry.get("timestamp", entry.get("timestamp_decision", ""))),
-                                "claim_state": "SEALED",
-                                "payload": entry.get("payload", {}),
-                                "floors": entry.get("floors", entry.get("constitutional_floors_checked", entry.get("floor_attribution", []))),
-                                "chain_hash": entry.get("chain_hash", ""),
-                                "risk_tier": entry.get("risk_tier", entry.get("harm_detected", "unknown")),
-                            })
+                            records.append(
+                                {
+                                    "source": os.path.basename(vpath),
+                                    "event_id": eid,
+                                    "event_type": entry.get(
+                                        "event_type", entry.get("type", entry.get("verdict_issued", "unknown"))
+                                    ),
+                                    "verdict": entry.get("verdict", entry.get("verdict_issued", "UNKNOWN")),
+                                    "actor_id": entry.get("actor_id", entry.get("operator_override", "unknown")),
+                                    "session_id": entry.get("session_id", ""),
+                                    "stage": entry.get("stage", ""),
+                                    "timestamp": entry.get(
+                                        "sealed_at", entry.get("timestamp", entry.get("timestamp_decision", ""))
+                                    ),
+                                    "claim_state": "SEALED",
+                                    "payload": entry.get("payload", {}),
+                                    "floors": entry.get(
+                                        "floors", entry.get("constitutional_floors_checked", entry.get("floor_attribution", []))
+                                    ),
+                                    "chain_hash": entry.get("chain_hash", ""),
+                                    "risk_tier": entry.get("risk_tier", entry.get("harm_detected", "unknown")),
+                                }
+                            )
                         except json.JSONDecodeError:
                             continue
             except Exception as e:
@@ -221,6 +251,7 @@ async def geox_history_audit(
         next_cursor = None
         if total > safe_limit:
             import base64
+
             cursor_payload = json.dumps({"offset": safe_limit, "query": clean_query})
             next_cursor = base64.b64encode(cursor_payload.encode()).decode()
 
@@ -263,6 +294,7 @@ async def geox_history_audit(
 # CONTRADICTION REGISTRY STATUS — Machine-checkable evidence for validation
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 async def geox_contradiction_registry_status() -> dict:
     """Return the canonical contradiction detector registry.
 
@@ -276,28 +308,83 @@ async def geox_contradiction_registry_status() -> dict:
     without reading source code.
     """
     detectors = [
-        {"id": "C1", "name": "marine_shale_terrestrial_mismatch", "penalty": 0.25, "auto_hold": False,
-         "description": "Marine shale predicted but evidence is terrestrial"},
-        {"id": "C2", "name": "deepwater_in_shoreface_context", "penalty": 0.30, "auto_hold": True,
-         "description": "Deepwater process (fan lobe, turbidite) in shoreface context"},
-        {"id": "C3", "name": "high_confidence_without_core_biostrat", "penalty": 0.20, "auto_hold": False,
-         "description": "High confidence without core or biostratigraphic evidence"},
-        {"id": "C4", "name": "incompatible_process_pairs", "penalty": 0.15, "auto_hold": False,
-         "description": "Mutually exclusive processes both ranked highly"},
-        {"id": "C5", "name": "gr_sand_vs_dn_shale", "penalty": 0.35, "auto_hold": True,
-         "description": "GR indicates sand but density-neutron indicates shale (or reverse)"},
-        {"id": "C6", "name": "gr_shale_vs_rt_resistive", "penalty": 0.30, "auto_hold": True,
-         "description": "GR indicates shale but RT is highly resistive"},
-        {"id": "C7", "name": "density_phi_vs_sonic_phi_disagree", "penalty": 0.20, "auto_hold": False,
-         "description": "Density porosity and sonic porosity disagree by >0.10"},
-        {"id": "C8", "name": "vsh_high_with_phi_high", "penalty": 0.30, "auto_hold": True,
-         "description": "Vsh >0.5 with porosity >0.25 (unphysical for most clastics)"},
-        {"id": "C9", "name": "gr_motif_inversion", "penalty": 0.15, "auto_hold": False,
-         "description": "FUNNEL with increasing GR or BELL with decreasing GR"},
-        {"id": "C10", "name": "shoreface_in_too_thin_interval", "penalty": 0.20, "auto_hold": False,
-         "description": "Shoreface or delta-front assigned to <2 m interval"},
-        {"id": "C11", "name": "shoreface_without_lateral_extent", "penalty": 0.15, "auto_hold": False,
-         "description": "Shoreface with discontinuous or absent lateral extent evidence"},
+        {
+            "id": "C1",
+            "name": "marine_shale_terrestrial_mismatch",
+            "penalty": 0.25,
+            "auto_hold": False,
+            "description": "Marine shale predicted but evidence is terrestrial",
+        },
+        {
+            "id": "C2",
+            "name": "deepwater_in_shoreface_context",
+            "penalty": 0.30,
+            "auto_hold": True,
+            "description": "Deepwater process (fan lobe, turbidite) in shoreface context",
+        },
+        {
+            "id": "C3",
+            "name": "high_confidence_without_core_biostrat",
+            "penalty": 0.20,
+            "auto_hold": False,
+            "description": "High confidence without core or biostratigraphic evidence",
+        },
+        {
+            "id": "C4",
+            "name": "incompatible_process_pairs",
+            "penalty": 0.15,
+            "auto_hold": False,
+            "description": "Mutually exclusive processes both ranked highly",
+        },
+        {
+            "id": "C5",
+            "name": "gr_sand_vs_dn_shale",
+            "penalty": 0.35,
+            "auto_hold": True,
+            "description": "GR indicates sand but density-neutron indicates shale (or reverse)",
+        },
+        {
+            "id": "C6",
+            "name": "gr_shale_vs_rt_resistive",
+            "penalty": 0.30,
+            "auto_hold": True,
+            "description": "GR indicates shale but RT is highly resistive",
+        },
+        {
+            "id": "C7",
+            "name": "density_phi_vs_sonic_phi_disagree",
+            "penalty": 0.20,
+            "auto_hold": False,
+            "description": "Density porosity and sonic porosity disagree by >0.10",
+        },
+        {
+            "id": "C8",
+            "name": "vsh_high_with_phi_high",
+            "penalty": 0.30,
+            "auto_hold": True,
+            "description": "Vsh >0.5 with porosity >0.25 (unphysical for most clastics)",
+        },
+        {
+            "id": "C9",
+            "name": "gr_motif_inversion",
+            "penalty": 0.15,
+            "auto_hold": False,
+            "description": "FUNNEL with increasing GR or BELL with decreasing GR",
+        },
+        {
+            "id": "C10",
+            "name": "shoreface_in_too_thin_interval",
+            "penalty": 0.20,
+            "auto_hold": False,
+            "description": "Shoreface or delta-front assigned to <2 m interval",
+        },
+        {
+            "id": "C11",
+            "name": "shoreface_without_lateral_extent",
+            "penalty": 0.15,
+            "auto_hold": False,
+            "description": "Shoreface with discontinuous or absent lateral extent evidence",
+        },
     ]
 
     artifact = {
@@ -315,6 +402,7 @@ async def geox_contradiction_registry_status() -> dict:
 # ═══════════════════════════════════════════════════════════════════════════════
 # TEST RECEIPT STATUS — CI anchor for test claims
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 async def geox_test_receipt_status() -> dict:
     """Return the latest test suite receipt.
@@ -384,7 +472,7 @@ async def geox_test_receipt_status() -> dict:
             text=True,
             timeout=30,
         )
-        collect_match = re.search(r'(\d+) tests? collected', result.stdout)
+        collect_match = re.search(r"(\d+) tests? collected", result.stdout)
         if collect_match:
             total_tests = int(collect_match.group(1))
         else:
@@ -410,7 +498,7 @@ async def geox_test_receipt_status() -> dict:
                 timeout=120,
             )
             summary_match = re.search(
-                r'(\d+) passed(?:, (\d+) failed)?(?:, (\d+) skipped)?(?:, (\d+) xfailed)?(?:, (\d+) xpassed)?',
+                r"(\d+) passed(?:, (\d+) failed)?(?:, (\d+) skipped)?(?:, (\d+) xfailed)?(?:, (\d+) xpassed)?",
                 result.stdout + result.stderr,
             )
             if summary_match:
@@ -435,7 +523,11 @@ async def geox_test_receipt_status() -> dict:
         "commit_date": commit_date,
         "source": source_note,
         "verified_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
-        "registry_truth": "PASS" if tests_failed == 0 and commit_hash != "unknown" else "HYPOTHESIS" if tests_failed == 0 else "WARN",
+        "registry_truth": "PASS"
+        if tests_failed == 0 and commit_hash != "unknown"
+        else "HYPOTHESIS"
+        if tests_failed == 0
+        else "WARN",
     }
     return get_standard_envelope(artifact, tool_class="system")
 
@@ -443,6 +535,7 @@ async def geox_test_receipt_status() -> dict:
 # ═══════════════════════════════════════════════════════════════════════════════
 # BUNDLE SECURITY AUDIT — Validate .mcpignore enforcement
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 async def geox_bundle_security_audit() -> dict:
     """Audit the MCP bundle for secret leakage and entropy control.
@@ -530,6 +623,7 @@ async def geox_bundle_security_audit() -> dict:
 # RESOURCE REGISTRY STATUS — Machine-checkable resource layer manifest
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 async def geox_resource_registry_status() -> dict:
     """Return the live resource layer manifest.
 
@@ -596,5 +690,3 @@ async def geox_resource_registry_status() -> dict:
         "note": "Counts are live filesystem scans, not hardcoded claims.",
     }
     return get_standard_envelope(artifact, tool_class="system")
-
-
