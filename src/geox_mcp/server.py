@@ -74,6 +74,31 @@ if not GEOX_SECRET_TOKEN:
 
 sys.path.append(os.getcwd())
 
+
+# ─── Git SHA version (K8: no silent version drift) ───────────────────────────
+def _get_git_version() -> str:
+    """Return geox-<short-sha> from git, or 'geox-unknown' if not a git repo."""
+    import subprocess
+
+    try:
+        sha = (
+            subprocess.check_output(
+                ["git", "rev-parse", "--short", "HEAD"],
+                cwd=str(Path(__file__).parent),
+                timeout=5,
+            )
+            .decode()
+            .strip()
+        )
+        return f"geox-{sha}"
+    except Exception:
+        return "geox-unknown"
+
+
+# Computed once at module load — used in all tool audit receipts
+_GIT_VERSION = _get_git_version()
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # MCP Apps — Optional (prefab_ui)
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -604,7 +629,7 @@ def _wrap_tool_outputs(mcp_server):
                 pt_id = _find_field("parent_trace_id") or "unknown"
                 c_hash = _find_field("constitution_hash") or "unknown"
                 art_hash = _find_field("artifact_hash") or "unknown"
-                t_ver = _find_field("tool_version") or "geox-v2026.05.10"
+                t_ver = _find_field("tool_version") or _GIT_VERSION
                 cl_state = _find_field("claim_state") or result.get("claim_tag", "HYPOTHESIS")
                 ev_refs = _find_field("evidence_refs") or result.get("evidence_refs", [])
 
@@ -626,7 +651,7 @@ def _wrap_tool_outputs(mcp_server):
                 defaults = {
                     "claim_tag": result.get("claim_tag", "HYPOTHESIS"),
                     "confidence_band": result.get("confidence_band"),
-                    "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": "geox-v2026.05.10"}),
+                    "physics_guard": result.get("physics_guard", {"guard_passed": True, "physics_version": _GIT_VERSION}),
                     "evidence_refs": ev_refs,
                     "uncertainty": result.get("uncertainty", "Moderate"),
                     "audit_receipt": audit_receipt,
@@ -659,12 +684,190 @@ def _wrap_tool_outputs(mcp_server):
                         "p90": None,
                     }
 
+                # W14: Inject mandatory units/CRS/depth_datum metadata.
+                # Every numeric output must declare its units per F4-Clarity.
+                if "metadata" not in result:
+                    result["metadata"] = UNIT_METADATA.get(
+                        tool_name,
+                        {
+                            "depth_unit": None,
+                            "depth_datum": None,
+                            "time_unit": None,
+                            "crs": None,
+                            "note": "Units not declared for this tool.",
+                        },
+                    )
+
+                # S6: Inject machine-readable resource links for tool chaining.
+                # When artefact refs are present, add structured _links for programmatic
+                # extraction without LLM-in-the-loop parsing of text summaries.
+                if "_links" not in result:
+                    _generated_links: list[dict] = []
+                    # Primary artefact ref
+                    _art_ref = result.get("primary_artifact", {}).get("artifact_ref") or result.get("artifact_ref")
+                    if _art_ref:
+                        _generated_links.append(
+                            {
+                                "rel": "primary_artefact",
+                                "uri": f"geox://artefact/{_art_ref}",
+                                "mimeType": "application/json",
+                            }
+                        )
+                    # Evidence refs
+                    for _eref in result.get("evidence_refs", []):
+                        if _eref and isinstance(_eref, str):
+                            _generated_links.append(
+                                {
+                                    "rel": "evidence",
+                                    "uri": f"geox://evidence/{_eref}",
+                                    "mimeType": "application/json",
+                                }
+                            )
+                    if _generated_links:
+                        result["_links"] = _generated_links
+
             # Return plain dict — FastMCP serializes with by_alias=True, exclude_none=True.
             # Returning mcp.types.CallToolResult caused annotations:null and _meta:null
             # on the wire (pydantic_core.to_jsonable_python includes all null fields).
             return result
 
         tool.fn = _universal_wrapper
+
+
+# ─── W14: Unit/CRS/Datum Registry ──────────────────────────────────────────────
+# Maps each canonical tool to its output units, CRS, and depth/time datum.
+# This is the canonical declaration for W14 (units mandatory on all numeric output).
+# Inject into every non-registry tool result as result["metadata"].
+
+UNIT_METADATA: dict[str, dict] = {
+    "geox_data_ingest_bundle": {
+        "depth_unit": "m",
+        "depth_datum": "MD",  # or TVDSS if ingested with TVD correction
+        "time_unit": None,
+        "velocity_unit": "m/s",
+        "density_unit": "g/cc",
+        "pressure_unit": "MPa",
+        "temperature_unit": "degC",
+        "crs": None,  # declared at well level; inherit from ingested data
+        "mass_unit": "kg",
+        "volume_unit": "m3",
+        "curve_units": {},  # per-curve units declared in canonical_curve_map
+        "note": "Depth in metres MD. TVD correction applied post-ingest if checkshot supplied.",
+    },
+    "geox_data_qc_bundle": {
+        "depth_unit": "m",
+        "depth_datum": "MD",
+        "time_unit": None,
+        "crs": None,
+        "qc_units": {
+            "null_pct": "%",
+            "depth_error_m": "m",
+            "monotonicity": "boolean",
+            "range_violation": "count",
+        },
+        "curve_units": {},  # inherited from ingest artefact
+        "note": "QC operates on already-ingested data. Units inherit from geox_data_ingest_bundle.",
+    },
+    "geox_dst_ingest_test": {
+        "depth_unit": "m",
+        "depth_datum": "MD",
+        "time_unit": "s",  # test duration
+        "pressure_unit": "MPa",
+        "temperature_unit": "degC",
+        "rate_unit": "m3/d",
+        "viscosity_unit": "cP",
+        "volume_unit": "m3",
+        "crs": None,
+        "note": "DST pressures in MPa gauge. Temperature in degC. Rate in m3/d at surface conditions.",
+    },
+    "geox_subsurface_generate_candidates": {
+        "depth_unit": "m",
+        "depth_datum": "TVDSS",
+        "time_unit": None,
+        "velocity_unit": "m/s",
+        "density_unit": "g/cc",
+        "porosity_unit": "fraction",
+        "saturation_unit": "fraction",
+        "permeability_unit": "mD",
+        "thickness_unit": "m",
+        "area_unit": "km2",
+        "volume_unit": "Rm3",  # reservoir cubic metres (both pore and matrix)
+        "stoip_unit": "Mstb",  # millions of stock tank barrels
+        "crs": None,  # declared at prospect/basin level
+        "note": "All depths in TVDSS. Volumetric outputs as P10/P50/P90 ensemble. Units must match those declared in prospect_ref.",
+    },
+    "geox_subsurface_verify_integrity": {
+        "depth_unit": "m",
+        "depth_datum": "TVDSS",
+        "time_unit": None,
+        "velocity_unit": "m/s",
+        "density_unit": "g/cc",
+        "porosity_unit": "fraction",
+        "saturation_unit": "fraction",
+        "crs": None,
+        "note": "Physics9 boundary checks. Returns pass/fail per invariant. No new physical units produced.",
+    },
+    "geox_seismic_compute": {
+        "depth_unit": "m",
+        "depth_datum": "TVDSS",
+        "time_unit": "ms",  # TWT in milliseconds
+        "velocity_unit": "m/s",
+        "density_unit": "g/cc",
+        "amplitude_unit": "normalized",
+        "frequency_unit": "Hz",
+        "wavelet_unit": "ms",
+        "crs": None,  # declared at volume level; inherit from volume_ref
+        "note": "Synthetic: depth axis m TVDSS, time axis ms TWT. well_tie: returns shift in samples at dt_ms. time_depth_anchor: drift in ms. anomalous_contrast: dimensionless RC coefficient.",
+    },
+    "geox_sequence_interpret": {
+        "depth_unit": "m",
+        "depth_datum": "MD",
+        "time_unit": "Ma",  # geological time in millions of years
+        "gr_unit": "API",
+        "resistivity_unit": "ohm-m",
+        "sonic_unit": "us/ft",
+        "neutron_unit": "p.u.",
+        "density_unit": "g/cc",
+        "porosity_unit": "fraction",
+        "crs": None,
+        "note": "Depths in MD. Sequence boundaries dated in Ma relative to geological timescale. GR in API. All other curves inherit units from LAS header.",
+    },
+    "geox_evidence_reason": {
+        "depth_unit": None,
+        "depth_datum": None,
+        "time_unit": None,
+        "score_unit": "dimensionless",  # 0–1 confidence, hypothesis ranks
+        "crs": None,
+        "note": "Evidence reason outputs are dimensionless ratios and hypothesis scores. No physical units.",
+    },
+    "geox_prospect_evaluate": {
+        "depth_unit": "m",
+        "depth_datum": "TVDSS",
+        "volume_unit": "Rm3",
+        "stoip_unit": "Mstb",
+        "area_unit": "km2",
+        "chance_unit": "fraction",  # 0–1
+        "crs": "EPSG:4326",  # surface location CRS mandatory
+        "note": "Prospect depths in TVDSS. Surface location in EPSG:4326. Volumetrics in P10/P50/P90. Chance in fraction (0–1).",
+    },
+    "geox_map_context_scene": {
+        "depth_unit": "m",
+        "depth_datum": "TVDSS",
+        "time_unit": None,
+        "area_unit": "km2",
+        "crs": "EPSG:4326",  # bbox always in EPSG:4326
+        "note": "All bboxes declared in EPSG:4326. Area computed in km2. Depth datum for any z-value declared separately.",
+    },
+}
+
+# Also add metadata to registry tool for completeness
+UNIT_METADATA["geox_system_registry_status"] = {
+    "depth_unit": None,
+    "depth_datum": None,
+    "time_unit": None,
+    "crs": None,
+    "note": "System registry is metadata infrastructure. No physical units.",
+}
 
 
 logger.info("Applying universal output contract v0.4...")
