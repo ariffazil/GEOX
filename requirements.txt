@@ -18,7 +18,7 @@ uvicorn>=0.23.0
 
 # Data Ingestion
 lasio>=0.31
-openpyxl>=3.1.0
+openpyxl>=3.1.5
 
 # HTTP & async
 httpx>=0.25.0
