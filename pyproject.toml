@@ -76,7 +76,7 @@ all = [
     "kaleido>=0.2.1",
     "panel>=1.4.0",
     "hvplot>=0.9.0",
-    "holoviews>=1.18.0",
+    "holoviews>=1.22.1",
     "bokeh>=3.4.0",
     "datashader>=0.16.0",
 ]
