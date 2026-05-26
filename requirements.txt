@@ -17,7 +17,7 @@ pydantic>=2.0.0
 uvicorn>=0.23.0
 
 # Data Ingestion
-lasio>=0.31
+lasio>=0.32
 openpyxl>=3.1.0
 
 # HTTP & async
