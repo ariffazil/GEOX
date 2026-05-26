@@ -5,7 +5,7 @@
 # Audit: zero imports found in canonical src/ for removed packages
 
 # Core Scientific (Wajib per Arif spec)
-numpy>=1.20.0
+numpy>=2.4.6
 scipy>=1.10.0
 pandas>=2.0.0
 matplotlib>=3.7.0
