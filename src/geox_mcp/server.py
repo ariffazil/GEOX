@@ -19,6 +19,7 @@ from __future__ import annotations
 
 try:
     import uvloop
+
     uvloop.install()
 except ImportError:
     pass  # Windows / dev fallback
@@ -213,6 +214,7 @@ def _prune_mcp_surface(mcp_server) -> None:
             name = key[5:].rstrip("@")
             try:
                 from federation.tool_manifest import is_tool_somatic
+
                 visible = is_tool_somatic(name)
             except Exception:
                 visible = name in SACRED_SURFACE
@@ -546,9 +548,10 @@ def _wrap_tool_outputs(mcp_server):
             # This runs inside FastMCP's tool execution, catching ALL tool calls.
             tool_name = getattr(__tool, "name", "")
             arguments = kwargs if kwargs else (args[0] if args else {})
-            
+
             # Import here to avoid circular imports
             from geox_mcp.organ_governance import check_governance
+
             gov_verdict, gov_error = check_governance(
                 tool_name=tool_name,
                 arguments=arguments,
@@ -556,13 +559,13 @@ def _wrap_tool_outputs(mcp_server):
             )
             if gov_error is not None:
                 return {
-                "tool": tool_name,
-                "error_code": "ORGAN_GOVERNANCE_BLOCKED",
-                "governance_status": gov_verdict,
-                "message": f"arifOS {gov_verdict}: governance check blocked execution",
-                "guard": "ORGAN_GOVERNANCE",
-                "floor": "F1-F13",
-                "claim_state": "NO_VALID_EVIDENCE",
+                    "tool": tool_name,
+                    "error_code": "ORGAN_GOVERNANCE_BLOCKED",
+                    "governance_status": gov_verdict,
+                    "message": f"arifOS {gov_verdict}: governance check blocked execution",
+                    "guard": "ORGAN_GOVERNANCE",
+                    "floor": "F1-F13",
+                    "claim_state": "NO_VALID_EVIDENCE",
                 }
 
             result = __orig(*args, **kwargs)
@@ -587,7 +590,11 @@ def _wrap_tool_outputs(mcp_server):
                     if isinstance(result, dict):
                         if field_name in result:
                             return result[field_name]
-                        if "audit_receipt" in result and isinstance(result["audit_receipt"], dict) and field_name in result["audit_receipt"]:
+                        if (
+                            "audit_receipt" in result
+                            and isinstance(result["audit_receipt"], dict)
+                            and field_name in result["audit_receipt"]
+                        ):
                             return result["audit_receipt"][field_name]
                     return default_val
 
@@ -877,12 +884,33 @@ GEOX_TOOL_CATEGORIES = {
     },
     "geox_seismic_physics": {
         "canonical": [
-            "geox_seismic_well_tie_compute",
-            "geox_time_depth_anchor",
-            "geox_forward_model_synthetic",
-            "geox_anomalous_contrast_detector",
+            "geox_seismic_compute",
         ],
-        "description": "Deterministic seismic-to-well tie, T-D anchoring, synthetic, AC theory",
+        "description": "Unified seismic physics: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute",
+    },
+    "geox_sequence_stratigraphy": {
+        "canonical": [
+            "geox_sequence_interpret",
+        ],
+        "description": "Unified sequence stratigraphy: single_well, project, preview, section_correlation",
+    },
+    "geox_evidence_reasoning": {
+        "canonical": [
+            "geox_evidence_reason",
+        ],
+        "description": "Unified evidence synthesis, abduction, and contradiction engine",
+    },
+    "geox_prospect": {
+        "canonical": [
+            "geox_prospect_evaluate",
+        ],
+        "description": "Integrated prospect evaluation: screen, appraise, develop with optional SEAL",
+    },
+    "geox_map_context": {
+        "canonical": [
+            "geox_map_context_scene",
+        ],
+        "description": "Spatial bbox context, CRS checks, scene rendering, coordinate guardrails",
     },
 }
 
@@ -1243,11 +1271,13 @@ async def geox_resource(category: str, name: str) -> str:
 
     try:
         content = file_path.read_text()
-        return json.dumps({
-            "uri": f"geox://resources/{category}/{name}",
-            "content": content,
-            "format": file_path.suffix.lstrip("."),
-        })
+        return json.dumps(
+            {
+                "uri": f"geox://resources/{category}/{name}",
+                "content": content,
+                "format": file_path.suffix.lstrip("."),
+            }
+        )
     except Exception as e:
         return json.dumps({"error": f"Failed to read resource: {e}"})
 
