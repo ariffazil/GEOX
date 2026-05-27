@@ -38,6 +38,12 @@ from geox_mcp.tools.evidence_reason import geox_evidence_reason
 from geox_mcp.tools.prospect import geox_prospect_evaluate
 from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.registry import geox_system_registry_status
+from geox_mcp.tools.claims import (
+    geox_claim_create,
+    geox_claim_challenge,
+    geox_evidence_attach,
+    geox_claim_seal,
+)
 
 logger = logging.getLogger("geox.unified13")
 
@@ -87,6 +93,11 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_prospect_evaluate", geox_prospect_evaluate),
     ("geox_map_context_scene", geox_map_context_scene),
     ("geox_system_registry_status", geox_system_registry_status),
+    # H5: Claim Engine
+    ("geox_claim_create", geox_claim_create),
+    ("geox_claim_challenge", geox_claim_challenge),
+    ("geox_evidence_attach", geox_evidence_attach),
+    ("geox_claim_seal", geox_claim_seal),
 ]
 
 _TOOL_ANNOTATIONS: dict[str, dict] = {
@@ -189,6 +200,31 @@ _TOOL_ANNOTATIONS: dict[str, dict] = {
         "idempotentHint": True,
         "openWorldHint": False,
     },
+    # H5: Claim Engine
+    "geox_claim_create": {
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_claim_challenge": {
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_evidence_attach": {
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_claim_seal": {
+        "readOnlyHint": False,
+        "destructiveHint": True,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
 }
 
 
@@ -212,8 +248,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    if len(CANONICAL_PUBLIC_TOOLS) != 16:
-        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 16 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+    if len(CANONICAL_PUBLIC_TOOLS) != 20:
+        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 20 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
 
     # ── Legacy alias bridge ──────────────────────────────────────────────────
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
