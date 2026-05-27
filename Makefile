@@ -1,7 +1,7 @@
 # GEOX Earth Intelligence — Makefile
 # DITEMPA BUKAN DIBERI
 
-.PHONY: install test smoke build up down lint format clean
+.PHONY: install test smoke build up down lint format clean security-audit forge
 
 PYTHON := python3
 PIP := pip
@@ -36,3 +36,10 @@ format:
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete 2>/dev/null || true
+
+# ── arifOS Federation Security Audit ─────────────────────────────────────────
+# Inherits security-audit from arifOS canonical.mk — fires 888_HOLD on CRITICAL/HIGH
+include /root/arifOS/scripts/security_audit.mk
+
+forge: security-audit
+	@echo "GEOX Surgical Burn complete. Awaiting SOVEREIGN SEAL."
