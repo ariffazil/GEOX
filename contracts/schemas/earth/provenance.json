@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "earth/provenance.json",
+  "title": "Data Provenance",
+  "description": "Canonical provenance specification for all Earth evidence claims. No interpretation without provenance. Every Earth claim must trace to an origin.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["source_id", "source_type", "ingested_at"],
+  "additionalProperties": true,
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "description": "Unique identifier for the source artifact. Examples: MAHA-1.las, SEGY_2024_3D_VINTAGE1, WELL_MASTER_2024.xlsx",
+      "examples": ["MAHA-1.las", "SEISMIC_3D_2024", "WELL_MASTER"]
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "las_file",
+        "segy_file",
+        "well_header",
+        "well_log_curve",
+        "seismic_volume",
+        "seismic_line",
+        "deviation_survey",
+        "tops_table",
+        "marker_picks",
+        "horizon_picks",
+        "fault_picks",
+        "pressure_data",
+        "core_data",
+        "cuttings_description",
+        "mud_log",
+        "dst_result",
+        "production_data",
+        "synthetic_test",
+        "remote_sensing",
+        "map_digitized",
+        "report",
+        "spreadsheet",
+        "database_export",
+        "api_response",
+        "manual_entry",
+        "unknown"
+      ],
+      "description": "Type of data source"
+    },
+    "source_subtype": {
+      "type": ["string", "null"],
+      "description": "More specific type. Examples: check shot, sonic log, formation test, production test"
+    },
+    "source_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA256 hash of source file. Must match for data integrity."
+    },
+    "source_path": {
+      "type": ["string", "null"],
+      "description": "File path or URI to source artifact",
+      "examples": ["s3://bucket/data/MAHA-1.las", "/data/wells/MAHA-1.las"]
+    },
+    "format": {
+      "type": ["string", "null"],
+      "description": "File format. Examples: LAS 2.0, LAS 3.0, SEG-Y rev1, SEG-Y rev2, CSV, JSON",
+      "examples": ["LAS 2.0", "LAS 3.0", "SEG-Y rev1", "SEG-Y rev2"]
+    },
+    "encoding": {
+      "type": ["string", "null"],
+      "description": "Character encoding of source file",
+      "examples": ["ASCII", "UTF-8", "EBCDIC", "binary"]
+    },
+    "operator": {
+      "type": ["string", "null"],
+      "description": "Company or person who acquired the data",
+      "examples": ["PETRONAS", "Shell", "ExxonMobil", "unknown"]
+    },
+    "acquisition_date": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Date data was acquired (YYYY-MM-DD)"
+    },
+    "acquisition_method": {
+      "type": ["string", "null"],
+      "description": "How data was acquired",
+      "examples": ["wireline_logging", "seismic_survey", "core_analysis", "production_test"]
+    },
+    "ingested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when data was ingested into GEOX"
+    },
+    "ingested_by": {
+      "type": ["string", "null"],
+      "description": "Agent or human who ingested the data",
+      "examples": ["GEOX.LASAgent", "arifOS", "arif-fazil"]
+    },
+    "processing_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "processed_at"],
+        "additionalProperties": false,
+        "properties": {
+          "step": {
+            "type": "string",
+            "description": "Description of processing step",
+            "examples": ["depth shift", "velocity conversion", "amplitude scaling", "migration"]
+          },
+          "processed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "processed_by": {
+            "type": ["string", "null"],
+            "examples": ["PETREL", "GeoFrame", "GEOX.LASAgent", "manual"]
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Processing parameters used"
+          },
+          "software_version": {
+            "type": ["string", "null"]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Confidence in processing step correctness"
+          }
+        }
+      },
+      "description": "Ordered list of processing steps applied to data"
+    },
+    "quality_flags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Known quality issues. Examples: DEPTH_MISMATCH, MISSING_CURVES, TIME_GAP, OVERSIZED_HEADER"
+    },
+    "qc_status": {
+      "type": "string",
+      "enum": ["raw", "qc_passed", "qc_failed", "qc_warning", "not_qc'd"],
+      "description": "QC status of source data"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Overall confidence in data provenance correctness. 1.0 = fully trusted, 0.0 = completely unverified"
+    },
+    "alternative_sources": {
+      "type": "array",
+      "items": {"$ref": "#"},
+      "description": "Alternative/replacement sources for this data, if known"
+    },
+    "supersedes": {
+      "type": ["string", "null"],
+      "description": "source_id of data this supersedes, if any"
+    },
+    "superseded_by": {
+      "type": ["string", "null"],
+      "description": "source_id of data that supersedes this, if known"
+    },
+    "access_level": {
+      "type": "string",
+      "enum": ["public", "confidential", "restricted", "proprietary", "synthetic_test"],
+      "description": "Data access classification"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Any additional notes about data provenance"
+    }
+  }
+}

@@ -1,0 +1,284 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "earth/earth_memory_envelope.json",
+  "title": "GEOX Earth Memory Envelope — Canonical Claim Container",
+  "description": "Universal envelope for all Earth/subsurface claims stored in GEOX Earth memory. Every record must carry this envelope. No naked Earth claims. Agent notes are NOT Earth memory.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["id", "memory_type", "truth_class", "subject", "claim", "authority", "freshness"],
+  "additionalProperties": false,
+  "definitions": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^mem_[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "description": "GEOX memory record ID. Format: mem_<uuid>"
+    },
+    "truth_class": {
+      "type": "string",
+      "enum": ["observation", "interpretation", "abduction", "decision"],
+      "description": "Truth class of this claim. Critical for discipline."
+    },
+    "memory_type": {
+      "type": "string",
+      "enum": ["agent", "earth", "vault"],
+      "description": "Which memory store this belongs to. Earth memory = GEOX domain memory."
+    }
+  },
+  "properties": {
+    "id": {
+      "$ref": "#/definitions/uuid"
+    },
+    "memory_type": {
+      "$ref": "#/definitions/memory_type"
+    },
+    "truth_class": {
+      "$ref": "#/definitions/truth_class"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What this claim is about",
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "enum": ["well", "log_curve", "seismic_volume", "seismic_line", "horizon", "fault", "surface", "prospect", "field", "dataset", "formation", "marker", "section", "region", "unknown"],
+          "description": "Type of Earth entity"
+        },
+        "entity_id": {
+          "type": "string",
+          "description": "Entity identifier. Examples: MAHA-1, GR, SEISMIC_3D_2024, H10_v2",
+          "examples": ["MAHA-1", "GR", "SEISMIC_3D_2024", "H10_v2", "F5"]
+        },
+        "depth_range": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "from": {"type": "number"},
+            "to": {"type": "number"},
+            "unit": {"type": "string"},
+            "datum": {"type": "string", "enum": ["MD", "TVD", "TVDSS", "SS", "unknown"]}
+          }
+        },
+        "time_range": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "from": {"type": "number"},
+            "to": {"type": "number"},
+            "unit": {"type": "string"}
+          }
+        },
+        "crs": {
+          "type": ["string", "null"],
+          "description": "EPSG code or coordinate system name. Required for any coordinate claim."
+        },
+        "coordinate": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "longitude": {"type": "number"},
+            "latitude": {"type": "number"},
+            "crs": {"type": "string"}
+          }
+        }
+      }
+    },
+    "claim": {
+      "type": "string",
+      "description": "The core Earth claim in plain language. Must be specific, measurable, and grounded.",
+      "minLength": 10
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "evidence_id": {"type": "string"},
+          "evidence_type": {
+            "type": "string",
+            "enum": ["well_log", "seismic", "core", "cuttings", "dst", "mud_log", "pressure", "production", "biostratigraphy", "geochemistry", "map", "report", "analog", "inference", "unknown"]
+          },
+          "description": {"type": "string"},
+          "file_ref": {"type": ["string", "null"]},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      },
+      "description": "List of evidence supporting or contradicting this claim"
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Full provenance spine. Required for all Earth claims.",
+      "required": ["source_id", "source_type", "ingested_at"],
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {"type": "string"},
+        "source_type": {"type": "string"},
+        "source_hash": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "format": {"type": ["string", "null"]},
+        "operator": {"type": ["string", "null"]},
+        "acquisition_date": {"type": ["string", "null"]},
+        "ingested_at": {"type": "string", "format": "date-time"},
+        "ingested_by": {"type": ["string", "null"]},
+        "processing_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step": {"type": "string"},
+              "processed_at": {"type": "string"},
+              "processed_by": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "qc_status": {
+          "type": "string",
+          "enum": ["raw", "qc_passed", "qc_failed", "qc_warning", "not_qc_d"]
+        }
+      }
+    },
+    "measurement": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Physical measurement. Required when claim is about a measurement.",
+      "properties": {
+        "value": {
+          "type": ["number", "null"]
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measurement. Must match units.json schema."
+        },
+        "datum": {
+          "type": ["string", "null"],
+          "enum": ["MD", "TVD", "TVDSS", "SS", "MSL", "LAT", "CD", "unknown", null]
+        },
+        "crs": {
+          "type": ["string", "null"]
+        },
+        "depth_range": {
+          "type": ["object", "null"],
+          "properties": {
+            "from": {"type": "number"},
+            "to": {"type": "number"},
+            "unit": {"type": "string"}
+          }
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Uncertainty specification. Required for all interpretation and abduction claims.",
+      "properties": {
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence in this claim. 1.0 = certain, 0.0 = completely uncertain."
+        },
+        "range": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "p10": {"type": "number", "description": "P10 optimistic estimate"},
+            "p50": {"type": "number", "description": "P50 median estimate"},
+            "p90": {"type": "number", "description": "P90 pessimistic estimate"},
+            "unit": {"type": "string"}
+          }
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "alternative": {"type": "string", "description": "Alternative explanation"},
+              "probability": {"type": "number", "minimum": 0, "maximum": 1},
+              "evidence_for": {"type": "array", "items": {"type": "string"}},
+              "evidence_against": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "description": "Alternative explanations for this claim"
+        },
+        "missing_evidence": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Evidence that would improve confidence in this claim"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "created_by": {
+          "type": "string",
+          "description": "Agent or human who created this record. Examples: GEOX.LASAgent, arif-fazil"
+        },
+        "approved_by": {
+          "type": ["string", "null"],
+          "description": "Human or agent who approved this claim"
+        },
+        "approval_state": {
+          "type": "string",
+          "enum": ["draft", "reviewed", "sealed", "rejected"],
+          "description": "Approval state of this claim"
+        },
+        "seal_id": {
+          "type": ["string", "null"],
+          "description": "VAULT999 seal ID if this claim has been sealed"
+        },
+        "seal_timestamp": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["fresh", "stale", "expired", "unknown"],
+          "description": "Freshness of this claim's underlying data"
+        },
+        "valid_until": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "Timestamp when this claim expires and should be re-validated"
+        },
+        "last_validated_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supersedes": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "IDs of records this supersedes"
+        },
+        "superseded_by": {
+          "type": ["string", "null"],
+          "description": "ID of record that supersedes this"
+        },
+        "derived_from": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "IDs of records this was derived from"
+        },
+        "promotion_level": {
+          "type": "string",
+          "enum": ["scratch", "agent_note", "draft", "validated", "reviewed", "sealed"],
+          "description": "Position on the promotion ladder"
+        }
+      }
+    }
+  }
+}

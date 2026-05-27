@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "earth/well_tops.json",
+  "title": "Well Tops Table Schema",
+  "description": "Canonical schema for geological marker tops and formation picks.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["well_id", "tops"],
+  "additionalProperties": false,
+  "properties": {
+    "well_id": {"type": "string"},
+    "operator": {"type": ["string", "null"]},
+    "country": {"type": ["string", "null"]},
+    "basin": {"type": ["string", "null"]},
+    "field": {"type": ["string", "null"]},
+    "unit": {
+      "type": "string",
+      "enum": ["m", "ft"],
+      "description": "Depth unit for all top values"
+    },
+    "datum": {
+      "type": "string",
+      "enum": ["MD", "TVD", "TVDSS", "SS", "KB", "DF", "GL", "other"],
+      "description": "Depth datum for all top values"
+    },
+    "crs": {
+      "type": ["string", "null"],
+      "description": "Coordinate reference system for well location"
+    },
+    "wellhead_location": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "longitude": {"type": "number"},
+        "latitude": {"type": "number"}
+      }
+    },
+    "tops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["marker_name", "top_md", "confidence"],
+        "additionalProperties": false,
+        "properties": {
+          "marker_name": {
+            "type": "string",
+            "description": "Geological marker name. Examples: TOP_SAND_A, BAZHENOV_FORMATION, MIO_PLIO_UNCONF"
+          },
+          "top_md": {
+            "type": "number",
+            "description": "Top depth in measured depth"
+          },
+          "top_tvd": {
+            "type": ["number", "null"],
+            "description": "Top depth in true vertical depth"
+          },
+          "base_md": {
+            "type": ["number", "null"]
+          },
+          "base_tvd": {
+            "type": ["number", "null"]
+          },
+          "thickness": {
+            "type": ["number", "null"],
+            "description": "Gross thickness"
+          },
+          "formation": {
+            "type": ["string", "null"],
+            "description": "Formation name. Examples: SAND_A, CARBONATE_B, BASEMENT"
+          },
+          "lithology": {
+            "type": ["string", "null"],
+            "enum": ["sandstone", "shale", "limestone", "dolomite", "siltstone", "coal", " anhydrite", "basement", "unknown", null]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Confidence in this top pick. 1.0 = very high confidence, 0.0 = speculative"
+          },
+          "pick_method": {
+            "type": ["string", "null"],
+            "enum": ["log", "seismic", "biostratigraphy", "mud_log", "cuttings", "core", "dst", "analog", "interpolated", "unknown", null]
+          },
+          "evidence": {
+            "type": ["string", "null"],
+            "description": "Description of evidence for this top"
+          },
+          "qc_flags": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "QC flags. Examples: MISSING_BASE, NEGATIVE_THICKNESS, TIE_CONFLICT"
+          },
+          "source": {
+            "type": ["string", "null"],
+            "description": "Source of this top pick. Examples: WELL_GEOLOGIST_A, SEISMIC_INTERPRETATION, PUBLISHED"
+          },
+          "notes": {
+            "type": ["string", "null"]
+          }
+        }
+      }
+    },
+    "source_file_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

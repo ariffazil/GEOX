@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://geox.arif-fazil.com/schemas/earth/provenance.json",
+  "title": "GEOX Earth Provenance Pipeline Schema",
+  "description": "Enforces the 11-step pipeline: ingest -> validate -> identify -> timestamp -> provenance -> normalize -> store -> retrieve -> interpret -> challenge -> seal.",
+  "type": "object",
+  "properties": {
+    "provenance_state": {
+      "type": "string",
+      "enum": [
+        "INGESTED",
+        "VALIDATED",
+        "IDENTIFIED",
+        "TIMESTAMPED",
+        "PROVENANCE_ATTACHED",
+        "NORMALIZED",
+        "STORED",
+        "RETRIEVED",
+        "INTERPRETED",
+        "CHALLENGED",
+        "SEALED"
+      ],
+      "description": "Current state of the Earth claim in the ingestion pipeline."
+    },
+    "ingestion_record": {
+      "type": "object",
+      "properties": {
+        "original_file": {"type": "string"},
+        "format": {"type": "string", "enum": ["LAS", "SEG-Y", "CSV", "JSON", "SHAPEFILE", "WITSML", "RESQML", "OSDU", "OTHER"]},
+        "ingested_by": {"type": "string"},
+        "ingested_at": {"type": "string", "format": "date-time"}
+      },
+      "required": ["original_file", "format", "ingested_at"]
+    },
+    "validation_record": {
+      "type": "object",
+      "properties": {
+        "crs_validated": {"type": "boolean"},
+        "units_validated": {"type": "boolean"},
+        "validation_hash": {"type": "string"}
+      }
+    },
+    "identity_record": {
+      "type": "object",
+      "properties": {
+        "earth_object_id": {"type": "string", "description": "Canonical ID across modalities"},
+        "modality": {"type": "string", "enum": ["well", "seismic", "core", "map", "fluid"]}
+      },
+      "required": ["earth_object_id"]
+    },
+    "seal_record": {
+      "type": "object",
+      "properties": {
+        "sealed_by": {"type": "string"},
+        "sealed_at": {"type": "string", "format": "date-time"},
+        "vault_hash": {"type": "string"},
+        "decision_impact": {"type": "string"}
+      }
+    }
+  },
+  "required": ["provenance_state", "ingestion_record", "identity_record"]
+}

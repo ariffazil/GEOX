@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://geox.arif-fazil.com/schemas/earth/crs_datum.json",
+  "title": "GEOX Coordinate Reference System & Datum Schema",
+  "description": "Strict enforcement of CRS and depth/time datums. No naked coordinates or depths.",
+  "type": "object",
+  "properties": {
+    "crs": {
+      "type": "object",
+      "properties": {
+        "authority": {
+          "type": "string",
+          "enum": ["EPSG", "ESRI", "CUSTOM", "UNKNOWN"],
+          "description": "The authority defining the CRS."
+        },
+        "code": {
+          "type": "integer",
+          "description": "The authority code, e.g., 4326 for WGS84."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human readable CRS name, e.g., WGS 84 / UTM zone 48N"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["geographic", "projected", "local", "seismic_bin_grid"],
+          "description": "Type of spatial reference."
+        }
+      },
+      "required": ["authority", "name", "type"]
+    },
+    "vertical_datum": {
+      "type": "object",
+      "properties": {
+        "datum_type": {
+          "type": "string",
+          "enum": ["MSL", "LAT", "ELLIPSOID", "LOCAL_SEISMIC", "KELLY_BUSHING", "DRILL_FLOOR", "GROUND_LEVEL"],
+          "description": "The vertical datum reference."
+        },
+        "elevation_offset_m": {
+          "type": "number",
+          "description": "Offset from Mean Sea Level (MSL) in meters, if applicable."
+        }
+      },
+      "required": ["datum_type"]
+    },
+    "depth_domain": {
+      "type": "string",
+      "enum": ["MD", "TVD", "TVDSS", "TWT", "OWT", "SEISMIC_DEPTH"],
+      "description": "The domain of the vertical measurement (Measured Depth, True Vertical Depth, Two-Way Time, etc.)."
+    }
+  },
+  "required": ["crs", "vertical_datum", "depth_domain"]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/fault.json",
+  "title": "Fault Schema",
+  "description": "Metadata for a geological fault",
+  "schema_id": "fault_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "fault_name": {
+      "type": "string"
+    },
+    "coordinate": {
+      "type": "object",
+      "properties": {
+        "crs": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "crs"
+      ]
+    }
+  },
+  "required": [
+    "fault_name",
+    "coordinate"
+  ],
+  "examples": [
+    {
+      "fault_name": "Fault-F1",
+      "coordinate": {
+        "crs": "EPSG:32631"
+      }
+    }
+  ],
+  "invalid_examples": [
+    {
+      "fault_name": "Fault-F1",
+      "coordinate": {}
+    }
+  ]
+}

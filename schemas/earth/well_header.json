@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/well_header.json",
+  "title": "Well Header Schema",
+  "description": "Header information for a well",
+  "schema_id": "well_header_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "well_name": {
+      "type": "string"
+    },
+    "coordinate": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "crs": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "crs"
+      ]
+    },
+    "depth": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "datum": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "datum"
+      ]
+    }
+  },
+  "required": [
+    "well_name",
+    "coordinate",
+    "depth"
+  ],
+  "examples": [
+    {
+      "well_name": "Well-1A",
+      "coordinate": {
+        "x": 100.0,
+        "y": 200.0,
+        "crs": "EPSG:32631"
+      },
+      "depth": {
+        "value": 3000.0,
+        "datum": "MSL"
+      }
+    }
+  ],
+  "invalid_examples": [
+    {
+      "well_name": "Well-1A",
+      "coordinate": {
+        "x": 100.0,
+        "y": 200.0
+      },
+      "depth": {
+        "value": 3000.0,
+        "datum": "MSL"
+      }
+    }
+  ]
+}

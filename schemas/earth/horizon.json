@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/horizon.json",
+  "title": "Horizon Schema",
+  "description": "Metadata for a geological horizon",
+  "schema_id": "horizon_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "horizon_name": {
+      "type": "string"
+    },
+    "coordinate": {
+      "type": "object",
+      "properties": {
+        "crs": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "crs"
+      ]
+    },
+    "datum": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "horizon_name",
+    "coordinate",
+    "datum"
+  ],
+  "examples": [
+    {
+      "horizon_name": "Top-Jurassic",
+      "coordinate": {
+        "crs": "EPSG:32631"
+      },
+      "datum": "MSL"
+    }
+  ],
+  "invalid_examples": [
+    {
+      "horizon_name": "Top-Jurassic",
+      "coordinate": {
+        "crs": "EPSG:32631"
+      }
+    }
+  ]
+}

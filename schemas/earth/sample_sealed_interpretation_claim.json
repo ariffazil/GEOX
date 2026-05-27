@@ -1,0 +1,17 @@
+{
+  "claim_id": "interp_sample_01",
+  "provenance": "GEOX Subsurface Auto-Interpreter Beta",
+  "confidence": {
+    "uncertainty": {
+      "value": 0.85,
+      "distribution": "normal"
+    }
+  },
+  "evidence": [
+    "synthetic_well_log_A",
+    "synthetic_seismic_cube_B"
+  ],
+  "seal": {
+    "hash": "7a3f8b9d4c2e1a5f6b7c8d9e0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b"
+  }
+}
