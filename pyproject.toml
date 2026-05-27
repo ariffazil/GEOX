@@ -59,7 +59,7 @@ dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=1.4.0",
     "ruff>=0.1.0",
-    "mypy>=1.0.0",
+    "mypy>=2.1.0",
 ]
 pinn = [
     "torch>=2.0.0",
