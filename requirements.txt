@@ -3,7 +3,7 @@
 # Arif Spec: Low-entropy, physics-grounded, no bloatware
 
 # Core Computational & Spatial Physics
-numpy>=1.24.0
+numpy>=2.4.6
 scipy>=1.10.0
 pandas>=2.0.0
 
