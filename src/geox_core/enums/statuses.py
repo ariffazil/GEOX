@@ -361,6 +361,9 @@ def get_standard_envelope(
     trace_id: Optional[str] = None,
     parent_trace_id: Optional[str] = None,
     constitution_hash: Optional[str] = None,
+    # Session propagation extension (actor + tool_name for audit receipt)
+    actor_id: Optional[str] = None,
+    tool_name: Optional[str] = None,
     # Agentic recovery (Fix #1, #4 - Arif 2026-05-16)
     next_best_actions: Optional[List[Dict[str, Any]]] = None,
     suggested_tool: Optional[str] = None,
@@ -455,6 +458,8 @@ def get_standard_envelope(
             "timestamp": now,
             "session_id": _session_id,
             "trace_id": _trace_id,
+            "actor_id": actor_id or "geox-unknown",
+            "tool_name": tool_name or primary_artifact.get("tool", "unknown"),
         },
         "humility_score": humility_score,
         "maruah_flag": maruah_flag

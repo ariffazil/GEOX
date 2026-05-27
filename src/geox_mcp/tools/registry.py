@@ -97,6 +97,7 @@ async def geox_system_registry_status(
         "registry_truth": registry_truth,
         "canonical_tools": sorted(CANONICAL_PUBLIC_TOOLS),
         "callable_tools": sorted(_manifest_exposed),
+        "tools_count": len(_canonical_set),
         "phantom_tools": phantom_tools,
         "missing_from_manifest": missing_from_manifest,
         "contract_version": "GEOX-SOVEREIGN-v2026.05.22",
