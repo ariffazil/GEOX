@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "earth/crs_datum.json",
+  "title": "Coordinate Reference System and Datum",
+  "description": "Canonical CRS/datum specification for all Earth coordinate claims. No coordinate without CRS. No depth without datum.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["crs_id", "datum", "crs_type", "authority"],
+  "additionalProperties": false,
+  "properties": {
+    "crs_id": {
+      "type": "string",
+      "description": "EPSG code or coordinate system name. Examples: EPSG:4326, EPSG:32646, LOCAL-UTM-ZONE46N",
+      "examples": ["EPSG:4326", "EPSG:32646", "LOCAL:TVDSingapore"]
+    },
+    "crs_type": {
+      "type": "string",
+      "enum": ["geographic", "projected", "local", "unknown"],
+      "description": "Type of coordinate reference system"
+    },
+    "datum": {
+      "type": "string",
+      "description": "Vertical and horizontal datum. Examples: WGS84, ED50, Kertau, GDM2000",
+      "examples": ["WGS84", "ED50", "Kertau", "GDM2000", "MSL", "LAT"]
+    },
+    "vertical_datum": {
+      "type": ["string", "null"],
+      "description": "Vertical datum for depth/elevation. Examples: MSL, LAT, CD, SD",
+      "examples": ["MSL", "LAT", "CD", "SD"]
+    },
+    "authority": {
+      "type": "string",
+      "description": "Organization or standard that defines this CRS. Examples: EPSG, OGP, PETRONAS, ExxonMobil",
+      "examples": ["EPSG", "OGP", "PETRONAS", "operator"]
+    },
+    "area_of_use": {
+      "type": ["string", "null"],
+      "description": "Geographic area where this CRS is valid. Examples: Malaysia, North Sea, Gulf of Mexico",
+      "examples": ["Malaysia", "North Sea", "Gulf of Mexico"]
+    },
+    "projection_method": {
+      "type": ["string", "null"],
+      "description": "For projected CRS only. Projection method. Examples: Transverse Mercator, UTM",
+      "examples": ["Transverse Mercator", "UTM"]
+    },
+    "unit": {
+      "$ref": "../units.json#/definitions/length_unit"
+    },
+    "validation_status": {
+      "type": "string",
+      "enum": ["validated", "unknown", "invalid"],
+      "description": "Whether this CRS has been validated against authoritative source"
+    },
+    "source_file_hash": {
+      "type": ["string", "null"],
+      "description": "SHA256 hash of source file defining this CRS",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "ingested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when this CRS was ingested"
+    },
+    "note": {
+      "type": ["string", "null"],
+      "description": "Any caveats or known issues with this CRS"
+    }
+  }
+}

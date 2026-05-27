@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/interpretation_claim.json",
+  "title": "Interpretation Claim Schema",
+  "description": "An interpretation claim with provenance and confidence",
+  "schema_id": "interpretation_claim_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "claim_id": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "object",
+      "properties": {
+        "uncertainty": {
+          "$ref": "uncertainty.json"
+        }
+      },
+      "required": [
+        "uncertainty"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "seal": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "hash"
+      ]
+    }
+  },
+  "required": [
+    "provenance",
+    "confidence",
+    "evidence",
+    "seal"
+  ],
+  "examples": [
+    {
+      "claim_id": "interp_001",
+      "provenance": "Interpreter: Jane Doe, Tool: Petrel",
+      "confidence": {
+        "uncertainty": {
+          "value": 0.8
+        }
+      },
+      "evidence": [
+        "seismic_volume_1"
+      ],
+      "seal": {
+        "hash": "4a5b6c7d8e9f"
+      }
+    }
+  ],
+  "invalid_examples": [
+    {
+      "claim_id": "interp_001",
+      "confidence": {
+        "uncertainty": {
+          "value": 0.8
+        }
+      },
+      "evidence": [
+        "seismic_volume_1"
+      ],
+      "seal": {
+        "hash": "4a5b6c7d8e9f"
+      }
+    }
+  ]
+}

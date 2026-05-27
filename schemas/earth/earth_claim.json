@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/earth_claim.json",
+  "title": "Earth Claim Schema",
+  "description": "Base schema for a claim with evidence and seal",
+  "schema_id": "earth_claim_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "claim_id": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "seal": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "hash"
+      ]
+    }
+  },
+  "required": [
+    "evidence",
+    "seal"
+  ],
+  "examples": [
+    {
+      "claim_id": "claim_001",
+      "evidence": [
+        "well_log_1",
+        "core_sample_2"
+      ],
+      "seal": {
+        "hash": "abc123def456"
+      }
+    }
+  ],
+  "invalid_examples": [
+    {
+      "claim_id": "claim_002",
+      "evidence": []
+    }
+  ]
+}

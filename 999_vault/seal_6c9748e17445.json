@@ -1,0 +1,12 @@
+{
+  "earth_object_id": "PROSPECT-ALPHA-01",
+  "claim_state": "SEALED",
+  "timestamp_utc": "2026-05-27T09:01:50.820892+00:00",
+  "sealed_by": "arifOS-GEOX-Clerk",
+  "data": {
+    "GCoS": 0.45,
+    "dominant_risk": "Charge Timing",
+    "decision": "Acquire 3D Seismic"
+  },
+  "vault_hash": "6c9748e1744549bdf722024c1c9dab947c0134e5e518a3b34d594f71a0cc236f"
+}

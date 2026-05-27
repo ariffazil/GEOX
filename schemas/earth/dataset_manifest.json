@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/dataset_manifest.json",
+  "title": "Dataset Manifest Schema",
+  "description": "Manifest for a geological dataset",
+  "schema_id": "dataset_manifest_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "dataset_name": {
+      "type": "string"
+    },
+    "crs": {
+      "type": "string"
+    },
+    "datum": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_name"
+  ],
+  "examples": [
+    {
+      "dataset_name": "survey_xyz",
+      "crs": "EPSG:4326"
+    }
+  ],
+  "invalid_examples": [
+    {}
+  ]
+}

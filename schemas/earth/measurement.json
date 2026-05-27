@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/measurement.json",
+  "title": "Measurement Schema",
+  "description": "A measurement with a unit",
+  "schema_id": "measurement_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "number"
+    },
+    "unit": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "value",
+    "unit"
+  ],
+  "examples": [
+    {
+      "value": 1500.5,
+      "unit": "m"
+    }
+  ],
+  "invalid_examples": [
+    {
+      "value": 1500.5
+    }
+  ]
+}

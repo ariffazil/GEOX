@@ -1,7 +1,7 @@
 """
-GEOX Witness Core — Canonical 13-Tool Orchestrator
-══════════════════════════════════════════════════
-13 tools. Physics-9 foundation. No interpretation. No narrative.
+GEOX Witness Core — Canonical 16-Tool Orchestrator
+═════════════════════════════════════════════════
+16 tools. Physics-9 foundation. No interpretation. No narrative.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
@@ -19,6 +19,13 @@ from geox_core.compatibility.legacy_aliases import get_alias_metadata
 
 # ── Canonical tool implementations ───────────────────────────────────────────
 from geox_mcp.tools.data import geox_data_ingest_bundle
+from geox_mcp.tools.ingestion import (
+    geox_las_inspect,
+    geox_seismic_inspect,
+    geox_deviation_survey_inspect,
+    geox_tops_inspect,
+    geox_seismic_segy_inspect,
+)
 from geox_mcp.tools.qc import geox_data_qc_bundle
 from geox_mcp.tools.dst import geox_dst_ingest_test
 from geox_mcp.tools.petrophysics import (
@@ -67,6 +74,11 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),
     ("geox_data_qc_bundle", geox_data_qc_bundle),
     ("geox_dst_ingest_test", geox_dst_ingest_test),
+    ("geox_las_inspect", geox_las_inspect),
+    ("geox_seismic_inspect", geox_seismic_inspect),
+    ("geox_deviation_survey_inspect", geox_deviation_survey_inspect),
+    ("geox_tops_inspect", geox_tops_inspect),
+    ("geox_seismic_segy_inspect", geox_seismic_segy_inspect),
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
     ("geox_subsurface_verify_integrity", geox_subsurface_verify_integrity),
     ("geox_seismic_compute", geox_seismic_compute),
@@ -94,6 +106,36 @@ _TOOL_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_dst_ingest_test": {
         "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_las_inspect": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_seismic_inspect": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_deviation_survey_inspect": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_tops_inspect": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_seismic_segy_inspect": {
+        "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
         "openWorldHint": False,
@@ -170,9 +212,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(**kwargs)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    assert len(CANONICAL_PUBLIC_TOOLS) == 11, (
-        f"F0_CONSTITUTION_BREACH: Expected 11 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
-    )
+    if len(CANONICAL_PUBLIC_TOOLS) != 16:
+        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 16 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
 
     # ── Legacy alias bridge ──────────────────────────────────────────────────
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")

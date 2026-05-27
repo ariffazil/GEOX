@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/seismic_volume_metadata.json",
+  "title": "Seismic Volume Metadata Schema",
+  "description": "Metadata for a seismic volume",
+  "schema_id": "seismic_volume_metadata_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "volume_name": {
+      "type": "string"
+    },
+    "coordinate": {
+      "type": "object",
+      "properties": {
+        "bbox": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "crs": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "crs"
+      ]
+    },
+    "datum": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "volume_name",
+    "coordinate",
+    "datum"
+  ],
+  "examples": [
+    {
+      "volume_name": "Seismic-3D",
+      "coordinate": {
+        "bbox": [
+          0,
+          0,
+          100,
+          100
+        ],
+        "crs": "EPSG:32631"
+      },
+      "datum": "MSL"
+    }
+  ],
+  "invalid_examples": [
+    {
+      "volume_name": "Seismic-3D",
+      "coordinate": {
+        "bbox": [
+          0,
+          0,
+          100,
+          100
+        ],
+        "crs": "EPSG:32631"
+      }
+    }
+  ]
+}

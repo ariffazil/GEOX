@@ -10,6 +10,11 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_data_ingest_bundle",
     "geox_data_qc_bundle",
     "geox_dst_ingest_test",
+    "geox_las_inspect",
+    "geox_seismic_inspect",
+    "geox_deviation_survey_inspect",
+    "geox_tops_inspect",
+    "geox_seismic_segy_inspect",
     # Physics-9 domain engines
     "geox_subsurface_generate_candidates",
     "geox_subsurface_verify_integrity",
@@ -28,17 +33,22 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
 ]
 
 GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
-    {"name": "geox_data_ingest_bundle",             "axis": "observe",  "expose": True},
-    {"name": "geox_data_qc_bundle",                 "axis": "verify",   "expose": True},
-    {"name": "geox_dst_ingest_test",                "axis": "observe",  "expose": True},
-    {"name": "geox_subsurface_generate_candidates", "axis": "reason",   "expose": True},
-    {"name": "geox_subsurface_verify_integrity",    "axis": "verify",   "expose": True},
-    {"name": "geox_seismic_compute",                "axis": "reason",   "expose": True},
-    {"name": "geox_sequence_interpret",             "axis": "reason",   "expose": True},
-    {"name": "geox_evidence_reason",                "axis": "reason",   "expose": True},
-    {"name": "geox_prospect_evaluate",              "axis": "reason",   "expose": True},
-    {"name": "geox_map_context_scene",              "axis": "observe",  "expose": True},
-    {"name": "geox_system_registry_status",         "axis": "identity", "expose": True},
+    {"name": "geox_data_ingest_bundle", "axis": "observe", "expose": True},
+    {"name": "geox_data_qc_bundle", "axis": "verify", "expose": True},
+    {"name": "geox_dst_ingest_test", "axis": "observe", "expose": True},
+    {"name": "geox_las_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_seismic_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_deviation_survey_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_tops_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_seismic_segy_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_subsurface_generate_candidates", "axis": "reason", "expose": True},
+    {"name": "geox_subsurface_verify_integrity", "axis": "verify", "expose": True},
+    {"name": "geox_seismic_compute", "axis": "reason", "expose": True},
+    {"name": "geox_sequence_interpret", "axis": "reason", "expose": True},
+    {"name": "geox_evidence_reason", "axis": "reason", "expose": True},
+    {"name": "geox_prospect_evaluate", "axis": "reason", "expose": True},
+    {"name": "geox_map_context_scene", "axis": "observe", "expose": True},
+    {"name": "geox_system_registry_status", "axis": "observe", "expose": True},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)

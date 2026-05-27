@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/uncertainty.json",
+  "title": "Uncertainty Schema",
+  "description": "Defines uncertainty for a confidence metric",
+  "schema_id": "uncertainty_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "number"
+    },
+    "distribution": {
+      "type": "string"
+    },
+    "p10": {
+      "type": "number"
+    },
+    "p90": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "value"
+  ],
+  "examples": [
+    {
+      "value": 0.1,
+      "distribution": "normal"
+    }
+  ],
+  "invalid_examples": [
+    {
+      "distribution": "normal"
+    }
+  ]
+}

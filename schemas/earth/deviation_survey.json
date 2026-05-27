@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "earth/deviation_survey.json",
+  "title": "Deviation Survey Schema",
+  "description": "Canonical schema for deviation survey metadata. Tracks well path from vertical to horizontal.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["well_id", "survey_name", "md_values", "tvd_values", "unit", "datum"],
+  "additionalProperties": false,
+  "properties": {
+    "well_id": {"type": "string"},
+    "survey_name": {"type": "string"},
+    "operator": {"type": ["string", "null"]},
+    "acquisition_date": {"type": ["string", "null"], "format": "date"},
+    "md_values": {
+      "type": "array",
+      "items": {"type": "number"},
+      "description": "Measured depth values (must be increasing)"
+    },
+    "tvd_values": {
+      "type": "array",
+      "items": {"type": "number"},
+      "description": "True vertical depth values"
+    },
+    "inclination_values": {
+      "type": ["array", "null"],
+      "items": {"type": "number"},
+      "description": "Inclination from vertical in degrees"
+    },
+    "azimuth_values": {
+      "type": ["array", "null"],
+      "items": {"type": "number"},
+      "description": "Azimuth from north in degrees"
+    },
+    "unit": {
+      "type": "string",
+      "enum": ["m", "ft"],
+      "description": "Depth unit"
+    },
+    "datum": {
+      "type": "string",
+      "enum": ["KB", "DF", "GL", "MSL", "other"],
+      "description": "Reference datum for depths"
+    },
+    "crs": {
+      "type": ["string", "null"],
+      "description": "Coordinate reference system for surface location"
+    },
+    "surface_location": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "longitude": {"type": "number"},
+        "latitude": {"type": "number"}
+      }
+    },
+    "nod_values": {
+      "type": ["array", "null"],
+      "items": {"type": "number"},
+      "description": "Northing values (if calculated)"
+    },
+    "eod_values": {
+      "type": ["array", "null"],
+      "items": {"type": "number"},
+      "description": "Easting values (if calculated)"
+    },
+    "qc_flags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Quality flags. Examples: RE蛇蛇蛇蛇蛇蛇蛇_DUPLICATE_DEPTH, SMOOTHING_APPLIED, SURVEY_GAP"
+    },
+    "method": {
+      "type": ["string", "null"],
+      "enum": ["single_shot", "multi_shot", "gyro", "MWD", "gyro_while_drilling", "unknown"]
+    },
+    "source_file_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "earth/segy_metadata.json",
+  "title": "SEG-Y File Metadata Schema",
+  "description": "Canonical schema for SEG-Y file binary header metadata. Inspect before ingest. No mutation by default.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["filename", "format", "coordinate_units"],
+  "additionalProperties": true,
+  "properties": {
+    "filename": {"type": "string"},
+    "file_size_bytes": {"type": "integer"},
+    "file_hash_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "format": {
+      "type": "string",
+      "enum": ["SEG_Y_REV1", "SEG_Y_REV2", "SEG_Y_0", "UNKNOWN"],
+      "description": "SEG-Y format revision"
+    },
+    "revision_number": {
+      "type": "number",
+      "description": "SEG-Y revision number. 1.0 = rev1, 2.0 = rev2"
+    },
+    "encoding": {
+      "type": "string",
+      "enum": ["IBM_FLOAT", "IEEE_FLOAT", "INT16", "INT32", "UNKNOWN"],
+      "description": "Data sample format encoding"
+    },
+    "coordinate_units": {
+      "type": "string",
+      "enum": ["length_meters", "length_feet", "seconds", "unknown"],
+      "description": "Units for inline/xline/cdp coordinates"
+    },
+    "sample_format": {
+      "type": "string",
+      "description": "Descriptive format string. Examples: 4-byte IBM float, 4-byte IEEE float, 2-byte integer"
+    },
+    "sample_count": {
+      "type": "integer",
+      "description": "Number of samples per trace"
+    },
+    "sample_interval_ms": {
+      "type": "number",
+      "description": "Sample interval in milliseconds"
+    },
+    "trace_count": {
+      "type": "integer",
+      "description": "Approximate number of traces in file"
+    },
+    "inline_start": {
+      "type": ["integer", "null"]
+    },
+    "inline_end": {
+      "type": ["integer", "null"]
+    },
+    "crossline_start": {
+      "type": ["integer", "null"]
+    },
+    "crossline_end": {
+      "type": ["integer", "null"]
+    },
+    "inline_step": {
+      "type": ["integer", "null"]
+    },
+    "crossline_step": {
+      "type": ["integer", "null"]
+    },
+    "shotpoint_start": {
+      "type": ["number", "null"]
+    },
+    "shotpoint_end": {
+      "type": ["number", "null"]
+    },
+    "offset_min": {
+      "type": ["number", "null"],
+      "description": "Minimum offset in meters"
+    },
+    "offset_max": {
+      "type": ["number", "null"],
+      "description": "Maximum offset in meters"
+    },
+    "cdp_min": {
+      "type": ["integer", "null"]
+    },
+    "cdp_max": {
+      "type": ["integer", "null"]
+    },
+    "sweep_frequency_start_hz": {
+      "type": ["number", "null"]
+    },
+    "sweep_frequency_end_hz": {
+      "type": ["number", "null"]
+    },
+    "sweep_type": {
+      "type": ["string", "null"],
+      "enum": ["linear", "parabolic", "symmetric", "chirpz", "unknown", null]
+    },
+    "source_type": {
+      "type": ["string", "null"],
+      "enum": ["vibroseis", "dynamite", "airgun", "sparker", "unknown", null]
+    },
+    "orientation": {
+      "type": ["string", "null"],
+      "enum": ["BINARY_GATHER", "LINE", "3D", "UNKNOWN", null]
+    },
+    "inline_location_byte": {
+      "type": ["integer", "null"],
+      "description": "SEG-Y binary header byte location for inline number"
+    },
+    "crossline_location_byte": {
+      "type": ["integer", "null"],
+      "description": "SEG-Y binary header byte location for crossline number"
+    },
+    "cdp_x_location_byte": {
+      "type": ["integer", "null"],
+      "description": "Byte location for CDP X coordinate"
+    },
+    "cdp_y_location_byte": {
+      "type": ["integer", "null"],
+      "description": "Byte location for CDP Y coordinate"
+    },
+    "coordinate_system": {
+      "type": ["string", "null"],
+      "description": "EPSG code or CRS name for CDP coordinates"
+    },
+    "surveydata_note": {
+      "type": ["string", "null"],
+      "description": "Text from trace header bytes 181-184"
+    },
+    "ingestion_warning_flags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Flags indicating potential issues. Examples: MIXED_ENDIAN, SUSPECT_COORDINATES, OVERSIZED_FILE"
+    },
+    "operator": {
+      "type": ["string", "null"]
+    },
+    "survey_name": {
+      "type": ["string", "null"]
+    },
+    "acquisition_date": {
+      "type": ["string", "null"]
+    },
+    "processing_level": {
+      "type": ["string", "null"],
+      "examples": ["raw", "stack", "migration", "AVO", "inversion", "unknown"]
+    },
+    "quality_flags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Data quality flags. Examples: DEAD_TRACES, AMP_SATSATURATION, NULL_VALUE_PRESENT"
+    }
+  }
+}

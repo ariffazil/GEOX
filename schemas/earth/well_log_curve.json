@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.os/schemas/earth/well_log_curve.json",
+  "title": "Well Log Curve Schema",
+  "description": "Metadata for a well log curve",
+  "schema_id": "well_log_curve_v1",
+  "schema_version": "1.0.0",
+  "changelog": [
+    "1.0.0 - Initial release"
+  ],
+  "type": "object",
+  "properties": {
+    "curve_name": {
+      "type": "string"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "well_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "curve_name",
+    "unit"
+  ],
+  "examples": [
+    {
+      "curve_name": "GR",
+      "unit": "gAPI",
+      "well_id": "Well-1A"
+    }
+  ],
+  "invalid_examples": [
+    {
+      "curve_name": "GR"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "earth/units.json",
+  "title": "Measurement Units",
+  "description": "Canonical unit specification for all Earth measurement claims. No measurement without unit.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["unit_system", "valid_units"],
+  "additionalProperties": false,
+  "definitions": {
+    "length_unit": {
+      "type": "string",
+      "enum": ["m", "cm", "mm", "ft", "in", "km"],
+      "description": "Allowed length units in GEOX Earth memory"
+    },
+    "time_unit": {
+      "type": "string",
+      "enum": ["ms", "s", "min", "h", "d"],
+      "description": "Allowed time units"
+    },
+    "pressure_unit": {
+      "type": "string",
+      "enum": ["kPa", "MPa", "psi", "bar", "atm"],
+      "description": "Allowed pressure units"
+    },
+    "temperature_unit": {
+      "type": "string",
+      "enum": ["K", "C", "F"],
+      "description": "Allowed temperature units"
+    },
+    "velocity_unit": {
+      "type": "string",
+      "enum": ["m/s", "m/ms", "ft/s", "knots"],
+      "description": "Allowed velocity units"
+    },
+    "density_unit": {
+      "type": "string",
+      "enum": ["kg/m3", "g/cm3", "ppg"],
+      "description": "Allowed density units"
+    },
+    "frequency_unit": {
+      "type": "string",
+      "enum": ["Hz", "kHz", "MHz", "GHz"],
+      "description": "Allowed frequency units"
+    },
+    "angle_unit": {
+      "type": "string",
+      "enum": ["deg", "rad", "mrad"],
+      "description": "Allowed angle units"
+    },
+    "impedance_unit": {
+      "type": "string",
+      "enum": ["kg/ms", "g/cm2s", "psi-s/ft"],
+      "description": "Allowed acoustic impedance units"
+    },
+    "unit_conversion": {
+      "type": "object",
+      "required": ["from", "to", "factor"],
+      "additionalProperties": false,
+      "properties": {
+        "from": {"type": "string"},
+        "to": {"type": "string"},
+        "factor": {"type": "number"},
+        "offset": {"type": "number", "description": "For temperature conversions"}
+      }
+    }
+  },
+  "properties": {
+    "unit_system": {
+      "type": "string",
+      "enum": ["metric", "imperial", "mixed", "unknown"],
+      "description": "Primary unit system used"
+    },
+    "depth_unit": {
+      "$ref": "#/definitions/length_unit"
+    },
+    "time_unit": {
+      "$ref": "#/definitions/time_unit"
+    },
+    "pressure_unit": {
+      "$ref": "#/definitions/pressure_unit"
+    },
+    "velocity_unit": {
+      "$ref": "#/definitions/velocity_unit"
+    },
+    "density_unit": {
+      "$ref": "#/definitions/density_unit"
+    },
+    "temperature_unit": {
+      "$ref": "#/definitions/temperature_unit"
+    },
+    "frequency_unit": {
+      "$ref": "#/definitions/frequency_unit"
+    },
+    "angle_unit": {
+      "$ref": "#/definitions/angle_unit"
+    },
+    "impedance_unit": {
+      "$ref": "#/definitions/impedance_unit"
+    },
+    "valid_units": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "List of all valid unit strings recognized by this schema"
+    },
+    "common_conversions": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/unit_conversion"},
+      "description": "Common unit conversions used in this dataset"
+    },
+    "unit_convention": {
+      "type": "string",
+      "enum": ["SI", "Oilfield", "Custom", "Mixed"],
+      "description": "Industry convention for unit representation"
+    },
+    "validation_status": {
+      "type": "string",
+      "enum": ["validated", "unknown", "invalid", "mixed"],
+      "description": "Whether units have been validated against source file headers"
+    },
+    "source_file_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "ingested_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
