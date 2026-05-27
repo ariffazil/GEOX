@@ -209,8 +209,8 @@ def bootstrap_sovereign_13():
 
         register_unified_tools(mcp, profile=GEOX_PROFILE)
         # Assert against the canonical public tools count
-        if len(CANONICAL_PUBLIC_TOOLS) != 16:
-            raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 16 Witness Core tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+        if len(CANONICAL_PUBLIC_TOOLS) != 20:
+            raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 20 Witness Core tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
         logger.info(f"Witness Core surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} canonical tools)")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 16 registry: {e}")

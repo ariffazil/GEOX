@@ -19,3 +19,4 @@ geox-gui/node_modules/
 /data/wells/
 ops/reports/*.csv
 asset_memory.db
+earth_memory.db

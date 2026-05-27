@@ -30,6 +30,11 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_map_context_scene",
     # Machine-checkable truth
     "geox_system_registry_status",
+    # H5: Claim Engine
+    "geox_claim_create",
+    "geox_claim_challenge",
+    "geox_evidence_attach",
+    "geox_claim_seal",
 ]
 
 GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
@@ -49,6 +54,11 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_prospect_evaluate", "axis": "reason", "expose": True},
     {"name": "geox_map_context_scene", "axis": "observe", "expose": True},
     {"name": "geox_system_registry_status", "axis": "observe", "expose": True},
+    # H5: Claim Engine
+    {"name": "geox_claim_create", "axis": "reason", "expose": True},
+    {"name": "geox_claim_challenge", "axis": "reason", "expose": True},
+    {"name": "geox_evidence_attach", "axis": "verify", "expose": True},
+    {"name": "geox_claim_seal", "axis": "reason", "expose": True},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
