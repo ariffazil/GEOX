@@ -18,7 +18,7 @@ segyio>=1.9.0
 segysak>=0.4.0
 
 # Well Log Ingestion (canonical src/ uses lasio)
-welly>=0.5.0
+welly>=0.5.2
 lasio>=0.31
 striplog>=0.9.2
 
