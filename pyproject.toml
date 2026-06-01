@@ -78,7 +78,7 @@ all = [
     "hvplot>=0.9.0",
     "holoviews>=1.22.1",
     "bokeh>=3.9.0",
-    "datashader>=0.16.0",
+    "datashader>=0.19.1",
 ]
 
 [project.urls]
