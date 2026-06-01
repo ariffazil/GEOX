@@ -5,7 +5,7 @@
 # Core Computational & Spatial Physics
 numpy>=2.4.6
 scipy>=1.17.1
-pandas>=2.0.0
+pandas>=3.0.3
 
 # Visual Abstraction & Imaging Membrane (headless = no GUI bloat)
 opencv-python-headless>=4.7.0

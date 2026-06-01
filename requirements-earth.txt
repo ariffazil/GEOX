@@ -7,7 +7,7 @@
 # Core Scientific (Wajib per Arif spec)
 numpy>=2.4.6
 scipy>=1.10.0
-pandas>=2.0.0
+pandas>=3.0.3
 matplotlib>=3.7.0
 
 # Imaging support (Pillow — matplotlib/OpenCV dependency)
