@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any, List, Dict, Optional, Literal
 
 from fastmcp import FastMCP
@@ -272,6 +273,98 @@ async def geox_data_qc_bundle(
         flags = sorted(set(engine_flags + curve_state_flags + inherited_flags))
         limitations = sorted(set(list(qc_dict.get("limitations", [])) + inherited_limitations))
 
+        # EUREKA FORGE (2026-06-02): distill the SAF statistical-rigor pattern
+        # into the existing QC verdict. No new tool registered (F13 directive:
+        # no additional tools). When the loaded well data has statistically
+        # significant departures from normality (Shapiro p<0.05) or high
+        # outlier density, we surface this as a SAF-grounded warning and
+        # downgrade the claim_state to QC_VERIFIED_WITH_WARNINGS.
+        try:
+            import sys
+
+            _arifos_kernel = "/root/arifOS"
+            if _arifos_kernel not in sys.path:
+                sys.path.insert(0, _arifos_kernel)
+            from core.shared.saf_stats import (
+                stat_assumptions as _saf_assumptions,
+                stat_outliers as _saf_outliers,
+            )
+            import pandas as _pd_saf
+            import uuid as _uuid_saf
+            from pathlib import Path as _Path_saf
+            import os as _os_saf
+
+            _geox_saf_root = _Path_saf(_os_saf.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
+            _geox_saf_root.mkdir(parents=True, exist_ok=True)
+            _os_saf.environ.setdefault("SAF_DATA_ROOT", str(_geox_saf_root))
+            # Extract depth curve from the loaded well (use curves['DEPT'])
+            _depth = None
+            try:
+                _curves_dict = getattr(well_result, "curves", None) or {}
+                # Try common depth curve names
+                for _dn in ("DEPT", "DEPTH", "MD", "TVD"):
+                    if _dn in _curves_dict:
+                        _arr = _curves_dict[_dn]
+                        if hasattr(_arr, "tolist"):
+                            _depth = _arr.tolist()
+                        elif isinstance(_arr, (list, tuple)):
+                            _depth = list(_arr)
+                        break
+                if _depth is None and _curves_dict:
+                    # Fall back to first numeric curve
+                    for _v in _curves_dict.values():
+                        if hasattr(_v, "tolist"):
+                            _depth = _v.tolist()
+                            break
+            except Exception:
+                _depth = None
+            _saf_summary = None
+            if _depth and len(_depth) >= 3:
+                _csv = _geox_saf_root / f"qc_{_uuid_saf.uuid4().hex[:10]}.csv"
+                _pd_saf.DataFrame({"depth": _depth}).to_csv(_csv, index=False)
+                _saf_assump = _saf_assumptions(file_path=str(_csv), columns=["depth"])
+                _saf_out = _saf_outliers(file_path=str(_csv), columns=["depth"], method="iqr", threshold=1.5)
+                try:
+                    _csv.unlink()
+                except OSError:
+                    pass
+                # Extract summary stats
+                _p_shapiro = None
+                _skew = None
+                _kurt = None
+                for c in _saf_assump.get("results", []):
+                    if c.get("normality_p") is not None:
+                        _p_shapiro = c.get("normality_p")
+                        _skew = c.get("skew")
+                        _kurt = c.get("kurtosis")
+                        break
+                _n_outliers = 0
+                for c in _saf_out.get("per_column", {}).values():
+                    _n_outliers += len(c.get("indices", []))
+                _saf_summary = {
+                    "n_depth_samples": len(_depth),
+                    "shapiro_p": round(_p_shapiro, 6) if _p_shapiro is not None else None,
+                    "skew": round(_skew, 4) if _skew is not None else None,
+                    "kurtosis": round(_kurt, 4) if _kurt is not None else None,
+                    "outliers_iqr_count": _n_outliers,
+                    "outlier_density": round(_n_outliers / len(_depth), 4) if _depth else None,
+                    "verdict": "SEAL"
+                    if (_p_shapiro is None or _p_shapiro >= 0.05) and _n_outliers / max(len(_depth), 1) < 0.05
+                    else "SABAR",
+                }
+                # F2 TRUTH: if normality violated OR outlier density > 5%,
+                # add a warning (will downgrade claim_state below)
+                if _p_shapiro is not None and _p_shapiro < 0.05:
+                    flags.append("SAF_NON_NORMAL_DEPTH")
+                    limitations.append(f"SAF stat_assumptions: Shapiro p={_p_shapiro:.4f} — depth distribution non-normal.")
+                if _n_outliers / max(len(_depth), 1) > 0.05:
+                    flags.append(f"SAF_HIGH_OUTLIER_DENSITY:{_n_outliers}")
+                    limitations.append(
+                        f"SAF stat_outliers: {_n_outliers} outliers ({_n_outliers / len(_depth):.1%} of depth samples) — investigate before parametric use."
+                    )
+        except Exception as _saf_exc:
+            _saf_summary = {"embed_skipped": str(_saf_exc)[:120]}
+
         # Red Team Fix: Include curve_warnings and depth_qc in failure logic
         has_range_issues = bool(curve_warnings)
         has_depth_issues = not depth_qc.get("monotonic", True)
@@ -344,6 +437,11 @@ async def geox_data_qc_bundle(
                 response["completeness_score"] = completeness_score
                 response["present_curves"] = present_curves
                 response["missing_curves"] = missing_curves
+            # EUREKA FORGE (2026-06-02): surface SAF statistical-rigor
+            # summary in the response so downstream consumers can see
+            # the assumption check + outlier audit.
+            if _saf_summary is not None:
+                response["_saf_assumptions"] = _saf_summary
         except NameError:
             pass  # mode-specific vars not set (exception above)
 
