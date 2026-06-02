@@ -335,17 +335,19 @@ def _match_rules(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                 score = cand["prior"] * confidence_ratio - context_penalty
                 score = max(0.05, min(0.95, score))  # clamp
 
-                candidates.append({
-                    "process": cand["process"],
-                    "mechanism": cand["mechanism"],
-                    "evidence_for": _build_evidence_for(rule, evidence),
-                    "evidence_against": _build_evidence_against(cand, evidence, missing_context),
-                    "expected_additional_signatures": cand.get("expected_signatures", []),
-                    "missing_tests": _build_missing_tests(cand, evidence, missing_context),
-                    "confidence": _score_to_confidence(score),
-                    "claim_state": "PROCESS_HYPOTHESIS",
-                    "_score": score,
-                })
+                candidates.append(
+                    {
+                        "process": cand["process"],
+                        "mechanism": cand["mechanism"],
+                        "evidence_for": _build_evidence_for(rule, evidence),
+                        "evidence_against": _build_evidence_against(cand, evidence, missing_context),
+                        "expected_additional_signatures": cand.get("expected_signatures", []),
+                        "missing_tests": _build_missing_tests(cand, evidence, missing_context),
+                        "confidence": _score_to_confidence(score),
+                        "claim_state": "PROCESS_HYPOTHESIS",
+                        "_score": score,
+                    }
+                )
 
     # Sort by score descending
     candidates.sort(key=lambda x: x["_score"], reverse=True)
@@ -365,9 +367,7 @@ def _build_evidence_for(rule: dict[str, Any], evidence: dict[str, Any]) -> list[
     return ev_for
 
 
-def _build_evidence_against(
-    candidate: dict[str, Any], evidence: dict[str, Any], missing_context: list[str]
-) -> list[str]:
+def _build_evidence_against(candidate: dict[str, Any], evidence: dict[str, Any], missing_context: list[str]) -> list[str]:
     """Build evidence_against list."""
     against = []
     for ctx in missing_context:
@@ -381,9 +381,7 @@ def _build_evidence_against(
     return against
 
 
-def _build_missing_tests(
-    candidate: dict[str, Any], evidence: dict[str, Any], missing_context: list[str]
-) -> list[str]:
+def _build_missing_tests(candidate: dict[str, Any], evidence: dict[str, Any], missing_context: list[str]) -> list[str]:
     """Build missing_tests list."""
     tests = []
     if evidence.get("well_count", 1) < 2:
@@ -557,7 +555,9 @@ def _contradiction_scan(hypotheses: list[dict[str, Any]], evidence: dict[str, An
             if vsh_mean > 0.5 and phi_mean > 0.25:
                 penalties += 0.30
                 issues.append(f"C8: High Vsh ({vsh_mean:.2f}) incompatible with high porosity ({phi_mean:.3f})")
-                auto_hold_triggers.append({"code": "C8", "severity": "high", "detail": f"Vsh={vsh_mean:.2f} vs phi={phi_mean:.3f}"})
+                auto_hold_triggers.append(
+                    {"code": "C8", "severity": "high", "detail": f"Vsh={vsh_mean:.2f} vs phi={phi_mean:.3f}"}
+                )
 
         # ═══════════════════════════════════════════════════════════════════════
         # C9: Trend contradiction
@@ -600,32 +600,35 @@ def _contradiction_scan(hypotheses: list[dict[str, Any]], evidence: dict[str, An
         if tie_corr is not None and tie_corr < 0.70:
             penalties += 0.25
             issues.append(f"C12: Low seismic-well tie correlation ({tie_corr:.2f})")
-            
+
             # Eureka Vector 1: Geomechanical Mismatch
             if evidence.get("caliper_deviation", 0) > 2.0:
                 issues.append("Eureka 1: Borehole washouts detected — density log likely compromised, creating AI bias.")
-            
+
             # Eureka Vector 2: Fluid Substitution
             if evidence.get("is_gas_zone") and evidence.get("velocity_drop_anomaly"):
                 issues.append("Eureka 2: Unseen gas cloud suspected — lowering velocity and breaking regional T-D assumption.")
-            
+
             # Eureka Vector 3: Structural Reality
             if evidence.get("seismic_discontinuity") == "high":
                 issues.append("Eureka 3: Sub-seismic faulting suspected — acoustic wave smearing detected.")
 
-        contradictions.append({
-            "process": hyp["process"],
-            "issues": issues,
-            "penalty": round(penalties, 3),
-        })
+        contradictions.append(
+            {
+                "process": hyp["process"],
+                "issues": issues,
+                "penalty": round(penalties, 3),
+            }
+        )
         penalty_scores.append(penalties)
 
     max_penalty = max(penalty_scores) if penalty_scores else 0.0
     recommendation = (
         "888HOLD triggered — severe contradictions detected"
-        if auto_hold_triggers else
-        "Re-rank hypotheses after penalty application" if any(p > 0 for p in penalty_scores) else
-        "No major contradictions detected"
+        if auto_hold_triggers
+        else "Re-rank hypotheses after penalty application"
+        if any(p > 0 for p in penalty_scores)
+        else "No major contradictions detected"
     )
 
     return {
@@ -689,7 +692,14 @@ async def geox_process_abduction(
             "next_best_actions": [
                 {"tool": "geox_data_ingest_bundle", "reason": "Re-ingest missing evidence", "priority": "critical"}
             ],
-            "audit_receipt": {"acrisk": 1.0, "verdict": "VOID", "floors": ["F2 TRUTH"]},
+            "audit_receipt": {
+                "acrisk": 1.0,
+                "verdict": "VOID",
+                "floor_signals": [
+                    {"domain": "truth_risk", "value": "high", "trigger": "evidence_load_failed", "raw": len(failed)}
+                ],
+                "floor_authority": "arifOS",
+            },
             "human_final_authority": "Arif",
             "error": f"Failed to load {len(failed)} artifact(s): {[a['ref'] for a in failed]}",
         }
@@ -704,16 +714,18 @@ async def geox_process_abduction(
 
     # Enforce minimum hypotheses for ambiguous data
     if len(hypotheses) < 2 and claim_strictness in ["appraise", "decision"]:
-        hypotheses.append({
-            "process": "alternative_unspecified",
-            "mechanism": "Insufficient data to distinguish process",
-            "evidence_for": ["Data matches no strong pattern"],
-            "evidence_against": ["Pattern ambiguity high"],
-            "expected_additional_signatures": [],
-            "missing_tests": ["More complete log suite", "Core description", "Seismic context"],
-            "confidence": "low",
-            "claim_state": "PROCESS_HYPOTHESIS",
-        })
+        hypotheses.append(
+            {
+                "process": "alternative_unspecified",
+                "mechanism": "Insufficient data to distinguish process",
+                "evidence_for": ["Data matches no strong pattern"],
+                "evidence_against": ["Pattern ambiguity high"],
+                "expected_additional_signatures": [],
+                "missing_tests": ["More complete log suite", "Core description", "Seismic context"],
+                "confidence": "low",
+                "claim_state": "PROCESS_HYPOTHESIS",
+            }
+        )
 
     # Build claim limits
     claim_limits = [
@@ -733,9 +745,13 @@ async def geox_process_abduction(
         {"tool": "geox_evidence_contradiction_scan", "reason": "Attack hypotheses for contradictions", "priority": "high"},
     ]
     if not evidence.get("has_core"):
-        next_best_actions.append({"tool": "geox_data_ingest_bundle", "reason": "Add core data if available", "priority": "medium"})
+        next_best_actions.append(
+            {"tool": "geox_data_ingest_bundle", "reason": "Add core data if available", "priority": "medium"}
+        )
     if evidence.get("well_count", 1) < 2:
-        next_best_actions.append({"tool": "geox_section_interpret_correlation", "reason": "Correlate to adjacent wells", "priority": "medium"})
+        next_best_actions.append(
+            {"tool": "geox_section_interpret_correlation", "reason": "Correlate to adjacent wells", "priority": "medium"}
+        )
 
     return {
         "execution_status": "SUCCESS",
@@ -753,7 +769,8 @@ async def geox_process_abduction(
         "audit_receipt": {
             "acrisk": 0.45 if len(hypotheses) >= 2 else 0.60,
             "verdict": "QUALIFY" if len(hypotheses) >= 2 else "HOLD",
-            "floors": [],
+            "floor_signals": [],
+            "floor_authority": "arifOS",
         },
         "human_final_authority": "Arif",
     }
@@ -789,7 +806,12 @@ async def geox_evidence_contradiction_scan(
             "next_best_actions": [
                 {"tool": "geox_process_abduction", "reason": "Generate hypotheses before scanning", "priority": "critical"}
             ],
-            "audit_receipt": {"acrisk": 0.50, "verdict": "HOLD", "floors": ["F4 HUMILITY"]},
+            "audit_receipt": {
+                "acrisk": 0.50,
+                "verdict": "HOLD",
+                "floor_signals": [{"domain": "uncertainty_band", "value": "wide", "trigger": "no_hypotheses", "raw": None}],
+                "floor_authority": "arifOS",
+            },
             "human_final_authority": "Arif",
         }
 
@@ -816,13 +838,25 @@ async def geox_evidence_contradiction_scan(
         execution_status = "HOLD"
         verdict = "VOID"
         acrisk = 0.85
-        floors = ["F2 TRUTH", "F9 ANTI-HANTU"]
+        # GEOX is an evidence organ — it signals domain risk, not constitutional floors.
+        # Floors (F1-F13) are enforced by arifOS, not GEOX.
+        truth_risk = "high" if scan["max_penalty"] >= 0.30 else "moderate"
+        hallucination_risk = "high" if scan["max_penalty"] >= 0.30 else "moderate"
+        floor_signals = [
+            {"domain": "truth_risk", "value": truth_risk, "trigger": "max_penalty", "raw": scan["max_penalty"]},
+            {
+                "domain": "hallucination_risk",
+                "value": hallucination_risk,
+                "trigger": "contradiction_detected",
+                "raw": len(scan.get("contradictions", [])),
+            },
+        ]
     else:
         claim_state = "DECISION_SUPPORT"
         execution_status = "SUCCESS"
         verdict = "QUALIFY" if scan["max_penalty"] < 0.30 else "HOLD"
         acrisk = 0.35 + scan["max_penalty"] * 0.5
-        floors = []
+        floor_signals = []
 
     return {
         "execution_status": execution_status,
@@ -847,13 +881,14 @@ async def geox_evidence_contradiction_scan(
         ],
         "next_best_actions": [
             {"tool": "geox_evidence_summarize_cross", "reason": "Synthesize final ranking", "priority": "high"}
-            if not scan.get("auto_hold") else
-            {"tool": "geox_data_qc_bundle", "reason": "Re-QC conflicting curves before re-abduction", "priority": "critical"}
+            if not scan.get("auto_hold")
+            else {"tool": "geox_data_qc_bundle", "reason": "Re-QC conflicting curves before re-abduction", "priority": "critical"}
         ],
         "audit_receipt": {
             "acrisk": acrisk,
             "verdict": verdict,
-            "floors": floors,
+            "floor_signals": floor_signals,
+            "floor_authority": "arifOS",
         },
         "human_final_authority": "Arif",
     }
@@ -893,10 +928,13 @@ async def geox_task_metabolize_basin(
             "artifact_refs": {},
             "evidence_refs": [],
             "claim_limits": ["well_refs list is empty. Provide at least one well."],
-            "next_best_actions": [
-                {"tool": "geox_data_ingest_bundle", "reason": "Ingest wells first", "priority": "critical"}
-            ],
-            "audit_receipt": {"acrisk": 0.50, "verdict": "HOLD", "floors": ["F4 HUMILITY"]},
+            "next_best_actions": [{"tool": "geox_data_ingest_bundle", "reason": "Ingest wells first", "priority": "critical"}],
+            "audit_receipt": {
+                "acrisk": 0.50,
+                "verdict": "HOLD",
+                "floor_signals": [{"domain": "uncertainty_band", "value": "wide", "trigger": "empty_well_refs", "raw": 0}],
+                "floor_authority": "arifOS",
+            },
             "human_final_authority": "Arif",
         }
 
@@ -945,21 +983,25 @@ async def geox_task_metabolize_basin(
                 success_count += 1
             else:
                 error_count += 1
-            per_well_results.append({
-                "well_ref": well_ref,
-                "status": status,
-                "artifact_ref": payload.get("artifact_ref"),
-                "claim_state": payload.get("claim_state", "UNKNOWN"),
-                "physics_guard": payload.get("physics_guard"),
-            })
+            per_well_results.append(
+                {
+                    "well_ref": well_ref,
+                    "status": status,
+                    "artifact_ref": payload.get("artifact_ref"),
+                    "claim_state": payload.get("claim_state", "UNKNOWN"),
+                    "physics_guard": payload.get("physics_guard"),
+                }
+            )
         except Exception as exc:
             error_count += 1
-            per_well_results.append({
-                "well_ref": well_ref,
-                "status": "ERROR",
-                "error": str(exc),
-                "claim_state": "NO_VALID_EVIDENCE",
-            })
+            per_well_results.append(
+                {
+                    "well_ref": well_ref,
+                    "status": "ERROR",
+                    "error": str(exc),
+                    "claim_state": "NO_VALID_EVIDENCE",
+                }
+            )
 
     all_ok = error_count == 0
     batch_status = "SUCCESS" if all_ok else "PARTIAL"
@@ -986,7 +1028,9 @@ async def geox_task_metabolize_basin(
         },
         "process_hypotheses": [],
         "decision_support": {
-            "recommendation": "Proceed to basin-scale prospect evaluation" if all_ok else "Review failed wells before basin aggregation",
+            "recommendation": "Proceed to basin-scale prospect evaluation"
+            if all_ok
+            else "Review failed wells before basin aggregation",
             "next_tool": "geox_prospect_evaluate" if all_ok else "geox_data_qc_bundle",
         },
         "artifact_refs": {},
@@ -1001,7 +1045,8 @@ async def geox_task_metabolize_basin(
         "audit_receipt": {
             "acrisk": 0.30 + (error_count / max(len(well_refs), 1)) * 0.40,
             "verdict": verdict,
-            "floors": [],
+            "floor_signals": [],
+            "floor_authority": "arifOS",
         },
         "human_final_authority": "Arif",
     }
