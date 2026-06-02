@@ -60,6 +60,7 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "ruff>=0.1.0",
     "mypy>=2.1.0",
+    "fastmcp[tasks]>=3.3.1,<4.0",  # server bootstrap registers task=True tools (geox_data_ingest_bundle)
 ]
 pinn = [
     "torch>=2.0.0",

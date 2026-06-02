@@ -19,6 +19,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, List, Optional, Literal
 
+import numpy as np
+
 
 from geox_core.enums.statuses import (
     get_standard_envelope,
