@@ -331,6 +331,20 @@ Artifact refs are immutable, auditable, and federation-portable (arifOS ↔ WEAL
 
 GEOX feeds governed evidence to arifOS. arifOS renders constitutional verdict. WEALTH applies economic constraints. Arif holds F13 sovereign veto over all three.
 
+### AAA Terminology Note
+
+When GEOX docs or agents reference AAA, qualify the surface:
+
+| Term | Surface | Role |
+|------|---------|------|
+| **AAA-HF** | Hugging Face dataset | Supplies doctrine and evaluation references for agent behavior |
+| **AAA-Cockpit** | GitHub `ariffazil/AAA` | Displays and routes federation state — does not own F1–F13 judgment |
+| **arifOS** | `ariffazil/arifos` | **The judge** — applies constitutional floors to all GEOX computations |
+
+GEOX computes earth evidence only. GEOX does not judge. GEOX does not define doctrine.
+
+> "AAA is polymorphic by design. When precision matters, qualify the surface."
+
 ***
 
 ## Roadmap
