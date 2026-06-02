@@ -1,0 +1,158 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# GEOX Sentinel Pre-Merge Gate
+# Q1: Did Physics9 / canonical tool paths change?
+# Q2: Physics9 invariants intact (no unitless values, no hardcoded Archie)?
+# Q3: Tests pass?
+# ═══════════════════════════════════════════════════════════════════════════
+name: "🛡️ GEOX Sentinel"
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  merge_group:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─── Q1: Critical path changes? ────────────────────────────────────────
+  q1-critical-paths:
+    name: "Q1 — Critical Paths"
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.scan.outputs.critical_changed }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed critical paths
+        id: scan
+        run: |
+          CRITICAL_PATHS=(
+            "server.py"
+            "geoxmcp/core/"
+            "geoxmcp/tools/"
+            "geoxmcp/contracts/"
+            "geoxmcp/physics9/"
+            "pyproject.toml"
+          )
+
+          CRITICAL_CHANGED="no"
+
+          for path in "${CRITICAL_PATHS[@]}"; do
+            if ! git diff --exit-code "origin/main...HEAD" -- "$path" > /dev/null 2>&1; then
+              CRITICAL_CHANGED="yes"
+              echo "  - ${path} (MODIFIED)"
+            fi
+          done
+
+          echo "critical_changed=$CRITICAL_CHANGED" >> "$GITHUB_OUTPUT"
+
+          if [[ "$CRITICAL_CHANGED" == "yes" ]]; then
+            echo "::notice::Q1 ALERT: Earth-critical paths modified"
+          else
+            echo "::notice::Q1 PASS: No earth-critical paths modified"
+          fi
+
+  # ─── Q2: Physics9 invariants? ──────────────────────────────────────────
+  q2-physics9:
+    name: "Q2 — Physics9 Invariants"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check Physics9 invariants
+        run: |
+          VIOLATIONS=""
+
+          # Hardcoded Archie constants without evidence ref
+          ARCHIE_HITS=$(git diff origin/main...HEAD -- '*.py' | grep '^+' | grep -E "archie_a\s*=\s*[0-9]|archie_m\s*=\s*[0-9]|archie_n\s*=\s*[0-9]" | grep -v "^++" | grep -v "default\|arg\|param\|config" || true)
+          if [[ -n "$ARCHIE_HITS" ]]; then
+            VIOLATIONS="${VIOLATIONS}\n  - Hardcoded Archie constants (should use config/evidence_ref)"
+          fi
+
+          # Unitless depth values (bare float without _m/_ft suffix in context)
+          UNITLESS_HITS=$(git diff origin/main...HEAD -- '*.py' | grep '^+' | grep -E "depth\s*=\s*[0-9]+\b" | grep -v "_m\b\|_ft\b\|unit\|meter\|feet\|depth_unit\|#" | grep -v "^++" || true)
+          if [[ -n "$UNITLESS_HITS" ]]; then
+            VIOLATIONS="${VIOLATIONS}\n  - Possibly unitless depth assignment (use depth_m or depth_ft)"
+          fi
+
+          # Claim creation without evidence_ids
+          CLAIM_HITS=$(git diff origin/main...HEAD -- '*.py' | grep '^+' | grep -E "geox_claim_create|claim_text=" | grep -v "evidence_ids\|test_\|#" | grep -v "^++" || true)
+          if [[ -n "$CLAIM_HITS" ]]; then
+            VIOLATIONS="${VIOLATIONS}\n  - Claim created without evidence_ids (F2 TRUTH)"
+          fi
+
+          # Finance logic leaking into earth organ
+          FIN_HITS=$(git diff origin/main...HEAD -- '*.py' | grep '^+' | grep -iE "\bNPV\b|\bIRR\b|\bEMV\b|discount_rate|cashflow" | grep -v "^++" || true)
+          if [[ -n "$FIN_HITS" ]]; then
+            VIOLATIONS="${VIOLATIONS}\n  - Financial compute in GEOX (delegate to WEALTH organ)"
+          fi
+
+          if [[ -n "$VIOLATIONS" ]]; then
+            echo "::error::Q2 PHYSICS9 VIOLATION:$VIOLATIONS"
+            printf "Violations:$VIOLATIONS\n"
+            exit 1
+          else
+            echo "::notice::Q2 PASS: Physics9 invariants intact"
+          fi
+
+  # ─── Q3: Tests pass? ───────────────────────────────────────────────────
+  q3-tests:
+    name: "Q3 — Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --extra dev
+
+      - name: Test
+        run: PYTHONPATH=src uv run pytest tests/ -q --tb=short
+
+  # ─── Final gate ────────────────────────────────────────────────────────
+  sentinel-gate:
+    name: "✅ Sentinel Gate"
+    needs: [q1-critical-paths, q2-physics9, q3-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Gate verdict
+        run: |
+          Q1="${{ needs.q1-critical-paths.result }}"
+          Q2="${{ needs.q2-physics9.result }}"
+          Q3="${{ needs.q3-tests.result }}"
+
+          echo "Q1 (critical paths): $Q1"
+          echo "Q2 (Physics9):       $Q2"
+          echo "Q3 (tests):          $Q3"
+
+          if [[ "$Q2" != "success" || "$Q3" != "success" ]]; then
+            echo "::error::SENTINEL BLOCK — PR cannot merge"
+            exit 1
+          fi
+
+          if [[ "${{ needs.q1-critical-paths.outputs.changed }}" == "yes" ]]; then
+            echo "::warning::SENTINEL PASS WITH ALERT — earth-critical paths changed, review carefully"
+          fi
+
+          echo "✅ SENTINEL PASS"
