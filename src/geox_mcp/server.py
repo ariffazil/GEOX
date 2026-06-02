@@ -1097,6 +1097,20 @@ def build_status_payload() -> dict:
     }
 
 
+async def build_info_handler(request):
+    return JSONResponse(
+        {
+            "sha": "unknown",
+            "short_sha": "unknown",
+            "branch": "main",
+            "version": GEOX_VERSION,
+            "tool_count": len(await mcp.list_tools()),
+            "epoch": datetime.now(UTC).isoformat(),
+            "source_repo": "geox",
+        }
+    )
+
+
 async def health_handler(request):
     return JSONResponse(
         {
@@ -1764,6 +1778,99 @@ async def prompt_report_writer() -> str:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# GEOX Supabase L4 Domain Write (Phase 3C)
+# Fire-and-forget: GEOX writes Earth evidence receipts to arifosmcp_canon_records
+# Controlled by GEOX_SUPABASE_WRITE_MODE env (default: off)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+_GEOX_SUPABASE_URL = os.getenv("GEOX_SUPABASE_URL", "https://utbmmjmbolmuahwixjqc.supabase.co")
+_GEOX_SUPABASE_ANON_KEY = os.getenv(
+    "GEOX_SUPABASE_ANON_KEY",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0Ym1tam1ib2xtdWFod2l4anFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjQwMTYsImV4cCI6MjAwNTA5OTk5Nn0.Nxg2Rkf-PyqnemVGz-_H1VW22jhNbmq67hH6EZ2EzEs",
+)
+
+
+def _geox_write_domain_receipt(
+    tool_name: str,
+    result: dict[str, Any],
+    session_id: str | None = None,
+    actor_id: str = "geox-mcp",
+) -> None:
+    """
+    Fire-and-forget async write to Supabase arifosmcp_canon_records.
+    GEOX tools produce Earth evidence: claims, interpretations, QC results.
+    Writes include claim_id, truth_class, claim_type, and full body.
+    Never blocks tool execution — errors are swallowed silently.
+    """
+    mode = os.getenv("GEOX_SUPABASE_WRITE_MODE", "off").lower()
+    if mode == "off":
+        return
+
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        return  # No running loop, skip
+
+    epoch = datetime.now(UTC).isoformat()
+    headers = {
+        "apikey": _GEOX_SUPABASE_ANON_KEY,
+        "Authorization": f"Bearer {_GEOX_SUPABASE_ANON_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+    }
+
+    # Extract GEOX-specific claim metadata from result
+    structured = result.get("structuredContent", result)
+    claim_id = structured.get("claim_id") or structured.get("prospect_ref") or None
+    truth_class = structured.get("truth_class", "INTERPRETATION")
+    claim_type = structured.get("claim_type", tool_name)
+    record_type = f"geox_{tool_name}"
+
+    payload = {
+        "record_type": record_type,
+        "reference_id": claim_id,
+        "body": {
+            "tool": tool_name,
+            "structuredContent": structured,
+            "verdict": structured.get("verdict", "SEAL"),
+            "truth_class": truth_class,
+            "claim_type": claim_type,
+        },
+        "verdict": structured.get("verdict"),
+        "witness": {
+            "organ": "geox",
+            "actor_id": actor_id,
+            "session_id": session_id,
+            "tool": tool_name,
+        },
+        "epoch": epoch,
+    }
+
+    async def _write() -> None:
+        try:
+            import httpx
+
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                await client.post(
+                    f"{_GEOX_SUPABASE_URL}/rest/v1/arifosmcp_canon_records",
+                    headers=headers,
+                    json=payload,
+                )
+        except Exception:
+            pass  # Fire-and-forget: never propagate
+
+    try:
+        loop.run_in_executor(None, lambda: asyncio.run(_write()))
+    except Exception:
+        pass  # Swallow: Supabase failure never blocks GEOX
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Legacy MCP Tool Handler
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
 async def run_legacy_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
     tool_result = await mcp.call_tool(name, arguments)
     parsed = json.loads(tool_result.content[0].text) if tool_result.content else {}
@@ -1863,6 +1970,16 @@ async def legacy_mcp_handler(request):
             return gov_error
 
         result = await run_legacy_tool(resolved_name, args)  # Call with resolved name
+
+        # Phase 3C: Fire-and-forget Supabase L4 domain write for GEOX Earth evidence
+        # Writes claim/evidence receipts to arifosmcp_canon_records
+        _geox_write_domain_receipt(
+            tool_name=resolved_name,
+            result=result,
+            session_id=None,  # Legacy handler has no session context
+            actor_id="geox-mcp",
+        )
+
         return JSONResponse(
             {
                 "jsonrpc": "2.0",
@@ -2003,6 +2120,7 @@ def create_app():
     app = Starlette(
         routes=[
             Route("/health", health_handler, methods=["GET"]),
+            Route("/api/build-info", build_info_handler, methods=["GET"]),
             Route("/ready", ready_handler, methods=["GET"]),
             Route("/status", status_handler, methods=["GET"]),
             Route("/contract", contract_handler, methods=["GET"]),
