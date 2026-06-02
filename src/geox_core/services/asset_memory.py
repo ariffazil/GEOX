@@ -6,6 +6,7 @@ Separates Agent Memory from Earth Memory.
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 import uuid
 from dataclasses import dataclass, field
@@ -14,10 +15,12 @@ from pathlib import Path
 from typing import Any, List, Dict, Optional
 import jsonschema
 
-SCHEMA_DIR = "/root/geox/schemas/earth"
+# Resolve schema dir relative to this file (works in local, CI container, editable install).
+# Layout: src/geox_core/services/asset_memory.py → ../../../schemas/earth
+_THIS = Path(__file__).resolve()
+SCHEMA_DIR = str(_THIS.parents[3] / "schemas" / "earth")
 
 def load_schema(schema_name: str) -> dict:
-    import os
     path = os.path.join(SCHEMA_DIR, schema_name)
     with open(path, "r") as f:
         return json.load(f)

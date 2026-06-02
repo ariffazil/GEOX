@@ -35,33 +35,19 @@ def test_vault_write_and_read(tmp_path):
     file_path = vault_dir / f"seal_{seal_hash[:12]}.json"
 
     # Write to vault
-    try:
-        with open(file_path, "w") as f:
-            json.dump(claim, f, indent=2)
-        print(f"✅ Successfully wrote sealed claim to vault: {file_path}")
-    except Exception as e:
-        print(f"❌ Failed to write to vault: {e}")
-        return False
+    with open(file_path, "w") as f:
+        json.dump(claim, f, indent=2)
+    assert file_path.exists(), f"vault file not created: {file_path}"
 
     # Read from vault
-    try:
-        with open(file_path, "r") as f:
-            loaded_claim = json.load(f)
+    with open(file_path, "r") as f:
+        loaded_claim = json.load(f)
 
-        # Verify hash
-        loaded_hash = loaded_claim.pop("vault_hash")
-        loaded_str = json.dumps(loaded_claim, sort_keys=True)
-        verified_hash = hashlib.sha256(loaded_str.encode()).hexdigest()
-
-        if loaded_hash == verified_hash:
-            print(f"✅ Successfully read and verified sealed claim from vault.")
-            return True
-        else:
-            print(f"❌ Hash mismatch in vault record.")
-            return False
-    except Exception as e:
-        print(f"❌ Failed to read from vault: {e}")
-        return False
+    # Verify hash
+    loaded_hash = loaded_claim.pop("vault_hash")
+    loaded_str = json.dumps(loaded_claim, sort_keys=True)
+    verified_hash = hashlib.sha256(loaded_str.encode()).hexdigest()
+    assert loaded_hash == verified_hash, "Hash mismatch in vault record"
 
 
 if __name__ == "__main__":
@@ -69,5 +55,8 @@ if __name__ == "__main__":
     import tempfile
     from pathlib import Path
     with tempfile.TemporaryDirectory() as td:
-        ok = test_vault_write_and_read(Path(td))
-        print("Vault999 Integrity Check:", "PASSED" if ok else "FAILED")
+        try:
+            test_vault_write_and_read(Path(td))
+            print("Vault999 Integrity Check: PASSED")
+        except AssertionError as e:
+            print(f"Vault999 Integrity Check: FAILED — {e}")
