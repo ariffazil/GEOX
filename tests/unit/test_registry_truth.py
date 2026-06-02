@@ -3,6 +3,7 @@ GEOX Registry Truth Tests — P4 Priority
 Validates: listed_tools == callable_tools, tool counts consistent.
 DITEMPA BUKAN DIBERI
 """
+
 import pytest
 import sys
 import os
@@ -59,9 +60,7 @@ class TestRegistryTruth:
     async def test_test_receipt_no_failures(self):
         result = await geox_test_receipt_status()
         payload = result.get("primary_artifact", result.get("artifact", result))
-        assert payload.get("tests_failed", 0) == 0, (
-            f"tests_failed={payload.get('tests_failed')} — all tests must pass"
-        )
+        assert payload.get("tests_failed", 0) == 0, f"tests_failed={payload.get('tests_failed')} — all tests must pass"
 
     @pytest.mark.asyncio
     async def test_tool_count_consistency(self):
@@ -70,8 +69,10 @@ class TestRegistryTruth:
         payload = result.get("primary_artifact", result.get("artifact", result))
         count = payload.get("tools_count", payload.get("registered_tools", None))
         canonical = payload.get("canonical_tools", count)
+        # `canonical_tools` may be returned as a list of names (from the
+        # registry's CANONICAL_PUBLIC_TOOLS), or as a scalar count. Normalize.
+        if isinstance(canonical, list):
+            canonical = len(canonical)
         if count is not None and canonical is not None:
             # Allow ≤1 delta for system-only tools
-            assert abs(int(count) - int(canonical)) <= 1, (
-                f"Tool count mismatch: tools_count={count}, canonical_tools={canonical}"
-            )
+            assert abs(int(count) - int(canonical)) <= 1, f"Tool count mismatch: tools_count={count}, canonical_tools={canonical}"

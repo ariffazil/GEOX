@@ -29,6 +29,7 @@ import asyncio
 import json
 import logging
 import os
+import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -263,12 +264,18 @@ def _prune_mcp_surface(mcp_server) -> None:
     for key in list(components.keys()):
         if key.startswith("tool:"):
             name = key[5:].rstrip("@")
+            # Local SACRED_SURFACE is authoritative for GEOX.
+            # Federation can ADD visibility (when it knows the tool),
+            # but never REMOVE a canonical GEOX tool — the federation
+            # manifest may be empty or partial during federation-wide
+            # refactors, and we must not silently drop local tools.
             try:
                 from federation.tool_manifest import is_tool_somatic
 
-                visible = is_tool_somatic(name)
+                federation_visible = bool(is_tool_somatic(name))
             except Exception:
-                visible = name in SACRED_SURFACE
+                federation_visible = False
+            visible = (name in SACRED_SURFACE) or federation_visible
             if not visible:
                 del components[key]
                 removed.append(name)
@@ -1098,17 +1105,61 @@ def build_status_payload() -> dict:
 
 
 async def build_info_handler(request):
+    sha = _resolve_build_sha()
     return JSONResponse(
         {
-            "sha": "fd6561630dbb624b5e886c57e1c5552312df8c97",
-            "short_sha": "fd65616",
-            "branch": "main",
+            "sha": sha,
+            "short_sha": sha[:7] if sha and sha != "unknown" else "unknown",
+            "branch": _resolve_git_branch(),
             "version": GEOX_VERSION,
             "tool_count": len(await mcp.list_tools()),
             "epoch": datetime.now(UTC).isoformat(),
             "source_repo": "geox",
         }
     )
+
+
+def _resolve_build_sha() -> str:
+    """Resolve the build SHA at request time.
+
+    Order of precedence:
+      1. GEOX_BUILD_SHA env var (for container/CI stamps)
+      2. `git rev-parse HEAD` against /root/geox (live, no hardcode)
+      3. Literal "unknown" (never raises to the client)
+    """
+    env_sha = os.getenv("GEOX_BUILD_SHA")
+    if env_sha:
+        return env_sha.strip()
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd="/root/geox",
+            capture_output=True,
+            text=True,
+            timeout=3,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
+    except Exception:
+        pass
+    return "unknown"
+
+
+def _resolve_git_branch() -> str:
+    """Best-effort git branch name; never raises."""
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd="/root/geox",
+            capture_output=True,
+            text=True,
+            timeout=3,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
+    except Exception:
+        pass
+    return "main"  # service runs against main, even if git unavailable
 
 
 async def health_handler(request):
