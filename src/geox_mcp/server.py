@@ -1100,8 +1100,8 @@ def build_status_payload() -> dict:
 async def build_info_handler(request):
     return JSONResponse(
         {
-            "sha": "unknown",
-            "short_sha": "unknown",
+            "sha": "fd6561630dbb624b5e886c57e1c5552312df8c97",
+            "short_sha": "fd65616",
             "branch": "main",
             "version": GEOX_VERSION,
             "tool_count": len(await mcp.list_tools()),

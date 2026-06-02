@@ -483,9 +483,10 @@ async def geox_claim_seal(
     """
     Submit a validated claim to arifOS for Vault999 sealing.
 
-    This routes through the arifOS kernel which performs final constitutional
-    checks (F1 AMANAH, F13 SOVEREIGN) before writing an immutable seal
-    to VAULT999.
+    Routes to the arifOS kernel which performs final constitutional checks
+    (F1 AMANAH gate, F13 SOVEREIGN veto) before writing to VAULT999.
+    GEOX does not perform constitutional adjudication — it merely forwards
+    the claim for arifOS to judge.
 
     SEAL: Claim is constitutionally approved, irreversibly sealed.
     SABAR: Claim is held — needs more evidence or human review.

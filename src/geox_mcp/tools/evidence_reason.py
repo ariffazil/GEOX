@@ -495,7 +495,7 @@ async def _phase_abduct(evidence_refs: list[str], scale: str, depo_context: str,
             "evidence_refs": evidence_refs,
             "claim_limits": ["Cannot abduct from missing evidence."],
             "next_best_actions": [{"tool": "geox_data_ingest_bundle", "reason": "Re-ingest missing evidence", "priority": "critical"}],
-            "audit_receipt": {"acrisk": 1.0, "verdict": "VOID", "floors": ["F2 TRUTH"]},
+            "audit_receipt": {"acrisk": 1.0, "verdict": "VOID", "floor_signals": ["F2 TRUTH"], "floor_authority": "arifOS"},
             "human_final_authority": "Arif",
             "error": f"Failed to load {len(failed)} artifact(s): {[a['ref'] for a in failed]}",
         }
@@ -548,7 +548,8 @@ async def _phase_abduct(evidence_refs: list[str], scale: str, depo_context: str,
         "audit_receipt": {
             "acrisk": 0.45 if len(hypotheses) >= 2 else 0.60,
             "verdict": "QUALIFY" if len(hypotheses) >= 2 else "HOLD",
-            "floors": [],
+            "floor_signals": [],
+            "floor_authority": "arifOS",
         },
         "human_final_authority": "Arif",
     }
@@ -572,7 +573,7 @@ async def _phase_contradict(evidence_refs: list[str], hypotheses: list[dict] | N
             "evidence_refs": evidence_refs,
             "claim_limits": ["Contradiction scan requires hypotheses. Call geox_evidence_reason with phase='abduct' first."],
             "next_best_actions": [{"tool": "geox_evidence_reason", "reason": "Generate hypotheses before scanning", "priority": "critical", "parameters": {"phase": "abduct"}}],
-            "audit_receipt": {"acrisk": 0.50, "verdict": "HOLD", "floors": ["F4 HUMILITY"]},
+            "audit_receipt": {"acrisk": 0.50, "verdict": "HOLD", "floor_signals": ["F4 HUMILITY"], "floor_authority": "arifOS"},
             "human_final_authority": "Arif",
         }
 
@@ -593,13 +594,13 @@ async def _phase_contradict(evidence_refs: list[str], hypotheses: list[dict] | N
         execution_status = "HOLD"
         verdict = "VOID"
         acrisk = 0.85
-        floors = ["F2 TRUTH", "F9 ANTI-HANTU"]
+        floor_signals = ["F2 TRUTH", "F9 ANTI-HANTU"]
     else:
         claim_state = "DECISION_SUPPORT"
         execution_status = "SUCCESS"
         verdict = "QUALIFY" if scan["max_penalty"] < 0.30 else "HOLD"
         acrisk = 0.35 + scan["max_penalty"] * 0.5
-        floors = []
+        floor_signals = []
 
     return {
         "execution_status": execution_status,
@@ -629,7 +630,7 @@ async def _phase_contradict(evidence_refs: list[str], hypotheses: list[dict] | N
             if not scan.get("auto_hold") else
             {"tool": "geox_data_qc_bundle", "reason": "Re-QC conflicting curves before re-abduction", "priority": "critical"}
         ],
-        "audit_receipt": {"acrisk": acrisk, "verdict": verdict, "floors": floors},
+        "audit_receipt": {"acrisk": acrisk, "verdict": verdict, "floor_signals": floor_signals, "floor_authority": "arifOS"},
         "human_final_authority": "Arif",
     }
 
