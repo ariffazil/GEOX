@@ -4,7 +4,8 @@ import pytest
 import jsonschema
 from jsonschema import validate, RefResolver
 
-SCHEMA_DIR = "/root/geox/schemas/earth"
+# Resolve schema dir relative to this test file (works in local + CI)
+SCHEMA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "schemas", "earth")
 
 def load_schema(filename):
     with open(os.path.join(SCHEMA_DIR, filename), 'r') as f:

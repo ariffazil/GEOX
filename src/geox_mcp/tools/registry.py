@@ -433,16 +433,25 @@ async def geox_test_receipt_status() -> dict:
     import re
     from pathlib import Path
 
-    # Resolve repo root: inside container /app, on host /root/geox
-    _candidates = [Path("/app"), Path("/root/geox"), Path(__file__).resolve().parents[3], Path.cwd()]
-    repo_root = next((p for p in _candidates if (p / "src").exists() or (p / "pyproject.toml").exists()), Path("/app"))
+    # Resolve repo root: env-var override > container /app > src-relative > cwd
+    # (removed hardcoded /root/geox — fails in CI, leaks host path into production)
+    import os as _os
+    _env_root = _os.environ.get("GEOX_REPO_ROOT")
+    _src_parents = Path(__file__).resolve().parents  # .../src/geox_mcp/tools/registry.py → parents[3] = repo root
+    _candidates = (
+        [Path(_env_root)] if _env_root else []
+    ) + [Path("/app"), _src_parents[3] if len(_src_parents) > 3 else Path.cwd(), Path.cwd()]
+    repo_root = next(
+        (p for p in _candidates if (p / "src").exists() or (p / "pyproject.toml").exists()),
+        Path.cwd(),
+    )
 
-    # Prefer /app/tests (container) then /root/geox/tests (host)
-    tests_candidates = [repo_root / "tests", Path("/app/tests"), Path("/root/geox/tests")]
+    # Prefer repo_root/tests
+    tests_candidates = [repo_root / "tests"]
     tests_dir = next((p for p in tests_candidates if p.exists()), repo_root / "tests")
 
     # Fallback search paths for git repo
-    git_dirs = [repo_root, Path("/root/geox"), Path("/app"), Path.cwd()]
+    git_dirs = [repo_root, Path.cwd()]
     commit_hash = "unknown"
     commit_date = "unknown"
     for git_dir in git_dirs:
