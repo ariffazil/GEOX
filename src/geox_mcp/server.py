@@ -1387,8 +1387,7 @@ async def tools_list_handler(request):
 
 @mcp.resource("geox://identity")
 async def geox_identity() -> dict:
-    from geox_mcp.registry import CANON9_TOOL_MAP
-    from geox_core.enums.statuses import GDE_VOCAB
+    from geox_core.enums.statuses import CANON9_TOOL_MAP, GDE_VOCAB
 
     identity_state = {
         "identity": "GEOX",
@@ -1433,16 +1432,6 @@ async def list_geox_apps() -> list[dict]:
                 except Exception as e:
                     logger.error(f"Failed to load manifest {filename}: {e}")
     return apps
-
-
-@mcp.resource("geox://apps/earth-panel")
-async def get_earth_panel() -> str:
-    try:
-        ui_path = os.path.join(os.getcwd(), "ui", "earth-panel", "index.html")
-        with open(ui_path, encoding="utf-8") as f:
-            return f.read()
-    except Exception as e:
-        return f"Error loading earth panel UI: {e}"
 
 
 @mcp.resource("geox://profile/status")

@@ -296,7 +296,10 @@ async def geox_history_audit(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-async def geox_contradiction_registry_status() -> dict:
+async def geox_contradiction_registry_status(
+    session_id: str = "geox-no-session",
+    actor_id: str = "geox-unknown",
+) -> dict:
     """Return the canonical contradiction detector registry.
 
     Provides machine-checkable evidence for:
@@ -307,6 +310,11 @@ async def geox_contradiction_registry_status() -> dict:
     This allows external validators to verify claims like
     "11 contradiction detectors" and "4 auto-HOLD triggers"
     without reading source code.
+
+    Args:
+        session_id: Optional session id for audit-receipt propagation
+            (used by _wrap_tool_outputs to thread context through).
+        actor_id: Optional actor id for audit-receipt propagation.
     """
     detectors = [
         {
@@ -397,7 +405,13 @@ async def geox_contradiction_registry_status() -> dict:
         "registry_truth": "PASS",
         "note": "All detectors are live in geox_evidence_contradiction_scan",
     }
-    return get_standard_envelope(artifact, tool_class="system")
+    return get_standard_envelope(
+        artifact,
+        tool_class="system",
+        session_id=session_id,
+        actor_id=actor_id,
+        tool_name="geox_contradiction_registry_status",
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
