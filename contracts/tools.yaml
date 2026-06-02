@@ -6,8 +6,8 @@ schema_version: "2026.05.19"
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
-mcp_endpoint: http://localhost:18081/mcp
-health_endpoint: http://localhost:18081/health
+mcp_endpoint: http://localhost:8081/mcp
+health_endpoint: http://localhost:8081/health
 
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9

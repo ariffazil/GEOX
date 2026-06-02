@@ -24,9 +24,9 @@ Arif. This is the **GEOX** organ of the arifOS federation — Earth Intelligence
 
 The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-grounded evidence for constitutional judgment. It is **evidence-only** — never a policy judge.
 
-**21 sovereign tools** across subsurface, sensing, stratigraphy, seismic, and prospect evaluation.
+**20 sovereign tools** across subsurface, sensing, stratigraphy, seismic, and prospect evaluation.
 
-- **Port:** 18081 (live daemon; NOT 8081)
+- **Port:** 8081 (live daemon)
 - **Runtime:** Python 3.11+
 - **Framework:** FastMCP + Pydantic + Uvicorn
 
