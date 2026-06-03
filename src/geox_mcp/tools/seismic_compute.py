@@ -263,6 +263,27 @@ async def geox_seismic_compute(
     -------
     Standard GEOX envelope with mode-specific derived artifacts.
     """
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_seismic_compute",
+        well_id=well_id,
+            vp=vp,
+            rho=rho,
+            depth=depth,
+            wavelet_params=wavelet_params,
+            volume_ref=volume_ref,
+            checkshot_ref=checkshot_ref,
+            ai_profile=ai_profile,
+            ac_depth=ac_depth,
+            formation_tops=formation_tops,
+            ac_vp=ac_vp,
+            ac_rho=ac_rho,
+            volume_ref_attr=volume_ref_attr,
+            attribute=attribute,
+    )
+    if _err is not None:
+        return _err
     if mode == "synthetic":
         return await _mode_synthetic(
             well_id=well_id,

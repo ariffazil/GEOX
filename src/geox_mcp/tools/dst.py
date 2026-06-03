@@ -41,6 +41,17 @@ async def geox_dst_ingest_test(
     F2 Truth: all outputs are OBSERVED from supplied parameters; no geological
     interpretation is performed here. claim_state = INGESTED.
     """
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_dst_ingest_test",
+        well_id=well_id,
+            field=field,
+            reservoir_name=reservoir_name,
+            test_name=test_name,
+    )
+    if _err is not None:
+        return _err
     derived: Dict[str, Any] = {}
     flags: List[str] = []
 

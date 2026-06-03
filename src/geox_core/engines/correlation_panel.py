@@ -204,7 +204,7 @@ def render_correlation_panel(
 
     warnings: list[str] = []
     depth_basis = "MD (measured depth)"
-    depth_unit = wells[0].depth_unit if wells else "M"
+    wells[0].depth_unit if wells else "M"
 
     # Auto depth range
     if depth_range is None:

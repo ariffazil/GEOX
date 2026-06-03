@@ -48,7 +48,7 @@ def build_wavelet(frequency: float, dt_ms: float, wavelet_type: str = "ricker") 
             w += (np.sin(2 * np.pi * fn1 * t_wl / 1000) - np.sin(2 * np.pi * fn * t_wl / 1000)) / (np.pi * t_wl / 1000 + 1e-6)
     elif wavelet_type == "klauder":
         t_k = t_wl / 1000
-        duration = abs(t_k[-1] - t_k[0])
+        abs(t_k[-1] - t_k[0])
         k = frequency * 0.2
         f1 = frequency - k / 2
         f2 = frequency + k / 2
@@ -110,7 +110,7 @@ def generate_synthetic_seismogram(
 
     # Time-depth relationship (average velocity)
     t_ms = np.zeros_like(md)
-    dt_avg = np.mean(np.diff(md) / (np.diff(t_ms / 1000 + 1)) if np.any(t_ms > 0) else [1])
+    np.mean(np.diff(md) / (np.diff(t_ms / 1000 + 1)) if np.any(t_ms > 0) else [1])
     for i in range(1, len(md)):
         t_ms[i] = t_ms[i - 1] + 2 * (md[i] - md[i - 1]) / vp[i] * 1000
 
@@ -357,7 +357,7 @@ def amplitude_analysis(
     """
     n_samples, n_traces = seis_data.shape
     dt = t_coords[1] - t_coords[0]
-    win_samples = max(int(window_ms / dt), 3)
+    max(int(window_ms / dt), 3)
 
     rms = np.zeros((n_traces,))
     for ix in range(n_traces):

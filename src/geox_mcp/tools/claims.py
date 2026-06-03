@@ -275,7 +275,7 @@ async def geox_claim_validate(
 
     store = _get_memory_store()
     try:
-        ok = store.validate_claim(claim_id)
+        store.validate_claim(claim_id)
         return {
             "status": "VALIDATED",
             "claim_id": claim_id,

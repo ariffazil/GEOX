@@ -177,7 +177,7 @@ class GEOXVisionDepthEngine:
             calculated_depths = (attested_v_int * (normalized_twt / 1000.0)) / 2.0
 
             # F2 Validity Check (Scale Invariant Error)
-            v_int_profile = self.compute_attested_depth(
+            self.compute_attested_depth(
                 np.linspace(0, max_time_ms, 100),
                 np.interp(np.linspace(0, max_time_ms, 100), np.linspace(0, max_time_ms, len(v_rms_anchor)), v_rms_anchor),
             )

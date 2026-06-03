@@ -184,7 +184,7 @@ def inverse_petrophysics(curves: Dict[str, np.ndarray], params: Dict[str, float]
     dt = curves.get("DT", np.full(n, np.nan))
     cal = curves.get("CALI", np.full(n, np.nan))
     sp = curves.get("SP", np.full(n, np.nan))
-    md = curves.get("MD", np.linspace(0, 4000, n))
+    curves.get("MD", np.linspace(0, 4000, n))
 
     # Override with params
     rw = params.get("rw", 0.03)

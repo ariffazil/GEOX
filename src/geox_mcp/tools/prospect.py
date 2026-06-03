@@ -36,6 +36,16 @@ async def geox_prospect_evaluate(
         ack_irreversible: Required when verdict="seal". F1 Amanah gate.
         judge_pin: Optional constant-time PIN for seal authorization.
     """
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_prospect_evaluate",
+        prospect_ref=prospect_ref,
+            evidence_refs=evidence_refs,
+            judge_pin=judge_pin,
+    )
+    if _err is not None:
+        return _err
     refs = evidence_refs or []
 
     if mode in ("appraise", "develop") and not refs:

@@ -250,7 +250,6 @@ def _epistemic_provenance_for_sequence(
       full     → L3 sequence surfaces:  input [1,2,3], output 4, ascent
     """
     # Grounding anchors: raw evidence refs used
-    evidence_refs = [source_sha256] if source_sha256 else []
 
     provenance_by_level = {
         "bins": {
@@ -1045,6 +1044,29 @@ async def geox_sequence_interpret(
     Standard GEOX envelope with bins / packages / systems_tracts / surfaces
     depending on workflow and detail_level.
     """
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_sequence_interpret",
+        source=source,
+            depo_env_code=depo_env_code,
+            project_yaml=project_yaml,
+            output_dir=output_dir,
+            section_ref=section_ref,
+            well_refs=well_refs,
+            mode=mode,
+            well_las_paths=well_las_paths,
+            paleoenvironment_input=paleoenvironment_input,
+            checkshot_ref=checkshot_ref,
+            wavelet_mode=wavelet_mode,
+            wavelet_freq_hz=wavelet_freq_hz,
+            polarity=polarity,
+            seismic_ref=seismic_ref,
+            sonic_curve=sonic_curve,
+            density_curve=density_curve,
+    )
+    if _err is not None:
+        return _err
     if workflow == "single_well":
         if not source or zone_top is None or zone_base is None:
             return _error_envelope("MISSING_PARAMS", "single_well workflow requires source, zone_top, and zone_base.")

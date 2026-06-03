@@ -215,7 +215,6 @@ def generate_well_curve(
         dt[i] = np.clip(1e6 / vp + rng.normal(0, 8), 40, 200)
 
         # Water Saturation (Archie)
-        rw = layer.rw
         rt_layer = layer.rt_min + (layer.rt_max - layer.rt_min) * (1 - layer.sw_mean * vsh_val)
         rt_base = max(rt_layer, 0.2)
         rt[i] = np.clip(rng.lognormal(np.log(rt_base), noise_level * 0.3), 0.2, 5000)
@@ -299,15 +298,13 @@ def generate_seismic_section(
     # Build layered velocity/depth model for reflection coefficients
     # Map stratigraphy to time
     vp_surface = 1650
-    vs_surface = 460
-    rho_surface = 1.85
     layer_twt_top = []  # TWT at top of each layer
 
     twt_acc = 0.0
     for layer in strat:
         if layer.bot_md > z_range[1] * 500:  # convert ms to ~m (v/2)
             break
-        dvz = layer.vp_mean - vp_surface
+        layer.vp_mean - vp_surface
         twt_layer = 2 * (layer.bot_md - layer.top_md) / (layer.vp_mean + vp_surface) * 1000
         twt_acc += twt_layer
         layer_twt_top.append(twt_acc)
@@ -318,7 +315,6 @@ def generate_seismic_section(
         # Build RC series at each trace (with lateral variation)
         rc = np.zeros(n_samples)
         vp0 = 1650
-        vs0 = 460
         rho0 = 1.85
 
         for il, layer in enumerate(strat):
@@ -340,7 +336,7 @@ def generate_seismic_section(
             dip = 0.05 * np.sin(2 * np.pi * x_norm * 2)  # gentle anticline/syncline
             t_shift = int(dip * n_samples)
             idx_top_s = np.clip(idx_top + t_shift, 0, n_samples - 1)
-            idx_bot_s = np.clip(idx_bot + t_shift, 0, n_samples - 1)
+            np.clip(idx_bot + t_shift, 0, n_samples - 1)
 
             # Physical reflection coefficient (Shuey approximation)
             dvp = layer.vp_mean - vp0
@@ -353,7 +349,6 @@ def generate_seismic_section(
                 rc[idx_top_s] = rc_val
 
             vp0 = layer.vp_mean
-            vs0 = layer.vs_mean
             rho0 = layer.rho_mean
 
         # Convolve wavelet with RC
@@ -427,7 +422,7 @@ def generate_3d_cube(
 
     xi = np.linspace(x_range[0], x_range[1], n_x)
     yi = np.linspace(y_range[0], y_range[1], n_y)
-    zi = np.linspace(z_range[0], z_range[1], n_z)
+    np.linspace(z_range[0], z_range[1], n_z)
 
     # Build inline/crossline 3D array
     cube = np.zeros((n_z, n_y, n_x))
@@ -447,7 +442,7 @@ def generate_3d_cube(
                 # Approximate depth from time
                 z_est = (t_ms[iz] / 2000) * vp_trace
                 layer = assign_layer(z_est, strat)
-                v_val = layer.vp_mean + 50 * rng.normal(0, 1)
+                layer.vp_mean + 50 * rng.normal(0, 1)
                 trace[iz] = rng.normal(0, 0.02) + 0.3 * layer.vp_mean / 3500
 
             # Add horizon reflections at layer boundaries

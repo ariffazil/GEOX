@@ -59,6 +59,19 @@ async def geox_subsurface_generate_candidates(
     Fails closed: empty evidence_refs → VALIDATION_ERROR/NO_VALID_EVIDENCE.
     """
     # F1 Amanah + F2 Truth: fail closed on empty evidence
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_subsurface_generate_candidates",
+        target_class=target_class,
+            evidence_refs=evidence_refs,
+            vsh_method=vsh_method,
+            sw_model=sw_model,
+            basin_context=basin_context,
+            canon9_profile=canon9_profile,
+    )
+    if _err is not None:
+        return _err
     if not evidence_refs:
         envelope = get_standard_envelope(
             {
@@ -232,6 +245,15 @@ async def geox_subsurface_verify_integrity(candidate_ref: str, domain: str) -> d
     found in the artifact store, returns HOLD/NO_VALID_EVIDENCE.
     """
     # F2 Truth gate: verify evidence exists before claiming physical feasibility
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_subsurface_verify_integrity",
+        candidate_ref=candidate_ref,
+            domain=domain,
+    )
+    if _err is not None:
+        return _err
     exists = _artifact_exists(candidate_ref)
     if not exists:
         return get_standard_envelope(
