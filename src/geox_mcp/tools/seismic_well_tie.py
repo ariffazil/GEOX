@@ -326,11 +326,25 @@ async def geox_time_depth_anchor(
     checkshot_ref: str,
     drift_threshold_ms: float = 25.0,
     method: Literal["checkshot", "vsp", "regional_proxy"] = "checkshot",
+    td_fitter: Literal["linear", "polynomial", "vo_k", "layer_cake"] = "linear",
+    td_fitter_kwargs: Optional[dict] = None,
 ) -> dict:
     """Empirical Time-Depth anchoring using Checkshots or VSP.
 
     Locks the sonic-integrated time to empirical depth anchors.
     Enforces F2 Truth via drift thresholds.
+
+    Eureka 1 (2026-06-03): `td_fitter` selects which mathematical fitter
+    is used to map depth → TWT between checkshot anchor points. Default
+    "linear" preserves the original piecewise-linear behaviour. Other
+    options: "polynomial" (degree-bounded weighted fit), "vo_k"
+    (linear or exponential compaction, k from checkshots), "layer_cake"
+    (per-formation V_int when formation tops are provided via
+    `td_fitter_kwargs={"tops": [(name, depth), ...]}`).
+
+    The chosen fitter's full envelope (equation, coefficients, residuals,
+    physics_guard receipt) is included in the result so the caller can
+    audit which assumption produced the T-D curve.
     """
 
     if not _artifact_exists(well_id):
@@ -450,8 +464,34 @@ async def geox_time_depth_anchor(
         "avg_drift_ms": round(observed_drift, 4),
         "stretch_squeeze_applied": True,
         "drift_curve": [float(x) for x in drift_curve],
-        "equation": "drift = TWT_observed - TWT_sonic_integrated",
+        "equation": "drift = TWT_observed - TWT_sonic integrated",
     }
+
+    # ── Eureka 1: opt-in multi-method T-D fitter ──────────────────────────
+    # When td_fitter != "linear", run the chosen fitter and include its full
+    # envelope (equation, coefficients, residuals, physics_guard receipt) in
+    # the result. Default "linear" preserves the original behaviour exactly.
+    if td_fitter != "linear":
+        try:
+            from geox_core.physics.td_methods import fit_td
+
+            kwargs = td_fitter_kwargs or {}
+            td_result = fit_td(
+                td_fitter,
+                raw,
+                np.asarray(depths, dtype=float),
+                **kwargs,
+            )
+            result["td_fitter"] = td_result.to_dict()
+            logger.info(
+                f"F2/Eureka-1: td_fitter={td_fitter} rmse={td_result.rmse_ms:.3f}ms "
+                f"extrapolation_risk={td_result.extrapolation_risk:.3f} "
+                f"drift_ok={td_result.physics_guard.get('drift_ok', '?')}"
+            )
+        except Exception as exc:
+            # Fail soft — the drift gate already passed; the fitter is additional info
+            logger.warning(f"td_fitter={td_fitter} failed: {exc}")
+            result["td_fitter"] = {"method": td_fitter, "error": str(exc)}
 
     envelope = get_standard_envelope(
         result,
