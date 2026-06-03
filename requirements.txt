@@ -25,7 +25,7 @@ httpx>=0.25.0
 python-dotenv>=1.0.0
 
 # Database
-asyncpg>=0.29.0
+asyncpg>=0.31.0
 
 # LLM Integration (LEM Layer)
 google-genai>=0.1.0
