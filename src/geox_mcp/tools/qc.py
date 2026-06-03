@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Literal
+from typing import Any, Literal
 
 from geox_core.enums.statuses import (
     get_standard_envelope,
@@ -46,10 +46,11 @@ async def geox_data_qc_bundle(
     # Red Team Fix: Initialize these to ensure they are available for the fail-closed check
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_data_qc_bundle",
         artifact_ref=artifact_ref,
-            artifact_type=artifact_type,
+        artifact_type=artifact_type,
     )
     if _err is not None:
         return _err
@@ -427,6 +428,120 @@ async def geox_data_qc_bundle(
             # the assumption check + outlier audit.
             if _saf_summary is not None:
                 response["_saf_assumptions"] = _saf_summary
+
+            # EUREKA FORGE (2026-06-03): cross-curve correlation QC.
+            # When in 'full' or 'cross_curve' mode with >=2 numeric curves,
+            # compute Pearson + Spearman pairwise correlations between
+            # curves. Univariate QC (already done) checks each curve in
+            # isolation; this adds bivariate coherence — the petrophysical
+            # equivalent of asking "do GR and RHOB move together as
+            # theory predicts?". Strong linear relationships are flagged
+            # for redundancy; near-zero correlations between curves
+            # that should be related (e.g. NPHI vs RHOB in clean sands)
+            # are flagged for further review.
+            try:
+                import sys as _sys_xc
+
+                _arifos_kernel_xc = "/root/arifOS"
+                if _arifos_kernel_xc not in _sys_xc.path:
+                    _sys_xc.path.insert(0, _arifos_kernel_xc)
+                import pandas as _pd_xc
+                import uuid as _uuid_xc
+                from pathlib import Path as _Path_xc
+                import os as _os_xc
+                from core.shared.saf_stats import (
+                    stat_correlate as _saf_correlate,
+                )
+
+                _geox_saf_root_xc = _Path_xc(_os_xc.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
+                _geox_saf_root_xc.mkdir(parents=True, exist_ok=True)
+                _os_xc.environ.setdefault("SAF_DATA_ROOT", str(_geox_saf_root_xc))
+
+                if qc_mode in ("full", "cross_curve"):
+                    _numeric_curves: dict[str, Any] = {
+                        k: np.asarray(v, dtype=float)
+                        for k, v in raw_curves.items()
+                        if k.upper() not in {"DEPT", "DEPTH", "MD"} and v is not None and len(v) >= 5
+                    }
+                    _numeric_curves = {k: v for k, v in _numeric_curves.items() if not np.all(np.isnan(v))}
+                    if len(_numeric_curves) >= 2:
+                        _curves_csv = _geox_saf_root_xc / (f"xcurve_{_uuid_xc.uuid4().hex[:10]}.csv")
+                        _pd_xc.DataFrame(_numeric_curves).to_csv(_curves_csv, index=False)
+                        _mnems = sorted(_numeric_curves.keys())
+                        _pearson_matrix: dict[str, dict[str, float | None]] = {m1: {} for m1 in _mnems}
+                        _spearman_matrix: dict[str, dict[str, float | None]] = {m1: {} for m1 in _mnems}
+                        _pvalue_matrix: dict[str, dict[str, float | None]] = {m1: {} for m1 in _mnems}
+                        _high_corr_pairs: list[dict[str, Any]] = []
+                        for i, m1 in enumerate(_mnems):
+                            for j, m2 in enumerate(_mnems):
+                                if j <= i:
+                                    continue
+                                _r_p = _saf_correlate(str(_curves_csv), m1, m2, method="pearson")
+                                _r_s = _saf_correlate(str(_curves_csv), m1, m2, method="spearman")
+
+                                # Federated saf_stats returns a F1-F13 wrapped
+                                # envelope with fields at the top level (no
+                                # "result" nesting). Fall back to nested form
+                                # for upstream-style callers.
+                                def _pick_corr(d, key):
+                                    if not isinstance(d, dict):
+                                        return None
+                                    if key in d:
+                                        return d[key]
+                                    inner = d.get("result")
+                                    if isinstance(inner, dict) and key in inner:
+                                        return inner[key]
+                                    return None
+
+                                _rp = _pick_corr(_r_p, "r")
+                                _pp = _pick_corr(_r_p, "p_value")
+                                _rs = _pick_corr(_r_s, "r")
+                                _pearson_matrix[m1][m2] = round(float(_rp), 4) if _rp is not None else None
+                                _spearman_matrix[m1][m2] = round(float(_rs), 4) if _rs is not None else None
+                                _pvalue_matrix[m1][m2] = round(float(_pp), 6) if _pp is not None else None
+                                if _rp is not None and abs(float(_rp)) >= 0.95:
+                                    _high_corr_pairs.append(
+                                        {
+                                            "curve_a": m1,
+                                            "curve_b": m2,
+                                            "r_pearson": round(float(_rp), 4),
+                                            "r_spearman": (round(float(_rs), 4) if _rs is not None else None),
+                                            "p_value": _pp,
+                                            "interpretation": ("redundant curves — consider dropping one"),
+                                        }
+                                    )
+                                if _rp is not None and abs(_rp) >= 0.95:
+                                    _high_corr_pairs.append(
+                                        {
+                                            "curve_a": m1,
+                                            "curve_b": m2,
+                                            "r_pearson": round(_rp, 4),
+                                            "r_spearman": (round(_rs, 4) if _rs is not None else None),
+                                            "p_value": _pp,
+                                            "interpretation": ("redundant curves — consider dropping one"),
+                                        }
+                                    )
+                        try:
+                            _curves_csv.unlink()
+                        except OSError:
+                            pass
+                        if _high_corr_pairs:
+                            limitations.append(
+                                f"SAF stat_correlate: {len(_high_corr_pairs)} "
+                                "curve pair(s) with |r|>=0.95 (potential redundancy)."
+                            )
+                            flags.append("SAF_REDUNDANT_CURVES")
+                        response["_saf_cross_curve"] = {
+                            "n_curves": len(_mnems),
+                            "curves": _mnems,
+                            "pearson": _pearson_matrix,
+                            "spearman": _spearman_matrix,
+                            "p_value": _pvalue_matrix,
+                            "high_correlation_pairs": _high_corr_pairs,
+                            "redundancy_threshold": 0.95,
+                        }
+            except Exception as _saf_xc_exc:
+                response["_saf_cross_curve_skipped"] = str(_saf_xc_exc)[:120]
         except NameError:
             pass  # mode-specific vars not set (exception above)
 
