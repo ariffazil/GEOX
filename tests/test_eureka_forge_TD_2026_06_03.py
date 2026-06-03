@@ -373,17 +373,18 @@ class TestNoNewMCPTools(unittest.TestCase):
 
     def test_canonical_registry_unchanged(self):
         try:
-            from geox_mcp.server import TOOL_NAMES
+            from geox_mcp.server import CANONICAL_PUBLIC_TOOLS
 
-            # At forge time, GEOX has 20 tools (or 21 per AGENTS.md; we
-            # accept either as the canonical count; what matters is the
-            # forge didn't add any).
-            self.assertLessEqual(len(TOOL_NAMES), 21)
-            self.assertGreaterEqual(len(TOOL_NAMES), 18)
-        except ImportError:
+            # At forge time, GEOX has 20 canonical tools (per AGENTS.md and
+            # server.py witness). The forge must not add any new tool —
+            # capability lives in existing surfaces (geox_seismic_compute,
+            # geox_time_depth_anchor, etc.) plus opt-in params.
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 21)
+            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 18)
+        except ImportError as e:
             # geox_mcp server not importable in test env; that's OK —
             # the integration test will catch surface bloat in CI
-            self.skipTest("geox_mcp.server not importable in this env")
+            self.skipTest(f"geox_mcp.server not importable in this env: {e}")
 
     def test_eureka_modules_are_importable(self):
         # Eureka 1
