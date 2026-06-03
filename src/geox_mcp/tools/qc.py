@@ -46,10 +46,11 @@ async def geox_data_qc_bundle(
     # Red Team Fix: Initialize these to ensure they are available for the fail-closed check
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_data_qc_bundle",
         artifact_ref=artifact_ref,
-            artifact_type=artifact_type,
+        artifact_type=artifact_type,
     )
     if _err is not None:
         return _err
@@ -427,6 +428,12 @@ async def geox_data_qc_bundle(
             # the assumption check + outlier audit.
             if _saf_summary is not None:
                 response["_saf_assumptions"] = _saf_summary
+            if _saf_anova is not None:
+                response["_saf_anova"] = _saf_anova
+            if _saf_chi2 is not None:
+                response["_saf_chi_square"] = _saf_chi2
+            if _saf_missing is not None:
+                response["_saf_missing"] = _saf_missing
         except NameError:
             pass  # mode-specific vars not set (exception above)
 
