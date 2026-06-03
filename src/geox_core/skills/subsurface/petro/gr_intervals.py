@@ -8,6 +8,7 @@ Part of the GEOX petrophysics suite.
 import numpy as np
 from scipy.signal import savgol_filter
 
+
 def despike_gr(gr, spike_threshold=50.0):
     """Remove single-point spikes using median replacement."""
     gr = np.array(gr, dtype=float)
@@ -18,6 +19,7 @@ def despike_gr(gr, spike_threshold=50.0):
         return np.zeros_like(gr_clean)
     median_val = np.nanmedian(gr_clean)
     return np.nan_to_num(gr_clean, nan=median_val)
+
 
 def smooth_gr(gr, depth, window_m=7.0, poly=2):
     """Savitzky-Golay smoothing with human-scale window (metres)."""
@@ -36,6 +38,7 @@ def smooth_gr(gr, depth, window_m=7.0, poly=2):
     safe_poly = min(poly, window_pts - 1)
     return savgol_filter(gr, window_pts, safe_poly)
 
+
 def detect_boundaries(depth, gr_smooth, min_interval=5.0):
     """Derivative-based segmentation for stable boundaries."""
     depth = np.array(depth)
@@ -46,7 +49,7 @@ def detect_boundaries(depth, gr_smooth, min_interval=5.0):
     sign = np.sign(dgr)
     idx = [0]
     for i in range(1, len(sign)):
-        if sign[i] != sign[i-1]:
+        if sign[i] != sign[i - 1]:
             idx.append(i)
     idx.append(len(depth) - 1)
     intervals = []
@@ -55,6 +58,7 @@ def detect_boundaries(depth, gr_smooth, min_interval=5.0):
         if depth[base] - depth[top] >= min_interval:
             intervals.append((top, base))
     return intervals
+
 
 def merge_intervals(intervals, depth, min_interval=5.0):
     """Enforce vertical persistence law (Anti-microscale)."""
@@ -73,6 +77,7 @@ def merge_intervals(intervals, depth, min_interval=5.0):
     merged.append(tuple(current))
     return merged
 
+
 def classify_motif(gr_segment):
     """Signal-only motif attribution."""
     if len(gr_segment) < 2:
@@ -87,6 +92,7 @@ def classify_motif(gr_segment):
     if slope < -0.05:
         return "FUNNEL"
     return "HETEROLITHIC"
+
 
 def attach_nn(intervals_data, biostrat):
     """Attach NN zones as attributes to existing intervals."""
@@ -105,6 +111,7 @@ def attach_nn(intervals_data, biostrat):
             row["NN_zone"], row["NN_confidence"] = None, "UNKNOWN"
     return intervals_data
 
+
 def run_gr_cognitive_pipeline(depth_or_data, gr_array=None, biostrat=None, min_interval_m=5.0, smoothing_window_m=7.0):
     """Main entry point for cognitive GR analysis."""
     if isinstance(depth_or_data, list) and len(depth_or_data) > 0 and isinstance(depth_or_data[0], dict):
@@ -112,23 +119,28 @@ def run_gr_cognitive_pipeline(depth_or_data, gr_array=None, biostrat=None, min_i
         gr = np.array([float(d["gr"]) for d in depth_or_data])
     else:
         depth, gr = np.array(depth_or_data), np.array(gr_array)
-    
+
     gr_qc = despike_gr(gr)
     gr_s = smooth_gr(gr_qc, depth, smoothing_window_m)
     intervals = detect_boundaries(depth, gr_s, min_interval_m)
     if not intervals:
-        intervals = [(0, len(depth)-1)]
+        intervals = [(0, len(depth) - 1)]
     else:
         intervals = merge_intervals(intervals, depth, min_interval_m)
 
     rows = []
     for i0, i1 in intervals:
-        segment = gr_s[i0:i1+1]
-        rows.append({
-            "Top_MD": float(depth[i0]), "Base_MD": float(depth[i1]),
-            "Thickness": float(depth[i1] - depth[i0]),
-            "GR_mean": float(np.mean(gr[i0:i1+1])),
-            "Motif": classify_motif(segment)
-        })
-    return {"interval_table": attach_nn(rows, biostrat or []), 
-            "qc": {"interval_count": len(rows), "min_interval_m": min_interval_m, "nn_used": bool(biostrat)}}
+        segment = gr_s[i0 : i1 + 1]
+        rows.append(
+            {
+                "Top_MD": float(depth[i0]),
+                "Base_MD": float(depth[i1]),
+                "Thickness": float(depth[i1] - depth[i0]),
+                "GR_mean": float(np.mean(gr[i0 : i1 + 1])),
+                "Motif": classify_motif(segment),
+            }
+        )
+    return {
+        "interval_table": attach_nn(rows, biostrat or []),
+        "qc": {"interval_count": len(rows), "min_interval_m": min_interval_m, "nn_used": bool(biostrat)},
+    }

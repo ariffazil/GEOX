@@ -10,6 +10,7 @@ Orthogonal layers:
 Rule: Nothing outside this module defines new physics parameters.
 All engines read from and write back to this layer.
 """
+
 from geox_core.physics.state import (
     Physics9State,
     EARTH_MATERIAL_CATALOG,

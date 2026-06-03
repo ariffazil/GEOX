@@ -7,9 +7,6 @@ import numpy as np
 from geox_core.enums.statuses import (
     get_standard_envelope,
     enrich_envelope_with_metabolic,
-    ExecutionStatus,
-    GovernanceStatus,
-    ArtifactStatus,
 )
 from geox_mcp.tools._helpers import (
     _get_artifact,
@@ -21,10 +18,8 @@ from geox_core.physics import (
     ricker_wavelet as generate_ricker,
     convolve_trace as convolve_synthetic,
 )
-from geox_core.io.checkshot_reader import apply_td_anchor
 from geox_core.physics import gardner_density
 from geox_core.physics.guards import PhysicsGuard
-from geox_core.core.welltie import compute_welltie
 
 logger = logging.getLogger("geox.canonical.seismic_well_tie")
 
@@ -60,6 +55,7 @@ def _extract_well_curves_from_artifact(well_id: str) -> Optional[Dict[str, Any]]
     if las_path:
         try:
             from geox_core.core.geox_1d import process_las_file
+
             las_curves = process_las_file(las_path)
             if "ERROR" not in las_curves:
                 # Map canonical curves
@@ -91,6 +87,7 @@ def _extract_well_curves_from_artifact(well_id: str) -> Optional[Dict[str, Any]]
                     dt_mean = np.nanmean(np.abs(sonic_arr))
                     dt_unit = "usm" if dt_mean > 200 else "usft"
                     from geox_core.core.welltie import compute_vp_from_sonic
+
                     vp_arr = compute_vp_from_sonic(sonic_arr, depth_arr, dt_unit)
                     curves["vp"] = vp_arr
                     curves["depth"] = depth_arr
@@ -127,28 +124,20 @@ def _build_wavelet_resource(
     """Build a deterministic wavelet resource with equations and provenance."""
     if wavelet_type == "ricker":
         wavelet = generate_ricker(float(frequency_hz), dt_ms / 1000.0)
-        equation = (
-            "w(t) = (1 - 2π²f²t²) × exp(-π²f²t²)  "
-            "[Ricker zero-phase wavelet]"
-        )
+        equation = "w(t) = (1 - 2π²f²t²) × exp(-π²f²t²)  [Ricker zero-phase wavelet]"
     elif wavelet_type == "ormsby" and isinstance(frequency_hz, (list, tuple)) and len(frequency_hz) == 4:
         f1, f2, f3, f4 = frequency_hz
         # Approximate ormsby as band-limited ricker for now
         avg_f = (f2 + f3) / 2.0
         wavelet = generate_ricker(avg_f, dt_ms / 1000.0)
-        equation = (
-            f"Ormsby band-pass: [{f1},{f2},{f3},{f4}] Hz  "
-            "w(t) = band-limited sinc integral"
-        )
+        equation = f"Ormsby band-pass: [{f1},{f2},{f3},{f4}] Hz  w(t) = band-limited sinc integral"
     else:
         wavelet = generate_ricker(float(frequency_hz), dt_ms / 1000.0)
-        equation = (
-            "w(t) = (1 - 2π²f²t²) × exp(-π²f²t²)  "
-            "[Ricker zero-phase wavelet — fallback]"
-        )
+        equation = "w(t) = (1 - 2π²f²t²) × exp(-π²f²t²)  [Ricker zero-phase wavelet — fallback]"
 
     if abs(phase_degrees) > 0.1:
         from geox_core.core.welltie import apply_phase_rotation
+
         wavelet = apply_phase_rotation(wavelet, phase_degrees)
         equation += f"; phase_rotated_by={phase_degrees}°"
 
@@ -410,6 +399,7 @@ async def geox_time_depth_anchor(
     curves = _extract_well_curves_from_artifact(well_id)
     if curves and "depth" in curves and "vp" in curves:
         from geox_core.core.welltie import compute_average_velocity_td
+
         sonic_twt = compute_average_velocity_td(curves["vp"], curves["depth"])
         # Interpolate sonic TWT to checkshot depths
         sonic_twt_at_cs = np.interp(depths, curves["depth"], sonic_twt)
@@ -448,9 +438,7 @@ async def geox_time_depth_anchor(
             claim_state="HOLD",
         )
         envelope["execution_status"] = "HOLD"
-        envelope["reason"] = (
-            f"Drift {observed_drift:.2f}ms exceeds threshold {drift_threshold_ms}ms (F2 Breach)."
-        )
+        envelope["reason"] = f"Drift {observed_drift:.2f}ms exceeds threshold {drift_threshold_ms}ms (F2 Breach)."
         envelope["equations"] = {
             "drift": "drift = TWT_observed - TWT_sonic_integrated",
             "proxy": "TWT_proxy = 2 × depth / Vavg_proxy × 1000",
@@ -559,6 +547,7 @@ async def geox_forward_model_synthetic(
     # Phase rotation
     if abs(phase_degrees) > 0.1:
         from geox_core.core.welltie import apply_phase_rotation
+
         synthetic = apply_phase_rotation(synthetic, phase_degrees)
 
     # Noise
@@ -578,6 +567,7 @@ async def geox_forward_model_synthetic(
     if register_output:
         synthetic_ref = f"synthetic:{well_id}:{wavelet_type}:{frequency_hz}"
         from geox_mcp.tools._helpers import _register_artifact
+
         _register_artifact(
             synthetic_ref,
             well_id=well_id,

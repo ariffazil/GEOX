@@ -14,11 +14,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import os
-import json
-import hashlib
-import tempfile
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -34,29 +30,29 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
-from matplotlib.patches import Rectangle
 
 
 # ─── Curve alias map (Arif's canonical spec) ───────────────────────────────────
 
 CURVE_ALIASES: dict[str, list[str]] = {
-    "GR":  ["GR", "GAMMA", "CGR", "SGR"],
-    "RT":  ["RT", "ILD", "LLD", "RDEP", "RES_DEEP", "AT90", "RESD"],
+    "GR": ["GR", "GAMMA", "CGR", "SGR"],
+    "RT": ["RT", "ILD", "LLD", "RDEP", "RES_DEEP", "AT90", "RESD"],
     "RHOB": ["RHOB", "DEN", "DENS", "ZDEN"],
     "NPHI": ["NPHI", "NEUT", "TNPH", "CNCF"],
-    "DT":  ["DT", "DTC", "AC"],
+    "DT": ["DT", "DTC", "AC"],
     "PEF": ["PEF", "PE"],
 }
 
 
 # ─── Claim state labels ────────────────────────────────────────────────────────
 
+
 class ClaimState:
-    OBSERVATION  = "OBSERVED"
-    COMPUTED     = "COMPUTED"
-    CANDIDATE    = "AUTO_PICK_CANDIDATE"
-    EXPLORATORY  = "EXPLORATORY_VISUALIZATION"
-    UNKNOWN      = "UNKNOWN"
+    OBSERVATION = "OBSERVED"
+    COMPUTED = "COMPUTED"
+    CANDIDATE = "AUTO_PICK_CANDIDATE"
+    EXPLORATORY = "EXPLORATORY_VISUALIZATION"
+    UNKNOWN = "UNKNOWN"
 
 
 @dataclass
@@ -84,8 +80,8 @@ class WellManifest:
 
 @dataclass
 class TrackConfig:
-    mnemonic: str          # canonical name (GR, RT, RHOB, NPHI)
-    aliases: list[str]     # which LAS mnemonics map to this track
+    mnemonic: str  # canonical name (GR, RT, RHOB, NPHI)
+    aliases: list[str]  # which LAS mnemonics map to this track
     color: str = "#222222"
     fill_color: str | None = None
     log_scale: bool = False
@@ -94,14 +90,15 @@ class TrackConfig:
 
 
 DEFAULT_TRACKS: list[TrackConfig] = [
-    TrackConfig("GR",   CURVE_ALIASES["GR"],   color="#4CAF50", fill_color="#A5D6A7"),
-    TrackConfig("RT",   CURVE_ALIASES["RT"],   color="#F44336", log_scale=True,  min_val=0.1, max_val=1000),
+    TrackConfig("GR", CURVE_ALIASES["GR"], color="#4CAF50", fill_color="#A5D6A7"),
+    TrackConfig("RT", CURVE_ALIASES["RT"], color="#F44336", log_scale=True, min_val=0.1, max_val=1000),
     TrackConfig("RHOB", CURVE_ALIASES["RHOB"], color="#FF9800", min_val=1.9, max_val=2.9),
     TrackConfig("NPHI", CURVE_ALIASES["NPHI"], color="#2196F3", min_val=-0.05, max_val=0.6),
 ]
 
 
 # ─── LAS Reader ────────────────────────────────────────────────────────────────
+
 
 def read_las_with_aliases(path: str) -> tuple[dict[str, np.ndarray], np.ndarray, str, list[str]]:
     """Read LAS file and return {canonical_name: values}, depth_array, depth_unit, loaded_mnemonics.
@@ -152,6 +149,7 @@ def read_las_with_aliases(path: str) -> tuple[dict[str, np.ndarray], np.ndarray,
 
 # ─── Domain guardrails ─────────────────────────────────────────────────────────
 
+
 def check_cross_basin(wells: list[WellManifest]) -> list[str]:
     """Warn if wells appear to be from different basins/sources."""
     basins = set()
@@ -169,6 +167,7 @@ def check_cross_basin(wells: list[WellManifest]) -> list[str]:
 
 
 # ─── Panel renderer ───────────────────────────────────────────────────────────
+
 
 def render_correlation_panel(
     wells: list[WellManifest],
@@ -196,7 +195,8 @@ def render_correlation_panel(
     n_tracks = len(tracks)
 
     fig, axes = plt.subplots(
-        1, n_wells * n_tracks,
+        1,
+        n_wells * n_tracks,
         figsize=(figsize[0] * n_wells, figsize[1]),
         squeeze=False,
     )
@@ -227,9 +227,9 @@ def render_correlation_panel(
             ax = axes[0, col_idx]
 
             if not well.loaded:
-                ax.text(0.5, 0.5, f"ERROR:\n{well.error}",
-                        ha="center", va="center", color="red", fontsize=8,
-                        transform=ax.transAxes)
+                ax.text(
+                    0.5, 0.5, f"ERROR:\n{well.error}", ha="center", va="center", color="red", fontsize=8, transform=ax.transAxes
+                )
                 ax.set_title(well.well_id[:12], fontsize=8, color="gray")
                 col_idx += 1
                 continue
@@ -253,23 +253,42 @@ def render_correlation_panel(
                     _plot_track(ax, depths, vals, track, d_min, d_max)
                     warnings.append(f"Well {well.well_id} loaded {track.mnemonic}")
                 else:
-                    ax.text(0.5, 0.5, f"[{track.mnemonic}\nmissing]",
-                            ha="center", va="center", color="#999",
-                            fontsize=7, transform=ax.transAxes)
+                    ax.text(
+                        0.5,
+                        0.5,
+                        f"[{track.mnemonic}\nmissing]",
+                        ha="center",
+                        va="center",
+                        color="#999",
+                        fontsize=7,
+                        transform=ax.transAxes,
+                    )
             else:
-                ax.text(0.5, 0.5, f"[{track.mnemonic}\nnot loaded]",
-                        ha="center", va="center", color="#CCC",
-                        fontsize=7, transform=ax.transAxes)
+                ax.text(
+                    0.5,
+                    0.5,
+                    f"[{track.mnemonic}\nnot loaded]",
+                    ha="center",
+                    va="center",
+                    color="#CCC",
+                    fontsize=7,
+                    transform=ax.transAxes,
+                )
 
             # Tops
             if tops and well.well_id in tops:
                 for marker, depth in tops[well.well_id].items():
                     if d_min <= depth <= d_max:
-                        ax.axhline(y=depth, color="#9C27B0", linestyle="--",
-                                   linewidth=0.8, alpha=0.7)
-                        ax.text(1.02, depth, f"◆ {marker}", fontsize=6,
-                                va="center", color="#9C27B0",
-                                transform=ax.get_yaxis_transform())
+                        ax.axhline(y=depth, color="#9C27B0", linestyle="--", linewidth=0.8, alpha=0.7)
+                        ax.text(
+                            1.02,
+                            depth,
+                            f"◆ {marker}",
+                            fontsize=6,
+                            va="center",
+                            color="#9C27B0",
+                            transform=ax.get_yaxis_transform(),
+                        )
 
             ax.set_xlim(track.min_val or 0, track.max_val or 100)
             ax.invert_yaxis()
@@ -281,27 +300,38 @@ def render_correlation_panel(
 
             # Column headers
             if t_idx == 0:
-                ax.set_title(well.well_id[:14], fontsize=9, fontweight="bold",
-                             color="#1A1A1A")
+                ax.set_title(well.well_id[:14], fontsize=9, fontweight="bold", color="#1A1A1A")
             if w_idx == 0:
-                ax.text(0.5, 1.03, track.mnemonic,
-                        ha="center", va="bottom", fontsize=9, fontweight="bold",
-                        color=track.color, transform=ax.transAxes)
+                ax.text(
+                    0.5,
+                    1.03,
+                    track.mnemonic,
+                    ha="center",
+                    va="bottom",
+                    fontsize=9,
+                    fontweight="bold",
+                    color=track.color,
+                    transform=ax.transAxes,
+                )
 
             col_idx += 1
 
     # Disclaimer
-    fig.text(0.5, 0.01,
-             f"Depth basis: {depth_basis} | Datum correction: not applied | "
-             f"TVDSS: unavailable | Claim: {ClaimState.EXPLORATORY} | "
-             f"GEOX Sovereign 13 | DITEMPA BUKAN DIBERI",
-             ha="center", va="bottom", fontsize=6, color="#888",
-             style="italic")
+    fig.text(
+        0.5,
+        0.01,
+        f"Depth basis: {depth_basis} | Datum correction: not applied | "
+        f"TVDSS: unavailable | Claim: {ClaimState.EXPLORATORY} | "
+        f"GEOX Sovereign 13 | DITEMPA BUKAN DIBERI",
+        ha="center",
+        va="bottom",
+        fontsize=6,
+        color="#888",
+        style="italic",
+    )
 
-    plt.subplots_adjust(left=0.06, right=0.97, top=0.95, bottom=0.06,
-                       wspace=0.4)
-    fig.savefig(output_path, dpi=150, bbox_inches="tight",
-                facecolor=fig.get_facecolor())
+    plt.subplots_adjust(left=0.06, right=0.97, top=0.95, bottom=0.06, wspace=0.4)
+    fig.savefig(output_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
 
     return {
@@ -328,8 +358,7 @@ def _get_curve_values(well: WellManifest, canonical: str, aliases: list[str]) ->
     return None
 
 
-def _plot_track(ax, depths: np.ndarray, values: np.ndarray,
-                track: TrackConfig, d_min: float, d_max: float) -> None:
+def _plot_track(ax, depths: np.ndarray, values: np.ndarray, track: TrackConfig, d_min: float, d_max: float) -> None:
     """Plot a single track curve with fill."""
     mask = ~(np.isnan(values) | np.isnan(depths))
     d_plot = depths[mask]
@@ -345,6 +374,7 @@ def _plot_track(ax, depths: np.ndarray, values: np.ndarray,
 
 
 # ─── High-level pipeline ───────────────────────────────────────────────────────
+
 
 def build_correlation_panel(
     las_paths: list[str],
@@ -422,10 +452,7 @@ def build_correlation_panel(
     # Cross-basin check
     basins = check_cross_basin(wells)
     if len(basins) > 1:
-        all_warnings.append(
-            f"Wells appear from different basins/sources: {basins}. "
-            f"Correlation is visual/testing only."
-        )
+        all_warnings.append(f"Wells appear from different basins/sources: {basins}. Correlation is visual/testing only.")
 
     # Pre-render guard: fail if no wells loaded
     wells_loaded_count = sum(1 for w in wells if w.loaded)
@@ -455,13 +482,15 @@ def build_correlation_panel(
     for w in wells:
         if w.loaded:
             for mn, cdata in w.curves.items():
-                curve_summary.append({
-                    "well_id": w.well_id,
-                    "mnemonic": mn,
-                    "depth_min": round(cdata.depth_min, 1),
-                    "depth_max": round(cdata.depth_max, 1),
-                    "null_pct": round(cdata.null_pct, 1),
-                })
+                curve_summary.append(
+                    {
+                        "well_id": w.well_id,
+                        "mnemonic": mn,
+                        "depth_min": round(cdata.depth_min, 1),
+                        "depth_max": round(cdata.depth_max, 1),
+                        "null_pct": round(cdata.null_pct, 1),
+                    }
+                )
 
     result["curve_summary"] = curve_summary
     result["warnings"] = all_warnings + result.get("warnings", [])

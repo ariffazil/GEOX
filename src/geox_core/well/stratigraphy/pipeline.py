@@ -18,7 +18,6 @@ from collections import Counter
 from datetime import datetime
 from typing import Any, Optional
 
-import numpy as np
 
 from .config import (
     ProjectConfig,
@@ -86,7 +85,7 @@ def run_pipeline(
     all_sensing_by_well = {}
     pkg_counter = {}
 
-    for well_id in (config.well_order or list(config.intervals.keys())):
+    for well_id in config.well_order or list(config.intervals.keys()):
         wdata = well_data.get(well_id)
         ivls = config.intervals.get(well_id, [])
         pkg_counter[well_id] = 0
@@ -100,8 +99,7 @@ def run_pipeline(
 
             if wdata is None or wdata.get("gr") is None:
                 pkg_counter[well_id] += 1
-                pkg = _make_no_data_package(well_id, pkg_counter[well_id], zone, depo,
-                                            top, base, age)
+                pkg = _make_no_data_package(well_id, pkg_counter[well_id], zone, depo, top, base, age)
                 all_packages.append(pkg)
                 well_pkgs.append(pkg)
                 continue
@@ -111,7 +109,10 @@ def run_pipeline(
 
             # L1: sensing
             bins = sense_bins(
-                depth, gr, top, base,
+                depth,
+                gr,
+                top,
+                base,
                 bin_size_m=config.bin_size_m,
                 gr_cut_api=config.gr_cut_api,
             )
@@ -132,10 +133,12 @@ def run_pipeline(
                 flag = geo_rule_check(pkg_raw, depo, depo_rank)
 
                 conf = (
-                    "High" if pkg_raw["VARIABILITY"] == "Low"
+                    "High"
+                    if pkg_raw["VARIABILITY"] == "Low"
                     and pkg_raw["N_BINS"] >= 4
                     and pkg_raw["HUMAN_MOTIF"] not in ("Heterolithic", "Serrated / Irregular Pattern")
-                    else "Low" if pkg_raw["N_BINS"] < 3
+                    else "Low"
+                    if pkg_raw["N_BINS"] < 3
                     else "Medium"
                 )
 
@@ -156,10 +159,7 @@ def run_pipeline(
                     "GR_P10": pkg_raw["GR_P10"],
                     "GR_P50": pkg_raw["GR_P50"],
                     "GR_P90": pkg_raw["GR_P90"],
-                    "LITHO": litho_classify(pkg_raw["GR_MEAN"],
-                                             config.gr_sand_api,
-                                             config.gr_silt_api,
-                                             config.gr_shaly_api),
+                    "LITHO": litho_classify(pkg_raw["GR_MEAN"], config.gr_sand_api, config.gr_silt_api, config.gr_shaly_api),
                     "SEQ_STRAT": tract,
                     "INFERRED_PROCESS": process,
                     "ANOMALY_FLAG": flag,
@@ -187,7 +187,7 @@ def run_pipeline(
     logger.info(f"[3/4] Generating panels ({len(well_data)} wells + correlation)...")
     generated_files = []
 
-    for well_id in (config.well_order or list(config.intervals.keys())):
+    for well_id in config.well_order or list(config.intervals.keys()):
         wdata = well_data.get(well_id)
         pkgs = [p for p in all_packages if p["WELL"] == well_id]
         ivls = config.intervals.get(well_id, [])
@@ -196,7 +196,10 @@ def run_pipeline(
             continue
 
         png_path = generate_well_panel(
-            well_id, wdata, pkgs, ivls,
+            well_id,
+            wdata,
+            pkgs,
+            ivls,
             sensing_bins=all_sensing_by_well.get(well_id, []),
             config=config,
             output_dir=output_dir,
@@ -206,9 +209,7 @@ def run_pipeline(
         if png_path:
             generated_files.append(png_path)
 
-    corr_png = generate_correlation_panel(
-        well_data, all_packages, config, output_dir, dpi_corr, now_ts
-    )
+    corr_png = generate_correlation_panel(well_data, all_packages, config, output_dir, dpi_corr, now_ts)
     if corr_png:
         generated_files.append(corr_png)
 
@@ -258,8 +259,13 @@ def _parse_zone_age(zone: str, nn_ages: dict) -> Optional[tuple[float, float]]:
 
 
 def _make_no_data_package(
-    well_id: str, counter: int, zone: str, depo: str,
-    top: float, base: float, age: Optional[tuple],
+    well_id: str,
+    counter: int,
+    zone: str,
+    depo: str,
+    top: float,
+    base: float,
+    age: Optional[tuple],
 ) -> dict:
     """Create a package record for wells with no LAS data."""
     return {
@@ -293,7 +299,8 @@ def _make_no_data_package(
 
 
 def _extrapolate_motif(
-    pkg: dict, sorted_pkgs: list[dict],
+    pkg: dict,
+    sorted_pkgs: list[dict],
 ) -> tuple[Optional[str], Optional[str], Optional[str]]:
     """Extrapolate Heterolithic motif from nearest non-Heterolithic neighbours."""
     try:
@@ -302,22 +309,22 @@ def _extrapolate_motif(
         return None, None, None
 
     above = next(
-        (sorted_pkgs[j]["HUMAN_MOTIF"]
-         for j in range(idx - 1, -1, -1)
-         if sorted_pkgs[j]["HUMAN_MOTIF"] != "Heterolithic"),
+        (sorted_pkgs[j]["HUMAN_MOTIF"] for j in range(idx - 1, -1, -1) if sorted_pkgs[j]["HUMAN_MOTIF"] != "Heterolithic"),
         None,
     )
     below = next(
-        (sorted_pkgs[j]["HUMAN_MOTIF"]
-         for j in range(idx + 1, len(sorted_pkgs))
-         if sorted_pkgs[j]["HUMAN_MOTIF"] != "Heterolithic"),
+        (
+            sorted_pkgs[j]["HUMAN_MOTIF"]
+            for j in range(idx + 1, len(sorted_pkgs))
+            if sorted_pkgs[j]["HUMAN_MOTIF"] != "Heterolithic"
+        ),
         None,
     )
 
     if above == below and above is not None:
         return above, "HIGH", f"Bracketed by {above} above and below"
     if above is not None and below is None:
-        return above, "MEDIUM", f"End of section — propagated downward"
+        return above, "MEDIUM", "End of section — propagated downward"
     if below is not None and above is None:
-        return below, "MEDIUM", f"Start of section — propagated upward"
+        return below, "MEDIUM", "Start of section — propagated upward"
     return None, None, None

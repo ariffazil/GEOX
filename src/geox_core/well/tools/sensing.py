@@ -74,35 +74,39 @@ def compute_gr_bins(
             motif = motif_result.get("motif", "INSUFFICIENT_DATA")
             confidence = motif_result.get("confidence", 0.0)
 
-            bins.append({
-                "depth_top": round(bin_top, 2),
-                "depth_base": round(bin_base, 2),
-                "depth_mid": round((bin_top + bin_base) / 2, 2),
-                "p10": round(p10, 1),
-                "p50": round(p50, 1),
-                "p90": round(p90, 1),
-                "mean": round(mean, 1),
-                "std": round(std, 1),
-                "n_samples": int(len(gr_bin)),
-                "motif": motif,
-                "confidence": round(confidence, 2),
-                "claim_state": "DERIVED_CANDIDATE",
-            })
+            bins.append(
+                {
+                    "depth_top": round(bin_top, 2),
+                    "depth_base": round(bin_base, 2),
+                    "depth_mid": round((bin_top + bin_base) / 2, 2),
+                    "p10": round(p10, 1),
+                    "p50": round(p50, 1),
+                    "p90": round(p90, 1),
+                    "mean": round(mean, 1),
+                    "std": round(std, 1),
+                    "n_samples": int(len(gr_bin)),
+                    "motif": motif,
+                    "confidence": round(confidence, 2),
+                    "claim_state": "DERIVED_CANDIDATE",
+                }
+            )
         else:
-            bins.append({
-                "depth_top": round(bin_top, 2),
-                "depth_base": round(bin_base, 2),
-                "depth_mid": round((bin_top + bin_base) / 2, 2),
-                "p10": None,
-                "p50": None,
-                "p90": None,
-                "mean": None,
-                "std": None,
-                "n_samples": int(len(gr_bin)),
-                "motif": "INSUFFICIENT_DATA",
-                "confidence": 0.0,
-                "claim_state": "INSUFFICIENT_DATA",
-            })
+            bins.append(
+                {
+                    "depth_top": round(bin_top, 2),
+                    "depth_base": round(bin_base, 2),
+                    "depth_mid": round((bin_top + bin_base) / 2, 2),
+                    "p10": None,
+                    "p50": None,
+                    "p90": None,
+                    "mean": None,
+                    "std": None,
+                    "n_samples": int(len(gr_bin)),
+                    "motif": "INSUFFICIENT_DATA",
+                    "confidence": 0.0,
+                    "claim_state": "INSUFFICIENT_DATA",
+                }
+            )
 
         bin_top = bin_base
 

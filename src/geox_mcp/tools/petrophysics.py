@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, List, Dict, Optional, Literal
+from typing import Any, List, Optional, Literal
 
-from fastmcp import FastMCP
 from geox_core.enums.statuses import (
     get_standard_envelope,
     GovernanceStatus,
@@ -12,37 +11,10 @@ from geox_core.enums.statuses import (
     enrich_envelope_with_metabolic,
 )
 from geox_mcp.tools._helpers import (
-    _get_artifact,
     _artifact_exists,
-    _register_artifact,
-    _record_latest_qc,
-    _latest_qc_failed_refs,
-    _check_maruah_territory,
     _inject_ensemble_residual_evidence,
-    _safe_upload_path,
-    _decode_upload_content,
-    _parse_csv_or_json,
-    _map_canonical_curves,
-    _detect_depth_unit,
-    _compute_vsh_from_store,
-    _compute_porosity_from_store,
-    _compute_saturation_from_store,
-    _compute_netpay_from_store,
-    _classify_gr_motif,
-    _classify_lithology_from_store,
-    _safe_reduction,
-    _get_well_data_with_depth,
     _compute_subsurface_candidates,
-    CLAIM_STATES,
-    CANONICAL_ALIASES,
-    _CURVE_RANGES,
-    _artifact_registry,
-    _artifact_store,
-    _well_curves_registry,
-    _ARTIFACT_REGISTRY_PATH,
-    MAX_UPLOAD_BYTES,
 )
-from geox_core.compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 
 logger = logging.getLogger("geox.canonical.subsurface")
 
@@ -109,14 +81,24 @@ async def geox_subsurface_generate_candidates(
     if basin_context is not None and len(evidence_refs) > 1:
         profile_defaults: dict[str, Any] = {
             "malay_basin": {
-                "rw": 0.05, "archie_m": 2.0, "archie_n": 2.0,
-                "matrix_density": 2.65, "fluid_density": 1.0,
-                "vsh_cutoff": 0.5, "phi_cutoff": 0.1, "sw_cutoff": 0.6,
+                "rw": 0.05,
+                "archie_m": 2.0,
+                "archie_n": 2.0,
+                "matrix_density": 2.65,
+                "fluid_density": 1.0,
+                "vsh_cutoff": 0.5,
+                "phi_cutoff": 0.1,
+                "sw_cutoff": 0.6,
             },
             "generic": {
-                "rw": 0.05, "archie_m": 2.0, "archie_n": 2.0,
-                "matrix_density": 2.65, "fluid_density": 1.0,
-                "vsh_cutoff": 0.5, "phi_cutoff": 0.1, "sw_cutoff": 0.6,
+                "rw": 0.05,
+                "archie_m": 2.0,
+                "archie_n": 2.0,
+                "matrix_density": 2.65,
+                "fluid_density": 1.0,
+                "vsh_cutoff": 0.5,
+                "phi_cutoff": 0.1,
+                "sw_cutoff": 0.6,
             },
         }
         defaults = profile_defaults.get(canon9_profile, profile_defaults["generic"])
@@ -137,16 +119,20 @@ async def geox_subsurface_generate_candidates(
                     success_count += 1
                 else:
                     error_count += 1
-                per_well_results.append({
-                    "well_ref": well_ref,
-                    "status": status,
-                    "artifact_ref": payload.get("artifact_ref"),
-                    "claim_state": payload.get("claim_state", "UNKNOWN"),
-                    "physics_guard": payload.get("physics_guard"),
-                })
+                per_well_results.append(
+                    {
+                        "well_ref": well_ref,
+                        "status": status,
+                        "artifact_ref": payload.get("artifact_ref"),
+                        "claim_state": payload.get("claim_state", "UNKNOWN"),
+                        "physics_guard": payload.get("physics_guard"),
+                    }
+                )
             except Exception as exc:
                 error_count += 1
-                per_well_results.append({"well_ref": well_ref, "status": "ERROR", "error": str(exc), "claim_state": "NO_VALID_EVIDENCE"})
+                per_well_results.append(
+                    {"well_ref": well_ref, "status": "ERROR", "error": str(exc), "claim_state": "NO_VALID_EVIDENCE"}
+                )
         all_ok = error_count == 0
         batch_status = "SUCCESS" if all_ok else "PARTIAL"
         verdict = "QUALIFY" if all_ok else "HOLD"

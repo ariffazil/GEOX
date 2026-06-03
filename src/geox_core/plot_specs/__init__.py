@@ -20,10 +20,31 @@ logger = logging.getLogger("geox.plot_specs")
 # ── Forbidden fields (executable / arbitrary code vectors) ────────────────────
 
 _FORBIDDEN_KEYS: set[str] = {
-    "exec", "eval", "code", "script", "shell", "command", "subprocess",
-    "import", "__import__", "compile", "open", "os.system", "os.popen",
-    "eval_expression", "lambda", "fn", "function", "callback", "hook",
-    "javascript", "js", "wasm", "bytecode", "pickle", "marshal",
+    "exec",
+    "eval",
+    "code",
+    "script",
+    "shell",
+    "command",
+    "subprocess",
+    "import",
+    "__import__",
+    "compile",
+    "open",
+    "os.system",
+    "os.popen",
+    "eval_expression",
+    "lambda",
+    "fn",
+    "function",
+    "callback",
+    "hook",
+    "javascript",
+    "js",
+    "wasm",
+    "bytecode",
+    "pickle",
+    "marshal",
 }
 
 # ── Approved renderer surface ─────────────────────────────────────────────────
@@ -37,6 +58,7 @@ _APPROVED_RENDERERS: set[str] = {
 
 
 # ── PlotSpec dataclass ────────────────────────────────────────────────────────
+
 
 @dataclass
 class PlotSpec:

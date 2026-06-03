@@ -36,10 +36,18 @@ def geox_compute_sw_ensemble_tool(
     pe = PetroEnsemble()
     user_inputs = {"rt": rt, "phi": phi, "rw": rw, "vsh": vsh}
     result = pe.compute_sw_ensemble(
-        rt=rt, phi=phi, rw=rw, vsh=vsh, temp=temp,
-        a=a, m=m, n=n, rsh=rsh,
+        rt=rt,
+        phi=phi,
+        rw=rw,
+        vsh=vsh,
+        temp=temp,
+        a=a,
+        m=m,
+        n=n,
+        rsh=rsh,
         required_curves=required_curves,
-        top_md=top_md, bottom_md=bottom_md,
+        top_md=top_md,
+        bottom_md=bottom_md,
         qc_state_ref=qc_state_ref,
         user_inputs=user_inputs,
         user_defaults={} if rsh is not None else {"rsh": None},

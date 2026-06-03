@@ -85,12 +85,14 @@ _ARIFOS_KERNEL_TOKEN = os.getenv("ARIFOS_KERNEL_TOKEN", "")
 
 def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int = 20) -> dict[str, Any]:
     """Call arifOS MCP kernel. FAIL-CLOSED on error — returns error dict."""
-    payload = json.dumps({
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "tools/call",
-        "params": {"name": tool_name, "arguments": params},
-    }).encode()
+    payload = json.dumps(
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {"name": tool_name, "arguments": params},
+        }
+    ).encode()
 
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
     if _ARIFOS_KERNEL_TOKEN:
@@ -114,6 +116,7 @@ def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int = 20)
 
 # ─── Governance Check ─────────────────────────────────────────────────────────
 
+
 def check_governance(
     tool_name: str,
     arguments: dict[str, Any],
@@ -123,15 +126,15 @@ def check_governance(
 ) -> tuple[str, Optional[JSONResponse]]:
     """
     Check governance for a GEOX tool call.
-    
+
     Returns: (verdict, error_response_or_None)
       - ("SEAL", None) → proceed with execution
       - ("ADVISORY", None) → proceed (kernel noted the call)
       - ("HOLD", dict) → blocked, return dict as JSON error response
       - ("VOID", dict) → rejected, return dict as JSON error response
-    
+
     Applied after RT-3 guard (which checks ack_irreversible).
-    
+
     fail_closed=True: If kernel unreachable or session unbound → HOLD
     fail_closed=False: Allow pass-through (for C1 advisory tools)
     """
@@ -169,8 +172,7 @@ def check_governance(
     candidate = {
         "action": f"GEOX_ORGAN:{tool_name}",
         "description": (
-            f"GEOX organ tool '{tool_name}' with risk tier {risk_tier.value}. "
-            "SEAL required from arifOS kernel before execution."
+            f"GEOX organ tool '{tool_name}' with risk tier {risk_tier.value}. SEAL required from arifOS kernel before execution."
         ),
         "actor_id": actor_id,
         "organ": "GEOX",
@@ -187,7 +189,7 @@ def check_governance(
     }
 
     logger.info(f"GOV: {tool_name} [{risk_tier.value}] → calling arifOS kernel...")
-    
+
     kernel_result = _call_arif_kernel("arif_judge_deliberate", judge_params)
 
     verdict = "HOLD"  # fail-closed default
@@ -195,18 +197,18 @@ def check_governance(
 
     if isinstance(kernel_result, dict):
         kernel_status = kernel_result.get("status", "")
-        
+
         # Kernel error — fail closed
         if kernel_status == "ERROR":
             reason = f"arifOS kernel error: {kernel_result.get('error', 'unknown')}"
             logger.warning(f"GOV: {tool_name} [{risk_tier.value}] → HOLD (kernel error): {reason}")
-        
+
         # Valid response — extract verdict
         elif "verdict" in kernel_result:
             verdict = kernel_result.get("verdict", "HOLD")
             judgment = kernel_result.get("judgment", {})
             reason = judgment.get("reason", kernel_result.get("reason", "No reason provided"))
-            
+
             # Session unbound — fail closed for IRREVERSIBLE/C2
             session_bound = kernel_result.get("session_bound", True)
             if not session_bound and risk_tier in (RiskTier.C2_EXECUTE, RiskTier.IRREVERSIBLE):

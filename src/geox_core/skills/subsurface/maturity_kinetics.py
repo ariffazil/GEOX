@@ -2,8 +2,9 @@
 GEOX Legacy Substrate: Kinetic Maturity Logic (Easy%Ro)
 Surgically extracted from geox/core/basin_charge.py
 """
+
 import math
-from typing import Any
+
 
 def compute_tti(burial_history: list[dict[str, float]]) -> float:
     """
@@ -17,6 +18,7 @@ def compute_tti(burial_history: list[dict[str, float]]) -> float:
         tti += duration_ma * (2.0 ** ((temp_c - 100.0) / 10.0))
     return max(tti, 0.0)
 
+
 def compute_easy_ro(tti: float) -> float:
     """
     Compute Vitrinite Reflectance (Easy%Ro) from TTI.
@@ -26,6 +28,7 @@ def compute_easy_ro(tti: float) -> float:
         return 0.2
     # Ro = 0.42 + 0.23 * log10(TTI + 1)
     return max(0.2, min(3.5, 0.42 + 0.23 * math.log10(tti + 1.0)))
+
 
 def get_charge_age(burial_history: list[dict[str, float]], threshold_c: float = 90.0) -> float:
     """Age at which source rock reached thermal expulsion threshold."""

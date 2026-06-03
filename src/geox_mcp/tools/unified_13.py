@@ -234,6 +234,7 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
     # ── Register canonical 13 ────────────────────────────────────────────────
     from geox_mcp.organ_governance import GEOX_RISK_MAP, RiskTier
     import sys
+
     if "/root/arifOS" not in sys.path:
         sys.path.append("/root/arifOS")
 
@@ -251,17 +252,19 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
 
         # Wrap function to write Supabase domain receipts
         import inspect
+
         def make_wrapper(f=func, n=name):
             async def wrapper(*args, **kwargs):
                 if inspect.iscoroutinefunction(f):
                     res = await f(*args, **kwargs)
                 else:
                     res = f(*args, **kwargs)
-                
+
                 # Intercept domain records
                 try:
                     from arifOS.supabase_adapter import record_evidence, record_artifact
                     import asyncio
+
                     loop = asyncio.get_running_loop()
                     if isinstance(res, dict):
                         # Write evidence
@@ -270,38 +273,44 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
                             if isinstance(items, list):
                                 for item in items:
                                     if isinstance(item, dict):
-                                        loop.create_task(record_evidence(
-                                            session_ref=kwargs.get("session_id", "geox_session"),
-                                            source_type=item.get("source_type", n),
-                                            claim_state=item.get("claim_state", "EST"),
-                                            title=item.get("title"),
-                                            content=item.get("content"),
-                                            confidence=item.get("confidence"),
-                                            organ_code="GEOX",
-                                        ))
+                                        loop.create_task(
+                                            record_evidence(
+                                                session_ref=kwargs.get("session_id", "geox_session"),
+                                                source_type=item.get("source_type", n),
+                                                claim_state=item.get("claim_state", "EST"),
+                                                title=item.get("title"),
+                                                content=item.get("content"),
+                                                confidence=item.get("confidence"),
+                                                organ_code="GEOX",
+                                            )
+                                        )
                         # Write artifacts
                         if "artifacts" in res:
                             artifacts = res.get("artifacts") or []
                             if isinstance(artifacts, list):
                                 for a in artifacts:
                                     if isinstance(a, dict):
-                                        loop.create_task(record_artifact(
-                                            bucket=a.get("bucket", "geox_artifacts"),
-                                            path=a.get("path", ""),
-                                            filename=a.get("filename", "unknown"),
-                                            artifact_type=a.get("type"),
-                                            organ_code="GEOX",
-                                            session_ref=kwargs.get("session_id", "geox_session")
-                                        ))
+                                        loop.create_task(
+                                            record_artifact(
+                                                bucket=a.get("bucket", "geox_artifacts"),
+                                                path=a.get("path", ""),
+                                                filename=a.get("filename", "unknown"),
+                                                artifact_type=a.get("type"),
+                                                organ_code="GEOX",
+                                                session_ref=kwargs.get("session_id", "geox_session"),
+                                            )
+                                        )
                 except Exception as e:
                     logger.debug(f"GEOX Supabase adapter failed (fail-soft): {e}")
 
                 return res
+
             # Preserve signature
             import functools
+
             functools.update_wrapper(wrapper, f)
             return wrapper
-            
+
         mcp.tool(**kwargs)(make_wrapper())
 
     # ── Assert canonical count ───────────────────────────────────────────────

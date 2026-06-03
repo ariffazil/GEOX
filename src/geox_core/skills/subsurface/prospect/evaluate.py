@@ -29,7 +29,6 @@ from typing import Any
 from geox_core.core.ac_risk import TEARFRAME
 from geox_core.core.basin_charge import BasinChargeSimulator
 from geox_core.core.volumetrics import ProbabilisticVolumetrics
-from geox_core.core.governed_output import classify_claim_tag, make_vault_receipt
 
 
 def _make_receipt(tool: str, payload: dict, verdict: str) -> dict:
@@ -195,10 +194,10 @@ def geox_prospect_evaluate(
 
     # Build governance flags
     governance_flags = {
-        "F1_human_sovereign": True,   # always sovereign
-        "F3_tri_witness": True,        # vault_receipt present on both tools
+        "F1_human_sovereign": True,  # always sovereign
+        "F3_tri_witness": True,  # vault_receipt present on both tools
         "F7_no_speculation": timing_dict.get("verdict") != "void",
-        "F13_irreversible": False,     # prospect eval is read-only
+        "F13_irreversible": False,  # prospect eval is read-only
         "timing_hold": timing_dict.get("verdict") in ("improbable", "void"),
         "volume_hold": volume_result.get("hold_enforced", False),
         "risk_verdict": risk_verdict,
@@ -216,7 +215,7 @@ def geox_prospect_evaluate(
     if volume_result.get("hold_enforced"):
         hold_triggers.append("volume_physics_guard_hold")
     if ac_risk_score > 0.7:
-        hold_triggers.append(f"high_risk_score_{round(ac_risk_score,2)}")
+        hold_triggers.append(f"high_risk_score_{round(ac_risk_score, 2)}")
     if not evidence_chain_complete:
         hold_triggers.append("evidence_chain_incomplete")
 
@@ -237,7 +236,7 @@ def geox_prospect_evaluate(
         human_decision_point = (
             f"Prospect {prospect_name} evaluated. Verdict SEAL. "
             f"Claim state COMPUTED. "
-            f"Composite risk score {round(ac_risk_score,4)}. "
+            f"Composite risk score {round(ac_risk_score, 4)}. "
             f"Proceed to next workflow stage."
         )
 

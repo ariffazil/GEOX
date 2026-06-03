@@ -3,8 +3,8 @@ Epistemic Integrity Module — AlphaFold pLDDT equivalent for GEOX.
 ══════════════════════════════════════════════════════════════════════════════════════
 DITEMPA BUKAN DIBERI
 
-Governs epistemic integrity scoring, model lineage tracking, and independence 
-checking for subsurface outputs. Prevents model-correlated risk from reaching 
+Governs epistemic integrity scoring, model lineage tracking, and independence
+checking for subsurface outputs. Prevents model-correlated risk from reaching
 WEALTH capital allocation.
 """
 
@@ -98,28 +98,19 @@ class EpistemicIntegrity:
 
         # 4. Confidence Levels (pLDDT equivalent)
         confidence_levels = self._compute_per_element_confidence(outputs, well_density)
-        avg_confidence = (
-            sum(c.score for c in confidence_levels) / len(confidence_levels)
-            if confidence_levels
-            else 0.5
-        )
+        avg_confidence = sum(c.score for c in confidence_levels) / len(confidence_levels) if confidence_levels else 0.5
 
         # 5. Final Integrity Score Formula
-        # weights: evidence_density (0.4), posterior_breadth (0.2), 
+        # weights: evidence_density (0.4), posterior_breadth (0.2),
         # independence (0.2), avg_confidence (0.2)
-        
+
         # Normalize evidence density: 1.0 at 5 wells/100km2
         norm_density = min(well_density / 5.0, 1.0)
-        
+
         # Normalize breadth: 1.0 at ratio 2.0, 0.0 at ratio 10.0
         norm_breadth = max(0.0, 1.0 - (posterior_breadth - 2.0) / 8.0)
-        
-        integrity_score = (
-            (norm_density * 0.4) +
-            (norm_breadth * 0.2) +
-            (independence_score * 0.2) +
-            (avg_confidence * 0.2)
-        )
+
+        integrity_score = (norm_density * 0.4) + (norm_breadth * 0.2) + (independence_score * 0.2) + (avg_confidence * 0.2)
 
         # 6. Classification & Recommendation
         hold = False
@@ -157,7 +148,7 @@ class EpistemicIntegrity:
 
         unique_models = set(pos_components.values())
         component_count = len(pos_components)
-        
+
         if component_count <= 1:
             return 1.0
 
@@ -165,32 +156,25 @@ class EpistemicIntegrity:
         independence = len(unique_models) / component_count
         return independence
 
-    def _compute_per_element_confidence(
-        self, outputs: dict[str, Any], well_density: float
-    ) -> list[ConfidenceLevel]:
+    def _compute_per_element_confidence(self, outputs: dict[str, Any], well_density: float) -> list[ConfidenceLevel]:
         """
         Computes pLDDT-style per-element confidence.
         """
         levels = []
-        
+
         # Parameters to check
         params = ["porosity", "sw", "vsh", "net_pay", "permeability"]
-        
+
         for p in params:
             if p in outputs:
                 # Base score from well density
-                score = min(well_density / 4.0, 0.8) # Cap well data at 0.8
-                
+                score = min(well_density / 4.0, 0.8)  # Cap well data at 0.8
+
                 # Boost if specifically marked as "measured"
                 basis = outputs.get(f"{p}_source", "inferred")
                 if basis == "measured":
                     score = min(score + 0.2, 1.0)
-                
-                levels.append(ConfidenceLevel(
-                    parameter=p,
-                    score=score,
-                    basis=basis,
-                    evidence_density=well_density
-                ))
-                
+
+                levels.append(ConfidenceLevel(parameter=p, score=score, basis=basis, evidence_density=well_density))
+
         return levels

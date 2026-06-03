@@ -598,7 +598,6 @@ class MetabolicCycle(BaseModel):
 
 
 from datetime import datetime, timezone
-from typing import Any
 
 
 def build_metabolic_output(

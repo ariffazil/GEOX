@@ -204,8 +204,7 @@ class NPDClient:
             return res
         rows = res.get("_npd_data", [])
         matched = [
-            row for row in rows
-            if field_name.lower() in str(row.get("prfInformationCarrier") or row.get("Field") or "").lower()
+            row for row in rows if field_name.lower() in str(row.get("prfInformationCarrier") or row.get("Field") or "").lower()
         ]
         return {
             "field_name": field_name,

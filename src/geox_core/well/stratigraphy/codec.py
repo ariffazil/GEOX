@@ -18,6 +18,8 @@ import logging
 import os
 from typing import Any, Optional
 
+import pandas as pd
+
 import openpyxl
 
 logger = logging.getLogger("geox.stratigraphy.codec")
@@ -26,6 +28,7 @@ MANIFEST_KEY = "GEOX_KL2_MANIFEST_B64"
 
 try:
     from PIL import Image as _PIL_Image, PngImagePlugin as _PngMeta
+
     _PILLOW_OK = True
 except ImportError:
     _PILLOW_OK = False
@@ -85,8 +88,7 @@ def png_to_xlsx(png_path: str, xlsx_out: str) -> dict:
     """
     manifest = extract_manifest_from_png(png_path)
     if manifest is None:
-        return {"mode": "LOSSY_VISUAL_ONLY",
-                "reason": "No embedded manifest — visual only"}
+        return {"mode": "LOSSY_VISUAL_ONLY", "reason": "No embedded manifest — visual only"}
 
     payload = manifest.get("payload", {})
     wb = openpyxl.Workbook()
@@ -114,6 +116,7 @@ def validate_roundtrip(xlsx_path: str, sheet: str = "01_GEO_PACKAGES") -> dict:
     """Test XLSX → PNG → XLSX fidelity."""
     import tempfile
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
@@ -128,7 +131,8 @@ def validate_roundtrip(xlsx_path: str, sheet: str = "01_GEO_PACKAGES") -> dict:
         plt.close(fig)
 
         manifest = {
-            "type": "xlsx_image_manifest", "version": "1.0",
+            "type": "xlsx_image_manifest",
+            "version": "1.0",
             "source_sha256": _sha256(xlsx_path),
             "workbook": os.path.basename(xlsx_path),
             "sheets": [sheet],
@@ -144,8 +148,8 @@ def validate_roundtrip(xlsx_path: str, sheet: str = "01_GEO_PACKAGES") -> dict:
 
         if res["mode"] == "LOSSLESS":
             import pandas as pd
+
             df2 = pd.read_excel(xlsx_tmp, sheet_name=sheet)
             equal = df1.shape == df2.shape
-            return {"ok": equal, "mode": "LOSSLESS",
-                    "rows": df1.shape[0], "cols": df1.shape[1]}
+            return {"ok": equal, "mode": "LOSSLESS", "rows": df1.shape[0], "cols": df1.shape[1]}
         return {"ok": False, "mode": res["mode"]}

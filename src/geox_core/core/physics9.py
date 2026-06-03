@@ -6,6 +6,7 @@ This module re-exports the same symbols for code that has not yet updated import
 
 DO NOT ADD NEW CODE HERE. Use geox_core.physics instead.
 """
+
 from geox_core.physics.state import (
     Physics9State,
     EARTH_MATERIAL_CATALOG,

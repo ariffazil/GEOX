@@ -13,7 +13,6 @@ from __future__ import annotations
 import csv
 import logging
 from collections import Counter
-from typing import Any
 
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -36,8 +35,14 @@ _DEPO_EOD = default_depo_eod()
 
 # Well colors
 _WELL_COLORS = {
-    0: "#C5D9F1", 1: "#E2EFDA", 2: "#FCE4D6", 3: "#FFF2CC",
-    4: "#FFE0E0", 5: "#EAD1DC", 6: "#D9D2E9", 7: "#CFE2F3",
+    0: "#C5D9F1",
+    1: "#E2EFDA",
+    2: "#FCE4D6",
+    3: "#FFF2CC",
+    4: "#FFE0E0",
+    5: "#EAD1DC",
+    6: "#D9D2E9",
+    7: "#CFE2F3",
 }
 
 
@@ -92,12 +97,34 @@ def export_excel(
     ws1 = wb.active
     ws1.title = "01_GEO_PACKAGES"
     h1 = [
-        "WELL", "PKG_ID", "PARENT_ZONE", "DEPO_ENV", "TOP_MD", "BASE_MD",
-        "THICKNESS_M", "HUMAN_MOTIF", "RIDER_MOTIF", "NET_TREND",
-        "VARIABILITY", "GR_BASELINE_SHIFT_GAPI", "GR_MEAN", "GR_P10",
-        "GR_P50", "GR_P90", "LITHO", "SEQ_STRAT", "INFERRED_PROCESS",
-        "ANOMALY_FLAG", "CONFIDENCE", "N_10M_BINS", "AGE_TOP_Ma",
-        "AGE_BASE_Ma", "NN_ZONE", "QC_FLAGS", "EXTRAP_MOTIF", "EXTRAP_CONF",
+        "WELL",
+        "PKG_ID",
+        "PARENT_ZONE",
+        "DEPO_ENV",
+        "TOP_MD",
+        "BASE_MD",
+        "THICKNESS_M",
+        "HUMAN_MOTIF",
+        "RIDER_MOTIF",
+        "NET_TREND",
+        "VARIABILITY",
+        "GR_BASELINE_SHIFT_GAPI",
+        "GR_MEAN",
+        "GR_P10",
+        "GR_P50",
+        "GR_P90",
+        "LITHO",
+        "SEQ_STRAT",
+        "INFERRED_PROCESS",
+        "ANOMALY_FLAG",
+        "CONFIDENCE",
+        "N_10M_BINS",
+        "AGE_TOP_Ma",
+        "AGE_BASE_Ma",
+        "NN_ZONE",
+        "QC_FLAGS",
+        "EXTRAP_MOTIF",
+        "EXTRAP_CONF",
     ]
     _header_row(ws1, h1, color="0D47A1")
 
@@ -109,17 +136,34 @@ def export_excel(
         wc = _WELL_COLORS.get(well_idx[w] % len(_WELL_COLORS), "FFFFFF")
         tf = _tract_fill(p.get("SEQ_STRAT", "UNKNOWN"))
         vals = [
-            p["WELL"], p.get("PKG_ID", ""), p.get("PARENT_ZONE", ""),
-            p.get("DEPO_ENV", ""), p["TOP"], p["BASE"], p["THICKNESS"],
-            p["HUMAN_MOTIF"], p["RIDER_MOTIF"], p["NET_TREND"],
-            p["VARIABILITY"], p["GR_BASELINE_SHIFT"],
-            p["GR_MEAN"], p["GR_P10"], p["GR_P50"], p["GR_P90"],
-            p.get("LITHO", ""), p.get("SEQ_STRAT", ""),
-            p.get("INFERRED_PROCESS", ""), p.get("ANOMALY_FLAG", "PASS"),
-            p.get("CONFIDENCE", "Medium"), p["N_BINS"],
-            p.get("AGE_TOP_Ma"), p.get("AGE_BASE_Ma"),
-            p.get("NN_ZONE", ""), p.get("QC", "PASS"),
-            p.get("EXTRAP_MOTIF", ""), p.get("EXTRAP_CONF", ""),
+            p["WELL"],
+            p.get("PKG_ID", ""),
+            p.get("PARENT_ZONE", ""),
+            p.get("DEPO_ENV", ""),
+            p["TOP"],
+            p["BASE"],
+            p["THICKNESS"],
+            p["HUMAN_MOTIF"],
+            p["RIDER_MOTIF"],
+            p["NET_TREND"],
+            p["VARIABILITY"],
+            p["GR_BASELINE_SHIFT"],
+            p["GR_MEAN"],
+            p["GR_P10"],
+            p["GR_P50"],
+            p["GR_P90"],
+            p.get("LITHO", ""),
+            p.get("SEQ_STRAT", ""),
+            p.get("INFERRED_PROCESS", ""),
+            p.get("ANOMALY_FLAG", "PASS"),
+            p.get("CONFIDENCE", "Medium"),
+            p["N_BINS"],
+            p.get("AGE_TOP_Ma"),
+            p.get("AGE_BASE_Ma"),
+            p.get("NN_ZONE", ""),
+            p.get("QC", "PASS"),
+            p.get("EXTRAP_MOTIF", ""),
+            p.get("EXTRAP_CONF", ""),
         ]
         for ci, v in enumerate(vals, 1):
             fill = wc if ci == 1 else (tf if ci in (18, 19) else "FFFFFF")
@@ -128,8 +172,7 @@ def export_excel(
             _cell(ws1, ri, ci, v, fill_color=fill)
         ws1.row_dimensions[ri].height = 18
 
-    widths = [14, 12, 18, 14, 8, 8, 10, 18, 14, 18, 11, 14,
-              8, 8, 8, 8, 12, 8, 50, 20, 10, 8, 10, 10, 14, 10, 18, 10]
+    widths = [14, 12, 18, 14, 8, 8, 10, 18, 14, 18, 11, 14, 8, 8, 8, 8, 12, 8, 50, 20, 10, 8, 10, 10, 14, 10, 18, 10]
     for ci, w in enumerate(widths, 1):
         ws1.column_dimensions[get_column_letter(ci)].width = w
     ws1.freeze_panes = "A2"
@@ -138,9 +181,16 @@ def export_excel(
     # ── 03_WELL_SUMMARY ──────────────────────────────────────────────
     ws3 = wb.create_sheet("03_WELL_SUMMARY")
     h3 = [
-        "WELL", "N_INTERVALS", "N_PACKAGES", "DOMINANT_MOTIF",
-        "DOMINANT_TRACT", "DEPTH_RANGE_m", "AGE_RANGE_Ma", "DEPO_RANGE",
-        "KEY_ANOMALIES", "GEOLOGICAL_INTERPRETATION",
+        "WELL",
+        "N_INTERVALS",
+        "N_PACKAGES",
+        "DOMINANT_MOTIF",
+        "DOMINANT_TRACT",
+        "DEPTH_RANGE_m",
+        "AGE_RANGE_Ma",
+        "DEPO_RANGE",
+        "KEY_ANOMALIES",
+        "GEOLOGICAL_INTERPRETATION",
     ]
     _header_row(ws3, h3, color="004D40")
 
@@ -149,8 +199,14 @@ def export_excel(
         w = p["WELL"]
         if w not in well_summaries:
             well_summaries[w] = {
-                "motifs": [], "tracts": [], "tops": [], "bases": [],
-                "ages_top": [], "ages_base": [], "depos": set(), "flags": [],
+                "motifs": [],
+                "tracts": [],
+                "tops": [],
+                "bases": [],
+                "ages_top": [],
+                "ages_base": [],
+                "depos": set(),
+                "flags": [],
             }
         s = well_summaries[w]
         s["motifs"].append(p["HUMAN_MOTIF"])
@@ -165,9 +221,7 @@ def export_excel(
         if p.get("ANOMALY_FLAG", "PASS") != "PASS":
             s["flags"].append(p["ANOMALY_FLAG"])
 
-    well_order = config.well_order or list(
-        dict.fromkeys(p["WELL"] for p in all_packages)
-    )
+    well_order = config.well_order or list(dict.fromkeys(p["WELL"] for p in all_packages))
     for ri, well_id in enumerate(well_order, 2):
         s = well_summaries.get(well_id, {})
         ivs = config.intervals.get(well_id, [])
@@ -175,15 +229,11 @@ def export_excel(
         dom_motif = Counter(s.get("motifs", [])).most_common(1)[0][0] if s.get("motifs") else "?"
         dom_tract = Counter(s.get("tracts", [])).most_common(1)[0][0] if s.get("tracts") else "?"
         d_rng = f"{min(s['tops']):.0f}-{max(s['bases']):.0f}m" if s.get("tops") and s.get("bases") else "?"
-        a_rng = (
-            f"{min(s['ages_top']):.1f}-{max(s['ages_base']):.1f} Ma"
-            if s.get("ages_top") and s.get("ages_base") else "?"
-        )
+        a_rng = f"{min(s['ages_top']):.1f}-{max(s['ages_base']):.1f} Ma" if s.get("ages_top") and s.get("ages_base") else "?"
         d_envs = " -> ".join(sorted(s.get("depos", set())))
         flags = "; ".join(set(s.get("flags", []))) or "PASS"
 
-        vals = [well_id, len(ivs), len(s.get("motifs", [])),
-                dom_motif, dom_tract, d_rng, a_rng, d_envs, flags, ""]
+        vals = [well_id, len(ivs), len(s.get("motifs", [])), dom_motif, dom_tract, d_rng, a_rng, d_envs, flags, ""]
         for ci, v in enumerate(vals, 1):
             _cell(ws3, ri, ci, v, fill_color=wc, bold=(ci == 1))
         ws3.row_dimensions[ri].height = 30
@@ -194,8 +244,7 @@ def export_excel(
 
     # ── 05_COLOR_LEGEND ──────────────────────────────────────────────
     ws5 = wb.create_sheet("05_COLOR_LEGEND")
-    _header_row(ws5, ["CATEGORY", "LABEL", "HEX_CODE", "DESCRIPTION", "RGB"],
-                color="1A237E")
+    _header_row(ws5, ["CATEGORY", "LABEL", "HEX_CODE", "DESCRIPTION", "RGB"], color="1A237E")
 
     legend_rows = []
     for m, c in MOTIF_COLORS.items():
@@ -207,9 +256,8 @@ def export_excel(
         r, g, b = int(hc[0:2], 16), int(hc[2:4], 16), int(hc[4:6], 16)
         legend_rows.append(("SEQ_STRAT", t, c, f"Systems tract: {t}", f"R{r} G{g} B{b}"))
     for code, (lbl, col) in _DEPO_EOD.items():
-        hc = f"{int(col[0]*255):02X}{int(col[1]*255):02X}{int(col[2]*255):02X}"
-        legend_rows.append(("DEPO_ENV", code, f"#{hc}", lbl,
-                            f"R{int(col[0]*255)} G{int(col[1]*255)} B{int(col[2]*255)}"))
+        hc = f"{int(col[0] * 255):02X}{int(col[1] * 255):02X}{int(col[2] * 255):02X}"
+        legend_rows.append(("DEPO_ENV", code, f"#{hc}", lbl, f"R{int(col[0] * 255)} G{int(col[1] * 255)} B{int(col[2] * 255)}"))
 
     for ri, (cat, lbl, hx, desc, rgb) in enumerate(legend_rows, 2):
         hx_fill = hx.lstrip("#") if hx.startswith("#") and len(hx) == 7 else None
@@ -239,8 +287,7 @@ def export_sensing(sensing_rows: list[dict], output_path: str) -> str:
             f.write("WELL,ZONE,TOP,BASE,N,P10,P50,P90,MEAN,RANGE,SLOPE,MICRO_MOTIF\n")
         return output_path
 
-    fieldnames = ["WELL", "ZONE", "TOP", "BASE", "N", "P10", "P50", "P90",
-                  "MEAN", "RANGE", "SLOPE", "MICRO_MOTIF"]
+    fieldnames = ["WELL", "ZONE", "TOP", "BASE", "N", "P10", "P50", "P90", "MEAN", "RANGE", "SLOPE", "MICRO_MOTIF"]
     with open(output_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
@@ -254,7 +301,11 @@ def export_sensing(sensing_rows: list[dict], output_path: str) -> str:
 def _tract_fill(tract: str) -> str:
     """Return fill color for a systems tract."""
     return {
-        "LST": "FFF3E0", "TST": "E3F2FD", "HST": "E8F5E9",
-        "FSST": "FBE9E7", "CS": "F3E5F5",
-        "UNCERTAIN": "ECEFF1", "UNKNOWN": "FAFAFA",
+        "LST": "FFF3E0",
+        "TST": "E3F2FD",
+        "HST": "E8F5E9",
+        "FSST": "FBE9E7",
+        "CS": "F3E5F5",
+        "UNCERTAIN": "ECEFF1",
+        "UNKNOWN": "FAFAFA",
     }.get(tract, "FAFAFA")

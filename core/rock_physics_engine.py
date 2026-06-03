@@ -14,7 +14,6 @@ Naming: fsh-linux convention. No mythical names. Scientific geology only.
 
 from __future__ import annotations
 
-import json
 import math
 import time
 from dataclasses import dataclass, field, asdict
@@ -31,35 +30,38 @@ except ImportError:
 # CONSTANTS — measured rock physics values (no magic numbers)
 # ──────────────────────────────────────────────────────────────────────────────
 
+
 class Mineral(Enum):
     """Frame mineral end-members with lab-measured elastic properties."""
-    QUARTZ   = ("quartz",   36.6, 45.0, 2.650)   # K, G, rho — Mavko et al.
-    CALCITE  = ("calcite",  76.8, 32.0, 2.710)
+
+    QUARTZ = ("quartz", 36.6, 45.0, 2.650)  # K, G, rho — Mavko et al.
+    CALCITE = ("calcite", 76.8, 32.0, 2.710)
     DOLOMITE = ("dolomite", 94.9, 45.0, 2.870)
-    CLAY     = ("clay",     20.9,  6.85, 2.550)  # Illite-smectite average
+    CLAY = ("clay", 20.9, 6.85, 2.550)  # Illite-smectite average
     FELDSPAR = ("feldspar", 37.5, 15.0, 2.630)
-    SALT     = ("salt",     24.8, 14.9, 2.160)   # Halite — caprock
-    ANHYDRITE= ("anhydrite",56.0, 29.0, 2.980)   # Evaporite seal
-    COAL     = ("coal",      3.7,  2.4, 1.350)   # Organic — low impedance marker
-    BASEMENT = ("basement",  75.0, 33.0, 2.650)  # Granite — acoustic floor
+    SALT = ("salt", 24.8, 14.9, 2.160)  # Halite — caprock
+    ANHYDRITE = ("anhydrite", 56.0, 29.0, 2.980)  # Evaporite seal
+    COAL = ("coal", 3.7, 2.4, 1.350)  # Organic — low impedance marker
+    BASEMENT = ("basement", 75.0, 33.0, 2.650)  # Granite — acoustic floor
 
     def __init__(self, label: str, bulk_mod: float, shear_mod: float, rho: float):
         self.label = label
-        self.bulk_mod = bulk_mod   # GPa
+        self.bulk_mod = bulk_mod  # GPa
         self.shear_mod = shear_mod  # GPa
-        self.rho = rho              # g/cm³
+        self.rho = rho  # g/cm³
 
 
 class Fluid(Enum):
     """Pore fluid end-members at standard conditions."""
-    BRINE = ("brine", 2.38, 1.090, 0.0)   # K, rho — Mavko 80kppm NaCl
-    OIL   = ("oil",   0.72, 0.780, 0.0)   # K, rho — API 35 light crude
-    GAS   = ("gas",   0.02, 0.150, 0.0)   # K, rho — dry gas at reservoir P/T
+
+    BRINE = ("brine", 2.38, 1.090, 0.0)  # K, rho — Mavko 80kppm NaCl
+    OIL = ("oil", 0.72, 0.780, 0.0)  # K, rho — API 35 light crude
+    GAS = ("gas", 0.02, 0.150, 0.0)  # K, rho — dry gas at reservoir P/T
 
     def __init__(self, label: str, bulk_mod: float, rho: float, _visc: float):
         self.label = label
-        self.bulk_mod = bulk_mod   # GPa
-        self.rho = rho              # g/cm³
+        self.bulk_mod = bulk_mod  # GPa
+        self.rho = rho  # g/cm³
 
 
 GASSMANN_CONST = {
@@ -83,22 +85,22 @@ GASSMANN_CONST = {
 
 # PhysicsGuard hard bounds — measured physical limits (Mavko et al.)
 GUARD = {
-    "vp_min": 1500.0,    # m/s — brine velocity
-    "vp_max": 7000.0,    # m/s — dolomite upper
-    "vs_min": 0.0,       # m/s — suspension
-    "vs_max": 4500.0,    # m/s — dolomite upper
-    "rho_min": 1.00,     # g/cm³ — gas near-surface
-    "rho_max": 3.50,     # g/cm³ — pyrite upper bound
-    "por_min": 0.01,     # 1% — practical minimum porosity
-    "por_max": 0.45,     # 45% — unconsolidated sand limit
+    "vp_min": 1500.0,  # m/s — brine velocity
+    "vp_max": 7000.0,  # m/s — dolomite upper
+    "vs_min": 0.0,  # m/s — suspension
+    "vs_max": 4500.0,  # m/s — dolomite upper
+    "rho_min": 1.00,  # g/cm³ — gas near-surface
+    "rho_max": 3.50,  # g/cm³ — pyrite upper bound
+    "por_min": 0.01,  # 1% — practical minimum porosity
+    "por_max": 0.45,  # 45% — unconsolidated sand limit
     "sw_min": 0.0,
     "sw_max": 1.0,
-    "temp_min_c": 0.0,   # °C — surface
+    "temp_min_c": 0.0,  # °C — surface
     "temp_max_c": 400.0,  # °C — deep basin
     "pres_min_mpa": 0.0,  # MPa — surface
-    "pres_max_mpa": 200.0, # MPa — ultra-deep
-    "perm_min_md": 0.001, # mD — tight carbonate
-    "perm_max_md": 10000, # mD — high-perm sand
+    "pres_max_mpa": 200.0,  # MPa — ultra-deep
+    "perm_min_md": 0.001,  # mD — tight carbonate
+    "perm_max_md": 10000,  # mD — high-perm sand
 }
 
 
@@ -106,13 +108,15 @@ GUARD = {
 # DATA STRUCTURES
 # ──────────────────────────────────────────────────────────────────────────────
 
+
 @dataclass
 class Physics9State:
     """Canonical state object for all three compute modes."""
+
     porosity: float
     sw: float
     vsh: float
-    fluid_type: str          # brine / oil / gas
+    fluid_type: str  # brine / oil / gas
     pressure_mpa: float = 25.0
     temp_c: float = 80.0
     # Forward outputs
@@ -132,7 +136,7 @@ class Physics9State:
     # Metabolic log
     metabolic_log: list = field(default_factory=list)
     # Grade
-    grade: str = "RAW"       # AAA | AA | A | RAW | PHYSICS_VIOLATION
+    grade: str = "RAW"  # AAA | AA | A | RAW | PHYSICS_VIOLATION
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -146,20 +150,21 @@ class Physics9State:
 @dataclass
 class VaultReceipt:
     """VAULT999 receipt — every compute emits this."""
+
     receipt_id: str
     vault_route: str = "999_VAULT"
     app_id: str = "geox.subsurface.well-desk"
     timestamp: str = ""
     physics9_state: dict = field(default_factory=dict)
-    floor_checks: dict = field(default_factory=lambda: {
-        "F1": False, "F2": False, "F4": False,
-        "F7": False, "F9": False, "F11": False, "F13": False
-    })
+    floor_checks: dict = field(
+        default_factory=lambda: {"F1": False, "F2": False, "F4": False, "F7": False, "F9": False, "F11": False, "F13": False}
+    )
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PHYSICSGUARD
 # ──────────────────────────────────────────────────────────────────────────────
+
 
 class PhysicsGuard:
     """Pre-output validation guard. No RAW grade reaches UI."""
@@ -189,8 +194,9 @@ class PhysicsGuard:
         return "AAA"
 
     @staticmethod
-    def check_reversibility(fwd_state: Physics9State, inv_state: Physics9State,
-                            tol_por: float = 0.02, tol_sw: float = 0.05) -> bool:
+    def check_reversibility(
+        fwd_state: Physics9State, inv_state: Physics9State, tol_por: float = 0.02, tol_sw: float = 0.05
+    ) -> bool:
         """F1: Forward-inverse round-trip within tolerance."""
         if inv_state.est_porosity is None or inv_state.est_sw is None:
             return False
@@ -203,6 +209,7 @@ class PhysicsGuard:
 # VOIGT-REUSS-HILL AVERAGING
 # ──────────────────────────────────────────────────────────────────────────────
 
+
 def vrh_bound(f1: float, k1: float, k2: float) -> tuple[float, float]:
     """Voigt (upper) and Reuss (lower) bounds for bulk modulus."""
     f2 = 1.0 - f1
@@ -213,10 +220,12 @@ def vrh_bound(f1: float, k1: float, k2: float) -> tuple[float, float]:
         k_reuss = 1.0 / (f1 / k1 + f2 / k2) if (f1 / k1 + f2 / k2) > 0 else 0.0
     return k_voigt, k_reuss
 
+
 def vrh_average(f1: float, k1: float, k2: float) -> float:
     """Hill average = arithmetic mean of Voigt and Reuss bounds."""
     k_v, k_r = vrh_bound(f1, k1, k2)
     return 0.5 * (k_v + k_r)
+
 
 def hashin_shtrikman(f1: float, k1: float, k2: float, g1: float, g2: float) -> tuple[float, float]:
     """Hashin-Shtrikman bounds — tighter than Voigt-Reuss."""
@@ -238,6 +247,7 @@ def hashin_shtrikman(f1: float, k1: float, k2: float, g1: float, g2: float) -> t
 # ──────────────────────────────────────────────────────────────────────────────
 # ROCK PHYSICS TEMPLATES — Material catalog
 # ──────────────────────────────────────────────────────────────────────────────
+
 
 def mineral_mix(vsh: float, lithology: str = "sand_shale") -> dict:
     """
@@ -303,8 +313,8 @@ def fluid_mix(sw: float, fluid_type: str = "brine") -> dict:
 # GASSMANN FLUID SUBSTITUTION
 # ──────────────────────────────────────────────────────────────────────────────
 
-def gassmann_substitution(k_dry: float, g_dry: float, k_min: float,
-                          k_fl: float, phi: float) -> dict:
+
+def gassmann_substitution(k_dry: float, g_dry: float, k_min: float, k_fl: float, phi: float) -> dict:
     """
     Gassmann (1951) fluid substitution.
     Input:  dry frame moduli, mineral modulus, fluid modulus, porosity
@@ -342,14 +352,15 @@ def velocities_from_moduli(k_sat: float, g_sat: float, rho_sat: float) -> dict:
     return {
         "vp": vp,
         "vs": vs,
-        "ai": rho_sat * vp,     # g/cm³ * m/s — standard log unit
-        "vp_vs_ratio": vp / vs if vs > 0 else 0.0
+        "ai": rho_sat * vp,  # g/cm³ * m/s — standard log unit
+        "vp_vs_ratio": vp / vs if vs > 0 else 0.0,
     }
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 # MAIN ENGINE CLASS
 # ──────────────────────────────────────────────────────────────────────────────
+
 
 class RockPhysicsEngine:
     """
@@ -362,12 +373,9 @@ class RockPhysicsEngine:
     def __init__(self):
         self.guard = PhysicsGuard()
         self._scaffold = {
-            "bek_2": {"por": 0.22, "sw": 0.35, "vsh": 0.12,
-                      "fluid": "brine", "top_m": 2040, "base_m": 2220},
-            "dul_a1": {"por": 0.18, "sw": 0.42, "vsh": 0.25,
-                       "fluid": "oil", "top_m": 3100, "base_m": 3280},
-            "tng_3": {"por": 0.15, "sw": 0.55, "vsh": 0.35,
-                      "fluid": "brine", "top_m": 2850, "base_m": 2950},
+            "bek_2": {"por": 0.22, "sw": 0.35, "vsh": 0.12, "fluid": "brine", "top_m": 2040, "base_m": 2220},
+            "dul_a1": {"por": 0.18, "sw": 0.42, "vsh": 0.25, "fluid": "oil", "top_m": 3100, "base_m": 3280},
+            "tng_3": {"por": 0.15, "sw": 0.55, "vsh": 0.35, "fluid": "brine", "top_m": 2850, "base_m": 2950},
         }
 
     # ── FORWARD MODE ──────────────────────────────────────────────────────────
@@ -454,8 +462,7 @@ class RockPhysicsEngine:
 
     # ── INVERSE MODE ──────────────────────────────────────────────────────────
 
-    def inverse(self, vp_obs: float, vs_obs: float, rho_obs: float,
-                prior: Optional[Physics9State] = None) -> Physics9State:
+    def inverse(self, vp_obs: float, vs_obs: float, rho_obs: float, prior: Optional[Physics9State] = None) -> Physics9State:
         """
         Inverse rock physics: observed Vp, Vs, rho → estimated por/Sw/fluid.
         Uses L-BFGS-B optimization to minimize misfit against forward model.
@@ -465,8 +472,7 @@ class RockPhysicsEngine:
 
         # Prior state for regularization
         if prior is None:
-            prior = Physics9State(porosity=0.20, sw=0.50, vsh=0.20,
-                                  fluid_type="brine", pressure_mpa=25.0, temp_c=80.0)
+            prior = Physics9State(porosity=0.20, sw=0.50, vsh=0.20, fluid_type="brine", pressure_mpa=25.0, temp_c=80.0)
         if prior.fluid_type == "gas":
             inv_state = Physics9State(
                 porosity=prior.porosity,
@@ -496,10 +502,7 @@ class RockPhysicsEngine:
             fluid_type = fluids[max(0, min(2, fluid_idx))]
 
             test_state = Physics9State(
-                porosity=por, sw=sw, vsh=vsh,
-                fluid_type=fluid_type,
-                pressure_mpa=prior.pressure_mpa,
-                temp_c=prior.temp_c
+                porosity=por, sw=sw, vsh=vsh, fluid_type=fluid_type, pressure_mpa=prior.pressure_mpa, temp_c=prior.temp_c
             )
             try:
                 fwd = self.forward(test_state)
@@ -525,8 +528,7 @@ class RockPhysicsEngine:
         fluid_prior = {"brine": 0.0, "oil": 1.0, "gas": 2.0}.get(prior.fluid_type, 0.0)
         x0 = [prior.porosity, prior.sw, prior.vsh, fluid_prior]
 
-        result = minimize(_misfit, x0, method="L-BFGS-B", bounds=bounds,
-                          options={"maxiter": 200, "ftol": 1e-8})
+        result = minimize(_misfit, x0, method="L-BFGS-B", bounds=bounds, options={"maxiter": 200, "ftol": 1e-8})
 
         est_por = max(0.0, min(0.50, result.x[0]))
         est_sw = max(0.0, min(1.0, result.x[1]))
@@ -536,9 +538,7 @@ class RockPhysicsEngine:
 
         # Uncertainty from Hessian diagonal approximation
         inv_state = Physics9State(
-            porosity=est_por, sw=est_sw, vsh=est_vsh,
-            fluid_type=est_fluid,
-            pressure_mpa=prior.pressure_mpa, temp_c=prior.temp_c
+            porosity=est_por, sw=est_sw, vsh=est_vsh, fluid_type=est_fluid, pressure_mpa=prior.pressure_mpa, temp_c=prior.temp_c
         )
         inv_state.est_porosity = round(est_por, 3)
         inv_state.est_sw = round(est_sw, 3)
@@ -547,7 +547,7 @@ class RockPhysicsEngine:
         inv_state.uncertainty_band = {
             "porosity_pm": round(abs(result.x[0] - prior.porosity) * 0.5 + 0.02, 3),
             "sw_pm": round(abs(result.x[1] - prior.sw) * 0.3 + 0.05, 3),
-            "fluid_confidence": "high" if result.fun < 0.01 else "medium" if result.fun < 0.05 else "low"
+            "fluid_confidence": "high" if result.fun < 0.01 else "medium" if result.fun < 0.05 else "low",
         }
         inv_state.grade = self.guard.validate_inverse(est_por, est_sw, est_fluid)
 
@@ -555,9 +555,9 @@ class RockPhysicsEngine:
 
     # ── METABOLIC MODE ────────────────────────────────────────────────────────
 
-    def metabolic(self, observed_vp: float, observed_ai: float,
-                  initial: Physics9State,
-                  max_iter: int = 50, tolerance: float = 1e-4) -> Physics9State:
+    def metabolic(
+        self, observed_vp: float, observed_ai: float, initial: Physics9State, max_iter: int = 50, tolerance: float = 1e-4
+    ) -> Physics9State:
         """
         Metabolic convergence: iteratively adjust state until forward model
         matches observed data within tolerance, or grade reaches AAA.
@@ -581,14 +581,16 @@ class RockPhysicsEngine:
 
             grade = "AAA" if delta_state < tolerance else "AA" if delta_state < 10 * tolerance else "RAW"
 
-            metabolic_log.append({
-                "iteration": iteration,
-                "delta_state": round(delta_state, 6),
-                "grade": grade,
-                "current_vp": state.vp,
-                "current_por": state.porosity,
-                "current_sw": state.sw
-            })
+            metabolic_log.append(
+                {
+                    "iteration": iteration,
+                    "delta_state": round(delta_state, 6),
+                    "grade": grade,
+                    "current_vp": state.vp,
+                    "current_por": state.porosity,
+                    "current_sw": state.sw,
+                }
+            )
 
             if grade == "AAA" or delta_state < tolerance:
                 state.grade = "AAA"
@@ -617,10 +619,7 @@ class RockPhysicsEngine:
         if key not in self._scaffold:
             key = "bek_2"  # Default scaffold
         s = self._scaffold[key]
-        return Physics9State(
-            porosity=s["por"], sw=s["sw"], vsh=s["vsh"],
-            fluid_type=s["fluid"], pressure_mpa=25.0, temp_c=80.0
-        )
+        return Physics9State(porosity=s["por"], sw=s["sw"], vsh=s["vsh"], fluid_type=s["fluid"], pressure_mpa=25.0, temp_c=80.0)
 
     # ── VAULT RECEIPT BUILDER ─────────────────────────────────────────────────
 
@@ -630,7 +629,7 @@ class RockPhysicsEngine:
         receipt = VaultReceipt(
             receipt_id=f"well-desk-{int(time.time() * 1000)}",
             timestamp=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-            physics9_state=state.to_dict()
+            physics9_state=state.to_dict(),
         )
         # Floor checks
         receipt.floor_checks["F9"] = state.grade != "PHYSICS_VIOLATION"

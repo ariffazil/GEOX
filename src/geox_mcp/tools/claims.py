@@ -123,7 +123,6 @@ def _build_claim_envelope(
 
 def _get_arifOS_health() -> bool:
     """Check if arifOS is available for sealing."""
-    import urllib.request
 
     try:
         with urllib.request.urlopen("http://localhost:8088/health", timeout=3) as r:
@@ -564,7 +563,6 @@ async def geox_claim_seal(
     }
 
     # Attempt to route through arifOS vault bridge
-    import urllib.request
 
     try:
         data = json.dumps(seal_request).encode("utf-8")

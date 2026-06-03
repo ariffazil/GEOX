@@ -4,11 +4,11 @@ import hashlib
 import json
 import logging
 import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, List, Dict, Optional, Literal
+from typing import Optional, Literal
 
-from fastmcp import FastMCP
 from geox_core.enums.statuses import (
     get_standard_envelope,
     GovernanceStatus,
@@ -17,38 +17,29 @@ from geox_core.enums.statuses import (
     enrich_envelope_with_metabolic,
 )
 from geox_mcp.tools._helpers import (
-    _get_artifact,
-    _artifact_exists,
     _register_artifact,
-    _record_latest_qc,
-    _latest_qc_failed_refs,
-    _check_maruah_territory,
-    _inject_ensemble_residual_evidence,
     _safe_upload_path,
     _decode_upload_content,
     _parse_csv_or_json,
     _map_canonical_curves,
     _detect_depth_unit,
-    _compute_vsh_from_store,
-    _compute_porosity_from_store,
-    _compute_saturation_from_store,
-    _compute_netpay_from_store,
-    _classify_gr_motif,
-    _classify_lithology_from_store,
-    _safe_reduction,
-    _get_well_data_with_depth,
     CLAIM_STATES,
-    CANONICAL_ALIASES,
-    _CURVE_RANGES,
-    _artifact_registry,
     _artifact_store,
-    _well_curves_registry,
-    _ARTIFACT_REGISTRY_PATH,
-    MAX_UPLOAD_BYTES,
 )
-from geox_core.compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 
 logger = logging.getLogger("geox.canonical.ingest")
+
+
+def _safe_filename(well_id: str) -> str:
+    """Sanitize a well identifier into a portable filename stem.
+
+    Replaces path separators and whitespace; falls back to 'well' for empty input.
+    Keeps case (well IDs are case-sensitive in OpenWorks/DBS).
+    """
+    if not well_id:
+        return "well"
+    sanitized = re.sub(r"[\\/:\s]+", "_", well_id).strip("._")
+    return sanitized or "well"
 
 
 def _metabolic_return(
@@ -110,11 +101,17 @@ async def geox_data_ingest_bundle(
         if not refs:
             return _metabolic_return(
                 get_standard_envelope(
-                    {"tool": "geox_data_ingest_bundle", "error_code": "NO_VALID_EVIDENCE",
-                     "message": "batch_mode=True requires artifact_refs list."},
-                    tool_class="ingress", execution_status=ExecutionStatus.ERROR,
-                    governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
-                    claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+                    {
+                        "tool": "geox_data_ingest_bundle",
+                        "error_code": "NO_VALID_EVIDENCE",
+                        "message": "batch_mode=True requires artifact_refs list.",
+                    },
+                    tool_class="ingress",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="HYPOTHESIS",
+                    claim_state="NO_VALID_EVIDENCE",
                 )
             )
         results: list[dict] = []
@@ -123,8 +120,10 @@ async def geox_data_ingest_bundle(
         for ref in refs:
             try:
                 single = await geox_data_ingest_bundle(
-                    source_uri=ref, source_type="auto",
-                    standardize_curves=standardize_curves, normalize_units=normalize_units,
+                    source_uri=ref,
+                    source_type="auto",
+                    standardize_curves=standardize_curves,
+                    normalize_units=normalize_units,
                 )
                 payload = single.get("payload", single)
                 status = payload.get("execution_status", "UNKNOWN")
@@ -132,12 +131,15 @@ async def geox_data_ingest_bundle(
                     success_count += 1
                 else:
                     error_count += 1
-                results.append({
-                    "ref": ref, "status": status,
-                    "artifact_ref": payload.get("artifact_ref"),
-                    "well_id": payload.get("well_id"),
-                    "claim_state": payload.get("claim_state", "UNKNOWN"),
-                })
+                results.append(
+                    {
+                        "ref": ref,
+                        "status": status,
+                        "artifact_ref": payload.get("artifact_ref"),
+                        "well_id": payload.get("well_id"),
+                        "claim_state": payload.get("claim_state", "UNKNOWN"),
+                    }
+                )
             except Exception as exc:
                 error_count += 1
                 results.append({"ref": ref, "status": "ERROR", "error": str(exc), "claim_state": "NO_VALID_EVIDENCE"})
@@ -146,8 +148,11 @@ async def geox_data_ingest_bundle(
         gov_status = GovernanceStatus.QUALIFY if all_ok else GovernanceStatus.HOLD
         art_status = ArtifactStatus.LOADED if all_ok else ArtifactStatus.PARTIAL
         out = {
-            "tool": "geox_data_ingest_bundle", "batch_mode": True,
-            "batch_size": len(refs), "success_count": success_count, "error_count": error_count,
+            "tool": "geox_data_ingest_bundle",
+            "batch_mode": True,
+            "batch_size": len(refs),
+            "success_count": success_count,
+            "error_count": error_count,
             "per_file_results": results,
             "claim_state": CLAIM_STATES["RAW_OBSERVATION"] if all_ok else CLAIM_STATES["HYPOTHESIS"],
         }
@@ -156,8 +161,11 @@ async def geox_data_ingest_bundle(
             out["human_final_authority"] = "Arif"
         return _metabolic_return(
             get_standard_envelope(
-                out, tool_class="ingress", execution_status=batch_status,
-                governance_status=gov_status, artifact_status=art_status,
+                out,
+                tool_class="ingress",
+                execution_status=batch_status,
+                governance_status=gov_status,
+                artifact_status=art_status,
                 claim_tag="CLAIM" if all_ok else "HYPOTHESIS",
             )
         )
@@ -346,8 +354,6 @@ async def geox_data_ingest_bundle(
                 claim_tag="HYPOTHESIS",
             )
         )
-
-    from pathlib import Path
 
     derived_id = well_id or Path(source_uri).stem
 
@@ -553,7 +559,7 @@ async def geox_data_ingest_bundle(
             try:
                 stable_dir = Path(os.environ.get("GEOX_WELL_DATA_DIR", "/data/wells"))
                 stable_dir.mkdir(parents=True, exist_ok=True)
-                stable_path = stable_dir / f"{_safe_artifact_filename(derived_well_id)}.las"
+                stable_path = stable_dir / f"{_safe_filename(derived_well_id)}.las"
                 if Path(local_path) != stable_path:
                     import shutil
 

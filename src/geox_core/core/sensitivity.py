@@ -145,6 +145,8 @@ class SensitivitySweep:
             cases=cases,
             critical_sensitivity=critical_sensitivity,
             recommended_verdict=recommended_verdict,
-            claim_tag=classify_claim_tag(1.0 - (cases[0].sensitivity_index if cases else 0.0), hold_enforced=critical_sensitivity),
+            claim_tag=classify_claim_tag(
+                1.0 - (cases[0].sensitivity_index if cases else 0.0), hold_enforced=critical_sensitivity
+            ),
             vault_receipt=make_vault_receipt("geox_run_sensitivity_sweep", payload, verdict=recommended_verdict),
         )

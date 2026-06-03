@@ -12,12 +12,13 @@ from typing import List, Dict, Any, Optional
 
 logger = logging.getLogger("geox.core.bias_detector")
 
+
 class BiasDetector:
     """
     Heuristic engine to detect cognitive bias exposure (B_cog).
     Prevents manual gaming of bias scenarios.
     """
-    
+
     # Canonical B_cog values from TOAC_AC_RISK_SPEC
     SCENARIOS = {
         "physics_validated": 0.20,
@@ -36,7 +37,7 @@ class BiasDetector:
         session_history: List[Dict[str, Any]],
         hypotheses_count: int = 1,
         deadline: Optional[datetime] = None,
-        complexity_score: float = 0.5
+        complexity_score: float = 0.5,
     ) -> Dict[str, Any]:
         """
         Detect the actual bias scenario and return the corrected B_cog.
@@ -48,8 +49,7 @@ class BiasDetector:
         # If they claim physics_validated, check if a verify tool was actually run
         if claimed_scenario == "physics_validated":
             physics_verified = any(
-                "verify" in str(event.get("tool_class", "")) or 
-                "physics_verify" in str(event.get("tool", ""))
+                "verify" in str(event.get("tool_class", "")) or "physics_verify" in str(event.get("tool", ""))
                 for event in session_history
             )
             if not physics_verified:
@@ -73,7 +73,7 @@ class BiasDetector:
 
         # 4. Final B_cog Determination
         actual_b_cog = cls.SCENARIOS.get(detected_scenario, cls.SCENARIOS["ai_vision_only"])
-        
+
         # Ceiling: if both collapse and pressure, floor is 0.70
         if "MODEL_COLLAPSE_DETECTED" in modifiers and "TIMELINE_PRESSURE_DETECTED" in modifiers:
             actual_b_cog = 0.70
@@ -83,9 +83,5 @@ class BiasDetector:
             "detected_scenario": detected_scenario,
             "b_cog": actual_b_cog,
             "modifiers": modifiers,
-            "audit": {
-                "claimed": claimed_scenario,
-                "hypotheses": hypotheses_count,
-                "timestamp": datetime.now().isoformat()
-            }
+            "audit": {"claimed": claimed_scenario, "hypotheses": hypotheses_count, "timestamp": datetime.now().isoformat()},
         }

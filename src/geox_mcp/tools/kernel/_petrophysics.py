@@ -228,12 +228,10 @@ def _compute_porosity_from_store(
                 "p90": _safe_reduction(lambda x: np.nanpercentile(x, 90), phit),
             },
         ),
-        "physics_guard": merge_guards(
-            *(g for g in [rhob_guard, nphi_guard, phi_guard] if g)
-        ),
-        "_phit_array": phit,   # internal
-        "_curves": curves,     # internal
-        "_depth": depth,       # internal
+        "physics_guard": merge_guards(*(g for g in [rhob_guard, nphi_guard, phi_guard] if g)),
+        "_phit_array": phit,  # internal
+        "_curves": curves,  # internal
+        "_depth": depth,  # internal
     }
 
 
@@ -294,6 +292,7 @@ def _compute_saturation_from_store(
         phi = phit_result["_phit_array"]
     else:
         from geox_core.core.geox_1d import compute_porosity_rhob
+
         phi = None
         for alias in CANONICAL_ALIASES.get("RHOB", ["RHOB"]):
             if alias in curves:
@@ -378,8 +377,10 @@ def _compute_netpay_from_store(
 ) -> dict:
     """Compute net pay from stored LAS data. All cutoffs explicit in output."""
     import sys
+
     sys.path.insert(0, "/root/geox")
     import numpy as np
+
     cutoff_guard = merge_guards(
         validate_scalar(vsh_cutoff, "VSH"),
         validate_scalar(phi_cutoff, "PHI"),
@@ -423,8 +424,7 @@ def _compute_netpay_from_store(
 
     # 3. Compute Sw
     sw_result = _compute_saturation_from_store(
-        artifact_ref, sw_model, rw, 1.0, 2.0, 2.0,
-        vsh_result=vsh_result, phit_result=phit_result
+        artifact_ref, sw_model, rw, 1.0, 2.0, 2.0, vsh_result=vsh_result, phit_result=phit_result
     )
     if "error" in sw_result:
         return {"error": f"SW_FAILED: {sw_result['error']}"}
@@ -463,21 +463,25 @@ def _compute_netpay_from_store(
             start_depth = float(depth[i])
         elif not pay_mask[i] and in_pay:
             in_pay = False
-            pay_intervals.append({
-                "top_m": start_depth,
-                "base_m": float(depth[i - 1]),
-                "thickness_m": round(float(depth[i - 1]) - start_depth + step, 2),
-                "phi_avg": round(float(np.mean(phi[pay_mask])), 3),
-                "sw_avg": round(float(np.mean(sw[pay_mask])), 3),
-            })
+            pay_intervals.append(
+                {
+                    "top_m": start_depth,
+                    "base_m": float(depth[i - 1]),
+                    "thickness_m": round(float(depth[i - 1]) - start_depth + step, 2),
+                    "phi_avg": round(float(np.mean(phi[pay_mask])), 3),
+                    "sw_avg": round(float(np.mean(sw[pay_mask])), 3),
+                }
+            )
     if in_pay:
-        pay_intervals.append({
-            "top_m": start_depth,
-            "base_m": float(depth[-1]),
-            "thickness_m": round(float(depth[-1]) - start_depth + step, 2),
-            "phi_avg": round(float(np.mean(phi[pay_mask])), 3) if np.any(pay_mask) else 0.0,
-            "sw_avg": round(float(np.mean(sw[pay_mask])), 3) if np.any(pay_mask) else 0.0,
-        })
+        pay_intervals.append(
+            {
+                "top_m": start_depth,
+                "base_m": float(depth[-1]),
+                "thickness_m": round(float(depth[-1]) - start_depth + step, 2),
+                "phi_avg": round(float(np.mean(phi[pay_mask])), 3) if np.any(pay_mask) else 0.0,
+                "sw_avg": round(float(np.mean(sw[pay_mask])), 3) if np.any(pay_mask) else 0.0,
+            }
+        )
 
     return {
         "gross_thickness_m": round(gross_thickness, 2),
@@ -652,9 +656,11 @@ def _classify_lithology_from_store(
 # SOVEREIGN 13 IMPLEMENTATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def _safe_reduction(func, arr, default=None):
     """Safely apply a numpy reduction, returning default if array is empty."""
     import numpy as np
+
     if arr is None or (isinstance(arr, np.ndarray) and arr.size == 0):
         return default
     try:
@@ -662,7 +668,8 @@ def _safe_reduction(func, arr, default=None):
         if np.isnan(res):
             return default
         return float(res)
-    except:
+    except (ValueError, TypeError, ArithmeticError):
+        # Defensive: numpy aggregation can raise on malformed arrays.
         return default
 
 
@@ -703,9 +710,9 @@ def _get_well_data_with_depth(
     # Filter by zone if requested
     mask = np.ones(len(depth), dtype=bool)
     if zone_top is not None:
-        mask &= (depth >= zone_top)
+        mask &= depth >= zone_top
     if zone_base is not None:
-        mask &= (depth <= zone_base)
+        mask &= depth <= zone_base
 
     if not np.any(mask):
         return {"error": "NO_SAMPLES_IN_ZONE", "depth_range": [float(depth[0]), float(depth[-1])]}

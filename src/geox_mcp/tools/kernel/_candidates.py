@@ -6,9 +6,12 @@ from ._ingest import CANONICAL_ALIASES, CLAIM_STATES
 from ._registry import _artifact_exists, _get_artifact, _latest_qc_failed_refs
 from ._unit_registry import validate_curve, value_contract
 from ._petrophysics import (
-    _compute_vsh_from_store, _compute_porosity_from_store,
-    _compute_saturation_from_store, _compute_netpay_from_store,
-    _classify_gr_motif, _classify_lithology_from_store,
+    _compute_vsh_from_store,
+    _compute_porosity_from_store,
+    _compute_saturation_from_store,
+    _compute_netpay_from_store,
+    _classify_gr_motif,
+    _classify_lithology_from_store,
 )
 from geox_core.enums.statuses import ArtifactStatus, get_standard_envelope
 from typing import Any, List, Optional
@@ -62,6 +65,7 @@ async def _compute_subsurface_candidates(
 ) -> dict:
     """Inner computation for subsurface candidates."""
     import sys
+
     sys.path.insert(0, "/root/geox")
     import numpy as np
 
@@ -168,7 +172,11 @@ async def _compute_subsurface_candidates(
             "input_null_pct": {},
             "phit_uncertainty": "p10_p90_spread",
             "p10_p90_spread": float(clean.get("phit_p90", 0) or 0) - float(clean.get("phit_p10", 0) or 0),
-            "confidence_label": "LOW" if (float(clean.get("phit_p90", 0) or 0) - float(clean.get("phit_p10", 0) or 0)) > 0.08 else "MEDIUM" if (float(clean.get("phit_p90", 0) or 0) - float(clean.get("phit_p10", 0) or 0)) > 0.04 else "HIGH",
+            "confidence_label": "LOW"
+            if (float(clean.get("phit_p90", 0) or 0) - float(clean.get("phit_p10", 0) or 0)) > 0.08
+            else "MEDIUM"
+            if (float(clean.get("phit_p90", 0) or 0) - float(clean.get("phit_p10", 0) or 0)) > 0.04
+            else "HIGH",
         }
         return clean
 
@@ -176,8 +184,14 @@ async def _compute_subsurface_candidates(
         vsh_r = _compute_vsh_from_store(primary_ref, gr_clean, gr_shale, vsh_method)
         phit_r = _compute_porosity_from_store(primary_ref, matrix_density, fluid_density)
         result = _compute_saturation_from_store(
-            primary_ref, sw_model, rw, archie_a, archie_m, archie_n,
-            vsh_result=vsh_r, phit_result=phit_r,
+            primary_ref,
+            sw_model,
+            rw,
+            archie_a,
+            archie_m,
+            archie_n,
+            vsh_result=vsh_r,
+            phit_result=phit_r,
         )
         if "error" in result:
             return _candidate_error(
@@ -192,21 +206,36 @@ async def _compute_subsurface_candidates(
         clean["target_class"] = "saturation"
         clean["artifact_ref"] = primary_ref
         clean["claim_state"] = "DERIVED_CANDIDATE"
-        clean["risk"] = f"Sw computed via {sw_model} model — assumes homogeneous formation; shaly sands may require Indonesia equation"
+        clean["risk"] = (
+            f"Sw computed via {sw_model} model — assumes homogeneous formation; shaly sands may require Indonesia equation"
+        )
         clean["uncertainty"] = {
             "propagation": "cumulative",
             "input_null_pct": {},
             "sw_uncertainty": "p10_p90_spread",
             "p10_p90_spread": float(clean.get("sw_p90", 0) or 0) - float(clean.get("sw_p10", 0) or 0),
-            "confidence_label": "LOW" if (float(clean.get("sw_p90", 0) or 0) - float(clean.get("sw_p10", 0) or 0)) > 0.2 else "MEDIUM" if (float(clean.get("sw_p90", 0) or 0) - float(clean.get("sw_p10", 0) or 0)) > 0.1 else "HIGH",
+            "confidence_label": "LOW"
+            if (float(clean.get("sw_p90", 0) or 0) - float(clean.get("sw_p10", 0) or 0)) > 0.2
+            else "MEDIUM"
+            if (float(clean.get("sw_p90", 0) or 0) - float(clean.get("sw_p10", 0) or 0)) > 0.1
+            else "HIGH",
             "cumulative_from": ["vsh", "phit"],
         }
         return clean
 
     if target_class == "netpay":
         result = _compute_netpay_from_store(
-            primary_ref, vsh_cutoff, phi_cutoff, sw_cutoff, rt_cutoff,
-            gr_clean, gr_shale, sw_model, rw, matrix_density, fluid_density,
+            primary_ref,
+            vsh_cutoff,
+            phi_cutoff,
+            sw_cutoff,
+            rt_cutoff,
+            gr_clean,
+            gr_shale,
+            sw_model,
+            rw,
+            matrix_density,
+            fluid_density,
         )
         if "error" in result:
             return _candidate_error(
@@ -225,6 +254,7 @@ async def _compute_subsurface_candidates(
 
     if target_class == "permeability":
         from geox_core.core.geox_1d import process_las_file
+
         entry = _get_artifact(primary_ref)
         if not entry or not entry.get("las_path"):
             return _candidate_error("NO_LAS_PATH", target_class="permeability", artifact_ref=primary_ref)
@@ -232,8 +262,14 @@ async def _compute_subsurface_candidates(
         vsh_r = _compute_vsh_from_store(primary_ref, gr_clean, gr_shale, vsh_method)
         phit_r = _compute_porosity_from_store(primary_ref, matrix_density, fluid_density)
         sw_r = _compute_saturation_from_store(
-            primary_ref, sw_model, rw, archie_a, archie_m, archie_n,
-            vsh_result=vsh_r, phit_result=phit_r,
+            primary_ref,
+            sw_model,
+            rw,
+            archie_a,
+            archie_m,
+            archie_n,
+            vsh_result=vsh_r,
+            phit_result=phit_r,
         )
         if any("error" in r for r in [vsh_r, phit_r, sw_r]):
             failed = next(r for r in [vsh_r, phit_r, sw_r] if "error" in r)
@@ -249,7 +285,7 @@ async def _compute_subsurface_candidates(
         sw = sw_r["_sw_array"]
         # Timur-Coates proxy: k = (phi^4.5 * (1-Sw)^2) / Sw^2 * 100
         sw_safe = np.clip(sw, 0.01, 0.99)
-        k_proxy = (phi ** 4.5) * ((1 - sw_safe) ** 2) / (sw_safe ** 2) * 100
+        k_proxy = (phi**4.5) * ((1 - sw_safe) ** 2) / (sw_safe**2) * 100
         k_proxy = np.clip(k_proxy, 0, 10000)
         valid = k_proxy[~np.isnan(k_proxy)]
         k_guard = validate_curve(k_proxy, "K")
@@ -289,6 +325,7 @@ async def _compute_subsurface_candidates(
 
     if target_class == "gr_motif":
         from geox_core.core.geox_1d import process_las_file
+
         entry = _get_artifact(primary_ref)
         if not entry or not entry.get("las_path"):
             return _candidate_error("NO_LAS_PATH", target_class="gr_motif", artifact_ref=primary_ref)
@@ -356,7 +393,9 @@ async def _compute_subsurface_candidates(
                 "vcl": vsh_cutoff * 0.5,
                 "bvw": 0.25,
                 "uncertainty": 0.12,
-                "hold_triggers": ["Petrophysics engine not available in canonical core — use geox_subsurface_generate_candidates with full evidence_refs"],
+                "hold_triggers": [
+                    "Petrophysics engine not available in canonical core — use geox_subsurface_generate_candidates with full evidence_refs"
+                ],
                 "requires_hold": True,
             }
 
@@ -390,6 +429,6 @@ async def _compute_subsurface_candidates(
         "ensemble": ensemble,
         "residuals": {"rmse": 0.05, "misfit_map": "Nominal"},
         "data_density": f"Ensemble ({len(evidence_refs)} evidence refs)",
-        "f7_humility": "Ensemble realizations provided — verify against raw evidence."
+        "f7_humility": "Ensemble realizations provided — verify against raw evidence.",
     }
     return get_standard_envelope(artifact, tool_class="compute", artifact_status=ArtifactStatus.COMPUTED)

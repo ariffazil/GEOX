@@ -311,7 +311,12 @@ class EIAClient:
             return {"reachable": False, "authenticated": False, "reason": "EIA_API_KEY not set"}
         result = await self._request("petroleum/pri/spt/data", params={"frequency": "daily", "data[0]": "value", "length": 1})
         if "_eia_error" in result:
-            return {"reachable": False, "authenticated": True, "status": result.get("_eia_status"), "detail": result.get("_eia_detail")}
+            return {
+                "reachable": False,
+                "authenticated": True,
+                "status": result.get("_eia_status"),
+                "detail": result.get("_eia_detail"),
+            }
         return {"reachable": True, "authenticated": True, "latency_ms": result["_eia_provenance"].get("latency_ms")}
 
     def _void_response(self, data_type: str, reason: str) -> dict[str, Any]:

@@ -12,7 +12,7 @@ from geox_core.core.governed_output import classify_claim_tag, make_vault_receip
 
 
 def geox_render_log_track_tool(
-    curves: list[dict[str, Any]], 
+    curves: list[dict[str, Any]],
     title: str = "Log Track Viewer",
     intervals: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
@@ -25,27 +25,23 @@ def geox_render_log_track_tool(
         samples = curve.get("samples", [])
         values = [float(sample["value"]) for sample in samples]
         depths = [float(sample["depth"]) for sample in samples]
-        
+
         mnemonic = curve["mnemonic"].upper()
         shading = None
         if "GR" in mnemonic or "GAM" in mnemonic:
             # Shale-side shading (right-to-left)
-            shading = {
-                "type": "right", 
-                "base_value": max(values) if values else 120,
-                "color": curve.get("color", "#7f7f7f")
-            }
-            
+            shading = {"type": "right", "base_value": max(values) if values else 120, "color": curve.get("color", "#7f7f7f")}
+
         tracks.append(
             {
                 "mnemonic": curve["mnemonic"],
                 "color": curve.get("color", "#3b82f6"),
                 "depths": depths,
                 "values": values,
-                "shading": shading
+                "shading": shading,
             }
         )
-    
+
     payload = {
         "title": title,
         "tracks": tracks,
@@ -56,11 +52,11 @@ def geox_render_log_track_tool(
         ],
         "claim_tag": classify_claim_tag(0.75),
     }
-    
+
     # Governance note for cognitive intervals
     if intervals:
         payload["governance_note"] = "WELL.GR_INTERVAL_COGNITIVE: Interval blocks aligned with GR depth."
-        
+
     payload["vault_receipt"] = make_vault_receipt("geox_render_log_track", payload)
     return payload
 

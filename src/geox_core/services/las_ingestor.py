@@ -22,8 +22,6 @@ import json
 import numpy as np
 
 from geox_core.physics.guards import PhysicsGuard
-from geox_core.core.truth_ledger import TruthLedger
-from geox_core.core.artefact_emission import ArtefactEmitter
 
 try:
     import lasio
@@ -39,6 +37,7 @@ except ImportError:
 
 # ─────────────────── CLAIM TAG ───────────────────
 
+
 class ClaimTag(str):
     OBSERVED = "OBSERVED"
     COMPUTED = "COMPUTED"
@@ -47,6 +46,7 @@ class ClaimTag(str):
 
 
 # ─────────────────── QC RESULT DATACLASSES ───────────────────
+
 
 @dataclass
 class QCIssue:
@@ -83,6 +83,7 @@ class CurveQCResult:
 @dataclass
 class WellLoadResult:
     """Output schema for geox_well_load_bundle — v2 witness summary."""
+
     tool: str = "geox_well_load_bundle"
     well_id: str = ""
     permit: str = ""
@@ -163,6 +164,7 @@ class WellLoadResult:
 @dataclass
 class WellQCResult:
     """Output schema for geox_well_qc_logs — v2 structured severity."""
+
     tool: str = "geox_well_qc_logs"
     qc_overall: str = "FAIL"  # PASS | WARN | FAIL
     curve_results: list[CurveQCResult] = field(default_factory=list)
@@ -190,16 +192,21 @@ class WellQCResult:
 # ─────────────────── CURVE MAP ───────────────────
 
 _CURVE_MAP = {
-    "NPHI": "porosity", "PHI": "porosity",
-    "SW": "sw", "VSH": "vsh",
-    "GR": "gamma_ray", "ILD": "resistivity",
-    "RHOB": "density", "DT": "compressional",
+    "NPHI": "porosity",
+    "PHI": "porosity",
+    "SW": "sw",
+    "VSH": "vsh",
+    "GR": "gamma_ray",
+    "ILD": "resistivity",
+    "RHOB": "density",
+    "DT": "compressional",
 }
 
 
 def _make_vault_receipt(tool_name: str, payload: dict, verdict: str) -> dict:
-    import hashlib, json
+    import hashlib
     from datetime import datetime, timezone
+
     canonical = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
     digest = hashlib.sha256(f"{tool_name}:{canonical}".encode("utf-8")).hexdigest()
     return {
@@ -213,8 +220,10 @@ def _make_vault_receipt(tool_name: str, payload: dict, verdict: str) -> dict:
 
 # ─────────────────── EXCEPTIONS ───────────────────
 
+
 class ConstitutionalRefusal(Exception):
     """Raised when an operation violates the arifOS Earth Kernel invariants (WAJIB)."""
+
     def __init__(self, reason: str, evidence: dict | None = None):
         self.reason = reason
         self.evidence = evidence or {}
@@ -223,12 +232,13 @@ class ConstitutionalRefusal(Exception):
 
 # ─────────────────── INGESTOR ───────────────────
 
+
 def _las_header_str(las_well, *keys) -> str:
     """Extract a string value from LAS well header, trying keys in order."""
     for key in keys:
         item = las_well.get(key)
         if item is not None:
-            val = getattr(item, 'value', item)
+            val = getattr(item, "value", item)
             if val and str(val).strip():
                 return str(val).strip()
     return "UNKNOWN"
@@ -238,15 +248,15 @@ class LASIngestor:
     """Read LAS 2.0/3.0 files and produce v2 JSON-safe manifests."""
 
     REQUIRED_CURVES = {
-        "GR":   "gamma_ray",
-        "RT":   "resistivity",   # canonical; RT/ILD/LLD/RDEP all map here
+        "GR": "gamma_ray",
+        "RT": "resistivity",  # canonical; RT/ILD/LLD/RDEP all map here
         "RHOB": "bulk_density",
         "NPHI": "neutron_porosity",
     }
     RESISTIVITY_ALIASES = frozenset({"ILD", "LLD", "RDEP", "RESDEEP", "AT90", "RESD", "RT"})
-    POROSITY_ALIASES    = frozenset({"NPHI", "NEUT", "TNPH", "CNCF", "PHI"})
-    GR_ALIASES          = frozenset({"GR", "GAMMA", "CGR", "SGR"})
-    DENSITY_ALIASES     = frozenset({"RHOB", "DEN", "DENS", "ZDEN"})
+    POROSITY_ALIASES = frozenset({"NPHI", "NEUT", "TNPH", "CNCF", "PHI"})
+    GR_ALIASES = frozenset({"GR", "GAMMA", "CGR", "SGR"})
+    DENSITY_ALIASES = frozenset({"RHOB", "DEN", "DENS", "ZDEN"})
 
     def __init__(self, guard: PhysicsGuard | None = None) -> None:
         self.guard = guard or PhysicsGuard()
@@ -268,12 +278,14 @@ class LASIngestor:
         for j, d in enumerate(diffs):
             if d > threshold:
                 idx = j + 1
-                issues.append(QCIssue(
-                    type="spike",
-                    depth_m=float(depths[idx]) if idx < len(depths) else 0.0,
-                    value=float(clean[idx]),
-                    threshold=threshold,
-                ))
+                issues.append(
+                    QCIssue(
+                        type="spike",
+                        depth_m=float(depths[idx]) if idx < len(depths) else 0.0,
+                        value=float(clean[idx]),
+                        threshold=threshold,
+                    )
+                )
         return issues[:5]  # cap at 5 spikes
 
     def _detect_gaps(self, values: np.ndarray, depths: np.ndarray) -> list[QCIssue]:
@@ -319,42 +331,46 @@ class LASIngestor:
         well = Well.from_las(str(source)) if Well is not None else None
 
         depth_curve = np.asarray(las.index, dtype=float)
-        
+
         # ── CONSTITUTIONAL GATE 1: Depth Integrity (F07 Physics) ──
         if depth_curve.size < 2:
             raise ConstitutionalRefusal("Insufficient depth samples (<2)", {"path": str(path)})
-        
+
         # Check monotonicity
         depth_diffs = np.diff(depth_curve)
         if np.any(depth_diffs <= 0):
-            raise ConstitutionalRefusal("Non-monotonic depth sequence detected (Depth must strictly increase)", {"path": str(path)})
+            raise ConstitutionalRefusal(
+                "Non-monotonic depth sequence detected (Depth must strictly increase)", {"path": str(path)}
+            )
 
         # ── CONSTITUTIONAL GATE 2: UWI Verification (F04 Truth) ──
         uwi_header = _las_header_str(las.well, "UWI", "API").strip()
         well_header = _las_header_str(las.well, "WELL").strip()
-        
+
         if asset_id:
             # If asset_id provided, it MUST exist in headers or we refuse
             if uwi_header == "UNKNOWN" and well_header == "UNKNOWN":
-                 raise ConstitutionalRefusal("LAS missing both UWI and WELL headers. Identity unproven.", {"path": str(path)})
-            
+                raise ConstitutionalRefusal("LAS missing both UWI and WELL headers. Identity unproven.", {"path": str(path)})
+
             # If headers exist, they must not conflict with asset_id (Sovereign Truth)
             if uwi_header != "UNKNOWN" and asset_id != uwi_header:
-                 # Check if asset_id is well_name or part of UWI
-                 if asset_id != well_header:
-                     raise ConstitutionalRefusal(
-                         f"Identity Mismatch: Requested '{asset_id}' but found UWI='{uwi_header}' WELL='{well_header}'",
-                         {"requested": asset_id, "found_uwi": uwi_header, "found_well": well_header}
-                     )
+                # Check if asset_id is well_name or part of UWI
+                if asset_id != well_header:
+                    raise ConstitutionalRefusal(
+                        f"Identity Mismatch: Requested '{asset_id}' but found UWI='{uwi_header}' WELL='{well_header}'",
+                        {"requested": asset_id, "found_uwi": uwi_header, "found_well": well_header},
+                    )
 
         # ── CONSTITUTIONAL GATE 3: Unit Governance (F05 Peace) ──
         depth_unit = _las_header_str(las.well, "UNIT", "STRT", "STOP").upper()
         # Common pattern: STRT.M 100.00
         if "M" not in depth_unit and "FT" not in depth_unit and "FEET" not in depth_unit:
-             # Try to find unit in curve header for depth
-             depth_curve_unit = str(las.curves[0].unit or "").upper()
-             if "M" not in depth_curve_unit and "FT" not in depth_curve_unit:
-                 raise ConstitutionalRefusal("Depth units missing or ambiguous. Refusing to guess between M/FT.", {"path": str(path)})
+            # Try to find unit in curve header for depth
+            depth_curve_unit = str(las.curves[0].unit or "").upper()
+            if "M" not in depth_curve_unit and "FT" not in depth_curve_unit:
+                raise ConstitutionalRefusal(
+                    "Depth units missing or ambiguous. Refusing to guess between M/FT.", {"path": str(path)}
+                )
 
         loaded_curves: list[str] = []
         curve_qc_results: list[CurveQCResult] = []
@@ -442,7 +458,9 @@ class LASIngestor:
             vault_receipt={},
         )
         result._n_depth_samples = int(depth_curve.size)  # type: ignore[attr-defined]
-        result.vault_receipt = _make_vault_receipt("geox_well_load_bundle", result.to_dict(), "HOLD" if suitability == "void" else "SEAL")
+        result.vault_receipt = _make_vault_receipt(
+            "geox_well_load_bundle", result.to_dict(), "HOLD" if suitability == "void" else "SEAL"
+        )
         return result
 
     def qc_logs(self, well_result: WellLoadResult, path: str) -> WellQCResult:
@@ -479,12 +497,14 @@ class LASIngestor:
             else:
                 status = "PASS"
 
-            curve_results.append(CurveQCResult(
-                mnemonic=mnemonic,
-                unit=str(curve.unit or ""),
-                status=status,
-                issues=issues,
-            ))
+            curve_results.append(
+                CurveQCResult(
+                    mnemonic=mnemonic,
+                    unit=str(curve.unit or ""),
+                    status=status,
+                    issues=issues,
+                )
+            )
 
         # Overall
         if total_fail > 0:
@@ -522,16 +542,19 @@ class LASIngestor:
             human_decision_point=human_decision,
             vault_receipt={},
         )
-        result.vault_receipt = _make_vault_receipt("geox_well_qc_logs", result.to_dict(), "HOLD" if qc_overall == "FAIL" else "SEAL")
+        result.vault_receipt = _make_vault_receipt(
+            "geox_well_qc_logs", result.to_dict(), "HOLD" if qc_overall == "FAIL" else "SEAL"
+        )
         return result
 
 
 # ─────────────────── OCR INGESTOR ─────────────────────────────────────────────
 
+
 class OCRIngestor:
     """
     Analog log digitizer — Stage 1 OCR using pytesseract.
-    
+
     Accepts a scanned image of a paper log, extracts curve data via OCR,
     and returns a WellDigitizeResult with:
       - extracted text (raw)
@@ -562,10 +585,7 @@ class OCRIngestor:
             from PIL import Image
             import pytesseract
         except ImportError as e:
-            raise RuntimeError(
-                f"OCR dependencies not available: {e}. "
-                "Ensure PIL and pytesseract are installed in the container."
-            )
+            raise RuntimeError(f"OCR dependencies not available: {e}. Ensure PIL and pytesseract are installed in the container.")
 
     def _parse_depth_from_text(self, text_lines: list[str]) -> tuple[list[float], list[int]]:
         """
@@ -574,7 +594,8 @@ class OCRIngestor:
         Uses regex to find depth patterns like '2500' or '2500.5'.
         """
         import re
-        depth_pattern = re.compile(r'^\s*(\d{3,5}(?:\.\d+)?)\s*$')
+
+        depth_pattern = re.compile(r"^\s*(\d{3,5}(?:\.\d+)?)\s*$")
         depths: list[float] = []
         line_indices: list[int] = []
 
@@ -593,7 +614,8 @@ class OCRIngestor:
     def _parse_curve_value(self, token: str) -> float | None:
         """Parse a single numeric token from OCR text."""
         import re
-        m = re.search(r'[-+]?\d*\.\d+|\d+', token)
+
+        m = re.search(r"[-+]?\d*\.\d+|\d+", token)
         if not m:
             return None
         try:
@@ -607,22 +629,28 @@ class OCRIngestor:
         Returns {curve_mnemonic: [extracted_values]}.
         """
         import re
+
         # GR column patterns
-        gr_matches = re.findall(r'\b(?:GR|GAMMA|CGR|SGR)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
-        rt_matches = re.findall(r'\b(?:RT|RD|RS|ILD|AT[0-9]+)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
-        rho_matches = re.findall(r'\b(?:RHO|RHOB|DEN)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
-        nphi_matches = re.findall(r'\b(?:NPHI|PHI|POR)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
-        dt_matches = re.findall(r'\b(?:DT|AC|DTC)\s*[:=]?\s*(\d+\.?\d*)', text, re.IGNORECASE)
+        gr_matches = re.findall(r"\b(?:GR|GAMMA|CGR|SGR)\s*[:=]?\s*(\d+\.?\d*)", text, re.IGNORECASE)
+        rt_matches = re.findall(r"\b(?:RT|RD|RS|ILD|AT[0-9]+)\s*[:=]?\s*(\d+\.?\d*)", text, re.IGNORECASE)
+        rho_matches = re.findall(r"\b(?:RHO|RHOB|DEN)\s*[:=]?\s*(\d+\.?\d*)", text, re.IGNORECASE)
+        nphi_matches = re.findall(r"\b(?:NPHI|PHI|POR)\s*[:=]?\s*(\d+\.?\d*)", text, re.IGNORECASE)
+        dt_matches = re.findall(r"\b(?:DT|AC|DTC)\s*[:=]?\s*(\d+\.?\d*)", text, re.IGNORECASE)
 
         detected = {}
-        if gr_matches: detected['GR'] = gr_matches[:100]
-        if rt_matches: detected['RT'] = rt_matches[:100]
-        if rho_matches: detected['RHOB'] = rho_matches[:100]
-        if nphi_matches: detected['NPHI'] = nphi_matches[:100]
-        if dt_matches: detected['DT'] = dt_matches[:100]
+        if gr_matches:
+            detected["GR"] = gr_matches[:100]
+        if rt_matches:
+            detected["RT"] = rt_matches[:100]
+        if rho_matches:
+            detected["RHOB"] = rho_matches[:100]
+        if nphi_matches:
+            detected["NPHI"] = nphi_matches[:100]
+        if dt_matches:
+            detected["DT"] = dt_matches[:100]
         return detected
 
-    def ingest(self, image_path: str, asset_id: str | None = None) -> 'WellDigitizeResult':
+    def ingest(self, image_path: str, asset_id: str | None = None) -> "WellDigitizeResult":
         """
         Main entry point: ingest a scanned log image.
         Returns WellDigitizeResult with claim_state, suitability, and limitations.
@@ -638,8 +666,8 @@ class OCRIngestor:
 
         # ── OCR extraction ──────────────────────────────────────────
         img = Image.open(source)
-        raw_text: str = pytesseract.image_to_string(img, config='--psm 6')
-        text_lines = [ln.strip() for ln in raw_text.split('\n') if ln.strip()]
+        raw_text: str = pytesseract.image_to_string(img, config="--psm 6")
+        text_lines = [ln.strip() for ln in raw_text.split("\n") if ln.strip()]
 
         # ── Parse detected curves ────────────────────────────────────
         detected_curves = self._detect_curve_type_from_text(raw_text)
@@ -696,13 +724,19 @@ class OCRIngestor:
         # ── Limitations ────────────────────────────────────────────
         limitations: list[str] = []
         if not detected_curves:
-            limitations.append("No standard log curves (GR, RT, RHOB, NPHI, DT) detected in image. OCR may need clearer scan or manual annotation.")
+            limitations.append(
+                "No standard log curves (GR, RT, RHOB, NPHI, DT) detected in image. OCR may need clearer scan or manual annotation."
+            )
         if not depths:
             limitations.append("No depth values extracted from image. Manual depth calibration required before LAS export.")
         if num_curves_detected < 2:
-            limitations.append(f"Only {num_curves_detected} curve type(s) detected. Archie saturation requires at least GR + RT + porosity curves.")
+            limitations.append(
+                f"Only {num_curves_detected} curve type(s) detected. Archie saturation requires at least GR + RT + porosity curves."
+            )
         if digitize_confidence < 0.4:
-            limitations.append(f"OCR confidence is low ({digitize_confidence:.1%}). Extracted values are approximate — verify against original image before use.")
+            limitations.append(
+                f"OCR confidence is low ({digitize_confidence:.1%}). Extracted values are approximate — verify against original image before use."
+            )
 
         # ── Well ID ────────────────────────────────────────────────
         well_id = asset_id or source.stem
@@ -735,7 +769,7 @@ class OCRIngestor:
             detected_curve_values=detected_curves,
             depth_points_extracted=num_depths,
             depth_values=depths,
-            raw_ocr_text='\n'.join(text_lines[:50]),  # first 50 lines
+            raw_ocr_text="\n".join(text_lines[:50]),  # first 50 lines
             digitize_confidence=round(digitize_confidence, 4),
             suitability=suitability,
             claim_state=claim_state,
@@ -748,6 +782,7 @@ class OCRIngestor:
 @dataclass
 class WellDigitizeResult:
     """Output schema for geox_well_digitize_log — Stage 1 OCR."""
+
     tool: str = "geox_well_digitize_log"
     well_id: str = ""
     image_path: str = ""

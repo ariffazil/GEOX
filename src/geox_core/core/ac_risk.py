@@ -36,6 +36,7 @@ from typing import List, Dict, Any, Optional
 
 class ClaimTag(Enum):
     """Epistemic classification for every geoscientific assertion."""
+
     CLAIM = "CLAIM"
     PLAUSIBLE = "PLAUSIBLE"
     HYPOTHESIS = "HYPOTHESIS"
@@ -45,6 +46,7 @@ class ClaimTag(Enum):
 
 class ACVerdict(Enum):
     """Canonical AC_Risk terminal verdicts."""
+
     PROCEED = "PROCEED"
     HOLD = "HOLD"
     BLOCK = "BLOCK"
@@ -62,6 +64,7 @@ class TEARFRAME:
     - bias_scenario: Cognitive bias scenario
     - b_cog: Computed cognitive bias factor
     """
+
     u_ambiguity: float = 0.0
     evidence_credit: float = 0.0
     echo_score: float = 0.0
@@ -130,6 +133,7 @@ class TEARFRAME:
 @dataclass
 class AC_RiskResult:
     """Result of AC_Risk calculation."""
+
     ac_risk: float
     verdict: str
     explanation: str
@@ -142,6 +146,7 @@ class AC_RiskResult:
 @dataclass
 class AntiHantuReport:
     """Anti-Hantu (F9) screening report."""
+
     passed: bool
     violations: List[str] = field(default_factory=list)
     screened_text_snippet: str = ""
@@ -157,6 +162,7 @@ class AntiHantuReport:
 @dataclass
 class VaultSeal:
     """VAULT999 seal emitted on PROCEED verdict only."""
+
     epoch: int
     session_id: str
     hash: str
@@ -178,6 +184,7 @@ class VaultSeal:
 @dataclass
 class GovernedACRiskResult:
     """Full governed result including AC_Risk, TEARFRAME, ClaimTag, Anti-Hantu, 888_HOLD, VAULT999."""
+
     ac_risk_score: float
     verdict: str
     explanation: str
@@ -454,12 +461,13 @@ def compute_ac_risk_governed(
     if prospect_context and "context_tags" in prospect_context:
         try:
             from geox_core.core.scar_ledger import ScarLedger
+
             scars = ScarLedger().audit_against_scars(prospect_context["context_tags"])
             if scars:
                 scar_echoes = [f"F12_SCAR: {s['enforced_rule']}" for s in scars]
                 floor_violations.extend(scar_echoes)
         except Exception:
-            pass # Fail-open for ledger absence during basic tests, but log it ideally
+            pass  # Fail-open for ledger absence during basic tests, but log it ideally
 
     hold_triggered = False
     verdict = ACVerdict.PROCEED.value
@@ -515,7 +523,7 @@ def compute_ac_risk_governed(
         if verdict == ACVerdict.HOLD.value:
             verdict = "ADVISORY_HOLD"
             explanation = "[ADVISORY MODE] " + explanation
-            hold_triggered = False # Do not enforce hard stop in the pipeline
+            hold_triggered = False  # Do not enforce hard stop in the pipeline
         elif verdict == ACVerdict.BLOCK.value:
             verdict = "ADVISORY_BLOCK"
             explanation = "[ADVISORY MODE] " + explanation

@@ -10,7 +10,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 from scipy import stats as scipy_stats
@@ -60,11 +60,20 @@ def sense_bins(
         while d < zone_base:
             top_b = max(d, zone_top)
             base_b = min(d + bin_size_m, zone_base)
-            bins.append({
-                "TOP": round(top_b, 2), "BASE": round(base_b, 2), "N": 0,
-                "P10": None, "P50": None, "P90": None, "MEAN": None,
-                "RANGE": None, "SLOPE": None, "MICRO_MOTIF": "Heterolithic",
-            })
+            bins.append(
+                {
+                    "TOP": round(top_b, 2),
+                    "BASE": round(base_b, 2),
+                    "N": 0,
+                    "P10": None,
+                    "P50": None,
+                    "P90": None,
+                    "MEAN": None,
+                    "RANGE": None,
+                    "SLOPE": None,
+                    "MICRO_MOTIF": "Heterolithic",
+                }
+            )
             d += bin_size_m
         return bins
 
@@ -88,11 +97,20 @@ def sense_bins(
         while d < zone_base:
             top_b = max(d, zone_top)
             base_b = min(d + bin_size_m, zone_base)
-            bins.append({
-                "TOP": round(top_b, 2), "BASE": round(base_b, 2), "N": 0,
-                "P10": None, "P50": None, "P90": None, "MEAN": None,
-                "RANGE": None, "SLOPE": None, "MICRO_MOTIF": "Heterolithic",
-            })
+            bins.append(
+                {
+                    "TOP": round(top_b, 2),
+                    "BASE": round(base_b, 2),
+                    "N": 0,
+                    "P10": None,
+                    "P50": None,
+                    "P90": None,
+                    "MEAN": None,
+                    "RANGE": None,
+                    "SLOPE": None,
+                    "MICRO_MOTIF": "Heterolithic",
+                }
+            )
             d += bin_size_m
         return bins
 
@@ -138,18 +156,20 @@ def sense_bins(
             p10 = p50 = p90 = mean = rng = slope = None
             mean = None
 
-        bins.append({
-            "TOP": round(top_b, 2),
-            "BASE": round(base_b, 2),
-            "N": n,
-            "P10": round(p10, 2) if p10 is not None else None,
-            "P50": round(p50, 2) if p50 is not None else None,
-            "P90": round(p90, 2) if p90 is not None else None,
-            "MEAN": round(mean, 2) if mean is not None else None,
-            "RANGE": round(rng, 2) if rng is not None else None,
-            "SLOPE": round(slope, 4) if slope is not None else None,
-            "MICRO_MOTIF": micro,
-        })
+        bins.append(
+            {
+                "TOP": round(top_b, 2),
+                "BASE": round(base_b, 2),
+                "N": n,
+                "P10": round(p10, 2) if p10 is not None else None,
+                "P50": round(p50, 2) if p50 is not None else None,
+                "P90": round(p90, 2) if p90 is not None else None,
+                "MEAN": round(mean, 2) if mean is not None else None,
+                "RANGE": round(rng, 2) if rng is not None else None,
+                "SLOPE": round(slope, 4) if slope is not None else None,
+                "MICRO_MOTIF": micro,
+            }
+        )
         d += bin_size_m
 
     return bins

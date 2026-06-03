@@ -26,16 +26,17 @@ import numpy as np
 
 
 class ClaimTag(str, Enum):
-    OBSERVED = "OBSERVED"    # Direct measurement / ingested
-    COMPUTED = "COMPUTED"    # Derived from physics model
+    OBSERVED = "OBSERVED"  # Direct measurement / ingested
+    COMPUTED = "COMPUTED"  # Derived from physics model
     INTERPRETED = "INTERPRETED"  # Multi-source inference
     SYNTHESIZED = "SYNTHESIZED"  # Cross-domain assembly
-    VERIFIED = "VERIFIED"    # QC passed
-    UNKNOWN = "UNKNOWN"      # Explicit gap
+    VERIFIED = "VERIFIED"  # QC passed
+    UNKNOWN = "UNKNOWN"  # Explicit gap
     HYPOTHESIS = "HYPOTHESIS"  # Low confidence / image-only input
 
 
 # ─────────────────── VAULT999 RECEIPT ───────────────────
+
 
 def make_vault_receipt(
     tool_name: str,
@@ -54,6 +55,7 @@ def make_vault_receipt(
 
 
 # ─────────────────── CLAIM TAG CLASSIFIER ───────────────────
+
 
 def classify_claim_tag(confidence: float, hold_enforced: bool = False) -> str:
     if hold_enforced:
@@ -91,15 +93,14 @@ def physics_guard(data: dict[str, Any]) -> dict[str, Any]:
         if key in data:
             val = float(data[key])
             if val < bounds["min"] or val > bounds["max"]:
-                violations.append(
-                    f"{key}={val} outside [{bounds['min']}, {bounds['max']}]"
-                )
+                violations.append(f"{key}={val} outside [{bounds['min']}, {bounds['max']}]")
     if violations:
         return {"status": "PHYSICS_VIOLATION", "violations": violations, "hold": True}
     return {"status": "PASS"}
 
 
 # ─────────────────── ADMISSIBILITY GATE ───────────────────
+
 
 def _admissibility_gate(provenance: str, required_present: bool = True) -> dict[str, Any]:
     """Block downstream if intake is not from a real SEG-Y."""
@@ -120,6 +121,7 @@ def _admissibility_gate(provenance: str, required_present: bool = True) -> dict[
 # ─────────────────────────────────────────────────────────────────────────────
 # SEISMIC LOAD VOLUME — IMPROVED
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def seismic_load_volume(
     segy_path: Optional[str] = None,
@@ -176,49 +178,53 @@ def seismic_load_volume(
             il_start = int(segy.inline_start) if hasattr(segy, "inline_start") and segy.inline_start else 1
             xl_start = int(segy.crossline_start) if hasattr(segy, "crossline_start") and segy.crossline_start else 1
 
-            result.update({
-                # REQUIRED per spec
-                "sample_interval_ms": round(sample_interval_us / 1000, 4),
-                "axis_identity": {
-                    "inline_axis": "inline",
-                    "crossline_axis": "crossline",
-                    "time_axis": "twt_ms",
-                },
-                "inline_range": [il_start, il_start + (il_count - 1) * 1, 1],
-                "crossline_range": [xl_start, xl_start + (xl_count - 1) * 1, 1],
-                "sample_domain": "time_ms",
-                "byte_order": "big-endian" if segy.endian == "big" else "little-endian",
-                "bounding_box_3d": {
-                    "inline": [il_start, il_start + (il_count - 1)],
-                    "crossline": [xl_start, xl_start + (xl_count - 1)],
-                    "twt_ms": [0.0, round(sample_count * sample_interval_us / 1000, 2)],
-                },
-                # Additional
-                "shape": [il_count, xl_count, sample_count],
-                "trace_count": il_count * xl_count,
-                "il_step": 1,
-                "xl_step": 1,
-                "sample_interval_us": sample_interval_us,
-                "survey_name": survey_name or "unknown",
-                "ingestion_hash": _compute_segy_hash(segy_path),
-                "data_byte_order": "big-endian" if segy.endian == "big" else "little-endian",
-                "scalogram": {
+            result.update(
+                {
+                    # REQUIRED per spec
+                    "sample_interval_ms": round(sample_interval_us / 1000, 4),
+                    "axis_identity": {
+                        "inline_axis": "inline",
+                        "crossline_axis": "crossline",
+                        "time_axis": "twt_ms",
+                    },
+                    "inline_range": [il_start, il_start + (il_count - 1) * 1, 1],
+                    "crossline_range": [xl_start, xl_start + (xl_count - 1) * 1, 1],
+                    "sample_domain": "time_ms",
+                    "byte_order": "big-endian" if segy.endian == "big" else "little-endian",
+                    "bounding_box_3d": {
+                        "inline": [il_start, il_start + (il_count - 1)],
+                        "crossline": [xl_start, xl_start + (xl_count - 1)],
+                        "twt_ms": [0.0, round(sample_count * sample_interval_us / 1000, 2)],
+                    },
+                    # Additional
+                    "shape": [il_count, xl_count, sample_count],
+                    "trace_count": il_count * xl_count,
                     "il_step": 1,
                     "xl_step": 1,
-                    "twt_step_ms": round(sample_interval_us / 1000, 4),
-                },
-            })
+                    "sample_interval_us": sample_interval_us,
+                    "survey_name": survey_name or "unknown",
+                    "ingestion_hash": _compute_segy_hash(segy_path),
+                    "data_byte_order": "big-endian" if segy.endian == "big" else "little-endian",
+                    "scalogram": {
+                        "il_step": 1,
+                        "xl_step": 1,
+                        "twt_step_ms": round(sample_interval_us / 1000, 4),
+                    },
+                }
+            )
             result["status"] = "loaded"
             result["verdict"] = "SEAL"
 
     except Exception as e:
-        result.update({
-            "status": "error",
-            "claim_state": ClaimTag.UNKNOWN.value,
-            "error": str(e),
-            "verdict": "VOID",
-            "limitations": limitations + [f"loading failed: {str(e)}"],
-        })
+        result.update(
+            {
+                "status": "error",
+                "claim_state": ClaimTag.UNKNOWN.value,
+                "error": str(e),
+                "verdict": "VOID",
+                "limitations": limitations + [f"loading failed: {str(e)}"],
+            }
+        )
         result["vault_receipt"] = make_vault_receipt("geismic_load_volume", result, "VOID")
         return result
 
@@ -304,9 +310,7 @@ def _scaffold_seismic_volume(
             "provenance": provenance,
         },
     }
-    physics = physics_guard(
-        {"inline_count": shape[0], "crossline_count": shape[1], "sample_count": shape[2]}
-    )
+    physics = physics_guard({"inline_count": shape[0], "crossline_count": shape[1], "sample_count": shape[2]})
     result["physics_guard"] = physics
     return result
 
@@ -317,12 +321,36 @@ def _scaffold_seismic_volume(
 
 # Attribute metadata: window default, units, description
 _ATTRIBUTE_META = {
-    "amplitude":  {"window_ms": 40,  "units": "normalized", "limitation": "Raw amplitude is non-directional. Cannot distinguish lithology without structural context."},
-    "variance":   {"window_ms": 60,  "units": "normalized", "limitation": "Variance measures lateral discontinuity. Cannot distinguish fault from facies change without structural control."},
-    "sweetness":  {"window_ms": 40,  "units": "ratio",      "limitation": "Sweetness highlights peak events. Low-frequency events may be over-emphasised in thick intervals."},
-    "coherence":  {"window_ms": 80,  "units": "normalized", "limitation": "Coherence is window-dependent. Small windows give noisy results; large windows reduce spatial resolution."},
-    "envelope":   {"window_ms": 40,  "units": "normalized", "limitation": "Envelope measures total energy. It cannot distinguish between noise and real signal in low-SNR data."},
-    "freq_avg":   {"window_ms": 60,  "units": "Hz",         "limitation": "Average frequency is sensitive to noise and window choice. Interpret as relative, not absolute."},
+    "amplitude": {
+        "window_ms": 40,
+        "units": "normalized",
+        "limitation": "Raw amplitude is non-directional. Cannot distinguish lithology without structural context.",
+    },
+    "variance": {
+        "window_ms": 60,
+        "units": "normalized",
+        "limitation": "Variance measures lateral discontinuity. Cannot distinguish fault from facies change without structural control.",
+    },
+    "sweetness": {
+        "window_ms": 40,
+        "units": "ratio",
+        "limitation": "Sweetness highlights peak events. Low-frequency events may be over-emphasised in thick intervals.",
+    },
+    "coherence": {
+        "window_ms": 80,
+        "units": "normalized",
+        "limitation": "Coherence is window-dependent. Small windows give noisy results; large windows reduce spatial resolution.",
+    },
+    "envelope": {
+        "window_ms": 40,
+        "units": "normalized",
+        "limitation": "Envelope measures total energy. It cannot distinguish between noise and real signal in low-SNR data.",
+    },
+    "freq_avg": {
+        "window_ms": 60,
+        "units": "Hz",
+        "limitation": "Average frequency is sensitive to noise and window choice. Interpret as relative, not absolute.",
+    },
 }
 
 
@@ -381,10 +409,14 @@ def seismic_compute_attribute(
     try:
         if attribute == "variance":
             from scipy.ndimage import generic_filter
-            def _var(x): return np.var(x)
+
+            def _var(x):
+                return np.var(x)
+
             computed = generic_filter(arr, _var, size=min(window_samples, 11))
         elif attribute == "sweetness":
             from scipy.signal import hilbert
+
             analytic = hilbert(arr, axis=-1)
             env = np.abs(analytic)
             peak = np.max(env, axis=-1, keepdims=True)
@@ -392,22 +424,23 @@ def seismic_compute_attribute(
             sweetness_raw = (peak / np.sqrt(total / arr.shape[-1])).squeeze()
             computed = np.clip(sweetness_raw, 0, 10)
         elif attribute == "coherence":
-            from scipy.ndimage import uniform_filter
             m, n = arr.shape
             C = np.zeros((m, n))
             ws = min(window_samples // 2, 3)
             for i in range(ws, m - ws):
                 for j in range(ws, n - ws):
-                    window = arr[i - ws:i + ws + 1, j - ws:j + ws + 1]
+                    window = arr[i - ws : i + ws + 1, j - ws : j + ws + 1]
                     if window.size >= 4:
                         C[i, j] = np.mean(window) / (np.std(window) + 1e-10)
             computed = np.clip(C, 0, 1)
         elif attribute == "envelope":
             from scipy.signal import hilbert
+
             analytic = hilbert(arr, axis=-1)
             computed = np.abs(analytic).squeeze()
         elif attribute == "freq_avg":
             from scipy.signal import welch
+
             freqs = np.zeros(arr.shape[:2])
             nperseg = min(64, arr.shape[-1])
             for i in range(arr.shape[0]):
@@ -418,27 +451,31 @@ def seismic_compute_attribute(
             computed = arr
 
     except Exception as e:
-        result.update({
-            "status": "attribute_compute_failed",
-            "error": str(e),
-            "verdict": "HOLD",
-            "limitations": [f"compute failed: {str(e)}"],
-        })
+        result.update(
+            {
+                "status": "attribute_compute_failed",
+                "error": str(e),
+                "verdict": "HOLD",
+                "limitations": [f"compute failed: {str(e)}"],
+            }
+        )
         result["vault_receipt"] = make_vault_receipt("seismic_compute_attribute", result, "HOLD")
         return result
 
-    result.update({
-        "shape": list(computed.shape),
-        "value_range": [float(np.min(computed)), float(np.max(computed))],
-        "statistics": {
-            "mean": round(float(np.mean(computed)), 6),
-            "std": round(float(np.std(computed)), 6),
-            "p10": round(float(np.percentile(computed, 10)), 6),
-            "p90": round(float(np.percentile(computed, 90)), 6),
-            "count": int(np.prod(computed.shape)),
-        },
-        "status": "computed",
-    })
+    result.update(
+        {
+            "shape": list(computed.shape),
+            "value_range": [float(np.min(computed)), float(np.max(computed))],
+            "statistics": {
+                "mean": round(float(np.mean(computed)), 6),
+                "std": round(float(np.std(computed)), 6),
+                "p10": round(float(np.percentile(computed, 10)), 6),
+                "p90": round(float(np.percentile(computed, 90)), 6),
+                "count": int(np.prod(computed.shape)),
+            },
+            "status": "computed",
+        }
+    )
 
     # PhysicsGuard
     bounds = _SEISMIC_BOUNDS.get(attribute, {"min": -1e6, "max": 1e6})
@@ -499,13 +536,14 @@ def seismic_compute_attribute(
 # SEISMIC RENDER VOLUME SLICE — IMPROVED
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 def seismic_render_volume_slice(
     volume_id: str,
-    orientation: str = "inline",   # inline | crossline | time_slice | depth_slice
+    orientation: str = "inline",  # inline | crossline | time_slice | depth_slice
     slice_index: int = 0,
     attribute: Optional[str] = None,
     display_mode: str = "qualitative_display",  # qualitative_display | interpretation_scale | earth_scale_depth_view
-    domain_flag: str = "time",       # time | depth | frequency
+    domain_flag: str = "time",  # time | depth | frequency
     physical_extents: Optional[dict] = None,  # from geox_seismic_load_volume
     provenance: str = "computed",
 ) -> dict[str, Any]:
@@ -537,8 +575,8 @@ def seismic_render_volume_slice(
 
     # axis labels
     axis_labels = {
-        "inline":     f"Inline (1-based), range {physical_extents['inline']}",
-        "crossline":  f"Crossline (1-based), range {physical_extents['crossline']}",
+        "inline": f"Inline (1-based), range {physical_extents['inline']}",
+        "crossline": f"Crossline (1-based), range {physical_extents['crossline']}",
         "time_slice": f"TWT (ms), range {physical_extents.get('twt_ms', [0, 4000])}",
         "depth_slice": f"Depth (m), range {physical_extents.get('depth_m', [0, 4000])}",
     }
@@ -591,6 +629,7 @@ def seismic_render_volume_slice(
 
 
 # ─────────────────── HEALTH CHECK ───────────────────
+
 
 def seismic_health_check() -> dict[str, Any]:
     """Return availability of seismic libraries."""

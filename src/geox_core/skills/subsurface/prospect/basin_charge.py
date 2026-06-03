@@ -38,7 +38,7 @@ def geox_time4d_verify_timing_tool(
 ) -> dict:
     """
     geox_time4d_verify_timing — v2 full spec.
-    
+
     Returns:
       verdict: screening | probable | improbable | void
       claim_state: OBSERVED | COMPUTED | HYPOTHESIS | VOID

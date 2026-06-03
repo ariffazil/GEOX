@@ -34,13 +34,12 @@ def materialize_las_source(source: str, *, artifact_id: str | None = None) -> st
     if source.startswith(("http://", "https://")):
         # Red Team Fix: Basic SSRF protection
         from urllib.parse import urlparse
-        import socket
-        
+
         parsed = urlparse(source)
         hostname = parsed.hostname
         if not hostname:
             raise LASSourceError("Invalid URL: no hostname")
-        
+
         # FIND-LIVE-002 FIX: Comprehensive SSRF blocklist
         # Block all private, loopback, and metadata IP ranges
         hostname_lower = hostname.lower()
@@ -69,8 +68,8 @@ def materialize_las_source(source: str, *, artifact_id: str | None = None) -> st
 
         # Block URLs with credentials (credential injection)
         if parsed.port or "@" in source:
-            raise LASSourceError(f"URL with port or credentials not allowed")
-            
+            raise LASSourceError("URL with port or credentials not allowed")
+
         suffix = Path(source.split("?", 1)[0]).suffix or ".las"
         target = _target_path(artifact_id, suffix=suffix)
         try:
@@ -128,9 +127,7 @@ def _decode_base64(payload: str) -> bytes:
     if not decoded:
         raise LASSourceError("Decoded LAS payload is empty")
     if len(decoded) > MAX_INLINE_LAS_BYTES:
-        raise LASSourceError(
-            f"Decoded LAS payload exceeds {MAX_INLINE_LAS_BYTES} byte limit"
-        )
+        raise LASSourceError(f"Decoded LAS payload exceeds {MAX_INLINE_LAS_BYTES} byte limit")
     return decoded
 
 

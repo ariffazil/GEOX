@@ -2,7 +2,7 @@
 GEOX Legacy Substrate: Stress & Pressure Logic
 Surgically extracted from geox/core/geox_data.py and petro_ensemble.py
 """
-import math
+
 
 def compute_overburden_pressure(depth_m: float, avg_density_gcc: float = 2.3) -> float:
     """
@@ -14,11 +14,13 @@ def compute_overburden_pressure(depth_m: float, avg_density_gcc: float = 2.3) ->
     pressure_mpa = (density_kgm3 * 9.81 * depth_m) / 1000000.0
     return pressure_mpa
 
+
 def estimate_pore_pressure(depth_m: float, gradient_mpa_m: float = 0.0105) -> float:
     """
     Simplified pore pressure estimate based on hydrostatic gradient.
     """
     return depth_m * gradient_mpa_m
+
 
 def gardner_velocity_to_density(vp_ms: float) -> float:
     """

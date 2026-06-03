@@ -76,9 +76,7 @@ class GEOXTelemetryEmitter:
     """
 
     def __init__(self, arifos_endpoint: Optional[str] = None):
-        self._arifos_endpoint = arifos_endpoint or os.environ.get(
-            "ARIFOS_TELEMETRY_ENDPOINT", "http://arifOS:7070/telemetry"
-        )
+        self._arifos_endpoint = arifos_endpoint or os.environ.get("ARIFOS_TELEMETRY_ENDPOINT", "http://arifOS:7070/telemetry")
         self._uptime_start = time.time()
         self._tool_count = 0
         self._vault_count = 0
@@ -111,9 +109,7 @@ class GEOXTelemetryEmitter:
         )
         return heartbeat.to_dict()
 
-    def emit_tool_use(
-        self, tool_name: str, vault_receipt: Optional[dict[str, Any]] = None
-    ) -> dict[str, Any]:
+    def emit_tool_use(self, tool_name: str, vault_receipt: Optional[dict[str, Any]] = None) -> dict[str, Any]:
         """Record a tool invocation for telemetry."""
         self._tool_count += 1
         self._last_tool = tool_name
@@ -130,9 +126,7 @@ class GEOXTelemetryEmitter:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-    def emit_ac_risk_result(
-        self, verdict: str, ac_risk: float, claim_tag: str = "UNKNOWN"
-    ) -> dict[str, Any]:
+    def emit_ac_risk_result(self, verdict: str, ac_risk: float, claim_tag: str = "UNKNOWN") -> dict[str, Any]:
         """Emit AC_Risk computation result into telemetry stream."""
         # Map verdict to entropy_delta proxy
         verdict_entropy = {
@@ -184,9 +178,7 @@ class GEOXTelemetryEmitter:
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-    def emit_prospect_result(
-        self, prospect_id: str, verdict: str, claim_tag: str
-    ) -> dict[str, Any]:
+    def emit_prospect_result(self, prospect_id: str, verdict: str, claim_tag: str) -> dict[str, Any]:
         """Emit prospect evaluation result."""
         self._last_claim = claim_tag
         verdict_peace = {"SEAL": 1.0, "QUALIFY": 0.85, "HOLD": 0.60, "VOID": 0.20}

@@ -1,6 +1,7 @@
 """
 BACKWARD COMPATIBILITY SHIM — Use geox_core.physics instead.
 """
+
 from geox_core.physics.parameters import (
     spectral_decay as calculate_spectral_decay,
     time_variant_wavelet_params as get_time_variant_wavelet_params,

@@ -61,10 +61,7 @@ class VolumeDistribution:
 
     @property
     def tornado_data(self) -> list[dict[str, float | str]]:
-        rows = [
-            {"parameter": key, "impact": value, "abs_impact": abs(value)}
-            for key, value in self.tornado.items()
-        ]
+        rows = [{"parameter": key, "impact": value, "abs_impact": abs(value)} for key, value in self.tornado.items()]
         return sorted(rows, key=lambda row: float(row["abs_impact"]), reverse=True)
 
     def to_dict(self) -> dict[str, Any]:

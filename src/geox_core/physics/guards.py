@@ -6,6 +6,7 @@ Physically impossible outputs never reach human review.
 
 DITEMPA BUKAN DIBERI
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -174,9 +175,7 @@ class PhysicsGuard:
             )
         return ValidationResult(status="PASS", posterior_breadth_ratio=ratio)
 
-    def check_volumetric_output(
-        self, stoiip: dict[str, Any], max_ratio: Optional[float] = None
-    ) -> ValidationResult:
+    def check_volumetric_output(self, stoiip: dict[str, Any], max_ratio: Optional[float] = None) -> ValidationResult:
         if not all(k in stoiip for k in ("p10", "p50", "p90")):
             return ValidationResult(
                 status="INVALID",
@@ -250,10 +249,7 @@ class PhysicsGuard:
             return ValidationResult(
                 status="TIMING_VIOLATION",
                 hold=True,
-                reason=(
-                    f"CHARGE_BEFORE_TRAP_VIOLATION: charge_ma ({charge_ma}) > "
-                    f"trap_ma ({trap_ma})"
-                ),
+                reason=(f"CHARGE_BEFORE_TRAP_VIOLATION: charge_ma ({charge_ma}) > trap_ma ({trap_ma})"),
             )
         return ValidationResult(status="PASS")
 
@@ -266,18 +262,14 @@ class PhysicsGuard:
 
     # ─── Velocity Sanity (Stretch/Squeeze Guard) ────────────────────────────
 
-    def validate_velocity_sanity(
-        self, v_stretched: np.ndarray, z_depth: np.ndarray
-    ) -> ValidationResult:
+    def validate_velocity_sanity(self, v_stretched: np.ndarray, z_depth: np.ndarray) -> ValidationResult:
         violations: List[PhysicsViolation] = []
 
         if np.any(v_stretched > 5500.0) or np.any(v_stretched < 1480.0):
             violations.append(
                 PhysicsViolation(
                     parameter="velocity_absolute",
-                    value=float(
-                        np.max(v_stretched) if np.any(v_stretched > 5500.0) else np.min(v_stretched)
-                    ),
+                    value=float(np.max(v_stretched) if np.any(v_stretched > 5500.0) else np.min(v_stretched)),
                     min_bound=1480.0,
                     max_bound=5500.0,
                     severity="CRITICAL",
@@ -370,11 +362,7 @@ class PhysicsGuard:
             reasons.append(epistemic_result.recommendation)
 
         if all_violations or reasons or epistemic_result.hold:
-            status = (
-                "PHYSICS_VIOLATION"
-                if all_violations or posterior_breadth_violation
-                else "EPISTEMIC_VIOLATION"
-            )
+            status = "PHYSICS_VIOLATION" if all_violations or posterior_breadth_violation else "EPISTEMIC_VIOLATION"
             return ValidationResult(
                 status=status,
                 violations=all_violations,

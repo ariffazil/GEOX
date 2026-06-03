@@ -2,13 +2,17 @@
 # Extracted from _helpers.py (lines 312–451)
 # NO FastMCP imports. Pure business logic.
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Dict
 import base64
 import csv
 import json
 import os
-import re
 from pathlib import Path
+
+# Hard limits for ingest payloads. 200 MiB decoded cap keeps the
+# canonical artifact store bounded and matches GEOX_WELL_DATA_DIR quotas.
+MAX_UPLOAD_BYTES: int = 200 * 1024 * 1024  # 200 MiB
+
 
 def _safe_upload_path(filename: str, target_dir: str) -> Path:
     safe_name = Path(filename or "").name
@@ -42,53 +46,54 @@ def _decode_upload_content(content_base64: str) -> bytes:
 # Lifecycle states govern workflow gating; epistemic states govern claim_tag.
 CLAIM_STATES: Dict[str, str] = {
     # Lifecycle — artifact readiness pipeline
-    "NO_VALID_EVIDENCE":  "NO_VALID_EVIDENCE",
-    "INGESTED":           "INGESTED",
-    "QC_VERIFIED":        "QC_VERIFIED",
-    "PLOTTED":            "PLOTTED",
-    "INTERPRETED":        "INTERPRETED",
+    "NO_VALID_EVIDENCE": "NO_VALID_EVIDENCE",
+    "INGESTED": "INGESTED",
+    "QC_VERIFIED": "QC_VERIFIED",
+    "PLOTTED": "PLOTTED",
+    "INTERPRETED": "INTERPRETED",
     "DECISION_SENSITIVE": "DECISION_SENSITIVE",
-    "BLOCKED":            "BLOCKED",
+    "BLOCKED": "BLOCKED",
     # Legacy / epistemic aliases
-    "RAW_OBSERVATION":    "INGESTED",
-    "COMPUTED":           "INTERPRETED",
-    "DERIVED_CANDIDATE":  "DERIVED_CANDIDATE",
+    "RAW_OBSERVATION": "INGESTED",
+    "COMPUTED": "INTERPRETED",
+    "DERIVED_CANDIDATE": "DERIVED_CANDIDATE",
     "HUMAN_REVIEW_REQUIRED": "DECISION_SENSITIVE",
-    "HUMAN_ACCEPTED":     "DECISION_SENSITIVE",
-    "SEALED_RECORD":      "SEALED_RECORD",
+    "HUMAN_ACCEPTED": "DECISION_SENSITIVE",
+    "SEALED_RECORD": "SEALED_RECORD",
     # Epistemic claim tags
-    "HYPOTHESIS":         "HYPOTHESIS",
-    "CLAIM":              "CLAIM",
-    "PLAUSIBLE":          "PLAUSIBLE",
-    "ESTIMATE":           "ESTIMATE",
+    "HYPOTHESIS": "HYPOTHESIS",
+    "CLAIM": "CLAIM",
+    "PLAUSIBLE": "PLAUSIBLE",
+    "ESTIMATE": "ESTIMATE",
 }
 
 # ─── Canonical curve alias map ─────────────────────────────────────────────────
 CANONICAL_ALIASES = {
-    "GR":   ["GR", "GRC", "CGR", "SGR", "GAMMA"],
-    "RT":   ["RT", "ILD", "LLD", "RDEP", "RESDEEP", "AT90", "RESD", "RES_DEEP"],
+    "GR": ["GR", "GRC", "CGR", "SGR", "GAMMA"],
+    "RT": ["RT", "ILD", "LLD", "RDEP", "RESDEEP", "AT90", "RESD", "RES_DEEP"],
     "RHOB": ["RHOB", "DEN", "DENS", "ZDEN"],
     "NPHI": ["NPHI", "NEUT", "TNPH", "CNCF"],
-    "DT":   ["DT", "DTC", "AC"],
-    "PEF":  ["PEF", "PE"],
+    "DT": ["DT", "DTC", "AC"],
+    "PEF": ["PEF", "PE"],
     "CALI": ["CALI", "HCAL", "CAL", "DCAL"],
-    "SP":   ["SP"],
-    "DTS":  ["DTS", "DTSM"],
+    "SP": ["SP"],
+    "DTS": ["DTS", "DTSM"],
 }
 
 # Physical range QC limits per canonical curve
 _CURVE_RANGES = {
-    "GR":   (0, 300, "gAPI"),
-    "RT":   (0, None, "ohm.m"),     # RT must be > 0
+    "GR": (0, 300, "gAPI"),
+    "RT": (0, None, "ohm.m"),  # RT must be > 0
     "RHOB": (1.5, 3.2, "g/cc"),
     "NPHI": (-0.15, 0.8, "v/v"),
-    "DT":   (30, 250, "us/ft"),
+    "DT": (30, 250, "us/ft"),
 }
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # INTERNAL HELPER FUNCTIONS (not MCP tools)
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 def _map_canonical_curves(raw_mnemonics: list[str]) -> tuple[dict[str, str], list[str]]:
     """Map raw LAS mnemonics to canonical names. Returns (canonical_map, missing_canonicals)."""
@@ -107,6 +112,7 @@ def _detect_depth_unit(las_path: str) -> str:
     """Read the LAS header to find the depth unit. Returns 'M', 'FT', or 'UNKNOWN'."""
     try:
         import lasio
+
         las = lasio.read(las_path, ignore_data=True)
         # Check DEPT curve unit
         for key in ["DEPT", "DEPTH", "MD"]:
@@ -149,8 +155,7 @@ def _parse_csv_or_json(source_uri: str) -> list[dict]:
         allowed_roots = [Path("/data"), Path("/app/fixtures")]
         if not any(resolved == r or resolved.is_relative_to(r) for r in allowed_roots):
             raise ValueError(
-                f"Path {source_uri} is outside allowed directories (/data or /app/fixtures). "
-                f"Path traversal attempt blocked."
+                f"Path {source_uri} is outside allowed directories (/data or /app/fixtures). Path traversal attempt blocked."
             )
         raise FileNotFoundError(f"File not found: {source_uri}")
     ext = os.path.splitext(source_uri)[1].lower()

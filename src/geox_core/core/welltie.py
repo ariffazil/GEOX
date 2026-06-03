@@ -16,11 +16,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import sys
-import hashlib
-import json
 import warnings
-from datetime import datetime, timezone
-from typing import Optional
 
 import numpy as np
 
@@ -606,7 +602,7 @@ def compute_welltie(
         density_assumption,
         f"Time-depth: {td_method}",
         f"Wavelet: {wavelet_mode} at {freq_hz} Hz",
-        f"Reflectivity: Zoeppritz linear approximation",
+        "Reflectivity: Zoeppritz linear approximation",
     ]
     if phase_degrees != 0:
         assumptions.append(f"Phase rotation applied: {phase_degrees}°")

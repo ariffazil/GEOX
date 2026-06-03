@@ -149,16 +149,17 @@ def register_well_tools(mcp: FastMCP) -> None:
         if ext in (".las", ".LAS"):
             try:
                 import lasio
+
                 las = lasio.read(str(path))
                 depth = las.index
-                if hasattr(depth, 'values'):
+                if hasattr(depth, "values"):
                     depth = depth.values
                 depth = depth.astype(float)
                 # Find GR curve (try common mnemonics)
                 for alias in ["GR", "GRC", "SGR", "CGR", "GAPI", "GAMMA", "GAMMA_RAY"]:
                     if alias in las.keys():
                         gr = las[alias]
-                        if hasattr(gr, 'values'):
+                        if hasattr(gr, "values"):
                             gr = gr.values
                         gr = gr.astype(float)
                         break
@@ -166,11 +167,11 @@ def register_well_tools(mcp: FastMCP) -> None:
                     # Use first curve if no GR found
                     gr_name = list(las.keys())[0]
                     gr = las[gr_name]
-                    if hasattr(gr, 'values'):
+                    if hasattr(gr, "values"):
                         gr = gr.values
                     gr = gr.astype(float)
                 meta = {
-                    "well": las.well.WELL.value if hasattr(las.well, 'WELL') else path.stem,
+                    "well": las.well.WELL.value if hasattr(las.well, "WELL") else path.stem,
                     "source": str(path),
                     "format": "LAS",
                     "source_sha256": _source_hash(path),
@@ -186,9 +187,7 @@ def register_well_tools(mcp: FastMCP) -> None:
                     raise ValueError("Source has fewer than 3 finite depth/GR samples.")
                 diffs = np.diff(depth)
                 if not (np.all(diffs > 0) or np.all(diffs < 0)):
-                    raise ValueError(
-                        "Depth samples must be strictly monotonic before sequence analysis."
-                    )
+                    raise ValueError("Depth samples must be strictly monotonic before sequence analysis.")
                 if np.all(diffs < 0):
                     depth = depth[::-1]
                     gr = gr[::-1]
@@ -199,6 +198,7 @@ def register_well_tools(mcp: FastMCP) -> None:
 
         elif ext in (".csv", ".CSV", ".txt"):
             import csv
+
             with open(path) as f:
                 reader = csv.DictReader(f)
                 rows = list(reader)
@@ -233,9 +233,7 @@ def register_well_tools(mcp: FastMCP) -> None:
                 raise ValueError("Source has fewer than 3 finite depth/GR samples.")
             diffs = np.diff(depth)
             if not (np.all(diffs > 0) or np.all(diffs < 0)):
-                raise ValueError(
-                    "Depth samples must be strictly monotonic before sequence analysis."
-                )
+                raise ValueError("Depth samples must be strictly monotonic before sequence analysis.")
             if np.all(diffs < 0):
                 depth = depth[::-1]
                 gr = gr[::-1]
@@ -302,6 +300,7 @@ def register_well_tools(mcp: FastMCP) -> None:
             )
 
         from geox_core.well.tools.sensing import compute_gr_bins
+
         bins = compute_gr_bins(depth, gr, zone_top, zone_base, bin_size_m)
         usable_bins = [b for b in bins if b.get("p50") is not None]
         if not usable_bins:
@@ -410,9 +409,7 @@ def register_well_tools(mcp: FastMCP) -> None:
                 },
             )
 
-        stacking_patterns = list(set(
-            p.get("stacking_pattern", "MIXED") for p in packages
-        ))
+        stacking_patterns = list(set(p.get("stacking_pattern", "MIXED") for p in packages))
 
         return get_standard_envelope(
             primary_artifact={

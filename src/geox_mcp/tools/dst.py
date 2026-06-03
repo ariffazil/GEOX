@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from geox_core.enums.statuses import (
     get_standard_envelope,
-    GovernanceStatus,
-    ArtifactStatus,
-    ExecutionStatus,
 )
 
 logger = logging.getLogger("geox.canonical.dst")
@@ -83,7 +80,8 @@ async def geox_dst_ingest_test(
         "derived_metrics": derived,
         "flags": flags,
         "raw_inputs": {
-            k: v for k, v in {
+            k: v
+            for k, v in {
                 "gas_rate_mmscfd": gas_rate_mmscfd,
                 "condensate_rate_stbd": condensate_rate_stbd,
                 "water_rate_stbd": water_rate_stbd,
@@ -91,7 +89,8 @@ async def geox_dst_ingest_test(
                 "h2s_ppm": h2s_ppm,
                 "bhp_psi": bhp_psi,
                 "whp_psi": whp_psi,
-            }.items() if v is not None
+            }.items()
+            if v is not None
         },
     }
 

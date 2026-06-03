@@ -3,9 +3,10 @@ GEOX PSV Forge: The Prospect State Vector
 Unifying Ninefold Substrates into Earth Intelligence PSV.
 [PSV = f(Energy, Flux, Pressure, Structure, Time)]
 """
+
 from dataclasses import dataclass
-from typing import Dict, List, Any
-import numpy as np
+from typing import Dict, Any
+
 
 @dataclass
 class ProspectStateVector:
@@ -18,6 +19,7 @@ class ProspectStateVector:
     p90: float
     substrate_lineage: Dict[str, str]
     systemic_entropy: float
+
 
 def compute_psv_from_substrates(substrate_evidence: Dict[str, Any]) -> ProspectStateVector:
     """
@@ -33,26 +35,26 @@ def compute_psv_from_substrates(substrate_evidence: Dict[str, Any]) -> ProspectS
     structure = substrate_evidence.get("structure", {"closure": 0.5})
     # 5. Material -> Lithos/Pore Intelligence (Reservoir)
     material = substrate_evidence.get("pore", {"porosity": 0.15})
-    
+
     # ── Probability Derivation ──
     # P_charge = f(Kinetic Energy * Flow Flux)
     p_charge = min(1.0, kinetic["maturity"] * 1.2 * flow["mobility"])
-    
+
     # P_trap = f(Stress Containment * Structural Closure)
     p_trap = min(1.0, stress["seal_integrity"] * structure["closure"])
-    
+
     # P_reservoir = f(Pore Void * Lithos Matrix)
     p_reservoir = 0.85 if material["porosity"] > 0.1 else 0.4
-    
+
     gcoS = p_charge * p_trap * p_reservoir
-    
+
     # ── Volumetric Derivation (Probabilistic Volume) ──
     # Derived from Pore (Volume) and Strata (Geometry)
     base_volume = substrate_evidence.get("volume_m3", 1000000)
     p50 = base_volume * (material["porosity"] / 0.15)
-    p10 = p50 * 2.5 # Upside
-    p90 = p50 * 0.4 # Downside
-    
+    p10 = p50 * 2.5  # Upside
+    p90 = p50 * 0.4  # Downside
+
     return ProspectStateVector(
         p_charge=round(p_charge, 4),
         p_trap=round(p_trap, 4),
@@ -66,7 +68,7 @@ def compute_psv_from_substrates(substrate_evidence: Dict[str, Any]) -> ProspectS
             "flux": "flow_substrate",
             "pressure": "stress_substrate",
             "structure": "break_substrate",
-            "time": "strata_substrate"
+            "time": "strata_substrate",
         },
-        systemic_entropy=substrate_evidence.get("dS", 0.1)
+        systemic_entropy=substrate_evidence.get("dS", 0.1),
     )

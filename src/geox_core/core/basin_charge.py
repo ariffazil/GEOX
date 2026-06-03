@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from math import log10
 from typing import Any
 
-from geox_core.core.governed_output import classify_claim_tag, make_vault_receipt
+from geox_core.core.governed_output import make_vault_receipt
 from geox_core.physics.guards import PhysicsGuard
 
 
@@ -35,6 +35,7 @@ class ClaimTag(str):
 @dataclass
 class BasinChargeResult:
     """Output schema for geox_simulate_basin_charge — v2."""
+
     tool: str = "geox_simulate_basin_charge"
     tti: float = 0.0
     easy_ro: float = 0.0
@@ -76,6 +77,7 @@ class BasinChargeResult:
 @dataclass
 class TimingVerificationResult:
     """Output schema for geox_time4d_verify_timing — v2."""
+
     tool: str = "geox_time4d_verify_timing"
     # Verdict
     verdict: str = "void"  # screening | probable | improbable | void
@@ -113,8 +115,7 @@ class TimingVerificationResult:
             "burial_carrier_assumptions": self.burial_carrier_assumptions,
             "assumptions": self.assumptions,
             "reversal_conditions": self.reversal_conditions,
-            "reversal_scenarios": {k: round(v, 4) if isinstance(v, float) else v
-                                   for k, v in self.reversal_scenarios.items()},
+            "reversal_scenarios": {k: round(v, 4) if isinstance(v, float) else v for k, v in self.reversal_scenarios.items()},
             "limitations": self.limitations,
             "human_decision_point": self.human_decision_point,
             "vault_receipt": self.vault_receipt,
@@ -182,7 +183,9 @@ class BasinChargeSimulator:
 
         # Condition 1: trap significantly younger than charge
         if charge_age_ma > 0 and trap_age_ma < charge_age_ma - 10.0:
-            conditions.append(f"Trap age ({trap_age_ma} Ma) is >10 Ma younger than charge window — charge may have dissipated before trap formation")
+            conditions.append(
+                f"Trap age ({trap_age_ma} Ma) is >10 Ma younger than charge window — charge may have dissipated before trap formation"
+            )
 
         # Condition 2: migration window too short
         if migration_window_my < 5.0:
@@ -191,12 +194,16 @@ class BasinChargeSimulator:
 
         # Condition 3: seal capacity exceeded
         if buoyancy_pressure_mpa > seal_capacity_mpa:
-            conditions.append(f"Buoyancy ({buoyancy_pressure_mpa} MPa) exceeds seal capacity ({seal_capacity_mpa} MPa) — leakage risk")
+            conditions.append(
+                f"Buoyancy ({buoyancy_pressure_mpa} MPa) exceeds seal capacity ({seal_capacity_mpa} MPa) — leakage risk"
+            )
             scenarios["seal_breach"] = {"buoyancy_pressure_mpa": seal_capacity_mpa * 1.2, "charge_probability_change": -0.15}
 
         # Condition 4: very low maturity
         if charge_age_ma < 20.0:
-            conditions.append(f"Immature source (charge age {charge_age_ma:.0f} Ma) — if charge age is actually older/more mature, verdict improves")
+            conditions.append(
+                f"Immature source (charge age {charge_age_ma:.0f} Ma) — if charge age is actually older/more mature, verdict improves"
+            )
 
         return conditions, scenarios
 
@@ -233,8 +240,11 @@ class BasinChargeSimulator:
 
         # Reversal conditions
         reversal_conditions, reversal_scenarios = self._derive_reversal_conditions(
-            charge_age_ma, trap_age_ma, migration_window_my,
-            buoyancy_pressure_mpa, seal_capacity_mpa,
+            charge_age_ma,
+            trap_age_ma,
+            migration_window_my,
+            buoyancy_pressure_mpa,
+            seal_capacity_mpa,
         )
 
         # Verdict mapping
@@ -274,7 +284,9 @@ class BasinChargeSimulator:
         if charge_age_ma == 0:
             limitations.append("No burial step reached 90°C — source maturity unconstrained")
         if migration_window_my < 0:
-            limitations.append(f"Trap age ({trap_age_ma} Ma) is younger than charge age ({charge_age_ma} Ma) — structural timing may be reversed")
+            limitations.append(
+                f"Trap age ({trap_age_ma} Ma) is younger than charge age ({charge_age_ma} Ma) — structural timing may be reversed"
+            )
         if fault_density > 0.3:
             limitations.append("High fault density (>0.3) increases leakage risk — not fully captured in seal_integrity_estimate")
         if not reversal_conditions:

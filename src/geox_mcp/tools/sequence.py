@@ -18,7 +18,6 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import hashlib
-import json
 import logging
 from pathlib import Path
 from typing import Any, Literal
@@ -31,12 +30,9 @@ from geox_core.enums.statuses import (
     ExecutionStatus,
     GovernanceStatus,
     get_standard_envelope,
-    enrich_envelope_with_metabolic,
 )
 from geox_mcp.tools._helpers import (
     _get_artifact,
-    _artifact_exists,
-    _register_artifact,
     _classify_gr_motif,
     CANONICAL_ALIASES,
 )
@@ -316,7 +312,7 @@ def _epistemic_provenance_for_sequence(
                 {
                     "assumption_id": "SEQ-PKG-THICKNESS",
                     "type": "parameter",
-                    "description": f"min_package_thickness_m threshold separates genetic units",
+                    "description": "min_package_thickness_m threshold separates genetic units",
                     "source": "user_input",
                     "rung_origin": 3,
                     "value_used": "min_package_thickness_m",

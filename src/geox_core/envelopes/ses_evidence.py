@@ -2,9 +2,11 @@
 GEOX Canonical Substrate Ontology v2.1
 Shared SES Evidence Envelope Factory
 """
+
 import uuid
 import hashlib
 from datetime import datetime
+
 
 class SESEvidenceObject:
     def __init__(self, tool_name, parent_ids=None):
@@ -28,5 +30,5 @@ class SESEvidenceObject:
             "claim_tag": claim_tag,
             "uncertainty": uncertainty or {"method": "unspecified", "sigma": 0.0},
             "data": substrate_data,
-            "eligible_for_verdict": self.tool in ["geox_kinetic_tool", "geox_stress_tool", "geox_flow_tool"]
+            "eligible_for_verdict": self.tool in ["geox_kinetic_tool", "geox_stress_tool", "geox_flow_tool"],
         }

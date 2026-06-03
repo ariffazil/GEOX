@@ -3,10 +3,12 @@ GEOX Harness Engine: 9-Harness Constraint Architecture
 Ported from arifOS WEALTH v2.0
 DITEMPA BUKAN DIBERI
 """
+
 import os
 import hashlib
 import inspect
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
 
 class HarnessEngine:
     """9-Harness Constraint Architecture for GEOX Decision Kernel."""
@@ -42,15 +44,22 @@ class HarnessEngine:
         return cls._LINEAGE_HASH
 
     HARNESS_NAMES = [
-        "Identity", "Reality", "Epistemic", "Entropy", "Survival",
-        "Constitutional", "Efficiency", "Coordination", "Civilization"
+        "Identity",
+        "Reality",
+        "Epistemic",
+        "Entropy",
+        "Survival",
+        "Constitutional",
+        "Efficiency",
+        "Coordination",
+        "Civilization",
     ]
 
     def audit(self, tool_name: str, primary: Dict[str, Any], flags: List[str], parent_hash: str = "") -> Dict[str, Any]:
         """Audit geoscientific evidence against the 9-harness constraints."""
         harness_status = {name: {"stress": 0.0, "status": "SECURE"} for name in self.HARNESS_NAMES}
         violations = []
-        
+
         # 1. Identity Check (Parent chaining)
         if parent_hash and len(parent_hash) != 64:
             harness_status["Identity"].update({"stress": 1.0, "status": "SNAPPED"})
@@ -80,20 +89,18 @@ class HarnessEngine:
         hcpv = primary.get("hcpv", 1.0)
         stress_resistance = primary.get("stress_resistance", 0.5)
         flow_mobility = primary.get("flow_mobility", 0.5)
-        
+
         # Energy In = Stress Resistance / Flow Mobility
         energy_invested = (stress_resistance / max(0.01, flow_mobility)) * 1000
         eroei = hcpv / max(1.0, energy_invested)
-        
+
         carbon = primary.get("carbon_intensity", 0.0)
         collapse = primary.get("collapse_risk", 0.0)
-        
+
         if carbon > 0.04 or collapse > 0.3 or eroei < 3.0:
-            harness_status["Civilization"].update({
-                "stress": 1.0, 
-                "status": "SNAPPED",
-                "detail": f"C:{carbon:.3f} | R:{collapse:.3f} | EROEI:{eroei:.2f}"
-            })
+            harness_status["Civilization"].update(
+                {"stress": 1.0, "status": "SNAPPED", "detail": f"C:{carbon:.3f} | R:{collapse:.3f} | EROEI:{eroei:.2f}"}
+            )
             violations.append("CIVILIZATION_HARNESS_FAILURE")
             if eroei < 3.0:
                 violations.append("ENERGY_OVERSHOOT_FAILURE")

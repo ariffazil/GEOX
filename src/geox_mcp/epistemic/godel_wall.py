@@ -133,7 +133,6 @@ def recursive_dependency_check(
     Returns:
       GodelWallRecord with verdict.
     """
-    import uuid
 
     if visited is None:
         visited = set()
@@ -236,7 +235,6 @@ def godel_wall_check(
     Raises:
         GodelWallError: If verdict is UNDECIDABLE_YET
     """
-    import uuid
 
     wall_id = str(uuid.uuid4())[:12]
 

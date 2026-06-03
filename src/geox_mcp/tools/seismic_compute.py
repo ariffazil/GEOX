@@ -15,8 +15,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional, Literal
-
+from typing import Any, Literal
 
 
 from geox_core.enums.statuses import (
@@ -26,7 +25,7 @@ from geox_core.enums.statuses import (
     ExecutionStatus,
     enrich_envelope_with_metabolic,
 )
-from geox_mcp.tools._helpers import _get_artifact, _artifact_exists
+from geox_mcp.tools._helpers import _artifact_exists
 
 logger = logging.getLogger("geox.seismic_compute")
 
@@ -53,6 +52,7 @@ async def _mode_synthetic(
     output_format: str,
 ) -> dict[str, Any]:
     from geox_mcp.tools.forward_model_synthetic import geox_forward_model_synthetic
+
     return await geox_forward_model_synthetic(
         well_id=well_id,
         vp=vp,
@@ -85,6 +85,7 @@ async def _mode_well_tie(
     q_factor: float,
 ) -> dict[str, Any]:
     from geox_mcp.tools.seismic_well_tie import geox_seismic_well_tie_compute
+
     return await geox_seismic_well_tie_compute(
         well_id=well_id,
         volume_ref=volume_ref,
@@ -109,6 +110,7 @@ async def _mode_time_depth_anchor(
     method: str,
 ) -> dict[str, Any]:
     from geox_mcp.tools.seismic_well_tie import geox_time_depth_anchor
+
     return await geox_time_depth_anchor(
         well_id=well_id,
         checkshot_ref=checkshot_ref,
@@ -132,6 +134,7 @@ async def _mode_anomalous_contrast(
     rho: list[float] | None,
 ) -> dict[str, Any]:
     from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
+
     return await geox_anomalous_contrast_detector(
         ai_profile=ai_profile,
         depth=depth,
