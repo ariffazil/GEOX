@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, List, Optional, Literal
+from typing import Any, Dict, List, Optional, Literal
+
+import numpy as np
 
 from geox_core.enums.statuses import (
     get_standard_envelope,
@@ -31,6 +33,7 @@ async def geox_subsurface_generate_candidates(
         "permeability",
         "gr_motif",
         "lithology",
+        "velocity_slice",  # E8: 2.5D velocity slice as structure map
     ],
     evidence_refs: List[str],
     realizations: int = 3,
@@ -53,6 +56,10 @@ async def geox_subsurface_generate_candidates(
     # Basin metabolize mode (absorbs geox_task_metabolize_basin)
     basin_context: str | None = None,
     canon9_profile: str = "malay_basin",
+    # ── Eureka 8 (2026-06-03): velocity_slice mode parameters ───────────
+    target_depth_m: Optional[float] = None,  # depth to slice at (m TVDSS)
+    cube_inline: Optional[Dict[str, Any]] = None,  # {data: 3D list, x, y, z}
+    use_synth_cube: bool = True,  # if True and no cube_inline, build a synth cube
 ) -> dict:
     """Generates ensemble subsurface outputs with residuals and data-density maps.
 
@@ -61,14 +68,15 @@ async def geox_subsurface_generate_candidates(
     # F1 Amanah + F2 Truth: fail closed on empty evidence
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_subsurface_generate_candidates",
         target_class=target_class,
-            evidence_refs=evidence_refs,
-            vsh_method=vsh_method,
-            sw_model=sw_model,
-            basin_context=basin_context,
-            canon9_profile=canon9_profile,
+        evidence_refs=evidence_refs,
+        vsh_method=vsh_method,
+        sw_model=sw_model,
+        basin_context=basin_context,
+        canon9_profile=canon9_profile,
     )
     if _err is not None:
         return _err
@@ -235,6 +243,76 @@ async def geox_subsurface_generate_candidates(
             physics_guard=result.get("physics_guard"),
             confidence_band=(result.get("value_contract") or {}).get("uncertainty_band"),
         )
+
+    # ── Eureka 8 (2026-06-03): velocity_slice mode branch ─────────────────
+    # When target_class == "velocity_slice", route through the E8 keystone
+    # module: build/ingest Vp cube, slice at target_depth, attribute.
+    # The result is added to the existing envelope; target_class remains.
+    # Zero new MCP surface — this is a new mode of an existing tool.
+    if target_class == "velocity_slice":
+        try:
+            from geox_core.spatial import (
+                synth_cube_with_structure,
+                slice_velocity_cube,
+                structural_attribution,
+            )
+
+            # Build or ingest the Vp cube
+            if cube_inline is not None:
+                from geox_core.spatial.velocity_slice import VpCube
+
+                cube = VpCube(
+                    data=np.asarray(cube_inline["data"], dtype=float),
+                    x=np.asarray(cube_inline["x"], dtype=float),
+                    y=np.asarray(cube_inline["y"], dtype=float),
+                    z=np.asarray(cube_inline["z"], dtype=float),
+                    origin="user_supplied_inline",
+                    construction=str(cube_inline.get("construction", "user_supplied")),
+                    dix_horizontal_layering_assumed=bool(cube_inline.get("dix_horizontal_layering_assumed", True)),
+                )
+            elif use_synth_cube:
+                cube = synth_cube_with_structure(
+                    z_min=zone_top_m if zone_top_m is not None else 0.0,
+                    z_max=zone_base_m if zone_base_m is not None else 3000.0,
+                )
+            else:
+                return {
+                    **result,
+                    "execution_status": "HOLD",
+                    "reason": "velocity_slice mode requires either cube_inline or use_synth_cube=True",
+                    "e8_status": "NO_CUBE_PROVIDED",
+                }
+
+            slice_depth = target_depth_m if target_depth_m is not None else 2000.0
+            vp_slice = slice_velocity_cube(cube, slice_depth, window_m=0.0)
+            smap = structural_attribution(vp_slice)
+            e8_block = {
+                "eureka": "E8_velocity_as_structure_2026_06_03",
+                "target_depth_m": float(slice_depth),
+                "cube_id": cube.cube_id,
+                "cube_construction": cube.construction,
+                "structural_map": smap.to_dict(),
+                "signals_attributed": list(smap.signals.keys()),
+                "physics_status": (
+                    "PLAUSIBLE_NOT_CLAIM (2.5D Dix has known limitations)"
+                    if cube.dix_horizontal_layering_assumed
+                    else "CLAIM (synth cube; no horizontal-layer assumption)"
+                ),
+                "honest_flags": smap.envelope.get("honest_flags", []),
+            }
+            # Merge E8 block into the result envelope (no overwrite of existing keys)
+            result = {**result, "e8_velocity_slice": e8_block}
+        except Exception as exc:
+            logger.warning(f"E8 velocity_slice branch failed (target_class=velocity_slice): {exc}")
+            result = {
+                **result,
+                "e8_velocity_slice": {
+                    "eureka": "E8_velocity_as_structure_2026_06_03",
+                    "status": "HOLD",
+                    "reason": f"velocity_slice mode failed: {exc}",
+                },
+            }
+
     return enrich_envelope_with_metabolic(result, "geox_subsurface_generate_candidates")
 
 
@@ -247,10 +325,11 @@ async def geox_subsurface_verify_integrity(candidate_ref: str, domain: str) -> d
     # F2 Truth gate: verify evidence exists before claiming physical feasibility
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_subsurface_verify_integrity",
         candidate_ref=candidate_ref,
-            domain=domain,
+        domain=domain,
     )
     if _err is not None:
         return _err

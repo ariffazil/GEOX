@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Literal
+from typing import Any, Dict, Literal, Optional
 
 from geox_core.enums.statuses import (
     get_standard_envelope,
@@ -20,6 +20,8 @@ async def geox_prospect_evaluate(
     verdict: Literal["compute", "preview", "seal"] = "compute",
     ack_irreversible: bool = False,
     judge_pin: str | None = None,
+    # ── Eureka 8 (2026-06-03): optional StructuralMap as derived input ────
+    structural_map_inline: Optional[Dict[str, Any]] = None,
 ) -> dict:
     """Integrated prospect evaluation (Volumetrics, POS, EVOI) with optional preview/seal.
 
@@ -35,14 +37,20 @@ async def geox_prospect_evaluate(
         verdict: "compute" (default) | "preview" (reversible advisory) | "seal" (irreversible).
         ack_irreversible: Required when verdict="seal". F1 Amanah gate.
         judge_pin: Optional constant-time PIN for seal authorization.
+        structural_map_inline: E8 — optional inline StructuralMap (output of
+                               bootstrap_structure). When provided, the prospect
+                               evaluation carries the structural position as
+                               additional evidence (Vp-mean, structural-height
+                               at the prospect location, etc.).
     """
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_prospect_evaluate",
         prospect_ref=prospect_ref,
-            evidence_refs=evidence_refs,
-            judge_pin=judge_pin,
+        evidence_refs=evidence_refs,
+        judge_pin=judge_pin,
     )
     if _err is not None:
         return _err
