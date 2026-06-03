@@ -66,35 +66,34 @@ Every output passes through the **F3 WITNESS floor** before reaching the reasoni
 
 ***
 
-## MCP Surface (Live — 2026-05-17)
+## MCP Surface (Live — 2026-06-03)
 
 ```
-PYTHONPATH=src python -m geox_mcp.server
-→ 28 canonical tools exposed (no internal legacy aliases)
+PYTHONPATH=src python -m geox_mcp.server --host 0.0.0.0 --port 8081
+→ 20 canonical tools exposed (no internal legacy aliases)
 → Universal output contract v0.4
-→ Version v2026.05.17
+→ Version v2026.05.27
+→ Contract epoch: 2026-05-12-GEOX-13TOOLS-v0.7
 ```
 
-### Tool Groups
+### The 20 canonical tools
 
-| Group | Tools | Purpose |
-|-------|-------|---------|
-| `data` | `geox_data_ingest_bundle`, `geox_data_qc_bundle` | Load and validate well log data |
-| `well` | `geox_well_analyze_sequence`, `geox_well_infer_seq_strat` | Well log interpretation |
-| `well` | `geox_well_build_packages`, `geox_well_compute_gr_bins` | GR binning and package building |
-| `subsurface` | `geox_subsurface_generate_candidates`, `geox_subsurface_verify_integrity` | Petrophysical candidates |
-| `seismic` | `geox_seismic_analyze_volume`, `geox_seismic_well_tie_compute` | Seismic evidence preparation |
-| `seismic` | `geox_vision_time_to_depth`, `geox_time_depth_anchor` | Vision depth conversion |
-| `section` | `geox_section_interpret_correlation` | Cross-section correlation |
-| `map` | `geox_map_context_scene` | Geospatial grounding |
-| `time4d` | `geox_time4d_analyze_system` | 4D systems tract analysis |
-| `abduction` | `geox_process_abduction`, `geox_evidence_contradiction_scan` | Geological process hypothesis + red-team |
-| `cross` | `geox_evidence_summarize_cross` | Cross-domain synthesis |
-| `prospect` | `geox_prospect_evaluate`, `geox_prospect_judge_preview`, `geox_prospect_judge_seal` | Risk quantification and verdict |
-| `registry` | `geox_system_registry_status`, `geox_history_audit` | Registry health and audit trail |
-| `registry` | `geox_contradiction_registry_status`, `geox_test_receipt_status` | Validation and test receipts |
-| `registry` | `geox_bundle_security_audit`, `geox_resource_registry_status` | Security and manifest audit |
-| `governance` | `mcp_health_check` | F1–F13 enforcement, 888HOLD |
+The canonical list lives at `src/geox_mcp/server.py` → `CANONICAL_PUBLIC_TOOLS` and is served live by `geox_system_registry_status`. **Always trust the live registry, not this table.**
+
+| Domain | Tools |
+|--------|-------|
+| **Data intake** | `geox_data_ingest_bundle`, `geox_data_qc_bundle`, `geox_dst_ingest_test` |
+| **Inspect (pre-ingest)** | `geox_las_inspect`, `geox_seismic_inspect`, `geox_deviation_survey_inspect`, `geox_tops_inspect`, `geox_seismic_segy_inspect` |
+| **Subsurface (petrophysics + integrity)** | `geox_subsurface_generate_candidates`, `geox_subsurface_verify_integrity` |
+| **Seismic physics** | `geox_seismic_compute` (modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute) |
+| **Sequence stratigraphy** | `geox_sequence_interpret` (modes: single_well, project, section_correlation) |
+| **Evidence reasoning** | `geox_evidence_reason` (phases: synthesize, abduct, contradict, full) |
+| **Prospect** | `geox_prospect_evaluate` (modes: screen, appraise, develop) |
+| **Map context** | `geox_map_context_scene` |
+| **Claim governance** | `geox_claim_create`, `geox_claim_challenge`, `geox_evidence_attach`, `geox_claim_seal` |
+| **Registry / system** | `geox_system_registry_status` |
+
+> **F13 honored** — every capability lives in an existing tool's modes/params, not a new tool. Eureka forges (E1 multi-method T-D fitters, E7 cascade demotion) add depth inside `geox_seismic_compute` and `geox_claim_*` without expanding the surface.
 
 ### Universal Output Envelope (v0.4)
 
@@ -144,7 +143,7 @@ geox/
 │       ├── server.py           # THE canonical FastMCP entrypoint
 │       ├── registry.py         # Single tool registry — one source of truth
 │       ├── contracts/          # MCP protocol contracts
-│       └── tools/             # 28 canonical tools (one module per domain)
+│       └── tools/             # 20 canonical tools (one module per domain)
 │
 ├── resources/                  # Agent Knowledge Pack
 │   ├── capabilities/
@@ -366,8 +365,8 @@ GEOX computes earth evidence only. GEOX does not judge. GEOX does not define doc
 ## Test Suite
 
 ```
-693 passed, 1 skipped, 3 xfailed, 0 failures
-```
+66 passed, 0 skipped, 0 xfailed, 0 failures
+*Eureka forge (E1 + E7) + physics guard suites — full integration suite lives in `tests/integration/` and runs separately.*
 
 Golden tests anchor agent behavior — tool output shape, claim_state correctness, failure mode coverage, no secret/path leaks.
 
@@ -379,7 +378,7 @@ Golden tests anchor agent behavior — tool output shape, claim_state correctnes
 |----------|---------|-------------|
 | `PYTHONPATH` | `src` | Required — must include `src/` for imports |
 | `GEOX_HOST` | `0.0.0.0` | HTTP bind host |
-| `GEOX_PORT` | `18081` | HTTP bind port (organ-standard) |
+| `GEOX_PORT` | `8081` | HTTP bind port (organ-standard, live on `geox-mcp.service`) |
 | `GEOX_TRANSPORT` | `streamable-http` | `stdio` or `streamable-http` |
 | `GEOX_LOG_LEVEL` | `INFO` | Logging level |
 | `GEOX_SECRET_TOKEN` | `stdio-bypass` | Fail-closed auth for HTTP transport |
@@ -397,5 +396,5 @@ Golden tests anchor agent behavior — tool output shape, claim_state correctnes
 Full federation knowledge base — architecture decisions, earth-intelligence theory, agent documentation:
 → **https://wiki.arif-fazil.com**
 
-*Last Verified: 2026-05-22 | 999 SEAL ALIVE*
+*Last Verified: 2026-06-03 | 999 SEAL ALIVE*
 **DITEMPA BUKAN DIBERI — Intelligence is forged, not given.**
