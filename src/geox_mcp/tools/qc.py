@@ -472,13 +472,109 @@ async def geox_data_qc_bundle(
                     except OSError:
                         pass
                     if _aov_results["significant_curves"]:
-                        limitations.append(
+                        limitaciones.append(
                             f"SAF stat_anova: {_aov_results['n_groups']}-group ANOVA found significant differences "
                             f"(p<0.05) in {len(_aov_results['significant_curves'])} curve(s) "
                             f"by {_group_col_aov}: {', '.join(_aov_results['significant_curves'])}."
                         )
                         flags.append("SAF_ANOVA_SIGNIFICANT_GROUPS")
                     _saf_anova = _aov_results
+        except Exception as _saf_aov_exc:
+            _saf_anova = {"embed_skipped": str(_saf_aov_exc)[:120]}
+
+        # EUREKA FORGE (2026-06-03): categorical independence via chi-square.
+
+        # EUREKA FORGE (2026-06-03): categorical independence via chi-square.
+        # When the artifact has TWO categorical columns (e.g. facies x
+        # region, lithology x well_id), run chi-square test of
+        # independence via saf_stats.stat_chi_square. Surfaces chi2,
+        # p_value, dof, Cramér's V (effect size), and Fisher's exact
+        # (for 2x2 tables). Answers: "is facies X independent of
+        # region Y, or are they correlated?"
+        _saf_chi2 = None
+        try:
+            import sys as _sys_chi
+
+            _arifos_kernel_chi = "/root/arifOS"
+            if _arifos_kernel_chi not in _sys_chi.path:
+                _sys_chi.path.insert(0, _arifos_kernel_chi)
+            from core.shared.saf_stats import stat_chi_square as _saf_chi2_fn
+
+            # Find two categorical columns. Auto-detect from: facies,
+            # lithology, region, zone, well_id, formation, group.
+            _cat_candidates_chi = (
+                "facies",
+                "lithology",
+                "region",
+                "zone",
+                "well_id",
+                "formation",
+                "group",
+            )
+            _cat_cols_chi = [
+                c
+                for c in _cat_candidates_chi
+                if c in (raw_curves or {}) and raw_curves.get(c) is not None and len(raw_curves.get(c)) >= 6
+            ]
+            if len(_cat_cols_chi) >= 2:
+                import pandas as _pd_chi
+                import uuid as _uuid_chi
+                from pathlib import Path as _Path_chi
+                import os as _os_chi
+
+                _chi2_root = _Path_chi(_os_chi.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
+                _chi2_root.mkdir(parents=True, exist_ok=True)
+                _os_chi.environ["SAF_DATA_ROOT"] = str(_chi2_root)
+                _chi2_csv = _chi2_root / (f"chi2_{_uuid_chi.uuid4().hex[:10]}.csv")
+                _chi2_df_chi: dict = {c: list(raw_curves[c]) for c in _cat_cols_chi[:2]}
+                _pd_chi.DataFrame(_chi2_df_chi).to_csv(_chi2_csv, index=False)
+                _chi2_raw = _saf_chi2_fn(
+                    str(_chi2_csv),
+                    var_a=_cat_cols_chi[0],
+                    var_b=_cat_cols_chi[1],
+                    test="independence",
+                )
+                try:
+                    _chi2_csv.unlink()
+                except OSError:
+                    pass
+                # Federated saf_stats returns the F1-F13 envelope with
+                # chi2, p_value, dof, cramers_v, fisher_exact at top
+                # level. Upstream saf_stats nests under "result".
+                _chi2_p = _chi2_raw.get("p_value") if isinstance(_chi2_raw, dict) else None
+                _chi2_chi2 = _chi2_raw.get("chi2") if isinstance(_chi2_raw, dict) else None
+                _chi2_dof = _chi2_raw.get("dof") if isinstance(_chi2_raw, dict) else None
+                _chi2_v = _chi2_raw.get("cramers_v") if isinstance(_chi2_raw, dict) else None
+                _chi2_fisher = _chi2_raw.get("fisher_exact") if isinstance(_chi2_raw, dict) else None
+                _chi2_table_shape = (
+                    _chi2_raw.get("n_rows"),
+                    _chi2_raw.get("n_cols"),
+                )
+                _chi2_summary = {
+                    "var_a": _cat_cols_chi[0],
+                    "var_b": _cat_cols_chi[1],
+                    "test": "chi_square_independence",
+                    "chi2": _chi2_chi2,
+                    "dof": _chi2_dof,
+                    "p_value": _chi2_p,
+                    "cramers_v": _chi2_v,
+                    "fisher_exact": _chi2_fisher,
+                    "table_shape": _chi2_table_shape,
+                    "significant_at_0_05": (_chi2_p is not None and float(_chi2_p) < 0.05),
+                }
+                if _chi2_p is not None and float(_chi2_p) < 0.05:
+                    _chi2_summary["interpretation"] = f"{_cat_cols_chi[0]} and {_cat_cols_chi[1]} are NOT independent"
+                    limitaciones.append(
+                        f"SAF stat_chi_square: {_cat_cols_chi[0]} and {_cat_cols_chi[1]} "
+                        f"are not independent (chi2={_chi2_chi2}, p={_chi2_p}, "
+                        f"Cramér's V={_chi2_v})."
+                    )
+                    flags.append("SAF_CHI_SQUARE_DEPENDENT")
+                else:
+                    _chi2_summary["interpretation"] = f"{_cat_cols_chi[0]} and {_cat_cols_chi[1]} are independent"
+                _saf_chi2 = _chi2_summary
+        except Exception as _saf_chi2_exc:
+            _saf_chi2 = {"embed_skipped": str(_saf_chi2_exc)[:120]}
         except Exception as _saf_aov_exc:
             _saf_anova = {"embed_skipped": str(_saf_aov_exc)[:120]}
 
@@ -561,6 +657,8 @@ async def geox_data_qc_bundle(
                 response["_saf_assumptions"] = _saf_summary
             if _saf_anova is not None:
                 response["_saf_anova"] = _saf_anova
+            if _saf_chi2 is not None:
+                response["_saf_chi_square"] = _saf_chi2
         except NameError:
             pass  # mode-specific vars not set (exception above)
 
