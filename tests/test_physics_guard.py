@@ -6,6 +6,7 @@ Tests physics constraint enforcement for subsurface outputs.
 import pytest
 import sys
 from pathlib import Path
+import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -276,6 +277,94 @@ class TestValidationResult:
         assert d["hold"] is True
         assert len(d["violations"]) == 1
         assert d["violations"][0]["parameter"] == "porosity"
+
+    def test_extended_violation_result(self):
+        from geox_core.core.epistemic_integrity import EpistemicResult
+        epistemic = EpistemicResult(
+            integrity_score=0.9,
+            classification="CLAIM",
+            posterior_breadth=4.0,
+            evidence_density=1.2,
+            model_lineage_hash="abc123hash",
+            independence_score=0.95,
+            recommendation="Review required",
+            hold=True
+        )
+        result = ValidationResult(
+            status="PHYSICS_VIOLATION",
+            violations=[],
+            hold=True,
+            posterior_breadth_violation=True,
+            posterior_breadth_ratio=6.5,
+            reason="Posterior too broad",
+            epistemic_integrity=epistemic
+        )
+        d = result.to_dict()
+        assert d["status"] == "PHYSICS_VIOLATION"
+        assert d["hold"] is True
+        assert d["posterior_breadth_violation"] is True
+        assert d["posterior_breadth_ratio"] == 6.5
+        assert d["reason"] == "Posterior too broad"
+        assert d["epistemic_integrity"]["hold"] is True
+
+
+
+
+class TestPhysicsGuardExtended:
+    """Extended tests for the updated functions in guards.py"""
+
+    def setup_method(self):
+        self.guard = PhysicsGuard()
+
+    def test_ro_bounds_valid(self):
+        result = self.guard.validate({"ro": 1.0})
+        assert result.status == "PASS"
+
+    def test_ro_bounds_invalid(self):
+        result = self.guard.validate({"ro": 0.5})
+        assert result.status == "PHYSICS_VIOLATION"
+        assert len(result.violations) == 1
+        assert result.violations[0].parameter == "ro"
+
+    def test_tie_correlation(self):
+        assert self.guard.check_tie_correlation(0.5) == "HOLD"
+        assert self.guard.check_tie_correlation(0.8) == "QUALIFY"
+
+    def test_velocity_sanity_valid(self):
+        v = np.array([2000.0, 2200.0, 2400.0])
+        z = np.array([100.0, 200.0, 300.0])
+        result = self.guard.validate_velocity_sanity(v, z)
+        assert result.status == "PASS"
+
+    def test_velocity_sanity_out_of_bounds(self):
+        # Min velocity < 1480
+        v = np.array([1400.0, 2000.0])
+        z = np.array([100.0, 200.0])
+        result = self.guard.validate_velocity_sanity(v, z)
+        assert result.status == "PHYSICS_VIOLATION"
+        assert result.violations[0].parameter == "velocity_absolute"
+
+    def test_velocity_sanity_gradient_out_of_bounds(self):
+        # dv/dz = 1000/10 = 100 > 50
+        v = np.array([2000.0, 3000.0])
+        z = np.array([100.0, 110.0])
+        result = self.guard.validate_velocity_sanity(v, z)
+        assert result.status == "PHYSICS_VIOLATION"
+        assert result.violations[0].parameter == "velocity_gradient_acceleration"
+
+    def test_drift_sanity_valid(self):
+        drift = np.array([10.0, 20.0, 30.0])
+        z = np.array([100.0, 200.0, 300.0])
+        result = self.guard.validate_drift_sanity(drift, z)
+        assert result.status == "PASS"
+
+    def test_drift_sanity_invalid(self):
+        # Large curvature
+        drift = np.array([10.0, 100.0, 10.0])
+        z = np.array([100.0, 101.0, 102.0])
+        result = self.guard.validate_drift_sanity(drift, z)
+        assert result.status == "DRIFT_VIOLATION"
+        assert result.violations[0].parameter == "drift_curvature"
 
 
 if __name__ == "__main__":

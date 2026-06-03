@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __all__ = [
     "AttributeOverlayRef",
     "BaseSupportGeometry",
@@ -53,8 +55,6 @@ DITEMPA BUKAN DIBERI
 This module defines the canonical Pydantic 2.x models for the GEOX 'Causal Scene'.
 It enforces the separation between identity, witness geometry, and policy-governed verdicts.
 """
-
-from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
