@@ -90,6 +90,38 @@ def compute_td_from_checkshot(
     return twt_interp, coverage_pct
 
 
+# ── Eureka 1: Multi-method T-D fitter dispatcher ────────────────────────────
+
+
+def compute_td_function(
+    checkshot_data: list[dict],
+    depth_array: np.ndarray,
+    method: str = "linear",
+    **kwargs,
+):
+    """Multi-method T-D fitter dispatcher (Eureka 1).
+
+    Wraps `geox_core.physics.td_methods.fit_td` and returns a `TDFitResult`
+    envelope (not just twt + coverage). The 4 supported methods:
+
+      - "linear"      (default; preserves compute_td_from_checkshot behaviour)
+      - "polynomial"  (degree-bounded weighted fit, opt-in allow_extrapolation)
+      - "vo_k"        (linear or exponential compaction, k from checkshots)
+      - "layer_cake"  (per-formation V_int from tops + checkshots)
+
+    Returns the full TDFitResult envelope: method, equation, coefficients,
+    twt_ms, residuals_ms, rmse_ms, physics_guard, extrapolation_risk, fail_closed.
+
+    Backward compat: pass method="linear" to get the same semantics as
+    compute_td_from_checkshot (fail-closed on extrapolation).
+    """
+    from geox_core.physics.td_methods import fit_td
+
+    # Normalise dict-format → list-of-dict (the fitters expect either, but
+    # the canonical input is the dict format with "depth_md" / "twt_ms" keys).
+    return fit_td(method, checkshot_data, np.asarray(depth_array, dtype=float), **kwargs)
+
+
 def compute_average_velocity_td(
     vp_array: np.ndarray,
     depth_array: np.ndarray,
