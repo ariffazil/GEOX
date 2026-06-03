@@ -482,6 +482,92 @@ async def geox_data_qc_bundle(
         except Exception as _saf_aov_exc:
             _saf_anova = {"embed_skipped": str(_saf_aov_exc)[:120]}
 
+        # EUREKA FORGE (2026-06-03): data-quality MCAR audit via stat_missing.
+        # Per-column missing counts + Little's MCAR chi-square test. A
+        # non-random missingness pattern means downstream parametric
+        # analysis is biased. Compatible with both federated (dict-format
+        # per_column) and upstream (list-format) saf_stats.stat_missing.
+        _saf_missing = None
+        try:
+            import sys as _sys_mis
+
+            _arifos_kernel_mis = "/root/arifOS"
+            if _arifos_kernel_mis not in _sys_mis.path:
+                _sys_mis.path.insert(0, _arifos_kernel_mis)
+            from core.shared.saf_stats import stat_missing as _saf_missing_fn
+            import pandas as _pd_mis
+            import uuid as _uuid_mis
+            from pathlib import Path as _Path_mis
+            import os as _os_mis
+
+            _mis_root = _Path_mis(_os_mis.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
+            _mis_root.mkdir(parents=True, exist_ok=True)
+            _os_mis.environ["SAF_DATA_ROOT"] = str(_mis_root)
+            _mis_csv = _mis_root / (f"missing_{_uuid_mis.uuid4().hex[:10]}.csv")
+            _mis_df: dict = {}
+            for _k_mis, _v_mis in (raw_curves or {}).items():
+                if _k_mis.upper() not in {"DEPT", "DEPTH", "MD"} and _v_mis is not None and isinstance(_v_mis, list):
+                    _mis_df[_k_mis] = _v_mis
+            if _mis_df:
+                _pd_mis.DataFrame(_mis_df).to_csv(_mis_csv, index=False)
+                _mis_raw = _saf_missing_fn(str(_mis_csv))
+                try:
+                    _mis_csv.unlink()
+                except OSError:
+                    pass
+                _mis_per_col_raw = _mis_raw.get("per_column", {}) if isinstance(_mis_raw, dict) else {}
+                _mis_mcar = _mis_raw.get("littles_mcar_approx", {}) if isinstance(_mis_raw, dict) else {}
+                _mis_per_col_list = []
+                _mis_high_missing = []
+                if isinstance(_mis_per_col_raw, dict):
+                    for _col_name_mis, _col_info_mis in _mis_per_col_raw.items():
+                        if isinstance(_col_info_mis, dict):
+                            _missing = _col_info_mis.get("missing", 0)
+                            _pct = _col_info_mis.get("pct", 0.0)
+                        else:
+                            _missing, _pct = 0, 0.0
+                        _mis_per_col_list.append(
+                            {
+                                "column": _col_name_mis,
+                                "n_missing": _missing,
+                                "pct_missing": _pct,
+                            }
+                        )
+                        if _pct > 10.0:
+                            _mis_high_missing.append(_col_name_mis)
+                elif isinstance(_mis_per_col_raw, list):
+                    _mis_per_col_list = _mis_per_col_raw
+                    _mis_high_missing = [c.get("column") for c in _mis_per_col_raw if c.get("pct_missing", 0) > 10.0]
+                _mcar_rejected = _mis_mcar.get("verdict_at_alpha_0_05", "") == "False"
+                _saf_missing = {
+                    "n_rows": (_mis_raw.get("n_rows") if isinstance(_mis_raw, dict) else None),
+                    "total_missing": (_mis_raw.get("total_missing") if isinstance(_mis_raw, dict) else None),
+                    "pct_missing_total": (_mis_raw.get("pct_missing_total") if isinstance(_mis_raw, dict) else None),
+                    "per_column": _mis_per_col_list,
+                    "littles_mcar_approx": _mis_mcar,
+                    "high_missing_columns": _mis_high_missing,
+                    "mcar_rejected": _mcar_rejected,
+                    "interpretation": (
+                        "missingness is NOT random (MCAR rejected) — downstream analysis may be biased"
+                        if _mcar_rejected
+                        else "missingness consistent with MCAR"
+                    ),
+                }
+                if _mis_high_missing:
+                    limitaciones.append(
+                        f"SAF stat_missing: {len(_mis_high_missing)} curve(s) have >10% missing: {', '.join(_mis_high_missing)}"
+                    )
+                    flags.append("SAF_HIGH_MISSING")
+                if _mcar_rejected:
+                    limitaciones.append(
+                        "SAF stat_missing: Little's MCAR test rejected "
+                        f"(chi2={_mis_mcar.get('chi2_approx', '?')}, "
+                        "p<0.05) — missingness is systematic, not random"
+                    )
+                    flags.append("SAF_MCAR_REJECTED")
+        except Exception as _saf_mis_exc:
+            _saf_missing = {"embed_skipped": str(_saf_mis_exc)[:120]}
+
         # EUREKA FORGE (2026-06-03): categorical independence via chi-square.
 
         # EUREKA FORGE (2026-06-03): categorical independence via chi-square.
@@ -773,6 +859,8 @@ async def geox_data_qc_bundle(
                 response["_saf_anova"] = _saf_anova
             if _saf_chi2 is not None:
                 response["_saf_chi_square"] = _saf_chi2
+            if _saf_missing is not None:
+                response["_saf_missing"] = _saf_missing
         except NameError:
             pass  # mode-specific vars not set (exception above)
 
