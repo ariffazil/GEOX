@@ -355,6 +355,31 @@ async def geox_data_ingest_bundle(
             )
         )
 
+    # Hardening: enforce max length on free-text inputs at the boundary.
+    from geox_mcp.tools.kernel._validation import validate_optional_string
+
+    try:
+        validate_optional_string("source_uri", source_uri)
+        validate_optional_string("well_id", well_id)
+        validate_optional_string("filename", filename)
+    except (TypeError, ValueError) as exc:
+        return _metabolic_return(
+            get_standard_envelope(
+                {
+                    "status": "ERROR",
+                    "tool": "geox_data_ingest_bundle",
+                    "error_code": "INVALID_INPUT",
+                    "message": str(exc),
+                    "claim_state": "NO_VALID_EVIDENCE",
+                },
+                tool_class="ingress",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+            )
+        )
+
     derived_id = well_id or Path(source_uri).stem
 
     # ── Handle non-well source types ────────────────────────────────────

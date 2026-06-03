@@ -582,8 +582,8 @@ class OCRIngestor:
 
     def _require_deps(self):
         try:
-            from PIL import Image
-            import pytesseract
+            from PIL import Image  # noqa: F401
+            import pytesseract  # noqa: F401
         except ImportError as e:
             raise RuntimeError(f"OCR dependencies not available: {e}. Ensure PIL and pytesseract are installed in the container.")
 

@@ -397,7 +397,8 @@ def generate_seismic_section(
         "wavelet": wavelet,
         "dominant_freq_hz": freq_hz,
         "stratigraphy": [
-            {"name": l.name, "top_md": l.top_md, "bot_md": l.bot_md, "vp": l.vp_mean, "rho": l.rho_mean} for l in strat
+            {"name": layer.name, "top_md": layer.top_md, "bot_md": layer.bot_md, "vp": layer.vp_mean, "rho": layer.rho_mean}
+            for layer in strat
         ],
         "metadata": {
             "ditempa_constitution": "888_JUDGE_ratified",

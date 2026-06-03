@@ -172,7 +172,7 @@ def _render_plotly(spec: PlotSpec) -> dict[str, Any]:
 
 def _render_pillow(spec: PlotSpec) -> dict[str, Any]:
     """Deterministic pillow renderer for image verification / thumbnails."""
-    from PIL import Image, ImageDraw, ImageFont
+    from PIL import Image, ImageDraw  # noqa: F401
     import os
 
     os.makedirs(spec.output_dir, exist_ok=True)
