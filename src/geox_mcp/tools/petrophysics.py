@@ -34,6 +34,7 @@ async def geox_subsurface_generate_candidates(
         "gr_motif",
         "lithology",
         "velocity_slice",  # E8: 2.5D velocity slice as structure map
+        "lmr_map",  # E9: Lambda-Mu-Rho (fluid + lithology) crossplot at every voxel
     ],
     evidence_refs: List[str],
     realizations: int = 3,
@@ -60,6 +61,9 @@ async def geox_subsurface_generate_candidates(
     target_depth_m: Optional[float] = None,  # depth to slice at (m TVDSS)
     cube_inline: Optional[Dict[str, Any]] = None,  # {data: 3D list, x, y, z}
     use_synth_cube: bool = True,  # if True and no cube_inline, build a synth cube
+    # ── Eureka 9 (2026-06-03): lmr_map mode parameters ───────────────────
+    lmr_inline: Optional[Dict[str, Any]] = None,  # {vp, vs, rho} arrays + fluid_zone
+    castagna_fallback: bool = True,  # if True and vs missing, predict from Vp via Castagna
 ) -> dict:
     """Generates ensemble subsurface outputs with residuals and data-density maps.
 
@@ -310,6 +314,84 @@ async def geox_subsurface_generate_candidates(
                     "eureka": "E8_velocity_as_structure_2026_06_03",
                     "status": "HOLD",
                     "reason": f"velocity_slice mode failed: {exc}",
+                },
+            }
+
+    # ── Eureka 9 (2026-06-03): lmr_map mode branch ──────────────────────
+    # When target_class == "lmr_map", route through the E9 keystone: build
+    # {Vp, Vs, rho} fields, apply Castagna mudrock fallback if Vs missing,
+    # compute Lambda-Rho and Mu-Rho (Goodway 1997). Zero new MCP surface.
+    if target_class == "lmr_map":
+        try:
+            from geox_core.avo import (
+                lmr_decompose,
+                castagna_mudrock_fallback,
+                CASTAGNA_HONEST_BAND,
+            )
+
+            if lmr_inline is None:
+                # Build synth {Vp, Vs, rho} from zone_top..zone_base
+                zt = zone_top_m if zone_top_m is not None else 0.0
+                zb = zone_base_m if zone_base_m is not None else 3000.0
+                nz = 11
+                vp_arr = np.linspace(2200.0, 3000.0, nz)  # typical clastic Vp
+                vs_arr = np.linspace(1200.0, 1500.0, nz)  # typical clastic Vs
+                rho_arr = np.linspace(2.10, 2.40, nz)  # typical density (g/cc)
+                used_castagna = False
+            else:
+                vp_arr = np.asarray(lmr_inline["vp"], dtype=float)
+                vs_input = lmr_inline.get("vs")
+                rho_arr = np.asarray(lmr_inline["rho"], dtype=float)
+                if vs_input is None and castagna_fallback:
+                    # Castagna Vp -> Vs fallback (DTS absent)
+                    cf = castagna_mudrock_fallback(
+                        vp_arr,
+                        fluid_zone=str(lmr_inline.get("fluid_zone", "brine")),
+                        unit="m/s",
+                    )
+                    vs_arr = np.asarray(cf["vs"], dtype=float)
+                    used_castagna = True
+                elif vs_input is not None:
+                    vs_arr = np.asarray(vs_input, dtype=float)
+                    used_castagna = False
+                else:
+                    return {
+                        **result,
+                        "execution_status": "HOLD",
+                        "reason": "lmr_map mode requires lmr_inline.vp; castagna_fallback=False and no vs supplied",
+                        "e9_status": "NO_VS_NO_FALLBACK",
+                    }
+
+            lmr = lmr_decompose(vp_arr, vs_arr, rho_arr)
+            # AVO class is interpretable from Vp/Vs trend (heuristic for the demo)
+            vp_vs = vp_arr / np.maximum(vs_arr, 1e-6)
+            # Class III (gas-sand DHI) when Vp/Vs < 1.7 on average
+            avg_vp_vs = float(np.mean(vp_vs))
+            avo_class = "III" if avg_vp_vs < 1.7 else ("I" if avg_vp_vs > 2.0 else "II")
+            e9_block = {
+                "eureka": "E9_impedance_as_fluid_2026_06_03",
+                "lmr_crossplot": lmr.to_dict(),
+                "lambda_rho_mean": float(np.mean(lmr.lambda_rho)),
+                "mu_rho_mean": float(np.mean(lmr.mu_rho)),
+                "vp_vs_ratio_mean": avg_vp_vs,
+                "avo_class_heuristic": avo_class,
+                "castagna_fallback_used": used_castagna,
+                "honest_flags": (["F2: Castagna mudrock fallback — Vs not observed, predicted from Vp"] if used_castagna else [])
+                + CASTAGNA_HONEST_BAND,
+                "acrisk": 0.20 if not used_castagna else 0.35,
+                "physics_status": (
+                    "DEGRADED (Castagna fallback, no DTS)" if used_castagna else "PLAUSIBLE (Vs observed or no Castagna)"
+                ),
+            }
+            result = {**result, "e9_lmr_map": e9_block}
+        except Exception as exc:
+            logger.warning(f"E9 lmr_map branch failed (target_class=lmr_map): {exc}")
+            result = {
+                **result,
+                "e9_lmr_map": {
+                    "eureka": "E9_impedance_as_fluid_2026_06_03",
+                    "status": "HOLD",
+                    "reason": f"lmr_map mode failed: {exc}",
                 },
             }
 
