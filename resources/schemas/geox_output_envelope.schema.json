@@ -78,6 +78,66 @@
         "confidence": { "type": "string", "enum": ["low", "low-moderate", "moderate", "moderate-high", "high"] },
         "claim_state": { "type": "string", "enum": ["PROCESS_HYPOTHESIS"] }
       }
+    },
+    "causal_link": {
+      "type": "object",
+      "description": "E1 — single step in a causal chain. Links an upstream cause to a downstream effect via a mechanism grounded in a physics domain.",
+      "required": ["step", "mechanism", "physics_domain"],
+      "properties": {
+        "step": { "type": "string", "description": "Human-readable description of this causal step" },
+        "mechanism": { "type": "string", "description": "The physical mechanism (e.g. 'thermal conduction', 'buoyancy-driven migration')" },
+        "physics_domain": {
+          "type": "string",
+          "enum": ["tectonics", "thermodynamics", "fluid_flow", "surface_ocean", "wave_sar", "geochemistry", "rock_physics", "petrophysics"]
+        },
+        "evidence_ref": { "type": "string", "description": "Reference to evidence supporting this link" },
+        "conservation_law": { "type": "string", "enum": ["mass", "energy", "momentum", "charge", "isotope", "pvt", "none"] }
+      }
+    },
+    "falsification_test": {
+      "type": "object",
+      "description": "E2 — a single testable prediction that, if violated, would falsify the parent hypothesis.",
+      "required": ["prediction", "check_method", "expected_signal"],
+      "properties": {
+        "prediction": { "type": "string" },
+        "check_method": { "type": "string", "enum": ["seismic", "well_log", "sar_imagery", "gravity_magnetic", "geochemistry", "pressure", "production", "analog"] },
+        "expected_signal": { "type": "string", "description": "What observation would confirm the hypothesis" },
+        "current_status": { "type": "string", "enum": ["unverified", "confirmed", "weakened", "falsified", "untestable"] },
+        "discriminating_data_needed": { "type": "string", "description": "Data that would distinguish this hypothesis from competing alternatives" }
+      }
+    },
+    "toac_pair": {
+      "type": "object",
+      "description": "E3 — Theory of Anomalous Contrast baseline+excess pair. Baseline = expected signal if no anomaly. Excess = delta beyond baseline+uncertainty.",
+      "required": ["baseline", "excess", "uncertainty"],
+      "properties": {
+        "baseline": { "type": "type" },
+        "excess": { "description": "Delta between observed and baseline" },
+        "uncertainty": { "type": "number", "minimum": 0, "maximum": 1, "description": "1-sigma uncertainty on the baseline" },
+        "signal_to_noise": { "type": "number", "description": "excess / uncertainty" },
+        "anomaly_class": { "type": "string", "enum": ["NONE", "WEAK", "MODERATE", "STRONG", "ANOMALOUS"] }
+      }
+    },
+    "scale_metadata": {
+      "type": "object",
+      "description": "E4 — scale envelope so downstream modules can reject cross-scale misuse.",
+      "required": ["length_m", "time_s"],
+      "properties": {
+        "length_m": { "type": "number", "description": "Characteristic length scale in meters" },
+        "time_s": { "type": "number", "description": "Characteristic time scale in seconds" },
+        "regime": {
+          "type": "string",
+          "enum": ["pore", "core", "log", "well", "seismic_trace", "cross_section", "field", "play", "basin", "margin", "global"]
+        }
+      }
     }
+  },
+  "$defs_added_per_eureka_extraction_20260603": {
+    "E1_causal_chain": "definitions.causal_link — used in result.causal_chain[]",
+    "E2_falsification_tests": "definitions.falsification_test — used in candidate.falsification_tests[]",
+    "E3_toac_pair": "definitions.toac_pair — used in result.toac field",
+    "E4_scale_metadata": "definitions.scale_metadata — used in result.scale field",
+    "applies_at": "result level (top-level envelope properties), pending server.py wiring",
+    "wired_via": "Tier 3 — requires @mcp.tool return-type updates (888_HOLD)"
   }
 }
