@@ -351,6 +351,137 @@ async def geox_data_qc_bundle(
         except Exception as _saf_exc:
             _saf_summary = {"embed_skipped": str(_saf_exc)[:120]}
 
+        # EUREKA FORGE (2026-06-03): group-wise one-way ANOVA + Welch ANOVA.
+        # When the artifact has a categorical grouping column (e.g. facies,
+        # well_id, region) and >=2 numeric curves, run one-way ANOVA on
+        # each numeric curve ~ group_col. The federated saf_stats.stat_anova
+        # uses pingouin/scipy and returns F, p, eta^2, plus optional
+        # Tukey HSD post-hoc. This complements the univariate (depth
+        # distribution) and bivariate (cross-curve correlation) forges:
+        # the third axis of petrophysical QC is "do these curves differ
+        # by group?" — e.g. does GR differ across facies? Does RHOB
+        # differ by well?
+        _saf_anova = None
+        try:
+            import sys as _sys_aov
+
+            _arifos_kernel_aov = "/root/arifOS"
+            if _arifos_kernel_aov not in _sys_aov.path:
+                _sys_aov.path.insert(0, _arifos_kernel_aov)
+            from core.shared.saf_stats import stat_anova as _saf_anova_fn
+
+            # Detect a categorical grouping column from the artifact.
+            # Convention: caller passes group_col via the artifact's
+            # "_saf_group_col" tag, or the function falls back to
+            # a column named exactly one of: "facies", "well_id",
+            # "region", "zone", "group".
+            _group_col_aov = (
+                raw_curves.get("_saf_group_col")  # caller hint
+                if isinstance(raw_curves, dict)
+                else None
+            )
+            if not _group_col_aov:
+                for _candidate in ("facies", "well_id", "region", "zone", "group"):
+                    if _candidate in (raw_curves or {}):
+                        _group_col_aov = _candidate
+                        break
+            if _group_col_aov and _group_col_aov in (raw_curves or {}):
+                _group_vals = raw_curves[_group_col_aov]
+                if _group_vals is not None and len(_group_vals) >= 6:
+                    import pandas as _pd_aov
+                    import uuid as _uuid_aov
+                    from pathlib import Path as _Path_aov
+                    import os as _os_aov
+
+                    _aov_root = _Path_aov(_os_aov.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
+                    _aov_root.mkdir(parents=True, exist_ok=True)
+                    _os_aov.environ["SAF_DATA_ROOT"] = str(_aov_root)
+                    _aov_csv = _aov_root / (f"anova_{_uuid_aov.uuid4().hex[:10]}.csv")
+                    _aov_df: dict = {_group_col_aov: list(_group_vals)}
+                    for k in raw_curves:
+                        if k != _group_col_aov and k.upper() not in {"DEPT", "DEPTH", "MD"} and raw_curves.get(k) is not None:
+                            _v = raw_curves[k]
+                            if isinstance(_v, list) and len(_v) == len(_group_vals):
+                                _aov_df[k] = _v
+                    _pd_aov.DataFrame(_aov_df).to_csv(_aov_csv, index=False)
+                    _aov_results: dict = {
+                        "group_col": _group_col_aov,
+                        "n_groups": None,
+                        "per_curve": {},
+                        "significant_curves": [],
+                    }
+                    _curves_tested = [
+                        k
+                        for k in _aov_df
+                        if k != _group_col_aov and _pd_aov.api.types.is_numeric_dtype(_pd_aov.Series(_aov_df[k]).dtype)
+                    ]
+                    for _curve_aov in _curves_tested:
+                        try:
+                            _aov_raw = _saf_anova_fn(
+                                str(_aov_csv),
+                                value_col=_curve_aov,
+                                group_col=_group_col_aov,
+                                parametric=True,
+                                welch=False,
+                                post_hoc=True,
+                            )
+                            # Federated stat_anova returns the F stat nested
+                            # under anova_table.F (as a dict mapping term
+                            # names to F values), with p_value at the top
+                            # level. Upstream saf_stats returns the F
+                            # stat at result.F. Handle both.
+                            _aov_p = _aov_raw.get("p_value") if isinstance(_aov_raw, dict) else None
+                            _aov_F = None
+                            _aov_eta2 = None
+                            _aov_k = None
+                            if isinstance(_aov_raw, dict):
+                                _aov_inner = _aov_raw.get("result", _aov_raw)
+                                if isinstance(_aov_inner, dict):
+                                    _aov_F = _aov_inner.get("F")
+                                    _aov_eta2 = _aov_inner.get("eta_squared")
+                                    _aov_k = _aov_inner.get("k_groups")
+                                if _aov_F is None:
+                                    _aov_table = _aov_raw.get("anova_table", {}) or {}
+                                    _F_map = _aov_table.get("F", {}) or {}
+                                    # F values are keyed by term names
+                                    # like "C(facies)"; pick the first.
+                                    if isinstance(_F_map, dict) and _F_map:
+                                        _aov_F = next(iter(_F_map.values()))
+                                if _aov_eta2 is None:
+                                    _aov_eta2 = _aov_raw.get("eta_sq")
+                                if _aov_k is None:
+                                    _k_val = _aov_raw.get("n_groups")
+                                    if _k_val is None:
+                                        # Count unique groups from the data.
+                                        _k_val = len(set(str(x) for x in _group_vals))
+                                    _aov_k = _k_val
+                            _aov_results["n_groups"] = _aov_k
+                            _aov_results["per_curve"][_curve_aov] = {
+                                "F": _aov_F,
+                                "p_value": _aov_p,
+                                "eta_squared": _aov_eta2,
+                                "k_groups": _aov_k,
+                                "significant_at_0_05": (_aov_p is not None and float(_aov_p) < 0.05),
+                            }
+                            if _aov_p is not None and float(_aov_p) < 0.05:
+                                _aov_results["significant_curves"].append(_curve_aov)
+                        except Exception as _curve_aov_exc:
+                            _aov_results["per_curve"][_curve_aov] = {"embed_skipped": str(_curve_aov_exc)[:120]}
+                    try:
+                        _aov_csv.unlink()
+                    except OSError:
+                        pass
+                    if _aov_results["significant_curves"]:
+                        limitations.append(
+                            f"SAF stat_anova: {_aov_results['n_groups']}-group ANOVA found significant differences "
+                            f"(p<0.05) in {len(_aov_results['significant_curves'])} curve(s) "
+                            f"by {_group_col_aov}: {', '.join(_aov_results['significant_curves'])}."
+                        )
+                        flags.append("SAF_ANOVA_SIGNIFICANT_GROUPS")
+                    _saf_anova = _aov_results
+        except Exception as _saf_aov_exc:
+            _saf_anova = {"embed_skipped": str(_saf_aov_exc)[:120]}
+
         # Red Team Fix: Include curve_warnings and depth_qc in failure logic
         has_range_issues = bool(curve_warnings)
         has_depth_issues = not depth_qc.get("monotonic", True)
@@ -428,6 +559,7 @@ async def geox_data_qc_bundle(
             # the assumption check + outlier audit.
             if _saf_summary is not None:
                 response["_saf_assumptions"] = _saf_summary
+<<<<<<< HEAD
 
             # EUREKA FORGE (2026-06-03): cross-curve correlation QC.
             # When in 'full' or 'cross_curve' mode with >=2 numeric curves,
@@ -542,6 +674,8 @@ async def geox_data_qc_bundle(
                         }
             except Exception as _saf_xc_exc:
                 response["_saf_cross_curve_skipped"] = str(_saf_xc_exc)[:120]
+            if _saf_anova is not None:
+                response["_saf_anova"] = _saf_anova
         except NameError:
             pass  # mode-specific vars not set (exception above)
 
