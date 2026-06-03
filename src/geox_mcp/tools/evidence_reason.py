@@ -23,7 +23,6 @@ from typing import Any, Literal
 from geox_core.enums.statuses import (
     get_standard_envelope,
     GovernanceStatus,
-    ArtifactStatus,
     ExecutionStatus,
 )
 from geox_mcp.tools._helpers import _get_artifact
@@ -42,44 +41,84 @@ _GRAMMAR_RULES: list[dict[str, Any]] = [
         "name": "coarsening_upward_clean_top",
         "patterns": {"gr_trend": "decreasing_upward", "vclay_trend": "decreasing_upward", "rhob_trend": "increasing_upward"},
         "candidates": [
-            {"process": "shoreface progradation", "mechanism": "sediment supply exceeded accommodation", "prior": 0.35,
-             "required_context": ["marine_shale_below", "clean_sand_top"]},
-            {"process": "delta front mouth bar", "mechanism": "fluvial input into standing water", "prior": 0.25,
-             "required_context": ["distributary_channel_evidence"]},
-            {"process": "fan lobe progradation", "mechanism": "turbidity current deceleration", "prior": 0.15,
-             "required_context": ["deepwater_context"]},
+            {
+                "process": "shoreface progradation",
+                "mechanism": "sediment supply exceeded accommodation",
+                "prior": 0.35,
+                "required_context": ["marine_shale_below", "clean_sand_top"],
+            },
+            {
+                "process": "delta front mouth bar",
+                "mechanism": "fluvial input into standing water",
+                "prior": 0.25,
+                "required_context": ["distributary_channel_evidence"],
+            },
+            {
+                "process": "fan lobe progradation",
+                "mechanism": "turbidity current deceleration",
+                "prior": 0.15,
+                "required_context": ["deepwater_context"],
+            },
         ],
     },
     {
         "name": "fining_upward_blocky",
         "patterns": {"gr_trend": "increasing_upward", "vclay_trend": "increasing_upward", "motif": "blocky"},
         "candidates": [
-            {"process": "channel fill", "mechanism": "fluvial or tidal channel abandonment", "prior": 0.40,
-             "required_context": ["erosional_base"]},
-            {"process": "crevasse splay", "mechanism": "levee breach during flood", "prior": 0.20,
-             "required_context": ["near_channel"]},
+            {
+                "process": "channel fill",
+                "mechanism": "fluvial or tidal channel abandonment",
+                "prior": 0.40,
+                "required_context": ["erosional_base"],
+            },
+            {
+                "process": "crevasse splay",
+                "mechanism": "levee breach during flood",
+                "prior": 0.20,
+                "required_context": ["near_channel"],
+            },
         ],
     },
     {
         "name": "high_gr_condensed",
         "patterns": {"gr_peak": "high", "thickness_m": "thin", "lateral_extent": "regional"},
         "candidates": [
-            {"process": "maximum flooding surface", "mechanism": "maximum transgression and condensation", "prior": 0.30,
-             "required_context": ["regional_correlation", "biostrat"]},
-            {"process": "volcanic ash bed", "mechanism": "airfall tephra deposition", "prior": 0.15,
-             "required_context": ["geochemical_fingerprint"]},
-            {"process": "organic-rich flooding", "mechanism": "high productivity + anoxia", "prior": 0.20,
-             "required_context": ["low_rho", "high_resistivity"]},
+            {
+                "process": "maximum flooding surface",
+                "mechanism": "maximum transgression and condensation",
+                "prior": 0.30,
+                "required_context": ["regional_correlation", "biostrat"],
+            },
+            {
+                "process": "volcanic ash bed",
+                "mechanism": "airfall tephra deposition",
+                "prior": 0.15,
+                "required_context": ["geochemical_fingerprint"],
+            },
+            {
+                "process": "organic-rich flooding",
+                "mechanism": "high productivity + anoxia",
+                "prior": 0.20,
+                "required_context": ["low_rho", "high_resistivity"],
+            },
         ],
     },
     {
         "name": "blocky_low_gr_cuts_shale",
         "patterns": {"gr_shape": "blocky", "gr_value": "low", "base_contact": "sharp"},
         "candidates": [
-            {"process": "channel incision", "mechanism": "base-level fall or avulsion", "prior": 0.35,
-             "required_context": ["erosional_base", "3d_seismic"]},
-            {"process": "turbidite lobe", "mechanism": "density flow deceleration", "prior": 0.20,
-             "required_context": ["deepwater_context"]},
+            {
+                "process": "channel incision",
+                "mechanism": "base-level fall or avulsion",
+                "prior": 0.35,
+                "required_context": ["erosional_base", "3d_seismic"],
+            },
+            {
+                "process": "turbidite lobe",
+                "mechanism": "density flow deceleration",
+                "prior": 0.20,
+                "required_context": ["deepwater_context"],
+            },
         ],
     },
 ]
@@ -108,13 +147,29 @@ def _load_artifact(artifact_ref: str) -> dict[str, Any]:
 
 def _extract_evidence_summary(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
     summary: dict[str, Any] = {
-        "gr_trend": "unknown", "vclay_trend": "unknown", "rhob_trend": "unknown",
-        "motif": "unknown", "gr_shape": "unknown", "gr_value": "unknown",
-        "base_contact": "unknown", "thickness_m": "unknown", "lateral_extent": "unknown",
-        "has_core": False, "has_biostrat": False, "has_correlation": False, "well_count": 1,
-        "gr_mean_api": None, "gr_motif_class": None, "dn_dominant_lithology": None,
-        "dn_lithology_fractions": {}, "rt_mean_ohmm": None, "vsh_mean": None,
-        "phi_mean": None, "sw_mean": None, "phi_density_mean": None, "phi_sonic_mean": None,
+        "gr_trend": "unknown",
+        "vclay_trend": "unknown",
+        "rhob_trend": "unknown",
+        "motif": "unknown",
+        "gr_shape": "unknown",
+        "gr_value": "unknown",
+        "base_contact": "unknown",
+        "thickness_m": "unknown",
+        "lateral_extent": "unknown",
+        "has_core": False,
+        "has_biostrat": False,
+        "has_correlation": False,
+        "well_count": 1,
+        "gr_mean_api": None,
+        "gr_motif_class": None,
+        "dn_dominant_lithology": None,
+        "dn_lithology_fractions": {},
+        "rt_mean_ohmm": None,
+        "vsh_mean": None,
+        "phi_mean": None,
+        "sw_mean": None,
+        "phi_density_mean": None,
+        "phi_sonic_mean": None,
     }
     for art in artifacts:
         meta = art.get("metadata", {})
@@ -243,17 +298,19 @@ def _match_rules(evidence: dict[str, Any]) -> list[dict[str, Any]]:
                         missing_context.append(req)
                 score = cand["prior"] * confidence_ratio - context_penalty
                 score = max(0.05, min(0.95, score))
-                candidates.append({
-                    "process": cand["process"],
-                    "mechanism": cand["mechanism"],
-                    "evidence_for": _build_evidence_for(rule, evidence),
-                    "evidence_against": _build_evidence_against(cand, evidence, missing_context),
-                    "expected_additional_signatures": cand.get("expected_signatures", []),
-                    "missing_tests": _build_missing_tests(cand, evidence, missing_context),
-                    "confidence": _score_to_confidence(score),
-                    "claim_state": "PROCESS_HYPOTHESIS",
-                    "_score": score,
-                })
+                candidates.append(
+                    {
+                        "process": cand["process"],
+                        "mechanism": cand["mechanism"],
+                        "evidence_for": _build_evidence_for(rule, evidence),
+                        "evidence_against": _build_evidence_against(cand, evidence, missing_context),
+                        "expected_additional_signatures": cand.get("expected_signatures", []),
+                        "missing_tests": _build_missing_tests(cand, evidence, missing_context),
+                        "confidence": _score_to_confidence(score),
+                        "claim_state": "PROCESS_HYPOTHESIS",
+                        "_score": score,
+                    }
+                )
     candidates.sort(key=lambda x: x["_score"], reverse=True)
     for c in candidates:
         del c["_score"]
@@ -376,7 +433,9 @@ def _contradiction_scan(hypotheses: list[dict[str, Any]], evidence: dict[str, An
             if vsh_mean > 0.5 and phi_mean > 0.25:
                 penalties += 0.30
                 issues.append(f"C8: High Vsh ({vsh_mean:.2f}) incompatible with high porosity ({phi_mean:.3f})")
-                auto_hold_triggers.append({"code": "C8", "severity": "high", "detail": f"Vsh={vsh_mean:.2f} vs phi={phi_mean:.3f}"})
+                auto_hold_triggers.append(
+                    {"code": "C8", "severity": "high", "detail": f"Vsh={vsh_mean:.2f} vs phi={phi_mean:.3f}"}
+                )
 
         # C9
         if motif == "FUNNEL" and gr_trend == "increasing_upward":
@@ -419,9 +478,11 @@ def _contradiction_scan(hypotheses: list[dict[str, Any]], evidence: dict[str, An
 
     max_penalty = max(penalty_scores) if penalty_scores else 0.0
     recommendation = (
-        "888HOLD triggered — severe contradictions detected" if auto_hold_triggers else
-        "Re-rank hypotheses after penalty application" if any(p > 0 for p in penalty_scores) else
-        "No major contradictions detected"
+        "888HOLD triggered — severe contradictions detected"
+        if auto_hold_triggers
+        else "Re-rank hypotheses after penalty application"
+        if any(p > 0 for p in penalty_scores)
+        else "No major contradictions detected"
     )
     return {
         "contradictions": contradictions,
@@ -494,7 +555,9 @@ async def _phase_abduct(evidence_refs: list[str], scale: str, depo_context: str,
             "artifact_refs": {},
             "evidence_refs": evidence_refs,
             "claim_limits": ["Cannot abduct from missing evidence."],
-            "next_best_actions": [{"tool": "geox_data_ingest_bundle", "reason": "Re-ingest missing evidence", "priority": "critical"}],
+            "next_best_actions": [
+                {"tool": "geox_data_ingest_bundle", "reason": "Re-ingest missing evidence", "priority": "critical"}
+            ],
             "audit_receipt": {"acrisk": 1.0, "verdict": "VOID", "floor_signals": ["F2 TRUTH"], "floor_authority": "arifOS"},
             "human_final_authority": "Arif",
             "error": f"Failed to load {len(failed)} artifact(s): {[a['ref'] for a in failed]}",
@@ -506,16 +569,18 @@ async def _phase_abduct(evidence_refs: list[str], scale: str, depo_context: str,
     hypotheses = _match_rules(evidence)
 
     if len(hypotheses) < 2 and claim_strictness in ["appraise", "decision"]:
-        hypotheses.append({
-            "process": "alternative_unspecified",
-            "mechanism": "Insufficient data to distinguish process",
-            "evidence_for": ["Data matches no strong pattern"],
-            "evidence_against": ["Pattern ambiguity high"],
-            "expected_additional_signatures": [],
-            "missing_tests": ["More complete log suite", "Core description", "Seismic context"],
-            "confidence": "low",
-            "claim_state": "PROCESS_HYPOTHESIS",
-        })
+        hypotheses.append(
+            {
+                "process": "alternative_unspecified",
+                "mechanism": "Insufficient data to distinguish process",
+                "evidence_for": ["Data matches no strong pattern"],
+                "evidence_against": ["Pattern ambiguity high"],
+                "expected_additional_signatures": [],
+                "missing_tests": ["More complete log suite", "Core description", "Seismic context"],
+                "confidence": "low",
+                "claim_state": "PROCESS_HYPOTHESIS",
+            }
+        )
 
     claim_limits = [
         "All outputs are PROCESS_HYPOTHESIS, not DECISION_SUPPORT.",
@@ -543,7 +608,12 @@ async def _phase_abduct(evidence_refs: list[str], scale: str, depo_context: str,
         "evidence_refs": evidence_refs,
         "claim_limits": claim_limits,
         "next_best_actions": [
-            {"tool": "geox_evidence_reason", "reason": "Run contradiction scan", "priority": "high", "parameters": {"phase": "contradict"}}
+            {
+                "tool": "geox_evidence_reason",
+                "reason": "Run contradiction scan",
+                "priority": "high",
+                "parameters": {"phase": "contradict"},
+            }
         ],
         "audit_receipt": {
             "acrisk": 0.45 if len(hypotheses) >= 2 else 0.60,
@@ -572,7 +642,14 @@ async def _phase_contradict(evidence_refs: list[str], hypotheses: list[dict] | N
             "artifact_refs": {},
             "evidence_refs": evidence_refs,
             "claim_limits": ["Contradiction scan requires hypotheses. Call geox_evidence_reason with phase='abduct' first."],
-            "next_best_actions": [{"tool": "geox_evidence_reason", "reason": "Generate hypotheses before scanning", "priority": "critical", "parameters": {"phase": "abduct"}}],
+            "next_best_actions": [
+                {
+                    "tool": "geox_evidence_reason",
+                    "reason": "Generate hypotheses before scanning",
+                    "priority": "critical",
+                    "parameters": {"phase": "abduct"},
+                }
+            ],
             "audit_receipt": {"acrisk": 0.50, "verdict": "HOLD", "floor_signals": ["F4 HUMILITY"], "floor_authority": "arifOS"},
             "human_final_authority": "Arif",
         }
@@ -626,16 +703,23 @@ async def _phase_contradict(evidence_refs: list[str], hypotheses: list[dict] | N
             "Auto-888HOLD fires when curve contradictions exceed safety threshold.",
         ],
         "next_best_actions": [
-            {"tool": "geox_evidence_reason", "reason": "Synthesize final ranking", "priority": "high", "parameters": {"phase": "synthesize"}}
-            if not scan.get("auto_hold") else
-            {"tool": "geox_data_qc_bundle", "reason": "Re-QC conflicting curves before re-abduction", "priority": "critical"}
+            {
+                "tool": "geox_evidence_reason",
+                "reason": "Synthesize final ranking",
+                "priority": "high",
+                "parameters": {"phase": "synthesize"},
+            }
+            if not scan.get("auto_hold")
+            else {"tool": "geox_data_qc_bundle", "reason": "Re-QC conflicting curves before re-abduction", "priority": "critical"}
         ],
         "audit_receipt": {"acrisk": acrisk, "verdict": verdict, "floor_signals": floor_signals, "floor_authority": "arifOS"},
         "human_final_authority": "Arif",
     }
 
 
-async def _phase_full(evidence_refs: list[str], scale: str, depo_context: str, claim_strictness: str, export_format: str, output_path: str | None) -> dict[str, Any]:
+async def _phase_full(
+    evidence_refs: list[str], scale: str, depo_context: str, claim_strictness: str, export_format: str, output_path: str | None
+) -> dict[str, Any]:
     abduct_result = await _phase_abduct(evidence_refs, scale, depo_context, claim_strictness)
     if abduct_result.get("execution_status") == "ERROR":
         return abduct_result

@@ -3,12 +3,12 @@ GEOX 2.5D — Map View, Geoid, and Cross-Section Probe
 Bridge between 2D sections and 3D cube: map views, horizon slices, geoid visualization,
 and the key operation of "probing" a 3D cube through a 2D section plane.
 """
+
 import numpy as np
-from typing import Dict, List, Tuple, Optional, Any
+from typing import Dict, List, Tuple, Any
 
 
-def extract_horizon_map(cube_data: List, z_slice_idx: int, 
-                        x_coords: List, y_coords: List) -> Dict[str, Any]:
+def extract_horizon_map(cube_data: List, z_slice_idx: int, x_coords: List, y_coords: List) -> Dict[str, Any]:
     """
     Extract a horizon map (time slice / depth slice) from 3D cube.
     Returns amplitude grid for map view visualization.
@@ -27,8 +27,7 @@ def extract_horizon_map(cube_data: List, z_slice_idx: int,
     }
 
 
-def extract_inline_section(cube_data: List, x_idx: int,
-                            x_coords: List, y_coords: List, z_times: List) -> Dict[str, Any]:
+def extract_inline_section(cube_data: List, x_idx: int, x_coords: List, y_coords: List, z_times: List) -> Dict[str, Any]:
     """
     Extract inline (vertical slice along x-axis) from 3D cube.
     """
@@ -49,8 +48,7 @@ def extract_inline_section(cube_data: List, x_idx: int,
     }
 
 
-def extract_crossline_section(cube_data: List, y_idx: int,
-                                x_coords: List, y_coords: List, z_times: List) -> Dict[str, Any]:
+def extract_crossline_section(cube_data: List, y_idx: int, x_coords: List, y_coords: List, z_times: List) -> Dict[str, Any]:
     """
     Extract crossline (vertical slice along y-axis) from 3D cube.
     """
@@ -92,14 +90,14 @@ def compute_geoid_anomalies(
     # Deep basin (negative: low density fill)
     grav -= 35 * np.exp(-(X**2 + Y**2) / (2 * 50**2))
     # Carbonate platform (positive: dense)
-    grav += 18 * np.exp(-((X-15)**2 + (Y+10)**2) / (2 * 20**2))
+    grav += 18 * np.exp(-((X - 15) ** 2 + (Y + 10) ** 2) / (2 * 20**2))
     # Igneous intrusions (high density → positive)
-    grav += 25 * np.exp(-((X-25)**2 + (Y+20)**2) / (2 * 8**2))
-    grav += 15 * np.exp(-((X+20)**2 + (Y-25)**2) / (2 * 6**2))
+    grav += 25 * np.exp(-((X - 25) ** 2 + (Y + 20) ** 2) / (2 * 8**2))
+    grav += 15 * np.exp(-((X + 20) ** 2 + (Y - 25) ** 2) / (2 * 6**2))
     # Salt diapers (density inversion → negative)
-    grav -= 20 * np.exp(-((X+10)**2 + (Y-15)**2) / (2 * 5**2))
+    grav -= 20 * np.exp(-((X + 10) ** 2 + (Y - 15) ** 2) / (2 * 5**2))
     # Fault zones (linear)
-    grav += 5 * np.exp(-((Y - 0.2*X - 5)**2) / (2 * 3**2))
+    grav += 5 * np.exp(-((Y - 0.2 * X - 5) ** 2) / (2 * 3**2))
     # Noise (regional field)
     grav += rng.normal(0, 1.5, (n_grid, n_grid))
 
@@ -108,13 +106,13 @@ def compute_geoid_anomalies(
     # Basement high (strongly magnetized)
     mag += 250 * np.exp(-(X**2 + Y**2) / (2 * 35**2))
     # Faults (magnetization contrast along fault planes)
-    mag += 100 * np.exp(-((Y - 0.3*X - 8)**2) / (2 * 4**2))
-    mag += 80  * np.exp(-((Y - 0.3*X + 22)**2) / (2 * 5**2))
+    mag += 100 * np.exp(-((Y - 0.3 * X - 8) ** 2) / (2 * 4**2))
+    mag += 80 * np.exp(-((Y - 0.3 * X + 22) ** 2) / (2 * 5**2))
     # Shallow volcanics (high frequency)
-    mag += 150 * np.exp(-((X-25)**2 + (Y+20)**2) / (2 * 6**2))
-    mag += 120 * np.exp(-((X+15)**2 + (Y-10)**2) / (2 * 5**2))
+    mag += 150 * np.exp(-((X - 25) ** 2 + (Y + 20) ** 2) / (2 * 6**2))
+    mag += 120 * np.exp(-((X + 15) ** 2 + (Y - 10) ** 2) / (2 * 5**2))
     # Diapirs
-    mag -= 40 * np.exp(-((X+10)**2 + (Y-15)**2) / (2 * 4**2))
+    mag -= 40 * np.exp(-((X + 10) ** 2 + (Y - 15) ** 2) / (2 * 4**2))
     mag += rng.normal(0, 4, (n_grid, n_grid))
 
     return {
@@ -133,7 +131,7 @@ def compute_geoid_anomalies(
             "dimension": "2.5D_geoid",
             "geoid_model": "EGM2008",
             "magnetic_datum": "IGRF-14",
-        }
+        },
     }
 
 
@@ -149,7 +147,7 @@ def compute_geoid_surface(
     N = (G / γ) * ∫∫ Δg(ψ) / sin(ψ/2) dσ
     """
     grav = np.array(gravity_data)
-    
+
     if geoid_type == "undulation":
         # Simple Bouguer anomaly → geoid conversion
         # N ≈ -Δg_B / (ρ_e * g) * H  (simplified)
@@ -175,8 +173,10 @@ def compute_geoid_surface(
 
 def probe_3d_cube_at_section(
     cube_data: List,
-    x_coords: List, y_coords: List, z_times: List,
-    section_type: str = "arbitrary",       # "inline", "crossline", "arbitrary"
+    x_coords: List,
+    y_coords: List,
+    z_times: List,
+    section_type: str = "arbitrary",  # "inline", "crossline", "arbitrary"
     section_position: float = None,
     arbitrary_line: List[Tuple[float, float]] = None,
 ) -> Dict[str, Any]:
@@ -185,7 +185,7 @@ def probe_3d_cube_at_section(
     Extracts the intersection values along the plane.
     """
     n_z = len(z_times)
-    
+
     if section_type == "inline":
         x_idx = int(np.interp(section_position, x_coords, np.arange(len(x_coords))))
         section = np.zeros((n_z, len(y_coords)))
@@ -225,12 +225,13 @@ def probe_3d_cube_at_section(
             "constitution": "888_JUDGE",
             "dimension": "2.5D_probe",
             "arifos_version": "v1.3.1",
-        }
+        },
     }
 
 
-def build_attribute_volume(cube_data: List, x_coords: List, y_coords: List, z_times: List,
-                           attribute: str = "envelope") -> Dict[str, Any]:
+def build_attribute_volume(
+    cube_data: List, x_coords: List, y_coords: List, z_times: List, attribute: str = "envelope"
+) -> Dict[str, Any]:
     """
     Compute seismic attributes on the 3D cube.
     Attributes: envelope, instantaneous phase, dominant frequency, similarity.
@@ -261,12 +262,13 @@ def build_attribute_volume(cube_data: List, x_coords: List, y_coords: List, z_ti
                 attr = np.arctan2(analytic.imag, analytic.real)
             elif attribute == "frequency":
                 from scipy.signal import spectrogram
+
                 f, t_spec, Sxx = spectrogram(trace, fs=4, nperseg=min(16, len(trace)))
                 attr = np.array([f[np.argmax(Sxx[:, i])] for i in range(len(t_spec))])
                 # Resample to match z
                 attr = np.interp(np.arange(n_z), np.arange(len(attr)), attr)
             else:
-                attr = trace ** 2
+                attr = trace**2
 
             attr_vol[:, iy, ix] = attr
 
@@ -277,12 +279,12 @@ def build_attribute_volume(cube_data: List, x_coords: List, y_coords: List, z_ti
         "metadata": {
             "constitution": "888_JUDGE",
             "dimension": "3D_attribute",
-        }
+        },
     }
 
 
 def time_to_depth_conversion(
-    horizon_times: List[float], 
+    horizon_times: List[float],
     velocity_model: Dict[str, List[float]],
     method: str = "layered",
 ) -> List[float]:

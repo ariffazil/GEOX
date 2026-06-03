@@ -1,6 +1,7 @@
 from scipy.interpolate import interp1d
 import numpy as np
 
+
 def apply_td_anchor(tvd_log: np.ndarray, checkshot_tvd: np.ndarray, checkshot_twt: np.ndarray) -> np.ndarray:
     """
     Forces the depth-based log to map to Two-Way Time (TWT).
@@ -9,6 +10,7 @@ def apply_td_anchor(tvd_log: np.ndarray, checkshot_tvd: np.ndarray, checkshot_tw
     # bounds_error=True ensures we don't hallucinate beyond anchor points
     td_function = interp1d(checkshot_tvd, checkshot_twt, bounds_error=True, fill_value=None)
     return td_function(tvd_log)
+
 
 def integrate_sonic(dt_log: np.ndarray, dz: float) -> np.ndarray:
     """

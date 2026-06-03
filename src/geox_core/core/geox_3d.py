@@ -3,6 +3,7 @@ GEOX 3D — Full 3D Seismic Cube Visualization & Interpretation
 3D cube generation, isosurface extraction, horizon mapping,
 and the integration of map view + section view + 3D render in one surface.
 """
+
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass
@@ -12,7 +13,7 @@ from dataclasses import dataclass
 class Isosurface:
     amplitude_value: float
     mesh_vertices: List  # simplified - list of vertex coordinates
-    mesh_faces: List    # simplified - list of face indices
+    mesh_faces: List  # simplified - list of face indices
     color: str
     opacity: float
     arifos_grade: str
@@ -22,7 +23,7 @@ class Isosurface:
 class HorizonSurface:
     name: str
     depth_grid: List[List[float]]  # 2D grid of depth values
-    time_grid: List[List[float]]    # 2D grid of time values
+    time_grid: List[List[float]]  # 2D grid of time values
     amplitude_attributes: Optional[Dict] = None
     area_km2: float = 0.0
     structural_gradient: float = 0.0  # dip angle in degrees
@@ -58,10 +59,10 @@ def generate_3d_seismic_cube(
                 surf[iy, ix] = f(xi[ix], yi[iy])
         return surf
 
-    cx = (x_range_km[0]+x_range_km[1])/2
-    cy = (y_range_km[0]+y_range_km[1])/2
+    cx = (x_range_km[0] + x_range_km[1]) / 2
+    cy = (y_range_km[0] + y_range_km[1]) / 2
     if geology == "fold_belt":
-        top_surf = make_surface(lambda x, y: 500 + 100 * np.exp(-((x - cx)**2 + (y - cy)**2) / (2 * 20**2)))
+        top_surf = make_surface(lambda x, y: 500 + 100 * np.exp(-((x - cx) ** 2 + (y - cy) ** 2) / (2 * 20**2)))
         mid_surf = top_surf + 300 + 20 * rng.random((n_y, n_x))
         bot_surf = mid_surf + 400 + 30 * rng.random((n_y, n_x))
     elif geology == "delta":
@@ -71,9 +72,10 @@ def generate_3d_seismic_cube(
         bot_surf = mid_surf + 350
     elif geology == "carbonate_platform":
         # Flat topped carbonate with steep margins
-        top_surf = make_surface(lambda x, y: 0.0, amplitude=0)
-        margin_mask = np.sqrt((xi[:, None]**2 + yi[None, :]**2)) > (n_x * 0.3)
-        top_surf = np.where(margin_mask, z0 + 150, z0 + 20 * rng.random((n_y, n_x)))
+        z0_carb = 0.0
+        top_surf = make_surface(lambda x, y: z0_carb, amplitude=0)
+        margin_mask = np.sqrt((xi[:, None] ** 2 + yi[None, :] ** 2)) > (n_x * 0.3)
+        top_surf = np.where(margin_mask, z0_carb + 150, z0_carb + 20 * rng.random((n_y, n_x)))
         mid_surf = top_surf + 400
         bot_surf = mid_surf + 300
     else:
@@ -107,9 +109,9 @@ def generate_3d_seismic_cube(
             # Fault disruption
             if fault_complex:
                 for fault in fault_complex:
-                    fx = fault.get("x_km", (x_range_km[0]+x_range_km[1])/2)
-                    fy = fault.get("y_km", (y_range_km[0]+y_range_km[1])/2)
-                    dist = np.sqrt((xi[ix] - fx)**2 + (yi[iy] - fy)**2)
+                    fx = fault.get("x_km", (x_range_km[0] + x_range_km[1]) / 2)
+                    fy = fault.get("y_km", (y_range_km[0] + y_range_km[1]) / 2)
+                    dist = np.sqrt((xi[ix] - fx) ** 2 + (yi[iy] - fy) ** 2)
                     if dist < 5:
                         throw = fault.get("throw_ms", 50)
                         shift = int(throw / (z_span / n_z))
@@ -119,12 +121,12 @@ def generate_3d_seismic_cube(
             # Convolve with Ricker wavelet (simplified)
             t_wl = np.arange(-0.1, 0.1, zi[1] - zi[0])
             f0 = 35
-            wavelet = (1 - (np.pi * f0 * t_wl / 1000)**2) * np.exp(-(np.pi * f0 * t_wl / 1000)**2)
-            trace = np.convolve(trace, wavelet / np.max(np.abs(wavelet)), mode='same')
+            wavelet = (1 - (np.pi * f0 * t_wl / 1000) ** 2) * np.exp(-((np.pi * f0 * t_wl / 1000) ** 2))
+            trace = np.convolve(trace, wavelet / np.max(np.abs(wavelet)), mode="same")
 
             cube[:, iy, ix] = trace
 
-    cube /= (np.max(np.abs(cube)) + 1e-9)
+    cube /= np.max(np.abs(cube)) + 1e-9
 
     # Build horizon grids
     horizons = []
@@ -132,12 +134,14 @@ def generate_3d_seismic_cube(
         time_grid = surf_2d.tolist()
         # Compute amplitude attribute from cube
         amp_attr = {}
-        horizons.append({
-            "name": surf_name,
-            "depth_time_grid_ms": time_grid,
-            "area_km2": float(n_x * n_y * 0.25 / 1e6),
-            "metadata": {"constitution": "888_JUDGE"},
-        })
+        horizons.append(
+            {
+                "name": surf_name,
+                "depth_time_grid_ms": time_grid,
+                "area_km2": float(n_x * n_y * 0.25 / 1e6),
+                "metadata": {"constitution": "888_JUDGE"},
+            }
+        )
 
     return {
         "cube_data": cube.tolist(),
@@ -151,7 +155,7 @@ def generate_3d_seismic_cube(
             "constitution": "888_JUDGE",
             "dimension": "3D_cube",
             "arifos_version": "v1.3.1",
-        }
+        },
     }
 
 
@@ -183,12 +187,14 @@ def extract_horizon_from_cube(
 
     for iy in range(n_y):
         for ix in range(n_x):
-            trace = [cube_data[iz][iy][ix] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix < len(cube_data[iz][iy]) else 0
-                     for iz in range(n_z)]
+            trace = [
+                cube_data[iz][iy][ix] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix < len(cube_data[iz][iy]) else 0
+                for iz in range(n_z)
+            ]
 
             t_start = max(0, t_idx_target - win)
-            t_end   = min(n_z - 1, t_idx_target + win)
-            window = trace[t_start:t_end+1]
+            t_end = min(n_z - 1, t_idx_target + win)
+            window = trace[t_start : t_end + 1]
 
             if window:
                 horizon_amp[iy, ix] = float(np.mean(window))
@@ -203,8 +209,9 @@ def extract_horizon_from_cube(
     }
 
 
-def compute_coherence_volume(cube_data: List, x_coords: List, y_coords: List, z_times: List,
-                             window_traces: int = 3) -> Dict[str, Any]:
+def compute_coherence_volume(
+    cube_data: List, x_coords: List, y_coords: List, z_times: List, window_traces: int = 3
+) -> Dict[str, Any]:
     """
     Compute coherence/continuity attribute to highlight faults and stratigraphy.
     Uses semblance-like calculation.
@@ -219,9 +226,13 @@ def compute_coherence_volume(cube_data: List, x_coords: List, y_coords: List, z_
         for iy in range(1, n_y - 1):
             for ix in range(1, n_x - 1):
                 # 3-trace semblance
-                c = cube_data[iz][iy][ix] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix < len(cube_data[iz][iy]) else 0
-                l = cube_data[iz][iy][ix-1] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix-1 >= 0 else 0
-                r = cube_data[iz][iy][ix+1] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix+1 < n_x else 0
+                c = (
+                    cube_data[iz][iy][ix]
+                    if iz < len(cube_data) and iy < len(cube_data[iz]) and ix < len(cube_data[iz][iy])
+                    else 0
+                )
+                l = cube_data[iz][iy][ix - 1] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix - 1 >= 0 else 0
+                r = cube_data[iz][iy][ix + 1] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix + 1 < n_x else 0
 
                 denom = (abs(c) + abs(l) + abs(r)) / 3 + 1e-6
                 coherence[iz, iy, ix] = 1 - abs(c - (l + r) / 2) / denom
@@ -247,17 +258,17 @@ def build_volume_rendering_params(cube_data: List) -> Dict[str, Any]:
         "histogram": hist.tolist(),
         "bin_edges": bin_edges.tolist(),
         "opacity_points": [
-            {"amplitude": -1.0, "opacity": 0.0,  "color": [0, 0, 0]},
-            {"amplitude": -0.5, "opacity": 0.0,  "color": [0, 0, 80]},
-            {"amplitude":  0.0, "opacity": 0.3,  "color": [255, 255, 255]},
-            {"amplitude":  0.3, "opacity": 0.7,  "color": [0, 200, 100]},
-            {"amplitude":  0.6, "opacity": 0.9,  "color": [255, 100, 0]},
-            {"amplitude":  1.0, "opacity": 1.0,  "color": [255, 255, 0]},
+            {"amplitude": -1.0, "opacity": 0.0, "color": [0, 0, 0]},
+            {"amplitude": -0.5, "opacity": 0.0, "color": [0, 0, 80]},
+            {"amplitude": 0.0, "opacity": 0.3, "color": [255, 255, 255]},
+            {"amplitude": 0.3, "opacity": 0.7, "color": [0, 200, 100]},
+            {"amplitude": 0.6, "opacity": 0.9, "color": [255, 100, 0]},
+            {"amplitude": 1.0, "opacity": 1.0, "color": [255, 255, 0]},
         ],
         "metadata": {
             "render_mode": "semi-transparent_volume",
             "constitution": "888_JUDGE",
-        }
+        },
     }
 
 
@@ -268,7 +279,8 @@ def integrate_map_section_3d(
     x_coords: List[float],
     y_coords: List[float],
     z_times: List[float],
-    inline_idx: int, crossline_idx: int,
+    inline_idx: int,
+    crossline_idx: int,
 ) -> Dict[str, Any]:
     """
     Integrate all three visualization planes into one view:
@@ -297,5 +309,5 @@ def integrate_map_section_3d(
             "constitution": "888_JUDGE",
             "dimension": "3D_unified",
             "arifos_version": "v1.3.1",
-        }
+        },
     }

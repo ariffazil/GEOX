@@ -16,8 +16,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, List, Dict, Optional
-import json
+from typing import Any, Dict
 import logging
 
 logger = logging.getLogger("geox.core.tool_registry")
@@ -26,27 +25,35 @@ logger = logging.getLogger("geox.core.tool_registry")
 # ENUMS
 # ============================================================================
 
+
 class ToolStatus(Enum):
     """Production readiness status."""
-    PROD = "production"      # Fully tested, stable
-    PREVIEW = "preview"      # Working but may change
-    SCAFFOLD = "scaffold"    # Architecture only, not implemented
+
+    PROD = "production"  # Fully tested, stable
+    PREVIEW = "preview"  # Working but may change
+    SCAFFOLD = "scaffold"  # Architecture only, not implemented
+
 
 class Verdict(str, Enum):
     """Canonical AC_Risk terminal verdicts."""
+
     SEAL = "SEAL"
     QUALIFY = "QUALIFY"
     HOLD = "HOLD"
     VOID = "VOID"
 
+
 class DependencyType(str, Enum):
     """Type of inter-product dependency."""
+
     REQUIRED = "required"
     CONDITIONAL = "conditional"
     OPTIONAL = "optional"
 
+
 class ErrorCode(Enum):
     """Standardized GEOX error codes."""
+
     VALIDATION_ERROR = "GEOX_400_VALIDATION"
     INVALID_FORMAT = "GEOX_400_FORMAT"
     MISSING_REQUIRED = "GEOX_400_MISSING"
@@ -64,9 +71,11 @@ class ErrorCode(Enum):
     VISION_UNAVAILABLE = "GEOX_500_VISION"
     CALCULATION_ERROR = "GEOX_500_CALC"
 
+
 # ============================================================================
 # DATA CLASSES
 # ============================================================================
+
 
 @dataclass
 class ErrorSpec:
@@ -75,6 +84,7 @@ class ErrorSpec:
     description: str
     recoverable: bool
     suggested_action: str
+
 
 @dataclass
 class ToolSchema:
@@ -90,6 +100,7 @@ class ToolSchema:
             "required": self.required,
             "additionalProperties": self.additional_properties,
         }
+
 
 @dataclass
 class ToolMetadata:
@@ -122,6 +133,7 @@ class ToolMetadata:
             "nature": self.nature,
         }
 
+
 # ============================================================================
 # REGISTRY & DEPENDENCIES
 # ============================================================================
@@ -140,7 +152,12 @@ DEPENDENCY_GRAPH = [
 SEAL_CHECKLISTS: dict[str, list[str]] = {
     "map": ["geox_map_verify_coordinates", "map_interpret_georeference", "cross_audit_transform_lineage"],
     "well": ["geox_well_verify_petrophysics", "well_audit_qc", "well_verify_cutoffs", "cross_audit_transform_lineage"],
-    "ccs": ["ccs_verify_caprock_integrity", "ccs_audit_hydro_dependency", "geox_physics_compute_ac_risk", "cross_audit_transform_lineage"],
+    "ccs": [
+        "ccs_verify_caprock_integrity",
+        "ccs_audit_hydro_dependency",
+        "geox_physics_compute_ac_risk",
+        "cross_audit_transform_lineage",
+    ],
 }
 
 MANDATORY_888HOLD_DIMENSIONS = {"hazard", "hydro", "ccs", "prospect"}
@@ -149,14 +166,15 @@ MANDATORY_888HOLD_DIMENSIONS = {"hazard", "hydro", "ccs", "prospect"}
 # SEALING ENGINE
 # ============================================================================
 
+
 def can_grant_seal(
     product_type: str,
     fired_tools: set[str],
     own_ac_risk: float,
     vault_anchor: bool,
     runtime_healthy: bool,
-    upstream_verdicts: Dict[str, str] = None, # {product_type: verdict_str}
-    upstream_ac_risks: Dict[str, float] = None, # {product_type: ac_risk_float}
+    upstream_verdicts: Dict[str, str] = None,  # {product_type: verdict_str}
+    upstream_ac_risks: Dict[str, float] = None,  # {product_type: ac_risk_float}
     hold_approved: bool = False,
 ) -> dict[str, Any]:
     """
@@ -169,8 +187,10 @@ def can_grant_seal(
     upstream_ac_risks = upstream_ac_risks or {}
 
     # 1. Universal Preconditions
-    if not vault_anchor: failures.append("Missing vault anchor")
-    if not runtime_healthy: failures.append("Runtime not healthy")
+    if not vault_anchor:
+        failures.append("Missing vault anchor")
+    if not runtime_healthy:
+        failures.append("Runtime not healthy")
     if "cross_audit_transform_lineage" not in fired_tools:
         failures.append("Required metabolizer not fired: cross_audit_transform_lineage")
 
@@ -183,16 +203,16 @@ def can_grant_seal(
     # 3. Risk Inheritance Logic
     max_inherited_risk = 0.0
     upstreams = [d for d in DEPENDENCY_GRAPH if d["downstream"] == product_type]
-    
+
     for dep in upstreams:
         u_type = dep["upstream"]
         u_verdict = upstream_verdicts.get(u_type, Verdict.VOID.value)
         u_risk = upstream_ac_risks.get(u_type, 1.0)
-        
+
         # Rule 1: VOID Propagation
         if u_verdict == Verdict.VOID.value and dep["type"] == DependencyType.REQUIRED:
             failures.append(f"Hard Block: Required upstream {u_type} is VOID.")
-        
+
         # Rule 2: HOLD Propagation for critical products
         if u_verdict == Verdict.HOLD.value and product_type in ["CCS", "HAZARD", "SHALLOW_GEOHAZARD"]:
             failures.append(f"Hard Block: Critical upstream {u_type} is on HOLD.")
@@ -204,7 +224,7 @@ def can_grant_seal(
 
     # 4. Final Risk Determination
     final_ac_risk = max(own_ac_risk, max_inherited_risk)
-    
+
     if final_ac_risk >= 0.15:
         failures.append(f"Final AC_Risk {final_ac_risk:.3f} >= 0.15 (Inherited or Own risk too high)")
 
@@ -217,16 +237,14 @@ def can_grant_seal(
         "verdict": Verdict.SEAL.value if len(failures) == 0 else Verdict.HOLD.value,
         "failures": failures,
         "final_ac_risk": round(final_ac_risk, 4),
-        "audit_trail": {
-            "own_ac_risk": own_ac_risk,
-            "max_inherited_risk": max_inherited_risk,
-            "upstream_count": len(upstreams)
-        }
+        "audit_trail": {"own_ac_risk": own_ac_risk, "max_inherited_risk": max_inherited_risk, "upstream_count": len(upstreams)},
     }
+
 
 # ============================================================================
 # TOOL REGISTRY CLASS
 # ============================================================================
+
 
 class ToolRegistry:
     """Unified tool registry for GEOX MCP server."""
@@ -240,7 +258,7 @@ class ToolRegistry:
     @classmethod
     def list_tools(cls) -> list[ToolMetadata]:
         return list(cls._tools.values())
-    
+
     # Maintain compatibility with geox/__init__.py
     ToolStatus = ToolStatus
     ErrorCode = ErrorCode

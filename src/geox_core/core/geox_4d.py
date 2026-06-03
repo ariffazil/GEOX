@@ -6,8 +6,9 @@ Forward and inverse modelling for 4D earth monitoring:
 - Fluid substitution modelling
 - Compaction/dilation effects
 """
+
 import numpy as np
-from typing import Dict, List, Tuple, Optional, Any
+from typing import Dict, List, Tuple, Any
 from dataclasses import dataclass
 
 
@@ -16,11 +17,11 @@ class TimeLapseSurvey:
     survey_name: str
     year: int
     baseline: bool
-    seismic_data: List      # 3D cube
-    pressure_bar: float     # reservoir pressure (bar)
-    temperature_c: float    # temperature (°C)
-    gas_oil_ratio: float   # GOR (scf/stb)
-    water_cut: float        # water cut fraction
+    seismic_data: List  # 3D cube
+    pressure_bar: float  # reservoir pressure (bar)
+    temperature_c: float  # temperature (°C)
+    gas_oil_ratio: float  # GOR (scf/stb)
+    water_cut: float  # water cut fraction
 
 
 @dataclass
@@ -31,29 +32,31 @@ class FluidSubstitutionResult:
     vs_after: float
     rho_before: float
     rho_after: float
-    ai_change_pct: float   # Acoustic impedance change %
-    fluid_indicator: str   # "GAS", "OIL", "WATER", "MIXED"
+    ai_change_pct: float  # Acoustic impedance change %
+    fluid_indicator: str  # "GAS", "OIL", "WATER", "MIXED"
 
 
 def gassmann_fluid_substitution(
-    vp_initial: float, vs_initial: float, rho_initial: float,
+    vp_initial: float,
+    vs_initial: float,
+    rho_initial: float,
     phi: float,
-    k_mineral: float = 37.0,    # GPa (quartz)
-    k_fluid: float = 2.2,        # GPa (brine)
-    k_dry_frame: float = 10.0,   # GPa (dry rock frame)
+    k_mineral: float = 37.0,  # GPa (quartz)
+    k_fluid: float = 2.2,  # GPa (brine)
+    k_dry_frame: float = 10.0,  # GPa (dry rock frame)
     rho_mineral: float = 2.65,  # g/cm³ (quartz)
-    rho_fluid: float = 1.0,      # g/cm³ (brine)
+    rho_fluid: float = 1.0,  # g/cm³ (brine)
     sw_initial: float = 0.9,
     sw_final: float = 0.3,
 ) -> FluidSubstitutionResult:
     """
     Gassmann's fluid substitution (the standard method).
     Models velocity changes due to fluid saturation.
-    
+
     Physics:
     K_sat = K_dry + (1 - K_dry/K_m)^2 / [φ/K_f + (1-φ)/K_m - K_dry/K_m^2]
     ρ_sat = (1-φ)*ρ_m + φ*ρ_f
-    
+
     Used for 4D time-lapse seismic modelling.
     """
     # Convert to Pa
@@ -67,31 +70,31 @@ def gassmann_fluid_substitution(
 
     def gassmann(vp, vs, rho, sw):
         # Bulk modulus from velocity
-        k = rho * (vp**2 - 4/3 * vs**2)
+        k = rho * (vp**2 - 4 / 3 * vs**2)
         mu = rho * vs**2
-        
+
         # Saturated bulk modulus (Gassmann)
-        denom = phi/k_f + (1-phi)/k_m - k_d/k_m**2
+        denom = phi / k_f + (1 - phi) / k_m - k_d / k_m**2
         if abs(denom) < 1e-20:
             return k
-        k_sat = k_d + (1 - k_d/k_m)**2 / denom
-        
+        k_sat = k_d + (1 - k_d / k_m) ** 2 / denom
+
         # Updated density
         rho_f = sw * rho_fluid + (1 - sw) * 2200  # oil ~880 kg/m3
         rho_sat = (1 - phi) * rho_mineral * 1000 + phi * rho_f
         rho_sat /= 1000  # back to g/cm³
-        
+
         # Updated velocities
-        vp_new = np.sqrt((k_sat + 4/3 * mu) / (rho_sat * 1000))
+        vp_new = np.sqrt((k_sat + 4 / 3 * mu) / (rho_sat * 1000))
         vs_new = np.sqrt(mu / (rho_sat * 1000))
-        
+
         return vp_new, vs_new, rho_sat, k_sat
 
     vp_b, vs_b, rho_b, _ = gassmann(vp_i, vs_i, rho_i, sw_initial)
     vp_a, vs_a, rho_a, _ = gassmann(vp_i, vs_i, rho_i, sw_final)
 
     ai_before = vp_b * rho_b
-    ai_after  = vp_a * rho_a
+    ai_after = vp_a * rho_a
     ai_change = (ai_after - ai_before) / max(ai_before, 1) * 100
 
     fluid_ind = "WATER" if sw_final > 0.8 else "OIL" if sw_final > 0.5 else "GAS" if sw_final < 0.2 else "MIXED"
@@ -109,7 +112,7 @@ def gassmann_fluid_substitution(
 
 
 def build_4d_cube_difference(
-    baseline_cube: List, 
+    baseline_cube: List,
     monitor_cube: List,
     threshold_pct: float = 5.0,
 ) -> Dict[str, Any]:
@@ -125,12 +128,15 @@ def build_4d_cube_difference(
     significance_map = np.zeros((n_z, n_y, n_x))
 
     for iz in range(n_z):
-        if iz >= len(baseline_cube) or iz >= len(monitor_cube): break
+        if iz >= len(baseline_cube) or iz >= len(monitor_cube):
+            break
         for iy in range(n_y):
-            if iy >= len(baseline_cube[iz]) or iy >= len(monitor_cube[iz]): break
+            if iy >= len(baseline_cube[iz]) or iy >= len(monitor_cube[iz]):
+                break
             for ix in range(n_x):
-                if ix >= len(baseline_cube[iz][iy]) or ix >= len(monitor_cube[iz][iy]): break
-                
+                if ix >= len(baseline_cube[iz][iy]) or ix >= len(monitor_cube[iz][iy]):
+                    break
+
                 b = baseline_cube[iz][iy][ix]
                 m = monitor_cube[iz][iy][ix]
                 diff = m - b
@@ -151,12 +157,14 @@ def build_4d_cube_difference(
         "significance_pct": significance_map.tolist(),
         "hotspot_count": len(hotspot_coords),
         "hotspot_percentage": round(len(hotspot_coords) / max(n_z * n_y * n_x, 1) * 100, 2),
-        "n_z": n_z, "n_y": n_y, "n_x": n_x,
+        "n_z": n_z,
+        "n_y": n_y,
+        "n_x": n_x,
         "metadata": {
             "threshold_pct": threshold_pct,
             "constitution": "888_JUDGE",
             "dimension": "4D_difference",
-        }
+        },
     }
 
 
@@ -201,12 +209,12 @@ def forward_4d_simulation(
             "method": "analytical_forward",
             "constitution": "888_JUDGE",
             "dimension": "4D_forward",
-        }
+        },
     }
 
 
 def inverse_4d_from_observations(
-    baseline_data: List, 
+    baseline_data: List,
     monitor_data: List,
     prior_model: Dict[str, Any],
     regularization: str = "l2_smooth",
@@ -215,7 +223,7 @@ def inverse_4d_from_observations(
     """
     Inverse modelling: given baseline + monitor observations,
     infer the change in reservoir properties.
-    
+
     Method: Gradient-based optimization with regularization.
     """
     # Simplified: compute mean change pattern
@@ -232,8 +240,16 @@ def inverse_4d_from_observations(
         for iz in range(min(n_z, 20)):  # limit for performance
             for iy in range(min(n_y, 20)):
                 for ix in range(min(n_x, 20)):
-                    b = baseline_data[iz][iy][ix] if iz < len(baseline_data) and iy < len(baseline_data[iz]) and ix < len(baseline_data[iz][iy]) else 0
-                    m = monitor_data[iz][iy][ix] if iz < len(monitor_data) and iy < len(monitor_data[iz]) and ix < len(monitor_data[iz][iy]) else 0
+                    b = (
+                        baseline_data[iz][iy][ix]
+                        if iz < len(baseline_data) and iy < len(baseline_data[iz]) and ix < len(baseline_data[iz][iy])
+                        else 0
+                    )
+                    m = (
+                        monitor_data[iz][iy][ix]
+                        if iz < len(monitor_data) and iy < len(monitor_data[iz]) and ix < len(monitor_data[iz][iy])
+                        else 0
+                    )
                     total_diff += abs(m - b)
                     count += 1
 
@@ -255,7 +271,7 @@ def inverse_4d_from_observations(
                 "dimension": "4D_inverse",
                 "method": "gradient_optimization",
                 "arifos_grade": "AAA",
-            }
+            },
         }
 
     return change_model
@@ -301,12 +317,12 @@ def build_4d_time_series(
         "metadata": {
             "constitution": "888_JUDGE",
             "dimension": "4D_time_series",
-        }
+        },
     }
 
 
 def compute_4d_uncertainty(
-    baseline_cube: List, 
+    baseline_cube: List,
     monitor_cube: List,
     repeatability_noise: float = 0.05,
 ) -> Dict[str, Any]:
@@ -325,8 +341,16 @@ def compute_4d_uncertainty(
         for iz in range(n_z):
             for iy in range(n_y):
                 for ix in range(n_x):
-                    b = baseline_cube[iz][iy][ix] if iz < len(baseline_cube) and iy < len(baseline_cube[iz]) and ix < len(baseline_cube[iz][iy]) else 0
-                    m = monitor_cube[iz][iy][ix] if iz < len(monitor_cube) and iy < len(monitor_cube[iz]) and ix < len(monitor_cube[iz][iy]) else 0
+                    b = (
+                        baseline_cube[iz][iy][ix]
+                        if iz < len(baseline_cube) and iy < len(baseline_cube[iz]) and ix < len(baseline_cube[iz][iy])
+                        else 0
+                    )
+                    m = (
+                        monitor_cube[iz][iy][ix]
+                        if iz < len(monitor_cube) and iy < len(monitor_cube[iz]) and ix < len(monitor_cube[iz][iy])
+                        else 0
+                    )
                     diff[iz, iy, ix] = m - b
 
         nrms = np.sqrt(np.mean(diff**2)) / (np.std(baseline_cube[:n_z, :n_y, :n_x]) + 1e-6) * 100
@@ -339,7 +363,7 @@ def compute_4d_uncertainty(
             "metadata": {
                 "constitution": "888_JUDGE",
                 "dimension": "4D_quality_control",
-            }
+            },
         }
 
     return {"error": "insufficient data for uncertainty analysis"}
@@ -347,7 +371,9 @@ def compute_4d_uncertainty(
 
 def detect_4d_amplitude_anomaly(
     difference_cube: List,
-    x_coords: List, y_coords: List, z_times: List,
+    x_coords: List,
+    y_coords: List,
+    z_times: List,
     detection_threshold: float = 0.1,
 ) -> List[Dict[str, Any]]:
     """
@@ -364,14 +390,16 @@ def detect_4d_amplitude_anomaly(
             for ix in range(n_x):
                 amp = difference_cube[iz][iy][ix]
                 if abs(amp) > detection_threshold:
-                    anomalies.append({
-                        "x_km": x_coords[ix] if ix < len(x_coords) else 0,
-                        "y_km": y_coords[iy] if iy < len(y_coords) else 0,
-                        "time_ms": z_times[iz] if iz < len(z_times) else 0,
-                        "amplitude": round(float(amp), 4),
-                        "polarity": "positive" if amp > 0 else "negative",
-                        "confidence": round(min(abs(amp) * 5, 1.0), 2),
-                    })
+                    anomalies.append(
+                        {
+                            "x_km": x_coords[ix] if ix < len(x_coords) else 0,
+                            "y_km": y_coords[iy] if iy < len(y_coords) else 0,
+                            "time_ms": z_times[iz] if iz < len(z_times) else 0,
+                            "amplitude": round(float(amp), 4),
+                            "polarity": "positive" if amp > 0 else "negative",
+                            "confidence": round(min(abs(amp) * 5, 1.0), 2),
+                        }
+                    )
 
     # Sort by confidence
     anomalies.sort(key=lambda a: a["confidence"], reverse=True)

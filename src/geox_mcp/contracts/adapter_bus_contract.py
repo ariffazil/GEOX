@@ -26,12 +26,13 @@ Status: SCAFFOLD — do not use in production
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional
 
 
 class AdapterBusEnvelope(BaseModel):
     """Message envelope for GEOX → arifOS tool calls."""
+
     tool_name: str
     arguments: dict
     geox_substrate: Optional[str] = None

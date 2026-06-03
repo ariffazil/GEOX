@@ -1,2 +1,1 @@
 """GEOX skill package namespace."""
-

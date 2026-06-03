@@ -45,22 +45,12 @@ class ProjectConfig(BaseModel):
     shale_color: str = Field("#8D6E63", description="Shale fill hex color")
     curve_color: str = Field("#1A1A1A", description="GR curve line color")
 
-    well_order: list[str] = Field(
-        default_factory=list,
-        description="Well order for correlation panel presentation"
-    )
-    wells: list[WellSource] = Field(
-        default_factory=list,
-        description="Well data sources"
-    )
-    intervals: dict[str, list[ProjectInterval]] = Field(
-        default_factory=dict,
-        description="Well ID -> list of intervals"
-    )
+    well_order: list[str] = Field(default_factory=list, description="Well order for correlation panel presentation")
+    wells: list[WellSource] = Field(default_factory=list, description="Well data sources")
+    intervals: dict[str, list[ProjectInterval]] = Field(default_factory=dict, description="Well ID -> list of intervals")
 
     regional_surfaces: list[dict[str, Any]] = Field(
-        default_factory=list,
-        description="Regional surfaces for tie lines: [{name, age_ma, type, color}]"
+        default_factory=list, description="Regional surfaces for tie lines: [{name, age_ma, type, color}]"
     )
 
     output_dir: str = Field("output", description="Output directory for PNGs and XLSX")
@@ -70,32 +60,32 @@ class ProjectConfig(BaseModel):
 
 # ── Motif vocabulary (corrected 2026-05-22) ──────────────────────────────────
 HUMAN_LABELS: dict[str, str] = {
-    "Bell":          "Fining Upward",
-    "Funnel":        "Coarsening Upward",          # typo: Coaserning
-    "Cylindrical":   "Blocky",
-    "Serrated":      "Serrated / Irregular Pattern",   # typo: Serated
+    "Bell": "Fining Upward",
+    "Funnel": "Coarsening Upward",  # typo: Coaserning
+    "Cylindrical": "Blocky",
+    "Serrated": "Serrated / Irregular Pattern",  # typo: Serated
     "High_GR_Shale": "Serrated / Irregular Pattern",
-    "Symmetrical":   "Crecentric",                  # typo: Crecentric
-    "Heterolithic":  "Heterolithic",
+    "Symmetrical": "Crecentric",  # typo: Crecentric
+    "Heterolithic": "Heterolithic",
 }
 
 MOTIF_COLORS: dict[str, str] = {
-    "Fining Upward":              "#1565C0",
-    "Coarsening Upward":          "#2E7D32",
-    "Blocky":                     "#F9A825",
-    "Serrated / Irregular Pattern":  "#546E7A",
-    "Crecentric":                 "#FF8C00",
-    "Heterolithic":               "#90A4AE",
+    "Fining Upward": "#1565C0",
+    "Coarsening Upward": "#2E7D32",
+    "Blocky": "#F9A825",
+    "Serrated / Irregular Pattern": "#546E7A",
+    "Crecentric": "#FF8C00",
+    "Heterolithic": "#90A4AE",
 }
 
 TRACT_COLORS: dict[str, str] = {
-    "LST":      "#FF8F00",
-    "TST":      "#1565C0",
-    "HST":      "#2E7D32",
-    "FSST":     "#E65100",
-    "CS":       "#6A1B9A",
-    "UNCERTAIN":"#78909C",
-    "UNKNOWN":  "#BDBDBD",
+    "LST": "#FF8F00",
+    "TST": "#1565C0",
+    "HST": "#2E7D32",
+    "FSST": "#E65100",
+    "CS": "#6A1B9A",
+    "UNCERTAIN": "#78909C",
+    "UNKNOWN": "#BDBDBD",
 }
 
 TRACT_ALPHA = 0.45
@@ -103,34 +93,52 @@ TRACT_ALPHA = 0.45
 # ── Depositional environment codes (GDE) ────────────────────────────────────
 # Format: code -> (label, (R, G, B) normalized 0-1)
 DEFAULT_DEPO_EOD: dict[str, tuple[str, tuple[float, float, float]]] = {
-    "COL":     ("Alluvial Plain",          (1.0, 0.647, 0.0)),
-    "COL-HIN": ("Alluvial->Inn.N.",        (0.757, 0.694, 0.455)),
-    "HIN":     ("Inner Neritic",           (0.514, 0.737, 0.906)),
-    "HIN-HMN": ("Inn.->Mid.N.",           (0.333, 0.627, 0.847)),
-    "HMN":     ("Middle Neritic",          (0.153, 0.518, 0.788)),
-    "HMN-HON": ("Mid.->Out.N.",           (0.078, 0.259, 0.710)),
-    "HON":     ("Outer Neritic",           (0.0, 0.0, 0.627)),
-    "HON-UBT": ("Out.N->Up.Bath.",        (0.216, 0.341, 0.816)),
-    "UBT":     ("Upper Bathyal",           (0.824, 0.682, 1.0)),
-    "UBT-MBT": ("Up.->Mid.Bath.",         (0.769, 0.584, 0.996)),
-    "MBT":     ("Middle Bathyal",          (0.714, 0.482, 0.992)),
-    "MBT-LBT": ("Mid.->Lo.Bath.",         (0.584, 0.243, 0.996)),
-    "LBT":     ("Lower Bathyal",           (0.451, 0.004, 0.996)),
+    "COL": ("Alluvial Plain", (1.0, 0.647, 0.0)),
+    "COL-HIN": ("Alluvial->Inn.N.", (0.757, 0.694, 0.455)),
+    "HIN": ("Inner Neritic", (0.514, 0.737, 0.906)),
+    "HIN-HMN": ("Inn.->Mid.N.", (0.333, 0.627, 0.847)),
+    "HMN": ("Middle Neritic", (0.153, 0.518, 0.788)),
+    "HMN-HON": ("Mid.->Out.N.", (0.078, 0.259, 0.710)),
+    "HON": ("Outer Neritic", (0.0, 0.0, 0.627)),
+    "HON-UBT": ("Out.N->Up.Bath.", (0.216, 0.341, 0.816)),
+    "UBT": ("Upper Bathyal", (0.824, 0.682, 1.0)),
+    "UBT-MBT": ("Up.->Mid.Bath.", (0.769, 0.584, 0.996)),
+    "MBT": ("Middle Bathyal", (0.714, 0.482, 0.992)),
+    "MBT-LBT": ("Mid.->Lo.Bath.", (0.584, 0.243, 0.996)),
+    "LBT": ("Lower Bathyal", (0.451, 0.004, 0.996)),
 }
 
 DEFAULT_DEPO_RANK: dict[str, int] = {
-    "COL":0, "COL-HIN":1, "HIN":2, "HIN-HMN":3,
-    "HMN":4, "HMN-HON":5, "HON":6, "HON-UBT":7,
-    "UBT":8, "UBT-MBT":9, "MBT":10, "MBT-LBT":11, "LBT":12,
+    "COL": 0,
+    "COL-HIN": 1,
+    "HIN": 2,
+    "HIN-HMN": 3,
+    "HMN": 4,
+    "HMN-HON": 5,
+    "HON": 6,
+    "HON-UBT": 7,
+    "UBT": 8,
+    "UBT-MBT": 9,
+    "MBT": 10,
+    "MBT-LBT": 11,
+    "LBT": 12,
 }
 
 # ── Default NN ages (GPTS2020) ──────────────────────────────────────────────
 DEFAULT_NN_AGES: dict[str, tuple[float, float]] = {
-    "NN11C": (6.91, 7.42), "NN11B": (7.42, 7.67), "NN11A": (7.67, 8.59),
-    "NN11":  (6.91, 8.59), "NN10B": (8.59, 9.53), "NN10A": (9.53, 10.41),
-    "NN10":  (8.59, 10.41), "NN9": (10.41, 11.79), "NN8": (11.79, 12.12),
-    "NN7":   (12.12, 13.12), "NN6": (13.12, 13.65), "NN5": (13.65, 14.91),
-    "NN4":   (14.91, 17.95),
+    "NN11C": (6.91, 7.42),
+    "NN11B": (7.42, 7.67),
+    "NN11A": (7.67, 8.59),
+    "NN11": (6.91, 8.59),
+    "NN10B": (8.59, 9.53),
+    "NN10A": (9.53, 10.41),
+    "NN10": (8.59, 10.41),
+    "NN9": (10.41, 11.79),
+    "NN8": (11.79, 12.12),
+    "NN7": (12.12, 13.12),
+    "NN6": (13.12, 13.65),
+    "NN5": (13.65, 14.91),
+    "NN4": (14.91, 17.95),
 }
 
 

@@ -26,6 +26,7 @@ try:
         TelemetryPayload,
         Verdict,
     )
+
     TYPES_AVAILABLE = True
 except ImportError:
     TYPES_AVAILABLE = False
@@ -52,10 +53,7 @@ class AdmissibilityError(Exception):
 
     def __init__(self, node_id: str):
         self.node_id = node_id
-        super().__init__(
-            f"Node {node_id} is governance-blocked. "
-            "Cannot pass to WEALTH score_kernel."
-        )
+        super().__init__(f"Node {node_id} is governance-blocked. Cannot pass to WEALTH score_kernel.")
 
 
 def geox_to_wealth(node: "ResourceNode", telemetry: "TelemetryPayload", verdict: "Verdict") -> WealthInput:

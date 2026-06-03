@@ -3,8 +3,9 @@ GEOX 2D — Seismic Cross-Section Generator & Interpreter
 Convolutional seismogram modelling, horizon picking, fault interpretation,
 amplitude analysis, and time-depth conversion.
 """
+
 import numpy as np
-from typing import Dict, List, Tuple, Optional, Any
+from typing import Dict, List, Tuple, Any
 from dataclasses import dataclass
 
 
@@ -14,7 +15,7 @@ class HorizonPick:
     time_ms: float
     x_positions: List[float]
     amplitudes: List[float]
-    phase: str       # "positive" or "negative"
+    phase: str  # "positive" or "negative"
     continuity: float  # 0-1 confidence
     fault_positions: List[float]
     arifos_grade: str  # "AAA" / "TRUST-GRADED" / "RAW"
@@ -22,11 +23,11 @@ class HorizonPick:
 
 @dataclass
 class SeismicSection:
-    data: np.ndarray        # (n_samples, n_traces)
+    data: np.ndarray  # (n_samples, n_traces)
     x_coords: np.ndarray
-    t_coords: np.ndarray    # time in ms
+    t_coords: np.ndarray  # time in ms
     horizons: List[HorizonPick]
-    faults: List[Dict]      # fault interpretation
+    faults: List[Dict]  # fault interpretation
     metadata: Dict
 
 
@@ -39,37 +40,38 @@ def build_wavelet(frequency: float, dt_ms: float, wavelet_type: str = "ricker") 
 
     if wavelet_type == "ricker":
         f0 = frequency
-        w = (1 - (np.pi * f0 * t_wl / 1000) ** 2) * np.exp(-(np.pi * f0 * t_wl / 1000) ** 2)
+        w = (1 - (np.pi * f0 * t_wl / 1000) ** 2) * np.exp(-((np.pi * f0 * t_wl / 1000) ** 2))
     elif wavelet_type == "ormsby":
         f1, f2, f3, f4 = frequency * 0.5, frequency * 0.8, frequency * 1.2, frequency * 2.0
         w = np.zeros_like(t_wl)
         for fn, fn1 in [(f4, f3), (f2, f1)]:
-            w += (np.sin(2*np.pi*fn1*t_wl/1000) - np.sin(2*np.pi*fn*t_wl/1000)) / (np.pi*t_wl/1000 + 1e-6)
+            w += (np.sin(2 * np.pi * fn1 * t_wl / 1000) - np.sin(2 * np.pi * fn * t_wl / 1000)) / (np.pi * t_wl / 1000 + 1e-6)
     elif wavelet_type == "klauder":
         t_k = t_wl / 1000
         duration = abs(t_k[-1] - t_k[0])
         k = frequency * 0.2
-        f1 = frequency - k/2; f2 = frequency + k/2
-        w = np.sin(np.pi * k * t_k) / (np.pi * k * t_k + 1e-9) * np.cos(2*np.pi*frequency*t_k)
+        f1 = frequency - k / 2
+        f2 = frequency + k / 2
+        w = np.sin(np.pi * k * t_k) / (np.pi * k * t_k + 1e-9) * np.cos(2 * np.pi * frequency * t_k)
     else:
-        w = np.zeros(n_wl); w[n_wl//2] = 1
+        w = np.zeros(n_wl)
+        w[n_wl // 2] = 1
 
     w = w / (np.max(np.abs(w)) + 1e-9)
     return w
 
 
-def apply_nmo_velocity(seis_data: np.ndarray, t_coords: np.ndarray, 
-                        x_coords: np.ndarray, velocities: np.ndarray) -> np.ndarray:
+def apply_nmo_velocity(seis_data: np.ndarray, t_coords: np.ndarray, x_coords: np.ndarray, velocities: np.ndarray) -> np.ndarray:
     """
     Apply Normal Moveout correction for CDP gather.
     t_nmo = sqrt(t0^2 + x^2 / v_rms^2)
     """
     n_samples, n_traces = seis_data.shape
     corrected = np.zeros_like(seis_data)
-    
+
     for ix, xpos in enumerate(x_coords):
         for it, t0 in enumerate(t_coords):
-            v_rms = velocities[min(it, len(velocities)-1)]
+            v_rms = velocities[min(it, len(velocities) - 1)]
             t_nmo_sq = t0**2 + (xpos**2) / (max(v_rms**2, 1))
             t_nmo = np.sqrt(t_nmo_sq)
             # Interpolate from original data
@@ -108,15 +110,15 @@ def generate_synthetic_seismogram(
 
     # Time-depth relationship (average velocity)
     t_ms = np.zeros_like(md)
-    dt_avg = np.mean(np.diff(md) / (np.diff(t_ms/1000 + 1)) if np.any(t_ms > 0) else [1])
+    dt_avg = np.mean(np.diff(md) / (np.diff(t_ms / 1000 + 1)) if np.any(t_ms > 0) else [1])
     for i in range(1, len(md)):
-        t_ms[i] = t_ms[i-1] + 2 * (md[i] - md[i-1]) / vp[i] * 1000
+        t_ms[i] = t_ms[i - 1] + 2 * (md[i] - md[i - 1]) / vp[i] * 1000
 
     # Reflection coefficients
     rc = np.zeros(len(vp))
     for i in range(1, len(vp)):
-        dv = rho[i] * vp[i] - rho[i-1] * vp[i-1]
-        z_sum = rho[i] * vp[i] + rho[i-1] * vp[i-1]
+        dv = rho[i] * vp[i] - rho[i - 1] * vp[i - 1]
+        z_sum = rho[i] * vp[i] + rho[i - 1] * vp[i - 1]
         rc[i] = dv / (z_sum + 1e-9)
 
     # Build wavelet
@@ -124,7 +126,7 @@ def generate_synthetic_seismogram(
     wavelet = build_wavelet(wavelet_freq, max(dt_sampling, 0.5), wavelet_type)
 
     # Convolve
-    synthetic = np.convolve(wavelet, rc, mode='same')
+    synthetic = np.convolve(wavelet, rc, mode="same")
 
     # Add noise
     if noise_db < 0:
@@ -135,10 +137,9 @@ def generate_synthetic_seismogram(
     return synthetic, t_ms
 
 
-def interpret_horizons(seis_data: np.ndarray, t_coords: np.ndarray,
-                        x_coords: np.ndarray, 
-                        horizon_times: List[float],
-                        layer_names: List[str]) -> List[HorizonPick]:
+def interpret_horizons(
+    seis_data: np.ndarray, t_coords: np.ndarray, x_coords: np.ndarray, horizon_times: List[float], layer_names: List[str]
+) -> List[HorizonPick]:
     """
     Auto-pick horizons from seismic data at specified time values.
     Computes amplitude characteristics and phase.
@@ -206,24 +207,24 @@ def build_2d_section(
         if structure_type == "anticline":
             # Dome/anticline
             base = t_range[0] + layer * t_span / 6
-            dip = -80 * np.exp(-((x_norm - 0.5)**2) / 0.08)
+            dip = -80 * np.exp(-((x_norm - 0.5) ** 2) / 0.08)
             return base + dip
         elif structure_type == "syncline":
             base = t_range[0] + layer * t_span / 6
-            dip = +120 * np.exp(-((x_norm - 0.5)**2) / 0.06)
+            dip = +120 * np.exp(-((x_norm - 0.5) ** 2) / 0.06)
             return base + dip
         elif structure_type == "fault_block":
             base = t_range[0] + layer * t_span / 6
             dip = -60 * x_norm
             fault_x = x_range[0] + 0.4 * (x_range[1] - x_range[0])
             if abs(x_pos - fault_x) < (x_range[1] - x_range[0]) * 0.03:
-                dip += 80 * np.exp(-((x_pos - fault_x)**2) / 0.002)
+                dip += 80 * np.exp(-((x_pos - fault_x) ** 2) / 0.002)
             return base + dip
         elif structure_type == "salt_dome":
             base = t_range[0] + layer * t_span / 6
             center_x = (x_range[0] + x_range[1]) / 2
             radius = (x_range[1] - x_range[0]) * 0.1
-            dist = np.sqrt((x_pos - center_x)**2 + 5e7)
+            dist = np.sqrt((x_pos - center_x) ** 2 + 5e7)
             if dist < radius:
                 return base - 100 * (1 - dist / radius)
             return base
@@ -235,12 +236,12 @@ def build_2d_section(
 
     # Layer definitions with reflection coefficients
     layers = [
-        {"name": "Sea Floor",           "rc": -0.6,  "color": "#4488ff"},
-        {"name": "Recent Shale",         "rc":  0.15, "color": "#aabb44"},
-        {"name": "Upper Sand",           "rc": -0.25, "color": "#ddbb66"},
-        {"name": "Mid Shale",            "rc":  0.10, "color": "#88aa55"},
-        {"name": "Limestone Top",        "rc": -0.35, "color": "#cc9966"},
-        {"name": "Basal Sand",           "rc": -0.20, "color": "#eecc55"},
+        {"name": "Sea Floor", "rc": -0.6, "color": "#4488ff"},
+        {"name": "Recent Shale", "rc": 0.15, "color": "#aabb44"},
+        {"name": "Upper Sand", "rc": -0.25, "color": "#ddbb66"},
+        {"name": "Mid Shale", "rc": 0.10, "color": "#88aa55"},
+        {"name": "Limestone Top", "rc": -0.35, "color": "#cc9966"},
+        {"name": "Basal Sand", "rc": -0.20, "color": "#eecc55"},
     ]
 
     for ix, xpos in enumerate(x):
@@ -264,7 +265,7 @@ def build_2d_section(
                 trace[i_sub] += 0.1 * rng.normal(0, 1) * rc_val
 
         # Convolve wavelet
-        trace = np.convolve(wavelet, trace, mode='same')
+        trace = np.convolve(wavelet, trace, mode="same")
 
         # Add noise
         trace += rng.normal(0, 10 ** (noise_db / 20), n_samples)
@@ -279,40 +280,47 @@ def build_2d_section(
                 t_layer = structure_depth(xpos, z_range, layers.index(layer))
                 amp_at = int(np.interp(t_layer, t, np.arange(n_samples)))
                 amp_at = np.clip(amp_at, 0, n_samples - 1)
-                horizons.append(HorizonPick(
-                    name=layer["name"],
-                    time_ms=float(t_layer),
-                    x_positions=x.tolist(),
-                    amplitudes=data[amp_at, :].tolist(),
-                    phase="positive" if layer["rc"] > 0 else "negative",
-                    continuity=0.75 + 0.1 * rng.random(),
-                    fault_positions=[],
-                    arifos_grade="AAA",
-                ))
+                horizons.append(
+                    HorizonPick(
+                        name=layer["name"],
+                        time_ms=float(t_layer),
+                        x_positions=x.tolist(),
+                        amplitudes=data[amp_at, :].tolist(),
+                        phase="positive" if layer["rc"] > 0 else "negative",
+                        continuity=0.75 + 0.1 * rng.random(),
+                        fault_positions=[],
+                        arifos_grade="AAA",
+                    )
+                )
 
-    data /= (np.max(np.abs(data)) + 1e-9)
+    data /= np.max(np.abs(data)) + 1e-9
 
     # Fault interpretation
     if fault_present:
         fault_x = x_range[0] + 0.4 * (x_range[1] - x_range[0])
-        faults.append({
-            "type": "normal",
-            "x_position": float(fault_x),
-            "vertical_extent_ms": float(z_range[1] - z_range[0]),
-            "throw_m": 50,
-            "arifos_grade": "TRUST-GRADED",
-        })
+        faults.append(
+            {
+                "type": "normal",
+                "x_position": float(fault_x),
+                "vertical_extent_ms": float(z_range[1] - z_range[0]),
+                "throw_m": 50,
+                "arifos_grade": "TRUST-GRADED",
+            }
+        )
 
     return SeismicSection(
-        data=data, x_coords=x, t_coords=t,
-        horizons=horizons, faults=faults,
+        data=data,
+        x_coords=x,
+        t_coords=t,
+        horizons=horizons,
+        faults=faults,
         metadata={
             "structure_type": structure_type,
             "n_traces": n_traces,
             "dominant_freq_hz": 35.0,
             "constitution": "888_JUDGE",
             "dimension": "2D",
-        }
+        },
     )
 
 
@@ -324,7 +332,7 @@ def export_segy(seismic_section: SeismicSection, output_path: str) -> Dict[str, 
         spec = segyio.spec()
         spec.offsets = 1
         spec.sorting = 2  # CDP
-        spec.format  = 5  # IBM float
+        spec.format = 5  # IBM float
         spec.samples = seismic_section.t_coords.tolist()
 
         with segyio.create(output_path, spec) as f:
@@ -333,15 +341,16 @@ def export_segy(seismic_section: SeismicSection, output_path: str) -> Dict[str, 
                 f.header[i] = {
                     segyio.su.tracf: i + 1,
                     segyio.su.cdps: i + 1,
-                    segyio.su.ep:   1,
+                    segyio.su.ep: 1,
                 }
         return {"status": "ok", "path": output_path, "traces": seismic_section.data.shape[1]}
     except Exception as e:
         return {"status": "error", "reason": str(e)}
 
 
-def amplitude_analysis(seis_data: np.ndarray, window_ms: float,
-                       t_coords: np.ndarray, x_coords: np.ndarray) -> Dict[str, np.ndarray]:
+def amplitude_analysis(
+    seis_data: np.ndarray, window_ms: float, t_coords: np.ndarray, x_coords: np.ndarray
+) -> Dict[str, np.ndarray]:
     """
     RMS amplitude, instantaneous phase, frequency analysis.
     Returns amplitude map over the section.
@@ -353,19 +362,20 @@ def amplitude_analysis(seis_data: np.ndarray, window_ms: float,
     rms = np.zeros((n_traces,))
     for ix in range(n_traces):
         windowed = seis_data[:, ix]
-        rms[ix] = np.sqrt(np.mean(windowed ** 2))
+        rms[ix] = np.sqrt(np.mean(windowed**2))
 
     # Envelope (instantaneous amplitude)
     from scipy.signal import hilbert
+
     envelope = np.abs(hilbert(seis_data, axis=0))
 
     return {
         "rms_amplitude": rms.tolist(),
         "max_amplitude": np.max(seis_data, axis=0).tolist(),
-        "envelope_slice": envelope[len(t_coords)//2, :].tolist(),
+        "envelope_slice": envelope[len(t_coords) // 2, :].tolist(),
         "x_coords": x_coords.tolist(),
         "metadata": {
             "window_ms": window_ms,
             "dimension": "2D_amplitude",
-        }
+        },
     }

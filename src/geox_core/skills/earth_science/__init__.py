@@ -1,2 +1,1 @@
 """Earth-science skill wrappers."""
-

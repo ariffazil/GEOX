@@ -6,9 +6,10 @@ Nothing in this file interprets. It only names and bounds.
 
 DITEMPA BUKAN DIBERI
 """
+
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List
 
 
@@ -20,15 +21,16 @@ class Physics9State:
     Derived variables (moduli, ratios) are computed in parameters.py,
     not stored here, per the orthogonality rule.
     """
-    rho: float       # kg/m³   density
-    vp: float        # m/s     compressional velocity
-    vs: float        # m/s     shear velocity
-    rho_e: float     # Ω·m     electrical resistivity
-    chi: float       # SI      magnetic susceptibility
-    k: float         # W/m·K   thermal conductivity
-    P: float         # Pa      pore pressure
-    T: float         # K       temperature
-    phi: float       # 0–1     porosity
+
+    rho: float  # kg/m³   density
+    vp: float  # m/s     compressional velocity
+    vs: float  # m/s     shear velocity
+    rho_e: float  # Ω·m     electrical resistivity
+    chi: float  # SI      magnetic susceptibility
+    k: float  # W/m·K   thermal conductivity
+    P: float  # Pa      pore pressure
+    T: float  # K       temperature
+    phi: float  # 0–1     porosity
 
     # Anisotropy (Thomsen parameters) — extensions, not core 9
     epsilon: float = 0.0
@@ -41,16 +43,29 @@ class Physics9State:
 
     def to_vector(self) -> List[float]:
         return [
-            self.rho, self.vp, self.vs, self.rho_e, self.chi,
-            self.k, self.P, self.T, self.phi,
-            self.epsilon, self.delta, self.gamma,
-            self.qp, self.qs,
+            self.rho,
+            self.vp,
+            self.vs,
+            self.rho_e,
+            self.chi,
+            self.k,
+            self.P,
+            self.T,
+            self.phi,
+            self.epsilon,
+            self.delta,
+            self.gamma,
+            self.qp,
+            self.qs,
         ]
 
     @classmethod
     def from_vector(cls, v: List[float]) -> "Physics9State":
         return cls(
-            rho=v[0], vp=v[1], vs=v[2], rho_e=v[3],
+            rho=v[0],
+            vp=v[1],
+            vs=v[2],
+            rho_e=v[3],
             chi=v[4] if len(v) > 4 else 0.0,
             k=v[5] if len(v) > 5 else 2.5,
             P=v[6] if len(v) > 6 else 20e6,
@@ -94,30 +109,14 @@ class Physics9State:
 
 # ─── Earth Material Catalog ─────────────────────────────────────────────────
 
-SANDSTONE = Physics9State(
-    rho=2350, vp=2950, vs=1680, rho_e=20, chi=0.0001, k=2.8, P=20e6, T=320, phi=0.25
-)
-LIMESTONE = Physics9State(
-    rho=2710, vp=4300, vs=2500, rho_e=200, chi=0.00005, k=3.2, P=30e6, T=340, phi=0.10
-)
-DOLOMITE = Physics9State(
-    rho=2850, vp=5400, vs=2900, rho_e=100, chi=0.00006, k=3.0, P=35e6, T=350, phi=0.08
-)
-SHALE = Physics9State(
-    rho=2350, vp=2450, vs=1050, rho_e=10, chi=0.004, k=1.5, P=25e6, T=330, phi=0.32
-)
-ANHYDRITE = Physics9State(
-    rho=2970, vp=6000, vs=3200, rho_e=2000, chi=0.00002, k=4.1, P=40e6, T=360, phi=0.01
-)
-SALT = Physics9State(
-    rho=2160, vp=4500, vs=2300, rho_e=1e6, chi=0.00001, k=5.5, P=15e6, T=310, phi=0.01
-)
-COAL = Physics9State(
-    rho=1450, vp=2100, vs=1100, rho_e=500, chi=0.005, k=0.3, P=10e6, T=300, phi=0.08
-)
-BASEMENT = Physics9State(
-    rho=2900, vp=5800, vs=3400, rho_e=500, chi=0.01, k=2.5, P=60e6, T=400, phi=0.02
-)
+SANDSTONE = Physics9State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0.0001, k=2.8, P=20e6, T=320, phi=0.25)
+LIMESTONE = Physics9State(rho=2710, vp=4300, vs=2500, rho_e=200, chi=0.00005, k=3.2, P=30e6, T=340, phi=0.10)
+DOLOMITE = Physics9State(rho=2850, vp=5400, vs=2900, rho_e=100, chi=0.00006, k=3.0, P=35e6, T=350, phi=0.08)
+SHALE = Physics9State(rho=2350, vp=2450, vs=1050, rho_e=10, chi=0.004, k=1.5, P=25e6, T=330, phi=0.32)
+ANHYDRITE = Physics9State(rho=2970, vp=6000, vs=3200, rho_e=2000, chi=0.00002, k=4.1, P=40e6, T=360, phi=0.01)
+SALT = Physics9State(rho=2160, vp=4500, vs=2300, rho_e=1e6, chi=0.00001, k=5.5, P=15e6, T=310, phi=0.01)
+COAL = Physics9State(rho=1450, vp=2100, vs=1100, rho_e=500, chi=0.005, k=0.3, P=10e6, T=300, phi=0.08)
+BASEMENT = Physics9State(rho=2900, vp=5800, vs=3400, rho_e=500, chi=0.01, k=2.5, P=60e6, T=400, phi=0.02)
 
 EARTH_MATERIAL_CATALOG: Dict[str, Physics9State] = {
     "Sandstone": SANDSTONE,

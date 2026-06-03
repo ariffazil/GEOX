@@ -28,6 +28,7 @@ from typing import Optional
 @dataclass
 class CurveBundle:
     """Container for loaded LAS curve data."""
+
     well_id: str
     depth_md: np.ndarray
     gr: Optional[np.ndarray] = None
@@ -44,6 +45,7 @@ class CurveBundle:
 @dataclass
 class CurveManifestEntry:
     """Single curve metadata for QC reporting."""
+
     mnemonic: str
     unit: str
     null_pct: float
@@ -104,12 +106,12 @@ def load_las(filepath: str, well_id: str) -> CurveBundle:
         raise ValueError(f"No depth curve found in {filepath}. Tried: DEPT, DEPTH, MD, MEAS.")
 
     # Map curves by alias groups
-    gr   = _safe_curve(las, "GR", "GAM", "GRC", "SGR")
-    rt   = _safe_curve(las, "RT", "RES", "RESIST", "LLD", "LLS", "MSFL")
+    gr = _safe_curve(las, "GR", "GAM", "GRC", "SGR")
+    rt = _safe_curve(las, "RT", "RES", "RESIST", "LLD", "LLS", "MSFL")
     rhob = _safe_curve(las, "RHOB", "RHO", "BDC", "DEN")
     nphi = _safe_curve(las, "NPHI", "PHI", "NPL", "CNC")
-    cal  = _safe_curve(las, "CAL", "CALI", "CALM")
-    sp   = _safe_curve(las, "SP")
+    cal = _safe_curve(las, "CAL", "CALI", "CALM")
+    sp = _safe_curve(las, "SP")
 
     null_pct = {
         "GR": round(_null_pct(gr), 4),
@@ -152,11 +154,13 @@ def curve_manifest_from_bundle(bundle: CurveBundle) -> list[CurveManifestEntry]:
             valid = arr[~np.isnan(arr)]
             range_min = float(np.min(valid)) if len(valid) > 0 else 0.0
             range_max = float(np.max(valid)) if len(valid) > 0 else 0.0
-            entries.append(CurveManifestEntry(
-                mnemonic=mnemonic,
-                unit=unit,
-                null_pct=bundle.null_pct.get(mnemonic.split("_")[0], _null_pct(arr)),
-                range_min=range_min,
-                range_max=range_max,
-            ))
+            entries.append(
+                CurveManifestEntry(
+                    mnemonic=mnemonic,
+                    unit=unit,
+                    null_pct=bundle.null_pct.get(mnemonic.split("_")[0], _null_pct(arr)),
+                    range_min=range_min,
+                    range_max=range_max,
+                )
+            )
     return entries

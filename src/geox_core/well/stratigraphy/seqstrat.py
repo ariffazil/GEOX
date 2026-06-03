@@ -52,73 +52,37 @@ def infer_seq_strat(
 
     # Condensed section: thin, high-GR, deep water
     if gr > 95 and thick < 70 and rank >= 8:
-        return (
-            "CS",
-            "Condensed section — MFS candidate; hemipelagic drape above "
-            "maximum flooding surface"
-        )
+        return ("CS", "Condensed section — MFS candidate; hemipelagic drape above maximum flooding surface")
 
     # LST: clean blocky sand in bathyal = turbidite fan / lowstand
     if motif == "Blocky" and gr < 60 and rank >= 7:
-        return (
-            "LST",
-            "Lowstand turbidite fan/lobe — clean blocky sand in deep-water; "
-            "sand deliverer during sea-level fall"
-        )
+        return ("LST", "Lowstand turbidite fan/lobe — clean blocky sand in deep-water; sand deliverer during sea-level fall")
 
     # TST: Fining Upward in marine = retrogradational flooding
     if motif == "Fining Upward" and rank >= 3:
-        return (
-            "TST",
-            "Transgressive systems tract — retrograding succession; "
-            "accommodation creation exceeds sediment supply"
-        )
+        return ("TST", "Transgressive systems tract — retrograding succession; accommodation creation exceeds sediment supply")
 
     # HST: Coarsening Upward in shallow = prograding highstand
     if motif == "Coarsening Upward" and rank <= 7:
-        return (
-            "HST",
-            "Highstand systems tract — prograding shallowing-upward "
-            "succession; sediment supply exceeds accommodation"
-        )
+        return ("HST", "Highstand systems tract — prograding shallowing-upward succession; sediment supply exceeds accommodation")
 
     # FSST: Coarsening Upward in deep setting = falling-stage turbidite lobe
     if motif == "Coarsening Upward" and rank >= 8:
-        return (
-            "FSST",
-            "Falling stage systems tract — prograding turbidite lobe; "
-            "forced regression into deep water"
-        )
+        return ("FSST", "Falling stage systems tract — prograding turbidite lobe; forced regression into deep water")
 
     # Blocky in shallow = aggradational HST or TST
     if motif == "Blocky" and rank <= 5:
-        return (
-            "HST",
-            "Aggradational highstand — constant accommodation; "
-            "shoreface or shelf amalgamated sand"
-        )
+        return ("HST", "Aggradational highstand — constant accommodation; shoreface or shelf amalgamated sand")
 
     # Serrated in deep water = slope apron / condensed
     if motif == "Serrated / Irregular Pattern" and rank >= 8:
         if gr > 90:
-            return (
-                "CS",
-                "Hemipelagic/pelagic drape — condensed; "
-                "minimal clastic supply to deep water"
-            )
-        return (
-            "UNCERTAIN",
-            "Heterolithic slope apron — systems tract uncertain; "
-            "mixed turbidite and hemipelagic signal"
-        )
+            return ("CS", "Hemipelagic/pelagic drape — condensed; minimal clastic supply to deep water")
+        return ("UNCERTAIN", "Heterolithic slope apron — systems tract uncertain; mixed turbidite and hemipelagic signal")
 
     # Serrated in proximal = heterolithic coastal / tidal
     if motif == "Serrated / Irregular Pattern" and rank <= 4:
-        return (
-            "UNCERTAIN",
-            "Heterolithic coastal/tidal plain — high-frequency cyclicity; "
-            "possibly transgressive lagoonal"
-        )
+        return ("UNCERTAIN", "Heterolithic coastal/tidal plain — high-frequency cyclicity; possibly transgressive lagoonal")
 
     # Heterolithic fallback: assign by depth of water only
     if motif == "Heterolithic":
@@ -126,18 +90,11 @@ def infer_seq_strat(
             return (
                 "UNCERTAIN",
                 "Heterolithic interval in deep water — mixed turbidite/hemipelagic; "
-                "insufficient GR geometry to determine systems tract"
+                "insufficient GR geometry to determine systems tract",
             )
-        return (
-            "UNCERTAIN",
-            "Heterolithic interval — high-frequency GR oscillation; "
-            "tidal/coastal cyclicity or data gap"
-        )
+        return ("UNCERTAIN", "Heterolithic interval — high-frequency GR oscillation; tidal/coastal cyclicity or data gap")
 
-    return (
-        "UNCERTAIN",
-        "GR geometry does not uniquely satisfy any single systems tract rule"
-    )
+    return ("UNCERTAIN", "GR geometry does not uniquely satisfy any single systems tract rule")
 
 
 def geo_rule_check(

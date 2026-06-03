@@ -86,7 +86,9 @@ def dispatch(spec: PlotSpec) -> dict[str, Any]:
 
 def _digest_spec(spec: PlotSpec) -> str:
     """Stable hash of the PlotSpec for lineage tracking."""
-    import hashlib, json
+    import hashlib
+    import json
+
     payload = {
         "renderer": spec.renderer,
         "plot_type": spec.plot_type,
@@ -103,9 +105,11 @@ def _digest_spec(spec: PlotSpec) -> str:
 
 # ── Internal: matplotlib renderer ─────────────────────────────────────────────
 
+
 def _render_matplotlib(spec: PlotSpec) -> dict[str, Any]:
     """Deterministic matplotlib renderer for well panels and sections."""
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     import os
@@ -121,8 +125,16 @@ def _render_matplotlib(spec: PlotSpec) -> dict[str, Any]:
 
     # Placeholder: deterministic line rendering from data_refs would go here.
     # For now, emit a structured placeholder that still produces a valid PNG.
-    ax.text(0.5, 0.5, f"GEOX {spec.plot_type.upper()}\nRenderer: matplotlib\nDepth basis: {spec.depth_basis}",
-            transform=ax.transAxes, ha="center", va="center", fontsize=10, family="monospace")
+    ax.text(
+        0.5,
+        0.5,
+        f"GEOX {spec.plot_type.upper()}\nRenderer: matplotlib\nDepth basis: {spec.depth_basis}",
+        transform=ax.transAxes,
+        ha="center",
+        va="center",
+        fontsize=10,
+        family="monospace",
+    )
     ax.axis("off")
 
     fig.savefig(path, dpi=spec.dpi, bbox_inches="tight", format=spec.output_format)
@@ -133,9 +145,11 @@ def _render_matplotlib(spec: PlotSpec) -> dict[str, Any]:
 
 # ── Internal: plotly renderer (stub) ──────────────────────────────────────────
 
+
 def _render_plotly(spec: PlotSpec) -> dict[str, Any]:
     """Deterministic plotly renderer for interactive HTML."""
     import os
+
     os.makedirs(spec.output_dir, exist_ok=True)
     timestamp = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = os.path.join(spec.output_dir, f"geox_{spec.plot_type}_{timestamp}.html")
@@ -154,6 +168,7 @@ def _render_plotly(spec: PlotSpec) -> dict[str, Any]:
 
 
 # ── Internal: pillow renderer (stub) ──────────────────────────────────────────
+
 
 def _render_pillow(spec: PlotSpec) -> dict[str, Any]:
     """Deterministic pillow renderer for image verification / thumbnails."""
@@ -174,9 +189,11 @@ def _render_pillow(spec: PlotSpec) -> dict[str, Any]:
 
 # ── Internal: pyvista renderer (stub) ─────────────────────────────────────────
 
+
 def _render_pyvista(spec: PlotSpec) -> dict[str, Any]:
     """Deterministic pyvista renderer for 3D previews."""
     import os
+
     os.makedirs(spec.output_dir, exist_ok=True)
     timestamp = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = os.path.join(spec.output_dir, f"geox_{spec.plot_type}_{timestamp}.{spec.output_format}")
@@ -184,6 +201,7 @@ def _render_pyvista(spec: PlotSpec) -> dict[str, Any]:
     # PyVista is optional; if not installed, write a placeholder PNG
     try:
         import pyvista as pv
+
         plotter = pv.Plotter(off_screen=True)
         plotter.add_text(f"GEOX 3D | {spec.title}", font_size=12)
         plotter.add_mesh(pv.Cube(), color="lightblue")
@@ -191,6 +209,7 @@ def _render_pyvista(spec: PlotSpec) -> dict[str, Any]:
         plotter.close()
     except Exception:
         from PIL import Image, ImageDraw
+
         img = Image.new("RGB", (spec.width_px, spec.height_px), color=(240, 240, 240))
         draw = ImageDraw.Draw(img)
         draw.text((20, 20), f"PyVista 3D placeholder\n{spec.title}", fill=(50, 50, 50))

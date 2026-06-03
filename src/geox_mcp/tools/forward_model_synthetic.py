@@ -30,7 +30,6 @@ from geox_core.enums.statuses import (
     enrich_envelope_with_metabolic,
 )
 from geox_mcp.tools._helpers import (
-    _get_artifact,
     _artifact_exists,
     _get_well_data_with_depth,
 )
@@ -137,11 +136,19 @@ async def geox_forward_model_synthetic(
                 break
         if vp_arr is None:
             return get_standard_envelope(
-                {"tool": "geox_forward_model_synthetic", "error_code": "VP_CURVE_MISSING",
-                 "message": "No VP or DT curve found in well artifact.", "available": list(curves.keys())},
-                tool_class="compute", execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE", evidence_refs=[well_id],
+                {
+                    "tool": "geox_forward_model_synthetic",
+                    "error_code": "VP_CURVE_MISSING",
+                    "message": "No VP or DT curve found in well artifact.",
+                    "available": list(curves.keys()),
+                },
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
+                evidence_refs=[well_id],
             )
         # Resolve density
         rho_arr = None
@@ -151,7 +158,7 @@ async def geox_forward_model_synthetic(
                 break
         if rho_arr is None:
             # Gardner fallback with constitutional flag
-            rho_arr = 1.741 * (vp_arr ** 0.25)
+            rho_arr = 1.741 * (vp_arr**0.25)
             logger.info("F2: Gardner fallback applied for density (RHOB missing).")
             gardner_flag = True
         else:
@@ -159,11 +166,17 @@ async def geox_forward_model_synthetic(
     else:
         if not vp or not rho or not depth:
             return get_standard_envelope(
-                {"tool": "geox_forward_model_synthetic", "error_code": "MISSING_INPUTS",
-                 "message": "Provide either well_id or vp/rho/depth arrays."},
-                tool_class="compute", execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD, artifact_status=ArtifactStatus.REJECTED,
-                claim_tag="HYPOTHESIS", claim_state="NO_VALID_EVIDENCE",
+                {
+                    "tool": "geox_forward_model_synthetic",
+                    "error_code": "MISSING_INPUTS",
+                    "message": "Provide either well_id or vp/rho/depth arrays.",
+                },
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
             )
         vp_arr = np.array(vp, dtype=float)
         rho_arr = np.array(rho, dtype=float)
@@ -222,10 +235,7 @@ async def geox_forward_model_synthetic(
         primary_artifact["rc_series"] = rc.tolist()
         primary_artifact["twt_axis_ms"] = t_uniform.tolist()
         primary_artifact["depth_axis_m"] = depth_arr.tolist()
-        primary_artifact["depth_to_twt_table"] = [
-            {"depth_m": float(d), "twt_ms": float(t)}
-            for d, t in zip(depth_arr, twt)
-        ]
+        primary_artifact["depth_to_twt_table"] = [{"depth_m": float(d), "twt_ms": float(t)} for d, t in zip(depth_arr, twt)]
         primary_artifact["wavelet_signature"] = wavelet.tolist()
 
     envelope = get_standard_envelope(

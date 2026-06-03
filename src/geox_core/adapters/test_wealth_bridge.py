@@ -104,13 +104,16 @@ def make_mock_telemetry() -> TelemetryPayload:
 class TestEpistemicTagPreservation:
     """F2 contract: epistemic tags must never be upgraded at domain boundary."""
 
-    @pytest.mark.parametrize("epistemic_tag", [
-        EpistemicTag.UNKNOWN,
-        EpistemicTag.ESTIMATE,
-        EpistemicTag.HYPOTHESIS,
-        EpistemicTag.PLAUSIBLE,
-        EpistemicTag.CLAIM,
-    ])
+    @pytest.mark.parametrize(
+        "epistemic_tag",
+        [
+            EpistemicTag.UNKNOWN,
+            EpistemicTag.ESTIMATE,
+            EpistemicTag.HYPOTHESIS,
+            EpistemicTag.PLAUSIBLE,
+            EpistemicTag.CLAIM,
+        ],
+    )
     def test_epistemic_tag_passed_through_untouched(self, epistemic_tag):
         """Every epistemic tag must survive the bridge unchanged."""
         node = make_mock_node(epistemic_geo=epistemic_tag)

@@ -128,9 +128,7 @@ def _reject_forbidden_fields(value: Any, path: str = "") -> None:
             key_text = str(key)
             lowered = key_text.lower()
             executable_tokens = ("python_code", "os.system", "subprocess")
-            if lowered in FORBIDDEN_PLOT_SPEC_FIELDS or any(
-                token in lowered for token in executable_tokens
-            ):
+            if lowered in FORBIDDEN_PLOT_SPEC_FIELDS or any(token in lowered for token in executable_tokens):
                 location = f"{path}.{key_text}" if path else key_text
                 raise PlotSpecValidationError(f"Executable PlotSpec field rejected: {location}")
             _reject_forbidden_fields(child, f"{path}.{key_text}" if path else key_text)

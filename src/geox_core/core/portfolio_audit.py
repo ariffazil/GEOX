@@ -19,9 +19,7 @@ class ProspectNode:
     prospect_id: str
     model_lineage_hash: str
     integrity_score: float
-    timestamp: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -42,17 +40,10 @@ class PortfolioTracker:
         self.critical_threshold = critical_threshold
         self.prospects: dict[str, ProspectNode] = {}
 
-    def add_prospect(
-        self,
-        prospect_id: str,
-        model_lineage_hash: str,
-        integrity_score: float
-    ) -> None:
+    def add_prospect(self, prospect_id: str, model_lineage_hash: str, integrity_score: float) -> None:
         """Add or update a prospect in the tracking registry."""
         self.prospects[prospect_id] = ProspectNode(
-            prospect_id=prospect_id,
-            model_lineage_hash=model_lineage_hash,
-            integrity_score=integrity_score
+            prospect_id=prospect_id, model_lineage_hash=model_lineage_hash, integrity_score=integrity_score
         )
 
     def audit_portfolio(self) -> PortfolioAuditResult:
@@ -65,7 +56,7 @@ class PortfolioTracker:
                 correlation_ratio=0.0,
                 dominant_model_hash=None,
                 affected_prospects=[],
-                recommendation="Empty portfolio"
+                recommendation="Empty portfolio",
             )
 
         # Count occurrences of each model hash
@@ -92,27 +83,21 @@ class PortfolioTracker:
             )
         elif correlation_ratio >= 0.2:
             status = "WARNING"
-            recommendation = (
-                f"CORRELATION_WARNING: Elevated shared lineage {dominant_hash}."
-            )
+            recommendation = f"CORRELATION_WARNING: Elevated shared lineage {dominant_hash}."
 
         return PortfolioAuditResult(
             status=status,
             correlation_ratio=correlation_ratio,
             dominant_model_hash=dominant_hash,
             affected_prospects=affected_prospects,
-            recommendation=recommendation
+            recommendation=recommendation,
         )
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "total_prospects": len(self.prospects),
             "prospects": {
-                p_id: {
-                    "hash": node.model_lineage_hash,
-                    "score": node.integrity_score,
-                    "ts": node.timestamp
-                }
+                p_id: {"hash": node.model_lineage_hash, "score": node.integrity_score, "ts": node.timestamp}
                 for p_id, node in self.prospects.items()
-            }
+            },
         }

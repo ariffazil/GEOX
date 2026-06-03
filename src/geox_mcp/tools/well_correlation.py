@@ -111,9 +111,7 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
         resolved_paths: list[str] = []
         for index, p in enumerate(las_paths):
             try:
-                resolved_paths.append(
-                    materialize_las_source(p, artifact_id=f"panel_las_{index}")
-                )
+                resolved_paths.append(materialize_las_source(p, artifact_id=f"panel_las_{index}"))
             except (FileNotFoundError, LASSourceError) as exc:
                 logger.warning("Could not materialize LAS source %s: %s", p, exc)
                 # Try as-is even if not found — let the engine report no wells loaded.
@@ -184,9 +182,7 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
                 "depth_basis": spec.depth.basis,
                 "renderer": spec.renderer.primary,
             }
-            response["interpretation"] = (
-                "Exploratory visualization. Human geologist review required."
-            )
+            response["interpretation"] = "Exploratory visualization. Human geologist review required."
             response["unknown"] = [
                 "Datum correction not applied unless source metadata explicitly supplies it.",
                 "TVD/TVDSS unavailable unless supplied by source data.",
@@ -222,9 +218,7 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
             return {
                 "ok": False,
                 "error_code": "NO_WELLS_LOADED",
-                "error_message": (
-                    "Correlation panel could not be generated because no LAS files were loaded."
-                ),
+                "error_message": ("Correlation panel could not be generated because no LAS files were loaded."),
                 "wells_loaded": 0,
                 "wells_failed": response.get("wells_failed", las_paths),
                 "artifact": None,
@@ -310,9 +304,9 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
         qc_flags: list[str] = []
         for cname, np_pct in bundle.null_pct.items():
             if np_pct > 0.5:
-                qc_flags.append(f"{cname}: {round(np_pct*100,1)}% null — low data quality.")
+                qc_flags.append(f"{cname}: {round(np_pct * 100, 1)}% null — low data quality.")
             elif np_pct > 0.1:
-                qc_flags.append(f"{cname}: {round(np_pct*100,1)}% null.")
+                qc_flags.append(f"{cname}: {round(np_pct * 100, 1)}% null.")
 
         # Unfound curves
         for canon in CURVE_ALIASES:
@@ -338,14 +332,18 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
             },
             "qc_flags": qc_flags,
             "claim_state": bundle.claim_state,
-            "vault_receipt": _make_vault_receipt("geox_las_curve_inventory", {
-                "well_id": bundle.well_id,
-                "n_curves": len(found_aliases),
-            }),
+            "vault_receipt": _make_vault_receipt(
+                "geox_las_curve_inventory",
+                {
+                    "well_id": bundle.well_id,
+                    "n_curves": len(found_aliases),
+                },
+            ),
         }
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
+
 
 def _error_response(error_code: str, message: str, wells_failed: list[str]) -> dict[str, Any]:
     return {
@@ -361,13 +359,13 @@ def _error_response(error_code: str, message: str, wells_failed: list[str]) -> d
 
 def _curve_unit(canon: str) -> str:
     return {
-        "GR":   "gAPI",
-        "RT":   "ohm.m",
+        "GR": "gAPI",
+        "RT": "ohm.m",
         "RHOB": "g/cc",
         "NPHI": "v/v",
-        "DT":   "us/ft",
-        "CAL":  "in",
-        "SP":   "mV",
+        "DT": "us/ft",
+        "CAL": "in",
+        "SP": "mV",
     }.get(canon, "")
 
 
@@ -391,4 +389,5 @@ def _make_vault_receipt(tool_name: str, payload: dict) -> dict:
 
 def _json_deterministic(obj: dict) -> str:
     import json
+
     return json.dumps(obj, sort_keys=True, default=str, separators=(",", ":"))

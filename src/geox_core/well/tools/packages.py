@@ -92,6 +92,7 @@ def _finalize_package(bins: list[dict[str, Any]]) -> dict[str, Any]:
 
     motifs = [b["motif"] for b in bins if b.get("motif")]
     from collections import Counter
+
     dominant = Counter(motifs).most_common(1)[0][0] if motifs else "UNKNOWN"
 
     p50_vals = [b["p50"] for b in bins if b.get("p50") is not None]

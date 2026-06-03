@@ -1,9 +1,7 @@
 import os
-import json
 import base64
-import hashlib
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ARTIFACT REGISTRY (IN-MEMORY)
@@ -24,7 +22,7 @@ def _artifact_exists(artifact_id: str) -> bool:
 def _register_artifact(artifact_id: str, **kwargs) -> str:
     """Register an artifact in the in-memory store."""
     _artifact_registry[artifact_id] = kwargs
-    _artifact_store[artifact_id] = kwargs # Keep a copy for direct access if needed
+    _artifact_store[artifact_id] = kwargs  # Keep a copy for direct access if needed
     return artifact_id
 
 
@@ -54,7 +52,7 @@ def _safe_upload_path(filename: str, target_dir: str = "/data/geox_las") -> Path
     """
     if ".." in filename or os.path.isabs(filename):
         raise ValueError("Filename contains path traversal characters or is absolute.")
-    
+
     # Ensure target_dir exists and is absolute
     base_dir = Path(target_dir).resolve()
     base_dir.mkdir(parents=True, exist_ok=True)

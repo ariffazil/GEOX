@@ -6,6 +6,7 @@ They are the "engine" layer above the static parameters.
 
 DITEMPA BUKAN DIBERI
 """
+
 from __future__ import annotations
 
 import math
@@ -16,6 +17,7 @@ from geox_core.physics.parameters import forward_physics9
 
 
 # ─── Lithology Discrimination (Vp/Vs/ρ only) ────────────────────────────────
+
 
 def build_lithology_model(state: Physics9State) -> Tuple[str, float, Dict[str, float]]:
     """
@@ -47,6 +49,7 @@ def build_lithology_model(state: Physics9State) -> Tuple[str, float, Dict[str, f
 
 
 # ─── Theory of Anomalous Contrast ───────────────────────────────────────────
+
 
 def anomaly_contrast_theory(
     background: Physics9State,
@@ -81,9 +84,7 @@ def anomaly_contrast_theory(
         "d_rho": round(d_rho, 4),
         "d_phi": round(d_phi, 4),
         "d_rhoe": round(d_rhoe, 4),
-        "verdict": (
-            "SEAL" if AC_Risk < 0.5 else "HOLD" if AC_Risk < 1.5 else "VOID"
-        ),
+        "verdict": ("SEAL" if AC_Risk < 0.5 else "HOLD" if AC_Risk < 1.5 else "VOID"),
         "metadata": {
             "formula": "AC_Risk = u_ambiguity × D_transform_effective × B_cog",
             "constitution": "888_JUDGE",
@@ -92,6 +93,7 @@ def anomaly_contrast_theory(
 
 
 # ─── Inverse Physics ────────────────────────────────────────────────────────
+
 
 def inverse_physics9(
     measurements: Dict[str, float],
@@ -103,9 +105,15 @@ def inverse_physics9(
     """
     if prior_state is None:
         prior_state = Physics9State(
-            rho=2350, vp=2950, vs=1680,
-            rho_e=20, chi=0.001, k=2.5,
-            P=20e6, T=320, phi=0.20,
+            rho=2350,
+            vp=2950,
+            vs=1680,
+            rho_e=20,
+            chi=0.001,
+            k=2.5,
+            P=20e6,
+            T=320,
+            phi=0.20,
         )
 
     updated = Physics9State(
@@ -130,6 +138,7 @@ def inverse_physics9(
 
 
 # ─── Metabolic Loop (Forward ↔ Inverse Convergence) ────────────────────────
+
 
 def metabolic_loop(
     initial_state: Physics9State,

@@ -16,7 +16,7 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any
 
-from .config import HUMAN_LABELS, MOTIF_COLORS
+from .config import HUMAN_LABELS
 
 
 def build_packages(
@@ -55,14 +55,8 @@ def build_packages(
 
     for b in bu[1:]:
         last = current[-1]
-        p50_break = (
-            b["P50"] is not None and last["P50"] is not None
-            and abs(b["P50"] - last["P50"]) > shift_thresh_gapi
-        )
-        mot_inversion = (
-            {b["MICRO_MOTIF"], last["MICRO_MOTIF"]}
-            == {"Fining Upward", "Coarsening Upward"}
-        )
+        p50_break = b["P50"] is not None and last["P50"] is not None and abs(b["P50"] - last["P50"]) > shift_thresh_gapi
+        mot_inversion = {b["MICRO_MOTIF"], last["MICRO_MOTIF"]} == {"Fining Upward", "Coarsening Upward"}
         thickness_now = abs(current[0]["TOP"] - current[-1]["BASE"])
         if p50_break or mot_inversion or thickness_now >= max_pkg_m:
             groups.append(current)
@@ -103,20 +97,13 @@ def _finalize_package(bins: list[dict[str, Any]]) -> dict[str, Any]:
     p90s = [x["P90"] for x in bins if x["P90"] is not None]
     rngs = [x["RANGE"] for x in bins if x["RANGE"] is not None]
     slps = [x["SLOPE"] for x in bins if x["SLOPE"] is not None]
-    micros = [x["MICRO_MOTIF"] for x in bins
-              if x["MICRO_MOTIF"] not in ("Heterolithic", None)]
+    micros = [x["MICRO_MOTIF"] for x in bins if x["MICRO_MOTIF"] not in ("Heterolithic", None)]
     import numpy as np
 
     gr_mean = round(float(np.mean(means)), 2) if means else None
-    gr_p10 = (
-        round(float(np.percentile(p10s, 10)), 2) if len(p10s) >= 2
-        else (round(p10s[0], 2) if p10s else None)
-    )
+    gr_p10 = round(float(np.percentile(p10s, 10)), 2) if len(p10s) >= 2 else (round(p10s[0], 2) if p10s else None)
     gr_p50 = round(float(np.median(p50s)), 2) if p50s else None
-    gr_p90 = (
-        round(float(np.percentile(p90s, 90)), 2) if len(p90s) >= 2
-        else (round(p90s[0], 2) if p90s else None)
-    )
+    gr_p90 = round(float(np.percentile(p90s, 90)), 2) if len(p90s) >= 2 else (round(p90s[0], 2) if p90s else None)
     net_slope = float(np.mean(slps)) if slps else 0.0
     rng_mean = float(np.mean(rngs)) if rngs else 0.0
 
@@ -155,9 +142,13 @@ def _finalize_package(bins: list[dict[str, Any]]) -> dict[str, Any]:
         "THICKNESS": round(max(bases) - min(tops), 1),
         "HUMAN_MOTIF": human_motif,
         "RIDER_MOTIF": rider_motif,
-        "NET_TREND": ("Net Fining Upward" if human_motif == "Fining Upward"
-                      else "Net Coarsening Upward" if human_motif == "Coarsening Upward"
-                      else "Aggradational"),
+        "NET_TREND": (
+            "Net Fining Upward"
+            if human_motif == "Fining Upward"
+            else "Net Coarsening Upward"
+            if human_motif == "Coarsening Upward"
+            else "Aggradational"
+        ),
         "VARIABILITY": variability,
         "GR_BASELINE_SHIFT": baseline_shift,
         "GR_MEAN": gr_mean,

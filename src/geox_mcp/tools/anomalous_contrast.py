@@ -87,21 +87,25 @@ async def geox_anomalous_contrast_detector(
         tol = geological_boundary_tolerance_m
         window_mask = np.abs(depth_arr - geo_depth_actual) <= tol
         if not np.any(window_mask):
-            anomalies.append({
-                "formation": formation_name,
-                "depth_geological_m": geo_depth_actual,
-                "depth_seismic_m": None,
-                "rc_geological": float(rc_abs[geo_idx]),
-                "rc_seismic": None,
-                "mistie_m": None,
-                "reason": "No samples within tolerance window.",
-            })
-            recommended_picks.append({
-                "formation": formation_name,
-                "depth_geological_m": geo_depth_actual,
-                "depth_seismic_apparent_m": None,
-                "reason": "No samples within tolerance window.",
-            })
+            anomalies.append(
+                {
+                    "formation": formation_name,
+                    "depth_geological_m": geo_depth_actual,
+                    "depth_seismic_m": None,
+                    "rc_geological": float(rc_abs[geo_idx]),
+                    "rc_seismic": None,
+                    "mistie_m": None,
+                    "reason": "No samples within tolerance window.",
+                }
+            )
+            recommended_picks.append(
+                {
+                    "formation": formation_name,
+                    "depth_geological_m": geo_depth_actual,
+                    "depth_seismic_apparent_m": None,
+                    "reason": "No samples within tolerance window.",
+                }
+            )
             continue
 
         window_indices = np.where(window_mask)[0]
@@ -116,33 +120,39 @@ async def geox_anomalous_contrast_detector(
         is_anomaly = (seismic_idx != geo_idx) and (rc_at_seismic > rc_at_geo * 1.05)
 
         if is_anomaly:
-            anomalies.append({
-                "formation": formation_name,
-                "depth_geological_m": round(geo_depth_actual, 2),
-                "depth_seismic_m": round(seismic_depth, 2),
-                "rc_geological": round(rc_at_geo, 6),
-                "rc_seismic": round(rc_at_seismic, 6),
-                "rc_ratio": round(rc_at_seismic / max(rc_at_geo, 1e-9), 3),
-                "mistie_m": round(mistie, 2),
-                "reason": (
-                    f"Strongest reflector ({rc_at_seismic:.4f}) is {abs(mistie):.1f}m "
-                    f"{'deeper' if mistie > 0 else 'shallower'} than geological top ({rc_at_geo:.4f})."
-                ),
-            })
+            anomalies.append(
+                {
+                    "formation": formation_name,
+                    "depth_geological_m": round(geo_depth_actual, 2),
+                    "depth_seismic_m": round(seismic_depth, 2),
+                    "rc_geological": round(rc_at_geo, 6),
+                    "rc_seismic": round(rc_at_seismic, 6),
+                    "rc_ratio": round(rc_at_seismic / max(rc_at_geo, 1e-9), 3),
+                    "mistie_m": round(mistie, 2),
+                    "reason": (
+                        f"Strongest reflector ({rc_at_seismic:.4f}) is {abs(mistie):.1f}m "
+                        f"{'deeper' if mistie > 0 else 'shallower'} than geological top ({rc_at_geo:.4f})."
+                    ),
+                }
+            )
             total_mistie_m += abs(mistie)
-            recommended_picks.append({
-                "formation": formation_name,
-                "depth_geological_m": round(geo_depth_actual, 2),
-                "depth_seismic_apparent_m": round(seismic_depth, 2),
-                "reason": "Seismic pick displaced from geological top.",
-            })
+            recommended_picks.append(
+                {
+                    "formation": formation_name,
+                    "depth_geological_m": round(geo_depth_actual, 2),
+                    "depth_seismic_apparent_m": round(seismic_depth, 2),
+                    "reason": "Seismic pick displaced from geological top.",
+                }
+            )
         else:
-            recommended_picks.append({
-                "formation": formation_name,
-                "depth_geological_m": round(geo_depth_actual, 2),
-                "depth_seismic_apparent_m": round(geo_depth_actual, 2),
-                "reason": "Geological top aligns with strongest reflector within tolerance.",
-            })
+            recommended_picks.append(
+                {
+                    "formation": formation_name,
+                    "depth_geological_m": round(geo_depth_actual, 2),
+                    "depth_seismic_apparent_m": round(geo_depth_actual, 2),
+                    "reason": "Geological top aligns with strongest reflector within tolerance.",
+                }
+            )
 
     # ── 4. VOLUMETRIC IMPACT ─────────────────────────────────────────────────
     n_anomalies = len(anomalies)

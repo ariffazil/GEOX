@@ -190,9 +190,7 @@ class UncertaintyBand:
     killers: List[RiskKiller] = field(default_factory=list)
 
 
-def create_uncertainty_band(
-    base: float, unit: str, killers: List[RiskKiller]
-) -> UncertaintyBand:
+def create_uncertainty_band(base: float, unit: str, killers: List[RiskKiller]) -> UncertaintyBand:
     spread = base * 0.4
     return UncertaintyBand(
         p10=round(base + spread, 2),
@@ -221,10 +219,7 @@ class EvidenceCitation:
 def audit_hallucination(claims: List[str], citations: List[EvidenceCitation]) -> Tuple[bool, List[str]]:
     ungrounded: List[str] = []
     for claim in claims:
-        grounded = any(
-            claim.lower() in c.observation.lower() or c.observation.lower() in claim.lower()
-            for c in citations
-        )
+        grounded = any(claim.lower() in c.observation.lower() or c.observation.lower() in claim.lower() for c in citations)
         if not grounded:
             ungrounded.append(claim)
     return len(ungrounded) == 0, ungrounded
@@ -235,8 +230,7 @@ def audit_hallucination(claims: List[str], citations: List[EvidenceCitation]) ->
 # ═══════════════════════════════════════════════════════════════════════════════
 
 HighRiskDomain = Literal[
-    "drilling", "reserves_booking", "barrier_integrity", "well_design",
-    "abandonment", "production_alteration"
+    "drilling", "reserves_booking", "barrier_integrity", "well_design", "abandonment", "production_alteration"
 ]
 
 HIGH_RISK_KEYWORDS: Dict[str, HighRiskDomain] = {
@@ -316,14 +310,9 @@ def run_discipline_panel(opinions: List[DisciplineOpinion]) -> DisciplinePanel:
         dominant = yellows[0].discipline
 
     if reds:
-        synthesis = (
-            f"Geologically attractive BUT {' + '.join(r.discipline for r in reds)} "
-            "flags critical risk."
-        )
+        synthesis = f"Geologically attractive BUT {' + '.join(r.discipline for r in reds)} flags critical risk."
     elif yellows:
-        synthesis = (
-            f"Attractive with operational caution from {' + '.join(y.discipline for y in yellows)}."
-        )
+        synthesis = f"Attractive with operational caution from {' + '.join(y.discipline for y in yellows)}."
     else:
         synthesis = "All disciplines green. Proceed with standard diligence."
 
@@ -399,10 +388,7 @@ def scan_trauma(scenario_tags: List[str]) -> List[TraumaCase]:
 def format_trauma_warning(cases: List[TraumaCase]) -> str:
     if not cases:
         return ""
-    lines = [
-        f"WARNING: Similar to {c.name} ({c.year}, {c.basin or 'unknown basin'}) — {c.failure_mode}."
-        for c in cases
-    ]
+    lines = [f"WARNING: Similar to {c.name} ({c.year}, {c.basin or 'unknown basin'}) — {c.failure_mode}." for c in cases]
     return "\n".join(lines)
 
 

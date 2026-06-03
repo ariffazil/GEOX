@@ -12,10 +12,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
-import json
 import logging
-import tempfile
-from pathlib import Path
 from typing import Any, Optional
 
 import yaml
@@ -105,14 +102,10 @@ def register_stratigraphy_tools(mcp: FastMCP) -> None:
         from geox_core.well.stratigraphy.config import ProjectConfig, WellSource, ProjectInterval
 
         try:
-            wells = [
-                WellSource(**w) for w in config_dict.get("wells", [])
-            ]
+            wells = [WellSource(**w) for w in config_dict.get("wells", [])]
             intervals = {}
             for well_id, ivls in config_dict.get("intervals", {}).items():
-                intervals[well_id] = [
-                    ProjectInterval(**i) for i in ivls
-                ]
+                intervals[well_id] = [ProjectInterval(**i) for i in ivls]
 
             config = ProjectConfig(
                 project=config_dict.get("project", "Untitled"),
@@ -144,6 +137,7 @@ def register_stratigraphy_tools(mcp: FastMCP) -> None:
             )
 
         from geox_core.well.stratigraphy.pipeline import run_pipeline
+
         try:
             result = run_pipeline(
                 config,
@@ -203,19 +197,14 @@ def register_stratigraphy_tools(mcp: FastMCP) -> None:
                 "claim_state": "VOID",
             }
 
-        from geox_core.well.stratigraphy.config import ProjectConfig, WellSource, ProjectInterval
-
         try:
             wells = [
-                {"name": w["name"], "path": w["path"], "format": w.get("format", "LAS")}
-                for w in config_dict.get("wells", [])
+                {"name": w["name"], "path": w["path"], "format": w.get("format", "LAS")} for w in config_dict.get("wells", [])
             ]
             interval_summary = {}
             for well_id, ivls in config_dict.get("intervals", {}).items():
                 interval_summary[well_id] = [
-                    {"zone": i["zone"], "top": i["top"], "base": i["base"],
-                     "depo_env": i.get("depo_env", "?")}
-                    for i in ivls
+                    {"zone": i["zone"], "top": i["top"], "base": i["base"], "depo_env": i.get("depo_env", "?")} for i in ivls
                 ]
         except Exception as e:
             return {
@@ -243,6 +232,7 @@ def register_stratigraphy_tools(mcp: FastMCP) -> None:
     # Register in FEDERATION_TOOLS
     try:
         from federation.tool_manifest import FEDERATION_TOOLS, ToolManifest, CognitiveAxis
+
         for _name in TOOL_NAMES:
             if _name not in FEDERATION_TOOLS:
                 FEDERATION_TOOLS[_name] = ToolManifest(

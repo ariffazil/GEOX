@@ -12,11 +12,7 @@ from geox_core.renderers.base import RenderRequest, RenderResult
 
 def render_multiwell_correlation_panel(request: RenderRequest) -> RenderResult:
     spec = request.plot_spec
-    output_png = (
-        validate_output_path(request.output_png, must_have_suffix=".png")
-        if request.output_png
-        else None
-    )
+    output_png = validate_output_path(request.output_png, must_have_suffix=".png") if request.output_png else None
     output_dir = str(Path(output_png).parent) if output_png else request.output_dir
 
     panel_result = render_correlation_panel(
@@ -64,9 +60,7 @@ def render_multiwell_correlation_panel(request: RenderRequest) -> RenderResult:
                     "wells_loaded": panel_result.wells_loaded,
                     "tracks_rendered": panel_result.tracks_rendered,
                 },
-                "interpretation": (
-                    "Exploratory well-log visualization only; human geologist review required."
-                ),
+                "interpretation": ("Exploratory well-log visualization only; human geologist review required."),
                 "unknown": [
                     "Datum correction not applied",
                     "TVD/TVDSS unavailable unless explicitly supplied",
@@ -77,8 +71,7 @@ def render_multiwell_correlation_panel(request: RenderRequest) -> RenderResult:
         validation = verify_artifact_pack(artifacts)
 
     return RenderResult(
-        ok=panel_result.ok
-        and _pack_is_valid(validation, required=("png_path", "csv_summary_path")),
+        ok=panel_result.ok and _pack_is_valid(validation, required=("png_path", "csv_summary_path")),
         artifacts=artifacts,
         validation=validation,
         audit_path=audit_path,

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any
 # ─── kernel/_evidence.py ─── F6 Maruah + F7 Humility + ensemble injection ─────
 # Extracted from _helpers.py (lines 193–311)
 # NO FastMCP imports. Pure business logic.
@@ -57,7 +57,11 @@ def _inject_ensemble_residual_evidence(
     for i in range(realizations):
         noise_factor = 0.9 + (i * 0.1)  # 0.9, 1.0, 1.1
         _scenario_tags = {1: "MIN", 2: "MID", 3: "MAX"}
-        realization = {"realization_id": i + 1, "noise_factor": noise_factor, "scenario_tag": _scenario_tags.get(i + 1, f"R{i + 1}")}
+        realization = {
+            "realization_id": i + 1,
+            "noise_factor": noise_factor,
+            "scenario_tag": _scenario_tags.get(i + 1, f"R{i + 1}"),
+        }
         if "phit_p50" in result:
             realization["phit"] = round(float(result["phit_p50"]) * noise_factor, 4)
         if "sw_p50" in result:
@@ -120,4 +124,3 @@ def _check_maruah_territory(bbox: list[float], crs: str) -> dict[str, Any]:
         "confidence": "MEDIUM",
         "floors_triggered": ["F5", "F6"],
     }
-

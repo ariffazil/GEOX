@@ -37,7 +37,9 @@ def geox_memory_recall_asset_tool(
     limit: int = 10,
 ) -> dict:
     store = AssetMemoryStore(db_path=db_path)
-    records = [record.to_dict() for record in store.recall_asset(asset_id=asset_id, eval_type=eval_type, query=query, limit=limit)]
+    records = [
+        record.to_dict() for record in store.recall_asset(asset_id=asset_id, eval_type=eval_type, query=query, limit=limit)
+    ]
     payload = {"asset_id": asset_id, "count": len(records), "query": query}
     return {
         "asset_id": asset_id,

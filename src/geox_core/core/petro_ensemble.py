@@ -18,11 +18,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from math import sqrt
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
-from geox_core.core.governed_output import classify_claim_tag, make_vault_receipt
+from geox_core.core.governed_output import make_vault_receipt
 from geox_core.physics.guards import PhysicsGuard
 
 
@@ -57,15 +57,16 @@ class EnsembleModelResult:
 @dataclass
 class PetroEnsembleResult:
     """Output schema for geox_well_compute_petrophysics — v2."""
+
     tool: str = "geox_well_compute_petrophysics"
     # Required per spec
-    saturation_model: str = ""          # Archie | Indonesia | Simandoux
+    saturation_model: str = ""  # Archie | Indonesia | Simandoux
     required_curves_present: list[str] = field(default_factory=list)
     required_curves_absent: list[str] = field(default_factory=list)
     applied_defaults: dict = field(default_factory=dict)
     interval_coverage: dict = field(default_factory=dict)  # {top_md, bottom_md, net_m}
     confidence_limitations: list[str] = field(default_factory=list)
-    prerequisite_qc_state: str = ""      # reference to geox_well_qc_logs output
+    prerequisite_qc_state: str = ""  # reference to geox_well_qc_logs output
     # Computed values
     models: dict[str, float] = field(default_factory=dict)
     model_details: list[EnsembleModelResult] = field(default_factory=list)
@@ -244,11 +245,11 @@ class PetroEnsemble:
             if model.name == "indonesia" and rsh is None:
                 model.is_defaulted = True
                 model.defaulted_params = {"rsh": round(effective_rsh, 4)}
-            if "a" in applied and not ("a" in user_inputs):
+            if "a" in applied and "a" not in user_inputs:
                 if not model.defaulted_params:
                     model.defaulted_params = {}
                 model.defaulted_params.setdefault("a", applied["a"]["value"])
-            if "m" in applied and not ("m" in user_inputs):
+            if "m" in applied and "m" not in user_inputs:
                 if not model.defaulted_params:
                     model.defaulted_params = {}
                 model.defaulted_params.setdefault("m", applied["m"]["value"])
@@ -257,11 +258,13 @@ class PetroEnsemble:
         validations: dict[str, Any] = {}
         invalid_models: list[str] = []
         for model in models:
-            validation = self.guard.validate({
-                "sw": model.sw,
-                "porosity": phi,
-                "vsh": effective_vsh,
-            })
+            validation = self.guard.validate(
+                {
+                    "sw": model.sw,
+                    "porosity": phi,
+                    "vsh": effective_vsh,
+                }
+            )
             validations[model.name] = validation.to_dict()
             if validation.hold:
                 model.physics_status = validation.status
@@ -283,7 +286,9 @@ class PetroEnsemble:
         if invalid_models:
             limitations.append(f"PhysicsGuard violations: {invalid_models}")
         if disagreement_band > 0.20:
-            limitations.append(f"Model disagreement band {disagreement_band:.2f} exceeds 0.20 — interpretations may differ significantly")
+            limitations.append(
+                f"Model disagreement band {disagreement_band:.2f} exceeds 0.20 — interpretations may differ significantly"
+            )
         if net_m and net_m < 10.0:
             limitations.append(f"Thin interval ({net_m}m) — Sw estimates have higher uncertainty")
 
@@ -313,16 +318,22 @@ class PetroEnsemble:
         ]
         sw_range = [round(float(p10), 4), round(float(p90), 4)]
 
-        payload = {k: v for k, v in {
-            "saturation_model": "Archie/Indonesia/Simandoux ensemble",
-            "required_curves_present": present,
-            "required_curves_absent": absent,
-            "applied_defaults": applied,
-            "interval_coverage": {"top_md": top_md, "bottom_md": bottom_md, "net_m": net_m},
-            "mean": float(sw_values.mean()),
-            "p10": float(p10), "p50": float(p50), "p90": float(p90),
-            "disagreement_band": disagreement_band,
-        }.items() if v is not None}
+        payload = {
+            k: v
+            for k, v in {
+                "saturation_model": "Archie/Indonesia/Simandoux ensemble",
+                "required_curves_present": present,
+                "required_curves_absent": absent,
+                "applied_defaults": applied,
+                "interval_coverage": {"top_md": top_md, "bottom_md": bottom_md, "net_m": net_m},
+                "mean": float(sw_values.mean()),
+                "p10": float(p10),
+                "p50": float(p50),
+                "p90": float(p90),
+                "disagreement_band": disagreement_band,
+            }.items()
+            if v is not None
+        }
 
         verdict = "HOLD" if hold_enforced else "SEAL"
         vault_receipt = make_vault_receipt("geox_well_compute_petrophysics", payload, verdict)

@@ -136,12 +136,14 @@ def _assign_systems_tracts(
         # Detect tract boundary on major pattern shift
         if _is_tract_boundary(pattern, motif, current_tract, expected, depo):
             if current_tract:
-                tracts.append({
-                    "tract": expected,
-                    "packages": current_tract,
-                    "top": current_tract[0]["top"],
-                    "base": current_tract[-1]["base"],
-                })
+                tracts.append(
+                    {
+                        "tract": expected,
+                        "packages": current_tract,
+                        "top": current_tract[0]["top"],
+                        "base": current_tract[-1]["base"],
+                    }
+                )
                 current_tract = []
                 tract_idx += 1
                 expected = SYSTEMS_TRACT_ORDER[tract_idx] if tract_idx < len(SYSTEMS_TRACT_ORDER) else "HST"
@@ -149,12 +151,14 @@ def _assign_systems_tracts(
         current_tract.append(pkg)
 
     if current_tract:
-        tracts.append({
-            "tract": expected,
-            "packages": current_tract,
-            "top": current_tract[0]["top"],
-            "base": current_tract[-1]["base"],
-        })
+        tracts.append(
+            {
+                "tract": expected,
+                "packages": current_tract,
+                "top": current_tract[0]["top"],
+                "base": current_tract[-1]["base"],
+            }
+        )
 
     return tracts
 
@@ -209,14 +213,16 @@ def _identify_surfaces(
         # Tract boundary = surface
         if i == 0:
             # Base of section: could be SB or SB/TS composite
-            surfaces.append({
-                "surface": "SB",
-                "depth": round(base_depth, 2),
-                "type": "sequence_boundary",
-                "context": "base_of_section",
-                "confidence": 0.5,
-                "claim_state": "INTERPRETED",
-            })
+            surfaces.append(
+                {
+                    "surface": "SB",
+                    "depth": round(base_depth, 2),
+                    "type": "sequence_boundary",
+                    "context": "base_of_section",
+                    "confidence": 0.5,
+                    "claim_state": "INTERPRETED",
+                }
+            )
         else:
             # Tract boundary = systems tract transition surface
             prev_tract = tracts[i - 1]
@@ -224,53 +230,63 @@ def _identify_surfaces(
             curr_tract_name = tract["tract"]
 
             if prev_tract_name == "LST" and curr_tract_name == "TST":
-                surfaces.append({
-                    "surface": "TS",
-                    "depth": round(base_depth, 2),
-                    "type": "transgressive_surface",
-                    "context": f"{prev_tract_name}_{curr_tract_name}",
-                    "confidence": 0.6,
-                    "claim_state": "INTERPRETED",
-                })
+                surfaces.append(
+                    {
+                        "surface": "TS",
+                        "depth": round(base_depth, 2),
+                        "type": "transgressive_surface",
+                        "context": f"{prev_tract_name}_{curr_tract_name}",
+                        "confidence": 0.6,
+                        "claim_state": "INTERPRETED",
+                    }
+                )
             elif prev_tract_name == "TST" and curr_tract_name == "HST":
-                surfaces.append({
-                    "surface": "MFS",
-                    "depth": round(base_depth, 2),
-                    "type": "maximum_flooding_surface",
-                    "context": f"{prev_tract_name}_{curr_tract_name}",
-                    "confidence": 0.7,
-                    "claim_state": "INTERPRETED",
-                })
+                surfaces.append(
+                    {
+                        "surface": "MFS",
+                        "depth": round(base_depth, 2),
+                        "type": "maximum_flooding_surface",
+                        "context": f"{prev_tract_name}_{curr_tract_name}",
+                        "confidence": 0.7,
+                        "claim_state": "INTERPRETED",
+                    }
+                )
             elif prev_tract_name == "HST" and curr_tract_name == "FSST":
-                surfaces.append({
-                    "surface": "SB",
-                    "depth": round(base_depth, 2),
-                    "type": "sequence_boundary",
-                    "context": f"{prev_tract_name}_{curr_tract_name}",
-                    "confidence": 0.5,
-                    "claim_state": "INTERPRETED",
-                })
+                surfaces.append(
+                    {
+                        "surface": "SB",
+                        "depth": round(base_depth, 2),
+                        "type": "sequence_boundary",
+                        "context": f"{prev_tract_name}_{curr_tract_name}",
+                        "confidence": 0.5,
+                        "claim_state": "INTERPRETED",
+                    }
+                )
             else:
-                surfaces.append({
-                    "surface": "STACKING_TRANSITION",
-                    "depth": round(base_depth, 2),
-                    "type": "stacking_pattern_change",
-                    "context": f"{prev_tract_name}_{curr_tract_name}",
-                    "confidence": 0.4,
-                    "claim_state": "INTERPRETED",
-                })
+                surfaces.append(
+                    {
+                        "surface": "STACKING_TRANSITION",
+                        "depth": round(base_depth, 2),
+                        "type": "stacking_pattern_change",
+                        "context": f"{prev_tract_name}_{curr_tract_name}",
+                        "confidence": 0.4,
+                        "claim_state": "INTERPRETED",
+                    }
+                )
 
     # Always include final surface at base of deepest tract
     if tracts:
         last_tract = tracts[-1]
         last_base = last_tract["packages"][-1]["base"]
-        surfaces.append({
-            "surface": "BASE_SECTION",
-            "depth": round(last_base, 2),
-            "type": "base_of_section",
-            "context": "end_of_data",
-            "confidence": 0.5,
-            "claim_state": "INTERPRETED",
-        })
+        surfaces.append(
+            {
+                "surface": "BASE_SECTION",
+                "depth": round(last_base, 2),
+                "type": "base_of_section",
+                "context": "end_of_data",
+                "confidence": 0.5,
+                "claim_state": "INTERPRETED",
+            }
+        )
 
     return surfaces

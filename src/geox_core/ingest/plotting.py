@@ -34,31 +34,33 @@ logger = logging.getLogger("geox.plotting")
 # ── Alias maps ────────────────────────────────────────────────────────────────
 
 CURVE_ALIASES: dict[str, list[str]] = {
-    "GR":   ["GR", "GAMMA", "CGR", "SGR", "GAM"],
-    "RT":   ["RT", "ILD", "LLD", "LLS", "RDEP", "RESD", "RES", "AT90", "MSFL"],
+    "GR": ["GR", "GAMMA", "CGR", "SGR", "GAM"],
+    "RT": ["RT", "ILD", "LLD", "LLS", "RDEP", "RESD", "RES", "AT90", "MSFL"],
     "RHOB": ["RHOB", "DEN", "DENS", "ZDEN", "RHO", "BDC"],
     "NPHI": ["NPHI", "NEUT", "TNPH", "CNCF", "PHI", "NPL"],
-    "DT":   ["DT", "DTC", "AC"],
-    "CAL":  ["CAL", "CALI", "CALM"],
-    "SP":   ["SP"],
+    "DT": ["DT", "DTC", "AC"],
+    "CAL": ["CAL", "CALI", "CALM"],
+    "SP": ["SP"],
 }
 
 # ── Claim state constants ─────────────────────────────────────────────────────
 
-CLAIM_EXPLORATORY  = "EXPLORATORY_VISUALIZATION"
-CLAIM_COMPUTED     = "COMPUTED_AUTOPICK"
-CLAIM_OBSERVED     = "OBSERVED_CURVE_PATTERN"
+CLAIM_EXPLORATORY = "EXPLORATORY_VISUALIZATION"
+CLAIM_COMPUTED = "COMPUTED_AUTOPICK"
+CLAIM_OBSERVED = "OBSERVED_CURVE_PATTERN"
 
 
 # ── Dataclasses ───────────────────────────────────────────────────────────────
 
+
 @dataclass
 class WellBundle:
     """Loaded well data for correlation."""
+
     well_id: str
     source_path: str
     depth_md: np.ndarray
-    curves: dict[str, np.ndarray]          # canonical name → array
+    curves: dict[str, np.ndarray]  # canonical name → array
     depth_unit: str = "M"
     null_pct: dict[str, float] = field(default_factory=dict)
     depth_range: tuple[float, float] = field(default_factory=lambda: (0.0, 0.0))
@@ -73,8 +75,9 @@ class WellBundle:
 @dataclass
 class PanelConfig:
     """Configuration for a correlation panel."""
-    tracks: list[str]            # e.g. ["GR", "RT"]
-    depth_basis: str = "MD"      # always stated explicitly
+
+    tracks: list[str]  # e.g. ["GR", "RT"]
+    depth_basis: str = "MD"  # always stated explicitly
     depth_unit: str = "m"
     depth_range: Optional[tuple[float, float]] = None  # None = auto
     tops: Optional[dict[str, float]] = None  # well_id → {marker_name: depth}
@@ -88,6 +91,7 @@ class PanelConfig:
 @dataclass
 class PanelResult:
     """Output of a panel render."""
+
     ok: bool
     png_path: Optional[str] = None
     svg_path: Optional[str] = None
@@ -127,6 +131,7 @@ class PanelResult:
 
 
 # ── LAS loading (thin wrapper around las_reader) ───────────────────────────────
+
 
 def _canonicalise(arr: np.ndarray) -> np.ndarray:
     """Replace LAS null values with np.nan."""
@@ -188,7 +193,7 @@ def load_well_bundle(filepath: str, well_id: Optional[str] = None) -> WellBundle
             pct = float(np.sum(np.isnan(arr)) / max(len(arr), 1))
             null_pct[canon] = round(pct, 4)
             if pct > 0.5:
-                warnings.append(f"{canon}: {round(pct*100,1)}% null — interpret with caution.")
+                warnings.append(f"{canon}: {round(pct * 100, 1)}% null — interpret with caution.")
         else:
             warnings.append(f"{canon}: not found — substituted null array.")
 
@@ -204,6 +209,7 @@ def load_well_bundle(filepath: str, well_id: Optional[str] = None) -> WellBundle
 
 
 # ── Correlation panel plotting ─────────────────────────────────────────────────
+
 
 def _render_panel(
     bundles: list[WellBundle],
@@ -222,10 +228,10 @@ def _render_panel(
         PanelResult with artifact paths and QC state.
     """
     import matplotlib
+
     matplotlib.use("Agg")  # headless — no display required
     import matplotlib.pyplot as plt
     import matplotlib.ticker as mticker
-    from matplotlib.colors import Normalize
 
     os.makedirs(output_dir, exist_ok=True)
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -268,9 +274,7 @@ def _render_panel(
             all_warnings.append(f"[{bundle.well_id}] {w}")
 
         # Title
-        display_name = (config.well_names[col_idx]
-                        if config.well_names and col_idx < len(config.well_names)
-                        else bundle.well_id)
+        display_name = config.well_names[col_idx] if config.well_names and col_idx < len(config.well_names) else bundle.well_id
         ax.set_title(display_name, fontsize=9, pad=6)
 
         for track_idx, track_name in enumerate(config.tracks):
@@ -279,17 +283,32 @@ def _render_panel(
 
             arr = bundle.curves.get(track_name)
             if arr is None:
-                ax.text(0.5, 0.5, f"{track_name}\n(NOT FOUND)",
-                        transform=ax.transAxes, ha="center", va="center",
-                        fontsize=8, color="red", alpha=0.7)
+                ax.text(
+                    0.5,
+                    0.5,
+                    f"{track_name}\n(NOT FOUND)",
+                    transform=ax.transAxes,
+                    ha="center",
+                    va="center",
+                    fontsize=8,
+                    color="red",
+                    alpha=0.7,
+                )
                 ax.set_xticks([])
                 continue
 
             valid = ~np.isnan(arr)
             if not np.any(valid):
-                ax.text(0.5, 0.5, f"{track_name}\n(all null)",
-                        transform=ax.transAxes, ha="center", va="center",
-                        fontsize=8, color="orange")
+                ax.text(
+                    0.5,
+                    0.5,
+                    f"{track_name}\n(all null)",
+                    transform=ax.transAxes,
+                    ha="center",
+                    va="center",
+                    fontsize=8,
+                    color="orange",
+                )
                 continue
 
             x_plot = arr.copy()
@@ -319,50 +338,73 @@ def _render_panel(
             if config.tops and bundle.well_id in config.tops:
                 for marker, mdepth in config.tops[bundle.well_id].items():
                     ax.axhline(y=mdepth, color="brown", linewidth=0.8, linestyle="--", alpha=0.6)
-                    ax.text(1.02, mdepth, f"◆ {marker}", transform=ax.get_yaxis_transform(),
-                            fontsize=6, va="center", color="brown")
+                    ax.text(
+                        1.02, mdepth, f"◆ {marker}", transform=ax.get_yaxis_transform(), fontsize=6, va="center", color="brown"
+                    )
 
             # Null pct in corner
             np_pct = bundle.null_pct.get(track_name, 0.0)
             if np_pct > 0.1:
-                ax.text(0.97, 0.03, f"null: {np_pct*100:.0f}%",
-                        transform=ax.transAxes, ha="right", va="bottom",
-                        fontsize=6, color="gray")
+                ax.text(
+                    0.97,
+                    0.03,
+                    f"null: {np_pct * 100:.0f}%",
+                    transform=ax.transAxes,
+                    ha="right",
+                    va="bottom",
+                    fontsize=6,
+                    color="gray",
+                )
 
             # Curve summary
-            curve_summary.append({
-                "well_id": bundle.well_id,
-                "track": track_name,
-                "n_samples": int(np.sum(valid)),
-                "null_pct": round(np_pct, 4),
-                "min": round(float(np.nanmin(x_plot)), 4),
-                "max": round(float(np.nanmax(x_plot)), 4),
-                "unit": _track_unit(track_name),
-            })
+            curve_summary.append(
+                {
+                    "well_id": bundle.well_id,
+                    "track": track_name,
+                    "n_samples": int(np.sum(valid)),
+                    "null_pct": round(np_pct, 4),
+                    "min": round(float(np.nanmin(x_plot)), 4),
+                    "max": round(float(np.nanmax(x_plot)), 4),
+                    "unit": _track_unit(track_name),
+                }
+            )
 
         # Grid
         ax.grid(True, axis="y", linewidth=0.3, alpha=0.4)
         ax.set_axisbelow(True)
 
     # Shared depth label
-    fig.text(0.5, 0.01, f"Depth basis: {config.depth_basis} | Datum correction: not applied | TVDSS: unavailable",
-             ha="center", fontsize=7, color="gray", style="italic")
+    fig.text(
+        0.5,
+        0.01,
+        f"Depth basis: {config.depth_basis} | Datum correction: not applied | TVDSS: unavailable",
+        ha="center",
+        fontsize=7,
+        color="gray",
+        style="italic",
+    )
 
     # Claim state banner
-    claim_text = f"Claim state: {config.basin_hint} — {CLAIM_EXPLORATORY}" if config.basin_hint else f"Claim state: {CLAIM_EXPLORATORY}"
-    fig.text(0.5, 0.985, claim_text,
-             ha="center", fontsize=7, color="darkorange",
-             style="italic",
-             bbox=dict(boxstyle="round,pad=0.3", facecolor="lightyellow", alpha=0.7))
+    claim_text = (
+        f"Claim state: {config.basin_hint} — {CLAIM_EXPLORATORY}" if config.basin_hint else f"Claim state: {CLAIM_EXPLORATORY}"
+    )
+    fig.text(
+        0.5,
+        0.985,
+        claim_text,
+        ha="center",
+        fontsize=7,
+        color="darkorange",
+        style="italic",
+        bbox=dict(boxstyle="round,pad=0.3", facecolor="lightyellow", alpha=0.7),
+    )
 
     # Warning list
     if all_warnings:
         warn_text = " | ".join(all_warnings[:3])
-        fig.text(0.5, 0.015, f"WARNINGS: {warn_text}",
-                 ha="center", fontsize=6, color="red")
+        fig.text(0.5, 0.015, f"WARNINGS: {warn_text}", ha="center", fontsize=6, color="red")
 
-    fig.suptitle("GEOX Well Correlation Panel — Exploratory Visualization",
-                 fontsize=11, y=0.99)
+    fig.suptitle("GEOX Well Correlation Panel — Exploratory Visualization", fontsize=11, y=0.99)
     plt.tight_layout(rect=[0, 0.02, 1, 0.97])
     fig.savefig(png_path, dpi=150, bbox_inches="tight", format="png")
     svg_path = None
@@ -394,30 +436,31 @@ def _render_panel(
 
 def _track_color(track: str) -> str:
     return {
-        "GR":   "green",
-        "RT":   "red",
+        "GR": "green",
+        "RT": "red",
         "RHOB": "blue",
         "NPHI": "orange",
-        "DT":   "purple",
-        "CAL":  "brown",
-        "SP":   "gray",
+        "DT": "purple",
+        "CAL": "brown",
+        "SP": "gray",
     }.get(track, "black")
 
 
 def _track_unit(track: str) -> str:
     return {
-        "GR":   "gAPI",
-        "RT":   "ohm.m",
+        "GR": "gAPI",
+        "RT": "ohm.m",
         "RHOB": "g/cc",
         "NPHI": "v/v",
-        "DT":   "us/ft",
-        "CAL":  "in",
-        "SP":   "mV",
+        "DT": "us/ft",
+        "CAL": "in",
+        "SP": "mV",
     }.get(track, "")
 
 
 def _write_csv_summary(csv_path: str, curve_summary: list[dict]) -> None:
     import csv
+
     if not curve_summary:
         return
     with open(csv_path, "w", newline="") as f:
@@ -427,6 +470,7 @@ def _write_csv_summary(csv_path: str, curve_summary: list[dict]) -> None:
 
 
 # ── Public entry point ─────────────────────────────────────────────────────────
+
 
 def render_correlation_panel(
     las_paths: list[str],
@@ -480,8 +524,7 @@ def render_correlation_panel(
             if basin_hint:
                 bundle.claim_state = CLAIM_EXPLORATORY
                 bundle.qc_warnings.append(
-                    f"Cross-basin guardrail active: basin='{basin_hint}' — "
-                    "this panel is for visual/testing purposes only."
+                    f"Cross-basin guardrail active: basin='{basin_hint}' — this panel is for visual/testing purposes only."
                 )
 
             bundles.append(bundle)
@@ -535,6 +578,7 @@ def _write_vault_receipt(result: PanelResult) -> None:
     receipt_path = os.path.join(os.path.dirname(result.png_path or "/tmp"), "panel_receipt.json")
     if result.png_path:
         import json
+
         with open(receipt_path, "w") as f:
             json.dump(receipt, f, indent=2, default=str)
 

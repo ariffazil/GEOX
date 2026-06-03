@@ -81,9 +81,7 @@ class PINNPetrophysics:
         device: Optional[str] = None,
     ) -> None:
         if not _HAS_TORCH:
-            raise RuntimeError(
-                "PINNPetrophysics requires PyTorch. Install: pip install torch"
-            )
+            raise RuntimeError("PINNPetrophysics requires PyTorch. Install: pip install torch")
 
         self.input_dim = input_dim
         self.hidden_dims = hidden_dims
@@ -179,9 +177,12 @@ class PINNPetrophysics:
 
         # Hard bounds via ReLU penalties
         bound_loss = (
-            F.relu(-vsh).mean() + F.relu(vsh - self.vsh_max).mean()
-            + F.relu(-phi).mean() + F.relu(phi - self.phi_max).mean()
-            + F.relu(-sw).mean() + F.relu(sw - self.sw_max).mean()
+            F.relu(-vsh).mean()
+            + F.relu(vsh - self.vsh_max).mean()
+            + F.relu(-phi).mean()
+            + F.relu(phi - self.phi_max).mean()
+            + F.relu(-sw).mean()
+            + F.relu(sw - self.sw_max).mean()
         )
 
         # Archie consistency loss
@@ -190,10 +191,7 @@ class PINNPetrophysics:
         if inputs.shape[1] > 3:
             rt = inputs[:, 3].clamp(min=1e-8)
             phi_clamped = phi.clamp(min=1e-8)
-            sw_archie = (
-                (self.archie_a * self.rw)
-                / (rt * phi_clamped ** self.archie_m)
-            ) ** (1.0 / self.archie_n)
+            sw_archie = ((self.archie_a * self.rw) / (rt * phi_clamped**self.archie_m)) ** (1.0 / self.archie_n)
             sw_archie = sw_archie.clamp(0, self.sw_max)
             archie_loss = F.mse_loss(sw, sw_archie)
         else:
@@ -209,11 +207,7 @@ class PINNPetrophysics:
         else:
             density_loss = torch.tensor(0.0, device=self.device)
 
-        total = (
-            self.lambda_phys * bound_loss
-            + self.lambda_archie * archie_loss
-            + self.lambda_density * density_loss
-        )
+        total = self.lambda_phys * bound_loss + self.lambda_archie * archie_loss + self.lambda_density * density_loss
         return total
 
     def total_loss(
@@ -281,10 +275,7 @@ class PINNPetrophysics:
             history["total_loss"].append(tl)
 
             if log_interval > 0 and (epoch + 1) % log_interval == 0:
-                logger.info(
-                    f"PINN epoch {epoch + 1}/{epochs} | "
-                    f"data={dl:.6f} phys={pl:.6f} total={tl:.6f}"
-                )
+                logger.info(f"PINN epoch {epoch + 1}/{epochs} | data={dl:.6f} phys={pl:.6f} total={tl:.6f}")
 
         logger.info(f"PINN training complete. Final total_loss={tl:.6f}")
         return history
@@ -328,15 +319,9 @@ class PINNPetrophysics:
             "physics_loss": phys_loss_val,
             "threshold": violation_threshold,
             "bounds_checked": {
-                "vsh_out_of_range": bool(
-                    np.any((vsh < 0) | (vsh > self.vsh_max))
-                ),
-                "phi_out_of_range": bool(
-                    np.any((phi < 0) | (phi > self.phi_max))
-                ),
-                "sw_out_of_range": bool(
-                    np.any((sw < 0) | (sw > self.sw_max))
-                ),
+                "vsh_out_of_range": bool(np.any((vsh < 0) | (vsh > self.vsh_max))),
+                "phi_out_of_range": bool(np.any((phi < 0) | (phi > self.phi_max))),
+                "sw_out_of_range": bool(np.any((sw < 0) | (sw > self.sw_max))),
             },
         }
 

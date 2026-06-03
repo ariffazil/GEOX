@@ -22,9 +22,21 @@ logger = logging.getLogger("geox.stratigraphy.loader")
 NULL_VALUES = {-999.25, -999, 999.25, -9999}
 
 GR_ALIASES = [
-    "GR", "GRC", "GR:1", "GR:2", "GR:3", "SGR", "CGR", "CGRC", "CGRC:1",
-    "GAPI", "GAMMA", "GAMMA_RAY", "GRMA_RT_FULL_PKK",
-    "GR_EDITED", "GR_COMPUTED",
+    "GR",
+    "GRC",
+    "GR:1",
+    "GR:2",
+    "GR:3",
+    "SGR",
+    "CGR",
+    "CGRC",
+    "CGRC:1",
+    "GAPI",
+    "GAMMA",
+    "GAMMA_RAY",
+    "GRMA_RT_FULL_PKK",
+    "GR_EDITED",
+    "GR_COMPUTED",
 ]
 
 DEPTH_ALIASES = ["DEPT", "DEPTH", "MD", "TD", "DEPT_M", "DEPT_FT", "INDEX"]
@@ -71,6 +83,7 @@ def _load_las(
 ) -> dict:
     """Load LAS file, detect depth and GR columns."""
     import lasio
+
     las = lasio.read(str(path), ignore_header_errors=True, engine="normal")
 
     null_val = -999.25

@@ -13,10 +13,11 @@ Includes:
 
 DITEMPA BUKAN DIBERI
 """
+
 from __future__ import annotations
 
 import math
-from typing import Any, Dict
+from typing import Dict
 
 import numpy as np
 from scipy import signal
@@ -25,6 +26,7 @@ from geox_core.physics.state import Physics9State
 
 
 # ─── Derived Elastic Moduli ─────────────────────────────────────────────────
+
 
 def bulk_modulus(vp: float, vs: float, rho: float) -> float:
     """K = ρ(Vp² − 4/3 Vs²) [Pa]"""
@@ -68,12 +70,13 @@ def fatigue_proxy(phi: float, delta_P: float, cycles: int = 1000) -> float:
 
 # ─── Rock Physics ────────────────────────────────────────────────────────────
 
+
 def gardner_density(vp: np.ndarray, alpha: float = 310.0, beta: float = 0.25) -> np.ndarray:
     """
     Gardner's equation: ρ = α · Vp^β
     Default α=310, β=0.25 for Vp in m/s and ρ in kg/m³.
     """
-    return alpha * (vp ** beta)
+    return alpha * (vp**beta)
 
 
 def bellotti_velocity_from_density(rho: np.ndarray) -> np.ndarray:
@@ -87,6 +90,7 @@ def faust_velocity(depth: np.ndarray, resistivity: np.ndarray, l: float = 2.288,
 
 
 # ─── Anisotropy (Thomsen) ──────────────────────────────────────────────────
+
 
 def estimate_thomsen_parameters(vp: np.ndarray, vsh: np.ndarray) -> Dict[str, np.ndarray]:
     """
@@ -116,6 +120,7 @@ def apply_anisotropic_velocity_correction(
 
 # ─── Attenuation (Q-factor) ─────────────────────────────────────────────────
 
+
 def spectral_decay(f_initial: float, twt_s: float, q_factor: float) -> float:
     """
     Dominant-frequency shift due to attenuation.
@@ -134,6 +139,7 @@ def time_variant_wavelet_params(f_initial: float, time_vector: np.ndarray, q_fac
 
 
 # ─── Well-Tie Primitives ────────────────────────────────────────────────────
+
 
 def impedance_array(rho: np.ndarray, vp: np.ndarray) -> np.ndarray:
     """Z = ρ·Vp with shape guard."""
@@ -162,6 +168,7 @@ def convolve_trace(reflectivity: np.ndarray, wavelet: np.ndarray) -> np.ndarray:
 
 
 # ─── Forward Physics (all derived from a state) ─────────────────────────────
+
 
 def forward_physics9(state: Physics9State) -> Dict[str, float]:
     """Compute all derived scalar properties from a canonical state."""
