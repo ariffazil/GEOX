@@ -655,7 +655,6 @@ async def geox_data_qc_bundle(
             # the assumption check + outlier audit.
             if _saf_summary is not None:
                 response["_saf_assumptions"] = _saf_summary
-<<<<<<< HEAD
 
             # EUREKA FORGE (2026-06-03): cross-curve correlation QC.
             # When in 'full' or 'cross_curve' mode with >=2 numeric curves,
