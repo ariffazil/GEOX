@@ -22,6 +22,14 @@ async def geox_prospect_evaluate(
     judge_pin: str | None = None,
     # ── Eureka 8 (2026-06-03): optional StructuralMap as derived input ────
     structural_map_inline: Optional[Dict[str, Any]] = None,
+    # ── Eureka 11 (2026-06-03): optional statistical-power params ──────────
+    # When provided, runs saf_stats.stat_power to solve for missing n
+    # or power. Critical for survey design: "how many wells do I need to
+    # confirm a play with effect size f and target power 0.8?"
+    # Required keys: test (t/f/chi2/z), effect_size, alpha. Provide
+    # exactly one of: power (to solve for n) or nobs (to solve for power).
+    # For test=f, also set df_num (k-1).
+    power_params: Optional[Dict[str, Any]] = None,
 ) -> dict:
     """Integrated prospect evaluation (Volumetrics, POS, EVOI) with optional preview/seal.
 
@@ -142,6 +150,140 @@ async def geox_prospect_evaluate(
             "score_type": "heuristic_screening",
             "note": "No evidence supplied — screening is qualitative only.",
         }
+
+        # EUREKA FORGE (2026-06-03): prospect survey design via stat_power.
+        # Lives in the screen-mode path so the power query works without
+        # needing full evidence. When power_params is provided, solves
+        # for missing n or power and embeds the result in the artifact.
+        if power_params and isinstance(power_params, dict):
+            try:
+                import math as _math_pw_sm
+                import warnings as _w_pw_sm
+
+                _w_pw_sm.filterwarnings("ignore")
+                from statsmodels.stats.power import (
+                    FTestAnovaPower,
+                    TTestIndPower,
+                    GofChisquarePower,
+                    NormalIndPower,
+                )
+
+                _test_sm = str(power_params.get("test", "f")).lower()
+                _alpha_sm = float(power_params.get("alpha", 0.05))
+                _effect_sm = float(power_params.get("effect_size", 0.25))
+                _power_in_sm = power_params.get("power")
+                _nobs_in_sm = power_params.get("nobs")
+                _df_num_sm = power_params.get("df_num")
+                _out_sm: Dict[str, Any] = {
+                    "test": _test_sm,
+                    "alpha": _alpha_sm,
+                    "effect_size": _effect_sm,
+                }
+                if _test_sm == "f":
+                    _k_sm = (int(_df_num_sm) + 1) if _df_num_sm is not None else 3
+                    _ana_sm = FTestAnovaPower()
+                    _out_sm["k_groups"] = _k_sm
+                    if _nobs_in_sm is not None:
+                        _df_den_sm = max(1, int(_nobs_in_sm) - _k_sm)
+                        _out_sm["solved_power"] = float(
+                            _ana_sm.solve_power(
+                                effect_size=_effect_sm,
+                                alpha=_alpha_sm,
+                                k_groups=_k_sm,
+                                nobs=int(_nobs_in_sm),
+                                power=None,
+                            )
+                        )
+                        _out_sm["solved_nobs"] = int(_nobs_in_sm)
+                        _out_sm["df_den"] = _df_den_sm
+                    elif _power_in_sm is not None:
+                        _out_sm["solved_nobs"] = int(
+                            _math_pw_sm.ceil(
+                                _ana_sm.solve_power(
+                                    effect_size=_effect_sm,
+                                    alpha=_alpha_sm,
+                                    k_groups=_k_sm,
+                                    power=float(_power_in_sm),
+                                )
+                            )
+                        )
+                    else:
+                        _out_sm["error"] = "supply exactly one of power or nobs"
+                elif _test_sm == "t":
+                    _ana_sm = TTestIndPower()
+                    if _nobs_in_sm is not None:
+                        _out_sm["solved_power"] = float(
+                            _ana_sm.solve_power(
+                                effect_size=_effect_sm,
+                                alpha=_alpha_sm,
+                                nobs1=int(_nobs_in_sm),
+                            )
+                        )
+                        _out_sm["solved_nobs"] = int(_nobs_in_sm)
+                    elif _power_in_sm is not None:
+                        _out_sm["solved_nobs"] = int(
+                            _math_pw_sm.ceil(
+                                _ana_sm.solve_power(
+                                    effect_size=_effect_sm,
+                                    alpha=_alpha_sm,
+                                    power=float(_power_in_sm),
+                                )
+                            )
+                        )
+                    else:
+                        _out_sm["error"] = "supply exactly one of power or nobs"
+                elif _test_sm == "chi2":
+                    _ana_sm = GofChisquarePower()
+                    if _nobs_in_sm is not None:
+                        _out_sm["solved_power"] = float(
+                            _ana_sm.solve_power(
+                                effect_size=_effect_sm,
+                                alpha=_alpha_sm,
+                                nobs=int(_nobs_in_sm),
+                            )
+                        )
+                        _out_sm["solved_nobs"] = int(_nobs_in_sm)
+                    elif _power_in_sm is not None:
+                        _out_sm["solved_nobs"] = int(
+                            _math_pw_sm.ceil(
+                                _ana_sm.solve_power(
+                                    effect_size=_effect_sm,
+                                    alpha=_alpha_sm,
+                                    power=float(_power_in_sm),
+                                )
+                            )
+                        )
+                    else:
+                        _out_sm["error"] = "supply exactly one of power or nobs"
+                elif _test_sm == "z":
+                    _ana_sm = NormalIndPower()
+                    if _nobs_in_sm is not None:
+                        _out_sm["solved_power"] = float(
+                            _ana_sm.solve_power(
+                                effect_size=_effect_sm,
+                                alpha=_alpha_sm,
+                                nobs1=int(_nobs_in_sm),
+                            )
+                        )
+                        _out_sm["solved_nobs"] = int(_nobs_in_sm)
+                    elif _power_in_sm is not None:
+                        _out_sm["solved_nobs"] = int(
+                            _math_pw_sm.ceil(
+                                _ana_sm.solve_power(
+                                    effect_size=_effect_sm,
+                                    alpha=_alpha_sm,
+                                    power=float(_power_in_sm),
+                                )
+                            )
+                        )
+                    else:
+                        _out_sm["error"] = "supply exactly one of power or nobs"
+                else:
+                    _out_sm["error"] = f"unsupported test '{_test_sm}'"
+                artifact["_saf_power"] = _out_sm
+            except Exception as _pw_exc_sm:
+                artifact["_saf_power"] = {"embed_skipped": str(_pw_exc_sm)[:120]}
+
         return get_standard_envelope(
             artifact,
             tool_class="compute",
@@ -155,7 +297,7 @@ async def geox_prospect_evaluate(
                 "confidence_band": "qualitative",
                 "reason": "Screen mode — no quantitative evidence available",
                 "allowed_claims": ["qualitative screening", "relative ranking", "hypothesis framing"],
-                "disallowed_claims": ["POS", "STOIIP", "P10/P50/P90", "commercial decision"],
+                "disallowed_claims": ["POS", "STOIIP", "P10/P50/P90", "comercial decision"],
             },
             # Agentic: screen mode is the safe downgrade
             suggested_tool=None,
@@ -274,8 +416,134 @@ async def geox_prospect_evaluate(
         "stoiip_p50": 150 if mode == "screen" else 220,
         "score_type": "heuristic_screening" if mode == "screen" else "appraisal",
         "verdict_available": True,
-        "note": "Use verdict='preview' for reversible advisory or verdict='seal' with ack_irreversible for constitutional seal.",
+        "note": "Use verdict='preview' for reversible advisory or verdict='seal' with ack_irreversible for constitucional seal.",
     }
+
+    # EUREKA FORGE (2026-06-03): prospect survey design via stat_power.
+    # When the user passes power_params (e.g. for "how many wells do I
+    # need to confirm a play with f=0.25 at power=0.8?"), solve for the
+    # missing n or power and surface in artifact. Uses statsmodels
+    # directly because the federated saf_stats.stat_power wrapper
+    # strips the F-test k_groups / df_num params needed for one-way
+    # ANOVA power. Embed is best-effort; never break main flow.
+    if power_params and isinstance(power_params, dict):
+        try:
+            import math as _math_pw
+            import warnings as _w_pw
+
+            _w_pw.filterwarnings("ignore")
+            from statsmodels.stats.power import (
+                FTestAnovaPower,
+                TTestIndPower,
+                GofChisquarePower,
+                NormalIndPower,
+            )
+            from scipy import stats as _ss_pw
+
+            _test = str(power_params.get("test", "f")).lower()
+            _alpha = float(power_params.get("alpha", 0.05))
+            _effect = float(power_params.get("effect_size", 0.25))
+            _power_in = power_params.get("power")
+            _nobs_in = power_params.get("nobs")
+            _df_num = power_params.get("df_num")
+            _out: Dict[str, Any] = {
+                "test": _test,
+                "alpha": _alpha,
+                "effect_size": _effect,
+            }
+            if _test == "f":
+                _k = (int(_df_num) + 1) if _df_num is not None else 3
+                _ana = FTestAnovaPower()
+                _out["k_groups"] = _k
+                if _nobs_in is not None:
+                    _df_den = max(1, int(_nobs_in) - _k)
+                    _solved_power = float(
+                        _ana.solve_power(
+                            effect_size=_effect,
+                            alpha=_alpha,
+                            k_groups=_k,
+                            nobs=None,
+                            df_num=int(_df_num) if _df_num is not None else _k - 1,
+                            df_den=_df_den,
+                            power=None,
+                        )
+                    )
+                    _out["solved_power"] = _solved_power
+                    _out["solved_nobs"] = int(_nobs_in)
+                    _out["df_den"] = _df_den
+                elif _power_in is not None:
+                    _solved_n = int(
+                        _math_pw.ceil(
+                            _ana.solve_power(
+                                effect_size=_effect,
+                                alpha=_alpha,
+                                k_groups=_k,
+                                nobs=None,
+                                df_num=_k - 1,
+                                power=float(_power_in),
+                            )
+                        )
+                    )
+                    _out["solved_nobs"] = _solved_n
+                else:
+                    _out["error"] = "supply exactly one of power or nobs"
+            elif _test == "t":
+                _ana = TTestIndPower()
+                if _nobs_in is not None:
+                    _out["solved_power"] = float(_ana.solve_power(effect_size=_effect, alpha=_alpha, nobs1=int(_nobs_in)))
+                    _out["solved_nobs"] = int(_nobs_in)
+                elif _power_in is not None:
+                    _out["solved_nobs"] = int(
+                        _math_pw.ceil(
+                            _ana.solve_power(
+                                effect_size=_effect,
+                                alpha=_alpha,
+                                power=float(_power_in),
+                            )
+                        )
+                    )
+                else:
+                    _out["error"] = "supply exactly one of power or nobs"
+            elif _test == "chi2":
+                _ana = GofChisquarePower()
+                if _nobs_in is not None:
+                    _out["solved_power"] = float(_ana.solve_power(effect_size=_effect, alpha=_alpha, nobs=int(_nobs_in)))
+                    _out["solved_nobs"] = int(_nobs_in)
+                elif _power_in is not None:
+                    _out["solved_nobs"] = int(
+                        _math_pw.ceil(
+                            _ana.solve_power(
+                                effect_size=_effect,
+                                alpha=_alpha,
+                                power=float(_power_in),
+                            )
+                        )
+                    )
+                else:
+                    _out["error"] = "supply exactly one of power or nobs"
+            elif _test == "z":
+                _ana = NormalIndPower()
+                if _nobs_in is not None:
+                    _out["solved_power"] = float(_ana.solve_power(effect_size=_effect, alpha=_alpha, nobs1=int(_nobs_in)))
+                    _out["solved_nobs"] = int(_nobs_in)
+                elif _power_in is not None:
+                    _out["solved_nobs"] = int(
+                        _math_pw.ceil(
+                            _ana.solve_power(
+                                effect_size=_effect,
+                                alpha=_alpha,
+                                power=float(_power_in),
+                            )
+                        )
+                    )
+                else:
+                    _out["error"] = "supply exactly one of power or nobs"
+            else:
+                _out["error"] = f"unsupported test '{_test}'"
+            artifact["_saf_power"] = _out
+        except Exception as _pw_exc:
+            artifact["_saf_power"] = {"embed_skipped": str(_pw_exc)[:120]}
+
     return get_standard_envelope(
         artifact,
         tool_class="compute",
