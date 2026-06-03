@@ -525,8 +525,8 @@ def generate_correlation_panel(
         axes = [axes]
 
     ax_info = {}
-    depo_rank = default_depo_rank()
-    nn_ages = default_nn_ages()
+    default_depo_rank()
+    default_nn_ages()
 
     for col_i, well_id in enumerate(well_order):
         ax = axes[col_i]
@@ -537,9 +537,9 @@ def generate_correlation_panel(
 
         wdata = well_data.get(well_id)
         pkgs = [p for p in all_packages if p["WELL"] == well_id]
-        ivls = config.intervals.get(well_id, [])
+        config.intervals.get(well_id, [])
 
-        wc = WELL_COLORS[col_i % len(WELL_COLORS)]
+        WELL_COLORS[col_i % len(WELL_COLORS)]
         if wdata is None or not pkgs:
             ax.text(0.5, 0.5, "NO DATA", transform=ax.transAxes, ha="center", va="center", fontsize=9, color="#9E9E9E")
             ax.set_title(well_id, fontsize=8, fontweight="bold", pad=4)

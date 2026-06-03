@@ -636,7 +636,7 @@ async def geox_forward_model_synthetic(
 
 def _estimate_thomsen_parameters(vp: np.ndarray, vsh: np.ndarray) -> dict:
     """Estimate Thomsen anisotropy parameters from velocity and shale fraction."""
-    avg_vp = float(np.mean(vp))
+    float(np.mean(vp))
     avg_vsh = float(np.mean(vsh))
     epsilon = 0.05 + 0.15 * avg_vsh
     delta = 0.02 + 0.08 * avg_vsh

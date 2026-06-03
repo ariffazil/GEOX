@@ -34,6 +34,15 @@ async def geox_map_context_scene(
         crs: Coordinate reference system (default EPSG:4326).
     """
     # F6 Maruah-first: detect basins intersecting community/indigenous territory
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_map_context_scene",
+        bbox=bbox,
+            crs=crs,
+    )
+    if _err is not None:
+        return _err
     maruah_flag = _check_maruah_territory(bbox, crs)
     artifact = {
         "bbox": bbox,

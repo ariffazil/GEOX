@@ -294,7 +294,7 @@ def apply_phase_rotation(synthetic: np.ndarray, phase_degrees: float) -> np.ndar
 
     # FFT → rotate → iFFT
     spectrum = np.fft.rfft(synthetic)
-    freq_bins = np.fft.rfftfreq(n)
+    np.fft.rfftfreq(n)
     rotation = np.cos(phi) + 1j * np.sin(phi)
     rotated_spectrum = spectrum * rotation
     return np.fft.irfft(rotated_spectrum, n=n)
@@ -397,7 +397,7 @@ def polarity_check(ai: np.ndarray, seg_polarity: str) -> bool:
     if len(ai) < 2:
         return True  # Cannot determine
 
-    rc0 = (ai[1] - ai[0]) / (ai[1] + ai[0] + 1e-9)
+    (ai[1] - ai[0]) / (ai[1] + ai[0] + 1e-9)
     if seg_polarity == "SEG_NORMAL":
         # Water bottom (soft→hard): AI increases → RC should be positive
         # But convention varies; just flag large RC at top
@@ -567,7 +567,6 @@ def compute_welltie(
     correlation_coef = None
     residual_rms = None
     time_shift_ms = None
-    phase_score = None
 
     if seismic_ref:
         from geox_mcp.tools._helpers import _get_artifact
@@ -576,7 +575,7 @@ def compute_welltie(
         if seis_entry and "trace" in seis_entry:
             seismic_trace = np.array(seis_entry["trace"], dtype=float)
             correlation_coef, residual_rms, time_shift_ms = cross_correlate(synthetic, seismic_trace)
-            phase_score = abs(1.0 - abs(correlation_coef))  # proxy
+            abs(1.0 - abs(correlation_coef))  # proxy
         else:
             # Try as numpy artifact
             try:

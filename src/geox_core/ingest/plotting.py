@@ -239,7 +239,7 @@ def _render_panel(
     csv_path = os.path.join(output_dir, f"geox_panel_{timestamp}.csv")
 
     n_wells = len(bundles)
-    n_tracks = len(config.tracks)
+    len(config.tracks)
 
     fig_width = n_wells * 2.5 + 0.5
     fig_height = 12.0
@@ -264,8 +264,8 @@ def _render_panel(
 
     # Depth limits
     all_depths = np.concatenate([b.depth_md for b in bundles])
-    dmin = float(np.nanmin(all_depths)) if len(all_depths) > 0 else 0.0
-    dmax = float(np.nanmax(all_depths)) if len(all_depths) > 0 else 1000.0
+    float(np.nanmin(all_depths)) if len(all_depths) > 0 else 0.0
+    float(np.nanmax(all_depths)) if len(all_depths) > 0 else 1000.0
 
     for col_idx, bundle in enumerate(bundles):
         ax = axes[0, col_idx]

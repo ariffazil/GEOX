@@ -133,7 +133,6 @@ def generate_3d_seismic_cube(
     for surf_name, surf_2d in [("Top_Surface", top_surf), ("Mid_Surface", mid_surf), ("Bot_Surface", bot_surf)]:
         time_grid = surf_2d.tolist()
         # Compute amplitude attribute from cube
-        amp_attr = {}
         horizons.append(
             {
                 "name": surf_name,

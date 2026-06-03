@@ -401,11 +401,10 @@ class LASIngestor:
         # UWI / well name
         permit = _las_header_str(las.well, "PERMIT", "FLD", "COMP")
         uwi_str = _las_header_str(las.well, "UWI", "WELL", "API")
-        well_name = None
         if "WELL" in las.well:
-            well_name = str(las.well["WELL"].value)
+            str(las.well["WELL"].value)
         elif well is not None:
-            well_name = getattr(well, "name", None)
+            getattr(well, "name", None)
 
         well_id = asset_id or (uwi_str if uwi_str != "UNKNOWN" else source.stem)
 
@@ -704,7 +703,7 @@ class OCRIngestor:
         # ── Suitability determination ───────────────────────────────
         num_curves_detected = len(detected_curves)
         num_depths = len(depths)
-        has_good_ocr = len(text_lines) > 5 and digitize_confidence > 0.3
+        len(text_lines) > 5 and digitize_confidence > 0.3
 
         if num_curves_detected >= 2 and num_depths >= 10 and digitize_confidence > 0.5:
             suitability = "decision_ready"

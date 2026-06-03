@@ -44,6 +44,15 @@ async def geox_data_qc_bundle(
             - "full" (default): all of the above.
     """
     # Red Team Fix: Initialize these to ensure they are available for the fail-closed check
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_data_qc_bundle",
+        artifact_ref=artifact_ref,
+            artifact_type=artifact_type,
+    )
+    if _err is not None:
+        return _err
     curve_warnings = []
     depth_qc = {}
     header_checks = {}

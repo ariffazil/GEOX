@@ -157,10 +157,6 @@ class EIAClient:
         # More accurate: use series IDs via the data endpoint with facets
         # petroleum/pri/spt/data?frequency=daily&data[0]=value&facets[product][]=EPCBRENT
         # WTI = EPCBRENT is wrong; correct mapping:
-        correct_product = {
-            "wti": "EPCBRENT",  # WTI Cushing spot
-            "brent": "EPCBRENT",  # Brent Europe — actually different
-        }
         # EIA uses specific series IDs; the v2 route with facets is cleaner
         # Let's use the natural-gas / petroleum routes with product facets
         params: dict[str, Any] = {

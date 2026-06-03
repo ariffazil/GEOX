@@ -48,7 +48,7 @@ def infer_seq_strat(
     gr = pkg.get("GR_MEAN") or 80.0
     thick = pkg.get("THICKNESS", 0)
     rank = rank_map.get(str(depo_code).strip(), 5)
-    variability = pkg.get("VARIABILITY", "Moderate")
+    pkg.get("VARIABILITY", "Moderate")
 
     # Condensed section: thin, high-GR, deep water
     if gr > 95 and thick < 70 and rank >= 8:
@@ -104,7 +104,7 @@ def geo_rule_check(
 ) -> str:
     """Check for geological anomalies. Returns flag string or PASS."""
     rank_map = depo_rank or default_depo_rank()
-    motif = pkg.get("HUMAN_MOTIF", "")
+    pkg.get("HUMAN_MOTIF", "")
     rider = pkg.get("RIDER_MOTIF", "")
     gr_mean = pkg.get("GR_MEAN") or 80.0
     rank = rank_map.get(str(depo_code).strip(), 5)

@@ -334,7 +334,6 @@ def compute_4d_uncertainty(
     n_y = min(len(baseline_cube[0]) if n_z > 0 else 0, len(monitor_cube[0]) if n_z > 0 else 0)
     n_x = min(len(baseline_cube[0][0]) if n_z > 0 else 0, len(monitor_cube[0][0]) if n_z > 0 else 0)
 
-    nrms_values = []
 
     if n_z > 0 and n_y > 0 and n_x > 0:
         diff = np.zeros((n_z, n_y, n_x))

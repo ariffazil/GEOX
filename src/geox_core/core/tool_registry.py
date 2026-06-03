@@ -182,7 +182,6 @@ def can_grant_seal(
     Combines Checklist enforcement with Risk Inheritance rules.
     """
     failures = []
-    reasons = []
     upstream_verdicts = upstream_verdicts or {}
     upstream_ac_risks = upstream_ac_risks or {}
 

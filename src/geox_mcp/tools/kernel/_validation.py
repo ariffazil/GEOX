@@ -81,3 +81,61 @@ def safe_path(target: str, allowed_roots: tuple[str, ...] = ("/data", "/tmp")) -
         except ValueError:
             continue
     raise ValueError(f"target path {resolved} is not under any allowed root {list(allowed_roots)}")
+
+
+def validate_tool_inputs(tool_name: str, **fields) -> dict | None:
+    """One-shot entry-point validator. Returns an error envelope on failure, None on pass.
+
+    Each kwarg is validated:
+        - str value:  validate_string_field
+        - Optional str (None or str): validate_optional_string
+        - list value: validate_list_field
+        - None:  skipped
+
+    Returns:
+        None if all fields pass; otherwise a standard error envelope dict
+        ready to be returned from the tool. Tool-specific code can wrap this
+        in a metabolic envelope if needed.
+    """
+    errors: list[str] = []
+    for name, value in fields.items():
+        if value is None:
+            continue
+        try:
+            if isinstance(value, str):
+                validate_string_field(name, value)
+            elif isinstance(value, (list, tuple)):
+                validate_list_field(name, value)
+            else:
+                # Non-string, non-list fields are passed through (handled by
+                # downstream type checks).
+                continue
+        except (TypeError, ValueError) as exc:
+            errors.append(f"{name}: {exc}")
+
+    if not errors:
+        return None
+
+    return {
+        "execution_status": "ERROR",
+        "tool_class": "ingress",
+        "claim_state": "NO_VALID_EVIDENCE",
+        "claim_limits": ["input validation failed at tool boundary"],
+        "next_best_actions": [
+            {
+                "tool": tool_name,
+                "reason": "; ".join(errors),
+                "priority": "critical",
+            }
+        ],
+        "audit_receipt": {
+            "verdict": "VOID",
+            "floors": ["F2", "F8"],
+        },
+        "human_final_authority": "Arif",
+        "data": {
+            "tool": tool_name,
+            "error_code": "INVALID_INPUT",
+            "validation_errors": errors,
+        },
+    }

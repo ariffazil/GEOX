@@ -799,6 +799,16 @@ async def geox_evidence_reason(
     Unified envelope with process_hypotheses, decision_support (contradictions),
     claim_limits, and next_best_actions.
     """
+    # Hardening: validate free-text inputs at boundary.
+    from geox_mcp.tools.kernel._validation import validate_tool_inputs
+    _err = validate_tool_inputs(
+        "geox_evidence_reason",
+        evidence_refs=evidence_refs,
+            hypotheses=hypotheses,
+            output_path=output_path,
+    )
+    if _err is not None:
+        return _err
     refs = evidence_refs or []
 
     if phase == "synthesize":

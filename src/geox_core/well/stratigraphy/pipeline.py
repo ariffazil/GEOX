@@ -60,7 +60,7 @@ def run_pipeline(
     dict with keys: project, n_wells, n_bins, n_packages, n_gap_packages,
         tract_dist, motif_dist, outputs (list of generated file paths), status.
     """
-    depo_eod = default_depo_eod()
+    default_depo_eod()
     depo_rank = default_depo_rank()
     nn_ages = default_nn_ages()
 
