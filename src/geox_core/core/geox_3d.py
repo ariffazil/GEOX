@@ -231,11 +231,11 @@ def compute_coherence_volume(
                     if iz < len(cube_data) and iy < len(cube_data[iz]) and ix < len(cube_data[iz][iy])
                     else 0
                 )
-                l = cube_data[iz][iy][ix - 1] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix - 1 >= 0 else 0
-                r = cube_data[iz][iy][ix + 1] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix + 1 < n_x else 0
+                left = cube_data[iz][iy][ix - 1] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix - 1 >= 0 else 0
+                right = cube_data[iz][iy][ix + 1] if iz < len(cube_data) and iy < len(cube_data[iz]) and ix + 1 < n_x else 0
 
-                denom = (abs(c) + abs(l) + abs(r)) / 3 + 1e-6
-                coherence[iz, iy, ix] = 1 - abs(c - (l + r) / 2) / denom
+                denom = (abs(c) + abs(left) + abs(right)) / 3 + 1e-6
+                coherence[iz, iy, ix] = 1 - abs(c - (left + right) / 2) / denom
 
     return {
         "coherence_data": coherence.tolist(),

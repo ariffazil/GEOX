@@ -84,9 +84,19 @@ def bellotti_velocity_from_density(rho: np.ndarray) -> np.ndarray:
     return (rho / 310.0) ** 4
 
 
-def faust_velocity(depth: np.ndarray, resistivity: np.ndarray, l: float = 2.288, m: float = 1.0 / 6.0) -> np.ndarray:
-    """Faust's equation: Vp = l · (Z · Rt)^(1/6)."""
-    return l * (depth * resistivity) ** m
+def faust_velocity(depth: np.ndarray, resistivity: np.ndarray, faust_k: float = 2.288, exp: float = 1.0 / 6.0) -> np.ndarray:
+    """Faust's equation: Vp = k · (Z · Rt)^(1/6).
+
+    Args:
+        depth: Depth in meters (Z).
+        resistivity: Formation resistivity in ohm-m (Rt).
+        faust_k: Faust's proportionality constant (default 2.288; regional calibration recommended).
+        exp: Exponent on the (depth * resistivity) product (default 1/6; classical value).
+
+    Returns:
+        P-wave velocity in m/s, same shape as depth.
+    """
+    return faust_k * (depth * resistivity) ** exp
 
 
 # ─── Anisotropy (Thomsen) ──────────────────────────────────────────────────

@@ -272,9 +272,9 @@ def forward_synthetic_logs(layers: List[Dict], md_range: Tuple[float, float], n_
     for i, depth in enumerate(md):
         # find layer
         layer = layers[-1]
-        for l in layers:
-            if l["top"] <= depth < l["bot"]:
-                layer = l
+        for lyr in layers:
+            if lyr["top"] <= depth < lyr["bot"]:
+                layer = lyr
                 break
 
         vsh = layer.get("vsh", 0.1)

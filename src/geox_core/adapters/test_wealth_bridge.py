@@ -23,7 +23,7 @@ try:
         EconomicsNode,
         GovernanceNode,
     )
-    from wealth_bridge import geox_to_wealth, AdmissibilityError, WealthInput
+    from wealth_bridge import geox_to_wealth, AdmissibilityError
 
     TYPES_AVAILABLE = True
 except ImportError:
