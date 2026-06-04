@@ -398,3 +398,7 @@ Full federation knowledge base — architecture decisions, earth-intelligence th
 
 *Last Verified: 2026-06-04 | 999 SEAL ALIVE*
 **DITEMPA BUKAN DIBERI — Intelligence is forged, not given.**
+
+## License
+
+AGPL-3.0. See [LICENSE](LICENSE).
