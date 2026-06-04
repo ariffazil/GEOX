@@ -14,14 +14,14 @@ import csv
 import logging
 from collections import Counter
 
-from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
-from openpyxl.utils import get_column_letter
 import openpyxl
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from openpyxl.utils import get_column_letter
 
 from .config import (
-    ProjectConfig,
     MOTIF_COLORS,
     TRACT_COLORS,
+    ProjectConfig,
     default_depo_eod,
 )
 

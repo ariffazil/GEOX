@@ -31,7 +31,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-
 # ─── Curve alias map (Arif's canonical spec) ───────────────────────────────────
 
 CURVE_ALIASES: dict[str, list[str]] = {

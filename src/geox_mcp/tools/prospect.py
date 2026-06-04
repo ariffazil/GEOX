@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Literal
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
+    get_standard_envelope,
 )
 
 logger = logging.getLogger("geox.canonical.prospect")
@@ -21,7 +21,7 @@ async def geox_prospect_evaluate(
     ack_irreversible: bool = False,
     judge_pin: str | None = None,
     # ── Eureka 8 (2026-06-03): optional StructuralMap as derived input ────
-    structural_map_inline: Optional[Dict[str, Any]] = None,
+    structural_map_inline: dict[str, Any] | None = None,
     # ── Eureka 11 (2026-06-03): optional statistical-power params ──────────
     # When provided, runs saf_stats.stat_power to solve for missing n
     # or power. Critical for survey design: "how many wells do I need to
@@ -29,7 +29,7 @@ async def geox_prospect_evaluate(
     # Required keys: test (t/f/chi2/z), effect_size, alpha. Provide
     # exactly one of: power (to solve for n) or nobs (to solve for power).
     # For test=f, also set df_num (k-1).
-    power_params: Optional[Dict[str, Any]] = None,
+    power_params: dict[str, Any] | None = None,
 ) -> dict:
     """Integrated prospect evaluation (Volumetrics, POS, EVOI) with optional preview/seal.
 
@@ -163,9 +163,9 @@ async def geox_prospect_evaluate(
                 _w_pw_sm.filterwarnings("ignore")
                 from statsmodels.stats.power import (
                     FTestAnovaPower,
-                    TTestIndPower,
                     GofChisquarePower,
                     NormalIndPower,
+                    TTestIndPower,
                 )
 
                 _test_sm = str(power_params.get("test", "f")).lower()
@@ -174,7 +174,7 @@ async def geox_prospect_evaluate(
                 _power_in_sm = power_params.get("power")
                 _nobs_in_sm = power_params.get("nobs")
                 _df_num_sm = power_params.get("df_num")
-                _out_sm: Dict[str, Any] = {
+                _out_sm: dict[str, Any] = {
                     "test": _test_sm,
                     "alpha": _alpha_sm,
                     "effect_size": _effect_sm,
@@ -434,11 +434,10 @@ async def geox_prospect_evaluate(
             _w_pw.filterwarnings("ignore")
             from statsmodels.stats.power import (
                 FTestAnovaPower,
-                TTestIndPower,
                 GofChisquarePower,
                 NormalIndPower,
+                TTestIndPower,
             )
-            from scipy import stats as _ss_pw
 
             _test = str(power_params.get("test", "f")).lower()
             _alpha = float(power_params.get("alpha", 0.05))
@@ -446,7 +445,7 @@ async def geox_prospect_evaluate(
             _power_in = power_params.get("power")
             _nobs_in = power_params.get("nobs")
             _df_num = power_params.get("df_num")
-            _out: Dict[str, Any] = {
+            _out: dict[str, Any] = {
                 "test": _test,
                 "alpha": _alpha,
                 "effect_size": _effect,

@@ -10,7 +10,7 @@ DITEMPA BUKAN DIBERI
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -41,7 +41,7 @@ class Physics9State:
     qp: float = 100.0
     qs: float = 50.0
 
-    def to_vector(self) -> List[float]:
+    def to_vector(self) -> list[float]:
         return [
             self.rho,
             self.vp,
@@ -60,7 +60,7 @@ class Physics9State:
         ]
 
     @classmethod
-    def from_vector(cls, v: List[float]) -> "Physics9State":
+    def from_vector(cls, v: list[float]) -> Physics9State:
         return cls(
             rho=v[0],
             vp=v[1],
@@ -78,7 +78,7 @@ class Physics9State:
             qs=v[13] if len(v) > 13 else 50.0,
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "rho": self.rho,
             "vp": self.vp,
@@ -118,7 +118,7 @@ SALT = Physics9State(rho=2160, vp=4500, vs=2300, rho_e=1e6, chi=0.00001, k=5.5, 
 COAL = Physics9State(rho=1450, vp=2100, vs=1100, rho_e=500, chi=0.005, k=0.3, P=10e6, T=300, phi=0.08)
 BASEMENT = Physics9State(rho=2900, vp=5800, vs=3400, rho_e=500, chi=0.01, k=2.5, P=60e6, T=400, phi=0.02)
 
-EARTH_MATERIAL_CATALOG: Dict[str, Physics9State] = {
+EARTH_MATERIAL_CATALOG: dict[str, Physics9State] = {
     "Sandstone": SANDSTONE,
     "Limestone": LIMESTONE,
     "Dolomite": DOLOMITE,
@@ -130,5 +130,5 @@ EARTH_MATERIAL_CATALOG: Dict[str, Physics9State] = {
 }
 
 
-def compute_earth_material_catalog() -> Dict[str, Dict[str, float]]:
+def compute_earth_material_catalog() -> dict[str, dict[str, float]]:
     return {name: s.to_dict() for name, s in EARTH_MATERIAL_CATALOG.items()}

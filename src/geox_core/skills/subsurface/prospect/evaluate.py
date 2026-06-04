@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from geox_core.core.ac_risk import TEARFRAME
@@ -33,12 +33,12 @@ from geox_core.core.volumetrics import ProbabilisticVolumetrics
 
 def _make_receipt(tool: str, payload: dict, verdict: str) -> dict:
     canonical = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
-    digest = hashlib.sha256(f"{tool}:{canonical}".encode("utf-8")).hexdigest()
+    digest = hashlib.sha256(f"{tool}:{canonical}".encode()).hexdigest()
     return {
         "vault": "VAULT999",
         "tool": tool,
         "verdict": verdict,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "hash": digest[:16],
     }
 

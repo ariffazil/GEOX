@@ -40,10 +40,9 @@ DITEMPA BUKAN DIBERI — impedance is the earth, sliced by angle.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
-
 
 # ────────────────────────────────────────────────────────────────────
 # Data structures — the AVO envelopes
@@ -65,11 +64,11 @@ class AVOResult:
     vp2: float
     vs2: float
     rho2: float
-    physics_guard: Dict[str, Any] = field(default_factory=dict)
+    physics_guard: dict[str, Any] = field(default_factory=dict)
     acrisk: float = 0.12
     claim_state: str = "QUALIFY"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "intercept_R0": self.intercept_R0,
             "gradient_G": self.gradient_G,
@@ -98,7 +97,7 @@ class LMRResult:
     claim_state: str = "SEAL"
     provenance: str = "lmr_decompose"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "lambda_rho": self.lambda_rho,
             "mu_rho": self.mu_rho,
@@ -124,7 +123,7 @@ def zoeppritz_rpp(
     vp2: float,
     vs2: float,
     rho2: float,
-    theta_deg: "np.ndarray | list[float]",
+    theta_deg: np.ndarray | list[float],
 ) -> np.ndarray:
     """Exact Zoeppritz R_PP(theta) via the Bortfeld closed-form approximation.
 
@@ -257,7 +256,7 @@ def shuey_avo(
 
     avo_class = _classify_avo(R0, G)
 
-    guard: Dict[str, Any] = {
+    guard: dict[str, Any] = {
         "theta_max_deg": theta_max,
         "validity": "Shuey linearisation valid for theta < 30 deg",
         "error_at_20deg_pct": 5.0,
@@ -346,9 +345,9 @@ def lmr_decompose(
 
 
 def synth_gather(
-    theta_deg: "np.ndarray | list[float]",
+    theta_deg: np.ndarray | list[float],
     scenario: str = "class_III_gas",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Synthetic angle gather for E9 testing.
 
     Scenarios:

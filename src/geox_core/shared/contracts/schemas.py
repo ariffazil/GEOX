@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Dict, List, Any
+from typing import Any
+
 from pydantic import BaseModel
 
 
@@ -25,7 +27,7 @@ class XYZPoint(BaseModel):
 class BoundingBox(BaseModel):
     min: XYZPoint
     max: XYZPoint
-    crs: Optional[str] = None
+    crs: str | None = None
 
 
 class VerticalDomain(str, Enum):
@@ -40,7 +42,7 @@ class GeoContext(BaseModel):
     crsEpsg: int
     verticalDomain: VerticalDomain
     isTimeDomain: bool
-    units: Dict[str, UnitRef]
+    units: dict[str, UnitRef]
 
 
 class EvidenceKind(str, Enum):
@@ -57,14 +59,14 @@ class EvidenceRef(BaseModel):
     kind: EvidenceKind
     sourceUri: str
     timestamp: datetime
-    version: Optional[str] = None
+    version: str | None = None
 
 
 class EvidenceObject(BaseModel):
     ref: EvidenceRef
     context: GeoContext
     payload: Any
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
 
 class TransformStatus(str, Enum):
@@ -77,14 +79,14 @@ class TransformRequest(BaseModel):
     requestId: str
     sourceContext: GeoContext
     targetContext: GeoContext
-    dataToTransform: List[XYZPoint]
+    dataToTransform: list[XYZPoint]
     method: str = "bilinear"
 
 
 class TransformResult(BaseModel):
     requestId: str
-    transformedData: List[XYZPoint]
-    errorRms: Optional[float] = None
+    transformedData: list[XYZPoint]
+    errorRms: float | None = None
     status: TransformStatus
 
 
@@ -104,7 +106,7 @@ class RiskFactor(BaseModel):
 
 class RiskAssessment(BaseModel):
     score: float  # 0 to 1
-    factors: List[RiskFactor]
+    factors: list[RiskFactor]
 
 
 class Verdict(BaseModel):
@@ -123,8 +125,8 @@ class AuditEvent(BaseModel):
     eventId: str
     actor: str
     tool: str
-    evidenceRefs: List[str]
-    verdictId: Optional[str] = None
+    evidenceRefs: list[str]
+    verdictId: str | None = None
     inputSnapshot: Any
     outputSnapshot: Any
     timestamp: datetime

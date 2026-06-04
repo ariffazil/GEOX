@@ -4,9 +4,10 @@ Implements: Archie's law, Larionov Vsh, Gardner VP, inverse optimization.
 Constitutionally bounded: Ω₀ ∈ [0.03, 0.05], ΔS ≤ 0, Peace² ≥ 1.0.
 """
 
-import numpy as np
-from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
 
 
 @dataclass
@@ -18,13 +19,13 @@ class InversionResult:
     rmft: float  # movable fluid
     rmhc: float  # residual hydrocarbon
     quality_score: float  # 0-1 (F2 truth_score ≥ 0.99 target)
-    confidence_band: Tuple[float, float]
-    layers_identified: List[str]
+    confidence_band: tuple[float, float]
+    layers_identified: list[str]
     verdict: str  # "PAY", "WET", "MARGINAL", "INDETERMINATE"
-    arifos_check: Dict[str, str]  # constitutional floor results
+    arifos_check: dict[str, str]  # constitutional floor results
 
 
-def process_las_file(filepath: str) -> Dict[str, np.ndarray]:
+def process_las_file(filepath: str) -> dict[str, np.ndarray]:
     """
     Load a LAS file (.log) and extract standard curve arrays.
     Wraps lasio library with arifOS error handling.
@@ -42,7 +43,7 @@ def process_las_file(filepath: str) -> Dict[str, np.ndarray]:
         return {"ERROR": np.array([str(e)]), "FALLBACK": np.array([1])}
 
 
-def parse_las_from_dict(data: Dict[str, List[float]]) -> Dict[str, np.ndarray]:
+def parse_las_from_dict(data: dict[str, list[float]]) -> dict[str, np.ndarray]:
     """Parse well log data from dictionary (MCP input format)."""
     result = {}
     for key, values in data.items():
@@ -106,7 +107,7 @@ def compute_sw_archie(
     a: float = 1.0,
     m: float = 2.0,
     n: float = 2.0,
-    vsh: Optional[np.ndarray] = None,
+    vsh: np.ndarray | None = None,
 ) -> np.ndarray:
     """
     Water saturation from Archie (with shale correction option).
@@ -140,7 +141,7 @@ def compute_sw_indonesian(
 
 def compute_sonic_velocity(
     rhob: np.ndarray, phi: np.ndarray, vp_ma: float = 4200.0, vp_f: float = 1600.0, vs_ma: float = 2500.0, vs_f: float = 800.0
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Compute Vp, Vs from density and porosity (Gardner-Castagna relation).
     VP = 0.23 * ρ^0.25 * 1000 ... simplified
@@ -152,7 +153,7 @@ def compute_sonic_velocity(
     return np.clip(vp, 1400, 7000), np.clip(vs, 600, 4000)
 
 
-def inverse_petrophysics(curves: Dict[str, np.ndarray], params: Dict[str, float]) -> Dict[str, np.ndarray]:
+def inverse_petrophysics(curves: dict[str, np.ndarray], params: dict[str, float]) -> dict[str, np.ndarray]:
     """
     Main inverse modelling pipeline: RAW LOGS → PETROPHYSICAL PROPERTIES.
 
@@ -257,7 +258,7 @@ def inverse_petrophysics(curves: Dict[str, np.ndarray], params: Dict[str, float]
     return results
 
 
-def forward_synthetic_logs(layers: List[Dict], md_range: Tuple[float, float], n_samples: int = 500) -> Dict[str, np.ndarray]:
+def forward_synthetic_logs(layers: list[dict], md_range: tuple[float, float], n_samples: int = 500) -> dict[str, np.ndarray]:
     """
     Forward modelling: GEOLOGICAL MODEL → SYNTHETIC LOGS.
     Given layer definitions (Vp, Rho, Phi, Vsh), compute all wireline logs.
@@ -312,7 +313,7 @@ def forward_synthetic_logs(layers: List[Dict], md_range: Tuple[float, float], n_
     }
 
 
-def analyze_pay_zones(petrophysics: Dict[str, np.ndarray], md: np.ndarray) -> List[Dict[str, Any]]:
+def analyze_pay_zones(petrophysics: dict[str, np.ndarray], md: np.ndarray) -> list[dict[str, Any]]:
     """
     Identify and rank hydrocarbon-bearing zones.
     Returns pay zones with summary statistics.
@@ -369,9 +370,9 @@ def analyze_pay_zones(petrophysics: Dict[str, np.ndarray], md: np.ndarray) -> Li
 
 
 def summarize_inversion(
-    curves: Dict[str, np.ndarray],
-    petrophysics: Dict[str, np.ndarray],
-    params: Dict[str, float],
+    curves: dict[str, np.ndarray],
+    petrophysics: dict[str, np.ndarray],
+    params: dict[str, float],
 ) -> InversionResult:
     """
     Full inversion summary with constitutional governance.

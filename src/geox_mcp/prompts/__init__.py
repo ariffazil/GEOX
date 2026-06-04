@@ -16,6 +16,7 @@ DITEMPA BUKAN DIBERI — Earth evidence is forged, not given.
 """
 
 from __future__ import annotations
+
 from typing import Any
 
 # ══════════════════════════════════════════════════════════════════════════════

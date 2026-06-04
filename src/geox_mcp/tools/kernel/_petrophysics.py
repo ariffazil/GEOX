@@ -2,10 +2,11 @@
 # Extracted from _helpers.py (lines 453–1042)
 # NO FastMCP imports. Pure business logic.
 # Imports geox.core.geox_1d (business logic, not FastMCP).
+from typing import Any
+
 from ._ingest import CANONICAL_ALIASES
 from ._registry import _get_artifact
 from ._unit_registry import merge_guards, validate_curve, validate_scalar, value_contract
-from typing import Any, Optional
 
 
 def _guard_error(error: str, *, physics_guard: dict[str, Any] | None = None, **extra) -> dict:
@@ -21,11 +22,12 @@ def _compute_vsh_from_store(
     gr_clean: float,
     gr_shale: float,
     method: str,
-    zone_top_m: Optional[float] = None,
-    zone_base_m: Optional[float] = None,
+    zone_top_m: float | None = None,
+    zone_base_m: float | None = None,
 ) -> dict:
     """Compute Vsh from stored LAS data. Returns stats dict or error dict."""
     import numpy as np
+
     from geox_core.core.geox_1d import compute_vsh_gr
 
     data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
@@ -122,12 +124,13 @@ def _compute_porosity_from_store(
     artifact_ref: str,
     matrix_density: float,
     fluid_density: float,
-    zone_top_m: Optional[float] = None,
-    zone_base_m: Optional[float] = None,
+    zone_top_m: float | None = None,
+    zone_base_m: float | None = None,
 ) -> dict:
     """Compute PHIT from stored LAS data using RHOB and/or NPHI. Returns stats dict."""
     import numpy as np
-    from geox_core.core.geox_1d import compute_porosity_rhob, compute_porosity_neutron
+
+    from geox_core.core.geox_1d import compute_porosity_neutron, compute_porosity_rhob
 
     data = _get_well_data_with_depth(artifact_ref, zone_top_m, zone_base_m)
     if "error" in data:
@@ -244,11 +247,12 @@ def _compute_saturation_from_store(
     n: float,
     vsh_result: dict | None = None,
     phit_result: dict | None = None,
-    zone_top_m: Optional[float] = None,
-    zone_base_m: Optional[float] = None,
+    zone_top_m: float | None = None,
+    zone_base_m: float | None = None,
 ) -> dict:
     """Compute Sw from stored LAS data. Returns stats dict."""
     import numpy as np
+
     from geox_core.core.geox_1d import compute_sw_archie, compute_sw_indonesian
 
     if (vsh_result and "_curves" in vsh_result) or (phit_result and "_curves" in phit_result):
@@ -580,8 +584,8 @@ def _classify_gr_motif(
 
 def _classify_lithology_from_store(
     artifact_ref: str,
-    zone_top_m: Optional[float] = None,
-    zone_base_m: Optional[float] = None,
+    zone_top_m: float | None = None,
+    zone_base_m: float | None = None,
 ) -> dict:
     """Classify lithology from RHOB-NPHI crossplot zones."""
     import numpy as np
@@ -675,12 +679,14 @@ def _safe_reduction(func, arr, default=None):
 
 def _get_well_data_with_depth(
     artifact_ref: str,
-    zone_top: Optional[float] = None,
-    zone_base: Optional[float] = None,
+    zone_top: float | None = None,
+    zone_base: float | None = None,
 ) -> dict:
     """Helper to load LAS curves and apply depth filtering."""
     import os
+
     import numpy as np
+
     from geox_core.core.geox_1d import process_las_file
 
     entry = _get_artifact(artifact_ref)

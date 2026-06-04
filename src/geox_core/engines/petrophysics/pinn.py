@@ -15,7 +15,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -78,7 +78,7 @@ class PINNPetrophysics:
         lambda_phys: float = 1.0,
         lambda_archie: float = 0.5,
         lambda_density: float = 0.3,
-        device: Optional[str] = None,
+        device: str | None = None,
     ) -> None:
         if not _HAS_TORCH:
             raise RuntimeError("PINNPetrophysics requires PyTorch. Install: pip install torch")
@@ -120,8 +120,8 @@ class PINNPetrophysics:
         self.net = nn.Sequential(*layers).to(self.device)
 
         # Normalization stats (fit during training)
-        self._input_mean: Optional[torch.Tensor] = None
-        self._input_std: Optional[torch.Tensor] = None
+        self._input_mean: torch.Tensor | None = None
+        self._input_std: torch.Tensor | None = None
 
         logger.info(
             f"PINNPetrophysics initialized: {input_dim}→{hidden_dims}→{output_dim} "
@@ -375,7 +375,7 @@ class PINNPetrophysics:
         logger.info(f"PINN state saved to {path}")
 
     @classmethod
-    def load(cls, path: str, device: Optional[str] = None) -> "PINNPetrophysics":
+    def load(cls, path: str, device: str | None = None) -> PINNPetrophysics:
         """Load model weights + normalizer stats."""
         state = torch.load(path, map_location=device or "cpu", weights_only=False)
         config = state["config"]

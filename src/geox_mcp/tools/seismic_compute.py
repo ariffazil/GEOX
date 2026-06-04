@@ -17,13 +17,14 @@ from __future__ import annotations
 import logging
 from typing import Any, Literal
 
+from fastmcp import Context
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
     enrich_envelope_with_metabolic,
+    get_standard_envelope,
 )
 from geox_mcp.tools._helpers import _artifact_exists
 
@@ -243,6 +244,7 @@ async def geox_seismic_compute(
     # attribute
     volume_ref_attr: str | None = None,
     attribute: str = "rms",
+    ctx: Context | None = None,
 ) -> dict[str, Any]:
     """Unified seismic physics engine.
 
@@ -282,10 +284,19 @@ async def geox_seismic_compute(
             volume_ref_attr=volume_ref_attr,
             attribute=attribute,
     )
+    if ctx:
+        ctx.report_progress(0, 100)
+
     if _err is not None:
         return _err
+
+    if ctx:
+        ctx.report_progress(20, 100)
+
     if mode == "synthetic":
-        return await _mode_synthetic(
+        if ctx:
+            ctx.report_progress(40, 100)
+        result = await _mode_synthetic(
             well_id=well_id,
             vp=vp,
             rho=rho,
@@ -299,6 +310,9 @@ async def geox_seismic_compute(
             noise_db=noise_db,
             output_format=output_format,
         )
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if mode == "well_tie":
         if not well_id or not volume_ref:
@@ -308,7 +322,9 @@ async def geox_seismic_compute(
                 claim_tag="HYPOTHESIS",
                 claim_state="NO_VALID_EVIDENCE",
             )
-        return await _mode_well_tie(
+        if ctx:
+            ctx.report_progress(40, 100)
+        result = await _mode_well_tie(
             well_id=well_id,
             volume_ref=volume_ref,
             extraction_window_ms=extraction_window_ms,
@@ -318,6 +334,9 @@ async def geox_seismic_compute(
             apply_anisotropy_correction=apply_anisotropy_correction,
             q_factor=q_factor,
         )
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if mode == "time_depth_anchor":
         if not well_id or not checkshot_ref:
@@ -327,12 +346,17 @@ async def geox_seismic_compute(
                 claim_tag="HYPOTHESIS",
                 claim_state="NO_VALID_EVIDENCE",
             )
-        return await _mode_time_depth_anchor(
+        if ctx:
+            ctx.report_progress(40, 100)
+        result = await _mode_time_depth_anchor(
             well_id=well_id,
             checkshot_ref=checkshot_ref,
             drift_threshold_ms=drift_threshold_ms,
             method=td_method,
         )
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if mode == "anomalous_contrast":
         if not ai_profile or not ac_depth or not formation_tops:
@@ -342,7 +366,9 @@ async def geox_seismic_compute(
                 claim_tag="HYPOTHESIS",
                 claim_state="NO_VALID_EVIDENCE",
             )
-        return await _mode_anomalous_contrast(
+        if ctx:
+            ctx.report_progress(40, 100)
+        result = await _mode_anomalous_contrast(
             ai_profile=ai_profile,
             depth=ac_depth,
             formation_tops=formation_tops,
@@ -351,10 +377,20 @@ async def geox_seismic_compute(
             vp=ac_vp,
             rho=ac_rho,
         )
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if mode == "attribute":
-        return await _mode_attribute(volume_ref=volume_ref_attr or volume_ref or "", attribute=attribute)
+        if ctx:
+            ctx.report_progress(40, 100)
+        result = await _mode_attribute(volume_ref=volume_ref_attr or volume_ref or "", attribute=attribute)
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
+    if ctx:
+        ctx.report_progress(100, 100)
     return get_standard_envelope(
         {"tool": TOOL_NAME, "error": f"Unknown mode: {mode}"},
         tool_class="compute",

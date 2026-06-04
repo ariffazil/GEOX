@@ -1,25 +1,32 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional, Literal
+from typing import Any, Literal
+
 import numpy as np
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
     enrich_envelope_with_metabolic,
-)
-from geox_mcp.tools._helpers import (
-    _get_artifact,
-    _artifact_exists,
+    get_standard_envelope,
 )
 from geox_core.physics import (
-    impedance_array as calculate_acoustic_impedance,
-    reflectivity_array as calculate_reflectivity,
-    ricker_wavelet as generate_ricker,
     convolve_trace as convolve_synthetic,
 )
 from geox_core.physics import gardner_density
+from geox_core.physics import (
+    impedance_array as calculate_acoustic_impedance,
+)
+from geox_core.physics import (
+    reflectivity_array as calculate_reflectivity,
+)
+from geox_core.physics import (
+    ricker_wavelet as generate_ricker,
+)
 from geox_core.physics.guards import PhysicsGuard
+from geox_mcp.tools._helpers import (
+    _artifact_exists,
+    _get_artifact,
+)
 
 logger = logging.getLogger("geox.canonical.seismic_well_tie")
 
@@ -28,7 +35,7 @@ logger = logging.getLogger("geox.canonical.seismic_well_tie")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-def _extract_well_curves_from_artifact(well_id: str) -> Optional[Dict[str, Any]]:
+def _extract_well_curves_from_artifact(well_id: str) -> dict[str, Any] | None:
     """Extract rho, vp, vsh, depth arrays from a well artifact.
 
     Tries artifact store first (expects keys: rho, vp, vsh, depth, dt, twt).
@@ -40,7 +47,7 @@ def _extract_well_curves_from_artifact(well_id: str) -> Optional[Dict[str, Any]]
         return None
 
     # Direct curve storage
-    curves: Dict[str, Any] = {}
+    curves: dict[str, Any] = {}
     for key in ("rho", "vp", "vsh", "depth", "dt", "twt"):
         if key in artifact and artifact[key] is not None:
             arr = np.asarray(artifact[key], dtype=float)
@@ -117,10 +124,10 @@ def _extract_well_curves_from_artifact(well_id: str) -> Optional[Dict[str, Any]]
 
 def _build_wavelet_resource(
     wavelet_type: Literal["ricker", "ormsby", "klauder", "statistical", "butterworth"],
-    frequency_hz: float | List[float],
+    frequency_hz: float | list[float],
     dt_ms: float,
     phase_degrees: float = 0.0,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a deterministic wavelet resource with equations and provenance."""
     if wavelet_type == "ricker":
         wavelet = generate_ricker(float(frequency_hz), dt_ms / 1000.0)
@@ -327,7 +334,7 @@ async def geox_time_depth_anchor(
     drift_threshold_ms: float = 25.0,
     method: Literal["checkshot", "vsp", "regional_proxy"] = "checkshot",
     td_fitter: Literal["linear", "polynomial", "vo_k", "layer_cake"] = "linear",
-    td_fitter_kwargs: Optional[dict] = None,
+    td_fitter_kwargs: dict | None = None,
 ) -> dict:
     """Empirical Time-Depth anchoring using Checkshots or VSP.
 
@@ -522,7 +529,7 @@ async def geox_time_depth_anchor(
 async def geox_forward_model_synthetic(
     well_id: str,
     wavelet_type: Literal["ricker", "ormsby", "klauder"] = "ricker",
-    frequency_hz: float | List[float] = 35.0,
+    frequency_hz: float | list[float] = 35.0,
     phase_degrees: float = 0.0,
     polarity: Literal["SEG_NORMAL", "SEG_REVERSE"] = "SEG_NORMAL",
     dt_ms: float = 4.0,

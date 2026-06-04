@@ -13,11 +13,12 @@ No interpretation. No narrative. Physics only.
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
-
+from typing import Any
 
 from geox_core.physics import (
     impedance_array as calculate_acoustic_impedance,
+)
+from geox_core.physics import (
     reflectivity_array as calculate_reflectivity,
 )
 
@@ -25,13 +26,13 @@ logger = logging.getLogger("geox.canonical.anomalous_contrast")
 
 
 async def geox_anomalous_contrast_detector(
-    ai_profile: List[float],
-    depth: List[float],
-    formation_tops: Dict[str, float],
+    ai_profile: list[float],
+    depth: list[float],
+    formation_tops: dict[str, float],
     rc_threshold: float = 0.05,
     geological_boundary_tolerance_m: float = 5.0,
-    vp: Optional[List[float]] = None,
-    rho: Optional[List[float]] = None,
+    vp: list[float] | None = None,
+    rho: list[float] | None = None,
 ) -> dict[str, Any]:
     """
     Detect physical/visual anomalies between seismic response and known geological boundaries.

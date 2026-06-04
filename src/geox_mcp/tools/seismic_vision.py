@@ -1,5 +1,6 @@
 import logging
 from typing import Any
+
 from geox_core.engines.seismic.vision_bridge import GEOXVisionDepthEngine
 
 logger = logging.getLogger("geox.canonical.seismic_vision")

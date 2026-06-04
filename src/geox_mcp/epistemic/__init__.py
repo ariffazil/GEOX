@@ -14,50 +14,45 @@ Exports:
   - godel_wall: godel_wall_check, GodelWallRecord, GodelWallVerdict, UndecidableReason, GodelWallError
 """
 
+from .anti_beautiful_one import (
+    AntiBeautifulOne,
+    BeautyMetrics,
+)
 from .assumption_lineage import (
-    AssumptionRecord,
     AssumptionGraph,
+    AssumptionRecord,
     AssumptionStatus,
     AssumptionType,
     get_assumption_graph,
     reset_assumption_graph,
 )
-
-from .epistemic_runtime import (
-    EpistemicRuntime,
-    EpistemicEvent,
-    EpistemicEventType,
-    get_or_create_runtime,
-    get_runtime,
-)
-
 from .contradiction_ontology import (
     ContradictionRecord,
-    ContradictionType,
     ContradictionSeverity,
+    ContradictionType,
     ResolutionPath,
     classify_contradiction,
     get_contradiction_record,
 )
-
-from .anti_beautiful_one import (
-    AntiBeautifulOne,
-    BeautyMetrics,
+from .epistemic_runtime import (
+    EpistemicEvent,
+    EpistemicEventType,
+    EpistemicRuntime,
+    get_or_create_runtime,
+    get_runtime,
 )
-
-from .meta_epistemic_audit import (
-    MetaEpistemicAuditor,
-    MetaAuditRecord,
-    ConstitutionalVerdict,
-)
-
 from .godel_wall import (
-    godel_wall_check,
-    check_and_raise,
+    GodelWallError,
     GodelWallRecord,
     GodelWallVerdict,
     UndecidableReason,
-    GodelWallError,
+    check_and_raise,
+    godel_wall_check,
+)
+from .meta_epistemic_audit import (
+    ConstitutionalVerdict,
+    MetaAuditRecord,
+    MetaEpistemicAuditor,
 )
 
 __all__ = [

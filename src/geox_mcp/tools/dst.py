@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from geox_core.enums.statuses import (
     get_standard_envelope,
@@ -52,8 +52,8 @@ async def geox_dst_ingest_test(
     )
     if _err is not None:
         return _err
-    derived: Dict[str, Any] = {}
-    flags: List[str] = []
+    derived: dict[str, Any] = {}
+    flags: list[str] = []
 
     # ── Derived metrics ──────────────────────────────────────────────────────
     if gas_rate_mmscfd and condensate_rate_stbd is not None:

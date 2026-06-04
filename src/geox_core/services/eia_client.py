@@ -28,7 +28,7 @@ from __future__ import annotations
 import logging
 import os
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -96,7 +96,7 @@ class EIAClient:
             # EIA requires a key; without one we return VOID early
             return self._void_response(route, "missing_api_key")
 
-        t0 = datetime.now(timezone.utc)
+        t0 = datetime.now(UTC)
         try:
             async with httpx.AsyncClient(timeout=self.timeout, follow_redirects=True) as client:
                 resp = await client.get(url, params=req_params)
@@ -119,7 +119,7 @@ class EIAClient:
                 "_eia_url": url,
             }
 
-        latency = (datetime.now(timezone.utc) - t0).total_seconds() * 1000
+        latency = (datetime.now(UTC) - t0).total_seconds() * 1000
         provenance = EIAProvenance(
             endpoint=route,
             requested_at=t0.isoformat(),
@@ -323,7 +323,7 @@ class EIAClient:
             "_eia_provenance": {
                 "source": "eia_gov_api",
                 "endpoint": f"/{data_type}",
-                "requested_at": datetime.now(timezone.utc).isoformat(),
+                "requested_at": datetime.now(UTC).isoformat(),
                 "response_status": 401,
             },
         }

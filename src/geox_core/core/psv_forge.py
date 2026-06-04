@@ -5,7 +5,7 @@ Unifying Ninefold Substrates into Earth Intelligence PSV.
 """
 
 from dataclasses import dataclass
-from typing import Dict, Any
+from typing import Any
 
 
 @dataclass
@@ -17,11 +17,11 @@ class ProspectStateVector:
     p10: float
     p50: float
     p90: float
-    substrate_lineage: Dict[str, str]
+    substrate_lineage: dict[str, str]
     systemic_entropy: float
 
 
-def compute_psv_from_substrates(substrate_evidence: Dict[str, Any]) -> ProspectStateVector:
+def compute_psv_from_substrates(substrate_evidence: dict[str, Any]) -> ProspectStateVector:
     """
     Translates substrate evidence into the Prospect State Vector.
     """

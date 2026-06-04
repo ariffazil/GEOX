@@ -34,8 +34,7 @@ import json
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
-
+from typing import Any
 
 # ── Enums ────────────────────────────────────────────────────────────────────
 
@@ -73,16 +72,16 @@ class Assumption:
     """One assumption, fully traceable."""
 
     id: str
-    parent_id: Optional[str]
+    parent_id: str | None
     rung_origin: RungOrigin
     introduced_by: str  # tool name or agent id
     description: str
     status: AssumptionStatus = AssumptionStatus.ACTIVE
-    falsified_by: Optional[str] = None  # evidence_ref that falsified it
-    falsified_at: Optional[float] = None  # epoch
-    dependents: Set[str] = field(default_factory=set)  # other assumption ids
+    falsified_by: str | None = None  # evidence_ref that falsified it
+    falsified_at: float | None = None  # epoch
+    dependents: set[str] = field(default_factory=set)  # other assumption ids
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "parent_id": self.parent_id,
@@ -105,8 +104,8 @@ class AssumptionLineage:
     """
 
     def __init__(self) -> None:
-        self._assumptions: Dict[str, Assumption] = {}
-        self._by_parent: Dict[str, Set[str]] = {}  # parent_id → child ids
+        self._assumptions: dict[str, Assumption] = {}
+        self._by_parent: dict[str, set[str]] = {}  # parent_id → child ids
         self._clock = time.time
 
     def register(
@@ -114,8 +113,8 @@ class AssumptionLineage:
         description: str,
         rung: RungOrigin,
         introduced_by: str,
-        parent_id: Optional[str] = None,
-        assumption_id: Optional[str] = None,
+        parent_id: str | None = None,
+        assumption_id: str | None = None,
     ) -> str:
         """Register a new assumption. Returns its id.
 
@@ -146,7 +145,7 @@ class AssumptionLineage:
         assumption_id: str,
         evidence_ref: str,
         by: str = "earth_falsification",
-    ) -> List[str]:
+    ) -> list[str]:
         """Mark an assumption as falsified. Returns the cascade list
         (all dependent claims that should be demoted).
 
@@ -166,10 +165,10 @@ class AssumptionLineage:
                 self._assumptions[cid].status = AssumptionStatus.DEMOTED
         return sorted(cascade)
 
-    def _walk_descendants(self, root_id: str) -> Set[str]:
+    def _walk_descendants(self, root_id: str) -> set[str]:
         """BFS over the parent_id graph from `root_id`."""
-        visited: Set[str] = set()
-        queue: List[str] = list(self._by_parent.get(root_id, set()))
+        visited: set[str] = set()
+        queue: list[str] = list(self._by_parent.get(root_id, set()))
         while queue:
             current = queue.pop(0)
             if current in visited:
@@ -178,16 +177,16 @@ class AssumptionLineage:
             queue.extend(self._by_parent.get(current, set()))
         return visited
 
-    def get(self, assumption_id: str) -> Optional[Assumption]:
+    def get(self, assumption_id: str) -> Assumption | None:
         return self._assumptions.get(assumption_id)
 
-    def all_active(self) -> List[Assumption]:
+    def all_active(self) -> list[Assumption]:
         return [a for a in self._assumptions.values() if a.status == AssumptionStatus.ACTIVE]
 
-    def all_falsified(self) -> List[Assumption]:
+    def all_falsified(self) -> list[Assumption]:
         return [a for a in self._assumptions.values() if a.status == AssumptionStatus.FALSIFIED]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "n_total": len(self._assumptions),
             "n_active": len(self.all_active()),
@@ -206,11 +205,11 @@ class CascadeResult:
     falsified_assumption_id: str
     evidence_ref: str
     cascaded_count: int
-    demoted_assumption_ids: List[str]
-    affected_seal_ids: List[str]
+    demoted_assumption_ids: list[str]
+    affected_seal_ids: list[str]
     cascade_risk: float  # 0.0–1.0; how much of the model is now suspect
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "falsified_assumption_id": self.falsified_assumption_id,
             "evidence_ref": self.evidence_ref,
@@ -225,7 +224,7 @@ def cascade_demote(
     lineage: AssumptionLineage,
     falsified_assumption_id: str,
     evidence_ref: str,
-    affected_seal_ids: Optional[List[str]] = None,
+    affected_seal_ids: list[str] | None = None,
 ) -> CascadeResult:
     """Given a falsified assumption, compute the cascade and return a
     `CascadeResult` for the calling tool to surface in its envelope.
@@ -261,11 +260,11 @@ class HonestLuckyReport:
     n_seals: int
     n_falsified: int
     honesty_ratio: float  # 0.0 = all lucky, 1.0 = all honest
-    lucky_seal_ids: List[str]
-    honest_seal_ids: List[str]
-    cascade_history: List[Dict[str, Any]]
+    lucky_seal_ids: list[str]
+    honest_seal_ids: list[str]
+    cascade_history: list[dict[str, Any]]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "n_seals": self.n_seals,
             "n_falsified": self.n_falsified,
@@ -277,8 +276,8 @@ class HonestLuckyReport:
 
 
 def honest_vs_lucky(
-    seal_history: List[Dict[str, Any]],
-    falsifications: List[Dict[str, Any]],
+    seal_history: list[dict[str, Any]],
+    falsifications: list[dict[str, Any]],
 ) -> HonestLuckyReport:
     """Compute the honest/lucky ratio from a chain of seals and the
     list of falsifications that have occurred since.
@@ -286,9 +285,9 @@ def honest_vs_lucky(
     Each `seal_history` entry: {"seal_id": str, "claim_summary": str, ...}
     Each `falsifications` entry: {"falsified_seal_id": str, "evidence_ref": str, ...}
     """
-    falsified_seal_ids: Set[str] = {f.get("falsified_seal_id") for f in falsifications if f.get("falsified_seal_id")}
-    lucky: List[str] = []
-    honest: List[str] = []
+    falsified_seal_ids: set[str] = {f.get("falsified_seal_id") for f in falsifications if f.get("falsified_seal_id")}
+    lucky: list[str] = []
+    honest: list[str] = []
     for s in seal_history:
         sid = s.get("seal_id")
         if sid is None:
@@ -323,16 +322,16 @@ class ResealEnvelope:
     """
 
     new_state_summary: str
-    prev_leaf: Optional[str]
-    new_assumption_ids: List[str]
-    demoted_assumption_ids: List[str]
-    calibration_history: List[Dict[str, Any]]
+    prev_leaf: str | None
+    new_assumption_ids: list[str]
+    demoted_assumption_ids: list[str]
+    calibration_history: list[dict[str, Any]]
     cascade_risk: float
-    honest_lucky_report: Dict[str, Any]
+    honest_lucky_report: dict[str, Any]
     timestamp: float
     new_payload_hash: str  # sha256 of the new state
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "new_state_summary": self.new_state_summary,
             "prev_leaf": self.prev_leaf,
@@ -348,12 +347,12 @@ class ResealEnvelope:
 
 
 def reseal_with_history(
-    new_state: Dict[str, Any],
-    prev_leaf: Optional[str],
+    new_state: dict[str, Any],
+    prev_leaf: str | None,
     lineage: AssumptionLineage,
-    cascade: Optional[CascadeResult],
-    seal_history: List[Dict[str, Any]],
-    falsifications: List[Dict[str, Any]],
+    cascade: CascadeResult | None,
+    seal_history: list[dict[str, Any]],
+    falsifications: list[dict[str, Any]],
 ) -> ResealEnvelope:
     """Build the envelope for a re-seal that preserves history.
 
@@ -387,10 +386,10 @@ def reseal_with_history(
 
 
 def attach_lineage_to_envelope(
-    envelope: Dict[str, Any],
+    envelope: dict[str, Any],
     lineage: AssumptionLineage,
-    cascade: Optional[CascadeResult] = None,
-) -> Dict[str, Any]:
+    cascade: CascadeResult | None = None,
+) -> dict[str, Any]:
     """Mutate (and return) an existing envelope dict to include the
     `assumption_lineage` block + (optional) `cascade_risk`.
 

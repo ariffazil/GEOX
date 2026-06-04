@@ -23,11 +23,10 @@ It produces a meta-audit verdict: CONSTITUTIONAL | DEVIATION | VIOLATION.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Optional
 
-from .epistemic_runtime import EpistemicRuntime, EpistemicEventType
+from .epistemic_runtime import EpistemicEventType, EpistemicRuntime
 
 
 class ConstitutionalVerdict(StrEnum):
@@ -74,8 +73,8 @@ class MetaAuditRecord:
     rung_delta_warranted: int = 0  # What delta is supported by evidence
 
     # Uncertainty
-    uncertainty_declared: Optional[float] = None
-    uncertainty_warranted: Optional[float] = None  # What uncertainty is actually supported
+    uncertainty_declared: float | None = None
+    uncertainty_warranted: float | None = None  # What uncertainty is actually supported
     uncertainty_compressed: bool = False
 
     # Contradiction
@@ -88,7 +87,7 @@ class MetaAuditRecord:
     iron_law_should_apply: bool = False
 
     # Beauty drift
-    beauty_score: Optional[float] = None
+    beauty_score: float | None = None
     beauty_drift_flagged: bool = False
     beauty_drift_ignored: bool = False
 
@@ -106,7 +105,7 @@ class MetaAuditRecord:
     deviation_notes: str = ""
     constitutional_notes: str = ""
 
-    audited_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    audited_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def to_dict(self) -> dict:
         return {
@@ -161,9 +160,9 @@ class MetaEpistemicAuditor:
         output_rung: int,
         input_rungs: list[int],
         output_data: dict,
-        assumptions_added: Optional[list[dict]] = None,
-        evidence_refs: Optional[list[str]] = None,
-        uncertainty_declared: Optional[float] = None,
+        assumptions_added: list[dict] | None = None,
+        evidence_refs: list[str] | None = None,
+        uncertainty_declared: float | None = None,
     ) -> MetaAuditRecord:
         """
         Audit a single tool output for constitutional compliance.
@@ -326,7 +325,7 @@ class MetaEpistemicAuditor:
         output_data: dict,
         assumptions: list[dict],
         evidence_refs: list[str],
-    ) -> Optional[float]:
+    ) -> float | None:
         """Compute the minimum uncertainty that should be declared."""
         # Base uncertainty from evidence count
         evidence_count = len(evidence_refs)
@@ -360,7 +359,7 @@ class MetaEpistemicAuditor:
         text_lower = text.lower()
         return sum(1 for p in softening_phrases if p in text_lower) >= 2
 
-    def _rough_beauty_score(self, text: str) -> Optional[float]:
+    def _rough_beauty_score(self, text: str) -> float | None:
         """Very rough beauty score from text alone (no evidence_ref context)."""
         if not text:
             return None

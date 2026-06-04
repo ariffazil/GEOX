@@ -29,9 +29,9 @@ import hashlib
 import re
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import List, Dict, Any, Optional
+from typing import Any
 
 
 class ClaimTag(Enum):
@@ -72,7 +72,7 @@ class TEARFRAME:
     bias_scenario: str = "ai_vision_only"
     b_cog: float = 0.0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "u_ambiguity": round(self.u_ambiguity, 4),
             "evidence_credit": round(self.evidence_credit, 4),
@@ -140,7 +140,7 @@ class AC_RiskResult:
     u_ambiguity: float
     evidence_credit: float
     b_cog: float
-    transform_stack: List[str] = field(default_factory=list)
+    transform_stack: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -148,10 +148,10 @@ class AntiHantuReport:
     """Anti-Hantu (F9) screening report."""
 
     passed: bool
-    violations: List[str] = field(default_factory=list)
+    violations: list[str] = field(default_factory=list)
     screened_text_snippet: str = ""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "passed": self.passed,
             "violations": self.violations,
@@ -170,7 +170,7 @@ class VaultSeal:
     ac_risk_score: float
     timestamp: str
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "epoch": self.epoch,
             "session_id": self.session_id,
@@ -199,11 +199,11 @@ class GovernedACRiskResult:
     tearframe: TEARFRAME
     anti_hantu_check: bool
     hold_triggered: bool
-    vault_seal: Optional[VaultSeal]
-    floor_violations: List[str]
+    vault_seal: VaultSeal | None
+    floor_violations: list[str]
     audit_trace: str
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "verdict": self.verdict,
             "ac_risk_score": round(self.ac_risk_score, 4),
@@ -231,11 +231,11 @@ class AntiHantuScreen:
     ]
 
     @classmethod
-    def screen(cls, text: Optional[str]) -> AntiHantuReport:
+    def screen(cls, text: str | None) -> AntiHantuReport:
         if not text:
             return AntiHantuReport(passed=True)
 
-        violations: List[str] = []
+        violations: list[str] = []
         lower_text = text.lower()
         for pattern in cls._PATTERNS:
             matches = re.findall(pattern, lower_text)
@@ -264,7 +264,7 @@ def _clamp(value: float, min_val: float, max_val: float) -> float:
 def _compute_b_cog(
     u_ambiguity: float,
     evidence_credit: float,
-    custom_b_cog: Optional[float],
+    custom_b_cog: float | None,
     bias_scenario: str,
 ) -> float:
     """Compute B_cog using canonical formula."""
@@ -293,7 +293,7 @@ def _run_floor_checks(
     evidence_credit: float,
     anti_hantu_passed: bool,
     amanah_locked: bool,
-) -> List[str]:
+) -> list[str]:
     """Run F1-F13 floor checks. Returns list of violated floors.
 
     NOTE: Floor violations are tracked for audit but do NOT automatically
@@ -326,7 +326,7 @@ def _generate_audit_trace(
     verdict: str,
     claim_tag: str,
     hold_triggered: bool,
-    floor_violations: List[str],
+    floor_violations: list[str],
 ) -> str:
     """Generate human-readable audit trace."""
     parts = [
@@ -348,13 +348,13 @@ def _generate_vault_seal(
     verdict: str,
     ac_risk_score: float,
     session_id: str,
-) -> Optional[VaultSeal]:
+) -> VaultSeal | None:
     """Generate VAULT999 seal only on PROCEED verdict."""
     if verdict != "PROCEED":
         return None
 
     epoch = int(time.time())
-    timestamp = datetime.now(timezone.utc).isoformat()
+    timestamp = datetime.now(UTC).isoformat()
     hash_input = f"{verdict}{ac_risk_score}{timestamp}"
     hash_digest = hashlib.sha256(hash_input.encode()).hexdigest()[:16]
 
@@ -370,10 +370,10 @@ def _generate_vault_seal(
 
 def compute_ac_risk(
     u_ambiguity: float,
-    transform_stack: List[str],
+    transform_stack: list[str],
     evidence_credit: float = 0.0,
     bias_scenario: str = "ai_vision_only",
-    custom_b_cog: Optional[float] = None,
+    custom_b_cog: float | None = None,
 ) -> AC_RiskResult:
     """
     Calculate Theory of Anomalous Contrast (ToAC) risk score.
@@ -410,18 +410,18 @@ def compute_ac_risk(
 
 def compute_ac_risk_governed(
     u_ambiguity: float,
-    transform_stack: List[str],
+    transform_stack: list[str],
     evidence_credit: float = 0.0,
     echo_score: float = 0.0,
     truth_score: float = 0.0,
     bias_scenario: str = "ai_vision_only",
-    custom_b_cog: Optional[float] = None,
+    custom_b_cog: float | None = None,
     rasa_present: bool = False,
     amanah_locked: bool = False,
     irreversible_action: bool = False,
-    model_text: Optional[str] = None,
-    prospect_context: Optional[Dict[str, Any]] = None,
-    session_id: Optional[str] = None,
+    model_text: str | None = None,
+    prospect_context: dict[str, Any] | None = None,
+    session_id: str | None = None,
     advisory_mode: bool = False,
 ) -> GovernedACRiskResult:
     """

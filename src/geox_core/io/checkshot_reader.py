@@ -1,5 +1,5 @@
-from scipy.interpolate import interp1d
 import numpy as np
+from scipy.interpolate import interp1d
 
 
 def apply_td_anchor(tvd_log: np.ndarray, checkshot_tvd: np.ndarray, checkshot_twt: np.ndarray) -> np.ndarray:

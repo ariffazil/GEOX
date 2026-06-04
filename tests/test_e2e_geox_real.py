@@ -219,7 +219,9 @@ async def test_geox_well_infer_seq_strat_bad_depo_env(mcp, dummy_packages):
 
 def test_actual_registered_tool_count():
     """
-    Ground truth: only 4 @mcp.tool decorators exist in src/geox_mcp/tools/.
+    Ground truth: decorator/imperative mcp.tool() calls in src/geox_mcp/tools/.
+    Legacy files (stratigraphy, well, well_correlation) use decorators.
+    _register.py uses imperative registration for domain-server composition.
     Any agent claiming 21, 26, or 28 tools is hallucinating.
     """
     tools_dir = SRC_ROOT / "geox_mcp" / "tools"
@@ -232,4 +234,6 @@ def test_actual_registered_tool_count():
                 func = node.func
                 if isinstance(func, ast.Attribute) and func.attr == "tool":
                     count += 1
-    assert count == 10, f"Expected 10 registered tools, found {count}"
+    # 8 decorators in stratigraphy(2) + well(4) + well_correlation(2)
+    # 1 imperative mcp.tool() in _register.py
+    assert count == 9, f"Expected 9 mcp.tool() calls in tools/, found {count}"

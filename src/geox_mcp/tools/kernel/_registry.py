@@ -2,13 +2,14 @@
 # Extracted from _helpers.py (lines 1–192)
 # NO FastMCP imports. Pure business logic.
 
+import json
 import logging
 import os
-import json
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
 # NO FastMCP — kernel layer
 
 logger = logging.getLogger("geox.unified13")
@@ -101,7 +102,7 @@ def _register_artifact(
         "diagnostics": diagnostics or {},
         "source_uri": source_uri,
         "artifact_type": artifact_type,
-        "registered_at": datetime.now(timezone.utc).isoformat(),
+        "registered_at": datetime.now(UTC).isoformat(),
     }
     for alias in aliases:
         _artifact_registry.add(alias)
@@ -155,7 +156,7 @@ def _record_latest_qc(artifact_ref: str, qc: dict[str, Any]) -> None:
         "flags": list(qc.get("flags") or []),
         "limitations": list(qc.get("limitations") or []),
         "claim_state": qc.get("claim_state", "RAW_OBSERVATION"),
-        "checked_at": datetime.now(timezone.utc).isoformat(),
+        "checked_at": datetime.now(UTC).isoformat(),
     }
     entry["latest_qc"] = latest_qc
     entry["qc"] = latest_qc

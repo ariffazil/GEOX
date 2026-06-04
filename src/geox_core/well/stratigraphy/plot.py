@@ -12,20 +12,19 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Optional
 
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 import numpy as np
 
 from .config import (
-    ProjectConfig,
     MOTIF_COLORS,
     TRACT_COLORS,
+    ProjectConfig,
     default_depo_eod,
     default_depo_rank,
     default_nn_ages,
@@ -104,15 +103,15 @@ def _draw_motif_schematic(ax, motif, color, top_d, base_d, x0=0.02, x1=0.40, alp
 
 def generate_well_panel(
     well_id: str,
-    wdata: Optional[dict],
+    wdata: dict | None,
     packages: list[dict],
     intervals: list,
     config: ProjectConfig,
     output_dir: str = "output",
     dpi: int = 200,
-    sensing_bins: Optional[list] = None,
+    sensing_bins: list | None = None,
     now_ts: str = "",
-) -> Optional[str]:
+) -> str | None:
     """
     Generate per-well 6-track panel.
 
@@ -511,7 +510,7 @@ def generate_correlation_panel(
     output_dir: str = "output",
     dpi: int = 180,
     now_ts: str = "",
-) -> Optional[str]:
+) -> str | None:
     """Generate multi-well correlation panel with GR shading and systems tract stripe."""
     well_order = config.well_order or list(well_data.keys())
     n = len(well_order)

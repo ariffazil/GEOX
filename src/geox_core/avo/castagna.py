@@ -31,19 +31,17 @@ empirical bridge, declared honestly.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict, Union
+from typing import Any
 
 import numpy as np
-
 
 # ── Public surface ──────────────────────────────────────────────────
 
 
 def castagna_mudrock_vp_to_vs(
-    vp: Union[float, np.ndarray],
+    vp: float | np.ndarray,
     unit: str = "m/s",
-) -> Union[float, np.ndarray]:
+) -> float | np.ndarray:
     """Predict Vs from Vp using the Castagna mudrock line (brine-saturated).
 
     Args:
@@ -68,10 +66,10 @@ def castagna_mudrock_vp_to_vs(
 
 
 def castagna_mudrock_fallback(
-    vp: Union[float, np.ndarray],
+    vp: float | np.ndarray,
     fluid_zone: str = "brine",
     unit: str = "m/s",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Castagna fallback with explicit ACRisk and honest flags.
 
     Args:

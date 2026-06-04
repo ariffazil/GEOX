@@ -21,7 +21,7 @@ DITEMPA BUKAN DIBERI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Literal, Optional, Tuple
+from typing import Any, Literal
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Layer 1 — Physics First, AI Second
@@ -40,7 +40,7 @@ class PhysicsViolation:
 @dataclass
 class PhysicsGuardResult:
     passed: bool
-    violations: List[PhysicsViolation]
+    violations: list[PhysicsViolation]
     fatal: bool
 
 
@@ -50,7 +50,7 @@ class PhysicsGuard:
     These run BEFORE any AI narrative is emitted.
     """
 
-    LOCKS: List[dict[str, Any]] = [
+    LOCKS: list[dict[str, Any]] = [
         {
             "name": "shale_porosity_depth",
             "severity": "fatal",
@@ -78,8 +78,8 @@ class PhysicsGuard:
         },
     ]
 
-    def check(self, payload: Dict[str, Any]) -> PhysicsGuardResult:
-        violations: List[PhysicsViolation] = []
+    def check(self, payload: dict[str, Any]) -> PhysicsGuardResult:
+        violations: list[PhysicsViolation] = []
         fatal = False
         for lock in self.LOCKS:
             v = lock["check"](payload)
@@ -91,7 +91,7 @@ class PhysicsGuard:
         return PhysicsGuardResult(passed=len(violations) == 0, violations=violations, fatal=fatal)
 
 
-def _check_shale_porosity_depth(p: Dict[str, Any]) -> Optional[PhysicsViolation]:
+def _check_shale_porosity_depth(p: dict[str, Any]) -> PhysicsViolation | None:
     porosity = _extract_float(p, "porosity", "porosity_fraction", "phi")
     depth = _extract_float(p, "depth_m", "depth", "tvdss")
     if porosity is not None and depth is not None and depth > 3000:
@@ -106,7 +106,7 @@ def _check_shale_porosity_depth(p: Dict[str, Any]) -> Optional[PhysicsViolation]
     return None
 
 
-def _check_mass_balance(p: Dict[str, Any]) -> Optional[PhysicsViolation]:
+def _check_mass_balance(p: dict[str, Any]) -> PhysicsViolation | None:
     influx = _extract_float(p, "water_influx", "aquifer_influx")
     production = _extract_float(p, "cumulative_production", "prod_total")
     expansion = _extract_float(p, "fluid_expansion", "expansion")
@@ -123,7 +123,7 @@ def _check_mass_balance(p: Dict[str, Any]) -> Optional[PhysicsViolation]:
     return None
 
 
-def _check_darcy_sanity(p: Dict[str, Any]) -> Optional[PhysicsViolation]:
+def _check_darcy_sanity(p: dict[str, Any]) -> PhysicsViolation | None:
     perm = _extract_float(p, "permeability_md", "perm", "k")
     rate = _extract_float(p, "flow_rate_bpd", "rate", "q")
     if perm is not None and rate is not None:
@@ -137,7 +137,7 @@ def _check_darcy_sanity(p: Dict[str, Any]) -> Optional[PhysicsViolation]:
     return None
 
 
-def _check_pressure_gradient(p: Dict[str, Any]) -> Optional[PhysicsViolation]:
+def _check_pressure_gradient(p: dict[str, Any]) -> PhysicsViolation | None:
     pressure = _extract_float(p, "pressure_psi", "pressure")
     depth = _extract_float(p, "depth_m", "depth", "tvdss")
     if pressure is not None and depth is not None and depth > 0:
@@ -152,7 +152,7 @@ def _check_pressure_gradient(p: Dict[str, Any]) -> Optional[PhysicsViolation]:
     return None
 
 
-def _check_capillary_limit(p: Dict[str, Any]) -> Optional[PhysicsViolation]:
+def _check_capillary_limit(p: dict[str, Any]) -> PhysicsViolation | None:
     sw = _extract_float(p, "sw", "water_saturation")
     porosity = _extract_float(p, "porosity", "phi")
     if sw is not None and porosity is not None:
@@ -177,7 +177,7 @@ class RiskKiller:
     rank: int
     description: str
     probability: float
-    mitigation: Optional[str] = None
+    mitigation: str | None = None
 
 
 @dataclass
@@ -186,11 +186,11 @@ class UncertaintyBand:
     p50: float
     p90: float
     unit: str
-    dependencies: List[str] = field(default_factory=list)
-    killers: List[RiskKiller] = field(default_factory=list)
+    dependencies: list[str] = field(default_factory=list)
+    killers: list[RiskKiller] = field(default_factory=list)
 
 
-def create_uncertainty_band(base: float, unit: str, killers: List[RiskKiller]) -> UncertaintyBand:
+def create_uncertainty_band(base: float, unit: str, killers: list[RiskKiller]) -> UncertaintyBand:
     spread = base * 0.4
     return UncertaintyBand(
         p10=round(base + spread, 2),
@@ -213,11 +213,11 @@ class EvidenceCitation:
     source_id: str
     observation: str
     confidence: float
-    page_or_depth: Optional[str] = None
+    page_or_depth: str | None = None
 
 
-def audit_hallucination(claims: List[str], citations: List[EvidenceCitation]) -> Tuple[bool, List[str]]:
-    ungrounded: List[str] = []
+def audit_hallucination(claims: list[str], citations: list[EvidenceCitation]) -> tuple[bool, list[str]]:
+    ungrounded: list[str] = []
     for claim in claims:
         grounded = any(claim.lower() in c.observation.lower() or c.observation.lower() in claim.lower() for c in citations)
         if not grounded:
@@ -233,7 +233,7 @@ HighRiskDomain = Literal[
     "drilling", "reserves_booking", "barrier_integrity", "well_design", "abandonment", "production_alteration"
 ]
 
-HIGH_RISK_KEYWORDS: Dict[str, HighRiskDomain] = {
+HIGH_RISK_KEYWORDS: dict[str, HighRiskDomain] = {
     "drill": "drilling",
     "drilling": "drilling",
     "reserves": "reserves_booking",
@@ -252,23 +252,23 @@ HIGH_RISK_KEYWORDS: Dict[str, HighRiskDomain] = {
 @dataclass
 class HoldManifest:
     domain: HighRiskDomain
-    known: List[str] = field(default_factory=list)
-    unknown: List[str] = field(default_factory=list)
-    dangerous_assumptions: List[str] = field(default_factory=list)
+    known: list[str] = field(default_factory=list)
+    unknown: list[str] = field(default_factory=list)
+    dangerous_assumptions: list[str] = field(default_factory=list)
     signatory_required: str = "Registered Petroleum Engineer / Chief Geoscientist"
     ai_recommendation: Literal["WITNESS_ONLY", "CONDITIONAL", "HOLD"] = "WITNESS_ONLY"
 
 
-def is_high_risk_domain(query: str) -> Optional[HighRiskDomain]:
+def is_high_risk_domain(query: str) -> HighRiskDomain | None:
     key = query.lower().strip().replace(" ", "_")
     return HIGH_RISK_KEYWORDS.get(key)
 
 
 def build_hold_manifest(
     domain: HighRiskDomain,
-    known: List[str],
-    unknown: List[str],
-    dangerous_assumptions: List[str],
+    known: list[str],
+    unknown: list[str],
+    dangerous_assumptions: list[str],
 ) -> HoldManifest:
     return HoldManifest(
         domain=domain,
@@ -295,15 +295,15 @@ class DisciplineOpinion:
 
 @dataclass
 class DisciplinePanel:
-    opinions: List[DisciplineOpinion]
+    opinions: list[DisciplineOpinion]
     synthesis: str
-    dominant_risk: Optional[Discipline] = None
+    dominant_risk: Discipline | None = None
 
 
-def run_discipline_panel(opinions: List[DisciplineOpinion]) -> DisciplinePanel:
+def run_discipline_panel(opinions: list[DisciplineOpinion]) -> DisciplinePanel:
     reds = [o for o in opinions if o.risk_flag == "red"]
     yellows = [o for o in opinions if o.risk_flag == "yellow"]
-    dominant: Optional[Discipline] = None
+    dominant: Discipline | None = None
     if reds:
         dominant = reds[0].discipline
     elif yellows:
@@ -332,14 +332,14 @@ def run_discipline_panel(opinions: List[DisciplineOpinion]) -> DisciplinePanel:
 class TraumaCase:
     name: str
     year: int
-    basin: Optional[str]
+    basin: str | None
     failure_mode: str
     root_cause: str
-    lessons: List[str]
-    similarity_tags: List[str]
+    lessons: list[str]
+    similarity_tags: list[str]
 
 
-TRAUMA_REGISTRY: List[TraumaCase] = [
+TRAUMA_REGISTRY: list[TraumaCase] = [
     TraumaCase(
         name="Macondo",
         year=2010,
@@ -381,11 +381,11 @@ TRAUMA_REGISTRY: List[TraumaCase] = [
 ]
 
 
-def scan_trauma(scenario_tags: List[str]) -> List[TraumaCase]:
+def scan_trauma(scenario_tags: list[str]) -> list[TraumaCase]:
     return [t for t in TRAUMA_REGISTRY if any(tag in scenario_tags for tag in t.similarity_tags)]
 
 
-def format_trauma_warning(cases: List[TraumaCase]) -> str:
+def format_trauma_warning(cases: list[TraumaCase]) -> str:
     if not cases:
         return ""
     lines = [f"WARNING: Similar to {c.name} ({c.year}, {c.basin or 'unknown basin'}) — {c.failure_mode}." for c in cases]
@@ -397,7 +397,7 @@ def format_trauma_warning(cases: List[TraumaCase]) -> str:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-def _extract_float(obj: Dict[str, Any], *keys: str) -> Optional[float]:
+def _extract_float(obj: dict[str, Any], *keys: str) -> float | None:
     for k in keys:
         v = obj.get(k)
         if isinstance(v, (int, float)):
@@ -410,7 +410,7 @@ def _extract_float(obj: Dict[str, Any], *keys: str) -> Optional[float]:
     return None
 
 
-def _extract_str(obj: Dict[str, Any], *keys: str) -> Optional[str]:
+def _extract_str(obj: dict[str, Any], *keys: str) -> str | None:
     for k in keys:
         v = obj.get(k)
         if isinstance(v, str):

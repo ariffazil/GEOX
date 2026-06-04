@@ -1,6 +1,7 @@
-import pandas as pd
+from datetime import UTC, datetime
 from pathlib import Path
-from datetime import datetime, timezone
+
+import pandas as pd
 
 ARTEFACT_DIR = Path("/root/geox/ops/reports")
 
@@ -17,7 +18,7 @@ class ArtefactEmitter:
 
     def emit_well_ingestion_report(self, well_result: dict) -> str:
         """Produces a human-readable CSV report for management/TAC slides."""
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
         filename = f"TAC_IngestReport_{well_result.get('well_id', 'UNKNOWN')}_{timestamp}.csv"
         filepath = self.output_dir / filename
 

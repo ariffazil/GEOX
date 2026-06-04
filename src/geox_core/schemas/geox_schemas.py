@@ -11,10 +11,9 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Annotated, Literal, Optional, Union, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
-
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Domain & Enumerations
@@ -125,11 +124,11 @@ class DomainRef(BaseModel):
     xy_kind: DomainKind = DomainKind.xy_m
     xy_unit: UnitRef
     is_time_domain: bool
-    crs_name: Optional[str] = None
-    crs_epsg: Optional[int] = None
+    crs_name: str | None = None
+    crs_epsg: int | None = None
 
     @model_validator(mode="after")
-    def check_time_flag(self) -> "DomainRef":
+    def check_time_flag(self) -> DomainRef:
         if self.z_kind in {DomainKind.twt_ms, DomainKind.time_s} and not self.is_time_domain:
             raise ValueError("z_kind is time-based but is_time_domain is False")
         if self.z_kind not in {DomainKind.twt_ms, DomainKind.time_s} and self.is_time_domain:
@@ -140,24 +139,24 @@ class DomainRef(BaseModel):
 class StorageRef(BaseModel):
     model_config = ConfigDict(extra="forbid")
     platform: str = Field(default="opendtect")
-    ioobj_key: Optional[str] = None
-    object_name: Optional[str] = None
-    object_type: Optional[str] = None
-    source_path: Optional[str] = None
-    source_ref: Optional[str] = None
-    survey_name: Optional[str] = None
-    survey_uuid: Optional[str] = None
+    ioobj_key: str | None = None
+    object_name: str | None = None
+    object_type: str | None = None
+    source_path: str | None = None
+    source_ref: str | None = None
+    survey_name: str | None = None
+    survey_uuid: str | None = None
 
 
 class ProvenanceStamp(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    author: Optional[str] = None
-    created_at: Optional[datetime] = None
-    modified_at: Optional[datetime] = None
+    author: str | None = None
+    created_at: datetime | None = None
+    modified_at: datetime | None = None
     machine_generated: bool = False
-    workflow_name: Optional[str] = None
-    workflow_version: Optional[str] = None
-    notes: Optional[str] = None
+    workflow_name: str | None = None
+    workflow_version: str | None = None
+    notes: str | None = None
 
 
 class SamplingAxis(BaseModel):
@@ -166,7 +165,7 @@ class SamplingAxis(BaseModel):
     start: float
     stop: float
     step: float
-    count: Optional[int] = None
+    count: int | None = None
     unit: UnitRef
 
     @field_validator("step")
@@ -177,7 +176,7 @@ class SamplingAxis(BaseModel):
         return v
 
     @model_validator(mode="after")
-    def stop_must_exceed_start(self) -> "SamplingAxis":
+    def stop_must_exceed_start(self) -> SamplingAxis:
         if self.stop < self.start:
             raise ValueError("sampling stop must be >= start")
         return self
@@ -203,7 +202,7 @@ class NumericRange(BaseModel):
     unit: UnitRef
 
     @model_validator(mode="after")
-    def check_order(self) -> "NumericRange":
+    def check_order(self) -> NumericRange:
         if self.max_value < self.min_value:
             raise ValueError("max_value must be >= min_value")
         return self
@@ -218,7 +217,7 @@ class BaseSupportGeometry(BaseModel):
     model_config = ConfigDict(extra="forbid")
     support_kind: SupportKind
     domain: DomainRef
-    label: Optional[str] = None
+    label: str | None = None
 
 
 class GridSupportGeometry(BaseSupportGeometry):
@@ -227,8 +226,8 @@ class GridSupportGeometry(BaseSupportGeometry):
     support_kind: Literal[SupportKind.grid] = SupportKind.grid
     inline_axis: SamplingAxis
     crossline_axis: SamplingAxis
-    z_axis: Optional[SamplingAxis] = None
-    bbox_xy: Optional[list[XYPoint]] = None
+    z_axis: SamplingAxis | None = None
+    bbox_xy: list[XYPoint] | None = None
     is_regular_grid: bool = True
 
 
@@ -237,7 +236,7 @@ class StickSupportGeometry(BaseSupportGeometry):
 
     support_kind: Literal[SupportKind.stick] = SupportKind.stick
     stick_count: int
-    point_count: Optional[int] = None
+    point_count: int | None = None
     stick_id_field: str = "stick_id"
     ordering: Literal["top_down", "bottom_up", "unordered"] = "unordered"
 
@@ -247,8 +246,8 @@ class TrackSupportGeometry(BaseSupportGeometry):
 
     support_kind: Literal[SupportKind.track] = SupportKind.track
     measured_depth_range: NumericRange
-    sample_step: Optional[float] = None
-    sample_step_unit: Optional[UnitRef] = None
+    sample_step: float | None = None
+    sample_step_unit: UnitRef | None = None
     trajectory_defined: bool = True
 
 
@@ -272,17 +271,11 @@ class VolumeSupportGeometry(BaseModel):
     step_z: float
     lateral_stepout_traces: int = 0
     vertical_window_samples: int = 0
-    effective_resolution_m: Optional[float] = None
+    effective_resolution_m: float | None = None
 
 
 SupportGeometry = Annotated[
-    Union[
-        GridSupportGeometry,
-        StickSupportGeometry,
-        TrackSupportGeometry,
-        PointSetSupportGeometry,
-        VolumeSupportGeometry,
-    ],
+    GridSupportGeometry | StickSupportGeometry | TrackSupportGeometry | PointSetSupportGeometry | VolumeSupportGeometry,
     Field(discriminator="support_kind"),
 ]
 
@@ -299,17 +292,17 @@ class PolicyBand(BaseModel):
     policy_name: str
     metric_name: str
     comparator: Comparator
-    green_max: Optional[float] = None
-    amber_max: Optional[float] = None
-    red_min: Optional[float] = None
-    lower_bound: Optional[float] = None
-    upper_bound: Optional[float] = None
+    green_max: float | None = None
+    amber_max: float | None = None
+    red_min: float | None = None
+    lower_bound: float | None = None
+    upper_bound: float | None = None
     unit: UnitRef
     default_verdict_if_missing: VerdictCode = VerdictCode.unknown
-    rationale: Optional[str] = None
+    rationale: str | None = None
 
     @model_validator(mode="after")
-    def validate_band_shape(self) -> "PolicyBand":
+    def validate_band_shape(self) -> PolicyBand:
         if self.comparator in {Comparator.abs_gt, Comparator.abs_ge, Comparator.gt, Comparator.ge, Comparator.lt, Comparator.le}:
             if self.green_max is None and self.red_min is None and self.amber_max is None:
                 raise ValueError("threshold policy requires at least one threshold")
@@ -326,14 +319,14 @@ class PolicyEvaluation(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
     metric_name: str
-    observed_value: Optional[float] = None
+    observed_value: float | None = None
     unit: UnitRef
     band: PolicyBand
     verdict: VerdictCode = VerdictCode.unknown
-    explanation: Optional[str] = None
+    explanation: str | None = None
 
     @model_validator(mode="after")
-    def metric_names_align(self) -> "PolicyEvaluation":
+    def metric_names_align(self) -> PolicyEvaluation:
         if self.metric_name != self.band.metric_name:
             raise ValueError("metric_name must match the policy band's metric_name")
         return self
@@ -351,10 +344,10 @@ class WitnessBase(BaseModel):
     name: str
     domain: DomainRef
     support_geometry: SupportGeometry
-    storage_ref: Optional[StorageRef] = None
-    provenance: Optional[ProvenanceStamp] = None
+    storage_ref: StorageRef | None = None
+    provenance: ProvenanceStamp | None = None
     tags: list[str] = Field(default_factory=list)
-    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     active: bool = True
 
 
@@ -365,41 +358,41 @@ class ManifoldWitness(WitnessBase):
     survey_bounds: SurveyBounds
     z_sampling: SamplingAxis
     crs_locked: bool = True
-    z_transform_name: Optional[str] = None
-    thermo_volume: Optional[ThermoVolume] = None
+    z_transform_name: str | None = None
+    thermo_volume: ThermoVolume | None = None
     reject_out_of_bounds: bool = True
 
 
 class SurveyBounds(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    inline_range: Optional[tuple[int, int]] = None
-    crossline_range: Optional[tuple[int, int]] = None
-    xy_bbox: Optional[list[XYPoint]] = None
+    inline_range: tuple[int, int] | None = None
+    crossline_range: tuple[int, int] | None = None
+    xy_bbox: list[XYPoint] | None = None
     z_range: NumericRange
-    nominal_inline_step: Optional[float] = None
-    nominal_crossline_step: Optional[float] = None
+    nominal_inline_step: float | None = None
+    nominal_crossline_step: float | None = None
 
 
 class ThermoVolume(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    pressure_range_mpa: Optional[tuple[float, float]] = None
-    temperature_range_c: Optional[tuple[float, float]] = None
-    notes: Optional[str] = None
+    pressure_range_mpa: tuple[float, float] | None = None
+    temperature_range_c: tuple[float, float] | None = None
+    notes: str | None = None
 
 
 class TruthWitness(WitnessBase):
     """The Ground Truth: Absolute anchors (Well Markers, Logs)."""
 
     witness_kind: Literal[WitnessKind.truth] = WitnessKind.truth
-    well_id: Optional[str] = None
-    well_name: Optional[str] = None
+    well_id: str | None = None
+    well_name: str | None = None
     markers: list[MarkerObservation] = Field(default_factory=list)
     logs: list[LogCurveRef] = Field(default_factory=list)
-    d2t_calibration: Optional[D2TCalibration] = None
+    d2t_calibration: D2TCalibration | None = None
     hard_witness: bool = True
 
     @model_validator(mode="after")
-    def requires_truth_payload(self) -> "TruthWitness":
+    def requires_truth_payload(self) -> TruthWitness:
         if not self.markers and not self.logs:
             raise ValueError("truth witness must contain at least one marker or one log")
         return self
@@ -408,14 +401,14 @@ class TruthWitness(WitnessBase):
 class MarkerObservation(BaseModel):
     model_config = ConfigDict(extra="forbid")
     marker_name: str
-    md_value: Optional[float] = None
-    tvdss_value: Optional[float] = None
-    twt_value_ms: Optional[float] = None
-    uncertainty: Optional[float] = None
-    uncertainty_unit: Optional[UnitRef] = None
+    md_value: float | None = None
+    tvdss_value: float | None = None
+    twt_value_ms: float | None = None
+    uncertainty: float | None = None
+    uncertainty_unit: UnitRef | None = None
 
     @model_validator(mode="after")
-    def at_least_one_position(self) -> "MarkerObservation":
+    def at_least_one_position(self) -> MarkerObservation:
         if self.md_value is None and self.tvdss_value is None and self.twt_value_ms is None:
             raise ValueError("marker must carry at least one positional value")
         return self
@@ -426,18 +419,18 @@ class LogCurveRef(BaseModel):
     mnemonic: str
     quantity: str
     unit: UnitRef
-    sample_count: Optional[int] = None
-    null_value: Optional[float] = None
-    support_range: Optional[NumericRange] = None
+    sample_count: int | None = None
+    null_value: float | None = None
+    support_range: NumericRange | None = None
 
 
 class D2TCalibration(BaseModel):
     model_config = ConfigDict(extra="forbid")
     exists: bool
-    source: Optional[str] = None
-    control_point_count: Optional[int] = None
-    residual_rms_ms: Optional[float] = None
-    quality_flag: Optional[str] = None
+    source: str | None = None
+    control_point_count: int | None = None
+    residual_rms_ms: float | None = None
+    quality_flag: str | None = None
 
 
 class ClaimWitness(WitnessBase):
@@ -449,21 +442,21 @@ class ClaimWitness(WitnessBase):
     confidence: float = 1.0
     connected_body_count: int = 1
     largest_body_fraction: float = 1.0
-    mask_id: Optional[str] = None
+    mask_id: str | None = None
     uncertainty: float = 0.0
     interpreted_by_human: bool = True
-    source_algorithm: Optional[str] = None
-    version_label: Optional[str] = None
-    z_range: Optional[NumericRange] = None
+    source_algorithm: str | None = None
+    version_label: str | None = None
+    z_range: NumericRange | None = None
     overlays: list[AttributeOverlayRef] = Field(default_factory=list)
-    parent_claim_id: Optional[str] = None
+    parent_claim_id: str | None = None
 
 
 class AttributeOverlayRef(BaseModel):
     model_config = ConfigDict(extra="forbid")
     name: str
-    unit: Optional[UnitRef] = None
-    description: Optional[str] = None
+    unit: UnitRef | None = None
+    description: str | None = None
 
 
 class TextureWitness(WitnessBase):
@@ -471,25 +464,25 @@ class TextureWitness(WitnessBase):
 
     witness_kind: Literal[WitnessKind.texture] = WitnessKind.texture
     texture_kind: str  # amplitude, similarity, coherence, dip, etc.
-    support: Union[GridSupportGeometry, VolumeSupportGeometry, TrackSupportGeometry]
-    stats: Optional[TextureStats] = None
+    support: GridSupportGeometry | VolumeSupportGeometry | TrackSupportGeometry
+    stats: TextureStats | None = None
     parent_attribute_ids: list[str] = Field(default_factory=list)
-    operator_name: Optional[str] = None
+    operator_name: str | None = None
     operator_params: dict[str, Any] = Field(default_factory=dict)
-    active_set_id: Optional[str] = None
+    active_set_id: str | None = None
     uncertainty: float = 0.0
-    u_source: Optional[str] = None
-    wavelet_name: Optional[str] = None
-    phase_reference: Optional[str] = None
-    polarity_convention: Optional[str] = None
+    u_source: str | None = None
+    wavelet_name: str | None = None
+    phase_reference: str | None = None
+    polarity_convention: str | None = None
 
 
 class TextureStats(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    min_amplitude: Optional[float] = None
-    max_amplitude: Optional[float] = None
-    mean_amplitude: Optional[float] = None
-    std_amplitude: Optional[float] = None
+    min_amplitude: float | None = None
+    max_amplitude: float | None = None
+    mean_amplitude: float | None = None
+    std_amplitude: float | None = None
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -504,7 +497,7 @@ class FloorPolicy(BaseModel):
     floor_name: str
     enabled: bool = True
     hold_on_fail: bool = True
-    note: Optional[str] = None
+    note: str | None = None
 
 
 class IntentEnvelope(BaseModel):
@@ -513,18 +506,18 @@ class IntentEnvelope(BaseModel):
     model_config = ConfigDict(extra="forbid")
     intent_id: str
     operation_name: str
-    operator_name: Optional[str] = None
-    project_name: Optional[str] = None
+    operator_name: str | None = None
+    project_name: str | None = None
     reversible: bool = True
     requires_human_confirmation: bool = False
     target_witness_ids: list[str] = Field(default_factory=list)
     floor_policies: list[FloorPolicy] = Field(default_factory=list)
     policy_bands: list[PolicyBand] = Field(default_factory=list)
     io_parameters: dict[str, str | int | float | bool | None] = Field(default_factory=dict)
-    audit_message: Optional[str] = None
+    audit_message: str | None = None
 
     @model_validator(mode="after")
-    def irreversible_requires_confirmation(self) -> "IntentEnvelope":
+    def irreversible_requires_confirmation(self) -> IntentEnvelope:
         if not self.reversible and not self.requires_human_confirmation:
             raise ValueError("irreversible actions must require human confirmation")
         return self
@@ -539,10 +532,10 @@ class ContrastMetric(BaseModel):
     value: float
     unit: str | UnitRef
     confidence: float = 1.0
-    expected_value: Optional[float] = None
-    residual_value: Optional[float] = None
-    method_tag: Optional[str] = None  # e.g. quad_tessellation_area
-    description: Optional[str] = None
+    expected_value: float | None = None
+    residual_value: float | None = None
+    method_tag: str | None = None  # e.g. quad_tessellation_area
+    description: str | None = None
 
 
 class ContrastLink(BaseModel):
@@ -564,11 +557,11 @@ class ContrastOperatorSpec(BaseModel):
     right_kind: WitnessKind
     right_support: SupportKind
     required_domain_match: bool = True
-    interpolation_method: Optional[str] = None
+    interpolation_method: str | None = None
     rationale: str
 
     @model_validator(mode="after")
-    def validate_op_logic(self) -> "ContrastOperatorSpec":
+    def validate_op_logic(self) -> ContrastOperatorSpec:
         # Example invariant: residual_z always requires a Track (Well) vs Grid/Stick (Horizon/Fault)
         if self.op_kind == OperatorKind.residual_z:
             if self.left_support != SupportKind.track:
@@ -610,14 +603,14 @@ class ContrastVerdict(BaseModel):
     verdict_id: str
     intent_id: str
     status: Literal["PASS", "DRIL", "HOLD", "FAIL"]
-    verdict_code: Optional[VerdictCode] = VerdictCode.unknown
+    verdict_code: VerdictCode | None = VerdictCode.unknown
     metrics: list[ContrastMetric]
     links: list[ContrastLink]
     floors_evaluated: list[str]
     human_override: bool = False
-    override_reason: Optional[str] = None
-    override_authority_level: Optional[int] = None  # 0-11
-    override_timestamp: Optional[datetime] = None
+    override_reason: str | None = None
+    override_authority_level: int | None = None  # 0-11
+    override_timestamp: datetime | None = None
     commentary: str
     policy_evaluations: list[PolicyEvaluation] = Field(default_factory=list)
     triggered_floors: list[str] = Field(default_factory=list)
@@ -627,7 +620,7 @@ class ContrastVerdict(BaseModel):
     generated_at: datetime = Field(default_factory=datetime.now)
 
     @model_validator(mode="after")
-    def synchronize_hold_flags(self) -> "ContrastVerdict":
+    def synchronize_hold_flags(self) -> ContrastVerdict:
         if self.status in {"HOLD", "FAIL"}:
             self.requires_hold = True
         return self

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -49,10 +49,10 @@ class VpCube:
         self.data = np.clip(self.data, VP_MIN, VP_MAX)
 
     @property
-    def shape(self) -> Tuple[int, int, int]:
+    def shape(self) -> tuple[int, int, int]:
         return tuple(self.data.shape)  # type: ignore[return-value]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "cube_id": self.cube_id,
             "shape": list(self.shape),
@@ -79,7 +79,7 @@ class VpSlice:
     cube_id: str = ""
     slice_id: str = ""
     smoothing_window_m: float = 0.0
-    envelope: Dict[str, Any] = field(default_factory=dict)
+    envelope: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if self.data.ndim != 2:
@@ -89,10 +89,10 @@ class VpSlice:
         self.data = np.clip(self.data, VP_MIN, VP_MAX)
 
     @property
-    def shape(self) -> Tuple[int, int]:
+    def shape(self) -> tuple[int, int]:
         return tuple(self.data.shape)  # type: ignore[return-value]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "slice_id": self.slice_id,
             "depth_m": float(self.depth),
@@ -114,12 +114,12 @@ class StructuralMap:
     """The attributed Vp slice: 5 geological signals + provenance."""
 
     slice_data: VpSlice
-    signals: Dict[str, np.ndarray] = field(default_factory=dict)
-    attribution_confidence: Dict[str, float] = field(default_factory=dict)
-    envelope: Dict[str, Any] = field(default_factory=dict)
+    signals: dict[str, np.ndarray] = field(default_factory=dict)
+    attribution_confidence: dict[str, float] = field(default_factory=dict)
+    envelope: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
-        out: Dict[str, Any] = {
+    def to_dict(self) -> dict[str, Any]:
+        out: dict[str, Any] = {
             "slice_id": self.slice_data.slice_id,
             "depth_m": self.slice_data.depth,
             "shape": list(self.slice_data.data.shape),
@@ -192,7 +192,7 @@ def slice_velocity_cube(
 # ── Primitive 2: structural_attribution ─────────────────────────────────────
 
 
-_DEFAULT_LITHOLOGY_CATALOG: Dict[str, Dict[str, float]] = {
+_DEFAULT_LITHOLOGY_CATALOG: dict[str, dict[str, float]] = {
     "Sandstone": {"vp": 3500.0, "rho": 2300.0, "phi_typical": 0.20},
     "Limestone": {"vp": 4500.0, "rho": 2600.0, "phi_typical": 0.10},
     "Dolomite": {"vp": 5500.0, "rho": 2800.0, "phi_typical": 0.08},
@@ -206,7 +206,7 @@ _DEFAULT_LITHOLOGY_CATALOG: Dict[str, Dict[str, float]] = {
 
 def structural_attribution(
     slice_data: VpSlice,
-    physics9_catalog: Optional[Dict[str, Dict[str, float]]] = None,
+    physics9_catalog: dict[str, dict[str, float]] | None = None,
     matrix_vp: float = 5500.0,
     fluid_vp_brine: float = 1700.0,
     fluid_vp_gas: float = 500.0,
@@ -299,10 +299,10 @@ def structural_attribution(
 
 
 def bootstrap_structure(
-    checkshots: List[Dict[str, Any]],
+    checkshots: list[dict[str, Any]],
     cube: VpCube,
     target_depth: float,
-    target_twt: Optional[float] = None,
+    target_twt: float | None = None,
     tie_tolerance_m: float = 50.0,
 ) -> StructuralMap:
     """Sparse 1D well anchors + dense 2.5D Vp field -> 2D structure map.
@@ -311,7 +311,7 @@ def bootstrap_structure(
     quality) calibrate the cube's Vp scale. Extrapolation: the cube's
     2.5D field carries the anchors laterally. The slice is the structure map.
     """
-    well_vp_obs: List[Dict[str, float]] = []
+    well_vp_obs: list[dict[str, float]] = []
     for cs in checkshots:
         if "depths" in cs and "twts" in cs:
             for d, t in zip(cs["depths"], cs["twts"]):

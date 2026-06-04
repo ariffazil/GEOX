@@ -14,10 +14,10 @@ Registry for all GEOX MCP tools with:
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict
-import logging
+from typing import Any
 
 logger = logging.getLogger("geox.core.tool_registry")
 
@@ -173,8 +173,8 @@ def can_grant_seal(
     own_ac_risk: float,
     vault_anchor: bool,
     runtime_healthy: bool,
-    upstream_verdicts: Dict[str, str] = None,  # {product_type: verdict_str}
-    upstream_ac_risks: Dict[str, float] = None,  # {product_type: ac_risk_float}
+    upstream_verdicts: dict[str, str] = None,  # {product_type: verdict_str}
+    upstream_ac_risks: dict[str, float] = None,  # {product_type: ac_risk_float}
     hold_approved: bool = False,
 ) -> dict[str, Any]:
     """

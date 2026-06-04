@@ -4,10 +4,10 @@ Ported from arifOS WEALTH v2.0
 DITEMPA BUKAN DIBERI
 """
 
-import os
 import hashlib
 import inspect
-from typing import Any, Dict, List
+import os
+from typing import Any
 
 
 class HarnessEngine:
@@ -24,7 +24,7 @@ class HarnessEngine:
                 base_dir = os.path.dirname(__file__)
                 path = os.path.join(base_dir, "canon", "WEALTH_HARNESS.md")
                 if os.path.exists(path):
-                    with open(path, "r", encoding="utf-8") as f:
+                    with open(path, encoding="utf-8") as f:
                         cls._DOCTRINE_HASH = hashlib.sha256(f.read().encode()).hexdigest()
                 else:
                     cls._DOCTRINE_HASH = "MISSING_DOCTRINE_FILE"
@@ -55,7 +55,7 @@ class HarnessEngine:
         "Civilization",
     ]
 
-    def audit(self, tool_name: str, primary: Dict[str, Any], flags: List[str], parent_hash: str = "") -> Dict[str, Any]:
+    def audit(self, tool_name: str, primary: dict[str, Any], flags: list[str], parent_hash: str = "") -> dict[str, Any]:
         """Audit geoscientific evidence against the 9-harness constraints."""
         harness_status = {name: {"stress": 0.0, "status": "SECURE"} for name in self.HARNESS_NAMES}
         violations = []

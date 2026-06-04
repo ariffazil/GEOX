@@ -17,13 +17,11 @@ DITEMPA BUKAN DIBERI
 from __future__ import annotations
 
 import math
-from typing import Dict
 
 import numpy as np
 from scipy import signal
 
 from geox_core.physics.state import Physics9State
-
 
 # ─── Derived Elastic Moduli ─────────────────────────────────────────────────
 
@@ -102,7 +100,7 @@ def faust_velocity(depth: np.ndarray, resistivity: np.ndarray, faust_k: float = 
 # ─── Anisotropy (Thomsen) ──────────────────────────────────────────────────
 
 
-def estimate_thomsen_parameters(vp: np.ndarray, vsh: np.ndarray) -> Dict[str, np.ndarray]:
+def estimate_thomsen_parameters(vp: np.ndarray, vsh: np.ndarray) -> dict[str, np.ndarray]:
     """
     Empirical Thomsen parameters from Vsh.
     Epsilon ≈ 0.2·Vsh, Delta ≈ 0.1·Vsh, Gamma ≈ 0.15·Vsh.
@@ -180,7 +178,7 @@ def convolve_trace(reflectivity: np.ndarray, wavelet: np.ndarray) -> np.ndarray:
 # ─── Forward Physics (all derived from a state) ─────────────────────────────
 
 
-def forward_physics9(state: Physics9State) -> Dict[str, float]:
+def forward_physics9(state: Physics9State) -> dict[str, float]:
     """Compute all derived scalar properties from a canonical state."""
     K = bulk_modulus(state.vp, state.vs, state.rho)
     G = shear_modulus(state.vs, state.rho)

@@ -8,8 +8,7 @@ dependency resolution and SEAL audit trails.
 
 import json
 import os
-from typing import Dict, Any, Optional
-
+from typing import Any
 
 DEFAULT_VAULT_PATH = os.path.expanduser("~/.geox/vault.jsonl")
 
@@ -24,11 +23,11 @@ class VaultClient:
         self.vault_path = vault_path
         os.makedirs(os.path.dirname(self.vault_path), exist_ok=True)
 
-    def _read_all(self) -> list[Dict[str, Any]]:
+    def _read_all(self) -> list[dict[str, Any]]:
         if not os.path.exists(self.vault_path):
             return []
         records = []
-        with open(self.vault_path, "r", encoding="utf-8") as f:
+        with open(self.vault_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:
@@ -38,7 +37,7 @@ class VaultClient:
                         continue
         return records
 
-    def get_product(self, product_id: str) -> Optional[Dict[str, Any]]:
+    def get_product(self, product_id: str) -> dict[str, Any] | None:
         """Return the latest record for a given product_id."""
         records = self._read_all()
         # Return the last matching record (latest version wins)
@@ -47,17 +46,17 @@ class VaultClient:
                 return record
         return None
 
-    def get_products_by_type(self, product_type: str) -> list[Dict[str, Any]]:
+    def get_products_by_type(self, product_type: str) -> list[dict[str, Any]]:
         """Return all records for a given product_type, latest first."""
         records = self._read_all()
         return [r for r in reversed(records) if r.get("product_type") == product_type]
 
-    def seal_product(self, product: Dict[str, Any]) -> None:
+    def seal_product(self, product: dict[str, Any]) -> None:
         """Append a product record to the vault."""
         with open(self.vault_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(product, ensure_ascii=False) + "\n")
 
-    def list_products(self, limit: int = 100) -> list[Dict[str, Any]]:
+    def list_products(self, limit: int = 100) -> list[dict[str, Any]]:
         """Return the latest N product records."""
         records = self._read_all()
         return records[-limit:][::-1]

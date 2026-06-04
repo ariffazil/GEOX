@@ -25,9 +25,8 @@ Contradiction types:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Optional
 
 
 class ContradictionType(StrEnum):
@@ -131,7 +130,7 @@ class ContradictionRecord:
     # Resolution
     verdict: str  # VOID | FLAG | HOLD | DEMOTE
     resolution_notes: str = ""
-    resolved_at: Optional[datetime] = None
+    resolved_at: datetime | None = None
 
     # Cascade
     assumption_ids_affected: list[str] = field(default_factory=list)
@@ -139,7 +138,7 @@ class ContradictionRecord:
 
     # Context
     session_id: str = ""
-    detected_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    detected_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     metadata: dict = field(default_factory=dict)
 
     def is_fatal(self) -> bool:
@@ -185,7 +184,7 @@ def classify_contradiction(
     claim_b_type: str,
     has_physics_violation: bool = False,
     has_circular_ref: bool = False,
-    beauty_score: Optional[float] = None,
+    beauty_score: float | None = None,
     has_missing_grounding: bool = False,
 ) -> ContradictionType:
     """
@@ -253,7 +252,7 @@ def get_contradiction_record(
     claim_b_rung: int,
     claim_b_tool: str,
     session_id: str,
-    contradiction_id: Optional[str] = None,
+    contradiction_id: str | None = None,
     **kwargs,
 ) -> ContradictionRecord:
     """

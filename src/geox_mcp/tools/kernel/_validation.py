@@ -4,8 +4,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 # Conservative caps. Bigger values should be batched, not single-shot.
 MAX_STRING_LEN: int = 8 * 1024  # 8 KiB

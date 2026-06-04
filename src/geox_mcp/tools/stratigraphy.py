@@ -13,11 +13,11 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 import yaml
-
 from fastmcp import FastMCP
+
 from geox_core.enums.statuses import get_standard_envelope
 
 logger = logging.getLogger("geox.stratigraphy.mcp")
@@ -34,7 +34,7 @@ def register_stratigraphy_tools(mcp: FastMCP) -> None:
     @mcp.tool()
     async def geox_stratigraphy_run_pipeline(
         project_yaml: str,
-        output_dir: Optional[str] = None,
+        output_dir: str | None = None,
     ) -> dict[str, Any]:
         """
         Run the full L1-L3 sequence stratigraphy pipeline.
@@ -99,7 +99,7 @@ def register_stratigraphy_tools(mcp: FastMCP) -> None:
                 claim_state="VOID",
             )
 
-        from geox_core.well.stratigraphy.config import ProjectConfig, WellSource, ProjectInterval
+        from geox_core.well.stratigraphy.config import ProjectConfig, ProjectInterval, WellSource
 
         try:
             wells = [WellSource(**w) for w in config_dict.get("wells", [])]
@@ -231,7 +231,7 @@ def register_stratigraphy_tools(mcp: FastMCP) -> None:
 
     # Register in FEDERATION_TOOLS
     try:
-        from federation.tool_manifest import FEDERATION_TOOLS, ToolManifest, CognitiveAxis
+        from federation.tool_manifest import FEDERATION_TOOLS, CognitiveAxis, ToolManifest
 
         for _name in TOOL_NAMES:
             if _name not in FEDERATION_TOOLS:

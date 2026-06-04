@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 
-
 CURVE_BOUNDS: dict[str, dict[str, Any]] = {
     "GR": {"unit": "gAPI", "min": 0.0, "max": 300.0, "null": -999.25},
     "RHOB": {"unit": "g/cc", "min": 1.0, "max": 3.0, "null": -999.25},

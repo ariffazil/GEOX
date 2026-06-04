@@ -4,10 +4,11 @@ Translating Prospect State Vector (PSV) into Risked Capital Projections.
 [PSV -> EMV -> Constitutional Gate -> SEAL]
 """
 
-from typing import Dict, Any
+from typing import Any
+
 from geox_core.core.psv_forge import ProspectStateVector
-from geox_core.wealth.wealth_score_kernel import compute_emv, compute_npv, compute_capital_x_rate
 from geox_core.wealth.harness_engine import HarnessEngine
+from geox_core.wealth.wealth_score_kernel import compute_capital_x_rate, compute_emv, compute_npv
 
 
 def compute_sovereign_valuation(
@@ -17,7 +18,7 @@ def compute_sovereign_valuation(
     price_per_unit: float,
     discount_rate: float = 0.10,
     parent_chain_hash: str = "",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Project-level capital allocation audited by the 9-Harness engine.
     """

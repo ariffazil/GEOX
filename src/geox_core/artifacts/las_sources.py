@@ -8,7 +8,6 @@ import os
 import urllib.request
 from pathlib import Path
 
-
 MAX_INLINE_LAS_BYTES = int(os.environ.get("GEOX_MAX_INLINE_LAS_BYTES", str(25 * 1024 * 1024)))
 WELL_DATA_DIR = Path(os.environ.get("GEOX_WELL_DATA_DIR", "/data/wells"))
 

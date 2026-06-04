@@ -1,8 +1,9 @@
 import json
 import logging
-from typing import Dict, Any, List
-import jsonschema
 import os
+from typing import Any
+
+import jsonschema
 
 logger = logging.getLogger("geox.ingestion")
 
@@ -11,11 +12,11 @@ SCHEMA_DIR = "/root/geox/schemas/earth"
 
 def load_schema(schema_name: str) -> dict:
     path = os.path.join(SCHEMA_DIR, schema_name)
-    with open(path, "r") as f:
+    with open(path) as f:
         return json.load(f)
 
 
-async def geox_las_inspect(las_metadata: Dict[str, Any], las_curve_info: List[Dict[str, Any]]) -> Dict[str, Any]:
+async def geox_las_inspect(las_metadata: dict[str, Any], las_curve_info: list[dict[str, Any]]) -> dict[str, Any]:
     """
     Inspects LAS metadata and curve headers against GEOX Earth schemas before ingestion.
     """
@@ -42,7 +43,7 @@ async def geox_las_inspect(las_metadata: Dict[str, Any], las_curve_info: List[Di
     return report
 
 
-async def geox_seismic_inspect(seismic_metadata: Dict[str, Any]) -> Dict[str, Any]:
+async def geox_seismic_inspect(seismic_metadata: dict[str, Any]) -> dict[str, Any]:
     """
     Inspects Seismic metadata against GEOX Earth schemas before ingestion.
     """
@@ -60,7 +61,7 @@ async def geox_seismic_inspect(seismic_metadata: Dict[str, Any]) -> Dict[str, An
     return report
 
 
-async def geox_deviation_survey_inspect(deviation_metadata: Dict[str, Any]) -> Dict[str, Any]:
+async def geox_deviation_survey_inspect(deviation_metadata: dict[str, Any]) -> dict[str, Any]:
     """
     Inspects deviation survey metadata against GEOX Earth schemas before ingestion.
     Enforces: depth unit, datum, MD increasing, TVD consistency.
@@ -110,7 +111,7 @@ async def geox_deviation_survey_inspect(deviation_metadata: Dict[str, Any]) -> D
     return report
 
 
-async def geox_tops_inspect(tops_metadata: Dict[str, Any]) -> Dict[str, Any]:
+async def geox_tops_inspect(tops_metadata: dict[str, Any]) -> dict[str, Any]:
     """
     Inspects well tops table metadata against GEOX Earth schemas before ingestion.
     Enforces: unit/datum consistency, positive thickness, confidence levels.
@@ -158,7 +159,7 @@ async def geox_tops_inspect(tops_metadata: Dict[str, Any]) -> Dict[str, Any]:
     return report
 
 
-async def geox_seismic_segy_inspect(segy_metadata: Dict[str, Any]) -> Dict[str, Any]:
+async def geox_seismic_segy_inspect(segy_metadata: dict[str, Any]) -> dict[str, Any]:
     """
     Inspects SEG-Y file binary header metadata before ingestion.
     Inspect before ingest. Validate structure without mutating data.

@@ -3,10 +3,9 @@ GEOX Legacy Substrate: Stratigraphy & Sequence Logic
 Surgically extracted from geox/core/geox_data.py
 """
 
-from typing import List
 
 
-def assign_layer(depth: float, stratigraphy: List[dict]) -> dict:
+def assign_layer(depth: float, stratigraphy: list[dict]) -> dict:
     """Matches a depth point to a named geological layer (Strata substrate)."""
     for layer in stratigraphy:
         if layer["top_md"] <= depth < layer["bot_md"]:

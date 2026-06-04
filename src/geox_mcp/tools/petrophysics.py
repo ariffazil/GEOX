@@ -1,21 +1,22 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional, Literal
+from typing import Any, Literal
 
 import numpy as np
+from fastmcp import Context
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
     enrich_envelope_with_metabolic,
+    get_standard_envelope,
 )
 from geox_mcp.tools._helpers import (
     _artifact_exists,
-    _inject_ensemble_residual_evidence,
     _compute_subsurface_candidates,
+    _inject_ensemble_residual_evidence,
 )
 
 logger = logging.getLogger("geox.canonical.subsurface")
@@ -36,7 +37,7 @@ async def geox_subsurface_generate_candidates(
         "velocity_slice",  # E8: 2.5D velocity slice as structure map
         "lmr_map",  # E9: Lambda-Mu-Rho (fluid + lithology) crossplot at every voxel
     ],
-    evidence_refs: List[str],
+    evidence_refs: list[str],
     realizations: int = 3,
     gr_clean: float = 15.0,
     gr_shale: float = 150.0,
@@ -52,18 +53,19 @@ async def geox_subsurface_generate_candidates(
     phi_cutoff: float = 0.1,
     sw_cutoff: float = 0.6,
     rt_cutoff: float = 2.0,
-    zone_top_m: Optional[float] = None,
-    zone_base_m: Optional[float] = None,
+    zone_top_m: float | None = None,
+    zone_base_m: float | None = None,
     # Basin metabolize mode (absorbs geox_task_metabolize_basin)
     basin_context: str | None = None,
     canon9_profile: str = "malay_basin",
     # ── Eureka 8 (2026-06-03): velocity_slice mode parameters ───────────
-    target_depth_m: Optional[float] = None,  # depth to slice at (m TVDSS)
-    cube_inline: Optional[Dict[str, Any]] = None,  # {data: 3D list, x, y, z}
+    target_depth_m: float | None = None,  # depth to slice at (m TVDSS)
+    cube_inline: dict[str, Any] | None = None,  # {data: 3D list, x, y, z}
     use_synth_cube: bool = True,  # if True and no cube_inline, build a synth cube
     # ── Eureka 9 (2026-06-03): lmr_map mode parameters ───────────────────
-    lmr_inline: Optional[Dict[str, Any]] = None,  # {vp, vs, rho} arrays + fluid_zone
+    lmr_inline: dict[str, Any] | None = None,  # {vp, vs, rho} arrays + fluid_zone
     castagna_fallback: bool = True,  # if True and vs missing, predict from Vp via Castagna
+    ctx: Context | None = None,
 ) -> dict:
     """Generates ensemble subsurface outputs with residuals and data-density maps.
 
@@ -82,8 +84,15 @@ async def geox_subsurface_generate_candidates(
         basin_context=basin_context,
         canon9_profile=canon9_profile,
     )
+    if ctx:
+        ctx.report_progress(0, 100)
+
     if _err is not None:
         return _err
+
+    if ctx:
+        ctx.report_progress(10, 100)
+
     if not evidence_refs:
         envelope = get_standard_envelope(
             {
@@ -104,6 +113,8 @@ async def geox_subsurface_generate_candidates(
 
     # ── Basin metabolize mode (absorbs geox_task_metabolize_basin) ───────────
     if basin_context is not None and len(evidence_refs) > 1:
+        if ctx:
+            ctx.report_progress(20, 100)
         profile_defaults: dict[str, Any] = {
             "malay_basin": {
                 "rw": 0.05,
@@ -130,7 +141,10 @@ async def geox_subsurface_generate_candidates(
         per_well_results: list[dict[str, Any]] = []
         success_count = 0
         error_count = 0
-        for well_ref in evidence_refs:
+        n_wells = len(evidence_refs)
+        for idx, well_ref in enumerate(evidence_refs):
+            if ctx:
+                ctx.report_progress(20 + int(50 * idx / n_wells), 100)
             try:
                 single = await geox_subsurface_generate_candidates(
                     target_class=target_class,
@@ -158,6 +172,8 @@ async def geox_subsurface_generate_candidates(
                 per_well_results.append(
                     {"well_ref": well_ref, "status": "ERROR", "error": str(exc), "claim_state": "NO_VALID_EVIDENCE"}
                 )
+        if ctx:
+            ctx.report_progress(80, 100)
         all_ok = error_count == 0
         batch_status = "SUCCESS" if all_ok else "PARTIAL"
         verdict = "QUALIFY" if all_ok else "HOLD"
@@ -168,7 +184,7 @@ async def geox_subsurface_generate_candidates(
             "basin_context": basin_context,
             "canon9_profile": canon9_profile,
         }
-        return get_standard_envelope(
+        envelope = get_standard_envelope(
             {
                 "tool": "geox_subsurface_generate_candidates",
                 "basin_mode": True,
@@ -182,8 +198,13 @@ async def geox_subsurface_generate_candidates(
             claim_state="DECISION_SUPPORT" if all_ok else "HYPOTHESIS",
             evidence_refs=evidence_refs,
         )
+        if ctx:
+            ctx.report_progress(100, 100)
+        return envelope
 
     # ── Single-well mode ─────────────────────────────────────────────────────
+    if ctx:
+        ctx.report_progress(30, 100)
     result = await _compute_subsurface_candidates(
         target_class,
         evidence_refs,
@@ -205,6 +226,8 @@ async def geox_subsurface_generate_candidates(
         zone_top_m,
         zone_base_m,
     )
+    if ctx:
+        ctx.report_progress(70, 100)
     result = _inject_ensemble_residual_evidence(
         result,
         realizations,
@@ -220,6 +243,8 @@ async def geox_subsurface_generate_candidates(
             },
         },
     )
+    if ctx:
+        ctx.report_progress(90, 100)
     if "tool_class" not in result:
         if result.get("execution_status") in {"ERROR", "HOLD"}:
             envelope = get_standard_envelope(
@@ -247,7 +272,6 @@ async def geox_subsurface_generate_candidates(
             physics_guard=result.get("physics_guard"),
             confidence_band=(result.get("value_contract") or {}).get("uncertainty_band"),
         )
-
     # ── Eureka 8 (2026-06-03): velocity_slice mode branch ─────────────────
     # When target_class == "velocity_slice", route through the E8 keystone
     # module: build/ingest Vp cube, slice at target_depth, attribute.
@@ -256,9 +280,9 @@ async def geox_subsurface_generate_candidates(
     if target_class == "velocity_slice":
         try:
             from geox_core.spatial import (
-                synth_cube_with_structure,
                 slice_velocity_cube,
                 structural_attribution,
+                synth_cube_with_structure,
             )
 
             # Build or ingest the Vp cube
@@ -324,9 +348,9 @@ async def geox_subsurface_generate_candidates(
     if target_class == "lmr_map":
         try:
             from geox_core.avo import (
-                lmr_decompose,
-                castagna_mudrock_fallback,
                 CASTAGNA_HONEST_BAND,
+                castagna_mudrock_fallback,
+                lmr_decompose,
             )
 
             if lmr_inline is None:
@@ -395,6 +419,8 @@ async def geox_subsurface_generate_candidates(
                 },
             }
 
+    if ctx:
+        ctx.report_progress(100, 100)
     return enrich_envelope_with_metabolic(result, "geox_subsurface_generate_candidates")
 
 

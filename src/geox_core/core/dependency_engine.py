@@ -1,6 +1,9 @@
 from __future__ import annotations
+
+from typing import Any
+
 import numpy as np
-from typing import Dict, Any
+
 from geox_core.core.hierarchy import Prospect
 
 
@@ -11,7 +14,7 @@ class DependencyEngine:
     """
 
     @staticmethod
-    def rollout_prospect_probabilistic(prospect: Prospect, draws: int = 10000) -> Dict[str, Any]:
+    def rollout_prospect_probabilistic(prospect: Prospect, draws: int = 10000) -> dict[str, Any]:
         """
         Rolls up multiple segments into a Prospect-level distribution
         using explicit dependency logic and structural uncertainty (SUNNAH).

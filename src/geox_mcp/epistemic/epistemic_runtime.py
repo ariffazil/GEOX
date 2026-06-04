@@ -26,9 +26,8 @@ from __future__ import annotations
 import threading
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Optional
 
 
 class EpistemicEventType(StrEnum):
@@ -58,32 +57,32 @@ class EpistemicEvent:
     event_type: EpistemicEventType
     tool_name: str  # Tool that triggered this event
     session_id: str
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     # Rung context (for RUNG_ASCENT / RUNG_DESCENT)
-    from_rung: Optional[int] = None
-    to_rung: Optional[int] = None
-    rung_delta: Optional[int] = None
+    from_rung: int | None = None
+    to_rung: int | None = None
+    rung_delta: int | None = None
 
     # Assumption context (for ASSUMPTION_ADDED / FALSIFIED)
-    assumption_id: Optional[str] = None
-    assumption_type: Optional[str] = None
-    parent_assumption_id: Optional[str] = None
-    falsified_by: Optional[str] = None  # Evidence_ref that caused falsification
+    assumption_id: str | None = None
+    assumption_type: str | None = None
+    parent_assumption_id: str | None = None
+    falsified_by: str | None = None  # Evidence_ref that caused falsification
 
     # Contradiction context
-    contradiction_type: Optional[str] = None
-    claim_a: Optional[str] = None
-    claim_b: Optional[str] = None
-    winning_rung: Optional[int] = None
-    losing_rung: Optional[int] = None
+    contradiction_type: str | None = None
+    claim_a: str | None = None
+    claim_b: str | None = None
+    winning_rung: int | None = None
+    losing_rung: int | None = None
 
     # Beauty drift context
-    beauty_score: Optional[float] = None  # rhetorical_coherence / evidentiary_density
-    overreach_ratio: Optional[float] = None
+    beauty_score: float | None = None  # rhetorical_coherence / evidentiary_density
+    overreach_ratio: float | None = None
 
     # Iron law context
-    iron_law_verdict: Optional[str] = None  # VOID | FLAG | HOLD
+    iron_law_verdict: str | None = None  # VOID | FLAG | HOLD
 
     # General metadata
     description: str = ""
@@ -174,7 +173,7 @@ class EpistemicRuntime:
         tool_name: str,
         from_rung: int,
         to_rung: int,
-        assumption_ids: Optional[list[str]] = None,
+        assumption_ids: list[str] | None = None,
     ) -> EpistemicEvent:
         """Emit a RUNG_ASCENT event."""
         return self.emit(
@@ -210,7 +209,7 @@ class EpistemicRuntime:
         assumption_id: str,
         assumption_type: str,
         rung_origin: int,
-        parent_assumption_id: Optional[str] = None,
+        parent_assumption_id: str | None = None,
     ) -> EpistemicEvent:
         """Emit an ASSUMPTION_ADDED event."""
         return self.emit(
@@ -302,8 +301,8 @@ class EpistemicRuntime:
 
     def events(
         self,
-        event_type: Optional[EpistemicEventType] = None,
-        tool_name: Optional[str] = None,
+        event_type: EpistemicEventType | None = None,
+        tool_name: str | None = None,
         limit: int = 100,
     ) -> list[EpistemicEvent]:
         """
@@ -380,7 +379,7 @@ def get_or_create_runtime(session_id: str) -> EpistemicRuntime:
         return _RUNTIME_REGISTRY[session_id]
 
 
-def get_runtime(session_id: str) -> Optional[EpistemicRuntime]:
+def get_runtime(session_id: str) -> EpistemicRuntime | None:
     """Get an existing runtime, or None if not found."""
     with _RUNTIME_REGISTRY_LOCK:
         return _RUNTIME_REGISTRY.get(session_id)

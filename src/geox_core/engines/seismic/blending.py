@@ -17,7 +17,6 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import logging
-from typing import Literal
 
 import numpy as np
 

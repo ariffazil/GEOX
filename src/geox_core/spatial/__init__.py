@@ -20,12 +20,12 @@ DITEMPA BUKAN DIBERI — velocity is the earth, integrated over time.
 """
 
 from geox_core.spatial.velocity_slice import (
+    StructuralMap,
     VpCube,
     VpSlice,
-    StructuralMap,
+    bootstrap_structure,
     slice_velocity_cube,
     structural_attribution,
-    bootstrap_structure,
     synth_cube_with_structure,
 )
 

@@ -4,9 +4,10 @@ Simulates realistic subsurface geological properties using real physics-based mo
 Supports both synthetic generation and real well loading.
 """
 
-import numpy as np
-from typing import Dict, Any, List
 from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
 
 
 @dataclass
@@ -157,7 +158,7 @@ DEFAULT_STRATIGRAPHY = [
 ]
 
 
-def assign_layer(depth: float, strat: List[EarthLayer]) -> EarthLayer:
+def assign_layer(depth: float, strat: list[EarthLayer]) -> EarthLayer:
     for layer in strat:
         if layer.top_md <= depth < layer.bot_md:
             return layer
@@ -166,12 +167,12 @@ def assign_layer(depth: float, strat: List[EarthLayer]) -> EarthLayer:
 
 def generate_well_curve(
     md: np.ndarray,
-    strat: List[EarthLayer] = None,
+    strat: list[EarthLayer] = None,
     noise_level: float = 0.03,
     seed: int = 42,
     include_azimuth: bool = False,
     az_known: bool = False,
-) -> Dict[str, np.ndarray]:
+) -> dict[str, np.ndarray]:
     """
     Generate realistic synthetic well logs from geological model.
     Physics-based relationships from Gardner, Castagna, and Archie equations.
@@ -265,11 +266,11 @@ def generate_seismic_section(
     z_range: tuple,  # (z_min, z_max) in ms TWT
     n_samples: int = 500,
     n_traces: int = 200,
-    strat: List[EarthLayer] = None,
+    strat: list[EarthLayer] = None,
     noise_db: float = -15,
     freq_hz: float = 35.0,
     wavelet: str = "ricker",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Generate 2D seismic section with geological horizon interpretation.
     Uses convolutional model:seis = wavelet * (reflection_coefficients + noise)
@@ -411,8 +412,8 @@ def generate_3d_cube(
     n_x: int = 50,
     n_y: int = 50,
     n_z: int = 200,
-    strat: List[EarthLayer] = None,
-) -> Dict[str, Any]:
+    strat: list[EarthLayer] = None,
+) -> dict[str, Any]:
     """
     Generate synthetic 3D seismic cube.
     For each (x,y) trace, depth-to-time conversion with lateral velocity variation.
@@ -475,7 +476,7 @@ def generate_gravity_magnetic(
     area_km: tuple,
     n_grid: int = 80,
     lat_center: float = 4.0,  # degrees N (Malaysian basin)
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Generate synthetic gravity (Bouguer) and magnetic (TMI) grids.
     Physics: gravitational attraction from density contrasts (basement relief).

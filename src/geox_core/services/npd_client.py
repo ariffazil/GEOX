@@ -29,7 +29,7 @@ import csv
 import io
 import logging
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -96,7 +96,7 @@ class NPDClient:
                 "_npd_detail": f"Unknown endpoint: {endpoint_key}",
             }
 
-        t0 = datetime.now(timezone.utc)
+        t0 = datetime.now(UTC)
         try:
             async with httpx.AsyncClient(timeout=self.timeout, follow_redirects=True) as client:
                 resp = await client.get(url)
@@ -119,7 +119,7 @@ class NPDClient:
                 "_npd_url": url,
             }
 
-        latency = (datetime.now(timezone.utc) - t0).total_seconds() * 1000
+        latency = (datetime.now(UTC) - t0).total_seconds() * 1000
         # Parse CSV
         try:
             reader = csv.DictReader(io.StringIO(text, newline=""))
@@ -177,7 +177,7 @@ class NPDClient:
             "_npd_provenance": {
                 "source": "npd_norway",
                 "endpoint": "wellbore_search",
-                "requested_at": datetime.now(timezone.utc).isoformat(),
+                "requested_at": datetime.now(UTC).isoformat(),
                 "response_status": 200,
                 "row_count": len(results),
             },
@@ -213,7 +213,7 @@ class NPDClient:
             "_npd_provenance": {
                 "source": "npd_norway",
                 "endpoint": "field_production_filtered",
-                "requested_at": datetime.now(timezone.utc).isoformat(),
+                "requested_at": datetime.now(UTC).isoformat(),
                 "response_status": 200,
                 "row_count": len(matched),
             },

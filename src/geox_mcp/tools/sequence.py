@@ -24,6 +24,7 @@ from typing import Any, Literal
 
 import numpy as np
 import yaml
+from fastmcp import Context
 
 from geox_core.enums.statuses import (
     ArtifactStatus,
@@ -32,9 +33,9 @@ from geox_core.enums.statuses import (
     get_standard_envelope,
 )
 from geox_mcp.tools._helpers import (
-    _get_artifact,
-    _classify_gr_motif,
     CANONICAL_ALIASES,
+    _classify_gr_motif,
+    _get_artifact,
 )
 
 logger = logging.getLogger("geox.sequence")
@@ -441,9 +442,9 @@ async def _workflow_single_well(
             {"source": source, "physics_guard": physics_guard},
         )
 
-    from geox_core.well.tools.sensing import compute_gr_bins
     from geox_core.well.tools.packages import build_packages
-    from geox_core.well.tools.seqstrat import infer_seq_strat, DEPO_ENV_SYSTEMS_TRACTS
+    from geox_core.well.tools.sensing import compute_gr_bins
+    from geox_core.well.tools.seqstrat import DEPO_ENV_SYSTEMS_TRACTS, infer_seq_strat
 
     depo_env_code = str(depo_env_code or "").upper()
     if depo_env_code not in DEPO_ENV_SYSTEMS_TRACTS:
@@ -594,7 +595,7 @@ async def _workflow_project(project_yaml: str, output_dir: str | None) -> dict[s
         return _error_envelope("INVALID_YAML", f"Invalid YAML: {e}")
 
     try:
-        from geox_core.well.stratigraphy.config import ProjectConfig, WellSource, ProjectInterval
+        from geox_core.well.stratigraphy.config import ProjectConfig, ProjectInterval, WellSource
 
         wells = [WellSource(**w) for w in config_dict.get("wells", [])]
         intervals = {}
@@ -1006,6 +1007,7 @@ async def geox_sequence_interpret(
     density_curve: str = "RHOB",
     matrix_density: float = 2.65,
     fluid_density: float = 1.0,
+    ctx: Context | None = None,
 ) -> dict[str, Any]:
     """Unified sequence stratigraphy engine.
 
@@ -1065,12 +1067,21 @@ async def geox_sequence_interpret(
             sonic_curve=sonic_curve,
             density_curve=density_curve,
     )
+    if ctx:
+        ctx.report_progress(0, 100)
+
     if _err is not None:
         return _err
+
+    if ctx:
+        ctx.report_progress(15, 100)
+
     if workflow == "single_well":
         if not source or zone_top is None or zone_base is None:
             return _error_envelope("MISSING_PARAMS", "single_well workflow requires source, zone_top, and zone_base.")
-        return await _workflow_single_well(
+        if ctx:
+            ctx.report_progress(30, 100)
+        result = await _workflow_single_well(
             source=source,
             zone_top=zone_top,
             zone_base=zone_base,
@@ -1081,21 +1092,36 @@ async def geox_sequence_interpret(
             gr_cutoff_api=gr_cutoff_api,
             detail_level=detail_level,
         )
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if workflow == "project":
         if not project_yaml:
             return _error_envelope("MISSING_PARAMS", "project workflow requires project_yaml.")
-        return await _workflow_project(project_yaml, output_dir)
+        if ctx:
+            ctx.report_progress(30, 100)
+        result = await _workflow_project(project_yaml, output_dir)
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if workflow == "preview":
         if not project_yaml:
             return _error_envelope("MISSING_PARAMS", "preview workflow requires project_yaml.")
-        return await _workflow_preview(project_yaml)
+        if ctx:
+            ctx.report_progress(30, 100)
+        result = await _workflow_preview(project_yaml)
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if workflow == "section_correlation":
         if not section_ref or not well_refs:
             return _error_envelope("MISSING_PARAMS", "section_correlation workflow requires section_ref and well_refs.")
-        return await _workflow_section_correlation(
+        if ctx:
+            ctx.report_progress(30, 100)
+        result = await _workflow_section_correlation(
             section_ref=section_ref,
             well_refs=well_refs,
             mode=mode,
@@ -1117,5 +1143,10 @@ async def geox_sequence_interpret(
             matrix_density=matrix_density,
             fluid_density=fluid_density,
         )
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
+    if ctx:
+        ctx.report_progress(100, 100)
     return _error_envelope("UNKNOWN_WORKFLOW", f"Unknown workflow: {workflow}")

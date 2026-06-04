@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Any
 
 import numpy as np
@@ -22,10 +22,9 @@ from scipy.ndimage import generic_filter
 from scipy.signal import hilbert, welch
 
 from geox_core.core.geox_image import (
-    Image2d,
-    Image3d,
     AttributeCategory,
     AttributeType,
+    Image3d,
 )
 
 logger = logging.getLogger("geox.seismic.attribute_registry")

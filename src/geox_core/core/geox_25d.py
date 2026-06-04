@@ -4,11 +4,12 @@ Bridge between 2D sections and 3D cube: map views, horizon slices, geoid visuali
 and the key operation of "probing" a 3D cube through a 2D section plane.
 """
 
+from typing import Any
+
 import numpy as np
-from typing import Dict, List, Tuple, Any
 
 
-def extract_horizon_map(cube_data: List, z_slice_idx: int, x_coords: List, y_coords: List) -> Dict[str, Any]:
+def extract_horizon_map(cube_data: list, z_slice_idx: int, x_coords: list, y_coords: list) -> dict[str, Any]:
     """
     Extract a horizon map (time slice / depth slice) from 3D cube.
     Returns amplitude grid for map view visualization.
@@ -27,7 +28,7 @@ def extract_horizon_map(cube_data: List, z_slice_idx: int, x_coords: List, y_coo
     }
 
 
-def extract_inline_section(cube_data: List, x_idx: int, x_coords: List, y_coords: List, z_times: List) -> Dict[str, Any]:
+def extract_inline_section(cube_data: list, x_idx: int, x_coords: list, y_coords: list, z_times: list) -> dict[str, Any]:
     """
     Extract inline (vertical slice along x-axis) from 3D cube.
     """
@@ -48,7 +49,7 @@ def extract_inline_section(cube_data: List, x_idx: int, x_coords: List, y_coords
     }
 
 
-def extract_crossline_section(cube_data: List, y_idx: int, x_coords: List, y_coords: List, z_times: List) -> Dict[str, Any]:
+def extract_crossline_section(cube_data: list, y_idx: int, x_coords: list, y_coords: list, z_times: list) -> dict[str, Any]:
     """
     Extract crossline (vertical slice along y-axis) from 3D cube.
     """
@@ -69,11 +70,11 @@ def extract_crossline_section(cube_data: List, y_idx: int, x_coords: List, y_coo
 
 
 def compute_geoid_anomalies(
-    area_km: Tuple[float, float],
+    area_km: tuple[float, float],
     n_grid: int = 80,
     lat_center: float = 4.0,
     lon_center: float = 110.0,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Compute gravity (Bouguer) and magnetic (TMI) anomaly grids.
     Physics: gravitational attraction from density contrasts.
@@ -136,11 +137,11 @@ def compute_geoid_anomalies(
 
 
 def compute_geoid_surface(
-    gravity_data: List[List[float]],
-    x_coords: List[float],
-    y_coords: List[float],
+    gravity_data: list[list[float]],
+    x_coords: list[float],
+    y_coords: list[float],
     geoid_type: str = "undulation",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Compute geoid undulation surface from gravity data.
     Uses Stokes's formula approximation for geoid height.
@@ -172,14 +173,14 @@ def compute_geoid_surface(
 
 
 def probe_3d_cube_at_section(
-    cube_data: List,
-    x_coords: List,
-    y_coords: List,
-    z_times: List,
+    cube_data: list,
+    x_coords: list,
+    y_coords: list,
+    z_times: list,
     section_type: str = "arbitrary",  # "inline", "crossline", "arbitrary"
     section_position: float = None,
-    arbitrary_line: List[Tuple[float, float]] = None,
-) -> Dict[str, Any]:
+    arbitrary_line: list[tuple[float, float]] = None,
+) -> dict[str, Any]:
     """
     Core 2.5D operation: probe 3D cube with a 2D section plane.
     Extracts the intersection values along the plane.
@@ -230,8 +231,8 @@ def probe_3d_cube_at_section(
 
 
 def build_attribute_volume(
-    cube_data: List, x_coords: List, y_coords: List, z_times: List, attribute: str = "envelope"
-) -> Dict[str, Any]:
+    cube_data: list, x_coords: list, y_coords: list, z_times: list, attribute: str = "envelope"
+) -> dict[str, Any]:
     """
     Compute seismic attributes on the 3D cube.
     Attributes: envelope, instantaneous phase, dominant frequency, similarity.
@@ -284,10 +285,10 @@ def build_attribute_volume(
 
 
 def time_to_depth_conversion(
-    horizon_times: List[float],
-    velocity_model: Dict[str, List[float]],
+    horizon_times: list[float],
+    velocity_model: dict[str, list[float]],
     method: str = "layered",
-) -> List[float]:
+) -> list[float]:
     """
     Convert time horizons to depth using velocity model.
     method: "layered" or "rms"

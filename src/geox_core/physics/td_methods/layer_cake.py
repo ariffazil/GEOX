@@ -24,7 +24,7 @@ Use this when:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -38,9 +38,9 @@ from geox_core.physics.td_methods.base import (
 
 
 def fit_layer_cake(
-    checkshot_data: List[Dict[str, Any]],
+    checkshot_data: list[dict[str, Any]],
     depth_array: np.ndarray,
-    tops: List[Tuple[str, float]],  # [(name, top_md), ...]
+    tops: list[tuple[str, float]],  # [(name, top_md), ...]
     v_fallback: float = 2200.0,
     allow_extrapolation: bool = False,
 ) -> TDFitResult:
@@ -72,9 +72,9 @@ def fit_layer_cake(
         sorted_tops = sorted_tops + [("TD", float(depth_array.max()))]
 
     # Build per-layer V_int
-    layer_v_int: Dict[str, float] = {}
-    layer_coverage: Dict[str, int] = {}
-    layer_twt_offset: Dict[str, float] = {sorted_tops[0][0]: 0.0}
+    layer_v_int: dict[str, float] = {}
+    layer_coverage: dict[str, int] = {}
+    layer_twt_offset: dict[str, float] = {sorted_tops[0][0]: 0.0}
 
     cumulative_twt = 0.0
     for i in range(len(sorted_tops) - 1):

@@ -7,9 +7,10 @@ Forward and inverse modelling for 4D earth monitoring:
 - Compaction/dilation effects
 """
 
-import numpy as np
-from typing import Dict, List, Tuple, Any
 from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
 
 
 @dataclass
@@ -17,7 +18,7 @@ class TimeLapseSurvey:
     survey_name: str
     year: int
     baseline: bool
-    seismic_data: List  # 3D cube
+    seismic_data: list  # 3D cube
     pressure_bar: float  # reservoir pressure (bar)
     temperature_c: float  # temperature (°C)
     gas_oil_ratio: float  # GOR (scf/stb)
@@ -112,10 +113,10 @@ def gassmann_fluid_substitution(
 
 
 def build_4d_cube_difference(
-    baseline_cube: List,
-    monitor_cube: List,
+    baseline_cube: list,
+    monitor_cube: list,
     threshold_pct: float = 5.0,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Compute 4D difference cube (monitor - baseline).
     Identifies areas of significant change (potential fluid movement).
@@ -177,7 +178,7 @@ def forward_4d_simulation(
     permeability_md: float = 100.0,
     viscosity_cp: float = 1.0,
     injection_rate_m3d: float = 500.0,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Simple forward 4D simulation (analytical approximation).
     Models pressure and saturation evolution over time.
@@ -214,12 +215,12 @@ def forward_4d_simulation(
 
 
 def inverse_4d_from_observations(
-    baseline_data: List,
-    monitor_data: List,
-    prior_model: Dict[str, Any],
+    baseline_data: list,
+    monitor_data: list,
+    prior_model: dict[str, Any],
     regularization: str = "l2_smooth",
     max_iterations: int = 50,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Inverse modelling: given baseline + monitor observations,
     infer the change in reservoir properties.
@@ -278,11 +279,11 @@ def inverse_4d_from_observations(
 
 
 def build_4d_time_series(
-    surveys: List[TimeLapseSurvey],
+    surveys: list[TimeLapseSurvey],
     horizon_time_ms: float,
-    x_range: Tuple[float, float],
+    x_range: tuple[float, float],
     n_x: int = 50,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Build 4D time series for a given horizon across multiple surveys.
     Returns amplitude vs time for monitoring.
@@ -322,10 +323,10 @@ def build_4d_time_series(
 
 
 def compute_4d_uncertainty(
-    baseline_cube: List,
-    monitor_cube: List,
+    baseline_cube: list,
+    monitor_cube: list,
     repeatability_noise: float = 0.05,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Assess 4D uncertainty and repeatability.
     Key metric: NRMS (normalized root mean square) noise.
@@ -369,12 +370,12 @@ def compute_4d_uncertainty(
 
 
 def detect_4d_amplitude_anomaly(
-    difference_cube: List,
-    x_coords: List,
-    y_coords: List,
-    z_times: List,
+    difference_cube: list,
+    x_coords: list,
+    y_coords: list,
+    z_times: list,
     detection_threshold: float = 0.1,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Detect 4D amplitude anomalies (potential fluid movement, pressure changes).
     Returns list of anomaly centroids with magnitude.

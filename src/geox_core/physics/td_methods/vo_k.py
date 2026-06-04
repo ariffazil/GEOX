@@ -36,7 +36,7 @@ Cannot fit:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
@@ -50,7 +50,7 @@ from geox_core.physics.td_methods.base import (
 
 
 def fit_vo_k(
-    checkshot_data: List[Dict[str, Any]],
+    checkshot_data: list[dict[str, Any]],
     depth_array: np.ndarray,
     mode: str = "linear",
     v0_init: float = 1800.0,
@@ -74,7 +74,7 @@ def fit_vo_k(
     if depth_array.min() < min_d or depth_array.max() > max_d:
         if not allow_extrapolation:
             raise ValueError(
-                f"Vo-K fitter: depth array outside checkshot range. Pass allow_extrapolation=True (recommended for Vo-K)."
+                "Vo-K fitter: depth array outside checkshot range. Pass allow_extrapolation=True (recommended for Vo-K)."
             )
 
     # Initial V_avg per checkshot point

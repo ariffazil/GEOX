@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 # Add geox to path
 sys.path.append(os.path.abspath("."))
