@@ -1,6 +1,6 @@
 ﻿<!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-05-22
+last_verified: 2026-06-04
 valid_from: 2026-05-22
 valid_until: 2026-06-22
 confidence: high
@@ -66,7 +66,7 @@ Every output passes through the **F3 WITNESS floor** before reaching the reasoni
 
 ***
 
-## MCP Surface (Live — 2026-06-03)
+## MCP Surface (Live — 2026-06-04)
 
 ```
 PYTHONPATH=src python -m geox_mcp.server --host 0.0.0.0 --port 8081
@@ -365,7 +365,7 @@ GEOX computes earth evidence only. GEOX does not judge. GEOX does not define doc
 ## Test Suite
 
 ```
-66 passed, 0 skipped, 0 xfailed, 0 failures
+229 passed, 0 skipped, 0 xfailed, 0 failures
 *Eureka forge (E1 + E7) + physics guard suites — full integration suite lives in `tests/integration/` and runs separately.*
 
 Golden tests anchor agent behavior — tool output shape, claim_state correctness, failure mode coverage, no secret/path leaks.
@@ -385,7 +385,7 @@ Golden tests anchor agent behavior — tool output shape, claim_state correctnes
 
 ***
 
-*Last Verified: 2026-05-18 | 999 SEAL ALIVE*
+*Last Verified: 2026-06-04 | 999 SEAL ALIVE*
 
 **DITEMPA BUKAN DIBERI — Forged, Not Given.**
 
@@ -396,5 +396,5 @@ Golden tests anchor agent behavior — tool output shape, claim_state correctnes
 Full federation knowledge base — architecture decisions, earth-intelligence theory, agent documentation:
 → **https://wiki.arif-fazil.com**
 
-*Last Verified: 2026-06-03 | 999 SEAL ALIVE*
+*Last Verified: 2026-06-04 | 999 SEAL ALIVE*
 **DITEMPA BUKAN DIBERI — Intelligence is forged, not given.**
