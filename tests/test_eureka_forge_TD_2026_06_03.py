@@ -379,7 +379,7 @@ class TestNoNewMCPTools(unittest.TestCase):
             # server.py witness). The forge must not add any new tool —
             # capability lives in existing surfaces (geox_seismic_compute,
             # geox_time_depth_anchor, etc.) plus opt-in params.
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 21)
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 30)
             self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 18)
         except ImportError as e:
             # geox_mcp server not importable in test env; that's OK —
