@@ -357,7 +357,11 @@ class EarthAnchorMiddleware(BaseHTTPMiddleware):
                     body = json.dumps(payload).encode()
                 except (json.JSONDecodeError, TypeError):
                     pass
-            return JSONResponse(json.loads(body.decode())) if body else response
+                try:
+                    return JSONResponse(json.loads(body.decode())) if body else response
+                except (json.JSONDecodeError, TypeError):
+                    pass
+            return response
         return response
 
 
