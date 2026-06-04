@@ -40,7 +40,7 @@ from fastmcp import FastMCP
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, RedirectResponse
 from starlette.routing import Route, Mount
 
 # Import canonical registry for source-of-truth
@@ -210,8 +210,8 @@ def bootstrap_sovereign_13():
 
         register_unified_tools(mcp, profile=GEOX_PROFILE)
         # Assert against the canonical public tools count
-        if len(CANONICAL_PUBLIC_TOOLS) != 20:
-            raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 20 Witness Core tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+        if len(CANONICAL_PUBLIC_TOOLS) != 30:
+            raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 30 Witness Core tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
         logger.info(f"Witness Core surface: IGNITED ({len(CANONICAL_PUBLIC_TOOLS)} canonical tools)")
     except Exception as e:
         logger.critical(f"Failed to bootstrap Sovereign 16 registry: {e}")
@@ -2172,10 +2172,13 @@ def create_app():
             Route("/adapters", adapters_handler, methods=["GET"]),
             Route("/.well-known/mcp/server.json", discovery_handler, methods=["GET"]),
             Route("/tools", tools_list_handler, methods=["GET"]),
+            Route("/mcp", lambda req: RedirectResponse(url="/mcp/", status_code=307), methods=["GET", "POST", "DELETE"]),
             Mount("/mcp", app=mcp_http_handler),
         ],
         lifespan=mcp_http_handler.lifespan,
     )
+    app.router.redirect_slashes = False
+    mcp_http_handler.router.redirect_slashes = False
     app.add_middleware(EarthAnchorMiddleware)
     app.add_middleware(GlobalPanicMiddleware)
     return app
