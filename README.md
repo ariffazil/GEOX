@@ -320,31 +320,6 @@ Artifact refs are immutable, auditable, and federation-portable (arifOS ↔ WEAL
 
 ***
 
-## Federation
-
-| Organ | Repo | Role |
-|-------|------|------|
-| **arifOS** | [ariffazil/arifOS](https://github.com/ariffazil/arifOS) | Kernel — constitutional judgment, F3 WITNESS, 000–999 pipeline |
-| **GEOX** | [ariffazil/GEOX](https://github.com/ariffazil/GEOX) | FIELD — Earth evidence, petrophysics, governed computation |
-| **WEALTH** | [ariffazil/wealth](https://github.com/ariffazil/wealth) | Capital — economic constraints on field development |
-
-GEOX feeds governed evidence to arifOS. arifOS renders constitutional verdict. WEALTH applies economic constraints. Arif holds F13 sovereign veto over all three.
-
-### AAA Terminology Note
-
-When GEOX docs or agents reference AAA, qualify the surface:
-
-| Term | Surface | Role |
-|------|---------|------|
-| **AAA-HF** | Hugging Face dataset | Supplies doctrine and evaluation references for agent behavior |
-| **AAA-Cockpit** | GitHub `ariffazil/AAA` | Displays and routes federation state — does not own F1–F13 judgment |
-| **arifOS** | `ariffazil/arifos` | **The judge** — applies constitutional floors to all GEOX computations |
-
-GEOX computes earth evidence only. GEOX does not judge. GEOX does not define doctrine.
-
-> "AAA is polymorphic by design. When precision matters, qualify the surface."
-
-***
 
 ## Roadmap
 
@@ -385,9 +360,6 @@ Golden tests anchor agent behavior — tool output shape, claim_state correctnes
 
 ***
 
-*Last Verified: 2026-06-04 | 999 SEAL ALIVE*
-
-**DITEMPA BUKAN DIBERI — Forged, Not Given.**
 
 ---
 
@@ -396,9 +368,29 @@ Golden tests anchor agent behavior — tool output shape, claim_state correctnes
 Full federation knowledge base — architecture decisions, earth-intelligence theory, agent documentation:
 → **https://wiki.arif-fazil.com**
 
-*Last Verified: 2026-06-04 | 999 SEAL ALIVE*
-**DITEMPA BUKAN DIBERI — Intelligence is forged, not given.**
+## 🏛️ Federation
 
-## License
+| Organ | Repository | Role | Port |
+|-------|-----------|------|------|
+| **arifOS** | [ariffazil/arifOS](https://github.com/ariffazil/arifOS) | Constitutional Kernel · F1-F13 | 8088 |
+| **AAA** | [ariffazil/AAA](https://github.com/ariffazil/AAA) | Reality Console · A2A Gateway | 3001 |
+| **A-FORGE** | [ariffazil/A-FORGE](https://github.com/ariffazil/A-FORGE) | Execution Shell | 7071 |
+| **GEOX** | [ariffazil/geox](https://github.com/ariffazil/geox) | Earth Intelligence | 8081 |
+| **WEALTH** | [ariffazil/wealth](https://github.com/ariffazil/wealth) | Capital Intelligence | 18082 |
+| **WELL** | [ariffazil/well](https://github.com/ariffazil/well) | Human Readiness | 18083 |
+| **arif-sites** | [ariffazil/arif-sites](https://github.com/ariffazil/arif-sites) | Public Surfaces | 443 |
+
+> **Constitutional authority:** F1-F13 floors, 888_JUDGE, and VAULT999 live in `ariffazil/arifOS`.  
+> **Live federation status:** See `ariffazil/arifOS/FEDERATION_STATUS.md`.
+## 📄 Contributing
+
+This repository operates under the arifOS Federation constitution (F1–F13).  
+See [AGENTS.md](AGENTS.md) for the canonical boot sequence and agent operating rules.
+
+## 📜 License
 
 AGPL-3.0. See [LICENSE](LICENSE).
+
+---
+
+**DITEMPA BUKAN DIBERI** — Forged, Not Given.
