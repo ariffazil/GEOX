@@ -23,9 +23,9 @@ import hashlib
 import logging
 import os
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -79,13 +79,13 @@ class PanelConfig:
     tracks: list[str]  # e.g. ["GR", "RT"]
     depth_basis: str = "MD"  # always stated explicitly
     depth_unit: str = "m"
-    depth_range: Optional[tuple[float, float]] = None  # None = auto
-    tops: Optional[dict[str, float]] = None  # well_id → {marker_name: depth}
+    depth_range: tuple[float, float] | None = None  # None = auto
+    tops: dict[str, float] | None = None  # well_id → {marker_name: depth}
     normalize: bool = True
     output_format: str = "png"
     output_formats: list[str] = field(default_factory=lambda: ["png", "csv_summary"])
-    basin_hint: Optional[str] = None  # for cross-basin guardrail
-    well_names: Optional[list[str]] = None  # display names per well
+    basin_hint: str | None = None  # for cross-basin guardrail
+    well_names: list[str] | None = None  # display names per well
 
 
 @dataclass
@@ -93,18 +93,18 @@ class PanelResult:
     """Output of a panel render."""
 
     ok: bool
-    png_path: Optional[str] = None
-    svg_path: Optional[str] = None
-    pdf_path: Optional[str] = None
-    csv_summary_path: Optional[str] = None
+    png_path: str | None = None
+    svg_path: str | None = None
+    pdf_path: str | None = None
+    csv_summary_path: str | None = None
     wells_loaded: int = 0
     wells_failed: list[str] = field(default_factory=list)
     tracks_rendered: list[str] = field(default_factory=list)
     curve_summary: list[dict] = field(default_factory=list)
     qc_warnings: list[str] = field(default_factory=list)
     claim_state: str = CLAIM_EXPLORATORY
-    error_code: Optional[str] = None
-    error_message: Optional[str] = None
+    error_code: str | None = None
+    error_message: str | None = None
 
     def to_dict(self) -> dict:
         out: dict[str, Any] = {
@@ -141,7 +141,7 @@ def _canonicalise(arr: np.ndarray) -> np.ndarray:
     return arr
 
 
-def _safe_curve(las_curves, *keys: str) -> Optional[np.ndarray]:
+def _safe_curve(las_curves, *keys: str) -> np.ndarray | None:
     """Try each alias key; return first non-empty match."""
     for key in keys:
         for curve in las_curves:
@@ -152,7 +152,7 @@ def _safe_curve(las_curves, *keys: str) -> Optional[np.ndarray]:
     return None
 
 
-def load_well_bundle(filepath: str, well_id: Optional[str] = None) -> WellBundle:
+def load_well_bundle(filepath: str, well_id: str | None = None) -> WellBundle:
     """
     Load a LAS file and return a WellBundle.
 
@@ -234,7 +234,7 @@ def _render_panel(
     import matplotlib.ticker as mticker
 
     os.makedirs(output_dir, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     png_path = os.path.join(output_dir, f"geox_panel_{timestamp}.png")
     csv_path = os.path.join(output_dir, f"geox_panel_{timestamp}.csv")
 
@@ -474,15 +474,15 @@ def _write_csv_summary(csv_path: str, curve_summary: list[dict]) -> None:
 
 def render_correlation_panel(
     las_paths: list[str],
-    well_names: Optional[list[str]] = None,
-    tracks: Optional[list[str]] = None,
+    well_names: list[str] | None = None,
+    tracks: list[str] | None = None,
     output_dir: str = "/tmp/geox_panels",
-    depth_range: Optional[list[float]] = None,
-    tops: Optional[dict[str, dict[str, float]]] = None,
+    depth_range: list[float] | None = None,
+    tops: dict[str, dict[str, float]] | None = None,
     normalize: bool = True,
-    basin_hint: Optional[str] = None,
-    well_ids: Optional[list[str]] = None,
-    output_formats: Optional[list[str]] = None,
+    basin_hint: str | None = None,
+    well_ids: list[str] | None = None,
+    output_formats: list[str] | None = None,
 ) -> PanelResult:
     """
     Generate a multi-well correlation panel PNG.
@@ -567,7 +567,7 @@ def _write_vault_receipt(result: PanelResult) -> None:
     receipt = {
         "vault": "VAULT999",
         "tool": "geox_well_correlation_panel",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "ok": result.ok,
         "wells_loaded": result.wells_loaded,
         "tracks_rendered": result.tracks_rendered,

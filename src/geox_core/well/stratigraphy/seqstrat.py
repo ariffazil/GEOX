@@ -17,7 +17,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 from .config import default_depo_rank
 
@@ -25,7 +25,7 @@ from .config import default_depo_rank
 def infer_seq_strat(
     pkg: dict[str, Any],
     depo_code: str,
-    depo_rank: Optional[dict[str, int]] = None,
+    depo_rank: dict[str, int] | None = None,
 ) -> tuple[str, str]:
     """
     Assign systems tract per package based on motif + depo env + GR.
@@ -100,7 +100,7 @@ def infer_seq_strat(
 def geo_rule_check(
     pkg: dict[str, Any],
     depo_code: str,
-    depo_rank: Optional[dict[str, int]] = None,
+    depo_rank: dict[str, int] | None = None,
 ) -> str:
     """Check for geological anomalies. Returns flag string or PASS."""
     rank_map = depo_rank or default_depo_rank()
@@ -119,7 +119,7 @@ def geo_rule_check(
     return ";".join(flags) if flags else "PASS"
 
 
-def litho_classify(gr_mean: Optional[float], cut_sand=35, cut_silt=65, cut_shaly=90) -> str:
+def litho_classify(gr_mean: float | None, cut_sand=35, cut_silt=65, cut_shaly=90) -> str:
     """Classify lithology from GR mean."""
     if gr_mean is None:
         return "Heterolithic"

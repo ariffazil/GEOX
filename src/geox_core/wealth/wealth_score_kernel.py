@@ -3,14 +3,16 @@ GEOX Wealth Score Kernel: Governed Capital Translation Layer
 Hardened via 9-Harness Constraint Architecture
 """
 
-from typing import List, Annotated
+from typing import Annotated
+
 from pydantic import Field
+
 from geox_core.wealth.harness_engine import HarnessEngine
 
 # --- Core Economic Formulas ---
 
 
-def compute_npv(initial_investment: float, cash_flows: List[float], discount_rate: float) -> float:
+def compute_npv(initial_investment: float, cash_flows: list[float], discount_rate: float) -> float:
     """Standard NPV: Sum(CF_t / (1+r)^t) - I"""
     npv = -abs(initial_investment)
     for t, cf in enumerate(cash_flows, start=1):
@@ -18,7 +20,7 @@ def compute_npv(initial_investment: float, cash_flows: List[float], discount_rat
     return round(npv, 6)
 
 
-def compute_emv(scenarios: List[dict]) -> float:
+def compute_emv(scenarios: list[dict]) -> float:
     """Expected Monetary Value: Sum(Prob_i * Outcome_i)"""
     emv = sum(s.get("probability", 0.0) * s.get("outcome", 0.0) for s in scenarios)
     return round(emv, 6)

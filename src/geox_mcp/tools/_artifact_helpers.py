@@ -1,15 +1,15 @@
-import os
 import base64
+import os
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ARTIFACT REGISTRY (IN-MEMORY)
 # ═══════════════════════════════════════════════════════════════════════════════
 
-_artifact_registry: Dict[str, Dict[str, Any]] = {}
-_well_curves_registry: Dict[str, Dict[str, Any]] = {}
-_artifact_store: Dict[str, Dict[str, Any]] = {}
+_artifact_registry: dict[str, dict[str, Any]] = {}
+_well_curves_registry: dict[str, dict[str, Any]] = {}
+_artifact_store: dict[str, dict[str, Any]] = {}
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB limit for base64 uploads
 
@@ -26,12 +26,12 @@ def _register_artifact(artifact_id: str, **kwargs) -> str:
     return artifact_id
 
 
-def _get_artifact(artifact_id: str) -> Optional[Dict[str, Any]]:
+def _get_artifact(artifact_id: str) -> dict[str, Any] | None:
     """Retrieve an artifact from the in-memory store."""
     return _artifact_store.get(artifact_id)
 
 
-def _record_latest_qc(artifact_id: str, qc_result: Dict[str, Any]):
+def _record_latest_qc(artifact_id: str, qc_result: dict[str, Any]):
     """Record the latest QC result for an artifact."""
     if artifact_id in _artifact_registry:
         _artifact_registry[artifact_id]["latest_qc"] = qc_result

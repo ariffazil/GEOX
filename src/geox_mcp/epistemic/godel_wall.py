@@ -23,9 +23,8 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Optional
 
 
 class UndecidableReason(StrEnum):
@@ -68,14 +67,14 @@ class GodelWallRecord:
 
     # Dependency chain
     assumption_chain: list[str] = field(default_factory=list)  # assumption IDs in chain
-    circular_path: Optional[list[str]] = None  # If CIRCULAR_DEPENDENCY
+    circular_path: list[str] | None = None  # If CIRCULAR_DEPENDENCY
     deepest_rung_reached: int = 0
     required_external_evidence: str = ""
 
     # For recursive dependency check
     dependency_graph: dict[str, list[str]] = field(default_factory=dict)
 
-    checked_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    checked_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     metadata: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:
@@ -115,8 +114,8 @@ def recursive_dependency_check(
     assumption_ids: list[str],
     get_assumption_rung_fn,  # callable(assumption_id) -> int
     get_parent_fn,  # callable(assumption_id) -> Optional[str]
-    visited: Optional[set[str]] = None,
-    chain: Optional[list[str]] = None,
+    visited: set[str] | None = None,
+    chain: list[str] | None = None,
 ) -> GodelWallRecord:
     """
     Recursively check whether a claim can be closed.

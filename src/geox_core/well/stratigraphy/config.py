@@ -12,7 +12,8 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
+
 from pydantic import BaseModel, Field
 
 
@@ -20,7 +21,7 @@ class WellSource(BaseModel):
     name: str = Field(..., description="Well identifier")
     path: str = Field(..., description="Path to LAS or CSV file")
     format: str = Field("LAS", description="File format: LAS or CSV_LAS")
-    lon: Optional[float] = Field(None, description="Longitude for spatial ordering")
+    lon: float | None = Field(None, description="Longitude for spatial ordering")
 
 
 class ProjectInterval(BaseModel):

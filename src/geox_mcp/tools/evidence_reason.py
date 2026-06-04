@@ -20,10 +20,12 @@ import os
 from pathlib import Path
 from typing import Any, Literal
 
+from fastmcp import Context
+
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ExecutionStatus,
+    GovernanceStatus,
+    get_standard_envelope,
 )
 from geox_mcp.tools._helpers import _get_artifact
 
@@ -771,6 +773,7 @@ async def geox_evidence_reason(
     claim_strictness: Literal["screen", "appraise", "decision"] = "screen",
     export_format: Literal["json", "csv"] = "json",
     output_path: str | None = None,
+    ctx: Context | None = None,
 ) -> dict[str, Any]:
     """Unified evidence synthesis, abduction, and contradiction engine.
 
@@ -807,22 +810,51 @@ async def geox_evidence_reason(
             hypotheses=hypotheses,
             output_path=output_path,
     )
+    if ctx:
+        ctx.report_progress(0, 100)
+
     if _err is not None:
         return _err
+
+    if ctx:
+        ctx.report_progress(10, 100)
+
     refs = evidence_refs or []
 
     if phase == "synthesize":
-        return await _phase_synthesize(refs, export_format, output_path)
+        if ctx:
+            ctx.report_progress(25, 100)
+        result = await _phase_synthesize(refs, export_format, output_path)
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if phase == "abduct":
-        return await _phase_abduct(refs, scale, depo_context, claim_strictness)
+        if ctx:
+            ctx.report_progress(25, 100)
+        result = await _phase_abduct(refs, scale, depo_context, claim_strictness)
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if phase == "contradict":
-        return await _phase_contradict(refs, hypotheses)
+        if ctx:
+            ctx.report_progress(25, 100)
+        result = await _phase_contradict(refs, hypotheses)
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
     if phase == "full":
-        return await _phase_full(refs, scale, depo_context, claim_strictness, export_format, output_path)
+        if ctx:
+            ctx.report_progress(25, 100)
+        result = await _phase_full(refs, scale, depo_context, claim_strictness, export_format, output_path)
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
 
+    if ctx:
+        ctx.report_progress(100, 100)
     return get_standard_envelope(
         {"tool": TOOL_NAME, "error": f"Unknown phase: {phase}"},
         tool_class="compute",

@@ -20,7 +20,7 @@ Use this when:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 
@@ -28,13 +28,12 @@ from geox_core.physics.td_methods.base import (
     TDFitResult,
     _audit,
     _coverage,
-    _extrapolation_risk,
     _validate_inputs,
 )
 
 
 def fit_linear(
-    checkshot_data: List[Dict[str, Any]],
+    checkshot_data: list[dict[str, Any]],
     depth_array: np.ndarray,
 ) -> TDFitResult:
     """Linear interpolation of TWT from checkshot table.

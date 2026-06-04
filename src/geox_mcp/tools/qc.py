@@ -5,19 +5,19 @@ import os
 from typing import Any, Literal
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
     enrich_envelope_with_metabolic,
+    get_standard_envelope,
 )
 from geox_mcp.tools._helpers import (
-    _get_artifact,
-    _artifact_exists,
-    _record_latest_qc,
-    _detect_depth_unit,
-    CANONICAL_ALIASES,
     _CURVE_RANGES,
+    CANONICAL_ALIASES,
+    _artifact_exists,
+    _detect_depth_unit,
+    _get_artifact,
+    _record_latest_qc,
 )
 
 logger = logging.getLogger("geox.canonical.qc")
@@ -271,14 +271,17 @@ async def geox_data_qc_bundle(
             _arifos_kernel = "/root/arifOS"
             if _arifos_kernel not in sys.path:
                 sys.path.insert(0, _arifos_kernel)
-            from core.shared.saf_stats import (
-                stat_assumptions as _saf_assumptions,
-                stat_outliers as _saf_outliers,
-            )
-            import pandas as _pd_saf
+            import os as _os_saf
             import uuid as _uuid_saf
             from pathlib import Path as _Path_saf
-            import os as _os_saf
+
+            import pandas as _pd_saf
+            from core.shared.saf_stats import (
+                stat_assumptions as _saf_assumptions,
+            )
+            from core.shared.saf_stats import (
+                stat_outliers as _saf_outliers,
+            )
 
             _geox_saf_root = _Path_saf(_os_saf.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
             _geox_saf_root.mkdir(parents=True, exist_ok=True)
@@ -388,10 +391,11 @@ async def geox_data_qc_bundle(
             if _group_col_aov and _group_col_aov in (raw_curves or {}):
                 _group_vals = raw_curves[_group_col_aov]
                 if _group_vals is not None and len(_group_vals) >= 6:
-                    import pandas as _pd_aov
+                    import os as _os_aov
                     import uuid as _uuid_aov
                     from pathlib import Path as _Path_aov
-                    import os as _os_aov
+
+                    import pandas as _pd_aov
 
                     _aov_root = _Path_aov(_os_aov.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
                     _aov_root.mkdir(parents=True, exist_ok=True)
@@ -494,11 +498,12 @@ async def geox_data_qc_bundle(
             _arifos_kernel_mis = "/root/arifOS"
             if _arifos_kernel_mis not in _sys_mis.path:
                 _sys_mis.path.insert(0, _arifos_kernel_mis)
-            from core.shared.saf_stats import stat_missing as _saf_missing_fn
-            import pandas as _pd_mis
+            import os as _os_mis
             import uuid as _uuid_mis
             from pathlib import Path as _Path_mis
-            import os as _os_mis
+
+            import pandas as _pd_mis
+            from core.shared.saf_stats import stat_missing as _saf_missing_fn
 
             _mis_root = _Path_mis(_os_mis.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
             _mis_root.mkdir(parents=True, exist_ok=True)
@@ -603,10 +608,11 @@ async def geox_data_qc_bundle(
                 if c in (raw_curves or {}) and raw_curves.get(c) is not None and len(raw_curves.get(c)) >= 6
             ]
             if len(_cat_cols_chi) >= 2:
-                import pandas as _pd_chi
+                import os as _os_chi
                 import uuid as _uuid_chi
                 from pathlib import Path as _Path_chi
-                import os as _os_chi
+
+                import pandas as _pd_chi
 
                 _chi2_root = _Path_chi(_os_chi.environ.get("GEOX_SAF_DATA_ROOT", "/tmp/geox_saf"))
                 _chi2_root.mkdir(parents=True, exist_ok=True)
@@ -758,10 +764,11 @@ async def geox_data_qc_bundle(
                 _arifos_kernel_xc = "/root/arifOS"
                 if _arifos_kernel_xc not in _sys_xc.path:
                     _sys_xc.path.insert(0, _arifos_kernel_xc)
-                import pandas as _pd_xc
+                import os as _os_xc
                 import uuid as _uuid_xc
                 from pathlib import Path as _Path_xc
-                import os as _os_xc
+
+                import pandas as _pd_xc
                 from core.shared.saf_stats import (
                     stat_correlate as _saf_correlate,
                 )

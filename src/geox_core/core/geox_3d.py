@@ -4,16 +4,17 @@ GEOX 3D — Full 3D Seismic Cube Visualization & Interpretation
 and the integration of map view + section view + 3D render in one surface.
 """
 
-import numpy as np
-from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
 
 
 @dataclass
 class Isosurface:
     amplitude_value: float
-    mesh_vertices: List  # simplified - list of vertex coordinates
-    mesh_faces: List  # simplified - list of face indices
+    mesh_vertices: list  # simplified - list of vertex coordinates
+    mesh_faces: list  # simplified - list of face indices
     color: str
     opacity: float
     arifos_grade: str
@@ -22,15 +23,15 @@ class Isosurface:
 @dataclass
 class HorizonSurface:
     name: str
-    depth_grid: List[List[float]]  # 2D grid of depth values
-    time_grid: List[List[float]]  # 2D grid of time values
-    amplitude_attributes: Optional[Dict] = None
+    depth_grid: list[list[float]]  # 2D grid of depth values
+    time_grid: list[list[float]]  # 2D grid of time values
+    amplitude_attributes: dict | None = None
     area_km2: float = 0.0
     structural_gradient: float = 0.0  # dip angle in degrees
     # ── paleoscan_python v2.0.0 forge extensions ──
-    data_image: Optional[Any] = None  # Image2d representation of horizon data
-    block_space: Optional[Any] = None  # BlockSpace linked to horizon grid
-    survey_space: Optional[Any] = None  # SurveySpace linked to horizon grid
+    data_image: Any | None = None  # Image2d representation of horizon data
+    block_space: Any | None = None  # BlockSpace linked to horizon grid
+    survey_space: Any | None = None  # SurveySpace linked to horizon grid
 
     def set_data_image(self, image: Any) -> None:
         """Attach a canonical Image2d as the horizon's data component."""
@@ -46,15 +47,15 @@ class HorizonSurface:
 
 
 def generate_3d_seismic_cube(
-    x_range_km: Tuple[float, float],
-    y_range_km: Tuple[float, float],
-    z_range_ms: Tuple[float, float],
+    x_range_km: tuple[float, float],
+    y_range_km: tuple[float, float],
+    z_range_ms: tuple[float, float],
     n_x: int = 60,
     n_y: int = 60,
     n_z: int = 200,
     geology: str = "fold_belt",
-    fault_complex: Optional[List[Dict]] = None,
-) -> Dict[str, Any]:
+    fault_complex: list[dict] | None = None,
+) -> dict[str, Any]:
     """
     Generate synthetic 3D seismic cube with geological structure.
     geology types: "fold_belt", "delta", "carbonate_platform", "basin_fill"
@@ -90,7 +91,7 @@ def generate_3d_seismic_cube(
         # Flat topped carbonate with steep margins
         z0_carb = 0.0
         top_surf = make_surface(lambda x, y: z0_carb, amplitude=0)
-        margin_mask = np.sqrt((xi[:, None] ** 2 + yi[None, :] ** 2)) > (n_x * 0.3)
+        margin_mask = np.sqrt(xi[:, None] ** 2 + yi[None, :] ** 2) > (n_x * 0.3)
         top_surf = np.where(margin_mask, z0_carb + 150, z0_carb + 20 * rng.random((n_y, n_x)))
         mid_surf = top_surf + 400
         bot_surf = mid_surf + 300
@@ -175,13 +176,13 @@ def generate_3d_seismic_cube(
 
 
 def extract_horizon_from_cube(
-    cube_data: List,
+    cube_data: list,
     target_time_ms: float,
-    z_times: List[float],
-    x_coords: List[float],
-    y_coords: List[float],
+    z_times: list[float],
+    x_coords: list[float],
+    y_coords: list[float],
     window_ms: float = 20,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Extract a horizon surface from 3D cube at a specific time value.
     Uses coherence/similarity to track the reflection event.
@@ -225,8 +226,8 @@ def extract_horizon_from_cube(
 
 
 def compute_coherence_volume(
-    cube_data: List, x_coords: List, y_coords: List, z_times: List, window_traces: int = 3
-) -> Dict[str, Any]:
+    cube_data: list, x_coords: list, y_coords: list, z_times: list, window_traces: int = 3
+) -> dict[str, Any]:
     """
     Compute coherence/continuity attribute to highlight faults and stratigraphy.
     Uses semblance-like calculation.
@@ -259,7 +260,7 @@ def compute_coherence_volume(
     }
 
 
-def build_volume_rendering_params(cube_data: List) -> Dict[str, Any]:
+def build_volume_rendering_params(cube_data: list) -> dict[str, Any]:
     """
     Compute volume rendering transfer function parameters.
     Returns opacity and color mapping for 3D visualization.
@@ -288,15 +289,15 @@ def build_volume_rendering_params(cube_data: List) -> Dict[str, Any]:
 
 
 def integrate_map_section_3d(
-    horizon_map: List[List[float]],
-    inline_section: List[List[float]],
-    crossline_section: List[List[float]],
-    x_coords: List[float],
-    y_coords: List[float],
-    z_times: List[float],
+    horizon_map: list[list[float]],
+    inline_section: list[list[float]],
+    crossline_section: list[list[float]],
+    x_coords: list[float],
+    y_coords: list[float],
+    z_times: list[float],
     inline_idx: int,
     crossline_idx: int,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Integrate all three visualization planes into one view:
     - Map view (time slice)

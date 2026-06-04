@@ -26,8 +26,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Optional
-
 
 # ─── Certainty language markers ────────────────────────────────────────────────
 
@@ -344,13 +342,13 @@ class AntiBeautifulOne:
         else:
             return "FORCE_DECOMPOSITION"
 
-    def force_decomposition_triggered(self, metrics: Optional[BeautyMetrics] = None) -> bool:
+    def force_decomposition_triggered(self, metrics: BeautyMetrics | None = None) -> bool:
         """True if the output should be force-decomposed."""
         if metrics is None:
             metrics = self.analyze()
         return metrics.overreach_verdict == "FORCE_DECOMPOSITION"
 
-    def suspicious(self, metrics: Optional[BeautyMetrics] = None) -> bool:
+    def suspicious(self, metrics: BeautyMetrics | None = None) -> bool:
         """True if the output is suspicious or worse."""
         if metrics is None:
             metrics = self.analyze()

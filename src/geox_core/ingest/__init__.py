@@ -12,13 +12,13 @@ Public surface (3 parsers + 1 detector + 1 OCR hook):
 """
 
 from geox_core.ingest.legacy_ingest import (
+    E2_HONEST_BAND,
     LegacyRows,
-    parse_xlsx_legacy,
-    parse_csv_legacy,
-    parse_las_legacy,
     detect_synthetic_label,
     ocr_scanned_well,
-    E2_HONEST_BAND,
+    parse_csv_legacy,
+    parse_las_legacy,
+    parse_xlsx_legacy,
 )
 
 __all__ = [

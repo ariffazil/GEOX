@@ -3,27 +3,28 @@ Tests for GEOX → WEALTH Adapter (WELD-002)
 DITEMPA BUKAN DIBERI
 """
 
-import pytest
 import sys
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, "/root/arifOS/packages/arifos-types/py")
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
     from arifos_types import (
-        ResourceNode,
+        DecisionContext,
+        EconomicsNode,
+        EngineeringNode,
         EpistemicTag,
+        GeologyNode,
+        GovernanceNode,
+        ResourceNode,
         TelemetryPayload,
         Verdict,
         Witness,
-        DecisionContext,
-        GeologyNode,
-        EngineeringNode,
-        EconomicsNode,
-        GovernanceNode,
     )
-    from wealth_bridge import geox_to_wealth, AdmissibilityError
+    from wealth_bridge import AdmissibilityError, geox_to_wealth
 
     TYPES_AVAILABLE = True
 except ImportError:

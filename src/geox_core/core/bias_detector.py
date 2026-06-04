@@ -8,7 +8,7 @@ interpretation diversity, and timeline pressure.
 
 import logging
 from datetime import datetime, timedelta
-from typing import List, Dict, Any, Optional
+from typing import Any
 
 logger = logging.getLogger("geox.core.bias_detector")
 
@@ -34,11 +34,11 @@ class BiasDetector:
     def detect(
         cls,
         claimed_scenario: str,
-        session_history: List[Dict[str, Any]],
+        session_history: list[dict[str, Any]],
         hypotheses_count: int = 1,
-        deadline: Optional[datetime] = None,
+        deadline: datetime | None = None,
         complexity_score: float = 0.5,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Detect the actual bias scenario and return the corrected B_cog.
         """

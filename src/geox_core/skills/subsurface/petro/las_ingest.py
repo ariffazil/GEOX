@@ -4,10 +4,10 @@ MCP wrapper for LAS ingestion.
 
 from __future__ import annotations
 
-from geox_core.core.governed_output import classify_claim_tag, make_vault_receipt
-from geox_core.services.las_ingestor import LASIngestor, ConstitutionalRefusal
-from geox_core.core.truth_ledger import TruthLedger
 from geox_core.core.artefact_emission import ArtefactEmitter
+from geox_core.core.governed_output import classify_claim_tag, make_vault_receipt
+from geox_core.core.truth_ledger import TruthLedger
+from geox_core.services.las_ingestor import ConstitutionalRefusal, LASIngestor
 
 
 def geox_ingest_las_tool(path: str, asset_id: str | None = None, chunk_size: int = 200) -> dict:

@@ -25,7 +25,7 @@ from __future__ import annotations
 import logging
 import os
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -101,7 +101,7 @@ class SPGlobalClient:
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
 
-        t0 = datetime.now(timezone.utc)
+        t0 = datetime.now(UTC)
         try:
             async with httpx.AsyncClient(timeout=self.timeout, follow_redirects=True) as client:
                 resp = await client.request(
@@ -130,7 +130,7 @@ class SPGlobalClient:
                 "_spg_url": url,
             }
 
-        latency = (datetime.now(timezone.utc) - t0).total_seconds() * 1000
+        latency = (datetime.now(UTC) - t0).total_seconds() * 1000
         provenance = SPGlobalProvenance(
             endpoint=endpoint,
             requested_at=t0.isoformat(),
@@ -362,7 +362,7 @@ class SPGlobalClient:
             "_spg_provenance": {
                 "source": "sp_global_api",
                 "endpoint": f"/{data_type}",
-                "requested_at": datetime.now(timezone.utc).isoformat(),
+                "requested_at": datetime.now(UTC).isoformat(),
                 "response_status": 401,
             },
         }

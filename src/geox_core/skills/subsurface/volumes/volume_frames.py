@@ -200,8 +200,8 @@ def geox_volume_get_frame(
     """
     from geox_core.skills.earth_science.seismic_wrappers import (
         ClaimTag,
-        make_vault_receipt,
         _admissibility_gate,
+        make_vault_receipt,
     )
 
     gate = _admissibility_gate(provenance)

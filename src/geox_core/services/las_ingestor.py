@@ -13,11 +13,11 @@ Improvement spec applied:
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
+from datetime import UTC
 from pathlib import Path
 from typing import Any
-
-import json
 
 import numpy as np
 
@@ -205,15 +205,15 @@ _CURVE_MAP = {
 
 def _make_vault_receipt(tool_name: str, payload: dict, verdict: str) -> dict:
     import hashlib
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     canonical = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
-    digest = hashlib.sha256(f"{tool_name}:{canonical}".encode("utf-8")).hexdigest()
+    digest = hashlib.sha256(f"{tool_name}:{canonical}".encode()).hexdigest()
     return {
         "vault": "VAULT999",
         "tool_name": tool_name,
         "verdict": verdict,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "hash": digest[:16],
     }
 
@@ -581,8 +581,8 @@ class OCRIngestor:
 
     def _require_deps(self):
         try:
-            from PIL import Image  # noqa: F401
             import pytesseract  # noqa: F401
+            from PIL import Image  # noqa: F401
         except ImportError as e:
             raise RuntimeError(f"OCR dependencies not available: {e}. Ensure PIL and pytesseract are installed in the container.")
 
@@ -649,13 +649,13 @@ class OCRIngestor:
             detected["DT"] = dt_matches[:100]
         return detected
 
-    def ingest(self, image_path: str, asset_id: str | None = None) -> "WellDigitizeResult":
+    def ingest(self, image_path: str, asset_id: str | None = None) -> WellDigitizeResult:
         """
         Main entry point: ingest a scanned log image.
         Returns WellDigitizeResult with claim_state, suitability, and limitations.
         """
-        from PIL import Image
         import pytesseract
+        from PIL import Image
 
         self._require_deps()
         source = Path(image_path)

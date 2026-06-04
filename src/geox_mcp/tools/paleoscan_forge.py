@@ -19,26 +19,26 @@ import logging
 from typing import Any, Literal
 
 import numpy as np
+from fastmcp import Context
 
-from geox_core.core.geox_image import BlockSpace, SurveySpace, WorldSpace, ScanOrientation
-from geox_core.spatial.transforms import CoordinateSystem
+from geox_core.core.geox_image import BlockSpace, SurveySpace, WorldSpace
 from geox_core.engines.seismic.attribute_registry import DEFAULT_REGISTRY
-from geox_core.skills.subsurface.volumes.volume_frames import (
-    geox_volume_get_frame,
-    geox_volume_set_frame,
+from geox_core.enums.statuses import (
+    ArtifactStatus,
+    ExecutionStatus,
+    GovernanceStatus,
+    enrich_envelope_with_metabolic,
+    get_standard_envelope,
 )
 from geox_core.skills.subsurface.faults.fault_sticks import (
     ingest_fault_sticks_from_csv,
     ingest_fault_sticks_from_json,
-    FaultSet3d,
 )
-from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
-    ArtifactStatus,
-    ExecutionStatus,
-    enrich_envelope_with_metabolic,
+from geox_core.skills.subsurface.volumes.volume_frames import (
+    geox_volume_get_frame,
+    geox_volume_set_frame,
 )
+from geox_core.spatial.transforms import CoordinateSystem
 from geox_mcp.tools._helpers import _artifact_exists
 
 logger = logging.getLogger("geox.paleoscan_forge")
@@ -242,6 +242,7 @@ async def geox_seismic_compute_attribute_tool(
     orientation: Literal["inline", "crossline", "time"] = "inline",
     window_size: int = 11,
     provenance: str = "fixture",
+    ctx: Context | None = None,
 ) -> dict[str, Any]:
     """
     Compute a registered seismic attribute on a volume or frame.
@@ -251,14 +252,20 @@ async def geox_seismic_compute_attribute_tool(
     """
     from geox_core.skills.earth_science.seismic_wrappers import (
         ClaimTag,
-        make_vault_receipt,
         _admissibility_gate,
+        make_vault_receipt,
     )
+
+    if ctx:
+        ctx.report_progress(0, 100)
 
     gate = _admissibility_gate(provenance)
     claim_state = ClaimTag.COMPUTED.value
     if gate["claim_state"] == ClaimTag.HYPOTHESIS.value:
         claim_state = ClaimTag.HYPOTHESIS.value
+
+    if ctx:
+        ctx.report_progress(10, 100)
 
     if not _artifact_exists(volume_ref):
         return get_standard_envelope(
@@ -275,6 +282,9 @@ async def geox_seismic_compute_attribute_tool(
             claim_state="NO_VALID_EVIDENCE",
             evidence_refs=[volume_ref],
         )
+
+    if ctx:
+        ctx.report_progress(30, 100)
 
     # Get frame as Image3d (or Image3d with single frame for 2D line)
     frame_result = geox_volume_get_frame(volume_ref, frame_index or 0, orientation, provenance)
@@ -305,6 +315,9 @@ async def geox_seismic_compute_attribute_tool(
     # We need the actual frame data — scaffold for now since get_frame returns metadata only
     # In production, get_frame would return the full pixel buffer
 
+    if ctx:
+        ctx.report_progress(50, 100)
+
     # For now, compute on a scaffold and be honest about it
     attr_impl = DEFAULT_REGISTRY.get(attribute_name)
     if attr_impl is None:
@@ -323,10 +336,16 @@ async def geox_seismic_compute_attribute_tool(
             claim_state="UNKNOWN_ATTRIBUTE",
         )
 
+    if ctx:
+        ctx.report_progress(80, 100)
+
     # Scaffold compute on random data (honest about it — frame buffer pipeline pending)
     scaffold_volume = Image3d(width=width, height=height, length=1, name="scaffold")
     scaffold_volume._data = np.random.randn(1, height, width).astype(np.float32) * 0.1
     output = attr_impl.compute(scaffold_volume, window_size=window_size)
+
+    if ctx:
+        ctx.report_progress(100, 100)
 
     result = {
         "tool": "geox_seismic_compute_attribute_tool",
@@ -455,12 +474,12 @@ async def geox_blend_volume_alpha_tool(
     Weights are normalized to sum to 1.0. Returns a canonical blended Image3d.
     This is pure geoscience compute — no file I/O, no UI.
     """
+    from geox_core.engines.seismic.blending import alpha_blend_3d
     from geox_core.skills.earth_science.seismic_wrappers import (
         ClaimTag,
-        make_vault_receipt,
         _admissibility_gate,
+        make_vault_receipt,
     )
-    from geox_core.engines.seismic.blending import alpha_blend_3d
 
     gate = _admissibility_gate(provenance)
     claim_state = ClaimTag.COMPUTED.value
@@ -520,6 +539,7 @@ async def geox_blend_volume_rgb_tool(
     volume_ref_green: str,
     volume_ref_blue: str,
     provenance: str = "fixture",
+    ctx: Context | None = None,
 ) -> dict[str, Any]:
     """
     RGB blend three seismic volumes into a single color-mapped volume.
@@ -527,17 +547,23 @@ async def geox_blend_volume_rgb_tool(
     Each volume is normalized to [0, 1] and assigned to a color channel.
     Widely used for frequency decomposition interpretation (e.g. R=low freq, G=mid, B=high).
     """
+    from geox_core.engines.seismic.blending import rgb_blend_3d
     from geox_core.skills.earth_science.seismic_wrappers import (
         ClaimTag,
-        make_vault_receipt,
         _admissibility_gate,
+        make_vault_receipt,
     )
-    from geox_core.engines.seismic.blending import rgb_blend_3d
+
+    if ctx:
+        ctx.report_progress(0, 100)
 
     gate = _admissibility_gate(provenance)
     claim_state = ClaimTag.COMPUTED.value
     if gate["claim_state"] == ClaimTag.HYPOTHESIS.value:
         claim_state = ClaimTag.HYPOTHESIS.value
+
+    if ctx:
+        ctx.report_progress(20, 100)
 
     vol_r = Image3d(100, 200, 50, name="red")
     vol_g = Image3d(100, 200, 50, name="green")
@@ -545,6 +571,9 @@ async def geox_blend_volume_rgb_tool(
     vol_r._data = np.random.randn(50, 200, 100).astype(np.float32) * 0.1
     vol_g._data = np.random.randn(50, 200, 100).astype(np.float32) * 0.1
     vol_b._data = np.random.randn(50, 200, 100).astype(np.float32) * 0.1
+
+    if ctx:
+        ctx.report_progress(70, 100)
 
     try:
         blended = rgb_blend_3d(vol_r, vol_g, vol_b)
@@ -558,6 +587,9 @@ async def geox_blend_volume_rgb_tool(
             claim_tag="VOID",
             claim_state="BLEND_FAILED",
         )
+
+    if ctx:
+        ctx.report_progress(100, 100)
 
     result = {
         "tool": "geox_blend_volume_rgb_tool",
@@ -590,6 +622,7 @@ async def geox_segy_export_tool(
     textual_header: str = "",
     overwrite: bool = False,
     provenance: str = "fixture",
+    ctx: Context | None = None,
 ) -> dict[str, Any]:
     """
     Export a seismic volume to SEG-Y format.
@@ -597,17 +630,23 @@ async def geox_segy_export_tool(
     [REQUIRES_888_HOLD: true]
     This is an irreversible file creation. The MCP layer enforces hold.
     """
+    from geox_core.ingest.segy_export import export_volume_to_segy
     from geox_core.skills.earth_science.seismic_wrappers import (
         ClaimTag,
-        make_vault_receipt,
         _admissibility_gate,
+        make_vault_receipt,
     )
-    from geox_core.ingest.segy_export import export_volume_to_segy
+
+    if ctx:
+        ctx.report_progress(0, 100)
 
     gate = _admissibility_gate(provenance)
     claim_state = ClaimTag.OBSERVED.value
     if gate["claim_state"] == ClaimTag.HYPOTHESIS.value:
         claim_state = ClaimTag.HYPOTHESIS.value
+
+    if ctx:
+        ctx.report_progress(20, 100)
 
     if not _artifact_exists(volume_ref):
         return get_standard_envelope(
@@ -625,9 +664,15 @@ async def geox_segy_export_tool(
             evidence_refs=[volume_ref],
         )
 
+    if ctx:
+        ctx.report_progress(40, 100)
+
     # Scaffold volume for export demonstration
     vol = Image3d(100, 200, 50, name="export_vol")
     vol._data = np.random.randn(50, 200, 100).astype(np.float32) * 0.1
+
+    if ctx:
+        ctx.report_progress(60, 100)
 
     export_result = export_volume_to_segy(
         output_path=output_path,
@@ -636,6 +681,9 @@ async def geox_segy_export_tool(
         textual_header=textual_header,
         overwrite=overwrite,
     )
+
+    if ctx:
+        ctx.report_progress(80, 100)
 
     if export_result["status"] == "error":
         return get_standard_envelope(
@@ -652,6 +700,9 @@ async def geox_segy_export_tool(
             claim_state="EXPORT_FAILED",
             evidence_refs=[volume_ref],
         )
+
+    if ctx:
+        ctx.report_progress(100, 100)
 
     result = {
         "tool": "geox_segy_export_tool",

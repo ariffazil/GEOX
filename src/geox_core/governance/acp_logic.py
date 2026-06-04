@@ -19,10 +19,10 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Callable, Dict, List, Optional, Set
 from weakref import WeakSet
 
 logger = logging.getLogger("geox.acp")
@@ -106,12 +106,12 @@ class Agent:
     agent_id: str
     role: AgentRole
     name: str
-    subscribed_resources: Set[str] = field(default_factory=set)
-    authorized_tools: Set[str] = field(default_factory=set)
+    subscribed_resources: set[str] = field(default_factory=set)
+    authorized_tools: set[str] = field(default_factory=set)
     status: AgentStatus = AgentStatus.IDLE
-    last_proposal: Optional[dict] = None
+    last_proposal: dict | None = None
     confidence_score: float = 0.0
-    connected_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    connected_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def to_dict(self) -> dict:
         return {
@@ -131,10 +131,10 @@ class A2AMessage:
 
     msg_id: str
     sender_id: str
-    recipient_id: Optional[str]  # None = broadcast
+    recipient_id: str | None  # None = broadcast
     msg_type: str  # "proposal", "query", "validation", "alert", "verdict"
     payload: dict
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def to_dict(self) -> dict:
         return {
@@ -177,13 +177,13 @@ class AgentRegistry:
     """
 
     def __init__(self):
-        self._agents: Dict[str, Agent] = {}
-        self._resource_subscribers: Dict[str, Set[str]] = {}
+        self._agents: dict[str, Agent] = {}
+        self._resource_subscribers: dict[str, set[str]] = {}
         self._listeners: WeakSet[Callable[[A2AMessage], None]] = WeakSet()
         self._lock = asyncio.Lock()
 
     async def register(
-        self, agent_id: str, role: AgentRole, name: str, resources: Optional[List[str]] = None, tools: Optional[List[str]] = None
+        self, agent_id: str, role: AgentRole, name: str, resources: list[str] | None = None, tools: list[str] | None = None
     ) -> Agent:
         """Register a new agent with the ACP."""
         async with self._lock:
@@ -225,16 +225,16 @@ class AgentRegistry:
             logger.info("Agent unregistered: %s", agent_id)
             return True
 
-    def get_agent(self, agent_id: str) -> Optional[Agent]:
+    def get_agent(self, agent_id: str) -> Agent | None:
         """Get agent by ID."""
         return self._agents.get(agent_id)
 
-    def get_subscribers(self, resource: str) -> List[Agent]:
+    def get_subscribers(self, resource: str) -> list[Agent]:
         """Get all agents subscribed to a resource."""
         agent_ids = self._resource_subscribers.get(resource, set())
         return [self._agents[aid] for aid in agent_ids if aid in self._agents]
 
-    def list_agents(self) -> List[Agent]:
+    def list_agents(self) -> list[Agent]:
         """List all registered agents."""
         return list(self._agents.values())
 
@@ -267,8 +267,8 @@ class A2AMessageBus:
 
     def __init__(self, registry: AgentRegistry):
         self.registry = registry
-        self._message_history: List[A2AMessage] = []
-        self._handlers: Dict[str, List[Callable[[A2AMessage], None]]] = {}
+        self._message_history: list[A2AMessage] = []
+        self._handlers: dict[str, list[Callable[[A2AMessage], None]]] = {}
         self._lock = asyncio.Lock()
 
     async def send(self, message: A2AMessage) -> bool:
@@ -295,7 +295,7 @@ class A2AMessageBus:
             sender = self.registry.get_agent(message.sender_id)
             if sender:
                 # Get agents subscribed to same resources
-                recipients: Set[str] = set()
+                recipients: set[str] = set()
                 for resource in sender.subscribed_resources:
                     for agent_id in self.registry.get_subscribers(resource):
                         if agent_id != message.sender_id:
@@ -326,7 +326,7 @@ class A2AMessageBus:
             self._handlers[msg_type] = []
         self._handlers[msg_type].append(handler)
 
-    def get_history(self, limit: int = 100) -> List[A2AMessage]:
+    def get_history(self, limit: int = 100) -> list[A2AMessage]:
         """Get recent message history."""
         return self._message_history[-limit:]
 
@@ -343,7 +343,7 @@ class FloorEnforcer:
     """
 
     def __init__(self):
-        self._check_handlers: Dict[FloorId, Callable[..., FloorCheck]] = {
+        self._check_handlers: dict[FloorId, Callable[..., FloorCheck]] = {
             FloorId.F2_TRUTH: self._check_f2_truth,
             FloorId.F4_CLARITY: self._check_f4_clarity,
             FloorId.F7_HUMILITY: self._check_f7_humility,
@@ -352,7 +352,7 @@ class FloorEnforcer:
             FloorId.F13_SOVEREIGN: self._check_f13_sovereign,
         }
 
-    async def validate(self, proposal: dict, agent: Agent, required_floors: Optional[List[FloorId]] = None) -> List[FloorCheck]:
+    async def validate(self, proposal: dict, agent: Agent, required_floors: list[FloorId] | None = None) -> list[FloorCheck]:
         """
         Validate a proposal against all required constitutional floors.
         Returns list of floor check results.
@@ -510,7 +510,7 @@ class DiscordanceDetector:
             # Trigger discordance alert
             await self.bus.send(
                 A2AMessage(
-                    msg_id=f"alert_{datetime.now(timezone.utc).timestamp()}",
+                    msg_id=f"alert_{datetime.now(UTC).timestamp()}",
                     sender_id="acp.discordance_detector",
                     recipient_id=None,  # Broadcast
                     msg_type="alert",
@@ -533,7 +533,7 @@ class DiscordanceDetector:
             "message": "Converged" if converged else f"Discordance: {discordance * 100:.1f}%",
         }
 
-    def _calculate_discordance(self, proposals: List[dict]) -> float:
+    def _calculate_discordance(self, proposals: list[dict]) -> float:
         """Calculate discordance metric between proposals."""
         # Extract numerical values
         values = []
@@ -569,8 +569,8 @@ class Judge888:
 
     def __init__(self, enforcer: FloorEnforcer):
         self.enforcer = enforcer
-        self._verdict_history: List[dict] = []
-        self._pending_proposals: Dict[str, dict] = {}
+        self._verdict_history: list[dict] = []
+        self._pending_proposals: dict[str, dict] = {}
 
     async def evaluate(self, proposal: dict, agent: Agent, auto_low_risk: bool = True) -> dict:
         """
@@ -602,7 +602,7 @@ class Judge888:
             "verdict": verdict.value,
             "agent_id": agent.agent_id,
             "proposal_id": proposal.get("id", "unknown"),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "floor_results": [r.to_dict() for r in floor_results],
             "all_passed": all_passed,
             "message": self._verdict_message(verdict),
@@ -633,7 +633,7 @@ class Judge888:
         result = {
             "verdict": VerdictState.SEAL_999.value,
             "proposal_id": proposal_id,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "message": "999_SEAL granted. DITEMPA BUKAN DIBERI.",
             "sealed": True,
         }
@@ -653,7 +653,7 @@ class GEOSXACP:
     Singleton instance manages the entire agent ecosystem.
     """
 
-    _instance: Optional["GEOSXACP"] = None
+    _instance: GEOSXACP | None = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -675,7 +675,7 @@ class GEOSXACP:
         logger.info("GEOX ACP initialized — DITEMPA BUKAN DIBERI")
 
     async def register_agent(
-        self, agent_id: str, role: str, name: str, resources: Optional[List[str]] = None, tools: Optional[List[str]] = None
+        self, agent_id: str, role: str, name: str, resources: list[str] | None = None, tools: list[str] | None = None
     ) -> Agent:
         """Register an agent with the ACP."""
         role_enum = AgentRole(role) if role in [r.value for r in AgentRole] else AgentRole.GEOLOGIST
@@ -696,7 +696,7 @@ class GEOSXACP:
         # Broadcast to other agents
         await self.bus.send(
             A2AMessage(
-                msg_id=f"prop_{datetime.now(timezone.utc).timestamp()}",
+                msg_id=f"prop_{datetime.now(UTC).timestamp()}",
                 sender_id=agent_id,
                 recipient_id=None,
                 msg_type="proposal",
@@ -717,7 +717,7 @@ class GEOSXACP:
             "agents_registered": len(self.registry.list_agents()),
             "f7_humility_floor": F7_HUMILITY_FLOOR,
             "f7_max_uncertainty": F7_MAX_UNCERTAINTY,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
 
@@ -731,7 +731,7 @@ acp = GEOSXACP()
 
 
 async def acp_register_agent(
-    agent_id: str, role: str, name: str, resources: Optional[List[str]] = None, tools: Optional[List[str]] = None
+    agent_id: str, role: str, name: str, resources: list[str] | None = None, tools: list[str] | None = None
 ) -> dict:
     """MCP Tool: Register an agent with the ACP."""
     try:

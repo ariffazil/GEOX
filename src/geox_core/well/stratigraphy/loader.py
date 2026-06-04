@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -44,8 +43,8 @@ DEPTH_ALIASES = ["DEPT", "DEPTH", "MD", "TD", "DEPT_M", "DEPT_FT", "INDEX"]
 
 def load_well_data(
     path: str,
-    gr_override: Optional[str] = None,
-    depth_override: Optional[str] = None,
+    gr_override: str | None = None,
+    depth_override: str | None = None,
 ) -> dict:
     """
     Load well data from LAS or CSV file.
@@ -78,8 +77,8 @@ def load_well_data(
 
 def _load_las(
     path: Path,
-    gr_override: Optional[str] = None,
-    depth_override: Optional[str] = None,
+    gr_override: str | None = None,
+    depth_override: str | None = None,
 ) -> dict:
     """Load LAS file, detect depth and GR columns."""
     import lasio
@@ -139,8 +138,8 @@ def _load_las(
 
 def _load_csv(
     path: Path,
-    gr_override: Optional[str] = None,
-    depth_override: Optional[str] = None,
+    gr_override: str | None = None,
+    depth_override: str | None = None,
 ) -> dict:
     """Load CSV file, detect depth and GR columns."""
     df = pd.read_csv(path)
@@ -175,7 +174,7 @@ def _load_csv(
     }
 
 
-def _detect_gr_column(df: pd.DataFrame, override: Optional[str] = None) -> Optional[str]:
+def _detect_gr_column(df: pd.DataFrame, override: str | None = None) -> str | None:
     """Detect GR column from common aliases."""
     if override and override.upper() in df.columns:
         return override.upper()

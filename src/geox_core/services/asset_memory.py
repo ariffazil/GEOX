@@ -10,9 +10,10 @@ import os
 import sqlite3
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, List, Dict, Optional
+from typing import Any
+
 import jsonschema
 
 # Resolve schema dir relative to this file (works in local, CI container, editable install).
@@ -23,7 +24,7 @@ SCHEMA_DIR = str(_THIS.parents[3] / "schemas" / "earth")
 
 def load_schema(schema_name: str) -> dict:
     path = os.path.join(SCHEMA_DIR, schema_name)
-    with open(path, "r") as f:
+    with open(path) as f:
         return json.load(f)
 
 
@@ -34,8 +35,8 @@ def _receipt(tool_name: str, payload: dict[str, Any], verdict: str = "SEAL") -> 
     return {
         "tool_name": tool_name,
         "verdict": verdict,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "hash": hashlib.sha256(f"{tool_name}:{canonical}".encode("utf-8")).hexdigest()[:16],
+        "timestamp": datetime.now(UTC).isoformat(),
+        "hash": hashlib.sha256(f"{tool_name}:{canonical}".encode()).hexdigest()[:16],
     }
 
 
@@ -70,7 +71,7 @@ class EarthMemoryStore:
                 """
             )
 
-    def draft_claim(self, asset_id: str, payload: Dict[str, Any]) -> str:
+    def draft_claim(self, asset_id: str, payload: dict[str, Any]) -> str:
         """Create a draft claim. No strict validation yet."""
         record_id = payload.get("id", f"mem_{uuid.uuid4().hex[:12]}")
         payload["id"] = record_id
@@ -78,7 +79,7 @@ class EarthMemoryStore:
         payload.setdefault("authority", {})["approval_state"] = "draft"
         payload.setdefault("authority", {})["created_by"] = "GEOX_Worker"
 
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         with self._connect() as conn:
             conn.execute(
                 "INSERT INTO earth_memory (id, asset_id, memory_type, truth_class, approval_state, payload, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -150,7 +151,7 @@ class EarthMemoryStore:
             )
             return receipt
 
-    def supersede_claim(self, old_record_id: str, new_payload: Dict[str, Any]) -> str:
+    def supersede_claim(self, old_record_id: str, new_payload: dict[str, Any]) -> str:
         """Version an Earth claim."""
         new_record_id = self.draft_claim(new_payload.get("subject", {}).get("asset_id", "unknown"), new_payload)
         with self._connect() as conn:
@@ -184,9 +185,9 @@ class AgentMemoryStore:
                 """
             )
 
-    def store_thought(self, agent_name: str, payload: Dict[str, Any], ttl_hours: int = 24) -> str:
+    def store_thought(self, agent_name: str, payload: dict[str, Any], ttl_hours: int = 24) -> str:
         record_id = f"ag_mem_{uuid.uuid4().hex[:12]}"
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         with self._connect() as conn:
             conn.execute(
                 "INSERT INTO agent_memory (id, agent_name, payload, ttl_hours, timestamp) VALUES (?, ?, ?, ?, ?)",
@@ -201,9 +202,9 @@ class AssetMemoryStore(EarthMemoryStore):
         @dataclass
         class MockStoreResult:
             success: bool
-            record_id: Optional[str]
-            audit_trace: List[str]
-            vault_receipt: Dict[str, Any]
+            record_id: str | None
+            audit_trace: list[str]
+            vault_receipt: dict[str, Any]
 
         if not amanah_locked:
             return MockStoreResult(
@@ -218,12 +219,12 @@ class AssetMemoryStore(EarthMemoryStore):
         receipt = _receipt("geox_memory_store_asset", payload, "SEAL")
         return MockStoreResult(True, record_id, ["F11 PASS"], receipt)
 
-    def recall(self, asset_id: str, eval_type: Optional[str] = None, query: Optional[str] = None, limit: int = 10) -> Any:
+    def recall(self, asset_id: str, eval_type: str | None = None, query: str | None = None, limit: int = 10) -> Any:
         @dataclass
         class MockRecallResult:
             asset_id: str
-            records: List[Any]
+            records: list[Any]
             claim_tag: str
-            vault_receipt: Dict[str, Any]
+            vault_receipt: dict[str, Any]
 
         return MockRecallResult(asset_id, [], "CLAIM", _receipt("geox_memory_recall_asset", {}, "SEAL"))

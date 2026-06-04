@@ -3,10 +3,16 @@ BACKWARD COMPATIBILITY SHIM — Use geox_core.physics instead.
 """
 
 from geox_core.physics.parameters import (
-    impedance_array as calculate_acoustic_impedance,
-    reflectivity_array as calculate_reflectivity,
-    ricker_wavelet as generate_ricker,
     convolve_trace as convolve_synthetic,
+)
+from geox_core.physics.parameters import (
+    impedance_array as calculate_acoustic_impedance,
+)
+from geox_core.physics.parameters import (
+    reflectivity_array as calculate_reflectivity,
+)
+from geox_core.physics.parameters import (
+    ricker_wavelet as generate_ricker,
 )
 
 __all__ = [

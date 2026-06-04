@@ -17,45 +17,50 @@ Author: M Arif Fazil | DITEMPA BUKAN DIBERI
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional, Literal
+from typing import Any, Literal
 
 import numpy as np
 
-
+from geox_core.core.geox_2d import build_wavelet
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
     enrich_envelope_with_metabolic,
+    get_standard_envelope,
+)
+from geox_core.physics import (
+    convolve_trace as convolve_synthetic,
+)
+from geox_core.physics import (
+    impedance_array as calculate_acoustic_impedance,
+)
+from geox_core.physics import (
+    reflectivity_array as calculate_reflectivity,
+)
+from geox_core.physics import (
+    ricker_wavelet as generate_ricker,
 )
 from geox_mcp.tools._helpers import (
     _artifact_exists,
     _get_well_data_with_depth,
 )
-from geox_core.physics import (
-    impedance_array as calculate_acoustic_impedance,
-    reflectivity_array as calculate_reflectivity,
-    ricker_wavelet as generate_ricker,
-    convolve_trace as convolve_synthetic,
-)
-from geox_core.core.geox_2d import build_wavelet
 
 logger = logging.getLogger("geox.canonical.forward_model")
 
 
 async def geox_forward_model_synthetic(
-    vp: Optional[List[float]] = None,
-    rho: Optional[List[float]] = None,
-    depth: Optional[List[float]] = None,
+    vp: list[float] | None = None,
+    rho: list[float] | None = None,
+    depth: list[float] | None = None,
     wavelet_type: Literal["ricker", "ormsby", "klauder"] = "ricker",
     wavelet_freq: float = 20.0,
-    wavelet_params: Optional[Dict[str, Any]] = None,
+    wavelet_params: dict[str, Any] | None = None,
     water_depth_m: float = 0.0,
     vp_water: float = 1500.0,
     dt_ms: float = 4.0,
     noise_db: float = -18.0,
-    well_id: Optional[str] = None,
+    well_id: str | None = None,
     output_format: Literal["full", "compact"] = "full",
 ) -> dict:
     """Forward seismic model: Well logs → AI → RC → Wavelet convolution → Synthetic.

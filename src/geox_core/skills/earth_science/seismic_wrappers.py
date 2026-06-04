@@ -18,9 +18,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -44,12 +44,12 @@ def make_vault_receipt(
     verdict: str = "SEAL",
 ) -> dict[str, Any]:
     canonical = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
-    digest = hashlib.sha256(f"{tool_name}:{canonical}".encode("utf-8")).hexdigest()
+    digest = hashlib.sha256(f"{tool_name}:{canonical}".encode()).hexdigest()
     return {
         "vault": "VAULT999",
         "tool_name": tool_name,
         "verdict": verdict,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "hash": digest[:16],
     }
 
@@ -124,9 +124,9 @@ def _admissibility_gate(provenance: str, required_present: bool = True) -> dict[
 
 
 def seismic_load_volume(
-    segy_path: Optional[str] = None,
+    segy_path: str | None = None,
     volume_id: str = "SEISMIC_3D",
-    survey_name: Optional[str] = None,
+    survey_name: str | None = None,
     inline_axis: int = 0,
     crossline_axis: int = 1,
     sample_axis: int = 2,
@@ -256,7 +256,7 @@ def _compute_segy_hash(segy_path: str) -> str:
 
 def _scaffold_seismic_volume(
     volume_id: str,
-    survey_name: Optional[str],
+    survey_name: str | None,
     provenance: str,
     limitations: list[str],
     claim_state: str,
@@ -357,10 +357,10 @@ _ATTRIBUTE_META = {
 def seismic_compute_attribute(
     volume_id: str,
     attribute: str = "amplitude",
-    inline: Optional[int] = None,
-    crossline: Optional[int] = None,
-    slice_data: Optional[list] = None,
-    source_volume_id: Optional[str] = None,  # provenance link
+    inline: int | None = None,
+    crossline: int | None = None,
+    slice_data: list | None = None,
+    source_volume_id: str | None = None,  # provenance link
     window_samples: int = 11,
     window_center_ms: float = 0.0,
     provenance: str = "fixture",  # for admissibility
@@ -541,10 +541,10 @@ def seismic_render_volume_slice(
     volume_id: str,
     orientation: str = "inline",  # inline | crossline | time_slice | depth_slice
     slice_index: int = 0,
-    attribute: Optional[str] = None,
+    attribute: str | None = None,
     display_mode: str = "qualitative_display",  # qualitative_display | interpretation_scale | earth_scale_depth_view
     domain_flag: str = "time",  # time | depth | frequency
-    physical_extents: Optional[dict] = None,  # from geox_seismic_load_volume
+    physical_extents: dict | None = None,  # from geox_seismic_load_volume
     provenance: str = "computed",
 ) -> dict[str, Any]:
     """

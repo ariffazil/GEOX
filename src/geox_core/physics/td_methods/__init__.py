@@ -3,10 +3,10 @@ geox_core.physics.td_methods — exports
 """
 
 from geox_core.physics.td_methods.base import TDFitResult
+from geox_core.physics.td_methods.layer_cake import fit_layer_cake
 from geox_core.physics.td_methods.linear import fit_linear
 from geox_core.physics.td_methods.polynomial import fit_polynomial
 from geox_core.physics.td_methods.vo_k import fit_vo_k
-from geox_core.physics.td_methods.layer_cake import fit_layer_cake
 
 
 def fit_td(

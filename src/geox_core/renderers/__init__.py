@@ -13,8 +13,8 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from geox_core.artifacts import build_artifact_envelope, validate_artifact
 from geox_core.plot_specs import PlotSpec
-from geox_core.artifacts import validate_artifact, build_artifact_envelope
 
 logger = logging.getLogger("geox.renderers")
 
@@ -111,8 +111,9 @@ def _render_matplotlib(spec: PlotSpec) -> dict[str, Any]:
     import matplotlib
 
     matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
     import os
+
+    import matplotlib.pyplot as plt
 
     os.makedirs(spec.output_dir, exist_ok=True)
     timestamp = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -172,8 +173,9 @@ def _render_plotly(spec: PlotSpec) -> dict[str, Any]:
 
 def _render_pillow(spec: PlotSpec) -> dict[str, Any]:
     """Deterministic pillow renderer for image verification / thumbnails."""
-    from PIL import Image, ImageDraw  # noqa: F401
     import os
+
+    from PIL import Image, ImageDraw  # noqa: F401
 
     os.makedirs(spec.output_dir, exist_ok=True)
     timestamp = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d_%H%M%S")

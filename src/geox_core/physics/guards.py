@@ -10,7 +10,7 @@ DITEMPA BUKAN DIBERI
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, List, Optional
+from typing import Any
 
 import numpy as np
 
@@ -29,12 +29,12 @@ class PhysicsViolation:
 @dataclass
 class ValidationResult:
     status: str
-    violations: List[PhysicsViolation] = field(default_factory=list)
+    violations: list[PhysicsViolation] = field(default_factory=list)
     hold: bool = False
     posterior_breadth_violation: bool = False
-    posterior_breadth_ratio: Optional[float] = None
-    reason: Optional[str] = None
-    epistemic_integrity: Optional[EpistemicResult] = None
+    posterior_breadth_ratio: float | None = None
+    reason: str | None = None
+    epistemic_integrity: EpistemicResult | None = None
 
     def to_dict(self) -> dict[str, Any]:
         result: dict[str, Any] = {"status": self.status}
@@ -87,7 +87,7 @@ class PhysicsGuard:
     # ─── Core Bounds Validation ─────────────────────────────────────────────
 
     def validate(self, output: dict[str, Any]) -> ValidationResult:
-        violations: List[PhysicsViolation] = []
+        violations: list[PhysicsViolation] = []
 
         if "porosity" in output or "por" in output:
             por = output.get("porosity") or output.get("por")
@@ -115,8 +115,8 @@ class PhysicsGuard:
 
         return ValidationResult(status="PASS")
 
-    def _check_bounds(self, param: str, value: float) -> List[PhysicsViolation]:
-        violations: List[PhysicsViolation] = []
+    def _check_bounds(self, param: str, value: float) -> list[PhysicsViolation]:
+        violations: list[PhysicsViolation] = []
         if param in self.BOUNDS:
             min_b, max_b = self.BOUNDS[param]
             if value < min_b or value > max_b:
@@ -131,8 +131,8 @@ class PhysicsGuard:
                 )
         return violations
 
-    def _check_ro_bounds(self, ro: float) -> List[PhysicsViolation]:
-        violations: List[PhysicsViolation] = []
+    def _check_ro_bounds(self, ro: float) -> list[PhysicsViolation]:
+        violations: list[PhysicsViolation] = []
         oil_min, oil_max = self.RO_BOUNDS["ro_oil_window"]
         gas_min, gas_max = self.RO_BOUNDS["ro_gas_floor"]
         if ro < oil_min or (ro > oil_max and ro < gas_min):
@@ -154,7 +154,7 @@ class PhysicsGuard:
         p10: float,
         p50: float,
         p90: float,
-        max_ratio: Optional[float] = None,
+        max_ratio: float | None = None,
     ) -> ValidationResult:
         if max_ratio is None:
             max_ratio = self.max_posterior_ratio
@@ -175,7 +175,7 @@ class PhysicsGuard:
             )
         return ValidationResult(status="PASS", posterior_breadth_ratio=ratio)
 
-    def check_volumetric_output(self, stoiip: dict[str, Any], max_ratio: Optional[float] = None) -> ValidationResult:
+    def check_volumetric_output(self, stoiip: dict[str, Any], max_ratio: float | None = None) -> ValidationResult:
         if not all(k in stoiip for k in ("p10", "p50", "p90")):
             return ValidationResult(
                 status="INVALID",
@@ -200,7 +200,7 @@ class PhysicsGuard:
         por_cutoff: float = 0.10,
         vsh_cutoff: float = 0.6,
     ) -> ValidationResult:
-        violations: List[PhysicsViolation] = []
+        violations: list[PhysicsViolation] = []
 
         if sw >= sw_cutoff:
             violations.append(
@@ -263,7 +263,7 @@ class PhysicsGuard:
     # ─── Velocity Sanity (Stretch/Squeeze Guard) ────────────────────────────
 
     def validate_velocity_sanity(self, v_stretched: np.ndarray, z_depth: np.ndarray) -> ValidationResult:
-        violations: List[PhysicsViolation] = []
+        violations: list[PhysicsViolation] = []
 
         if np.any(v_stretched > 5500.0) or np.any(v_stretched < 1480.0):
             violations.append(
@@ -331,11 +331,11 @@ class PhysicsGuard:
     # ─── Prospect Composite ─────────────────────────────────────────────────
 
     def validate_prospect_input(self, prospect: dict[str, Any]) -> ValidationResult:
-        all_violations: List[PhysicsViolation] = []
+        all_violations: list[PhysicsViolation] = []
         posterior_breadth_violation = False
-        posterior_breadth_ratio: Optional[float] = None
-        reasons: List[str] = []
-        epistemic_result: Optional[EpistemicResult] = None
+        posterior_breadth_ratio: float | None = None
+        reasons: list[str] = []
+        epistemic_result: EpistemicResult | None = None
 
         if any(k in prospect for k in ("porosity", "por", "sw", "vsh")):
             basic_result = self.validate(prospect)

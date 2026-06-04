@@ -2,7 +2,6 @@
 # Extracted from _helpers.py (lines 312–451)
 # NO FastMCP imports. Pure business logic.
 
-from typing import Dict
 import base64
 import csv
 import json
@@ -44,7 +43,7 @@ def _decode_upload_content(content_base64: str) -> bytes:
 # ─── Claim-state ladder (Arif's spec) ─────────────────────────────────────────
 # Two axes: lifecycle (artifact readiness) + epistemic (confidence class)
 # Lifecycle states govern workflow gating; epistemic states govern claim_tag.
-CLAIM_STATES: Dict[str, str] = {
+CLAIM_STATES: dict[str, str] = {
     # Lifecycle — artifact readiness pipeline
     "NO_VALID_EVIDENCE": "NO_VALID_EVIDENCE",
     "INGESTED": "INGESTED",

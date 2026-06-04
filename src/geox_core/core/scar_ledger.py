@@ -1,6 +1,6 @@
 import sqlite3
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any
 
 DB_PATH = Path("/root/geox/asset_memory.db")
 
@@ -48,7 +48,7 @@ class ScarLedger:
             )
             return cursor.lastrowid
 
-    def audit_against_scars(self, context_tags: List[str]) -> List[Dict[str, Any]]:
+    def audit_against_scars(self, context_tags: list[str]) -> list[dict[str, Any]]:
         """
         Audit a new evaluation against known scars.
         Returns a list of applicable scars (echoes) that must be respected.

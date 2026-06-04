@@ -20,7 +20,6 @@ import warnings
 
 import numpy as np
 
-
 # ── helpers already imported in section.py ──────────────────────────────────
 # We re-import locally to keep this module self-contained.
 sys.path.insert(0, "/root/geox")

@@ -5,26 +5,26 @@ import json
 import logging
 import os
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional, Literal
+from typing import Literal
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
     enrich_envelope_with_metabolic,
+    get_standard_envelope,
 )
 from geox_mcp.tools._helpers import (
-    _register_artifact,
-    _safe_upload_path,
-    _decode_upload_content,
-    _parse_csv_or_json,
-    _map_canonical_curves,
-    _detect_depth_unit,
     CLAIM_STATES,
     _artifact_store,
+    _decode_upload_content,
+    _detect_depth_unit,
+    _map_canonical_curves,
+    _parse_csv_or_json,
+    _register_artifact,
+    _safe_upload_path,
 )
 
 logger = logging.getLogger("geox.canonical.ingest")
@@ -61,13 +61,13 @@ def _metabolic_return(
 
 
 async def geox_data_ingest_bundle(
-    source_uri: Optional[str] = None,
+    source_uri: str | None = None,
     source_type: Literal["well", "seismic", "earth3d", "auto", "tops", "biostrat", "checkshot"] = "auto",
-    well_id: Optional[str] = None,
+    well_id: str | None = None,
     standardize_curves: bool = True,
     normalize_units: bool = True,
-    content_base64: Optional[str] = None,
-    filename: Optional[str] = None,
+    content_base64: str | None = None,
+    filename: str | None = None,
     target_dir: str = "/data/geox_las",
     overwrite: bool = False,
     # Batch mode (absorbs geox_task_ingest_las_batch)
@@ -660,7 +660,7 @@ async def geox_data_ingest_bundle(
         out["vault_receipt"] = {
             "vault": "VAULT999",
             "tool": "geox_data_ingest_bundle",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "hash": digest,
         }
         return _metabolic_return(

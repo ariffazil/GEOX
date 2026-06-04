@@ -10,9 +10,9 @@ Constitutional contract:
   - Governance-blocked nodes cannot enter WEALTH pipeline.
 """
 
-from typing import TypedDict
 import sys
 from pathlib import Path
+from typing import TypedDict
 
 # Attempt to locate arifos_types from the arifOS workspace if present
 _arifos_types_path = Path("/root/arifOS/packages/arifos-types/py")
@@ -21,8 +21,8 @@ if _arifos_types_path.exists():
 
 try:
     from arifos_types import (
-        ResourceNode,
         EpistemicTag,
+        ResourceNode,
         TelemetryPayload,
         Verdict,
     )

@@ -19,10 +19,10 @@ import hashlib
 import json
 import os
 import time
-from datetime import datetime, timezone
-from typing import Any, Optional
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime
 from enum import Enum
+from typing import Any
 
 
 class ClaimTag(str, Enum):
@@ -49,7 +49,7 @@ class GEOXTelemetryHeartbeat:
     peace_sq: float = 1.0
     dominant_claim: str = "UNKNOWN"
     tools_used_count: int = 0
-    last_tool: Optional[str] = None
+    last_tool: str | None = None
     vault_receipts_count: int = 0
     active_apps: list[str] = field(default_factory=list)
     mcp_apps_plane_connected: bool = False
@@ -58,7 +58,7 @@ class GEOXTelemetryHeartbeat:
 
     def __post_init__(self):
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -75,13 +75,13 @@ class GEOXTelemetryEmitter:
         emitter.emit_ac_risk_result(verdict="SEAL", ac_risk=0.08)
     """
 
-    def __init__(self, arifos_endpoint: Optional[str] = None):
+    def __init__(self, arifos_endpoint: str | None = None):
         self._arifos_endpoint = arifos_endpoint or os.environ.get("ARIFOS_TELEMETRY_ENDPOINT", "http://arifOS:7070/telemetry")
         self._uptime_start = time.time()
         self._tool_count = 0
         self._vault_count = 0
         self._recent_tools: list[str] = []
-        self._last_tool: Optional[str] = None
+        self._last_tool: str | None = None
         self._last_claim: str = "UNKNOWN"
         self._last_peace_sq: float = 1.0
         self._last_entropy_delta: float = 0.0
@@ -94,7 +94,7 @@ class GEOXTelemetryEmitter:
         """Emit current heartbeat frame."""
         heartbeat = GEOXTelemetryHeartbeat(
             organ="GEOX",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             uptime_ms=round(self.uptime_ms, 2),
             entropy_delta=round(self._last_entropy_delta, 4),
             peace_sq=round(self._last_peace_sq, 4),
@@ -109,7 +109,7 @@ class GEOXTelemetryEmitter:
         )
         return heartbeat.to_dict()
 
-    def emit_tool_use(self, tool_name: str, vault_receipt: Optional[dict[str, Any]] = None) -> dict[str, Any]:
+    def emit_tool_use(self, tool_name: str, vault_receipt: dict[str, Any] | None = None) -> dict[str, Any]:
         """Record a tool invocation for telemetry."""
         self._tool_count += 1
         self._last_tool = tool_name
@@ -123,7 +123,7 @@ class GEOXTelemetryEmitter:
             "event": "tool_use",
             "tool_name": tool_name,
             "tool_count": self._tool_count,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
     def emit_ac_risk_result(self, verdict: str, ac_risk: float, claim_tag: str = "UNKNOWN") -> dict[str, Any]:
@@ -154,7 +154,7 @@ class GEOXTelemetryEmitter:
             "claim_tag": claim_tag,
             "entropy_delta": round(self._last_entropy_delta, 4),
             "peace_sq": round(self._last_peace_sq, 4),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
     def emit_seismic_result(self, volume_id: str, attribute: str, claim_tag: str) -> dict[str, Any]:
@@ -165,7 +165,7 @@ class GEOXTelemetryEmitter:
             "volume_id": volume_id,
             "attribute": attribute,
             "claim_tag": claim_tag,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
     def emit_well_result(self, well_id: str, claim_tag: str) -> dict[str, Any]:
@@ -175,7 +175,7 @@ class GEOXTelemetryEmitter:
             "event": "well_result",
             "well_id": well_id,
             "claim_tag": claim_tag,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
     def emit_prospect_result(self, prospect_id: str, verdict: str, claim_tag: str) -> dict[str, Any]:
@@ -189,18 +189,18 @@ class GEOXTelemetryEmitter:
             "verdict": verdict,
             "claim_tag": claim_tag,
             "peace_sq": round(self._last_peace_sq, 4),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
     def make_telemetry_receipt(self, payload: dict[str, Any]) -> dict[str, Any]:
         """Wrap any payload in VAULT999 telemetry receipt."""
         canonical = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
-        digest = hashlib.sha256(f"telemetry:{canonical}".encode("utf-8")).hexdigest()
+        digest = hashlib.sha256(f"telemetry:{canonical}".encode()).hexdigest()
         return {
             "vault": "VAULT999",
             "tool_name": "geox_telemetry_emit",
             "verdict": "SEAL",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "hash": digest[:16],
             "payload": payload,
         }
@@ -240,7 +240,7 @@ class GEOXTelemetryEmitter:
 
 
 # Global singleton
-_telemetry_emitter: Optional[GEOXTelemetryEmitter] = None
+_telemetry_emitter: GEOXTelemetryEmitter | None = None
 
 
 def get_telemetry_emitter() -> GEOXTelemetryEmitter:

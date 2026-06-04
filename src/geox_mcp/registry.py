@@ -1,11 +1,11 @@
-from typing import List, Dict, Any
+from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX WITNESS CORE — v2026.05.22
 # 10 tools. Physics-9 foundation. No interpretation. No narrative.
 # ═══════════════════════════════════════════════════════════════════════════════
 
-CANONICAL_PUBLIC_TOOLS: List[str] = [
+CANONICAL_PUBLIC_TOOLS: list[str] = [
     # Data witnessing
     "geox_data_ingest_bundle",
     "geox_data_qc_bundle",
@@ -49,7 +49,7 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_claim_seal",
 ]
 
-GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
+GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_data_ingest_bundle", "axis": "observe", "expose": True},
     {"name": "geox_data_qc_bundle", "axis": "verify", "expose": True},
     {"name": "geox_dst_ingest_test", "axis": "observe", "expose": True},
@@ -86,7 +86,7 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
-LEGACY_ALIAS_MAP: Dict[str, str] = {
+LEGACY_ALIAS_MAP: dict[str, str] = {
     "geox_ingest_bundle": "geox_data_ingest_bundle",
     "geox_qc_bundle": "geox_data_qc_bundle",
     "geox_subsurface_candidates": "geox_subsurface_generate_candidates",

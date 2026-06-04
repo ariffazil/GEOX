@@ -10,16 +10,15 @@ DITEMPA BUKAN DIBERI
 from __future__ import annotations
 
 import math
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
-from geox_core.physics.state import Physics9State
 from geox_core.physics.parameters import forward_physics9
-
+from geox_core.physics.state import Physics9State
 
 # ─── Lithology Discrimination (Vp/Vs/ρ only) ────────────────────────────────
 
 
-def build_lithology_model(state: Physics9State) -> Tuple[str, float, Dict[str, float]]:
+def build_lithology_model(state: Physics9State) -> tuple[str, float, dict[str, float]]:
     """
     Vp/Vs/ρ → lithology name + confidence + derived properties.
 
@@ -54,7 +53,7 @@ def build_lithology_model(state: Physics9State) -> Tuple[str, float, Dict[str, f
 def anomaly_contrast_theory(
     background: Physics9State,
     observed: Physics9State,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     AC_Risk = u_ambiguity × D_transform_effective × B_cog
 
@@ -96,9 +95,9 @@ def anomaly_contrast_theory(
 
 
 def inverse_physics9(
-    measurements: Dict[str, float],
-    prior_state: Optional[Physics9State] = None,
-) -> Dict[str, Any]:
+    measurements: dict[str, float],
+    prior_state: Physics9State | None = None,
+) -> dict[str, Any]:
     """
     Infer canonical state from sparse measurements.
     Simple ratio-update; not Bayesian MCMC.
@@ -142,9 +141,9 @@ def inverse_physics9(
 
 def metabolic_loop(
     initial_state: Physics9State,
-    measurements: Dict[str, float],
+    measurements: dict[str, float],
     max_iterations: int = 50,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Forward → Inverse → Forward until residual < 0.01 or max_iterations.
     """

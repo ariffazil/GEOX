@@ -4,7 +4,7 @@ import csv
 import json
 import logging
 import os
-from typing import List, Optional, Literal
+from typing import Literal
 
 from geox_core.enums.statuses import (
     get_standard_envelope,
@@ -17,9 +17,9 @@ logger = logging.getLogger("geox.canonical.evidence")
 
 
 async def geox_evidence_summarize_cross(
-    evidence_refs: List[str],
+    evidence_refs: list[str],
     export_format: Literal["json", "csv"] = "json",
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
 ) -> dict:
     """Cross-domain synthesis into a causal evidence graph.
 

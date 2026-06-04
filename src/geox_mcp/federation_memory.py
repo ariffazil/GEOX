@@ -18,7 +18,7 @@ import os
 import time
 from typing import Any
 from urllib import request as urlrequest
-from urllib.error import URLError, HTTPError
+from urllib.error import HTTPError, URLError
 
 ARIFOS_MCP_URL = os.getenv("ARIFOS_MCP_URL", "http://localhost:8088")
 ACTOR_ID = "geox"

@@ -23,7 +23,7 @@ import logging
 import os
 import urllib.request
 from enum import StrEnum
-from typing import Any, Optional
+from typing import Any
 
 from starlette.responses import JSONResponse
 
@@ -120,10 +120,10 @@ def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int = 20)
 def check_governance(
     tool_name: str,
     arguments: dict[str, Any],
-    session_id: Optional[str] = None,
+    session_id: str | None = None,
     actor_id: str = "geox-governed",
     fail_closed: bool = True,
-) -> tuple[str, Optional[JSONResponse]]:
+) -> tuple[str, JSONResponse | None]:
     """
     Check governance for a GEOX tool call.
 

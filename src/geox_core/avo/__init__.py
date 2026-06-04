@@ -20,17 +20,17 @@ DITEMPA BUKAN DIBERI
 """
 
 from geox_core.avo.avo_forward import (
-    zoeppritz_rpp,
-    shuey_avo,
-    lmr_decompose,
-    synth_gather,
     AVOResult,
     LMRResult,
+    lmr_decompose,
+    shuey_avo,
+    synth_gather,
+    zoeppritz_rpp,
 )
 from geox_core.avo.castagna import (
-    castagna_mudrock_vp_to_vs,
-    castagna_mudrock_fallback,
     CASTAGNA_HONEST_BAND,
+    castagna_mudrock_fallback,
+    castagna_mudrock_vp_to_vs,
 )
 
 __all__ = [

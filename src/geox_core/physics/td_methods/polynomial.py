@@ -28,7 +28,7 @@ The PhysicsGuard catches curvature explosions.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
@@ -42,10 +42,10 @@ from geox_core.physics.td_methods.base import (
 
 
 def fit_polynomial(
-    checkshot_data: List[Dict[str, Any]],
+    checkshot_data: list[dict[str, Any]],
     depth_array: np.ndarray,
     degree: int = 2,
-    weights: Optional[np.ndarray] = None,
+    weights: np.ndarray | None = None,
     allow_extrapolation: bool = False,
 ) -> TDFitResult:
     """Weighted polynomial fit of TWT vs depth.

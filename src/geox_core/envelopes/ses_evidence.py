@@ -3,8 +3,8 @@ GEOX Canonical Substrate Ontology v2.1
 Shared SES Evidence Envelope Factory
 """
 
-import uuid
 import hashlib
+import uuid
 from datetime import datetime
 
 

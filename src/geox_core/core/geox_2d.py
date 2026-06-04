@@ -4,20 +4,21 @@ Convolutional seismogram modelling, horizon picking, fault interpretation,
 amplitude analysis, and time-depth conversion.
 """
 
-import numpy as np
-from typing import Dict, List, Tuple, Any
 from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
 
 
 @dataclass
 class HorizonPick:
     name: str
     time_ms: float
-    x_positions: List[float]
-    amplitudes: List[float]
+    x_positions: list[float]
+    amplitudes: list[float]
     phase: str  # "positive" or "negative"
     continuity: float  # 0-1 confidence
-    fault_positions: List[float]
+    fault_positions: list[float]
     arifos_grade: str  # "AAA" / "TRUST-GRADED" / "RAW"
 
 
@@ -26,9 +27,9 @@ class SeismicSection:
     data: np.ndarray  # (n_samples, n_traces)
     x_coords: np.ndarray
     t_coords: np.ndarray  # time in ms
-    horizons: List[HorizonPick]
-    faults: List[Dict]  # fault interpretation
-    metadata: Dict
+    horizons: list[HorizonPick]
+    faults: list[dict]  # fault interpretation
+    metadata: dict
 
 
 def build_wavelet(frequency: float, dt_ms: float, wavelet_type: str = "ricker") -> np.ndarray:
@@ -84,13 +85,13 @@ def apply_nmo_velocity(seis_data: np.ndarray, t_coords: np.ndarray, x_coords: np
 
 
 def generate_synthetic_seismogram(
-    curves: Dict[str, np.ndarray],
+    curves: dict[str, np.ndarray],
     vp_col: str = "DT",
     rho_col: str = "RHOB",
     wavelet_freq: float = 35.0,
     wavelet_type: str = "ricker",
     noise_db: float = -18,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Generate synthetic seismogram from well logs.
     Method: Zoeppritz reflectivity → Ricker wavelet convolution.
@@ -138,8 +139,8 @@ def generate_synthetic_seismogram(
 
 
 def interpret_horizons(
-    seis_data: np.ndarray, t_coords: np.ndarray, x_coords: np.ndarray, horizon_times: List[float], layer_names: List[str]
-) -> List[HorizonPick]:
+    seis_data: np.ndarray, t_coords: np.ndarray, x_coords: np.ndarray, horizon_times: list[float], layer_names: list[str]
+) -> list[HorizonPick]:
     """
     Auto-pick horizons from seismic data at specified time values.
     Computes amplitude characteristics and phase.
@@ -178,8 +179,8 @@ def interpret_horizons(
 
 
 def build_2d_section(
-    x_range: Tuple[float, float],
-    z_range: Tuple[float, float],
+    x_range: tuple[float, float],
+    z_range: tuple[float, float],
     n_traces: int = 200,
     n_samples: int = 500,
     structure_type: str = "anticline",
@@ -200,7 +201,7 @@ def build_2d_section(
     faults = []
 
     # Build geological structure
-    def structure_depth(x_pos: float, t_range: Tuple[float, float], layer: int) -> float:
+    def structure_depth(x_pos: float, t_range: tuple[float, float], layer: int) -> float:
         t_span = t_range[1] - t_range[0]
         x_norm = (x_pos - x_range[0]) / max(x_range[1] - x_range[0], 1)
 
@@ -324,7 +325,7 @@ def build_2d_section(
     )
 
 
-def export_segy(seismic_section: SeismicSection, output_path: str) -> Dict[str, Any]:
+def export_segy(seismic_section: SeismicSection, output_path: str) -> dict[str, Any]:
     """Export seismic section to SEG-Y format using segyio."""
     try:
         import segyio
@@ -350,7 +351,7 @@ def export_segy(seismic_section: SeismicSection, output_path: str) -> Dict[str, 
 
 def amplitude_analysis(
     seis_data: np.ndarray, window_ms: float, t_coords: np.ndarray, x_coords: np.ndarray
-) -> Dict[str, np.ndarray]:
+) -> dict[str, np.ndarray]:
     """
     RMS amplitude, instantaneous phase, frequency analysis.
     Returns amplitude map over the section.

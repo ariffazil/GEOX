@@ -16,8 +16,7 @@ import logging
 import os
 from collections import Counter
 from datetime import datetime
-from typing import Any, Optional
-
+from typing import Any
 
 from .config import (
     ProjectConfig,
@@ -25,12 +24,12 @@ from .config import (
     default_depo_rank,
     default_nn_ages,
 )
-from .loader import load_well_data
-from .sensing import sense_bins
-from .packages import build_packages
-from .seqstrat import infer_seq_strat, geo_rule_check, litho_classify
-from .plot import generate_well_panel, generate_correlation_panel
 from .excel import export_excel, export_sensing
+from .loader import load_well_data
+from .packages import build_packages
+from .plot import generate_correlation_panel, generate_well_panel
+from .sensing import sense_bins
+from .seqstrat import geo_rule_check, infer_seq_strat, litho_classify
 
 logger = logging.getLogger("geox.stratigraphy.pipeline")
 
@@ -241,7 +240,7 @@ def run_pipeline(
     }
 
 
-def _parse_zone_age(zone: str, nn_ages: dict) -> Optional[tuple[float, float]]:
+def _parse_zone_age(zone: str, nn_ages: dict) -> tuple[float, float] | None:
     """Parse NN zone age from zone string."""
     z = zone.upper().replace(" ", "_")
     if z in nn_ages:
@@ -265,7 +264,7 @@ def _make_no_data_package(
     depo: str,
     top: float,
     base: float,
-    age: Optional[tuple],
+    age: tuple | None,
 ) -> dict:
     """Create a package record for wells with no LAS data."""
     return {
@@ -301,7 +300,7 @@ def _make_no_data_package(
 def _extrapolate_motif(
     pkg: dict,
     sorted_pkgs: list[dict],
-) -> tuple[Optional[str], Optional[str], Optional[str]]:
+) -> tuple[str | None, str | None, str | None]:
     """Extrapolate Heterolithic motif from nearest non-Heterolithic neighbours."""
     try:
         idx = sorted_pkgs.index(pkg)

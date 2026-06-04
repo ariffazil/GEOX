@@ -10,10 +10,9 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import logging
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -157,7 +156,7 @@ class Image2d:
         self.height = new_height
         self._data = np.full((new_height, new_width), NO_VALUE, dtype=np.float32)
 
-    def transpose(self) -> "Image2d":
+    def transpose(self) -> Image2d:
         """Return a transposed copy (width ↔ height)."""
         t = Image2d(self.height, self.width, name=f"{self.name}_T")
         t._data = self._data.T.copy()

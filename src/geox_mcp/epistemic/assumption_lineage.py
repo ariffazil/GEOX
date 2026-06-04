@@ -21,9 +21,8 @@ from __future__ import annotations
 
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Optional
 
 
 class AssumptionStatus(StrEnum):
@@ -58,7 +57,7 @@ class AssumptionRecord:
     """
 
     assumption_id: str
-    parent_assumption_id: Optional[str]
+    parent_assumption_id: str | None
     introduced_by: str  # Tool name that introduced this
     rung_origin: int  # Rung at which this assumption was introduced
     assumption_type: AssumptionType
@@ -67,9 +66,9 @@ class AssumptionRecord:
     alternatives: list[str]  # Reasonable alternative values
     sensitivity: str  # CRITICAL | HIGH | MEDIUM | LOW
     current_status: AssumptionStatus
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    falsified_at: Optional[datetime] = None
-    falsified_by: Optional[str] = None  # Evidence_ref that falsified it
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    falsified_at: datetime | None = None
+    falsified_by: str | None = None  # Evidence_ref that falsified it
     propagated_to: list[str] = field(default_factory=list)  # assumption_ids that inherited this
     metadata: dict = field(default_factory=dict)  # Flexible extra context
 
@@ -107,14 +106,14 @@ class AssumptionGraph:
         self,
         introduced_by: str,
         assumption_id: str,
-        parent_assumption_id: Optional[str],
+        parent_assumption_id: str | None,
         rung_origin: int,
         assumption_type: AssumptionType,
         description: str,
         value_used: str,
-        alternatives: Optional[list[str]] = None,
+        alternatives: list[str] | None = None,
         sensitivity: str = "MEDIUM",
-        metadata: Optional[dict] = None,
+        metadata: dict | None = None,
     ) -> AssumptionRecord:
         """
         Register a new assumption in the graph.
@@ -157,7 +156,7 @@ class AssumptionGraph:
         self,
         assumption_id: str,
         falsified_by: str,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ) -> bool:
         """
         Mark an assumption as falsified.
@@ -172,7 +171,7 @@ class AssumptionGraph:
 
             record = self._records[assumption_id]
             record.current_status = AssumptionStatus.FALSIFIED
-            record.falsified_at = datetime.now(timezone.utc)
+            record.falsified_at = datetime.now(UTC)
             record.falsified_by = falsified_by
             if reason:
                 record.metadata["falsification_reason"] = reason
@@ -182,13 +181,13 @@ class AssumptionGraph:
                 child = self._records.get(child_id)
                 if child and child.current_status == AssumptionStatus.INHERITED:
                     child.current_status = AssumptionStatus.FALSIFIED
-                    child.falsified_at = datetime.now(timezone.utc)
+                    child.falsified_at = datetime.now(UTC)
                     child.falsified_by = f"CASCADE:{assumption_id}"
                     child.metadata["falsification_cascade_from"] = assumption_id
 
             return True
 
-    def get(self, assumption_id: str) -> Optional[AssumptionRecord]:
+    def get(self, assumption_id: str) -> AssumptionRecord | None:
         """Retrieve an assumption record by ID."""
         with self._lock:
             return self._records.get(assumption_id)
@@ -284,7 +283,7 @@ class AssumptionGraph:
 # ─── Global singleton assumption graph ──────────────────────────────────────────
 # Shared across all GEOX tool invocations within a session.
 
-_ASSUMPTION_GRAPH: Optional[AssumptionGraph] = None
+_ASSUMPTION_GRAPH: AssumptionGraph | None = None
 _GRAPH_LOCK = threading.Lock()
 
 

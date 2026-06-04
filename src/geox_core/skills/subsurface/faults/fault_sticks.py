@@ -174,7 +174,7 @@ def ingest_fault_sticks_from_csv(csv_path: str) -> FaultSet3d | None:
         current_stick: FaultStick | None = None
         current_fault: Fault3d | None = None
 
-        with open(csv_path, "r") as f:
+        with open(csv_path) as f:
             reader = csv.DictReader(f)
             for row in reader:
                 fname = row.get("fault_name", "unknown")
@@ -217,7 +217,7 @@ def ingest_fault_sticks_from_csv(csv_path: str) -> FaultSet3d | None:
 def ingest_fault_sticks_from_json(json_path: str) -> FaultSet3d | None:
     """Ingest fault sticks from GeoJSON FeatureCollection."""
     try:
-        with open(json_path, "r") as f:
+        with open(json_path) as f:
             data = json.load(f)
 
         fault_set = FaultSet3d(filename=json_path)

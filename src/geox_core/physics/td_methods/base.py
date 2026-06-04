@@ -35,13 +35,12 @@ DITEMPA BUKAN DIBERI — forges capability without surface bloat.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 
 from geox_core.physics.guards import PhysicsGuard
-
 
 # ── Envelope contract ────────────────────────────────────────────────────────
 
@@ -52,15 +51,15 @@ class TDFitResult:
 
     method: str
     equation: str
-    coefficients: List[float]
+    coefficients: list[float]
     twt_ms: np.ndarray
     residuals_ms: np.ndarray
     rmse_ms: float
-    physics_guard: Dict[str, Any]
+    physics_guard: dict[str, Any]
     extrapolation_risk: float
     fail_closed: bool
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "method": self.method,
             "equation": self.equation,
@@ -78,9 +77,9 @@ class TDFitResult:
 
 
 def _validate_inputs(
-    checkshot_data: List[Dict[str, Any]],
+    checkshot_data: list[dict[str, Any]],
     depth_array: np.ndarray,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """Pull (depth_md, twt_ms) arrays out of any checkshot format.
 
     Accepts:
@@ -139,7 +138,7 @@ def _audit(
     twt_ms: np.ndarray,
     depth_array: np.ndarray,
     residual_twt_ms: np.ndarray,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Run PhysicsGuard on the fitter output. Returns the receipt.
 
     Checks: Vp bounds [1500, 6000], drift |dv/dz| ≤ 50, curvature sanity.

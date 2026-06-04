@@ -1,14 +1,15 @@
 import os
-import numpy as np
+from typing import Any
+
 import matplotlib.pyplot as plt
-from typing import Dict, Any, Tuple
+import numpy as np
 
 
 class GEOXVisionDepthEngine:
     def __init__(self, epsilon: float = 1e-6):
         self.epsilon = epsilon
 
-    def extract_horizon_vectors_from_image(self, image_path: str) -> Tuple[np.ndarray, np.ndarray]:
+    def extract_horizon_vectors_from_image(self, image_path: str) -> tuple[np.ndarray, np.ndarray]:
         """
         [ABSTRACTION LAYER]
         Parses the image to extract horizon coordinates.
@@ -60,8 +61,8 @@ class GEOXVisionDepthEngine:
         return v_int
 
     def build_depth_section(
-        self, time_horizons_px: Dict[str, list[float]], px_to_twt_scale: float, v_rms_profile: np.ndarray, twt_profile: np.ndarray
-    ) -> Dict[str, Any]:
+        self, time_horizons_px: dict[str, list[float]], px_to_twt_scale: float, v_rms_profile: np.ndarray, twt_profile: np.ndarray
+    ) -> dict[str, Any]:
         """
         Converts pixel coordinate horizons into calibrated True Vertical Depth (TVD).
         """
@@ -130,7 +131,7 @@ class GEOXVisionDepthEngine:
 
         return v_int
 
-    def calculate_scale_invariant_error(self, v_int: np.ndarray) -> Dict[str, float]:
+    def calculate_scale_invariant_error(self, v_int: np.ndarray) -> dict[str, float]:
         """
         [ATTESTATION LAYER]
         Calculates the F2 validity of a geometric depth proposal.
@@ -154,7 +155,7 @@ class GEOXVisionDepthEngine:
 
     def generate_calibrated_depth_section(
         self, image_path: str, max_time_ms: float, max_cmp: float, v_rms_anchor: list, output_path: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Processes the input image, calculates the depth translation,
         and outputs a strictly calibrated structural Depth Image.

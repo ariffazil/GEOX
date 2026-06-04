@@ -18,11 +18,11 @@ Curve mapping:
 
 from __future__ import annotations
 
-import lasio
-import numpy as np
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
+
+import lasio
+import numpy as np
 
 
 @dataclass
@@ -31,12 +31,12 @@ class CurveBundle:
 
     well_id: str
     depth_md: np.ndarray
-    gr: Optional[np.ndarray] = None
-    rt: Optional[np.ndarray] = None
-    rhob: Optional[np.ndarray] = None
-    nphi: Optional[np.ndarray] = None
-    cal: Optional[np.ndarray] = None
-    sp: Optional[np.ndarray] = None
+    gr: np.ndarray | None = None
+    rt: np.ndarray | None = None
+    rhob: np.ndarray | None = None
+    nphi: np.ndarray | None = None
+    cal: np.ndarray | None = None
+    sp: np.ndarray | None = None
     null_pct: dict = field(default_factory=dict)
     depth_range: tuple = field(default_factory=lambda: (0.0, 0.0))
     provenance: str = "las_file"
@@ -53,7 +53,7 @@ class CurveManifestEntry:
     range_max: float
 
 
-def _canonicalise(arr: Optional[np.ndarray]) -> Optional[np.ndarray]:
+def _canonicalise(arr: np.ndarray | None) -> np.ndarray | None:
     """Replace LAS null value (-999.25 etc.) with np.nan."""
     if arr is None:
         return None
@@ -64,7 +64,7 @@ def _canonicalise(arr: Optional[np.ndarray]) -> Optional[np.ndarray]:
     return arr
 
 
-def _safe_curve(las: lasio.LasFile, *keys: str) -> Optional[np.ndarray]:
+def _safe_curve(las: lasio.LasFile, *keys: str) -> np.ndarray | None:
     """Try each key alias until one has data."""
     for key in keys:
         if key in las.curves:
@@ -74,7 +74,7 @@ def _safe_curve(las: lasio.LasFile, *keys: str) -> Optional[np.ndarray]:
     return None
 
 
-def _null_pct(arr: Optional[np.ndarray]) -> float:
+def _null_pct(arr: np.ndarray | None) -> float:
     if arr is None:
         return 1.0
     return float(np.sum(np.isnan(arr)) / max(len(arr), 1))

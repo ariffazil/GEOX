@@ -2,19 +2,21 @@
 # Extracted from _helpers.py (lines 1043–1363)
 # NO FastMCP imports. Pure business logic.
 
+from typing import Any
+
+from geox_core.enums.statuses import ArtifactStatus, get_standard_envelope
+
 from ._ingest import CANONICAL_ALIASES, CLAIM_STATES
-from ._registry import _artifact_exists, _get_artifact, _latest_qc_failed_refs
-from ._unit_registry import validate_curve, value_contract
 from ._petrophysics import (
-    _compute_vsh_from_store,
-    _compute_porosity_from_store,
-    _compute_saturation_from_store,
-    _compute_netpay_from_store,
     _classify_gr_motif,
     _classify_lithology_from_store,
+    _compute_netpay_from_store,
+    _compute_porosity_from_store,
+    _compute_saturation_from_store,
+    _compute_vsh_from_store,
 )
-from geox_core.enums.statuses import ArtifactStatus, get_standard_envelope
-from typing import Any, List, Optional
+from ._registry import _artifact_exists, _get_artifact, _latest_qc_failed_refs
+from ._unit_registry import validate_curve, value_contract
 
 
 def _candidate_error(
@@ -44,7 +46,7 @@ def _candidate_error(
 
 async def _compute_subsurface_candidates(
     target_class: str,
-    evidence_refs: List[str],
+    evidence_refs: list[str],
     realizations: int,
     gr_clean: float,
     gr_shale: float,
@@ -60,8 +62,8 @@ async def _compute_subsurface_candidates(
     phi_cutoff: float,
     sw_cutoff: float,
     rt_cutoff: float,
-    zone_top_m: Optional[float],
-    zone_base_m: Optional[float],
+    zone_top_m: float | None,
+    zone_base_m: float | None,
 ) -> dict:
     """Inner computation for subsurface candidates."""
     import sys

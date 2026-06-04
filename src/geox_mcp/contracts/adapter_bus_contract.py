@@ -27,7 +27,6 @@ Status: SCAFFOLD — do not use in production
 from __future__ import annotations
 
 from pydantic import BaseModel
-from typing import Optional
 
 
 class AdapterBusEnvelope(BaseModel):
@@ -35,8 +34,8 @@ class AdapterBusEnvelope(BaseModel):
 
     tool_name: str
     arguments: dict
-    geox_substrate: Optional[str] = None
-    geox_scale: Optional[str] = None
-    geox_horizon: Optional[str] = None
+    geox_substrate: str | None = None
+    geox_scale: str | None = None
+    geox_horizon: str | None = None
     claim_tag: str = "UNKNOWN"
     f13_hold: bool = False

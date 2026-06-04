@@ -16,18 +16,18 @@ import hashlib
 import json
 import logging
 import os
-from typing import Any, Optional
-
-import pandas as pd
+from typing import Any
 
 import openpyxl
+import pandas as pd
 
 logger = logging.getLogger("geox.stratigraphy.codec")
 
 MANIFEST_KEY = "GEOX_KL2_MANIFEST_B64"
 
 try:
-    from PIL import Image as _PIL_Image, PngImagePlugin as _PngMeta
+    from PIL import Image as _PIL_Image
+    from PIL import PngImagePlugin as _PngMeta
 
     _PILLOW_OK = True
 except ImportError:
@@ -67,7 +67,7 @@ def embed_manifest_in_png(png_path: str, manifest_obj: dict) -> bool:
         return False
 
 
-def extract_manifest_from_png(png_path: str) -> Optional[dict]:
+def extract_manifest_from_png(png_path: str) -> dict | None:
     """Extract manifest dict from PNG tEXt chunk."""
     if not _PILLOW_OK:
         return None
@@ -115,6 +115,7 @@ def png_to_xlsx(png_path: str, xlsx_out: str) -> dict:
 def validate_roundtrip(xlsx_path: str, sheet: str = "01_GEO_PACKAGES") -> dict:
     """Test XLSX → PNG → XLSX fidelity."""
     import tempfile
+
     import matplotlib
 
     matplotlib.use("Agg")

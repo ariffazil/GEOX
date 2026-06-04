@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal
 
 from geox_core.enums.statuses import (
     get_standard_envelope,
@@ -14,13 +14,13 @@ logger = logging.getLogger("geox.canonical.map_context")
 
 
 async def geox_map_context_scene(
-    bbox: List[float],
+    bbox: list[float],
     mode: Literal[
         "bbox_context", "crs_check", "render_scene", "scene_summary", "georeference_map", "coordinate_guardrail"
     ] = "bbox_context",
     crs: str = "EPSG:4326",
     # ── Eureka 8 (2026-06-03): optional VpSlice as scene input ────────────
-    vp_slice_inline: Optional[Dict[str, Any]] = None,
+    vp_slice_inline: dict[str, Any] | None = None,
 ) -> dict:
     """Spatial bbox context, CRS checks, and causal scene rendering.
 
@@ -58,11 +58,12 @@ async def geox_map_context_scene(
         "crs": crs,
         "scene_rendered": True,
     }
-    e8_block: Dict[str, Any] = {}
+    e8_block: dict[str, Any] = {}
     if vp_slice_inline is not None:
         try:
-            from geox_core.spatial.velocity_slice import VpSlice
             import numpy as np
+
+            from geox_core.spatial.velocity_slice import VpSlice
 
             slc = VpSlice(
                 data=np.asarray(vp_slice_inline["data"], dtype=float),

@@ -2,17 +2,17 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import List, Optional, Literal
+from typing import Literal
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
+    get_standard_envelope,
 )
 from geox_mcp.tools._helpers import (
-    _classify_gr_motif,
     CANONICAL_ALIASES,
+    _classify_gr_motif,
 )
 
 logger = logging.getLogger("geox.canonical.section")
@@ -20,24 +20,24 @@ logger = logging.getLogger("geox.canonical.section")
 
 async def geox_section_interpret_correlation(
     section_ref: str,
-    well_refs: List[str],
+    well_refs: list[str],
     mode: Literal["correlation", "gr_motif", "sequence_stratigraphy", "gde_trend", "well_tie"] = "correlation",
-    well_las_paths: Optional[List[str]] = None,
-    tops: Optional[dict] = None,
-    zone_definitions: Optional[dict] = None,
-    strat_standard: Optional[dict] = None,
-    paleoenvironment_input: Optional[List[dict]] = None,
+    well_las_paths: list[str] | None = None,
+    tops: dict | None = None,
+    zone_definitions: dict | None = None,
+    strat_standard: dict | None = None,
+    paleoenvironment_input: list[dict] | None = None,
     # ── well_tie parameters ──────────────────────────────────────────────────
-    checkshot_ref: Optional[str] = None,
+    checkshot_ref: str | None = None,
     wavelet_mode: Literal["ricker", "ormsby", "klauder", "estimated"] = "ricker",
-    wavelet_freq_hz: Optional[List[float]] = None,
+    wavelet_freq_hz: list[float] | None = None,
     phase_degrees: float = 0.0,
     polarity: Literal["SEG_NORMAL", "SEG_REVERSE"] = "SEG_NORMAL",
     synthetics_output: bool = False,
     tie_qc_report: bool = True,
-    seismic_ref: Optional[str] = None,
-    sonic_curve: Optional[str] = "DT",
-    density_curve: Optional[str] = "RHOB",
+    seismic_ref: str | None = None,
+    sonic_curve: str | None = "DT",
+    density_curve: str | None = "RHOB",
     matrix_density: float = 2.65,
     fluid_density: float = 1.0,
 ) -> dict:

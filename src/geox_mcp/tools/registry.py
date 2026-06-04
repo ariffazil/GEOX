@@ -22,11 +22,13 @@ def _get_git_version() -> str:
         return "geox-unknown"
 
 
+from datetime import UTC
+
 from geox_core.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
+    get_standard_envelope,
 )
 from geox_mcp.tools._helpers import (
     _artifact_store,
@@ -58,11 +60,12 @@ async def geox_system_registry_status(
     if _err is not None:
         return _err
     import os
-    from datetime import datetime, timezone
+    from datetime import datetime
+
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
 
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
 
     # Manifest vs canonical cross-check (boring, instrumental)
     _manifest_exposed = {e["name"] for e in GEOX_TOOL_MANIFEST if e.get("expose", True)}
@@ -109,8 +112,8 @@ async def geox_history_audit(
       2. GEOX _artifact_store (in-memory tool execution history)
       3. EvidenceStore file-backed store (future)
     """
-    import logging
     import json
+    import logging
     import os
 
     logger = logging.getLogger("geox.history_audit")
@@ -143,7 +146,7 @@ async def geox_history_audit(
             if not os.path.exists(vpath):
                 continue
             try:
-                with open(vpath, "r") as f:
+                with open(vpath) as f:
                     for line in f:
                         line = line.strip()
                         if not line:
@@ -406,14 +409,14 @@ async def geox_test_receipt_status() -> dict:
 
     Dynamically runs pytest --collect-only to count tests. Never hardcodes.
     """
-    import subprocess
     import os
-    import re
-    from pathlib import Path
 
     # Resolve repo root: env-var override > container /app > src-relative > cwd
     # (removed hardcoded /root/geox — fails in CI, leaks host path into production)
     import os as _os
+    import re
+    import subprocess
+    from pathlib import Path
 
     _env_root = _os.environ.get("GEOX_REPO_ROOT")
     _src_parents = Path(__file__).resolve().parents  # .../src/geox_mcp/tools/registry.py → parents[3] = repo root
@@ -562,7 +565,7 @@ async def geox_bundle_security_audit() -> dict:
     blocked_patterns: list[str] = []
 
     if mcpignore_present:
-        with open(mcpignore_path, "r") as f:
+        with open(mcpignore_path) as f:
             for line in f:
                 stripped = line.strip()
                 if stripped and not stripped.startswith("#"):

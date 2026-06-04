@@ -1,4 +1,5 @@
 from typing import Any
+
 # ─── kernel/_evidence.py ─── F6 Maruah + F7 Humility + ensemble injection ─────
 # Extracted from _helpers.py (lines 193–311)
 # NO FastMCP imports. Pure business logic.
