@@ -27,6 +27,22 @@ class HorizonSurface:
     amplitude_attributes: Optional[Dict] = None
     area_km2: float = 0.0
     structural_gradient: float = 0.0  # dip angle in degrees
+    # ── paleoscan_python v2.0.0 forge extensions ──
+    data_image: Optional[Any] = None  # Image2d representation of horizon data
+    block_space: Optional[Any] = None  # BlockSpace linked to horizon grid
+    survey_space: Optional[Any] = None  # SurveySpace linked to horizon grid
+
+    def set_data_image(self, image: Any) -> None:
+        """Attach a canonical Image2d as the horizon's data component."""
+        self.data_image = image
+
+    def set_block_space(self, block: Any) -> None:
+        """Attach the BlockSpace that defines horizon grid dimensions."""
+        self.block_space = block
+
+    def set_survey_space(self, survey: Any) -> None:
+        """Attach the SurveySpace that defines horizon coordinate bounds."""
+        self.survey_space = survey
 
 
 def generate_3d_seismic_cube(

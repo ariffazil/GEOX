@@ -38,6 +38,18 @@ from geox_mcp.tools.evidence_reason import geox_evidence_reason
 from geox_mcp.tools.prospect import geox_prospect_evaluate
 from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.registry import geox_system_registry_status
+from geox_mcp.tools.paleoscan_forge import (
+    geox_coord_transform_tool,
+    geox_blockspace_resolution_tool,
+    geox_volume_get_frame_tool,
+    geox_volume_set_frame_tool,
+    geox_seismic_compute_attribute_tool,
+    geox_fault_stick_ingest_tool,
+    geox_attribute_registry_list_tool,
+    geox_blend_volume_alpha_tool,
+    geox_blend_volume_rgb_tool,
+    geox_segy_export_tool,
+)
 from geox_mcp.tools.claims import (
     geox_claim_create,
     geox_claim_challenge,
@@ -93,6 +105,18 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_prospect_evaluate", geox_prospect_evaluate),
     ("geox_map_context_scene", geox_map_context_scene),
     ("geox_system_registry_status", geox_system_registry_status),
+    # paleoscan_python v2.0.0 forge
+    ("geox_coord_transform_tool", geox_coord_transform_tool),
+    ("geox_blockspace_resolution_tool", geox_blockspace_resolution_tool),
+    ("geox_volume_get_frame_tool", geox_volume_get_frame_tool),
+    ("geox_volume_set_frame_tool", geox_volume_set_frame_tool),
+    ("geox_seismic_compute_attribute_tool", geox_seismic_compute_attribute_tool),
+    ("geox_fault_stick_ingest_tool", geox_fault_stick_ingest_tool),
+    ("geox_attribute_registry_list_tool", geox_attribute_registry_list_tool),
+    # paleoscan_python v2.0.0 forge — blending + export
+    ("geox_blend_volume_alpha_tool", geox_blend_volume_alpha_tool),
+    ("geox_blend_volume_rgb_tool", geox_blend_volume_rgb_tool),
+    ("geox_segy_export_tool", geox_segy_export_tool),
     # H5: Claim Engine
     ("geox_claim_create", geox_claim_create),
     ("geox_claim_challenge", geox_claim_challenge),
@@ -198,6 +222,68 @@ _TOOL_ANNOTATIONS: dict[str, dict] = {
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    # paleoscan_python v2.0.0 forge
+    "geox_coord_transform_tool": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_blockspace_resolution_tool": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_volume_get_frame_tool": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_volume_set_frame_tool": {
+        "readOnlyHint": False,
+        "destructiveHint": True,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    },
+    "geox_seismic_compute_attribute_tool": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_fault_stick_ingest_tool": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_attribute_registry_list_tool": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    # paleoscan_python v2.0.0 forge — blending + export
+    "geox_blend_volume_alpha_tool": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_blend_volume_rgb_tool": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_segy_export_tool": {
+        "readOnlyHint": False,
+        "destructiveHint": True,
+        "idempotentHint": False,
         "openWorldHint": False,
     },
     # H5: Claim Engine
@@ -314,8 +400,8 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(**kwargs)(make_wrapper())
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    if len(CANONICAL_PUBLIC_TOOLS) != 20:
-        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 20 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+    if len(CANONICAL_PUBLIC_TOOLS) != 30:
+        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 30 sovereign tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
 
     # ── Legacy alias bridge ──────────────────────────────────────────────────
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")

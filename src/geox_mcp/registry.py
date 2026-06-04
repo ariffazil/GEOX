@@ -30,6 +30,18 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_map_context_scene",
     # Machine-checkable truth
     "geox_system_registry_status",
+    # paleoscan_python v2.0.0 forge — coordinate & image substrate
+    "geox_coord_transform_tool",
+    "geox_blockspace_resolution_tool",
+    "geox_volume_get_frame_tool",
+    "geox_volume_set_frame_tool",
+    "geox_seismic_compute_attribute_tool",
+    "geox_fault_stick_ingest_tool",
+    "geox_attribute_registry_list_tool",
+    # paleoscan_python v2.0.0 forge — blending + export
+    "geox_blend_volume_alpha_tool",
+    "geox_blend_volume_rgb_tool",
+    "geox_segy_export_tool",
     # H5: Claim Engine
     "geox_claim_create",
     "geox_claim_challenge",
@@ -54,6 +66,18 @@ GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
     {"name": "geox_prospect_evaluate", "axis": "reason", "expose": True},
     {"name": "geox_map_context_scene", "axis": "observe", "expose": True},
     {"name": "geox_system_registry_status", "axis": "observe", "expose": True},
+    # paleoscan_python v2.0.0 forge
+    {"name": "geox_coord_transform_tool", "axis": "compute", "expose": True},
+    {"name": "geox_blockspace_resolution_tool", "axis": "compute", "expose": True},
+    {"name": "geox_volume_get_frame_tool", "axis": "observe", "expose": True},
+    {"name": "geox_volume_set_frame_tool", "axis": "observe", "expose": True},
+    {"name": "geox_seismic_compute_attribute_tool", "axis": "reason", "expose": True},
+    {"name": "geox_fault_stick_ingest_tool", "axis": "observe", "expose": True},
+    {"name": "geox_attribute_registry_list_tool", "axis": "observe", "expose": True},
+    # paleoscan_python v2.0.0 forge — blending + export
+    {"name": "geox_blend_volume_alpha_tool", "axis": "compute", "expose": True},
+    {"name": "geox_blend_volume_rgb_tool", "axis": "compute", "expose": True},
+    {"name": "geox_segy_export_tool", "axis": "observe", "expose": True},
     # H5: Claim Engine
     {"name": "geox_claim_create", "axis": "reason", "expose": True},
     {"name": "geox_claim_challenge", "axis": "reason", "expose": True},
