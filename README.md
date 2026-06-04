@@ -10,12 +10,17 @@ epistemic_status: CLAIM
 
 # 🪨 GEOX — Earth Intelligence Engine
 
-> **Governed subsurface coprocessor for the arifOS federation.**
-> Domain: `geox.arif-fazil.com` | Organ: FIELD (γ) | Authority: Arif Fazil
-> Status: OPERATIONAL | Seal: DITEMPA BUKAN DIBERI
->
-> ⚠️ **For live/degraded/disabled status of ALL federation organs, see:**
-> **`ariffazil/arifOS/FEDERATION_STATUS.md`** — canonical source of truth.
+> **GEOX is a governed geoscience intelligence server for the arifOS federation.** It connects AI agents to subsurface evidence — well logs, petrophysics, seismic data, and prospect evaluation — and enforces constitutional rules that prevent the AI from overstating confidence, skipping evidence, or making irreversible drilling decisions without human approval. It is the earth witness: it observes, it computes, it never decides alone.
+
+<!-- SOT-MANIFEST
+owner: Arif
+last_verified: 2026-06-04
+valid_from: 2026-05-22
+valid_until: 2026-06-22
+confidence: high
+scope: /root/geox
+epistemic_status: CLAIM
+-->
 
 ***
 
