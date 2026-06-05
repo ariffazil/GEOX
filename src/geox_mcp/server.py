@@ -77,6 +77,7 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_prospect_evaluate": 60.0,
     "geox_map_context_scene": 30.0,
     "geox_system_registry_status": 10.0,
+    "geox_horizon_contrast_surface": 60.0,
 }
 TOOL_TIMEOUT_DEFAULT = 60.0
 
@@ -217,10 +218,8 @@ def compose_geox_servers() -> None:
     mcp.mount(claims, namespace=None)
 
     # Assert canonical count across all composed servers
-    if len(CANONICAL_PUBLIC_TOOLS) != 30:
-        raise ValueError(
-            f"F0_CONSTITUTION_BREACH: Expected 30 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
-        )
+    if len(CANONICAL_PUBLIC_TOOLS) != 31:
+        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 31 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
     logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 3 domains")
 
 
