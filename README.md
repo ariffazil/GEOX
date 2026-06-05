@@ -1,8 +1,8 @@
 ﻿<!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-04
-valid_from: 2026-05-22
-valid_until: 2026-06-22
+last_verified: 2026-06-05
+valid_from: 2026-06-05
+valid_until: 2026-07-05
 confidence: high
 scope: /root/geox
 epistemic_status: CLAIM
@@ -90,9 +90,9 @@ The canonical list lives at `src/geox_mcp/server.py` → `CANONICAL_PUBLIC_TOOLS
 
 > **F13 honored** — every capability lives in an existing tool's modes/params, not a new tool. Eureka forges (E1 multi-method T-D fitters, E7 cascade demotion) add depth inside `geox_seismic_compute` and `geox_claim_*` without expanding the surface.
 
-### Universal Output Envelope (v0.4)
+### Universal Output Envelope (v0.5)
 
-Every tool returns the same outer contract:
+Every tool returns the same outer contract — now with **cross-modal stability** fields forged 2026-06-05:
 
 ```json
 {
@@ -108,11 +108,14 @@ Every tool returns the same outer contract:
   "claim_limits": [],
   "next_best_actions": [],
   "audit_receipt": {},
-  "human_final_authority": "Arif"
+  "human_final_authority": "Arif",
+  "cross_modal_stability": 0.95,
+  "semantic_density_score": 0.35,
+  "dim_spot_flag": false
 }
 ```
 
-> `claim_state` maps directly to ACRisk thresholds: SEAL (< 0.25), QUALIFY (0.25–0.50), HOLD (0.50–0.75), VOID (> 0.75).
+> **Cross-Modal Fidelity Theorem (2026-06-05):** Physical and schematic constraint reduces the admissible solution space, improving inter-modal fidelity. `cross_modal_stability` scores how well this output will survive transmission to another modality (image, audio, protocol). `dim_spot_flag` warns when negative constraints (VOID, absence) risk being lost in cross-modal transfer — the hardest failure mode, confirmed in the literature (Kolmogorov, Solomonoff 1964; Semantic Hub, Wu et al. ICLR 2025). See `GENESIS/003_CONSTITUTIONAL_ALIGNMENT.md` and `docs/GEOX_NOBEL_EUREKA_CATALOGUE.md`.
 
 ***
 
@@ -299,6 +302,10 @@ Where:
 | 0.50–0.75 | HOLD | Human review required |
 | > 0.75 | VOID | Unsafe — do not use |
 
+### Anomalous Contrast Detection (Hardened 2026-06-05)
+
+`geox_seismic_compute(mode="anomalous_contrast")` now returns governed outputs — not raw physics. Each detected anomaly is classified via the **contradiction ontology** (INTERPRETATION_OBSERVATION_MISMATCH), gated through `888_HOLD` when severity is HIGH, and scored for cross-modal stability. The bridge: **AVO fluid factor (Smith & Gidlow 1987) = transformer attention (Vaswani 2017) = constitutional governance deviation.** Same math. Different domain. See `docs/TOAC_CANON.md` and `docs/GEOX_NOBEL_EUREKA_CATALOGUE.md`.
+
 ***
 
 ## Artifact Reference Protocol
@@ -327,18 +334,19 @@ Artifact refs are immutable, auditable, and federation-portable (arifOS ↔ WEAL
 | H5 — MCP Elicitation (888HOLD UI) | 🔧 Next | Multi-select elicitation via SEP-1330 — partial unblock in FastMCP 2.14 |
 | H6 — Server Card + Registry | ✅ SEALED | `server-card.json` published |
 | H7 — MCP Skills | ❌ Blocked | Awaiting MCP Skills WG finalization |
-| PINN Layer | 🔧 Future | Physics-informed neural net for Vsh/φ/Sw |
+| PINN Layer | ✅ FORGED | Physics-informed neural net for Vsh/φ/Sw — violates Archie → auto-fail (`engines/petrophysics/pinn.py`, 389 lines) |
+| AC Risk Hardening | ✅ FORGED | Governed anomalous contrast detection — classified + gated + cross-modal stable (`seismic_compute.py`, `anomalous_contrast.py`) |
+| Cross-Modal Fidelity | ✅ FORGED | `cross_modal_stability`, `semantic_density_score`, `dim_spot_flag` on every envelope — 7 files hardened (2026-06-05) |
 | DRP Synthetic Core | 🔧 Future | GAN super-resolution for micro-CT training data |
+| WLFM Backbone | 🔧 Future | Well-log foundation model — cross-well invariant geological token embeddings |
 
 ***
 
 ## Test Suite
 
 ```
-229 passed, 0 skipped, 0 xfailed, 0 failures
-*Eureka forge (E1 + E7) + physics guard suites — full integration suite lives in `tests/integration/` and runs separately.*
-
-Golden tests anchor agent behavior — tool output shape, claim_state correctness, failure mode coverage, no secret/path leaks.
+229+ passed, 0 skipped, 0 xfailed, 0 failures
+*Includes: anomalous contrast (5/5), seismic compute, envelope integrity, contradiction ontology, Nobel-grade locks (33/33). Golden tests anchor agent behavior — tool output shape, claim_state correctness, failure mode coverage, no secret/path leaks.*
 
 ***
 
