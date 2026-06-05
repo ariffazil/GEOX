@@ -56,6 +56,10 @@ dependencies = [
     "segyio>=1.9.0",
     # Statistical power analysis — imported in prospect.py
     "statsmodels>=0.14.6",
+    # Spatial block validation + FJIS (Eureka 2026-06-05) — used by
+    # geox_evidence_reason(phase='spatial_block') and
+    # geox_data_qc_bundle(qc_mode='feature_info')
+    "scikit-learn>=1.3.0",
     # welly requires pkg_resources from older setuptools (setuptools 70+ removed it)
     "setuptools<70",
 ]
