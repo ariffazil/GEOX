@@ -307,11 +307,11 @@ async def geox_seismic_compute_attribute_tool(
     # Build Image3d from extracted frame (treat as single-frame volume)
     width = frame_result["width"]
     height = frame_result["height"]
-    img3d = CoordinateSystem().__class__.__new__(CoordinateSystem)  # dummy
+    CoordinateSystem().__class__.__new__(CoordinateSystem)  # dummy
     # Actually, create a proper Image3d with one frame
     from geox_core.core.geox_image import Image3d
 
-    volume = Image3d(width=width, height=height, length=1, name="input_volume")
+    Image3d(width=width, height=height, length=1, name="input_volume")
     # We need the actual frame data — scaffold for now since get_frame returns metadata only
     # In production, get_frame would return the full pixel buffer
 

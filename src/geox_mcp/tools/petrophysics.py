@@ -355,8 +355,6 @@ async def geox_subsurface_generate_candidates(
 
             if lmr_inline is None:
                 # Build synth {Vp, Vs, rho} from zone_top..zone_base
-                zt = zone_top_m if zone_top_m is not None else 0.0
-                zb = zone_base_m if zone_base_m is not None else 3000.0
                 nz = 11
                 vp_arr = np.linspace(2200.0, 3000.0, nz)  # typical clastic Vp
                 vs_arr = np.linspace(1200.0, 1500.0, nz)  # typical clastic Vs

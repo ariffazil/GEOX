@@ -154,7 +154,7 @@ def fit_layer_cake(
     layer_eq_parts = [f"{n}:V={v:.0f}m/s" for n, v in layer_v_int.items()]
     equation = "TWT(z) = Σ_layers 2·Δz/V_int(layer) ; " + " ; ".join(layer_eq_parts)
 
-    cov = _coverage(depth_array, cs_d)
+    _coverage(depth_array, cs_d)
     audit = _audit(twt_pred, depth_array, residuals)
     risk = 0.0 if all(n >= 1 for n in layer_coverage.values()) else _extrapolation_risk(depth_array, cs_d)
 

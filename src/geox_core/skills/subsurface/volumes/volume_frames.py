@@ -178,7 +178,7 @@ def create_segy_file(
         with segyio.create(output_path, spec) as f:
             for il in ilines:
                 for xl in xlines:
-                    tr = segyio.Trace(f, segyio.traceheader(field=segyio.su.iline) == il)
+                    segyio.Trace(f, segyio.traceheader(field=segyio.su.iline) == il)
                     # segyio create handles trace allocation; we just ensure zeros
         return True
     except Exception as e:
