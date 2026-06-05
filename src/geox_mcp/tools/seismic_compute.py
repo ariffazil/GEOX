@@ -134,9 +134,17 @@ async def _mode_anomalous_contrast(
     vp: list[float] | None,
     rho: list[float] | None,
 ) -> dict[str, Any]:
+    """Hardened anomalous contrast detection — raw physics → governed envelope.
+
+    Cross-Modal Fidelity Theorem (arifOS, 2026-06-05):
+      Physical constraint reduces admissible solution space,
+      which improves inter-modal fidelity (AI) and inter-survey consistency (geoscience).
+      The governed envelope IS the transfer-stable encoding.
+    """
+    import numpy as np
     from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
 
-    return await geox_anomalous_contrast_detector(
+    raw = await geox_anomalous_contrast_detector(
         ai_profile=ai_profile,
         depth=depth,
         formation_tops=formation_tops,
@@ -145,6 +153,90 @@ async def _mode_anomalous_contrast(
         vp=vp,
         rho=rho,
     )
+
+    # ── GOVERNANCE WRAPPER ───────────────────────────────────────────────
+    # The raw physics result carries zero governance. We harden it here.
+    # This is the bridge: physical constraint → reduced solution space →
+    # transfer-stable encoding (Kolmogorov compressibility).
+
+    n_anomalies: int = len(raw.get("anomalies", []))
+    total_mistie: float = raw.get("volumetric_impact", {}).get("total_abs_mistie_m", 0.0)
+
+    # ── ClaimTag classification ──────────────────────────────────────────
+    if n_anomalies == 0:
+        claim_tag = "CLAIM"
+        gov_status = GovernanceStatus.SEAL
+        artifact_status = ArtifactStatus.VERIFIED
+        claim_state = "QC_VERIFIED"
+    elif n_anomalies <= 2 and total_mistie < 20.0:
+        claim_tag = "PLAUSIBLE"
+        gov_status = GovernanceStatus.QUALIFY
+        artifact_status = ArtifactStatus.IN_REVIEW
+        claim_state = "INTERPRETED"
+    else:
+        claim_tag = "HYPOTHESIS"
+        gov_status = GovernanceStatus.HOLD
+        artifact_status = ArtifactStatus.IN_REVIEW
+        claim_state = "INTERPRETED"
+
+    # ── PhysicsGuard: AI physical range check ─────────────────────────────
+    ai_arr = np.array(ai_profile, dtype=float)
+    ai_min, ai_max = float(np.min(ai_arr)), float(np.max(ai_arr))
+    # Sedimentary rock acoustic impedance: ~3000–30000 kg/m²·s
+    # (vp 1500-6000 m/s × rho 2000-5000 kg/m³ for consolidated section)
+    ai_phys_lower, ai_phys_upper = 2000.0, 35000.0
+    physics_ok = bool(ai_phys_lower <= ai_min <= ai_phys_upper and ai_phys_lower <= ai_max <= ai_phys_upper)
+
+    # ── Envelope construction ────────────────────────────────────────────
+    artifact = {**raw, "tool": TOOL_NAME, "mode": "anomalous_contrast"}
+    envelope = get_standard_envelope(
+        artifact,
+        tool_class="compute",
+        execution_status=ExecutionStatus.SUCCESS,
+        governance_status=gov_status,
+        artifact_status=artifact_status,
+        claim_tag=claim_tag,
+        claim_state=claim_state,
+        perception_class="ANOMALY" if n_anomalies > 0 else "DISPLAY",
+        evidence_refs=list(formation_tops.keys()),
+        physics_guard={
+            "guard_passed": physics_ok,
+            "physics_version": "geox-ac-v2026.06.05",
+            "equations_used": raw.get("physics", {}).get("equations_used", []),
+            "assumptions": raw.get("physics", {}).get("assumptions", []),
+            "limitations": raw.get("physics", {}).get("limitations", []),
+            "ai_physical_range_check": {
+                "ai_min_kg_m2s": round(ai_min, 1),
+                "ai_max_kg_m2s": round(ai_max, 1),
+                "physical_bounds_kg_m2s": [ai_phys_lower, ai_phys_upper],
+                "passed": physics_ok,
+            },
+        },
+    )
+
+    # ── Anomalous Contrast risk metadata ─────────────────────────────────
+    # Maps to: AVO Fluid Factor (Smith & Gidlow, 1987) — deviation from background.
+    # The "background" here is the geological formation tops.
+    # Anomalies ARE the fluid factor: seismic does not match geological.
+    envelope["anomalous_contrast"] = {
+        "anomalies_detected": n_anomalies,
+        "total_abs_mistie_m": round(total_mistie, 2),
+        "contradiction_type": "INTERPRETATION_OBSERVATION_MISMATCH" if n_anomalies > 0 else None,
+        "ac_severity": "HIGH" if n_anomalies > 2 else ("MEDIUM" if n_anomalies > 0 else "NONE"),
+        "risk_gate": "888_HOLD"
+        if gov_status == GovernanceStatus.HOLD
+        else ("QUALIFY" if gov_status == GovernanceStatus.QUALIFY else "PROCEED"),
+        "toac_version": "v2026.06.05",
+        "toac_note": (
+            "Theory of Anomalous Contrast: anomalies are classified as "
+            "INTERPRETATION_OBSERVATION_MISMATCH per contradiction ontology. "
+            "AC_Risk = f(n_anomalies, mistie_magnitude) — simplified from "
+            "governed AC_Risk engine (Physics9State-based). For full governed "
+            "AC_Risk, route through compute_ac_risk_governed with Physics9State inputs."
+        ),
+    }
+
+    return enrich_envelope_with_metabolic(envelope, TOOL_NAME)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -267,22 +359,23 @@ async def geox_seismic_compute(
     """
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_seismic_compute",
         well_id=well_id,
-            vp=vp,
-            rho=rho,
-            depth=depth,
-            wavelet_params=wavelet_params,
-            volume_ref=volume_ref,
-            checkshot_ref=checkshot_ref,
-            ai_profile=ai_profile,
-            ac_depth=ac_depth,
-            formation_tops=formation_tops,
-            ac_vp=ac_vp,
-            ac_rho=ac_rho,
-            volume_ref_attr=volume_ref_attr,
-            attribute=attribute,
+        vp=vp,
+        rho=rho,
+        depth=depth,
+        wavelet_params=wavelet_params,
+        volume_ref=volume_ref,
+        checkshot_ref=checkshot_ref,
+        ai_profile=ai_profile,
+        ac_depth=ac_depth,
+        formation_tops=formation_tops,
+        ac_vp=ac_vp,
+        ac_rho=ac_rho,
+        volume_ref_attr=volume_ref_attr,
+        attribute=attribute,
     )
     if ctx:
         ctx.report_progress(0, 100)

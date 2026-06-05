@@ -733,6 +733,27 @@ async def _phase_full(
 
     synthesize_result = await _phase_synthesize(evidence_refs, export_format, output_path)
 
+    # Structural Coherence dim-spot scan — EUREKA v2026.06.05
+    # Detect whether negative constraints are underrepresented.
+    # Negative constraints (absence, VOID, missing tests) do not survive
+    # cross-modal transfer as reliably as positive constraints.
+    _hypotheses = contradict_result.get("process_hypotheses", [])
+    _missing_against = sum(1 for h in _hypotheses if not h.get("evidence_against"))
+    _missing_tests = sum(1 for h in _hypotheses if not h.get("missing_tests"))
+    _dim_spot_scan = {
+        "dim_spot_detected": (_missing_against > 0 or _missing_tests > 0 or len(evidence_refs) < 2),
+        "hypotheses_without_contradicting_evidence": _missing_against,
+        "hypotheses_without_missing_tests": _missing_tests,
+        "evidence_ref_count": len(evidence_refs),
+        "recommendation": (
+            "Add explicit contradicting evidence and missing_tests to each hypothesis. "
+            "Without these negative constraints, the abduction output will lose fidelity "
+            "in cross-modal transfer (text→image→text, log→PNG→log)."
+            if (_missing_against > 0 or _missing_tests > 0)
+            else "Negative constraints are well-represented. Signal has high structural coherence."
+        ),
+    }
+
     # Merge into unified output
     return {
         "tool": TOOL_NAME,
@@ -756,6 +777,8 @@ async def _phase_full(
         ],
         "audit_receipt": contradict_result.get("audit_receipt", {}),
         "human_final_authority": "Arif",
+        # Structural Coherence Transmission — dim-spot detection
+        "_dim_spot_scan": _dim_spot_scan,
     }
 
 

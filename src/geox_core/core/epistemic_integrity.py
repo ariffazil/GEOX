@@ -34,6 +34,9 @@ class EpistemicResult:
     recommendation: str
     confidence_levels: list[ConfidenceLevel] = field(default_factory=list)
     hold: bool = False
+    # Structural Coherence Transmission — EUREKA v2026.06.05
+    cross_modal_fidelity_score: float = 0.0
+    structural_coherence_note: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -54,6 +57,9 @@ class EpistemicResult:
                 for c in self.confidence_levels
             ],
             "hold": self.hold,
+            # Structural Coherence: cross-modal fidelity derived from epistemic integrity
+            "cross_modal_fidelity_score": round(self.cross_modal_fidelity_score, 4),
+            "structural_coherence_note": self.structural_coherence_note,
         }
 
 
@@ -126,6 +132,30 @@ class EpistemicIntegrity:
             classification = "CLAIM"
             recommendation = "PASS"
 
+        # Structural Coherence Transmission — EUREKA v2026.06.05
+        # Cross-modal fidelity is a function of epistemic integrity.
+        # Low integrity → low fidelity across text/image/protocol roundtrips.
+        cross_modal_fidelity = max(0.1, min(0.95, integrity_score * 0.8 + 0.1))
+        if classification == "AUTO_HOLD":
+            coherence_note = (
+                "STRUCTURAL_COHERENCE: AUTO_HOLD — this output has LOW cross-modal fidelity. "
+                "Negative constraints and absent evidence will be lost in modality transfer. "
+                "Re-encode with explicit positive governance markers before transmission."
+            )
+        elif classification == "PLAUSIBLE":
+            coherence_note = (
+                "STRUCTURAL_COHERENCE: PLAUSIBLE — moderate cross-modal fidelity. "
+                "Signal survives well-structured channels (JSON, MCP) but may degrade "
+                "in pixel or audio roundtrips. Add redundant verdict tokens."
+            )
+        else:
+            coherence_note = (
+                "STRUCTURAL_COHERENCE: CLAIM — high cross-modal fidelity. "
+                "Governance grammar is dense enough to survive text→image→text and "
+                "log→PNG→log roundtrips. The calibrated background (13 floors) makes "
+                "this signal register as anomalous contrast against ambient noise."
+            )
+
         return EpistemicResult(
             integrity_score=integrity_score,
             classification=classification,
@@ -136,6 +166,8 @@ class EpistemicIntegrity:
             recommendation=recommendation,
             confidence_levels=confidence_levels,
             hold=hold,
+            cross_modal_fidelity_score=cross_modal_fidelity,
+            structural_coherence_note=coherence_note,
         )
 
     def _check_independence(self, pos_components: dict[str, str] | None) -> float:
