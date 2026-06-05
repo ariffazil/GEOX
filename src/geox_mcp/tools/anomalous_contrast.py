@@ -121,6 +121,24 @@ async def geox_anomalous_contrast_detector(
         is_anomaly = (seismic_idx != geo_idx) and (rc_at_seismic > rc_at_geo * 1.05)
 
         if is_anomaly:
+            # ── Contradiction classification ────────────────────────────
+            # Theory of Anomalous Contrast (ToAC): each anomaly is an
+            # INTERPRETATION_OBSERVATION_MISMATCH per contradiction ontology.
+            # Seismic reflector = INTERPRETATION (derived from impedance contrast)
+            # Geological top = OBSERVATION (measured from well log / core)
+            # The contradiction is the ANOMALOUS CONTRAST — the fluid factor
+            # of governance: deviation from the calibrated background.
+            abs_mistie = abs(mistie)
+            if abs_mistie > 20.0:
+                contradiction_severity = "HIGH"
+                resolution = "DEMOTE — seismic pick displaced >20 m; validate with checkshot/VSP"
+            elif abs_mistie > 5.0:
+                contradiction_severity = "MEDIUM"
+                resolution = "QUALIFY — seismic pick displaced {:.0f} m; cross-check with well tie".format(abs_mistie)
+            else:
+                contradiction_severity = "LOW"
+                resolution = "NOTE — minor mistie {:.0f} m; within picking tolerance but flagged".format(abs_mistie)
+
             anomalies.append(
                 {
                     "formation": formation_name,
@@ -134,6 +152,11 @@ async def geox_anomalous_contrast_detector(
                         f"Strongest reflector ({rc_at_seismic:.4f}) is {abs(mistie):.1f}m "
                         f"{'deeper' if mistie > 0 else 'shallower'} than geological top ({rc_at_geo:.4f})."
                     ),
+                    # ── Contradiction ontology classification ────────────
+                    "contradiction_type": "INTERPRETATION_OBSERVATION_MISMATCH",
+                    "contradiction_severity": contradiction_severity,
+                    "resolution": resolution,
+                    "toac_version": "v2026.06.05",
                 }
             )
             total_mistie_m += abs(mistie)

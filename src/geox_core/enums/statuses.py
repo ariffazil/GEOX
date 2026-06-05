@@ -313,7 +313,23 @@ def enforce_claim_state(
     - No evidence_refs → artifact_status cannot be VERIFIED or SEAL
     - claim_state HYPOTHESIS/INGESTED/NO_VALID_EVIDENCE → artifact_status must be DRAFT or lower
     - confidence_band must be None (or have computed=False) when no evidence
+
+    Structural Coherence dim-spot detection (EUREKA v2026.06.05):
+    Negative constraints (VOID, absence, rejected status) do not survive cross-modal
+    transfer as reliably as positive constraints. When dim_spot_flag is True,
+    the output MUST include an explicit note making the absence visible.
     """
+    # Dim-spot detection: make absence visible
+    _claim_state = result.get("claim_state", "INGESTED")
+    _artifact_status = result.get("artifact_status", "DRAFT")
+    if _claim_state in ("VOID", "888_HOLD") or _artifact_status == "REJECTED":
+        result["dim_spot_flag"] = True
+        result["_dim_spot_note"] = (
+            "STRUCTURAL_COHERENCE_ALERT: Negative constraint detected (VOID/888_HOLD/REJECTED). "
+            "This signal has LOW cross-modal fidelity. If transmitting to another modality "
+            "(image, audio, protocol), the absence will likely be lost. Re-encode as explicit "
+            "positive constraint or add redundant governance markers."
+        )
     refs = evidence_refs or result.get("evidence_refs") or []
     artifact_status = result.get("artifact_status", "DRAFT")
     claim_state = result.get("claim_state", "INGESTED")
@@ -381,6 +397,13 @@ def get_standard_envelope(
     vertical_trend: str | None = None,
     litho_class: str | None = None,
     strat_standard: dict[str, Any] | None = None,
+    # Structural Coherence Transmission — EUREKA v2026.06.05
+    # Governance architecture is signal compression. These fields measure
+    # cross-modal fidelity: how well the output survives text→image→text,
+    # log→PNG→log, seismic→depth→seismic roundtrips.
+    cross_modal_stability: float | None = None,
+    semantic_density_score: float | None = None,
+    dim_spot_flag: bool | None = None,
 ) -> dict[str, Any]:
     """
     Canonical MCP Apps Response Envelope — Universal Output Contract v0.81.
@@ -408,9 +431,51 @@ def get_standard_envelope(
     vertical_trend: DEEPENING_UPWARD / SHALLOWING_UPWARD / STABLE_OR_AMBIGUOUS
     litho_class: Canonical lithology classification
     strat_standard: Stratigraphic reference scheme + chart URI
+
+    Structural Coherence Transmission (EUREKA v2026.06.05):
+    Governance architecture IS signal compression. The 13-floor constitution creates
+    a calibrated background against which governed outputs register as anomalous
+    contrast — legible across any modality. cross_modal_stability measures this.
+    semantic_density_score measures whether governance tokens are distributed
+    densely enough to survive roundtrip transfer. dim_spot_flag warns when negative
+    constraints (VOID, absence) are present — these do not survive cross-modal
+    transfer as reliably as positive constraints. Make absence visible.
     """
+    # Structural Coherence defaults — computed from governance grammar if not explicit
+    _governance_stability_map = {
+        GovernanceStatus.SEAL: 0.95,
+        GovernanceStatus.QUALIFY: 0.80,
+        GovernanceStatus.HOLD: 0.50,
+        GovernanceStatus.VOID: 0.20,
+        GovernanceStatus.APPROVED: 0.90,
+    }
+    _resolved_cross_modal = cross_modal_stability
+    if _resolved_cross_modal is None:
+        _resolved_cross_modal = _governance_stability_map.get(
+            governance_status if isinstance(governance_status, GovernanceStatus) else GovernanceStatus(governance_status),
+            0.50,
+        )
+
+    _evidence_count = len(evidence_refs or [])
+    _resolved_density = semantic_density_score
+    if _resolved_density is None:
+        _base_density = {0: 0.0, 1: 0.3, 2: 0.3}.get(_evidence_count, 0.6 if _evidence_count <= 5 else 0.9)
+        _tag_adjust = 0.0
+        if claim_tag == "CLAIM":
+            _tag_adjust = 0.05
+        elif claim_tag in ("HYPOTHESIS", "ESTIMATE", "UNKNOWN"):
+            _tag_adjust = -0.10
+        _resolved_density = max(0.0, min(1.0, _base_density + _tag_adjust))
+
+    _resolved_dim_spot = dim_spot_flag
+    if _resolved_dim_spot is None:
+        _resolved_dim_spot = (
+            claim_state in ("VOID", "888_HOLD")
+            or artifact_status == ArtifactStatus.REJECTED
+            or (not evidence_refs and claim_tag == "CLAIM")
+        )
     import uuid
-    from datetime import datetime
+    from datetime import datetime, timezone
 
     tool_version = tool_version or os.environ.get("GEOX_VERSION", "geox-v2026.05.10")
     now = datetime.now(timezone.utc).isoformat()
@@ -494,6 +559,10 @@ def get_standard_envelope(
         "confidence_policy": confidence_policy or {},
         "equations_used": equations_used or [],
         "sensitivity_to": sensitivity_to or [],
+        # Structural Coherence Transmission — EUREKA v2026.06.05
+        "cross_modal_stability": round(_resolved_cross_modal, 4),
+        "semantic_density_score": round(_resolved_density, 4),
+        "dim_spot_flag": bool(_resolved_dim_spot),
     }
 
     # F2 Truth gate: auto-downgrade overclaimed states

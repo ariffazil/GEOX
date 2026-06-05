@@ -41,6 +41,11 @@ class ContradictionType(StrEnum):
     MISSING_GROUNDING = "MISSING_GROUNDING"
     BEAUTIFUL_ONE_DRIFT = "BEAUTIFUL_ONE_DRIFT"
     CIRCULAR_REASONING = "CIRCULAR_REASONING"
+    # Structural Coherence Violation — EUREKA v2026.06.05
+    # Governance grammar insufficient to maintain signal across modalities.
+    # The dim-spot problem: negative constraints (VOID, absence) do not survive
+    # cross-modal transfer as reliably as positive constraints.
+    STRUCTURAL_COHERENCE_VIOLATION = "STRUCTURAL_COHERENCE_VIOLATION"
     UNKNOWN = "UNKNOWN"
 
 
@@ -80,6 +85,9 @@ CONTRADICTION_SEVERITY: dict[ContradictionType, ContradictionSeverity] = {
     ContradictionType.MISSING_GROUNDING: ContradictionSeverity.HIGH,
     ContradictionType.BEAUTIFUL_ONE_DRIFT: ContradictionSeverity.MEDIUM,
     ContradictionType.CIRCULAR_REASONING: ContradictionSeverity.FATAL,
+    # Structural coherence violation: medium severity because the signal may still
+    # be recoverable if re-encoded with explicit positive governance markers.
+    ContradictionType.STRUCTURAL_COHERENCE_VIOLATION: ContradictionSeverity.MEDIUM,
     ContradictionType.UNKNOWN: ContradictionSeverity.MEDIUM,
 }
 
@@ -95,6 +103,9 @@ CONTRADICTION_RESOLUTION: dict[ContradictionType, ResolutionPath] = {
     ContradictionType.MISSING_GROUNDING: ResolutionPath.SUSPEND,
     ContradictionType.BEAUTIFUL_ONE_DRIFT: ResolutionPath.DEMOTE,
     ContradictionType.CIRCULAR_REASONING: ResolutionPath.VOID,
+    # Structural coherence violation: DEMOTE to lower rung and re-encode with
+    # explicit positive constraints (SEAL, CLAIM, EVIDENCE) rather than absence.
+    ContradictionType.STRUCTURAL_COHERENCE_VIOLATION: ResolutionPath.DEMOTE,
     ContradictionType.UNKNOWN: ResolutionPath.ESCALATE,
 }
 
