@@ -788,7 +788,7 @@ async def _phase_full(
 
 
 async def geox_evidence_reason(
-    phase: Literal["synthesize", "abduct", "contradict", "full"] = "full",
+    phase: Literal["synthesize", "abduct", "contradict", "full", "spatial_block"] = "full",
     evidence_refs: list[str] | None = None,
     hypotheses: list[dict] | None = None,
     scale: Literal["parasequence", "systems_tract", "basin"] = "parasequence",
@@ -796,6 +796,13 @@ async def geox_evidence_reason(
     claim_strictness: Literal["screen", "appraise", "decision"] = "screen",
     export_format: Literal["json", "csv"] = "json",
     output_path: str | None = None,
+    # ── Eureka 2026-06-05 (Burlamaque Step 3): spatial_block phase inputs ──
+    # Required when phase='spatial_block'. Ignored otherwise.
+    samples: list[dict[str, Any]] | None = None,
+    block_size_km: float = 5.0,
+    n_folds: int = 5,
+    target_key: str = "value",
+    feature_keys: list[str] | None = None,
     ctx: Context | None = None,
 ) -> dict[str, Any]:
     """Unified evidence synthesis, abduction, and contradiction engine.
@@ -810,6 +817,9 @@ async def geox_evidence_reason(
         "abduct" — generate and rank competing geological process hypotheses.
         "contradict" — attack hypotheses and surface contradictions (requires hypotheses).
         "full" — synthesize → abduct → contradict in one call.
+        "spatial_block" (Eureka 2026-06-05) — surrogate block-CV per
+            Burlamaque 2026-06-04 Step 3. Honest spatial generalization
+            gap. Requires `samples` with lat/lon/value fields.
 
     evidence_refs : list[str]
         Artifact refs to reason over.
@@ -819,6 +829,8 @@ async def geox_evidence_reason(
         Passed to abduction phase.
     export_format, output_path :
         Passed to synthesis phase.
+    samples, block_size_km, n_folds, target_key, feature_keys :
+        Passed to spatial_block phase.
 
     Returns
     -------
@@ -827,11 +839,12 @@ async def geox_evidence_reason(
     """
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_evidence_reason",
         evidence_refs=evidence_refs,
-            hypotheses=hypotheses,
-            output_path=output_path,
+        hypotheses=hypotheses,
+        output_path=output_path,
     )
     if ctx:
         ctx.report_progress(0, 100)
@@ -876,6 +889,20 @@ async def geox_evidence_reason(
             ctx.report_progress(100, 100)
         return result
 
+    if phase == "spatial_block":
+        if ctx:
+            ctx.report_progress(25, 100)
+        result = await _phase_spatial_block(
+            samples=samples or [],
+            block_size_km=block_size_km,
+            n_folds=n_folds,
+            target_key=target_key,
+            feature_keys=feature_keys,
+        )
+        if ctx:
+            ctx.report_progress(100, 100)
+        return result
+
     if ctx:
         ctx.report_progress(100, 100)
     return get_standard_envelope(
@@ -885,3 +912,112 @@ async def geox_evidence_reason(
         governance_status=GovernanceStatus.HOLD,
         claim_tag="HYPOTHESIS",
     )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# EUREKA 2026-06-05 — Spatial Block Validation (Burlamaque 2026-06-04 Step 3)
+# Surfaces via phase='spatial_block'. No new top-level tool.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+async def _phase_spatial_block(
+    samples: list[dict[str, Any]],
+    block_size_km: float,
+    n_folds: int,
+    target_key: str,
+    feature_keys: list[str] | None,
+) -> dict[str, Any]:
+    """Honest spatial generalization assessment via surrogate block-CV."""
+    from geox_mcp.tools.spatial_block import run_spatial_block_validate
+
+    if not samples:
+        return {
+            "execution_status": "ERROR",
+            "tool_class": "audit",
+            "claim_state": "NO_VALID_EVIDENCE",
+            "phase": "spatial_block",
+            "error": "No samples supplied",
+            "n_samples": 0,
+            "n_blocks": 0,
+            "audit_receipt": {"verdict": "VOID", "floor_signals": ["F2 TRUTH"], "floor_authority": "arifOS"},
+            "human_final_authority": "Arif",
+        }
+
+    result = run_spatial_block_validate(
+        samples=samples,
+        block_size_km=block_size_km,
+        n_folds=n_folds,
+        target_key=target_key,
+        feature_keys=feature_keys,
+    )
+
+    # Translate spatial verdict → envelope semantics
+    spatial_verdict = str(result.get("verdict", "HOLD")).upper()
+    verdict_map = {
+        "SEAL": ("SUCCESS", "SEAL", "EVALUATED"),
+        "QUALIFY": ("SUCCESS", "QUALIFY", "EVALUATED"),
+        "HOLD": ("PARTIAL", "HOLD", "EVALUATED"),
+        "VOID": ("PARTIAL", "VOID", "EVALUATED"),
+    }
+    exec_status, gov_status, claim_state = verdict_map.get(spatial_verdict, ("PARTIAL", "HOLD", "EVALUATED"))
+
+    gap_ratio = result.get("spatial_gap_ratio", 1.0)
+    floor_signals: list[str] = []
+    if gap_ratio > 1.5:
+        floor_signals.append("F4 HUMILITY")  # honest about generalization limits
+
+    return {
+        "execution_status": exec_status,
+        "tool_class": "audit",
+        "phase": "spatial_block",
+        "claim_state": claim_state,
+        "observed": {},
+        "derived": {
+            "spatial_block_validation": result,
+        },
+        "local_interpretation": {
+            "verdict_reason": result.get("verdict_reason", ""),
+            "spatial_gap_ratio": gap_ratio,
+            "n_blocks": result.get("n_blocks", 0),
+        },
+        "process_hypotheses": [],
+        "decision_support": {
+            "verdict": spatial_verdict,
+            "spatial_gap_p10_p50_p90": result.get("spatial_gap_p10_p50_p90", {}),
+            "recommendation": (
+                "Use spatial-CV RMSE for honest generalization claims. "
+                "Random-CV RMSE is inflated when spatial autocorrelation is present."
+            ),
+        },
+        "artifact_refs": {},
+        "evidence_refs": [],
+        "claim_limits": [
+            "Spatial block validation is a SURROGATE — a small RandomForest probes the spatial structure of your data.",
+            "It is NOT a substitute for full physics-based forward modeling.",
+            "The verdict is calibration-only, not geological truth.",
+        ],
+        "next_best_actions": [
+            {
+                "tool": "geox_evidence_reason",
+                "reason": "Run synthesize phase to combine spatial-CV verdict with full evidence graph",
+                "priority": "high",
+                "parameters": {"phase": "synthesize"},
+            }
+        ]
+        if spatial_verdict in ("SEAL", "QUALIFY")
+        else [
+            {
+                "tool": "geox_data_ingest_bundle",
+                "reason": "Add more spatial coverage to reduce block-CV gap before committing to claims",
+                "priority": "critical",
+            }
+        ],
+        "audit_receipt": {
+            "verdict": gov_status,
+            "acrisk": min(0.95, 0.20 + (gap_ratio - 1.0) * 0.5),
+            "floor_signals": floor_signals,
+            "floor_authority": "arifOS",
+        },
+        "eureka_ref": "BURLAMAQUE_2026_STEP3_SPATIAL_BLOCK",
+        "human_final_authority": "Arif",
+    }

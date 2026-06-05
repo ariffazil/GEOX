@@ -6,6 +6,7 @@ from typing import Any, Literal
 
 from geox_core.enums.statuses import (
     ArtifactStatus,
+    ClaimTag,
     ExecutionStatus,
     GovernanceStatus,
     enrich_envelope_with_metabolic,
@@ -26,7 +27,13 @@ logger = logging.getLogger("geox.canonical.qc")
 async def geox_data_qc_bundle(
     artifact_ref: str,
     artifact_type: str,
-    qc_mode: Literal["full", "header", "curves", "depth", "completeness"] = "full",
+    qc_mode: Literal["full", "header", "curves", "depth", "completeness", "feature_info"] = "full",
+    # ── Eureka 2026-06-05 (FJIS): feature_info mode inputs ───────────────
+    # Required when qc_mode='feature_info'. Ignored otherwise.
+    samples: list[dict[str, Any]] | None = None,
+    existing_features: list[str] | None = None,
+    candidate_feature: str | None = None,
+    target_key: str = "value",
 ) -> dict:
     """Real QC: depth monotonicity, null %, physical range checks.
 
@@ -42,7 +49,21 @@ async def geox_data_qc_bundle(
             - "curves": physical range checks per canonical curve.
             - "completeness": which canonical curves present vs missing.
             - "full" (default): all of the above.
+            - "feature_info" (Eureka 2026-06-05): Feature Joint Information
+              Statistic — quantifies how much unique signal a candidate
+              feature adds beyond redundancy with existing features.
+              Requires samples + existing_features + candidate_feature.
+              Article reference: Burlamaque 2026-06-04 Step 1.
     """
+    # ── Eureka 2026-06-05: FJIS feature_info mode is independent of artifact_ref
+    if qc_mode == "feature_info":
+        return await _qc_feature_info(
+            samples=samples or [],
+            existing_features=existing_features or [],
+            candidate_feature=candidate_feature or "",
+            target_key=target_key,
+        )
+
     # Red Team Fix: Initialize these to ensure they are available for the fail-closed check
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
@@ -901,3 +922,121 @@ async def geox_data_qc_bundle(
             claim_tag="HYPOTHESIS",
         )
         return enrich_envelope_with_metabolic(envelope, "geox_data_qc_bundle")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# EUREKA 2026-06-05 — Feature Joint Information Statistic (FJIS)
+# Surfaces via qc_mode='feature_info'. No new top-level tool.
+# Article: Burlamaque 2026-06-04 — Small Data, Big Maps (Step 1).
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+async def _qc_feature_info(
+    samples: list[dict[str, Any]],
+    existing_features: list[str],
+    candidate_feature: str,
+    target_key: str,
+) -> dict:
+    """FJIS — quantify how much unique signal a candidate feature adds.
+
+    Returns a SEAL/HOLD/VOID verdict on the feature, with the underlying
+    mutual information and per-feature redundancy breakdown.
+    """
+    from geox_mcp.tools.feature_joint_info import run_fjis
+
+    if not samples:
+        return get_standard_envelope(
+            {
+                "tool": "geox_data_qc_bundle",
+                "qc_mode": "feature_info",
+                "error_code": "NO_SAMPLES",
+                "message": "feature_info mode requires non-empty `samples`.",
+                "claim_state": "NO_VALID_EVIDENCE",
+            },
+            tool_class="qc",
+            execution_status=ExecutionStatus.RECOVERABLE_ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.INCOMPLETE,
+            claim_tag="HYPOTHESIS",
+        )
+
+    if not existing_features:
+        return get_standard_envelope(
+            {
+                "tool": "geox_data_qc_bundle",
+                "qc_mode": "feature_info",
+                "error_code": "NO_EXISTING_FEATURES",
+                "message": "feature_info mode requires `existing_features` list.",
+                "claim_state": "NO_VALID_EVIDENCE",
+            },
+            tool_class="qc",
+            execution_status=ExecutionStatus.RECOVERABLE_ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.INCOMPLETE,
+            claim_tag="HYPOTHESIS",
+        )
+
+    if not candidate_feature:
+        return get_standard_envelope(
+            {
+                "tool": "geox_data_qc_bundle",
+                "qc_mode": "feature_info",
+                "error_code": "NO_CANDIDATE",
+                "message": "feature_info mode requires `candidate_feature` name.",
+                "claim_state": "NO_VALID_EVIDENCE",
+            },
+            tool_class="qc",
+            execution_status=ExecutionStatus.RECOVERABLE_ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.INCOMPLETE,
+            claim_tag="HYPOTHESIS",
+        )
+
+    try:
+        fjis_result = run_fjis(
+            samples=samples,
+            existing_features=existing_features,
+            candidate_feature=candidate_feature,
+            target_key=target_key,
+        )
+    except Exception as exc:
+        return get_standard_envelope(
+            {
+                "tool": "geox_data_qc_bundle",
+                "qc_mode": "feature_info",
+                "error_code": "FJIS_ENGINE_FAILED",
+                "message": f"FJIS engine error: {exc}",
+                "claim_state": "RAW_OBSERVATION",
+                "recoverable": True,
+            },
+            tool_class="qc",
+            execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="HYPOTHESIS",
+        )
+
+    # Map FJIS verdict → envelope
+    fjis_verdict = str(fjis_result.get("verdict", "HOLD")).upper()
+    verdict_map = {
+        "SEAL": (GovernanceStatus.SEAL, ArtifactStatus.VERIFIED, ClaimTag.CLAIM),
+        "QUALIFY": (GovernanceStatus.QUALIFY, ArtifactStatus.USABLE, ClaimTag.PLAUSIBLE),
+        "HOLD": (GovernanceStatus.HOLD, ArtifactStatus.IN_REVIEW, ClaimTag.HYPOTHESIS),
+        "VOID": (GovernanceStatus.VOID, ArtifactStatus.REJECTED, ClaimTag.HYPOTHESIS),
+    }
+    gov, art, tag = verdict_map.get(fjis_verdict, (GovernanceStatus.HOLD, ArtifactStatus.IN_REVIEW, ClaimTag.HYPOTHESIS))
+
+    return get_standard_envelope(
+        {
+            "tool": "geox_data_qc_bundle",
+            "qc_mode": "feature_info",
+            "feature_joint_information": fjis_result,
+            "claim_state": "EVALUATED",
+            "eureka_ref": "BURLAMAQUE_2026_STEP1_FJIS",
+        },
+        tool_class="qc",
+        execution_status=ExecutionStatus.SUCCESS,
+        governance_status=gov,
+        artifact_status=art,
+        claim_tag=tag,
+    )

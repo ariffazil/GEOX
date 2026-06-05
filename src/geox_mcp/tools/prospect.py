@@ -419,6 +419,16 @@ async def geox_prospect_evaluate(
         "note": "Use verdict='preview' for reversible advisory or verdict='seal' with ack_irreversible for constitucional seal.",
     }
 
+    # ── EUREKA 2026-06-05 (Burlamaque Step 4): stratum-confidence ribbon ──
+    # Make hidden class imbalance per stratum visible on every prospect eval.
+    # Honors the article's lesson: aggregate metrics hide which sub-domain
+    # the data is actually strong in.
+    artifact["stratum_breakdown"] = _compute_stratum_breakdown(
+        mode=mode,
+        evidence_refs=refs,
+        prospect_ref=prospect_ref,
+    )
+
     # EUREKA FORGE (2026-06-03): prospect survey design via stat_power.
     # When the user passes power_params (e.g. for "how many wells do I
     # need to confirm a play with f=0.25 at power=0.8?"), solve for the
@@ -552,6 +562,124 @@ async def geox_prospect_evaluate(
         humility_score=round((280 - 80) / 150, 4) if 150 else 0.0,
         evidence_refs=refs,
     )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# EUREKA 2026-06-05 — Stratum-Confidence Ribbon (Burlamaque 2026-06-04 Step 4)
+# Surface the hidden class imbalance across the three evaluation strata.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _compute_stratum_breakdown(
+    mode: str,
+    evidence_refs: list[str],
+    prospect_ref: str,
+) -> dict[str, Any]:
+    """Compute the stratum-confidence ribbon for a prospect evaluation.
+
+    Returns per-stratum (screen/appraise/develop) sample counts, confidence,
+    and missing strata, plus a Gini-based balance verdict.
+    """
+    # Strata are the three evaluation tiers. Each represents a different
+    # evidence bar; "balanced" coverage means data exists at each tier.
+    strata = {
+        "screen": _stratum_screen(evidence_refs, prospect_ref),
+        "appraise": _stratum_appraise(evidence_refs),
+        "develop": _stratum_develop(evidence_refs),
+    }
+
+    # Gini coefficient of sample counts (0 = perfect balance, 1 = monoculture)
+    counts = [s["n_samples"] for s in strata.values()]
+    gini = _gini_coefficient(counts)
+
+    if gini > 0.7 or any(s["n_samples"] == 0 for s in strata.values()):
+        ribbon_verdict = "CRITICAL"
+    elif gini > 0.4:
+        ribbon_verdict = "UNBALANCED"
+    else:
+        ribbon_verdict = "BALANCED"
+
+    return {
+        "screen": strata["screen"],
+        "appraise": strata["appraise"],
+        "develop": strata["develop"],
+        "balance_gini": round(gini, 4),
+        "ribbon_verdict": ribbon_verdict,
+        "active_mode": mode,
+        "eureka_ref": "BURLAMAQUE_2026_STEP4_STRATUM",
+        "note": (
+            "Aggregate prospect metrics can hide which evaluation tier your "
+            "data actually supports. The ribbon shows effective sample size "
+            "per stratum. CRITICAL = at least one stratum is empty; "
+            "UNBALANCED = Gini > 0.4; BALANCED = even coverage across tiers."
+        ),
+    }
+
+
+def _stratum_screen(evidence_refs: list[str], prospect_ref: str) -> dict[str, Any]:
+    """Screen mode: qualitative, no evidence required. Always has >= 1 sample (the prospect)."""
+    return {
+        "n_samples": max(1, len(evidence_refs) if evidence_refs else 1),
+        "confidence": 0.40,  # qualitative-only — low
+        "missing_strata": [],
+        "evidence_bar": "qualitative heuristic",
+    }
+
+
+def _stratum_appraise(evidence_refs: list[str]) -> dict[str, Any]:
+    """Appraise mode: requires QC-verified DST/PVT/seismic. Threshold = 3+."""
+    n = len(evidence_refs) if evidence_refs else 0
+    if n >= 3:
+        confidence = min(0.85, 0.40 + 0.15 * n)
+        missing: list[str] = []
+    else:
+        confidence = 0.20 + 0.10 * n
+        missing = [
+            "DST table (QC-verified)",
+            "PVT / gas composition (QC-verified)",
+            "seismic interpretation (QC-verified)",
+        ]
+    return {
+        "n_samples": n,
+        "confidence": round(confidence, 3),
+        "missing_strata": missing,
+        "evidence_bar": "QC-verified DST/PVT/seismic",
+    }
+
+
+def _stratum_develop(evidence_refs: list[str]) -> dict[str, Any]:
+    """Develop mode: full evidence package + prior appraisal. Threshold = 5+."""
+    n = len(evidence_refs) if evidence_refs else 0
+    if n >= 5:
+        confidence = min(0.95, 0.50 + 0.10 * (n - 5))
+        missing: list[str] = []
+    else:
+        confidence = 0.10 + 0.05 * n
+        missing = [
+            "net pay / petrophysics",
+            "structure map (depth-converted)",
+            "fluid contacts",
+            "production analog data",
+            "reservoir simulation (history-matched)",
+        ]
+    return {
+        "n_samples": n,
+        "confidence": round(confidence, 3),
+        "missing_strata": missing,
+        "evidence_bar": "full package + prior appraisal",
+    }
+
+
+def _gini_coefficient(values: list[int | float]) -> float:
+    """Standard Gini coefficient. 0 = perfect equality, 1 = max inequality."""
+    if not values or sum(values) == 0:
+        return 0.0
+    sorted_vals = sorted(values)
+    n = len(sorted_vals)
+    cum = 0.0
+    for i, v in enumerate(sorted_vals, start=1):
+        cum += (2 * i - n - 1) * v
+    return cum / (n * sum(sorted_vals))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
