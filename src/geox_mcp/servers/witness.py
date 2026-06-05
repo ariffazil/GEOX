@@ -182,7 +182,13 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
 }
 
 
+_WITNESS_TASKS: set[str] = {
+    "geox_data_ingest_bundle",
+    "geox_evidence_reason",
+}
+
+
 def create_witness_server() -> FastMCP:
     server = FastMCP("geox-witness")
-    register_tools_on_server(server, _WITNESS_TOOLS, _WITNESS_ANNOTATIONS)
+    register_tools_on_server(server, _WITNESS_TOOLS, _WITNESS_ANNOTATIONS, tasks=_WITNESS_TASKS)
     return server

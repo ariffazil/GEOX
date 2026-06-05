@@ -60,7 +60,10 @@ _CLAIMS_ANNOTATIONS: dict[str, dict] = {
 }
 
 
+_CLAIMS_TASKS: set[str] = set()
+
+
 def create_claims_server() -> FastMCP:
     server = FastMCP("geox-claims")
-    register_tools_on_server(server, _CLAIMS_TOOLS, _CLAIMS_ANNOTATIONS)
+    register_tools_on_server(server, _CLAIMS_TOOLS, _CLAIMS_ANNOTATIONS, tasks=_CLAIMS_TASKS)
     return server

@@ -8,6 +8,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
+import asyncio
 import functools
 import inspect
 import logging
@@ -83,9 +84,11 @@ def register_tools_on_server(
     mcp: FastMCP,
     tools: list[tuple[str, Any]],
     annotations: dict[str, dict] | None = None,
+    tasks: set[str] | None = None,
 ) -> None:
-    """Register a list of (name, func) tuples on a FastMCP server with receipts + annotations."""
+    """Register a list of (name, func) tuples on a FastMCP server with receipts + annotations + tasks."""
     annotations = annotations or {}
+    tasks = tasks or set()
 
     for name, func in tools:
         kwargs: dict[str, Any] = {"name": name}
@@ -98,6 +101,10 @@ def register_tools_on_server(
 
         if name in annotations:
             kwargs["annotations"] = annotations[name]
+
+        # MCP Tasks extension: background execution for long-running async tools
+        if name in tasks and asyncio.iscoroutinefunction(func):
+            kwargs["task"] = True
 
         wrapped = _make_receipt_wrapper(func, name)
         mcp.tool(**kwargs)(wrapped)

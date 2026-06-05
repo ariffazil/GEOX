@@ -115,7 +115,12 @@ _PALEOSCAN_ANNOTATIONS: dict[str, dict] = {
 }
 
 
+_PALEOSCAN_TASKS: set[str] = {
+    "geox_seismic_compute_attribute_tool",
+}
+
+
 def create_paleoscan_server() -> FastMCP:
     server = FastMCP("geox-paleoscan")
-    register_tools_on_server(server, _PALEOSCAN_TOOLS, _PALEOSCAN_ANNOTATIONS)
+    register_tools_on_server(server, _PALEOSCAN_TOOLS, _PALEOSCAN_ANNOTATIONS, tasks=_PALEOSCAN_TASKS)
     return server
