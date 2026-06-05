@@ -276,6 +276,39 @@ def _prune_mcp_surface(mcp_server) -> None:
     logger.info(f"MCP surface clean: {len(components)} canonical tools exposed (profile={_profile})")
 
 
+# MCP Spec 2025-11-25 outputSchema — standard GEOX response envelope
+_GEOX_OUTPUT_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "status": {"type": "string", "description": "Execution status: OK, ERROR, HOLD, VOID"},
+        "verdict": {"type": "string", "description": "GEOX verdict: SEAL, HOLD, VOID, QUALIFY"},
+        "claim_state": {"type": "string", "description": "Epistemic claim state"},
+        "claim_tag": {"type": "string", "description": "CLAIM | PLAUSIBLE | HYPOTHESIS | ESTIMATE"},
+        "cross_modal_stability": {"type": "object", "description": "Cross-modal fidelity assessment"},
+        "semantic_density_score": {"type": "number", "description": "Semantic density 0.0–1.0"},
+        "dim_spot_flag": {"type": "boolean", "description": "Dim-spot anomaly guard"},
+        "result": {"type": "object", "description": "Tool-specific geoscience payload"},
+        "error": {"type": "string", "description": "Error message if status != OK"},
+        "reasons": {"type": "array", "items": {"type": "string"}, "description": "Human-readable justification"},
+    },
+}
+
+
+def _patch_output_schemas(mcp_server) -> None:
+    """Patch MCP tool outputSchema post-registration (FastMCP 3.x)."""
+    provider = getattr(mcp_server, "_local_provider", None)
+    if not provider:
+        return
+    components = getattr(provider, "_components", {})
+    patched = 0
+    for key, component in components.items():
+        if key.startswith("tool:") and hasattr(component, "output_schema"):
+            component.output_schema = _GEOX_OUTPUT_SCHEMA
+            patched += 1
+    if patched:
+        logger.info(f"MCP outputSchema patched: {patched} tools")
+
+
 # ─── listChanged notification (Sprint 2A) ───────────────────────────────────
 
 
@@ -790,9 +823,11 @@ def main() -> None:
         logger.info(f"GEOX starting in stdio mode — {GEOX_VERSION} ({_GIT_VERSION})")
         logger.info(f"  Tools: {len(CANONICAL_PUBLIC_TOOLS)} canonical across 3 domains")
         logger.info(f"  Profile: {GEOX_PROFILE}")
+        _patch_output_schemas(mcp)
         mcp.run(transport="stdio")
     else:
         # ── HTTP transport: systemd service / network ─────────────────
+        _patch_output_schemas(mcp)
         app = create_app()
         logger.info(f"GEOX Unified Server starting on {args.host}:{args.port}")
         logger.info(f"  Version: {GEOX_VERSION}")
