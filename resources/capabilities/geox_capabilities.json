@@ -1,7 +1,9 @@
 {
   "domain": "earth_intelligence",
-  "version": "2026.05.17",
+  "version": "2026.06.05",
   "seal": "DITEMPA BUKAN DIBERI",
+  "canonical_tool_count": 31,
+  "canonical_source": "src/geox_mcp/registry.py \u2192 CANONICAL_PUBLIC_TOOLS",
   "tools": [
     {
       "name": "geox_data_ingest_bundle",
@@ -9,26 +11,16 @@
       "required_inputs": [
         "source_uri OR content_base64"
       ],
-      "optional_inputs": [
-        "well_id",
-        "source_type",
-        "standardize_curves",
-        "normalize_units"
-      ],
+      "optional_inputs": [],
       "outputs": [
         "artifact_ref",
         "sha256",
-        "curve_inventory",
-        "depth_range_m",
         "claim_state"
       ],
       "claim_limits": [
-        "FILE_IMPORT means mechanical load, not geological validation."
+        "Mechanical load, not geological validation."
       ],
-      "next_best_tools": [
-        "geox_data_qc_bundle",
-        "geox_las_curve_inventory"
-      ]
+      "next_best_tools": []
     },
     {
       "name": "geox_data_qc_bundle",
@@ -37,55 +29,114 @@
         "artifact_ref",
         "artifact_type"
       ],
-      "optional_inputs": [
-        "qc_mode"
-      ],
+      "optional_inputs": [],
       "outputs": [
         "qc_overall",
-        "qc_passed",
         "claim_state",
-        "flags",
-        "limitations"
+        "flags"
       ],
       "claim_limits": [
-        "QC_VERIFIED means mechanical checks passed, not geological truth."
+        "QC_VERIFIED = mechanical checks, not geological truth."
       ],
-      "next_best_tools": [
-        "geox_subsurface_generate_candidates",
-        "geox_well_analyze_sequence"
-      ]
+      "next_best_tools": []
     },
     {
-      "name": "geox_well_analyze_sequence",
-      "domain": "well_stratigraphy",
+      "name": "geox_dst_ingest_test",
+      "domain": "well_test",
       "required_inputs": [
-        "source",
-        "zone_top",
-        "zone_base"
+        "well_id"
       ],
-      "optional_inputs": [
-        "depo_env_code",
-        "bin_size_m",
-        "min_package_thickness_m",
-        "p50_shift_api",
-        "gr_cutoff_api"
-      ],
+      "optional_inputs": [],
       "outputs": [
-        "bins",
-        "packages",
-        "systems_tracts",
-        "surfaces",
+        "dst_summary",
+        "derived_metrics",
         "claim_state"
       ],
       "claim_limits": [
-        "Single-well sequence surfaces are candidates only.",
-        "MFS requires correlation or independent strat evidence.",
-        "GR-only motif cannot prove lithology."
+        "F2 Truth: all outputs OBSERVED from parameters, not interpreted."
       ],
-      "next_best_tools": [
-        "geox_section_interpret_correlation",
-        "geox_evidence_summarize_cross"
-      ]
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_las_inspect",
+      "domain": "data_inspect",
+      "required_inputs": [
+        "las_metadata",
+        "las_curve_info"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "inspection_report",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Inspect before ingest \u2014 validate structure without mutating data."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_seismic_inspect",
+      "domain": "data_inspect",
+      "required_inputs": [
+        "seismic_metadata"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "inspection_report",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Metadata validation only \u2014 no volume I/O."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_deviation_survey_inspect",
+      "domain": "data_inspect",
+      "required_inputs": [
+        "deviation_metadata"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "inspection_report",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Depth unit, datum, MD/TVD consistency enforced."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_tops_inspect",
+      "domain": "data_inspect",
+      "required_inputs": [
+        "tops_metadata"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "inspection_report",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Unit/datum consistency, positive thickness enforced."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_seismic_segy_inspect",
+      "domain": "data_inspect",
+      "required_inputs": [
+        "segy_metadata"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "inspection_report",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Binary header only \u2014 inspect before ingest."
+      ],
+      "next_best_tools": []
     },
     {
       "name": "geox_subsurface_generate_candidates",
@@ -94,12 +145,7 @@
         "target_class",
         "evidence_refs"
       ],
-      "optional_inputs": [
-        "zone_top_m",
-        "zone_base_m",
-        "realizations",
-        "archie params"
-      ],
+      "optional_inputs": [],
       "outputs": [
         "candidates",
         "residuals",
@@ -108,10 +154,79 @@
       "claim_limits": [
         "Candidates are hypotheses until verified by independent evidence."
       ],
-      "next_best_tools": [
-        "geox_subsurface_verify_integrity",
-        "geox_evidence_summarize_cross"
-      ]
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_subsurface_verify_integrity",
+      "domain": "petrophysics",
+      "required_inputs": [
+        "candidate_ref",
+        "domain"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "integrity_verdict",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Never returns SEAL without verified evidence."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_seismic_compute",
+      "domain": "seismic",
+      "required_inputs": [
+        "mode"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "mode-specific artifacts",
+        "attention_equivalence (anomalous_contrast mode)",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "anomalous_contrast mode: AVO class CONDITIONAL from normal-incidence RC. Pre-stack validation required."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_sequence_interpret",
+      "domain": "stratigraphy",
+      "required_inputs": [
+        "workflow",
+        "source"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "bins",
+        "packages",
+        "systems_tracts",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Single-well surfaces are candidates only. MFS requires correlation."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_evidence_reason",
+      "domain": "cross_dimension",
+      "required_inputs": [
+        "phase",
+        "evidence_refs"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "causal_graph",
+        "hypotheses",
+        "contradictions",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Cross-domain synthesis only as strong as weakest evidence ref."
+      ],
+      "next_best_tools": []
     },
     {
       "name": "geox_prospect_evaluate",
@@ -119,10 +234,7 @@
       "required_inputs": [
         "prospect_ref"
       ],
-      "optional_inputs": [
-        "mode",
-        "evidence_refs"
-      ],
+      "optional_inputs": [],
       "outputs": [
         "evaluation",
         "pos",
@@ -130,33 +242,306 @@
         "claim_state"
       ],
       "claim_limits": [
-        "Screen mode is heuristic only. Appraise/develop require QC_VERIFIED evidence."
+        "Screen mode is heuristic only. Appraise requires QC_VERIFIED evidence."
       ],
-      "next_best_tools": [
-        "geox_prospect_judge_preview"
-      ]
+      "next_best_tools": []
     },
     {
-      "name": "geox_evidence_summarize_cross",
-      "domain": "cross_dimension",
+      "name": "geox_map_context_scene",
+      "domain": "spatial",
       "required_inputs": [
-        "evidence_refs"
+        "bbox"
       ],
-      "optional_inputs": [
-        "export_format",
-        "output_path"
-      ],
+      "optional_inputs": [],
       "outputs": [
-        "causal_graph",
-        "summary",
+        "scene_summary",
         "claim_state"
       ],
       "claim_limits": [
-        "Cross-domain synthesis is only as strong as the weakest evidence ref."
+        "Coordinate guardrail checks against known basin boundaries."
       ],
-      "next_best_tools": [
-        "geox_prospect_judge_preview"
-      ]
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_system_registry_status",
+      "domain": "registry",
+      "required_inputs": [],
+      "optional_inputs": [],
+      "outputs": [
+        "registry_truth",
+        "canonical_tools",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Reports ACTUAL live MCP surface \u2014 no phantom aliases."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_horizon_contrast_surface",
+      "domain": "horizon",
+      "required_inputs": [
+        "attribute_data",
+        "depth",
+        "geological_query"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "fused_contrast",
+        "horizon_candidates",
+        "attention_weights",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "ToAC-as-Attention pipeline: signal = amplify(normalize(obs \u2212 bg)). AVO class conditional."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_coord_transform_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "points",
+        "from_space",
+        "to_space"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "transformed_points",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Deterministic geoscience math \u2014 claim_state = COMPUTED."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_blockspace_resolution_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "block_width",
+        "block_height",
+        "block_length",
+        "survey_*"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "resolution",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Resolution = survey_range / (block_dimension - 1)."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_volume_get_frame_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "volume_ref",
+        "frame_index",
+        "orientation"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "image2d",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Reads frame-by-frame (deep copy) from SEG-Y or scaffold."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_volume_set_frame_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "volume_ref",
+        "frame_index",
+        "orientation",
+        "image_data"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "claim_state"
+      ],
+      "claim_limits": [
+        "REQUIRES_888_HOLD: irreversible file mutation."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_seismic_compute_attribute_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "volume_ref",
+        "attribute_name"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "attribute_volume",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Uses dynamic AttributeRegistry from paleoscan patterns."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_fault_stick_ingest_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "source_uri",
+        "source_type"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "fault_set",
+        "stick_counts",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Ingest fault sticks from CSV or GeoJSON into canonical FaultSet3d."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_attribute_registry_list_tool",
+      "domain": "paleoscan",
+      "required_inputs": [],
+      "optional_inputs": [],
+      "outputs": [
+        "attributes",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Lists all registered seismic attributes with metadata."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_blend_volume_alpha_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "volume_ref_1",
+        "volume_ref_2"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "blended_volume",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Pure geoscience compute \u2014 no file I/O, no UI."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_blend_volume_rgb_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "volume_ref_red",
+        "volume_ref_green",
+        "volume_ref_blue"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "rgb_volume",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Widely used for frequency decomposition interpretation."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_segy_export_tool",
+      "domain": "paleoscan",
+      "required_inputs": [
+        "volume_ref",
+        "output_path"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "export_path",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "REQUIRES_888_HOLD: irreversible file creation."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_claim_create",
+      "domain": "claims",
+      "required_inputs": [
+        "claim_text",
+        "claim_type",
+        "truth_class",
+        "evidence_ids"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "claim_id",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "FACT = directly observed. INTERPRETATION = derived from physics. SPECULATION = inferred."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_claim_challenge",
+      "domain": "claims",
+      "required_inputs": [
+        "claim_id",
+        "challenge_text",
+        "alternative_claim_text",
+        "alternative_evidence_ids"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "challenge_id",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Multi-Discipline Self-Argument requirement (Eureka #4)."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_evidence_attach",
+      "domain": "claims",
+      "required_inputs": [
+        "claim_id",
+        "evidence_id"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "attachment",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Evidence types: supporting, contradicting, contextual, alternative."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_claim_seal",
+      "domain": "claims",
+      "required_inputs": [
+        "claim_id",
+        "ack_irreversible"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "seal_verdict",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Routes to arifOS kernel for F1-F13 constitutional checks. GEOX does not adjudicate."
+      ],
+      "next_best_tools": []
     }
   ]
 }
