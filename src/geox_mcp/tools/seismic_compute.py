@@ -195,7 +195,9 @@ async def _mode_anomalous_contrast(
         # Boundary condition escalation
         esc = ar.get("governance_escalation")
         if esc:
-            if worst_escalation is None or _escalation_rank.get(esc["required_status"], 0) > _escalation_rank.get(worst_escalation["required_status"], 0):
+            if worst_escalation is None or _escalation_rank.get(esc["required_status"], 0) > _escalation_rank.get(
+                worst_escalation["required_status"], 0
+            ):
                 worst_escalation = esc
 
     # Apply override if escalation demands stricter governance than default
@@ -451,12 +453,19 @@ async def geox_seismic_compute(
         "synthetic" — forward model S = w * r + n.
         "well_tie" — seismic-to-well tie with cross-correlation.
         "time_depth_anchor" — checkshot/VSP anchoring.
-        "anomalous_contrast" — detect AC mismatches.
-        "attribute" — honest placeholder for future attribute engine.
+        "anomalous_contrast" — detect AC mismatches with AVO class I-IV,
+            attention residual (δ_i = e_i − ē), softmax hallucination risk,
+            approximation tier, and boundary condition flags.
+            Governed output with ClaimTag + PhysicsGuard + 888_HOLD gating.
+            Per the Eureka GeoX Theory: AVO fluid factor ΔF ≡ attention
+            residual δ_i ≡ constitutional governance deviation ΔV.
+        "attribute" — seismic attribute computation via dynamic registry.
 
     Returns
     -------
     Standard GEOX envelope with mode-specific derived artifacts.
+    For anomalous_contrast: envelope carries attention_equivalence metadata
+    (AVO chain, attention chain, shared primitives, failure modes, trilogy ref).
     """
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
