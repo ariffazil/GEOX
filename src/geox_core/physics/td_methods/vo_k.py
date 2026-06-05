@@ -120,7 +120,7 @@ def fit_vo_k(
 
     residuals = cs_t - twt_at_cs
     rmse = float(np.sqrt(np.mean(residuals**2)))
-    cov = _coverage(depth_array, cs_d)
+    _coverage(depth_array, cs_d)
     audit = _audit(twt_pred, depth_array, residuals)
     risk = _extrapolation_risk(depth_array, cs_d) if allow_extrapolation else 0.0
 

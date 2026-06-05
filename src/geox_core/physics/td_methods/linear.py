@@ -53,7 +53,7 @@ def fit_linear(
     twt_interp = np.interp(depth_array, cs_d, cs_t)
     residual_at_cs = np.interp(cs_d, depth_array, twt_interp) - cs_t
     rmse = float(np.sqrt(np.mean(residual_at_cs**2)))
-    cov = _coverage(depth_array, cs_d)
+    _coverage(depth_array, cs_d)
     audit = _audit(twt_interp, depth_array, residual_at_cs)
 
     return TDFitResult(

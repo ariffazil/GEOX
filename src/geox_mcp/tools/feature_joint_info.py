@@ -86,10 +86,9 @@ def run_fjis(
         }
 
     if candidate_feature not in existing_features:
-        # Add candidate to feature set for the analysis
-        all_features = list(existing_features) + [candidate_feature]
-    else:
-        all_features = list(existing_features)
+        # Add candidate to feature set for the analysis (declared for clarity;
+        # actual feature matrix uses existing_features + candidate directly below)
+        pass
 
     # Downsample
     if len(samples) > max_samples:

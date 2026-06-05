@@ -42,8 +42,8 @@ def _assign_blocks(
         return []
     lats = [c[0] for c in coords]
     lons = [c[1] for c in coords]
-    lat_min, lat_max = min(lats), max(lats)
-    lon_min, lon_max = min(lons), max(lons)
+    lat_min = min(lats)
+    lon_min = min(lons)
     # 1 deg latitude ~ 111 km. Block size in deg-lat = block_size_km / 111.
     deg_per_block = max(block_size_km / 111.0, 1e-6)
     blocks: list[int] = []
@@ -225,8 +225,7 @@ def run_spatial_block_validate(
     per_fold_baseline_rmse: list[float] = []  # random-CV-like baseline (no blocks)
 
     # Random baseline (no spatial awareness)
-    rng = np.random.default_rng(random_seed)
-    random_idx = rng.permutation(len(y))
+    np.random.default_rng(random_seed)
     random_folds = [int(i % n_folds) for i in range(len(y))]
 
     for fold in range(n_folds):

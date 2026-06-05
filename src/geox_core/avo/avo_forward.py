@@ -151,7 +151,7 @@ def zoeppritz_rpp(
 
     # Layer 1 quantities
     cos_t1 = np.cos(np.deg2rad(theta_deg))
-    sin_t1 = np.sin(np.deg2rad(theta_deg))
+    np.sin(np.deg2rad(theta_deg))
     sin_f1_sq = np.clip(p2 * vs1 * vs1, 0.0, 1.0)
     cos_f1 = np.sqrt(1.0 - sin_f1_sq)
 
