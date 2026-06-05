@@ -30,24 +30,28 @@ _CLAIMS_TOOLS: list[tuple[str, Any]] = [
 
 _CLAIMS_ANNOTATIONS: dict[str, dict] = {
     "geox_claim_create": {
+        "title": "Claim Create",
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": True,
         "openWorldHint": False,
     },
     "geox_claim_challenge": {
+        "title": "Claim Challenge",
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": True,
         "openWorldHint": False,
     },
     "geox_evidence_attach": {
+        "title": "Evidence Attach",
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": True,
         "openWorldHint": False,
     },
     "geox_claim_seal": {
+        "title": "Claim Seal",
         "readOnlyHint": False,
         "destructiveHint": True,
         "idempotentHint": True,

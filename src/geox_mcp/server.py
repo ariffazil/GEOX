@@ -325,6 +325,29 @@ class GlobalPanicMiddleware(BaseHTTPMiddleware):
             )
 
 
+class OriginValidationMiddleware(BaseHTTPMiddleware):
+    """Validate Origin header on MCP endpoints to prevent DNS rebinding (SEP-2243)."""
+
+    ALLOWED_ORIGIN_PREFIXES: tuple[str, ...] = (
+        "https://geox.arif-fazil.com",
+        "https://arif-fazil.com",
+        "http://localhost",
+        "https://localhost",
+        "http://127.0.0.1",
+        "https://127.0.0.1",
+    )
+
+    async def dispatch(self, request: Request, call_next):
+        if request.url.path.startswith("/mcp"):
+            origin = request.headers.get("origin", "")
+            if origin and not any(origin.startswith(p) for p in self.ALLOWED_ORIGIN_PREFIXES):
+                return JSONResponse(
+                    {"error": "Invalid Origin", "detail": "DNS rebinding protection"},
+                    status_code=403,
+                )
+        return await call_next(request)
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # HEALTH & STATUS HANDLERS
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -389,6 +412,20 @@ async def discovery_handler(request: Request) -> JSONResponse:
                 "prompts": {"listChanged": True},
             },
             "seal": GEOX_SEAL,
+        }
+    )
+
+
+async def mcp_server_card(request: Request) -> JSONResponse:
+    """MCP Server Card — SEP-2127 HTTP discovery document."""
+    return JSONResponse(
+        {
+            "name": "geox",
+            "displayName": "GEOX Earth Intelligence",
+            "url": "https://geox.arif-fazil.com/mcp",
+            "version": GEOX_VERSION.lstrip("v"),
+            "capabilities": {"tools": True, "resources": True, "prompts": True},
+            "authentication": {"type": "none"},
         }
     )
 
@@ -716,6 +753,7 @@ def create_app():
             Route("/contract", contract_handler, methods=["GET"]),
             Route("/schemas", schemas_handler, methods=["GET"]),
             Route("/adapters", adapters_handler, methods=["GET"]),
+            Route("/.well-known/mcp.json", mcp_server_card, methods=["GET"]),
             Route("/.well-known/mcp/server.json", discovery_handler, methods=["GET"]),
             Route("/tools", tools_list_handler, methods=["GET"]),
             Route("/mcp", lambda req: RedirectResponse(url="/mcp/", status_code=307), methods=["GET", "POST", "DELETE"]),
@@ -727,6 +765,7 @@ def create_app():
     mcp_http_handler.router.redirect_slashes = False
     app.add_middleware(EarthAnchorMiddleware)
     app.add_middleware(GlobalPanicMiddleware)
+    app.add_middleware(OriginValidationMiddleware)
     return app
 
 
