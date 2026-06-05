@@ -30,6 +30,8 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_map_context_scene",
     # Machine-checkable truth
     "geox_system_registry_status",
+    # Horizon contrast surface (ToAC-as-Attention pipeline)
+    "geox_horizon_contrast_surface",
     # paleoscan_python v2.0.0 forge — coordinate & image substrate
     "geox_coord_transform_tool",
     "geox_blockspace_resolution_tool",
@@ -66,6 +68,7 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_prospect_evaluate", "axis": "reason", "expose": True},
     {"name": "geox_map_context_scene", "axis": "observe", "expose": True},
     {"name": "geox_system_registry_status", "axis": "observe", "expose": True},
+    {"name": "geox_horizon_contrast_surface", "axis": "reason", "expose": True},
     # paleoscan_python v2.0.0 forge
     {"name": "geox_coord_transform_tool", "axis": "compute", "expose": True},
     {"name": "geox_blockspace_resolution_tool", "axis": "compute", "expose": True},

@@ -35,6 +35,7 @@ from geox_mcp.tools.qc import geox_data_qc_bundle
 from geox_mcp.tools.registry import geox_system_registry_status
 from geox_mcp.tools.seismic_compute import geox_seismic_compute
 from geox_mcp.tools.sequence import geox_sequence_interpret
+from geox_mcp.tools.horizon_contrast import geox_horizon_contrast_surface
 
 _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),
@@ -53,6 +54,7 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_prospect_evaluate", geox_prospect_evaluate),
     ("geox_map_context_scene", geox_map_context_scene),
     ("geox_system_registry_status", geox_system_registry_status),
+    ("geox_horizon_contrast_surface", geox_horizon_contrast_surface),
 ]
 
 _WITNESS_ANNOTATIONS: dict[str, dict] = {
@@ -149,6 +151,12 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
         "openWorldHint": False,
     },
     "geox_system_registry_status": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_horizon_contrast_surface": {
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,

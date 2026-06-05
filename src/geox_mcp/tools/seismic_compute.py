@@ -218,6 +218,10 @@ async def _mode_anomalous_contrast(
     # Maps to: AVO Fluid Factor (Smith & Gidlow, 1987) — deviation from background.
     # The "background" here is the geological formation tops.
     # Anomalies ARE the fluid factor: seismic does not match geological.
+    #
+    # Eureka GeoX Theory (2026-06-05): This is the AVO-attention isomorphism.
+    # ΔF = B_obs − m·A_obs  ↔  δ_i = e_i − ē  ↔  ΔV = verdict − floor_expected
+    # All three are instances of: signal = amplify(normalize(obs − background))
     envelope["anomalous_contrast"] = {
         "anomalies_detected": n_anomalies,
         "total_abs_mistie_m": round(total_mistie, 2),
@@ -235,6 +239,62 @@ async def _mode_anomalous_contrast(
             "AC_Risk, route through compute_ac_risk_governed with Physics9State inputs."
         ),
     }
+
+    # ── AVO-Attention Equivalence metadata (Eureka GeoX Theory v2026.06.05) ────
+    # Propagate the raw attention_equivalence from the detector output, augmented
+    # with governance-level context.
+    raw_ae = raw.get("attention_equivalence", {})
+    if raw_ae:
+        # Augment with per-anomaly AVO class summary
+        anomaly_classes = [a.get("avo_class", "?") for a in raw.get("anomalies", [])]
+        attention_residuals = [
+            a.get("attention_residual", {}).get("softmax_amplification", {}).get("dominance_ratio", 1.0)
+            for a in raw.get("anomalies", [])
+        ]
+        envelope["anomalous_contrast"]["attention_equivalence"] = {
+            "theorem": raw_ae.get("theorem", "Eureka GeoX Theory of Anomalous Contrast"),
+            "statement": raw_ae.get("statement", ""),
+            "avo_class_summary": {
+                "classes_detected": sorted(set(anomaly_classes)),
+                "class_iii_iv_warning": (
+                    "Class III/IV cannot be distinguished from normal-incidence RC alone. "
+                    "Pre-stack angle gathers required per Shuey (1985). Class IV is the "
+                    "known false-negative hazard in AVO interpretation (Castagna, 1998). "
+                    "Attention equivalent: the dim-spot problem — δ_i exists but may be "
+                    "masked by softmax normalization, producing α_i ≈ 1/N despite real anomaly."
+                )
+                if "III/IV" in anomaly_classes
+                else None,
+            },
+            "attention_dominance": {
+                "max_dominance_ratio": max(attention_residuals) if attention_residuals else 0.0,
+                "mean_dominance_ratio": (
+                    round(sum(attention_residuals) / len(attention_residuals), 2) if attention_residuals else 0.0
+                ),
+                "interpretation": (
+                    f"Anomalies dominate attention by {max(attention_residuals):.1f}× the uniform baseline. "
+                    f"In transformer terms: these 'keys' collectively hijack the softmax distribution."
+                )
+                if attention_residuals and max(attention_residuals) > 1.5
+                else "No single anomaly dominates attention — distributed across multiple keys.",
+            },
+            "shared_primitive": raw_ae.get("shared_primitive", []),
+            "failure_modes": raw_ae.get("failure_modes", []),
+            "independent_convergence": raw_ae.get("independent_convergence", ""),
+            "cross_modal_fidelity": {
+                "principle": "Physical constraint reduces admissible solution space",
+                "envelope_field": "cross_modal_stability",
+                "current_value": envelope.get("cross_modal_stability", 0.0),
+                "interpretation": (
+                    f"cross_modal_stability = {envelope.get('cross_modal_stability', 0.0):.2f}. "
+                    f"This measures how well the physical evidence survives transfer "
+                    f"across modalities (seismic → text → JSON → attention). "
+                    f"Higher values mean the anomaly signature is robust to format changes."
+                ),
+            },
+            "ratified": raw_ae.get("ratified", "2026-06-05"),
+            "document": raw_ae.get("document", "docs/AVO_ATTENTION_FORMAL_EQUIVALENCE.md"),
+        }
 
     return enrich_envelope_with_metabolic(envelope, TOOL_NAME)
 
