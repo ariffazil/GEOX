@@ -25,9 +25,10 @@ Arif. This is the **GEOX** organ of the arifOS federation — Earth Intelligence
 
 The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-grounded evidence for constitutional judgment. It is **evidence-only** — never a policy judge.
 
-**20 canonical tools** across subsurface, sensing, stratigraphy, seismic, and prospect evaluation.
+**31 canonical tools** across subsurface, sensing, stratigraphy, seismic, horizon interpretation, and prospect evaluation.
 
-- **Port:** 8081 (live daemon)
+- **Port:** 8081 (live daemon, HTTP mode)
+- **Transport:** Dual-mode — `--transport http` (systemd) or `--transport stdio` (local agents)
 - **Runtime:** Python 3.11+
 - **Framework:** FastMCP + Pydantic + Uvicorn
 
@@ -52,7 +53,7 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Update canonical schemas in `contracts/`
 
 ### Requires 888_HOLD
-- Changes to the tool registry (20 canonical tools in `src/geox_mcp/server.py:CANONICAL_PUBLIC_TOOLS`)
+- Changes to the tool registry (31 canonical tools in `src/geox_mcp/server.py:CANONICAL_PUBLIC_TOOLS`)
 - Changes to Physics9 boundary limits
 - Production deployment without verified build + test pass
 
