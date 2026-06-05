@@ -61,17 +61,22 @@ Every output passes through the **F3 WITNESS floor** before reaching the reasoni
 
 ***
 
-## MCP Surface (Live — 2026-06-04)
+## MCP Surface (Live — 2026-06-05)
 
 ```
-PYTHONPATH=src python -m geox_mcp.server --host 0.0.0.0 --port 8081
-→ 20 canonical tools exposed (no internal legacy aliases)
-→ Universal output contract v0.4
+# HTTP mode (systemd, Cloudflare Tunnel):
+PYTHONPATH=src python -m geox_mcp.server --host 127.0.0.1 --port 8081
+
+# Stdio mode (local agents — Claude Code, OpenCode, Continue CLI):
+PYTHONPATH=src python -m geox_mcp.server --transport stdio
+
+→ 31 canonical tools across 3 domains (witness, paleoscan, claims)
+→ Universal output envelope v0.5 (cross_modal_stability, attention_equivalence)
 → Version v2026.05.27
 → Contract epoch: 2026-05-12-GEOX-13TOOLS-v0.7
 ```
 
-### The 20 canonical tools
+### The 31 canonical tools
 
 The canonical list lives at `src/geox_mcp/server.py` → `CANONICAL_PUBLIC_TOOLS` and is served live by `geox_system_registry_status`. **Always trust the live registry, not this table.**
 
@@ -80,7 +85,8 @@ The canonical list lives at `src/geox_mcp/server.py` → `CANONICAL_PUBLIC_TOOLS
 | **Data intake** | `geox_data_ingest_bundle`, `geox_data_qc_bundle`, `geox_dst_ingest_test` |
 | **Inspect (pre-ingest)** | `geox_las_inspect`, `geox_seismic_inspect`, `geox_deviation_survey_inspect`, `geox_tops_inspect`, `geox_seismic_segy_inspect` |
 | **Subsurface (petrophysics + integrity)** | `geox_subsurface_generate_candidates`, `geox_subsurface_verify_integrity` |
-| **Seismic physics** | `geox_seismic_compute` (modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute) |
+| **Seismic physics** | `geox_seismic_compute` (modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute) — now carries AVO class I-IV + attention residual + softmax hallucination risk per anomaly |
+| **Horizon interpretation** | `geox_horizon_contrast_surface` — 6-step ToAC-as-Attention pipeline: background model → multi-attribute contrast → attention-weighted fusion → candidates → governance → audit |
 | **Sequence stratigraphy** | `geox_sequence_interpret` (modes: single_well, project, section_correlation) |
 | **Evidence reasoning** | `geox_evidence_reason` (phases: synthesize, abduct, contradict, full) |
 | **Prospect** | `geox_prospect_evaluate` (modes: screen, appraise, develop) |
@@ -175,8 +181,11 @@ geox/
 # Install
 pip install -e ".[dev]"
 
-# Run canonical MCP server
-PYTHONPATH=src python -m geox_mcp.server
+# Run canonical MCP server (HTTP — systemd default)
+PYTHONPATH=src python -m geox_mcp.server --host 127.0.0.1 --port 8081
+
+# Run as stdio (local agents — Claude Code, OpenCode, Continue CLI)
+PYTHONPATH=src python -m geox_mcp.server --transport stdio
 
 # Run tests
 PYTHONPATH=src python -m pytest tests/ -q
@@ -187,36 +196,33 @@ ruff format src/
 mypy src/geox_mcp/server.py
 ```
 
-### Connect via FastMCP CLI
+### Connect via FastMCP CLI / Agent Config
 
 ```bash
-# List all 28 tools
-fastmcp list src/geox_mcp/server.py
+# List all 31 tools
+fastmcp run src/geox_mcp/server.py --transport stdio
 
 # Call a tool
-fastmcp call src/geox_mcp/server.py mcp_health_check
-
-# Inspect capabilities
-fastmcp inspect src/geox_mcp/server.py
+fastmcp call src/geox_mcp/server.py geox_system_registry_status
 ```
 
-### Connect via Claude Desktop
+### Stdio — Claude Code / OpenCode / Continue CLI
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+GEOX is dual-mode. Use `--transport stdio` for any agent on the same machine:
 
 ```json
 {
   "mcpServers": {
     "geox": {
-      "command": "python",
-      "args": ["-m", "geox_mcp.server"],
-      "env": {
-        "PYTHONPATH": "/path/to/geox/src"
-      }
+      "command": "python3",
+      "args": ["-m", "geox_mcp.server", "--transport", "stdio"],
+      "cwd": "/root/geox"
     }
   }
 }
 ```
+
+No token needed — F1 stdio bypass for local use. All 31 tools available.
 
 ### Remote (VPS)
 
@@ -335,8 +341,11 @@ Artifact refs are immutable, auditable, and federation-portable (arifOS ↔ WEAL
 | H6 — Server Card + Registry | ✅ SEALED | `server-card.json` published |
 | H7 — MCP Skills | ❌ Blocked | Awaiting MCP Skills WG finalization |
 | PINN Layer | ✅ FORGED | Physics-informed neural net for Vsh/φ/Sw — violates Archie → auto-fail (`engines/petrophysics/pinn.py`, 389 lines) |
-| AC Risk Hardening | ✅ FORGED | Governed anomalous contrast detection — classified + gated + cross-modal stable (`seismic_compute.py`, `anomalous_contrast.py`) |
+| AC Risk Hardening | ✅ FORGED | Governed anomalous contrast detection — AVO class I-IV, attention residual, Essay #13 softmax hallucination risk (`seismic_compute.py`, `anomalous_contrast.py`) |
 | Cross-Modal Fidelity | ✅ FORGED | `cross_modal_stability`, `semantic_density_score`, `dim_spot_flag` on every envelope — 7 files hardened (2026-06-05) |
+| ToAC-Attention Pipeline | ✅ FORGED | `geox_horizon_contrast_surface` — 6-step multi-attribute contrast fusion pipeline with ABKSS stratigraphic query templates (2026-06-05) |
+| Essay #13 Lock-In | ✅ FORGED | Mathematical derivation encoded: softmax hallucination risk, approximation tier, boundary condition flags, trilogy reference — every anomaly output carries the proof |
+| Stdio Transport | ✅ FORGED | Dual-mode MCP: `--transport stdio` for local agents, `--transport http` for systemd (2026-06-05) |
 | DRP Synthetic Core | 🔧 Future | GAN super-resolution for micro-CT training data |
 | WLFM Backbone | 🔧 Future | Well-log foundation model — cross-well invariant geological token embeddings |
 
@@ -345,8 +354,12 @@ Artifact refs are immutable, auditable, and federation-portable (arifOS ↔ WEAL
 ## Test Suite
 
 ```
-229+ passed, 0 skipped, 0 xfailed, 0 failures
-*Includes: anomalous contrast (5/5), seismic compute, envelope integrity, contradiction ontology, Nobel-grade locks (33/33). Golden tests anchor agent behavior — tool output shape, claim_state correctness, failure mode coverage, no secret/path leaks.*
+264 passed, 1 skipped, 0 failures
+*Includes: anomalous contrast (15/15), horizon contrast pipeline (8/8), seismic compute, 
+envelope integrity, contradiction ontology, AVO-attention equivalence, 
+Essay #13 softmax hallucination risk, Nobel-grade locks (33/33).
+Golden tests anchor agent behavior — tool output shape, claim_state correctness, 
+failure mode coverage, no secret/path leaks.*
 
 ***
 
@@ -355,11 +368,11 @@ Artifact refs are immutable, auditable, and federation-portable (arifOS ↔ WEAL
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PYTHONPATH` | `src` | Required — must include `src/` for imports |
-| `GEOX_HOST` | `0.0.0.0` | HTTP bind host |
-| `GEOX_PORT` | `8081` | HTTP bind port (organ-standard, live on `geox-mcp.service`) |
-| `GEOX_TRANSPORT` | `streamable-http` | `stdio` or `streamable-http` |
+| `GEOX_HOST` | `127.0.0.1` | HTTP bind host (systemd) |
+| `GEOX_PORT` | `8081` | HTTP bind port (geox-mcp.service) |
+| `--transport` | `http` | Transport mode: `http` (uvicorn) or `stdio` (local agents) |
 | `GEOX_LOG_LEVEL` | `INFO` | Logging level |
-| `GEOX_SECRET_TOKEN` | `stdio-bypass` | Fail-closed auth for HTTP transport |
+| `GEOX_SECRET_TOKEN` | `stdio-bypass` | Fail-closed auth for HTTP transport (auto-bypassed on stdio) |
 
 ***
 
