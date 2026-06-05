@@ -3,16 +3,21 @@
 
 .PHONY: install test smoke build up down lint format clean security-audit forge
 
-PYTHON := python3
-PIP := pip
+PYTHON := /root/geox/.venv/bin/python3
+UV := uv
 DOCKER := docker
 COMPOSE := docker compose
 
+# GEOX is now managed by uv (like arifOS). The .venv is the single source of truth.
+# DITEMPA BUKAN DIBERI — 2026-06-05
 install:
-	$(PIP) install -e ".[dev]"
+	$(UV) sync --frozen
+
+install-dev:
+	$(UV) sync --frozen
 
 test:
-	PYTHONPATH=src pytest tests/ -q --tb=short
+	PYTHONPATH=src $(PYTHON) -m pytest tests/ -q --tb=short
 
 smoke:
 	PYTHONPATH=src $(PYTHON) scripts/smoke_test.py
