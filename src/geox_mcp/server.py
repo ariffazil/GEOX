@@ -1,5 +1,5 @@
 """
-GEOX Unified MCP Server — Sovereign 16 Kernel + Dimension Native
+GEOX Unified MCP Server — Sovereign 31 Kernel + Dimension Native
 ================================================================
 DITEMPA BUKAN DIBERI — Forged, Not Given
 
@@ -7,10 +7,12 @@ Single canonical entrypoint for GEOX MCP server.
 Composed from domain servers (witness, paleoscan, claims) via mcp.mount().
 Resources and prompts live in geox_mcp.resources and geox_mcp.prompts.
 Fail-closed GEOX_SECRET_TOKEN authentication.
-streamable-http transport with Starlette ASGI mounting.
 
-Port: 8081 (GEOX_PORT env var)
-Transport: streamable-http
+Transport modes:
+  --transport http   streamable-http via uvicorn (default, port 8081, systemd)
+  --transport stdio  standard I/O for local agent/proxy use (Claude Code, OpenCode, etc.)
+
+Port: 8081 (GEOX_PORT env var, http mode only)
 """
 
 from __future__ import annotations
@@ -732,14 +734,33 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default=GEOX_HOST)
     parser.add_argument("--port", type=int, default=GEOX_PORT)
+    parser.add_argument(
+        "--transport",
+        choices=["http", "stdio"],
+        default="http",
+        help="Transport protocol. 'http' = streamable-http via uvicorn (default, port 8081). "
+        "'stdio' = standard I/O for local agent/proxy use (no port, no network).",
+    )
     args = parser.parse_args()
-    app = create_app()
-    logger.info(f"GEOX Unified Server starting on {args.host}:{args.port}")
-    logger.info(f"  Version: {GEOX_VERSION}")
-    logger.info(f"  Profile: {GEOX_PROFILE}")
-    logger.info("  Dimensions: ['prospect', 'well', 'earth3d', 'map', 'cross']")
-    logger.info(f"  MCP Apps: {'enabled' if HAS_FASTMCP_APPS else 'disabled'}")
-    uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+
+    if args.transport == "stdio":
+        # ── stdio transport: local agent/proxy use ────────────────────
+        # No port, no network, no uvicorn. FastMCP handles JSON-RPC I/O.
+        # Used by Claude Code, OpenCode, Continue CLI, and any agent
+        # running on the same machine that needs direct MCP access.
+        logger.info(f"GEOX starting in stdio mode — {GEOX_VERSION} ({_GIT_VERSION})")
+        logger.info(f"  Tools: {len(CANONICAL_PUBLIC_TOOLS)} canonical across 3 domains")
+        logger.info(f"  Profile: {GEOX_PROFILE}")
+        mcp.run(transport="stdio")
+    else:
+        # ── HTTP transport: systemd service / network ─────────────────
+        app = create_app()
+        logger.info(f"GEOX Unified Server starting on {args.host}:{args.port}")
+        logger.info(f"  Version: {GEOX_VERSION}")
+        logger.info(f"  Profile: {GEOX_PROFILE}")
+        logger.info("  Dimensions: ['prospect', 'well', 'earth3d', 'map', 'cross']")
+        logger.info(f"  MCP Apps: {'enabled' if HAS_FASTMCP_APPS else 'disabled'}")
+        uvicorn.run(app, host=args.host, port=args.port, log_level="info")
 
 
 if __name__ == "__main__":
