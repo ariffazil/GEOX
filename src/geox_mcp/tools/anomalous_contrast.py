@@ -110,6 +110,7 @@ def _compute_attention_residual(
     rc_ratio: float,
     mistie_m: float,
     contradiction_severity: str,
+    n_formations: int,
 ) -> dict[str, Any]:
     """Compute the attention-domain contrast residual for this anomaly.
 
@@ -146,9 +147,9 @@ def _compute_attention_residual(
     #   α_i / α_avg ≈ rc_ratio / 1.0
     # A rc_ratio of 3.0 means this reflector is 3× more "salient" than
     # the geological background — analogous to α_i = 3/N vs uniform 1/N.
-    n_formations = 1  # Will be replaced by caller
-    softmax_alpha = round(1.0 / (1.0 + (max(n_formations, 2) - 1) * (1.0 / max(rc_ratio, 0.01))), 4)
-    uniform_baseline = round(1.0 / max(n_formations, 1), 4)
+    n_eff = max(n_formations, 2)
+    softmax_alpha = round(1.0 / (1.0 + (n_eff - 1) * (1.0 / max(rc_ratio, 0.01))), 4)
+    uniform_baseline = round(1.0 / n_eff, 4)
 
     # ── Severity → attention hazard class ──────────────────────────────
     severity_map = {
@@ -174,10 +175,6 @@ def _compute_attention_residual(
     # Softmax has NO equivalent — even δ = 0.001 produces α_i ≠ 1/N.
     # The hallucination risk is proportional to how much softmax output
     # deviates from uniform despite NO physical anomaly being present.
-    n_forms = 1  # placeholder, patched by caller
-    n_eff = max(n_forms, 2)
-    uniform_baseline = round(1.0 / n_eff, 4)
-
     # Dead zone deficit: how far α_i deviates from uniform for δ ≈ 0
     dead_zone_deficit = abs(softmax_alpha - uniform_baseline)
 
@@ -289,6 +286,40 @@ def _compute_attention_residual(
             }
         )
 
+    # ── Governance Escalation (Essay #13 boundary conditions → action) ───
+    governance_escalation = None
+    if boundary_flags:
+        conditions = [f["condition"] for f in boundary_flags]
+        if "ADVERSARIAL_DELTA" in conditions:
+            governance_escalation = {
+                "required_status": "VOID",
+                "trigger": "ADVERSARIAL_DELTA",
+                "reason": (
+                    "Essay #13, Section 5.3: Adversarial δ detected. "
+                    "Softmax amplifies arbitrarily large perturbations into near-certainty. "
+                    "Force VOID — verify this is not acquisition footprint or artifact."
+                ),
+            }
+        elif "LARGE_CONTRAST" in conditions and "LARGE_MISTIE" in conditions:
+            governance_escalation = {
+                "required_status": "HOLD",
+                "trigger": "LARGE_CONTRAST + LARGE_MISTIE",
+                "reason": (
+                    "Essay #13, Section 5.3: Multiple boundary conditions violated. "
+                    "Linearized model (Aki-Richards / Shuey) no longer applies. "
+                    "Equivalent to post-critical angle + numerical saturation."
+                ),
+            }
+        elif "LARGE_CONTRAST" in conditions or "LARGE_MISTIE" in conditions:
+            governance_escalation = {
+                "required_status": "HOLD",
+                "trigger": conditions[0],
+                "reason": (
+                    "Essay #13, Section 5.3: Boundary condition violated. "
+                    "Approximation tier may not hold. Human review required."
+                ),
+            }
+
     return {
         "contrast_primitive": "signal = f(observation − background)",
         "avo_fluid_factor_equivalent": {
@@ -332,6 +363,7 @@ def _compute_attention_residual(
         "approximation_tier": approximation_tier,
         "boundary_condition_flags": boundary_flags,
         "boundary_conditions_pass": len(boundary_flags) == 0,
+        "governance_escalation": governance_escalation,
         # ── Previous fields preserved ────────────────────────────────────
         "governance_derivative": {
             "domain": "arifOS Constitutional (F1–F13)",
@@ -483,18 +515,7 @@ async def geox_anomalous_contrast_detector(
                 rc_ratio=rc_ratio_val,
                 mistie_m=float(mistie),
                 contradiction_severity=contradiction_severity,
-            )
-            # Patch n_formations into the softmax computation
-            n_forms = max(len(formation_tops), 2)
-            attn_alpha = round(1.0 / (1.0 + (n_forms - 1) * (1.0 / max(rc_ratio_val, 0.01))), 4)
-            attn_baseline = round(1.0 / n_forms, 4)
-            attention_residual["softmax_amplification"]["alpha_i"] = attn_alpha
-            attention_residual["softmax_amplification"]["uniform_baseline"] = attn_baseline
-            attention_residual["softmax_amplification"]["dominance_ratio"] = round(attn_alpha / max(attn_baseline, 0.001), 1)
-            attention_residual["softmax_amplification"]["interpretation"] = (
-                f"Anomaly has {attn_alpha / max(attn_baseline, 0.001):.1f}× "
-                f"the uniform attention weight. In transformer terms: "
-                f"this 'key' dominates the softmax distribution."
+                n_formations=len(formation_tops),
             )
 
             anomalies.append(

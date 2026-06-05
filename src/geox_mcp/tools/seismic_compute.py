@@ -179,6 +179,46 @@ async def _mode_anomalous_contrast(
         artifact_status = ArtifactStatus.IN_REVIEW
         claim_state = "INTERPRETED"
 
+    # ── Essay #13: Dead Zone Guard + Boundary Condition Escalation ───────
+    # Scan anomalies for hallucination risk and boundary violations.
+    # Override default ClaimTag if critical conditions detected.
+    dim_spot_flag = False
+    worst_escalation = None
+    _escalation_rank = {"VOID": 3, "HOLD": 2, "QUALIFY": 1, "SEAL": 0}
+
+    for anomaly in raw.get("anomalies", []):
+        ar = anomaly.get("attention_residual", {})
+        # Dead zone guard: near-background with high hallucination risk
+        hr = ar.get("softmax_hallucination_risk", {})
+        if hr.get("risk_level") in ("CRITICAL", "ELEVATED") and anomaly.get("rc_ratio", 1.0) < 1.05:
+            dim_spot_flag = True
+        # Boundary condition escalation
+        esc = ar.get("governance_escalation")
+        if esc:
+            if worst_escalation is None or _escalation_rank.get(esc["required_status"], 0) > _escalation_rank.get(worst_escalation["required_status"], 0):
+                worst_escalation = esc
+
+    # Apply override if escalation demands stricter governance than default
+    if worst_escalation:
+        required = worst_escalation["required_status"]
+        if required == "VOID":
+            claim_tag = "HYPOTHESIS"
+            gov_status = GovernanceStatus.VOID
+            artifact_status = ArtifactStatus.REJECTED
+            claim_state = "VOID"
+        elif required == "HOLD" and gov_status not in (GovernanceStatus.VOID,):
+            claim_tag = "HYPOTHESIS"
+            gov_status = GovernanceStatus.HOLD
+            artifact_status = ArtifactStatus.IN_REVIEW
+            claim_state = "888_HOLD"
+
+    # Dim spot guard: high hallucination risk on near-background forces HOLD
+    if dim_spot_flag and gov_status not in (GovernanceStatus.VOID, GovernanceStatus.HOLD):
+        claim_tag = "HYPOTHESIS"
+        gov_status = GovernanceStatus.HOLD
+        artifact_status = ArtifactStatus.IN_REVIEW
+        claim_state = "888_HOLD"
+
     # ── PhysicsGuard: AI physical range check ─────────────────────────────
     ai_arr = np.array(ai_profile, dtype=float)
     ai_min, ai_max = float(np.min(ai_arr)), float(np.max(ai_arr))
@@ -199,6 +239,7 @@ async def _mode_anomalous_contrast(
         claim_state=claim_state,
         perception_class="ANOMALY" if n_anomalies > 0 else "DISPLAY",
         evidence_refs=list(formation_tops.keys()),
+        dim_spot_flag=dim_spot_flag,
         physics_guard={
             "guard_passed": physics_ok,
             "physics_version": "geox-ac-v2026.06.05",
