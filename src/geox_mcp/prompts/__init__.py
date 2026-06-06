@@ -205,12 +205,60 @@ Your job is to minimize misunderstanding. The verdict belongs to arifOS.
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+GEOX_UI_EXPLAIN_PANEL_PROMPT = """\
+You are the GEOX UI Panel Explainer.
+Explain the current visual panel data (logs, seismic slices, maps, or claims) for the user, highlighting:
+1. Observed vs derived data separation.
+2. Hard physical constraints (e.g. Physics9 limits).
+3. Any active data quality flags, uncertainties, or gaps.
+4. Safe usage boundaries.
+"""
+
+GEOX_CLAIM_DISCIPLINE_PROMPT = """\
+You are the GEOX Claim Discipline Assistant.
+Guide the agent to formulate claims using the 3-tier system: FACT, INTERPRETATION, and SPECULATION.
+Enforce F2 truth gates: every claim must attach specific, valid `evidence_ids`.
+Ensure no qualitative overclaiming occurs, and that uncertainty bounds (P10/P50/P90) are explicitly declared.
+"""
+
+GEOX_RED_TEAM_REVIEWER_PROMPT = """\
+You are the GEOX Red Team Reviewer.
+Attack draft or validated claims, search for contradictions in evidence, and suggest alternative process hypotheses.
+Compare competing geological models (depositional facies, structural geometry, sealing mechanisms) and rank them by evidence density.
+"""
+
+GEOX_REPORT_WRITER_PROMPT = """\
+You are the GEOX Report Writer.
+Draft structured geological briefs and reports.
+Always anchor report statements directly to validated claims in the Claim Graph.
+State clearly what is observed vs interpreted, and call out areas of high risk (e.g. low data density, AVO mismatch, or fault seal uncertainty).
+"""
+
+GEOX_LITERATURE_TO_CLAIMS_PROMPT = """\
+You are the GEOX Literature to Claims Extractor.
+Parse text blocks from academic publications (e.g., PDF extracts) and structure them into draft claims.
+Map each claim to a category (reservoir, stratigraphy, source, etc.), assign a confidence level, and document forbidden uses (e.g. no site-specific drilling decisions).
+"""
+
+GEOX_BASIN_SCREEN_PROMPT = """\
+You are the GEOX Basin Screening Assistant.
+Review a basin profile (stratigraphic framework, petroleum system, tectonic setting) to screen for play fairway suitability.
+Assess the presence of mature source rocks, migration pathways, reservoirs, seals, and trap timings.
+"""
+
+GEOX_ABSTRACTION_GUARD_PROMPT = """\
+You are the GEOX Abstraction Guard.
+Enforce the F10 Ontology Wall. Ensure non-geological relationship metaphors (e.g., personal relationships) do not enter the Claim Graph.
+Refuse non-geoscience queries with a polite explanation of the ontological boundaries.
+"""
+
+
 # Registration
 # ══════════════════════════════════════════════════════════════════════════════
 
 
 def register_prompts(mcp: Any) -> None:
-    """Register the 3 GEOX Earth intelligence prompts."""
+    """Register all GEOX prompts."""
 
     async def _geox_sense() -> str:
         return GEOX_SENSE_PROMPT
@@ -220,6 +268,27 @@ def register_prompts(mcp: Any) -> None:
 
     async def _geox_interpret() -> str:
         return GEOX_INTERPRET_PROMPT
+
+    async def _ui_explain_panel() -> str:
+        return GEOX_UI_EXPLAIN_PANEL_PROMPT
+
+    async def _claim_discipline() -> str:
+        return GEOX_CLAIM_DISCIPLINE_PROMPT
+
+    async def _red_team_reviewer() -> str:
+        return GEOX_RED_TEAM_REVIEWER_PROMPT
+
+    async def _report_writer() -> str:
+        return GEOX_REPORT_WRITER_PROMPT
+
+    async def _literature_to_claims() -> str:
+        return GEOX_LITERATURE_TO_CLAIMS_PROMPT
+
+    async def _basin_screen() -> str:
+        return GEOX_BASIN_SCREEN_PROMPT
+
+    async def _abstraction_guard() -> str:
+        return GEOX_ABSTRACTION_GUARD_PROMPT
 
     mcp.prompt(
         name="geox_sense",
@@ -255,3 +324,38 @@ def register_prompts(mcp: Any) -> None:
             "The Earth is the ultimate witness. The verdict belongs to arifOS."
         ),
     )(_geox_interpret)
+
+    mcp.prompt(
+        name="geox.ui_explain_panel",
+        description="Explain data or metadata shown on a UI panel.",
+    )(_ui_explain_panel)
+
+    mcp.prompt(
+        name="geox.claim_discipline",
+        description="Guide the agent to formulate claim-disciplined observations/derived inputs.",
+    )(_claim_discipline)
+
+    mcp.prompt(
+        name="geox.red_team_reviewer",
+        description="Red-team review claims and search for contradictions.",
+    )(_red_team_reviewer)
+
+    mcp.prompt(
+        name="geox.report_writer",
+        description="Draft structured geological reports referencing claims.",
+    )(_report_writer)
+
+    mcp.prompt(
+        name="geox.literature_to_claims",
+        description="Extract claims from a literature text block.",
+    )(_literature_to_claims)
+
+    mcp.prompt(
+        name="geox.basin_screen",
+        description="Assist in screening a basin profile for play fairways.",
+    )(_basin_screen)
+
+    mcp.prompt(
+        name="geox.abstraction_guard",
+        description="Enforce category boundaries for non-geological concepts.",
+    )(_abstraction_guard)

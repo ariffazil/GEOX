@@ -17,7 +17,7 @@ GEOX's physics modules organize into **6 first-class physics domains** (Copilot)
 ### 2. Basin Thermodynamics & Geochemical Cycling
 **Physics:** Fourier heat conduction, Arrhenius kerogen kinetics, mass balance.
 **Invariants:** Energy conservation, mass balance (generated = expelled + retained + lost).
-**Live tools:** `geox_tops_inspect` (calibration), `geox_dst_ingest_test` (DST data), `geox_prospect_evaluate` (uses thermal history).
+**Live tools:** `geox_header_inspect` (calibration), `geox_dst_ingest_test` (DST data), `geox_prospect_evaluate` (uses thermal history).
 **Gap:** No `geox_burial_history` or `geox_maturity_model` tool — only via private Python modules.
 
 ### 3. Fluid Flow & Migration Physics

@@ -1,0 +1,7 @@
+uncertainties:
+  - parameter: "Fault Seal Risk"
+    description: "SGR calculation highly sensitive to clay content estimates in shale zones"
+    mitigation: "Acquire high-resolution GR logs and run petrophysical uncertainty ensembles"
+  - parameter: "Deep Reservoir Quality"
+    description: "Compaction and diagenesis degrade Group K/L permeability at depths > 3000m"
+    mitigation: "Faust/Gardner parameter checks, calibrate vs core measurements"

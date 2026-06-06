@@ -19,10 +19,12 @@ from geox_mcp.tools.claims import (
     geox_claim_create,
     geox_claim_seal,
     geox_evidence_attach,
+    geox_claim_validate,
 )
 
 _CLAIMS_TOOLS: list[tuple[str, Any]] = [
     ("geox_claim_create", geox_claim_create),
+    ("geox_claim_validate", geox_claim_validate),
     ("geox_claim_challenge", geox_claim_challenge),
     ("geox_evidence_attach", geox_evidence_attach),
     ("geox_claim_seal", geox_claim_seal),
@@ -31,6 +33,13 @@ _CLAIMS_TOOLS: list[tuple[str, Any]] = [
 _CLAIMS_ANNOTATIONS: dict[str, dict] = {
     "geox_claim_create": {
         "title": "Claim Create",
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_claim_validate": {
+        "title": "Claim Validate",
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": True,

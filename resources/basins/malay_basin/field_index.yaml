@@ -1,0 +1,10 @@
+fields:
+  - name: "Angsi"
+    major_reservoirs: ["Group I", "Group J"]
+    type: "Oil and Gas"
+  - name: "Sotong"
+    major_reservoirs: ["Group H", "Group I"]
+    type: "Gas condensate"
+  - name: "Dulang"
+    major_reservoirs: ["Group E"]
+    type: "Oil"

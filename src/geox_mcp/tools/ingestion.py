@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from typing import Any
+from typing import Any, Literal
 
 import jsonschema
 
@@ -196,3 +196,56 @@ async def geox_seismic_segy_inspect(segy_metadata: dict[str, Any]) -> dict[str, 
             report["errors"].append("inline_end < inline_start — coordinate range error")
 
     return report
+
+
+async def geox_header_inspect(
+    file_format: Literal["las", "segy", "seismic", "deviation", "tops"],
+    las_metadata: dict[str, Any] | None = None,
+    las_curve_info: list[dict[str, Any]] | None = None,
+    segy_metadata: dict[str, Any] | None = None,
+    seismic_metadata: dict[str, Any] | None = None,
+    deviation_metadata: dict[str, Any] | None = None,
+    tops_metadata: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Inspects LAS well log, SEG-Y seismic header, seismic metadata, deviation survey, or well tops against GEOX Earth schemas.
+
+    Parameters
+    ----------
+    file_format : Literal["las", "segy", "seismic", "deviation", "tops"]
+        The format of the file header to inspect.
+    las_metadata : dict, optional
+        Metadata dict for LAS files (required if file_format is "las").
+    las_curve_info : list of dict, optional
+        Curve info list for LAS files (required if file_format is "las").
+    segy_metadata : dict, optional
+        Metadata dict for SEG-Y files (required if file_format is "segy").
+    seismic_metadata : dict, optional
+        Metadata dict for Seismic volume (required if file_format is "seismic").
+    deviation_metadata : dict, optional
+        Metadata dict for Deviation survey (required if file_format is "deviation").
+    tops_metadata : dict, optional
+        Metadata dict for Stratigraphic tops (required if file_format is "tops").
+    """
+    if file_format == "las":
+        if las_metadata is None or las_curve_info is None:
+            return {"status": "INVALID", "errors": ["Missing las_metadata or las_curve_info for LAS inspection"]}
+        return await geox_las_inspect(las_metadata, las_curve_info)
+    elif file_format == "segy":
+        if segy_metadata is None:
+            return {"status": "INVALID", "errors": ["Missing segy_metadata for SEG-Y inspection"]}
+        return await geox_seismic_segy_inspect(segy_metadata)
+    elif file_format == "seismic":
+        if seismic_metadata is None:
+            return {"status": "INVALID", "errors": ["Missing seismic_metadata for Seismic inspection"]}
+        return await geox_seismic_inspect(seismic_metadata)
+    elif file_format == "deviation":
+        if deviation_metadata is None:
+            return {"status": "INVALID", "errors": ["Missing deviation_metadata for Deviation inspection"]}
+        return await geox_deviation_survey_inspect(deviation_metadata)
+    elif file_format == "tops":
+        if tops_metadata is None:
+            return {"status": "INVALID", "errors": ["Missing tops_metadata for Tops inspection"]}
+        return await geox_tops_inspect(tops_metadata)
+    else:
+        return {"status": "INVALID", "errors": [f"Unsupported file format: {file_format}"]}
+

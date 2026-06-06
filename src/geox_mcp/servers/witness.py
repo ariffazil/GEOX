@@ -15,15 +15,15 @@ from typing import Any
 from fastmcp import FastMCP
 
 from geox_mcp.tools._register import register_tools_on_server
-from geox_mcp.tools.data import geox_data_ingest_bundle
+from geox_mcp.tools.data import (
+    geox_data_ingest_bundle,
+    geox_evidence_discover,
+    geox_report_to_workflow,
+)
 from geox_mcp.tools.dst import geox_dst_ingest_test
 from geox_mcp.tools.evidence_reason import geox_evidence_reason
 from geox_mcp.tools.ingestion import (
-    geox_deviation_survey_inspect,
-    geox_las_inspect,
-    geox_seismic_inspect,
-    geox_seismic_segy_inspect,
-    geox_tops_inspect,
+    geox_header_inspect,
 )
 from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.petrophysics import (
@@ -36,16 +36,21 @@ from geox_mcp.tools.registry import geox_system_registry_status
 from geox_mcp.tools.seismic_compute import geox_seismic_compute
 from geox_mcp.tools.sequence import geox_sequence_interpret
 from geox_mcp.tools.horizon_contrast import geox_horizon_contrast_surface
+from geox_mcp.tools.basin import (
+    geox_basin_resolve,
+    geox_basin_profile,
+    geox_query_intake,
+    geox_abstraction_guard,
+    geox_literature_ingest,
+)
 
 _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),
     ("geox_data_qc_bundle", geox_data_qc_bundle),
     ("geox_dst_ingest_test", geox_dst_ingest_test),
-    ("geox_las_inspect", geox_las_inspect),
-    ("geox_seismic_inspect", geox_seismic_inspect),
-    ("geox_deviation_survey_inspect", geox_deviation_survey_inspect),
-    ("geox_tops_inspect", geox_tops_inspect),
-    ("geox_seismic_segy_inspect", geox_seismic_segy_inspect),
+    ("geox_header_inspect", geox_header_inspect),
+    ("geox_evidence_discover", geox_evidence_discover),
+    ("geox_report_to_workflow", geox_report_to_workflow),
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
     ("geox_subsurface_verify_integrity", geox_subsurface_verify_integrity),
     ("geox_seismic_compute", geox_seismic_compute),
@@ -55,6 +60,11 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_map_context_scene", geox_map_context_scene),
     ("geox_system_registry_status", geox_system_registry_status),
     ("geox_horizon_contrast_surface", geox_horizon_contrast_surface),
+    ("geox_basin_resolve", geox_basin_resolve),
+    ("geox_basin_profile", geox_basin_profile),
+    ("geox_query_intake", geox_query_intake),
+    ("geox_abstraction_guard", geox_abstraction_guard),
+    ("geox_literature_ingest", geox_literature_ingest),
 ]
 
 _WITNESS_ANNOTATIONS: dict[str, dict] = {
@@ -80,41 +90,29 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
         "idempotentHint": True,
         "openWorldHint": False,
     },
-    "geox_las_inspect": {
-        "title": "LAS Inspect",
+    "geox_header_inspect": {
+        "title": "Header Inspect",
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
         "openWorldHint": False,
     },
-    "geox_seismic_inspect": {
-        "title": "Seismic Inspect",
+
+    "geox_evidence_discover": {
+        "title": "Evidence Discover",
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
         "openWorldHint": False,
     },
-    "geox_deviation_survey_inspect": {
-        "title": "Deviation Survey Inspect",
+    "geox_report_to_workflow": {
+        "title": "Report to Workflow",
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
         "openWorldHint": False,
     },
-    "geox_tops_inspect": {
-        "title": "Tops Inspect",
-        "readOnlyHint": True,
-        "destructiveHint": False,
-        "idempotentHint": True,
-        "openWorldHint": False,
-    },
-    "geox_seismic_segy_inspect": {
-        "title": "Seismic SEGY Inspect",
-        "readOnlyHint": True,
-        "destructiveHint": False,
-        "idempotentHint": True,
-        "openWorldHint": False,
-    },
+
     "geox_subsurface_generate_candidates": {
         "title": "Subsurface Generate Candidates",
         "ui": {"resourceUri": "ui://earth_volume"},
@@ -174,6 +172,41 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_horizon_contrast_surface": {
         "title": "Horizon Contrast Surface",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_basin_resolve": {
+        "title": "Basin Resolve",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_basin_profile": {
+        "title": "Basin Profile",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_query_intake": {
+        "title": "Query Intake",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_abstraction_guard": {
+        "title": "Abstraction Guard",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_literature_ingest": {
+        "title": "Literature Ingest",
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,

@@ -1,4 +1,4 @@
-﻿<!-- SOT-MANIFEST
+<!-- SOT-MANIFEST
 owner: Arif
 last_verified: 2026-06-05
 valid_from: 2026-06-05
@@ -70,20 +70,20 @@ PYTHONPATH=src python -m geox_mcp.server --host 127.0.0.1 --port 8081
 # Stdio mode (local agents — Claude Code, OpenCode, Continue CLI):
 PYTHONPATH=src python -m geox_mcp.server --transport stdio
 
-→ 31 canonical tools across 3 domains (witness, paleoscan, claims)
+→ 33 canonical tools across 3 domains (witness, paleoscan, claims)
 → Universal output envelope v0.5 (cross_modal_stability, attention_equivalence)
 → Version v2026.05.27
 → Contract epoch: 2026-05-12-GEOX-13TOOLS-v0.7
 ```
 
-### The 31 canonical tools
+### The 33 canonical tools
 
 The canonical list lives at `src/geox_mcp/server.py` → `CANONICAL_PUBLIC_TOOLS` and is served live by `geox_system_registry_status`. **Always trust the live registry, not this table.**
 
 | Domain | Tools |
 |--------|-------|
 | **Data intake** | `geox_data_ingest_bundle`, `geox_data_qc_bundle`, `geox_dst_ingest_test` |
-| **Inspect (pre-ingest)** | `geox_las_inspect`, `geox_seismic_inspect`, `geox_deviation_survey_inspect`, `geox_tops_inspect`, `geox_seismic_segy_inspect` |
+| **Inspect / Evidence (pre-ingest)** | `geox_las_inspect`, `geox_seismic_inspect`, `geox_seismic_segy_inspect`, `geox_header_inspect`, `geox_evidence_discover`, `geox_report_to_workflow` |
 | **Subsurface (petrophysics + integrity)** | `geox_subsurface_generate_candidates`, `geox_subsurface_verify_integrity` |
 | **Seismic physics** | `geox_seismic_compute` (modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute) — now carries AVO class I-IV + attention residual + softmax hallucination risk per anomaly |
 | **Horizon interpretation** | `geox_horizon_contrast_surface` — 6-step ToAC-as-Attention pipeline: background model → multi-attribute contrast → attention-weighted fusion → candidates → governance → audit |
@@ -199,7 +199,7 @@ mypy src/geox_mcp/server.py
 ### Connect via FastMCP CLI / Agent Config
 
 ```bash
-# List all 31 tools
+# List all 33 tools
 fastmcp run src/geox_mcp/server.py --transport stdio
 
 # Call a tool
@@ -222,7 +222,7 @@ GEOX is dual-mode. Use `--transport stdio` for any agent on the same machine:
 }
 ```
 
-No token needed — F1 stdio bypass for local use. All 31 tools available.
+No token needed — F1 stdio bypass for local use. All 33 tools available.
 
 ### Remote (VPS)
 

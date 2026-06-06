@@ -1,0 +1,7 @@
+trap_styles:
+  - style: "Fault-bounded Anticlines"
+    mechanism: "Tectonic inversion compressing early normal faults"
+    seal_dependence: "High dependency on fault sealing capacity (SGR)"
+  - style: "Stratigraphic Pinchouts"
+    mechanism: "Fluvial channels transitioning laterally to flood-plain claystone"
+    seal_dependence: "High dependency on lateral facies transition integrity"

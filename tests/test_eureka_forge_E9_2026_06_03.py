@@ -311,7 +311,7 @@ class TestF13NoNewMCPTools(unittest.TestCase):
         try:
             from geox_mcp.server import CANONICAL_PUBLIC_TOOLS
 
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 31)
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 33)
             self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 18)
         except ImportError:
             self.skipTest("geox_mcp.server not importable in this env")

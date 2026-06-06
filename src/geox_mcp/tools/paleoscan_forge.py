@@ -180,56 +180,66 @@ async def geox_blockspace_resolution_tool(
     return enrich_envelope_with_metabolic(envelope, "geox_blockspace_resolution_tool")
 
 
-# ─────────────────── VOLUME FRAME GET ───────────────────
-
-
-async def geox_volume_get_frame_tool(
+async def geox_volume_frame_tool(
+    action: Literal["get", "set"],
     volume_ref: str,
     frame_index: int,
     orientation: Literal["inline", "crossline", "time"] = "inline",
     provenance: str = "fixture",
+    image_data: list[list[float]] | None = None,
 ) -> dict[str, Any]:
+    """Read or write a single 2D frame in a 3D seismic volume.
+
+    Parameters
+    ----------
+    action : Literal["get", "set"]
+        Whether to get (read) or set (write) the frame.
+    volume_ref : str
+        The volume reference ID.
+    frame_index : int
+        Index of the frame.
+    orientation : Literal["inline", "crossline", "time"], default "inline"
+        The orientation of the slice.
+    provenance : str, default "fixture"
+        The data provenance source.
+    image_data : list of list of float, optional
+        The pixel/sample grid values (required for action="set").
     """
-    Extract a single 2D frame from a 3D seismic volume.
+    if action == "get":
+        if not _artifact_exists(volume_ref):
+            return get_standard_envelope(
+                {
+                    "tool": "geox_volume_frame_tool",
+                    "error_code": "NO_VALID_EVIDENCE",
+                    "message": f"Volume '{volume_ref}' not found.",
+                },
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
+                evidence_refs=[volume_ref],
+            )
+        return geox_volume_get_frame(volume_ref, frame_index, orientation, provenance)
+    elif action == "set":
+        if image_data is None:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_volume_frame_tool",
+                    "error": "Missing image_data for action='set'",
+                },
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="VOID",
+                claim_state="INVALID_INPUT",
+            )
+        return geox_volume_set_frame(volume_ref, frame_index, orientation, image_data)
+    else:
+        return {"error": f"Unsupported action: {action}"}
 
-    Reads frame-by-frame (deep copy) from SEG-Y or scaffold.
-    Returns canonical Image2d schema.
-    """
-    if not _artifact_exists(volume_ref):
-        return get_standard_envelope(
-            {
-                "tool": "geox_volume_get_frame_tool",
-                "error_code": "NO_VALID_EVIDENCE",
-                "message": f"Volume '{volume_ref}' not found.",
-            },
-            tool_class="compute",
-            execution_status=ExecutionStatus.ERROR,
-            governance_status=GovernanceStatus.HOLD,
-            artifact_status=ArtifactStatus.REJECTED,
-            claim_tag="HYPOTHESIS",
-            claim_state="NO_VALID_EVIDENCE",
-            evidence_refs=[volume_ref],
-        )
-
-    return geox_volume_get_frame(volume_ref, frame_index, orientation, provenance)
-
-
-# ─────────────────── VOLUME FRAME SET ───────────────────
-
-
-async def geox_volume_set_frame_tool(
-    volume_ref: str,
-    frame_index: int,
-    orientation: Literal["inline", "crossline", "time"],
-    image_data: list[list[float]],
-) -> dict[str, Any]:
-    """
-    Write a 2D frame into a 3D seismic volume.
-
-    [REQUIRES_888_HOLD: true]
-    This is an irreversible file mutation. The MCP layer enforces hold.
-    """
-    return geox_volume_set_frame(volume_ref, frame_index, orientation, image_data)
 
 
 # ─────────────────── SEISMIC ATTRIBUTE COMPUTE (REGISTRY) ───────────────────
@@ -719,5 +729,75 @@ async def geox_segy_export_tool(
         evidence_refs=[volume_ref],
     )
     envelope["verdict"] = "SEAL" if claim_state != ClaimTag.HYPOTHESIS.value else "HOLD"
-    envelope["vault_receipt"] = make_vault_receipt("geox_segy_export_tool", result, envelope["verdict"])
+    envelope["vault_receipt"] = make_vault_receipt("gegy_export_tool", result, envelope["verdict"])
     return enrich_envelope_with_metabolic(envelope, "geox_segy_export_tool")
+
+
+async def geox_blend_volume_tool(
+    blend_mode: Literal["alpha", "rgb"],
+    volume_ref_1: str | None = None,
+    volume_ref_2: str | None = None,
+    volume_ref_3: str | None = None,
+    opacity_1: float = 0.33,
+    opacity_2: float = 0.33,
+    opacity_3: float = 0.34,
+    volume_ref_red: str | None = None,
+    volume_ref_green: str | None = None,
+    volume_ref_blue: str | None = None,
+    provenance: str = "fixture",
+    ctx: Context | None = None,
+) -> dict[str, Any]:
+    """Alpha or RGB blend seismic volumes into a single composite volume.
+
+    Parameters
+    ----------
+    blend_mode : Literal["alpha", "rgb"]
+        Blending algorithm to use.
+    volume_ref_1 : str, optional
+        First volume reference (required for alpha mode).
+    volume_ref_2 : str, optional
+        Second volume reference (required for alpha mode).
+    volume_ref_3 : str, optional
+        Third volume reference (optional for alpha mode).
+    opacity_1 : float, default 0.33
+        Opacity weight for volume 1.
+    opacity_2 : float, default 0.33
+        Opacity weight for volume 2.
+    opacity_3 : float, default 0.34
+        Opacity weight for volume 3.
+    volume_ref_red : str, optional
+        Volume reference for Red channel (required for rgb mode).
+    volume_ref_green : str, optional
+        Volume reference for Green channel (required for rgb mode).
+    volume_ref_blue : str, optional
+        Volume reference for Blue channel (required for rgb mode).
+    provenance : str, default "fixture"
+        Data provenance source.
+    ctx : Context, optional
+        FastMCP execution context.
+    """
+    if blend_mode == "alpha":
+        if volume_ref_1 is None or volume_ref_2 is None:
+            return {"error": "Missing volume_ref_1 or volume_ref_2 for alpha blending"}
+        return await geox_blend_volume_alpha_tool(
+            volume_ref_1=volume_ref_1,
+            volume_ref_2=volume_ref_2,
+            volume_ref_3=volume_ref_3,
+            opacity_1=opacity_1,
+            opacity_2=opacity_2,
+            opacity_3=opacity_3,
+            provenance=provenance,
+        )
+    elif blend_mode == "rgb":
+        if volume_ref_red is None or volume_ref_green is None or volume_ref_blue is None:
+            return {"error": "Missing volume_ref_red, volume_ref_green, or volume_ref_blue for RGB blending"}
+        return await geox_blend_volume_rgb_tool(
+            volume_ref_red=volume_ref_red,
+            volume_ref_green=volume_ref_green,
+            volume_ref_blue=volume_ref_blue,
+            provenance=provenance,
+            ctx=ctx,
+        )
+    else:
+        return {"error": f"Unsupported blend mode: {blend_mode}"}
+

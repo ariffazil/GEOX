@@ -1,0 +1,19 @@
+{
+  "type": "Feature",
+  "properties": {
+    "name": "Malay Basin",
+    "basin_id": "MALAY_BASIN"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [102.0, 4.0],
+        [106.5, 4.0],
+        [106.5, 8.5],
+        [102.0, 8.5],
+        [102.0, 4.0]
+      ]
+    ]
+  }
+}
