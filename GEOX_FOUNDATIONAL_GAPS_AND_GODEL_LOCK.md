@@ -1,3 +1,5 @@
+> **PRE-FORGE — 2026-06-05 stamp.** This document pre-dates the unified constitution forge. Authoritative Law references: L01–L13 (was F01–F13). See [`000_CONSTITUTION.md`](https://github.com/ariffazil/arifos/blob/main/static/arifos/theory/000/000_CONSTITUTION.md) for current canon. Archived for historical reference only.
+
 # GEOX_FOUNDATIONAL_GAPS_AND_GODEL_LOCK.md
 
 > **SEAL TYPE:** Foundational Constitutional Seal — Gödel Lock / Strange Loop / Anti-Beautiful One
