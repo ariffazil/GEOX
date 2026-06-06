@@ -491,7 +491,7 @@ class TextureStats(BaseModel):
 
 
 class FloorPolicy(BaseModel):
-    """Structural constraint based on GEOX Constitutional Floors."""
+    """Structural constraint based on GEOX Constitutional Laws."""
 
     model_config = ConfigDict(extra="forbid")
     floor_name: str

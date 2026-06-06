@@ -15,7 +15,7 @@ The 7 Tools:
 6. geox_evaluate_prospect — Prospect verdict with 888_HOLD
 7. geox_earth_signals — Live Earth observations
 
-Constitutional Floors: F1, F2, F4, F7, F9, F11, F13
+Constitutional Laws: F1, F2, F4, F7, F9, F11, F13
 """
 
 __version__ = "v2026.04.10-EIC"

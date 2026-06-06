@@ -73,7 +73,7 @@ class VerdictState(Enum):
 
 
 class FloorId(Enum):
-    """arifOS Constitutional Floors F1-F13."""
+    """arifOS Constitutional Laws F1-F13."""
     F1_AMANAH = "F1"  # Reversibility
     F2_TRUTH = "F2"   # Evidence grounded
     F3_TRI_WITNESS = "F3"
@@ -331,7 +331,7 @@ class A2AMessageBus:
 
 class FloorEnforcer:
     """
-    Enforces arifOS Constitutional Floors F1-F13.
+    Enforces arifOS Constitutional Laws F1-F13.
     Validates agent proposals against physical and ethical constraints.
     """
     
