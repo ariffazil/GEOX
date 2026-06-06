@@ -265,7 +265,7 @@ When assigning vision tasks, use this template:
 
 ---
 
-## Constitutional Floors for Vision
+## Constitutional Laws for Vision
 
 | Floor | Vision Implementation |
 |-------|----------------------|

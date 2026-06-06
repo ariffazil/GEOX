@@ -51,7 +51,7 @@ graph LR
 ```json
 {
   "GEOX_type": "well_track_manifest",
-  "provenance": { "floor": "F11_AUTHORITY", "source": "well_01.las" },
+  "provenance": { "floor": "L11_AUTHORITY", "source": "well_01.las" },
   "tracks": [
     { "id": "GR", "unit": "gAPI", "range": [0, 150], "data_ref": "token_gr_001" },
     { "id": "RATLAS_VALIDATION", "overlay": "materials_library_v1" }

@@ -18,7 +18,7 @@ GEOX has been elevated to **AAA GRADE — Large Earth Model** status. This repre
 | **Seismic Viewer** | AAA | ✅ PRODUCTION |
 | **Well Context Desk** | AAA | ✅ PRODUCTION |
 | **Error Handling** | AAA | ✅ STANDARDIZED |
-| **Constitutional Floors** | AAA | ✅ F1-F13 ACTIVE |
+| **Constitutional Laws** | AAA | ✅ F1-F13 ACTIVE |
 
 ---
 
@@ -263,7 +263,7 @@ Component Verification:
   ✅ Seismic Viewer: 2D/3D with constitutional overlays
   ✅ Well Context Desk: Petrophysics with AC_Risk widget
   ✅ Error Handling: GEOX_4xx/5xx standardized codes
-  ✅ Constitutional Floors: F1-F13 fully enforced
+  ✅ Constitutional Laws: F1-F13 fully enforced
 
 Governance Status:
   ✅ ToAC (Theory of Anomalous Contrast) — Active

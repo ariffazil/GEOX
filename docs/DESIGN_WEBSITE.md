@@ -6,7 +6,7 @@
 - **Name**: GEOX Command Center
 - **Tagline**: "Earth Intelligence Core — Real Tools, Zero Theater"
 - **Seal**: "DITEMPA BUKAN DIBERI" (Forged, Not Given)
-- **Constitutional Floors**: F1 F2 F4 F7 F9 F11 F13
+- **Constitutional Laws**: F1 F2 F4 F7 F9 F11 F13
 
 ### 1.2 Project Description
 GEOX is a governed, agentic geological intelligence coprocessor for arifOS. The website showcases multiple web applications and tools designed for geoscience professionals.

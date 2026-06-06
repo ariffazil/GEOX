@@ -26,7 +26,7 @@ GEOX is not a replacement for enterprise subsurface operating systems (Petrel, D
 While incumbents prioritize **automation speed** and **feature breadth**, GEOX prioritizes **interpretative integrity**.
 
 ### The "Diferensiasi"
-- **Constitutional Floors (F1-F13):** Hard-coded physical and ethical boundaries.
+- **Constitutional Laws (F1-F13):** Hard-coded physical and ethical boundaries.
 - **888_HOLD Mechanics:** Intentional friction to prevent hallucinated interpretation.
 - **Tri-Witness Consensus:** Observed vs. Inferred separation as a first-class primitive.
 

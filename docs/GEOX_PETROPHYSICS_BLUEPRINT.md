@@ -716,7 +716,7 @@ Do not guess when data is insufficient.
 
 ---
 
-## 7. The Governance: Constitutional Floors Applied
+## 7. The Governance: Constitutional Laws Applied
 
 ### 7.1 Petrophysics-Specific Floor Enforcement
 

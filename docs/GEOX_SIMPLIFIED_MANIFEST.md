@@ -72,7 +72,7 @@ GEOX/
 
 ---
 
-## Constitutional Floors (F1-F13)
+## Constitutional Laws (F1-F13)
 
 Every tool enforces:
 - **F2 Truth** — Uncertainty quantified

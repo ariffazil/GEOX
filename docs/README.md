@@ -24,7 +24,7 @@ GEOX is an **Earth Intelligence** system for subsurface decision-making. It impl
 
 ## The 7 Essential Tools
 
-| Tool | Purpose | Constitutional Floors |
+| Tool | Purpose | Constitutional Laws |
 |------|---------|----------------------|
 | `geox_compute_ac_risk` | **THE CORE** — ToAC calculation | F2, F4, F7 |
 | `geox_load_seismic_line` | Seismic loading with scale validation | F4 |
@@ -72,7 +72,7 @@ curl -X POST http://localhost:8000/mcp/v1/messages \
 
 ---
 
-## Constitutional Floors (F1-F13)
+## Constitutional Laws (F1-F13)
 
 Every tool enforces:
 

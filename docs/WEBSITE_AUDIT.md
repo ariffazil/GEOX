@@ -44,7 +44,7 @@ geox-gui/
 | ToolsSection | "13 MCP Tools" | "7 Essential Tools" |
 | Tool list | 13 tools | 7 tools |
 
-### 3. Constitutional Floors Wrong
+### 3. Constitutional Laws Wrong
 | Location | Current | Should Be |
 |----------|---------|-----------|
 | FLOORS array | F1,F2,F3,F4,F5,F7,F9,F13 | F1,F2,F4,F7,F9,F11,F13 |
