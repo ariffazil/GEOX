@@ -1,0 +1,7 @@
+matrix:
+  - reservoir: "Group D"
+    seal: "Intraformational Shales"
+    thickness_ratio: "Seal thickness exceeds reservoir thickness by 1.5x on average"
+  - reservoir: "Group E/F"
+    seal: "Regional Group F Shale"
+    thickness_ratio: "Continuous regional seal, thickness 50-150m"

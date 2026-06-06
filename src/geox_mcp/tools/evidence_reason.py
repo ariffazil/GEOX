@@ -787,6 +787,110 @@ async def _phase_full(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
+async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[str, Any]:
+    import yaml
+    from geox_mcp.tools.basin import _normalize_name
+    normalized = _normalize_name(basin_name)
+    if normalized in ("basin_melayu", "malay_basin"):
+        normalized = "malay_basin"
+    
+    basin_dir = Path("/root/geox/resources/basins") / normalized
+    if not basin_dir.exists():
+        return get_standard_envelope(
+            {"tool": TOOL_NAME, "error": f"Basin data not found for: {basin_name}"},
+            tool_class="reason",
+            execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            claim_state="NO_VALID_EVIDENCE",
+        )
+
+    try:
+        # Load claims
+        claims_file = basin_dir / "claims.json"
+        claims = []
+        if claims_file.exists():
+            with open(claims_file) as f:
+                claims = json.load(f)
+
+        observed = {}
+        derived = {}
+        interpreted = {}
+        process_hypotheses = []
+        forbidden_claims = ["site_specific_stoiip_or_reserves_adjudication", "commercial_drilling_verdict"]
+
+        for c in claims:
+            c_text = c.get("claim", "")
+            c_type = c.get("claim_type", "interpreted")
+            c_refs = c.get("evidence_refs", [])
+            forbid = c.get("forbidden_uses", [])
+            forbidden_claims.extend(forbid)
+
+            # Map to interpreted or hypothesis per P3 rule
+            if c_type in ("observed", "derived", "interpreted"):
+                interpreted[c_text] = {"source": c.get("source"), "refs": c_refs, "confidence": c.get("confidence")}
+            else:
+                process_hypotheses.append({
+                    "process": c_text,
+                    "mechanism": c.get("source"),
+                    "confidence": c.get("confidence").lower(),
+                    "evidence_for": c_refs,
+                })
+
+        profile_file = basin_dir / "basin_profile.yaml"
+        profile_data = {}
+        if profile_file.exists():
+            with open(profile_file) as f:
+                profile_data = yaml.safe_load(f) or {}
+
+        result = {
+            "tool": TOOL_NAME,
+            "phase": "full",
+            "reasoning_mode": reasoning_mode,
+            "basin_name": basin_name,
+            "execution_status": "SUCCESS",
+            "claim_state": "INTERPRETED",
+            "observed": {},  # empty because no site-specific wells/seismic
+            "derived": {},   # empty
+            "local_interpretation": {**interpreted, "basin_overview": profile_data},
+            "process_hypotheses": process_hypotheses,
+            "decision_support": {
+                "synthesis": "Baseline regional literature synthesis only. No site-specific wells or seismic lines loaded.",
+                "contradictions": [],
+            },
+            "claim_limits": [
+                "Baseline regional synthesis. Extrapolated from literature.",
+                "No lateral control verified.",
+                "Do not use for site-specific prospect drilling decisions."
+            ],
+            "forbidden_claims": list(set(forbidden_claims)),
+            "next_best_actions": [
+                {
+                    "tool": "geox_data_ingest_bundle",
+                    "reason": "Ingest site-specific LAS well logs or SEG-Y seismic to run quantitative abduction",
+                    "priority": "high"
+                }
+            ]
+        }
+
+        return get_standard_envelope(
+            result,
+            tool_class="reason",
+            execution_status=ExecutionStatus.SUCCESS,
+            governance_status=GovernanceStatus.QUALIFY,
+            claim_tag="HYPOTHESIS",
+            claim_state="INTERPRETED",
+            evidence_refs=[f"basins/{normalized}/claims.json"],
+        )
+    except Exception as exc:
+        return get_standard_envelope(
+            {"tool": TOOL_NAME, "error": f"Failed to run baseline reasoning: {exc}"},
+            tool_class="reason",
+            execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            claim_state="VOID",
+        )
+
+
 async def geox_evidence_reason(
     phase: Literal["synthesize", "abduct", "contradict", "full", "spatial_block"] = "full",
     evidence_refs: list[str] | None = None,
@@ -804,6 +908,9 @@ async def geox_evidence_reason(
     target_key: str = "value",
     feature_keys: list[str] | None = None,
     ctx: Context | None = None,
+    # ── P3: Basin Baseline parameters ──
+    basin_name: str | None = None,
+    reasoning_mode: Literal["default", "baseline", "literature_screen"] = "default",
 ) -> dict[str, Any]:
     """Unified evidence synthesis, abduction, and contradiction engine.
 
@@ -831,12 +938,20 @@ async def geox_evidence_reason(
         Passed to synthesis phase.
     samples, block_size_km, n_folds, target_key, feature_keys :
         Passed to spatial_block phase.
+    basin_name : str, optional
+        Target basin name for baseline screening when evidence_refs is empty.
+    reasoning_mode : str, default 'default'
+        Reasoning mode (default, baseline, literature_screen).
 
     Returns
     -------
     Unified envelope with process_hypotheses, decision_support (contradictions),
     claim_limits, and next_best_actions.
     """
+    # P3: Baseline regional check if no evidence but known basin
+    if (not evidence_refs or len(evidence_refs) == 0) and basin_name:
+        return await _reason_basin_baseline(basin_name, reasoning_mode)
+
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
 

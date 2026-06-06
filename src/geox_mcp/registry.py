@@ -10,11 +10,9 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_data_ingest_bundle",
     "geox_data_qc_bundle",
     "geox_dst_ingest_test",
-    "geox_las_inspect",
-    "geox_seismic_inspect",
-    "geox_deviation_survey_inspect",
-    "geox_tops_inspect",
-    "geox_seismic_segy_inspect",
+    "geox_header_inspect",
+    "geox_evidence_discover",
+    "geox_report_to_workflow",
     # Physics-9 domain engines
     "geox_subsurface_generate_candidates",
     "geox_subsurface_verify_integrity",
@@ -35,31 +33,34 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     # paleoscan_python v2.0.0 forge — coordinate & image substrate
     "geox_coord_transform_tool",
     "geox_blockspace_resolution_tool",
-    "geox_volume_get_frame_tool",
-    "geox_volume_set_frame_tool",
+    "geox_volume_frame_tool",
     "geox_seismic_compute_attribute_tool",
     "geox_fault_stick_ingest_tool",
     "geox_attribute_registry_list_tool",
     # paleoscan_python v2.0.0 forge — blending + export
-    "geox_blend_volume_alpha_tool",
-    "geox_blend_volume_rgb_tool",
+    "geox_blend_volume_tool",
     "geox_segy_export_tool",
     # H5: Claim Engine
     "geox_claim_create",
+    "geox_claim_validate",
     "geox_claim_challenge",
     "geox_evidence_attach",
     "geox_claim_seal",
+    # Basin & Metaphor guards
+    "geox_basin_resolve",
+    "geox_basin_profile",
+    "geox_query_intake",
+    "geox_abstraction_guard",
+    "geox_literature_ingest",
 ]
 
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_data_ingest_bundle", "axis": "observe", "expose": True},
     {"name": "geox_data_qc_bundle", "axis": "verify", "expose": True},
     {"name": "geox_dst_ingest_test", "axis": "observe", "expose": True},
-    {"name": "geox_las_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_seismic_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_deviation_survey_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_tops_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_seismic_segy_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_header_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_evidence_discover", "axis": "observe", "expose": True},
+    {"name": "geox_report_to_workflow", "axis": "reason", "expose": True},
     {"name": "geox_subsurface_generate_candidates", "axis": "reason", "expose": True},
     {"name": "geox_subsurface_verify_integrity", "axis": "verify", "expose": True},
     {"name": "geox_seismic_compute", "axis": "reason", "expose": True},
@@ -72,24 +73,32 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     # paleoscan_python v2.0.0 forge
     {"name": "geox_coord_transform_tool", "axis": "compute", "expose": True},
     {"name": "geox_blockspace_resolution_tool", "axis": "compute", "expose": True},
-    {"name": "geox_volume_get_frame_tool", "axis": "observe", "expose": True},
-    {"name": "geox_volume_set_frame_tool", "axis": "observe", "expose": True},
+    {"name": "geox_volume_frame_tool", "axis": "observe", "expose": True},
     {"name": "geox_seismic_compute_attribute_tool", "axis": "reason", "expose": True},
     {"name": "geox_fault_stick_ingest_tool", "axis": "observe", "expose": True},
     {"name": "geox_attribute_registry_list_tool", "axis": "observe", "expose": True},
     # paleoscan_python v2.0.0 forge — blending + export
-    {"name": "geox_blend_volume_alpha_tool", "axis": "compute", "expose": True},
-    {"name": "geox_blend_volume_rgb_tool", "axis": "compute", "expose": True},
+    {"name": "geox_blend_volume_tool", "axis": "compute", "expose": True},
     {"name": "geox_segy_export_tool", "axis": "observe", "expose": True},
     # H5: Claim Engine
     {"name": "geox_claim_create", "axis": "reason", "expose": True},
+    {"name": "geox_claim_validate", "axis": "verify", "expose": True},
     {"name": "geox_claim_challenge", "axis": "reason", "expose": True},
     {"name": "geox_evidence_attach", "axis": "verify", "expose": True},
     {"name": "geox_claim_seal", "axis": "reason", "expose": True},
+    # Basin & Metaphor guards
+    {"name": "geox_basin_resolve", "axis": "observe", "expose": True},
+    {"name": "geox_basin_profile", "axis": "reason", "expose": True},
+    {"name": "geox_query_intake", "axis": "observe", "expose": True},
+    {"name": "geox_abstraction_guard", "axis": "verify", "expose": True},
+    {"name": "geox_literature_ingest", "axis": "observe", "expose": True},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
 LEGACY_ALIAS_MAP: dict[str, str] = {
+    "geox_deviation_survey_inspect": "geox_header_inspect",
+    "geox_tops_inspect": "geox_header_inspect",
+    "geox_seismic_inspect": "geox_header_inspect",
     "geox_ingest_bundle": "geox_data_ingest_bundle",
     "geox_qc_bundle": "geox_data_qc_bundle",
     "geox_subsurface_candidates": "geox_subsurface_generate_candidates",

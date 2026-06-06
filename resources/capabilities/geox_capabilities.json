@@ -2,7 +2,7 @@
   "domain": "earth_intelligence",
   "version": "2026.06.05",
   "seal": "DITEMPA BUKAN DIBERI",
-  "canonical_tool_count": 31,
+  "canonical_tool_count": 33,
   "canonical_source": "src/geox_mcp/registry.py \u2192 CANONICAL_PUBLIC_TOOLS",
   "tools": [
     {
@@ -75,52 +75,67 @@
       "next_best_tools": []
     },
     {
-      "name": "geox_seismic_inspect",
-      "domain": "data_inspect",
+      "name": "geox_claim_validate",
+      "domain": "claims",
       "required_inputs": [
-        "seismic_metadata"
+        "claim_id"
       ],
       "optional_inputs": [],
       "outputs": [
-        "inspection_report",
-        "claim_state"
+        "status",
+        "claim_state",
+        "verification"
       ],
       "claim_limits": [
-        "Metadata validation only \u2014 no volume I/O."
+        "Validates draft claim against earth_memory_envelope schema before sealing."
       ],
-      "next_best_tools": []
+      "next_best_tools": [
+        "geox_claim_challenge",
+        "geox_claim_seal"
+      ]
     },
     {
-      "name": "geox_deviation_survey_inspect",
+      "name": "geox_evidence_discover",
       "domain": "data_inspect",
       "required_inputs": [
-        "deviation_metadata"
+        "query"
       ],
-      "optional_inputs": [],
+      "optional_inputs": [
+        "scope",
+        "permission_level"
+      ],
       "outputs": [
-        "inspection_report",
+        "candidates",
         "claim_state"
       ],
       "claim_limits": [
-        "Depth unit, datum, MD/TVD consistency enforced."
+        "Searches SharePoint/OneDrive/local reports for geological evidence."
       ],
-      "next_best_tools": []
+      "next_best_tools": [
+        "geox_report_to_workflow",
+        "geox_literature_ingest"
+      ]
     },
     {
-      "name": "geox_tops_inspect",
+      "name": "geox_report_to_workflow",
       "domain": "data_inspect",
       "required_inputs": [
-        "tops_metadata"
+        "report_ref",
+        "intent"
       ],
       "optional_inputs": [],
       "outputs": [
-        "inspection_report",
+        "steps",
+        "provenance_mandate",
         "claim_state"
       ],
       "claim_limits": [
-        "Unit/datum consistency, positive thickness enforced."
+        "Translates discovered report evidence and intent into safe workflow steps."
       ],
-      "next_best_tools": []
+      "next_best_tools": [
+        "geox_seismic_compute",
+        "geox_prospect_evaluate"
+      ]
     },
     {
       "name": "geox_seismic_segy_inspect",

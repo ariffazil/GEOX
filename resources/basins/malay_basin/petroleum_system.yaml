@@ -1,0 +1,17 @@
+petroleum_system:
+  source_rocks:
+    - formation: "Group L/M Lacustrine Shales"
+      type: "Type I/II Kerogen"
+      maturity: "Mature to overmature in deep kitchens"
+    - formation: "Group H/I/J Coal and Coaly Shales"
+      type: "Type III/II-III Kerogen"
+      maturity: "Mature, oil and gas generating"
+  reservoirs:
+    - groups: ["Group D", "Group E", "Group F", "Group H", "Group I", "Group J"]
+      quality: "Porosity 12-28%, Permeability 10-1000 mD"
+  seals:
+    - primary: "Intraformational shales and regional Group F marine shale"
+      effectiveness: "Moderate to high"
+  charge:
+    - pathways: "Vertical migration via faults, lateral migration along carrier beds"
+      timing: "Miocene to Present"

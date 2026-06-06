@@ -2,6 +2,13 @@ import os
 from enum import Enum
 from typing import Any
 
+# P5 version normalization
+GEOX_VERSION = "v2026.06.05"
+GEOX_CONTRACT_EPOCH = "2026-06-05-GEOX-35TOOLS-v2.0"
+PHYSICS_GUARD_VERSION = "geox-a7e8bfa5"
+REGISTRY_HASH = "reg-hash-35d798a"
+TOOL_SCHEMA_HASH = "schema-sha-35d798a"
+
 
 class Dimension(str, Enum):
     PROSPECT = "prospect"
@@ -477,7 +484,7 @@ def get_standard_envelope(
     import uuid
     from datetime import datetime, timezone
 
-    tool_version = tool_version or os.environ.get("GEOX_VERSION", "geox-v2026.05.10")
+    tool_version = tool_version or GEOX_VERSION
     now = datetime.now(timezone.utc).isoformat()
 
     # Session propagation (Fix #2 - Arif 2026-05-16)
@@ -488,7 +495,7 @@ def get_standard_envelope(
     _constitution_hash = constitution_hash or os.environ.get("GEOX_CONSTITUTION_HASH", "unknown")
 
     provenance = {
-        "tool_name": primary_artifact.get("tool", "unknown"),
+        "tool_name": tool_name or primary_artifact.get("tool", "unknown"),
         "tool_version": tool_version,
         "artifact_hash": artifact_hash or "",
         "claim_state": claim_state,
@@ -503,6 +510,12 @@ def get_standard_envelope(
         "constitution_hash": _constitution_hash,
         # LEM contract v0.8
         "equations_used": equations_used or [],
+        # P5 - Version normalization
+        "geox_version": GEOX_VERSION,
+        "contract_epoch": GEOX_CONTRACT_EPOCH,
+        "registry_hash": REGISTRY_HASH,
+        "tool_schema_hash": TOOL_SCHEMA_HASH,
+        "physics_guard_version": PHYSICS_GUARD_VERSION,
     }
 
     response = {
@@ -514,7 +527,7 @@ def get_standard_envelope(
         "claim_tag": claim_tag,
         "claim_state": claim_state,
         "confidence_band": confidence_band,
-        "physics_guard": physics_guard or {"guard_passed": True, "physics_version": "geox-v2026.05.10"},
+        "physics_guard": physics_guard or {"guard_passed": True, "physics_version": PHYSICS_GUARD_VERSION},
         "uncertainty": uncertainty,
         "evidence_refs": evidence_refs or [],
         "audit_receipt": audit_receipt

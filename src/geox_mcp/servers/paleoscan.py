@@ -17,27 +17,23 @@ from fastmcp import FastMCP
 from geox_mcp.tools._register import register_tools_on_server
 from geox_mcp.tools.paleoscan_forge import (
     geox_attribute_registry_list_tool,
-    geox_blend_volume_alpha_tool,
-    geox_blend_volume_rgb_tool,
+    geox_blend_volume_tool,
     geox_blockspace_resolution_tool,
     geox_coord_transform_tool,
     geox_fault_stick_ingest_tool,
     geox_segy_export_tool,
     geox_seismic_compute_attribute_tool,
-    geox_volume_get_frame_tool,
-    geox_volume_set_frame_tool,
+    geox_volume_frame_tool,
 )
 
 _PALEOSCAN_TOOLS: list[tuple[str, Any]] = [
     ("geox_coord_transform_tool", geox_coord_transform_tool),
     ("geox_blockspace_resolution_tool", geox_blockspace_resolution_tool),
-    ("geox_volume_get_frame_tool", geox_volume_get_frame_tool),
-    ("geox_volume_set_frame_tool", geox_volume_set_frame_tool),
+    ("geox_volume_frame_tool", geox_volume_frame_tool),
     ("geox_seismic_compute_attribute_tool", geox_seismic_compute_attribute_tool),
     ("geox_fault_stick_ingest_tool", geox_fault_stick_ingest_tool),
     ("geox_attribute_registry_list_tool", geox_attribute_registry_list_tool),
-    ("geox_blend_volume_alpha_tool", geox_blend_volume_alpha_tool),
-    ("geox_blend_volume_rgb_tool", geox_blend_volume_rgb_tool),
+    ("geox_blend_volume_tool", geox_blend_volume_tool),
     ("geox_segy_export_tool", geox_segy_export_tool),
 ]
 
@@ -56,15 +52,8 @@ _PALEOSCAN_ANNOTATIONS: dict[str, dict] = {
         "idempotentHint": True,
         "openWorldHint": False,
     },
-    "geox_volume_get_frame_tool": {
-        "title": "Volume Get Frame",
-        "readOnlyHint": True,
-        "destructiveHint": False,
-        "idempotentHint": True,
-        "openWorldHint": False,
-    },
-    "geox_volume_set_frame_tool": {
-        "title": "Volume Set Frame",
+    "geox_volume_frame_tool": {
+        "title": "Volume Frame",
         "readOnlyHint": False,
         "destructiveHint": True,
         "idempotentHint": False,
@@ -91,15 +80,8 @@ _PALEOSCAN_ANNOTATIONS: dict[str, dict] = {
         "idempotentHint": True,
         "openWorldHint": False,
     },
-    "geox_blend_volume_alpha_tool": {
-        "title": "Blend Volume Alpha",
-        "readOnlyHint": True,
-        "destructiveHint": False,
-        "idempotentHint": True,
-        "openWorldHint": False,
-    },
-    "geox_blend_volume_rgb_tool": {
-        "title": "Blend Volume RGB",
+    "geox_blend_volume_tool": {
+        "title": "Blend Volume",
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,

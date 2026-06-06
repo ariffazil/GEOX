@@ -1,0 +1,157 @@
+[
+  {
+    "claim_id": "clm_orig_1",
+    "claim": "The Malay Basin is a Cenozoic rift basin located in the southern part of the South China Sea, formed during late Eocene/Oligocene extension.",
+    "claim_type": "observed",
+    "evidence_refs": [
+      "tectonic_history.md"
+    ],
+    "source": "Madon et al., 1999",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_orig_2",
+    "claim": "Group D, E, and F reservoirs are primarily fluvial-deltaic sandstones with high porosity (15-25%) and permeability.",
+    "claim_type": "derived",
+    "evidence_refs": [
+      "reservoir_seal_matrix.yaml",
+      "stratigraphy_groups.yaml"
+    ],
+    "source": "Petronas Carigali regional studies",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "direct_pos_calculation"
+    ]
+  },
+  {
+    "claim_id": "clm_orig_3",
+    "claim": "Fault seal risk is high for Group I reservoirs due to shale gouge ratio (SGR) variability under high fault displacement.",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "uncertainty_register.yaml"
+    ],
+    "source": "GEOX fault seal analysis, 2026",
+    "confidence": "MEDIUM",
+    "valid_until": "2028-06-06",
+    "forbidden_uses": [
+      "commercial_stoiip_seal"
+    ]
+  },
+  {
+    "claim_id": "clm_orig_4",
+    "claim": "A Class III AVO anomaly in the deep syn-rift Group M sandstones represents a high-saturation gas reservoir.",
+    "claim_type": "hypothesis",
+    "evidence_refs": [
+      "play_fairways.yaml"
+    ],
+    "source": "Seismic vision candidate ensemble",
+    "confidence": "LOW",
+    "valid_until": "2027-06-06",
+    "forbidden_uses": [
+      "unverified_commercial_decision"
+    ]
+  },
+  {
+    "claim_id": "clm_317a7c30873e40b7",
+    "claim": "Malay Basin is offshore east of Peninsular Malaysia and contributes about 40% of Malaysia’s hydrocarbon resources in the review period.",
+    "claim_type": "observed",
+    "evidence_refs": [
+      "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
+    ],
+    "source": "Madon, 2021",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_878a99cc8cc84177",
+    "claim": "Exploration history shows mature-basin creaming behavior: early giant discoveries, later smaller incremental additions.",
+    "claim_type": "derived",
+    "evidence_refs": [
+      "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
+    ],
+    "source": "Madon, 2021",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_4c04b8f277854aba",
+    "claim": "Malay Basin initiated by Late Eocene–Early Oligocene extension, high post-rift subsidence, >14 km sediment in deepest centre, E-W half-grabens influenced by Pre-Tertiary faults.",
+    "claim_type": "observed",
+    "evidence_refs": [
+      "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
+    ],
+    "source": "Madon, 2021",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_db822655c84b43ac",
+    "claim": "Stratigraphy uses groups A–P; drilling reaches at least Group M; fill transitions from lacustrine/non-marine to coastal plain and shallow marine; K shale marks key transition.",
+    "claim_type": "derived",
+    "evidence_refs": [
+      "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
+    ],
+    "source": "Madon, 2021",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_64bd3be4f6fb471c",
+    "claim": "Main resources are reported from Groups J, I, K, E, D; I/J/K contribute about 60%, and D/E plus those contribute about 85%; deltaic sands dominate.",
+    "claim_type": "derived",
+    "evidence_refs": [
+      "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
+    ],
+    "source": "Madon, 2021",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_ca5a5ef4c80544ff",
+    "claim": "Oils/condensates derive mainly from lower coastal plain fluvio-deltaic coal/coaly shale and lacustrine syn-rift shales; northwest is gas-prone, southeast more oil-prone.",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
+    ],
+    "source": "Madon, 2021",
+    "confidence": "MEDIUM",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_78c4535ee5764c10",
+    "claim": "Remaining potential is not zero; paper estimates roughly 2 bboe yet to discover by 2020, but requires new play concepts.",
+    "claim_type": "hypothesis",
+    "evidence_refs": [
+      "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
+    ],
+    "source": "Madon, 2021",
+    "confidence": "MEDIUM",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  }
+]

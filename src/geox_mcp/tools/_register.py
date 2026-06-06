@@ -130,10 +130,55 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
     """Wrap a tool function to write Supabase domain receipts (fail-soft) AND emit Evidence Contract envelope."""
 
     async def wrapper(*args: Any, **kwargs: Any) -> Any:
+        import os
+
+        # Extract session/provenance fields from kwargs
+        session_id = kwargs.pop("session_id", None)
+        actor_id = kwargs.pop("actor_id", None)
+        trace_id = kwargs.pop("trace_id", None)
+
         if inspect.iscoroutinefunction(func):
             res = await func(*args, **kwargs)
         else:
             res = func(*args, **kwargs)
+
+        # Inject session/provenance plumbing into envelope (P4)
+        if isinstance(res, dict):
+            # If it is already enveloped (has epistemic_tag and result)
+            if "epistemic_tag" in res and "result" in res:
+                if session_id:
+                    res["session_id"] = session_id
+                if trace_id:
+                    res["trace_id"] = trace_id
+                
+                # Plumb provenance
+                prov = res.setdefault("provenance", {})
+                if isinstance(prov, dict):
+                    if session_id:
+                        prov["session_id"] = session_id
+                    if trace_id:
+                        prov["trace_id"] = trace_id
+                    prov["tool_name"] = name
+                    prov["constitution_hash"] = os.environ.get("GEOX_CONSTITUTION_HASH", "unknown")
+                
+                # Plumb audit_receipt
+                audit = res.setdefault("audit_receipt", {})
+                if isinstance(audit, dict):
+                    if session_id:
+                        audit["session_id"] = session_id
+                    if trace_id:
+                        audit["trace_id"] = trace_id
+                    if actor_id:
+                        audit["actor_id"] = actor_id
+                    audit["tool_name"] = name
+            else:
+                # Not enveloped yet. Add to res so _geox_wrap_envelope can process it.
+                if session_id:
+                    res["session_id"] = session_id
+                if actor_id:
+                    res["actor_id"] = actor_id
+                if trace_id:
+                    res["trace_id"] = trace_id
 
         # Intercept domain records
         try:
@@ -151,7 +196,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                             if isinstance(item, dict):
                                 loop.create_task(
                                     record_evidence(
-                                        session_ref=kwargs.get("session_id", "geox_session"),
+                                        session_ref=session_id or "geox_session",
                                         source_type=item.get("source_type", name),
                                         claim_state=item.get("claim_state", "EST"),
                                         title=item.get("title"),
@@ -173,7 +218,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                                         filename=a.get("filename", "unknown"),
                                         artifact_type=a.get("type"),
                                         organ_code="GEOX",
-                                        session_ref=kwargs.get("session_id", "geox_session"),
+                                        session_ref=session_id or "geox_session",
                                     )
                                 )
         except Exception as e:
@@ -181,9 +226,67 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
 
         # Emit Evidence Contract envelope (Appendix B)
         res = _geox_wrap_envelope(name, res)
+
+        # Post-wrap double check for envelope root session_id/trace_id
+        if isinstance(res, dict) and "epistemic_tag" in res:
+            if session_id:
+                res["session_id"] = session_id
+            if trace_id:
+                res["trace_id"] = trace_id
+            prov = res.setdefault("provenance", {})
+            if isinstance(prov, dict):
+                if session_id:
+                    prov["session_id"] = session_id
+                if trace_id:
+                    prov["trace_id"] = trace_id
+                prov["tool_name"] = name
+
         return res
 
     functools.update_wrapper(wrapper, func)
+
+    # Dynamically build wrapper signature to include session_id, actor_id, and trace_id
+    try:
+        import inspect
+        sig = inspect.signature(func)
+        params = list(sig.parameters.values())
+
+        if not any(p.name == "session_id" for p in params):
+            params.append(
+                inspect.Parameter(
+                    "session_id",
+                    inspect.Parameter.KEYWORD_ONLY,
+                    default=None,
+                    annotation=str | None,
+                )
+            )
+        if not any(p.name == "actor_id" for p in params):
+            params.append(
+                inspect.Parameter(
+                    "actor_id",
+                    inspect.Parameter.KEYWORD_ONLY,
+                    default=None,
+                    annotation=str | None,
+                )
+            )
+        if not any(p.name == "trace_id" for p in params):
+            params.append(
+                inspect.Parameter(
+                    "trace_id",
+                    inspect.Parameter.KEYWORD_ONLY,
+                    default=None,
+                    annotation=str | None,
+                )
+            )
+        wrapper.__signature__ = sig.replace(parameters=params)
+        
+        # Inject annotations so Pydantic's get_function_type_hints succeeds
+        wrapper.__annotations__["session_id"] = str | None
+        wrapper.__annotations__["actor_id"] = str | None
+        wrapper.__annotations__["trace_id"] = str | None
+    except Exception as sig_err:
+        logger.debug(f"Failed to modify signature for {name}: {sig_err}")
+
     return wrapper
 
 
