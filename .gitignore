@@ -26,3 +26,5 @@ earth_memory.db
 
 # Test coverage output (regenerable)
 coverage.xml
+.coverage
+.playwright-mcp*.yml
