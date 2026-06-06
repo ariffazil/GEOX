@@ -220,8 +220,8 @@ def compose_geox_servers() -> None:
     mcp.mount(claims, namespace=None)
 
     # Assert canonical count across all composed servers
-    if len(CANONICAL_PUBLIC_TOOLS) != 31:
-        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 31 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+    if len(CANONICAL_PUBLIC_TOOLS) != 33:
+        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 33 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
     logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 3 domains")
 
 
@@ -288,6 +288,27 @@ _GEOX_OUTPUT_SCHEMA: dict[str, Any] = {
         "semantic_density_score": {"type": "number", "description": "Semantic density 0.0–1.0"},
         "dim_spot_flag": {"type": "boolean", "description": "Dim-spot anomaly guard"},
         "result": {"type": "object", "description": "Tool-specific geoscience payload"},
+        "visuals": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "map|track|section|crossplot|volume_slice|claim_graph|table|timeline",
+                    },
+                    "title": {"type": "string"},
+                    "artifact_ref": {"type": "string"},
+                    "data_ref": {"type": "string"},
+                    "schema": {"type": "string"},
+                    "claim_layer": {"type": "string", "description": "OBSERVED|DERIVED|INTERPRETED|HYPOTHESIS"},
+                    "uncertainty_band": {"type": "array", "items": {"type": "number"}},
+                    "safe_to_render": {"type": "boolean"},
+                },
+                "required": ["type", "title", "safe_to_render"],
+            },
+            "description": "Visual payloads for Phase-1 and Phase-2 UI rendering",
+        },
         "error": {"type": "string", "description": "Error message if status != OK"},
         "reasons": {"type": "array", "items": {"type": "string"}, "description": "Human-readable justification"},
     },
@@ -387,6 +408,77 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
 
 
 async def health_handler(request: Request) -> JSONResponse:
+    # ── FEDERATION GEOMETRY 1a: home-call to arifOS ─────────────────────
+    # Non-blocking. arifOS geometry is auth-bypass (absorbed diagnostic).
+    # arifOS MCP requires session-init before tools/call, so we do a
+    # 2-call sequence (initialize + tools/call). 2s timeout per step.
+    # Inline import matches existing pattern (line 572).
+    fed_geometry: dict | None = None
+    fed_geometry_source: str | None = None
+    fed_geometry_note: str | None = None
+    try:
+        import httpx
+
+        async with httpx.AsyncClient(timeout=2.0) as _arif_client:
+            # Step 1: initialize to get session id
+            _init_resp = await _arif_client.post(
+                "http://127.0.0.1:8088/mcp",
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json, text/event-stream",
+                },
+                json={
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "initialize",
+                    "params": {
+                        "protocolVersion": "2024-11-25",
+                        "capabilities": {},
+                        "clientInfo": {
+                            "name": "geox-federation-bridge",
+                            "version": "1.0",
+                        },
+                    },
+                },
+            )
+            _session_id = _init_resp.headers.get("mcp-session-id")
+            if _session_id:
+                # Step 2: tools/call with session id
+                _arif_resp = await _arif_client.post(
+                    "http://127.0.0.1:8088/mcp",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Accept": "application/json, text/event-stream",
+                        "mcp-session-id": _session_id,
+                    },
+                    json={
+                        "jsonrpc": "2.0",
+                        "id": 2,
+                        "method": "tools/call",
+                        "params": {
+                            "name": "arif_ops_measure",
+                            "arguments": {"mode": "geometry"},
+                        },
+                    },
+                )
+                _arif_json = _arif_resp.json()
+                for _c in _arif_json.get("result", {}).get("content", []):
+                    if _c.get("type") != "text":
+                        continue
+                    try:
+                        _inner = json.loads(_c.get("text", ""))
+                    except Exception:
+                        continue
+                    _payload = _inner.get("result", _inner)
+                    if isinstance(_payload, dict) and _payload.get("telemetry_source") == "geometry_hygiene_v1":
+                        fed_geometry = _payload
+                        fed_geometry_source = "arifOS:8088/mcp"
+                        break
+            else:
+                fed_geometry_note = "arifOS did not return mcp-session-id"
+    except Exception as _exc:
+        fed_geometry_note = f"arifOS unreachable: {type(_exc).__name__}"
+    # ── END FEDERATION GEOMETRY 1a ───────────────────────────────────
     return JSONResponse(
         {
             "status": "healthy",
@@ -414,6 +506,9 @@ async def health_handler(request: Request) -> JSONResponse:
                     "service_healthy",
                 ],
             },
+            "federation_geometry": fed_geometry,
+            "federation_geometry_source": fed_geometry_source,
+            "federation_geometry_note": fed_geometry_note,
             "final_authority": "ARIF",
         }
     )
