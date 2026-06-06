@@ -23,3 +23,6 @@ earth_memory.db
 
 # Vault seal artifacts written by tests (canonical VAULT999 lives at /root/arifOS/VAULT999)
 999_vault/seal_*.json
+
+# Test coverage output (regenerable)
+coverage.xml
