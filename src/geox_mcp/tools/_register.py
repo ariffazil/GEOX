@@ -103,7 +103,10 @@ def _geox_wrap_envelope(tool_name: str, result: Any) -> Any:
         delta_s = round(-0.05 + (0.05 * n_conf) - (0.02 * quality), 4)
 
     # source_attribution: from provenance + tool name
-    provenance = result.get("provenance") or {}
+    # F1-FIX 2026-06-06: provenance may be a string (default for claim_create) instead of a dict.
+    # Guard with isinstance so we don't crash every tool that emits a string provenance.
+    provenance_raw = result.get("provenance")
+    provenance = provenance_raw if isinstance(provenance_raw, dict) else {}
     source_attribution = [
         "GEOX:src/geox_mcp/server.py",
         f"GEOX:tool/{tool_name}",

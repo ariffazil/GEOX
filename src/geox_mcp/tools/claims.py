@@ -562,36 +562,97 @@ async def geox_claim_seal(
         "timestamp": _now_iso(),
     }
 
-    # Attempt to route through arifOS vault bridge
+    # Attempt to route through arifOS vault bridge (MCP-native, not REST)
+    # arifOS exposes /mcp (MCP protocol), not /vault/seal (REST).
+    # The bridge does: initialize -> tools/call(arif_vault_seal).
 
     try:
-        data = json.dumps(seal_request).encode("utf-8")
-        req = urllib.request.Request(
-            "http://localhost:8088/vault/seal",
-            data=data,
-            headers={"Content-Type": "application/json"},
+        mcp_headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/event-stream",
+        }
+
+        # 1. initialize MCP session
+        init_body = json.dumps(
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {},
+                    "clientInfo": {"name": "geox-bridge", "version": "1.0"},
+                },
+            }
+        ).encode("utf-8")
+        init_req = urllib.request.Request(
+            "http://localhost:8088/mcp",
+            data=init_body,
+            headers=mcp_headers,
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            result = json.loads(resp.read())
+        with urllib.request.urlopen(init_req, timeout=10) as init_resp:
+            session_id = init_resp.headers.get("Mcp-Session-Id") or init_resp.headers.get("mcp-session-id") or ""
+
+        # 2. tools/call arif_vault_seal
+        call_body = json.dumps(
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "arif_vault_seal",
+                    "arguments": {
+                        "action": "SEAL",
+                        "payload": json.dumps(seal_request),
+                        "actor_id": "geox-bridge",
+                        "session_id": session_id,
+                        "ack_irreversible": bool(ack_irreversible),
+                    },
+                },
+            }
+        ).encode("utf-8")
+        call_headers = {**mcp_headers, "Mcp-Session-Id": session_id}
+        call_req = urllib.request.Request(
+            "http://localhost:8088/mcp",
+            data=call_body,
+            headers=call_headers,
+            method="POST",
+        )
+        with urllib.request.urlopen(call_req, timeout=10) as call_resp:
+            raw = call_resp.read()
+            result = json.loads(raw)
+            if "error" in result and result["error"]:
+                raise RuntimeError(f"MCP error: {result['error']}")
+            mcp_result = result.get("result") or {}
             return {
                 "status": "SEALED",
-                "seal_receipt": result,
+                "seal_receipt": mcp_result,
                 "claim_id": claim_id,
                 "claim_state": "SEALED",
                 "verdict": seal_verdict,
+                "session_id": session_id,
             }
     except Exception as e:
         error_msg = str(e)
+        # Preserve the legacy HOLD shape for downstream consumers
         if hasattr(e, "code") and hasattr(e, "reason"):
             return {
                 "status": "HOLD",
-                "error_code": "ARIFOS_HTTP_ERROR",
-                "message": f"arifOS HTTP error: {getattr(e, 'code', '?')} {getattr(e, 'reason', '?')}",
+                "error_code": "ARIFOS_MCP_ERROR",
+                "message": f"arifOS MCP error: {getattr(e, 'code', '?')} {getattr(e, 'reason', '?')}",
                 "detail": error_msg,
                 "claim_id": claim_id,
-                "required_action": "Check arifOS health and retry.",
+                "required_action": "Check arifOS health and /mcp readiness, then retry.",
             }
+        return {
+            "status": "HOLD",
+            "error_code": "ARIFOS_MCP_ERROR",
+            "message": "arifOS MCP bridge failed",
+            "detail": error_msg,
+            "claim_id": claim_id,
+            "required_action": "Check arifOS /mcp endpoint and retry.",
+        }
 
 
 # ── Tool 6: geox_claim_query ─────────────────────────────────────────────────
