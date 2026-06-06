@@ -130,7 +130,7 @@ ToAC does not replace the floors. It **operationalizes** them into measurable AC
 
 1. **Declare the Name** — e.g., `HAZARD`, `HYDRO`, `CCS`
 2. **Assign the Dimension Enum** — added to `GeoXAppManifest.Dimension`
-3. **Bind Constitutional Floors** — mandatory floor set for all tools under this name
+3. **Bind Constitutional Laws** — mandatory floor set for all tools under this name
 4. **Define the Physics Adapter Contract** — external engine(s) that compute the answer
 5. **Set the 888_HOLD Conditions** — which outputs require human veto before release
 6. **Seal with `999_SEAL`** — the dimension becomes live in the metabolic loop

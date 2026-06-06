@@ -11,7 +11,7 @@ While most AI geoscience projects focus on making libraries (SPECFEM, Macrostrat
 | :--- | :--- | :--- |
 | **Primary Goal** | Forward modeling / Data retrieval | Governed Structural Interpretation |
 | **Logic Layer** | Script orchestration | Theory of Anomalous Contrast (ToAC) |
-| **Governance** | None (Deterministic execution) | Constitutional Floors (F1-F13) |
+| **Governance** | None (Deterministic execution) | Constitutional Laws (F1-F13) |
 | **Bias Control** | None (Interpreter driven) | Mandatory Contrast Canon (Bond 2007) |
 | **Result State** | Numerical output / JSON | SEALED Artifact (8-layer MAS) |
 | **Trust Model** | Tool availability | Sovereignty & Humility (888_HOLD) |
