@@ -425,7 +425,7 @@ async def test_f9_anti_hantu_meta_detection():
 
 """
 Test Suite Status: SEAL
-Constitutional Floors Checked:
+Constitutional Laws Checked:
   F1  Amanah — All results reversible with full provenance
   F4  Clarity — Physical/visual separation explicit
   F7  Humility — Uncertainty ∈ [0.03, 0.15] enforced

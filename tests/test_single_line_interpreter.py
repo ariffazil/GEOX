@@ -595,7 +595,7 @@ async def test_f9_anti_hantu_no_llm_guess():
 
 """
 Test Suite Status: SEAL
-Constitutional Floors Checked:
+Constitutional Laws Checked:
   F1  Amanah — Full provenance chain, reversible interpretation
   F2  Truth — No claims beyond attribute support
   F4  Clarity — Physical/visual separation explicit
