@@ -52,6 +52,11 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_query_intake",
     "geox_abstraction_guard",
     "geox_literature_ingest",
+    # Vision V1 (Layer 1) — 4 tools, forged 2026-06-07
+    "geox_vision_perceptual_inventory",
+    "geox_vision_minimax_inference",
+    "geox_vision_calibrate",
+    "geox_vision_audit",
 ]
 
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
@@ -92,6 +97,11 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_query_intake", "axis": "observe", "expose": True},
     {"name": "geox_abstraction_guard", "axis": "verify", "expose": True},
     {"name": "geox_literature_ingest", "axis": "observe", "expose": True},
+    # Vision V1 (Layer 1) — 4 tools, forged 2026-06-07
+    {"name": "geox_vision_perceptual_inventory", "axis": "observe", "expose": True},
+    {"name": "geox_vision_minimax_inference", "axis": "reason", "expose": True},
+    {"name": "geox_vision_calibrate", "axis": "verify", "expose": True},
+    {"name": "geox_vision_audit", "axis": "verify", "expose": True},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
