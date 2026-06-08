@@ -84,11 +84,22 @@ async def test_benchmark_metaphor_guard():
     assert "metaphor_mappings" in guard["primary_artifact"]
 
 
+def _pdf_fixture_available() -> bool:
+    """Safe check for the local Antigravity PDF fixture.
+    Returns False if path doesn't exist OR can't be stat'd (e.g. CI runner
+    has restrictive perms on /root/.gemini/ and Path.exists() raises).
+    """
+    try:
+        return Path(
+            "/root/.gemini/antigravity-cli/brain/2cac89a4-07df-4975-a727-92b9ccb0bd2f/.tempmediaStorage/6a1dd264a26ba533.pdf"
+        ).exists()
+    except (PermissionError, OSError):
+        return False
+
+
 @pytest.mark.asyncio
 @pytest.mark.skipif(
-    not Path(
-        "/root/.gemini/antigravity-cli/brain/2cac89a4-07df-4975-a727-92b9ccb0bd2f/.tempmediaStorage/6a1dd264a26ba533.pdf"
-    ).exists(),
+    not _pdf_fixture_available(),
     reason="Madon 2021 PDF fixture not present (Antigravity session-only). Local-only test.",
 )
 async def test_benchmark_literature_ingest():
