@@ -203,26 +203,37 @@ def _enforce_geox() -> dict[str, Any] | None:
 def compose_geox_servers() -> None:
     """Mount domain sub-servers onto the main GEOX MCP server.
 
-    Each sub-server owns a slice of the 30-tool surface:
+    Each sub-server owns a slice of the 37-tool surface (33+4 Vision V1):
       - witness:    16 canonical observe/verify tools
       - paleoscan:  10 paleoscan_python v2.0.0 forge tools
-      - claims:     4 H5 claim engine tools
+      - claims:     5 H5 claim engine tools
+      - vision:     4 Vision V1 layer-1 tools (perceptual_inventory,
+                    minimax_inference, calibrate, audit)
+                    Forged 2026-06-07 (autonomous, F13 delegation).
     """
-    from geox_mcp.servers import create_claims_server, create_paleoscan_server, create_witness_server
+    from geox_mcp.servers import (
+        create_claims_server,
+        create_paleoscan_server,
+        create_vision_server,
+        create_witness_server,
+    )
 
     witness = create_witness_server()
     paleoscan = create_paleoscan_server()
     claims = create_claims_server()
+    vision = create_vision_server()
 
     # namespace=None preserves original tool names (no prefixing)
     mcp.mount(witness, namespace=None)
     mcp.mount(paleoscan, namespace=None)
     mcp.mount(claims, namespace=None)
+    mcp.mount(vision, namespace=None)
 
     # Assert canonical count across all composed servers
-    if len(CANONICAL_PUBLIC_TOOLS) != 33:
-        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 33 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
-    logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 3 domains")
+    # 2026-06-07: 33 -> 37 (Vision V1 wire)
+    if len(CANONICAL_PUBLIC_TOOLS) != 37:
+        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 37 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+    logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 4 domains")
 
 
 compose_geox_servers()
