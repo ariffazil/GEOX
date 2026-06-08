@@ -73,7 +73,7 @@ dev = [
     "fastmcp[tasks]>=3.3.1,<4.0",  # server bootstrap registers task=True tools (geox_data_ingest_bundle)
 ]
 pinn = [
-    "torch>=2.0.0",
+    "torch>=2.12.0",
 ]
 all = [
     "numpy>=2.4.6",
