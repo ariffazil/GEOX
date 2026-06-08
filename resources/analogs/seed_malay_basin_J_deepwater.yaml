@@ -1,0 +1,57 @@
+# Seed Analog Factsheet — Malay Basin Group J/K Deepwater
+# ═══════════════════════════════════════════════════════════════════════════════
+# Public-domain seed analog for geox_analog_atlas MVP scope.
+# Discovered late 1980s / 1990s. Deeper, gas-prone, intra-formational seals.
+# Use case: deepwater / outer-shelf exploratory analog.
+# DITEMPA BUKAN DIBERI.
+
+analog_id: "MALAY_BASIN_GroupJK_deepwater_gas"
+basin_id: "MALAY_BASIN"
+play_name: "Group J/K lowstand turbidite sandstone"
+play_type: "deepwater_turbidite"
+discovery_status: "producing"
+producers_count: 15
+discovery_year_first: 1990
+
+tectonic_setting: "Cenozoic failed rift / pull-apart basin"
+basin_age: "Middle-Late Miocene"
+lithology_primary: "turbiditic sandstone (lowstand fan)"
+lithology_secondary: "deep marine shale"
+depth_range_m: [2500, 4500]
+trap_style: "stratigraphic pinchout + subtle anticline"
+source_rock: "Group E lacustrine + Group H coaly"
+reservoir_rock: "Group J/K amalgamated channel sandstones"
+seal: "intra-J/K marine shale (regional)"
+
+epistemic_rung: "INTERPRETATION"
+evidence_refs:
+  - "geox://resource/basins/malay_basin/basin_profile.yaml"
+  - "beicip-franlab:deepwater_tertiary:1992"
+  - "petronas:deepwater_synthesis:2008"
+data_quality: "MEDIUM"   # thinner dataset than shallow play
+
+contrast_dimensions:
+  - dimension: "structural_style"
+    observation: "subtle structural + stratigraphic (less fault-dependent)"
+    expected_in_query: "highly faulted"
+    delta_if_query_differs: 0.6
+    implication: "Different trap integrity risk profile"
+  - dimension: "depositional_environment"
+    observation: "deepwater turbidite"
+    expected_in_query: "shallow marine | fluvial"
+    delta_if_query_differs: 0.7
+    implication: "Reservoir continuity and sand-body geometry differ"
+  - dimension: "depth_burial_history"
+    observation: "2.5-4.5 km (gas window dominant)"
+    expected_in_query: "shallower"
+    delta_if_query_differs: 0.5
+    implication: "Phase window differs (gas vs oil)"
+
+primary_hydrocarbon: "Gas"
+eur_bcf: 800
+recovery_factor: 0.55
+fiscal_terms: "PSC (Malaysia)"
+
+notes:
+  - "Smaller pool sizes than shallow Group H/I; sweet spot is amalgamation zone"
+  - "Higher risk on reservoir presence vs Group H/I; lower risk on seal"
