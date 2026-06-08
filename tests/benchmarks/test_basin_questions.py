@@ -85,15 +85,20 @@ async def test_benchmark_metaphor_guard():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(
+    not Path(
+        "/root/.gemini/antigravity-cli/brain/2cac89a4-07df-4975-a727-92b9ccb0bd2f/.tempmediaStorage/6a1dd264a26ba533.pdf"
+    ).exists(),
+    reason="Madon 2021 PDF fixture not present (Antigravity session-only). Local-only test.",
+)
 async def test_benchmark_literature_ingest():
-    # Ingest Madon 2021 PDF
+    # Ingest Madon 2021 PDF (local-only fixture from Antigravity session)
     pdf_path = "/root/.gemini/antigravity-cli/brain/2cac89a4-07df-4975-a727-92b9ccb0bd2f/.tempmediaStorage/6a1dd264a26ba533.pdf"
     res = await geox_literature_ingest(file_path=pdf_path, basin_name="Malay Basin")
-    
+
     assert res["execution_status"] == "SUCCESS"
     assert res["primary_artifact"]["artifact_type"] == "literature_review"
     assert "Mazlan Madon" in res["primary_artifact"]["author"]
     assert "Five decades" in res["primary_artifact"]["title"]
     assert len(res["primary_artifact"]["claim_candidates"]) == 7
     assert res["primary_artifact"]["claim_state"] == "DRAFT"
-
