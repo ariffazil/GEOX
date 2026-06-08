@@ -38,16 +38,13 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import logging
-import os
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Literal
 
 import numpy as np
 from scipy import ndimage
 
 from geox_core.enums.statuses import (
-    ArtifactStatus,
     ExecutionStatus,
     GovernanceStatus,
     get_standard_envelope,
@@ -203,8 +200,13 @@ def _local_dip(img: np.ndarray, sigma: float = 1.0, smooth_sigma: float = 3.0, *
     return dip
 
 
-def _gabor_kernel(wavelength: int, sigma: float) -> np.ndarray:
-    """2D complex Gabor kernel at 0 azimuth (horizontal stripes)."""
+def _gabor_kernel(wavelength: int, sigma: float):
+    """2D complex Gabor kernel at 0 azimuth (horizontal stripes).
+
+    Returns a complex128 ndarray (real part = cosine * envelope,
+    imag part = sine * envelope). Untyped return so mypy/pyright don't
+    fight with .real / .imag attribute access downstream.
+    """
     half = int(np.ceil(3 * sigma))
     x = np.arange(-half, half + 1)
     y = np.arange(-half, half + 1)
@@ -215,10 +217,19 @@ def _gabor_kernel(wavelength: int, sigma: float) -> np.ndarray:
 
 
 def _phase_symmetry(img: np.ndarray, sigma: float = 2.0, wavelength: int = 8, **kwargs: Any) -> np.ndarray:
-    """Attribute 7: Phase Symmetry (waveform polarity proxy). atan2(imag, real) of Gabor response."""
+    """Attribute 7: Phase Symmetry (waveform character proxy).
+
+    Physical proxy: peak vs trough vs zero-crossing identity, polarity.
+    Convolves with a complex Gabor filter at the chosen wavelength; the
+    per-pixel phase is atan2(imag, real). Phase in [-pi, pi] distinguishes
+    peaks (positive) from troughs (negative). A polarity reversal across
+    space (e.g. at a fluid contact) shows as a pi-jump.
+    """
     g = _gabor_kernel(wavelength, sigma)
-    real = ndimage.convolve(img, g.real, mode="reflect")
-    imag = ndimage.convolve(img, g.imag, mode="reflect")
+    g_real = np.ascontiguousarray(g.real)
+    g_imag = np.ascontiguousarray(g.imag)
+    real = ndimage.convolve(img, g_real, mode="reflect")
+    imag = ndimage.convolve(img, g_imag, mode="reflect")
     return np.arctan2(imag, real)
 
 
@@ -654,7 +665,10 @@ async def geox_contrast_views(
                 "phase_1_4": ["frequency_content"],
                 "phase_2_0": ["ac_risk_heatmap"],
             },
-            "f13_audit_pending": "Vision V1 +4, geox_analog_atlas, geox_contrast_views (with all 9 modes). Sovereign ratification needed to promote to canonical.",
+            "f13_audit_pending": (
+                "Vision V1 +4, geox_analog_atlas, geox_contrast_views "
+                "(all 9 modes). Sovereign ratification needed to promote to canonical."
+            ),
         },
     }
 
