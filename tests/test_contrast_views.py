@@ -170,26 +170,28 @@ def test_load_raster_from_png(saved_synthetic_path):
 
 
 def test_default_modes_are_phase1(synthetic_faulted_section):
-    """No `modes` arg → all 3 Phase 1 modes."""
+    """No `modes` arg → all 8 Phase 1 modes (everything except AC_Risk)."""
     res = asyncio.run(geox_contrast_views(source=synthetic_faulted_section))
     assert res["governance_status"] == "QUALIFY"
     pa = res["primary_artifact"]
-    assert pa["summary"]["n_attributes_requested"] == 3
-    assert pa["summary"]["n_attributes_computed"] == 3
+    assert pa["summary"]["n_attributes_requested"] == len(PHASE1_MODES)
+    assert pa["summary"]["n_attributes_computed"] == len(PHASE1_MODES)
     returned_modes = {a["mode"] for a in pa["attributes"]}
     assert returned_modes == set(PHASE1_MODES)
+    # AC_Risk is opt-in (not in default Phase 1 set)
+    assert "ac_risk_heatmap" not in returned_modes
 
 
 def test_explicit_modes_subset(synthetic_faulted_section):
     res = asyncio.run(
         geox_contrast_views(
             source=synthetic_faulted_section,
-            modes=["edge_map", "texture_energy"],
+            modes=["edge_map", "texture_energy", "local_dip"],
         )
     )
     pa = res["primary_artifact"]
-    assert pa["summary"]["n_attributes_computed"] == 2
-    assert {a["mode"] for a in pa["attributes"]} == {"edge_map", "texture_energy"}
+    assert pa["summary"]["n_attributes_computed"] == 3
+    assert {a["mode"] for a in pa["attributes"]} == {"edge_map", "texture_energy", "local_dip"}
 
 
 def test_invalid_mode_returns_hold(synthetic_faulted_section):
@@ -226,16 +228,21 @@ def test_loads_from_png_path(saved_synthetic_path):
 def test_every_attribute_carries_axis_and_provenance(synthetic_faulted_section):
     """F4 CLARITY: each attribute must carry axis + normalization metadata."""
     res = asyncio.run(geox_contrast_views(source=synthetic_faulted_section))
+    valid_axes = {
+        "reflection_strength",
+        "structural_discontinuity",
+        "seismic_facies_character",
+        "lateral_amplitude_change",
+        "impedance_transition_rate",
+        "reflector_orientation",
+        "waveform_polarity_proxy",
+        "dominant_local_frequency",
+    }
     for a in res["primary_artifact"]["attributes"]:
         assert "axis" in a
         assert "normalization" in a
         assert "computation" in a
-        # Physical axis names (no "fault" or "horizon" — those are LLM interpretations)
-        assert a["axis"] in {
-            "reflection_strength",
-            "structural_discontinuity",
-            "seismic_facies_character",
-        }
+        assert a["axis"] in valid_axes
 
 
 def test_every_attribute_has_summary_for_llm(synthetic_faulted_section):
@@ -284,17 +291,68 @@ def test_image_provenance_is_carried_through(synthetic_faulted_section):
 
 
 def test_phase2_modes_explicitly_rejected():
-    """Phase 2 modes are documented in the road map but not yet implemented.
-    The tool must fail closed if asked for them."""
-    for m in PHASE2_MODES:
-        res = asyncio.run(
-            geox_contrast_views(
-                source=np.zeros((64, 64)),
-                modes=[m],
-            )
+    """Phase 2 modes are documented in the road map. As of 2026-06-08,
+    PHASE2_MODES is just `ac_risk_heatmap` which IS implemented (the
+    constitutional firewall). So this test now serves as a regression
+    guard against unknown modes, not against not-yet-implemented ones.
+    """
+    # An unknown mode should still fail closed
+    res = asyncio.run(
+        geox_contrast_views(
+            source=np.zeros((64, 64)),
+            modes=["definitely_not_a_real_mode_xyz"],
         )
-        assert res["governance_status"] == "HOLD", f"Phase 2 mode {m} should be rejected"
-        assert res["primary_artifact"]["error_code"] == "INVALID_MODE", f"Phase 2 mode {m} should be in error"
+    )
+    assert res["governance_status"] == "HOLD"
+    assert res["primary_artifact"]["error_code"] == "INVALID_MODE"
+
+
+def test_ac_risk_heatmap_is_opt_in(synthetic_faulted_section):
+    """AC_Risk (Attribute 9, the constitutional firewall) is opt-in.
+
+    A geologist inspecting physical signals should not be forced to
+    also pay the cost of the audit layer. Explicit request = explicit consent.
+    """
+    # Default modes: AC_Risk NOT included
+    res = asyncio.run(geox_contrast_views(source=synthetic_faulted_section))
+    modes = {a["mode"] for a in res["primary_artifact"]["attributes"]}
+    assert "ac_risk_heatmap" not in modes
+
+    # Explicit request: AC_Risk included
+    res2 = asyncio.run(geox_contrast_views(source=synthetic_faulted_section, modes=["ac_risk_heatmap"]))
+    pa = res2["primary_artifact"]
+    assert pa["summary"]["n_attributes_computed"] == 1
+    attr = pa["attributes"][0]
+    assert attr["mode"] == "ac_risk_heatmap"
+    assert attr["axis"] == "display_vs_reality_mismatch"
+    assert 0.0 <= attr["summary"]["min"] <= attr["summary"]["max"] <= 1.0
+
+
+def test_all_nine_attributes_on_real_data(synthetic_faulted_section):
+    """All 9 attributes can be requested in one call (3+2+2+1+1)."""
+    res = asyncio.run(
+        geox_contrast_views(
+            source=synthetic_faulted_section,
+            modes=[
+                "amplitude_envelope",
+                "edge_map",
+                "texture_energy",
+                "horizontal_gradient",
+                "vertical_gradient",
+                "local_dip",
+                "phase_symmetry",
+                "frequency_content",
+                "ac_risk_heatmap",
+            ],
+        )
+    )
+    pa = res["primary_artifact"]
+    assert pa["summary"]["n_attributes_computed"] == 9
+    assert pa["summary"]["n_attributes_failed"] == 0
+    returned = {a["mode"] for a in pa["attributes"]}
+    assert len(returned) == 9
+    assert "ac_risk_heatmap" in returned
+    assert "local_dip" in returned
 
 
 def test_doctrine_8_missing_evidence_surface(synthetic_faulted_section):
@@ -318,7 +376,13 @@ def test_failure_in_one_mode_doesnt_kill_others(monkeypatch, synthetic_faulted_s
 
     monkeypatch.setattr(contrast_views, "_texture_energy", failing_kernel)
     try:
-        res = asyncio.run(geox_contrast_views(source=synthetic_faulted_section))
+        # Request a subset that includes texture_energy, plus others
+        res = asyncio.run(
+            geox_contrast_views(
+                source=synthetic_faulted_section,
+                modes=["edge_map", "texture_energy", "amplitude_envelope"],
+            )
+        )
         pa = res["primary_artifact"]
         assert pa["summary"]["n_attributes_computed"] == 2
         assert pa["summary"]["n_attributes_failed"] == 1

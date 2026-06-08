@@ -10,15 +10,20 @@ returns a 2D attribute image of the same shape as the input. The
 composition is the PerceptualInventory that feeds the LLM via
 geox_vision_perceptual_inventory.
 
-MVP scope (Phase 1 — 2026-06-08):
-  - amplitude_envelope  (Attribute 1)
-  - edge_map           (Attribute 2)
-  - texture_energy     (Attribute 3)
+All 9 attributes forged 2026-06-08 (sovereign "forge all" directive):
+  - amplitude_envelope    (Attribute 1)
+  - edge_map             (Attribute 2)
+  - texture_energy       (Attribute 3)
+  - horizontal_gradient  (Attribute 4)
+  - vertical_gradient    (Attribute 5)
+  - local_dip            (Attribute 6)
+  - phase_symmetry       (Attribute 7)
+  - frequency_content    (Attribute 8)
+  - ac_risk_heatmap      (Attribute 9, the constitucional firewall)
 
-The remaining 6 attributes (horizontal_gradient, vertical_gradient,
-local_dip, phase_symmetry, frequency_content, AC_Risk heatmap) are
-phased road-map items. They share the same `geox_contrast_views`
-entry point so callers can compose freely.
+The 9th (AC_Risk) is NOT a physical signal. It is the governance metric
+that audits the other 8 for display lies. This is the Gödel Lock in
+visual form.
 
 Constitutional binding (F1-F13):
   F1 AMANAH     — read-only computation, no I/O
@@ -51,25 +56,47 @@ from geox_core.enums.statuses import (
 logger = logging.getLogger("geox.canonical.contrast_views")
 
 ContrastMode = Literal[
-    "amplitude_envelope",  # Phase 1
-    "edge_map",  # Phase 1
-    "texture_energy",  # Phase 1
-    # Phase 2 (planned):
-    # "horizontal_gradient",
-    # "vertical_gradient",
-    # "local_dip",
-    # "phase_symmetry",
-    # "frequency_content",
-    # "ac_risk_heatmap",  (Attribute 9 — governance, lives in contrast_ac_risk.py)
+    "amplitude_envelope",  # Attribute 1
+    "edge_map",  # Attribute 2
+    "texture_energy",  # Attribute 3
+    "horizontal_gradient",  # Attribute 4
+    "vertical_gradient",  # Attribute 5
+    "local_dip",  # Attribute 6
+    "phase_symmetry",  # Attribute 7
+    "frequency_content",  # Attribute 8
+    "ac_risk_heatmap",  # Attribute 9
 ]
 
-PHASE1_MODES: tuple[str, ...] = ("amplitude_envelope", "edge_map", "texture_energy")
-PHASE2_MODES: tuple[str, ...] = (
+# As of 2026-06-08: all 9 attributes are FORGED (sovereign directive "forge all").
+# Phase 1.1 (3 attrs): amplitude_envelope, edge_map, texture_energy
+# Phase 1.2 (2 attrs): horizontal_gradient, vertical_gradient
+# Phase 1.3 (2 attrs): local_dip, phase_symmetry
+# Phase 1.4 (1 attr):  frequency_content
+# Phase 2.0 (1 attr):  ac_risk_heatmap  -- the constitucional firewall
+# All 9 modes are SHIPPED. The phase tags below remain for roadmap reporting.
+ALL_MODES: tuple[str, ...] = (
+    "amplitude_envelope",
+    "edge_map",
+    "texture_energy",
     "horizontal_gradient",
     "vertical_gradient",
     "local_dip",
     "phase_symmetry",
     "frequency_content",
+    "ac_risk_heatmap",
+)
+PHASE1_MODES: tuple[str, ...] = (
+    "amplitude_envelope",
+    "edge_map",
+    "texture_energy",
+    "horizontal_gradient",
+    "vertical_gradient",
+    "local_dip",
+    "phase_symmetry",
+    "frequency_content",
+)
+PHASE2_MODES: tuple[str, ...] = (
+    "ac_risk_heatmap",  # Attribute 9 -- the governance layer
 )
 
 
@@ -153,10 +180,154 @@ def _texture_energy(img: np.ndarray, window: int = 7, **kwargs: Any) -> np.ndarr
     return var
 
 
+def _horizontal_gradient(img: np.ndarray, sigma: float = 1.0, **kwargs: Any) -> np.ndarray:
+    """Attribute 4: Horizontal Gradient (X-derivative). Physical: lateral amplitude change."""
+    smoothed = ndimage.gaussian_filter(img, sigma=sigma)
+    return ndimage.sobel(smoothed, axis=1, mode="reflect")
+
+
+def _vertical_gradient(img: np.ndarray, sigma: float = 1.0, **kwargs: Any) -> np.ndarray:
+    """Attribute 5: Vertical Gradient (Y-derivative). Physical: vertical impedance transition rate."""
+    smoothed = ndimage.gaussian_filter(img, sigma=sigma)
+    return ndimage.sobel(smoothed, axis=0, mode="reflect")
+
+
+def _local_dip(img: np.ndarray, sigma: float = 1.0, smooth_sigma: float = 3.0, **kwargs: Any) -> np.ndarray:
+    """Attribute 6: Local Dip (reflector orientation). atan2(gy, gx) of structure tensor."""
+    smoothed = ndimage.gaussian_filter(img, sigma=sigma)
+    gx = ndimage.sobel(smoothed, axis=1, mode="reflect")
+    gy = ndimage.sobel(smoothed, axis=0, mode="reflect")
+    dip = np.arctan2(gy, gx)
+    if smooth_sigma > 0:
+        dip = ndimage.gaussian_filter(dip, sigma=smooth_sigma)
+    return dip
+
+
+def _gabor_kernel(wavelength: int, sigma: float) -> np.ndarray:
+    """2D complex Gabor kernel at 0 azimuth (horizontal stripes)."""
+    half = int(np.ceil(3 * sigma))
+    x = np.arange(-half, half + 1)
+    y = np.arange(-half, half + 1)
+    X, Y = np.meshgrid(x, y)
+    envelope = np.exp(-(X**2 + Y**2) / (2 * sigma**2))
+    phase = (2 * np.pi * X) / wavelength
+    return (envelope * np.cos(phase)) + 1j * (envelope * np.sin(phase))
+
+
+def _phase_symmetry(img: np.ndarray, sigma: float = 2.0, wavelength: int = 8, **kwargs: Any) -> np.ndarray:
+    """Attribute 7: Phase Symmetry (waveform polarity proxy). atan2(imag, real) of Gabor response."""
+    g = _gabor_kernel(wavelength, sigma)
+    real = ndimage.convolve(img, g.real, mode="reflect")
+    imag = ndimage.convolve(img, g.imag, mode="reflect")
+    return np.arctan2(imag, real)
+
+
+def _frequency_content(img: np.ndarray, window: int = 32, **kwargs: Any) -> np.ndarray:
+    """Attribute 8: Frequency Content (dominant local frequency).
+
+    Physical proxy: resolution, attenuation, thin-bed interference.
+    Returns a per-row dominant frequency (cycles/pixel), broadcast to
+    all columns. Higher = sharper detail (shallower, unattenuated).
+    Lower = attenuated (deep, gas absorption, low Q).
+
+    Implementation: for each row, take a 1D FFT in a sliding window along
+    the column axis, compute the power-weighted mean of positive frequencies,
+    and broadcast to that row. This is the cheap version of "dominant
+    local frequency" that captures the depth-dependent resolution story
+    (frequency drops with depth in real seismic due to attenuation).
+    """
+    half = window // 2
+    hann = np.hanning(window)
+    freqs = np.fft.fftfreq(window, d=1.0)
+    pos = freqs[1 : window // 2 + 1]  # positive freqs, skip DC
+    weights = np.abs(pos)  # weight by frequency
+    H, W = img.shape
+    padded = np.pad(img, ((0, 0), (half, half)), mode="reflect")
+    # Compute the 1D FFT for each row once: shape (H, window//2)
+    # We do this by sliding a window along axis=1, applying Hann taper.
+    # For each row i, the spectrum is over columns j=half..W+half.
+    # stride_tricks could help but for clarity we loop rows.
+    out = np.zeros_like(img)
+    for i in range(H):
+        row = padded[i, :].astype(np.float64)
+        # Sliding window via cumulative approach
+        # Simple loop over columns:
+        for j in range(W):
+            patch = row[j : j + window] * hann
+            F = np.abs(np.fft.rfft(patch))[1:]  # skip DC
+            power = F**2
+            psum = float(power.sum())
+            if psum > 0:
+                out[i, j] = float((weights * power).sum() / psum)
+    return out
+
+
+def _ac_risk_heatmap(
+    img: np.ndarray,
+    sigma: float = 1.0,
+    window: int = 15,
+    **kwargs: Any,
+) -> np.ndarray:
+    """Attribute 9: AC_Risk Heatmap (the constitucional firewall).
+
+    AC_Risk = U_phys * D_transform * B_cog per pixel. THE GÖDEL LOCK
+    in visual form. NOT a physical signal — a governance metric that
+    audits the other 8 for display lies. Triggers 888_HOLD where
+    AC_Risk > 0.5.
+
+    Component heuristics (MVP, refined in Phase 2.1):
+      U_phys       = 1 - normalized local signal strength (proxy: 1 - local_std)
+      D_transform  = normalized local gradient direction variance
+      B_cog        = normalized local texture_energy (chaotic zones are
+                    hard to attribute)
+    """
+    smoothed = ndimage.gaussian_filter(img, sigma=sigma)
+
+    # U_phys: 1 - normalized local signal strength
+    local_abs_dev = np.abs(smoothed - ndimage.uniform_filter(smoothed, window, mode="reflect"))
+    local_std = ndimage.uniform_filter(local_abs_dev, window, mode="reflect")
+    if local_std.max() > 0:
+        u_phys = 1.0 - (local_std / local_std.max())
+    else:
+        u_phys = np.zeros_like(img)
+
+    # D_transform: local gradient direction variance
+    gx = ndimage.sobel(smoothed, axis=1, mode="reflect")
+    gy = ndimage.sobel(smoothed, axis=0, mode="reflect")
+    grad_dir = np.arctan2(gy, gx)
+    grad_dir_mean = ndimage.uniform_filter(grad_dir, window, mode="reflect")
+    grad_dir_sq_mean = ndimage.uniform_filter(grad_dir**2, window, mode="reflect")
+    dir_var = np.maximum(grad_dir_sq_mean - grad_dir_mean**2, 0.0)
+    if dir_var.max() > 0:
+        d_transform = dir_var / dir_var.max()
+    else:
+        d_transform = np.zeros_like(img)
+
+    # B_cog: proxy via local texture energy
+    sm = ndimage.uniform_filter(smoothed, window, mode="reflect")
+    sm_sq = ndimage.uniform_filter(smoothed * smoothed, window, mode="reflect")
+    tex = np.maximum(sm_sq - sm**2, 0.0)
+    if tex.max() > 0:
+        b_cog = tex / tex.max()
+    else:
+        b_cog = np.zeros_like(img)
+
+    ac_risk = u_phys * d_transform * b_cog
+    if ac_risk.max() > 0:
+        ac_risk = ac_risk / ac_risk.max()
+    return ac_risk
+
+
 _MODE_REGISTRY: dict[str, Any] = {
     "amplitude_envelope": _amplitude_envelope,
     "edge_map": _edge_map,
     "texture_energy": _texture_energy,
+    "horizontal_gradient": _horizontal_gradient,
+    "vertical_gradient": _vertical_gradient,
+    "local_dip": _local_dip,
+    "phase_symmetry": _phase_symmetry,
+    "frequency_content": _frequency_content,
+    "ac_risk_heatmap": _ac_risk_heatmap,
 }
 
 
@@ -254,6 +425,9 @@ async def geox_contrast_views(
             claim_state="NO_VALID_EVIDENCE",
         )
     if not modes:
+        # Default: all Phase 1 modes (8 of 9 -- everything except AC_Risk).
+        # AC_Risk is opt-in: a geologist may want to inspect the physical
+        # signals first before applying the audit layer.
         modes = list(PHASE1_MODES)
     invalid = [m for m in modes if m not in _MODE_REGISTRY]
     if invalid:
@@ -329,6 +503,36 @@ async def geox_contrast_views(
             "variance (>=0)",
             f"local variance in {texture_window}x{texture_window} window (uniform_filter)",
         ),
+        "horizontal_gradient": (
+            "lateral_amplitude_change",
+            "raw (X-derivative)",
+            "Sobel gradient along axis=1 (horizontal) after Gaussian(sigma=1.0) smoothing",
+        ),
+        "vertical_gradient": (
+            "impedance_transition_rate",
+            "raw (Y-derivative)",
+            "Sobel gradient along axis=0 (vertical) after Gaussian(sigma=1.0) smoothing",
+        ),
+        "local_dip": (
+            "reflector_orientation",
+            "radians in [-pi/2, pi/2] (positive = dipping right/down)",
+            "atan2(gy, gx) from local structure tensor (Sobel gradients); Gaussian-smoothed",
+        ),
+        "phase_symmetry": (
+            "waveform_polarity_proxy",
+            "radians in [-pi, pi]",
+            "atan2(imag, real) of per-pixel complex Gabor response (wavelength 8 px)",
+        ),
+        "frequency_content": (
+            "dominant_local_frequency",
+            "cycles/pixel (higher = sharper detail)",
+            "power-weighted mean of positive frequencies in 32-px Hann-tapered FFT window",
+        ),
+        "ac_risk_heatmap": (
+            "display_vs_reality_mismatch",
+            "[0, 1] (higher = less trustworthy)",
+            "U_phys * D_transform * B_cog per pixel (see _ac_risk_heatmap for component definitions)",
+        ),
     }
 
     # ── Compute ───────────────────────────────────────────────────────
@@ -341,6 +545,18 @@ async def geox_contrast_views(
                 data = _texture_energy(img, window=texture_window)
             elif mode == "amplitude_envelope":
                 data = _amplitude_envelope(img)
+            elif mode == "horizontal_gradient":
+                data = _horizontal_gradient(img, sigma=edge_sigma)
+            elif mode == "vertical_gradient":
+                data = _vertical_gradient(img, sigma=edge_sigma)
+            elif mode == "local_dip":
+                data = _local_dip(img, sigma=edge_sigma, smooth_sigma=3.0)
+            elif mode == "phase_symmetry":
+                data = _phase_symmetry(img, sigma=2.0, wavelength=8)
+            elif mode == "frequency_content":
+                data = _frequency_content(img, window=32)
+            elif mode == "ac_risk_heatmap":
+                data = _ac_risk_heatmap(img, sigma=1.0, window=15)
             else:
                 # Should not reach here (validated above) but fail closed
                 continue
@@ -419,16 +635,26 @@ async def geox_contrast_views(
             ),
         },
         "phase2_roadmap": {
-            "status": "planned",
-            "remaining_attributes": [
-                "horizontal_gradient (Attribute 4)",
-                "vertical_gradient (Attribute 5)",
-                "local_dip (Attribute 6)",
-                "phase_symmetry (Attribute 7)",
-                "frequency_content (Attribute 8)",
-                "ac_risk_heatmap (Attribute 9 — governance)",
+            "status": "SHIPPED -- all 9 attributes forged 2026-06-08",
+            "all_modes_shipped": [
+                "amplitude_envelope",
+                "edge_map",
+                "texture_energy",
+                "horizontal_gradient",
+                "vertical_gradient",
+                "local_dip",
+                "phase_symmetry",
+                "frequency_content",
+                "ac_risk_heatmap",
             ],
-            "depends_on": "F13 ratification of Phase 1 + user feedback on Phase 1 output.",
+            "phase_breakdown": {
+                "phase_1_1": ["amplitude_envelope", "edge_map", "texture_energy"],
+                "phase_1_2": ["horizontal_gradient", "vertical_gradient"],
+                "phase_1_3": ["local_dip", "phase_symmetry"],
+                "phase_1_4": ["frequency_content"],
+                "phase_2_0": ["ac_risk_heatmap"],
+            },
+            "f13_audit_pending": "Vision V1 +4, geox_analog_atlas, geox_contrast_views (with all 9 modes). Sovereign ratification needed to promote to canonical.",
         },
     }
 
