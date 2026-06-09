@@ -39,11 +39,11 @@ classifiers = [
 ]
 
 dependencies = [
-    "fastmcp[tasks]>=3.3.1,<4.0",
-    "pydantic>=2.0.0",
+    "fastmcp[tasks]>=3.4.2,<4.0",
+    "pydantic>=2.13.4",
     "uvicorn[standard]>=0.48.0",
     "python-dotenv>=1.0.0",
-    "httpx>=0.27.0",
+    "httpx>=0.28.1",
     "numpy>=2.4.6",
     "lasio>=0.32",
     "welly>=0.5.2",
@@ -66,14 +66,14 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0.0",
+    "pytest>=9.0.3",
     "pytest-asyncio>=1.4.0",
-    "ruff>=0.1.0",
+    "ruff>=0.15.16",
     "mypy>=2.1.0",
-    "fastmcp[tasks]>=3.3.1,<4.0",  # server bootstrap registers task=True tools (geox_data_ingest_bundle)
+    "fastmcp[tasks]>=3.4.2,<4.0",  # server bootstrap registers task=True tools (geox_data_ingest_bundle)
 ]
 pinn = [
-    "torch>=2.0.0",
+    "torch>=2.12.0",
 ]
 all = [
     "numpy>=2.4.6",
@@ -83,12 +83,12 @@ all = [
     "scipy>=1.17.1",
     "matplotlib>=3.7.0",
     "pillow>=10.0.0",
-    "plotly>=6.7.0",
+    "plotly>=6.8.0",
     "kaleido>=0.2.1",
     "panel>=1.9.2",
     "hvplot>=0.9.0",
     "holoviews>=1.22.1",
-    "bokeh>=3.9.0",
+    "bokeh>=3.9.1",
     "datashader>=0.19.1",
 ]
 

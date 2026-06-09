@@ -8,14 +8,18 @@ from pathlib import Path
 from typing import Literal, Any
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
+    ArtifactStatus,
     ExecutionStatus,
     GovernanceStatus,
+    get_standard_envelope,
 )
 
 logger = logging.getLogger("geox.basin")
 
-RESOURCES_DIR = Path("/root/geox/resources")
+# Repo-root resolution. Default = path-relative; override via GEOX_RESOURCES_DIR.
+# Fix: prior hardcode `/root/geox/resources` broke CI (runner uses /home/runner/work/...).
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+RESOURCES_DIR = Path(os.environ.get("GEOX_RESOURCES_DIR", str(_REPO_ROOT / "resources")))
 
 
 def _normalize_name(name: str) -> str:
@@ -174,12 +178,14 @@ async def geox_basin_profile(
             elif c_type == "interpreted":
                 interpreted[c_text] = {"source": c.get("source"), "refs": c_refs, "confidence": c.get("confidence")}
             elif c_type == "hypothesis":
-                process_hypotheses.append({
-                    "process": c_text,
-                    "mechanism": c.get("source"),
-                    "confidence": c.get("confidence").lower(),
-                    "evidence_for": c_refs,
-                })
+                process_hypotheses.append(
+                    {
+                        "process": c_text,
+                        "mechanism": c.get("source"),
+                        "confidence": c.get("confidence").lower(),
+                        "evidence_for": c_refs,
+                    }
+                )
 
         # Load specific mode details
         mode_data = {}
@@ -240,10 +246,7 @@ async def geox_basin_profile(
                 evidence_loaded.append("uncertainty_register.yaml")
 
         elif mode == "contradiction_scan":
-            mode_data = {
-                "scan_status": "COMPLETE",
-                "contradictions_found": []
-            }
+            mode_data = {"scan_status": "COMPLETE", "contradictions_found": []}
             # Add regional contradictions if any
             evidence_loaded.append("claims.json")
 
@@ -256,14 +259,14 @@ async def geox_basin_profile(
             if claim_strictness == "decision":
                 forbidden_claims.append("site_specific_stoiip_or_reserves_adjudication")
 
-        next_best_actions = [
-            {"tool": "geox_basin_resolve", "reason": "Audit coordinates against known boundary"}
-        ]
+        next_best_actions = [{"tool": "geox_basin_resolve", "reason": "Audit coordinates against known boundary"}]
         if missing_evidence:
-            next_best_actions.append({
-                "tool": "geox_data_ingest_bundle",
-                "reason": "Ingest well log or seismic volume to upgrade strictness from screen to appraise/decision"
-            })
+            next_best_actions.append(
+                {
+                    "tool": "geox_data_ingest_bundle",
+                    "reason": "Ingest well log or seismic volume to upgrade strictness from screen to appraise/decision",
+                }
+            )
 
         result = {
             "mode": mode,
@@ -363,7 +366,7 @@ async def geox_query_intake(
         "routed_intent": routed_intent,
         "pre_resolved_basin": pre_resolved_basin,
         "suggested_tools": suggested_tools,
-        "message": f"Routed query with intent '{routed_intent}'. Please execute the suggested tools to get comprehensive evidence-backed details."
+        "message": f"Routed query with intent '{routed_intent}'. Please execute the suggested tools to get comprehensive evidence-backed details.",
     }
 
     return get_standard_envelope(
@@ -409,7 +412,7 @@ async def geox_abstraction_guard(
             "pressure": "Accumulated emotional stress, financial burden, or expectations.",
             "leakage": "Unresolved issues escaping sideways (sarcasm, passive aggression, withdrawal).",
             "reactivation": "Triggering old relationship trauma by applying new stress to existing faults.",
-            "trap": "A cyclical behavioral pattern that captures both individuals."
+            "trap": "A cyclical behavioral pattern that captures both individuals.",
         },
         "diagnosis_denied": "No predictive or diagnostics capability is valid for personal or relationship matters.",
     }
@@ -462,6 +465,7 @@ async def geox_literature_ingest(
     text_content = ""
     try:
         import subprocess
+
         proc = subprocess.run(
             ["pdftotext", str(path), "-"],
             stdout=subprocess.PIPE,
@@ -489,7 +493,7 @@ async def geox_literature_ingest(
     doi = ""
     evidence_role = "contextual"
     claim_state = "DRAFT"
-    
+
     # Check for Mazlan Madon 2021 GSM paper specifically
     is_madon_2021 = False
     if "madon" in text_content.lower() and "five decades" in text_content.lower():
@@ -506,10 +510,11 @@ async def geox_literature_ingest(
     else:
         # Generic heuristic matching
         import re
+
         doi_match = re.search(r"10\.\d{4,9}/[-._;()/:A-Z0-9]+", text_content, re.IGNORECASE)
         if doi_match:
             doi = doi_match.group(0)
-        
+
         # Heuristics for Title, Author, etc.
         lines = [line.strip() for line in text_content.split("\n") if line.strip()][:10]
         if lines:
@@ -521,6 +526,7 @@ async def geox_literature_ingest(
     # Citation chunks / snippet extraction
     citation_chunks = []
     import re
+
     citations = re.findall(r"\([A-Za-z]+(?:\s+et\s+al\.)?,\s*\d{4}\)", text_content)
     seen_citations = set()
     for citation in citations:
@@ -531,11 +537,8 @@ async def geox_literature_ingest(
                 start = max(0, idx - 100)
                 end = min(len(text_content), idx + len(citation) + 150)
                 snippet = text_content[start:end].replace("\n", " ").strip()
-                citation_chunks.append({
-                    "citation": citation,
-                    "snippet": f"... {snippet} ..."
-                })
-    
+                citation_chunks.append({"citation": citation, "snippet": f"... {snippet} ..."})
+
     citation_chunks = citation_chunks[:10]
 
     lit_ref = f"lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf" if is_madon_2021 else f"lit://custom/{path.name}"
@@ -548,50 +551,50 @@ async def geox_literature_ingest(
                 "type": "other",
                 "claim": "Malay Basin is offshore east of Peninsular Malaysia and contributes about 40% of Malaysia’s hydrocarbon resources in the review period.",
                 "evidence_ref": lit_ref,
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_878a99cc8cc84177",
                 "type": "other",
                 "claim": "Exploration history shows mature-basin creaming behavior: early giant discoveries, later smaller incremental additions.",
                 "evidence_ref": lit_ref,
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_4c04b8f277854aba",
                 "type": "structure",
                 "claim": "Malay Basin initiated by Late Eocene–Early Oligocene extension, high post-rift subsidence, >14 km sediment in deepest centre, E-W half-grabens influenced by Pre-Tertiary faults.",
                 "evidence_ref": lit_ref,
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_db822655c84b43ac",
                 "type": "stratigraphy",
                 "claim": "Stratigraphy uses groups A–P; drilling reaches at least Group M; fill transitions from lacustrine/non-marine to coastal plain and shallow marine; K shale marks key transition.",
                 "evidence_ref": lit_ref,
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_64bd3be4f6fb471c",
                 "type": "reservoir",
                 "claim": "Main resources are reported from Groups J, I, K, E, D; I/J/K contribute about 60%, and D/E plus those contribute about 85%; deltaic sands dominate.",
                 "evidence_ref": lit_ref,
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_ca5a5ef4c80544ff",
                 "type": "source",
                 "claim": "Oils/condensates derive mainly from lower coastal plain fluvio-deltaic coal/coaly shale and lacustrine syn-rift shales; northwest is gas-prone, southeast more oil-prone.",
                 "evidence_ref": lit_ref,
-                "confidence": "MEDIUM"
+                "confidence": "MEDIUM",
             },
             {
                 "claim_id": "clm_78c4535ee5764c10",
                 "type": "other",
                 "claim": "Remaining potential is not zero; paper estimates roughly 2 bboe yet to discover by 2020, but requires new play concepts.",
                 "evidence_ref": lit_ref,
-                "confidence": "MEDIUM"
-            }
+                "confidence": "MEDIUM",
+            },
         ]
     else:
         claim_candidates = [
@@ -600,24 +603,28 @@ async def geox_literature_ingest(
                 "type": "other",
                 "claim": f"Document references geological study in {resolved_basin}.",
                 "evidence_ref": lit_ref,
-                "confidence": "MEDIUM"
+                "confidence": "MEDIUM",
             }
         ]
 
     challenges = []
     for candidate in claim_candidates:
         if "remaining potential" in candidate["claim"].lower():
-            challenges.append({
-                "claim_id": candidate["claim_id"],
-                "challenge": "Validating if 2 bboe remaining potential accounts for deep HPHT or tight basement play risk.",
-                "severity": "MEDIUM"
-            })
+            challenges.append(
+                {
+                    "claim_id": candidate["claim_id"],
+                    "challenge": "Validating if 2 bboe remaining potential accounts for deep HPHT or tight basement play risk.",
+                    "severity": "MEDIUM",
+                }
+            )
         if "AVO" in candidate["claim"] or "syn-rift" in candidate["claim"].lower():
-            challenges.append({
-                "claim_id": candidate["claim_id"],
-                "challenge": "Archie loss and depth compaction constraints are active at depths >3000m.",
-                "severity": "HIGH"
-            })
+            challenges.append(
+                {
+                    "claim_id": candidate["claim_id"],
+                    "challenge": "Archie loss and depth compaction constraints are active at depths >3000m.",
+                    "severity": "HIGH",
+                }
+            )
 
     result = {
         "artifact_type": "literature_review",
@@ -634,20 +641,20 @@ async def geox_literature_ingest(
             "play-type taxonomy",
             "creaming curve",
             "remaining-potential framing",
-            "source/reservoir/trap hypotheses"
+            "source/reservoir/trap hypotheses",
         ],
         "not_usable_for": [
             "QC well-log computation",
             "field-specific reserves booking",
             "seismic-derived structure candidates",
             "drill decision",
-            "sealed prospect POS"
+            "sealed prospect POS",
         ],
         "citation_chunks": citation_chunks,
         "claim_candidates": claim_candidates,
         "challenges_found": challenges,
         "vault999_seal": "NOT DONE",
-        "qc_verified_evidence": "NOT YET"
+        "qc_verified_evidence": "NOT YET",
     }
 
     return get_standard_envelope(
@@ -662,4 +669,3 @@ async def geox_literature_ingest(
         actor_id=actor_id,
         tool_name="geox_literature_ingest",
     )
-
