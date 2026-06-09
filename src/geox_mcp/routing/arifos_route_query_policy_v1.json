@@ -1,0 +1,80 @@
+{
+  "route_version": "v1.0.0",
+  "domain_defaults": {
+    "geology": "medium",
+    "finance": "medium",
+    "hse": "high",
+    "general": "low"
+  },
+  "explore_terms": [
+    "what am i missing",
+    "alternatives",
+    "limitations",
+    "contradict",
+    "what could be wrong"
+  ],
+  "exploit_terms": [
+    "find file",
+    "open latest",
+    "latest version",
+    "where is",
+    "show me"
+  ],
+  "hybrid_terms": [
+    "decision",
+    "scenario",
+    "risk review",
+    "assess",
+    "should we"
+  ],
+  "budgets": {
+    "exploit": {
+      "exploit_ratio": 1.0,
+      "explore_ratio": 0.0,
+      "min_explore_docs": 0,
+      "min_contradicting_docs": 0
+    },
+    "explore": {
+      "exploit_ratio": 0.3,
+      "explore_ratio": 0.7,
+      "min_explore_docs": 5,
+      "min_contradicting_docs": 2
+    },
+    "hybrid": {
+      "exploit_ratio": 0.6,
+      "explore_ratio": 0.4,
+      "min_explore_docs": 3,
+      "min_contradicting_docs": 1
+    }
+  },
+  "tool_lanes": {
+    "exploit": [
+      "enterprise_graph_search"
+    ],
+    "explore": [
+      "geox_contrast_search",
+      "geox_disconfirm_evidence_scan",
+      "enterprise_graph_search"
+    ],
+    "hybrid": [
+      "enterprise_graph_search",
+      "geox_contrast_search",
+      "geox_disconfirm_evidence_scan"
+    ]
+  },
+  "entitlement_defaults": {
+    "enterprise_graph_search": [
+      "all"
+    ],
+    "geox_contrast_search": [
+      "geox-core",
+      "subsurface",
+      "all"
+    ],
+    "geox_disconfirm_evidence_scan": [
+      "geox-core",
+      "subsurface",
+      "all"
+    ]
+  }
+}
