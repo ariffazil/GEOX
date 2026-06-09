@@ -45,6 +45,13 @@ from starlette.routing import Mount, Route
 
 # Import canonical registry for source-of-truth
 from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
+from geox_mcp.routing import (
+    GEOX_ENABLE_ARIFOS_ROUTE_QUERY,
+    GEOX_ROUTE_QUERY_GUARD_ENABLED,
+    RouteQueryGuardMiddleware,
+    arifos_route_query,
+    record_route_decision,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("geox.unified")
@@ -351,6 +358,31 @@ def _build_list_changed_payload() -> dict:
         "method": "notifications/list_changed",
         "params": {},
     }
+
+
+def _emit_list_changed_notification() -> None:
+    """
+    Emit MCP listChanged notification.
+    Called after any tool registry mutation (tool add/remove/prune).
+    HTTP transport: logs the notification payload as MCP requires clients to
+    re-call tools/list on next request. SSE/WebSocket transports can override
+    this to push directly to connected clients.
+    """
+    payload = _build_list_changed_payload()
+    logger.info(
+        "listChanged emitted — clients should call tools/list to refresh. "  # noqa: G004
+        f"Payload: {json.dumps(payload)}"
+    )
+
+
+_prune_mcp_surface(mcp)
+
+if GEOX_ENABLE_ARIFOS_ROUTE_QUERY:
+    mcp.tool(name="arifos_route_query")(arifos_route_query)
+    logger.info("Experimental route query tool enabled: arifos_route_query")
+
+# Emit listChanged after initial tool registration so clients refresh their cache.
+_emit_list_changed_notification()
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -721,6 +753,20 @@ async def legacy_mcp_handler(request):
     if method == "tools/call":
         name = params.get("name")
         args = params.get("arguments", {})
+        if GEOX_ENABLE_ARIFOS_ROUTE_QUERY and name == "arifos_route_query":
+            result = await run_legacy_tool(name, args)
+            route_mode = result.get("structuredContent", {}).get("mode")
+            if route_mode and args.get("request_id"):
+                record_route_decision(str(args["request_id"]), str(route_mode))
+            return JSONResponse(
+                {
+                    "jsonrpc": "2.0",
+                    "id": response_id,
+                    "result": {"content": [{"type": "text", "text": json.dumps(result)}]},
+                }
+            )
+        # RT-1: block undeclared tools before FastMCP sees them. Use canonical for check.
+        # Patch E - Resolve dashboard.open: Alias is handled here by LEGACY_ALIAS_MAP
         resolved_name = LEGACY_ALIAS_MAP.get(name, name)
         if resolved_name not in CANONICAL_PUBLIC_TOOLS and resolved_name != name:
             return JSONResponse(
@@ -925,6 +971,8 @@ def create_app():
     app.add_middleware(EarthAnchorMiddleware)
     app.add_middleware(GlobalPanicMiddleware)
     app.add_middleware(OriginValidationMiddleware)
+    if GEOX_ROUTE_QUERY_GUARD_ENABLED:
+        app.add_middleware(RouteQueryGuardMiddleware)
     return app
 
 

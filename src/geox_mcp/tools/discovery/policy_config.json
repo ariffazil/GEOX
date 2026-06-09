@@ -1,0 +1,97 @@
+{
+  "route_version": "v1.0.0",
+  "intent_patterns": {
+    "retrieve_known": [
+      "find file", "find the file", "open latest", "show me the file",
+      "where is the", "get the file", "locate the", "open the document"
+    ],
+    "explore": [
+      "what am i missing", "what else", "alternatives",
+      "what could be wrong", "what could i be wrong about",
+      "don't know", "haven't seen", "outside my", "adjacent",
+      "frontier", "unexplored", "analogues", "other basins",
+      "what don't i know", "blind spot", "what have i missed"
+    ],
+    "disconfirmation": [
+      "contradict", "disprove", "argue against", "challenges",
+      "what breaks", "failure modes", "limitations", "downside",
+      "against this", "what's wrong with", "risks with",
+      "evidence against", "counter-evidence"
+    ],
+    "decision_support": [
+      "should we", "recommend", "drill", "commit", "go ahead",
+      "approve", "sanction", "propose", "decision", "advise",
+      "nod", "proceed with"
+    ]
+  },
+  "risk_patterns": {
+    "critical": [
+      "drill", "well", "sanction", "capital", "capex",
+      "commitment", "sidetrack", "perforate", "workover"
+    ],
+    "high": [
+      "hse", "safety", "regulatory", "compliance", "permit",
+      "environmental", "incident", "hazard", "spill", "blowout"
+    ],
+    "medium": [
+      "recommend", "approve", "decision", "committee",
+      "present", "endorse", "proposal"
+    ]
+  },
+  "modes": {
+    "exploit": {
+      "explore_ratio": 0.0,
+      "explore_required": false,
+      "disconfirmation_required": false,
+      "min_explore_docs": 0,
+      "min_contradicting_docs": 0,
+      "confidence_ceiling": 1.0
+    },
+    "explore": {
+      "explore_ratio": 0.7,
+      "explore_required": true,
+      "disconfirmation_required": true,
+      "min_explore_docs": 3,
+      "min_contradicting_docs": 1,
+      "confidence_ceiling": 0.85
+    },
+    "hybrid": {
+      "explore_ratio": 0.3,
+      "explore_required": true,
+      "disconfirmation_required": true,
+      "min_explore_docs": 2,
+      "min_contradicting_docs": 1,
+      "confidence_ceiling": 0.80
+    },
+    "disconfirmation": {
+      "explore_ratio": 1.0,
+      "explore_required": true,
+      "disconfirmation_required": true,
+      "min_explore_docs": 3,
+      "min_contradicting_docs": 2,
+      "confidence_ceiling": 0.75
+    }
+  },
+  "risk_overrides": {
+    "medium": {
+      "confidence_ceiling": 0.90
+    },
+    "high": {
+      "confidence_ceiling": 0.70,
+      "disconfirmation_required": true,
+      "conservative_language_required": true
+    },
+    "critical": {
+      "confidence_ceiling": 0.50,
+      "disconfirmation_required": true,
+      "conservative_language_required": true,
+      "hold_if_low_confidence": true
+    }
+  },
+  "allowed_tools_by_mode": {
+    "exploit":         ["enterprise_graph_search"],
+    "explore":         ["geox_contrast_search", "geox_disconfirm_evidence_scan", "enterprise_graph_search"],
+    "hybrid":          ["enterprise_graph_search", "geox_contrast_search", "geox_disconfirm_evidence_scan"],
+    "disconfirmation": ["geox_disconfirm_evidence_scan", "enterprise_graph_search"]
+  }
+}

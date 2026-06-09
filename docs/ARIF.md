@@ -23,6 +23,7 @@
 - 999 SEAL Ritual: Unified MCP Kernel ignited at `server.py`
 - Engine Upgrade: LoopStructural 1.6.27 embedded in `geox_earth3d_model_geometries`
 - Ghost Purge: Legacy server entrypoints moved to `archive/deprecated/`
+- Discovery Governance: feature-gated `arifos_route_query` skeleton added under `src/geox_mcp/routing/`
 
 ## 2. OPERATIONAL MANDATE
 
@@ -32,14 +33,13 @@
 
 ## 3. THE 999 SEAL (SESSION LOG)
 
-- TIMESTAMP: 2026-05-01
-- CLERK_ID: Gemini-Clerk-L3
+- TIMESTAMP: 2026-06-09
+- CLERK_ID: GPT-5.4-Clerk
 - SEAL_SUMMARY:
-  - Collapse: 49 fragmented tools contracted to 13 Sovereign Prisms (unified_13.py)
-  - Security: Blocked arbitrary file exfiltration and SSRF in `geox_file_upload_import`
-  - Governance: Hardened `geox_data_qc_bundle` to fail-closed on range/monotonicity issues
-  - Stability: Implemented depth-aware zone filtering and empty-array guards in candidate tools
-  - Logic: Unified `qc_overall` schema to reflect `FAIL` when physically impossible data is detected
+  - Routing: Added deterministic `arifos_route_query` policy skeleton with external JSON policy, typed I/O models, and audit records
+  - Guard: Added feature-gated route-decision store + middleware scaffold to block protected retrieval when routing has not run
+  - Server: Wired experimental route tool and guard into `src/geox_mcp/server.py` behind env flags to preserve the 20-tool canon by default
+  - Validation: Added focused unit coverage for explore/exploit fallback behavior and route guard scaffolding
 
 ## 4. ACTIVE TOPOLOGY (MEMORY MAP)
 
@@ -59,6 +59,7 @@
 - HARD_BLOCK: ~~VPS port 8081~~ (RESOLVED: migrated to 18081) was reachable behind CF/Proxy but inducing intermittent 421 (HTTP/2 coalescing).
 - INFRA_LAW: WELL container is intentionally REMOVED per Sovereign Rebuild Decision.
 - GHOST_TOOL: Phantom 'mcp_health_check' on arifOS is a client/proxy cache issue (NOT on server).
+- SOFT_FRICTION: Local server bootstrap still depends on FastMCP `tasks` extra in this environment; route skeleton validated via focused unit tests instead.
 
 ## 6. RECENT SCARS (W_scar)
 
@@ -79,6 +80,8 @@
 
 - [Q]: Should GEOX auto-deploy to alternative VPS if Hostinger is not restored within 48h?
 - [CONTEXT]: MCP endpoint is critical for production use. Current VPS is unmanaged. No clear SLA. Ω₀ = 0.7
+- [Q]: Should `arifos_route_query` graduate from feature-gated experimental tool to sovereign public surface?
+- [CONTEXT]: Deterministic routing skeleton is implemented, but exposing it changes retrieval governance and public tool behavior. Ω₀ = 0.6
 
 ## 9. PIPELINE PREFETCH (NEXT MOVES)
 
@@ -86,6 +89,8 @@
 - [ ] Fix wiki/50_TOOLS reference (it's a directory — update index)
 - [ ] Run full test suite after VPS restore
 - [ ] Merge pending arifOS cleanup branches (cleanup/unix-style-2026-04-23, architecture-normalization-final-clean)
+- [ ] Decide production entitlement map + protected retrieval tool list for `arifos_route_query`
+- [ ] Add infra/security review for audit salt, policy file governance, and route guard enablement flags
 
 
 ---
