@@ -61,6 +61,7 @@ from geox_mcp.tools.qc import geox_data_qc_bundle
 from geox_mcp.tools.registry import geox_system_registry_status
 from geox_mcp.tools.seismic_compute import geox_seismic_compute
 from geox_mcp.tools.sequence import geox_sequence_interpret
+from geox_mcp.tools.discovery import arifos_route_query
 
 logger = logging.getLogger("geox.unified13")
 
@@ -102,6 +103,8 @@ _TOOL_REGISTRY: list[tuple[str, Any]] = [
     ("geox_claim_challenge", geox_claim_challenge),
     ("geox_evidence_attach", geox_evidence_attach),
     ("geox_claim_seal", geox_claim_seal),
+    # Discovery governance router (L0 mandatory pre-router)
+    ("arifos_route_query", arifos_route_query),
 ]
 
 _TOOL_ANNOTATIONS: dict[str, dict] = {
@@ -263,6 +266,14 @@ _TOOL_ANNOTATIONS: dict[str, dict] = {
         "idempotentHint": False,
         "openWorldHint": False,
     },
+    # Discovery governance router
+    "arifos_route_query": {
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    # H5: Claim Engine
     "geox_claim_create": {
         "readOnlyHint": False,
         "destructiveHint": False,
