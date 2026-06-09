@@ -790,11 +790,15 @@ async def _phase_full(
 async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[str, Any]:
     import yaml
     from geox_mcp.tools.basin import _normalize_name
+
     normalized = _normalize_name(basin_name)
     if normalized in ("basin_melayu", "malay_basin"):
         normalized = "malay_basin"
-    
-    basin_dir = Path("/root/geox/resources/basins") / normalized
+
+    # Fix: prior hardcode `/root/geox/...` broke CI. Use repo-root resolution.
+    _repo_root = Path(__file__).resolve().parents[3]
+    _resources_dir = Path(os.environ.get("GEOX_RESOURCES_DIR", str(_repo_root / "resources")))
+    basin_dir = _resources_dir / "basins" / normalized
     if not basin_dir.exists():
         return get_standard_envelope(
             {"tool": TOOL_NAME, "error": f"Basin data not found for: {basin_name}"},
@@ -829,12 +833,14 @@ async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[s
             if c_type in ("observed", "derived", "interpreted"):
                 interpreted[c_text] = {"source": c.get("source"), "refs": c_refs, "confidence": c.get("confidence")}
             else:
-                process_hypotheses.append({
-                    "process": c_text,
-                    "mechanism": c.get("source"),
-                    "confidence": c.get("confidence").lower(),
-                    "evidence_for": c_refs,
-                })
+                process_hypotheses.append(
+                    {
+                        "process": c_text,
+                        "mechanism": c.get("source"),
+                        "confidence": c.get("confidence").lower(),
+                        "evidence_for": c_refs,
+                    }
+                )
 
         profile_file = basin_dir / "basin_profile.yaml"
         profile_data = {}
@@ -850,7 +856,7 @@ async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[s
             "execution_status": "SUCCESS",
             "claim_state": "INTERPRETED",
             "observed": {},  # empty because no site-specific wells/seismic
-            "derived": {},   # empty
+            "derived": {},  # empty
             "local_interpretation": {**interpreted, "basin_overview": profile_data},
             "process_hypotheses": process_hypotheses,
             "decision_support": {
@@ -860,16 +866,16 @@ async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[s
             "claim_limits": [
                 "Baseline regional synthesis. Extrapolated from literature.",
                 "No lateral control verified.",
-                "Do not use for site-specific prospect drilling decisions."
+                "Do not use for site-specific prospect drilling decisions.",
             ],
             "forbidden_claims": list(set(forbidden_claims)),
             "next_best_actions": [
                 {
                     "tool": "geox_data_ingest_bundle",
                     "reason": "Ingest site-specific LAS well logs or SEG-Y seismic to run quantitative abduction",
-                    "priority": "high"
+                    "priority": "high",
                 }
-            ]
+            ],
         }
 
         return get_standard_envelope(
