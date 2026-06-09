@@ -489,37 +489,80 @@ class MiniMaxVLMAdapter:
 
 
 class _MCPToolVisionBackend:
-    """Wraps the in-process `minimax-code_understand_image` MCP tool.
+    """Wraps the deployed `minimax-code_understand_image` MCP tool via
+    the `vision-direct` skill (subprocess call).
 
-    The MCP tool is exposed in the system tool surface when this module
-    is loaded inside an MCP-aware host (Claude Code, OpenCode, etc.).
-    In a plain Python test/CI context, the call will fail with
-    AttributeError → caught by `MiniMaxVLMAdapter.interpret()` and
-    returned as VisionResult(success=False, error_type="BackendError").
+    The MCP server is deployed on port 18091 (per /opt/minimax-mcp-code/run_sse.py)
+    and exposes `understand_image(prompt, image_source)` over SSE. Instead of
+    calling the SSE interface directly from inside the geox FastMCP process
+    (which would require an MCP client in the same process — currently absent),
+    we delegate to the `vision-direct` skill (subprocess) which hits the
+    same upstream `/v1/coding_plan/vlm` endpoint with the same key.
+
+    Why subprocess over in-process import:
+    1. vision-direct is a separate skill; importing it couples geox to its
+       dependency tree (urllib, base64, hashlib — fine, but the principle
+       is: skills don't import each other, they call each other).
+    2. Subprocess isolation means a vision-direct crash can't take down
+       the geox FastMCP server.
+    3. The vision-direct skill is F13-gated and F11-audited at the call
+       boundary — subprocess preserves that audit trail cleanly.
+
+    Failure modes:
+    - vision-direct missing → BackendError (clearly different from
+      "in-process MCP runtime" — gives an actionable fix)
+    - vision-direct exit non-zero → BackendError with the exit code
+    - Empty content → AntiHantuError (per F9 ANTI-HANTU discipline)
     """
 
     backend_id = "minimax-M3-vision"
 
     def call(self, image_path: str, prompt: str, **kwargs: Any) -> str:
-        # In-process call to the MCP tool. The tool name is
-        # `minimax-code_understand_image` (per system tool surface).
-        # Importing lazily so the module is importable in test envs
-        # without the MCP runtime.
-        try:
-            from mcp import tools as mcp_tools
+        import subprocess
 
-            # The actual invocation goes through the MCP client.
-            # In OpenCode/Claude Code, the tool is registered globally.
+        skill_script = "/root/.hermes/skills/multimodal/vision-direct/scripts/understand.py"
+        if not os.path.exists(skill_script):
             raise NotImplementedError(
-                "In-process MCP tool invocation requires MCP runtime context. "
-                "Use a host that exposes `minimax-code_understand_image` directly, "
-                "or inject a VisionBackend mock for testing."
+                f"vision-direct skill not found at {skill_script}. "
+                f"Run `skill_manage --list vision-direct` or restore from /root/.hermes/skills/."
             )
-        except ImportError:
+        try:
+            result = subprocess.run(
+                ["python3", skill_script, "--image", image_path,
+                 "--prompt", prompt, "--json"],
+                capture_output=True, text=True, timeout=90,
+            )
+        except subprocess.TimeoutExpired as e:
             raise NotImplementedError(
-                "MCP runtime not available in this Python process. "
-                "Inject a VisionBackend mock via MiniMaxVLMAdapter(backend=...)."
+                f"vision-direct call timed out after 90s for {image_path}"
+            ) from e
+        except FileNotFoundError as e:
+            raise NotImplementedError(
+                f"vision-direct python interpreter not found: {e}"
+            ) from e
+
+        if result.returncode != 0:
+            # vision-direct emits a JSON error to stderr on failure
+            err_body = result.stderr.strip() or result.stdout.strip()
+            raise NotImplementedError(
+                f"vision-direct failed (exit {result.returncode}): {err_body[:300]}"
             )
+
+        # Parse the JSON envelope and return just the content
+        try:
+            envelope = json.loads(result.stdout)
+        except json.JSONDecodeError as e:
+            raise NotImplementedError(
+                f"vision-direct returned non-JSON on success: {e}. Body: {result.stdout[:300]}"
+            ) from e
+
+        content = (envelope.get("content") or "").strip()
+        if not content:
+            raise NotImplementedError(
+                f"vision-direct returned empty content for {image_path}. "
+                f"Envelope: {envelope}"
+            )
+        return content
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
