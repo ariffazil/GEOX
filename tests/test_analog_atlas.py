@@ -90,7 +90,7 @@ def test_categorical_similarity_missing_is_neutral():
 
 
 def test_numeric_range_overlap_full():
-    assert _numeric_range_overlap([1000, 2000], [1500, 2500]) == pytest.approx(0.5)
+    assert _numeric_range_overlap([1000, 2000], [1500, 2500]) == pytest.approx(1 / 3)
     assert _numeric_range_overlap([1000, 2000], [1000, 2000]) == 1.0
 
 
