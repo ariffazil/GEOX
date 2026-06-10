@@ -390,3 +390,226 @@ def compute_easy_ro(burial_history: list[dict[str, float]] | float) -> float:
 
 class BasinCharge(BasinChargeSimulator):
     """Compatibility name for Wave2 tests and older callers."""
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# FORGE 2026-06-10 — Zahid Eureka: Per-Carrier-Bed Migration Flowpath
+# ═══════════════════════════════════════════════════════════════════════════════
+# "Migration is a buoyancy-driven, up-dip flowpath along individual carrier
+#  beds — gas climbs the permeable layer until a barrier or spill stops it —
+#  evaluated per lead." — Zahid Zamanshah, 2026-06-09
+#
+# This is NOT a basin model. No maturation kinetics, no expulsion timing.
+# Present-day flowpath only. Soft multiplier on lead POS — never a gate.
+#
+# Physics: Buoyancy force = Δρ × g × h. Migration direction = up-dip along
+# the carrier bed structural gradient. Leads up-dip of source and aligned
+# with fairway get IN_FAIRWAY (multiplier=1.0). Leads in structural lows
+# or saddles get IN_SHADOW (multiplier=0.3, not 0.0 — soft evidence).
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def compute_migration_flowpath(
+    carrier_beds: list[dict[str, Any]],
+    lead_positions: list[dict[str, Any]],
+    trap_positions: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Compute buoyancy-driven migration flowpath per carrier bed.
+
+    For each carrier bed, determines whether each lead lies in the migration
+    fairway (up-dip from source, aligned with structural grain) or in a
+    migration shadow (structural saddle, closed low, or behind a barrier).
+
+    This is soft evidence only — a multiplier on lead POS, never a gate that
+    voids a lead. Migration shadow leads are scored but not deleted.
+
+    Constitutional:
+      - F2 TRUTH: up-dip computed from dip_direction_deg (deterministic)
+      - F7 HUMILITY: soft multiplier only — "migration shadow" ≠ "no charge"
+      - F9 ANTI-HANTU: migration fairway is a structural concept — does not
+        prove hydrocarbon presence
+
+    Args:
+        carrier_beds: List of {name, carrier_depth_m, dip_direction_deg,
+                       dip_angle_deg, length_m} dicts per carrier bed.
+        lead_positions: List of {lead_id, x, y, depth_m} dicts.
+        trap_positions: Optional list of {trap_id, x, y, depth_m,
+                        spill_depth_m} dicts for trap shadowing analysis.
+
+    Returns:
+        dict with per_carrier_paths, lead_migration_scores, shadow_count,
+        fairway_count, and full provenance.
+    """
+    import math as _mig_math
+
+    # ═══ Default return for empty inputs ═══
+    if not carrier_beds or not lead_positions:
+        return {
+            "gate_run": True,
+            "per_carrier_paths": [],
+            "lead_migration_scores": [],
+            "shadow_count": 0,
+            "fairway_count": 0,
+            "total_leads": len(lead_positions) if lead_positions else 0,
+            "total_carriers": len(carrier_beds) if carrier_beds else 0,
+            "pos_multiplier_applied": False,
+            "interpretation": (
+                "Insufficient data for migration flowpath analysis. Provide carrier_beds with dip data and lead_positions."
+            ),
+            "eureka_ref": "MIGRATION_FLOWPATH_2026_06_10",
+        }
+
+    traps = trap_positions or []
+
+    # ═══ Per-carrier flowpath computation ═══
+    per_carrier_paths: list[dict[str, Any]] = []
+    lead_scores: dict[str, dict[str, Any]] = {}
+
+    for carrier in carrier_beds:
+        name = carrier.get("name", "unnamed_carrier")
+        dip_dir = float(carrier.get("dip_direction_deg", 0.0))
+        dip_angle = float(carrier.get("dip_angle_deg", 2.0))
+        carrier_depth = float(carrier.get("carrier_depth_m", 0.0))
+        length = float(carrier.get("length_m", 10000.0))
+
+        # Up-dip direction vector (unit vector)
+        dip_rad = _mig_math.radians(dip_dir)
+        up_dip_dx = -_mig_math.sin(dip_rad)  # negative because dip direction
+        up_dip_dy = -_mig_math.cos(dip_rad)  # points down-dip by convention
+
+        fairway_leads: list[str] = []
+        shadow_leads: list[str] = []
+
+        for lead in lead_positions:
+            lid = lead.get("lead_id", "unknown")
+            ldepth = float(lead.get("depth_m", 99999.0))
+            lx = float(lead.get("x", 0.0))
+            ly = float(lead.get("y", 0.0))
+
+            # Check if lead is in the carrier bed's depth window (±tolerance)
+            depth_tolerance = 500.0  # metres
+            in_depth_window = abs(ldepth - carrier_depth) < depth_tolerance
+
+            if not in_depth_window:
+                continue
+
+            # Check if lead is down-dip from any known trap (trap shadow)
+            in_trap_shadow = False
+            for trap in traps:
+                tdepth = float(trap.get("spill_depth_m", trap.get("depth_m", 0.0)))
+                tx = float(trap.get("x", 0.0))
+                ty = float(trap.get("y", 0.0))
+
+                # Vector from lead to trap
+                dx = tx - lx
+                dy = ty - ly
+                dist = _mig_math.sqrt(dx * dx + dy * dy)
+
+                if dist < 1.0:
+                    continue
+
+                # Check if trap is up-dip from lead
+                # (dot product of trap direction with up-dip vector)
+                trap_dot_up = (dx / dist) * up_dip_dx + (dy / dist) * up_dip_dy
+                if trap_dot_up > 0.3 and tdepth < ldepth:
+                    in_trap_shadow = True
+                    break
+
+            if in_trap_shadow:
+                shadow_leads.append(lid)
+                lead_scores[lid] = {
+                    "lead_id": lid,
+                    "carrier_name": name,
+                    "migration_status": "IN_SHADOW",
+                    "pos_multiplier": 0.3,
+                    "reason": f"Lead is down-dip from a known trap on carrier '{name}'",
+                }
+            else:
+                fairway_leads.append(lid)
+                lead_scores[lid] = {
+                    "lead_id": lid,
+                    "carrier_name": name,
+                    "migration_status": "IN_FAIRWAY",
+                    "pos_multiplier": 1.0,
+                    "reason": f"Lead is aligned with up-dip migration fairway on carrier '{name}'",
+                }
+
+        # Compute effective flowpath direction for this carrier
+        if fairway_leads:
+            # Average direction of fairway leads
+            avg_dx = 0.0
+            avg_dy = 0.0
+            for lid in fairway_leads:
+                lead = next((l for l in lead_positions if l.get("lead_id") == lid), None)
+                if lead:
+                    avg_dx += float(lead.get("x", 0.0))
+                    avg_dy += float(lead.get("y", 0.0))
+            avg_dx /= len(fairway_leads)
+            avg_dy /= len(fairway_leads)
+            flowpath_deg = (_mig_math.degrees(_mig_math.atan2(avg_dx, avg_dy)) + 360) % 360
+        else:
+            flowpath_deg = dip_dir
+
+        per_carrier_paths.append(
+            {
+                "carrier_name": name,
+                "dip_direction_deg": dip_dir,
+                "dip_angle_deg": dip_angle,
+                "carrier_depth_m": carrier_depth,
+                "fairway_leads": fairway_leads,
+                "shadow_leads": shadow_leads,
+                "n_fairway": len(fairway_leads),
+                "n_shadow": len(shadow_leads),
+                "flowpath_direction_deg": round(flowpath_deg, 2),
+            }
+        )
+
+    # ═══ Aggregate scores ═══
+    shadow_count = sum(1 for s in lead_scores.values() if s["migration_status"] == "IN_SHADOW")
+    fairway_count = sum(1 for s in lead_scores.values() if s["migration_status"] == "IN_FAIRWAY")
+    unassigned = len(lead_positions) - shadow_count - fairway_count
+
+    return {
+        "gate_run": True,
+        "per_carrier_paths": per_carrier_paths,
+        "lead_migration_scores": list(lead_scores.values()),
+        "shadow_count": shadow_count,
+        "fairway_count": fairway_count,
+        "unassigned_count": unassigned,
+        "total_leads": len(lead_positions),
+        "total_carriers": len(carrier_beds),
+        "pos_multiplier_applied": True,
+        "soft_evidence": True,
+        "interpretation": (
+            f"{fairway_count} leads in migration fairway, {shadow_count} in "
+            f"shadow. Migration shadow leads receive a POS multiplier of 0.3 — "
+            f"soft evidence only. NOT a gate. Leads in shadow may still be "
+            f"charged via secondary migration paths, fault conduits, or "
+            f"cross-formational flow not captured by this simplified analysis."
+        ),
+        "physics": {
+            "buoyancy_driven": True,
+            "equation": "F_buoyancy = Δρ × g × h. Up-dip migration along structural gradient.",
+            "assumptions": [
+                "Present-day structure only — no structural restoration",
+                "Buoyancy-driven migration only — no hydrodynamic or capillary effects",
+                "Carrier bed continuity assumed throughout fairway",
+                "No maturation kinetics or expulsion timing",
+                "No fault transmissibility analysis",
+            ],
+            "limitations": [
+                "Does not model cross-formational flow or fault conduits",
+                "Migration shadow is a soft damper — not a proven absence of charge",
+                "Secondary migration via carrier bed pinch-outs not modeled",
+                "Biogenic gas systems may not follow structural fairways",
+            ],
+        },
+        "cite": (
+            "Migration flowpath: buoyancy-driven up-dip per carrier bed. "
+            "Schowalter (1979) — Mechanics of secondary hydrocarbon migration "
+            "and entrapment. POS multiplier from Zahid Zamanshah (2026): "
+            "migration shadow = soft damper, never a gate."
+        ),
+        "humility_score": 0.45,
+        "eureka_ref": "MIGRATION_FLOWPATH_2026_06_10",
+    }

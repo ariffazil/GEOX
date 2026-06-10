@@ -320,6 +320,29 @@ async def geox_seismic_well_tie_compute(
         "equations": derived["equations"],
     }
 
+    # ── FORGE 2026-06-10 — Zahid Eureka: Forward-Consistency Gate ─────────
+    # "Re-forward-model the inversion result and correlate against the seismic
+    #  input. Correlation ≈ 1.0 proves data-consistency — but not correctness."
+    #  — Zahid Zamanshah, 2026-06-09 (Lancaster-Whitcombe, 2000)
+    #
+    # Gate is run when real seismic trace data is available at the well
+    # location via volume_ref. Currently, full SEG-Y trace extraction at an
+    # arbitrary (x,y) is gated on the SEG-Y engine activation. Until then, the
+    # gate structure is present but gate_run=false — the envelope tells the
+    # agent exactly what data would unlock it.
+    forward_consistency = _build_forward_consistency_block(
+        synthetic_trace=synthetic,
+        volume_ref=volume_ref,
+        well_id=well_id,
+        gate_available=False,  # True when SEG-Y trace extraction is live
+    )
+    envelope["forward_consistency"] = forward_consistency
+
+    # If gate actually ran and failed, override claim state
+    if forward_consistency.get("gate_run") and not forward_consistency.get("data_consistent"):
+        envelope["claim_state"] = "CONSISTENCY_CHECK_FAILED"
+        envelope["execution_status"] = "HOLD"
+
     return enrich_envelope_with_metabolic(envelope, "geox_seismic_well_tie_compute")
 
 
@@ -700,3 +723,131 @@ def _calculate_spectral_decay(f_initial: float, twt_s: float, q_factor: float) -
         return f_initial
     f_decayed = f_initial / (1.0 + (f_initial * twt_s) / q_factor)
     return max(f_decayed, 1.0)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# FORGE 2026-06-10 — Zahid Eureka: Forward-Consistency Block Builder
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _build_forward_consistency_block(
+    synthetic_trace: np.ndarray,
+    volume_ref: str,
+    well_id: str,
+    gate_available: bool = False,
+) -> dict[str, Any]:
+    """Build the forward_consistency envelope block for well-tie results.
+
+    When gate_available=True and real seismic trace data can be extracted at
+    the well location from volume_ref, runs the actual Pearson r gate via
+    _forward_consistency_gate. Otherwise, returns a structured placeholder
+    that tells the agent exactly what data would unlock the gate.
+
+    Constitutional:
+      - F2 TRUTH: gate_run is always honest
+      - F7 HUMILITY: humility_score = 1.0 when gate cannot run
+      - F9 ANTI-HANTU: never says "correct" — only "data-consistent"
+    """
+    if not gate_available:
+        return {
+            "gate_run": False,
+            "correlation_r": None,
+            "data_consistent": None,
+            "threshold": 0.85,
+            "interpretation": (
+                "Forward-consistency gate NOT RUN. Seismic trace data at well "
+                f"location not available for volume '{volume_ref}' and well "
+                f"'{well_id}'. To unlock: activate SEG-Y trace extraction "
+                "pipeline (geox_seismic_compute attribute mode) or provide "
+                "a seismic_trace array at the well location."
+            ),
+            "unlock_requires": [
+                "SEG-Y volume ingested with geox_data_ingest_bundle",
+                "Well trajectory (deviation survey) for (x,y) at each depth",
+                "Trace extraction at well (x,y) from seismic volume",
+                "Time-depth table from geox_time_depth_anchor",
+            ],
+            "note": (
+                "Without this gate, the well-tie synthetic is unvalidated. "
+                "Cross-correlation r_tie in the derived block only compares "
+                "the synthetic against a copy of itself — not against real "
+                "seismic. Zahid (2026): 'data-consistent ≠ correct. Correlation "
+                "near 1.0 only proves the inversion reproduces the input "
+                "seismic. Without a well-tied LFM the low frequencies are a "
+                "1/f integration ramp — not calibrated geology.'"
+            ),
+            "cite": "Lancaster-Whitcombe (2000) coloured inversion: data-consistent ≠ correct",
+            "humility_score": 1.0,
+            "eureka_ref": "FORWARD_CONSISTENCY_GATE_2026_06_10",
+        }
+
+    # Gate available — try to extract real trace and run
+    try:
+        from geox_mcp.tools.forward_model_synthetic import _forward_consistency_gate
+
+        # Attempt to load seismic trace at well location
+        seismic_trace = _try_extract_seismic_at_well(volume_ref, well_id)
+
+        if seismic_trace is None:
+            return {
+                "gate_run": False,
+                "correlation_r": None,
+                "data_consistent": None,
+                "threshold": 0.85,
+                "interpretation": (
+                    f"Seismic trace extraction attempted but returned no data for volume '{volume_ref}', well '{well_id}'."
+                ),
+                "humility_score": 1.0,
+                "eureka_ref": "FORWARD_CONSISTENCY_GATE_2026_06_10",
+            }
+
+        gate = _forward_consistency_gate(synthetic_trace, seismic_trace)
+        gate["volume_ref"] = volume_ref
+        gate["well_id"] = well_id
+        return gate
+
+    except Exception as exc:
+        return {
+            "gate_run": False,
+            "correlation_r": None,
+            "data_consistent": None,
+            "threshold": 0.85,
+            "interpretation": f"Gate computation failed: {exc}",
+            "humility_score": 1.0,
+            "eureka_ref": "FORWARD_CONSISTENCY_GATE_2026_06_10",
+        }
+
+
+def _try_extract_seismic_at_well(volume_ref: str, well_id: str) -> np.ndarray | None:
+    """Try to extract a seismic trace at a well location from the artifact store.
+
+    Returns None if extraction is not possible (SEG-Y engine not active,
+    no trajectory, etc.). This is a best-effort probe — never raises.
+    """
+    try:
+        from geox_mcp.tools._helpers import _get_artifact
+
+        vol = _get_artifact(volume_ref)
+        if not vol:
+            return None
+
+        # Check for pre-extracted trace at well location
+        well_traces = vol.get("well_traces", {})
+        if isinstance(well_traces, dict) and well_id in well_traces:
+            trace_data = well_traces[well_id]
+            if isinstance(trace_data, (list, np.ndarray)):
+                return np.asarray(trace_data, dtype=float)
+
+        # Check for inline/xline extraction capability
+        if "traces" in vol and "well_locations" in vol:
+            locs = vol["well_locations"]
+            if isinstance(locs, dict) and well_id in locs:
+                loc = locs[well_id]
+                traces = np.asarray(vol["traces"], dtype=float)
+                idx = int(loc.get("trace_index", -1))
+                if 0 <= idx < len(traces):
+                    return traces[idx]
+
+        return None
+    except Exception:
+        return None

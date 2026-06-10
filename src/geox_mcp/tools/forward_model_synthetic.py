@@ -305,3 +305,130 @@ async def geox_forward_model_synthetic(
         witness_type="seismic",
         witness_status="COMPUTED",
     )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# FORGE 2026-06-10 — Zahid Eureka: Forward-Consistency Gate
+# ═══════════════════════════════════════════════════════════════════════════════
+# "Re-forward-model the inversion result and correlate against the seismic input.
+#  Correlation ≈ 1.0 proves data-consistency. Without this check, the inversion
+#  result has no self-validation." — Zahid Zamanshah, 2026-06-09
+#
+# Physics: Pearson r between synthetic trace and input seismic trace.
+# Gate: r > 0.85 = data-consistent. Never says "correct" — only "data-consistent."
+#
+# Lancaster-Whitcombe (2000): coloured inversion preserves relative impedance but
+# cannot recover absolute low frequencies. Gate passes if the inversion reproduces
+# the band-limited seismic — it does NOT prove the absolute impedance is correct.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _forward_consistency_gate(
+    synthetic: np.ndarray,
+    seismic_input: np.ndarray,
+    threshold: float = 0.85,
+) -> dict[str, Any]:
+    """Re-forward-model the synthetic and correlate against input seismic.
+
+    This IS the gate Zahid describes: after inversion (AI → RC → wavelet
+    convolution → synthetic), correlate the output synthetic against the
+    original seismic trace. Pearson r ≈ 1.0 proves the inversion is
+    internally data-consistent. r < threshold proves something went wrong
+    in the forward-inverse loop.
+
+    Constitutional grounding:
+      - F2 TRUTH: Pearson r is a deterministic statistic — deterministic output
+      - F9 ANTI-HANTU: Never says "correct." Only says "data-consistent."
+      - F7 HUMILITY: If gate cannot run (no seismic input), humility = 1.0
+
+    Args:
+        synthetic: The forward-modeled synthetic trace (1D array).
+        seismic_input: The original seismic trace at the well location (1D array).
+        threshold: Pearson r threshold for data-consistency. Default 0.85.
+
+    Returns:
+        dict with correlation, data_consistent flag, gate_passed, interpretation,
+        cite, and humility_score.
+    """
+    # Align lengths — use minimum
+    n = min(len(synthetic), len(seismic_input))
+    if n < 3:
+        return {
+            "gate_run": True,
+            "correlation_r": None,
+            "data_consistent": False,
+            "gate_passed": False,
+            "threshold": threshold,
+            "interpretation": "INSUFFICIENT_SAMPLES — need at least 3 samples for correlation",
+            "cite": "Lancaster-Whitcombe (2000) coloured inversion: data-consistent ≠ correct",
+            "humility_score": 1.0,
+            "eureka_ref": "FORWARD_CONSISTENCY_GATE_2026_06_10",
+        }
+
+    syn = np.asarray(synthetic[:n], dtype=float)
+    seis = np.asarray(seismic_input[:n], dtype=float)
+
+    # Guard against zero-variance inputs
+    syn_std = np.std(syn)
+    seis_std = np.std(seis)
+    if syn_std < 1e-12 or seis_std < 1e-12:
+        return {
+            "gate_run": True,
+            "correlation_r": 0.0,
+            "data_consistent": False,
+            "gate_passed": False,
+            "threshold": threshold,
+            "interpretation": "ZERO_VARIANCE — one or both inputs have no signal variation",
+            "cite": "Lancaster-Whitcombe (2000): data-consistent ≠ correct",
+            "humility_score": 1.0,
+            "eureka_ref": "FORWARD_CONSISTENCY_GATE_2026_06_10",
+        }
+
+    # Pearson correlation coefficient
+    r = float(np.corrcoef(syn, seis)[0, 1])
+
+    # NaN guard
+    if np.isnan(r):
+        r = 0.0
+
+    data_consistent = bool(r >= threshold)
+
+    # Interpretation — never says "correct"
+    if data_consistent and r > 0.95:
+        interpretation = (
+            f"DATA_CONSISTENT (r={r:.4f}): The inversion reproduces the input "
+            f"seismic with high fidelity. This proves internal consistency of the "
+            f"forward-inverse loop but does NOT prove the absolute impedance model "
+            f"is correct — low frequencies remain in the null space of band-limited "
+            f"inversion (Lancaster-Whitcombe, 2000)."
+        )
+    elif data_consistent:
+        interpretation = (
+            f"DATA_CONSISTENT (r={r:.4f}): The inversion is internally consistent "
+            f"with the input seismic at the {threshold:.0%} threshold. "
+            f"Moderate residual may indicate wavelet estimation error, tuning "
+            f"effects, or noise contamination — not a physical failure."
+        )
+    else:
+        interpretation = (
+            f"CONSISTENCY_CHECK_FAILED (r={r:.4f} < {threshold}): The inversion "
+            f"does NOT adequately reproduce the input seismic. Possible causes: "
+            f"wavelet mismatch, incorrect velocity model, time-depth error, or "
+            f"pre-stack effects contaminating the post-stack trace. "
+            f"REWORK required before using this synthetic for interpretation."
+        )
+
+    return {
+        "gate_run": True,
+        "correlation_r": round(r, 6),
+        "data_consistent": data_consistent,
+        "gate_passed": data_consistent,
+        "threshold": threshold,
+        "interpretation": interpretation,
+        "cite": "Lancaster-Whitcombe (2000): data-consistent ≠ correct. "
+        "Correlation proves the inversion reproduces the input seismic. "
+        "Without a well-tied LFM, low frequencies are a 1/f integration "
+        "ramp — not calibrated geology.",
+        "humility_score": round(1.0 - min(r, 0.95), 4) if data_consistent else 1.0,
+        "eureka_ref": "FORWARD_CONSISTENCY_GATE_2026_06_10",
+    }
