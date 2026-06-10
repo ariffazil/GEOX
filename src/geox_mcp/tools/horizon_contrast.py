@@ -445,6 +445,194 @@ def _geological_alignment_check(
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# FORGE 2026-06-10 — Zahid Eureka: Step 7 — Fill-and-Spill Spill-Point Detection
+# ═══════════════════════════════════════════════════════════════════════════════
+# "Automated closure-trap to spill-point detectors on the leads identification"
+# "From 57 raw closures → 9 prospects survive reservoir+seal intersection filter"
+#  — Zahid Zamanshah, 2026-06-09
+#
+# Given a closure grid (depth-labelled points forming a structural closure),
+# finds the spill point = minimum depth on the closure boundary contour,
+# computes column height, and classifies the closure as a valid trap if the
+# column exceeds a minimum threshold.
+#
+# Physics: The spill point is the lowest structural contour that fully
+# encloses the closure. Column height = spill_depth − crest_depth.
+# This is pure structural geometry — no seal integrity, no volumetrics.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _compute_spill_point(
+    closure_grid: list[dict[str, Any]],
+    horizon_name: str = "",
+    min_column_threshold: float = 10.0,
+) -> dict[str, Any]:
+    """Compute spill-point and column height for a structural closure.
+
+    Given a closure grid (list of {x, y, depth_m} points defining a structural
+    closure), finds the spill point (lowest point on the closure boundary
+    before spill), computes the hydrocarbon column height, and classifies
+    the closure as a valid structural trap.
+
+    Constitutional:
+      - F2 TRUTH: spill point is deterministic from closure geometry
+      - F7 HUMILITY: column height is structural only — no seal integrity
+        assessment (requires Vs data for caprock evaluation)
+      - F9 ANTI-HANTU: trap_type = STRUCTURAL_TRAP is geometric only —
+        does NOT imply hydrocarbon presence
+
+    Args:
+        closure_grid: List of {x, y, depth_m} dicts defining the closure.
+        horizon_name: Optional horizon name for labeling.
+        min_column_threshold: Minimum column height in metres for valid trap.
+
+    Returns:
+        dict with spill_depth_m, crest_depth_m, column_height_m, trap_type,
+        is_valid_trap, and eureka_ref.
+    """
+    if not closure_grid or len(closure_grid) < 3:
+        return {
+            "gate_run": True,
+            "spill_depth_m": None,
+            "crest_depth_m": None,
+            "column_height_m": None,
+            "trap_type": "INSUFFICIENT_DATA",
+            "is_valid_trap": False,
+            "min_column_threshold_m": min_column_threshold,
+            "n_closure_points": len(closure_grid) if closure_grid else 0,
+            "interpretation": (
+                "Insufficient closure points (need ≥ 3). A closure requires "
+                "at minimum three points to define a structural boundary."
+            ),
+            "eureka_ref": "SPILL_POINT_DETECTION_2026_06_10",
+        }
+
+    import numpy as np
+
+    depths = np.array([p["depth_m"] for p in closure_grid], dtype=float)
+    xs = np.array([p.get("x", 0.0) for p in closure_grid], dtype=float)
+    ys = np.array([p.get("y", 0.0) for p in closure_grid], dtype=float)
+
+    # Crest = shallowest point (minimum depth)
+    crest_idx = int(np.argmin(depths))
+    crest_depth = float(depths[crest_idx])
+
+    # Spill point = deepest point on the closure boundary contour.
+    # For a simple convex closure, this is the maximum depth among all
+    # points. For a more complex closure with internal structure, the
+    # boundary contour is approximated by the convex hull perimeter.
+    # Here we identify the spill point as the deepest point on the
+    # closure boundary — the structural low where hydrocarbons would
+    # spill out of the trap.
+    #
+    # Boundary identification: compute the convex hull of the (x,y) points
+    # and take the deepest depth among hull vertices as the spill point.
+    try:
+        from scipy.spatial import ConvexHull
+
+        points_2d = np.column_stack([xs, ys])
+        hull = ConvexHull(points_2d)
+        hull_vertices = hull.vertices
+        boundary_depths = depths[hull_vertices]
+        spill_idx_in_hull = int(np.argmax(boundary_depths))
+        spill_depth = float(boundary_depths[spill_idx_in_hull])
+        boundary_method = "convex_hull"
+    except Exception:
+        # Fallback: deepest point overall
+        spill_idx = int(np.argmax(depths))
+        spill_depth = float(depths[spill_idx])
+        boundary_method = "max_depth_fallback"
+
+    # Column height
+    column_height = spill_depth - crest_depth
+
+    # Trap classification
+    if column_height <= 0:
+        trap_type = "INVALID"
+        is_valid = False
+    elif column_height >= min_column_threshold:
+        trap_type = "STRUCTURAL_TRAP"
+        is_valid = True
+    else:
+        trap_type = "SUBTHRESHOLD_CLOSURE"
+        is_valid = False
+
+    # Uncertainty bands (structural only)
+    pick_uncertainty = 5.0  # ±5m pick uncertainty
+    col_p10 = column_height + pick_uncertainty
+    col_p50 = column_height
+    col_p90 = max(0.0, column_height - pick_uncertainty)
+
+    return {
+        "gate_run": True,
+        "spill_depth_m": round(spill_depth, 2),
+        "crest_depth_m": round(crest_depth, 2),
+        "column_height_m": round(column_height, 2),
+        "column_uncertainty": {
+            "p10_m": round(col_p10, 2),
+            "p50_m": round(col_p50, 2),
+            "p90_m": round(col_p90, 2),
+            "pick_uncertainty_m": pick_uncertainty,
+            "note": "Structural-only uncertainty. Velocity uncertainty and seal integrity not included.",
+        },
+        "trap_type": trap_type,
+        "is_valid_trap": is_valid,
+        "min_column_threshold_m": min_column_threshold,
+        "n_closure_points": len(closure_grid),
+        "n_boundary_points": len(hull_vertices) if "hull_vertices" in dir() else 0,
+        "boundary_method": boundary_method,
+        "horizon_name": horizon_name,
+        "interpretation": _spill_point_interpretation(trap_type, column_height, spill_depth, crest_depth, horizon_name),
+        "cite": (
+            "Spill-point detection: structural geometry from closure boundary "
+            "(Sales, 1997 — 'Closure vs fill'). Column height is geometric only. "
+            "Hydrocarbon column may be less than structural closure due to seal "
+            "capacity, charge limitation, or hydrodynamics."
+        ),
+        "limitations": [
+            "Seal integrity not evaluated (requires Vs/Vsh and caprock pressure data)",
+            "Fault seal not evaluated (requires fault transmissibility analysis)",
+            "Charge limitation not evaluated (column may be less than structural closure)",
+            "Hydrodynamic tilt not evaluated (requires pressure data)",
+        ],
+        "humility_score": round(min(1.0, 1.0 - column_height / max(spill_depth, 1.0) * 0.5), 4),
+        "eureka_ref": "SPILL_POINT_DETECTION_2026_06_10",
+    }
+
+
+def _spill_point_interpretation(
+    trap_type: str,
+    column_height: float,
+    spill_depth: float,
+    crest_depth: float,
+    horizon_name: str,
+) -> str:
+    """Human-readable interpretation of spill-point analysis."""
+    label = f" ({horizon_name})" if horizon_name else ""
+    if trap_type == "STRUCTURAL_TRAP":
+        return (
+            f"Valid structural trap{label}: crest at {crest_depth:.0f}m, "
+            f"spill at {spill_depth:.0f}m, column height {column_height:.0f}m "
+            f"(≥ threshold). This closure can hold a hydrocarbon column of up "
+            f"to {column_height:.0f}m before spill. Actual column depends on "
+            f"charge volume and seal capacity."
+        )
+    elif trap_type == "SUBTHRESHOLD_CLOSURE":
+        return (
+            f"Subthreshold closure{label}: column height {column_height:.0f}m "
+            f"below minimum trap threshold. May still be viable as a "
+            f"combination trap with stratigraphic or fault seal component."
+        )
+    elif trap_type == "INVALID":
+        return (
+            f"Invalid closure{label}: crest ({crest_depth:.0f}m) ≥ spill "
+            f"({spill_depth:.0f}m). This is not a structural closure — check "
+            f"horizon interpretation for mispicks."
+        )
+    return f"Spill-point analysis: {trap_type}, column {column_height:.0f}m."
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # PUBLIC TOOL
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -459,6 +647,8 @@ async def geox_horizon_contrast_surface(
     peak_threshold: float = 1.5,
     min_separation_m: float = 20.0,
     custom_query: dict[str, float] | None = None,
+    # ── FORGE 2026-06-10 — Zahid Eureka: Step 7 spill-point ────────────
+    closure_grid: list[dict[str, Any]] | None = None,
     ctx: Context | None = None,
 ) -> dict[str, Any]:
     """ToAC-as-Attention Horizon Contrast Surface Pipeline.
@@ -704,6 +894,23 @@ async def geox_horizon_contrast_surface(
             ],
         },
     )
+
+    # ── FORGE 2026-06-10 — Zahid Eureka: Step 7 — Spill-Point Detection ───
+    # "Automated closure-trap to spill-point detectors" — Zahid Zamanshah
+    # Wire the spill-point analysis into the horizon contrast pipeline.
+    # This is pure structural geometry — no seal, no charge, no volumetrics.
+    if closure_grid is not None:
+        spill = _compute_spill_point(
+            closure_grid,
+            horizon_name=geological_query,
+            min_column_threshold=10.0,
+        )
+        envelope["structural_trap_analysis"] = spill
+
+        # If valid structural trap found, upgrade claim_tag
+        if spill.get("is_valid_trap") and n_candidates > 0:
+            envelope["claim_tag"] = "PLAUSIBLE"
+            envelope["perception_class"] = "ANOMALY"
 
     # ── ToAC-Attention Equivalence Metadata ────────────────────────────────
     attr_contrast_types = [
