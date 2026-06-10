@@ -1,0 +1,33 @@
+name: "Copilot Setup Steps — GEOX"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  copilot-setup-steps:
+    name: "GEOX — Pre-install earth intelligence dependencies"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install GEOX dependencies
+        run: pip install -e ".[dev]" -q
+      - name: Verify MCP surface loads
+        run: PYTHONPATH=src python3 -c "from geox_mcp import server; print('[PASS] GEOX MCP surface loaded')" || echo "[WARN] check PYTHONPATH=src"
+        env:
+          ARIFOS_ENV: ci
+      - name: Run fast physics tests
+        run: PYTHONPATH=src python3 -m pytest tests/ -q --tb=short -x -m "not slow" --ignore=tests/e2e || true
+        env:
+          ARIFOS_ENV: ci
