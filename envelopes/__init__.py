@@ -1,1 +1,0 @@
-../src/geox_core/envelopes/__init__.py
