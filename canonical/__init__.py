@@ -1,1 +1,0 @@
-../src/geox_core/canonical/__init__.py

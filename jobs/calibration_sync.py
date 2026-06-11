@@ -1,1 +1,0 @@
-../src/geox_core/jobs/calibration_sync.py
