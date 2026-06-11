@@ -523,7 +523,7 @@ async def geox_analog_atlas(
 
     primary_hypothesis = (
         (
-            f"Top analog: {best['analog_id']} (score={best['similarity_score']}) in {best['basin_id']} "
+            f"Top analog: {best['analog_id']} (score={best.get('similarity_score', 'N/A')}) in {best['basin_id']} "
             f"may share structural / charge / reservoir features with the query."
         )
         if best
@@ -552,7 +552,7 @@ async def geox_analog_atlas(
         "summary": {
             "n_results_returned": len(scored),
             "n_dangerous_similarities": dangerous_count,
-            "best_score": best["similarity_score"] if best else None,
+            "best_score": best.get("similarity_score") if best else None,
             "verdict": verdict,
             "verdict_reason": verdict_reason,
             "primary_hypothesis": primary_hypothesis,
