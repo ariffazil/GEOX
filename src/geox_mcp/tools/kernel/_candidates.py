@@ -2,6 +2,7 @@
 # Extracted from _helpers.py (lines 1043–1363)
 # NO FastMCP imports. Pure business logic.
 
+import os
 from typing import Any
 
 from geox_core.enums.statuses import ArtifactStatus, get_standard_envelope
@@ -68,7 +69,7 @@ async def _compute_subsurface_candidates(
     """Inner computation for subsurface candidates."""
     import sys
 
-    sys.path.insert(0, "/root/geox")
+    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
     import numpy as np
 
     # Evidence validation — all refs must be resolvable

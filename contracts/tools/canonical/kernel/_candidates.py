@@ -2,6 +2,7 @@
 # Extracted from _helpers.py (lines 1043–1363)
 # NO FastMCP imports. Pure business logic.
 
+import os
 from ._ingest import CANONICAL_ALIASES, CLAIM_STATES
 from ._registry import _artifact_exists, _get_artifact, _latest_qc_failed_refs
 from ._unit_registry import validate_curve, value_contract
@@ -62,7 +63,7 @@ async def _compute_subsurface_candidates(
 ) -> dict:
     """Inner computation for subsurface candidates."""
     import sys
-    sys.path.insert(0, "/root/geox")
+    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
     import numpy as np
 
     # Evidence validation — all refs must be resolvable

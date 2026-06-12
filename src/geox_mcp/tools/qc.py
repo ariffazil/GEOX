@@ -138,7 +138,7 @@ async def geox_data_qc_bundle(
     # ── Mode-specific QC ─────────────────────────────────────────────────
     import sys
 
-    sys.path.insert(0, "/root/geox")
+    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
     import numpy as np
 
     try:
@@ -289,7 +289,7 @@ async def geox_data_qc_bundle(
         try:
             import sys
 
-            _arifos_kernel = "/root/arifOS"
+            _arifos_kernel = os.environ.get("ARIFOS_HOME", "/root") + "/arifOS"
             if _arifos_kernel not in sys.path:
                 sys.path.insert(0, _arifos_kernel)
             import os as _os_saf
@@ -389,7 +389,7 @@ async def geox_data_qc_bundle(
         try:
             import sys as _sys_aov
 
-            _arifos_kernel_aov = "/root/arifOS"
+            _arifos_kernel_aov = os.environ.get("ARIFOS_HOME", "/root") + "/arifOS"
             if _arifos_kernel_aov not in _sys_aov.path:
                 _sys_aov.path.insert(0, _arifos_kernel_aov)
             from core.shared.saf_stats import stat_anova as _saf_anova_fn
@@ -516,7 +516,7 @@ async def geox_data_qc_bundle(
         try:
             import sys as _sys_mis
 
-            _arifos_kernel_mis = "/root/arifOS"
+            _arifos_kernel_mis = os.environ.get("ARIFOS_HOME", "/root") + "/arifOS"
             if _arifos_kernel_mis not in _sys_mis.path:
                 _sys_mis.path.insert(0, _arifos_kernel_mis)
             import os as _os_mis
@@ -607,7 +607,7 @@ async def geox_data_qc_bundle(
         try:
             import sys as _sys_chi
 
-            _arifos_kernel_chi = "/root/arifOS"
+            _arifos_kernel_chi = os.environ.get("ARIFOS_HOME", "/root") + "/arifOS"
             if _arifos_kernel_chi not in _sys_chi.path:
                 _sys_chi.path.insert(0, _arifos_kernel_chi)
             from core.shared.saf_stats import stat_chi_square as _saf_chi2_fn
@@ -782,7 +782,7 @@ async def geox_data_qc_bundle(
             try:
                 import sys as _sys_xc
 
-                _arifos_kernel_xc = "/root/arifOS"
+                _arifos_kernel_xc = os.environ.get("ARIFOS_HOME", "/root") + "/arifOS"
                 if _arifos_kernel_xc not in _sys_xc.path:
                     _sys_xc.path.insert(0, _arifos_kernel_xc)
                 import os as _os_xc

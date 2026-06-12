@@ -10,7 +10,7 @@ GEOX-specific governance module that:
 
 Used by geox_mcp/server.py after RT-3 guard check.
 
-arifOS kernel endpoint: http://arifosmcp:8080/mcp
+arifOS kernel endpoint: http://arifosmcp:8088/mcp
 
 FAIL-CLOSED: If arifOS kernel is unreachable or session is unbound,
 defaults to HOLD. No guessing, no bypass.
@@ -79,7 +79,7 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
 
 # ─── arifOS Kernel Client ──────────────────────────────────────────────────────
 
-ARIFOS_KERNEL_URL = os.getenv("ARIFOS_KERNEL_URL", "http://arifosmcp:8080")
+ARIFOS_KERNEL_URL = os.getenv("ARIFOS_KERNEL_URL", "http://arifosmcp:8088")
 _ARIFOS_KERNEL_TOKEN = os.getenv("ARIFOS_KERNEL_TOKEN", "")
 
 

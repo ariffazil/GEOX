@@ -15,6 +15,7 @@ One entry point. One clear contract. No phantom surface.
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
+import os
 from __future__ import annotations
 
 import hashlib
@@ -705,7 +706,7 @@ async def _workflow_section_correlation(
 ) -> dict[str, Any]:
     import sys
 
-    sys.path.insert(0, "/root/geox")
+    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
 
     # well_tie mode
     if mode == "well_tie":
