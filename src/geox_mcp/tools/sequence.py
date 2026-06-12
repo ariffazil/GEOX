@@ -15,8 +15,9 @@ One entry point. One clear contract. No phantom surface.
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
-import os
 from __future__ import annotations
+
+import os
 
 import hashlib
 import logging
@@ -1049,24 +1050,25 @@ async def geox_sequence_interpret(
     """
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_sequence_interpret",
         source=source,
-            depo_env_code=depo_env_code,
-            project_yaml=project_yaml,
-            output_dir=output_dir,
-            section_ref=section_ref,
-            well_refs=well_refs,
-            mode=mode,
-            well_las_paths=well_las_paths,
-            paleoenvironment_input=paleoenvironment_input,
-            checkshot_ref=checkshot_ref,
-            wavelet_mode=wavelet_mode,
-            wavelet_freq_hz=wavelet_freq_hz,
-            polarity=polarity,
-            seismic_ref=seismic_ref,
-            sonic_curve=sonic_curve,
-            density_curve=density_curve,
+        depo_env_code=depo_env_code,
+        project_yaml=project_yaml,
+        output_dir=output_dir,
+        section_ref=section_ref,
+        well_refs=well_refs,
+        mode=mode,
+        well_las_paths=well_las_paths,
+        paleoenvironment_input=paleoenvironment_input,
+        checkshot_ref=checkshot_ref,
+        wavelet_mode=wavelet_mode,
+        wavelet_freq_hz=wavelet_freq_hz,
+        polarity=polarity,
+        seismic_ref=seismic_ref,
+        sonic_curve=sonic_curve,
+        density_curve=density_curve,
     )
     if ctx:
         ctx.report_progress(0, 100)
