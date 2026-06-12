@@ -69,7 +69,7 @@ pip install -e ".[dev]"
 pytest tests/ -q
 
 # Lint / Format / Type-check
-ruff check server.py geox/ arifos/geox/
+ruff check server.py src/geox_core/
 ruff format geox/
 mypy server.py geox/
 
