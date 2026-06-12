@@ -1,7 +1,8 @@
+import os
 import numpy as np
 import sys
 
-sys.path.insert(0, "/root/geox")
+sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
 
 from geox.skills.subsurface.petro.gr_intervals import run_gr_cognitive_pipeline
 

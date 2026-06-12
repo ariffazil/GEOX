@@ -277,7 +277,7 @@ async def geox_surface_truth() -> str:
     # 7. Git SHA
     import subprocess
     try:
-        git_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd="/root/geox").decode("utf-8").strip()
+        git_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=os.environ.get("ARIFOS_HOME", "/root") + "/geox").decode("utf-8").strip()
     except Exception:
         git_sha = "unknown"
 

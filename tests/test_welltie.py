@@ -4,6 +4,7 @@ Tests for geox/core/welltie.py — well-to-seismic tie computation engine.
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
+import os
 from __future__ import annotations
 
 import csv
@@ -15,7 +16,7 @@ import pytest
 
 import sys
 
-sys.path.insert(0, "/root/geox")
+sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
 
 from geox.core.welltie import (
     compute_vp_from_sonic,

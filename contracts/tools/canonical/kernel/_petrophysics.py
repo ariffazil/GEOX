@@ -378,7 +378,7 @@ def _compute_netpay_from_store(
 ) -> dict:
     """Compute net pay from stored LAS data. All cutoffs explicit in output."""
     import sys
-    sys.path.insert(0, "/root/geox")
+    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
     import numpy as np
     cutoff_guard = merge_guards(
         validate_scalar(vsh_cutoff, "VSH"),

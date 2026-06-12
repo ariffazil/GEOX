@@ -18,7 +18,7 @@ import shutil
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path("/root/geox")
+REPO_ROOT = Path(os.environ.get("ARIFOS_HOME", "/root") + "/geox")
 TARGET_SRC = REPO_ROOT / "src"
 TARGET_RESOURCES = REPO_ROOT / "resources"
 TARGET_DOCS = REPO_ROOT / "docs"
