@@ -51,19 +51,27 @@ def _mcp_call(tool_name: str, arguments: dict) -> dict:
         "method": "tools/call",
         "params": {"name": tool_name, "arguments": arguments},
     }
-    resp = _req("POST", "/mcp", payload)
+    resp = _req("POST", "/mcp/", payload)
     # FastMCP streamable-http with json_response=True returns JSON-RPC envelope
     result = resp.get("result", {})
     if isinstance(result, dict) and "content" in result:
         content = result["content"]
         if content and isinstance(content, list) and "text" in content[0]:
             try:
-                return json.loads(content[0]["text"])
+                result = json.loads(content[0]["text"])
             except json.JSONDecodeError:
-                return {"raw_text": content[0]["text"]}
-    # Direct result (sometimes FastMCP returns the result object directly)
-    if isinstance(result, dict) and "execution_status" in result:
-        return result
+                pass
+    if isinstance(result, dict) and "result" in result:
+        inner = result["result"]
+        if isinstance(inner, dict):
+            for k, v in inner.items():
+                if k not in result:
+                    result[k] = v
+                elif isinstance(result[k], dict) and isinstance(v, dict):
+                    # Recursively merge dictionary keys (e.g. provenance)
+                    for sub_k, sub_v in v.items():
+                        if sub_k not in result[k]:
+                            result[k][sub_k] = sub_v
     return result
 
 
@@ -110,7 +118,19 @@ def main() -> int:
         },
     )
     if ingest.get("claim_state") not in ("INGESTED", "FILE_IMPORTED", "RAW_OBSERVATION"):
-        print("[SMOKE] FAIL: Ingest did not succeed:", ingest.get("claim_state"))
+        print("[SMOKE] FAIL: Ingest did not succeed. Response received:")
+        print(json.dumps(ingest, indent=2))
+        if proc.poll() is None:
+            # Server is still running, let's read whatever is in stderr
+            import select
+            stderr_data = []
+            while sys.stdin in select.select([proc.stderr], [], [], 0.5)[0]:
+                line = proc.stderr.readline()
+                if not line:
+                    break
+                stderr_data.append(line.decode())
+            print("[SMOKE] Server stderr logs:")
+            print("".join(stderr_data))
         proc.terminate()
         return 1
     print("[SMOKE] Ingest OK:", ingest.get("claim_state"))
@@ -122,8 +142,9 @@ def main() -> int:
     fm = None
     for attempt in range(2):
         fm = _mcp_call(
-        "geox_forward_model_synthetic",
+        "geox_seismic_compute",
         {
+            "mode": "synthetic",
             "well_id": "smoke_well",
             "wavelet_type": "ricker",
             "wavelet_freq": 25,
@@ -159,10 +180,11 @@ def main() -> int:
     # ── 5. ANOMALOUS CONTRAST ────────────────────────────────────────────────
     print("[SMOKE] Running anomalous_contrast_detector...")
     ac = _mcp_call(
-        "geox_anomalous_contrast_detector",
+        "geox_seismic_compute",
         {
+            "mode": "anomalous_contrast",
             "ai_profile": [4_000_000.0, 4_200_000.0, 6_500_000.0],
-            "depth": [1000.0, 1005.0, 1010.0],
+            "ac_depth": [1000.0, 1005.0, 1010.0],
             "formation_tops": {"Carbonate_Top": 1000.0},
             "geological_boundary_tolerance_m": 10.0,
         },
@@ -172,11 +194,11 @@ def main() -> int:
         proc.terminate()
         return 1
     pa_ac = ac.get("primary_artifact", {})
-    if pa_ac.get("law_capsule") != "LC#28":
-        print("[SMOKE] FAIL: LC#28 law capsule missing")
+    if ac.get("domain_law") != "NATURAL_LAW":
+        print("[SMOKE] FAIL: NATURAL_LAW domain law missing")
         proc.terminate()
         return 1
-    print(f"[SMOKE] Anomalous contrast OK | anomalies={len(pa_ac.get('anomalies', []))} | law_capsule={pa_ac.get('law_capsule')}")
+    print(f"[SMOKE] Anomalous contrast OK | anomalies={len(pa_ac.get('anomalies', []))} | domain_law={ac.get('domain_law')}")
 
     # ── 6. SHUTDOWN ──────────────────────────────────────────────────────────
     print("[SMOKE] Shutting down server...")
