@@ -248,4 +248,3 @@ async def geox_header_inspect(
         return await geox_tops_inspect(tops_metadata)
     else:
         return {"status": "INVALID", "errors": [f"Unsupported file format: {file_format}"]}
-

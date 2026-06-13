@@ -43,12 +43,13 @@ async def geox_dst_ingest_test(
     """
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_dst_ingest_test",
         well_id=well_id,
-            field=field,
-            reservoir_name=reservoir_name,
-            test_name=test_name,
+        field=field,
+        reservoir_name=reservoir_name,
+        test_name=test_name,
     )
     if _err is not None:
         return _err

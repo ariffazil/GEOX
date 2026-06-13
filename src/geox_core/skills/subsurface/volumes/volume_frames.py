@@ -219,21 +219,25 @@ def geox_volume_get_frame(
     # Attempt extraction
     img = extract_frame_from_segy(volume_ref, frame_index, orientation)  # type: ignore[arg-type]
     if img is None:
-        result.update({
-            "status": "error",
-            "error": "Frame extraction failed — file not found or segyio unavailable",
-            "verdict": "VOID",
-        })
+        result.update(
+            {
+                "status": "error",
+                "error": "Frame extraction failed — file not found or segyio unavailable",
+                "verdict": "VOID",
+            }
+        )
         result["vault_receipt"] = make_vault_receipt("geox_volume_get_frame", result, "VOID")
         return result
 
-    result.update({
-        "status": "extracted",
-        "image": img.to_dict(),
-        "width": img.width,
-        "height": img.height,
-        "verdict": "SEAL" if claim_state != ClaimTag.HYPOTHESIS.value else "HOLD",
-    })
+    result.update(
+        {
+            "status": "extracted",
+            "image": img.to_dict(),
+            "width": img.width,
+            "height": img.height,
+            "verdict": "SEAL" if claim_state != ClaimTag.HYPOTHESIS.value else "HOLD",
+        }
+    )
     result["vault_receipt"] = make_vault_receipt("geox_volume_get_frame", result, result["verdict"])
     return result
 
@@ -262,10 +266,7 @@ def geox_volume_set_frame(
         "orientation": orientation,
         "claim_state": ClaimTag.COMPUTED.value,
         "status": "PENDING_ENGINE",
-        "note": (
-            "Frame write requires trace-header-aware SEG-Y rewriting. "
-            "Schematic only — full engine pending. Use 888_HOLD."
-        ),
+        "note": ("Frame write requires trace-header-aware SEG-Y rewriting. Schematic only — full engine pending. Use 888_HOLD."),
         "verdict": "HOLD",
     }
     result["vault_receipt"] = make_vault_receipt("geox_volume_set_frame", result, "HOLD")

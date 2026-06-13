@@ -4,7 +4,6 @@ Surgically extracted from geox/core/geox_data.py
 """
 
 
-
 def assign_layer(depth: float, stratigraphy: list[dict]) -> dict:
     """Matches a depth point to a named geological layer (Strata substrate)."""
     for layer in stratigraphy:

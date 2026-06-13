@@ -32,6 +32,7 @@ def require_router(request_id: str, calling_tool: str) -> dict[str, Any] | None:
     completed, route = check_route_completion(request_id)
     if not completed:
         from geox_mcp.tools.discovery.audit_logger import log_guard_block
+
         log_guard_block(request_id, calling_tool)
         logger.warning("GUARD_BLOCK: %s called before router. request_id=%s", calling_tool, request_id)
         return {

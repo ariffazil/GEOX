@@ -241,7 +241,6 @@ async def geox_volume_frame_tool(
         return {"error": f"Unsupported action: {action}"}
 
 
-
 # ─────────────────── SEISMIC ATTRIBUTE COMPUTE (REGISTRY) ───────────────────
 
 
@@ -383,9 +382,7 @@ async def geox_seismic_compute_attribute_tool(
         evidence_refs=[volume_ref],
     )
     envelope["verdict"] = "SEAL" if claim_state != ClaimTag.HYPOTHESIS.value else "HOLD"
-    envelope["vault_receipt"] = make_vault_receipt(
-        "geox_seismic_compute_attribute_tool", result, envelope["verdict"]
-    )
+    envelope["vault_receipt"] = make_vault_receipt("geox_seismic_compute_attribute_tool", result, envelope["verdict"])
     return enrich_envelope_with_metabolic(envelope, "geox_seismic_compute_attribute_tool")
 
 
@@ -800,4 +797,3 @@ async def geox_blend_volume_tool(
         )
     else:
         return {"error": f"Unsupported blend mode: {blend_mode}"}
-

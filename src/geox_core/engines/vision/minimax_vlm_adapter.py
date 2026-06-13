@@ -528,40 +528,30 @@ class _MCPToolVisionBackend:
             )
         try:
             result = subprocess.run(
-                ["python3", skill_script, "--image", image_path,
-                 "--prompt", prompt, "--json"],
-                capture_output=True, text=True, timeout=90,
+                ["python3", skill_script, "--image", image_path, "--prompt", prompt, "--json"],
+                capture_output=True,
+                text=True,
+                timeout=90,
             )
         except subprocess.TimeoutExpired as e:
-            raise NotImplementedError(
-                f"vision-direct call timed out after 90s for {image_path}"
-            ) from e
+            raise NotImplementedError(f"vision-direct call timed out after 90s for {image_path}") from e
         except FileNotFoundError as e:
-            raise NotImplementedError(
-                f"vision-direct python interpreter not found: {e}"
-            ) from e
+            raise NotImplementedError(f"vision-direct python interpreter not found: {e}") from e
 
         if result.returncode != 0:
             # vision-direct emits a JSON error to stderr on failure
             err_body = result.stderr.strip() or result.stdout.strip()
-            raise NotImplementedError(
-                f"vision-direct failed (exit {result.returncode}): {err_body[:300]}"
-            )
+            raise NotImplementedError(f"vision-direct failed (exit {result.returncode}): {err_body[:300]}")
 
         # Parse the JSON envelope and return just the content
         try:
             envelope = json.loads(result.stdout)
         except json.JSONDecodeError as e:
-            raise NotImplementedError(
-                f"vision-direct returned non-JSON on success: {e}. Body: {result.stdout[:300]}"
-            ) from e
+            raise NotImplementedError(f"vision-direct returned non-JSON on success: {e}. Body: {result.stdout[:300]}") from e
 
         content = (envelope.get("content") or "").strip()
         if not content:
-            raise NotImplementedError(
-                f"vision-direct returned empty content for {image_path}. "
-                f"Envelope: {envelope}"
-            )
+            raise NotImplementedError(f"vision-direct returned empty content for {image_path}. Envelope: {envelope}")
         return content
 
 

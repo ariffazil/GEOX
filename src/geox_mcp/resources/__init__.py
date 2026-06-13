@@ -78,6 +78,7 @@ def _geox_tree777_index() -> dict[str, Any]:
 
 # ── Resource handlers (async functions, no decorators) ───────────────────────
 
+
 async def geox_identity() -> dict:
     from geox_core.enums.statuses import CANON9_TOOL_MAP, GDE_VOCAB
 
@@ -223,7 +224,6 @@ async def geox_resources_index() -> str:
     return json.dumps(index, indent=2)
 
 
-
 async def geox_surface_truth() -> str:
     """Validate and report the current surface truth status (the Surface Truth Lock)."""
     # 1. Parse README.md count
@@ -267,6 +267,7 @@ async def geox_surface_truth() -> str:
     # 5. Live registry count
     try:
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+
         live_count = len(CANONICAL_PUBLIC_TOOLS)
     except Exception:
         live_count = 0
@@ -276,14 +277,26 @@ async def geox_surface_truth() -> str:
 
     # 7. Git SHA
     import subprocess
+
     try:
-        git_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=os.environ.get("ARIFOS_HOME", "/root") + "/geox").decode("utf-8").strip()
+        git_sha = (
+            subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=os.environ.get("ARIFOS_HOME", "/root") + "/geox")
+            .decode("utf-8")
+            .strip()
+        )
     except Exception:
         git_sha = "unknown"
 
     status = "FAIL"
-    if (readme_count == 33 and card_count == 33 and llms_count == 33 and 
-        cap_count == 33 and live_count == 33 and tests_count == 304 and git_sha != "unknown"):
+    if (
+        readme_count == 33
+        and card_count == 33
+        and llms_count == 33
+        and cap_count == 33
+        and live_count == 33
+        and tests_count == 304
+        and git_sha != "unknown"
+    ):
         status = "PASS"
 
     truth_map = {
@@ -296,7 +309,7 @@ async def geox_surface_truth() -> str:
         "tests_count": tests_count,
         "git_sha": git_sha,
         "seal": "DITEMPA BUKAN DIBERI",
-        "lock_active": True
+        "lock_active": True,
     }
     return json.dumps(truth_map, indent=2)
 
@@ -316,59 +329,59 @@ async def geox_literature_madon_paper() -> str:
                 "Basin-wide structural & play history",
                 "Play-type taxonomy (Groups A-P)",
                 "Creaming curve & mature basin framing",
-                "Source-rock and migration hypotheses"
+                "Source-rock and migration hypotheses",
             ],
             "forbidden": [
                 "Direct petrophysical log computations",
                 "Field-level reserves booking/certification",
                 "Seismic structural candidate generation",
-                "Drilling decisions & Sealed POS evaluations"
-            ]
+                "Drilling decisions & Sealed POS evaluations",
+            ],
         },
         "extracted_claims": [
             {
                 "claim_id": "clm_317a7c30873e40b7",
                 "category": "General",
                 "text": "Malay Basin is offshore east of Peninsular Malaysia and contributes about 40% of Malaysia’s hydrocarbon resources in the review period.",
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_878a99cc8cc84177",
                 "category": "Maturity",
                 "text": "Exploration history shows mature-basin creaming behavior: early giant discoveries, later smaller incremental additions.",
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_4c04b8f277854aba",
                 "category": "Structure",
                 "text": "Malay Basin initiated by Late Eocene–Early Oligocene extension, high post-rift subsidence, >14 km sediment in deepest centre, E-W half-grabens influenced by Pre-Tertiary faults.",
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_db822655c84b43ac",
                 "category": "Stratigraphy",
                 "text": "Stratigraphy uses groups A–P; drilling reaches at least Group M; fill transitions from lacustrine/non-marine to coastal plain and shallow marine; K shale marks key transition.",
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_64bd3be4f6fb471c",
                 "category": "Reservoir",
                 "text": "Main resources are reported from Groups J, I, K, E, D; I/J/K contribute about 60%, and D/E plus those contribute about 85%; deltaic sands dominate.",
-                "confidence": "HIGH"
+                "confidence": "HIGH",
             },
             {
                 "claim_id": "clm_ca5a5ef4c80544ff",
                 "category": "Source",
                 "text": "Oils/condensates derive mainly from lower coastal plain fluvio-deltaic coal/coaly shale and lacustrine syn-rift shales; northwest is gas-prone, southeast more oil-prone.",
-                "confidence": "MEDIUM"
+                "confidence": "MEDIUM",
             },
             {
                 "claim_id": "clm_78c4535ee5764c10",
                 "category": "Potential",
                 "text": "Remaining potential is not zero; paper estimates roughly 2 bboe yet to discover by 2020, but requires new play concepts.",
-                "confidence": "MEDIUM"
-            }
-        ]
+                "confidence": "MEDIUM",
+            },
+        ],
     }
     return json.dumps(metadata, indent=2)
 
@@ -376,6 +389,7 @@ async def geox_literature_madon_paper() -> str:
 async def geox_basin_malay_profile() -> str:
     """Fetch geological profile for Malay Basin."""
     import yaml
+
     profile_path = Path("/root/geox/resources/basins/malay_basin/basin_profile.yaml")
     if profile_path.exists():
         try:
@@ -383,16 +397,19 @@ async def geox_basin_malay_profile() -> str:
             return json.dumps(profile_data, indent=2)
         except Exception as e:
             return json.dumps({"error": f"Failed to parse profile: {e}"})
-    return json.dumps({
-        "basin_name": "Malay Basin",
-        "basin_id": "MALAY_BASIN",
-        "location": "Southern South China Sea, offshore Peninsular Malaysia",
-        "area_sq_km": 80000,
-        "tectonic_setting": "Cenozoic failed rift / pull-apart basin",
-        "stratigraphic_framework": "Group A (youngest) to Group M (oldest, syn-rift)",
-        "status": "Mature oil and gas province",
-        "primary_hydrocarbon": "Gas-prone, significant oil in Group H and I"
-    }, indent=2)
+    return json.dumps(
+        {
+            "basin_name": "Malay Basin",
+            "basin_id": "MALAY_BASIN",
+            "location": "Southern South China Sea, offshore Peninsular Malaysia",
+            "area_sq_km": 80000,
+            "tectonic_setting": "Cenozoic failed rift / pull-apart basin",
+            "stratigraphic_framework": "Group A (youngest) to Group M (oldest, syn-rift)",
+            "status": "Mature oil and gas province",
+            "primary_hydrocarbon": "Gas-prone, significant oil in Group H and I",
+        },
+        indent=2,
+    )
 
 
 async def geox_literature_index() -> str:
@@ -402,7 +419,7 @@ async def geox_literature_index() -> str:
             "uri": "geox://literature/GSM-MADON-2021-MALAY-BASIN",
             "title": "Five decades of petroleum exploration and discovery in the Malay Basin (1968–2018) and remaining potential",
             "author": "Mazlan Madon",
-            "journal": "Bulletin of the Geological Society of Malaysia, Volume 72, 2021"
+            "journal": "Bulletin of the Geological Society of Malaysia, Volume 72, 2021",
         }
     ]
     return json.dumps(literature_list, indent=2)
@@ -419,7 +436,7 @@ async def geox_claims_index() -> str:
                     "claim_id": c.get("claim_id"),
                     "claim_type": c.get("claim_type"),
                     "confidence": c.get("confidence"),
-                    "short_text": c.get("claim", "")[:60] + "..." if len(c.get("claim", "")) > 60 else c.get("claim", "")
+                    "short_text": c.get("claim", "")[:60] + "..." if len(c.get("claim", "")) > 60 else c.get("claim", ""),
                 }
                 for c in claims_data
             ]
@@ -440,7 +457,7 @@ async def geox_artifacts_index() -> str:
             "created_by_tool": "geox_literature_ingest",
             "created_at": "2026-06-06T13:47:00Z",
             "parent_refs": [],
-            "visualizable": True
+            "visualizable": True,
         },
         {
             "artifact_ref": "geox://basins/malay-basin/profile",
@@ -450,8 +467,8 @@ async def geox_artifacts_index() -> str:
             "created_by_tool": "geox_basin_resolve",
             "created_at": "2026-06-06T14:00:00Z",
             "parent_refs": [],
-            "visualizable": True
-        }
+            "visualizable": True,
+        },
     ]
     return json.dumps(artifacts, indent=2)
 
@@ -466,26 +483,20 @@ async def geox_claims_graph() -> str:
             claims_data = json.loads(claims_path.read_text())
             for idx, c in enumerate(claims_data):
                 cid = c.get("claim_id")
-                nodes.append({
-                    "id": cid,
-                    "type": "claim",
-                    "claim_state": c.get("claim_type", "draft").upper(),
-                    "text": c.get("claim"),
-                    "seal_status": "SEALED" if c.get("claim_type") == "sealed" else "UNSEALED"
-                })
+                nodes.append(
+                    {
+                        "id": cid,
+                        "type": "claim",
+                        "claim_state": c.get("claim_type", "draft").upper(),
+                        "text": c.get("claim"),
+                        "seal_status": "SEALED" if c.get("claim_type") == "sealed" else "UNSEALED",
+                    }
+                )
                 for ev_ref in c.get("evidence_refs", []):
                     ev_id = f"ev_{ev_ref.replace('://', '_').replace('/', '_').replace('.', '_')}"
                     if not any(n["id"] == ev_id for n in nodes):
-                        nodes.append({
-                            "id": ev_id,
-                            "type": "evidence",
-                            "text": ev_ref
-                        })
-                    edges.append({
-                        "source": cid,
-                        "target": ev_id,
-                        "relation": "supported_by"
-                    })
+                        nodes.append({"id": ev_id, "type": "evidence", "text": ev_ref})
+                    edges.append({"source": cid, "target": ev_id, "relation": "supported_by"})
         except Exception:
             pass
     return json.dumps({"nodes": nodes, "edges": edges}, indent=2)
@@ -507,10 +518,9 @@ async def geox_basins_index() -> str:
     if basins_dir.exists():
         for d in basins_dir.iterdir():
             if d.is_dir():
-                basins.append({
-                    "name": d.name.replace("_", " ").title(),
-                    "uri": f"geox://basins/{d.name.replace('_', '-')}/profile"
-                })
+                basins.append(
+                    {"name": d.name.replace("_", " ").title(), "uri": f"geox://basins/{d.name.replace('_', '-')}/profile"}
+                )
     return json.dumps(basins, indent=2)
 
 
@@ -534,38 +544,32 @@ async def geox_reality_context() -> str:
     """Fetch reality engineering context for agent execution."""
     try:
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+
         tools = CANONICAL_PUBLIC_TOOLS
     except Exception:
         tools = []
-        
+
     context_map = {
         "domain": "earth",
-        "available_evidence": [
-            "geox://literature/GSM-MADON-2021-MALAY-BASIN"
-        ],
+        "available_evidence": ["geox://literature/GSM-MADON-2021-MALAY-BASIN"],
         "available_tools": tools,
         "available_reports": [
             "GSM-MADON-2021-MALAY-BASIN.pdf",
             "USGS-BISHOP-2002-MALAY-BASIN.pdf",
-            "PETRONAS-1999-PETROLEUM-GEOLOGY-MALAYSIA.pdf"
+            "PETRONAS-1999-PETROLEUM-GEOLOGY-MALAYSIA.pdf",
         ],
         "forbidden_claims": [
             "Silent report usage without provenance",
-            "Drilling decisions & Sealed POS evaluations without human confirmation"
+            "Drilling decisions & Sealed POS evaluations without human confirmation",
         ],
-        "claim_ladder": [
-            "observed",
-            "derived",
-            "interpreted",
-            "hypothesis",
-            "decision_support"
-        ],
-        "human_final_authority": "Arif"
+        "claim_ladder": ["observed", "derived", "interpreted", "hypothesis", "decision_support"],
+        "human_final_authority": "Arif",
     }
     return json.dumps(context_map, indent=2)
 
 
 # ── Registration ──────────────────────────────────────────────────────────────
+
 
 def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -> None:
     """Register all GEOX resources on the given FastMCP server."""

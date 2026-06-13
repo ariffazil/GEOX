@@ -114,6 +114,18 @@ def _geox_wrap_envelope(tool_name: str, result: Any) -> Any:
     if provenance.get("tool_version"):
         source_attribution.append(f"GEOX:version/{provenance['tool_version']}")
 
+    # GEOX identity anchor: physics_manifest_hash + domain_law
+    try:
+        from geox_core.physics.manifest import get_domain_law, get_physics_manifest_hash
+
+        _env_domain_law = get_domain_law()
+        _env_physics_hash = get_physics_manifest_hash()
+    except Exception:
+        import os as _os_env
+
+        _env_domain_law = "NATURAL_LAW"
+        _env_physics_hash = _os_env.environ.get("GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing")
+
     # Build the envelope. Per Appendix B, the original payload goes under "result".
     envelope = {
         "result": result,
@@ -122,6 +134,8 @@ def _geox_wrap_envelope(tool_name: str, result: Any) -> Any:
         "source_attribution": source_attribution,
         "uncertainty_band": [round(float(band[0]), 4), round(float(band[1]), 4)],
         "delta_S": round(float(delta_s), 4),
+        "domain_law": _env_domain_law,
+        "physics_manifest_hash": _env_physics_hash,
     }
     return envelope
 
@@ -146,37 +160,41 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
         if isinstance(res, dict):
             # If it is already enveloped (has epistemic_tag and result)
             if "epistemic_tag" in res and "result" in res:
-                if session_id:
-                    res["session_id"] = session_id
+                # Always propagate session lineage — never conditionally drop.
+                # If caller passed session_id, it must reach every downstream field.
+                res["session_id"] = session_id
                 if trace_id:
                     res["trace_id"] = trace_id
-                
+
                 # Plumb provenance
                 prov = res.setdefault("provenance", {})
                 if isinstance(prov, dict):
-                    if session_id:
-                        prov["session_id"] = session_id
+                    prov["session_id"] = session_id
                     if trace_id:
                         prov["trace_id"] = trace_id
                     prov["tool_name"] = name
-                    prov["constitution_hash"] = os.environ.get("GEOX_CONSTITUTION_HASH", "unknown")
-                
+                    # GEOX identity anchor: physics_manifest_hash (NOT constitution_hash)
+                    try:
+                        from geox_core.physics.manifest import get_domain_law, get_physics_manifest_hash
+
+                        prov["domain_law"] = get_domain_law()
+                        prov["physics_manifest_hash"] = get_physics_manifest_hash()
+                    except Exception:
+                        prov["domain_law"] = "NATURAL_LAW"
+                        prov["physics_manifest_hash"] = os.environ.get("GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing")
+
                 # Plumb audit_receipt
                 audit = res.setdefault("audit_receipt", {})
                 if isinstance(audit, dict):
-                    if session_id:
-                        audit["session_id"] = session_id
+                    audit["session_id"] = session_id
                     if trace_id:
                         audit["trace_id"] = trace_id
-                    if actor_id:
-                        audit["actor_id"] = actor_id
+                    audit["actor_id"] = actor_id
                     audit["tool_name"] = name
             else:
                 # Not enveloped yet. Add to res so _geox_wrap_envelope can process it.
-                if session_id:
-                    res["session_id"] = session_id
-                if actor_id:
-                    res["actor_id"] = actor_id
+                res["session_id"] = session_id
+                res["actor_id"] = actor_id
                 if trace_id:
                     res["trace_id"] = trace_id
 
@@ -228,18 +246,25 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
         res = _geox_wrap_envelope(name, res)
 
         # Post-wrap double check for envelope root session_id/trace_id
+        # Always propagate — never conditionally drop session lineage
         if isinstance(res, dict) and "epistemic_tag" in res:
-            if session_id:
-                res["session_id"] = session_id
+            res["session_id"] = session_id
             if trace_id:
                 res["trace_id"] = trace_id
             prov = res.setdefault("provenance", {})
             if isinstance(prov, dict):
-                if session_id:
-                    prov["session_id"] = session_id
+                prov["session_id"] = session_id
                 if trace_id:
                     prov["trace_id"] = trace_id
                 prov["tool_name"] = name
+                # Re-assert physics manifest identity even in post-wrap
+                try:
+                    from geox_core.physics.manifest import get_domain_law, get_physics_manifest_hash
+
+                    prov["domain_law"] = get_domain_law()
+                    prov["physics_manifest_hash"] = get_physics_manifest_hash()
+                except Exception:
+                    pass
 
         return res
 
@@ -248,6 +273,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
     # Dynamically build wrapper signature to include session_id, actor_id, and trace_id
     try:
         import inspect
+
         sig = inspect.signature(func)
         params = list(sig.parameters.values())
 
@@ -279,7 +305,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                 )
             )
         wrapper.__signature__ = sig.replace(parameters=params)
-        
+
         # Inject annotations so Pydantic's get_function_type_hints succeeds
         wrapper.__annotations__["session_id"] = str | None
         wrapper.__annotations__["actor_id"] = str | None
