@@ -76,7 +76,7 @@ def export_volume_to_segy(
 
         spec = segyio.spec()
         spec.sorting = 2  # Inline sorted
-        spec.format = 1   # IBM float (standard)
+        spec.format = 1  # IBM float (standard)
         spec.samples = np.arange(n_samples) * sample_interval_ms
         spec.ilines = ilines
         spec.xlines = xlines

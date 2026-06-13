@@ -97,7 +97,6 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
         "idempotentHint": True,
         "openWorldHint": False,
     },
-
     "geox_evidence_discover": {
         "title": "Evidence Discover",
         "readOnlyHint": True,
@@ -112,7 +111,6 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
         "idempotentHint": True,
         "openWorldHint": False,
     },
-
     "geox_subsurface_generate_candidates": {
         "title": "Subsurface Generate Candidates",
         "ui": {"resourceUri": "ui://earth_volume"},

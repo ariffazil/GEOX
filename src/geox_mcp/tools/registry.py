@@ -52,10 +52,11 @@ async def geox_system_registry_status(
     """
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
+
     _err = validate_tool_inputs(
         "geox_system_registry_status",
         session_id=session_id,
-            actor_id=actor_id,
+        actor_id=actor_id,
     )
     if _err is not None:
         return _err

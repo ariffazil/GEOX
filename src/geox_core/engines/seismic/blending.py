@@ -102,9 +102,9 @@ def _hsl_to_rgb(hsl: np.ndarray) -> np.ndarray:
 
     def _hue_to_rgb(p: np.ndarray, q: np.ndarray, t: np.ndarray) -> np.ndarray:
         t = t % 1.0
-        return np.where(t < 1 / 6, p + (q - p) * 6 * t,
-               np.where(t < 1 / 2, q,
-               np.where(t < 2 / 3, p + (q - p) * (2 / 3 - t) * 6, p)))
+        return np.where(
+            t < 1 / 6, p + (q - p) * 6 * t, np.where(t < 1 / 2, q, np.where(t < 2 / 3, p + (q - p) * (2 / 3 - t) * 6, p))
+        )
 
     q = np.where(l < 0.5, l * (1 + s), l + s - l * s)
     p = 2 * l - q
@@ -173,7 +173,7 @@ def alpha_blend_3d(
     if channel1.width != channel2.width or channel1.height != channel2.height or channel1.length != channel2.length:
         raise ValueError("Channel dimensions must match for blending")
     if channel3 is not None:
-        if (channel1.width != channel3.width or channel1.height != channel3.height or channel1.length != channel3.length):
+        if channel1.width != channel3.width or channel1.height != channel3.height or channel1.length != channel3.length:
             raise ValueError("Channel 3 dimensions must match for blending")
 
     total = opacity1 + opacity2 + (opacity3 if channel3 else 0.0)
@@ -202,8 +202,10 @@ def rgb_blend_2d(
     RGB blend three Image2d channels into a single RGB image.
     Returns a 3-band Image2d where each pixel is (R, G, B).
     """
-    if not (red_channel.width == green_channel.width == blue_channel.width and
-            red_channel.height == green_channel.height == blue_channel.height):
+    if not (
+        red_channel.width == green_channel.width == blue_channel.width
+        and red_channel.height == green_channel.height == blue_channel.height
+    ):
         raise ValueError("All channel dimensions must match for RGB blending")
 
     r = _normalize_to_01(red_channel._data)
@@ -227,9 +229,11 @@ def rgb_blend_3d(
     RGB blend three Image3d channels into a single 3-band RGB volume.
     Each frame is (H, W, 3) with normalized R/G/B values.
     """
-    if not (red_channel.width == green_channel.width == blue_channel.width and
-            red_channel.height == green_channel.height == blue_channel.height and
-            red_channel.length == green_channel.length == blue_channel.length):
+    if not (
+        red_channel.width == green_channel.width == blue_channel.width
+        and red_channel.height == green_channel.height == blue_channel.height
+        and red_channel.length == green_channel.length == blue_channel.length
+    ):
         raise ValueError("All channel dimensions must match for RGB blending")
 
     out = Image3d(red_channel.width, red_channel.height, red_channel.length, name="rgb_blend")
@@ -253,9 +257,11 @@ def hsv_blend_3d(
     HSV blend three Image3d channels into an RGB volume.
     Maps hue_channel → Hue, saturation_channel → Saturation, value_channel → Value.
     """
-    if not (hue_channel.width == saturation_channel.width == value_channel.width and
-            hue_channel.height == saturation_channel.height == value_channel.height and
-            hue_channel.length == saturation_channel.length == value_channel.length):
+    if not (
+        hue_channel.width == saturation_channel.width == value_channel.width
+        and hue_channel.height == saturation_channel.height == value_channel.height
+        and hue_channel.length == saturation_channel.length == value_channel.length
+    ):
         raise ValueError("All channel dimensions must match for HSV blending")
 
     out = Image3d(hue_channel.width, hue_channel.height, hue_channel.length, name="hsv_blend")
@@ -278,9 +284,11 @@ def hsl_blend_3d(
     HSL blend three Image3d channels into an RGB volume.
     Maps hue_channel → Hue, saturation_channel → Saturation, lightness_channel → Lightness.
     """
-    if not (hue_channel.width == saturation_channel.width == lightness_channel.width and
-            hue_channel.height == saturation_channel.height == lightness_channel.height and
-            hue_channel.length == saturation_channel.length == lightness_channel.length):
+    if not (
+        hue_channel.width == saturation_channel.width == lightness_channel.width
+        and hue_channel.height == saturation_channel.height == lightness_channel.height
+        and hue_channel.length == saturation_channel.length == lightness_channel.length
+    ):
         raise ValueError("All channel dimensions must match for HSL blending")
 
     out = Image3d(hue_channel.width, hue_channel.height, hue_channel.length, name="hsl_blend")

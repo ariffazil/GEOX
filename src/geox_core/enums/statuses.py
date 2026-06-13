@@ -2,10 +2,31 @@ import os
 from enum import Enum
 from typing import Any
 
-# P5 version normalization
+
+# P6 version normalization — physics guard version from git (live) or fallback constant
+def _compute_physics_guard_version() -> str:
+    """Compute physics guard version from git SHA, falling back to shipped constant."""
+    try:
+        import subprocess as _sp
+        from pathlib import Path as _P
+
+        _sha = (
+            _sp.check_output(
+                ["git", "rev-parse", "--short", "HEAD"],
+                cwd=str(_P(__file__).parent.parent.parent),
+                timeout=5,
+            )
+            .decode()
+            .strip()
+        )
+        return f"geox-{_sha}"
+    except Exception:
+        return "geox-014d3e33"  # shipped fallback — bumped 2026-06-13
+
+
 GEOX_VERSION = "v2026.06.05"
-GEOX_CONTRACT_EPOCH = "2026-06-05-GEOX-35TOOLS-v2.0"
-PHYSICS_GUARD_VERSION = "geox-a7e8bfa5"
+GEOX_CONTRACT_EPOCH = "2026-06-05-GEOX-37TOOLS-v2.0"
+PHYSICS_GUARD_VERSION = _compute_physics_guard_version()
 REGISTRY_HASH = "reg-hash-35d798a"
 TOOL_SCHEMA_HASH = "schema-sha-35d798a"
 
@@ -383,7 +404,9 @@ def get_standard_envelope(
     session_id: str | None = None,
     trace_id: str | None = None,
     parent_trace_id: str | None = None,
-    constitution_hash: str | None = None,
+    # GEOX identity anchor (NOT constitution_hash — NATURAL_LAW, not constitutional law)
+    domain_law: str | None = None,
+    physics_manifest_hash: str | None = None,
     # Session propagation extension (actor + tool_name for audit receipt)
     actor_id: str | None = None,
     tool_name: str | None = None,
@@ -492,7 +515,18 @@ def get_standard_envelope(
     _session_id = session_id or (audit_receipt.get("session_id") if audit_receipt else None) or "geox-no-session"
     _trace_id = trace_id or f"trace-{uuid.uuid4().hex[:16]}"
     _parent_trace_id = parent_trace_id or None
-    _constitution_hash = constitution_hash or os.environ.get("GEOX_CONSTITUTION_HASH", "unknown")
+
+    # GEOX identity anchor: physics_manifest_hash + domain_law (NATURAL_LAW)
+    # NOT constitution_hash — that's arifOS territory.
+    # kuasa alam: GEOX answers to physics, not to floors.
+    try:
+        from geox_core.physics.manifest import get_domain_law, get_physics_manifest_hash
+
+        _domain_law = get_domain_law()
+        _physics_manifest_hash = get_physics_manifest_hash()
+    except Exception:
+        _domain_law = "NATURAL_LAW"
+        _physics_manifest_hash = os.environ.get("GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing")
 
     provenance = {
         "tool_name": tool_name or primary_artifact.get("tool", "unknown"),
@@ -507,7 +541,9 @@ def get_standard_envelope(
         "session_id": _session_id,
         "trace_id": _trace_id,
         "parent_trace_id": _parent_trace_id,
-        "constitution_hash": _constitution_hash,
+        # GEOX identity anchor: domain_law + physics_manifest_hash (NOT constitution_hash)
+        "domain_law": _domain_law,
+        "physics_manifest_hash": _physics_manifest_hash,
         # LEM contract v0.8
         "equations_used": equations_used or [],
         # P5 - Version normalization
@@ -561,7 +597,9 @@ def get_standard_envelope(
         "session_id": _session_id,
         "trace_id": _trace_id,
         "parent_trace_id": _parent_trace_id,
-        "constitution_hash": _constitution_hash,
+        # GEOX identity anchor: domain_law + physics_manifest_hash (NOT constitution_hash)
+        "domain_law": _domain_law,
+        "physics_manifest_hash": _physics_manifest_hash,
         # Agentic recovery (Fix #1, #4 - Arif 2026-05-16)
         "next_best_actions": next_best_actions or [],
         "suggested_tool": suggested_tool,
@@ -766,6 +804,16 @@ def enrich_envelope_with_metabolic(
 
     now = datetime.now(UTC).isoformat()
 
+    # Resolve physics manifest identity
+    try:
+        from geox_core.physics.manifest import get_physics_manifest_hash as _get_pmh
+
+        _pmh = _get_pmh()
+    except Exception:
+        import os as _os_met
+
+        _pmh = _os_met.environ.get("GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing")
+
     metabolic = {
         "organ": "GEOX",
         "tool_name": tool_name,
@@ -837,7 +885,8 @@ def enrich_envelope_with_metabolic(
         "requires_888_judge": False,
         # Provenance
         "timestamp_utc": now,
-        "constitution_hash": "",
+        "domain_law": "NATURAL_LAW",
+        "physics_manifest_hash": _pmh,
     }
 
     envelope["metabolic"] = metabolic

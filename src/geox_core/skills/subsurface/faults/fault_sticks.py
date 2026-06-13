@@ -143,6 +143,7 @@ class FaultSet3d:
             return False
         try:
             import os
+
             if os.path.exists(path) and not overwrite:
                 logger.error(f"File exists and overwrite=False: {path}")
                 return False
@@ -168,6 +169,7 @@ def ingest_fault_sticks_from_csv(csv_path: str) -> FaultSet3d | None:
     """
     try:
         import csv
+
         fault_set = FaultSet3d(filename=csv_path)
         current_fault_name = None
         current_stick_id = None

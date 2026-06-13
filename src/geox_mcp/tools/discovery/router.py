@@ -185,6 +185,7 @@ async def arifos_route_query(
         }
         try:
             from geox_mcp.tools.discovery.guard import register_route_completion
+
             register_route_completion(request_id, fallback)
         except Exception:
             pass

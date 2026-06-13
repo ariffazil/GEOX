@@ -25,6 +25,7 @@ NO_VALUE = np.nan  # PaleoScan uses a sentinel; GEOX uses IEEE NaN (industry sta
 
 # ─────────────────── ENUMS ───────────────────
 
+
 class ScanOrientation(str, Enum):
     Inline = "inline"
     Crossline = "crossline"
@@ -51,6 +52,7 @@ class AttributeType(str, Enum):
 
 
 # ─────────────────── IMAGE2D ───────────────────
+
 
 class Image2d:
     """
@@ -114,27 +116,23 @@ class Image2d:
             self._data.fill(float(values))
         elif isinstance(values, np.ndarray):
             if values.size != self.size:
-                raise RuntimeError(
-                    f"Fill array size {values.size} != image size {self.size}"
-                )
+                raise RuntimeError(f"Fill array size {values.size} != image size {self.size}")
             self._data = values.reshape(self.height, self.width).astype(np.float32)
         elif isinstance(values, list):
             if len(values) != self.size:
-                raise RuntimeError(
-                    f"Fill list length {len(values)} != image size {self.size}"
-                )
+                raise RuntimeError(f"Fill list length {len(values)} != image size {self.size}")
             self._data = np.array(values, dtype=np.float32).reshape(self.height, self.width)
         else:
             raise TypeError(f"Unsupported fill type: {type(values)}")
 
     def get_value(self, x: int, y: int) -> float:
         if not (0 <= x < self.width and 0 <= y < self.height):
-            raise IndexError(f"Coordinate ({x}, {y}) out of range [0..{self.width-1}, 0..{self.height-1}]")
+            raise IndexError(f"Coordinate ({x}, {y}) out of range [0..{self.width - 1}, 0..{self.height - 1}]")
         return float(self._data[y, x])
 
     def set_value(self, x: int, y: int, value: float) -> None:
         if not (0 <= x < self.width and 0 <= y < self.height):
-            raise IndexError(f"Coordinate ({x}, {y}) out of range [0..{self.width-1}, 0..{self.height-1}]")
+            raise IndexError(f"Coordinate ({x}, {y}) out of range [0..{self.width - 1}, 0..{self.height - 1}]")
         self._data[y, x] = float(value)
 
     def __getitem__(self, key: tuple[int, int]) -> float:
@@ -150,6 +148,7 @@ class Image2d:
             raise RuntimeError(f"Invalid resize dimensions: ({new_width}, {new_height})")
         if new_width == self.width and new_height == self.height:
             import warnings
+
             warnings.warn("Resize to same size — no operation performed", RuntimeWarning)
             return
         self.width = new_width
@@ -181,6 +180,7 @@ class Image2d:
 
 # ─────────────────── BLOCKSPACE ───────────────────
 
+
 @dataclass
 class BlockSpace:
     """
@@ -188,7 +188,7 @@ class BlockSpace:
     PaleoScan equivalent: paleoscan_python.BlockSpace
     """
 
-    width: int = 1   # crossline count (X)
+    width: int = 1  # crossline count (X)
     height: int = 1  # sample count   (Z)
     length: int = 1  # inline count   (Y)
 
@@ -229,6 +229,7 @@ class BlockSpace:
 
 # ─────────────────── SURVEYSPACE ───────────────────
 
+
 @dataclass
 class SurveySpace:
     """
@@ -239,12 +240,12 @@ class SurveySpace:
       yMin/yMax → inline range
     """
 
-    x_min: float = 0.0   # crossline min
-    x_max: float = 1.0   # crossline max
-    z_min: float = 0.0   # time/depth min
-    z_max: float = 1.0   # time/depth max
-    y_min: float = 0.0   # inline min
-    y_max: float = 1.0   # inline max
+    x_min: float = 0.0  # crossline min
+    x_max: float = 1.0  # crossline max
+    z_min: float = 0.0  # time/depth min
+    z_max: float = 1.0  # time/depth max
+    y_min: float = 0.0  # inline min
+    y_max: float = 1.0  # inline max
 
     def set_survey_space(
         self,
@@ -285,6 +286,7 @@ class SurveySpace:
 
 # ─────────────────── WORLDSPACE ───────────────────
 
+
 @dataclass
 class WorldSpace:
     """
@@ -321,6 +323,7 @@ class WorldSpace:
 
 # ─────────────────── IMAGE3D ───────────────────
 
+
 class Image3d(BlockSpace):
     """
     3-dimensional container for 32-bit floating point data.
@@ -343,16 +346,14 @@ class Image3d(BlockSpace):
     def get_value(self, x: int, y: int, z: int) -> float:
         if not (0 <= x < self.width and 0 <= y < self.length and 0 <= z < self.height):
             raise IndexError(
-                f"Coordinate ({x}, {y}, {z}) out of range "
-                f"[0..{self.width-1}, 0..{self.length-1}, 0..{self.height-1}]"
+                f"Coordinate ({x}, {y}, {z}) out of range [0..{self.width - 1}, 0..{self.length - 1}, 0..{self.height - 1}]"
             )
         return float(self._data[y, z, x])
 
     def set_value(self, x: int, y: int, z: int, value: float) -> None:
         if not (0 <= x < self.width and 0 <= y < self.length and 0 <= z < self.height):
             raise IndexError(
-                f"Coordinate ({x}, {y}, {z}) out of range "
-                f"[0..{self.width-1}, 0..{self.length-1}, 0..{self.height-1}]"
+                f"Coordinate ({x}, {y}, {z}) out of range [0..{self.width - 1}, 0..{self.length - 1}, 0..{self.height - 1}]"
             )
         self._data[y, z, x] = float(value)
 
@@ -369,6 +370,7 @@ class Image3d(BlockSpace):
             raise RuntimeError(f"Invalid resize: ({new_width}, {new_height}, {new_length})")
         if new_width == self.width and new_height == self.height and new_length == self.length:
             import warnings
+
             warnings.warn("Resize to same size — no operation performed", RuntimeWarning)
             return
         self.width = new_width
@@ -385,19 +387,19 @@ class Image3d(BlockSpace):
         """Extract a 2D frame from the 3D volume by orientation and index."""
         if orientation == ScanOrientation.Inline:
             if not (0 <= index < self.length):
-                raise IndexError(f"Inline index {index} out of range [0..{self.length-1}]")
+                raise IndexError(f"Inline index {index} out of range [0..{self.length - 1}]")
             img = Image2d(self.width, self.height, name=f"{self.name}_inline_{index}")
             img._data = self._data[index, :, :].copy()
             return img
         elif orientation == ScanOrientation.Crossline:
             if not (0 <= index < self.width):
-                raise IndexError(f"Crossline index {index} out of range [0..{self.width-1}]")
+                raise IndexError(f"Crossline index {index} out of range [0..{self.width - 1}]")
             img = Image2d(self.height, self.length, name=f"{self.name}_crossline_{index}")
             img._data = self._data[:, :, index].copy().T
             return img
         elif orientation in (ScanOrientation.TimeSlice, ScanOrientation.DepthSlice):
             if not (0 <= index < self.height):
-                raise IndexError(f"Time/depth index {index} out of range [0..{self.height-1}]")
+                raise IndexError(f"Time/depth index {index} out of range [0..{self.height - 1}]")
             img = Image2d(self.width, self.length, name=f"{self.name}_slice_{index}")
             img._data = self._data[:, index, :].copy()
             return img
@@ -408,27 +410,21 @@ class Image3d(BlockSpace):
         """Write a 2D frame into the 3D volume at orientation and index."""
         if orientation == ScanOrientation.Inline:
             if not (0 <= index < self.length):
-                raise IndexError(f"Inline index {index} out of range [0..{self.length-1}]")
+                raise IndexError(f"Inline index {index} out of range [0..{self.length - 1}]")
             if image.width != self.width or image.height != self.height:
-                raise IndexError(
-                    f"Image size ({image.width}, {image.height}) != expected ({self.width}, {self.height})"
-                )
+                raise IndexError(f"Image size ({image.width}, {image.height}) != expected ({self.width}, {self.height})")
             self._data[index, :, :] = image._data.copy()
         elif orientation == ScanOrientation.Crossline:
             if not (0 <= index < self.width):
-                raise IndexError(f"Crossline index {index} out of range [0..{self.width-1}]")
+                raise IndexError(f"Crossline index {index} out of range [0..{self.width - 1}]")
             if image.width != self.height or image.height != self.length:
-                raise IndexError(
-                    f"Image size ({image.width}, {image.height}) != expected ({self.height}, {self.length})"
-                )
+                raise IndexError(f"Image size ({image.width}, {image.height}) != expected ({self.height}, {self.length})")
             self._data[:, :, index] = image._data.T.copy()
         elif orientation in (ScanOrientation.TimeSlice, ScanOrientation.DepthSlice):
             if not (0 <= index < self.height):
-                raise IndexError(f"Time/depth index {index} out of range [0..{self.height-1}]")
+                raise IndexError(f"Time/depth index {index} out of range [0..{self.height - 1}]")
             if image.width != self.width or image.height != self.length:
-                raise IndexError(
-                    f"Image size ({image.width}, {image.height}) != expected ({self.width}, {self.length})"
-                )
+                raise IndexError(f"Image size ({image.width}, {image.height}) != expected ({self.width}, {self.length})")
             self._data[:, index, :] = image._data.copy()
         else:
             raise ValueError(f"Unknown orientation: {orientation}")

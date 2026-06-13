@@ -60,9 +60,9 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.05.27"
-# Patch B - Eureka Doctrine: earth schemas now served as canonical contracts
-GEOX_CONTRACT_EPOCH = "2026-05-12-GEOX-13TOOLS-v0.7"
+GEOX_VERSION = "v2026.06.05"
+# P6 - Bumped to 37-tool surface; physics manifest anchor replacing constitution_hash
+GEOX_CONTRACT_EPOCH = "2026-06-05-GEOX-37TOOLS-v2.0"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -522,6 +522,18 @@ async def health_handler(request: Request) -> JSONResponse:
     except Exception as _exc:
         fed_geometry_note = f"arifOS unreachable: {type(_exc).__name__}"
     # ── END FEDERATION GEOMETRY 1a ───────────────────────────────────
+    # GEOX identity anchor: physics_manifest_hash + domain_law (NATURAL_LAW)
+    try:
+        from geox_core.physics.manifest import get_domain_law, get_physics_manifest_hash
+
+        _domain_law = get_domain_law()
+        _physics_hash = get_physics_manifest_hash()
+    except Exception:
+        import os as _os_id
+
+        _domain_law = "NATURAL_LAW"
+        _physics_hash = _os_id.environ.get("GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing")
+
     return JSONResponse(
         {
             "status": "healthy",
@@ -530,6 +542,9 @@ async def health_handler(request: Request) -> JSONResponse:
             "profile": GEOX_PROFILE,
             "identity": is_geox(),
             "git_version": _GIT_VERSION,
+            # ── GEOX identity anchor (NATURAL_LAW, not constitutional) ───
+            "domain_law": _domain_law,
+            "physics_manifest_hash": _physics_hash,
             # ── Canonical 7-field health schema (per federation convention) ───
             "identity_hash": _GIT_VERSION,  # git SHA = identity proof
             "freshness": {

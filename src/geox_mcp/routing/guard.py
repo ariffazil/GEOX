@@ -51,7 +51,7 @@ def guard_route_requirement(tool_name: str, arguments: dict[str, Any]) -> JSONRe
             "status": "partial",
             "error": "ROUTER_REQUIRED",
             "message": f"Tool '{tool_name}' requires arifos_route_query before retrieval.",
-            "safe_next_action": "Call arifos_route_query with the same request_id, then retry retrieval."
+            "safe_next_action": "Call arifos_route_query with the same request_id, then retry retrieval.",
         },
         status_code=428,
     )

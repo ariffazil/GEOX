@@ -531,7 +531,8 @@ class MetabolicOutput(BaseModel):
 
     # ── Provenance ──────────────────────────────────────────────────────────
     timestamp_utc: str = Field(description="UTC timestamp of this output")
-    constitution_hash: str = Field(default="", description="Constitutional law version this output was generated under")
+    domain_law: str = Field(default="NATURAL_LAW", description="GEOX domain law: NATURAL_LAW (kuasa alam)")
+    physics_manifest_hash: str = Field(default="", description="SHA-256 hash of GEOX Physics Manifest")
 
     class Config:
         json_schema_extra = {
@@ -836,7 +837,8 @@ def build_metabolic_output(
         "requires_888_judge": False,
         # Provenance
         "timestamp_utc": now,
-        "constitution_hash": "",
+        "domain_law": "NATURAL_LAW",
+        "physics_manifest_hash": "",
     }
 
     return metabolic
