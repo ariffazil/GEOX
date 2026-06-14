@@ -978,6 +978,8 @@ def create_app():
             Route("/tools", tools_list_handler, methods=["GET"]),
             Route("/mcp", lambda req: RedirectResponse(url="/mcp/", status_code=307), methods=["GET", "POST", "DELETE"]),
             Mount("/mcp", app=mcp_http_handler),
+            # Also handle /mcp with trailing slash explicitly (some clients don't follow 307)
+            Route("/mcp/", legacy_mcp_handler, methods=["GET", "POST"]),
         ],
         lifespan=mcp_http_handler.lifespan,
     )
