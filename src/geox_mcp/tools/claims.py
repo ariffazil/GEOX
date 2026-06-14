@@ -544,17 +544,86 @@ async def geox_claim_seal(
     # Fetch claim from store
     store = _get_memory_store()
     claim_payload = None
+    approval_state = "draft"
+    challenges = []
     if store:
         try:
             with store._connect() as conn:
                 row = conn.execute(
-                    "SELECT payload FROM earth_memory WHERE id = ?",
+                    "SELECT payload, approval_state FROM earth_memory WHERE id = ?",
                     (claim_id,),
                 ).fetchone()
                 if row:
                     claim_payload = json.loads(row[0])
+                    approval_state = row[1] or "draft"
+                    challenges = claim_payload.get("challenges", [])
         except Exception as e:
             logger.warning(f"Claim fetch failed: {e}")
+
+    # ── MANDATORY CONTRADICTION PRE-SEAL GATE (Federation Contract §5) ─────
+    # Before SEAL: claim must be VALIDATED, must have been challenged or
+    # contradiction-scanned, and must have integrity verified.
+    if seal_verdict == "SEAL":
+        pre_seal_checks = []
+
+        # Gate 1: Claim must be VALIDATED
+        if approval_state not in ("VALIDATED", "validated", "review_pending"):
+            pre_seal_checks.append({
+                "gate": "claim_validate_required",
+                "status": "FAILED",
+                "detail": f"Claim approval_state is '{approval_state}', not 'VALIDATED'. "
+                          "Call geox_claim_validate before sealing.",
+                "recovery": "geox_claim_validate(claim_id='{claim_id}')",
+            })
+
+        # Gate 2: Claim must have been challenged (contradiction discipline)
+        if not challenges:
+            pre_seal_checks.append({
+                "gate": "contradiction_scan_required",
+                "status": "FAILED",
+                "detail": "Claim has no challenges recorded. Federation contract requires "
+                          "geox_claim_challenge before SEAL (Multi-Discipline Self-Argument).",
+                "recovery": (
+                    "geox_claim_challenge(claim_id='{claim_id}', "
+                    "challenge_text='<why this might be wrong>', "
+                    "alternative_claim_text='<alternative interpretation>', "
+                    "alternative_evidence_ids=[])"
+                ),
+            })
+
+        # Gate 3: Evidence integrity must be verified
+        evidence_ids = claim_payload.get("evidence_ids", []) if claim_payload else []
+        evidence_chain = claim_payload.get("evidence_chain", []) if claim_payload else []
+        if not evidence_ids and not evidence_chain:
+            pre_seal_checks.append({
+                "gate": "evidence_integrity_required",
+                "status": "FAILED",
+                "detail": "Claim has no evidence attached. Federation contract requires "
+                          "geox_evidence_attach before SEAL.",
+                "recovery": "geox_evidence_attach(claim_id='{claim_id}', evidence_id='<id>')",
+            })
+
+        if pre_seal_checks:
+            return {
+                "status": "HOLD",
+                "error_code": "PRE_SEAL_CONTRADICTION_GATE",
+                "message": (
+                    "Federation contract §5: Mandatory contradiction discipline before SEAL. "
+                    f"{len(pre_seal_checks)} gate(s) failed."
+                ),
+                "claim_id": claim_id,
+                "approval_state": approval_state,
+                "challenge_count": len(challenges),
+                "evidence_count": len(evidence_ids) if evidence_ids else 0,
+                "failed_gates": pre_seal_checks,
+                "required_actions": [g["recovery"] for g in pre_seal_checks],
+                "next_steps": [
+                    "1. Call geox_claim_validate to set approval_state=VALIDATED",
+                    "2. Call geox_claim_challenge for mandatory contradiction scan",
+                    "3. Call geox_evidence_attach to link evidence artifacts",
+                    "4. Retry geox_claim_seal with ack_irreversible=True",
+                ],
+            }
 
     arifOS_available = await _get_arifOS_health()
 

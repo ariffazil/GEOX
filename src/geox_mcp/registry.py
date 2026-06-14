@@ -69,56 +69,53 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
 ]
 
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
-    {"name": "geox_data_ingest_bundle", "axis": "observe", "expose": True},
-    {"name": "geox_data_qc_bundle", "axis": "verify", "expose": True},
-    {"name": "geox_dst_ingest_test", "axis": "observe", "expose": True},
-    {"name": "geox_header_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_las_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_seismic_segy_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_evidence_discover", "axis": "observe", "expose": True},
-    {"name": "geox_report_to_workflow", "axis": "reason", "expose": True},
-    {"name": "geox_subsurface_generate_candidates", "axis": "reason", "expose": True},
-    {"name": "geox_subsurface_verify_integrity", "axis": "verify", "expose": True},
-    {"name": "geox_seismic_compute", "axis": "reason", "expose": True},
-    {"name": "geox_sequence_interpret", "axis": "reason", "expose": True},
-    {"name": "geox_evidence_reason", "axis": "reason", "expose": True},
-    {"name": "geox_prospect_evaluate", "axis": "reason", "expose": True},
-    {"name": "geox_map_context_scene", "axis": "observe", "expose": True},
-    {"name": "geox_system_registry_status", "axis": "observe", "expose": True},
-    {"name": "geox_horizon_contrast_surface", "axis": "reason", "expose": True},
-    # paleoscan_python v2.0.0 forge
-    {"name": "geox_coord_transform_tool", "axis": "compute", "expose": True},
-    {"name": "geox_blockspace_resolution_tool", "axis": "compute", "expose": True},
-    {"name": "geox_volume_frame_tool", "axis": "observe", "expose": True},
-    {"name": "geox_seismic_compute_attribute_tool", "axis": "reason", "expose": True},
-    {"name": "geox_fault_stick_ingest_tool", "axis": "observe", "expose": True},
-    {"name": "geox_attribute_registry_list_tool", "axis": "observe", "expose": True},
-    # paleoscan_python v2.0.0 forge — blending + export
-    {"name": "geox_blend_volume_tool", "axis": "compute", "expose": True},
-    {"name": "geox_segy_export_tool", "axis": "observe", "expose": True},
-    # H5: Claim Engine
-    {"name": "geox_claim_create", "axis": "reason", "expose": True},
-    {"name": "geox_claim_validate", "axis": "verify", "expose": True},
-    {"name": "geox_claim_challenge", "axis": "reason", "expose": True},
-    {"name": "geox_evidence_attach", "axis": "verify", "expose": True},
-    {"name": "geox_claim_seal", "axis": "reason", "expose": True},
-    # Basin & Metaphor guards
-    {"name": "geox_basin_resolve", "axis": "observe", "expose": True},
-    {"name": "geox_basin_profile", "axis": "reason", "expose": True},
-    {"name": "geox_query_intake", "axis": "observe", "expose": True},
-    {"name": "geox_abstraction_guard", "axis": "verify", "expose": True},
-    {"name": "geox_literature_ingest", "axis": "observe", "expose": True},
-    # Vision V1 (Layer 1) — 4 tools, forged 2026-06-07
-    {"name": "geox_vision_perceptual_inventory", "axis": "observe", "expose": True},
-    {"name": "geox_vision_minimax_inference", "axis": "reason", "expose": True},
-    {"name": "geox_vision_calibrate", "axis": "verify", "expose": True},
-    {"name": "geox_vision_audit", "axis": "verify", "expose": True},
-    # Macrostrat — dedicated client (replaces thin proxy alias)
-    {"name": "geox_query_macrostrat", "axis": "observe", "expose": True},
-    # Macrostrat modes (via geox_basin_profile):
-    #   macrostrat_units, macrostrat_columns, macrostrat_lithologies,
-    #   macrostrat_strat_names, macrostrat_intervals, macrostrat_fossils,
-    #   macrostrat_geologic_map, macrostrat_cache_warm
+    # ── DISCOVERY LANE (5 tools) ── max_action_class: OBSERVE, no lease required
+    {"name": "geox_system_registry_status", "axis": "observe", "lane": "discovery", "expose": True},
+    {"name": "geox_attribute_registry_list_tool", "axis": "observe", "lane": "discovery", "expose": True},
+    {"name": "geox_basin_resolve", "axis": "observe", "lane": "discovery", "expose": True},
+    {"name": "geox_query_intake", "axis": "observe", "lane": "discovery", "expose": True},
+    {"name": "geox_query_macrostrat", "axis": "observe", "lane": "discovery", "expose": True},
+
+    # ── EVIDENCE LANE (13 tools) ── max_action_class: ANALYZE, no lease required
+    {"name": "geox_data_ingest_bundle", "axis": "observe", "lane": "evidence", "expose": True},
+    {"name": "geox_data_qc_bundle", "axis": "verify", "lane": "evidence", "expose": True},
+    {"name": "geox_dst_ingest_test", "axis": "observe", "lane": "evidence", "expose": True},
+    {"name": "geox_header_inspect", "axis": "verify", "lane": "evidence", "expose": True},
+    {"name": "geox_las_inspect", "axis": "verify", "lane": "evidence", "expose": True},
+    {"name": "geox_seismic_segy_inspect", "axis": "verify", "lane": "evidence", "expose": True},
+    {"name": "geox_evidence_discover", "axis": "observe", "lane": "evidence", "expose": True},
+    {"name": "geox_evidence_attach", "axis": "verify", "lane": "evidence", "expose": True},
+    {"name": "geox_literature_ingest", "axis": "observe", "lane": "evidence", "expose": True},
+    {"name": "geox_fault_stick_ingest_tool", "axis": "observe", "lane": "evidence", "expose": True},
+    {"name": "geox_volume_frame_tool", "axis": "observe", "lane": "evidence", "expose": True},
+    {"name": "geox_vision_perceptual_inventory", "axis": "observe", "lane": "evidence", "expose": True},
+    {"name": "geox_vision_calibrate", "axis": "verify", "lane": "evidence", "expose": True},
+
+    # ── REASONING LANE (17 tools) ── max_action_class: ANALYZE, lease + session required
+    {"name": "geox_subsurface_generate_candidates", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_subsurface_verify_integrity", "axis": "verify", "lane": "reasoning", "expose": True},
+    {"name": "geox_seismic_compute", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_seismic_compute_attribute_tool", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_sequence_interpret", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_evidence_reason", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_prospect_evaluate", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_map_context_scene", "axis": "observe", "lane": "reasoning", "expose": True},
+    {"name": "geox_horizon_contrast_surface", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_coord_transform_tool", "axis": "compute", "lane": "reasoning", "expose": True},
+    {"name": "geox_blockspace_resolution_tool", "axis": "compute", "lane": "reasoning", "expose": True},
+    {"name": "geox_blend_volume_tool", "axis": "compute", "lane": "reasoning", "expose": True},
+    {"name": "geox_basin_profile", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_vision_minimax_inference", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_vision_audit", "axis": "verify", "lane": "reasoning", "expose": True},
+    {"name": "geox_report_to_workflow", "axis": "reason", "lane": "reasoning", "expose": True},
+    {"name": "geox_abstraction_guard", "axis": "verify", "lane": "reasoning", "expose": True},
+
+    # ── JUDGMENT LANE (5 tools) ── GOVERNED, lease + session + arifOS judge required
+    {"name": "geox_claim_create", "axis": "reason", "lane": "judgment", "expose": True},
+    {"name": "geox_claim_validate", "axis": "verify", "lane": "judgment", "expose": True},
+    {"name": "geox_claim_challenge", "axis": "reason", "lane": "judgment", "expose": True},
+    {"name": "geox_claim_seal", "axis": "reason", "lane": "judgment", "expose": True},
+    {"name": "geox_segy_export_tool", "axis": "observe", "lane": "judgment", "expose": True},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
