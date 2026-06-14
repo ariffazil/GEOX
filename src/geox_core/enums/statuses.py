@@ -512,7 +512,7 @@ def get_standard_envelope(
 
     # Session propagation (Fix #2 - Arif 2026-05-16)
     # Use explicitly passed session_id, fallback to audit_receipt, fallback to auto-generated
-    _session_id = session_id or (audit_receipt.get("session_id") if audit_receipt else None) or "geox-no-session"
+    _session_id = session_id or (audit_receipt.get("session_id") if audit_receipt else None) or (os.environ.get("GEOX_SESSION_ID") or "anonymous")
     _trace_id = trace_id or f"trace-{uuid.uuid4().hex[:16]}"
     _parent_trace_id = parent_trace_id or None
 
@@ -572,7 +572,7 @@ def get_standard_envelope(
             "timestamp": now,
             "session_id": _session_id,
             "trace_id": _trace_id,
-            "actor_id": actor_id or "geox-unknown",
+            "actor_id": actor_id or os.environ.get("GEOX_ACTOR_ID") or "anonymous",
             "tool_name": tool_name or primary_artifact.get("tool", "unknown"),
         },
         "humility_score": humility_score,

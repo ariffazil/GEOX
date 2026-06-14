@@ -43,6 +43,10 @@ from geox_mcp.tools.basin import (
     geox_abstraction_guard,
     geox_literature_ingest,
 )
+from geox_mcp.tools.ingestion import (
+    geox_las_inspect,
+    geox_seismic_segy_inspect,
+)
 
 _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),
@@ -65,6 +69,8 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_query_intake", geox_query_intake),
     ("geox_abstraction_guard", geox_abstraction_guard),
     ("geox_literature_ingest", geox_literature_ingest),
+    ("geox_las_inspect", geox_las_inspect),
+    ("geox_seismic_segy_inspect", geox_seismic_segy_inspect),
 ]
 
 _WITNESS_ANNOTATIONS: dict[str, dict] = {
@@ -205,6 +211,20 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_literature_ingest": {
         "title": "Literature Ingest",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_las_inspect": {
+        "title": "LAS Inspect",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_seismic_segy_inspect": {
+        "title": "SEG-Y Inspect",
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,

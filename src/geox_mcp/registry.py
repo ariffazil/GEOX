@@ -11,6 +11,8 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_data_qc_bundle",
     "geox_dst_ingest_test",
     "geox_header_inspect",
+    "geox_las_inspect",
+    "geox_seismic_segy_inspect",
     "geox_evidence_discover",
     "geox_report_to_workflow",
     # Physics-9 domain engines
@@ -64,6 +66,8 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_data_qc_bundle", "axis": "verify", "expose": True},
     {"name": "geox_dst_ingest_test", "axis": "observe", "expose": True},
     {"name": "geox_header_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_las_inspect", "axis": "verify", "expose": True},
+    {"name": "geox_seismic_segy_inspect", "axis": "verify", "expose": True},
     {"name": "geox_evidence_discover", "axis": "observe", "expose": True},
     {"name": "geox_report_to_workflow", "axis": "reason", "expose": True},
     {"name": "geox_subsurface_generate_candidates", "axis": "reason", "expose": True},
@@ -109,6 +113,7 @@ LEGACY_ALIAS_MAP: dict[str, str] = {
     "geox_deviation_survey_inspect": "geox_header_inspect",
     "geox_tops_inspect": "geox_header_inspect",
     "geox_seismic_inspect": "geox_header_inspect",
+    # geox_las_inspect and geox_seismic_segy_inspect are now canonical (directly registered)
     "geox_ingest_bundle": "geox_data_ingest_bundle",
     "geox_qc_bundle": "geox_data_qc_bundle",
     "geox_subsurface_candidates": "geox_subsurface_generate_candidates",
