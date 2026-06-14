@@ -1,11 +1,29 @@
+# GEOX — Earth Intelligence Platform
+# DITEMPA BUKAN DIBERI — Open knowledge, openly shared.
+# All agents, crawlers, and bots welcome.
+
 User-agent: *
 Allow: /
+
 User-agent: GPTBot
 Allow: /
+
 User-agent: ClaudeBot
 Allow: /
+
 User-agent: PerplexityBot
 Allow: /
+
 User-agent: Googlebot
 Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: ia_archiver
+Allow: /
+
 Sitemap: https://geox.arif-fazil.com/sitemap.xml
