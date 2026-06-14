@@ -76,6 +76,44 @@ async def geox_system_registry_status(
     missing_from_manifest = sorted(_canonical_set - _manifest_exposed)
     registry_truth = "PASS" if not phantom_tools and not missing_from_manifest else "DRIFT"
 
+    # ── Envelope Compliance Scan (Federation Contract §6, §9) ──────────
+    # Scans all tool files to report which tools use get_standard_envelope()
+    # and which don't. Makes P2 compliance gap visible and auditable.
+    envelope_compliant: list[str] = []
+    envelope_noncompliant: list[str] = []
+    envelope_legacy_alias: list[str] = []
+    try:
+        import ast as _ast
+        from geox_mcp.registry import LEGACY_ALIAS_MAP
+        legacy_names = set(LEGACY_ALIAS_MAP.keys())
+        tool_dir = Path(__file__).parent
+        for fname in sorted(tool_dir.glob("*.py")):
+            if fname.name.startswith("_") or fname.name.startswith("__"):
+                continue
+            try:
+                content = fname.read_text()
+                uses_envelope = "get_standard_envelope" in content
+                if "def geox_" not in content and "async def geox_" not in content:
+                    continue
+                tree = _ast.parse(content)
+                for node in _ast.walk(tree):
+                    if isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)) and node.name.startswith("geox_"):
+                        if node.name in legacy_names:
+                            envelope_legacy_alias.append(node.name)
+                        elif uses_envelope:
+                            envelope_compliant.append(node.name)
+                        else:
+                            envelope_noncompliant.append(node.name)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+    envelope_compliance_pct = (
+        round(len(envelope_compliant) / max(1, len(envelope_compliant) + len(envelope_noncompliant)) * 100)
+        if envelope_compliant or envelope_noncompliant else 100
+    )
+
     return {
         "registry_truth": registry_truth,
         "canonical_tools": sorted(CANONICAL_PUBLIC_TOOLS),
@@ -87,6 +125,21 @@ async def geox_system_registry_status(
         "physics_guard": {"guard_passed": True, "physics_version": _get_git_version()},
         "last_audit": now,
         "legacy_aliases_visible": _show_legacy,
+        "envelope_compliance": {
+            "rate_pct": envelope_compliance_pct,
+            "compliant_tools": len(envelope_compliant),
+            "noncompliant_tools": len(envelope_noncompliant),
+            "legacy_alias_tools": len(envelope_legacy_alias),
+            "noncompliant_list": sorted(envelope_noncompliant),
+            "note": "Noncompliant tools don't use get_standard_envelope(). Claim tools (geox_claim_*) intentionally use claim envelope format. Federation Contract §9 target: 100% for evidence-producing tools.",
+        },
+        "lane_classification": {
+            "discovery": len([t for t in GEOX_TOOL_MANIFEST if t.get("lane") == "discovery"]),
+            "evidence": len([t for t in GEOX_TOOL_MANIFEST if t.get("lane") == "evidence"]),
+            "reasoning": len([t for t in GEOX_TOOL_MANIFEST if t.get("lane") == "reasoning"]),
+            "judgment": len([t for t in GEOX_TOOL_MANIFEST if t.get("lane") == "judgment"]),
+            "classified": len([t for t in GEOX_TOOL_MANIFEST if "lane" in t]),
+        },
         "note": (
             None if registry_truth == "PASS" else f"Drift: {len(phantom_tools)} phantom, {len(missing_from_manifest)} missing."
         ),
