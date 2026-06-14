@@ -1,5 +1,5 @@
 """
-GEOX Unified MCP Server — Sovereign 31 Kernel + Dimension Native
+GEOX Unified MCP Server — Sovereign 39 Kernel + Dimension Native
 ================================================================
 DITEMPA BUKAN DIBERI — Forged, Not Given
 
@@ -61,8 +61,8 @@ logger = logging.getLogger("geox.unified")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 GEOX_VERSION = "v2026.06.05"
-# P6 - Bumped to 37-tool surface; physics manifest anchor replacing constitution_hash
-GEOX_CONTRACT_EPOCH = "2026-06-05-GEOX-37TOOLS-v2.0"
+# P6 - Bumped to 39-tool surface; physics manifest anchor replacing constitution_hash
+GEOX_CONTRACT_EPOCH = "2026-06-14-GEOX-39TOOLS-v2.1"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -210,11 +210,11 @@ def _enforce_geox() -> dict[str, Any] | None:
 def compose_geox_servers() -> None:
     """Mount domain sub-servers onto the main GEOX MCP server.
 
-    Each sub-server owns a slice of the 37-tool surface (33+4 Vision V1):
-      - witness:    16 canonical observe/verify tools
-      - paleoscan:  10 paleoscan_python v2.0.0 forge tools
-      - claims:     5 H5 claim engine tools
-      - vision:     4 Vision V1 layer-1 tools (perceptual_inventory,
+    Each sub-server owns a slice of the 39-tool canonical surface:
+      - witness:    observe/verify tools
+      - paleoscan:  paleoscan_python v2.0.0 forge tools
+      - claims:     H5 claim engine tools
+      - vision:     Vision V1 layer-1 tools (perceptual_inventory,
                     minimax_inference, calibrate, audit)
                     Forged 2026-06-07 (autonomous, F13 delegation).
     """
@@ -239,7 +239,7 @@ def compose_geox_servers() -> None:
     # Assert canonical count across all composed servers
     # 2026-06-14: 37 -> 39 (added geox_las_inspect + geox_seismic_segy_inspect)
     if len(CANONICAL_PUBLIC_TOOLS) != 39:
-        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 37 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 39 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
     logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 4 domains")
 
 

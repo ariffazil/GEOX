@@ -617,11 +617,11 @@ GEOX is the only Earth AI system in the world with:
 | Organ | Repo | Port | Role | Relationship to GEOX |
 |-------|------|------|------|---------------------|
 | **arifOS** | [ariffazil/arifOS](https://github.com/ariffazil/arifOS) | 8088 | Constitutional kernel | Receives GEOX evidence; adjudicates SEAL/SABAR/HOLD/VOID |
-| **A-FORGE** | [ariffazil/A-FORGE](https://github.com/ariffazil/A-FORGE) | 7071 | Execution shell | Builds + deploys GEOX Docker image |
+| **A-FORGE** | [ariffazil/A-FORGE](https://github.com/ariffazil/A-FORGE) | 7071 | Execution shell | Builds + deploys GEOX Docker image; hosts MIND:51001 + MEMORY:51002 |
 | **AAA** | [ariffazil/AAA](https://github.com/ariffazil/AAA) | 3001 | Control plane | Operator cockpit; displays GEOX prospect cards, map scenes, correlation panels |
 | **WEALTH** | [ariffazil/WEALTH](https://github.com/ariffazil/WEALTH) | 18082 | Capital intelligence | Future: receives GEOX prospect viability scores for NPV/IRR computation |
 | **WELL** | [ariffazil/WELL](https://github.com/ariffazil/WELL) | 18083 | Human readiness | Checks human-substrate readiness before field operations informed by GEOX evidence |
-| **APEX** | — | 3002 | 888 JUDGE (legacy) | Deliberation — absorbed into AAA a2a-server |
+| **APEX** | [ariffazil/apex](https://github.com/ariffazil/apex) | 3002 | Legacy health probe | Legacy health probe — deliberation moved to AAA a2a-server |
 
 ---
 

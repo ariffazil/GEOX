@@ -311,11 +311,10 @@ class TestF13NoNewMCPTools(unittest.TestCase):
         try:
             from geox_mcp.server import CANONICAL_PUBLIC_TOOLS
 
-            # F13 SOVEREIGN PENDING RATIFICATION (2026-06-08): see eureka_forge_E8 for full note.
-            # Live canonical count = 37 (33 pre-Vision V1 + 4 Vision V1 tools).
-            # Until sovereign ratifies the +4 (or rolls back), test floor is 37.
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 37)
-            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 18)
+            # Canonical federation decision (2026-06-14): GEOX surface is 39 tools
+            # (35 core + 4 Vision V1). See eureka_forge_E8 for full F13 note.
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 39)
+            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 35)
         except ImportError:
             self.skipTest("geox_mcp.server not importable in this env")
 

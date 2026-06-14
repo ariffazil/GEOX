@@ -32,7 +32,7 @@ journalctl -u geox-mcp -n 50 --no-pager
 Manual start (only for local debugging, never in production):
 ```bash
 cd /root/geox
-python3 -m geox_mcp.server --host 0.0.0.0 --port 8081
+python3 -m geox_mcp.server --host 127.0.0.1 --port 8081
 ```
 
 ## Health Check

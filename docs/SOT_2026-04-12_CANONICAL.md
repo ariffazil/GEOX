@@ -18,7 +18,7 @@
 | Public ready | `https://geox.arif-fazil.com/ready` |
 | Public MCP | `https://geox.arif-fazil.com/mcp` |
 | Ready status | `ok` |
-| Canonical tools | `14` |
+| Canonical tools | `39` |
 | Legacy aliases | `85` |
 | Contract epoch | `2026-05-01-GEOX-13TOOLS-v0.4` |
 
@@ -35,12 +35,12 @@
 | Profile | `full` |
 | Enabled dimensions | `prospect`, `well`, `earth3d`, `map`, `cross`, `physics`, `section`, `canonical` |
 | Auth mode | `fail_closed` |
-| Caddy upstream | `127.0.0.1:18081` |
+| Caddy upstream | `127.0.0.1:8081` |
 
 ---
 
 ## Canonical Guidance
 
 - GEOX public truth is the readiness contract exposed at `/ready`; the README and contract tree must stay aligned with that count.
-- Legacy aliases remain callable for compatibility, but the canonical surface is 14 tools.
+- Legacy aliases remain callable for compatibility, but the canonical surface is 39 tools.
 - Public ingress is now host-safe through localhost proxying rather than Docker-only service names.

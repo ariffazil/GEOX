@@ -8,7 +8,7 @@
 
 ## What you are working in
 
-GEOX provides 33 MCP tools for geoscience evidence: well ingest, petrophysics, seismic, prospect evaluation, and vision interpretation. All outputs carry `cross_modal_stability`, `semantic_density_score`, and `dim_spot_flag`.
+GEOX provides 39 MCP tools for geoscience evidence: well ingest, petrophysics, seismic, prospect evaluation, and vision interpretation. All outputs carry `cross_modal_stability`, `semantic_density_score`, and `dim_spot_flag`.
 
 ## Build / run / test
 
@@ -33,7 +33,7 @@ src/geox_core/   ← physics truth (NOT agent-facing)
     pinn.py                 ← Physics-Informed Neural Net (389 lines)
 
 src/geox_mcp/    ← agent surface (tools, contracts, resources)
-    tools/                  ← all 33 public tools
+    tools/                  ← all 39 public tools
     contracts/              ← tool specs
     servers/                ← server bootstrap
 
@@ -42,7 +42,7 @@ tests/           ← 60+ files, Nobel-grade physics locks (33/33)
 apps/            ← welldesk, seismic_vision, earth_volume, judge_console
 ```
 
-## The 33-tool canonical surface (key tools)
+## The 39-tool canonical surface (key tools)
 
 `geox_basin_profile` · `geox_claim_create` · `geox_claim_validate` · `geox_claim_seal` · `geox_prospect_evaluate` · `geox_data_ingest_bundle` · `geox_data_qc_bundle` · `geox_sequence_interpret` · `geox_seismic_compute` · `geox_horizon_contrast_surface` · `geox_subsurface_generate_candidates` · `geox_subsurface_verify_integrity` · `geox_vision_minimax_inference`
 
