@@ -1065,4 +1065,34 @@ VAULT999 = memory of irreversible truth  (append-only, hash-chained)
 
 ---
 
+## Appendix A — The 7 Engineering Laws (Kernel-to-GUI Alignment)
+
+> **GUI is a lens, not a brain. ACRisk travels with pixels. One truth object from kernel to screen.**
+
+These 7 laws govern every layer from geoxcore computation through MCP transport to GUI rendering. Full contract: `docs/KERNEL_TO_GUI_ALIGNMENT_CONTRACT.md`
+
+| # | Law | Meaning | Violation |
+|---|-----|---------|-----------|
+| 1 | **Contract Supremacy** | GUI consumes only canonical MCP contracts (`RenderPayload`, `CubeManifest`, `ClaimEnvelope`) | React component that manually parses raw envelope fields |
+| 2 | **Provenance on Screen** | Every rendered object shows `artifact_ref`, source tool, CRS, timestamp | Pretty 3D surface with no source hash |
+| 3 | **ACRisk Travels with Pixels** | Risk metadata persists from kernel to tooltip | 3D viewer hiding ACRisk behind menu |
+| 4 | **No Silent Upgrade** | GUI may refine resolution, never epistemic certainty | Panel promoting HYPOTHESIS to CLAIM |
+| 5 | **Partial is Explicit** | Missing data stays PARTIAL/QUALIFY/HYPOTHESIS | Smooth surface hiding 60% interpolation |
+| 6 | **One Object, Many Views** | Map, 3D, table, narrative bind to same `render_id` | Three panels showing different unlinked objects |
+| 7 | **888 at the Edge** | Human veto enforceable in UI, not just kernel | Submit button ignoring GEOX verdict |
+
+### Alignment Flow
+
+```
+geoxcore computes → geoxmcp wraps (contract + ACRisk + verdict)
+  → GUI resolves modality (RenderPayload → component)
+  → UI renders + metadata (ACRisk visible, provenance accessible)
+  → App composes workflows (NEVER mutates claim)
+  → Human judges or 888 HOLD
+```
+
+**If any app step generates new geological meaning without GEOX MCP, alignment is broken.**
+
+---
+
 **DITEMPA BUKAN DIBERI — Forged, Not Given.**
