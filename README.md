@@ -33,6 +33,14 @@ scope: /root/geox
 
 GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, and stratigraphic interpretation — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
 
+[![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
+[![MCP Tools](https://img.shields.io/badge/MCP-39%20canonical%20tools-10b981)](server.py)
+[![Organ](https://img.shields.io/badge/organ-EARTH-f59e0b)](FEDERATION_CONTRACT.md)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-ef4444?logo=gnu)](LICENSE)
+[![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
+[![Authority](https://img.shields.io/badge/authority-EVIDENCE__ONLY-f97316)](GENESIS/)
+[![Status](https://img.shields.io/badge/status-LIVE-success)](CONTEXT.md)
+
 ---
 
 ## 1. FEDERATION POSITION
