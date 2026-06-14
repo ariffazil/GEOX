@@ -212,7 +212,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                     if isinstance(items, list):
                         for item in items:
                             if isinstance(item, dict):
-                                loop.create_task(
+                                task = loop.create_task(
                                     record_evidence(
                                         session_ref=session_id or "geox_session",
                                         source_type=item.get("source_type", name),
@@ -223,13 +223,14 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                                         organ_code="GEOX",
                                     )
                                 )
+                                task.add_done_callback(lambda t: logger.debug(f"Evidence record task done: {t.exception() if t.exception() else 'ok'}"))
                 # Write artifacts
                 if "artifacts" in res:
                     artifacts = res.get("artifacts") or []
                     if isinstance(artifacts, list):
                         for a in artifacts:
                             if isinstance(a, dict):
-                                loop.create_task(
+                                task = loop.create_task(
                                     record_artifact(
                                         bucket=a.get("bucket", "geox_artifacts"),
                                         path=a.get("path", ""),
@@ -239,6 +240,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                                         session_ref=session_id or "geox_session",
                                     )
                                 )
+                                task.add_done_callback(lambda t: logger.debug(f"Artifact record task done: {t.exception() if t.exception() else 'ok'}"))
         except Exception as e:
             logger.debug(f"GEOX Supabase adapter failed (fail-soft): {e}")
 
@@ -263,8 +265,8 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
 
                     prov["domain_law"] = get_domain_law()
                     prov["physics_manifest_hash"] = get_physics_manifest_hash()
-                except Exception:
-                    pass
+                except Exception as exc:
+                    logger.warning(f"Failed to inject physics manifest in post-wrap for {name}: {exc}")
 
         return res
 

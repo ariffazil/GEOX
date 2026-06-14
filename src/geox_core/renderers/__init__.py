@@ -11,6 +11,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import logging
+from datetime import datetime, timezone
 from typing import Any
 
 from geox_core.artifacts import build_artifact_envelope, validate_artifact
@@ -116,7 +117,7 @@ def _render_matplotlib(spec: PlotSpec) -> dict[str, Any]:
     import matplotlib.pyplot as plt
 
     os.makedirs(spec.output_dir, exist_ok=True)
-    timestamp = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = os.path.join(spec.output_dir, f"geox_{spec.plot_type}_{timestamp}.{spec.output_format}")
 
     fig, ax = plt.subplots(figsize=(spec.width_px / spec.dpi, spec.height_px / spec.dpi), dpi=spec.dpi)
@@ -152,7 +153,7 @@ def _render_plotly(spec: PlotSpec) -> dict[str, Any]:
     import os
 
     os.makedirs(spec.output_dir, exist_ok=True)
-    timestamp = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = os.path.join(spec.output_dir, f"geox_{spec.plot_type}_{timestamp}.html")
 
     html = f"""<!DOCTYPE html>
@@ -178,7 +179,7 @@ def _render_pillow(spec: PlotSpec) -> dict[str, Any]:
     from PIL import Image, ImageDraw  # noqa: F401
 
     os.makedirs(spec.output_dir, exist_ok=True)
-    timestamp = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = os.path.join(spec.output_dir, f"geox_{spec.plot_type}_{timestamp}.{spec.output_format}")
 
     img = Image.new("RGB", (spec.width_px, spec.height_px), color=(245, 245, 245))
@@ -197,7 +198,7 @@ def _render_pyvista(spec: PlotSpec) -> dict[str, Any]:
     import os
 
     os.makedirs(spec.output_dir, exist_ok=True)
-    timestamp = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = os.path.join(spec.output_dir, f"geox_{spec.plot_type}_{timestamp}.{spec.output_format}")
 
     # PyVista is optional; if not installed, write a placeholder PNG

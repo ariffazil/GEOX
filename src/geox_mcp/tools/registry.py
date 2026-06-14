@@ -22,7 +22,7 @@ def _get_git_version() -> str:
         return "geox-unknown"
 
 
-from datetime import UTC
+from datetime import datetime, UTC
 
 from geox_core.enums.statuses import (
     ArtifactStatus,
@@ -531,7 +531,7 @@ async def geox_test_receipt_status() -> dict:
         "commit_hash": commit_hash,
         "commit_date": commit_date,
         "source": source_note,
-        "verified_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+        "verified_at": datetime.now(UTC).isoformat(),
         "registry_truth": "PASS"
         if tests_failed == 0 and commit_hash != "unknown"
         else "HYPOTHESIS"

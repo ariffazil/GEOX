@@ -16,6 +16,8 @@ Author: M Arif Fazil | DITEMPA BUKAN DIBERI
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 import logging
 from typing import Any, Literal
 
@@ -276,7 +278,7 @@ async def geox_forward_model_synthetic(
         audit_receipt={
             "tool": "geox_forward_model_synthetic",
             "version": "2026.05.21",
-            "timestamp": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "floors_checked": [1, 2, 3, 9, 10, 11, 13],
         },
         canon_9_touched=["Vp", "rho", "phi"],

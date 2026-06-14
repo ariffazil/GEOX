@@ -104,7 +104,6 @@ if not GEOX_SECRET_TOKEN:
         )
         GEOX_SECRET_TOKEN = ""
 
-sys.path.append(os.getcwd())
 
 
 # ─── Git SHA version (K8: no silent version drift) ───────────────────────────
@@ -135,19 +134,17 @@ _GIT_VERSION = _get_git_version()
 try:
     from fastmcp import FastMCPApp
     from prefab_ui.actions import SetState, ShowToast
-    from prefab_ui.actions.mcp import CallTool
     from prefab_ui.app import PrefabApp
-    from prefab_ui.components import Badge, Column, Heading, Row, Separator, Text
-    from prefab_ui.components.cards import StatCard
-    from prefab_ui.components.tables import Table, TableColumn
+    from prefab_ui.components import (
+        Badge, Card, Column, DataTable, Heading, Metric, Row, Separator, Text,
+    )
 
     HAS_FASTMCP_APPS = True
 except Exception:
     FastMCPApp = None
     PrefabApp = None
-    Column = Heading = Row = Text = Separator = Badge = None
-    Table = TableColumn = StatCard = None
-    CallTool = ShowToast = SetState = None
+    Badge = Card = Column = DataTable = Heading = Metric = Row = Separator = Text = None
+    SetState = ShowToast = None
     HAS_FASTMCP_APPS = False
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -244,6 +241,119 @@ def compose_geox_servers() -> None:
 
 
 compose_geox_servers()
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MCP APPS — PrefabUI tools (P2#7)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _register_prefab_apps() -> None:
+    """Register MCP App tools on the geox_app and well_app providers.
+
+    These are FastMCP PrefabUI components that render interactive UIs
+    inside MCP hosts (Claude, ChatGPT, Cursor, etc.).
+
+    Only registered when HAS_FASTMCP_APPS is True.
+    """
+    if not HAS_FASTMCP_APPS:
+        logger.info("MCP Apps disabled — prefab-ui not installed")
+        return
+
+    # Import tool categories for PrefabUI dashboard
+    from geox_mcp.webmcp import TOOL_CATEGORIES
+
+    # ── geox_app: GEOX Mission Board ──────────────────────────────────
+    @geox_app.tool
+    def geox_mission_board() -> list[PrefabApp]:
+        """GEOX Mission Board — live governance dashboard."""
+        with PrefabApp() as board:
+            with Column(gap=4, css_class="p-4"):
+                Heading("GEOX Mission Board", level=2)
+                Text("Earth Intelligence — 39 canonical tools across 4 domains")
+                Separator()
+                with Row(gap=6):
+                    Metric(label="Canonical Tools", value="39")
+                    Metric(label="Domains", value="4")
+                    Metric(label="Status", value="SEAL")
+                Separator()
+                Heading("Tool Categories", level=3)
+                for cat in TOOL_CATEGORIES:
+                    with Column(gap=1):
+                        Heading(cat["category"], level=4)
+                        Text(", ".join(cat["tools"]))
+        return board
+
+    @geox_app.tool
+    def geox_health_dashboard() -> PrefabApp:
+        """GEOX Health Dashboard — real-time system status."""
+        import os
+        import subprocess
+
+        try:
+            git = subprocess.run(
+                ["git", "log", "--oneline", "-1"],
+                capture_output=True, text=True, cwd="/root/geox", timeout=5,
+            )
+            git_version = git.stdout.strip() or "unknown"
+        except Exception:
+            git_version = "unknown"
+
+        with PrefabApp() as dash:
+            with Column(gap=4, css_class="p-4"):
+                Heading("GEOX System Health", level=2)
+                Badge("DITEMPA BUKAN DIBERI", variant="outline")
+
+                with Row(gap=4):
+                    with Card():
+                        CardHeader("MCP Server")
+                        Text(f"Version: {os.getenv('GEOX_VERSION', '2026.06.06')}")
+                        Text(f"Commit: {git_version}")
+                        Text(f"Port: {os.getenv('GEOX_PORT', '8081')}")
+
+                    with Card():
+                        CardHeader("Transport")
+                        Text("HTTP: streamable-http")
+                        Text("Stdio: local agents")
+                        Text("WebMCP: browser console")
+
+                with Card():
+                    CardHeader("Canonical Tools by Category")
+                    for cat in TOOL_CATEGORIES:
+                        Text(f"{cat['category']}: {len(cat['tools'])} tools")
+        return dash
+
+    # ── well_app: Well Desk App ────────────────────────────────────────
+    @well_app.tool
+    def well_desk_dashboard() -> PrefabApp:
+        """Well Desk — well log and petrophysics quick-launch panel."""
+        with PrefabApp() as wd:
+            with Column(gap=4, css_class="p-4"):
+                Heading("Well Desk", level=2)
+                Text("Interactive well log analysis tools")
+                Separator()
+                with Row(gap=4):
+                    Metric(label="LAS Files Available", value="737")
+                    Metric(label="Wells", value="600+")
+                    Metric(label="Well Data Directory")
+                    Text("/root/geox/data/wells/")
+                Separator()
+                Heading("Quick Actions", level=3)
+                with Column(gap=2):
+                    with Card():
+                        CardHeader("Ingest Well Log")
+                        Text("geox_data_ingest_bundle — load LAS/CSV/Parquet")
+                    with Card():
+                        CardHeader("QC Log Data")
+                        Text("geox_data_qc_bundle — depth, curves, physical ranges")
+                    with Card():
+                        CardHeader("Petrophysics")
+                        Text("geox_subsurface_generate_candidates — Vsh, Phi, Sw, NetPay")
+        return wd
+
+    logger.info("MCP App tools registered: geox_mission_board, geox_health_dashboard, well_desk_dashboard")
+
+
+_register_prefab_apps()
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # RESOURCES & PROMPTS COMPOSITION (P1 — extracted modules)
@@ -528,7 +638,8 @@ async def health_handler(request: Request) -> JSONResponse:
 
         _domain_law = get_domain_law()
         _physics_hash = get_physics_manifest_hash()
-    except Exception:
+    except Exception as exc:
+        logger.warning(f"Failed to load physics manifest: {exc}")
         import os as _os_id
 
         _domain_law = "NATURAL_LAW"
@@ -646,10 +757,9 @@ async def tools_list_handler(request: Request) -> JSONResponse:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 _GEOX_SUPABASE_URL = os.getenv("GEOX_SUPABASE_URL", "https://utbmmjmbolmuahwixjqc.supabase.co")
-_GEOX_SUPABASE_ANON_KEY = os.getenv(
-    "GEOX_SUPABASE_ANON_KEY",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV0Ym1tam1ib2xtdWFod2l4anFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjQwMTYsImV4cCI6MjAwNTA5OTk5Nn0.Nxg2Rkf-PyqnemVGz-_H1VW22jhNbmq67hH6EZ2EzEs",
-)
+# Fail-closed: no default anon key. Must be set via env or writes are skipped.
+# Falls back to SUPABASE_ANON_KEY for compatibility with shared vault.
+_GEOX_SUPABASE_ANON_KEY = os.getenv("GEOX_SUPABASE_ANON_KEY", os.getenv("SUPABASE_ANON_KEY", ""))
 
 
 def _geox_write_domain_receipt(
@@ -662,10 +772,14 @@ def _geox_write_domain_receipt(
     mode = os.getenv("GEOX_SUPABASE_WRITE_MODE", "off").lower()
     if mode == "off":
         return
+    if not _GEOX_SUPABASE_URL or not _GEOX_SUPABASE_ANON_KEY:
+        logger.warning(f"Supabase write skipped: missing URL or anon key (mode={mode})")
+        return
 
     try:
         loop = asyncio.get_running_loop()
     except RuntimeError:
+        logger.warning("Supabase write skipped: no running event loop")
         return
 
     epoch = datetime.now(UTC).isoformat()
@@ -712,13 +826,18 @@ def _geox_write_domain_receipt(
                     headers=headers,
                     json=payload,
                 )
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning(f"Supabase write failed for {tool_name}: {exc}")
+            # Track via runtime counter so we know how many fail
+            _supabase_write_failures = getattr(_geox_write_domain_receipt, "_failures", 0) + 1
+            _geox_write_domain_receipt._failures = _supabase_write_failures
 
     try:
         loop.run_in_executor(None, lambda: asyncio.run(_write()))
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning(f"Supabase executor error for {tool_name}: {exc}")
+        _supabase_write_failures = getattr(_geox_write_domain_receipt, "_failures", 0) + 1
+        _geox_write_domain_receipt._failures = _supabase_write_failures
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -783,6 +902,13 @@ async def legacy_mcp_handler(request):
         # RT-1: block undeclared tools before FastMCP sees them. Use canonical for check.
         # Patch E - Resolve dashboard.open: Alias is handled here by LEGACY_ALIAS_MAP
         resolved_name = LEGACY_ALIAS_MAP.get(name, name)
+
+        # Macrostrat alias: inject mode='macrostrat_units' and pass lat/lng
+        if name in ("geox_query_macrostrat",):
+            if "mode" not in args:
+                args["mode"] = "macrostrat_units"
+            # Pass lat/lng to geox_basin_profile as-is
+
         if resolved_name not in CANONICAL_PUBLIC_TOOLS and resolved_name != name:
             return JSONResponse(
                 {
@@ -822,7 +948,7 @@ async def legacy_mcp_handler(request):
 
         from geox_mcp.organ_governance import check_governance
 
-        gov_verdict, gov_error = check_governance(
+        gov_verdict, gov_error = await check_governance(
             tool_name=resolved_name,
             arguments=args,
             actor_id="geox-mcp",
@@ -964,6 +1090,15 @@ def create_app():
         stateless_http=True,
     )
 
+    # ── WebMCP routes (P2#5) ──────────────────────────────────────
+    from geox_mcp.webmcp import (
+        webmcp_call_tool,
+        webmcp_index,
+        webmcp_manifest,
+        webmcp_status,
+        webmcp_tools,
+    )
+
     app = Starlette(
         routes=[
             Route("/health", health_handler, methods=["GET"]),
@@ -975,7 +1110,12 @@ def create_app():
             Route("/adapters", adapters_handler, methods=["GET"]),
             Route("/.well-known/mcp.json", mcp_server_card, methods=["GET"]),
             Route("/.well-known/mcp/server.json", discovery_handler, methods=["GET"]),
+            Route("/.well-known/webmcp", webmcp_manifest, methods=["GET"]),
             Route("/tools", tools_list_handler, methods=["GET"]),
+            Route("/webmcp", webmcp_index, methods=["GET"]),
+            Route("/webmcp/tools", webmcp_tools, methods=["GET"]),
+            Route("/webmcp/status", webmcp_status, methods=["GET"]),
+            Route("/webmcp/call/{tool_name:str}", webmcp_call_tool, methods=["POST"]),
             Route("/mcp", lambda req: RedirectResponse(url="/mcp/", status_code=307), methods=["GET", "POST", "DELETE"]),
             Mount("/mcp", app=mcp_http_handler),
             # Also handle /mcp with trailing slash explicitly (some clients don't follow 307)

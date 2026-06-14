@@ -4,8 +4,12 @@ import os
 import yaml
 import json
 import logging
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal, Any
+
+import httpx
 
 from geox_core.enums.statuses import (
     ArtifactStatus,
@@ -15,6 +19,38 @@ from geox_core.enums.statuses import (
 )
 
 logger = logging.getLogger("geox.basin")
+
+# ── Macrostrat TTL Cache ──────────────────────────────────────────────────
+# In-process cache: keyed by (endpoint, lat_4dp, lng_4dp)
+# Geology doesn't change fast — 1 hour TTL is safe.
+_MACROSTRAT_CACHE: dict[str, tuple[float, Any]] = {}
+_MACROSTRAT_CACHE_TTL = 3600.0  # 1 hour
+_MACROSTRAT_BASE = "https://macrostrat.org/api/v2"
+
+
+async def _macrostrat_query(endpoint: str, lat: float, lng: float, **params: Any) -> dict:
+    """Query Macrostrat API with in-process TTL cache. Returns parsed JSON."""
+    cache_key = f"{endpoint}:{lat:.4f}:{lng:.4f}"
+    cached = _MACROSTRAT_CACHE.get(cache_key)
+    if cached is not None:
+        cached_at, data = cached
+        if (time.monotonic() - cached_at) < _MACROSTRAT_CACHE_TTL:
+            logger.debug("Macrostrat cache hit: %s", cache_key)
+            return data
+
+    query_params = {"lat": lat, "lng": lng, **params}
+    try:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            resp = await client.get(f"{_MACROSTRAT_BASE}/{endpoint}", params=query_params)
+            resp.raise_for_status()
+            data = resp.json()
+    except Exception as exc:
+        logger.warning(f"Macrostrat API error ({endpoint} @ {lat},{lng}): {exc}")
+        return {"error": str(exc), "data": []}
+
+    _MACROSTRAT_CACHE[cache_key] = (time.monotonic(), data)
+    logger.debug("Macrostrat cache set: %s (%d items)", cache_key, len(data.get("data", data.get("success", {}).get("data", []))))
+    return data
 
 # Repo-root resolution. Default = path-relative; override via GEOX_RESOURCES_DIR.
 # Fix: prior hardcode `/root/geox/resources` broke CI (runner uses /home/runner/work/...).
@@ -106,12 +142,14 @@ async def geox_basin_resolve(
 
 async def geox_basin_profile(
     basin_name: str,
-    mode: Literal["overview", "petroleum_system", "stratigraphy", "play_fairway", "risk", "contradiction_scan"] = "overview",
+    mode: Literal["overview", "petroleum_system", "stratigraphy", "play_fairway", "risk", "contradiction_scan", "macrostrat_units", "macrostrat_columns"] = "overview",
     claim_strictness: Literal["screen", "appraise", "decision"] = "screen",
     evidence_refs: list[str] | None = None,
     include_missing_evidence: bool = True,
     session_id: str | None = None,
     actor_id: str | None = None,
+    lat: float | None = None,
+    lng: float | None = None,
 ) -> dict:
     """Retrieve basin-level intelligence, regional geology, petroleum system details, or stratigraphic frameworks.
 
@@ -120,7 +158,8 @@ async def geox_basin_profile(
     basin_name : str
         The resolved basin name (e.g. 'Malay Basin').
     mode : str
-        Operation mode: overview, petroleum_system, stratigraphy, play_fairway, risk, contradiction_scan.
+        Operation mode: overview, petroleum_system, stratigraphy, play_fairway, risk, contradiction_scan,
+        macrostrat_units (rock units from Macrostrat API), or macrostrat_columns (strat columns).
     claim_strictness : str
         Strictness constraint: screen, appraise, or decision. Higher strictness requires more evidence_refs.
     evidence_refs : list of str, optional
@@ -131,6 +170,10 @@ async def geox_basin_profile(
         Sovereign session ID.
     actor_id : str, optional
         Sovereign actor ID.
+    lat : float, optional
+        Latitude for Macrostrat queries (required for macrostrat_* modes).
+    lng : float, optional
+        Longitude for Macrostrat queries (required for macrostrat_* modes).
     """
     normalized = _normalize_name(basin_name)
     if normalized in ("basin_melayu", "malay_basin"):
@@ -244,6 +287,40 @@ async def geox_basin_profile(
                 with open(u_file) as f:
                     mode_data = yaml.safe_load(f)
                 evidence_loaded.append("uncertainty_register.yaml")
+
+        elif mode.startswith("macrostrat_"):
+            # ── Macrostrat API modes ─────────────────────────────────
+            if lat is None or lng is None:
+                return get_standard_envelope(
+                    {"tool": "geox_basin_profile", "error": f"macrostrat_* modes require lat and lng parameters"},
+                    tool_class="observe",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    claim_state="VOID",
+                    session_id=session_id,
+                    actor_id=actor_id,
+                )
+
+            if mode == "macrostrat_units":
+                raw = await _macrostrat_query("units", lat, lng, format="json")
+                items = raw.get("success", {}).get("data", raw.get("data", []))
+                mode_data = {
+                    "units": items,
+                    "unit_count": len(items),
+                    "source": "macrostrat.org/api/v2/units",
+                    "license": "CC-BY-4.0",
+                }
+                evidence_loaded.append("macrostrat.org/api/v2/units")
+            elif mode == "macrostrat_columns":
+                raw = await _macrostrat_query("columns", lat, lng, format="geojson")
+                items = raw.get("success", {}).get("data", raw.get("data", []))
+                mode_data = {
+                    "columns": items,
+                    "column_count": len(items),
+                    "source": "macrostrat.org/api/v2/columns",
+                    "license": "CC-BY-4.0",
+                }
+                evidence_loaded.append("macrostrat.org/api/v2/columns")
 
         elif mode == "contradiction_scan":
             mode_data = {"scan_status": "COMPLETE", "contradictions_found": []}
@@ -483,8 +560,8 @@ async def geox_literature_ingest(
         try:
             with open(path, "rb") as f:
                 text_content = f.read(10000).decode("utf-8", errors="replace")
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning(f"PDF ingest failed: {exc}")
 
     # Heuristic metadata extraction
     title = "Unknown Literature Title"

@@ -633,10 +633,12 @@ def seismic_render_volume_slice(
 
 def seismic_health_check() -> dict[str, Any]:
     """Return availability of seismic libraries."""
+    import importlib
+
     libs = {}
     for name, imp in [("segyio", "segyio"), ("bruges", "bruges"), ("scipy", "scipy")]:
         try:
-            __import__(imp)
+            importlib.import_module(imp)
             libs[name] = {"available": True}
         except Exception as e:
             libs[name] = {"available": False, "error": str(e)}

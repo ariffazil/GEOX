@@ -13,7 +13,7 @@
   ],
   "optional_tools": [
     "mcp.geox.verify_geospatial",
-    "mcp.geox.query_macrostrat",
+    "mcp.geox.basin_profile",
     "mcp.geox.query_memory"
   ],
   "ui_entry": {

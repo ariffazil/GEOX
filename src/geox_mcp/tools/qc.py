@@ -138,7 +138,6 @@ async def geox_data_qc_bundle(
     # ── Mode-specific QC ─────────────────────────────────────────────────
     import sys
 
-    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
     import numpy as np
 
     try:
@@ -290,8 +289,6 @@ async def geox_data_qc_bundle(
             import sys
 
             _arifos_kernel = os.environ.get("ARIFOS_HOME", "/root") + "/arifOS"
-            if _arifos_kernel not in sys.path:
-                sys.path.insert(0, _arifos_kernel)
             import os as _os_saf
             import uuid as _uuid_saf
             from pathlib import Path as _Path_saf

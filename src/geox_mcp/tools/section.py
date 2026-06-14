@@ -75,7 +75,6 @@ async def geox_section_interpret_correlation(
     """
     import sys
 
-    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
     import numpy as np
 
     # ── well_tie mode ────────────────────────────────────────────────────────

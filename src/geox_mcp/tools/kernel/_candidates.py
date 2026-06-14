@@ -69,7 +69,6 @@ async def _compute_subsurface_candidates(
     """Inner computation for subsurface candidates."""
     import sys
 
-    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
     import numpy as np
 
     # Evidence validation — all refs must be resolvable

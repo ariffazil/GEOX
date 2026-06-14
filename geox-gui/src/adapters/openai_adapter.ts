@@ -441,7 +441,7 @@ const getToolLimitations = (toolName: string): string[] => {
       'Prospect evaluation uses available data; additional wells may change conclusions.',
       'Risk matrix is advisory; final investment decision requires full due diligence.',
     ],
-    geox_query_macrostrat: [
+    'geox_basin_profile (macrostrat_*)': [
       'Macrostrat data is regional-scale; local geology may vary.',
       'Stratigraphic correlations are probabilistic.',
     ],

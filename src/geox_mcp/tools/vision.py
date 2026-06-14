@@ -472,8 +472,12 @@ async def geox_vision_calibrate(
             seed=seed,
         )
 
-        # Write the report
-        report_path = Path(output_dir) / f"calibrate_{int(time.time())}.json"
+        # Write the report — validate path is under safe root
+        safe_root = Path("/tmp/opencode")
+        output_path = Path(output_dir).resolve()
+        if not str(output_path).startswith(str(safe_root)):
+            raise ValueError(f"Output path {output_dir} is outside allowed root {safe_root}")
+        report_path = output_path / f"calibrate_{int(time.time())}.json"
         report_path.write_text(
             json.dumps(report.to_dict() if hasattr(report, "to_dict") else dict(report), indent=2, sort_keys=True)
         )

@@ -13,7 +13,7 @@
     "mcp.geox.malay_basin_pilot"
   ],
   "optional_tools": [
-    "mcp.geox.query_macrostrat",
+    "mcp.geox.basin_profile",
     "mcp.geox.load_seismic_line",
     "mcp.geox.earth_signals"
   ],

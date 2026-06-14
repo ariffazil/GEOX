@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import logging
 import os
+from datetime import datetime, timezone
 from typing import Any
 
 from fastmcp import FastMCP
@@ -86,7 +87,7 @@ async def mcp_health_check() -> dict:
         "version": _v,
         "transport": "streamable-http",
         "tools_loaded": len(CANONICAL_PUBLIC_TOOLS),
-        "timestamp": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 # REGISTRATION
