@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "geox-claim-state-machine/v1",
+  "title": "GEOX ClaimCard State Machine v1",
+  "description": "Canonical state machine for ClaimCard lifecycle. 9 states, 8 transitions. Structured error codes for governance holds.",
+  "type": "object",
+  "properties": {
+    "spec_version": {
+      "type": "string",
+      "const": "geox-claim-state-machine/v1"
+    },
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "entry_conditions", "exit_allowed"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "entry_conditions": { "type": "array", "items": { "type": "string" } },
+          "requires_evidence_pack": { "type": "boolean", "default": false },
+          "requires_human": { "type": "boolean", "default": false },
+          "exit_allowed": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Valid next states."
+          }
+        }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "condition", "error_code_on_fail"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "condition": { "type": "string" },
+          "error_code_on_fail": { "type": "string" }
+        }
+      }
+    },
+    "error_codes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "layer", "message_template"],
+        "properties": {
+          "code": { "type": "string" },
+          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+          "layer": { "type": "string", "enum": ["production_authority", "geox_mcp_core", "geox_mcp_ui", "geox_mcp_apps", "subsurface_workflow"] },
+          "message_template": { "type": "string" },
+          "recovery": { "type": "string" }
+        }
+      }
+    },
+    "default": {
+      "type": "object",
+      "properties": {
+        "initial_state": { "type": "string", "const": "DRAFT" },
+        "terminal_states": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "blocked_if_no_evidence": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "States that cannot be entered if EvidencePack is NO_VALID_EVIDENCE or QC_FAILED."
+        }
+      }
+    }
+  },
+  "required": ["spec_version", "states", "transitions", "error_codes", "default"]
+}

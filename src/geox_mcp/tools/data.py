@@ -42,22 +42,36 @@ def _safe_filename(well_id: str) -> str:
     return sanitized or "well"
 
 
-def _metabolic_return(
-    envelope: dict,
-    witness_status: str = "RAW",
-    **kwargs,
-) -> dict:
-    """Add metabolic.v1 output to a GEOX ingest envelope and return it.
+def _make_metabolic_return(source_crs: str = "unknown", depth_datum: str | None = None):
+    """Factory for _metabolic_return with CRS context captured at definition time.
 
-    Phase 1 adoption bridge: wraps get_standard_envelope() output with
-    the universal metabolic contract so arifOS can read it uniformly.
+    P1.4: Injects CRS provenance into every ingest envelope without
+    needing to pass source_crs through all 21 return paths.
     """
-    return enrich_envelope_with_metabolic(
-        envelope,
-        "geox_data_ingest_bundle",
-        witness_status=witness_status,
+    def _metabolic_return(
+        envelope: dict,
+        witness_status: str = "RAW",
         **kwargs,
-    )
+    ) -> dict:
+        """Inject CRS provenance and wrap with metabolic contract."""
+        # P1.4: Add CRS provenance to envelope's provenance block
+        if isinstance(envelope, dict) and "provenance" in envelope:
+            prov = envelope["provenance"]
+            if isinstance(prov, dict):
+                prov["crs_source"] = source_crs or "unknown"
+                prov["depth_datum"] = depth_datum or prov.get("depth_datum", "unknown")
+        # Also inject into top level for visibility
+        if isinstance(envelope, dict):
+            envelope["crs_source"] = source_crs or "unknown"
+            envelope["depth_datum"] = depth_datum or envelope.get("depth_datum", "unknown")
+
+        return enrich_envelope_with_metabolic(
+            envelope,
+            "geox_data_ingest_bundle",
+            witness_status=witness_status,
+            **kwargs,
+        )
+    return _metabolic_return
 
 
 async def geox_data_ingest_bundle(
@@ -74,6 +88,9 @@ async def geox_data_ingest_bundle(
     batch_mode: bool = False,
     artifact_refs: list[str] | None = None,
     qc_strict: bool = True,
+    # P1.4: CRS handling — coordinate reference system of the source data
+    source_crs: str = "unknown",
+    depth_datum: str | None = None,
 ) -> dict:
     """Lazy ingestion for LAS, CSV, Parquet, SEG-Y, and structural payloads.
     Also supports direct base64 upload and batch mode.
@@ -93,13 +110,21 @@ async def geox_data_ingest_bundle(
         batch_mode: If True, iterate over artifact_refs instead of single source_uri.
         artifact_refs: List of file paths or artifact references for batch_mode.
         qc_strict: If True, treat QC failures as errors in batch summary.
+        source_crs: Coordinate Reference System (e.g. "EPSG:3168" for Kertau).
+            "unknown" = not declared — will flag in provenance but not block.
+            Pass explicit EPSG code for subsurface-grade data management.
+            P1.4: No free-text coordinates. Must be EPSG code.
+        depth_datum: Depth reference datum (KB, MSL, DF). Default None = derive from LAS header.
     """
+
+    # P1.4: Capture CRS at function entry — propagates through all return paths
+    _return = _make_metabolic_return(source_crs=source_crs, depth_datum=depth_datum)
 
     # --- Batch mode (absorbs geox_task_ingest_las_batch) ---
     if batch_mode:
         refs = artifact_refs or []
         if not refs:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "tool": "geox_data_ingest_bundle",
@@ -159,7 +184,7 @@ async def geox_data_ingest_bundle(
         if not all_ok and qc_strict:
             out["hold_reason"] = f"{error_count} of {len(refs)} files failed ingest/QC"
             out["human_final_authority"] = "Arif"
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 out,
                 tool_class="ingress",
@@ -173,7 +198,7 @@ async def geox_data_ingest_bundle(
     # --- Handle content_base64 upload first ---
     if content_base64:
         if source_uri:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "status": "ERROR",
@@ -190,7 +215,7 @@ async def geox_data_ingest_bundle(
                 )
             )
         if not filename:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "status": "ERROR",
@@ -210,7 +235,7 @@ async def geox_data_ingest_bundle(
         try:
             target_path = _safe_upload_path(filename, target_dir)
         except ValueError as exc:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "status": "ERROR",
@@ -228,7 +253,7 @@ async def geox_data_ingest_bundle(
             )
 
         if target_path.exists() and not overwrite:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "status": "ERROR",
@@ -250,7 +275,7 @@ async def geox_data_ingest_bundle(
             payload = _decode_upload_content(content_base64)
             target_path.write_bytes(payload)
         except Exception as exc:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "status": "ERROR",
@@ -276,7 +301,7 @@ async def geox_data_ingest_bundle(
             ingest_result = LASIngestor().ingest(path=str(target_path), asset_id=derived_well_id)
             ingest_dict = ingest_result.to_dict()
         except Exception as exc:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "status": "ERROR",
@@ -315,7 +340,7 @@ async def geox_data_ingest_bundle(
             artifact_type="well_log",
         )
 
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "status": "OK",
@@ -338,7 +363,7 @@ async def geox_data_ingest_bundle(
 
     # --- Original geox_data_ingest_bundle logic (for source_uri) ---
     if not source_uri:
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "status": "ERROR",
@@ -363,7 +388,7 @@ async def geox_data_ingest_bundle(
         validate_optional_string("well_id", well_id)
         validate_optional_string("filename", filename)
     except (TypeError, ValueError) as exc:
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "status": "ERROR",
@@ -387,7 +412,7 @@ async def geox_data_ingest_bundle(
         try:
             rows = _parse_csv_or_json(source_uri)
         except Exception as exc:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "tool": "geox_data_ingest_bundle",
@@ -408,7 +433,7 @@ async def geox_data_ingest_bundle(
         _register_artifact(derived_id, claim_state="RAW_OBSERVATION")
         _artifact_store[derived_id]["type"] = "tops"
         _artifact_store[derived_id]["rows"] = rows
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "tool": "geox_data_ingest_bundle",
@@ -430,7 +455,7 @@ async def geox_data_ingest_bundle(
         try:
             rows = _parse_csv_or_json(source_uri)
         except Exception as exc:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "tool": "geox_data_ingest_bundle",
@@ -451,7 +476,7 @@ async def geox_data_ingest_bundle(
         _register_artifact(derived_id, claim_state="RAW_OBSERVATION")
         _artifact_store[derived_id]["type"] = "biostrat"
         _artifact_store[derived_id]["rows"] = rows
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "tool": "geox_data_ingest_bundle",
@@ -473,7 +498,7 @@ async def geox_data_ingest_bundle(
         try:
             rows = _parse_csv_or_json(source_uri)
         except Exception as exc:
-            return _metabolic_return(
+            return _return(
                 get_standard_envelope(
                     {
                         "tool": "geox_data_ingest_bundle",
@@ -495,7 +520,7 @@ async def geox_data_ingest_bundle(
         _artifact_store[derived_id]["type"] = "checkshot"
         _artifact_store[derived_id]["rows"] = rows
         depth_range = [min(depths), max(depths)] if depths else [0, 0]
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "tool": "geox_data_ingest_bundle",
@@ -521,7 +546,7 @@ async def geox_data_ingest_bundle(
 
         local_path = materialize_las_source(source_uri, artifact_id=derived_well_id)
     except FileNotFoundError as exc:
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "tool": "geox_data_ingest_bundle",
@@ -541,7 +566,7 @@ async def geox_data_ingest_bundle(
         )
     except LASSourceError as exc:
         error_code = "URL_FETCH_FAILED" if source_uri.startswith(("http://", "https://")) else "LAS_SOURCE_UNAVAILABLE"
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "tool": "geox_data_ingest_bundle",
@@ -663,7 +688,7 @@ async def geox_data_ingest_bundle(
             "timestamp": datetime.now(UTC).isoformat(),
             "hash": digest,
         }
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 out,
                 tool_class="ingest",
@@ -673,7 +698,7 @@ async def geox_data_ingest_bundle(
             )
         )
     except Exception as exc:
-        return _metabolic_return(
+        return _return(
             get_standard_envelope(
                 {
                     "tool": "geox_data_ingest_bundle",
@@ -892,6 +917,9 @@ async def geox_report_to_workflow(
             {"step": 4, "action": "perform contradiction scan", "details": "Attack claims with geox_evidence_reason."},
         ]
 
+    # P1.3: Boundary guard — report_to_workflow may summarize and package,
+    # but must NOT approve, seal, sanction, or mutate official interpretation.
+    # Output class is always DRAFT_REPORT or REVIEW_PACKAGE — never APPROVAL.
     return {
         "status": "OK",
         "verdict": "QUALIFY",
@@ -904,6 +932,7 @@ async def geox_report_to_workflow(
             "report_ref": report_ref,
             "intent": intent,
             "steps": steps,
+            "output_class": "DRAFT_REPORT",  # P1.3: NOT_APPROVAL — cannot substitute for human decision
             "provenance_mandate": {
                 "source_report_hash": "8fca02d1844b20a3240e13bc5894191c7f4222da8e8b62551a0293144ef2981a",
                 "artifact_refs": [report_ref],
@@ -915,5 +944,5 @@ async def geox_report_to_workflow(
             },
         },
         "error": None,
-        "reasons": ["Generated geological workflow steps from report and intent."],
+        "reasons": ["Generated geological workflow steps from report and intent. DRAFT only — not approval."],
     }

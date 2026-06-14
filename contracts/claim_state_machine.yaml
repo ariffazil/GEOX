@@ -1,0 +1,179 @@
+# GEOX ClaimCard State Machine v1
+# DITEMPA BUKAN DIBERI
+# Canonical lifecycle: 9 states, 8 transitions, 7 error codes
+# 
+# Rule: A claim SHALL NOT advance beyond DRAFT or AI_INFERRED
+# if EvidencePack is in NO_VALID_EVIDENCE or QC_FAILED state.
+
+spec_version: geox-claim-state-machine/v1
+
+states:
+  - name: DRAFT
+    description: Claim object created, no evidence linked yet.
+    entry_conditions:
+      - "claim_id must be non-null UUID"
+      - "actor_id must be non-null"
+      - "session_id must be non-null"
+    requires_evidence_pack: false
+    requires_human: false
+    exit_allowed: [AI_INFERRED, REJECTED]
+
+  - name: AI_INFERRED
+    description: Claim produced by model or agent with linked EvidencePack.
+    entry_conditions:
+      - "EvidencePack must exist or explicit NO_VALID_EVIDENCE declared"
+    requires_evidence_pack: true
+    requires_human: false
+    exit_allowed: [REVIEW_PENDING, REJECTED]
+
+  - name: REVIEW_PENDING
+    description: Human reviewer has opened governed review.
+    entry_conditions:
+      - "EvidencePack must not be NO_VALID_EVIDENCE or QC_FAILED"
+      - "actor_id and session_id must be bound"
+    requires_evidence_pack: true
+    requires_human: true
+    exit_allowed: [NEEDS_EVIDENCE, CHALLENGED, APPROVED_INTERPRETATION, REJECTED]
+
+  - name: NEEDS_EVIDENCE
+    description: Reviewer found missing, weak, or contradictory grounding.
+    entry_conditions:
+      - "REVIEW_PENDING or CHALLENGED transitioning back"
+    requires_evidence_pack: true
+    requires_human: true
+    exit_allowed: [REVIEW_PENDING, REJECTED]
+
+  - name: CHALLENGED
+    description: Reviewer disputes interpretation or requests alternatives.
+    entry_conditions:
+      - "Contradictions list must be non-empty"
+    requires_evidence_pack: true
+    requires_human: true
+    exit_allowed: [REVIEW_PENDING, NEEDS_EVIDENCE, APPROVED_INTERPRETATION, REJECTED]
+
+  - name: APPROVED_INTERPRETATION
+    description: Human accepts claim as interpretation within scope.
+    entry_conditions:
+      - "ReviewAction must have action=approve_as_interpretation"
+      - "actor_id must match reviewer role"
+    requires_evidence_pack: true
+    requires_human: true
+    exit_allowed: [SEALED, CHALLENGED, REJECTED]
+
+  - name: SEALED
+    description: Irreversibly sealed to VAULT999.
+    entry_conditions:
+      - "ack_irreversible must be true"
+      - "Policy must allow sealing"
+    requires_evidence_pack: true
+    requires_human: true
+    exit_allowed: [REVOKED]
+
+  - name: REVOKED
+    description: Exceptional administrative reversal with traceable justification.
+    entry_conditions:
+      - "Only from SEALED"
+      - "Requires F13 SOVEREIGN-level authority"
+    requires_evidence_pack: true
+    requires_human: true
+    exit_allowed: []
+
+  - name: REJECTED
+    description: Claim invalidated or withdrawn. Terminal state.
+    entry_conditions: []
+    requires_evidence_pack: false
+    requires_human: false
+    exit_allowed: [DRAFT]
+
+transitions:
+  - from: DRAFT
+    to: AI_INFERRED
+    condition: "EvidencePack linked or NO_VALID_EVIDENCE explicitly declared"
+    error_code_on_fail: HOLD_EVIDENCE_REQUIRED
+
+  - from: AI_INFERRED
+    to: REVIEW_PENDING
+    condition: "Human reviewer opens review session"
+    error_code_on_fail: HOLD_IDENTITY_REQUIRED
+
+  - from: REVIEW_PENDING
+    to: NEEDS_EVIDENCE
+    condition: "Evidence QC failed or contradictions found"
+    error_code_on_fail: HOLD_EVIDENCE_REQUIRED
+
+  - from: REVIEW_PENDING
+    to: CHALLENGED
+    condition: "Alternatives exist and reviewer flags dispute"
+    error_code_on_fail: null
+
+  - from: REVIEW_PENDING
+    to: APPROVED_INTERPRETATION
+    condition: "Reviewer approves. All mandatory gates pass."
+    error_code_on_fail: HOLD_HUMAN_REVIEW_REQUIRED
+
+  - from: APPROVED_INTERPRETATION
+    to: SEALED
+    condition: "ack_irreversible true AND policy allows seal"
+    error_code_on_fail: HOLD_SEAL_NOT_PERMITTED
+
+  - from: SEALED
+    to: REVOKED
+    condition: "F13 SOVEREIGN override with traceable justification"
+    error_code_on_fail: HOLD_REVOKE_NOT_PERMITTED
+
+  - from: ANY
+    to: REJECTED
+    condition: "Claim invalidated or withdrawn"
+    error_code_on_fail: null
+
+default:
+  initial_state: DRAFT
+  terminal_states: [REJECTED, SEALED, REVOKED]
+  blocked_if_no_evidence:
+    - REVIEW_PENDING
+    - CHALLENGED
+    - APPROVED_INTERPRETATION
+    - SEALED
+
+error_codes:
+  - code: HOLD_IDENTITY_REQUIRED
+    severity: critical
+    layer: production_authority
+    message_template: "Missing actor_id or session_id for governed action. All subsurface operations require identity propagation."
+    recovery: "Call arif_session_init first. Pass actor_id and session_id in every invocation."
+
+  - code: HOLD_SCOPE_REQUIRED
+    severity: critical
+    layer: production_authority
+    message_template: "Missing asset_id, basin_id, or lease_id. Asset-scoped workflows require scope declaration."
+    recovery: "Declare asset_id, basin_id, and lease_id in the GEOX Invocation Envelope."
+
+  - code: HOLD_EVIDENCE_REQUIRED
+    severity: critical
+    layer: geox_mcp_core
+    message_template: "Claim lacks valid EvidencePack. Cannot advance to REVIEW_PENDING without grounded evidence."
+    recovery: "Assemble EvidencePack via geox_data_qc_bundle and geox_data_ingest_bundle before linking to claim."
+
+  - code: HOLD_QC_FAILED
+    severity: high
+    layer: geox_mcp_core
+    message_template: "Evidence exists but QC state is QC_FAILED. Review QC findings before proceeding."
+    recovery: "Re-run geox_data_qc_bundle with corrected inputs or document QC waiver."
+
+  - code: HOLD_CRS_PROOF_REQUIRED
+    severity: high
+    layer: subsurface_workflow
+    message_template: "Spatial claim lacks verifiable CRS context. Coordinate-sensitive claims require CRS_PROOF_PACKET."
+    recovery: "Pass source_crs and run roundtrip validation. Add CRS_PROOF_PACKET to the ScenePacket."
+
+  - code: HOLD_HUMAN_REVIEW_REQUIRED
+    severity: critical
+    layer: production_authority
+    message_template: "Action exceeds autonomous approval boundary. Human review is required."
+    recovery: "Route to GEOX Review Workbench. A named human reviewer must approve."
+
+  - code: HOLD_SEAL_NOT_PERMITTED
+    severity: critical
+    layer: production_authority
+    message_template: "Seal policy denied. Either ack_irreversible is false or policy conditions are unmet."
+    recovery: "Set ack_irreversible=true. Verify all mandatory gates pass (identity, scope, evidence, CRS)."
