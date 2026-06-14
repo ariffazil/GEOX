@@ -643,7 +643,7 @@ Foundation model output is not fact. It is a **candidate witness**. Label it `FM
 
 | Interface | Audience | Status |
 |-----------|----------|--------|
-| MCP | AI agents | ✅ 39 tools |
+| MCP | AI agents | ✅ 40 tools |
 | OpenAPI | Humans & enterprise | ❌ |
 | OGC API - Features | Geospatial clients | ❌ |
 | A2A agent card | Agent discovery | ✅ New (2026-06-14) |

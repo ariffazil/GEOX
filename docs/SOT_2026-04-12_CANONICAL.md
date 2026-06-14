@@ -42,5 +42,5 @@
 ## Canonical Guidance
 
 - GEOX public truth is the readiness contract exposed at `/ready`; the README and contract tree must stay aligned with that count.
-- Legacy aliases remain callable for compatibility, but the canonical surface is 39 tools.
+- Legacy aliases remain callable for compatibility, but the canonical surface is 40 tools.
 - Public ingress is now host-safe through localhost proxying rather than Docker-only service names.

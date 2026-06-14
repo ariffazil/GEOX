@@ -2,7 +2,7 @@
   "domain": "earth_intelligence",
   "version": "2026.06.05",
   "seal": "DITEMPA BUKAN DIBERI",
-  "canonical_tool_count": 33,
+  "canonical_tool_count": 40,
   "canonical_source": "src/geox_mcp/registry.py \u2192 CANONICAL_PUBLIC_TOOLS",
   "tools": [
     {
@@ -350,38 +350,23 @@
       "next_best_tools": []
     },
     {
-      "name": "geox_volume_get_frame_tool",
+      "name": "geox_volume_frame_tool",
       "domain": "paleoscan",
       "required_inputs": [
         "volume_ref",
-        "frame_index",
-        "orientation"
+        "action",
+        "frame_index"
       ],
-      "optional_inputs": [],
+      "optional_inputs": [
+        "orientation",
+        "image_data"
+      ],
       "outputs": [
         "image2d",
         "claim_state"
       ],
       "claim_limits": [
-        "Reads frame-by-frame (deep copy) from SEG-Y or scaffold."
-      ],
-      "next_best_tools": []
-    },
-    {
-      "name": "geox_volume_set_frame_tool",
-      "domain": "paleoscan",
-      "required_inputs": [
-        "volume_ref",
-        "frame_index",
-        "orientation",
-        "image_data"
-      ],
-      "optional_inputs": [],
-      "outputs": [
-        "claim_state"
-      ],
-      "claim_limits": [
-        "REQUIRES_888_HOLD: irreversible file mutation."
+        "Unified get/set frame operation. Action=get reads, action=set writes."
       ],
       "next_best_tools": []
     },
@@ -435,37 +420,22 @@
       "next_best_tools": []
     },
     {
-      "name": "geox_blend_volume_alpha_tool",
+      "name": "geox_blend_volume_tool",
       "domain": "paleoscan",
       "required_inputs": [
-        "volume_ref_1",
-        "volume_ref_2"
+        "blend_mode"
       ],
-      "optional_inputs": [],
+      "optional_inputs": [
+        "volume_ref_1", "volume_ref_2", "volume_ref_3",
+        "volume_ref_red", "volume_ref_green", "volume_ref_blue",
+        "opacity_1", "opacity_2", "opacity_3"
+      ],
       "outputs": [
-        "blended_volume",
+        "composite_volume",
         "claim_state"
       ],
       "claim_limits": [
-        "Pure geoscience compute \u2014 no file I/O, no UI."
-      ],
-      "next_best_tools": []
-    },
-    {
-      "name": "geox_blend_volume_rgb_tool",
-      "domain": "paleoscan",
-      "required_inputs": [
-        "volume_ref_red",
-        "volume_ref_green",
-        "volume_ref_blue"
-      ],
-      "optional_inputs": [],
-      "outputs": [
-        "rgb_volume",
-        "claim_state"
-      ],
-      "claim_limits": [
-        "Widely used for frequency decomposition interpretation."
+        "Alpha or RGB blend. blend_mode determines which inputs are required."
       ],
       "next_best_tools": []
     },
@@ -557,6 +527,258 @@
         "Routes to arifOS kernel for F1-F13 constitutional checks. GEOX does not adjudicate."
       ],
       "next_best_tools": []
+    },
+    {
+      "name": "geox_abstraction_guard",
+      "domain": "ontology",
+      "required_inputs": [
+        "concept",
+        "query"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "guard_verdict",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Evaluates non-geological queries against ontology guards. Not a semantic free-for-all."
+      ],
+      "next_best_tools": []
+    },
+    {
+      "name": "geox_basin_resolve",
+      "domain": "basin",
+      "required_inputs": [
+        "name"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "canonical_id",
+        "bounding_box",
+        "neighbors",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Resolves basin name to canonical ID and bounding box. Deterministic lookup, not interpretation."
+      ],
+      "next_best_tools": [
+        "geox_basin_profile"
+      ]
+    },
+    {
+      "name": "geox_basin_profile",
+      "domain": "basin",
+      "required_inputs": [
+        "basin_name",
+        "mode"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "basin_summary",
+        "petroleum_system",
+        "risk_profile",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Basin-level intelligence: screen < appraise < decision. Higher strictness requires evidence_refs."
+      ],
+      "next_best_tools": [
+        "geox_prospect_evaluate",
+        "geox_evidence_reason"
+      ]
+    },
+    {
+      "name": "geox_header_inspect",
+      "domain": "data_qc",
+      "required_inputs": [
+        "file_format"
+      ],
+      "optional_inputs": [
+        "las_metadata",
+        "segy_metadata",
+        "seismic_metadata",
+        "deviation_metadata",
+        "tops_metadata"
+      ],
+      "outputs": [
+        "inspection_report",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Inspects LAS/SEG-Y/seismic/deviation/tops headers against GEOX Earth schemas. Pre-ingest verification."
+      ],
+      "next_best_tools": [
+        "geox_data_qc_bundle"
+      ]
+    },
+    {
+      "name": "geox_literature_ingest",
+      "domain": "literature",
+      "required_inputs": [
+        "file_path"
+      ],
+      "optional_inputs": [
+        "basin_name"
+      ],
+      "outputs": [
+        "literature_claim_scaffold",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Ingests PDF/document as contextual literature witness. Not a geological truth engine."
+      ],
+      "next_best_tools": [
+        "geox_claim_create",
+        "geox_evidence_attach"
+      ]
+    },
+    {
+      "name": "geox_query_intake",
+      "domain": "routing",
+      "required_inputs": [
+        "query"
+      ],
+      "optional_inputs": [
+        "intent"
+      ],
+      "outputs": [
+        "intent_classification",
+        "target_tools",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Natural language query router to appropriate GEOX tools. Not a knowledge engine."
+      ],
+      "next_best_tools": [
+        "geox_basin_profile",
+        "geox_basin_resolve"
+      ]
+    },
+    {
+      "name": "geox_query_macrostrat",
+      "domain": "macrostrat",
+      "required_inputs": [
+        "basin_name",
+        "lat",
+        "lng"
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        "macrostrat_units",
+        "macrostrat_columns",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Macrostrat is PROCESS_HYPOTHESIS level — regional surface geology, not subsurface truth. CC-BY-4.0."
+      ],
+      "next_best_tools": [
+        "geox_basin_profile",
+        "geox_evidence_reason"
+      ]
+    },
+    {
+      "name": "geox_vision_audit",
+      "domain": "vision",
+      "required_inputs": [
+        "overall_confidence",
+        "physics_validated",
+        "multi_view_passed"
+      ],
+      "optional_inputs": [
+        "u_phys",
+        "d_transform",
+        "b_cog",
+        "transform_stack"
+      ],
+      "outputs": [
+        "ac_risk",
+        "vision_verdict",
+        "human_review_flag",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "AC_Risk bounded [0,1]. F7 HUMILITY cap 0.90. F9 ANTI-HANTU: verdict ≤ INTERPRETATION unless physics_validated."
+      ],
+      "next_best_tools": [
+        "geox_vision_calibrate",
+        "geox_vision_minimax_inference"
+      ]
+    },
+    {
+      "name": "geox_vision_calibrate",
+      "domain": "vision",
+      "required_inputs": [
+        "backend",
+        "output_dir"
+      ],
+      "optional_inputs": [
+        "basin_context",
+        "seed"
+      ],
+      "outputs": [
+        "calibration_results",
+        "precision_recall",
+        "transform_stack",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Synthetic forward-inverse harness. F1 AMANAH: read-only on test fixture. F4 CLARITY: full transform_stack logged."
+      ],
+      "next_best_tools": [
+        "geox_vision_audit",
+        "geox_vision_perceptual_inventory"
+      ]
+    },
+    {
+      "name": "geox_vision_minimax_inference",
+      "domain": "vision",
+      "required_inputs": [
+        "image_path"
+      ],
+      "optional_inputs": [
+        "basin_context",
+        "interpretation_goal",
+        "mcp_url"
+      ],
+      "outputs": [
+        "vision_interpretation",
+        "features",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "VLM call via minimax-code MCP (port 18091). Interpretation is VLM output, not GEOX truth."
+      ],
+      "next_best_tools": [
+        "geox_vision_perceptual_inventory",
+        "geox_vision_audit"
+      ]
+    },
+    {
+      "name": "geox_vision_perceptual_inventory",
+      "domain": "vision",
+      "required_inputs": [
+        "image_path"
+      ],
+      "optional_inputs": [
+        "overall_confidence",
+        "reflectors",
+        "faults",
+        "amplitude_zones",
+        "ac_risk"
+      ],
+      "outputs": [
+        "perceptual_inventory",
+        "vision_verdict",
+        "ac_risk_scoring",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "F7 HUMILITY: overall_confidence ≤ 0.90. F9: verdict ≤ INTERPRETATION unless physics_validated."
+      ],
+      "next_best_tools": [
+        "geox_vision_audit",
+        "geox_vision_calibrate"
+      ]
     }
   ]
 }

@@ -1,5 +1,6 @@
 # GEOX Contracts — Enums
 # DITEMPA BUKAN DIBERI
+from __future__ import annotations
 
 from contracts.enums.statuses import (
     Dimension,

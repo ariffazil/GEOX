@@ -375,7 +375,7 @@ class TestNoNewMCPTools(unittest.TestCase):
         try:
             from geox_mcp.server import CANONICAL_PUBLIC_TOOLS
 
-            # F13 SOVEREIGN RATIFIED (2026-06-14): 39 canonical tools.
+            # F13 SOVEREIGN RATIFIED (2026-06-14): 40 canonical tools.
             # Added: geox_las_inspect, geox_seismic_segy_inspect.
             # Vision V1 (4 tools) also ratified.
             self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 42)

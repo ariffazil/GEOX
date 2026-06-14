@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 contracts/tools/well_correlation.py — geox_well_correlation_panel MCP Tool
 ═══════════════════════════════════════════════════════════════════════════════
@@ -8,7 +9,6 @@ Geoscience logic lives in the engine; MCP tool is the delivery surface.
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
-from __future__ import annotations
 
 import hashlib
 import logging

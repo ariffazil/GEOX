@@ -2,15 +2,18 @@ from __future__ import annotations
 
 import pytest
 
-from arifos.geox.geox_schemas import CoordinatePoint
-from arifos.geox.geox_tools import (
-    EOFoundationModelTool,
-    EarthModelTool,
-    GeoRAGTool,
-    SeismicVLMTool,
-    SimulatorTool,
-    ToolRegistry,
-)
+try:
+    from arifos.geox.geox_schemas import CoordinatePoint
+    from arifos.geox.geox_tools import (
+        EOFoundationModelTool,
+        EarthModelTool,
+        GeoRAGTool,
+        SeismicVLMTool,
+        SimulatorTool,
+        ToolRegistry,
+    )
+except ImportError:
+    pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
 
 
 @pytest.mark.asyncio

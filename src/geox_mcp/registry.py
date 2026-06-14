@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -59,6 +61,11 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_vision_minimax_inference",
     "geox_vision_calibrate",
     "geox_vision_audit",
+    # Macrostrat — dedicated client (replaces thin proxy alias)
+    "geox_query_macrostrat",
+    # New macrostrat modes accessible via geox_basin_profile
+    # macrostrat_lithologies, macrostrat_strat_names, macrostrat_intervals,
+    # macrostrat_fossils, macrostrat_geologic_map, macrostrat_cache_warm
 ]
 
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
@@ -106,6 +113,12 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_vision_minimax_inference", "axis": "reason", "expose": True},
     {"name": "geox_vision_calibrate", "axis": "verify", "expose": True},
     {"name": "geox_vision_audit", "axis": "verify", "expose": True},
+    # Macrostrat — dedicated client (replaces thin proxy alias)
+    {"name": "geox_query_macrostrat", "axis": "observe", "expose": True},
+    # Macrostrat modes (via geox_basin_profile):
+    #   macrostrat_units, macrostrat_columns, macrostrat_lithologies,
+    #   macrostrat_strat_names, macrostrat_intervals, macrostrat_fossils,
+    #   macrostrat_geologic_map, macrostrat_cache_warm
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
@@ -139,10 +152,6 @@ LEGACY_ALIAS_MAP: dict[str, str] = {
     "geox_prospect_judge_preview": "geox_prospect_evaluate",
     "geox_prospect_judge_seal": "geox_prospect_evaluate",
     "geox_prospect_judge_verdict": "geox_prospect_evaluate",
-    "geox_task_ingest_las_batch": "geox_data_ingest_bundle",
-    "geox_task_metabolize_basin": "geox_subsurface_generate_candidates",
     "geox_registry": "geox_system_registry_status",
-    # Macrostrat alias — old manifest references redirect to basin_profile
-    "geox_query_macrostrat": "geox_basin_profile",
-    "geox_earth_realtime": "geox_basin_profile",
+    # geox_query_macrostrat is now a first-class canonical tool (not an alias)
 }

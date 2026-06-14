@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 geox_mcp_server_acp.py — GEOX Agent Control Plane (ACP) Extension
 ═══════════════════════════════════════════════════════════════════════════════
@@ -14,7 +15,6 @@ This module extends the base MCP server with:
 - 888_JUDGE Verdict Protocol
 """
 
-from __future__ import annotations
 
 import asyncio
 import json

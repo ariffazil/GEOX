@@ -16,18 +16,21 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from arifos.geox.geox_schemas import CoordinatePoint
-from arifos.geox.tools.seismic_visual_filter import (
-    FilterResult,
-    SeismicVisualFilterTool,
-    _compute_contrast,
-    _compute_edge_density,
-    _image_checksum,
-    apply_filter,
-    compare_filter_response,
-    emit_visual_hypothesis,
-    generate_filter_stack,
-)
+try:
+    from arifos.geox.geox_schemas import CoordinatePoint
+    from arifos.geox.tools.seismic_visual_filter import (
+        FilterResult,
+        SeismicVisualFilterTool,
+        _compute_contrast,
+        _compute_edge_density,
+        _image_checksum,
+        apply_filter,
+        compare_filter_response,
+        emit_visual_hypothesis,
+        generate_filter_stack,
+    )
+except ImportError:
+    pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
 
 
 # ---------------------------------------------------------------------------

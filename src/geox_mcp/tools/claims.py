@@ -23,6 +23,13 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any, Literal
 
+# ── Reality Ledger Bridge ───────────────────────────────────────────────────────
+_LEDGER_AVAILABLE = True
+try:
+    from core.organ_ledger_bridge import record_geox_claim
+except ImportError:
+    _LEDGER_AVAILABLE = False
+
 logger = logging.getLogger("geox.claims")
 
 # ── Claim truth classes ────────────────────────────────────────────────────────
@@ -211,6 +218,24 @@ async def geox_claim_create(
             payload["_earth_memory_id"] = record_id
         except Exception as e:
             logger.warning(f"EarthMemoryStore write failed: {e}")
+
+    # ── Record to Reality Ledger ────────────────────────────────────────────────
+    if _LEDGER_AVAILABLE:
+        try:
+            ledger_id = record_geox_claim(
+                claim_data={
+                    "claim_type": claim_type,
+                    "claim_text": claim_text,
+                    "evidence_ids": evidence_ids,
+                    "confidence": (
+                        uncertainty_p50 / 100 if uncertainty_p50 is not None else 0.5
+                    ),
+                },
+                actor=authority,
+            )
+            logger.debug(f"Reality Ledger: {ledger_id}")
+        except Exception as e:
+            logger.warning(f"Reality Ledger write failed: {e}")
 
     return {
         "status": "CREATED",

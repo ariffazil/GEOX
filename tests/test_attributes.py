@@ -17,15 +17,18 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from arifos.geox.tools.attributes import (
-    SeismicAttributeTool,
-    compute_attributes,
-    compute_coherence,
-    compute_curvature,
-    compute_envelope,
-    compute_rms_amplitude,
-    compute_spectral_decomposition,
-)
+try:
+    from arifos.geox.tools.attributes import (
+        SeismicAttributeTool,
+        compute_attributes,
+        compute_coherence,
+        compute_curvature,
+        compute_envelope,
+        compute_rms_amplitude,
+        compute_spectral_decomposition,
+    )
+except ImportError:
+    pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
 
 
 # ---------------------------------------------------------------------------

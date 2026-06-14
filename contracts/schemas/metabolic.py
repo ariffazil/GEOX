@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 GEOX Metabolic Output Schemas — Canonical-Copy of arifOS metabolic.v1
 ════════════════════════════════════════════════════════════════════════════════════════
@@ -22,7 +23,6 @@ The loop:
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
-from __future__ import annotations
 
 from enum import Enum
 from typing import Any, Literal

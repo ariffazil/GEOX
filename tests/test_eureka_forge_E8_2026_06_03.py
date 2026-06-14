@@ -458,9 +458,9 @@ class TestF13NoNewMCPTools(unittest.TestCase):
             # 4 new tools: geox_vision_perceptual_inventory, geox_vision_minimax_inference,
             # geox_vision_calibrate, geox_vision_audit — bringing the count from 33 to 37.
             # The F13 floor requires 888 ratification for any canonical-tool-surface change.
-            # Canonical federation decision (2026-06-14): GEOX surface is 39 tools
+            # Canonical federation decision (2026-06-14): GEOX surface is 40 tools
             # (35 core + 4 Vision V1). This test is updated to match the ratified state.
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 39)
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 40)
             self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 35)
         except ImportError:
             # Server not importable in test env; the integration test will catch

@@ -1,5 +1,5 @@
 """
-GEOX Unified MCP Server — Sovereign 39 Kernel + Dimension Native
+GEOX Unified MCP Server — Sovereign 40 Kernel + Dimension Native
 ================================================================
 DITEMPA BUKAN DIBERI — Forged, Not Given
 
@@ -61,8 +61,8 @@ logger = logging.getLogger("geox.unified")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 GEOX_VERSION = "v2026.06.05"
-# P6 - Bumped to 39-tool surface; physics manifest anchor replacing constitution_hash
-GEOX_CONTRACT_EPOCH = "2026-06-14-GEOX-39TOOLS-v2.1"
+# P6 - Bumped to 40-tool surface; physics manifest anchor replacing constitution_hash
+GEOX_CONTRACT_EPOCH = "2026-06-14-GEOX-40TOOLS-v2.2"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -207,7 +207,7 @@ def _enforce_geox() -> dict[str, Any] | None:
 def compose_geox_servers() -> None:
     """Mount domain sub-servers onto the main GEOX MCP server.
 
-    Each sub-server owns a slice of the 39-tool canonical surface:
+    Each sub-server owns a slice of the 40-tool canonical surface:
       - witness:    observe/verify tools
       - paleoscan:  paleoscan_python v2.0.0 forge tools
       - claims:     H5 claim engine tools
@@ -234,13 +234,48 @@ def compose_geox_servers() -> None:
     mcp.mount(vision, namespace=None)
 
     # Assert canonical count across all composed servers
-    # 2026-06-14: 37 -> 39 (added geox_las_inspect + geox_seismic_segy_inspect)
-    if len(CANONICAL_PUBLIC_TOOLS) != 39:
-        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 39 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+    # 2026-06-14: 37 -> 40 (added basin, lit ingest, abstraction guard, query intake, literature)
+    if len(CANONICAL_PUBLIC_TOOLS) != 40:
+        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 40 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
     logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 4 domains")
 
 
 compose_geox_servers()
+
+from geox_mcp.tools.ui_applets import register_ui_applets
+register_ui_applets(mcp)
+
+# ── Register legacy alias tools that FastMCP can route ────────────────────
+# FastMCP intercepts tool calls before the legacy_mcp_handler sees them.
+# Register thin aliases so FastMCP can route geox_query_macrostrat → geox_basin_profile.
+
+
+@mcp.tool(name="geox_query_macrostrat")
+async def geox_query_macrostrat(
+    basin_name: str = "",
+    mode: str = "macrostrat_units",
+    lat: float | None = None,
+    lng: float | None = None,
+) -> dict:
+    """Query Macrostrat geological database for regional stratigraphy, lithology, and age data.
+
+    This is an alias for geox_basin_profile(mode='macrostrat_units'|'macrostrat_columns').
+    Macrostrat data is PROCESS_HYPOTHESIS level — regional surface geology,
+    not subsurface truth. CC-BY-4.0 license.
+    """
+    from geox_mcp.tools.basin import geox_basin_profile as _profile
+
+    result = await _profile(
+        basin_name=basin_name or "Global",
+        mode=mode,
+        lat=lat,
+        lng=lng,
+    )
+    # Extract interpreted data from the envelope
+    artifact = result.get("primary_artifact", {})
+    if artifact:
+        return artifact.get("interpreted", artifact)
+    return result
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MCP APPS — PrefabUI tools (P2#7)
@@ -269,10 +304,10 @@ def _register_prefab_apps() -> None:
         with PrefabApp() as board:
             with Column(gap=4, css_class="p-4"):
                 Heading("GEOX Mission Board", level=2)
-                Text("Earth Intelligence — 39 canonical tools across 4 domains")
+                Text("Earth Intelligence — 40 canonical tools across 4 domains")
                 Separator()
                 with Row(gap=6):
-                    Metric(label="Canonical Tools", value="39")
+                    Metric(label="Canonical Tools", value="40")
                     Metric(label="Domains", value="4")
                     Metric(label="Status", value="SEAL")
                 Separator()
@@ -903,12 +938,8 @@ async def legacy_mcp_handler(request):
         # Patch E - Resolve dashboard.open: Alias is handled here by LEGACY_ALIAS_MAP
         resolved_name = LEGACY_ALIAS_MAP.get(name, name)
 
-        # Macrostrat alias: inject mode='macrostrat_units' and pass lat/lng
-        if name in ("geox_query_macrostrat",):
-            if "mode" not in args:
-                args["mode"] = "macrostrat_units"
-            # Pass lat/lng to geox_basin_profile as-is
-
+        # geox_query_macrostrat is now a FastMCP-registered alias → geox_basin_profile
+        # No special-case routing needed; the alias function in server.py handles mode injection.
         if resolved_name not in CANONICAL_PUBLIC_TOOLS and resolved_name != name:
             return JSONResponse(
                 {

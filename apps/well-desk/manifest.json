@@ -31,6 +31,16 @@
   "fallback": {
     "chain": ["inline", "external", "card", "text"]
   },
+  "_meta": {
+    "ui": {
+      "csp": {
+        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "http://localhost:7071"],
+        "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
+        "frameDomains": ["'none'"],
+        "baseUriDomains": ["'none'"]
+      }
+    }
+  },
   "permissions": {
     "file_system": ["read_las", "read_lis", "write_las", "export_png"],
     "compute": ["forward_rock_physics", "inverse_rock_physics", "metabolic_convergence"],

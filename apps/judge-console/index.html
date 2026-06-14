@@ -811,19 +811,179 @@
             `).join('');
         }
 
-        // Listen for MCP host messages
-        window.addEventListener('message', (e) => {
-            if (e.data.type === 'set_parameters') {
-                const params = e.data.data;
-                if (params.uphys !== undefined) {
-                    uphysSlider.value = params.uphys;
-                    uphysValue.textContent = params.uphys.toFixed(2);
+        // ── MCP Bridge — secure JSON-RPC 2.0 postMessage ─────────────────
+        // Implements SEP-1865 ext-apps View protocol
+        const MCP_BRIDGE = (() => {
+            const PROTOCOL_VERSION = '2026-01-26';
+            const APP_NAME = 'geox-judge-console';
+            const APP_VERSION = '1.0.0';
+            const TIMEOUT_MS = 15000;
+
+            const state = {
+                initialized: false,
+                standalone: window.parent === window,
+                nextId: 1,
+                pending: new Map(),
+                hostContext: null,
+            };
+
+            function isPlainObject(v) {
+                return v !== null && typeof v === 'object' && !Array.isArray(v);
+            }
+
+            function isJsonRpc(msg) {
+                return isPlainObject(msg) && msg.jsonrpc === '2.0';
+            }
+
+            function safeParse(event) {
+                let data = event.data;
+                if (typeof data === 'string') {
+                    try { data = JSON.parse(data); } catch { return null; }
                 }
-                if (params.bias_scenario) {
-                    biasSelect.value = params.bias_scenario;
+                return isJsonRpc(data) ? data : null;
+            }
+
+            const ALLOWED = new Set([
+                'ui/notifications/tool-input',
+                'ui/notifications/tool-result',
+                'ui/notifications/tool-cancelled',
+                'ui/notifications/host-context-changed',
+                'ui/resource-teardown',
+                'ping',
+            ]);
+
+            function sendRequest(method, params) {
+                if (state.standalone) return Promise.reject(new Error('No host'));
+                const id = state.nextId++;
+                const payload = { jsonrpc: '2.0', id, method, params };
+                return new Promise((resolve, reject) => {
+                    state.pending.set(id, { resolve, reject, method, ts: Date.now() });
+                    window.parent.postMessage(payload, '*');
+                    setTimeout(() => {
+                        if (state.pending.has(id)) {
+                            state.pending.delete(id);
+                            reject(new Error(`Timeout: ${method}`));
+                        }
+                    }, TIMEOUT_MS);
+                });
+            }
+
+            function post(msg) {
+                if (!state.standalone) window.parent.postMessage(msg, '*');
+            }
+
+            async function initialize() {
+                if (state.standalone) return;
+                try {
+                    const result = await sendRequest('ui/initialize', {
+                        protocolVersion: PROTOCOL_VERSION,
+                        clientInfo: { name: APP_NAME, version: APP_VERSION },
+                        capabilities: {},
+                        appCapabilities: { availableDisplayModes: ['inline', 'fullscreen'] },
+                    });
+                    state.initialized = true;
+                    state.hostContext = result?.hostContext || null;
+                    post({ jsonrpc: '2.0', method: 'ui/notifications/initialized', params: {} });
+                } catch (err) {
+                    console.warn('[JudgeConsole] MCP init failed:', err.message);
                 }
             }
-        });
+
+            // Handle governance envelope from tool result
+            function handleGovernance(envelope) {
+                const holds = Array.isArray(envelope?.holds) ? envelope.holds : [];
+                const constraints = envelope?.constraints || {};
+                const veto = constraints.veto?.active === true;
+                const blocking = holds.filter(h => h.blocking !== false);
+
+                // 888 HOLD banner
+                const holdEl = document.getElementById('holdBanner');
+                if (holdEl) {
+                    holdEl.hidden = blocking.length === 0;
+                    if (blocking.length > 0) {
+                        holdEl.textContent = '888 HOLD — ' + blocking.map(h => h.reason || h.code).join(' | ');
+                    }
+                }
+
+                // F13 VETO banner
+                const vetoEl = document.getElementById('vetoBanner');
+                if (vetoEl) {
+                    vetoEl.hidden = !veto;
+                    vetoEl.textContent = veto ? 'F13 VETO — human block active' : '';
+                }
+
+                // Disable compute button under veto or hold
+                if (computeBtn) {
+                    computeBtn.disabled = veto || blocking.length > 0;
+                }
+            }
+
+            window.addEventListener('message', (event) => {
+                const msg = safeParse(event);
+                if (!msg) return;
+
+                // Response
+                if (msg.id != null && (msg.result !== undefined || msg.error !== undefined)) {
+                    const p = state.pending.get(msg.id);
+                    if (p) {
+                        state.pending.delete(msg.id);
+                        if (msg.error) p.reject(new Error(msg.error.message));
+                        else p.resolve(msg.result);
+                    }
+                    return;
+                }
+
+                // Method
+                if (!ALLOWED.has(msg.method)) return;
+
+                switch (msg.method) {
+                    case 'ui/notifications/tool-input': {
+                        const args = msg.params?.arguments || {};
+                        // Set parameters from host context
+                        if (args.uphys !== undefined) {
+                            uphysSlider.value = args.uphys;
+                            uphysValue.textContent = parseFloat(args.uphys).toFixed(2);
+                        }
+                        if (args.bias_scenario) {
+                            biasSelect.value = args.bias_scenario;
+                        }
+                        break;
+                    }
+                    case 'ui/notifications/tool-result': {
+                        const sc = msg.params?.structuredContent || {};
+                        const envelope = sc?.envelope || {};
+                        handleGovernance(envelope);
+                        break;
+                    }
+                    case 'ui/notifications/host-context-changed':
+                        state.hostContext = { ...(state.hostContext || {}), ...(msg.params || {}) };
+                        break;
+                    case 'ping':
+                        post({ jsonrpc: '2.0', id: msg.id, result: {} });
+                        break;
+                }
+            });
+
+            initialize();
+
+            return {
+                sendRequest,
+                getHostContext: () => state.hostContext,
+            };
+        })();
+
+        // Also inject hold/veto banners into the DOM
+        const holdBanner = document.createElement('div');
+        holdBanner.id = 'holdBanner';
+        holdBanner.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#e74c3c;color:#fff;padding:6px 12px;font-size:13px;font-weight:bold;text-align:center;';
+        holdBanner.hidden = true;
+        document.body.prepend(holdBanner);
+
+        const vetoBanner = document.createElement('div');
+        vetoBanner.id = 'vetoBanner';
+        vetoBanner.style.cssText = 'display:none;position:fixed;top:32px;left:0;right:0;z-index:9998;background:#8e44ad;color:#fff;padding:6px 12px;font-size:13px;font-weight:bold;text-align:center;';
+        vetoBanner.hidden = true;
+        document.body.prepend(vetoBanner);
 
         // Initialize
         console.log('🔥 GEOX AC_Risk Console — AAA Grade Initialized');

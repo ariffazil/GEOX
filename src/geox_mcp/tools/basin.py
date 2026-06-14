@@ -17,40 +17,20 @@ from geox_core.enums.statuses import (
     GovernanceStatus,
     get_standard_envelope,
 )
+from geox_mcp.tools.macrostrat_client import MacrostratClient
 
 logger = logging.getLogger("geox.basin")
 
-# ── Macrostrat TTL Cache ──────────────────────────────────────────────────
-# In-process cache: keyed by (endpoint, lat_4dp, lng_4dp)
-# Geology doesn't change fast — 1 hour TTL is safe.
-_MACROSTRAT_CACHE: dict[str, tuple[float, Any]] = {}
-_MACROSTRAT_CACHE_TTL = 3600.0  # 1 hour
-_MACROSTRAT_BASE = "https://macrostrat.org/api/v2"
+# ── Global Macrostrat Client (lazy init, shared across calls) ────────────
+_MACROSTRAT_CLIENT: MacrostratClient | None = None
 
 
-async def _macrostrat_query(endpoint: str, lat: float, lng: float, **params: Any) -> dict:
-    """Query Macrostrat API with in-process TTL cache. Returns parsed JSON."""
-    cache_key = f"{endpoint}:{lat:.4f}:{lng:.4f}"
-    cached = _MACROSTRAT_CACHE.get(cache_key)
-    if cached is not None:
-        cached_at, data = cached
-        if (time.monotonic() - cached_at) < _MACROSTRAT_CACHE_TTL:
-            logger.debug("Macrostrat cache hit: %s", cache_key)
-            return data
-
-    query_params = {"lat": lat, "lng": lng, **params}
-    try:
-        async with httpx.AsyncClient(timeout=20.0) as client:
-            resp = await client.get(f"{_MACROSTRAT_BASE}/{endpoint}", params=query_params)
-            resp.raise_for_status()
-            data = resp.json()
-    except Exception as exc:
-        logger.warning(f"Macrostrat API error ({endpoint} @ {lat},{lng}): {exc}")
-        return {"error": str(exc), "data": []}
-
-    _MACROSTRAT_CACHE[cache_key] = (time.monotonic(), data)
-    logger.debug("Macrostrat cache set: %s (%d items)", cache_key, len(data.get("data", data.get("success", {}).get("data", []))))
-    return data
+def _get_macrostrat() -> MacrostratClient:
+    """Get or create the shared MacrostratClient singleton."""
+    global _MACROSTRAT_CLIENT
+    if _MACROSTRAT_CLIENT is None:
+        _MACROSTRAT_CLIENT = MacrostratClient()
+    return _MACROSTRAT_CLIENT
 
 # Repo-root resolution. Default = path-relative; override via GEOX_RESOURCES_DIR.
 # Fix: prior hardcode `/root/geox/resources` broke CI (runner uses /home/runner/work/...).
@@ -142,7 +122,10 @@ async def geox_basin_resolve(
 
 async def geox_basin_profile(
     basin_name: str,
-    mode: Literal["overview", "petroleum_system", "stratigraphy", "play_fairway", "risk", "contradiction_scan", "macrostrat_units", "macrostrat_columns"] = "overview",
+    mode: Literal["overview", "petroleum_system", "stratigraphy", "play_fairway", "risk", "contradiction_scan",
+                    "macrostrat_units", "macrostrat_columns", "macrostrat_lithologies",
+                    "macrostrat_strat_names", "macrostrat_intervals", "macrostrat_fossils",
+                    "macrostrat_geologic_map", "macrostrat_cache_warm"] = "overview",
     claim_strictness: Literal["screen", "appraise", "decision"] = "screen",
     evidence_refs: list[str] | None = None,
     include_missing_evidence: bool = True,
@@ -159,7 +142,10 @@ async def geox_basin_profile(
         The resolved basin name (e.g. 'Malay Basin').
     mode : str
         Operation mode: overview, petroleum_system, stratigraphy, play_fairway, risk, contradiction_scan,
-        macrostrat_units (rock units from Macrostrat API), or macrostrat_columns (strat columns).
+        macrostrat_units (rock units from Macrostrat API), macrostrat_columns (strat columns),
+        macrostrat_lithologies (lithology types), macrostrat_strat_names (stratigraphic name lexicon),
+        macrostrat_intervals (geologic time intervals), macrostrat_fossils (PBDB fossil occurrences),
+        macrostrat_geologic_map (2.5M map polygons), macrostrat_cache_warm (SE Asia cache warming).
     claim_strictness : str
         Strictness constraint: screen, appraise, or decision. Higher strictness requires more evidence_refs.
     evidence_refs : list of str, optional
@@ -180,16 +166,19 @@ async def geox_basin_profile(
         normalized = "malay_basin"
 
     basin_dir = RESOURCES_DIR / "basins" / normalized
-    if not basin_dir.exists():
-        return get_standard_envelope(
-            {"tool": "geox_basin_profile", "error": f"Basin data not found for: {basin_name}"},
-            tool_class="observe",
-            execution_status=ExecutionStatus.ERROR,
-            governance_status=GovernanceStatus.HOLD,
-            claim_state="NO_VALID_EVIDENCE",
-            session_id=session_id,
-            actor_id=actor_id,
-        )
+
+    # Macrostrat modes fetch from API — local basin resource dir is optional
+    if not mode.startswith("macrostrat_"):
+        if not basin_dir.exists():
+            return get_standard_envelope(
+                {"tool": "geox_basin_profile", "error": f"Basin data not found for: {basin_name}"},
+                tool_class="observe",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                claim_state="NO_VALID_EVIDENCE",
+                session_id=session_id,
+                actor_id=actor_id,
+            )
 
     # Load resources
     try:
@@ -289,38 +278,146 @@ async def geox_basin_profile(
                 evidence_loaded.append("uncertainty_register.yaml")
 
         elif mode.startswith("macrostrat_"):
-            # ── Macrostrat API modes ─────────────────────────────────
-            if lat is None or lng is None:
-                return get_standard_envelope(
-                    {"tool": "geox_basin_profile", "error": f"macrostrat_* modes require lat and lng parameters"},
-                    tool_class="observe",
-                    execution_status=ExecutionStatus.ERROR,
-                    governance_status=GovernanceStatus.HOLD,
-                    claim_state="VOID",
-                    session_id=session_id,
-                    actor_id=actor_id,
-                )
+            # ── Macrostrat API modes (client-based) ──────────────────
+            client = _get_macrostrat()
 
-            if mode == "macrostrat_units":
-                raw = await _macrostrat_query("units", lat, lng, format="json")
-                items = raw.get("success", {}).get("data", raw.get("data", []))
+            # Cache warm mode needs no lat/lng
+            if mode == "macrostrat_cache_warm":
+                warm_results = await client.warm_se_asia()
                 mode_data = {
-                    "units": items,
-                    "unit_count": len(items),
-                    "source": "macrostrat.org/api/v2/units",
-                    "license": "CC-BY-4.0",
+                    "cache_warm_results": warm_results,
+                    "attribution": client.attribution_markdown(),
+                    "hint": "Macrostrat has limited SE Asia coverage. Cache warming ensures global map data is available.",
                 }
-                evidence_loaded.append("macrostrat.org/api/v2/units")
-            elif mode == "macrostrat_columns":
-                raw = await _macrostrat_query("columns", lat, lng, format="geojson")
-                items = raw.get("success", {}).get("data", raw.get("data", []))
-                mode_data = {
-                    "columns": items,
-                    "column_count": len(items),
-                    "source": "macrostrat.org/api/v2/columns",
-                    "license": "CC-BY-4.0",
-                }
-                evidence_loaded.append("macrostrat.org/api/v2/columns")
+                evidence_loaded.append("macrostrat_cache_warm")
+
+            else:
+                if lat is None or lng is None:
+                    return get_standard_envelope(
+                        {"tool": "geox_basin_profile", "error": f"macrostrat_* modes require lat and lng parameters"},
+                        tool_class="observe",
+                        execution_status=ExecutionStatus.ERROR,
+                        governance_status=GovernanceStatus.HOLD,
+                        claim_state="VOID",
+                        session_id=session_id,
+                        actor_id=actor_id,
+                    )
+
+                if mode == "macrostrat_units":
+                    raw = await client.get_units(lat=lat, lng=lng, radius_km=100)
+                    items = client.get_units_summary(raw)
+                    mode_data = {
+                        "units": items,
+                        "unit_count": len(items),
+                        "source": "macrostrat.org/api/v2/units",
+                        "license": "CC-BY-4.0",
+                        "attribution": client.attribution_markdown(),
+                    }
+                    if items:
+                        mode_data["sample_unit"] = {
+                            k: items[0].get(k) for k in (
+                                "unit_id", "unit_name", "lith", "lith_type",
+                                "t_age", "b_age", "col_id", "best_age",
+                                "Fm", "Gp", "SGp",
+                            ) if k in items[0]
+                        }
+                    evidence_loaded.append("macrostrat.org/api/v2/units")
+
+                elif mode == "macrostrat_columns":
+                    raw = await client.get_columns(lat=lat, lng=lng, radius_km=100)
+                    columns = client.get_columns_summary(raw)
+                    mode_data = {
+                        "columns": columns,
+                        "column_count": len(columns),
+                        "source": "macrostrat.org/api/v2/columns",
+                        "license": "CC-BY-4.0",
+                        "attribution": client.attribution_markdown(),
+                    }
+                    evidence_loaded.append("macrostrat.org/api/v2/columns")
+
+                elif mode == "macrostrat_lithologies":
+                    raw = await client.get_lithologies()
+                    data = raw.get("success", {}).get("data", [])
+                    mode_data = {
+                        "lithologies": data,
+                        "lithology_count": len(data),
+                        "source": "macrostrat.org/api/v2/defs/lithologies",
+                        "license": "CC-BY-4.0",
+                        "attribution": client.attribution_markdown(),
+                    }
+                    evidence_loaded.append("macrostrat.org/api/v2/defs/lithologies")
+
+                elif mode == "macrostrat_strat_names":
+                    raw = await client.get_strat_names(all_=True)
+                    data = raw.get("success", {}).get("data", [])
+                    mode_data = {
+                        "strat_names": data[:100],  # cap at 100 for response size
+                        "total_count": len(data),
+                        "truncated": len(data) > 100,
+                        "source": "macrostrat.org/api/v2/defs/strat_names",
+                        "license": "CC-BY-4.0",
+                        "attribution": client.attribution_markdown(),
+                    }
+                    evidence_loaded.append("macrostrat.org/api/v2/defs/strat_names")
+
+                elif mode == "macrostrat_intervals":
+                    raw = await client.get_intervals()
+                    data = raw.get("success", {}).get("data", [])
+                    # Group by level for readability
+                    levels: dict[str, list[dict]] = {}
+                    for iv in data:
+                        lvl = iv.get("int_type", "other")
+                        if lvl not in levels:
+                            levels[lvl] = []
+                        levels[lvl].append(iv)
+                    mode_data = {
+                        "intervals_by_level": {k: v[:20] for k, v in levels.items()},
+                        "total_count": len(data),
+                        "source": "macrostrat.org/api/v2/defs/intervals",
+                        "license": "CC-BY-4.0",
+                        "attribution": client.attribution_markdown(),
+                    }
+                    evidence_loaded.append("macrostrat.org/api/v2/defs/intervals")
+
+                elif mode == "macrostrat_fossils":
+                    raw = await client.get_fossils(limit=50)
+                    data = raw.get("success", {}).get("data", [])
+                    mode_data = {
+                        "fossils": data[:50],
+                        "fossil_count": len(data),
+                        "source": "macrostrat.org/api/v2/fossils",
+                        "license": "CC-BY-4.0",
+                        "attribution": client.attribution_markdown(),
+                        "note": "Fossil data from Paleobiology Database (PBDB) linked to Macrostrat units",
+                    }
+                    evidence_loaded.append("macrostrat.org/api/v2/fossils")
+
+                elif mode == "macrostrat_geologic_map":
+                    raw = await client.get_geologic_units_map(lat=lat, lng=lng, radius_km=100)
+                    success = raw.get("success", {})
+                    data = success.get("data", [])
+                    if isinstance(data, dict):
+                        data = data.get("features", data)
+                    if not isinstance(data, list):
+                        data = []
+                    # Summarize by lithology type
+                    lith_summary: dict[str, int] = {}
+                    for feat in data[:500]:
+                        lith = ""
+                        if isinstance(feat, dict):
+                            lith = feat.get("lith", feat.get("properties", {}).get("lith", "unknown"))
+                        if not isinstance(lith, str):
+                            lith = str(lith)
+                        key = lith.split(",")[0].strip()[:30] if lith else "unknown"
+                        lith_summary[key] = lith_summary.get(key, 0) + 1
+                    mode_data = {
+                        "map_polygon_count": len(data),
+                        "lithology_summary": dict(sorted(lith_summary.items(), key=lambda x: -x[1])[:15]),
+                        "source": "macrostrat.org/api/v2/geologic_units/map",
+                        "license": "CC-BY-4.0",
+                        "attribution": client.attribution_markdown(),
+                    }
+                    evidence_loaded.append("macrostrat.org/api/v2/geologic_units/map")
 
         elif mode == "contradiction_scan":
             mode_data = {"scan_status": "COMPLETE", "contradictions_found": []}

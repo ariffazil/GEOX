@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 GEOX Sovereign 13 — Canonical Tool Orchestrator
 ═══════════════════════════════════════════════════════════════════════════════
@@ -7,7 +8,6 @@ contracts.tools.canonical.* modules.
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
-from __future__ import annotations
 
 import logging
 import os

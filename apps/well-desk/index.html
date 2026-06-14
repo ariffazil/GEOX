@@ -597,44 +597,36 @@
       });
 
       // ── MCP Bridge ──────────────────────────────────────────────────────────
-      const mcp = new MCPBridge();
-      mcp.on('initialize', (payload) => {
-        console.log('[WellDesk] MCP initialized:', payload);
-        document.getElementById('mcpStatus').textContent = 'MCP CONNECTED';
-        document.getElementById('mcpStatus').style.color = '#0f0';
-        if (payload.well_id) {
-          state.wellId = payload.well_id;
-          initTracks();
-        }
-      });
-
-      mcp.on('toolResult', (result, receipt, p9) => {
-        console.log('[WellDesk] Tool result:', result);
-        if (p9) {
-          state.physics9 = p9;
-        }
-      });
-
-      // ── Quick Actions ───────────────────────────────────────────────────────
-      document.getElementById('btnExportLas').addEventListener('click', () => {
-        if (trackRenderer) trackRenderer.exportSvg();
-      });
-
-      document.getElementById('btnAcRisk').addEventListener('click', () => {
-        document.getElementById('btnRunPhysics').click();
-      });
-
-      // ── Initialize ──────────────────────────────────────────────────────────
-      initTracks();
-
-      // If running as MCP app, announce ready
-      if (mcp.isMCP()) {
-        document.getElementById('mcpStatus').textContent = 'MCP READY';
-        document.getElementById('mcpStatus').style.color = '#0f0';
       }
+      
+      // SEP-1865 MCP App protocol bridge — loaded after all other scripts
+      // Provides: window.WELLDESK_MCP_BRIDGE, window.WELLDESK_RENDER
+      if (!window.WELLDESK_MCP_BRIDGE) {
 
       console.log('[WellDesk] Initialized. Well:', state.wellId, 'Mode:', state.mode);
     })();
   </script>
+
+  <!-- MCP Bridge — SEP-1865 ext-apps protocol (secure postMessage) -->
+  <script src="./src/bridge/MCPBridge.js"></script>
+  <!-- WellDesk Render Adapter — consumes viewModel from bridge -->
+  <script src="./src/bridge/WellDeskRenderAdapter.js"></script>
+
+  <!-- 888 HOLD / F13 VETO banners (hidden by default) -->
+  <div id="holdBanner"
+       style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;
+              background:#e74c3c;color:#fff;padding:6px 12px;font-size:13px;
+              font-weight:bold;text-align:center;"
+       hidden></div>
+  <div id="vetoBanner"
+       style="display:none;position:fixed;top:32px;left:0;right:0;z-index:9998;
+              background:#8e44ad;color:#fff;padding:6px 12px;font-size:13px;
+              font-weight:bold;text-align:center;"
+       hidden></div>
+  <!-- Hidden error banner -->
+  <div id="mcpError"
+       style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9997;
+              background:#333;color:#e74c3c;padding:4px 12px;font-size:11px;"
+       hidden></div>
 </body>
 </html>

@@ -3,3 +3,4 @@ Separated from contracts/tools/canonical/_helpers.py
 All business logic lives here. MCP wrappers live in contracts/tools/canonical/.
 Zero FastMCP dependencies.
 """
+from __future__ import annotations

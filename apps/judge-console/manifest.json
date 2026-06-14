@@ -68,6 +68,16 @@
     "external_url": "https://geox.arif-fazil.com/apps/ac_risk_console/?session={session_id}",
     "card_template": "/apps/ac_risk_console/card.html"
   },
+  "_meta": {
+    "ui": {
+      "csp": {
+        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "https://api.geox.arif-fazil.com"],
+        "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
+        "frameDomains": ["'none'"],
+        "baseUriDomains": ["'none'"]
+      }
+    }
+  },
   "arifos": {
     "required_floors": [
       "F1",

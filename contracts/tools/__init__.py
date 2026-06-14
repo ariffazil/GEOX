@@ -3,6 +3,7 @@
 #
 # Canonical surface: 13 sovereign public tools (per EPOCH GEOX-11TOOLS-v0.3).
 # Infrastructure tools (geox_file_upload_import) are excluded from public surface count.
+from __future__ import annotations
 
 from contracts.enums import (
     Dimension,

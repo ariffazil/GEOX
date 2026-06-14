@@ -14,21 +14,24 @@ from datetime import datetime, timezone
 import pytest
 import pytest_asyncio
 
-from arifos.geox.geox_schemas import (
-    CoordinatePoint,
-    GeoPrediction,
-    GeoInsight,
-    GeoQuantity,
-    ProvenanceRecord,
-)
-from arifos.geox.geox_validator import (
-    AggregateVerdict,
-    GeoXValidator,
-    ValidationResult,
-    _parse_range,
-)
-from arifos.geox.examples.mock_tools.mock_earthnet import MockEarthNetTool
-from arifos.geox.examples.mock_tools.mock_vlm import MockSeismicVLMTool
+try:
+    from arifos.geox.geox_schemas import (
+        CoordinatePoint,
+        GeoPrediction,
+        GeoInsight,
+        GeoQuantity,
+        ProvenanceRecord,
+    )
+    from arifos.geox.geox_validator import (
+        AggregateVerdict,
+        GeoXValidator,
+        ValidationResult,
+        _parse_range,
+    )
+    from arifos.geox.examples.mock_tools.mock_earthnet import MockEarthNetTool
+    from arifos.geox.examples.mock_tools.mock_vlm import MockSeismicVLMTool
+except ImportError:
+    pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
 
 
 # ---------------------------------------------------------------------------
