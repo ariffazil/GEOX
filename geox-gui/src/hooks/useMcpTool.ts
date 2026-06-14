@@ -30,6 +30,73 @@ export interface McpToolState<T = unknown> {
 }
 
 const TIMEOUT_MS = 30_000;
+const GEOX_MCP_ENDPOINT = '/mcp/';
+
+/**
+ * Detect if we're running in an iframe (ChatGPT/Claude plugin mode)
+ * vs standalone (browser direct). Uses same logic as useGeoxBridge.
+ */
+function isInIframe(): boolean {
+  try {
+    return typeof window !== 'undefined' && window.parent !== window;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Direct HTTP call to GEOX MCP server via fetch.
+ * Used in standalone mode (not in iframe).
+ */
+async function directMcpCall<TResult>(
+  toolName: string,
+  args: Record<string, unknown>,
+  baseUrl: string,
+): Promise<TResult> {
+  const url = `${baseUrl}${GEOX_MCP_ENDPOINT}`;
+  const body = JSON.stringify({
+    jsonrpc: '2.0',
+    id: `${toolName}-${Date.now()}`,
+    method: 'tools/call',
+    params: { name: toolName, arguments: args },
+  });
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body,
+  });
+
+  if (!response.ok) {
+    throw new Error(`GEOX MCP HTTP ${response.status}: ${response.statusText}`);
+  }
+
+  const json = await response.json();
+  const error = json.error;
+  if (error) {
+    throw new Error(`GEOX MCP error: ${error.message ?? JSON.stringify(error)}`);
+  }
+
+  const content = json?.result?.content;
+  if (!content || content.length === 0) {
+    throw new Error(`GEOX MCP: empty result for ${toolName}`);
+  }
+
+  // MCP returns content[0].text — parse inner JSON result
+  const text = content[0].text;
+  if (typeof text === 'string' && text.length > 0) {
+    try {
+      // The tool result is JSON-stringified inside the MCP content text
+      const parsed = JSON.parse(text);
+      return parsed as TResult;
+    } catch {
+      // If it's not JSON (e.g. string result), return as-is
+      return text as unknown as TResult;
+    }
+  }
+
+  return text as unknown as TResult;
+}
 
 export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
   toolName: string,
@@ -49,7 +116,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
     handler?: (event: MessageEvent) => void;
   } | null>(null);
 
-  const { updateFloorStatus, setToACReport } = useGEOXStore();
+  const { updateFloorStatus, setToACReport, geoxUrl } = useGEOXStore();
 
   const call = useCallback(
     (args: TArgs): Promise<TResult> => {
@@ -64,8 +131,6 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
       }
 
       return new Promise<TResult>((resolve, reject) => {
-        const callId = `${toolName}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-
         setState({
           data: null,
           status: 'loading',
@@ -74,12 +139,56 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
         });
         updateFloorStatus('F11', 'amber', `${toolName} in progress…`);
 
+        // ─── PATH B: Standalone mode — direct HTTP fetch ─────────────────
+        if (!isInIframe() && geoxUrl) {
+          const timer = setTimeout(() => {
+            const msg = `${toolName} timed out after ${TIMEOUT_MS / 1000}s (standalone)`;
+            setState(prev => ({ ...prev, status: 'error', error: msg }));
+            updateFloorStatus('F12', 'amber', msg);
+            reject(msg);
+          }, TIMEOUT_MS);
+
+          directMcpCall<TResult>(toolName, args as Record<string, unknown>, geoxUrl)
+            .then((result) => {
+              clearTimeout(timer);
+              setState(prev => ({ ...prev, data: result, status: 'success', error: null }));
+              updateFloorStatus('F11', 'green', `${toolName} completed`);
+
+              // Extract ToAC v1 fields
+              const r = result as Record<string, unknown>;
+              if (r && (r['claim_tag'] || r['acrisk'] !== undefined)) {
+                setToACReport({
+                  perception_class: (r['perception_class'] as ToACReport['perception_class']) || 'HYPOTHESIS',
+                  evidence_tag: (r['evidence_tag'] as ToACReport['evidence_tag']) || 'UNKNOWN',
+                  canon_9_touched: (r['canon_9_touched'] as ToACReport['canon_9_touched']) || [],
+                  vertical_trend: (r['vertical_trend'] as ToACReport['vertical_trend']) || 'UNKNOWN',
+                  litho_class: (r['litho_class'] as ToACReport['litho_class']) || 'UNKNOWN',
+                  strat_standard: (r['strat_standard'] as ToACReport['strat_standard']) || { scheme: 'NN_zone', reference_chart: '' },
+                });
+              }
+
+              resolve(result);
+            })
+            .catch((err) => {
+              clearTimeout(timer);
+              const errMsg = String(err);
+              setState(prev => ({ ...prev, status: 'error', error: errMsg }));
+              updateFloorStatus('F12', 'red', `${toolName} error: ${errMsg}`);
+              reject(errMsg);
+            });
+
+          return;
+        }
+
+        // ─── PATH A: iframe mode — postMessage to host LLM ────────────────
+        const callId = `${toolName}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+
         const timer = setTimeout(() => {
           if (pendingRef.current?.handler) {
             window.removeEventListener('message', pendingRef.current.handler);
           }
           pendingRef.current = null;
-          const msg = `${toolName} timed out after ${TIMEOUT_MS / 1000}s`;
+          const msg = `${toolName} timed out after ${TIMEOUT_MS / 1000}s (iframe)`;
           setState(prev => ({ ...prev, status: 'error', error: msg }));
           updateFloorStatus('F12', 'amber', msg);
           reject(msg);
@@ -91,7 +200,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
           const data = event.data;
           if (data?.jsonrpc !== '2.0' || data?.method !== 'tool.response') return;
           if (data?.params?.tool !== toolName) return;
-          if (data?.id !== callId) return;  // Critical: correlate by callId to prevent misrouting
+          if (data?.id !== callId) return;
 
           clearTimeout(timer);
           window.removeEventListener('message', _handleResponse);
@@ -107,7 +216,6 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
             setState(prev => ({ ...prev, data: result, status: 'success', error: null }));
             updateFloorStatus('F11', 'green', `${toolName} completed`);
 
-            // Extract ToAC v1 fields from result and propagate to store
             const r = result as Record<string, unknown>;
             if (r && (r['perception_class'] || r['evidence_tag'])) {
               setToACReport({
@@ -139,7 +247,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
         );
       });
     },
-    [toolName, updateFloorStatus],
+    [toolName, updateFloorStatus, setToACReport, geoxUrl],
   );
 
   const reset = useCallback(() => {

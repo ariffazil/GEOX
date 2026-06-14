@@ -19,7 +19,7 @@ const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ childr
 
 export const Domain2D: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const interpretTool = useMcpTool<any, string>('bridge.interpret_causal_scene');
+  const interpretTool = useMcpTool<any, string>('geox_horizon_contrast_surface');
   const [gcpScanned, setGcpScanned] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
 

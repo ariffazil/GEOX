@@ -18,7 +18,7 @@ const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ childr
 };
 
 export const Domain1D: React.FC = () => {
-  const interpretTool = useMcpTool<any, string>('bridge.interpret_causal_scene');
+  const interpretTool = useMcpTool<any, string>('geox_subsurface_generate_candidates');
   const [isCalibrating, setIsCalibrating] = useState(false);
   const [calibrated, setCalibrated] = useState(false);
 

@@ -29,7 +29,7 @@ const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ childr
 export const GeoxCore: React.FC = () => {
   const [activeDomain, setActiveDomain] = useState('prospect');
   const [time, setTime] = useState('');
-  const interpretTool = useMcpTool<any, string>('bridge.interpret_causal_scene');
+  const interpretTool = useMcpTool<any, string>('geox_map_context_scene');
   const [terminalInput, setTerminalInput] = useState('');
   const [terminalLog, setTerminalLog] = useState([
     { sender: 'sys', text: '> PHYSICS_9 Initialized...' },

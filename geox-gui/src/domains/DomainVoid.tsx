@@ -17,8 +17,8 @@ const Badge: React.FC<{ children: React.ReactNode; color?: string }> = ({ childr
 };
 
 export const DomainVoid: React.FC = () => {
-  const interpretTool = useMcpTool<any, string>('bridge.interpret_causal_scene');
-  const stoiipTool = useMcpTool<any, any>('prospect.compute_stoiip');
+  const interpretTool = useMcpTool<any, string>('geox_system_registry_status');
+  const stoiipTool = useMcpTool<any, any>('geox_prospect_evaluate');
   
   const [rw, setRw] = useState(0.04);
   const [archieM, setArchieM] = useState(2.0);
