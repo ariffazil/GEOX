@@ -375,10 +375,10 @@ class TestNoNewMCPTools(unittest.TestCase):
         try:
             from geox_mcp.server import CANONICAL_PUBLIC_TOOLS
 
-            # F13 SOVEREIGN PENDING RATIFICATION (2026-06-08): see eureka_forge_E8.
-            # Live canonical count = 37 (33 pre-Vision V1 + 4 Vision V1 tools).
-            # Until sovereign ratifies the +4 (or rolls back), test floor is 37.
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 37)
+            # F13 SOVEREIGN RATIFIED (2026-06-14): 39 canonical tools.
+            # Added: geox_las_inspect, geox_seismic_segy_inspect.
+            # Vision V1 (4 tools) also ratified.
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 42)
             self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 18)
         except ImportError as e:
             # geox_mcp server not importable in test env; that's OK —
