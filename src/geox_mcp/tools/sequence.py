@@ -707,8 +707,6 @@ async def _workflow_section_correlation(
 ) -> dict[str, Any]:
     import sys
 
-    sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
-
     # well_tie mode
     if mode == "well_tie":
         if not well_refs:

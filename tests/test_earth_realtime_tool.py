@@ -305,7 +305,16 @@ class TestToolRegistration:
         registry = ToolRegistry.default_registry()
         assert "EarthRealtimeTool" in registry.list_tools()
 
-    def test_macrostrat_still_in_registry(self):
-        from arifos.geox.geox_tools import ToolRegistry
-        registry = ToolRegistry.default_registry()
-        assert "MacrostratTool" in registry.list_tools()
+    def test_macrostrat_in_basin_profile_modes(self):
+        """Macrostrat is now a mode of geox_basin_profile — not a standalone tool.
+        Verify the mode literal accepts macrostrat_* values.
+        """
+        from geox_mcp.tools.basin import geox_basin_profile
+        import inspect
+        sig = inspect.signature(geox_basin_profile)
+        mode_param = sig.parameters.get("mode")
+        assert mode_param is not None, "geox_basin_profile must have a 'mode' parameter"
+        # Check that macrostrat modes are in the Literal
+        annotation = str(mode_param.annotation)
+        assert "macrostrat_units" in annotation, f"macrostrat_units not in mode options: {annotation}"
+        assert "macrostrat_columns" in annotation, f"macrostrat_columns not in mode options: {annotation}"

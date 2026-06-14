@@ -1,10 +1,10 @@
 <!-- SOT-MANIFEST
-owner: ariffazil/geox
-last_verified: 2026-05-19
-valid_from: 2026-05-19
-valid_until: 2026-06-19
+owner: Arif
+last_verified: 2026-06-14
+valid_from: 2026-06-14
+valid_until: 2026-07-14
 confidence: high
-scope: /
+scope: /root/geox/BOUNDARY.md
 -->
 
 # BOUNDARY.md — GEOX Earth Intelligence / Governed World Model

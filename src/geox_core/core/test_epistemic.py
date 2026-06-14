@@ -1,8 +1,6 @@
 import os
 import sys
 
-# Add geox to path
-sys.path.append(os.path.abspath("."))
 
 from geox_core.core.epistemic_integrity import EpistemicIntegrity
 

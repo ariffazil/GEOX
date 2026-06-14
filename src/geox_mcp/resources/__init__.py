@@ -268,7 +268,7 @@ async def geox_surface_truth() -> str:
             card_data = json.loads(card_path.read_text())
             card_count = card_data.get("tools", 0)
         except Exception:
-            pass
+            logger.warning("Failed to parse server-card.json for surface truth check")
 
     # 4. Parse llms.txt count
     llms_path = Path("/root/geox/resources/llms.txt")
@@ -287,7 +287,7 @@ async def geox_surface_truth() -> str:
             cap_data = json.loads(cap_path.read_text())
             cap_count = cap_data.get("canonical_tool_count", 0)
         except Exception:
-            pass
+            logger.warning("Failed to parse capabilities count for surface truth check")
 
     # 6. Tests count — read from live pytest cache if available, else unknown
     tests_count = 0
@@ -515,8 +515,8 @@ async def geox_claims_graph() -> str:
                     if not any(n["id"] == ev_id for n in nodes):
                         nodes.append({"id": ev_id, "type": "evidence", "text": ev_ref})
                     edges.append({"source": cid, "target": ev_id, "relation": "supported_by"})
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning(f"Failed to build claims graph: {exc}")
     return json.dumps({"nodes": nodes, "edges": edges}, indent=2)
 
 

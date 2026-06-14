@@ -18,10 +18,10 @@ defaults to HOLD. No guessing, no bypass.
 
 from __future__ import annotations
 
+import httpx
 import json
 import logging
 import os
-import urllib.request
 from enum import StrEnum
 from typing import Any
 
@@ -79,35 +79,28 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
 
 # ─── arifOS Kernel Client ──────────────────────────────────────────────────────
 
-ARIFOS_KERNEL_URL = os.getenv("ARIFOS_KERNEL_URL", "http://arifosmcp:8088")
+ARIFOS_KERNEL_URL = os.getenv("ARIFOS_KERNEL_URL", "http://127.0.0.1:8088")
 _ARIFOS_KERNEL_TOKEN = os.getenv("ARIFOS_KERNEL_TOKEN", "")
 
 
-def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int = 20) -> dict[str, Any]:
-    """Call arifOS MCP kernel. FAIL-CLOSED on error — returns error dict."""
-    payload = json.dumps(
-        {
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {"name": tool_name, "arguments": params},
-        }
-    ).encode()
+async def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int = 20) -> dict[str, Any]:
+    """Call arifOS MCP kernel asynchronously. FAIL-CLOSED on error — returns error dict."""
+    payload = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": tool_name, "arguments": params},
+    }
 
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
     if _ARIFOS_KERNEL_TOKEN:
         headers["Authorization"] = f"Bearer {_ARIFOS_KERNEL_TOKEN}"
 
-    req = urllib.request.Request(
-        f"{ARIFOS_KERNEL_URL}/mcp",
-        data=payload,
-        headers=headers,
-        method="POST",
-    )
-
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            result = json.loads(resp.read().decode())
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            resp = await client.post(f"{ARIFOS_KERNEL_URL}/mcp", json=payload, headers=headers)
+            resp.raise_for_status()
+            result = resp.json()
             return result.get("result", {"status": "ERROR", "error": "no result in response"})
     except Exception as exc:
         logger.error(f"arifOS kernel call failed: {exc}")
@@ -117,7 +110,7 @@ def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int = 20)
 # ─── Governance Check ─────────────────────────────────────────────────────────
 
 
-def check_governance(
+async def check_governance(
     tool_name: str,
     arguments: dict[str, Any],
     session_id: str | None = None,
@@ -162,7 +155,7 @@ def check_governance(
             "actor_id": actor_id,
         }
         logger.info(f"GOV: {tool_name} [C1] → calling arifOS (advisory)...")
-        kernel_result = _call_arif_kernel("arif_judge_deliberate", judge_params)
+        kernel_result = await _call_arif_kernel("arif_judge_deliberate", judge_params)
         verdict = kernel_result.get("verdict", "ADVISORY")
         logger.info(f"GOV: {tool_name} [C1] → {verdict} (proceeding anyway)")
         return verdict, None
@@ -190,7 +183,7 @@ def check_governance(
 
     logger.info(f"GOV: {tool_name} [{risk_tier.value}] → calling arifOS kernel...")
 
-    kernel_result = _call_arif_kernel("arif_judge_deliberate", judge_params)
+    kernel_result = await _call_arif_kernel("arif_judge_deliberate", judge_params)
 
     verdict = "HOLD"  # fail-closed default
     reason = "arifOS kernel unreachable or session unbound — fail-closed"

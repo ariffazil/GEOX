@@ -3,7 +3,7 @@
   "name_for_human": "GEOX Earth Witness",
   "name_for_model": "geox_earth_witness",
   "description_for_human": "Constitutional geoscience platform for petroleum exploration. Query seismic data, evaluate prospects, calculate petrophysics, and access geological databases with 13-floor constitutional governance.",
-  "description_for_model": "GEOX Earth Witness is a constitutional geoscience MCP platform. Use this to: (1) Query Malay Basin petroleum data, (2) Load and interpret seismic lines, (3) Evaluate prospects with tri-witness consensus, (4) Calculate water saturation using Archie/Simandoux/Indonesia models, (5) Query Macrostrat geological database. All operations pass through F1-F13 constitutional floors including F2 Truth (evidence grounding), F7 Humility (confidence caps), and F13 Sovereign (human override).",
+  "description_for_model": "GEOX Earth Witness is a constitutional geoscience MCP platform. Use this to: (1) Query Malay Basin petroleum data, (2) Load and interpret seismic lines, (3) Evaluate prospects with tri-witness consensus, (4) Calculate water saturation using Archie/Simandoux/Indonesia models, (5) Query Macrostrat global geology via geox_basin_profile(mode='macrostrat_units' or 'macrostrat_columns'). All operations pass through F1-F13 constitutional floors including F2 Truth (evidence grounding), F7 Humility (confidence caps), and F13 Sovereign (human override).",
   "auth": {
     "type": "none"
   },
@@ -154,17 +154,36 @@
       }
     },
     {
-      "name": "geox_query_geology",
-      "description": "Query Macrostrat geological database for regional stratigraphy, lithology, and age data. Data cited per F2 Truth requirements.",
+      "name": "geox_basin_profile",
+      "description": "Query Macrostrat geological database for regional stratigraphy, lithology, and age data. Use mode='macrostrat_units' for rock units or mode='macrostrat_columns' for strat columns. Data cited per F2 Truth requirements.",
       "parameters": {
         "type": "object",
         "properties": {
+          "basin_name": {
+            "type": "string",
+            "description": "Basin name (e.g. 'Malay Basin')"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["macrostrat_units", "macrostrat_columns"],
+            "description": "macrostrat_units for rock units, macrostrat_columns for strat columns"
+          },
           "lat": {
             "type": "number",
             "description": "Latitude (-90 to 90)",
             "minimum": -90,
             "maximum": 90
           },
+          "lng": {
+            "type": "number",
+            "description": "Longitude (-180 to 180)",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": ["basin_name", "mode", "lat", "lng"]
+      }
+    },
           "lon": {
             "type": "number",
             "description": "Longitude (-180 to 180)",

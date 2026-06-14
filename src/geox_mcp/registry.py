@@ -142,4 +142,7 @@ LEGACY_ALIAS_MAP: dict[str, str] = {
     "geox_task_ingest_las_batch": "geox_data_ingest_bundle",
     "geox_task_metabolize_basin": "geox_subsurface_generate_candidates",
     "geox_registry": "geox_system_registry_status",
+    # Macrostrat alias — old manifest references redirect to basin_profile
+    "geox_query_macrostrat": "geox_basin_profile",
+    "geox_earth_realtime": "geox_basin_profile",
 }

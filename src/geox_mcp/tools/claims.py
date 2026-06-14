@@ -16,9 +16,9 @@ DITEMPA BUKAN DIBERI — Earth intelligence is forged, not given.
 from __future__ import annotations
 
 import hashlib
+import httpx
 import json
 import logging
-import urllib.request
 import uuid
 from datetime import UTC, datetime
 from typing import Any, Literal
@@ -121,13 +121,15 @@ def _build_claim_envelope(
     return payload
 
 
-def _get_arifOS_health() -> bool:
+async def _get_arifOS_health() -> bool:
     """Check if arifOS is available for sealing."""
 
     try:
-        with urllib.request.urlopen("http://localhost:8088/health", timeout=3) as r:
-            return r.status == 200
-    except Exception:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            r = await client.get("http://127.0.0.1:8088/health")
+            return r.status_code == 200
+    except Exception as exc:
+        logger.warning(f"arifOS health check failed: {exc}")
         return False
 
 
@@ -529,7 +531,7 @@ async def geox_claim_seal(
         except Exception as e:
             logger.warning(f"Claim fetch failed: {e}")
 
-    arifOS_available = _get_arifOS_health()
+    arifOS_available = await _get_arifOS_health()
 
     if not arifOS_available:
         # Self-seal with local receipt (degraded mode — no arifOS)
@@ -572,56 +574,46 @@ async def geox_claim_seal(
             "Accept": "application/json, text/event-stream",
         }
 
-        # 1. initialize MCP session
-        init_body = json.dumps(
-            {
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "initialize",
-                "params": {
-                    "protocolVersion": "2024-11-05",
-                    "capabilities": {},
-                    "clientInfo": {"name": "geox-bridge", "version": "1.0"},
-                },
-            }
-        ).encode("utf-8")
-        init_req = urllib.request.Request(
-            "http://localhost:8088/mcp",
-            data=init_body,
-            headers=mcp_headers,
-            method="POST",
-        )
-        with urllib.request.urlopen(init_req, timeout=10) as init_resp:
-            session_id = init_resp.headers.get("Mcp-Session-Id") or init_resp.headers.get("mcp-session-id") or ""
-
-        # 2. tools/call arif_vault_seal
-        call_body = json.dumps(
-            {
-                "jsonrpc": "2.0",
-                "id": 2,
-                "method": "tools/call",
-                "params": {
-                    "name": "arif_vault_seal",
-                    "arguments": {
-                        "action": "SEAL",
-                        "payload": json.dumps(seal_request),
-                        "actor_id": "geox-bridge",
-                        "session_id": session_id,
-                        "ack_irreversible": bool(ack_irreversible),
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            # 1. initialize MCP session
+            init_resp = await client.post(
+                "http://127.0.0.1:8088/mcp",
+                headers=mcp_headers,
+                json={
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "initialize",
+                    "params": {
+                        "protocolVersion": "2024-11-05",
+                        "capabilities": {},
+                        "clientInfo": {"name": "geox-bridge", "version": "1.0"},
                     },
                 },
-            }
-        ).encode("utf-8")
-        call_headers = {**mcp_headers, "Mcp-Session-Id": session_id}
-        call_req = urllib.request.Request(
-            "http://localhost:8088/mcp",
-            data=call_body,
-            headers=call_headers,
-            method="POST",
-        )
-        with urllib.request.urlopen(call_req, timeout=10) as call_resp:
-            raw = call_resp.read()
-            result = json.loads(raw)
+            )
+            session_id = init_resp.headers.get("Mcp-Session-Id") or init_resp.headers.get("mcp-session-id") or ""
+
+            # 2. tools/call arif_vault_seal
+            call_headers = {**mcp_headers, "Mcp-Session-Id": session_id}
+            call_resp = await client.post(
+                "http://127.0.0.1:8088/mcp",
+                headers=call_headers,
+                json={
+                    "jsonrpc": "2.0",
+                    "id": 2,
+                    "method": "tools/call",
+                    "params": {
+                        "name": "arif_vault_seal",
+                        "arguments": {
+                            "action": "SEAL",
+                            "payload": json.dumps(seal_request),
+                            "actor_id": "geox-bridge",
+                            "session_id": session_id,
+                            "ack_irreversible": bool(ack_irreversible),
+                        },
+                    },
+                },
+            )
+            result = call_resp.json()
             if "error" in result and result["error"]:
                 raise RuntimeError(f"MCP error: {result['error']}")
             mcp_result = result.get("result") or {}

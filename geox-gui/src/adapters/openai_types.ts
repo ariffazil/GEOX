@@ -341,11 +341,22 @@ export const GEOX_OPENAI_TOOL_MAP: Record<string, MappedGeoxTool> = {
     },
     constitutionalNotes: ['F7: Uncertainty quantified', 'F2: All parameters grounded'],
   },
-  'geox_query_macrostrat': {
-    geoxName: 'geox_query_macrostrat',
+  'geox_basin_profile (macrostrat)': {
+    geoxName: 'geox_basin_profile',
     openaiName: 'geox_query_geology',
-    description: 'Query Macrostrat geological database for regional stratigraphy, lithology, and age data.',
+    description: 'Query Macrostrat geological database via geox_basin_profile mode=macrostrat_units|macrostrat_columns.',
     parameters: {
+      basin_name: {
+        type: 'string',
+        description: 'Basin name (e.g. Malay Basin)',
+        required: true,
+      },
+      mode: {
+        type: 'string',
+        enum: ['macrostrat_units', 'macrostrat_columns'],
+        description: 'macrostrat_units for rock units, macrostrat_columns for strat columns',
+        required: true,
+      },
       lat: {
         type: 'number',
         description: 'Latitude (-90 to 90)',

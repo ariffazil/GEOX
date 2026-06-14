@@ -44,7 +44,8 @@ clean:
 
 # ── arifOS Federation Security Audit ─────────────────────────────────────────
 # Inherits security-audit from arifOS canonical.mk — fires 888_HOLD on CRITICAL/HIGH
+include /root/arifOS/scripts/forge.mk
 include /root/arifOS/scripts/security_audit.mk
 
-forge: security-audit
-	@echo "GEOX Surgical Burn complete. Awaiting SOVEREIGN SEAL."
+forge: clean-temp sot-bump security-audit
+	@echo "⛓️  GEOX forge gate passed."

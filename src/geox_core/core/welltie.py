@@ -24,7 +24,6 @@ import numpy as np
 
 # ── helpers already imported in section.py ──────────────────────────────────
 # We re-import locally to keep this module self-contained.
-sys.path.insert(0, os.environ.get("ARIFOS_HOME", "/root") + "/geox")
 
 
 def _load_las_curves(las_path: str) -> dict:

@@ -16,8 +16,6 @@ from typing import TypedDict
 
 # Attempt to locate arifos_types from the arifOS workspace if present
 _arifos_types_path = Path("/root/arifOS/packages/arifos-types/py")
-if _arifos_types_path.exists():
-    sys.path.insert(0, str(_arifos_types_path))
 
 try:
     from arifos_types import (
