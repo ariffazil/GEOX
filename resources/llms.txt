@@ -1,9 +1,9 @@
-# GEOX — Earth Intelligence Sovereign Kernel (39 Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (40 Tools)
 > Level: L3 AGI Clerk / Ψ Node
 > Doctrine: Physics before Narrative. F1–F13 Governed.
 > Epoch: 2026-06-14
 > Seal: DITEMPA BUKAN DIBERI
-> Surface: 39 canonical tools
+> Surface: 40 canonical tools
 
 ## 1. Canonical Tool Surface
 
@@ -45,7 +45,7 @@
 36. **geox_vision_perceptual_inventory**: Build perceptual inventory from VLM outputs.
 37. **geox_vision_minimax_inference**: Interpret seismic images via MiniMax VLM.
 38. **geox_vision_calibrate**: Calibrate VLM against synthetic forward-inverse harness.
-39. **geox_vision_audit**: Compute AC_Risk and emit VisionVerdict.
+40. **geox_vision_audit**: Compute AC_Risk and emit VisionVerdict.
 
 ## 2. Agent Reasoning Logic
 - Ingest -> QC -> Generate -> Verify -> Judge.

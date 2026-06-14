@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 from typing import Any, Dict, List
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX CANONICAL PUBLIC TOOLS
 # SOT: src/geox_mcp/registry.py
 # Last verified: 2026-06-14
-# 39 canonical tools. Physics-9 foundation. Evidence-only.
+# 40 canonical tools. Physics-9 foundation. Evidence-only.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 CANONICAL_PUBLIC_TOOLS: List[str] = [
@@ -61,48 +63,51 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_vision_minimax_inference",
     "geox_vision_calibrate",
     "geox_vision_audit",
+    # Macrostrat — dedicated client (replaces thin proxy alias)
+    "geox_query_macrostrat",
 ]
 
-GEOX_TOOL_MANIFEST: List[Dict[str, Any]] = [
-    {"name": "geox_data_ingest_bundle", "axis": "observe", "expose": True},
-    {"name": "geox_data_qc_bundle", "axis": "verify", "expose": True},
-    {"name": "geox_dst_ingest_test", "axis": "observe", "expose": True},
-    {"name": "geox_header_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_las_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_seismic_segy_inspect", "axis": "verify", "expose": True},
-    {"name": "geox_evidence_discover", "axis": "observe", "expose": True},
-    {"name": "geox_report_to_workflow", "axis": "reason", "expose": True},
-    {"name": "geox_subsurface_generate_candidates", "axis": "reason", "expose": True},
-    {"name": "geox_subsurface_verify_integrity", "axis": "verify", "expose": True},
-    {"name": "geox_seismic_compute", "axis": "reason", "expose": True},
-    {"name": "geox_sequence_interpret", "axis": "reason", "expose": True},
-    {"name": "geox_evidence_reason", "axis": "reason", "expose": True},
-    {"name": "geox_prospect_evaluate", "axis": "reason", "expose": True},
-    {"name": "geox_map_context_scene", "axis": "observe", "expose": True},
-    {"name": "geox_system_registry_status", "axis": "observe", "expose": True},
-    {"name": "geox_horizon_contrast_surface", "axis": "reason", "expose": True},
-    {"name": "geox_coord_transform_tool", "axis": "compute", "expose": True},
-    {"name": "geox_blockspace_resolution_tool", "axis": "compute", "expose": True},
-    {"name": "geox_volume_frame_tool", "axis": "observe", "expose": True},
-    {"name": "geox_seismic_compute_attribute_tool", "axis": "reason", "expose": True},
-    {"name": "geox_fault_stick_ingest_tool", "axis": "observe", "expose": True},
-    {"name": "geox_attribute_registry_list_tool", "axis": "observe", "expose": True},
-    {"name": "geox_blend_volume_tool", "axis": "compute", "expose": True},
-    {"name": "geox_segy_export_tool", "axis": "observe", "expose": True},
-    {"name": "geox_claim_create", "axis": "reason", "expose": True},
-    {"name": "geox_claim_validate", "axis": "verify", "expose": True},
-    {"name": "geox_claim_challenge", "axis": "reason", "expose": True},
-    {"name": "geox_evidence_attach", "axis": "verify", "expose": True},
-    {"name": "geox_claim_seal", "axis": "reason", "expose": True},
-    {"name": "geox_basin_resolve", "axis": "observe", "expose": True},
-    {"name": "geox_basin_profile", "axis": "reason", "expose": True},
-    {"name": "geox_query_intake", "axis": "observe", "expose": True},
-    {"name": "geox_abstraction_guard", "axis": "verify", "expose": True},
-    {"name": "geox_literature_ingest", "axis": "observe", "expose": True},
-    {"name": "geox_vision_perceptual_inventory", "axis": "observe", "expose": True},
-    {"name": "geox_vision_minimax_inference", "axis": "reason", "expose": True},
-    {"name": "geox_vision_calibrate", "axis": "verify", "expose": True},
-    {"name": "geox_vision_audit", "axis": "verify", "expose": True},
+GEOX_TOOL_MANIFEST: List[Dict[str, str]] = [
+    {"name": "geox_data_ingest_bundle", "axis": "observe", "expose": "True"},
+    {"name": "geox_data_qc_bundle", "axis": "verify", "expose": "True"},
+    {"name": "geox_dst_ingest_test", "axis": "observe", "expose": "True"},
+    {"name": "geox_header_inspect", "axis": "verify", "expose": "True"},
+    {"name": "geox_las_inspect", "axis": "verify", "expose": "True"},
+    {"name": "geox_seismic_segy_inspect", "axis": "verify", "expose": "True"},
+    {"name": "geox_evidence_discover", "axis": "observe", "expose": "True"},
+    {"name": "geox_report_to_workflow", "axis": "reason", "expose": "True"},
+    {"name": "geox_subsurface_generate_candidates", "axis": "reason", "expose": "True"},
+    {"name": "geox_subsurface_verify_integrity", "axis": "verify", "expose": "True"},
+    {"name": "geox_seismic_compute", "axis": "reason", "expose": "True"},
+    {"name": "geox_sequence_interpret", "axis": "reason", "expose": "True"},
+    {"name": "geox_evidence_reason", "axis": "reason", "expose": "True"},
+    {"name": "geox_prospect_evaluate", "axis": "reason", "expose": "True"},
+    {"name": "geox_map_context_scene", "axis": "observe", "expose": "True"},
+    {"name": "geox_system_registry_status", "axis": "observe", "expose": "True"},
+    {"name": "geox_horizon_contrast_surface", "axis": "reason", "expose": "True"},
+    {"name": "geox_coord_transform_tool", "axis": "compute", "expose": "True"},
+    {"name": "geox_blockspace_resolution_tool", "axis": "compute", "expose": "True"},
+    {"name": "geox_volume_frame_tool", "axis": "observe", "expose": "True"},
+    {"name": "geox_seismic_compute_attribute_tool", "axis": "reason", "expose": "True"},
+    {"name": "geox_fault_stick_ingest_tool", "axis": "observe", "expose": "True"},
+    {"name": "geox_attribute_registry_list_tool", "axis": "observe", "expose": "True"},
+    {"name": "geox_blend_volume_tool", "axis": "compute", "expose": "True"},
+    {"name": "geox_segy_export_tool", "axis": "observe", "expose": "True"},
+    {"name": "geox_claim_create", "axis": "reason", "expose": "True"},
+    {"name": "geox_claim_validate", "axis": "verify", "expose": "True"},
+    {"name": "geox_claim_challenge", "axis": "reason", "expose": "True"},
+    {"name": "geox_evidence_attach", "axis": "verify", "expose": "True"},
+    {"name": "geox_claim_seal", "axis": "reason", "expose": "True"},
+    {"name": "geox_basin_resolve", "axis": "observe", "expose": "True"},
+    {"name": "geox_basin_profile", "axis": "reason", "expose": "True"},
+    {"name": "geox_query_intake", "axis": "observe", "expose": "True"},
+    {"name": "geox_abstraction_guard", "axis": "verify", "expose": "True"},
+    {"name": "geox_literature_ingest", "axis": "observe", "expose": "True"},
+    {"name": "geox_vision_perceptual_inventory", "axis": "observe", "expose": "True"},
+    {"name": "geox_vision_minimax_inference", "axis": "reason", "expose": "True"},
+    {"name": "geox_vision_calibrate", "axis": "verify", "expose": "True"},
+    {"name": "geox_vision_audit", "axis": "verify", "expose": "True"},
+    {"name": "geox_query_macrostrat", "axis": "observe", "expose": "True"},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)

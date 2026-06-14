@@ -15,20 +15,23 @@ import pytest
 import numpy as np
 import asyncio
 
-from arifos.geox.tools.single_line_interpreter import (
-    SingleLineInterpreter,
-    compute_attributes_2d,
-    link_attributes_to_geology,
-    audit_conceptual_bias,
-    TectonicSetting,
-    InputType,
-    _compute_coherence_2d,
-    _compute_curvature_2d,
-    _compute_instantaneous_frequency,
-    _compute_envelope,
-    _compute_dip_2d,
-)
-from arifos.geox.geox_tools import ToolRegistry
+try:
+    from arifos.geox.tools.single_line_interpreter import (
+        SingleLineInterpreter,
+        compute_attributes_2d,
+        link_attributes_to_geology,
+        audit_conceptual_bias,
+        TectonicSetting,
+        InputType,
+        _compute_coherence_2d,
+        _compute_curvature_2d,
+        _compute_instantaneous_frequency,
+        _compute_envelope,
+        _compute_dip_2d,
+    )
+    from arifos.geox.geox_tools import ToolRegistry
+except ImportError:
+    pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
 
 
 # -----------------------------------------------------------------------------

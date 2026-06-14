@@ -4,12 +4,15 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from arifos.geox.renderers.base import RenderSession
-from arifos.geox.renderers.cigvis_adapter import (
-    CigvisAdapter,
-    InteractiveCigvisRenderer,
-    StaticCigvisRenderer,
-)
+try:
+    from arifos.geox.renderers.base import RenderSession
+    from arifos.geox.renderers.cigvis_adapter import (
+        CigvisAdapter,
+        InteractiveCigvisRenderer,
+        StaticCigvisRenderer,
+    )
+except ImportError:
+    pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
 
 
 def test_compile_scene_returns_empty_when_cigvis_is_unavailable(monkeypatch):

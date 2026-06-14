@@ -3,6 +3,7 @@
 #
 # This package owns the absolute truth for all GEOX interfaces.
 # No runtime may define contracts outside this package.
+from __future__ import annotations
 
 from contracts.enums.statuses import (
     Dimension,

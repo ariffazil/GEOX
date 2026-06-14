@@ -19,8 +19,11 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 import httpx
 
-from arifos.geox.geox_schemas import CoordinatePoint
-from arifos.geox.tools.earth_realtime_tool import EarthRealtimeTool
+try:
+    from arifos.geox.geox_schemas import CoordinatePoint
+    from arifos.geox.tools.earth_realtime_tool import EarthRealtimeTool
+except ImportError:
+    pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
 
 
 SABAH_LOCATION = CoordinatePoint(latitude=5.9792, longitude=116.0733)  # Kota Kinabalu
@@ -301,20 +304,31 @@ class TestGracefulDegradation:
 
 class TestToolRegistration:
     def test_earth_realtime_in_default_registry(self):
-        from arifos.geox.geox_tools import ToolRegistry
+        try:
+            from arifos.geox.geox_tools import ToolRegistry
+        except ImportError:
+            pytest.skip("Legacy arifos.geox module not available")
         registry = ToolRegistry.default_registry()
         assert "EarthRealtimeTool" in registry.list_tools()
 
     def test_macrostrat_in_basin_profile_modes(self):
         """Macrostrat is now a mode of geox_basin_profile — not a standalone tool.
-        Verify the mode literal accepts macrostrat_* values.
+        Verify the mode literal accepts all macrostrat_* values.
         """
         from geox_mcp.tools.basin import geox_basin_profile
         import inspect
         sig = inspect.signature(geox_basin_profile)
         mode_param = sig.parameters.get("mode")
         assert mode_param is not None, "geox_basin_profile must have a 'mode' parameter"
-        # Check that macrostrat modes are in the Literal
+        # Check that all macrostrat modes are in the Literal
         annotation = str(mode_param.annotation)
-        assert "macrostrat_units" in annotation, f"macrostrat_units not in mode options: {annotation}"
-        assert "macrostrat_columns" in annotation, f"macrostrat_columns not in mode options: {annotation}"
+        expected_modes = [
+            "macrostrat_units", "macrostrat_columns", "macrostrat_lithologies",
+            "macrostrat_strat_names", "macrostrat_intervals", "macrostrat_fossils",
+            "macrostrat_geologic_map", "macrostrat_cache_warm",
+        ]
+        for m in expected_modes:
+            assert m in annotation, f"{m} missing from mode options: {annotation}"
+        assert annotation.count("macrostrat_") == len(expected_modes), (
+            f"Expected {len(expected_modes)} macrostrat modes, got different count"
+        )

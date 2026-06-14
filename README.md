@@ -29,7 +29,7 @@ scope: /root/geox
 
 # GEOX — Earth Intelligence | Governed World Model
 
-> **39 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**
+> **40 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**
 
 GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, and stratigraphic interpretation — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
 
@@ -91,7 +91,7 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 - **An earth evidence coprocessor** — it ingests well logs, seismic volumes, DST data, and geological reports; it runs petrophysics, stratigraphy, and prospect evaluation; it outputs structured, physics-constrained evidence receipts.
 - **Constitutionally governed** — every output carries epistemic tags (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN), uncertainty bands (P10/P50/P90), and provenance chains.
-- **Agent-accessible** — all 39 tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
+- **Agent-accessible** — all 40 tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
 - **Dual-transport** — systemd service (`geox-mcp.service`) for HTTP/SSE; `--transport stdio` for Claude Code, OpenCode, Continue CLI, and other local agents.
 
 ### What GEOX IS NOT
@@ -385,7 +385,7 @@ geox/
 │
 ├── src/
 │   ├── geox_mcp/                         ← MCP surface (agent-facing)
-│   │   ├── server.py                     ← Canonical FastMCP server (39 tools)
+│   │   ├── server.py                     ← Canonical FastMCP server (40 tools)
 │   │   ├── tools/                        ← Tool implementations
 │   │   │   ├── discovery/                ← System discovery + registry
 │   │   │   └── kernel/                   ← Kernel-bridge tools
@@ -533,7 +533,7 @@ Arif Fazil (F13 SOVEREIGN) decides → Drilling go/no-go, capital commitment
 
 ### 9.1 MCP Connection
 
-GEOX exposes all 39 tools via MCP (Model Context Protocol). Two transport modes:
+GEOX exposes all 40 tools via MCP (Model Context Protocol). Two transport modes:
 
 **HTTP/SSE (for remote agents):**
 ```

@@ -22,7 +22,7 @@
 | Port | **8081** (NOT 18081) | ✅ `ss -tlnp` shows `geox_mcp.server` PID 1888572 on `0.0.0.0:8081` |
 | Health | `https://geox.arif-fazil.com/health` → 200, `registry_truth=VERIFIED` | ✅ |
 | Daemon | `python3 -m geox_mcp.server` via `geox-mcp.service` (systemd) | ✅ |
-| Tool count | 39 canonical (`CANONICAL_PUBLIC_TOOLS` in `src/geox_mcp/registry.py`) | ✅ |
+| Tool count | 40 canonical (`CANONICAL_PUBLIC_TOOLS` in `src/geox_mcp/registry.py`) | ✅ |
 | Version | v2026.05.27 · contract epoch 2026-05-12-GEOX-13TOOLS-v0.7 | ✅ |
 
 > **Important — what lives on each port:**
@@ -51,7 +51,7 @@ curl https://geox.arif-fazil.com/health
 - ❌ Any Caddyfile route to `:18081` for GEOX — it must be `:8081`
 - ❌ Any doc saying GEOX daemon on `18081`
 - ❌ Any MCP config pointing to `localhost:18081` for GEOX
-- ❌ Tool count `28` — the live surface is **39 canonical** (`CANONICAL_PUBLIC_TOOLS`)
+- ❌ Tool count `28` — the live surface is **40 canonical** (`CANONICAL_PUBLIC_TOOLS`)
 - ❌ Tool count `21` — same: 39 is the truth
 
 ## ⚠️ Caddy misroute flagged (2026-06-03)
@@ -63,7 +63,7 @@ arifosd's `/health` response shape, not geox's. **This is a 888_HOLD Caddyfile
 edit** — flagged for sovereign approval, not auto-fixed by the agent.
 
 ## Related Files
-- `src/geox_mcp/registry.py` — canonical daemon (39 canonical tools)
+- `src/geox_mcp/registry.py` — canonical daemon (40 canonical tools)
 - `HEALTHCHECK.md` — deployment notes
 - `AGENT_KERNEL_START.md` — estate entry ritual
 - `/etc/systemd/system/geox-mcp.service` — systemd unit binding 8081

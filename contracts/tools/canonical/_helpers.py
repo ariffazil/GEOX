@@ -3,6 +3,7 @@
 # Original 1,363-line _helpers.py split into 5 kernel modules:
 #   kernel/_registry.py      ← artifact registry + globals (lines 1–192)
 #   kernel/_evidence.py     ← F6 Maruah + F7 ensemble (lines 193–311)
+from __future__ import annotations
 #   kernel/_ingest.py       ← ingest + canonical curves (lines 312–451)
 #   kernel/_petrophysics.py ← petrophysics (lines 453–1042)
 #   kernel/_candidates.py   ← async subsurface candidates (lines 1043–1363)

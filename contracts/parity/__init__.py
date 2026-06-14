@@ -1,5 +1,6 @@
 # GEOX Contracts — Parity
 # DITEMPA BUKAN DIBERI
+from __future__ import annotations
 
 from contracts.parity.runtime_matrix import (
     RUNTIME_PARITY_MATRIX,

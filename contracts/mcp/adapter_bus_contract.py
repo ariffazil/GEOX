@@ -1,3 +1,4 @@
+from __future__ import annotations
 """GEOX ↔ arifOS Adapter Bus Contract
 DITEMPA BUKAN DIBERI
 
@@ -24,7 +25,6 @@ TODO (2026-04-19): Full 489-line Pydantic v2 implementation.
 Status: SCAFFOLD — do not use in production
 """
 
-from __future__ import annotations
 
 from pydantic import BaseModel, Field
 from typing import Optional

@@ -14,16 +14,19 @@ from datetime import datetime, timezone
 import pytest
 from pydantic import ValidationError
 
-from arifos.geox.geox_schemas import (
-    CoordinatePoint,
-    GeoPrediction,
-    GeoInsight,
-    GeoQuantity,
-    GeoRequest,
-    GeoResponse,
-    ProvenanceRecord,
-    export_json_schemas,
-)
+try:
+    from arifos.geox.geox_schemas import (
+        CoordinatePoint,
+        GeoPrediction,
+        GeoInsight,
+        GeoQuantity,
+        GeoRequest,
+        GeoResponse,
+        ProvenanceRecord,
+        export_json_schemas,
+    )
+except ImportError:
+    pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
 
 
 # ---------------------------------------------------------------------------

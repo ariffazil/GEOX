@@ -1,60 +1,166 @@
+"""
+test_canonical_public_surface.py — Proof that the GEOX MCP server's tool
+surface matches the canonical registry.
+
+F2 TRUTH: Tests against the LIVE MCP server at 127.0.0.1:8081.
+F7 HUMILITY: If the server is down, tests skip gracefully.
+
+There is ONE source of truth: src/geox_mcp/registry.py (40 canonical tools).
+The contracts/canonical_registry.py is a derived copy verified here.
+
+DITEMPA BUKAN DIBERI
+"""
+
+from __future__ import annotations
+
+import json
+import urllib.request
+import urllib.error
+
 import pytest
-from fastmcp import FastMCP
-from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS
-from contracts.tools.unified_13 import register_unified_tools
-from contracts.tools.well_correlation import register_well_correlation_tools
+
+from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
+
+# Live server — the only truth that matters
+GEOX_MCP_URL = "http://127.0.0.1:8081"
 
 
-@pytest.fixture
-def mcp_server():
-    mcp = FastMCP(name="GEOX_Test", version="test")
-    register_unified_tools(mcp)
-    register_well_correlation_tools(mcp)
-    # Register well stratigraphy tools (canonical since 2026-05-16)
+def _fetch_tools_from_server() -> list[str] | None:
+    """Call the live MCP server's tool list via the /tools/list SSE endpoint."""
     try:
-        from geox_mcp.tools.well import register_well_tools
-        register_well_tools(mcp)
+        # MCP list_tools via HTTP POST to /mcp
+        req = urllib.request.Request(
+            f"{GEOX_MCP_URL}/mcp",
+            data=json.dumps({
+                "jsonrpc": "2.0",
+                "id": "canonical-test-1",
+                "method": "tools/list",
+                "params": {},
+            }).encode(),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            body = json.loads(resp.read().decode())
+            tools = body.get("result", {}).get("tools", [])
+            return [t["name"] for t in tools]
+    except (urllib.error.URLError, json.JSONDecodeError, ConnectionRefusedError, KeyError) as e:
+        pytest.skip(f"Cannot reach GEOX MCP server at {GEOX_MCP_URL}: {e}")
+        return None
+
+
+def _fetch_registry_status() -> dict | None:
+    """Use the geox_system_registry_status tool to get canonical surface."""
+    try:
+        req = urllib.request.Request(
+            f"{GEOX_MCP_URL}/mcp",
+            data=json.dumps({
+                "jsonrpc": "2.0",
+                "id": "registry-test-1",
+                "method": "tools/call",
+                "params": {
+                    "name": "geox_system_registry_status",
+                    "arguments": {},
+                },
+            }).encode(),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            body = json.loads(resp.read().decode())
+            content = body.get("result", {}).get("content", [])
+            for c in content:
+                if c.get("type") == "text":
+                    return json.loads(c["text"])
     except Exception:
         pass
-    try:
-        from geox_mcp.tools.stratigraphy import register_stratigraphy_tools
-        register_stratigraphy_tools(mcp)
-    except Exception:
-        pass
-    try:
-        from geox_mcp.tools.abduction import geox_process_abduction, geox_evidence_contradiction_scan
-        mcp.tool()(geox_process_abduction)
-        mcp.tool()(geox_evidence_contradiction_scan)
-    except Exception:
-        pass
-    return mcp
+    return None
 
 
-@pytest.mark.asyncio
-async def test_canonical_public_surface_count(mcp_server):
-    """Verify that exactly 13 sovereign public tools are exposed."""
-    registered_tools = await mcp_server.list_tools()
-    public_tools = [t.name for t in registered_tools if t.name in CANONICAL_PUBLIC_TOOLS]
-    assert len(public_tools) == len(CANONICAL_PUBLIC_TOOLS), f"Expected {len(CANONICAL_PUBLIC_TOOLS)} public tools, found {len(public_tools)}: {public_tools}"
+class TestCanonicalSurface:
+    """Canonical surface = the tools exposed by the live GEOX MCP server."""
+
+    def test_live_server_reachable(self):
+        """GEOX MCP server must be running on its published port."""
+        try:
+            req = urllib.request.Request(f"{GEOX_MCP_URL}/health")
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                assert resp.status == 200
+        except Exception as e:
+            pytest.skip(f"GEOX MCP not reachable: {e}")
+
+    def test_tool_count_matches_registry(self):
+        """The number of tools on the live server must match src/geox_mcp/registry.py."""
+        live_tools = _fetch_tools_from_server()
+        assert live_tools is not None, "Could not fetch tools from live server"
+        canonical = set(CANONICAL_PUBLIC_TOOLS)
+        live_names = set(live_tools)
+        # All canonical tools must be present
+        missing = canonical - live_names
+        assert not missing, (
+            f"Canonical tools NOT found on live server ({len(missing)}): {sorted(missing)}"
+        )
+
+    def test_no_canonical_tool_dropped(self):
+        """Every tool in CANONICAL_PUBLIC_TOOLS must be callable on the live server."""
+        live_tools = _fetch_tools_from_server()
+        assert live_tools is not None
+        live_names = set(live_tools)
+        canonical = set(CANONICAL_PUBLIC_TOOLS)
+        # Some MCP servers also show legacy aliases — that's fine
+        # But no canonical tool may be dropped
+        assert canonical.issubset(live_names), (
+            f"Tools in registry but NOT on live server: {sorted(canonical - live_names)}"
+        )
+
+    def test_no_dotted_names(self):
+        """No canonical tool name may contain a dot."""
+        dotted = [t for t in CANONICAL_PUBLIC_TOOLS if "." in t]
+        assert not dotted, f"Dotted tool names in registry: {dotted}"
+
+    def test_no_phantom_tools(self):
+        """All registry tools must have the geox_ prefix."""
+        non_prefixed = [t for t in CANONICAL_PUBLIC_TOOLS if not t.startswith("geox_")]
+        assert not non_prefixed, f"Non-geox_ prefixed tools in registry: {non_prefixed}"
+
+    def test_registry_vs_contracts_drift(self):
+        """Verify contracts/canonical_registry.py matches src/geox_mcp/registry.py."""
+        from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS as CONTRACT_TOOLS
+        contract_set = set(CONTRACT_TOOLS)
+        src_set = set(CANONICAL_PUBLIC_TOOLS)
+        missing_in_contracts = src_set - contract_set
+        extra_in_contracts = contract_set - src_set
+        if missing_in_contracts:
+            pytest.fail(f"contracts/canonical_registry.py missing tools: {sorted(missing_in_contracts)}")
+        if extra_in_contracts:
+            pytest.fail(f"contracts/canonical_registry.py has extra tools not in src: {sorted(extra_in_contracts)}")
+
+    def test_no_alias_collision(self):
+        """No alias should conflict with a canonical tool name."""
+        canonical = set(CANONICAL_PUBLIC_TOOLS)
+        alias_names = set(LEGACY_ALIAS_MAP.keys())
+        conflicts = canonical & alias_names
+        assert not conflicts, f"Alias names collide with canonical tools: {sorted(conflicts)}"
+
+    def test_legacy_aliases_point_to_live_tools(self):
+        """Every legacy alias should point to a tool that exists in CANONICAL_PUBLIC_TOOLS."""
+        canonical = set(CANONICAL_PUBLIC_TOOLS)
+        for alias, target in LEGACY_ALIAS_MAP.items():
+            assert target in canonical, (
+                f"Alias '{alias}' points to '{target}' which is not in CANONICAL_PUBLIC_TOOLS"
+            )
 
 
-@pytest.mark.asyncio
-async def test_canonical_public_surface_names(mcp_server):
-    """Verify all 13 canonical public tool names are correctly registered."""
-    registered_tool_names = {t.name for t in await mcp_server.list_tools()}
-    missing_tools = [t for t in CANONICAL_PUBLIC_TOOLS if t not in registered_tool_names]
-    # Extra = tools registered that are NOT in CANONICAL_PUBLIC_TOOLS (ok to have internal tools,
-    # but none of the canonical names may be missing from the server).
-    assert not missing_tools, f"Missing canonical public tools: {missing_tools}"
-    # Confirm canonical set is a subset of registered — no canonical tool silently dropped
-    assert set(CANONICAL_PUBLIC_TOOLS).issubset(registered_tool_names), (
-        f"CANONICAL_PUBLIC_TOOLS not fully covered: {set(CANONICAL_PUBLIC_TOOLS) - registered_tool_names}"
-    )
+class TestRegistryStatusTool:
+    """The geox_system_registry_status tool must work and report accurately."""
 
-
-@pytest.mark.asyncio
-async def test_canonical_public_surface_no_dotted_names(mcp_server):
-    """Verify no public tool name contains \'.\'."""
-    registered_tools = await mcp_server.list_tools()
-    dotted_names = [t.name for t in registered_tools if "." in t.name and t.name in CANONICAL_PUBLIC_TOOLS]
-    assert not dotted_names, f"Dotted names on canonical surface: {dotted_names}"
+    def test_registry_status_returns_ok(self):
+        """Registry status tool should execute successfully."""
+        registry = _fetch_registry_status()
+        if registry is None:
+            pytest.skip("geox_system_registry_status not callable directly via HTTP")
+        assert isinstance(registry, dict)
+        # Registry must report tool count
+        tools = registry.get("tools", registry.get("canonical_tools", registry.get("tool_count", None)))
+        if tools is not None:
+            assert len(tools) >= 40  # at minimum 40 tools

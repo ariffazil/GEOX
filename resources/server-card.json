@@ -5,7 +5,7 @@
   "description": "Governed Earth API for subsurface intelligence. Physics-first. ACRisk-stamped. Claim-disciplined.",
   "governance": "arifOS F1-F13 + ToAC + CANON-9",
   "seal": "DITEMPA BUKAN DIBERI",
-  "tools": 33,
+  "tools": 40,
   "resources": 25,
   "prompts": 7,
   "transport": ["streamable-http", "sse"],

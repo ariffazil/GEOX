@@ -1,4 +1,5 @@
 """Minimal stub for skills_resources — restored for server bootstrap."""
+from __future__ import annotations
 
 
 def register_skill_resources(mcp):

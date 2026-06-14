@@ -33,3 +33,4 @@ coverage.xml
 entropy-report.json
 public_registry.json
 resources/public_registry.json
+resources/macrostrat_cache/
