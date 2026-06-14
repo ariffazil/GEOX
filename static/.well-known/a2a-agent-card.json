@@ -1,0 +1,50 @@
+{
+  "$schema": "https://a2aproject.github.io/A2A/schema/agent-card.json",
+  "protocolVersion": "1.0.1",
+  "name": "GEOX — Governed Earth Intelligence",
+  "description": "Earth Intelligence organ of the arifOS federation. 39 canonical MCP tools across seismic, petrophysics, basin analysis, prospect evaluation, sequence stratigraphy, LAS/SEG-Y inspection, and Vision V1. Evidence-only — never a policy judge. Every claim carries physics provenance, uncertainty bands, and constitutional governance.",
+  "url": "https://geox.arif-fazil.com",
+  "provider": {
+    "organization": "arifOS by Muhammad Arif bin Fazil",
+    "url": "https://arif-fazil.com"
+  },
+  "version": "v2026.06.05",
+  "documentationUrl": "https://geox.arif-fazil.com/docs",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "securitySchemes": {},
+  "security": [],
+  "defaultInputModes": ["application/json"],
+  "defaultOutputModes": ["application/json"],
+  "mcp_endpoints": [
+    {
+      "url": "https://geox.arif-fazil.com/mcp",
+      "transport": "streamable-http",
+      "protocol": "2025-11-25"
+    }
+  ],
+  "tools": [
+    {"name": "Data Ingest & QC", "tools": ["geox_data_ingest_bundle", "geox_data_qc_bundle", "geox_header_inspect", "geox_las_inspect", "geox_seismic_segy_inspect", "geox_dst_ingest_test"]},
+    {"name": "Evidence Discovery & Reasoning", "tools": ["geox_evidence_discover", "geox_evidence_reason", "geox_evidence_attach", "geox_report_to_workflow"]},
+    {"name": "Subsurface & Petrophysics", "tools": ["geox_subsurface_generate_candidates", "geox_subsurface_verify_integrity"]},
+    {"name": "Seismic Physics", "tools": ["geox_seismic_compute", "geox_seismic_compute_attribute_tool", "geox_volume_frame_tool", "geox_blend_volume_tool", "geox_segy_export_tool", "geox_fault_stick_ingest_tool", "geox_attribute_registry_list_tool"]},
+    {"name": "Horizon & Structure", "tools": ["geox_horizon_contrast_surface", "geox_coord_transform_tool", "geox_blockspace_resolution_tool"]},
+    {"name": "Sequence Stratigraphy", "tools": ["geox_sequence_interpret"]},
+    {"name": "Basin & Prospect Evaluation", "tools": ["geox_basin_resolve", "geox_basin_profile", "geox_prospect_evaluate", "geox_query_intake", "geox_literature_ingest"]},
+    {"name": "Claim Engine", "tools": ["geox_claim_create", "geox_claim_validate", "geox_claim_challenge", "geox_claim_seal"]},
+    {"name": "Governance & Registry", "tools": ["geox_system_registry_status", "geox_abstraction_guard", "geox_map_context_scene"]},
+    {"name": "Vision V1 (Layer 1)", "tools": ["geox_vision_perceptual_inventory", "geox_vision_minimax_inference", "geox_vision_calibrate", "geox_vision_audit"]}
+  ],
+  "governance": {
+    "constitution": "F1-F13 arifOS constitution",
+    "identity_anchor": "physics_manifest_hash:sha256:b51811b11db15aa911715316c34b4758a1e964ff1e354d1f08d5a1db60cc6f35",
+    "evidence_only": true,
+    "self_judge": false,
+    "verdict_authority": "arifOS 888_JUDGE"
+  },
+  "seal": "DITEMPA BUKAN DIBERI",
+  "epoch": "2026-06-14"
+}

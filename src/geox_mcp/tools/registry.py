@@ -279,8 +279,8 @@ async def geox_history_audit(
 
 
 async def geox_contradiction_registry_status(
-    session_id: str = "geox-no-session",
-    actor_id: str = "geox-unknown",
+    session_id: str = "",
+    actor_id: str = "",
 ) -> dict:
     """Return the canonical contradiction detector registry.
 

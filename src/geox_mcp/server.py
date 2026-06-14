@@ -237,8 +237,8 @@ def compose_geox_servers() -> None:
     mcp.mount(vision, namespace=None)
 
     # Assert canonical count across all composed servers
-    # 2026-06-07: 33 -> 37 (Vision V1 wire)
-    if len(CANONICAL_PUBLIC_TOOLS) != 37:
+    # 2026-06-14: 37 -> 39 (added geox_las_inspect + geox_seismic_segy_inspect)
+    if len(CANONICAL_PUBLIC_TOOLS) != 39:
         raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 37 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
     logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 4 domains")
 

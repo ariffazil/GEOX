@@ -261,6 +261,8 @@ async def geox_vision_perceptual_inventory(
                 "ac_risk_verdict": ac_verdict.value,
                 "vision_verdict": inventory.verdict.value,
                 "human_review_required": inventory.human_review_required,
+                "backend_id": "schema-construct",
+                "vision_backend_source": "manual_input",
                 "constitutional_notes": {
                     "f1_amanah_image_sha256": image_sha,
                     "f5_humility_confidence_capped": overall_confidence <= 0.90,
@@ -344,6 +346,10 @@ async def geox_vision_minimax_inference(
                 "execution_status": "ERROR",
                 "error_code": "F9_ANTI_HANTU_VLM_UNREACHABLE",
                 "error": f"VLM adapter failed: {type(e).__name__}: {e}",
+                "backend_id": "minimax-M3-vision",
+                "vision_backend_source": "vlm_inference",
+                "ac_risk_score": 0.95,
+                "ac_risk_verdict": "VOID",
                 "hint": (
                     "The in-process MCP backend is NotImplementedError until the host "
                     "registers `minimax-code_understand_image` globally. For headless "
@@ -385,6 +391,7 @@ async def geox_vision_minimax_inference(
             "vision_verdict": inv.verdict.value,
             "human_review_required": inv.human_review_required,
             "backend_id": result.backend_id,
+            "vision_backend_source": "vlm_inference",
             "elapsed_seconds": result.elapsed_seconds,
             "constitutional_notes": {
                 "f1_amanah_image_sha256": inv.input_image_sha256,
@@ -478,6 +485,8 @@ async def geox_vision_calibrate(
                 "execution_status": "SUCCESS",
                 "report": report.to_dict() if hasattr(report, "to_dict") else dict(report),
                 "report_path": str(report_path),
+                "backend_id": f"{backend}",
+                "vision_backend_source": "calibration_harness",
                 "constitutional_notes": {
                     "f1_amanah_fixture_readonly": True,
                     "f2_truth_groundtruth_known": True,
@@ -590,6 +599,8 @@ async def geox_vision_audit(
                 "vision_verdict": vision_verdict.value,
                 "human_review_required": human_review_required,
                 "overall_confidence": capped_confidence,
+                "backend_id": "ac-risk-scorer",
+                "vision_backend_source": "ac_risk_computation",
                 "breakdown": {
                     "u_phys": u_phys,
                     "d_transform": d_transform,

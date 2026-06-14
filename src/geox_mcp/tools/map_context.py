@@ -16,10 +16,10 @@ logger = logging.getLogger("geox.canonical.map_context")
 async def geox_map_context_scene(
     bbox: list[float],
     mode: Literal[
-        "bbox_context", "crs_check", "render_scene", "scene_summary", "georeference_map", "coordinate_guardrail"
+        "bbox_context", "crs_check", "render_scene", "scene_summary", "georeference_map", "coordinate_guardrail",
+        "render_geojson"
     ] = "bbox_context",
     crs: str = "EPSG:4326",
-    # ── Eureka 8 (2026-06-03): optional VpSlice as scene input ────────────
     vp_slice_inline: dict[str, Any] | None = None,
 ) -> dict:
     """Spatial bbox context, CRS checks, and causal scene rendering.
@@ -52,6 +52,82 @@ async def geox_map_context_scene(
     if _err is not None:
         return _err
     maruah_flag = _check_maruah_territory(bbox, crs)
+
+    # ── GeoJSON render mode (Module J: visual-spatial-first) ──────────────
+    if mode == "render_geojson":
+        try:
+            geojson = {
+                "type": "FeatureCollection",
+                "metadata": {
+                    "crs": {"type": "name", "properties": {"name": crs}},
+                    "bbox": bbox,
+                    "maruah_flag": maruah_flag,
+                    "generated_by": "geox_map_context_scene",
+                    "tool": "geox_render_map_scene_alpha",
+                    "visual_artifact_id": f"geox:bbox:{hash(tuple(bbox))}:{crs}",
+                    "render_type": "map",
+                },
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": {"type": "bounding_box", "label": "Query AOI"},
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [[
+                                [bbox[0], bbox[1]],
+                                [bbox[2], bbox[1]],
+                                [bbox[2], bbox[3]],
+                                [bbox[0], bbox[3]],
+                                [bbox[0], bbox[1]],
+                            ]],
+                        },
+                    },
+                    {
+                        "type": "Feature",
+                        "properties": {"type": "center_point", "label": "AOI Center"},
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [
+                                (bbox[0] + bbox[2]) / 2,
+                                (bbox[1] + bbox[3]) / 2,
+                            ],
+                        },
+                    },
+                ],
+            }
+            if maruah_flag:
+                from geox_core.spatial.maruah_zones import get_maruah_zone_polygons
+                zones = get_maruah_zone_polygons(bbox, crs)
+                for zone in zones:
+                    geojson["features"].append({
+                        "type": "Feature",
+                        "properties": {
+                            "type": "maruah_zone",
+                            "label": zone.get("name", "Community/Indigenous Territory"),
+                            "risk": zone.get("risk", "MEDIUM"),
+                        },
+                        "geometry": zone.get("geometry", {"type": "Point", "coordinates": [0, 0]}),
+                    })
+        except Exception as exc:
+            geojson = {"type": "FeatureCollection", "features": [], "error": str(exc)}
+
+        envelope = get_standard_envelope(
+            {
+                "bbox": bbox,
+                "mode": mode,
+                "crs": crs,
+                "geojson": geojson,
+                "scene_rendered": True,
+                "maruah_flag": maruah_flag,
+            },
+            tool_class="observe",
+            claim_tag="HYPOTHESIS",
+            claim_state="INTERPRETED",
+            perception_class="DISPLAY",
+            maruah_flag=maruah_flag,
+        )
+        return envelope
+
     artifact = {
         "bbox": bbox,
         "mode": mode,
