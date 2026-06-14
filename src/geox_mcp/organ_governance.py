@@ -121,12 +121,231 @@ async def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int
 # ─── Governance Check ─────────────────────────────────────────────────────────
 
 
-# ─── Identity Propagation Gate (P0.1) ─────────────────────────────────────────
-# Every GEOX tool call in production mode must carry actor_id and session_id.
-# Anonymous or null identity → HOLD_IDENTITY_REQUIRED.
-# Sandbox mode bypasses this check.
+# ─── FOUR-LANE TOOL CLASSIFICATION (Federation Contract §3) ────────────────────
+# Loaded from GEOX.yaml federation contract; fallback to inline heuristics.
+# Lane determines authority gating: discovery(no session) → evidence(no session)
+# → reasoning(session required) → judgment(session+lease+arifOS judge required)
+
+def _load_lane_map() -> dict[str, str]:
+    """Load tool→lane mapping from GEOX.yaml federation contract or fallback."""
+    try:
+        import yaml
+        contract_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
+            "arifOS", "federation", "GEOX.yaml",
+        )
+        # Also try local path (when running from geox repo directly)
+        if not os.path.exists(contract_path):
+            contract_path = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+                "federation", "GEOX.yaml",
+            )
+        if os.path.exists(contract_path):
+            with open(contract_path) as f:
+                contract = yaml.safe_load(f)
+            return contract.get("lanes", {}).get("tool_lane_map", {})
+    except Exception:
+        pass
+
+    # Fallback: lane classification from registry manifest
+    try:
+        from geox_mcp.registry import GEOX_TOOL_MANIFEST
+        return {t["name"]: t.get("lane", "reasoning") for t in GEOX_TOOL_MANIFEST}
+    except Exception:
+        pass
+
+    # Ultimate fallback: hardcoded lane map
+    return {
+        "geox_system_registry_status": "discovery",
+        "geox_attribute_registry_list_tool": "discovery",
+        "geox_basin_resolve": "discovery",
+        "geox_query_intake": "discovery",
+        "geox_query_macrostrat": "discovery",
+        "geox_data_ingest_bundle": "evidence",
+        "geox_data_qc_bundle": "evidence",
+        "geox_dst_ingest_test": "evidence",
+        "geox_header_inspect": "evidence",
+        "geox_las_inspect": "evidence",
+        "geox_seismic_segy_inspect": "evidence",
+        "geox_evidence_discover": "evidence",
+        "geox_evidence_attach": "evidence",
+        "geox_literature_ingest": "evidence",
+        "geox_fault_stick_ingest_tool": "evidence",
+        "geox_volume_frame_tool": "evidence",
+        "geox_vision_perceptual_inventory": "evidence",
+        "geox_vision_calibrate": "evidence",
+        "geox_subsurface_generate_candidates": "reasoning",
+        "geox_subsurface_verify_integrity": "reasoning",
+        "geox_seismic_compute": "reasoning",
+        "geox_seismic_compute_attribute_tool": "reasoning",
+        "geox_sequence_interpret": "reasoning",
+        "geox_evidence_reason": "reasoning",
+        "geox_prospect_evaluate": "reasoning",
+        "geox_map_context_scene": "reasoning",
+        "geox_horizon_contrast_surface": "reasoning",
+        "geox_coord_transform_tool": "reasoning",
+        "geox_blockspace_resolution_tool": "reasoning",
+        "geox_blend_volume_tool": "reasoning",
+        "geox_basin_profile": "reasoning",
+        "geox_vision_minimax_inference": "reasoning",
+        "geox_vision_audit": "reasoning",
+        "geox_report_to_workflow": "reasoning",
+        "geox_abstraction_guard": "reasoning",
+        "geox_claim_create": "judgment",
+        "geox_claim_validate": "judgment",
+        "geox_claim_challenge": "judgment",
+        "geox_claim_seal": "judgment",
+        "geox_segy_export_tool": "judgment",
+    }
+
+
+GEOX_LANE_MAP: dict[str, str] = _load_lane_map()
+
+# Lane authority requirements
+LANE_REQUIRES_SESSION: dict[str, bool] = {
+    "discovery": False,
+    "evidence": False,
+    "reasoning": True,
+    "judgment": True,
+}
+
+LANE_REQUIRES_LEASE: dict[str, bool] = {
+    "discovery": False,
+    "evidence": False,
+    "reasoning": False,  # session recommended, lease optional
+    "judgment": True,     # lease required
+}
+
+LANE_REQUIRES_ARIFOS_ROUTE: dict[str, bool] = {
+    "discovery": False,
+    "evidence": False,
+    "reasoning": False,   # direct or routed — both acceptable
+    "judgment": True,      # MUST route through arifOS kernel
+}
+
+LANE_DIRECT_CALL_FORBIDDEN_MESSAGE: dict[str, str] = {
+    "judgment": (
+        "JUDGMENT_LANE_DIRECT_CALL: Tool '{tool}' is classified as JUDGMENT lane. "
+        "Judgment lane tools MUST be called through arif_kernel_route(mode=bridge, organ=geox). "
+        "Direct agent-to-GEOX calls for judgment tools are forbidden per Federation Contract §7. "
+        "Route through arifOS: arif_session_init → arif_lease_issue → arif_kernel_route(mode=bridge, organ=geox, tool_name='{tool}')"
+    ),
+}
+
+
+# ─── Identity Propagation Gate (P0.1 + Lane Enforcement) ──────────────────────
+# Lane-aware identity enforcement:
+#   - Discovery/Evidence: no session or identity required
+#   - Reasoning: session_id required (actor_id recommended)
+#   - Judgment: session_id + lease_id + MUST route through arifOS (reject direct calls)
+# Sandbox mode bypasses all checks.
 
 ASSET_MODE = os.getenv("GEOX_ASSET_MODE", "production")  # production | sandbox | demo
+
+
+def _get_lane(tool_name: str) -> str:
+    """Get the lane classification for a tool."""
+    return GEOX_LANE_MAP.get(tool_name, "reasoning")
+
+
+def _check_lane_enforcement(
+    tool_name: str,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    lease_id: str | None = None,
+    is_direct_call: bool = True,
+) -> tuple[str, JSONResponse | None]:
+    """Lane-based authority enforcement (Federation Contract §3).
+
+    Returns:
+      ("SEAL", None) if the call is authorized for this lane.
+      ("HOLD", JSONResponse) if lane enforcement blocks the call.
+    """
+    if ASSET_MODE == "sandbox":
+        return "SEAL", None
+
+    lane = _get_lane(tool_name)
+
+    # ── JUDGMENT LANE: MUST route through arifOS ──────────────────────
+    if LANE_REQUIRES_ARIFOS_ROUTE.get(lane, False) and is_direct_call:
+        reason = LANE_DIRECT_CALL_FORBIDDEN_MESSAGE.get(lane, "").format(tool=tool_name)
+        logger.warning(f"LANE: {tool_name} [{lane}] → BLOCKED (direct call forbidden)")
+        error_response = JSONResponse(
+            {
+                "jsonrpc": "2.0",
+                "id": None,
+                "error": {
+                    "code": -32007,
+                    "message": "JUDGMENT_LANE_DIRECT_CALL_FORBIDDEN",
+                    "data": {
+                        "guard": "LANE_ENFORCEMENT",
+                        "verdict": "HOLD",
+                        "tool": tool_name,
+                        "lane": lane,
+                        "reason": reason,
+                        "fix": "Route through arifOS: arif_kernel_route(mode=bridge, organ=geox, tool_name='{tool}')".format(tool=tool_name),
+                    },
+                },
+            },
+            status_code=428,
+        )
+        return "HOLD", error_response
+
+    # ── REASONING / JUDGMENT LANE: session required ──────────────────
+    if LANE_REQUIRES_SESSION.get(lane, False):
+        if not session_id or session_id in ("anonymous", "null", "None", ""):
+            reason = f"Tool '{tool_name}' is in {lane} lane — session_id required"
+            logger.warning(f"LANE: {tool_name} [{lane}] → HOLD (no session)")
+            error_response = JSONResponse(
+                {
+                    "jsonrpc": "2.0",
+                    "id": None,
+                    "error": {
+                        "code": -32003,
+                        "message": "SESSION_REQUIRED",
+                        "data": {
+                            "guard": "LANE_ENFORCEMENT",
+                            "verdict": "HOLD",
+                            "tool": tool_name,
+                            "lane": lane,
+                            "reason": reason,
+                            "fix": "Call arif_session_init first to establish governed session.",
+                        },
+                    },
+                },
+                status_code=423,
+            )
+            return "HOLD", error_response
+
+    # ── JUDGMENT LANE: lease required ────────────────────────────────
+    if LANE_REQUIRES_LEASE.get(lane, False):
+        if not lease_id or lease_id in ("anonymous", "null", "None", ""):
+            reason = f"Tool '{tool_name}' is in {lane} lane — lease_id required"
+            logger.warning(f"LANE: {tool_name} [{lane}] → HOLD (no lease)")
+            error_response = JSONResponse(
+                {
+                    "jsonrpc": "2.0",
+                    "id": None,
+                    "error": {
+                        "code": -32003,
+                        "message": "LEASE_REQUIRED",
+                        "data": {
+                            "guard": "LANE_ENFORCEMENT",
+                            "verdict": "HOLD",
+                            "tool": tool_name,
+                            "lane": lane,
+                            "reason": reason,
+                            "fix": "Call arif_lease_issue first, then pass lease_id in arguments.",
+                        },
+                    },
+                },
+                status_code=423,
+            )
+            return "HOLD", error_response
+
+    # ── DISCOVERY / EVIDENCE LANE: always allowed ───────────────────
+    logger.info(f"LANE: {tool_name} [{lane}] → ALLOWED")
+    return "SEAL", None
 
 
 def _check_identity_propagation(
@@ -136,18 +355,29 @@ def _check_identity_propagation(
 ) -> tuple[str, JSONResponse | None]:
     """P0.1: Reject anonymous tool calls in production mode.
 
+    NOTE: Identity check is now lane-aware. Discovery/Evidence lane tools
+    are exempt from identity requirements. Reasoning/Judgment lane tools
+    are checked by _check_lane_enforcement instead.
+
     Returns:
-      ("SEAL", None) if identity is valid and bound.
-      ("HOLD", JSONResponse) if identity is missing or unbound in production mode.
+      ("SEAL", None) if identity is valid and bound, or lane-exempt.
+      ("HOLD", JSONResponse) if identity is missing for governed lanes.
     """
     if ASSET_MODE == "sandbox":
         logger.info(f"GOV: {tool_name} [SANDBOX] → identity check bypassed")
         return "SEAL", None
 
+    lane = _get_lane(tool_name)
+
+    # Discovery and Evidence lanes: no identity required
+    if lane in ("discovery", "evidence"):
+        return "SEAL", None
+
+    # Reasoning/Judgment lanes: identity check (supplementary to lane enforcement)
     # actor_id must be present and not null/anonymous
     if not actor_id or actor_id in ("anonymous", "null", "None", ""):
-        reason = f"actor_id is '{actor_id}' — all subsurface tool calls require actor identity"
-        logger.warning(f"GOV: {tool_name} → HOLD_IDENTITY_REQUIRED: {reason}")
+        reason = f"actor_id is '{actor_id}' — {lane} lane tools require actor identity"
+        logger.warning(f"GOV: {tool_name} [{lane}] → HOLD_IDENTITY_REQUIRED: {reason}")
         error_response = JSONResponse(
             {
                 "jsonrpc": "2.0",
@@ -159,6 +389,7 @@ def _check_identity_propagation(
                         "guard": "P0_IDENTITY_PROPAGATION",
                         "verdict": "HOLD",
                         "tool": tool_name,
+                        "lane": lane,
                         "reason": reason,
                         "fix": "Pass actor_id from arifOS session. Call arif_session_init first.",
                     },
@@ -170,8 +401,8 @@ def _check_identity_propagation(
 
     # session_id must be present and not null/anonymous
     if not session_id or session_id in ("anonymous", "null", "None", ""):
-        reason = f"session_id is '{session_id}' — all subsurface tool calls require governed session"
-        logger.warning(f"GOV: {tool_name} → HOLD_IDENTITY_REQUIRED: {reason}")
+        reason = f"session_id is '{session_id}' — {lane} lane tools require governed session"
+        logger.warning(f"GOV: {tool_name} [{lane}] → HOLD_IDENTITY_REQUIRED: {reason}")
         error_response = JSONResponse(
             {
                 "jsonrpc": "2.0",
@@ -183,6 +414,7 @@ def _check_identity_propagation(
                         "guard": "P0_IDENTITY_PROPAGATION",
                         "verdict": "HOLD",
                         "tool": tool_name,
+                        "lane": lane,
                         "reason": reason,
                         "fix": "Call arif_session_init first to establish governed session.",
                     },
@@ -201,6 +433,7 @@ async def check_governance(
     session_id: str | None = None,
     actor_id: str = "geox-governed",
     fail_closed: bool = True,
+    is_direct_call: bool = True,
 ) -> tuple[str, JSONResponse | None]:
     """
     Check governance for a GEOX tool call.
@@ -213,16 +446,44 @@ async def check_governance(
 
     Applied after RT-3 guard (which checks ack_irreversible).
 
-    Identity Propagation (P0.1):
-      - In production mode, anonymous/null actor_id or session_id → HOLD
-      - Sandbox mode bypasses identity check
+    Enforcement order:
+      1. LANE ENFORCEMENT (Federation Contract §3):
+         - Judgment lane: BLOCK direct calls → must route through arifOS
+         - Reasoning/Judgment: require session_id
+         - Judgment: require lease_id
+         - Discovery/Evidence: always allowed
+      2. IDENTITY PROPAGATION (P0.1):
+         - Discovery/Evidence lanes: exempt
+         - Reasoning/Judgment: require actor_id + session_id
+         - Sandbox mode bypasses all checks
+      3. RISK TIER (C1/C2/IRREVERSIBLE):
+         - Calls arifOS kernel for governed tools
 
     fail_closed=True: If kernel unreachable or session unbound → HOLD
     fail_closed=False: Allow pass-through (for C1 advisory tools)
     """
+    # Extract lane-enforcement fields from arguments
+    lease_id = arguments.get("lease_id") if arguments else None
+    # session_id from arguments takes precedence over parameter
+    if arguments and arguments.get("session_id"):
+        session_id = arguments.get("session_id")
+    if arguments and arguments.get("actor_id"):
+        actor_id = arguments.get("actor_id")
+
+    # ═══ STEP 1: LANE ENFORCEMENT (Federation Contract §3) ═══════════
+    lane_verdict, lane_error = _check_lane_enforcement(
+        tool_name=tool_name,
+        session_id=session_id,
+        actor_id=actor_id,
+        lease_id=lease_id,
+        is_direct_call=is_direct_call,
+    )
+    if lane_verdict == "HOLD":
+        return lane_verdict, lane_error
+
     risk_tier = GEOX_RISK_MAP.get(tool_name, RiskTier.C1_ADVISORY)
 
-    # P0.1: Identity propagation gate — run before all other checks
+    # ═══ STEP 2: IDENTITY PROPAGATION (P0.1 — lane-aware) ══════════
     id_verdict, id_error = _check_identity_propagation(tool_name, session_id, actor_id)
     if id_verdict == "HOLD":
         return id_verdict, id_error

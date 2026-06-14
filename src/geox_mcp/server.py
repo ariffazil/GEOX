@@ -982,7 +982,9 @@ async def legacy_mcp_handler(request):
         gov_verdict, gov_error = await check_governance(
             tool_name=resolved_name,
             arguments=args,
-            actor_id="geox-mcp",
+            actor_id=args.get("actor_id", "geox-mcp"),
+            session_id=args.get("session_id"),
+            is_direct_call=True,  # Raw MCP call = direct agent call
         )
         if gov_error is not None:
             return gov_error
