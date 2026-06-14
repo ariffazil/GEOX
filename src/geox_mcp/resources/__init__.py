@@ -676,3 +676,131 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         "geox://resources/schemas/index",
         description="Index of schemas files.",
     )(geox_resources_schemas_index)
+
+    # ── Binary render data resources (Module J: Binary Transport) ─────────────
+    async def geox_render_surface(surface_id: str) -> str:
+        """Serve binary surface data (horizon mesh, fault plane) via MCP resource.
+        
+        Format: geox://render/surfaces/{surface_id} where surface_id = "<name>.npz|gltf|ply"
+        Returns base64-encoded binary for MCP transport.
+        """
+        import base64 as _b64
+        import os as _os
+        
+        surface_path = _os.path.join(
+            _os.environ.get("GEOX_RENDER_DATA_DIR", "/data/geox_render"), "surfaces", surface_id
+        )
+        
+        if not _os.path.exists(surface_path):
+            return f"ERROR: Surface not found: {surface_path}"
+        
+        with open(surface_path, "rb") as f:
+            raw = f.read()
+        
+        return _b64.b64encode(raw).decode("ascii")
+    
+    mcp.resource(
+        "geox://render/surfaces/{surface_id}",
+        description="Binary surface data (horizon mesh, fault plane). "
+                    "Returns base64-encoded bytes. Format: geox://render/surfaces/<filename>",
+    )(geox_render_surface)
+    
+    async def geox_render_cube_slice(volume_id: str, orientation: str, slice_index: int) -> str:
+        """Serve binary cube slice data (2D frame from 3D volume) via MCP resource.
+        
+        Returns raw Float32Array bytes (little-endian) as base64.
+        """
+        import base64 as _b64
+        import os as _os
+        
+        filename = f"{volume_id}_{orientation}_{slice_index}.f32"
+        slice_path = _os.path.join(
+            _os.environ.get("GEOX_RENDER_DATA_DIR", "/data/geox_render"), "cubes", filename
+        )
+        
+        if not _os.path.exists(slice_path):
+            return f"ERROR: Cube slice not found: {slice_path}"
+        
+        with open(slice_path, "rb") as f:
+            raw = f.read()
+        
+        return _b64.b64encode(raw).decode("ascii")
+    
+    mcp.resource(
+        "geox://render/cubes/{volume_id}/{orientation}/{slice_index}",
+        description="Binary cube slice frame (2D from 3D volume). "
+                    "Returns base64-encoded Float32Array bytes.",
+    )(geox_render_cube_slice)
+    
+    async def geox_render_payload_schema(_version: str = "v1") -> str:
+        """Serve the canonical RenderPayload schema."""
+        try:
+            from geox_core.schemas.render_payload import RenderPayload
+            schema = RenderPayload.model_json_schema()
+            return json.dumps(schema, indent=2)
+        except Exception as exc:
+            return json.dumps({"error": f"RenderPayload schema not available: {exc}"})
+    
+    mcp.resource(
+        "geox://render/payload-schema/{_version}",
+        description="Canonical RenderPayload schema (Pydantic JSON schema). "
+                    "Every GEOX visual output conforms to this. Version: v1",
+    )(geox_render_payload_schema)
+    
+    # ── Cube manifest + brick streaming ───────────────────────────────────────
+    async def geox_cube_manifest(cube_id: str) -> str:
+        """Serve a CubeManifest for a 3D seismic volume.
+        
+        The manifest describes the brick grid, LOD pyramid, CRS, and
+        URI template for brick fetches. Client fetches this FIRST,
+        then requests bricks progressively.
+        """
+        import json as _json
+        import os as _os
+        
+        manifest_path = _os.path.join(
+            _os.environ.get("GEOX_CUBE_MANIFEST_DIR", "/data/geox_cubes"),
+            cube_id, "manifest.json"
+        )
+        
+        if not _os.path.exists(manifest_path):
+            return _json.dumps({"error": f"Cube manifest not found: {cube_id}"})
+        
+        with open(manifest_path) as f:
+            return f.read()
+    
+    mcp.resource(
+        "geox://render/cubes/{cube_id}/manifest",
+        description="CubeManifest for a 3D seismic volume. "
+                    "Describes brick grid, LOD pyramid, CRS, and brick URI template. "
+                    "Client fetches this first before requesting any bricks.",
+    )(geox_cube_manifest)
+    
+    async def geox_cube_brick(cube_id: str, lod: int, ix: int, iy: int, iz: int) -> str:
+        """Serve a single brick of a 3D cube at a specific LOD.
+        
+        Returns base64-encoded binary bytes (Float32 or Int16 depending on LOD).
+        Client decodes into a typed array on the browser side.
+        """
+        import base64 as _b64
+        import os as _os
+        
+        brick_path = _os.path.join(
+            _os.environ.get("GEOX_CUBE_BRICK_DIR", "/data/geox_cubes"),
+            cube_id, f"lod_{lod}", f"brick_{ix}_{iy}_{iz}.bin"
+        )
+        
+        if not _os.path.exists(brick_path):
+            return f"ERROR: Brick not found: {brick_path}"
+        
+        with open(brick_path, "rb") as f:
+            raw = f.read()
+        
+        return _b64.b64encode(raw).decode("ascii")
+    
+    mcp.resource(
+        "geox://render/cubes/{cube_id}/lod/{lod}/brick/{ix}/{iy}/{iz}",
+        description="Binary brick from a 3D seismic cube at specified LOD and brick address. "
+                    "Returns base64-encoded bytes (Float32 or Int16). "
+                    "Progressive streaming: start with LOD=0, refine with higher LODs.",
+    )(geox_cube_brick)

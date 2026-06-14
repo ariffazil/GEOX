@@ -114,12 +114,25 @@ async def geox_map_context_scene(
                 geojson["metadata"]["maruah_module_error"] = str(exc)
                 logger.warning(f"MARUAH zone render failed (non-blocking): {exc}")
 
+        # Wrap in standardized RenderPayload contract
+        try:
+            from geox_core.schemas.render_payload import render_map as _render_map
+            render_payload = _render_map(
+                geojson=geojson,
+                bbox=bbox,
+                crs=crs,
+                maruah_flag=maruah_flag,
+            ).model_dump(mode="json")
+        except Exception:
+            render_payload = None
+
         envelope = get_standard_envelope(
             {
                 "bbox": bbox,
                 "mode": mode,
                 "crs": crs,
                 "geojson": geojson,
+                "render_payload": render_payload,
                 "scene_rendered": True,
                 "maruah_flag": maruah_flag,
             },
