@@ -31,7 +31,7 @@ scope: /root/geox
 
 > **39 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**
 
-GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifOS). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, and stratigraphic interpretation — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
+GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, and stratigraphic interpretation — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
 
 ---
 
@@ -616,7 +616,7 @@ GEOX is the only Earth AI system in the world with:
 
 | Organ | Repo | Port | Role | Relationship to GEOX |
 |-------|------|------|------|---------------------|
-| **arifOS** | [ariffazil/arifOS](https://github.com/ariffazil/arifOS) | 8088 | Constitutional kernel | Receives GEOX evidence; adjudicates SEAL/SABAR/HOLD/VOID |
+| **arifOS** | [ariffazil/arifos](https://github.com/ariffazil/arifos) | 8088 | Constitutional kernel | Receives GEOX evidence; adjudicates SEAL/SABAR/HOLD/VOID |
 | **A-FORGE** | [ariffazil/A-FORGE](https://github.com/ariffazil/A-FORGE) | 7071 | Execution shell | Builds + deploys GEOX Docker image; hosts MIND:51001 + MEMORY:51002 |
 | **AAA** | [ariffazil/AAA](https://github.com/ariffazil/AAA) | 3001 | Control plane | Operator cockpit; displays GEOX prospect cards, map scenes, correlation panels |
 | **WEALTH** | [ariffazil/WEALTH](https://github.com/ariffazil/WEALTH) | 18082 | Capital intelligence | Future: receives GEOX prospect viability scores for NPV/IRR computation |
