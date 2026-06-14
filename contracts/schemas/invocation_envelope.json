@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "geox-invocation/v1",
+  "title": "GEOX Invocation Envelope",
+  "description": "Universal identity + context wrapper for every GEOX tool call in production mode. Propagates actor, session, lease, asset, basin, and tool metadata through the entire call chain.",
+  "type": "object",
+  "required": [
+    "session_id", "actor_id", "actor_role",
+    "tool_name", "tool_version",
+    "trace_id", "invocation_timestamp",
+    "authority_scope", "mutation_allowed", "ops_touch_allowed", "human_review_required"
+  ],
+  "properties": {
+    "spec_version": {
+      "type": "string",
+      "const": "geox-invocation/v1"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Governed session ID from arifOS session_init",
+      "pattern": "^SEAL-"
+    },
+    "actor_id": {
+      "type": "string",
+      "description": "Human or agent identity. MUST be non-null, non-anonymous in production mode."
+    },
+    "actor_role": {
+      "type": "string",
+      "enum": [
+        "geophysicist", "petrophysicist", "reservoir_engineer",
+        "drilling_engineer", "geologist", "reviewer", "ai_agent"
+      ]
+    },
+    "lease_id": {
+      "type": "string",
+      "description": "Scope-of-authority lease identifier. Null if no lease applies."
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "Target asset identifier. REQUIRED for asset-scoped workflows."
+    },
+    "basin_id": {
+      "type": "string",
+      "description": "Target basin identifier. REQUIRED for basin-scoped workflows."
+    },
+    "discipline": {
+      "type": "string",
+      "enum": ["geology", "geophysics", "petrophysics", "reservoir", "drilling", "completion"],
+      "description": "Discipline scope of this invocation"
+    },
+    "tool_name": {
+      "type": "string",
+      "description": "MUST match a registered canonical tool name",
+      "examples": [
+        "geox_data_qc_bundle", "geox_horizon_contrast_surface",
+        "geox_subsurface_generate_candidates", "geox_prospect_evaluate",
+        "geox_claim_seal"
+      ]
+    },
+    "tool_version": {
+      "type": "string",
+      "description": "Version of the tool being invoked",
+      "examples": ["v2026.06.05"]
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "UUID for end-to-end tracing across host, shell, tool, store, vault"
+    },
+    "parent_trace_id": {
+      "type": "string",
+      "description": "Parent trace ID for chained invocations. Null if this is root."
+    },
+    "invocation_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "authority_scope": {
+      "type": "string",
+      "enum": ["READONLY", "C1_ADVISORY", "C2_EXECUTE", "IRREVERSIBLE"],
+      "description": "Maximum action class authorized for this invocation"
+    },
+    "mutation_allowed": {
+      "type": "boolean",
+      "description": "True if this invocation may change artifact/model state"
+    },
+    "ops_touch_allowed": {
+      "type": "boolean",
+      "description": "True if this invocation may touch operational systems"
+    },
+    "human_review_required": {
+      "type": "boolean",
+      "description": "True if output requires human review before downstream use"
+    }
+  }
+}

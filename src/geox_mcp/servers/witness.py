@@ -115,7 +115,14 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False,
+        "openWorldHint": True,  # P1.3: external_side_effect — output may feed downstream decision pipelines
+        "mcp_safety_tier": "Tier 0 (interpretive)",
+        "output_class": "DRAFT_REPORT",
+        "fiqh_class": "wajib_guarded",
+        "requires_human_review": True,
+        "can_mutate_model": False,
+        "can_touch_ops": False,
+        "reversible": True,
     },
     "geox_subsurface_generate_candidates": {
         "title": "Subsurface Generate Candidates",

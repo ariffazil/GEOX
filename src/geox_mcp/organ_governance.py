@@ -4,9 +4,9 @@ organ_governance.py — GEOX arifOS Governance Integration
 DITEMPA BUKAN DIBERI — Forged, Not Given
 
 GEOX-specific governance module that:
-  1. Defines risk tier for all GEOX tools
-  2. Calls arifOS kernel for C2+/IRREVERSIBLE tools
-  3. Returns (verdict, error_response_or_None) tuple
+   1. Defines risk tier for all GEOX tools
+   2. Calls arifOS kernel for C2+/IRREVERSIBLE tools
+   3. Returns (verdict, error_response_or_None) tuple
 
 Used by geox_mcp/server.py after RT-3 guard check.
 
@@ -15,7 +15,6 @@ arifOS kernel endpoint: http://arifosmcp:8088/mcp
 FAIL-CLOSED: If arifOS kernel is unreachable or session is unbound,
 defaults to HOLD. No guessing, no bypass.
 """
-
 from __future__ import annotations
 
 import httpx
@@ -38,42 +37,54 @@ class RiskTier(StrEnum):
 
 
 # ─── GEOX Tool Risk Map ────────────────────────────────────────────────────────
+# All entries must match canonical tool names from CANONICAL_PUBLIC_TOOLS
+# or LEGACY_ALIAS_MAP in src/geox_mcp/registry.py.
 
 GEOX_RISK_MAP: dict[str, RiskTier] = {
     # READONLY — log only, no kernel call
-    "geox_well_analyze_sequence": RiskTier.READONLY,
-    "geox_well_compute_gr_bins": RiskTier.READONLY,
-    "geox_well_build_packages": RiskTier.READONLY,
-    "geox_well_infer_seq_strat": RiskTier.READONLY,
-    "geox_section_interpret_correlation": RiskTier.READONLY,
-    "geox_map_context_scene": RiskTier.READONLY,
-    "geox_bundle_security_audit": RiskTier.READONLY,
+    "geox_data_ingest_bundle": RiskTier.READONLY,
     "geox_data_qc_bundle": RiskTier.READONLY,
-    "geox_forward_model_synthetic": RiskTier.READONLY,
-    "geox_seismic_well_tie_compute": RiskTier.READONLY,
-    "geox_time_depth_anchor": RiskTier.READONLY,
-    "geox_process_abduction": RiskTier.READONLY,
-    "geox_subsurface_verify_integrity": RiskTier.READONLY,
-    "geox_evidence_contradiction_scan": RiskTier.READONLY,
-    "geox_evidence_summarize_cross": RiskTier.READONLY,
-    "geox_resource_registry_status": RiskTier.READONLY,
-    "geox_contradiction_registry_status": RiskTier.READONLY,
-    "geox_test_receipt_status": RiskTier.READONLY,
-    "geox_mcp_health_check": RiskTier.READONLY,
-    "geox_anomalous_contrast_detector": RiskTier.READONLY,
-    "geox_vision_time_to_depth": RiskTier.READONLY,
-    "geox_time4d_analyze_system": RiskTier.READONLY,
+    "geox_dst_ingest_test": RiskTier.READONLY,
+    "geox_header_inspect": RiskTier.READONLY,
+    "geox_las_inspect": RiskTier.READONLY,
+    "geox_seismic_segy_inspect": RiskTier.READONLY,
+    "geox_evidence_discover": RiskTier.READONLY,
+    "geox_report_to_workflow": RiskTier.C1_ADVISORY,  # P1.3: workflow steps can feed decision pipelines — advisory only
     "geox_subsurface_generate_candidates": RiskTier.READONLY,
-    "geox_stratigraphy_preview_config": RiskTier.READONLY,
+    "geox_subsurface_verify_integrity": RiskTier.READONLY,
+    "geox_seismic_compute": RiskTier.READONLY,
+    "geox_sequence_interpret": RiskTier.READONLY,
+    "geox_evidence_reason": RiskTier.READONLY,
+    "geox_map_context_scene": RiskTier.READONLY,
+    "geox_system_registry_status": RiskTier.READONLY,
+    "geox_horizon_contrast_surface": RiskTier.READONLY,
+    "geox_coord_transform_tool": RiskTier.READONLY,
+    "geox_blockspace_resolution_tool": RiskTier.READONLY,
+    "geox_volume_frame_tool": RiskTier.C2_EXECUTE,  # P0.1: readOnlyHint=False, destructiveHint=True — must match tier
+    "geox_seismic_compute_attribute_tool": RiskTier.READONLY,
+    "geox_fault_stick_ingest_tool": RiskTier.READONLY,
+    "geox_attribute_registry_list_tool": RiskTier.READONLY,
+    "geox_blend_volume_tool": RiskTier.READONLY,
+    "geox_claim_create": RiskTier.READONLY,
+    "geox_claim_validate": RiskTier.READONLY,
+    "geox_claim_challenge": RiskTier.READONLY,
+    "geox_evidence_attach": RiskTier.READONLY,
+    "geox_basin_resolve": RiskTier.READONLY,
+    "geox_basin_profile": RiskTier.READONLY,
+    "geox_query_intake": RiskTier.READONLY,
+    "geox_abstraction_guard": RiskTier.READONLY,
+    "geox_literature_ingest": RiskTier.READONLY,
+    "geox_vision_perceptual_inventory": RiskTier.READONLY,
+    "geox_vision_audit": RiskTier.READONLY,
+    "geox_vision_calibrate": RiskTier.READONLY,
+    "geox_vision_minimax_inference": RiskTier.READONLY,
+    "geox_query_macrostrat": RiskTier.READONLY,
     # C1 — kernel pre-check, execute anyway
     "geox_prospect_evaluate": RiskTier.C1_ADVISORY,
-    "geox_prospect_judge_preview": RiskTier.C1_ADVISORY,
     # C2 — SEAL required from arifOS
-    "geox_task_metabolize_basin": RiskTier.C2_EXECUTE,
-    "geox_task_ingest_las_batch": RiskTier.C2_EXECUTE,
-    "geox_stratigraphy_run_pipeline": RiskTier.C2_EXECUTE,
+    "geox_claim_seal": RiskTier.C2_EXECUTE,
     # IRREVERSIBLE — SEAL + ack_irreversible already checked by RT-3
-    "geox_prospect_judge_seal": RiskTier.IRREVERSIBLE,
+    "geox_segy_export_tool": RiskTier.IRREVERSIBLE,
 }
 
 
@@ -110,6 +121,80 @@ async def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int
 # ─── Governance Check ─────────────────────────────────────────────────────────
 
 
+# ─── Identity Propagation Gate (P0.1) ─────────────────────────────────────────
+# Every GEOX tool call in production mode must carry actor_id and session_id.
+# Anonymous or null identity → HOLD_IDENTITY_REQUIRED.
+# Sandbox mode bypasses this check.
+
+ASSET_MODE = os.getenv("GEOX_ASSET_MODE", "production")  # production | sandbox | demo
+
+
+def _check_identity_propagation(
+    tool_name: str,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+) -> tuple[str, JSONResponse | None]:
+    """P0.1: Reject anonymous tool calls in production mode.
+
+    Returns:
+      ("SEAL", None) if identity is valid and bound.
+      ("HOLD", JSONResponse) if identity is missing or unbound in production mode.
+    """
+    if ASSET_MODE == "sandbox":
+        logger.info(f"GOV: {tool_name} [SANDBOX] → identity check bypassed")
+        return "SEAL", None
+
+    # actor_id must be present and not null/anonymous
+    if not actor_id or actor_id in ("anonymous", "null", "None", ""):
+        reason = f"actor_id is '{actor_id}' — all subsurface tool calls require actor identity"
+        logger.warning(f"GOV: {tool_name} → HOLD_IDENTITY_REQUIRED: {reason}")
+        error_response = JSONResponse(
+            {
+                "jsonrpc": "2.0",
+                "id": None,
+                "error": {
+                    "code": -32003,
+                    "message": "HOLD_IDENTITY_REQUIRED",
+                    "data": {
+                        "guard": "P0_IDENTITY_PROPAGATION",
+                        "verdict": "HOLD",
+                        "tool": tool_name,
+                        "reason": reason,
+                        "fix": "Pass actor_id from arifOS session. Call arif_session_init first.",
+                    },
+                },
+            },
+            status_code=423,
+        )
+        return "HOLD", error_response
+
+    # session_id must be present and not null/anonymous
+    if not session_id or session_id in ("anonymous", "null", "None", ""):
+        reason = f"session_id is '{session_id}' — all subsurface tool calls require governed session"
+        logger.warning(f"GOV: {tool_name} → HOLD_IDENTITY_REQUIRED: {reason}")
+        error_response = JSONResponse(
+            {
+                "jsonrpc": "2.0",
+                "id": None,
+                "error": {
+                    "code": -32003,
+                    "message": "HOLD_IDENTITY_REQUIRED",
+                    "data": {
+                        "guard": "P0_IDENTITY_PROPAGATION",
+                        "verdict": "HOLD",
+                        "tool": tool_name,
+                        "reason": reason,
+                        "fix": "Call arif_session_init first to establish governed session.",
+                    },
+                },
+            },
+            status_code=423,
+        )
+        return "HOLD", error_response
+
+    return "SEAL", None
+
+
 async def check_governance(
     tool_name: str,
     arguments: dict[str, Any],
@@ -128,10 +213,19 @@ async def check_governance(
 
     Applied after RT-3 guard (which checks ack_irreversible).
 
+    Identity Propagation (P0.1):
+      - In production mode, anonymous/null actor_id or session_id → HOLD
+      - Sandbox mode bypasses identity check
+
     fail_closed=True: If kernel unreachable or session unbound → HOLD
     fail_closed=False: Allow pass-through (for C1 advisory tools)
     """
     risk_tier = GEOX_RISK_MAP.get(tool_name, RiskTier.C1_ADVISORY)
+
+    # P0.1: Identity propagation gate — run before all other checks
+    id_verdict, id_error = _check_identity_propagation(tool_name, session_id, actor_id)
+    if id_verdict == "HOLD":
+        return id_verdict, id_error
 
     # READONLY — log and proceed
     if risk_tier == RiskTier.READONLY:

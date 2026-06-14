@@ -1,8 +1,30 @@
-%% GEOX Large Earth Model — Architecture Visual
+%% GEOX Large Earth Model — Architecture Visual v2
 %% DITEMPA BUKAN DIBERI
-%% v2026.06.14
+%% v2026.06.15 — Added MCP Apps Shell + Review Workbench + Agentic Earth Loop
 
 flowchart TB
+    subgraph HOST["MCP HOST (Claude, ChatGPT, Cursor...)\nConversation entry point"]
+        CHAT["Chat proposes\nAgent forms intent"]
+    end
+
+    subgraph APPS["GEOX MCP APP SHELL"]
+        direction TB
+        APPS_PORTFOLIO["App Portfolio"]
+        QC_APP["GEOX QC App\nIngest · Evidence · QC State"]
+        INTERP_APP["GEOX Interpretation App\nClaimCards · Seismic Overlays"]
+        PROSPECT_APP["GEOX Prospect App\nScenarioDelta · Volumetrics · Risk"]
+        GOV_APP["GEOX Governance App\nApprovals · Challenge Queue · Seal Audit"]
+        
+        subgraph WORKBENCH["GEOX REVIEW WORKBENCH"]
+            direction TB
+            W_LAYOUT["4-Panel Layout"]
+            EVIDENCE_PANEL["Evidence Panel\nArtifact list · QC state · Provenance · Limitations"]
+            EARTH_SCENE["Earth Scene Panel\nSeismic section · Log overlay · AI/Human picks\nCRS_PROOF_PACKET · Confidence bands"]
+            CLAIMCARD_PANEL["ClaimCard + Action Rail\nClaim text · Uncertainty · Contradictions\nAlternatives · [Reject/Approve/Seal]"]
+            SCENARIO_PANEL["Scenario Delta Panel\nBase/Low/High · Sensitivity · Decision impact"]
+        end
+    end
+
     subgraph CONSTITUTIONAL["arifOS CONSTITUTIONAL KERNEL"]
         direction TB
         F1["F1 AMANAH — Reversible-first"]
@@ -68,10 +90,10 @@ flowchart TB
             CLAIM_SEAL["Seal (→ arifOS)"]
         end
 
-        subgraph     VISUAL["VISUAL ENGINE\nMap · Section · Cube · Claim Overlay\nVisual-spatial-first, text as legal wrapper"]
-    
-    INTERFACES["AGENT SURFACES"]
-            MCP["MCP (AI Agents)\n39 tools"]
+        subgraph VISUAL["VISUAL ENGINE\nMap · Section · Cube · Claim Overlay\nVisual-spatial-first, text as legal wrapper"]
+
+        subgraph INTERFACES["AGENT SURFACES"]
+            MCP["MCP (AI Agents)\n40 tools"]
             OPENAPI["OpenAPI\n(Humans/Enterprise)"]
             OGC["OGC API - Features\n(GIS Clients)"]
             A2A["A2A Agent Card\n(Discovery)"]
@@ -142,7 +164,32 @@ flowchart TB
     CONSTITUTIONAL <--> AFORGE
     CONSTITUTIONAL <--> AAA
 
-    %% INTERFACES
+    %% AGENTIC EARTH LOOP (NEW v2)
+    %% Chat proposes → App Shell structures → Constitution gates → LEM computes → Workbench reviews → Human seals
+    HOST -->|"1. Chat proposes intent"| APPS_PORTFOLIO
+    APPS_PORTFOLIO --> QC_APP
+    APPS_PORTFOLIO --> INTERP_APP
+    APPS_PORTFOLIO --> PROSPECT_APP
+    APPS_PORTFOLIO --> GOV_APP
+    
+    %% App Shell calls arifOS for governance
+    APPS_PORTFOLIO ---|"GEOX Invocation Envelope\n(identity, lease, scope)"| CONSTITUTIONAL
+    
+    %% App Shell routes to Workbench panels
+    INTERP_APP -->|"2. ClaimCard structures"| CLAIMCARD_PANEL
+    INTERP_APP -->|"3. ScenePacket locates"| EARTH_SCENE
+    QC_APP -->|"4. EvidencePack grounds"| EVIDENCE_PANEL
+    PROSPECT_APP -->|"5. ScenarioDelta tests"| SCENARIO_PANEL
+    GOV_APP -->|"6. ReviewAction authorizes"| CLAIMCARD_PANEL
+    
+    %% Workbench → arifOS gate → LEM
+    WORKBENCH -->|"arifOS gate\n(identity check, lease, authority)"| LAYER_E
+    WORKBENCH -->|"EvidencePack"| LAYER_A
+    WORKBENCH -->|"ScenePacket"| LAYER_E
+    WORKBENCH -->|"ScenarioDelta"| LAYER_B
+    WORKBENCH -->|"ClaimCard"| CLAIM_ENGINE
+
+    %% Legacy interfaces
     MCP --> LAYER_E
     OPENAPI --> LAYER_E
     OGC --> ENTITIES
@@ -155,6 +202,10 @@ flowchart TB
     VISUAL --> CLAIM_ENGINE
     LAYER_D --> VISUAL
     CLAIM_ENGINE --> VISUAL
+    
+    %% Workbench connects back to Visual
+    EARTH_SCENE --> VISUAL
+    VISUAL --> EARTH_SCENE
 
     %% DATA
     PETROPHYSICS --> POSTGRES
@@ -182,3 +233,6 @@ flowchart TB
     class POSTGRES,QDRANT,FALKORDB,VAULT999_STORAGE,OBJECT_STORE grey
     class MCP,OPENAPI,OGC,A2A grey
     class VISUAL red
+    class HOST grey
+    class APPS_PORTFOLIO,QC_APP,INTERP_APP,PROSPECT_APP,GOV_APP purple
+    class WORKBENCH,W_LAYOUT,EVIDENCE_PANEL,EARTH_SCENE,CLAIMCARD_PANEL,SCENARIO_PANEL gold

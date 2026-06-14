@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "geox-crs-proof/v1",
+  "title": "GEOX CRS Proof Packet",
+  "description": "Verifiable record that a coordinate transformation happened correctly. Every CRS-bearing operation in production mode MUST carry this packet.",
+  "type": "object",
+  "required": [
+    "source_crs", "target_crs", "axis_order",
+    "roundtrip_samples", "roundtrip_max_error_m", "roundtrip_passed"
+  ],
+  "properties": {
+    "spec_version": {
+      "type": "string",
+      "const": "geox-crs-proof/v1"
+    },
+    "source_crs": {
+      "type": "string",
+      "description": "EPSG code of source CRS",
+      "examples": ["EPSG:3168", "EPSG:3375", "EPSG:29872"]
+    },
+    "source_crs_name": {
+      "type": "string",
+      "description": "Human-readable name"
+    },
+    "source_crs_type": {
+      "type": "string",
+      "enum": ["geographic", "projected"],
+      "description": "Type of source CRS"
+    },
+    "source_crs_unit": {
+      "type": "string",
+      "description": "Unit of source CRS (metre, foot, degree)",
+      "examples": ["metre", "Clark's foot", "degree"]
+    },
+    "target_crs": {
+      "type": "string",
+      "description": "EPSG code of target CRS",
+      "default": "EPSG:4326"
+    },
+    "target_crs_name": {
+      "type": "string",
+      "default": "WGS84"
+    },
+    "target_crs_type": {
+      "type": "string",
+      "enum": ["geographic", "projected"],
+      "default": "geographic"
+    },
+    "depth_datum": {
+      "type": "string",
+      "enum": ["KB", "MSL", "DF", "unknown", null],
+      "description": "Depth reference datum. Separate from horizontal CRS."
+    },
+    "axis_order": {
+      "type": "string",
+      "enum": ["(x,y)", "(y,x)", "(easting,northing)", "(latitude,longitude)"],
+      "description": "Axis order convention used by the transformation"
+    },
+    "transform_method": {
+      "type": "string",
+      "description": "Software/method that performed transformation",
+      "examples": ["pyproj.Transformer.from_crs"]
+    },
+    "pyproj_version": {
+      "type": "string",
+      "description": "Version of pyproj used"
+    },
+    "proj_version": {
+      "type": "string",
+      "description": "Version of PROJ used by pyproj"
+    },
+    "roundtrip_samples": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of test points used for round-trip validation"
+    },
+    "roundtrip_max_error_m": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Maximum deviation in metres after source → target → source"
+    },
+    "roundtrip_avg_error_m": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Average deviation in metres"
+    },
+    "roundtrip_passed": {
+      "type": "boolean",
+      "description": "True if max_error_m <= configured tolerance (default 0.01m = 1cm)"
+    },
+    "transformed_by": {
+      "type": "string",
+      "description": "Tool name or actor_id that performed the transformation"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["CONTROLLED", "APPROXIMATE", "UNKNOWN"],
+      "default": "CONTROLLED",
+      "description": "CONTROLLED = known CRS + passed round-trip. APPROXIMATE = known CRS, no round-trip. UNKNOWN = CRS not in known registry."
+    }
+  }
+}

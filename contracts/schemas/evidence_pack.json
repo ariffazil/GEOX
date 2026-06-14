@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "geox-evidencepack/v1",
+  "title": "GEOX EvidencePack v1",
+  "description": "The complete grounded support bundle for a subsurface ClaimCard. Every claim in REVIEW_PENDING or above MUST reference an EvidencePack.",
+  "type": "object",
+  "required": [
+    "evidence_pack_id", "evidence_refs", "qc_state", "provenance",
+    "artifact_manifest", "generated_by", "generated_at"
+  ],
+  "properties": {
+    "spec_version": {
+      "type": "string",
+      "const": "geox-evidencepack/v1"
+    },
+    "evidence_pack_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Immutable evidence bundle identifier."
+    },
+    "claim_card_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ClaimCard this EvidencePack supports."
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 0,
+      "description": "References to seismic, logs, tops, DST, reports, maps, checkshots, or related artifacts. Empty array means explicit NO_VALID_EVIDENCE."
+    },
+    "qc_state": {
+      "type": "string",
+      "enum": [
+        "RAW", "INGESTED", "QC_FAILED", "QC_VERIFIED", "NO_VALID_EVIDENCE"
+      ],
+      "description": "Aggregate QC state of the evidence bundle.",
+      "default": "RAW"
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source_systems", "tool_versions", "extraction_steps"],
+      "properties": {
+        "source_systems": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Systems that contributed evidence (e.g. ['GEOX:geox_data_ingest_bundle', 'Petrel:well_top_export'])"
+        },
+        "tool_versions": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Map of tool name to version string."
+        },
+        "processing_lineage": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered steps from raw ingest to assembled pack."
+        },
+        "extraction_steps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "How each evidence artifact was extracted or transformed."
+        }
+      }
+    },
+    "artifact_manifest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["artifact_ref", "artifact_type", "source_type"],
+        "properties": {
+          "artifact_ref": { "type": "string" },
+          "artifact_type": {
+            "type": "string",
+            "enum": ["LAS", "SEG-Y", "DST", "PVT", "TOPS", "DEVIATION", "CHECKSHOT", "CORE", "MAP", "REPORT", "OTHER"]
+          },
+          "source_type": { "type": "string" },
+          "well_id": { "type": "string" },
+          "survey_id": { "type": "string" },
+          "curves": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Log curve mnemonics (for LAS artifacts)."
+          },
+          "qc_status": {
+            "type": "string",
+            "enum": ["RAW", "INGESTED", "QC_PENDING", "QC_VERIFIED", "QC_FAILED"]
+          },
+          "depth_range_m": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 2,
+            "description": "[top_m, base_m]"
+          },
+          "depth_datum": {
+            "type": "string",
+            "enum": ["KB", "MSL", "DF", "unknown"]
+          }
+        }
+      },
+      "description": "Typed inventory of included evidence artifacts."
+    },
+    "spatial_context": {
+      "type": "object",
+      "properties": {
+        "asset_id": { "type": "string" },
+        "basin_id": { "type": "string" },
+        "crs": { "type": "string", "description": "Canonical CRS of this evidence bundle." },
+        "depth_datum": { "type": "string", "enum": ["KB", "MSL", "DF", "unknown"] },
+        "bbox": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "[min_lon, min_lat, max_lon, max_lat]"
+        },
+        "scene_packet_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Link to ScenePacket for visual context."
+        }
+      }
+    },
+    "quality_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": { "type": "string", "enum": ["INFO", "WARNING", "ERROR"] },
+          "message": { "type": "string" },
+          "source": { "type": "string" },
+          "artifact_ref": { "type": "string" }
+        }
+      },
+      "description": "Human or automated QC observations."
+    },
+    "confidence_notes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Evidence-level reliability caveats."
+    },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Known limitations of this evidence bundle (e.g. 'DT log gap below 2500m')."
+    },
+    "generated_by": {
+      "type": "object",
+      "required": ["tool_name", "workflow_path"],
+      "properties": {
+        "tool_name": { "type": "string" },
+        "workflow_path": { "type": "string" },
+        "model_id": { "type": "string" },
+        "prompt_id": { "type": "string", "description": "SHA256 of prompt used (F2 audit)" }
+      },
+      "description": "Tool, model, or workflow path that assembled the pack."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Assembly timestamp."
+    }
+  }
+}

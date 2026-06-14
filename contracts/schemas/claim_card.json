@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "geox-claimcard/v2",
+  "title": "GEOX ClaimCard v2",
+  "description": "The atomic governed object for subsurface claims. Every geological assertion is a ClaimCard. CLAIM: claim_id, claim_text, claim_type, truth_class, claim_state, uncertainty, contradictions, actor_id, session_id, asset_id, basin_id, review_status, seal_status, reversible.",
+  "type": "object",
+  "required": [
+    "claim_id", "claim_text", "claim_type", "truth_class", "claim_state",
+    "uncertainty", "contradictions",
+    "actor_id", "session_id", "asset_id", "basin_id",
+    "review_status", "seal_status", "reversible",
+    "created_at", "updated_at"
+  ],
+  "properties": {
+    "spec_version": {
+      "type": "string",
+      "const": "geox-claimcard/v2"
+    },
+    "claim_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Immutable unique identifier for the claim object."
+    },
+    "claim_text": {
+      "type": "string",
+      "description": "Human-readable statement of the claim.",
+      "minLength": 1,
+      "examples": ["Channel sand at 2.5s TWT, Malay Basin"]
+    },
+    "claim_type": {
+      "type": "string",
+      "enum": [
+        "structural", "stratigraphic", "petrophysical", "volumetric",
+        "prospect", "crs", "seismic", "geomechanical", "other"
+      ],
+      "description": "Governed type classification of the claim domain."
+    },
+    "truth_class": {
+      "type": "string",
+      "enum": ["FACT", "INTERPRETATION", "SPECULATION", "COMPUTED", "VALIDATED"],
+      "description": "FACT: directly observed. INTERPRETATION: physics-derived. SPECULATION: inferred. COMPUTED: algorithmic transform. VALIDATED: cross-checked against independent data."
+    },
+    "claim_state": {
+      "type": "string",
+      "enum": [
+        "DRAFT", "AI_INFERRED", "REVIEW_PENDING", "CHALLENGED",
+        "APPROVED_INTERPRETATION", "SEALED", "REJECTED"
+      ],
+      "description": "Lifecycle state of the claim.",
+      "default": "DRAFT"
+    },
+    "uncertainty": {
+      "type": "object",
+      "description": "Confidence range, key assumptions, and unresolved ambiguities.",
+      "required": ["epistemic_tag"],
+      "properties": {
+        "p10": { "type": "number", "description": "P10 (optimistic) value" },
+        "p50": { "type": "number", "description": "P50 (median) value" },
+        "p90": { "type": "number", "description": "P90 (pessimistic) value" },
+        "distribution": {
+          "type": "string",
+          "enum": ["lognormal", "normal", "triangular"],
+          "default": "lognormal"
+        },
+        "epistemic_tag": {
+          "type": "string",
+          "enum": ["CLAIM", "PLAUSIBLE", "HYPOTHESIS", "ESTIMATE", "UNKNOWN"],
+          "description": "Epistemic confidence classification."
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Key assumptions underlying this claim."
+        },
+        "unresolved_ambiguities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Known ambiguities not yet resolved."
+        }
+      }
+    },
+    "contradictions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Known conflicting evidence artifact IDs or competing claim IDs.",
+      "default": []
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim_text", "evidence_refs"],
+        "properties": {
+          "claim_text": { "type": "string" },
+          "evidence_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "uncertainty": { "$ref": "#/properties/uncertainty" }
+        }
+      },
+      "description": "Rival candidate interpretations or scenarios."
+    },
+    "evidence_pack_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Linked EvidencePack identifier. REQUIRED for REVIEW_PENDING and above."
+    },
+    "scene_packet_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Linked spatial/visual context packet identifier. Optional."
+    },
+    "actor_id": {
+      "type": "string",
+      "description": "Current responsible actor. MUST be non-null, non-anonymous outside sandbox."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Governed session ID that produced or reviewed the claim."
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "Asset or field scope."
+    },
+    "basin_id": {
+      "type": "string",
+      "description": "Basin or regional scope."
+    },
+    "lease_id": {
+      "type": "string",
+      "description": "Lease or contractual boundary where applicable."
+    },
+    "review_status": {
+      "type": "string",
+      "enum": ["NONE", "IN_REVIEW", "NEEDS_EVIDENCE", "APPROVED", "REJECTED"],
+      "default": "NONE",
+      "description": "Human review status of this claim."
+    },
+    "seal_status": {
+      "type": "string",
+      "enum": ["UNSEALED", "PREPARED", "SEALED", "REVOKED"],
+      "default": "UNSEALED",
+      "description": "Vault seal status."
+    },
+    "reversible": {
+      "type": "boolean",
+      "description": "Whether the claim can be rolled back without side effects."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Latest mutation timestamp."
+    }
+  }
+}

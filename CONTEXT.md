@@ -7,7 +7,7 @@
 ## Live State
 - **Service:** `geox-mcp.service` (systemd, enabled)
 - **Health:** `http://127.0.0.1:8081/health`
-- **Tools:** 39 canonical MCP tools
+- **Tools:** 40 canonical MCP tools
 - **License:** Apache-2.0 (scientific tooling; federation governed by kernel AGPL-3.0)
 
 ## Dependencies
@@ -16,7 +16,7 @@
 - Caddy reverse proxy for public endpoint
 
 ## Current Focus
-- Operational. 39 tools live. GENESIS/000-003 canon chain established.
+- Operational. 40 tools live. GENESIS/000-003 canon chain established.
 - GENESIS/003 floor numbering needs realignment to F1-F13 (see FEDERATION_STATUS.md)
 
 ## Known Issues

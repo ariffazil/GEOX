@@ -24,7 +24,7 @@ Arif. This is the **GEOX** organ of the arifOS federation — Earth Intelligence
 
 The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-grounded evidence for constitutional judgment. It is **evidence-only** — never a policy judge.
 
-**39 canonical tools** across subsurface, sensing, stratigraphy, seismic, horizon interpretation, prospect evaluation, and vision.
+**40 canonical tools** across subsurface, sensing, stratigraphy, seismic, horizon interpretation, prospect evaluation, and vision.
 
 - **Port:** 8081 (live daemon, HTTP mode)
 - **Transport:** Dual-mode — `--transport http` (systemd) or `--transport stdio` (local agents)
@@ -52,7 +52,7 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Update canonical schemas in `contracts/`
 
 ### Requires 888_HOLD
-- Changes to the tool registry (39 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`)
+- Changes to the tool registry (40 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`)
 - Changes to Physics9 boundary limits
 - Production deployment without verified build + test pass
 
@@ -84,7 +84,7 @@ cd geox-gui && npm install && npm run build
 | Path | Purpose |
 |------|---------|
 | `GENESIS/` | **Canonical system doctrine** — manifesto, kill map, first principles, constitutional alignment |
-| `src/geox_mcp/server.py` | Canonical unified MCP server (~1,032 lines, 39 tools) |
+| `src/geox_mcp/server.py` | Canonical unified MCP server (~1,200 lines, 40 tools) |
 | `geox/core/` | Unified tool registry, AC-risk engine, doctrine |
 | `geox/well/` | Well stratigraphy (L1-L3), schemas, tools |
 | `geox/skills/` | Earth science skill modules |

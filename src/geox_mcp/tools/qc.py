@@ -98,6 +98,7 @@ async def geox_data_qc_bundle(
             execution_status=ExecutionStatus.ERROR,
             governance_status=GovernanceStatus.HOLD,
             artifact_status=ArtifactStatus.REJECTED,
+            claim_state="NO_VALID_EVIDENCE",  # P0.2: Fix state contradiction — missing artifact cannot be INGESTED
             claim_tag="HYPOTHESIS",
         )
         return enrich_envelope_with_metabolic(envelope, "geox_data_qc_bundle")

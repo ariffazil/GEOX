@@ -109,6 +109,41 @@ class ProspectVerdict(str, Enum):
     DROP = "DROP"
 
 
+class ClaimState(str, Enum):
+    """Canonical artifact/claim lifecycle states (P0.2).
+
+    Lifecycle:
+      RAW → INGESTED → QC_VERIFIED → INTERPRETED → CANDIDATE → REVIEW_PENDING → SEALED
+                         ↓
+                   QC_FAILED → NO_VALID_EVIDENCE / ARTIFACT_MISSING / VOID_INPUT
+    """
+    # Entry states
+    RAW = "RAW"
+    INGESTED = "INGESTED"
+    # QC states
+    QC_VERIFIED = "QC_VERIFIED"
+    QC_VERIFIED_WITH_WARNINGS = "QC_VERIFIED_WITH_WARNINGS"
+    QC_FAILED = "QC_FAILED"
+    # Domain states
+    COMPUTED = "COMPUTED"
+    INTERPRETED = "INTERPRETED"
+    DERIVED_CANDIDATE = "DERIVED_CANDIDATE"
+    CANDIDATE = "CANDIDATE"
+    # Governance states
+    REVIEW_PENDING = "REVIEW_PENDING"
+    APPROVED_BY_HUMAN = "APPROVED_BY_HUMAN"
+    SEALED = "SEALED"
+    JUDGE_PREVIEW = "JUDGE_PREVIEW"
+    # Failure states
+    NO_VALID_EVIDENCE = "NO_VALID_EVIDENCE"
+    ARTIFACT_MISSING = "ARTIFACT_MISSING"
+    VOID_INPUT = "VOID_INPUT"
+    QC_NOT_RUN = "QC_NOT_RUN"
+    # Hold states
+    HOLD = "888_HOLD"
+    VOID = "VOID"
+
+
 class ClaimTag(str, Enum):
     CLAIM = "CLAIM"
     PLAUSIBLE = "PLAUSIBLE"
