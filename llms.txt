@@ -1,75 +1,51 @@
-# GEOX — Earth Intelligence Sovereign Kernel
-> Governed geoscience coprocessor. 33+ MCP tools for subsurface evidence.
-> Port: 8081. License: AGPL-3.0. Status: OPERATIONAL. Version: 2026.06.07.
+# GEOX — Earth Intelligence Sovereign Kernel (39 Tools)
+> Level: L3 AGI Clerk / Ψ Node
+> Doctrine: Physics before Narrative. F1–F13 Governed.
+> Epoch: 2026-06-14
+> Seal: DITEMPA BUKAN DIBERI
+> Surface: 39 canonical tools
 
-## Quick Context
-- **What:** Earth-truth evidence engine — petrophysics, seismic, basin analysis
-- **Role:** EVIDENCE_ONLY — produces Earth evidence, never adjudicates
-- **Federation:** GEOX witnesses Earth. arifOS adjudicates. Arif decides.
-- **Ingress:** Cloudflare Tunnel → geox.arif-fazil.com/mcp
+## 1. Canonical Tool Surface
 
-## Key Files
-- README.md — Full human-readable narrative (716 lines)
-- AGENTS.md — Agent rules, build/test commands
-- GENESIS/000_MANIFESTO.md — Founding manifesto
-- GENESIS/001_KILL_MAP.md — Anti-hallucination kill map
-- GENESIS/002_FIRST_PRINCIPLES.md — Physics-first principles
-- GENESIS/003_CONSTITUTIONAL_ALIGNMENT.md — Cross-Modal Fidelity Theorem
-- GEOX_NOBEL_EUREKA_CATALOGUE.md — 6 Nobel-grade eurekas, code-mapped
+1. **geox_data_ingest_bundle**: Ingest LAS, CSV, Parquet, SEG-Y, and structural payloads.
+2. **geox_data_qc_bundle**: Run QC checks — depth monotonicity, null %, physical range.
+3. **geox_dst_ingest_test**: Ingest DST tests with derived metrics and flags.
+4. **geox_header_inspect**: Inspect LAS/SEGY/deviation/tops headers.
+5. **geox_las_inspect**: Inspect LAS well log curve metadata, units, depth range.
+6. **geox_seismic_segy_inspect**: Inspect SEG-Y file headers, trace count, sample interval.
+7. **geox_evidence_discover**: Search corpus / reports for geological evidence.
+8. **geox_report_to_workflow**: Turn discovered report evidence into safe GEOX workflow steps.
+9. **geox_subsurface_generate_candidates**: Generate ensemble petrophysical/structural candidates.
+10. **geox_subsurface_verify_integrity**: Verify Physics9 boundary limits and structural paradoxes.
+11. **geox_seismic_compute**: Compute synthetics, well ties, time-depth anchors, contrast attributes.
+12. **geox_sequence_interpret**: Interpret well sequences, stratigraphy, and correlations.
+13. **geox_evidence_reason**: Cross-domain evidence synthesis, abduction, and contradiction scan.
+14. **geox_prospect_evaluate**: Evaluate prospect volumetrics, POS, and EVOI.
+15. **geox_map_context_scene**: Render spatial bbox context with CRS checks.
+16. **geox_system_registry_status**: Live system registry status and contract epoch.
+17. **geox_horizon_contrast_surface**: ToAC-as-Attention horizon contrast surface pipeline.
+18. **geox_coord_transform_tool**: Transform coordinates between block/survey/world spaces.
+19. **geox_blockspace_resolution_tool**: Compute block space resolution from survey definitions.
+20. **geox_volume_frame_tool**: Read or write a single 2D frame in a 3D volume.
+21. **geox_seismic_compute_attribute_tool**: Compute registered seismic attributes.
+22. **geox_fault_stick_ingest_tool**: Ingest fault sticks into canonical FaultSet3d schema.
+23. **geox_attribute_registry_list_tool**: List registered seismic attributes.
+24. **geox_blend_volume_tool**: Alpha or RGB blend seismic volumes.
+25. **geox_segy_export_tool**: Export seismic volume to SEG-Y format. [REQUIRES 888_HOLD]
+26. **geox_claim_create**: Create a structured geological claim with provenance.
+27. **geox_claim_validate**: Validate a draft claim against the earth_memory_envelope schema.
+28. **geox_claim_challenge**: Challenge an existing claim with alternative interpretation.
+29. **geox_evidence_attach**: Attach evidence to a claim.
+30. **geox_claim_seal**: Route validated claim to arifOS for Vault999 sealing.
+31. **geox_basin_resolve**: Resolve basin identifiers to canonical IDs.
+32. **geox_basin_profile**: Fetch basin geological profile and contradiction scan.
+33. **geox_query_intake**: Route geological questions to appropriate tools.
+34. **geox_abstraction_guard**: Enforce ontological category bounds.
+35. **geox_literature_ingest**: Ingest literature publications as contextual witness.
+36. **geox_vision_perceptual_inventory**: Build perceptual inventory from VLM outputs.
+37. **geox_vision_minimax_inference**: Interpret seismic images via MiniMax VLM.
+38. **geox_vision_calibrate**: Calibrate VLM against synthetic forward-inverse harness.
+39. **geox_vision_audit**: Compute AC_Risk and emit VisionVerdict.
 
-## Entry Points
-- src/geox_mcp/server.py — FastMCP server, dual-mode (HTTP + stdio)
-- src/geox_core/ — Truth engine core (NOT agent-facing)
-- src/geox_core/engines/ — Petrophysics, seismic, PINN, AC_Risk
-- src/geox_core/schemas/ — Pydantic v2 Earth models
-- src/geox_mcp/tools/ — Agent-facing tool surface
-- src/geox_mcp/contracts/ — Tool contracts, canonical surface
-
-## Build & Test
-- Install:  pip install -e ".[dev]"  OR  uv sync --frozen
-- Test:    PYTHONPATH=src pytest tests/ -q --tb=short
-- Smoke:   PYTHONPATH=src python scripts/smoke_test.py
-- Lint:    ruff check . && ruff format .    (line length 130)
-- Start:   python -m geox_mcp.server  OR  systemctl start geox-mcp
-- Health:  curl http://127.0.0.1:8081/health
-- Deploy:  systemctl restart geox-mcp
-
-## MCP Tools (33+, across 3 domains)
-### Witness (17 tools)
-geox_basin_resolve, geox_basin_profile, geox_query_intake, geox_evidence_discover
-geox_evidence_reason, geox_literature_ingest, geox_report_to_workflow
-geox_system_registry_status, geox_abstraction_guard, geox_map_context_scene
-
-### Paleoscan (10 tools)
-geox_data_ingest_bundle, geox_data_qc_bundle, geox_header_inspect
-geox_seismic_compute, geox_horizon_contrast_surface, geox_sequence_interpret
-geox_subsurface_generate_candidates, geox_subsurface_verify_integrity
-
-### Claims (4 tools)
-geox_claim_create, geox_claim_validate, geox_claim_challenge, geox_claim_seal
-
-### Vision V1 (4 tools)
-geox_vision_perceptual_inventory, geox_vision_audit, geox_vision_calibrate
-geox_vision_minimax_inference
-
-### Volume / Coordinate
-geox_volume_frame_tool, geox_coord_transform_tool, geox_blockspace_resolution_tool
-geox_blend_volume_tool, geox_segy_export_tool, geox_fault_stick_ingest_tool
-geox_seismic_compute_attribute_tool, geox_attribute_registry_list_tool
-
-## Cross-Modal Fidelity (ratified 2026-06-05)
-Every tool output carries: cross_modal_stability, semantic_density_score,
-dim_spot_flag. Anomalous contrast detector is constitutionally governed
-(ClaimTag + PhysicsGuard + AC_Risk + 888_HOLD gating).
-
-## Nobel Eureka Catalogue (6 eurekas)
-E1 Feature Joint Information · E2 Honest Spatial Block-CV
-E3 Physics-Constrained Recovery · E4 ToAC-as-Attention Pipeline
-E5 Multi-Discipline Self-Argument · E6 Cross-Modal Stability Theorem
-
-## Boundaries (NEVER)
-- NEVER seal without arifOS adjudication
-- NEVER output P10/P50/P90 without evidence provenance
-- NEVER call a toy an engineering tool
-- NEVER claim certainty on undrilled prospects
-- NEVER bypass the Physics9 boundary limits
+## 2. Agent Reasoning Logic
+- Ingest -> QC -> Generate -> Verify -> Judge.

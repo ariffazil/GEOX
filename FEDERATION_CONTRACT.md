@@ -2,6 +2,7 @@
 
 > **This organ operates under the arifOS Constitutional Federation.**
 > **Canonical contract:** [ariffazil/arifOS/FEDERATION_CONTRACT.md](https://github.com/ariffazil/arifOS/blob/main/FEDERATION_CONTRACT.md)
+> **Canonical status:** [ariffazil/arifOS/FEDERATION_STATUS.md](https://github.com/ariffazil/arifOS/blob/main/FEDERATION_STATUS.md)
 > **Kernel canon:** [ariffazil/arifOS/GENESIS/000_KERNEL_CANON.md](https://github.com/ariffazil/arifOS/blob/main/GENESIS/000_KERNEL_CANON.md)
 
 ## Organ Identity
@@ -12,7 +13,8 @@
 | **Repo** | `ariffazil/geox` |
 | **Port** | 8081 |
 | **Role** | Evidence-only earth coprocessor |
-| **Floors enforced** | F2 TRUTH, F7 HUMILITY, F9 ANTIHANTU |
+| **Canonical tools** | 39 |
+| **Floors enforced** | F1–F13 (delegated to arifOS kernel) |
 | **License** | Apache-2.0 (scientific tooling; federation governed by kernel AGPL-3.0) |
 
 ## Boundaries

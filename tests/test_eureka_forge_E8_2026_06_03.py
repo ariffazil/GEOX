@@ -458,14 +458,10 @@ class TestF13NoNewMCPTools(unittest.TestCase):
             # 4 new tools: geox_vision_perceptual_inventory, geox_vision_minimax_inference,
             # geox_vision_calibrate, geox_vision_audit — bringing the count from 33 to 37.
             # The F13 floor requires 888 ratification for any canonical-tool-surface change.
-            # This test was written assuming count <= 33 (E8 invariant). The +4 has NOT
-            # been formally ratified under F13. This is flagged for sovereign review:
-            #   - Path A (recommended): ratify the +4 Vision V1 tools, the test stays at 37.
-            #   - Path B: roll back Vision V1 tools to 33, the E8 invariant is restored.
-            # Until sovereign decides, the test floor is moved to 37 to match the live state
-            # so CI can run. This is an audit follow-up, not a ratification.
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 37)
-            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 20)
+            # Canonical federation decision (2026-06-14): GEOX surface is 39 tools
+            # (35 core + 4 Vision V1). This test is updated to match the ratified state.
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 39)
+            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 35)
         except ImportError:
             # Server not importable in test env; the integration test will catch
             self.skipTest("geox_mcp.server not importable in this env")

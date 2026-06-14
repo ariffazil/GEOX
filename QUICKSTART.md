@@ -6,7 +6,7 @@
 
 ## What You'll Have
 
-A running FastMCP server on `http://localhost:8081` exposing 30 geoscience tools.
+A running FastMCP server on `http://localhost:8081` exposing 39 geoscience tools.
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ curl http://localhost:8081/health | python3 -m json.tool
 
 # Expected: {"status": "healthy", "service": "geox-unified"}
 
-# List tools (30 canonical tools)
+# List tools (39 canonical tools)
 curl -s http://localhost:8081/tools | python3 -m json.tool | head -30
 
 # System registry status

@@ -28,3 +28,8 @@ earth_memory.db
 coverage.xml
 .coverage
 .playwright-mcp*.yml
+
+# Runtime/generated artifacts
+entropy-report.json
+public_registry.json
+resources/public_registry.json

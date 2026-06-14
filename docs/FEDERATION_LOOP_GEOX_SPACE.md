@@ -128,7 +128,7 @@ All 49 supported legacy tool names resolve to the correct canonical tool and ret
 | `GET /status` | Contract status (epoch, tool count, alias count) |
 
 **Common deployment issues:**
-- Empty health / 502 from proxy → verify server bound to `0.0.0.0:8081` (Docker) or `0.0.0.0:18081` (live VPS), proxy points same
+- Empty health / 502 from proxy → verify GEOX server bound to `127.0.0.1:8081`, proxy points same
 - Immediate exit on startup → check `GEOX_SECRET_TOKEN` presence
 
 ***

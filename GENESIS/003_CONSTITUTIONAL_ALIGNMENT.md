@@ -1,7 +1,7 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-05-20
-valid_from: 2026-05-20
+last_verified: 2026-06-14
+valid_from: 2026-06-14
 confidence: high
 scope: /root/geox/GENESIS
 -->
@@ -22,27 +22,28 @@ Goal:
 
 ---
 
-## F01 — CLARITY
+## F1 — AMANAH
 
 ### Geological Meaning
-- Observations vs interpretations must be explicitly separated
+- Reversibility first. Irreversible actions require explicit sovereign mandate.
 
 ### GEOX Mapping
-- Structured schema (well, log, facies, horizon)
+- All writes that create files (SEG-Y export, claim seal) route through arifOS 888 JUDGE.
+- Every irreversible action has an inverse or a complete audit log.
 
 ### Enforcement
-- Data models require explicit fields (observation / interpretation)
+- `geox_segy_export_tool` requires 888_HOLD.
+- `geox_claim_seal` requires `ack_irreversible=True` and proxies to arifOS.
 
 ### STATUS
-✅ PARTIAL — supported via schema discipline  
-⚠️ Full enforcement depends on strict ingestion protocols
+✅ STRONG — F1 gating is explicit in tool contracts
 
 ---
 
-## F02 — TRUTH
+## F2 — TRUTH
 
 ### Geological Meaning
-- Interpretation must be grounded in observable data
+- Interpretation must be grounded in observable data. P(truth) ≥ 0.99.
 
 ### GEOX Mapping
 - Evidence-linked outputs
@@ -60,124 +61,128 @@ Goal:
 
 ---
 
-## F03 — STABILITY
+## F3 — TRI-WITNESS
 
 ### Geological Meaning
-- Interpretations must be reproducible
+- Earth evidence must converge with human and AI witnesses. W₃ = ∛(Human × AI × Earth) ≥ 0.75.
 
 ### GEOX Mapping
-- persistent state + versioning
+- GEOX populates the `witness.earth` dimension for subsurface capital decisions.
+- Cross-domain synthesis (`geox_evidence_reason`) surfaces agreement and contradiction.
 
 ### Enforcement
-- same input → same output (agent determinism)
+- Missing earth evidence blocks a full SEAL from arifOS 888 JUDGE.
+- `geox_evidence_attach` links supporting/contradicting evidence to claims.
 
 ### STATUS
-⚠️ UNKNOWN — full reproducibility across agents not proven
+⚠️ PARTIAL — evidence synthesis exists; uniform tri-witness scoring not yet native
 
 ---
 
-## F04 — EQUITY (ACCESS)
+## F4 — CLARITY
 
 ### Geological Meaning
-- No geoscientist blocked by system access
+- Observations vs interpretations must be explicitly separated. ΔS ≤ 0.
 
 ### GEOX Mapping
-- compute-on-demand model
+- Structured schema (well, log, facies, horizon)
+- ClaimTag grammar: CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN
 
 ### Enforcement
-- no FCFS gating
-- no seat-based limitation
+- Data models require explicit fields (observation / interpretation)
+- Every output reduces entropy: units, CRS, provenance, epistemic class.
 
 ### STATUS
-⚠️ PARTIAL — removal of license constraint achieved conceptually  
-❌ Infra still bounded (single VPS)
+✅ PARTIAL — supported via schema discipline  
+⚠️ Full enforcement depends on strict ingestion protocols
 
 ---
 
-## F05 — MARUAH (DIGNITY)
+## F5 — PEACE²
 
 ### Geological Meaning
-- Human expertise must not be dismissed by automation
+- Non-destructive power. Outputs must not amplify harm or unsafe drilling pressure.
 
 ### GEOX Mapping
-- human-in-loop validation
-- override capability
+- `geox_subsurface_verify_integrity` enforces Physics9 boundary limits.
+- `geox_prospect_evaluate` exposes uncertainty bands rather than single-number certainty.
 
 ### Enforcement
-- final decision always human
+- Outputs blocked when physical parameters violate safety bounds.
+- Confidence hard-capped at 0.90 (Ω₀ ∈ [0.03, 0.05] expression).
 
 ### STATUS
-✅ STRONG — embedded via design philosophy  
-⚠️ Requires continuous discipline in agent deployment
+⚠️ PARTIAL — physics guard exists; peace² risk model not explicitly scored
 
 ---
 
-## F06 — STEWARDSHIP
+## F6 — EMPATHY
 
 ### Geological Meaning
-- Full utilisation of data and capability
+- Protect the weakest stakeholder: local communities, future geoscientists, non-expert reviewers.
 
 ### GEOX Mapping
-- ingestion pipelines
-- multi-source integration
+- Plain-language provenance and uncertainty bands on every estimate.
+- Visual epistemic weight (emoji, color, structure) for low-literacy readers.
 
 ### Enforcement
-- no data left unused due to access constraints
+- Every P10/P50/P90 estimate carries a human-readable explanation.
+- `geox_abstraction_guard` rejects off-topic queries that could mislead non-geoscientists.
 
 ### STATUS
-✅ PARTIAL — ingestion exists  
-⚠️ completeness of datasets UNKNOWN
+⚠️ PARTIAL — human-readable framing exists; weakest-stakeholder audit not automated
 
 ---
 
-## F07 — PARALLELISM
+## F7 — HUMILITY
 
 ### Geological Meaning
-- Multiple interpretations can coexist and be evaluated
+- No fake certainty. Confidence intervals are mandatory on all estimates.
 
 ### GEOX Mapping
-- multi-agent reasoning
-- concurrent execution
+- `overall_confidence` hard-capped at 0.90.
+- P10/P50/P90 uncertainty bands required for volumetrics, POS, and EVOI.
 
 ### Enforcement
-- simultaneous workflows allowed
+- `geox_prospect_evaluate` rejects deterministic-only output.
+- `geox_vision_perceptual_inventory` caps VLM confidence at 0.90.
 
 ### STATUS
-⚠️ PARTIAL — agent layer exists  
-❌ full A2A orchestration not native in GEOX
+✅ STRONG — embedded in schema and tool contracts
 
 ---
 
-## F08 — REFLECTION
+## F8 — GENIUS
 
 ### Geological Meaning
-- System must self-check interpretations
+- Complex actions require a minimum genius threshold. G ≥ 0.80.
 
 ### GEOX Mapping
-- QC agents
-- validation routines
+- Multi-discipline self-argument (`geox_claim_challenge`).
+- Cross-modal stability and AC_Risk scoring.
 
 ### Enforcement
-- contradiction detection
-- alternative hypotheses
+- High-complexity claims must pass contradiction scan before promotion.
+- `geox_evidence_reason` requires alternative hypotheses.
 
 ### STATUS
-⚠️ PARTIAL — QC tools exist  
-⚠️ not uniformly enforced
+⚠️ PARTIAL — self-argument exists; genius score not explicitly computed
 
 ---
 
-## F09 — ANTI-HANTU (NO FAKE INTELLIGENCE)
+## F9 — ANTI-HANTU
 
 ### Geological Meaning
-- No black-box results without explanation
+- No deception, manipulation, or consciousness claims. No black-box results without explanation.
 
 ### GEOX Mapping
 - explicit outputs
 - structured reasoning
+- Physics9 bounds
 
 ### Enforcement
 - outputs must be explainable
+- SEAL verdict reserved for `physics_validated = True`
 
 ### STATUS
 ✅ STRONG — design intent aligned  
@@ -185,16 +190,18 @@ Goal:
 
 ---
 
-## F10 — ONTOLOGY WALL
+## F10 — ONTOLOGY
 
 ### Geological Meaning
-- Prevent category confusion (e.g., observation mistaken as interpretation)
+- Prevent category confusion (e.g., observation mistaken as interpretation).
 
 ### GEOX Mapping
 - schema separation
+- `geox_abstraction_guard` enforces ontological category bounds.
 
 ### Enforcement
 - strict data types
+- ClaimTag grammar separates observed, derived, interpreted, hypothesis, decision_support.
 
 ### STATUS
 ✅ PARTIAL — schema supports separation  
@@ -202,51 +209,57 @@ Goal:
 
 ---
 
-## F11 — AUTHENTICITY
+## F11 — AUDITABILITY
 
 ### Geological Meaning
-- Intent must be declared, not hidden
+- Every decision logged, inspectable. Intent must be declared, not hidden.
 
 ### GEOX Mapping
 - agent declarations
 - tool-level clarity
+- VAULT999 logging for claim lifecycle
 
 ### Enforcement
 - every process has explicit purpose
+- `geox_history_audit` retrieves past runs and decision lineage
 
 ### STATUS
-✅ STRONG — visible in tool registry
+✅ STRONG — visible in tool registry and audit trails
 
 ---
 
-## F12 — GOVERNANCE WALL
+## F12 — RESILIENCE
 
 ### Geological Meaning
-- High-impact decisions must be controlled
+- Injection defense. Risk < 0.85. Adversarial prompts must fail closed.
 
 ### GEOX Mapping
-- 888 / 999 gating (via arifOS)
+- Input schema validation via Pydantic v2.
+- `geox_abstraction_guard` rejects non-geological queries.
+- Fail-closed on missing evidence.
 
 ### Enforcement
-- irreversible decisions require confirmation
+- Malformed inputs return validation errors, not silent fallback.
+- Untrusted evidence is tagged as CONTEXTUAL_WITNESS_ONLY.
 
 ### STATUS
-✅ STRONG (via arifOS integration)  
-⚠️ GEOX alone does not enforce — relies on external governance layer
+✅ PARTIAL — schema validation strong; adversarial test suite expanding
 
 ---
 
-## F13 — HUMAN SOVEREIGNTY
+## F13 — SOVEREIGN
 
 ### Geological Meaning
-- Final judgement rests with human
+- Final judgement rests with human. Drilling decisions are F13 territory.
 
 ### GEOX Mapping
 - human approval points
 - override capability
+- `geox_claim_seal` proxies to arifOS; GEOX never self-seals.
 
 ### Enforcement
 - agents cannot self-seal critical outputs
+- `AC_Risk > 0.5` → `human_review_required = True`
 
 ### STATUS
 ✅ STRONG — embedded in design philosophy and control flows
@@ -257,9 +270,8 @@ Goal:
 
 GEOX alignment pattern:
 
-- **Strong:** F05, F09, F11, F12, F13
-- **Partial:** F01, F02, F04, F06, F07, F08, F10
-- **Unknown:** F03 reproducibility
+- **Strong:** F1, F2, F4, F7, F9, F11, F12, F13
+- **Partial:** F3, F5, F6, F8, F10
 
 ---
 
