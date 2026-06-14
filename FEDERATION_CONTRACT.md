@@ -1,9 +1,9 @@
 # FEDERATION CONTRACT — GEOX (Earth Intelligence)
 
 > **This organ operates under the arifOS Constitutional Federation.**
-> **Canonical contract:** [ariffazil/arifOS/FEDERATION_CONTRACT.md](https://github.com/ariffazil/arifOS/blob/main/FEDERATION_CONTRACT.md)
-> **Canonical status:** [ariffazil/arifOS/FEDERATION_STATUS.md](https://github.com/ariffazil/arifOS/blob/main/FEDERATION_STATUS.md)
-> **Kernel canon:** [ariffazil/arifOS/GENESIS/000_KERNEL_CANON.md](https://github.com/ariffazil/arifOS/blob/main/GENESIS/000_KERNEL_CANON.md)
+> **Canonical contract:** [ariffazil/arifos/FEDERATION_CONTRACT.md](https://github.com/ariffazil/arifos/blob/main/FEDERATION_CONTRACT.md)
+> **Canonical status:** [ariffazil/arifos/FEDERATION_STATUS.md](https://github.com/ariffazil/arifos/blob/main/FEDERATION_STATUS.md)
+> **Kernel canon:** [ariffazil/arifos/GENESIS/000_KERNEL_CANON.md](https://github.com/ariffazil/arifos/blob/main/GENESIS/000_KERNEL_CANON.md)
 
 ## Organ Identity
 
