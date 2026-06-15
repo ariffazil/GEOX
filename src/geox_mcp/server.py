@@ -595,6 +595,26 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
+async def root_handler(request: Request) -> JSONResponse:
+    """GEOX root metadata — federation discovery and reachability."""
+    return JSONResponse(
+        {
+            "service": "geox-unified",
+            "version": GEOX_VERSION,
+            "domain_law": "NATURAL_LAW",
+            "authority": "REFLECT_ONLY — Earth evidence; arifOS judges.",
+            "final_authority": "ARIF",
+            "endpoints": {
+                "health": "/health",
+                "tools": "/tools",
+                "build_info": "/api/build-info",
+                "mcp": "/mcp",
+                "mcp_server_card": "/.well-known/mcp/server.json",
+            },
+        }
+    )
+
+
 async def health_handler(request: Request) -> JSONResponse:
     # ── FEDERATION GEOMETRY 1a: home-call to arifOS ─────────────────────
     # Non-blocking. arifOS geometry is auth-bypass (absorbed diagnostic).
@@ -1134,7 +1154,8 @@ def create_app():
 
     app = Starlette(
         routes=[
-            Route("/health", health_handler, methods=["GET"]),
+            Route("/", root_handler, methods=["GET"]),
+        Route("/health", health_handler, methods=["GET"]),
             Route("/api/build-info", build_info_handler, methods=["GET"]),
             Route("/ready", ready_handler, methods=["GET"]),
             Route("/status", status_handler, methods=["GET"]),
