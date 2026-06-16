@@ -1,0 +1,210 @@
+# GEOX Biostratigraphy Reference Stack — Canonical
+# DITEMPA BUKAN DIBERI
+#
+# This is the authoritative reference stack for biostratigraphic intelligence
+# in the GEOX Earth Intelligence system.
+#
+# IRON LAW:
+#   Tectonics → Stratigraphy → Age Calibration (NN zones)
+#   NOT: Age → Stratigraphy → Tectonics
+#   If biostrat conflicts with seismic → the surface stays, the age is questioned.
+#
+# Sources: PETRONAS internal reports (Kinabalu, Sabah, NW Sabah studies),
+#          Nannotax3 (mikrotax.org), GTS2012, published literature.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TAXONOMIC ATLAS
+# ─────────────────────────────────────────────────────────────────────────────
+
+taxonomy_atlas:
+  primary:
+    name: "Nannotax3"
+    url: "https://www.mikrotax.org/Nannotax3/"
+    api: "https://www.mikrotax.org/system/api?name={taxon}&db=main"
+    maintainer: "Jeremy R. Young (UCL), Paul R. Bown, Jacqueline A. Lees"
+    authority: "International Nannoplankton Association (INA)"
+    coverage:
+      taxa: ~3600
+      images: ~29000
+      references: ~5300
+      farinacci_catalog: ~4700
+      geological_range: "Triassic to Holocene"
+    modules:
+      - Nannotax3: "Coccolithophores & calcareous nannofossils"
+      - pforams: "Planktonic foraminifera"
+      - bforams: "Benthic foraminifera"
+      - radiolaria: "Cenozoic radiolaria"
+      - chitinotax: "Chitinozoa"
+      - acritax: "Acritarchs"
+    citation: |
+      Young, J.R., Bown P.R., Lees J.A. (2022) Nannotax3 website.
+      International Nannoplankton Association. Accessed [date].
+      URL: www.mikrotax.org/Nannotax3
+    note: "REST API available for single-taxon JSON lookups. Bulk data requires collaboration agreement (jeremy.young@ucl.ac.uk)."
+
+  complementary:
+    - name: "Neptune Database"
+      description: "DSDP/ODP/IODP nannofossil occurrence data"
+      maintainer: "Dave Lazarus (Museum für Naturkunde, Berlin)"
+      coverage: "17,000+ samples, 202,000+ occurrence records"
+      integration: "Built into Nannotax3 — occurrence frequency plots on species pages"
+      note: "Primary source for global range calibration"
+
+    - name: "PBDB (Paleobiology Database)"
+      url: "https://paleobiodb.org/data1.2/"
+      description: "Global fossil occurrence database"
+      nannofossil_occurrences: 83718
+      auth: "None required (read-only REST API)"
+      note: "Use for taxonomic hierarchy resolution and occurrence validation"
+
+    - name: "AlgaeBase"
+      url: "https://www.algaebase.org/"
+      description: "Biological taxonomy of algae (incl. coccolithophores)"
+      note: "Different nomenclature from paleontological usage — use for extant species biology only"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PRIMARY ZONATION SCHEME — PETRONAS Standard
+# ─────────────────────────────────────────────────────────────────────────────
+
+zonation_schemes:
+  primary_nannofossil:
+    name: "Martini (1971)"
+    notation: "NN1–NN21 (Neogene), NP1–NP25 (Paleogene)"
+    scope: "Cenozoic calcareous nannofossils"
+    usage: "THE anchor for all PETRONAS age calibration"
+    references:
+      - "Martini, E. (1971) Standard Tertiary and Quaternary calcareous nannoplankton zonation. Proc. 2nd Planktonic Conference Roma, 2: 739–785."
+    petronas_reports:
+      - "ZoisitDeep-1 BiostratReport PROOF"
+      - "CECIL-1 Biostratigraphy final report 09-06-2026"
+      - "MR1_Data Management & Review_PCSB_NW SABAH Regional Study 14_5_26"
+      - "SBO3BTRIBP04"
+    geox_tool: "geox_biostrat_zone (default scheme)"
+
+  primary_foram:
+    name: "Blow (1969)"
+    notation: "N1–N23"
+    scope: "Planktonic Foraminifera"
+    usage: "Secondary calibration for foram-bearing intervals"
+    references:
+      - "Blow, W.H. (1969) Late middle Eocene to Recent planktonic foraminiferal biostratigraphy. Proc. 1st Int. Conf. Planktonic Microfossils, 1: 199–422."
+    geox_tool: "geox_biostrat_zone (foram mode)"
+
+  supporting_nannofossil:
+    - name: "Bukry (1973, 1975)"
+      notation: "CN1–CN15 (Neogene), CP1–CP19 (Paleogene)"
+      scope: "Low-latitude coccolith zonation"
+      usage: "Alternative to Martini, used alongside NN zones"
+      petronas_reports:
+        - "SBO3BTRIBP04"
+        - "CECIL-1 Biostratigraphy final report 09-06-2026"
+
+    - name: "Okada & Bukry (1980)"
+      notation: "CN1–CN15, CP1–CP19"
+      scope: "Supplementary modification to low-latitude zonation"
+      usage: "Code numbers for low-latitude nannofossil zones"
+      petronas_reports:
+        - "Garantung-1 BiostratReport_Proof2025"
+        - "CECIL-1 Biostratigraphy final report 09-06-2026"
+
+    - name: "Agnini et al. (2014)"
+      notation: "CNP1–CNP11, CNE1–CNE21, CNO1–CNO6"
+      scope: "Paleogene (higher resolution than Martini NP zones)"
+      zones: 38
+      avg_resolution_ma: 1.1
+      usage: "Paleogene calibration — deeper than Martini NP zones"
+      references:
+        - "Agnini, C., Monechi, S. & Raffi, I. (2014) Calcareous nannofossil biostratigraphy: historical review and current state of the art. Revue de Micropaléontologie, 57: 49–64."
+      geox_tool: "geox_biostrat_zone (paleogene mode)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# REGIONAL FRAMEWORK — Malaysia / SE Asia
+# ─────────────────────────────────────────────────────────────────────────────
+
+regional_framework:
+  primary:
+    name: "Morley et al. (2021)"
+    title: "Sequence biostratigraphic framework for the Oligocene to Pliocene of Malaysia"
+    description: "SEA Cycles — high-frequency depositional cycles driven by polar glaciation"
+    usage: "THE regional sequence biostratigraphic reference for Malaysia"
+    references:
+      - "Morley, R.J. et al. (2021) Sequence biostratigraphic framework for the Oligocene to Pliocene of Malaysia. Journal of Nannoplankton Research, Special Issue."
+    geox_tool: "geox_biostrat_correlate (regional anchor)"
+
+  supporting:
+    - name: "Lunt (2016/2017)"
+      description: "Larger Foraminifera biozonation"
+      usage: "Carbonate-rich shelf settings"
+      geox_tool: "geox_biostrat_zone (LBF mode)"
+
+    - name: "Theodoridis (1984)"
+      description: "Miocene calcareous nannofossil biozonation — helicoliths and discoasters"
+      usage: "Miocene refinement"
+
+    - name: "Perch-Nielsen (1985)"
+      description: "Cenozoic calcareous nannofossils in Plankton Stratigraphy (Bolli et al.)"
+      usage: "Comprehensive taxonomic reference"
+
+    - name: "Young (1998)"
+      description: "Neogene chapter in Bown's Calcareous Nannofossil Biostratigraphy"
+      usage: "Modern atlas standard"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TIMESCALE
+# ─────────────────────────────────────────────────────────────────────────────
+
+timescale:
+  primary:
+    name: "GTS 2012"
+    full_name: "The Geologic Time Scale 2012"
+    authors: "Gradstein, F.M. et al."
+    usage: "Master chronostratigraphic reference for all age determination"
+    note: "Nannotax3 stores ranges in primary stratigraphic units (e.g., 'Albian' or 'Zone NN12') with GTS2012 lookup table for age conversion"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COUNTING & DOCUMENTATION STANDARDS
+# ─────────────────────────────────────────────────────────────────────────────
+
+counting_standards:
+  - name: "Styzen (1997)"
+    description: "Cascading counts of nannofossil abundance"
+    usage: "Industry-standard counting method for abundance data"
+    categories: ["rare", "few", "common", "abundant", "dominant"]
+    petronas_reports:
+      - "Garantung-1 BiostratReport_Proof2025"
+      - "SKO3MOMEGL6679"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GLOSSARY / TERMINOLOGY
+# ─────────────────────────────────────────────────────────────────────────────
+
+terminology:
+  - name: "INA Terminology Guide"
+    url: "https://ina.tmsoc.org/"
+    description: "Standardized nannofossil morphological terminology"
+    usage: "Consistent description of morphological features"
+
+  - name: "Farinacci & Howe Catalog"
+    description: "Original descriptions of ~4,700 nannofossil species"
+    integrated_into: "Nannotax3 (cross-linked to taxon pages)"
+    authority: "International Nannoplankton Association (INA)"
+    usage: "Historical taxonomic authority — original descriptions as PDFs"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EPISTEMIC STATUS
+# ─────────────────────────────────────────────────────────────────────────────
+
+epistemic:
+  status: LIVE_INTELLIGENCE
+  last_verified: "2026-06-16"
+  data_sources:
+    - "PETRONAS internal biostrat reports (Kinabalu, Sabah, NW Sabah)"
+    - "Nannotax3 website (mikrotax.org)"
+    - "Published literature (Martini, Blow, Agnini, Morley, etc.)"
+    - "PBDB API (paleobiodb.org)"
+  confidence: HIGH
+  caution: |
+    - Biozones can overlap — use LBF + CNN together for age calibration, not verification
+    - Diachronism is real — same bioevent can occur at different times in different latitudes
+    - Reworking is a risk in tectonically active basins (Kinabalu, Sabah)
+    - Always cross-check biostrat with seismic and structural evidence (IRON LAW)
