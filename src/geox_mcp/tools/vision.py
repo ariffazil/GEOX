@@ -57,6 +57,8 @@ from geox_core.engines.vision import (
     AcRiskComponents,
     AcRiskVerdict,
     MiniMaxVLMAdapter,
+    MiMoVLMAdapter,
+    MiMoVisionResult,
     PerceptualInventory,
     VisionResult,
     VisionVerdict,
@@ -70,6 +72,10 @@ logger = logging.getLogger("geox.canonical.vision")
 # Default VLM backend URL — the deployed minimax-code MCP (port 18091).
 # Per CONTEXT.md 2026-06-05: minimax-code MCP is live and reachable.
 DEFAULT_VLM_MCP_URL = os.getenv("GEOX_VLM_MCP_URL", "http://127.0.0.1:18091/mcp")
+
+# Default MiMo backend URL — local vLLM/SGLang server (port 8000).
+# Per MiMo-Embodied-7B deployment: localhost:8000/v1
+DEFAULT_MIMO_BACKEND_URL = os.getenv("GEOX_MIMO_BACKEND_URL", "http://127.0.0.1:8000/v1")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -393,6 +399,134 @@ async def geox_vision_minimax_inference(
             "backend_id": result.backend_id,
             "vision_backend_source": "vlm_inference",
             "elapsed_seconds": result.elapsed_seconds,
+            "constitutional_notes": {
+                "f1_amanah_image_sha256": inv.input_image_sha256,
+                "f2_truth_model_id": inv.model_id,
+                "f2_truth_prompt_id": inv.prompt_id,
+                "f2_truth_raw_response_hash": inv.raw_response_hash,
+                "f5_humility_confidence_capped": inv.overall_confidence <= 0.90,
+                "f9_anti_hantu_verdict_cap": inv.verdict.value,
+                "f11_audit_actor_id": actor_id or "anonymous",
+                "f11_audit_session_id": session_id or "no-session",
+            },
+        },
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Tool 2b — geox_vision_mimo_inference (MiMo native multimodal)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+async def geox_vision_mimo_inference(
+    image_path: str,
+    basin_context: str = "unknown",
+    interpretation_goal: str = "Identify structural features, faults, reflectors, and amplitude anomalies",
+    has_segy: bool = False,
+    mimo_backend_url: str = DEFAULT_MIMO_BACKEND_URL,
+    mimo_model: str = "XiaomiMiMo/MiMo-Embodied-7B",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+) -> dict[str, Any]:
+    """Interpret a seismic section image via MiMo-Embodied-7B (native multimodal).
+
+    MiMo-Embodied-7B is a cross-embodied VLM with:
+      - 8B parameters (fits on af-forge VPS)
+      - Image-Text-to-Text capability (native multimodal)
+      - Strong spatial understanding (critical for seismic interpretation)
+      - Qwen2.5-VL architecture (proven vision-language backbone)
+
+    Wire: this tool calls the MiMo VLM via the MiMoVLMAdapter, which uses
+    the MiMoHTTPBackend to call the local vLLM/SGLang server.
+
+    Constitutional binding:
+      F1 AMANAH    image is read-only (sha256 logged)
+      F2 TRUTH     every output has model_id, prompt_id, raw_response_hash
+      F5 HUMILITY  hard cap 0.90 in PerceptualInventory
+      F9 ANTI-HANTU VLM-only outputs never reach SEAL
+      F13 SOVEREIGN human_review_required=True if AC_Risk > 0.5
+
+    Parameters:
+      image_path          absolute path to PNG/JPEG
+      basin_context       short hint (e.g. "Malay Basin, passive margin")
+      interpretation_goal free-form goal
+      has_segy            True if cross-validation against SEG-Y is possible
+      mimo_backend_url    override the MiMo endpoint (default 127.0.0.1:8000/v1)
+      mimo_model          HuggingFace model identifier
+
+    Returns:
+      Envelope with the PerceptualInventory (Pydantic v2), the VisionVerdict
+      (always <= INTERPRETATION unless physics_validated), and the
+      AC_Risk score.
+    """
+    try:
+        adapter = MiMoVLMAdapter(
+            backend_url=mimo_backend_url,
+            model_name=mimo_model,
+        )
+        result: MiMoVisionResult = await adapter.interpret(
+            image_path=image_path,
+            basin_context=basin_context,
+            interpretation_goal=interpretation_goal,
+            has_segy=has_segy,
+        )
+    except Exception as e:
+        logger.warning("MiMo adapter.interpret() raised: %s", e)
+        return _vision_envelope(
+            "geox_vision_mimo_inference",
+            {
+                "status": "VOID",
+                "claim_state": "VOID",
+                "execution_status": "ERROR",
+                "error_code": "F9_ANTI_HANTU_MIMO_UNREACHABLE",
+                "error": f"MiMo adapter failed: {type(e).__name__}: {e}",
+                "backend_id": f"mimo-{mimo_model.split('/')[-1]}",
+                "vision_backend_source": "mimo_inference",
+                "ac_risk_score": 0.95,
+                "ac_risk_verdict": "VOID",
+                "hint": (
+                    "MiMo-Embodied-7B must be deployed as a vLLM/SGLang server. "
+                    f"For local deployment: vllm serve {mimo_model} --port 8000. "
+                    f"Then hit {mimo_backend_url} via the GEOX MCP surface."
+                ),
+            },
+        )
+
+    if not result.success:
+        return _vision_envelope(
+            "geox_vision_mimo_inference",
+            {
+                "status": "VOID",
+                "claim_state": "VOID",
+                "execution_status": "ERROR",
+                "error_code": result.error_type or "F9_ANTI_HANTU_MIMO_FAILED",
+                "error": result.error or "MiMoVisionResult.success=False with no error message",
+                "backend_id": result.backend_id,
+                "elapsed_seconds": result.elapsed_seconds,
+            },
+        )
+
+    inv = result.inventory
+    assert inv is not None  # success=True implies inventory is not None
+    ac_score = inv.ac_risk.compute()
+    ac_verdict = inv.ac_risk.to_verdict()
+
+    return _vision_envelope(
+        "geox_vision_mimo_inference",
+        {
+            "status": "SEAL_RESERVED" if ac_verdict == AcRiskVerdict.SEAL else ac_verdict.value,
+            "claim_state": inv.verdict.value,
+            "execution_status": "SUCCESS",
+            "inventory": inv.model_dump(mode="json"),
+            "seal_receipt": inv.to_seal_receipt(),
+            "ac_risk_score": ac_score,
+            "ac_risk_verdict": ac_verdict.value,
+            "vision_verdict": inv.verdict.value,
+            "human_review_required": inv.human_review_required,
+            "backend_id": result.backend_id,
+            "vision_backend_source": "mimo_inference",
+            "elapsed_seconds": result.elapsed_seconds,
+            "mimo_model": mimo_model,
             "constitutional_notes": {
                 "f1_amanah_image_sha256": inv.input_image_sha256,
                 "f2_truth_model_id": inv.model_id,

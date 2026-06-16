@@ -79,6 +79,14 @@ from .minimax_vlm_adapter import (
     interpret_seismic_image,
 )
 
+from .mimo_vlm_adapter import (
+    MiMoVLMAdapter,
+    MiMoVisionResult,
+    MiMoVisionError,
+    MiMoHTTPBackend,
+    interpret_seismic_image_mimo,
+)
+
 __all__ = [
     # Inventory schemas
     "PerceptualInventory",
@@ -102,10 +110,16 @@ __all__ = [
     "default_ac_risk_components",
     "sha256_file",
     "sha256_text",
-    # Adapter
+    # MiniMax Adapter
     "MiniMaxVLMAdapter",
     "VisionBackend",
     "VisionResult",
     "AntiHantuError",
     "interpret_seismic_image",
+    # MiMo Adapter
+    "MiMoVLMAdapter",
+    "MiMoVisionResult",
+    "MiMoVisionError",
+    "MiMoHTTPBackend",
+    "interpret_seismic_image_mimo",
 ]
