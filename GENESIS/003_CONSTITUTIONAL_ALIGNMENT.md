@@ -1,13 +1,17 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-15
+last_verified: 2026-06-16
 valid_from: 2026-06-14
-valid_until: 2026-07-15
+valid_until: 2026-07-16
 confidence: high
 scope: /root/geox/GENESIS
 -->
 
 # GEOX — CONSTITUTIONAL ALIGNMENT (F1–F13)
+
+> **Canonical source:** `/root/arifOS/static/arifos/theory/000/000_CONSTITUTION.md` (hash `SHA256:da81f983e3bfb0f1e177f828a779eaab99d2d0162e88dfdd7f1b3904f67adf44`)
+>
+> Floor numbering verified F1–F13. F14 is DEAD and not a floor.
 
 ## PURPOSE
 
