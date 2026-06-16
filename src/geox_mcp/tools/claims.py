@@ -603,6 +603,43 @@ async def geox_claim_seal(
                 "recovery": "geox_evidence_attach(claim_id='{claim_id}', evidence_id='<id>')",
             })
 
+        # Gate 3b: ANTI-SINK — Synthetic/fixture provenance must not be sealed
+        # F1 AMANAH + Anti-Behavioral-Sink: claims backed only by synthetic data
+        # cannot be sealed as FACT or INTERPRETATION. They are SPECULATION at best.
+        # This prevents the "closed loop over own outputs" failure mode.
+        _SYNTHETIC_PROVENANCE = {"fixture", "scaffold_fixture", "synthetic", "generated"}
+        if evidence_ids and claim_payload:
+            synthetic_evidence_count = 0
+            total_evidence = len(evidence_ids)
+            # Check evidence_chain for provenance tags
+            for ev in (evidence_chain if isinstance(evidence_chain, list) else []):
+                prov = str(ev.get("provenance", "")).lower()
+                if any(s in prov for s in _SYNTHETIC_PROVENANCE):
+                    synthetic_evidence_count += 1
+            # Also check evidence_refs in payload
+            for ev_id in evidence_ids:
+                if isinstance(ev_id, str) and any(s in ev_id.lower() for s in _SYNTHETIC_PROVENANCE):
+                    synthetic_evidence_count += 1
+            if synthetic_evidence_count > 0 and synthetic_evidence_count == total_evidence:
+                truth_class = claim_payload.get("truth_class", "INTERPRETATION")
+                if truth_class in ("FACT", "INTERPRETATION"):
+                    pre_seal_checks.append({
+                        "gate": "anti_sink_synthetic_provenance_block",
+                        "status": "FAILED",
+                        "detail": (
+                            f"All {total_evidence} evidence artifact(s) have synthetic/fixture provenance, "
+                            f"but truth_class is '{truth_class}'. Federation Anti-Sink rule: claims backed "
+                            "only by synthetic data cannot be sealed as FACT or INTERPRETATION. "
+                            "Set truth_class='SPECULATION' or attach real-world evidence."
+                        ),
+                        "recovery": (
+                            "geox_evidence_attach(claim_id='{claim_id}', evidence_id='<real_data_artifact_id>') "
+                            "OR update claim truth_class to 'SPECULATION'."
+                        ),
+                        "floor": "F1_AMANAH",
+                        "rule": "ANTI_SINK_v1",
+                    })
+
         if pre_seal_checks:
             return {
                 "status": "HOLD",
