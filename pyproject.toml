@@ -53,7 +53,7 @@ dependencies = [
     "pillow>=10.0.0",
     "openpyxl>=3.1.5",
     # Production seismic I/O — imported in 5 canonical source files
-    "segyio>=1.9.0",
+    "segyio>=1.9.14",
     # Statistical power analysis — imported in prospect.py
     "statsmodels>=0.14.6",
     # Spatial block validation + FJIS (Eureka 2026-06-05) — used by
