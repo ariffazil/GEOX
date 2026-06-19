@@ -34,3 +34,8 @@ entropy-report.json
 public_registry.json
 resources/public_registry.json
 resources/macrostrat_cache/
+
+# Secrets — never commit
+.env
+.env.local
+.env.*.local
