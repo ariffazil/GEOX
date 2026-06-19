@@ -39,7 +39,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "fastmcp[tasks]>=3.4.2,<4.0",
+    "fastmcp[tasks]==3.4.2",
     "pydantic>=2.13.4",
     "uvicorn[standard]>=0.49.0",
     "python-dotenv>=1.2.2",
@@ -71,7 +71,7 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "ruff>=0.15.17",
     "mypy>=2.1.0",
-    "fastmcp[tasks]>=3.4.2,<4.0",  # server bootstrap registers task=True tools (geox_data_ingest_bundle)
+    "fastmcp[tasks]==3.4.2",  # server bootstrap registers task=True tools (geox_data_ingest_bundle)
 ]
 pinn = [
     "torch>=2.12.0",
