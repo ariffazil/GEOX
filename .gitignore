@@ -39,3 +39,9 @@ resources/macrostrat_cache/
 .env
 .env.local
 .env.*.local
+
+# Cache & scratch
+.mypy_cache/
+scratch/
+*.pyc
+
