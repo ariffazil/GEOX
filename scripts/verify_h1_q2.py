@@ -1,5 +1,7 @@
-from geox.skills.subsurface.petro.las_ingest import geox_ingest_las_tool
 import json
+
+from geox.skills.subsurface.petro.las_ingest import geox_ingest_las_tool
+
 
 def test_refusal():
     print("--- TESTING CONSTITUTIONAL REFUSAL: IDENTITY MISMATCH ---")

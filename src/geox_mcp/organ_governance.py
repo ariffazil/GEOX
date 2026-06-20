@@ -17,13 +17,13 @@ defaults to HOLD. No guessing, no bypass.
 """
 from __future__ import annotations
 
-import httpx
 import json
 import logging
 import os
 from enum import StrEnum
 from typing import Any
 
+import httpx
 from starlette.responses import JSONResponse
 
 logger = logging.getLogger("geox.governance")
@@ -283,7 +283,7 @@ def _check_lane_enforcement(
                         "tool": tool_name,
                         "lane": lane,
                         "reason": reason,
-                        "fix": "Route through arifOS: arif_kernel_route(mode=bridge, organ=geox, tool_name='{tool}')".format(tool=tool_name),
+                        "fix": f"Route through arifOS: arif_kernel_route(mode=bridge, organ=geox, tool_name='{tool_name}')",
                     },
                 },
             },

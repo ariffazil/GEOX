@@ -49,42 +49,40 @@ __author__ = "arifOS Forge Agent Ω (autonomous, F13 SOVEREIGN delegation)"
 __status__ = "EXPERIMENTAL — not registered as canonical tool, not in production"
 
 # Public surface (re-exports for convenience)
-from .perceptual_inventory import (
-    PerceptualInventory,
-    ReflectorObservation,
-    FaultObservation,
-    AmplitudeZoneObservation,
-    AxisMetadata,
-    AcRiskComponents,
-    VisionVerdict,
-    AcRiskVerdict,
-    AmplitudeCharacter,
-    ReflectorContinuity,
-    PolarityConvention,
-    FaultType,
-    AmplitudeZoneCharacter,
-    AmplitudeZoneOrigin,
-    DisplayColorPolarity,
-    DisplayUnits,
-    default_ac_risk_components,
-    sha256_file,
-    sha256_text,
+from .mimo_vlm_adapter import (
+    MiMoHTTPBackend,
+    MiMoVisionError,
+    MiMoVisionResult,
+    MiMoVLMAdapter,
+    interpret_seismic_image_mimo,
 )
-
 from .minimax_vlm_adapter import (
+    AntiHantuError,
     MiniMaxVLMAdapter,
     VisionBackend,
     VisionResult,
-    AntiHantuError,
     interpret_seismic_image,
 )
-
-from .mimo_vlm_adapter import (
-    MiMoVLMAdapter,
-    MiMoVisionResult,
-    MiMoVisionError,
-    MiMoHTTPBackend,
-    interpret_seismic_image_mimo,
+from .perceptual_inventory import (
+    AcRiskComponents,
+    AcRiskVerdict,
+    AmplitudeCharacter,
+    AmplitudeZoneCharacter,
+    AmplitudeZoneObservation,
+    AmplitudeZoneOrigin,
+    AxisMetadata,
+    DisplayColorPolarity,
+    DisplayUnits,
+    FaultObservation,
+    FaultType,
+    PerceptualInventory,
+    PolarityConvention,
+    ReflectorContinuity,
+    ReflectorObservation,
+    VisionVerdict,
+    default_ac_risk_components,
+    sha256_file,
+    sha256_text,
 )
 
 __all__ = [

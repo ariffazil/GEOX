@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 contracts/schemas/output_schemas.py — Canonical outputSchema for all 16 GEOX MCP tools.
 MCP 2025-11-25 alignment: formal inputSchema + outputSchema per tool.

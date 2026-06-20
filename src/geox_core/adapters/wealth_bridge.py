@@ -10,7 +10,6 @@ Constitutional contract:
   - Governance-blocked nodes cannot enter WEALTH pipeline.
 """
 
-import sys
 from pathlib import Path
 from typing import TypedDict
 

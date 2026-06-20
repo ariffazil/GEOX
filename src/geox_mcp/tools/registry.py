@@ -22,7 +22,7 @@ def _get_git_version() -> str:
         return "geox-unknown"
 
 
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 from geox_core.enums.statuses import (
     ArtifactStatus,
@@ -84,6 +84,7 @@ async def geox_system_registry_status(
     envelope_legacy_alias: list[str] = []
     try:
         import ast as _ast
+
         from geox_mcp.registry import LEGACY_ALIAS_MAP
         legacy_names = set(LEGACY_ALIAS_MAP.keys())
         tool_dir = Path(__file__).parent

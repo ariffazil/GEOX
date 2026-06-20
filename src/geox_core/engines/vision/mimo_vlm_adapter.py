@@ -60,28 +60,19 @@ import logging
 import os
 import re
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional, Protocol
+from typing import Any, Protocol
 
 from pydantic import ValidationError
 
 from .perceptual_inventory import (
-    AcRiskComponents,
     AcRiskVerdict,
     AmplitudeZoneObservation,
     AxisMetadata,
-    DisplayColorPolarity,
-    DisplayUnits,
     FaultObservation,
-    FaultType,
     PerceptualInventory,
-    PolarityConvention,
     ReflectorObservation,
-    ReflectorContinuity,
-    AmplitudeCharacter,
-    AmplitudeZoneCharacter,
-    AmplitudeZoneOrigin,
     VisionVerdict,
     default_ac_risk_components,
     sha256_file,
@@ -222,10 +213,10 @@ class MiMoVisionResult:
     PerceptualInventory or a typed error."""
 
     success: bool
-    inventory: Optional[PerceptualInventory] = None
-    error: Optional[str] = None
-    error_type: Optional[str] = None
-    raw_response: Optional[str] = None
+    inventory: PerceptualInventory | None = None
+    error: str | None = None
+    error_type: str | None = None
+    raw_response: str | None = None
     elapsed_seconds: float = 0.0
     backend_id: str = ""
 
@@ -258,7 +249,7 @@ class MiMoVLMAdapter:
 
     def __init__(
         self,
-        backend: Optional[VisionBackend] = None,
+        backend: VisionBackend | None = None,
         backend_url: str = DEFAULT_MIMO_BACKEND_URL,
         model_name: str = DEFAULT_MIMO_MODEL,
         timeout: int = DEFAULT_MIMO_TIMEOUT,
@@ -576,8 +567,8 @@ class MiMoHTTPBackend:
         Raises:
             MiMoVisionError: if the call fails
         """
-        import urllib.request
         import urllib.error
+        import urllib.request
 
         # Read and base64-encode the image
         try:
@@ -680,7 +671,7 @@ async def interpret_seismic_image_mimo(
     image_path: str,
     basin_context: str = "unknown",
     interpretation_goal: str = "Identify structural features, faults, reflectors, and amplitude anomalies",
-    backend: Optional[VisionBackend] = None,
+    backend: VisionBackend | None = None,
     has_segy: bool = False,
 ) -> MiMoVisionResult:
     """Convenience function for one-shot MiMo interpretation."""

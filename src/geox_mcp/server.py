@@ -40,7 +40,7 @@ from fastmcp import FastMCP
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse, RedirectResponse
+from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
 
 # Import canonical registry for source-of-truth
@@ -136,7 +136,15 @@ try:
     from prefab_ui.actions import SetState, ShowToast
     from prefab_ui.app import PrefabApp
     from prefab_ui.components import (
-        Badge, Card, Column, DataTable, Heading, Metric, Row, Separator, Text,
+        Badge,
+        Card,
+        Column,
+        DataTable,
+        Heading,
+        Metric,
+        Row,
+        Separator,
+        Text,
     )
 
     HAS_FASTMCP_APPS = True
@@ -243,6 +251,7 @@ def compose_geox_servers() -> None:
 compose_geox_servers()
 
 from geox_mcp.tools.ui_applets import register_ui_applets
+
 register_ui_applets(mcp)
 
 # ── Register legacy alias tools that FastMCP can route ────────────────────

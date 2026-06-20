@@ -44,21 +44,20 @@ Authority:
 
 from __future__ import annotations
 
-import asyncio
 import json
 import logging
 import os
 import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from geox_core.engines.vision import (
     AcRiskComponents,
     AcRiskVerdict,
-    MiniMaxVLMAdapter,
-    MiMoVLMAdapter,
     MiMoVisionResult,
+    MiMoVLMAdapter,
+    MiniMaxVLMAdapter,
     PerceptualInventory,
     VisionResult,
     VisionVerdict,
@@ -110,7 +109,7 @@ def _vision_envelope(tool_name: str, payload: dict[str, Any]) -> dict[str, Any]:
 async def geox_vision_perceptual_inventory(
     image_path: str,
     model_id: str = "minimax-M3-vision",
-    prompt_id: Optional[str] = None,
+    prompt_id: str | None = None,
     overall_confidence: float = 0.5,
     global_assessment: str = "(empty — populate after VLM inference)",
     reflectors: list[dict[str, Any]] | None = None,
@@ -572,12 +571,12 @@ async def geox_vision_calibrate(
       distribution, summary statistics).
     """
     try:
+        from geox_core.engines.vision.run_vision_v1_demo import (
+            NoisyVisionMock,
+            PerfectVisionMock,
+        )
         from geox_core.engines.vision.vision_test_harness import (
             run_synthetic_forward_inverse,
-        )
-        from geox_core.engines.vision.run_vision_v1_demo import (
-            PerfectVisionMock,
-            NoisyVisionMock,
         )
 
         Path(output_dir).mkdir(parents=True, exist_ok=True)

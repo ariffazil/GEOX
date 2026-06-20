@@ -23,7 +23,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .schemas import Biozone, BiostratEnvelope
+from .schemas import Biozone
 
 # ── Zone Age Dictionaries ────────────────────────────────────────────────────
 # Format: { zone_id: (age_top_Ma, age_base_Ma) }

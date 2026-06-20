@@ -18,8 +18,8 @@ from geox_mcp.tools.claims import (
     geox_claim_challenge,
     geox_claim_create,
     geox_claim_seal,
-    geox_evidence_attach,
     geox_claim_validate,
+    geox_evidence_attach,
 )
 
 _CLAIMS_TOOLS: list[tuple[str, Any]] = [

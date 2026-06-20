@@ -493,10 +493,10 @@ async def geox_anomalous_contrast_detector(
                 resolution = "DEMOTE — seismic pick displaced >20 m; validate with checkshot/VSP"
             elif abs_mistie > 5.0:
                 contradiction_severity = "MEDIUM"
-                resolution = "QUALIFY — seismic pick displaced {:.0f} m; cross-check with well tie".format(abs_mistie)
+                resolution = f"QUALIFY — seismic pick displaced {abs_mistie:.0f} m; cross-check with well tie"
             else:
                 contradiction_severity = "LOW"
-                resolution = "NOTE — minor mistie {:.0f} m; within picking tolerance but flagged".format(abs_mistie)
+                resolution = f"NOTE — minor mistie {abs_mistie:.0f} m; within picking tolerance but flagged"
 
             # ── AVO class classification (conditional, from normal-incidence RC) ──
             rc_ratio_val = rc_at_seismic / max(rc_at_geo, 1e-9)

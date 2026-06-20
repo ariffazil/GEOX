@@ -1,5 +1,6 @@
 """Map all 37 GEOX tools by domain."""
 import sys
+
 sys.path.insert(0, "src")
 
 from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS

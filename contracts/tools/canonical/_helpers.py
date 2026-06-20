@@ -4,6 +4,7 @@
 #   kernel/_registry.py      ← artifact registry + globals (lines 1–192)
 #   kernel/_evidence.py     ← F6 Maruah + F7 ensemble (lines 193–311)
 from __future__ import annotations
+
 #   kernel/_ingest.py       ← ingest + canonical curves (lines 312–451)
 #   kernel/_petrophysics.py ← petrophysics (lines 453–1042)
 #   kernel/_candidates.py   ← async subsurface candidates (lines 1043–1363)
@@ -14,13 +15,7 @@ from __future__ import annotations
 __all__ = []  # populated below
 
 # ─── Import kernel layer ───────────────────────────────────────────────────
-from .kernel import _registry
-from .kernel import _evidence
-from .kernel import _ingest
-from .kernel import _petrophysics
-from .kernel import _candidates
-from .kernel import _biostrat
-from .kernel import _unit_registry
+from .kernel import _biostrat, _candidates, _evidence, _ingest, _petrophysics, _registry, _unit_registry
 
 # ─── Global state (lives in kernel/_registry.py) ─────────────────────────
 # These are the in-memory stores — imported from kernel for backward compat

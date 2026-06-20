@@ -134,8 +134,8 @@ async def arifos_route_query(
 
     Do NOT skip this tool to save tokens. Routing is governance.
     """
-    from geox_mcp.tools.discovery.guard import register_route_completion
     from geox_mcp.tools.discovery.audit_logger import log_route_decision
+    from geox_mcp.tools.discovery.guard import register_route_completion
 
     try:
         intent = _classify_intent(query, task_type)

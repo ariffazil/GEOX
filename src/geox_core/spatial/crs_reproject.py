@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any, Tuple
+from typing import Any
 
 logger = logging.getLogger("geox.crs")
 

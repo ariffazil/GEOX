@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import List, Dict, Any, Optional
-from enum import Enum
 import os
+from enum import Enum
+from typing import Any
 
 
 class Dimension(str, Enum):
@@ -306,9 +306,9 @@ SEAL = "DITEMPA BUKAN DIBERI"
 
 
 def enforce_claim_state(
-    result: Dict[str, Any],
-    evidence_refs: Optional[List[str]] = None,
-) -> Dict[str, Any]:
+    result: dict[str, Any],
+    evidence_refs: list[str] | None = None,
+) -> dict[str, Any]:
     """F2 Truth + F7 Humility: prevent semantic overclaiming.
 
     Hard rules:
@@ -338,47 +338,47 @@ def enforce_claim_state(
 
 
 def get_standard_envelope(
-    primary_artifact: Dict[str, Any],
+    primary_artifact: dict[str, Any],
     tool_class: str = "compute",
     execution_status: ExecutionStatus = ExecutionStatus.SUCCESS,
     governance_status: GovernanceStatus = GovernanceStatus.QUALIFY,
     artifact_status: ArtifactStatus = ArtifactStatus.DRAFT,
     uncertainty: str = "Moderate",
-    evidence_refs: Optional[List[str]] = None,
-    diagnostics: Optional[Dict[str, Any]] = None,
-    ui_resource_uri: Optional[str] = None,
+    evidence_refs: list[str] | None = None,
+    diagnostics: dict[str, Any] | None = None,
+    ui_resource_uri: str | None = None,
     claim_tag: str = "HYPOTHESIS",
     claim_state: str = "INGESTED",
-    confidence_band: Optional[Dict[str, Any]] = None,
-    physics_guard: Optional[Dict[str, Any]] = None,
-    audit_receipt: Optional[Dict[str, str]] = None,
+    confidence_band: dict[str, Any] | None = None,
+    physics_guard: dict[str, Any] | None = None,
+    audit_receipt: dict[str, str] | None = None,
     humility_score: float = 0.0,
-    maruah_flag: Optional[Dict[str, Any]] = None,
-    tool_version: Optional[str] = None,
-    artifact_hash: Optional[str] = None,
-    depth_basis: Optional[str] = None,
-    depth_datum: Optional[str] = None,
+    maruah_flag: dict[str, Any] | None = None,
+    tool_version: str | None = None,
+    artifact_hash: str | None = None,
+    depth_basis: str | None = None,
+    depth_datum: str | None = None,
     # Session propagation (Fix #2 - Arif 2026-05-16)
-    session_id: Optional[str] = None,
-    trace_id: Optional[str] = None,
-    parent_trace_id: Optional[str] = None,
-    constitution_hash: Optional[str] = None,
+    session_id: str | None = None,
+    trace_id: str | None = None,
+    parent_trace_id: str | None = None,
+    constitution_hash: str | None = None,
     # Agentic recovery (Fix #1, #4 - Arif 2026-05-16)
-    next_best_actions: Optional[List[Dict[str, Any]]] = None,
-    suggested_tool: Optional[str] = None,
+    next_best_actions: list[dict[str, Any]] | None = None,
+    suggested_tool: str | None = None,
     can_auto_retry: bool = False,
     # missing_inputs_schema: structured input gaps for agentic rerun (Arif 2026-05-16)
-    missing_inputs_schema: Optional[List[Dict[str, Any]]] = None,
+    missing_inputs_schema: list[dict[str, Any]] | None = None,
     # confidence_policy: what confidence means for this tool output (Arif 2026-05-16)
-    confidence_policy: Optional[Dict[str, Any]] = None,
+    confidence_policy: dict[str, Any] | None = None,
     # ToAC perception bridge fields
-    perception_class: Optional[str] = None,
-    evidence_tag: Optional[str] = None,
-    canon_9_touched: Optional[List[str]] = None,
-    vertical_trend: Optional[str] = None,
-    litho_class: Optional[str] = None,
-    strat_standard: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
+    perception_class: str | None = None,
+    evidence_tag: str | None = None,
+    canon_9_touched: list[str] | None = None,
+    vertical_trend: str | None = None,
+    litho_class: str | None = None,
+    strat_standard: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """
     Canonical MCP Apps Response Envelope — Universal Output Contract v0.7.
     MCP 2025-11-25 alignment: provenance block, structuredContent contract.
@@ -406,8 +406,8 @@ def get_standard_envelope(
     litho_class: Canonical lithology classification
     strat_standard: Stratigraphic reference scheme + chart URI
     """
-    from datetime import datetime, timezone
     import uuid
+    from datetime import datetime
 
     tool_version = tool_version or os.environ.get("GEOX_VERSION", "geox-v2026.05.10")
     now = datetime.now(timezone.utc).isoformat()
@@ -510,8 +510,7 @@ def get_standard_envelope(
 # DITEMPA BUKAN DIBERI — Forged, Not Given
 
 
-from datetime import datetime, timezone
-
+from datetime import UTC, datetime
 
 # Map GEOX internal claim_state values → metabolic ClaimState
 _CLAIM_STATE_MAP = {
@@ -586,21 +585,21 @@ def _get_confidence_for_claim(claim_state: str) -> str:
 
 
 def enrich_envelope_with_metabolic(
-    envelope: Dict[str, Any],
+    envelope: dict[str, Any],
     tool_name: str,
     *,
     witness_type: str | None = None,
     witness_status: str = "RAW",
-    decoded_entities: List[Any] | None = None,
-    anomalous_contrasts: List[Any] | None = None,
-    candidate_meanings: List[Any] | None = None,
-    constraints_checked: List[Any] | None = None,
-    model_updates: List[Any] | None = None,
-    required_next_tests: List[str] | None = None,
+    decoded_entities: list[Any] | None = None,
+    anomalous_contrasts: list[Any] | None = None,
+    candidate_meanings: list[Any] | None = None,
+    constraints_checked: list[Any] | None = None,
+    model_updates: list[Any] | None = None,
+    required_next_tests: list[str] | None = None,
     next_best_tool: str = "",
-    cross_organ_handoff: Dict[str, Any] | None = None,
+    cross_organ_handoff: dict[str, Any] | None = None,
     session_id: str | None = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Enrich a GEOX standard envelope with metabolic.v1 output fields.
 
@@ -674,7 +673,7 @@ def enrich_envelope_with_metabolic(
     }
     uncertainty_range, major_unknowns = _CONFIDENCE_UNCERTAINTY.get(confidence, ([0.0, 1.0], []))
 
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
 
     metabolic = {
         "organ": "GEOX",

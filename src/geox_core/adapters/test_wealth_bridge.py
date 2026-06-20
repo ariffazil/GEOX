@@ -3,12 +3,8 @@ Tests for GEOX → WEALTH Adapter (WELD-002)
 DITEMPA BUKAN DIBERI
 """
 
-import sys
-from pathlib import Path
 
 import pytest
-
-
 
 try:
     from arifos_types import (

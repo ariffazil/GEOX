@@ -17,8 +17,8 @@ import hashlib
 import json
 import logging
 import warnings
-from dataclasses import dataclass, field
-from typing import Any, Optional
+from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 
@@ -61,7 +61,7 @@ class AttributeResult:
 class AnomalousContrastResult:
     ac_score: float
     ac_class: str
-    anomaly_mask: Optional[np.ndarray]
+    anomaly_mask: np.ndarray | None
     confidence: str
     semblance: float
     variance_ratio: float
