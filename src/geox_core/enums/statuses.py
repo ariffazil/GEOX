@@ -25,7 +25,7 @@ def _compute_physics_guard_version() -> str:
 
 
 GEOX_VERSION = "v2026.06.05"
-GEOX_CONTRACT_EPOCH = "2026-06-05-GEOX-37TOOLS-v2.0"
+GEOX_CONTRACT_EPOCH = "2026-06-18-GEOX-40TOOLS-v2.1"
 PHYSICS_GUARD_VERSION = _compute_physics_guard_version()
 REGISTRY_HASH = "reg-hash-35d798a"
 TOOL_SCHEMA_HASH = "schema-sha-35d798a"
