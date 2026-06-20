@@ -932,6 +932,23 @@ async def legacy_mcp_handler(request):
     params = payload.get("params", {})
     response_id = payload.get("id")
 
+    if method == "initialize":
+        return JSONResponse({
+            "jsonrpc": "2.0",
+            "id": response_id,
+            "result": {
+                "protocolVersion": "2025-11-25",
+                "capabilities": {
+                    "tools": {"listChanged": True},
+                    "resources": {"listChanged": True},
+                },
+                "serverInfo": {
+                    "name": "GEOX",
+                    "version": GEOX_VERSION,
+                },
+            },
+        })
+
     if method == "tools/list":
         all_tools = {t.name: t for t in await mcp.list_tools()}
         tools = [
@@ -1170,9 +1187,13 @@ def create_app():
             Route("/webmcp/tools", webmcp_tools, methods=["GET"]),
             Route("/webmcp/status", webmcp_status, methods=["GET"]),
             Route("/webmcp/call/{tool_name:str}", webmcp_call_tool, methods=["POST"]),
-            Route("/mcp", lambda req: RedirectResponse(url="/mcp/", status_code=307), methods=["GET", "POST", "DELETE"]),
+            # Mount FastMCP HTTP handler at /mcp (handles Streamable HTTP natively).
+            # No 307 redirect — breaks Kimi Code and other MCP clients that don't follow POST redirects.
             Mount("/mcp", app=mcp_http_handler),
-            # Also handle /mcp with trailing slash explicitly (some clients don't follow 307)
+            # Handle /mcp (no trailing slash) — Mount can't handle this because the
+            # remaining path "" doesn't match the mounted app's "/" route.
+            Route("/mcp", legacy_mcp_handler, methods=["GET", "POST"]),
+            # Explicit /mcp/ handler for clients that append trailing slash
             Route("/mcp/", legacy_mcp_handler, methods=["GET", "POST"]),
         ],
         lifespan=mcp_http_handler.lifespan,

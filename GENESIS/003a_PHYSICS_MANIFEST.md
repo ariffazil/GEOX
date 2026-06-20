@@ -1,4 +1,4 @@
-# GEOX Physics Manifest — Kuasa Alam
+# GENESIS/003a — GEOX Physics Manifest — Kuasa Alam
 
 > **GEOX obeys natural law, not constitutional law.**
 > This manifest declares the physics invariants, coordinate guardrails,

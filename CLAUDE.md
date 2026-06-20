@@ -8,7 +8,7 @@
 
 ## What you are working in
 
-GEOX provides 39 MCP tools for geoscience evidence: well ingest, petrophysics, seismic, prospect evaluation, and vision interpretation. All outputs carry `cross_modal_stability`, `semantic_density_score`, and `dim_spot_flag`.
+GEOX provides 40 MCP tools for geoscience evidence: well ingest, petrophysics, seismic, prospect evaluation, and vision interpretation. All outputs carry `cross_modal_stability`, `semantic_density_score`, and `dim_spot_flag`.
 
 ## Build / run / test
 
