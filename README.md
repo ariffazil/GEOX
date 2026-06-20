@@ -1,8 +1,8 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-15
+last_verified: 2026-06-20
 valid_from: 2026-06-14
-valid_until: 2026-07-15
+valid_until: 2026-07-20
 confidence: high
 scope: /root/geox
 -->
@@ -29,7 +29,7 @@ scope: /root/geox
 
 # GEOX — Earth Intelligence | Governed World Model
 
-> **40 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**
+> **39 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**
 
 GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, and stratigraphic interpretation — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
 

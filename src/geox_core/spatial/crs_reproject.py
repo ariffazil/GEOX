@@ -80,6 +80,18 @@ KNOWN_CRS: dict[str, dict[str, Any]] = {
         "unit": "metre",
         "type": "projected",
     },
+    "EPSG:32647": {
+        "name": "WGS84 / UTM zone 47N",
+        "area": "Global (zone 47N)",
+        "unit": "metre",
+        "type": "projected",
+    },
+    "EPSG:32648": {
+        "name": "WGS84 / UTM zone 48N",
+        "area": "Global (zone 48N)",
+        "unit": "metre",
+        "type": "projected",
+    },
     "EPSG:32650": {
         "name": "WGS84 / UTM zone 50N",
         "area": "Global (zone 50N)",

@@ -1,8 +1,8 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-15
+last_verified: 2026-06-18
 valid_from: 2026-06-12
-valid_until: 2026-07-15
+valid_until: 2026-07-18
 confidence: high
 scope: /root/geox/GENESIS
 -->

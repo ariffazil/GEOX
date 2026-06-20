@@ -47,9 +47,14 @@ logger = logging.getLogger("geox.paleoscan_forge")
 
 
 async def geox_coord_transform_tool(
-    points: list[list[float]],
-    from_space: Literal["block", "survey", "world"],
-    to_space: Literal["block", "survey", "world"],
+    points: list[list[float]] | None = None,
+    from_space: Literal["block", "survey", "world"] | None = None,
+    to_space: Literal["block", "survey", "world"] | None = None,
+    x: float | None = None,
+    y: float | None = None,
+    from_crs: str | None = None,
+    to_crs: str | None = None,
+    allow_unknown_crs: bool = False,
     block_width: int = 1,
     block_height: int = 1,
     block_length: int = 1,
@@ -65,11 +70,127 @@ async def geox_coord_transform_tool(
     world_p3: list[float] | None = None,
 ) -> dict[str, Any]:
     """
-    Transform 3D points between block, survey, and world coordinate spaces.
+    Transform points between coordinate systems.
 
-    Uses 4x4 affine matrices computed from the provided space definitions.
-    This is deterministic geoscience math — claim_state = COMPUTED.
+    Two explicit modes are supported:
+      - CRS reprojection: provide x/y or 2D points plus from_crs/to_crs (EPSG codes).
+      - Local affine transform: provide 3D points plus from_space/to_space
+        in block/survey/world.
     """
+    if from_crs or to_crs:
+        if not from_crs or not to_crs:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_coord_transform_tool",
+                    "error": "CRS transform requires both from_crs and to_crs.",
+                    "mode": "crs_reprojection",
+                },
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="VOID",
+                claim_state="VOID_INPUT",
+            )
+
+        crs_points: list[tuple[float, float]]
+        if x is not None and y is not None:
+            crs_points = [(float(x), float(y))]
+        elif points:
+            try:
+                crs_points = [(float(p[0]), float(p[1])) for p in points]
+            except (IndexError, TypeError, ValueError) as e:
+                return get_standard_envelope(
+                    {
+                        "tool": "geox_coord_transform_tool",
+                        "error": f"CRS points must be [x, y] numeric pairs: {e}",
+                        "mode": "crs_reprojection",
+                    },
+                    tool_class="compute",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    artifact_status=ArtifactStatus.REJECTED,
+                    claim_tag="VOID",
+                    claim_state="VOID_INPUT",
+                )
+        else:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_coord_transform_tool",
+                    "error": "CRS transform requires x/y or points.",
+                    "mode": "crs_reprojection",
+                },
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="VOID",
+                claim_state="VOID_INPUT",
+            )
+
+        try:
+            from geox_core.spatial.crs_reproject import validate_crs
+            import pyproj
+
+            for label, crs in (("from_crs", from_crs), ("to_crs", to_crs)):
+                valid, message = validate_crs(crs, allow_unknown=allow_unknown_crs)
+                if not valid:
+                    raise ValueError(f"{label}: {message}")
+
+            transformer = pyproj.Transformer.from_crs(from_crs, to_crs, always_xy=True)
+            transformed = [transformer.transform(px, py) for px, py in crs_points]
+        except Exception as e:
+            return get_standard_envelope(
+                {
+                    "tool": "geox_coord_transform_tool",
+                    "error": f"CRS transform failed: {e}",
+                    "from_crs": from_crs,
+                    "to_crs": to_crs,
+                    "mode": "crs_reprojection",
+                },
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="VOID",
+                claim_state="TRANSFORM_FAILED",
+            )
+
+        result = {
+            "tool": "geox_coord_transform_tool",
+            "mode": "crs_reprojection",
+            "from_crs": from_crs,
+            "to_crs": to_crs,
+            "input_points": [list(p) for p in crs_points],
+            "transformed_points": [[float(px), float(py)] for px, py in transformed],
+            "status": "computed",
+        }
+        envelope = get_standard_envelope(
+            result,
+            tool_class="compute",
+            claim_tag="COMPUTED",
+            claim_state="COMPUTED",
+            physics_guard={"guard_passed": True, "equations_used": ["pyproj_crs_reprojection"]},
+        )
+        return enrich_envelope_with_metabolic(envelope, "geox_coord_transform_tool")
+
+    if points is None or from_space is None or to_space is None:
+        return get_standard_envelope(
+            {
+                "tool": "geox_coord_transform_tool",
+                "error": "Local affine transform requires points, from_space, and to_space.",
+                "mode": "local_affine_space_transform",
+                "accepted_spaces": ["block", "survey", "world"],
+                "crs_mode_hint": "For EPSG transforms, pass x/y or points with from_crs and to_crs.",
+            },
+            tool_class="compute",
+            execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.REJECTED,
+            claim_tag="VOID",
+            claim_state="VOID_INPUT",
+        )
+
     block = BlockSpace(width=block_width, height=block_height, length=block_length)
     survey = SurveySpace(
         x_min=survey_x_min,
@@ -114,6 +235,7 @@ async def geox_coord_transform_tool(
 
     result = {
         "tool": "geox_coord_transform_tool",
+        "mode": "local_affine_space_transform",
         "from_space": from_space,
         "to_space": to_space,
         "input_points": points,
