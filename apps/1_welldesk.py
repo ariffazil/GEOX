@@ -2,21 +2,19 @@
 GEOX WellDesk — 1D Well Log Visualization & Petrophysics
 OMEGA Improved: stripped cartoon, real physics9, real 888_JUDGE.
 """
-import streamlit as st
+import os
+import sys
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-import sys, os
+import streamlit as st
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geox_core.core.geox_1d import (
-    generate_well_curve, inverse_petrophysics,
-    analyze_petrophysics_results, summarize_inversion,
-    compute_vsh_gr
-)
+from geox_core.core.geox_1d import analyze_petrophysics_results, compute_vsh_gr
 from geox_core.core.geox_data import DEFAULT_STRATIGRAPHY, assign_layer
-from geox_core.core.physics9 import Physics9State, forward_physics9, build_lithology_model
+from geox_core.core.physics9 import Physics9State, build_lithology_model, forward_physics9
 
 # ── 888_JUDGE physics9 helper ────────────────────────────────────────────────
 

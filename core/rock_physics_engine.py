@@ -16,9 +16,8 @@ from __future__ import annotations
 
 import math
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import Optional
 
 try:
     from scipy.optimize import minimize
@@ -120,19 +119,19 @@ class Physics9State:
     pressure_mpa: float = 25.0
     temp_c: float = 80.0
     # Forward outputs
-    vp: Optional[float] = None
-    vs: Optional[float] = None
-    rho: Optional[float] = None
-    ai: Optional[float] = None
-    vp_vs_ratio: Optional[float] = None
-    bulk_modulus: Optional[float] = None
-    shear_modulus: Optional[float] = None
+    vp: float | None = None
+    vs: float | None = None
+    rho: float | None = None
+    ai: float | None = None
+    vp_vs_ratio: float | None = None
+    bulk_modulus: float | None = None
+    shear_modulus: float | None = None
     # Inverse outputs
-    est_porosity: Optional[float] = None
-    est_sw: Optional[float] = None
-    est_fluid: Optional[str] = None
+    est_porosity: float | None = None
+    est_sw: float | None = None
+    est_fluid: str | None = None
     uncertainty_band: dict = field(default_factory=dict)
-    integrity_score: Optional[float] = None
+    integrity_score: float | None = None
     # Metabolic log
     metabolic_log: list = field(default_factory=list)
     # Grade
@@ -462,7 +461,7 @@ class RockPhysicsEngine:
 
     # ── INVERSE MODE ──────────────────────────────────────────────────────────
 
-    def inverse(self, vp_obs: float, vs_obs: float, rho_obs: float, prior: Optional[Physics9State] = None) -> Physics9State:
+    def inverse(self, vp_obs: float, vs_obs: float, rho_obs: float, prior: Physics9State | None = None) -> Physics9State:
         """
         Inverse rock physics: observed Vp, Vs, rho → estimated por/Sw/fluid.
         Uses L-BFGS-B optimization to minimize misfit against forward model.

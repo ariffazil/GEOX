@@ -1,7 +1,7 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional
 from enum import Enum
-from datetime import datetime
+
+from pydantic import BaseModel, Field
+
 
 class VelocityQCGate(str, Enum):
     MULTI_VELOCITY_CONVERGENCE = "multi_velocity_convergence"
@@ -46,17 +46,17 @@ class VelocityStructuralClaim(BaseModel):
     epistemic_rung: str = Field(default="EARTHMODEL", description="Velocity cubes for structure are always Rung 5 models, never facts.")
     
     # Provenance & Lineage
-    lineage: List[VelocityLineageEvent] = Field(default_factory=list, description="Audit trail of why this model version exists.")
-    evidence_handles: List[str] = Field(default_factory=list, description="URIs pointing to QC artifacts (e.g., geox://qc/welltie/123).")
+    lineage: list[VelocityLineageEvent] = Field(default_factory=list, description="Audit trail of why this model version exists.")
+    evidence_handles: list[str] = Field(default_factory=list, description="URIs pointing to QC artifacts (e.g., geox://qc/welltie/123).")
     
-    cleared_qc_gates: List[VelocityQCGate]
-    failed_qc_gates: List[VelocityQCGate]
-    identified_failure_modes: List[VelocityFailureMode]
+    cleared_qc_gates: list[VelocityQCGate]
+    failed_qc_gates: list[VelocityQCGate]
+    identified_failure_modes: list[VelocityFailureMode]
     
     # Claim Grammar Enforcement
     evidence_for: str = Field(..., description="Evidence supporting this Vint model as a valid structural proxy.")
     evidence_against: str = Field(..., description="Contradicting evidence or unresolved artifacts (e.g., residual moveout).")
-    missing_tests: List[str] = Field(..., description="Required QC gates that were not performed.")
+    missing_tests: list[str] = Field(..., description="Required QC gates that were not performed.")
     
     uncertainty_band: str = Field(default="P10-P90 Not Calculated", description="Uncertainty spread across realizations (e.g., '±50m at 3km depth').")
     ac_risk: float = Field(..., ge=0.0, le=1.0, description="Calculated Anomalous Contrast Risk. >0.70 means highly unsafe for structural decisions.")

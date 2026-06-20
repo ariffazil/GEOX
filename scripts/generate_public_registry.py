@@ -21,9 +21,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 REGISTRY_PATH = Path(__file__).parent.parent / "public_registry.json"
@@ -44,7 +43,7 @@ def compute_hash(tools: list[str]) -> str:
             "epoch": "GEOX-11TOOLS-v0.3",
             "tools": canonical_sorted,
             "count": len(canonical_sorted),
-            "computed_at": datetime.now(timezone.utc).isoformat(),
+            "computed_at": datetime.now(UTC).isoformat(),
         },
         sort_keys=True,
         indent=2,
@@ -67,7 +66,7 @@ def main():
 
     registry = {
         "epoch": "GEOX-11TOOLS-v0.3",
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "canonical_tool_count": tool_count,
         "registry_hash": canonical_hash,
         "tools": sorted(tools),

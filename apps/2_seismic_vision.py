@@ -2,15 +2,17 @@
 GEOX SeismicVision — 2D Seismic Cross-Section
 OMEGA Improved: stripped cartoon, real geox_2d, real AC_Risk.
 """
-import streamlit as st
+import os
+import sys
+
 import numpy as np
 import plotly.graph_objects as go
-import sys, os
+import streamlit as st
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geox_core.core.geox_2d import build_2d_section, interpret_horizons, amplitude_analysis
-from geox_core.core.physics9 import anomaly_contrast_theory, Physics9State, EARTH_MATERIAL_CATALOG
+from geox_core.core.geox_2d import amplitude_analysis, build_2d_section, interpret_horizons
+
 
 def physics9_seismic_section(section):
     """Augment seismic section with physics9 horizon annotations."""
@@ -50,7 +52,7 @@ def render_seismic(data, x_coords, t_coords, horizons=None, faults=None, title="
             x_f = f.get("x_position", x_coords[len(x_coords)//2])
             fig.add_trace(go.Scatter(
                 x=[x_f, x_f], y=[t_coords[0], t_coords[-1]],
-                mode="lines", name=f"fault",
+                mode="lines", name="fault",
                 line=dict(width=2, dash="dot", color="yellow"),
             ))
     fig.update_layout(

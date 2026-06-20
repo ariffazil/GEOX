@@ -44,27 +44,18 @@ import logging
 import os
 import re
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Optional, Protocol
+from dataclasses import dataclass
+from typing import Any, Protocol
 
 from pydantic import ValidationError
 
 from .perceptual_inventory import (
-    AcRiskComponents,
     AcRiskVerdict,
     AmplitudeZoneObservation,
     AxisMetadata,
-    DisplayColorPolarity,
-    DisplayUnits,
     FaultObservation,
-    FaultType,
     PerceptualInventory,
-    PolarityConvention,
     ReflectorObservation,
-    ReflectorContinuity,
-    AmplitudeCharacter,
-    AmplitudeZoneCharacter,
-    AmplitudeZoneOrigin,
     VisionVerdict,
     default_ac_risk_components,
     sha256_file,
@@ -199,10 +190,10 @@ class VisionResult:
     PerceptualInventory or a typed error."""
 
     success: bool
-    inventory: Optional[PerceptualInventory] = None
-    error: Optional[str] = None
-    error_type: Optional[str] = None
-    raw_response: Optional[str] = None
+    inventory: PerceptualInventory | None = None
+    error: str | None = None
+    error_type: str | None = None
+    raw_response: str | None = None
     elapsed_seconds: float = 0.0
     backend_id: str = ""
 
@@ -227,7 +218,7 @@ class MiniMaxVLMAdapter:
 
     def __init__(
         self,
-        backend: Optional[VisionBackend] = None,
+        backend: VisionBackend | None = None,
         execution_mode: str = "deterministic",
     ):
         """If `backend` is None, the adapter uses the real MCP tool via
@@ -564,7 +555,7 @@ async def interpret_seismic_image(
     image_path: str,
     basin_context: str = "unknown",
     interpretation_goal: str = "Identify structural features, faults, reflectors, and amplitude anomalies",
-    backend: Optional[VisionBackend] = None,
+    backend: VisionBackend | None = None,
     has_segy: bool = False,
 ) -> VisionResult:
     """Convenience function for one-shot interpretation."""

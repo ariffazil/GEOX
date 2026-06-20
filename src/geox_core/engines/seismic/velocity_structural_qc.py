@@ -1,11 +1,6 @@
-from typing import List, Dict, Any, Optional
-from geox_core.schemas.velocity_mapping import (
-    VelocityQCGate,
-    VelocityFailureMode,
-    VelocityStructuralClaim,
-    VelocityRenderPayload
-)
+from geox_core.schemas.velocity_mapping import VelocityFailureMode, VelocityQCGate, VelocityRenderPayload, VelocityStructuralClaim
 from geox_core.schemas.velocity_policy import VelocityACRiskPolicy
+
 
 class VelocityStructuralEngine:
     """
@@ -13,21 +8,21 @@ class VelocityStructuralEngine:
     Computes Anomalous Contrast (AC) Risk using a configurable policy.
     """
 
-    def __init__(self, policy: Optional[VelocityACRiskPolicy] = None):
+    def __init__(self, policy: VelocityACRiskPolicy | None = None):
         self.policy = policy or VelocityACRiskPolicy()
 
     def evaluate_velocity_cube(
         self,
         cube_id: str,
         source_model_version: str,
-        cleared_gates: List[VelocityQCGate],
-        identified_failures: List[VelocityFailureMode],
+        cleared_gates: list[VelocityQCGate],
+        identified_failures: list[VelocityFailureMode],
         evidence_for: str,
         evidence_against: str,
         uncertainty_band: str = "P10-P90 Not Calculated",
-        proxy_id: Optional[str] = None,
-        lineage: Optional[List[dict]] = None,
-        evidence_handles: Optional[List[str]] = None
+        proxy_id: str | None = None,
+        lineage: list[dict] | None = None,
+        evidence_handles: list[str] | None = None
     ) -> VelocityRenderPayload:
         """
         Runs the doctrine logic. Calculate AC Risk.

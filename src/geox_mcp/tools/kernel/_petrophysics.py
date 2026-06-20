@@ -380,7 +380,6 @@ def _compute_netpay_from_store(
     fluid_density: float = 1.0,
 ) -> dict:
     """Compute net pay from stored LAS data. All cutoffs explicit in output."""
-    import sys
 
     import numpy as np
 

@@ -1,12 +1,14 @@
-import sys
 import os
+import sys
 from datetime import datetime
 
 # Path Hack
 sys.path.append(os.path.abspath("."))
 
 from services.evidence_store.store import store
-from geox.shared.contracts.schemas import EvidenceObject, EvidenceRef, GeoContext, UnitRef, VerticalDomain, EvidenceKind
+
+from geox.shared.contracts.schemas import EvidenceKind, EvidenceObject, EvidenceRef, GeoContext, UnitRef, VerticalDomain
+
 
 def seed():
     # 1. Define Common Units

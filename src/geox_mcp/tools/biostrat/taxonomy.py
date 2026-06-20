@@ -16,7 +16,7 @@ from typing import Any
 
 import httpx
 
-from .schemas import BiostratEnvelope, TaxonRecord
+from .schemas import TaxonRecord
 
 logger = logging.getLogger(__name__)
 

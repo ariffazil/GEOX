@@ -1,7 +1,8 @@
-from geox.skills.subsurface.petro.las_ingest import geox_ingest_las_tool
-import json
-import sqlite3
 import os
+import sqlite3
+
+from geox.skills.subsurface.petro.las_ingest import geox_ingest_las_tool
+
 
 def test_wajib_forge():
     print("--- TESTING WAJIB #1 (Ledger) and WAJIB #5 (Artefact) ---")

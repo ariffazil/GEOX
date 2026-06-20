@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from contracts.enums.statuses import (
     get_standard_envelope,
-    GovernanceStatus,
-    ArtifactStatus,
-    ExecutionStatus,
 )
 
 logger = logging.getLogger("geox.canonical.dst")
@@ -44,8 +41,8 @@ async def geox_dst_ingest_test(
     F2 Truth: all outputs are OBSERVED from supplied parameters; no geological
     interpretation is performed here. claim_state = INGESTED.
     """
-    derived: Dict[str, Any] = {}
-    flags: List[str] = []
+    derived: dict[str, Any] = {}
+    flags: list[str] = []
 
     # ── Derived metrics ──────────────────────────────────────────────────────
     if gas_rate_mmscfd and condensate_rate_stbd is not None:

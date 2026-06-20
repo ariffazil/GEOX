@@ -1,8 +1,9 @@
 import json
 import os
 import subprocess
+from datetime import UTC, datetime
+
 import requests
-from datetime import datetime, timezone
 
 SOT_PATH = "/opt/arifos/sites/arif-fazil.com/geox/status.json"
 SOT_DIR = os.path.dirname(SOT_PATH)
@@ -24,7 +25,7 @@ def get_api_health(url):
         return "unreachable"
 
 status_data = {
-    "timestamp": datetime.now(timezone.utc).isoformat(),
+    "timestamp": datetime.now(UTC).isoformat(),
     "seal": "DITEMPA BUKAN DIBERI",
     "services": {
         "arifosmcp": {

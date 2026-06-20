@@ -1,5 +1,6 @@
 from geox.geox_mcp.fastmcp_server import arifos_compute_risk
 
+
 def test_advisory_mode():
     print("--- TESTING SUNNAH: ADVISORY MODE ---")
     

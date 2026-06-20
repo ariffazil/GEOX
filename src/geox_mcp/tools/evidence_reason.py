@@ -789,6 +789,7 @@ async def _phase_full(
 
 async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[str, Any]:
     import yaml
+
     from geox_mcp.tools.basin import _normalize_name
 
     normalized = _normalize_name(basin_name)

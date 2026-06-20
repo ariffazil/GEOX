@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """GEOX ↔ arifOS Adapter Bus Contract
 DITEMPA BUKAN DIBERI
 
@@ -26,16 +27,16 @@ Status: SCAFFOLD — do not use in production
 """
 
 
-from pydantic import BaseModel, Field
-from typing import Optional
+
+from pydantic import BaseModel
 
 
 class AdapterBusEnvelope(BaseModel):
     """Message envelope for GEOX → arifOS tool calls."""
     tool_name: str
     arguments: dict
-    geox_substrate: Optional[str] = None
-    geox_scale: Optional[str] = None
-    geox_horizon: Optional[str] = None
+    geox_substrate: str | None = None
+    geox_scale: str | None = None
+    geox_horizon: str | None = None
     claim_tag: str = "UNKNOWN"
     f13_hold: bool = False

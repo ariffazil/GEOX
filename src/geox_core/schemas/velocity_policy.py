@@ -1,6 +1,8 @@
+
 from pydantic import BaseModel, Field
-from typing import Dict
-from geox_core.schemas.velocity_mapping import VelocityQCGate, VelocityFailureMode
+
+from geox_core.schemas.velocity_mapping import VelocityFailureMode, VelocityQCGate
+
 
 class VelocityACRiskPolicy(BaseModel):
     """
@@ -15,7 +17,7 @@ class VelocityACRiskPolicy(BaseModel):
     base_irreducible_risk: float = Field(default=0.10, description="The baseline epistemic uncertainty inherent in any velocity model.")
 
     # Penalty weights for missing QC gates
-    qc_penalty_map: Dict[VelocityQCGate, float] = Field(default_factory=lambda: {
+    qc_penalty_map: dict[VelocityQCGate, float] = Field(default_factory=lambda: {
         VelocityQCGate.MULTI_VELOCITY_CONVERGENCE: 0.15,
         VelocityQCGate.WELL_TIE_TOLERANCE: 0.20,
         VelocityQCGate.TOMOGRAPHY_SENSITIVITY: 0.10,
@@ -27,7 +29,7 @@ class VelocityACRiskPolicy(BaseModel):
     })
 
     # Penalty weights for identified failure modes
-    failure_mode_penalty_map: Dict[VelocityFailureMode, float] = Field(default_factory=lambda: {
+    failure_mode_penalty_map: dict[VelocityFailureMode, float] = Field(default_factory=lambda: {
         VelocityFailureMode.TOMOGRAPHIC_SMOOTHING: 0.25,
         VelocityFailureMode.ANISOTROPY_MISPARAMETERIZATION: 0.35,
         VelocityFailureMode.GAS_CLOUD_PUSHDOWN: 0.30,

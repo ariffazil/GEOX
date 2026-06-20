@@ -129,8 +129,9 @@ async def geox_coord_transform_tool(
             )
 
         try:
-            from geox_core.spatial.crs_reproject import validate_crs
             import pyproj
+
+            from geox_core.spatial.crs_reproject import validate_crs
 
             for label, crs in (("from_crs", from_crs), ("to_crs", to_crs)):
                 valid, message = validate_crs(crs, allow_unknown=allow_unknown_crs)

@@ -5,10 +5,11 @@ Assigns WGS84 (EPSG:4326) coordinates to extracted GSM maps.
 Requires: rasterio, numpy, pillow
 """
 
-import os
 import argparse
-from PIL import Image
+import os
+
 import numpy as np
+from PIL import Image
 
 try:
     import rasterio

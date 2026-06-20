@@ -142,6 +142,7 @@ async def _mode_anomalous_contrast(
       The governed envelope IS the transfer-stable encoding.
     """
     import numpy as np
+
     from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
 
     raw = await geox_anomalous_contrast_detector(

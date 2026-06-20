@@ -45,10 +45,8 @@ import hashlib
 import json
 import time
 from enum import Enum
-from typing import List, Optional, Tuple
 
 from pydantic import BaseModel, Field, field_validator, model_validator
-
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Enums
@@ -91,7 +89,7 @@ class AmplitudeZoneCharacter(str, Enum):
     OTHER = "other"
 
     @classmethod
-    def _missing_(cls, value: str) -> "AmplitudeZoneCharacter":
+    def _missing_(cls, value: str) -> AmplitudeZoneCharacter:
         return cls.OTHER
 
 
@@ -103,7 +101,7 @@ class AmplitudeZoneOrigin(str, Enum):
     UNKNOWN = "unknown"
 
     @classmethod
-    def _missing_(cls, value: str) -> "AmplitudeZoneOrigin":
+    def _missing_(cls, value: str) -> AmplitudeZoneOrigin:
         return cls.UNKNOWN
 
 
@@ -120,7 +118,7 @@ class DisplayUnits(str, Enum):
     UNKNOWN = "unknown"
 
     @classmethod
-    def _missing_(cls, value: str) -> "DisplayUnits":
+    def _missing_(cls, value: str) -> DisplayUnits:
         """Lenient: unknown unit strings become UNKNOWN. Per F2 TRUTH, an
         honest UNKNOWN is better than a hard fail. Logs a warning at
         the adapter layer."""
@@ -158,13 +156,13 @@ class ReflectorObservation(BaseModel):
     Pure geometry, no geological meaning yet."""
 
     reflector_id: str = Field(..., description="Stable identifier, e.g. 'R_top_seq_boundary'")
-    lateral_extent_inlines: Tuple[float, float] = Field(..., description="(start, end) inline range where reflector is visible")
-    twt_range_ms: Tuple[float, float] = Field(..., description="(min, max) TWT in ms where reflector is observed")
+    lateral_extent_inlines: tuple[float, float] = Field(..., description="(start, end) inline range where reflector is visible")
+    twt_range_ms: tuple[float, float] = Field(..., description="(min, max) TWT in ms where reflector is observed")
     amplitude_character: AmplitudeCharacter
     continuity: ReflectorContinuity
     polarity: PolarityConvention = PolarityConvention.UNKNOWN
     confidence: float = Field(..., ge=0.0, le=0.90, description="F7 HUMILITY hard cap at 0.90")
-    notes: Optional[str] = Field(None, description="Free-form VLM note, e.g. 'clinoform geometry visible'")
+    notes: str | None = Field(None, description="Free-form VLM note, e.g. 'clinoform geometry visible'")
 
 
 class FaultObservation(BaseModel):
@@ -172,37 +170,37 @@ class FaultObservation(BaseModel):
 
     fault_id: str = Field(..., description="Stable identifier, e.g. 'F_main_boundary'")
     type: FaultType = FaultType.UNKNOWN
-    lateral_extent_inlines: Tuple[float, float]
-    twt_range_ms: Tuple[float, float]
-    strike_dip_deg: Optional[float] = Field(None, ge=0.0, le=90.0, description="Apparent dip")
-    throw_ms: Optional[float] = Field(None, description="Apparent vertical throw in ms TWT")
+    lateral_extent_inlines: tuple[float, float]
+    twt_range_ms: tuple[float, float]
+    strike_dip_deg: float | None = Field(None, ge=0.0, le=90.0, description="Apparent dip")
+    throw_ms: float | None = Field(None, description="Apparent vertical throw in ms TWT")
     confidence: float = Field(..., ge=0.0, le=0.90)
-    notes: Optional[str] = None
+    notes: str | None = None
 
 
 class AmplitudeZoneObservation(BaseModel):
     """A localized amplitude anomaly — bright spot, dim spot, polarity reversal."""
 
     zone_id: str
-    twt_range_ms: Tuple[float, float]
-    lateral_extent_inlines: Tuple[float, float]
+    twt_range_ms: tuple[float, float]
+    lateral_extent_inlines: tuple[float, float]
     character: AmplitudeZoneCharacter
     possible_origin: AmplitudeZoneOrigin = AmplitudeZoneOrigin.UNKNOWN
     confidence: float = Field(..., ge=0.0, le=0.90)
-    notes: Optional[str] = None
+    notes: str | None = None
 
 
 class AxisMetadata(BaseModel):
     """Coordinate system metadata extracted from the image header / axes.
     Critical for downstream physics checks."""
 
-    twt_range_ms: Tuple[float, float] = Field(..., description="(min, max) from vertical axis")
-    inline_range: Tuple[float, float] = Field(..., description="(min, max) from horizontal axis")
+    twt_range_ms: tuple[float, float] = Field(..., description="(min, max) from vertical axis")
+    inline_range: tuple[float, float] = Field(..., description="(min, max) from horizontal axis")
     polarity_convention: PolarityConvention = PolarityConvention.UNKNOWN
     display_units: DisplayUnits = DisplayUnits.UNKNOWN
     color_polarity: DisplayColorPolarity = DisplayColorPolarity.UNKNOWN
     confidence: float = Field(0.5, ge=0.0, le=0.90)
-    notes: Optional[str] = None
+    notes: str | None = None
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -222,7 +220,7 @@ class AcRiskComponents(BaseModel):
     u_phys: float = Field(..., ge=0.0, le=1.0, description="Physical model uncertainty")
     d_transform: float = Field(..., ge=1.0, le=3.0, description="Transform stack distortion (multiplicative)")
     b_cog: float = Field(0.79, ge=0.0, le=1.0, description="Cognitive bias exposure")
-    transform_stack: List[str] = Field(default_factory=list, description="F4 CLARITY: each transform applied")
+    transform_stack: list[str] = Field(default_factory=list, description="F4 CLARITY: each transform applied")
     multi_view_passed: bool = Field(False, description="True if cross-view consistency check passed")
     physics_validated: bool = Field(False, description="True if reconciled with underlying SEG-Y / well data")
 
@@ -270,23 +268,23 @@ class PerceptualInventory(BaseModel):
     inventory_id: str = Field(..., description="Stable id, e.g. inv_<sha256[:12]>")
     image_path: str = Field(..., description="Absolute path to source image")
     input_image_sha256: str = Field(..., description="SHA256 of source image bytes (F1 AMANAH identity)")
-    reflectors: List[ReflectorObservation] = Field(default_factory=list)
-    faults: List[FaultObservation] = Field(default_factory=list)
-    amplitude_zones: List[AmplitudeZoneObservation] = Field(default_factory=list)
+    reflectors: list[ReflectorObservation] = Field(default_factory=list)
+    faults: list[FaultObservation] = Field(default_factory=list)
+    amplitude_zones: list[AmplitudeZoneObservation] = Field(default_factory=list)
     axis_metadata: AxisMetadata
     global_assessment: str = Field(..., description="VLM's natural-language summary")
     overall_confidence: float = Field(..., ge=0.0, le=0.90)
     model_id: str = Field(..., description="e.g. 'minimax-M3-vision'")
     prompt_id: str = Field(..., description="Hash of the prompt used to elicit the VLM")
     raw_response_hash: str = Field(..., description="SHA256 of raw VLM response text")
-    transform_stack: List[str] = Field(default_factory=list)
+    transform_stack: list[str] = Field(default_factory=list)
     ac_risk: AcRiskComponents
     verdict: VisionVerdict = VisionVerdict.INTERPRETATION
     human_review_required: bool = Field(False, description="F13: True if AC_Risk > 0.5 or any fault/HC observation")
     timestamp_unix: float = Field(default_factory=time.time, description="ISO 8601 / Unix epoch")
 
     @model_validator(mode="after")
-    def _enforce_governance(self) -> "PerceptualInventory":
+    def _enforce_governance(self) -> PerceptualInventory:
         """Cross-floor consistency checks at validation time."""
         # F7 HUMILITY hard cap (defense in depth)
         if self.overall_confidence > 0.90:
@@ -369,7 +367,7 @@ def sha256_text(text: str) -> str:
 
 def default_ac_risk_components(
     u_phys: float = 0.45,
-    transform_stack: Optional[List[str]] = None,
+    transform_stack: list[str] | None = None,
     multi_view_passed: bool = False,
     physics_validated: bool = False,
 ) -> AcRiskComponents:

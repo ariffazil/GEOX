@@ -2,24 +2,29 @@
 GEOX EarthVolume — 3D Seismic Cube + Prospect Volumetrics + physics9
 OMEGA Improved: stripped cartoon, real geox_3d, real physics9, real AC_Risk.
 """
-import streamlit as st
+import os
+import sys
+
 import numpy as np
 import plotly.graph_objects as go
-import sys, os
-from typing import Dict
+import streamlit as st
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from geox_core.core.geox_3d import generate_3d_seismic_cube, extract_horizon_from_cube, compute_coherence_volume
-from geox_core.core.geox_25d import probe_3d_cube_at_section
+from geox_core.core.geox_3d import generate_3d_seismic_cube
 from geox_core.core.physics9 import (
-    Physics9State, compute_earth_material_catalog, anomaly_contrast_theory,
-    forward_physics9, build_lithology_model, metabolic_loop, EARTH_MATERIAL_CATALOG
+    EARTH_MATERIAL_CATALOG,
+    Physics9State,
+    anomaly_contrast_theory,
+    build_lithology_model,
+    compute_earth_material_catalog,
+    metabolic_loop,
 )
+
 
 def compute_volumetrics(area_km2: float, thickness_m: float,
                        phi_eff: float, sw_res: float,
-                       bo: float = 1.2, rf: float = 0.30) -> Dict:
+                       bo: float = 1.2, rf: float = 0.30) -> dict:
     bulk = area_km2 * 1e6 * thickness_m
     pore = bulk * phi_eff
     hcpv = pore * (1 - sw_res)

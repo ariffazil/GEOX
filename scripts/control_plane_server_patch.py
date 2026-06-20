@@ -22,8 +22,9 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-from datetime import datetime, timezone
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any
 
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -85,7 +86,7 @@ def rt1_guard_middleware(get_response: Callable):
             return await get_response(request)
 
         # Only guard /mcp tool calls
-        if not request.url.path.rstrip("/") in ("/mcp", "/mcp/"):
+        if request.url.path.rstrip("/") not in ("/mcp", "/mcp/"):
             return await get_response(request)
 
         try:
@@ -160,7 +161,7 @@ def rt3_check_irreversible(tool_name: str, arguments: dict[str, Any]) -> tuple[b
     return True, ""
 
 
-def rt3_guard(tool_name: str, arguments: dict[str, Any]) -> Optional[JSONResponse]:
+def rt3_guard(tool_name: str, arguments: dict[str, Any]) -> JSONResponse | None:
     """
     RT-3 guard for tool handlers.
 
@@ -204,7 +205,7 @@ def compute_registry_hash() -> str:
                 "epoch": "GEOX-11TOOLS-v0.3",
                 "tools": canonical_sorted,
                 "count": len(canonical_sorted),
-                "computed_at": datetime.now(timezone.utc).isoformat(),
+                "computed_at": datetime.now(UTC).isoformat(),
             },
             sort_keys=True,
         )

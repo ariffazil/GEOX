@@ -6,18 +6,17 @@
 from __future__ import annotations
 
 from contracts.enums import (
-    Dimension,
-    Verdict,
-    FloorStatus,
-    Runtime,
-    Transport,
-    ToolCategory,
-    ProspectVerdict,
-    ClaimTag,
     CONSTITUTIONAL_FLOORS,
     SEAL,
+    ClaimTag,
+    Dimension,
+    FloorStatus,
+    ProspectVerdict,
+    Runtime,
+    ToolCategory,
+    Transport,
+    Verdict,
 )
-
 from contracts.enums.statuses import CANONICAL_TOOLS
 
 __all__ = [

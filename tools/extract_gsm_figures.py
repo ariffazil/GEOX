@@ -5,9 +5,9 @@ Extracts pages from GSM-702001 PDF as high-resolution images for
 GEOX Seismic Viewer and Basin Map Explorer integration.
 """
 
-import os
-import json
 import argparse
+import json
+import os
 import sys
 
 try:

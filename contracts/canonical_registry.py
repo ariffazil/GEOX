@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
-
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX CANONICAL PUBLIC TOOLS
 # SOT: src/geox_mcp/registry.py
@@ -9,7 +7,7 @@ from typing import Any, Dict, List
 # 40 canonical tools. Physics-9 foundation. Evidence-only.
 # ═══════════════════════════════════════════════════════════════════════════════
 
-CANONICAL_PUBLIC_TOOLS: List[str] = [
+CANONICAL_PUBLIC_TOOLS: list[str] = [
     # Data witnessing
     "geox_data_ingest_bundle",
     "geox_data_qc_bundle",
@@ -67,7 +65,7 @@ CANONICAL_PUBLIC_TOOLS: List[str] = [
     "geox_query_macrostrat",
 ]
 
-GEOX_TOOL_MANIFEST: List[Dict[str, str]] = [
+GEOX_TOOL_MANIFEST: list[dict[str, str]] = [
     {"name": "geox_data_ingest_bundle", "axis": "observe", "expose": "True"},
     {"name": "geox_data_qc_bundle", "axis": "verify", "expose": "True"},
     {"name": "geox_dst_ingest_test", "axis": "observe", "expose": "True"},
@@ -111,7 +109,7 @@ GEOX_TOOL_MANIFEST: List[Dict[str, str]] = [
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
-LEGACY_ALIAS_MAP: Dict[str, str] = {
+LEGACY_ALIAS_MAP: dict[str, str] = {
     "geox_deviation_survey_inspect": "geox_header_inspect",
     "geox_tops_inspect": "geox_header_inspect",
     "geox_seismic_inspect": "geox_header_inspect",

@@ -137,7 +137,6 @@ async def geox_data_qc_bundle(
         return enrich_envelope_with_metabolic(envelope, "geox_data_qc_bundle")
 
     # ── Mode-specific QC ─────────────────────────────────────────────────
-    import sys
 
     import numpy as np
 
@@ -287,7 +286,6 @@ async def geox_data_qc_bundle(
         # outlier density, we surface this as a SAF-grounded warning and
         # downgrade the claim_state to QC_VERIFIED_WITH_WARNINGS.
         try:
-            import sys
 
             _arifos_kernel = os.environ.get("ARIFOS_HOME", "/root") + "/arifOS"
             import os as _os_saf

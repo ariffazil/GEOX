@@ -19,7 +19,6 @@ from __future__ import annotations
 import json
 import logging
 import os
-from functools import cached_property
 from typing import Any
 
 from starlette.requests import Request
