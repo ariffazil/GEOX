@@ -1008,6 +1008,13 @@ async def legacy_mcp_handler(request):
                 status_code=403,
             )
 
+        # Import with explicit system path — script lives in scripts/ dir
+        import sys as _sys
+        _scripts_path = str(
+            (Path(__file__).resolve().parents[2] / "scripts").resolve()
+        )
+        if _scripts_path not in _sys.path:
+            _sys.path.insert(0, _scripts_path)
         from control_plane_server_patch import rt3_guard
 
         rt3_blocked = rt3_guard(name, args)
