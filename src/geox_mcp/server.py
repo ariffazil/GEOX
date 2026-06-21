@@ -243,8 +243,30 @@ def compose_geox_servers() -> None:
 
     # Assert canonical count across all composed servers
     # 2026-06-14: 37 -> 40 (added basin, lit ingest, abstraction guard, query intake, literature)
-    if len(CANONICAL_PUBLIC_TOOLS) != 40:
-        raise ValueError(f"F0_CONSTITUTION_BREACH: Expected 40 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}")
+    # 2026-06-21: 40 -> 47 (W2-W12 FORGE — 7 new canonical tools: 3 doctrine + 1 Prithvi + 1 gravity/mag + 2 open data)
+    # 2026-06-21: 47 -> 50 (W13+ Phase C FORGE — 3 new canonical tools for multi-physics Earth Witness):
+    #   - geox_joint_inversion   (fuses N modalities → one Physics9State per cell)
+    #   - geox_mt_forward        (1D CSEM/MT apparent resistivity + phase — fills the ρₑ gap)
+    #   - geox_biostrat_constraint (time-facies admissibility — φ, Vp/Vs, T, P constraints)
+    # Full W2-W13+ tool list:
+    #   - geox_doctrine_assumption_register (W2-W4 Gap X)
+    #   - geox_doctrine_anti_beautiful_one (W2-W4 Gap 3)
+    #   - geox_doctrine_godel_review        (W2-W4 Gap 5)
+    #   - geox_prithvi_eo_inference         (W5-W8 Phase A first wave)
+    #   - geox_gravity_magnetic_forward     (W9-W12 Phase B first wave)
+    #   - geox_emag2_ingest                 (W9-W12 open data)
+    #   - geox_icgem_models                 (W9-W12 open data)
+    #   - geox_joint_inversion              (W13+ Phase C — multi-physics)
+    #   - geox_mt_forward                   (W13+ Phase C — CSEM/MT)
+    #   - geox_biostrat_constraint          (W13+ Phase C — biostrat)
+    # F13 SOVEREIGN authorized; AGENTS.md §Authority 888_HOLD gate satisfied.
+    _EXPECTED_CANONICAL = 54
+    if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
+        raise ValueError(
+            f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
+            f"got {len(CANONICAL_PUBLIC_TOOLS)}. If this expansion is intentional, "
+            f"update _EXPECTED_CANONICAL in server.py with a forge-state comment."
+        )
     logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 4 domains")
 
 
@@ -257,6 +279,306 @@ register_ui_applets(mcp)
 # ── Register legacy alias tools that FastMCP can route ────────────────────
 # FastMCP intercepts tool calls before the legacy_mcp_handler sees them.
 # Register thin aliases so FastMCP can route geox_query_macrostrat → geox_basin_profile.
+
+
+# ── W2-W4 FORGE — Doctrine layer tool registrations ────────────────────────
+@mcp.tool(name="geox_doctrine_assumption_register")
+async def _doctrine_assumption_register(
+    introduced_by: str,
+    rung_origin: int,
+    description: str,
+    parent_assumption_id: str | None = None,
+    inherited_from: str | None = None,
+    epistemic_label: str = "DER",
+) -> dict:
+    """Register an assumption in the GEOX doctrine lineage (Gap X)."""
+    from geox_mcp.tools.doctrine import (
+        AssumptionRegisterRequest, geox_doctrine_assumption_register,
+    )
+    req = AssumptionRegisterRequest(
+        introduced_by=introduced_by,
+        rung_origin=rung_origin,
+        description=description,
+        parent_assumption_id=parent_assumption_id,
+        inherited_from=inherited_from,
+        epistemic_label=epistemic_label,
+    )
+    return (await geox_doctrine_assumption_register(req)).model_dump(mode="json")
+
+
+@mcp.tool(name="geox_doctrine_anti_beautiful_one")
+async def _doctrine_anti_beautiful_one(
+    text: str,
+    grounding_evidence_count: int = 0,
+    grounding_evidence_rungs: list[int] | None = None,
+    threshold: float = 1.5,
+    include_decomposition: bool = True,
+) -> dict:
+    """Run Anti-Beautiful-One audit on a claim (Gap 3)."""
+    from geox_mcp.tools.doctrine import (
+        BeautyAuditRequest, geox_doctrine_anti_beautiful_one,
+    )
+    req = BeautyAuditRequest(
+        text=text,
+        grounding_evidence_count=grounding_evidence_count,
+        grounding_evidence_rungs=list(grounding_evidence_rungs or []),
+        threshold=threshold,
+        include_decomposition=include_decomposition,
+    )
+    return (await geox_doctrine_anti_beautiful_one(req)).model_dump(mode="json")
+
+
+@mcp.tool(name="geox_doctrine_godel_review")
+async def _doctrine_godel_review(
+    claim_id: str = "",
+    action: str = "review",
+    void_reason: str | None = None,
+    rung: int | None = None,
+    description: str | None = None,
+    depends_on_assumption_ids: list[str] | None = None,
+) -> dict:
+    """Review / seal / void a claim via the Gödel Wall (Gap 5).
+
+    If `claim_id` is provided, action operates on the existing claim
+    (review / seal / void). Otherwise, register a new claim and run review.
+    """
+    from geox_mcp.tools.doctrine import (
+        GodelClaimRequest, GodelSealRequest,
+        geox_doctrine_godel_review, geox_doctrine_godel_register_claim,
+    )
+    if not claim_id:
+        if rung is None or description is None:
+            return {"ok": False, "error": "rung and description required when claim_id is absent"}
+        reg_req = GodelClaimRequest(
+            rung=rung,
+            description=description,
+            depends_on_assumption_ids=list(depends_on_assumption_ids or []),
+        )
+        reg = await geox_doctrine_godel_register_claim(reg_req)
+        if not reg.ok:
+            return reg.model_dump(mode="json")
+        # Pull the new claim_id out of the registration response
+        claim_id = reg.claim.get("claim_id", "") if reg.claim else ""
+    req = GodelSealRequest(claim_id=claim_id, action=action, void_reason=void_reason)
+    return (await geox_doctrine_godel_review(req)).model_dump(mode="json")
+
+
+# ── W5-W8 FORGE — Phase A first wave: Foundation model backing engine ────────
+@mcp.tool(name="geox_prithvi_eo_inference")
+async def _prithvi_eo_inference(
+    tile_id: str,
+    task: str = "land_cover",
+    bands: list[str] | None = None,
+    time_range_start: str = "2024-01-01",
+    time_range_end: str = "2024-12-31",
+    cloud_cover_max: float = 0.20,
+    source_uri: str | None = None,
+) -> dict:
+    """Run Prithvi-EO-2.0 (NASA-IMPACT/IBM) on an HLS tile. Mock mode by default."""
+    from geox_mcp.tools.earth_obs import (
+        PrithviEOInferenceRequest, geox_prithvi_eo_inference,
+    )
+    req = PrithviEOInferenceRequest(
+        tile_id=tile_id,
+        bands=tuple(bands) if bands else ("B02", "B03", "B04", "B8A", "B11", "B12"),
+        time_range=(time_range_start, time_range_end),
+        cloud_cover_max=cloud_cover_max,
+        task=task,  # type: ignore[arg-type]
+        source_uri=source_uri,
+    )
+    return (await geox_prithvi_eo_inference(req)).model_dump(mode="json")
+
+
+# ── W9-W12 FORGE — Phase B first wave: Nonseismic geophysics + open data ────
+@mcp.tool(name="geox_gravity_magnetic_forward")
+async def _gravity_magnetic_forward(
+    survey_type: str = "gravity",
+    easting_m: list[float] | None = None,
+    northing_m: list[float] | None = None,
+    prisms: list[dict] | None = None,
+    magnetization_a_m: float = 0.0,
+    field_declination_deg: float = 0.0,
+    field_inclination_deg: float = 0.0,
+) -> dict:
+    """Forward-model gravity or magnetic anomaly grid via HarmonIC (mock by default)."""
+    from geox_mcp.tools.geophysics_nonseismic import (
+        GravityMagneticForwardRequest, geox_gravity_magnetic_forward,
+    )
+    req = GravityMagneticForwardRequest(
+        survey_type=survey_type,  # type: ignore[arg-type]
+        easting_m=tuple(easting_m) if easting_m else (0.0,),
+        northing_m=tuple(northing_m) if northing_m else (0.0,),
+        prisms=list(prisms or []),
+        magnetization_a_m=magnetization_a_m,
+        field_declination_deg=field_declination_deg,
+        field_inclination_deg=field_inclination_deg,
+    )
+    return (await geox_gravity_magnetic_forward(req)).model_dump(mode="json")
+
+
+@mcp.tool(name="geox_emag2_ingest")
+async def _emag2_ingest(force: bool = False) -> dict:
+    """Fetch EMAG2v3 global magnetic anomaly grid (offline-safe stub by default)."""
+    from geox_mcp.tools.geophysics_nonseismic import (
+        EMAG2FetchRequest, geox_emag2_ingest,
+    )
+    req = EMAG2FetchRequest(force=force)
+    return (await geox_emag2_ingest(req)).model_dump(mode="json")
+
+
+@mcp.tool(name="geox_icgem_models")
+async def _icgem_models() -> dict:
+    """List ICGEM (GFZ Potsdam) global gravity field models."""
+    from geox_mcp.tools.geophysics_nonseismic import (
+        ICGEMListRequest, geox_icgem_models,
+    )
+    return (await geox_icgem_models(ICGEMListRequest())).model_dump(mode="json")
+
+
+# ── W13+ FORGE — Phase C: Multi-physics Earth Witness (joint inversion + CSEM/MT + biostrat) ──
+@mcp.tool(name="geox_joint_inversion")
+async def _joint_inversion(
+    observations: list[dict] | None = None,
+    prior: dict | None = None,
+    max_iter: int = 50,
+    tolerance: float = 1e-3,
+) -> dict:
+    """Joint multi-physics inversion: fuse N modalities into one Physics9State per cell.
+
+    Each observation: {modality, value, uncertainty?, weight?, depth_m?}.
+    Supported modalities: seismic_impedance, seismic_vpvs, gravity, magnetic, mt_resistivity.
+    Enforces Earth-bounds on every dial; output is graded RAW or AAA.
+    """
+    from geox_mcp.tools.multi_physics import (
+        JointInversionRequest, geox_joint_inversion,
+    )
+    from geox_mcp.tools.multi_physics import ModalityObsSchema as _ModObs
+    obs = [_ModObs(**o) for o in (observations or [])]
+    req = JointInversionRequest(
+        observations=obs, prior=prior,
+        max_iter=max_iter, tolerance=tolerance,
+    )
+    return (await geox_joint_inversion(req)).model_dump(mode="json")
+
+
+@mcp.tool(name="geox_mt_forward")
+async def _mt_forward(
+    layers: list[dict] | None = None,
+    frequencies_hz: list[float] | None = None,
+) -> dict:
+    """1D CSEM/MT forward: apparent resistivity + phase at each frequency."""
+    from geox_mcp.tools.multi_physics import (
+        MTForwardRequestSchema, geox_mt_forward,
+    )
+    req = MTForwardRequestSchema(
+        layers=layers or [],
+        frequencies_hz=tuple(frequencies_hz) if frequencies_hz else (0.001, 0.01, 0.1, 1.0, 10.0, 100.0),
+    )
+    return (await geox_mt_forward(req)).model_dump(mode="json")
+
+
+@mcp.tool(name="geox_biostrat_constraint")
+async def _biostrat_constraint(
+    state: dict,
+    age_ma: float,
+) -> dict:
+    """Biostratigraphic time-facies admissibility check for a Physics9State cell.
+
+    Returns zone name, admissible materials, and consistency verdict.
+    """
+    from geox_mcp.tools.multi_physics import (
+        BiostratRequest, geox_biostrat_constraint,
+    )
+    req = BiostratRequest(state=state, age_ma=age_ma)
+    return (await geox_biostrat_constraint(req)).model_dump(mode="json")
+
+
+# ── W13+ FORGE — Phase C: PINN-style 1D seismic inversion (Faust + Gardner prior) ──
+@mcp.tool(name="geox_seismic_inversion")
+async def _seismic_inversion(
+    reflectivity: list[float] | None = None,
+    sample_interval_s: float = 0.002,
+    initial_impedance: float = 7.0e6,
+    depth_top_m: float = 0.0,
+    resistivity_ohm_m: list[float] | None = None,
+) -> dict:
+    """1D post-stack seismic inversion under PINN-style physics constraints.
+
+    Recovers acoustic impedance, Vp, density via recursive inversion +
+    Faust velocity prior + Gardner density prior. Enforces Physics9 bounds.
+    """
+    from geox_mcp.tools.seismic_inversion import (
+        SeismicInversionRequestSchema, geox_seismic_inversion,
+    )
+    req = SeismicInversionRequestSchema(
+        reflectivity=tuple(reflectivity) if reflectivity else (),
+        sample_interval_s=sample_interval_s,
+        initial_impedance=initial_impedance,
+        depth_top_m=depth_top_m,
+        resistivity_ohm_m=tuple(resistivity_ohm_m) if resistivity_ohm_m else None,
+    )
+    return (await geox_seismic_inversion(req)).model_dump(mode="json")
+
+
+# ── W13+ FORGE — Phase C: Geomechanics (K, G, E, ν from Physics9State) ──
+@mcp.tool(name="geox_geomechanics")
+async def _geomechanics(state: dict) -> dict:
+    """Derive geomechanical moduli (K, G, E, ν, AI) from a Physics9State cell.
+
+    Returns all derived scalars + sanity flags + grade (RAW/AAA) + godel_wall.
+    """
+    from geox_mcp.tools.geomechanics import (
+        GeomechanicsRequest, geox_geomechanics,
+    )
+    return (await geox_geomechanics(GeomechanicsRequest(state=state))).model_dump(mode="json")
+
+
+# ── W13+ FORGE — Phase C: WELL → GEOX operator readiness gate ──
+@mcp.tool(name="geox_well_decision_class")
+async def _well_decision_class(
+    operator_id: str = "arif",
+    task_description: str | None = None,
+) -> dict:
+    """Read WELL organ state and return C1-C5 decision_class for joint inversion gating.
+
+    C1/C2: proceed strict; C3: proceed with flags; C4: defer non-critical;
+    C5: HOLD — no inversions allowed.
+    """
+    from geox_mcp.tools.integration_well import (
+        WellStateRequest, geox_well_decision_class,
+    )
+    req = WellStateRequest(operator_id=operator_id, task_description=task_description)
+    return (await geox_well_decision_class(req)).model_dump(mode="json")
+
+
+# ── W13+ FORGE — Phase C: GEOX → WEALTH STOIIP + ranking feed ──
+@mcp.tool(name="geox_wealth_feed")
+async def _wealth_feed(
+    cell_states: list[dict] | None = None,
+    areal_extent_m2: float = 1e6,
+    pay_zone_thickness_m: float = 50.0,
+    formation_volume_factor: float = 1.3,
+    water_saturation: float = 0.30,
+    oil_density_kg_m3: float = 850.0,
+    recovery_factor: float = 0.30,
+) -> dict:
+    """Feed WEALTH organ: STOIIP + P10/P50/P90 + ranking + ADVANCE/DEFER/REJECT verdict.
+
+    Lithology-aware: only Sandstone, Limestone, Dolomite count as producible.
+    """
+    from geox_mcp.tools.integration_wealth import (
+        WealthFeedRequest, geox_wealth_feed,
+    )
+    req = WealthFeedRequest(
+        cell_states=cell_states or [],
+        areal_extent_m2=areal_extent_m2,
+        pay_zone_thickness_m=pay_zone_thickness_m,
+        formation_volume_factor=formation_volume_factor,
+        water_saturation=water_saturation,
+        oil_density_kg_m3=oil_density_kg_m3,
+        recovery_factor=recovery_factor,
+    )
+    return (await geox_wealth_feed(req)).model_dump(mode="json")
 
 
 @mcp.tool(name="geox_query_macrostrat")
@@ -313,10 +635,10 @@ def _register_prefab_apps() -> None:
         with PrefabApp() as board:
             with Column(gap=4, css_class="p-4"):
                 Heading("GEOX Mission Board", level=2)
-                Text("Earth Intelligence — 40 canonical tools across 4 domains")
+                Text(f"Earth Intelligence — {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 4 domains")
                 Separator()
                 with Row(gap=6):
-                    Metric(label="Canonical Tools", value="40")
+                    Metric(label="Canonical Tools", value=str(len(CANONICAL_PUBLIC_TOOLS)))
                     Metric(label="Domains", value="4")
                     Metric(label="Status", value="SEAL")
                 Separator()

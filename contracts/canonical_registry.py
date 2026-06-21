@@ -3,8 +3,12 @@ from __future__ import annotations
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX CANONICAL PUBLIC TOOLS
 # SOT: src/geox_mcp/registry.py
-# Last verified: 2026-06-14
-# 40 canonical tools. Physics-9 foundation. Evidence-only.
+# Last verified: 2026-06-21
+# 54 canonical tools (W2-W13+ FORGE). Physics-9 foundation. Evidence-only.
+# +14 from W2-W13+: 3 doctrine + 1 Prithvi + 1 gravity/mag + 2 open data
+# + 3 multi-physics (joint inversion + CSEM/MT + biostrat) + 1 PINN
+# + 3 integration (geomechanics + WELL decision_class + WEALTH feed).
+# F13 SOVEREIGN authorized expansion (AGENTS.md §Authority).
 # ═══════════════════════════════════════════════════════════════════════════════
 
 CANONICAL_PUBLIC_TOOLS: list[str] = [
@@ -63,6 +67,24 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_vision_audit",
     # Macrostrat — dedicated client (replaces thin proxy alias)
     "geox_query_macrostrat",
+    # ── W2-W4 FORGE — Doctrine layer ──
+    "geox_doctrine_assumption_register",
+    "geox_doctrine_anti_beautiful_one",
+    "geox_doctrine_godel_review",
+    # ── W5-W8 FORGE — Phase A first wave: Foundation model as backing engine ──
+    "geox_prithvi_eo_inference",
+    # ── W9-W12 FORGE — Phase B first wave: Nonseismic geophysics + open data ──
+    "geox_gravity_magnetic_forward",
+    "geox_emag2_ingest",
+    "geox_icgem_models",
+    # ── W13+ FORGE — Phase C: Multi-physics Earth Witness ──
+    "geox_joint_inversion",
+    "geox_mt_forward",
+    "geox_biostrat_constraint",
+    "geox_seismic_inversion",  # 1D post-stack PINN-style seismic inversion
+    "geox_geomechanics",        # K, G, E, ν from Physics9State
+    "geox_well_decision_class", # WELL → GEOX operator readiness gate (C1-C5)
+    "geox_wealth_feed",         # GEOX → WEALTH STOIIP + ranking + verdict
 ]
 
 GEOX_TOOL_MANIFEST: list[dict[str, str]] = [
@@ -106,6 +128,24 @@ GEOX_TOOL_MANIFEST: list[dict[str, str]] = [
     {"name": "geox_vision_calibrate", "axis": "verify", "expose": "True"},
     {"name": "geox_vision_audit", "axis": "verify", "expose": "True"},
     {"name": "geox_query_macrostrat", "axis": "observe", "expose": "True"},
+    # W2-W4 — Doctrine layer
+    {"name": "geox_doctrine_assumption_register", "axis": "verify", "expose": "True"},
+    {"name": "geox_doctrine_anti_beautiful_one", "axis": "verify", "expose": "True"},
+    {"name": "geox_doctrine_godel_review", "axis": "verify", "expose": "True"},
+    # W5-W8 — Phase A
+    {"name": "geox_prithvi_eo_inference", "axis": "reason", "expose": "True"},
+    # W9-W12 — Phase B
+    {"name": "geox_gravity_magnetic_forward", "axis": "compute", "expose": "True"},
+    {"name": "geox_emag2_ingest", "axis": "observe", "expose": "True"},
+    {"name": "geox_icgem_models", "axis": "observe", "expose": "True"},
+    # W13+ — Multi-physics
+    {"name": "geox_joint_inversion", "axis": "reason", "expose": "True"},
+    {"name": "geox_mt_forward", "axis": "compute", "expose": "True"},
+    {"name": "geox_biostrat_constraint", "axis": "verify", "expose": "True"},
+    {"name": "geox_seismic_inversion", "axis": "reason", "expose": "True"},
+    {"name": "geox_geomechanics", "axis": "compute", "expose": "True"},
+    {"name": "geox_well_decision_class", "axis": "verify", "expose": "True"},
+    {"name": "geox_wealth_feed", "axis": "reason", "expose": "True"},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
