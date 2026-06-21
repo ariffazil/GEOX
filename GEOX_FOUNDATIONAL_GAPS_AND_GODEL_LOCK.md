@@ -205,3 +205,26 @@ This is the exact opposite of current AI.
 *Readable by: Arif · agents · systems*
 *VAULT999 hash-chained: YES*
 *Next review: Sprint 4 completion or 30 days, whichever comes first*
+
+
+---
+
+# GAP CLOSURE — 2026-06-21 Update
+
+All three WAJIB foundational gaps are now **CLOSED** as live MCP tools in the JUDGMENT lane:
+
+| Gap | Status | MCP Tool | Implementation |
+|-----|--------|----------|----------------|
+| **Gap X — Assumption Identity & Lineage** | ✅ CLOSED | `geox_doctrine_assumption_register` | `src/geox_core/assumption_lineage.py` (311 lines) — tracks `parent_assumption_id`, `rung_origin` (1-7), cascading falsification to descendants. 28 tests passing. |
+| **Gap 3 — Anti-Beautiful-One Detector** | ✅ CLOSED | `geox_doctrine_anti_beautiful_one` | `src/geox_core/anti_beautiful_one.py` (244 lines) — `beauty_overreach_score = certainty_gradient / grounding_gradient`. Forces decomposition when rhetoric outruns evidence. Threshold = 1.5. |
+| **Gap 5 — Formal Gödel Wall** | ✅ CLOSED | `geox_doctrine_godel_review` | `src/geox_core/godel_wall.py` (291 lines) — runtime hard-stop. Iron Law enforced. 4 states: KNOWN / UNKNOWN / UNDECIDABLE_YET / SEALED / VOID. |
+
+Sprint 4 sequence (`epistemic_runtime.py` → `contradiction_ontology.py` → `anti_beautiful_one.py` → `meta_epistemic_audit.py` → `assumption_lineage.py` → `godel_wall.py`) is **complete**. The doctrine layer is now wired into the canonical MCP surface (commit `657b9eb0`, pushed 2026-06-21).
+
+**Backlog (post-Gap-closure):**
+- **Gap 1 — Epistemic Metabolism Engine**: still SUNAT (runtime event log of rung transitions). Can be added when needed.
+- **Gap 2 — Contradiction Ontology**: 7-type enum now lives inside `godel_wall.py` (MEASUREMENT_CONFLICT, DATUM_CONFLICT, MODEL_PHYSICS_VIOLATION, INTERPRETATION_OBSERVATION_MISMATCH, NARRATIVE_OVERRUN, MISSING_GROUNDING, BEAUTIFUL_ONE_DRIFT). SUNAT for now.
+- **Gap 4 — Self-Audit Recursion Layer**: meta_epistemic_audit deferred — doctrine layer suffices for current 54-tool surface.
+
+---
+
