@@ -941,6 +941,13 @@ async def legacy_mcp_handler(request):
     params = payload.get("params", {})
     response_id = payload.get("id")
 
+    if method == "ping":
+        return JSONResponse({"jsonrpc": "2.0", "id": response_id, "result": {}})
+
+    if method == "notifications/initialized":
+        # No response required per MCP spec — client sent its initialized notice.
+        return JSONResponse({"jsonrpc": "2.0", "id": response_id, "result": {}})
+
     if method == "initialize":
         return JSONResponse({
             "jsonrpc": "2.0",
@@ -1059,7 +1066,10 @@ async def legacy_mcp_handler(request):
             }
         )
 
-    return JSONResponse({"error": "Method not found"}, status_code=404)
+    return JSONResponse(
+        {"jsonrpc": "2.0", "id": response_id, "error": {"code": -32601, "message": f"Method not found: {method}"}},
+        status_code=404,
+    )
 
 
 # ── Monkey-patch: Accept */* when json_response is enabled ──────────────────
