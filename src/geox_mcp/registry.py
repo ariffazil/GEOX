@@ -66,17 +66,38 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     # New macrostrat modes accessible via geox_basin_profile
     # macrostrat_lithologies, macrostrat_strat_names, macrostrat_intervals,
     # macrostrat_fossils, macrostrat_geologic_map, macrostrat_cache_warm
+    # ── W2-W4 FORGE — Doctrine layer (Gap X Assumption Lineage + Gap 3 Anti-Beautiful-One + Gap 5 Gödel Wall) ──
+    "geox_doctrine_assumption_register",
+    "geox_doctrine_anti_beautiful_one",
+    "geox_doctrine_godel_review",
+    # ── W5-W8 FORGE — Phase A first wave: Foundation model as backing engine (Prithvi-EO-2.0 NASA/IBM) ──
+    "geox_prithvi_eo_inference",
+    # ── W9-W12 FORGE — Phase B first wave: Nonseismic geophysics (gravity/magnetic + open data) ──
+    "geox_gravity_magnetic_forward",
+    "geox_emag2_ingest",
+    "geox_icgem_models",
+    # ── W13+ FORGE — Phase C: Multi-physics Earth Witness (joint inversion + CSEM/MT + biostrat) ──
+    "geox_joint_inversion",
+    "geox_mt_forward",
+    "geox_biostrat_constraint",
+    # ── W13+ FORGE — Phase C: Seismic Inversion (coloured / model-based / PINN) ──
+    "geox_seismic_inversion",
+    "geox_geomechanics",
+    "geox_well_decision_class",
+    "geox_wealth_feed",
 ]
 
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
-    # ── DISCOVERY LANE (5 tools) ── max_action_class: OBSERVE, no lease required
+    # ── DISCOVERY LANE (6 tools) ── max_action_class: OBSERVE, no lease required
     {"name": "geox_system_registry_status", "axis": "observe", "lane": "discovery", "expose": True},
     {"name": "geox_attribute_registry_list_tool", "axis": "observe", "lane": "discovery", "expose": True},
     {"name": "geox_basin_resolve", "axis": "observe", "lane": "discovery", "expose": True},
     {"name": "geox_query_intake", "axis": "observe", "lane": "discovery", "expose": True},
     {"name": "geox_query_macrostrat", "axis": "observe", "lane": "discovery", "expose": True},
+    # W9-W12 — open-data registry lookup (Phase B first wave)
+    {"name": "geox_icgem_models", "axis": "observe", "lane": "discovery", "expose": True},
 
-    # ── EVIDENCE LANE (13 tools) ── max_action_class: ANALYZE, no lease required
+    # ── EVIDENCE LANE (14 tools) ── max_action_class: ANALYZE, no lease required
     {"name": "geox_data_ingest_bundle", "axis": "observe", "lane": "evidence", "expose": True},
     {"name": "geox_data_qc_bundle", "axis": "verify", "lane": "evidence", "expose": True},
     {"name": "geox_dst_ingest_test", "axis": "observe", "lane": "evidence", "expose": True},
@@ -90,8 +111,10 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_volume_frame_tool", "axis": "observe", "lane": "evidence", "expose": True},
     {"name": "geox_vision_perceptual_inventory", "axis": "observe", "lane": "evidence", "expose": True},
     {"name": "geox_vision_calibrate", "axis": "verify", "lane": "evidence", "expose": True},
+    # W9-W12 — EMAG2v3 global magnetic anomaly grid ingest (Phase B first wave)
+    {"name": "geox_emag2_ingest", "axis": "observe", "lane": "evidence", "expose": True},
 
-    # ── REASONING LANE (17 tools) ── max_action_class: ANALYZE, lease + session required
+    # ── REASONING LANE (19 tools) ── max_action_class: ANALYZE, lease + session required
     {"name": "geox_subsurface_generate_candidates", "axis": "reason", "lane": "reasoning", "expose": True},
     {"name": "geox_subsurface_verify_integrity", "axis": "verify", "lane": "reasoning", "expose": True},
     {"name": "geox_seismic_compute", "axis": "reason", "lane": "reasoning", "expose": True},
@@ -109,13 +132,35 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_vision_audit", "axis": "verify", "lane": "reasoning", "expose": True},
     {"name": "geox_report_to_workflow", "axis": "reason", "lane": "reasoning", "expose": True},
     {"name": "geox_abstraction_guard", "axis": "verify", "lane": "reasoning", "expose": True},
+    # W5-W8 — Prithvi-EO-2.0 NASA/IBM foundation model (Phase A first wave)
+    {"name": "geox_prithvi_eo_inference", "axis": "reason", "lane": "reasoning", "expose": True},
+    # W9-W12 — Gravity + Magnetic forward model via HarmonIC (Phase B first wave)
+    {"name": "geox_gravity_magnetic_forward", "axis": "compute", "lane": "reasoning", "expose": True},
+    # W13+ — Phase C: Seismic Inversion (coloured / model-based / PINN)
+    {"name": "geox_seismic_inversion", "axis": "reason", "lane": "reasoning", "expose": True},
+    # W13+ — Phase C: MT 1D forward model
+    {"name": "geox_mt_forward", "axis": "compute", "lane": "reasoning", "expose": True},
+    # W13+ — Phase C: Biostratigraphic zonation constraint
+    {"name": "geox_biostrat_constraint", "axis": "reason", "lane": "reasoning", "expose": True},
 
-    # ── JUDGMENT LANE (5 tools) ── GOVERNED, lease + session + arifOS judge required
+    # ── JUDGMENT LANE (9 tools) ── GOVERNED, lease + session + arifOS judge required
     {"name": "geox_claim_create", "axis": "reason", "lane": "judgment", "expose": True},
     {"name": "geox_claim_validate", "axis": "verify", "lane": "judgment", "expose": True},
     {"name": "geox_claim_challenge", "axis": "reason", "lane": "judgment", "expose": True},
     {"name": "geox_claim_seal", "axis": "reason", "lane": "judgment", "expose": True},
     {"name": "geox_segy_export_tool", "axis": "observe", "lane": "judgment", "expose": True},
+    # W2-W4 — Doctrine layer (Gap X Assumption Lineage + Gap 3 Anti-Beautiful-One + Gap 5 Gödel Wall)
+    {"name": "geox_doctrine_assumption_register", "axis": "verify", "lane": "judgment", "expose": True},
+    {"name": "geox_doctrine_anti_beautiful_one", "axis": "verify", "lane": "judgment", "expose": True},
+    {"name": "geox_doctrine_godel_review", "axis": "verify", "lane": "judgment", "expose": True},
+    # W13+ — Phase C: Joint multi-physics inversion (GOVERNED — requires judge)
+    {"name": "geox_joint_inversion", "axis": "reason", "lane": "judgment", "expose": True},
+    # W13+ — Geomechanics (K, G, E, ν)
+    {"name": "geox_geomechanics", "axis": "compute", "lane": "reasoning", "expose": True},
+    # W13+ — WELL → GEOX operator readiness gate
+    {"name": "geox_well_decision_class", "axis": "verify", "lane": "judgment", "expose": True},
+    # W13+ — GEOX → WEALTH STOIIP + ranking feed
+    {"name": "geox_wealth_feed", "axis": "reason", "lane": "judgment", "expose": True},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
