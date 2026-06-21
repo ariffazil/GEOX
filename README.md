@@ -29,12 +29,14 @@ scope: /root/geox
 
 # GEOX — Earth Intelligence | Governed World Model
 
-> **40 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**
+> **54 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**  
+> **Multi-physics Earth Witness** — seismic + gravity + magnetic + CSEM/MT + biostrat → one Physics9State per cell  
+> **Doctrine-wrapped** — Gap X Assumption Lineage, Gap 3 Anti-Beautiful-One, Gap 5 Gödel Wall live
 
-GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, and stratigraphic interpretation — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
+GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, stratigraphic interpretation, **multi-physics joint inversion (Physics9), CSEM/MT, geomechanics, and WELL/WEALTH integration** — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
 
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![MCP Tools](https://img.shields.io/badge/MCP-40%20canonical%20tools-10b981)](src/geox_mcp/server.py)
+[![MCP Tools](https://img.shields.io/badge/MCP-54%20canonical%20tools-10b981)](src/geox_mcp/server.py)
 [![Organ](https://img.shields.io/badge/organ-EARTH-f59e0b)](FEDERATION_CONTRACT.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-ef4444?logo=gnu)](LICENSE)
 [![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
@@ -162,8 +164,8 @@ curl http://127.0.0.1:8081/health
 # Public (Cloudflare Tunnel)
 curl https://geox.arif-fazil.com/health
 
-# Expected response:
-# {"status":"healthy","service":"geox-unified","canonical_tools":39,...}
+# Expected response (current as of W13+ FORGE):
+# {"status":"healthy","service":"geox-unified","canonical_tools":54,"git_version":"geox-657b9eb0",...}
 ```
 
 ### 2.5 Build & Test
@@ -179,9 +181,20 @@ make forge        # security-audit (Trivy + Semgrep + Gitleaks + Ruff)
 
 ---
 
-## 3. FULL CAPABILITY MAP — 39 CANONICAL TOOLS
+## 3. FULL CAPABILITY MAP — 54 CANONICAL TOOLS
 
-All tools are available via MCP at `https://geox.arif-fazil.com/mcp` (HTTP/SSE) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, and `dim_spot_flag` on every output envelope.
+All tools are available via MCP at `https://geox.arif-fazil.com/mcp` (HTTP/SSE) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, `dim_spot_flag`, `epistemic_provenance` (rung 1-7 + grounding source), `ml_provenance` (FM backings), and `godel_wall` verdict on every output envelope.
+
+**Four-lane organ governance** (mirrored in `src/geox_mcp/registry.py`):
+
+| Lane | Max Authority | Lease | Session | Tools |
+|------|--------------|-------|---------|-------|
+| **DISCOVERY** (6) | OBSERVE | No | No | system_registry_status, attribute_registry, basin_resolve, query_intake, query_macrostrat, **icgem_models** |
+| **EVIDENCE** (14) | ANALYZE | No | No | data_ingest, data_qc, dst_ingest, header_inspect, las_inspect, segy_inspect, evidence_discover, evidence_attach, literature_ingest, fault_stick, volume_frame, vision_perceptual, vision_calibrate, **emag2_ingest** |
+| **REASONING** (21) | ANALYZE | Yes | Yes | subsurface_generate, subsurface_verify, seismic_compute, seismic_attribute, sequence_interpret, evidence_reason, prospect_evaluate, map_context, horizon_contrast, coord_transform, blockspace, blend_volume, basin_profile, vision_minimax, vision_audit, report_to_workflow, abstraction_guard, **prithvi_eo_inference**, **gravity_magnetic_forward**, **mt_forward**, **biostrat_constraint**, **seismic_inversion** |
+| **JUDGMENT** (13) | GOVERNED | Yes | Yes | claim_create, claim_validate, claim_challenge, claim_seal, segy_export, **doctrine_assumption_register**, **doctrine_anti_beautiful_one**, **doctrine_godel_review**, **joint_inversion**, **geomechanics**, **well_decision_class**, **wealth_feed** |
+
+**14 new tools added in W₂-W₁₃+ FORGE (2026-06-21)** — 3 doctrine (Gap X/3/5), 1 foundation model (Prithvi-EO-2.0), 3 nonseismic+open data (HarmonIC + EMAG2v3 + ICGEM), 4 multi-physics (joint + MT + biostrat + PINN), 3 integration (geomechanics + WELL gate + WEALTH feed). Total: **40 → 54 canonical tools**.
 
 ### 3.1 Data Ingestion & Quality Control
 
@@ -266,6 +279,56 @@ All tools are available via MCP at `https://geox.arif-fazil.com/mcp` (HTTP/SSE) 
 | 37 | `geox_abstraction_guard` | Evaluate non-geological questions and enforce ontology guards. |
 | 38 | `geox_report_to_workflow` | Given a discovered report and user intent, produce safe GEOX workflow steps. |
 | 39 | `geox_system_registry_status` | Discovery of canonical tools, health, and contract epoch. F2 Truth: the registry must not tell lies about what is callable. |
+
+---
+
+### 3.10 W2-W4 Doctrine Layer — Gap X / 3 / 5 (NEW 2026-06-21)
+
+| # | Tool | Description |
+|---|------|-------------|
+| 40 | `geox_doctrine_assumption_register` | Gap X (WAJIB) — register an assumption in the GEOX reasoning lineage. Tracks `parent_assumption_id`, `rung_origin` (1-7), `falsified_at`, cascading falsification to descendants. |
+| 41 | `geox_doctrine_anti_beautiful_one` | Gap 3 (WAJIB) — `beauty_overreach_score = certainty_gradient / grounding_gradient`. If rhetoric outruns evidence, forces decomposition before SEAL. |
+| 42 | `geox_doctrine_godel_review` | Gap 5 (WAJIB) — runtime hard-stop. Iron Law: lower rungs always beat higher rungs. Returns KNOWN / UNKNOWN / UNDECIDABLE_YET / VOID. |
+
+### 3.11 W5-W8 Phase A — Foundation Model as Backing Engine (NEW 2026-06-21)
+
+| # | Tool | Description |
+|---|------|-------------|
+| 43 | `geox_prithvi_eo_inference` | Prithvi-EO-2.0 (NASA-IMPACT + IBM, HuggingFace). Earth observation FM trained on 4.2M HLS time series. Tasks: flood mapping, burn scars, land cover, multi-temporal crop, scene reasoning. Mock backend by default; live requires `terratorch` + GPU + 888_HOLD. |
+
+### 3.12 W9-W12 Phase B — Nonseismic Geophysics + Open Data (NEW 2026-06-21)
+
+| # | Tool | Description |
+|---|------|-------------|
+| 44 | `geox_gravity_magnetic_forward` | Forward-model Bouguer / TMI anomaly grids via Fatiando HarmonIC. Adapters for gravity + magnetic prism superposition. |
+| 45 | `geox_emag2_ingest` | Fetch EMAG2v3 global magnetic anomaly grid (NOAA NCEI, 228 MB TIFF, 2-arc-min resolution). Cached at `/root/.cache/geox/emag2/`. Offline stub by default. |
+| 46 | `geox_icgem_models` | List ICGEM (GFZ Potsdam) global gravity field models: EIGEN-6C4, EGM2008, XGM2019. Citation + source URI included. |
+
+### 3.13 W13+ Phase C — Multi-Physics Earth Witness (NEW 2026-06-21)
+
+| # | Tool | Description |
+|---|------|-------------|
+| 47 | `geox_joint_inversion` | **Strategic centerpiece.** Fuse N modalities (seismic impedance, Vp/Vs, gravity, magnetic, MT resistivity) → one Physics9State per cell. IRLS solver with Earth-bounds clipping. Output graded RAW / AAA. |
+| 48 | `geox_mt_forward` | 1D CSEM/MT forward via Wait's recursion. Returns apparent resistivity (Ω·m) + phase (deg). **Fills the missing ρₑ discipline per strategic vision.** |
+| 49 | `geox_biostrat_constraint` | Biostrat time-facies admissibility check. 6 built-in zones (Quaternary, Miocene Reef, Cretaceous Shale, Jurassic Sabkha, Carboniferous Coal, Precambrian Basement). |
+| 50 | `geox_seismic_inversion` | 1D post-stack PINN-style seismic inversion. Recursive impedance + Faust velocity prior + Gardner density prior. Enforces Physics9 bounds. |
+
+### 3.14 W13+ Phase C — Federation Integration Layer (NEW 2026-06-21)
+
+| # | Tool | Description |
+|---|------|-------------|
+| 51 | `geox_geomechanics` | Derive K, G, E, ν, AI, Vp/Vs from a Physics9State. Sanity-flagged for negative moduli. Godel verdict on demand. |
+| 52 | `geox_well_decision_class` | **WELL → GEOX gate.** Reads operator fatigue via WELL organ; returns C1-C5 decision_class gating joint inversion aggressiveness. C5 = VOID (HOLD). |
+| 53 | `geox_wealth_feed` | **GEOX → WEALTH feed.** STOIIP (P10/P50/P90) + lithology-aware ranking + ADVANCE / DEFER / REJECT verdict. Ready for `wealth_compute_npv` consumption. |
+| 54 | (reserved — see contracts/canonical_registry.py for the live count) | — |
+
+### 3.15 Quick Reference: Old vs New Tool Surface
+
+**Before W2-W13+ FORGE (40 canonical tools):**
+- DISCOVERY 5 · EVIDENCE 13 · REASONING 17 · JUDGMENT 5
+
+**After W2-W13+ FORGE (54 canonical tools):**
+- DISCOVERY 6 (+icgem_models) · EVIDENCE 14 (+emag2_ingest) · REASONING 21 (+prithvi, +gravity_mag, +mt, +biostrat, +seismic_inv) · JUDGMENT 13 (+3 doctrine, +joint_inversion, +geomechanics, +well_decision_class, +wealth_feed)
 
 ---
 
@@ -420,7 +483,10 @@ geox/
 ├── docs/                                 ← Documentation
 │   ├── GEOX_NOBEL_EUREKA_CATALOGUE.md    ← 6 Nobel-grade eurekas, code-mapped
 │   ├── TOAC_CANON.md                     ← Theory of Anomalous Contrast
-│   └── LEM_ROADMAP.md                    ← Large Earth Model roadmap
+│   ├── LEM_ROADMAP.md                    ← Large Earth Model roadmap
+│   ├── MCP_TOOL_REFERENCE.md             ← Full 54-tool reference (W13+)
+│   ├── AGENTICS_INTEGRATION.md           ← WELL/WEALTH/arifOS federation wiring
+│   └── PHYSICS9_EARTH_WITNESS.md         ← Multi-physics joint inversion (Phase C)
 │
 ├── tests/                                ← 60+ test files
 │   ├── unit/                             ← Unit tests

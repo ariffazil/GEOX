@@ -24,7 +24,7 @@ Arif. This is the **GEOX** organ of the arifOS federation — Earth Intelligence
 
 The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-grounded evidence for constitutional judgment. It is **evidence-only** — never a policy judge.
 
-**40 canonical tools** across subsurface, sensing, stratigraphy, seismic, horizon interpretation, prospect evaluation, and vision.
+**54 canonical tools** (W2-W13+ FORGE 2026-06-21) across subsurface, sensing, stratigraphy, seismic, horizon interpretation, prospect evaluation, vision, **multi-physics joint inversion (Physics9), CSEM/MT, biostrat, geomechanics, foundation model backing engines, doctrine layer (Gap X/3/5), and federation integration (WELL/WEALTH)**.
 
 - **Port:** 8081 (live daemon, HTTP mode)
 - **Transport:** Dual-mode — `--transport http` (systemd) or `--transport stdio` (local agents)
@@ -52,9 +52,21 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Update canonical schemas in `contracts/`
 
 ### Requires 888_HOLD
-- Changes to the tool registry (40 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`)
+- Changes to the tool registry (54 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`)
 - Changes to Physics9 boundary limits
+- Live foundation model weight deployment (Prithvi-EO-2.0, TerraMind, Clay, Aurora)
 - Production deployment without verified build + test pass
+
+### W2-W13+ FORGE Status (2026-06-21)
+- 14 new canonical tools added since 40-tool baseline:
+  - **3 doctrine**: `geox_doctrine_assumption_register`, `_anti_beautiful_one`, `_godel_review` (Gap X/3/5 closed)
+  - **1 foundation model**: `geox_prithvi_eo_inference` (Prithvi-EO-2.0 NASA/IBM, mock default)
+  - **3 nonseismic + open data**: `geox_gravity_magnetic_forward` (HarmonIC), `geox_emag2_ingest` (NOAA), `geox_icgem_models` (GFZ)
+  - **4 multi-physics**: `geox_joint_inversion` (N-modal fusion), `geox_mt_forward` (CSEM/MT), `geox_biostrat_constraint`, `geox_seismic_inversion` (1D PINN)
+  - **3 integration**: `geox_geomechanics`, `geox_well_decision_class` (WELL gate), `geox_wealth_feed` (WEALTH feed)
+- Tests: 89 passing, 3 skipped (live-server drift, expected pre-deploy)
+- Constitutional invariant `_EXPECTED_CANONICAL = 54` in `server.py`
+- Service restarted 2026-06-21; pushed commit `657b9eb0` to `origin/main`
 
 ## Build & Test
 
