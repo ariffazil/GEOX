@@ -2,12 +2,14 @@
 
 > **Organ:** GEOX | **Port:** 8081 | **Repo:** `ariffazil/geox`
 > **Kernel SoT:** `ariffazil/arifos` (FEDERATION_CONTRACT.md + GENESIS/000)
-> **Last Updated:** 2026-06-21
+> **Last Updated:** 2026-06-22
 
 ## Live State
 - **Service:** `geox-mcp.service` (systemd, enabled)
 - **Health:** `http://127.0.0.1:8081/health`
-- **Tools:** **54 canonical MCP tools** (40 → 54 after W2-W13+ FORGE 2026-06-21)
+- **Tools:** **56 canonical MCP tools** (40 → 54 after W2-W13+ FORGE 2026-06-21, +2 from parallel GEOX-LEM session 2026-06-22)
+- **Intelligence Flow:** Quantum-level (W14-α FORGE 2026-06-22) — NATS pub/sub backbone wired via `src/geox_core/governance/event_bus.py` + `src/geox_mcp/events/{publisher,subscriber}.py`. See `docs/FEDERATION_INTELLIGENCE_FLOW.md`.
+- **Auth posture:** LAN-only + Cloudflare Tunnel; **NO OAuth yet** (deferred to W15 per F13 directive — "i dont want to add that password or terlupa key chaos yet")
 - **Git version (live):** `geox-657b9eb0`
 - **Last forge:** `feat(geox): W2-W13+ multi-physics Earth Witness + integration layer` (commit 657b9eb0, pushed to origin/main)
 - **License:** Apache-2.0 (scientific tooling; federation governed by kernel AGPL-3.0)
