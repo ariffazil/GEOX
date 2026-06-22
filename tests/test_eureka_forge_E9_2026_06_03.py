@@ -313,8 +313,10 @@ class TestF13NoNewMCPTools(unittest.TestCase):
 
             # Canonical federation decision (2026-06-14): GEOX surface is 40 tools
             # (35 core + 4 Vision V1). See eureka_forge_E8 for full F13 note.
-            # 2026-06-21: W2-W13+ FORGE — 40 → 51 (Phase B + Phase C multi-physics Earth Witness)
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 51)
+            # 2026-06-21: W2-W13+ FORGE — 40 → 54 (Phase B + Phase C multi-physics Earth Witness)
+            # 2026-06-21: W14+ FORGE — 54 → 55 (+geox_lem_predict)
+            # 2026-06-22: W15+ FORGE — 55 → 56 (+geox_deep_time_state)
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 56)
             self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 40)
         except ImportError:
             self.skipTest("geox_mcp.server not importable in this env")

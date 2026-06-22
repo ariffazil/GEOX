@@ -85,7 +85,11 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_geomechanics",
     "geox_well_decision_class",
     "geox_wealth_feed",
-]
+    # ── W14+ FORGE 2026-06-21: GEOX-LEM inference (substrate live, weights pending GPU + 888) ──
+    "geox_lem_predict",
+    # ── W15+ FORGE 2026-06-22: Deep Time Physics Context (governed Earth State Vector) ──
+    "geox_deep_time_state",
+] 
 
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     # ── DISCOVERY LANE (6 tools) ── max_action_class: OBSERVE, no lease required
@@ -134,6 +138,8 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_abstraction_guard", "axis": "verify", "lane": "reasoning", "expose": True},
     # W5-W8 — Prithvi-EO-2.0 NASA/IBM foundation model (Phase A first wave)
     {"name": "geox_prithvi_eo_inference", "axis": "reason", "lane": "reasoning", "expose": True},
+    # W14+ FORGE 2026-06-21: GEOX-LEM substrate (live inference path; weights pending)
+    {"name": "geox_lem_predict", "axis": "reason", "lane": "reasoning", "expose": True},
     # W9-W12 — Gravity + Magnetic forward model via HarmonIC (Phase B first wave)
     {"name": "geox_gravity_magnetic_forward", "axis": "compute", "lane": "reasoning", "expose": True},
     # W13+ — Phase C: Seismic Inversion (coloured / model-based / PINN)
@@ -142,6 +148,8 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_mt_forward", "axis": "compute", "lane": "reasoning", "expose": True},
     # W13+ — Phase C: Biostratigraphic zonation constraint
     {"name": "geox_biostrat_constraint", "axis": "reason", "lane": "reasoning", "expose": True},
+    # W15+ — Deep Time Physics Context (governed Earth State Vector)
+    {"name": "geox_deep_time_state", "axis": "reason", "lane": "reasoning", "expose": True},
 
     # ── JUDGMENT LANE (9 tools) ── GOVERNED, lease + session + arifOS judge required
     {"name": "geox_claim_create", "axis": "reason", "lane": "judgment", "expose": True},

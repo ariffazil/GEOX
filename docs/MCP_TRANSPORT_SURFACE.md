@@ -1,10 +1,11 @@
 # GEOX MCP Transport Surface — Manifest
 
-> **Last verified:** 2026-06-22 (W2-W13+ FORGE complete, commit `ead04d1c` on `origin/main`)
+> **Last verified:** 2026-06-22 (W16+ FORGE complete, commit pending push to `origin/main`)
 > **Source of truth:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS), `src/geox_mcp/resources/__init__.py` (resource registrations), `src/geox_mcp/prompts/__init__.py` (prompt registrations)
-> **Server invariant:** `_EXPECTED_CANONICAL = 54` in `src/geox_mcp/server.py`
+> **Server invariant:** `_EXPECTED_CANONICAL = 56` in `src/geox_mcp/server.py`
+> **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0`
 > **Transport:** HTTP/SSE (`https://geox.arif-fazil.com/mcp`) or stdio (`python3 -m geox_mcp.server --transport stdio`)
-> **SDK:** FastMCP 3.x (Python) — `gofastmcp.com`
+> **SDK:** FastMCP 3.4.2 (Python) — `gofastmcp.com`
 > **Spec compliance:** MCP 2025-11-25 (`modelcontextprotocol.io`)
 
 ---
@@ -13,18 +14,18 @@
 
 | Primitive | Count | Lane / Category | Location |
 |-----------|-------|-----------------|----------|
-| **Tools** | **54** | 4 lanes (Discovery 6 / Evidence 14 / Reasoning 21 / Judgment 13) | `src/geox_mcp/tools/` (45+ files) + decorators in `src/geox_mcp/server.py` |
+| **Tools** | **56** | 4 lanes (Discovery 6 / Evidence 14 / Reasoning 23 / Judgment 13) | `src/geox_mcp/tools/` (45+ files) + decorators in `src/geox_mcp/server.py` |
 | **Resources** | **17+** templates | Identity, registry, knowledge pack, literature, basins, claims, artifacts, render | `src/geox_mcp/resources/` (splitting to per-module files) |
 | **Prompts** | **11** templates | Earth intelligence (3), discipline (3), red-team (1), reports (3), abstraction guard (1) | `src/geox_mcp/prompts/` (splitting to per-module files) |
 | **Sub-servers (mounted)** | 4 | witness, paleoscan, claims, vision | `src/geox_mcp/servers/` |
 | **UI App applets** | registered | 3 applet templates (mission_board, health_dashboard, well_desk_dashboard) | `src/geox_mcp/tools/ui_applets.py` |
 | **WebMCP HTTP endpoints** | 5 | `/.well-known/webmcp`, `/webmcp`, `/webmcp/tools`, `/webmcp/status`, `/webmcp/call/{tool}` | `src/geox_mcp/webmcp.py` |
 
-**Total MCP primitives: 86+** (54 tools + 17+ resources + 11 prompts + 4 mounted sub-servers + WebMCP endpoints).
+**Total MCP primitives: 88+** (56 tools + 17+ resources + 11 prompts + 4 mounted sub-servers + WebMCP endpoints).
 
 ---
 
-## 1. TOOLS — 54 Canonical (4 Lanes)
+## 1. TOOLS — 56 Canonical (4 Lanes)
 
 ### Lane 1 — DISCOVERY (6 tools, OBSERVE-only, no lease)
 
@@ -99,6 +100,8 @@
 | 52 | `geox_joint_inversion` | **[W13+]** Multi-physics fusion → Physics9State. |
 | 53 | `geox_well_decision_class` | **[W13+]** WELL → GEOX operator readiness gate. |
 | 54 | `geox_wealth_feed` | **[W13+]** GEOX → WEALTH STOIIP + verdict. |
+| 55 | `geox_lem_predict` | **[W14+]** GEOX-LEM inference (physics_prior default; transformer gated). |
+| 56 | `geox_deep_time_state` | **[W15+]** Governed Earth State Vector (temporal physics). |
 
 ---
 
@@ -283,7 +286,7 @@ Enforced in `src/geox_mcp/registry.py` per-tool lane assignment and in the `is_g
 
 | Spec Section | GEOX Coverage |
 |--------------|---------------|
-| **Tools** (`server/tools.md`) | ✅ 54 tools with `inputSchema`/`outputSchema` (Pydantic v2 → JSON Schema 2020-12) |
+| **Tools** (`server/tools.md`) | ✅ 56 tools with `inputSchema`/`outputSchema` (Pydantic v2 → JSON Schema 2020-12) |
 | **Resources** (`server/resources.md`) | ✅ 17+ templates with URIs, MIME types, descriptions |
 | **Prompts** (`server/prompts.md`) | ✅ 11 parameterized templates |
 | **Logging** (`server/utilities/logging.md`) | ✅ Server-sent logging via Python `logging` |

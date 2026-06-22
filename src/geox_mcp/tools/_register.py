@@ -11,10 +11,17 @@ from __future__ import annotations
 import asyncio
 import functools
 import logging
+import time
 from typing import Any
 
 from fastmcp import FastMCP
 
+from geox_mcp.floor_enforcement import (
+    HUMILITY_CAP,
+    enforce_floor_post_call,
+    enforce_floor_pre_call,
+    get_idempotency_store,
+)
 from geox_mcp.organ_governance import GEOX_RISK_MAP, RiskTier
 
 logger = logging.getLogger("geox.register")
@@ -42,7 +49,9 @@ _EPISTEMIC_MAP = {
 }
 
 _CONFIDENCE_QUALITY = {
-    "HIGH": 0.95,
+    # F7 HUMILITY: HIGH=0.90 (was 0.95 — violated F7 cap). 0.90 is the
+    # constitutional floor for any evidence_quality value in the GEOX surface.
+    "HIGH": HUMILITY_CAP,
     "MEDIUM": 0.70,
     "MODERATE": 0.70,
     "LOW": 0.30,
@@ -143,17 +152,111 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
     """Wrap a tool function to write Supabase domain receipts (fail-soft) AND emit Evidence Contract envelope."""
 
     async def wrapper(*args: Any, **kwargs: Any) -> Any:
+        import inspect
         import os
 
         # Extract session/provenance fields from kwargs
         session_id = kwargs.pop("session_id", None)
         actor_id = kwargs.pop("actor_id", None)
         trace_id = kwargs.pop("trace_id", None)
+        # F1 AMANAH — idempotency key (optional, for replay-safe calls)
+        idempotency_key = kwargs.pop("idempotency_key", None)
+        # F13 SOVEREIGN — explicit acknowledgement for IRREVERSIBLE tier
+        ack_irreversible = kwargs.pop("ack_irreversible", None)
 
-        if inspect.iscoroutinefunction(func):
-            res = await func(*args, **kwargs)
-        else:
-            res = func(*args, **kwargs)
+        # ── F1/F9/F13 — pre-call floor enforcement ──────────────────────────
+        risk_tier = GEOX_RISK_MAP.get(name, RiskTier.C1_ADVISORY)
+        pre_call = enforce_floor_pre_call(
+            tool_name=name,
+            kwargs=kwargs,
+            risk_tier=str(risk_tier),
+        )
+        if pre_call.outcome == "BLOCK":
+            logger.error(f"Floor BLOCK on {name}: {pre_call.reason}")
+            # F11 AUDIT — record the blocked attempt
+            enforce_floor_post_call(
+                tool_name=name,
+                result={"error_code": "FLOOR_BLOCK"},
+                kwargs=kwargs,
+                risk_tier=str(risk_tier),
+                pre_call=pre_call,
+                duration_ms=0.0,
+            )
+            return {
+                "error_code": "FLOOR_BLOCK",
+                "governance_status": "BLOCKED",
+                "tool_name": name,
+                "reason": pre_call.reason,
+                "call_hash": pre_call.call_hash,
+            }
+        if pre_call.outcome == "HOLD":
+            logger.warning(f"Floor HOLD on {name}: {pre_call.reason}")
+            # F11 AUDIT — record the held attempt
+            enforce_floor_post_call(
+                tool_name=name,
+                result={"error_code": "FLOOR_HOLD"},
+                kwargs=kwargs,
+                risk_tier=str(risk_tier),
+                pre_call=pre_call,
+                duration_ms=0.0,
+            )
+            return {
+                "error_code": "FLOOR_HOLD",
+                "governance_status": "HOLD",
+                "tool_name": name,
+                "reason": pre_call.reason,
+                "required_params": pre_call.required_params,
+                "call_hash": pre_call.call_hash,
+            }
+
+        # ── F1 AMANAH — idempotency check (replay-safe) ────────────────────
+        if idempotency_key:
+            outcome, reason = get_idempotency_store().check(
+                idempotency_key, pre_call.call_hash
+            )
+            if outcome == "BLOCK":
+                logger.error(
+                    f"F1 idempotency violation on {name}: {reason}"
+                )
+                return {
+                    "error_code": "F1_IDEMPOTENCY_VIOLATION",
+                    "governance_status": "BLOCKED",
+                    "tool_name": name,
+                    "reason": reason,
+                }
+
+        # ── Run the tool ────────────────────────────────────────────────────
+        t0 = time.perf_counter()
+        try:
+            if inspect.iscoroutinefunction(func):
+                res = await func(*args, **kwargs)
+            else:
+                res = func(*args, **kwargs)
+        except Exception as exc:
+            # F4 CLARITY — log the failure but return a structured error
+            duration_ms = (time.perf_counter() - t0) * 1000
+            enforce_floor_post_call(
+                tool_name=name,
+                result={"error": str(exc)},
+                kwargs=kwargs,
+                risk_tier=str(risk_tier),
+                pre_call=pre_call,
+                duration_ms=duration_ms,
+            )
+            raise
+        duration_ms = (time.perf_counter() - t0) * 1000
+
+        # ── F4/F7/F11 — post-call floor enforcement + audit ─────────────────
+        post_call = enforce_floor_post_call(
+            tool_name=name,
+            result=res,
+            kwargs=kwargs,
+            risk_tier=str(risk_tier),
+            pre_call=pre_call,
+            duration_ms=duration_ms,
+        )
+        for w in post_call.warnings:
+            logger.info(f"[{name}] {w}")
 
         # Inject session/provenance plumbing into envelope (P4)
         if isinstance(res, dict):

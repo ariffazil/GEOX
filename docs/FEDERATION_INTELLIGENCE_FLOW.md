@@ -190,7 +190,7 @@ GEOX does NOT need any new infrastructure. Everything is already running:
 | **VAULT999** (ports 8100/5001) | ✅ Running | Atom hash sealing (every emit triggers vault_seal) |
 | **PAI Receipt** schema | ✅ Defined in `pai_receipt.py` | Universal envelope for every atom (was: defined but not wired) |
 | **ACP** (`acp_logic.py`) | ✅ Defined, not imported | Agent Control Plane (A2A coordination; was: defined but not used) |
-| **GEOX tools** (54 canonical) | ✅ Live | Each tool emits IntelligenceAtom (was: bare JSON only) |
+| **GEOX tools** (56 canonical) | ✅ Live | Each tool emits IntelligenceAtom (was: bare JSON only) |
 
 ---
 
@@ -328,7 +328,7 @@ The OAuth layer is W15, not W14. Auth before coherence is auth-on-a-broken-door.
 
 ## What Stays The Same (no change)
 
-- 54 canonical tools (unchanged)
+- 56 canonical tools (W16+ FORGE 2026-06-22)
 - Physics9 bounds (unchanged)
 - Steel Security Layer (non-blocking, no pre-commit hooks)
 - F1-F13 floors (unchanged)
@@ -384,7 +384,7 @@ nats pub arifos.well.operator.arif '{"fatigue": 0.9, "decision_class": "C5"}'
 ## References
 
 - **Copilot's diagnosis:** `/root/CONTEXT.md` references + previous turn
-- **AGENTS.md:** `/root/geox/AGENTS.md` (Steel Security Layer, 54 tools, F13 SOVEREIGN)
+- **AGENTS.md:** `/root/geox/AGENTS.md` (Steel Security Layer, 56 tools, F13 SOVEREIGN)
 - **PAI Receipt:** `/root/geox/src/geox_mcp/pai_receipt.py`
 - **ACP (Agent Control Plane):** `/root/geox/src/geox_core/governance/acp_logic.py`
 - **NATS topic conventions:** `arifos.{organ}.{stream_type}.{subject}` (existing convention)

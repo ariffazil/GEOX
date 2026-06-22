@@ -45,3 +45,9 @@ resources/macrostrat_cache/
 scratch/
 *.pyc
 
+# Runtime artifacts (regenerated each session)
+entropy/
+logs/
+_archived_logs/
+999_vault/audit.jsonl
+

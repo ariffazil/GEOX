@@ -1,8 +1,8 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-21
+last_verified: 2026-06-22
 valid_from: 2026-06-14
-valid_until: 2026-07-21
+valid_until: 2026-07-22
 confidence: high
 scope: /root/geox
 -->
@@ -24,7 +24,7 @@ Arif. This is the **GEOX** organ of the arifOS federation — Earth Intelligence
 
 The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-grounded evidence for constitutional judgment. It is **evidence-only** — never a policy judge.
 
-**54 canonical tools** (W2-W13+ FORGE 2026-06-21) across subsurface, sensing, stratigraphy, seismic, horizon interpretation, prospect evaluation, vision, **multi-physics joint inversion (Physics9), CSEM/MT, biostrat, geomechanics, foundation model backing engines, doctrine layer (Gap X/3/5), and federation integration (WELL/WEALTH)**.
+**56 canonical tools** (W16+ FORGE 2026-06-22: 40 baseline + 14 W2-W13+ + 1 LEM W14+ + 1 Deep Time W15+) across subsurface, sensing, stratigraphy, seismic, horizon interpretation, prospect evaluation, vision, **multi-physics joint inversion (Physics9), CSEM/MT, biostrat, geomechanics, foundation model backing engines, doctrine layer (Gap X/3/5), federation integration (WELL/WEALTH), and the W16+ physics-first substrate (Huang 2021 Vp grammar + intelligence flow + Kinabalu corpus)**.
 
 - **Port:** 8081 (live daemon, HTTP mode)
 - **Transport:** Dual-mode — `--transport http` (systemd) or `--transport stdio` (local agents)
@@ -52,21 +52,40 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Update canonical schemas in `contracts/`
 
 ### Requires 888_HOLD
-- Changes to the tool registry (54 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`)
+- Changes to the tool registry (56 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`)
 - Changes to Physics9 boundary limits
-- Live foundation model weight deployment (Prithvi-EO-2.0, TerraMind, Clay, Aurora)
+- Live foundation model weight deployment (Prithvi-EO-2.0, TerraMind, Clay, Aurora, GEOX-LEM)
 - Production deployment without verified build + test pass
+- `git push origin main` for sovereign commit chain
+- Domain BOUNDARY classification (e.g., Kinabalu Basin registration)
+- Cross-organ biostrat re-assessment coordination
 
-### W2-W13+ FORGE Status (2026-06-21)
-- 14 new canonical tools added since 40-tool baseline:
-  - **3 doctrine**: `geox_doctrine_assumption_register`, `_anti_beautiful_one`, `_godel_review` (Gap X/3/5 closed)
+### W2-W16+ FORGE Status (2026-06-22)
+- **40 baseline → 56 canonical tools** (16 added in 4 forge tranches)
+- **W2-W13+ (2026-06-21)**: 14 new tools
+  - **3 doctrine**: `geox_doctrine_assumption_register`, `_anti_beautiful_one`, `_godel_review` (Gap X/3/5)
   - **1 foundation model**: `geox_prithvi_eo_inference` (Prithvi-EO-2.0 NASA/IBM, mock default)
   - **3 nonseismic + open data**: `geox_gravity_magnetic_forward` (HarmonIC), `geox_emag2_ingest` (NOAA), `geox_icgem_models` (GFZ)
   - **4 multi-physics**: `geox_joint_inversion` (N-modal fusion), `geox_mt_forward` (CSEM/MT), `geox_biostrat_constraint`, `geox_seismic_inversion` (1D PINN)
   - **3 integration**: `geox_geomechanics`, `geox_well_decision_class` (WELL gate), `geox_wealth_feed` (WEALTH feed)
-- Tests: 89 passing, 3 skipped (live-server drift, expected pre-deploy)
-- Constitutional invariant `_EXPECTED_CANONICAL = 54` in `server.py`
-- Service restarted 2026-06-21; pushed commit `657b9eb0` to `origin/main`
+- **W14+ (2026-06-21)**: 1 tool
+  - **1 GEOX-LEM**: `geox_lem_predict` (Large Earth Model substrate, weights pending GPU + 888)
+- **W15+ (2026-06-22)**: 1 tool
+  - **1 Deep Time**: `geox_deep_time_state` (governed Earth State Vector)
+- **W16+ (2026-06-22)**: Physics-first substrate (no new tools — substrate only)
+  - `src/geox_core/schemas/crust_vp_grammar.py` (Huang 2021 Vp grammar, 32 tests)
+  - `src/geox_core/schemas/intelligence_flow.py` (7-layer dynamic flow, 21 tests)
+  - `src/geox_core/schemas/kinabalu_corpus.py` (corpus substrate)
+  - `src/geox_core/physics/joint_inversion_zone_hook.py` (post-inversion Vp classification, 15 tests)
+  - `src/geox_mcp/floor_enforcement.py` (F1/F4/F7/F9/F11/F13 wrapper, 40 tests)
+  - `src/geox_mcp/tools/crustal_domain_classify.py` (multi-cell classifier, 16 tests)
+  - `src/geox_mcp/tools/_register.py` (hardened wrapper, F7 HUMILITY cap 0.95→0.90)
+  - New forge_work docs: eureka capsule, RSI roadmap, federation MCP map, Kinabalu corpus
+- Tests: 708 passing, 2 skipped, 5 pre-existing failures (documented, deferred)
+- Constitutional invariant `_EXPECTED_CANONICAL = 56` in `server.py`
+- GEOX_CONTRACT_EPOCH: `2026-06-22-GEOX-56TOOLS-v3.0`
+- Live at `https://geox.arif-fazil.com/mcp` (MCP 2025-11-25, FastMCP 3.4.2)
+- Last live commit: `ead04d1c` on `origin/main` (next push pending 888_HOLD — see `forge_work/2026-06-22-888-hold-push-deploy.md`)
 
 ## Build & Test
 

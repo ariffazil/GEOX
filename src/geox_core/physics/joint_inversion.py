@@ -64,6 +64,13 @@ class InversionRequest:
     # Convergence thresholds
     max_iter: int = 50
     tolerance: float = 1e-3
+    # F4 CLARITY: opt-in post-inversion crust-zone classification.
+    # Default OFF — existing callers see no change.
+    # Stage 6 forge: wired to Huang 2021 Vp grammar.
+    classify_crust_zone: bool = False
+    crust_thickness_km: Optional[float] = None  # used if classify_crust_zone=True
+    heat_flow_mw_m2: Optional[float] = None     # used if classify_crust_zone=True
+    include_zone_diagnostics: bool = False      # verbose diagnostic_basis in result
 
 
 # ───────────────────────────── FORWARD OPERATORS ─────────────────────────────────
@@ -270,7 +277,7 @@ def joint_inversion(request: InversionRequest) -> dict:
     ])).encode()
     obs_hash = hashlib.sha256(payload).hexdigest()
 
-    return {
+    result = {
         "ok": True,
         "state": state,
         "grade": state.grade(),
@@ -299,6 +306,27 @@ def joint_inversion(request: InversionRequest) -> dict:
             ),
         },
     }
+
+    # F4 CLARITY — opt-in post-inversion crust-zone classification.
+    # Stage 6 forge: wires vp_zone_classify into the inversion pipeline.
+    # F13 SOVEREIGN note: this is substrate support, NOT a verdict.
+    if request.classify_crust_zone:
+        from geox_core.physics.joint_inversion_zone_hook import (
+            PostInversionZoneHook,
+            classify_state_post_inversion,
+        )
+        hook = PostInversionZoneHook(
+            crust_thickness_km=request.crust_thickness_km,
+            heat_flow_mw_m2=request.heat_flow_mw_m2,
+            include_diagnostics=request.include_zone_diagnostics,
+        )
+        result["crust_zone_classification"] = classify_state_post_inversion(
+            state=state,
+            observations=request.observations,
+            hook=hook,
+        )
+
+    return result
 
 
 # ───────────────────────────── BATCH ENTRY ────────────────────────────────────────
