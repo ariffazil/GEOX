@@ -44,7 +44,7 @@ from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
 
 # Import canonical registry for source-of-truth
-from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
+from geox_mcp.registry import CANONICAL_COMPAT_TOOLS, CANONICAL_PUBLIC_TOOLS
 from geox_mcp.routing import (
     GEOX_ENABLE_ARIFOS_ROUTE_QUERY,
     GEOX_ROUTE_QUERY_GUARD_ENABLED,
@@ -60,9 +60,9 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.06.22"
-# P7 - Bumped to 56-tool surface; W16+ forge: Vp grammar + intelligence flow + Kinabalu corpus
-GEOX_CONTRACT_EPOCH = "2026-06-22-GEOX-56TOOLS-v3.0"
+GEOX_VERSION = "v2026.06.22-phase2"
+# Phase 2 Clean Architecture: 15 mode-consolidated tools, backward-compat wrappers for 52 old names
+GEOX_CONTRACT_EPOCH = "2026-06-22-GEOX-15TOOLS-PHASE2"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -85,7 +85,7 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_evidence_reason": 60.0,
     "geox_prospect_evaluate": 60.0,
     "geox_map_context_scene": 30.0,
-    "geox_system_registry_status": 10.0,
+    # geox_system_registry_status — removed (Phase 1 Clean Slate)
     "geox_horizon_contrast_surface": 60.0,
 }
 TOOL_TIMEOUT_DEFAULT = 60.0
@@ -260,14 +260,15 @@ def compose_geox_servers() -> None:
     #   - geox_mt_forward                   (W13+ Phase C — CSEM/MT)
     #   - geox_biostrat_constraint          (W13+ Phase C — biostrat)
     # F13 SOVEREIGN authorized; AGENTS.md §Authority 888_HOLD gate satisfied.
-    _EXPECTED_CANONICAL = 56  # W15+ FORGE 2026-06-22: added geox_deep_time_state
+    _EXPECTED_CANONICAL = 15  # Phase 2 Clean Architecture (2026-06-22): 15 mode-consolidated tools
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
             f"got {len(CANONICAL_PUBLIC_TOOLS)}. If this expansion is intentional, "
             f"update _EXPECTED_CANONICAL in server.py with a forge-state comment."
         )
-    logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools across 4 domains")
+    logger.info(f"GEOX surface composed: {len(CANONICAL_PUBLIC_TOOLS)} canonical + "
+                f"{len(CANONICAL_COMPAT_TOOLS)} backward-compat tools across 9 domains")
 
 
 compose_geox_servers()
@@ -275,11 +276,6 @@ compose_geox_servers()
 from geox_mcp.tools.ui_applets import register_ui_applets
 
 register_ui_applets(mcp)
-
-# ── Register legacy alias tools that FastMCP can route ────────────────────
-# FastMCP intercepts tool calls before the legacy_mcp_handler sees them.
-# Register thin aliases so FastMCP can route geox_query_macrostrat → geox_basin_profile.
-
 
 # ── W2-W4 FORGE — Doctrine layer tool registrations ────────────────────────
 @mcp.tool(name="geox_doctrine_assumption_register")
@@ -533,23 +529,7 @@ async def _geomechanics(state: dict) -> dict:
     return (await geox_geomechanics(GeomechanicsRequest(state=state))).model_dump(mode="json")
 
 
-# ── W13+ FORGE — Phase C: WELL → GEOX operator readiness gate ──
-@mcp.tool(name="geox_well_decision_class")
-async def _well_decision_class(
-    operator_id: str = "arif",
-    task_description: str | None = None,
-) -> dict:
-    """Read WELL organ state and return C1-C5 decision_class for joint inversion gating.
-
-    C1/C2: proceed strict; C3: proceed with flags; C4: defer non-critical;
-    C5: HOLD — no inversions allowed.
-    """
-    from geox_mcp.tools.integration_well import (
-        WellStateRequest, geox_well_decision_class,
-    )
-    req = WellStateRequest(operator_id=operator_id, task_description=task_description)
-    return (await geox_well_decision_class(req)).model_dump(mode="json")
-
+# ── geox_well_decision_class — removed (Phase 1 Clean Slate, → WELL organ) ──
 
 # ── W14+ FORGE 2026-06-21: GEOX-LEM inference (substrate live, weights pending GPU + 888) ──
 @mcp.tool(name="geox_lem_predict")
@@ -633,34 +613,7 @@ async def _deep_time_state(
 
 
 # ── W13+ FORGE — Phase C: GEOX → WEALTH STOIIP + ranking feed ──
-@mcp.tool(name="geox_wealth_feed")
-async def _wealth_feed(
-    cell_states: list[dict] | None = None,
-    areal_extent_m2: float = 1e6,
-    pay_zone_thickness_m: float = 50.0,
-    formation_volume_factor: float = 1.3,
-    water_saturation: float = 0.30,
-    oil_density_kg_m3: float = 850.0,
-    recovery_factor: float = 0.30,
-) -> dict:
-    """Feed WEALTH organ: STOIIP + P10/P50/P90 + ranking + ADVANCE/DEFER/REJECT verdict.
-
-    Lithology-aware: only Sandstone, Limestone, Dolomite count as producible.
-    """
-    from geox_mcp.tools.integration_wealth import (
-        WealthFeedRequest, geox_wealth_feed,
-    )
-    req = WealthFeedRequest(
-        cell_states=cell_states or [],
-        areal_extent_m2=areal_extent_m2,
-        pay_zone_thickness_m=pay_zone_thickness_m,
-        formation_volume_factor=formation_volume_factor,
-        water_saturation=water_saturation,
-        oil_density_kg_m3=oil_density_kg_m3,
-        recovery_factor=recovery_factor,
-    )
-    return (await geox_wealth_feed(req)).model_dump(mode="json")
-
+# ── geox_wealth_feed — removed (Phase 1 Clean Slate, → arif_bridge_connect) ──
 
 @mcp.tool(name="geox_query_macrostrat")
 async def geox_query_macrostrat(
@@ -819,14 +772,15 @@ register_prompts(mcp)
 
 def _prune_mcp_surface(mcp_server) -> None:
     """Strip non-canonical tools from the MCP registry after bootstrap."""
-    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS)
+    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
     _profile = os.getenv("GEOX_PROFILE", "full").lower()
     if _profile == "minimal":
         SACRED_SURFACE = {
-            "geox_data_ingest_bundle",
-            "geox_data_qc_bundle",
-            "geox_system_registry_status",
-        }
+            "geox_well_ingest",
+            "geox_well_qc",
+            "geox_petrophysics",
+            "geox_basin",
+        } | set(CANONICAL_PUBLIC_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
 
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
@@ -1397,30 +1351,8 @@ async def legacy_mcp_handler(request):
                     "result": {"content": [{"type": "text", "text": json.dumps(result)}]},
                 }
             )
-        # RT-1: block undeclared tools before FastMCP sees them. Use canonical for check.
-        # Patch E - Resolve dashboard.open: Alias is handled here by LEGACY_ALIAS_MAP
-        resolved_name = LEGACY_ALIAS_MAP.get(name, name)
-
-        # geox_query_macrostrat is now a FastMCP-registered alias → geox_basin_profile
-        # No special-case routing needed; the alias function in server.py handles mode injection.
-        if resolved_name not in CANONICAL_PUBLIC_TOOLS and resolved_name != name:
-            return JSONResponse(
-                {
-                    "jsonrpc": "2.0",
-                    "id": response_id,
-                    "error": {
-                        "code": -32001,
-                        "message": f"RT1_GUARD: Tool '{name}' is a retired alias and no longer supported.",
-                        "data": {
-                            "guard": "RETIRED_ALIAS",
-                            "tool": name,
-                            "canonical_name": resolved_name,
-                        },
-                    },
-                },
-                status_code=403,
-            )
-        elif resolved_name not in CANONICAL_PUBLIC_TOOLS:
+        # RT-1: block undeclared tools. LEGACY_ALIAS_MAP removed Phase 1.
+        if name not in CANONICAL_PUBLIC_TOOLS:
             return JSONResponse(
                 {
                     "jsonrpc": "2.0",
@@ -1459,10 +1391,10 @@ async def legacy_mcp_handler(request):
         if gov_error is not None:
             return gov_error
 
-        result = await run_legacy_tool(resolved_name, args)
+        result = await run_legacy_tool(name, args)
 
         _geox_write_domain_receipt(
-            tool_name=resolved_name,
+            tool_name=name,
             result=result,
             session_id=None,
             actor_id="geox-mcp",
