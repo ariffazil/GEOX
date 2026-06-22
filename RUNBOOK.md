@@ -1,7 +1,8 @@
 # RUNBOOK.md — GEOX (Earth Intelligence)
 
-> **Organ:** GEOX | **Port:** 8081 | **Canonical tools:** 54 (W2-W13+ FORGE)
-> **Last Updated:** 2026-06-21
+> **Organ:** GEOX | **Port:** 8081 | **Canonical tools:** **56** (W16+ FORGE 2026-06-22)
+> **Last Updated:** 2026-06-22
+> **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0`
 
 ## Start / Stop
 ```bash
@@ -14,8 +15,24 @@ systemctl status geox-mcp
 ## Health Check
 ```bash
 curl -s http://127.0.0.1:8081/health | python3 -m json.tool
-# Expected: status=healthy, service=geox-unified, canonical_tools=54
+# Expected: status=healthy, service=geox-unified, canonical_tools=56
 ```
+
+## Federation Map (W16+)
+
+GEOX is one of **7 organs** in the arifOS federation. Live at `https://geox.arif-fazil.com/mcp`.
+
+| Organ | Port | Transport | Tools | Status |
+|-------|------|-----------|-------|--------|
+| arifOS | 8088 | streamable-http | 22 canonical | ✅ healthy |
+| **GEOX** | **8081** | **streamable-http** | **56 canonical** | **✅ healthy** |
+| WEALTH | 18082 | streamable-http | 19+ | ✅ ALIVE |
+| WELL | 18083 | streamable-http | 21 | ⚠️ degraded |
+| A-FORGE | 7071/7072 | streamable-http | sense + 77 | ✅ healthy |
+| AAA | 3001 | mcp-endpoint-registry | 0 | ✅ healthy |
+| VAULT999 | 5001/8100 | (append-only) | 0 | ✅ healthy |
+
+All organs use FastMCP 3.x + streamable-http + protocol_version `2025-11-25`.
 
 ## Logs
 ```bash

@@ -24,8 +24,8 @@ def _compute_physics_guard_version() -> str:
         return "geox-014d3e33"  # shipped fallback — bumped 2026-06-13
 
 
-GEOX_VERSION = "v2026.06.05"
-GEOX_CONTRACT_EPOCH = "2026-06-18-GEOX-40TOOLS-v2.1"
+GEOX_VERSION = "v2026.06.22"
+GEOX_CONTRACT_EPOCH = "2026-06-22-GEOX-56TOOLS-v3.0"
 PHYSICS_GUARD_VERSION = _compute_physics_guard_version()
 REGISTRY_HASH = "reg-hash-35d798a"
 TOOL_SCHEMA_HASH = "schema-sha-35d798a"

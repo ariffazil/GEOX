@@ -378,7 +378,10 @@ class TestNoNewMCPTools(unittest.TestCase):
             # F13 SOVEREIGN RATIFIED (2026-06-14): 40 canonical tools.
             # Added: geox_las_inspect, geox_seismic_segy_inspect.
             # Vision V1 (4 tools) also ratified.
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 42)
+            # 2026-06-21: W2-W13+ FORGE — 40 → 54 (14 new tools)
+            # 2026-06-21: W14+ FORGE — 54 → 55 (+geox_lem_predict)
+            # 2026-06-22: W15+ FORGE — 55 → 56 (+geox_deep_time_state)
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 56)
             self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 18)
         except ImportError as e:
             # geox_mcp server not importable in test env; that's OK —

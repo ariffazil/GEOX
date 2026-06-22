@@ -1,0 +1,417 @@
+# Kinabalu Multi-Physics Knowledge Graph
+# SOT: arifOS federation / GEOX organ
+# Owner: arif_fazil (F13 SOVEREIGN)
+# Forge cycle: 2026-06-22 RSI consolidation
+# Vector-ready: yes (Qdrant + Neo4j ingestion plan)
+
+graph:
+  id: SABAH_MULTIPHYSICS_KINABALU_v1.0
+  description: >
+    Multi-physics literature knowledge graph for Kinabalu Basin / NW Sabah.
+    Vector-ready corpus for GEOX ingestion via geox_literature_ingest.
+  lineage:
+    - BEKANTAN_1
+    - LEBAH_EMAS_1
+    - ABKSS_FRAMEWORK
+    - arifOS_FEDERATION
+  forge_cycle: 2026-06-22-rsi-consolidation
+  owner: arif_fazil
+
+  nodes:
+
+    - id: N01_Meju2024_MT
+      type: Paper
+      title: "Meju et al. 2024 — 3D anisotropic MT imaging, Dangerous Grounds + Borneo"
+      paper_id: Meju2024_DGroundsMT
+      tier: 1
+      source: external_peer_reviewed
+      doi: 10.1093/gji/ggae346
+      url: https://academic.oup.com/gji/article/239/3/1879/7842021
+      kinabalu_relevance:
+        - crustal_architecture
+        - mt_anisotropy
+        - ductile_flow
+        - serpentinized_mantle
+      sovereign_reviewed: false  # external
+      key_claims:
+        - "1416 marine MT stations, 13 lines, 4677 line-km"
+        - "Resistive upper crust + uppermost mantle underlain by anisotropic conductive layers"
+        - "Anisotropic conductors correlate with Cretaceous ophiolites + Neogene sub-basins"
+        - "Post-subduction lithospheric-asthenospheric ductile flow under multidirectional compression"
+
+    - id: N02_Mackie2025_TTI
+      type: Paper
+      title: "Mackie et al. 2025 — TTI CSEM multiphysics inversion offshore Malaysia"
+      paper_id: Mackie2025_TTI
+      tier: 1
+      source: external_peer_reviewed
+      url: https://www.viridiengroup.com/sites/default/files/2026-03/viridien_quantifying_the_effects_of_TTI_in_multiphysics_analysis_of_electromagnetic_data_offshore.pdf
+      kinabalu_relevance:
+        - csem_methodology
+        - sabah_dip_correction
+        - fold_thrust_belt
+
+    - id: N03_Gilligan2026_nBOSS
+      type: Paper
+      title: "Gilligan et al. 2026 — Receiver functions: crustal thickness 24-60 km, thin under Mt Kinabalu"
+      paper_id: Gilligan2026_nBOSS
+      tier: 1
+      source: external_peer_reviewed
+      doi: 10.1029/2025JB031499
+      url: https://agupubs.onlinelibrary.wiley.com/doi/epdf/10.1029/2025JB031499
+      kinabalu_relevance:
+        - crustal_thickness
+        - underthrust
+        - mt_kinabalu
+      key_claims:
+        - "Crocker Range crust 60 km thick"
+        - "Central Sabah crust 24 km thin (Miocene extension)"
+        - "Mt Kinabalu = comparatively thin crust"
+        - "Dangerous Grounds continental crust underthrust beneath W Sabah"
+
+    - id: N04_Fone2024_ANT
+      type: Paper
+      title: "Fone et al. 2024 — Ambient Noise Tomography: failed-rift thermal upwelling under central Sabah"
+      paper_id: Fone2024_ANT
+      tier: 1
+      source: external_peer_reviewed
+      doi: 10.1029/2024JB029092
+      url: https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2024JB029092
+      kinabalu_relevance:
+        - thermal_upwelling
+        - failed_rift
+        - sulu_rollback
+        - crustal_heterogeneity
+      key_claims:
+        - "Crocker Range heterogeneous Vs = remnant early Miocene subduction + underthrust crust"
+        - "East Sabah igneous bodies from mid-Miocene Celebes Sea subduction + decompression melting"
+        - "Low-Vs lower-crust = thermal upwelling beneath failed rift (Sulu rollback)"
+
+    - id: N05_Hesse2009_DWFTB
+      type: Paper
+      title: "Hesse et al. 2009 — DWFTB requires basement-driven component"
+      paper_id: Hesse2009_DWFTB
+      tier: 1
+      source: external_peer_reviewed
+      doi: 10.1130/B26411.1
+      kinabalu_relevance:
+        - dwftb_kinematics
+        - basement_shortening
+        - kl2_toe_thrust
+      key_claims:
+        - "~50 km shortening on DWFTB vs only ~7-10 km extension on shelf"
+        - "basement-driven component required"
+        - "Anchors KL2 toe-thrust interpretation"
+
+    - id: N06_Sidek2016_GMSYS
+      type: Paper
+      title: "Sidek et al. 2016 — Moho 26-33 km, GM-SYS public crustal model"
+      paper_id: Sidek2016_GMSYS
+      tier: 1
+      source: external_peer_reviewed
+      kinabalu_relevance:
+        - crustal_thickness
+        - gm_sys_model
+        - public_benchmark
+      key_claims:
+        - "Moho 26-33 km in NW Sabah"
+        - "Analytical signal of magnetic basement 26-33 km"
+        - "Crocker thrust block as high-density body"
+
+    - id: N07_BurtonJohnson2019_AMS
+      type: Paper
+      title: "Burton-Johnson et al. 2019 — AMS NW-SE extension 7.9-7.3 Ma at 319°"
+      paper_id: BurtonJohnson2019_AMS
+      tier: 1
+      source: external_peer_reviewed
+      kinabalu_relevance:
+        - tectonic_timing
+        - mt_kinabalu_pluton
+        - dru_age_constraint
+      key_claims:
+        - "Miocene NW-SE extension 7.9-7.3 Ma at 319° ±13.1°"
+        - "Overprints prior compression interpretations"
+
+    - id: N08_Swauger2000_Kinabalu
+      type: Paper
+      title: "Swauger et al. 2000 — Mt Kinabalu pluton K-Ar 10-13.7 Ma, exhumation 6.7-7.8 Ma"
+      paper_id: Swauger2000_Kinabalu
+      tier: 1
+      source: external_peer_reviewed
+      url: https://gsm.org.my/wp-content/uploads/gsm_file_2/702001-100753-PDF.pdf
+      kinabalu_relevance:
+        - mt_kinabalu_pluton
+        - dru_age_anchor
+        - iva_dru_timing
+      key_claims:
+        - "K-Ar 10-13.7 Ma intrusion"
+        - "Fission track exhumation 6.7-7.8 Ma"
+        - "Ties to Sabah Orogeny + 15 Ma DRU"
+
+    - id: N09_Madon2020_FracturedBasement
+      type: Paper
+      title: "Madon et al. 2020 — Crocker/Kudat fractured basement play"
+      paper_id: Madon2020_FracturedBasement
+      tier: 1
+      source: external_peer_reviewed
+      url: https://gsm.org.my/wp-content/uploads/gsm_file_2/702001-101825-PDF.pdf
+      kinabalu_relevance:
+        - fractured_basement_play
+        - reservoir_target
+        - multiphysics_derisk
+      key_claims:
+        - "Frames Stage I-III 'economic basement' as a target"
+        - "Requires multiphysics to derisk"
+
+    - id: N10_Das2024_Unconformities
+      type: Paper
+      title: "Das et al. 2024 — Four major unconformities NW Sabah/DG (internal-authored)"
+      paper_id: Das2024_Unconformities
+      tier: 1
+      source: hybrid  # internal author + external journal
+      sovereign_reviewed: false  # REQUIRES F13 review
+      kinabalu_relevance:
+        - chronostrat_anchor
+        - iva_ivf_timing
+        - internal_lineage
+      key_claims:
+        - "Four major unconformities anchor IVA-IVF"
+
+    - id: N11_BellFTG_Sabah
+      type: DataSource
+      title: "Bell Geospace MCFTG-SABAH FTG 367,649 km²"
+      paper_id: BellFTG_Sabah
+      tier: 2
+      source: external_industry
+      url: https://www.bellgeo.com/multi-client-data/malaysia-multiclient-programme
+      kinabalu_relevance:
+        - ftg_gravity
+        - multiclient
+        - gm_megamerge
+
+    - id: N12_MacGregor2020_subBasalt
+      type: Paper
+      title: "MacGregor 2020 — Multi-physics under-basalt imaging"
+      paper_id: MacGregor2020_subBasalt
+      tier: 2
+      source: external_peer_reviewed
+      kinabalu_relevance:
+        - volcanic_mask_discrimination
+        - pekaka_volcaniclastics
+        - layang_layang_basement
+
+    - id: N13_BurtonJohnson2013_Thesis
+      type: Paper
+      title: "Burton-Johnson 2013 PhD — Mt Kinabalu granitic pluton (Durham thesis)"
+      paper_id: BurtonJohnson2013_Thesis
+      tier: 2
+      source: external_peer_reviewed
+      url: https://etheses.durham.ac.uk/id/eprint/9450/1/Complete_Thesis_-_Post-Viva_-_Mt_Kinabalu_-_Alex_Burton-Johnson_2013.pdf
+      kinabalu_relevance:
+        - mt_kinabalu_pluton
+        - gravity_interpretation
+        - no_felsic_crust
+
+    - id: N14_Milsom1996_Gravity
+      type: Paper
+      title: "Milsom 1996 — Gravity field of Borneo"
+      paper_id: Milsom1996_Gravity
+      tier: 2
+      source: external_peer_reviewed
+      kinabalu_relevance:
+        - regional_gravity
+        - attenuated_continental_crust
+        - southern_margin_context
+
+    - id: N15_Internal_Synthesis_20260622
+      type: InternalArtifact
+      title: "Kinabalu physics-first synthesis (internal PDF, 2026-06-22)"
+      paper_id: Internal_Synthesis_20260622
+      tier: 1
+      source: internal_authored
+      sovereign_reviewed: true  # This is Arif's own synthesis
+      kinabalu_relevance:
+        - physics_first_framework
+        - crustal_domain_map
+        - paradox_register
+
+    - id: N16_Internal_PhaseI
+      type: InternalArtifact
+      title: "Prof Kinabalu Basin Tectono-Stratigraphic Framework (Phase I)"
+      paper_id: Internal_PhaseI
+      tier: 1
+      source: internal_authored
+      sovereign_reviewed: true
+      kinabalu_relevance:
+        - phase1_deliverables
+        - crustal_domain_map
+        - cob_surface
+        - basement_register
+        - event_horizons
+
+  edges:
+
+    - {from: N01_Meju2024_MT, to: N03_Gilligan2026_nBOSS, rel: corroborates,
+       claim: "Both image Dangerous Grounds underthrusting / lithospheric thinning"}
+
+    - {from: N03_Gilligan2026_nBOSS, to: N04_Fone2024_ANT, rel: complements,
+       claim: "Receiver functions + ANT agree on central-Sabah thin-crust + thermal upwelling"}
+
+    - {from: N07_BurtonJohnson2019_AMS, to: N08_Swauger2000_Kinabalu, rel: refines,
+       claim: "AMS extension 7.9-7.3 Ma post-dates pluton intrusion 10-13.7 Ma; ties Sabah Orogeny → DRU 15 Ma"}
+
+    - {from: N05_Hesse2009_DWFTB, to: N06_Sidek2016_GMSYS, rel: corroborates,
+       claim: "Both demand basement-driven shortening; Moho 26-33 km consistent with crustal-scale wedge"}
+
+    - {from: N01_Meju2024_MT, to: N09_Madon2020_FracturedBasement, rel: enables,
+       claim: "MT anisotropy + ophiolite serpentinization gives mechanism for fracture-controlled basement reservoir"}
+
+    - {from: N02_Mackie2025_TTI, to: N15_Internal_Synthesis_20260622, rel: applies,
+       claim: "TTI required for steeply dipping Crocker/Trusmadi sequences"}
+
+    - {from: N10_Das2024_Unconformities, to: N16_Internal_PhaseI, rel: anchors,
+       claim: "Four major unconformities anchor IVA-IVF timing"}
+
+    - {from: N11_BellFTG_Sabah, to: N06_Sidek2016_GMSYS, rel: complements,
+       claim: "Bell FTG + GM-SYS together enable NW Sabah megamerge calibration"}
+
+    - {from: N13_BurtonJohnson2013_Thesis, to: N09_Madon2020_FracturedBasement, rel: enables,
+       claim: "No felsic crust under ophiolite = basement is ultramafic, brittle, fracture-controlled reservoir candidate"}
+
+    - {from: N14_Milsom1996_Gravity, to: N06_Sidek2016_GMSYS, rel: corroborates,
+       claim: "Regional gravity + GM-SYS both support attenuated continental crust under Sabah"}
+
+    - {from: N04_Fone2024_ANT, to: N12_MacGregor2020_subBasalt, rel: applies,
+       claim: "ANT thermal upwelling signature under volcanic cover requires multiphysics disambiguation"}
+
+  eurekas:
+
+    - id: E1
+      title: "Kinabalu pluton = isostatic + decompression melting, not classic arc"
+      claim: >
+        Thin crust beneath Mt Kinabalu (nBOSS 24 km) + 7.9-7.3 Ma extension (AMS) +
+        10-13.7 Ma pluton (K-Ar) + 6.7-7.8 Ma exhumation = isostatic response to
+        post-subduction slab breakoff + decompression melting, not a typical arc.
+      supporting_paper_ids: [N03_Gilligan2026_nBOSS, N07_BurtonJohnson2019_AMS, N08_Swauger2000_Kinabalu, N04_Fone2024_ANT]
+      kinabalu_implication: >
+        Resolves the "what is the source of the Mt Kinabalu pluton?" paradox.
+        The 7.5 Ma Mt. Kinabalu granite is the smoking gun for slab breakoff,
+        not the Sabah Orogeny.
+      target_layer: ARCHITECTURE
+      tool_family: A_crustal_architecture
+
+    - id: E2
+      title: "Kinabalu inboard = polyphase foreland, not pure foreland basin"
+      claim: >
+        Dangerous Grounds continental crust underthrust under W Sabah (nBOSS) +
+        Hesse basement-driven shortening + Sidek Moho 26-33 km = the inboard
+        Kinabalu Basin is a polyphase foreland with inherited extensional fabric
+        and post-subduction relaxation, not a single-mechanism foreland basin.
+      supporting_paper_ids: [N03_Gilligan2026_nBOSS, N05_Hesse2009_DWFTB, N06_Sidek2016_GMSYS]
+      kinabalu_implication: >
+        Reframes Kinabalu Basin interpretation: the basin is not just "foreland
+        from Sabah Orogeny" but a long-lived polyphase system.
+      target_layer: ARCHITECTURE
+      tool_family: A_crustal_architecture
+
+    - id: E3
+      title: "MT anisotropic conductors = heat-flow predictor for source-rock maturity"
+      claim: >
+        Meju 2024 MT anisotropic conductors at lithospheric-asthenospheric boundary
+        spatially coincide with Neogene sub-basin distribution → MT anisotropy is
+        a heat-flow proxy for source-rock maturity in Kinabalu IVA-IVB intervals.
+      supporting_paper_ids: [N01_Meju2024_MT, N04_Fone2024_ANT]
+      kinabalu_implication: >
+        Multiphysics derisking: MT anisotropy is a non-seismic predictor for
+        maturation. Reduces exploration risk for IVA-IVB source rocks.
+      target_layer: INTERPRET
+      tool_family: C_lem_analog
+
+    - id: E4
+      title: "Crocker fractured basement play = dual-mechanism reservoir"
+      claim: >
+        Madon 2020 fractured basement + Burton-Johnson no felsic crust + Meju
+        2024 serpentinized ophiolite mantle = dual-mechanism reservoir/seal
+        system worth multiphysics-de-risked test.
+      supporting_paper_ids: [N09_Madon2020_FracturedBasement, N13_BurtonJohnson2013_Thesis, N01_Meju2024_MT]
+      kinabalu_implication: >
+        Validates Phase I D3 (Basement Penetration Register) as a real play
+        target, not just academic curiosity.
+      target_layer: INTERPRET
+      tool_family: A_crustal_architecture
+
+    - id: E5
+      title: "Multi-crustal architecture eureka is publicly defensible"
+      claim: >
+        Hesse basement-driven shortening + Sidek Moho 26-33 km + Burton-Johnson
+        no felsic crust + Gilligan thin crust + Meju anisotropic conductors =
+        the multi-crustal architecture synthesis (continental + hyperextended +
+        oceanic-affinity + remnant slab) is publicly defensible in peer review.
+      supporting_paper_ids: [N05_Hesse2009_DWFTB, N06_Sidek2016_GMSYS, N13_BurtonJohnson2013_Thesis, N03_Gilligan2026_nBOSS, N01_Meju2024_MT]
+      kinabalu_implication: >
+        The physics-first framework for Kinabalu is not a private claim — it
+        is corroborated by 5+ independent peer-reviewed publications.
+      target_layer: AUDIT
+      tool_family: D_governance
+
+    - id: E6
+      title: "Failed-rift thermal upwelling explains Kinabalu thermal anomaly"
+      claim: >
+        Fone 2024 ANT shows failed-rift thermal upwelling under central Sabah →
+        gives a physical mechanism for the Mt Kinabalu thermal anomaly and
+        connects to the 7.5 Ma pressure-melt granite formation.
+      supporting_paper_ids: [N04_Fone2024_ANT, N08_Swauger2000_Kinabalu, N07_BurtonJohnson2019_AMS]
+      kinabalu_implication: >
+        Provides a physical explanation for the 7.5 Ma Mt. Kinabalu granite
+        (Swauger exhumation = same time as slab breakoff + thermal upwelling).
+      target_layer: PHYSICS
+      tool_family: B_tectonic_context
+
+  ingestion_plan:
+    vector_store:
+      backend: qdrant
+      uri: qdrant://geox-vps:6333/sabah_multiphysics
+      collection_name: kinabalu_external_v1
+      vector_dims: 1536
+      distance: cosine
+      embedding_model: text-embedding-3-large
+
+    graph_store:
+      backend: neo4j
+      uri: neo4j://geox-vps:7687/kinabalu
+      graph_name: kinabalu_ext
+
+    chunking:
+      chunk_size: 1500
+      overlap: 200
+      strategy: recursive
+
+    ingestion_sequence:
+      - step: 1
+        action: "Acquire PDFs locally (Tier 1 = 10 papers, Tier 2 = 11 papers)"
+        tool: manual or wget
+        sovereign: false
+      - step: 2
+        action: "Run geox_literature_ingest on each PDF"
+        tool: geox_literature_ingest
+        batch_size: 1
+      - step: 3
+        action: "Embed chunks into Qdrant"
+        tool: qdrant-client
+        batch_size: 100
+      - step: 4
+        action: "Build Neo4j graph from YAML"
+        tool: neo4j-client
+      - step: 5
+        action: "Run geox_evidence_reason to find eureka connections"
+        tool: geox_evidence_reason
+        mode: full
+      - step: 6
+        action: "F13 ratification of 6 eurekas"
+        sovereign: true
+
+    888_hold_packets:
+      - packet: forge_work/2026-06-22-888-hold-crustal-domain-classify.md
+        blocks_step: 2
+      - packet: forge_work/2026-06-22-888-hold-biostrat-coordination.md
+        blocks_step: 5

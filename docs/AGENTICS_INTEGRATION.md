@@ -24,7 +24,7 @@
              ▼
 ┌────────────────────────────────────────────────────────────────────┐
 │                          GEOX :8081                                │
-│  54 canonical MCP tools · Evidence-only · Witness to kernel         │
+│  56 canonical MCP tools · Evidence-only · Witness to kernel         │
 │  DOES NOT DECIDE — computes, models, testifies, hands to kernel    │
 └────────────┬───────────────────────────────────────────────────────┘
              │ (subscribes via federation calls)

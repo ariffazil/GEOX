@@ -460,10 +460,10 @@ class TestF13NoNewMCPTools(unittest.TestCase):
             # The F13 floor requires 888 ratification for any canonical-tool-surface change.
             # Canonical federation decision (2026-06-14): GEOX surface is 40 tools
             # (35 core + 4 Vision V1). This test is updated to match the ratified state.
-            # 2026-06-21: W2-W12 FORGE — 40 → 47 (3 doctrine + 1 Prithvi + 1 gravity/mag + 2 open data)
-            # 2026-06-21: W13+ Phase C FORGE — 47 → 50 (joint_inversion + mt_forward + biostrat_constraint)
-            # 2026-06-21: W13+ Phase C FORGE — 50 → 51 (+ geox_seismic_inversion)
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 51)
+            # 2026-06-21: W2-W13+ FORGE — 40 → 54 (doctrine + foundation + nonseismic + multi-physics)
+            # 2026-06-21: W14+ FORGE — 54 → 55 (+ geox_lem_predict, GEOX-LEM substrate live; weights pending 888)
+            # 2026-06-22: W15+ FORGE — 55 → 56 (+ geox_deep_time_state, Deep Time Physics Context)
+            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 56)
             self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 40)
         except ImportError:
             # Server not importable in test env; the integration test will catch

@@ -60,9 +60,9 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.06.05"
-# P6 - Bumped to 40-tool surface; physics manifest anchor replacing constitution_hash
-GEOX_CONTRACT_EPOCH = "2026-06-14-GEOX-40TOOLS-v2.2"
+GEOX_VERSION = "v2026.06.22"
+# P7 - Bumped to 56-tool surface; W16+ forge: Vp grammar + intelligence flow + Kinabalu corpus
+GEOX_CONTRACT_EPOCH = "2026-06-22-GEOX-56TOOLS-v3.0"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -260,7 +260,7 @@ def compose_geox_servers() -> None:
     #   - geox_mt_forward                   (W13+ Phase C — CSEM/MT)
     #   - geox_biostrat_constraint          (W13+ Phase C — biostrat)
     # F13 SOVEREIGN authorized; AGENTS.md §Authority 888_HOLD gate satisfied.
-    _EXPECTED_CANONICAL = 54
+    _EXPECTED_CANONICAL = 56  # W15+ FORGE 2026-06-22: added geox_deep_time_state
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -549,6 +549,87 @@ async def _well_decision_class(
     )
     req = WellStateRequest(operator_id=operator_id, task_description=task_description)
     return (await geox_well_decision_class(req)).model_dump(mode="json")
+
+
+# ── W14+ FORGE 2026-06-21: GEOX-LEM inference (substrate live, weights pending GPU + 888) ──
+@mcp.tool(name="geox_lem_predict")
+async def _lem_predict(
+    well_id: str,
+    curves: dict,
+    depth_m: list,
+    depth_top_m: float | None = None,
+    depth_bot_m: float | None = None,
+    target_properties: list[str] | None = None,
+    mode: str = "physics_prior",
+    basin: str | None = None,
+    rw_ohm_m: float | None = None,
+    rho_matrix_g_cc: float | None = None,
+    rho_fluid_g_cc: float | None = None,
+    patch_size_m: float = 0.5,
+    actor_id: str | None = None,
+    session_id: str | None = None,
+) -> dict:
+    """Predict rock properties (porosity, Sw, lithology, Vp, pressure gradient) over a depth window.
+
+    Substrate mode of operation:
+      - `physics_prior` (default): physics-bounded estimates via Archie (Sw),
+        density-porosity (phi), Gardner (Vp), Wyllie (phi from DT). Honest mock-default
+        until federated pretraining data (>=1,200 wells) and foundation-model weights
+        are deployed (gated by 888_HOLD).
+      - `transformer`: requires federated weights; gated.
+      - `hybrid`: physics prior + transformer residual; transformer residual gated.
+
+    F2 TRUTH: confidence is hard-capped at 0.90. F13 SOVEREIGN: AC_Risk > 0.5 -> human_review_required.
+    """
+    from geox_mcp.tools.lem_predict import (
+        LEMPredictRequest, geox_lem_predict as _impl,
+    )
+    req = LEMPredictRequest(
+        well_id=well_id,
+        curves=curves,
+        depth_m=depth_m,
+        depth_top_m=depth_top_m,
+        depth_bot_m=depth_bot_m,
+        target_properties=target_properties or ["porosity", "sw"],
+        mode=mode,
+        basin=basin,
+        rw_ohm_m=rw_ohm_m,
+        rho_matrix_g_cc=rho_matrix_g_cc,
+        rho_fluid_g_cc=rho_fluid_g_cc,
+        patch_size_m=patch_size_m,
+        actor_id=actor_id,
+        session_id=session_id,
+    )
+    return await _impl(req)
+
+
+# ── W15+ FORGE 2026-06-22: Deep Time State (governed Earth State Vector) ──
+@mcp.tool(name="geox_deep_time_state")
+async def _deep_time_state(
+    age_ma: float | None = None,
+    age_top_ma: float | None = None,
+    age_bot_ma: float | None = None,
+    period: str | None = None,
+    query: str | None = None,
+    include_pending_datasets: bool = True,
+    actor_id: str | None = None,
+    session_id: str | None = None,
+) -> dict:
+    """Deep Time State — returns an Earth State Vector for the requested deep time.
+
+    F2 TRUTH: age resolution via ICS Chart v2024/12.
+    F7 HUMILITY: confidence hard-capped at 0.90.
+    F11 AUDIT: every envelope carries governance footer.
+    """
+    from geox_mcp.tools.deep_time_state import geox_deep_time_state as _impl
+    return await _impl(
+        age_ma=age_ma,
+        age_top_ma=age_top_ma,
+        age_bot_ma=age_bot_ma,
+        period=period,
+        query=query,
+        include_pending_datasets=include_pending_datasets,
+    )
 
 
 # ── W13+ FORGE — Phase C: GEOX → WEALTH STOIIP + ranking feed ──
@@ -1289,9 +1370,16 @@ async def legacy_mcp_handler(request):
 
     if method == "tools/list":
         all_tools = {t.name: t for t in await mcp.list_tools()}
-        tools = [
-            {"name": t.name, "description": t.description} for t_name in CANONICAL_PUBLIC_TOOLS if (t := all_tools.get(t_name))
-        ]
+        tools = []
+        for t_name in CANONICAL_PUBLIC_TOOLS:
+            t = all_tools.get(t_name)
+            if t:
+                params_schema = getattr(t, "parameters", None) or {"type": "object", "properties": {}}
+                tools.append({
+                    "name": t.name,
+                    "description": t.description or "",
+                    "inputSchema": params_schema,
+                })
         return JSONResponse({"jsonrpc": "2.0", "id": response_id, "result": {"tools": tools}})
 
     if method == "tools/call":

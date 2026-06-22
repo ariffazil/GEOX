@@ -156,4 +156,92 @@ See `AAA/wiki/log.md` for full release receipt. 10 verification gates passed.
 
 ---
 
+## [2026-06-21] — W14+ FORGE: GEOX-LEM substrate (commit: ead04d1c)
+
+**Scope:** Large Earth Model substrate (tokenizer, model, physics_head, dataset, pretrain). Live inference path exposed; weights pending GPU + 888.
+
+### Added
+- `geox_lem_predict` — Rock property prediction (porosity, Sw, Vp, lithology, pressure) over a depth window. Three modes: `physics_prior` (default, mock), `transformer` (gated, requires weights), `hybrid`. F2 TRUTH: confidence hard-capped at 0.90. F13 SOVEREIGN: AC_Risk > 0.5 → human_review_required.
+
+### Substrate (no live weight)
+- `src/geox_core/engines/lem/` — six-organ fusion architecture (config, dataset, model, physics_head, pretrain, tokenizer)
+
+---
+
+## [2026-06-22] — W15+ FORGE: Deep Time Physics Context (commit pending push)
+
+**Scope:** Governed Earth State Vector — temporal extension to the multi-physics substrate.
+
+### Added
+- `geox_deep_time_state` — Governed Earth State Vector for time-extended physics reasoning.
+
+---
+
+## [2026-06-22] — W16+ FORGE: Physics-First Substrate + Federation MCP Alignment (commit pending push)
+
+**Scope:** 56-tool surface, Huang 2021 Vp grammar, intelligence flow schema, Kinabalu multi-physics corpus, federation MCP architecture map. **No new canonical tools** — substrate only.
+
+### New Substrate (autonomous, no registry change)
+- `src/geox_core/schemas/crust_vp_grammar.py` — Huang 2021 Vp-based crust-type classifier (7 zones, 32 tests)
+- `src/geox_core/schemas/intelligence_flow.py` — 7-layer dynamic flow + 5 tool families (A-E) + 21 tests
+- `src/geox_core/schemas/kinabalu_corpus.py` — Multi-physics corpus substrate (Paper, Claim, Node, Edge, Eureka)
+- `src/geox_core/physics/joint_inversion_zone_hook.py` — Post-inversion Vp classification (additive, opt-in, 15 tests)
+- `src/geox_mcp/floor_enforcement.py` — F1/F4/F7/F9/F11/F13 wrapper (40 tests)
+- `src/geox_mcp/tools/crustal_domain_classify.py` — Multi-cell crustal domain classifier (16 tests)
+- `src/geox_mcp/tools/_register.py` — Hardened wrapper with F7 HUMILITY cap (0.95 → 0.90)
+
+### Hardening (constitutional floor enforcement)
+- **F7 HUMILITY cap**: 0.95 → 0.90 (was a constitutional violation, now enforced at `floor_enforcement.py`)
+- **F1 AMANAH**: Content-addressed audit (SHA-256 per call) to `999_vault/audit.jsonl`
+- **F4 CLARITY**: Pydantic `extra="forbid"` on tool envelopes
+- **F9 ANTI-HANTU**: Canonical tool name validation on registration
+- **F13 SOVEREIGN**: `ack_irreversible` enforcement for IRREVERSIBLE tier
+
+### Federation MCP Alignment
+- Verified MCP spec 2025-11-25 alignment (9/13 SEPs implemented; 4 deferred optional)
+- Verified FastMCP 3.4.2 alignment (11/24 features; 13 deferred optional)
+- Live URL `https://geox.arif-fazil.com/mcp` confirmed working
+- Server card at `/.well-known/mcp/server.json` confirmed
+- All 7 federation organs use FastMCP + streamable-http + protocol_version `2025-11-25`
+
+### Kinabalu Basin Multi-Physics Corpus
+- 21 tier-1 peer-reviewed papers (vector-ready)
+- 12-node knowledge graph (Meju 2024, Gilligan 2026, Fone 2024, Hesse 2009, etc.)
+- 7 eurekas synthesized (5 autonomous, 2 sovereign)
+- Internal bridge to 6 PETRONAS artefacts (synthesis, Phase I, workshops, etc.)
+
+### Tests
+- **708 passing** (was 591 at session start)
+- **2 skipped** (CUDA-required PINN)
+- **5 pre-existing failures** (documented; deferred: NATS graceful degradation, transport manifest drift)
+- **+124 new tests** across 5 modules (crust_vp_grammar: 32, intelligence_flow: 21, crustal_domain_classify: 16, joint_inversion_zone_hook: 15, floor_enforcement: 40)
+
+### Bug Sweep (per mandate: own all bugs)
+- `tests/test_e2e_geox_real.py` — dynamic tool count (was hardcoded 9)
+- `tests/test_mimo_vision.py` — `asyncio.run` replacement (11 sites)
+- `tests/test_golden.py` — CUDA-required skip
+- `tests/test_integration/test_macrostrat_api.py` — API-alive skip
+- `tests/test_quantum_flow.py` — deferred (NATS graceful degradation)
+- `tests/test_transport_manifest.py` — deferred (manifest drift)
+
+### Documentation
+- `docs/GEOX_INTELLIGENCE_FLOW.md` — Canonical architecture doc
+- `forge_work/2026-06-22-federated-mcp-architecture.md` — Federation map
+- `forge_work/2026-06-22-huang2021-eureka-receipt.md` — Huang 2021 eureka
+- `forge_work/2026-06-22-kinabalu-eureka-capsule.md` — 7 eurekas
+- `forge_work/2026-06-22-kinabalu-corpus-graph.yaml` — 12-node graph
+- `forge_work/2026-06-22-kinabalu-vector-manifest.json` — Ingestion plan
+- `forge_work/2026-06-22-rsi-roadmap.md` — RSI consolidation roadmap
+- `forge_work/2026-06-22-kinabalu-corpus-receipt.md` — Corpus receipt
+- `forge_work/2026-06-22-888-hold-push-deploy.md` — 888_HOLD packet for push
+
+### 888_HOLD Packets (5 pending)
+- `2026-06-22-888-hold-crustal-domain-classify.md` — registry promotion
+- `2026-06-22-888-hold-biostrat-coordination.md` — 8 biostrat rulings
+- `2026-06-22-888-hold-push-deploy.md` — git push to main
+- E5 + E7 in eureka capsule (canon defense + basin registration)
+- Internal Das 2024 paper F13 review
+
+---
+
 *See `git log --oneline --all` and `/root/AAA/wiki/log.md` for full history.*

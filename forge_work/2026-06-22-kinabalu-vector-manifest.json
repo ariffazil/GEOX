@@ -1,0 +1,215 @@
+{
+  "corpus_id": "SABAH_MULTIPHYSICS_KINABALU_EXTERNAL_v1.0",
+  "owner": "arif_fazil",
+  "lineage": ["BEKANTAN_1", "LEBAH_EMAS_1", "ABKSS_FRAMEWORK", "arifOS_FEDERATION"],
+  "forge_cycle": "2026-06-22-rsi-consolidation",
+  "tier1_papers": [
+    {
+      "doi": "10.1093/gji/ggae346",
+      "tag": "MT_DGrounds_Meju2024",
+      "priority": 1,
+      "kinabalu_relevance": ["crustal_architecture", "mt_anisotropy", "ductile_flow"]
+    },
+    {
+      "doi": "10.1093/gji/ggac035",
+      "tag": "MT_seismicGuided_Saleh2022",
+      "priority": 1,
+      "kinabalu_relevance": ["seismic_guided_mt", "cross_gradient", "fold_thrust_belt"]
+    },
+    {
+      "doi": "10.1029/2025JB031499",
+      "tag": "RF_nBOSS_Gilligan2026",
+      "priority": 1,
+      "kinabalu_relevance": ["crustal_thickness", "mt_kinabalu", "underthrust"]
+    },
+    {
+      "doi": "10.1029/2024JB029092",
+      "tag": "ANT_Fone2024",
+      "priority": 1,
+      "kinabalu_relevance": ["thermal_upwelling", "failed_rift", "sulu_rollback"]
+    },
+    {
+      "doi": "10.1130/B26411.1",
+      "tag": "DWFTB_Hesse2009",
+      "priority": 1,
+      "kinabalu_relevance": ["dwftb_kinematics", "basement_shortening", "kl2_toe_thrust"]
+    },
+    {
+      "doi": "10.1016/j.jsg.2018.11.014",
+      "tag": "AMS_Kinabalu_BurtonJohnson2019",
+      "priority": 1,
+      "kinabalu_relevance": ["tectonic_timing", "dru_age_constraint", "mt_kinabalu_pluton"]
+    },
+    {
+      "doi": "10.1007/s12517-023-11828-w",
+      "tag": "Unconformities_Das2024",
+      "priority": 1,
+      "kinabalu_relevance": ["chronostrat_anchor", "iva_ivf_timing"],
+      "sovereign_review_required": true,
+      "sovereign_note": "Internal author — Tg M Syazwan, Jamin Jamil — requires F13 review before canon"
+    },
+    {
+      "doi": "10.7186/bgsm69202014",
+      "tag": "FracturedBasement_Madon2020",
+      "priority": 1,
+      "kinabalu_relevance": ["fractured_basement_play", "reservoir_target"]
+    },
+    {
+      "doi": "10.7186/BGSM40199703",
+      "tag": "Gravity_Milsom1996",
+      "priority": 2,
+      "kinabalu_relevance": ["regional_gravity", "attenuated_continental_crust"]
+    },
+    {
+      "doi": "10.1016/J.MARPETGEO.2009.09.004",
+      "tag": "Folds_Back2010",
+      "priority": 2,
+      "kinabalu_relevance": ["anticline_families", "kl2_kinabalu"]
+    },
+    {
+      "tag": "TTI_CSEM_Mackie2025",
+      "priority": 1,
+      "url": "https://www.viridiengroup.com/sites/default/files/2026-03/viridien_quantifying_the_effects_of_TTI_in_multiphysics_analysis_of_electromagnetic_data_offshore.pdf",
+      "kinabalu_relevance": ["csem_methodology", "sabah_dip_correction"]
+    },
+    {
+      "tag": "GM_SYS_Sidek2016",
+      "priority": 1,
+      "url": "http://www.arpnjournals.org/jeas/research_papers/rp_2016/jeas_0216_3513.pdf",
+      "kinabalu_relevance": ["crustal_thickness", "gm_sys_model", "public_benchmark"]
+    },
+    {
+      "tag": "Kinabalu_Pluton_Swauger2000",
+      "priority": 1,
+      "url": "https://gsm.org.my/wp-content/uploads/gsm_file_2/702001-100753-PDF.pdf",
+      "kinabalu_relevance": ["mt_kinabalu_pluton", "dru_age_anchor"]
+    },
+    {
+      "tag": "MtKinabalu_Thesis_BurtonJohnson2013",
+      "priority": 2,
+      "url": "https://etheses.durham.ac.uk/id/eprint/9450/1/Complete_Thesis_-_Post-Viva_-_Mt_Kinabalu_-_Alex_Burton-Johnson_2013.pdf",
+      "kinabalu_relevance": ["mt_kinabalu_pluton", "no_felsic_crust"]
+    },
+    {
+      "tag": "subBasalt_MacGregor2020",
+      "priority": 2,
+      "url": "https://spgindia.org/document/technical-articles3-geohorizons-jan2020-10-5-20.pdf",
+      "kinabalu_relevance": ["volcanic_mask_discrimination", "pekaka_volcaniclastics"]
+    }
+  ],
+  "data_sources": [
+    {
+      "name": "Bell_Geospace_MCFTG_SABAH",
+      "size_km2": 367649,
+      "line_spacing_km": 2,
+      "url": "https://www.bellgeo.com/multi-client-data/malaysia-multiclient-programme",
+      "tier": 2,
+      "kinabalu_relevance": ["ftg_gravity", "multiclient", "gm_megamerge"]
+    },
+    {
+      "name": "TGS_Sabah_MC3D",
+      "url": "https://www.tgs.com/technical-library/mapping-the-exploration-potential-of-nw-borneo-in-sabah-and-sarawak",
+      "tier": 2,
+      "kinabalu_relevance": ["mc3d_seismic", "exploration_potential"]
+    }
+  ],
+  "internal_artifacts": [
+    {
+      "name": "kinabalu_basin_geology_physics_first_synthesis_20260622_031324",
+      "type": "internal_synthesis",
+      "sovereign_reviewed": true,
+      "tier": 1
+    },
+    {
+      "name": "Prof_Kinabalu_Basin_Tectono-Stratigraphic_Framework_PhaseI",
+      "type": "internal_presentation",
+      "sovereign_reviewed": true,
+      "tier": 1
+    },
+    {
+      "name": "Sabah_Multiphysics_QI_Integration_2022",
+      "type": "internal_report",
+      "sovereign_reviewed": true,
+      "tier": 1
+    },
+    {
+      "name": "2024_Strati-structural_evolution_of_NW_Sabah",
+      "type": "internal_publication",
+      "sovereign_reviewed": false,
+      "tier": 1,
+      "sovereign_note": "Internal author (Tg M Syazwan, Jamin Jamil) published externally; requires F13 review"
+    }
+  ],
+  "vector_dims": 1536,
+  "chunk_size": 1500,
+  "overlap": 200,
+  "embedding_model": "text-embedding-3-large",
+  "store": "qdrant://geox-vps:6333/sabah_multiphysics",
+  "graph": "neo4j://geoforge-vps:7687/kinabalu",
+  "verdict_grammar": ["SEAL", "PARTIAL", "SABAR", "HOLD", "VOID", "UNKNOWN"],
+  "claim_tagging": "MANDATORY",
+  "sovereignty_notes": {
+    "E1": "Reframes the Mt Kinabalu pluton origin (F13 required before canon)",
+    "E2": "Reframes the Kinabalu Basin origin (F13 required before canon)",
+    "E3": "Multiphysics derisking — no sovereign override needed (technical)",
+    "E4": "Validates Phase I D3 (F13 confirmation helpful but not blocking)",
+    "E5": "Public defensibility of multi-crustal architecture (F13 confirmation required)",
+    "E6": "Physical mechanism for Kinabalu thermal anomaly (F13 required)"
+  },
+  "ingestion_sequence": [
+    {
+      "step": 1,
+      "action": "Acquire local PDFs (Tier 1 = 10, Tier 2 = 11)",
+      "tool": "manual or wget",
+      "sovereign": false,
+      "effort_hours": 4
+    },
+    {
+      "step": 2,
+      "action": "Run geox_literature_ingest on each PDF",
+      "tool": "geox_literature_ingest",
+      "batch_size": 1,
+      "sovereign": false,
+      "effort_hours": 2
+    },
+    {
+      "step": 3,
+      "action": "Embed chunks into Qdrant",
+      "tool": "qdrant-client",
+      "batch_size": 100,
+      "sovereign": false,
+      "effort_hours": 1
+    },
+    {
+      "step": 4,
+      "action": "Build Neo4j graph from YAML",
+      "tool": "neo4j-client",
+      "sovereign": false,
+      "effort_hours": 1
+    },
+    {
+      "step": 5,
+      "action": "Run geox_evidence_reason to find eureka connections",
+      "tool": "geox_evidence_reason",
+      "mode": "full",
+      "sovereign": false,
+      "effort_hours": 2
+    },
+    {
+      "step": 6,
+      "action": "F13 ratification of 6 eurekas",
+      "sovereign": true,
+      "blocks_until_done": true
+    }
+  ],
+  "total_effort_hours": 10,
+  "expected_evidence_quality_band": "OBS to DER (peer-reviewed primary literature)",
+  "expected_ontology_coverage": {
+    "crustal_architecture": 5,
+    "tectonic_context": 4,
+    "mt_anisotropy": 3,
+    "kinabalu_pluton": 4,
+    "unconformities": 2,
+    "dwftb_kinematics": 3
+  }
+}

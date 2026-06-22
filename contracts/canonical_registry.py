@@ -3,11 +3,12 @@ from __future__ import annotations
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX CANONICAL PUBLIC TOOLS
 # SOT: src/geox_mcp/registry.py
-# Last verified: 2026-06-21
-# 54 canonical tools (W2-W13+ FORGE). Physics-9 foundation. Evidence-only.
+# Last verified: 2026-06-21 (W14+ FORGE: +1 geox_lem_predict)
+# 55 canonical tools (W2-W14+ FORGE). Physics-9 foundation. Evidence-only.
 # +14 from W2-W13+: 3 doctrine + 1 Prithvi + 1 gravity/mag + 2 open data
 # + 3 multi-physics (joint inversion + CSEM/MT + biostrat) + 1 PINN
 # + 3 integration (geomechanics + WELL decision_class + WEALTH feed).
+# +1 from W14+: geox_lem_predict (GEOX-LEM substrate live; weights pending GPU + 888).
 # F13 SOVEREIGN authorized expansion (AGENTS.md §Authority).
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -85,6 +86,8 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_geomechanics",        # K, G, E, ν from Physics9State
     "geox_well_decision_class", # WELL → GEOX operator readiness gate (C1-C5)
     "geox_wealth_feed",         # GEOX → WEALTH STOIIP + ranking + verdict
+    # W14+ FORGE 2026-06-21: GEOX-LEM inference (substrate live; physics_prior default)
+    "geox_lem_predict",         # LEM cell prediction (porosity, Sw, Vp, lithology, ...)
 ]
 
 GEOX_TOOL_MANIFEST: list[dict[str, str]] = [
@@ -146,6 +149,7 @@ GEOX_TOOL_MANIFEST: list[dict[str, str]] = [
     {"name": "geox_geomechanics", "axis": "compute", "expose": "True"},
     {"name": "geox_well_decision_class", "axis": "verify", "expose": "True"},
     {"name": "geox_wealth_feed", "axis": "reason", "expose": "True"},
+    {"name": "geox_lem_predict", "axis": "reason", "expose": "True"},
 ]
 
 # Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)

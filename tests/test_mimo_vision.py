@@ -204,7 +204,7 @@ class TestMiMoVLMAdapter:
     def test_interpret_perfect_mock(self, tmp_png, mock_backend_perfect):
         """Test interpretation with perfect mock backend."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(
                 image_path=tmp_png,
                 basin_context="Malay Basin, deltaic prograding",
@@ -234,7 +234,7 @@ class TestMiMoVLMAdapter:
     def test_interpret_empty_mock(self, tmp_png, mock_backend_empty):
         """Test interpretation with empty observations."""
         adapter = MiMoVLMAdapter(backend=mock_backend_empty)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(
                 image_path=tmp_png,
                 basin_context="Unknown basin",
@@ -255,7 +255,7 @@ class TestMiMoVLMAdapter:
     def test_interpret_malformed_json(self, tmp_png, mock_backend_malformed):
         """Test handling of malformed JSON response."""
         adapter = MiMoVLMAdapter(backend=mock_backend_malformed)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(
                 image_path=tmp_png,
                 basin_context="Unknown basin",
@@ -269,7 +269,7 @@ class TestMiMoVLMAdapter:
     def test_interpret_missing_image(self, mock_backend_perfect):
         """Test handling of missing image file."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(
                 image_path="/nonexistent/image.png",
                 basin_context="Unknown basin",
@@ -282,7 +282,7 @@ class TestMiMoVLMAdapter:
     def test_ac_risk_computation(self, tmp_png, mock_backend_perfect):
         """Test AC_Risk computation with MiMo-specific adjustments."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(
                 image_path=tmp_png,
                 basin_context="Malay Basin",
@@ -303,7 +303,7 @@ class TestMiMoVLMAdapter:
     def test_constitutional_notes(self, tmp_png, mock_backend_perfect):
         """Test that constitutional notes are present in the envelope."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(
                 image_path=tmp_png,
                 basin_context="Malay Basin",
@@ -357,7 +357,7 @@ class TestCrossModalFidelity:
     def test_inventory_round_trip(self, tmp_png, mock_backend_perfect):
         """Test that PerceptualInventory survives JSON round-trip."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(image_path=tmp_png, basin_context="Test")
         )
         
@@ -380,7 +380,7 @@ class TestCrossModalFidelity:
     def test_transform_stack_logged(self, tmp_png, mock_backend_perfect):
         """Test that transform stack is logged (F4 CLARITY)."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(image_path=tmp_png, basin_context="Test")
         )
         
@@ -437,7 +437,7 @@ class TestEdgeCases:
         """Test handling of very long image path."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
         long_path = "/tmp/" + "a" * 10000 + ".png"
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(image_path=long_path, basin_context="Test")
         )
         assert result.success is False
@@ -446,7 +446,7 @@ class TestEdgeCases:
     def test_special_characters_in_basin_context(self, tmp_png, mock_backend_perfect):
         """Test handling of special characters in basin context."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(
                 image_path=tmp_png,
                 basin_context="Malay Basin (2026) — deltaic prograding <test>",
@@ -457,7 +457,7 @@ class TestEdgeCases:
     def test_unicode_in_prompt(self, tmp_png, mock_backend_perfect):
         """Test handling of unicode in prompt."""
         adapter = MiMoVLMAdapter(backend=mock_backend_perfect)
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             adapter.interpret(
                 image_path=tmp_png,
                 basin_context="Malay Basin — ΔF ≡ δᵢ",

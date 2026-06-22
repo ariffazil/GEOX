@@ -14,10 +14,15 @@
 | **Repo** | `ariffazil/geox` |
 | **Port** | 8081 |
 | **Role** | Evidence-only earth coprocessor |
-| **Canonical tools** | **54** (40 baseline + 14 W2-W13+ FORGE 2026-06-21) |
-| **Floors enforced** | F1–F13 (delegated to arifOS kernel) |
+| **Canonical tools** | **56** (40 baseline + 14 W2-W13+ + 1 LEM W14+ + 1 Deep Time W15+) |
+| **Contract epoch** | `2026-06-22-GEOX-56TOOLS-v3.0` |
+| **Floors enforced** | F1–F13 (delegated to arifOS kernel, with F7 HUMILITY cap ≤0.90 enforced at wrapper) |
 | **Domain law** | NATURAL_LAW |
 | **Identity anchor** | physics_manifest_hash (NOT constitution_hash) |
+| **MCP spec** | 2025-11-25 (latest) |
+| **FastMCP** | 3.4.2 (latest) |
+| **Live URL** | `https://geox.arif-fazil.com/mcp` (HTTPS via Cloudflare → Caddy → GEOX) |
+| **Server card** | `/.well-known/mcp/server.json` |
 | **License** | Apache-2.0 (scientific tooling; federation governed by kernel AGPL-3.0) |
 
 ## Boundaries
