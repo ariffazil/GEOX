@@ -1,9 +1,9 @@
 {
-  "well_id": "BEK-2",
-  "permit": "PM9",
-  "field": "Bekok",
-  "company": "PETRONAS Carigali",
-  "country": "Malaysia",
+  "well_id": "DEMO-A",
+  "permit": "DEMO-PERMIT",
+  "field": "Demo-Field-A",
+  "company": "Demo Operator",
+  "country": "Demo Country",
   "track_data": [
     {
       "name": "MD",

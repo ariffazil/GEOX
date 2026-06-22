@@ -17,11 +17,104 @@ DITEMPA BUKAN DIBEI — Forged, Not Given.
 
 from __future__ import annotations
 
+import csv
+import logging
+import os
+import re
+
 from .schemas import (
     EarthStateVariable,
     PolarityState,
     ReferenceFrame,
 )
+
+logger = logging.getLogger("geox.deep_time.data_loaders")
+
+# ─── GPTS CSV paths (ingested from Macrostrat API) ──────────────────────────
+# Frozen copy of Macrostrat's Geomagnetic Polarity Chron (timescale_id=22) and
+# Geomagnetic Polarity Subchron (timescale_id=23) tables. CC-BY 4.0.
+# Source: https://macrostrat.org/api/v2/defs/intervals?timescale_id=22
+#         https://macrostrat.org/api/v2/defs/intervals?timescale_id=23
+_DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+CHRONS_CSV = os.path.join(_DATA_DIR, "gp_ts_chrons.csv")
+SUBCHRONS_CSV = os.path.join(_DATA_DIR, "gp_ts_subchrons.csv")
+
+
+def _load_gpts_table(csv_path: str) -> list[dict[str, str]]:
+    """Load a GPTS CSV table.
+    
+    Returns list of {name, abbrev, t_age, b_age, int_type, color}.
+    Empty if file missing.
+    """
+    if not os.path.exists(csv_path):
+        logger.warning("GPTS CSV not found: %s", csv_path)
+        return []
+    with open(csv_path, newline="") as f:
+        reader = csv.DictReader(f)
+        return list(reader)
+
+
+def _derive_polarity_from_abbrev(abbrev: str, name: str = "") -> str | None:
+    """Derive 'normal' | 'reversed' from a subchron abbrev like C1n or C1r.1r.
+    
+    Also accepts the subchron name field as fallback for subchrons that have
+    their polarity suffix in the name (e.g. C5n.2n) rather than abbrev.
+    
+    Rules:
+      - Ends with 'n' → normal
+      - Ends with 'r' → reversed
+      - Named chrons: Brunhes → normal, Matuyama → reversed (from GPTS GTS2020)
+      - Empty or unrecognised → None (unknown)
+    """
+    # Try abbrev first
+    source = abbrev if abbrev else name
+    if not source:
+        return None
+    # Strip trailing numeric and check last polarity suffix
+    stripped = source.rstrip("0123456789.")
+    if stripped.endswith("n"):
+        return "normal"
+    if stripped.endswith("r"):
+        return "reversed"
+    
+    # Named subchrons
+    named_mapping = {
+        "Brunhes": "normal",
+        "Jaramillo": "normal",
+        "Cobb Mountain": "normal",
+        "Cochiti": "normal",
+        "Nunivak": "normal",
+        "Sidufjall": "normal",
+        "Thvera": "normal",
+        "Matuyama": "reversed",
+        "Mammoth": "reversed",
+        "Gilbert": "reversed",
+    }
+    if name in named_mapping:
+        return named_mapping[name]
+    
+    return None
+
+
+# ─── GPTS lookup tables (loaded once at module import) ──────────────────────
+# These are sorted by t_age ascending (0 = present, higher = older).
+# Cache to avoid re-reading CSV on every call.
+_CHRONS_CACHE: list[dict[str, str]] | None = None
+_SUBCHRONS_CACHE: list[dict[str, str]] | None = None
+
+
+def _get_chrons() -> list[dict[str, str]]:
+    global _CHRONS_CACHE
+    if _CHRONS_CACHE is None:
+        _CHRONS_CACHE = _load_gpts_table(CHRONS_CSV)
+    return _CHRONS_CACHE
+
+
+def _get_subchrons() -> list[dict[str, str]]:
+    global _SUBCHRONS_CACHE
+    if _SUBCHRONS_CACHE is None:
+        _SUBCHRONS_CACHE = _load_gpts_table(SUBCHRONS_CSV)
+    return _SUBCHRONS_CACHE
 
 
 # ─── Pending-external-dataset stub registry ──────────────────────────────────
@@ -48,11 +141,21 @@ PENDING_DATASETS: dict[str, dict[str, str]] = {
         "ingestion_path": "Phase 1 forge — /root/geox/src/geox_mcp/tools/deep_time/data/sea_level_*.csv",
     },
     "magnetic_polarity": {
-        "primary": "GPTS GTS2020 (Gradstein et al. 2020)",
-        "alternative": "Ogg 2020, Cande & Kent 1995",
-        "format": "CSV with columns: age_top_Ma, age_base_Ma, chron_id, polarity (normal/reversed)",
-        "license": "CC-BY",
-        "ingestion_path": "Phase 1 forge — /root/geox/src/geox_mcp/tools/deep_time/data/gp_ts_gts2020.csv",
+        "primary": "Macrostrat Geomagnetic Polarity Chron/Subchron (GTS2020, Ogg 2020)",
+        "alternative": "Gradstein et al. 2020, Cande & Kent 1995",
+        "format": "Frozen CSV from Macrostrat API, CC-BY 4.0",
+        "license": "CC-BY 4.0 (Macrostrat)",
+        "ingestion_path": (
+            "INGESTED — /root/geox/src/geox_mcp/tools/deep_time/data/"
+            "gp_ts_chrons.csv (101 chrons) + gp_ts_subchrons.csv (372 subchrons)"
+        ),
+        "status": "INGESTED",
+        "coverage": "0–170.76 Ma (C1–M44 chrons, subchron-level resolution)",
+        "last_fetched": "2026-06-22",
+        "source_urls": [
+            "https://macrostrat.org/api/v2/defs/intervals?timescale_id=22",
+            "https://macrostrat.org/api/v2/defs/intervals?timescale_id=23",
+        ],
     },
     "o2": {
         "primary": "Berner 2001 GEOCARBSULF atmospheric O2",
@@ -85,14 +188,14 @@ PENDING_DATASETS: dict[str, dict[str, str]] = {
 #   CNS: 83.6 - 120.6 Ma (rounded to 83.6 - 121 Ma in our table)
 #   Kiaman: ~262 - 318 Ma
 #
-# GPTS coverage:
-#   Cenozoic: 0 - 66 Ma — dense, C1-C29r
-#   Cretaceous (post-CNS): 66 - 83.6 Ma — moderate, C29r-C34n
-#   CNS (blind): 83.6 - 121 Ma
-#   Cretaceous (pre-CNS): 121 - 145 Ma — M-series (M0-M25n)
-#   Jurassic: 145 - 201.4 Ma — M-series (M25n-M44Ar)
-#   Triassic (limited): 201.4 - ~227 Ma — M44Ar-? (poorly calibrated)
-#   Pre-Triassic: >227 Ma — UNRESOLVED
+# GPTS coverage (from frozen Macrostrat CSV):
+#   Cenozoic: 0 - 66 Ma — dense chrons + named subchrons
+#   Cretaceous (post-CNS): 66 - 83.6 Ma — C29r-C34n
+#   CNS (blind): 83.6 - 125.93 Ma (polarity known, dating NULL)
+#   Cretaceous (pre-CNS): 125.93 - 145 Ma — M0-M19 chrons
+#   Jurassic: 145 - 170.76 Ma — M19-M44 chrons
+#   Post-Jurassic: >170.76 Ma — beyond frozen CSV coverage
+#   Pre-Triassic: >250 Ma — UNRESOLVED
 
 CNS_TOP_MA = 83.6
 CNS_BASE_MA = 121.0
@@ -100,6 +203,8 @@ KIAMAN_TOP_MA = 262.0
 KIAMAN_BASE_MA = 318.0
 GPTS_FLOOR_MA = 0.0
 GPTS_CEILING_MA = 250.0  # conservative — Laskar chaos regime above
+GPTS_CSV_FLOOR_MA = 0.0
+GPTS_CSV_CEILING_MA = 170.76  # M44 top — last chron in frozen CSV
 
 
 # ─── UNKNOWN thresholds (F9 fabrication guard) ───────────────────────────────
@@ -125,10 +230,106 @@ def _is_unknown_at_age(param: str, age_ma: float) -> bool:
     return False
 
 
-# ─── 5-state polarity resolver ───────────────────────────────────────────────
+# ─── GPTS CSV-based polarity lookup ──────────────────────────────────────────
+
+def _lookup_chron_at_age(age_ma: float) -> dict | None:
+    """Find which GPTS chron contains the given age.
+    
+    Searches the frozen CSV table for the chron where t_age <= age_ma < b_age.
+    Returns the chron row dict, or None if outside frozen CSV range.
+    """
+    chrons = _get_chrons()
+    if not chrons:
+        return None
+    for row in chrons:
+        t = float(row["t_age"])
+        b = float(row["b_age"])
+        if t <= age_ma < b:
+            return row
+    return None
+
+
+def _lookup_subchron_at_age(age_ma: float) -> dict | None:
+    """Find which GPTS subchron contains the given age.
+    
+    Returns the subchron row dict with finest resolution, or None.
+    """
+    subchrons = _get_subchrons()
+    if not subchrons:
+        return None
+    for row in subchrons:
+        t = float(row["t_age"])
+        b = float(row["b_age"])
+        if t <= age_ma < b:
+            return row
+    return None
+
+
+def _chrons_in_interval(top_ma: float, base_ma: float) -> list[dict]:
+    """Return all GPTS chrons that overlap the interval [top_ma, base_ma).
+    
+    Chron overlaps if chron.t_age < base_ma AND chron.b_age > top_ma.
+    """
+    chrons = _get_chrons()
+    if not chrons:
+        return []
+    result = []
+    for row in chrons:
+        c_top = float(row["t_age"])
+        c_base = float(row["b_age"])
+        # Overlap condition: intervals overlap
+        if c_top < base_ma and c_base > top_ma:
+            result.append(row)
+    return result
+
+
+def _subchrons_in_interval(top_ma: float, base_ma: float) -> list[dict]:
+    """Return all GPTS subchrons that overlap the interval."""
+    subchrons = _get_subchrons()
+    if not subchrons:
+        return []
+    result = []
+    for row in subchrons:
+        s_top = float(row["t_age"])
+        s_base = float(row["b_age"])
+        if s_top < base_ma and s_base > top_ma:
+            result.append(row)
+    return result
+
+
+def _polarity_for_chron(chron_row: dict) -> str | None:
+    """Derive polarity for a chron row.
+    
+    Strategy:
+      1. Try subchron lookup at midpoint (finer resolution, has .n/.r naming)
+      2. Named chron heuristics
+      3. Fall back to None (unknown)
+    """
+    name = chron_row["name"]
+    t_age = float(chron_row["t_age"])
+    mid_age = (t_age + float(chron_row["b_age"])) / 2.0
+    
+    # Try subchron resolution first
+    sub = _lookup_subchron_at_age(mid_age)
+    if sub:
+        pol = _derive_polarity_from_abbrev(
+            sub.get("abbrev", ""),
+            sub.get("name", ""),
+        )
+        if pol:
+            return pol
+    
+    # CNS
+    if name == "C34":
+        return "normal"
+    
+    return None
+
 
 def resolve_polarity_state(age_ma: float, interval_top_ma: float, interval_base_ma: float) -> tuple[PolarityState, str]:
     """Determine the 5-state polarity for the requested interval.
+
+    Uses frozen GPTS CSV (Macrostrat chrons + subchrons, 0-170.76 Ma).
 
     Returns:
         (state, detailed_note)
@@ -136,12 +337,9 @@ def resolve_polarity_state(age_ma: float, interval_top_ma: float, interval_base_
     Logic:
       1. If interval entirely within CNS or Kiaman → SUPERCHRON
       2. If interval entirely above GPTS ceiling (pre-Triassic) → UNRESOLVED
-      3. If interval spans >=1 known reversal → MIXED
-      4. If single chron covers the interval → NORMAL or REVERSED
-      5. If interval entirely outside GPTS calibrated range → UNRESOLVED
-
-    Note: in this forge we use static boundaries. A future phase will
-    ingest the GPTS CSV and use real chron crossings.
+      3. If interval entirely within a single chron → NORMAL / REVERSED
+      4. If interval spans multiple chrons → MIXED (with count and names)
+      5. If CSV coverage exhausted → UNRESOLVED
     """
     # Case 1: superchron containment
     if interval_base_ma <= CNS_BASE_MA and interval_top_ma >= CNS_TOP_MA:
@@ -167,7 +365,7 @@ def resolve_polarity_state(age_ma: float, interval_top_ma: float, interval_base_
             f"No calibrated magnetic polarity time scale exists for this window.",
         )
 
-    # Case 3: intersects CNS (partially blind)
+    # Case 3: intersects CNS (partially blind within CSV range)
     if interval_top_ma < CNS_BASE_MA and interval_base_ma > CNS_TOP_MA:
         return (
             PolarityState.MIXED,
@@ -176,27 +374,82 @@ def resolve_polarity_state(age_ma: float, interval_top_ma: float, interval_base_
             f"are resolvable but the CNS itself is a blind zone.",
         )
 
-    # Case 4: in calibrated GPTS range; assume single chron for narrow queries
-    # (proper chron crossing detection requires GPTS CSV ingestion — Phase 2)
-    if interval_base_ma - interval_top_ma < 1.0:
-        # Single-instant query — assume normal polarity by default at Cenozoic
-        # (Phase 2 will use real GPTS CSV lookup)
-        if 0 <= age_ma < 0.781:
-            return (PolarityState.NORMAL, "Brunhes normal chron (0-0.781 Ma)")
-        if 0.781 <= age_ma < 0.988:
-            return (PolarityState.REVERSED, "Matuyama reversed chron (0.781-0.988 Ma)")
-        # ... Phase 2: replace with full GPTS lookup
+    # Case 4: beyond frozen CSV ceiling (>170.76 Ma, within GPTS calibrated range)
+    if interval_top_ma >= GPTS_CSV_CEILING_MA:
         return (
-            PolarityState.NORMAL,
-            "Single-chron resolution (Phase 2 will use full GPTS CSV lookup)",
+            PolarityState.UNRESOLVED,
+            f"Interval [{interval_top_ma}, {interval_base_ma}] Ma is above the frozen "
+            f"GPTS CSV ceiling ({GPTS_CSV_CEILING_MA} Ma, M44 chron). "
+            f"Extend CSV coverage for Jurassic polarity resolution.",
         )
 
-    # Case 5: interval with unknown reversal count (mid range, no GPTS data yet)
-    return (
-        PolarityState.MIXED,
-        f"Interval [{interval_top_ma}, {interval_base_ma}] Ma spans unknown number of "
-        f"reversals. Phase 2 will resolve exact chron boundaries from GPTS CSV.",
+    # Case 5: CSV-based resolution — count overlapping chrons
+    chrons = _chrons_in_interval(interval_top_ma, interval_base_ma)
+    subchrons = _subchrons_in_interval(interval_top_ma, interval_base_ma)
+
+    if not chrons:
+        # No chrons found — typically means outside CSV range
+        return (
+            PolarityState.UNRESOLVED,
+            f"No GPTS chrons found for interval [{interval_top_ma}, {interval_base_ma}] Ma.",
+        )
+
+    # Single chron?
+    if len(chrons) == 1:
+        chron = chrons[0]
+        chron_name = chron["name"]
+        chron_top = float(chron["t_age"])
+        chron_base = float(chron["b_age"])
+
+        # Find subchron at interval midpoint (highest resolution)
+        mid_age = (interval_top_ma + interval_base_ma) / 2.0
+        mid_sub = _lookup_subchron_at_age(mid_age)
+        if mid_sub:
+            sub_name = mid_sub["name"]
+            sub_abbrev = mid_sub.get("abbrev", "")
+            pol = _derive_polarity_from_abbrev(sub_abbrev, sub_name)
+            if pol == "normal":
+                return (
+                    PolarityState.NORMAL,
+                    f"{sub_name} normal subchron ({sub_abbrev}, {chron_top}-{chron_base} Ma)",
+                )
+            elif pol == "reversed":
+                return (
+                    PolarityState.REVERSED,
+                    f"{sub_name} reversed subchron ({sub_abbrev}, {chron_top}-{chron_base} Ma)",
+                )
+
+        # Single chron, no subchron match — try deriving from abbrev
+        pol = _polarity_for_chron(chron)
+        if pol == "normal":
+            return (
+                PolarityState.NORMAL,
+                f"{chron_name} normal chron ({chron_top}-{chron_base} Ma)"
+            )
+        elif pol == "reversed":
+            return (
+                PolarityState.REVERSED,
+                f"{chron_name} reversed chron ({chron_top}-{chron_base} Ma)"
+            )
+        # Unknown polarity — still single chron, return the name
+        return (
+            PolarityState.MIXED,
+            f"Single chron {chron_name} ({chron_top}-{chron_base} Ma), polarity unresolved. "
+            f"Subchron table may have gaps at this interval.",
+        )
+
+    # Multiple chrons — MIXED
+    chron_names = [c["name"] for c in chrons]
+    n_reversals = len(chrons) - 1  # each chron boundary is a polarity reversal
+    detail = (
+        f"Interval [{interval_top_ma}, {interval_base_ma}] Ma spans {len(chrons)} chrons "
+        f"({n_reversals} reversal(s)): {', '.join(chron_names)}"
     )
+    if subchrons:
+        sub_names = [s["name"] for s in subchrons[:10]]
+        detail += f" with {len(subchrons)} subchrons ({', '.join(sub_names)}{'...' if len(subchrons) > 10 else ''})"
+
+    return (PolarityState.MIXED, detail)
 
 
 # ─── Interval-distribution helper ─────────────────────────────────────────────
@@ -421,23 +674,28 @@ def load_sea_level_estimate(age_ma: float, age_top_ma: float, age_base_ma: float
 def load_magnetic_polarity(age_ma: float, age_top_ma: float, age_base_ma: float, duration_myr: float) -> EarthStateVariable:
     """Geomagnetic polarity at `age_ma` — 5-state enum (NORMAL / REVERSED / MIXED / SUPERCHRON / UNRESOLVED).
 
-    This is the canonical LC#28 closure for Sabah ophiolite dating.
+    Uses frozen GPTS CSV (Macrostrat chrons + subchrons, 0-170.76 Ma, CC-BY 4.0).
+    For intervals within CSV coverage, returns proper chron names and polarity.
+    F9 guard: returns UNRESOLVED for >250 Ma (uncalibrated).
     """
     state, detail_note = resolve_polarity_state(age_ma, age_top_ma, age_base_ma)
 
+    # PENDING_DATASETS ingestion status
+    csv_status = "INGESTED (Macrostrat GPTS Chrons + Subchrons, CC-BY 4.0)"
+    source = "Macrostrat Geomagnetic Polarity Chron (frozen CSV, GTS2020)"
+
     # Map PolarityState → value string and confidence
     if state == PolarityState.SUPERCHRON:
-        # Polarity is KNOWN but dating power is ZERO
         return EarthStateVariable(
             name="geomagnetic_polarity",
             value="SUPERCHRON (polarity known, dating power NULL)",
             units="enum: normal|reversed|mixed|superchron|unresolved",
             epistemic_level="OBSERVED",
-            source_citation="Ogg 2020 (GTS2020 chronology)",
+            source_citation=source,
             coverage_top_ma=GPTS_FLOOR_MA,
             coverage_base_ma=GPTS_CEILING_MA,
             notes=detail_note,
-            confidence=0.90,  # polarity is known, but dating resolution is NULL
+            confidence=0.90,
             warning="DATING RESOLUTION = NULL: use biostrat or radiometric dating as alternative.",
         )
     if state == PolarityState.UNRESOLVED:
@@ -451,21 +709,31 @@ def load_magnetic_polarity(age_ma: float, age_top_ma: float, age_base_ma: float,
             confidence=0.10,
         )
 
-    # For NORMAL / REVERSED / MIXED, we have NO_DATA because the GPTS CSV
-    # is not ingested — but we can still describe the resolution logic.
+    # NORMAL / REVERSED — CSV-resolved, proper OBSERVED level
+    if state in (PolarityState.NORMAL, PolarityState.REVERSED):
+        return EarthStateVariable(
+            name="geomagnetic_polarity",
+            value=state.value,
+            units="enum: normal|reversed|mixed|superchron|unresolved",
+            epistemic_level="OBSERVED",
+            source_citation=source,
+            coverage_top_ma=GPTS_FLOOR_MA,
+            coverage_base_ma=GPTS_CSV_CEILING_MA,
+            notes=detail_note,
+            confidence=0.85,
+        )
+
+    # MIXED — CSV-resolved but interval spans multiple chrons
     return EarthStateVariable(
         name="geomagnetic_polarity",
-        value=state.value,  # 'normal' | 'reversed' | 'mixed'
+        value=state.value,
         units="enum: normal|reversed|mixed|superchron|unresolved",
-        epistemic_level="NO_DATA",
-        source_citation="(pending — see PENDING_DATASETS['magnetic_polarity'])",
+        epistemic_level="OBSERVED",
+        source_citation=source,
         coverage_top_ma=GPTS_FLOOR_MA,
-        coverage_base_ma=GPTS_CEILING_MA,
-        notes=(
-            f"5-state enum resolution: {state.value}. {detail_note} "
-            "GPTS CSV not yet ingested — exact chron assignments pending Phase 1 forge."
-        ),
-        confidence=0.50,  # logic is sound, but exact chron data missing
+        coverage_base_ma=GPTS_CSV_CEILING_MA,
+        notes=detail_note,
+        confidence=0.75,
     )
 
 
