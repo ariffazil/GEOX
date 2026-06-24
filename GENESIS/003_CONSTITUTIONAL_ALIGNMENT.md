@@ -9,7 +9,7 @@ scope: /root/geox/GENESIS
 
 # GEOX — CONSTITUTIONAL ALIGNMENT (F1–F13)
 
-> **Canonical source:** `/root/arifOS/static/arifos/theory/000/000_LAW_v2026.03.07.md` (the canonically sealed law file — see also `static/arifos/000_CONSTITUTION.md` redirect).
+> **Canonical source:** `/root/arifOS/GENESIS/000_KERNEL_CANON.md` (see also CLAUDE.md table + arifOS schemas for runtime). Old path `/root/arifOS/static/arifos/theory/000/000_LAW_v2026.03.07.md` is superseded.
 >
 > Floor numbering verified F1–F13. F14 is DEAD and not a floor.
 >
