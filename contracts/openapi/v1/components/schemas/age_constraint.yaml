@@ -1,0 +1,23 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: AgeConstraint
+description: Formal age interpretation derived from isotopic, biostrat, or regional ties. Separated from timescale formal units.
+type: object
+required:
+  - type
+  - min_ma
+  - max_ma
+properties:
+  type:
+    type: string
+    enum: [biostrat, magnetostrat, isotopic, seismic, regional]
+  label:
+    type: string
+    description: "e.g., nannofossil zone"
+  min_ma:
+    type: number
+  max_ma:
+    type: number
+  confidence:
+    type: number
+    minimum: 0.0
+    maximum: 1.0

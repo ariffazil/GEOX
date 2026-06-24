@@ -1,0 +1,215 @@
+openapi: 3.1.0
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+info:
+  title: GEOX Stratigraphic API
+  version: 1.0.0
+  description: |
+    Standardized stratigraphic API schema combining GeoSciML semantics with Macrostrat's ergonomic JSON envelopes.
+    Enforces provenance, epistemic tags, and uncertainty for F2/F7/F11 constitutional compliance.
+servers:
+  - url: https://geox.arif-fazil.com/api/v1
+    description: Production GEOX Earth Intelligence Organ
+tags:
+  - name: Wells
+    description: Borehole and log curve metadata
+  - name: Stratigraphy
+    description: Picks, intervals, and correlations
+  - name: Temporal
+    description: Geologic timescales and age constraints
+  - name: Definitions
+    description: Controlled vocabularies and dictionaries
+
+paths:
+  /wells:
+    get:
+      tags:
+        - Wells
+      summary: List wells
+      responses:
+        "200":
+          description: A list of wells
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelopeWell'
+        "default":
+          $ref: '#/components/responses/ProblemDetailsResponse'
+
+  /wells/{well_id}/intervals:
+    get:
+      tags:
+        - Stratigraphy
+      summary: Get intervals for a well
+      parameters:
+        - name: well_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of intervals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelopeInterval'
+        "default":
+          $ref: '#/components/responses/ProblemDetailsResponse'
+
+  /correlations:
+    post:
+      tags:
+        - Stratigraphy
+      summary: Create a correlation between picks or intervals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components/schemas/correlation.yaml'
+      responses:
+        "201":
+          description: Created correlation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelopeCorrelation'
+        "default":
+          $ref: '#/components/responses/ProblemDetailsResponse'
+
+  /defs/lithologies:
+    get:
+      tags:
+        - Definitions
+      summary: Get controlled vocabulary for lithologies
+      responses:
+        "200":
+          description: Lithology dictionary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelopeDictionary'
+        "default":
+          $ref: '#/components/responses/ProblemDetailsResponse'
+
+  /defs/strat_ranks:
+    get:
+      tags:
+        - Definitions
+      summary: Get controlled vocabulary for stratigraphic ranks
+      responses:
+        "200":
+          description: Stratigraphic ranks dictionary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelopeDictionary'
+        "default":
+          $ref: '#/components/responses/ProblemDetailsResponse'
+
+components:
+  responses:
+    ProblemDetailsResponse:
+      description: Standard RFC 7807 Error Response
+      content:
+        application/problem+json:
+          schema:
+            $ref: './components/schemas/problem_details.yaml'
+  schemas:
+    Pick:
+      $ref: './components/schemas/pick.yaml'
+    Interval:
+      $ref: './components/schemas/interval.yaml'
+    Correlation:
+      $ref: './components/schemas/correlation.yaml'
+    TimescaleUnit:
+      $ref: './components/schemas/timescale_unit.yaml'
+    AgeConstraint:
+      $ref: './components/schemas/age_constraint.yaml'
+    Provenance:
+      $ref: './components/schemas/provenance.yaml'
+    EpistemicTag:
+      $ref: './components/schemas/epistemic_tag.yaml'
+    SuccessEnvelopeWell:
+      type: object
+      properties:
+        success:
+          type: object
+          properties:
+            v:
+              type: integer
+              default: 1
+            schema:
+              type: string
+              default: "geox.strat.v1"
+            request_id:
+              type: string
+              format: uuid
+            data:
+              type: array
+              items:
+                type: object # Placeholder for Well schema
+    SuccessEnvelopeInterval:
+      type: object
+      properties:
+        success:
+          type: object
+          properties:
+            v:
+              type: integer
+              default: 1
+            schema:
+              type: string
+              default: "geox.strat.v1"
+            request_id:
+              type: string
+              format: uuid
+            data:
+              type: array
+              items:
+                $ref: './components/schemas/interval.yaml'
+    SuccessEnvelopeCorrelation:
+      type: object
+      properties:
+        success:
+          type: object
+          properties:
+            v:
+              type: integer
+              default: 1
+            schema:
+              type: string
+              default: "geox.strat.v1"
+            request_id:
+              type: string
+              format: uuid
+            data:
+              type: array
+              items:
+                $ref: './components/schemas/correlation.yaml'
+    SuccessEnvelopeDictionary:
+      type: object
+      properties:
+        success:
+          type: object
+          properties:
+            v:
+              type: integer
+              default: 1
+            schema:
+              type: string
+              default: "geox.strat.v1"
+            request_id:
+              type: string
+              format: uuid
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  label:
+                    type: string
+                  description:
+                    type: string

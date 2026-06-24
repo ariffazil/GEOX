@@ -4,7 +4,7 @@ from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX CANONICAL — Phase 2 Clean Architecture (2026-06-22)
-# 15 tools. Mode-based consolidation. Evidence-only. Physics-9 governed.
+# 16 tools. Mode-based consolidation. Evidence-only. Physics-9 governed.
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -25,18 +25,19 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     "geox_subsurface_model",     # 9. Joint inversion, gravity/mag, MT forward
     "geox_geomechanics",         # 10. K/G/E/ν, coordinate transform, blockspace
 
-    # ── BASIN DOMAIN (1 tool) ──────────────────────────────────────────────────
-    "geox_basin",                # 11. Profile, resolve, macrostrat, deep time, scene
+    # ── BASIN DOMAIN (2 tools) ─────────────────────────────────────────────────
+    "geox_basin",                # 11. Profile, resolve, macrostrat, scene
+    "geox_deep_time_state",      # 12. Earth State Vector at any geological age
 
     # ── GOVERNANCE DOMAIN (2 tools) ────────────────────────────────────────────
-    "geox_claim",                # 12. Create, validate, challenge, seal, attach
-    "geox_evidence",             # 13. Discover, synthesize, abduct, contradict, literature
+    "geox_claim",                # 13. Create, validate, challenge, seal, attach
+    "geox_evidence",             # 14. Discover, synthesize, abduct, contradict, literature
 
     # ── EVALUATION DOMAIN (1 tool) ─────────────────────────────────────────────
-    "geox_prospect",             # 14. Volumetrics, POS, EVOI, risk assessment
+    "geox_prospect",             # 15. Volumetrics, POS, EVOI, risk assessment
 
     # ── DOCTRINE DOMAIN (1 tool) ───────────────────────────────────────────────
-    "geox_doctrine",             # 15. Anti-Beautiful-One, assumptions, Gödel, guards
+    "geox_doctrine",             # 16. Anti-Beautiful-One, assumptions, Gödel, guards
 ]
 
 # Backward-compat: old tool names available for 1 release cycle
@@ -61,12 +62,13 @@ CANONICAL_COMPAT_TOOLS: list[str] = [
     "geox_doctrine_godel_review", "geox_prithvi_eo_inference",
     "geox_gravity_magnetic_forward", "geox_emag2_ingest", "geox_icgem_models",
     "geox_joint_inversion", "geox_mt_forward", "geox_biostrat_constraint",
-    "geox_seismic_inversion", "geox_lem_predict", "geox_deep_time_state",
+    "geox_seismic_inversion", "geox_lem_predict",
+    # geox_deep_time_state moved to CANONICAL_PUBLIC_TOOLS (16th slot)
 ]
-# These compat names will be removed in Phase 4. 
+# These compat names will be removed in Phase 4.
 
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
-    # ── PHASE 2 CLEAN ARCHITECTURE (15 tools, 4 lanes) ─────────────────────────
+    # ── PHASE 2 CLEAN ARCHITECTURE (16 tools, 4 lanes) ─────────────────────────
 
     # ── WELL DOMAIN (4 tools) ──────────────────────────────────────────────────
     {"name": "geox_well_ingest", "axis": "observe", "lane": "evidence", "expose": True},
@@ -84,8 +86,9 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_subsurface_model", "axis": "reason", "lane": "judgment", "expose": True},
     {"name": "geox_geomechanics", "axis": "compute", "lane": "reasoning", "expose": True},
 
-    # ── BASIN DOMAIN (1 tool) ──────────────────────────────────────────────────
+    # ── BASIN DOMAIN (2 tools) ─────────────────────────────────────────────────
     {"name": "geox_basin", "axis": "reason", "lane": "discovery", "expose": True},
+    {"name": "geox_deep_time_state", "axis": "reason", "lane": "discovery", "expose": True},
 
     # ── GOVERNANCE DOMAIN (2 tools) ────────────────────────────────────────────
     {"name": "geox_claim", "axis": "reason", "lane": "judgment", "expose": True},
