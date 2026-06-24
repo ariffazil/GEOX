@@ -260,7 +260,7 @@ def compose_geox_servers() -> None:
     #   - geox_mt_forward                   (W13+ Phase C — CSEM/MT)
     #   - geox_biostrat_constraint          (W13+ Phase C — biostrat)
     # F13 SOVEREIGN authorized; AGENTS.md §Authority 888_HOLD gate satisfied.
-    _EXPECTED_CANONICAL = 15  # Phase 2 Clean Architecture (2026-06-22): 15 mode-consolidated tools
+    _EXPECTED_CANONICAL = 16  # Phase 2 Clean Architecture (2026-06-22 + W15+ deep_time): 16 mode-consolidated tools
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -1382,7 +1382,7 @@ async def legacy_mcp_handler(request):
         from geox_mcp.organ_governance import check_governance
 
         gov_verdict, gov_error = await check_governance(
-            tool_name=resolved_name,
+            tool_name=name,
             arguments=args,
             actor_id=args.get("actor_id", "geox-mcp"),
             session_id=args.get("session_id"),
@@ -1555,13 +1555,10 @@ def create_app():
             Route("/webmcp/tools", webmcp_tools, methods=["GET"]),
             Route("/webmcp/status", webmcp_status, methods=["GET"]),
             Route("/webmcp/call/{tool_name:str}", webmcp_call_tool, methods=["POST"]),
-            # Mount FastMCP HTTP handler at /mcp (handles Streamable HTTP natively).
-            # No 307 redirect — breaks Kimi Code and other MCP clients that don't follow POST redirects.
-            Mount("/mcp", app=mcp_http_handler),
-            # Handle /mcp (no trailing slash) — Mount can't handle this because the
-            # remaining path "" doesn't match the mounted app's "/" route.
+            # Governed legacy handler for all MCP traffic (/mcp and /mcp/).
+            # Native FastMCP streamable-http mount removed to enforce RT1/RT3 lanes,
+            # session/actor/lease checks, and arifOS judgment.
             Route("/mcp", legacy_mcp_handler, methods=["GET", "POST"]),
-            # Explicit /mcp/ handler for clients that append trailing slash
             Route("/mcp/", legacy_mcp_handler, methods=["GET", "POST"]),
         ],
         lifespan=mcp_http_handler.lifespan,
@@ -1613,3 +1610,107 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PHASE 2 UNIFIED TOOL WIRING — forge 2026-06-23
+# Wires the 14 mode-consolidated canonical tools that exist as _unified.py
+# implementations but were never registered with FastMCP. Each wrapper
+# delegates to the unified async function via a single 'arguments' dict
+# (FastMCP rejects **kwargs). Clients call as:
+#   {"name": "geox_basin", "arguments": {"arguments": {"mode": "...", "basin_name": "..."}}}
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+@mcp.tool(name="geox_well_ingest")
+async def _well_ingest(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Load well log data (LAS, SEG-Y, DST, deviation, tops)."""
+    from geox_mcp.tools.well_ingest import geox_well_ingest as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_well_qc")
+async def _well_qc(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """QC: depth, curves, completeness, FJIS."""
+    from geox_mcp.tools.well_qc import geox_well_qc as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_petrophysics")
+async def _petrophysics(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Vsh, porosity, Sw, perm, net pay, LEM."""
+    from geox_mcp.tools.petrophysics_unified import geox_petrophysics as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_sequence")
+async def _sequence(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Sequence stratigraphy, correlation."""
+    from geox_mcp.tools.sequence_unified import geox_sequence as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_seismic_ingest")
+async def _seismic_ingest(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """SEG-Y I/O, header inspection."""
+    from geox_mcp.tools.seismic_ingest import geox_seismic_ingest as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_seismic_interpret")
+async def _seismic_interpret(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Horizon contrast, faults, frames, blend."""
+    from geox_mcp.tools.seismic_interpret import geox_seismic_interpret as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_vision")
+async def _vision(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """VLM inference, audit, calibration, perceptual."""
+    from geox_mcp.tools.vision_unified import geox_vision as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_subsurface_model")
+async def _subsurface_model(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Joint inversion, gravity/mag, MT forward."""
+    from geox_mcp.tools.subsurface_model import geox_subsurface_model as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_basin")
+async def _basin(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Profile, resolve, macrostrat, scene."""
+    from geox_mcp.tools.basin_unified import geox_basin as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_claim")
+async def _claim(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Create, validate, challenge, seal, attach."""
+    from geox_mcp.tools.claim_unified import geox_claim as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_evidence")
+async def _evidence(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Discover, synthesize, abduct, contradict, literature."""
+    from geox_mcp.tools.evidence_unified import geox_evidence as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_prospect")
+async def _prospect(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Volumetrics, POS, EVOI, risk assessment."""
+    from geox_mcp.tools.prospect_unified import geox_prospect as _impl
+    return await _impl(**(arguments or {}))
+
+
+@mcp.tool(name="geox_doctrine")
+async def _doctrine(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Anti-Beautiful-One, assumptions, Gödel, guards."""
+    from geox_mcp.tools.doctrine_unified import geox_doctrine as _impl
+    return await _impl(**(arguments or {}))
+
+
+logger.info("Phase 2 unified tools wired: 14 canonical tools registered with FastMCP")
