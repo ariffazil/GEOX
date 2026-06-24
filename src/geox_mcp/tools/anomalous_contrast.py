@@ -286,36 +286,46 @@ def _compute_attention_residual(
             }
         )
 
-    # ── Governance Escalation (Essay #13 boundary conditions → action) ───
+    # ── Governance Escalation (physics-domain advisory only) ─────────────
+    # GEOX is an L1 domain organ. It may flag physics conditions that *suggest*
+    # governance attention, but it MUST NOT issue constitutional verdicts.
+    # The final SEAL / SABAR / HOLD / VOID verdict is computed by arifOS from
+    # F1–F13, independent of GEOX, using:
+    #     AC_Risk = U_phys × D_transform × B_cog
+    # This field is therefore an ADVISORY_STATUS for arifOS, not a requirement.
     governance_escalation = None
     if boundary_flags:
         conditions = [f["condition"] for f in boundary_flags]
         if "ADVERSARIAL_DELTA" in conditions:
             governance_escalation = {
-                "required_status": "VOID",
+                "advisory_status": "VOID",
                 "trigger": "ADVERSARIAL_DELTA",
                 "reason": (
-                    "Essay #13, Section 5.3: Adversarial δ detected. "
+                    "Essay #13, Section 5.3: Adversarial δ detected in the physics model. "
                     "Softmax amplifies arbitrarily large perturbations into near-certainty. "
-                    "Force VOID — verify this is not acquisition footprint or artifact."
+                    "arifOS should treat this as a high-AC_Risk advisory; final VOID verdict "
+                    "requires independent F1–F13 constitutional review."
                 ),
             }
         elif "LARGE_CONTRAST" in conditions and "LARGE_MISTIE" in conditions:
             governance_escalation = {
-                "required_status": "HOLD",
+                "advisory_status": "HOLD",
                 "trigger": "LARGE_CONTRAST + LARGE_MISTIE",
                 "reason": (
-                    "Essay #13, Section 5.3: Multiple boundary conditions violated. "
-                    "Linearized model (Aki-Richards / Shuey) no longer applies. "
-                    "Equivalent to post-critical angle + numerical saturation."
+                    "Essay #13, Section 5.3: Multiple physics boundary conditions violated. "
+                    "Linearized model (Aki-Richards / Shuey) may not apply. "
+                    "This is a physics-domain advisory for arifOS; final HOLD verdict "
+                    "is computed from F1–F13 and AC_Risk, not by GEOX."
                 ),
             }
         elif "LARGE_CONTRAST" in conditions or "LARGE_MISTIE" in conditions:
             governance_escalation = {
-                "required_status": "HOLD",
+                "advisory_status": "HOLD",
                 "trigger": conditions[0],
                 "reason": (
-                    "Essay #13, Section 5.3: Boundary condition violated. Approximation tier may not hold. Human review required."
+                    "Essay #13, Section 5.3: Physics boundary condition violated. "
+                    "Approximation tier may not hold. Advisory only — final arifOS "
+                    "verdict requires independent constitutional review."
                 ),
             }
 

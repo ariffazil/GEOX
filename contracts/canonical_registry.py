@@ -3,7 +3,7 @@ from __future__ import annotations
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX CANONICAL PUBLIC TOOLS — Contract Mirror
 # SOT: src/geox_mcp/registry.py
-# Phase 2 Clean Architecture (2026-06-22): 15 mode-consolidated tools
+# Phase 2 Clean Architecture (2026-06-22): 16 mode-consolidated tools
 # ═══════════════════════════════════════════════════════════════════════════════
 
 CANONICAL_PUBLIC_TOOLS: list[str] = [
@@ -20,8 +20,9 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
     # ── MODEL DOMAIN (2 tools) ──
     "geox_subsurface_model",
     "geox_geomechanics",
-    # ── BASIN DOMAIN (1 tool) ──
+    # ── BASIN DOMAIN (2 tools) ──
     "geox_basin",
+    "geox_deep_time_state",
     # ── GOVERNANCE DOMAIN (2 tools) ──
     "geox_claim",
     "geox_evidence",

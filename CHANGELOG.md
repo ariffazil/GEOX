@@ -84,7 +84,7 @@
 ### Fixed
 - Tool count: **37 → 39** — added missing `geox_las_inspect` and `geox_seismic_segy_inspect` to capability map and table
 - Epistemic tags: `FACT / INTERPRETATION / SPECULATION` → canonical `CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN` across all sections
-- F1–F13 constitutional table: fully rewritten to match canonical arifOS `000_LAW_v2026.03.07.md` — added Type (HARD/SOFT/DERIVED), Symbols (τ, W₄, P², κᵣ, Ω₀, etc.), threshold values, and GEOfield mappings
+- F1–F13 constitutional table: fully rewritten to match canonical arifOS `GENESIS/000_KERNEL_CANON.md` (supersedes 000_LAW_v2026.03.07.md) — added Type (HARD/SOFT/DERIVED), Symbols, and mappings (historical entry)
 
 ### Added
 - **Epistemic Ladder section (§6)** — 7-rung ladder from OBSERVED → HUMAN JUDGMENT, with hypothesis scaffolding (evidence_for, evidence_against, expected_additional_signatures, missing_tests), and non-stationary principle
