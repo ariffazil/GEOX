@@ -1,0 +1,52 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Interval
+description: Top-base bounded stratigraphic package in MD/TVDSS. Corresponds to GeoSciML MappedFeature.
+type: object
+required:
+  - interval_id
+  - well_id
+  - top
+  - base
+  - provenance
+properties:
+  interval_id:
+    type: string
+  well_id:
+    type: string
+  top:
+    type: object
+    properties:
+      md_m:
+        type: number
+      tvdss_m:
+        type: number
+  base:
+    type: object
+    properties:
+      md_m:
+        type: number
+      tvdss_m:
+        type: number
+  strat_name:
+    type: string
+  lithology:
+    type: array
+    items:
+      type: string
+  relative_order:
+    type: integer
+    description: Relative stratigraphy stacking order
+  correlation_group:
+    type: string
+    description: ID linking to equivalent packages across wells
+  timescale_unit:
+    $ref: './timescale_unit.yaml'
+  age_constraints:
+    type: array
+    items:
+      $ref: './age_constraint.yaml'
+  earth_state:
+    type: object
+    description: Deep-time contextual enrichment
+  provenance:
+    $ref: './provenance.yaml'

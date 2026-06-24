@@ -1,0 +1,45 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Correlation
+description: Cross-well linkage between equivalent picks or intervals. Extends GeoSciML relations.
+type: object
+required:
+  - correlation_id
+  - source_object
+  - target_object
+  - method
+  - provenance
+properties:
+  correlation_id:
+    type: string
+  source_object:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [pick, interval]
+      id:
+        type: string
+  target_object:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [pick, interval]
+      id:
+        type: string
+  method:
+    type: string
+    enum: [manual, dtw, ml, bayesian, hybrid]
+  evidence:
+    type: array
+    items:
+      type: object
+      properties:
+        kind:
+          type: string
+        weight:
+          type: number
+  confidence:
+    $ref: './confidence.yaml'
+  provenance:
+    $ref: './provenance.yaml'

@@ -25,16 +25,6 @@ from pydantic import BaseModel, Field
 #
 # A tool that emits UNKNOWN is honest. A tool that silently extrapolates to
 # fill a gap violates F9.
-EpistemicLevel = Literal[
-    "OBSERVED",            # direct measurement, very high confidence
-    "DERIVED",             # calculated from well-understood physics/formula
-    "INTERPRETED",         # inferred from proxy data with interpretative steps
-    "PROCESS_HYPOTHESIS",  # plausible estimate from theoretical model
-    "SPECULATION",         # unmodeled, unconstrained
-    "NO_DATA",             # dataset not yet ingested; explicit null but ingestible
-    "UNKNOWN",             # cannot be known at this age; F9 fabrication guard
-]
-
 EPISTEMIC_CONFIDENCE_CAP = {
     "OBSERVED": 0.99,
     "DERIVED": 0.95,
@@ -44,6 +34,29 @@ EPISTEMIC_CONFIDENCE_CAP = {
     "NO_DATA": 0.10,
     "UNKNOWN": 0.05,  # explicitly low — we are telling the caller "we cannot know"
 }
+
+
+def cap_confidence(epistemic_level: str, raw_confidence: float) -> float:
+    """Apply F7 HUMILITY cap based on epistemic level.
+
+    Per GEOX F7, confidence is hard-capped per variable type:
+      - OBSERVED:          cap = 0.90
+      - DERIVED:           cap = 0.90 (formula-based, not fabricated)
+      - INTERPRETED:       cap = 0.85
+      - PROCESS_HYPOTHESIS: cap = 0.75
+      - SPECULATION:       cap = 0.50
+      - NO_DATA:           cap = 0.10
+      - UNKNOWN:           cap = 0.05
+
+    The F7 cap is the MAXIMUM confidence any variable may claim, regardless
+    of what the raw confidence score is. If a data loader computes 0.99 for
+    an OBSERVED measurement, this function reduces it to 0.90.
+
+    This is distinct from the model-level F7 overall_confidence cap of 0.90
+    for the whole envelope.
+    """
+    cap = EPISTEMIC_CONFIDENCE_CAP.get(epistemic_level, 0.10)
+    return min(float(raw_confidence), cap)
 
 
 # ─── Polarity states (5-state enum per F2 hardening) ─────────────────────────
