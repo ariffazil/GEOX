@@ -21,7 +21,7 @@ from typing import Any, Literal
 import numpy as np
 from fastmcp import Context
 
-from geox_core.core.geox_image import BlockSpace, SurveySpace, WorldSpace
+from geox_core.core.geox_image import BlockSpace, Image3d, SurveySpace, WorldSpace
 from geox_core.engines.seismic.attribute_registry import DEFAULT_REGISTRY
 from geox_core.enums.statuses import (
     ArtifactStatus,

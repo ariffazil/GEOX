@@ -366,7 +366,7 @@ async def resolve_taxon(
         auto = await _pbdb.taxa_autocomplete(taxon_name, limit=5)
         if auto:
             best = auto[0]
-            oid = best.get("oid", "")
+            best.get("oid", "")
             # Fetch full record
             full = await _pbdb.taxa_list(
                 base_name=best.get("nam", taxon_name),

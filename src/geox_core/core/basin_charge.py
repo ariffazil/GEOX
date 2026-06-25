@@ -470,7 +470,7 @@ def compute_migration_flowpath(
         dip_dir = float(carrier.get("dip_direction_deg", 0.0))
         dip_angle = float(carrier.get("dip_angle_deg", 2.0))
         carrier_depth = float(carrier.get("carrier_depth_m", 0.0))
-        length = float(carrier.get("length_m", 10000.0))
+        float(carrier.get("length_m", 10000.0))
 
         # Up-dip direction vector (unit vector)
         dip_rad = _mig_math.radians(dip_dir)

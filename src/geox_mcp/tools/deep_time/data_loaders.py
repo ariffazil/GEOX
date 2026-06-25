@@ -681,7 +681,6 @@ def load_magnetic_polarity(age_ma: float, age_top_ma: float, age_base_ma: float,
     state, detail_note = resolve_polarity_state(age_ma, age_top_ma, age_base_ma)
 
     # PENDING_DATASETS ingestion status
-    csv_status = "INGESTED (Macrostrat GPTS Chrons + Subchrons, CC-BY 4.0)"
     source = "Macrostrat Geomagnetic Polarity Chron (frozen CSV, GTS2020)"
 
     # Map PolarityState → value string and confidence

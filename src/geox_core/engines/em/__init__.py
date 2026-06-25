@@ -266,8 +266,8 @@ def csem_forward_1d(
             Z_surface = Z0 * numerator / denominator
 
         # Wavenumber in air (for the TE mode)
-        k_air = np.sqrt(1j * omega * MU_0 * 1e-12)  # σ_air ≈ 0
-        k0 = np.sqrt(omega * MU_0 * omega * EPSILON_0)  # free-space wavenumber
+        np.sqrt(1j * omega * MU_0 * 1e-12)  # σ_air ≈ 0
+        np.sqrt(omega * MU_0 * omega * EPSILON_0)  # free-space wavenumber
 
         # Skin depth in the first layer
         sigma_first = 1.0 / max(resistivities[0], 1e-10)

@@ -29,7 +29,7 @@ scope: /root/geox
 
 # GEOX — Earth Intelligence | Governed World Model
 
-> **56 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**  
+> **16 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**  
 > **Multi-physics Earth Witness** — seismic + gravity + magnetic + CSEM/MT + biostrat → one Physics9State per cell  
 > **Doctrine-wrapped** — Gap X Assumption Lineage, Gap 3 Anti-Beautiful-One, Gap 5 Gödel Wall live
 > **W16+ FORGE 2026-06-22** — Huang 2021 Vp grammar + intelligence flow + Kinabalu corpus substrate
@@ -37,7 +37,7 @@ scope: /root/geox
 GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, stratigraphic interpretation, **multi-physics joint inversion (Physics9), CSEM/MT, geomechanics, foundation model backing engines, doctrine layer (Gap X/3/5), federation integration (WELL/WEALTH), and the W16+ physics-first substrate (Huang 2021 Vp grammar + dynamic intelligence flow + Kinabalu multi-physics corpus)** — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
 
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![MCP Tools](https://img.shields.io/badge/MCP-56%20canonical%20tools-10b981)](src/geox_mcp/server.py)
+[![MCP Tools](https://img.shields.io/badge/MCP-16%20canonical%20tools-10b981)](src/geox_mcp/server.py)
 [![Organ](https://img.shields.io/badge/organ-EARTH-f59e0b)](FEDERATION_CONTRACT.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-ef4444?logo=gnu)](LICENSE)
 [![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
@@ -95,7 +95,7 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 - **An earth evidence coprocessor** — it ingests well logs, seismic volumes, DST data, and geological reports; it runs petrophysics, stratigraphy, and prospect evaluation; it outputs structured, physics-constrained evidence receipts.
 - **Constitutionally governed** — every output carries epistemic tags (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN), uncertainty bands (P10/P50/P90), and provenance chains.
-- **Agent-accessible** — all 40 tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
+- **Agent-accessible** — all 16 tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
 - **Dual-transport** — systemd service (`geox-mcp.service`) for HTTP/SSE; `--transport stdio` for Claude Code, OpenCode, Continue CLI, and other local agents.
 
 ### What GEOX IS NOT
@@ -167,7 +167,7 @@ curl http://127.0.0.1:8081/health
 curl https://geox.arif-fazil.com/health
 
 # Expected response (current as of W16+ FORGE):
-# {"status":"healthy","service":"geox-unified","canonical_tools":56,"git_version":"geox-ead04d1c","contract_epoch":"2026-06-22-GEOX-56TOOLS-v3.0",...}
+# {"status":"healthy","service":"geox-unified","canonical_tools":16,"git_version":"geox-ead04d1c","contract_epoch":"2026-06-22-GEOX-56TOOLS-v3.0",...}
 ```
 
 ### 2.5 Build & Test
@@ -202,7 +202,7 @@ All tools are available via MCP at `https://geox.arif-fazil.com/mcp` (HTTP/SSE) 
 - **W15+ (2026-06-22)**: 1 new — `geox_deep_time_state` (Governed Earth State Vector, temporal extension). **55 → 56**.
 - **W16+ (2026-06-22)**: Physics-first substrate (no new tools — see `docs/GEOX_INTELLIGENCE_FLOW.md`).
 
-**Total: 40 → 56 canonical tools.** Server invariant `_EXPECTED_CANONICAL = 56` in `src/geox_mcp/server.py`.
+**Total: 40 → 16 canonical tools.** Server invariant `_EXPECTED_CANONICAL = 56` in `src/geox_mcp/server.py`.
 
 ### 3.1 Data Ingestion & Quality Control
 
@@ -332,7 +332,7 @@ All tools are available via MCP at `https://geox.arif-fazil.com/mcp` (HTTP/SSE) 
 
 ### 3.15 Quick Reference: Old vs New Tool Surface
 
-**Before W2-W13+ FORGE (40 canonical tools):**
+**Before W2-W13+ FORGE (16 canonical tools):**
 - DISCOVERY 5 · EVIDENCE 13 · REASONING 17 · JUDGMENT 5
 
 **After W2-W13+ FORGE (54 canonical tools, 2026-06-21):**
@@ -341,10 +341,10 @@ All tools are available via MCP at `https://geox.arif-fazil.com/mcp` (HTTP/SSE) 
 **After W14+ FORGE (55 canonical tools, 2026-06-21):**
 - REASONING 22 (+geox_lem_predict, GEOX-LEM substrate, weights pending GPU + 888)
 
-**After W15+ FORGE (56 canonical tools, 2026-06-22):**
+**After W15+ FORGE (16 canonical tools, 2026-06-22):**
 - JUDGMENT 14 (+geox_deep_time_state, Governed Earth State Vector)
 
-**After W16+ FORGE (56 canonical tools + physics-first substrate, 2026-06-22):**
+**After W16+ FORGE (16 canonical tools + physics-first substrate, 2026-06-22):**
 - No new tools — substrate only (`crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`, `crustal_domain_classify.py`, `joint_inversion_zone_hook.py`)
 - 124 new tests across 5 modules
 
@@ -641,7 +641,7 @@ Arif Fazil (F13 SOVEREIGN) decides → Drilling go/no-go, capital commitment
 
 ### 9.1 MCP Connection
 
-GEOX exposes all 40 tools via MCP (Model Context Protocol). Two transport modes:
+GEOX exposes all 16 tools via MCP (Model Context Protocol). Two transport modes:
 
 **HTTP/SSE (for remote agents):**
 ```

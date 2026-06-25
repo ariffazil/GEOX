@@ -396,7 +396,7 @@ def _infer_cell(
     # Aggregate AC risk for the cell
     if out:
         ac_risks = []
-        for prop, blob in out.items():
+        for _prop, blob in out.items():
             if "ac_risk" in blob:
                 ac_risks.append(blob["ac_risk"])
         ac_overall = float(np.mean(ac_risks)) if ac_risks else 0.5

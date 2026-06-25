@@ -384,7 +384,7 @@ class MiMoVLMAdapter:
         try:
             data = json.loads(cleaned)
         except json.JSONDecodeError as e:
-            raise MiMoVisionError(f"MiMo response is not valid JSON: {str(e)[:200]}. Response starts with: {cleaned[:100]}")
+            raise MiMoVisionError(f"MiMo response is not valid JSON: {str(e)[:200]}. Response starts with: {cleaned[:100]}") from e
 
         if not isinstance(data, dict):
             raise MiMoVisionError(f"MiMo response is JSON but not a dict. Got type: {type(data).__name__}")
@@ -462,7 +462,7 @@ class MiMoVLMAdapter:
         except (KeyError, TypeError) as e:
             raise MiMoVisionError(
                 f"Axis metadata missing or malformed: {e}. MiMo must always return twt_range_ms and inline_range."
-            )
+            ) from e
 
         # 6. Multi-view consistency check (if cross_validate enabled)
         multi_view_passed = False
@@ -491,7 +491,7 @@ class MiMoVLMAdapter:
         response_hash = sha256_text(raw_response)
 
         # 9. Auto-set verdict based on AC_Risk verdict + content
-        ac_risk_val = ac.compute()
+        ac.compute()
         if ac.to_verdict() == AcRiskVerdict.VOID:
             verdict = VisionVerdict.VOID
         elif ac.to_verdict() == AcRiskVerdict.HOLD:
@@ -643,7 +643,7 @@ class MiMoHTTPBackend:
         try:
             response_json = json.loads(response_data)
         except json.JSONDecodeError as e:
-            raise MiMoVisionError(f"MiMo response is not valid JSON: {e}")
+            raise MiMoVisionError(f"MiMo response is not valid JSON: {e}") from e
 
         # Extract content from OpenAI-compatible response
         try:

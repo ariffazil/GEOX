@@ -70,19 +70,27 @@ class TestHumilityCap:
 
 class TestCanonicalToolValidation:
     def test_canonical_name_passes(self) -> None:
-        assert validate_canonical_tool("geox_data_ingest_bundle") is True
-        assert validate_canonical_tool("geox_claim_seal") is True
-        assert validate_canonical_tool("geox_prospect_evaluate") is True
+        assert validate_canonical_tool("geox_well_ingest") is True
+        assert validate_canonical_tool("geox_claim") is True
+        assert validate_canonical_tool("geox_prospect") is True
 
     def test_legacy_alias_passes(self) -> None:
-        # Legacy aliases are still routed to canonical tools.
-        assert validate_canonical_tool("geox_ingest_bundle") is True
-        assert validate_canonical_tool("geox_sequence_stratigraphy") is True
+        # LEGACY_ALIAS_MAP is currently empty (Phase 2 clean cutover).
+        # This test verifies the path works; no aliases to test right now.
+        from geox_mcp.registry import LEGACY_ALIAS_MAP
+        for alias in LEGACY_ALIAS_MAP:
+            assert validate_canonical_tool(alias) is True
 
     def test_unknown_name_fails(self) -> None:
         assert validate_canonical_tool("not_a_real_tool") is False
         assert validate_canonical_tool("geox_fake_tool_99") is False
         assert validate_canonical_tool("") is False
+
+    def test_old_compat_name_fails_f9(self) -> None:
+        """Old compat names are NOT in CANONICAL_PUBLIC_TOOLS → F9 blocks them."""
+        assert validate_canonical_tool("geox_data_ingest_bundle") is False
+        assert validate_canonical_tool("geox_claim_seal") is False
+        assert validate_canonical_tool("geox_system_registry_status") is False
 
     def test_registry_unavailable_passes(self) -> None:
         # Cold start: registry not importable → fail-open (defensive)
@@ -115,7 +123,7 @@ class TestCanonicalToolValidation:
 class TestSovereignAck:
     def test_irreversible_without_ack_holds(self) -> None:
         v = enforce_floor_pre_call(
-            tool_name="geox_segy_export_tool",  # IRREVERSIBLE in GEOX_RISK_MAP
+            tool_name="geox_claim",  # IRREVERSIBLE (mode="seal") in GEOX_RISK_MAP
             kwargs={},
             risk_tier="irreversible",
         )
@@ -125,7 +133,7 @@ class TestSovereignAck:
 
     def test_irreversible_with_ack_proceeds(self) -> None:
         v = enforce_floor_pre_call(
-            tool_name="geox_segy_export_tool",
+            tool_name="geox_claim",
             kwargs={"ack_irreversible": True},
             risk_tier="irreversible",
         )
@@ -133,16 +141,16 @@ class TestSovereignAck:
 
     def test_c2_execute_without_ack_holds(self) -> None:
         v = enforce_floor_pre_call(
-            tool_name="geox_claim_seal",
+            tool_name="geox_claim",
             kwargs={},
             risk_tier="c2",
         )
-        # Risk map says geox_claim_seal is C2_EXECUTE → needs ack
+        # geox_claim is C2_EXECUTE → needs ack
         assert v.outcome == "HOLD"
 
     def test_readonly_never_needs_ack(self) -> None:
         v = enforce_floor_pre_call(
-            tool_name="geox_data_qc_bundle",
+            tool_name="geox_well_qc",
             kwargs={},
             risk_tier="readonly",
         )
@@ -220,7 +228,7 @@ class TestAuditLog:
     def test_audit_record_serializes(self) -> None:
         r = AuditRecord(
             ts="2026-06-22T00:00:00+00:00",
-            tool_name="geox_data_qc_bundle",
+            tool_name="geox_well_qc",
             risk_tier="readonly",
             actor_id="a1",
             session_id="s1",
@@ -235,7 +243,7 @@ class TestAuditLog:
         )
         line = r.to_jsonl_line()
         d = json.loads(line)
-        assert d["tool_name"] == "geox_data_qc_bundle"
+        assert d["tool_name"] == "geox_well_qc"
         assert d["floor_gates_passed"] == ["F7"]
 
     def test_audit_log_appends(self, tmp_path: Path) -> None:
@@ -314,7 +322,7 @@ class TestIdempotency:
 class TestPostCall:
     def test_post_call_caps_quality_in_result(self) -> None:
         pre = enforce_floor_pre_call(
-            tool_name="geox_data_qc_bundle",
+            tool_name="geox_well_qc",
             kwargs={},
             risk_tier="readonly",
         )
@@ -325,7 +333,7 @@ class TestPostCall:
             "source_attribution": ["GEOX:test"],
         }
         post = enforce_floor_post_call(
-            tool_name="geox_data_qc_bundle",
+            tool_name="geox_well_qc",
             result=result,
             kwargs={},
             risk_tier="readonly",
@@ -375,7 +383,7 @@ class TestWrapperIntegration:
                 "source_attribution": ["GEOX:tool/test_fn"],
             }
 
-        wrapped = _make_receipt_wrapper(tool_fn, "geox_data_qc_bundle")
+        wrapped = _make_receipt_wrapper(tool_fn, "geox_well_qc")
         out = asyncio.run(
             wrapped(session_id="S1", actor_id="A1")
         )

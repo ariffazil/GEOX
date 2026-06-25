@@ -210,7 +210,7 @@ def resolve_age_query(
         )
 
     # Priority 4: substring match against fuzzy_phrases
-    for phrase, (age_mid, label) in chart.fuzzy_phrases.items():
+    for phrase, (_age_mid, label) in chart.fuzzy_phrases.items():
         if phrase in norm or norm in phrase:
             unit = _lookup_unit_by_name(label, chart)
             if unit is not None:

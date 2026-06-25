@@ -21,11 +21,11 @@ class GEOXVisionDepthEngine:
 
         try:
             import cv2
-        except ImportError:
+        except ImportError as exc:
             raise ImportError(
                 "F2 Failure: 'cv2' (opencv-python-headless) is required for visual abstraction. "
                 "Install it with 'pip install opencv-python-headless' or provide structural vectors directly."
-            )
+            ) from exc
 
         img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
         # Structural binarization to pick up the high-contrast tracked lines (purple/green tracking loops)

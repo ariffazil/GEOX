@@ -333,7 +333,7 @@ class MiniMaxVLMAdapter:
         try:
             data = json.loads(cleaned)
         except json.JSONDecodeError as e:
-            raise AntiHantuError(f"VLM response is not valid JSON: {str(e)[:200]}. Response starts with: {cleaned[:100]}")
+            raise AntiHantuError(f"VLM response is not valid JSON: {str(e)[:200]}. Response starts with: {cleaned[:100]}") from e
 
         if not isinstance(data, dict):
             raise AntiHantuError(f"VLM response is JSON but not a dict. Got type: {type(data).__name__}")
@@ -411,7 +411,7 @@ class MiniMaxVLMAdapter:
         except (KeyError, TypeError) as e:
             raise AntiHantuError(
                 f"Axis metadata missing or malformed: {e}. VLM must always return twt_range_ms and inline_range."
-            )
+            ) from e
 
         # 6. Multi-view consistency check (if cross_validate enabled)
         multi_view_passed = False
@@ -442,7 +442,7 @@ class MiniMaxVLMAdapter:
         response_hash = sha256_text(raw_response)
 
         # 9. Auto-set verdict based on AC_Risk verdict + content
-        ac_risk_val = ac.compute()
+        ac.compute()
         if ac.to_verdict() == AcRiskVerdict.VOID:
             verdict = VisionVerdict.VOID
         elif ac.to_verdict() == AcRiskVerdict.HOLD:

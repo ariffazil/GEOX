@@ -126,7 +126,7 @@ def run_pipeline(
                 shift_thresh_gapi=config.p50_shift_thresh_gapi,
             )
 
-            for pi, pkg_raw in enumerate(pkgs, 1):
+            for _pi, pkg_raw in enumerate(pkgs, 1):
                 pkg_counter[well_id] += 1
                 tract, process = infer_seq_strat(pkg_raw, depo, depo_rank)
                 flag = geo_rule_check(pkg_raw, depo, depo_rank)

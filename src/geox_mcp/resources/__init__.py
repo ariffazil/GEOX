@@ -499,7 +499,7 @@ async def geox_claims_graph() -> str:
     if claims_path.exists():
         try:
             claims_data = json.loads(claims_path.read_text())
-            for idx, c in enumerate(claims_data):
+            for _idx, c in enumerate(claims_data):
                 cid = c.get("claim_id")
                 nodes.append(
                     {

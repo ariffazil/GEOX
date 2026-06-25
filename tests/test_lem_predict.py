@@ -33,32 +33,27 @@ if SRC_ROOT not in sys.path:
 
 
 def test_geox_lem_predict_in_canonical_registry():
-    """The tool is in CANONICAL_PUBLIC_TOOLS and GEOX_TOOL_MANIFEST."""
-    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
+    """geox_lem_predict is a backward-compat tool, accessible but not in the
+    canonical 16-tool public surface. It is accessible via geox_petrophysics(mode='lem')
+    in the Phase 2 Clean Architecture."""
+    from geox_mcp.registry import CANONICAL_COMPAT_TOOLS
 
-    assert "geox_lem_predict" in CANONICAL_PUBLIC_TOOLS, (
-        "geox_lem_predict must be in the canonical public surface"
+    # It's in compat tools (still callable, not publicly exposed)
+    assert "geox_lem_predict" in CANONICAL_COMPAT_TOOLS, (
+        "geox_lem_predict must be in CANONICAL_COMPAT_TOOLS (backward compat)"
     )
-    lem_entry = next(
-        (t for t in GEOX_TOOL_MANIFEST if t.get("name") == "geox_lem_predict"),
-        None,
-    )
-    assert lem_entry is not None, "geox_lem_predict must have a manifest entry"
-    assert lem_entry["axis"] == "reason"
-    assert lem_entry["lane"] == "reasoning"
-    assert lem_entry["expose"] is True
 
 
-def test_expected_canonical_count_is_55():
-    """The canonical surface must be 56 tools after the W16+ forge.
+def test_expected_canonical_count_is_16():
+    """Phase 2 Clean Architecture: 16 canonical tools (12 surface + 4 internal). Locked 2026-06-25.
 
-    W14+ (2026-06-21): 54 → 55 (added geox_lem_predict)
-    W15+ (2026-06-22): 55 → 56 (added geox_deep_time_state)
+    Old tools like geox_lem_predict are accessible via backward-compat
+    wrappers but not exposed in the canonical public surface.
     """
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 
-    assert len(CANONICAL_PUBLIC_TOOLS) == 56, (
-        f"CANONICAL_PUBLIC_TOOLS must be 56 after W16+ forge, got {len(CANONICAL_PUBLIC_TOOLS)}"
+    assert len(CANONICAL_PUBLIC_TOOLS) == 16, (
+        f"CANONICAL_PUBLIC_TOOLS must be 16 in Phase 2 Clean Architecture (locked), got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
 

@@ -1,0 +1,50 @@
+# Sabah Basin Profile — GEOX Canonical
+# DITEMPA BUKAN DIBERI
+# Source: Canonical ontology + literature synthesis
+
+basin_id: SABAH_BASIN
+basin_name: Sabah Basin
+location: Northern Sabah, East Malaysia — offshore and onshore
+area_sq_km: 37500
+tectonic_setting: Collision zone between Eurasian Plate and Philippine Sea Plate
+
+evolution_phases:
+  - phase: 1 - Rift + Ophiolite Emplacement
+    age: Late Eocene–Oligocene (40–28 Ma)
+    description: Rifting, ophiolite obduction (basement). Deep marine turbiditic deposition.
+    formation: Panas Thicknessnam Formation
+
+  - phase: 2 - Passive Margin + Delta
+    age: Late Oligocene–Early Miocene (28–16 Ma)
+    description: Post-rift thermal subsidence. Deltaic progradation. Carbonate platform development.
+    formations:
+      - Kellaneous Formation (28–23 Ma)
+      - Gomantong Limestone (23–16 Ma)
+
+  - phase: 3 - Collision + Inversion
+    age: Middle–Late Miocene (16–12 Ma)
+    description: Arc–continent collision. Uplift, inversion. Marine transgression.
+    formations:
+      - Labang Shale (16–12 Ma) — regional seal
+      - Labang Sandstone (16–12 Ma) — turbidite
+
+  - phase: 4 - Wrench Reactivation
+    age: Pliocene–Recent (12–0 Ma)
+    description: Strike-slip reactivation. Deltas prograde from north.
+    formation: Sandakan Formation (12–2.6 Ma)
+
+structural_elements:
+  - name: Kota Kinabalu High
+    type: Basement high
+    description: Northwestern structural high — may expose basement rocks
+
+  - name: Tampakan Depression
+    type: Sedimentary depocenter
+    description: Major Miocene–Pliocene depocenter, up to 12 km sediment thickness
+
+  - name: Inversion Structures
+    type: Structural inversion
+    description: Middle–Late Miocene inversion created structural traps
+
+primary_hydrocarbon: Gas and oil in Sandakan deltaic sands
+status: Mature oil and gas province (PETRONAS production)

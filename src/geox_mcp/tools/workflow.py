@@ -74,7 +74,6 @@ async def geox_workflow_run_canon(
     from geox_mcp.tools.qc import geox_data_qc_bundle
 
     step_outputs: list[dict] = []
-    step_errors: list[dict] = []
     workflow_halted = False
     halt_reason: str | None = None
     final_artifact_ref: str | None = None

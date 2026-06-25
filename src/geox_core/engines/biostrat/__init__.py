@@ -24,6 +24,8 @@ from typing import Any, Literal
 
 import numpy as np
 
+from geox_core.physics.state import Physics9State
+
 logger = logging.getLogger("geox.biostrat")
 
 

@@ -38,53 +38,42 @@ class RiskTier(StrEnum):
 
 # ─── GEOX Tool Risk Map ────────────────────────────────────────────────────────
 # All entries must match canonical tool names from CANONICAL_PUBLIC_TOOLS
-# or LEGACY_ALIAS_MAP in src/geox_mcp/registry.py.
+# in src/geox_mcp/registry.py (Phase 2 Clean Architecture — 16 tools).
+#
+# Old compat tool names (geox_data_ingest_bundle, geox_claim_seal, etc.)
+# are NOT listed here — they are accepted by the middleware for backward
+# compat but the risk map only governs canonical tools.
 
 GEOX_RISK_MAP: dict[str, RiskTier] = {
-    # READONLY — log only, no kernel call
-    "geox_data_ingest_bundle": RiskTier.READONLY,
-    "geox_data_qc_bundle": RiskTier.READONLY,
-    "geox_dst_ingest_test": RiskTier.READONLY,
-    "geox_header_inspect": RiskTier.READONLY,
-    "geox_las_inspect": RiskTier.READONLY,
-    "geox_seismic_segy_inspect": RiskTier.READONLY,
-    "geox_evidence_discover": RiskTier.READONLY,
-    "geox_report_to_workflow": RiskTier.C1_ADVISORY,  # P1.3: workflow steps can feed decision pipelines — advisory only
-    "geox_subsurface_generate_candidates": RiskTier.READONLY,
-    "geox_subsurface_verify_integrity": RiskTier.READONLY,
+    # ── WELL DOMAIN (4) ──
+    "geox_well_ingest": RiskTier.READONLY,
+    "geox_well_qc": RiskTier.READONLY,
+    "geox_petrophysics": RiskTier.READONLY,
+    "geox_sequence": RiskTier.READONLY,
+
+    # ── SEISMIC DOMAIN (4) ──
+    "geox_seismic_ingest": RiskTier.READONLY,
     "geox_seismic_compute": RiskTier.READONLY,
-    "geox_sequence_interpret": RiskTier.READONLY,
-    "geox_evidence_reason": RiskTier.READONLY,
-    "geox_map_context_scene": RiskTier.READONLY,
-    "geox_system_registry_status": RiskTier.READONLY,
-    "geox_horizon_contrast_surface": RiskTier.READONLY,
-    "geox_coord_transform_tool": RiskTier.READONLY,
-    "geox_blockspace_resolution_tool": RiskTier.READONLY,
-    "geox_volume_frame_tool": RiskTier.C2_EXECUTE,  # P0.1: readOnlyHint=False, destructiveHint=True — must match tier
-    "geox_seismic_compute_attribute_tool": RiskTier.READONLY,
-    "geox_fault_stick_ingest_tool": RiskTier.READONLY,
-    "geox_attribute_registry_list_tool": RiskTier.READONLY,
-    "geox_blend_volume_tool": RiskTier.READONLY,
-    "geox_claim_create": RiskTier.READONLY,
-    "geox_claim_validate": RiskTier.READONLY,
-    "geox_claim_challenge": RiskTier.READONLY,
-    "geox_evidence_attach": RiskTier.READONLY,
-    "geox_basin_resolve": RiskTier.READONLY,
-    "geox_basin_profile": RiskTier.READONLY,
-    "geox_query_intake": RiskTier.READONLY,
-    "geox_abstraction_guard": RiskTier.READONLY,
-    "geox_literature_ingest": RiskTier.READONLY,
-    "geox_vision_perceptual_inventory": RiskTier.READONLY,
-    "geox_vision_audit": RiskTier.READONLY,
-    "geox_vision_calibrate": RiskTier.READONLY,
-    "geox_vision_minimax_inference": RiskTier.READONLY,
-    "geox_query_macrostrat": RiskTier.READONLY,
-    # C1 — kernel pre-check, execute anyway
-    "geox_prospect_evaluate": RiskTier.C1_ADVISORY,
-    # C2 — SEAL required from arifOS
-    "geox_claim_seal": RiskTier.C2_EXECUTE,
-    # IRREVERSIBLE — SEAL + ack_irreversible already checked by RT-3
-    "geox_segy_export_tool": RiskTier.IRREVERSIBLE,
+    "geox_seismic_interpret": RiskTier.READONLY,
+    "geox_vision": RiskTier.READONLY,
+
+    # ── MODEL DOMAIN (2) ──
+    "geox_subsurface_model": RiskTier.C1_ADVISORY,  # joint inversion → advisory
+    "geox_geomechanics": RiskTier.READONLY,
+
+    # ── BASIN DOMAIN (2) ──
+    "geox_basin": RiskTier.READONLY,
+    "geox_deep_time_state": RiskTier.READONLY,
+
+    # ── GOVERNANCE DOMAIN (2) ──
+    "geox_claim": RiskTier.C2_EXECUTE,       # mode="seal" → requires arifOS SEAL
+    "geox_evidence": RiskTier.READONLY,
+
+    # ── EVALUATION DOMAIN (1) ──
+    "geox_prospect": RiskTier.C1_ADVISORY,   # mode="seal" → C2
+
+    # ── DOCTRINE DOMAIN (1) ──
+    "geox_doctrine": RiskTier.READONLY,
 }
 
 
@@ -127,75 +116,45 @@ async def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int
 # → reasoning(session required) → judgment(session+lease+arifOS judge required)
 
 def _load_lane_map() -> dict[str, str]:
-    """Load tool→lane mapping from GEOX.yaml federation contract or fallback."""
-    try:
-        import yaml
-        contract_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
-            "arifOS", "federation", "GEOX.yaml",
-        )
-        # Also try local path (when running from geox repo directly)
-        if not os.path.exists(contract_path):
-            contract_path = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-                "federation", "GEOX.yaml",
-            )
-        if os.path.exists(contract_path):
-            with open(contract_path) as f:
-                contract = yaml.safe_load(f)
-            return contract.get("lanes", {}).get("tool_lane_map", {})
-    except Exception:
-        pass
+    """Load tool→lane mapping from registry manifest (single source of truth).
 
-    # Fallback: lane classification from registry manifest
+    Priority: registry.py GEOX_TOOL_MANIFEST > hardcoded fallback.
+    The old GEOX.yaml federation contract is NOT loaded — it had stale
+    40-tool entries that caused the split-brain. Registry manifest is the
+    only authoritative lane source.
+    """
+    # Priority 1: registry manifest (authoritative)
     try:
         from geox_mcp.registry import GEOX_TOOL_MANIFEST
         return {t["name"]: t.get("lane", "reasoning") for t in GEOX_TOOL_MANIFEST}
     except Exception:
         pass
 
-    # Ultimate fallback: hardcoded lane map
+    # Priority 2: hardcoded fallback for 16 canonical tools (Phase 2)
     return {
-        "geox_system_registry_status": "discovery",
-        "geox_attribute_registry_list_tool": "discovery",
-        "geox_basin_resolve": "discovery",
-        "geox_query_intake": "discovery",
-        "geox_query_macrostrat": "discovery",
-        "geox_data_ingest_bundle": "evidence",
-        "geox_data_qc_bundle": "evidence",
-        "geox_dst_ingest_test": "evidence",
-        "geox_header_inspect": "evidence",
-        "geox_las_inspect": "evidence",
-        "geox_seismic_segy_inspect": "evidence",
-        "geox_evidence_discover": "evidence",
-        "geox_evidence_attach": "evidence",
-        "geox_literature_ingest": "evidence",
-        "geox_fault_stick_ingest_tool": "evidence",
-        "geox_volume_frame_tool": "evidence",
-        "geox_vision_perceptual_inventory": "evidence",
-        "geox_vision_calibrate": "evidence",
-        "geox_subsurface_generate_candidates": "reasoning",
-        "geox_subsurface_verify_integrity": "reasoning",
+        # WELL DOMAIN
+        "geox_well_ingest": "evidence",
+        "geox_well_qc": "evidence",
+        "geox_petrophysics": "reasoning",
+        "geox_sequence": "reasoning",
+        # SEISMIC DOMAIN
+        "geox_seismic_ingest": "evidence",
         "geox_seismic_compute": "reasoning",
-        "geox_seismic_compute_attribute_tool": "reasoning",
-        "geox_sequence_interpret": "reasoning",
-        "geox_evidence_reason": "reasoning",
-        "geox_prospect_evaluate": "reasoning",
-        "geox_map_context_scene": "reasoning",
-        "geox_horizon_contrast_surface": "reasoning",
-        "geox_coord_transform_tool": "reasoning",
-        "geox_blockspace_resolution_tool": "reasoning",
-        "geox_blend_volume_tool": "reasoning",
-        "geox_basin_profile": "reasoning",
-        "geox_vision_minimax_inference": "reasoning",
-        "geox_vision_audit": "reasoning",
-        "geox_report_to_workflow": "reasoning",
-        "geox_abstraction_guard": "reasoning",
-        "geox_claim_create": "judgment",
-        "geox_claim_validate": "judgment",
-        "geox_claim_challenge": "judgment",
-        "geox_claim_seal": "judgment",
-        "geox_segy_export_tool": "judgment",
+        "geox_seismic_interpret": "reasoning",
+        "geox_vision": "reasoning",
+        # MODEL DOMAIN
+        "geox_subsurface_model": "judgment",
+        "geox_geomechanics": "reasoning",
+        # BASIN DOMAIN
+        "geox_basin": "discovery",
+        "geox_deep_time_state": "discovery",
+        # GOVERNANCE DOMAIN
+        "geox_claim": "judgment",
+        "geox_evidence": "evidence",
+        # EVALUATION DOMAIN
+        "geox_prospect": "judgment",
+        # DOCTRINE DOMAIN
+        "geox_doctrine": "judgment",
     }
 
 

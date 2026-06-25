@@ -33,6 +33,9 @@ CANONICAL_PUBLIC_TOOLS: list[str] = [
 ]
 
 # Backward-compat names (Phase 2 transition — removed in Phase 4)
+# These are accepted by the middleware for backward compat but NOT exposed
+# in tools/list. F9 ANTI-HANTU allows them through on_call_tool only.
+# geox_deep_time_state moved to CANONICAL_PUBLIC_TOOLS (16th slot).
 CANONICAL_COMPAT_TOOLS: list[str] = [
     "geox_data_ingest_bundle", "geox_data_qc_bundle", "geox_dst_ingest_test",
     "geox_header_inspect", "geox_las_inspect", "geox_seismic_segy_inspect",
@@ -53,7 +56,7 @@ CANONICAL_COMPAT_TOOLS: list[str] = [
     "geox_doctrine_godel_review", "geox_prithvi_eo_inference",
     "geox_gravity_magnetic_forward", "geox_emag2_ingest", "geox_icgem_models",
     "geox_joint_inversion", "geox_mt_forward", "geox_biostrat_constraint",
-    "geox_seismic_inversion", "geox_lem_predict", "geox_deep_time_state",
+    "geox_seismic_inversion", "geox_lem_predict",
 ]
 
 # Legacy aliases — REMOVED Phase 1 (2026-06-22)

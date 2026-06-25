@@ -106,7 +106,7 @@ def train_tokenizer(
     for epoch in range(config.tokenizer.tokenizer_epochs):
         epoch_losses: dict[str, float] = {"recon": 0.0, "commit": 0.0, "codebook": 0.0, "total": 0.0}
 
-        for batch_idx, batch in enumerate(loader):
+        for _batch_idx, batch in enumerate(loader):
             curves = batch["curves"].to(device)  # (B, C, L)
 
             optimizer.zero_grad()
@@ -276,7 +276,7 @@ def pretrain_transformer(
 
     data = np.load(tokenized_data_path, allow_pickle=True)
     tokens = data["tokens"]  # (N, T)
-    token_frequencies = data.get("token_frequencies", {}).item() if "token_frequencies" in data else {}
+    data.get("token_frequencies", {}).item() if "token_frequencies" in data else {}
 
     # Build model
     model = LEMTransformer(

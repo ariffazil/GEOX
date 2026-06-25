@@ -1,0 +1,46 @@
+# Sabah Basin Petroleum System
+
+source_rock:
+  formation: Panas Thicknessnam Formation
+  age: Late Eocene (40–28 Ma)
+  toc_percent: [0.5, 3.0]
+  kerogen_type: Type II
+  maturity: Under-explored — requires Ro% confirmation
+
+reservoir:
+  primary:
+    formation: Sandakan Formation
+    age: Late Miocene–Pliocene (12–2.6 Ma)
+    porosity: [0.15, 0.28]
+    permeability_mD: [100, 2000]
+    environment: Deltaic clastics
+
+  secondary:
+    formation: Gomantong Limestone
+    age: Early Miocene (23–16 Ma)
+    porosity: [0.05, 0.18]
+    permeability_mD: [1, 100]
+    environment: Carbonate platform / reefal
+
+  tertiary:
+    formation: Kellaneous Formation
+    age: Oligocene–Early Miocene (28–23 Ma)
+    porosity: [0.12, 0.22]
+    permeability_mD: [50, 800]
+    environment: Shallow marine to deltaic
+
+seal:
+  primary:
+    formation: Labang Shale
+    age: Middle Miocene (16–12 Ma)
+    thickness_m: [200, 800]
+    quality: EXCEPTIONAL
+    extent: Regional
+
+trap:
+  type: Structural (inversion anticlines) + Stratigraphic (facies changes)
+  timing: Middle–Late Miocene inversion
+
+migration:
+  pathway: Vertical through faults and unconformities
+  timing: Post-dates most reservoir deposition
