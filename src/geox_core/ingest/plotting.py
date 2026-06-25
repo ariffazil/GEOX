@@ -277,7 +277,7 @@ def _render_panel(
         display_name = config.well_names[col_idx] if config.well_names and col_idx < len(config.well_names) else bundle.well_id
         ax.set_title(display_name, fontsize=9, pad=6)
 
-        for track_idx, track_name in enumerate(config.tracks):
+        for _track_idx, track_name in enumerate(config.tracks):
             if col_idx == 0:
                 ax.set_ylabel(f"Depth ({config.depth_unit})", fontsize=8)
 

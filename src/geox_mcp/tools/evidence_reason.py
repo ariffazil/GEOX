@@ -817,8 +817,6 @@ async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[s
             with open(claims_file) as f:
                 claims = json.load(f)
 
-        observed = {}
-        derived = {}
         interpreted = {}
         process_hypotheses = []
         forbidden_claims = ["site_specific_stoiip_or_reserves_adjudication", "commercial_drilling_verdict"]

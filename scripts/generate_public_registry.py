@@ -4,7 +4,7 @@ Generate Public Tool Registry — GEOX Canonical Surface
 ====================================================
 DITEMPA BUKAN DIBERI — Forged, Not Given
 
-Reads CANONICAL_TOOLS from contracts.enums.statuses,
+Reads CANONICAL_PUBLIC_TOOLS from src/geox_mcp/registry.py (the single source of truth),
 computes a SHA-256 hash of the canonical surface,
 and writes a public registry JSON for runtime parity verification.
 
@@ -12,9 +12,10 @@ Run after any change to the canonical tool surface:
     python scripts/generate_public_registry.py
 
 Verify parity:
-    python -c "from control_plane_server_patch import compute_registry_hash; print(compute_registry_hash())"
+    python -c "from scripts.control_plane_server_patch import compute_registry_hash; print(compute_registry_hash())"
 
-Epoch: GEOX-11TOOLS-v0.3
+Epoch: 2026-06-22-GEOX-16TOOLS-PHASE2
+Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 """
 
 from __future__ import annotations
@@ -29,10 +30,10 @@ REGISTRY_PATH = Path(__file__).parent.parent / "public_registry.json"
 
 
 def load_canonical_tools() -> list[str]:
-    """Load CANONICAL_TOOLS from contracts.enums.statuses."""
-    sys.path.insert(0, str(Path(__file__).parent.parent))
-    from contracts.enums.statuses import CANONICAL_TOOLS
-    return CANONICAL_TOOLS
+    """Load CANONICAL_PUBLIC_TOOLS from geox_mcp.registry (single source of truth)."""
+    sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+    return CANONICAL_PUBLIC_TOOLS
 
 
 def compute_hash(tools: list[str]) -> str:

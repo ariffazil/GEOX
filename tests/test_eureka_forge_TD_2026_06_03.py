@@ -381,8 +381,11 @@ class TestNoNewMCPTools(unittest.TestCase):
             # 2026-06-21: W2-W13+ FORGE — 40 → 54 (14 new tools)
             # 2026-06-21: W14+ FORGE — 54 → 55 (+geox_lem_predict)
             # 2026-06-22: W15+ FORGE — 55 → 56 (+geox_deep_time_state)
+            # 2026-06-22: Phase 2 Clean — 56 → 16 (mode-consolidated canonical surface)
+            # 2026-06-25: LOCKED at 16 (canonical surface for ChatGPT app parity).
+            #             33-tool expansion deferred to Phase 3 (requires 888_HOLD).
             self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 56)
-            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 18)
+            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 16)
         except ImportError as e:
             # geox_mcp server not importable in test env; that's OK —
             # the integration test will catch surface bloat in CI

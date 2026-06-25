@@ -281,7 +281,7 @@ def compare_to_ground_truth(
     # Reflectors
     tp_r, fp_r, fn_r = [], [], []
     matched_gt_r = set()
-    for i, vlm_r in enumerate(inventory.reflectors):
+    for _i, vlm_r in enumerate(inventory.reflectors):
         vlm_twt = vlm_r.twt_range_ms
         matched_idx = None
         for j, gt_r in enumerate(gt.reflectors):

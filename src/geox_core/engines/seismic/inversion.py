@@ -418,7 +418,7 @@ def model_based_inversion(
     ai_current = initial_ai.copy()
     residuals = []
 
-    for iteration in range(iterations):
+    for _iteration in range(iterations):
         # Forward model: AI → RC → Synthetic
         rc = reflectivity_array(ai_current)
         synthetic = convolve_trace(rc, wavelet)
@@ -537,7 +537,7 @@ def pinn_assisted_inversion(
 
     losses = []
 
-    for iteration in range(iterations):
+    for _iteration in range(iterations):
         # Forward model
         rc = reflectivity_array(ai)
         predicted = convolve_trace(rc, wavelet)
@@ -650,7 +650,7 @@ def reforward_consistency_gate(
     r ≈ 1.0 proves the inversion is data-consistent.
     """
     ai = inversion_result.ai_absolute
-    dt_s = inversion_result.wavelet.dt_ms / 1000.0
+    inversion_result.wavelet.dt_ms / 1000.0
     wavelet = inversion_result.wavelet.samples
 
     rc = reflectivity_array(ai)

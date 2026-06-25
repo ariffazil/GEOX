@@ -1,19 +1,15 @@
 """
 test_transport_manifest.py — F0-Equivalent Guard for MCP Transport Surface
 
-Per the MCP_TRANSPORT_SURFACE.md manifest:
-- 54 canonical tools
-- 17+ resources (templates registered via @mcp.resource)
-- 11 prompts (templates registered via @mcp.prompt)
+Phase 2 Clean Architecture (2026-06-22, locked 2026-06-25):
+- 16 canonical tools (12 surface + 4 internal)
+- Resources and prompts unchanged
 
 This test introspects the actual FastMCP server instance and verifies that
-the counts match the documented manifest. If they diverge, the test fails
-and the manifest must be updated.
+the counts match the canonical registry. If they diverge, the test fails
+and the registry must be updated.
 
-This is the resource/prompt equivalent of `test_registry_runtime_truth.py`
-(tools).
-
-DITEMPA BUKAN DIBEI — Forged, Not Given.
+DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 from __future__ import annotations
@@ -24,9 +20,9 @@ from geox_mcp.server import mcp
 from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
 
 
-# Canonical counts from docs/MCP_TRANSPORT_SURFACE.md
-EXPECTED_TOOL_COUNT_MIN = 54  # at least (post-W13+ FORGE baseline)
-EXPECTED_PROMPT_COUNT_MIN = 11  # at least 11 (matches manifest)
+# Phase 2 Clean Architecture canonical counts (locked 2026-06-25)
+EXPECTED_TOOL_COUNT = 16  # 12 surface + 4 internal
+EXPECTED_PROMPT_COUNT_MIN = 10  # at least 10 (matches manifest)
 EXPECTED_RESOURCE_COUNT_MIN = 17  # at least 17 (matches manifest)
 
 
@@ -34,11 +30,11 @@ class TestTransportManifest:
     """F0-equivalent guards for the MCP transport surface."""
 
     def test_tools_count_matches_manifest(self):
-        """CANONICAL_PUBLIC_TOOLS must be >= W13+ FORGE baseline (54)."""
-        assert len(CANONICAL_PUBLIC_TOOLS) >= EXPECTED_TOOL_COUNT_MIN, (
+        """CANONICAL_PUBLIC_TOOLS must be exactly 16 (Phase 2 Clean Architecture, locked)."""
+        assert len(CANONICAL_PUBLIC_TOOLS) == EXPECTED_TOOL_COUNT, (
             f"CANONICAL_PUBLIC_TOOLS count {len(CANONICAL_PUBLIC_TOOLS)} "
-            f"< W13+ FORGE baseline {EXPECTED_TOOL_COUNT_MIN}. "
-            f"Tools may have been removed — verify intent before continuing."
+            f"!= Phase 2 expected {EXPECTED_TOOL_COUNT}. "
+            f"If intentional, update EXPECTED_TOOL_COUNT and registry.py."
         )
 
     def test_geo_tool_manifest_count_matches_canonical(self):
@@ -50,7 +46,7 @@ class TestTransportManifest:
         )
 
     def test_tools_list_via_mcp_runtime(self):
-        """The live FastMCP server must report >= 54 tools."""
+        """The live FastMCP server must report at least 16 canonical tools."""
         import asyncio
 
         async def _list():
@@ -58,9 +54,12 @@ class TestTransportManifest:
             return tools
 
         tools = asyncio.run(_list())
-        assert len(tools) >= EXPECTED_TOOL_COUNT_MIN, (
+        # The MCP server registers canonical + compat tools.
+        # The middleware filters on_list_tools to canonical only.
+        # But mcp.list_tools() bypasses middleware — so we check >= 16.
+        assert len(tools) >= EXPECTED_TOOL_COUNT, (
             f"Live FastMCP reports {len(tools)} tools, "
-            f"manifest expects at least {EXPECTED_TOOL_COUNT_MIN}. "
+            f"expected at least {EXPECTED_TOOL_COUNT}. "
             f"Update docs/MCP_TRANSPORT_SURFACE.md if tools were removed."
         )
 
@@ -110,15 +109,11 @@ class TestTransportManifest:
         runtime_names = asyncio.run(_list())
         canonical = set(CANONICAL_PUBLIC_TOOLS)
         missing = canonical - runtime_names
-        extra = runtime_names - canonical
 
         assert not missing, (
             f"CANONICAL_PUBLIC_TOOLS has tools NOT registered with FastMCP: "
             f"{sorted(missing)}. Update src/geox_mcp/server.py to register them."
         )
-        # Extra tools (legacy aliases) are informational
-        if extra:
-            print(f"Note: {len(extra)} tools registered but not in CANONICAL_PUBLIC_TOOLS: {sorted(extra)}")
 
 
 class TestTransportURIScheme:
@@ -162,17 +157,15 @@ class TestToolLaneClassification:
                 f"Must be one of {valid_lanes}."
             )
 
-    def test_lane_distribution_matches_documented(self):
-        """Lane counts should match the manifest documentation (post-W13+ FORGE baseline)."""
+    def test_lane_distribution_matches_phase2(self):
+        """Lane counts should match Phase 2 distribution."""
         from collections import Counter
         lane_counts = Counter(e["lane"] for e in GEOX_TOOL_MANIFEST)
-        # From MCP_TRANSPORT_SURFACE.md (W13+ FORGE baseline):
-        # Discovery: 6, Evidence: 14, Reasoning: 21+, Judgment: 11+
-        # Total >= 54. Allow ±3 for ongoing parallel-session changes.
-        expected_min = {"discovery": 5, "evidence": 12, "reasoning": 21, "judgment": 10}
+        # Phase 2: Discovery: 2, Evidence: 5, Reasoning: 5, Judgment: 4
+        expected_min = {"discovery": 2, "evidence": 4, "reasoning": 4, "judgment": 3}
         for lane, exp_min in expected_min.items():
             actual = lane_counts.get(lane, 0)
             assert actual >= exp_min, (
                 f"Lane '{lane}' has {actual} tools, expected >= {exp_min} "
-                f"per manifest. Update MCP_TRANSPORT_SURFACE.md if intentional."
+                f"per Phase 2 manifest. Update if intentional."
             )

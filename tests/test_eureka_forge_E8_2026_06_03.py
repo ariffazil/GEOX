@@ -463,8 +463,11 @@ class TestF13NoNewMCPTools(unittest.TestCase):
             # 2026-06-21: W2-W13+ FORGE — 40 → 54 (doctrine + foundation + nonseismic + multi-physics)
             # 2026-06-21: W14+ FORGE — 54 → 55 (+ geox_lem_predict, GEOX-LEM substrate live; weights pending 888)
             # 2026-06-22: W15+ FORGE — 55 → 56 (+ geox_deep_time_state, Deep Time Physics Context)
+            # 2026-06-22: Phase 2 Clean — 56 → 16 (mode-consolidated canonical surface)
+            # 2026-06-25: LOCKED at 16 (canonical surface for ChatGPT app parity).
+            #             33-tool expansion deferred to Phase 3 (requires 888_HOLD).
             self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 56)
-            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 40)
+            self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 16)
         except ImportError:
             # Server not importable in test env; the integration test will catch
             self.skipTest("geox_mcp.server not importable in this env")

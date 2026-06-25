@@ -162,7 +162,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
         # F1 AMANAH — idempotency key (optional, for replay-safe calls)
         idempotency_key = kwargs.pop("idempotency_key", None)
         # F13 SOVEREIGN — explicit acknowledgement for IRREVERSIBLE tier
-        ack_irreversible = kwargs.pop("ack_irreversible", None)
+        kwargs.pop("ack_irreversible", None)
 
         # ── F1/F9/F13 — pre-call floor enforcement ──────────────────────────
         risk_tier = GEOX_RISK_MAP.get(name, RiskTier.C1_ADVISORY)

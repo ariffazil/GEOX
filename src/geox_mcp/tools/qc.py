@@ -493,7 +493,7 @@ async def geox_data_qc_bundle(
                     except OSError:
                         pass
                     if _aov_results["significant_curves"]:
-                        limitaciones.append(
+                        limitations.append(
                             f"SAF stat_anova: {_aov_results['n_groups']}-group ANOVA found significant differences "
                             f"(p<0.05) in {len(_aov_results['significant_curves'])} curve(s) "
                             f"by {_group_col_aov}: {', '.join(_aov_results['significant_curves'])}."
@@ -576,12 +576,12 @@ async def geox_data_qc_bundle(
                     ),
                 }
                 if _mis_high_missing:
-                    limitaciones.append(
+                    limitations.append(
                         f"SAF stat_missing: {len(_mis_high_missing)} curve(s) have >10% missing: {', '.join(_mis_high_missing)}"
                     )
                     flags.append("SAF_HIGH_MISSING")
                 if _mcar_rejected:
-                    limitaciones.append(
+                    limitations.append(
                         "SAF stat_missing: Little's MCAR test rejected "
                         f"(chi2={_mis_mcar.get('chi2_approx', '?')}, "
                         "p<0.05) — missingness is systematic, not random"
@@ -673,7 +673,7 @@ async def geox_data_qc_bundle(
                 }
                 if _chi2_p is not None and float(_chi2_p) < 0.05:
                     _chi2_summary["interpretation"] = f"{_cat_cols_chi[0]} and {_cat_cols_chi[1]} are NOT independent"
-                    limitaciones.append(
+                    limitations.append(
                         f"SAF stat_chi_square: {_cat_cols_chi[0]} and {_cat_cols_chi[1]} "
                         f"are not independent (chi2={_chi2_chi2}, p={_chi2_p}, "
                         f"Cramér's V={_chi2_v})."

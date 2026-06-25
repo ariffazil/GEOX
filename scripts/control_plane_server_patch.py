@@ -4,7 +4,7 @@ GEOX Control Plane Server Patch — RT-1 / RT-3 Dispatch Guards
 DITEMPA BUKAN DIBERI — Forged, Not Given
 
 RT-1 Guard (Runtime Tier 1):
-  - Validates tool name is in CANONICAL_TOOLS (public surface)
+  - Validates tool name is in CANONICAL_PUBLIC_TOOLS (from registry.py)
   - Rejects calls to undeclared tools with 403 Forbidden
   - Applied at HTTP handler level before FastMCP tool dispatch
 
@@ -14,7 +14,8 @@ RT-3 Guard (Runtime Tier 3):
   - F1 Amanah: no irreversible action without explicit human consent
   - Applied at tool handler level for flagged operations
 
-Epoch: GEOX-11TOOLS-v0.3
+Epoch: 2026-06-22-GEOX-16TOOLS-PHASE2
+Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 """
 
 from __future__ import annotations
@@ -31,13 +32,27 @@ from starlette.responses import JSONResponse
 
 logger = logging.getLogger("geox.dispatch_guard")
 
+# ─── CANONICAL TOOL SURFACE (single source of truth) ─────────────────────────
+# Import from registry.py — the ONLY authoritative source.
+# NEVER import from contracts.enums.statuses.CANONICAL_TOOLS (stale, pre-Phase 2).
+
+def _get_canonical_tools() -> set[str]:
+    """Load canonical tool set from registry.py. Fail-open on import error."""
+    try:
+        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+        return set(CANONICAL_PUBLIC_TOOLS)
+    except ImportError:
+        logger.warning("RT1: registry.py not importable — allowing pass-through")
+        return set()
+
 # ─── IRREVERSIBLE TOOL DEFINITIONS (RT-3 scope) ──────────────────────────────
 # Tools that perform irreversible state changes require explicit human ack.
-# Any new irreversible tool MUST be added here.
+# Phase 2: geox_claim(mode="seal") and geox_prospect(mode="seal") are the
+# canonical irreversible paths. Old direct names are removed.
 
 _IRREVERSIBLE_TOOLS: set[str] = {
-    "geox_prospect_judge_verdict",   # backward-compat alias for seal
-    "geox_prospect_judge_seal",      # canonical irreversible adjudication
+    "geox_claim",      # mode="seal" requires ack_irreversible=True
+    "geox_prospect",   # mode="seal" requires ack_irreversible=True
 }
 
 # ─── RT-1 GUARD ───────────────────────────────────────────────────────────────
@@ -51,25 +66,20 @@ def rt1_check_tool(tool_name: str) -> tuple[bool, str]:
         - allowed=True, error=""  → pass
         - allowed=False, error=msg → reject with 403
     """
-    try:
-        from contracts.enums.statuses import CANONICAL_TOOLS
-    except ImportError:
-        logger.warning("RT1: CANONICAL_TOOLS not importable — allowing pass-through")
+    canonical = _get_canonical_tools()
+    if not canonical:
+        # Registry unavailable — fail open (cold start)
         return True, ""
 
-    if tool_name not in CANONICAL_TOOLS:
-        # Check if it's a dimension/legacy tool (allowed but logged)
-        # RT-1 only blocks truly undeclared tools
+    if tool_name not in canonical:
         logger.warning(
             f"RT1_GUARD: Tool '{tool_name}' is not on canonical public surface. "
-            f"Valid surface: {CANONICAL_TOOLS}"
+            f"Valid surface: {sorted(canonical)}"
         )
-        # Fail open for dimension tools (they are registered), fail closed for unknown
-        # This allows dimension tools while blocking hallucinated tool names
         return False, (
             f"Tool '{tool_name}' is not on the canonical public surface. "
-            f"Public surface has {len(CANONICAL_TOOLS)} declared tools. "
-            f"Use geox_registry_contract to enumerate available tools."
+            f"Public surface has {len(canonical)} declared tools. "
+            f"Use geox_doctrine(mode='registry') to enumerate available tools."
         )
     return True, ""
 
@@ -96,7 +106,7 @@ def rt1_guard_middleware(get_response: Callable):
 
             payload = json.loads(body)
             method = payload.get("method", "")
-            params = params = payload.get("params", {})
+            params = payload.get("params", {})
 
             # tools/call method — validate tool name
             if method == "tools/call":
@@ -104,6 +114,7 @@ def rt1_guard_middleware(get_response: Callable):
                 allowed, error = rt1_check_tool(tool_name)
                 if not allowed:
                     logger.warning(f"RT1_BLOCK: {tool_name} — {error}")
+                    canonical = _get_canonical_tools()
                     return JSONResponse(
                         {
                             "jsonrpc": "2.0",
@@ -114,7 +125,7 @@ def rt1_guard_middleware(get_response: Callable):
                                 "data": {
                                     "guard": "RT1",
                                     "tool": tool_name,
-                                    "canonical_count": 13,
+                                    "canonical_count": len(canonical),
                                 },
                             },
                         },
@@ -198,11 +209,11 @@ def compute_registry_hash() -> str:
     Used to verify runtime registry matches declared surface.
     """
     try:
-        from contracts.enums.statuses import CANONICAL_TOOLS
-        canonical_sorted = sorted(CANONICAL_TOOLS)
+        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+        canonical_sorted = sorted(CANONICAL_PUBLIC_TOOLS)
         payload = json.dumps(
             {
-                "epoch": "GEOX-11TOOLS-v0.3",
+                "epoch": "2026-06-22-GEOX-16TOOLS-PHASE2",
                 "tools": canonical_sorted,
                 "count": len(canonical_sorted),
                 "computed_at": datetime.now(UTC).isoformat(),
@@ -218,20 +229,17 @@ def compute_registry_hash() -> str:
 # ─── GUARD REGISTRY REPORT ─────────────────────────────────────────────────────
 
 def guard_report() -> dict[str, Any]:
-    """Runtime guard status report for geox_registry_contract."""
-    try:
-        from contracts.enums.statuses import CANONICAL_TOOLS
-        canonical_count = len(CANONICAL_TOOLS)
-    except ImportError:
-        canonical_count = 0
-
+    """Runtime guard status report for geox_doctrine(mode='registry')."""
+    canonical = _get_canonical_tools()
     return {
         "guard_active": True,
         "rt1_enabled": True,
         "rt3_enabled": True,
         "irreversible_tools": sorted(_IRREVERSIBLE_TOOLS),
-        "canonical_tool_count": canonical_count,
+        "canonical_tool_count": len(canonical),
+        "canonical_tools": sorted(canonical),
         "registry_hash": compute_registry_hash(),
-        "epoch": "GEOX-11TOOLS-v0.3",
-        "floors_enforced": ["F1_AMANAH", "F10_COHERENCE"],
+        "epoch": "2026-06-22-GEOX-16TOOLS-PHASE2",
+        "source_of_truth": "src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS",
+        "floors_enforced": ["F1_AMANAH", "F9_ANTI_HANTU", "F13_SOVEREIGN"],
     }

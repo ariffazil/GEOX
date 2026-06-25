@@ -66,7 +66,7 @@ def _build_route(
     mode_cfg = dict(_POLICY["modes"][mode])
     risk_ovr = _POLICY["risk_overrides"].get(risk, {})
 
-    confidence_ceiling: float = risk_ovr.get("confidence_ceiling", mode_cfg["confidence_ceiling"])
+    risk_ovr.get("confidence_ceiling", mode_cfg["confidence_ceiling"])
     disconfirmation_required: bool = risk_ovr.get("disconfirmation_required", mode_cfg["disconfirmation_required"])
     conservative_language_required: bool = risk_ovr.get("conservative_language_required", False)
     hold_if_low_confidence: bool = risk_ovr.get("hold_if_low_confidence", False)

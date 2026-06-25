@@ -25,6 +25,21 @@ from pydantic import BaseModel, Field
 #
 # A tool that emits UNKNOWN is honest. A tool that silently extrapolates to
 # fill a gap violates F9.
+#
+# EpistemicLevel is a str-Enum so it serializes to JSON as the string value
+# (not a quoted enum repr) and accepts string comparisons like
+# `epistemic_level == "OBSERVED"` without coercion errors.
+class EpistemicLevel(str, Enum):
+    """Epistemic provenance of a deep_time variable — drives F7 confidence cap."""
+    OBSERVED = "OBSERVED"             # directly measured (e.g. ice core δ18O)
+    DERIVED = "DERIVED"               # formula-based from observed inputs
+    INTERPRETED = "INTERPRETED"       # model output, calibrated
+    PROCESS_HYPOTHESIS = "PROCESS_HYPOTHESIS"  # process-model prediction
+    SPECULATION = "SPECULATION"       # analogy / statistics-based inference
+    NO_DATA = "NO_DATA"               # dataset not yet ingested
+    UNKNOWN = "UNKNOWN"               # cannot be known at this age (F9 guard)
+
+
 EPISTEMIC_CONFIDENCE_CAP = {
     "OBSERVED": 0.99,
     "DERIVED": 0.95,

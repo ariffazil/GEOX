@@ -110,7 +110,7 @@ def generate_3d_seismic_cube(
             trace += rng.normal(0, 0.02, n_z)
 
             # Add reflection events at horizon positions
-            for surf_name, surf_2d in [("top", top_surf), ("mid", mid_surf), ("bot", bot_surf)]:
+            for _surf_name, surf_2d in [("top", top_surf), ("mid", mid_surf), ("bot", bot_surf)]:
                 t_horizon = surf_2d[iy, ix]
                 t_idx = int(np.interp(t_horizon, zi, np.arange(n_z)))
                 t_idx = np.clip(t_idx, 0, n_z - 1)

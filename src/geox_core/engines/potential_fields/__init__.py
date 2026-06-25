@@ -370,7 +370,7 @@ def magnetic_forward_prism(
     M = susceptibility_si * B0 / mu0  # magnetisation
 
     inc = np.deg2rad(inclination_deg)
-    dec = np.deg2rad(declination_deg)
+    np.deg2rad(declination_deg)
 
     # Effective depth to centre
     z_c = (depth_top_m + depth_bottom_m) / 2.0
