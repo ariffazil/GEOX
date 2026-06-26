@@ -1,0 +1,9 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: EpistemicTag
+description: GEOX epistemic class indicating the nature of truth of the claim (F2/F7).
+type: string
+enum:
+  - OBSERVED
+  - DERIVED
+  - INTERPRETED_LOCAL
+  - PROCESS_HYPOTHESIS

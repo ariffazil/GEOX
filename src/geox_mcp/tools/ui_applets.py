@@ -1,5 +1,7 @@
 from typing import Any
+
 from fastmcp import FastMCP
+
 
 def register_ui_applets(mcp: FastMCP) -> None:
     @mcp.tool(name="geox_applet_crossplot")

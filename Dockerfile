@@ -14,9 +14,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install all deps into the venv
-COPY requirements.txt requirements-earth.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+# Install GEOX package + all deps into the venv
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
+RUN pip install --no-cache-dir .
 
 
 # ── Stage 2: lean runtime ───────────────────────────────────────────────
@@ -41,8 +42,7 @@ COPY src/ ./src/
 COPY resources/ ./resources/
 COPY data/ ./data/
 COPY fixtures/ ./fixtures/
-COPY pyproject.toml requirements.txt requirements-earth.txt ./
-COPY entrypoint.sh ./
+COPY pyproject.toml entrypoint.sh ./
 
 # Build-time git provenance (optional — enables test receipt commit binding)
 ARG GIT_SHA=""

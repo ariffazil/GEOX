@@ -9,17 +9,17 @@ v1.3: Adds Deterministic Area/GrossH Kernels and Support Geometry.
 """
 
 import json
-import os
 import sys
-import numpy as np
 from datetime import datetime
+
+import numpy as np
 
 # Standard ODBind imports
 try:
-    import odbind.survey as odsurvey
     import odbind.horizon3d as odhor
-    import odbind.well as odwell
     import odbind.seis as odseis
+    import odbind.survey as odsurvey
+    import odbind.well as odwell
     OD_AVAILABLE = True
 except ImportError:
     OD_AVAILABLE = False

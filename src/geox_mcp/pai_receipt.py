@@ -24,10 +24,9 @@ import hashlib
 import json
 from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, model_validator
-
 
 # ═══════════════════════════════════════════════════════════════════════════════
 #  ENUMS (mirror of canonical)
@@ -133,15 +132,15 @@ class PAIOrigin(BaseModel):
     producer_type: ProducerType
     producer_id: str
     organ: Organ
-    model_id: Optional[str] = None
-    tool_id: Optional[str] = None
+    model_id: str | None = None
+    tool_id: str | None = None
 
 
 class PAIAuthority(BaseModel):
     human_root: str = CANONICAL_HUMAN_ROOT
     delegate: str
     authority_chain: list[str] = Field(default_factory=list)
-    expires_at: Optional[datetime] = None
+    expires_at: datetime | None = None
     subdelegation_allowed: bool = False
 
 
@@ -155,7 +154,7 @@ class PAIIntent(BaseModel):
     requires_888_hold: bool = False
 
     @model_validator(mode="after")
-    def _enforce_intent_floor(self) -> "PAIIntent":
+    def _enforce_intent_floor(self) -> PAIIntent:
         tier = RISK_TO_TIER[self.risk_class]
         if tier in (Tier.CONSEQUENTIAL, Tier.ATOMIC) and not self.requires_human_intent:
             object.__setattr__(self, "requires_human_intent", True)
@@ -171,15 +170,15 @@ class PAIEvidence(BaseModel):
     tool_calls: list[str] = Field(default_factory=list)
     confidence: str = "unknown"
     human_reviewed: bool = False
-    reviewer_id: Optional[str] = None
+    reviewer_id: str | None = None
 
 
 class PAIAudit(BaseModel):
     destination: str = "VAULT999"
-    previous_receipt: Optional[str] = None
-    receipt_hash: Optional[str] = None
-    signature: Optional[str] = None
-    vault_ref: Optional[str] = None
+    previous_receipt: str | None = None
+    receipt_hash: str | None = None
+    signature: str | None = None
+    vault_ref: str | None = None
 
 
 class PAIReceipt(BaseModel):
@@ -194,7 +193,7 @@ class PAIReceipt(BaseModel):
     audit: PAIAudit = Field(default_factory=PAIAudit)
 
     @model_validator(mode="after")
-    def _enforce_receipt_type(self) -> "PAIReceipt":
+    def _enforce_receipt_type(self) -> PAIReceipt:
         if self.receipt_type != PAI_RECEIPT_TYPE:
             raise ValueError(f"receipt_type must be '{PAI_RECEIPT_TYPE}', got {self.receipt_type!r}")
         return self
@@ -237,19 +236,19 @@ def mint_pai_receipt(
     external_effect: bool = False,
     reversibility: Reversibility = Reversibility.FULL,
     delegate: str = "anonymous",
-    authority_chain: Optional[list[str]] = None,
-    expires_at: Optional[datetime] = None,
+    authority_chain: list[str] | None = None,
+    expires_at: datetime | None = None,
     subdelegation_allowed: bool = False,
-    sources: Optional[list[str]] = None,
-    tool_calls: Optional[list[str]] = None,
+    sources: list[str] | None = None,
+    tool_calls: list[str] | None = None,
     confidence: str = "unknown",
     human_reviewed: bool = False,
-    reviewer_id: Optional[str] = None,
-    model_id: Optional[str] = None,
-    tool_id: Optional[str] = None,
-    previous_receipt: Optional[str] = None,
+    reviewer_id: str | None = None,
+    model_id: str | None = None,
+    tool_id: str | None = None,
+    previous_receipt: str | None = None,
     destination: str = "VAULT999",
-    signature: Optional[str] = None,
+    signature: str | None = None,
 ) -> PAIReceipt:
     intent = PAIIntent(
         action=action,
@@ -313,7 +312,7 @@ def geox_claim_receipt(
     model_id: str = "geox_petrophysics_v1",
     tool_id: str = "geox_claim_create",
     human_reviewed: bool = False,
-    reviewer_id: Optional[str] = None,
+    reviewer_id: str | None = None,
 ) -> PAIReceipt:
     """Standard PAI receipt for a GEOX claim. Truth class → risk class.
 

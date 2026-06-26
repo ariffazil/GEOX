@@ -13,25 +13,24 @@ from __future__ import annotations
 
 import datetime
 import logging
-from typing import Any, Literal, Optional
+from typing import Literal
 
 from geox_core.enums.statuses import (
-    get_standard_envelope,
+    ArtifactStatus,
     ExecutionStatus,
     GovernanceStatus,
-    ArtifactStatus,
+    get_standard_envelope,
 )
-from geox_mcp.tools._helpers import _get_artifact, _artifact_exists
 
 logger = logging.getLogger("geox.workflow.canon")
 
 
 async def geox_workflow_run_canon(
-    source_uri: Optional[str] = None,
+    source_uri: str | None = None,
     source_type: Literal["well", "seismic", "earth3d", "auto"] = "auto",
-    well_id: Optional[str] = None,
-    content_base64: Optional[str] = None,
-    filename: Optional[str] = None,
+    well_id: str | None = None,
+    content_base64: str | None = None,
+    filename: str | None = None,
     target_dir: str = "/data/geox_las",
     overwrite: bool = False,
     auto_contradiction: bool = True,
@@ -68,17 +67,16 @@ async def geox_workflow_run_canon(
     F5 PEACE: Never proceeds to irreversible steps (e.g. judge_seal) without human ack.
     """
     # Defer imports to avoid circular references
+    from geox_mcp.tools.abduction import geox_evidence_contradiction_scan, geox_process_abduction
     from geox_mcp.tools.data import geox_data_ingest_bundle
-    from geox_mcp.tools.qc import geox_data_qc_bundle
-    from geox_mcp.tools.petrophysics import geox_subsurface_generate_candidates
-    from geox_mcp.tools.abduction import geox_process_abduction, geox_evidence_contradiction_scan
     from geox_mcp.tools.evidence import geox_evidence_summarize_cross
+    from geox_mcp.tools.petrophysics import geox_subsurface_generate_candidates
+    from geox_mcp.tools.qc import geox_data_qc_bundle
 
     step_outputs: list[dict] = []
-    step_errors: list[dict] = []
     workflow_halted = False
-    halt_reason: Optional[str] = None
-    final_artifact_ref: Optional[str] = None
+    halt_reason: str | None = None
+    final_artifact_ref: str | None = None
 
     def _claim_state(result: dict) -> str:
         return result.get("claim_state", result.get("artifact", {}).get("claim_state", "UNKNOWN"))
@@ -343,7 +341,7 @@ async def geox_workflow_run_canon(
         ],
         "f4_invariant": "Each step output is preserved — human can inspect any stage",
         "f13_invariant": "abort_on_hold=False allows human review before continuing",
-        "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "generated_at": datetime.datetime.now(datetime.UTC).isoformat(),
         "next_best_actions": [
             {
                 "tool": "geox_prospect_judge_preview",

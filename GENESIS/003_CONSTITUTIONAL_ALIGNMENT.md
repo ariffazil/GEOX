@@ -1,17 +1,27 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-16
+last_verified: 2026-06-25
 valid_from: 2026-06-14
-valid_until: 2026-07-16
+valid_until: 2026-07-25
 confidence: high
 scope: /root/geox/GENESIS
 -->
 
 # GEOX — CONSTITUTIONAL ALIGNMENT (F1–F13)
 
-> **Canonical source:** `/root/arifOS/static/arifos/theory/000/000_CONSTITUTION.md` (hash `SHA256:da81f983e3bfb0f1e177f828a779eaab99d2d0162e88dfdd7f1b3904f67adf44`)
+> **Canonical source:** `/root/arifOS/GENESIS/000_KERNEL_CANON.md` (see also CLAUDE.md table + arifOS schemas for runtime). Old path `/root/arifOS/static/arifos/theory/000/000_LAW_v2026.03.07.md` is superseded.
 >
 > Floor numbering verified F1–F13. F14 is DEAD and not a floor.
+>
+> **Name alignment (2026-06-21 FORGE):** GEOX's local floor names are aligned to the canonical arifOS law names where they diverge:
+>
+> | Floor | Canonical (arifOS) | GEOX-pre-2026-06-21 | Status |
+> |---|---|---|---|
+> | F3 | QUAD-WITNESS (W4) | TRI-WITNESS | aligned |
+> | F11 | COMMAND AUTHORITY | AUDITABILITY | aligned |
+> | F12 | INJECTION DEFENSE | RESILIENCE | aligned |
+>
+> The geological meaning column remains GEOX-specific. Naming is the spine; meaning is the body.
 
 ## PURPOSE
 
@@ -66,10 +76,10 @@ Goal:
 
 ---
 
-## F3 — TRI-WITNESS
+## F3 — QUAD-WITNESS (W4)  *(formerly TRI-WITNESS)*
 
 ### Geological Meaning
-- Earth evidence must converge with human and AI witnesses. W₃ = ∛(Human × AI × Earth) ≥ 0.75.
+- Earth evidence must converge with human, AI, and the additional constitutional witnesses. W₄ = ∜(Human × AI × Earth × Constitution) ≥ 0.75. The "Earth" axis is GEOX's primary contribution; the "Constitution" axis is what arifOS contributes; "Human" and "AI" cross both.
 
 ### GEOX Mapping
 - GEOX populates the `witness.earth` dimension for subsurface capital decisions.
@@ -214,29 +224,31 @@ Goal:
 
 ---
 
-## F11 — AUDITABILITY
+## F11 — COMMAND AUTHORITY  *(formerly AUDITABILITY)*
 
 ### Geological Meaning
-- Every decision logged, inspectable. Intent must be declared, not hidden.
+- Every Earth decision is logged, inspectable, and authorized. The Human Sovereign retains command authority over irreversible actions (drilling, sealing, exporting).
 
 ### GEOX Mapping
 - agent declarations
 - tool-level clarity
 - VAULT999 logging for claim lifecycle
+- **`ack_irreversible=True` is required on `geox_claim_seal` and `geox_segy_export_tool`**
 
 ### Enforcement
 - every process has explicit purpose
 - `geox_history_audit` retrieves past runs and decision lineage
+- `geox_claim_seal` proxies to arifOS 888 JUDGE; GEOX never self-seals
 
 ### STATUS
-✅ STRONG — visible in tool registry and audit trails
+✅ STRONG — visible in tool registry, audit trails, and command gating
 
 ---
 
-## F12 — RESILIENCE
+## F12 — INJECTION DEFENSE  *(formerly RESILIENCE)*
 
 ### Geological Meaning
-- Injection defense. Risk < 0.85. Adversarial prompts must fail closed.
+- Injection defense at the Earth-input boundary. Risk < 0.85. Adversarial geological prompts must fail closed. The rock is the rock; injected malice must not become "evidence."
 
 ### GEOX Mapping
 - Input schema validation via Pydantic v2.
@@ -246,9 +258,10 @@ Goal:
 ### Enforcement
 - Malformed inputs return validation errors, not silent fallback.
 - Untrusted evidence is tagged as CONTEXTUAL_WITNESS_ONLY.
+- Adversarial test suite: `tests/test_fail_closed_auth.py`, `tests/test_claim_laundering_guard.py`.
 
 ### STATUS
-✅ PARTIAL — schema validation strong; adversarial test suite expanding
+✅ STRONG — schema validation + adversarial test suite active
 
 ---
 
@@ -273,10 +286,10 @@ Goal:
 
 ## CROSS-OBSERVATION
 
-GEOX alignment pattern:
+GEOX alignment pattern (post-2026-06-21 forge):
 
-- **Strong:** F1, F2, F4, F7, F9, F11, F12, F13
-- **Partial:** F3, F5, F6, F8, F10
+- **Strong:** F1, F2, F3 (Earth-axis only), F4, F6, F7, F9, F11, F12, F13
+- **Partial:** F3 (uniform W4 scoring not yet native), F5 (peace² risk model), F8 (genius score), F10 (depends on ingestion discipline)
 
 ---
 

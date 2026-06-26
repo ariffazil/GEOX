@@ -38,17 +38,16 @@ This is the **calibration artifact** for the GEOX Vision V1 forge.
 
 from __future__ import annotations
 
-import asyncio
 import dataclasses
 import hashlib
 import json
 import os
 import time
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any
 
-import numpy as np
 import matplotlib
+import numpy as np
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -56,25 +55,14 @@ import matplotlib.pyplot as plt
 # GEOX physics — production-grade
 from geox_core.physics import (
     convolve_trace,
-    impedance_array,
-    reflectivity_array,
     ricker_wavelet,
 )
 
 # Vision module
-from .minimax_vlm_adapter import MiniMaxVLMAdapter, VisionResult
+from .minimax_vlm_adapter import MiniMaxVLMAdapter
 from .perceptual_inventory import (
     PerceptualInventory,
-    ReflectorObservation,
-    FaultObservation,
-    AmplitudeZoneObservation,
-    AmplitudeZoneCharacter,
-    AmplitudeZoneOrigin,
-    AmplitudeCharacter,
-    ReflectorContinuity,
-    FaultType,
 )
-
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Ground truth schema
@@ -88,18 +76,18 @@ class SyntheticGroundTruth:
 
     n_inlines: int
     n_twt_samples: int
-    twt_range_ms: Tuple[float, float]  # (min, max) TWT
-    inline_range: Tuple[float, float]  # (min, max) inline
+    twt_range_ms: tuple[float, float]  # (min, max) TWT
+    inline_range: tuple[float, float]  # (min, max) inline
 
     # Each reflector: (twt_center_ms, amplitude_sign, width_ms)
     # For matching: VLM reflector must overlap in twt_range_ms
-    reflectors: List[Dict[str, Any]] = field(default_factory=list)
+    reflectors: list[dict[str, Any]] = field(default_factory=list)
 
     # Each fault: (inline_center, twt_top, twt_bot, type, throw_ms)
-    faults: List[Dict[str, Any]] = field(default_factory=list)
+    faults: list[dict[str, Any]] = field(default_factory=list)
 
     # Each bright zone: (twt_center, twt_width, lateral_inlines, character)
-    bright_zones: List[Dict[str, Any]] = field(default_factory=list)
+    bright_zones: list[dict[str, Any]] = field(default_factory=list)
 
     def reflector_tolerance_ms(self) -> float:
         """A VLM-detected reflector is a match if its twt_range overlaps
@@ -124,15 +112,15 @@ class SyntheticGroundTruth:
 def build_synthetic_2d_section(
     n_inlines: int = 200,
     n_twt_samples: int = 300,
-    twt_range_ms: Tuple[float, float] = (0.0, 2000.0),
+    twt_range_ms: tuple[float, float] = (0.0, 2000.0),
     dt_ms: float = 4.0,
     wavelet_freq: float = 25.0,
     noise_db: float = -22.0,
-    seed: Optional[int] = 42,
-    reflectors: Optional[List[Tuple[float, float, float]]] = None,
-    faults: Optional[List[Tuple[int, float, float, str, float]]] = None,
-    bright_zones: Optional[List[Tuple[float, float, int, int, str]]] = None,
-) -> Tuple[np.ndarray, SyntheticGroundTruth]:
+    seed: int | None = 42,
+    reflectors: list[tuple[float, float, float]] | None = None,
+    faults: list[tuple[int, float, float, str, float]] | None = None,
+    bright_zones: list[tuple[float, float, int, int, str]] | None = None,
+) -> tuple[np.ndarray, SyntheticGroundTruth]:
     """Build a synthetic 2D seismic section with known features.
 
     Args:
@@ -275,7 +263,7 @@ def render_section_to_png(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-def _ranges_overlap(a: Tuple[float, float], b: Tuple[float, float], tolerance: float = 0.0) -> float:
+def _ranges_overlap(a: tuple[float, float], b: tuple[float, float], tolerance: float = 0.0) -> float:
     """Return the size of the intersection of two ranges (with tolerance)."""
     a_lo, a_hi = a[0] - tolerance, a[1] + tolerance
     b_lo, b_hi = b[0] - tolerance, b[1] + tolerance
@@ -287,13 +275,13 @@ def _ranges_overlap(a: Tuple[float, float], b: Tuple[float, float], tolerance: f
 def compare_to_ground_truth(
     inventory: PerceptualInventory,
     gt: SyntheticGroundTruth,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Compare VLM output to known ground truth. Returns precision,
     recall, and per-feature match breakdown."""
     # Reflectors
     tp_r, fp_r, fn_r = [], [], []
     matched_gt_r = set()
-    for i, vlm_r in enumerate(inventory.reflectors):
+    for _i, vlm_r in enumerate(inventory.reflectors):
         vlm_twt = vlm_r.twt_range_ms
         matched_idx = None
         for j, gt_r in enumerate(gt.reflectors):
@@ -391,7 +379,7 @@ class HarnessReport:
     timestamp_unix: float
     image_path: str
     image_sha256: str
-    ground_truth_summary: Dict[str, int]
+    ground_truth_summary: dict[str, int]
     vision_verdict: str
     vision_human_review_required: bool
     vision_ac_risk: float
@@ -399,10 +387,10 @@ class HarnessReport:
     n_vlm_reflectors: int
     n_vlm_faults: int
     n_vlm_zones: int
-    precision_recall: Dict[str, Any]
-    pass_fail: Dict[str, bool]
+    precision_recall: dict[str, Any]
+    pass_fail: dict[str, bool]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return dataclasses.asdict(self)
 
 

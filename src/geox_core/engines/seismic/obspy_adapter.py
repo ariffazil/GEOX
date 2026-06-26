@@ -17,8 +17,8 @@ import hashlib
 import json
 import logging
 import warnings
-from dataclasses import dataclass, field
-from typing import Any, Optional
+from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 
@@ -61,7 +61,7 @@ class AttributeResult:
 class AnomalousContrastResult:
     ac_score: float
     ac_class: str
-    anomaly_mask: Optional[np.ndarray]
+    anomaly_mask: np.ndarray | None
     confidence: str
     semblance: float
     variance_ratio: float
@@ -85,10 +85,11 @@ class ObsPyAdapter:
         try:
             import obspy
             self._obspy_version = obspy.__version__
-        except ImportError:
+        except ImportError as exc:
             raise ImportError(
                 "ObsPy is required for seismic operations. "
                 "Install with: pip install 'geox[seismic]'"
+            ) from exc
             )
 
     def _sha256_params(self, params: dict) -> str:
@@ -467,7 +468,7 @@ class ObsPyAdapter:
         semblance_vals = np.zeros(n)
         for i in range(window_size, n - window_size):
             window = arr[i - window_size:i + window_size]
-            window_mean = np.mean(window)
+            np.mean(window)
             window_var = np.var(window)
             point_var = np.var(arr[i])
             if window_var > 1e-10:
@@ -475,7 +476,7 @@ class ObsPyAdapter:
             else:
                 semblance_vals[i] = 1.0
 
-        local_mean = np.convolve(arr, np.ones(window_size) / window_size, mode="same")
+        np.convolve(arr, np.ones(window_size) / window_size, mode="same")
         local_var = np.array([
             np.var(arr[max(0, i - window_size):min(n, i + window_size)])
             for i in range(n)

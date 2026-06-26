@@ -1,18 +1,14 @@
 from __future__ import annotations
 
-import os
-import yaml
 import json
 import logging
-import time
-from datetime import datetime, timezone
+import os
 from pathlib import Path
-from typing import Literal, Any
+from typing import Literal
 
-import httpx
+import yaml
 
 from geox_core.enums.statuses import (
-    ArtifactStatus,
     ExecutionStatus,
     GovernanceStatus,
     get_standard_envelope,
@@ -294,7 +290,7 @@ async def geox_basin_profile(
             else:
                 if lat is None or lng is None:
                     return get_standard_envelope(
-                        {"tool": "geox_basin_profile", "error": f"macrostrat_* modes require lat and lng parameters"},
+                        {"tool": "geox_basin_profile", "error": "macrostrat_* modes require lat and lng parameters"},
                         tool_class="observe",
                         execution_status=ExecutionStatus.ERROR,
                         governance_status=GovernanceStatus.HOLD,
@@ -715,7 +711,7 @@ async def geox_literature_ingest(
 
     citation_chunks = citation_chunks[:10]
 
-    lit_ref = f"lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf" if is_madon_2021 else f"lit://custom/{path.name}"
+    lit_ref = "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf" if is_madon_2021 else f"lit://custom/{path.name}"
 
     claim_candidates = []
     if is_madon_2021 or resolved_basin == "Malay Basin":

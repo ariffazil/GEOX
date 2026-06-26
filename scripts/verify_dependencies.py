@@ -1,6 +1,8 @@
-from geox.core.hierarchy import Segment, Prospect, GeologicalRisk
-from geox.core.dependency_engine import DependencyEngine
 import json
+
+from geox.core.dependency_engine import DependencyEngine
+from geox.core.hierarchy import GeologicalRisk, Prospect, Segment
+
 
 def test_dependency():
     print("--- TESTING WAJIB #2 & #3: HIERARCHY & DEPENDENCY ---")
@@ -30,7 +32,7 @@ def test_dependency():
     # P(Fail_both) = 0.744 * 0.744 = 0.553
     # P(Success_indep) = 1 - 0.553 = 0.446
     
-    print(f"Independent Math Result would be ~0.446")
+    print("Independent Math Result would be ~0.446")
     print(f"Shared Logic Result (Simulated): {result['gcos']}")
     
     # If Shared Source is used, the combined GCOS should be LOWER than independent 

@@ -24,8 +24,8 @@ def _compute_physics_guard_version() -> str:
         return "geox-014d3e33"  # shipped fallback — bumped 2026-06-13
 
 
-GEOX_VERSION = "v2026.06.05"
-GEOX_CONTRACT_EPOCH = "2026-06-05-GEOX-37TOOLS-v2.0"
+GEOX_VERSION = "v2026.06.22"
+GEOX_CONTRACT_EPOCH = "2026-06-22-GEOX-56TOOLS-v3.0"
 PHYSICS_GUARD_VERSION = _compute_physics_guard_version()
 REGISTRY_HASH = "reg-hash-35d798a"
 TOOL_SCHEMA_HASH = "schema-sha-35d798a"
@@ -653,6 +653,23 @@ def get_standard_envelope(
 
     # F2 Truth gate: auto-downgrade overclaimed states
     response = enforce_claim_state(response, evidence_refs=evidence_refs)
+
+    # ── APEX Runtime Governance Envelope (APEX-MCP-001) ──────────────────
+    # GEOX = Earth Evidence organ. Maps physical signals to 10 APEX gates.
+    try:
+        from geox_core.apex_envelope_geox import geox_apex_envelope
+        response["apex"] = geox_apex_envelope(
+            tool_name=tool_name or primary_artifact.get("tool", "unknown"),
+            claim_state=claim_state,
+            perception_class=perception_class or "HYPOTHESIS",
+            evidence_refs=evidence_refs or [],
+            humility_score=humility_score,
+            uncertainty=uncertainty,
+            governance_status=governance_status,
+            actor_id=actor_id or os.environ.get("GEOX_ACTOR_ID"),
+        )
+    except Exception:
+        pass  # APEX envelope is additive; never breaks tool output
 
     if ui_resource_uri:
         response["_meta"] = {"ui": {"resourceUri": ui_resource_uri}}

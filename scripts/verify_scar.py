@@ -1,5 +1,7 @@
-from geox.core.scar_ledger import ScarLedger
 import json
+
+from geox.core.scar_ledger import ScarLedger
+
 
 def test_scar_canonisation():
     print("--- TESTING WAJIB F12: SCAR CANONISATION ---")

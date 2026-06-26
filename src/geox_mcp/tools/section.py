@@ -73,7 +73,6 @@ async def geox_section_interpret_correlation(
         matrix_density: g/cm³ fallback matrix density when no RHOB available.
         fluid_density: g/cm³ fallback fluid density when no RHOB available.
     """
-    import sys
 
     import numpy as np
 

@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any, Tuple
+from typing import Any
 
 logger = logging.getLogger("geox.crs")
 
@@ -77,6 +77,18 @@ KNOWN_CRS: dict[str, dict[str, Any]] = {
     "EPSG:32649": {
         "name": "WGS84 / UTM zone 49N",
         "area": "Global (zone 49N)",
+        "unit": "metre",
+        "type": "projected",
+    },
+    "EPSG:32647": {
+        "name": "WGS84 / UTM zone 47N",
+        "area": "Global (zone 47N)",
+        "unit": "metre",
+        "type": "projected",
+    },
+    "EPSG:32648": {
+        "name": "WGS84 / UTM zone 48N",
+        "area": "Global (zone 48N)",
         "unit": "metre",
         "type": "projected",
     },

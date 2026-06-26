@@ -15,6 +15,13 @@ from typing import Any
 from fastmcp import FastMCP
 
 from geox_mcp.tools._register import register_tools_on_server
+from geox_mcp.tools.basin import (
+    geox_abstraction_guard,
+    geox_basin_profile,
+    geox_basin_resolve,
+    geox_literature_ingest,
+    geox_query_intake,
+)
 from geox_mcp.tools.data import (
     geox_data_ingest_bundle,
     geox_evidence_discover,
@@ -22,8 +29,11 @@ from geox_mcp.tools.data import (
 )
 from geox_mcp.tools.dst import geox_dst_ingest_test
 from geox_mcp.tools.evidence_reason import geox_evidence_reason
+from geox_mcp.tools.horizon_contrast import geox_horizon_contrast_surface
 from geox_mcp.tools.ingestion import (
     geox_header_inspect,
+    geox_las_inspect,
+    geox_seismic_segy_inspect,
 )
 from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.petrophysics import (
@@ -35,18 +45,6 @@ from geox_mcp.tools.qc import geox_data_qc_bundle
 from geox_mcp.tools.registry import geox_system_registry_status
 from geox_mcp.tools.seismic_compute import geox_seismic_compute
 from geox_mcp.tools.sequence import geox_sequence_interpret
-from geox_mcp.tools.horizon_contrast import geox_horizon_contrast_surface
-from geox_mcp.tools.basin import (
-    geox_basin_resolve,
-    geox_basin_profile,
-    geox_query_intake,
-    geox_abstraction_guard,
-    geox_literature_ingest,
-)
-from geox_mcp.tools.ingestion import (
-    geox_las_inspect,
-    geox_seismic_segy_inspect,
-)
 
 _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),

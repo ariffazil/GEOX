@@ -1,10 +1,11 @@
-from typing import List, Optional
+
 from mcp.server.fastmcp import FastMCP
 from pydantic import Field
 
-from geox_core.schemas.velocity_mapping import VelocityQCGate, VelocityFailureMode
 from geox_core.engines.seismic.velocity_structural_qc import VelocityStructuralEngine
+from geox_core.schemas.velocity_mapping import VelocityFailureMode, VelocityQCGate
 from geox_core.schemas.velocity_policy import VelocityACRiskPolicy
+
 
 def register_velocity_tools(mcp: FastMCP):
     """
@@ -22,14 +23,14 @@ def register_velocity_tools(mcp: FastMCP):
     def geox_velocity_structural_mapping_qc(
         cube_id: str = Field(..., description="The ID of the velocity cube to evaluate"),
         source_model_version: str = Field(..., description="Version of the source model (e.g., FWI_v3)"),
-        cleared_gates: List[VelocityQCGate] = Field(..., description="List of QC gates that have passed"),
-        identified_failures: List[VelocityFailureMode] = Field(..., description="List of failure modes present in the volume"),
+        cleared_gates: list[VelocityQCGate] = Field(..., description="List of QC gates that have passed"),
+        identified_failures: list[VelocityFailureMode] = Field(..., description="List of failure modes present in the volume"),
         evidence_for: str = Field(..., description="Geological/geophysical evidence supporting this velocity model"),
         evidence_against: str = Field(..., description="Contradicting evidence or unresolved artifacts"),
         uncertainty_band: str = Field("P10-P90 Not Calculated", description="Uncertainty spread across realizations"),
-        proxy_id: Optional[str] = Field(None, description="Unique proxy packet ID"),
-        lineage: Optional[List[dict]] = Field(None, description="List of VelocityLineageEvent dicts"),
-        evidence_handles: Optional[List[str]] = Field(None, description="URIs pointing to QC artifacts")
+        proxy_id: str | None = Field(None, description="Unique proxy packet ID"),
+        lineage: list[dict] | None = Field(None, description="List of VelocityLineageEvent dicts"),
+        evidence_handles: list[str] | None = Field(None, description="URIs pointing to QC artifacts")
     ) -> dict:
         """
         Executes the VelocityStructuralEngine to compute AC Risk and 

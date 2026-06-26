@@ -49,9 +49,9 @@ import hashlib
 import json
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 import httpx
 
@@ -85,7 +85,7 @@ class GovernedPayload:
     irreversibility: IrreversibilityLevel
     physics9_checks: dict[str, Any]
     proposed_verdict: str = "SEAL"
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     constitution_hash: str = CONSTITUTION_HASH
 
     def to_dict(self) -> dict[str, Any]:
@@ -308,7 +308,7 @@ async def seal_to_vault(
         "result_summary": _summarize_for_vault(result),
         "full_result": result,
         "judge_state_hash": judge_state_hash,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "constitution_hash": CONSTITUTION_HASH,
     }
 

@@ -1,0 +1,20 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: TimescaleUnit
+description: ICS/GEOX chronostratigraphic unit. Corresponds to GeoSciML GeologicTimeScale.
+type: object
+required:
+  - name
+  - rank
+properties:
+  name:
+    type: string
+    description: "e.g., Santonian"
+  rank:
+    type: string
+    enum: [eon, era, period, epoch, age]
+  top_ma:
+    type: number
+    description: Top age bound in million years
+  base_ma:
+    type: number
+    description: Base age bound in million years

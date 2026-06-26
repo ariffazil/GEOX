@@ -219,21 +219,71 @@ async def test_geox_well_infer_seq_strat_bad_depo_env(mcp, dummy_packages):
 
 def test_actual_registered_tool_count():
     """
-    Ground truth: decorator/imperative mcp.tool() calls in src/geox_mcp/tools/.
-    Legacy files (stratigraphy, well, well_correlation) use decorators.
-    _register.py uses imperative registration for domain-server composition.
-    Any agent claiming 21, 26, or 28 tools is hallucinating.
+    Ground truth: this test confirms the dynamic decorator count matches
+    what we expect given the current registration architecture.
+
+    ARCHITECTURE NOTE (2026-06-22):
+      GEOX uses two tool registration mechanisms:
+        (a) @mcp.tool() decorator inside individual tool modules (legacy)
+        (b) Imperative register_tools_on_server() in `_register.py` (modern)
+
+      The legacy decorator-based files are: stratigraphy.py, well.py,
+      well_correlation.py, lem_predict.py. As of W16+ FORGE 2026-06-22,
+      all other tools are registered imperatively via the canonical registry
+      in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` (currently 56 tools).
+
+      This test guards the LEGACY decorator count — any agent claiming
+      a different decorator count is hallucinating.
     """
     tools_dir = SRC_ROOT / "geox_mcp" / "tools"
     count = 0
+    decorator_files = []
     for py_file in tools_dir.glob("*.py"):
         source = py_file.read_text()
         tree = ast.parse(source)
+        file_count = 0
         for node in ast.walk(tree):
             if isinstance(node, ast.Call):
                 func = node.func
                 if isinstance(func, ast.Attribute) and func.attr == "tool":
-                    count += 1
-    # 8 decorators in stratigraphy(2) + well(4) + well_correlation(2)
-    # 1 imperative mcp.tool() in _register.py
-    assert count == 9, f"Expected 9 mcp.tool() calls in tools/, found {count}"
+                    file_count += 1
+        if file_count > 0:
+            decorator_files.append((py_file.name, file_count))
+            count += file_count
+
+    # Cross-check against canonical registry (informational)
+    try:
+        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+
+        canonical = len(CANONICAL_PUBLIC_TOOLS)
+    except Exception:
+        canonical = -1
+
+    # Expected decorator count = sum across legacy decorator files
+    # Update this when a new decorator-based tool is added.
+    expected_decorator_files = {
+        "stratigraphy.py": 2,
+        "well.py": 4,
+        "well_correlation.py": 2,
+        "ui_applets.py": 1,
+        "velocity_structural_qc.py": 1,
+        "_register.py": 1,  # one imperative register_tools_on_server call
+    }
+    expected = sum(expected_decorator_files.values())
+
+    actual_files = dict(decorator_files)
+    assert actual_files == expected_decorator_files, (
+        f"Decorator-file count drift: expected {expected_decorator_files}, "
+        f"got {actual_files}. If you added/removed a decorator-based tool, "
+        f"update expected_decorator_files above."
+    )
+    assert count == expected, (
+        f"Expected {expected} decorator calls, found {count}. "
+        f"Files: {decorator_files}"
+    )
+    # Informational: canonical registry has more tools than decorators.
+    # This is by design — see ARCHITECTURE NOTE above.
+    if canonical > 0:
+        assert canonical >= expected, (
+            f"Canonical registry ({canonical}) should be ≥ decorator count ({expected})"
+        )
