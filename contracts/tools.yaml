@@ -1,327 +1,142 @@
 # GEOX Earth Intelligence Tool Registry
-# SOT: ariffazil/geox — Governed World Model
-# Last verified: 2026-06-14
+# SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
+# Last verified: 2026-06-25 (Phase 2 Clean Architecture)
+#
+# DITEMPA BUKAN DIBERI — Forged, Not Given.
+#
+# THIS FILE IS GENERATED FROM registry.py. DO NOT EDIT MANUALLY.
+# The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
+# If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: "2026.06.14"
+schema_version: "2026.06.25"
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
 mcp_endpoint: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
 
-canonical_tool_count: 39
+canonical_tool_count: 16
+contract_epoch: "2026-06-22-GEOX-16TOOLS-PHASE2"
+source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
 
 tools:
-  geox_data_ingest_bundle:
-    category: geox_ingest
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Lazy ingestion for LAS, CSV, Parquet, SEG-Y, and structural payloads
+  # ── WELL DOMAIN (4 tools) ──────────────────────────────────────────────────
+  geox_well_ingest:
+    category: well
+    axis: observe
+    lane: evidence
+    description: LAS, SEG-Y, DST, deviation, tops ingest
+    session_required: false
 
-  geox_data_qc_bundle:
-    category: geox_ingest
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Real QC — depth monotonicity, null %, physical range checks
+  geox_well_qc:
+    category: well
+    axis: verify
+    lane: evidence
+    description: "QC: depth, curves, completeness, FJIS"
+    session_required: false
 
-  geox_dst_ingest_test:
-    category: geox_ingest
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Structured DST ingestion with derived metrics and flags
+  geox_petrophysics:
+    category: well
+    axis: reason
+    lane: reasoning
+    description: Vsh, porosity, Sw, perm, net pay, LEM
+    session_required: true
 
-  geox_header_inspect:
-    category: geox_ingest
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Inspect LAS/SEGY/deviation/tops headers against Earth schemas
+  geox_sequence:
+    category: well
+    axis: reason
+    lane: reasoning
+    description: Sequence stratigraphy, correlation
+    session_required: true
 
-  geox_las_inspect:
-    category: geox_ingest
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Inspect LAS well log curve metadata, units, depth range
-
-  geox_seismic_segy_inspect:
-    category: geox_ingest
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Inspect SEG-Y file headers, trace count, sample interval
-
-  geox_evidence_discover:
-    category: geox_evidence
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Search corpus / reports for geological evidence
-
-  geox_report_to_workflow:
-    category: geox_evidence
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Turn discovered report evidence into safe GEOX workflow steps
-
-  geox_subsurface_generate_candidates:
-    category: geox_subsurface
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Ensemble subsurface outputs with residuals and data-density maps
-
-  geox_subsurface_verify_integrity:
-    category: geox_subsurface
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Physics9 boundary limits and structural paradox detection
+  # ── SEISMIC DOMAIN (4 tools) ───────────────────────────────────────────────
+  geox_seismic_ingest:
+    category: seismic
+    axis: observe
+    lane: evidence
+    description: SEG-Y I/O, header inspection
+    session_required: false
 
   geox_seismic_compute:
-    category: geox_seismic
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Unified seismic physics — synthetics, well ties, time-depth, contrast
+    category: seismic
+    axis: reason
+    lane: reasoning
+    description: Synthetic, well-tie, AVO, attributes, inversion
+    session_required: true
 
-  geox_sequence_interpret:
-    category: geox_stratigraphy
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Unified sequence stratigraphy engine — single well to project correlation
+  geox_seismic_interpret:
+    category: seismic
+    axis: reason
+    lane: reasoning
+    description: Horizon contrast, faults, frames, blend
+    session_required: true
 
-  geox_evidence_reason:
-    category: geox_evidence
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Cross-domain evidence synthesis, abduction, and contradiction scan
+  geox_vision:
+    category: seismic
+    axis: reason
+    lane: reasoning
+    description: VLM inference, audit, calibration, perceptual
+    session_required: true
 
-  geox_prospect_evaluate:
-    category: geox_prospect
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Integrated prospect evaluation — volumetrics, POS, EVOI
+  # ── MODEL DOMAIN (2 tools) ─────────────────────────────────────────────────
+  geox_subsurface_model:
+    category: model
+    axis: reason
+    lane: judgment
+    description: Joint inversion, gravity/mag, MT forward
+    session_required: true
 
-  geox_map_context_scene:
-    category: geox_spatial
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Spatial bbox context, CRS checks, causal scene rendering
+  geox_geomechanics:
+    category: model
+    axis: compute
+    lane: reasoning
+    description: "K/G/E/ν, coordinate transform, blockspace"
+    session_required: true
 
-  geox_system_registry_status:
-    category: geox_registry_contract
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/server.py
-    tests_present: true
-    status: sealed
-    description: Discovery of canonical tools, health, and contract epoch
+  # ── BASIN DOMAIN (2 tools) ─────────────────────────────────────────────────
+  geox_basin:
+    category: basin
+    axis: reason
+    lane: discovery
+    description: Profile, resolve, macrostrat, scene
+    session_required: false
 
-  geox_horizon_contrast_surface:
-    category: geox_seismic
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: ToAC-as-Attention horizon contrast surface pipeline
+  geox_deep_time_state:
+    category: basin
+    axis: reason
+    lane: discovery
+    description: Earth State Vector at any geological age
+    session_required: false
 
-  geox_coord_transform_tool:
-    category: geox_spatial
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Transform coordinates between block, survey, and world spaces
+  # ── GOVERNANCE DOMAIN (2 tools) ────────────────────────────────────────────
+  geox_claim:
+    category: governance
+    axis: reason
+    lane: judgment
+    description: Create, validate, challenge, seal, attach
+    session_required: true
 
-  geox_blockspace_resolution_tool:
-    category: geox_spatial
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Compute block space resolution from survey definitions
+  geox_evidence:
+    category: governance
+    axis: reason
+    lane: evidence
+    description: Discover, synthesize, abduct, contradict, literature
+    session_required: false
 
-  geox_volume_frame_tool:
-    category: geox_seismic
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Read or write a single 2D frame in a 3D volume
+  # ── EVALUATION DOMAIN (1 tool) ─────────────────────────────────────────────
+  geox_prospect:
+    category: evaluation
+    axis: reason
+    lane: judgment
+    description: Volumetrics, POS, EVOI, risk assessment
+    session_required: true
 
-  geox_seismic_compute_attribute_tool:
-    category: geox_seismic
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Compute registered seismic attributes
-
-  geox_fault_stick_ingest_tool:
-    category: geox_seismic
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Ingest fault sticks into canonical FaultSet3d schema
-
-  geox_attribute_registry_list_tool:
-    category: geox_seismic
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: List registered seismic attributes with metadata
-
-  geox_blend_volume_tool:
-    category: geox_seismic
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Alpha or RGB blend seismic volumes
-
-  geox_segy_export_tool:
-    category: geox_seismic
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Export seismic volume to SEG-Y format; requires 888_HOLD
-
-  geox_claim_create:
-    category: geox_claims
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Create structured Earth interpretation claim with provenance
-
-  geox_claim_validate:
-    category: geox_claims
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Validate claim against earth_memory_envelope schema
-
-  geox_claim_challenge:
-    category: geox_claims
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Challenge claim with alternative interpretation
-
-  geox_evidence_attach:
-    category: geox_claims
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Attach evidence artifact to existing claim
-
-  geox_claim_seal:
-    category: geox_claims
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Route validated claim to arifOS for Vault999 sealing
-
-  geox_basin_resolve:
-    category: geox_basin
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Resolve basin name to canonical ID, bbox, and polygon reference
-
-  geox_basin_profile:
-    category: geox_basin
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Retrieve basin-level intelligence and contradiction scan
-
-  geox_query_intake:
-    category: geox_registry_contract
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Accept natural language queries and route to tools
-
-  geox_abstraction_guard:
-    category: geox_registry_contract
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Evaluate non-geological questions and enforce ontology guards
-
-  geox_literature_ingest:
-    category: geox_evidence
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Ingest literature as contextual witness
-
-  geox_vision_perceptual_inventory:
-    category: geox_vision
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Build PerceptualInventory from VLM outputs
-
-  geox_vision_minimax_inference:
-    category: geox_vision
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Interpret seismic section images via MiniMax VLM
-
-  geox_vision_calibrate:
-    category: geox_vision
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Calibrate VLM against synthetic forward-inverse harness
-
-  geox_vision_audit:
-    category: geox_vision
-    owner_repo: ariffazil/geox
-    runtime_surface: src/geox_mcp/tools
-    tests_present: true
-    status: sealed
-    description: Compute AC_Risk and emit VisionVerdict
+  # ── DOCTRINE DOMAIN (1 tool) ───────────────────────────────────────────────
+  geox_doctrine:
+    category: doctrine
+    axis: verify
+    lane: judgment
+    description: Anti-Beautiful-One, assumptions, Gödel, guards
+    session_required: true

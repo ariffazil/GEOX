@@ -17,8 +17,6 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
-import os
-
 import hashlib
 import logging
 from pathlib import Path
@@ -705,7 +703,6 @@ async def _workflow_section_correlation(
     matrix_density: float,
     fluid_density: float,
 ) -> dict[str, Any]:
-    import sys
 
     # well_tie mode
     if mode == "well_tie":

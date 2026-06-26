@@ -16,12 +16,13 @@ DITEMPA BUKAN DIBERI — Earth intelligence is forged, not given.
 from __future__ import annotations
 
 import hashlib
-import httpx
 import json
 import logging
 import uuid
 from datetime import UTC, datetime
 from typing import Any, Literal
+
+import httpx
 
 # ── Reality Ledger Bridge ───────────────────────────────────────────────────────
 _LEDGER_AVAILABLE = True

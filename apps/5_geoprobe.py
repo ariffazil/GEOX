@@ -2,18 +2,23 @@
 GEOX GeoProbe — 2.5D Map View + Geoid + Attribute Volume
 OMEGA Improved: stripped cartoon, real geox_25d, real physics9.
 """
-import streamlit as st
+import os
+import sys
+
 import numpy as np
 import plotly.graph_objects as go
-import sys, os
+import streamlit as st
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from geox_core.core.geox_25d import (
-    compute_geoid_anomalies, compute_geoid_surface,
-    build_attribute_volume, time_to_depth_conversion
+    build_attribute_volume,
+    compute_geoid_anomalies,
+    compute_geoid_surface,
+    time_to_depth_conversion,
 )
-from geox_core.core.physics9 import Physics9State, anomaly_contrast_theory, forward_physics9
+from geox_core.core.physics9 import Physics9State, forward_physics9
+
 
 def plot_map(data, x, y, title, colorscale="viridis"):
     fig = go.Figure(go.Heatmap(z=data, x=x, y=y, colorscale=colorscale, zmid=0))
@@ -58,7 +63,7 @@ def build_geoprobe_app():
                 with t2:
                     fig = plot_map(np.array(result["magnetic_tmi_nt"]),
                                    result["x_km"], result["y_km"],
-                                   f"Magnetic TMI (nT)", "Portland")
+                                   "Magnetic TMI (nT)", "Portland")
                     st.plotly_chart(fig, use_container_width=True)
                 st.json(result)
 

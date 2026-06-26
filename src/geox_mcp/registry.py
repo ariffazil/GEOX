@@ -3,152 +3,165 @@ from __future__ import annotations
 from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GEOX WITNESS CORE — v2026.05.22
-# 10 tools. Physics-9 foundation. No interpretation. No narrative.
+# GEOX CANONICAL TOOLS — Phase 2 Clean Architecture (2026-06-22)
+# 16 tools. Mode-based consolidation. Evidence-only. Physics-9 governed.
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# SURFACE-FACING (12 tools):
+#   What external agents (AAA, ART, Copilot, any MCP client) call to get
+#   Earth data or run subsurface analysis. These are the "public API" of GEOX.
+#
+# INTERNAL PLUMBING (4 tools):
+#   Governance, claims, evidence chains, doctrine. Federation constitutional
+#   machinery. Used by arifOS 888_JUDGE and internal workflows.
+#
+#   Total canonical = 16. Live runtime reports canonical_tools=16.
+#   Any change requires 888_HOLD per geox/AGENTS.md.
+#
+# DITEMPA BUKAN DIBERI — Forged, Not Given.
 # ═══════════════════════════════════════════════════════════════════════════════
 
-CANONICAL_PUBLIC_TOOLS: list[str] = [
-    # Data witnessing
-    "geox_data_ingest_bundle",
-    "geox_data_qc_bundle",
-    "geox_dst_ingest_test",
-    "geox_header_inspect",
-    "geox_las_inspect",
-    "geox_seismic_segy_inspect",
-    "geox_evidence_discover",
-    "geox_report_to_workflow",
-    # Physics-9 domain engines
-    "geox_subsurface_generate_candidates",
-    "geox_subsurface_verify_integrity",
-    # Unified seismic physics
-    "geox_seismic_compute",
-    # Unified sequence stratigraphy
-    "geox_sequence_interpret",
-    # Unified evidence reasoning
-    "geox_evidence_reason",
-    # Prospect evaluation with governance
-    "geox_prospect_evaluate",
-    # Spatial context
-    "geox_map_context_scene",
-    # Machine-checkable truth
-    "geox_system_registry_status",
-    # Horizon contrast surface (ToAC-as-Attention pipeline)
-    "geox_horizon_contrast_surface",
-    # paleoscan_python v2.0.0 forge — coordinate & image substrate
-    "geox_coord_transform_tool",
-    "geox_blockspace_resolution_tool",
-    "geox_volume_frame_tool",
-    "geox_seismic_compute_attribute_tool",
-    "geox_fault_stick_ingest_tool",
-    "geox_attribute_registry_list_tool",
-    # paleoscan_python v2.0.0 forge — blending + export
-    "geox_blend_volume_tool",
-    "geox_segy_export_tool",
-    # H5: Claim Engine
-    "geox_claim_create",
-    "geox_claim_validate",
-    "geox_claim_challenge",
-    "geox_evidence_attach",
-    "geox_claim_seal",
-    # Basin & Metaphor guards
-    "geox_basin_resolve",
-    "geox_basin_profile",
-    "geox_query_intake",
-    "geox_abstraction_guard",
-    "geox_literature_ingest",
-    # Vision V1 (Layer 1) — 4 tools, forged 2026-06-07
-    "geox_vision_perceptual_inventory",
-    "geox_vision_minimax_inference",
-    "geox_vision_calibrate",
-    "geox_vision_audit",
-    # Macrostrat — dedicated client (replaces thin proxy alias)
-    "geox_query_macrostrat",
-    # New macrostrat modes accessible via geox_basin_profile
-    # macrostrat_lithologies, macrostrat_strat_names, macrostrat_intervals,
-    # macrostrat_fossils, macrostrat_geologic_map, macrostrat_cache_warm
+# ─────────────────────────────────────────────────────────────────────────────
+# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (12 tools)
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# What these do: query the planet, analyze subsurface data, return evidence.
+# Who calls them: AAA cockpit, ART, Copilot, any MCP client.
+# Count: 12
+#
+SURFACE_TOOLS: list[str] = [
+    # ── WELL DOMAIN (4) ────────────────────────────────────────────────────────
+    "geox_well_ingest",          # LAS, SEG-Y, DST, deviation, tops ingest
+    "geox_well_qc",              # QC: depth, curves, completeness, FJIS
+    "geox_petrophysics",         # Vsh, porosity, Sw, perm, net pay, LEM
+    "geox_sequence",             # Sequence stratigraphy, correlation
+
+    # ── SEISMIC DOMAIN (4) ─────────────────────────────────────────────────────
+    "geox_seismic_ingest",       # SEG-Y I/O, header inspection
+    "geox_seismic_compute",      # Synthetic, well-tie, AVO, attributes, inversion
+    "geox_seismic_interpret",    # Horizon contrast, faults, frames, blend
+    "geox_vision",               # VLM inference, audit, calibration, perceptual
+
+    # ── MODEL DOMAIN (2) ───────────────────────────────────────────────────────
+    "geox_subsurface_model",     # Joint inversion, gravity/mag, MT forward
+    "geox_geomechanics",         # K/G/E/ν, coordinate transform, blockspace
+
+    # ── BASIN DOMAIN (2) ───────────────────────────────────────────────────────
+    "geox_basin",                # Profile, resolve, macrostrat, scene
+    "geox_deep_time_state",      # Earth State Vector at any geological age
 ]
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# INTERNAL PLUMBING — Governance, Claims, Doctrine (4 tools)
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# What these do: constitutional machinery. Claims, evidence chains, judgment,
+#   epistemic guards. Used by arifOS 888_JUDGE and federation workflows.
+# Who calls them: arifOS kernel, 888_JUDGE, internal federation a2a.
+# Count: 4
+#
+INTERNAL_TOOLS: list[str] = [
+    "geox_claim",    # Create, validate, challenge, seal, attach claims
+    "geox_evidence", # Discover, synthesize, abduct, contradict, literature
+    "geox_prospect", # Volumetrics, POS, EVOI, risk assessment (judgment-gated)
+    "geox_doctrine", # Anti-Beautiful-One, assumptions, Gödel, guards
+]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CANONICAL PUBLIC TOOLS — Union of surface + internal (16 total)
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# This is the single source of truth for the MCP server invariant check.
+# Surface tools are what the world sees. Internal tools are federation plumbing.
+# Live runtime reports canonical_tools=16; do not change without 888_HOLD.
+#
+CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BACKWARD COMPAT — old tool names, 1 release cycle
+# ─────────────────────────────────────────────────────────────────────────────
+CANONICAL_COMPAT_TOOLS: list[str] = [
+    "geox_data_ingest_bundle", "geox_data_qc_bundle", "geox_dst_ingest_test",
+    "geox_header_inspect", "geox_las_inspect", "geox_seismic_segy_inspect",
+    "geox_evidence_discover", "geox_subsurface_generate_candidates",
+    "geox_subsurface_verify_integrity", "geox_sequence_interpret",
+    "geox_evidence_reason", "geox_prospect_evaluate", "geox_map_context_scene",
+    "geox_horizon_contrast_surface", "geox_coord_transform_tool",
+    "geox_blockspace_resolution_tool", "geox_volume_frame_tool",
+    "geox_seismic_compute_attribute_tool", "geox_fault_stick_ingest_tool",
+    "geox_attribute_registry_list_tool", "geox_blend_volume_tool",
+    "geox_segy_export_tool", "geox_claim_create", "geox_claim_validate",
+    "geox_claim_challenge", "geox_evidence_attach", "geox_claim_seal",
+    "geox_basin_resolve", "geox_basin_profile", "geox_query_intake",
+    "geox_abstraction_guard", "geox_literature_ingest",
+    "geox_vision_perceptual_inventory", "geox_vision_minimax_inference",
+    "geox_vision_calibrate", "geox_vision_audit", "geox_query_macrostrat",
+    "geox_doctrine_assumption_register", "geox_doctrine_anti_beautiful_one",
+    "geox_doctrine_godel_review", "geox_prithvi_eo_inference",
+    "geox_gravity_magnetic_forward", "geox_emag2_ingest", "geox_icgem_models",
+    "geox_joint_inversion", "geox_mt_forward", "geox_biostrat_constraint",
+    "geox_seismic_inversion", "geox_lem_predict",
+]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TOOL MANIFEST — metadata for MCP server
+# ─────────────────────────────────────────────────────────────────────────────
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
-    # ── DISCOVERY LANE (5 tools) ── max_action_class: OBSERVE, no lease required
-    {"name": "geox_system_registry_status", "axis": "observe", "lane": "discovery", "expose": True},
-    {"name": "geox_attribute_registry_list_tool", "axis": "observe", "lane": "discovery", "expose": True},
-    {"name": "geox_basin_resolve", "axis": "observe", "lane": "discovery", "expose": True},
-    {"name": "geox_query_intake", "axis": "observe", "lane": "discovery", "expose": True},
-    {"name": "geox_query_macrostrat", "axis": "observe", "lane": "discovery", "expose": True},
+    # ── SURFACE-FACING: WELL DOMAIN (4) ───────────────────────────────────────
+    {"name": "geox_well_ingest", "axis": "observe", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "geox_well_qc", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "geox_petrophysics", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
+    {"name": "geox_sequence", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
 
-    # ── EVIDENCE LANE (13 tools) ── max_action_class: ANALYZE, no lease required
-    {"name": "geox_data_ingest_bundle", "axis": "observe", "lane": "evidence", "expose": True},
-    {"name": "geox_data_qc_bundle", "axis": "verify", "lane": "evidence", "expose": True},
-    {"name": "geox_dst_ingest_test", "axis": "observe", "lane": "evidence", "expose": True},
-    {"name": "geox_header_inspect", "axis": "verify", "lane": "evidence", "expose": True},
-    {"name": "geox_las_inspect", "axis": "verify", "lane": "evidence", "expose": True},
-    {"name": "geox_seismic_segy_inspect", "axis": "verify", "lane": "evidence", "expose": True},
-    {"name": "geox_evidence_discover", "axis": "observe", "lane": "evidence", "expose": True},
-    {"name": "geox_evidence_attach", "axis": "verify", "lane": "evidence", "expose": True},
-    {"name": "geox_literature_ingest", "axis": "observe", "lane": "evidence", "expose": True},
-    {"name": "geox_fault_stick_ingest_tool", "axis": "observe", "lane": "evidence", "expose": True},
-    {"name": "geox_volume_frame_tool", "axis": "observe", "lane": "evidence", "expose": True},
-    {"name": "geox_vision_perceptual_inventory", "axis": "observe", "lane": "evidence", "expose": True},
-    {"name": "geox_vision_calibrate", "axis": "verify", "lane": "evidence", "expose": True},
+    # ── SURFACE-FACING: SEISMIC DOMAIN (4) ────────────────────────────────────
+    {"name": "geox_seismic_ingest", "axis": "observe", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "geox_seismic_compute", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
+    {"name": "geox_seismic_interpret", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
+    {"name": "geox_vision", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
 
-    # ── REASONING LANE (17 tools) ── max_action_class: ANALYZE, lease + session required
-    {"name": "geox_subsurface_generate_candidates", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_subsurface_verify_integrity", "axis": "verify", "lane": "reasoning", "expose": True},
-    {"name": "geox_seismic_compute", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_seismic_compute_attribute_tool", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_sequence_interpret", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_evidence_reason", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_prospect_evaluate", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_map_context_scene", "axis": "observe", "lane": "reasoning", "expose": True},
-    {"name": "geox_horizon_contrast_surface", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_coord_transform_tool", "axis": "compute", "lane": "reasoning", "expose": True},
-    {"name": "geox_blockspace_resolution_tool", "axis": "compute", "lane": "reasoning", "expose": True},
-    {"name": "geox_blend_volume_tool", "axis": "compute", "lane": "reasoning", "expose": True},
-    {"name": "geox_basin_profile", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_vision_minimax_inference", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_vision_audit", "axis": "verify", "lane": "reasoning", "expose": True},
-    {"name": "geox_report_to_workflow", "axis": "reason", "lane": "reasoning", "expose": True},
-    {"name": "geox_abstraction_guard", "axis": "verify", "lane": "reasoning", "expose": True},
+    # ── SURFACE-FACING: MODEL DOMAIN (2) ──────────────────────────────────────
+    {"name": "geox_subsurface_model", "axis": "reason", "lane": "judgment", "expose": True, "face": "surface"},
+    {"name": "geox_geomechanics", "axis": "compute", "lane": "reasoning", "expose": True, "face": "surface"},
 
-    # ── JUDGMENT LANE (5 tools) ── GOVERNED, lease + session + arifOS judge required
-    {"name": "geox_claim_create", "axis": "reason", "lane": "judgment", "expose": True},
-    {"name": "geox_claim_validate", "axis": "verify", "lane": "judgment", "expose": True},
-    {"name": "geox_claim_challenge", "axis": "reason", "lane": "judgment", "expose": True},
-    {"name": "geox_claim_seal", "axis": "reason", "lane": "judgment", "expose": True},
-    {"name": "geox_segy_export_tool", "axis": "observe", "lane": "judgment", "expose": True},
+    # ── SURFACE-FACING: BASIN DOMAIN (2) ──────────────────────────────────────
+    {"name": "geox_basin", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
+    {"name": "geox_deep_time_state", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
+
+    # ── INTERNAL PLUMBING: GOVERNANCE + DOCTRINE (4) ──────────────────────────
+    {"name": "geox_claim", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
+    {"name": "geox_evidence", "axis": "reason", "lane": "evidence", "expose": True, "face": "internal"},
+    {"name": "geox_prospect", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
+    {"name": "geox_doctrine", "axis": "verify", "lane": "judgment", "expose": True, "face": "internal"},
 ]
 
-# Legacy aliases — hidden by default (GEOX_SHOW_LEGACY_ALIASES)
-LEGACY_ALIAS_MAP: dict[str, str] = {
-    "geox_deviation_survey_inspect": "geox_header_inspect",
-    "geox_tops_inspect": "geox_header_inspect",
-    "geox_seismic_inspect": "geox_header_inspect",
-    # geox_las_inspect and geox_seismic_segy_inspect are now canonical (directly registered)
-    "geox_ingest_bundle": "geox_data_ingest_bundle",
-    "geox_qc_bundle": "geox_data_qc_bundle",
-    "geox_subsurface_candidates": "geox_subsurface_generate_candidates",
-    "geox_petrophysics": "geox_subsurface_generate_candidates",
-    "geox_seismic_tie": "geox_seismic_compute",
-    "geox_well_tie": "geox_seismic_compute",
-    "geox_td_anchor": "geox_seismic_compute",
-    "geox_forward_model": "geox_seismic_compute",
-    "geox_anomalous_contrast": "geox_seismic_compute",
-    "geox_ac_detector": "geox_seismic_compute",
-    "geox_seismic_analyze_volume": "geox_seismic_compute",
-    "geox_sequence_stratigraphy": "geox_sequence_interpret",
-    "geox_well_compute_gr_bins": "geox_sequence_interpret",
-    "geox_well_build_packages": "geox_sequence_interpret",
-    "geox_well_infer_seq_strat": "geox_sequence_interpret",
-    "geox_well_analyze_sequence": "geox_sequence_interpret",
-    "geox_stratigraphy_run_pipeline": "geox_sequence_interpret",
-    "geox_stratigraphy_preview_config": "geox_sequence_interpret",
-    "geox_section_interpret_correlation": "geox_sequence_interpret",
-    "geox_evidence_summarize_cross": "geox_evidence_reason",
-    "geox_process_abduction": "geox_evidence_reason",
-    "geox_evidence_contradiction_scan": "geox_evidence_reason",
-    "geox_prospect_judge_preview": "geox_prospect_evaluate",
-    "geox_prospect_judge_seal": "geox_prospect_evaluate",
-    "geox_prospect_judge_verdict": "geox_prospect_evaluate",
-    "geox_registry": "geox_system_registry_status",
-    # geox_query_macrostrat is now a first-class canonical tool (not an alias)
-}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HELPERS
+# ─────────────────────────────────────────────────────────────────────────────
+
+def surface_tool_count() -> int:
+    """Number of surface-facing tools (what the world sees)."""
+    return len(SURFACE_TOOLS)
+
+
+def internal_tool_count() -> int:
+    """Number of internal plumbing tools (governance machinery)."""
+    return len(INTERNAL_TOOLS)
+
+
+def is_surface_tool(name: str) -> bool:
+    """Check if a tool is surface-facing."""
+    return name in SURFACE_TOOLS
+
+
+def is_internal_tool(name: str) -> bool:
+    """Check if a tool is internal plumbing."""
+    return name in INTERNAL_TOOLS
+
+
+# Legacy aliases — REMOVED Phase 1 Clean Slate (2026-06-22)
+LEGACY_ALIAS_MAP: dict[str, str] = {}

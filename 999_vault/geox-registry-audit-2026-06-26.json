@@ -1,0 +1,29 @@
+{
+  "seal_id": "GEOX-REGISTRY-AUDIT-2026-06-26-001",
+  "epoch": "2026-06-26T02:21+08:00",
+  "actor": "FORGE",
+  "action": "GEOX_OPEN_SOURCE_REGISTRY_AUDIT_COMPLETE",
+  "resources_audited": 21,
+  "live": 5,
+  "install_queue": 13,
+  "deferred": 3,
+  "corrections": [
+    "pygeopressure_voided_REPLACED_BY_welly_bruges",
+    "gempy_version_corrected_gempy_2026_MIT",
+    "pygplates_correction_pip_install_Wrong_USE_conda",
+    "lem_substrate_gated_not_live",
+    "bruges_added_P2_for_Eaton_pore_pressure"
+  ],
+  "active_888_holds": ["WLFM", "OPM_Flow", "GEOS"],
+  "phase_lock": "Phase_2_intact_16tools",
+  "evidence_path": "/root/geox/forge_work/GEOX_OPEN_SOURCE_REGISTRY_AUDIT.md",
+  "verdict": "QUALIFY",
+  "confidence": 0.97,
+  "witness": {
+    "human": "Arif",
+    "ai": "ARIF-Perplexity-FORGE",
+    "earth": "CANON-9"
+  },
+  "next_action": "pip_install_block_execution_pending_Arif_approval",
+  "seal_DITMPA": "DITEMPA BUKAN DIBERI"
+}

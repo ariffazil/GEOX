@@ -4,49 +4,27 @@ import hashlib
 import json
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, List, Dict, Optional, Literal
+from typing import Literal
 
-from fastmcp import FastMCP
 from contracts.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
     enrich_envelope_with_metabolic,
+    get_standard_envelope,
 )
 from contracts.tools.canonical._helpers import (
-    _get_artifact,
-    _artifact_exists,
-    _register_artifact,
-    _record_latest_qc,
-    _latest_qc_failed_refs,
-    _check_maruah_territory,
-    _inject_ensemble_residual_evidence,
-    _safe_upload_path,
-    _decode_upload_content,
-    _parse_csv_or_json,
-    _map_canonical_curves,
-    _detect_depth_unit,
-    _compute_vsh_from_store,
-    _compute_porosity_from_store,
-    _compute_saturation_from_store,
-    _compute_netpay_from_store,
-    _classify_gr_motif,
-    _classify_lithology_from_store,
-    _safe_reduction,
-    _get_well_data_with_depth,
     CLAIM_STATES,
-    CANONICAL_ALIASES,
-    _CURVE_RANGES,
-    _artifact_registry,
     _artifact_store,
-    _well_curves_registry,
-    _ARTIFACT_REGISTRY_PATH,
-    MAX_UPLOAD_BYTES,
+    _decode_upload_content,
+    _detect_depth_unit,
+    _map_canonical_curves,
+    _parse_csv_or_json,
+    _register_artifact,
+    _safe_upload_path,
 )
-from compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 
 logger = logging.getLogger("geox.canonical.ingest")
 
@@ -70,13 +48,13 @@ def _metabolic_return(
 
 
 async def geox_data_ingest_bundle(
-    source_uri: Optional[str] = None,
+    source_uri: str | None = None,
     source_type: Literal["well", "seismic", "earth3d", "auto", "tops", "biostrat", "checkshot"] = "auto",
-    well_id: Optional[str] = None,
+    well_id: str | None = None,
     standardize_curves: bool = True,
     normalize_units: bool = True,
-    content_base64: Optional[str] = None,  # New: support for base64 encoded content
-    filename: Optional[str] = None,  # Required if content_base64 is provided
+    content_base64: str | None = None,  # New: support for base64 encoded content
+    filename: str | None = None,  # Required if content_base64 is provided
     target_dir: str = "/data/geox_las",  # Required if content_base64 is provided
     overwrite: bool = False,  # Required if content_base64 is provided
 ) -> dict:
@@ -281,7 +259,6 @@ async def geox_data_ingest_bundle(
             )
         )
 
-    from pathlib import Path
 
     derived_id = well_id or Path(source_uri).stem
 
@@ -563,7 +540,7 @@ async def geox_data_ingest_bundle(
         out["vault_receipt"] = {
             "vault": "VAULT999",
             "tool": "geox_data_ingest_bundle",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "hash": digest,
         }
         return _metabolic_return(

@@ -149,9 +149,7 @@ def metabolic_loop(
     """
     state = initial_state
     converged = False
-    i = 0
-
-    for i in range(max_iterations):
+    for _iteration in range(max_iterations):
         predicted = forward_physics9(state)
 
         residual = 0.0

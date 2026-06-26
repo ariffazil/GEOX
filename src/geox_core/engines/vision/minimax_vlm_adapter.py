@@ -44,27 +44,18 @@ import logging
 import os
 import re
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Optional, Protocol
+from dataclasses import dataclass
+from typing import Any, Protocol
 
 from pydantic import ValidationError
 
 from .perceptual_inventory import (
-    AcRiskComponents,
     AcRiskVerdict,
     AmplitudeZoneObservation,
     AxisMetadata,
-    DisplayColorPolarity,
-    DisplayUnits,
     FaultObservation,
-    FaultType,
     PerceptualInventory,
-    PolarityConvention,
     ReflectorObservation,
-    ReflectorContinuity,
-    AmplitudeCharacter,
-    AmplitudeZoneCharacter,
-    AmplitudeZoneOrigin,
     VisionVerdict,
     default_ac_risk_components,
     sha256_file,
@@ -199,10 +190,10 @@ class VisionResult:
     PerceptualInventory or a typed error."""
 
     success: bool
-    inventory: Optional[PerceptualInventory] = None
-    error: Optional[str] = None
-    error_type: Optional[str] = None
-    raw_response: Optional[str] = None
+    inventory: PerceptualInventory | None = None
+    error: str | None = None
+    error_type: str | None = None
+    raw_response: str | None = None
     elapsed_seconds: float = 0.0
     backend_id: str = ""
 
@@ -227,7 +218,7 @@ class MiniMaxVLMAdapter:
 
     def __init__(
         self,
-        backend: Optional[VisionBackend] = None,
+        backend: VisionBackend | None = None,
         execution_mode: str = "deterministic",
     ):
         """If `backend` is None, the adapter uses the real MCP tool via
@@ -342,7 +333,7 @@ class MiniMaxVLMAdapter:
         try:
             data = json.loads(cleaned)
         except json.JSONDecodeError as e:
-            raise AntiHantuError(f"VLM response is not valid JSON: {str(e)[:200]}. Response starts with: {cleaned[:100]}")
+            raise AntiHantuError(f"VLM response is not valid JSON: {str(e)[:200]}. Response starts with: {cleaned[:100]}") from e
 
         if not isinstance(data, dict):
             raise AntiHantuError(f"VLM response is JSON but not a dict. Got type: {type(data).__name__}")
@@ -420,7 +411,7 @@ class MiniMaxVLMAdapter:
         except (KeyError, TypeError) as e:
             raise AntiHantuError(
                 f"Axis metadata missing or malformed: {e}. VLM must always return twt_range_ms and inline_range."
-            )
+            ) from e
 
         # 6. Multi-view consistency check (if cross_validate enabled)
         multi_view_passed = False
@@ -451,7 +442,7 @@ class MiniMaxVLMAdapter:
         response_hash = sha256_text(raw_response)
 
         # 9. Auto-set verdict based on AC_Risk verdict + content
-        ac_risk_val = ac.compute()
+        ac.compute()
         if ac.to_verdict() == AcRiskVerdict.VOID:
             verdict = VisionVerdict.VOID
         elif ac.to_verdict() == AcRiskVerdict.HOLD:
@@ -564,7 +555,7 @@ async def interpret_seismic_image(
     image_path: str,
     basin_context: str = "unknown",
     interpretation_goal: str = "Identify structural features, faults, reflectors, and amplitude anomalies",
-    backend: Optional[VisionBackend] = None,
+    backend: VisionBackend | None = None,
     has_segy: bool = False,
 ) -> VisionResult:
     """Convenience function for one-shot interpretation."""

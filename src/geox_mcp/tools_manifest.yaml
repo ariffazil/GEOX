@@ -1,0 +1,237 @@
+# geox_mcp/tools_manifest.yaml
+# DITEMPA BUKAN DIBERI — Evidence is forged, not given.
+#
+# Purpose: Explicit binding from public tool names → internal engine/adapter.
+#   - Public names are what MCP clients call.
+#   - Internal names are what FORGE and developers track.
+#   - adapter_name: the specific Python module/class that handles this tool.
+#   - engine_dir: the geox_core/engines/ directory that owns the computation.
+#   - expose_public: true = MCP advertises this tool; false = internal only.
+#
+# RULE: library names (harmonica, ppigrf, gplately, GEMPY, etc.)
+#   NEVER appear in public tool names. They are internal implementation.
+#   Public names use domain verbs: get_, compute_, derive_, reconstruct_.
+#
+# Version: 1.0.0 (locked 2026-06-26)
+
+# ── SURFACE TOOLS — Earth data + subsurface analysis ──────────────────────────
+
+geox_well_ingest:
+  domain: well
+  description: Ingest LAS, SEG-Y, DST, deviation, tops data as OBSERVED evidence
+  internal_engine: geox_core.engines.well
+  adapter_name: null  # multi-adapter; welly + lasio
+  canon9_variables: [Vp, RT, rho]
+  expose_public: true
+  replan_triggers: []  # primary ingestion — does not trigger replan
+
+geox_well_qc:
+  domain: well
+  description: QC depth, curves, completeness, FJIS against known standards
+  internal_engine: geox_core.engines.well
+  adapter_name: null
+  canon9_variables: [Vp, RT, rho]
+  expose_public: true
+  replan_triggers: []
+
+geox_petrophysics:
+  domain: well
+  description: Vsh, porosity, Sw, perm, net pay from log curves via deterministic transforms
+  internal_engine: geox_core.engines.petrophysics
+  adapter_name: bruges_adapter
+  canon9_variables: [phi, Sw, Vsh, k]
+  expose_public: true
+  replan_triggers:
+    - trigger: new_well_data
+      affects: [phi, Sw, Vsh]
+      propagation: auto  # low risk — well-level local inference
+
+geox_sequence:
+  domain: stratigraphy
+  description: Sequence stratigraphy, correlation, parasequence stacking patterns
+  internal_engine: geox_core.engines.correlation_panel
+  adapter_name: null
+  canon9_variables: []
+  expose_public: true
+  replan_triggers: []
+
+geox_seismic_ingest:
+  domain: seismic
+  description: SEG-Y I/O, header inspection, inline/xline random access
+  internal_engine: geox_core.engines.seismic
+  adapter_name: segyio_adapter
+  canon9_variables: [Vp]
+  expose_public: true
+  replan_triggers: []
+
+geox_seismic_compute:
+  domain: seismic
+  description: Synthetic seismogram, well-tie, AVO, time-depth anchoring, attribute extraction
+  internal_engine: geox_core.engines.seismic
+  adapter_name: null  # multiple: welly_tie, devito_adapter
+  canon9_variables: [Vp, Vs, rho, AI]
+  expose_public: true
+  replan_triggers:
+    - trigger: new_well_tie
+      affects: [Vp, AI]
+      propagation: auto
+
+geox_seismic_interpret:
+  domain: seismic
+  description: Horizon contrast, fault interpretation, seismic facies framing
+  internal_engine: geox_core.engines.seismic
+  adapter_name: null
+  canon9_variables: []
+  expose_public: true
+  replan_triggers:
+    - trigger: horizon_update
+      affects: [structure]
+      propagation: advisory  # surface to Arif, no block
+
+geox_vision:
+  domain: vision
+  description: VLM inference on images, core photos, thin sections
+  internal_engine: geox_core.engines.vision
+  adapter_name: null  # prithvi_adapter or minimax_vlm
+  canon9_variables: []
+  expose_public: true
+  replan_triggers: []
+
+geox_subsurface_model:
+  domain: model
+  description: 3D structural interpolation, joint gravity/magnetics, MT forward
+  internal_engine: geox_core.engines
+  adapter_name: loopstructural_adapter, gempy_adapter, harmonica_adapter
+  canon9_variables: [Vp, rho, chi]
+  expose_public: true
+  replan_triggers:
+    - trigger: new_structure
+      affects: [Vp, structure]
+      propagation: hold  # structural changes can affect trap integrity → 888_HOLD
+
+geox_geomechanics:
+  domain: geomechanics
+  description: K/G/E/ν moduli from Vp/Vs/rho, Andersonian stress, blockspace transform
+  internal_engine: geox_core.engines.geophysics
+  adapter_name: null
+  canon9_variables: [Vp, Vs, rho]
+  expose_public: true
+  replan_triggers:
+    - trigger: insar_subsidence_anomaly
+      affects: [P]  # pore pressure change signal
+      propagation: hold  # P (pore pressure) → 888_HOLD required
+
+geox_basin:
+  domain: basin
+  description: Basin profile, thermal history, macrostrat, accommodation, scene rendering
+  internal_engine: geox_core.engines.basin
+  adapter_name: null
+  canon9_variables: [T, P, phi]
+  expose_public: true
+  replan_triggers:
+    - trigger: new_well_data
+      affects: [phi, Sw, T]
+      propagation: auto
+    - trigger: maturity_update
+      affects: [T]
+      propagation: hold  # affects charge timing → 888_HOLD
+
+geox_deep_time_state:
+  domain: deep_time
+  description: Earth State Vector at any geological age — plate recon, paleobathymetry, IGRF
+  internal_engine: geox_core.engines.geospatial, geox_core.engines.magnetometry
+  adapter_name: gplately_adapter, igrf_adapter, emag2_adapter, gebco_adapter
+  canon9_variables: []
+  expose_public: true
+  replan_triggers:
+    - trigger: new_paleo_reconstruction
+      affects: [paleolat, paleolon]
+      propagation: advisory
+
+# ── INTERNAL TOOLS — Governance + doctrine ──────────────────────────────────
+
+geox_claim:
+  domain: governance
+  description: Create, validate, challenge, seal geological claims with evidence contracts
+  internal_engine: geox_core.governance
+  adapter_name: null
+  canon9_variables: []
+  expose_public: true  # visible to federation agents
+  replan_triggers: []
+
+geox_evidence:
+  domain: governance
+  description: Discover, synthesize, abduct, contradict evidence across domains
+  internal_engine: geox_core.governance
+  adapter_name: null
+  canon9_variables: []
+  expose_public: true
+  replan_triggers: []
+
+geox_prospect:
+  domain: governance
+  description: Volumetrics, POS, EVOI, risk — judgment-gated prospect assessment
+  internal_engine: geox_core.governance
+  adapter_name: null
+  canon9_variables: []
+  expose_public: true
+  replan_triggers:
+    - trigger: any_canon9_update
+      affects: [all]
+      propagation: hold  # prospect-level changes always require Arif release
+
+geox_doctrine:
+  domain: governance
+  description: Anti-Beautiful-One guard, assumption lineage, Gödel wall
+  internal_engine: geox_core.governance
+  adapter_name: null
+  canon9_variables: []
+  expose_public: true
+  replan_triggers: []
+
+# ── INTERNAL-ONLY ENGINES — NOT exposed as public tools ───────────────────────
+# These exist in geox_core/engines/ but are not standalone MCP tools.
+# They are called by surface tools above, never directly by external agents.
+
+__internal_only:
+  - name: harmonica_adapter
+    engine: geox_core.engines.geophysics
+    used_by: [geox_subsurface_model]
+    library: harmonica
+    status: experimental
+
+  - name: igrf_adapter
+    engine: geox_core.engines.magnetometry
+    used_by: [geox_deep_time_state]
+    library: ppigrf
+    status: experimental
+
+  - name: gebco_adapter
+    engine: geox_core.engines.bathymetry
+    used_by: [geox_basin]
+    library: null  # REST-only, no PyPI package
+    status: experimental
+
+  - name: emag2_adapter
+    engine: geox_core.engines.magnetometry
+    used_by: [geox_deep_time_state]
+    library: null  # REST-only
+    status: experimental
+
+  - name: gplately_adapter
+    engine: geox_core.engines.geospatial
+    used_by: [geox_deep_time_state]
+    library: gplately
+    status: stable
+
+  - name: bruges_adapter
+    engine: geox_core.engines.petrophysics
+    used_by: [geox_petrophysics]
+    library: bruges
+    status: stable
+
+  - name: gempy_adapter
+    engine: geox_core.engines.geospatial
+    used_by: [geox_subsurface_model]
+    library: gempy
+    status: stable

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 GEOX Metabolic Output Schemas — Canonical-Copy of arifOS metabolic.v1
 ════════════════════════════════════════════════════════════════════════════════════════
@@ -28,7 +29,6 @@ from enum import Enum
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
-
 
 # ──────────────────────────────────────────────────────────────────────────────
 # METABOLIC ENUMS — Do not modify
@@ -597,8 +597,7 @@ class MetabolicCycle(BaseModel):
 # DITEMPA BUKAN DIBERI — Forged, Not Given
 
 
-from datetime import datetime, timezone
-from typing import Any
+from datetime import UTC, datetime
 
 
 def build_metabolic_output(
@@ -744,7 +743,7 @@ def build_metabolic_output(
     resolved_required_tests = required_next_tests if required_next_tests is not None else defaults.get("required_next_tests", [])
 
     # ── Evidence freshness ─────────────────────────────────────────────────
-    freshness_as_of = evidence_freshness_as_of or datetime.now(timezone.utc).isoformat()
+    freshness_as_of = evidence_freshness_as_of or datetime.now(UTC).isoformat()
     evidence_freshness = {
         "as_of": freshness_as_of,
         "expires_after_seconds": None,  # Geological data is effectively static
@@ -792,7 +791,7 @@ def build_metabolic_output(
         }
 
     # ── Build MetabolicOutput dict ────────────────────────────────────────
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
 
     metabolic = {
         # Identity

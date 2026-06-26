@@ -1,0 +1,16 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Confidence
+description: Confidence scoring for an interpretation.
+type: object
+required:
+  - value
+  - method
+properties:
+  value:
+    type: number
+    minimum: 0.0
+    maximum: 1.0
+    description: Confidence score between 0 and 1
+  method:
+    type: string
+    description: "e.g., posterior_probability, manual_assignment"

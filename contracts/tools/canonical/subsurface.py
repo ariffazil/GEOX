@@ -1,48 +1,20 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, List, Dict, Optional, Literal
+from typing import Literal
 
-from fastmcp import FastMCP
 from contracts.enums.statuses import (
-    get_standard_envelope,
-    GovernanceStatus,
     ArtifactStatus,
     ExecutionStatus,
+    GovernanceStatus,
     enrich_envelope_with_metabolic,
+    get_standard_envelope,
 )
 from contracts.tools.canonical._helpers import (
-    _get_artifact,
     _artifact_exists,
-    _register_artifact,
-    _record_latest_qc,
-    _latest_qc_failed_refs,
-    _check_maruah_territory,
-    _inject_ensemble_residual_evidence,
-    _safe_upload_path,
-    _decode_upload_content,
-    _parse_csv_or_json,
-    _map_canonical_curves,
-    _detect_depth_unit,
-    _compute_vsh_from_store,
-    _compute_porosity_from_store,
-    _compute_saturation_from_store,
-    _compute_netpay_from_store,
-    _classify_gr_motif,
-    _classify_lithology_from_store,
-    _safe_reduction,
-    _get_well_data_with_depth,
     _compute_subsurface_candidates,
-    CLAIM_STATES,
-    CANONICAL_ALIASES,
-    _CURVE_RANGES,
-    _artifact_registry,
-    _artifact_store,
-    _well_curves_registry,
-    _ARTIFACT_REGISTRY_PATH,
-    MAX_UPLOAD_BYTES,
+    _inject_ensemble_residual_evidence,
 )
-from compatibility.legacy_aliases import LEGACY_ALIAS_MAP, get_alias_metadata
 
 logger = logging.getLogger("geox.canonical.subsurface")
 
@@ -60,7 +32,7 @@ async def geox_subsurface_generate_candidates(
         "gr_motif",
         "lithology",
     ],
-    evidence_refs: List[str],
+    evidence_refs: list[str],
     realizations: int = 3,
     gr_clean: float = 15.0,
     gr_shale: float = 150.0,
@@ -76,8 +48,8 @@ async def geox_subsurface_generate_candidates(
     phi_cutoff: float = 0.1,
     sw_cutoff: float = 0.6,
     rt_cutoff: float = 2.0,
-    zone_top_m: Optional[float] = None,
-    zone_base_m: Optional[float] = None,
+    zone_top_m: float | None = None,
+    zone_base_m: float | None = None,
 ) -> dict:
     """Generates ensemble subsurface outputs with residuals and data-density maps.
 

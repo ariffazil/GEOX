@@ -286,36 +286,46 @@ def _compute_attention_residual(
             }
         )
 
-    # ── Governance Escalation (Essay #13 boundary conditions → action) ───
+    # ── Governance Escalation (physics-domain advisory only) ─────────────
+    # GEOX is an L1 domain organ. It may flag physics conditions that *suggest*
+    # governance attention, but it MUST NOT issue constitutional verdicts.
+    # The final SEAL / SABAR / HOLD / VOID verdict is computed by arifOS from
+    # F1–F13, independent of GEOX, using:
+    #     AC_Risk = U_phys × D_transform × B_cog
+    # This field is therefore an ADVISORY_STATUS for arifOS, not a requirement.
     governance_escalation = None
     if boundary_flags:
         conditions = [f["condition"] for f in boundary_flags]
         if "ADVERSARIAL_DELTA" in conditions:
             governance_escalation = {
-                "required_status": "VOID",
+                "advisory_status": "VOID",
                 "trigger": "ADVERSARIAL_DELTA",
                 "reason": (
-                    "Essay #13, Section 5.3: Adversarial δ detected. "
+                    "Essay #13, Section 5.3: Adversarial δ detected in the physics model. "
                     "Softmax amplifies arbitrarily large perturbations into near-certainty. "
-                    "Force VOID — verify this is not acquisition footprint or artifact."
+                    "arifOS should treat this as a high-AC_Risk advisory; final VOID verdict "
+                    "requires independent F1–F13 constitutional review."
                 ),
             }
         elif "LARGE_CONTRAST" in conditions and "LARGE_MISTIE" in conditions:
             governance_escalation = {
-                "required_status": "HOLD",
+                "advisory_status": "HOLD",
                 "trigger": "LARGE_CONTRAST + LARGE_MISTIE",
                 "reason": (
-                    "Essay #13, Section 5.3: Multiple boundary conditions violated. "
-                    "Linearized model (Aki-Richards / Shuey) no longer applies. "
-                    "Equivalent to post-critical angle + numerical saturation."
+                    "Essay #13, Section 5.3: Multiple physics boundary conditions violated. "
+                    "Linearized model (Aki-Richards / Shuey) may not apply. "
+                    "This is a physics-domain advisory for arifOS; final HOLD verdict "
+                    "is computed from F1–F13 and AC_Risk, not by GEOX."
                 ),
             }
         elif "LARGE_CONTRAST" in conditions or "LARGE_MISTIE" in conditions:
             governance_escalation = {
-                "required_status": "HOLD",
+                "advisory_status": "HOLD",
                 "trigger": conditions[0],
                 "reason": (
-                    "Essay #13, Section 5.3: Boundary condition violated. Approximation tier may not hold. Human review required."
+                    "Essay #13, Section 5.3: Physics boundary condition violated. "
+                    "Approximation tier may not hold. Advisory only — final arifOS "
+                    "verdict requires independent constitutional review."
                 ),
             }
 
@@ -493,10 +503,10 @@ async def geox_anomalous_contrast_detector(
                 resolution = "DEMOTE — seismic pick displaced >20 m; validate with checkshot/VSP"
             elif abs_mistie > 5.0:
                 contradiction_severity = "MEDIUM"
-                resolution = "QUALIFY — seismic pick displaced {:.0f} m; cross-check with well tie".format(abs_mistie)
+                resolution = f"QUALIFY — seismic pick displaced {abs_mistie:.0f} m; cross-check with well tie"
             else:
                 contradiction_severity = "LOW"
-                resolution = "NOTE — minor mistie {:.0f} m; within picking tolerance but flagged".format(abs_mistie)
+                resolution = f"NOTE — minor mistie {abs_mistie:.0f} m; within picking tolerance but flagged"
 
             # ── AVO class classification (conditional, from normal-incidence RC) ──
             rc_ratio_val = rc_at_seismic / max(rc_at_geo, 1e-9)

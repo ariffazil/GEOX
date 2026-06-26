@@ -142,6 +142,7 @@ async def _mode_anomalous_contrast(
       The governed envelope IS the transfer-stable encoding.
     """
     import numpy as np
+
     from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
 
     raw = await geox_anomalous_contrast_detector(
@@ -162,6 +163,27 @@ async def _mode_anomalous_contrast(
     n_anomalies: int = len(raw.get("anomalies", []))
     total_mistie: float = raw.get("volumetric_impact", {}).get("total_abs_mistie_m", 0.0)
 
+    # ── AC_Risk: computed by L2 governance, not L1 physics ─────────────
+    # ToAC canon: AC_Risk = U_phys × D_transform × B_cog
+    # U_phys derived from anomaly count + mistie magnitude (both independently contribute)
+    # D_transform = 2.0 (seismic → interpreted depth, 2+ transforms per ToAC canon)
+    # B_cog = 0.30 (geological formation tops: well-calibrated, but seismic is indirect measurement)
+    # Note: the old L1 override (governance_escalation from Phase 1) has been removed.
+    # AC_Risk is now the sole basis for constitutional verdicts.
+    U_phys = min(1.0, 0.05 + (n_anomalies * 0.20) + (total_mistie / 80.0))
+    D_transform = 2.0
+    B_cog = 0.30
+    AC_Risk = min(1.0, U_phys * D_transform * B_cog)
+
+    if AC_Risk >= 0.60:
+        ac_risk_verdict = "VOID"
+    elif AC_Risk >= 0.35:
+        ac_risk_verdict = "HOLD"
+    elif AC_Risk >= 0.15:
+        ac_risk_verdict = "QUALIFY"
+    else:
+        ac_risk_verdict = "SEAL"
+
     # ── ClaimTag classification ──────────────────────────────────────────
     if n_anomalies == 0:
         claim_tag = "CLAIM"
@@ -179,47 +201,48 @@ async def _mode_anomalous_contrast(
         artifact_status = ArtifactStatus.IN_REVIEW
         claim_state = "INTERPRETED"
 
-    # ── Essay #13: Dead Zone Guard + Boundary Condition Escalation ───────
-    # Scan anomalies for hallucination risk and boundary violations.
-    # Override default ClaimTag if critical conditions detected.
+    # ── L1 Advisory Metadata (not verdicts) ───────────────────────────
+    # GEOX emits physical signals. arifOS computes constitutional verdicts.
+    # This separation preserves APEX stack integrity (L1 ≠ L2).
     dim_spot_flag = False
-    worst_escalation = None
-    _escalation_rank = {"VOID": 3, "HOLD": 2, "QUALIFY": 1, "SEAL": 0}
+    worst_l1_advisory = None  # raw physics signal, not a governance verdict
+    _l1_severity_rank = {"CRITICAL": 4, "ELEVATED": 3, "WARNING": 2, "MODERATE": 1, "NOMINAL": 0}
 
     for anomaly in raw.get("anomalies", []):
         ar = anomaly.get("attention_residual", {})
-        # Dead zone guard: near-background with high hallucination risk
         hr = ar.get("softmax_hallucination_risk", {})
+        # Dead zone: near-background with high hallucination risk — L1 signal, not verdict
         if hr.get("risk_level") in ("CRITICAL", "ELEVATED") and anomaly.get("rc_ratio", 1.0) < 1.05:
             dim_spot_flag = True
-        # Boundary condition escalation
+        # L1 advisory only — do not treat as constitutional verdict
         esc = ar.get("governance_escalation")
         if esc:
-            if worst_escalation is None or _escalation_rank.get(esc["required_status"], 0) > _escalation_rank.get(
-                worst_escalation["required_status"], 0
-            ):
-                worst_escalation = esc
+            sev = _l1_severity_rank.get(esc.get("advisory_status", "NOMINAL"), 0)
+            worst_sev = _l1_severity_rank.get(worst_l1_advisory.get("advisory_status", "NOMINAL") if worst_l1_advisory else "NOMINAL", 0)
+            if sev > worst_sev:
+                worst_l1_advisory = esc
 
-    # Apply override if escalation demands stricter governance than default
-    if worst_escalation:
-        required = worst_escalation["required_status"]
-        if required == "VOID":
-            claim_tag = "HYPOTHESIS"
-            gov_status = GovernanceStatus.VOID
-            artifact_status = ArtifactStatus.REJECTED
-            claim_state = "VOID"
-        elif required == "HOLD" and gov_status not in (GovernanceStatus.VOID,):
-            claim_tag = "HYPOTHESIS"
-            gov_status = GovernanceStatus.HOLD
-            artifact_status = ArtifactStatus.IN_REVIEW
-            claim_state = "888_HOLD"
-
-    # Dim spot guard: high hallucination risk on near-background forces HOLD
-    if dim_spot_flag and gov_status not in (GovernanceStatus.VOID, GovernanceStatus.HOLD):
+    # ── arifOS computes verdict from AC_Risk (not from L1 advisory override) ──
+    # L1 advisory signals are surfaced as metadata for arifOS to weigh.
+    # The constitutional verdict is determined by AC_Risk score alone.
+    if ac_risk_verdict == "VOID":
+        gov_status = GovernanceStatus.VOID
         claim_tag = "HYPOTHESIS"
+        artifact_status = ArtifactStatus.REJECTED
+        claim_state = "VOID"
+    elif ac_risk_verdict == "HOLD":
         gov_status = GovernanceStatus.HOLD
+        claim_tag = "HYPOTHESIS"
         artifact_status = ArtifactStatus.IN_REVIEW
         claim_state = "888_HOLD"
+    elif ac_risk_verdict == "QUALIFY":
+        gov_status = GovernanceStatus.QUALIFY
+        claim_tag = "PLAUSIBLE"
+        artifact_status = ArtifactStatus.IN_REVIEW
+        claim_state = "INTERPRETED"
+    else:
+        # SEAL: nothing triggered — n_anomalies==0 and clean profile
+        pass  # keep defaults set by n_anomalies branch above
 
     # ── PhysicsGuard: AI physical range check ─────────────────────────────
     ai_arr = np.array(ai_profile, dtype=float)
@@ -270,17 +293,25 @@ async def _mode_anomalous_contrast(
         "total_abs_mistie_m": round(total_mistie, 2),
         "contradiction_type": "INTERPRETATION_OBSERVATION_MISMATCH" if n_anomalies > 0 else None,
         "ac_severity": "HIGH" if n_anomalies > 2 else ("MEDIUM" if n_anomalies > 0 else "NONE"),
-        "risk_gate": "888_HOLD"
-        if gov_status == GovernanceStatus.HOLD
-        else ("QUALIFY" if gov_status == GovernanceStatus.QUALIFY else "PROCEED"),
         "toac_version": "v2026.06.05",
-        "toac_note": (
-            "Theory of Anomalous Contrast: anomalies are classified as "
-            "INTERPRETATION_OBSERVATION_MISMATCH per contradiction ontology. "
-            "AC_Risk = f(n_anomalies, mistie_magnitude) — simplified from "
-            "governed AC_Risk engine (Physics9State-based). For full governed "
-            "AC_Risk, route through compute_ac_risk_governed with Physics9State inputs."
-        ),
+        # AC_Risk computed by L2 governance (arifOS reads this, not L1 advisory)
+        "ac_risk": {
+            "score": round(AC_Risk, 3),
+            "U_phys": round(U_phys, 3),
+            "D_transform": D_transform,
+            "B_cog": B_cog,
+            "verdict": ac_risk_verdict,
+        },
+        # L1 advisory metadata: raw physics signals for arifOS to weigh
+        # NOT a constitutional verdict — separated per APEX L1/L2 stack
+        "l1_advisory": {
+            "worst_governance_escalation": worst_l1_advisory,
+            "dim_spot_flag": dim_spot_flag,
+            "toac_note": (
+                "L1 advisory only — arifOS computes constitutional verdict from AC_Risk above. "
+                "δ_i = e_i − ē surfaces here; ΔV = verdict − floor_expected is arifOS jurisdiction."
+            ),
+        },
     }
 
     # ── AVO-Attention Equivalence metadata (Eureka GeoX Theory v2026.06.05) ────

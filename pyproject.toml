@@ -63,18 +63,62 @@ dependencies = [
     # welly requires pkg_resources from older setuptools (setuptools 70+ removed it)
     "setuptools<70",
     "pyproj>=3.7.2",
+
+    # ─── P1 CRITICAL: Seismic (2026-06-25 FORGE batch embed) ─────────────────
+    # ObsPy — adapter exists in engines/seismic/obspy_adapter.py
+    "obspy>=1.4.0",
+    # Bruges — rock physics: Gardner, AI, EI, Vp/Vs, AVO, anisotropy
+    "bruges>=2024.1.0",
+    # pyGeoPressure — Eaton + Bowers pore pressure prediction (⚠️ 888_HOLD gate required)
+    "pygeopressure>=0.4.0",
+    # Devito — symbolic finite-difference wave propagation (FWI engine)
+    "devito>=4.0.0",
+    # PyLops — linear operators for seismic inversion (sparse spike, AVAz, rank-reduction)
+    "pylops>=2.0.0",
+
+    # ─── P1 CRITICAL: Geophysics Inversion ──────────────────────────────────
+    # HarmonIC — gravity + magnetics forward (referenced in harmonica_adapter.py)
+    "harmonica>=1.0.0",
+    # SimPEG — gravity, magnetics, EM, DC resistivity inversion
+    "simpeg>=0.7.0",
+    # PyGIMLi — ERT, induced polarization, traveltime tomography, joint inversion
+    "pygimli>=1.4.0",
+
+    # ─── P1 CRITICAL: Geospatial & Satellite ────────────────────────────────
+    # GDAL — raster/vector geospatial (requires system gdal-dev on some platforms)
+    "gdal>=3.8.0",
+    "geopandas>=1.0.0",
+    "rasterio>=1.4.0",
+
+    # ─── P1 CRITICAL: Plate Tectonics & Geomodeling ────────────────────────
+    # GPlately — plate reconstruction raster/vector through deep time
+    "gplately>=2.0.0",
+    # GemPy v3 — implicit 3D geological modeling (GPU-accelerated, stochastic)
+    "gempy>=2.0.0",
+    # LoopStructural — time-aware structural geology (faults, folds, surfaces)
+    "loopstructural>=1.0.0",
+
+    # ─── P1 CRITICAL: Hydrology & Climate ───────────────────────────────────
+    # FloPy — MODFLOW 6/2000/2005 Python interface (USGS groundwater)
+    "flopy>=3.10.0",
+    # CDS API — ERA5 climate reanalysis access (ECMEOF/Copernicus)
+    "cdsapi>=0.7.0",
+
+    # ─── P1 CRITICAL: Geochemistry ─────────────────────────────────────────
+    # pyrolite — geochemical data processing (trace elements, spider diagrams)
+    "pyrolite>=0.4.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=9.1.0",
+    "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
-    "ruff>=0.15.17",
+    "ruff>=0.15.18",
     "mypy>=2.1.0",
     "fastmcp[tasks]==3.4.2",  # server bootstrap registers task=True tools (geox_data_ingest_bundle)
 ]
 pinn = [
-    "torch>=2.12.0",
+    "torch>=2.12.1",
 ]
 all = [
     "numpy>=2.4.6",
@@ -138,6 +182,6 @@ markers = [
 
 [dependency-groups]
 dev = [
-    "pytest>=9.1.0",
+    "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
 ]

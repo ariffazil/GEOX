@@ -1,0 +1,25 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Provenance
+description: Core metadata enforcing F11 (Auditability) and tracing origins.
+type: object
+required:
+  - source
+  - software
+  - epistemic_tag
+properties:
+  source:
+    type: string
+    enum: [human, algorithm, human+algorithm]
+    description: Origin actor of the claim.
+  software:
+    type: string
+    description: Software version or model hash (e.g., geox.correlate.v1).
+  review_status:
+    type: string
+    enum: [draft, reviewed, sealed]
+    description: Human review status.
+  epistemic_tag:
+    $ref: './epistemic_tag.yaml'
+  timestamp:
+    type: string
+    format: date-time

@@ -18,7 +18,6 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-
 # ── Zone Schemes ──────────────────────────────────────────────────────────────
 
 ZONE_SCHEMES = Literal[

@@ -10,7 +10,6 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-
 ALL_ZERO = "0" * 40
 SAFETY_TEST_PATTERNS = [
     re.compile(r"^tests/.+", re.IGNORECASE),

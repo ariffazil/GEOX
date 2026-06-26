@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 contracts/tools/well_correlation.py — geox_well_correlation_panel MCP Tool
 ═══════════════════════════════════════════════════════════════════════════════
@@ -13,8 +14,8 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 import hashlib
 import logging
 import os
-from datetime import datetime, timezone
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from fastmcp import FastMCP
 
@@ -31,17 +32,17 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
     @mcp.tool(name="geox_well_correlation_panel")
     async def geox_well_correlation_panel(
         las_paths: list[str],
-        well_names: Optional[list[str]] = None,
-        tracks: Optional[list[str]] = None,
-        depth_range: Optional[list[float]] = None,
-        tops: Optional[dict[str, dict[str, float]]] = None,
+        well_names: list[str] | None = None,
+        tracks: list[str] | None = None,
+        depth_range: list[float] | None = None,
+        tops: dict[str, dict[str, float]] | None = None,
         normalize: bool = True,
-        basin_hint: Optional[str] = None,
-        well_ids: Optional[list[str]] = None,
-        output_dir: Optional[str] = None,
-        output_png: Optional[str] = None,
-        output_formats: Optional[list[str]] = None,
-        plot_spec: Optional[dict[str, Any]] = None,
+        basin_hint: str | None = None,
+        well_ids: list[str] | None = None,
+        output_dir: str | None = None,
+        output_png: str | None = None,
+        output_formats: list[str] | None = None,
+        plot_spec: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """
         Generate a multi-well log correlation panel PNG.
@@ -92,8 +93,8 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
               "claim_state": "EXPLORATORY_VISUALIZATION"
             }
         """
-        from geox.artifacts.writer import ArtifactValidationError, validate_output_path
         from geox.artifacts.las_sources import LASSourceError, materialize_las_source
+        from geox.artifacts.writer import ArtifactValidationError, validate_output_path
         from geox.plot_specs.schemas import PlotSpecValidationError
         from geox.plot_specs.validators import build_well_panel_plot_spec
         from geox.renderers.base import RenderRequest
@@ -247,7 +248,7 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
     @mcp.tool(name="geox_las_curve_inventory")
     async def geox_las_curve_inventory(
         las_path: str,
-        well_id: Optional[str] = None,
+        well_id: str | None = None,
     ) -> dict[str, Any]:
         """
         Inspect a LAS file and return its curve inventory.
@@ -378,14 +379,14 @@ def _make_vault_receipt(tool_name: str, payload: dict) -> dict:
         return {
             "vault": "VAULT999",
             "tool": tool_name,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "hash": digest,
         }
     except Exception:
         return {
             "vault": "VAULT999",
             "tool": tool_name,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
 

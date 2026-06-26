@@ -1,8 +1,8 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-15
+last_verified: 2026-06-25
 valid_from: 2026-06-14
-valid_until: 2026-07-15
+valid_until: 2026-07-25
 confidence: high
 scope: /root/geox/BOUNDARY.md
 -->
@@ -10,6 +10,9 @@ scope: /root/geox/BOUNDARY.md
 # BOUNDARY.md — GEOX Earth Intelligence / Governed World Model
 
 > **DITEMPA BUKAN DIBERI** — Forged, not given.
+
+> **Last forge cycle:** W16+ (2026-06-22) — 56 canonical tools, Huang 2021 Vp grammar substrate, intelligence flow schema, Kinabalu multi-physics corpus.
+> **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0`
 
 ## Owns
 
@@ -21,6 +24,10 @@ scope: /root/geox/BOUNDARY.md
 - **Spatial Evidence** — Map context scenes, bbox rendering, coordinate guardrails, causal scene generation
 - **Time-4D Analysis** — Burial history, maturity modeling, regime shift detection
 - **Earth-Truth Artifacts** — Structured JSON outputs, PNG panels, XLSX reports, geological memos
+- **Crustal Architecture (W16+)** — Vp-based crust-type classification (Huang 2021 grammar), multi-cell domain maps
+- **Multi-Physics Corpus (W16+)** — Vector-ready ingestion substrate for 21 tier-1 peer-reviewed papers (Kinabalu Basin)
+- **Dynamic Flow of Intelligence (W16+)** — 7-layer typed flow substrate (INGEST→WITNESS→PHYSICS→ARCHITECTURE→INTERPRET→DECISION + LEM foundation + Doctrine audit)
+- **LEM Substrate (W14+)** — Large Earth Model tokenizer + transformer + physics_head (weights pending GPU + 888)
 
 ## Does Not Own
 

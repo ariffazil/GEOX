@@ -19,20 +19,14 @@ Outputs to /tmp/opencode/geox-vision-v1/reports/:
 from __future__ import annotations
 
 import asyncio
-import json
 import os
 import time
-from typing import Any, Dict, List
+from typing import Any
 
-from geox_core.engines.vision import (
-    MiniMaxVLMAdapter,
-    default_ac_risk_components,
-)
 from geox_core.engines.vision.vision_test_harness import (
-    run_synthetic_forward_inverse,
     HarnessReport,
+    run_synthetic_forward_inverse,
 )
-
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Mock backends
@@ -128,7 +122,7 @@ REPORT_DIR = "/tmp/opencode/geox-vision-v1/reports"
 
 async def main():
     os.makedirs(REPORT_DIR, exist_ok=True)
-    summary: List[Dict[str, Any]] = []
+    summary: list[dict[str, Any]] = []
     t0 = time.time()
 
     print("=" * 72)
@@ -211,7 +205,7 @@ KEY FINDINGS:
     print("DONE.")
 
 
-def _summarize(name: str, r: HarnessReport, out: List[Dict[str, Any]]) -> None:
+def _summarize(name: str, r: HarnessReport, out: list[dict[str, Any]]) -> None:
     pr = r.precision_recall
     row = {
         "name": name,

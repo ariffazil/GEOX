@@ -1,0 +1,196 @@
+{
+  "schema": "GEOX-LEM-v0.1-Fusion-Architecture",
+  "constitutional_status": "CANONICAL_DRAFT",
+  "forged_by": "000Ω-A-FORGE",
+  "forged_for": "arifOS Federation — GEOX Organ",
+  "timestamp_utc": "2026-06-21T21:00:00Z",
+  "doctrine": "DITEMPA BUKAN DIBERI — Forged, Not Given",
+
+  "overview": {
+    "description": "GEOX Large Earth Model v0.1 — a governed cluster of three sovereign foundation model organs fused in a shared Earth coordinate frame, constrained by an external Physics Organ, queried via an Earth Knowledge Graph, and surfaced through the GEOX MCP tool surface.",
+    "governance_principle": "No single monolithic model. Six sovereign organs, each with bounded authority. GEOX is the constitutional router — not an encoder.",
+    "constitutional_alignment": "F1 (reversible by organ isolation), F2 (physics-grounded), F4 (organs are clear boundaries), F8 (simplest correct path: separate FMs), F9 (no hallucination — physics organ guards), F13 (Arif controls any organ independently)"
+  },
+
+  "organs": {
+    "seismic_fm": {
+      "id": "org.lem.seismic",
+      "role": "subsurface_texture_and_structure",
+      "type": "foundation_model",
+      "class": "transformer_encoder_decoder",
+      "parameter_budget": "100-200M",
+      "training_data": "millions_of_2D_seismic_slices",
+      "pretraining_objective": "masked_patch_prediction",
+      "latent_output": "seismic_latent_tensor (B, T_seismic, D_seismic)",
+      "governed_by": ["physics_organ", "earth_kg"],
+      "constitutional_notes": "Must never be used alone for geological interpretation. Requires GEOX routing + physics verification."
+    },
+    "eo_basin_fm": {
+      "id": "org.lem.eo_basin",
+      "role": "surface_and_basin_context",
+      "type": "foundation_model",
+      "class": "geospatial_transformer",
+      "parameter_budget": "100-150M",
+      "base_model": "Prithvi-EO-2.0 (NASA/IBM) or TerraMind",
+      "modalities": ["DEM", "Sentinel-2", "Landsat", "climate_reanalysis", "basin_boundaries"],
+      "pretraining_objective": "masked_patch_prediction + contrastive_basin_embedding",
+      "latent_output": "eo_latent_tensor (B, T_eo, D_eo)",
+      "governed_by": ["earth_kg"],
+      "constitutional_notes": "Surface only. No subsurface claims without seismic + well organ cross-validation."
+    },
+    "well_petro_fm": {
+      "id": "org.lem.well_petro",
+      "role": "vertical_physics_profile",
+      "type": "foundation_model",
+      "class": "sequence_transformer_vqvae",
+      "parameter_budget": "50-100M",
+      "training_data": "well_log_curves (GR, RT, RHOB, NPHI, DT, SP) + core_data + DST",
+      "pretraining_objective": "masked_channel_prediction + contrastive_stratigraphy",
+      "latent_output": "well_latent_tensor (B, T_well, D_well)",
+      "governed_by": ["physics_organ"],
+      "constitutional_notes": "Already partially implemented in /root/geox/src/geox_core/engines/lem/. VQ-VAE tokenizer built, transformer scaffold built, physics head needs refactoring to external organ."
+    },
+    "physics_organ": {
+      "id": "org.lem.physics",
+      "role": "teach_guard_score",
+      "type": "external_constraint_engine",
+      "class": "neural_operator_library + differentiable_physics",
+      "not_a_foundation_model": true,
+      "sub_engines": [
+        {"name": "wave_propagation", "model": "fourier_neural_operator", "status": "reference_available"},
+        {"name": "pressure_diffusion", "model": "neural_operator", "status": "to_build"},
+        {"name": "saturation_evolution", "model": "archie_physics", "status": "available_in_geox"},
+        {"name": "compaction_subsidence", "model": "neural_operator", "status": "to_build"},
+        {"name": "rock_physics", "model": "gardner_faust_bellotti", "status": "available_in_geox"},
+        {"name": "density_porosity", "model": "density_neutron_crossplot", "status": "available_in_geox"}
+      ],
+      "operations": {
+        "teach": "generate_synthetic_training_data_via_forward_model",
+        "guard": "penalize_physically_impossible_latent_states",
+        "score": "epistemic_uncertainty + feasibility + causality_violation"
+      },
+      "constitutional_notes": "THIS IS THE KEY INSIGHT. Physics is not baked into FM losses. It is an external organ that all three FMs call. Keeps FMs flexible, physics lawful."
+    },
+    "earth_kg": {
+      "id": "org.lem.earth_kg",
+      "role": "temporal_and_stratigraphic_truth",
+      "type": "knowledge_graph",
+      "class": "temporal_property_graph",
+      "backing_store": "macrostrat_cache (SQLite, 182MB already populated) + Supabase",
+      "node_types": ["horizon", "fault", "well", "reservoir", "basin", "play", "event", "formation"],
+      "edge_types": [
+        {"type": "above/below", "domain": "stratigraphy"},
+        {"type": "same_tract", "domain": "sequence_stratigraphy"},
+        {"type": "same_play", "domain": "petroleum_systems"},
+        {"type": "same_migration_path", "domain": "charge_modeling"},
+        {"type": "calibrated_by", "domain": "well_tie"},
+        {"type": "imaged_by", "domain": "seismic"}
+      ],
+      "query_interface": "GEOX MCP tools (geox_basin_resolve, geox_query_macrostrat, etc.)",
+      "constitutional_notes": "Already operational as GEOX MCP tools and Macrostrat cache. Needs formalizing as an explicit KG with temporal edges."
+    },
+    "geox_router": {
+      "id": "org.lem.router",
+      "role": "latent_fusion_and_reality_checker",
+      "type": "constitutional_interface_layer",
+      "class": "cross_attention_fusion + coordinate_frame_projection",
+      "not_a_foundation_model": true,
+      "shared_coordinate_frame": {
+        "dimensions": ["x", "y", "z", "t", "basin_id", "play_id", "horizon_id"],
+        "encoding": "learned_fourier_features",
+        "token_position_system": "this_coordinate_frame_becomes_the_positional_encoding"
+      },
+      "fusion_mechanism": {
+        "seismic_to_wells": "cross_attention_via_well_trajectory_projection",
+        "seismic_to_eo": "cross_attention_via_surface_projection",
+        "wells_to_eo": "cross_attention_via_basin_play_embeddings"
+      },
+      "query_pattern": "GEOX_QUERY(latent_stack, coordinate_frame) -> answer_with_ac_risk_score",
+      "constitutional_notes": "GEOX does not store weights. It queries. Every output carries AC_Risk + epistemic label + physics_organ verdict."
+    }
+  },
+
+  "data_flow": {
+    "training_path": [
+      {"step": 1, "action": "pretrain_seismic_fm_on_unlabeled_slices", "organ": "seismic_fm"},
+      {"step": 2, "action": "pretrain_eo_basin_fm_on_satellite_and_climate", "organ": "eo_basin_fm"},
+      {"step": 3, "action": "pretrain_well_petro_fm_on_well_logs", "organ": "well_petro_fm"},
+      {"step": 4, "action": "freeze_all_three_FMs", "note": "Each organ is sovereign. Fine-tune, do not re-pretrain."},
+      {"step": 5, "action": "train_geox_router_cross_attention", "data": "aligned_coordinate_frames"},
+      {"step": 6, "action": "validate_with_physics_organ", "data": "synthetic_physics_data"},
+      {"step": 7, "action": "surface_through_MCP", "interface": "geox_mcp_tools"}
+    ],
+    "inference_path": {
+      "query": "user -> GEOX MCP tool",
+      "routing": "geox_router resolves intent -> queries one FM or all three",
+      "fusion": "cross_attention in shared coordinate frame",
+      "verification": "physics_organ.teach/guard/score on output",
+      "grounding": "earth_kg query for stratigraphic consistency",
+      "response": "geox_mcp returns result + AC_Risk + epistemic_label + physics_verdict"
+    }
+  },
+
+  "sparsity_handling": {
+    "strategy": "first_class_signal_not_defect",
+    "token_types": ["no_log_token", "no_seismic_token", "no_eo_token"],
+    "uncertainty_channels": ["mu", "sigma"],
+    "missing_data_mechanism": "mixture_of_experts_conditioned_on_basin_play",
+    "constitutional_notes": "Ignorance is a signal. GEOX must say 'I don't know' when data is insufficient. F7 HUMILITY."
+  },
+
+  "loss_functions": {
+    "pretraining": {
+      "seismic_fm": "masked_patch_mse",
+      "eo_basin_fm": "masked_patch_mse + contrastive_basin",
+      "well_petro_fm": "masked_channel_mse + vq_commitment + stratigraphy_contrastive"
+    },
+    "geological_consistency": {
+      "description": "Post-FM penalties enforced by physics_organ + earth_kg, NOT baked into backbone",
+      "stratigraphic_order": "depth_ranking_loss",
+      "facies_continuity": "smoothness_regularization",
+      "rock_physics_coherence": "gardner_faust_archie_mse",
+      "structural_regularity": "laplacian_smoothness_on_horizons"
+    }
+  },
+
+  "scaling_budget": {
+    "tier": "v0.1_cpu_training",
+    "hardware": "af-forge VPS (5 CPU, 31GB RAM, no GPU)",
+    "seismic_fm": "not_yet (requires GPU)",
+    "eo_basin_fm": "not_yet (requires GPU + terratorch)",
+    "well_petro_fm": "TRAINING_NOW (CPU-capable, 715 LAS files, 50-100M params)",
+    "physics_organ": "OPERATIONAL (existing GEOX physics modules)",
+    "earth_kg": "OPERATIONAL (Macrostrat cache + MCP tools)",
+    "geox_router": "TO_BUILD (cross-attention fusion layer)",
+    "gpu_upgrade_path": "burst compute for seismic+EO pretrain, inference runs on VPS",
+    "constitutional_notes": "v0.1 is well_petro_fm + physics_organ + earth_kg + geox_router. Seismic and EO FMs are reference architectures until GPU is available."
+  },
+
+  "mcp_integration": {
+    "existing_tools": {
+      "geox_prithvi_eo_inference": "EO/Basin FM adapter (mock for now)",
+      "geox_seismic_compute": "Seismic tool (not FM-backed yet)",
+      "geox_data_ingest_bundle": "LAS/SEG-Y ingest",
+      "geox_basin_resolve": "Basin KG query",
+      "geox_query_macrostrat": "Earth KG query",
+      "geox_subsurface_generate_candidates": "Candidate generation with AC_Risk",
+      "geox_claim_create": "Evidence-backed claim creation"
+    },
+    "new_tools_needed": [
+      "geox_lem_infer — query the fused LEM",
+      "geox_lem_tokenize — run VQ tokenizer on arbitrary well logs",
+      "geox_lem_state — return current LEM training state and organ health",
+      "geox_physics_teach — request synthetic data generation from physics organ",
+      "geox_physics_guard — run physics constraint check on any latent state",
+      "geox_physics_score — get epistemic uncertainty + feasibility + causality score"
+    ],
+    "constitutional_notes": "Every new LEM tool must pass through AGENTS.md registry. All 54 existing canonical tools remain operational."
+  },
+
+  "signature": {
+    "forged_by": "000Ω-A-FORGE (OpenCode 333-AGI)",
+    "reviewed_by": "arifOS Constitutional Kernel",
+    "ratified_by": "888-HOLD (pending Arif review)",
+    "epistemic_status": "LIVE_DRAFT — architecture is sound but not yet sealed"
+  }
+}

@@ -22,7 +22,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any, Literal
 from uuid import uuid4
@@ -179,7 +179,7 @@ class CubeManifest(BaseModel):
     artifact_ref: str = Field(default="", description="Source artifact hash")
     
     # Timestamp
-    generated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    generated_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 class RenderPayload(BaseModel):
@@ -222,7 +222,7 @@ class RenderPayload(BaseModel):
     source_artifact_refs: list[str] = Field(default_factory=list, description="Artifact hashes that this render is derived from")
     
     # Timestamp
-    generated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    generated_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
     
     # Visual Engine metadata
     visual_artifact_id: str = Field(default_factory=lambda: f"sha256:geox-render-{uuid4().hex[:16]}")

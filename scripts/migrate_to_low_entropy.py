@@ -13,7 +13,6 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 import os
-import re
 import shutil
 import sys
 from pathlib import Path
@@ -237,7 +236,7 @@ def phase_2_migrate_mcp() -> None:
         content = server_src.read_text(encoding="utf-8")
         content = rewrite_imports(content)
         server_dst.write_text(content, encoding="utf-8")
-        print(f"  ✓ server.py → src/geox_mcp/server.py")
+        print("  ✓ server.py → src/geox_mcp/server.py")
 
     # Registry
     registry_src = REPO_ROOT / "contracts" / "canonical_registry.py"
@@ -246,7 +245,7 @@ def phase_2_migrate_mcp() -> None:
         content = registry_src.read_text(encoding="utf-8")
         content = rewrite_imports(content)
         registry_dst.write_text(content, encoding="utf-8")
-        print(f"  ✓ contracts/canonical_registry.py → src/geox_mcp/registry.py")
+        print("  ✓ contracts/canonical_registry.py → src/geox_mcp/registry.py")
 
     # Tool mappings
     tool_mappings = {
@@ -294,14 +293,14 @@ def phase_2_migrate_mcp() -> None:
     kernel_dst = tools_dst / "kernel"
     if kernel_src.exists():
         copy_tree_with_rewrite(kernel_src, kernel_dst)
-        print(f"  ✓ contracts/tools/canonical/kernel → src/geox_mcp/tools/kernel")
+        print("  ✓ contracts/tools/canonical/kernel → src/geox_mcp/tools/kernel")
 
     # MCP contracts
     mcp_contracts_src = REPO_ROOT / "contracts" / "mcp"
     mcp_contracts_dst = TARGET_SRC / "geox_mcp" / "contracts"
     if mcp_contracts_src.exists():
         copy_tree_with_rewrite(mcp_contracts_src, mcp_contracts_dst)
-        print(f"  ✓ contracts/mcp → src/geox_mcp/contracts")
+        print("  ✓ contracts/mcp → src/geox_mcp/contracts")
 
     # Well MCP wrappers
     well_mcp_tools = REPO_ROOT / "geox" / "well" / "mcp_tools.py"
@@ -315,7 +314,7 @@ def phase_2_migrate_mcp() -> None:
         content = content.replace("from .pipeline import", "from geox_core.well.stratigraphy.pipeline import")
         content = content.replace("from .seqstrat import", "from geox_core.well.tools.seqstrat import")
         (tools_dst / "well.py").write_text(content, encoding="utf-8")
-        print(f"  ✓ geox/well/mcp_tools.py → src/geox_mcp/tools/well.py")
+        print("  ✓ geox/well/mcp_tools.py → src/geox_mcp/tools/well.py")
 
     if well_mcp_strat.exists():
         content = well_mcp_strat.read_text(encoding="utf-8")
@@ -323,7 +322,7 @@ def phase_2_migrate_mcp() -> None:
         content = content.replace("from .config import", "from geox_core.well.stratigraphy.config import")
         content = content.replace("from .pipeline import", "from geox_core.well.stratigraphy.pipeline import")
         (tools_dst / "stratigraphy.py").write_text(content, encoding="utf-8")
-        print(f"  ✓ geox/well/mcp_stratigraphy.py → src/geox_mcp/tools/stratigraphy.py")
+        print("  ✓ geox/well/mcp_stratigraphy.py → src/geox_mcp/tools/stratigraphy.py")
 
 
 def phase_3_create_resources() -> None:
@@ -605,7 +604,7 @@ intervals:
       depo_env: SHOREFACE
 """
     (TARGET_RESOURCES / "examples" / "danum1_project.yaml").write_text(example_project, encoding="utf-8")
-    print(f"  ✓ resources/examples/danum1_project.yaml")
+    print("  ✓ resources/examples/danum1_project.yaml")
 
     # Schema exports
     schemas_to_export = [

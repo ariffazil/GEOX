@@ -1,0 +1,778 @@
+# geox_reality_contract.yaml — GEOX Physics Layer (proof of concept #2)
+# Forged: 2026-06-17 by FORGE (000Ω) — replicating WEALTH template
+# Audience: 333-AGI, 555-ASI, 888-APEX, A-AUDIT, A-ARCHIVE
+# Status: DRAFT (reversible; high-risk writes still gated by 888_HOLD)
+# Predecessor: wealth_reality_contract.yaml
+# Schema: arifos.reality_contract/v1
+#
+# "DITEMPA BUKAN DIBERI — Velocity is a symptom, not the Earth."
+# This contract codifies the GEOX organ's implicit physics into explicit,
+# auditable YAML. The 4 lanes, 9 Physics9 invariants, 3-tier claim
+# taxonomy, and 40 tool contracts are extracted from the actual code
+# in /root/geox/src/geox_mcp/registry.py and /root/geox/GENESIS/.
+#
+# ─────────────────────────────────────────────────────────────────────
+
+version: 1
+contract: geox_reality_contract
+organ_id: GEOX
+organ_role: earth_intelligence
+organ_version: v2026.06.05
+federation_version: v2026.05.05-SSCT
+sovereign: ARIF_FAZIL
+f13_acknowledged: true
+forged_by: FORGE (000Ω)
+forged_at: 2026-06-17T04:00:00Z
+
+# ════════════════════════════════════════════════════════════════════
+# 0. INVARIANTS (the iron rules of the GEOX organ)
+# ════════════════════════════════════════════════════════════════════
+
+invariants:
+  - id: GEOX-001
+    rule: "GEOX answers to natural law, not constitutional law. The rock doesn't negotiate."
+    floor: F1_AMANAH
+    must: [obey_physics9_bounds, evidence_every_claim, return_uncertainty_band]
+    must_never: [issue_constitutional_verdict, claim_certainty, hide_contradictions]
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+  - id: GEOX-002
+    rule: "Velocity is a symptom, not the Earth. Geology is the actual Earth."
+    floor: F2_TRUTH
+    must: [return_geological_context_with_velocity, flag_velocity_only_interpretations]
+    must_never: [substitute_velocity_for_geology, return_naked_velocity_models]
+    source: GENESIS/007_GEOX_CHARTER.md
+  - id: GEOX-003
+    rule: "Provenance is a socio-technical contract. No evidence → claim cannot be SEAL."
+    floor: F11_AUDITABILITY
+    must: [carry_evidence_handles, expose_lineage, log_qc_status]
+    must_never: [seal_without_evidence, drop_provenance]
+
+# ════════════════════════════════════════════════════════════════════
+# 1. ENTITIES (the Earth-states GEOX can reason over)
+# ════════════════════════════════════════════════════════════════════
+# Anchored to Physics9 invariants from GENESIS/004.
+
+entities:
+  # ── Physics State (state variables bounded by Physics9) ──
+  - id: physics.porosity
+    description: "Rock porosity (φ)"
+    bounds: "0.02 ≤ φ ≤ 0.45"
+    invariant_id: P9-1
+    epistemic_classes: [FACT, INTERPRETATION]
+    fields: [phi_value, phi_method, phi_uncertainty, depth_md, depth_tvdss]
+  - id: physics.water_saturation
+    description: "Water saturation (Sw)"
+    bounds: "0.0 ≤ Sw ≤ 1.0"
+    invariant_id: P9-2
+    epistemic_classes: [FACT, INTERPRETATION]
+    fields: [sw_value, sw_method, sw_uncertainty, archie_params]
+  - id: physics.shale_volume
+    description: "Shale volume (Vsh)"
+    bounds: "0.0 ≤ Vsh ≤ 1.0"
+    invariant_id: P9-3
+    fields: [vsh_value, vsh_method, gr_clean, gr_shale]
+  - id: physics.uncertainty_band
+    description: "Posterior uncertainty (P90/P10 ratio)"
+    bounds: "P90/P10 ≤ 5.0"
+    invariant_id: P9-4
+    note: "If ratio > 5.0, claim_state cannot be SEAL"
+  - id: physics.net_pay
+    description: "Net pay thickness (after cutoffs)"
+    bounds: "Sw < 0.4 ∧ φ > 0.10 ∧ Vsh < 0.6"
+    invariant_id: P9-5
+    fields: [net_pay_m, sw_cutoff, phi_cutoff, vsh_cutoff]
+  - id: physics.charge_timing
+    description: "Charge-to-trap timing relationship"
+    bounds: "charge_age < trap_age"
+    invariant_id: P9-6
+    note: "Violations → claim_state = HOLD"
+  - id: physics.well_tie
+    description: "Seismic-to-well correlation"
+    bounds: "r ≥ 0.70"
+    invariant_id: P9-7
+    fields: [correlation_coef, lag_ms, polarity_convention]
+  - id: physics.velocity
+    description: "Seismic velocity (Vp)"
+    bounds: "1480 ≤ Vp ≤ 5500 m/s, gradient < 50"
+    invariant_id: P9-8
+    fields: [vp, vs, rho, gradient, anisotropy]
+  - id: physics.checkshot_drift
+    description: "Time-depth drift curvature"
+    bounds: "curvature threshold enforced"
+    invariant_id: P9-9
+    fields: [checkshot_twt, checkshot_depth, drift_ms, curvature]
+
+  # ── Claim State (the 3-tier taxonomy) ──
+  - id: claim.fact
+    description: "Directly observed (log reading, core photo, seismic amplitude)"
+    truth_class: FACT
+    epistemic_level: OBSERVED
+    sealable: true
+    requires_evidence: true
+  - id: claim.interpretation
+    description: "Physics-consistent derivation (depth-converted map, PVT)"
+    truth_class: INTERPRETATION
+    epistemic_level: DERIVED
+    sealable: true
+    requires_evidence: true
+    requires_physics_validation: true
+  - id: claim.speculation
+    description: "Inferred from analogy/statistics (undrilled prospect)"
+    truth_class: SPECULATION
+    epistemic_level: SPECULATED
+    sealable: false  # SPECULATION cannot be SEALed
+    requires_evidence: true  # but cannot be VERIFIED
+    note: "Speculation may become INTERPRETATION upon evidence"
+  - id: claim.draft
+    description: "Draft claim, not yet validated"
+    truth_class: DRAFT
+    sealable: false
+  - id: claim.validated
+    description: "16-field envelope validated"
+    truth_class: INTERPRETATION
+    sealable: true
+  - id: claim.sealed
+    description: "VAULT999-sealed, irreversible"
+    truth_class: FACT  # or INTERPRETATION
+    sealable: false  # already sealed
+    irreversible: true
+
+  # ── Basin & Spatial State ──
+  - id: basin.resolved
+    description: "Basin name resolved to canonical ID + bbox + neighbors"
+    fields: [basin_id, bbox, neighbors, polygon_ref, crs_epsg]
+  - id: seismic.volume
+    description: "3D seismic volume with provenance"
+    fields: [volume_ref, crs_epsg, inline_range, xline_range, twt_range, sample_rate_ms, provenance]
+  - id: well.log
+    description: "Well log artifact (LAS, etc.)"
+    fields: [well_id, uwi, crs_epsg, depth_basis, curves, qc_status]
+
+# ════════════════════════════════════════════════════════════════════
+# 2. THE 4 LANES (the work-state machine)
+# ════════════════════════════════════════════════════════════════════
+# From /root/geox/src/geox_mcp/registry.py (CANONICAL_PUBLIC_TOOLS)
+
+lanes:
+  - id: discovery
+    description: "Find/resolve what exists; max_action_class: OBSERVE; no lease"
+    purpose: "Discovery before evidence before reasoning"
+    entry_tools: [geox_basin_resolve, geox_query_intake, geox_query_macrostrat, geox_system_registry_status, geox_attribute_registry_list_tool]
+    exit_to: evidence
+    audit_min: structured_event
+  - id: evidence
+    description: "Ingest + QC + inspect; max_action_class: ANALYZE; no lease"
+    purpose: "Bring raw Earth data into the federated substrate"
+    entry_tools: [geox_data_ingest_bundle, geox_data_qc_bundle, geox_dst_ingest_test, geox_header_inspect, geox_las_inspect, geox_seismic_segy_inspect, geox_evidence_discover, geox_evidence_attach, geox_literature_ingest, geox_fault_stick_ingest_tool, geox_volume_frame_tool, geox_vision_perceptual_inventory, geox_vision_calibrate]
+    exit_to: reasoning
+    audit_min: structured_event + provenance
+  - id: reasoning
+    description: "Compute / interpret / reason; max_action_class: ANALYZE; lease + session required"
+    purpose: "Turn evidence into governed Earth claims"
+    entry_tools: [geox_subsurface_generate_candidates, geox_subsurface_verify_integrity, geox_seismic_compute, geox_seismic_compute_attribute_tool, geox_sequence_interpret, geox_evidence_reason, geox_prospect_evaluate, geox_map_context_scene, geox_horizon_contrast_surface, geox_coord_transform_tool, geox_blockspace_resolution_tool, geox_blend_volume_tool, geox_basin_profile, geox_vision_minimax_inference, geox_vision_audit, geox_report_to_workflow, geox_abstraction_guard]
+    exit_to: judgment
+    audit_min: VAULT999_seal + envelope
+  - id: judgment
+    description: "GOVERNED; lease + session + arifOS judge required"
+    purpose: "Create, validate, challenge, seal Earth claims"
+    entry_tools: [geox_claim_create, geox_claim_validate, geox_claim_challenge, geox_claim_seal, geox_segy_export_tool]
+    audit_min: VAULT999_seal + arifOS_judge_verdict
+    note: "ALL writes in this lane route through arifOS 888 JUDGE"
+
+# ════════════════════════════════════════════════════════════════════
+# 3. ALLOWED TRANSITIONS (the state machine)
+# ════════════════════════════════════════════════════════════════════
+
+allowed_transitions:
+  - id: TX-GX-001
+    from: any
+    to: basin.resolved
+    via_tool: geox_basin_resolve
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    lanes: [discovery]
+    description: "Resolve a basin name to canonical ID + bbox"
+  - id: TX-GX-002
+    from: basin.resolved
+    to: basin.profile
+    via_tool: geox_basin_profile
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    lanes: [reasoning]
+    description: "Get basin-level intelligence (petroleum system, stratigraphy, risk)"
+  - id: TX-GX-003
+    from: external_uri
+    to: well.log
+    via_tool: geox_data_ingest_bundle
+    action_class: EXECUTE_REVERSIBLE
+    floors: [F1, F2, F4, F11]
+    lanes: [evidence]
+    description: "Ingest LAS/CSV/Parquet/SEG-Y into canonical substrate"
+    preconditions: [qc_strict_default, source_crs_epsg_declared, depth_datum_declared]
+  - id: TX-GX-004
+    from: well.log
+    to: well.log.qc_verified
+    via_tool: geox_data_qc_bundle
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    lanes: [evidence]
+    description: "QC: depth monotonicity, null %, physical range checks"
+    preconditions: [claim_state=QC_VERIFIED required for downstream SEAL]
+  - id: TX-GX-005
+    from: physics.porosity / physics.water_saturation / physics.shale_volume
+    to: claim.interpretation
+    via_tool: geox_subsurface_generate_candidates
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    lanes: [reasoning]
+    description: "Generate ensemble petrophysics candidates with residuals"
+    invariants_required: [P9-1, P9-2, P9-3, P9-4]
+  - id: TX-GX-006
+    from: claim.interpretation
+    to: claim.interpretation.physics_validated
+    via_tool: geox_subsurface_verify_integrity
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    lanes: [reasoning]
+    description: "Enforce Physics9 bounds; detect structural paradoxes"
+    preconditions: [P9-1..P9-9 enforcement]
+  - id: TX-GX-007
+    from: seismic.volume + well.log
+    to: seismic.tied
+    via_tool: geox_seismic_compute
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    lanes: [reasoning]
+    description: "Unified seismic physics engine (synthetic/well_tie/AC/etc.)"
+    invariants_required: [P9-7, P9-8, P9-9]
+  - id: TX-GX-008
+    from: claim.draft
+    to: claim.draft
+    via_tool: geox_claim_create
+    action_class: EXECUTE_REVERSIBLE
+    floors: [F1, F2, F11]
+    lanes: [judgment]
+    description: "Create a structured Earth interpretation claim"
+    preconditions:
+      - "truth_class in {FACT, INTERPRETATION, SPECULATION}"
+      - "evidence_ids >= 1"
+  - id: TX-GX-009
+    from: claim.draft
+    to: claim.validated
+    via_tool: geox_claim_validate
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    lanes: [judgment]
+    description: "Promote DRAFT → VALIDATED via 16-field earth_memory_envelope"
+  - id: TX-GX-010
+    from: claim.validated
+    to: claim.challenged
+    via_tool: geox_claim_challenge
+    action_class: REASON
+    floors: [F2, F4, F7, F11]
+    lanes: [judgment]
+    description: "Create a competing claim; multi-discipline self-argument"
+  - id: TX-GX-011
+    from: claim.validated
+    to: claim.sealed
+    via_tool: geox_claim_seal
+    action_class: IRREVERSIBLE
+    floors: [F1, F2, F4, F8, F11, F13]
+    lanes: [judgment]
+    description: "Submit to arifOS for VAULT999 seal — IRREVERSIBLE"
+    preconditions: [ack_irreversible=True, arifOS_judge_verdict=SEAL, all 9 Physics9 invariants PASS]
+    audit: VAULT999_seal_required
+
+# ════════════════════════════════════════════════════════════════════
+# 4. DENIED TRANSITIONS (structurally forbidden)
+# ════════════════════════════════════════════════════════════════════
+
+denied_transitions:
+  - id: DX-GX-001
+    from: any
+    to: claim.sealed
+    via: direct_seal
+    reason: "All seals route through arifOS 888 JUDGE. No organ self-seals."
+  - id: DX-GX-002
+    from: claim.speculation
+    to: claim.sealed
+    reason: "SPECULATION cannot be SEALed. Must be promoted to INTERPRETATION via evidence first."
+  - id: DX-GX-003
+    from: any
+    to: external_well_drilling_decision
+    reason: "GEOX does not authorize drilling. Evidence only."
+  - id: DX-GX-004
+    from: any
+    to: external_volume_estimate
+    reason: "GEOX does not estimate resources. Prospect_evaluate emits evidence; arifOS judge seals."
+  - id: DX-GX-005
+    from: physics.velocity
+    to: geology_truth
+    reason: "Velocity is a symptom, not the Earth. Geology is the actual Earth (GENESIS/007)."
+  - id: DX-GX-006
+    from: any
+    to: physics.*.bounds_violation
+    reason: "Physics9 invariants are immutable. Out-of-bounds → claim_state=HOLD, never SEAL."
+
+# ════════════════════════════════════════════════════════════════════
+# 5. PHYSICS9 INVARIANT GATES (the geological gates)
+# ════════════════════════════════════════════════════════════════════
+# Binding surface; codified in GENESIS/004_PHYSICS_MANIFEST.md.
+
+gates:
+  - id: P9-1_Porosity
+    name: "Porosity bounds"
+    bound: "0.02 ≤ φ ≤ 0.45"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    enforced_by: [geox_subsurface_verify_integrity]
+  - id: P9-2_Sw
+    name: "Water saturation bounds"
+    bound: "0.0 ≤ Sw ≤ 1.0"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    enforced_by: [geox_subsurface_verify_integrity]
+  - id: P9-3_Vsh
+    name: "Shale volume bounds"
+    bound: "0.0 ≤ Vsh ≤ 1.0"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    enforced_by: [geox_subsurface_verify_integrity]
+  - id: P9-4_P90P10
+    name: "Posterior breadth"
+    bound: "P90/P10 ≤ 5.0"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    enforced_by: [geox_subsurface_verify_integrity, geox_prospect_evaluate]
+    failure_action: claim_state=HOLD (not SEAL)
+  - id: P9-5_NetPay
+    name: "Net pay cutoffs"
+    bound: "Sw < 0.4 ∧ φ > 0.10 ∧ Vsh < 0.6"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    enforced_by: [geox_subsurface_generate_candidates]
+  - id: P9-6_Charge
+    name: "Charge-to-trap timing"
+    bound: "charge_age < trap_age"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    failure_action: claim_state=HOLD
+  - id: P9-7_WellTie
+    name: "Well-tie correlation"
+    bound: "r ≥ 0.70"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    enforced_by: [geox_seismic_compute (mode=well_tie)]
+  - id: P9-8_Velocity
+    name: "Velocity sanity"
+    bound: "1480 ≤ Vp ≤ 5500 m/s, gradient < 50"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    enforced_by: [geox_seismic_compute]
+  - id: P9-9_Checkshot
+    name: "Checkshot drift curvature"
+    bound: "curvature threshold enforced"
+    source: GENESIS/004_PHYSICS_MANIFEST.md
+    enforced_by: [geox_seismic_compute (mode=time_depth_anchor)]
+
+# ════════════════════════════════════════════════════════════════════
+# 6. TOOL CONTRACTS (40 tools, grouped by lane)
+# ════════════════════════════════════════════════════════════════════
+# Sourced from /root/geox/src/geox_mcp/registry.py (CANONICAL_PUBLIC_TOOLS).
+
+tools:
+  # ── DISCOVERY LANE (5 tools) ── max_action_class: OBSERVE, no lease
+  - name: geox_system_registry_status
+    lane: discovery
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Registry truth diagnostic"
+    reversal: instant
+  - name: geox_attribute_registry_list_tool
+    lane: discovery
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "List registered seismic attributes"
+    reversal: instant
+  - name: geox_basin_resolve
+    lane: discovery
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Resolve basin name to canonical ID + bbox"
+    reversal: instant
+  - name: geox_query_intake
+    lane: discovery
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Natural language routing to basin/well/seismic"
+    reversal: instant
+  - name: geox_query_macrostrat
+    lane: discovery
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Macrostrat regional geology (PROCESS_HYPOTHESIS level)"
+    reversal: instant
+    note: "Macrostrat = regional surface geology, CC-BY-4.0"
+
+  # ── EVIDENCE LANE (13 tools) ── max_action_class: ANALYZE, no lease
+  - name: geox_data_ingest_bundle
+    lane: evidence
+    action_class: EXECUTE_REVERSIBLE
+    floors: [F1, F2, F4, F11]
+    purpose: "Ingest LAS/CSV/Parquet/SEG-Y into canonical substrate"
+    reversal: yes (file path + target_dir)
+    preconditions: [source_crs_epsg_declared, depth_datum_declared]
+  - name: geox_data_qc_bundle
+    lane: evidence
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "QC: depth monotonicity, null %, physical range"
+    reversal: instant
+  - name: geox_dst_ingest_test
+    lane: evidence
+    action_class: EXECUTE_REVERSIBLE
+    floors: [F1, F2, F4, F11]
+    purpose: "Structured DST ingestion with derived metrics"
+    reversal: yes
+  - name: geox_header_inspect
+    lane: evidence
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Inspect LAS/SEG-Y/Seismic/Deviation/Tops headers"
+    reversal: instant
+  - name: geox_las_inspect
+    lane: evidence
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Pre-ingest LAS validation"
+    reversal: instant
+  - name: geox_seismic_segy_inspect
+    lane: evidence
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Pre-ingest SEG-Y validation"
+    reversal: instant
+  - name: geox_evidence_discover
+    lane: evidence
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Search SharePoint/OneDrive/local corpus for evidence"
+    reversal: instant
+  - name: geox_evidence_attach
+    lane: evidence
+    action_class: EXECUTE_REVERSIBLE
+    floors: [F1, F2, F4, F11]
+    purpose: "Attach evidence artifact to a claim"
+    reversal: yes
+  - name: geox_literature_ingest
+    lane: evidence
+    action_class: EXECUTE_REVERSIBLE
+    floors: [F1, F2, F4, F11]
+    purpose: "Ingest PDF/document as literature witness"
+    reversal: yes
+  - name: geox_fault_stick_ingest_tool
+    lane: evidence
+    action_class: EXECUTE_REVERSIBLE
+    floors: [F1, F2, F4, F11]
+    purpose: "Ingest fault sticks from CSV/GeoJSON"
+    reversal: yes
+  - name: geox_volume_frame_tool
+    lane: evidence
+    action_class: IRREVERSIBLE  # for set action
+    floors: [F1, F2, F4, F8, F11, F13]
+    purpose: "Read/write 2D frame in 3D seismic volume"
+    reversal: yes (re-import)
+    note: "GET = OBSERVE; SET = IRREVERSIBLE; requires 888_HOLD for SET"
+  - name: geox_vision_perceptual_inventory
+    lane: evidence
+    action_class: OBSERVE
+    floors: [F2, F4, F7, F9]
+    purpose: "Build PerceptualInventory from VLM output"
+    reversal: instant
+    note: "F7 confidence hard-cap 0.90"
+  - name: geox_vision_calibrate
+    lane: evidence
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Calibrate VLM against ground truth (sandbox)"
+
+  # ── REASONING LANE (17 tools) ── max_action_class: ANALYZE, lease + session required
+  - name: geox_subsurface_generate_candidates
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    purpose: "Generate ensemble subsurface outputs with residuals"
+    invariants_required: [P9-1, P9-2, P9-3, P9-4, P9-5]
+    reversal: instant
+  - name: geox_subsurface_verify_integrity
+    lane: reasoning
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Enforce Physics9 bounds; detect structural paradoxes"
+    invariants_required: [P9-1..P9-9]
+    reversal: instant
+    note: "Fails closed: HOLD/NO_VALID_EVIDENCE if candidate_ref missing"
+  - name: geox_seismic_compute
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    purpose: "Unified seismic physics engine (synthetic/well_tie/AC/etc.)"
+    invariants_required: [P9-7, P9-8, P9-9]
+    reversal: instant
+  - name: geox_seismic_compute_attribute_tool
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F11]
+    purpose: "Compute registered seismic attribute"
+    reversal: instant
+  - name: geox_sequence_interpret
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    purpose: "Unified sequence stratigraphy engine"
+    reversal: instant
+  - name: geox_evidence_reason
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    purpose: "Unified evidence synthesis, abduction, contradiction"
+    reversal: instant
+  - name: geox_prospect_evaluate
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F8, F11, F13]
+    purpose: "Integrated prospect evaluation (Volumetrics, POS, EVOI)"
+    reversal: instant
+    note: "verdict=seal requires ack_irreversible=True + arifOS judge"
+  - name: geox_map_context_scene
+    lane: reasoning
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Spatial bbox context, CRS checks, scene rendering"
+    reversal: instant
+  - name: geox_horizon_contrast_surface
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    purpose: "ToAC-as-Attention horizon contrast pipeline"
+    reversal: instant
+  - name: geox_coord_transform_tool
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F11]
+    purpose: "Transform 3D points between block/survey/world"
+    reversal: instant
+  - name: geox_blockspace_resolution_tool
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F11]
+    purpose: "Compute inline/crossline/vertical resolution"
+    reversal: instant
+  - name: geox_blend_volume_tool
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F11]
+    purpose: "Alpha or RGB blend seismic volumes"
+    reversal: instant
+  - name: geox_basin_profile
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F11]
+    purpose: "Basin-level intelligence (petroleum system, risk, contradiction)"
+    reversal: instant
+  - name: geox_vision_minimax_inference
+    lane: reasoning
+    action_class: SIMULATE
+    floors: [F2, F4, F7, F9]
+    purpose: "Seismic section interpretation via MiniMax VLM"
+    reversal: instant
+  - name: geox_vision_audit
+    lane: reasoning
+    action_class: OBSERVE
+    floors: [F2, F4, F7, F9]
+    purpose: "Compute AC_Risk + VisionVerdict for VLM observation"
+    reversal: instant
+  - name: geox_report_to_workflow
+    lane: reasoning
+    action_class: SUGGEST
+    floors: [F2, F4]
+    purpose: "Given a report, produce safe GEOX workflow steps"
+    reversal: instant
+  - name: geox_abstraction_guard
+    lane: reasoning
+    action_class: OBSERVE
+    floors: [F2, F4, F9]
+    purpose: "Evaluate non-geological questions; enforce ontology guards"
+    reversal: instant
+
+  # ── JUDGMENT LANE (5 tools) ── GOVERNED, lease + session + arifOS judge required
+  - name: geox_claim_create
+    lane: judgment
+    action_class: EXECUTE_REVERSIBLE
+    floors: [F1, F2, F4, F11]
+    purpose: "Create a structured Earth interpretation claim"
+    reversal: yes
+    preconditions:
+      - "truth_class in {FACT, INTERPRETATION, SPECULATION}"
+      - "evidence_ids >= 1"
+  - name: geox_claim_validate
+    lane: judgment
+    action_class: OBSERVE
+    floors: [F2, F4, F11]
+    purpose: "Promote DRAFT → VALIDATED via 16-field envelope"
+    reversal: instant
+  - name: geox_claim_challenge
+    lane: judgment
+    action_class: REASON
+    floors: [F2, F4, F7, F11]
+    purpose: "Multi-discipline self-argument; create competing claim"
+    reversal: yes
+  - name: geox_claim_seal
+    lane: judgment
+    action_class: IRREVERSIBLE
+    floors: [F1, F2, F4, F8, F11, F13]
+    purpose: "Submit to arifOS for VAULT999 seal"
+    preconditions: [ack_irreversible=True, arifOS_judge_verdict=SEAL, P9-1..P9-9 PASS]
+    audit: VAULT999_seal_required
+  - name: geox_segy_export_tool
+    lane: judgment
+    action_class: IRREVERSIBLE
+    floors: [F1, F2, F4, F8, F11, F13]
+    purpose: "Export seismic volume to SEG-Y (file creation)"
+    preconditions: [ack_irreversible=True, 888_HOLD]
+    audit: VAULT999_seal_required
+
+# ════════════════════════════════════════════════════════════════════
+# 7. PER-CALL ENVELOPE (inherited from per_call_envelope.schema.json)
+# ════════════════════════════════════════════════════════════════════
+
+per_call_envelope:
+  required_fields:
+    - trace_id
+    - session_id
+    - epoch_id
+    - lease_id          # REASONING + JUDGMENT lanes require lease
+    - actor_id
+    - agent_class
+    - organ_id          # GEOX
+    - tool_name
+    - action_class      # OBSERVE / SUGGEST / SIMULATE / DRAFT / EXECUTE_REVERSIBLE / IRREVERSIBLE
+    - floors_chain      # includes F1+F2 always; F13 for IRREVERSIBLE
+    - physics_invariants_checked  # P9-1..P9-9 (subset per tool)
+    - risk_tier         # low / medium / high / critical
+    - approval_state    # open | 888_HOLD | sealed
+    - args_hash
+    - epistemic_label   # OBS / DER / INT / SPEC / UNKNOWN
+    - truth_class       # GEOX-specific: FACT / INTERPRETATION / SPECULATION
+  organ_specific:
+    geox_invariants_applied: [P9-1, P9-2, P9-3, P9-4, P9-5, P9-6, P9-7, P9-8, P9-9]
+    geox_lane_at_call: discovery | evidence | reasoning | judgment
+    crs_epsg: required_for_spatial_calls
+    depth_datum: required_for_depth_calls
+
+# ════════════════════════════════════════════════════════════════════
+# 8. CROSS-ORGAN ALLOWLIST (the explicit graph — GEOX slice)
+# ════════════════════════════════════════════════════════════════════
+# Full federation graph at /root/WEALTH/reality_contracts/federation_call_graph.yaml
+# This block is GEOX-specific.
+
+cross_organ_allowed:
+  - from: GEOX
+    to: arifOS_kernel
+    via: MCP
+    allowed_tools: [arif_session_init, arif_judge_deliberate, arif_vault_seal, arif_organ_attest]
+    purpose: "Constitutional supervision, claim seal, judge deliberation"
+    constraints: [floor_chain_inherited, audit_structured_event]
+  - from: GEOX
+    to: AAA
+    via: MCP
+    allowed_tools: [aaa_cockpit_display, aaa_a2a_route]
+    purpose: "Display claim state, route 888_HOLD"
+    constraints: [read_only_by_default]
+  - from: GEOX
+    to: WEALTH
+    via: MCP
+    allowed_tools: [wealth_field_macro, wealth_commodity_evidence]
+    purpose: "Earth evidence → capital analysis (commodity, energy, basin economic)"
+    constraints: [evidence_only, no_joint_signoff, no_joint_advice]
+  - from: GEOX
+    to: WELL
+    via: MCP
+    allowed_tools: [well_assess_reliability]
+    purpose: "Operator readiness before high-blast-radius drilling decisions"
+    constraints: [read_only, advisory_only]
+  - from: GEOX
+    to: A_FORGE
+    via: MCP
+    allowed_tools: [forge_approve, forge_dry_run]
+    purpose: "Approval / dry-run for IRREVERSIBLE (claim_seal, segy_export)"
+    constraints: [888_HOLD_required, ack_irreversible_required, vault_seal_on_success]
+
+cross_organ_denied:
+  - from: GEOX
+    to: any_external_saas
+    reason: "GEOX has no egress to external APIs. arifOS routes to A-FORGE."
+  - from: GEOX
+    to: any_organ
+    via: write_path_without_arifOS_judge
+    reason: "All writes route through arifOS judge + human 888_HOLD."
+
+# ════════════════════════════════════════════════════════════════════
+# 9. FLOOR INVARIANTS (the constitutional guarantees — GEOX-specific)
+# ════════════════════════════════════════════════════════════════════
+
+floor_invariants:
+  - "No F1 violation: every transition is reversible OR 888_HOLDed (claim_seal, segy_export, volume_frame SET)."
+  - "No F2 violation: every claim carries evidence_handles + line-of-sight to Physics9 + epistemic_label."
+  - "No F4 violation: every output reduces entropy vs input (or zero change with explicit reason)."
+  - "No F7 violation: VLM confidence hard-cap 0.90; no naked certainty from any tool."
+  - "No F9 violation: no consciousness claims; no anthropomorphizing of Earth (geology is not the agent)."
+  - "No F11 violation: every consequential action emits structured audit event to NATS / VAULT999."
+  - "No F13 violation: no self-approval of IRREVERSIBLE; human 888_HOLD required."
+  - "GEOX-001 enforced: GEOX answers to natural law (Physics9), not constitutional law (F1-F13)."
+  - "GEOX-002 enforced: velocity is a symptom, geology is the actual Earth."
+  - "GEOX-003 enforced: no evidence → claim cannot be SEAL."
+
+# ════════════════════════════════════════════════════════════════════
+# 10. FAILURE MODES
+# ════════════════════════════════════════════════════════════════════
+
+failure_modes:
+  on_physics9_violation:
+    action: claim_state=HOLD
+    sink: VAULT999
+    example: "P9-1 violated (φ=0.55) → claim_state=HOLD, log, return GateResult"
+  on_provenance_missing:
+    action: claim_state=DRAFT (cannot VALIDATE)
+    sink: VAULT999
+    example: "claim_create without evidence_ids → DRAFT, log, BLOCK"
+  on_lane_violation:
+    action: BLOCK + 888_HOLD
+    sink: VAULT999
+    example: "REASONING tool called without lease → BLOCK"
+  on_irreversible_without_888:
+    action: ABSOLUTE_BLOCK
+    sink: VAULT999 + sovereign_alert
+    example: "geox_claim_seal without ack_irreversible=True → ABSOLUTE_BLOCK + F13 alert"
+  on_velocity_only_interpretation:
+    action: WARN + flag_geo_context_required
+    sink: VAULT999
+    example: "interpretation references velocity but not stratigraphy → WARN, flag for geology review (GENESIS/007)"
+
+# ════════════════════════════════════════════════════════════════════
+# 11. ROLLOUT / REVERSIBILITY
+# ════════════════════════════════════════════════════════════════════
+
+rollout:
+  status: DRAFT
+  reversibility: 100% (no irreversible write happens until F13 SOVEREIGN)
+  test_phase:
+    - "Physics9 invariants already enforced in geox_subsurface_verify_integrity"
+    - "4 lanes already structured in registry.py (CANONICAL_PUBLIC_TOOLS)"
+    - "3-tier claim taxonomy already implemented in geox_claim_create"
+    - "Cross-organ edges already implicit in arifOS kernel_route"
+  ratification_needed:
+    - "F13 SOVEREIGN sign-off on the contract (irreversible seal)"
+    - "arifOS judge deliberation on each IRREVERSIBLE (geox_claim_seal, geox_segy_export_tool, geox_volume_frame_tool SET)"
+    - "VAULT999 seal once ratified"
+  next_step:
+    - "Use this + WEALTH contract as TEMPLATE for arifOS Reality Contract (the kernel itself)"
+    - "After 3 organs contracted (WEALTH + GEOX + arifOS), execute MVTS partition (Option A)"
+
+# ─────────────────────────────────────────────────────────────────────
+# DITEMPA BUKAN DIBERI — Velocity is a symptom. Geology is the Earth.
+# F-floor compliance: F1, F2, F4, F7, F8, F9, F11, F13
+# VAULT999 seal: PENDING F13 SOVEREIGN (irreversible, requires 888_HOLD)
+# ─────────────────────────────────────────────────────────────────────

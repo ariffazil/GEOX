@@ -1,12 +1,13 @@
-import sys
-import os
 import asyncio
+import os
+import sys
 
 # Path Hack
 sys.path.append(os.path.abspath("."))
 
 from services.evidence_store.store import store
 from services.governance.judge import judge
+
 
 async def test():
     print("Testing 888_JUDGE Loop...")

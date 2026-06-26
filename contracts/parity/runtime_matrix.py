@@ -5,7 +5,7 @@ Single source of truth for declaring tool support across the FastMCP (Control Pl
 and VPS (Execution Plane) runtimes.
 """
 
-from typing import Dict, List, Literal
+from typing import Literal
 
 RuntimeType = Literal["fastmcp", "vps"]
 ParityStatus = Literal["FULL", "PARTIAL", "DEPRECATED"]
@@ -17,7 +17,7 @@ ParityStatus = Literal["FULL", "PARTIAL", "DEPRECATED"]
 #     "public": True
 # }
 
-RUNTIME_PARITY_MATRIX: Dict[str, Dict[str, str | bool | List[str]]] = {
+RUNTIME_PARITY_MATRIX: dict[str, dict[str, str | bool | list[str]]] = {
     # ─── PROSPECT DIMENSION ──────────────────────────────────────────
     "geox_prospect_evaluate": {
         "fastmcp": "FULL",
@@ -109,7 +109,7 @@ RUNTIME_PARITY_MATRIX: Dict[str, Dict[str, str | bool | List[str]]] = {
     # Add other dimensions (Section, Map, Physics, Cross) as needed.
 }
 
-def get_tool_parity(tool_name: str) -> Dict:
+def get_tool_parity(tool_name: str) -> dict:
     return RUNTIME_PARITY_MATRIX.get(tool_name, {
         "fastmcp": "UNKNOWN",
         "vps": "UNKNOWN",

@@ -80,6 +80,31 @@ class PhysicsGuard:
         "ro_gas_floor": (1.3, 5.0),
     }
 
+    # ── Multi-Physics Bounds (Phase C: Seismic Inversion / Gravity / Magnetics / EM) ──
+
+    GRAVITY_BOUNDS: dict[str, tuple[float, float]] = {
+        "density_kg_m3": (1000, 5000),
+        "density_contrast_kg_m3": (-2000, 2000),
+        "bouguer_anomaly_mgal": (-200, 200),
+    }
+
+    MAGNETICS_BOUNDS: dict[str, tuple[float, float]] = {
+        "susceptibility_si": (0, 0.1),
+        "total_field_anomaly_nt": (-5000, 5000),
+        "inclination_deg": (-90, 90),
+    }
+
+    EM_BOUNDS: dict[str, tuple[float, float]] = {
+        "resistivity_ohmm": (0.01, 1e6),
+        "apparent_resistivity_ohmm": (0.01, 1e6),
+        "phase_deg": (-180, 180),
+    }
+
+    SEISMIC_INVERSION_BOUNDS: dict[str, tuple[float, float]] = {
+        "acoustic_impedance_kg_m2s": (1e4, 1e8),
+        "inversion_correlation": (0.0, 1.0),
+    }
+
     def __init__(self, max_posterior_ratio: float = 5.0) -> None:
         self.max_posterior_ratio = max_posterior_ratio
         self.epistemic = EpistemicIntegrity()
@@ -294,6 +319,109 @@ class PhysicsGuard:
                 violations=violations,
                 hold=True,
                 reason="Unphysical velocity stretch/squeeze detected.",
+            )
+        return ValidationResult(status="PASS")
+
+    # ─── Multi-Physics Validation (Phase C) ────────────────────────────────
+
+    def validate_gravity(self, output: dict[str, Any]) -> ValidationResult:
+        """Validate gravity forward model output against physical bounds."""
+        violations: list[PhysicsViolation] = []
+        for param, (lo, hi) in self.GRAVITY_BOUNDS.items():
+            val = output.get(param)
+            if val is not None and isinstance(val, (int, float)):
+                if val < lo or val > hi:
+                    violations.append(PhysicsViolation(
+                        parameter=param, value=float(val),
+                        min_bound=lo, max_bound=hi, severity="CRITICAL",
+                    ))
+        if violations:
+            return ValidationResult(
+                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                reason="Gravity bounds exceeded",
+            )
+        return ValidationResult(status="PASS")
+
+    def validate_magnetics(self, output: dict[str, Any]) -> ValidationResult:
+        """Validate magnetics forward model output against physical bounds."""
+        violations: list[PhysicsViolation] = []
+        for param, (lo, hi) in self.MAGNETICS_BOUNDS.items():
+            val = output.get(param)
+            if val is not None and isinstance(val, (int, float)):
+                if val < lo or val > hi:
+                    violations.append(PhysicsViolation(
+                        parameter=param, value=float(val),
+                        min_bound=lo, max_bound=hi, severity="CRITICAL",
+                    ))
+        if violations:
+            return ValidationResult(
+                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                reason="Magnetics bounds exceeded",
+            )
+        return ValidationResult(status="PASS")
+
+    def validate_em(self, output: dict[str, Any]) -> ValidationResult:
+        """Validate EM forward model output against physical bounds."""
+        violations: list[PhysicsViolation] = []
+        for param, (lo, hi) in self.EM_BOUNDS.items():
+            val = output.get(param)
+            if val is not None and isinstance(val, (int, float)):
+                if val < lo or val > hi:
+                    violations.append(PhysicsViolation(
+                        parameter=param, value=float(val),
+                        min_bound=lo, max_bound=hi, severity="CRITICAL",
+                    ))
+        if violations:
+            return ValidationResult(
+                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                reason="EM bounds exceeded",
+            )
+        return ValidationResult(status="PASS")
+
+    def validate_seismic_inversion(self, output: dict[str, Any]) -> ValidationResult:
+        """Validate seismic inversion output against physical bounds."""
+        violations: list[PhysicsViolation] = []
+        for param, (lo, hi) in self.SEISMIC_INVERSION_BOUNDS.items():
+            val = output.get(param)
+            if val is not None and isinstance(val, (int, float)):
+                if val < lo or val > hi:
+                    violations.append(PhysicsViolation(
+                        parameter=param, value=float(val),
+                        min_bound=lo, max_bound=hi, severity="CRITICAL",
+                    ))
+        if violations:
+            return ValidationResult(
+                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                reason="Seismic inversion bounds exceeded",
+            )
+        return ValidationResult(status="PASS")
+
+    def validate_physics9_state(self, state: dict[str, Any]) -> ValidationResult:
+        """Validate a complete Physics9State against all bounds."""
+        violations: list[PhysicsViolation] = []
+        bounds = {
+            "rho": (1000, 5000),
+            "vp": (1500, 7000),
+            "vs": (500, 4000),
+            "rho_e": (0.01, 1e6),
+            "chi": (0, 0.1),
+            "k": (0.1, 10),
+            "P": (1e5, 1e9),
+            "T": (200, 600),
+            "phi": (0.01, 0.45),
+        }
+        for param, (lo, hi) in bounds.items():
+            val = state.get(param)
+            if val is not None:
+                if val < lo or val > hi:
+                    violations.append(PhysicsViolation(
+                        parameter=param, value=float(val),
+                        min_bound=lo, max_bound=hi, severity="CRITICAL",
+                    ))
+        if violations:
+            return ValidationResult(
+                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                reason="Physics9State bounds exceeded",
             )
         return ValidationResult(status="PASS")
 

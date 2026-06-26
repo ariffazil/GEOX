@@ -1,0 +1,38 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Pick
+description: Single horizon/top/base marker with depth domain and provenance. Corresponds to a Contact in GeoSciML.
+type: object
+required:
+  - pick_id
+  - well_id
+  - depth
+  - pick_type
+  - provenance
+properties:
+  pick_id:
+    type: string
+  well_id:
+    type: string
+  depth:
+    type: object
+    properties:
+      md_m:
+        type: number
+      tvdss_m:
+        type: number
+  pick_type:
+    type: string
+    enum:
+      - top
+      - base
+      - flooding_surface
+      - unconformity
+      - mfs
+      - sequence_boundary
+    description: Semantics of the marker
+  strat_name:
+    type: string
+  confidence:
+    $ref: './confidence.yaml'
+  provenance:
+    $ref: './provenance.yaml'
