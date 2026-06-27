@@ -16,6 +16,7 @@ changes_since_last_verified:
   - P2: ProvenanceLedger extended — physics9_fill flag + derivation_chain per field
   - P2: SynthesisState extended — iteration_count, convergence_threshold, max_iterations, converged, delta_S_history
   - P2: GapRegistry extended — GAP_CONVERGENCE type added
+  - GAP-1: geox_surface_status added (2026-06-27) — 17th canonical tool, federation-standard registry probe
   - tests: 75 passed (orchestration), 0 failed — 52 Phase 1 + 23 Phase 2
 -->
 
@@ -36,7 +37,7 @@ Arif. This is the **GEOX** organ of the arifOS federation — Earth Intelligence
 
 The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-grounded evidence for constitutional judgment. It is **evidence-only** — never a policy judge.
 
-**16 canonical tools** (Phase 2 Clean Architecture, locked 2026-06-25 for ChatGPT app parity) across subsurface, stratigraphy, seismic, horizon interpretation, vision, geomechanics, basin, deep time, and federation integration (WELL/WEALTH). 12 surface-facing + 4 internal plumbing (claim / evidence / prospect / doctrine). Mode-consolidated — many legacy flat names (geox_data_ingest_bundle, geox_claim_create, geox_prospect_evaluate, etc.) are accepted by middleware backward-compat but NOT in the canonical surface. Live runtime reports `canonical_tools=16`.
+**17 canonical tools** (Phase 2 Clean Architecture + GAP-1 fix, 2026-06-27) across subsurface, stratigraphy, seismic, horizon interpretation, vision, geomechanics, basin, deep time, and federation integration (WELL/WEALTH). 13 surface-facing + 4 internal plumbing (claim / evidence / prospect / doctrine). Mode-consolidated — many legacy flat names (geox_data_ingest_bundle, geox_claim_create, geox_prospect_evaluate, etc.) are accepted by middleware backward-compat but NOT in the canonical surface. Live runtime reports `canonical_tools=17`. The 17th tool is `geox_surface_status` — federation-standard registry probe (GAP-1 fix).
 
 - **Port:** 8081 (live daemon, HTTP mode)
 - **Transport:** Dual-mode — `--transport http` (systemd) or `--transport stdio` (local agents)
@@ -72,9 +73,9 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Domain BOUNDARY classification (e.g., Kinabalu Basin registration)
 - Cross-organ biostrat re-assessment coordination
 
-### Phase 2 Clean Architecture — FORGE Status (2026-06-25, LOCKED at 16)
+### Phase 2 Clean Architecture — FORGE Status (2026-06-27, LOCKED at 17)
 
-**Surface (12):** `geox_well_ingest`, `geox_well_qc`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`.
+**Surface (13):** `geox_well_ingest`, `geox_well_qc`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`, `geox_surface_status`.
 
 **Internal (4):** `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine`.
 
@@ -82,8 +83,8 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - **Phase 3 deferred (requires 888_HOLD to re-enable)**: 33-tool Earth Dimensions expansion (D1-D17), 56-tool legacy forge, foundation model backing engines, multi-physics joint inversion (Physics9), CSEM/MT, biostrat, Prithvi-EO-2.0, GEOX-LEM, etc.
 - **W16+ physics-first substrate** (preserved, not a tool): `src/geox_core/schemas/crust_vp_grammar.py` (Huang 2021 Vp grammar), `intelligence_flow.py` (7-layer dynamic flow), `kinabalu_corpus.py` (corpus substrate), `physics/joint_inversion_zone_hook.py` (post-inversion Vp classification), `floor_enforcement.py` (F1/F4/F7/F9/F11/F13 wrapper), `tools/crustal_domain_classify.py` (multi-cell classifier), `tools/_register.py` (hardened wrapper, F7 HUMILITY cap 0.95→0.90).
 - **Tests:** 810 passing, 61 skipped, 28 pre-existing `test_deep_time_state.py` failures (broken `EpistemicLevel` import in `deep_time/schemas.py` — pre-existing, NOT caused by Phase 2 lock; track separately).
-- **Constitutional invariant:** `_EXPECTED_CANONICAL = 16` in `src/geox_mcp/server.py` (line 285).
-- **GEOX_CONTRACT_EPOCH:** `2026-06-22-GEOX-16TOOLS-PHASE2` in `src/geox_mcp/server.py`.
+- **Constitutional invariant:** `_EXPECTED_CANONICAL = 17` in `src/geox_mcp/server.py` (line 287).
+- **GEOX_CONTRACT_EPOCH:** `2026-06-27-GEOX-17TOOLS-GAP1` in `src/geox_mcp/server.py`.
 - **Live at** `https://geox.arif-fazil.com/mcp` (MCP 2025-11-25, FastMCP 3.4.2) — runtime reports `canonical_tools=16`. ChatGPT dev app holds a stale cached manifest (31 legacy tools); disconnect + reconnect in ChatGPT dev console to refresh the action discovery.
 - **Last live commit:** `4f171490` (working tree holds the lock; push pending 888_HOLD).
 
