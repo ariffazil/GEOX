@@ -68,17 +68,22 @@ dependencies = [
     # ObsPy — adapter exists in engines/seismic/obspy_adapter.py
     "obspy>=1.4.0",
     # Bruges — rock physics: Gardner, AI, EI, Vp/Vs, AVO, anisotropy
-    "bruges>=2024.1.0",
+    "bruges>=0.4.0",
     # pyGeoPressure — Eaton + Bowers pore pressure prediction (⚠️ 888_HOLD gate required)
-    "pygeopressure>=0.4.0",
+    # NOTE: Not available on PyPI. Adapter exists at engines/seismic/pygeopressure_adapter.py
+    # "pygeopressure>=0.4.0",
     # Devito — symbolic finite-difference wave propagation (FWI engine)
-    "devito>=4.0.0",
+    # MOVED to [seismic] extra — conflicts with arifOS numpy>=2.5.0 (devito requires numpy<=2.4.3)
+    # "devito>=4.8.22",
     # PyLops — linear operators for seismic inversion (sparse spike, AVAz, rank-reduction)
     "pylops>=2.0.0",
 
     # ─── P1 CRITICAL: Geophysics Inversion ──────────────────────────────────
     # HarmonIC — gravity + magnetics forward (referenced in harmonica_adapter.py)
-    "harmonica>=1.0.0",
+    "harmonica>=0.4.0",
+    # Constrain numba/llvmlite for Python 3.12 compat (harmonica pulls old versions)
+    "numba>=0.60.0",
+    "llvmlite>=0.43.0",
     # SimPEG — gravity, magnetics, EM, DC resistivity inversion
     "simpeg>=0.7.0",
     # PyGIMLi — ERT, induced polarization, traveltime tomography, joint inversion
@@ -86,7 +91,7 @@ dependencies = [
 
     # ─── P1 CRITICAL: Geospatial & Satellite ────────────────────────────────
     # GDAL — raster/vector geospatial (requires system gdal-dev on some platforms)
-    "gdal>=3.8.0",
+    "gdal>=3.8.0,<3.11",
     "geopandas>=1.0.0",
     "rasterio>=1.4.0",
 
@@ -106,7 +111,7 @@ dependencies = [
 
     # ─── P1 CRITICAL: Geochemistry ─────────────────────────────────────────
     # pyrolite — geochemical data processing (trace elements, spider diagrams)
-    "pyrolite>=0.4.0",
+    "pyrolite>=0.3.0",
 ]
 
 [project.optional-dependencies]
@@ -119,6 +124,11 @@ dev = [
 ]
 pinn = [
     "torch>=2.12.1",
+]
+seismic = [
+    # Devito — FWI engine. Requires numpy<=2.4.3, conflicts with arifOS numpy==2.5.0
+    # Install separately: pip install geox[seismic]
+    "devito>=4.8.22",
 ]
 all = [
     "numpy>=2.4.6",

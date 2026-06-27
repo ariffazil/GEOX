@@ -104,7 +104,6 @@ if not GEOX_SECRET_TOKEN:
         GEOX_SECRET_TOKEN = ""
 
 
-
 # ─── Git SHA version (K8: no silent version drift) ───────────────────────────
 def _get_git_version() -> str:
     """Return geox-<short-sha> from git, or 'geox-unknown' if not a git repo."""
@@ -193,16 +192,20 @@ mcp = FastMCP(**_mcp_kwargs)
 # in turn imports server.py. The check_governance function is injected at
 # create_app() time when the import graph is already resolved.
 _geox_governance_middleware = None  # populated by create_app() at runtime
+
+
 def _build_geox_governance_middleware():
     """Lazy factory — called inside create_app() after import graph resolves."""
     from geox_mcp.geox_middleware import GeoxGovernanceMiddleware
     from geox_mcp.organ_governance import check_governance
+
     return GeoxGovernanceMiddleware(
         canonical_public_tools=set(CANONICAL_PUBLIC_TOOLS),
         canonical_compat_tools=set(CANONICAL_COMPAT_TOOLS),
         arifos_route_query_enabled=bool(GEOX_ENABLE_ARIFOS_ROUTE_QUERY),
         check_governance_fn=check_governance,
     )
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX Identity Invariant (F10 Coherence + F01 Amanah)
@@ -287,8 +290,10 @@ def compose_geox_servers() -> None:
             f"got {len(CANONICAL_PUBLIC_TOOLS)}. If this expansion is intentional, "
             f"update _EXPECTED_CANONICAL in server.py with a forge-state comment."
         )
-    logger.info(f"GEOX surface composed: {len(SURFACE_TOOLS)} surface + {len(INTERNAL_TOOLS)} internal = {len(CANONICAL_PUBLIC_TOOLS)} canonical + "
-                f"{len(CANONICAL_COMPAT_TOOLS)} backward-compat tools")
+    logger.info(
+        f"GEOX surface composed: {len(SURFACE_TOOLS)} surface + {len(INTERNAL_TOOLS)} internal = {len(CANONICAL_PUBLIC_TOOLS)} canonical + "
+        f"{len(CANONICAL_COMPAT_TOOLS)} backward-compat tools"
+    )
 
 
 compose_geox_servers()
@@ -296,6 +301,7 @@ compose_geox_servers()
 from geox_mcp.tools.ui_applets import register_ui_applets
 
 register_ui_applets(mcp)
+
 
 # ── W2-W4 FORGE — Doctrine layer tool registrations ────────────────────────
 @mcp.tool(name="geox_doctrine_assumption_register")
@@ -309,8 +315,10 @@ async def _doctrine_assumption_register(
 ) -> dict:
     """Register an assumption in the GEOX doctrine lineage (Gap X)."""
     from geox_mcp.tools.doctrine import (
-        AssumptionRegisterRequest, geox_doctrine_assumption_register,
+        AssumptionRegisterRequest,
+        geox_doctrine_assumption_register,
     )
+
     req = AssumptionRegisterRequest(
         introduced_by=introduced_by,
         rung_origin=rung_origin,
@@ -332,8 +340,10 @@ async def _doctrine_anti_beautiful_one(
 ) -> dict:
     """Run Anti-Beautiful-One audit on a claim (Gap 3)."""
     from geox_mcp.tools.doctrine import (
-        BeautyAuditRequest, geox_doctrine_anti_beautiful_one,
+        BeautyAuditRequest,
+        geox_doctrine_anti_beautiful_one,
     )
+
     req = BeautyAuditRequest(
         text=text,
         grounding_evidence_count=grounding_evidence_count,
@@ -359,9 +369,12 @@ async def _doctrine_godel_review(
     (review / seal / void). Otherwise, register a new claim and run review.
     """
     from geox_mcp.tools.doctrine import (
-        GodelClaimRequest, GodelSealRequest,
-        geox_doctrine_godel_review, geox_doctrine_godel_register_claim,
+        GodelClaimRequest,
+        GodelSealRequest,
+        geox_doctrine_godel_review,
+        geox_doctrine_godel_register_claim,
     )
+
     if not claim_id:
         if rung is None or description is None:
             return {"ok": False, "error": "rung and description required when claim_id is absent"}
@@ -392,8 +405,10 @@ async def _prithvi_eo_inference(
 ) -> dict:
     """Run Prithvi-EO-2.0 (NASA-IMPACT/IBM) on an HLS tile. Mock mode by default."""
     from geox_mcp.tools.earth_obs import (
-        PrithviEOInferenceRequest, geox_prithvi_eo_inference,
+        PrithviEOInferenceRequest,
+        geox_prithvi_eo_inference,
     )
+
     req = PrithviEOInferenceRequest(
         tile_id=tile_id,
         bands=tuple(bands) if bands else ("B02", "B03", "B04", "B8A", "B11", "B12"),
@@ -418,8 +433,10 @@ async def _gravity_magnetic_forward(
 ) -> dict:
     """Forward-model gravity or magnetic anomaly grid via HarmonIC (mock by default)."""
     from geox_mcp.tools.geophysics_nonseismic import (
-        GravityMagneticForwardRequest, geox_gravity_magnetic_forward,
+        GravityMagneticForwardRequest,
+        geox_gravity_magnetic_forward,
     )
+
     req = GravityMagneticForwardRequest(
         survey_type=survey_type,  # type: ignore[arg-type]
         easting_m=tuple(easting_m) if easting_m else (0.0,),
@@ -436,8 +453,10 @@ async def _gravity_magnetic_forward(
 async def _emag2_ingest(force: bool = False) -> dict:
     """Fetch EMAG2v3 global magnetic anomaly grid (offline-safe stub by default)."""
     from geox_mcp.tools.geophysics_nonseismic import (
-        EMAG2FetchRequest, geox_emag2_ingest,
+        EMAG2FetchRequest,
+        geox_emag2_ingest,
     )
+
     req = EMAG2FetchRequest(force=force)
     return (await geox_emag2_ingest(req)).model_dump(mode="json")
 
@@ -446,8 +465,10 @@ async def _emag2_ingest(force: bool = False) -> dict:
 async def _icgem_models() -> dict:
     """List ICGEM (GFZ Potsdam) global gravity field models."""
     from geox_mcp.tools.geophysics_nonseismic import (
-        ICGEMListRequest, geox_icgem_models,
+        ICGEMListRequest,
+        geox_icgem_models,
     )
+
     return (await geox_icgem_models(ICGEMListRequest())).model_dump(mode="json")
 
 
@@ -466,13 +487,17 @@ async def _joint_inversion(
     Enforces Earth-bounds on every dial; output is graded RAW or AAA.
     """
     from geox_mcp.tools.multi_physics import (
-        JointInversionRequest, geox_joint_inversion,
+        JointInversionRequest,
+        geox_joint_inversion,
     )
     from geox_mcp.tools.multi_physics import ModalityObsSchema as _ModObs
+
     obs = [_ModObs(**o) for o in (observations or [])]
     req = JointInversionRequest(
-        observations=obs, prior=prior,
-        max_iter=max_iter, tolerance=tolerance,
+        observations=obs,
+        prior=prior,
+        max_iter=max_iter,
+        tolerance=tolerance,
     )
     return (await geox_joint_inversion(req)).model_dump(mode="json")
 
@@ -484,8 +509,10 @@ async def _mt_forward(
 ) -> dict:
     """1D CSEM/MT forward: apparent resistivity + phase at each frequency."""
     from geox_mcp.tools.multi_physics import (
-        MTForwardRequestSchema, geox_mt_forward,
+        MTForwardRequestSchema,
+        geox_mt_forward,
     )
+
     req = MTForwardRequestSchema(
         layers=layers or [],
         frequencies_hz=tuple(frequencies_hz) if frequencies_hz else (0.001, 0.01, 0.1, 1.0, 10.0, 100.0),
@@ -503,8 +530,10 @@ async def _biostrat_constraint(
     Returns zone name, admissible materials, and consistency verdict.
     """
     from geox_mcp.tools.multi_physics import (
-        BiostratRequest, geox_biostrat_constraint,
+        BiostratRequest,
+        geox_biostrat_constraint,
     )
+
     req = BiostratRequest(state=state, age_ma=age_ma)
     return (await geox_biostrat_constraint(req)).model_dump(mode="json")
 
@@ -524,8 +553,10 @@ async def _seismic_inversion(
     Faust velocity prior + Gardner density prior. Enforces Physics9 bounds.
     """
     from geox_mcp.tools.seismic_inversion import (
-        SeismicInversionRequestSchema, geox_seismic_inversion,
+        SeismicInversionRequestSchema,
+        geox_seismic_inversion,
     )
+
     req = SeismicInversionRequestSchema(
         reflectivity=tuple(reflectivity) if reflectivity else (),
         sample_interval_s=sample_interval_s,
@@ -538,18 +569,157 @@ async def _seismic_inversion(
 
 # ── W13+ FORGE — Phase C: Geomechanics (K, G, E, ν from Physics9State) ──
 @mcp.tool(name="geox_geomechanics")
-async def _geomechanics(state: dict, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict:
+async def _geomechanics(
+    state: dict,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+    thickness_m: float | None = None,
+    rho_fluid: float | None = 1025.0,
+) -> dict:
     """Derive geomechanical moduli (K, G, E, ν, AI) from a Physics9State cell.
 
     Returns all derived scalars + sanity flags + grade (RAW/AAA) + godel_wall.
+    Optional: buoyancy computation when thickness_m is provided.
     """
     from geox_mcp.tools.geomechanics import (
-        GeomechanicsRequest, geox_geomechanics,
+        GeomechanicsRequest,
+        geox_geomechanics,
     )
-    return (await geox_geomechanics(GeomechanicsRequest(state=state))).model_dump(mode="json")
+
+    return (
+        await geox_geomechanics(
+            GeomechanicsRequest(
+                state=state,
+                thickness_m=thickness_m,
+                rho_fluid=rho_fluid,
+            )
+        )
+    ).model_dump(mode="json")
+
+
+# ── W13+ FORGE — A2 GRAVITY SCREEN (evidence lane, no judgment required) ──
+@mcp.tool(name="geox_gravity_screen")
+async def _gravity_screen(
+    observed_mGal: list[float],
+    easting_m: list[float],
+    northing_m: list[float],
+    density_kg_m3: float,
+    depth_top_m: float,
+    depth_bottom_m: float,
+    reference_density_kg_m3: float = 2670.0,
+    claim_id: str = "UNKNOWN",
+    hypothesis_prior: float = 0.25,
+    actor_id: str | None = None,
+    session_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict:
+    """Screen a gravity anomaly against a single-density prism forward model.
+
+    Evidence lane tool — does NOT invoke geox_subsurface_model (judgment lane).
+    Uses HarmonICA (or mock fallback) to compute predicted gravity and compare
+    to observed. Returns HYPOTHESIS_SCREEN grade + misfit diagnostics.
+
+    A2 fix (2026-06-28): bypasses geox_subsurface_model judgment firewall by
+    providing a gravity-only screen in the evidence lane.
+    """
+    from geox_core.engines.geophysics.harmonica_adapter import gravity_screen
+
+    return gravity_screen(
+        observed_mGal=observed_mGal,
+        easting_m=easting_m,
+        northing_m=northing_m,
+        density_kg_m3=density_kg_m3,
+        depth_top_m=depth_top_m,
+        depth_bottom_m=depth_bottom_m,
+        reference_density_kg_m3=reference_density_kg_m3,
+        claim_id=claim_id,
+        hypothesis_prior=hypothesis_prior,
+    )
+
+
+# ── A2 JUDGMENT PREFLIGHT — guidance tool (evidence lane) ───────────────────
+@mcp.tool(name="geox_judgment_preflight")
+async def _judgment_preflight(
+    target_tool: str,
+    actor_id: str | None = None,
+    session_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict:
+    """Guide callers to the correct governance path for judgment-lane tools.
+
+    This is a C1 advisory tool in the evidence lane — it does NOT invoke
+    the target tool. It returns the correct call sequence so the caller
+    can proceed through proper governance.
+
+    A2 fix (2026-06-28): geox_subsurface_model is judgment lane (direct call
+    forbidden). This tool tells the caller exactly how to route through
+    arifOS to reach it legally.
+    """
+    # Valid judgment-lane tools that can be preflted
+    VALID_JUDGMENT_TOOLS = {
+        "geox_subsurface_model": {
+            "lane": "judgment",
+            "lease_required": True,
+            "session_required": True,
+            "arifos_route_required": True,
+            "governance_sequence": [
+                "1. arif_session_init(mode='init') — establish governed session",
+                "2. arif_lease_issue(tool='geox_subsurface_model') — get lease_id",
+                "3. arif_kernel_route(mode='bridge', organ='geox', tool_name='geox_subsurface_model', lease_id=<lease>, session_id=<session>)",
+            ],
+            "alternative_evidence_tool": "geox_gravity_screen",
+            "alternative_note": (
+                "For gravity-only screening without full joint inversion, "
+                "use geox_gravity_screen (evidence lane, no lease required). "
+                "gravity_screen returns HYPOTHESIS_SCREEN grade."
+            ),
+        },
+        "geox_prospect": {
+            "lane": "judgment",
+            "lease_required": True,
+            "session_required": True,
+            "arifos_route_required": True,
+            "governance_sequence": [
+                "1. arif_session_init(mode='init') — establish governed session",
+                "2. arif_lease_issue(tool='geox_prospect') — get lease_id",
+                "3. arif_kernel_route(mode='bridge', organ='geox', tool_name='geox_prospect', lease_id=<lease>, session_id=<session>)",
+            ],
+            "alternative_evidence_tool": "geox_evidence",
+            "alternative_note": "For prospect screening use geox_evidence (evidence lane) first.",
+        },
+    }
+
+    if target_tool not in VALID_JUDGMENT_TOOLS:
+        return {
+            "ok": False,
+            "error": f"Unknown judgment-lane tool: {target_tool}",
+            "valid_tools": list(VALID_JUDGMENT_TOOLS.keys()),
+            "note": "Judgment-lane tools must route through arifOS kernel. "
+            "For evidence-lane alternatives, check geox_basin or geox_evidence.",
+        }
+
+    info = VALID_JUDGMENT_TOOLS[target_tool]
+    return {
+        "ok": True,
+        "target_tool": target_tool,
+        "lane": info["lane"],
+        "lease_required": info["lease_required"],
+        "session_required": info["session_required"],
+        "arifos_route_required": info["arifos_route_required"],
+        "governance_sequence": info["governance_sequence"],
+        "alternative_evidence_tool": info.get("alternative_evidence_tool"),
+        "alternative_note": info.get("alternative_note"),
+        "epistemic_label": "OBS",
+        "caveat": (
+            "preflight is guidance only — it does not execute the target tool. "
+            "Caller must follow the governance_sequence to invoke the judgment-lane tool."
+        ),
+    }
 
 
 # ── geox_well_decision_class — removed (Phase 1 Clean Slate, → WELL organ) ──
+
 
 # ── W14+ FORGE 2026-06-21: GEOX-LEM inference (substrate live, weights pending GPU + 888) ──
 @mcp.tool(name="geox_lem_predict")
@@ -582,8 +752,10 @@ async def _lem_predict(
     F2 TRUTH: confidence is hard-capped at 0.90. F13 SOVEREIGN: AC_Risk > 0.5 -> human_review_required.
     """
     from geox_mcp.tools.lem_predict import (
-        LEMPredictRequest, geox_lem_predict as _impl,
+        LEMPredictRequest,
+        geox_lem_predict as _impl,
     )
+
     req = LEMPredictRequest(
         well_id=well_id,
         curves=curves,
@@ -622,6 +794,7 @@ async def _deep_time_state(
     F11 AUDIT: every envelope carries governance footer.
     """
     from geox_mcp.tools.deep_time_state import geox_deep_time_state as _impl
+
     return await _impl(
         age_ma=age_ma,
         age_top_ma=age_top_ma,
@@ -634,6 +807,7 @@ async def _deep_time_state(
 
 # ── W13+ FORGE — Phase C: GEOX → WEALTH STOIIP + ranking feed ──
 # ── geox_wealth_feed — removed (Phase 1 Clean Slate, → arif_bridge_connect) ──
+
 
 @mcp.tool(name="geox_query_macrostrat")
 async def geox_query_macrostrat(
@@ -661,6 +835,7 @@ async def geox_query_macrostrat(
     if artifact:
         return artifact.get("interpreted", artifact)
     return result
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MCP APPS — PrefabUI tools (P2#7)
@@ -712,7 +887,10 @@ def _register_prefab_apps() -> None:
         try:
             git = subprocess.run(
                 ["git", "log", "--oneline", "-1"],
-                capture_output=True, text=True, cwd="/root/geox", timeout=5,
+                capture_output=True,
+                text=True,
+                cwd="/root/geox",
+                timeout=5,
             )
             git_version = git.stdout.strip() or "unknown"
         except Exception:
@@ -795,12 +973,16 @@ def _prune_mcp_surface(mcp_server) -> None:
     SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
     _profile = os.getenv("GEOX_PROFILE", "full").lower()
     if _profile == "minimal":
-        SACRED_SURFACE = {
-            "geox_well_ingest",
-            "geox_well_qc",
-            "geox_petrophysics",
-            "geox_basin",
-        } | set(CANONICAL_PUBLIC_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
+        SACRED_SURFACE = (
+            {
+                "geox_well_ingest",
+                "geox_well_qc",
+                "geox_petrophysics",
+                "geox_basin",
+            }
+            | set(CANONICAL_PUBLIC_TOOLS)
+            | set(CANONICAL_COMPAT_TOOLS)
+        )
 
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
@@ -947,6 +1129,7 @@ def _safe_forward(
 ) -> dict[str, Any]:
     """Call `impl(**filtered_args)` — only with params the impl signature accepts."""
     import inspect as _inspect
+
     sig = _inspect.signature(impl)
     accepted = set(sig.parameters.keys())
     args: dict[str, Any] = {k: v for k, v in explicit_args.items() if k in accepted and v is not None}
@@ -1506,7 +1689,7 @@ def create_app():
     app = Starlette(
         routes=[
             Route("/", root_handler, methods=["GET"]),
-        Route("/health", health_handler, methods=["GET"]),
+            Route("/health", health_handler, methods=["GET"]),
             Route("/api/build-info", build_info_handler, methods=["GET"]),
             Route("/ready", ready_handler, methods=["GET"]),
             Route("/status", status_handler, methods=["GET"]),
@@ -1550,29 +1733,44 @@ def create_app():
 
 
 @mcp.tool(name="geox_well_ingest")
-async def _well_ingest(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _well_ingest(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Load well log data (LAS, SEG-Y, DST, deviation, tops)."""
     from geox_mcp.tools.well_ingest import geox_well_ingest as _impl
-    args = _safe_forward(_impl, arguments or {},
-                         session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_well_qc")
-async def _well_qc(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _well_qc(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """QC: depth, curves, completeness, FJIS."""
     from geox_mcp.tools.well_qc import geox_well_qc as _impl
-    args = _safe_forward(_impl, arguments or {},
-                         session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_petrophysics")
-async def _petrophysics(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _petrophysics(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Vsh, porosity, Sw, perm, net pay, LEM."""
     from geox_mcp.tools.petrophysics_unified import geox_petrophysics as _impl
-    args = _safe_forward(_impl, arguments or {},
-                         session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
     return await _impl(**args)
 
 
@@ -1610,59 +1808,97 @@ async def _sequence(
 ) -> dict[str, Any]:
     """Sequence stratigraphy, correlation. Pattern A wrapper — see sequence_unified.geox_sequence."""
     from geox_mcp.tools.sequence_unified import geox_sequence as _impl
+
     args = _safe_forward(
         _impl,
         {
-            "workflow": workflow, "source": source, "zone_top": zone_top, "zone_base": zone_base,
-            "depo_env_code": depo_env_code, "bin_size_m": bin_size_m,
-            "min_package_thickness_m": min_package_thickness_m, "p50_shift_api": p50_shift_api,
-            "gr_cutoff_api": gr_cutoff_api, "detail_level": detail_level,
-            "project_yaml": project_yaml, "output_dir": output_dir,
-            "section_ref": section_ref, "well_refs": well_refs, "mode": mode,
-            "well_las_paths": well_las_paths, "tops": tops, "zone_definitions": zone_definitions,
-            "strat_standard": strat_standard, "paleoenvironment_input": paleoenvironment_input,
-            "checkshot_ref": checkshot_ref, "wavelet_mode": wavelet_mode,
-            "wavelet_freq_hz": wavelet_freq_hz, "phase_degrees": phase_degrees,
-            "polarity": polarity, "synthetics_output": synthetics_output,
+            "workflow": workflow,
+            "source": source,
+            "zone_top": zone_top,
+            "zone_base": zone_base,
+            "depo_env_code": depo_env_code,
+            "bin_size_m": bin_size_m,
+            "min_package_thickness_m": min_package_thickness_m,
+            "p50_shift_api": p50_shift_api,
+            "gr_cutoff_api": gr_cutoff_api,
+            "detail_level": detail_level,
+            "project_yaml": project_yaml,
+            "output_dir": output_dir,
+            "section_ref": section_ref,
+            "well_refs": well_refs,
+            "mode": mode,
+            "well_las_paths": well_las_paths,
+            "tops": tops,
+            "zone_definitions": zone_definitions,
+            "strat_standard": strat_standard,
+            "paleoenvironment_input": paleoenvironment_input,
+            "checkshot_ref": checkshot_ref,
+            "wavelet_mode": wavelet_mode,
+            "wavelet_freq_hz": wavelet_freq_hz,
+            "phase_degrees": phase_degrees,
+            "polarity": polarity,
+            "synthetics_output": synthetics_output,
         },
-        session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        session_id=session_id,
+        actor_id=actor_id,
+        trace_id=trace_id,
     )
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_seismic_ingest")
-async def _seismic_ingest(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _seismic_ingest(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """SEG-Y I/O, header inspection."""
     from geox_mcp.tools.seismic_ingest import geox_seismic_ingest as _impl
-    args = _safe_forward(_impl, arguments or {},
-                         session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_seismic_interpret")
-async def _seismic_interpret(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _seismic_interpret(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Horizon contrast, faults, frames, blend."""
     from geox_mcp.tools.seismic_interpret import geox_seismic_interpret as _impl
-    args = _safe_forward(_impl, arguments or {},
-                         session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_vision")
-async def _vision(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _vision(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """VLM inference, audit, calibration, perceptual."""
     from geox_mcp.tools.vision_unified import geox_vision as _impl
-    args = _safe_forward(_impl, arguments or {},
-                         session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_subsurface_model")
-async def _subsurface_model(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _subsurface_model(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Joint inversion, gravity/mag, MT forward."""
     from geox_mcp.tools.subsurface_model import geox_subsurface_model as _impl
-    args = _safe_forward(_impl, arguments or {},
-                         session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
     return await _impl(**args)
 
 
@@ -1701,31 +1937,54 @@ async def _basin(
     Session metadata is forwarded only if the impl signature accepts it.
     """
     from geox_mcp.tools.basin_unified import geox_basin as _impl
+
     args = _safe_forward(
         _impl,
         {
-            "mode": mode, "name": name, "basin_name": basin_name,
-            "macrostrat_mode": macrostrat_mode, "lat": lat, "lng": lng,
-            "age_ma": age_ma, "age_top_ma": age_top_ma, "age_bot_ma": age_bot_ma,
-            "period": period, "query": query,
-            "include_pending_datasets": include_pending_datasets, "force": force,
-            "intent": intent, "bbox": bbox, "scene_mode": scene_mode, "crs": crs,
-            "vp_slice_inline": vp_slice_inline, "profile_mode": profile_mode,
-            "claim_strictness": claim_strictness, "evidence_refs": evidence_refs,
+            "mode": mode,
+            "name": name,
+            "basin_name": basin_name,
+            "macrostrat_mode": macrostrat_mode,
+            "lat": lat,
+            "lng": lng,
+            "age_ma": age_ma,
+            "age_top_ma": age_top_ma,
+            "age_bot_ma": age_bot_ma,
+            "period": period,
+            "query": query,
+            "include_pending_datasets": include_pending_datasets,
+            "force": force,
+            "intent": intent,
+            "bbox": bbox,
+            "scene_mode": scene_mode,
+            "crs": crs,
+            "vp_slice_inline": vp_slice_inline,
+            "profile_mode": profile_mode,
+            "claim_strictness": claim_strictness,
+            "evidence_refs": evidence_refs,
             "include_missing_evidence": include_missing_evidence,
         },
-        session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        session_id=session_id,
+        actor_id=actor_id,
+        trace_id=trace_id,
     )
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_claim")
-async def _claim(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None, ack_irreversible: bool = False) -> dict[str, Any]:
+async def _claim(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+    ack_irreversible: bool = False,
+) -> dict[str, Any]:
     """Create, validate, challenge, seal, attach."""
     from geox_mcp.tools.claim_unified import geox_claim as _impl
-    args = _safe_forward(_impl, arguments or {},
-                         session_id=session_id, actor_id=actor_id, trace_id=trace_id,
-                         ack_irreversible=ack_irreversible)
+
+    args = _safe_forward(
+        _impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id, ack_irreversible=ack_irreversible
+    )
     return await _impl(**args)
 
 
@@ -1754,17 +2013,31 @@ async def _evidence(
 ) -> dict[str, Any]:
     """Discover, synthesize, abduct, contradict, literature. Pattern A wrapper."""
     from geox_mcp.tools.evidence_unified import geox_evidence as _impl
+
     args = _safe_forward(
         _impl,
         {
-            "mode": mode, "query": query, "scope": scope, "permission_level": permission_level,
-            "file_path": file_path, "basin_name": basin_name, "evidence_refs": evidence_refs,
-            "hypotheses": hypotheses, "scale": scale, "depo_context": depo_context,
-            "claim_strictness": claim_strictness, "reasoning_mode": reasoning_mode,
-            "samples": samples, "block_size_km": block_size_km, "n_folds": n_folds,
-            "target_key": target_key, "feature_keys": feature_keys,
+            "mode": mode,
+            "query": query,
+            "scope": scope,
+            "permission_level": permission_level,
+            "file_path": file_path,
+            "basin_name": basin_name,
+            "evidence_refs": evidence_refs,
+            "hypotheses": hypotheses,
+            "scale": scale,
+            "depo_context": depo_context,
+            "claim_strictness": claim_strictness,
+            "reasoning_mode": reasoning_mode,
+            "samples": samples,
+            "block_size_km": block_size_km,
+            "n_folds": n_folds,
+            "target_key": target_key,
+            "feature_keys": feature_keys,
         },
-        session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        session_id=session_id,
+        actor_id=actor_id,
+        trace_id=trace_id,
     )
     return await _impl(**args)
 
@@ -1785,15 +2058,21 @@ async def _prospect(
 ) -> dict[str, Any]:
     """Volumetrics, POS, EVOI, risk assessment. Pattern A wrapper."""
     from geox_mcp.tools.prospect_unified import geox_prospect as _impl
+
     args = _safe_forward(
         _impl,
         {
-            "prospect_ref": prospect_ref, "mode": mode,
-            "evidence_refs": evidence_refs, "verdict": verdict,
-            "judge_pin": judge_pin, "structural_map_inline": structural_map_inline,
+            "prospect_ref": prospect_ref,
+            "mode": mode,
+            "evidence_refs": evidence_refs,
+            "verdict": verdict,
+            "judge_pin": judge_pin,
+            "structural_map_inline": structural_map_inline,
             "power_params": power_params,
         },
-        session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        session_id=session_id,
+        actor_id=actor_id,
+        trace_id=trace_id,
         ack_irreversible=ack_irreversible,
     )
     return await _impl(**args)
@@ -1840,19 +2119,36 @@ async def _doctrine(
     Pattern A wrapper — every doctrine_unified.geox_doctrine param declared.
     """
     from geox_mcp.tools.doctrine_unified import geox_doctrine as _impl
+
     args: dict[str, Any] = {
-        "mode": mode, "introduced_by": introduced_by, "rung_origin": rung_origin,
-        "description": description, "parent_assumption_id": parent_assumption_id,
-        "inherited_from": inherited_from, "epistemic_label": epistemic_label,
-        "claim_id": claim_id, "action": action, "void_reason": void_reason,
-        "rung": rung, "depends_on_assumption_ids": depends_on_assumption_ids,
-        "concept": concept, "query": query, "state": state, "age_ma": age_ma,
-        "tile_id": tile_id, "task": task, "bands": bands,
-        "time_range_start": time_range_start, "time_range_end": time_range_end,
-        "cloud_cover_max": cloud_cover_max, "source_uri": source_uri, "text": text,
+        "mode": mode,
+        "introduced_by": introduced_by,
+        "rung_origin": rung_origin,
+        "description": description,
+        "parent_assumption_id": parent_assumption_id,
+        "inherited_from": inherited_from,
+        "epistemic_label": epistemic_label,
+        "claim_id": claim_id,
+        "action": action,
+        "void_reason": void_reason,
+        "rung": rung,
+        "depends_on_assumption_ids": depends_on_assumption_ids,
+        "concept": concept,
+        "query": query,
+        "state": state,
+        "age_ma": age_ma,
+        "tile_id": tile_id,
+        "task": task,
+        "bands": bands,
+        "time_range_start": time_range_start,
+        "time_range_end": time_range_end,
+        "cloud_cover_max": cloud_cover_max,
+        "source_uri": source_uri,
+        "text": text,
         "grounding_evidence_count": grounding_evidence_count,
         "grounding_evidence_rungs": grounding_evidence_rungs,
-        "threshold": threshold, "include_decomposition": include_decomposition,
+        "threshold": threshold,
+        "include_decomposition": include_decomposition,
     }
     args = _safe_forward(_impl, args, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
     return await _impl(**args)
@@ -1860,114 +2156,231 @@ async def _doctrine(
 
 # ── SURFACE EARTH DOMAIN — Physical Visible Earth (2026-06-25 FORGE) ────────
 
+
 @mcp.tool(name="geox_earthquake_catalog")
-async def _earthquake_catalog(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _earthquake_catalog(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query USGS Earthquake Catalog for seismic events. OBSERVED data — real seismic events from USGS FDSN API. Public Domain."""
     from geox_mcp.tools.earth_surface import geox_earthquake_catalog as _impl
+
     args = dict(arguments or {})
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_relief_ingest")
-async def _relief_ingest(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _relief_ingest(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Ingest ETOPO 2022 global relief (topography + bathymetry). OBSERVED data — measured elevation from NOAA NCEI. Public Domain."""
     from geox_mcp.tools.earth_surface import geox_relief_ingest as _impl
+
     args = dict(arguments or {})
     return await _impl(**args)
 
 
 @mcp.tool(name="geox_bathymetry_ingest")
-async def _bathymetry_ingest(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _bathymetry_ingest(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Ingest GEBCO_2026 global bathymetry grid (ocean floor terrain). OBSERVED data — measured ocean depth from IHO/UNESCO. Public Domain."""
     from geox_mcp.tools.earth_surface import geox_bathymetry_ingest as _impl
+
     args = dict(arguments or {})
     return await _impl(**args)
 
 
 # ── EXTENDED EARTH DIMENSIONS — D4-D17 Open Data (2026-06-25 FORGE) ───────
 
+
 @mcp.tool(name="geox_heatflow_query")
-async def _heatflow(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _heatflow(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query IHFC Global Heat Flow Database. OBSERVED — ~91k measurements. GFZ/IHFC CC-BY-4.0."""
     from geox_mcp.tools.earth_surface_2 import geox_heatflow_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_stress_query")
-async def _stress(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _stress(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query World Stress Map 2025 (WSM). OBSERVED — ~100k stress orientations. GFZ CC-BY-4.0."""
     from geox_mcp.tools.earth_surface_2 import geox_stress_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_geochem_query")
-async def _geochem(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _geochem(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query EarthChem/PetDB for igneous geochemistry. OBSERVED — global rock analyses. CC-BY."""
     from geox_mcp.tools.earth_surface_2 import geox_geochem_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_plate_reconstruct")
-async def _plate(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _plate(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Reconstruct a point through deep time via GPlates. INTERPRETED — plate model dependent. GPL-2.0."""
     from geox_mcp.tools.earth_surface_2 import geox_plate_reconstruct as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_paleomag_query")
-async def _paleomag(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _paleomag(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query MagIC for paleomagnetic data. OBSERVED — rock magnetic measurements. CC-BY-4.0."""
     from geox_mcp.tools.earth_surface_2 import geox_paleomag_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_gravity_change_query")
-async def _grace(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _grace(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query GRACE-FO for time-variable gravity (mass change). OBSERVED — NASA satellite gravimetry. Public Domain."""
     from geox_mcp.tools.earth_surface_2 import geox_gravity_change_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_ocean_query")
-async def _ocean(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _ocean(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query Copernicus Marine (CMEMS) for ocean physics/BGC. OBSERVED — satellite + model. EU Open Data."""
     from geox_mcp.tools.earth_surface_2 import geox_ocean_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_erddap_query")
-async def _erddap(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _erddap(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query NOAA ERDDAP for ocean/atmosphere data. OBSERVED — 10k+ datasets. Public Domain."""
     from geox_mcp.tools.earth_surface_2 import geox_erddap_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_climate_reanalysis")
-async def _climate(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _climate(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query ERA5 global reanalysis. OBSERVED — ECMWF hourly data from 1940. Copernicus License."""
     from geox_mcp.tools.earth_surface_2 import geox_climate_reanalysis as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_hydrology_query")
-async def _hydrology(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _hydrology(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query USGS Water Services for streamflow/groundwater. OBSERVED — US real-time. Public Domain."""
     from geox_mcp.tools.earth_surface_2 import geox_hydrology_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_satellite_catalog")
-async def _satellite(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _satellite(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Search STAC for Landsat/MODIS/Sentinel imagery. OBSERVED — satellite surface reflectance. Public Domain."""
     from geox_mcp.tools.earth_surface_2 import geox_satellite_catalog as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_uk_petroleum_query")
-async def _nsta(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _nsta(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query NSTA UK petroleum data (wells, fields, licences). OBSERVED — UKCS regulatory. OGL v3.0."""
     from geox_mcp.tools.earth_surface_2 import geox_uk_petroleum_query as _impl
+
     return await _impl(**dict(arguments or {}))
+
 
 @mcp.tool(name="geox_geology_map_query")
-async def _onegeology(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _onegeology(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query OneGeology WMS for national geological maps. OBSERVED — aggregated survey data."""
     from geox_mcp.tools.earth_surface_2 import geox_geology_map_query as _impl
+
     return await _impl(**dict(arguments or {}))
 
+
 @mcp.tool(name="geox_space_weather")
-async def _spaceweather(arguments: dict[str, Any] | None = None, session_id: str | None = None, actor_id: str | None = None, trace_id: str | None = None) -> dict[str, Any]:
+async def _spaceweather(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
     """Query NOAA SWPC for space weather (Kp, Dst, solar wind). OBSERVED — real-time. Public Domain."""
     from geox_mcp.tools.earth_surface_2 import geox_space_weather as _impl
+
     return await _impl(**dict(arguments or {}))
 
 

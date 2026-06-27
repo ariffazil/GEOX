@@ -9,8 +9,10 @@ Modes: profile, resolve, macrostrat, deep_time, emag2, icgem, intake, scene
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 from typing import Any, Literal
+
 
 async def geox_basin(
     mode: Literal["profile", "resolve", "macrostrat", "deep_time", "emag2", "icgem", "intake", "scene"] = "profile",
@@ -51,10 +53,12 @@ async def geox_basin(
     kwargs = locals().copy()
     if mode == "resolve":
         from geox_mcp.tools.basin import geox_basin_resolve as _impl
+
         return await _impl(name=kwargs.get("name", kwargs.get("basin_name", "")))
 
     if mode == "macrostrat":
-        from geox_mcp.tools.basin import geox_query_macrostrat as _impl
+        from geox_mcp.tools.compat import geox_query_macrostrat as _impl
+
         return await _impl(
             basin_name=kwargs.get("basin_name", ""),
             mode=kwargs.get("macrostrat_mode", "macrostrat_units"),
@@ -64,6 +68,7 @@ async def geox_basin(
 
     if mode == "deep_time":
         from geox_mcp.tools.deep_time_state import geox_deep_time_state as _impl
+
         return await _impl(
             age_ma=kwargs.get("age_ma"),
             age_top_ma=kwargs.get("age_top_ma"),
@@ -75,14 +80,17 @@ async def geox_basin(
 
     if mode == "emag2":
         from geox_mcp.tools.geophysics_nonseismic import geox_emag2_ingest as _impl
+
         return await _impl(force=kwargs.get("force", False))
 
     if mode == "icgem":
         from geox_mcp.tools.geophysics_nonseismic import geox_icgem_models as _impl
+
         return await _impl()
 
     if mode == "intake":
         from geox_mcp.tools.basin import geox_query_intake as _impl
+
         return await _impl(
             query=kwargs.get("query", ""),
             intent=kwargs.get("intent", "general"),
@@ -90,6 +98,7 @@ async def geox_basin(
 
     if mode == "scene":
         from geox_mcp.tools.map_context import geox_map_context_scene as _impl
+
         return await _impl(
             bbox=kwargs.get("bbox", [0, 0, 1, 1]),
             mode=kwargs.get("scene_mode", "bbox_context"),
@@ -99,6 +108,7 @@ async def geox_basin(
 
     # Default: profile
     from geox_mcp.tools.basin import geox_basin_profile as _impl
+
     return await _impl(
         basin_name=kwargs.get("basin_name", ""),
         mode=kwargs.get("profile_mode", "overview"),
