@@ -29,8 +29,8 @@ scope: /root/geox
 
 # GEOX — Governed Earth Intelligence
 
-> **Public surface: 16 sovereign MCP entrypoints**
-> **Internal capability map: 56 geological/physics/doctrine contracts**
+> **Public surface: 17 sovereign MCP entrypoints** (16 canonical + geox_surface_status)
+> **Backward-compat: 31 ghost tools registered in FastMCP but NOT in canonical surface**
 > **Governance: arifOS F1–F13 · 888 JUDGE · VAULT999**
 > **Authority: evidence-only · no drilling decision · no capital allocation**
 
@@ -42,7 +42,7 @@ scope: /root/geox
 
 **How do I run it?** `uv sync --frozen` then `python3 -m geox_mcp.server --transport stdio` (local) or `systemctl start geox-mcp` (production on port 8081).
 
-**How do I verify it is alive?** `curl http://127.0.0.1:8081/health` → `{"status":"healthy","canonical_tools":16,...}`
+**How do I verify it is alive?** `curl http://127.0.0.1:8081/health` → `{"status":"healthy","canonical_tools":17,...}` or call `geox_surface_status(mode="health")` for full registry probe
 
 GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It **witnesses** the Earth and hands evidence to arifOS for adjudication. It never authorizes. It never allocates capital.
 
