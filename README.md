@@ -27,17 +27,37 @@ scope: /root/geox
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
-# GEOX — Earth Intelligence | Governed World Model
+# GEOX — Governed Earth Intelligence
 
-> **16 canonical MCP tools · 13 constitutional floors · 1 sovereign · 0 drilling decisions**  
-> **Multi-physics Earth Witness** — seismic + gravity + magnetic + CSEM/MT + biostrat → one Physics9State per cell  
-> **Doctrine-wrapped** — Gap X Assumption Lineage, Gap 3 Anti-Beautiful-One, Gap 5 Gödel Wall live
-> **W16+ FORGE 2026-06-22** — Huang 2021 Vp grammar + intelligence flow + Kinabalu corpus substrate
+> **Public surface: 16 sovereign MCP entrypoints**
+> **Internal capability map: 56 geological/physics/doctrine contracts**
+> **Governance: arifOS F1–F13 · 888 JUDGE · VAULT999**
+> **Authority: evidence-only · no drilling decision · no capital allocation**
 
-GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It provides physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin screening, prospect evaluation, stratigraphic interpretation, **multi-physics joint inversion (Physics9), CSEM/MT, geomechanics, foundation model backing engines, doctrine layer (Gap X/3/5), federation integration (WELL/WEALTH), and the W16+ physics-first substrate (Huang 2021 Vp grammar + dynamic intelligence flow + Kinabalu multi-physics corpus)** — to the federation's judgment kernel. It never authorizes. It never allocates capital. It **witnesses** the Earth and hands the evidence to arifOS for adjudication.
+**What is it?** Physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin, prospect, stratigraphy, multi-physics joint inversion (Physics9), CSEM/MT, geomechanics, doctrine layer (Gap X/3/5), federation integration (WELL/WEALTH).
+
+**What can I do with it?** Ingest well logs, run seismic physics, compute petrophysics, screen basins, evaluate prospects, create structured evidence claims, challenge interpretations, prepare cases for constitutional adjudication.
+
+**What must I never trust it to do?** Authorize drilling, allocate capital, self-seal claims, override arifOS, replace human geological judgment.
+
+**How do I run it?** `uv sync --frozen` then `python3 -m geox_mcp.server --transport stdio` (local) or `systemctl start geox-mcp` (production on port 8081).
+
+**How do I verify it is alive?** `curl http://127.0.0.1:8081/health` → `{"status":"healthy","canonical_tools":16,...}`
+
+GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It **witnesses** the Earth and hands evidence to arifOS for adjudication. It never authorizes. It never allocates capital.
+
+| Field | Current |
+|---|---|
+| Runtime | Python FastMCP |
+| Public MCP surface | 16 sovereign entrypoints |
+| Internal capability contracts | 56 |
+| License | Apache-2.0 |
+| Governance | arifOS F1–F13 |
+| Authority | Evidence-only |
+| Status | Live |
 
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![MCP Tools](https://img.shields.io/badge/MCP-16%20canonical%20tools-10b981)](src/geox_mcp/server.py)
+[![MCP Tools](https://img.shields.io/badge/MCP-16%20sovereign%20entrypoints-10b981)](src/geox_mcp/server.py)
 [![Organ](https://img.shields.io/badge/organ-EARTH-f59e0b)](FEDERATION_CONTRACT.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-ef4444?logo=gnu)](LICENSE)
 [![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
@@ -183,26 +203,22 @@ make forge        # security-audit (Trivy + Semgrep + Gitleaks + Ruff)
 
 ---
 
-## 3. FULL CAPABILITY MAP — 56 CANONICAL TOOLS
+## 3. CAPABILITY MAP — 16 PUBLIC ENTRYPOINTS / 56 INTERNAL CONTRACTS
 
-All tools are available via MCP at `https://geox.arif-fazil.com/mcp` (HTTP/SSE) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, `dim_spot_flag`, `epistemic_provenance` (rung 1-7 + grounding source), `ml_provenance` (FM backings), and `godel_wall` verdict on every output envelope. Every tool call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
+All 16 public entrypoints are callable via MCP at `https://geox.arif-fazil.com/mcp` (HTTP) or `stdio`. Behind them, 56 internal capability contracts are implemented. The public surface is intentionally smaller — agents call governed entrypoints; GEOX routes internally to the appropriate capability contract. Each entrypoint carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, `dim_spot_flag`, `epistemic_provenance`, `ml_provenance` (FM backings), and `godel_wall` verdict on every output envelope. Every tool call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
 
-**Four-lane organ governance** (mirrored in `src/geox_mcp/registry.py`):
+**16 public sovereign MCP entrypoints** — Phase 2 Clean Architecture (locked 2026-06-25 for ChatGPT app parity):
 
-| Lane | Max Authority | Lease | Session | Tools |
-|------|--------------|-------|---------|-------|
-| **DISCOVERY** (6) | OBSERVE | No | No | system_registry_status, attribute_registry, basin_resolve, query_intake, query_macrostrat, **icgem_models** |
-| **EVIDENCE** (14) | ANALYZE | No | No | data_ingest, data_qc, dst_ingest, header_inspect, las_inspect, segy_inspect, evidence_discover, evidence_attach, literature_ingest, fault_stick, volume_frame, vision_perceptual, vision_calibrate, **emag2_ingest** |
-| **REASONING** (23) | ANALYZE | Yes | Yes | subsurface_generate, subsurface_verify, seismic_compute, seismic_attribute, sequence_interpret, evidence_reason, prospect_evaluate, map_context, horizon_contrast, coord_transform, blockspace, blend_volume, basin_profile, vision_minimax, vision_audit, report_to_workflow, abstraction_guard, **prithvi_eo_inference**, **gravity_magnetic_forward**, **mt_forward**, **biostrat_constraint**, **seismic_inversion**, **lem_predict** |
-| **JUDGMENT** (13) | GOVERNED | Yes | Yes | claim_create, claim_validate, claim_challenge, claim_seal, segy_export, **doctrine_assumption_register**, **doctrine_anti_beautiful_one**, **doctrine_godel_review**, **joint_inversion**, **geomechanics**, **well_decision_class**, **wealth_feed**, **deep_time_state** |
+| Lane | Count | Entrypoints |
+|------|-------|-------------|
+| **Surface** (12) | OBSERVE/ANALYZE | `geox_well_ingest`, `geox_well_qc`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state` |
+| **Internal** (4) | FEDERATION PLUMBING | `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine` |
 
-**16 new tools added across 4 forge tranches (W2-W16+)**:
-- **W2-W13+ (2026-06-21)**: 14 new — 3 doctrine (Gap X/3/5), 1 foundation model (Prithvi-EO-2.0), 3 nonseismic+open data (HarmonIC + EMAG2v3 + ICGEM), 4 multi-physics (joint + MT + biostrat + PINN), 3 integration (geomechanics + WELL gate + WEALTH feed). **40 → 54**.
-- **W14+ (2026-06-21)**: 1 new — `geox_lem_predict` (Large Earth Model substrate, weights pending GPU + 888). **54 → 55**.
-- **W15+ (2026-06-22)**: 1 new — `geox_deep_time_state` (Governed Earth State Vector, temporal extension). **55 → 56**.
-- **W16+ (2026-06-22)**: Physics-first substrate (no new tools — see `docs/GEOX_INTELLIGENCE_FLOW.md`).
-
-**Total: 40 → 16 canonical tools.** Server invariant `_EXPECTED_CANONICAL = 56` in `src/geox_mcp/server.py`.
+**Internal capability history (56 contracts behind the surface):**
+- **W2–W13+**: 3 doctrine, 1 foundation model (Prithvi-EO-2.0), 3 nonseismic+open data (HarmonIC + EMAG2v3 + ICGEM), 4 multi-physics (joint + MT + biostrat + PINN), 3 integration (geomechanics + WELL gate + WEALTH feed).
+- **W14+**: LEM substrate (tokenizer, model, physics_head).
+- **W15+**: `geox_deep_time_state` — Governed Earth State Vector.
+- **W16+**: Physics-first substrate — `crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`, `crustal_domain_classify.py`, `joint_inversion_zone_hook.py`. No new public entrypoints added.
 
 ### 3.1 Data Ingestion & Quality Control
 
