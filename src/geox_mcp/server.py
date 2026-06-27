@@ -302,11 +302,36 @@ compose_geox_servers()
 
 from geox_mcp.tools.ui_applets import register_ui_applets
 
+
+class _McpSlashRewriteMiddleware:
+    """ASGI middleware bridging /mcp → /mcp/ for FastMCP streamable-http.
+
+    Starlette Mount("/mcp/", ...) only handles paths UNDER /mcp/ — the exact /mcp
+    path falls through all routes and returns Starlette's 404. FastMCP's internal
+    router also expects /mcp/.
+
+    This middleware intercepts /mcp requests BEFORE route matching, rewrites
+    scope.path to /mcp/, then passes to the ASGI app. The Mount("/mcp/", ...)
+    then matches and FastMCP's internal routing works correctly.
+    """
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http" and scope.get("path") == "/mcp":
+            # Shallow copy — scope is mutable but shared; only mutate our copy
+            scope = dict(scope)
+            scope["path"] = "/mcp/"
+        await self.app(scope, receive, send)
+
+
 register_ui_applets(mcp)
 
 
 # ── W2-W4 FORGE — Doctrine layer tool registrations ────────────────────────
-@mcp.tool(name="geox_doctrine_assumption_register")
+# INTERNAL-ONLY 2026-06-27: judgment lane — removed from MCP facade
+# Python-callable for federation organs; not on tools/list
 async def _doctrine_assumption_register(
     introduced_by: str,
     rung_origin: int,
@@ -332,7 +357,7 @@ async def _doctrine_assumption_register(
     return (await geox_doctrine_assumption_register(req)).model_dump(mode="json")
 
 
-@mcp.tool(name="geox_doctrine_anti_beautiful_one")
+# INTERNAL-ONLY 2026-06-27: judgment lane — removed from MCP facade
 async def _doctrine_anti_beautiful_one(
     text: str,
     grounding_evidence_count: int = 0,
@@ -356,7 +381,7 @@ async def _doctrine_anti_beautiful_one(
     return (await geox_doctrine_anti_beautiful_one(req)).model_dump(mode="json")
 
 
-@mcp.tool(name="geox_doctrine_godel_review")
+# INTERNAL-ONLY 2026-06-27: judgment lane — removed from MCP facade
 async def _doctrine_godel_review(
     claim_id: str = "",
     action: str = "review",
@@ -1710,15 +1735,16 @@ def create_app():
             # methods (initialize, tools/list, tools/call, resources/*, prompts/*)
             # natively. Governance (RT1/RT3/arifOS) enforced by GeoxGovernanceMiddleware.
             Mount("/mcp/", app=mcp_http_handler),
-            # /mcp (no trailing slash) → redirect to /mcp/. Starlette's Mount does
-            # not match the mount path exactly when it has a non-empty inner path,
-            # so we add a Route that 308-redirects clients to the canonical /mcp/.
-            Route("/mcp", endpoint=lambda req: RedirectResponse("/mcp/", status_code=308), methods=["GET", "POST"]),
         ],
         lifespan=mcp_http_handler.lifespan,
     )
     app.router.redirect_slashes = False
     mcp_http_handler.router.redirect_slashes = False
+
+    # P1-A FIX (2026-06-27): Rewrite /mcp → /mcp/ BEFORE route matching.
+    # Starlette Mount("/mcp/", ...) only serves paths prefixed /mcp/, not the exact /mcp.
+    # Middleware fires before routing, so scope.path="/mcp" becomes "/mcp/" transparently.
+    app.add_middleware(_McpSlashRewriteMiddleware)
     app.add_middleware(EarthAnchorMiddleware)
     app.add_middleware(OriginValidationMiddleware)
     return app
@@ -2187,7 +2213,9 @@ async def _prospect(
     return await _impl(**args)
 
 
-@mcp.tool(name="geox_doctrine")
+# INTERNAL-ONLY 2026-06-27: judgment lane — removed from MCP facade
+# NOTE: by lane policy, geox_doctrine is in the judgment lane and cannot be
+# called directly from non-arifOS clients. Use arifOS judge → GEOX path.
 async def _doctrine(
     mode: str = "anti_beautiful_one",
     introduced_by: str = "",

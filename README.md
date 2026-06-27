@@ -49,15 +49,15 @@ GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federatio
 | Field | Current |
 |---|---|
 | Runtime | Python FastMCP |
-| Public MCP surface | 16 sovereign entrypoints |
-| Internal capability contracts | 56 |
+| Public MCP surface | 17 sovereign entrypoints (13 surface + 4 internal) |
+| Internal capability contracts | 17 canonical (31 backward-compat ghosts not in canonical surface) |
 | License | Apache-2.0 |
 | Governance | arifOS F1–F13 |
 | Authority | Evidence-only |
 | Status | Live |
 
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![MCP Tools](https://img.shields.io/badge/MCP-16%20sovereign%20entrypoints-10b981)](src/geox_mcp/server.py)
+[![MCP Tools](https://img.shields.io/badge/MCP-17%20sovereign%20entrypoints-10b981)](src/geox_mcp/server.py)
 [![Organ](https://img.shields.io/badge/organ-EARTH-f59e0b)](FEDERATION_CONTRACT.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-ef4444?logo=gnu)](LICENSE)
 [![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
@@ -115,7 +115,7 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 - **An earth evidence coprocessor** — it ingests well logs, seismic volumes, DST data, and geological reports; it runs petrophysics, stratigraphy, and prospect evaluation; it outputs structured, physics-constrained evidence receipts.
 - **Constitutionally governed** — every output carries epistemic tags (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN), uncertainty bands (P10/P50/P90), and provenance chains.
-- **Agent-accessible** — all 16 tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
+- **Agent-accessible** — all 17 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
 - **Dual-transport** — systemd service (`geox-mcp.service`) for HTTP/SSE; `--transport stdio` for Claude Code, OpenCode, Continue CLI, and other local agents.
 
 ### What GEOX IS NOT
@@ -186,8 +186,8 @@ curl http://127.0.0.1:8081/health
 # Public (Cloudflare Tunnel)
 curl https://geox.arif-fazil.com/health
 
-# Expected response (current as of W16+ FORGE):
-# {"status":"healthy","service":"geox-unified","canonical_tools":16,"git_version":"geox-ead04d1c","contract_epoch":"2026-06-22-GEOX-56TOOLS-v3.0",...}
+# Expected response (current as of W17+ FORGE):
+# {"status":"healthy","service":"geox-unified","canonical_tools":17,"git_version":"geox-ead04d1c","contract_epoch":"2026-06-27-GEOX-17TOOLS-GAP1",...}
 ```
 
 ### 2.5 Build & Test
@@ -203,22 +203,16 @@ make forge        # security-audit (Trivy + Semgrep + Gitleaks + Ruff)
 
 ---
 
-## 3. CAPABILITY MAP — 16 PUBLIC ENTRYPOINTS / 56 INTERNAL CONTRACTS
+## 3. CAPABILITY MAP — 17 CANONICAL ENTRYPOINTS
 
-All 16 public entrypoints are callable via MCP at `https://geox.arif-fazil.com/mcp` (HTTP) or `stdio`. Behind them, 56 internal capability contracts are implemented. The public surface is intentionally smaller — agents call governed entrypoints; GEOX routes internally to the appropriate capability contract. Each entrypoint carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, `dim_spot_flag`, `epistemic_provenance`, `ml_provenance` (FM backings), and `godel_wall` verdict on every output envelope. Every tool call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
+All 17 canonical entrypoints are callable via MCP at `https://geox.arif-fazil.com/mcp` (HTTP) or `stdio`. Each entrypoint carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, `dim_spot_flag`, `epistemic_provenance`, `ml_provenance` (FM backings), and `godel_wall` verdict on every output envelope. Every tool call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
 
-**16 public sovereign MCP entrypoints** — Phase 2 Clean Architecture (locked 2026-06-25 for ChatGPT app parity):
+**17 canonical MCP entrypoints** — Phase 2 Clean Architecture + GAP-1 fix (locked 2026-06-27):
 
 | Lane | Count | Entrypoints |
 |------|-------|-------------|
-| **Surface** (12) | OBSERVE/ANALYZE | `geox_well_ingest`, `geox_well_qc`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state` |
+| **Surface** (13) | OBSERVE/ANALYZE | `geox_well_ingest`, `geox_well_qc`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`, `geox_surface_status` |
 | **Internal** (4) | FEDERATION PLUMBING | `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine` |
-
-**Internal capability history (56 contracts behind the surface):**
-- **W2–W13+**: 3 doctrine, 1 foundation model (Prithvi-EO-2.0), 3 nonseismic+open data (HarmonIC + EMAG2v3 + ICGEM), 4 multi-physics (joint + MT + biostrat + PINN), 3 integration (geomechanics + WELL gate + WEALTH feed).
-- **W14+**: LEM substrate (tokenizer, model, physics_head).
-- **W15+**: `geox_deep_time_state` — Governed Earth State Vector.
-- **W16+**: Physics-first substrate — `crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`, `crustal_domain_classify.py`, `joint_inversion_zone_hook.py`. No new public entrypoints added.
 
 ### 3.1 Data Ingestion & Quality Control
 
@@ -363,6 +357,9 @@ All 16 public entrypoints are callable via MCP at `https://geox.arif-fazil.com/m
 **After W16+ FORGE (16 canonical tools + physics-first substrate, 2026-06-22):**
 - No new tools — substrate only (`crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`, `crustal_domain_classify.py`, `joint_inversion_zone_hook.py`)
 - 124 new tests across 5 modules
+
+**After W17+ FORGE (17 canonical tools, 2026-06-27):**
+- DISCOVERY 13 (+geox_surface_status, federation-standard registry probe GAP-1 fix)
 
 ---
 
