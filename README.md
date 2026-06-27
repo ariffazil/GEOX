@@ -49,8 +49,8 @@ GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federatio
 | Field | Current |
 |---|---|
 | Runtime | Python FastMCP |
-| Public MCP surface | 17 sovereign entrypoints (13 surface + 4 internal) |
-| Internal capability contracts | 17 canonical (31 backward-compat ghosts not in canonical surface) |
+| Public MCP surface | 18 sovereign entrypoints (14 surface + 4 internal) |
+| Internal capability contracts | 18 canonical (31 backward-compat ghosts not in canonical surface) |
 | License | Apache-2.0 |
 | Governance | arifOS F1–F13 |
 | Authority | Evidence-only |
@@ -115,7 +115,7 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 - **An earth evidence coprocessor** — it ingests well logs, seismic volumes, DST data, and geological reports; it runs petrophysics, stratigraphy, and prospect evaluation; it outputs structured, physics-constrained evidence receipts.
 - **Constitutionally governed** — every output carries epistemic tags (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN), uncertainty bands (P10/P50/P90), and provenance chains.
-- **Agent-accessible** — all 17 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
+- **Agent-accessible** — all 18 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
 - **Dual-transport** — systemd service (`geox-mcp.service`) for HTTP/SSE; `--transport stdio` for Claude Code, OpenCode, Continue CLI, and other local agents.
 
 ### What GEOX IS NOT
@@ -205,9 +205,9 @@ make forge        # security-audit (Trivy + Semgrep + Gitleaks + Ruff)
 
 ## 3. CAPABILITY MAP — 17 CANONICAL ENTRYPOINTS
 
-All 17 canonical entrypoints are callable via MCP at `https://geox.arif-fazil.com/mcp` (HTTP) or `stdio`. Each entrypoint carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, `dim_spot_flag`, `epistemic_provenance`, `ml_provenance` (FM backings), and `godel_wall` verdict on every output envelope. Every tool call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
+All 18 canonical entrypoints are callable via MCP at `https://geox.arif-fazil.com/mcp` (HTTP) or `stdio`. Each entrypoint carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, `dim_spot_flag`, `epistemic_provenance`, `ml_provenance` (FM backings), and `godel_wall` verdict on every output envelope. Every tool call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
 
-**17 canonical MCP entrypoints** — Phase 2 Clean Architecture + GAP-1 fix (locked 2026-06-27):
+**18 canonical MCP entrypoints** — Phase 2.1 + GAP-1 fix (locked 2026-06-28):
 
 | Lane | Count | Entrypoints |
 |------|-------|-------------|
@@ -358,8 +358,9 @@ All 17 canonical entrypoints are callable via MCP at `https://geox.arif-fazil.co
 - No new tools — substrate only (`crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`, `crustal_domain_classify.py`, `joint_inversion_zone_hook.py`)
 - 124 new tests across 5 modules
 
-**After W17+ FORGE (17 canonical tools, 2026-06-27):**
-- DISCOVERY 13 (+geox_surface_status, federation-standard registry probe GAP-1 fix)
+**After Phase 2.1 FORGE (18 canonical tools, 2026-06-28):**
+- WELL 5 (+geox_well_desurvey, 3D wellbore geometry — wellpathpy mincurve + tan, pyproj CRS, ACRisk envelope)
+- DISCOVERY 14 (+geox_surface_status, federation-standard registry probe GAP-1 fix)
 
 ---
 
