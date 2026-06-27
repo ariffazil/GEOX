@@ -283,7 +283,9 @@ def compose_geox_servers() -> None:
     #
     # Live runtime reports canonical_tools=16. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 16  # Phase 2 Clean Architecture (2026-06-22): 12 surface + 4 internal. Locked for ChatGPT app parity.
+    _EXPECTED_CANONICAL = (
+        17  # Phase 2 Clean Architecture (2026-06-22): 13 surface + 4 internal. geox_surface_status added (GAP-1 fix, 2026-06-27).
+    )
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -1844,6 +1846,113 @@ async def _sequence(
         trace_id=trace_id,
     )
     return await _impl(**args)
+
+
+# ── SURFACE DISCOVERY — Federation Standard Registry Tool ────────────────────
+# GAP-1 FIX (2026-06-27): Every organ MUST expose <organ>_surface_status.
+# This is the non-judgment-lane discovery tool. Any MCP client can call it.
+# Returns canonical surface — 16 tools, not the 47 registered ghosts.
+# Mode registry: tool list + domains
+# Mode health: service status
+# DITEMPA BUKAN DIBERI.
+
+
+@mcp.tool(name="geox_surface_status")
+async def geox_surface_status(
+    mode: str = "registry",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Federation-standard registry probe for GEOX.
+
+    Use this to discover what GEOX actually exposes.
+    Not geox_system_registry_status (removed Phase 1).
+    Not geox_doctrine (judgment lane, arifOS-only).
+
+    Modes:
+      registry  — canonical tool list + domains + affordance summary
+      health    — service status, version, uptime
+
+    This is the GAP-1 fix: one standard name across all organs.
+    WEALTH has wealth_system_registry_status. GEOX now has geox_surface_status.
+    arifOS has arifOS tools for the same purpose.
+    """
+    import datetime, subprocess
+
+    try:
+        git_version = (
+            "geox-"
+            + subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True, stderr=subprocess.DEVNULL).strip()
+        )
+    except Exception:
+        git_version = "geox-unknown"
+
+    if mode == "health":
+        return {
+            "status": "healthy",
+            "organ": "GEOX",
+            "version": "v2026.06.22-phase2",
+            "git_version": git_version,
+            "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
+            "mcp_transport": "http",
+            "mcp_port": 8081,
+            "registered_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        }
+
+    # registry mode — canonical surface only
+    tool_domains = {
+        "geox_well_ingest": "earth.well",
+        "geox_well_qc": "earth.well",
+        "geox_petrophysics": "earth.petrophysics",
+        "geox_sequence": "earth.stratigraphy",
+        "geox_seismic_ingest": "earth.seismic",
+        "geox_seismic_compute": "earth.seismic",
+        "geox_seismic_interpret": "earth.seismic",
+        "geox_vision": "earth.perception",
+        "geox_subsurface_model": "earth.model",
+        "geox_geomechanics": "earth.mechanics",
+        "geox_basin": "earth.basin",
+        "geox_deep_time_state": "earth.deep_time",
+        "geox_claim": "governance.claims",
+        "geox_evidence": "governance.evidence",
+        "geox_prospect": "governance.prospect",
+        "geox_doctrine": "governance.doctrine",
+    }
+
+    canonical_list = []
+    for tool_name in CANONICAL_PUBLIC_TOOLS:
+        canonical_list.append(
+            {
+                "name": tool_name,
+                "domain": tool_domains.get(tool_name, "earth.general"),
+                "affordance": {
+                    "action_class": "ANALYZE"
+                    if tool_name.startswith("geox_")
+                    and "claim" not in tool_name
+                    and "doctrine" not in tool_name
+                    and "evidence" not in tool_name
+                    and "prospect" not in tool_name
+                    else "OBSERVE",
+                    "mutation": False,
+                    "irreversible": False,
+                    "requires_888_hold": tool_name in ("geox_claim", "geox_prospect"),
+                    "final_authority": "ARIF",
+                },
+            }
+        )
+
+    return {
+        "status": "healthy",
+        "organ": "GEOX",
+        "surface_version": "geox-2f2e65d4",
+        "canonical_tools": canonical_list,
+        "tool_count": len(CANONICAL_PUBLIC_TOOLS),
+        "note": "31 extra tools are registered in FastMCP but NOT in canonical surface. Use this list only.",
+        "registered_at": __import__("datetime", fromlist=["datetime"])
+        .datetime.now(__import__("datetime", fromlist=["datetime"]).timezone.utc)
+        .isoformat(),
+    }
 
 
 @mcp.tool(name="geox_seismic_ingest")
