@@ -59,9 +59,10 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.06.22-phase2"
-# Phase 2 Clean Architecture: 16 mode-consolidated tools, backward-compat wrappers for 56 old names
-GEOX_CONTRACT_EPOCH = "2026-06-22-GEOX-16TOOLS-PHASE2"
+GEOX_VERSION = "v2026.06.28-phase2.1"
+# Phase 2.1 Clean Architecture (2026-06-28): 18 mode-consolidated tools (added geox_well_desurvey).
+# Backward-compat wrappers for 56 old names.
+GEOX_CONTRACT_EPOCH = "2026-06-28-GEOX-18TOOLS-PHASE21"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -280,11 +281,13 @@ def compose_geox_servers() -> None:
     #             prospect_evaluate, etc.)
     #   2026-06-25: LOCKED at 16 (canonical surface). All Earth dimensions and W9-W13+
     #             tools are deferred to Phase 3 (requires 888_HOLD to re-enable).
+    #   2026-06-27: 16 -> 17 (GAP-1 fix: geox_surface_status added — federation-standard registry probe).
+    #   2026-06-28: 17 -> 18 (Phase 2.1: geox_well_desurvey added — 3D wellbore geometry).
     #
-    # Live runtime reports canonical_tools=16. Any expansion requires 888_HOLD per
+    # Live runtime reports canonical_tools=18. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
     _EXPECTED_CANONICAL = (
-        17  # Phase 2 Clean Architecture (2026-06-22): 13 surface + 4 internal. geox_surface_status added (GAP-1 fix, 2026-06-27).
+        18  # Phase 2.1 (2026-06-28): 14 surface + 4 internal. geox_well_desurvey added (GEOX-ADAPT-001-r1, F13 ratified).
     )
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
@@ -1788,6 +1791,26 @@ async def _well_qc(
     return await _impl(**args)
 
 
+@mcp.tool(name="geox_well_desurvey")
+async def _well_desurvey(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """3D wellbore geometry from deviation survey.
+
+    Phase 2.1 (2026-06-28): evidence-only. Computes TVD/X/Y/TVDSS trajectory
+    using industry-standard minimum curvature method (wellpathpy). Returns
+    geox.desurvey.v1 envelope with claim-tagged uncertainty.
+    See forge_work/GEOX-ADAPT-001-r1.md for spec + 12 golden tests.
+    """
+    from geox_mcp.tools.well_desurvey import geox_well_desurvey as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
 @mcp.tool(name="geox_petrophysics")
 async def _petrophysics(
     arguments: dict[str, Any] | None = None,
@@ -1930,6 +1953,7 @@ async def geox_surface_status(
     tool_domains = {
         "geox_well_ingest": "earth.well",
         "geox_well_qc": "earth.well",
+        "geox_well_desurvey": "earth.well",  # Phase 2.1 (2026-06-28)
         "geox_petrophysics": "earth.petrophysics",
         "geox_sequence": "earth.stratigraphy",
         "geox_seismic_ingest": "earth.seismic",
