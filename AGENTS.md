@@ -1,10 +1,22 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-25
+last_verified: 2026-06-26
 valid_from: 2026-06-14
 valid_until: 2026-07-25
 confidence: high
 scope: /root/geox
+changes_since_last_verified:
+  - A1: Physics9State.from_raw_dict() added (state.py) — removes session wall for partial dicts
+  - A1: compute_buoyancy() added (parameters.py) — buoyancy pressure from density contrast + thickness
+  - A1: geox_geomechanics updated — uses from_raw_dict + optional buoyancy via thickness_m param
+  - A2: gravity_screen() added (harmonica_adapter.py) — evidence-lane gravity screening
+  - A2: geox_gravity_screen MCP tool wired (server.py) — bypasses judgment firewall
+  - A2: geox_judgment_preflight added (server.py) — governance guidance for judgment-lane tools
+  - P2: BasinSynthesisPipeline Phase 2 deployed — FetcherManager, 8 real fetchers, Physics9 gap fill, STRANGE LOOP convergence
+  - P2: ProvenanceLedger extended — physics9_fill flag + derivation_chain per field
+  - P2: SynthesisState extended — iteration_count, convergence_threshold, max_iterations, converged, delta_S_history
+  - P2: GapRegistry extended — GAP_CONVERGENCE type added
+  - tests: 75 passed (orchestration), 0 failed — 52 Phase 1 + 23 Phase 2
 -->
 
 # AGENTS.md — geox | arifOS Federation

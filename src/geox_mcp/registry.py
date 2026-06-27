@@ -135,7 +135,7 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_claim", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
     {"name": "geox_evidence", "axis": "reason", "lane": "evidence", "expose": True, "face": "internal"},
     {"name": "geox_prospect", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
-    {"name": "geox_doctrine", "axis": "verify", "lane": "judgment", "expose": True, "face": "internal"},
+    {"name": "geox_doctrine", "axis": "verify", "lane": "discovery", "expose": True, "face": "internal"},
 ]
 
 

@@ -6,7 +6,11 @@ Absorbs: geox_doctrine_anti_beautiful_one, geox_doctrine_assumption_register,
          geox_biostrat_constraint, geox_prithvi_eo_inference
 
 Modes: anti_beautiful_one, assumption_register, godel_review,
-       abstraction_guard, biostrat, prithvi_eo
+       abstraction_guard, biostrat, prithvi_eo, registry
+
+Capability Spine Repair 2026-06-26: Added 'registry' mode that delegates to
+geox_system_registry_status. Fixes the guard contradiction where the control
+plane recommended geox_doctrine(mode='registry') but no such mode existed.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
@@ -15,7 +19,8 @@ from typing import Any, Literal
 
 async def geox_doctrine(
     mode: Literal["anti_beautiful_one", "assumption_register", "godel_review",
-                  "abstraction_guard", "biostrat", "prithvi_eo"] = "anti_beautiful_one",
+                  "abstraction_guard", "biostrat", "prithvi_eo",
+                  "registry"] = "anti_beautiful_one",
     introduced_by: str = "",
     rung_origin: int = 0,
     description: str | None = None,
@@ -103,6 +108,10 @@ async def geox_doctrine(
             cloud_cover_max=kwargs.get("cloud_cover_max", 0.2),
             source_uri=kwargs.get("source_uri"),
         )
+
+    if mode == "registry":
+        from geox_mcp.tools.registry import geox_system_registry_status as _impl
+        return await _impl()
 
     # Default: anti_beautiful_one
     from geox_mcp.tools.doctrine import geox_doctrine_anti_beautiful_one as _impl, BeautyAuditRequest

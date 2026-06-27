@@ -12,7 +12,7 @@ def get_container_status(name):
     try:
         res = subprocess.check_output(["docker", "inspect", "-f", "{{.State.Status}}", name]).decode().strip()
         return res
-    except:
+    except Exception:
         return "down"
 
 def get_api_health(url):
@@ -21,7 +21,7 @@ def get_api_health(url):
         if res.status_code == 200:
             return "healthy"
         return f"error_{res.status_code}"
-    except:
+    except Exception:
         return "unreachable"
 
 status_data = {

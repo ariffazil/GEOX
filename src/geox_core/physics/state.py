@@ -96,6 +96,56 @@ class Physics9State:
             "qs": self.qs,
         }
 
+    @classmethod
+    def from_raw_dict(cls, raw: dict[str, Any]) -> Physics9State:
+        """Build a Physics9State from a raw dict with partial/mixed-type fields.
+
+        Coerces str→float for numeric fields. Fills defaults for missing optional
+        fields. Ignores extra keys. Raises TypeError if required core fields
+        (rho, vp, vs) are absent or uncoercible.
+
+        This removes the session wall for buoyancy/lite callers that cannot
+        construct a full typed state — they pass {rho, vp, vs, ...} as a dict
+        and get a valid Physics9State without needing a governed session.
+        """
+        # Required core fields
+        required = ["rho", "vp", "vs"]
+        vals = {}
+        for key in required:
+            val = raw.get(key)
+            if val is None:
+                raise TypeError(f"Physics9State.from_raw_dict: required field '{key}' is missing. Got keys: {list(raw.keys())}")
+            try:
+                vals[key] = float(val)
+            except (TypeError, ValueError) as exc:
+                raise TypeError(f"Physics9State.from_raw_dict: cannot coerce {key}={val!r} to float: {exc}") from exc
+
+        # Optional fields with defaults
+        optional = {
+            "rho_e": 20.0,
+            "chi": 0.0,
+            "k": 2.5,
+            "P": 20e6,
+            "T": 320.0,
+            "phi": 0.20,
+            "epsilon": 0.0,
+            "delta": 0.0,
+            "gamma": 0.0,
+            "qp": 100.0,
+            "qs": 50.0,
+        }
+        for key, default in optional.items():
+            val = raw.get(key)
+            if val is None:
+                vals[key] = default
+            else:
+                try:
+                    vals[key] = float(val)
+                except (TypeError, ValueError):
+                    vals[key] = default
+
+        return cls(**vals)
+
     def grade(self) -> str:
         """Physical-bounds quality gate. RAW = outside Earth bounds."""
         if not (0.02 <= self.phi <= 0.45):

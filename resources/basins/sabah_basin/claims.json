@@ -1,0 +1,90 @@
+[
+  {
+    "claim_id": "CLM-NWS-001",
+    "claim": "Crocker Formation is an accretionary prism deposited in Proto-South China Sea (PSCS) subduction setting",
+    "claim_type": "hypothesis",
+    "confidence_prior": 0.62,
+    "confidence": "MEDIUM",
+    "valid_until": "2028-06-27",
+    "forbidden_uses": ["site_specific_drilling", "commercial_resource_estimate"],
+    "evidence_refs": ["tectonic_history.md", "basin_profile.yaml"],
+    "source": "Hall 2002 | Hutchison 2004 | Breitfeld 2023 | Hamilton 1979",
+    "metadata": {
+      "evidence_for": [
+        "three_layer_stratigraphy_oceanic_basement_flysch_molasse",
+        "Hall_2002_Hutchison_2004_accretionary_prism_model",
+        "structural_position_at_leading_edge_of_collision_zone",
+        "Paleogene_subduction_timing_consistent"
+      ],
+      "evidence_against": [
+        "detrital_zircon_ambiguous_Sundaland_source_not_excluded (Breitfeld 2023)",
+        "no_Cr_spinel_reported_in_Crocker_heavy_minerals",
+        "Breitfeld_2023_short_subduction_window_19.6_to_21_Ma"
+      ],
+      "missing_tests": [
+        "Cr_spinel_heavy_mineral_petrography",
+        "Lu_Hf_isotope_provenance_mapping",
+        "U_Pb_detrital_zircon_ocean_vs_continental_source"
+      ]
+    }
+  },
+  {
+    "claim_id": "CLM-NWS-002",
+    "claim": "Thrust Sheet Zone in NW Sabah contains subcutaneous PSCS oceanic crust (mafic/ultramafic sliver, rho ~2850 kg/m3)",
+    "claim_type": "hypothesis",
+    "confidence_prior": 0.25,
+    "confidence": "LOW",
+    "valid_until": "2028-06-27",
+    "forbidden_uses": ["unverified_commercial_decision"],
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "Franke 2008 | Sidek 2016 | nBOSS_Fone 2024",
+    "metadata": {
+      "evidence_for": [
+        "Franke_2008_high_Vp_body_6.5_to_7.0_kms_basinward_edge",
+        "ophiolite_obduction_Sabah_Palawan_17_to_15_Ma_not_all_surfaced",
+        "nBOSS_Fone_2024_high_velocity_structures_Crocker_Range",
+        "Sidek_2016_density_2450_CANON9_violation_too_low_for_flysch_or_carbonate"
+      ],
+      "evidence_against": [
+        "Sidek_models_zone_sediment_range_density_not_mafic",
+        "Franke_high_Vp_body_is_offshore_not_confirmed_in_Sidek_corridor",
+        "no_seismic_refraction_Vp_through_Thrust_Sheet_Zone_specifically"
+      ],
+      "missing_tests": [
+        "OBS_refraction_across_Thrust_Sheet_Zone_corridor",
+        "gravity_forward_model_Scenario_D_rho_2850",
+        "Cr_spinel_PGE_geochemistry_in_thrust_sheet_samples"
+      ],
+      "critical_discriminator": "Scenario_D_LSD_gravity_misfit_vs_5pct_threshold"
+    }
+  },
+  {
+    "claim_id": "CLM-NWS-003",
+    "claim": "PSCS oceanic plateau is not normal MORB — E-MORB geochemistry with diachronous cessation 44-16 Ma explained by buoyancy",
+    "claim_type": "hypothesis",
+    "confidence_prior": 0.45,
+    "confidence": "LOW",
+    "valid_until": "2028-06-27",
+    "forbidden_uses": ["unverified_commercial_decision"],
+    "evidence_refs": ["tectonic_history.md"],
+    "source": "Utrecht_UU_2024 | GSA_Bulletin_2025_unverified | Wu_Suppe_2018",
+    "metadata": {
+      "evidence_for": [
+        "Utrecht_2024_E_MORB_pillow_basalt_geochemistry_accreted_Sabah",
+        "radiolarian_chert_geq_40_Ma_plateau_accretion_timing",
+        "diachronous_cessation_44_Ma_SW_16_Ma_NE_explained_by_buoyancy",
+        "manual_buoyancy_plateau_3.120_floats_MORB_3.248_sinks"
+      ],
+      "evidence_against": [
+        "GSA_Bulletin_2025_content_unverified_URL_blocked",
+        "slab_velocity_unknown_no_NW_Sabah_borehole_calibration",
+        "plateau_15_to_25_km_thickness_not_confirmed_by_refraction"
+      ],
+      "missing_tests": [
+        "NW_Sabah_borehole_vitrinite_Ro_or_apatite_fission_track",
+        "PSCS_crustal_thickness_OBS_refraction_on_accreted_slivers",
+        "PGE_REE_geochemistry_plateau_vs_MORB_discriminant"
+      ]
+    }
+  }
+]
