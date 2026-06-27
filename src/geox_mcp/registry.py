@@ -4,10 +4,10 @@ from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX CANONICAL TOOLS — Phase 2 Clean Architecture (2026-06-22)
-# 16 tools. Mode-based consolidation. Evidence-only. Physics-9 governed.
+# 17 tools. Mode-based consolidation. Evidence-only. Physics-9 governed.
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# SURFACE-FACING (12 tools):
+# SURFACE-FACING (13 tools):
 #   What external agents (AAA, ART, Copilot, any MCP client) call to get
 #   Earth data or run subsurface analysis. These are the "public API" of GEOX.
 #
@@ -15,40 +15,41 @@ from typing import Any
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 16. Live runtime reports canonical_tools=16.
+#   Total canonical = 17. Live runtime reports canonical_tools=17.
 #   Any change requires 888_HOLD per geox/AGENTS.md.
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (12 tools)
+# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (13 tools)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # What these do: query the planet, analyze subsurface data, return evidence.
 # Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 12
+# Count: 13 (12 earth tools + 1 federation discovery tool)
 #
 SURFACE_TOOLS: list[str] = [
     # ── WELL DOMAIN (4) ────────────────────────────────────────────────────────
-    "geox_well_ingest",          # LAS, SEG-Y, DST, deviation, tops ingest
-    "geox_well_qc",              # QC: depth, curves, completeness, FJIS
-    "geox_petrophysics",         # Vsh, porosity, Sw, perm, net pay, LEM
-    "geox_sequence",             # Sequence stratigraphy, correlation
-
+    "geox_well_ingest",  # LAS, SEG-Y, DST, deviation, tops ingest
+    "geox_well_qc",  # QC: depth, curves, completeness, FJIS
+    "geox_petrophysics",  # Vsh, porosity, Sw, perm, net pay, LEM
+    "geox_sequence",  # Sequence stratigraphy, correlation
     # ── SEISMIC DOMAIN (4) ─────────────────────────────────────────────────────
-    "geox_seismic_ingest",       # SEG-Y I/O, header inspection
-    "geox_seismic_compute",      # Synthetic, well-tie, AVO, attributes, inversion
-    "geox_seismic_interpret",    # Horizon contrast, faults, frames, blend
-    "geox_vision",               # VLM inference, audit, calibration, perceptual
-
+    "geox_seismic_ingest",  # SEG-Y I/O, header inspection
+    "geox_seismic_compute",  # Synthetic, well-tie, AVO, attributes, inversion
+    "geox_seismic_interpret",  # Horizon contrast, faults, frames, blend
+    "geox_vision",  # VLM inference, audit, calibration, perceptual
     # ── MODEL DOMAIN (2) ───────────────────────────────────────────────────────
-    "geox_subsurface_model",     # Joint inversion, gravity/mag, MT forward
-    "geox_geomechanics",         # K/G/E/ν, coordinate transform, blockspace
-
+    "geox_subsurface_model",  # Joint inversion, gravity/mag, MT forward
+    "geox_geomechanics",  # K/G/E/ν, coordinate transform, blockspace
     # ── BASIN DOMAIN (2) ───────────────────────────────────────────────────────
-    "geox_basin",                # Profile, resolve, macrostrat, scene
-    "geox_deep_time_state",      # Earth State Vector at any geological age
+    "geox_basin",  # Profile, resolve, macrostrat, scene
+    "geox_deep_time_state",  # Earth State Vector at any geological age
+    # ── FEDERATION DISCOVERY (1) ───────────────────────────────────────────────
+    # GAP-1 fix (2026-06-27): Federation-standard registry probe.
+    # Any MCP client can call this. Returns the 17 real tools, not the 31 ghosts.
+    "geox_surface_status",
 ]
 
 
@@ -62,20 +63,20 @@ SURFACE_TOOLS: list[str] = [
 # Count: 4
 #
 INTERNAL_TOOLS: list[str] = [
-    "geox_claim",    # Create, validate, challenge, seal, attach claims
-    "geox_evidence", # Discover, synthesize, abduct, contradict, literature
-    "geox_prospect", # Volumetrics, POS, EVOI, risk assessment (judgment-gated)
-    "geox_doctrine", # Anti-Beautiful-One, assumptions, Gödel, guards
+    "geox_claim",  # Create, validate, challenge, seal, attach claims
+    "geox_evidence",  # Discover, synthesize, abduct, contradict, literature
+    "geox_prospect",  # Volumetrics, POS, EVOI, risk assessment (judgment-gated)
+    "geox_doctrine",  # Anti-Beautiful-One, assumptions, Gödel, guards
 ]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CANONICAL PUBLIC TOOLS — Union of surface + internal (16 total)
+# CANONICAL PUBLIC TOOLS — Union of surface + internal (17 total)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # This is the single source of truth for the MCP server invariant check.
 # Surface tools are what the world sees. Internal tools are federation plumbing.
-# Live runtime reports canonical_tools=16; do not change without 888_HOLD.
+# Live runtime reports canonical_tools=17; do not change without 888_HOLD.
 #
 CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
 
@@ -84,26 +85,55 @@ CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
 # BACKWARD COMPAT — old tool names, 1 release cycle
 # ─────────────────────────────────────────────────────────────────────────────
 CANONICAL_COMPAT_TOOLS: list[str] = [
-    "geox_data_ingest_bundle", "geox_data_qc_bundle", "geox_dst_ingest_test",
-    "geox_header_inspect", "geox_las_inspect", "geox_seismic_segy_inspect",
-    "geox_evidence_discover", "geox_subsurface_generate_candidates",
-    "geox_subsurface_verify_integrity", "geox_sequence_interpret",
-    "geox_evidence_reason", "geox_prospect_evaluate", "geox_map_context_scene",
-    "geox_horizon_contrast_surface", "geox_coord_transform_tool",
-    "geox_blockspace_resolution_tool", "geox_volume_frame_tool",
-    "geox_seismic_compute_attribute_tool", "geox_fault_stick_ingest_tool",
-    "geox_attribute_registry_list_tool", "geox_blend_volume_tool",
-    "geox_segy_export_tool", "geox_claim_create", "geox_claim_validate",
-    "geox_claim_challenge", "geox_evidence_attach", "geox_claim_seal",
-    "geox_basin_resolve", "geox_basin_profile", "geox_query_intake",
-    "geox_abstraction_guard", "geox_literature_ingest",
-    "geox_vision_perceptual_inventory", "geox_vision_minimax_inference",
-    "geox_vision_calibrate", "geox_vision_audit", "geox_query_macrostrat",
-    "geox_doctrine_assumption_register", "geox_doctrine_anti_beautiful_one",
-    "geox_doctrine_godel_review", "geox_prithvi_eo_inference",
-    "geox_gravity_magnetic_forward", "geox_emag2_ingest", "geox_icgem_models",
-    "geox_joint_inversion", "geox_mt_forward", "geox_biostrat_constraint",
-    "geox_seismic_inversion", "geox_lem_predict",
+    "geox_data_ingest_bundle",
+    "geox_data_qc_bundle",
+    "geox_dst_ingest_test",
+    "geox_header_inspect",
+    "geox_las_inspect",
+    "geox_seismic_segy_inspect",
+    "geox_evidence_discover",
+    "geox_subsurface_generate_candidates",
+    "geox_subsurface_verify_integrity",
+    "geox_sequence_interpret",
+    "geox_evidence_reason",
+    "geox_prospect_evaluate",
+    "geox_map_context_scene",
+    "geox_horizon_contrast_surface",
+    "geox_coord_transform_tool",
+    "geox_blockspace_resolution_tool",
+    "geox_volume_frame_tool",
+    "geox_seismic_compute_attribute_tool",
+    "geox_fault_stick_ingest_tool",
+    "geox_attribute_registry_list_tool",
+    "geox_blend_volume_tool",
+    "geox_segy_export_tool",
+    "geox_claim_create",
+    "geox_claim_validate",
+    "geox_claim_challenge",
+    "geox_evidence_attach",
+    "geox_claim_seal",
+    "geox_basin_resolve",
+    "geox_basin_profile",
+    "geox_query_intake",
+    "geox_abstraction_guard",
+    "geox_literature_ingest",
+    "geox_vision_perceptual_inventory",
+    "geox_vision_minimax_inference",
+    "geox_vision_calibrate",
+    "geox_vision_audit",
+    "geox_query_macrostrat",
+    "geox_doctrine_assumption_register",
+    "geox_doctrine_anti_beautiful_one",
+    "geox_doctrine_godel_review",
+    "geox_prithvi_eo_inference",
+    "geox_gravity_magnetic_forward",
+    "geox_emag2_ingest",
+    "geox_icgem_models",
+    "geox_joint_inversion",
+    "geox_mt_forward",
+    "geox_biostrat_constraint",
+    "geox_seismic_inversion",
+    "geox_lem_predict",
 ]
 
 
@@ -116,21 +146,19 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_well_qc", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
     {"name": "geox_petrophysics", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
     {"name": "geox_sequence", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-
     # ── SURFACE-FACING: SEISMIC DOMAIN (4) ────────────────────────────────────
     {"name": "geox_seismic_ingest", "axis": "observe", "lane": "evidence", "expose": True, "face": "surface"},
     {"name": "geox_seismic_compute", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
     {"name": "geox_seismic_interpret", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
     {"name": "geox_vision", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-
     # ── SURFACE-FACING: MODEL DOMAIN (2) ──────────────────────────────────────
     {"name": "geox_subsurface_model", "axis": "reason", "lane": "judgment", "expose": True, "face": "surface"},
     {"name": "geox_geomechanics", "axis": "compute", "lane": "reasoning", "expose": True, "face": "surface"},
-
     # ── SURFACE-FACING: BASIN DOMAIN (2) ──────────────────────────────────────
     {"name": "geox_basin", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
     {"name": "geox_deep_time_state", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
-
+    # ── SURFACE-FACING: FEDERATION DISCOVERY (1) ───────────────────────────────
+    {"name": "geox_surface_status", "axis": "verify", "lane": "discovery", "expose": True, "face": "surface"},
     # ── INTERNAL PLUMBING: GOVERNANCE + DOCTRINE (4) ──────────────────────────
     {"name": "geox_claim", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
     {"name": "geox_evidence", "axis": "reason", "lane": "evidence", "expose": True, "face": "internal"},
@@ -142,6 +170,7 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
 # ─────────────────────────────────────────────────────────────────────────────
 # HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 def surface_tool_count() -> int:
     """Number of surface-facing tools (what the world sees)."""
