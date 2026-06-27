@@ -4,10 +4,11 @@ from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX CANONICAL TOOLS — Phase 2 Clean Architecture (2026-06-22)
-# 17 tools. Mode-based consolidation. Evidence-only. Physics-9 governed.
+# 18 tools (Phase 2.1, 2026-06-28). Mode-based consolidation. Evidence-only.
+# Physics-9 governed.
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# SURFACE-FACING (13 tools):
+# SURFACE-FACING (14 tools):
 #   What external agents (AAA, ART, Copilot, any MCP client) call to get
 #   Earth data or run subsurface analysis. These are the "public API" of GEOX.
 #
@@ -15,24 +16,29 @@ from typing import Any
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 17. Live runtime reports canonical_tools=17.
+#   Total canonical = 18. Live runtime reports canonical_tools=18.
 #   Any change requires 888_HOLD per geox/AGENTS.md.
+#
+# Phase 2.1 (2026-06-28): added geox_well_desurvey (3D wellbore geometry).
+#   Action card: forge_work/GEOX-ADAPT-001-r1.md.
+#   F13 SOVEREIGN ratified by Arif 2026-06-28.
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (13 tools)
+# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (14 tools)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # What these do: query the planet, analyze subsurface data, return evidence.
 # Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 13 (12 earth tools + 1 federation discovery tool)
+# Count: 14 (13 earth tools + 1 federation discovery tool)
 #
 SURFACE_TOOLS: list[str] = [
-    # ── WELL DOMAIN (4) ────────────────────────────────────────────────────────
+    # ── WELL DOMAIN (5) ────────────────────────────────────────────────────────
     "geox_well_ingest",  # LAS, SEG-Y, DST, deviation, tops ingest
     "geox_well_qc",  # QC: depth, curves, completeness, FJIS
+    "geox_well_desurvey",  # Phase 2.1 (2026-06-28): 3D wellbore geometry (TVD/X/Y/TVDSS) from deviation survey. wellpathpy mincurve + tan, CRS transform, ACRisk envelope.
     "geox_petrophysics",  # Vsh, porosity, Sw, perm, net pay, LEM
     "geox_sequence",  # Sequence stratigraphy, correlation
     # ── SEISMIC DOMAIN (4) ─────────────────────────────────────────────────────
@@ -48,7 +54,7 @@ SURFACE_TOOLS: list[str] = [
     "geox_deep_time_state",  # Earth State Vector at any geological age
     # ── FEDERATION DISCOVERY (1) ───────────────────────────────────────────────
     # GAP-1 fix (2026-06-27): Federation-standard registry probe.
-    # Any MCP client can call this. Returns the 17 real tools, not the 31 ghosts.
+    # Any MCP client can call this. Returns the 18 real tools, not the 31 ghosts.
     "geox_surface_status",
 ]
 
@@ -71,12 +77,12 @@ INTERNAL_TOOLS: list[str] = [
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CANONICAL PUBLIC TOOLS — Union of surface + internal (17 total)
+# CANONICAL PUBLIC TOOLS — Union of surface + internal (18 total)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # This is the single source of truth for the MCP server invariant check.
 # Surface tools are what the world sees. Internal tools are federation plumbing.
-# Live runtime reports canonical_tools=17; do not change without 888_HOLD.
+# Live runtime reports canonical_tools=18; do not change without 888_HOLD.
 #
 CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
 
@@ -141,9 +147,16 @@ CANONICAL_COMPAT_TOOLS: list[str] = [
 # TOOL MANIFEST — metadata for MCP server
 # ─────────────────────────────────────────────────────────────────────────────
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
-    # ── SURFACE-FACING: WELL DOMAIN (4) ───────────────────────────────────────
+    # ── SURFACE-FACING: WELL DOMAIN (5) ───────────────────────────────────────
     {"name": "geox_well_ingest", "axis": "observe", "lane": "evidence", "expose": True, "face": "surface"},
     {"name": "geox_well_qc", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
+    {
+        "name": "geox_well_desurvey",
+        "axis": "compute",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },  # Phase 2.1 (2026-06-28): TVD/X/Y trajectory from deviation survey. Evidence-only.
     {"name": "geox_petrophysics", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
     {"name": "geox_sequence", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
     # ── SURFACE-FACING: SEISMIC DOMAIN (4) ────────────────────────────────────

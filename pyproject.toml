@@ -47,6 +47,7 @@ dependencies = [
     "numpy>=2.4.6",
     "lasio>=0.32",
     "welly>=0.5.2",
+    "wellpathpy>=0.5.2",  # Phase 2.1 (2026-06-28): 3D wellbore geometry — minimum curvature + tangential methods. Used by geox_well_desurvey.
     "striplog>=0.9.2",
     "scipy>=1.17.1",
     "matplotlib>=3.11.0",
