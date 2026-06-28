@@ -75,18 +75,39 @@ EARTH_SCHEMA_DIR = os.getenv("GEOX_SCHEMAS_DIR", str(_GEOX_SCHEMAS_DIR))
 
 # ─── Per-tool execution timeouts (Sprint 2C) ─────────────────────────────────
 TOOL_TIMEOUTS: dict[str, float] = {
-    "geox_data_ingest_bundle": 60.0,
-    "geox_data_qc_bundle": 30.0,
-    "geox_dst_ingest_test": 30.0,
-    "geox_subsurface_generate_candidates": 60.0,
-    "geox_subsurface_verify_integrity": 30.0,
+    # Surface-facing canonical tools (Phase 2.1 + EGS, 2026-06-28)
+    "geox_well_ingest": 60.0,
+    "geox_well_qc": 30.0,
+    "geox_well_desurvey": 30.0,
+    "geox_petrophysics": 60.0,
+    "geox_sequence": 90.0,
+    "geox_seismic_ingest": 60.0,
     "geox_seismic_compute": 120.0,
-    "geox_sequence_interpret": 90.0,
-    "geox_evidence_reason": 60.0,
-    "geox_prospect_evaluate": 60.0,
-    "geox_map_context_scene": 30.0,
-    # geox_system_registry_status — removed (Phase 1 Clean Slate)
-    "geox_horizon_contrast_surface": 60.0,
+    "geox_seismic_interpret": 60.0,
+    "geox_vision": 120.0,
+    "geox_subsurface_model": 60.0,
+    "geox_geomechanics": 30.0,
+    "geox_basin": 60.0,
+    "geox_deep_time_state": 30.0,
+    "geox_surface_status": 10.0,
+    # Internal plumbing (4)
+    "geox_claim": 30.0,
+    "geox_evidence": 60.0,
+    "geox_prospect": 60.0,
+    "geox_doctrine": 30.0,
+    # EGS tools (12)
+    "geox_egs_query_entity": 10.0,
+    "geox_egs_query_claim": 10.0,
+    "geox_egs_query_uncertainty": 10.0,
+    "geox_egs_query_provenance": 10.0,
+    "geox_egs_claim_create": 10.0,
+    "geox_egs_claim_challenge": 10.0,
+    "geox_egs_evidence_attach": 10.0,
+    "geox_egs_evidence_reason": 30.0,
+    "geox_egs_seismic_compute": 60.0,
+    "geox_egs_rock_physics": 30.0,
+    "geox_egs_data_qc_bundle": 30.0,
+    "geox_egs_scenario_audit": 30.0,
 }
 TOOL_TIMEOUT_DEFAULT = 60.0
 

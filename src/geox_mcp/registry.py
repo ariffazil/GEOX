@@ -16,7 +16,7 @@ from typing import Any
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 18. Live runtime reports canonical_tools=18.
+#   Total canonical = 30. Live runtime reports canonical_tools=30.
 #   Any change requires 888_HOLD per geox/AGENTS.md.
 #
 # Phase 2.1 (2026-06-28): added geox_well_desurvey (3D wellbore geometry).
