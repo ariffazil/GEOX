@@ -56,6 +56,21 @@ SURFACE_TOOLS: list[str] = [
     # GAP-1 fix (2026-06-27): Federation-standard registry probe.
     # Any MCP client can call this. Returns the 18 real tools, not the 31 ghosts.
     "geox_surface_status",
+    # ── EGS (Earth Grounding System) — 12 tools (2026-06-28) ─────────────────────
+    # Typed earth graph, uncertainty algebra, claim/evidence lifecycle.
+    # "Language models consume EGS; they do not replace it."
+    "egs_query_entity",
+    "egs_query_claim",
+    "egs_query_uncertainty",
+    "egs_query_provenance",
+    "egs_claim_create",
+    "egs_claim_challenge",
+    "egs_evidence_attach",
+    "egs_evidence_reason",
+    "egs_seismic_compute",
+    "egs_rock_physics",
+    "egs_data_qc_bundle",
+    "egs_scenario_audit",
 ]
 
 
@@ -177,6 +192,24 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {"name": "geox_evidence", "axis": "reason", "lane": "evidence", "expose": True, "face": "internal"},
     {"name": "geox_prospect", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
     {"name": "geox_doctrine", "axis": "verify", "lane": "discovery", "expose": True, "face": "internal"},
+    # ── EGS (Earth Grounding System) — 12 tools (2026-06-28) ────────────────────
+    # Typed earth graph, uncertainty algebra, claim/evidence lifecycle.
+    # Query tools are pure reads → discovery lane (no session needed).
+    # Claim tools carry evidence → evidence lane.
+    # Compute tools require reasoning → reasoning lane.
+    # "Language models consume EGS; they do not replace it."
+    {"name": "egs_query_entity", "axis": "observe", "lane": "discovery", "expose": True, "face": "surface"},
+    {"name": "egs_query_claim", "axis": "observe", "lane": "discovery", "expose": True, "face": "surface"},
+    {"name": "egs_query_uncertainty", "axis": "observe", "lane": "discovery", "expose": True, "face": "surface"},
+    {"name": "egs_query_provenance", "axis": "observe", "lane": "discovery", "expose": True, "face": "surface"},
+    {"name": "egs_claim_create", "axis": "reason", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "egs_claim_challenge", "axis": "reason", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "egs_evidence_attach", "axis": "reason", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "egs_evidence_reason", "axis": "reason", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "egs_seismic_compute", "axis": "compute", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "egs_rock_physics", "axis": "compute", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "egs_data_qc_bundle", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
+    {"name": "egs_scenario_audit", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
 ]
 
 

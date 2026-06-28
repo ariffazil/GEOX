@@ -181,6 +181,15 @@ else:
 
 mcp = FastMCP(**_mcp_kwargs)
 
+# ── EGS Runtime (2026-06-28) ─────────────────────────────────────────────────
+# Earth Grounding System — typed earth graph, uncertainty algebra,
+# claim/evidence lifecycle, structured query API.
+# "Language models consume EGS; they do not replace it."
+from geox.egs.registry import register_egs_tools, init_egs_state
+
+init_egs_state()
+register_egs_tools(mcp)
+
 # ── Governance wiring (FORGE 2026-06-25) ─────────────────────────────────────
 # Register the FastMCP-native governance middleware BEFORE the Starlette app
 # is built. The middleware handles RT1 (canonical tool name) + RT3
@@ -284,11 +293,10 @@ def compose_geox_servers() -> None:
     #   2026-06-27: 16 -> 17 (GAP-1 fix: geox_surface_status added — federation-standard registry probe).
     #   2026-06-28: 17 -> 18 (Phase 2.1: geox_well_desurvey added — 3D wellbore geometry).
     #
-    # Live runtime reports canonical_tools=18. Any expansion requires 888_HOLD per
+    # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
+    # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = (
-        18  # Phase 2.1 (2026-06-28): 14 surface + 4 internal. geox_well_desurvey added (GEOX-ADAPT-001-r1, F13 ratified).
-    )
+    _EXPECTED_CANONICAL = 30  # Phase 2.1 (2026-06-28): 18 original + 12 EGS tools (Earth Grounding System).
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
