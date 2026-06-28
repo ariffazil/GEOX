@@ -60,9 +60,9 @@ logger = logging.getLogger("geox.unified")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 GEOX_VERSION = "v2026.06.28-phase2.1"
-# Phase 2.1 Clean Architecture (2026-06-28): 18 mode-consolidated tools (added geox_well_desurvey).
-# Backward-compat wrappers for 56 old names.
-GEOX_CONTRACT_EPOCH = "2026-06-28-GEOX-18TOOLS-PHASE21"
+# Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
+# Backward-compat wrappers for 49 legacy alias names.
+GEOX_CONTRACT_EPOCH = "2026-06-28-GEOX-30TOOLS-PHASE21"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
