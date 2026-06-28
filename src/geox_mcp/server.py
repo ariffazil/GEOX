@@ -1704,6 +1704,67 @@ async def adapters_handler(request: Request) -> JSONResponse:
     )
 
 
+# ── A2A Agent Card (Federation Discovery) ──────────────────────────────────
+# FORGE 2026-06-28: /.well-known/agent.json for AAA A2A mesh discovery.
+
+_GEOX_AGENT_CARD = {
+    "schema": "agent-manifest/v1",
+    "name": "GEOX — Governed Earth Intelligence",
+    "description": (
+        "Earth coprocessor for arifOS federation. Provides geoscience, "
+        "petrophysics, seismic, basin, deep time, and geomechanical evidence "
+        "for constitutional judgment. Evidence-only — never a policy judge."
+    ),
+    "version": "2026.06.28",
+    "url": "https://geox.arif-fazil.com",
+    "endpoints": {
+        "mcp": "https://geox.arif-fazil.com/mcp",
+        "health": "https://geox.arif-fazil.com/health",
+        "tools": "https://geox.arif-fazil.com/tools",
+    },
+    "authority_class": "evidence",
+    "allowed_action_classes": ["OBSERVE", "PREPARE"],
+    "max_risk_tier": "T1",
+    "auth": {"type": "none"},
+    "federation": {
+        "protocol": "A2A",
+        "peer_coordinator": "https://aaa.arif-fazil.com",
+        "constitutional_kernel": "https://arifos.arif-fazil.com",
+    },
+    "owned_mcp": {
+        "server": "geox-mcp",
+        "transport": "streamable-http",
+        "tool_count": 30,
+        "canonical_tools": [
+            "geox_well_ingest",
+            "geox_well_qc",
+            "geox_well_desurvey",
+            "geox_petrophysics",
+            "geox_sequence",
+            "geox_seismic_ingest",
+            "geox_seismic_compute",
+            "geox_seismic_interpret",
+            "geox_vision",
+            "geox_subsurface_model",
+            "geox_geomechanics",
+            "geox_basin",
+            "geox_deep_time_state",
+            "geox_surface_status",
+        ],
+    },
+    "skills": [
+        {"id": "earth.evidence", "name": "Earth Evidence", "tags": ["geoscience", "evidence"]},
+        {"id": "basin.resolve", "name": "Basin Resolution", "tags": ["basin", "stratigraphy"]},
+        {"id": "seismic.compute", "name": "Seismic Physics", "tags": ["seismic", "forward-model"]},
+    ],
+}
+
+
+async def _geox_agent_card_handler(request):
+    """Serve A2A agent card for federation discovery."""
+    return JSONResponse(_GEOX_AGENT_CARD)
+
+
 def create_app():
     """
     Build the GEOX ASGI app.
@@ -1757,6 +1818,8 @@ def create_app():
             Route("/adapters", adapters_handler, methods=["GET"]),
             Route("/.well-known/mcp.json", mcp_server_card, methods=["GET"]),
             Route("/.well-known/mcp/server.json", discovery_handler, methods=["GET"]),
+            Route("/.well-known/agent.json", _geox_agent_card_handler, methods=["GET"]),
+            Route("/.well-known/agent-card.json", _geox_agent_card_handler, methods=["GET"]),
             Route("/.well-known/webmcp", webmcp_manifest, methods=["GET"]),
             Route("/tools", tools_list_handler, methods=["GET"]),
             Route("/webmcp", webmcp_index, methods=["GET"]),
