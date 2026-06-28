@@ -134,7 +134,7 @@ class TestF1Amanah:
         )
         out, err, rc = run_psql(write_sql)
         assert rc == 0, f"Agent A write failed: {err}"
-        alice_id = [l for l in out.splitlines() if l.strip() and not l.strip().startswith("SET")][-1]
+        alice_id = [l for l in out.splitlines() if l.strip() and not l.strip().startswith("SET") and l.strip() not in ("BEGIN", "COMMIT")][-1]
 
         # Agent B attempts to UPDATE Alice's record (no sovereign_approval → should fail)
         update_sql = sql_with_session(
@@ -419,7 +419,7 @@ def test_substrate_health():
         role="postgres",
     )
     active_floors = set(out.strip().splitlines())
-    expected_floors = {f"F{i}" for i in range(1, 14)}
+    expected_floors = {f"F{i:02d}" for i in range(1, 14)}
     missing_floors = expected_floors - active_floors
     assert not missing_floors, f"Missing active floor rules: {missing_floors}"
 

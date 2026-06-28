@@ -41,8 +41,8 @@ class EpistemicLevel(str, Enum):
 
 
 EPISTEMIC_CONFIDENCE_CAP = {
-    "OBSERVED": 0.99,
-    "DERIVED": 0.95,
+    "OBSERVED": 0.90,
+    "DERIVED": 0.90,
     "INTERPRETED": 0.85,
     "PROCESS_HYPOTHESIS": 0.75,
     "SPECULATION": 0.50,

@@ -268,7 +268,7 @@ async def egs_query_provenance(
 
 
 EGS_QUERY_TOOLS: dict[str, dict[str, Any]] = {
-    "egs_query_entity": {
+    "geox_egs_query_entity": {
         "description": "Query earth graph entities by type, name, bbox, or ID. Pure read-only query.",
         "input_schema": {
             "type": "object",
@@ -295,7 +295,7 @@ EGS_QUERY_TOOLS: dict[str, dict[str, Any]] = {
         "destructiveHint": False,
         "idempotentHint": True,
     },
-    "egs_query_claim": {
+    "geox_egs_query_claim": {
         "description": "Query claim envelopes by status, domain, entity, or author. Pure read-only query.",
         "input_schema": {
             "type": "object",
@@ -318,7 +318,7 @@ EGS_QUERY_TOOLS: dict[str, dict[str, Any]] = {
         "destructiveHint": False,
         "idempotentHint": True,
     },
-    "egs_query_uncertainty": {
+    "geox_egs_query_uncertainty": {
         "description": "Query uncertainty associated with an entity or claim. Pure read-only query.",
         "input_schema": {
             "type": "object",
@@ -334,7 +334,7 @@ EGS_QUERY_TOOLS: dict[str, dict[str, Any]] = {
         "destructiveHint": False,
         "idempotentHint": True,
     },
-    "egs_query_provenance": {
+    "geox_egs_query_provenance": {
         "description": "Query provenance history for an entity. Pure read-only query.",
         "input_schema": {
             "type": "object",

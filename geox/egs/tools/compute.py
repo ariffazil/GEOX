@@ -97,7 +97,7 @@ async def egs_rock_physics(
 
 
 EGS_COMPUTE_TOOLS: dict[str, dict[str, Any]] = {
-    "egs_seismic_compute": {
+    "geox_egs_seismic_compute": {
         "description": "Compute seismic properties (AI, EI, Vp/Vs) from velocity and density.",
         "input_schema": {
             "type": "object",
@@ -121,7 +121,7 @@ EGS_COMPUTE_TOOLS: dict[str, dict[str, Any]] = {
         "destructiveHint": False,
         "idempotentHint": True,
     },
-    "egs_rock_physics": {
+    "geox_egs_rock_physics": {
         "description": "Compute Voigt-Reuss-Hill velocity bounds from mineral/fluid properties.",
         "input_schema": {
             "type": "object",

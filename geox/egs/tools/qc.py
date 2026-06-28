@@ -205,7 +205,7 @@ async def egs_scenario_audit(
 
 
 EGS_QC_TOOLS: dict[str, dict[str, Any]] = {
-    "egs_data_qc_bundle": {
+    "geox_egs_data_qc_bundle": {
         "description": "Run quality control checks on earth entities: completeness, consistency, provenance.",
         "input_schema": {
             "type": "object",
@@ -225,7 +225,7 @@ EGS_QC_TOOLS: dict[str, dict[str, Any]] = {
         "destructiveHint": False,
         "idempotentHint": True,
     },
-    "egs_scenario_audit": {
+    "geox_egs_scenario_audit": {
         "description": "Audit alternative scenarios / competing interpretations for claims.",
         "input_schema": {
             "type": "object",
