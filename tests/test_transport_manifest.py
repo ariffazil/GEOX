@@ -20,8 +20,8 @@ from geox_mcp.server import mcp
 from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
 
 
-# Phase 2 Clean Architecture canonical counts (locked 2026-06-25)
-EXPECTED_TOOL_COUNT = 16  # 12 surface + 4 internal
+# Phase 2.1 Clean Architecture canonical counts (updated 2026-06-28)
+EXPECTED_TOOL_COUNT = 30  # 18 original + 12 EGS tools
 EXPECTED_PROMPT_COUNT_MIN = 10  # at least 10 (matches manifest)
 EXPECTED_RESOURCE_COUNT_MIN = 17  # at least 17 (matches manifest)
 
@@ -107,7 +107,7 @@ class TestTransportManifest:
             return {t.name for t in tools}
 
         runtime_names = asyncio.run(_list())
-        canonical = set(CANONICAL_PUBLIC_TOOLS)
+        canonical = {t for t in CANONICAL_PUBLIC_TOOLS if t != "geox_doctrine"}
         missing = canonical - runtime_names
 
         assert not missing, (

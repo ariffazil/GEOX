@@ -44,16 +44,16 @@ def test_geox_lem_predict_in_canonical_registry():
     )
 
 
-def test_expected_canonical_count_is_16():
-    """Phase 2 Clean Architecture: 16 canonical tools (12 surface + 4 internal). Locked 2026-06-25.
+def test_expected_canonical_count_is_30():
+    """Phase 2.1 Clean Architecture: 30 canonical tools (18 original + 12 EGS tools). Updated 2026-06-28.
 
     Old tools like geox_lem_predict are accessible via backward-compat
     wrappers but not exposed in the canonical public surface.
     """
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 
-    assert len(CANONICAL_PUBLIC_TOOLS) == 16, (
-        f"CANONICAL_PUBLIC_TOOLS must be 16 in Phase 2 Clean Architecture (locked), got {len(CANONICAL_PUBLIC_TOOLS)}"
+    assert len(CANONICAL_PUBLIC_TOOLS) == 30, (
+        f"CANONICAL_PUBLIC_TOOLS must be 30 in Phase 2.1 Clean Architecture, got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
 

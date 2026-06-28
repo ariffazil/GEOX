@@ -347,7 +347,7 @@ def _suggest_grade(direct: int, multiple: int, single: int, analogue: int, specu
 
 
 EGS_CLAIM_TOOLS: dict[str, dict[str, Any]] = {
-    "egs_claim_create": {
+    "geox_egs_claim_create": {
         "description": "Create a new geological claim with typed evidence structure and provenance.",
         "input_schema": {
             "type": "object",
@@ -373,7 +373,7 @@ EGS_CLAIM_TOOLS: dict[str, dict[str, Any]] = {
         "destructiveHint": False,
         "idempotentHint": False,
     },
-    "egs_claim_challenge": {
+    "geox_egs_claim_challenge": {
         "description": "Challenge an existing claim with contradictory evidence. Updates status to CHALLENGED.",
         "input_schema": {
             "type": "object",
@@ -395,7 +395,7 @@ EGS_CLAIM_TOOLS: dict[str, dict[str, Any]] = {
         "destructiveHint": False,
         "idempotentHint": False,
     },
-    "egs_evidence_attach": {
+    "geox_egs_evidence_attach": {
         "description": "Attach evidence to an existing claim. Can be supporting or contradictory.",
         "input_schema": {
             "type": "object",
@@ -423,7 +423,7 @@ EGS_CLAIM_TOOLS: dict[str, dict[str, Any]] = {
         "destructiveHint": False,
         "idempotentHint": False,
     },
-    "egs_evidence_reason": {
+    "geox_egs_evidence_reason": {
         "description": "Analyze evidence for a claim. Synthesize or grade the evidence quality.",
         "input_schema": {
             "type": "object",

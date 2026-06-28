@@ -57,7 +57,7 @@ class TestFederationSubstrate:
             "SELECT floor_code FROM arifosmcp_floor_rules WHERE is_active ORDER BY floor_code;"
         )
         active_floors = set(out.strip().splitlines())
-        expected = {f"F{i}" for i in range(1, 14)}
+        expected = {f"F{i:02d}" for i in range(1, 14)}
         missing = expected - active_floors
         assert not missing, f"Federation substrate missing floors: {missing}"
 

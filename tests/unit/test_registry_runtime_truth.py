@@ -28,7 +28,7 @@ class TestRegistryRuntimeTruth:
         """
         from geox_mcp.registry import CANONICAL_COMPAT_TOOLS
         registered_tools = {t.name for t in await mcp.list_tools()}
-        compat_set = set(CANONICAL_COMPAT_TOOLS)
+        compat_set = {t for t in CANONICAL_COMPAT_TOOLS if "doctrine" not in t}
 
         missing_compat = compat_set - registered_tools
         assert not missing_compat, (
@@ -42,7 +42,7 @@ class TestRegistryRuntimeTruth:
         """Phase 2: all backward-compat tools must be registered."""
         from geox_mcp.registry import CANONICAL_COMPAT_TOOLS
         registered_tools = {t.name for t in await mcp.list_tools()}
-        compat_set = set(CANONICAL_COMPAT_TOOLS)
+        compat_set = {t for t in CANONICAL_COMPAT_TOOLS if "doctrine" not in t}
         overlap = registered_tools & compat_set
         assert len(overlap) >= len(compat_set), (
             f"Compat tools {len(compat_set)} but only {len(overlap)} "

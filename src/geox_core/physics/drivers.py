@@ -179,7 +179,7 @@ def metabolic_loop(
     return {
         "converged_state": state,
         "final_lithology": litho,
-        "loop_cycles": i + 1,
+        "loop_cycles": _iteration + 1,
         "converged": converged,
         "metadata": {
             "loop_type": "forward_inverse_metabolic",
