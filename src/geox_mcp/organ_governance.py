@@ -15,6 +15,7 @@ arifOS kernel endpoint: http://arifosmcp:8088/mcp
 FAIL-CLOSED: If arifOS kernel is unreachable or session is unbound,
 defaults to HOLD. No guessing, no bypass.
 """
+
 from __future__ import annotations
 
 import json
@@ -50,28 +51,22 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     "geox_well_qc": RiskTier.READONLY,
     "geox_petrophysics": RiskTier.READONLY,
     "geox_sequence": RiskTier.READONLY,
-
     # ── SEISMIC DOMAIN (4) ──
     "geox_seismic_ingest": RiskTier.READONLY,
     "geox_seismic_compute": RiskTier.READONLY,
     "geox_seismic_interpret": RiskTier.READONLY,
     "geox_vision": RiskTier.READONLY,
-
     # ── MODEL DOMAIN (2) ──
     "geox_subsurface_model": RiskTier.C1_ADVISORY,  # joint inversion → advisory
     "geox_geomechanics": RiskTier.READONLY,
-
     # ── BASIN DOMAIN (2) ──
     "geox_basin": RiskTier.READONLY,
     "geox_deep_time_state": RiskTier.READONLY,
-
     # ── GOVERNANCE DOMAIN (2) ──
-    "geox_claim": RiskTier.C2_EXECUTE,       # mode="seal" → requires arifOS SEAL
+    "geox_claim": RiskTier.C2_EXECUTE,  # mode="seal" → requires arifOS SEAL
     "geox_evidence": RiskTier.READONLY,
-
     # ── EVALUATION DOMAIN (1) ──
-    "geox_prospect": RiskTier.C1_ADVISORY,   # mode="seal" → C2
-
+    "geox_prospect": RiskTier.C1_ADVISORY,  # mode="seal" → C2
     # ── DOCTRINE DOMAIN (1) ──
     "geox_doctrine": RiskTier.READONLY,
 }
@@ -115,22 +110,89 @@ async def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int
 # Lane determines authority gating: discovery(no session) → evidence(no session)
 # → reasoning(session required) → judgment(session+lease+arifOS judge required)
 
+
 def _load_lane_map() -> dict[str, str]:
     """Load tool→lane mapping from registry manifest (single source of truth).
 
-    Priority: registry.py GEOX_TOOL_MANIFEST > hardcoded fallback.
+    Priority: registry.py GEOX_TOOL_MANIFEST > compat lane map > hardcoded fallback.
     The old GEOX.yaml federation contract is NOT loaded — it had stale
     40-tool entries that caused the split-brain. Registry manifest is the
     only authoritative lane source.
     """
-    # Priority 1: registry manifest (authoritative)
+    # Priority 1: registry manifest (authoritative) + backward-compat tools
     try:
         from geox_mcp.registry import GEOX_TOOL_MANIFEST
-        return {t["name"]: t.get("lane", "reasoning") for t in GEOX_TOOL_MANIFEST}
+
+        lane_map = {t["name"]: t.get("lane", "reasoning") for t in GEOX_TOOL_MANIFEST}
+        # Priority 2: backward-compat tools (CANONICAL_COMPAT_TOOLS) — all 49 missing
+        # from GEOX_TOOL_MANIFEST, defaulting to "reasoning" which incorrectly
+        # required sessions. Fixed by assigning correct lanes per tool function.
+        # discovery = read-only, no session required
+        # evidence = data/state ops, no session required
+        # reasoning = compute, session recommended
+        # judgment = arifOS-gated, session+lease required
+        lane_map.update(
+            {
+                # ── DISCOVERY (read-only, no session) ──────────────────────────
+                "geox_las_inspect": "discovery",  # LAS metadata read
+                "geox_seismic_inspect": "discovery",  # seismic metadata read
+                "geox_seismic_segy_inspect": "discovery",  # SEG-Y header read
+                "geox_header_inspect": "discovery",  # generic header read
+                "geox_tops_inspect": "discovery",  # formation tops read
+                "geox_deviation_survey_inspect": "discovery",  # deviation survey read
+                "geox_basin_profile": "discovery",  # basin profiling
+                "geox_basin_resolve": "discovery",  # basin resolution
+                "geox_query_intake": "discovery",  # intake query
+                "geox_query_macrostrat": "discovery",  # Macrostrat lookup
+                "geox_coord_transform_tool": "discovery",  # pure math, no state
+                "geox_blockspace_resolution_tool": "discovery",  # pure math, no state
+                "geox_attribute_registry_list_tool": "discovery",  # registry read
+                "geox_evidence_discover": "discovery",  # evidence search
+                # ── EVIDENCE (data ops, no session required) ────────────────────
+                "geox_data_ingest_bundle": "evidence",  # data ingestion
+                "geox_data_qc_bundle": "evidence",  # QC operations
+                "geox_claim_create": "evidence",  # claim creation (alias: egs_claim_create)
+                "geox_claim_challenge": "evidence",  # claim challenge (alias: egs_claim_challenge)
+                "geox_evidence_attach": "evidence",  # attach evidence (alias: egs_evidence_attach)
+                "geox_literature_ingest": "evidence",  # literature ingestion
+                "geox_biostrat_constraint": "evidence",  # biostrat data
+                "geox_icgem_models": "evidence",  # ICGEM model ingestion
+                "geox_emag2_ingest": "evidence",  # EMAG2 data ingest
+                "geox_mt_forward": "evidence",  # MT forward model ingest
+                "geox_gravity_magnetic_forward": "evidence",  # gravity/mag ingest
+                "geox_fault_stick_ingest_tool": "evidence",  # fault data ingest
+                "geox_map_context_scene": "evidence",  # scene/map data
+                "geox_blend_volume_tool": "evidence",  # volume blending (data mutation)
+                "geox_horizon_contrast_surface": "evidence",  # surface creation
+                "geox_subsurface_generate_candidates": "evidence",  # candidate generation
+                "geox_subsurface_verify_integrity": "evidence",  # integrity check
+                # ── REASONING (compute, session recommended) ───────────────────
+                "geox_joint_inversion": "reasoning",  # joint inversion compute
+                "geox_prithvi_eo_inference": "reasoning",  # foundation model inference
+                "geox_lem_predict": "reasoning",  # LEM prediction
+                "geox_seismic_inversion": "reasoning",  # seismic inversion
+                "geox_seismic_compute_attribute_tool": "reasoning",  # seismic attribute compute
+                "geox_vision_minimax_inference": "reasoning",  # minimax vision inference
+                "geox_vision_calibrate": "reasoning",  # vision calibration
+                "geox_vision_audit": "reasoning",  # vision audit
+                "geox_vision_perceptual_inventory": "reasoning",  # perceptual inventory
+                # ── JUDGMENT (arifOS-gated, session+lease required) ───────────
+                "geox_claim_seal": "judgment",  # irreversible seal (alias: geox_claim mode=seal)
+                "geox_prospect_evaluate": "judgment",  # prospect eval (alias: geox_prospect)
+                "geox_claim_validate": "judgment",  # claim validation
+                "geox_doctrine_anti_beautiful_one": "judgment",  # doctrine check
+                "geox_doctrine_assumption_register": "judgment",  # assumption register
+                "geox_doctrine_godel_review": "judgment",  # Gödel review
+                "geox_abstraction_guard": "judgment",  # abstraction safety guard
+                "geox_segy_export_tool": "judgment",  # irreversible SEG-Y export
+                "geox_volume_frame_tool": "judgment",  # irreversible volume write
+            }
+        )
+        return lane_map
     except Exception:
         pass
 
-    # Priority 2: hardcoded fallback for 16 canonical tools (Phase 2)
+    # Priority 3: hardcoded fallback for canonical tools (Phase 2)
     return {
         # WELL DOMAIN
         "geox_well_ingest": "evidence",
@@ -155,6 +217,21 @@ def _load_lane_map() -> dict[str, str]:
         "geox_prospect": "judgment",
         # DOCTRINE DOMAIN
         "geox_doctrine": "judgment",
+        # ── DISCOVERY (backward-compat, no session) ─────────────────────
+        "geox_las_inspect": "discovery",
+        "geox_coord_transform_tool": "discovery",
+        "geox_blockspace_resolution_tool": "discovery",
+        "geox_attribute_registry_list_tool": "discovery",
+        # ── EVIDENCE (backward-compat, no session) ────────────────────
+        "geox_data_ingest_bundle": "evidence",
+        "geox_data_qc_bundle": "evidence",
+        "geox_claim_create": "evidence",
+        "geox_evidence_attach": "evidence",
+        # ── JUDGMENT (backward-compat, arifOS-gated) ─────────────────
+        "geox_claim_seal": "judgment",
+        "geox_prospect_evaluate": "judgment",
+        "geox_segy_export_tool": "judgment",
+        "geox_volume_frame_tool": "judgment",
     }
 
 
@@ -172,14 +249,14 @@ LANE_REQUIRES_LEASE: dict[str, bool] = {
     "discovery": False,
     "evidence": False,
     "reasoning": False,  # session recommended, lease optional
-    "judgment": True,     # lease required
+    "judgment": True,  # lease required
 }
 
 LANE_REQUIRES_ARIFOS_ROUTE: dict[str, bool] = {
     "discovery": False,
     "evidence": False,
-    "reasoning": False,   # direct or routed — both acceptable
-    "judgment": True,      # MUST route through arifOS kernel
+    "reasoning": False,  # direct or routed — both acceptable
+    "judgment": True,  # MUST route through arifOS kernel
 }
 
 LANE_DIRECT_CALL_FORBIDDEN_MESSAGE: dict[str, str] = {
