@@ -44,7 +44,7 @@ from starlette.responses import JSONResponse, RedirectResponse
 from starlette.routing import Mount, Route
 
 # Import canonical registry for source-of-truth
-from geox_mcp.registry import CANONICAL_COMPAT_TOOLS, CANONICAL_PUBLIC_TOOLS, SURFACE_TOOLS, INTERNAL_TOOLS
+from geox_mcp.registry import CANONICAL_COMPAT_TOOLS, CANONICAL_PUBLIC_TOOLS, SURFACE_TOOLS, INTERNAL_TOOLS, get_tool_domain
 from geox_mcp.routing import (
     GEOX_ENABLE_ARIFOS_ROUTE_QUERY,
     GEOX_ROUTE_QUERY_GUARD_ENABLED,  # noqa: F401 — kept for env compatibility, see create_app()
@@ -2046,32 +2046,14 @@ async def geox_surface_status(
         }
 
     # registry mode — canonical surface only
-    tool_domains = {
-        "geox_well_ingest": "earth.well",
-        "geox_well_qc": "earth.well",
-        "geox_well_desurvey": "earth.well",  # Phase 2.1 (2026-06-28)
-        "geox_petrophysics": "earth.petrophysics",
-        "geox_sequence": "earth.stratigraphy",
-        "geox_seismic_ingest": "earth.seismic",
-        "geox_seismic_compute": "earth.seismic",
-        "geox_seismic_interpret": "earth.seismic",
-        "geox_vision": "earth.perception",
-        "geox_subsurface_model": "earth.model",
-        "geox_geomechanics": "earth.mechanics",
-        "geox_basin": "earth.basin",
-        "geox_deep_time_state": "earth.deep_time",
-        "geox_claim": "governance.claims",
-        "geox_evidence": "governance.evidence",
-        "geox_prospect": "governance.prospect",
-        "geox_doctrine": "governance.doctrine",
-    }
-
+    # Domain sourced from GEOX_TOOL_MANIFEST via get_tool_domain() (registry.py).
+    # Single source of truth — structured manifest replaces hardcoded inline dict.
     canonical_list = []
     for tool_name in CANONICAL_PUBLIC_TOOLS:
         canonical_list.append(
             {
                 "name": tool_name,
-                "domain": tool_domains.get(tool_name, "earth.general"),
+                "domain": get_tool_domain(tool_name),
                 "affordance": {
                     "action_class": "ANALYZE"
                     if tool_name.startswith("geox_")

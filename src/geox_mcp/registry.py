@@ -160,57 +160,267 @@ CANONICAL_COMPAT_TOOLS: list[str] = [
 
 # ─────────────────────────────────────────────────────────────────────────────
 # TOOL MANIFEST — metadata for MCP server
+# Single source of truth for domain, lane, axis, and affordance metadata.
+# Structured source replaces hardcoded inline dict in server.py geox_surface_status.
 # ─────────────────────────────────────────────────────────────────────────────
 GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
-    # ── SURFACE-FACING: WELL DOMAIN (5) ───────────────────────────────────────
-    {"name": "geox_well_ingest", "axis": "observe", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_well_qc", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
+    # ── WELL DOMAIN (3) ───────────────────────────────────────────────────────
+    {
+        "name": "geox_well_ingest",
+        "domain": "earth.well",
+        "axis": "observe",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {"name": "geox_well_qc", "domain": "earth.well", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
     {
         "name": "geox_well_desurvey",
+        "domain": "earth.well",
         "axis": "compute",
         "lane": "evidence",
         "expose": True,
         "face": "surface",
-    },  # Phase 2.1 (2026-06-28): TVD/X/Y trajectory from deviation survey. Evidence-only.
-    {"name": "geox_petrophysics", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-    {"name": "geox_sequence", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-    # ── SURFACE-FACING: SEISMIC DOMAIN (4) ────────────────────────────────────
-    {"name": "geox_seismic_ingest", "axis": "observe", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_seismic_compute", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-    {"name": "geox_seismic_interpret", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-    {"name": "geox_vision", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-    # ── SURFACE-FACING: MODEL DOMAIN (2) ──────────────────────────────────────
-    {"name": "geox_subsurface_model", "axis": "reason", "lane": "judgment", "expose": True, "face": "surface"},
-    {"name": "geox_geomechanics", "axis": "compute", "lane": "reasoning", "expose": True, "face": "surface"},
-    # ── SURFACE-FACING: BASIN DOMAIN (2) ──────────────────────────────────────
-    {"name": "geox_basin", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
-    {"name": "geox_deep_time_state", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
-    # ── SURFACE-FACING: FEDERATION DISCOVERY (1) ───────────────────────────────
-    {"name": "geox_surface_status", "axis": "verify", "lane": "discovery", "expose": True, "face": "surface"},
-    # ── INTERNAL PLUMBING: GOVERNANCE + DOCTRINE (4) ──────────────────────────
-    {"name": "geox_claim", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
-    {"name": "geox_evidence", "axis": "reason", "lane": "evidence", "expose": True, "face": "internal"},
-    {"name": "geox_prospect", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
-    {"name": "geox_doctrine", "axis": "verify", "lane": "discovery", "expose": True, "face": "internal"},
-    # ── EGS (Earth Grounding System) — 12 tools (2026-06-28) ────────────────────
+    },  # Phase 2.1 (2026-06-28)
+    # ── PETROPHYSICS DOMAIN (1) ───────────────────────────────────────────────
+    {
+        "name": "geox_petrophysics",
+        "domain": "earth.petrophysics",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── STRATIGRAPHY DOMAIN (1) ────────────────────────────────────────────────
+    {
+        "name": "geox_sequence",
+        "domain": "earth.stratigraphy",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── SEISMIC DOMAIN (3) ────────────────────────────────────────────────────
+    {
+        "name": "geox_seismic_ingest",
+        "domain": "earth.seismic",
+        "axis": "observe",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_seismic_compute",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_seismic_interpret",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── PERCEPTION DOMAIN (1) ─────────────────────────────────────────────────
+    {
+        "name": "geox_vision",
+        "domain": "earth.perception",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── MODEL DOMAIN (1) ─────────────────────────────────────────────────────
+    {
+        "name": "geox_subsurface_model",
+        "domain": "earth.model",
+        "axis": "reason",
+        "lane": "judgment",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── MECHANICS DOMAIN (1) ─────────────────────────────────────────────────
+    {
+        "name": "geox_geomechanics",
+        "domain": "earth.mechanics",
+        "axis": "compute",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── BASIN DOMAIN (1) ─────────────────────────────────────────────────────
+    {"name": "geox_basin", "domain": "earth.basin", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
+    # ── DEEP TIME DOMAIN (1) ─────────────────────────────────────────────────
+    {
+        "name": "geox_deep_time_state",
+        "domain": "earth.deep_time",
+        "axis": "reason",
+        "lane": "discovery",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── GENERAL DISCOVERY (1) ─────────────────────────────────────────────────
+    {
+        "name": "geox_surface_status",
+        "domain": "earth.general",
+        "axis": "verify",
+        "lane": "discovery",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── GOVERNANCE DOMAIN (4) ─────────────────────────────────────────────────
+    {
+        "name": "geox_claim",
+        "domain": "governance.claims",
+        "axis": "reason",
+        "lane": "judgment",
+        "expose": True,
+        "face": "internal",
+    },
+    {
+        "name": "geox_evidence",
+        "domain": "governance.evidence",
+        "axis": "reason",
+        "lane": "evidence",
+        "expose": True,
+        "face": "internal",
+    },
+    {
+        "name": "geox_prospect",
+        "domain": "governance.prospect",
+        "axis": "reason",
+        "lane": "judgment",
+        "expose": True,
+        "face": "internal",
+    },
+    {
+        "name": "geox_doctrine",
+        "domain": "governance.doctrine",
+        "axis": "verify",
+        "lane": "discovery",
+        "expose": True,
+        "face": "internal",
+    },
+    # ── EGS (Earth Grounding System) — 12 tools (2026-06-28) ─────────────────
     # Typed earth graph, uncertainty algebra, claim/evidence lifecycle.
-    # Query tools are pure reads → discovery lane (no session needed).
-    # Claim tools carry evidence → evidence lane.
-    # Compute tools require reasoning → reasoning lane.
     # "Language models consume EGS; they do not replace it."
-    {"name": "geox_egs_query_entity", "axis": "observe", "lane": "discovery", "expose": True, "face": "surface"},
-    {"name": "geox_egs_query_claim", "axis": "observe", "lane": "discovery", "expose": True, "face": "surface"},
-    {"name": "geox_egs_query_uncertainty", "axis": "observe", "lane": "discovery", "expose": True, "face": "surface"},
-    {"name": "geox_egs_query_provenance", "axis": "observe", "lane": "discovery", "expose": True, "face": "surface"},
-    {"name": "geox_egs_claim_create", "axis": "reason", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_egs_claim_challenge", "axis": "reason", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_egs_evidence_attach", "axis": "reason", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_egs_evidence_reason", "axis": "reason", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_egs_seismic_compute", "axis": "compute", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_egs_rock_physics", "axis": "compute", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_egs_data_qc_bundle", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_egs_scenario_audit", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
+    # Query tools → discovery lane (pure reads, no session needed).
+    # Claim/evidence tools → evidence lane.
+    # Compute tools → evidence lane (bounded transforms, not full reasoning).
+    {
+        "name": "geox_egs_query_entity",
+        "domain": "earth.governance",
+        "axis": "observe",
+        "lane": "discovery",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_query_claim",
+        "domain": "earth.governance",
+        "axis": "observe",
+        "lane": "discovery",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_query_uncertainty",
+        "domain": "earth.governance",
+        "axis": "observe",
+        "lane": "discovery",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_query_provenance",
+        "domain": "earth.governance",
+        "axis": "observe",
+        "lane": "discovery",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_claim_create",
+        "domain": "earth.governance",
+        "axis": "reason",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_claim_challenge",
+        "domain": "earth.governance",
+        "axis": "reason",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_evidence_attach",
+        "domain": "earth.governance",
+        "axis": "reason",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_evidence_reason",
+        "domain": "earth.governance",
+        "axis": "reason",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_seismic_compute",
+        "domain": "earth.seismic",
+        "axis": "compute",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_rock_physics",
+        "domain": "earth.petrophysics",
+        "axis": "compute",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_data_qc_bundle",
+        "domain": "earth.general",
+        "axis": "verify",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_egs_scenario_audit",
+        "domain": "earth.governance",
+        "axis": "verify",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
 ]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HELPERS — built from manifest, single source of truth
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def get_tool_domain(tool_name: str) -> str:
+    """Return the domain for a tool from the manifest. Falls back to earth.general."""
+    for entry in GEOX_TOOL_MANIFEST:
+        if entry["name"] == tool_name:
+            return entry.get("domain", "earth.general")
+    return "earth.general"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
