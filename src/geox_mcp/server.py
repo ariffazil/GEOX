@@ -1708,8 +1708,10 @@ async def adapters_handler(request: Request) -> JSONResponse:
 # FORGE 2026-06-28: /.well-known/agent.json for AAA A2A mesh discovery.
 
 _GEOX_AGENT_CARD = {
-    "schema": "agent-manifest/v1",
+    "schema_version": "0.2",
+    "organ_id": "geox",
     "name": "GEOX — Governed Earth Intelligence",
+    "role": "earth",
     "description": (
         "Earth coprocessor for arifOS federation. Provides geoscience, "
         "petrophysics, seismic, basin, deep time, and geomechanical evidence "
@@ -1717,6 +1719,8 @@ _GEOX_AGENT_CARD = {
     ),
     "version": "2026.06.28",
     "url": "https://geox.arif-fazil.com",
+    "a2a_endpoint": "http://127.0.0.1:8081/a2a",
+    "agent_card_url": "http://127.0.0.1:8081/.well-known/agent-card.json",
     "endpoints": {
         "mcp": "https://geox.arif-fazil.com/mcp",
         "health": "https://geox.arif-fazil.com/health",
@@ -1731,27 +1735,27 @@ _GEOX_AGENT_CARD = {
         "peer_coordinator": "https://aaa.arif-fazil.com",
         "constitutional_kernel": "https://arifos.arif-fazil.com",
     },
-    "owned_mcp": {
-        "server": "geox-mcp",
-        "transport": "streamable-http",
-        "tool_count": 30,
-        "canonical_tools": [
-            "geox_well_ingest",
-            "geox_well_qc",
-            "geox_well_desurvey",
-            "geox_petrophysics",
-            "geox_sequence",
-            "geox_seismic_ingest",
-            "geox_seismic_compute",
-            "geox_seismic_interpret",
-            "geox_vision",
-            "geox_subsurface_model",
-            "geox_geomechanics",
-            "geox_basin",
-            "geox_deep_time_state",
-            "geox_surface_status",
-        ],
-    },
+    "owned_mcp": [
+        "geox_well_ingest",
+        "geox_well_qc",
+        "geox_well_desurvey",
+        "geox_petrophysics",
+        "geox_sequence",
+        "geox_seismic_ingest",
+        "geox_seismic_compute",
+        "geox_seismic_interpret",
+        "geox_vision",
+        "geox_subsurface_model",
+        "geox_geomechanics",
+        "geox_basin",
+        "geox_deep_time_state",
+        "geox_surface_status",
+        "geox_claim",
+        "geox_evidence",
+        "geox_prospect",
+        "geox_doctrine",
+    ],
+    "judge_skills": [],
     "skills": [
         {"id": "earth.evidence", "name": "Earth Evidence", "tags": ["geoscience", "evidence"]},
         {"id": "basin.resolve", "name": "Basin Resolution", "tags": ["basin", "stratigraphy"]},
