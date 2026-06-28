@@ -105,9 +105,14 @@ def desurvey(
         raise ValueError("well_id required (non-empty string)")
     if not collar or not isinstance(collar, dict):
         raise ValueError("collar required (dict with x_collar, y_collar, z_collar)")
-    for k in ("x_collar", "y_collar"):
+    required_collar_keys = ("x_collar", "y_collar")
+    optional_collar_keys = ("z_collar", "ground_elev")
+    for k in required_collar_keys:
         if k not in collar:
             raise ValueError(f"collar missing required key: {k}")
+    for k in optional_collar_keys:
+        if k in collar and not isinstance(collar[k], (int, float)):
+            raise ValueError(f"collar.{k} must be numeric, got {type(collar[k]).__name__}")
     if not survey or not isinstance(survey, list):
         raise ValueError("survey required (list of {md, inc, azi})")
     if len(survey) < MIN_SURVEY_STATIONS:

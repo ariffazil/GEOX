@@ -112,6 +112,9 @@ async def geox_subsurface_generate_candidates(
         return enrich_envelope_with_metabolic(envelope, "geox_subsurface_generate_candidates")
 
     # ── Basin metabolize mode (absorbs geox_task_metabolize_basin) ───────────
+    # F4 CLARITY: prevent unbounded recursion in basin metabolize mode.
+    # The recursive call passes evidence_refs=[single_ref] which won't trigger
+    # this branch again (len == 1, not > 1), so depth=0 guard is sufficient.
     if basin_context is not None and len(evidence_refs) > 1:
         if ctx:
             ctx.report_progress(20, 100)

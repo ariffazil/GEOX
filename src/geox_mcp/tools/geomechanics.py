@@ -16,7 +16,10 @@ from __future__ import annotations
 
 from typing import Optional
 
+import logging
 from pydantic import BaseModel, Field
+
+logger = logging.getLogger("geox.geomechanics")
 
 from geox_core.physics.state import Physics9State
 from geox_core.physics.parameters import (
@@ -60,6 +63,15 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
     partial/mixed-type dicts without hitting SESSION_REQUIRED.  Buoyancy is
     available when thickness_m is provided.
     """
+    # F1 AMANAH: validate input structure before computation
+    if not isinstance(request.state, dict):
+        return GeomechanicsResponse(ok=False, error="state must be a dict")
+    if not all(k in request.state for k in ("rho", "vp", "vs")):
+        return GeomechanicsResponse(
+            ok=False,
+            error=f"state dict must contain 'rho', 'vp', 'vs' (required Physics9 fields). Got: {list(request.state.keys())}",
+        )
+
     try:
         # A1 fix: from_raw_dict() handles partial/mixed-type dicts gracefully
         s = Physics9State.from_raw_dict(request.state)
@@ -114,8 +126,13 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
             )
 
         return GeomechanicsResponse(ok=True, result=result)
+    except TypeError as e:
+        return GeomechanicsResponse(ok=False, error=f"TYPE_ERROR: {e}")
+    except ValueError as e:
+        return GeomechanicsResponse(ok=False, error=f"VALUE_ERROR: {e}")
     except Exception as e:
-        return GeomechanicsResponse(ok=False, error=str(e))
+        logger.exception("geox_geomechanics unexpected error")
+        return GeomechanicsResponse(ok=False, error=f"UNEXPECTED: {e}")
 
 
 __all__ = ["GeomechanicsRequest", "GeomechanicsResponse", "geox_geomechanics"]

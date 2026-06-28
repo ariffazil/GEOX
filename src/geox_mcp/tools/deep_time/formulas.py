@@ -11,6 +11,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
+import math
 from math import cos, radians, sin
 
 from .schemas import EarthStateVariable
@@ -85,9 +86,7 @@ def day_length_hours(age_ma: float) -> float:
     """
     if age_ma < 0:
         raise ValueError(f"age_ma must be >= 0, got {age_ma}")
-    penalty = DAY_LENGTH_ANCIENT_PENALTY_HOURS * (
-        1.0 - 2.71828 ** (-age_ma / DAY_LENGTH_DECAY_TIMESCALE_MA)
-    )
+    penalty = DAY_LENGTH_ANCIENT_PENALTY_HOURS * (1.0 - math.e ** (-age_ma / DAY_LENGTH_DECAY_TIMESCALE_MA))
     return 24.0 - penalty
 
 
@@ -98,13 +97,13 @@ def day_length_hours(age_ma: float) -> float:
 # a CSV asset in a future phase.
 ECCENTRICITY_BY_ERA_MA: list[tuple[float, float, float]] = [
     # (top_ma, base_ma, eccentricity_value)
-    (0.0, 0.0117, 0.0167),     # Holocene (present value)
-    (0.0117, 2.58, 0.04),       # Pleistocene average
-    (2.58, 23.03, 0.04),        # Neogene
-    (23.03, 66.0, 0.04),        # Paleogene
-    (66.0, 145.0, 0.05),        # Cretaceous (low chaos regime)
-    (145.0, 250.0, 0.06),       # Late Triassic to Late Jurassic
-    (250.0, 540.0, 0.07),       # Earlier Phanerozoic (approximation)
+    (0.0, 0.0117, 0.0167),  # Holocene (present value)
+    (0.0117, 2.58, 0.04),  # Pleistocene average
+    (2.58, 23.03, 0.04),  # Neogene
+    (23.03, 66.0, 0.04),  # Paleogene
+    (66.0, 145.0, 0.05),  # Cretaceous (low chaos regime)
+    (145.0, 250.0, 0.06),  # Late Triassic to Late Jurassic
+    (250.0, 540.0, 0.07),  # Earlier Phanerozoic (approximation)
 ]
 
 
@@ -128,6 +127,7 @@ def orbital_eccentricity_approx(age_ma: float) -> float | None:
 # La2011 range: 22.1° - 24.5° over 0-250 Ma
 # Mean ~23.3° throughout; for simplicity, return 23.4° ± 0.5°
 
+
 def orbital_obliquity_deg(age_ma: float) -> float:
     """Approximate Earth axial obliquity (tilt) at `age_ma`.
 
@@ -138,6 +138,7 @@ def orbital_obliquity_deg(age_ma: float) -> float:
 
 
 # ─── Wrapping helpers for vector assembly ─────────────────────────────────────
+
 
 def wrap_solar_luminosity(age_ma: float) -> EarthStateVariable:
     val = solar_luminosity_fraction(age_ma)
