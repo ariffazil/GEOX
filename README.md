@@ -65,7 +65,7 @@ GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federatio
 [![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
 [![Authority](https://img.shields.io/badge/authority-EVIDENCE__ONLY-f97316)](GENESIS/)
 [![Status](https://img.shields.io/badge/status-active-success)](CONTEXT.md)
-[![Live](https://img.shields.io/badge/live-geox.arif--fazil.com%2Fmcp-blueviolet)](https://geox.arif-fazil.com/mcp)
+[![Live](https://img.shields.io/badge/live-mcp.arif--fazil.com%2Fmcp-blueviolet)](https://mcp.arif-fazil.com/mcp)
 [![RASA](https://img.shields.io/badge/RASA-context__fit-blue)](docs/ac_risk.md)
 
 ---
@@ -148,7 +148,7 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 - **An earth evidence coprocessor** — it ingests well logs, seismic volumes, DST data, and geological reports; it runs petrophysics, stratigraphy, and prospect evaluation; it outputs structured, physics-constrained evidence receipts.
 - **Constitutionally governed** — every output carries epistemic tags (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN), uncertainty bands (P10/P50/P90), and provenance chains.
-- **Agent-accessible** — all 30 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
+- **Agent-accessible** — all 30 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Integrated public frontdoor: `https://mcp.arif-fazil.com/mcp` (proxies internally through arifOS).
 - **Dual-transport** — systemd service (`geox-mcp.service`) for HTTP/SSE; `--transport stdio` for Claude Code, OpenCode, Continue CLI, and other local agents.
 
 ### What GEOX IS NOT
@@ -238,7 +238,7 @@ make forge        # security-audit (Trivy + Semgrep + Gitleaks + Ruff)
 
 ## 4. CAPABILITY MAP — 30 CANONICAL TOOLS
 
-All 30 canonical tools are callable via MCP at `https://geox.arif-fazil.com/mcp` (HTTP) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, epistemic tags, uncertainty bands, provenance, and a `godel_wall` verdict. Every call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
+All 30 canonical tools are callable via the single gateway at `https://mcp.arif-fazil.com/mcp` (HTTP) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, epistemic tags, uncertainty bands, provenance, and a `godel_wall` verdict. Every call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
 
 **30 canonical tools** — Phase 2.1 (locked 2026-06-28, RASA release 2026-06-29):
 
@@ -554,9 +554,9 @@ GEOX exposes all 30 canonical tools via MCP (Model Context Protocol). Two transp
 
 **HTTP/SSE (for remote agents):**
 ```
-Endpoint: https://geox.arif-fazil.com/mcp
-Transport: Streamable HTTP
-Auth: Cloudflare Tunnel (no API key required for localhost-bridged agents)
+Unified Frontdoor: https://mcp.arif-fazil.com/mcp
+Transport: Streamable HTTP (proxied internally via arifOS to port 8081)
+Auth: arifOS Gateway Authorization (all organs trust arifOS as the single verifier)
 ```
 
 **stdio (for local agents):**
