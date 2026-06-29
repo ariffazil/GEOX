@@ -31,7 +31,7 @@ scope: /root/geox
 
 ![GEOX Earth Intelligence Banner](./docs/assets/geox_hero_banner.jpg)
 
-> **Public surface: 30 canonical MCP tools** (26 surface + 4 internal)
+> **Public surface: canonical MCP tools** (verify with `tools/list` at runtime)
 > **Backward-compat: 49 legacy aliases mapped to the canonical surface**
 > **Governance: arifOS F1–F13 · 888 JUDGE · VAULT999**
 > **Authority: evidence-only · no drilling decision · no capital allocation**
@@ -44,22 +44,38 @@ scope: /root/geox
 
 **How do I run it?** `uv sync --frozen` then `python3 -m geox_mcp.server --transport stdio` (local) or `systemctl restart geox-mcp` (production on port 8081).
 
-**How do I verify it is alive?** `curl http://127.0.0.1:8081/health` → `{"status":"healthy","canonical_tools":30,...}` or call `geox_surface_status(mode="health")` for full registry probe.
+**How do I verify it is alive?** `curl http://127.0.0.1:8081/health` → `{"status":"healthy","canonical_tools":"<N>",...}` or call `geox_surface_status(mode="health")` for full registry probe. Tool count varies by build — run `tools/list` for the exact number.
 
 GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It **witnesses** the Earth and hands evidence to arifOS for adjudication. It never authorizes. It never allocates capital.
+
+**Federation Position (canonical organ map):**
+
+```
+Arif (F13 SOVEREIGN)
+    ↓
+AAA / Hermes / OpenClaw (A2A)
+    ↓
+arifOS KERNEL (F1-F13, :8088)
+    ↓
+GEOX (EARTH, :8081)  ← witness only, evidence-only
+    ↓
+A-FORGE (:7071)  ← executes after SEAL
+    ↓
+VAULT999  ← immutable record
+```
 
 | Field | Current |
 |---|---|
 | Runtime | Python FastMCP 3.4.2 |
-| Public MCP surface | 30 canonical tools (26 surface + 4 internal) |
-| Internal capability contracts | 30 canonical (49 backward-compat aliases not in canonical surface) |
+| Public MCP surface | 54 canonical tools (verify with `tools/list` at runtime) |
+| Internal capability contracts | 54 canonical (49 backward-compat aliases not in canonical surface) |
 | License | Business Source License 1.1 (BSL-1.1) |
 | Governance | arifOS F1–F13 |
 | Authority | Evidence-only |
 | Status | Active (v2026.06.29-BSL-GOVERNANCE); verify with `curl :8081/health` |
 
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![MCP Tools](https://img.shields.io/badge/MCP-30%20canonical%20tools-10b981)](src/geox_mcp/server.py)
+[![MCP Tools](https://img.shields.io/badge/MCP-canonical%20tools-10b981)](src/geox_mcp/server.py)
 [![Organ](https://img.shields.io/badge/organ-EARTH-f59e0b)](FEDERATION_CONTRACT.md)
 [![License](https://img.shields.io/badge/license-BSL--1.1-ef4444?logo=gnu)](LICENSE)
 [![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
@@ -220,7 +236,8 @@ curl http://127.0.0.1:8081/health
 curl https://geox.arif-fazil.com/health
 
 # Expected response (current as of RASA release):
-# {"status":"healthy","service":"geox-unified","canonical_tools":30,"git_version":"geox-<HEAD>","contract_epoch":"2026-06-28-GEOX-30CANONICAL-RASA",...}
+# {"status":"healthy","service":"geox-unified","canonical_tools":"<N>","git_version":"geox-<HEAD>","contract_epoch":"2026-06-28-GEOX-CANONICAL-RASA",...}
+# Tool count varies by build — run `tools/list` at runtime for exact number.
 ```
 
 ### 3.5 Build & Test
