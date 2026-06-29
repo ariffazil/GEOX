@@ -1358,7 +1358,8 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
     """
 
     SUPPORTED_VERSIONS: frozenset[str] = frozenset({
-        "2025-06-18",  # current canonical
+        "2025-11-25",  # Streamable HTTP + outputSchema (GEOX canonical)
+        "2025-06-18",  # transitional canonical
         "2024-11-25",  # FastMCP legacy — in active use across federation
         "2024-11-05",  # old SSE transport — backwards compat for Claude Desktop
     })
