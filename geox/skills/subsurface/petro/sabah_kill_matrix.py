@@ -457,7 +457,7 @@ def _K006_reservoir_quality_precheck(
     - φ < 15% → Vp_Hill > 5.4 km/s → overlaps basement/igneous
     - Discrimination gap: Vp alone cannot distinguish at φ < 15%
 
-    PETRONAS Sabah data: Kinabalu porosity 3-15% (sub-commercial)
+    Operator Sabah data: Kinabalu porosity 3-15% (sub-commercial)
     Solisip-1: 138 m carbonate non-productive
 
     Rule: If Vp > 5.4 km/s AND porosity < 0.15 AND no well control → KILL.
@@ -478,7 +478,7 @@ def _K006_reservoir_quality_precheck(
             verdict=KillVerdict.KILL,
             evidence=f"Vp={vp_m_s:.0f} m/s + φ={porosity_fraction:.1%} — in basement overlap zone (Vp>5.5 km/s, φ<15%)",
             threshold="Vp + porosity in basement/igneous overlap — cannot confirm carbonate lithology",
-            kill_logic="At low porosity (<15%), carbonate Vp overlaps basement/igneous Vp. Without well control or AVO, cannot confirm carbonate. PETRONAS Kinabalu (φ=3-15%) = sub-commercial. Solisip-1 = non-productive.",
+            kill_logic="At low porosity (<15%), carbonate Vp overlaps basement/igneous Vp. Without well control or AVO, cannot confirm carbonate. Operator Kinabalu (φ=3-15%) = sub-commercial. Solisip-1 = non-productive.",
         )
 
     # Thin prospect warning
@@ -670,7 +670,7 @@ SABAH_TEST_PROSPECTS = {
         "is_isolated_mound_in_deep_water": None,
         "vp_m_s": 4800.0,  # estimated
         "porosity_fraction": 0.10,  # Kinabalu: 3-15%
-        "note": "Solisip-1: 138 m carbonate but sub-commercial porosity (PETRONAS data)",
+        "note": "Solisip-1: 138 m carbonate but sub-commercial porosity (Operator data)",
     },
     "Tepat (proven)": {
         "age_ma": 15.0,

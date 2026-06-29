@@ -574,7 +574,7 @@ async def geox_reality_context() -> str:
         "available_reports": [
             "GSM-MADON-2021-MALAY-BASIN.pdf",
             "USGS-BISHOP-2002-MALAY-BASIN.pdf",
-            "PETRONAS-1999-PETROLEUM-GEOLOGY-MALAYSIA.pdf",
+            "NOC-1999-PETROLEUM-GEOLOGY-MALAYSIA.pdf",
         ],
         "forbidden_claims": [
             "Silent report usage without provenance",
@@ -606,7 +606,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Use this to discover available resources across the arifOS, GEOX, WELL, and WEALTH domains."
         ),
     )(geox_tree777_index)
-    mcp.resource_template(
+    mcp.resource(
         "tree777://skills/geox/{name}",
         description=(
             "Individual GEOX skill page from the TREE777 wiki. "
@@ -614,7 +614,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Example: tree777://skills/geox/spatial-grounding"
         ),
     )(geox_tree777_skill)
-    mcp.resource_template(
+    mcp.resource(
         "tree777://geo/concepts/{name}",
         description=(
             "Geoscience concept page from the TREE777 wiki. "
@@ -622,7 +622,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Example: tree777://geo/concepts/TREE777"
         ),
     )(geox_tree777_concept)
-    mcp.resource_template(
+    mcp.resource(
         "tree777://geo/scars/{name}",
         description=(
             "GEOX scar/incident record from the TREE777 wiki. "
@@ -634,7 +634,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         "geox://capabilities",
         description="Full GEOX capability map: tools, domains, claim limits, next best actions. Read at session start.",
     )(geox_capabilities)
-    mcp.resource_template(
+    mcp.resource(
         "geox://resources/{category}/{name}",
         description=(
             "Agent knowledge pack: ontology, playbooks, schemas, examples. "
@@ -715,7 +715,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
 
         return _b64.b64encode(raw).decode("ascii")
 
-mcp.resource_template(
+    mcp.resource(
         "geox://render/surfaces/{surface_id}",
         description="Binary surface data (horizon mesh, fault plane). "
         "Returns base64-encoded bytes. Format: geox://render/surfaces/",
@@ -723,7 +723,6 @@ mcp.resource_template(
 
     async def geox_render_cube_slice(volume_id: str, orientation: str, slice_index: int) -> str:
         """Serve binary cube slice data (2D frame from 3D volume) via MCP resource.
-
         Returns raw Float32Array bytes (little-endian) as base64.
         """
         import base64 as _b64

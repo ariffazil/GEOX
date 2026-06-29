@@ -40,7 +40,7 @@ from fastmcp import FastMCP
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse, RedirectResponse
+from starlette.responses import JSONResponse, RedirectResponse, StreamingResponse
 from starlette.routing import Mount, Route
 
 # Import canonical registry for source-of-truth
@@ -59,7 +59,7 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.06.28-phase2.1"
+GEOX_VERSION = "v2026.06.29-phase2.2-rasa"
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
 # Backward-compat wrappers for 49 legacy alias names.
 GEOX_CONTRACT_EPOCH = "2026-06-28-GEOX-30TOOLS-PHASE21"
@@ -531,6 +531,33 @@ async def _icgem_models() -> dict:
     return (await geox_icgem_models(ICGEMListRequest())).model_dump(mode="json")
 
 
+@mcp.tool(name="geox_geochem_kinetics")
+async def _geochem_kinetics(
+    initial_smectite_frac: float = 0.5,
+    T_C: float = 100.0,
+    time_ma: float = 10.0,
+    TOC_wt: float = 0.05,
+    kerogen_type: str = "II",
+) -> dict:
+    """Foundational Geochemistry: computes mineral kinetics (smectite->illite) and kerogen maturation.
+    
+    This acts as the causal base layer feeding into RockPhysics13State (porosity budget, void generation).
+    """
+    from geox_mcp.tools.geochemistry import (
+        GeochemRequest,
+        geox_geochem_kinetics as _impl,
+    )
+
+    req = GeochemRequest(
+        initial_smectite_frac=initial_smectite_frac,
+        T_C=T_C,
+        time_ma=time_ma,
+        TOC_wt=TOC_wt,
+        kerogen_type=kerogen_type,
+    )
+    return (await _impl(req)).model_dump(mode="json")
+
+
 # ── W13+ FORGE — Phase C: Multi-physics Earth Witness (joint inversion + CSEM/MT + biostrat) ──
 @mcp.tool(name="geox_joint_inversion")
 async def _joint_inversion(
@@ -539,7 +566,7 @@ async def _joint_inversion(
     max_iter: int = 50,
     tolerance: float = 1e-3,
 ) -> dict:
-    """Joint multi-physics inversion: fuse N modalities into one Physics9State per cell.
+    """Joint multi-physics inversion: fuse N modalities into one Physics13State per cell.
 
     Each observation: {modality, value, uncertainty?, weight?, depth_m?}.
     Supported modalities: seismic_impedance, seismic_vpvs, gravity, magnetic, mt_resistivity.
@@ -584,7 +611,7 @@ async def _biostrat_constraint(
     state: dict,
     age_ma: float,
 ) -> dict:
-    """Biostratigraphic time-facies admissibility check for a Physics9State cell.
+    """Biostratigraphic time-facies admissibility check for a Physics13State cell.
 
     Returns zone name, admissible materials, and consistency verdict.
     """
@@ -626,7 +653,7 @@ async def _seismic_inversion(
     return (await geox_seismic_inversion(req)).model_dump(mode="json")
 
 
-# ── W13+ FORGE — Phase C: Geomechanics (K, G, E, ν from Physics9State) ──
+# ── W13+ FORGE — Phase C: Geomechanics (K, G, E, ν from Physics13State) ──
 @mcp.tool(name="geox_geomechanics")
 async def _geomechanics(
     state: dict,
@@ -636,7 +663,7 @@ async def _geomechanics(
     thickness_m: float | None = None,
     rho_fluid: float | None = 1025.0,
 ) -> dict:
-    """Derive geomechanical moduli (K, G, E, ν, AI) from a Physics9State cell.
+    """Derive geomechanical moduli (K, G, E, ν, AI) from a Physics13State cell.
 
     Returns all derived scalars + sanity flags + grade (RAW/AAA) + godel_wall.
     Optional: buoyancy computation when thickness_m is provided.
@@ -1286,6 +1313,92 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
+class McpAuthMiddleware(BaseHTTPMiddleware):
+    """Validate Bearer token on every MCP HTTP request — MCP spec 2025-06-18 §Security.
+
+    Spec: servers MUST validate credentials on every request.
+    Returns HTTP 401 if Authorization header is missing or invalid.
+    Skips OPTIONS (CORS preflight) and all non-/mcp paths.
+    Token must equal GEOX_SECRET_TOKEN env var (fail-closed if unset in HTTP mode).
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        # Bypass: CORS preflight, non-MCP paths
+        if request.method == "OPTIONS" or not request.url.path.startswith("/mcp"):
+            return await call_next(request)
+        # Bypass: token not configured (stdio mode or dev env)
+        if not GEOX_SECRET_TOKEN or GEOX_SECRET_TOKEN == "stdio-bypass":
+            return await call_next(request)
+        auth = request.headers.get("authorization", "")
+        expected = f"Bearer {GEOX_SECRET_TOKEN}"
+        if auth != expected:
+            logger.warning(
+                "MCP_AUTH_401: missing/invalid Bearer token — path=%s method=%s",
+                request.url.path,
+                request.method,
+            )
+            return JSONResponse(
+                {
+                    "error": "Unauthorized",
+                    "detail": "Valid Bearer token required. Set Authorization: Bearer <GEOX_SECRET_TOKEN>.",
+                },
+                status_code=401,
+            )
+        return await call_next(request)
+
+
+class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
+    """Validate MCP-Protocol-Version header on HTTP requests — MCP spec 2025-06-18 §Transport.
+
+    Spec: every HTTP request after initialize MUST include MCP-Protocol-Version.
+    Server MUST reject requests with missing or mismatched version with HTTP 400.
+
+    Grace rule: if no Mcp-Session-Id header is present (i.e. this is an initialize
+    request), allow a missing version header — many clients omit it on the first call.
+    """
+
+    SUPPORTED_VERSIONS: frozenset[str] = frozenset({
+        "2025-06-18",  # current canonical
+        "2024-11-25",  # FastMCP legacy — in active use across federation
+        "2024-11-05",  # old SSE transport — backwards compat for Claude Desktop
+    })
+
+    async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS" or not request.url.path.startswith("/mcp"):
+            return await call_next(request)
+        version = request.headers.get("mcp-protocol-version", "")
+        if not version:
+            # Grace period: if no Mcp-Session-Id, this is an initialize — allow
+            session_id = request.headers.get("mcp-session-id", "")
+            if session_id:
+                logger.warning(
+                    "MCP_VERSION_400: mcp-protocol-version header absent after initialize "
+                    "(session=%s)",
+                    session_id[:8],
+                )
+                return JSONResponse(
+                    {
+                        "error": "Bad Request",
+                        "detail": "MCP-Protocol-Version header required after initialize",
+                    },
+                    status_code=400,
+                )
+            return await call_next(request)
+        if version not in self.SUPPORTED_VERSIONS:
+            logger.warning("MCP_VERSION_400: unsupported version=%s", version)
+            return JSONResponse(
+                {
+                    "error": "Bad Request",
+                    "detail": (
+                        f"Unsupported MCP-Protocol-Version: '{version}'. "
+                        f"Supported: {sorted(self.SUPPORTED_VERSIONS)}"
+                    ),
+                },
+                status_code=400,
+            )
+        return await call_next(request)
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # HEALTH & STATUS HANDLERS
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1493,7 +1606,7 @@ async def mcp_server_card(request: Request) -> JSONResponse:
             "url": "https://geox.arif-fazil.com/mcp",
             "version": GEOX_VERSION.lstrip("v"),
             "capabilities": {"tools": True, "resources": True, "prompts": True},
-            "authentication": {"type": "none"},
+            "authentication": {"type": "bearer", "required": True, "header": "Authorization"},
         }
     )
 
@@ -1501,6 +1614,61 @@ async def mcp_server_card(request: Request) -> JSONResponse:
 async def tools_list_handler(request: Request) -> JSONResponse:
     tools = [{"name": t} for t in CANONICAL_PUBLIC_TOOLS]
     return JSONResponse({"tools": tools, "count": len(tools)})
+
+
+async def delete_mcp_handler(request: Request) -> JSONResponse:
+    """DELETE /mcp — explicit session termination (MCP spec 2025-06-18 §Session Lifecycle).
+
+    Spec: clients MUST be able to send DELETE /mcp to terminate a session.
+    Server MUST handle DELETE and return HTTP 200.
+    FastMCP stateful session cleanup is signalled by connection close on the
+    FastMCP layer; this handler provides the required HTTP-level acknowledgement.
+    """
+    session_id = request.headers.get("mcp-session-id", "")
+    if session_id:
+        logger.info("MCP_SESSION_TERMINATE: session=%s", session_id[:8])
+    else:
+        logger.info("MCP_SESSION_TERMINATE: DELETE /mcp with no session ID")
+    return JSONResponse(
+        {"ok": True, "terminated": True, "session_id": session_id or None},
+        status_code=200,
+    )
+
+
+async def legacy_sse_handler(request: Request) -> StreamingResponse:
+    """GET /sse — legacy MCP SSE transport backwards compat (spec 2024-11-05).
+
+    Old clients (Claude Desktop <1.x, pre-2025-06-18 agents) open GET /sse
+    first, receive an 'endpoint' event pointing to the POST URL, then POST
+    to /messages (or /mcp) for JSON-RPC messages.
+
+    MCP spec Backwards Compatibility: servers SHOULD handle this pattern.
+    New clients should use Streamable HTTP (POST /mcp) directly.
+    """
+    base = str(request.base_url).rstrip("/")
+    post_url = f"{base}/mcp"
+
+    async def event_stream():
+        # Emit endpoint event — URL clients should POST to
+        endpoint_data = json.dumps({"uri": post_url, "sessionId": None})
+        yield f"event: endpoint\ndata: {endpoint_data}\n\n"
+        # Keep-alive pings every 15 s (prevents proxy / load-balancer timeouts)
+        try:
+            while True:
+                await asyncio.sleep(15)
+                yield ": keepalive\n\n"
+        except asyncio.CancelledError:
+            pass
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",  # disable Caddy/nginx response buffering
+            "Connection": "keep-alive",
+        },
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1798,7 +1966,7 @@ def create_app():
         path="/",
         transport="streamable-http",
         json_response=True,
-        stateless_http=True,
+        stateless_http=False,  # Stateful: session IDs validated, 404 on stale, SSE push supported
     )
 
     # ── WebMCP routes (P2#5) ──────────────────────────────────────
@@ -1830,6 +1998,11 @@ def create_app():
             Route("/webmcp/tools", webmcp_tools, methods=["GET"]),
             Route("/webmcp/status", webmcp_status, methods=["GET"]),
             Route("/webmcp/call/{tool_name:str}", webmcp_call_tool, methods=["POST"]),
+            # DELETE /mcp — explicit session termination (MCP spec 2025-06-18 §4.2)
+            Route("/mcp", delete_mcp_handler, methods=["DELETE"]),
+            Route("/mcp/", delete_mcp_handler, methods=["DELETE"]),
+            # GET /sse — legacy 2024-11-05 SSE transport backwards compat
+            Route("/sse", legacy_sse_handler, methods=["GET"]),
             # Native FastMCP streamable-http transport — handles all JSON-RPC
             # methods (initialize, tools/list, tools/call, resources/*, prompts/*)
             # natively. Governance (RT1/RT3/arifOS) enforced by GeoxGovernanceMiddleware.
@@ -1845,7 +2018,11 @@ def create_app():
     # Middleware fires before routing, so scope.path="/mcp" becomes "/mcp/" transparently.
     app.add_middleware(_McpSlashRewriteMiddleware)
     app.add_middleware(EarthAnchorMiddleware)
-    app.add_middleware(OriginValidationMiddleware)
+    # MCP spec compliance middlewares — outermost to innermost:
+    #   OriginValidation → McpAuth → McpProtocolVersion → EarthAnchor → SlashRewrite → routes
+    app.add_middleware(McpProtocolVersionMiddleware)  # MCP spec §Transport: version header
+    app.add_middleware(McpAuthMiddleware)              # MCP spec §Security: Bearer token
+    app.add_middleware(OriginValidationMiddleware)    # SEP-2243: DNS rebinding guard (outermost)
     return app
 
 

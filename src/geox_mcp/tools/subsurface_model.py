@@ -29,7 +29,7 @@ async def geox_subsurface_model(
     """Unified subsurface modeling — multi-physics inversion, gravity/mag, MT.
 
     Modes:
-      joint_inversion  - Fuse N modalities into one Physics9State per cell
+      joint_inversion  - Fuse N modalities into one Physics13State per cell
       gravity_magnetic - Gravity/magnetic forward model via HarmonIC
       mt_forward       - 1D CSEM/MT apparent resistivity + phase
     """

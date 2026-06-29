@@ -68,7 +68,7 @@ from geox_core.schemas.voxel_state import (
     VoidState,
     VoxelState4,
 )
-from geox_core.physics.state import Physics9State, EARTH_MATERIAL_CATALOG
+from geox_core.physics.state import Physics13State, EARTH_MATERIAL_CATALOG
 
 # ─── Phase 2: Real fetcher imports ────────────────────────────────────────────
 try:
@@ -364,7 +364,7 @@ def physics9_fill_for_lithology(
     litho_name: str,
     provenance: ProvenanceLedger,
     field_prefix: str = "voxel_field",
-) -> tuple[Physics9State, bool]:
+) -> tuple[Physics13State, bool]:
     """Fill missing Physics9 fields from EARTH_MATERIAL_CATALOG.
 
     Args:
@@ -373,7 +373,7 @@ def physics9_fill_for_lithology(
         field_prefix: prefix for provenance field names
 
     Returns:
-        (Physics9State, is_physics9_fill)
+        (Physics13State, is_physics9_fill)
 
     F2 TRUTH: Physics9 priors (universal physics constants) ARE valid.
     Random guesses ARE NOT. These are laboratory-measured rock properties.
@@ -795,7 +795,7 @@ class BasinSynthesisPipeline:
             else:
                 result = {
                     "units": [
-                        {"name": "Bekok Fm", "lithology": "Sandstone/Shale", "age_ma": 23.0, "thickness_m": 800},
+                        {"name": "Synthetic Fm", "lithology": "Sandstone/Shale", "age_ma": 23.0, "thickness_m": 800},
                         {"name": "Tapis Fm", "lithology": "Sandstone", "age_ma": 30.0, "thickness_m": 600},
                         {"name": "Pulai Fm", "lithology": "Shale/Limestone", "age_ma": 35.0, "thickness_m": 500},
                         {"name": "K Fm", "lithology": "Sandstone/Coal", "age_ma": 55.0, "thickness_m": 400},

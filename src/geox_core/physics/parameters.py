@@ -21,7 +21,7 @@ import math
 import numpy as np
 from scipy import signal
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 # ─── Derived Elastic Moduli ─────────────────────────────────────────────────
 
@@ -178,7 +178,7 @@ def convolve_trace(reflectivity: np.ndarray, wavelet: np.ndarray) -> np.ndarray:
 # ─── Forward Physics (all derived from a state) ─────────────────────────────
 
 
-def forward_physics9(state: Physics9State) -> dict[str, float]:
+def forward_physics9(state: Physics13State) -> dict[str, float]:
     """Compute all derived scalar properties from a canonical state."""
     K = bulk_modulus(state.vp, state.vs, state.rho)
     G = shear_modulus(state.vs, state.rho)

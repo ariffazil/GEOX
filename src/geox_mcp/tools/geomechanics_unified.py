@@ -38,7 +38,7 @@ async def geox_geomechanics(
     """Geomechanics — derive K/G/E/ν/AI, coordinate transforms, block resolution.
 
     Modes:
-      derive_moduli   - K, G, E, ν, AI from Physics9State
+      derive_moduli   - K, G, E, ν, AI from Physics13State
       blockspace      - Inline/crossline resolution from block/survey geometry
       coord_transform - CRS reprojection or local affine transform
     """

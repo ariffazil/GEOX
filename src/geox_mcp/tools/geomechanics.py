@@ -6,7 +6,7 @@ acoustic_impedance, vp_vs_ratio from geox_core.physics.parameters
 as a constitutional MCP tool.
 
 Strategic doc alignment: "Geomechanics" — bulk/young/shear/poisson
-per cell. This tool computes them from a Physics9State and stamps
+per cell. This tool computes them from a Physics13State and stamps
 the result with epistemic_provenance + godel_wall verdict.
 
 DITEMPA BUKAN DIBEI — the modulus is forged, not given.
@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 
 logger = logging.getLogger("geox.geomechanics")
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 from geox_core.physics.parameters import (
     bulk_modulus,
     shear_modulus,
@@ -35,7 +35,7 @@ from geox_core.physics.parameters import (
 
 
 class GeomechanicsRequest(BaseModel):
-    state: dict = Field(..., description="Physics9State as dict — partial fields OK, from_raw_dict() coerces")
+    state: dict = Field(..., description="Physics13State as dict — partial fields OK, from_raw_dict() coerces")
     thickness_m: Optional[float] = Field(
         default=None,
         description="Column thickness [m] for buoyancy computation. Not part of 9-dial — pass explicitly.",
@@ -54,12 +54,12 @@ class GeomechanicsResponse(BaseModel):
 
 
 async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsResponse:
-    """Constitutional MCP tool: derive geomechanical moduli from a Physics9State cell.
+    """Constitutional MCP tool: derive geomechanical moduli from a Physics13State cell.
 
     Returns K, G, E, ν, AI, Vp/Vs and all derived forward-physics scalars.
     Each cell is graded RAW or AAA per Physics9 bounds.
 
-    A1 fix (2026-06-28): uses Physics9State.from_raw_dict() so callers can pass
+    A1 fix (2026-06-28): uses Physics13State.from_raw_dict() so callers can pass
     partial/mixed-type dicts without hitting SESSION_REQUIRED.  Buoyancy is
     available when thickness_m is provided.
     """
@@ -74,7 +74,7 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
 
     try:
         # A1 fix: from_raw_dict() handles partial/mixed-type dicts gracefully
-        s = Physics9State.from_raw_dict(request.state)
+        s = Physics13State.from_raw_dict(request.state)
         derived = forward_physics9(s)
 
         # Sanity-check derived moduli against classical bounds

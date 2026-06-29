@@ -793,10 +793,10 @@ async def geox_evidence_discover(
             }
         )
 
-    if "petronas" in query_lower or "1999" in query_lower or "geology" in query_lower:
+    if "noc" in query_lower or "1999" in query_lower or "geology" in query_lower:
         candidates.append(
             {
-                "evidence_ref": "geox://enterprise/sharepoint/report/PETRONAS-1999-PETROLEUM-GEOLOGY-MALAYSIA.pdf",
+                "evidence_ref": "geox://enterprise/sharepoint/report/NOC-1999-PETROLEUM-GEOLOGY-MALAYSIA.pdf",
                 "source_system": "SharePoint",
                 "title": "Petroleum Geology and Resources of Malaysia",
                 "author": "Madon, M., et al.",

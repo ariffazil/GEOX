@@ -4,7 +4,7 @@
 
 $VPS_IP      = "72.62.71.199"
 $VPS_USER    = "ariffazil"
-$WINDOWS_SRC = "C:\Users\arif.fazil\OneDrive - PETRONAS\Documents\MY DOCUMENTS\1. PETRONAS Work\1. Projects\31. KINABALU BASIN\03. Well\DSGLink"
+$WINDOWS_SRC = "C:\Users\arif.fazil\OneDrive - Enterprise\Documents\MY DOCUMENTS\1. Enterprise Work\1. Projects\31. KINABALU BASIN\03. Well\DSGLink"
 $VPS_DEST    = "${VPS_USER}@${VPS_IP}:/root/geox/data/kl2/wells/"
 
 Write-Host "============================================================" -ForegroundColor Cyan

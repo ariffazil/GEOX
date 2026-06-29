@@ -23,7 +23,7 @@ from geox_core.physics.joint_inversion_zone_hook import (
     PostInversionZoneHook,
     classify_state_post_inversion,
 )
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 from geox_core.schemas.crust_vp_grammar import CrustZone
 
 
@@ -68,7 +68,7 @@ class TestOptInBehavior:
 
 
 class TestPostInversionClassification:
-    """When ON, classification runs on the inverted Physics9State."""
+    """When ON, classification runs on the inverted Physics13State."""
 
     def test_classification_present_when_on(self) -> None:
         """Setting classify_crust_zone=True adds the field."""
@@ -91,7 +91,7 @@ class TestPostInversionClassification:
     def test_vp_m_s_to_km_s_conversion(self) -> None:
         """Verify state.vp (m/s) is correctly converted to km/s."""
         # Prior with known Vp
-        prior = Physics9State(
+        prior = Physics13State(
             rho=2700.0, vp=5500.0, vs=3300.0, rho_e=100.0,
             chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05,
         )
@@ -113,7 +113,7 @@ class TestPostInversionClassification:
 
     def test_depth_derived_from_observations(self) -> None:
         """Cell depth should be median of observation depths."""
-        prior = Physics9State(rho=2700.0, vp=5500.0, vs=3300.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
+        prior = Physics13State(rho=2700.0, vp=5500.0, vs=3300.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
         req = InversionRequest(
             observations=[
                 ModalityObservation(modality="seismic_impedance", value=14850000.0, depth_m=4000.0),
@@ -131,7 +131,7 @@ class TestPostInversionClassification:
 
     def test_diagnostics_included_when_requested(self) -> None:
         """include_zone_diagnostics=True adds diagnostic_basis."""
-        prior = Physics9State(rho=2700.0, vp=6500.0, vs=3700.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
+        prior = Physics13State(rho=2700.0, vp=6500.0, vs=3700.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
         req = InversionRequest(
             observations=[
                 ModalityObservation(
@@ -151,7 +151,7 @@ class TestPostInversionClassification:
 
     def test_no_diagnostics_by_default(self) -> None:
         """Verbose diagnostics are off by default to keep result compact."""
-        prior = Physics9State(rho=2700.0, vp=6500.0, vs=3700.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
+        prior = Physics13State(rho=2700.0, vp=6500.0, vs=3700.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
         req = InversionRequest(
             observations=[
                 ModalityObservation(
@@ -183,7 +183,7 @@ class TestHumilityCap:
         for vp_m_s in test_vps:
             for thick in test_thicks:
                 rho = 2400.0 + (vp_m_s - 3000.0) / 10.0  # crude ρ-Vp tie
-                prior = Physics9State(rho=rho, vp=vp_m_s, vs=vp_m_s / 1.8, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
+                prior = Physics13State(rho=rho, vp=vp_m_s, vs=vp_m_s / 1.8, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
                 req = InversionRequest(
                     observations=[
                         ModalityObservation(
@@ -214,7 +214,7 @@ class TestSabahScenarios:
 
     def test_kinabalu_inboard_normal_continental(self) -> None:
         """Kinabalu Basin on Dangerous Grounds: thick continental, ~30 km."""
-        prior = Physics9State(rho=2750.0, vp=6200.0, vs=3600.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
+        prior = Physics13State(rho=2750.0, vp=6200.0, vs=3600.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
         req = InversionRequest(
             observations=[
                 ModalityObservation(
@@ -234,7 +234,7 @@ class TestSabahScenarios:
 
     def test_layang_layang_ductile_signature(self) -> None:
         """Layang-Layang: ductile layer expected at ~9 km depth."""
-        prior = Physics9State(rho=2700.0, vp=5900.0, vs=3400.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
+        prior = Physics13State(rho=2700.0, vp=5900.0, vs=3400.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
         req = InversionRequest(
             observations=[
                 ModalityObservation(
@@ -254,7 +254,7 @@ class TestSabahScenarios:
 
     def test_nw_sabah_oct(self) -> None:
         """NW Sabah trough → hyperthinned OCT-equivalent."""
-        prior = Physics9State(rho=2850.0, vp=6500.0, vs=3700.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
+        prior = Physics13State(rho=2850.0, vp=6500.0, vs=3700.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
         req = InversionRequest(
             observations=[
                 ModalityObservation(
@@ -308,7 +308,7 @@ class TestZoneHookDataclass:
 
 class TestDirectHookFunction:
     def test_classify_state_returns_envelope(self) -> None:
-        state = Physics9State(rho=2700.0, vp=5500.0, vs=3300.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
+        state = Physics13State(rho=2700.0, vp=5500.0, vs=3300.0, rho_e=100.0, chi=0.001, k=2.5, P=15e6, T=300.0, phi=0.05)
         hook = PostInversionZoneHook(crust_thickness_km=22.0)
         observations = [
             ModalityObservation(modality="seismic_impedance", value=14850000.0, depth_m=8000.0),

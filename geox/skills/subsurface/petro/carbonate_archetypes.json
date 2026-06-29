@@ -347,7 +347,7 @@
       "proven_producers": ["Tepat field", "Megah field", "Layang-Layang field"],
       "failed_tests": ["Solisip-1: 138 m non-productive carbonate", "Kinabalu porosity 3-15%"],
       "discrimination_gap": "Vp alone cannot distinguish carbonate from basement at φ<15%",
-      "seismic_misclassification_risk": "mud volcanoes + volcanic intrusions mimic carbonate mounds (internal PETRONAS study)"
+      "seismic_misclassification_risk": "mud volcanoes + volcanic intrusions mimic carbonate mounds (internal NOC study)"
     },
     "discrimination_workflow": [
       "Step 1: Age context from seismic stratigraphy → Icehouse vs Greenhouse",

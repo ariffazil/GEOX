@@ -3,7 +3,7 @@ integration_wealth.py — W13+ Phase C forge: WEALTH ← GEOX integration.
 
 Strategic doc: "joint_inversion output → prospect ranking + NPV scenarios".
 
-This tool consumes a joint_inversion output (Physics9State per cell +
+This tool consumes a joint_inversion output (Physics13State per cell +
 residual + per-modality breakdown) and produces:
   - Volumetric estimate (STOIIP P10/P50/P90) using rock physics priors
   - Capital allocation ranking via simple scoring
@@ -23,11 +23,11 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 
 class WealthFeedRequest(BaseModel):
-    cell_states: list[dict] = Field(..., description="List of Physics9State dicts (one per cell)")
+    cell_states: list[dict] = Field(..., description="List of Physics13State dicts (one per cell)")
     areal_extent_m2: float = Field(default=1e6, gt=0, description="Areal extent of the prospect")
     pay_zone_thickness_m: float = Field(default=50.0, gt=0)
     formation_volume_factor: float = Field(default=1.3, gt=0)
@@ -74,11 +74,11 @@ def stoiip_cell(
 async def geox_wealth_feed(request: WealthFeedRequest) -> WealthFeedResponse:
     """Constitutional MCP tool: GEOX → WEALTH feed for prospect economics.
 
-    Takes cell-level Physics9State from joint_inversion and produces a
+    Takes cell-level Physics13State from joint_inversion and produces a
     WEALTH-ready feed with STOIIP, ranking score, and risk verdict.
     """
     try:
-        cells = [Physics9State(**c) for c in request.cell_states]
+        cells = [Physics13State(**c) for c in request.cell_states]
 
         per_cell = []
         total_recoverable = 0.0

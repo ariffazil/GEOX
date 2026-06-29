@@ -7,7 +7,7 @@ Stage 6 forge: wire `vp_zone_classify()` from `geox_core.schemas.crust_vp_gramma
 into the `joint_inversion` pipeline as an OPT-IN post-inversion step.
 
 Constitutional binding:
-  F2 TRUTH  — Classification is DER-grade (derived from inverted Physics9State).
+  F2 TRUTH  — Classification is DER-grade (derived from inverted Physics13State).
               Provenance hash is preserved in the result.
   F4 CLARITY — Optional. Default off. Existing callers see no change.
   F7 HUMILITY— Confidence hard-capped at 0.90 (enforced inside vp_zone_classify).
@@ -23,9 +23,9 @@ Reference:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 from geox_core.schemas.crust_vp_grammar import (
     CrustClassification,
     CrustZone,
@@ -43,20 +43,24 @@ class PostInversionZoneHook:
     F4 CLARITY: default behavior is OFF. Existing callers see no change.
     """
 
-    crust_thickness_km: Optional[float] = None
-    heat_flow_mw_m2: Optional[float] = None
+    crust_thickness_km: float | None = None
+    heat_flow_mw_m2: float | None = None
     # If True, include full diagnostic_basis in the result.
     # Default False to keep result compact.
     include_diagnostics: bool = False
 
 
-def _depth_km_from_state(state: Physics9State, observations: list[Any]) -> float:
+def _depth_km_from_state(state: Physics13State, observations: list[Any]) -> float:
     """Derive cell depth (km) from observation depths.
 
     Strategy: take the median observation depth.
     Falls back to 0.0 if no observations with depth.
     """
-    depths = [obs.depth_m for obs in observations if hasattr(obs, "depth_m") and obs.depth_m]
+    depths: list[float] = [
+        float(obs.depth_m)
+        for obs in observations
+        if hasattr(obs, "depth_m") and obs.depth_m is not None
+    ]
     if not depths:
         return 0.0
     depths_sorted = sorted(depths)
@@ -67,11 +71,11 @@ def _depth_km_from_state(state: Physics9State, observations: list[Any]) -> float
 
 
 def classify_state_post_inversion(
-    state: Physics9State,
+    state: Physics13State,
     observations: list[Any],
     hook: PostInversionZoneHook,
 ) -> dict[str, Any]:
-    """Run vp_zone_classify on an inverted Physics9State.
+    """Run vp_zone_classify on an inverted Physics13State.
 
     Pure function. Returns a result envelope:
       {
@@ -90,7 +94,7 @@ def classify_state_post_inversion(
     F7 HUMILITY: confidence is hard-capped at 0.90 by vp_zone_classify.
 
     Constitutional provenance:
-      - Source of truth: state.vp (m/s, from Physics9State)
+      - Source of truth: state.vp (m/s, from Physics13State)
       - Conversion: divide by 1000 to get km/s
       - Grammar source: Huang et al. (2021)
       - Schema: geox_core.schemas.crust_vp_grammar
