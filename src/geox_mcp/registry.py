@@ -49,9 +49,10 @@ SURFACE_TOOLS: list[str] = [
     # ── MODEL DOMAIN (2) ───────────────────────────────────────────────────────
     "geox_subsurface_model",  # Joint inversion, gravity/mag, MT forward
     "geox_geomechanics",  # K/G/E/ν, coordinate transform, blockspace
-    # ── BASIN DOMAIN (2) ───────────────────────────────────────────────────────
+    # ── BASIN DOMAIN (3) ───────────────────────────────────────────────────────
     "geox_basin",  # Profile, resolve, macrostrat, scene
     "geox_deep_time_state",  # Earth State Vector at any geological age
+    "geox_atlas",  # Point-in-country + land/water classifier. Natural Earth 10m GeoJSON.
     # ── FEDERATION DISCOVERY (1) ───────────────────────────────────────────────
     # GAP-1 fix (2026-06-27): Federation-standard registry probe.
     # Any MCP client can call this. Returns the 18 real tools, not the 31 ghosts.

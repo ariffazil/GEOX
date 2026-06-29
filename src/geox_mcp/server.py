@@ -62,7 +62,7 @@ logger = logging.getLogger("geox.unified")
 GEOX_VERSION = "v2026.06.29-phase2.2-rasa"
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
 # Backward-compat wrappers for 49 legacy alias names.
-GEOX_CONTRACT_EPOCH = "2026-06-28-GEOX-30TOOLS-PHASE21"
+GEOX_CONTRACT_EPOCH = "2026-06-29-GEOX-31TOOLS-PHASE22"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -89,6 +89,7 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_geomechanics": 30.0,
     "geox_basin": 60.0,
     "geox_deep_time_state": 30.0,
+    "geox_atlas": 15.0,  # Point-in-country + land/water. Fast lookup from local GeoJSON.
     "geox_surface_status": 10.0,
     # Internal plumbing (4)
     "geox_claim": 30.0,
@@ -317,7 +318,9 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 30  # Phase 2.1 (2026-06-28): 18 original + 12 EGS tools (Earth Grounding System).
+    _EXPECTED_CANONICAL = (
+        31  # Phase 2.2 (2026-06-29): +1 geox_atlas — Earth Atlas Phase 1. Natural Earth 10m point-in-country + land/water.
+    )
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -540,7 +543,7 @@ async def _geochem_kinetics(
     kerogen_type: str = "II",
 ) -> dict:
     """Foundational Geochemistry: computes mineral kinetics (smectite->illite) and kerogen maturation.
-    
+
     This acts as the causal base layer feeding into RockPhysics13State (porosity budget, void generation).
     """
     from geox_mcp.tools.geochemistry import (
@@ -889,6 +892,38 @@ async def _deep_time_state(
         query=query,
         include_pending_datasets=include_pending_datasets,
     )
+
+
+# ── Phase 2.2 (2026-06-29): Earth Atlas — Natural Earth 10m point-in-country + land/water ──
+@mcp.tool(name="geox_isitwater")
+async def _geox_isitwater(
+    lat: float,
+    lon: float,
+) -> dict:
+    """Point-in-polygon land/water classifier using Natural Earth 10m GeoJSON.
+
+    Returns 'land', 'water', or 'error'. Synchronous geometry — no network calls.
+    Data: /root/geox/data/atlas/countries.geojson + sea_neighbors.geojson (SHA256 verified).
+    F2 TRUTH: geometry-only, no model uncertainty.
+    """
+    from geox_mcp.tools.geox_atlas import geox_isitwater as _impl
+
+    return await _impl(lat=lat, lon=lon)
+
+
+@mcp.tool(name="geox_context_at_location")
+async def _geox_context_at_location(
+    lat: float,
+    lon: float,
+) -> dict:
+    """Country + sea context at a lat/lon point. Land → adjacent sea countries.
+    Water → enclosing + neighboring countries. Natural Earth 10m GeoJSON.
+
+    F2 TRUTH: geometry-only lookup from local atlas data.
+    """
+    from geox_mcp.tools.geox_atlas import geox_context_at_location as _impl
+
+    return await _impl(lat=lat, lon=lon)
 
 
 # ── W13+ FORGE — Phase C: GEOX → WEALTH STOIIP + ranking feed ──
@@ -1357,12 +1392,14 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
     request), allow a missing version header — many clients omit it on the first call.
     """
 
-    SUPPORTED_VERSIONS: frozenset[str] = frozenset({
-        "2025-11-25",  # Streamable HTTP + outputSchema (GEOX canonical)
-        "2025-06-18",  # transitional canonical
-        "2024-11-25",  # FastMCP legacy — in active use across federation
-        "2024-11-05",  # old SSE transport — backwards compat for Claude Desktop
-    })
+    SUPPORTED_VERSIONS: frozenset[str] = frozenset(
+        {
+            "2025-11-25",  # Streamable HTTP + outputSchema (GEOX canonical)
+            "2025-06-18",  # transitional canonical
+            "2024-11-25",  # FastMCP legacy — in active use across federation
+            "2024-11-05",  # old SSE transport — backwards compat for Claude Desktop
+        }
+    )
 
     async def dispatch(self, request: Request, call_next):
         if request.method == "OPTIONS" or not request.url.path.startswith("/mcp"):
@@ -1373,8 +1410,7 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
             session_id = request.headers.get("mcp-session-id", "")
             if session_id:
                 logger.warning(
-                    "MCP_VERSION_400: mcp-protocol-version header absent after initialize "
-                    "(session=%s)",
+                    "MCP_VERSION_400: mcp-protocol-version header absent after initialize (session=%s)",
                     session_id[:8],
                 )
                 return JSONResponse(
@@ -1390,10 +1426,7 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
             return JSONResponse(
                 {
                     "error": "Bad Request",
-                    "detail": (
-                        f"Unsupported MCP-Protocol-Version: '{version}'. "
-                        f"Supported: {sorted(self.SUPPORTED_VERSIONS)}"
-                    ),
+                    "detail": (f"Unsupported MCP-Protocol-Version: '{version}'. Supported: {sorted(self.SUPPORTED_VERSIONS)}"),
                 },
                 status_code=400,
             )
@@ -1918,6 +1951,7 @@ _GEOX_AGENT_CARD = {
         "geox_geomechanics",
         "geox_basin",
         "geox_deep_time_state",
+        "geox_atlas",
         "geox_surface_status",
         "geox_claim",
         "geox_evidence",
@@ -2022,8 +2056,8 @@ def create_app():
     # MCP spec compliance middlewares — outermost to innermost:
     #   OriginValidation → McpAuth → McpProtocolVersion → EarthAnchor → SlashRewrite → routes
     app.add_middleware(McpProtocolVersionMiddleware)  # MCP spec §Transport: version header
-    app.add_middleware(McpAuthMiddleware)              # MCP spec §Security: Bearer token
-    app.add_middleware(OriginValidationMiddleware)    # SEP-2243: DNS rebinding guard (outermost)
+    app.add_middleware(McpAuthMiddleware)  # MCP spec §Security: Bearer token
+    app.add_middleware(OriginValidationMiddleware)  # SEP-2243: DNS rebinding guard (outermost)
     return app
 
 

@@ -247,7 +247,7 @@ All 30 canonical tools are callable via MCP at `https://geox.arif-fazil.com/mcp`
 | **Wells & Stratigraphy** | `geox_well_ingest`, `geox_well_qc`, `geox_well_desurvey`, `geox_petrophysics`, `geox_sequence` |
 | **Seismic** | `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision` |
 | **Subsurface & Geomechanics** | `geox_subsurface_model`, `geox_geomechanics` |
-| **Basin & Deep Time** | `geox_basin`, `geox_deep_time_state`, `geox_surface_status` |
+| **Basin & Deep Time** | `geox_basin`, `geox_deep_time_state`, `geox_isitwater`, `geox_context_at_location`, `geox_surface_status` |
 | **Earth Governance Surface (EGS)** | `geox_egs_query_entity`, `geox_egs_query_claim`, `geox_egs_query_uncertainty`, `geox_egs_query_provenance`, `geox_egs_claim_create`, `geox_egs_claim_challenge`, `geox_egs_evidence_attach`, `geox_egs_evidence_reason`, `geox_egs_seismic_compute`, `geox_egs_rock_physics`, `geox_egs_data_qc_bundle`, `geox_egs_scenario_audit` |
 | **Internal Federation** | `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine` |
 
