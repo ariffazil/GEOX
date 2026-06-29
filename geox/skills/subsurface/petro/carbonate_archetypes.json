@@ -1,0 +1,362 @@
+{
+  "metadata": {
+    "source": "Badali et al. (2024), Figure 2 — SEG Interpretation",
+    "doi": "10.1190/INT-2023-0014.1",
+    "study_count": "29 carbonate case studies",
+    "climate_regimes": ["Icehouse (I)", "Greenhouse (G)"],
+    "structure_types": 7,
+    "date": "2026-06-29",
+    "forge_id": "forge-sabah-carbonate",
+    "vaul999_id": "8b0c7a711dee4f7f"
+  },
+  "archetypes": [
+    {
+      "id": "homoclinal_ramp",
+      "label": "Homoclinal Ramp",
+      "figure_ref": "Fig 2(a)",
+      "attached": true,
+      "rimmed": false,
+      "geometry": "homoclinal, low-angle (<1° to ~15° locally)",
+      "seismic_character": "low-relief clinoform packages, tabular geometry, weak amplitude contrast",
+      "icehouse_features": ["low-angle foresets", "thin resedimented aprons"],
+      "greenhouse_features": ["low-angle homoclinal", "sheet-like geometry", "low relief"],
+      "slope_angle_deg": "<15",
+      "rimmed_score": 0.0,
+      "isolation_score": 0.0,
+      "attached_score": 1.0,
+      "reservoir_quality": "low to moderate (thin, widespread, low relief)",
+      "discrimination_confidence": "LOW (easily confused with detrital shelf)",
+      "mud_volcano_risk": "MODERATE (low-relief sheet can mimic)",
+      "vertical_resolution_m": "25-60",
+      "typical_thickness_m": "50-500",
+      "sab ah_relevance": "Oligocene pre-collision; broad shelf ramp"
+    },
+    {
+      "id": "distally_steepened_ramp",
+      "label": "Distally Steepened Ramp",
+      "figure_ref": "Fig 2(b)",
+      "attached": true,
+      "rimmed": false,
+      "geometry": "low-angle inner ramp, steepening distally (slope break at shelf edge)",
+      "seismic_character": "low-angle proximal clinoforms, steep distal margin, mounded geometry at slope break",
+      "icehouse_features": ["steep distal margin", "debris flow aprons", "megabreccias at slope break"],
+      "greenhouse_features": ["moderate distal slope", "graded profiles"],
+      "slope_angle_deg": "5-25",
+      "rimmed_score": 0.2,
+      "isolation_score": 0.0,
+      "attached_score": 1.0,
+      "reservoir_quality": "moderate (thickest at slope break)",
+      "discrimination_confidence": "LOW-MODERATE (distal steepening can mimic volcanic intrusion or mud volcano)",
+      "mud_volcano_risk": "HIGH (steepened margin can look like mud volcano cone)",
+      "vertical_resolution_m": "25-60",
+      "typical_thickness_m": "200-1500",
+      "sabah_reelevance": "transitional carbonate; collision-related accommodation"
+    },
+    {
+      "id": "nonrimmed_attached_platform",
+      "label": "Non-Rimmed Attached Platform (Shelf)",
+      "figure_ref": "Fig 2(c)",
+      "attached": true,
+      "rimmed": false,
+      "geometry": "broad flat-topped shelf, attached to hinterland, no rim barrier",
+      "seismic_character": "high-amplitude flat top, low-angle margins, sheet-like geometry, weak rim",
+      "icehouse_features": ["broad shelf", "low-angle margins", "extensive but low-relief"],
+      "greenhouse_features": ["very wide shelf", "tabular geometry", "low energy"],
+      "slope_angle_deg": "<15",
+      "rimmed_score": 0.0,
+      "isolation_score": 0.0,
+      "attached_score": 1.0,
+      "reservoir_quality": "moderate (wide area but low relief, thin)",
+      "discrimination_confidence": "LOW (easily confused with detrital shelf, shale platform)",
+      "mud_volcano_risk": "MODERATE (flat top + broad shape)",
+      "vertical_resolution_m": "25-60",
+      "typical_thickness_m": "100-800",
+      "sabah_relevance": "Oligocene-Miocene broad shelf; Luconia-style attached platform"
+    },
+    {
+      "id": "slightly_rimmed_platform",
+      "label": "Slightly Rimmed Platform",
+      "figure_ref": "Fig 2(d)",
+      "attached": true,
+      "rimmed": true,
+      "rimmed_degree": "slight",
+      "geometry": "flat-topped shelf with low-relief rim, marginal slope 5-15°",
+      "seismic_character": "weak rim crest amplitude, subtle slope break, internal platform reflections visible",
+      "icehouse_features": ["low rim", "debris flows", "periplatform debris"],
+      "greenhouse_features": ["low rim", "graded margin"],
+      "slope_angle_deg": "5-15",
+      "rimmed_score": 0.3,
+      "isolation_score": 0.0,
+      "attached_score": 1.0,
+      "reservoir_quality": "moderate (rim adds relief, platform interior thinner)",
+      "discrimination_confidence": "LOW (subtle rim easily missed; confused with ramp)",
+      "mud_volcano_risk": "HIGH (subtle rim + mound shape)",
+      "volcanic_intrusion_risk": "MODERATE",
+      "vertical_resolution_m": "25-60",
+      "typical_thickness_m": "200-1200",
+      "sabah_relevance": "transitional; early Miocene before full collision"
+    },
+    {
+      "id": "rimmed_platform",
+      "label": "Rimmed Platform",
+      "figure_ref": "Fig 2(e)",
+      "attached": true,
+      "rimmed": true,
+      "rimmed_degree": "rimmed",
+      "geometry": "well-developed rim crest (reef rim), steep margin slope 30-70°, flat interior platform",
+      "seismic_character": "high-amplitude continuous rim crest, steep margin reflections, weak interior platform, possible progradation packages",
+      "icehouse_features": ["steep margin 30-70°", "megabreccias", "karst collapse", "high-relief rim", "resedimented carbonates on slope"],
+      "greenhouse_features": ["moderate slope <30°", "graded rim"],
+      "slope_angle_deg": "30-70",
+      "rimmed_score": 0.9,
+      "isolation_score": 0.0,
+      "attached_score": 1.0,
+      "reservoir_quality": "HIGH (rim = best reservoir; steep slopes = thick platform section)",
+      "discrimination_confidence": "HIGH (full archetype)",
+      "mud_volcano_risk": "LOW (steep margin + high relief rim is distinctive)",
+      "volcanic_intrusion_risk": "LOW (rim geometry is distinctive)",
+      "vertical_resolution_m": "25-60",
+      "typical_thickness_m": "500-2500",
+      "sabah_relevance": "Miocene icehouse (I); highest chaseability; proven producers Tepat, Megah, Layang-Layang"
+    },
+    {
+      "id": "isolated_platform",
+      "label": "Isolated Platform",
+      "figure_ref": "Fig 2(f)",
+      "attached": false,
+      "rimmed": true,
+      "rimmed_degree": "nonrimmed_to_rimmed",
+      "geometry": "isolated flat-topped carbonate build-up, surrounded by deep water, can be nonrimmed, slightly rimmed, or fully rimmed",
+      "seismic_character": "high-amplitude rim crest, steep flanks, isolated high-relief mound, onlap terminations on flanks",
+      "icehouse_features": ["steep flanks 30-70°", "rim or pinnacle", "megabreccia flanks", "karst if exposed"],
+      "greenhouse_features": ["moderate flanks <20°", "tabular geometry"],
+      "slope_angle_deg": "20-70",
+      "rimmed_score": 0.5,
+      "isolation_score": 1.0,
+      "attached_score": 0.0,
+      "reservoir_quality": "HIGH (isolation = best porosity; flank = secondary reservoir)",
+      "discrimination_confidence": "HIGH (isolated high-relief mound is most distinctive carbonate structure)",
+      "mud_volcano_risk": "LOW (isolated mound in deep water is hard to confuse)",
+      "volcanic_intrusion_risk": "LOW (isolated platform geometry is distinctive)",
+      "vertical_resolution_m": "25-60",
+      "typical_thickness_m": "300-2000",
+      "sabah_relevance": "possible in post-collision strike-slip setting; pinnacle reefs in deep water"
+    },
+    {
+      "id": "pinnacle_reef",
+      "label": "Pinnacle Reef",
+      "figure_ref": "Fig 2(g)",
+      "attached": false,
+      "rimmed": false,
+      "geometry": "small isolated mounded carbonate build-up, pointed or rounded top, no flat top, <2 km width typical",
+      "seismic_character": "small mounded high-relief reflection, pointed or rounded crest, steep flanks, isolated in deep water",
+      "icehouse_features": ["high-relief mound", "steep flanks", "possible karst surface"],
+      "greenhouse_features": ["moderate relief", "smaller size"],
+      "slope_angle_deg": "30-60",
+      "rimmed_score": 0.0,
+      "isolation_score": 1.0,
+      "attached_score": 0.0,
+      "reservoir_quality": "HIGH (small, dense, good porosity; flanks are reservoir)",
+      "discrimination_confidence": "MODERATE (small mounds hard to distinguish from volcanic knobs, mud volcano cones, salt diapirs)",
+      "mud_volcano_risk": "HIGH (pinnacle shape + isolated in deep water is mud volcano archetype)",
+      "volcanic_intrusion_risk": "HIGH (small volcanic intrusive domes have identical shape)",
+      "vertical_resolution_m": "25-60",
+      "typical_thickness_m": "100-800",
+      "sabah_relevance": "highest false-positive risk; requires AVO + well control to confirm"
+    }
+  ],
+  "climate_regime_definitions": {
+    "Icehouse (I)": {
+      "code": "I",
+      "typical_periods": ["Pleistocene", "Miocene", "Oligocene (late)"],
+      "platform_types": ["rimmed platform", "isolated platform", "pinnacle reef"],
+      "slope_angle": "30-70°",
+      "resedimentation": "extensive megabreccias, debris flows, periplatform ooze",
+      "karst": "common (exposure surfaces)",
+      "sequence_pattern": "high-frequency high-amplitude cycles",
+      "sab ah_expected": "Miocene (post-collision) — rimmed platform dominant"
+    },
+    "Greenhouse (G)": {
+      "code": "G",
+      "typical_periods": ["Eocene", "early Oligocene", "Cretaceous"],
+      "platform_types": ["non-rimmed platform", "homoclinal ramp", "distally steepened ramp"],
+      "slope_angle": "<15°",
+      "resedimentation": "minor, graded margins, soft slopes",
+      "karst": "rare",
+      "sequence_pattern": "low-frequency low-amplitude cycles",
+      "sabah_expected": "Oligocene pre-collision — ramp / distally steepened ramp"
+    }
+  },
+  "discrimination_decision_tree": {
+    "step_1_climate_regime": {
+      "question": "What is the seismic age context?",
+      "options": {
+        "Miocene-Pleistocene (Icehouse)": {
+          "likely_archetypes": ["rimmed_platform", "isolated_platform", "pinnacle_reef"],
+          "expected_slope": "30-70°",
+          "go_to_step": "step_2_geometry"
+        },
+        "Eocene-early Oligocene (Greenhouse)": {
+          "likely_archetypes": ["homoclinal_ramp", "distally_steepened_ramp", "nonrimmed_attached_platform"],
+          "expected_slope": "<15°",
+          "go_to_step": "step_2_geometry"
+        },
+        "unknown": {
+          "likely_archetypes": ["all"],
+          "go_to_step": "step_2_geometry"
+        }
+      }
+    },
+    "step_2_geometry": {
+      "question": "What is the geometric relationship to hinterland?",
+      "options": {
+        "attached_to_land": {
+          "likely_archetypes": ["homoclinal_ramp", "distally_steepened_ramp", "nonrimmed_attached_platform", "slightly_rimmed_platform", "rimmed_platform"],
+          "note": "Carbonate factory connected to siliciclastic sediment source",
+          "go_to_step": "step_3_rim"
+        },
+        "isolated_in_deep_water": {
+          "likely_archetypes": ["isolated_platform", "pinnacle_reef"],
+          "note": "Oceanic setting, no siliciclastic input",
+          "go_to_step": "step_3_rim"
+        },
+        "unknown": {
+          "likely_archetypes": ["all"],
+          "go_to_step": "step_3_rim"
+        }
+      }
+    },
+    "step_3_rim": {
+      "question": "Is there a visible rim crest and steep margin?",
+      "options": {
+        "yes_strong_rim": {
+          "likely_archetypes": ["rimmed_platform", "isolated_platform"],
+          "slope_angle_expected": "30-70°",
+          "confidence": "HIGH",
+          "go_to_step": "step_4_slope"
+        },
+        "yes_weak_rim": {
+          "likely_archetypes": ["slightly_rimmed_platform"],
+          "slope_angle_expected": "5-15°",
+          "confidence": "LOW-MODERATE",
+          "go_to_step": "step_4_slope"
+        },
+        "no_rim": {
+          "likely_archetypes": ["homoclinal_ramp", "distally_steepened_ramp", "nonrimmed_attached_platform"],
+          "slope_angle_expected": "<15°",
+          "confidence": "LOW",
+          "go_to_step": "step_4_slope"
+        }
+      }
+    },
+    "step_4_slope": {
+      "question": "What is the margin slope angle from seismic?",
+      "options": {
+        "steep_30_70": {
+          "icehouse_indicator": true,
+          "archetype_filter": ["rimmed_platform", "isolated_platform"],
+          "discrimination_confidence": "HIGH",
+          "mud_volcano_risk": "LOW",
+          "volcanic_intrusion_risk": "LOW"
+        },
+        "moderate_15_30": {
+          "icehouse_indicator": false,
+          "archetype_filter": ["distally_steepened_ramp", "slightly_rimmed_platform"],
+          "discrimination_confidence": "MODERATE",
+          "mud_volcano_risk": "MODERATE"
+        },
+        "gentle_5_15": {
+          "archetype_filter": ["distally_steepened_ramp", "nonrimmed_attached_platform", "slightly_rimmed_platform"],
+          "discrimination_confidence": "LOW-MODERATE",
+          "mud_volcano_risk": "HIGH"
+        },
+        "gentle_0_5": {
+          "archetype_filter": ["homoclinal_ramp", "nonrimmed_attached_platform"],
+          "discrimination_confidence": "LOW",
+          "mud_volcano_risk": "MODERATE"
+        }
+      }
+    },
+    "step_5_features": {
+      "question": "What additional seismic features are present?",
+      "checklist": {
+        "megabreccias_on_slope": {
+          "indicator": "Icehouse carbonate",
+          "archetype_filter": ["rimmed_platform", "isolated_platform"],
+          "weight": 0.2
+        },
+        "karst_collapse_surfaces": {
+          "indicator": "Exposure / icehouse",
+          "archetype_filter": ["rimmed_platform", "isolated_platform"],
+          "weight": 0.15
+        },
+        "progradation_packages": {
+          "indicator": "Platform growth",
+          "archetype_filter": ["rimmed_platform", "distally_steepened_ramp"],
+          "weight": 0.1
+        },
+        "onlap_terminations_on_flanks": {
+          "indicator": "Carbonate build-up",
+          "archetype_filter": ["all attached/isolated"],
+          "weight": 0.1
+        },
+        "chaotic_surface_no_geometry": {
+          "indicator": "Non-carbonate",
+          "archetype_filter": [],
+          "weight": -0.3,
+          "warning": "Mud volcano, volcanic intrusion, or basement high"
+        }
+      }
+    }
+  },
+  "false_positive_risk_matrix": {
+    "carbonat_lookalikes": {
+      "mud_volcano": {
+        "mimics": ["pinnacle_reef", "distally_steepened_ramp", "slightly_rimmed_platform"],
+        "key_discriminators": ["AVO (mud volcano = low impedance)", "geochemistry", "well control", "thermal signature"],
+        "risk_level": "HIGH"
+      },
+      "volcanic_intrusion": {
+        "mimics": ["pinnacle_reef", "isolated_platform"],
+        "key_discriminators": ["Vp (volcanic = higher Vp)", "seismic attribute analysis", "magnetic anomaly", "well control"],
+        "risk_level": "HIGH"
+      },
+      "basement_high": {
+        "mimics": ["homoclinal_ramp", "nonrimmed_attached_platform"],
+        "key_discriminators": ["Vp (basement Vp > 5.5 km/s)", "seismic refraction", "well control"],
+        "risk_level": "MODERATE"
+      },
+      "salt_diapir": {
+        "mimics": ["pinnacle_reef", "isolated_platform"],
+        "key_discriminators": ["velocity pull-down", "salt-specific seismic attributes", "gravity"],
+        "risk_level": "LOW (Sabah has no significant salt)"
+      },
+      "shale_diapir": {
+        "mimics": ["pinnacle_reef"],
+        "key_discriminators": ["velocity analysis", "gamma ray (shale = high GR)", "well control"],
+        "risk_level": "MODERATE"
+      }
+    }
+  },
+  "sabah_specific_guidance": {
+    "primary_play": {
+      "window_ma": "30-10 Ma (Oligocene-Middle Miocene)",
+      "primary_archetype": "rimmed_platform",
+      "secondary_archetypes": ["isolated_platform", "pinnacle_reef"],
+      "climate_regime": "Icehouse (Miocene) + Greenhouse (Oligocene)",
+      "proven_producers": ["Tepat field", "Megah field", "Layang-Layang field"],
+      "failed_tests": ["Solisip-1: 138 m non-productive carbonate", "Kinabalu porosity 3-15%"],
+      "discrimination_gap": "Vp alone cannot distinguish carbonate from basement at φ<15%",
+      "seismic_misclassification_risk": "mud volcanoes + volcanic intrusions mimic carbonate mounds (internal PETRONAS study)"
+    },
+    "discrimination_workflow": [
+      "Step 1: Age context from seismic stratigraphy → Icehouse vs Greenhouse",
+      "Step 2: Geometry classification → attached vs isolated, rimmed vs non-rimmed",
+      "Step 3: Slope angle from seismic → >30° = Icehouse rimmed; <15° = Greenhouse ramp",
+      "Step 4: Feature checklist → megabreccias, karst, progradation",
+      "Step 5: Vp-porosity from well control or rock physics model",
+      "Step 6: AVO analysis to rule out mud volcano / volcanic intrusion",
+      "Step 7: Assign archetype + confidence; if confidence < 0.7 → exploratory"
+    ]
+  }
+}
