@@ -606,7 +606,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Use this to discover available resources across the arifOS, GEOX, WELL, and WEALTH domains."
         ),
     )(geox_tree777_index)
-    mcp.resource(
+    mcp.resource_template(
         "tree777://skills/geox/{name}",
         description=(
             "Individual GEOX skill page from the TREE777 wiki. "
@@ -614,7 +614,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Example: tree777://skills/geox/spatial-grounding"
         ),
     )(geox_tree777_skill)
-    mcp.resource(
+    mcp.resource_template(
         "tree777://geo/concepts/{name}",
         description=(
             "Geoscience concept page from the TREE777 wiki. "
@@ -622,7 +622,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Example: tree777://geo/concepts/TREE777"
         ),
     )(geox_tree777_concept)
-    mcp.resource(
+    mcp.resource_template(
         "tree777://geo/scars/{name}",
         description=(
             "GEOX scar/incident record from the TREE777 wiki. "
@@ -634,7 +634,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         "geox://capabilities",
         description="Full GEOX capability map: tools, domains, claim limits, next best actions. Read at session start.",
     )(geox_capabilities)
-    mcp.resource(
+    mcp.resource_template(
         "geox://resources/{category}/{name}",
         description=(
             "Agent knowledge pack: ontology, playbooks, schemas, examples. "
@@ -715,10 +715,10 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
 
         return _b64.b64encode(raw).decode("ascii")
 
-    mcp.resource(
+mcp.resource_template(
         "geox://render/surfaces/{surface_id}",
         description="Binary surface data (horizon mesh, fault plane). "
-        "Returns base64-encoded bytes. Format: geox://render/surfaces/<filename>",
+        "Returns base64-encoded bytes. Format: geox://render/surfaces/",
     )(geox_render_surface)
 
     async def geox_render_cube_slice(volume_id: str, orientation: str, slice_index: int) -> str:
