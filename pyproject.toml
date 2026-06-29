@@ -86,7 +86,7 @@ dependencies = [
     "numba>=0.60.0",
     "llvmlite>=0.43.0",
     # SimPEG — gravity, magnetics, EM, DC resistivity inversion
-    "simpeg>=0.7.0",
+    "simpeg>=0.25.2",
     # PyGIMLi — ERT, induced polarization, traveltime tomography, joint inversion
     "pygimli>=1.4.0",
 
