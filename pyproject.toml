@@ -77,7 +77,7 @@ dependencies = [
     # MOVED to [seismic] extra — conflicts with arifOS numpy>=2.5.0 (devito requires numpy<=2.4.3)
     # "devito>=4.8.22",
     # PyLops — linear operators for seismic inversion (sparse spike, AVAz, rank-reduction)
-    "pylops>=2.0.0",
+    "pylops>=2.7.0",
 
     # ─── P1 CRITICAL: Geophysics Inversion ──────────────────────────────────
     # HarmonIC — gravity + magnetics forward (referenced in harmonica_adapter.py)
