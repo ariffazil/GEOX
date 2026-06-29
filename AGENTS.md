@@ -188,3 +188,42 @@ The 13 Constitutional Laws (L01–L13) live in **one canonical file**:
 
 This organ emits the **Evidence Contract** (see Appendix B of the constitution) and does **not** self-judge. arifOS alone reads the envelope and applies L01–L13.
 
+---
+
+## 🏛️ Autonomous Authority Charter (AAC v1.0)
+
+Every agent operating within this repository inherits the following authority tiers, defining which actions are autonomous vs. which require human sovereign authorization.
+
+```yaml
+AUTONOMYCHARTERV1
+Authority:
+  CLASSAAUTONOMOUS:
+    - internalcodeexecution
+    - sessionspawnresume_checkpoint
+    - tool_selection
+    - epistemic_tagging
+    - ledger_update
+    - a2ainternalcomms
+    - self_healing
+
+  CLASSBSOVEREIGN:
+    - human_contact
+    - asset_contact
+    - irreversible_action
+    - external_publication
+
+  CLASSCFORBIDDEN:
+    - impersonate_arif
+    - legalfinancialcommitment
+    - unauthorizedconfidentialaccess
+    - evidence_fabrication
+    - constitutional_mutation
+
+Runtime:
+  RULE: |
+    if action in CLASSAAUTONOMOUS: EXECUTE
+    if action in CLASSBSOVEREIGN: REQUEST_ONCE
+    if action in CLASSCFORBIDDEN: BLOCKANDLOG
+```
+
+
