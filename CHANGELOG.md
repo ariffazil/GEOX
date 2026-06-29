@@ -208,7 +208,7 @@ See `AAA/wiki/log.md` for full release receipt. 10 verification gates passed.
 - 21 tier-1 peer-reviewed papers (vector-ready)
 - 12-node knowledge graph (Meju 2024, Gilligan 2026, Fone 2024, Hesse 2009, etc.)
 - 7 eurekas synthesized (5 autonomous, 2 sovereign)
-- Internal bridge to 6 PETRONAS artefacts (synthesis, Phase I, workshops, etc.)
+- Internal bridge to 6 NOC artefacts (synthesis, Phase I, workshops, etc.)
 
 ### Tests
 - **708 passing** (was 591 at session start)
