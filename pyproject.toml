@@ -83,7 +83,7 @@ dependencies = [
     # HarmonIC — gravity + magnetics forward (referenced in harmonica_adapter.py)
     "harmonica>=0.4.0",
     # Constrain numba/llvmlite for Python 3.12 compat (harmonica pulls old versions)
-    "numba>=0.60.0",
+    "numba>=0.65.1",
     "llvmlite>=0.43.0",
     # SimPEG — gravity, magnetics, EM, DC resistivity inversion
     "simpeg>=0.7.0",
