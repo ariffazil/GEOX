@@ -2013,6 +2013,39 @@ def create_app():
         webmcp_tools,
     )
 
+    # 2026-06-29 — Federation-wide OAuth discovery (Hermes-flow fix).
+    # Spec-compliant MCP clients (Cursor, Claude Code, MiniMax) fetch
+    # /.well-known/oauth-protected-resource first per RFC 8707. Without
+    # this, OAuth clients fail with "failed to get oauth authorization url".
+    # arifOS (port 8088) is the canonical authorization server for the
+    # whole federation; these endpoints mirror its metadata.
+
+    async def _geox_oauth_protected_resource(request):
+        return JSONResponse(
+            {
+                "resource": "https://mcp.arif-fazil.com/mcp",
+                    "authorization_servers": ["https://mcp.arif-fazil.com"],
+                "bearer_methods_supported": ["header"],
+                "scopes_supported": ["openid", "profile", "mcp:full", "mcp:read_only"],
+            },
+            headers={"Access-Control-Allow-Origin": "*"},
+        )
+
+    async def _geox_oauth_authorization_server(request):
+        return JSONResponse(
+            {
+                "issuer": "https://mcp.arif-fazil.com",
+                "authorization_endpoint": "https://mcp.arif-fazil.com/api/auth/authorize",
+                "token_endpoint": "https://mcp.arif-fazil.com/api/auth/token",
+                "jwks_uri": "https://mcp.arif-fazil.com/.well-known/jwks.json",
+                "response_types_supported": ["code"],
+                "grant_types_supported": ["authorization_code", "refresh_token"],
+                "code_challenge_methods_supported": ["S256"],
+                "scopes_supported": ["openid", "profile", "mcp:full", "mcp:read_only"],
+            },
+            headers={"Access-Control-Allow-Origin": "*"},
+        )
+
     app = Starlette(
         routes=[
             Route("/", root_handler, methods=["GET"]),
@@ -2028,6 +2061,9 @@ def create_app():
             Route("/.well-known/agent.json", _geox_agent_card_handler, methods=["GET"]),
             Route("/.well-known/agent-card.json", _geox_agent_card_handler, methods=["GET"]),
             Route("/.well-known/webmcp", webmcp_manifest, methods=["GET"]),
+            Route("/.well-known/oauth-protected-resource", _geox_oauth_protected_resource, methods=["GET"]),
+            Route("/.well-known/oauth-protected-resource/mcp", _geox_oauth_protected_resource, methods=["GET"]),
+            Route("/.well-known/oauth-authorization-server", _geox_oauth_authorization_server, methods=["GET"]),
             Route("/tools", tools_list_handler, methods=["GET"]),
             Route("/webmcp", webmcp_index, methods=["GET"]),
             Route("/webmcp/tools", webmcp_tools, methods=["GET"]),
