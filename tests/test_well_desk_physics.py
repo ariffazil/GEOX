@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "core"))
 
 from rock_physics_engine import (
     RockPhysicsEngine,
-    Physics9State,
+    Physics13State,
     PhysicsGuard,
     GUARD,
     Mineral,
@@ -35,7 +35,7 @@ def engine():
 @pytest.fixture
 def bek2_state():
     """BEK-2 scaffold: phi=0.22, Sw=0.35, vsh=0.12, brine, 2040-2220m"""
-    return Physics9State(
+    return Physics13State(
         porosity=0.22, sw=0.35, vsh=0.12,
         fluid_type="brine", pressure_mpa=25.0, temp_c=80.0
     )
@@ -44,7 +44,7 @@ def bek2_state():
 @pytest.fixture
 def clean_sand_brine():
     """Clean sand, fully brine saturated"""
-    return Physics9State(
+    return Physics13State(
         porosity=0.25, sw=1.0, vsh=0.05,
         fluid_type="brine", pressure_mpa=20.0, temp_c=75.0
     )
@@ -53,7 +53,7 @@ def clean_sand_brine():
 @pytest.fixture
 def clean_sand_gas():
     """Clean sand with gas — should show Vp drop and Vp/Vs increase"""
-    return Physics9State(
+    return Physics13State(
         porosity=0.25, sw=0.10, vsh=0.05,
         fluid_type="gas", pressure_mpa=20.0, temp_c=75.0
     )
@@ -75,7 +75,7 @@ class TestForward:
 
     def test_forward_sandstone_oil(self, engine):
         """Oil saturation should produce Vp between brine and gas cases."""
-        state = Physics9State(
+        state = Physics13State(
             porosity=0.25, sw=0.20, vsh=0.05,
             fluid_type="oil", pressure_mpa=20.0, temp_c=75.0
         )
@@ -86,7 +86,7 @@ class TestForward:
     def test_forward_sandstone_gas(self, engine, clean_sand_gas):
         """Gas substitution must produce Vp drop and Vp/Vs increase vs brine."""
         # First get brine reference
-        brine_state = Physics9State(
+        brine_state = Physics13State(
             porosity=0.25, sw=1.0, vsh=0.05,
             fluid_type="brine", pressure_mpa=20.0, temp_c=75.0
         )
@@ -103,7 +103,7 @@ class TestForward:
 
     def test_forward_shale(self, engine):
         """High vsh (shale) must produce lower Vp/Vs and higher density."""
-        state = Physics9State(
+        state = Physics13State(
             porosity=0.12, sw=1.0, vsh=0.85,
             fluid_type="brine", pressure_mpa=25.0, temp_c=80.0
         )
@@ -116,7 +116,7 @@ class TestForward:
 
     def test_forward_limestone(self, engine):
         """Carbonate matrix must produce high Vp."""
-        state = Physics9State(
+        state = Physics13State(
             porosity=0.10, sw=1.0, vsh=0.05,
             fluid_type="brine", pressure_mpa=30.0, temp_c=90.0
         )
@@ -137,7 +137,7 @@ class TestInverse:
     def test_inverse_round_trip(self, engine):
         """Forward(por=0.22, Sw=0.35) → inverse → recover por ±0.02, Sw ±0.05."""
         # Forward
-        fwd_state = Physics9State(
+        fwd_state = Physics13State(
             porosity=0.22, sw=0.35, vsh=0.12,
             fluid_type="brine", pressure_mpa=25.0, temp_c=80.0
         )
@@ -160,7 +160,7 @@ class TestInverse:
     )
     def test_inverse_gas_identification(self, engine):
         """Gas case must be identified as gas after inversion."""
-        fwd_state = Physics9State(
+        fwd_state = Physics13State(
             porosity=0.25, sw=0.10, vsh=0.05,
             fluid_type="gas", pressure_mpa=20.0, temp_c=75.0
         )
@@ -174,7 +174,7 @@ class TestInverse:
 class TestPhysicsGuard:
     def test_guard_rejects_impossible_porosity(self, engine):
         """por=0.55 must trigger PHYSICS_VIOLATION."""
-        state = Physics9State(
+        state = Physics13State(
             porosity=0.55, sw=0.50, vsh=0.20,
             fluid_type="brine", pressure_mpa=25.0, temp_c=80.0
         )
@@ -194,9 +194,9 @@ class TestPhysicsGuard:
     def test_guard_reversibility_check(self):
         """F1: Round-trip must be reversible within tolerance."""
         guard = PhysicsGuard()
-        fwd = Physics9State(porosity=0.22, sw=0.35, vsh=0.12, fluid_type="brine")
+        fwd = Physics13State(porosity=0.22, sw=0.35, vsh=0.12, fluid_type="brine")
         fwd.vp = 3700; fwd.vs = 2000; fwd.rho = 2.38
-        inv = Physics9State(porosity=0.22, sw=0.35, vsh=0.12, fluid_type="brine")
+        inv = Physics13State(porosity=0.22, sw=0.35, vsh=0.12, fluid_type="brine")
         inv.est_porosity = 0.215; inv.est_sw = 0.34
         assert guard.check_reversibility(fwd, inv) is True
 
@@ -230,7 +230,7 @@ class TestMetabolic:
 
     def test_metabolic_aaa_grade(self, engine):
         """Perfect match should reach AAA immediately."""
-        state = Physics9State(
+        state = Physics13State(
             porosity=0.20, sw=0.50, vsh=0.20,
             fluid_type="brine", pressure_mpa=25.0, temp_c=80.0
         )
@@ -270,7 +270,7 @@ class TestCatalog:
 class TestVault:
     def test_receipt_structure(self, engine):
         """Receipt must contain all required fields."""
-        state = Physics9State(
+        state = Physics13State(
             porosity=0.22, sw=0.35, vsh=0.12,
             fluid_type="brine", pressure_mpa=25.0, temp_c=80.0
         )
@@ -282,7 +282,7 @@ class TestVault:
 
     def test_receipt_floor_checks(self, engine):
         """PHYSICS_VIOLATION must fail F9."""
-        state = Physics9State(
+        state = Physics13State(
             porosity=0.55, sw=0.50, vsh=0.20,
             fluid_type="brine", pressure_mpa=25.0, temp_c=80.0
         )

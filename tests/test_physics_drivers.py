@@ -8,7 +8,7 @@ import pytest
 import math
 from typing import Dict, Any
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 from geox_core.physics.parameters import forward_physics9
 from geox_core.physics.drivers import (
     build_lithology_model,
@@ -21,7 +21,7 @@ from geox_core.physics.drivers import (
 @pytest.fixture
 def base_state():
     """Default state with sandstone-like baseline properties."""
-    return Physics9State(
+    return Physics13State(
         rho=2350.0,
         vp=2950.0,
         vs=1680.0,
@@ -38,7 +38,7 @@ def base_state():
 
 def test_build_lithology_model_dolomite():
     # Vp > 5500
-    state = Physics9State(rho=2850, vp=5600, vs=3000, rho_e=100, chi=0, k=3, P=0, T=0, phi=0.05)
+    state = Physics13State(rho=2850, vp=5600, vs=3000, rho_e=100, chi=0, k=3, P=0, T=0, phi=0.05)
     litho, conf, derived = build_lithology_model(state)
     assert litho == "Dolomite"
     assert conf == 0.85
@@ -47,7 +47,7 @@ def test_build_lithology_model_dolomite():
 
 def test_build_lithology_model_limestone():
     # Vp > 4000 (and <= 5500)
-    state = Physics9State(rho=2710, vp=4500, vs=2400, rho_e=200, chi=0, k=3, P=0, T=0, phi=0.08)
+    state = Physics13State(rho=2710, vp=4500, vs=2400, rho_e=200, chi=0, k=3, P=0, T=0, phi=0.08)
     litho, conf, derived = build_lithology_model(state)
     assert litho == "Limestone"
     assert conf == 0.80
@@ -55,7 +55,7 @@ def test_build_lithology_model_limestone():
 
 def test_build_lithology_model_anhydrite():
     # Vp > 3000 (and <= 4000) and vp/vs > 1.75
-    state = Physics9State(rho=2900, vp=3500, vs=1800, rho_e=2000, chi=0, k=4, P=0, T=0, phi=0.01)
+    state = Physics13State(rho=2900, vp=3500, vs=1800, rho_e=2000, chi=0, k=4, P=0, T=0, phi=0.01)
     litho, conf, derived = build_lithology_model(state)
     assert litho == "Anhydrite"
     assert conf == 0.75
@@ -63,7 +63,7 @@ def test_build_lithology_model_anhydrite():
 
 def test_build_lithology_model_sandstone():
     # Vp > 2800 (and <= 3000) and phi > 0.20
-    state = Physics9State(rho=2300, vp=2900, vs=1600, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.22)
+    state = Physics13State(rho=2300, vp=2900, vs=1600, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.22)
     litho, conf, derived = build_lithology_model(state)
     assert litho == "Sandstone"
     assert conf == 0.78
@@ -71,7 +71,7 @@ def test_build_lithology_model_sandstone():
 
 def test_build_lithology_model_shale():
     # Vp < 2500 and Vs < 1200
-    state = Physics9State(rho=2350, vp=2400, vs=1100, rho_e=10, chi=0, k=1.5, P=0, T=0, phi=0.32)
+    state = Physics13State(rho=2350, vp=2400, vs=1100, rho_e=10, chi=0, k=1.5, P=0, T=0, phi=0.32)
     litho, conf, derived = build_lithology_model(state)
     assert litho == "Shale"
     assert conf == 0.82
@@ -79,7 +79,7 @@ def test_build_lithology_model_shale():
 
 def test_build_lithology_model_coal():
     # Vp < 2200 and rho < 1700 (and not matching previous)
-    state = Physics9State(rho=1400, vp=2000, vs=1250, rho_e=500, chi=0, k=0.3, P=0, T=0, phi=0.08)
+    state = Physics13State(rho=1400, vp=2000, vs=1250, rho_e=500, chi=0, k=0.3, P=0, T=0, phi=0.08)
     litho, conf, derived = build_lithology_model(state)
     assert litho == "Coal"
     assert conf == 0.70
@@ -87,7 +87,7 @@ def test_build_lithology_model_coal():
 
 def test_build_lithology_model_mixed():
     # Default case
-    state = Physics9State(rho=2500, vp=2700, vs=1500, rho_e=50, chi=0, k=2, P=0, T=0, phi=0.15)
+    state = Physics13State(rho=2500, vp=2700, vs=1500, rho_e=50, chi=0, k=2, P=0, T=0, phi=0.15)
     litho, conf, derived = build_lithology_model(state)
     assert litho == "Mixed"
     assert conf == 0.50
@@ -106,7 +106,7 @@ def test_anomaly_contrast_theory_identical(base_state):
 
 def test_anomaly_contrast_theory_low_risk(base_state):
     # Small modification
-    observed = Physics9State(
+    observed = Physics13State(
         rho=base_state.rho + 10,
         vp=base_state.vp + 50,
         vs=base_state.vs,
@@ -124,7 +124,7 @@ def test_anomaly_contrast_theory_low_risk(base_state):
 
 def test_anomaly_contrast_theory_high_risk(base_state):
     # Significant deviation
-    observed = Physics9State(
+    observed = Physics13State(
         rho=base_state.rho + 400,
         vp=base_state.vp + 1500,
         vs=base_state.vs,

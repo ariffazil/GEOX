@@ -369,7 +369,7 @@ export const MalayBasinPilotDashboard: React.FC = () => {
       <div className="p-4 bg-black/20 border-t border-slate-900 text-[10px] flex justify-between items-center text-slate-500 font-mono">
         <div className="flex items-center gap-2">
            <Info className="w-3 h-3" />
-           DATA SRC: GSM-702001 (PETRONAS / GSM ARCHIVES)
+           DATA SRC: GSM-702001 (NOC / GSM ARCHIVES)
         </div>
         <div className="uppercase tracking-widest">
            SEAL: DITEMPA BUKAN DIBERI

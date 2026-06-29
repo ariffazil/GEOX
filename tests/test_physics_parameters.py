@@ -32,7 +32,7 @@ from geox_core.physics.parameters import (
     convolve_trace,
     forward_physics9,
 )
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 
 # ── Canonical test state ──────────────────────────────────────────────────
@@ -40,7 +40,7 @@ from geox_core.physics.state import Physics9State
 @pytest.fixture
 def sandstone_state():
     """Typical shallow marine sandstone parameters."""
-    return Physics9State(
+    return Physics13State(
         rho=2200.0,    # kg/m³
         vp=2800.0,     # m/s
         vs=1500.0,     # m/s
@@ -306,7 +306,7 @@ def test_forward_physics9_consistency(sandstone_state):
     assert result["acoustic_impedance"] == result["ai_kg_ms2"]
 
 
-# ── Physics9State ─────────────────────────────────────────────────────────
+# ── Physics13State ─────────────────────────────────────────────────────────
 
 def test_physics9state_to_vector(sandstone_state):
     v = sandstone_state.to_vector()
@@ -319,7 +319,7 @@ def test_physics9state_to_vector(sandstone_state):
 
 def test_physics9state_frozen():
     """State is immutable — modification raises AttributeError."""
-    state = Physics9State(
+    state = Physics13State(
         rho=2000.0, vp=2500.0, vs=1200.0,
         rho_e=5.0, chi=1e-5, k=2.0, P=10e6, T=300.0, phi=0.2
     )
@@ -329,7 +329,7 @@ def test_physics9state_frozen():
 
 def test_physics9state_defaults():
     """Extension params default correctly."""
-    state = Physics9State(
+    state = Physics13State(
         rho=2000.0, vp=2500.0, vs=1200.0,
         rho_e=5.0, chi=1e-5, k=2.0, P=10e6, T=300.0, phi=0.2
     )
@@ -342,7 +342,7 @@ def test_physics9state_defaults():
 
 def test_physics9state_from_vector():
     v = [2350, 2950, 1680, 20, 0.0001, 2.8, 20e6, 320, 0.25, 0.0, 0.0, 0.0, 100.0, 50.0]
-    state = Physics9State.from_vector(v)
+    state = Physics13State.from_vector(v)
     assert state.rho == 2350
     assert state.vp == 2950
     assert state.vs == 1680
@@ -350,7 +350,7 @@ def test_physics9state_from_vector():
 
     # Short vector
     v_short = [2350, 2950, 1680, 20]
-    state_short = Physics9State.from_vector(v_short)
+    state_short = Physics13State.from_vector(v_short)
     assert state_short.rho == 2350
     assert state_short.chi == 0.0
     assert state_short.phi == 0.20
@@ -358,19 +358,19 @@ def test_physics9state_from_vector():
 
 def test_physics9state_grade():
     # Valid
-    state_aaa = Physics9State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
+    state_aaa = Physics13State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
     assert state_aaa.grade() == "AAA"
 
     # Out of bounds porosity
-    state_raw1 = Physics9State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.50)
+    state_raw1 = Physics13State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.50)
     assert state_raw1.grade() == "RAW"
 
     # Out of bounds velocity
-    state_raw2 = Physics9State(rho=2350, vp=7000, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
+    state_raw2 = Physics13State(rho=2350, vp=7000, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
     assert state_raw2.grade() == "RAW"
 
     # Out of bounds density
-    state_raw3 = Physics9State(rho=6000, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
+    state_raw3 = Physics13State(rho=6000, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
     assert state_raw3.grade() == "RAW"
 
 

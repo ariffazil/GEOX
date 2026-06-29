@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 import math
 from typing import Literal, Optional
 
-from geox_core.physics.state import EARTH_MATERIAL_CATALOG, Physics9State
+from geox_core.physics.state import EARTH_MATERIAL_CATALOG, Physics13State
 
 
 # ───────────────────────────── ZONE CATALOG ───────────────────────────────────────
@@ -122,11 +122,11 @@ class BiostratConstraintResult:
 
 
 def evaluate_biostrat_constraint(
-    state: Physics9State,
+    state: Physics13State,
     age_ma: float,
     zones: Optional[list[BiostratZone]] = None,
 ) -> BiostratConstraintResult:
-    """Check whether a Physics9State is admissible for a biostrat zone at given age.
+    """Check whether a Physics13State is admissible for a biostrat zone at given age.
 
     Resolution logic:
       1. Find the zone whose age range contains `age_ma`. (If multiple match,

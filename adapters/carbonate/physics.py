@@ -8,7 +8,7 @@ discrimination.
 Canon sources:
   - Badali et al. (2024), SEG Interpretation, DOI: 10.1190/INT-2023-0014.1
   - ARIF 6-Domain Carbonate Differentiator (TEA Layang-Layang Basin, sealed)
-  - Tepat-1 benchmark (PETRONAS Sabah, proven producer)
+  - Tepat-1 benchmark (Operator Sabah, proven producer)
   - Yellow-horizon scar: ≥3/6 domain validation law
 
 Sealed Law: classify as carbonate only when ≥3 of 6 domains validate.

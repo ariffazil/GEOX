@@ -13,7 +13,7 @@
 
 GEOX is the **Earth Intelligence** organ of the arifOS federation. It produces governed evidence for hydrocarbon, mineral, CCS, and geothermal subsurface interpretation. As of 2026-06-24, GEOX owns **56 canonical tools** (per `src/geox_mcp/registry.py`) covering seismic, petrophysics, basin, prospect, vision, multi-physics joint inversion, and federation integration with WEALTH and WELL.
 
-**The problem:** Operator partners (PETRONAS, Shell, Aramco, ExxonMobil, etc.) increasingly require data exchange in **OSDU** (Open Subsurface Data Universe) format — an Open Group standard with 206 active member organizations, four hyperscaler deployments (AWS/Azure/GCP/IBM), and the **OSDU Data Platform Standard v1.0** released 2026-04-07.
+**The problem:** Operator partners (NOC, Shell, Aramco, ExxonMobil, etc.) increasingly require data exchange in **OSDU** (Open Subsurface Data Universe) format — an Open Group standard with 206 active member organizations, four hyperscaler deployments (AWS/Azure/GCP/IBM), and the **OSDU Data Platform Standard v1.0** released 2026-04-07.
 
 OSDU is **excellent at what it does**:
 - Standardized JSON-Schema catalog (Cortex) — wellbores, logs, seismic, interpretations, prospects
@@ -136,7 +136,7 @@ lithology_mapping:
 
 ### What GEOX Gains (DER)
 
-1. **Operator interop** — PETRONAS, Shell, Aramco, ExxonMobil, etc. can feed GEOX directly. Zero custom integration per partner.
+1. **Operator interop** — NOC, Shell, Aramco, ExxonMobil, etc. can feed GEOX directly. Zero custom integration per partner.
 2. **3rd-party dataset licensing** — TGS, PGS, CGG, Westwood multi-client libraries increasingly delivered in OSDU format.
 3. **Schema-standard naming** — partners recognize `master-data--Well`, `work-product-component--WellLog`, etc.
 4. **Trust anchor** — "conforms to OSDU exchange layer" is positive procurement signal.

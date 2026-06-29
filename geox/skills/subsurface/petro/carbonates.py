@@ -212,7 +212,7 @@ def classify_carbonate_structure(
     porosity_fraction : float, optional
         Estimated porosity (0.0–1.0) from rock physics or well control.
     sabah_mode : bool
-        Apply Sabah-specific discrimination guidance (PETRONAS overrides).
+        Apply Sabah-specific discrimination guidance (Operator overrides).
     source : str
         Source of interpretation for provenance tracking.
 
@@ -564,7 +564,7 @@ def sabah_play_test() -> DiscriminationResult:
     """
     Apply Badali discrimination to our Sabah session evidence:
     - Miocene (Icehouse, ~15 Ma peak)
-    - Rimmed platform geometry expected (PETRONAS proven producers: Tepat, Megah)
+    - Rimmed platform geometry expected (Operator proven producers: Tepat, Megah)
     - Slope 30-70° (Badali icehouse)
     - Solisip-1 failure noted (reservoir quality issue)
     - Vp-porosity from our rock physics: φ=20% → Vp=4720 m/s
@@ -579,11 +579,11 @@ def sabah_play_test() -> DiscriminationResult:
         slope_angle_deg=45.0,  # Badali icehouse: 30-70°, take mid-range
         has_megabreccias=True,  # Badali icehouse indicator
         has_karst=True,  # exposure surfaces likely
-        thickness_m=800.0,  # Solisip-1 had 138 m; PETRONAS notes 3-15% porosity
+        thickness_m=800.0,  # Solisip-1 had 138 m; Operator notes 3-15% porosity
         vp_m_s=4720.0,  # our VRH computation at φ=20%
         porosity_fraction=0.20,
         sabah_mode=True,
-        source="geox_egs_rock_physics + PETRONAS_overrides",
+        source="geox_egs_rock_physics + Operator_overrides",
     )
 
 

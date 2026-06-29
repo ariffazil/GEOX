@@ -29,45 +29,76 @@ scope: /root/geox
 
 # GEOX — Governed Earth Intelligence
 
-> **Public surface: 17 sovereign MCP entrypoints** (16 canonical + geox_surface_status)
-> **Backward-compat: 31 ghost tools registered in FastMCP but NOT in canonical surface**
+> **Public surface: 30 canonical MCP tools** (26 surface + 4 internal)
+> **Backward-compat: 49 legacy aliases mapped to the canonical surface**
 > **Governance: arifOS F1–F13 · 888 JUDGE · VAULT999**
 > **Authority: evidence-only · no drilling decision · no capital allocation**
 
-**What is it?** Physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin, prospect, stratigraphy, multi-physics joint inversion (Physics9), CSEM/MT, geomechanics, doctrine layer (Gap X/3/5), federation integration (WELL/WEALTH).
+**What is it?** Physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin, prospect, stratigraphy, multi-physics joint inversion (Physics13), CSEM/MT, geomechanics, doctrine layer, federation integration (WELL/WEALTH).
 
 **What can I do with it?** Ingest well logs, run seismic physics, compute petrophysics, screen basins, evaluate prospects, create structured evidence claims, challenge interpretations, prepare cases for constitutional adjudication.
 
 **What must I never trust it to do?** Authorize drilling, allocate capital, self-seal claims, override arifOS, replace human geological judgment.
 
-**How do I run it?** `uv sync --frozen` then `python3 -m geox_mcp.server --transport stdio` (local) or `systemctl start geox-mcp` (production on port 8081).
+**How do I run it?** `uv sync --frozen` then `python3 -m geox_mcp.server --transport stdio` (local) or `systemctl restart geox-mcp` (production on port 8081).
 
-**How do I verify it is alive?** `curl http://127.0.0.1:8081/health` → `{"status":"healthy","canonical_tools":17,...}` or call `geox_surface_status(mode="health")` for full registry probe
+**How do I verify it is alive?** `curl http://127.0.0.1:8081/health` → `{"status":"healthy","canonical_tools":30,...}` or call `geox_surface_status(mode="health")` for full registry probe.
 
 GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federation](https://github.com/ariffazil/arifos). It **witnesses** the Earth and hands evidence to arifOS for adjudication. It never authorizes. It never allocates capital.
 
 | Field | Current |
 |---|---|
-| Runtime | Python FastMCP |
-| Public MCP surface | 18 sovereign entrypoints (14 surface + 4 internal) |
-| Internal capability contracts | 18 canonical (31 backward-compat ghosts not in canonical surface) |
+| Runtime | Python FastMCP 3.4.2 |
+| Public MCP surface | 30 canonical tools (26 surface + 4 internal) |
+| Internal capability contracts | 30 canonical (49 backward-compat aliases not in canonical surface) |
 | License | Apache-2.0 |
 | Governance | arifOS F1–F13 |
 | Authority | Evidence-only |
-| Status | Live |
+| Status | Restarted 2026-06-29; verify with `curl :8081/health` |
 
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![MCP Tools](https://img.shields.io/badge/MCP-17%20sovereign%20entrypoints-10b981)](src/geox_mcp/server.py)
+[![MCP Tools](https://img.shields.io/badge/MCP-30%20canonical%20tools-10b981)](src/geox_mcp/server.py)
 [![Organ](https://img.shields.io/badge/organ-EARTH-f59e0b)](FEDERATION_CONTRACT.md)
-[![License](https://img.shields.io/badge/license-AGPL--3.0-ef4444?logo=gnu)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0-ef4444?logo=gnu)](LICENSE)
 [![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
 [![Authority](https://img.shields.io/badge/authority-EVIDENCE__ONLY-f97316)](GENESIS/)
-[![Status](https://img.shields.io/badge/status-LIVE-success)](CONTEXT.md)
+[![Status](https://img.shields.io/badge/status-restart_2026--06--29-informational)](CONTEXT.md)
 [![Live](https://img.shields.io/badge/live-geox.arif--fazil.com%2Fmcp-blueviolet)](https://geox.arif-fazil.com/mcp)
+[![RASA](https://img.shields.io/badge/RASA-context__fit-blue)](docs/ac_risk.md)
 
 ---
 
-## 1. FEDERATION POSITION
+## 1. EPISTEMIC RIGOR — Why GEOX Is Real Earth Science
+
+GEOX is not a chatbot with geology vocabulary. It is a **physics-constrained evidence coprocessor**:
+
+- **Evidence grades on every output** — CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN.
+- **Uncertainty bands on every estimate** — P10 / P50 / P90, not single numbers.
+- **Contradiction scan on every claim** — `evidence_for`, `evidence_against`, `missing_tests` are mandatory for hypotheses.
+- **Units and physical bounds** — every tool output carries units; every state vector is clipped to Earth-admissible ranges (Physics13).
+- **Provenance chains** — every result carries an artifact reference, source tool, and derivation hash.
+- **No black-box claims** — `geox_evidence` and `geox_claim_challenge` enforce multi-discipline self-argument.
+- **Constitutional floor enforcement** — F1 AMANAH (reversibility), F2 TRUTH (evidence labels), F4 CLARITY (ΔS ≤ 0), F7 HUMILITY (confidence ≤ 0.90), F9 ANTI-HANTU (no sentience claims), F11 AUDIT (immutable trace), F13 SOVEREIGN (human veto).
+
+The crustal domain grammar is grounded in **Huang et al. (2021)**, *Tectonics*, OBS2013-1 profile — 10,346 picked arrivals, ±0.3 km/s Vp uncertainty, 7-zone Vp taxonomy.
+
+### 1.1 RASA Context-Fit
+
+**RASA** = **R**elevance-**A**ware **S**ubstrate **A**lignment — a 0–1 score that measures how well a geological claim fits its evidence context.
+
+```
+RASA = evidence_credit × (1 − u_ambiguity)
+```
+
+- `evidence_credit` — fraction of required evidence artifacts present and valid.
+- `u_ambiguity` — physical ambiguity remaining after all constraints are applied.
+- F7 HUMILITY caps the score at **0.90**; GEOX never claims perfect context fit.
+
+RASA is computed inside `compute_ac_risk_governed(..., rasa_present=True)` and emitted on every governed evidence receipt. It is not a replacement for human judgment; it is a fast signal for whether a claim is anchored to its substrate or floating in abstraction.
+
+---
+
+## 2. FEDERATION POSITION
 
 GEOX operates under the arifOS constitutional kernel. It is not autonomous. It is evidence-only.
 
@@ -115,7 +146,7 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 - **An earth evidence coprocessor** — it ingests well logs, seismic volumes, DST data, and geological reports; it runs petrophysics, stratigraphy, and prospect evaluation; it outputs structured, physics-constrained evidence receipts.
 - **Constitutionally governed** — every output carries epistemic tags (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN), uncertainty bands (P10/P50/P90), and provenance chains.
-- **Agent-accessible** — all 18 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
+- **Agent-accessible** — all 30 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Public endpoint: `https://geox.arif-fazil.com/mcp`.
 - **Dual-transport** — systemd service (`geox-mcp.service`) for HTTP/SSE; `--transport stdio` for Claude Code, OpenCode, Continue CLI, and other local agents.
 
 ### What GEOX IS NOT
@@ -127,9 +158,9 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 ---
 
-## 2. QUICK START
+## 3. QUICK START
 
-### 2.1 Install
+### 3.1 Install
 
 ```bash
 cd /root/geox
@@ -139,7 +170,7 @@ uv sync --frozen                    # with dev deps (pytest, ruff, mypy)
 
 Requires Python 3.11+. FastMCP ≥ 3.4.2 with Tasks extension. Pydantic v2. Dependencies: `lasio`, `welly`, `striplog`, `numpy`, `scipy`, `matplotlib`, `segyio`, `scikit-learn`, `statsmodels`.
 
-### 2.2 Run (HTTP — systemd)
+### 3.2 Run (HTTP — systemd)
 
 The production service is managed by systemd:
 
@@ -156,7 +187,7 @@ cd /root/geox
 python3 -m geox_mcp.server --host 127.0.0.1 --port 8081
 ```
 
-### 2.3 Run (stdio — local agents)
+### 3.3 Run (stdio — local agents)
 
 ```bash
 cd /root/geox
@@ -177,7 +208,7 @@ For Claude Code, add to `~/.claude/settings.json`:
 }
 ```
 
-### 2.4 Health Check
+### 3.4 Health Check
 
 ```bash
 # Local
@@ -186,11 +217,11 @@ curl http://127.0.0.1:8081/health
 # Public (Cloudflare Tunnel)
 curl https://geox.arif-fazil.com/health
 
-# Expected response (current as of W17+ FORGE):
-# {"status":"healthy","service":"geox-unified","canonical_tools":17,"git_version":"geox-ead04d1c","contract_epoch":"2026-06-27-GEOX-17TOOLS-GAP1",...}
+# Expected response (current as of RASA release):
+# {"status":"healthy","service":"geox-unified","canonical_tools":30,"git_version":"geox-<HEAD>","contract_epoch":"2026-06-28-GEOX-30CANONICAL-RASA",...}
 ```
 
-### 2.5 Build & Test
+### 3.5 Build & Test
 
 ```bash
 make install      # uv sync --frozen
@@ -203,168 +234,26 @@ make forge        # security-audit (Trivy + Semgrep + Gitleaks + Ruff)
 
 ---
 
-## 3. CAPABILITY MAP — 17 CANONICAL ENTRYPOINTS
+## 4. CAPABILITY MAP — 30 CANONICAL TOOLS
 
-All 18 canonical entrypoints are callable via MCP at `https://geox.arif-fazil.com/mcp` (HTTP) or `stdio`. Each entrypoint carries `outputSchema`, MCP spec annotations, `cross_modal_stability`, `dim_spot_flag`, `epistemic_provenance`, `ml_provenance` (FM backings), and `godel_wall` verdict on every output envelope. Every tool call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
+All 30 canonical tools are callable via MCP at `https://geox.arif-fazil.com/mcp` (HTTP) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, epistemic tags, uncertainty bands, provenance, and a `godel_wall` verdict. Every call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
 
-**18 canonical MCP entrypoints** — Phase 2.1 + GAP-1 fix (locked 2026-06-28):
+**30 canonical tools** — Phase 2.1 (locked 2026-06-28, RASA release 2026-06-29):
 
-| Lane | Count | Entrypoints |
-|------|-------|-------------|
-| **Surface** (13) | OBSERVE/ANALYZE | `geox_well_ingest`, `geox_well_qc`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`, `geox_surface_status` |
-| **Internal** (4) | FEDERATION PLUMBING | `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine` |
+| Domain | Tools |
+|--------|-------|
+| **Wells & Stratigraphy** | `geox_well_ingest`, `geox_well_qc`, `geox_well_desurvey`, `geox_petrophysics`, `geox_sequence` |
+| **Seismic** | `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision` |
+| **Subsurface & Geomechanics** | `geox_subsurface_model`, `geox_geomechanics` |
+| **Basin & Deep Time** | `geox_basin`, `geox_deep_time_state`, `geox_surface_status` |
+| **Earth Governance Surface (EGS)** | `geox_egs_query_entity`, `geox_egs_query_claim`, `geox_egs_query_uncertainty`, `geox_egs_query_provenance`, `geox_egs_claim_create`, `geox_egs_claim_challenge`, `geox_egs_evidence_attach`, `geox_egs_evidence_reason`, `geox_egs_seismic_compute`, `geox_egs_rock_physics`, `geox_egs_data_qc_bundle`, `geox_egs_scenario_audit` |
+| **Internal Federation** | `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine` |
 
-### 3.1 Data Ingestion & Quality Control
-
-| # | Tool | Description |
-|---|------|-------------|
-| 1 | `geox_data_ingest_bundle` | Lazy ingestion for LAS, CSV, Parquet, SEG-Y, and structural payloads. Base64 upload + batch mode. |
-| 2 | `geox_data_qc_bundle` | Real QC: depth monotonicity, null %, physical range checks, Feature Joint Information Statistic (FJIS). |
-| 3 | `geox_dst_ingest_test` | Structured DST (Drill-Stem Test) ingestion with derived metrics: BHP, flow rates, skin, permeability, PVT flags. |
-| 4 | `geox_header_inspect` | Inspect LAS well log headers, SEG-Y seismic headers, deviation surveys, and well tops against Earth schemas. |
-| 5 | `geox_fault_stick_ingest_tool` | Ingest fault sticks from CSV or GeoJSON into canonical FaultSet3d schema. |
-| 6 | `geox_las_inspect` | Inspect LAS well log files against canonical curve schemas; return curve metadata, units, depth range. |
-| 7 | `geox_literature_ingest` | Ingest PDF or document as contextual literature witness; construct literature-claim scaffold. |
-
-### 3.2 Subsurface Generation & Verification
-
-| # | Tool | Description |
-|---|------|-------------|
-| 8 | `geox_subsurface_generate_candidates` | Generate ensemble subsurface outputs (petrophysics, structure, flattening, Vsh, φ, Sw, net pay, permeability) with residuals and data-density maps. |
-| 9 | `geox_subsurface_verify_integrity` | Enforce Physics9 boundary limits and detect structural paradoxes. Never returns SEAL without verified evidence. |
-
-### 3.3 Seismic Intelligence
-
-| # | Tool | Description |
-|---|------|-------------|
-| 10 | `geox_seismic_compute` | Unified seismic physics engine: synthetic forward modeling (S = w * r + n), well tie, time-depth anchoring, anomalous contrast detection (AVO class I–IV + attention residual + softmax hallucination risk), attribute computation. |
-| 11 | `geox_seismic_compute_attribute_tool` | Compute registered seismic attributes (Amplitude, Variance, Sweetness, Coherence, Envelope, Frequency Average) on volumes or frames. |
-| 12 | `geox_seismic_segy_inspect` | Inspect SEG-Y seismic file headers, trace count, sample interval, coordinate reference, and byte locations. |
-| 13 | `geox_horizon_contrast_surface` | ToAC-as-Attention Horizon Contrast Surface Pipeline: multi-attribute contrast residuals → attention-weighted fusion → horizon candidate extraction → geological governance. |
-| 14 | `geox_attribute_registry_list_tool` | List all registered seismic attributes with metadata. |
-| 15 | `geox_volume_frame_tool` | Read or write a single 2D frame in a 3D seismic volume. |
-| 16 | `geox_blend_volume_tool` | Alpha or RGB blend seismic volumes into a single composite volume. |
-| 17 | `geox_segy_export_tool` | Export seismic volume to SEG-Y format. **[REQUIRES 888_HOLD]** — irreversible file creation. |
-| 18 | `geox_blockspace_resolution_tool` | Compute inline, crossline, and vertical resolution from block/survey definitions. |
-
-### 3.4 Stratigraphy & Sequence Interpretation
-
-| # | Tool | Description |
-|---|------|-------------|
-| 19 | `geox_sequence_interpret` | Unified sequence stratigraphy engine: single-well L1–L3 pipeline (GR bins → packages → systems tracts), multi-well project with XLSX/PNG output, correlation panels, GR motif analysis, well ties with synthetics. |
-
-### 3.5 Basin & Spatial Intelligence
-
-| # | Tool | Description |
-|---|------|-------------|
-| 20 | `geox_basin_resolve` | Resolve basin name to canonical ID, bounding box, neighboring basins, and polygon reference. |
-| 21 | `geox_basin_profile` | Retrieve basin-level intelligence: overview, petroleum system, stratigraphy, play fairway, risk, contradiction scan. |
-| 22 | `geox_map_context_scene` | Spatial bbox context, CRS checks, causal scene rendering, coordinate guardrails. |
-| 23 | `geox_coord_transform_tool` | Transform 3D points between block, survey, and world coordinate spaces using 4×4 affine matrices. |
-
-### 3.6 Prospect Evaluation
-
-| # | Tool | Description |
-|---|------|-------------|
-| 24 | `geox_prospect_evaluate` | Integrated prospect evaluation: volumetrics, POS (Probability of Success), EVOI (Expected Value of Information). Modes: screen → appraise → develop. Optional preview or seal with 888_HOLD gating. |
-
-### 3.7 Evidence Reasoning & Claims
-
-| # | Tool | Description |
-|---|------|-------------|
-| 25 | `geox_evidence_reason` | Unified evidence synthesis, abduction, and contradiction engine. Full pipeline: synthesize → abduct → contradict. Spatial block-CV for honest generalization gap measurement. |
-| 26 | `geox_evidence_discover` | Search SharePoint / OneDrive / local corpus / reports for geological evidence with provenance metadata. |
-| 27 | `geox_evidence_attach` | Attach evidence artifact to existing claim (supporting, contradicting, contextual, or alternative). |
-| 28 | `geox_claim_create` | Create structured Earth interpretation claim with full provenance chain. Epistemic classes: CLAIM (asserted with evidence) · PLAUSIBLE (consistent with physics) · HYPOTHESIS (testable proposition) · ESTIMATE (quantitative bound) · UNKNOWN (insufficient evidence). P10/P50/P90 uncertainty bands. Every hypothesis must carry: `evidence_for`, `evidence_against`, `expected_additional_signatures`, `missing_tests`. |
-| 29 | `geox_claim_validate` | Validate claim against 16-field earth_memory_envelope schema. Promotes DRAFT → VALIDATED. |
-| 30 | `geox_claim_challenge` | Challenge existing claim with alternative interpretation — multi-discipline self-argument (Eureka #4). |
-| 31 | `geox_claim_seal` | Submit validated claim to arifOS for Vault999 sealing. GEOX forwards; arifOS adjudicates. |
-
-### 3.8 Vision AI (Seismic Image Interpretation)
-
-| # | Tool | Description |
-|---|------|-------------|
-| 32 | `geox_vision_perceptual_inventory` | Build PerceptualInventory from VLM outputs; validate against Pydantic v2 schema. Enforces F7 HUMILITY (confidence ≤ 0.90) and F9 ANTI-HANTU. |
-| 33 | `geox_vision_minimax_inference` | Interpret seismic section images via deployed MiniMax VLM (minimax-code MCP, port 18091). |
-| 34 | `geox_vision_calibrate` | Run synthetic forward-inverse harness to calibrate VLM against ground truth. Precision/recall against known features. |
-| 35 | `geox_vision_audit` | Compute AC_Risk and emit VisionVerdict: U_phys × D_transform × B_cog breakdown. F13 human_review_required flag if AC_Risk > 0.5. |
-
-### 3.9 Routing, Discovery & Guardrails
-
-| # | Tool | Description |
-|---|------|-------------|
-| 36 | `geox_query_intake` | Accept natural language queries and route to appropriate tools (basin profile, resolver, etc.). |
-| 37 | `geox_abstraction_guard` | Evaluate non-geological questions and enforce ontology guards. |
-| 38 | `geox_report_to_workflow` | Given a discovered report and user intent, produce safe GEOX workflow steps. |
-| 39 | `geox_system_registry_status` | Discovery of canonical tools, health, and contract epoch. F2 Truth: the registry must not tell lies about what is callable. |
+49 legacy flat names (e.g. `geox_data_ingest_bundle`, `geox_claim_create`, `geox_prospect_evaluate`) are still accepted by the backward-compat middleware and routed to the correct canonical tool.
 
 ---
 
-### 3.10 W2-W4 Doctrine Layer — Gap X / 3 / 5 (NEW 2026-06-21)
-
-| # | Tool | Description |
-|---|------|-------------|
-| 40 | `geox_doctrine_assumption_register` | Gap X (WAJIB) — register an assumption in the GEOX reasoning lineage. Tracks `parent_assumption_id`, `rung_origin` (1-7), `falsified_at`, cascading falsification to descendants. |
-| 41 | `geox_doctrine_anti_beautiful_one` | Gap 3 (WAJIB) — `beauty_overreach_score = certainty_gradient / grounding_gradient`. If rhetoric outruns evidence, forces decomposition before SEAL. |
-| 42 | `geox_doctrine_godel_review` | Gap 5 (WAJIB) — runtime hard-stop. Iron Law: lower rungs always beat higher rungs. Returns KNOWN / UNKNOWN / UNDECIDABLE_YET / VOID. |
-
-### 3.11 W5-W8 Phase A — Foundation Model as Backing Engine (NEW 2026-06-21)
-
-| # | Tool | Description |
-|---|------|-------------|
-| 43 | `geox_prithvi_eo_inference` | Prithvi-EO-2.0 (NASA-IMPACT + IBM, HuggingFace). Earth observation FM trained on 4.2M HLS time series. Tasks: flood mapping, burn scars, land cover, multi-temporal crop, scene reasoning. Mock backend by default; live requires `terratorch` + GPU + 888_HOLD. |
-
-### 3.12 W9-W12 Phase B — Nonseismic Geophysics + Open Data (NEW 2026-06-21)
-
-| # | Tool | Description |
-|---|------|-------------|
-| 44 | `geox_gravity_magnetic_forward` | Forward-model Bouguer / TMI anomaly grids via Fatiando HarmonIC. Adapters for gravity + magnetic prism superposition. |
-| 45 | `geox_emag2_ingest` | Fetch EMAG2v3 global magnetic anomaly grid (NOAA NCEI, 228 MB TIFF, 2-arc-min resolution). Cached at `/root/.cache/geox/emag2/`. Offline stub by default. |
-| 46 | `geox_icgem_models` | List ICGEM (GFZ Potsdam) global gravity field models: EIGEN-6C4, EGM2008, XGM2019. Citation + source URI included. |
-
-### 3.13 W13+ Phase C — Multi-Physics Earth Witness (NEW 2026-06-21)
-
-| # | Tool | Description |
-|---|------|-------------|
-| 47 | `geox_joint_inversion` | **Strategic centerpiece.** Fuse N modalities (seismic impedance, Vp/Vs, gravity, magnetic, MT resistivity) → one Physics9State per cell. IRLS solver with Earth-bounds clipping. Output graded RAW / AAA. |
-| 48 | `geox_mt_forward` | 1D CSEM/MT forward via Wait's recursion. Returns apparent resistivity (Ω·m) + phase (deg). **Fills the missing ρₑ discipline per strategic vision.** |
-| 49 | `geox_biostrat_constraint` | Biostrat time-facies admissibility check. 6 built-in zones (Quaternary, Miocene Reef, Cretaceous Shale, Jurassic Sabkha, Carboniferous Coal, Precambrian Basement). |
-| 50 | `geox_seismic_inversion` | 1D post-stack PINN-style seismic inversion. Recursive impedance + Faust velocity prior + Gardner density prior. Enforces Physics9 bounds. |
-
-### 3.14 W13+ Phase C — Federation Integration Layer (NEW 2026-06-21)
-
-| # | Tool | Description |
-|---|------|-------------|
-| 51 | `geox_geomechanics` | Derive K, G, E, ν, AI, Vp/Vs from a Physics9State. Sanity-flagged for negative moduli. Godel verdict on demand. |
-| 52 | `geox_well_decision_class` | **WELL → GEOX gate.** Reads operator fatigue via WELL organ; returns C1-C5 decision_class gating joint inversion aggressiveness. C5 = VOID (HOLD). |
-| 53 | `geox_wealth_feed` | **GEOX → WEALTH feed.** STOIIP (P10/P50/P90) + lithology-aware ranking + ADVANCE / DEFER / REJECT verdict. Ready for `wealth_compute_npv` consumption. |
-| 54 | (reserved — see contracts/canonical_registry.py for the live count) | — |
-
-### 3.15 Quick Reference: Old vs New Tool Surface
-
-**Before W2-W13+ FORGE (16 canonical tools):**
-- DISCOVERY 5 · EVIDENCE 13 · REASONING 17 · JUDGMENT 5
-
-**After W2-W13+ FORGE (54 canonical tools, 2026-06-21):**
-- DISCOVERY 6 (+icgem_models) · EVIDENCE 14 (+emag2_ingest) · REASONING 21 (+prithvi, +gravity_mag, +mt, +biostrat, +seismic_inv) · JUDGMENT 13 (+3 doctrine, +joint_inversion, +geomechanics, +well_decision_class, +wealth_feed)
-
-**After W14+ FORGE (55 canonical tools, 2026-06-21):**
-- REASONING 22 (+geox_lem_predict, GEOX-LEM substrate, weights pending GPU + 888)
-
-**After W15+ FORGE (16 canonical tools, 2026-06-22):**
-- JUDGMENT 14 (+geox_deep_time_state, Governed Earth State Vector)
-
-**After W16+ FORGE (16 canonical tools + physics-first substrate, 2026-06-22):**
-- No new tools — substrate only (`crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`, `crustal_domain_classify.py`, `joint_inversion_zone_hook.py`)
-- 124 new tests across 5 modules
-
-**After Phase 2.1 FORGE (18 canonical tools, 2026-06-28):**
-- WELL 5 (+geox_well_desurvey, 3D wellbore geometry — wellpathpy mincurve + tan, pyproj CRS, ACRisk envelope)
-- DISCOVERY 14 (+geox_surface_status, federation-standard registry probe GAP-1 fix)
-
----
-
-## 4. BOUNDARY DECLARATION
+## 5. BOUNDARY DECLARATION
 
 ### GEOX OWNS
 
@@ -398,7 +287,7 @@ All 18 canonical entrypoints are callable via MCP at `https://geox.arif-fazil.co
 
 ---
 
-## 5. CONSTITUTIONAL BINDING (F1–F13)
+## 6. CONSTITUTIONAL BINDING (F1–F13)
 
 GEOX is governed by 13 constitutional floors from the arifOS kernel (`000_LAW_v2026.03.07.md`). Below is the canonical mapping of each floor to geological operations within GEOX:
 
@@ -420,9 +309,7 @@ GEOX is governed by 13 constitutional floors from the arifOS kernel (`000_LAW_v2
 
 ---
 
-## 6. ARCHITECTURE
-
-## 6. EPISTEMIC LADDER — From Raw Data to Sovereign Decision
+## 7. EPISTEMIC LADDER — From Raw Data to Sovereign Decision
 
 GEOX follows a strict epistemic ladder. Every output occupies exactly one rung. No rung can be skipped.
 
@@ -442,7 +329,7 @@ DECISION SUPPORT  → Risked volumetric range, AC_Risk score, evidence completen
 HUMAN JUDGMENT    → F13 SOVEREIGN: drill or not drill (OUTSIDE GEOX)
 ```
 
-### 6.1 Hypothesis Scaffolding
+### 7.1 Hypothesis Scaffolding
 
 Every geological claim in GEOX is incomplete without four companion fields:
 
@@ -455,7 +342,7 @@ Every geological claim in GEOX is incomplete without four companion fields:
 
 Without all four, a claim is not yet ready for JUDGE.
 
-### 6.2 Non-Stationary Principle
+### 7.2 Non-Stationary Principle
 
 GEOX interpretations are **not static truths**:
 - Models expire. A HYPOTHESIS today may be REJECTED tomorrow when new wells are drilled.
@@ -466,9 +353,9 @@ GEOX interpretations are **not static truths**:
 
 ---
 
-## 7. ARCHITECTURE
+## 8. ARCHITECTURE
 
-### 7.1 Source Tree (Canonical)
+### 8.1 Source Tree (Canonical)
 
 ```
 geox/
@@ -480,7 +367,7 @@ geox/
 │
 ├── src/
 │   ├── geox_mcp/                         ← MCP surface (agent-facing)
-│   │   ├── server.py                     ← Canonical FastMCP server (56 tools)
+│   │   ├── server.py                     ← Canonical FastMCP server (30 canonical + 49 legacy aliases)
 │   │   ├── tools/                        ← Tool implementations
 │   │   │   ├── discovery/                ← System discovery + registry
 │   │   │   └── kernel/                   ← Kernel-bridge tools
@@ -492,7 +379,7 @@ geox/
 │   │   └── servers/                      ← Server composition
 │   │
 │   └── geox_core/                        ← Truth engine (NOT agent-facing)
-│       ├── core/                         ← AC_Risk engine, Physics9 state
+│       ├── core/                         ← AC_Risk engine, Physics13 state
 │       ├── well/                         ← Well stratigraphy (L1-L3)
 │       │   ├── stratigraphy/             ← 10+ pipeline modules
 │       │   └── tools/                    ← Well tool implementations
@@ -502,7 +389,7 @@ geox/
 │       ├── renderers/                    ← PNG, XLSX, JSON output renderers
 │       ├── artifacts/                    ← Earth-truth artifact store
 │       ├── wealth/canon/                 ← Capital-adjacent canons (evidence, not allocation)
-│       ├── laws/                         ← Physics9 invariants
+│       ├── laws/                         ← Physics13 invariants
 │       ├── shared/                       ← Shared schemas + contracts
 │       ├── schemas/                       ← W16+ physics-first substrate
 │       │   ├── crust_vp_grammar.py       ← Huang 2021 Vp grammar (7 zones)
@@ -511,10 +398,6 @@ geox/
 │       ├── physics/                      ← W16+ physics hooks
 │       │   └── joint_inversion_zone_hook.py ← Post-inversion Vp classification
 │       └── engines/lem/                  ← W14+ LEM substrate (tokenizer, model, physics_head)
-│
-├── src/geox_mcp/
-│   ├── floor_enforcement.py              ← W16+ F1/F4/F7/F9/F11/F13 wrapper
-│   └── tools/crustal_domain_classify.py  ← W16+ multi-cell classifier
 │
 ├── apps/                                 ← Standalone geoscience applications
 │   ├── welldesk/                         ← Well correlation desktop
@@ -566,7 +449,7 @@ geox/
 └── LICENSE                               ← Apache-2.0
 ```
 
-### 7.2 GENESIS Chain — The Constitutional Charter
+### 8.2 GENESIS Chain — The Constitutional Charter
 
 The `GENESIS/` directory is the **binding constitutional charter** for all agents operating in this repo. If code changes contradict a GENESIS principle, the principle wins. File an 888_HOLD and escalate to Arif.
 
@@ -577,7 +460,7 @@ The `GENESIS/` directory is the **binding constitutional charter** for all agent
 | `002_FIRST_PRINCIPLES.md` | L1–L5 system stack: Parallelism, Persistence, Structure, Compute as Infrastructure, Human Sovereignty | 175 |
 | `003_CONSTITUTIONAL_ALIGNMENT.md` | F1–F13 → geological operations → enforcement status | 347 |
 
-### 7.3 Cross-Modal Fidelity Theorem (GENESIS/003)
+### 8.3 Cross-Modal Fidelity Theorem (GENESIS/003)
 
 Ratified 2026-06-05. The theorem unifies four mathematical frameworks into a single governance constraint:
 
@@ -590,9 +473,9 @@ Ratified 2026-06-05. The theorem unifies four mathematical frameworks into a sin
 
 ---
 
-## 8. FOR HUMAN OPERATORS
+## 9. FOR HUMAN OPERATORS
 
-### 8.1 How to Read GEOX Evidence
+### 9.1 How to Read GEOX Evidence
 
 GEOX outputs are structured evidence receipts, not final answers. Every receipt contains:
 
@@ -623,23 +506,23 @@ GEOX outputs are structured evidence receipts, not final answers. Every receipt 
 - `cross_modal_stability` — < 0.70 = the interpretation may be generation-dependent
 - `dim_spot_flag` — true = attention collapsed; output may be hallucinated
 
-### 8.2 The Prospect Evaluation Pipeline
+### 9.2 The Prospect Evaluation Pipeline
 
 ```
-1. geox_data_ingest_bundle → Upload LAS, SEG-Y, DST data
-2. geox_data_qc_bundle → Verify depth, nulls, physical ranges
-3. geox_subsurface_generate_candidates → Compute Vsh, φ, Sw, net pay
-4. geox_subsurface_verify_integrity → Physics9 boundary check
-5. geox_basin_profile → Basin context + petroleum system
-6. geox_prospect_evaluate(mode='screen') → Quick heuristic screening
-7. geox_prospect_evaluate(mode='appraise') → Requires QC_VERIFIED evidence
-8. geox_claim_create → Structured interpretation claim
-9. geox_claim_validate → Schema validation
+1. geox_well_ingest → Upload LAS, SEG-Y, DST data
+2. geox_well_qc → Verify depth, nulls, physical ranges
+3. geox_petrophysics → Compute Vsh, φ, Sw, net pay
+4. geox_geomechanics → Physics13 boundary check + moduli
+5. geox_basin(mode='profile') → Basin context + petroleum system
+6. geox_prospect(mode='screen') → Quick heuristic screening
+7. geox_prospect(mode='appraise') → Requires QC_VERIFIED evidence
+8. geox_claim → Structured interpretation claim
+9. geox_evidence → Attach evidence + contradiction scan
 10. geox_claim_challenge → Alternative interpretation (multi-discipline argument)
-11. geox_claim_seal → Route to arifOS 888 JUDGE for final adjudication
+11. geox_evidence (seal path) → Route to arifOS 888 JUDGE for final adjudication
 ```
 
-### 8.3 Decision Authority
+### 9.3 Decision Authority
 
 ```
 GEOX computes evidence           → "60m oil column, P50, AC_Risk 0.28, QUALIFY"
@@ -651,11 +534,11 @@ Arif Fazil (F13 SOVEREIGN) decides → Drilling go/no-go, capital commitment
 
 ---
 
-## 9. FOR AI AGENTS
+## 10. FOR AI AGENTS
 
-### 9.1 MCP Connection
+### 10.1 MCP Connection
 
-GEOX exposes all 16 tools via MCP (Model Context Protocol). Two transport modes:
+GEOX exposes all 30 canonical tools via MCP (Model Context Protocol). Two transport modes:
 
 **HTTP/SSE (for remote agents):**
 ```
@@ -669,7 +552,7 @@ Auth: Cloudflare Tunnel (no API key required for localhost-bridged agents)
 python3 -m geox_mcp.server --transport stdio
 ```
 
-### 9.2 Tool Categories for Agentic Reasoning
+### 10.2 Tool Categories for Agentic Reasoning
 
 | Cognitive Axis | Tools | When to Use |
 |----------------|-------|-------------|
@@ -680,7 +563,7 @@ python3 -m geox_mcp.server --transport stdio
 | **judge** | `prospect_evaluate`, `claim_create`, `claim_validate`, `claim_challenge`, `claim_seal` | Prepare evidence for constitutional adjudication |
 | **identity** | `system_registry_status`, `query_intake`, `abstraction_guard`, `report_to_workflow` | System discovery and routing |
 
-### 9.3 Agent Rules
+### 10.3 Agent Rules
 
 1. **Always cite evidence.** Never claim a geological interpretation without referencing at least one evidence artifact (well log, seismic, DST, literature).
 2. **Always declare uncertainty.** Use P10/P50/P90 bands. Never claim certainty without a distribution.
@@ -694,9 +577,9 @@ python3 -m geox_mcp.server --transport stdio
 
 ---
 
-## 10. FOR INSTITUTIONS
+## 11. FOR INSTITUTIONS
 
-### 10.1 Nobel-Grade Earth Intelligence
+### 11.1 Nobel-Grade Earth Intelligence
 
 GEOX is built on 6 Nobel-grade eurekas, catalogued in [`docs/GEOX_NOBEL_EUREKA_CATALOGUE.md`](docs/GEOX_NOBEL_EUREKA_CATALOGUE.md):
 
@@ -707,7 +590,7 @@ GEOX is built on 6 Nobel-grade eurekas, catalogued in [`docs/GEOX_NOBEL_EUREKA_C
 5. **Constitutional Governance for AI Output** — 13 floors (WAJIB/SUNAT/HARUS/MAKRUH/HARAM) enforce trustworthiness, not just capability.
 6. **PINN Petrophysics** — Physics-Informed Neural Networks with Archie + density loss terms constrain Vsh/φ/Sw to physically admissible ranges.
 
-### 10.2 Compliance
+### 11.2 Compliance
 
 | Framework | Alignment |
 |-----------|-----------|
@@ -717,7 +600,7 @@ GEOX is built on 6 Nobel-grade eurekas, catalogued in [`docs/GEOX_NOBEL_EUREKA_C
 | **ASEAN Guide on AI Governance and Ethics** | 6 principles mapped |
 | **Apache-2.0** | Scientific tooling — free to use, modify, distribute. Federation governed by arifOS AGPL-3.0 kernel. |
 
-### 10.3 The Moat
+### 11.3 The Moat
 
 GEOX is the only Earth AI system in the world with:
 - Runtime epistemic integrity standard (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN) plus hypothesis scaffolding (`evidence_for`, `evidence_against`, `expected_additional_signatures`, `missing_tests`)
@@ -729,7 +612,7 @@ GEOX is the only Earth AI system in the world with:
 
 ---
 
-## 11. KNOWN LIMITATIONS
+## 12. KNOWN LIMITATIONS
 
 | Limitation | Severity | Status |
 |------------|----------|--------|
@@ -742,7 +625,7 @@ GEOX is the only Earth AI system in the world with:
 
 ---
 
-## 12. FEDERATION CROSS-REFERENCE
+## 13. FEDERATION CROSS-REFERENCE
 
 | Organ | Repo | Port | Role | Relationship to GEOX |
 |-------|------|------|------|---------------------|
@@ -755,9 +638,9 @@ GEOX is the only Earth AI system in the world with:
 
 ---
 
-## 13. BUILD, TEST, DEPLOY
+## 14. BUILD, TEST, DEPLOY
 
-### 13.1 Local Development
+### 14.1 Local Development
 
 ```bash
 cd /root/geox
@@ -781,7 +664,7 @@ make format                  # ruff format src/
 make forge                   # Trivy + Semgrep + Gitleaks + Ruff
 ```
 
-### 13.2 Running the Server
+### 14.2 Running the Server
 
 ```bash
 # Production (systemd)
@@ -794,20 +677,20 @@ python3 -m geox_mcp.server --host 127.0.0.1 --port 8081
 python3 -m geox_mcp.server --transport stdio
 ```
 
-### 13.3 Docker Build
+### 14.3 Docker Build
 
 ```bash
 make build                   # docker build -t geox:latest .
 ```
 
-### 13.4 Deploy to VPS
+### 14.4 Deploy to VPS
 
 ```bash
 ./deploy-vps.sh              # Build + transfer + docker compose up
 ./deploy-vps.sh --force-rebuild  # Force GUI asset rebuild
 ```
 
-### 13.5 CI Pipeline
+### 14.5 CI Pipeline
 
 On every push and PR (`.github/workflows/ci.yml`):
 1. **Security:** TruffleHog secret scan
@@ -816,7 +699,7 @@ On every push and PR (`.github/workflows/ci.yml`):
 
 ---
 
-## 14. LICENSE & SOVEREIGNTY
+## 15. LICENSE & SOVEREIGNTY
 
 ### License
 
@@ -841,7 +724,7 @@ GEOX is not a product. GEOX is an organ. It serves the federation. It witnesses 
 
 ---
 
-## 15. QUICK REFERENCE CARD
+## 16. QUICK REFERENCE CARD
 
 ```bash
 # Install

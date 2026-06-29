@@ -202,6 +202,8 @@ class GovernedACRiskResult:
     vault_seal: VaultSeal | None
     floor_violations: list[str]
     audit_trace: str
+    rasa_present: bool = False
+    rasa_context_fit: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -214,6 +216,8 @@ class GovernedACRiskResult:
             "vault_seal": self.vault_seal.to_dict() if self.vault_seal else None,
             "floor_violations": self.floor_violations,
             "audit_trace": self.audit_trace,
+            "rasa_present": self.rasa_present,
+            "rasa_context_fit": round(self.rasa_context_fit, 4),
         }
 
 
@@ -529,6 +533,13 @@ def compute_ac_risk_governed(
             explanation = "[ADVISORY MODE] " + explanation
             hold_triggered = False
 
+    # ── RASA context-fit score (F7 humility capped at 0.90) ──
+    rasa_context_fit = 0.0
+    if rasa_present:
+        rasa_context_fit = _clamp(evidence_credit * (1.0 - u_ambiguity), 0.0, 1.0)
+        # F7 HUMILITY: never claim perfect context fit; leave 10% epistemic room
+        rasa_context_fit = min(rasa_context_fit, 0.90)
+
     vault_seal = _generate_vault_seal(verdict, ac_risk_score, session_id or "N/A")
 
     audit_trace = _generate_audit_trace(
@@ -561,4 +572,6 @@ def compute_ac_risk_governed(
         vault_seal=vault_seal,
         floor_violations=floor_violations,
         audit_trace=audit_trace,
+        rasa_present=rasa_present,
+        rasa_context_fit=rasa_context_fit,
     )

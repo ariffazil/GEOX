@@ -2,7 +2,7 @@
 geox_core.engines.biostrat — Biostratigraphy Zonation Engine
 ═════════════════════════════════════════════════════════════
 Automated zonation using conodont and foraminifera schemes.
-Provides age constraints and facies context for Physics9State.
+Provides age constraints and facies context for Physics13State.
 
 Physics: Biostratigraphy doesn't measure physics directly — it constrains
 TIME (age) and FACIES (depositional environment), which bound:
@@ -24,7 +24,7 @@ from typing import Any, Literal
 
 import numpy as np
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 logger = logging.getLogger("geox.biostrat")
 
@@ -363,14 +363,14 @@ def assign_zones_to_well(
 
 def facies_to_physics9_constraints(
     facies: str,
-    base_state: Physics9State | None = None,
+    base_state: Physics13State | None = None,
 ) -> dict[str, Any]:
     """
     Map facies interpretation to Physics9 parameter constraints.
 
     Returns permissible ranges for porosity, Vp/Vs, temperature, pressure.
     """
-    from geox_core.physics.state import Physics9State
+    from geox_core.physics.state import Physics13State
 
     FACIES_BOUNDS = {
         "shallow_marine_carbonate": {"phi": (0.05, 0.30), "vp_vs": (1.6, 2.0), "rho_e": (50, 500)},

@@ -2,7 +2,7 @@
 joint_inversion.py — W13+ Phase C forge: Joint multi-physics inversion.
 
 The strategic centerpiece. Fuses N independent geophysical modalities
-(seismic, gravity, magnetic, EM) into one Physics9State per cell.
+(seismic, gravity, magnetic, EM) into one Physics13State per cell.
 
 Inputs (per cell):
   - Seismic: acoustic_impedance (kg·m⁻²·s⁻¹) OR Vp/Vs ratio
@@ -37,7 +37,7 @@ from typing import Literal, Optional
 
 import numpy as np
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 
 # ───────────────────────────── MODALITY INPUT ────────────────────────────────────
@@ -57,8 +57,8 @@ class InversionRequest:
     """A cell-wise inversion request."""
 
     observations: list[ModalityObservation] = field(default_factory=list)
-    # Prior: best-guess Physics9State (from wells / catalog)
-    prior: Optional[Physics9State] = None
+    # Prior: best-guess Physics13State (from wells / catalog)
+    prior: Optional[Physics13State] = None
     # Bounds: per-dial min/max for solver
     bounds: Optional[dict[str, tuple[float, float]]] = None
     # Convergence thresholds
@@ -74,17 +74,17 @@ class InversionRequest:
 
 
 # ───────────────────────────── FORWARD OPERATORS ─────────────────────────────────
-def forward_impedance(state: Physics9State) -> float:
+def forward_impedance(state: Physics13State) -> float:
     """Z = ρ · Vp (kg·m⁻²·s⁻¹)."""
     return state.rho * state.vp
 
 
-def forward_vpvs(state: Physics9State) -> float:
+def forward_vpvs(state: Physics13State) -> float:
     """Vp/Vs ratio (dimensionless)."""
     return state.vp / max(state.vs, 1e-6)
 
 
-def forward_gravity_bouguer(state: Physics9State, depth_m: float) -> float:
+def forward_gravity_bouguer(state: Physics13State, depth_m: float) -> float:
     """Single-prism Bouguer approximation at given depth.
 
     Simplified HarmonIC point-mass: Δg ≈ G · M / r² · 1e5 (mGal).
@@ -103,7 +103,7 @@ def forward_gravity_bouguer(state: Physics9State, depth_m: float) -> float:
     return G * mass / r2 * 1e5  # mGal
 
 
-def forward_magnetic_tmi(state: Physics9State, depth_m: float) -> float:
+def forward_magnetic_tmi(state: Physics13State, depth_m: float) -> float:
     """Simplified magnetic dipole forward.
 
     TMI ≈ (μ₀ / 4π) · (M · V · cos(θ)) / r³ · 1e9 (nT)
@@ -117,7 +117,7 @@ def forward_magnetic_tmi(state: Physics9State, depth_m: float) -> float:
     return (mu0 / (4 * math.pi)) * (M * volume * math.cos(inc)) / (r ** 3) * 1e9
 
 
-def forward_mt_resistivity(state: Physics9State) -> float:
+def forward_mt_resistivity(state: Physics13State) -> float:
     """The MT/CSAMT 'apparent resistivity' is just ρₑ in Ω·m."""
     return state.rho_e
 
@@ -136,9 +136,9 @@ DEFAULT_BOUNDS: dict[str, tuple[float, float]] = {
 }
 
 
-def _clip_to_bounds(state: Physics9State, bounds: dict[str, tuple[float, float]]) -> Physics9State:
+def _clip_to_bounds(state: Physics13State, bounds: dict[str, tuple[float, float]]) -> Physics13State:
     """Clip every dial to its allowed Earth-bounds."""
-    return Physics9State(
+    return Physics13State(
         rho=float(np.clip(state.rho, *bounds["rho"])),
         vp=float(np.clip(state.vp, *bounds["vp"])),
         vs=float(np.clip(state.vs, *bounds["vs"])),
@@ -151,7 +151,7 @@ def _clip_to_bounds(state: Physics9State, bounds: dict[str, tuple[float, float]]
     )
 
 
-def _forward_observation(state: Physics9State, obs: ModalityObservation) -> float:
+def _forward_observation(state: Physics13State, obs: ModalityObservation) -> float:
     """Dispatch to the right forward operator."""
     if obs.modality == "seismic_impedance":
         return forward_impedance(state)
@@ -167,7 +167,7 @@ def _forward_observation(state: Physics9State, obs: ModalityObservation) -> floa
 
 
 def joint_inversion(request: InversionRequest) -> dict:
-    """Solve for one Physics9State per cell from N modalities.
+    """Solve for one Physics13State per cell from N modalities.
 
     Algorithm: Iteratively Reweighted Least-Squares (IRLS) using
     the prior as starting point. Each iteration clips to bounds and
@@ -180,7 +180,7 @@ def joint_inversion(request: InversionRequest) -> dict:
     bounds = request.bounds or DEFAULT_BOUNDS
 
     # Prior or default Sandstone
-    state = request.prior or Physics9State(
+    state = request.prior or Physics13State(
         rho=2350.0, vp=2950.0, vs=1680.0, rho_e=20.0,
         chi=0.0001, k=2.8, P=20e6, T=320.0, phi=0.25,
     )
@@ -216,10 +216,11 @@ def joint_inversion(request: InversionRequest) -> dict:
         # Compute gradient via finite differences (cheap for 9 dials)
         eps = 1e-4
         grads = np.zeros(9)
-        names = ["rho", "vp", "vs", "rho_e", "chi", "k", "P", "T", "phi"]
+        names = ["rho", "vp", "vs", "rho_e", "chi", "k_th", "Pp", "T", "phi"]
         for i, name in enumerate(names):
-            state_plus = replace(state, **{name: getattr(state, name) * (1 + eps)})
-            state_minus = replace(state, **{name: getattr(state, name) * (1 - eps)})
+            value = getattr(state, name)
+            state_plus = replace(state, **{name: value * (1 + eps)})
+            state_minus = replace(state, **{name: value * (1 - eps)})
             res_plus = 0.0
             res_minus = 0.0
             for j, obs in enumerate(request.observations):
@@ -232,18 +233,18 @@ def joint_inversion(request: InversionRequest) -> dict:
                 rel_m = (v_m - obs.value) / max(abs(obs.value), 1e-6)
                 res_plus += wp * rel_p * rel_p
                 res_minus += wp * rel_m * rel_m
-            grads[i] = (res_plus - res_minus) / (2 * eps * max(abs(state.__dict__[name]), 1e-3))
+            grads[i] = (res_plus - res_minus) / (2 * eps * max(abs(value), 1e-3))
 
         # Step proportional to negative gradient
         step = 0.05 / max(np.linalg.norm(grads), 1e-3)
-        new_state = Physics9State(
+        new_state = Physics13State(
             rho=state.rho - step * grads[0],
             vp=state.vp - step * grads[1],
             vs=state.vs - step * grads[2],
             rho_e=state.rho_e - step * grads[3],
             chi=state.chi - step * grads[4],
-            k=state.k - step * grads[5],
-            P=state.P - step * grads[6],
+            k_th=state.k_th - step * grads[5],
+            Pp=state.Pp - step * grads[6],
             T=state.T - step * grads[7],
             phi=state.phi - step * grads[8],
         )
@@ -354,7 +355,7 @@ def joint_inversion_batch(
                 )
                 claim = doctrine_wall.register_claim(
                     rung=5,
-                    description=f"Cell {i} Physics9State is bounded (AAA grade).",
+                    description=f"Cell {i} Physics13State is bounded (AAA grade).",
                     depends_on_assumption_ids=[asm.assumption_id],
                 )
                 verdict = doctrine_wall.is_sealable(claim.claim_id)

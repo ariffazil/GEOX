@@ -267,7 +267,7 @@ from geox_core.engines.joint_inversion import (
     run_joint_inversion,
     quick_joint_inversion,
 )
-from geox_core.physics.state import Physics9State, EARTH_MATERIAL_CATALOG
+from geox_core.physics.state import Physics13State, EARTH_MATERIAL_CATALOG
 
 
 class TestJointInversion:

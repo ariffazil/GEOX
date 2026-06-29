@@ -8,7 +8,7 @@ Tests cover:
   - Stratigraphic column construction (including frontier gap)
   - Crust classification via vp_zone_classify
   - Thermal state computation
-  - Voxel field construction with Physics9State anchors
+  - Voxel field construction with Physics13State anchors
   - Contrast field computation (ΔS across 4 axes)
   - Uncertainty cascade propagation (serial + parallel + F7 cap)
   - End-to-end pipeline with mocked fetchers
@@ -665,7 +665,7 @@ class TestPhysics9GapFill:
     """Phase 2: Physics9 priors fill missing voxel field gaps."""
 
     def test_physics9_fill_for_known_lithology(self):
-        """Known lithology (Sandstone) returns correct Physics9State."""
+        """Known lithology (Sandstone) returns correct Physics13State."""
         from geox_core.orchestration.basin_synthesis_pipeline import physics9_fill_for_lithology
         from geox_core.orchestration.provenance_ledger import ProvenanceLedger
 
@@ -695,7 +695,7 @@ class TestPhysics9GapFill:
         assert phys9.vp == 2450
 
     def test_physics9_fill_for_all_catalog_materials(self):
-        """All 8 catalog materials produce valid Physics9State."""
+        """All 8 catalog materials produce valid Physics13State."""
         from geox_core.orchestration.basin_synthesis_pipeline import physics9_fill_for_lithology
         from geox_core.orchestration.provenance_ledger import ProvenanceLedger
         from geox_core.physics.state import EARTH_MATERIAL_CATALOG
