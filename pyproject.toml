@@ -94,7 +94,7 @@ dependencies = [
     # GDAL — raster/vector geospatial (requires system gdal-dev on some platforms)
     "gdal>=3.8.0,<3.11",
     "geopandas>=1.1.4",
-    "rasterio>=1.4.0",
+    "rasterio>=1.4.4",
 
     # ─── P1 CRITICAL: Plate Tectonics & Geomodeling ────────────────────────
     # GPlately — plate reconstruction raster/vector through deep time
