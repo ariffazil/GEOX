@@ -27,7 +27,7 @@ epistemic_rung: "INTERPRETATION"
 evidence_refs:
   - "geox://resource/basins/malay_basin/basin_profile.yaml"
   - "beicip-franlab:deepwater_tertiary:1992"
-  - "petronas:deepwater_synthesis:2008"
+  - "operator:deepwater_synthesis:2008"
 data_quality: "MEDIUM"   # thinner dataset than shallow play
 
 contrast_dimensions:

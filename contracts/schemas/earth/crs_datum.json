@@ -30,8 +30,8 @@
     },
     "authority": {
       "type": "string",
-      "description": "Organization or standard that defines this CRS. Examples: EPSG, OGP, PETRONAS, ExxonMobil",
-      "examples": ["EPSG", "OGP", "PETRONAS", "operator"]
+      "description": "Organization or standard that defines this CRS. Examples: EPSG, OGP, NOC, ExxonMobil",
+      "examples": ["EPSG", "OGP", "NOC", "operator"]
     },
     "area_of_use": {
       "type": ["string", "null"],
