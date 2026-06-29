@@ -56,7 +56,7 @@ GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federatio
 | License | Business Source License 1.1 (BSL-1.1) |
 | Governance | arifOS F1–F13 |
 | Authority | Evidence-only |
-| Status | Active (v0.1.0-bsl); verify with `curl :8081/health` |
+| Status | Active (v2026.06.29-BSL-GOVERNANCE); verify with `curl :8081/health` |
 
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
 [![MCP Tools](https://img.shields.io/badge/MCP-30%20canonical%20tools-10b981)](src/geox_mcp/server.py)
