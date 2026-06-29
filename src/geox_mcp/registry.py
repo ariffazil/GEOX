@@ -67,7 +67,7 @@ SURFACE_TOOLS: list[str] = [
     "geox_egs_claim_challenge",
     "geox_egs_evidence_attach",
     "geox_egs_evidence_reason",
-    "geox_egs_seismic_compute",
+    "geox_egs_seismic_compute",  # DEPRECATED: use geox_seismic_compute (unified engine with 6 modes)
     "geox_egs_rock_physics",
     "geox_egs_data_qc_bundle",
     "geox_egs_scenario_audit",

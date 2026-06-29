@@ -2,7 +2,12 @@
 compute.py — EGS Compute MCP Tools
 ====================================
 GEOX EGS: Seismic computation and data QC tools.
-Extends existing geox_seismic_compute with EGS-pedigreed uncertainty propagation.
+
+NOTE: geox_egs_seismic_compute is DEPRECATED in favor of
+geox_seismic_compute (unified seismic engine with 6 modes:
+synthetic, well_tie, time_depth_anchor, anomalous_contrast,
+attribute, inversion). This tool provides only basic rock physics
+computation (AI/EI/VpVs) and is kept for backward compatibility.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
@@ -40,6 +45,11 @@ async def egs_seismic_compute(
     use_gardner: bool = False,
 ) -> dict[str, Any]:
     """Compute seismic properties from velocity and density.
+
+    DEPRECATED: Use geox_seismic_compute (unified seismic engine) instead.
+    geox_seismic_compute supports 6 modes (synthetic, well_tie,
+    time_depth_anchor, anomalous_contrast, attribute, inversion) and
+    provides full rock physics including these computations.
 
     OBS — Pure computation, reads no mutable state.
     """
