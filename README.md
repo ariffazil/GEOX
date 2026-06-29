@@ -29,7 +29,7 @@ scope: /root/geox
 
 # GEOX — Governed Earth Intelligence
 
-![GEOX Earth Intelligence Banner](docs/assets/geox_hero_banner.jpg)
+![GEOX Earth Intelligence Banner](./docs/assets/geox_hero_banner.jpg)
 
 > **Public surface: 30 canonical MCP tools** (26 surface + 4 internal)
 > **Backward-compat: 49 legacy aliases mapped to the canonical surface**
