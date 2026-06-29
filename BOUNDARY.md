@@ -72,3 +72,67 @@ scope: /root/geox/BOUNDARY.md
 - **MCP Server:** FastMCP unified server (`python server.py`)
 - **Frontend:** `geox-gui/` (React 19 + Vite + MapLibre + CesiumJS)
 - **Test:** `pytest tests/ -q`
+
+---
+
+## Autonomous Authority Charter (AAC v1.0)
+
+GEOX agents (including Hermes, OpenCode, OpenClaw, and A-FORGE executors) operate under a governed autonomy model to optimize performance and prevent unnecessary confirmation latency.
+
+### 1. Class-A Autonomy (No Approval Needed)
+Agents may execute these actions immediately:
+*   **Internal Code Execution:** Running tests, compiling assets, invoking local scripts, executing standard MCP calls.
+*   **Session Management:** Spawning, resuming, checkpointing, or retiring agent sessions.
+*   **Tool Selection:** Selecting which canonical tool, model, or route to invoke.
+*   **Epistemic Tagging:** Appending evidence tags (`CLAIM`, `PLAUSIBLE`, `HYPOTHESIS`, `ESTIMATE`, `UNKNOWN`) to outputs.
+*   **Ledger & Receipt Updates:** Recording execution lineage and updating vitality files.
+*   **A2A Communications:** Exchanging metadata and coordination messages between peer federation agents.
+*   **Self-Healing:** Re-starting service workers, rebuilding caches, and repairing virtual environment configurations.
+
+### 2. Class-B Sovereign Actions (Requires Arif Veto Check)
+Agents MUST request explicit approval from Arif before executing:
+*   **Human/External Contact:** Sending Slack notifications, emails, WhatsApp messages, or external publication logs.
+*   **Asset/Cost Mutation:** Performing actions with external costs, API spending, or cloud deployment billing updates.
+*   **Irreversible State Mutation:** Writing to the VAULT999 ledger, deleting core databases/repositories, or altering git history.
+*   **Public/Reputational Statements:** Deploying code changes to public registries or publishing announcements.
+
+### 3. Class-C Forbidden Actions (Strictly Blocked)
+Agents are strictly prohibited from attempting:
+*   **Identity Impersonation:** Generating signatures representing Arif or other human users.
+*   **Binding Commitments:** Making legal, financial, or licensing agreements.
+*   **Proprietary/Confidential Access:** Reading or extracting unauthorized third-party confidential files.
+*   **Epistemic Deception:** Fabricating test data, bypassing validation schemas, or claiming absolute physical certainty.
+*   **Constitutional Mutating:** Modifying the 13 constitutional floors or the arifOS kernel boundaries.
+
+```yaml
+AUTONOMYCHARTERV1
+Authority:
+  CLASSAAUTONOMOUS:
+    - internalcodeexecution
+    - sessionspawnresume_checkpoint
+    - tool_selection
+    - epistemic_tagging
+    - ledger_update
+    - a2ainternalcomms
+    - self_healing
+
+  CLASSBSOVEREIGN:
+    - human_contact
+    - asset_contact
+    - irreversible_action
+    - external_publication
+
+  CLASSCFORBIDDEN:
+    - impersonate_arif
+    - legalfinancialcommitment
+    - unauthorizedconfidentialaccess
+    - evidence_fabrication
+    - constitutional_mutation
+
+Runtime:
+  RULE: |
+    if action in CLASSAAUTONOMOUS: EXECUTE
+    if action in CLASSBSOVEREIGN: REQUEST_ONCE
+    if action in CLASSCFORBIDDEN: BLOCKANDLOG
+```
+
