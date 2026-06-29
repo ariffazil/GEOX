@@ -56,7 +56,7 @@ GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federatio
 | License | Business Source License 1.1 (BSL-1.1) |
 | Governance | arifOS F1–F13 |
 | Authority | Evidence-only |
-| Status | Restarted 2026-06-29; verify with `curl :8081/health` |
+| Status | Active (v0.1.0-bsl); verify with `curl :8081/health` |
 
 [![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
 [![MCP Tools](https://img.shields.io/badge/MCP-30%20canonical%20tools-10b981)](src/geox_mcp/server.py)
@@ -64,7 +64,7 @@ GEOX is the **Earth Intelligence organ** of the [arifOS Constitutional Federatio
 [![License](https://img.shields.io/badge/license-BSL--1.1-ef4444?logo=gnu)](LICENSE)
 [![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
 [![Authority](https://img.shields.io/badge/authority-EVIDENCE__ONLY-f97316)](GENESIS/)
-[![Status](https://img.shields.io/badge/status-restart_2026--06--29-informational)](CONTEXT.md)
+[![Status](https://img.shields.io/badge/status-active-success)](CONTEXT.md)
 [![Live](https://img.shields.io/badge/live-geox.arif--fazil.com%2Fmcp-blueviolet)](https://geox.arif-fazil.com/mcp)
 [![RASA](https://img.shields.io/badge/RASA-context__fit-blue)](docs/ac_risk.md)
 
@@ -291,6 +291,9 @@ All 30 canonical tools are callable via MCP at `https://geox.arif-fazil.com/mcp`
 
 ## 6. CONSTITUTIONAL BINDING (F1–F13)
 
+<details>
+<summary><b>View arifOS Constitutional Floors Mapping (F1–F13)</b></summary>
+
 GEOX is governed by 13 constitutional floors from the arifOS kernel (`000_LAW_v2026.03.07.md`). Below is the canonical mapping of each floor to geological operations within GEOX:
 
 | Floor | Name | Symbol | Type | Geological Meaning | GEOX Enforcement |
@@ -309,9 +312,14 @@ GEOX is governed by 13 constitutional floors from the arifOS kernel (`000_LAW_v2
 | **F12** | INJECTION DEFENSE | I⁻ | HARD | Input sanitization. Injection probability < 0.85 | `PhysicsGuard` on seismic compute. Boundary condition flags. Contradiction ontology (12 types). DAN-style jailbreaks, prompt overrides, constitutional bypass attempts blocked. |
 | **F13** | SOVEREIGN OVERRIDE | S | HARD | Human final authority. Buck stops with the sovereign | All prospect sealing gates through 888 JUDGE. Vision `human_review_required=True` when AC_Risk > 0.5. AI proposes amendments; humans seal law. 888 Judge (Muhammad Arif bin Fazil) holds absolute authority OUTSIDE the floors. |
 
+</details>
+
 ---
 
 ## 7. EPISTEMIC LADDER — From Raw Data to Sovereign Decision
+
+<details>
+<summary><b>View Epistemic Ladder & Scaffolding Details</b></summary>
 
 GEOX follows a strict epistemic ladder. Every output occupies exactly one rung. No rung can be skipped.
 
@@ -352,6 +360,8 @@ GEOX interpretations are **not static truths**:
 - Single-well interpretations are **candidates**, not proven regional truths.
 - Seismic without well tie remains **hypothesis-layer only** — no matter how convincing the amplitude looks.
 - All evidence receipts carry timestamps. Old evidence is valid context; stale evidence without recent corroboration is flagged.
+
+</details>
 
 ---
 
@@ -705,7 +715,11 @@ On every push and PR (`.github/workflows/ci.yml`):
 
 ### License
 
-GEOX is licensed under the **Business Source License 1.1 (BSL-1.1)** — free for academic, personal, evaluation, and non-production use. Production use in commercial operations requires a separate commercial license from the Licensor (Muhammad Arif bin Fazil). Code automatically converts to Apache-2.0 after 3 years (Change Date: June 29, 2029).
+GEOX is licensed under the **Business Source License 1.1 (BSL-1.1)**.
+- **Licensor:** Muhammad Arif bin Fazil
+- **Change License:** Apache License, Version 2.0
+- **Change Date:** June 29, 2029
+- **Additional Use Grant:** You may use the software freely for non-production purposes, internal testing, evaluation, and academic research. Production use in commercial undertakings (including commercial drilling decisions, commercial seismic processing, or public SaaS deployments) requires a separate commercial license from the Licensor (ariffazil@gmail.com). Code automatically converts to Apache-2.0 after 3 years.
 
 ```
 Copyright 2025–2026 Muhammad Arif bin Fazil
