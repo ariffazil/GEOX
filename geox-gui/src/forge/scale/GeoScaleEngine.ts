@@ -264,6 +264,7 @@ export class GeoScaleEngine {
 
     return {
       domain: '3d',
+      pixel: { x: inline, y: xline },
       world: {
         x: worldCoords.x,
         y: worldCoords.y,
@@ -390,8 +391,8 @@ export class GeoScaleEngine {
     // Distance penalty from nearest GCP
     const minDistance = Math.min(
       ...config.gcps.map((gcp) => {
-        const dx = gcp.pixel.x - pixel.x;
-        const dy = gcp.pixel.y - pixel.y;
+        const dx = (gcp.pixel.x ?? 0) - (pixel.x ?? 0);
+        const dy = (gcp.pixel.y ?? 0) - (pixel.y ?? 0);
         return Math.sqrt(dx * dx + dy * dy);
       })
     );
