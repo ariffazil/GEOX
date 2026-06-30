@@ -4,7 +4,7 @@ version = "2026.06.30"
 description = "GEOX — Earth Intelligence Sovereign Kernel. Governed geoscience coprocessor under arifOS constitutional floors. 40 canonical MCP tools, 13 constitutional floors (F01-F13)."
 readme = "README.md"
 requires-python = ">=3.11"
-license = "BSL-1.1"
+license = {text = "BSL-1.1"}
 keywords = [
     "geoscience",
     "petrophysics",
