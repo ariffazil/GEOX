@@ -106,38 +106,6 @@ CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
 # ─────────────────────────────────────────────────────────────────────────────
 # BACKWARD COMPAT — old tool names, 1 release cycle
 # ─────────────────────────────────────────────────────────────────────────────
-#
-# ╔══════════════════════════════════════════════════════════════════════════════╗
-# ║  STRIKE 3 — DEPRECATION ANNOUNCEMENT (2026-06-30)                          ║
-# ║                                                                             ║
-# ║  These 49 backward-compat aliases are scheduled for REMOVAL after           ║
-# ║  2026-07-30. They are accepted by GeoxGovernanceMiddleware.on_call_tool()   ║
-# ║  but HIDDEN from tools/list (filtered by on_list_tools).                    ║
-# ║                                                                             ║
-# ║  Routing mechanism:                                                         ║
-# ║    1. These are actual FastMCP tool registrations from sub-servers          ║
-# ║       (witness, paleoscan, claims, vision) mounted via mcp.mount().         ║
-# ⑄    2. _prune_mcp_surface() keeps them because they are in SACRED_SURFACE.  ║
-# ║    3. GeoxGovernanceMiddleware._EXECUTABLE_SURFACE (geox_middleware.py:84)  ║
-# ║       = canonical_public ∪ canonical_compat → accepts both on call_tool.   ║
-# ║    4. GeoxGovernanceMiddleware.on_list_tools() (geox_middleware.py:115)     ║
-# ║       filters to _PUBLIC_SURFACE only → compat are hidden from tools/list.  ║
-# ║    5. Lane assignment (organ_governance.py:_load_lane_map()) maps each      ║
-# ║       alias to discovery/evidence/reasoning/judgment so lane enforcement    ║
-# ║       does not over-require session/lease on read-only aliases.             ║
-# ║                                                                             ║
-# ║  Migration: clients should switch to canonical tool names. See              ║
-# ║  CANONICAL_COMPAT_MIGRATION.md in this directory for alias→canonical map.   ║
-# ║                                                                             ║
-# ║  ⚠️  KNOWN GAPS (Strike 3 audit):                                          ║
-# ║      3 aliases lack explicit lane map entries in organ_governance.py:       ║
-# ║        - geox_dst_ingest_test    → defaults to "reasoning" (too strict)    ║
-# ║        - geox_sequence_interpret → defaults to "reasoning" (too strict)    ║
-# ║        - geox_evidence_reason    → defaults to "reasoning" (too strict)    ║
-# ║      These fall back to "reasoning" lane which unnecessarily requires       ║
-# ║      session_id. FIXED in organ_governance.py (Strike 3 patch).             ║
-# ╚══════════════════════════════════════════════════════════════════════════════╝
-#
 CANONICAL_COMPAT_TOOLS: list[str] = [
     "geox_data_ingest_bundle",
     "geox_data_qc_bundle",

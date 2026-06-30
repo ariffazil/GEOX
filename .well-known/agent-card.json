@@ -1,0 +1,22 @@
+{
+  "schema": "arifOS/agent-card/v2.0.0",
+  "name": "GEOX Earth Intelligence",
+  "service_id": "geox-mcp",
+  "version": "v2.0.0-UNIFIED",
+  "description": "Earth intelligence — seismic, petrophysics, basin, prospect evaluation. Evidence-only. 31 canonical tools.",
+  "authority": "EVIDENCE_ONLY",
+  "transport": {
+    "port": 8081,
+    "domain": "geox.arif-fazil.com",
+    "endpoint": "https://geox.arif-fazil.com/mcp"
+  },
+  "capabilities": {
+    "tools": 31,
+    "domains": ["well","seismic","basin","petrophysics","prospect","egs","geomechanics"]
+  },
+  "governance": {
+    "floors": ["F1","F2","F4","F7","F9","F11","F13"],
+    "authority_boundary": "EVIDENCE_ONLY",
+    "physics_invariants": ["Physics9"]
+  }
+}

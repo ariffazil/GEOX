@@ -57,4 +57,11 @@ ENV HOST=0.0.0.0
 
 EXPOSE 8081
 
+LABEL org.opencontainers.image.source="https://github.com/ariffazil/geox" \
+      org.opencontainers.image.description="Earth intelligence — 31-tool geoscience surface" \
+      org.opencontainers.image.version="v2.0.0-UNIFIED" \
+      org.opencontainers.image.licenses="BSL-1.1" \
+      arifos.organ="GEOX" \
+      arifos.authority="EVIDENCE_ONLY"
+
 CMD ["python", "-m", "geox_mcp.server"]
