@@ -116,6 +116,16 @@ RASA is computed inside `compute_ac_risk_governed(..., rasa_present=True)` and e
 
 ---
 
+## APEX STACK Bridge
+
+> APEX THEORY defines the constitutional dynamics of governed intelligence through ΔΩΨ. arifOS compiles those dynamics into an AGI substrate kernel. AAA renders the substrate as visible ASI civilization state. A-FORGE gives the system governed hands. GEOX, WEALTH, and WELL anchor those hands to earth, capital, and human reality. VAULT999 preserves consequence. Arif/F13 remains the sovereign witness and final veto.
+
+**GEOX must never:** authorize drilling, issue resource estimates without arifOS SEAL, or make policy decisions.
+
+Full doctrine: [GENESIS/040_APEX_STACK.md](https://github.com/ariffazil/arifos/blob/main/GENESIS/040_APEX_STACK.md)
+
+---
+
 ## 2. FEDERATION POSITION
 
 GEOX operates under the arifOS constitutional kernel. It is not autonomous. It is evidence-only.
