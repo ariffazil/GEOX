@@ -27,7 +27,7 @@ import { VerdictConsole } from '../VerdictConsole/VerdictConsole';
 import { ProspectUI } from '../ProspectUI/ProspectUI';
 import { SectionCanvas } from '../SectionCanvas/SectionCanvas';
 import { ChronosHistory } from '../ChronosHistory/ChronosHistory';
-import { AppIframeHost } from '../EarthWitness/AppIframeHost';
+import { AppIframeHost } from '../AppHost/AppIframeHost';
 import { useGEOXStore, useActiveTab, useGovernance, useGEOXConnected } from '../../store/geoxStore';
 import type { Tab } from '../../types';
 
