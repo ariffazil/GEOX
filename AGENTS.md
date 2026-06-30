@@ -18,7 +18,7 @@ changes_since_last_verified:
   - P2: GapRegistry extended — GAP_CONVERGENCE type added
   - GAP-1: geox_surface_status added (2026-06-27) — federation-standard registry probe
   - GEOX-AUDIT-FIX-001 (FORGE 2026-06-28): 49 backward-compat tools added to GEOX_LANE_MAP — fixed SESSION_REQUIRED blocks on read-only/compute tools
-  - GEOX now correctly reports 30 canonical tools (18 original + 12 EGS) + 49 backward-compat aliases
+  - GEOX now correctly reports 31 canonical tools (18 original + 12 EGS + 1 geox_atlas) + 49 backward-compat aliases
   - tests: 75 passed (orchestration), 0 failed — 52 Phase 1 + 23 Phase 2
 -->
 
@@ -67,7 +67,7 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Update canonical schemas in `contracts/`
 
 ### Requires 888_HOLD
-- Changes to the tool registry (30 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` — locked)
+- Changes to the tool registry (31 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` — locked)
 - Changes to Physics9 boundary limits
 - Live foundation model weight deployment (Prithvi-EO-2.0, TerraMind, Clay, Aurora, GEOX-LEM)
 - Production deployment without verified build + test pass
@@ -108,7 +108,7 @@ ruff format geox/
 mypy server.py geox/
 
 # Start canonical MCP server
-python server.py
+python -m geox_mcp.server
 
 # Frontend
 cd geox-gui && npm install && npm run build
@@ -119,7 +119,7 @@ cd geox-gui && npm install && npm run build
 | Path | Purpose |
 |------|---------|
 | `GENESIS/` | **Canonical system doctrine** — manifesto, kill map, first principles, constitutional alignment |
-| `src/geox_mcp/server.py` | Canonical unified MCP server (~2,700 lines, 30 canonical tools + backward-compat middleware) |
+| `src/geox_mcp/server.py` | Canonical unified MCP server (~2,700 lines, 31 canonical tools + backward-compat middleware) |
 | `geox/core/` | Unified tool registry, AC-risk engine, doctrine |
 | `geox/well/` | Well stratigraphy (L1-L3), schemas, tools |
 | `geox/skills/` | Earth science skill modules |

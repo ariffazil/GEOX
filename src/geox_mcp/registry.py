@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GEOX CANONICAL TOOLS — Phase 2 Clean Architecture (2026-06-22)
-# 18 tools (Phase 2.1, 2026-06-28). Mode-based consolidation. Evidence-only.
-# Physics-9 governed.
+# GEOX CANONICAL TOOLS — Phase 2.2 Clean Architecture (2026-06-29)
+# 31 canonical tools (27 surface + 4 internal). 49 backward-compat aliases.
+# Mode-based consolidation. Evidence-only. Physics-9 governed.
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # SURFACE-FACING (14 tools):
@@ -16,7 +16,8 @@ from typing import Any
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 30. Live runtime reports canonical_tools=30.
+#   Total canonical = 31. Live runtime reports canonical_tools=31.
+#   49 backward-compat aliases accepted by middleware.
 #   Any change requires 888_HOLD per geox/AGENTS.md.
 #
 # Phase 2.1 (2026-06-28): added geox_well_desurvey (3D wellbore geometry).
@@ -32,7 +33,7 @@ from typing import Any
 #
 # What these do: query the planet, analyze subsurface data, return evidence.
 # Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 14 (13 earth tools + 1 federation discovery tool)
+# Count: 27 (5 well + 4 seismic + 2 model + 3 basin + 1 atlas + 1 federation + 12 EGS)
 #
 SURFACE_TOOLS: list[str] = [
     # ── WELL DOMAIN (5) ────────────────────────────────────────────────────────
@@ -93,12 +94,12 @@ INTERNAL_TOOLS: list[str] = [
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CANONICAL PUBLIC TOOLS — Union of surface + internal (18 total)
+# CANONICAL PUBLIC TOOLS — Union of surface + internal (31 total)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # This is the single source of truth for the MCP server invariant check.
 # Surface tools are what the world sees. Internal tools are federation plumbing.
-# Live runtime reports canonical_tools=18; do not change without 888_HOLD.
+# Live runtime reports canonical_tools=31; do not change without 888_HOLD.
 #
 CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
 
