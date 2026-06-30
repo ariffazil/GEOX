@@ -1,0 +1,19 @@
+{
+  "schema": "mcp",
+  "version": "2026.06.30",
+  "protocolVersion": "2025-11-25",
+  "name": "GEOX MCP",
+  "description": "Earth intelligence — 31 canonical tools. Evidence-only geoscience coprocessor.",
+  "tools": 31,
+  "endpoint": "https://geox.arif-fazil.com/mcp",
+  "identity": {
+    "canonical_name": "GEOX",
+    "service_id": "geox-mcp",
+    "authority": "EVIDENCE_ONLY",
+    "port": 8081
+  },
+  "governance": {
+    "floors": ["F1","F2","F4","F7","F9","F11","F13"],
+    "authority_boundary": "EVIDENCE_ONLY"
+  }
+}
