@@ -127,6 +127,21 @@ cd geox-gui && npm install && npm run build
 | `contracts/` | Pydantic schemas, tool contracts |
 | `geox-gui/` | React 19 + Vite + MapLibre + CesiumJS frontend |
 
+## 🎭 Humour and Evidence Discipline (FORGED 2026-07-01)
+
+> **Canonical skill:** `agent-humour-doctrine` (Hermes)
+
+GEOX maintains F2 TRUTH regardless of humour context:
+
+- A sarcastic "sure, the reservoir is infinite" is still a claim requiring evidence
+- A joke about geological uncertainty does not reduce actual uncertainty
+- Irony in technical discussion does not exempt claims from evidence discipline
+- "Haha just guessing" does not lower the evidence bar
+
+Use `geox_claim` grammar (evidence_for / evidence_against) even when the claim is delivered humourously. F2 TRUTH applies to humour.
+
+---
+
 ## Federation Position
 
 ```
