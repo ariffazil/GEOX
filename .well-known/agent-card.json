@@ -1,22 +1,50 @@
 {
-  "schema": "arifOS/agent-card/v2.0.0",
-  "name": "GEOX Earth Intelligence",
-  "service_id": "geox-mcp",
-  "version": "v2.0.0-UNIFIED",
-  "description": "Earth intelligence — seismic, petrophysics, basin, prospect evaluation. Evidence-only. 31 canonical tools.",
-  "authority": "EVIDENCE_ONLY",
-  "transport": {
-    "port": 8081,
-    "domain": "geox.arif-fazil.com",
-    "endpoint": "https://geox.arif-fazil.com/mcp"
-  },
-  "capabilities": {
-    "tools": 31,
-    "domains": ["well","seismic","basin","petrophysics","prospect","egs","geomechanics"]
-  },
-  "governance": {
-    "floors": ["F1","F2","F4","F7","F9","F11","F13"],
-    "authority_boundary": "EVIDENCE_ONLY",
-    "physics_invariants": ["Physics9"]
-  }
+    "$schema": "arifOS/agent-card/v2.0.0",
+    "id": "geox-mcp",
+    "name": "GEOX Earth Intelligence",
+    "description": "Earth intelligence — seismic, petrophysics, basin, prospect evaluation. Evidence-only. 31 canonical tools. Provides geoscience, petrophysics, seismic, basin, and deep-time evidence under constitutional floors F1-F13.",
+    "version": "2026.07.01",
+    "protocolVersion": "1.0.0",
+    "url": "https://geox.arif-fazil.com",
+    "provider": {
+        "organization": "arifOS Federation",
+        "url": "https://arif-fazil.com"
+    },
+    "service_id": "geox-mcp",
+    "authority": "EVIDENCE_ONLY",
+    "transport": {
+        "port": 8081,
+        "domain": "geox.arif-fazil.com",
+        "endpoint": "https://geox.arif-fazil.com/mcp"
+    },
+    "capabilities": {
+        "tools": 31,
+        "domains": ["well","seismic","basin","petrophysics","prospect","egs","geomechanics"],
+        "streaming": false,
+        "pushNotifications": false,
+        "stateTransitionHistory": true
+    },
+    "owned_mcp": [
+        "geox_well_ingest", "geox_well_qc", "geox_well_desurvey",
+        "geox_petrophysics", "geox_sequence",
+        "geox_seismic_ingest", "geox_seismic_compute", "geox_seismic_interpret",
+        "geox_vision", "geox_subsurface_model", "geox_geomechanics",
+        "geox_basin", "geox_deep_time_state", "geox_surface_status",
+        "geox_claim", "geox_evidence", "geox_prospect", "geox_doctrine"
+    ],
+    "skills": [
+        {"id": "earth.evidence", "name": "Earth Evidence", "description": "Provide geological, geophysical, or petrophysical evidence for constitutional judgment.", "tags": ["geoscience","evidence","earth"], "floor_scope": ["F2","F4","F11"]}
+    ],
+    "governance": {
+        "floors": ["F1","F2","F4","F7","F9","F11","F13"],
+        "authority_boundary": "EVIDENCE_ONLY",
+        "physics_invariants": ["Physics9"],
+        "self_approval_forbidden": true,
+        "authority_class": "specialist"
+    },
+    "metadata": {
+        "consolidated": "2026-07-01T20:00:00Z",
+        "consolidated_by": "FORGE (000Ω) — Phase 2 entropy reduction",
+        "source": "merged from static/agent-card.json (owned_mcp, skills) + .well-known/agent-card.json"
+    }
 }
