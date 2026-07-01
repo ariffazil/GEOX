@@ -31,3 +31,5 @@ coverage.xml
 
 # Raw repo exports (duplicates live in Copilot/_archive/)
 ariffazil-geox.txt
+data/atlas/cache/
+src/arifos_geox.egg-info/
