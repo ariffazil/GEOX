@@ -29,25 +29,5 @@ coverage.xml
 .coverage
 .playwright-mcp*.yml
 
-# Runtime/generated artifacts
-entropy-report.json
-public_registry.json
-resources/public_registry.json
-resources/macrostrat_cache/
-
-# Secrets — never commit
-.env
-.env.local
-.env.*.local
-
-# Cache & scratch
-.mypy_cache/
-scratch/
-*.pyc
-
-# Runtime artifacts (regenerated each session)
-entropy/
-logs/
-_archived_logs/
-999_vault/audit.jsonl
-
+# Raw repo exports (duplicates live in Copilot/_archive/)
+ariffazil-geox.txt
