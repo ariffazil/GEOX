@@ -74,15 +74,10 @@ VAULT999  ← immutable record
 | Authority | Evidence-only |
 | Status | Active (v2026.06.29-BSL-GOVERNANCE); verify with `curl :8081/health` |
 
-[![Python](https://img.shields.io/badge/python-3.12+-3776AB?logo=python&logoColor=white)](pyproject.toml)
-[![MCP Tools](https://img.shields.io/badge/MCP-canonical%20tools-10b981)](src/geox_mcp/server.py)
-[![Organ](https://img.shields.io/badge/organ-EARTH-f59e0b)](FEDERATION_CONTRACT.md)
-[![License](https://img.shields.io/badge/license-BSL--1.1-ef4444?logo=gnu)](LICENSE)
-[![Port](https://img.shields.io/badge/port-8081-64748b)](INVARIANTS.md)
-[![Authority](https://img.shields.io/badge/authority-EVIDENCE__ONLY-f97316)](GENESIS/)
-[![Status](https://img.shields.io/badge/status-active-success)](CONTEXT.md)
-[![Live](https://img.shields.io/badge/live-mcp.arif--fazil.com%2Fmcp-blueviolet)](https://mcp.arif-fazil.com/mcp)
-[![RASA](https://img.shields.io/badge/RASA-context__fit-blue)](docs/ac_risk.md)
+[![Forge Pipeline](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml)
+[![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml)
+[![Governance Gate](https://github.com/ariffazil/GEOX/actions/workflows/governance-gate.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/governance-gate.yml)
+[![License](https://img.shields.io/github/license/ariffazil/GEOX?label=License)](LICENSE)
 
 ---
 
