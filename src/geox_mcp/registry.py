@@ -54,6 +54,12 @@ SURFACE_TOOLS: list[str] = [
     "geox_basin",  # Profile, resolve, macrostrat, scene
     "geox_deep_time_state",  # Earth State Vector at any geological age
     "geox_atlas",  # Point-in-country + land/water classifier. Natural Earth 10m GeoJSON.
+    # ── EARTH MAP SURFACE (3) — Phase 2.3 (2026-07-01) ─────────────────────────
+    # Layer registry + scene planning + cached preview rendering.
+    # Architecture: tools compute, resources carry data. Truth-class gated.
+    "geox_map_layers_list",  # Discover available layers for a bbox + theme
+    "geox_map_scene_plan",  # Deterministic render recipe (no image yet)
+    "geox_map_render_preview",  # Cheap static PNG preview with caching
     # ── FEDERATION DISCOVERY (1) ───────────────────────────────────────────────
     # GAP-1 fix (2026-06-27): Federation-standard registry probe.
     # Any MCP client can call this. Returns the 18 real tools, not the 31 ghosts.

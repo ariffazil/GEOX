@@ -59,10 +59,10 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.06.29-phase2.2-rasa"
+GEOX_VERSION = "v2026.07.01-phase2.3-earthmap"
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
 # Backward-compat wrappers for 49 legacy alias names.
-GEOX_CONTRACT_EPOCH = "2026-06-29-GEOX-31TOOLS-PHASE22"
+GEOX_CONTRACT_EPOCH = "2026-07-01-GEOX-34TOOLS-PHASE23"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -90,6 +90,9 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_basin": 60.0,
     "geox_deep_time_state": 30.0,
     "geox_atlas": 15.0,  # Point-in-country + land/water. Fast lookup from local GeoJSON.
+    "geox_map_layers_list": 10.0,  # Layer registry lookup. Fast.
+    "geox_map_scene_plan": 10.0,  # Scene plan generation. Fast.
+    "geox_map_render_preview": 25.0,  # Static preview render with caching.
     "geox_surface_status": 10.0,
     # Internal plumbing (4)
     "geox_claim": 30.0,
@@ -318,9 +321,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = (
-        31  # Phase 2.2 (2026-06-29): +1 geox_atlas — Earth Atlas Phase 1. Natural Earth 10m point-in-country + land/water.
-    )
+    _EXPECTED_CANONICAL = 34  # Phase 2.3 (2026-07-01): +3 earth map tools — layer registry, scene plan, render preview.
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -924,6 +925,96 @@ async def _geox_context_at_location(
     from geox_mcp.tools.geox_atlas import geox_context_at_location as _impl
 
     return await _impl(lat=lat, lon=lon)
+
+
+# ── Phase 2.3 (2026-07-01): Earth Map Surface — Layer Registry + Scene Planning + Preview ──
+# Architecture: tools compute + decide, resources carry data payloads.
+# Truth-class gated (CONTEXT / INTERPRETATION / DECISION_SUPPORT).
+# Cached renders. Guardrailed for miskin VPS survival.
+
+
+@mcp.tool(name="geox_map_layers_list")
+async def _geox_map_layers_list(
+    bbox: list[float],
+    theme: str | None = None,
+    include_unavailable: bool = False,
+) -> dict:
+    """List available GEOX map layers for a bounding box.
+
+    Returns layer catalogue with metadata, truth classes, and availability.
+    Use themes: regional_geology, basin, structure, stratigraphy, petroleum,
+    tectonics, sabah_regional, se_asia. Or query all layers for a bbox.
+
+    F2 TRUTH: layer registry is curated, not ground truth.
+    F6 MARUAH: community territory check on bbox.
+    """
+    from geox_mcp.tools.earth_map import geox_map_layers_list as _impl
+
+    return await _impl(bbox=bbox, theme=theme, include_unavailable=include_unavailable)
+
+
+@mcp.tool(name="geox_map_scene_plan")
+async def _geox_map_scene_plan(
+    bbox: list[float],
+    layer_ids: list[str] | None = None,
+    theme: str | None = None,
+    map_purpose: str = "context",
+    style_profile: str = "geox_regional_clean_v1",
+    crs: str = "EPSG:4326",
+) -> dict:
+    """Create a deterministic visual recipe for a geological map scene.
+
+    This is the 'constitution' of the map — layer ordering, styles, warnings,
+    and provenance. No image is rendered yet. Inspect this before rendering.
+
+    map_purpose: context | interpretation | qc | prospect_review | publication
+    Truth class gate: context maps exclude DECISION_SUPPORT layers.
+
+    Returns scene_id for use with geox_map_render_preview.
+    """
+    from geox_mcp.tools.earth_map import geox_map_scene_plan as _impl
+
+    return await _impl(
+        bbox=bbox,
+        layer_ids=layer_ids,
+        theme=theme,
+        map_purpose=map_purpose,
+        style_profile=style_profile,
+        crs=crs,
+    )
+
+
+@mcp.tool(name="geox_map_render_preview")
+async def _geox_map_render_preview(
+    scene_id: str | None = None,
+    bbox: list[float] | None = None,
+    layer_ids: list[str] | None = None,
+    theme: str | None = None,
+    width_px: int = 1024,
+    height_px: int = 768,
+    style_profile: str = "geox_regional_clean_v1",
+    format: str = "image/png",
+) -> dict:
+    """Render a static map preview from a scene plan or bbox.
+
+    Either provide scene_id (from geox_map_scene_plan) OR bbox+layer_ids/theme.
+    Images < 300KB returned as inline base64. Larger images as resource links.
+
+    Guardrails: max 1600px, max 12 layers, max 5000 features, 24h cache TTL.
+    Uses matplotlib + optional contextily basemap tiles.
+    """
+    from geox_mcp.tools.earth_map import geox_map_render_preview as _impl
+
+    return await _impl(
+        scene_id=scene_id,
+        bbox=bbox,
+        layer_ids=layer_ids,
+        theme=theme,
+        width_px=width_px,
+        height_px=height_px,
+        style_profile=style_profile,
+        format=format,
+    )
 
 
 # ── W13+ FORGE — Phase C: GEOX → WEALTH STOIIP + ranking feed ──
@@ -2024,7 +2115,7 @@ def create_app():
         return JSONResponse(
             {
                 "resource": "https://mcp.arif-fazil.com/mcp",
-                    "authorization_servers": ["https://mcp.arif-fazil.com"],
+                "authorization_servers": ["https://mcp.arif-fazil.com"],
                 "bearer_methods_supported": ["header"],
                 "scopes_supported": ["openid", "profile", "mcp:full", "mcp:read_only"],
             },
