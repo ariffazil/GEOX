@@ -11,6 +11,9 @@ changes_since_last_verified:
   - entrypoint_unified.sh deprecated (forwards to entrypoint.sh)
   - Dockerfile confirmed using pyproject.toml (no requirements.txt)
   - Known Issues section updated — stale CI issues resolved
+  - Production readiness audit: 72% YELLOW, gap tracker created
+  - Artifact envelope contract created (contracts/artifact_envelope.py)
+  - Deprecation calendar enforced (forge_work/DEPRECATION-CALENDAR-2026-07-30.md)
 -->
 
 # CONTEXT.md — GEOX (Earth Intelligence)
@@ -25,25 +28,37 @@ changes_since_last_verified:
 - **Public MCP:** `https://geox.arif-fazil.com/mcp`
 - **Runtime:** Python 3.11+ / FastMCP 3.4.2 / Pydantic v2
 - **Role:** Earth evidence coprocessor — witness, never authorize
-- **Contract epoch:** `2026-07-01-GEOX-34TOOLS-PHASE23`
+- **Contract epoch:** `2026-07-02-GEOX-35TOOLS-PHASE24`
 - **Git version:** `geox-75d66192`
 
 ## Canonical Tool Surface
 
-- **34 canonical tools** in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`
-  - 30 surface-facing (well, petrophysics, sequence, seismic, vision, geomechanics, basin, deep time, atlas, earth map, EGS)
+- **35 canonical tools** in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`
+  - 31 surface-facing (well, petrophysics, sequence, seismic, vision, geomechanics, basin, deep time, atlas, earth map ×4, EGS)
   - 4 internal plumbing (claim, evidence, prospect, doctrine)
 - **49 compat aliases** in `CANONICAL_COMPAT_TOOLS` — scheduled for deletion 2026-07-30
 - Invariant `_EXPECTED_CANONICAL = 34` in `src/geox_mcp/server.py`
-- Map surface: `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview` (Phase 2.3)
-- Missing: `geox_map_export_package` (governed export with PROV sidecar)
+- Map surface: `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_map_export_package` (Phase 2.3 + 2.4)
 
 ## Key Updates (2026-07-02 FORGE)
 
 - **Dual surface cleanup**: 16 dead `geox/` submodules archived to `.archive/`
 - **entrypoint_unified.sh deprecated** — forwards to `entrypoint.sh`; remove after 2026-07-30
 - **Dockerfile confirmed clean** — uses `pyproject.toml` + `pip install .`
-- **Live surface verified**: 34 tools on :8081, all ANALYZE class, mutation=false
+- **Live surface verified**: 35 tools on :8081, all ANALYZE class, mutation=false
+- **`geox_map_export_package` live** — completes the map verb chain with PROV sidecar + STAC catalog
+- **Artifact envelope contract** — `contracts/artifact_envelope.py` — forensic traceability for all tool returns
+- **Production readiness audit** — 11-gate scorecard: 72% YELLOW. Gap tracker: `forge_work/FORGE_PRODUCTION_GAPS.md`
+
+## Production Readiness (2026-07-02)
+
+- **Verdict:** YELLOW (72%) — concept strong, production gaps real
+- **Gap tracker:** `forge_work/FORGE_PRODUCTION_GAPS.md`
+- **Production audit:** `forge_work/PRODUCTION-READINESS-AUDIT-2026-07-02.md`
+- **P0 (1 day):** Stamp `_envelope` on 35 tools, fix 1 test failure
+- **P1 (8 days):** Unified QC runner, challenge gate, forbidden-claims classifier
+- **P2 (7 days):** Risk bands, evidence floors, petrophysics compute gaps
+- **Conveyor belt:** Ingest → QC → Compute → Claim → Challenge → Uncertainty → Reproducibility → Safety → arifOS
 
 ## Dependencies
 
@@ -58,7 +73,7 @@ changes_since_last_verified:
 - `geox/core/` duplicates root `core/` — tests depend on `geox.core.*` imports; merge pending
 - `entrypoint_unified.sh` deprecated — remove after 2026-07-30
 - 49 compat aliases — enforce deletion on 2026-07-30
-- No artifact-level PROV sidecar on rendered outputs (build `geox_map_export_package` to fix)
+- Artifact envelope (`_envelope`) not yet stamped on all tool returns — integration pending
 
 ---
 
