@@ -3,37 +3,41 @@ from __future__ import annotations
 from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GEOX CANONICAL TOOLS — Phase 2.2 Clean Architecture (2026-06-29)
-# 31 canonical tools (27 surface + 4 internal). 49 backward-compat aliases.
+# GEOX CANONICAL TOOLS — Phase 2.4 Clean Architecture (2026-07-02)
+# 35 canonical tools (31 surface + 4 internal). 49 backward-compat aliases.
 # Mode-based consolidation. Evidence-only. Physics-9 governed.
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# SURFACE-FACING (14 tools):
+# SURFACE-FACING (31 tools):
 #   What external agents (AAA, ART, Copilot, any MCP client) call to get
 #   Earth data or run subsurface analysis. These are the "public API" of GEOX.
+#   Organized by domain: 5 well + 4 seismic + 2 model + 3 basin + 1 atlas +
+#   4 earth map + 1 federation + 11 EGS (excluding deprecated egs_seismic_compute).
 #
 # INTERNAL PLUMBING (4 tools):
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 31. Live runtime reports canonical_tools=31.
-#   49 backward-compat aliases accepted by middleware.
+#   Total canonical = 35. Live runtime reports canonical_tools=35.
+#   49 backward-compat aliases accepted by middleware (scheduled removal 2026-07-30).
 #   Any change requires 888_HOLD per geox/AGENTS.md.
 #
 # Phase 2.1 (2026-06-28): added geox_well_desurvey (3D wellbore geometry).
 #   Action card: forge_work/GEOX-ADAPT-001-r1.md.
 #   F13 SOVEREIGN ratified by Arif 2026-06-28.
+# Phase 2.4 (2026-07-02): added geox_map_export_package (governed export + PROV sidecar).
+#   Completes map verb chain: discover → plan → render → export.
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (14 tools)
+# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (31 tools)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # What these do: query the planet, analyze subsurface data, return evidence.
 # Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 27 (5 well + 4 seismic + 2 model + 3 basin + 1 atlas + 1 federation + 12 EGS)
+# Count: 31 (5 well + 4 seismic + 2 model + 3 basin + 1 atlas + 4 earth map + 1 federation + 11 EGS)
 #
 SURFACE_TOOLS: list[str] = [
     # ── WELL DOMAIN (5) ────────────────────────────────────────────────────────
@@ -54,12 +58,13 @@ SURFACE_TOOLS: list[str] = [
     "geox_basin",  # Profile, resolve, macrostrat, scene
     "geox_deep_time_state",  # Earth State Vector at any geological age
     "geox_atlas",  # Point-in-country + land/water classifier. Natural Earth 10m GeoJSON.
-    # ── EARTH MAP SURFACE (3) — Phase 2.3 (2026-07-01) ─────────────────────────
-    # Layer registry + scene planning + cached preview rendering.
+    # ── EARTH MAP SURFACE (4) — Phase 2.4 (2026-07-02) ─────────────────────────
+    # Layer registry + scene planning + cached preview rendering + governed export.
     # Architecture: tools compute, resources carry data. Truth-class gated.
     "geox_map_layers_list",  # Discover available layers for a bbox + theme
     "geox_map_scene_plan",  # Deterministic render recipe (no image yet)
     "geox_map_render_preview",  # Cheap static PNG preview with caching
+    "geox_map_export_package",  # Governed export with PROV sidecar, STAC catalog, GeoPackage
     # ── FEDERATION DISCOVERY (1) ───────────────────────────────────────────────
     # GAP-1 fix (2026-06-27): Federation-standard registry probe.
     # Any MCP client can call this. Returns the 18 real tools, not the 31 ghosts.
@@ -261,6 +266,15 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "name": "geox_seismic_interpret",
         "domain": "earth.seismic",
         "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── MAP EXPORT DOMAIN (1) — Phase 2.4 (2026-07-02) ────────────────────────
+    {
+        "name": "geox_map_export_package",
+        "domain": "earth.map",
+        "axis": "compute",
         "lane": "reasoning",
         "expose": True,
         "face": "surface",
