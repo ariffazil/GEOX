@@ -95,6 +95,7 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_map_render_preview": 25.0,  # Static preview render with caching.
     "geox_map_export_package": 60.0,  # Governed export — task-style, PROV sidecar, STAC catalog.
     "geox_surface_status": 10.0,
+    "geox_forbidden_claims_scan": 10.0,
     # Internal plumbing (4)
     "geox_claim": 30.0,
     "geox_evidence": 60.0,
@@ -322,7 +323,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 35  # Phase 2.4 (2026-07-02): +1 geox_map_export_package — governed export with PROV sidecar.
+    _EXPECTED_CANONICAL = 36  # Phase 2.5 (2026-07-02): +1 geox_forbidden_claims_scan — civilizational safety gate.
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -926,6 +927,98 @@ async def _geox_context_at_location(
     from geox_mcp.tools.geox_atlas import geox_context_at_location as _impl
 
     return await _impl(lat=lat, lon=lon)
+
+
+@mcp.tool(name="geox_atlas")
+async def _geox_atlas(
+    lat: float,
+    lon: float,
+    mode: str = "context",
+) -> dict:
+    """Unified Earth Atlas — point-in-country + land/water classification.
+
+    Combines geox_isitwater and geox_context_at_location into one call.
+    Natural Earth 10m GeoJSON, offline, sovereign, no network calls.
+
+    Args:
+        lat: Latitude in EPSG:4326.
+        lon: Longitude in EPSG:4326.
+        mode: 'context' (default) — both land/water AND country context.
+              'water' — land/water only (faster).
+
+    Returns:
+        Land/water classification + country/sea context + F2 TRUTH metadata.
+    """
+    from geox_mcp.tools.geox_atlas import geox_isitwater as _isitwater
+    from geox_mcp.tools.geox_atlas import geox_context_at_location as _context
+
+    result: dict = {"lat": lat, "lon": lon, "mode": mode}
+
+    water_result = await _isitwater(lat=lat, lon=lon)
+    result["is_water"] = water_result.get("is_water", None)
+    result["water_status"] = water_result.get("status", "error")
+
+    if mode == "context":
+        ctx = await _context(lat=lat, lon=lon)
+        result["context"] = ctx.get("context", {})
+        result["country"] = ctx.get("country")
+
+    result["_envelope"] = {
+        "evidence_floor": "OBSERVED",
+        "method": "Natural Earth 10m point-in-polygon",
+        "source": "Natural Earth Data (offline)",
+        "limitations": ["10m resolution", "Coastal accuracy ±50m"],
+        "forbidden_claims": [],
+    }
+    return result
+
+
+@mcp.tool(name="geox_forbidden_claims_scan")
+async def _geox_forbidden_claims_scan(
+    text: str = "",
+) -> dict:
+    """Scan text for forbidden geological/economic certainty claims.
+
+    Tests output against GEOX's canonical forbidden-claims list.
+    Any BLOCK-level claim → output should be downgraded.
+    Any WARN-level claim → caveats should be added.
+
+    Forbidden claims include:
+      - "proven reserves", "commercial discovery" (BLOCK)
+      - "safe drilling target", "mineable resource" (BLOCK)
+      - "environmentally safe", "zero risk" (BLOCK)
+      - "hydrocarbon pay" without "candidate" prefix (WARN)
+      - "low-risk investment" without WEALTH organ backing (WARN)
+
+    Args:
+        text: Output text to scan (stringified JSON or plain text).
+
+    Returns:
+        Scan results with flagged claims, severity, and suggestions.
+    """
+    from geox_mcp.tools.forbidden_claims import (
+        scan_forbidden_claims,
+        forbidden_claims_summary,
+    )
+
+    flags = scan_forbidden_claims(text)
+    summary = forbidden_claims_summary()
+
+    return {
+        "status": "OK",
+        "scanned": True,
+        "flagged_claims": flags,
+        "total_flagged": len(flags),
+        "block_count": sum(1 for f in flags if f["severity"] == "BLOCK"),
+        "warn_count": sum(1 for f in flags if f["severity"] == "WARN"),
+        "registry": summary,
+        "_envelope": {
+            "evidence_floor": "OBSERVED",
+            "method": "Pattern-matched regex against canonical forbidden-claims list",
+            "authority": "F13 SOVEREIGN — list not modifiable by agents",
+            "forbidden_claims": [],
+        },
+    }
 
 
 # ── Phase 2.3 (2026-07-01): Earth Map Surface — Layer Registry + Scene Planning + Preview ──

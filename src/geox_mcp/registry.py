@@ -69,6 +69,11 @@ SURFACE_TOOLS: list[str] = [
     # GAP-1 fix (2026-06-27): Federation-standard registry probe.
     # Any MCP client can call this. Returns the 18 real tools, not the 31 ghosts.
     "geox_surface_status",
+    # ── CIVILIZATIONAL SAFETY GATE (1) — Phase 2.5 (2026-07-02) ────────────────
+    # Forbidden-claims scanner: every tool output can be checked against a
+    # canonical list of claims that GEOX must never assert without evidence.
+    # F13 SOVEREIGN: list is not modifiable by agents.
+    "geox_forbidden_claims_scan",
     # ── EGS (Earth Grounding System) — 12 tools (2026-06-28) ─────────────────────
     # Typed earth graph, uncertainty algebra, claim/evidence lifecycle.
     # "Language models consume EGS; they do not replace it."
@@ -317,10 +322,28 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "expose": True,
         "face": "surface",
     },
+    # ── ATLAS DOMAIN (1) — Phase 2.5 (2026-07-02) ─────────────────────────────
+    {
+        "name": "geox_atlas",
+        "domain": "earth.atlas",
+        "axis": "observe",
+        "lane": "discovery",
+        "expose": True,
+        "face": "surface",
+    },
     # ── GENERAL DISCOVERY (1) ─────────────────────────────────────────────────
     {
         "name": "geox_surface_status",
         "domain": "earth.general",
+        "axis": "verify",
+        "lane": "discovery",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── CIVILIZATIONAL SAFETY GATE (1) — Phase 2.5 (2026-07-02) ───────────────
+    {
+        "name": "geox_forbidden_claims_scan",
+        "domain": "earth.governance",
         "axis": "verify",
         "lane": "discovery",
         "expose": True,
