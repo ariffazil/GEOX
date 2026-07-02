@@ -1,8 +1,8 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-07-01
+last_verified: 2026-07-02
 valid_from: 2026-06-14
-valid_until: 2026-07-31
+valid_until: 2026-08-01
 confidence: high
 scope: /root/geox/BOUNDARY.md
 -->
@@ -11,8 +11,8 @@ scope: /root/geox/BOUNDARY.md
 
 > **DITEMPA BUKAN DIBERI** — Forged, not given.
 
-> **Last forge cycle:** Phase 2.3 (2026-07-01) — 34 canonical tools, 3 earth map tools added, metabolic spine deployed.
-> **Contract epoch:** `2026-07-01-GEOX-34TOOLS-PHASE23`
+> **Last forge cycle:** Phase 2.4 (2026-07-02) — 35 canonical tools, geox_map_export_package added, provenance sidecar schema standardized, doc drift resolved.
+> **Contract epoch:** `2026-07-02-GEOX-35TOOLS-PHASE24`
 
 ## Owns
 
@@ -58,19 +58,20 @@ scope: /root/geox/BOUNDARY.md
 
 ## Known Boundary Violations (888 HOLD Queue)
 
-1. **Canonical server location** — `geox/server.py` (~1,413 lines) is the canonical unified MCP server, but `geox/geox/` also has a modern dimension-native structure. Two server surfaces exist.
-2. **A-FORGE root contamination** — GEOX artifacts (`arifos_od_siphon.py`, `tests/`, `docker-compose.*`) were found co-located in A-FORGE root. Source of truth must be clarified.
-3. **arifOS deploy references** — `arifOS/deploy/arifOS/docker-compose.yml` references `/root/geox/server.py` directly. GEOX build context should be self-contained.
+1. **Canonical server location** — `src/geox_mcp/server.py` is the canonical unified MCP server, but `geox/geox/core/` also has a dimension-native structure (1D/2D/3D/4D). Two server surfaces exist. **Fix: Archive or merge `geox/geox/core/` into `src/geox_mcp/`. Deprecation set 2026-07-30.**
+2. **Dual entrypoints** — `entrypoint.sh` and `entrypoint_unified.sh` are functionally identical (both exec `python -m geox_mcp.server`). **Fix: Remove `entrypoint_unified.sh`, symlink to `entrypoint.sh`.**
+3. **A-FORGE root contamination** — GEOX artifacts (`arifos_od_siphon.py`, `tests/`, `docker-compose.*`) were found co-located in A-FORGE root. Source of truth must be clarified.
+4. **arifOS deploy references** — `arifOS/deploy/arifOS/docker-compose.yml` references `/root/geox/server.py` directly. GEOX build context should be self-contained.
 
 ## Canonical Tool Surface (Live)
 
-34 canonical tools on port 8081 (Phase 2.3, 2026-07-01):
+35 canonical tools on port 8081 (Phase 2.4, 2026-07-02):
 
-**Surface (30):** `geox_well_ingest`, `geox_well_qc`, `geox_well_desurvey`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`, `geox_atlas`, `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_surface_status`, `geox_egs_query_entity`, `geox_egs_query_claim`, `geox_egs_query_uncertainty`, `geox_egs_query_provenance`, `geox_egs_claim_create`, `geox_egs_claim_challenge`, `geox_egs_evidence_attach`, `geox_egs_evidence_reason`, `geox_egs_seismic_compute`, `geox_egs_rock_physics`, `geox_egs_data_qc_bundle`, `geox_egs_scenario_audit`.
+**Surface (31):** `geox_well_ingest`, `geox_well_qc`, `geox_well_desurvey`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`, `geox_atlas`, `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_map_export_package`, `geox_surface_status`, `geox_egs_query_entity`, `geox_egs_query_claim`, `geox_egs_query_uncertainty`, `geox_egs_query_provenance`, `geox_egs_claim_create`, `geox_egs_claim_challenge`, `geox_egs_evidence_attach`, `geox_egs_evidence_reason`, `geox_egs_seismic_compute`, `geox_egs_rock_physics`, `geox_egs_data_qc_bundle`, `geox_egs_scenario_audit`.
 
 **Internal (4):** `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine`.
 
-Source of truth: `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` + `_EXPECTED_CANONICAL = 34` in `src/geox_mcp/server.py`.
+Source of truth: `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` + `_EXPECTED_CANONICAL = 35` in `src/geox_mcp/server.py`.
 
 ## Canonical Surfaces
 

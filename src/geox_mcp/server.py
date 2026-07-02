@@ -93,6 +93,7 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_map_layers_list": 10.0,  # Layer registry lookup. Fast.
     "geox_map_scene_plan": 10.0,  # Scene plan generation. Fast.
     "geox_map_render_preview": 25.0,  # Static preview render with caching.
+    "geox_map_export_package": 60.0,  # Governed export — task-style, PROV sidecar, STAC catalog.
     "geox_surface_status": 10.0,
     # Internal plumbing (4)
     "geox_claim": 30.0,
@@ -321,7 +322,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 34  # Phase 2.3 (2026-07-01): +3 earth map tools — layer registry, scene plan, render preview.
+    _EXPECTED_CANONICAL = 35  # Phase 2.4 (2026-07-02): +1 geox_map_export_package — governed export with PROV sidecar.
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -1014,6 +1015,50 @@ async def _geox_map_render_preview(
         height_px=height_px,
         style_profile=style_profile,
         format=format,
+    )
+
+
+@mcp.tool(name="geox_map_export_package")
+async def _geox_map_export_package(
+    scene_plan_id: str,
+    formats: list[str] | None = None,
+    include_sources: bool = False,
+    include_provenance: bool = True,
+    review_mode: str = "draft",
+    output_dir: str | None = None,
+) -> dict:
+    """Create a governed export package with map assets, metadata, and provenance sidecars.
+
+    This is the 4th and final map verb — completes the chain:
+    layers_list → scene_plan → render_preview → export_package.
+
+    Produces a package directory with:
+      - Rendered preview (PNG/WebP)
+      - STAC catalog JSON (if include_provenance=True)
+      - W3C PROV provenance sidecar (if include_provenance=True)
+      - Scene manifest with layer references + checksums
+      - Optional: included source data copies
+
+    Args:
+        scene_plan_id: Scene ID from geox_map_scene_plan.
+        formats: Output formats. Default: ["png"]. Options: png, svg, pdf, gpkg, stac.
+        include_sources: If True, include copies of source data files.
+        include_provenance: If True, generate PROV sidecar + STAC catalog.
+        review_mode: draft | validated | sealed_candidate. Affects provenance metadata.
+        output_dir: Custom output directory. Default: /root/geox/data/exports/{scene_plan_id}.
+
+    Returns:
+        Package manifest with artifact paths, checksums, and provenance references.
+    """
+    from geox_mcp.tools.earth_map import geox_map_export_package as _impl
+
+    return await _impl(
+        scene_plan_id=scene_plan_id,
+        formats=formats,
+        include_sources=include_sources,
+        include_provenance=include_provenance,
+        review_mode=review_mode,
+        output_dir=output_dir,
     )
 
 
