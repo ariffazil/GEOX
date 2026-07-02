@@ -18,7 +18,7 @@ changes_since_last_verified:
   - P2: GapRegistry extended — GAP_CONVERGENCE type added
   - GAP-1: geox_surface_status added (2026-06-27) — federation-standard registry probe
   - GEOX-AUDIT-FIX-001 (FORGE 2026-06-28): 49 backward-compat tools added to GEOX_LANE_MAP — fixed SESSION_REQUIRED blocks on read-only/compute tools
-  - GEOX now correctly reports 34 canonical tools (31 Phase 2.2 + 3 earth map tools) + 49 backward-compat aliases
+  - GEOX now correctly reports 35 canonical tools (31 Phase 2.2 + 4 earth map tools) + 49 backward-compat aliases
   - tests: 75 passed (orchestration), 0 failed — 52 Phase 1 + 23 Phase 2
 -->
 
