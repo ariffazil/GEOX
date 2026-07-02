@@ -19,19 +19,19 @@ scope: /root/geox
 - **Public MCP:** `https://geox.arif-fazil.com/mcp`
 - **Runtime:** Python 3.11+ / FastMCP 3.4.2 / Pydantic v2
 - **Role:** Earth evidence coprocessor — witness, never authorize
-- **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0`
+- **Contract epoch:** `2026-07-01-GEOX-34TOOLS-PHASE23`
 - **Git version:** `geox-ead04d1c`
 
 ## Canonical Tool Surface
 
-- **16 mode-based tools** in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`
-- **56 compat names** in `CANONICAL_COMPAT_TOOLS`
-- Invariant `_EXPECTED_CANONICAL = 56` in `src/geox_mcp/server.py`
+- **34 mode-based tools** in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`
+- **49 compat names** in `CANONICAL_COMPAT_TOOLS`
+- Invariant `_EXPECTED_CANONICAL = 34` in `src/geox_mcp/server.py`
 
 ## Key Updates (2026-06-22 W16+ FORGE)
 
 - **Physics-first substrate** deployed: Huang 2021 Vp grammar, intelligence flow, Kinabalu corpus
-- **56 canonical tools** stable (40 baseline + 16 added in W2–W15+ tranches)
+- **34 canonical tools** stable (31 Phase 2.2 + 3 earth map tools in Phase 2.3)
 - **124 new tests** across crustal domain, intelligence flow, floor enforcement
 - **Dual MCP transport** verified: HTTP/SSE on 8081, stdio for local agents
 - **Floor enforcement wrapper** hardened: F7 humility cap 0.95 → 0.90

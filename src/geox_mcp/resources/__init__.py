@@ -215,6 +215,81 @@ async def geox_resource(category: str, name: str) -> str:
         return json.dumps({"error": f"Failed to read resource: {e}"})
 
 
+# ── EarthLayerRegistry resources (L1 export channel) ──────────────────────────
+# DITEMPA BUKAN DIBERI — Sovereign earth layers surface through MCP resources,
+# not new canonical tools (34-tool lock at server.py:324 is T3 888_HOLD).
+# Layer registry lives in contracts/schemas/earth_layer_registry.py and seeds
+# Sabah Basin + SE Asia plates + Kinabalu (falsified hypothesis, F6 maruah).
+
+
+def _earth_layer_registry():
+    """Lazy import + seed — avoids hard import at module load (mypy strict)."""
+    try:
+        from contracts.schemas.earth_layer_registry import seed_sabah_layers  # type: ignore[import-not-found]
+
+        return seed_sabah_layers()
+    except Exception as e:  # pragma: no cover — defensive surface
+        logger.warning("earth_layer_registry seed failed: %s", e)
+        return None
+
+
+async def geox_layers_index() -> str:
+    """Index of sovereign earth layers — discoverability for downstream agents."""
+    reg = _earth_layer_registry()
+    if reg is None:
+        return json.dumps({"error": "earth_layer_registry unavailable", "layers": []})
+    layers = reg.list()
+    return json.dumps(
+        {
+            "uri_template": "geox://layers/{layer_id}/package",
+            "count": len(layers),
+            "layers": [
+                {
+                    "layer_id": lid,
+                    "title": layer.title,
+                    "license": layer.license.value,
+                    "truth_class": layer.truth_class.value,
+                    "bbox": [layer.bbox_west, layer.bbox_south, layer.bbox_east, layer.bbox_north],
+                    "map_purposes_allowed": [p.value for p, ok in layer.map_purpose_allow.items() if ok],
+                    "f6_maruah_flagged": layer.community_territory_flag,
+                    "f11_audit_id": layer.audit_id,
+                }
+                for lid, layer in layers.items()
+            ],
+        },
+        indent=2,
+    )
+
+
+async def geox_layer_package(layer_id: str) -> str:
+    """Export a single sovereign earth layer as GEOX-LAYER-PKG-v1 envelope.
+
+    Returns None for missing layer (consistent with runtime contract —
+    export_package returns None, not raise). Caller sees the empty JSON
+    envelope and reports layer_id as unresolvable.
+    """
+    reg = _earth_layer_registry()
+    if reg is None:
+        return json.dumps(
+            {
+                "error": "earth_layer_registry unavailable",
+                "layer_id": layer_id,
+                "envelope": None,
+            }
+        )
+    pkg = reg.export_package(layer_id)
+    if pkg is None:
+        return json.dumps(
+            {
+                "error": f"layer_not_found: {layer_id}",
+                "layer_id": layer_id,
+                "envelope": None,
+                "hint": "fetch geox://layers/index for available layer_ids",
+            }
+        )
+    return json.dumps({"uri": f"geox://layers/{layer_id}/package", "envelope": pkg}, indent=2)
+
+
 async def geox_resources_index() -> str:
     index = {}
     for category in ["ontology", "playbooks", "schemas", "examples", "prompts"]:
@@ -595,6 +670,24 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
     _is_geox_func = is_geox_func
     _enforce_geox_func = enforce_geox_func
 
+    mcp.resource(
+        "geox://layers/{layer_id}/package",
+        description=(
+            "EarthLayerRegistry export package — GEOX-LAYER-PKG-v1 envelope for a single "
+            "sovereign layer (license, truth class, bbox, governance gates F1/F2/F6/F11). "
+            "Seeds include Sabah basin_outline, faults, plates, Kinabalu velocity. "
+            "F6 MARUAH layers (community_territory_flag=True) are exported with F6=FLAGGED. "
+            "Example: geox://layers/sabah.basin_outline.v3/package"
+        ),
+    )(geox_layer_package)
+    mcp.resource(
+        "geox://layers/index",
+        description=(
+            "EarthLayerRegistry index — every seeded sovereign layer (id, title, "
+            "license, truth class, bbox, governance gates). Use to discover what "
+            "geox://layers/{layer_id}/package exposes."
+        ),
+    )(geox_layers_index)
     mcp.resource("geox://reality/context")(geox_reality_context)
     mcp.resource("geox://identity")(geox_identity)
     mcp.resource("geox://registry/apps")(list_geox_apps)
