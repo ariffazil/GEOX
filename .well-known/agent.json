@@ -1,0 +1,127 @@
+{
+  "name": "GEOX",
+  "description": "Sovereign Earth Intelligence — geological, petrophysical, seismic, basin, sequence stratigraphy, and provenance evidence under F1-F13 constitutional governance. Evidence-only: never policy judges; arifOS 888_JUDGE owns the verdict.",
+  "version": "2026.07.01-34tools-phase23",
+  "url": "https://geox.arif-fazil.com/mcp",
+  "provider": {
+    "organization": "arifOS Federation",
+    "sovereign": "Muhammad Arif bin Fazil (F13 SOVEREIGN)",
+    "doctrine": "DITEMPA BUKAN DIBERI"
+  },
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "extensions": [
+      {
+        "uri": "https://arif-fazil.com/extensions/floor-compliance/v1",
+        "description": "Every envelope carries F1 AMANAH / F2 TRUTH / F4 CLARITY / F6 MARUAH / F11 AUDIT / F13 SOVEREIGN footer. F7 HUMILITY caps confidence at 0.90."
+      },
+      {
+        "uri": "https://arif-fazil.com/extensions/evidence-truth-class/v1",
+        "description": "Five truth classes: OBSERVED / DERIVED / INTERPRETED / HYPOTHESIS / SPECULATIVE. Gate map_purpose before claim crosses boundary."
+      }
+    ]
+  },
+  "authentication": {
+    "schemes": ["bearer"],
+    "credentials": "Lease-token issued by arifOS arif_lease_issue; 34 canonical tools + 49 backward-compat aliases available."
+  },
+  "defaultInputModes": ["application/json"],
+  "defaultOutputModes": ["application/json"],
+  "skills": [
+    {
+      "id": "well-desurvey",
+      "name": "3D Wellbore Geometry",
+      "description": "TVD/X/Y/TVDSS trajectory from deviation survey (industry minimum curvature, wellpathpy-backed). Evidence-only with claim-tagged uncertainty."
+    },
+    {
+      "id": "petrophysics-bounds",
+      "name": "Petrophysics Bounded Transforms",
+      "description": "Vsh, porosity, Sw, AI, permeability, net pay — each transform reports its epistemic rung (OBS/DER/INT/SPEC) and saturation bounds."
+    },
+    {
+      "id": "seismic-physics",
+      "name": "Seismic Physics Engine",
+      "description": "Synthetic forward model, well tie, time-depth anchor, anomalous-contrast detector with AVO class I-IV and attention residual (δ_i ≡ constitutional governance deviation ΔV per Eureka GeoX Theory)."
+    },
+    {
+      "id": "earth-map",
+      "name": "Earth Map Tools (Phase 2.3)",
+      "description": "geox_map_layers_list, geox_map_scene_plan, geox_map_render_preview — layer registry, scene planning truth-class gate, cached preview rendering. Decision-support layers excluded from context maps."
+    },
+    {
+      "id": "earth-atlas",
+      "name": "Earth Atlas (Phase 2.2)",
+      "description": "Natural Earth 10m point-in-country + land/water classifier — geox_isitwater + geox_context_at_location."
+    },
+    {
+      "id": "basin-synthesis",
+      "name": "Basin Synthesis Pipeline (Phase 2)",
+      "description": "FetcherManager + 8 real fetchers + Physics9 gap fill + STRANGE LOOP convergence. ProvenanceLedger carries physics9_fill + derivation_chain per field."
+    },
+    {
+      "id": "earth-claim-grammar",
+      "name": "Earth Claim Grammar",
+      "description": "Typed evidence_for / evidence_against / missing_tests structure. Sealed claims carry scar-derived confidence ceilings."
+    },
+    {
+      "id": "earth-layer-registry",
+      "name": "Earth Layer Registry (L1)",
+      "description": "Sovereign layer catalogue — license, truth class, bbox, governance gate F1/F2/F6/F11. Surfaces via MCP resource geox://layers/{layer_id}/package + geox://layers/index. Seeded with Sabah basin, faults, SE Asia plates, Kinabalu velocity (HYPOTHESIS + F6 maruah)."
+    },
+    {
+      "id": "scar-memory",
+      "name": "Scar Memory (Constitutional Pain)",
+      "description": "ScarStore applies scar-derived confidence ceilings to claims. Most restrictive wins. Kinabalu tectonic-continuity cap=0.60; velocity pull-up cap=0.70."
+    },
+    {
+      "id": "conformance-spine",
+      "name": "Conformance Spine (L10)",
+      "description": "MCP initialize → protocol version → schema echo → session start → authority check → hold-blocks-mutation → vault-replay → cooling ledger."
+    }
+  ],
+  "canonical_tools": {
+    "count": 34,
+    "locked": true,
+    "lock_file": "src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS",
+    "server_runtime_lock": "src/geox_mcp/server.py:_EXPECTED_CANONICAL=34",
+    "epoch": "2026-07-01-GEOX-34TOOLS-PHASE23",
+    "tools": [
+      "geox_well_ingest", "geox_well_qc", "geox_well_desurvey",
+      "geox_petrophysics", "geox_sequence",
+      "geox_seismic_ingest", "geox_seismic_compute", "geox_seismic_interpret",
+      "geox_vision", "geox_subsurface_model", "geox_geomechanics",
+      "geox_basin", "geox_deep_time_state", "geox_atlas", "geox_surface_status",
+      "geox_egs_query_entity", "geox_egs_query_claim", "geox_egs_query_uncertainty", "geox_egs_query_provenance",
+      "geox_egs_claim_create", "geox_egs_claim_challenge", "geox_egs_evidence_attach",
+      "geox_egs_evidence_reason", "geox_egs_seismic_compute", "geox_egs_rock_physics",
+      "geox_egs_data_qc_bundle", "geox_egs_scenario_audit",
+      "geox_map_layers_list", "geox_map_scene_plan", "geox_map_render_preview"
+    ],
+    "internal_plumbing": ["geox_claim", "geox_evidence", "geox_prospect", "geox_doctrine"],
+    "backward_compat_aliases": 49
+  },
+  "mcp_resources": [
+    "geox://reality/context", "geox://identity", "geox://registry/apps",
+    "geox://profile/status", "geox://capabilities", "geox://surface/truth",
+    "geox://resources/{category}/{name}", "geox://resources/index",
+    "geox://literature/index", "geox://literature/GSM-MADON-2021-MALAY-BASIN",
+    "geox://basins/malay-basin/profile",
+    "geox://claims/index", "geox://claims/graph", "geox://artifacts/index",
+    "geox://render/cubes/{cube_id}/manifest",
+    "geox://layers/index",
+    "geox://layers/{layer_id}/package"
+  ],
+  "constitutional_floors": ["F1_AMANAH", "F2_TRUTH", "F4_CLARITY", "F6_MARUAH", "F7_HUMILITY", "F9_ANTI_HANTU", "F11_AUDIT", "F13_SOVEREIGN"],
+  "lane": "evidence_only",
+  "self_judge": false,
+  "judge_authority": "arifOS arif_judge_deliberate",
+  "ledger": "VAULT999",
+  "seal_protocol": "arif_seal (irreversible hash chain, anchored)",
+  "metadata": {
+    "generated_at": "2026-07-01",
+    "generator": "GEOX A2A Agent Card builder",
+    "spec": "github.com/a2aproject/A2A v1.0"
+  }
+}

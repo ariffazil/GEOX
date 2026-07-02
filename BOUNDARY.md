@@ -11,8 +11,8 @@ scope: /root/geox/BOUNDARY.md
 
 > **DITEMPA BUKAN DIBERI** — Forged, not given.
 
-> **Last forge cycle:** W16+ (2026-06-22) — 56 canonical tools, Huang 2021 Vp grammar substrate, intelligence flow schema, Kinabalu multi-physics corpus.
-> **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0`
+> **Last forge cycle:** Phase 2.3 (2026-07-01) — 34 canonical tools, 3 earth map tools added, metabolic spine deployed.
+> **Contract epoch:** `2026-07-01-GEOX-34TOOLS-PHASE23`
 
 ## Owns
 
@@ -64,8 +64,13 @@ scope: /root/geox/BOUNDARY.md
 
 ## Canonical Tool Surface (Live)
 
-40 tools exposed on port 8081:
-`geox_system_registry_status`, `geox_history_audit`, `geox_data_ingest_bundle`, `geox_data_qc_bundle`, `geox_subsurface_generate_candidates`, `geox_subsurface_verify_integrity`, `geox_seismic_analyze_volume`, `geox_section_interpret_correlation`, `geox_map_context_scene`, `geox_time4d_analyze_system`, `geox_prospect_evaluate`, `geox_prospect_judge_preview`, `geox_prospect_judge_seal`, `geox_evidence_summarize_cross`, `geox_dst_ingest_test`, `geox_stratigraphy_run_pipeline`, `geox_stratigraphy_preview_config`, `geox_task_ingest_las_batch`, `geox_task_metabolize_basin`
+34 canonical tools on port 8081 (Phase 2.3, 2026-07-01):
+
+**Surface (30):** `geox_well_ingest`, `geox_well_qc`, `geox_well_desurvey`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`, `geox_atlas`, `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_surface_status`, `geox_egs_query_entity`, `geox_egs_query_claim`, `geox_egs_query_uncertainty`, `geox_egs_query_provenance`, `geox_egs_claim_create`, `geox_egs_claim_challenge`, `geox_egs_evidence_attach`, `geox_egs_evidence_reason`, `geox_egs_seismic_compute`, `geox_egs_rock_physics`, `geox_egs_data_qc_bundle`, `geox_egs_scenario_audit`.
+
+**Internal (4):** `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine`.
+
+Source of truth: `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` + `_EXPECTED_CANONICAL = 34` in `src/geox_mcp/server.py`.
 
 ## Canonical Surfaces
 
