@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import asyncio
 import math
+import os
 import time
 from datetime import datetime, timezone
 from enum import StrEnum
@@ -357,6 +358,33 @@ def _mock_latency() -> float:
     return MOCK_LATENCY_MS
 
 
+def _compute_model_spread(recon_results: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """Compute spatial spread between plate model reconstructions.
+
+    Returns distance in km between extreme model positions — the tectonic
+    uncertainty band. Large spread signals contrast (STS fork), not error.
+    """
+    if len(recon_results) < 2:
+        return {"spread_km": 0.0, "note": "insufficient models for spread"}
+    lats = [r["paleo_lat"] for r in recon_results.values() if r.get("paleo_lat") is not None]
+    lons = [r["paleo_lon"] for r in recon_results.values() if r.get("paleo_lon") is not None]
+    if len(lats) < 2:
+        return {"spread_km": 0.0, "note": "insufficient valid positions"}
+    avg_lat = sum(lats) / len(lats)
+    km_per_deg_lat = 111.32
+    km_per_deg_lon = 111.32 * math.cos(math.radians(avg_lat))
+    dlat_km = (max(lats) - min(lats)) * km_per_deg_lat
+    dlon_km = (max(lons) - min(lons)) * km_per_deg_lon
+    spread_km = math.sqrt(dlat_km**2 + dlon_km**2)
+    return {
+        "spread_km": round(spread_km, 1),
+        "dlat_deg": round(max(lats) - min(lats), 4),
+        "dlon_deg": round(max(lons) - min(lons), 4),
+        "num_models": len(recon_results),
+        "note": f"Model spread = {spread_km:.0f} km — tectonic uncertainty band (fork if > 500 km)",
+    }
+
+
 # ─── Physics9 Gap Fill ────────────────────────────────────────────────────────
 
 
@@ -634,22 +662,39 @@ class BasinSynthesisPipeline:
             gplates_source = "mock-gplates"
             usgs_source = "mock-usgs"
 
-            # Try GPlates fetcher
+            # Try GPlates fetcher — live GWS mode (P0 forged 2026-07-03)
             gplates_ok = False
+            gplates_recon_data: dict[str, Any] = {}
             if _GPLATES_AVAILABLE:
                 try:
+                    # Force live GWS mode for synthesis pipeline
+                    os.environ.setdefault("GEOX_GPLATES_OFFLINE", "0")
                     g = GPlatesFetcher()
-                    req = ReconstructionRequest(
-                        latitude=centroid.get("lat", 6.0),
-                        longitude=centroid.get("lng", 117.0),
-                        age_ma=age_ma or 23.0,
-                        model="Muller2019",
-                    )
-                    g_result, gplates_source, gplates_ok = await fetcher.try_fetch(
-                        "gplates",
-                        lambda: g.reconstruct(req),
-                        lambda: None,
-                    )
+                    model_sequence = ["Merdith2021", "Muller2019", "Seton2012"]
+                    recon_results: dict[str, dict[str, Any]] = {}
+                    for model in model_sequence:
+                        req = ReconstructionRequest(
+                            latitude=centroid.get("lat", 6.0),
+                            longitude=centroid.get("lng", 117.0),
+                            age_ma=age_ma or 23.0,
+                            model=model,
+                        )
+                        r_result = g.reconstruct(req)
+                        if r_result.ok and r_result.reconstructed_lat is not None:
+                            recon_results[model] = {
+                                "paleo_lat": r_result.reconstructed_lat,
+                                "paleo_lon": r_result.reconstructed_lon,
+                                "plate_id": r_result.plate_id,
+                                "mode": r_result.mode,
+                            }
+                    if recon_results:
+                        gplates_ok = True
+                        gplates_source = "gplates-gws-live"
+                        gplates_recon_data = {
+                            "reconstructions": recon_results,
+                            "model_spread": _compute_model_spread(recon_results),
+                            "note": f"GPlates GWS live: {len(recon_results)}/{len(model_sequence)} models returned data for {age_ma} Ma",
+                        }
                 except Exception:
                     pass
 
