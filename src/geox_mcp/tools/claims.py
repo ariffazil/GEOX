@@ -105,8 +105,15 @@ def _build_claim_envelope(
     alternatives: list[dict[str, Any]] | None,
     provenance: str,
     authority: str = "GEOX_CLAIM_WORKER",
+    extra_metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Build a full earth_memory_envelope-compliant claim."""
+    """Build a full earth_memory_envelope-compliant claim.
+
+    Args:
+        extra_metadata: Optional dict of supplementary metadata (e.g. epistemic_label,
+            forbidden_uses, source_citation, category) merged into the payload.
+            Added in Phase 2.5 for literature-to-claims extraction support.
+    """
     payload = {
         "id": claim_id,
         "claim_type": claim_type,
@@ -125,6 +132,8 @@ def _build_claim_envelope(
         "challenges": [],
         "evidence_chain": [],
     }
+    if extra_metadata:
+        payload["extra_metadata"] = extra_metadata
     payload["_content_hash"] = _hash_payload(payload)
     return payload
 
@@ -156,6 +165,7 @@ async def geox_claim_create(
     alternatives: list[dict[str, Any]] | None = None,
     provenance: str = "GEOX Claim Engine",
     authority: str = "GEOX_CLAIM_WORKER",
+    extra_metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """
     Create a structured Earth interpretation claim with full provenance chain.
@@ -182,6 +192,9 @@ async def geox_claim_create(
             'alternative_text' and 'alternative_evidence_ids'.
         provenance: Human-readable origin of this claim.
         authority: Which GEOX worker created this claim.
+        extra_metadata: Optional supplementary metadata for literature-to-claims
+            extraction. Supported keys: epistemic_label, forbidden_uses,
+            source_citation, category.
 
     Returns:
         Structured claim envelope with claim_id, status, and next steps.
@@ -209,6 +222,7 @@ async def geox_claim_create(
         alternatives=alternatives,
         provenance=provenance,
         authority=authority,
+        extra_metadata=extra_metadata,
     )
 
     # Persist to Earth Memory store
@@ -228,9 +242,7 @@ async def geox_claim_create(
                     "claim_type": claim_type,
                     "claim_text": claim_text,
                     "evidence_ids": evidence_ids,
-                    "confidence": (
-                        uncertainty_p50 / 100 if uncertainty_p50 is not None else 0.5
-                    ),
+                    "confidence": (uncertainty_p50 / 100 if uncertainty_p50 is not None else 0.5),
                 },
                 actor=authority,
             )
@@ -250,6 +262,7 @@ async def geox_claim_create(
         "provenance": provenance,
         "created_at": payload["authority"]["created_at"],
         "claim_state": "DRAFT",
+        "extra_metadata": extra_metadata,
         "_content_hash": payload["_content_hash"],
         "next_steps": [
             {
@@ -569,40 +582,45 @@ async def geox_claim_seal(
 
         # Gate 1: Claim must be VALIDATED
         if approval_state not in ("VALIDATED", "validated", "review_pending"):
-            pre_seal_checks.append({
-                "gate": "claim_validate_required",
-                "status": "FAILED",
-                "detail": f"Claim approval_state is '{approval_state}', not 'VALIDATED'. "
-                          "Call geox_claim_validate before sealing.",
-                "recovery": "geox_claim_validate(claim_id='{claim_id}')",
-            })
+            pre_seal_checks.append(
+                {
+                    "gate": "claim_validate_required",
+                    "status": "FAILED",
+                    "detail": f"Claim approval_state is '{approval_state}', not 'VALIDATED'. "
+                    "Call geox_claim_validate before sealing.",
+                    "recovery": "geox_claim_validate(claim_id='{claim_id}')",
+                }
+            )
 
         # Gate 2: Claim must have been challenged (contradiction discipline)
         if not challenges:
-            pre_seal_checks.append({
-                "gate": "contradiction_scan_required",
-                "status": "FAILED",
-                "detail": "Claim has no challenges recorded. Federation contract requires "
-                          "geox_claim_challenge before SEAL (Multi-Discipline Self-Argument).",
-                "recovery": (
-                    "geox_claim_challenge(claim_id='{claim_id}', "
-                    "challenge_text='<why this might be wrong>', "
-                    "alternative_claim_text='<alternative interpretation>', "
-                    "alternative_evidence_ids=[])"
-                ),
-            })
+            pre_seal_checks.append(
+                {
+                    "gate": "contradiction_scan_required",
+                    "status": "FAILED",
+                    "detail": "Claim has no challenges recorded. Federation contract requires "
+                    "geox_claim_challenge before SEAL (Multi-Discipline Self-Argument).",
+                    "recovery": (
+                        "geox_claim_challenge(claim_id='{claim_id}', "
+                        "challenge_text='<why this might be wrong>', "
+                        "alternative_claim_text='<alternative interpretation>', "
+                        "alternative_evidence_ids=[])"
+                    ),
+                }
+            )
 
         # Gate 3: Evidence integrity must be verified
         evidence_ids = claim_payload.get("evidence_ids", []) if claim_payload else []
         evidence_chain = claim_payload.get("evidence_chain", []) if claim_payload else []
         if not evidence_ids and not evidence_chain:
-            pre_seal_checks.append({
-                "gate": "evidence_integrity_required",
-                "status": "FAILED",
-                "detail": "Claim has no evidence attached. Federation contract requires "
-                          "geox_evidence_attach before SEAL.",
-                "recovery": "geox_evidence_attach(claim_id='{claim_id}', evidence_id='<id>')",
-            })
+            pre_seal_checks.append(
+                {
+                    "gate": "evidence_integrity_required",
+                    "status": "FAILED",
+                    "detail": "Claim has no evidence attached. Federation contract requires geox_evidence_attach before SEAL.",
+                    "recovery": "geox_evidence_attach(claim_id='{claim_id}', evidence_id='<id>')",
+                }
+            )
 
         # Gate 3b: ANTI-SINK — Synthetic/fixture provenance must not be sealed
         # F1 AMANAH + Anti-Behavioral-Sink: claims backed only by synthetic data
@@ -613,7 +631,7 @@ async def geox_claim_seal(
             synthetic_evidence_count = 0
             total_evidence = len(evidence_ids)
             # Check evidence_chain for provenance tags
-            for ev in (evidence_chain if isinstance(evidence_chain, list) else []):
+            for ev in evidence_chain if isinstance(evidence_chain, list) else []:
                 prov = str(ev.get("provenance", "")).lower()
                 if any(s in prov for s in _SYNTHETIC_PROVENANCE):
                     synthetic_evidence_count += 1
@@ -624,22 +642,24 @@ async def geox_claim_seal(
             if synthetic_evidence_count > 0 and synthetic_evidence_count == total_evidence:
                 truth_class = claim_payload.get("truth_class", "INTERPRETATION")
                 if truth_class in ("FACT", "INTERPRETATION"):
-                    pre_seal_checks.append({
-                        "gate": "anti_sink_synthetic_provenance_block",
-                        "status": "FAILED",
-                        "detail": (
-                            f"All {total_evidence} evidence artifact(s) have synthetic/fixture provenance, "
-                            f"but truth_class is '{truth_class}'. Federation Anti-Sink rule: claims backed "
-                            "only by synthetic data cannot be sealed as FACT or INTERPRETATION. "
-                            "Set truth_class='SPECULATION' or attach real-world evidence."
-                        ),
-                        "recovery": (
-                            "geox_evidence_attach(claim_id='{claim_id}', evidence_id='<real_data_artifact_id>') "
-                            "OR update claim truth_class to 'SPECULATION'."
-                        ),
-                        "floor": "F1_AMANAH",
-                        "rule": "ANTI_SINK_v1",
-                    })
+                    pre_seal_checks.append(
+                        {
+                            "gate": "anti_sink_synthetic_provenance_block",
+                            "status": "FAILED",
+                            "detail": (
+                                f"All {total_evidence} evidence artifact(s) have synthetic/fixture provenance, "
+                                f"but truth_class is '{truth_class}'. Federation Anti-Sink rule: claims backed "
+                                "only by synthetic data cannot be sealed as FACT or INTERPRETATION. "
+                                "Set truth_class='SPECULATION' or attach real-world evidence."
+                            ),
+                            "recovery": (
+                                "geox_evidence_attach(claim_id='{claim_id}', evidence_id='<real_data_artifact_id>') "
+                                "OR update claim truth_class to 'SPECULATION'."
+                            ),
+                            "floor": "F1_AMANAH",
+                            "rule": "ANTI_SINK_v1",
+                        }
+                    )
 
         if pre_seal_checks:
             return {

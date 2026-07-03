@@ -1,0 +1,213 @@
+{
+  "$schema": "geox://biostrat/palynology_pr_zones/v1",
+  "description": "Malay Basin Palynological Zonation — PR1 to PR15. Based on Yakzan et al. integrated biostratigraphic framework. Palynology is the backbone of Malay Basin biostratigraphy because much of the basin fill is non-marine to marginal marine. Pollen, spores, dinoflagellates, freshwater algae, and mangrove indicators provide age AND environment constraint.",
+  "source": "Yakzan et al. — Integrated biostratigraphic zonation for the Malay Basin",
+  "discipline": "palynology",
+  "region": "Malay Basin, offshore Peninsular Malaysia",
+  "basin_context": "Oligocene to Pleistocene pull-apart / rift-sag basin. Non-marine to marginal marine with periodic marine incursions from the South China Sea. Up to 12 km of sediment.",
+  "last_verified": "2026-07-03",
+  "epistemic_status": "LIVE_INTELLIGENCE",
+  "confidence_caveat": "PR zone ages are calibrated to seismic groups and regional unconformities, not to global chronostratigraphy alone. Age brackets are basin-specific and may not transfer to Sabah or Sarawak without recalibration.",
+
+  "seismic_groups": {
+    "description": "Malay Basin seismic groups A through M provide the structural-stratigraphic container. PR zones are tied to these groups.",
+    "groups": {
+      "A": {"age": "Pleistocene-Recent", "pr_zones": ["PR15"], "description": "Youngest clastic wedge"},
+      "B": {"age": "Pliocene", "pr_zones": ["PR14", "PR15"], "description": "Upper progradational clastics"},
+      "C": {"age": "Late Miocene-Pliocene", "pr_zones": ["PR12", "PR13"], "description": "Major progradational package"},
+      "D": {"age": "Late Miocene", "pr_zones": ["PR10", "PR11"], "description": "Shelf/slope progradation"},
+      "E": {"age": "Middle-Late Miocene", "pr_zones": ["PR8", "PR9"], "description": "Early progradation phase"},
+      "F": {"age": "Middle Miocene", "pr_zones": ["PR6", "PR7"], "description": "Marine influence increasing"},
+      "G": {"age": "Early-Middle Miocene", "pr_zones": ["PR4", "PR5"], "description": "Transitional to marine"},
+      "H": {"age": "Early Miocene", "pr_zones": ["PR2", "PR3"], "description": "Lacustrine to marginal marine"},
+      "I": {"age": "Oligocene-Early Miocene", "pr_zones": ["PR1"], "description": "Syn-rift, mainly non-marine"},
+      "J": {"age": "Oligocene", "pr_zones": [], "description": "Early syn-rift, alluvial-lacustrine"},
+      "K": {"age": "Eocene-Oligocene", "pr_zones": [], "description": "Basement/pre-rift"},
+      "L": {"age": "Mesozoic", "pr_zones": [], "description": "Economic basement"},
+      "M": {"age": "Pre-Tertiary", "pr_zones": [], "description": "Acoustic basement"}
+    }
+  },
+
+  "major_unconformities": {
+    "upper_miocene_unconformity": {
+      "age_ma": "10.0-10.5",
+      "description": "Major basin-wide unconformity. Separates Groups D/E from C. Erosion or non-deposition.",
+      "biozone_signature": "PR10/PR11 below, PR12/PR13 above — PR11 or PR12 may be missing"
+    },
+    "middle_miocene_unconformity": {
+      "age_ma": "7.8",
+      "description": "Separates upper Group C from Group B. Widespread erosion.",
+      "biozone_signature": "May truncate PR13 or remove part of PR14"
+    }
+  },
+
+  "zones": {
+    "PR1": {
+      "age": "Oligocene to Early Miocene",
+      "age_bracket_ma": [28.0, 20.0],
+      "seismic_group": "I",
+      "paleoenvironment": "Fluvial to lacustrine, minor brackish influence",
+      "key_markers": ["freshwater algae dominant", "limited mangrove pollen", "sparse marine indicators"],
+      "ecological_signal": "Continental interior — freshwater algae (Pediastrum, Botryococcus) indicate lacustrine conditions",
+      "confusion_risk": "May resemble younger lacustrine phases if marine markers are absent"
+    },
+    "PR2": {
+      "age": "Early Miocene",
+      "age_bracket_ma": [22.0, 19.0],
+      "seismic_group": "H",
+      "paleoenvironment": "Lacustrine to marginal marine transition",
+      "key_markers": ["increasing mangrove pollen", "first marine palynomorphs", "freshwater algae still present"],
+      "ecological_signal": "First marine incursion indicators — coastline approaching basin",
+      "confusion_risk": "Marine signal may be subtle and diachronous"
+    },
+    "PR3": {
+      "age": "Early Miocene",
+      "age_bracket_ma": [20.0, 18.0],
+      "seismic_group": "H",
+      "paleoenvironment": "Marginal marine with periodic marine incursions",
+      "key_markers": ["mangrove pollen common", "marine dinocysts appear", "freshwater algae declining"],
+      "ecological_signal": "Coastal/marginal marine established. Dinoflagellate cysts mark marine water entry."
+    },
+    "PR4": {
+      "age": "Early to Middle Miocene",
+      "age_bracket_ma": [18.0, 16.0],
+      "seismic_group": "G",
+      "paleoenvironment": "Coastal to shallow marine, increasing marine influence",
+      "key_markers": ["marine palynomorphs increasing", "mangrove pollen assemblages", "first consistent nannofossils"],
+      "ecological_signal": "Sustained marine connection. Marine flooding surfaces become reliable correlation markers."
+    },
+    "PR5": {
+      "age": "Middle Miocene",
+      "age_bracket_ma": [16.0, 14.5],
+      "seismic_group": "G",
+      "paleoenvironment": "Shallow marine shelf",
+      "key_markers": ["abundant marine palynomorphs", "nannofossils common", "mangrove pollen present"],
+      "ecological_signal": "Fully marine shelf conditions established. Mangrove pollen from coastal belt."
+    },
+    "PR6": {
+      "age": "Middle Miocene",
+      "age_bracket_ma": [14.5, 13.0],
+      "seismic_group": "F",
+      "paleoenvironment": "Open marine shelf",
+      "key_markers": ["diverse marine palynomorph assemblage", "planktonic forams increasing", "nannofossil NN5-NN6 equivalent"],
+      "ecological_signal": "Open marine conditions. Maximum marine influence in basin center."
+    },
+    "PR7": {
+      "age": "Middle Miocene",
+      "age_bracket_ma": [13.0, 12.0],
+      "seismic_group": "F",
+      "paleoenvironment": "Open marine shelf to upper slope",
+      "key_markers": ["peak marine diversity", "deepening-upward signals", "NN6-NN7 equivalent"],
+      "ecological_signal": "Deepening trend. May indicate early progradation setup."
+    },
+    "PR8": {
+      "age": "Middle to Late Miocene",
+      "age_bracket_ma": [12.0, 10.5],
+      "seismic_group": "E",
+      "paleoenvironment": "Shelf with progradational influence",
+      "key_markers": ["marine palynomorphs with terrestrial input increase", "NN7-NN9 equivalent"],
+      "ecological_signal": "Shelf/slope progradation begins. Terrestrial pollen input increases — sediment supply rising."
+    },
+    "PR9": {
+      "age": "Late Miocene",
+      "age_bracket_ma": [10.5, 9.0],
+      "seismic_group": "E",
+      "paleoenvironment": "Prograding shelf/slope",
+      "key_markers": ["mixed marine and terrestrial signal", "increasing pollen from hinterland", "NN9-NN10 equivalent"],
+      "ecological_signal": "Active progradation. Terrestrial signal dominant in proximal, marine in distal."
+    },
+    "PR10": {
+      "age": "Late Miocene",
+      "age_bracket_ma": [9.0, 7.8],
+      "seismic_group": "D",
+      "paleoenvironment": "Prograding clastic shelf",
+      "key_markers": ["abundant terrestrial pollen", "marine signal still present", "NN10-NN11 equivalent"],
+      "ecological_signal": "High sediment supply. Pollen assemblages track vegetation belts and climate."
+    },
+    "PR11": {
+      "age": "Late Miocene",
+      "age_bracket_ma": [7.8, 6.5],
+      "seismic_group": "D",
+      "paleoenvironment": "Prograding shelf, shallowing upward",
+      "key_markers": ["shallowing marine indicators", "coastal pollen assemblages", "NN11 equivalent"],
+      "ecological_signal": "Shallowing trend. May be truncated by Upper Miocene Unconformity in some areas."
+    },
+    "PR12": {
+      "age": "Late Miocene to Pliocene",
+      "age_bracket_ma": [6.5, 5.0],
+      "seismic_group": "C",
+      "paleoenvironment": "Post-unconformity shelf/slope progradation",
+      "key_markers": ["new progradational cycle above unconformity", "pollen assemblages indicate climate shift", "NN12 equivalent"],
+      "ecological_signal": "New depositional cycle above 10-10.5 Ma unconformity. Progradation resumes."
+    },
+    "PR13": {
+      "age": "Pliocene",
+      "age_bracket_ma": [5.0, 3.0],
+      "seismic_group": "C",
+      "paleoenvironment": "Prograding clastic shelf, coastal influence",
+      "key_markers": ["abundant terrestrial pollen", "coastal/marginal marine indicators", "NN13-NN15 equivalent"],
+      "ecological_signal": "Major progradational pulse. Coastal plain pollen assemblages. May be truncated by 7.8 Ma unconformity."
+    },
+    "PR14": {
+      "age": "Pliocene to Pleistocene",
+      "age_bracket_ma": [3.0, 1.5],
+      "seismic_group": "B",
+      "paleoenvironment": "Upper progradational clastics, coastal to shallow marine",
+      "key_markers": ["terrestrial and coastal pollen", "reduced marine influence basinward", "NN16-NN19 equivalent"],
+      "ecological_signal": "Late-stage basin fill. High sedimentation rate. Climate cycling visible in pollen."
+    },
+    "PR15": {
+      "age": "Pleistocene to Recent",
+      "age_bracket_ma": [1.5, 0.0],
+      "seismic_group": "A",
+      "paleoenvironment": "Youngest clastic wedge, coastal to marine",
+      "key_markers": ["modern pollen assemblages", "Pleistocene climate indicators", "NN19-NN21 equivalent"],
+      "ecological_signal": "Glacial/interglacial cycling visible. Sea-level fluctuations drive facies changes."
+    }
+  },
+
+  "key_ecological_signals": {
+    "freshwater_algae_dominance": {
+      "interpretation": "Freshwater lacustrine or fluvial setting",
+      "not": "Marine or coastal",
+      "PR_zones": ["PR1", "PR2"],
+      "example_taxa": ["Pediastrum", "Botryococcus", "Zygnemataceae"]
+    },
+    "mangrove_pollen_increase": {
+      "interpretation": "Coastline proximity — mangroves indicate marginal marine/coastal setting",
+      "not": "Open marine or deep water",
+      "duration": "May be diachronous as coastline migrates",
+      "PR_zones": ["PR2", "PR3", "PR4", "PR5"],
+      "example_taxa": ["Rhizophora", "Avicennia", "Sonneratia"]
+    },
+    "marine_palynomorph_appearance": {
+      "interpretation": "Marine water entry into basin — flooding surface or transgression",
+      "not": "Age boundary necessarily",
+      "caution": "May be older toward basin center, younger toward margin (diachronous)",
+      "example_taxa": ["dinoflagellate cysts", "acritarchs", "foram test linings"]
+    },
+    "peat_swamp_pollen_assemblage": {
+      "interpretation": "Coastal plain peat swamp — humid tropical climate, low-energy",
+      "not": "Time marker — climate and sea-level controlled",
+      "PR_zones": ["PR3", "PR4", "PR5", "PR11"]
+    },
+    "pollen_climate_shift": {
+      "interpretation": "Climate-driven vegetation change — may not indicate age change",
+      "not": "Stratigraphic boundary unless corroborated",
+      "caution": "Climate shifts can produce pollen changes that mimic biozone boundaries"
+    }
+  },
+
+  "cross_discipline_integration": {
+    "with_nannofossils": "PR4-PR5 corresponds to first consistent nannofossil occurrence. PR6-PR11 tied to NN5-NN11 equivalents. PR12-PR15 tied to NN12-NN21.",
+    "with_foraminifera": "Planktonic forams appear with marine incursions from PR3 onward. Benthic forams track water depth through PR4-PR11.",
+    "with_seismic": "PR zones are defined within seismic groups A-I. Major unconformities at ~10-10.5 Ma and ~7.8 Ma separate groups.",
+    "with_lithostratigraphy": "PR1-PR2 = syn-rift to early post-rift clastics. PR3-PR7 = marine-influenced. PR8-PR15 = progradational clastic wedge."
+  },
+
+  "constitutional_alignment": {
+    "B7_Regional_Diachroneity": "PR zone boundaries are tied to local Malay Basin calibration. Do not copy into Sabah or Sarawak without independent calibration.",
+    "B6_MultiDiscipline_Convergence": "PR zones must be cross-checked with nannofossils, forams, seismic groups, and lithostratigraphy. No PR zone alone certifies an age.",
+    "F7_HUMILITY": "Age brackets are approximate — calibrated to basin-scale unconformities and seismic groups, not global chronostratigraphy."
+  }
+}

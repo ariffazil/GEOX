@@ -1,0 +1,125 @@
+{
+  "$schema": "mcp://geox/biostrat/resources/v1",
+  "description": "GEOX Biostratigraphy MCP Resource Manifest. Declares reference data resources for MCP agent discovery per Model Context Protocol spec.",
+  "organ": "GEOX",
+  "domain": "earth.biostratigraphy",
+  "phase": "2.5",
+  "last_verified": "2026-07-03",
+  "epistemic_status": "LIVE_INTELLIGENCE",
+
+  "resources": {
+    "rulings": {
+      "uri": "resource://geox/biostrat/rulings.md",
+      "name": "Biostratigraphy Governance Rulings B1-B8",
+      "description": "8 constitutional guardrails for every biostratigraphic claim. Observation before age, Zone before Ma, Calibration explicit, Facies veto, Reworking warning, Multi-discipline convergence, Regional diachroneity, Hold advanced correlation.",
+      "mime_type": "text/markdown",
+      "size_bytes": 5234,
+      "version": "1.0",
+      "ratified": ["B1", "B2", "B4", "B6"],
+      "conditional": ["B3_scoped_wording", "B5_scoped_wording", "B7_scoped_wording", "B8_scoped_wording"],
+      "access": "read-only",
+      "cache_ttl_seconds": 86400
+    },
+
+    "nn_zones": {
+      "uri": "resource://geox/biostrat/nn_zones.json",
+      "name": "Martini (1971) NN Zone Calibration Table",
+      "description": "29 NN zones (NN1-NN21 + subzones) with GPTS2020 age calibration, epochs, stages. Includes diachroneity warning, not_a_radiometric_age flag, and 5 operator report references.",
+      "mime_type": "application/json",
+      "size_bytes": 8412,
+      "version": "1.0",
+      "calibration": "GPTS2020 (GEOX built-in lookup)",
+      "scheme": "Martini 1971",
+      "discipline": "calcareous_nannofossil",
+      "access": "read-only",
+      "cache_ttl_seconds": 604800
+    },
+
+    "facies_matrix": {
+      "uri": "resource://geox/biostrat/facies_matrix.json",
+      "name": "Facies-Biozone Compatibility Matrix",
+      "description": "6 fossil groups × lithologies × environments. Sabah-calibrated with NW Borneo margin knowledge. Deep Regional Unconformity logic. Province-specific cautions. Encodes B4 Facies Veto doctrine.",
+      "mime_type": "application/json",
+      "size_bytes": 12450,
+      "version": "1.0",
+      "region": "Sabah + Malay Basin",
+      "fossil_groups": ["calcareous_nannofossil", "planktonic_foraminifera", "benthic_foraminifera", "palynomorph_marine", "palynomorph_terrestrial", "freshwater_algae"],
+      "access": "read-only",
+      "cache_ttl_seconds": 604800
+    },
+
+    "palynology_pr_zones": {
+      "uri": "resource://geox/biostrat/palynology_pr_zones.json",
+      "name": "Malay Basin Palynological Zonation PR1-PR15",
+      "description": "15 PR zones from Yakzan et al. integrated biostratigraphic framework. Tied to seismic groups A-M, ecological signals (freshwater algae → mangrove → marine → progradation), major unconformities, and cross-discipline integration with nannofossils, forams, and lithostratigraphy.",
+      "mime_type": "application/json",
+      "size_bytes": 15820,
+      "version": "1.0",
+      "source": "Yakzan et al. — Integrated biostratigraphic zonation for the Malay Basin",
+      "region": "Malay Basin, offshore Peninsular Malaysia",
+      "access": "read-only",
+      "cache_ttl_seconds": 604800,
+      "caveat": "PR zone ages are calibrated to Malay Basin seismic groups and unconformities. Do not transfer to Sabah or Sarawak without independent calibration (B7 Regional Diachroneity)."
+    },
+
+    "tools_manifest": {
+      "uri": "resource://geox/biostrat/mcp/tools_manifest.json",
+      "name": "MCP Tool Manifest for Biostratigraphy",
+      "description": "Declares 4 biostrat tools for MCP agent discovery with capability tags, input schemas, action classes, and governance bindings.",
+      "mime_type": "application/json",
+      "version": "1.0",
+      "access": "read-only",
+      "cache_ttl_seconds": 3600
+    },
+
+    "prompts_manifest": {
+      "uri": "resource://geox/biostrat/mcp/prompts_manifest.json",
+      "name": "MCP Prompt Manifest for Biostratigraphy",
+      "description": "4 biostrat reasoning prompts for MCP agent use: interpret_claim, challenge_age_pick, check_facies_conflict, build_well_ruling.",
+      "mime_type": "application/json",
+      "version": "1.0",
+      "access": "read-only",
+      "cache_ttl_seconds": 3600
+    },
+
+    "concepts_manifest": {
+      "uri": "resource://geox/biostrat/mcp/concepts_manifest.json",
+      "name": "MCP Concepts Manifest — Sabah Event Anchors",
+      "description": "4 canonical Sabah event anchors declared as MCP concepts with truth classes, confidence levels, and relationships.",
+      "mime_type": "application/json",
+      "version": "1.0",
+      "access": "read-only",
+      "cache_ttl_seconds": 86400
+    },
+
+    "governance": {
+      "uri": "resource://geox/biostrat/mcp/governance.json",
+      "name": "MCP Governance — Biostrat Truth-Class Hygiene",
+      "description": "11-label truth class taxonomy (OBSERVATION_DIRECT through FAITH_STORY) mapped to MCP governance. Truth-class transitions, constraints, and violation handling.",
+      "mime_type": "application/json",
+      "version": "1.0",
+      "access": "read-only",
+      "cache_ttl_seconds": 86400
+    },
+
+    "skill_definition": {
+      "uri": "resource://geox/biostrat/mcp/skill_manifest.json",
+      "name": "MCP Skill Definition — geox-biostrat-analyst",
+      "description": "Agent personality for biostrat analysis. Required tools, resources, prompts, governance (Δ, Ω, Ψ), and workflow.",
+      "mime_type": "application/json",
+      "version": "1.0",
+      "access": "read-only",
+      "cache_ttl_seconds": 86400
+    },
+
+    "task_reality_loop": {
+      "uri": "resource://geox/biostrat/mcp/task_reality_loop.json",
+      "name": "MCP Task — Biostrat Reality Loop",
+      "description": "Multi-step agentic workflow: parse → normalize → resolve → test → rule. 6 stages, 4 required tools, 2 required prompts, 1 governance verdict.",
+      "mime_type": "application/json",
+      "version": "1.0",
+      "access": "read-only",
+      "cache_ttl_seconds": 86400
+    }
+  }
+}
