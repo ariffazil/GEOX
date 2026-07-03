@@ -345,7 +345,9 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 45  # Phase 3.0 (2026-07-03): +3 physics-first stratigraphy engines (accommodation/surfaces/sequences). The extinction event.
+    _EXPECTED_CANONICAL = (
+        46  # Phase 3.0 (2026-07-03): +4 physics-first engines (accommodation/surfaces/sequences/routing). The extinction event.
+    )
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -3609,6 +3611,74 @@ async def _simulate_sequences(
         from geox_mcp.federation_safety import classify_error
 
         return classify_error(e, source_tool="geox_simulate_sequences", source_organ="geox")
+
+
+@mcp.tool(name="geox_simulate_routing")
+async def _simulate_routing(
+    source_position_km: float = 0.0,
+    source_sand_fraction: float = 0.6,
+    source_supply_rate_m_myr: float = 100.0,
+    source_discharge_m3_s: float = 2000.0,
+    profile_length_km: float = 120.0,
+    shelf_width_km: float = 50.0,
+    shelf_gradient: float = 0.001,
+    slope_gradient: float = 0.05,
+    slope_start_km: float = 60.0,
+    basin_floor_start_km: float = 80.0,
+    accommodation_rate_m_myr: float = 50.0,
+    duration_ma: float = 10.0,
+    time_step_myr: float = 1.0,
+    seed: int | None = 42,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Simulate sediment routing from source to sink: deltas, fans, bypass, deposition.
+
+    Physics-first: generates depositional bodies from slope-driven transport,
+    sand/mud partitioning, and autogenic lobe switching.
+    Not facies modeling. Not geobody picking. Physics.
+
+    Returns: depositional bodies (reservoirs, seals, sources), lobe events,
+    mass balance, and emergent environments.
+    """
+    from geox_core.engines.stratigraphy.sediment_routing import (
+        BasinGeometry,
+        RoutingRequest,
+        SedimentSource,
+        simulate_routing as _impl,
+    )
+
+    try:
+        req = RoutingRequest(
+            sources=[
+                SedimentSource(
+                    source_id="SOURCE1",
+                    position_km=source_position_km,
+                    sand_fraction=source_sand_fraction,
+                    supply_rate_m_myr=source_supply_rate_m_myr,
+                    discharge_m3_s=source_discharge_m3_s,
+                )
+            ],
+            geometry=BasinGeometry(
+                profile_length_km=profile_length_km,
+                shelf_width_km=shelf_width_km,
+                shelf_gradient=shelf_gradient,
+                slope_gradient=slope_gradient,
+                slope_start_km=slope_start_km,
+                basin_floor_start_km=basin_floor_start_km,
+            ),
+            accommodation_rate_m_myr=accommodation_rate_m_myr,
+            duration_ma=duration_ma,
+            time_step_myr=time_step_myr,
+            seed=seed,
+        )
+        result = _impl(req)
+        return {"status": "success", "tool": "geox_simulate_routing", **result.model_dump()}
+    except Exception as e:
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_simulate_routing", source_organ="geox")
 
 
 logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools registered with FastMCP")

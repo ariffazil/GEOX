@@ -56,6 +56,7 @@ SURFACE_TOOLS: list[str] = [
     "geox_simulate_accommodation",  # Subsidence + eustasy + sediment loading → accommodation through time
     "geox_simulate_surfaces",  # Erosion/flooding/MFS/truncation surfaces from accommodation physics
     "geox_simulate_sequences",  # Sequences emerge from surfaces + stacking patterns (not LST/TST/HST)
+    "geox_simulate_routing",  # Sediment routing: source→sink, delta lobes, fans, bypass/deposition
     # ── SEISMIC DOMAIN (4) ─────────────────────────────────────────────────────
     "geox_seismic_ingest",  # SEG-Y I/O, header inspection
     "geox_seismic_compute",  # Synthetic, well-tie, AVO, attributes, inversion
