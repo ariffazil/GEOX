@@ -89,6 +89,12 @@ SURFACE_TOOLS: list[str] = [
     "geox_egs_rock_physics",
     "geox_egs_data_qc_bundle",
     "geox_egs_scenario_audit",
+    # ── UNIVERSAL ANOMALOUS CONTRAST DETECTOR (1) — Phase 2.6 (2026-07-03) ──────
+    # Theory of Anomalous Contrast (ToAC) generalized across all seven dimensions.
+    # Mass, Energy, Time, Absence contrast detection + cross-dimensional audit.
+    # Pattern: predict → observe → contrast → classify → report.
+    # A-FORGE 888_HOLD approved 2026-07-03 by F13 SOVEREIGN.
+    "geox_contrast_detect",
 ]
 
 
