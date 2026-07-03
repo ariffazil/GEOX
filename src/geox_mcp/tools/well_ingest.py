@@ -8,6 +8,7 @@ Modes: las, segy, seismic, deviation, tops, dst, checkshot, auto
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import logging
@@ -78,31 +79,43 @@ async def geox_well_ingest(
       checkshot  - Checkshot/VSP data ingestion
       auto       - Auto-detect format from source_uri extension
     """
-    if mode in ("las", "auto") and source_uri:
+    # ── Inspect path: only when caller EXPLICITLY supplies metadata ─────
+    # Without metadata, `mode in ("las", "auto") and source_uri` is an
+    # INGEST request, not an inspect request. Routing those into
+    # geox_las_inspect produced validator reports with no artifact_ref.
+    # Fix 2026-07-03: require explicit las_metadata OR las_curve_info to
+    # enter the inspect branch. Otherwise fall through to data_ingest_bundle.
+    if mode in ("las", "auto") and source_uri and (las_metadata or las_curve_info):
         from geox_mcp.tools.ingestion import geox_las_inspect as _impl
-        if mode == "auto" and source_uri and any(source_uri.lower().endswith(ext) for ext in (".las", ".LAS")):
+
+        if mode == "auto" and any(source_uri.lower().endswith(ext) for ext in (".las", ".LAS")):
             return await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or [])
         elif mode == "las":
             return await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or [])
 
     if mode in ("segy", "auto") and segy_metadata:
         from geox_mcp.tools.ingestion import geox_seismic_segy_inspect as _impl
+
         return await _impl(segy_metadata=segy_metadata)
 
     if mode == "seismic" and seismic_metadata:
         from geox_mcp.tools.ingestion import geox_seismic_inspect as _impl
+
         return await _impl(seismic_metadata=seismic_metadata)
 
     if mode == "deviation" and deviation_metadata:
         from geox_mcp.tools.ingestion import geox_deviation_survey_inspect as _impl
+
         return await _impl(deviation_metadata=deviation_metadata)
 
     if mode == "tops" and tops_metadata:
         from geox_mcp.tools.ingestion import geox_tops_inspect as _impl
+
         return await _impl(tops_metadata=tops_metadata)
 
     if mode == "header":
         from geox_mcp.tools.ingestion import geox_header_inspect as _impl
+
         return await _impl(
             file_format=file_format or "las",
             las_metadata=las_metadata,
@@ -115,6 +128,7 @@ async def geox_well_ingest(
 
     if mode == "dst":
         from geox_mcp.tools.dst import geox_dst_ingest_test as _impl
+
         return await _impl(
             well_id=well_id or "UNKNOWN",
             field=field,
@@ -145,6 +159,7 @@ async def geox_well_ingest(
     # Fallback: full data_ingest_bundle for auto mode with files
     if mode == "auto":
         from geox_mcp.tools.data import geox_data_ingest_bundle as _impl
+
         return await _impl(
             source_uri=source_uri,
             source_type=source_type,
