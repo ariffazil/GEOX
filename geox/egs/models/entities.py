@@ -11,9 +11,13 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator, model_validator
+
+if TYPE_CHECKING:
+    from geox.egs.models.sts import StateGraph
+    from geox.egs.models.translation import TranslationLayer
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Geometry Primitives
@@ -251,6 +255,9 @@ class EarthGraph(BaseModel):
     wells: dict[str, Well] = Field(default_factory=dict)
     surveys: dict[str, Survey] = Field(default_factory=dict)
     connectivity: ConnectivityGraph = Field(default_factory=ConnectivityGraph)
+    # STS model — state machine graphs (Phase 2.5)
+    sts_graphs: dict[str, "StateGraph"] = Field(default_factory=dict)
+    translation_layers: dict[str, "TranslationLayer"] = Field(default_factory=dict)
     version: int = Field(default=1, description="Graph version")
 
     def add_entity(self, entity: EarthEntity) -> str:
