@@ -153,9 +153,9 @@ class GeoxGovernanceMiddleware(Middleware):
             if not (self._arifos_route_query_enabled and tool_name == "arifos_route_query"):
                 logger.warning(f"RT1_BLOCK: tool '{tool_name}' is not on canonical public surface")
                 raise ToolError(
-                    f"RT1_GUARD: Tool '{tool_name}' is not a declared sovereign tool. "
-                    f"Public surface has {len(self._PUBLIC_SURFACE)} declared tools. "
-                    f"Use geox_doctrine(mode='registry') to enumerate available tools."
+                    f"RT1_GUARD: Tool '{tool_name}' is not on the canonical or compat surface. "
+                    f"Canonical surface has {len(self._PUBLIC_SURFACE)} declared tools. "
+                    f"Use geox_surface_status(mode='registry') to enumerate available tools."
                 )
 
         # ── RT3: irreversible tools require explicit ack_irreversible=True ──
