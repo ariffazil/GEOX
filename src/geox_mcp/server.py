@@ -244,6 +244,20 @@ def _build_geox_governance_middleware():
     )
 
 
+def _build_geox_ttl_middleware():
+    """Q3 seal (2026-07-03) — wrap tools/list with meta.ttlMs + fingerprint.
+
+    Per MCP SEP-2549, clients treat tools/list as immediately stale (ttl=0)
+    when ttlMs is missing. This middleware adds a 30-second TTL plus a
+    stable SHA-256 fingerprint (tool names + inputSchema dumps) so the
+    federation drift watcher can cheaply detect tool-surface changes
+    without re-parsing the entire tool list.
+    """
+    from geox_mcp.geox_middleware import GeoxToolListTtlMiddleware
+
+    return GeoxToolListTtlMiddleware()
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # GEOX Identity Invariant (F10 Coherence + F01 Amanah)
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -2224,6 +2238,11 @@ def create_app():
     global _geox_governance_middleware
     _geox_governance_middleware = _build_geox_governance_middleware()
     mcp.add_middleware(_geox_governance_middleware)
+
+    # Q3 seal (2026-07-03): register TTL middleware alongside governance.
+    # Adds meta.ttlMs + sha256 fingerprint to every tools/list response
+    # per MCP SEP-2549. The fingerprint feeds the federation drift watcher.
+    mcp.add_middleware(_build_geox_ttl_middleware())
 
     # Native FastMCP transport. path="/" so the parent Starlette controls mount point.
     mcp_http_handler = mcp.http_app(

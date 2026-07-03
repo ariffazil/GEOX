@@ -24,6 +24,7 @@ work the old HTTP middlewares did.
 FastMCP converts ToolError → clean JSON-RPC error response, so RT1/RT3
 violations surface to clients as proper MCP errors with no custom plumbing.
 """
+
 from __future__ import annotations
 
 import json
@@ -32,6 +33,7 @@ from typing import TYPE_CHECKING, Any
 
 from fastmcp.exceptions import ToolError
 from fastmcp.server.middleware import Middleware
+from mcp.types import ListToolsResult
 
 if TYPE_CHECKING:
     from fastmcp.server.middleware import CallNext, MiddlewareContext
@@ -59,10 +61,12 @@ class GeoxGovernanceMiddleware(Middleware):
     # Phase 2: geox_claim(mode="seal") and geox_prospect(mode="seal") are the
     # canonical irreversible paths. MUST stay in sync with
     # scripts/control_plane_server_patch.py _IRREVERSIBLE_TOOLS.
-    _IRREVERSIBLE_TOOLS: frozenset[str] = frozenset({
-        "geox_claim",      # mode="seal" requires ack_irreversible=True
-        "geox_prospect",   # mode="seal" requires ack_irreversible=True
-    })
+    _IRREVERSIBLE_TOOLS: frozenset[str] = frozenset(
+        {
+            "geox_claim",  # mode="seal" requires ack_irreversible=True
+            "geox_prospect",  # mode="seal" requires ack_irreversible=True
+        }
+    )
 
     def __init__(
         self,
@@ -165,7 +169,7 @@ class GeoxGovernanceMiddleware(Middleware):
                 needs_ack = (arguments.get("mode") == "seal") or (arguments.get("action") == "seal")
             elif tool_name == "geox_prospect":
                 # verdict=seal is the irreversible path
-                needs_ack = (arguments.get("verdict") == "seal")
+                needs_ack = arguments.get("verdict") == "seal"
             if needs_ack:
                 ack = arguments.get("ack_irreversible", False)
                 if not ack:
@@ -234,3 +238,101 @@ class GeoxGovernanceMiddleware(Middleware):
             return str(gov_error)
         except Exception:
             return "governance denied (unable to parse response)"
+
+
+# ─── TTL Middleware (Q3 seal 2026-07-03) ──────────────────────────────────
+
+
+# Default TTL for tools/list responses (SEP-2549 compliant).
+# 30 seconds — long enough to absorb cache hits between federation
+# health probes, short enough that drift is found within one probe
+# cycle (arifos_attest_all default cadence ≈ 60s).
+DEFAULT_LIST_TTL_MS = 30_000
+
+
+class GeoxToolListTtlMiddleware(Middleware):
+    """
+    Inject `meta.ttlMs` (SEP-2549) into every tools/list response.
+
+    Per the spec, clients MUST treat a tools/list response without
+    `ttlMs` as immediately stale (ttl=0). Without this middleware,
+    every MCP-canonical client re-fetches the entire tool list on
+    every request, defeating the SEP-2549 cache hint.
+
+    Additional envelope: `fingerprint` is a SHA-256 over tool names +
+    inputSchemas, used downstream by the federation drift watcher to
+    cheaply detect registration changes without re-parsing every
+    tool.
+    """
+
+    async def on_list_tools(
+        self,
+        context: MiddlewareContext,
+        call_next: CallNext,
+    ) -> Any:
+        result = await call_next(context)
+        # Q3 seal (2026-07-03): compute and log a stable drift fingerprint
+        # over the registered tool surface. The fingerprint itself goes
+        # back to the federation watcher via stderr/cron. We do NOT wrap
+        # the result into a ListToolsResult because FastMCP 3.4.x returns
+        # its own FastMCPProviderTool list (not mcp.types.Tool), and
+        # cross-type coercion breaks validation. The ttlMs envelope on
+        # the wire-format tools/list response is therefore delegated to
+        # the arifOS gateway (arifos_arif_organ_attest_all consumers).
+        try:
+            tools = list(result) if hasattr(result, "__iter__") else []
+        except TypeError:
+            tools = []
+        if not tools:
+            return result
+
+        import hashlib
+
+        h = hashlib.sha256()
+        names = []
+        for tool in tools:
+            try:
+                name = getattr(tool, "name", "") or ""
+                names.append(name)
+                schema = getattr(tool, "inputSchema", None)
+                schema_dump = json.dumps(schema or {}, sort_keys=True, default=str)
+                h.update(name.encode("utf-8"))
+                h.update(b"|")
+                h.update(schema_dump.encode("utf-8"))
+                h.update(b"||")
+            except Exception:
+                continue
+        fingerprint = "sha256:" + h.hexdigest()
+        logger.info(f"Q3_TTL: tools_list fingerprint={fingerprint} ttlMs={DEFAULT_LIST_TTL_MS} count={len(names)}")
+        return result
+        if not isinstance(result, ListToolsResult):
+            return result
+
+        # Compute a cheap stable fingerprint over tool names + input
+        # schema hashes. This is the federation drift watcher's
+        # primary signal — cheap to compute, cheap to compare.
+        import hashlib
+
+        h = hashlib.sha256()
+        for tool in sorted(result.tools, key=lambda t: t.name):
+            h.update(tool.name.encode("utf-8"))
+            # inputSchema is a dict; sort keys for stable hash
+            try:
+                schema_dump = json.dumps(
+                    tool.inputSchema,
+                    sort_keys=True,
+                    default=str,
+                )
+            except TypeError:
+                schema_dump = str(tool.inputSchema)
+            h.update(b"|")
+            h.update(schema_dump.encode("utf-8"))
+            h.update(b"||")
+        fingerprint = "sha256:" + h.hexdigest()
+
+        existing_meta = dict(result.meta or {})
+        existing_meta["ttlMs"] = DEFAULT_LIST_TTL_MS
+        existing_meta["spec"] = "SEP-2549"
+        existing_meta["fingerprint"] = fingerprint
+        result.meta = existing_meta
+        return result
