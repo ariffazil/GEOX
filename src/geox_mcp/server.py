@@ -114,6 +114,8 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_egs_rock_physics": 30.0,
     "geox_egs_data_qc_bundle": 30.0,
     "geox_egs_scenario_audit": 30.0,
+    # Phase 2.6: Universal Anomalous Contrast Detector
+    "geox_contrast_detect": 15.0,  # Fast — pure computation, no I/O
 }
 TOOL_TIMEOUT_DEFAULT = 60.0
 
@@ -337,7 +339,9 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 36  # Phase 2.5 (2026-07-02): +1 geox_forbidden_claims_scan — civilizational safety gate.
+    _EXPECTED_CANONICAL = (
+        37  # Phase 2.6 (2026-07-03): +1 geox_contrast_detect — universal anomalous contrast detector (ToAC generalized).
+    )
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -1199,6 +1203,96 @@ async def geox_query_macrostrat(
     if artifact:
         return artifact.get("interpreted", artifact)
     return result
+
+
+# ── Phase 2.6 (2026-07-03): Universal Anomalous Contrast Detector ───────────
+# Theory of Anomalous Contrast (ToAC) generalized across all seven dimensions.
+# Mass, Energy, Time, Absence contrast detection + cross-dimensional audit.
+# Pattern: predict → observe → contrast → classify → report.
+# A-FORGE 888_HOLD approved 2026-07-03 by F13 SOVEREIGN.
+
+
+@mcp.tool(name="geox_contrast_detect")
+async def _geox_contrast_detect(
+    dimension: str = "all",
+    mass_predicted: float | None = None,
+    mass_observed: float | None = None,
+    energy_predicted_stress: float | None = None,
+    energy_observed_stress: float | None = None,
+    energy_predicted_temp: float | None = None,
+    energy_observed_temp: float | None = None,
+    time_expected_ma: float | None = None,
+    time_measured_ma: float | None = None,
+    absence_expected_thickness: float | None = None,
+    absence_observed_thickness: float | None = None,
+    absence_expected_timespan: float | None = None,
+    absence_observed_timespan: float | None = None,
+    threshold: float = 0.2,
+) -> dict:
+    """Universal anomalous contrast detector across seven dimensions.
+
+    Generalizes the Theory of Anomalous Contrast (ToAC) from seismic-only
+    to all seven dimensions of the GEOX dimensional ontology.
+
+    Pattern (universal across all dimensions):
+      1. PREDICT — expected value from model/theory/Five-Part expectation
+      2. OBSERVE — actual value from data/evidence/measurement
+      3. CONTRAST — |predicted − observed| normalized
+      4. CLASSIFY — anomaly type, severity, governance action
+      5. REPORT — structured JSON with epistemic labels
+
+    Detects:
+      - Mass anomalies (bypass, missing mass, source-sink imbalance)
+      - Energy anomalies (overpressure, thermal anomaly, stress mismatch)
+      - Temporal contradictions (reworking, missing time, age conflicts)
+      - Absence anomalies (unconformities, erosion, non-deposition)
+      - Cross-dimensional conflicts (mass vs time, energy vs absence)
+
+    Every anomaly maps to a Five-Part violation:
+      SOURCE, TRANSFER, SINK, BURIAL, or EXHUMATION.
+
+    Axiom: Anomalous contrast is the universal signature of geological
+    inconsistency. Across all seven dimensions, anomalies share one pattern:
+    contrast that cannot be explained by SOURCE → TRANSFER → SINK → BURIAL → EXHUMATION.
+
+    Args:
+        dimension: Which dimension to check ("all", "mass", "energy", "time", "absence")
+        mass_predicted: Expected sediment production rate (m³/Myr)
+        mass_observed: Observed sediment accumulation rate (m³/Myr)
+        energy_predicted_stress: Expected stress (Pa) from model
+        energy_observed_stress: Observed stress (Pa) from data
+        energy_predicted_temp: Expected temperature (K) from model
+        energy_observed_temp: Observed temperature (K) from data
+        time_expected_ma: Expected age (Ma) from stratigraphy
+        time_measured_ma: Measured age (Ma) from dating
+        absence_expected_thickness: Expected thickness (m) from subsidence model
+        absence_observed_thickness: Observed thickness (m) from wells/seismic
+        absence_expected_timespan: Expected time span (Ma) for interval
+        absence_observed_timespan: Observed time span (Ma) from dating
+        threshold: Anomaly detection threshold (default 0.2 = 20%)
+
+    Returns:
+        Structured anomaly report with per-dimension contrasts,
+        dimensional entropy, cross-dimensional conflicts, and recommended actions.
+    """
+    from geox_mcp.tools.contrast_detect import contrast_detect as _detect
+
+    return _detect(
+        dimension=dimension,
+        mass_predicted=mass_predicted,
+        mass_observed=mass_observed,
+        energy_predicted_stress=energy_predicted_stress,
+        energy_observed_stress=energy_observed_stress,
+        energy_predicted_temp=energy_predicted_temp,
+        energy_observed_temp=energy_observed_temp,
+        time_expected_ma=time_expected_ma,
+        time_measured_ma=time_measured_ma,
+        absence_expected_thickness=absence_expected_thickness,
+        absence_observed_thickness=absence_observed_thickness,
+        absence_expected_timespan=absence_expected_timespan,
+        absence_observed_timespan=absence_observed_timespan,
+        threshold=threshold,
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
