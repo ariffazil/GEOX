@@ -205,6 +205,7 @@ CANONICAL_COMPAT_TOOLS: list[str] = [
     "geox_biostrat_constraint",
     "geox_seismic_inversion",
     "geox_lem_predict",
+    "geox_system_registry_status",  # legacy alias → geox_surface_status (canonical)
 ]
 
 
