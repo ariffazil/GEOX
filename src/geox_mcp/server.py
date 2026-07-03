@@ -2365,8 +2365,26 @@ async def _well_ingest(
     """Load well log data (LAS, SEG-Y, DST, deviation, tops)."""
     from geox_mcp.tools.well_ingest import geox_well_ingest as _impl
 
-    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
-    return await _impl(**args)
+    try:
+        args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        result = await _impl(**args)
+        # Discovery 8+9: Enrich result with memory + epistemic signals
+        return {
+            **(result if isinstance(result, dict) else {"data": result}),
+            "_memory": "LIVE_PROBE",
+            "_epistemic": {
+                "evidence_layer": "OBS",
+                "confidence": 0.85,
+                "source": "geox_well_ingest",
+                "reversible": True,
+                "authority_claim": "EVIDENCE",
+            },
+        }
+    except Exception as e:
+        # Discovery 3: Structured error envelope
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_well_ingest", source_organ="geox")
 
 
 @mcp.tool(name="geox_well_qc")
@@ -2413,8 +2431,24 @@ async def _petrophysics(
     """Vsh, porosity, Sw, perm, net pay, LEM."""
     from geox_mcp.tools.petrophysics_unified import geox_petrophysics as _impl
 
-    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
-    return await _impl(**args)
+    try:
+        args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        result = await _impl(**args)
+        return {
+            **(result if isinstance(result, dict) else {"data": result}),
+            "_memory": "LIVE_PROBE",
+            "_epistemic": {
+                "evidence_layer": "DER",
+                "confidence": 0.80,
+                "source": "geox_petrophysics",
+                "reversible": True,
+                "authority_claim": "EVIDENCE",
+            },
+        }
+    except Exception as e:
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_petrophysics", source_organ="geox")
 
 
 @mcp.tool(name="geox_sequence")
