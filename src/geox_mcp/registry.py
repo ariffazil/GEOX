@@ -3,22 +3,26 @@ from __future__ import annotations
 from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GEOX CANONICAL TOOLS — Phase 2.4 Clean Architecture (2026-07-02)
-# 35 canonical tools (31 surface + 4 internal). 49 backward-compat aliases.
+# GEOX CANONICAL TOOLS — Phase 2.7 Clean Architecture (2026-07-03)
+# 38 canonical tools (34 surface + 4 internal). 49 backward-compat aliases.
 # Mode-based consolidation. Evidence-only. Physics-9 governed.
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# SURFACE-FACING (31 tools):
+# SURFACE-FACING (41 tools):
 #   What external agents (AAA, ART, Copilot, any MCP client) call to get
 #   Earth data or run subsurface analysis. These are the "public API" of GEOX.
-#   Organized by domain: 5 well + 4 seismic + 2 model + 3 basin + 1 atlas +
-#   4 earth map + 1 federation + 11 EGS (excluding deprecated egs_seismic_compute).
+#   Organized by domain: 5 well + 4 stratigraphy + 4 seismic + 2 model + 6 basin + 1 atlas +
+#   4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast = 41.
+#   Phase 2.7 (2026-07-03): +1 geox_biostrat_parse, +1 geox_biostrat_nn_age,
+#   +1 geox_biostrat_ruling_check — biostratigraphy parsing + age + contradiction.
+#   Phase 3.0 (2026-07-03): +3 geox_simulate_accommodation/surfaces/sequences —
+#   physics-first stratigraphy engines. The extinction event.
 #
 # INTERNAL PLUMBING (4 tools):
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 35. Live runtime reports canonical_tools=35.
+#   Total canonical = 45. Live runtime reports canonical_tools=45.
 #   49 backward-compat aliases accepted by middleware (scheduled removal 2026-07-30).
 #   Any change requires 888_HOLD per geox/AGENTS.md.
 #
@@ -32,12 +36,12 @@ from typing import Any
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (31 tools)
+# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (34 tools)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # What these do: query the planet, analyze subsurface data, return evidence.
 # Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 31 (5 well + 4 seismic + 2 model + 3 basin + 1 atlas + 4 earth map + 1 federation + 11 EGS)
+# Count: 41 (5 well + 4 stratigraphy + 4 seismic + 2 model + 3 basin + 1 atlas + 4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast)
 #
 SURFACE_TOOLS: list[str] = [
     # ── WELL DOMAIN (5) ────────────────────────────────────────────────────────
@@ -45,7 +49,13 @@ SURFACE_TOOLS: list[str] = [
     "geox_well_qc",  # QC: depth, curves, completeness, FJIS
     "geox_well_desurvey",  # Phase 2.1 (2026-06-28): 3D wellbore geometry (TVD/X/Y/TVDSS) from deviation survey. wellpathpy mincurve + tan, CRS transform, ACRisk envelope.
     "geox_petrophysics",  # Vsh, porosity, Sw, perm, net pay, LEM
-    "geox_sequence",  # Sequence stratigraphy, correlation
+    "geox_sequence",  # [DEPRECATED] Sequence stratigraphy — taxonomy-first. Use geox_simulate_accommodation + geox_simulate_surfaces + geox_simulate_sequences for physics-first.
+    # ── PHYSICS-FIRST STRATIGRAPHY (3) — Phase 3.0 (2026-07-03) ────────────────
+    # The extinction event: replaces LST/TST/HST taxonomy with physics simulation.
+    # Surfaces and sequences EMERGE from accommodation + eustasy + sediment routing.
+    "geox_simulate_accommodation",  # Subsidence + eustasy + sediment loading → accommodation through time
+    "geox_simulate_surfaces",  # Erosion/flooding/MFS/truncation surfaces from accommodation physics
+    "geox_simulate_sequences",  # Sequences emerge from surfaces + stacking patterns (not LST/TST/HST)
     # ── SEISMIC DOMAIN (4) ─────────────────────────────────────────────────────
     "geox_seismic_ingest",  # SEG-Y I/O, header inspection
     "geox_seismic_compute",  # Synthetic, well-tie, AVO, attributes, inversion
@@ -54,9 +64,14 @@ SURFACE_TOOLS: list[str] = [
     # ── MODEL DOMAIN (2) ───────────────────────────────────────────────────────
     "geox_subsurface_model",  # Joint inversion, gravity/mag, MT forward
     "geox_geomechanics",  # K/G/E/ν, coordinate transform, blockspace
-    # ── BASIN DOMAIN (3) ───────────────────────────────────────────────────────
+    # ── BASIN DOMAIN (6) ───────────────────────────────────────────────────────
     "geox_basin",  # Profile, resolve, macrostrat, scene
     "geox_deep_time_state",  # Earth State Vector at any geological age
+    "geox_biostrat_parse",  # Phase 2.7: NN zone parser + GDE mapper + lithology classifier. Multi-zone extraction.
+    "geox_biostrat_nn_age",  # Phase 2.7: NN zone age resolution with calibration metadata. Not a radiometric age.
+    "geox_biostrat_ruling_check",  # Phase 2.7: Contradiction detector (facies veto, reworking, multi-discipline convergence).
+    "geox_biostrat_falsify",  # Phase 2.7: 8-gate Popperian falsification engine. Any FALSIFIED → overall FALSIFIED.
+    "geox_macrostrat_calibrate",  # Phase 2.8: Merge relative biostrat with Macrostrat absolute ages. Biostrat→Ma bridge.
     "geox_atlas",  # Point-in-country + land/water classifier. Natural Earth 10m GeoJSON.
     # ── EARTH MAP SURFACE (4) — Phase 2.4 (2026-07-02) ─────────────────────────
     # Layer registry + scene planning + cached preview rendering + governed export.
@@ -116,12 +131,12 @@ INTERNAL_TOOLS: list[str] = [
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CANONICAL PUBLIC TOOLS — Union of surface + internal (31 total)
+# CANONICAL PUBLIC TOOLS — Union of surface + internal (40 total)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # This is the single source of truth for the MCP server invariant check.
 # Surface tools are what the world sees. Internal tools are federation plumbing.
-# Live runtime reports canonical_tools=31; do not change without 888_HOLD.
+# Live runtime reports canonical_tools=45; do not change without 888_HOLD.
 #
 CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
 

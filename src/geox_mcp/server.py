@@ -59,10 +59,11 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.07.01-phase2.3-earthmap"
+GEOX_VERSION = "v2026.07.03-phase2.7-biostrat"
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
+# Phase 2.7 (2026-07-03): +1 geox_biostrat_parse — biostratigraphy parsing (NN zones, GDE, lithology).
 # Backward-compat wrappers for 49 legacy alias names.
-GEOX_CONTRACT_EPOCH = "2026-07-01-GEOX-34TOOLS-PHASE23"
+GEOX_CONTRACT_EPOCH = "2026-07-03-GEOX-38TOOLS-PHASE27"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -89,6 +90,11 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_geomechanics": 30.0,
     "geox_basin": 60.0,
     "geox_deep_time_state": 30.0,
+    "geox_biostrat_parse": 15.0,  # Phase 2.7: Biostrat parsing — regex-only, fast.
+    "geox_biostrat_nn_age": 10.0,  # Phase 2.7: NN zone age lookup — deterministic.
+    "geox_biostrat_ruling_check": 10.0,  # Phase 2.7: Contradiction detection — rule-based.
+    "geox_biostrat_falsify": 15.0,  # Phase 2.7: 8-gate Popperian falsification engine.
+    "geox_macrostrat_calibrate": 30.0,  # Phase 2.8: Biostrat→Macrostrat age bridge — API+lookup.
     "geox_atlas": 15.0,  # Point-in-country + land/water. Fast lookup from local GeoJSON.
     "geox_map_layers_list": 10.0,  # Layer registry lookup. Fast.
     "geox_map_scene_plan": 10.0,  # Scene plan generation. Fast.
@@ -339,9 +345,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = (
-        37  # Phase 2.6 (2026-07-03): +1 geox_contrast_detect — universal anomalous contrast detector (ToAC generalized).
-    )
+    _EXPECTED_CANONICAL = 45  # Phase 3.0 (2026-07-03): +3 physics-first stratigraphy engines (accommodation/surfaces/sequences). The extinction event.
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -648,6 +652,183 @@ async def _biostrat_constraint(
     return (await geox_biostrat_constraint(req)).model_dump(mode="json")
 
 
+# ── Phase 2.7 (2026-07-03): Biostratigraphy Parser — NN zone + GDE + lithology ──
+@mcp.tool(name="geox_biostrat_parse")
+async def _biostrat_parse(
+    text: str = "",
+    paleoenvironment: str = "",
+    lithology: str = "",
+) -> dict:
+    """Biostratigraphy Parser — extract biozones, GDE events, lithology from free text.
+
+    Returns arrays of biozones[], gde_events[], lithology_class, unparsed_terms[], warnings[].
+    Multi-zone extraction. All outputs evidence-tagged with source_span provenance.
+
+    F2 TRUTH: regex-only, no ML. Every output carries source_span and evidence_tag.
+    F7 HUMILITY: confidence hard-capped at 0.85. Unmatched terms preserved, not guessed.
+    IRON LAW: Tectonics → Stratigraphy → Age. Biostrat calibrates, never constitutes.
+    """
+    from geox_mcp.tools.biostrat_parse import geox_biostrat_parse as _impl
+
+    return await _impl(
+        text=text,
+        paleoenvironment=paleoenvironment,
+        lithology=lithology,
+    )
+
+
+# ── Phase 2.7 (2026-07-03): NN Zone Age Resolution ──
+@mcp.tool(name="geox_biostrat_nn_age")
+async def _biostrat_nn_age(
+    zone: str = "",
+    scheme: str = "Martini",
+    calibration: str = "default",
+) -> dict:
+    """NN Zone Age Resolution — convert biozone to age bracket with calibration metadata.
+
+    Returns zone, scheme, discipline, age_top_ma, age_base_ma, epoch, calibration,
+    and mandatory not_a_radiometric_age=true warning.
+
+    F2 TRUTH: Biozone age depends on calibration table and regional diachroneity.
+    F7 HUMILITY: Zone age is a lookup, not a measurement. Confidence capped at 0.85.
+    """
+    from geox_mcp.tools.biostrat_nn_age import geox_biostrat_nn_age as _impl
+
+    return await _impl(zone=zone, scheme=scheme, calibration=calibration)
+
+
+# ── Phase 2.7 (2026-07-03): Biostrat Ruling Check — contradiction detector ──
+@mcp.tool(name="geox_biostrat_ruling_check")
+async def _biostrat_ruling_check(
+    biozone: str = "",
+    lithology: str = "",
+    environment: str = "",
+    claim: str = "",
+    depth_m: float | None = None,
+) -> dict:
+    """Biostrat Ruling Check — detect contradictions in biostratigraphic interpretations.
+
+    Tests facies compatibility, reworking/caving, age ordering, and multi-discipline
+    convergence. Returns PASS | WEAK_PASS | CONTRADICTION | HOLD | REJECT.
+
+    B4 Facies Veto: biozone-implied environment must not conflict with lithology/faices
+    without documented explanation.
+
+    F2 TRUTH: Flags contradictions, does not resolve them.
+    F6 MARUAH: Challenges interpretations, never overrides without evidence.
+    """
+    from geox_mcp.tools.biostrat_ruling_check import geox_biostrat_ruling_check as _impl
+
+    return await _impl(
+        biozone=biozone,
+        lithology=lithology,
+        environment=environment,
+        claim=claim,
+        depth_m=depth_m,
+    )
+
+
+# ── Phase 2.7 (2026-07-03): Biostrat Falsification Engine — 8-gate Popperian test ──
+@mcp.tool(name="geox_biostrat_falsify")
+async def _biostrat_falsify(
+    fossil_group: str = "calcareous_nannofossil",
+    biozone: str = "",
+    lithology: str = "",
+    environment: str = "",
+    claim: str = "",
+    claim_type: str = "age",
+    sample_type: str = "cuttings",
+    depth_m: float | None = None,
+    younger_zone: str = "",
+    older_zone: str = "",
+    depth_younger_m: float | None = None,
+    depth_older_m: float | None = None,
+    reworking_claimed: bool = False,
+    fault_present: bool = False,
+    fossil_names: str = "",
+    basin_province: str = "",
+    claim_is_basinwide: bool = False,
+    seismic_group: str = "",
+    expected_seismic_group: str = "",
+    stacking_pattern: str = "",
+    region: str = "sabah",
+) -> dict:
+    """8-Gate Popperian Falsification Engine for biostrat claims.
+
+    G1-Facies G2-StratOrder G3-Taxonomy G4-Reworking G5-Diachroneity
+    G6-Seismic G7-Sequence G8-Tectonic. Any single FALSIFIED → overall FALSIFIED.
+    Science advances by eliminating what CANNOT be true.
+    """
+    from geox_mcp.tools.biostrat_falsify import geox_biostrat_falsify as _impl
+
+    return await _impl(
+        fossil_group=fossil_group,
+        biozone=biozone,
+        lithology=lithology,
+        environment=environment,
+        claim=claim,
+        claim_type=claim_type,
+        sample_type=sample_type,
+        depth_m=depth_m,
+        younger_zone=younger_zone,
+        older_zone=older_zone,
+        depth_younger_m=depth_younger_m,
+        depth_older_m=depth_older_m,
+        reworking_claimed=reworking_claimed,
+        fault_present=fault_present,
+        fossil_names=fossil_names,
+        basin_province=basin_province,
+        claim_is_basinwide=claim_is_basinwide,
+        seismic_group=seismic_group,
+        expected_seismic_group=expected_seismic_group,
+        stacking_pattern=stacking_pattern,
+        region=region,
+    )
+
+
+# ── Phase 2.8 (2026-07-03): Macrostrat Calibrate — biostrat → absolute age bridge ──
+@mcp.tool(name="geox_macrostrat_calibrate")
+async def _macrostrat_calibrate(
+    biozone: str = "",
+    lat: float | None = None,
+    lng: float | None = None,
+    radius_km: float = 50,
+    discipline_hint: str = "",
+    macrostrat_unit_name: str | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+) -> dict:
+    """Merge relative biostratigraphy (NN, PR, TR, FO/LO, GDE) with Macrostrat absolute ages.
+
+    Calibrates a biozone against:
+    1. GEOX internal NN-age table (for NN zones)
+    2. Macrostrat time intervals (global age brackets)
+    3. Macrostrat units at lat/lng (local rock packages)
+
+    Cross-references all three and returns a merged age bracket with
+    uncertainty, provenance, contradiction flags, and a ruling.
+
+    RULING CLASSES:
+      PASS          — biostrat age matches Macrostrat unit age within uncertainty
+      WEAK_PASS     — ages partially overlap or one has high uncertainty
+      HOLD          — insufficient data (no Macrostrat column, empty biozone)
+      CONTRADICTION — ages don't overlap (e.g., NN5 says 14.9 Ma, column says 23 Ma)
+
+    F2 TRUTH: Calibration is a MERGE, not a measurement.
+    F7 HUMILITY: Confidence capped at 0.85.
+    """
+    from geox_mcp.tools.macrostrat_calibrate import geox_macrostrat_calibrate as _impl
+
+    return await _impl(
+        biozone=biozone,
+        lat=lat,
+        lng=lng,
+        radius_km=radius_km,
+        discipline_hint=discipline_hint,
+        macrostrat_unit_name=macrostrat_unit_name,
+    )
+
+
 # ── W13+ FORGE — Phase C: PINN-style 1D seismic inversion (Faust + Gardner prior) ──
 @mcp.tool(name="geox_seismic_inversion")
 async def _seismic_inversion(
@@ -893,6 +1074,7 @@ async def _deep_time_state(
     age_bot_ma: float | None = None,
     period: str | None = None,
     query: str | None = None,
+    biozone: str | None = None,
     include_pending_datasets: bool = True,
     actor_id: str | None = None,
     session_id: str | None = None,
@@ -902,6 +1084,8 @@ async def _deep_time_state(
     F2 TRUTH: age resolution via ICS Chart v2024/12.
     F7 HUMILITY: confidence hard-capped at 0.90.
     F11 AUDIT: every envelope carries governance footer.
+
+    Phase 2.7: accepts biozone (e.g. "NN5") — resolved via Martini (1971) + GPTS2020.
     """
     from geox_mcp.tools.deep_time_state import geox_deep_time_state as _impl
 
@@ -911,6 +1095,7 @@ async def _deep_time_state(
         age_bot_ma=age_bot_ma,
         period=period,
         query=query,
+        biozone=biozone,
         include_pending_datasets=include_pending_datasets,
     )
 
@@ -1228,6 +1413,8 @@ async def _geox_contrast_detect(
     absence_expected_timespan: float | None = None,
     absence_observed_timespan: float | None = None,
     threshold: float = 0.2,
+    session_id: str | None = None,
+    actor_id: str | None = None,
 ) -> dict:
     """Universal anomalous contrast detector across seven dimensions.
 
@@ -3265,6 +3452,163 @@ async def _spaceweather(
     from geox_mcp.tools.earth_surface_2 import geox_space_weather as _impl
 
     return await _impl(**dict(arguments or {}))
+
+
+# ── PHYSICS-FIRST STRATIGRAPHY ENGINES — Phase 3.0 (2026-07-03) ────────────
+# The extinction event: replaces LST/TST/HST taxonomy with physics simulation.
+# Sequences EMERGE from accommodation + eustasy + sediment, not from rules.
+# DITEMPA BUKAN DIBERI.
+
+
+@mcp.tool(name="geox_simulate_accommodation")
+async def _simulate_accommodation(
+    initial_subsidence_km: float = 2.0,
+    thermal_subsidence_rate_mm_yr: float = 0.05,
+    eustatic_rate_mm_yr: float = 0.0,
+    sediment_supply_rate_m_myr: float = 50.0,
+    initial_water_depth_m: float = 100.0,
+    duration_ma: float = 10.0,
+    time_step_myr: float = 0.5,
+    dominant_lithology: str = "sandstone",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Simulate accommodation through time: tectonic subsidence + eustasy + sediment loading + compaction.
+
+    Physics-first: this is the DRIVER of stratigraphy. Not cartoon sea-level curves.
+    Surfaces and stacking patterns EMERGE from the simulation.
+    Replaces the 'accommodation' concept that LST/TST/HST tries to name but never computes.
+
+    Returns: accommodation steps with surface types and stacking patterns that emerged from physics.
+    """
+    from geox_core.engines.stratigraphy.accommodation import (
+        AccommodationRequest,
+        simulate_accommodation as _impl,
+    )
+
+    try:
+        req = AccommodationRequest(
+            initial_subsidence_km=initial_subsidence_km,
+            thermal_subsidence_rate_mm_yr=thermal_subsidence_rate_mm_yr,
+            eustatic_rate_mm_yr=eustatic_rate_mm_yr,
+            sediment_supply_rate_m_myr=sediment_supply_rate_m_myr,
+            initial_water_depth_m=initial_water_depth_m,
+            duration_ma=duration_ma,
+            time_step_myr=time_step_myr,
+            dominant_lithology=dominant_lithology,
+        )
+        result = _impl(req)
+        return {"status": "success", "tool": "geox_simulate_accommodation", **result.model_dump()}
+    except Exception as e:
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_simulate_accommodation", source_organ="geox")
+
+
+@mcp.tool(name="geox_simulate_surfaces")
+async def _simulate_surfaces(
+    initial_subsidence_km: float = 2.0,
+    thermal_subsidence_rate_mm_yr: float = 0.05,
+    eustatic_rate_mm_yr: float = 0.0,
+    sediment_supply_rate_m_myr: float = 50.0,
+    initial_water_depth_m: float = 100.0,
+    duration_ma: float = 10.0,
+    time_step_myr: float = 0.5,
+    dominant_lithology: str = "sandstone",
+    min_surface_magnitude_m: float = 0.5,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Generate stratigraphic surfaces from physics: erosion, flooding, MFS, truncation, ravinement.
+
+    Surfaces are REAL, MAPPABLE, FALSIFIABLE — not taxonomic labels.
+    This is Sloss's physics: base level → erosion → flooding → surfaces.
+    A surface is a physical object. A systems tract is a cartoon.
+
+    Returns: surfaces with type, age, geometry (onlap/downlap/truncation), and packages between them.
+    """
+    from geox_core.engines.stratigraphy.accommodation import (
+        AccommodationRequest,
+        simulate_accommodation as _acc_impl,
+    )
+    from geox_core.engines.stratigraphy.surface_first import generate_surfaces as _surf_impl
+
+    try:
+        req = AccommodationRequest(
+            initial_subsidence_km=initial_subsidence_km,
+            thermal_subsidence_rate_mm_yr=thermal_subsidence_rate_mm_yr,
+            eustatic_rate_mm_yr=eustatic_rate_mm_yr,
+            sediment_supply_rate_m_myr=sediment_supply_rate_m_myr,
+            initial_water_depth_m=initial_water_depth_m,
+            duration_ma=duration_ma,
+            time_step_myr=time_step_myr,
+            dominant_lithology=dominant_lithology,
+        )
+        acc = _acc_impl(req)
+        result = _surf_impl(acc, min_surface_magnitude_m=min_surface_magnitude_m)
+        return {"status": "success", "tool": "geox_simulate_surfaces", **result.model_dump()}
+    except Exception as e:
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_simulate_surfaces", source_organ="geox")
+
+
+@mcp.tool(name="geox_simulate_sequences")
+async def _simulate_sequences(
+    initial_subsidence_km: float = 2.0,
+    thermal_subsidence_rate_mm_yr: float = 0.05,
+    eustatic_rate_mm_yr: float = 0.0,
+    sediment_supply_rate_m_myr: float = 50.0,
+    initial_water_depth_m: float = 100.0,
+    duration_ma: float = 10.0,
+    time_step_myr: float = 0.5,
+    dominant_lithology: str = "sandstone",
+    min_surface_magnitude_m: float = 0.5,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Let sequences EMERGE from physics: accommodation → surfaces → sequences.
+
+    Sequences are NOT classified as LST/TST/HST. They EMERGE from:
+    - erosion → sequence boundaries
+    - flooding → flooding surfaces
+    - maximum flooding → MFS
+    - progradation/retrogradation → stacking patterns
+
+    Scale (parasequence/depositional/Sloss) is determined by DURATION, not by rules.
+    Resource potential (reservoir/seal/source) is inferred from stacking and surface types.
+
+    Returns: emergent sequences with bounding surfaces, stacking patterns, resource potential, and resource graph.
+    """
+    from geox_core.engines.stratigraphy.accommodation import (
+        AccommodationRequest,
+        simulate_accommodation as _acc_impl,
+    )
+    from geox_core.engines.stratigraphy.surface_first import generate_surfaces as _surf_impl
+    from geox_core.engines.stratigraphy.sequence_emergence import emerge_sequences as _seq_impl
+
+    try:
+        req = AccommodationRequest(
+            initial_subsidence_km=initial_subsidence_km,
+            thermal_subsidence_rate_mm_yr=thermal_subsidence_rate_mm_yr,
+            eustatic_rate_mm_yr=eustatic_rate_mm_yr,
+            sediment_supply_rate_m_myr=sediment_supply_rate_m_myr,
+            initial_water_depth_m=initial_water_depth_m,
+            duration_ma=duration_ma,
+            time_step_myr=time_step_myr,
+            dominant_lithology=dominant_lithology,
+        )
+        acc = _acc_impl(req)
+        surfaces = _surf_impl(acc, min_surface_magnitude_m=min_surface_magnitude_m)
+        result = _seq_impl(surfaces, acc)
+        return {"status": "success", "tool": "geox_simulate_sequences", **result.model_dump()}
+    except Exception as e:
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_simulate_sequences", source_organ="geox")
 
 
 logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools registered with FastMCP")
