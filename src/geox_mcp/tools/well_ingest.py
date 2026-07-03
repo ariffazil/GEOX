@@ -14,7 +14,88 @@ from __future__ import annotations
 import logging
 from typing import Any, Literal
 
+from fastmcp.tools import ToolResult
+from mcp.types import TextContent
+
 logger = logging.getLogger("geox.well_ingest")
+
+
+# ── MCP canonical error envelope (Q1 + Q3 seal) ─────────────────────────
+# Translates internal inspect-result dicts into MCP-spec ToolResult objects
+# with is_error=True and structuredContent (SEP-1303 protocol errors
+# distinguished from tool execution errors). Every response carries
+# meta.ttlMs (SEP-2549) so clients know when to re-fetch.
+#
+# Fix 2026-07-03: validation failures now reach the agent as recoverable
+# tool execution errors with full error_class/recoverability metadata,
+# not buried JSON in result.content.
+
+INSPECT_TTL_MS = 5_000  # validation results — short TTL
+INGEST_TTL_MS = 30_000  # full ingest — longer TTL (registrations persist)
+
+
+def _classify_recoverability(errors: list[str], warnings: list[str]) -> str:
+    """Map validation result to agent-friendly recoverability class.
+
+    AGENT_CAN_RETRY    — fix the call args and resend
+    ESCALATE_SOVEREIGN — bad data, human review needed
+    REJECT_PERMANENT   — schema/contract violation, will not succeed
+    """
+    text = " ".join(errors + warnings).lower()
+    if "required" in text or "missing" in text or "schema" in text:
+        return "AGENT_CAN_RETRY"
+    if "permission" in text or "denied" in text or "sovereign" in text:
+        return "ESCALATE_SOVEREIGN"
+    return "REJECT_PERMANENT"
+
+
+def _inspect_to_tool_result(inspect_result: dict[str, Any], ttl_ms: int = INSPECT_TTL_MS) -> ToolResult:
+    """Translate an inspect-result dict into MCP-canonical ToolResult.
+
+    status=INVALID → is_error=True with structured error envelope.
+    status=VALID   → is_error=False with the original payload as structured_content.
+    """
+    status = inspect_result.get("status", "VALID")
+    errors = inspect_result.get("errors", []) or []
+    warnings = inspect_result.get("warnings", []) or []
+
+    if status == "INVALID":
+        recoverability = _classify_recoverability(errors, warnings)
+        return ToolResult(
+            content=[
+                TextContent(
+                    type="text",
+                    text=(
+                        f"GEOX_VALIDATION_FAILED: {len(errors)} error(s), "
+                        f"{len(warnings)} warning(s). First error: "
+                        f"{errors[0] if errors else 'unspecified'}"
+                    ),
+                )
+            ],
+            structured_content={
+                "error_class": "VALIDATION_FAILED",
+                "recoverability": recoverability,
+                "next_action": {
+                    "AGENT_CAN_RETRY": "fix_invalid_fields_and_retry",
+                    "ESCALATE_SOVEREIGN": "halt_and_request_human_review",
+                    "REJECT_PERMANENT": "halt_chain_invalid_input",
+                }.get(recoverability, "halt_chain_invalid_input"),
+                "errors": errors,
+                "warnings": warnings,
+                "metadata_validated": inspect_result.get("metadata_validated", False),
+                "curves_validated": inspect_result.get("curves_validated", 0),
+                "raw": inspect_result,
+            },
+            meta={"ttlMs": ttl_ms, "spec": "SEP-1303+SEP-2549"},
+            is_error=True,
+        )
+
+    return ToolResult(
+        content=[TextContent(type="text", text=f"GEOX_VALID: {status}")],
+        structured_content=inspect_result,
+        meta={"ttlMs": ttl_ms, "spec": "SEP-1303+SEP-2549"},
+        is_error=False,
+    )
 
 
 async def geox_well_ingest(
@@ -66,7 +147,7 @@ async def geox_well_ingest(
     permeability_md_max: float | None = None,
     skin_min: float | None = None,
     skin_max: float | None = None,
-) -> dict[str, Any]:
+) -> ToolResult | dict[str, Any]:
     """Unified well data ingestion — auto-detect format or specify mode.
 
     Modes:
@@ -85,45 +166,52 @@ async def geox_well_ingest(
     # geox_las_inspect produced validator reports with no artifact_ref.
     # Fix 2026-07-03: require explicit las_metadata OR las_curve_info to
     # enter the inspect branch. Otherwise fall through to data_ingest_bundle.
+    #
+    # MCP canonical envelope (Q1 + Q3 seal 2026-07-03): every inspect result
+    # is wrapped as ToolResult with structured_content + is_error + meta.ttlMs.
+    # Validation failures reach the agent as recoverable tool execution errors
+    # (SEP-1303), not buried JSON in result.content.
     if mode in ("las", "auto") and source_uri and (las_metadata or las_curve_info):
         from geox_mcp.tools.ingestion import geox_las_inspect as _impl
 
         if mode == "auto" and any(source_uri.lower().endswith(ext) for ext in (".las", ".LAS")):
-            return await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or [])
+            return _inspect_to_tool_result(await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or []))
         elif mode == "las":
-            return await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or [])
+            return _inspect_to_tool_result(await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or []))
 
     if mode in ("segy", "auto") and segy_metadata:
         from geox_mcp.tools.ingestion import geox_seismic_segy_inspect as _impl
 
-        return await _impl(segy_metadata=segy_metadata)
+        return _inspect_to_tool_result(await _impl(segy_metadata=segy_metadata))
 
     if mode == "seismic" and seismic_metadata:
         from geox_mcp.tools.ingestion import geox_seismic_inspect as _impl
 
-        return await _impl(seismic_metadata=seismic_metadata)
+        return _inspect_to_tool_result(await _impl(seismic_metadata=seismic_metadata))
 
     if mode == "deviation" and deviation_metadata:
         from geox_mcp.tools.ingestion import geox_deviation_survey_inspect as _impl
 
-        return await _impl(deviation_metadata=deviation_metadata)
+        return _inspect_to_tool_result(await _impl(deviation_metadata=deviation_metadata))
 
     if mode == "tops" and tops_metadata:
         from geox_mcp.tools.ingestion import geox_tops_inspect as _impl
 
-        return await _impl(tops_metadata=tops_metadata)
+        return _inspect_to_tool_result(await _impl(tops_metadata=tops_metadata))
 
     if mode == "header":
         from geox_mcp.tools.ingestion import geox_header_inspect as _impl
 
-        return await _impl(
-            file_format=file_format or "las",
-            las_metadata=las_metadata,
-            las_curve_info=las_curve_info,
-            segy_metadata=segy_metadata,
-            seismic_metadata=seismic_metadata,
-            deviation_metadata=deviation_metadata,
-            tops_metadata=tops_metadata,
+        return _inspect_to_tool_result(
+            await _impl(
+                file_format=file_format or "las",
+                las_metadata=las_metadata,
+                las_curve_info=las_curve_info,
+                segy_metadata=segy_metadata,
+                seismic_metadata=seismic_metadata,
+                deviation_metadata=deviation_metadata,
+                tops_metadata=tops_metadata,
+            )
         )
 
     if mode == "dst":
