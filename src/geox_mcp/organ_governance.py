@@ -144,10 +144,22 @@ def _load_lane_map() -> dict[str, str]:
                 "geox_basin_resolve": "discovery",  # basin resolution
                 "geox_query_intake": "discovery",  # intake query
                 "geox_query_macrostrat": "discovery",  # Macrostrat lookup
+                "geox_macrostrat_calibrate": "discovery",  # Phase 2.8: biostrat→Ma bridge — read-only API+lookup, no session needed
                 "geox_coord_transform_tool": "discovery",  # pure math, no state
                 "geox_blockspace_resolution_tool": "discovery",  # pure math, no state
                 "geox_attribute_registry_list_tool": "discovery",  # registry read
                 "geox_evidence_discover": "discovery",  # evidence search
+                # ── CONTRAST DETECTION (pure computation, no session) ───────────
+                "geox_contrast_detect": "discovery",  # universal contrast detector — read-only computation
+                # ── BIOSTRAT (read-only parse/lookup, no session) ───────────────
+                "geox_biostrat_parse": "discovery",  # text parsing — pure regex
+                "geox_biostrat_nn_age": "discovery",  # NN zone age lookup — table read
+                "geox_biostrat_ruling_check": "discovery",  # contradiction check — read-only
+                "geox_biostrat_falsify": "discovery",  # 8-gate falsification — read-only
+                # ── MAP TOOLS (read-only render/plan, no session) ───────────────
+                "geox_map_layers_list": "discovery",  # layer registry read
+                "geox_map_scene_plan": "discovery",  # scene planning — pure computation
+                "geox_map_render_preview": "discovery",  # preview render — read-only
                 # ═══ STRIKE 3 FIX (2026-06-30): 3 missing aliases ═══════════════
                 "geox_dst_ingest_test": "evidence",  # DST test data ingest
                 "geox_sequence_interpret": "reasoning",  # sequence interpretation (compute-bound, session OK)

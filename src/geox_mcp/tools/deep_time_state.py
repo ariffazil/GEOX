@@ -49,6 +49,7 @@ async def geox_deep_time_state(
     age_bot_ma: float | None = None,
     period: str | None = None,
     query: str | None = None,
+    biozone: str | None = None,
     include_pending_datasets: bool = True,
 ) -> dict:
     """Deep Time State — returns an Earth State Vector for the requested deep time.
@@ -59,6 +60,9 @@ async def geox_deep_time_state(
         age_bot_ma:       Range base (older boundary) in Ma — pair with age_top_ma
         period:           Named period/epoch/era (e.g. "Jurassic", "Late Cretaceous")
         query:            Free-text fuzzy query (e.g. "when dinosaurs ruled")
+        biozone:          NN nannofossil zone (e.g. "NN5", "NN19-20"). Resolved via
+                          Martini (1971) + GPTS2020 age table. Overrides age_ma/period
+                          if both provided — biozone age bracket wins.
         include_pending_datasets:  If True, the envelope includes the
                                   pending_external_datasets list.
 
@@ -85,11 +89,41 @@ async def geox_deep_time_state(
         await geox_deep_time_state(age_ma=66.0)       # K-Pg boundary
         await geox_deep_time_state(period="Jurassic") # 201.4 - 145.0 Ma
         await geox_deep_time_state(query="when dinosaurs ruled")
+        await geox_deep_time_state(biozone="NN5")     # 13.65 - 14.91 Ma (Serravallian)
     """
     logger.info(
-        "geox_deep_time_state called: age_ma=%s age_top_ma=%s age_bot_ma=%s period=%s query=%s",
-        age_ma, age_top_ma, age_bot_ma, period, query,
+        "geox_deep_time_state called: age_ma=%s age_top_ma=%s age_bot_ma=%s period=%s query=%s biozone=%s",
+        age_ma,
+        age_top_ma,
+        age_bot_ma,
+        period,
+        query,
+        biozone,
     )
+
+    # Step 0 — Resolve biozone to age bracket (Phase 2.7, 2026-07-03)
+    biozone_source = None
+    if biozone:
+        from geox_mcp.tools.kernel._biostrat import parse_nn_zone, nn_age
+
+        parsed = parse_nn_zone(biozone)
+        zone_name = parsed["zone"]
+        if zone_name and zone_name != "UNKNOWN":
+            zone_age_top, zone_age_base = nn_age(zone_name)
+            if zone_age_top > -999 and zone_age_base > -999:
+                age_top_ma = zone_age_top
+                age_bot_ma = zone_age_base
+                biozone_source = zone_name
+                logger.info(
+                    "biozone %s resolved to [%.2f, %.2f] Ma via Martini (1971) + GPTS2020",
+                    zone_name,
+                    zone_age_top,
+                    zone_age_base,
+                )
+            else:
+                logger.warning("biozone %s resolved but age lookup failed", zone_name)
+        else:
+            logger.warning("biozone '%s' could not be parsed as NN zone", biozone)
 
     # Step 1 — Resolve the age query to a canonical [top_ma, base_ma] interval
     age_res = resolve_age_query(
@@ -101,8 +135,11 @@ async def geox_deep_time_state(
     )
     logger.info(
         "age resolved: %s [%s, %s] Ma via %s (confidence %.2f, query_type=%s)",
-        age_res.named_unit, age_res.top_ma, age_res.base_ma,
-        age_res.resolution_method, age_res.confidence,
+        age_res.named_unit,
+        age_res.top_ma,
+        age_res.base_ma,
+        age_res.resolution_method,
+        age_res.confidence,
         "interval" if age_res.duration_myr > 5.0 else "point",
     )
 
@@ -116,6 +153,8 @@ async def geox_deep_time_state(
         "age_bot_ma": age_bot_ma,
         "period": period,
         "query": query,
+        "biozone": biozone,
+        "biozone_source": biozone_source,
     }
     pending_datasets = None if include_pending_datasets else []
     envelope = assemble_envelope(

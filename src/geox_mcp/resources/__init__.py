@@ -679,6 +679,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "F6 MARUAH layers (community_territory_flag=True) are exported with F6=FLAGGED. "
             "Example: geox://layers/sabah.basin_outline.v3/package"
         ),
+        mime_type="application/json",
     )(geox_layer_package)
     mcp.resource(
         "geox://layers/index",
@@ -687,17 +688,33 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "license, truth class, bbox, governance gates). Use to discover what "
             "geox://layers/{layer_id}/package exposes."
         ),
+        mime_type="application/json",
     )(geox_layers_index)
-    mcp.resource("geox://reality/context")(geox_reality_context)
-    mcp.resource("geox://identity")(geox_identity)
-    mcp.resource("geox://registry/apps")(list_geox_apps)
-    mcp.resource("geox://profile/status")(get_profile_status)
+    mcp.resource(
+        "geox://reality/context",
+        description="Reality engineering context for agent execution — available tools, evidence, reports, forbidden claims, claim ladder.",
+        mime_type="application/json",
+    )(geox_reality_context)
+    mcp.resource(
+        "geox://identity",
+        description="GEOX identity state — role, authority, seal, version, canon-9 quantities, GDE vocabulary, strat standards.",
+        mime_type="application/json",
+    )(geox_identity)
+    mcp.resource(
+        "geox://registry/apps", description="List of registered GEOX MCP apps and their manifests.", mime_type="application/json"
+    )(list_geox_apps)
+    mcp.resource(
+        "geox://profile/status",
+        description="GEOX profile status — health, enabled dimensions, version, constitutional floors.",
+        mime_type="application/json",
+    )(get_profile_status)
     mcp.resource(
         "tree777://index",
         description=(
             "TREE777 wiki full index. Lists all federation skills, concepts, and scars. "
             "Use this to discover available resources across the arifOS, GEOX, WELL, and WEALTH domains."
         ),
+        mime_type="application/json",
     )(geox_tree777_index)
     mcp.resource(
         "tree777://skills/geox/{name}",
@@ -706,6 +723,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Returns markdown content (frontmatter-stripped) with metadata. "
             "Example: tree777://skills/geox/spatial-grounding"
         ),
+        mime_type="text/markdown",
     )(geox_tree777_skill)
     mcp.resource(
         "tree777://geo/concepts/{name}",
@@ -714,6 +732,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Covers: TREE777, intelligence-tree, mcp-architecture-mapping, etc. "
             "Example: tree777://geo/concepts/TREE777"
         ),
+        mime_type="text/markdown",
     )(geox_tree777_concept)
     mcp.resource(
         "tree777://geo/scars/{name}",
@@ -722,10 +741,12 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Documents failures and lessons learned for geoscience operations. "
             "Example: tree777://geo/scars/geo-seismic-misread"
         ),
+        mime_type="text/markdown",
     )(geox_tree777_scar)
     mcp.resource(
         "geox://capabilities",
         description="Full GEOX capability map: tools, domains, claim limits, next best actions. Read at session start.",
+        mime_type="application/json",
     )(geox_capabilities)
     mcp.resource(
         "geox://resources/{category}/{name}",
@@ -734,58 +755,72 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "Categories: ontology, playbooks, schemas, examples. "
             "Example: geox://resources/ontology/curve_aliases"
         ),
+        mime_type="application/json",
     )(geox_resource)
     mcp.resource(
         "geox://resources/index",
         description="Index of all available resources in the GEOX knowledge pack.",
+        mime_type="application/json",
     )(geox_resources_index)
     mcp.resource(
         "geox://surface/truth",
         description="Validate and report the current surface truth status (the Surface Truth Lock).",
+        mime_type="application/json",
     )(geox_surface_truth)
     mcp.resource(
         "geox://literature/GSM-MADON-2021-MALAY-BASIN",
         description="Fetch literature resource for Mazlan Madon's 2021 GSM Malay Basin paper.",
+        mime_type="application/json",
     )(geox_literature_madon_paper)
     mcp.resource(
         "geox://basins/malay-basin/profile",
         description="Fetch geological profile for Malay Basin.",
+        mime_type="application/json",
     )(geox_basin_malay_profile)
     mcp.resource(
         "geox://literature/index",
         description="Index of all literature resources.",
+        mime_type="application/json",
     )(geox_literature_index)
     mcp.resource(
         "geox://claims/index",
         description="Index of all claims (draft, validated, sealed).",
+        mime_type="application/json",
     )(geox_claims_index)
     mcp.resource(
         "geox://artifacts/index",
         description="Index of all visualizable artifacts.",
+        mime_type="application/json",
     )(geox_artifacts_index)
     mcp.resource(
         "geox://claims/graph",
         description="Visual claim graph nodes and edges.",
+        mime_type="application/json",
     )(geox_claims_graph)
     mcp.resource(
         "geox://basins/index",
         description="Index of all available basins.",
+        mime_type="application/json",
     )(geox_basins_index)
     mcp.resource(
         "geox://resources/prompts/index",
         description="Index of prompts templates.",
+        mime_type="application/json",
     )(geox_resources_prompts_index)
     mcp.resource(
         "geox://resources/playbooks/index",
         description="Index of playbook files.",
+        mime_type="application/json",
     )(geox_resources_playbooks_index)
     mcp.resource(
         "geox://resources/ontology/index",
         description="Index of ontology files.",
+        mime_type="application/json",
     )(geox_resources_ontology_index)
     mcp.resource(
         "geox://resources/schemas/index",
         description="Index of schemas files.",
+        mime_type="application/json",
     )(geox_resources_schemas_index)
 
     # ── Binary render data resources (Module J: Binary Transport) ─────────────
@@ -812,6 +847,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         "geox://render/surfaces/{surface_id}",
         description="Binary surface data (horizon mesh, fault plane). "
         "Returns base64-encoded bytes. Format: geox://render/surfaces/",
+        mime_type="application/octet-stream",
     )(geox_render_surface)
 
     async def geox_render_cube_slice(volume_id: str, orientation: str, slice_index: int) -> str:
@@ -835,6 +871,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
     mcp.resource(
         "geox://render/cubes/{volume_id}/{orientation}/{slice_index}",
         description="Binary cube slice frame (2D from 3D volume). Returns base64-encoded Float32Array bytes.",
+        mime_type="application/octet-stream",
     )(geox_render_cube_slice)
 
     async def geox_render_payload_schema(_version: str = "v1") -> str:
@@ -851,6 +888,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         "geox://render/payload-schema/{_version}",
         description="Canonical RenderPayload schema (Pydantic JSON schema). "
         "Every GEOX visual output conforms to this. Version: v1",
+        mime_type="application/json",
     )(geox_render_payload_schema)
 
     # ── Cube manifest + brick streaming ───────────────────────────────────────
@@ -877,6 +915,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         description="CubeManifest for a 3D seismic volume. "
         "Describes brick grid, LOD pyramid, CRS, and brick URI template. "
         "Client fetches this first before requesting any bricks.",
+        mime_type="application/json",
     )(geox_cube_manifest)
 
     async def geox_cube_brick(cube_id: str, lod: int, ix: int, iy: int, iz: int) -> str:
@@ -905,6 +944,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         description="Binary brick from a 3D seismic cube at specified LOD and brick address. "
         "Returns base64-encoded bytes (Float32 or Int16). "
         "Progressive streaming: start with LOD=0, refine with higher LODs.",
+        mime_type="application/octet-stream",
     )(geox_cube_brick)
 
 
@@ -940,6 +980,7 @@ def geox_earthquake_usgs_summary():
         "Fields: magnitude, location, depth, timestamp, felt reports. "
         "License: USGS Public Domain. "
         "Epistemic status: OBS — authoritative primary source.",
+        mime_type="application/json",
     )(geox_earthquake_usgs_summary)
 
 
@@ -961,6 +1002,7 @@ def geox_earthquake_usgs_fault():
         "Use for: macroseismic magnitude calibration, building damage proxies. "
         "License: USGS Public Domain. "
         "Epistemic status: OBS — crowd-sourced with USGS validation.",
+        mime_type="application/json",
     )(geox_earthquake_usgs_fault)
 
 
@@ -991,6 +1033,7 @@ def geox_emag2v3():
         "inclination (I), declination (D). "
         "License: NOAA Public Domain. "
         "Epistemic status: OBS — satellite (Swarm) + ground observatory composite.",
+        mime_type="application/json",
     )(geox_emag2v3)
 
 
@@ -1013,6 +1056,7 @@ def geox_icgem_vrm():
         "Derived from: CHAMP, Swarm, ground observatories. "
         "License: CC-BY 4.0 (ICGEM/GFZ). "
         "Epistemic status: OBS — multi-source synthesis.",
+        mime_type="application/json",
     )(geox_icgem_vrm)
 
 
@@ -1036,6 +1080,7 @@ def geox_world_magnetic_model():
         "Components: D, I, H, F, X, Y, Z. "
         "License: US DOD/NGA Public Domain. "
         "Epistemic status: OBS — official US/DOD reference model.",
+        mime_type="application/json",
     )(geox_world_magnetic_model)
 
 
@@ -1066,6 +1111,7 @@ def geox_etopo1():
         "free-air gravity reduction. "
         "License: Public Domain. "
         "Epistemic status: OBS — ship soundings + GEOSAT/ERS altimetry.",
+        mime_type="application/json",
     )(geox_etopo1)
 
 
@@ -1089,6 +1135,7 @@ def geox_gebco():
         "Compilation: ship echo-sounder + multi-beam + satellite altimetry + AI. "
         "License: CC-BY 4.0 (GEBCO). "
         "Epistemic status: OBS — TAC-validated crowd-sourced compilation.",
+        mime_type="application/json",
     )(geox_gebco)
 
 
@@ -1111,6 +1158,7 @@ def geox_srtm_plus():
         "Resolution: ~460 m. Combines SRTM land + ship bathymetry + altimetry. "
         "License: SIO/UCSD research use only (not CC-BY). "
         "Epistemic status: OBS — academic composite, high-resolution bathymetry.",
+        mime_type="application/json",
     )(geox_srtm_plus)
 
 
@@ -1140,6 +1188,7 @@ def geox_macrostrat_units():
         "Use for: sequence stratigraphy, Wheeler diagrams, global charts. "
         "License: CC-BY 4.0 (Macrostrat/PaleoBioDB). "
         "Epistemic status: OBS — peer-reviewed geological database.",
+        mime_type="application/json",
     )(geox_macrostrat_units)
 
 
@@ -1161,6 +1210,7 @@ def geox_macrostrat_timescale():
         "Use for: age conversions, stage boundaries, geologic time scale. "
         "License: CC-BY 4.0. "
         "Epistemic status: OBS — International Commission on Stratigraphy standard.",
+        mime_type="application/json",
     )(geox_macrostrat_timescale)
 
 
@@ -1183,6 +1233,7 @@ def geox_onegeology():
         "Use for: regional geology context, surface geology, fault traces. "
         "License: LGWM Open Data License (CC-BY variant). "
         "Epistemic status: OBS — national survey compilation via WMS.",
+        mime_type="application/json",
     )(geox_onegeology)
 
 
@@ -1213,6 +1264,7 @@ def geox_gplates_velocity():
         "Models: MORVEL, GSRM, NUVEL-1A. "
         "License: GPL (GPlates team / U. Sydney). "
         "Epistemic status: OBS — kinematic model reconstruction.",
+        mime_type="application/json",
     )(geox_gplates_velocity)
 
 
@@ -1235,6 +1287,7 @@ def geox_gplates_paleomask():
         "paleobathymetry. "
         "License: GPL (GPlates team). "
         "Epistemic status: OBS — CGMW-based reconstruction model.",
+        mime_type="application/json",
     )(geox_gplates_paleomask)
 
 
@@ -1264,6 +1317,7 @@ def geox_earthchem():
         "magma chemistry, alteration signatures. "
         "License: CEED Data Policy (restrictive — verify usage terms). "
         "Epistemic status: OBS — published geochemical data compilation.",
+        mime_type="application/json",
     )(geox_earthchem)
 
 
@@ -1294,6 +1348,7 @@ def geox_copernicus_bathymetry():
         "License: CC-BY 4.0 (Copernicus). "
         "⚠️ Requires registration at marine.copernicus.eu. "
         "Epistemic status: OBS — EU Copernicus public service product.",
+        mime_type="application/json",
     )(geox_copernicus_bathymetry)
 
 
@@ -1317,6 +1372,7 @@ def geox_copernicus_sea_level():
         "License: CC-BY 4.0 (Copernicus). "
         "⚠️ Requires registration at marine.copernicus.eu. "
         "Epistemic status: OBS — satellite altimetry (TOPEX/Poseidon → Sentinel-6).",
+        mime_type="application/json",
     )(geox_copernicus_sea_level)
 
 
@@ -1349,6 +1405,7 @@ def geox_era5_atmosphere():
         "License: CC-BY 4.0 (ECMWF/Copernicus). "
         "⚠️ Requires registration at cds.climate.copernicus.eu. "
         "Epistemic status: OBS — 4D-Var reanalysis model output.",
+        mime_type="application/json",
     )(geox_era5_atmosphere)
 
 
@@ -1372,6 +1429,7 @@ def geox_era5_pressure():
         "License: CC-BY 4.0. "
         "⚠️ Requires registration. "
         "Epistemic status: OBS — 4D-Var reanalysis model output.",
+        mime_type="application/json",
     )(geox_era5_pressure)
 
 
@@ -1400,6 +1458,7 @@ def geox_ihfc_heatflow():
         "lithospheric thickness proxies. "
         "License: Varies by contributing dataset (verify before publication). "
         "Epistemic status: OBS — direct borehole measurement database.",
+        mime_type="application/json",
     )(geox_ihfc_heatflow)
 
 
@@ -1421,6 +1480,7 @@ def geox_global_heatflow():
         "Use for: basin thermal history calibration. "
         "License: USGS Public Domain (where applicable). "
         "Epistemic status: OBS — direct measurement compilation.",
+        mime_type="application/json",
     )(geox_global_heatflow)
 
 
@@ -1449,6 +1509,7 @@ def geox_usgs_water():
         "sediment load proxies, basinal hydrology context. "
         "License: USGS Public Domain. "
         "Epistemic status: OBS — direct measurement gaging network.",
+        mime_type="application/json",
     )(geox_usgs_water)
 
 
@@ -1477,6 +1538,7 @@ def geox_magic_paleomag():
         "paleolatitude reconstructions, GPlates anchoring. "
         "License: Variable (verify per contributing dataset). "
         "Epistemic status: OBS — published paleomagnetic database.",
+        mime_type="application/json",
     )(geox_magic_paleomag)
 
 
@@ -1505,6 +1567,7 @@ def geox_nso_solar():
         "climate archive correlations, Maunder minimum analogs. "
         "License: NSO data policy (verify before publication). "
         "Epistemic status: OBS — direct solar telescope observation.",
+        mime_type="application/json",
     )(geox_nso_solar)
 
 
@@ -1528,6 +1591,7 @@ def geox_kp_index():
         "satellite drag, infrastructure risk. "
         "License: GFZ Potsdam (verify before publication). "
         "Epistemic status: OBS — global observatory magnetometer network.",
+        mime_type="application/json",
     )(geox_kp_index)
 
 
@@ -1556,6 +1620,7 @@ def geox_deeptime_co2():
         "License: USDE (verify). "
         "Status: PENDING — requires GEOCARB source code review. "
         "Epistemic status: DER — biogeochemical forward model.",
+        mime_type="application/json",
     )(geox_deeptime_co2)
 
 
@@ -1579,6 +1644,7 @@ def geox_deeptime_d18o():
         "License: Nature Publishing Group (verify). "
         "Status: PENDING — GPTS CSV ingestion in deep_time/data_loaders.py. "
         "Epistemic status: OBS — geochemical measurement proxy.",
+        mime_type="application/json",
     )(geox_deeptime_d18o)
 
 
@@ -1601,6 +1667,7 @@ def geox_deeptime_temperature():
         "hyperthermal events. "
         "Status: PENDING — proxy calibration review required. "
         "Epistemic status: DER — multi-proxy temperature estimation.",
+        mime_type="application/json",
     )(geox_deeptime_temperature)
 
 
@@ -1623,6 +1690,7 @@ def geox_deeptime_sea_level():
         "transgressive-regressive cycles. "
         "Status: PENDING — coastal onlap integration required. "
         "Epistemic status: DER — backstripping analysis + sequence correlation.",
+        mime_type="application/json",
     )(geox_deeptime_sea_level)
 
 
@@ -1646,6 +1714,7 @@ def geox_deeptime_o2():
         "License: USDE (verify). "
         "Status: PENDING. "
         "Epistemic status: DER — biogeochemical forward model.",
+        mime_type="application/json",
     )(geox_deeptime_o2)
 
     # ---------------------------------------------------------------------------
