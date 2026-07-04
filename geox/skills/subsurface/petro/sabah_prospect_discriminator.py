@@ -649,6 +649,34 @@ def _climate_regime(age_ma: Optional[float]) -> str:
     return "Transition"
 
 
+def _climate_regime_strict(age_ma: Optional[float]) -> str:
+    """
+    Strict climate regime classification (Eureka fix — Megah 22 Ma).
+
+    The original _climate_regime uses broad ranges that can misclassify
+    Oligocene (22 Ma) as Icehouse due to boundary overlap. This function
+    uses strict boundaries aligned with Badali 2024 Figure 2.
+
+    Age boundaries:
+      - Greenhouse: >33.9 Ma (Eocene and older)
+      - Transition: 30–33.9 Ma (Oligocene transition)
+      - Icehouse: 5.3–30 Ma (Miocene)
+      - Post-Icehouse: <5.3 Ma (Pliocene–Recent)
+
+    Returns:
+        "Greenhouse" | "Transition" | "Icehouse" | "Post-Icehouse" | "unknown"
+    """
+    if age_ma is None:
+        return "unknown"
+    if age_ma < 5.3:
+        return "Post-Icehouse"
+    if age_ma <= 30.0:
+        return "Icehouse"
+    if age_ma <= 33.9:
+        return "Transition"
+    return "Greenhouse"
+
+
 def discriminate_prospect(
     prospect_name: Optional[str] = None,  # Required for explicit calls; auto-set when use_known_prospect
     # ── Domain 1: Geometry ───────────────────────────────────────────────
@@ -847,7 +875,7 @@ def discriminate_prospect(
         status_confidence = min(carbonate_confidence * 0.70, 0.90)
 
     # ── 7. Assemble result ────────────────────────────────────────────────────
-    climate = _climate_regime(age_ma if prospect is None else prospect.age_ma)
+    climate = _climate_regime_strict(age_ma if prospect is None else prospect.age_ma)
 
     return ProspectDiscriminationResult(
         prospect_name=prospect_name,
