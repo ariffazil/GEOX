@@ -47,6 +47,16 @@ jobs:
           python-version: "3.12"
           cache: pip
 
+      - name: Install GDAL system dependencies
+        # GEOX pyproject pins gdal>=3.13.1 — the wrapper package needs the GDAL
+        # C library + gdal-config binary at wheel-build time. Debian trixie runners
+        # ship libgdal32 (no -dev header, no gdal-config); install both explicitly.
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libgdal-dev gdal-bin
+          gdal-config --version
+
       - name: Install
         run: pip install -e ".[dev]" --quiet
 
@@ -156,12 +166,20 @@ jobs:
           # Standard CI status
           STANDARD_OK="${{ needs.standard.result }}"
           echo "Lane 1 (Standard CI): $STANDARD_OK"
-          
-          # BIJAKSANA metrics
+
+          # BIJAKSANA metrics — provide safe defaults so the JSON template stays
+          # valid even if Lane 2 fails entirely (which would otherwise produce
+          # '"ds": ,' and crash JSON.parse at the GitHub-script step).
+          DS="${DS:-0}"
+          PHI="${PHI:-0}"
+          PSI="${PSI:-NO_MANIFEST}"
+          OMEGA="${OMEGA:-ERROR}"
           DS="${{ needs.bijaksana.outputs.ds-value }}"
           PHI="${{ needs.bijaksana.outputs.phi-value }}"
           PSI="${{ needs.bijaksana.outputs.psi-value }}"
           OMEGA="${{ needs.bijaksana.outputs.omega-value }}"
+          # Re-apply defaults after substitution (overrides empty/missing upstream)
+          : "${DS:=0}" "${PHI:=0}" "${PSI:=NO_MANIFEST}" "${OMEGA:=ERROR}"
           echo "ΔS = $DS"
           echo "Φ  = $PHI"
           echo "Ψ  = $PSI"
