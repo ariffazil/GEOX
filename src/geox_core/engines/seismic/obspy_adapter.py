@@ -90,7 +90,6 @@ class ObsPyAdapter:
                 "ObsPy is required for seismic operations. "
                 "Install with: pip install 'geox[seismic]'"
             ) from exc
-            )
 
     def _sha256_params(self, params: dict) -> str:
         """Fingerprint parameters for reproducibility."""
