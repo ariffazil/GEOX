@@ -158,6 +158,15 @@ class GeoxGovernanceMiddleware(Middleware):
                     f"Use geox_surface_status(mode='registry') to enumerate available tools."
                 )
 
+        # ── T7: Deprecation warning for backward-compat aliases ──
+        # If tool is in compat surface but NOT in canonical public surface, warn.
+        if tool_name not in self._PUBLIC_SURFACE and tool_name in self._EXECUTABLE_SURFACE:
+            logger.warning(
+                f"DEPRECATED: Tool '{tool_name}' is a backward-compat alias. "
+                f"Canonical tool names are available via geox_surface_status(mode='registry'). "
+                f"Scheduled removal: 2026-07-30."
+            )
+
         # ── RT3: irreversible tools require explicit ack_irreversible=True ──
         # The check is MODE-aware, not just tool-name. Read-only / screen / compute
         # / preview modes do NOT require ack_irreversible. Only the SEAL mode of
