@@ -33,3 +33,4 @@ node_modules/
 ops/reports/*.csv
 resources/macrostrat_cache/
 src/arifos_geox.egg-info/
+.audit_output.txt
