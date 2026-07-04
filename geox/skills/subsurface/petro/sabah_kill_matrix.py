@@ -500,6 +500,107 @@ def _K006_reservoir_quality_precheck(
     )
 
 
+def _K007_mud_volcano_probability(
+    has_chaotic_surface: Optional[bool] = None,
+    has_no_internal_reflectors: Optional[bool] = None,
+    has_no_rim: Optional[bool] = None,
+    is_isolated_mound_in_deep_water: Optional[bool] = None,
+    slope_angle_deg: Optional[float] = None,
+    age_ma: Optional[float] = None,
+) -> KillFilterResult:
+    """
+    K007 — Mud Volcano Probability Assessment (Eureka #5)
+
+    Computes probability that a prospect is a mud volcano (not carbonate).
+    Based on Sabah-specific false positive taxonomy from three-agent test.
+
+    Mud Volcano Signature (Pekaka archetype):
+      - Chaotic seismic surface (no coherent geometry)
+      - No rim crest
+      - No internal reflectors
+      - Isolated mound in deep water
+      - Steep slope (>40°) in non-Icehouse setting
+
+    Probability scoring:
+      - 0.0–0.3: LOW (likely carbonate)
+      - 0.3–0.6: MEDIUM (uncertain — needs well control)
+      - 0.6–0.8: HIGH (likely mud volcano)
+      - 0.8–1.0: VERY HIGH (almost certainly mud volcano)
+
+    HARD KILL: probability > 0.8 → KILL
+    REVIEW: probability 0.6–0.8 → REVIEW
+    PROCEED: probability < 0.6 → PROCEED
+
+    Source: Three-agent test (2026-07-04) — Pekaka killed by K005, confirmed mud volcano.
+    """
+    probability = 0.0
+    evidence_parts = []
+
+    # Signal 1: Chaotic surface (weight: 0.30)
+    if has_chaotic_surface is True:
+        probability += 0.30
+        evidence_parts.append("chaotic surface (+0.30)")
+
+    # Signal 2: No internal reflectors (weight: 0.25)
+    if has_no_internal_reflectors is True:
+        probability += 0.25
+        evidence_parts.append("no internal reflectors (+0.25)")
+
+    # Signal 3: No rim crest (weight: 0.20)
+    if has_no_rim is True:
+        probability += 0.20
+        evidence_parts.append("no rim crest (+0.20)")
+
+    # Signal 4: Isolated mound in deep water (weight: 0.15)
+    if is_isolated_mound_in_deep_water is True:
+        probability += 0.15
+        evidence_parts.append("isolated mound in deep water (+0.15)")
+
+    # Signal 5: Steep slope in non-Icehouse (weight: 0.10)
+    if slope_angle_deg is not None and slope_angle_deg > 40:
+        is_icehouse = age_ma is not None and 5.3 <= age_ma <= 30
+        if not is_icehouse:
+            probability += 0.10
+            evidence_parts.append(f"steep slope {slope_angle_deg:.0f}° in non-Icehouse (+0.10)")
+
+    # Cap at 1.0
+    probability = min(probability, 1.0)
+
+    # Verdict
+    if probability > 0.8:
+        return KillFilterResult(
+            filter_name="K007_mud_volcano_probability",
+            verdict=KillVerdict.KILL,
+            evidence=f"probability={probability:.2f} — {'; '.join(evidence_parts)}",
+            threshold="probability > 0.8 = VERY HIGH mud volcano risk",
+            kill_logic="Multiple mud volcano indicators present. Prospect matches Pekaka archetype (chaotic + no rim + no reflectors). Eureka #5: this is the mud volcano false positive signature.",
+        )
+    elif probability > 0.6:
+        return KillFilterResult(
+            filter_name="K007_mud_volcano_probability",
+            verdict=KillVerdict.REVIEW,
+            evidence=f"probability={probability:.2f} — {'; '.join(evidence_parts)}",
+            threshold="probability 0.6–0.8 = HIGH mud volcano risk",
+            kill_logic="Significant mud volcano indicators. Requires well control or additional seismic to confirm carbonate architecture.",
+        )
+    elif probability > 0.3:
+        return KillFilterResult(
+            filter_name="K007_mud_volcano_probability",
+            verdict=KillVerdict.REVIEW,
+            evidence=f"probability={probability:.2f} — {'; '.join(evidence_parts)}",
+            threshold="probability 0.3–0.6 = MEDIUM mud volcano risk",
+            kill_logic="Some mud volcano indicators present. Proceed with caution — verify carbonate architecture.",
+        )
+    else:
+        return KillFilterResult(
+            filter_name="K007_mud_volcano_probability",
+            verdict=KillVerdict.PROCEED,
+            evidence=f"probability={probability:.2f} — no mud volcano indicators",
+            threshold="probability < 0.3 = LOW mud volcano risk",
+            kill_logic="No mud volcano indicators. Prospect consistent with carbonate architecture.",
+        )
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # MASTER KILL MATRIX
 # ─────────────────────────────────────────────────────────────────────────────
@@ -511,6 +612,7 @@ KILL_FILTERS = [
     _K004_rim_crest_amplitude_test,
     _K005_false_positive_indicator_test,
     _K006_reservoir_quality_precheck,
+    _K007_mud_volcano_probability,
 ]
 
 
@@ -531,10 +633,19 @@ def apply_kill_matrix(
     porosity_fraction: Optional[float] = None,
 ) -> KillMatrixResult:
     """
-    Apply all 6 hard kill filters to a Sabah carbonate prospect.
+    Apply all 7 hard kill filters to a Sabah carbonate prospect.
 
     HARD RULE: ANY KILL → prospect is rejected.
     REVIEW count > 0 → treat as KILL until resolved.
+
+    Filters:
+      K001: Climate-Archetype Fit (Icehouse vs Greenhouse)
+      K002: Slope Angle Geometry
+      K003: Resolution-Thickness Test
+      K004: Rim Crest Amplitude Test
+      K005: False Positive Indicator Test (mud volcano detection)
+      K006: Reservoir Quality Pre-Check
+      K007: Mud Volcano Probability Assessment (Eureka #5)
 
     Parameters
     ----------
@@ -598,6 +709,9 @@ def apply_kill_matrix(
             has_chaotic_surface, has_no_internal_reflectors, is_isolated_mound_in_deep_water, slope_angle_deg
         ),
         _K006_reservoir_quality_precheck(porosity_fraction, vp_m_s, carbonate_thickness_m),
+        _K007_mud_volcano_probability(
+            has_chaotic_surface, has_no_internal_reflectors, has_no_rim, is_isolated_mound_in_deep_water, slope_angle_deg, age_ma
+        ),
     ]
 
     kill_count = sum(1 for f in filters if f.verdict == KillVerdict.KILL)

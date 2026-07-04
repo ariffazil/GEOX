@@ -143,6 +143,149 @@ Use `geox_claim` grammar (evidence_for / evidence_against) even when the claim i
 
 ---
 
+## 🔥 Thermal History Protocol (FORGED 2026-07-04 — Eureka #4)
+
+When thermochronological data is available (U-Pb, Ar/Ar, fission track, (U-Th)/He):
+
+1. **Extract** closure temperatures per system (zircon U-Pb ~900°C, biotite Ar/Ar ~350°C, ZFT ~240°C, AHe ~70°C)
+2. **Compute** cooling rate: ΔT/Δt (°C/Myr) using `geox_core/physics/thermal_history.py`
+3. **Compute** exhumation rate: cooling_rate / geothermal_gradient (mm/yr)
+4. **Label** every value: DER (derived from physics)
+5. **Flag** if cooling rate > 100°C/Myr → "TECTONIC UNROOFING" (not erosional)
+
+**Reference:** Cottam et al. 2013 — Kinabalu granite cooling rate 360°C/Myr confirms tectonic unroofing (36–360× faster than erosional exhumation).
+
+**Tool:** `python -c "from geox_core.physics.thermal_history import kinabalu_cooling_path; r = kinabalu_cooling_path(); print(r.interpretation)"`
+
+---
+
+## ⚠️ Active Tectonics Protocol (FORGED 2026-07-04 — Eureka #3)
+
+When evaluating prospects in tectonically active basins:
+
+1. **Check** for active faults (GPS, seismicity, geomorphology)
+2. **If active faults present** → flag "trap integrity is time-dependent"
+3. **Estimate** fault reactivation recurrence interval (if data available)
+4. **Note:** seal capacity decreases with each reactivation event
+5. **Label:** INT (interpreted from tectonic context)
+
+**Sabah example:** 2015 Mw 6.0 Kinabalu earthquake on 200-km normal fault system. GPS shows few mm/yr westward motion. Every prospect has a "shelf life" determined by the seismic cycle.
+
+---
+
+## 🎯 False Positive Taxonomy (FORGED 2026-07-04 — Eureka #5)
+
+Sabah-specific false positive signatures (from three-agent test):
+
+| False Positive | Seismic Signature | Kill Signal |
+|---|---|---|
+| **Mud volcano** | Chaotic surface, no rim, no internal reflectors | K005 + K007 |
+| **Volcanic intrusion** | Steep slope >40°, no internal reflectors, non-Icehouse | K002 + K005 |
+| **Basement high** | High Vp (>5.5 km/s), no onlap, no mounding | K006 |
+| **Salt diapir** | Transparent core, rim syncline, no carbonate architecture | K005 |
+
+**Kill matrix now has 7 filters** (K001–K007). K007 computes mud volcano probability from 5 seismic indicators.
+
+**Pekaka archetype:** Chaotic + no rim + no reflectors + isolated mound + steep slope = mud volcano. Any prospect matching this signature should be IMMEDIATELY killed.
+
+---
+
+## 📄 Scientific Writing Protocol (FORGED 2026-07-04 — Representation Engineering)
+
+GEOX can produce scientific papers, not just evidence envelopes. This is **representation engineering** — compressing observations into navigable knowledge.
+
+### When to Use
+
+- Basin synthesis reports
+- Prospect evaluation documents
+- Tectonic evolution summaries
+- Kill matrix evidence reports
+- Multi-agent validation outputs
+
+### Paper Structure Template
+
+```
+1. ABSTRACT — One paragraph, governing model, epistemic band
+2. INTRODUCTION — The enigma: what doesn't fit?
+3. METHODS — Data sources, tools used, constitutional constraints
+4. RESULTS — Figures + tables with epistemic labels
+5. DISCUSSION — Governing model, Eureka insights, representation insight
+6. CONCLUSIONS — One governing sentence
+7. PROVENANCE — All references with DOIs
+```
+
+### Figure Generation Protocol
+
+Every paper must include:
+1. **Location map** — structural elements, GPS vectors, faults
+2. **Cross-section** — depth-partitioned model
+3. **Key data plot** — cooling path, velocity profile, etc.
+4. **Summary dashboard** — kill matrix, Eureka grid, etc.
+
+Tools: `matplotlib` + `reportlab` for PDF assembly.
+Template: `/root/forge_work/2026-07-04/sabah_pdf_generator.py`
+
+### Epistemic Labeling (MANDATORY)
+
+Every claim in every paper carries:
+- **OBS** — Observed (direct measurement)
+- **DER** — Derived (computed from physics)
+- **INT** — Interpreted (model-dependent)
+- **SPEC** — Speculative (hypothesis)
+
+No claim without label. No label without evidence.
+
+### Provenance Chain (MANDATORY)
+
+Every figure, table, and claim traces to:
+```
+Source paper → Data → Computation → Claim → Label
+```
+
+Example:
+```
+Cottam et al. 2013 (JGS) → U-Pb zircon ages → cooling rate computation → 360°C/Myr → DER
+```
+
+### Three-Agent Validation (RECOMMENDED)
+
+Before publishing, test with three agents:
+1. **Vanilla** — no special tools, baseline comprehension
+2. **Domain-specific** — GEOX tools only
+3. **Full stack** — arifOS + all organs
+
+Compare: qualitative depth, quantitative rigor, physical reality.
+
+### Citation Format
+
+```
+Author et al. Year (Journal) — Key finding [OBS/DER/INT]
+```
+
+Example:
+```
+Cottam et al. 2013 (JGS) — Kinabalu granite cooling rate 360°C/Myr [DER]
+```
+
+### Output Formats
+
+| Format | Use When | Tool |
+|---|---|---|
+| PDF | Final deliverable | `reportlab` |
+| Markdown | Draft/review | Direct output |
+| LaTeX | Journal submission | Template-based |
+| HTML | Web publication | `iron-shell-render` |
+
+### Governance
+
+- **F2 TRUTH**: Every claim labeled
+- **F7 HUMILITY**: Confidence capped at 0.90
+- **F10 ONTOLOGY**: Canonical terminology
+- **F11 AUDIT**: Full provenance chain
+- **F13 SOVEREIGN**: Arif decides what gets published
+
+---
+
 ## Federation Position
 
 ```
