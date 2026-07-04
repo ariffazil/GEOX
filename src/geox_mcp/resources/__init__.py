@@ -179,7 +179,7 @@ async def geox_capabilities() -> str:
 
 async def geox_resource(category: str, name: str) -> str:
     """Serve any file from the resources/ directory as an MCP resource."""
-    allowed_categories = {"ontology", "playbooks", "schemas", "examples", "prompts"}
+    allowed_categories = {"ontology", "playbooks", "schemas", "examples"}
     if category not in allowed_categories:
         return json.dumps({"error": f"Invalid category: {category}"})
 
@@ -292,7 +292,7 @@ async def geox_layer_package(layer_id: str) -> str:
 
 async def geox_resources_index() -> str:
     index = {}
-    for category in ["ontology", "playbooks", "schemas", "examples", "prompts"]:
+    for category in ["ontology", "playbooks", "schemas", "examples"]:
         cat_dir = RESOURCES_DIR / category
         if cat_dir.exists():
             files = [f.name for f in cat_dir.iterdir() if f.is_file()]
@@ -617,10 +617,6 @@ async def geox_basins_index() -> str:
     return json.dumps(basins, indent=2)
 
 
-async def geox_resources_prompts_index() -> str:
-    return await geox_resources_sub_index("prompts")
-
-
 async def geox_resources_playbooks_index() -> str:
     return await geox_resources_sub_index("playbooks")
 
@@ -802,11 +798,6 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         description="Index of all available basins.",
         mime_type="application/json",
     )(geox_basins_index)
-    mcp.resource(
-        "geox://resources/prompts/index",
-        description="Index of prompts templates.",
-        mime_type="application/json",
-    )(geox_resources_prompts_index)
     mcp.resource(
         "geox://resources/playbooks/index",
         description="Index of playbook files.",
