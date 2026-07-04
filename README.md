@@ -261,6 +261,41 @@ make forge        # security-audit (Trivy + Semgrep + Gitleaks + Ruff)
 
 ---
 
+## 🔌 MCP Connection
+
+Connect to GEOX via the Model Context Protocol:
+
+| Property | Value |
+|----------|-------|
+| **Endpoint** | `https://geox.arif-fazil.com/mcp` |
+| **Transport** | Streamable HTTP (JSON-RPC 2.0) |
+| **Tools** | 46 canonical tools |
+| **Health** | `https://geox.arif-fazil.com/health` |
+
+### Claude Code / Cursor
+
+Add to your MCP client config:
+```json
+{
+  "mcpServers": {
+    "geox": {
+      "url": "https://geox.arif-fazil.com/mcp"
+    }
+  }
+}
+```
+
+### Direct Usage
+
+```bash
+curl -X POST https://geox.arif-fazil.com/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/list","id":1}'
+```
+
+---
+
 ## 4. CAPABILITY MAP — 30 CANONICAL TOOLS
 
 All 30 canonical tools are callable via the single gateway at `https://mcp.arif-fazil.com/mcp` (HTTP) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, epistemic tags, uncertainty bands, provenance, and a `godel_wall` verdict. Every call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
@@ -799,13 +834,7 @@ systemctl status geox-mcp
 systemctl restart geox-mcp
 journalctl -u geox-mcp -n 50 --no-pager
 ```
-
 ---
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║                                                                  ║
-║    GEOX does not tell you where to drill.                        ║
 ║    GEOX tells you what the Earth looks like.                     ║
 ║                                                                  ║
 ║    arifOS tells you if the evidence is admissible.               ║
