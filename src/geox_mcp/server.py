@@ -1830,7 +1830,12 @@ def _safe_forward(
 
     sig = _inspect.signature(impl)
     accepted = set(sig.parameters.keys())
-    args: dict[str, Any] = {k: v for k, v in explicit_args.items() if k in accepted and v is not None}
+    # Clean explicit args to prevent client spoofing of identity/trace variables
+    clean_explicit = {
+        k: v for k, v in explicit_args.items()
+        if k not in ("session_id", "actor_id", "trace_id")
+    }
+    args: dict[str, Any] = {k: v for k, v in clean_explicit.items() if k in accepted and v is not None}
     if "session_id" in accepted and session_id:
         args["session_id"] = session_id
     if "actor_id" in accepted and actor_id:
