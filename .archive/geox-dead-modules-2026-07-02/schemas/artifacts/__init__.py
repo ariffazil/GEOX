@@ -1,1 +1,0 @@
-../../../src/geox_core/schemas/artifacts/__init__.py

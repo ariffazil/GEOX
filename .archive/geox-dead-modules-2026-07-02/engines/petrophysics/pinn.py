@@ -1,1 +1,0 @@
-../../../src/geox_core/engines/petrophysics/pinn.py

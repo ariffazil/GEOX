@@ -1,1 +1,0 @@
-../../src/geox_core/compatibility/legacy_aliases.py

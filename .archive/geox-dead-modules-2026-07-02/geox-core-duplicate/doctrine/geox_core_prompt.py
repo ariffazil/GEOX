@@ -1,1 +1,0 @@
-../../../src/geox_core/core/doctrine/geox_core_prompt.py
