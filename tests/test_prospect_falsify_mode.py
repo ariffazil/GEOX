@@ -73,14 +73,64 @@ class TestProspectFalsifyMode:
 
     @pytest.mark.asyncio
     async def test_hc_column_exceeds_twice_seal_capacity(self):
-        """HC column > 2× seal_thickness → seal capacity exceeded."""
+        """Fallback: HC > 2× seal_thickness with NO capillary params → heuristic contradiction."""
         r = await geox_prospect(
             prospect_ref="TEST",
             mode="falsify",
             structural_map_inline={"estimated_column_height_m": 300, "seal_thickness_m": 50},
+            # No capillary params → falls back to heuristic rule
         )
         assert r["falsified"] is True
-        assert any("exceeds critical seal capacity" in c for c in r["results"]["contradictions"])
+        assert any("exceeds 2× seal thickness" in c for c in r["results"]["contradictions"])
+
+    @pytest.mark.asyncio
+    async def test_hc_column_exceeds_real_capillary_seal_capacity(self):
+        """R2: HC column > H_crit from real capillary physics → physics contradiction.
+
+        50nm shale seal, gas, gamma=0.055 N/m:
+          Pc = 2×0.055×1 / 50e-9 = 2.2 MPa
+          Δρ = (1030-200)×9.81 = 8142 Pa/m
+          H_crit = 2.2e6 / 8142 ≈ 270 m
+
+        HC=300m > 270m → contradiction.
+        """
+        r = await geox_prospect(
+            prospect_ref="VALID-GAS",
+            mode="falsify",
+            structural_map_inline={"estimated_column_height_m": 300},
+            r_pore_nm=50,
+            gamma_n_m=0.055,
+            contact_angle_deg=0,
+            rho_water_gcc=1.03,
+            rho_hc_gcc=0.20,
+            fluid_type="gas",
+        )
+        assert r["falsified"] is True
+        # Check physics note carries capillary computation
+        notes = r["results"].get("physics_notes", [])
+        assert any("H_crit" in n for n in notes), f"Expected H_crit in physics_notes, got: {notes}"
+        # Check contradiction mentions physics-based failure
+        assert any("physically-retainable" in c or "H_crit" in c for c in r["results"]["contradictions"]), (
+            f"Expected physics-based contradiction, got: {r['results']['contradictions']}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_hc_below_real_capillary_seal_capacity(self):
+        """HC column below H_crit → no contradiction (even if 2× seal_thickness fails)."""
+        r = await geox_prospect(
+            prospect_ref="VALID-GAS",
+            mode="falsify",
+            structural_map_inline={"estimated_column_height_m": 100, "seal_thickness_m": 50},
+            r_pore_nm=50,
+            gamma_n_m=0.055,
+            contact_angle_deg=0,
+            rho_water_gcc=1.03,
+            rho_hc_gcc=0.20,
+            fluid_type="gas",
+        )
+        assert r["falsified"] is False
+        assert r["apex_score"]["G"] == 0.85
+        assert r["apex_score"]["C_dark"] == 0.15
 
     # ── Gap Detection ────────────────────────────────────────────────────
 
