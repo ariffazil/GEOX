@@ -17,4 +17,8 @@ async def geox_physical_reality_interpret(image_path: str, output_dir: str = "/t
 
     epistemic: OBS_IMAGE → DER_ATTRIBUTE → INT_SEISMIC
     """
-    return await asyncio.get_event_loop().run_in_executor(None, lambda: GeoxPhysicalReality().interpret(image_path, output_dir))
+    result = await asyncio.get_event_loop().run_in_executor(None, lambda: GeoxPhysicalReality().interpret(image_path, output_dir))
+    # interpret() returns 'verdict', not 'status' — normalize for MCP envelope
+    if "verdict" in result and "status" not in result:
+        result["status"] = result["verdict"]
+    return result
