@@ -5,7 +5,7 @@ federation_release: v2026.07.04-MCP-A2A
 changelog: /root/CHANGELOG-2026-07-04.md
 a2a_agent_json: /root/GEOX/.well-known/agent.json
 valid_from: 2026-06-14
-valid_until: 2026-08-04
+valid_until: 2026-08-05
 confidence: high
 scope: /root/geox
 -->
