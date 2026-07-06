@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """
 GEOX Earth Atlas — Phase 1 (Merged)
-geox_atlas — Point-in-country lookup + land/water classifier
+geox_atlas — Point-in-country lookup + land/water classifier + EEZ attribution
 Uses local Natural Earth GeoJSON for sovereign offline-capable queries.
+
+FIX 2026-07-06: Added EEZ attribution for offshore points.
+  Previously all water points returned country=None with no jurisdiction.
+  Now returns sovereign_eez, eez_status, and fiscal_regime hints for
+  known offshore petroleum provinces.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
@@ -144,6 +149,198 @@ def _point_in_multipolygon(lat: float, lon: float, multipolygon: list) -> bool:
     return False
 
 
+# ── EEZ Attribution Registry ──────────────────────────────────────────────────
+# FIX 2026-07-06: Lightweight EEZ lookup for offshore petroleum provinces.
+# Bounding-box approach — checks if a point falls within a known EEZ polygon.
+# Source: Marine Regions v12 (CC-BY-4.0, DOI 10.14284/632) simplified to bbox.
+# For production, replace with actual GeoJSON polygons from Marine Regions download.
+
+_EEZ_REGISTRY: list[dict[str, Any]] = [
+    # South America
+    {
+        "sovereign": "Suriname",
+        "iso3": "SUR",
+        "bbox": [-56.5, 5.0, -53.0, 10.0],
+        "fiscal_regime": "PSC 6.25% royalty + 36% CIT",
+        "nocs": ["Staatsolie"],
+    },
+    {
+        "sovereign": "Guyana",
+        "iso3": "GUY",
+        "bbox": [-61.0, 5.0, -56.5, 10.0],
+        "fiscal_regime": "PSC 2% royalty + 10% CIT",
+        "nocs": [],
+    },
+    {
+        "sovereign": "Trinidad and Tobago",
+        "iso3": "TTO",
+        "bbox": [-62.5, 9.5, -59.5, 11.5],
+        "fiscal_regime": "PSC/royalty",
+        "nocs": ["Heritage"],
+    },
+    {
+        "sovereign": "Brazil",
+        "iso3": "BRA",
+        "bbox": [-50.0, -35.0, -34.0, 5.0],
+        "fiscal_regime": "Production-sharing + concession",
+        "nocs": ["Petrobras"],
+    },
+    {
+        "sovereign": "Venezuela",
+        "iso3": "VEN",
+        "bbox": [-73.0, 8.0, -59.0, 12.5],
+        "fiscal_regime": "Concession/JOA",
+        "nocs": ["PDVSA"],
+    },
+    # West Africa
+    {"sovereign": "Nigeria", "iso3": "NGA", "bbox": [2.5, 3.0, 9.0, 6.5], "fiscal_regime": "PSC/JV", "nocs": ["NNPC"]},
+    {
+        "sovereign": "Ghana",
+        "iso3": "GHA",
+        "bbox": [-3.5, 3.5, 1.5, 6.5],
+        "fiscal_regime": "PSC/Exploration license",
+        "nocs": ["GNPC"],
+    },
+    {
+        "sovereign": "Angola",
+        "iso3": "AGO",
+        "bbox": [8.0, -18.0, 14.0, -5.0],
+        "fiscal_regime": "PSC/Concession",
+        "nocs": ["Sonangol"],
+    },
+    {
+        "sovereign": "Equatorial Guinea",
+        "iso3": "GNQ",
+        "bbox": [8.0, 0.5, 12.0, 3.0],
+        "fiscal_regime": "PSC",
+        "nocs": ["GEPetrol"],
+    },
+    {
+        "sovereign": "Mozambique",
+        "iso3": "MOZ",
+        "bbox": [35.0, -27.0, 45.0, -10.0],
+        "fiscal_regime": "PSC/Concession",
+        "nocs": ["ENH"],
+    },
+    # SE Asia
+    {"sovereign": "Malaysia", "iso3": "MYS", "bbox": [99.5, 0.5, 119.5, 7.5], "fiscal_regime": "PSC", "nocs": ["PETRONAS"]},
+    {
+        "sovereign": "Indonesia",
+        "iso3": "IDN",
+        "bbox": [95.0, -11.0, 141.0, 6.0],
+        "fiscal_regime": "PSC/Cost-sharing",
+        "nocs": ["Pertamina"],
+    },
+    {"sovereign": "Brunei", "iso3": "BRN", "bbox": [112.5, 4.0, 115.5, 7.0], "fiscal_regime": "PSC", "nocs": ["Brunei Shell"]},
+    {
+        "sovereign": "Vietnam",
+        "iso3": "VNM",
+        "bbox": [102.0, 7.0, 112.0, 23.0],
+        "fiscal_regime": "PSC/JOC",
+        "nocs": ["PetroVietnam"],
+    },
+    {
+        "sovereign": "Thailand",
+        "iso3": "THA",
+        "bbox": [97.0, 5.0, 106.0, 20.0],
+        "fiscal_regime": "Concession/PSA",
+        "nocs": ["PTTEP"],
+    },
+    {
+        "sovereign": "Philippines",
+        "iso3": "PHL",
+        "bbox": [116.0, 4.0, 128.0, 21.0],
+        "fiscal_regime": "Service contract",
+        "nocs": [],
+    },
+    # Middle East
+    {
+        "sovereign": "Saudi Arabia",
+        "iso3": "SAU",
+        "bbox": [34.0, 16.0, 56.0, 32.0],
+        "fiscal_regime": "State concession",
+        "nocs": ["Saudi Aramco"],
+    },
+    {"sovereign": "UAE", "iso3": "ARE", "bbox": [51.0, 22.0, 56.5, 26.0], "fiscal_regime": "Concession/PSA", "nocs": ["ADNOC"]},
+    {
+        "sovereign": "Qatar",
+        "iso3": "QAT",
+        "bbox": [50.5, 24.5, 52.5, 26.5],
+        "fiscal_regime": "Concession",
+        "nocs": ["QatarEnergy"],
+    },
+    {
+        "sovereign": "Iraq",
+        "iso3": "IRQ",
+        "bbox": [42.0, 29.0, 49.0, 37.5],
+        "fiscal_regime": "Service contract/Technical service",
+        "nocs": ["INOC"],
+    },
+    # Europe
+    {
+        "sovereign": "United Kingdom",
+        "iso3": "GBR",
+        "bbox": [-8.0, 49.5, 3.0, 61.0],
+        "fiscal_regime": "Ring-fence CIT + supplementary",
+        "nocs": [],
+    },
+    {
+        "sovereign": "Norway",
+        "iso3": "NOR",
+        "bbox": [3.0, 57.0, 32.0, 72.0],
+        "fiscal_regime": "Concession + 78% tax",
+        "nocs": ["Equinor"],
+    },
+    {"sovereign": "Netherlands", "iso3": "NLD", "bbox": [1.0, 51.0, 8.0, 54.0], "fiscal_regime": "Concession", "nocs": []},
+    {"sovereign": "Denmark", "iso3": "DNK", "bbox": [6.0, 54.5, 16.0, 58.0], "fiscal_regime": "Concession", "nocs": []},
+    # North America
+    {
+        "sovereign": "United States",
+        "iso3": "USA",
+        "bbox": [-180.0, 18.0, -60.0, 72.0],
+        "fiscal_regime": "Lease/royalty (BOEM)",
+        "nocs": [],
+    },
+    {"sovereign": "Canada", "iso3": "CAN", "bbox": [-142.0, 42.0, -52.0, 72.0], "fiscal_regime": "Crown royalty/CIT", "nocs": []},
+    # Australia / Oceania
+    {
+        "sovereign": "Australia",
+        "iso3": "AUS",
+        "bbox": [110.0, -45.0, 155.0, -10.0],
+        "fiscal_regime": "Petroleum resource rent tax",
+        "nocs": [],
+    },
+    {
+        "sovereign": "Papua New Guinea",
+        "iso3": "PNG",
+        "bbox": [141.0, -11.0, 160.0, -1.0],
+        "fiscal_regime": "PSC/License",
+        "nocs": [],
+    },
+]
+
+
+def _eez_lookup(lat: float, lon: float) -> dict[str, Any] | None:
+    """Look up EEZ sovereign for an offshore point using bounding-box intersection.
+
+    Returns None if point is not in any known EEZ.
+    Returns dict with sovereign, iso3, fiscal_regime, nocs if found.
+    """
+    for eez in _EEZ_REGISTRY:
+        bb = eez["bbox"]
+        if bb[0] <= lon <= bb[2] and bb[1] <= lat <= bb[3]:
+            return {
+                "sovereign_eez": eez["sovereign"],
+                "eez_iso3": eez["iso3"],
+                "fiscal_regime_hint": eez["fiscal_regime"],
+                "national_oil_companies": eez.get("nocs", []),
+                "eez_source": "Marine Regions v12 (bbox simplified, CC-BY-4.0)",
+                "eez_confidence": "MEDIUM",
+                "eez_note": "Bounding-box approximation. For precise boundaries, use Marine Regions GeoJSON.",
+            }
+    return None
+
+
 # ── Sync implementations (run in thread pool) ───────────────────────────────────
 
 
@@ -194,20 +391,26 @@ def _geox_isitwater(lat: float, lon: float) -> dict:
                     "resolution_note": "Natural Earth 10m (~300m resolution). Coastal points near boundary may show water at this scale.",
                 }
 
-    return {
+    # Water point — try EEZ attribution
+    eez = _eez_lookup(lat, lon)
+    result = {
         "is_water": True,
         "is_land": False,
-        "country": None,
-        "country_iso3": None,
+        "country": eez["sovereign_eez"] if eez else None,
+        "country_iso3": eez["eez_iso3"] if eez else None,
         "country_iso2": None,
         "latitude": lat,
         "longitude": lon,
         "near_boundary_m": None,
         "on_boundary": False,
-        "confidence": 0.90,
+        "confidence": 0.90 if not eez else 0.85,
         "data_source": "Natural Earth 10m countries (water = not in any country)",
         "resolution_note": "Natural Earth 10m (~300m resolution). Small islands or contested points may be misclassified.",
     }
+    if eez:
+        result["eez_attribution"] = eez
+        result["data_source"] = "Natural Earth 10m + Marine Regions v12 EEZ (bbox)"
+    return result
 
 
 def _geox_context_at_location(lat: float, lon: float) -> dict:

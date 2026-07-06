@@ -1,0 +1,14 @@
+{
+  "run_tag": "GEOX_RSI_v1.0",
+  "image_sha256": "2bf70c900e4e7b1f0a819ea214a9de306fadf3d7e9e6176b31d6cde604794dad",
+  "image_sha256_short": "2bf70c900e4e7b1f",
+  "code_sha256": "ba3d91a82b3487611679c49c02facf4c3b2029f2fffbb6762418c7c78f6c329e",
+  "code_sha256_short": "ba3d91a82b348761",
+  "prompt_sha256": "00e6a3fe3a107d0eaac26fa6ccfad8014610dbea14470878ed3cd6550c094e9c",
+  "prompt_sha256_short": "00e6a3fe3a107d0e",
+  "vlm_model": "minimax-M3-vision",
+  "generated_at": "2026-07-06T10:22:15.580290+00:00",
+  "input_class": "image_only",
+  "coordinate_domain": "pixel",
+  "epistemic_note": "OBS_IMAGE \u2260 OBS_GEOLOGY. Pixels observed, geology requires calibration."
+}

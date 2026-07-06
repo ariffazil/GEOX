@@ -445,18 +445,202 @@ def _gate7_sequence(
 # GATE 8 — Regional Tectonic Mismatch
 # ═══════════════════════════════════════════════════════════════════════════════
 
-SABAH_TECTONIC_EVENTS = {
-    "deep_regional_unconformity": {
-        "age_ma": [16.0, 13.0],
-        "event": "Early-Middle Miocene compression/uplift/erosion — separates pre-MMU deep marine from post-MMU shelf/slope",
+# FIX 2026-07-06: Regional tectonic event registry.
+# Previously only Sabah events existed — all non-Sabah regions silently
+# defaulted to Sabah tectonics, producing meaningless G8 verdicts.
+# Now: region-keyed lookup with global events as fallback.
+# Sources: GPlates, EarthByte, published tectonic compilations.
+
+TECTONIC_EVENTS: dict[str, dict[str, dict]] = {
+    "sabah": {
+        "deep_regional_unconformity": {
+            "age_ma": [16.0, 13.0],
+            "event": "Early-Middle Miocene compression/uplift/erosion — separates pre-MMU deep marine from post-MMU shelf/slope",
+        },
+        "sabah_orogeny": {
+            "age_ma": [16.0, 12.0],
+            "event": "NW Borneo collision and orogenesis — major structural reorganization",
+        },
+        "shallow_regional_unconformity": {
+            "age_ma": [10.5, 7.8],
+            "event": "Late Miocene uplift/erosion — separates Groups D/E from C in Malay Basin analog",
+        },
+        "south_china_sea_spreading": {"age_ma": [32.0, 16.0], "event": "Oligocene-Miocene seafloor spreading — ended ~16 Ma"},
     },
-    "sabah_orogeny": {"age_ma": [16.0, 12.0], "event": "NW Borneo collision and orogenesis — major structural reorganization"},
-    "shallow_regional_unconformity": {
-        "age_ma": [10.5, 7.8],
-        "event": "Late Miocene uplift/erosion — separates Groups D/E from C in Malay Basin analog",
+    "suriname": {
+        "south_atlantic_opening": {
+            "age_ma": [130.0, 100.0],
+            "event": "South Atlantic rifting and seafloor spreading — created the Suriname-Guyana passive margin",
+        },
+        "equatorial_atlantic_transform": {
+            "age_ma": [100.0, 83.0],
+            "event": "Equatorial Atlantic transform faulting — Guinea-Sierra Leone transform system active",
+        },
+        "oae2_source_rock": {
+            "age_ma": [94.0, 93.0],
+            "event": "Oceanic Anoxic Event 2 — global source rock deposition (Cenomanian-Turonian boundary)",
+        },
+        "campanian_turbidite_deposition": {
+            "age_ma": [84.0, 72.0],
+            "event": "Campanian deepwater turbidite fan deposition — primary reservoir interval in Suriname-Guyana basin",
+        },
+        "kpg_mass_extinction": {
+            "age_ma": [66.5, 65.5],
+            "event": "Cretaceous-Paleogene mass extinction — Chicxulub impact, major environmental disruption",
+        },
+        "guiana_shield_uplift": {
+            "age_ma": [60.0, 40.0],
+            "event": "Post-rift thermal subsidence and sediment loading — continued passive margin development",
+        },
     },
-    "south_china_sea_spreading": {"age_ma": [32.0, 16.0], "event": "Oligocene-Miocene seafloor spreading — ended ~16 Ma"},
+    "guyana": {
+        "south_atlantic_opening": {
+            "age_ma": [130.0, 100.0],
+            "event": "South Atlantic rifting and seafloor spreading — created the Suriname-Guyana passive margin",
+        },
+        "equatorial_atlantic_transform": {
+            "age_ma": [100.0, 83.0],
+            "event": "Equatorial Atlantic transform faulting — Guinea-Sierra Leone transform system active",
+        },
+        "oae2_source_rock": {
+            "age_ma": [94.0, 93.0],
+            "event": "Oceanic Anoxic Event 2 — global source rock deposition (Cenomanian-Turonian boundary)",
+        },
+        "campanian_turbidite_deposition": {
+            "age_ma": [84.0, 72.0],
+            "event": "Campanian deepwater turbidite fan deposition — primary reservoir interval",
+        },
+    },
+    "north_sea": {
+        "alpine_compression": {
+            "age_ma": [65.0, 30.0],
+            "event": "Alpine compression — inversion structures in North Sea",
+        },
+        "north_atlantic_opening": {
+            "age_ma": [56.0, 33.0],
+            "event": "North Atlantic opening — NE Atlantic rifting, Faroe-Shetland Basin formation",
+        },
+        "pyrenean_compression": {
+            "age_ma": [40.0, 20.0],
+            "event": "Pyrenean compression — Bay of Biscay closure, southern North Sea inversion",
+        },
+    },
+    "gulf_of_mexico": {
+        "pangaea_rifting": {
+            "age_ma": [200.0, 160.0],
+            "event": "Pangaea rifting — Gulf of Mexico opening, Yucatan block rotation",
+        },
+        "louann_salt_deposition": {
+            "age_ma": [165.0, 155.0],
+            "event": "Louann Salt deposition — Jurassic evaporites, salt tectonics driver",
+        },
+        "creataceous_carbonate_platform": {
+            "age_ma": [130.0, 66.0],
+            "event": "Cretaceous carbonate platform development — Gulf margin passive phase",
+        },
+    },
+    "niger_delta": {
+        "west_african_rifting": {
+            "age_ma": [130.0, 100.0],
+            "event": "West African rift system — South Atlantic opening propagation into equatorial Atlantic",
+        },
+        "niger_delta_progradation": {
+            "age_ma": [40.0, 0.0],
+            "event": "Niger Delta clinoform progradation — major Cenozoic deltaic system growth",
+        },
+        "akata_shale_deposition": {
+            "age_ma": [65.0, 40.0],
+            "event": "Akata Formation marine shale — primary source rock and overpressure zone",
+        },
+    },
+    "permian_basin": {
+        "permian_sea_level_fall": {
+            "age_ma": [260.0, 250.0],
+            "event": "Late Permian sea-level fall and basin restriction — evaporite and reef reservoir development",
+        },
+        "laramide_orogeny": {
+            "age_ma": [80.0, 35.0],
+            "event": "Laramide orogeny — Rocky Mountain uplift, foreland basin development",
+        },
+    },
 }
+
+# Global fallback events (apply to all regions unless overridden)
+GLOBAL_TECTONIC_EVENTS = {
+    "pangaea_breakup": {
+        "age_ma": [200.0, 130.0],
+        "event": "Pangaea breakup — global rifting phase, passive margin creation worldwide",
+    },
+    "kpg_mass_extinction": {
+        "age_ma": [66.5, 65.5],
+        "event": "Cretaceous-Paleogene mass extinction — Chicxulub impact",
+    },
+    "eocene_oligocene_cooling": {
+        "age_ma": [34.0, 33.0],
+        "event": "Eocene-Oligocene transition — Antarctic ice sheet onset, global cooling",
+    },
+    "mid_miocene_climate_optimum": {
+        "age_ma": [17.0, 14.0],
+        "event": "Mid-Miocene Climate Optimum — warm period before Antarctic glaciation",
+    },
+    "messinian_salinity_crisis": {
+        "age_ma": [5.96, 5.33],
+        "event": "Messinian Salinity Crisis — Mediterranean desiccation",
+    },
+    "pleistocene_glaciations": {
+        "age_ma": [2.58, 0.012],
+        "event": "Pleistocene glacial-interglacial cycles — Northern Hemisphere ice sheets",
+    },
+}
+
+# Region name aliases for fuzzy matching
+_REGION_ALIASES: dict[str, str] = {
+    "suriname": "suriname",
+    "surinam": "suriname",
+    "block 52": "suriname",
+    "block52": "suriname",
+    "guyana": "guyana",
+    "guiana": "guyana",
+    "stabroek": "guyana",
+    "sabah": "sabah",
+    "borneo": "sabah",
+    "malaysia": "sabah",
+    "nw borneo": "sabah",
+    "north sea": "north_sea",
+    "uk north sea": "north_sea",
+    "norwegian north sea": "north_sea",
+    "gulf of mexico": "gulf_of_mexico",
+    "gom": "gulf_of_mexico",
+    "deepwater gulf": "gulf_of_mexico",
+    "niger delta": "niger_delta",
+    "nigeria": "niger_delta",
+    "west africa": "niger_delta",
+    "permian": "permian_basin",
+    "permian basin": "permian_basin",
+    "midland basin": "permian_basin",
+    "delaware basin": "permian_basin",
+}
+
+
+def _resolve_region_events(region: str) -> dict[str, dict]:
+    """Resolve region name to tectonic events, falling back to global events."""
+    if not region:
+        return {**GLOBAL_TECTONIC_EVENTS}
+
+    region_lower = region.lower().strip()
+    resolved_key = _REGION_ALIASES.get(region_lower)
+
+    if resolved_key and resolved_key in TECTONIC_EVENTS:
+        # Merge region-specific + global events (region takes precedence)
+        return {**GLOBAL_TECTONIC_EVENTS, **TECTONIC_EVENTS[resolved_key]}
+
+    # Fuzzy fallback: check if any alias is a substring
+    for alias, key in _REGION_ALIASES.items():
+        if alias in region_lower or region_lower in alias:
+            return {**GLOBAL_TECTONIC_EVENTS, **TECTONIC_EVENTS[key]}
+
+    # Unknown region: return global events only
+    return {**GLOBAL_TECTONIC_EVENTS}
 
 
 def _gate8_tectonic(
@@ -464,7 +648,11 @@ def _gate8_tectonic(
     claim_zone: str,
     region: str,
 ) -> dict:
-    """G8: Check age claim against known regional tectonic events."""
+    """G8: Check age claim against known regional tectonic events.
+
+    FIX 2026-07-06: Now uses regional tectonic event registry.
+    Previously defaulted to Sabah events for all regions.
+    """
     if not claim_age_ma and not claim_zone:
         return {"gate": "G8_TECTONIC", "verdict": "PASS", "note": "No age to test against tectonic framework"}
 
@@ -475,10 +663,7 @@ def _gate8_tectonic(
         if age_ma <= -999:
             return {"gate": "G8_TECTONIC", "verdict": "PASS", "note": f"Cannot resolve age for zone '{claim_zone}'"}
 
-    if region and "sabah" in region.lower():
-        events = SABAH_TECTONIC_EVENTS
-    else:
-        events = SABAH_TECTONIC_EVENTS  # default for now
+    events = _resolve_region_events(region)
 
     # Check if age falls within any major event
     for event_name, event_info in events.items():
@@ -495,7 +680,7 @@ def _gate8_tectonic(
     return {
         "gate": "G8_TECTONIC",
         "verdict": "PASS",
-        "message": f"Claim age ({age_ma:.1f} Ma) does not directly coincide with major known tectonic events. Not a falsification — may represent inter-event deposition.",
+        "message": f"Claim age ({age_ma:.1f} Ma) does not directly coincide with major known tectonic events in region '{region or 'global'}'. Not a falsification — may represent inter-event deposition.",
     }
 
 
@@ -662,7 +847,7 @@ async def geox_biostrat_falsify(
             "Popperian falsification: eliminate what CANNOT be true",
             "G1-G8: facies, strat order, taxonomy, reworking, diachroneity, seismic, sequence, tectonic",
             "FOSSIL_ECOLOGY matrix (6 groups × lithology × environment)",
-            "SABAH_TECTONIC_EVENTS calibrated to Tan & Lamy + operator reports",
+            "Regional tectonic event registry (Sabah, Suriname, Guyana, North Sea, GOM, Niger Delta, Permian + global)",
         ],
         sensitivity_to=["fossil_ecology_rules", "tectonic_event_ages", "taxonomic_synonymy_db"],
     )

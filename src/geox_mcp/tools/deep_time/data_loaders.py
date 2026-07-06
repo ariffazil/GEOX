@@ -42,7 +42,7 @@ SUBCHRONS_CSV = os.path.join(_DATA_DIR, "gp_ts_subchrons.csv")
 
 def _load_gpts_table(csv_path: str) -> list[dict[str, str]]:
     """Load a GPTS CSV table.
-    
+
     Returns list of {name, abbrev, t_age, b_age, int_type, color}.
     Empty if file missing.
     """
@@ -54,12 +54,76 @@ def _load_gpts_table(csv_path: str) -> list[dict[str, str]]:
         return list(reader)
 
 
+def _load_csv_table(csv_path: str) -> list[dict[str, str]]:
+    """Load any CSV table. Returns list of row dicts. Empty if missing."""
+    if not os.path.exists(csv_path):
+        return []
+    with open(csv_path, newline="") as f:
+        reader = csv.DictReader(f)
+        return list(reader)
+
+
+def _interpolate_from_table(
+    rows: list[dict[str, str]],
+    target_age_ma: float,
+    age_col: str,
+    value_col: str,
+) -> float | None:
+    """Linear interpolation from a sorted CSV table.
+
+    Finds the two rows bracketing target_age_ma and linearly interpolates
+    the value_col. Returns None if target is outside the table range or
+    if values cannot be parsed.
+
+    Table must be sorted by age_col ascending (youngest first).
+    """
+    try:
+        ages = []
+        values = []
+        for row in rows:
+            a = row.get(age_col)
+            v = row.get(value_col)
+            if a is None or v is None:
+                continue
+            try:
+                ages.append(float(a))
+                values.append(float(v))
+            except (ValueError, TypeError):
+                continue
+
+        if not ages:
+            return None
+
+        # Sort by age
+        pairs = sorted(zip(ages, values))
+        ages = [p[0] for p in pairs]
+        values = [p[1] for p in pairs]
+
+        # Clamp to range
+        if target_age_ma <= ages[0]:
+            return values[0]
+        if target_age_ma >= ages[-1]:
+            return values[-1]
+
+        # Find bracketing rows
+        for i in range(len(ages) - 1):
+            if ages[i] <= target_age_ma <= ages[i + 1]:
+                # Linear interpolation
+                frac = (target_age_ma - ages[i]) / (ages[i + 1] - ages[i])
+                return values[i] + frac * (values[i + 1] - values[i])
+
+        return None
+    except Exception as e:
+        logger.warning("Interpolation failed for %s/%s at %.1f Ma: %s", age_col, value_col, target_age_ma, e)
+        return None
+
+
 def _derive_polarity_from_abbrev(abbrev: str, name: str = "") -> str | None:
     """Derive 'normal' | 'reversed' from a subchron abbrev like C1n or C1r.1r.
-    
+
     Also accepts the subchron name field as fallback for subchrons that have
     their polarity suffix in the name (e.g. C5n.2n) rather than abbrev.
-    
+
     Rules:
       - Ends with 'n' → normal
       - Ends with 'r' → reversed
@@ -76,7 +140,7 @@ def _derive_polarity_from_abbrev(abbrev: str, name: str = "") -> str | None:
         return "normal"
     if stripped.endswith("r"):
         return "reversed"
-    
+
     # Named subchrons
     named_mapping = {
         "Brunhes": "normal",
@@ -92,7 +156,7 @@ def _derive_polarity_from_abbrev(abbrev: str, name: str = "") -> str | None:
     }
     if name in named_mapping:
         return named_mapping[name]
-    
+
     return None
 
 
@@ -212,6 +276,7 @@ GPTS_CSV_CEILING_MA = 170.76  # M44 top — last chron in frozen CSV
 # in principle. Return UNKNOWN rather than NO_DATA so the caller knows
 # ingestion is not the path — the parameter simply does not exist.
 
+
 def _is_unknown_at_age(param: str, age_ma: float) -> bool:
     """F9 fabrication guard: returns True if param CANNOT be known at age."""
     # Atmospheric CO2 in Hadean/early Archean: no calibrated proxy exists.
@@ -232,9 +297,10 @@ def _is_unknown_at_age(param: str, age_ma: float) -> bool:
 
 # ─── GPTS CSV-based polarity lookup ──────────────────────────────────────────
 
+
 def _lookup_chron_at_age(age_ma: float) -> dict | None:
     """Find which GPTS chron contains the given age.
-    
+
     Searches the frozen CSV table for the chron where t_age <= age_ma < b_age.
     Returns the chron row dict, or None if outside frozen CSV range.
     """
@@ -251,7 +317,7 @@ def _lookup_chron_at_age(age_ma: float) -> dict | None:
 
 def _lookup_subchron_at_age(age_ma: float) -> dict | None:
     """Find which GPTS subchron contains the given age.
-    
+
     Returns the subchron row dict with finest resolution, or None.
     """
     subchrons = _get_subchrons()
@@ -267,7 +333,7 @@ def _lookup_subchron_at_age(age_ma: float) -> dict | None:
 
 def _chrons_in_interval(top_ma: float, base_ma: float) -> list[dict]:
     """Return all GPTS chrons that overlap the interval [top_ma, base_ma).
-    
+
     Chron overlaps if chron.t_age < base_ma AND chron.b_age > top_ma.
     """
     chrons = _get_chrons()
@@ -299,7 +365,7 @@ def _subchrons_in_interval(top_ma: float, base_ma: float) -> list[dict]:
 
 def _polarity_for_chron(chron_row: dict) -> str | None:
     """Derive polarity for a chron row.
-    
+
     Strategy:
       1. Try subchron lookup at midpoint (finer resolution, has .n/.r naming)
       2. Named chron heuristics
@@ -308,7 +374,7 @@ def _polarity_for_chron(chron_row: dict) -> str | None:
     name = chron_row["name"]
     t_age = float(chron_row["t_age"])
     mid_age = (t_age + float(chron_row["b_age"])) / 2.0
-    
+
     # Try subchron resolution first
     sub = _lookup_subchron_at_age(mid_age)
     if sub:
@@ -318,11 +384,11 @@ def _polarity_for_chron(chron_row: dict) -> str | None:
         )
         if pol:
             return pol
-    
+
     # CNS
     if name == "C34":
         return "normal"
-    
+
     return None
 
 
@@ -422,15 +488,9 @@ def resolve_polarity_state(age_ma: float, interval_top_ma: float, interval_base_
         # Single chron, no subchron match — try deriving from abbrev
         pol = _polarity_for_chron(chron)
         if pol == "normal":
-            return (
-                PolarityState.NORMAL,
-                f"{chron_name} normal chron ({chron_top}-{chron_base} Ma)"
-            )
+            return (PolarityState.NORMAL, f"{chron_name} normal chron ({chron_top}-{chron_base} Ma)")
         elif pol == "reversed":
-            return (
-                PolarityState.REVERSED,
-                f"{chron_name} reversed chron ({chron_top}-{chron_base} Ma)"
-            )
+            return (PolarityState.REVERSED, f"{chron_name} reversed chron ({chron_top}-{chron_base} Ma)")
         # Unknown polarity — still single chron, return the name
         return (
             PolarityState.MIXED,
@@ -453,6 +513,7 @@ def resolve_polarity_state(age_ma: float, interval_top_ma: float, interval_base_
 
 
 # ─── Interval-distribution helper ─────────────────────────────────────────────
+
 
 def _wrap_distribution(
     variable_name: str,
@@ -496,11 +557,14 @@ def _wrap_distribution(
 
 # ─── Loader functions ─────────────────────────────────────────────────────────
 
+
 def load_co2_estimate(age_ma: float, age_top_ma: float, age_base_ma: float, duration_myr: float) -> EarthStateVariable:
     """Atmospheric CO2 estimate at `age_ma` (or distribution over interval).
 
+    FIX 2026-07-06: Now reads from co2_geocarbsulf.csv if available.
+    Previously always returned NO_DATA.
+
     F9 guard: UNKNOWN for ages > 1500 Ma (no calibrated proxy exists).
-    Otherwise: NO_DATA (awaiting ingestion).
     """
     if _is_unknown_at_age("co2", age_ma):
         return EarthStateVariable(
@@ -518,6 +582,34 @@ def load_co2_estimate(age_ma: float, age_top_ma: float, age_base_ma: float, dura
             interval_base_ma=age_base_ma,
             warning=f"Cannot be known — not a data gap, an unknowable.",
         )
+
+    # Try loading from CSV
+    co2_csv = os.path.join(_DATA_DIR, "co2_geocarbsulf.csv")
+    if os.path.exists(co2_csv):
+        try:
+            rows = _load_csv_table(co2_csv)
+            if rows:
+                co2_val = _interpolate_from_table(rows, age_ma, "age_Ma", "co2_ppm")
+                if co2_val is not None:
+                    p10 = _interpolate_from_table(rows, age_ma, "age_Ma", "uncertainty_p10")
+                    p90 = _interpolate_from_table(rows, age_ma, "age_Ma", "uncertainty_p90")
+                    return EarthStateVariable(
+                        name="atmospheric_co2_ppm",
+                        value=co2_val,
+                        units="ppm",
+                        epistemic_level="INTERPRETED",
+                        source_citation="Berner GEOCARBSULF v3 (Berner & Kothavala 2001, Beerling & Royer 2011)",
+                        confidence=0.6,
+                        interval_top_ma=age_top_ma,
+                        interval_base_ma=age_base_ma,
+                        notes=f"Interpolated from GEOCARBSULF CSV. Proxy-derived, model-dependent. Uncertainties: factor 2-3x for Mesozoic-Paleozoic.",
+                        value_min=p10,
+                        value_max=p90,
+                    )
+        except Exception as e:
+            logger.warning("Failed to load CO2 CSV: %s", e)
+
+    # Fallback: NO_DATA
     notes = (
         "External dataset not yet ingested. For Cenozoic, the canonical source is "
         "Zachos 2001 / Beerling & Royer 2011. For Phanerozoic, Berner GEOCARBSULF. "
@@ -526,7 +618,9 @@ def load_co2_estimate(age_ma: float, age_top_ma: float, age_base_ma: float, dura
     return _wrap_distribution(
         "atmospheric_co2_ppm",
         "ppm",
-        age_top_ma, age_base_ma, duration_myr,
+        age_top_ma,
+        age_base_ma,
+        duration_myr,
         is_interval=(duration_myr > 5.0),
         n_proxy_points=None,
         trend=None,
@@ -538,6 +632,8 @@ def load_co2_estimate(age_ma: float, age_top_ma: float, age_base_ma: float, dura
 
 def load_benthic_d18O(age_ma: float, age_top_ma: float, age_base_ma: float, duration_myr: float) -> EarthStateVariable:
     """Benthic δ18O (per mil) at `age_ma` — the OBSERVED measurement.
+
+    FIX 2026-07-06: Now reads from d18o_zachos_westerhold.csv if available.
 
     F9 guard: UNKNOWN for ages > 180 Ma (no benthic forams in pre-Cenozoic
     marine record; planktonic forams appeared in Jurassic).
@@ -558,14 +654,38 @@ def load_benthic_d18O(age_ma: float, age_top_ma: float, age_base_ma: float, dura
             interval_base_ma=age_base_ma,
         )
 
+    # Try loading from CSV
+    d18o_csv = os.path.join(_DATA_DIR, "d18o_zachos_westerhold.csv")
+    if os.path.exists(d18o_csv):
+        try:
+            rows = _load_csv_table(d18o_csv)
+            if rows:
+                val = _interpolate_from_table(rows, age_ma, "age_Ma", "d18O_permil")
+                if val is not None:
+                    return EarthStateVariable(
+                        name="benthic_d18O_permil",
+                        value=val,
+                        units="per mil VPDB",
+                        epistemic_level="OBSERVED",
+                        source_citation="Zachos et al. 2001 + Westerhold et al. 2020",
+                        confidence=0.75,
+                        interval_top_ma=age_top_ma,
+                        interval_base_ma=age_base_ma,
+                        notes="Interpolated from Zachos/Westerhold benthic δ18O stack. OBSERVED proxy measurement.",
+                    )
+        except Exception as e:
+            logger.warning("Failed to load d18O CSV: %s", e)
+
     return _wrap_distribution(
         "benthic_d18O_permil",
         "per mil VPDB",
-        age_top_ma, age_base_ma, duration_myr,
+        age_top_ma,
+        age_base_ma,
+        duration_myr,
         is_interval=(duration_myr > 5.0),
         n_proxy_points=None,
         trend=None,
-        pending_dataset_key="temperature",  # benthic δ18O is in the same dataset bundle
+        pending_dataset_key="temperature",
         epistemic_level="NO_DATA",
         notes=(
             "Benthic δ18O is the OBSERVED measurement (not the temperature). "
@@ -580,6 +700,8 @@ def load_benthic_d18O(age_ma: float, age_top_ma: float, age_base_ma: float, dura
 def load_temperature_estimate(age_ma: float, age_top_ma: float, age_base_ma: float, duration_myr: float) -> EarthStateVariable:
     """Global mean temperature anomaly at `age_ma` — the INTERPRETED downstream.
 
+    FIX 2026-07-06: Now reads from d18o_zachos_westerhold.csv (temp_anomaly_c column).
+
     F9 guard: UNKNOWN for ages > 1500 Ma (no proxy). For 540-1500 Ma:
     PROCESS_HYPOTHESIS range only (Scotese 2021 model, ±5-10°C).
 
@@ -588,7 +710,6 @@ def load_temperature_estimate(age_ma: float, age_top_ma: float, age_base_ma: flo
     These are TWO separate fields in the Earth State Vector.
     """
     if _is_unknown_at_age("co2", age_ma):
-        # Same F9 threshold — temp proxy also fails in deep time
         return EarthStateVariable(
             name="global_temperature_anomaly_c",
             value=None,
@@ -604,6 +725,31 @@ def load_temperature_estimate(age_ma: float, age_top_ma: float, age_base_ma: flo
             interval_base_ma=age_base_ma,
         )
 
+    # Try loading from CSV
+    d18o_csv = os.path.join(_DATA_DIR, "d18o_zachos_westerhold.csv")
+    if os.path.exists(d18o_csv):
+        try:
+            rows = _load_csv_table(d18o_csv)
+            if rows:
+                val = _interpolate_from_table(rows, age_ma, "age_Ma", "temp_anomaly_c")
+                if val is not None:
+                    return EarthStateVariable(
+                        name="global_temperature_anomaly_c",
+                        value=val,
+                        units="°C relative to present",
+                        epistemic_level="INTERPRETED",
+                        source_citation="Zachos et al. 2001 + Westerhold et al. 2020 (derived from δ18O)",
+                        confidence=0.6,
+                        interval_top_ma=age_top_ma,
+                        interval_base_ma=age_base_ma,
+                        notes=(
+                            "INTERPRETED from benthic δ18O. Requires δ18O_sw assumption + ice-volume correction. "
+                            "Cenozoic uncertainty: ±1-2°C; Phanerozoic: ±3-5°C."
+                        ),
+                    )
+        except Exception as e:
+            logger.warning("Failed to load temperature CSV: %s", e)
+
     notes = (
         "INTERPRETED (not DERIVED). benthic δ18O is the OBSERVED measurement; "
         "temperature requires assumptions: δ18O_sw=-1.0 permil (ice-free) or "
@@ -613,7 +759,9 @@ def load_temperature_estimate(age_ma: float, age_top_ma: float, age_base_ma: flo
     return _wrap_distribution(
         "global_temperature_anomaly_c",
         "°C relative to present",
-        age_top_ma, age_base_ma, duration_myr,
+        age_top_ma,
+        age_base_ma,
+        duration_myr,
         is_interval=(duration_myr > 5.0),
         n_proxy_points=None,
         trend=None,
@@ -658,10 +806,45 @@ def load_sea_level_estimate(age_ma: float, age_top_ma: float, age_base_ma: float
         "composite), datum (present_msl). Never emit a scalar without these. "
         "F4 CLARITY requires explicit reference frames."
     )
+
+    # Try loading from CSV
+    sl_csv = os.path.join(_DATA_DIR, "sea_level_miller.csv")
+    if os.path.exists(sl_csv):
+        try:
+            rows = _load_csv_table(sl_csv)
+            if rows:
+                val = _interpolate_from_table(rows, age_ma, "age_Ma", "sea_level_m")
+                if val is not None:
+                    unc = _interpolate_from_table(rows, age_ma, "age_Ma", "uncertainty_m")
+                    return EarthStateVariable(
+                        name="eustatic_sea_level_m",
+                        value=val,
+                        units="m relative to present MSL",
+                        epistemic_level="INTERPRETED",
+                        source_citation="Miller et al. 2020 (PANGAEA, CC-BY-4.0)",
+                        confidence=0.6,
+                        interval_top_ma=age_top_ma,
+                        interval_base_ma=age_base_ma,
+                        reference_curve="Miller2020",
+                        reference_component="long_term",
+                        reference_datum="present_msl",
+                        notes=(
+                            "Interpolated from Miller et al. 2020 Cenozoic sea-level curve. "
+                            "INTERPRETED — backstripping-derived, model-dependent. "
+                            "Uncertainty ±10-45 m depending on age."
+                        ),
+                        value_min=val - (unc or 20),
+                        value_max=val + (unc or 20),
+                    )
+        except Exception as e:
+            logger.warning("Failed to load sea level CSV: %s", e)
+
     return _wrap_distribution(
         "eustatic_sea_level_m",
         "m relative to present MSL",
-        age_top_ma, age_base_ma, duration_myr,
+        age_top_ma,
+        age_base_ma,
+        duration_myr,
         is_interval=(duration_myr > 5.0),
         n_proxy_points=None,
         trend=None,
@@ -737,7 +920,10 @@ def load_magnetic_polarity(age_ma: float, age_top_ma: float, age_base_ma: float,
 
 
 def load_atmospheric_o2(age_ma: float, age_top_ma: float, age_base_ma: float, duration_myr: float) -> EarthStateVariable:
-    """Atmospheric O2 (PAL) at `age_ma`."""
+    """Atmospheric O2 (PAL) at `age_ma`.
+
+    FIX 2026-07-06: Now reads from o2_berner.csv if available.
+    """
     if _is_unknown_at_age("o2", age_ma):
         return EarthStateVariable(
             name="atmospheric_o2_pal",
@@ -752,10 +938,41 @@ def load_atmospheric_o2(age_ma: float, age_top_ma: float, age_base_ma: float, du
             interval_top_ma=age_top_ma,
             interval_base_ma=age_base_ma,
         )
+
+    # Try loading from CSV
+    o2_csv = os.path.join(_DATA_DIR, "o2_berner.csv")
+    if os.path.exists(o2_csv):
+        try:
+            rows = _load_csv_table(o2_csv)
+            if rows:
+                val = _interpolate_from_table(rows, age_ma, "age_Ma", "o2_pal")
+                if val is not None:
+                    unc = _interpolate_from_table(rows, age_ma, "age_Ma", "uncertainty_pal")
+                    return EarthStateVariable(
+                        name="atmospheric_o2_pal",
+                        value=val,
+                        units="PAL (1.0 = present)",
+                        epistemic_level="INTERPRETED",
+                        source_citation="Berner 2001 GEOCARBSULF",
+                        confidence=0.55,
+                        interval_top_ma=age_top_ma,
+                        interval_base_ma=age_base_ma,
+                        notes=(
+                            "Interpolated from Berner GEOCARBSULF. Model-derived, proxy-calibrated. "
+                            "Uncertainty ±0.05-0.25 PAL depending on age."
+                        ),
+                        value_min=val - (unc or 0.1),
+                        value_max=val + (unc or 0.1),
+                    )
+        except Exception as e:
+            logger.warning("Failed to load O2 CSV: %s", e)
+
     return _wrap_distribution(
         "atmospheric_o2_pal",
         "PAL (1.0 = present)",
-        age_top_ma, age_base_ma, duration_myr,
+        age_top_ma,
+        age_base_ma,
+        duration_myr,
         is_interval=(duration_myr > 5.0),
         n_proxy_points=None,
         trend=None,
