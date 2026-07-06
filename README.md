@@ -1,6 +1,6 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-07-05
+last_verified: 2026-07-06
 federation_release: v2026.07.04-MCP-A2A
 changelog: /root/CHANGELOG-2026-07-04.md
 a2a_agent_json: /root/GEOX/.well-known/agent.json
@@ -34,10 +34,10 @@ scope: /root/geox
 
 ![GEOX Earth Intelligence Banner](./docs/assets/geox_hero_banner.jpg)
 
-> **Public surface: canonical MCP tools** (verify with `tools/list` at runtime)
-> **Backward-compat: 49 legacy aliases mapped to the canonical surface**
+> **Public surface: canonical MCP tools only** (verify with `tools/list` at runtime)
 > **Governance: arifOS F1–F13 · 888 JUDGE · VAULT999**
 > **Authority: evidence-only · no drilling decision · no capital allocation**
+> **No backward compatibility surface. Canonical only.**
 
 **What is it?** Physics-constrained, evidence-grounded subsurface reasoning — well logs, seismic, petrophysics, basin, prospect, stratigraphy, multi-physics joint inversion (Physics13), CSEM/MT, geomechanics, doctrine layer, federation integration (WELL/WEALTH).
 
@@ -70,8 +70,8 @@ VAULT999  ← immutable record
 | Field | Current |
 |---|---|
 | Runtime | Python FastMCP 3.4.2 |
-| Public MCP surface | 54 canonical tools (verify with `tools/list` at runtime) |
-| Internal capability contracts | 54 canonical (49 backward-compat aliases not in canonical surface) |
+| Public MCP surface | 35 canonical tools (verify with `tools/list` at runtime) |
+| Internal capability contracts | Canonical surface only (no public legacy surface) |
 | License | Business Source License 1.1 (BSL-1.1) |
 | Governance | arifOS F1–F13 |
 | Authority | Evidence-only |
@@ -172,7 +172,7 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 - **An earth evidence coprocessor** — it ingests well logs, seismic volumes, DST data, and geological reports; it runs petrophysics, stratigraphy, and prospect evaluation; it outputs structured, physics-constrained evidence receipts.
 - **Constitutionally governed** — every output carries epistemic tags (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN), uncertainty bands (P10/P50/P90), and provenance chains.
-- **Agent-accessible** — all 30 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Integrated public frontdoor: `https://mcp.arif-fazil.com/mcp` (proxies internally through arifOS).
+- **Agent-accessible** — all 35 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Integrated public frontdoor: `https://mcp.arif-fazil.com/mcp` (proxies internally through arifOS).
 - **Dual-transport** — systemd service (`geox-mcp.service`) for HTTP/SSE; `--transport stdio` for Claude Code, OpenCode, Continue CLI, and other local agents.
 
 ### What GEOX IS NOT
@@ -298,9 +298,9 @@ curl -X POST https://geox.arif-fazil.com/mcp \
 
 ## 4. CAPABILITY MAP — 30 CANONICAL TOOLS
 
-All 30 canonical tools are callable via the single gateway at `https://mcp.arif-fazil.com/mcp` (HTTP) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, epistemic tags, uncertainty bands, provenance, and a `godel_wall` verdict. Every call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
+All 35 canonical tools are callable via the single gateway at `https://mcp.arif-fazil.com/mcp` (HTTP) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, epistemic tags, uncertainty bands, provenance, and a `godel_wall` verdict. Every call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
 
-**30 canonical tools** — Phase 2.1 (locked 2026-06-28, RASA release 2026-06-29):
+**35 canonical tools** — Phase 2.1 (locked 2026-06-28, RASA release 2026-06-29):
 
 | Domain | Tools |
 |--------|-------|
@@ -311,7 +311,7 @@ All 30 canonical tools are callable via the single gateway at `https://mcp.arif-
 | **Earth Governance Surface (EGS)** | `geox_egs_query_entity`, `geox_egs_query_claim`, `geox_egs_query_uncertainty`, `geox_egs_query_provenance`, `geox_egs_claim_create`, `geox_egs_claim_challenge`, `geox_egs_evidence_attach`, `geox_egs_evidence_reason`, `geox_egs_seismic_compute`, `geox_egs_rock_physics`, `geox_egs_data_qc_bundle`, `geox_egs_scenario_audit` |
 | **Internal Federation** | `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine` |
 
-49 legacy flat names (e.g. `geox_data_ingest_bundle`, `geox_claim_create`, `geox_prospect_evaluate`) are still accepted by the backward-compat middleware and routed to the correct canonical tool.
+Only canonical tool names on the public surface. Legacy internal mappings (if any) are not part of the governed contract.
 
 ---
 
@@ -439,7 +439,7 @@ geox/
 │
 ├── src/
 │   ├── geox_mcp/                         ← MCP surface (agent-facing)
-│   │   ├── server.py                     ← Canonical FastMCP server (30 canonical + 49 legacy aliases)
+│   │   ├── server.py                     ← Canonical FastMCP server (canonical surface only)
 │   │   ├── tools/                        ← Tool implementations
 │   │   │   ├── discovery/                ← System discovery + registry
 │   │   │   └── kernel/                   ← Kernel-bridge tools
@@ -610,7 +610,7 @@ Arif Fazil (F13 SOVEREIGN) decides → Drilling go/no-go, capital commitment
 
 ### 10.1 MCP Connection
 
-GEOX exposes all 30 canonical tools via MCP (Model Context Protocol). Two transport modes:
+GEOX exposes all 35 canonical tools via MCP (Model Context Protocol). Two transport modes:
 
 **HTTP/SSE (for remote agents):**
 ```

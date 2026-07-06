@@ -273,7 +273,7 @@ async def geox_subsurface_generate_candidates(
             claim_tag="CLAIM",
             evidence_refs=evidence_refs,
             physics_guard=result.get("physics_guard"),
-            confidence_band=(result.get("value_contract") or {}).get("uncertainty_band"),
+            confidence_band=((result.get("value_contract") or {}).get("uncertainty_band") or {}).get("p50"),
         )
     # ── Eureka 8 (2026-06-03): velocity_slice mode branch ─────────────────
     # When target_class == "velocity_slice", route through the E8 keystone
