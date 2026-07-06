@@ -93,6 +93,8 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_panel_d_render_mcp": 60.0,  # Phase 3.0: Panel D cognitive rendering
     "geox_segy_trace_audit": 120.0,  # Phase 3.0: SEG-Y trace audit — file I/O intensive
     "geox_well_tie_compute": 60.0,  # Phase 3.0: Well-tie calibration via bruges
+    "geox_tie_receipt": 10.0,  # Phase 3.3: Tie receipt builder — pure schema, fast
+    "geox_tie_preflight": 10.0,  # Phase 3.3: 25-point preflight gate — rule-based, fast
     "geox_3d_model_build": 120.0,  # Phase 3.0: GemPy 3D model building
     "geox_wealth_bridge_run": 60.0,  # Phase 3.0: GEOX→WEALTH capital bridge
     "geox_vision": 120.0,
@@ -406,7 +408,9 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 66  # Phase 3.2 (2026-07-06): +10 new tools wired (geox_visual_understand, geox_visual_enhance, geox_visual_generate_hypotheses, geox_panel_d_render, geox_physical_reality_interpret, geox_cognitive_rank_hypotheses, geox_segy_audit, geox_well_tie, geox_3d_model, geox_wealth_consequence)
+    _EXPECTED_CANONICAL = (
+        68  # Phase 3.3 (2026-07-06): +2 geox_tie_receipt, geox_tie_preflight — tie evidence envelope + 25-point preflight gate
+    )
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -4263,10 +4267,16 @@ async def _geox_panel_d_render_mcp(
 
         # Render Panel D
         result = render_cognitive_panel(
-            attrs, fp, faults, horizons,
-            cogn.get("packages", []), cogn.get("terminations", []),
-            cogn.get("artifacts", []), cogn.get("hypotheses", {}),
-            raw_arr, crop_bbox,
+            attrs,
+            fp,
+            faults,
+            horizons,
+            cogn.get("packages", []),
+            cogn.get("terminations", []),
+            cogn.get("artifacts", []),
+            cogn.get("hypotheses", {}),
+            raw_arr,
+            crop_bbox,
             phys.get("provenance", {}),
             output_dir or os.path.dirname(image_path),
         )
@@ -4358,6 +4368,145 @@ async def _geox_well_tie_compute(
         }
     except Exception as e:
         return classify_error(e, source_tool="geox_well_tie_compute", source_organ="geox")
+
+
+# ── Phase 3.3: Tie Receipt + Preflight (2026-07-06) ─────────────────────────
+
+
+@mcp.tool(name="geox_tie_receipt", annotations=_geox_annotations("geox_tie_receipt"))
+async def _geox_tie_receipt(
+    well_name: str,
+    seismic_volume: str = "",
+    polarity_convention: str = "",
+    phase_convention: str = "",
+    seismic_datum: str = "",
+    well_datum: str = "",
+    depth_basis: str = "MD",
+    logs_used: str = "",
+    time_depth_checkshot: bool = False,
+    time_depth_vsp: bool = False,
+    time_depth_confidence: str = "low",
+    wavelet_source: str = "assumed",
+    wavelet_phase_confidence: str = "low",
+    correlation_score: float | None = None,
+    residual_class: str = "unexplained",
+    rock_lithology_sep: str = "low",
+    rock_fluid_sep: str = "low",
+    inversion_allowed: bool = False,
+    decision_permission: str = "HOLD",
+    decision_reason: str = "",
+    session_id: str | None = None,
+) -> dict[str, Any]:
+    """Seismic-to-well tie evidence envelope — metabolizer memory.
+
+    Builds a structured receipt that tells the system what it is allowed to
+    believe after a seismic-to-well tie. The receipt matters more than the
+    image of the tie. It covers: data inputs, calibration quality, error
+    classification, rock physics status, decision permission, and uncertainty.
+
+    Anti-hantu: amplitude is not hydrocarbon. Impedance is not lithology.
+    Inversion is not truth. Tie is not validation unless residuals are explained.
+    """
+    try:
+        from geox_core.schemas.tie_receipt import build_tie_receipt
+
+        logs_list = [l.strip() for l in logs_used.split(",") if l.strip()] if logs_used else []
+
+        receipt = build_tie_receipt(
+            well_name=well_name,
+            seismic_volume=seismic_volume,
+            session_id=session_id,
+            polarity_convention=polarity_convention,
+            phase_convention=phase_convention,
+            seismic_datum=seismic_datum,
+            well_datum=well_datum,
+            depth_basis=depth_basis,
+            logs_used=logs_list,
+            time_depth_control={
+                "checkshot_present": time_depth_checkshot,
+                "vsp_present": time_depth_vsp,
+                "confidence": time_depth_confidence,
+            },
+            wavelet={
+                "source": wavelet_source,
+                "phase_confidence": wavelet_phase_confidence,
+            },
+            tie_quality={
+                "correlation_score": correlation_score,
+                "residual_class": residual_class,
+            },
+            rock_physics_status={
+                "lithology_separability": rock_lithology_sep,
+                "fluid_separability": rock_fluid_sep,
+            },
+            inversion_permission={
+                "allowed": inversion_allowed,
+            },
+            decision_permission=decision_permission,
+            decision_reason=decision_reason,
+        )
+
+        return {
+            "status": "success",
+            "tool": "geox_tie_receipt",
+            "receipt": receipt,
+        }
+    except Exception as e:
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_tie_receipt", source_organ="geox")
+
+
+@mcp.tool(name="geox_tie_preflight", annotations=_geox_annotations("geox_tie_preflight"))
+async def _geox_tie_preflight(
+    well_name: str,
+    decision_context: str = "horizon_calibration",
+    answers: str = "",
+    session_id: str | None = None,
+) -> dict[str, Any]:
+    """25-point pre-interpretation gate for seismic-to-well tie.
+
+    Before interpreting a tie, an agent must answer 25 questions covering:
+    conventions, datum, calibration, data quality, signal, processing,
+    geology, rock physics, resolution, analog, and decision context.
+
+    Same data, different burden of proof: a tie for horizon calibration
+    needs less than a tie for reserves booking.
+
+    Returns GO / HOLD / VOID verdict with specific blockers.
+    The checklist is not bureaucracy. It is the metabolizer's intake valve.
+    """
+    try:
+        from geox_core.schemas.tie_preflight import run_tie_preflight
+
+        # Parse answers: "1=YES,2=ZERO-PHASE,3=MSL,..."
+        answers_dict: dict[int, str] = {}
+        if answers:
+            for pair in answers.split(","):
+                pair = pair.strip()
+                if "=" in pair:
+                    k, v = pair.split("=", 1)
+                    try:
+                        answers_dict[int(k.strip())] = v.strip()
+                    except ValueError:
+                        pass
+
+        result = run_tie_preflight(
+            well_name=well_name,
+            decision_context=decision_context,
+            answers=answers_dict,
+            session_id=session_id,
+        )
+
+        return {
+            "status": "success",
+            "tool": "geox_tie_preflight",
+            **result,
+        }
+    except Exception as e:
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_tie_preflight", source_organ="geox")
 
 
 @mcp.tool(name="geox_3d_model_build", annotations=_geox_annotations("geox_3d_model_build"))

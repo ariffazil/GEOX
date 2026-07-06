@@ -6,13 +6,16 @@ from typing import Any
 # GEOX CANONICAL TOOLS — Phase 2.7 Clean Architecture (2026-07-03)
 # 38 canonical tools (34 surface + 4 internal). 49 backward-compat aliases.
 # Mode-based consolidation. Evidence-only. Physics-9 governed.
+# Phase 3.3 (2026-07-06): +2 geox_tie_receipt + geox_tie_preflight —
+#   seismic-to-well tie evidence envelope + 25-point pre-interpretation gate.
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # SURFACE-FACING (41 tools):
 #   What external agents (AAA, ART, Copilot, any MCP client) call to get
 #   Earth data or run subsurface analysis. These are the "public API" of GEOX.
-#   Organized by domain: 5 well + 4 stratigraphy + 4 seismic + 2 model + 6 basin + 1 atlas +
-#   4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast = 41.
+#   Count: 52
+#   Organized by domain: 5 well + 4 stratigraphy + 15 seismic + 2 model + 6 basin + 1 atlas +
+#   4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast = 52.
 #   Phase 2.7 (2026-07-03): +1 geox_biostrat_parse, +1 geox_biostrat_nn_age,
 #   +1 geox_biostrat_ruling_check — biostratigraphy parsing + age + contradiction.
 # Phase 3.0 (2026-07-03): +3 geox_simulate_accommodation/surfaces/sequences —
@@ -24,7 +27,7 @@ from typing import Any
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 56. Live runtime reports canonical_tools=56.
+#   Total canonical = 58. Live runtime reports canonical_tools=58.
 #   49 backward-compat aliases accepted by middleware (scheduled removal 2026-07-30).
 #   Any change requires 888_HOLD per geox/AGENTS.md.
 #
@@ -43,7 +46,7 @@ from typing import Any
 #
 # What these do: query the planet, analyze subsurface data, return evidence.
 # Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 50 (5 well + 4 stratigraphy + 13 seismic + 2 model + 3 basin + 1 atlas + 4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast)
+# Count: 52 (5 well + 4 stratigraphy + 15 seismic + 2 model + 3 basin + 1 atlas + 4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast)
 #
 SURFACE_TOOLS: list[str] = [
     # ── WELL DOMAIN (5) ────────────────────────────────────────────────────────
@@ -70,6 +73,8 @@ SURFACE_TOOLS: list[str] = [
     "geox_panel_d_render_mcp",  # Phase 3.0: Cognitive interpretation rendering — geologist judgment panel
     "geox_segy_trace_audit",  # Phase 3.0: SEG-Y trace reality audit — physics validation
     "geox_well_tie_compute",  # Phase 3.0: Well-tie calibration via bruges — synthetic seismogram
+    "geox_tie_receipt",  # Phase 3.3: Seismic-to-well tie evidence envelope — metabolizer memory
+    "geox_tie_preflight",  # Phase 3.3: 25-point pre-interpretation gate — intake valve
     "geox_3d_model_build",  # Phase 3.0: GemPy 3D structural model — implicit geological modeling
     "geox_wealth_bridge_run",  # Phase 3.0: GEOX→WEALTH capital bridge — economic evaluation
     "geox_vision",  # VLM inference, audit, calibration, perceptual
