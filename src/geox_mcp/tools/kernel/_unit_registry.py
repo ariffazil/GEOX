@@ -13,7 +13,7 @@ CURVE_BOUNDS: dict[str, dict[str, Any]] = {
     "PE": {"unit": "b/e", "min": 1.0, "max": 6.0, "null": -999.25},
     "VP": {"unit": "m/s", "min": 1500.0, "max": 7000.0, "null": None},
     "VS": {"unit": "m/s", "min": 500.0, "max": 4000.0, "null": None},
-    "PHI": {"unit": "v/v", "min": 0.0, "max": 0.45, "null": None},
+    "PHI": {"unit": "v/v", "min": 0.0, "max": 0.50, "null": None},
     "SW": {"unit": "v/v", "min": 0.0, "max": 1.0, "null": None},
     "SO": {"unit": "v/v", "min": 0.0, "max": 1.0, "null": None},
     "SG": {"unit": "v/v", "min": 0.0, "max": 1.0, "null": None},

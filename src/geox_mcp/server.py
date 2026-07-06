@@ -1736,7 +1736,9 @@ _GEOX_OUTPUT_SCHEMA: dict[str, Any] = {
         "artifact_status": {"type": "string", "description": "Artifact status: DRAFT|FINAL|SEALED"},
         "primary_artifact": {"type": ["object", "null"], "description": "Primary tool output artifact"},
         "claim_tag_2": {"type": "string", "description": "Alias for claim_tag (envelope uses claim_tag)"},
-        "confidence_band": {"type": ["number", "null"], "description": "Confidence band 0.0–1.0"},
+        "confidence_band": {
+            "description": "Confidence band — single number (0.0–1.0) or dict {p10,p50,p90} for uncertainty bands"
+        },
         "physics_guard": {"type": "object", "description": "Physics-9 guard envelope"},
         "uncertainty": {"type": "string", "description": "Uncertainty descriptor: Low|Moderate|High"},
         "evidence_refs": {"type": "array", "items": {"type": "string"}, "description": "Evidence artifact refs"},
@@ -1831,10 +1833,7 @@ def _safe_forward(
     sig = _inspect.signature(impl)
     accepted = set(sig.parameters.keys())
     # Clean explicit args to prevent client spoofing of identity/trace variables
-    clean_explicit = {
-        k: v for k, v in explicit_args.items()
-        if k not in ("session_id", "actor_id", "trace_id")
-    }
+    clean_explicit = {k: v for k, v in explicit_args.items() if k not in ("session_id", "actor_id", "trace_id")}
     args: dict[str, Any] = {k: v for k, v in clean_explicit.items() if k in accepted and v is not None}
     if "session_id" in accepted and session_id:
         args["session_id"] = session_id

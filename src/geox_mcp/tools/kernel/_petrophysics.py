@@ -163,7 +163,14 @@ def _compute_porosity_from_store(
                         "violations": ["MATRIX_DENSITY_MUST_EXCEED_FLUID_DENSITY"],
                     },
                 )
-            if bool(np.any(rhob > matrix_density)) or bool(np.any(rhob < fluid_density)):
+            # 2% tolerance on matrix_density upper bound — real formations
+            # (calcite stringers, heavy minerals) can exceed pure matrix density
+            # by a small margin without being unphysical. The 2% factor covers
+            # typical cementation/mineralization effects (e.g. RHOB 2.653 vs 2.65).
+            # Hardened 2026-07-05 per QQQ-FFF findings.
+            density_tolerance = 0.02  # 2% fractional tolerance
+            rhob_max_allowed = matrix_density * (1.0 + density_tolerance)
+            if bool(np.any(rhob > rhob_max_allowed)) or bool(np.any(rhob < fluid_density)):
                 return _guard_error(
                     "RHOB_INCONSISTENT_WITH_DENSITY_ENDPOINTS",
                     physics_guard={
