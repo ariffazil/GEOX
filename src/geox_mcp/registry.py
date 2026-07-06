@@ -15,14 +15,16 @@ from typing import Any
 #   4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast = 41.
 #   Phase 2.7 (2026-07-03): +1 geox_biostrat_parse, +1 geox_biostrat_nn_age,
 #   +1 geox_biostrat_ruling_check — biostratigraphy parsing + age + contradiction.
-#   Phase 3.0 (2026-07-03): +3 geox_simulate_accommodation/surfaces/sequences —
+# Phase 3.0 (2026-07-03): +3 geox_simulate_accommodation/surfaces/sequences —
 #   physics-first stratigraphy engines. The extinction event.
+# Phase 3.0 (2026-07-06): +2 geox_rsi_interpret + geox_render_audit —
+#   real seismic image interpretation from pixels. RSI pipeline hardened.
 #
 # INTERNAL PLUMBING (4 tools):
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 45. Live runtime reports canonical_tools=45.
+#   Total canonical = 56. Live runtime reports canonical_tools=56.
 #   49 backward-compat aliases accepted by middleware (scheduled removal 2026-07-30).
 #   Any change requires 888_HOLD per geox/AGENTS.md.
 #
@@ -41,7 +43,7 @@ from typing import Any
 #
 # What these do: query the planet, analyze subsurface data, return evidence.
 # Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 41 (5 well + 4 stratigraphy + 4 seismic + 2 model + 3 basin + 1 atlas + 4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast)
+# Count: 50 (5 well + 4 stratigraphy + 13 seismic + 2 model + 3 basin + 1 atlas + 4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast)
 #
 SURFACE_TOOLS: list[str] = [
     # ── WELL DOMAIN (5) ────────────────────────────────────────────────────────
@@ -57,10 +59,19 @@ SURFACE_TOOLS: list[str] = [
     "geox_simulate_surfaces",  # Erosion/flooding/MFS/truncation surfaces from accommodation physics
     "geox_simulate_sequences",  # Sequences emerge from surfaces + stacking patterns (not LST/TST/HST)
     "geox_simulate_routing",  # Sediment routing: source→sink, delta lobes, fans, bypass/deposition
-    # ── SEISMIC DOMAIN (4) ─────────────────────────────────────────────────────
+    # ── SEISMIC DOMAIN (6) ─────────────────────────────────────────────────────
     "geox_seismic_ingest",  # SEG-Y I/O, header inspection
     "geox_seismic_compute",  # Synthetic, well-tie, AVO, attributes, inversion
     "geox_seismic_interpret",  # Horizon contrast, faults, frames, blend
+    "geox_rsi_interpret",  # Phase 3.0: Real seismic image interpretation — horizon/fault picking from pixels
+    "geox_render_audit",  # Phase 3.0: Render-vs-amplitude validation — image fidelity audit
+    "geox_physical_reality_interpret",  # Phase 3.0: Full RSI pipeline — reality gate to provenance
+    "geox_geological_cognition_run",  # Phase 3.0: Pixel→hypothesis translation — non-uniqueness law
+    "geox_panel_d_render_mcp",  # Phase 3.0: Cognitive interpretation rendering — geologist judgment panel
+    "geox_segy_trace_audit",  # Phase 3.0: SEG-Y trace reality audit — physics validation
+    "geox_well_tie_compute",  # Phase 3.0: Well-tie calibration via bruges — synthetic seismogram
+    "geox_3d_model_build",  # Phase 3.0: GemPy 3D structural model — implicit geological modeling
+    "geox_wealth_bridge_run",  # Phase 3.0: GEOX→WEALTH capital bridge — economic evaluation
     "geox_vision",  # VLM inference, audit, calibration, perceptual
     # ── MODEL DOMAIN (2) ───────────────────────────────────────────────────────
     "geox_subsurface_model",  # Joint inversion, gravity/mag, MT forward
@@ -111,6 +122,25 @@ SURFACE_TOOLS: list[str] = [
     # Pattern: predict → observe → contrast → classify → report.
     # A-FORGE 888_HOLD approved 2026-07-03 by F13 SOVEREIGN.
     "geox_contrast_detect",
+    # ── SEISMIC COGNITION ENGINE (1) — Phase 3.1 (2026-07-06) ─────────────────
+    # 7-layer image-first pipeline: OBS_IMAGE → CV_DETECTION → LLM_COGNITION →
+    # GEN_MODEL → PHYSICS_VALIDATION → HUMAN_GEOLOGIST → GOVERNANCE.
+    # Constitutional: F7 humility (cap 0.90), F9 anti-hantu, non-uniqueness.
+    # "Code can detect evidence. Code cannot manufacture earth truth."
+    "geox_seismic_cognition",
+    # ── SEISMIC VISION AI — 4 modes (Phase 3.2, 2026-07-06) ──────────────────
+    # Cognitive visual AI taxonomy: OBS_IMAGE / DER_RENDER_ENHANCEMENT / GEN_HYPOTHESIS / DER_COGNITIVE_RENDER
+    "geox_visual_understand",  # VLM pattern classification — OBS_IMAGE
+    "geox_visual_enhance",  # Readability enhancement — DER_RENDER_ENHANCEMENT
+    "geox_visual_generate_hypotheses",  # Visual scenario rendering — GEN_HYPOTHESIS
+    "geox_panel_d_render",  # Cognitive interpretation render — DER_COGNITIVE_RENDER
+    # ── PHYSICAL REALITY PIPELINE (Phase 3.2, 2026-07-06) ───────────────────
+    "geox_physical_reality_interpret",  # Reality gate + multi-attribute panel + horizon/fault extraction
+    "geox_cognitive_rank_hypotheses",  # Rank geological hypotheses by basin prior
+    "geox_segy_audit",  # Full SEG-Y trace reality pipeline
+    "geox_well_tie",  # Well-to-seismic tie via bruges
+    "geox_3d_model",  # 3D structural model via GemPy
+    "geox_wealth_consequence",  # Capital consequence via WEALTH HarnessEngine
 ]
 
 
@@ -273,7 +303,63 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "expose": True,
         "face": "surface",
     },
-    # ── SEISMIC DOMAIN (3) ────────────────────────────────────────────────────
+    # ── SEISMIC DOMAIN (3 + 2 RSI) ────────────────────────────────────────────
+    {
+        "name": "geox_physical_reality_interpret",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_geological_cognition_run",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_panel_d_render_mcp",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_segy_trace_audit",
+        "domain": "earth.seismic",
+        "axis": "observe",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_well_tie_compute",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_3d_model_build",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_wealth_bridge_run",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "judgment",
+        "expose": True,
+        "face": "surface",
+    },
     {
         "name": "geox_seismic_ingest",
         "domain": "earth.seismic",
@@ -295,6 +381,22 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "domain": "earth.seismic",
         "axis": "reason",
         "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_rsi_interpret",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+    },
+    {
+        "name": "geox_render_audit",
+        "domain": "earth.seismic",
+        "axis": "verify",
+        "lane": "evidence",
         "expose": True,
         "face": "surface",
     },
@@ -504,6 +606,15 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "domain": "earth.governance",
         "axis": "verify",
         "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── SEISMIC COGNITION ENGINE (1) — Phase 3.1 (2026-07-06) ─────────────
+    {
+        "name": "geox_seismic_cognition",
+        "domain": "earth.seismic",
+        "axis": "reason",
+        "lane": "reasoning",
         "expose": True,
         "face": "surface",
     },

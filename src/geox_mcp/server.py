@@ -29,6 +29,7 @@ import asyncio
 import json
 import logging
 import os
+import numpy as np
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -59,11 +60,11 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.07.03-phase2.7-biostrat"
+GEOX_VERSION = "v2026.07.06-phase3.1-rsi-pipeline"
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
 # Phase 2.7 (2026-07-03): +1 geox_biostrat_parse — biostratigraphy parsing (NN zones, GDE, lithology).
 # Backward-compat wrappers for 49 legacy alias names.
-GEOX_CONTRACT_EPOCH = "2026-07-03-GEOX-38TOOLS-PHASE27"
+GEOX_CONTRACT_EPOCH = "2026-07-06-GEOX-56TOOLS-PHASE31-RSI-PIPELINE"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -85,6 +86,15 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_seismic_ingest": 60.0,
     "geox_seismic_compute": 120.0,
     "geox_seismic_interpret": 60.0,
+    "geox_rsi_interpret": 120.0,  # Phase 3.0: Real seismic image interpretation — CPU-intensive
+    "geox_render_audit": 30.0,  # Phase 3.0: Render-vs-amplitude validation — fast audit
+    "geox_physical_reality_interpret": 120.0,  # Phase 3.0: Full RSI pipeline — CPU-intensive
+    "geox_geological_cognition_run": 60.0,  # Phase 3.0: Geological cognition — hypothesis generation
+    "geox_panel_d_render_mcp": 60.0,  # Phase 3.0: Panel D cognitive rendering
+    "geox_segy_trace_audit": 120.0,  # Phase 3.0: SEG-Y trace audit — file I/O intensive
+    "geox_well_tie_compute": 60.0,  # Phase 3.0: Well-tie calibration via bruges
+    "geox_3d_model_build": 120.0,  # Phase 3.0: GemPy 3D model building
+    "geox_wealth_bridge_run": 60.0,  # Phase 3.0: GEOX→WEALTH capital bridge
     "geox_vision": 120.0,
     "geox_subsurface_model": 60.0,
     "geox_geomechanics": 30.0,
@@ -396,9 +406,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = (
-        46  # Phase 3.0 (2026-07-03): +4 physics-first engines (accommodation/surfaces/sequences/routing). The extinction event.
-    )
+    _EXPECTED_CANONICAL = 66  # Phase 3.2 (2026-07-06): +10 new tools wired (geox_visual_understand, geox_visual_enhance, geox_visual_generate_hypotheses, geox_panel_d_render, geox_physical_reality_interpret, geox_cognitive_rank_hypotheses, geox_segy_audit, geox_well_tie, geox_3d_model, geox_wealth_consequence)
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -1533,6 +1541,85 @@ async def _geox_contrast_detect(
         absence_observed_timespan=absence_observed_timespan,
         threshold=threshold,
     )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# RSI TOOLS — Real Seismic Image Interpretation (Phase 3.0, 2026-07-06)
+# Forged from SCAR_GEOX_RSI_001 failure analysis.
+# OBS_IMAGE ≠ OBS_GEOLOGY. Pixels are observed. Geology requires calibration.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+@mcp.tool(name="geox_rsi_interpret", annotations=_geox_annotations("geox_rsi_interpret"))
+async def _geox_rsi_interpret(
+    image_path: str,
+    mode: str = "horizon_fault_pick",
+    max_faults: int = 20,
+    max_horizons: int = 12,
+    fault_percentile: float = 97.0,
+    fault_min_length: int = 80,
+    horizon_search: int = 5,
+    horizon_lookahead: int = 10,
+    include_attributes: bool = False,
+) -> dict:
+    """Real Seismic Image interpretation — horizon and fault picking from image pixels.
+
+    Processes a real seismic image through the RSI pipeline:
+    reality gate → provenance → crop → AGC → attribute stack →
+    fault detection (ant-track-lite + structure tensor + curvature) →
+    horizon tracking (DP with look-ahead + multi-seed + confidence) →
+    epistemic governance → render audit.
+
+    OBS_IMAGE ≠ OBS_GEOLOGY: All outputs are pixel-derived, not geological measurements.
+    Every INT claim carries alternative interpretations.
+    PETROPHYSICS = HOLD from image-only input.
+
+    Args:
+        image_path: Path to the seismic image file (JPG, PNG, TIFF)
+        mode: Interpretation mode (currently only horizon_fault_pick)
+        max_faults: Maximum number of faults to extract
+        max_horizons: Maximum number of horizons to track
+        fault_percentile: Percentile threshold for fault probability (higher = fewer faults)
+        fault_min_length: Minimum pixel length for a valid fault
+        horizon_search: Search window (pixels) for horizon tracking
+        horizon_lookahead: Look-ahead window for DP horizon tracking
+        include_attributes: If True, include full attribute arrays in output (large!)
+    """
+    from geox_mcp.tools.seismic_rsi import geox_rsi_interpret as _impl
+
+    return await _impl(
+        image_path=image_path,
+        mode=mode,
+        max_faults=max_faults,
+        max_horizons=max_horizons,
+        fault_percentile=fault_percentile,
+        fault_min_length=fault_min_length,
+        horizon_search=horizon_search,
+        horizon_lookahead=horizon_lookahead,
+        include_attributes=include_attributes,
+    )
+
+
+@mcp.tool(name="geox_render_audit", annotations=_geox_annotations("geox_render_audit"))
+async def _geox_render_audit(
+    image_path: str,
+    agc_window: int = 30,
+) -> dict:
+    """Audit image rendering fidelity — validate render-vs-amplitude consistency.
+
+    Checks dynamic range, color space, histogram shape, and AGC correlation.
+    All outputs labeled DER_RENDER_CONTRAST.
+
+    This audit answers: "Does the image faithfully represent seismic amplitude,
+    or has rendering (colormap, contrast, clipping) distorted the signal?"
+
+    Args:
+        image_path: Path to seismic image file
+        agc_window: AGC window size for correlation check
+    """
+    from geox_mcp.tools.seismic_rsi import geox_render_audit as _impl
+
+    return await _impl(image_path=image_path, agc_window=agc_window)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -2987,6 +3074,150 @@ async def _vision(
     return await _impl(**args)
 
 
+# ── SEISMIC VISION AI — 4 modes (Phase 3.2, 2026-07-06) ────────────────────
+# Cognitive visual AI taxonomy: OBS_IMAGE / DER_RENDER_ENHANCEMENT / GEN_HYPOTHESIS / DER_COGNITIVE_RENDER
+
+
+@mcp.tool(name="geox_visual_understand", annotations=_geox_annotations("geox_visual_understand"))
+async def _visual_understand(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Extract visual patterns from seismic image. epistemic: OBS_IMAGE."""
+    from geox_mcp.tools.seismic_vision_ai_async import geox_visual_understand_async as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_visual_enhance", annotations=_geox_annotations("geox_visual_enhance"))
+async def _visual_enhance(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Enhance seismic readability. epistemic: DER_RENDER_ENHANCEMENT."""
+    from geox_mcp.tools.seismic_vision_ai_async import geox_visual_enhance_async as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_visual_generate_hypotheses", annotations=_geox_annotations("geox_visual_generate_hypotheses"))
+async def _visual_generate_hypotheses(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Generate visual alternatives across discontinuity gaps. epistemic: GEN_HYPOTHESIS."""
+    from geox_mcp.tools.seismic_vision_ai_async import geox_visual_generate_hypotheses_async as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_panel_d_render", annotations=_geox_annotations("geox_panel_d_render"))
+async def _panel_d_render(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Render cognitive interpretation dashboard. epistemic: DER_COGNITIVE_RENDER."""
+    from geox_mcp.tools.seismic_vision_ai_async import geox_panel_d_render_async as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_physical_reality_interpret", annotations=_geox_annotations("geox_physical_reality_interpret"))
+async def _physical_reality_interpret(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Multi-attribute physical reality gate + horizon/fault extraction. epistemic: OBS→DER→INT."""
+    from geox_mcp.tools.geox_physical_reality_async import geox_physical_reality_interpret as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_cognitive_rank_hypotheses", annotations=_geox_annotations("geox_cognitive_rank_hypotheses"))
+async def _cognitive_rank_hypotheses(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Rank geological hypotheses by basin prior. epistemic: INT_SEISMIC."""
+    from geox_mcp.tools.geox_geological_cognition_async import geox_cognitive_rank_hypotheses as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_segy_audit", annotations=_geox_annotations("geox_segy_audit"))
+async def _segy_audit(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Full SEG-Y trace reality pipeline. epistemic: OBS_SEGY_TRACE."""
+    from geox_mcp.tools.geox_segy_trace_reality_async import geox_segy_audit as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_well_tie", annotations=_geox_annotations("geox_well_tie"))
+async def _well_tie(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Well-to-seismic tie via bruges. epistemic: DER_SYNTHETIC → INT_GEOLOGY_HORIZON."""
+    from geox_mcp.tools.geox_well_tie_bruges_async import geox_well_tie as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_3d_model", annotations=_geox_annotations("geox_3d_model"))
+async def _3d_model(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """3D structural model via GemPy from 2D picks. epistemic: INT_3D_STRUCTURE."""
+    from geox_mcp.tools.geox_3d_modeling_gempy_async import geox_3d_model as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
+@mcp.tool(name="geox_wealth_consequence", annotations=_geox_annotations("geox_wealth_consequence"))
+async def _wealth_consequence(
+    arguments: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Capital consequence via WEALTH HarnessEngine. epistemic: CAPITAL_CONSEQUENCE."""
+    from geox_mcp.tools.geox_wealth_bridge_async import geox_wealth_consequence as _impl
+
+    args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+    return await _impl(**args)
+
+
 @mcp.tool(name="geox_subsurface_model", annotations=_geox_annotations("geox_subsurface_model"))
 async def _subsurface_model(
     arguments: dict[str, Any] | None = None,
@@ -3730,6 +3961,145 @@ async def _simulate_routing(
         return classify_error(e, source_tool="geox_simulate_routing", source_organ="geox")
 
 
+# ── SEISMIC COGNITION ENGINE — Phase 3.1 (2026-07-06) ──────────────────────
+# 7-layer image-first pipeline for governed seismic interpretation.
+# IMAGE-FIRST COGNITION → SEG-Y VALIDATION → WELL-TIE GEOLOGY → GOVERNANCE
+# Constitutional: F7 humility (cap 0.90), F9 anti-hantu, non-uniqueness.
+# DITEMPA BUKAN DIBERI.
+
+
+@mcp.tool(name="geox_seismic_cognition", annotations=_geox_annotations("geox_seismic_cognition"))
+async def _seismic_cognition(
+    mode: str = "full_pipeline",
+    image_path: str | None = None,
+    segy_path: str | None = None,
+    well_data: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict[str, Any]:
+    """Seismic Cognition Engine — 7-layer image-first governed pipeline.
+
+    Implements the constitutional doctrine:
+      IMAGE-FIRST COGNITION → SEG-Y VALIDATION → WELL-TIE GEOLOGY → GOVERNANCE
+
+    Modes:
+      image_first  — Fast cognitive pass from rendered seismic image (Layers 1-3)
+      validate     — SEG-Y physical audit (Layer 5)
+      calibrate    — Well-tie calibration (Layer 6)
+      full_pipeline — Complete chain: image → SEG-Y → well-tie → governance
+      doctrine     — Returns the seismic cognition doctrine and layer definitions
+
+    Constitutional invariants:
+      - F7 HUMILITY: confidence hard-capped at 0.90
+      - F9 ANTI-HANTU: no hallucinated geology
+      - Non-uniqueness: every visual feature has multiple possible causes
+      - OBS_IMAGE cannot claim geological meaning
+      - INT_SEISMIC always keeps alternatives alive
+      - DER_SYNTHETIC always labeled synthetic
+      - No geology claim without physics validation
+      - No economics without well tie
+    """
+    from geox_core.seismic_cognition import (
+        CognitionResult,
+        SeismicCognitionEngine,
+        get_seismic_cognition_doctrine,
+    )
+
+    try:
+        if mode == "doctrine":
+            return {
+                "status": "success",
+                "tool": "geox_seismic_cognition",
+                "mode": "doctrine",
+                **get_seismic_cognition_doctrine(),
+            }
+
+        engine = SeismicCognitionEngine()
+
+        if mode == "image_first":
+            if not image_path:
+                return {
+                    "status": "error",
+                    "tool": "geox_seismic_cognition",
+                    "error": "image_path required for image_first mode",
+                }
+            result = await engine.process_image_first(image_path)
+            return {
+                "status": "success",
+                "tool": "geox_seismic_cognition",
+                "mode": "image_first",
+                **result.to_dict(),
+            }
+
+        elif mode == "validate":
+            if not segy_path:
+                return {
+                    "status": "error",
+                    "tool": "geox_seismic_cognition",
+                    "error": "segy_path required for validate mode",
+                }
+            # Build a prior result from image if provided
+            if image_path:
+                prior = await engine.process_image_first(image_path)
+            else:
+                prior = CognitionResult()
+            result = await engine.validate_with_segy(segy_path, prior)
+            return {
+                "status": "success",
+                "tool": "geox_seismic_cognition",
+                "mode": "validate",
+                **result.to_dict(),
+            }
+
+        elif mode == "calibrate":
+            if not well_data:
+                return {
+                    "status": "error",
+                    "tool": "geox_seismic_cognition",
+                    "error": "well_data required for calibrate mode",
+                }
+            # Build prior chain
+            if image_path:
+                prior = await engine.process_image_first(image_path)
+            else:
+                prior = CognitionResult()
+            if segy_path:
+                prior = await engine.validate_with_segy(segy_path, prior)
+            result = await engine.calibrate_with_wells(well_data, prior)
+            return {
+                "status": "success",
+                "tool": "geox_seismic_cognition",
+                "mode": "calibrate",
+                **result.to_dict(),
+            }
+
+        elif mode == "full_pipeline":
+            verdict = await engine.full_pipeline(
+                image_path=image_path,
+                segy_path=segy_path,
+                well_data=well_data,
+            )
+            return {
+                "status": "success",
+                "tool": "geox_seismic_cognition",
+                "mode": "full_pipeline",
+                **verdict.to_dict(),
+            }
+
+        else:
+            return {
+                "status": "error",
+                "tool": "geox_seismic_cognition",
+                "error": f"Unknown mode: {mode}. Valid: image_first, validate, calibrate, full_pipeline, doctrine",
+            }
+
+    except Exception as e:
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(e, source_tool="geox_seismic_cognition", source_organ="geox")
+
+
 logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools registered with FastMCP")
 
 
@@ -3766,6 +4136,301 @@ def main() -> None:
         logger.info("  Dimensions: ['prospect', 'well', 'earth3d', 'map', 'cross']")
         logger.info(f"  MCP Apps: {'enabled' if HAS_FASTMCP_APPS else 'disabled'}")
         uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SEISMIC PIPELINE TOOLS — Phase 3.0 RSI Cognition (2026-07-06)
+# Platform-agnostic seismic interpretation pipeline.
+# Implements IMAGE-FIRST COGNITION + NON-UNIQUENESS LAW doctrines.
+# OBS_IMAGE ≠ OBS_GEOLOGY. Pixels are observed. Geology requires calibration.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+@mcp.tool(name="geox_physical_reality_interpret", annotations=_geox_annotations("geox_physical_reality_interpret"))
+async def _geox_physical_reality_interpret(
+    image_path: str,
+    output_dir: str | None = None,
+    max_faults: int = 15,
+    max_horizons: int = 8,
+) -> dict[str, Any]:
+    """Physical reality interpretation from seismic image pixels.
+
+    Full RSI pipeline: reality gate → crop → AGC → phase → discontinuity →
+    edge → fault probability → ant-track-lite → DP horizon tracking →
+    epistemic governance → provenance manifest.
+
+    OBS_IMAGE ≠ OBS_GEOLOGY: All outputs are pixel-derived.
+    Every INT claim carries alternative interpretations.
+    PETROPHYSICS = HOLD from image-only input.
+    """
+    try:
+        from geox_mcp.federation_safety import classify_error
+        from geox_core.seismic_pipeline.geox_physical_reality import GeoxPhysicalReality
+
+        engine = GeoxPhysicalReality()
+        result = engine.interpret(image_path, output_dir=output_dir)
+        return {
+            "status": "success",
+            "tool": "geox_physical_reality_interpret",
+            **result,
+        }
+    except Exception as e:
+        return classify_error(e, source_tool="geox_physical_reality_interpret", source_organ="geox")
+
+
+@mcp.tool(name="geox_geological_cognition_run", annotations=_geox_annotations("geox_geological_cognition_run"))
+async def _geox_geological_cognition_run(
+    image_path: str,
+    output_dir: str | None = None,
+) -> dict[str, Any]:
+    """Geological cognition layer — translate pixel patterns into geological hypotheses.
+
+    Runs after physical reality interpretation. Classifies reflector packages,
+    detects terminations (onlap/downlap/truncation), screens imaging artifacts,
+    ranks multiple hypotheses per feature, and builds a geologist-style report.
+
+    Every INT claim carries alternatives. Non-uniqueness law enforced.
+    """
+    try:
+        import sys
+        from geox_mcp.federation_safety import classify_error
+
+        sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
+        from geox_geological_cognition import run_geological_cognition
+        from geox_physical_reality import GeoxPhysicalReality
+
+        # First run physical reality to get attributes
+        engine = GeoxPhysicalReality()
+        phys = engine.interpret(image_path, output_dir=output_dir)
+        if phys.get("status") == "VOID":
+            return {"status": "VOID", "reason": "Physical reality gate failed"}
+
+        # Run geological cognition on the attributes
+        attrs = phys.get("attributes", {})
+        import numpy as np
+
+        fp = np.array(attrs.get("fault_probability", []))
+        horizons = phys.get("horizons", [])
+        faults = phys.get("faults", [])
+
+        result = run_geological_cognition(attrs, fp, horizons, faults, output_dir)
+        return {
+            "status": "success",
+            "tool": "geox_geological_cognition_run",
+            **result,
+        }
+    except Exception as e:
+        return classify_error(e, source_tool="geox_geological_cognition_run", source_organ="geox")
+
+
+@mcp.tool(name="geox_panel_d_render_mcp", annotations=_geox_annotations("geox_panel_d_render_mcp"))
+async def _geox_panel_d_render_mcp(
+    image_path: str,
+    output_dir: str | None = None,
+) -> dict[str, Any]:
+    """Panel D — Cognitive interpretation rendering.
+
+    Renders what the geologist JUDGES, not what pixels show.
+    Zone bands, termination symbols, fault labels, horizon labels,
+    artifact boxes, epistemic rulers. The panel a senior geologist
+    would show to justify a drilling decision.
+
+    Requires prior physical reality + geological cognition runs.
+    """
+    try:
+        import sys
+        from geox_mcp.federation_safety import classify_error
+
+        sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
+        from geox_panel_d import render_cognitive_panel
+        from geox_physical_reality import GeoxPhysicalReality
+        from geox_geological_cognition import run_geological_cognition
+
+        # Run full pipeline
+        engine = GeoxPhysicalReality()
+        phys = engine.interpret(image_path, output_dir=output_dir)
+        if phys.get("status") == "VOID":
+            return {"status": "VOID", "reason": "Physical reality gate failed"}
+
+        attrs = phys.get("attributes", {})
+        import numpy as np
+
+        fp = np.array(attrs.get("fault_probability", []))
+        horizons = phys.get("horizons", [])
+        faults = phys.get("faults", [])
+
+        cogn = run_geological_cognition(attrs, fp, horizons, faults, output_dir)
+
+        # Render Panel D
+        result = render_cognitive_panel(
+            attrs,
+            fp,
+            faults,
+            horizons,
+            cogn.get("packages", []),
+            cogn.get("terminations", []),
+            cogn.get("artifacts", []),
+            cogn.get("hypotheses", {}),
+            np.array(attrs.get("agc", []))
+            if isinstance(attrs.get("agc"), list)
+            else (attrs.get("agc") if hasattr(attrs.get("agc", ""), "shape") else np.array([])),
+            phys.get("crop_bbox", [0, 0, 0, 0]),
+            phys.get("provenance", {}),
+            output_dir or os.path.dirname(image_path),
+        )
+        return {
+            "status": "success",
+            "tool": "geox_panel_d_render_mcp",
+            **result,
+        }
+    except Exception as e:
+        return classify_error(e, source_tool="geox_panel_d_render_mcp", source_organ="geox")
+
+
+@mcp.tool(name="geox_segy_trace_audit", annotations=_geox_annotations("geox_segy_trace_audit"))
+async def _geox_segy_trace_audit(
+    segy_path: str,
+    output_dir: str | None = None,
+) -> dict[str, Any]:
+    """SEG-Y trace reality audit — physical validation from raw traces.
+
+    Ingests SEG-Y, audits trace headers, checks geometry,
+    validates amplitude preservation, estimates wavelet phase,
+    and computes trace-level attributes.
+
+    This is the PHYSICS_VALIDATION layer — the evidential backbone
+    that validates or falsifies image-based interpretations.
+    """
+    try:
+        import sys
+        from geox_mcp.federation_safety import classify_error
+
+        sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
+        from geox_segy_trace_reality import (
+            ingest_segy,
+            audit_trace_headers,
+            audit_geometry,
+            check_amplitude_preservation,
+            check_wavelet_phase,
+            compute_trace_attributes,
+        )
+
+        ingested = ingest_segy(segy_path)
+        header_audit = audit_trace_headers(ingested)
+        geom_audit = audit_geometry(ingested)
+        amp_audit = check_amplitude_preservation(ingested)
+        wavelet_info = check_wavelet_phase(ingested)
+        trace_attrs = compute_trace_attributes(ingested, wavelet_info)
+
+        return {
+            "status": "success",
+            "tool": "geox_segy_trace_audit",
+            "header_audit": header_audit,
+            "geometry_audit": geom_audit,
+            "amplitude_audit": amp_audit,
+            "wavelet_info": wavelet_info,
+            "trace_attributes_summary": {
+                k: {"shape": v.shape, "dtype": str(v.dtype)} for k, v in trace_attrs.items() if hasattr(v, "shape")
+            },
+        }
+    except Exception as e:
+        return classify_error(e, source_tool="geox_segy_trace_audit", source_organ="geox")
+
+
+@mcp.tool(name="geox_well_tie_compute", annotations=_geox_annotations("geox_well_tie_compute"))
+async def _geox_well_tie_compute(
+    las_path: str,
+    segy_path: str | None = None,
+    output_dir: str | None = None,
+) -> dict[str, Any]:
+    """Well-tie calibration via bruges — synthetic seismogram generation.
+
+    Loads well logs (LAS), computes synthetic seismogram via bruges,
+    and ties to seismic if SEG-Y provided. This is the GEOLOGY layer
+    that converts seismic interpretation into formation-calibrated picks.
+
+    Without well tie, all interpretations remain INT_SEISMIC (not OBS_GEOLOGY).
+    """
+    try:
+        import sys
+        from geox_mcp.federation_safety import classify_error
+
+        sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
+        from geox_well_tie_bruges import run_well_tie
+
+        result = run_well_tie(las_path, segy_audit_path=segy_path or "", output_dir=output_dir or "/tmp/geox_well_tie")
+        return {
+            "status": "success",
+            "tool": "geox_well_tie_compute",
+            **result,
+        }
+    except Exception as e:
+        return classify_error(e, source_tool="geox_well_tie_compute", source_organ="geox")
+
+
+@mcp.tool(name="geox_3d_model_build", annotations=_geox_annotations("geox_3d_model_build"))
+async def _geox_3d_model_build(
+    model_json_path: str,
+    output_dir: str | None = None,
+) -> dict[str, Any]:
+    """3D structural model via GemPy — implicit geological modeling.
+
+    Builds a 3D geological model from 2D interpretation picks.
+    Requires a JSON model definition with surfaces, orientations,
+    and extent. Outputs 3D visualization and structural model.
+
+    This is the STRUCTURAL_VALIDATION layer — converts 2D picks
+    into 3D geological volumes for structural plausibility testing.
+    """
+    try:
+        import sys
+        from geox_mcp.federation_safety import classify_error
+
+        sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
+        from geox_3d_modeling_gempy import run_gempy_3d_model
+
+        result = run_gempy_3d_model(model_json_path, output_dir)
+        return {
+            "status": "success",
+            "tool": "geox_3d_model_build",
+            **result,
+        }
+    except Exception as e:
+        return classify_error(e, source_tool="geox_3d_model_build", source_organ="geox")
+
+
+@mcp.tool(name="geox_wealth_bridge_run", annotations=_geox_annotations("geox_wealth_bridge_run"))
+async def _geox_wealth_bridge_run(
+    gempy_manifest_path: str,
+    well_data: dict[str, Any] | None = None,
+    output_dir: str | None = None,
+) -> dict[str, Any]:
+    """GEOX → WEALTH capital bridge — economic evaluation of geological models.
+
+    Takes GemPy 3D model manifest and optional well data,
+    computes prospect volumetrics, and routes to WEALTH organ
+    for NPV/IRR/EMV evaluation.
+
+    Sovereign authority required for capital decisions.
+    WEALTH computes. arifOS judges. Arif decides.
+    """
+    try:
+        import sys
+        from geox_mcp.federation_safety import classify_error
+
+        sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
+        from geox_wealth_bridge import run_wealth_bridge
+
+        result = run_wealth_bridge(
+            gempy_manifest_path, grid_path="", well_manifest_path="", output_dir=output_dir or "/tmp/geox_wealth"
+        )
+        return {
+            "status": "success",
+            "tool": "geox_wealth_bridge_run",
+            **result,
+        }
+    except Exception as e:
+        return classify_error(e, source_tool="geox_wealth_bridge_run", source_organ="geox")
 
 
 if __name__ == "__main__":
