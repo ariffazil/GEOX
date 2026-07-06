@@ -1,0 +1,23 @@
+age_Ma,sea_level_m,uncertainty_m,curve,component,source
+0.0,0,5,Miller2020,long_term,Miller et al. 2020
+5.0,10,10,Miller2020,long_term,Miller et al. 2020
+10.0,20,15,Miller2020,long_term,Miller et al. 2020
+15.0,30,15,Miller2020,long_term,Miller et al. 2020
+20.0,40,20,Miller2020,long_term,Miller et al. 2020
+25.0,50,20,Miller2020,long_term,Miller et al. 2020
+30.0,60,25,Miller2020,long_term,Miller et al. 2020
+33.0,70,25,Miller2020,long_term,Miller et al. 2020 (E-O transition)
+35.0,40,20,Miller2020,long_term,Miller et al. 2020
+40.0,50,20,Miller2020,long_term,Miller et al. 2020
+45.0,60,25,Miller2020,long_term,Miller et al. 2020
+50.0,70,25,Miller2020,long_term,Miller et al. 2020
+55.0,80,30,Miller2020,long_term,Miller et al. 2020 (PETM)
+60.0,70,25,Miller2020,long_term,Miller et al. 2020
+65.0,60,25,Miller2020,long_term,Miller et al. 2020
+70.0,80,30,Miller2020,long_term,Miller et al. 2020 (Late Cretaceous high)
+75.0,100,35,Miller2020,long_term,Miller et al. 2020
+80.0,120,40,Miller2020,long_term,Miller et al. 2020
+85.0,130,40,Miller2020,long_term,Miller et al. 2020
+90.0,140,45,Miller2020,long_term,Miller et al. 2020 (Turonian high)
+95.0,130,40,Miller2020,long_term,Miller et al. 2020
+100.0,120,40,Miller2020,long_term,Miller et al. 2020

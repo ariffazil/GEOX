@@ -1,6 +1,17 @@
 """
-kernel/_biostrat.py — Biostratigraphy parsing, NN zone lookup, GDE mapping.
+kernel/_biostrat.py — Biostratigraphy parsing, zone lookup, GDE mapping.
 ToAC v1: evidence-tagged abstraction from source text to structured codes.
+
+Supports: NN (Neogene nannofossil), NP (Paleogene nannofossil),
+          CC (Cretaceous nannofossil, Sissingh 1977),
+          UC (Upper Cretaceous nannofossil, Burnett 1998).
+
+FIX 2026-07-06: Added CC/UC/NP zones + domain validator.
+  NN = Cenozoic/Neogene-Quaternary only (0–23 Ma)
+  NP = Paleogene only (23–66 Ma)
+  CC = Cretaceous only (66–145 Ma)
+  UC = Upper Cretaceous only (66–100 Ma)
+  Cross-era zone misuse is BLOCKED by validate_zone_domain().
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
@@ -10,7 +21,15 @@ from __future__ import annotations
 import re
 from typing import Any
 
-# ── NN Zone Age Lookup (GPTS2020-style) ──────────────────────────────────────
+# ── Era Boundaries (Ma, ICS v2024/12) ────────────────────────────────────────
+_MESOZOIC_START = 251.9  # Permian-Triassic boundary
+_CRETACEOUS_START = 145.0  # Jurassic-Cretaceous boundary
+_CRETACEOUS_END = 66.0  # Cretaceous-Paleogene (K-Pg) boundary
+_CENOZOIC_START = 66.0  # K-Pg boundary
+_PALEOGENE_END = 23.0  # Paleogene-Neogene boundary
+_NEogene_END = 2.6  # Neogene-Quaternary boundary
+
+# ── NN Zone Age Lookup — Neogene Nannofossil (Martini 1971, 0–23 Ma) ────────
 NN_AGES: dict[str, tuple[float, float]] = {
     "NN21": (0.00, 0.46),
     "NN20": (0.46, 1.04),
@@ -43,6 +62,268 @@ NN_AGES: dict[str, tuple[float, float]] = {
     "NN1": (20.44, 23.03),
 }
 
+# ── NP Zone Age Lookup — Paleogene Nannofossil (Martini 1971, 23–66 Ma) ────
+NP_AGES: dict[str, tuple[float, float]] = {
+    "NP25": (23.03, 27.99),
+    "NP24": (27.99, 33.89),
+    "NP23": (33.89, 37.71),
+    "NP22": (37.71, 39.58),
+    "NP21": (39.58, 41.03),
+    "NP20": (41.03, 42.57),
+    "NP19": (42.57, 45.72),
+    "NP18": (45.72, 48.61),
+    "NP17": (48.61, 49.11),
+    "NP16": (49.11, 52.77),
+    "NP15": (52.77, 53.70),
+    "NP14": (53.70, 54.63),
+    "NP13": (54.63, 55.56),
+    "NP12": (55.56, 57.55),
+    "NP11": (57.55, 59.24),
+    "NP10": (59.24, 61.64),
+    "NP9": (61.64, 62.53),
+    "NP8": (62.53, 63.25),
+    "NP7": (63.25, 63.80),
+    "NP6": (63.80, 64.68),
+    "NP5": (64.68, 65.19),
+    "NP4": (65.19, 65.56),
+    "NP3": (65.56, 65.84),
+    "NP2": (65.84, 66.00),
+    "NP1": (66.00, 66.05),
+}
+
+# ── CC Zone Age Lookup — Cretaceous Nannofossil (Sissingh 1977, 66–145 Ma) ──
+CC_AGES: dict[str, tuple[float, float]] = {
+    "CC26": (66.00, 67.60),  # late Maastrichtian
+    "CC25": (67.60, 69.20),  # early Maastrichtian
+    "CC24": (69.20, 71.10),  # late Campanian
+    "CC23": (71.10, 73.20),  # mid Campanian
+    "CC22": (73.20, 76.20),  # early Campanian
+    "CC21": (76.20, 80.60),  # late Santonian
+    "CC20": (80.60, 83.60),  # early Santonian
+    "CC19": (83.60, 85.80),  # late Coniacian
+    "CC18": (85.80, 87.50),  # early Coniacian
+    "CC17": (87.50, 89.00),  # late Turonian
+    "CC16": (89.00, 91.00),  # mid Turonian
+    "CC15": (91.00, 93.00),  # early Turonian
+    "CC14": (93.00, 93.90),  # Cenomanian-Turonian boundary (OAE-2)
+    "CC13": (93.90, 96.00),  # late Cenomanian
+    "CC12": (96.00, 97.50),  # mid Cenomanian
+    "CC11": (97.50, 99.60),  # early Cenomanian
+    "CC10": (99.60, 100.50),  # late Albian
+    "CC9": (100.50, 105.30),  # mid Albian
+    "CC8": (105.30, 109.00),  # early Albian
+    "CC7": (109.00, 112.20),  # late Aptian
+    "CC6": (112.20, 118.00),  # mid Aptian
+    "CC5": (118.00, 121.60),  # early Aptian
+    "CC4": (121.60, 126.30),  # late Barremian
+    "CC3": (126.30, 130.00),  # Hauterivian-Barremian
+    "CC2": (130.00, 136.40),  # Valanginian
+    "CC1": (136.40, 145.00),  # Berriasian-Valanginian
+}
+
+# ── UC Zone Age Lookup — Upper Cretaceous Nannofossil (Burnett 1998, 66–100 Ma)
+UC_AGES: dict[str, tuple[float, float]] = {
+    "UC20": (66.00, 67.60),  # late Maastrichtian
+    "UC19": (67.60, 69.20),  # early Maastrichtian
+    "UC18": (69.20, 71.10),  # late Campanian
+    "UC17": (71.10, 73.20),  # mid Campanian
+    "UC16": (73.20, 76.20),  # early Campanian
+    "UC15": (76.20, 80.60),  # late Santonian
+    "UC14": (80.60, 83.60),  # early Santonian
+    "UC13": (83.60, 85.80),  # late Coniacian
+    "UC12": (85.80, 87.50),  # early Coniacian
+    "UC11": (87.50, 89.00),  # late Turonian
+    "UC10": (89.00, 91.00),  # mid Turonian
+    "UC9": (91.00, 93.00),  # early Turonian
+    "UC8": (93.00, 93.90),  # Cenomanian-Turonian boundary (OAE-2)
+    "UC7": (93.90, 96.00),  # late Cenomanian
+    "UC6": (96.00, 97.50),  # mid Cenomanian
+    "UC5": (97.50, 99.60),  # early Cenomanian
+}
+
+# ── Unified Zone Registry ────────────────────────────────────────────────────
+# Maps zone prefix → (age_dict, scheme_name, period_domain, era)
+_ZONE_SCHEMES: dict[str, tuple[dict, str, str, str]] = {
+    "NN": (NN_AGES, "Martini_1971_NN", "Neogene-Quaternary", "Cenozoic"),
+    "NP": (NP_AGES, "Martini_1971_NP", "Paleogene", "Cenozoic"),
+    "CC": (CC_AGES, "Sissingh_1977_CC", "Cretaceous", "Mesozoic"),
+    "UC": (UC_AGES, "Burnett_1998_UC", "Upper Cretaceous", "Mesozoic"),
+}
+
+# All zones in one lookup (for cross-scheme age resolution)
+_ALL_ZONES: dict[str, tuple[float, float]] = {**NN_AGES, **NP_AGES, **CC_AGES, **UC_AGES}
+
+
+def validate_zone_domain(zone: str, claimed_stage_or_age: str | float | None = None) -> dict[str, Any]:
+    """Validate that a biozone's scheme is appropriate for the claimed age/stage.
+
+    This is the core fix for the NN21-on-Cretaceous bug:
+    NN zones are Neogene-Quaternary (0–23 Ma) only.
+    Using NN21 to date a Campanian (72–84 Ma) sample is a 72-million-year error.
+
+    Parameters
+    ----------
+    zone : str
+        Zone code, e.g. "NN21", "CC23", "UC18", "NP15"
+    claimed_stage_or_age : str or float, optional
+        If str: stage name (e.g. "Campanian", "Cretaceous")
+        If float: age in Ma
+
+    Returns
+    -------
+    dict with keys:
+        zone, scheme, period_domain, era, zone_age_top, zone_age_base,
+        domain_valid: bool, verdict: "VALID" | "CROSS_ERA_MISMATCH" | "UNKNOWN_SCHEME",
+        warning: str or None
+    """
+    zone_upper = zone.strip().upper()
+    prefix = re.match(r"([A-Z]+)", zone_upper)
+    if not prefix:
+        return {
+            "zone": zone,
+            "domain_valid": False,
+            "verdict": "UNKNOWN_SCHEME",
+            "warning": f"Cannot parse zone prefix from '{zone}'",
+        }
+
+    prefix_str = prefix.group(1)
+    scheme_info = _ZONE_SCHEMES.get(prefix_str)
+
+    if not scheme_info:
+        return {
+            "zone": zone,
+            "domain_valid": False,
+            "verdict": "UNKNOWN_SCHEME",
+            "warning": f"Zone prefix '{prefix_str}' not in registry (known: NN, NP, CC, UC)",
+        }
+
+    age_dict, scheme_name, period_domain, era = scheme_info
+    zone_ages = age_dict.get(zone_upper)
+
+    if not zone_ages:
+        return {
+            "zone": zone,
+            "scheme": scheme_name,
+            "period_domain": period_domain,
+            "era": era,
+            "domain_valid": False,
+            "verdict": "UNKNOWN_ZONE",
+            "warning": f"Zone '{zone_upper}' not found in {scheme_name}",
+        }
+
+    result = {
+        "zone": zone_upper,
+        "scheme": scheme_name,
+        "period_domain": period_domain,
+        "era": era,
+        "zone_age_top_ma": zone_ages[0],
+        "zone_age_base_ma": zone_ages[1],
+        "domain_valid": True,
+        "verdict": "VALID",
+        "warning": None,
+    }
+
+    if claimed_stage_or_age is None:
+        return result
+
+    # Determine claimed era from stage name or numeric age
+    claimed_era = None
+    claimed_age_ma = None
+
+    if isinstance(claimed_stage_or_age, (int, float)):
+        claimed_age_ma = float(claimed_stage_or_age)
+    elif isinstance(claimed_stage_or_age, str):
+        stage_lower = claimed_stage_or_age.lower()
+        # Map common stage names to eras
+        _CRETACEOUS_STAGES = {
+            "berriasian",
+            "valanginian",
+            "hauterivian",
+            "barremian",
+            "aptian",
+            "albian",
+            "cenomanian",
+            "turonian",
+            "coniacian",
+            "santonian",
+            "campanian",
+            "maastrichtian",
+            "cretaceous",
+        }
+        _PALEOGENE_STAGES = {
+            "danian",
+            "selandian",
+            "thanetian",
+            "ypresian",
+            "lutetian",
+            "bartonian",
+            "priabonian",
+            "paleocene",
+            "eocene",
+            "paleogene",
+        }
+        _NEOGENE_STAGES = {
+            "aquitanian",
+            "burdigalian",
+            "langhian",
+            "serravallian",
+            "tortonian",
+            "messinian",
+            "zanclean",
+            "piacenzian",
+            "gelasian",
+            "neogene",
+            "miocene",
+            "pliocene",
+            "pleistocene",
+            "holocene",
+            "quaternary",
+        }
+
+        if stage_lower in _CRETACEOUS_STAGES:
+            claimed_era = "Mesozoic"
+        elif stage_lower in _PALEOGENE_STAGES:
+            claimed_era = "Cenozoic"
+            if stage_lower in {"paleocene", "danian", "selandian", "thanetian"}:
+                claimed_age_ma = 60.0  # midpoint
+            elif stage_lower in {"eocene", "ypresian", "lutetian", "bartonian", "priabonian"}:
+                claimed_age_ma = 45.0
+        elif stage_lower in _NEOGENE_STAGES:
+            claimed_era = "Cenozoic"
+            if stage_lower in {"miocene", "aquitanian", "burdigalian", "langhian", "serravallian", "tortonian", "messinian"}:
+                claimed_age_ma = 15.0
+            elif stage_lower in {"pliocene", "zanclean", "piacenzian"}:
+                claimed_age_ma = 3.5
+            elif stage_lower in {"pleistocene", "quaternary", "holocene", "gelasian"}:
+                claimed_age_ma = 1.0
+
+    # Check for cross-era mismatch
+    if claimed_era and claimed_era != era:
+        result["domain_valid"] = False
+        result["verdict"] = "CROSS_ERA_MISMATCH"
+        result["warning"] = (
+            f"Zone {zone_upper} belongs to {era} ({period_domain}, "
+            f"{zone_ages[0]}–{zone_ages[1]} Ma) but claimed context is {claimed_era} "
+            f"(stage: {claimed_stage_or_age}). This is a {era}-{claimed_era} mismatch. "
+            f"Use {'CC' if claimed_era == 'Mesozoic' else 'NP'} zones instead."
+        )
+        return result
+
+    # Check numeric age mismatch (if we have both)
+    if claimed_age_ma is not None:
+        if claimed_age_ma < zone_ages[0] - 5 or claimed_age_ma > zone_ages[1] + 5:
+            result["domain_valid"] = False
+            result["verdict"] = "AGE_MISMATCH"
+            result["warning"] = (
+                f"Zone {zone_upper} spans {zone_ages[0]}–{zone_ages[1]} Ma "
+                f"but claimed age is {claimed_age_ma} Ma. "
+                f"Difference exceeds 5 Myr tolerance."
+            )
+            return result
+
+    return result
+
+
 # ── GDE (Geological Depositional Environment) Rules ──────────────────────────
 GDE_RULES: list[tuple[str, str, str, int, str]] = [
     (r"alluvial|fluvial|floodplain", "2026_COL", "Continental / alluvial plain", 0, "Continental fluvial to floodplain system"),
@@ -73,10 +354,13 @@ def clean_text(value: Any) -> str:
 
 
 def parse_nn_zone(value: str) -> dict[str, str]:
-    """Parse nannofossil zone text into structured NN zone + evidence tag.
+    """Parse nannofossil zone text into structured zone + evidence tag.
+
+    FIX 2026-07-06: Now handles NN, NP, CC, UC zone schemes.
+    Previously only matched NN zones — Cretaceous zones were silently dropped.
 
     Returns:
-        {"zone": "NN19", "source_text": "NN19-20", "evidence_tag": "EVIDENCE_DIRECT"}
+        {"zone": "CC23", "scheme": "Sissingh_1977_CC", "source_text": "CC23", "evidence_tag": "EVIDENCE_DIRECT"}
         or {"zone": "UNKNOWN", "source_text": "...", "evidence_tag": "NN_NOT_PARSED"}
     """
     text = clean_text(value)
@@ -85,21 +369,35 @@ def parse_nn_zone(value: str) -> dict[str, str]:
         return {"zone": "UNKNOWN", "source_text": "", "evidence_tag": "NO_GDE_SOURCE"}
     if re.search(r"INDET|BARREN|NOT ANALY|ABSENT|UNKNOWN", upper):
         return {"zone": "UNKNOWN", "source_text": text, "evidence_tag": "SOURCE_UNRESOLVED"}
-    matches = re.findall(r"\bNN\s*([0-9]{1,2}[A-C]?)\b", upper)
-    if not matches:
-        return {"zone": "UNKNOWN", "source_text": text, "evidence_tag": "NN_NOT_PARSED"}
-    zones = [f"NN{m}" for m in matches]
-    if len(zones) == 1:
-        return {"zone": zones[0], "source_text": text, "evidence_tag": "EVIDENCE_DIRECT"}
-    return {"zone": "-".join(zones), "source_text": text, "evidence_tag": "EVIDENCE_MULTI_ZONE"}
+
+    # Try all zone schemes: NN, NP, CC, UC
+    for prefix, pattern in [
+        ("NN", r"\bNN\s*([0-9]{1,2}[A-C]?)\b"),
+        ("NP", r"\bNP\s*([0-9]{1,2}[A-C]?)\b"),
+        ("CC", r"\bCC\s*([0-9]{1,2})\b"),
+        ("UC", r"\bUC\s*([0-9]{1,2})\b"),
+    ]:
+        matches = re.findall(pattern, upper)
+        if matches:
+            zones = [f"{prefix}{m}" for m in matches]
+            scheme = _ZONE_SCHEMES.get(prefix, (None, "unknown", "unknown", "unknown"))[1]
+            if len(zones) == 1:
+                return {"zone": zones[0], "scheme": scheme, "source_text": text, "evidence_tag": "EVIDENCE_DIRECT"}
+            return {"zone": "-".join(zones), "scheme": scheme, "source_text": text, "evidence_tag": "EVIDENCE_MULTI_ZONE"}
+
+    return {"zone": "UNKNOWN", "source_text": text, "evidence_tag": "NN_NOT_PARSED"}
 
 
 def nn_age(zone: str) -> tuple[float, float]:
-    """Return (age_top_Ma, age_base_Ma) for a parsed NN zone string."""
+    """Return (age_top_Ma, age_base_Ma) for any nannofossil zone (NN/NP/CC/UC).
+
+    FIX 2026-07-06: Now resolves across all zone schemes, not just NN.
+    Previously returned (-999.25, -999.25) for CC/UC/NP zones.
+    """
     if not zone or zone == "UNKNOWN":
         return (-999.25, -999.25)
     parts = zone.split("-")
-    ages = [NN_AGES[p] for p in parts if p in NN_AGES]
+    ages = [_ALL_ZONES[p] for p in parts if p in _ALL_ZONES]
     if not ages:
         return (-999.25, -999.25)
     return (min(a[0] for a in ages), max(a[1] for a in ages))

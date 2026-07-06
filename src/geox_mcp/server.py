@@ -4206,12 +4206,11 @@ async def _geox_geological_cognition_run(
             return {"status": "VOID", "reason": "Physical reality gate failed"}
 
         # Run geological cognition on the attributes
-        attrs = phys.get("attributes", {})
-        import numpy as np
-
-        fp = np.array(attrs.get("fault_probability", []))
-        horizons = phys.get("horizons", [])
-        faults = phys.get("faults", [])
+        # Use stored raw arrays from physical reality engine
+        attrs = engine._last_attrs
+        fp = engine._last_fp
+        horizons = engine._last_horizons
+        faults = engine._last_faults
 
         result = run_geological_cognition(attrs, fp, horizons, faults, output_dir)
         return {
@@ -4252,29 +4251,22 @@ async def _geox_panel_d_render_mcp(
         if phys.get("status") == "VOID":
             return {"status": "VOID", "reason": "Physical reality gate failed"}
 
-        attrs = phys.get("attributes", {})
-        import numpy as np
-
-        fp = np.array(attrs.get("fault_probability", []))
-        horizons = phys.get("horizons", [])
-        faults = phys.get("faults", [])
+        # Use stored raw arrays from physical reality engine
+        attrs = engine._last_attrs
+        fp = engine._last_fp
+        horizons = engine._last_horizons
+        faults = engine._last_faults
+        raw_arr = engine._last_raw_arr
+        crop_bbox = engine._last_crop_bbox
 
         cogn = run_geological_cognition(attrs, fp, horizons, faults, output_dir)
 
         # Render Panel D
         result = render_cognitive_panel(
-            attrs,
-            fp,
-            faults,
-            horizons,
-            cogn.get("packages", []),
-            cogn.get("terminations", []),
-            cogn.get("artifacts", []),
-            cogn.get("hypotheses", {}),
-            np.array(attrs.get("agc", []))
-            if isinstance(attrs.get("agc"), list)
-            else (attrs.get("agc") if hasattr(attrs.get("agc", ""), "shape") else np.array([])),
-            phys.get("crop_bbox", [0, 0, 0, 0]),
+            attrs, fp, faults, horizons,
+            cogn.get("packages", []), cogn.get("terminations", []),
+            cogn.get("artifacts", []), cogn.get("hypotheses", {}),
+            raw_arr, crop_bbox,
             phys.get("provenance", {}),
             output_dir or os.path.dirname(image_path),
         )
