@@ -62,10 +62,10 @@ SURFACE_TOOLS: list[str] = [
     "geox_simulate_surfaces",  # Erosion/flooding/MFS/truncation surfaces from accommodation physics
     "geox_simulate_sequences",  # Sequences emerge from surfaces + stacking patterns (not LST/TST/HST)
     "geox_simulate_routing",  # Sediment routing: source→sink, delta lobes, fans, bypass/deposition
-    # ── SEISMIC DOMAIN (6) ─────────────────────────────────────────────────────
-    "geox_seismic_ingest",  # SEG-Y I/O, header inspection
-    "geox_seismic_compute",  # Synthetic, well-tie, AVO, attributes, inversion
-    "geox_seismic_interpret",  # Horizon contrast, faults, frames, blend
+    # ── SEISMIC DOMAIN (consolidated 2026-07-06) ───────────────────────────
+    "geox_seismic_ingest",  # Legacy canonical surface retained while manifests migrate. Use geox_seismic_compute(mode="ingest") for new callers.
+    "geox_seismic_compute",  # Unified: synthetic, well-tie, AVO, attr, inversion, ingest(cerna), interpret(tafsir)
+    "geox_seismic_interpret",  # Legacy canonical surface retained while manifests migrate. Use geox_seismic_compute(mode="interpret") for new callers.
     "geox_rsi_interpret",  # Phase 3.0: Real seismic image interpretation — horizon/fault picking from pixels
     "geox_render_audit",  # Phase 3.0: Render-vs-amplitude validation — image fidelity audit
     "geox_physical_reality_interpret",  # Phase 3.0: Full RSI pipeline — reality gate to provenance
@@ -376,8 +376,8 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
     {
         "name": "geox_seismic_compute",
         "domain": "earth.seismic",
-        "axis": "reason",
-        "lane": "reasoning",
+        "axis": "compute",
+        "lane": "evidence",
         "expose": True,
         "face": "surface",
     },
