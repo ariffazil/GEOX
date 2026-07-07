@@ -3,50 +3,35 @@ from __future__ import annotations
 from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# GEOX CANONICAL TOOLS — Phase 2.7 Clean Architecture (2026-07-03)
-# 38 canonical tools (34 surface + 4 internal). 49 backward-compat aliases.
-# Mode-based consolidation. Evidence-only. Physics-9 governed.
-# Phase 3.3 (2026-07-06): +2 geox_tie_receipt + geox_tie_preflight —
-#   seismic-to-well tie evidence envelope + 25-point pre-interpretation gate.
+# GEOX CANONICAL TOOLS — Phase 5 Surface Unification (2026-07-07, FORGE)
+# 87 canonical tools (83 surface + 4 internal). 50 backward-compat aliases.
+# Phase 5 cleanup: removed duplicate geox_physical_reality_interpret from surface.
+# Added 20 earth surface data tools to canonical (were registered but unlisted).
+# FORGE-2026-07-07: F1 AMANAH backup at .backup-tools-20260707-032239/
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# SURFACE-FACING (41 tools):
+# SURFACE-FACING (83 tools):
 #   What external agents (AAA, ART, Copilot, any MCP client) call to get
 #   Earth data or run subsurface analysis. These are the "public API" of GEOX.
-#   Count: 52
-#   Organized by domain: 5 well + 4 stratigraphy + 15 seismic + 2 model + 6 basin + 1 atlas +
-#   4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast = 52.
-#   Phase 2.7 (2026-07-03): +1 geox_biostrat_parse, +1 geox_biostrat_nn_age,
-#   +1 geox_biostrat_ruling_check — biostratigraphy parsing + age + contradiction.
-# Phase 3.0 (2026-07-03): +3 geox_simulate_accommodation/surfaces/sequences —
-#   physics-first stratigraphy engines. The extinction event.
-# Phase 3.0 (2026-07-06): +2 geox_rsi_interpret + geox_render_audit —
-#   real seismic image interpretation from pixels. RSI pipeline hardened.
 #
 # INTERNAL PLUMBING (4 tools):
 #   Governance, claims, evidence chains, doctrine. Federation constitutional
 #   machinery. Used by arifOS 888_JUDGE and internal workflows.
 #
-#   Total canonical = 58. Live runtime reports canonical_tools=58.
-#   49 backward-compat aliases accepted by middleware (scheduled removal 2026-07-30).
+#   Total canonical = 87. Live runtime reports canonical_tools=87.
+#   50 backward-compat aliases accepted by middleware.
 #   Any change requires 888_HOLD per geox/AGENTS.md.
-#
-# Phase 2.1 (2026-06-28): added geox_well_desurvey (3D wellbore geometry).
-#   Action card: forge_work/GEOX-ADAPT-001-r1.md.
-#   F13 SOVEREIGN ratified by Arif 2026-06-28.
-# Phase 2.4 (2026-07-02): added geox_map_export_package (governed export + PROV sidecar).
-#   Completes map verb chain: discover → plan → render → export.
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (34 tools)
+# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (83 tools)
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # What these do: query the planet, analyze subsurface data, return evidence.
 # Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 52 (5 well + 4 stratigraphy + 15 seismic + 2 model + 3 basin + 1 atlas + 4 earth map + 1 federation + 1 safety + 12 EGS + 1 contrast)
+# Count: 83
 #
 SURFACE_TOOLS: list[str] = [
     # ── WELL DOMAIN (5) ────────────────────────────────────────────────────────
@@ -140,12 +125,32 @@ SURFACE_TOOLS: list[str] = [
     "geox_visual_generate_hypotheses",  # Visual scenario rendering — GEN_HYPOTHESIS
     "geox_panel_d_render",  # Cognitive interpretation render — DER_COGNITIVE_RENDER
     # ── PHYSICAL REALITY PIPELINE (Phase 3.2, 2026-07-06) ───────────────────
-    "geox_physical_reality_interpret",  # Reality gate + multi-attribute panel + horizon/fault extraction
     "geox_cognitive_rank_hypotheses",  # Rank geological hypotheses by basin prior
     "geox_segy_audit",  # Full SEG-Y trace reality pipeline
     "geox_well_tie",  # Well-to-seismic tie via bruges
     "geox_3d_model",  # 3D structural model via GemPy
     "geox_wealth_consequence",  # Capital consequence via WEALTH HarnessEngine
+    # ── SURFACE EARTH DATA (18 open data tools) ────────────────────────────
+    "geox_earthquake_catalog",  # USGS earthquake catalog — OBSERVED
+    "geox_relief_ingest",  # ETOPO 2022 global relief — OBSERVED
+    "geox_bathymetry_ingest",  # GEBCO global bathymetry — OBSERVED
+    "geox_heatflow_query",  # IHFC Global Heat Flow — OBSERVED
+    "geox_stress_query",  # World Stress Map 2025 — OBSERVED
+    "geox_geochem_query",  # EarthChem/PetDB igneous geochemistry — OBSERVED
+    "geox_geochem_kinetics",  # Geochemical kinetics — DERIVED
+    "geox_plate_reconstruct",  # GPlates plate reconstruction — INTERPRETED
+    "geox_paleomag_query",  # MagIC paleomagnetic data — OBSERVED
+    "geox_gravity_change_query",  # GRACE-FO time-variable gravity — OBSERVED
+    "geox_gravity_screen",  # Gravity screening — DERIVED
+    "geox_ocean_query",  # Copernicus Marine ocean physics/BGC — OBSERVED
+    "geox_erddap_query",  # NOAA ERDDAP ocean/atmosphere — OBSERVED
+    "geox_climate_reanalysis",  # ERA5 global reanalysis — OBSERVED
+    "geox_hydrology_query",  # USGS streamflow/groundwater — OBSERVED
+    "geox_satellite_catalog",  # STAC Landsat/MODIS/Sentinel — OBSERVED
+    "geox_uk_petroleum_query",  # NSTA UK petroleum data — OBSERVED
+    "geox_geology_map_query",  # OneGeology national geological maps — OBSERVED
+    "geox_space_weather",  # NOAA SWPC space weather — OBSERVED
+    "geox_judgment_preflight",  # Pre-judgment governance guidance — GOVERNANCE
 ]
 
 

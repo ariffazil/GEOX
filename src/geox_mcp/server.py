@@ -335,11 +335,7 @@ def _build_geox_ttl_middleware():
 
 
 def is_geox() -> bool:
-    return (
-        GEOX_VERSION.startswith("v2026.")
-        and GEOX_SEAL == "DITEMPA BUKAN DIBERI"
-        and GEOX_PROFILE in ("full", "lite", "vps")
-    )
+    return GEOX_VERSION.startswith("v2026.") and GEOX_SEAL == "DITEMPA BUKAN DIBERI" and GEOX_PROFILE in ("full", "lite", "vps")
 
 
 def _enforce_geox() -> dict[str, Any] | None:
@@ -404,12 +400,10 @@ def compose_geox_servers() -> None:
     #   2026-06-27: 16 -> 17 (GAP-1 fix: geox_surface_status added — federation-standard registry probe).
     #   2026-06-28: 17 -> 18 (Phase 2.1: geox_well_desurvey added — 3D wellbore geometry).
     #
-    # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
-    # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
-    # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = (
-        68  # Phase 3.3 (2026-07-06): legacy seismic ingest/interpret names remain exposed until manifests migrate
-    )
+    # FORGE-2026-07-07: synced to registry.py SURFACE_TOOLS(83) + INTERNAL_TOOLS(4) = 87.
+    # Added 20 earth surface data tools to canonical, removed 1 duplicate.
+    # Backup: .backup-tools-20260707-032239/. F13 SOVEREIGN invariant.
+    _EXPECTED_CANONICAL = 87  # SURFACE(83) + INTERNAL(4) — keep in sync with registry.py
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -1165,37 +1159,7 @@ async def _deep_time_state(
 
 
 # ── Phase 2.2 (2026-06-29): Earth Atlas — Natural Earth 10m point-in-country + land/water ──
-@mcp.tool(name="geox_isitwater", annotations=_geox_annotations("geox_isitwater"))
-async def _geox_isitwater(
-    lat: float,
-    lon: float,
-) -> dict:
-    """Point-in-polygon land/water classifier using Natural Earth 10m GeoJSON.
-
-    Returns 'land', 'water', or 'error'. Synchronous geometry — no network calls.
-    Data: /root/geox/data/atlas/countries.geojson + sea_neighbors.geojson (SHA256 verified).
-    F2 TRUTH: geometry-only, no model uncertainty.
-    """
-    from geox_mcp.tools.geox_atlas import geox_isitwater as _impl
-
-    return await _impl(lat=lat, lon=lon)
-
-
-@mcp.tool(name="geox_context_at_location", annotations=_geox_annotations("geox_context_at_location"))
-async def _geox_context_at_location(
-    lat: float,
-    lon: float,
-) -> dict:
-    """Country + sea context at a lat/lon point. Land → adjacent sea countries.
-    Water → enclosing + neighboring countries. Natural Earth 10m GeoJSON.
-
-    F2 TRUTH: geometry-only lookup from local atlas data.
-    """
-    from geox_mcp.tools.geox_atlas import geox_context_at_location as _impl
-
-    return await _impl(lat=lat, lon=lon)
-
-
+# geox_isitwater and geox_context_at_location consolidated into geox_atlas(mode=...)
 @mcp.tool(name="geox_atlas", annotations=_geox_annotations("geox_atlas"))
 async def _geox_atlas(
     lat: float,
@@ -1424,34 +1388,6 @@ async def _geox_map_export_package(
 
 # ── W13+ FORGE — Phase C: GEOX → WEALTH STOIIP + ranking feed ──
 # ── geox_wealth_feed — removed (Phase 1 Clean Slate, → arif_bridge_connect) ──
-
-
-@mcp.tool(name="geox_query_macrostrat", annotations=_geox_annotations("geox_query_macrostrat"))
-async def geox_query_macrostrat(
-    basin_name: str = "",
-    mode: str = "macrostrat_units",
-    lat: float | None = None,
-    lng: float | None = None,
-) -> dict:
-    """Query Macrostrat geological database for regional stratigraphy, lithology, and age data.
-
-    This is an alias for geox_basin_profile(mode='macrostrat_units'|'macrostrat_columns').
-    Macrostrat data is PROCESS_HYPOTHESIS level — regional surface geology,
-    not subsurface truth. CC-BY-4.0 license.
-    """
-    from geox_mcp.tools.basin import geox_basin_profile as _profile
-
-    result = await _profile(
-        basin_name=basin_name or "Global",
-        mode=mode,
-        lat=lat,
-        lng=lng,
-    )
-    # Extract interpreted data from the envelope
-    artifact = result.get("primary_artifact", {})
-    if artifact:
-        return artifact.get("interpreted", artifact)
-    return result
 
 
 # ── Phase 2.6 (2026-07-03): Universal Anomalous Contrast Detector ───────────
@@ -2747,9 +2683,12 @@ def create_app():
 
     # Dynamic FastMCP Tool Registration
     from geox_mcp.tools_wiring import register_tools_on
+
     register_tools_on(mcp)
 
     return app
+
+
 logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools registered with FastMCP")
 
 
