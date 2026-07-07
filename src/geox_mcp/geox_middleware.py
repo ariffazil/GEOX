@@ -57,14 +57,54 @@ class GeoxGovernanceMiddleware(Middleware):
     """
 
     # Tools that perform irreversible state changes.
-    # F1 AMANAH: no irreversible action without explicit human ack.
-    # Phase 2: geox_claim(mode="seal") and geox_prospect(mode="seal") are the
-    # canonical irreversible paths. MUST stay in sync with
-    # scripts/control_plane_server_patch.py _IRREVERSIBLE_TOOLS.
+    # F1 AMANAH: no irreversible action without explicit human consent.
     _IRREVERSIBLE_TOOLS: frozenset[str] = frozenset(
         {
             "geox_claim",  # mode="seal" requires ack_irreversible=True
             "geox_prospect",  # mode="seal" requires ack_irreversible=True
+        }
+    )
+
+    # Tools that wrap all parameters in an `arguments: dict` parameter.
+    # MCP clients send flat parameters; these tools need them nested.
+    _WRAPPER_TOOLS: frozenset[str] = frozenset(
+        {
+            "geox_3d_model",
+            "geox_bathymetry_ingest",
+            "geox_claim",
+            "geox_climate_reanalysis",
+            "geox_cognitive_rank_hypotheses",
+            "geox_earthquake_catalog",
+            "geox_erddap_query",
+            "geox_geochem_query",
+            "geox_geology_map_query",
+            "geox_gravity_change_query",
+            "geox_heatflow_query",
+            "geox_hydrology_query",
+            "geox_ocean_query",
+            "geox_paleomag_query",
+            "geox_panel_d_render",
+            "geox_petrophysics",
+            "geox_physical_reality_interpret",
+            "geox_plate_reconstruct",
+            "geox_relief_ingest",
+            "geox_satellite_catalog",
+            "geox_segy_audit",
+            "geox_seismic_ingest",
+            "geox_seismic_interpret",
+            "geox_space_weather",
+            "geox_stress_query",
+            "geox_subsurface_model",
+            "geox_uk_petroleum_query",
+            "geox_vision",
+            "geox_visual_enhance",
+            "geox_visual_generate_hypotheses",
+            "geox_visual_understand",
+            "geox_wealth_consequence",
+            "geox_well_desurvey",
+            "geox_well_ingest",
+            "geox_well_qc",
+            "geox_well_tie",
         }
     )
 
@@ -145,7 +185,31 @@ class GeoxGovernanceMiddleware(Middleware):
     ) -> Any:
         """RT1 + RT3 + organ_governance for every tools/call."""
         tool_name: str = getattr(context.message, "name", "")
-        arguments: dict[str, Any] = getattr(context.message, "arguments", {}) or {}
+        raw_arguments = getattr(context.message, "arguments", {}) or {}
+
+        # F1 AMANAH: defensive parse — some MCP transports serialize
+        # arguments as a JSON string instead of a parsed dict. Pydantic
+        # validation fails with "Input should be a valid dictionary" when
+        # it receives a string. Fix: parse JSON string → dict.
+        if isinstance(raw_arguments, str):
+            try:
+                arguments: dict[str, Any] = json.loads(raw_arguments)
+                logger.debug(f"ARG_PARSE: parsed JSON string arguments for '{tool_name}'")
+            except (json.JSONDecodeError, TypeError):
+                logger.warning(f"ARG_PARSE: failed to parse arguments string for '{tool_name}'")
+                arguments = {}
+        else:
+            arguments = raw_arguments
+
+        # F1 AMANAH: defensive unwrap — 36 GEOX tools declare `arguments: dict`
+        # as a wrapper parameter. MCP clients send flat parameters
+        # (mode=..., source_uri=...) which don't match the function signature.
+        # Detect when flat params arrive for a wrapper tool and nest them.
+        if (
+            tool_name in self._WRAPPER_TOOLS and "arguments" not in arguments and arguments  # non-empty
+        ):
+            arguments = {"arguments": arguments}
+            logger.debug(f"ARG_WRAP: nested flat params into arguments dict for '{tool_name}'")
 
         # ── RT1: tool name must be in executable surface (canonical + compat) ──
         if tool_name not in self._EXECUTABLE_SURFACE:
@@ -172,15 +236,19 @@ class GeoxGovernanceMiddleware(Middleware):
         # / preview modes do NOT require ack_irreversible. Only the SEAL mode of
         # geox_claim and geox_prospect does.
         if tool_name in self._IRREVERSIBLE_TOOLS:
+            # Extract effective args — handle wrapper pattern (arguments.arguments)
+            effective_args = arguments
+            if tool_name in self._WRAPPER_TOOLS and isinstance(arguments.get("arguments"), dict):
+                effective_args = arguments["arguments"]
             needs_ack = False
             if tool_name == "geox_claim":
                 # mode=seal is the irreversible path
-                needs_ack = (arguments.get("mode") == "seal") or (arguments.get("action") == "seal")
+                needs_ack = (effective_args.get("mode") == "seal") or (effective_args.get("action") == "seal")
             elif tool_name == "geox_prospect":
                 # verdict=seal is the irreversible path
-                needs_ack = arguments.get("verdict") == "seal"
+                needs_ack = effective_args.get("verdict") == "seal"
             if needs_ack:
-                ack = arguments.get("ack_irreversible", False)
+                ack = effective_args.get("ack_irreversible", False)
                 if not ack:
                     logger.warning(
                         f"RT3_BLOCK: {tool_name} in seal mode requires ack_irreversible=True. "

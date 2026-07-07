@@ -1,7 +1,7 @@
 {
   "name": "GEOX",
-  "description": "Sovereign Earth Intelligence — geological, petrophysical, seismic, basin, sequence stratigraphy, and provenance evidence under F1-F13 constitutional governance. Evidence-only: never policy judges; arifOS 888_JUDGE owns the verdict.",
-  "version": "2026.07.01-34tools-phase23",
+  "description": "Sovereign Earth Intelligence \u2014 geological, petrophysical, seismic, basin, sequence stratigraphy, and provenance evidence under F1-F13 constitutional governance. Evidence-only: never policy judges; arifOS 888_JUDGE owns the verdict.",
+  "version": "2026.07.06",
   "url": "https://geox.arif-fazil.com/mcp",
   "provider": {
     "organization": "arifOS Federation",
@@ -24,11 +24,17 @@
     ]
   },
   "authentication": {
-    "schemes": ["bearer"],
+    "schemes": [
+      "bearer"
+    ],
     "credentials": "Lease-token issued by arifOS arif_lease_issue; 34 canonical tools + 49 backward-compat aliases available."
   },
-  "defaultInputModes": ["application/json"],
-  "defaultOutputModes": ["application/json"],
+  "defaultInputModes": [
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "application/json"
+  ],
   "skills": [
     {
       "id": "well-desurvey",
@@ -38,22 +44,22 @@
     {
       "id": "petrophysics-bounds",
       "name": "Petrophysics Bounded Transforms",
-      "description": "Vsh, porosity, Sw, AI, permeability, net pay — each transform reports its epistemic rung (OBS/DER/INT/SPEC) and saturation bounds."
+      "description": "Vsh, porosity, Sw, AI, permeability, net pay \u2014 each transform reports its epistemic rung (OBS/DER/INT/SPEC) and saturation bounds."
     },
     {
       "id": "seismic-physics",
       "name": "Seismic Physics Engine",
-      "description": "Synthetic forward model, well tie, time-depth anchor, anomalous-contrast detector with AVO class I-IV and attention residual (δ_i ≡ constitutional governance deviation ΔV per Eureka GeoX Theory)."
+      "description": "Synthetic forward model, well tie, time-depth anchor, anomalous-contrast detector with AVO class I-IV and attention residual (\u03b4_i \u2261 constitutional governance deviation \u0394V per Eureka GeoX Theory)."
     },
     {
       "id": "earth-map",
       "name": "Earth Map Tools (Phase 2.3)",
-      "description": "geox_map_layers_list, geox_map_scene_plan, geox_map_render_preview — layer registry, scene planning truth-class gate, cached preview rendering. Decision-support layers excluded from context maps."
+      "description": "geox_map_layers_list, geox_map_scene_plan, geox_map_render_preview \u2014 layer registry, scene planning truth-class gate, cached preview rendering. Decision-support layers excluded from context maps."
     },
     {
       "id": "earth-atlas",
       "name": "Earth Atlas (Phase 2.2)",
-      "description": "Natural Earth 10m point-in-country + land/water classifier — geox_isitwater + geox_context_at_location."
+      "description": "Natural Earth 10m point-in-country + land/water classifier \u2014 geox_isitwater + geox_context_at_location."
     },
     {
       "id": "basin-synthesis",
@@ -68,7 +74,7 @@
     {
       "id": "earth-layer-registry",
       "name": "Earth Layer Registry (L1)",
-      "description": "Sovereign layer catalogue — license, truth class, bbox, governance gate F1/F2/F6/F11. Surfaces via MCP resource geox://layers/{layer_id}/package + geox://layers/index. Seeded with Sabah basin, faults, SE Asia plates, Kinabalu velocity (HYPOTHESIS + F6 maruah)."
+      "description": "Sovereign layer catalogue \u2014 license, truth class, bbox, governance gate F1/F2/F6/F11. Surfaces via MCP resource geox://layers/{layer_id}/package + geox://layers/index. Seeded with Sabah basin, faults, SE Asia plates, Kinabalu velocity (HYPOTHESIS + F6 maruah)."
     },
     {
       "id": "scar-memory",
@@ -78,42 +84,122 @@
     {
       "id": "conformance-spine",
       "name": "Conformance Spine (L10)",
-      "description": "MCP initialize → protocol version → schema echo → session start → authority check → hold-blocks-mutation → vault-replay → cooling ledger."
+      "description": "MCP initialize \u2192 protocol version \u2192 schema echo \u2192 session start \u2192 authority check \u2192 hold-blocks-mutation \u2192 vault-replay \u2192 cooling ledger."
     }
   ],
   "canonical_tools": {
-    "count": 34,
+    "count": 68,
     "locked": true,
     "lock_file": "src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS",
     "server_runtime_lock": "src/geox_mcp/server.py:_EXPECTED_CANONICAL=34",
     "epoch": "2026-07-01-GEOX-34TOOLS-PHASE23",
     "tools": [
-      "geox_well_ingest", "geox_well_qc", "geox_well_desurvey",
-      "geox_petrophysics", "geox_sequence",
-      "geox_seismic_ingest", "geox_seismic_compute", "geox_seismic_interpret",
-      "geox_vision", "geox_subsurface_model", "geox_geomechanics",
-      "geox_basin", "geox_deep_time_state", "geox_atlas", "geox_surface_status",
-      "geox_egs_query_entity", "geox_egs_query_claim", "geox_egs_query_uncertainty", "geox_egs_query_provenance",
-      "geox_egs_claim_create", "geox_egs_claim_challenge", "geox_egs_evidence_attach",
-      "geox_egs_evidence_reason", "geox_egs_seismic_compute", "geox_egs_rock_physics",
-      "geox_egs_data_qc_bundle", "geox_egs_scenario_audit",
-      "geox_map_layers_list", "geox_map_scene_plan", "geox_map_render_preview"
+      "geox_well_ingest",
+      "geox_well_qc",
+      "geox_well_desurvey",
+      "geox_petrophysics",
+      "geox_sequence",
+      "geox_simulate_accommodation",
+      "geox_simulate_surfaces",
+      "geox_simulate_sequences",
+      "geox_simulate_routing",
+      "geox_seismic_ingest",
+      "geox_seismic_compute",
+      "geox_seismic_interpret",
+      "geox_rsi_interpret",
+      "geox_render_audit",
+      "geox_physical_reality_interpret",
+      "geox_geological_cognition_run",
+      "geox_panel_d_render_mcp",
+      "geox_segy_trace_audit",
+      "geox_well_tie_compute",
+      "geox_tie_receipt",
+      "geox_tie_preflight",
+      "geox_3d_model_build",
+      "geox_wealth_bridge_run",
+      "geox_vision",
+      "geox_subsurface_model",
+      "geox_geomechanics",
+      "geox_basin",
+      "geox_deep_time_state",
+      "geox_biostrat_parse",
+      "geox_biostrat_nn_age",
+      "geox_biostrat_ruling_check",
+      "geox_biostrat_falsify",
+      "geox_macrostrat_calibrate",
+      "geox_atlas",
+      "geox_map_layers_list",
+      "geox_map_scene_plan",
+      "geox_map_render_preview",
+      "geox_map_export_package",
+      "geox_surface_status",
+      "geox_forbidden_claims_scan",
+      "geox_egs_query_entity",
+      "geox_egs_query_claim",
+      "geox_egs_query_uncertainty",
+      "geox_egs_query_provenance",
+      "geox_egs_claim_create",
+      "geox_egs_claim_challenge",
+      "geox_egs_evidence_attach",
+      "geox_egs_evidence_reason",
+      "geox_egs_seismic_compute",
+      "geox_egs_rock_physics",
+      "geox_egs_data_qc_bundle",
+      "geox_egs_scenario_audit",
+      "geox_contrast_detect",
+      "geox_seismic_cognition",
+      "geox_visual_understand",
+      "geox_visual_enhance",
+      "geox_visual_generate_hypotheses",
+      "geox_panel_d_render",
+      "geox_physical_reality_interpret",
+      "geox_cognitive_rank_hypotheses",
+      "geox_segy_audit",
+      "geox_well_tie",
+      "geox_3d_model",
+      "geox_wealth_consequence",
+      "geox_claim",
+      "geox_evidence",
+      "geox_prospect",
+      "geox_doctrine"
     ],
-    "internal_plumbing": ["geox_claim", "geox_evidence", "geox_prospect", "geox_doctrine"],
+    "internal_plumbing": [
+      "geox_claim",
+      "geox_evidence",
+      "geox_prospect",
+      "geox_doctrine"
+    ],
     "backward_compat_aliases": 49
   },
   "mcp_resources": [
-    "geox://reality/context", "geox://identity", "geox://registry/apps",
-    "geox://profile/status", "geox://capabilities", "geox://surface/truth",
-    "geox://resources/{category}/{name}", "geox://resources/index",
-    "geox://literature/index", "geox://literature/GSM-MADON-2021-MALAY-BASIN",
+    "geox://reality/context",
+    "geox://identity",
+    "geox://registry/apps",
+    "geox://profile/status",
+    "geox://capabilities",
+    "geox://surface/truth",
+    "geox://resources/{category}/{name}",
+    "geox://resources/index",
+    "geox://literature/index",
+    "geox://literature/GSM-MADON-2021-MALAY-BASIN",
     "geox://basins/malay-basin/profile",
-    "geox://claims/index", "geox://claims/graph", "geox://artifacts/index",
+    "geox://claims/index",
+    "geox://claims/graph",
+    "geox://artifacts/index",
     "geox://render/cubes/{cube_id}/manifest",
     "geox://layers/index",
     "geox://layers/{layer_id}/package"
   ],
-  "constitutional_floors": ["F1_AMANAH", "F2_TRUTH", "F4_CLARITY", "F6_MARUAH", "F7_HUMILITY", "F9_ANTI_HANTU", "F11_AUDIT", "F13_SOVEREIGN"],
+  "constitutional_floors": [
+    "F1_AMANAH",
+    "F2_TRUTH",
+    "F4_CLARITY",
+    "F6_MARUAH",
+    "F7_HUMILITY",
+    "F9_ANTI_HANTU",
+    "F11_AUDIT",
+    "F13_SOVEREIGN"
+  ],
   "lane": "evidence_only",
   "self_judge": false,
   "judge_authority": "arifOS arif_judge_deliberate",
