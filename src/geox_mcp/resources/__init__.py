@@ -19,7 +19,7 @@ logger = logging.getLogger("geox.resources")
 
 # ── Constants injected at registration time ──────────────────────────────────
 # These are set by register_resources() from the caller's context
-GEOX_VERSION = "v2026.05.27"
+GEOX_VERSION = "v2026.07.07"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = "full"
 

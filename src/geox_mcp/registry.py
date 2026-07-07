@@ -177,7 +177,7 @@ INTERNAL_TOOLS: list[str] = [
 #
 # This is the single source of truth for the MCP server invariant check.
 # Surface tools are what the world sees. Internal tools are federation plumbing.
-# Live runtime reports canonical_tools=45; do not change without 888_HOLD.
+# Live runtime reports canonical_tools=87; do not change without 888_HOLD.
 #
 CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
 
