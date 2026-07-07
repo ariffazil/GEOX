@@ -267,6 +267,7 @@ def test_actual_registered_tool_count():
         "well_correlation.py": 2,
         "ui_applets.py": 1,
         "velocity_structural_qc.py": 1,
+        "geox_interpolate_grid.py": 1,
         "_register.py": 1,  # one imperative register_tools_on_server call
     }
     expected = sum(expected_decorator_files.values())

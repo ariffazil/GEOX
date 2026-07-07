@@ -1,114 +1,604 @@
 {
   "domain": "earth_intelligence",
-  "version": "2026.06.28",
+  "version": "2026.07.06",
   "seal": "DITEMPA BUKAN DIBERI",
-  "canonical_tool_count": 30,
-  "canonical_source": "src/geox_mcp/registry.py → CANONICAL_PUBLIC_TOOLS (Phase 2.1 + EGS)",
-  "contract_epoch": "2026-06-28-GEOX-18TOOLS-PHASE21",
+  "canonical_tool_count": 68,
+  "canonical_source": "src/geox_mcp/registry.py \u2192 CANONICAL_PUBLIC_TOOLS (Phase 2.1 + EGS)",
+  "contract_epoch": "2026-07-06-GEOX-68TOOLS-PHASE33",
   "tools": [
     {
       "name": "geox_well_ingest",
       "domain": "well",
-      "required_inputs": ["source_uri OR content_base64"],
-      "outputs": ["artifact_ref", "sha256", "claim_state"],
-      "claim_limits": ["Mechanical load, not geological validation."],
+      "required_inputs": [
+        "source_uri OR content_base64"
+      ],
+      "outputs": [
+        "artifact_ref",
+        "sha256",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Mechanical load, not geological validation."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_well_qc",
       "domain": "well",
-      "required_inputs": ["artifact_ref"],
-      "outputs": ["qc_overall", "claim_state", "flags"],
-      "claim_limits": ["QC_VERIFIED = mechanical checks, not geological truth."],
+      "required_inputs": [
+        "artifact_ref"
+      ],
+      "outputs": [
+        "qc_overall",
+        "claim_state",
+        "flags"
+      ],
+      "claim_limits": [
+        "QC_VERIFIED = mechanical checks, not geological truth."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_well_desurvey",
       "domain": "well",
       "added": "2026-06-28",
-      "required_inputs": ["well_id", "collar", "survey"],
-      "outputs": ["tvd", "x", "y", "tvdss", "claim_state"],
-      "claim_limits": ["3D trajectory from deviation survey. wellpathpy minimum-curvature. ACRisk-stamped."],
+      "required_inputs": [
+        "well_id",
+        "collar",
+        "survey"
+      ],
+      "outputs": [
+        "tvd",
+        "x",
+        "y",
+        "tvdss",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "3D trajectory from deviation survey. wellpathpy minimum-curvature. ACRisk-stamped."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_petrophysics",
       "domain": "well",
-      "required_inputs": ["artifact_ref"],
-      "outputs": ["Vsh", "porosity", "Sw", "perm", "net_pay"],
-      "claim_limits": ["Bounded deterministic transforms only."],
+      "required_inputs": [
+        "artifact_ref"
+      ],
+      "outputs": [
+        "Vsh",
+        "porosity",
+        "Sw",
+        "perm",
+        "net_pay"
+      ],
+      "claim_limits": [
+        "Bounded deterministic transforms only."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_sequence",
       "domain": "stratigraphy",
-      "required_inputs": ["workflow", "source"],
-      "outputs": ["bins", "packages", "systems_tracts", "claim_state"],
-      "claim_limits": ["Single-well surfaces are candidates only."],
+      "required_inputs": [
+        "workflow",
+        "source"
+      ],
+      "outputs": [
+        "bins",
+        "packages",
+        "systems_tracts",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Single-well surfaces are candidates only."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_simulate_accommodation",
+      "domain": "stratigraphy",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_simulate_surfaces",
+      "domain": "stratigraphy",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_simulate_sequences",
+      "domain": "stratigraphy",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_simulate_routing",
+      "domain": "stratigraphy",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_seismic_ingest",
       "domain": "seismic",
-      "required_inputs": ["source_uri"],
-      "outputs": ["artifact_ref", "trace_count", "claim_state"],
-      "claim_limits": ["Binary header only — inspect before ingest."],
+      "required_inputs": [
+        "source_uri"
+      ],
+      "outputs": [
+        "artifact_ref",
+        "trace_count",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Binary header only \u2014 inspect before ingest."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_seismic_compute",
       "domain": "seismic",
-      "required_inputs": ["mode"],
-      "outputs": ["mode-specific artifacts", "claim_state"],
-      "claim_limits": ["anomalous_contrast mode: AVO class CONDITIONAL from normal-incidence RC."],
+      "required_inputs": [
+        "mode"
+      ],
+      "outputs": [
+        "mode-specific artifacts",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "anomalous_contrast mode: AVO class CONDITIONAL from normal-incidence RC."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_seismic_interpret",
       "domain": "seismic",
-      "required_inputs": ["arguments"],
-      "outputs": ["horizon_contrast", "faults", "frames", "claim_state"],
-      "claim_limits": ["Interpretation is hypothesis, not fact."],
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "horizon_contrast",
+        "faults",
+        "frames",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Interpretation is hypothesis, not fact."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_rsi_interpret",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_render_audit",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_physical_reality_interpret",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_geological_cognition_run",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_panel_d_render_mcp",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_segy_trace_audit",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_well_tie_compute",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_tie_receipt",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_tie_preflight",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_3d_model_build",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_wealth_bridge_run",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_vision",
       "domain": "vision",
-      "required_inputs": ["arguments"],
-      "outputs": ["vision_interpretation", "features", "claim_state"],
-      "claim_limits": ["VLM output, not GEOX truth."],
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "vision_interpretation",
+        "features",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "VLM output, not GEOX truth."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_subsurface_model",
       "domain": "model",
-      "required_inputs": ["arguments"],
-      "outputs": ["joint_inversion", "gravity_mag", "claim_state"],
-      "claim_limits": ["Multi-physics joint inversion."],
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "joint_inversion",
+        "gravity_mag",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Multi-physics joint inversion."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_geomechanics",
       "domain": "model",
-      "required_inputs": ["state"],
-      "outputs": ["K", "G", "E", "nu", "AI", "claim_state"],
-      "claim_limits": ["Derived from Physics9State cell."],
+      "required_inputs": [
+        "state"
+      ],
+      "outputs": [
+        "K",
+        "G",
+        "E",
+        "nu",
+        "AI",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from Physics9State cell."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_basin",
       "domain": "basin",
-      "required_inputs": ["basin_name", "mode"],
-      "outputs": ["basin_summary", "petroleum_system", "claim_state"],
-      "claim_limits": ["Screen mode is heuristic only."],
+      "required_inputs": [
+        "basin_name",
+        "mode"
+      ],
+      "outputs": [
+        "basin_summary",
+        "petroleum_system",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Screen mode is heuristic only."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_deep_time_state",
       "domain": "basin",
-      "required_inputs": ["query OR period OR age_ma"],
-      "outputs": ["earth_state_vector", "claim_state"],
-      "claim_limits": ["Earth State Vector at any geological age."],
+      "required_inputs": [
+        "query OR period OR age_ma"
+      ],
+      "outputs": [
+        "earth_state_vector",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Earth State Vector at any geological age."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_biostrat_parse",
+      "domain": "basin",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_biostrat_nn_age",
+      "domain": "basin",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_biostrat_ruling_check",
+      "domain": "basin",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_biostrat_falsify",
+      "domain": "basin",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_macrostrat_calibrate",
+      "domain": "basin",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_atlas",
+      "domain": "basin",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_map_layers_list",
+      "domain": "earth_map",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_map_scene_plan",
+      "domain": "earth_map",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_map_render_preview",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_map_export_package",
+      "domain": "earth_map",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
       "face": "surface"
     },
     {
@@ -116,148 +606,469 @@
       "domain": "federation",
       "added": "2026-06-27",
       "required_inputs": [],
-      "outputs": ["canonical_tools", "tool_count"],
-      "claim_limits": ["Registry probe — read-only."],
+      "outputs": [
+        "canonical_tools",
+        "tool_count"
+      ],
+      "claim_limits": [
+        "Registry probe \u2014 read-only."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_forbidden_claims_scan",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_query_entity",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["entity_id OR name_contains"],
-      "outputs": ["entities", "entity_type"],
-      "claim_limits": ["Typed earth graph query — read-only."],
+      "required_inputs": [
+        "entity_id OR name_contains"
+      ],
+      "outputs": [
+        "entities",
+        "entity_type"
+      ],
+      "claim_limits": [
+        "Typed earth graph query \u2014 read-only."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_query_claim",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["claim_id OR domain"],
-      "outputs": ["claims", "claim_state"],
-      "claim_limits": ["Typed claim query — read-only."],
+      "required_inputs": [
+        "claim_id OR domain"
+      ],
+      "outputs": [
+        "claims",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Typed claim query \u2014 read-only."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_query_uncertainty",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["entity_id"],
-      "outputs": ["uncertainty", "confidence_band"],
-      "claim_limits": ["Uncertainty algebra — read-only."],
+      "required_inputs": [
+        "entity_id"
+      ],
+      "outputs": [
+        "uncertainty",
+        "confidence_band"
+      ],
+      "claim_limits": [
+        "Uncertainty algebra \u2014 read-only."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_query_provenance",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["entity_id"],
-      "outputs": ["provenance_chain"],
-      "claim_limits": ["Provenance trace — read-only."],
+      "required_inputs": [
+        "entity_id"
+      ],
+      "outputs": [
+        "provenance_chain"
+      ],
+      "claim_limits": [
+        "Provenance trace \u2014 read-only."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_claim_create",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["title", "statement"],
-      "outputs": ["claim_id", "claim_state"],
-      "claim_limits": ["Evidence-only — claim lifecycle."],
+      "required_inputs": [
+        "title",
+        "statement"
+      ],
+      "outputs": [
+        "claim_id",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Evidence-only \u2014 claim lifecycle."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_claim_challenge",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["claim_id", "challenge_statement"],
-      "outputs": ["challenge_id", "claim_state"],
-      "claim_limits": ["Contradiction — open for debate."],
+      "required_inputs": [
+        "claim_id",
+        "challenge_statement"
+      ],
+      "outputs": [
+        "challenge_id",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Contradiction \u2014 open for debate."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_evidence_attach",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["claim_id", "description"],
-      "outputs": ["evidence_id"],
-      "claim_limits": ["Evidence attach — requires claim_id."],
+      "required_inputs": [
+        "claim_id",
+        "description"
+      ],
+      "outputs": [
+        "evidence_id"
+      ],
+      "claim_limits": [
+        "Evidence attach \u2014 requires claim_id."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_evidence_reason",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["claim_id"],
-      "outputs": ["evidence_analysis"],
-      "claim_limits": ["Evidence synthesis — read-only."],
+      "required_inputs": [
+        "claim_id"
+      ],
+      "outputs": [
+        "evidence_analysis"
+      ],
+      "claim_limits": [
+        "Evidence synthesis \u2014 read-only."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_seismic_compute",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["vp", "vs", "rho"],
-      "outputs": ["AI", "EI", "Vp/Vs"],
-      "claim_limits": ["Rock physics computation from velocity/density."],
+      "required_inputs": [
+        "vp",
+        "vs",
+        "rho"
+      ],
+      "outputs": [
+        "AI",
+        "EI",
+        "Vp/Vs"
+      ],
+      "claim_limits": [
+        "Rock physics computation from velocity/density."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_rock_physics",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["porosity", "fluid_density"],
-      "outputs": ["K", "G", "E", "bounds"],
-      "claim_limits": ["Voigt-Reuss-Hill bounds from mineral/fluid properties."],
+      "required_inputs": [
+        "porosity",
+        "fluid_density"
+      ],
+      "outputs": [
+        "K",
+        "G",
+        "E",
+        "bounds"
+      ],
+      "claim_limits": [
+        "Voigt-Reuss-Hill bounds from mineral/fluid properties."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_data_qc_bundle",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["entity_id"],
-      "outputs": ["qc_report"],
-      "claim_limits": ["Completeness, consistency, provenance checks."],
+      "required_inputs": [
+        "entity_id"
+      ],
+      "outputs": [
+        "qc_report"
+      ],
+      "claim_limits": [
+        "Completeness, consistency, provenance checks."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_egs_scenario_audit",
       "domain": "egs",
       "added": "2026-06-28",
-      "required_inputs": ["entity_id"],
-      "outputs": ["alternative_scenarios"],
-      "claim_limits": ["Alternative interpretation audit."],
+      "required_inputs": [
+        "entity_id"
+      ],
+      "outputs": [
+        "alternative_scenarios"
+      ],
+      "claim_limits": [
+        "Alternative interpretation audit."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_contrast_detect",
+      "domain": "contrast",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_seismic_cognition",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_visual_understand",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_visual_enhance",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_visual_generate_hypotheses",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_panel_d_render",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_physical_reality_interpret",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_cognitive_rank_hypotheses",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_segy_audit",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_well_tie",
+      "domain": "seismic",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_3d_model",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
+      "face": "surface"
+    },
+    {
+      "name": "geox_wealth_consequence",
+      "domain": "general",
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "envelope",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Derived from computational physics-9 state cell."
+      ],
       "face": "surface"
     },
     {
       "name": "geox_claim",
       "domain": "claims",
-      "required_inputs": ["arguments"],
-      "outputs": ["claim_id", "claim_state"],
-      "claim_limits": ["Routes to arifOS kernel for F1-F13 checks."],
+      "required_inputs": [
+        "arguments"
+      ],
+      "outputs": [
+        "claim_id",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Routes to arifOS kernel for F1-F13 checks."
+      ],
       "face": "internal"
     },
     {
       "name": "geox_evidence",
       "domain": "claims",
-      "required_inputs": ["mode", "query"],
-      "outputs": ["evidence_graph", "contradictions", "claim_state"],
-      "claim_limits": ["Cross-domain synthesis only as strong as weakest evidence ref."],
+      "required_inputs": [
+        "mode",
+        "query"
+      ],
+      "outputs": [
+        "evidence_graph",
+        "contradictions",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Cross-domain synthesis only as strong as weakest evidence ref."
+      ],
       "face": "internal"
     },
     {
       "name": "geox_prospect",
       "domain": "claims",
-      "required_inputs": ["mode"],
-      "outputs": ["evaluation", "pos", "evoi", "claim_state"],
-      "claim_limits": ["Screen mode is heuristic only."],
+      "required_inputs": [
+        "mode"
+      ],
+      "outputs": [
+        "evaluation",
+        "pos",
+        "evoi",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Screen mode is heuristic only."
+      ],
       "face": "internal"
     },
     {
       "name": "geox_doctrine",
       "domain": "claims",
-      "required_inputs": ["mode"],
-      "outputs": ["assumption_register", "anti_beautiful_one", "claim_state"],
-      "claim_limits": ["Doctrine layer — Gap X/3/5."],
+      "required_inputs": [
+        "mode"
+      ],
+      "outputs": [
+        "assumption_register",
+        "anti_beautiful_one",
+        "claim_state"
+      ],
+      "claim_limits": [
+        "Doctrine layer \u2014 Gap X/3/5."
+      ],
       "face": "internal"
     }
   ]

@@ -474,6 +474,63 @@ async def geox_seismic_compute(
     For anomalous_contrast: envelope carries attention_equivalence metadata
     (AVO chain, attention chain, shared primitives, failure modes, trilogy ref).
     """
+    import json
+
+    def _parse_list(val: Any) -> list[float] | None:
+        if isinstance(val, str):
+            try:
+                parsed = json.loads(val)
+                if isinstance(parsed, list):
+                    return [float(x) for x in parsed]
+            except Exception:
+                try:
+                    cleaned = val.strip("[]() ")
+                    if cleaned:
+                        return [float(x.strip()) for x in cleaned.replace(",", " ").split()]
+                except Exception:
+                    pass
+        elif isinstance(val, list):
+            return [float(x) for x in val]
+        return val
+
+    def _parse_tuple(val: Any) -> tuple[float, float] | None:
+        if isinstance(val, str):
+            try:
+                parsed = json.loads(val)
+                if isinstance(parsed, list) and len(parsed) == 2:
+                    return (float(parsed[0]), float(parsed[1]))
+            except Exception:
+                try:
+                    cleaned = val.strip("[]() ")
+                    parts = cleaned.replace(",", " ").split()
+                    if len(parts) == 2:
+                        return (float(parts[0]), float(parts[1]))
+                except Exception:
+                    pass
+        elif isinstance(val, (list, tuple)) and len(val) == 2:
+            return (float(val[0]), float(val[1]))
+        return val
+
+    def _parse_dict(val: Any) -> dict[str, float] | None:
+        if isinstance(val, str):
+            try:
+                parsed = json.loads(val)
+                if isinstance(parsed, dict):
+                    return {str(k): float(v) for k, v in parsed.items()}
+            except Exception:
+                pass
+        return val
+
+    vp = _parse_list(vp)
+    rho = _parse_list(rho)
+    depth = _parse_list(depth)
+    ai_profile = _parse_list(ai_profile)
+    ac_depth = _parse_list(ac_depth)
+    ac_vp = _parse_list(ac_vp)
+    ac_rho = _parse_list(ac_rho)
+    frequency_band = _parse_tuple(frequency_band)
+    formation_tops = _parse_dict(formation_tops)
+
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
 

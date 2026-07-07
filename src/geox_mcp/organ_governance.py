@@ -217,7 +217,7 @@ def _load_lane_map() -> dict[str, str]:
         "geox_sequence": "reasoning",
         # SEISMIC DOMAIN
         "geox_seismic_ingest": "evidence",
-        "geox_seismic_compute": "reasoning",
+        "geox_seismic_compute": "evidence",  # FIX: was "reasoning" — compute-only, no session state needed
         "geox_seismic_interpret": "reasoning",
         "geox_vision": "reasoning",
         # MODEL DOMAIN
@@ -300,12 +300,50 @@ def _get_lane(tool_name: str) -> str:
     return GEOX_LANE_MAP.get(tool_name, "reasoning")
 
 
+# ─── Mode-Based Lane Overrides ───────────────────────────────────────────────
+# Some tools have mode-based authority: non-seal modes are evidence-lane,
+# seal modes require judgment routing. This dict maps (tool_name, mode_value)
+# to the override lane. If a match is found, it overrides the default lane
+# from GEOX_LANE_MAP.
+#
+# FIX 2026-07-06: geox_claim non-seal modes (create, validate, challenge,
+# attach, query, list) are evidence-lane operations. Only seal mode requires
+# judgment routing through arifOS.
+
+_MODE_LANE_OVERRIDES: dict[tuple[str, str], str] = {
+    ("geox_claim", "create"): "evidence",
+    ("geox_claim", "validate"): "evidence",
+    ("geox_claim", "challenge"): "evidence",
+    ("geox_claim", "attach"): "evidence",
+    ("geox_claim", "query"): "evidence",
+    ("geox_claim", "list"): "evidence",
+    ("geox_prospect", "compute"): "evidence",
+    ("geox_prospect", "screen"): "evidence",
+    ("geox_prospect", "rank"): "evidence",
+}
+
+
+def _get_effective_lane(tool_name: str, arguments: dict[str, Any] | None = None) -> str:
+    """Get the effective lane for a tool call, considering mode-based overrides."""
+    if arguments:
+        # Check both flat and nested arguments — some tools wrap in `arguments` dict
+        mode = arguments.get("mode") or arguments.get("action")
+        if not mode and isinstance(arguments.get("arguments"), dict):
+            mode = arguments["arguments"].get("mode") or arguments["arguments"].get("action")
+        if mode:
+            override = _MODE_LANE_OVERRIDES.get((tool_name, str(mode)))
+            if override:
+                return override
+    return _get_lane(tool_name)
+
+
 def _check_lane_enforcement(
     tool_name: str,
     session_id: str | None = None,
     actor_id: str | None = None,
     lease_id: str | None = None,
     is_direct_call: bool = True,
+    arguments: dict[str, Any] | None = None,
 ) -> tuple[str, JSONResponse | None]:
     """Lane-based authority enforcement (Federation Contract §3).
 
@@ -316,7 +354,7 @@ def _check_lane_enforcement(
     if ASSET_MODE == "sandbox":
         return "SEAL", None
 
-    lane = _get_lane(tool_name)
+    lane = _get_effective_lane(tool_name, arguments)
 
     # ── JUDGMENT LANE: MUST route through arifOS ──────────────────────
     if LANE_REQUIRES_ARIFOS_ROUTE.get(lane, False) and is_direct_call:
@@ -404,6 +442,7 @@ def _check_identity_propagation(
     tool_name: str,
     session_id: str | None = None,
     actor_id: str | None = None,
+    arguments: dict[str, Any] | None = None,
 ) -> tuple[str, JSONResponse | None]:
     """P0.1: Reject anonymous tool calls in production mode.
 
@@ -419,7 +458,7 @@ def _check_identity_propagation(
         logger.info(f"GOV: {tool_name} [SANDBOX] → identity check bypassed")
         return "SEAL", None
 
-    lane = _get_lane(tool_name)
+    lane = _get_effective_lane(tool_name, arguments)
 
     # Discovery and Evidence lanes: no identity required
     if lane in ("discovery", "evidence"):
@@ -521,6 +560,15 @@ async def check_governance(
         session_id = arguments.get("session_id")
     if arguments and arguments.get("actor_id"):
         actor_id = arguments.get("actor_id")
+    # Also check nested arguments (wrapper pattern: arguments.arguments)
+    if arguments and isinstance(arguments.get("arguments"), dict):
+        inner = arguments["arguments"]
+        if inner.get("lease_id"):
+            lease_id = inner["lease_id"]
+        if inner.get("session_id"):
+            session_id = inner["session_id"]
+        if inner.get("actor_id"):
+            actor_id = inner["actor_id"]
 
     # ═══ STEP 1: LANE ENFORCEMENT (Federation Contract §3) ═══════════
     lane_verdict, lane_error = _check_lane_enforcement(
@@ -529,6 +577,7 @@ async def check_governance(
         actor_id=actor_id,
         lease_id=lease_id,
         is_direct_call=is_direct_call,
+        arguments=arguments,
     )
     if lane_verdict == "HOLD":
         return lane_verdict, lane_error
@@ -536,7 +585,7 @@ async def check_governance(
     risk_tier = GEOX_RISK_MAP.get(tool_name, RiskTier.C1_ADVISORY)
 
     # ═══ STEP 2: IDENTITY PROPAGATION (P0.1 — lane-aware) ══════════
-    id_verdict, id_error = _check_identity_propagation(tool_name, session_id, actor_id)
+    id_verdict, id_error = _check_identity_propagation(tool_name, session_id, actor_id, arguments)
     if id_verdict == "HOLD":
         return id_verdict, id_error
 
