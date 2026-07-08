@@ -1,0 +1,201 @@
+# NW Sabah Deepwater Basin Profile — GEOX Canonical
+# DITEMPA BUKAN DIBERI
+# Sources: Hazebroek & Tan 1993, Morley 2023, Khamis 2017/2018, Hall PSCS, nBOSS
+# Epistemic band: INT (interpreted from multiple literature sources)
+# Last verified: 2026-07-07
+
+basin_id: NORTHWEST_SABAH
+basin_name: Northwest Sabah Deepwater
+location: NW Sabah, East Malaysia — offshore deepwater (100–2000m water depth)
+area_sq_km: ~25000
+tectonic_setting: >
+  NW Sabah deepwater lies in the flexural margin of the NW Borneo collision
+  system. The region experienced terminal subduction of the Proto-South China
+  Sea (PSCS) at ~20 Ma, followed by fold-thrust belt development and massive
+  mud volcanism (~10.5 Ma). The deepwater area is underlain by a thick
+  sedimentary prism (up to 12+ km) with complex structural overprint from
+  toe-thrust systems and mud canopy emplacement.
+
+# Structural domains (NOT PSC block names — these are geological labels)
+structural_domains:
+  - name: "Limbayong–Bestari–P (L-B-P) toe-thrust trend"
+    style: "Imbricate thrust sheets with detachment in overpressured shales"
+    orientation: "NW–SE, arc-parallel"
+    key_horizons: ["Yellow reflector", "Pink reflector", "Deep unconformity"]
+    detachment_depth_m: ~4000
+    source: "Khamis et al. 2017/2018"
+    epistemic: "INT"
+
+  - name: "Meligan–Laup–Serpi (M-La-S) trend"
+    style: "Frontal fold-thrust structures"
+    orientation: "NW–SE"
+    source: "Khamis et al. 2017/2018"
+    epistemic: "INT"
+
+  - name: "Paginatan–Lotong–Umas (Pg-Lt-U) trend"
+    style: "Rear hinterland structures"
+    orientation: "NW–SE"
+    source: "Khamis et al. 2017/2018"
+    epistemic: "INT"
+
+# NSPW Mud Canopy System
+mud_canopy:
+  name: "North Sabah Province Wedge (NSPW) mud canopy"
+  approximate_area_sq_km: 1900
+  mud_volcano_centres: ~50
+  onset_age_ma: ~10.5
+  triggering_mechanism: "Rapid sediment loading + overpressured shale mobilization"
+  source: "Morley 2023"
+  epistemic: "INT"
+  note: >
+    The NSPW mud canopy is one of the largest mud volcano provinces in SE Asia.
+    It was triggered by rapid sediment loading during the Middle Miocene.
+    The canopy surface is seismically chaotic with no internal reflectors —
+    a key false-positive signature for hydrocarbon prospects (K007 kill filter).
+
+# Stratigraphic framework (see stratigraphy/sabah_deepwater_strat.yaml for detail)
+stratigraphic_summary:
+  pre_kinematic:
+    period: "Oligocene–Early Miocene"
+    description: "Deep marine turbiditic deposition in a passive margin setting"
+    reservoir_quality: "Good — thick, laterally continuous sand bodies"
+
+  syn_kinematic:
+    period: "Middle–Late Miocene"
+    description: "Sedimentation concurrent with fold-thrust belt development"
+    reservoir_quality: "Variable — compartmentalized by thrust structures"
+
+  post_kinematic:
+    period: "Pliocene–Recent"
+    description: "Deltaic progradation from north, draped over structures"
+    reservoir_quality: "Good — but shallow, unconsolidated"
+
+# Petroleum system elements
+petroleum_system:
+  source_rock:
+    formation: "Lower Miocene–Oligocene shales"
+    toc_percent: [1.0, 4.0]
+    kerogen_type: "Type II/III"
+    maturity: "Late oil to gas window in deep basin"
+    source: "Hazebroek & Tan 1993"
+    epistemic: "INT"
+
+  reservoir:
+    primary:
+      description: "Miocene deep marine turbidite sands"
+      age: "Middle Miocene"
+      porosity: [0.15, 0.25]
+      permeability_mD: [50, 1500]
+      environment: "Submarine fan / turbidite channel-lobe"
+      epistemic: "INT"
+    secondary:
+      description: "Oligocene–Early Miocene shallow marine sands"
+      age: "Oligocene–Early Miocene"
+      porosity: [0.12, 0.22]
+      permeability_mD: [50, 800]
+      epistemic: "HYPOTHESIS"
+
+  seal:
+    primary:
+      description: "Overpressured regional shales (Labang Shale equivalent)"
+      thickness_m: [200, 1000]
+      quality: "EXCEPTIONAL"
+      extent: "Regional"
+      epistemic: "INT"
+
+  trap:
+    type: "Structural (toe-thrust anticlines) + Stratigraphic (pinch-out)"
+    timing: "Middle–Late Miocene (syn-kinematic)"
+    epistemic: "INT"
+
+  charge:
+    timing: "Post-middle Miocene"
+    pathway: "Vertical through thrust faults and mud volcano conduits"
+    epistemic: "INT"
+
+# Key fields / discoveries
+key_discoveries:
+  - name: Kikeh
+    type: "First deepwater oil production in Malaysia"
+    operator: "Murphy Oil"
+    water_depth_m: ~1300
+    strategy: "FPSO"
+    epistemic: "OBS"
+
+  - name: Limbayong
+    type: "Deepwater gas/condensate"
+    operator: "PETRONAS Carigali"
+    epistemic: "OBS"
+
+  - name: Rotan
+    type: "Deepwater gas"
+    operator: "PETRONAS Carigali"
+    epistemic: "OBS"
+
+# Deep time context
+deep_time:
+  at_20_ma:
+    event: "Terminal PSCS subduction"
+    co2_ppm: ~500
+    temperature_anomaly_c: ~6
+    sea_level_m: ~+30
+    relevance: "Initiation of fold-thrust belt and accommodation space"
+    source: "GEOX deep_time_state"
+    epistemic: "DER"
+
+  at_10_5_ma:
+    event: "NSPW mud canopy emplacement"
+    co2_ppm: ~355
+    temperature_anomaly_c: ~4.6
+    sea_level_m: ~+21
+    relevance: "Massive mud volcanism, overpressure generation"
+    source: "GEOX deep_time_state"
+    epistemic: "DER"
+
+# Data gaps (what would upgrade HYPOTHESIS to CLAIM)
+data_gaps:
+  - item: "Source rock maturity (Ro/Tmax)"
+    needed: "Well data with vitrinite reflectance or Tmax measurements"
+    current_status: "HYPOTHESIS — inferred from burial history"
+
+  - item: "Reservoir quality distribution"
+    needed: "Core data, petrophysical logs from key wells"
+    current_status: "HYPOTHESIS — inferred from analogues"
+
+  - item: "Mud volcano conduit geometry"
+    needed: "High-resolution 3D seismic over NSPW canopy"
+    current_status: "INT — interpreted from 2D seismic"
+
+  - item: "Trap integrity under active tectonics"
+    needed: "GPS data, seismicity monitoring, fault reactivation analysis"
+    current_status: "SPEC — 2015 Kinabalu earthquake suggests active regime"
+
+# Coordinate verification
+verified_coordinates:
+  - feature: "Lipad Mud Volcano (Tabin)"
+    lat: 5.188
+    lon: 118.502
+    source: "GPS verified"
+    verification_level: "GPS"
+
+  - feature: "Maliau Basin"
+    lat: 4.830
+    lon: 116.900
+    source: "Wikipedia / GeoNames"
+    verification_level: "PUBLISHED"
+
+  - feature: "Ranau"
+    lat: 5.954
+    lon: 116.664
+    source: "GeoNames"
+    verification_level: "PUBLISHED"
+
+# Block vs structure name distinction
+naming_convention:
+  psc_blocks: "Block G, H, K, N, X, R, 2K, 2V, 2W — operator/PETRONAS designations"
+  structural_trends: "L-B-P, M-La-S, Pg-Lt-U — geological labels"
+  field_names: "Limbayong, Bestari, Kikeh, Rotan — discovery/production names"
+  warning: "These are NOT interchangeable. 'Block P' does not exist as a public PSC designation."
+
+status: "Active exploration province"
+last_updated: "2026-07-07"

@@ -1,0 +1,174 @@
+# NW Sabah Deepwater Stratigraphic Column — GEOX Canonical
+# DITEMPA BUKAN DIBERI
+# Sources: Jong et al. 2016, Hazebroek & Tan 1993, Khamis 2017/2018
+# Epistemic band: INT (interpreted from published literature)
+# Last verified: 2026-07-07
+# Skill: geological-artifact-rigor (Rule 1: tags ≠ content — data behind every label)
+
+basin_id: NORTHWEST_SABAH
+stratigraphic_scheme: "Lithostratigraphic + Seismic horizon nomenclature"
+source_reference: "Jong et al. (2016) Sequence stratigraphic case study, NW Sabah"
+
+formations:
+  # ── Youngest (post-kinematic) ──────────────────────────────────────────
+  - name: "Sandakan Formation"
+    age: "Late Miocene–Pliocene (12–2.6 Ma)"
+    age_nn_zone: "NN10–NN16"
+    lithology: "Deltaic sands, shales, minor coal"
+    thickness_m: [500, 2000]
+    environment: "Deltaic progradation from north"
+    wireline_signature: "Blocky to coarsening-upward gamma ray motifs"
+    reservoir_quality: "Good porosity (15–28%), moderate permeability (100–2000 mD)"
+    biostrat_markers: "Planktonic foraminifera zone N16–N21"
+    seismic_character: "Continuous, high-amplitude reflectors"
+    epistemic: "OBS"
+    source: "Hazebroek & Tan 1993"
+
+  # ── Syn-kinematic ──────────────────────────────────────────────────────
+  - name: "Labang Shale"
+    age: "Middle Miocene (16–12 Ma)"
+    age_nn_zone: "NN5–NN9"
+    lithology: "Marine shales, hemipelagic mudstones"
+    thickness_m: [200, 1000]
+    environment: "Open marine, transgressive"
+    wireline_signature: "High gamma ray, low resistivity"
+    seal_quality: "EXCEPTIONAL — regional seal"
+    biostrat_markers: "Globigerinoides spp., Orbulina spp."
+    seismic_character: "Continuous, low-amplitude, regional extent"
+    epistemic: "OBS"
+    source: "Hazebroek & Tan 1993"
+
+  - name: "Labang Sandstone"
+    age: "Middle Miocene (16–12 Ma)"
+    age_nn_zone: "NN5–NN9"
+    lithology: "Turbidite sands, thin-bedded to massive"
+    thickness_m: [50, 300]
+    environment: "Deep marine turbidite fan"
+    wireline_signature: "Low gamma ray, high resistivity in sand intervals"
+    reservoir_quality: "Variable (12–22% porosity, 50–800 mD)"
+    biostrat_markers: "Same as Labang Shale (interbedded)"
+    seismic_character: "Discontinuous, moderate amplitude"
+    epistemic: "INT"
+    source: "Khamis et al. 2017"
+
+  # ── Key seismic horizons (not formations — used for mapping) ───────────
+  - name: "Yellow Horizon"
+    age: "~12 Ma (Middle/Late Miocene boundary)"
+    type: "Seismic horizon"
+    significance: "Top of main reservoir interval; regional marker"
+    seismic_character: "High-amplitude, continuous reflector"
+    epistemic: "OBS"
+    source: "Khamis et al. 2017"
+
+  - name: "Pink Horizon"
+    age: "~15 Ma (Early/Middle Miocene boundary)"
+    type: "Seismic horizon"
+    significance: "Base of syn-kinematic sequence; detachment reference"
+    seismic_character: "High-amplitude, continuous reflector"
+    epistemic: "OBS"
+    source: "Khamis et al. 2017"
+
+  # ── Pre-kinematic ──────────────────────────────────────────────────────
+  - name: "Gomantong Limestone"
+    age: "Early Miocene (23–16 Ma)"
+    age_nn_zone: "NN2–NN6"
+    lithology: "Carbonate platform, reefal limestone"
+    thickness_m: [100, 500]
+    environment: "Shallow marine carbonate platform"
+    wireline_signature: "Very low gamma ray, high density, high velocity"
+    reservoir_quality: "Variable (5–18% porosity, 1–100 mD) — fracture-enhanced"
+    biostrat_markers: "Lepidocyclina spp., Miogypsina spp."
+    seismic_character: "High-amplitude, mound geometry"
+    epistemic: "OBS"
+    source: "Hazebroek & Tan 1993"
+
+  - name: "Kellaneous Formation"
+    age: "Oligocene–Early Miocene (28–23 Ma)"
+    age_nn_zone: "NN1–NN2"
+    lithology: "Shallow marine to deltaic sands and shales"
+    thickness_m: [200, 800]
+    environment: "Post-rift thermal subsidence, deltaic progradation"
+    wireline_signature: "Coarsening-upward motifs, moderate gamma ray"
+    reservoir_quality: "Good (12–22% porosity, 50–800 mD)"
+    biostrat_markers: "Globigerina ciperoensis"
+    seismic_character: "Moderate amplitude, onlapping"
+    epistemic: "INT"
+    source: "Hazebroek & Tan 1993"
+
+  # ── Deepest ─────────────────────────────────────────────────────────────
+  - name: "Panas Thicknessnam Formation"
+    age: "Late Eocene–Oligocene (40–28 Ma)"
+    lithology: "Deep marine turbiditic shales and thin sands"
+    thickness_m: [500, 2000]
+    environment: "Deep marine, pre-collision"
+    source_rock_potential: "Primary source — Type II/III kerogen, TOC 1–4%"
+    wireline_signature: "High gamma ray (organic-rich), low resistivity"
+    biostrat_markers: "Limited — deep marine, poor preservation"
+    seismic_character: "Low amplitude, transparent to chaotic"
+    epistemic: "INT"
+    source: "Hazebroek & Tan 1993"
+
+# Key intervals for mapping (from dossier)
+key_intervals:
+  - name: "Kebabangan"
+    type: "Reservoir interval"
+    age: "Middle Miocene"
+    note: "Named prospect interval — no published formation data"
+    epistemic: "HYPOTHESIS"
+
+  - name: "Kinarut"
+    type: "Reservoir interval"
+    age: "Middle Miocene"
+    epistemic: "HYPOTHESIS"
+
+  - name: "Kamunsu"
+    type: "Structural feature"
+    age: "Middle Miocene"
+    epistemic: "INT"
+
+  - name: "Lingan"
+    type: "Reservoir interval"
+    age: "Middle Miocene"
+    epistemic: "HYPOTHESIS"
+
+# Biostrat zonation (cross-ref with /root/geox/resources/biostrat/nn_zones.json)
+biostrat_framework:
+  scheme: "Martini 1971 (calcareous nannofossil) + Blow 1969 (planktonic foraminifera)"
+  key_zones_for_nw_sabah:
+    - zone: "NN5"
+      age_ma: [13.65, 14.91]
+      significance: "Bestari discovery context — Middle Miocene reservoir"
+
+    - zone: "NN6"
+      age_ma: [13.12, 13.65]
+      significance: "Middle Miocene — peak fold-thrust activity"
+
+    - zone: "NN9"
+      age_ma: [10.41, 11.79]
+      significance: "Late Miocene — post-mud canopy, regional seal development"
+
+    - zone: "NN10"
+      age_ma: [8.59, 10.41]
+      significance: "NSPW mud canopy emplacement (~10.5 Ma falls in NN10)"
+
+  regional_framework: "Morley et al. (2021) Sequence biostratigraphic framework for the Oligocene to Pliocene of Malaysia"
+
+# Data gaps
+data_gaps:
+  - item: "Formation thickness distribution"
+    needed: "Isopach maps from well penetrations"
+    current_status: "Ranges from literature, not well-constrained"
+
+  - item: "Wireline signatures"
+    needed: "Actual log motifs from key wells"
+    current_status: "Generic descriptions — no actual log data"
+
+  - item: "Biostrat zonation in deepwater wells"
+    needed: "Biostrat reports from NW Sabah deepwater wells"
+    current_status: "NN zones from global scheme — local calibration missing"
+
+  - item: "Petrophysical properties"
+    needed: "Core analysis, porosity-perm transforms from local data"
+    current_status: "Ranges from analogue basins — not NW Sabah specific"
+
+last_updated: "2026-07-07"

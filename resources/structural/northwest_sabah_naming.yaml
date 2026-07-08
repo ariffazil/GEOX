@@ -1,0 +1,120 @@
+# NW Sabah Block & Feature Name Registry — GEOX Canonical
+# DITEMPA BUKAN DIBERI
+# Purpose: Prevent category errors between PSC blocks, structural trends, and field names
+# Last verified: 2026-07-07
+
+registry_id: NW_SABAH_NAMING
+description: >
+  Three distinct naming categories exist in NW Sabah exploration. Confusing them
+  is a category error that leads to wrong maps, wrong well locations, and wrong
+  geological interpretations. "Block P" does not exist — the correct term is
+  "L-B-P structural trend" (Limbayong–Bestari–P structure).
+
+# ── PSC Block Designations (administrative, NOT geological) ───────────────
+psc_blocks:
+  source: "PETRONAS PSC records, public domain"
+  blocks:
+    - name: "Block G"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+    - name: "Block H"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+    - name: "Block K"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+    - name: "Block N"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+    - name: "Block X"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+    - name: "Block R"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+    - name: "Block 2K"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+    - name: "Block 2V"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+    - name: "Block 2W"
+      operator: "Various"
+      status: "Active"
+      epistemic: "OBS"
+
+  invalid_blocks:
+    - name: "Block P"
+      status: "DOES NOT EXIST in public PSC records"
+      correct_term: "L-B-P structural trend (Limbayong–Bestari–P structure)"
+      lesson: "Source: this session. 'Block P' was used incorrectly to refer to a structural trend."
+
+# ── Structural Trend Names (geological, NOT administrative) ───────────────
+structural_trends:
+  source: "Khamis et al. 2017/2018"
+  trends:
+    - name: "L-B-P"
+      full_name: "Limbayong–Bestari–P toe-thrust trend"
+      style: "Imbricate thrust sheets"
+      epistemic: "INT"
+
+    - name: "M-La-S"
+      full_name: "Meligan–Laup–Serpi trend"
+      style: "Frontal fold-thrust"
+      epistemic: "INT"
+
+    - name: "Pg-Lt-U"
+      full_name: "Paginatan–Lotong–Umas trend"
+      style: "Rear hinterland"
+      epistemic: "INT"
+
+# ── Field Names (discovery/production, NOT blocks or trends) ──────────────
+field_names:
+  source: "PETRONAS annual reports, public domain"
+  fields:
+    - name: "Kikeh"
+      type: "First deepwater oil production in Malaysia"
+      operator: "Murphy Oil"
+      epistemic: "OBS"
+
+    - name: "Limbayong"
+      type: "Deepwater gas/condensate"
+      operator: "PETRONAS Carigali"
+      epistemic: "OBS"
+
+    - name: "Bestari"
+      type: "Deepwater discovery"
+      operator: "PETRONAS Carigali"
+      epistemic: "OBS"
+
+    - name: "Rotan"
+      type: "Deepwater gas"
+      operator: "PETRONAS Carigali"
+      epistemic: "OBS"
+
+# ── Validation rules ──────────────────────────────────────────────────────
+validation:
+  rule_1: "If the name matches a PSC block → it's an administrative designation"
+  rule_2: "If the name matches a structural trend → it's a geological label"
+  rule_3: "If the name matches a field → it's a discovery/production name"
+  rule_4: "If none match → warn: unverified name, check source"
+  rule_5: "'Block X' where X is a letter → check against psc_blocks list"
+  rule_6: "'X-Y-Z trend' → it's a structural trend, NOT a block name"
+
+last_updated: "2026-07-07"

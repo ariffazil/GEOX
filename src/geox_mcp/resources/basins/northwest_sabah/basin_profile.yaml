@@ -1,0 +1,306 @@
+# NW Sabah Deepwater Basin Profile
+# GEOX Resource File — /root/geox/src/geox_mcp/resources/basins/northwest_sabah/basin_profile.yaml
+#
+# DITEMPA BUKAN DIBERI — Forged, Not Given.
+# Created: 2026-07-07 by FORGE (000Ω) under F13 SOVEREIGN directive
+# Standing Instruction: geological-artifact-rigor (8 hard rules)
+#
+# EPISTEMIC DISCIPLINE:
+#   OBS = observed (direct measurement, published data)
+#   DER = derived (computed from published data)
+#   INT = interpreted (model-dependent, multiple sources)
+#   SPEC = speculative (hypothesis, single-source inference)
+#   SCHEMATIC = conceptual framework only, not data
+#
+# Every claim below carries its epistemic band. Items marked [MISSING]
+# indicate specific data that would upgrade the band.
+
+basin:
+  id: northwest_sabah
+  canonical_name: "Northwest Sabah Deepwater"
+  aliases:
+    - "NW Sabah"
+    - "Sabah Deepwater"
+    - "NW Borneo Deepwater"
+  country: Malaysia
+  region: Sabah, East Malaysia
+  offshore: true
+  
+  # BOUNDING BOX — approximate, from published maps [INT]
+  bbox:
+    lat_min: 4.5
+    lat_max: 7.0
+    lon_min: 115.5
+    lon_max: 119.5
+    source: "Approximate from Morley 2023 Fig. 1, Khamis 2017 Fig. 2"
+    epistemic: INT
+    note: "Exact boundaries depend on PSC block definitions and structural interpretation"
+
+tectonic_setting:
+  # TECTONIC CONTEXT — well-established in literature [OBS]
+  setting: "Convergent margin — accretionary prism and toe-thrust belt"
+  plate_boundary: "PSCS (Proto-South China Sea) subduction beneath NW Borneo"
+  convergence_direction: "SE-directed subduction of PSCS oceanic crust"
+  orogenic_event: "Sabah Oligocene-Miocene orogeny"
+  
+  # CRUSTAL TYPE [OBS]
+  crust_type: "Continental — attenuated rifted margin of Dangerous Grounds terrane"
+  crust_note: >
+    The Dangerous Grounds is a rifted continental terrane/block in the
+    South China Sea, NOT a generic label for the subducted oceanic slab.
+    Terminology check: "Dangerous Grounds" refers to the continental
+    fragment, not the consumed PSCS slab. [OBS — Pubellier & Meresse 2013]
+  
+  # COLLISION TIMING [INT]
+  collision_onset_ma: 20.0
+  collision_onset_label: "PSCS terminal subduction / collision onset"
+  collision_onset_source: "Hall 2013, Hazebroek & Tan 1993"
+  collision_onset_epistemic: INT
+  
+  # OROGENIC PHASES [INT — Madon 2015]
+  phases:
+    - name: "Constructive phase"
+      age_range_ma: [20, 12]
+      description: "Thrust loading, flexural subsidence, piggyback basin formation"
+      source: "Madon 2015"
+      epistemic: INT
+    - name: "Destructive phase"
+      age_range_ma: [12, 0]
+      description: "Gravity-driven extension, shale tectonics, mud volcanism"
+      source: "Madon 2015"
+      epistemic: INT
+
+structural_domains:
+  # STRUCTURAL TRENDS — from Khamis 2017/2018, Madon 2015 [INT]
+  toe_thrust_belt:
+    description: "Imbricate thrust sheets with NE-SW structural trends"
+    detachment_depth: "Shale-prone decollement in Middle Miocene section"
+    detachment_depth_epistemic: INT
+    source: "Khamis 2017, Khamis 2018"
+    
+    trends:
+      - name: "Limbayong-Bestari-P (L-B-P) trend"
+        abbreviation: "L-B-P"
+        structural_style: "Toe-thrust anticline"
+        fields: ["Limbayong", "Bestari", "P-structure"]
+        source: "Khamis 2017/2018"
+        epistemic: INT
+        note: "P-structure designation needs verification — may be operator-specific"
+      
+      - name: "Malang-Layar-S (M-La-S) trend"
+        abbreviation: "M-La-S"
+        structural_style: "Toe-thrust anticline"
+        source: "Khamis 2017/2018"
+        epistemic: INT
+      
+      - name: "Piggyback-Lintang-Tongkal-U (Pg-Lt-U) trend"
+        abbreviation: "Pg-Lt-U"
+        structural_style: "Piggyback basin"
+        source: "Khamis 2017/2018"
+        epistemic: INT
+  
+  shale_tectonic_province:
+    description: "Gravity-driven extension, shale diapirism, mud volcano province"
+    extent: "Large area of NW Sabah deepwater"
+    source: "Morley 2023, King et al. 2010"
+    epistemic: INT
+
+mud_volcano_province:
+  # NSPW MUD CANOPY SYSTEM [INT — Morley 2023]
+  name: "North Sabah Province West (NSPW) mud canopy"
+  total_centres: 50
+  total_centres_source: "Morley 2023"
+  total_centres_epistemic: INT
+  
+  total_area_km2: 1900
+  total_area_source: "Morley 2023"
+  total_area_epistemic: INT
+  total_area_note: "Area is approximate — derived from published map digitization"
+  
+  onset_age_ma: 10.5
+  onset_age_source: "Morley 2023"
+  onset_age_epistemic: INT
+  onset_age_note: >
+    This is the ONSET age of mud canopy activity, NOT the duration of a
+    depositional stage. Using 10.5 Ma to bound a "stage" from 11-10.5 Ma
+    implies false precision (0.5 Myr). The canopy system has been active
+    from ~10.5 Ma to present. [Standing Instruction Rule 6]
+  
+  # VERIFIED LOCATIONS — coordinates must have source [OBS/MAP]
+  verified_locations:
+    - name: "Lipad mud volcano (Tabin)"
+      lat: 5.188
+      lon: 118.502
+      verification: GPS
+      source: "Published GPS coordinate"
+      epistemic: OBS
+      onshore: true
+    
+    - name: "Tabin mud volcano"
+      lat: 5.20
+      lon: 118.48
+      verification: MAP
+      source: "Published geological map"
+      epistemic: INT
+      onshore: true
+      note: "Approximate — digitized from published map"
+  
+  offshore_extent:
+    description: "Approximate polygon from Morley 2023 Fig. X"
+    source: "Morley 2023"
+    epistemic: INT
+    note: "Exact polygon needs digitization from published figure"
+
+petroleum_system:
+  # PETROLEUM SYSTEM ELEMENTS
+  # Standing Instruction: every quantitative claim needs supporting curve
+  
+  source_rock:
+    era: "Middle Miocene"
+    age_ma: [15, 12]
+    type: "Type II/III kerogen"
+    type_source: "Inferred from regional petroleum systems"
+    type_epistemic: INT
+    depositional_environment: "Deep marine shale, slope to basin floor"
+    
+    thermal_maturity:
+      status: "[MISSING] No Ro or Tmax data available"
+      claim: "Oil expelled during early thrusting, gas expelled post-peak thrusting"
+      claim_epistemic: SPEC
+      claim_note: >
+        This timing claim is PLAUSIBLE under progressive burial/heating but
+        UNSUPPORTED without actual maturity indicators. Needs: Ro profiles,
+        Tmax curves, burial history models from calibration wells.
+        [Standing Instruction Rule 3: quantitative claims need the curve]
+      upgrade_path: "Well data with Rock-Eval pyrolysis, vitrinite reflectance profiles"
+  
+  reservoir:
+    pre_kinematic:
+      description: "Reservoirs deposited before thrust deformation"
+      age_range_ma: [20, 15]
+      lithology: "Sandstone (turbidite)"
+      quality: "Variable — depends on burial depth and diagenesis"
+      epistemic: INT
+      source: "Regional framework"
+      note: "[MISSING] No porosity, permeability, NTG data available"
+    
+    syn_kinematic:
+      description: "Reservoirs deposited during thrust deformation"
+      age_range_ma: [15, 10]
+      lithology: "Sandstone (turbidite, mass transport deposits)"
+      quality: "Variable — structurally compartmentalized"
+      epistemic: INT
+      source: "Regional framework"
+      note: "[MISSING] No petrophysical data available"
+    
+    table_note: >
+      The pre-kinematic vs syn-kinematic reservoir distinction is well-established
+      in the literature [OBS — Khamis 2017/2018]. However, specific formation
+      names, thicknesses, and petrophysical properties are NOT available.
+  
+  seal:
+    description: "Intra-formational shales, regional mudstone"
+    epistemic: INT
+    note: "[MISSING] No seal capacity data (capillary pressure, thickness maps)"
+  
+  trap:
+    structural_style: "Thrust-related anticlines, combination traps"
+    closure_type: "Structural + stratigraphic"
+    epistemic: INT
+    note: "[MISSING] No closure area, spill point depth, or volumetric data"
+  
+  charge:
+    mechanism: "Vertical migration along faults and shale conduits"
+    risk: "HIGH — charge mechanism remains one of key geological risks"
+    epistemic: INT
+    source: "Dossier self-assessment"
+    note: >
+      Charge risk is acknowledged in the dossier but not quantified.
+      Needs: migration modeling, fault seal analysis, charge timing vs trap timing.
+
+  # OVERPRESSURE [INT]
+  overpressure:
+    description: "Shale-driven overpressure in deep section"
+    cause: "Undercompaction due to rapid burial + shale tectonics"
+    epistemic: INT
+    source: "Regional understanding"
+    note: "[MISSING] No pressure-depth plots, no mud weight data"
+
+key_fields:
+  # PUBLICLY KNOWN FIELDS [OBS]
+  - name: "Kikeh"
+    type: "Deepwater oil"
+    status: "Producing — FPSO"
+    source: "Public domain"
+    epistemic: OBS
+    note: "First deepwater oil production in Malaysia"
+  
+  - name: "Bestari"
+    type: "Discovery"
+    source: "Public domain"
+    epistemic: OBS
+  
+  - name: "Limbayong"
+    type: "Discovery"
+    source: "Public domain"
+    epistemic: OBS
+
+# PSC BLOCK INFORMATION
+# Standing Instruction: distinguish block names vs structural trend names vs field names
+psc_blocks:
+  note: >
+    PSC block designations in NW Sabah deepwater are operator-specific and
+    NOT equivalent to structural trend names. "Block P" was used in a prior
+    session but could not be verified as a public PSC designation.
+    [Standing Instruction Rule 4: terminology precision]
+  verified_blocks: []  # None verified from public sources
+  unverified_claims:
+    - "Block P" — used in prior session, not verified as public PSC designation
+    - "Block G, H, K, N, X, R, 2K, 2V, 2W" — from regional context, not individually verified
+
+# DATA GAPS — what would upgrade this profile
+data_gaps:
+  high_priority:
+    - item: "Stratigraphic column with formation names, ages, thicknesses"
+      source_needed: "Jong et al. 2016, well completion reports"
+      would_upgrade: "Reservoir and seal descriptions from INT to OBS"
+    
+    - item: "Well data registry (public wells only)"
+      source_needed: "Well completion reports, public databases"
+      would_upgrade: "All petroleum system elements from INT to DER"
+    
+    - item: "Thermal maturity profiles (Ro, Tmax)"
+      source_needed: "Rock-Eval data from exploration wells"
+      would_upgrade: "Source rock timing from SPEC to INT/DER"
+    
+    - item: "Biostratigraphic zonation"
+      source_needed: "Well biostrat reports, NN zone picks"
+      would_upgrade: "Age control from INT to OBS"
+  
+  medium_priority:
+    - item: "Mud volcano location registry (offshore)"
+      source_needed: "Digitization from Morley 2023 maps"
+      would_upgrade: "Mud canopy extent from INT to DER"
+    
+    - item: "Structural trend geometry (maps, cross-sections)"
+      source_needed: "Seismic interpretation, structural maps"
+      would_upgrade: "Structural framework from INT to DER"
+    
+    - item: "Petrophysical properties (porosity, perm, NTG)"
+      source_needed: "Core analysis, well logs"
+      would_upgrade: "Reservoir quality from INT to OBS"
+
+# PROVENANCE
+provenance:
+  created: "2026-07-07"
+  created_by: "FORGE (000Ω)"
+  authority: "F13 SOVEREIGN"
+  sources:
+    - "Hazebroek & Tan 1993 — NW Sabah tectonic framework"
+    - "Morley 2023 — NSPW mud canopy system"
+    - "Khamis 2017/2018 — Toe-thrust structural trends"
+    - "Madon 2015 — Constructive/destructive phase framework"
+    - "Hall 2013 — PSCS subduction timing"
+  standing_instruction: "geological-artifact-rigor"
+  epistemic_discipline: "All claims labeled OBS/DER/INT/SPEC/SCHEMATIC"
+  review_cadence: "Update when new well or seismic data becomes available"

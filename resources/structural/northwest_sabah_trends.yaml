@@ -1,0 +1,96 @@
+# NW Sabah Structural Trend Database — GEOX Canonical
+# DITEMPA BUKAN DIBERI
+# Sources: Khamis et al. 2017/2018, Madon 2015, Hall PSCS
+# Epistemic band: INT (interpreted from seismic and literature)
+# Last verified: 2026-07-07
+# Skill: geological-artifact-rigor (Rule 4: terminology precision — cross-check against cited literature)
+
+basin_id: NORTHWEST_SABAH
+structural_style: "Toe-thrust fold-thrust belt — thin-skinned deformation"
+detachment_horizon: "Overpressured Middle Miocene shales (~4 km depth)"
+stress_regime: "Gravity-driven compression from NW Borneo orogenic wedge"
+source: "Khamis et al. 2017/2018, Madon 2015"
+
+# ── Named structural trends ──────────────────────────────────────────────
+# IMPORTANT: These are GEOLOGICAL labels, NOT PSC block names.
+# L-B-P = Limbayong–Bestari–P structure (a structural trend)
+# NOT "Block P" — that designation does not exist in public PSC records.
+
+trends:
+  - name: "Limbayong–Bestari–P (L-B-P) toe-thrust trend"
+    abbreviation: "L-B-P"
+    style: "Imbricate thrust sheets with detachment in overpressured shales"
+    orientation: "NW–SE, arc-parallel"
+    key_horizons:
+      - "Yellow reflector (~12 Ma — top reservoir)"
+      - "Pink reflector (~15 Ma — detachment reference)"
+      - "Deep unconformity (~20 Ma — pre-kinematic)"
+    detachment_depth_m: ~4000
+    structural_trap_type: "Thrust-cored anticlines with frontal closure"
+    reservoir_interval: "Middle Miocene turbidite sands (Labang Sandstone equivalent)"
+    seal: "Labang Shale (regional, overpressured)"
+    key_discoveries: ["Limbayong", "Bestari"]
+    source: "Khamis et al. 2017/2018"
+    epistemic: "INT"
+
+  - name: "Meligan–Laup–Serpi (M-La-S) trend"
+    abbreviation: "M-La-S"
+    style: "Frontal fold-thrust structures"
+    orientation: "NW–SE"
+    position: "Foreland of L-B-P trend"
+    structural_trap_type: "Detachment folds with thrust faulting"
+    source: "Khamis et al. 2017/2018"
+    epistemic: "INT"
+
+  - name: "Paginatan–Lotong–Umas (Pg-Lt-U) trend"
+    abbreviation: "Pg-Lt-U"
+    style: "Rear hinterland structures"
+    orientation: "NW–SE"
+    position: "Hinterland (proximal) of L-B-P trend"
+    structural_trap_type: "Tight folds with complex thrust geometry"
+    source: "Khamis et al. 2017/2018"
+    epistemic: "INT"
+
+# ── Structural evolution ──────────────────────────────────────────────────
+evolution:
+  - phase: "Constructive (pre-kinematic)"
+    age: "Oligocene–Early Miocene (28–16 Ma)"
+    description: "Passive margin with thick sediment accumulation. No structural deformation."
+    reservoir_quality: "Good — laterally continuous sand bodies"
+
+  - phase: "Destructive (syn-kinematic)"
+    age: "Middle–Late Miocene (16–10 Ma)"
+    description: "Fold-thrust belt development. Structures grow synchronously with sedimentation."
+    reservoir_quality: "Variable — compartmentalized by thrust faults"
+
+  - phase: "Post-kinematic"
+    age: "Pliocene–Recent (10–0 Ma)"
+    description: "Structural activity wanes. Deltaic drape over structures."
+    reservoir_quality: "Good — but shallow, unconsolidated"
+
+# ── Naming convention (CRITICAL) ──────────────────────────────────────────
+naming_convention:
+  structural_trends: "L-B-P, M-La-S, Pg-Lt-U — geological labels from Khamis et al."
+  psc_blocks: "Block G, H, K, N, X, R, 2K, 2V, 2W — operator/PETRONAS designations"
+  field_names: "Limbayong, Bestari, Kikeh, Rotan — discovery/production names"
+  warning: |
+    These three categories are NOT interchangeable.
+    "Block P" does NOT exist as a public PSC designation in NW Sabah.
+    Using "Block P" when you mean "L-B-P structural trend" is a category error.
+    Always verify: is this a block name, a structural trend, or a field name?
+
+# ── Data gaps ─────────────────────────────────────────────────────────────
+data_gaps:
+  - item: "Detachment depth constraint"
+    needed: "Depth-converted seismic + well velocity data"
+    current_status: "~4 km estimated from seismic — not well-constrained"
+
+  - item: "Thrust fault displacement magnitudes"
+    needed: "Balanced cross-sections from 3D seismic"
+    current_status: "Not available — 2D regional lines only"
+
+  - item: "Active fault reactivation risk"
+    needed: "GPS monitoring, seismicity data, fault plane solutions"
+    current_status: "2015 Kinabalu Mw 6.0 earthquake suggests active regime — SPEC"
+
+last_updated: "2026-07-07"

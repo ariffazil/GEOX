@@ -1,0 +1,95 @@
+# Sabah Mud Volcano Registry — GEOX Canonical
+# DITEMPA BUKAN DIBERI
+# Sources: Morley 2023, published maps, GPS verification
+# Epistemic band: OBS for GPS-verified, INT for map-derived, SPEC for estimated
+# Last verified: 2026-07-07
+# Skill: geological-artifact-rigor (Rule: every coordinate must have a verified source)
+
+registry_id: SABAH_MUD_VOLCANOES
+description: >
+  Verified mud volcano locations in Sabah, Malaysia. Only coordinates with
+  published sources or GPS verification are included. No coordinates from
+  memory — Lipad/Tabin was 0.5° longitude off when plotted from memory,
+  Maliau was 0.67° latitude off. Wrong coordinates = wrong well = dry hole.
+
+# ── Verified locations ────────────────────────────────────────────────────
+features:
+  - name: "Lipad Mud Volcano"
+    location: "Tabin, Sabah"
+    lat: 5.188
+    lon: 118.502
+    verification_level: "GPS"
+    source: "GPS field verification"
+    type: "Active mud volcano"
+    description: "One of the most accessible mud volcanoes in Sabah. Located in Tabin Wildlife Reserve."
+    epistemic: "OBS"
+    coordinate_accuracy_m: ~10
+
+  - name: "Tabin Mud Volcano"
+    location: "Tabin, Sabah"
+    lat: 5.200
+    lon: 118.480
+    verification_level: "MAP"
+    source: "Published geological map"
+    type: "Active mud volcano"
+    description: "Near Lipad MV in Tabin Wildlife Reserve"
+    epistemic: "INT"
+    coordinate_accuracy_m: ~500
+
+  - name: "Maliau Basin"
+    location: "Interior Sabah"
+    lat: 4.830
+    lon: 116.900
+    verification_level: "PUBLISHED"
+    source: "Wikipedia / GeoNames"
+    type: "Conservation area (not a mud volcano — reference point)"
+    description: "Maliau Basin Conservation Area — used as a geographic reference"
+    epistemic: "OBS"
+    coordinate_accuracy_m: ~100
+
+  - name: "Ranau"
+    location: "Sabah"
+    lat: 5.954
+    lon: 116.664
+    verification_level: "PUBLISHED"
+    source: "GeoNames"
+    type: "Town (reference point)"
+    description: "Ranau town — near Kinabalu, reference for regional context"
+    epistemic: "OBS"
+    coordinate_accuracy_m: ~100
+
+# ── NSPW offshore mud canopy ──────────────────────────────────────────────
+offshore_canopy:
+  name: "North Sabah Province Wedge (NSPW) mud canopy"
+  approximate_centre_lat: 6.5
+  approximate_centre_lon: 116.0
+  approximate_area_sq_km: 1900
+  mud_volcano_centres: ~50
+  onset_age_ma: ~10.5
+  extent_source: "Morley 2023 — approximate polygon from published map"
+  epistemic: "INT"
+  note: >
+    The NSPW mud canopy is an offshore feature. Coordinates are approximate
+    centres from published maps, not GPS-verified. The canopy surface is
+    seismically chaotic — a key false-positive signature for prospects.
+    Use K007 kill filter for mud volcano probability assessment.
+
+# ── Coordinate verification protocol ──────────────────────────────────────
+verification_protocol:
+  rule: "Every coordinate must have a verified source"
+  acceptable_sources:
+    - "GPS field measurement"
+    - "Published geological map with coordinate grid"
+    - "GeoNames / Wikipedia (for named places)"
+    - "Peer-reviewed literature with coordinates"
+  unacceptable_sources:
+    - "Memory (always SPEC, never OBS)"
+    - "Approximate from map without grid reference"
+    - "AI-generated coordinates"
+  epistemic_mapping:
+    GPS: "OBS"
+    MAP: "INT"
+    PUBLISHED: "OBS"
+    ESTIMATE: "SPEC"
+
+last_updated: "2026-07-07"

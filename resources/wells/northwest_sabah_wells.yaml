@@ -1,0 +1,96 @@
+# NW Sabah Deepwater Well Registry — GEOX Canonical
+# DITEMPA BUKAN DIBERI
+# Sources: Public domain well data, PETRONAS annual reports, published literature
+# Epistemic band: OBS for well existence, INT for subsurface interpretations
+# Last verified: 2026-07-07
+# Skill: geological-artifact-rigor (Rule 2: no cartoon geometry — real data or say "no data")
+
+basin_id: NORTHWEST_SABAH
+data_note: >
+  Only publicly available well names are listed. No confidential data included.
+  Formation tops, DST results, and petrophysical properties are from published
+  sources only. Working geologists need actual well data — this registry is a
+  starting point, not a substitute for proper well database access.
+
+wells:
+  # ── Kikeh field ────────────────────────────────────────────────────────
+  - name: "Kikeh-1"
+    type: "Exploration well"
+    operator: "Murphy Oil"
+    field: "Kikeh"
+    water_depth_m: ~1300
+    td_m: ~4500
+    key_formations_penetrated:
+      - "Sandakan Fm (Pliocene)"
+      - "Labang Shale (Middle Miocene)"
+      - "Labang Sandstone (Middle Miocene)"
+      - "Gomantong Limestone (Early Miocene)"
+    hydrocarbon_shows: "Oil shows in Miocene turbidite sands"
+    dst_results: "Confirmed commercial oil — first deepwater oil production in Malaysia"
+    strategy: "FPSO"
+    epistemic: "OBS"
+    source: "Murphy Oil press releases, PETRONAS annual reports"
+
+  - name: "Kikeh-2"
+    type: "Appraisal well"
+    operator: "Murphy Oil"
+    field: "Kikeh"
+    epistemic: "OBS"
+    source: "Public domain"
+
+  # ── Limbayong ──────────────────────────────────────────────────────────
+  - name: "Limbayong-1"
+    type: "Exploration well"
+    operator: "PETRONAS Carigali"
+    field: "Limbayong"
+    hydrocarbon_shows: "Gas/condensate"
+    epistemic: "OBS"
+    source: "PETRONAS annual reports"
+
+  # ── Rotan ──────────────────────────────────────────────────────────────
+  - name: "Rotan-1"
+    type: "Exploration well"
+    operator: "PETRONAS Carigali"
+    field: "Rotan"
+    hydrocarbon_shows: "Gas"
+    epistemic: "OBS"
+    source: "PETRONAS annual reports"
+
+  # ── Bestari ────────────────────────────────────────────────────────────
+  - name: "Bestari-1"
+    type: "Exploration well"
+    operator: "PETRONAS Carigali"
+    field: "Bestari"
+    discovery_context: "NN5 biozone — Middle Miocene reservoir"
+    epistemic: "OBS"
+    source: "PETRONAS annual reports"
+
+# ── Data gaps ─────────────────────────────────────────────────────────────
+data_gaps:
+  - item: "Well tops and formation depths"
+    needed: "Well completion reports, biostrat reports"
+    current_status: "Not publicly available"
+
+  - item: "Petrophysical logs"
+    needed: "Gamma ray, resistivity, density-neutron logs"
+    current_status: "Not publicly available"
+
+  - item: "Core data"
+    needed: "Core descriptions, porosity-permeability measurements"
+    current_status: "Not publicly available"
+
+  - item: "DST results"
+    needed: "Flow rates, fluid properties, pressures"
+    current_status: "Partially available from press releases"
+
+  - item: "Biostrat reports"
+    needed: "Nannofossil and foraminifera picks from each well"
+    current_status: "Not publicly available — operator confidential"
+
+naming_convention:
+  well_names: "Operator-assigned names (e.g., Kikeh-1, Limbayong-1)"
+  field_names: "Discovery names (e.g., Kikeh, Limbayong, Rotan)"
+  psc_blocks: "NOT used as well names — Block G, H, K are administrative designations"
+  warning: "'Block P' does not exist as a public PSC designation in NW Sabah"
+
+last_updated: "2026-07-07"
