@@ -122,6 +122,8 @@ RASA is computed inside `compute_ac_risk_governed(..., rasa_present=True)` and e
 
 Full doctrine: [GENESIS/040_APEX_STACK.md](https://github.com/ariffazil/arifos/blob/main/GENESIS/040_APEX_STACK.md)
 
+**Orthogonal CANON:** [ariffazil/CANON.md](https://github.com/ariffazil/ariffazil/blob/main/CANON.md) — this repo is **earth domain intelligence** (evidence, never law). Runs on arifOS + A-FORGE substrate; does not SEAL or execute host mutation.
+
 ---
 
 ## 2. FEDERATION POSITION
