@@ -151,27 +151,6 @@ def _extract_all_biozones(text: str) -> list[dict[str, Any]]:
             }
         )
 
-    # If no zones found, try single parse as fallback
-    if not results:
-        parsed = parse_nn_zone(clean)
-        if parsed["zone"] != "UNKNOWN":
-            zone_name = parsed["zone"]
-            age_top, age_base = nn_age(zone_name)
-            age_valid = age_top > -999
-            results.append(
-                {
-                    "scheme": "Martini 1971",
-                    "group": "calcareous_nannofossil",
-                    "zone": zone_name,
-                    "confidence": 0.90 if age_valid else 0.50,
-                    "source_span": clean[:80],
-                    "age_top_ma": age_top if age_valid else None,
-                    "age_base_ma": age_base if age_valid else None,
-                    "epoch": _epoch_for_nn(zone_name.replace("NN", "")),
-                    "evidence_tag": parsed["evidence_tag"],
-                }
-            )
-
     return results
 
 
@@ -478,9 +457,7 @@ async def geox_biostrat_parse(
     # Warnings
     warnings: list[str] = []
     if not structured_mode:
-        warnings.append(
-            "Free-text mode — higher entropy. Prefer intervals=[{depth_top_m,depth_base_m,marker,zone}]"
-        )
+        warnings.append("Free-text mode — higher entropy. Prefer intervals=[{depth_top_m,depth_base_m,marker,zone}]")
     if not biozones and not gde_events and not lithology and not structured_rows:
         warnings.append("No biostratigraphic tokens extracted from input.")
     if unparsed:
@@ -523,10 +500,7 @@ async def geox_biostrat_parse(
         evidence_refs.append(f"GDE event: {ge['event_type']}")
     for r in structured_rows:
         if r.get("marker") or r.get("zone"):
-            evidence_refs.append(
-                f"Interval {r.get('depth_top_m')}-{r.get('depth_base_m')} m: "
-                f"{r.get('marker') or r.get('zone')}"
-            )
+            evidence_refs.append(f"Interval {r.get('depth_top_m')}-{r.get('depth_base_m')} m: {r.get('marker') or r.get('zone')}")
 
     audit = {
         "tool_call_hash": "geox_biostrat_parse_v3_structured",

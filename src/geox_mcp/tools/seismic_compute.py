@@ -81,7 +81,6 @@ async def _mode_well_tie(
     extraction_window_ms: float,
     frequency_band: tuple[float, float],
     wavelet_type: str,
-    apply_gardner_fallback: bool,
     apply_anisotropy_correction: bool,
     q_factor: float,
 ) -> dict[str, Any]:
@@ -93,7 +92,6 @@ async def _mode_well_tie(
         extraction_window_ms=extraction_window_ms,
         frequency_band=frequency_band,
         wavelet_type=wavelet_type,  # type: ignore[arg-type]
-        apply_gardner_fallback=apply_gardner_fallback,
         apply_anisotropy_correction=apply_anisotropy_correction,
         q_factor=q_factor,
     )
@@ -108,7 +106,6 @@ async def _mode_time_depth_anchor(
     well_id: str,
     checkshot_ref: str,
     drift_threshold_ms: float,
-    method: str,
 ) -> dict[str, Any]:
     from geox_mcp.tools.seismic_well_tie import geox_time_depth_anchor
 
@@ -116,7 +113,6 @@ async def _mode_time_depth_anchor(
         well_id=well_id,
         checkshot_ref=checkshot_ref,
         drift_threshold_ms=drift_threshold_ms,
-        method=method,  # type: ignore[arg-type]
     )
 
 
@@ -428,13 +424,11 @@ async def geox_seismic_compute(
     volume_ref: str | None = None,
     extraction_window_ms: float = 100.0,
     frequency_band: tuple[float, float] = (10.0, 50.0),
-    apply_gardner_fallback: bool = False,
     apply_anisotropy_correction: bool = False,
     q_factor: float = 100.0,
     # time_depth_anchor
     checkshot_ref: str | None = None,
     drift_threshold_ms: float = 25.0,
-    td_method: Literal["checkshot", "vsp", "regional_proxy"] = "checkshot",
     # anomalous_contrast
     ai_profile: list[float] | None = None,
     ac_depth: list[float] | None = None,
@@ -459,7 +453,7 @@ async def geox_seismic_compute(
     mode : str
         "synthetic" — forward model S = w * r + n.
         "well_tie" — seismic-to-well tie with cross-correlation.
-        "time_depth_anchor" — checkshot/VSP anchoring.
+        "time_depth_anchor" — checkshot anchoring (single path, Law 5).
         "anomalous_contrast" — detect AC mismatches with AVO class I-IV,
             attention residual (δ_i = e_i − ē), softmax hallucination risk,
             approximation tier, and boundary condition flags.
@@ -597,7 +591,6 @@ async def geox_seismic_compute(
             extraction_window_ms=extraction_window_ms,
             frequency_band=frequency_band,
             wavelet_type=wavelet_type,
-            apply_gardner_fallback=apply_gardner_fallback,
             apply_anisotropy_correction=apply_anisotropy_correction,
             q_factor=q_factor,
         )
@@ -619,7 +612,6 @@ async def geox_seismic_compute(
             well_id=well_id,
             checkshot_ref=checkshot_ref,
             drift_threshold_ms=drift_threshold_ms,
-            method=td_method,
         )
         if ctx:
             ctx.report_progress(100, 100)

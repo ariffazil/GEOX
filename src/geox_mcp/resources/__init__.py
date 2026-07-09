@@ -962,19 +962,6 @@ def geox_earthquake_usgs_summary():
     Epistemic: OBS — direct API, authoritative source
     """
     return "geox://earthquake/usgs_summary"
-
-    mcp.resource(
-        "geox://earthquake/usgs_summary",
-        description="USGS M4.5+ earthquake catalog — worldwide, last 30 days. "
-        "Schema index for USGS ANSS ComCat API. "
-        "Fetch via geox_seismic_ingest(mode='usgs_earthquake'). "
-        "Fields: magnitude, location, depth, timestamp, felt reports. "
-        "License: USGS Public Domain. "
-        "Epistemic status: OBS — authoritative primary source.",
-        mime_type="application/json",
-    )(geox_earthquake_usgs_summary)
-
-
 def geox_earthquake_usgs_fault():
     """USGS Did You Feel It? — macroseismic intensity + felt reports.
     URI: geox://earthquake/usgs_dyfi
@@ -984,19 +971,6 @@ def geox_earthquake_usgs_fault():
     Epistemic: OBS — crowd-sourced but validated
     """
     return "geox://earthquake/usgs_dyfi"
-
-    mcp.resource(
-        "geox://earthquake/usgs_dyfi",
-        description="USGS Did You Feel It? — macroseismic intensity (MMI) and felt reports. "
-        "Schema index for USGS DYFI API. "
-        "Fetch via geox_seismic_ingest(mode='usgs_earthquake', region='dyfi'). "
-        "Use for: macroseismic magnitude calibration, building damage proxies. "
-        "License: USGS Public Domain. "
-        "Epistemic status: OBS — crowd-sourced with USGS validation.",
-        mime_type="application/json",
-    )(geox_earthquake_usgs_fault)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: GRAVITY & MAGNETICS
 # Corresponding tools: geox_subsurface_model (gravity_forward mode)
@@ -1013,21 +987,6 @@ def geox_emag2v3():
     Epistemic: OBS — satellite+ground observation composite
     """
     return "geox://magnetics/emag2v3"
-
-    mcp.resource(
-        "geox://magnetics/emag2v3",
-        description="EMAG2v3 — 1-arc-minute global magnetic anomaly grid (WMM2020). "
-        "Schema index for NOAA NGDC EMAG2v3. "
-        "Fetch via geox_subsurface_model(mode='gravity_forward', survey='emag2v3'). "
-        "Resolution: ~1.85 km. Covers full Earth. "
-        "Components: total field intensity (F), horizontal (H), "
-        "inclination (I), declination (D). "
-        "License: NOAA Public Domain. "
-        "Epistemic status: OBS — satellite (Swarm) + ground observatory composite.",
-        mime_type="application/json",
-    )(geox_emag2v3)
-
-
 def geox_icgem_vrm():
     """ICGEM v7 — Virtual Geomagnetic Observatory, 10-arc-min global SV models.
     URI: geox://magnetics/icgem_vrm
@@ -1038,19 +997,6 @@ def geox_icgem_vrm():
     Epistemic: OBS — observatory+satellite synthesis
     """
     return "geox://magnetics/icgem_vrm"
-
-    mcp.resource(
-        "geox://magnetics/icgem_vrm",
-        description="ICGEM v7 VRM — 10-arc-minute global geomagnetic secular variation. "
-        "Schema index for GFZ Potsdam ICGEM. "
-        "Fetch via geox_subsurface_model(mode='gravity_forward', survey='icgem_vrm'). "
-        "Derived from: CHAMP, Swarm, ground observatories. "
-        "License: CC-BY 4.0 (ICGEM/GFZ). "
-        "Epistemic status: OBS — multi-source synthesis.",
-        mime_type="application/json",
-    )(geox_icgem_vrm)
-
-
 def geox_world_magnetic_model():
     """WMM2025 — World Magnetic Model, 3-arc-min referenced to WGS84.
     URI: geox://magnetics/wmm2025
@@ -1061,20 +1007,6 @@ def geox_world_magnetic_model():
     Epistemic: OBS — official military/civil model
     """
     return "geox://magnetics/wmm2025"
-
-    mcp.resource(
-        "geox://magnetics/wmm2025",
-        description="WMM2025 — World Magnetic Model, 3-arc-minute resolution. "
-        "Schema index for NGA/NOAA joint product. "
-        "Fetch via geox_subsurface_model(mode='gravity_forward', survey='wmm2025'). "
-        "Epoch: 2025.0. Valid 2025-2030. "
-        "Components: D, I, H, F, X, Y, Z. "
-        "License: US DOD/NGA Public Domain. "
-        "Epistemic status: OBS — official US/DOD reference model.",
-        mime_type="application/json",
-    )(geox_world_magnetic_model)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: BATHYMETRY & TOPOGRAPHY
 # Corresponding tools: geox_basin (bathymetry mode), geox_seismic_ingest
@@ -1091,21 +1023,6 @@ def geox_etopo1():
     Epistemic: OBS — ship echo-sounder + satellite altimetry composite
     """
     return "geox://bathymetry/etopo1"
-
-    mcp.resource(
-        "geox://bathymetry/etopo1",
-        description="ETOPO1 — 1-arc-minute global relief model (topo + bathy, bedrock ice surface). "
-        "Schema index for NOAA NGDC ETOPO1. "
-        "Fetch via geox_basin(mode='bathymetry', source='etopo1'). "
-        "Resolution: ~1.85 km. Two variants: ice=ETOPO1ice, bed=ETOPO1bed. "
-        "Use for: seafloor age context, sediment thickness proxies, "
-        "free-air gravity reduction. "
-        "License: Public Domain. "
-        "Epistemic status: OBS — ship soundings + GEOSAT/ERS altimetry.",
-        mime_type="application/json",
-    )(geox_etopo1)
-
-
 def geox_gebco():
     """GEBCO 2024 — 15-arc-sec global bathymetric grid, Type Approval Committee.
     URI: geox://bathymetry/gebco2024
@@ -1116,20 +1033,6 @@ def geox_gebco():
     Epistemic: OBS — crowd-sourced + ship survey validated
     """
     return "geox://bathymetry/gebco2024"
-
-    mcp.resource(
-        "geox://bathymetry/gebco2024",
-        description="GEBCO 2024 — 15-arc-second global bathymetric grid. "
-        "Schema index for GEBCO/Nippon Foundation TAML. "
-        "Fetch via geox_basin(mode='bathymetry', source='gebco'). "
-        "Resolution: ~460 m. Finest publicly available global bathymetry. "
-        "Compilation: ship echo-sounder + multi-beam + satellite altimetry + AI. "
-        "License: CC-BY 4.0 (GEBCO). "
-        "Epistemic status: OBS — TAC-validated crowd-sourced compilation.",
-        mime_type="application/json",
-    )(geox_gebco)
-
-
 def geox_srtm_plus():
     """SRTM15+ — 15-arc-sec combined topography/bathymetry, SIO/Scripps.
     URI: geox://bathymetry/srtm15plus
@@ -1140,19 +1043,6 @@ def geox_srtm_plus():
     Epistemic: OBS — academic composite, high-resolution
     """
     return "geox://bathymetry/srtm15plus"
-
-    mcp.resource(
-        "geox://bathymetry/srtm15plus",
-        description="SRTM15+ — 15-arc-second unified topography + bathymetry grid. "
-        "Schema index for SIO/UCSD. "
-        "Fetch via geox_basin(mode='bathymetry', source='srtm15plus'). "
-        "Resolution: ~460 m. Combines SRTM land + ship bathymetry + altimetry. "
-        "License: SIO/UCSD research use only (not CC-BY). "
-        "Epistemic status: OBS — academic composite, high-resolution bathymetry.",
-        mime_type="application/json",
-    )(geox_srtm_plus)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: GEOLOGY & STRATIGRAPHY
 # Corresponding tools: geox_basin, geox_sequence
@@ -1169,20 +1059,6 @@ def geox_macrostrat_units():
     Epistemic: OBS — peer-reviewed geological database
     """
     return "geox://stratigraphy/macrostrat_units"
-
-    mcp.resource(
-        "geox://stratigraphy/macrostrat_units",
-        description="Macrostrat API — global Phanerozoic stratigraphic units. "
-        "Schema index for Macrostrat.org v2. "
-        "Fetch via geox_basin(mode='stratigraphy', source='macrostrat'). "
-        "Covers: formations, members, beds, biostratigraphy, lithology. "
-        "Use for: sequence stratigraphy, Wheeler diagrams, global charts. "
-        "License: CC-BY 4.0 (Macrostrat/PaleoBioDB). "
-        "Epistemic status: OBS — peer-reviewed geological database.",
-        mime_type="application/json",
-    )(geox_macrostrat_units)
-
-
 def geox_macrostrat_timescale():
     """Macrostrat Timescale — ICS-aligned geological age definitions.
     URI: geox://stratigraphy/macrostrat_timescale
@@ -1192,19 +1068,6 @@ def geox_macrostrat_timescale():
     Epistemic: OBS — ICS international standard
     """
     return "geox://stratigraphy/macrostrat_timescale"
-
-    mcp.resource(
-        "geox://stratigraphy/macrostrat_timescale",
-        description="Macrostrat Timescale — ICS 2024/02 chronostratigraphic scale. "
-        "Schema index for Macrostrat timescale API. "
-        "Fetch via geox_basin(mode='timescale', source='macrostrat'). "
-        "Use for: age conversions, stage boundaries, geologic time scale. "
-        "License: CC-BY 4.0. "
-        "Epistemic status: OBS — International Commission on Stratigraphy standard.",
-        mime_type="application/json",
-    )(geox_macrostrat_timescale)
-
-
 def geox_onegeology():
     """OneGeology — global web-accessible geological map data (XSD-hosted).
     URI: geox://stratigraphy/onegeology
@@ -1215,19 +1078,6 @@ def geox_onegeology():
     Epistemic: OBS — national geological survey compilation
     """
     return "geox://stratigraphy/onegeology"
-
-    mcp.resource(
-        "geox://stratigraphy/onegeology",
-        description="OneGeology — global web-accessible geological map data. "
-        "Schema index for OneGeology EGDI. "
-        "Fetch via geox_basin(mode='geology_map', source='onegeology'). "
-        "Use for: regional geology context, surface geology, fault traces. "
-        "License: LGWM Open Data License (CC-BY variant). "
-        "Epistemic status: OBS — national survey compilation via WMS.",
-        mime_type="application/json",
-    )(geox_onegeology)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: TECTONICS
 # Corresponding tools: geox_basin (tectonic mode), geox_sequence
@@ -1244,21 +1094,6 @@ def geox_gplates_velocity():
     Epistemic: OBS — reconstruction model
     """
     return "geox://tectonics/gplates_velocity"
-
-    mcp.resource(
-        "geox://tectonics/gplates_velocity",
-        description="GPlates Web Service — plate motion model. "
-        "Schema index for GPlates GWS. "
-        "Fetch via geox_basin(mode='tectonic', source='gplates'). "
-        "Use for: plate reconstruction, basin paleoposition, "
-        "heat flow plate cooling models. "
-        "Models: MORVEL, GSRM, NUVEL-1A. "
-        "License: GPL (GPlates team / U. Sydney). "
-        "Epistemic status: OBS — kinematic model reconstruction.",
-        mime_type="application/json",
-    )(geox_gplates_velocity)
-
-
 def geox_gplates_paleomask():
     """GPlates paleomask — continental polygons at past geological times.
     URI: geox://tectonics/gplates_paleomask
@@ -1268,20 +1103,6 @@ def geox_gplates_paleomask():
     Epistemic: OBS — reconstruction model
     """
     return "geox://tectonics/gplates_paleomask"
-
-    mcp.resource(
-        "geox://tectonics/gplates_paleomask",
-        description="GPlates paleomask — continental polygon reconstructions. "
-        "Schema index for GPlates GWS paleomask endpoint. "
-        "Fetch via geox_basin(mode='tectonic', source='gplates', submode='paleomask'). "
-        "Use for: paleolatitude, continental collision context, "
-        "paleobathymetry. "
-        "License: GPL (GPlates team). "
-        "Epistemic status: OBS — CGMW-based reconstruction model.",
-        mime_type="application/json",
-    )(geox_gplates_paleomask)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: GEOCHEMISTRY
 # Corresponding tools: geox_basin (geochemistry mode)
@@ -1298,20 +1119,6 @@ def geox_earthchem():
     Epistemic: OBS — published geochemical database
     """
     return "geox://geochemistry/earthchem"
-
-    mcp.resource(
-        "geox://geochemistry/earthchem",
-        description="EarthChem — global geochemical database. "
-        "Schema index for EarthChem.org. "
-        "Fetch via geox_basin(mode='geochemistry', source='earthchem'). "
-        "Use for: source rock characterization, provenance, "
-        "magma chemistry, alteration signatures. "
-        "License: CEED Data Policy (restrictive — verify usage terms). "
-        "Epistemic status: OBS — published geochemical data compilation.",
-        mime_type="application/json",
-    )(geox_earthchem)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: OCEAN
 # Corresponding tools: geox_basin (oceanographic mode)
@@ -1329,20 +1136,6 @@ def geox_copernicus_bathymetry():
     Epistemic: OBS — European Union public service product
     """
     return "geox://ocean/copernicus_bathymetry"
-
-    mcp.resource(
-        "geox://ocean/copernicus_bathymetry",
-        description="Copernicus EMODnet Bathymetry ATLA — 1/16-arc-min global bathymetry. "
-        "Schema index for Copernicus Marine Service. "
-        "Fetch via geox_basin(mode='bathymetry', source='copernicus'). "
-        "Resolution: ~115 m. Most detailed global bathymetry publicly available. "
-        "License: CC-BY 4.0 (Copernicus). "
-        "⚠️ Requires registration at marine.copernicus.eu. "
-        "Epistemic status: OBS — EU Copernicus public service product.",
-        mime_type="application/json",
-    )(geox_copernicus_bathymetry)
-
-
 def geox_copernicus_sea_level():
     """Copernicus Sea Level — DUACS altimeter SLA, 1993-present, 0.25-deg global.
     URI: geox://ocean/copernicus_sea_level
@@ -1352,21 +1145,6 @@ def geox_copernicus_sea_level():
     Epistemic: OBS — satellite altimetry
     """
     return "geox://ocean/copernicus_sea_level"
-
-    mcp.resource(
-        "geox://ocean/copernicus_sea_level",
-        description="Copernicus DUACS — sea level anomaly (SLA) from satellite altimetry. "
-        "Schema index for AVISO/CLS/CNES via Copernicus. "
-        "Fetch via geox_basin(mode='ocean', source='copernicus', variable='sla'). "
-        "Coverage: 1993-present. Resolution: 0.25° x 0.25°. "
-        "Use for: contemporary sea level change, steric expansion proxies. "
-        "License: CC-BY 4.0 (Copernicus). "
-        "⚠️ Requires registration at marine.copernicus.eu. "
-        "Epistemic status: OBS — satellite altimetry (TOPEX/Poseidon → Sentinel-6).",
-        mime_type="application/json",
-    )(geox_copernicus_sea_level)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: ATMOSPHERE
 # Corresponding tools: geox_basin (atmospheric mode)
@@ -1384,22 +1162,6 @@ def geox_era5_atmosphere():
     Epistemic: OBS — reanalysis model output
     """
     return "geox://atmosphere/era5"
-
-    mcp.resource(
-        "geox://atmosphere/era5",
-        description="ERA5 — ECMWF 5th generation reanalysis, hourly/single-level. "
-        "Schema index for Copernicus Climate Data Store. "
-        "Fetch via geox_basin(mode='atmosphere', source='era5'). "
-        "Coverage: 1940-present. Resolution: 0.25° (~31 km). "
-        "Variables: 2m temperature, precipitation, pressure, wind, humidity. "
-        "Use for: surface temperature, weathering rates, sediment supply proxies. "
-        "License: CC-BY 4.0 (ECMWF/Copernicus). "
-        "⚠️ Requires registration at cds.climate.copernicus.eu. "
-        "Epistemic status: OBS — 4D-Var reanalysis model output.",
-        mime_type="application/json",
-    )(geox_era5_atmosphere)
-
-
 def geox_era5_pressure():
     """ERA5 pressure levels — 137 hybrid sigma-pressure levels, 3D atmospheric state.
     URI: geox://atmosphere/era5_pressure_levels
@@ -1409,21 +1171,6 @@ def geox_era5_pressure():
     Epistemic: OBS — reanalysis model output
     """
     return "geox://atmosphere/era5_pressure_levels"
-
-    mcp.resource(
-        "geox://atmosphere/era5_pressure_levels",
-        description="ERA5 pressure-level fields — 137 hybrid sigma-pressure levels. "
-        "Schema index for ECMWF/Copernicus. "
-        "Fetch via geox_basin(mode='atmosphere', source='era5', level_type='pressure'). "
-        "Use for: deep burial thermal history, overpressure genesis context. "
-        "Variables: geopotential, temperature, humidity, wind components. "
-        "License: CC-BY 4.0. "
-        "⚠️ Requires registration. "
-        "Epistemic status: OBS — 4D-Var reanalysis model output.",
-        mime_type="application/json",
-    )(geox_era5_pressure)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: HEAT FLOW
 # ---------------------------------------------------------------------------
@@ -1439,20 +1186,6 @@ def geox_ihfc_heatflow():
     Epistemic: OBS — direct measurement compilation
     """
     return "geox://heatflow/ihfc"
-
-    mcp.resource(
-        "geox://heatflow/ihfc",
-        description="IHFC Global Heat Flow Database — direct measurement compilation. "
-        "Schema index for IHFC/MCA. "
-        "Fetch via geox_basin(mode='heatflow', source='ihfc'). "
-        "Use for: geothermal gradient, thermal maturation, "
-        "lithospheric thickness proxies. "
-        "License: Varies by contributing dataset (verify before publication). "
-        "Epistemic status: OBS — direct borehole measurement database.",
-        mime_type="application/json",
-    )(geox_ihfc_heatflow)
-
-
 def geox_global_heatflow():
     """Global Heat Flow Database — alternate aggregation (USGS/HotEarth).
     URI: geox://heatflow/global
@@ -1462,19 +1195,6 @@ def geox_global_heatflow():
     Epistemic: OBS — direct measurement compilation
     """
     return "geox://heatflow/global"
-
-    mcp.resource(
-        "geox://heatflow/global",
-        description="Global Heat Flow — aggregated from multiple surveys. "
-        "Schema index for global compilation. "
-        "Fetch via geox_basin(mode='heatflow', source='global'). "
-        "Use for: basin thermal history calibration. "
-        "License: USGS Public Domain (where applicable). "
-        "Epistemic status: OBS — direct measurement compilation.",
-        mime_type="application/json",
-    )(geox_global_heatflow)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: HYDROLOGY
 # ---------------------------------------------------------------------------
@@ -1490,20 +1210,6 @@ def geox_usgs_water():
     Epistemic: OBS — direct measurement network
     """
     return "geox://hydrology/usgs_nwis"
-
-    mcp.resource(
-        "geox://hydrology/usgs_nwis",
-        description="USGS NWIS — National Water Information System. "
-        "Schema index for USGS waterservices REST API. "
-        "Fetch via geox_basin(mode='hydrology', source='usgs_nwis'). "
-        "Use for: surface water discharge, groundwater levels, "
-        "sediment load proxies, basinal hydrology context. "
-        "License: USGS Public Domain. "
-        "Epistemic status: OBS — direct measurement gaging network.",
-        mime_type="application/json",
-    )(geox_usgs_water)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: PALEOMAGNETISM
 # ---------------------------------------------------------------------------
@@ -1519,20 +1225,6 @@ def geox_magic_paleomag():
     Epistemic: OBS — published paleomagnetic database
     """
     return "geox://paleomag/magic"
-
-    mcp.resource(
-        "geox://paleomag/magic",
-        description="MAGIC Paleomagnetic Database — IAGA-aligned paleomag data. "
-        "Schema index for Oxford/Munich MAGIC database. "
-        "Fetch via geox_basin(mode='paleomag', source='magic'). "
-        "Use for: polarity timescale, apparent polar wander paths (APWP), "
-        "paleolatitude reconstructions, GPlates anchoring. "
-        "License: Variable (verify per contributing dataset). "
-        "Epistemic status: OBS — published paleomagnetic database.",
-        mime_type="application/json",
-    )(geox_magic_paleomag)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: SPACE WEATHER / SOLAR
 # ---------------------------------------------------------------------------
@@ -1548,20 +1240,6 @@ def geox_nso_solar():
     Epistemic: OBS — direct solar observation
     """
     return "geox://space/solar_nso"
-
-    mcp.resource(
-        "geox://space/solar_nso",
-        description="NSO/SOLIS — National Solar Observatory solar indices. "
-        "Schema index for NSO data services. "
-        "Fetch via geox_basin(mode='space', source='nso_solar'). "
-        "Use for: solar forcing in climate models, "
-        "climate archive correlations, Maunder minimum analogs. "
-        "License: NSO data policy (verify before publication). "
-        "Epistemic status: OBS — direct solar telescope observation.",
-        mime_type="application/json",
-    )(geox_nso_solar)
-
-
 def geox_kp_index():
     """Kp Index — geomagnetic activity, 3-hourly planetary index.
     URI: geox://space/kp_index
@@ -1572,20 +1250,6 @@ def geox_kp_index():
     Epistemic: OBS — observatory magnetometer network
     """
     return "geox://space/kp_index"
-
-    mcp.resource(
-        "geox://space/kp_index",
-        description="Kp Index — 3-hourly geomagnetic planetary index. "
-        "Schema index for GFZ Potsdam. "
-        "Fetch via geox_basin(mode='space', source='kp_index'). "
-        "Use for: geomagnetic storm proxies, ionospheric disturbance, "
-        "satellite drag, infrastructure risk. "
-        "License: GFZ Potsdam (verify before publication). "
-        "Epistemic status: OBS — global observatory magnetometer network.",
-        mime_type="application/json",
-    )(geox_kp_index)
-
-
 # ---------------------------------------------------------------------------
 # DOMAIN: DEEP TIME — PENDING DATASETS (5 missing sources)
 # ---------------------------------------------------------------------------
@@ -1600,21 +1264,6 @@ def geox_deeptime_co2():
     Epistemic: DER — forward biogeochemical model output
     """
     return "geox://deep_time/co2"
-
-    mcp.resource(
-        "geox://deep_time/co2",
-        description="GEOCARBSULF v4 — Phanerozoic atmospheric CO₂ reconstruction. "
-        "Schema index placeholder for Berner-type carbon cycle model. "
-        "Fetch via geox_deep_time_state(mode='co2') when available. "
-        "Epoch coverage: 550 Ma to present. "
-        "Use for: greenhouse climate context, paleoclimate forcing. "
-        "License: USDE (verify). "
-        "Status: PENDING — requires GEOCARB source code review. "
-        "Epistemic status: DER — biogeochemical forward model.",
-        mime_type="application/json",
-    )(geox_deeptime_co2)
-
-
 def geox_deeptime_d18o():
     """Deep Time δ18O — Zachos et al. (2008) LR04 stack, benthic foraminifera.
     URI: geox://deep_time/d18o
@@ -1624,21 +1273,6 @@ def geox_deeptime_d18o():
     Epistemic: OBS — geochemical measurement proxy
     """
     return "geox://deep_time/d18o"
-
-    mcp.resource(
-        "geox://deep_time/d18o",
-        description="Zachos et al. (2008) LR04 — benthic foraminifera δ18O stack. "
-        "Schema index for deep-time oxygen isotope record. "
-        "Fetch via geox_deep_time_state(mode='d18o') when available. "
-        "Use for: ice volume (sea level), deep-water temperature, "
-        "climate transitions, Eocene-Oligocene boundary. "
-        "License: Nature Publishing Group (verify). "
-        "Status: PENDING — GPTS CSV ingestion in deep_time/data_loaders.py. "
-        "Epistemic status: OBS — geochemical measurement proxy.",
-        mime_type="application/json",
-    )(geox_deeptime_d18o)
-
-
 def geox_deeptime_temperature():
     """Deep Time Temperature — PETM/EEH temperature proxies, Tripati et al. methods.
     URI: geox://deep_time/temperature
@@ -1648,20 +1282,6 @@ def geox_deeptime_temperature():
     Epistemic: DER — multi-proxy temperature estimation
     """
     return "geox://deep_time/temperature"
-
-    mcp.resource(
-        "geox://deep_time/temperature",
-        description="Deep Time Temperature — multi-proxy paleotemperature reconstruction. "
-        "Schema index placeholder for PETM/early Eocene hothouse. "
-        "Fetch via geox_deep_time_state(mode='temperature') when available. "
-        "Use for: hothouse/climate states, PETM carbon excursion, "
-        "hyperthermal events. "
-        "Status: PENDING — proxy calibration review required. "
-        "Epistemic status: DER — multi-proxy temperature estimation.",
-        mime_type="application/json",
-    )(geox_deeptime_temperature)
-
-
 def geox_deeptime_sea_level():
     """Deep Time Sea Level — Haq et al. (1987, 2008) eustatic curves, Kominz backstripping.
     URI: geox://deep_time/sea_level
@@ -1671,20 +1291,6 @@ def geox_deeptime_sea_level():
     Epistemic: DER — sequence stratigraphic + backstripping analysis
     """
     return "geox://deep_time/sea_level"
-
-    mcp.resource(
-        "geox://deep_time/sea_level",
-        description="Haq et al. — Phanerozoic eustatic sea level curve. "
-        "Schema index for Haq (1987, 2008) and Kominz backstripping. "
-        "Fetch via geox_deep_time_state(mode='sea_level') when available. "
-        "Use for: accommodation space, sequence stratigraphy, "
-        "transgressive-regressive cycles. "
-        "Status: PENDING — coastal onlap integration required. "
-        "Epistemic status: DER — backstripping analysis + sequence correlation.",
-        mime_type="application/json",
-    )(geox_deeptime_sea_level)
-
-
 def geox_deeptime_o2():
     """Deep Time O₂ — Berner (2006, 2009) GEOCARBMOD, Phanerozoic pO₂.
     URI: geox://deep_time/o2
@@ -1694,20 +1300,6 @@ def geox_deeptime_o2():
     Epistemic: DER — forward biogeochemical model output
     """
     return "geox://deep_time/o2"
-
-    mcp.resource(
-        "geox://deep_time/o2",
-        description="GEOCARBMOD — Phanerozoic atmospheric oxygen reconstruction. "
-        "Schema index for Berner-type O₂ model. "
-        "Fetch via geox_deep_time_state(mode='o2') when available. "
-        "Use for: oxidative weathering, coal/gas windows, "
-        "fire frequency, insect evolution. "
-        "License: USDE (verify). "
-        "Status: PENDING. "
-        "Epistemic status: DER — biogeochemical forward model.",
-        mime_type="application/json",
-    )(geox_deeptime_o2)
-
     # ---------------------------------------------------------------------------
     # EARTH DATA ATLAS — MCP PROMPT TEMPLATES
     # Reusable parameterized workflow templates (user-controlled)

@@ -173,6 +173,22 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
         )
         if pre_call.outcome == "BLOCK":
             logger.error(f"Floor BLOCK on {name}: {pre_call.reason}")
+            # Floor log — stderr (+ HOLD path via tool result). Protocol logging frozen SEP-2577.
+            try:
+                from geox_mcp.mcp_logging import emit_mcp_log, floor_event_to_level
+
+                await emit_mcp_log(
+                    floor_event_to_level("BLOCK"),
+                    f"Floor BLOCK on {name}: {pre_call.reason}",
+                    tool=name,
+                    floor="F9",
+                    verdict="BLOCK",
+                    logger_name="geox.floor",
+                    rate_key=f"geox:{name}:BLOCK",
+                    extra={"call_hash": pre_call.call_hash, "risk_tier": str(risk_tier)},
+                )
+            except Exception:
+                pass
             # F11 AUDIT — record the blocked attempt
             enforce_floor_post_call(
                 tool_name=name,
@@ -191,6 +207,26 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
             }
         if pre_call.outcome == "HOLD":
             logger.warning(f"Floor HOLD on {name}: {pre_call.reason}")
+            try:
+                from geox_mcp.mcp_logging import emit_mcp_log, floor_event_to_level
+
+                _floor = "F13" if "F13" in (pre_call.reason or "") else "FLOOR"
+                await emit_mcp_log(
+                    floor_event_to_level("HOLD", failed_floors=[_floor]),
+                    f"Floor HOLD on {name}: {pre_call.reason}",
+                    tool=name,
+                    floor=_floor,
+                    verdict="HOLD",
+                    logger_name="geox.floor",
+                    rate_key=f"geox:{name}:HOLD",
+                    extra={
+                        "call_hash": pre_call.call_hash,
+                        "required_params": pre_call.required_params,
+                        "risk_tier": str(risk_tier),
+                    },
+                )
+            except Exception:
+                pass
             # F11 AUDIT — record the held attempt
             enforce_floor_post_call(
                 tool_name=name,
@@ -257,6 +293,30 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
         )
         for w in post_call.warnings:
             logger.info(f"[{name}] {w}")
+        # MCP logging POC — F7 cap / envelope flags → warning
+        if post_call.warnings or post_call.capped_quality is not None:
+            try:
+                from geox_mcp.mcp_logging import emit_mcp_log, floor_event_to_level
+
+                await emit_mcp_log(
+                    floor_event_to_level(
+                        "WARNING",
+                        capped=post_call.capped_quality is not None,
+                    ),
+                    f"Floor post-call notes on {name}: {'; '.join(post_call.warnings) or 'capped'}",
+                    tool=name,
+                    floor="F7" if post_call.capped_quality is not None else "F4",
+                    verdict="CAUTION",
+                    logger_name="geox.floor",
+                    rate_key=f"geox:{name}:POST",
+                    extra={
+                        "capped_quality": post_call.capped_quality,
+                        "duration_ms": round(duration_ms, 3),
+                        "warnings": list(post_call.warnings)[:5],
+                    },
+                )
+            except Exception:
+                pass
 
         # Inject session/provenance plumbing into envelope (P4)
         if isinstance(res, dict):

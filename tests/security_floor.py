@@ -49,7 +49,7 @@ SECURITY_FLOOR = {
         "F4_CLARITY": {
             "name": "CLARITY — Reduce entropy, never leave chaos",
             "checks": [
-                "Tool surface must match registry lock (34 canonical tools)",
+                "Tool surface must match registry lock (see registry.py CANONICAL_PUBLIC_TOOLS)",
                 "Drift between documentation and implementation surfaces immediately",
             ],
         },
@@ -117,7 +117,7 @@ SECURITY_FLOOR = {
         "Steel Security Layer is non-blocking — never trap the agent in error loops",
         "All failures surface with EVIDENCE, not narrative",
         "Trust boundaries: arifOS owns judgment, A-FORGE owns execution, GEOX owns evidence",
-        "Tool-count lock is sacred — 34 canonical tools only",
+        "Tool-count lock is sacred — see registry.py CANONICAL_PUBLIC_TOOLS",
         "Scar memory is the constitutional pain layer — most restrictive ceiling wins",
     ],
     "evidence_schema": {

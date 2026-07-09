@@ -11,8 +11,8 @@ scope: /root/geox/BOUNDARY.md
 
 > **DITEMPA BUKAN DIBERI** — Forged, not given.
 
-> **Last forge cycle:** Phase 2.4 (2026-07-02) — 35 canonical tools, geox_map_export_package added, provenance sidecar schema standardized, doc drift resolved.
-> **Contract epoch:** `2026-07-02-GEOX-35TOOLS-PHASE24`
+> **Last forge cycle:** Phase 3.1 (2026-07-09) — doc drift eliminated, dynamic info stripped from static docs.
+> **Tool surface:** Runtime fact — verify with `tools/list` or `curl :8081/health`. Source: `registry.py`.
 
 ## Owns
 
@@ -65,13 +65,8 @@ scope: /root/geox/BOUNDARY.md
 
 ## Canonical Tool Surface (Live)
 
-35 canonical tools on port 8081 (Phase 2.4, 2026-07-02):
-
-**Surface (31):** `geox_well_ingest`, `geox_well_qc`, `geox_well_desurvey`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`, `geox_atlas`, `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_map_export_package`, `geox_surface_status`, `geox_egs_query_entity`, `geox_egs_query_claim`, `geox_egs_query_uncertainty`, `geox_egs_query_provenance`, `geox_egs_claim_create`, `geox_egs_claim_challenge`, `geox_egs_evidence_attach`, `geox_egs_evidence_reason`, `geox_egs_seismic_compute`, `geox_egs_rock_physics`, `geox_egs_data_qc_bundle`, `geox_egs_scenario_audit`.
-
-**Internal (4):** `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine`.
-
-Source of truth: `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` + `_EXPECTED_CANONICAL = 35` in `src/geox_mcp/server.py`.
+> **Tool count is a runtime fact.** Verify with `tools/list` or `curl :8081/health`.
+> Source of truth: `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS) + `src/geox_mcp/server.py` (_EXPECTED_CANONICAL invariant).
 
 ## Canonical Surfaces
 

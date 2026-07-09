@@ -33,34 +33,31 @@ from typing import Any
 
 DOMAIN_VERB_TOOLS: dict[str, str] = {
     # ── WELL DOMAIN (4) ─────────────────────────────────────────────────────
-    "well.load_logs":          "geox_well_ingest",
-    "well.check_quality":      "geox_well_qc",
-    "well.derive_petrophysics":"geox_petrophysics",
-    "well.correlate":          "geox_sequence",
-
+    "well.load_logs": "geox_well_ingest",
+    "well.check_quality": "geox_well_qc",
+    "well.derive_petrophysics": "geox_petrophysics",
+    "well.correlate": "geox_sequence",
     # ── SEISMIC DOMAIN (4) ────────────────────────────────────────────────────
-    "seismic.load_volume":      "geox_seismic_ingest",
-    "seismic.compute":         "geox_seismic_compute",
-    "seismic.interpret":       "geox_seismic_interpret",
-    "seismic.analyze_vision":  "geox_vision",
-
+    "seismic.load_volume": "geox_seismic_ingest",
+    "seismic.compute": "geox_seismic_compute",
+    "seismic.interpret": "geox_seismic_interpret",
+    "seismic.analyze_vision": "geox_vision",
     # ── MODEL DOMAIN (2) ──────────────────────────────────────────────────────
-    "model.joint_inversion":   "geox_subsurface_model",
-    "model.mechanics":        "geox_geomechanics",
-
+    "model.joint_inversion": "geox_subsurface_model",
+    "model.mechanics": "geox_geomechanics",
     # ── BASIN DOMAIN (2) ──────────────────────────────────────────────────────
-    "basin.profile":           "geox_basin",
-    "basin.deep_time":        "geox_deep_time_state",
-
+    "basin.profile": "geox_basin",
+    "basin.deep_time": "geox_deep_time_state",
     # ── INTERNAL PLUMBING (4) ─────────────────────────────────────────────────
-    "govern.claim":            "geox_claim",
-    "govern.evidence":         "geox_evidence",
-    "govern.prospect":         "geox_prospect",
-    "govern.doctrine":         "geox_doctrine",
+    "govern.claim": "geox_claim",
+    "govern.evidence": "geox_evidence",
+    "govern.prospect": "geox_prospect",
+    "govern.doctrine": "geox_doctrine",
 }
 
 
 # ─── Canonical Tool Registry ──────────────────────────────────────────────────
+
 
 @dataclass(frozen=True)
 class CanonicalTool:
@@ -91,13 +88,10 @@ class CanonicalTool:
 
 
 CANONICAL_TOOLS: dict[str, CanonicalTool] = {
-
     # ══════════════════════════════════════════════════════════════════════════════
     # SURFACE-FACING — 12 tools (what the world sees)
     # ══════════════════════════════════════════════════════════════════════════════
-
     # ── WELL DOMAIN ───────────────────────────────────────────────────────────
-
     "geox_well_ingest": CanonicalTool(
         mcp_tool_name="geox_well_ingest",
         domain_verb="well.load_logs",
@@ -109,7 +103,6 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["las", "segy", "deviation", "tops", "dst", "checkshot", "auto"],
     ),
-
     "geox_well_qc": CanonicalTool(
         mcp_tool_name="geox_well_qc",
         domain_verb="well.check_quality",
@@ -121,7 +114,6 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["depth", "curves", "completeness", "fjis"],
     ),
-
     "geox_petrophysics": CanonicalTool(
         mcp_tool_name="geox_petrophysics",
         domain_verb="well.derive_petrophysics",
@@ -133,7 +125,6 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,  # ADVISORY — surface result but note calibration status
         modes=["vsh", "porosity", "sw", "perm", "net_pay", "lem"],
     ),
-
     "geox_sequence": CanonicalTool(
         mcp_tool_name="geox_sequence",
         domain_verb="well.correlate",
@@ -145,9 +136,7 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["correlation", "stacking", "motif", "depo_environment"],
     ),
-
     # ── SEISMIC DOMAIN ─────────────────────────────────────────────────────────
-
     "geox_seismic_ingest": CanonicalTool(
         mcp_tool_name="geox_seismic_ingest",
         domain_verb="seismic.load_volume",
@@ -159,12 +148,11 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["header_inspect", "geometry_assign", "trace_stats"],
     ),
-
     "geox_seismic_compute": CanonicalTool(
         mcp_tool_name="geox_seismic_compute",
         domain_verb="seismic.compute",
         domain="seismic",
-        description="Seismic physics engine: synthetic seismogram (Devito FD), well-tie (cross-correlation), AVO/AVA (Aki-Richards, Fatti), time-depth anchoring, anomalous contrast detection, seismic attributes.",
+        description="Seismic physics engine: synthetic seismogram (Devito FD), well-tie (cross-correlation), AVO/AVA (Aki-Richards, Fatti), time-depth anchoring (checkshot-only, Law 5), anomalous contrast detection, seismic attributes.",
         use_when="User wants to compute synthetic seismograms, run well-ties, calculate AVO gradients, extract seismic attributes, or detect anomalous amplitude contrasts.",
         internal_backing=[
             "devito_adapter.DevitoAdapter",
@@ -176,7 +164,6 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["synthetic", "well_tie", "time_depth_anchor", "anomalous_contrast", "attribute"],
     ),
-
     "geox_seismic_interpret": CanonicalTool(
         mcp_tool_name="geox_seismic_interpret",
         domain_verb="seismic.interpret",
@@ -188,7 +175,6 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["horizon_contrast", "fault_stick", "blend", "frames"],
     ),
-
     "geox_vision": CanonicalTool(
         mcp_tool_name="geox_vision",
         domain_verb="seismic.analyze_vision",
@@ -200,9 +186,7 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["perceptual_audit", "calibration", "labeling"],
     ),
-
     # ── MODEL DOMAIN ───────────────────────────────────────────────────────────
-
     "geox_subsurface_model": CanonicalTool(
         mcp_tool_name="geox_subsurface_model",
         domain_verb="model.joint_inversion",
@@ -212,14 +196,13 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         internal_backing=[
             "simpeg_adapter.SimPEGAdapter",  # gravity, magnetics, MT
             "pygimli_adapter.PyGIMLIAdapter",  # ERT/TEM/DC
-            "gempy_adapter.GemPyAdapter",     # 3D stratigraphic geomodel
+            "gempy_adapter.GemPyAdapter",  # 3D stratigraphic geomodel
             "loopstructural_adapter.LoopStructuralAdapter",  # fault/fold geometry
         ],
         acrisk="HOLD",  # SimPEG MT → pore pressure is 888_HOLD gated
         is_888_hold=True,
         modes=["gravity", "magnetics", "mt_1d", "joint_grav_mag", "ert", "tem", "dc_sounding"],
     ),
-
     "geox_geomechanics": CanonicalTool(
         mcp_tool_name="geox_geomechanics",
         domain_verb="model.mechanics",
@@ -231,9 +214,7 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["elastic_moduli", "ai", "coord_transform", "blockspace"],
     ),
-
     # ── BASIN DOMAIN ───────────────────────────────────────────────────────────
-
     "geox_basin": CanonicalTool(
         mcp_tool_name="geox_basin",
         domain_verb="basin.profile",
@@ -241,18 +222,17 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         description="Basin profiling: plate reconstruction (GPlately), paleo-coordinate transform, plate velocity, Macrostrat unit query, EMAG2 magnetic anomaly, GEBCO bathymetry, scene context.",
         use_when="User wants to reconstruct plate positions at a past geological time, query bathymetry/topography, get magnetic declination, or profile a basin's stratigraphic architecture.",
         internal_backing=[
-            "gplately_adapter.GPlatelyAdapter",     # plate reconstruction
-            "harmonica_adapter.HarmonICAdapter",    # gravity forward + EMAG2
-            "gempy_adapter.GemPyAdapter",           # 3D stratigraphic model
+            "gplately_adapter.GPlatelyAdapter",  # plate reconstruction
+            "harmonica_adapter.HarmonICAdapter",  # gravity forward + EMAG2
+            "gempy_adapter.GemPyAdapter",  # 3D stratigraphic model
             "geox_core.engines.basin.macrostrat_client",
-            "geox_core.engines.basin.gebco_fetcher",   # GEBCO bathymetry
-            "geox_core.engines.basin.emag2_fetcher",   # EMAG2 magnetics
+            "geox_core.engines.basin.gebco_fetcher",  # GEBCO bathymetry
+            "geox_core.engines.basin.emag2_fetcher",  # EMAG2 magnetics
         ],
         acrisk="QUALIFY",
         is_888_hold=False,
         modes=["profile", "resolve", "macrostrat_units", "macrostrat_columns", "scene"],
     ),
-
     "geox_deep_time_state": CanonicalTool(
         mcp_tool_name="geox_deep_time_state",
         domain_verb="basin.deep_time",
@@ -267,11 +247,9 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=False,
         modes=["plate_polygons", "basin_architecture", "paleobathymetry", "heat_flow", "subsidence"],
     ),
-
     # ══════════════════════════════════════════════════════════════════════════════
     # INTERNAL PLUMBING — 4 tools (federation governance, not for generic external agents)
     # ══════════════════════════════════════════════════════════════════════════════
-
     "geox_claim": CanonicalTool(
         mcp_tool_name="geox_claim",
         domain_verb="govern.claim",
@@ -283,7 +261,6 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=True,
         modes=["create", "validate", "challenge", "seal", "attach"],
     ),
-
     "geox_evidence": CanonicalTool(
         mcp_tool_name="geox_evidence",
         domain_verb="govern.evidence",
@@ -295,7 +272,6 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=True,
         modes=["discover", "synthesize", "abduct", "contradict", "literature"],
     ),
-
     "geox_prospect": CanonicalTool(
         mcp_tool_name="geox_prospect",
         domain_verb="govern.prospect",
@@ -307,7 +283,6 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         is_888_hold=True,
         modes=["screen", "volumetric", "evoi", "risk_assessment"],
     ),
-
     "geox_doctrine": CanonicalTool(
         mcp_tool_name="geox_doctrine",
         domain_verb="govern.doctrine",
@@ -323,6 +298,7 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
 
 
 # ─── Helpers ───────────────────────────────────────────────────────────────────
+
 
 def get_canonical_tool(tool_name: str) -> CanonicalTool | None:
     """Resolve a tool name (canonical or domain_verb alias) to its CanonicalTool entry."""

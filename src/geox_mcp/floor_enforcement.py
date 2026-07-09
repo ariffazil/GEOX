@@ -86,7 +86,7 @@ def validate_canonical_tool(name: str) -> bool:
     """F9 ANTI-HANTU — tool name must be in canonical set or backward-compat alias.
 
     Checks (in order):
-      1. CANONICAL_PUBLIC_TOOLS — the 35 canonical tool names
+      1. CANONICAL_PUBLIC_TOOLS — the 73 canonical tool names
       2. CANONICAL_COMPAT_TOOLS — the 49 backward-compat aliases (accepted by middleware)
       3. LEGACY_ALIAS_MAP — empty as of Phase 2.4, kept for future use
 
