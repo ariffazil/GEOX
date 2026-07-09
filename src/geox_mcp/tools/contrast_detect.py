@@ -630,6 +630,35 @@ def audit_dimensional_consistency(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
+def _resolve_scalar_or_p50(
+    scalar: float | None,
+    dist: list[float] | tuple[float, ...] | None,
+) -> tuple[float | None, dict[str, float] | None]:
+    """Accept flat scalar or [P90, P50, P10] distribution (low→high or high→low).
+
+    Convention: pass [p90, p50, p10] for low/mid/high estimates of the same quantity
+    (p90 = conservative low case for rates/ages as used in exploration).
+    Returns (p50_or_scalar, full_dist_dict_or_None).
+    """
+    if dist is not None and len(dist) >= 3:
+        vals = [float(x) for x in dist[:3]]
+        ordered = sorted(vals)
+        # map sorted low/mid/high → p90/p50/p10 labels (p90=low estimate, p10=high)
+        d = {"p90": ordered[0], "p50": ordered[1], "p10": ordered[2]}
+        return d["p50"], d
+    if scalar is not None:
+        return float(scalar), None
+    return None, None
+
+
+def _distribution_spread_ratio(dist: dict[str, float] | None) -> float | None:
+    """(P10-P90)/max(|P50|, eps) — relative uncertainty width."""
+    if not dist:
+        return None
+    p50 = abs(dist["p50"]) or 1e-9
+    return abs(dist["p10"] - dist["p90"]) / p50
+
+
 def contrast_detect(
     dimension: str = "all",
     mass_predicted: float | None = None,
@@ -645,6 +674,17 @@ def contrast_detect(
     absence_expected_timespan: float | None = None,
     absence_observed_timespan: float | None = None,
     threshold: float = 0.2,
+    # ── Probabilistic upgrades (2026-07-09) ──────────────────────────
+    # Optional [P90, P50, P10] arrays. When provided, P50 drives the contrast
+    # and the P10–P90 envelope is reported as variance / W_scar.
+    mass_predicted_dist: list[float] | None = None,
+    mass_observed_dist: list[float] | None = None,
+    energy_predicted_temp_dist: list[float] | None = None,
+    energy_observed_temp_dist: list[float] | None = None,
+    time_expected_dist: list[float] | None = None,
+    time_measured_dist: list[float] | None = None,
+    confidence_index: float = 0.70,
+    data_quality: str = "unknown",
 ) -> dict[str, Any]:
     """Universal anomalous contrast detector across seven dimensions.
 
@@ -653,30 +693,52 @@ def contrast_detect(
 
     Args:
         dimension: Which dimension to check ("all", "mass", "energy", "time", "absence")
-        mass_predicted: Expected sediment production rate (m³/Myr)
-        mass_observed: Observed sediment accumulation rate (m³/Myr)
-        energy_predicted_stress: Expected stress (Pa)
-        energy_observed_stress: Observed stress (Pa)
-        energy_predicted_temp: Expected temperature (K)
-        energy_observed_temp: Observed temperature (K)
-        time_expected_ma: Expected age (Ma) from stratigraphy
-        time_measured_ma: Measured age (Ma) from dating
-        absence_expected_thickness: Expected thickness (m)
-        absence_observed_thickness: Observed thickness (m)
-        absence_expected_timespan: Expected time span (Ma)
-        absence_observed_timespan: Observed time span (Ma)
+        mass_predicted / mass_observed: flat scalars (legacy) OR use *_dist
+        *_dist: optional [P90, P50, P10] confidence intervals
+        confidence_index: data-quality weight 0.0–1.0 (3D seismic > regional 2D)
+        data_quality: free label e.g. "hires_3d" | "regional_2d" | "well_only" | "unknown"
         threshold: Anomaly detection threshold (default 0.2 = 20%)
 
     Returns:
         Structured anomaly report with per-dimension contrasts,
-        dimensional entropy, and recommended actions.
+        dimensional entropy, variance warnings, and recommended actions.
     """
+    # Clamp confidence_index (F7)
+    ci = max(0.0, min(1.0, float(confidence_index)))
+    variance_warnings: list[str] = []
+    if ci < 0.99:
+        variance_warnings.append(
+            f"confidence_index={ci:.2f} < 0.99 — P(truth) not F2-grade; treat contrast as W_scar, not verdict"
+        )
+
+    # Resolve scalar / distribution inputs
+    mass_p, mass_p_d = _resolve_scalar_or_p50(mass_predicted, mass_predicted_dist)
+    mass_o, mass_o_d = _resolve_scalar_or_p50(mass_observed, mass_observed_dist)
+    e_tp, e_tp_d = _resolve_scalar_or_p50(energy_predicted_temp, energy_predicted_temp_dist)
+    e_to, e_to_d = _resolve_scalar_or_p50(energy_observed_temp, energy_observed_temp_dist)
+    t_e, t_e_d = _resolve_scalar_or_p50(time_expected_ma, time_expected_dist)
+    t_m, t_m_d = _resolve_scalar_or_p50(time_measured_ma, time_measured_dist)
+
+    for name, d in (
+        ("mass_predicted", mass_p_d),
+        ("mass_observed", mass_o_d),
+        ("energy_temp_predicted", e_tp_d),
+        ("energy_temp_observed", e_to_d),
+        ("time_expected", t_e_d),
+        ("time_measured", t_m_d),
+    ):
+        spread = _distribution_spread_ratio(d)
+        if spread is not None and spread > 0.5:
+            variance_warnings.append(
+                f"{name} P10–P90 spread {spread:.0%} of P50 — high epistemic width; HOLD promotion"
+            )
+
     contrasts: list[ContrastResult] = []
     dims_to_check = [d.strip().lower() for d in dimension.split(",")]
 
     # Mass contrast
     if "all" in dims_to_check or "mass" in dims_to_check:
-        contrasts.append(detect_mass_contrast(mass_predicted, mass_observed, threshold=threshold))
+        contrasts.append(detect_mass_contrast(mass_p, mass_o, threshold=threshold))
 
     # Energy contrast
     if "all" in dims_to_check or "energy" in dims_to_check:
@@ -684,15 +746,15 @@ def contrast_detect(
             detect_energy_contrast(
                 energy_predicted_stress,
                 energy_observed_stress,
-                energy_predicted_temp,
-                energy_observed_temp,
+                e_tp,
+                e_to,
                 threshold=threshold,
             )
         )
 
     # Time contrast
     if "all" in dims_to_check or "time" in dims_to_check:
-        contrasts.append(detect_time_contrast(time_expected_ma, time_measured_ma, threshold=threshold))
+        contrasts.append(detect_time_contrast(t_e, t_m, threshold=threshold))
 
     # Absence contrast
     if "all" in dims_to_check or "absence" in dims_to_check:
@@ -709,10 +771,35 @@ def contrast_detect(
     # Cross-dimensional audit
     audit = audit_dimensional_consistency(contrasts)
 
+    # Weight severity by confidence_index (low CI → cannot escalate to CRITICAL alone)
+    weighted_critical = audit.critical_count if ci >= 0.70 else 0
+    if audit.critical_count > 0 and ci < 0.70:
+        variance_warnings.append(
+            "CRITICAL contrast demoted under low confidence_index — insufficient data quality for governance escalation"
+        )
+
+    distributions_used = {
+        k: v
+        for k, v in {
+            "mass_predicted": mass_p_d,
+            "mass_observed": mass_o_d,
+            "energy_temp_predicted": e_tp_d,
+            "energy_temp_observed": e_to_d,
+            "time_expected": t_e_d,
+            "time_measured": t_m_d,
+        }.items()
+        if v is not None
+    }
+
     return {
         "status": "OK",
         "dimension_requested": dimension,
         "threshold": threshold,
+        "confidence_index": ci,
+        "data_quality": data_quality,
+        "distributions": distributions_used,
+        "variance_warnings": variance_warnings,
+        "probabilistic_mode": bool(distributions_used),
         "contrasts": [
             {
                 "dimension": c.dimension.value,
@@ -723,6 +810,9 @@ def contrast_detect(
                 "severity": c.severity.value,
                 "five_part_violation": c.five_part_violation.value,
                 "confidence": c.confidence,
+                "confidence_weighted": round(min(0.90, float(c.confidence or 0.5) * ci), 4)
+                if isinstance(c.confidence, (int, float))
+                else c.confidence,
                 "explanation": c.explanation,
                 "recommended_next_tool": c.recommended_next_tool,
             }
@@ -731,16 +821,19 @@ def contrast_detect(
         "audit": {
             "total_anomalies": audit.total_anomalies,
             "critical_count": audit.critical_count,
+            "critical_count_confidence_weighted": weighted_critical,
             "highest_anomaly_dimension": audit.highest_anomaly_dimension.value if audit.highest_anomaly_dimension else None,
             "dimensional_entropy": round(audit.dimensional_entropy, 4),
             "cross_dimensional_conflicts": audit.cross_dimensional_conflicts,
             "recommended_actions": audit.recommended_actions,
             "confidence": audit.confidence,
+            "w_scar": round(1.0 - ci, 4),
         },
         "_envelope": {
             "evidence_floor": "DERIVED",
-            "method": "Universal anomalous contrast detection (ToAC generalization)",
+            "method": "Universal anomalous contrast detection (ToAC generalization) + P10/P50/P90",
             "authority": "GEOX Five-Part Invariants + Seven Dimensions",
             "theory": "Theory of Anomalous Contrast (Eureka 2026-06-05)",
+            "humility": "confidence_index weights severity; F2 variance warnings when CI<0.99",
         },
     }

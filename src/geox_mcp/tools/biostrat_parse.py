@@ -320,61 +320,179 @@ def _epoch_for_nn(num: str) -> str:
         return "Oligocene"
 
 
+# Regional ontology matrix — marker/zone → GDE risk score (0–1, higher = more risk to reservoir prediction)
+# SPEC/INT layer: regional Malay/Sunda-leaning defaults; override via structured intervals.
+_GDE_ONTOLOGY: dict[str, dict[str, Any]] = {
+    "marine_flooding": {"gde": "offshore_shelf", "reservoir_risk": 0.75, "seal_support": 0.85},
+    "maximum_flooding": {"gde": "condensed_section", "reservoir_risk": 0.85, "seal_support": 0.90},
+    "transgression": {"gde": "transgressive_shelf", "reservoir_risk": 0.70, "seal_support": 0.80},
+    "regression": {"gde": "progradational_delta", "reservoir_risk": 0.35, "seal_support": 0.45},
+    "mangrove_increase": {"gde": "coastal_plain", "reservoir_risk": 0.40, "seal_support": 0.55},
+    "freshwater_algae": {"gde": "lacustrine", "reservoir_risk": 0.50, "seal_support": 0.60},
+    "lacustrine_expansion": {"gde": "lacustrine", "reservoir_risk": 0.55, "seal_support": 0.65},
+    "marine_incursion": {"gde": "restricted_marine", "reservoir_risk": 0.65, "seal_support": 0.70},
+    "peat_swamp": {"gde": "coastal_plain_peat", "reservoir_risk": 0.45, "seal_support": 0.50},
+    "hiatus": {"gde": "hiatus", "reservoir_risk": 0.80, "seal_support": 0.40},
+    "unconformity": {"gde": "unconformity", "reservoir_risk": 0.85, "seal_support": 0.35},
+    "NN1": {"gde": "early_miocene_marine", "reservoir_risk": 0.55, "seal_support": 0.60},
+    "NN5": {"gde": "mid_miocene_marine", "reservoir_risk": 0.50, "seal_support": 0.65},
+    "NN11": {"gde": "late_miocene_marine", "reservoir_risk": 0.45, "seal_support": 0.70},
+    "group d": {"gde": "group_d_fluvial_deltaic", "reservoir_risk": 0.30, "seal_support": 0.40},
+    "group e": {"gde": "group_e_fluvial", "reservoir_risk": 0.35, "seal_support": 0.45},
+    "group f": {"gde": "group_f_fluvial", "reservoir_risk": 0.35, "seal_support": 0.45},
+    "base group d": {"gde": "group_d_base", "reservoir_risk": 0.40, "seal_support": 0.50},
+}
+
+
+def _score_gde_from_events(gde_events: list[dict], biozones: list[dict], markers: list[str]) -> dict[str, Any]:
+    """Map extracted tokens to ontology GDE risk (not free-text echo)."""
+    hits: list[dict[str, Any]] = []
+    for ge in gde_events:
+        et = str(ge.get("event_type", "")).lower()
+        if et in _GDE_ONTOLOGY:
+            row = dict(_GDE_ONTOLOGY[et])
+            row["source"] = et
+            row["kind"] = "gde_event"
+            hits.append(row)
+    for bz in biozones:
+        zone = str(bz.get("zone", "")).upper()
+        if zone in _GDE_ONTOLOGY:
+            row = dict(_GDE_ONTOLOGY[zone])
+            row["source"] = zone
+            row["kind"] = "biozone"
+            hits.append(row)
+    for m in markers:
+        key = m.strip().lower()
+        if key in _GDE_ONTOLOGY:
+            row = dict(_GDE_ONTOLOGY[key])
+            row["source"] = m
+            row["kind"] = "marker"
+            hits.append(row)
+        # partial match group letters
+        for ont_key, ont_val in _GDE_ONTOLOGY.items():
+            if ont_key in key and ont_key.startswith("group"):
+                row = dict(ont_val)
+                row["source"] = m
+                row["kind"] = "marker"
+                hits.append(row)
+
+    if not hits:
+        return {
+            "gde_risk_score": None,
+            "primary_gde": "UNKNOWN",
+            "reservoir_risk": None,
+            "seal_support": None,
+            "ontology_hits": [],
+            "note": "No ontology match — INSUFFICIENT_DATA for GDE risk",
+        }
+    # Aggregate: mean reservoir risk / seal support
+    r_risk = sum(h["reservoir_risk"] for h in hits) / len(hits)
+    s_sup = sum(h["seal_support"] for h in hits) / len(hits)
+    # Prefer most frequent gde label
+    from collections import Counter
+
+    gde_counts = Counter(h["gde"] for h in hits)
+    primary = gde_counts.most_common(1)[0][0]
+    return {
+        "gde_risk_score": round(r_risk, 3),
+        "primary_gde": primary,
+        "reservoir_risk": round(r_risk, 3),
+        "seal_support": round(s_sup, 3),
+        "ontology_hits": hits,
+        "note": "DER from regional ontology matrix — not a field observation",
+    }
+
+
 async def geox_biostrat_parse(
     text: str = "",
     paleoenvironment: str = "",
     lithology: str = "",
+    intervals: list[dict[str, Any]] | None = None,
 ) -> dict:
-    """Biostratigraphy Parser — extract biozones, GDE events, lithology from free text.
+    """Biostratigraphy Parser — structured intervals preferred; free text secondary.
 
-    Parses structured observations from free text WITHOUT over-interpreting.
-    Returns arrays of biozones, GDE events, unparsed terms, and warnings.
+    Prefer `intervals` array:
+      [{depth_top_m, depth_base_m, marker, zone, lithology, paleoenvironment}, ...]
 
-    Args:
-      text:             Free text containing biostratigraphic information
-                         (e.g. "Zone NN5 with marine flooding surface and
-                         increased nannofossils, mangrove pollen increase")
-      paleoenvironment: Optional explicit paleoenvironment text
-      lithology:        Optional explicit lithology text
+    Free text still accepted for legacy callers but marked higher entropy.
 
-    Returns:
-      Governed MCP envelope with:
-        biozones[]      — parsed zones with scheme, group, age, source_span
-        gde_events[]    — detected sequence/ecological events
-        lithology_class — canonical LithoClass
-        unparsed_terms[] — terms not matched to any vocabulary
-        warnings[]      — structural issues detected
-
-    F2 TRUTH: regex-only. Every output carries source_span and evidence_tag.
-    F7 HUMILITY: unmatched terms preserved, not guessed.
+    Returns biozones, gde_events, lithology_class, gde_risk (ontology), unparsed, warnings.
+    F2 TRUTH: regex-only on text; structured markers preferred. No ML fabrication.
     """
     logger.info(
-        "geox_biostrat_parse called: text=%s paleo=%s litho=%s",
+        "geox_biostrat_parse called: text=%s paleo=%s litho=%s intervals=%s",
         text[:100] if text else "",
         paleoenvironment[:60] if paleoenvironment else "",
         lithology[:60] if lithology else "",
+        len(intervals or []),
     )
 
-    # Combine all input text for parsing
-    combined = f"{text} {paleoenvironment} {lithology}"
+    structured_mode = bool(intervals)
+    markers: list[str] = []
+    combined_parts: list[str] = []
+    structured_rows: list[dict[str, Any]] = []
 
-    # Extract
+    if intervals:
+        for iv in intervals:
+            if not isinstance(iv, dict):
+                continue
+            top = iv.get("depth_top_m", iv.get("top", iv.get("depth_top")))
+            base = iv.get("depth_base_m", iv.get("base", iv.get("depth_base")))
+            marker = str(iv.get("marker") or iv.get("chronostrat") or "")
+            zone = str(iv.get("zone") or iv.get("biozone") or "")
+            lith = str(iv.get("lithology") or "")
+            paleo = str(iv.get("paleoenvironment") or "")
+            if marker:
+                markers.append(marker)
+            if zone:
+                markers.append(zone)
+            row_text = " ".join(x for x in (marker, zone, lith, paleo) if x)
+            combined_parts.append(row_text)
+            structured_rows.append(
+                {
+                    "depth_top_m": top,
+                    "depth_base_m": base,
+                    "marker": marker or None,
+                    "zone": zone or None,
+                    "lithology": lith or None,
+                    "paleoenvironment": paleo or None,
+                    "evidence_tag": "EVIDENCE_STRUCTURED",
+                }
+            )
+
+    # Free text path (legacy / residual)
+    combined = f"{text} {paleoenvironment} {lithology} " + " ".join(combined_parts)
+
     biozones = _extract_all_biozones(combined)
     gde_events = _extract_gde_events(combined)
     litho = lithology_class(lithology) if lithology else "UNKNOWN"
+    if litho == "UNKNOWN" and structured_rows:
+        for r in structured_rows:
+            if r.get("lithology"):
+                litho = lithology_class(r["lithology"])
+                if litho != "UNKNOWN":
+                    break
     unparsed = _find_unparsed_terms(combined, biozones, gde_events)
+    gde_risk = _score_gde_from_events(gde_events, biozones, markers)
 
     # Warnings
     warnings: list[str] = []
-    if not biozones and not gde_events and not lithology:
+    if not structured_mode:
+        warnings.append(
+            "Free-text mode — higher entropy. Prefer intervals=[{depth_top_m,depth_base_m,marker,zone}]"
+        )
+    if not biozones and not gde_events and not lithology and not structured_rows:
         warnings.append("No biostratigraphic tokens extracted from input.")
     if unparsed:
         warnings.append(f"Unparsed biostrat terms present: {', '.join(unparsed[:8])}")
 
-    # Confidence
+    # Confidence — structured intervals raise floor
     direct_zones = sum(1 for bz in biozones if bz.get("evidence_tag") == "EVIDENCE_DIRECT")
     event_count = len(gde_events)
-    if direct_zones >= 2:
+    if structured_mode and (biozones or gde_events or markers):
+        confidence = min(0.85, 0.72 + 0.03 * len(structured_rows))
+        claim_tag = "PLAUSIBLE"
+    elif direct_zones >= 2:
         confidence = min(0.85, 0.70 + 0.05 * direct_zones)
         claim_tag = "PLAUSIBLE"
     elif direct_zones >= 1 or event_count >= 2:
@@ -391,6 +509,9 @@ async def geox_biostrat_parse(
         "biozones": biozones,
         "gde_events": gde_events,
         "lithology_class": litho,
+        "intervals": structured_rows,
+        "gde_risk": gde_risk,
+        "input_mode": "structured" if structured_mode else "free_text",
         "unparsed_terms": unparsed,
         "warnings": warnings,
     }
@@ -400,12 +521,18 @@ async def geox_biostrat_parse(
         evidence_refs.append(f"Biozone {bz['zone']} ({bz['scheme']})")
     for ge in gde_events:
         evidence_refs.append(f"GDE event: {ge['event_type']}")
+    for r in structured_rows:
+        if r.get("marker") or r.get("zone"):
+            evidence_refs.append(
+                f"Interval {r.get('depth_top_m')}-{r.get('depth_base_m')} m: "
+                f"{r.get('marker') or r.get('zone')}"
+            )
 
     audit = {
-        "tool_call_hash": "geox_biostrat_parse_v2",
-        "verdict": "COMPLETE" if biozones or gde_events else "NO_EVIDENCE",
-        "risk": "LOW",
-        "human_review_required": len(warnings) > 2,
+        "tool_call_hash": "geox_biostrat_parse_v3_structured",
+        "verdict": "COMPLETE" if biozones or gde_events or structured_rows else "NO_EVIDENCE",
+        "risk": "LOW" if structured_mode else "MODERATE",
+        "human_review_required": len(warnings) > 2 or not structured_mode,
     }
 
     return get_standard_envelope(
