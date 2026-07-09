@@ -57,11 +57,30 @@ TARGET_CLAIM_TEMPLATE = (
     "Horizon {horizon} represents the top reservoir at {well}."
 )
 
-# Thresholds (ms) — kill/hold gates for mistie discipline
-MISTIE_HOLD_MS = 25.0
-MISTIE_KILL_MS = 40.0
-CHECKSHOT_DRIFT_HOLD_MS = 15.0
-CORRELATION_PROCEED_MIN = 0.70
+# Threshold law (locked 2026-07-09 — GEOX-001 receipt design)
+# mistie_ms:   PROCEED ≤15 · HOLD (15, 25] · KILL >25 (unless independently repaired)
+# checkshot:   PROCEED ≤10 · HOLD (10, 25] · KILL >25 persistent
+# correlation: PROCEED ≥0.65 · HOLD [0.40, 0.65) · KILL <0.40 without geological rescue
+MISTIE_PROCEED_MS = 15.0
+MISTIE_HOLD_MS = 15.0  # exclusive lower bound for HOLD band
+MISTIE_KILL_MS = 25.0  # exclusive lower bound for KILL band
+CHECKSHOT_PROCEED_MS = 10.0
+CHECKSHOT_DRIFT_HOLD_MS = 10.0
+CHECKSHOT_DRIFT_KILL_MS = 25.0
+CORRELATION_PROCEED_MIN = 0.65
+CORRELATION_HOLD_MIN = 0.40
+
+# Pipeline stages (governed harness — maps to existing GEOX verbs)
+PIPELINE_STAGES = (
+    "000_ingest",
+    "111_qc",
+    "222_evidence_graph",
+    "333_synthetic_tie",
+    "444_claim_create",
+    "555_challenge",
+    "666_falsification_scan",
+    "777_verdict",
+)
 
 ScenarioName = Literal["good_tie", "mistie_hold", "kill_contradiction"]
 SCENARIO_GOOD: ScenarioName = "good_tie"
@@ -70,6 +89,13 @@ SCENARIO_KILL: ScenarioName = "kill_contradiction"
 
 Verdict = Literal["PROCEED", "HOLD", "KILL"]
 EpistemicRung = Literal["OBS", "DER", "INT", "SPEC"]
+
+MANDATORY_ALTERNATIVES = (
+    "Mapped event is not top reservoir; it is another impedance boundary.",
+    "Well top is valid, but seismic event is mistied.",
+    "Velocity model shifts depth closure enough to erase trap confidence.",
+    "Reservoir motif exists in logs, but seismic support is weak.",
+)
 
 
 # ── Data model ────────────────────────────────────────────────────────────────
@@ -144,10 +170,16 @@ def _make_depth_grid(start_m: float = 2000.0, stop_m: float = 2500.0, step_m: fl
     return np.arange(start_m, stop_m + step_m * 0.5, step_m, dtype=float)
 
 
-def _build_curves(depth: np.ndarray, reservoir_top_m: float = 2300.0) -> dict[str, np.ndarray]:
+def _build_curves(
+    depth: np.ndarray,
+    reservoir_top_m: float = 2300.0,
+    *,
+    strong_dn_separation: bool = False,
+) -> dict[str, np.ndarray]:
     """Synthetic well curves with a sand motif at reservoir_top_m.
 
-    GR drops, resistivity rises, RHOB/NPHI show weak separation (INT, not OBS).
+    Default: GR/RT support sand but density-neutron separation weak (HOLD band).
+    strong_dn_separation=True: clean sand RHOB/NPHI for PROCEED path.
     """
     n = len(depth)
     gr = np.full(n, 95.0)
@@ -159,8 +191,12 @@ def _build_curves(depth: np.ndarray, reservoir_top_m: float = 2300.0) -> dict[st
     sand = (depth >= reservoir_top_m) & (depth < reservoir_top_m + 35.0)
     gr[sand] = 42.0
     rt[sand] = 18.0
-    rhob[sand] = 2.32  # weak separation vs NPHI
-    nphi[sand] = 0.22
+    if strong_dn_separation:
+        rhob[sand] = 2.18  # clear gas/sand density drop
+        nphi[sand] = 0.30  # strong DN separation
+    else:
+        rhob[sand] = 2.32  # weak separation vs NPHI
+        nphi[sand] = 0.22
     dt[sand] = 85.0  # faster sand
 
     # soft gradient with depth (compaction)
@@ -233,26 +269,33 @@ def generate_scenario_bundle(scenario: ScenarioName = SCENARIO_HOLD) -> dict[str
     horizon_id = "H1"
     reservoir_top_m = 2300.0
     depth = _make_depth_grid()
-    curves = _build_curves(depth, reservoir_top_m)
-    vp = compute_vp_from_sonic(curves["DT"], depth, dt_unit="usft")
-    rho = curves["RHOB"]
 
-    # Scenario knobs
+    # Scenario knobs (aligned to threshold law)
+    # good: mistie ≤15, drift ≤10, corr high, strong DN → PROCEED
+    # hold: mistie in (15, 25], drift in (10, 25], weak DN → HOLD
+    # kill: mistie >25 (classic +38 ms) OR drift >25 + offset contradiction → KILL
     if scenario == SCENARIO_GOOD:
         checkshot_drift = 0.0
-        mapped_shift_ms = 4.0  # small residual
+        mapped_shift_ms = 8.0
         nearby_top_contradicts = False
         velocity_uncert_pct = 0.03
+        strong_dn = True
     elif scenario == SCENARIO_KILL:
         checkshot_drift = 28.0
-        mapped_shift_ms = 48.0
+        mapped_shift_ms = 38.0  # >25 ms kill gate — classic demo mistie
         nearby_top_contradicts = True
         velocity_uncert_pct = 0.12
-    else:  # mistie_hold — the killer demo default
+        strong_dn = False
+    else:  # mistie_hold — default demo (HOLD band, not kill)
         checkshot_drift = 18.0
-        mapped_shift_ms = 38.0
+        mapped_shift_ms = 22.0  # (15, 25] → HOLD under threshold law
         nearby_top_contradicts = False
         velocity_uncert_pct = 0.08
+        strong_dn = False
+
+    curves = _build_curves(depth, reservoir_top_m, strong_dn_separation=strong_dn)
+    vp = compute_vp_from_sonic(curves["DT"], depth, dt_unit="usft")
+    rho = curves["RHOB"]
 
     checkshot = _build_checkshot(depth, vp, drift_bias_ms=checkshot_drift)
 
@@ -314,11 +357,14 @@ def generate_scenario_bundle(scenario: ScenarioName = SCENARIO_HOLD) -> dict[str
             }
         )
 
-    # Density-neutron separation strength (weak by design in sand)
+    # Density-neutron separation strength
+    # score = mean(NPHI) + (2.65 - mean(RHOB)); higher = clearer sand/fluid flag
     sand_mask = (depth >= reservoir_top_m) & (depth < reservoir_top_m + 35.0)
-    dn_sep = float(np.mean(curves["NPHI"][sand_mask] - (2.65 - curves["RHOB"][sand_mask]) / 1.0))
-    # crude porosity-proxy separation; keep as diagnostic scalar
-    dn_sep_score = float(np.mean(np.abs(curves["NPHI"][sand_mask] - (2.71 - curves["RHOB"][sand_mask]) / (2.71 - 1.0))))
+    dn_sep_score = float(
+        np.mean(curves["NPHI"][sand_mask]) + (2.65 - np.mean(curves["RHOB"][sand_mask]))
+    )
+    # weak if score < 0.65 (HOLD path default ~0.55; PROCEED path ~0.77)
+    dn_weak = (not strong_dn) or dn_sep_score < 0.65
 
     velocity_assumption = {
         "method": "checkshot_linear_interp",
@@ -327,6 +373,7 @@ def generate_scenario_bundle(scenario: ScenarioName = SCENARIO_HOLD) -> dict[str
         "uncertainty_fraction": velocity_uncert_pct,
         "uncertainty_ms_at_target": abs(top_twt) * velocity_uncert_pct,
         "note": "Velocity model uncertainty can erase closure if large enough",
+        "closure_survives_p10_p50_p90": scenario == SCENARIO_GOOD,
     }
 
     return {
@@ -363,7 +410,7 @@ def generate_scenario_bundle(scenario: ScenarioName = SCENARIO_HOLD) -> dict[str
         "petro_diagnostics": {
             "gr_resistivity_supports_sand": True,
             "density_neutron_separation_score": round(dn_sep_score, 4),
-            "density_neutron_separation_weak": dn_sep_score < 0.15,
+            "density_neutron_separation_weak": dn_weak,
             "top_pick_confidence": "INTERPRETATION",
         },
         "meta": {
@@ -567,14 +614,14 @@ def step_synthetic_tie(bundle: dict[str, Any]) -> TieResult:
 
     vel_uncert = float(bundle["velocity_assumption"].get("uncertainty_ms_at_target") or 0.0)
 
-    # Residual class for claim bridge
-    if abs(mistie_ms) >= MISTIE_KILL_MS or checkshot_drift_max >= CHECKSHOT_DRIFT_HOLD_MS * 1.5:
+    # Residual class for claim bridge (threshold law)
+    if abs(mistie_ms) > MISTIE_KILL_MS or checkshot_drift_max > CHECKSHOT_DRIFT_KILL_MS:
         residual_class = "checkshot_vsp_error" if checkshot_drift_max >= abs(mistie_ms) else "time_depth_error"
-    elif abs(mistie_ms) >= MISTIE_HOLD_MS:
+    elif abs(mistie_ms) > MISTIE_HOLD_MS or checkshot_drift_max > CHECKSHOT_DRIFT_HOLD_MS:
         residual_class = "time_depth_error"
-    elif corr < 0.5:
+    elif corr < CORRELATION_HOLD_MIN:
         residual_class = "wavelet_error"
-    elif abs(mistie_ms) <= 8.0 and corr >= CORRELATION_PROCEED_MIN:
+    elif abs(mistie_ms) <= MISTIE_PROCEED_MS and corr >= CORRELATION_PROCEED_MIN:
         residual_class = "good_tie"
     else:
         residual_class = "unexplained"
@@ -732,47 +779,49 @@ def step_create_claim(
 
 
 def step_challenge_claim(claim: ClaimBundle, tie: TieResult, bundle: dict[str, Any]) -> ClaimBundle:
-    """Active alternative interpretation — never single-story geology."""
-    alt = {
-        "alternative_id": "alt-event-below-or-above",
-        "text": (
-            f"Mapped event at {tie.mapped_event_twt_ms:.0f} ms is not Top_Reservoir; "
-            f"true top is nearer synthetic peak at {tie.synthetic_peak_twt_ms:.0f} ms "
-            f"(mistie {tie.mistie_ms:+.0f} ms)."
-        ),
-        "rung": "INT",
-        "evidence_for": [
-            "synthetic peak from well impedance series",
-            "checkshot places log top near synthetic peak window",
-        ],
-        "evidence_against": [
-            "interpreter may have followed a stronger parallel event",
-            "phase/polarity assumption may be wrong",
-        ],
-        "status": "active_challenge",
-    }
-    alt2 = {
-        "alternative_id": "alt-velocity-mistie",
-        "text": (
-            "Mistie is dominated by velocity/checkshot error, not horizon mispick; "
-            "horizon geometry may survive after T-D repair."
-        ),
-        "rung": "SPEC",
-        "evidence_for": [
-            f"checkshot_drift_max_ms={tie.checkshot_drift_max_ms}",
-            f"velocity_uncertainty_ms={tie.velocity_uncertainty_ms}",
-        ],
-        "evidence_against": [
-            "even after velocity repair, mapped event may still be wrong reflector",
-        ],
-        "status": "active_challenge",
-    }
-    claim.alternatives = [alt, alt2]
+    """Mandatory alternative interpretations — never single-story geology."""
+    claim.alternatives = [
+        {
+            "alternative_id": "alt_not_top_reservoir",
+            "text": MANDATORY_ALTERNATIVES[0],
+            "rung": "INT",
+            "detail": (
+                f"Mapped event at {tie.mapped_event_twt_ms:.0f} ms may be a parallel "
+                f"impedance boundary; synthetic peak at {tie.synthetic_peak_twt_ms:.0f} ms "
+                f"(mistie {tie.mistie_ms:+.0f} ms)."
+            ),
+            "status": "active_challenge",
+        },
+        {
+            "alternative_id": "alt_seismic_mistied",
+            "text": MANDATORY_ALTERNATIVES[1],
+            "rung": "INT",
+            "detail": "Well top valid on logs; seismic event pick is the error source.",
+            "status": "active_challenge",
+        },
+        {
+            "alternative_id": "alt_velocity_erases_trap",
+            "text": MANDATORY_ALTERNATIVES[2],
+            "rung": "SPEC",
+            "detail": (
+                f"velocity_uncertainty_ms={tie.velocity_uncertainty_ms}; "
+                f"checkshot_drift_max_ms={tie.checkshot_drift_max_ms}"
+            ),
+            "status": "active_challenge",
+        },
+        {
+            "alternative_id": "alt_weak_seismic_support",
+            "text": MANDATORY_ALTERNATIVES[3],
+            "rung": "INT",
+            "detail": "GR/RT motif supports sand; seismic event correlation may not.",
+            "status": "active_challenge",
+        },
+    ]
     if any(t.get("well_id") != bundle["well_id"] for t in bundle["tops"]):
         claim.alternatives.append(
             {
-                "alternative_id": "alt-wrong-correlation",
-                "text": "Top_Reservoir correlation to offset well is wrong; depth trend is invalid.",
+                "alternative_id": "alt_offset_depth_trend",
+                "text": "Nearby well top contradicts depth trend; correlation is wrong.",
                 "rung": "INT",
                 "status": "active_challenge",
             }
@@ -781,26 +830,25 @@ def step_challenge_claim(claim: ClaimBundle, tie: TieResult, bundle: dict[str, A
 
 
 def step_falsification_scan(tie: TieResult, claim: ClaimBundle, bundle: dict[str, Any]) -> list[FalsificationTest]:
-    """Popperian tests that can kill the horizon tie."""
+    """Popperian kill tests — what would kill the model."""
+    abs_m = abs(tie.mistie_ms)
     tests = [
         FalsificationTest(
-            test_id="F1_mistie_threshold",
-            statement=(
-                "If revised checkshot still gives >25 ms mistie, kill horizon tie"
-            ),
-            threshold=f"abs(mistie_ms) > {MISTIE_HOLD_MS}",
+            test_id="revised_checkshot_mistie_gt_25ms",
+            statement="if revised checkshot still gives >25 ms mistie, kill horizon tie",
+            threshold=f"abs(mistie_ms) > {MISTIE_KILL_MS}",
             current_status=(
                 "falsified"
-                if abs(tie.mistie_ms) > MISTIE_HOLD_MS
-                else "confirmed"
-                if abs(tie.mistie_ms) <= 8
+                if abs_m > MISTIE_KILL_MS
                 else "weakened"
+                if abs_m > MISTIE_HOLD_MS
+                else "confirmed"
             ),
             implication="Horizon H1 cannot be promoted as Top_Reservoir without re-pick or T-D repair",
         ),
         FalsificationTest(
-            test_id="F2_offset_top_trend",
-            statement="If nearby well top contradicts depth trend, downgrade prospect",
+            test_id="nearby_well_top_breaks_depth_trend",
+            statement="if nearby well top contradicts depth trend, downgrade prospect",
             threshold="offset top residual vs regional trend > 50 m",
             current_status=(
                 "falsified"
@@ -810,15 +858,29 @@ def step_falsification_scan(tie: TieResult, claim: ClaimBundle, bundle: dict[str
             implication="Multi-well depth consistency required before structural map trust",
         ),
         FalsificationTest(
-            test_id="F3_velocity_erases_closure",
-            statement="If velocity uncertainty band exceeds mapped closure relief, structural trap is untestable",
+            test_id="velocity_uncertainty_erases_closure",
+            statement="if alternate velocity removes closure, prospect claim cannot proceed",
             threshold="velocity_uncertainty_ms > closure_relief_ms",
-            current_status="unverified",  # closure not provided in min data
+            current_status="unverified",  # closure not in minimum unit
             implication="Do not promote closure-dependent prospect without velocity sensitivity",
         ),
         FalsificationTest(
-            test_id="F4_dn_reservoir",
-            statement="If density-neutron cannot support sand, reservoir claim stays INTERPRETATION",
+            test_id="polarity_or_phase_assumption_unresolved",
+            statement="if polarity/phase assumption unresolved, synthetic event may track wrong reflector",
+            threshold="wavelet phase not extracted from well-seismic match",
+            current_status="weakened",  # assumed zero-phase Ricker
+            implication="Phase/polarity must be locked before PROCEED on thin reservoirs",
+        ),
+        FalsificationTest(
+            test_id="synthetic_event_tracks_different_reflector",
+            statement="if synthetic peak tracks a different reflector than mapped H1, kill horizon tie",
+            threshold=f"abs(mistie_ms) > {MISTIE_KILL_MS}",
+            current_status="falsified" if abs_m > MISTIE_KILL_MS else "weakened" if abs_m > MISTIE_HOLD_MS else "confirmed",
+            implication="Mapped event is not the well impedance boundary under test",
+        ),
+        FalsificationTest(
+            test_id="density_neutron_weak_support",
+            statement="if density-neutron cannot support sand, reservoir claim stays INTERPRETATION",
             threshold="dn_separation_score < 0.15",
             current_status=(
                 "weakened"
@@ -837,9 +899,15 @@ def step_verdict(
     falsification: list[FalsificationTest],
     qc: list[QCResult],
 ) -> dict[str, Any]:
-    """Uncertainty-calibrated verdict: PROCEED | HOLD | KILL."""
+    """Uncertainty-calibrated verdict under locked threshold law: PROCEED | HOLD | KILL."""
     reasons: list[str] = []
     next_tests: list[str] = list(claim.missing_tests[:3])
+    # always append alternate-velocity falsification line for receipt shape
+    falsif_lines = [
+        f.statement
+        for f in falsification
+        if f.current_status in ("falsified", "weakened", "unverified")
+    ]
 
     qc_fail = [r for r in qc if r.status == "FAIL"]
     if qc_fail:
@@ -847,50 +915,86 @@ def step_verdict(
             "verdict": "KILL",
             "reason": [f"QC FAIL on {r.artifact}" for r in qc_fail],
             "falsification": [asdict(f) for f in falsification],
+            "falsification_statements": falsif_lines,
             "next_test": next_tests,
             "confidence_cap": 0.30,
             "model_deserves_to_live": False,
+            "threshold_triggers": ["qc_fail"],
         }
 
-    kill_flags = [f for f in falsification if f.current_status == "falsified" and f.test_id in ("F1_mistie_threshold", "F2_offset_top_trend")]
     abs_mistie = abs(tie.mistie_ms)
+    drift = tie.checkshot_drift_max_ms
+    corr = tie.correlation
+    offset_kill = any(
+        f.test_id == "nearby_well_top_breaks_depth_trend" and f.current_status == "falsified"
+        for f in falsification
+    )
+    triggers: list[str] = []
 
-    if abs_mistie >= MISTIE_KILL_MS or (
-        any(f.test_id == "F2_offset_top_trend" and f.current_status == "falsified" for f in falsification)
-        and abs_mistie >= MISTIE_HOLD_MS
-    ):
+    # KILL gates (threshold law)
+    kill = False
+    if abs_mistie > MISTIE_KILL_MS:
+        kill = True
+        triggers.append("mistie_gt_25ms")
+    if drift > CHECKSHOT_DRIFT_KILL_MS:
+        kill = True
+        triggers.append("checkshot_drift_gt_25ms")
+    if corr < CORRELATION_HOLD_MIN and not claim.promotion_allowed:
+        kill = True
+        triggers.append("correlation_lt_0.40")
+    if offset_kill and abs_mistie > MISTIE_HOLD_MS:
+        kill = True
+        triggers.append("offset_top_contradicts_depth_trend")
+
+    # HOLD gates
+    hold = False
+    if MISTIE_HOLD_MS < abs_mistie <= MISTIE_KILL_MS:
+        hold = True
+        triggers.append("mistie_in_hold_band")
+    if CHECKSHOT_DRIFT_HOLD_MS < drift <= CHECKSHOT_DRIFT_KILL_MS:
+        hold = True
+        triggers.append("checkshot_drift_in_hold_band")
+    if CORRELATION_HOLD_MIN <= corr < CORRELATION_PROCEED_MIN:
+        hold = True
+        triggers.append("correlation_in_hold_band")
+    if any("density-neutron" in e["item"] for e in claim.evidence_against):
+        hold = True
+        triggers.append("weak_density_neutron_separation")
+
+    if kill:
         verdict: Verdict = "KILL"
         reasons.append(f"synthetic tie peak is shifted {tie.mistie_ms:+.0f} ms from mapped event")
-        if tie.checkshot_drift_max_ms >= CHECKSHOT_DRIFT_HOLD_MS:
-            reasons.append(f"checkshot drift {tie.checkshot_drift_max_ms:.1f} ms exceeds threshold")
-        if any(f.test_id == "F2_offset_top_trend" and f.current_status == "falsified" for f in falsification):
+        if drift > CHECKSHOT_DRIFT_HOLD_MS:
+            reasons.append(f"checkshot drift exceeds threshold ({drift:.1f} ms)")
+        if offset_kill:
             reasons.append("nearby well top contradicts depth trend")
         reasons.append("top pick confidence is INTERPRETATION, not OBSERVATION")
-        reasons.append(
-            f"velocity model uncertainty ±{tie.velocity_uncertainty_ms:.1f} ms can erase closure"
-        )
+        reasons.append("velocity model uncertainty can erase closure")
         live = False
-    elif abs_mistie >= MISTIE_HOLD_MS or tie.checkshot_drift_max_ms >= CHECKSHOT_DRIFT_HOLD_MS or not claim.promotion_allowed:
+    elif hold or not claim.promotion_allowed or tie.residual_class != "good_tie":
         verdict = "HOLD"
         reasons.append(f"synthetic tie peak is shifted {tie.mistie_ms:+.0f} ms from mapped event")
-        if tie.checkshot_drift_max_ms >= CHECKSHOT_DRIFT_HOLD_MS:
-            reasons.append(f"checkshot drift exceeds threshold ({tie.checkshot_drift_max_ms:.1f} ms)")
-        reasons.append(
-            "GR/resistivity motif supports sand, but density-neutron separation is weak"
-            if any("density-neutron" in e["item"] for e in claim.evidence_against)
-            else f"tie residual class = {tie.residual_class}"
-        )
+        if drift > CHECKSHOT_DRIFT_HOLD_MS:
+            reasons.append("checkshot drift exceeds threshold")
+        if any("density-neutron" in e["item"] for e in claim.evidence_against):
+            reasons.append(
+                "GR/resistivity motif supports sand, but density-neutron separation is weak"
+            )
         reasons.append("top pick confidence is INTERPRETATION, not OBSERVATION")
-        reasons.append(
-            f"velocity model uncertainty ±{tie.velocity_uncertainty_ms:.1f} ms can erase closure"
-        )
+        reasons.append("velocity model uncertainty can erase closure")
         live = False
-    elif tie.residual_class == "good_tie" and tie.correlation >= CORRELATION_PROCEED_MIN and abs_mistie <= 8.0:
+    elif (
+        abs_mistie <= MISTIE_PROCEED_MS
+        and drift <= CHECKSHOT_PROCEED_MS
+        and corr >= CORRELATION_PROCEED_MIN
+        and tie.residual_class == "good_tie"
+    ):
         verdict = "PROCEED"
-        reasons.append(f"mistie {tie.mistie_ms:+.1f} ms within tolerance")
-        reasons.append(f"correlation {tie.correlation:.2f} ≥ {CORRELATION_PROCEED_MIN}")
+        reasons.append(f"mistie {tie.mistie_ms:+.1f} ms ≤ {MISTIE_PROCEED_MS:.0f} ms (proceed band)")
+        reasons.append(f"correlation {corr:.2f} ≥ {CORRELATION_PROCEED_MIN}")
         reasons.append("residual_class=good_tie; claim may advance with stated uncertainty")
         live = True
+        triggers.append("all_proceed_thresholds_met")
         next_tests = [
             "verify with second well if available",
             "lock wavelet phase against known markers",
@@ -898,9 +1002,12 @@ def step_verdict(
         ]
     else:
         verdict = "HOLD"
-        reasons.append(f"tie quality {tie.quality} / residual {tie.residual_class} insufficient for PROCEED")
-        reasons.append(f"mistie={tie.mistie_ms:+.1f} ms correlation={tie.correlation:.2f}")
+        reasons.append(
+            f"tie quality {tie.quality} / residual {tie.residual_class} insufficient for PROCEED"
+        )
+        reasons.append(f"mistie={tie.mistie_ms:+.1f} ms correlation={corr:.2f}")
         live = False
+        triggers.append("fallback_hold")
 
     # F7 humility: never claim certainty
     confidence_cap = 0.85 if verdict == "PROCEED" else 0.55 if verdict == "HOLD" else 0.35
@@ -908,20 +1015,31 @@ def step_verdict(
     return {
         "verdict": verdict,
         "reason": reasons,
-        "falsification": [
-            {
-                "test_id": f.test_id,
-                "statement": f.statement,
-                "status": f.current_status,
-                "implication": f.implication,
-            }
-            for f in falsification
-        ],
+        "falsification": [asdict(f) for f in falsification],
+        "falsification_statements": falsif_lines,
         "next_test": next_tests,
         "confidence_cap": confidence_cap,
         "model_deserves_to_live": live,
         "ac_risk": claim.ac_risk,
         "residual_class": tie.residual_class,
+        "threshold_triggers": triggers,
+        "thresholds_applied": {
+            "mistie_ms": {
+                "proceed": f"<={MISTIE_PROCEED_MS}",
+                "hold": f">{MISTIE_HOLD_MS} and <={MISTIE_KILL_MS}",
+                "kill": f">{MISTIE_KILL_MS}",
+            },
+            "checkshot_drift_ms": {
+                "proceed": f"<={CHECKSHOT_PROCEED_MS}",
+                "hold": f">{CHECKSHOT_DRIFT_HOLD_MS} and <={CHECKSHOT_DRIFT_KILL_MS}",
+                "kill": f">{CHECKSHOT_DRIFT_KILL_MS}",
+            },
+            "correlation": {
+                "proceed": f">={CORRELATION_PROCEED_MIN}",
+                "hold": f"{CORRELATION_HOLD_MIN} to {CORRELATION_PROCEED_MIN}",
+                "kill": f"<{CORRELATION_HOLD_MIN}",
+            },
+        },
     }
 
 
@@ -1017,22 +1135,110 @@ def run_geox_001(
     )
 
     success = {
+        "QC_verified_ingested_files": all(r.status != "FAIL" for r in qc),
+        "explicit_evidence_graph": bool(graph.get("nodes")) and bool(graph.get("edges")),
+        "synthetic_tie_and_drift_result": tie.mistie_ms is not None and tie.correlation is not None,
+        "claim_with_OBS_DER_INT_SPEC_separation": bool(epistemic)
+        and claim.rung in ("OBS", "DER", "INT", "SPEC"),
+        "active_challenge_or_alternative_interpretation": len(claim.alternatives) >= 4,
+        "verdict_can_say_PROCEED_HOLD_KILL_without_pretending_certainty": (
+            verdict_block["verdict"] in ("PROCEED", "HOLD", "KILL")
+            and verdict_block["confidence_cap"] <= 0.90
+        ),
+        # legacy keys (compat with earlier tests)
         "1_qc_verified": all(r.status != "FAIL" for r in qc),
         "2_evidence_graph": bool(graph.get("nodes")) and bool(graph.get("edges")),
         "3_synthetic_tie_drift": tie.mistie_ms is not None and tie.correlation is not None,
         "4_claim_obs_der_int_spec": bool(epistemic) and claim.rung in ("OBS", "DER", "INT", "SPEC"),
-        "5_active_challenge": len(claim.alternatives) >= 1,
+        "5_active_challenge": len(claim.alternatives) >= 4,
         "6_verdict_no_fake_certainty": verdict_block["verdict"] in ("PROCEED", "HOLD", "KILL")
         and verdict_block["confidence_cap"] <= 0.90,
     }
-    all_six = all(success.values())
+    core_six = [
+        "QC_verified_ingested_files",
+        "explicit_evidence_graph",
+        "synthetic_tie_and_drift_result",
+        "claim_with_OBS_DER_INT_SPEC_separation",
+        "active_challenge_or_alternative_interpretation",
+        "verdict_can_say_PROCEED_HOLD_KILL_without_pretending_certainty",
+    ]
+    all_six = all(success[k] for k in core_six)
+
+    evidence_classes = {
+        "OBS": [
+            "LAS curves inspected",
+            "tops table inspected",
+            "checkshot/VSP inspected",
+            "seismic event observed",
+        ],
+        "DER": [
+            "synthetic trace generated",
+            "time-depth relation computed",
+            f"mistie measured ({tie.mistie_ms:+.1f} ms)",
+            f"drift estimated ({tie.checkshot_drift_max_ms:.1f} ms)",
+            f"correlation_score={tie.correlation:.3f}",
+        ],
+        "INT": [
+            "top reservoir pick",
+            "horizon-to-well tie",
+            "geological defensibility claim",
+        ],
+        "SPEC": [
+            "velocity closure survival",
+            "regional trend assumption",
+            "prospect implication",
+        ],
+    }
+
+    constitutional_status = {
+        "GEOX_verdict": verdict_block["verdict"],
+        "VAULT999_status": "DRAFT_ONLY",
+        "seal_allowed": False,
+        "seal_allowed_note": "false_without_arifOS_adjudication",
+        "band": "YELLOW",
+        "evidence_level": "L2_live_surface_L4_benchmark_design",
+        "receipt_class": "DRAFT_ONLY_not_VAULT999_sealed",
+    }
 
     killer_output = {
+        "benchmark": f"{BENCHMARK_ID}: {BENCHMARK_TITLE}",
         "claim": claim.text,
         "verdict": verdict_block["verdict"],
+        "evidence_classes": evidence_classes,
         "reason": verdict_block["reason"],
-        "falsification": [f["statement"] for f in verdict_block["falsification"] if f["status"] in ("falsified", "weakened", "unverified")],
+        "falsification": verdict_block.get("falsification_statements")
+        or [f["statement"] for f in verdict_block["falsification"]],
         "next_test": verdict_block["next_test"],
+        "constitutional_status": constitutional_status,
+    }
+
+    pipeline = {
+        "000_ingest": {
+            "well_id": bundle["well_id"],
+            "horizon": bundle["horizon_id"],
+            "required_inputs": [
+                "las_file",
+                "tops_table",
+                "checkshot_or_vsp",
+                "seismic_line_or_mini_cube",
+                "horizon_pick_or_surface",
+                "velocity_assumption",
+            ],
+            "status": "complete",
+        },
+        "111_qc": {"results": [asdict(r) for r in qc], "status": "PASS" if success["1_qc_verified"] else "FAIL"},
+        "222_evidence_graph": graph,
+        "333_synthetic_tie": {
+            **asdict(tie),
+            "wavelet_assumption": "ricker_30hz_assumed_zero_phase",
+            "velocity_assumption_used": bundle.get("velocity_assumption"),
+            "peak_or_trough_polarity": bundle["seismic"].get("polarity", "SEG_NORMAL"),
+            "tie_window_ms": 80.0,
+        },
+        "444_claim_create": asdict(claim),
+        "555_challenge": claim.alternatives,
+        "666_falsification_scan": [asdict(f) for f in falsification],
+        "777_verdict": verdict_block,
     }
 
     return {
@@ -1040,31 +1246,48 @@ def run_geox_001(
         "benchmark_name": BENCHMARK_NAME,
         "title": BENCHMARK_TITLE,
         "thesis": THESIS,
+        "domain": "GEOX",
+        "test_type": "Well-Seismic Truth Test",
         "scenario": bundle.get("scenario", scenario),
         "status": "success" if all_six else "incomplete",
         "all_six_success_conditions": all_six,
         "success_conditions": success,
+        "pipeline_stages": list(PIPELINE_STAGES),
+        "pipeline": pipeline,
         "workflow": {
-            "ingest_data": {"well_id": bundle["well_id"], "horizon": bundle["horizon_id"]},
-            "qc_evidence": [asdict(r) for r in qc],
+            "ingest_data": pipeline["000_ingest"],
+            "qc_evidence": pipeline["111_qc"]["results"],
             "evidence_graph": graph,
-            "synthetic_tie": asdict(tie),
+            "synthetic_tie": pipeline["333_synthetic_tie"],
             "epistemic_classification": epistemic,
             "claim": asdict(claim),
             "challenge": claim.alternatives,
             "falsification_scan": [asdict(f) for f in falsification],
             "verdict": verdict_block,
         },
+        "GEOX_001_receipt": killer_output,
         "tie_receipt": receipt,
         "killer_output": killer_output,
+        "evidence_classes": evidence_classes,
+        "constitutional_status": constitutional_status,
         "model_deserves_to_live": verdict_block["model_deserves_to_live"],
         "timestamp_utc": datetime.now(UTC).isoformat(),
         "domain_law": "NATURAL_LAW",
+        "excluded": [
+            "basin simulation",
+            "prospect volumetrics",
+            "3D fan modelling",
+            "full petroleum system risking",
+            "production history integration",
+            "multi-well field correlation",
+            "commercial POS",
+        ],
         "anti_hantu": [
             "amplitude is not hydrocarbon",
             "impedance is not lithology",
             "tie is not validation unless residuals are explained",
             "horizon pick is INTERPRETATION until well evidence licenses it",
+            "GEOX does not seal — arifOS/VAULT999 owns final seal",
         ],
     }
 
@@ -1089,13 +1312,21 @@ def _load_bundle_from_dir(path: Path) -> dict[str, Any]:
 
 
 def render_killer_yaml(result: dict[str, Any]) -> str:
-    """Render the demo receipt in the human-facing YAML shape."""
-    k = result["killer_output"]
+    """Render the locked GEOX_001_receipt human-facing YAML shape."""
+    k = result.get("GEOX_001_receipt") or result["killer_output"]
+    cs = k.get("constitutional_status") or result.get("constitutional_status") or {}
     lines = [
+        f'benchmark: "{k.get("benchmark", BENCHMARK_ID + ": " + BENCHMARK_TITLE)}"',
         f'claim: "{k["claim"]}"',
         f"verdict: {k['verdict']}",
-        "reason:",
+        "evidence_classes:",
     ]
+    ec = k.get("evidence_classes") or result.get("evidence_classes") or {}
+    for rung in ("OBS", "DER", "INT", "SPEC"):
+        lines.append(f"  {rung}:")
+        for item in ec.get(rung, []):
+            lines.append(f"    - {item}")
+    lines.append("reason:")
     for r in k["reason"]:
         lines.append(f"  - {r}")
     lines.append("falsification:")
@@ -1104,6 +1335,10 @@ def render_killer_yaml(result: dict[str, Any]) -> str:
     lines.append("next_test:")
     for t in k["next_test"]:
         lines.append(f"  - {t}")
+    lines.append("constitutional_status:")
+    lines.append(f"  GEOX_verdict: {cs.get('GEOX_verdict', k['verdict'])}")
+    lines.append(f"  VAULT999_status: {cs.get('VAULT999_status', 'DRAFT_ONLY')}")
+    lines.append(f"  seal_allowed: {str(cs.get('seal_allowed', False)).lower()}")
     lines.append(f"model_deserves_to_live: {str(result['model_deserves_to_live']).lower()}")
     return "\n".join(lines) + "\n"
 

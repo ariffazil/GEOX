@@ -103,30 +103,49 @@ That is the thing DS365 does not naturally volunteer.
 
 ---
 
-## 6. Verdict gates
+## 6. Threshold law (locked)
 
-| Condition | Verdict | Model lives? |
-|-----------|---------|--------------|
-| mistie ≤ 8 ms, residual `good_tie`, corr ≥ 0.70 | **PROCEED** | yes (with uncertainty) |
-| mistie ≥ 25 ms or checkshot drift high | **HOLD** | no |
-| mistie ≥ 40 ms or mistie+offset contradiction | **KILL** | no |
-| QC FAIL on required artifacts | **KILL** | no |
+| Metric | PROCEED | HOLD | KILL |
+|--------|---------|------|------|
+| mistie_ms | ≤ 15 | (15, 25] | > 25 |
+| checkshot_drift_ms | ≤ 10 | (10, 25] | > 25 |
+| well_tie_correlation | ≥ 0.65 | [0.40, 0.65) | < 0.40 |
 
-Thresholds are explicit, not vibes. Confidence always capped (F7).
+Plus log-support HOLD if GR/RT supports sand but density-neutron separation is weak.
 
----
-
-## 7. Scenarios
-
-| Scenario | Purpose |
-|----------|---------|
-| `mistie_hold` | Default demo — +38 ms mistie → HOLD |
-| `good_tie` | Clean path — model may live |
-| `kill_contradiction` | Hard fail — large mistie + nearby top contradiction |
+Thresholds are explicit, not vibes. Confidence always capped (F7).  
+**GEOX verdict ≠ seal.** `VAULT999_status: DRAFT_ONLY` until arifOS adjudicates.
 
 ---
 
-## 8. What not to start with
+## 7. Pipeline (000–777)
+
+| Stage | Purpose | Example GEOX verbs |
+|-------|---------|-------------------|
+| 000_ingest | minimum unit in | data/well/seismic ingest |
+| 111_qc | fail-closed usability | well_qc, segy_audit |
+| 222_evidence_graph | OBS/DER/INT/SPEC | evidence_reason, egs_attach |
+| 333_synthetic_tie | mistie / drift / corr | well_tie, tie_preflight, tie_receipt |
+| 444_claim_create | one falsifiable claim | claim create |
+| 555_challenge | 4 mandatory alternatives | claim challenge |
+| 666_falsification_scan | kill tests | evidence_reason, integrity |
+| 777_verdict | PROCEED / HOLD / KILL | GEOX advisory only |
+
+---
+
+## 8. Scenarios
+
+| Scenario | Mistie | Verdict |
+|----------|--------|---------|
+| `good_tie` | ~8 ms | **PROCEED** |
+| `mistie_hold` | ~22 ms (HOLD band) | **HOLD** (default demo) |
+| `kill_contradiction` | **+38 ms** (>25) + offset top | **KILL** |
+
+Note: the classic +38 ms figure is a **KILL** under threshold law, not HOLD.
+
+---
+
+## 9. What not to start with
 
 | Candidate | Why later |
 |-----------|-----------|
@@ -138,7 +157,7 @@ Thresholds are explicit, not vibes. Confidence always capped (F7).
 
 ---
 
-## 9. Shortest path from prototype to weapon
+## 10. Shortest path from prototype to weapon
 
 **One well · one horizon · one seismic tie · one claim · one contradiction.**
 

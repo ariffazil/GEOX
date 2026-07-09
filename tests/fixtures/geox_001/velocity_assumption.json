@@ -4,5 +4,6 @@
   "units": "ms TWT / m MD",
   "uncertainty_fraction": 0.08,
   "uncertainty_ms_at_target": 16.995180939443593,
-  "note": "Velocity model uncertainty can erase closure if large enough"
+  "note": "Velocity model uncertainty can erase closure if large enough",
+  "closure_survives_p10_p50_p90": false
 }

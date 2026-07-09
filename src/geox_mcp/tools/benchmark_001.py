@@ -63,24 +63,32 @@ async def geox_benchmark_001(
         "benchmark_id": result["benchmark_id"],
         "title": result["title"],
         "thesis": result["thesis"],
+        "domain": result.get("domain", "GEOX"),
+        "test_type": result.get("test_type"),
         "scenario": result["scenario"],
         "all_six_success_conditions": result["all_six_success_conditions"],
         "success_conditions": result["success_conditions"],
+        "pipeline_stages": result.get("pipeline_stages"),
+        "GEOX_001_receipt": result.get("GEOX_001_receipt") or result["killer_output"],
         "killer_output": result["killer_output"],
         "killer_yaml": render_killer_yaml(result),
+        "evidence_classes": result.get("evidence_classes"),
+        "constitutional_status": result.get("constitutional_status"),
         "model_deserves_to_live": result["model_deserves_to_live"],
         "tie_receipt": result["tie_receipt"],
         "anti_hantu": result["anti_hantu"],
+        "excluded": result.get("excluded"),
         "claim_state": "INTERPRETED",
         "perception_class": "INTERPRETATION",
-        "confidence_level": "MEDIUM" if result["killer_output"]["verdict"] == "HOLD" else (
-            "HIGH" if result["killer_output"]["verdict"] == "PROCEED" else "LOW"
-        ),
+        "confidence_level": "MEDIUM"
+        if result["killer_output"]["verdict"] == "HOLD"
+        else ("HIGH" if result["killer_output"]["verdict"] == "PROCEED" else "LOW"),
         "governance_status": result["killer_output"]["verdict"],
         "timestamp_utc": result["timestamp_utc"],
     }
     if include_full_workflow:
         out["workflow"] = result["workflow"]
+        out["pipeline"] = result.get("pipeline")
     if fixture_note:
         out["fixtures_dir"] = fixture_note
     return out
