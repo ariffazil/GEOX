@@ -1,0 +1,67 @@
+# GEOX-001 Fixture Manifest — one well / one horizon / one line
+# Minimum unit for "Model Deserves To Live"
+benchmark_id: GEOX-001
+name: Model Deserves To Live
+thesis: If the well does not tie, the model does not get to speak as truth.
+
+minimum_unit:
+  well: 1
+  horizon: 1
+  seismic_tie: 1
+  claim: 1
+  contradiction: 1
+
+required_inputs:
+  - id: las_file
+    path: tests/fixtures/geox_001/well_a.las
+    rung: OBS
+  - id: tops_table
+    path: tests/fixtures/geox_001/tops.json
+    rung: INT
+  - id: checkshot_or_vsp
+    path: tests/fixtures/geox_001/checkshot.json
+    rung: OBS
+  - id: seismic_line_or_mini_cube
+    path: tests/fixtures/geox_001/seismic_trace.json
+    rung: OBS
+  - id: horizon_pick_or_surface
+    path: tests/fixtures/geox_001/horizon_h1.json
+    rung: INT
+  - id: velocity_assumption
+    path: tests/fixtures/geox_001/velocity_assumption.json
+    rung: SPEC
+
+scenarios:
+  good_tie:
+    mapped_shift_ms: 8
+    expected_verdict: PROCEED
+  mistie_hold:
+    mapped_shift_ms: 22
+    expected_verdict: HOLD
+  kill_contradiction:
+    mapped_shift_ms: 38
+    expected_verdict: KILL
+
+thresholds:
+  mistie_ms:
+    proceed: "<= 15"
+    hold: ">15 and <=25"
+    kill: ">25"
+  checkshot_drift_ms:
+    proceed: "<= 10"
+    hold: ">10 and <=25"
+    kill: ">25"
+  well_tie_correlation:
+    proceed: ">= 0.65"
+    hold: "0.40 to 0.65"
+    kill: "<0.40"
+
+generation:
+  engine: geox_core.benchmarks.geox_001_well_seismic_truth.write_fixture_bundle
+  command: >
+    PYTHONPATH=src python -m geox_core.benchmarks.geox_001_well_seismic_truth
+    --scenario mistie_hold --write-fixtures tests/fixtures/geox_001
+
+constitutional:
+  GEOX_emits: DRAFT_ONLY
+  seal_owner: arifOS/VAULT999
