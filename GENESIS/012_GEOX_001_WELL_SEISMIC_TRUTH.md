@@ -41,18 +41,23 @@ Attack line (from competitive layer map):
 
 ## 3. Workflow
 
+**Metabolic law (GENESIS/013):** Orthogonal Base tools first — never jump to Cognitive or Dimensional planes.
+
 ```text
-ingest_data
-  → QC evidence
-  → build evidence graph
-  → generate synthetic tie
-  → compare well tie vs seismic event
-  → classify OBS / DER / INT / SPEC
-  → create claim
-  → challenge claim
-  → falsification scan
-  → uncertainty-calibrated verdict
+[ORTHOGONAL BASE]
+geox_well_ingest → geox_well_qc
+  → (geox_seismic_ingest / segy_audit if present)
+  → geox_tie_preflight
+  → geox_well_tie_compute / synthetic tie
+  → geox_tie_receipt
+
+[LAW & EVIDENCE — only after base custody]
+evidence graph → OBS/DER/INT/SPEC claim
+  → challenge → falsification → geox_contrast_detect (optional)
+  → PROCEED | HOLD | KILL
 ```
+
+Blocked until base: vision, RSI, simulate_*, map_*, 3d_model_*, prospect narrative.
 
 **Implementation**
 
