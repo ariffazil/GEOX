@@ -1478,6 +1478,15 @@ async def _geox_contrast_detect(
     absence_expected_timespan: float | None = None,
     absence_observed_timespan: float | None = None,
     threshold: float = 0.2,
+    # Probabilistic (optional): [P90, P50, P10] arrays + data-quality weight
+    mass_predicted_dist: list[float] | None = None,
+    mass_observed_dist: list[float] | None = None,
+    energy_predicted_temp_dist: list[float] | None = None,
+    energy_observed_temp_dist: list[float] | None = None,
+    time_expected_dist: list[float] | None = None,
+    time_measured_dist: list[float] | None = None,
+    confidence_index: float = 0.70,
+    data_quality: str = "unknown",
     session_id: str | None = None,
     actor_id: str | None = None,
 ) -> dict:
@@ -1544,6 +1553,14 @@ async def _geox_contrast_detect(
         absence_expected_timespan=absence_expected_timespan,
         absence_observed_timespan=absence_observed_timespan,
         threshold=threshold,
+        mass_predicted_dist=mass_predicted_dist,
+        mass_observed_dist=mass_observed_dist,
+        energy_predicted_temp_dist=energy_predicted_temp_dist,
+        energy_observed_temp_dist=energy_observed_temp_dist,
+        time_expected_dist=time_expected_dist,
+        time_measured_dist=time_measured_dist,
+        confidence_index=confidence_index,
+        data_quality=data_quality,
     )
 
 
