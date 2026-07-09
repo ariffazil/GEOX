@@ -1514,6 +1514,24 @@ def run_geox_001_real_las(
                 bundle["tops"][1]["depth_md"] = mid + 35.0
                 bundle["tops"][1]["well_id"] = bundle["well_id"]
 
+    # F2 LAS math — porosity/AI/RC from curves (not summary tables)
+    las_physics = None
+    try:
+        from geox_core.benchmarks.geox_001_las_physics import compute_las_physics
+
+        las_physics = compute_las_physics(bundle["curves"])
+        # feed effective porosity stats into petro diagnostics
+        pe = (las_physics.get("stats") or {}).get("phi_e") or {}
+        bundle["petro_diagnostics"]["phi_e_p50"] = pe.get("p50")
+        bundle["petro_diagnostics"]["phi_e_p10"] = pe.get("p10")
+        bundle["petro_diagnostics"]["phi_e_p90"] = pe.get("p90")
+        bundle["petro_diagnostics"]["net_to_gross_log"] = (las_physics.get("stats") or {}).get(
+            "net_to_gross"
+        )
+        bundle["petro_diagnostics"]["porosity_source"] = "DER_FROM_LAS_CURVES"
+    except Exception as exc:
+        las_physics = {"status": "FAIL", "error": str(exc)[:200]}
+
     result = run_geox_001(scenario=scenario, bundle=bundle)
     result["real_las"] = {
         "status": "INGESTED",
@@ -1523,6 +1541,22 @@ def run_geox_001_real_las(
         "petronas_proprietary": "ABSENT_ON_HOST",
         "note": "Best real LAS on host is Q15 North Sea 15/9-19 — not a Petronas Malay Basin well",
     }
+    if las_physics:
+        result["las_physics"] = {
+            k: las_physics[k]
+            for k in ("epistemic", "rhob_source", "stats", "equations", "anti_hantu", "phi_n_source", "dt_unit")
+            if k in las_physics
+        }
+        # keep series out of default receipt size — available under full key if needed
+        result["las_physics_has_series"] = "series" in las_physics
+        if "evidence_classes" in result:
+            result["evidence_classes"].setdefault("DER", []).extend(
+                [
+                    f"φ_e P50={((las_physics.get('stats') or {}).get('phi_e') or {}).get('p50')} from density/neutron (LAS math)",
+                    f"NTG_log={((las_physics.get('stats') or {}).get('net_to_gross'))}",
+                    "AI/RC from Vp·ρ and Zoeppritz approximation",
+                ]
+            )
     # honesty: downgrade OBS claims for checkshot/seismic if scenario-derived
     if "evidence_classes" in result:
         result["evidence_classes"]["OBS"] = [
