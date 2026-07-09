@@ -96,6 +96,9 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_tie_receipt": 10.0,  # Phase 3.3: Tie receipt builder — pure schema, fast
     "geox_tie_preflight": 10.0,  # Phase 3.3: 25-point preflight gate — rule-based, fast
     "geox_benchmark_001": 30.0,  # GEOX-001 Well-Seismic Truth Test — Model Deserves To Live
+    "geox_well_time_depth_calibrate": 15.0,
+    "geox_well_seismic_mistie_rms": 10.0,
+    "geox_wavelet_extract_least_squares": 15.0,
     "geox_3d_model_build": 120.0,  # Phase 3.0: GemPy 3D model building
     "geox_wealth_bridge_run": 60.0,  # Phase 3.0: GEOX→WEALTH capital bridge
     "geox_vision": 120.0,
@@ -409,7 +412,7 @@ def compose_geox_servers() -> None:
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
     _EXPECTED_CANONICAL = (
-        69  # GEOX-001 (2026-07-09): +geox_benchmark_001 Well-Seismic Truth Test
+        72  # 2026-07-09: +3 GEOX 1D MCP (td_calibrate, mistie_rms, wavelet_ls)
     )
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(

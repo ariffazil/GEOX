@@ -59,6 +59,9 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     "geox_tie_receipt": RiskTier.READONLY,
     "geox_tie_preflight": RiskTier.READONLY,
     "geox_benchmark_001": RiskTier.C1_ADVISORY,  # GEOX-001 truth test — advisory verdict only
+    "geox_well_time_depth_calibrate": RiskTier.READONLY,
+    "geox_well_seismic_mistie_rms": RiskTier.READONLY,
+    "geox_wavelet_extract_least_squares": RiskTier.READONLY,
     # ── MODEL DOMAIN (2) ──
     "geox_subsurface_model": RiskTier.C1_ADVISORY,  # joint inversion → advisory
     "geox_geomechanics": RiskTier.READONLY,

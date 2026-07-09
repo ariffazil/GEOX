@@ -76,6 +76,10 @@ SURFACE_TOOLS: list[str] = [
     "geox_tie_receipt",  # Phase 3.3: Seismic-to-well tie evidence envelope — metabolizer memory
     "geox_tie_preflight",  # Phase 3.3: 25-point pre-interpretation gate — intake valve
     "geox_benchmark_001",  # GEOX-001: Well-Seismic Truth Test — Model Deserves To Live
+    # ── GEOX 1D MCP surface (2026-07-09) — Orthogonal Base calibration ────────
+    "geox_well_time_depth_calibrate",  # T-D fit (linear/poly/vo_k/layer_cake) + PhysicsGuard
+    "geox_well_seismic_mistie_rms",  # Phase 3 falsification gate — hard 25 ms
+    "geox_wavelet_extract_least_squares",  # Phase 4 Wiener wavelet extraction
     "geox_3d_model_build",  # Phase 3.0: GemPy 3D structural model — implicit geological modeling
     "geox_wealth_bridge_run",  # Phase 3.0: GEOX→WEALTH capital bridge — economic evaluation
     "geox_vision",  # VLM inference, audit, calibration, perceptual
@@ -830,6 +834,33 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "expose": True,
         "face": "surface",
         "description": "GEOX-001 Well-Seismic Truth Test — Model Deserves To Live",
+    },
+    {
+        "name": "geox_well_time_depth_calibrate",
+        "domain": "earth.well",
+        "axis": "calibrate",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+        "description": "T-D calibration LAS+checkshot with PhysicsGuard",
+    },
+    {
+        "name": "geox_well_seismic_mistie_rms",
+        "domain": "earth.seismic",
+        "axis": "verify",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+        "description": "Phase 3 RMS mistie gate SEAL/HOLD/VOID (default 25 ms)",
+    },
+    {
+        "name": "geox_wavelet_extract_least_squares",
+        "domain": "earth.seismic",
+        "axis": "calibrate",
+        "lane": "evidence",
+        "expose": True,
+        "face": "surface",
+        "description": "Phase 4 Wiener least-squares wavelet extraction",
     },
     # ── TEST FIXTURE — required by canonical set cross-check ───────────────
     {
