@@ -28,7 +28,7 @@ Doctrine (GEOX-001 + GENESIS/013): **Orthogonal Base first.**
 |----------|------|--------|
 | **P0** | 1D LAS math — φ, Vsh, Sw, AI, RC from curves | **IN PROGRESS** — `geox_001_las_physics` |
 | **P0** | Well-tie spine — preflight → synthetic → receipt | **LIVE** — GEOX-001 |
-| **P1** | Probabilistic STOIIP/EMV (lognormal MC) → WEALTH bridge | **LIVE** — `volumetric_mc` |
+| **P1** | Probabilistic STOIIP/EMV (lognormal MC) → WEALTH bridge | **DONE Marmousi** — `scripts/marmousi2_stoiip_mc_p1.py` |
 | **P2** | Spatial ToAC — prospect-local, not basin depocenter alone | Next |
 | **P3** | 3D corner-point / property upscale | Deferred until P0–P1 solid |
 | **P4** | Darcy migration path receipts | Deferred |
