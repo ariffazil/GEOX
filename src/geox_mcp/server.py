@@ -95,6 +95,7 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_well_tie_compute": 60.0,  # Phase 3.0: Well-tie calibration via bruges
     "geox_tie_receipt": 10.0,  # Phase 3.3: Tie receipt builder — pure schema, fast
     "geox_tie_preflight": 10.0,  # Phase 3.3: 25-point preflight gate — rule-based, fast
+    "geox_benchmark_001": 30.0,  # GEOX-001 Well-Seismic Truth Test — Model Deserves To Live
     "geox_3d_model_build": 120.0,  # Phase 3.0: GemPy 3D model building
     "geox_wealth_bridge_run": 60.0,  # Phase 3.0: GEOX→WEALTH capital bridge
     "geox_vision": 120.0,

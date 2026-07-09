@@ -75,6 +75,7 @@ SURFACE_TOOLS: list[str] = [
     "geox_well_tie_compute",  # Phase 3.0: Well-tie calibration via bruges — synthetic seismogram
     "geox_tie_receipt",  # Phase 3.3: Seismic-to-well tie evidence envelope — metabolizer memory
     "geox_tie_preflight",  # Phase 3.3: 25-point pre-interpretation gate — intake valve
+    "geox_benchmark_001",  # GEOX-001: Well-Seismic Truth Test — Model Deserves To Live
     "geox_3d_model_build",  # Phase 3.0: GemPy 3D structural model — implicit geological modeling
     "geox_wealth_bridge_run",  # Phase 3.0: GEOX→WEALTH capital bridge — economic evaluation
     "geox_vision",  # VLM inference, audit, calibration, perceptual
@@ -820,6 +821,15 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "lane": "evidence",
         "expose": True,
         "face": "surface",
+    },
+    {
+        "name": "geox_benchmark_001",
+        "domain": "earth.seismic",
+        "axis": "verify",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+        "description": "GEOX-001 Well-Seismic Truth Test — Model Deserves To Live",
     },
     # ── TEST FIXTURE — required by canonical set cross-check ───────────────
     {

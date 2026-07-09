@@ -239,6 +239,19 @@ DSG_status: useful incumbent machine, not earth intelligence
 TriCipta_status: sovereign AI application wedge
 SLB_status: future platform threat
 GEOX_lane: falsifiable earth reasoning and governance layer
+
+### First proof wedge (GEOX-001)
+
+See `GENESIS/012_GEOX_001_WELL_SEISMIC_TRUTH.md`.
+
+**GEOX-001: Model Deserves To Live** — Well-Seismic Truth Test.
+
+One well · one horizon · one seismic tie · one claim · one contradiction.
+
+Thesis: *If the well does not tie, the model does not get to speak as truth.*
+
+This is the highest-leverage wedge before basin narrative or prospect volumetrics:
+prove GEOX can catch when an interpretation is not supported by well-seismic evidence.
 strategic_instruction: interoperate_with_incumbents_do_not_imitate_them
 evidence_band: YELLOW
 evidence_note: L4 strategic assessment; public press claims not fully verified this pass

@@ -1,0 +1,15 @@
+{
+  "scenario": "mistie_hold",
+  "meta": {
+    "benchmark_id": "GEOX-001",
+    "title": "Model Deserves To Live",
+    "thesis": "If the well does not tie, the model does not get to speak as truth.",
+    "generated_at_utc": "2026-07-09T05:18:46.744840+00:00"
+  },
+  "petro": {
+    "gr_resistivity_supports_sand": true,
+    "density_neutron_separation_score": 0.0012,
+    "density_neutron_separation_weak": true,
+    "top_pick_confidence": "INTERPRETATION"
+  }
+}
