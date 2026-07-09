@@ -64,7 +64,7 @@ GEOX_VERSION = "v2026.07.06-phase3.1-rsi-pipeline"
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
 # Phase 2.7 (2026-07-03): +1 geox_biostrat_parse — biostratigraphy parsing (NN zones, GDE, lithology).
 # Backward-compat wrappers for 49 legacy alias names.
-GEOX_CONTRACT_EPOCH = "2026-07-06-GEOX-56TOOLS-PHASE31-RSI-PIPELINE"
+GEOX_CONTRACT_EPOCH = "2026-07-09-GEOX-73TOOLS-PHASE31-RSI-PIPELINE"
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
@@ -268,6 +268,8 @@ _mcp_kwargs: dict[str, Any] = {
         "Canonical GEOX Registry & MCP App Control Plane (Sovereign 30). DITEMPA BUKAN DIBERI — One Sovereign Kernel."
     ),
     "tasks": True,
+    # MCP logging: SEP-2577 deprecated — maintenance only; default min warning.
+    "client_log_level": "warning",
 }
 
 if HAS_FASTMCP_APPS:
@@ -282,6 +284,8 @@ else:
     well_app = None
 
 mcp = FastMCP(**_mcp_kwargs)
+
+# Completions CANCELLED 2026-07-09 — agent surface uses full tool JSON.
 
 # ── EGS Runtime (2026-06-28) ─────────────────────────────────────────────────
 # Earth Grounding System — typed earth graph, uncertainty algebra,
@@ -1955,26 +1959,29 @@ def _safe_forward(
 
 
 def _build_list_changed_payload() -> dict:
-    """Build the JSON-RPC listChanged notification payload."""
+    """Build MCP tools/list_changed notification payload (spec method name)."""
     return {
         "jsonrpc": "2.0",
-        "method": "notifications/list_changed",
+        "method": "notifications/tools/list_changed",
         "params": {},
     }
 
 
 def _emit_list_changed_notification() -> None:
     """
-    Emit MCP listChanged notification.
-    Called after any tool registry mutation (tool add/remove/prune).
-    HTTP transport: logs the notification payload as MCP requires clients to
-    re-call tools/list on next request. SSE/WebSocket transports can override
-    this to push directly to connected clients.
+    Signal tools list change to clients.
+
+    Spec: notifications/tools/list_changed (not notifications/list_changed).
+    Streamable-HTTP: currently log-only (no push to all sessions). Clients
+    that declare tools.listChanged should re-call tools/list when notified.
+    Called after tool registry mutation (add/remove/prune).
     """
     payload = _build_list_changed_payload()
+    # stderr / journal — do not use deprecated protocol logging channel
     logger.info(
-        "listChanged emitted — clients should call tools/list to refresh. "  # noqa: G004
-        f"Payload: {json.dumps(payload)}"
+        "tools/list_changed signal — clients should call tools/list to refresh. "
+        "payload=%s",
+        json.dumps(payload),
     )
 
 

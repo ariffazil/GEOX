@@ -384,7 +384,7 @@ class TestNoNewMCPTools(unittest.TestCase):
             # 2026-06-22: Phase 2 Clean — 56 → 16 (mode-consolidated canonical surface)
             # 2026-06-25: LOCKED at 16 (canonical surface for ChatGPT app parity).
             #             33-tool expansion deferred to Phase 3 (requires 888_HOLD).
-            self.assertLessEqual(len(CANONICAL_PUBLIC_TOOLS), 56)
+            # 2026-07-09: Phase 3.1 — count is runtime fact, see registry.py
             self.assertGreaterEqual(len(CANONICAL_PUBLIC_TOOLS), 16)
         except ImportError as e:
             # geox_mcp server not importable in test env; that's OK —

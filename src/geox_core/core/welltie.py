@@ -447,8 +447,6 @@ def compute_welltie(
     seismic_ref: str | None = None,
     sonic_curve: str = "DT",
     density_curve: str = "RHOB",
-    matrix_density: float = 2.65,
-    fluid_density: float = 1.0,
     noise_db: float = -18,
 ) -> dict:
     """
@@ -464,8 +462,6 @@ def compute_welltie(
         seismic_ref: Optional seismic trace artifact ref for correlation QC
         sonic_curve: LAS curve mnemonic for sonic (DT or DT4)
         density_curve: LAS curve mnemonic for density (RHOB)
-        matrix_density: g/cm³ fallback if no density curve
-        fluid_density: g/cm³ fallback if no density curve
         noise_db: Synthetic noise level (dB ref max)
 
     Returns:
@@ -514,30 +510,13 @@ def compute_welltie(
             break
 
     if rho_arr is None or np.all(np.isnan(rho_arr)):
-        # Fallback: use matrix/fluid density with porosity proxy
-        density_assumption = (
-            f"density curve not found — using matrix={matrix_density} g/cm³, "
-            f"fluid={fluid_density} g/cm³ with Vsh estimate as porosity proxy"
+        # Law 5 (Convergence Over Choice): No fallback. Density must be observed.
+        raise ValueError(
+            f"No density curve ({density_curve}/RHOB) found in LAS: {las_path}. "
+            "Matrix/fluid density fallback removed (Law 5). Ingest density data or use a well with RHOB."
         )
-        # Rough Vsh estimate from GR if available
-        gr_arr = None
-        for galias in ["GR", "GRC", "SGR"]:
-            if galias in curves:
-                gr_arr = np.array(curves[galias], dtype=float)
-                break
-        if gr_arr is not None:
-            # Simple Vsh from GR
-            gr_min, gr_max = np.nanmin(gr_arr), np.nanmax(gr_arr)
-            if gr_max > gr_min:
-                vsh = (gr_arr - gr_min) / (gr_max - gr_min)
-                vsh = np.clip(vsh, 0, 1)
-            else:
-                vsh = np.full_like(depth_arr, 0.3, dtype=float)
-        else:
-            vsh = np.full_like(depth_arr, 0.3, dtype=float)
-        rho_arr = matrix_density * (1 - vsh) + fluid_density * vsh
-    else:
-        density_assumption = "RHOB curve from LAS"
+
+    density_assumption = "RHOB curve from LAS"
 
     # ── 2. Time-depth conversion ───────────────────────────────────────────────
     if checkshot_ref:

@@ -3,8 +3,8 @@
   "version": "2026.06.30",
   "protocolVersion": "2025-11-25",
   "name": "GEOX MCP",
-  "description": "Earth intelligence — 31 canonical tools. Evidence-only geoscience coprocessor.",
-  "tools": 31,
+  "description": "Earth intelligence — evidence-only geoscience coprocessor under constitutional floors F1-F13.",
+  "tools": "discoverable via tools/list at runtime",
   "endpoint": "https://geox.arif-fazil.com/mcp",
   "identity": {
     "canonical_name": "GEOX",

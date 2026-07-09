@@ -8,6 +8,7 @@ Modes: generate, verify, lem_inference, stoip_feed
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import logging
@@ -44,7 +45,6 @@ async def geox_petrophysics(
     cube_inline: dict[str, Any] | None = None,
     use_synth_cube: bool = True,
     lmr_inline: dict[str, Any] | None = None,
-    castagna_fallback: bool = True,
     # ── subsurface_verify_integrity params ──
     candidate_ref: str | None = None,
     domain: str | None = None,
@@ -81,6 +81,7 @@ async def geox_petrophysics(
         if not well_id or not curves or not depth_m:
             return {"status": "INVALID", "errors": ["well_id, curves, and depth_m required for lem_inference mode"]}
         from geox_mcp.tools.lem_predict import geox_lem_predict as _impl
+
         return await _impl(
             well_id=well_id,
             curves=curves,
@@ -100,10 +101,12 @@ async def geox_petrophysics(
         if not candidate_ref or not domain:
             return {"status": "INVALID", "errors": ["candidate_ref and domain required for verify mode"]}
         from geox_mcp.tools.petrophysics import geox_subsurface_verify_integrity as _impl
+
         return await _impl(candidate_ref=candidate_ref, domain=domain)
 
     if mode == "stoip_feed":
         from geox_mcp.tools.integration_wealth import geox_wealth_feed as _impl, WealthFeedRequest
+
         req = WealthFeedRequest(
             cell_states=cell_states or [],
             areal_extent_m2=areal_extent_m2,
@@ -119,6 +122,7 @@ async def geox_petrophysics(
     if not target_class or not evidence_refs:
         return {"status": "INVALID", "errors": ["target_class and evidence_refs required for generate mode"]}
     from geox_mcp.tools.petrophysics import geox_subsurface_generate_candidates as _impl
+
     return await _impl(
         target_class=target_class,
         evidence_refs=evidence_refs,
@@ -145,5 +149,4 @@ async def geox_petrophysics(
         cube_inline=cube_inline,
         use_synth_cube=use_synth_cube,
         lmr_inline=lmr_inline,
-        castagna_fallback=castagna_fallback,
     )

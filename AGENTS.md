@@ -18,7 +18,7 @@ changes_since_last_verified:
   - P2: GapRegistry extended — GAP_CONVERGENCE type added
   - GAP-1: geox_surface_status added (2026-06-27) — federation-standard registry probe
   - GEOX-AUDIT-FIX-001 (FORGE 2026-06-28): 49 backward-compat tools added to GEOX_LANE_MAP — fixed SESSION_REQUIRED blocks on read-only/compute tools
-  - GEOX now correctly reports 35 canonical tools (31 Phase 2.2 + 4 earth map tools) + 49 backward-compat aliases
+  - GEOX tool surface is runtime-discoverable via tools/list. Source of truth: registry.py CANONICAL_PUBLIC_TOOLS.
   - tests: 75 passed (orchestration), 0 failed — 52 Phase 1 + 23 Phase 2
 -->
 
@@ -39,7 +39,7 @@ Arif. This is the **GEOX** organ of the arifOS federation — Earth Intelligence
 
 The earth coprocessor. GEOX prepares geoscience, petrophysics, and physics-grounded evidence for constitutional judgment. It is **evidence-only** — never a policy judge.
 
-**35 canonical tools** (Phase 2.4, 2026-07-02) across subsurface, stratigraphy, seismic, horizon interpretation, vision, geomechanics, basin, deep time, atlas, earth map, export, and federation integration (WELL/WEALTH). 31 surface-facing + 4 internal plumbing (claim / evidence / prospect / doctrine). Mode-consolidated — 49 legacy flat names are accepted by middleware backward-compat with correct lane assignment. Live runtime reports `canonical_tools=35`. Phase 2.1 added `geox_well_desurvey` (3D wellbore geometry — F13 SOVEREIGN ratified 2026-06-28). Phase 2.2 added `geox_atlas` (Earth Atlas Phase 1). Phase 2.3 added `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview` (earth map tools). Phase 2.4 added `geox_map_export_package` (governed map export with PROV sidecar) — completing the map verb chain.
+**Canonical tools** across subsurface, stratigraphy, seismic, horizon interpretation, vision, geomechanics, basin, deep time, atlas, earth map, export, biostratigraphy, physics-first simulation, and federation integration (WELL/WEALTH). Surface-facing + internal plumbing (claim / evidence / prospect / doctrine). Mode-consolidated — legacy flat names are accepted by middleware backward-compat with correct lane assignment. **Tool count is a runtime fact** — verify with `tools/list` or `curl :8081/health`. Source of truth: `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS list) + `src/geox_mcp/server.py` (_EXPECTED_CANONICAL invariant).
 
 - **Port:** 8081 (live daemon, HTTP mode)
 - **Transport:** Dual-mode — `--transport http` (systemd) or `--transport stdio` (local agents)
@@ -67,7 +67,7 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Update canonical schemas in `contracts/`
 
 ### Requires 888_HOLD
-- Changes to the tool registry (34 canonical tools in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` — locked)
+- Changes to the tool registry (`src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` — locked, count is runtime fact)
 - Changes to Physics9 boundary limits
 - Live foundation model weight deployment (Prithvi-EO-2.0, TerraMind, Clay, Aurora, GEOX-LEM)
 - Production deployment without verified build + test pass
@@ -120,7 +120,7 @@ cd geox-gui && npm install && npm run build
 | Path | Purpose |
 |------|---------|
 | `GENESIS/` | **Canonical system doctrine** — manifesto, kill map, first principles, constitutional alignment |
-| `src/geox_mcp/server.py` | Canonical unified MCP server (~2,700 lines, 34 canonical tools + backward-compat middleware) |
+| `src/geox_mcp/server.py` | Canonical unified MCP server (~2,700 lines, canonical tools + backward-compat middleware) |
 | `geox/core/` | Unified tool registry, AC-risk engine, doctrine |
 | `geox/well/` | Well stratigraphy (L1-L3), schemas, tools |
 | `geox/skills/` | Earth science skill modules |

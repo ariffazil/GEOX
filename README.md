@@ -81,7 +81,7 @@ VAULT999  ← immutable record
 | Field | Current |
 |---|---|
 | Runtime | Python FastMCP 3.4.2 |
-| Public MCP surface | 35 canonical tools (verify with `tools/list` at runtime) |
+| Public MCP surface | Canonical tools discoverable via `tools/list` at runtime |
 | Internal capability contracts | Canonical surface only (no public legacy surface) |
 | License | Business Source License 1.1 (BSL-1.1) |
 | Governance | arifOS F1–F13 |
@@ -185,7 +185,7 @@ GEOX operates under the arifOS constitutional kernel. It is not autonomous. It i
 
 - **An earth evidence coprocessor** — it ingests well logs, seismic volumes, DST data, and geological reports; it runs petrophysics, stratigraphy, and prospect evaluation; it outputs structured, physics-constrained evidence receipts.
 - **Constitutionally governed** — every output carries epistemic tags (CLAIM / PLAUSIBLE / HYPOTHESIS / ESTIMATE / UNKNOWN), uncertainty bands (P10/P50/P90), and provenance chains.
-- **Agent-accessible** — all 35 canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Integrated public frontdoor: `https://mcp.arif-fazil.com/mcp` (proxies internally through arifOS).
+- **Agent-accessible** — all canonical tools are callable via MCP over HTTP (port 8081) or stdio (local agents). Integrated public frontdoor: `https://mcp.arif-fazil.com/mcp` (proxies internally through arifOS). Current count: `tools/list`.
 - **Dual-transport** — systemd service (`geox-mcp.service`) for HTTP/SSE; `--transport stdio` for Claude Code, OpenCode, Continue CLI, and other local agents.
 
 ### What GEOX IS NOT
@@ -282,7 +282,7 @@ Connect to GEOX via the Model Context Protocol:
 |----------|-------|
 | **Endpoint** | `https://geox.arif-fazil.com/mcp` |
 | **Transport** | Streamable HTTP (JSON-RPC 2.0) |
-| **Tools** | 46 canonical tools |
+| **Tools** | Canonical surface — discoverable via `tools/list` |
 | **Health** | `https://geox.arif-fazil.com/health` |
 
 ### Claude Code / Cursor
@@ -309,11 +309,11 @@ curl -X POST https://geox.arif-fazil.com/mcp \
 
 ---
 
-## 4. CAPABILITY MAP — 30 CANONICAL TOOLS
+## 4. CAPABILITY MAP — CANONICAL TOOLS
 
-All 35 canonical tools are callable via the single gateway at `https://mcp.arif-fazil.com/mcp` (HTTP) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, epistemic tags, uncertainty bands, provenance, and a `godel_wall` verdict. Every call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
+> **Tool count is a runtime fact.** Verify with `tools/list` or `curl :8081/health`. The domains below are stable; the count grows.
 
-**35 canonical tools** — Phase 2.1 (locked 2026-06-28, RASA release 2026-06-29):
+All canonical tools are callable via the single gateway at `https://mcp.arif-fazil.com/mcp` (HTTP) or `stdio`. Each tool carries `outputSchema`, MCP spec annotations, epistemic tags, uncertainty bands, provenance, and a `godel_wall` verdict. Every call is hardened by `src/geox_mcp/floor_enforcement.py` (F1 AMANAH, F4 CLARITY, F7 HUMILITY ≤0.90, F9 ANTI-HANTU, F11 AUDIT, F13 SOVEREIGN).
 
 | Domain | Tools |
 |--------|-------|
@@ -623,7 +623,7 @@ Arif Fazil (F13 SOVEREIGN) decides → Drilling go/no-go, capital commitment
 
 ### 10.1 MCP Connection
 
-GEOX exposes all 35 canonical tools via MCP (Model Context Protocol). Two transport modes:
+GEOX exposes its canonical tool surface via MCP (Model Context Protocol). Two transport modes:
 
 **HTTP/SSE (for remote agents):**
 ```

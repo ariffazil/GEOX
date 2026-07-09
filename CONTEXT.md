@@ -28,15 +28,14 @@ changes_since_last_verified:
 - **Public MCP:** `https://geox.arif-fazil.com/mcp`
 - **Runtime:** Python 3.11+ / FastMCP 3.4.2 / Pydantic v2
 - **Role:** Earth evidence coprocessor — witness, never authorize
-- **Contract epoch:** `2026-07-02-GEOX-35TOOLS-PHASE24`
+- **Contract epoch:** Runtime fact — `server.py` GEOX_CONTRACT_EPOCH
 - **Git version:** `geox-75d66192`
 
 ## Canonical Tool Surface
 
-- **35 canonical tools** in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS`
-  - 31 surface-facing (well, petrophysics, sequence, seismic, vision, geomechanics, basin, deep time, atlas, earth map ×4, EGS)
-  - 4 internal plumbing (claim, evidence, prospect, doctrine)
-- **49 compat aliases** in `CANONICAL_COMPAT_TOOLS` — scheduled for deletion 2026-07-30
+- **Source of truth:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS list) + `src/geox_mcp/server.py` (_EXPECTED_CANONICAL invariant)
+- **Runtime discovery:** `tools/list` MCP call or `curl :8081/health`
+- **Backward-compat aliases** in `CANONICAL_COMPAT_TOOLS` — scheduled for deletion 2026-07-30
 - Invariant `_EXPECTED_CANONICAL = 34` in `src/geox_mcp/server.py`
 - Map surface: `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_map_export_package` (Phase 2.3 + 2.4)
 

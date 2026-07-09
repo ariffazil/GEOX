@@ -38,8 +38,6 @@ async def geox_section_interpret_correlation(
     seismic_ref: str | None = None,
     sonic_curve: str | None = "DT",
     density_curve: str | None = "RHOB",
-    matrix_density: float = 2.65,
-    fluid_density: float = 1.0,
 ) -> dict:
     """Multi-well stratigraphic correlation and marker interpretation.
 
@@ -70,8 +68,6 @@ async def geox_section_interpret_correlation(
         seismic_ref: Optional seismic trace artifact for cross-correlation QC.
         sonic_curve: LAS mnemonic for sonic curve (default "DT", also "DT4").
         density_curve: LAS mnemonic for density curve (default "RHOB").
-        matrix_density: g/cm³ fallback matrix density when no RHOB available.
-        fluid_density: g/cm³ fallback fluid density when no RHOB available.
     """
 
     import numpy as np
@@ -129,8 +125,6 @@ async def geox_section_interpret_correlation(
                 seismic_ref=seismic_ref,
                 sonic_curve=sonic_curve or "DT",
                 density_curve=density_curve or "RHOB",
-                matrix_density=matrix_density,
-                fluid_density=fluid_density,
             )
         except ValueError as e:
             return get_standard_envelope(
