@@ -339,11 +339,7 @@ def _build_geox_ttl_middleware():
 
 
 def is_geox() -> bool:
-    return (
-        GEOX_VERSION.startswith("v2026.")
-        and GEOX_SEAL == "DITEMPA BUKAN DIBERI"
-        and GEOX_PROFILE in ("full", "lite", "vps")
-    )
+    return GEOX_VERSION.startswith("v2026.") and GEOX_SEAL == "DITEMPA BUKAN DIBERI" and GEOX_PROFILE in ("full", "lite", "vps")
 
 
 def _enforce_geox() -> dict[str, Any] | None:
@@ -411,9 +407,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = (
-        72  # 2026-07-09: +3 GEOX 1D MCP (td_calibrate, mistie_rms, wavelet_ls)
-    )
+    _EXPECTED_CANONICAL = 73  # 2026-07-09: +1 geox_bid_round_screener (MBR 2026 multi-block screening)
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -2768,9 +2762,12 @@ def create_app():
 
     # Dynamic FastMCP Tool Registration
     from geox_mcp.tools_wiring import register_tools_on
+
     register_tools_on(mcp)
 
     return app
+
+
 logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools registered with FastMCP")
 
 

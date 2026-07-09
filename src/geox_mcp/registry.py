@@ -151,6 +151,11 @@ SURFACE_TOOLS: list[str] = [
     "geox_well_tie",  # Well-to-seismic tie via bruges
     "geox_3d_model",  # 3D structural model via GemPy
     "geox_wealth_consequence",  # Capital consequence via WEALTH HarnessEngine
+    # ── BID ROUND SCREENER (1) — MBR 2026 (2026-07-09) ─────────────────────
+    # Multi-block bid round screening with ranked recommendation matrix.
+    # Concurrent scoring: geological risk × capital × evidence × fiscal.
+    # F1-F13 floor compliance inline. Advisory only (F13 SOVEREIGN).
+    "geox_bid_round_screener",
 ]
 
 
@@ -699,6 +704,15 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "domain": "earth.seismic",
         "axis": "reason",
         "lane": "judgment",
+        "expose": True,
+        "face": "surface",
+    },
+    # ── BID ROUND SCREENER (1) — MBR 2026 (2026-07-09) ───────────────────
+    {
+        "name": "geox_bid_round_screener",
+        "domain": "earth.basin",
+        "axis": "reason",
+        "lane": "reasoning",
         "expose": True,
         "face": "surface",
     },

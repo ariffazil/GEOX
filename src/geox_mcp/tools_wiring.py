@@ -1873,6 +1873,142 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_benchmark_001", source_organ="geox")
 
+    # ── WELL-TIE P2–P4: Time-Depth Calibrate · Mistie RMS · Wavelet Extract ────
+
+    @mcp.tool(name="geox_well_time_depth_calibrate", annotations=_geox_annotations("geox_well_time_depth_calibrate"))
+    async def _well_time_depth_calibrate(
+        las_path: str,
+        checkshot_path: str | None = None,
+        checkshot_data: str | None = None,
+        method: str = "linear",
+        velocity_bounds: str | None = None,
+        residual_threshold_pct: float = 10.0,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Calibrate time-depth using LAS + checkshot with PhysicsGuard.
+
+        Accepts checkshot as a file path (JSON or CSV) or inline JSON string.
+        Dispatches to 4 fitters: linear, polynomial, vo_k, layer_cake.
+        Returns TDFitResult with equation, coefficients, residuals, extrapolation_risk.
+        """
+        try:
+            import json
+            from geox_mcp.federation_safety import classify_error
+            from geox_core.core.welltie_mcp import compute_td_calibrate
+
+            cs_data = None
+            if checkshot_data:
+                cs_data = json.loads(checkshot_data)
+                if isinstance(cs_data, dict) and "checkshots" in cs_data:
+                    cs_data = cs_data["checkshots"]
+                if not isinstance(cs_data, list):
+                    cs_data = [cs_data]
+
+            vb = (1500.0, 6000.0)
+            if velocity_bounds:
+                parts = json.loads(velocity_bounds) if isinstance(velocity_bounds, str) else velocity_bounds
+                if len(parts) >= 2:
+                    vb = (float(parts[0]), float(parts[1]))
+
+            result = compute_td_calibrate(
+                las_path=las_path,
+                checkshot_path=checkshot_path,
+                checkshot_data=cs_data,
+                method=method,
+                velocity_bounds=vb,
+                residual_threshold_pct=residual_threshold_pct,
+            )
+            return {"status": "success", "tool": "geox_well_time_depth_calibrate", **result}
+        except Exception as e:
+            return classify_error(e, source_tool="geox_well_time_depth_calibrate", source_organ="geox")
+
+    @mcp.tool(name="geox_well_seismic_mistie_rms", annotations=_geox_annotations("geox_well_seismic_mistie_rms"))
+    async def _well_seismic_mistie_rms(
+        well_name: str,
+        synthetic_trace: list[float],
+        seismic_trace: list[float],
+        dt_ms: float,
+        time_window_ms: list[float],
+        threshold_ms: float = 25.0,
+        max_lag_ms: float = 50.0,
+        checkshot_ref: str | None = None,
+        polarity: str = "SEG_NORMAL",
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Falsification gate: RMS mistie between synthetic and seismic.
+
+        Computes cross-correlation, finds optimal lag, computes RMS after shift.
+        Constitutional gate: RMS > threshold_ms → HOLD.
+        25 ms threshold based on tuning thickness resolution limit.
+        """
+        try:
+            from geox_mcp.federation_safety import classify_error
+            from geox_core.schemas.mistie_rms import MistieRMSInput
+            from geox_core.core.welltie_mcp import compute_mistie_rms
+
+            inp = MistieRMSInput(
+                well_name=well_name,
+                synthetic_trace=synthetic_trace,
+                seismic_trace=seismic_trace,
+                dt_ms=dt_ms,
+                time_window_ms=time_window_ms,
+                threshold_ms=threshold_ms,
+                max_lag_ms=max_lag_ms,
+                checkshot_ref=checkshot_ref,
+                polarity=polarity,
+                session_id=session_id,
+            )
+            result = compute_mistie_rms(inp)
+            return {"status": "success", "tool": "geox_well_seismic_mistie_rms", **result}
+        except Exception as e:
+            return classify_error(e, source_tool="geox_well_seismic_mistie_rms", source_organ="geox")
+
+    @mcp.tool(name="geox_wavelet_extract_least_squares", annotations=_geox_annotations("geox_wavelet_extract_least_squares"))
+    async def _wavelet_extract_least_squares(
+        well_name: str,
+        reflectivity_series: list[float],
+        seismic_trace: list[float],
+        dt_ms: float,
+        wavelet_length_ms: float = 100.0,
+        epsilon: float = 0.01,
+        max_condition_number: float = 100.0,
+        min_correlation_after: float = 0.60,
+        checkshot_ref: str | None = None,
+        polarity: str = "SEG_NORMAL",
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Extract wavelet from earth — Wiener least-squares spectral division.
+
+        Math: W(ω) = S(ω)·R*(ω)/(|R(ω)|²+ε).
+        Physical constraints: compact support, causality, phase classification.
+        Constitutional gate: condition_number > 10× threshold → VOID.
+        """
+        try:
+            from geox_mcp.federation_safety import classify_error
+            from geox_core.schemas.wavelet_extract import WaveletExtractInput
+            from geox_core.core.welltie_mcp import extract_wavelet_least_squares
+
+            inp = WaveletExtractInput(
+                well_name=well_name,
+                reflectivity_series=reflectivity_series,
+                seismic_trace=seismic_trace,
+                dt_ms=dt_ms,
+                wavelet_length_ms=wavelet_length_ms,
+                epsilon=epsilon,
+                max_condition_number=max_condition_number,
+                min_correlation_after=min_correlation_after,
+                checkshot_ref=checkshot_ref,
+                polarity=polarity,
+                session_id=session_id,
+            )
+            result = extract_wavelet_least_squares(inp)
+            return {"status": "success", "tool": "geox_wavelet_extract_least_squares", **result}
+        except Exception as e:
+            return classify_error(e, source_tool="geox_wavelet_extract_least_squares", source_organ="geox")
+
     @mcp.tool(name="geox_3d_model_build", annotations=_geox_annotations("geox_3d_model_build"))
     async def _geox_3d_model_build(
         model_json_path: str,
@@ -2035,4 +2171,25 @@ def register_tools_on(mcp):
                 "review_mode": review_mode,
                 "output_dir": output_dir,
             },
+        )
+
+    # ── BID ROUND SCREENER — MBR 2026 (2026-07-09) ─────────────────────────
+    @mcp.tool(name="geox_bid_round_screener", annotations=_geox_annotations("geox_bid_round_screener"))
+    async def _bid_round_screener(
+        arguments: dict[str, Any] | str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """MBR 2026 Multi-Block Bid Round Screener — rank N blocks into BID/PARTNER/NO_BID matrix.
+
+        Takes all block opportunities at once, scores each on geological risk,
+        capital requirement, evidence strength, and fiscal attractiveness.
+        F1-F13 floor compliance inline. Advisory only (F13 SOVEREIGN).
+        """
+        from geox_mcp.tools.bid_round_screener import geox_bid_round_screener as _impl
+
+        return await _auto_call(
+            _impl,
+            dict(_parse_str_arguments(arguments) or {}),
         )

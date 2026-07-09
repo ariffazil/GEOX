@@ -134,4 +134,4 @@ def test_registry_has_three_tools():
     ):
         assert t in SURFACE_TOOLS
         assert t in CANONICAL_PUBLIC_TOOLS
-    assert len(CANONICAL_PUBLIC_TOOLS) == 72
+    assert len(CANONICAL_PUBLIC_TOOLS) == 73  # 2026-07-09: bumped 72→73 for bid_round_screener (MBR 2026 multi-block)
