@@ -1,6 +1,6 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-07-09T04:50Z
+last_verified: 2026-07-09T05:10Z
 live_commit: d1aec520
 live_version: v2026.07.06-phase3.1-rsi-pipeline
 port: 8081
@@ -13,6 +13,8 @@ valid_until: 2026-08-08
 confidence: high
 scope: /root/geox
 machine_sot: /root/A-FORGE/forge_work/2026-07-09/MACHINE-SOT-2026-07-09.json
+competitive_canon: GENESIS/011_COMPETITIVE_LAYER_MAP.md
+competitive_verdict: LURUS — DS365 workflow engine ≠ earth intelligence; GEOX Layer 3
 -->
 
 ```
@@ -49,6 +51,8 @@ machine_sot: /root/A-FORGE/forge_work/2026-07-09/MACHINE-SOT-2026-07-09.json
 **What can I do with it?** Ingest well logs, run seismic physics, compute petrophysics, screen basins, evaluate prospects, create structured evidence claims, challenge interpretations, prepare cases for constitutional adjudication.
 
 **What must I never trust it to do?** Authorize drilling, allocate capital, self-seal claims, override arifOS, replace human geological judgment.
+
+**Competitive lane (F13 2026-07-09):** GEOX does **not** compete head-to-head with Halliburton DS365 / DecisionSpace or SLB Petrel/DELFI as another workflow platform. Those are **Layer 1 workflow engines** (model management). GEOX is **Layer 3 earth-reasoning substrate** — falsify the geological story, separate OBS/DER/INT/SPEC, kill weak models. *DS365 tells you where your model lives. GEOX tells you whether your model deserves to live.* Full map: [`GENESIS/011_COMPETITIVE_LAYER_MAP.md`](./GENESIS/011_COMPETITIVE_LAYER_MAP.md).
 
 **How do I run it?** `uv sync --frozen` then `python3 -m geox_mcp.server --transport stdio` (local) or `systemctl restart geox-mcp` (production on port 8081).
 
