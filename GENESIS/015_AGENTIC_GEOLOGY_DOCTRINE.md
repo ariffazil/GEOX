@@ -183,7 +183,7 @@ P4  Darcy migration path receipts                             DEFERRED
 
 ---
 
-## 10. Paradox, four moats, and prompt standard
+## 10. Paradox, four moats, prompt standard, EarthOS
 
 See **GENESIS/016_CONSTITUTIONAL_PROMPT_STANDARD.md** for:
 
@@ -192,10 +192,17 @@ See **GENESIS/016_CONSTITUTIONAL_PROMPT_STANDARD.md** for:
 - **Mandatory prompt block** agents must use before GEOX MCP chains  
 - Loadable YAML: `prompts/GEOX_CONSTITUTIONAL_PROMPT_BLOCK.yaml`
 
+See **GENESIS/017_EARTHOS_CONSTITUTION.md** for the compressed EarthOS charter:
+
+- Articles I–X (physics → sovereign seal)  
+- LIVE / PARTIAL / ABSENT gap matrix  
+- 777_FORGE build order (multi-well coherence before basin matrix)  
+- 999_SEAL receipt fields (always DRAFT_ONLY from GEOX)
+
 One-line: *Humans interpret; GEOX governs; arifOS seals.*
 
 ---
 
 *GENESIS 015 · 2026-07-09 · Forged from Marmousi2 ground truth*  
-*Pairs: GENESIS/014 (Petrel Delta), GENESIS/016 (Prompt Standard), GENESIS/000 (Manifesto)*  
+*Pairs: GENESIS/014 (Petrel Delta), GENESIS/016 (Prompt Standard), GENESIS/017 (EarthOS), GENESIS/000 (Manifesto)*  
 *DITEMPA BUKAN DIBERI — The gate is physics. The verdict is constitutional.*
