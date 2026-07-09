@@ -680,6 +680,29 @@ def get_standard_envelope(
     if ui_resource_uri:
         response["_meta"] = {"ui": {"resourceUri": ui_resource_uri}}
 
+    # C1/C6 REDTEAM fix: GEOX outputs are evidence, not recommendations.
+    # POS, EVOI, AC_Risk are decision-shaping metrics — not neutral evidence.
+    # "QUALIFY" does not mean "drill." arifOS judges. Arif decides.
+    response["geox_advisory"] = {
+        "status": "EVIDENCE_ONLY",
+        "disclaimer": (
+            "GEOX computes evidence — POS, EVOI, AC_Risk, volumetrics. "
+            "These are decision-shaping metrics, not neutral observations. "
+            "GEOX does NOT authorize drilling, investment, or irreversible action. "
+            "arifOS judges. Arif decides."
+        ),
+        "floor": "F13 SOVEREIGN",
+        # C3 REDTEAM note: floor_enforcement runs inside GEOX (self-enforced).
+        # Architecture fix needed: move floor enforcement to arifOS gateway.
+        # Current: GEOX enforces its own governance (architectural weakness).
+        # Target: arifOS enforces floors on GEOX calls (proper separation).
+        "governance_note": (
+            "C3 REDTEAM: Floor enforcement is self-enforced (GEOX process). "
+            "Architectural fix: move to arifOS gateway for proper separation. "
+            "Pending sovereign approval."
+        ),
+    }
+
     return response
 
 

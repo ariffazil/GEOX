@@ -2,7 +2,7 @@
 owner: Arif
 last_verified: 2026-07-09
 valid_from: 2026-07-09
-valid_until: 2026-09-07
+valid_until: 2026-08-08
 confidence: high
 scope: /root/geox/GENESIS
 -->
