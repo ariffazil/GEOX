@@ -1,9 +1,10 @@
 # GENESIS/016 — GEOX Constitutional Prompt Standard
 
 > **Authority:** Doctrine for all agents calling GEOX MCP (1D Orthogonal Base and beyond)  
-> **Pairs with:** GENESIS/010 AEI · 012 GEOX-001 · 013 Metabolic Surface · 015 Agentic Geology  
+> **Pairs with:** GENESIS/010 AEI · 012 GEOX-001 · 013 Metabolic Surface · 015 Agentic Geology · **017 EarthOS Constitution**  
 > **Status:** LIVE doctrine · DRAFT_ONLY for VAULT999 until F13 seals  
-> **One line:** *Earth physics first, geology second, rendering last.*
+> **One line:** *Earth physics first, geology second, rendering last.*  
+> **Note:** The four operational moats below are a **subset** of GENESIS/017 Articles I–X — not a competing constitution.
 
 ---
 
@@ -260,4 +261,5 @@ Before any GEOX chain ships to Arif:
 *GENESIS 016 · 2026-07-09*  
 *The paradox: enforce physics without killing geology.*  
 *The moat: falsification under custody.*  
+*EarthOS charter: GENESIS/017_EARTHOS_CONSTITUTION.md*  
 *DITEMPA BUKAN DIBERI*
