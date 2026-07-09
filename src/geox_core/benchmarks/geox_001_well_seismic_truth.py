@@ -1343,6 +1343,204 @@ def render_killer_yaml(result: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def load_real_las_curves(las_path: str | Path) -> dict[str, np.ndarray]:
+    """Load DEPT + sonic + density (+ GR/NPHI/RT if present) from a real LAS file."""
+    path = Path(las_path)
+    if not path.exists():
+        raise FileNotFoundError(f"LAS not found: {path}")
+
+    # Prefer geox_1d if available; fall back to light parser
+    try:
+        from geox_core.core.geox_1d import process_las_file
+
+        raw = process_las_file(str(path))
+        if "ERROR" not in raw:
+            depth = None
+            for dk in ("DEPT", "DEPTH", "MD"):
+                if dk in raw:
+                    depth = np.asarray(raw[dk], dtype=float)
+                    break
+            dt = None
+            for sk in ("DT", "DT4", "AC", "DTCO"):
+                if sk in raw:
+                    dt = np.asarray(raw[sk], dtype=float)
+                    break
+            rho = None
+            for rk in ("RHOB", "DEN", "RHOZ"):
+                if rk in raw:
+                    rho = np.asarray(raw[rk], dtype=float)
+                    break
+            if depth is not None and dt is not None:
+                out: dict[str, np.ndarray] = {"DEPT": depth, "DT": dt}
+                if rho is not None:
+                    out["RHOB"] = rho
+                for src, dst in (("GR", "GR"), ("RDEP", "RT"), ("RT", "RT"), ("NEU", "NPHI"), ("NPHI", "NPHI")):
+                    if src in raw and dst not in out:
+                        out[dst] = np.asarray(raw[src], dtype=float)
+                return out
+    except Exception:
+        pass
+
+    # Minimal ASCII LAS reader
+    lines = path.read_text(errors="replace").splitlines()
+    in_ascii = False
+    headers: list[str] = []
+    rows: list[list[float]] = []
+    for line in lines:
+        if line.startswith("~C") or line.startswith("~Curve"):
+            headers = []
+            continue
+        if line.startswith("~A"):
+            in_ascii = True
+            # header mnemonics often on ~A line or prior curve section
+            continue
+        if not in_ascii:
+            # collect curve mnemonics
+            if line.strip() and not line.startswith("~") and "." in line[:20]:
+                mnem = line.strip().split(".")[0].strip().upper()
+                if mnem and mnem not in headers:
+                    headers.append(mnem)
+            continue
+        parts = line.split()
+        if len(parts) < 2:
+            continue
+        try:
+            rows.append([float(x) for x in parts])
+        except ValueError:
+            continue
+    if not rows or not headers:
+        raise ValueError(f"Could not parse LAS curves from {path}")
+    arr = np.asarray(rows, dtype=float)
+    n = min(len(headers), arr.shape[1])
+    curves = {headers[i]: arr[:, i] for i in range(n)}
+    # normalize keys
+    out2: dict[str, np.ndarray] = {}
+    for k, v in curves.items():
+        ku = k.upper()
+        if ku in ("DEPT", "DEPTH", "MD"):
+            out2["DEPT"] = v
+        elif ku in ("DT", "AC", "DTCO", "DT4"):
+            out2["DT"] = v
+        elif ku in ("RHOB", "DEN", "RHOZ"):
+            out2["RHOB"] = v
+        elif ku == "GR":
+            out2["GR"] = v
+        elif ku in ("RT", "RDEP", "ILD"):
+            out2["RT"] = v
+        elif ku in ("NPHI", "NEU", "NPOR"):
+            out2["NPHI"] = v
+    if "DEPT" not in out2 or "DT" not in out2:
+        raise ValueError(f"LAS missing DEPT/DT after parse: keys={list(out2)}")
+    if "RHOB" not in out2:
+        # Gardner fallback marked later as DER not OBS
+        vp = compute_vp_from_sonic(out2["DT"], out2["DEPT"], dt_unit="usft")
+        out2["RHOB"] = (0.31 * (vp**0.25))  # rough Gardner g/cm3
+        out2["_rhob_gardner"] = np.array([1.0])
+    return out2
+
+
+def run_geox_001_real_las(
+    las_path: str | Path | None = None,
+    scenario: ScenarioName = SCENARIO_HOLD,
+) -> dict[str, Any]:
+    """Run GEOX-001 using a real LAS for curves; scenario still supplies seismic/horizon/checkshot gaps.
+
+    Honest provenance:
+      - LAS curves = OBS (if file exists)
+      - Checkshot / seismic extract / horizon = still scenario-derived (SPEC/INT)
+        until real Petronas/field companions are ingested.
+
+    Default LAS: data/real_wells/q15_15_9_19/q15_15_9_19.las (North Sea Q15 — not Petronas).
+    """
+    default = (
+        Path(__file__).resolve().parents[3]
+        / "data"
+        / "real_wells"
+        / "q15_15_9_19"
+        / "q15_15_9_19.las"
+    )
+    # workspace may be /root/geox or /root/GEOX
+    candidates = [
+        Path(las_path) if las_path else None,
+        default,
+        Path("/root/geox/data/real_wells/q15_15_9_19/q15_15_9_19.las"),
+        Path("/root/GEOX/data/real_wells/q15_15_9_19/q15_15_9_19.las"),
+    ]
+    path = next((p for p in candidates if p is not None and p.exists()), None)
+    if path is None:
+        result = run_geox_001(scenario=scenario)
+        result["real_las"] = {
+            "status": "MISSING",
+            "note": "No real LAS on disk; fell back to synthetic scenario bundle",
+            "petronas_proprietary": "ABSENT",
+        }
+        return result
+
+    real = load_real_las_curves(path)
+    bundle = generate_scenario_bundle(scenario)
+
+    # Overlay real curves onto scenario grid via depth interpolation window
+    d_real = real["DEPT"]
+    # use a contiguous window of real data matching scenario length
+    n = len(bundle["curves"]["DEPT"])
+    if len(d_real) >= n:
+        # pick middle window with finite DT/RHOB
+        dt_r = real["DT"]
+        valid = np.isfinite(dt_r) & np.isfinite(real.get("RHOB", dt_r))
+        idx = np.where(valid)[0]
+        if len(idx) >= n:
+            start = int(idx[len(idx) // 2 - n // 2])
+            sl = slice(start, start + n)
+            depth = d_real[sl]
+            new_curves = {"DEPT": depth.tolist()}
+            for k in ("DT", "RHOB", "GR", "RT", "NPHI"):
+                if k in real:
+                    new_curves[k] = np.asarray(real[k][sl], dtype=float).tolist()
+            # fill missing with scenario
+            for k, v in bundle["curves"].items():
+                if k not in new_curves:
+                    new_curves[k] = v
+            bundle["curves"] = new_curves
+            bundle["well_id"] = "15/9-19 (Q15)"
+            bundle["petro_diagnostics"]["top_pick_confidence"] = "INTERPRETATION"
+            bundle["petro_diagnostics"]["las_source"] = str(path)
+            bundle["petro_diagnostics"]["las_provenance"] = "OBS_REAL_FILE"
+            bundle["petro_diagnostics"]["rhob_gardner_fallback"] = bool(real.get("_rhob_gardner") is not None)
+            # rebuild tops at mid-window depth
+            mid = float(depth[len(depth) // 2])
+            bundle["tops"][0]["depth_md"] = mid
+            bundle["tops"][0]["well_id"] = bundle["well_id"]
+            if len(bundle["tops"]) > 1:
+                bundle["tops"][1]["depth_md"] = mid + 35.0
+                bundle["tops"][1]["well_id"] = bundle["well_id"]
+
+    result = run_geox_001(scenario=scenario, bundle=bundle)
+    result["real_las"] = {
+        "status": "INGESTED",
+        "path": str(path),
+        "well": bundle["well_id"],
+        "provenance": "OBS for LAS curves; checkshot/seismic/horizon remain scenario-derived until field companions arrive",
+        "petronas_proprietary": "ABSENT_ON_HOST",
+        "note": "Best real LAS on host is Q15 North Sea 15/9-19 — not a Petronas Malay Basin well",
+    }
+    # honesty: downgrade OBS claims for checkshot/seismic if scenario-derived
+    if "evidence_classes" in result:
+        result["evidence_classes"]["OBS"] = [
+            f"LAS curves inspected (real file: {path.name})",
+        ]
+        result["evidence_classes"]["SPEC"] = list(
+            dict.fromkeys(
+                result["evidence_classes"].get("SPEC", [])
+                + [
+                    "checkshot/VSP scenario-derived (no field table)",
+                    "seismic extract scenario-derived (no SEG-Y)",
+                    "horizon pick scenario-derived",
+                ]
+            )
+        )
+    return result
+
+
 if __name__ == "__main__":
     import argparse
 
@@ -1353,6 +1551,8 @@ if __name__ == "__main__":
         default=SCENARIO_HOLD,
     )
     p.add_argument("--write-fixtures", type=str, default="", help="Directory to write fixture files")
+    p.add_argument("--real-las", action="store_true", help="Use real Q15 LAS curves if present")
+    p.add_argument("--las-path", type=str, default="", help="Optional path to real LAS")
     p.add_argument("--json", action="store_true", help="Print full JSON receipt")
     args = p.parse_args()
 
@@ -1360,9 +1560,14 @@ if __name__ == "__main__":
         d = write_fixture_bundle(args.write_fixtures, args.scenario)
         print(f"fixtures → {d}")
 
-    result = run_geox_001(scenario=args.scenario)
+    if args.real_las or args.las_path:
+        result = run_geox_001_real_las(las_path=args.las_path or None, scenario=args.scenario)
+    else:
+        result = run_geox_001(scenario=args.scenario)
     if args.json:
         print(json.dumps(result, indent=2, default=str))
     else:
         print(render_killer_yaml(result))
+        if result.get("real_las"):
+            print(f"# real_las={result['real_las'].get('status')} petronas={result['real_las'].get('petronas_proprietary')}")
         print(f"# all_six={result['all_six_success_conditions']} scenario={result['scenario']}")
