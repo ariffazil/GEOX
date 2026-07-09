@@ -54,6 +54,8 @@ competitive_verdict: LURUS — DS365 workflow engine ≠ earth intelligence; GEO
 
 **Competitive lane (F13 2026-07-09):** GEOX does **not** compete head-to-head with Halliburton DS365 / DecisionSpace or SLB Petrel/DELFI as another workflow platform. Those are **Layer 1 workflow engines** (model management). GEOX is **Layer 3 earth-reasoning substrate** — falsify the geological story, separate OBS/DER/INT/SPEC, kill weak models. *DS365 tells you where your model lives. GEOX tells you whether your model deserves to live.* Full map: [`GENESIS/011_COMPETITIVE_LAYER_MAP.md`](./GENESIS/011_COMPETITIVE_LAYER_MAP.md).
 
+**First proof wedge — GEOX-001: Model Deserves To Live** (Well-Seismic Truth Test). One well · one horizon · one tie · one claim · one contradiction. MCP: `geox_benchmark_001(scenario="mistie_hold")`. Canon: [`GENESIS/012_GEOX_001_WELL_SEISMIC_TRUTH.md`](./GENESIS/012_GEOX_001_WELL_SEISMIC_TRUTH.md).
+
 **How do I run it?** `uv sync --frozen` then `python3 -m geox_mcp.server --transport stdio` (local) or `systemctl restart geox-mcp` (production on port 8081).
 
 **How do I verify it is alive?** `curl http://127.0.0.1:8081/health` → `{"status":"healthy","canonical_tools":"<N>",...}` or call `geox_surface_status(mode="health")` for full registry probe. Tool count varies by build — run `tools/list` for the exact number.

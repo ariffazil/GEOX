@@ -1721,6 +1721,43 @@ def register_tools_on(mcp):
             return classify_error(e, source_tool="geox_tie_preflight", source_organ="geox")
 
 
+    @mcp.tool(name="geox_benchmark_001", annotations=_geox_annotations("geox_benchmark_001"))
+    async def _geox_benchmark_001(
+        scenario: str = "mistie_hold",
+        write_fixtures_dir: str = "",
+        include_full_workflow: bool = True,
+    ) -> dict[str, Any]:
+        """GEOX-001: Well-Seismic Truth Test — Model Deserves To Live.
+
+        Cross-examines one horizon claim against one well + seismic extract.
+        Returns PROCEED / HOLD / KILL with OBS/DER/INT/SPEC separation,
+        evidence graph, synthetic mistie, active challenge, and falsification tests.
+
+        Thesis: If the well does not tie, the model does not get to speak as truth.
+
+        Scenarios: mistie_hold (default demo +38 ms), good_tie, kill_contradiction.
+        """
+        try:
+            from geox_mcp.federation_safety import classify_error
+            from geox_mcp.tools.benchmark_001 import geox_benchmark_001
+
+            if scenario not in ("good_tie", "mistie_hold", "kill_contradiction"):
+                return {
+                    "status": "error",
+                    "tool": "geox_benchmark_001",
+                    "error": f"Unknown scenario '{scenario}'",
+                }
+            return await geox_benchmark_001(
+                scenario=scenario,  # type: ignore[arg-type]
+                write_fixtures_dir=write_fixtures_dir,
+                include_full_workflow=include_full_workflow,
+            )
+        except Exception as e:
+            from geox_mcp.federation_safety import classify_error
+
+            return classify_error(e, source_tool="geox_benchmark_001", source_organ="geox")
+
+
     @mcp.tool(name="geox_3d_model_build", annotations=_geox_annotations("geox_3d_model_build"))
     async def _geox_3d_model_build(
         model_json_path: str,
