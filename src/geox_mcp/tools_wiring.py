@@ -95,7 +95,7 @@ def register_tools_on(mcp):
 
     @mcp.tool(name="geox_well_ingest", annotations=_geox_annotations("geox_well_ingest"))
     async def _well_ingest(
-        arguments: dict[str, Any] | None = None,
+        arguments: dict[str, Any] | str | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -104,6 +104,9 @@ def register_tools_on(mcp):
         from geox_mcp.tools.well_ingest import geox_well_ingest as _impl
 
         try:
+            arguments = _parse_str_arguments(arguments)
+            if isinstance(arguments, str):
+                arguments = {}  # parse failed, safe fallback
             args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
             result = await _impl(**args)
             # Discovery 8+9: Enrich result with memory + epistemic signals
@@ -1720,6 +1723,110 @@ def register_tools_on(mcp):
             from geox_mcp.federation_safety import classify_error
 
             return classify_error(e, source_tool="geox_tie_preflight", source_organ="geox")
+
+    # ── GEOX 1D MCP surface (Orthogonal Base) ─────────────────────────────
+
+    @mcp.tool(
+        name="geox_well_time_depth_calibrate",
+        annotations=_geox_annotations("geox_well_time_depth_calibrate"),
+    )
+    async def _geox_well_time_depth_calibrate(
+        las_path: str,
+        checkshot_path: str,
+        method: str = "linear",
+        velocity_bounds: list[float] | None = None,
+        residual_threshold_pct: float = 10.0,
+        well_id: str = "",
+        actor_id: str = "geox_1d_mcp",
+    ) -> dict[str, Any]:
+        """Calibrate time–depth using LAS + checkshot with PhysicsGuard.
+
+        Methods: linear | polynomial | vo_k | layer_cake.
+        Returns JSON TDFitResult + geox:// resource URI (DRAFT_ONLY receipt).
+        """
+        try:
+            from geox_mcp.tools.well_1d_surface import geox_well_time_depth_calibrate
+
+            return await geox_well_time_depth_calibrate(
+                las_path=las_path,
+                checkshot_path=checkshot_path,
+                method=method,  # type: ignore[arg-type]
+                velocity_bounds=velocity_bounds,
+                residual_threshold_pct=residual_threshold_pct,
+                well_id=well_id,
+                actor_id=actor_id,
+            )
+        except Exception as e:
+            from geox_mcp.federation_safety import classify_error
+
+            return classify_error(e, source_tool="geox_well_time_depth_calibrate", source_organ="geox")
+
+    @mcp.tool(
+        name="geox_well_seismic_mistie_rms",
+        annotations=_geox_annotations("geox_well_seismic_mistie_rms"),
+    )
+    async def _geox_well_seismic_mistie_rms(
+        synthetic_trace: list[float],
+        seismic_trace: list[float],
+        dt_ms: float = 4.0,
+        time_window_ms: list[float] | None = None,
+        threshold_ms: float = 25.0,
+        max_lag_ms: float = 50.0,
+        well_id: str = "WELL",
+        actor_id: str = "geox_1d_mcp",
+    ) -> dict[str, Any]:
+        """Phase 3 RMS mistie gate — synthetic vs seismic. Verdict SEAL|HOLD|VOID.
+
+        Hard default threshold 25 ms. Absolute ms, not sample units.
+        """
+        try:
+            from geox_mcp.tools.well_1d_surface import geox_well_seismic_mistie_rms
+
+            return await geox_well_seismic_mistie_rms(
+                synthetic_trace=synthetic_trace,
+                seismic_trace=seismic_trace,
+                dt_ms=dt_ms,
+                time_window_ms=time_window_ms,
+                threshold_ms=threshold_ms,
+                max_lag_ms=max_lag_ms,
+                well_id=well_id,
+                actor_id=actor_id,
+            )
+        except Exception as e:
+            from geox_mcp.federation_safety import classify_error
+
+            return classify_error(e, source_tool="geox_well_seismic_mistie_rms", source_organ="geox")
+
+    @mcp.tool(
+        name="geox_wavelet_extract_least_squares",
+        annotations=_geox_annotations("geox_wavelet_extract_least_squares"),
+    )
+    async def _geox_wavelet_extract_least_squares(
+        reflectivity_series: list[float],
+        seismic_trace: list[float],
+        wavelet_length_ms: float = 120.0,
+        epsilon: float = 1e-3,
+        dt_ms: float = 4.0,
+        well_id: str = "WELL",
+        actor_id: str = "geox_1d_mcp",
+    ) -> dict[str, Any]:
+        """Phase 4 Wiener least-squares wavelet extraction from r and seismic."""
+        try:
+            from geox_mcp.tools.well_1d_surface import geox_wavelet_extract_least_squares
+
+            return await geox_wavelet_extract_least_squares(
+                reflectivity_series=reflectivity_series,
+                seismic_trace=seismic_trace,
+                wavelet_length_ms=wavelet_length_ms,
+                epsilon=epsilon,
+                dt_ms=dt_ms,
+                well_id=well_id,
+                actor_id=actor_id,
+            )
+        except Exception as e:
+            from geox_mcp.federation_safety import classify_error
+
+            return classify_error(e, source_tool="geox_wavelet_extract_least_squares", source_organ="geox")
 
     @mcp.tool(name="geox_benchmark_001", annotations=_geox_annotations("geox_benchmark_001"))
     async def _geox_benchmark_001(
