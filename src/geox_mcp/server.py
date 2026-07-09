@@ -409,7 +409,7 @@ def compose_geox_servers() -> None:
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
     _EXPECTED_CANONICAL = (
-        68  # Phase 3.3 (2026-07-06): legacy seismic ingest/interpret names remain exposed until manifests migrate
+        69  # GEOX-001 (2026-07-09): +geox_benchmark_001 Well-Seismic Truth Test
     )
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
