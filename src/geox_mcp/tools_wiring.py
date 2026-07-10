@@ -2193,3 +2193,250 @@ def register_tools_on(mcp):
             _impl,
             dict(_parse_str_arguments(arguments) or {}),
         )
+
+    # ── COLLISION ZONE — Two Oceanics Physics (Phase Zen, 2026-07-10) ────────
+    # Implements collision zone physics from Arif's Sabah Eureka Ledger v1.0.
+    # Two blocks (accretionary + rifted), suture, accommodation ratio, loading ratio.
+    # Detects 6 Eureka signatures. Margin Principle embedded.
+    # DITEMPA BUKAN DIBERI.
+
+    @mcp.tool(name="geox_collision_zone", annotations=_geox_annotations("geox_collision_zone"))
+    async def _collision_zone(
+        domain_a: dict[str, Any],
+        domain_b: dict[str, Any],
+        suture_name: str = "Suture",
+        duration_ma: float = 15.0,
+        bypass_fraction: float = 0.0,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Analyze a collision zone using Two Oceanics physics.
+
+        Computes accommodation_ratio, loading_ratio, mass_deficit_pct from
+        two lithospheric blocks with different subsidence physics.
+
+        Detects Eureka signatures: TWO_OCEANICS, MFS_ASYMMETRY, LOADING_PULSE,
+        MASS_DEFICIT, SUTURE_SINK, PROSPECT_BIFURCATION.
+
+        Example (Sabah):
+          domain_a = {"name": "Kinabalu", "initial_subsidence_km": 4.0,
+                      "loading_rate_m_myr": 400.0, "has_mfs": true}
+          domain_b = {"name": "Layang-Layang", "initial_subsidence_km": 2.0,
+                      "thermal_rate_mm_yr": 0.20, "has_mfs": false}
+          suture_name = "Sabah Trough"
+        """
+        from geox_mcp.tools.collision_zone import compute_collision
+
+        return compute_collision(
+            domain_a=domain_a,
+            domain_b=domain_b,
+            suture_name=suture_name,
+            duration_ma=duration_ma,
+            bypass_fraction=bypass_fraction,
+        )
+
+    @mcp.tool(name="geox_collision_chronology", annotations=_geox_annotations("geox_collision_chronology"))
+    async def _collision_chronology(
+        events: list[dict[str, Any]],
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Compute collision chronology from a sequence of tectonic events.
+
+        Takes a list of {age_ma, event_name, description} and computes
+        collision duration, event ordering, and the key insight:
+        "The collision is not an event. It is a 15 Myr sequence, still finishing."
+
+        Example:
+          events = [{"age_ma": 65, "event_name": "DG Rift", "description": "..."},
+                    {"age_ma": 21, "event_name": "Collision", "description": "..."},
+                    {"age_ma": 7,  "event_name": "Kinabalu Granite", "description": "..."}]
+        """
+        from geox_mcp.tools.collision_zone import compute_collision_chronology
+
+        return compute_collision_chronology(events)
+
+    # ── DOMAIN EVIDENCE GATE — geox_diagnose (Phase Zen, 2026-07-10) ──────────
+    # Pre-flight check: "Does GEOX have evidence for this question?"
+    # Returns NO_DOMAIN_EVIDENCE / PARTIAL / READY.
+    # When NO_DOMAIN_EVIDENCE: use ChatGPT, not GEOX.
+
+    @mcp.tool(name="geox_diagnose", annotations=_geox_annotations("geox_diagnose"))
+    async def _diagnose(
+        query: str = "",
+        domain: str = "",
+        location: str = "",
+        basin: str = "",
+        required_evidence: list[str] | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Check if GEOX has domain evidence for a question.
+
+        Routes questions to either GEOX (evidence analysis) or ChatGPT (general knowledge).
+
+        Returns NO_DOMAIN_EVIDENCE when GEOX has no relevant basin profiles,
+        literature, or well data — use ChatGPT for general knowledge questions.
+
+        Returns READY when evidence is sufficient for geox_basin, geox_evidence,
+        or geox_contrast_detect analysis.
+        """
+        from geox_mcp.tools.diagnose import diagnose
+
+        return diagnose(
+            query=query,
+            domain=domain,
+            location=location,
+            basin=basin,
+            required_evidence=required_evidence,
+        )
+
+    # ── EARTH OBSERVE — 24-in-1 consolidated surface (Zen, 2026-07-10) ──────
+    # One tool. 24 modes. Replaces 24 individual Earth data fetchers.
+    # earthquake, relief, bathymetry, heatflow, stress, geochem,
+    # plate_reconstruct, paleomag, gravity, ocean, erddap, climate,
+    # hydrology, satellite, uk_petroleum, geology_map, space_weather,
+    # nsta, context_at_location, isitwater, gravity_screen,
+    # judgment_preflight, interpolate_grid, report_to_workflow
+
+    @mcp.tool(name="geox_observe", annotations=_geox_annotations("geox_observe"))
+    async def _observe(
+        mode: str,
+        query: str = "",
+        lat: float | None = None,
+        lng: float | None = None,
+        bbox: list[float] | None = None,
+        limit: int = 10,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Unified Earth observation — 24 data dimensions in one tool.
+
+        Modes: earthquake, relief, bathymetry, heatflow, stress, geochem,
+        plate_reconstruct, paleomag, gravity, ocean, erddap, climate,
+        hydrology, satellite, uk_petroleum, geology_map, space_weather,
+        nsta, context_at_location, isitwater, gravity_screen,
+        judgment_preflight, interpolate_grid, report_to_workflow
+        """
+        from geox_mcp.tools.observe import geox_observe as _impl
+
+        return await _impl(
+            mode=mode,
+            query=query,
+            lat=lat,
+            lng=lng,
+            bbox=bbox,
+            limit=limit,
+        )
+
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # BASIN ANALYSIS ENGINES (4) — Phase 0 (2026-07-10)
+    # Physics-first basin analysis: backstripping, mass balance, thermal maturity,
+    # claim graph evaluation. Complements simulate_* with backward reconstruction.
+    # ═══════════════════════════════════════════════════════════════════════════════
+
+    @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
+    async def _basin_backstrip(
+        well_ref: str,
+        stratigraphic_ages: list[dict[str, Any]],
+        lithology_model: dict[str, Any] | None = None,
+        palaeobathymetry_model: dict[str, Any] | None = None,
+        sea_level_model_ref: str = "",
+        water_density_kg_m3: float = 1030.0,
+        mantle_density_kg_m3: float = 3300.0,
+        uncertainty_realizations: int = 1000,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Reconstruct tectonic and total subsidence through time from validated well stratigraphy.
+
+        Uses Steckler & Watts (1978) Airy isostasy + Sclater & Christie (1980) decompaction.
+        """
+        from geox_mcp.tools.basin_engines.backstrip_tool import geox_basin_backstrip as _impl
+
+        return await _impl(
+            well_ref=well_ref,
+            stratigraphic_ages=stratigraphic_ages,
+            lithology_model=lithology_model or {},
+            palaeobathymetry_model=palaeobathymetry_model or {},
+            sea_level_model_ref=sea_level_model_ref,
+            water_density_kg_m3=water_density_kg_m3,
+            mantle_density_kg_m3=mantle_density_kg_m3,
+            uncertainty_realizations=uncertainty_realizations,
+        )
+
+    @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
+    async def _sediment_mass_balance(
+        basin_name: str,
+        source_eroded_km3: float,
+        source_density_kg_m3: float = 2650.0,
+        preserved_volumes: list[dict[str, Any]] | None = None,
+        bypassed_km3: float = 0.0,
+        dissolved_km3: float = 0.0,
+        routing_efficiency: float | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Compute source-to-sink sediment mass balance with uncertainty.
+
+        Physics: Peters (2012) sediment cycling framework.
+        """
+        from geox_mcp.tools.basin_engines.mass_balance_tool import geox_sediment_mass_balance as _impl
+
+        return await _impl(
+            basin_name=basin_name,
+            source_eroded_km3=source_eroded_km3,
+            source_density_kg_m3=source_density_kg_m3,
+            preserved_volumes=preserved_volumes,
+            bypassed_km3=bypassed_km3,
+            dissolved_km3=dissolved_km3,
+            routing_efficiency=routing_efficiency,
+        )
+
+    @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
+    async def _thermal_maturity_history(
+        well_ref: str,
+        burial_history: dict[str, Any],
+        heat_flow_history: dict[str, Any] | None = None,
+        surface_temp_c: float = 20.0,
+        geothermal_gradient_c_km: float = 30.0,
+        time_step_myr: float = 1.0,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Model burial + heat flow + maturity through time.
+
+        Uses EasyRo (Sweeney & Burnham 1990) + TTI (Lopatin 1971).
+        """
+        from geox_mcp.tools.basin_engines.thermal_tool import geox_thermal_maturity_history as _impl
+
+        return await _impl(
+            well_ref=well_ref,
+            burial_history=burial_history,
+            heat_flow_history=heat_flow_history,
+            surface_temp_c=surface_temp_c,
+            geothermal_gradient_c_km=geothermal_gradient_c_km,
+            time_step_myr=time_step_myr,
+        )
+
+    @mcp.tool(name="geox_claim_graph_evaluate", annotations=_geox_annotations("geox_claim_graph_evaluate"))
+    async def _claim_graph_evaluate(
+        claims: list[dict[str, Any]],
+        edges: list[dict[str, Any]],
+        initial_verdicts: dict[str, str] | None = None,
+        failure_propagation: str = "cascade",
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Evaluate a claim dependency graph.
+
+        Supports AND/OR/WEIGHTED dependency types and failure propagation.
+        """
+        from geox_mcp.tools.basin_engines.claim_graph_tool import geox_claim_graph_evaluate as _impl
+
+        return await _impl(
+            claims=claims,
+            edges=edges,
+            initial_verdicts=initial_verdicts,
+            failure_propagation=failure_propagation,
+        )
