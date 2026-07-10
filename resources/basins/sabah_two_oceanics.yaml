@@ -1,0 +1,167 @@
+# Sabah Two Oceanics Basin Profile
+# ═══════════════════════════════════════════
+# Based on: SABAH_EUREKA_LEDGER::v1.0 (2026-07-10)
+# Author: M Arif Fazil (F13 SOVEREIGN)
+# 
+# The NW Sabah system is TWO lithospheric blocks with different subsidence physics:
+#   Domain A — loaded accretionary Kinabalu domain (Crocker-Rajang wedge)
+#   Domain B — thermally-decaying rifted Dangerous Grounds domain
+# The Sabah Trough is the SUTURE, not a bathymetric feature.
+
+basin_name: Sabah
+province: NW Borneo
+framework: Two Oceanics Collision Zone
+
+# ── DOMAIN A: Kinabalu Accretionary Wedge ──
+domain_a:
+  name: Kinabalu Accretionary Wedge
+  type: accretionary
+  initial_subsidence_km: 4.0           # Deep Crocker-Rajang foredeep
+  loading_rate_m_myr: 400.0            # Rapid clastic loading from hinterland
+  thermal_rate_mm_yr: 0.05             # Slow thermal decay (old oceanic crust)
+  sediment_supply_m_myr: 100.0         # Crocker-Rajang source
+  initial_water_depth_m: 500.0          # Mid-bathyal
+  has_mfs: true                         # MFS present in Domain A
+  source_rock_mature: true              # Loading-driven maturation
+  key_formations:
+    - Crocker-Rajang flysch (Eocene-Oligocene)
+    - West Crocker turbidites
+    - Kinabalu granite (7 Ma decompression melt)
+  mud_volcanoes: true                   # ~50 centers, 1,900 km²
+  loading_signature: 4.25x              # Sediment-load subsidence ratio
+
+# ── DOMAIN B: Layang-Layang / Dangerous Grounds ──
+domain_b:
+  name: Dangerous Grounds Rifted Margin
+  type: rifted
+  initial_subsidence_km: 2.0           # Rifted continental crust
+  loading_rate_m_myr: 50.0             # Minor clastic input
+  thermal_rate_mm_yr: 0.20             # Fast thermal decay (young rift)
+  sediment_supply_m_myr: 10.0          # Starved — carbonate platform, no clastic hinterland
+  initial_water_depth_m: 2000.0         # Deep marine
+  has_mfs: false                        # MFS absent in Domain B
+  source_rock_mature: false             # Falkon-1: Oligocene immature
+  key_formations:
+    - Mesozoic continental basement
+    - Oligocene-Miocene carbonates
+    - Deepwater pelagics
+  prospect_risk: suture_adjacent_only   # Tepat-1 type: loading overprint on thermal
+
+# ── SUTURE: Sabah Trough ──
+suture:
+  name: Sabah Trough
+  type: collision_suture
+  description: The Sabah Trough is not a bathymetric feature — it is the suture where Domain A's missing 60% mass is deposited
+  mass_bypass_fraction: 0.6             # 60% of Domain A sediment mass bypasses into Trough
+  prospect_potential: high              # Toe-of-slope turbidite lobes, structural traps
+
+# ── Collision Metrics ──
+collision_metrics:
+  duration_ma: 15.0                     # ~21 Ma collision peak to present
+  accommodation_ratio: 2.84             # Domain A / Domain B accommodation
+  loading_ratio: 4.25                   # Domain A loading / Domain B thermal
+  mass_deficit_pct: 60.0                # Missing sediment mass
+  collision_signature: LOADING_DOMINANT
+  mfs_asymmetry: true                   # MFS in A, absent in B
+
+# ── Collision Chronology ──
+chronology:
+  - age_ma: 65.0
+    event: Dangerous Grounds Rift
+    description: Rifting from South China continental margin
+  - age_ma: 44.0
+    event: Proto-SCS Subduction
+    description: Proto-South China Sea subduction begins beneath Sabah
+  - age_ma: 29.6
+    event: Breakup Unconformity (BU)
+    description: DG rift-to-drift transition
+  - age_ma: 21.0
+    event: Collision Peak
+    description: Proto-SCS subduction terminates — canonical collision age
+  - age_ma: 14.2
+    event: Mid-Miocene Unconformity (MMU)
+    description: Post-collisional restart
+  - age_ma: 9.5
+    event: Post-Subduction Relaxation
+    description: Kinabalu decompression melting begins
+  - age_ma: 8.6
+    event: Shallow Regional Unconformity (SRU)
+    description: Wedge reaches present position
+  - age_ma: 7.0
+    event: Kinabalu Granite Emplacement
+    description: Buoyant 4,095 m granite intrusion — collision aftermath
+  - age_ma: 0.0
+    event: Present
+    description: Offshore fold-thrust belt still finishing motion
+
+# ── Eureka Flags ──
+eureka_flags:
+  - EUREKA_1_TWO_OCEANICS
+  - EUREKA_1_MFS_ASYMMETRY
+  - EUREKA_2_LOADING_PULSE
+  - EUREKA_4_MASS_DEFICIT
+  - EUREKA_4_SUTURE_SINK
+  - EUREKA_11_PROSPECT_BIFURCATION
+  - EUREKA_6_COLLISION_SEQUENCE
+  - EUREKA_8_MUD_VOLCANO_RELEASE
+  - EUREKA_9_KINABALU_DECOMPRESSION_MELT
+
+# ── Key Literature ──
+literature:
+  - citation: Tongkul 1991 — Sabah tectonic history (rich story, weak closure)
+  - citation: Sidek 2016 — Crustal model (fitted model, non-unique)
+  - citation: Prabal 2024 — Platform chronostratigraphy (calibrated, local)
+  - citation: Morley 2022 — Mud volcanoes (~50 centers, 1,900 km², loading release valve)
+  - citation: Gilligan 2026 — Kinabalu thin crust (no root, buoyant granite at ~7 Ma)
+  - citation: Lunt 2022 — DRU/MMU label conflation (Sarawak-Sabah stratigraphy)
+  - citation: Cottam et al. 2013 — Kinabalu cooling rate 360°C/Myr (tectonic unroofing)
+  - citation: Peters & Gaines 2012 — Great Unconformity transgressive amplifier + Cambrian weathering
+  - citation: Madon 2021 — Malay Basin petroleum systems
+  - citation: Falkon-1 well — Oligocene source rock immature in Domain B
+  - citation: Tepat-1 well — Suture-adjacent trap confirms loading overprint
+
+# ── Prospect Bifurcation ──
+prospect_risking:
+  domain_a:
+    risk: FAVORABLE
+    rationale: Loading-driven maturation accelerates at SRU loading pulse (~8.6 Ma)
+    key_traps:
+      - Crocker-Rajang fold-thrust belt
+      - SRU-related structural traps
+  domain_b:
+    risk: CAUTION
+    rationale: Thermal-only maturation — requires suture-adjacent loading overprint
+    key_traps:
+      - Tepat-1 suture-adjacent
+      - Toe-of-slope turbidite lobes at Sabah Trough wedge front
+  sabah_trough:
+    risk: FAVORABLE
+    rationale: Where the missing 60% went — basin-floor mud + toe-of-slope lobes + structural traps
+    key_traps:
+      - Trough deformation front
+      - Turbidite lobes at wedge front
+      - Charge from Domain B updip
+
+# ── Margin Principle ──
+margin_principle:
+  statement: Everything happens at the margins. The interior only records the result. Unconformities are made at margins, not in basin interiors.
+  sabah_application: |
+    Sabah has four local unconformities (ROU, BU, MMU, SRU) — each a local margin event,
+    each at a different time, each with a different mechanism. None global.
+    Scaled across supercontinent cycles and integrated over a billion years,
+    this is the physics that made the Great Unconformity possible.
+  great_unconformity_link: |
+    The Great Unconformity is a compound surface: tectonic uplift + Snowball Earth
+    glaciation + prolonged non-deposition + Cambrian marine transgression.
+    It is diachronous — different ages at different locations.
+    Same physics. Same margin principle. Billion-year scale.
+
+# ── Metadata ──
+_meta:
+  evidence_class: INTERPRETED
+  confidence_cap: 0.90
+  source: SABAH_EUREKA_LEDGER::v1.0::SEALED::2026-07-10
+  author: M Arif Fazil (ARIF, F13 SOVEREIGN)
+  physics: McKenzie 1978 + Airy isostasy + sediment routing
+  governance: EVIDENCE_ONLY — GEOX computes, arifOS judges, Arif decides
+  doctrine: Margin Principle — unconformities are made at margins

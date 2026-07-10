@@ -411,7 +411,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 73  # 2026-07-09: +1 geox_bid_round_screener (MBR 2026 multi-block screening)
+    _EXPECTED_CANONICAL = 81  # 2026-07-10 Basin engines: 77 + backstrip + mass_balance + thermal_maturity + claim_graph
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "

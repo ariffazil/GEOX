@@ -156,6 +156,29 @@ SURFACE_TOOLS: list[str] = [
     # Concurrent scoring: geological risk × capital × evidence × fiscal.
     # F1-F13 floor compliance inline. Advisory only (F13 SOVEREIGN).
     "geox_bid_round_screener",
+    # ── COLLISION ZONE PHYSICS (2) — Phase Zen (2026-07-10) ─────────────────
+    # Two Oceanics physics engine from Arif's Sabah Eureka Ledger v1.0.
+    # Implements: accommodation_ratio, loading_ratio, mass_deficit, bypass_fraction.
+    # Detects 6 Eureka signatures. Margin Principle embedded.
+    "geox_collision_zone",  # Collision zone analysis: two-block physics, prospect bifurcation
+    "geox_collision_chronology",  # Collision chronology: event sequence → duration
+    "geox_diagnose",  # Domain evidence gate: NO_DOMAIN_EVIDENCE / PARTIAL / READY
+    # ── EARTH OBSERVE (1) — Phase Zen consolidated (2026-07-10) ─────────────
+    # 24 Earth data fetchers + atlas tools consolidated into one surface tool.
+    # Modes: earthquake, relief, bathymetry, heatflow, stress, geochem,
+    #   plate_reconstruct, paleomag, gravity, ocean, erddap, climate,
+    #   hydrology, satellite, uk_petroleum, geology_map, space_weather,
+    #   nsta, context_at_location, isitwater, gravity_screen,
+    #   judgment_preflight, interpolate_grid, report_to_workflow
+    "geox_observe",
+    # ── BASIN ANALYSIS ENGINES (4) — Phase 0 (2026-07-10) ────────────────────
+    # Four canonical basin analysis tools: backstripping, mass balance,
+    # thermal maturity, claim graph evaluation. Physics-first, evidence-tagged.
+    # Complements simulate_* (forward) with backward reconstruction + accounting.
+    "geox_basin_backstrip",  # Tectonic subsidence from well stratigraphy (Steckler & Watts 1978)
+    "geox_sediment_mass_balance",  # Source-to-sink sediment accounting (Peters 2012)
+    "geox_thermal_maturity_history",  # Burial + heat flow + EasyRo + TTI (Sweeney & Burnham 1990)
+    "geox_claim_graph_evaluate",  # DAG evaluation for claim dependency graphs
 ]
 
 
@@ -884,6 +907,45 @@ GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
         "lane": "evidence",
         "expose": True,
         "face": "surface",
+    },
+    # ── BASIN ANALYSIS ENGINES (4) — Phase 0 (2026-07-10) ─────────────────
+    # Physics-first basin analysis: backstripping, mass balance, thermal maturity,
+    # claim graph evaluation. Complements simulate_* with backward reconstruction.
+    {
+        "name": "geox_basin_backstrip",
+        "domain": "earth.basin",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+        "description": "Tectonic subsidence from well stratigraphy (Steckler & Watts 1978)",
+    },
+    {
+        "name": "geox_sediment_mass_balance",
+        "domain": "earth.basin",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+        "description": "Source-to-sink sediment accounting (Peters 2012)",
+    },
+    {
+        "name": "geox_thermal_maturity_history",
+        "domain": "earth.basin",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+        "description": "Burial + heat flow + EasyRo + TTI (Sweeney & Burnham 1990)",
+    },
+    {
+        "name": "geox_claim_graph_evaluate",
+        "domain": "earth.basin",
+        "axis": "reason",
+        "lane": "reasoning",
+        "expose": True,
+        "face": "surface",
+        "description": "DAG evaluation for claim dependency graphs",
     },
 ]
 
