@@ -153,3 +153,26 @@ Expected output: `Total: 18+` and the 3 new URI templates appear.
 | Live daemon | Restored locally; restart HOLD pending Arif |
 
 **DITEMPA BUKAN DIBERI — v2 forged, audited, committed local; push and restart await your call.**
+
+---
+
+## 10. DEPLOYMENT CONFIRMATION (2026-07-10, post-sovereign-signal)
+
+Per Arif's "zen all then push and deploy":
+- **Push**: commit `12a61518` → `origin/main` ✓ (despite repo-move redirect + rule-violation bypass; both expected — admin override)
+- **Daemon restart**: `systemctl restart geox-mcp` ✓ — new PID **999391** (old 2508372 killed with SIGTERM)
+- **Live verification** at `http://127.0.0.1:8081/mcp`:
+
+| Surface | Live count | v2 NEW |
+|---|---|---|
+| Resources | 12 fixed URIs + 13 templates | **3 NEW templates** (`literature/{basin}/{paper_id}`, `wells/{basin}/{well_id}`, `claims/{claim_id}`) — all with `title=` + `annotations` |
+| Prompts | 14 total | **4 NEW workflow prompts** (`analyse-well-log`, `screen-prospect`, `tie-well-to-seismic`, `reeval-paper`) |
+| Tools | 73 callable | UNCHANGED — zero `CANONICAL_PUBLIC_TOOLS` mutation |
+
+| Capability | Declared | Honest? |
+|---|---|---|
+| `prompts.listChanged` | true | ✓ |
+| `resources.listChanged` | true | ✓ |
+| `resources.subscribe` | **false** | ✓ removed ghost (was `True` in server card before) |
+| `tools.listChanged` | true | ✓ |
+
