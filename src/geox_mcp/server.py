@@ -1955,31 +1955,64 @@ def _safe_forward(
     return args
 
 
-# ─── listChanged notification (Sprint 2A) ───────────────────────────────────
+# ─── listChanged notifications (Sprint 2A, Zen Resource Contract v2 2026-07-10) ──
+# Per MCP lifecycle spec (2025-06-18): one emitter per surface, each named
+# to match the spec method. All three methods must use the exact JSON-RPC
+# method strings below; clients filter by their negotiated capability.
 
 
-def _build_list_changed_payload() -> dict:
-    """Build MCP tools/list_changed notification payload (spec method name)."""
-    return {
-        "jsonrpc": "2.0",
-        "method": "notifications/tools/list_changed",
-        "params": {},
-    }
+def _build_list_changed_payload(method: str) -> dict:
+    """Build a spec-named list_changed notification payload."""
+    return {"jsonrpc": "2.0", "method": method, "params": {}}
 
 
-def _emit_list_changed_notification() -> None:
-    """
-    Signal tools list change to clients.
+def _emit_tools_list_changed() -> None:
+    """Signal `notifications/tools/list_changed` — fires only when tools.listChanged negotiated.
 
-    Spec: notifications/tools/list_changed (not notifications/list_changed).
     Streamable-HTTP: currently log-only (no push to all sessions). Clients
-    that declare tools.listChanged should re-call tools/list when notified.
+    that declared `tools.listChanged` re-call `tools/list` when notified.
     Called after tool registry mutation (add/remove/prune).
     """
-    payload = _build_list_changed_payload()
-    # stderr / journal — do not use deprecated protocol logging channel
+    payload = _build_list_changed_payload("notifications/tools/list_changed")
     logger.info(
         "tools/list_changed signal — clients should call tools/list to refresh. payload=%s",
+        json.dumps(payload),
+    )
+
+
+def _emit_resources_list_changed() -> None:
+    """Signal `notifications/resources/list_changed` — fires only when resources.listChanged negotiated.
+
+    No payload per spec. Clients refetch via `resources/list`.
+    Per docs-agent tip: never fire this if subscribe is undeclared — GEOX only
+    fires what was negotiated (subscribe=False → no `resources/updated`).
+    """
+    payload = _build_list_changed_payload("notifications/resources/list_changed")
+    logger.info(
+        "resources/list_changed signal — clients should call resources/list. payload=%s",
+        json.dumps(payload),
+    )
+
+
+def _emit_resources_updated(uri: str) -> None:
+    """Signal `notifications/resources/updated` for a single URI change.
+
+    Carries ONLY the URI — clients MUST still re-call `resources/read` to fetch
+    the fresh content (spec implicit pattern).
+    """
+    payload = {"jsonrpc": "2.0", "method": "notifications/resources/updated", "params": {"uri": uri}}
+    logger.info(
+        "resources/updated signal uri=%s — clients call resources/read for fresh payload=%s",
+        uri,
+        json.dumps(payload),
+    )
+
+
+def _emit_prompts_list_changed() -> None:
+    """Signal `notifications/prompts/list_changed` — fires only when prompts.listChanged negotiated."""
+    payload = _build_list_changed_payload("notifications/prompts/list_changed")
+    logger.info(
+        "prompts/list_changed signal — clients should call prompts/list. payload=%s",
         json.dumps(payload),
     )
 
@@ -1991,7 +2024,10 @@ if GEOX_ENABLE_ARIFOS_ROUTE_QUERY:
     logger.info("Experimental route query tool enabled: arifos_route_query")
 
 # Emit listChanged after initial tool registration so clients refresh their cache.
-_emit_list_changed_notification()
+_emit_tools_list_changed()
+# Also notify resources/prompts since v2 forge added new templates + prompts.
+_emit_resources_list_changed()
+_emit_prompts_list_changed()
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -2309,11 +2345,22 @@ async def discovery_handler(request: Request) -> JSONResponse:
             "protocol_version": "2025-11-25",
             "capabilities": {
                 "tools": {"listChanged": True},
-                # Per MCP docs-agent (2025-06-18) — declare only what we
-                # implement. subscribe is reserved for forward work; not
-                # currently wired through FastMCP — do not silently fail.
+                # Per MCP docs-agent lifecycle spec (2025-06-18) — declare
+                # only what we implement. subscribe is reserved for forward
+                # work; not currently wired through FastMCP — do not
+                # silently fail. Forged 2026-07-10 (v2).
                 "resources": {"listChanged": True},
                 "prompts": {"listChanged": True},
+                # logging: {} declares clients may send logging/setLevel /
+                # notifications/message (server logs at the requested
+                # level). No active emitter — server logs at INFO default
+                # via journald.
+                "logging": {},
+                # completions: {} declares clients may invoke
+                # completion/complete for template {param} enumeration.
+                # Implementation deferred — see forge_work/2026-07-10/
+                # RESOURCE-CONTRACT-v2.md §"Future work".
+                "completions": {},
             },
             "seal": GEOX_SEAL,
         }
@@ -2328,7 +2375,13 @@ async def mcp_server_card(request: Request) -> JSONResponse:
             "displayName": "GEOX Earth Intelligence",
             "url": "https://geox.arif-fazil.com/mcp",
             "version": GEOX_VERSION.lstrip("v"),
-            "capabilities": {"tools": True, "resources": True, "prompts": True},
+            "capabilities": {
+                "tools": True,
+                "resources": True,
+                "prompts": True,
+                "logging": {},
+                "completions": {},
+            },
             "authentication": {"type": "bearer", "required": True, "header": "Authorization"},
         }
     )
