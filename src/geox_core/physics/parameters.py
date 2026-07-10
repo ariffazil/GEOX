@@ -37,8 +37,14 @@ def shear_modulus(vs: float, rho: float) -> float:
 
 
 def young_modulus(K: float, G: float) -> float:
-    """E = G(3K + G)/(K + G) [Pa]"""
-    return G * (3 * K + G) / (K + G)
+    """E = 9KG/(3K+G) [Pa] — isotropic elastic identity.
+
+    Three-way equivalent:
+        E = 2G(1+ν)   via elastic identity
+        E = 9KG/(3K+G) via K + G
+        E = 3K(1-2ν)  via K + ν
+    """
+    return 9.0 * K * G / (3.0 * K + G)
 
 
 def poisson_ratio(K: float, G: float) -> float:
@@ -184,6 +190,12 @@ def forward_physics9(state: Physics13State) -> dict[str, float]:
     G = shear_modulus(state.vs, state.rho)
     E = young_modulus(K, G)
     nu = poisson_ratio(K, G)
+    # Immune system: three-way isotropic identity — catches E-formula bugs.
+    #   E = 2G(1+ν) is the canonical cross-check against independently correct G, ν.
+    #   Without this assert, the E-branch bug class is unrepresentable.
+    assert abs(E - 2.0 * G * (1.0 + nu)) < 1e-6 * max(E, 1e-9), (
+        f"Isotropic identity violation: E={E} ≠ 2G(1+ν)={2 * G * (1 + nu)} (K={K}, G={G}, ν={nu})"
+    )
     ai = acoustic_impedance(state.vp, state.rho)
     vpvsv = vp_vs_ratio(state.vp, state.vs)
     kappa = thermal_diffusivity(state.k, state.rho)
