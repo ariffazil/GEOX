@@ -1,7 +1,7 @@
 """
 GEOX MCP Prompts — Earth Intelligence (ZEN 2026-07-04, Consolidated)
 
-10 prompts. Each distinct. No overlap.
+10 core prompts + 4 workflow templates. Each distinct. No overlap.
 
   geox_sense       — INGEST: raw data → artifact_ref
   geox_qc          — VERIFY: artifact_ref → QC_VERIFIED
@@ -13,10 +13,58 @@ GEOX MCP Prompts — Earth Intelligence (ZEN 2026-07-04, Consolidated)
   geox_basin_screen — SCREEN: basin profile → play fairway suitability
   geox_guard       — CONSTRAIN: enforce F10 ontology boundaries
   geox_explain     — EXPLAIN: UI panel data → human-readable summary
+
+  analyse-well-log    — WORKFLOW: LAS → pay summary + claim envelope
+  screen-prospect     — WORKFLOW: basin → PROCEED | REVIEW | KILL
+  tie-well-to-seismic — WORKFLOW: LAS + seismic → GO | HOLD | VOID
+  reeval-paper        — WORKFLOW: paper → HOLD | REVISE | RETRACT
+
+Spec alignment (MCP 2025-06-18):
+  - Prompts return messages[] with embedded resource blocks (not just text)
+  - Workflow prompts declare arguments[] with completion-ready types
+  - Resources embedded via EmbeddedResource + TextResourceContents
 """
 
 from __future__ import annotations
+
+import json
 from typing import Any
+
+from mcp.types import EmbeddedResource, TextResourceContents
+from fastmcp.prompts.base import Message
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Helpers — resource embedding for spec-aligned prompts
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+def _embed_resource(uri: str, text: str, mime_type: str = "text/plain") -> EmbeddedResource:
+    """Create an EmbeddedResource block for prompt messages.
+
+    Per MCP 2025-06-18 spec: prompts/get response messages[] support
+    type="resource" content blocks — not just text.
+    """
+    from pydantic import AnyUrl
+
+    return EmbeddedResource(
+        type="resource",
+        resource=TextResourceContents(
+            uri=AnyUrl(uri),
+            mimeType=mime_type,
+            text=text,
+        ),
+    )
+
+
+def _msg_text(text: str, role: str = "user") -> Message:
+    """Create a text Message."""
+    return Message(text, role=role)  # type: ignore[arg-type]
+
+
+def _msg_resource(uri: str, text: str, mime_type: str = "text/plain", role: str = "user") -> Message:
+    """Create a resource-embedded Message."""
+    return Message(_embed_resource(uri, text, mime_type), role=role)  # type: ignore[arg-type]
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -398,6 +446,10 @@ BOUNDARY: EXPLAIN explains. INTERPRET interprets. EXPLAIN does not produce new c
 # ─── Resource Contract v2 — workflow prompts (FORGED 2026-07-10) ──────────────
 # Per MCP docs-agent Prompts spec (2025-06-18): prompts are user-driven TEMPLATES.
 # Each prompt here binds a multi-tool workflow with F1/F2/F11 floors.
+#
+# Spec alignment: these prompts accept arguments and embed resources inline.
+# The host can call prompts/get with arguments → server returns messages[]
+# with pre-loaded resource content before the model touches any tool.
 
 GEOX_ANALYSE_WELL_LOG_PROMPT = """\
 You are GEOX_ANALYSE_WELL_LOG — single-well petrophysics + interpretation.
