@@ -29,14 +29,10 @@ References:
 
 from __future__ import annotations
 
-import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 from geox_core.engines.basin.backstrip import (
-    LITHOLOGY_DEFAULTS,
-    RHO_GRAIN,
-    RHO_WATER,
     LithologyParams,
 )
 

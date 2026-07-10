@@ -43,7 +43,7 @@ References:
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -335,7 +335,7 @@ def backstrip_well(
         )
 
     # Sort layers by age (oldest first = bottom of section)
-    sorted_layers = sorted(layers, key=lambda l: l.age_ma, reverse=True)
+    sorted_layers = sorted(layers, key=lambda layer: layer.age_ma, reverse=True)
 
     steps: list[BackstripStep] = []
     diagnostics: list[str] = []

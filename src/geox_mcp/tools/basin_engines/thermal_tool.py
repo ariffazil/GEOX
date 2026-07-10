@@ -65,7 +65,7 @@ async def geox_thermal_maturity_history(
     heat_flows: list[float] = []
     gradients: list[float] = []
 
-    for i, (age, depth) in enumerate(zip(ages, depths)):
+    for _i, (age, depth) in enumerate(zip(ages, depths, strict=False)):
         # Interpolate heat flow if provided
         if hf_ages and hf_values:
             hf = _interpolate(age, hf_ages, hf_values)
