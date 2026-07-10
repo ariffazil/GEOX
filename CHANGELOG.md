@@ -245,3 +245,56 @@ See `AAA/wiki/log.md` for full release receipt. 10 verification gates passed.
 ---
 
 *See `git log --oneline --all` and `/root/AAA/wiki/log.md` for full history.*
+
+## [2026-07-10] — Resource Contract v2 (MCP 2025-11-25 / docs-agent 2025-06-18)
+
+**Scope:** zenned the entire `geox://` resource surface per MCP docs-agent corrections. No tool-registry mutation. No Phase 3 expansion.
+
+### Added
+- **`src/geox_mcp/uri_schemes.py`** (343 L) — single source of truth for 39 `geox://` entries (18 parametric). Frozen `UriTemplate` dataclasses; F2 fail-closed URI builder (`full_uri`); `AccessClass` (PUBLIC / READ_OPEN / DOMAIN_ONLY / SOVEREIGN); `Tier` (TEXT_INLINE / BLOB_INLINE / URI_EXTERNAL); JSON-RPC error codes (-32002 not found, -32003 forbidden, etc.).
+- **`src/geox_mcp/resources/pagination.py`** (124 L) — cursor encoder / decoder with filter fingerprint sha256. Round-trip verified. Cap 500/page.
+- **3 new parametric templates** registered in `register_resources()`:
+  - `geox://literature/{basin}/{paper_id}` (TEXT_INLINE, DOMAIN_ONLY)
+  - `geox://wells/{basin}/{well_id}` (TEXT_INLINE, DOMAIN_ONLY)
+  - `geox://claims/{claim_id}` (TEXT_INLINE, DOMAIN_ONLY)
+- **`_zen_existing()` post-processor** — walks registered resources and applies spec-correct `title`, `annotations`, `lastModified` based on `uri_schemes` lookup. Idempotent.
+- **`_geox_meta_envelope()` helper** — Shape A `_meta` on contents object (per spec 2025-11-25) with `seal_id`, `evidence_class`, `authority`, `sha256`, `actor_signature`, `read_at_iso`.
+- **Multi-contents bundle returns** — `literature_paper`, `well`, `claim` all return `{"contents": [...]}` with envelope + body.
+
+### Changed
+- **`src/geox_mcp/resources/__init__.py`** (+−4 lines net additions: 286+ −4)
+- **`src/geox_mcp/server.py:2313`** — capabilities declaration: removed `resources.subscribe: True` (not yet implemented); only `listChanged: true` declared per spec tip #1.
+
+### Doctrinal bindings (ratified 2026-07-10)
+- **External live APIs ⇒ Tools, not Resources.** Already compliant (Macrostrat: cached snapshot via Resource, live via Tool `geox_basin(mode='macrostrat_*)').
+- **`_meta` Shape A** — on contents object, not envelope.
+- **Coarse `list_changed`** — no payload per spec.
+- **Templates = URI shapes only** — no `supportsList` (all 18 templates enforce this).
+- **`title` distinct from `name`** — human-readable display.
+- **`size`** on blob returns where known.
+- **Annotations on three places** — definitions, templates, content blocks.
+- **`inode/directory`** reserved for basin-level grouping (future).
+- **`git://`** noted as alternative scheme (future).
+
+### F1-F13 alignment
+- F1 AMANAH: F2 fail-closed URI builder; sha256 on every `_meta` payload.
+- F2 TRUTH: `evidence_class` field on all `_meta`. Resolve-key error before default.
+- F3 WITNESS: `actor_signature` slot — handler gating spec written; awaits sovereign policy implementation.
+- F4 CLARITY: Single registry → single namespace → single contract.
+- F6 MARUAH: `pii_redacted` field; URI regex blocks shell metas.
+- F9 ANTI-HANTU: Templates declare `tier`; `BLOB_INLINE` size cap.
+- F11 AUDIT: `read_at_iso` stamped every read; sha256 available.
+- F13 SOVEREIGN: `AccessClass.SOVEREIGN` tier + handler gating spec drafted.
+
+### Tests
+- `pytest tests/test_transport_manifest.py` — 7 PASS, 2 FAIL (the 2 failures are pre-existing on commit `21c340d3` about CANONICAL_PUBLIC_TOOLS drift; NOT caused by this change — confirmed via `git stash`).
+- In-process FastMCP mount + 18-template enumeration — PASS. 3 NEW templates visible.
+- Round-trip on `pagination.py` — OK.
+
+### 888_HOLD-gated (NOT executed)
+- Daemon restart to expose new templates on live `/mcp` — pending Arif.
+- `git push origin main` — sovereign commit chain per GEOX AGENTS.md.
+- AAA federation manifest regeneration (`federation-p1/manifests/geox/manifest.json`) — contains 35 stale Phase 3 tool refs; needs review.
+- Any `CANONICAL_PUBLIC_TOOLS` mutation — locked.
+
+**DITEMPA BUKAN DIBERI — Resource Contract v2 forged, awaiting sovereign restart + push signal.**

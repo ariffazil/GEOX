@@ -1979,8 +1979,7 @@ def _emit_list_changed_notification() -> None:
     payload = _build_list_changed_payload()
     # stderr / journal — do not use deprecated protocol logging channel
     logger.info(
-        "tools/list_changed signal — clients should call tools/list to refresh. "
-        "payload=%s",
+        "tools/list_changed signal — clients should call tools/list to refresh. payload=%s",
         json.dumps(payload),
     )
 
@@ -2310,7 +2309,10 @@ async def discovery_handler(request: Request) -> JSONResponse:
             "protocol_version": "2025-11-25",
             "capabilities": {
                 "tools": {"listChanged": True},
-                "resources": {"subscribe": True, "listChanged": True},
+                # Per MCP docs-agent (2025-06-18) — declare only what we
+                # implement. subscribe is reserved for forward work; not
+                # currently wired through FastMCP — do not silently fail.
+                "resources": {"listChanged": True},
                 "prompts": {"listChanged": True},
             },
             "seal": GEOX_SEAL,

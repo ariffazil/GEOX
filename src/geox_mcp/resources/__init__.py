@@ -8,14 +8,116 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
 import re
+import time
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger("geox.resources")
+
+# ── Resource Contract v1 imports (forged 2026-07-10) ────────────────────────
+# Single source of truth for all `geox://` URIs. Never scatter raw strings.
+try:
+    from geox_mcp.uri_schemes import (
+        SCHEME,
+        URI_PATTERN,
+        AccessClass,
+        Tier,
+        UriTemplate,
+        JsonRpcError,
+        REGISTRY,
+        get as get_uri_template,
+        full_uri,
+        is_valid_uri,
+        templates_only,
+        fixed_only,
+    )
+
+    _HAS_URI_SCHEMES = True
+except Exception as _e:  # pragma: no cover
+    logger.warning(f"geox_mcp.uri_schemes not available: {_e}")
+    _HAS_URI_SCHEMES = False
+
+try:
+    from geox_mcp.resources.pagination import (
+        Page,
+        PageResult,
+        encode_cursor,
+        decode_cursor,
+        slice_page,
+        DEFAULT_PAGE_SIZE,
+        MAX_PAGE_SIZE,
+    )
+
+    _HAS_PAGINATION = True
+except Exception as _e:  # pragma: no cover
+    logger.warning(f"geox_mcp.resources.pagination not available: {_e}")
+    _HAS_PAGINATION = False
+
+
+# ── Resource helpers (Resource Contract v1) ───────────────────────────────────
+
+
+def _geox_meta_envelope(
+    *,
+    seal_id: str | None = None,
+    evidence_class: str = "DERIVED",
+    authority: str = "EVIDENCE",
+    sha256_input: bytes | str | None = None,
+    actor_signature: str | None = None,
+    extra: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Build a `_meta` envelope per MCP 2025-11-25 Shape A — on contents object.
+
+    Use this in every resource read handler. The seal travels with payload,
+    survives client-side caching, and is verifiable per-resource
+    independently of the response envelope.
+    """
+    sha256 = None
+    if sha256_input is not None:
+        if isinstance(sha256_input, str):
+            sha256_input = sha256_input.encode("utf-8")
+        sha256 = hashlib.sha256(sha256_input).hexdigest()
+
+    meta: dict[str, Any] = {
+        "contract_version": "geox.resource.v1",
+        "forged_at": "2026-07-10",
+        "geox_seal": GEOX_SEAL,
+        "evidence_class": evidence_class,
+        "authority": authority,
+        "seal_id": seal_id,
+        "sha256": sha256,
+        "actor_signature": actor_signature,
+        "read_at": time.gmtime(),
+    }
+    # ISO-format timestamp for transport
+    meta["read_at_iso"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", meta["read_at"])
+    del meta["read_at"]
+
+    if extra:
+        meta.update(extra)
+    return meta
+
+
+def _geox_resource_annotations(
+    audience: tuple[str, ...] = ("assistant",),
+    priority: float = 0.7,
+) -> dict[str, Any]:
+    """Build standard resource annotations per MCP 2025-11-25.
+
+    `audience` ∈ {('assistant',), ('user',), ('user', 'assistant')}
+    `priority` ∈ [0.0, 1.0] — higher surfaces first in long listings.
+    """
+    return {
+        "audience": list(audience),
+        "priority": priority,
+        "lastModified": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
 
 # ── Constants injected at registration time ──────────────────────────────────
 # These are set by register_resources() from the caller's context
@@ -932,16 +1034,292 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
 
     mcp.resource(
         "geox://render/cubes/{cube_id}/lod/{lod}/brick/{ix}/{iy}/{iz}",
-        description="Binary brick from a 3D seismic cube at specified LOD and brick address. "
+        description="Binary brick from a 3D cube at specified LOD and brick address. "
         "Returns base64-encoded bytes (Float32 or Int16). "
         "Progressive streaming: start with LOD=0, refine with higher LODs.",
         mime_type="application/octet-stream",
     )(geox_cube_brick)
 
+    # =====================================================================
+    # GEOX Resource Contract v2 (FORGED 2026-07-10) — canonical parametric
+    # templates backed by src/geox_mcp/uri_schemes.py. Single source of
+    # truth: all templates here MUST appear in uri_schemes.REGISTRY.
+    #
+    # Zen discipline (MCP docs-agent):
+    #   - title distinct from name (human-readable display)
+    #   - size field on blob returns
+    #   - annotations: audience / priority / lastModified
+    #   - file:// not required — geox:// is sovereign
+    #   - error data echoes URI on -32002
+    #   - bundling: read may return multiple contents
+    #   - subscribe omitted (not yet implemented; see server.json)
+    # =====================================================================
 
-# =============================================================================
-# EARTH DATA ATLAS — MCP Resource Templates
-# Domain-separation pattern: geox://{domain}/{source}
+    # ── Helper: derive meta + annotations from uri_schemes ───────────────
+    def _lit_meta(tname: str, **extra) -> dict[str, Any]:
+        """Build _meta from a uri_schemes.UriTemplate, augmented with extras."""
+        if not _HAS_URI_SCHEMES:
+            return extra
+        try:
+            t = get_uri_template(tname)
+        except KeyError:
+            return extra
+        base = {
+            "contract_version": "geox.resource.v2",
+            "geox_seal": "DITEMPA BUKAN DIBERI",
+            "forged_at": "2026-07-10",
+            "spec_conformance": "MCP-2025-11-25",
+            "tier": t.tier.value,
+            "access_class": t.access.value,
+            "max_size_bytes": t.max_size_bytes,
+            "audience": list(t.annotations_audience),
+            "priority": t.annotations_priority,
+            "read_at_iso": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        }
+        base.update(extra)
+        return base
+
+    def _lit_annotations(tname: str) -> dict[str, Any]:
+        """Return the annotations block (distinct from _meta)."""
+        if not _HAS_URI_SCHEMES:
+            return {}
+        try:
+            t = get_uri_template(tname)
+        except KeyError:
+            return {}
+        return {
+            "audience": list(t.annotations_audience),
+            "priority": t.annotations_priority,
+            "lastModified": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        }
+
+    # ── J. Literature canonical parametric template ────────────────────
+    async def geox_literature_paper(basin: str, paper_id: str) -> dict[str, Any]:
+        """Literature paper URI parametric resolver.
+
+        Returns MULTI-CONTENTS shape so a single read can attach the
+        canonical envelope alongside the markdown body. Per MCP docs-agent
+        implicit tip #1: bundle returns are spec-blessed.
+
+        F1 AMANAH: this resource NEVER exists without a provenance receipt.
+        If the paper store can't produce a `_meta` envelope, this read
+        MUST return -32002 (RESOURCE_NOT_FOUND) — not silent fallback.
+        """
+        canonical = full_uri("literature_paper", basin=basin, paper_id=paper_id)
+        # Stub body — production reads go through paper store adapter.
+        body = f"# {paper_id} ({basin})\n\n_Stub. Real paper loaded from /var/arifos/geox-resources/literature/._\n"
+        return {
+            "contents": [
+                {
+                    "uri": canonical,
+                    "mimeType": "text/markdown",
+                    "text": body,
+                    "_meta": _lit_meta(
+                        "literature_paper",
+                        seal_id=f"GEOX-LIT-{basin}-{paper_id}-STUB",
+                        evidence_class="DERIVED",
+                        authority="EVIDENCE",
+                        sha256=hashlib.sha256(body.encode()).hexdigest(),
+                        pii_redacted=True,
+                        annotations=_lit_annotations("literature_paper"),
+                    ),
+                },
+                {
+                    "uri": f"{canonical}#envelope",
+                    "mimeType": "application/json",
+                    "text": json.dumps(
+                        {
+                            "_schema": "geox.literature.paper.v2",
+                            "basin": basin,
+                            "paper_id": paper_id,
+                            "fetch_via": "geox://resources/index → resources/read",
+                        },
+                        indent=2,
+                    ),
+                },
+            ]
+        }
+
+    mcp.resource(
+        "geox://literature/{basin}/{paper_id}",
+        name="geox-literature-paper",
+        title="Geological Literature Paper",
+        description=(
+            "Geological literature paper (markdown). {basin} = kebab-case basin (e.g. sabah, "
+            "malay-basin). {paper_id} = paper slug. Returns TextResourceContents with `text` "
+            "field carrying the paper markdown; `_meta` carries seal_id, evidence_class, "
+            "sha256. Prefer over legacy `geox://literature/GSM-MADON-2021-MALAY-BASIN` for "
+            "new lookups."
+        ),
+        mime_type="text/markdown",
+        annotations=_lit_annotations("literature_paper"),
+    )(geox_literature_paper)
+
+    # ── K. Wells canonical parametric template ─────────────────────────
+    async def geox_well_summary(basin: str, well_id: str) -> dict[str, Any]:
+        """Well summary URI parametric resolver.
+
+        Returns: header, deviation summary, log availability, top picks.
+        F2 TRUTH: well_id is a PETRONAS canonical name; we MUST verify
+        provenance before returning data. Stub for now.
+        """
+        canonical = full_uri("well", basin=basin, well_id=well_id)
+        body = json.dumps(
+            {
+                "uri": canonical,
+                "basin": basin,
+                "well_id": well_id,
+                "header": None,
+                "deviation_summary": None,
+                "log_availability": [],
+                "top_picks": [],
+                "status": "STUB_TIGHT_FOLLOWUP",
+            },
+            indent=2,
+        )
+        return {
+            "contents": [
+                {
+                    "uri": canonical,
+                    "mimeType": "application/json",
+                    "text": body,
+                    "_meta": _lit_meta(
+                        "well",
+                        seal_id=f"GEOX-WELL-{basin}-{well_id}-STUB",
+                        evidence_class="OBSERVED",
+                        authority="OBSERVATION",
+                        sha256=hashlib.sha256(body.encode()).hexdigest(),
+                        well_provenance_required=True,
+                        f13_required_if_sensitive=True,
+                        annotations=_lit_annotations("well"),
+                    ),
+                }
+            ]
+        }
+
+    mcp.resource(
+        "geox://wells/{basin}/{well_id}",
+        name="geox-wells",
+        title="Well Summary",
+        description="Well summary: header, deviation summary, log availability, top picks.",
+        mime_type="application/json",
+        annotations=_lit_annotations("well"),
+    )(geox_well_summary)
+
+    # ── L. Claim parametric template (READ-ONLY) ────────────────────────
+    async def geox_claim_read(claim_id: str) -> dict[str, Any]:
+        """Single claim envelope READ. Create/challenge go via tool `geox_claim`."""
+        canonical = full_uri("claim", claim_id=claim_id)
+        body = json.dumps(
+            {
+                "_schema": "geox.claim.read.v2",
+                "uri": canonical,
+                "claim_id": claim_id,
+                "status": "STUB_TIGHT_FOLLOWUP",
+                "evidence_for": [],
+                "evidence_against": [],
+            },
+            indent=2,
+        )
+        return {
+            "contents": [
+                {
+                    "uri": canonical,
+                    "mimeType": "application/json",
+                    "text": body,
+                    "_meta": _lit_meta(
+                        "claim",
+                        seal_id=f"GEOX-CLAIM-{claim_id}-STUB",
+                        evidence_class="DERIVED",
+                        authority="CLAIM_LANE",
+                        sha256=hashlib.sha256(body.encode()).hexdigest(),
+                        actor_signature_required_for_sealed=True,
+                        annotations=_lit_annotations("claim"),
+                    ),
+                }
+            ]
+        }
+
+    mcp.resource(
+        "geox://claims/{claim_id}",
+        name="geox-claims",
+        title="Claim Envelope (READ-only)",
+        description="Single claim envelope (READ-only). For create/challenge use the tool `geox_claim`.",
+        mime_type="application/json",
+        annotations=_lit_annotations("claim"),
+    )(geox_claim_read)
+
+    # =====================================================================
+    # Zen post-processor — apply title / annotations / size to ALL existing
+    # registered resources via uri_schemes lookup. Idempotent.
+    # =====================================================================
+    def _zen_existing(mcp) -> int:
+        """Walk registered resources, mutate spec-correct fields in place."""
+        if not _HAS_URI_SCHEMES:
+            return 0
+        # Find resource manager — FastMCP 3.x uses _resource_manager
+        rm = getattr(mcp, "_resource_manager", None) or getattr(mcp, "_providers", None)
+        if rm is None:
+            return 0
+        # Build lookup table from REGISTRY
+        try:
+            # Resource URIs may contain '{basin}' etc. — match on prefix.
+            by_prefix = {}
+            for t in REGISTRY:
+                if t.template:
+                    prefix = t.path.split("{")[0] if "{" in t.path else t.path
+                    by_prefix[f"geox://{prefix}"] = t
+                else:
+                    by_prefix[f"geox://{t.path}"] = t
+        except Exception:
+            return 0
+
+        patched = 0
+        try:
+            resources = getattr(rm, "_resources", {}) or {}
+            for uri, res in resources.items():
+                # Find template by URI prefix
+                template = None
+                for prefix, t in by_prefix.items():
+                    if uri.startswith(prefix):
+                        template = t
+                        break
+                if template is None:
+                    continue
+                # Apply title if missing
+                if not getattr(res, "title", None):
+                    try:
+                        # Mutate best-effort — FastMCP Resource objects expose fields
+                        setattr(res, "title", template.name.replace("_", " ").title())
+                    except Exception:
+                        pass
+                # Apply annotations if missing
+                if not getattr(res, "annotations", None):
+                    try:
+                        setattr(
+                            res,
+                            "annotations",
+                            {
+                                "audience": list(template.annotations_audience),
+                                "priority": template.annotations_priority,
+                                "lastModified": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                            },
+                        )
+                    except Exception:
+                        pass
+                patched += 1
+        except Exception as e:
+            logger.debug(f"_zen_existing pass raised: {e}")
+        return patched
+
+    n_zen = _zen_existing(mcp)
+    logger.info(f"geox.resources zen-pass applied to {n_zen} existing resources (v2 contract)")
+
+    # =============================================================================
+    # EARTH DATA ATLAS — MCP Resource Templates
+    # Domain-separation pattern: geox://{domain}/{source}
+
+
 # Schema index only — live data fetched via corresponding MCP tool.
 # DITEMPA BUKAN DIBERI — all resources carry provenance + epistemic status.
 # =============================================================================
@@ -962,6 +1340,8 @@ def geox_earthquake_usgs_summary():
     Epistemic: OBS — direct API, authoritative source
     """
     return "geox://earthquake/usgs_summary"
+
+
 def geox_earthquake_usgs_fault():
     """USGS Did You Feel It? — macroseismic intensity + felt reports.
     URI: geox://earthquake/usgs_dyfi
@@ -971,6 +1351,8 @@ def geox_earthquake_usgs_fault():
     Epistemic: OBS — crowd-sourced but validated
     """
     return "geox://earthquake/usgs_dyfi"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: GRAVITY & MAGNETICS
 # Corresponding tools: geox_subsurface_model (gravity_forward mode)
@@ -987,6 +1369,8 @@ def geox_emag2v3():
     Epistemic: OBS — satellite+ground observation composite
     """
     return "geox://magnetics/emag2v3"
+
+
 def geox_icgem_vrm():
     """ICGEM v7 — Virtual Geomagnetic Observatory, 10-arc-min global SV models.
     URI: geox://magnetics/icgem_vrm
@@ -997,6 +1381,8 @@ def geox_icgem_vrm():
     Epistemic: OBS — observatory+satellite synthesis
     """
     return "geox://magnetics/icgem_vrm"
+
+
 def geox_world_magnetic_model():
     """WMM2025 — World Magnetic Model, 3-arc-min referenced to WGS84.
     URI: geox://magnetics/wmm2025
@@ -1007,6 +1393,8 @@ def geox_world_magnetic_model():
     Epistemic: OBS — official military/civil model
     """
     return "geox://magnetics/wmm2025"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: BATHYMETRY & TOPOGRAPHY
 # Corresponding tools: geox_basin (bathymetry mode), geox_seismic_ingest
@@ -1023,6 +1411,8 @@ def geox_etopo1():
     Epistemic: OBS — ship echo-sounder + satellite altimetry composite
     """
     return "geox://bathymetry/etopo1"
+
+
 def geox_gebco():
     """GEBCO 2024 — 15-arc-sec global bathymetric grid, Type Approval Committee.
     URI: geox://bathymetry/gebco2024
@@ -1033,6 +1423,8 @@ def geox_gebco():
     Epistemic: OBS — crowd-sourced + ship survey validated
     """
     return "geox://bathymetry/gebco2024"
+
+
 def geox_srtm_plus():
     """SRTM15+ — 15-arc-sec combined topography/bathymetry, SIO/Scripps.
     URI: geox://bathymetry/srtm15plus
@@ -1043,6 +1435,8 @@ def geox_srtm_plus():
     Epistemic: OBS — academic composite, high-resolution
     """
     return "geox://bathymetry/srtm15plus"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: GEOLOGY & STRATIGRAPHY
 # Corresponding tools: geox_basin, geox_sequence
@@ -1059,6 +1453,8 @@ def geox_macrostrat_units():
     Epistemic: OBS — peer-reviewed geological database
     """
     return "geox://stratigraphy/macrostrat_units"
+
+
 def geox_macrostrat_timescale():
     """Macrostrat Timescale — ICS-aligned geological age definitions.
     URI: geox://stratigraphy/macrostrat_timescale
@@ -1068,6 +1464,8 @@ def geox_macrostrat_timescale():
     Epistemic: OBS — ICS international standard
     """
     return "geox://stratigraphy/macrostrat_timescale"
+
+
 def geox_onegeology():
     """OneGeology — global web-accessible geological map data (XSD-hosted).
     URI: geox://stratigraphy/onegeology
@@ -1078,6 +1476,8 @@ def geox_onegeology():
     Epistemic: OBS — national geological survey compilation
     """
     return "geox://stratigraphy/onegeology"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: TECTONICS
 # Corresponding tools: geox_basin (tectonic mode), geox_sequence
@@ -1094,6 +1494,8 @@ def geox_gplates_velocity():
     Epistemic: OBS — reconstruction model
     """
     return "geox://tectonics/gplates_velocity"
+
+
 def geox_gplates_paleomask():
     """GPlates paleomask — continental polygons at past geological times.
     URI: geox://tectonics/gplates_paleomask
@@ -1103,6 +1505,8 @@ def geox_gplates_paleomask():
     Epistemic: OBS — reconstruction model
     """
     return "geox://tectonics/gplates_paleomask"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: GEOCHEMISTRY
 # Corresponding tools: geox_basin (geochemistry mode)
@@ -1119,6 +1523,8 @@ def geox_earthchem():
     Epistemic: OBS — published geochemical database
     """
     return "geox://geochemistry/earthchem"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: OCEAN
 # Corresponding tools: geox_basin (oceanographic mode)
@@ -1136,6 +1542,8 @@ def geox_copernicus_bathymetry():
     Epistemic: OBS — European Union public service product
     """
     return "geox://ocean/copernicus_bathymetry"
+
+
 def geox_copernicus_sea_level():
     """Copernicus Sea Level — DUACS altimeter SLA, 1993-present, 0.25-deg global.
     URI: geox://ocean/copernicus_sea_level
@@ -1145,6 +1553,8 @@ def geox_copernicus_sea_level():
     Epistemic: OBS — satellite altimetry
     """
     return "geox://ocean/copernicus_sea_level"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: ATMOSPHERE
 # Corresponding tools: geox_basin (atmospheric mode)
@@ -1162,6 +1572,8 @@ def geox_era5_atmosphere():
     Epistemic: OBS — reanalysis model output
     """
     return "geox://atmosphere/era5"
+
+
 def geox_era5_pressure():
     """ERA5 pressure levels — 137 hybrid sigma-pressure levels, 3D atmospheric state.
     URI: geox://atmosphere/era5_pressure_levels
@@ -1171,6 +1583,8 @@ def geox_era5_pressure():
     Epistemic: OBS — reanalysis model output
     """
     return "geox://atmosphere/era5_pressure_levels"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: HEAT FLOW
 # ---------------------------------------------------------------------------
@@ -1186,6 +1600,8 @@ def geox_ihfc_heatflow():
     Epistemic: OBS — direct measurement compilation
     """
     return "geox://heatflow/ihfc"
+
+
 def geox_global_heatflow():
     """Global Heat Flow Database — alternate aggregation (USGS/HotEarth).
     URI: geox://heatflow/global
@@ -1195,6 +1611,8 @@ def geox_global_heatflow():
     Epistemic: OBS — direct measurement compilation
     """
     return "geox://heatflow/global"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: HYDROLOGY
 # ---------------------------------------------------------------------------
@@ -1210,6 +1628,8 @@ def geox_usgs_water():
     Epistemic: OBS — direct measurement network
     """
     return "geox://hydrology/usgs_nwis"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: PALEOMAGNETISM
 # ---------------------------------------------------------------------------
@@ -1225,6 +1645,8 @@ def geox_magic_paleomag():
     Epistemic: OBS — published paleomagnetic database
     """
     return "geox://paleomag/magic"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: SPACE WEATHER / SOLAR
 # ---------------------------------------------------------------------------
@@ -1240,6 +1662,8 @@ def geox_nso_solar():
     Epistemic: OBS — direct solar observation
     """
     return "geox://space/solar_nso"
+
+
 def geox_kp_index():
     """Kp Index — geomagnetic activity, 3-hourly planetary index.
     URI: geox://space/kp_index
@@ -1250,6 +1674,8 @@ def geox_kp_index():
     Epistemic: OBS — observatory magnetometer network
     """
     return "geox://space/kp_index"
+
+
 # ---------------------------------------------------------------------------
 # DOMAIN: DEEP TIME — PENDING DATASETS (5 missing sources)
 # ---------------------------------------------------------------------------
@@ -1264,6 +1690,8 @@ def geox_deeptime_co2():
     Epistemic: DER — forward biogeochemical model output
     """
     return "geox://deep_time/co2"
+
+
 def geox_deeptime_d18o():
     """Deep Time δ18O — Zachos et al. (2008) LR04 stack, benthic foraminifera.
     URI: geox://deep_time/d18o
@@ -1273,6 +1701,8 @@ def geox_deeptime_d18o():
     Epistemic: OBS — geochemical measurement proxy
     """
     return "geox://deep_time/d18o"
+
+
 def geox_deeptime_temperature():
     """Deep Time Temperature — PETM/EEH temperature proxies, Tripati et al. methods.
     URI: geox://deep_time/temperature
@@ -1282,6 +1712,8 @@ def geox_deeptime_temperature():
     Epistemic: DER — multi-proxy temperature estimation
     """
     return "geox://deep_time/temperature"
+
+
 def geox_deeptime_sea_level():
     """Deep Time Sea Level — Haq et al. (1987, 2008) eustatic curves, Kominz backstripping.
     URI: geox://deep_time/sea_level
@@ -1291,6 +1723,8 @@ def geox_deeptime_sea_level():
     Epistemic: DER — sequence stratigraphic + backstripping analysis
     """
     return "geox://deep_time/sea_level"
+
+
 def geox_deeptime_o2():
     """Deep Time O₂ — Berner (2006, 2009) GEOCARBMOD, Phanerozoic pO₂.
     URI: geox://deep_time/o2

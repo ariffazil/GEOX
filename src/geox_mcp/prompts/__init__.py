@@ -395,6 +395,126 @@ BOUNDARY: EXPLAIN explains. INTERPRET interprets. EXPLAIN does not produce new c
 """
 
 
+# ─── Resource Contract v2 — workflow prompts (FORGED 2026-07-10) ──────────────
+# Per MCP docs-agent Prompts spec (2025-06-18): prompts are user-driven TEMPLATES.
+# Each prompt here binds a multi-tool workflow with F1/F2/F11 floors.
+
+GEOX_ANALYSE_WELL_LOG_PROMPT = """\
+You are GEOX_ANALYSE_WELL_LOG — single-well petrophysics + interpretation.
+
+TASK: Take a LAS file end-to-end and emit a defended interpretation.
+
+WORKFLOW (in order):
+  1. geox_well_ingest(las_path=PATH) → artifact_ref
+  2. geox_well_qc(artifact_ref) → register/depth validation
+  3. geox_petrophysics(artifact_ref, vsh=True, porosity=True, sw=True) → curves
+  4. geox_egs_claim_create with evidence_for/against for each pay zone
+
+OUTPUT:
+  - Pay summary (top N zones, net pay, average porosity, average Sw)
+  - Net/Gross ratio with depth confidence
+  - Fluid contacts (OWC, GOC, GWC) with evidence chain
+  - Claim envelope (sealed for downstream audit)
+
+DISCIPLINE:
+  - F2 TRUTH: every pay call cites the depth + curve + cutoff used.
+  - F7 HUMILITY: confidence never exceeds 0.90.
+  - F11 AUDIT: every claim carries actor_signature + read_at_iso.
+  - DO NOT extrapolate beyond the LAS depth range — flag as gap.
+
+AUTHORITY: GEOX proposes. arifOS judges. Arif decides.
+"""
+
+GEOX_SCREEN_PROSPECT_PROMPT = """\
+You are GEOX_SCREEN_PROSPECT — bid-round prospect screening.
+
+TASK: Take a named prospect and produce a PROCEED|REVIEW|KILL ruling
+backed by the GEOX kill-matrix and full evidence chain.
+
+WORKFLOW:
+  1. geox_basin(basin_name=NAME, mode='overview') → basin context
+  2. geox_prospect(prospect_ref=REF, mode='screen', evidence_refs=[...])
+  3. apply GEOX 7 kill filters (K001-K007):
+       K001 depth-preservation   K002 slope-magnitude
+       K003 facies-belts         K004 tectonic-compatibility
+       K005 reflector-coherence  K006 Vp-basement
+       K007 mud-volcano-probability
+  4. geox_egs_claim_challenge on any weak link
+  5. emit verdict with full evidence chain
+
+OUTPUT:
+  - Verdict: PROCEED | REVIEW | KILL
+  - Surviving filters + their score (0.0 - 1.0)
+  - Failing filters with reason + alternative hypothesis
+  - Required follow-up data to lift KILL → REVIEW
+
+DISCIPLINE:
+  - F1 AMANAH: every claim reversible or backed up.
+  - F6 MARUAH: never name individuals — reference roles.
+  - F9 ANTI-HANTU: do not soften — KILL is KILL if physics says so.
+  - F11 AUDIT: full chain of evidence attached.
+
+ADVISORY ONLY: GEOX produces. arifOS judges. Arif decides.
+"""
+
+GEOX_TIE_WELL_TO_SEISMIC_PROMPT = """\
+You are GEOX_TIE_WELL_TO_SEISMIC — comprehensive well-to-seismic tie.
+
+TASK: Bind a well to a seismic volume with full falsification discipline.
+
+WORKFLOW:
+  1. geox_well_time_depth_calibrate(las_path, checkshot_path) — 25ms gate
+  2. geox_wavelet_extract_least_squares(well_name, ref, seismic)
+       — VOID if condition_number > 100× threshold
+  3. geox_well_seismic_mistie_rms(threshold_ms=25) — falsification gate
+  4. geox_tie_preflight → GO | HOLD | VOID verdict
+  5. If GO: geox_tie_receipt → sealed evidence envelope
+
+OUTPUT:
+  - Verdict: GO | HOLD | VOID with primary blocker
+  - Time-depth equation + residual statistics
+  - Wavelet phase, frequency band, polarity
+  - Receipt sealed to VAULT999 with sha256 + actor_signature
+
+CONSTITUTIONAL GATE:
+  - RMS > 25 ms → HOLD (constitutional threshold; tune-resolution limit).
+  - No checkshot → HOLD (cannot trust without checkshot anchor).
+  - Wavelet condition > 100× → VOID (numerically unstable extraction).
+
+DISCIPLINE:
+  - F2 TRUTH: every step cites the physical invariant tested.
+  - F7 HUMILITY: HOLD is the safe default when in doubt.
+  - F11 AUDIT: full receipt written regardless of verdict.
+"""
+
+GEOX_REEVAL_PAPER_PROMPT = """\
+You are GEOX_REEVAL_PAPER — paper re-evaluation protocol.
+
+TASK: Take a citable paper and re-evaluate its claims against current models
+and any newly available data. Honour citation provenance at all times.
+
+WORKFLOW:
+  1. geox_literature_paper(basin=B, paper_id=P) → markdown body + envelope
+  2. parse each claim with geox_biostrat_parse / geox_egs_query_claim
+  3. geox_red_team → contradiction scan against new evidence
+  4. per claim: geox_egs_claim_challenge OR geox_egs_evidence_attach
+
+OUTPUT:
+  - Claim-by-claim ruling: HOLD (still valid) | REVISE (new evidence) | RETRACT
+  - Citation chain preserved verbatim (every statement cites line/section)
+  - Diff vs original: updated equations, redated ages, additional faults
+
+DISCIPLINE:
+  - F2 TRUTH: every statement cites line/section in original paper.
+  - F6 MARUAH: respect original author's voice; never caricature.
+  - F7 HUMILITY: confidence capped at 0.85 (paper claims are INT not OBS).
+  - F9 ANTI-HANTU: never claim original author was wrong without evidence.
+  - F11 AUDIT: every challenge / attachment has actor_signature + sha256.
+
+GUARD: if the paper's claims are not accessible to GEOX tools (no LAS, no
+position data), return HOLD and ask Arif for source data.
+"""
+
 # ══════════════════════════════════════════════════════════════════════════════
 # CONTRAST MATRIX — What each prompt does vs does NOT do
 # ══════════════════════════════════════════════════════════════════════════════
@@ -424,6 +544,60 @@ CONTRAST_MATRIX = """
 
 def register_prompts(mcp: Any) -> None:
     """Register all GEOX prompts."""
+
+    # ── Workflow templates — added in Resource Contract v2 (FORGED 2026-07-10) ──
+    # These four prompts cover the user-facing workflows that the 10 core
+    # pipeline prompts (sense/qc/interpret/...) don't surface directly.
+    # Per MCP docs-agent Prompts specification (2025-06-18): prompts are
+    # user-driven TEMPLATES, application-injected. Each one chains multiple
+    # GEOX tools in the canonical order with F1/F2/F11 discipline.
+
+    async def _analyse_well_log() -> str:
+        """Analyse a single well log end-to-end. Workflow:
+        (1) geox_well_ingest(las_path) → artifact_ref
+        (2) geox_well_qc → depth/register validation
+        (3) geox_petrophysics(vsh=True, porosity=True, sw=True) → curves
+        (4) geox_egs_claim_create with evidence_for/against
+        Outputs: pay summary, net/gross, fluid contacts, claim envelope.
+        Authority: GEOX proposes; arifOS judges; Arif decides.
+        """
+        return GEOX_ANALYSE_WELL_LOG_PROMPT
+
+    async def _screen_prospect() -> str:
+        """Screen a named prospect against the bid-round framework.
+        Workflow:
+        (1) geox_basin(basin_name, mode='overview') → basin context
+        (2) geox_prospect(pospect_ref, mode='screen', evidence_refs=[...])
+        (3) geox_kill_matrix filters (7 filters)
+        (4) geox_egs_claim_challenge on any weak link
+        Output: PROCEED | REVIEW | KILL verdict with full evidence chain.
+        F1-F13 floor compliance inline. Advisory only — arifOS judges.
+        """
+        return GEOX_SCREEN_PROSPECT_PROMPT
+
+    async def _tie_well_to_seismic() -> str:
+        """Comprehensive well-to-seismic tie. Falsification gate.
+        Workflow:
+        (1) geox_well_time_depth_calibrate(las_path, checkshot_path)
+        (2) geox_wavelet_extract_least_squares(well_name, ref, seismic)
+        (3) geox_well_seismic_mistie_rms(threshold_ms=25)
+        (4) geox_tie_preflight → GO/HOLD/VOID verdict
+        (5) If GO: geox_tie_receipt → sealed evidence envelope
+        Constitution: every tie must pass the 25ms RMS gate. HOLD if not.
+        """
+        return GEOX_TIE_WELL_TO_SEISMIC_PROMPT
+
+    async def _reeval_paper() -> str:
+        """Re-evaluate a citable paper using current models + new data.
+        Workflow:
+        (1) geox_literature_paper(basin, paper_id) → markdown body
+        (2) geox_egs_query_claim(claim_id=...) → provenance of each claim
+        (3) geox_red_team → contradiction scan
+        (4) geox_egs_claim_challenge or geox_egs_evidence_attach (per result)
+        Outputs: claim-by-claim hold/revise ruling, citation chain preserved.
+        Honours F2 TRUTH: every statement cites line/section in original paper.
+        """
+        return GEOX_REEVAL_PAPER_PROMPT
 
     async def _sense() -> str:
         return GEOX_SENSE_PROMPT
@@ -505,3 +679,46 @@ def register_prompts(mcp: Any) -> None:
         name="geox_explain",
         description="EXPLAIN: UI panel data → human-readable summary.",
     )(_explain)
+
+    # ── Resource Contract v2 — workflow templates (FORGED 2026-07-10) ─────
+    mcp.prompt(
+        name="analyse-well-log",
+        description=(
+            "ANALYSE: single-well petrophysics + interpretation. "
+            "Takes a LAS file end-to-end → pay summary + claim envelope. "
+            "Workflow: well_ingest → well_qc → petrophysics → claim_create. "
+            "F2 TRUTH: every pay call cites depth+curve+cutoff. F7: cap 0.90. "
+            "F11: every claim carries actor_signature + read_at_iso."
+        ),
+    )(_analyse_well_log)
+
+    mcp.prompt(
+        name="screen-prospect",
+        description=(
+            "SCREEN: bid-round prospect screening via 7 kill filters (K001-K007). "
+            "Output: PROCEED | REVIEW | KILL with surviving filter scores + "
+            "required follow-up data. F1 AMANAH, F6 MARUAH, F9 ANTI-HANTU, F11 "
+            "AUDIT. Advisory only — arifOS judges, Arif decides."
+        ),
+    )(_screen_prospect)
+
+    mcp.prompt(
+        name="tie-well-to-seismic",
+        description=(
+            "TIE: comprehensive well-to-seismic tie with falsification gates. "
+            "Workflow: time_depth_calibrate → wavelet_extract → mistie_rms → "
+            "tie_preflight → tie_receipt. RMS > 25ms → HOLD. No checkshot → "
+            "HOLD. Wavelet condition > 100× → VOID. F11 AUDIT sealed receipt."
+        ),
+    )(_tie_well_to_seismic)
+
+    mcp.prompt(
+        name="reeval-paper",
+        description=(
+            "REEVAL: paper re-evaluation protocol. Workflow: literature_paper "
+            "→ claim_parse → red_team_contradictions → claim_challenge or "
+            "evidence_attach. Output: HOLD | REVISE | RETRACT per claim with "
+            "citation chain preserved. F2 TRUTH: every statement cites "
+            "line/section. F7 HUMILITY: paper claims cap 0.85 (INT not OBS)."
+        ),
+    )(_reeval_paper)

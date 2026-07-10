@@ -860,3 +860,68 @@ journalctl -u geox-mcp -n 50 --no-pager
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
+
+---
+
+## Resource Contract v2 (MCP 2025-11-25)
+
+Forged 2026-07-10 — zenned `geox://` resource surface per docs-agent corrections.
+
+| Layer | File | Role |
+|---|---|---|
+| SOT (URIs) | `src/geox_mcp/uri_schemes.py` | 39 entries; 18 parametric templates; F2 fail-closed builder |
+| Pagination | `src/geox_mcp/resources/pagination.py` | cursor encode/decode, 500/page cap, session-scoped |
+| Registration | `src/geox_mcp/resources/__init__.py` | `register_resources()` + `_zen_existing()` post-processor |
+| Capabilities | `src/geox_mcp/server.py:2313` | declares only what is implemented (no `subscribe` ghost) |
+
+### Contract bindings (spec citations)
+
+| Doctrine | Implementation |
+|---|---|
+| External live APIs ⇒ Tools, not Resources | Macrostrat cached-as-Resource + live-via-Tool `geox_basin(mode='macrostrat_*')` |
+| `_meta` Shape A on contents object | `_geox_meta_envelope()` helper |
+| Annotations on 3 places (def / template / content) | `_lit_annotations()` applied uniformly |
+| `title` distinct from `name` | every template carries both |
+| `size` on blob returns | `BLOB_INLINE` capped by `max_size_bytes` |
+| Coarse `list_changed` (no payload) | server card `resources.listChanged: true` only |
+| Templates = URI shapes only (no `supportsList`) | all 18 templates enforce this |
+| `inode/directory` for basin-level grouping | reserved for future folder UI |
+| Bundle returns (multi-contents) | `literature_paper`, `well`, `claim` return `{"contents": [...]}` |
+
+### Templates — primary
+
+```
+geox://literature/{basin}/{paper_id}    # markdown, DOMAIN_ONLY
+geox://wells/{basin}/{well_id}          # json summary, DOMAIN_ONLY
+geox://claims/{claim_id}                # claim envelope, READ-only
+geox://seismic/{basin}/{volume_id}      # metadata only — volume binary via URI_EXTERNAL
+geox://render/cubes/{cube_id}/lod/{lod}/brick/{ix}/{iy}/{iz}  # progressive streaming
+geox://render/surfaces/{surface_id}     # binary mesh
+geox://render/cubes/{volume_id}/{orientation}/{slice_index}    # 2D slice Float32
+geox://render/cubes/{cube_id}/manifest  # brick grid + LOD
+geox://render/payload-schema/{version}
+geox://layers/{layer_id}/package
+geox://basins/{basin}/profile
+geox://wells/{basin}/{well_id}/logs
+geox://wells/{basin}/{well_id}/tops
+geox://tree777://skills/geox/{name}
+geox://tree777://geo/concepts/{name}
+geox://tree777://geo/scars/{name}
+geox://resources/{category}/{name}
+geox://claims/{claim_id}
+```
+
+### 888_HOLD gating
+
+Items **not executed** in v2 because they are sovereign-gated:
+
+| Item | Source |
+|---|---|
+| `git push origin main` | GEOX AGENTS.md (sovereign commit chain) |
+| Live daemon restart to expose new resources | until Arif acks `buat ja` |
+| Mutating `CANONICAL_PUBLIC_TOOLS` | GEOX AGENTS.md (locked, count is runtime fact) |
+| AAA federation manifest regeneration | `/root/AAA/federation-p1/manifests/geox/manifest.json` (35 stale Phase 3 tool refs) |
+| Phase 3 deferred tools (D1-D17, Prithvi, TerraMind, …) | GEOX AGENTS.md deferred gate |
+
+Receipt: `forge_work/2026-07-10/RESOURCE-CONTRACT-v2.md` (write when v2 fully seals).
+
