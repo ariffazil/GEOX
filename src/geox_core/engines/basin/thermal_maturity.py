@@ -32,7 +32,7 @@ References:
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -196,7 +196,7 @@ def easyro_compute(
             X[i] = min(X[i] + dX, 1.0)
 
     # Compute EasyRo
-    weighted_x = sum(f * x for f, x in zip(EASYRO_F, X))
+    weighted_x = sum(f * x for f, x in zip(EASYRO_F, X, strict=False))
     easyro = 0.2 + 0.8 * weighted_x
 
     return easyro
@@ -326,7 +326,7 @@ def burial_maturity_history(
     easyro_accum = 0.2
     tti_accum = 0.0
 
-    for i, (age, temp) in enumerate(zip(uniform_ages, uniform_temps)):
+    for _i, (age, temp) in enumerate(zip(uniform_ages, uniform_temps, strict=False)):
         # Compute EasyRo for this step
         # Use the temperature at this step
         dt_seconds = time_step_myr * 1e6 * 365.25 * 24 * 3600
@@ -360,8 +360,8 @@ def burial_maturity_history(
     ro_from_tti = tti_to_ro(tti_final)
 
     # Temperature and depth history
-    temperature_history = list(zip(uniform_ages, uniform_temps))
-    depth_history = list(zip(uniform_ages, uniform_depths))
+    temperature_history = list(zip(uniform_ages, uniform_temps, strict=False))
+    depth_history = list(zip(uniform_ages, uniform_depths, strict=False))
 
     # Hydrocarbon windows
     oil_entered = None

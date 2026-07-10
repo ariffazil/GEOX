@@ -20,26 +20,26 @@ from geox_core.engines.basin.backstrip import (
     decompact_layer,
     tectonic_subsidence,
 )
-from geox_core.engines.basin.mass_balance import (
-    MassBalanceResult,
-    SedimentBudget,
-    compute_mass_balance,
-    compaction_correction,
-    source_sink_accounting,
-)
-from geox_core.engines.basin.thermal_maturity import (
-    MaturityResult,
-    ThermalHistory,
-    easyro_compute,
-    tti_compute,
-    burial_maturity_history,
-)
 from geox_core.engines.basin.claim_graph import (
     ClaimGraph,
     ClaimNode,
     EvaluationResult,
     evaluate_graph,
     propagate_failure,
+)
+from geox_core.engines.basin.mass_balance import (
+    MassBalanceResult,
+    SedimentBudget,
+    compaction_correction,
+    compute_mass_balance,
+    source_sink_accounting,
+)
+from geox_core.engines.basin.thermal_maturity import (
+    MaturityResult,
+    ThermalHistory,
+    burial_maturity_history,
+    easyro_compute,
+    tti_compute,
 )
 
 __all__ = [

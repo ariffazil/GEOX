@@ -46,9 +46,7 @@ async def geox_claim_graph_evaluate(
         ClaimNode,
         ClaimVerdict,
         DependencyType,
-        FailureMode,
         evaluate_graph,
-        propagate_failure,
     )
 
     # Build graph
@@ -59,12 +57,6 @@ async def geox_claim_graph_evaluate(
         "and": DependencyType.AND,
         "or": DependencyType.OR,
         "weighted": DependencyType.WEIGHTED,
-    }
-
-    fail_map = {
-        "cascade": FailureMode.CASCADE,
-        "local": FailureMode.LOCAL,
-        "attenuated": FailureMode.ATTENUATED,
     }
 
     # Add claims

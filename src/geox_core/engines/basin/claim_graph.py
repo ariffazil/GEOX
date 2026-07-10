@@ -29,11 +29,11 @@ from __future__ import annotations
 import uuid
 from collections import defaultdict
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
-class ClaimVerdict(str, Enum):
+class ClaimVerdict(StrEnum):
     """Verdict for a claim."""
 
     SUPPORTED = "supported"
@@ -43,7 +43,7 @@ class ClaimVerdict(str, Enum):
     VOID = "void"
 
 
-class DependencyType(str, Enum):
+class DependencyType(StrEnum):
     """How a parent claim depends on its children."""
 
     AND = "and"  # parent fails if ANY child fails
@@ -51,7 +51,7 @@ class DependencyType(str, Enum):
     WEIGHTED = "weighted"  # parent validity = weighted sum
 
 
-class FailureMode(str, Enum):
+class FailureMode(StrEnum):
     """How failure propagates."""
 
     CASCADE = "cascade"  # failure propagates to all ancestors
