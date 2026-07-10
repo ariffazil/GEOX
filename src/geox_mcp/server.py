@@ -294,7 +294,9 @@ mcp = FastMCP(**_mcp_kwargs)
 from geox.egs.registry import register_egs_tools, init_egs_state
 
 init_egs_state()
-register_egs_tools(mcp)
+# DEREGISTERED 2026-07-10: EGS tools disabled (12 tools removed from surface).
+# Code preserved. Re-enable by uncommenting.
+# register_egs_tools(mcp)
 
 # ── Governance wiring (FORGE 2026-06-25) ─────────────────────────────────────
 # Register the FastMCP-native governance middleware BEFORE the Starlette app
@@ -546,7 +548,7 @@ async def _doctrine_godel_review(
 
 
 # ── W5-W8 FORGE — Phase A first wave: Foundation model backing engine ────────
-@mcp.tool(name="geox_prithvi_eo_inference", annotations=_geox_annotations("geox_prithvi_eo_inference"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_prithvi_eo_inference", annotations=_geox_annotations("geox_prithvi_eo_inference"))
 async def _prithvi_eo_inference(
     tile_id: str,
     task: str = "land_cover",
@@ -574,7 +576,7 @@ async def _prithvi_eo_inference(
 
 
 # ── W9-W12 FORGE — Phase B first wave: Nonseismic geophysics + open data ────
-@mcp.tool(name="geox_gravity_magnetic_forward", annotations=_geox_annotations("geox_gravity_magnetic_forward"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_gravity_magnetic_forward", annotations=_geox_annotations("geox_gravity_magnetic_forward"))
 async def _gravity_magnetic_forward(
     survey_type: str = "gravity",
     easting_m: list[float] | None = None,
@@ -602,7 +604,7 @@ async def _gravity_magnetic_forward(
     return (await geox_gravity_magnetic_forward(req)).model_dump(mode="json")
 
 
-@mcp.tool(name="geox_emag2_ingest", annotations=_geox_annotations("geox_emag2_ingest"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_emag2_ingest", annotations=_geox_annotations("geox_emag2_ingest"))
 async def _emag2_ingest(force: bool = False) -> dict:
     """Fetch EMAG2v3 global magnetic anomaly grid (offline-safe stub by default)."""
     from geox_mcp.tools.geophysics_nonseismic import (
@@ -614,7 +616,7 @@ async def _emag2_ingest(force: bool = False) -> dict:
     return (await geox_emag2_ingest(req)).model_dump(mode="json")
 
 
-@mcp.tool(name="geox_icgem_models", annotations=_geox_annotations("geox_icgem_models"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_icgem_models", annotations=_geox_annotations("geox_icgem_models"))
 async def _icgem_models() -> dict:
     """List ICGEM (GFZ Potsdam) global gravity field models."""
     from geox_mcp.tools.geophysics_nonseismic import (
@@ -625,7 +627,7 @@ async def _icgem_models() -> dict:
     return (await geox_icgem_models(ICGEMListRequest())).model_dump(mode="json")
 
 
-@mcp.tool(name="geox_geochem_kinetics", annotations=_geox_annotations("geox_geochem_kinetics"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_geochem_kinetics", annotations=_geox_annotations("geox_geochem_kinetics"))
 async def _geochem_kinetics(
     initial_smectite_frac: float = 0.5,
     T_C: float = 100.0,
@@ -653,7 +655,7 @@ async def _geochem_kinetics(
 
 
 # ── W13+ FORGE — Phase C: Multi-physics Earth Witness (joint inversion + CSEM/MT + biostrat) ──
-@mcp.tool(name="geox_joint_inversion", annotations=_geox_annotations("geox_joint_inversion"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_joint_inversion", annotations=_geox_annotations("geox_joint_inversion"))
 async def _joint_inversion(
     observations: list[dict] | None = None,
     prior: dict | None = None,
@@ -682,7 +684,7 @@ async def _joint_inversion(
     return (await geox_joint_inversion(req)).model_dump(mode="json")
 
 
-@mcp.tool(name="geox_mt_forward", annotations=_geox_annotations("geox_mt_forward"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_mt_forward", annotations=_geox_annotations("geox_mt_forward"))
 async def _mt_forward(
     layers: list[dict] | None = None,
     frequencies_hz: list[float] | None = None,
@@ -700,7 +702,7 @@ async def _mt_forward(
     return (await geox_mt_forward(req)).model_dump(mode="json")
 
 
-@mcp.tool(name="geox_biostrat_constraint", annotations=_geox_annotations("geox_biostrat_constraint"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_constraint", annotations=_geox_annotations("geox_biostrat_constraint"))
 async def _biostrat_constraint(
     state: dict,
     age_ma: float,
@@ -719,7 +721,7 @@ async def _biostrat_constraint(
 
 
 # ── Phase 2.7 (2026-07-03): Biostratigraphy Parser — NN zone + GDE + lithology ──
-@mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
 async def _biostrat_parse(
     text: str = "",
     paleoenvironment: str = "",
@@ -744,7 +746,7 @@ async def _biostrat_parse(
 
 
 # ── Phase 2.7 (2026-07-03): NN Zone Age Resolution ──
-@mcp.tool(name="geox_biostrat_nn_age", annotations=_geox_annotations("geox_biostrat_nn_age"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_nn_age", annotations=_geox_annotations("geox_biostrat_nn_age"))
 async def _biostrat_nn_age(
     zone: str = "",
     scheme: str = "Martini",
@@ -764,7 +766,7 @@ async def _biostrat_nn_age(
 
 
 # ── Phase 2.7 (2026-07-03): Biostrat Ruling Check — contradiction detector ──
-@mcp.tool(name="geox_biostrat_ruling_check", annotations=_geox_annotations("geox_biostrat_ruling_check"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_ruling_check", annotations=_geox_annotations("geox_biostrat_ruling_check"))
 async def _biostrat_ruling_check(
     biozone: str = "",
     lithology: str = "",
@@ -795,7 +797,7 @@ async def _biostrat_ruling_check(
 
 
 # ── Phase 2.7 (2026-07-03): Biostrat Falsification Engine — 8-gate Popperian test ──
-@mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
 async def _biostrat_falsify(
     fossil_group: str = "calcareous_nannofossil",
     biozone: str = "",
@@ -853,7 +855,7 @@ async def _biostrat_falsify(
 
 
 # ── Phase 2.8 (2026-07-03): Macrostrat Calibrate — biostrat → absolute age bridge ──
-@mcp.tool(name="geox_macrostrat_calibrate", annotations=_geox_annotations("geox_macrostrat_calibrate"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_macrostrat_calibrate", annotations=_geox_annotations("geox_macrostrat_calibrate"))
 async def _macrostrat_calibrate(
     biozone: str = "",
     lat: float | None = None,
@@ -896,7 +898,7 @@ async def _macrostrat_calibrate(
 
 
 # ── W13+ FORGE — Phase C: PINN-style 1D seismic inversion (Faust + Gardner prior) ──
-@mcp.tool(name="geox_seismic_inversion", annotations=_geox_annotations("geox_seismic_inversion"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_seismic_inversion", annotations=_geox_annotations("geox_seismic_inversion"))
 async def _seismic_inversion(
     reflectivity: list[float] | None = None,
     sample_interval_s: float = 0.002,
@@ -956,7 +958,7 @@ async def _geomechanics(
 
 
 # ── W13+ FORGE — A2 GRAVITY SCREEN (evidence lane, no judgment required) ──
-@mcp.tool(name="geox_gravity_screen", annotations=_geox_annotations("geox_gravity_screen"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_gravity_screen", annotations=_geox_annotations("geox_gravity_screen"))
 async def _gravity_screen(
     observed_mGal: list[float],
     easting_m: list[float],
@@ -996,7 +998,7 @@ async def _gravity_screen(
 
 
 # ── A2 JUDGMENT PREFLIGHT — guidance tool (evidence lane) ───────────────────
-@mcp.tool(name="geox_judgment_preflight", annotations=_geox_annotations("geox_judgment_preflight"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_judgment_preflight", annotations=_geox_annotations("geox_judgment_preflight"))
 async def _judgment_preflight(
     target_tool: str,
     actor_id: str | None = None,
@@ -1079,7 +1081,7 @@ async def _judgment_preflight(
 
 
 # ── W14+ FORGE 2026-06-21: GEOX-LEM inference (substrate live, weights pending GPU + 888) ──
-@mcp.tool(name="geox_lem_predict", annotations=_geox_annotations("geox_lem_predict"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_lem_predict", annotations=_geox_annotations("geox_lem_predict"))
 async def _lem_predict(
     well_id: str,
     curves: dict,
@@ -1167,7 +1169,7 @@ async def _deep_time_state(
 
 
 # ── Phase 2.2 (2026-06-29): Earth Atlas — Natural Earth 10m point-in-country + land/water ──
-@mcp.tool(name="geox_isitwater", annotations=_geox_annotations("geox_isitwater"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_isitwater", annotations=_geox_annotations("geox_isitwater"))
 async def _geox_isitwater(
     lat: float,
     lon: float,
@@ -1183,7 +1185,7 @@ async def _geox_isitwater(
     return await _impl(lat=lat, lon=lon)
 
 
-@mcp.tool(name="geox_context_at_location", annotations=_geox_annotations("geox_context_at_location"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_context_at_location", annotations=_geox_annotations("geox_context_at_location"))
 async def _geox_context_at_location(
     lat: float,
     lon: float,
@@ -1198,7 +1200,7 @@ async def _geox_context_at_location(
     return await _impl(lat=lat, lon=lon)
 
 
-@mcp.tool(name="geox_atlas", annotations=_geox_annotations("geox_atlas"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_atlas", annotations=_geox_annotations("geox_atlas"))
 async def _geox_atlas(
     lat: float,
     lon: float,
@@ -1242,7 +1244,7 @@ async def _geox_atlas(
     return result
 
 
-@mcp.tool(name="geox_forbidden_claims_scan", annotations=_geox_annotations("geox_forbidden_claims_scan"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_forbidden_claims_scan", annotations=_geox_annotations("geox_forbidden_claims_scan"))
 async def _geox_forbidden_claims_scan(
     text: str = "",
 ) -> dict:
@@ -1296,7 +1298,7 @@ async def _geox_forbidden_claims_scan(
 # Cached renders. Guardrailed for miskin VPS survival.
 
 
-@mcp.tool(name="geox_map_layers_list", annotations=_geox_annotations("geox_map_layers_list"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_map_layers_list", annotations=_geox_annotations("geox_map_layers_list"))
 async def _geox_map_layers_list(
     bbox: list[float],
     theme: str | None = None,
@@ -1316,7 +1318,7 @@ async def _geox_map_layers_list(
     return await _impl(bbox=bbox, theme=theme, include_unavailable=include_unavailable)
 
 
-@mcp.tool(name="geox_map_scene_plan", annotations=_geox_annotations("geox_map_scene_plan"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_map_scene_plan", annotations=_geox_annotations("geox_map_scene_plan"))
 async def _geox_map_scene_plan(
     bbox: list[float],
     layer_ids: list[str] | None = None,
@@ -1347,7 +1349,7 @@ async def _geox_map_scene_plan(
     )
 
 
-@mcp.tool(name="geox_map_render_preview", annotations=_geox_annotations("geox_map_render_preview"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_map_render_preview", annotations=_geox_annotations("geox_map_render_preview"))
 async def _geox_map_render_preview(
     scene_id: str | None = None,
     bbox: list[float] | None = None,
@@ -1380,7 +1382,7 @@ async def _geox_map_render_preview(
     )
 
 
-@mcp.tool(name="geox_map_export_package", annotations=_geox_annotations("geox_map_export_package"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_map_export_package", annotations=_geox_annotations("geox_map_export_package"))
 async def _geox_map_export_package(
     scene_plan_id: str,
     formats: list[str] | None = None,
@@ -1428,7 +1430,7 @@ async def _geox_map_export_package(
 # ── geox_wealth_feed — removed (Phase 1 Clean Slate, → arif_bridge_connect) ──
 
 
-@mcp.tool(name="geox_query_macrostrat", annotations=_geox_annotations("geox_query_macrostrat"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_query_macrostrat", annotations=_geox_annotations("geox_query_macrostrat"))
 async def geox_query_macrostrat(
     basin_name: str = "",
     mode: str = "macrostrat_units",
@@ -1463,7 +1465,7 @@ async def geox_query_macrostrat(
 # A-FORGE 888_HOLD approved 2026-07-03 by F13 SOVEREIGN.
 
 
-@mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
 async def _geox_contrast_detect(
     dimension: str = "all",
     mass_predicted: float | None = None,
@@ -1572,7 +1574,7 @@ async def _geox_contrast_detect(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-@mcp.tool(name="geox_rsi_interpret", annotations=_geox_annotations("geox_rsi_interpret"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_rsi_interpret", annotations=_geox_annotations("geox_rsi_interpret"))
 async def _geox_rsi_interpret(
     image_path: str,
     mode: str = "horizon_fault_pick",
@@ -1622,7 +1624,7 @@ async def _geox_rsi_interpret(
     )
 
 
-@mcp.tool(name="geox_render_audit", annotations=_geox_annotations("geox_render_audit"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_render_audit", annotations=_geox_annotations("geox_render_audit"))
 async def _geox_render_audit(
     image_path: str,
     agc_window: int = 30,
@@ -2388,7 +2390,22 @@ async def mcp_server_card(request: Request) -> JSONResponse:
 
 
 async def tools_list_handler(request: Request) -> JSONResponse:
-    tools = [{"name": t} for t in CANONICAL_PUBLIC_TOOLS]
+    """Enriched tool list — includes use_when for tools that have it in the manifest."""
+    from geox_mcp.tools_manifest import CANONICAL_TOOLS
+
+    tools = []
+    for t in CANONICAL_PUBLIC_TOOLS:
+        entry = {"name": t}
+        if t in CANONICAL_TOOLS:
+            meta = CANONICAL_TOOLS[t]
+            entry["description"] = meta.description
+            entry["use_when"] = meta.use_when
+            entry["domain"] = meta.domain
+            entry["acrisk"] = meta.acrisk
+            entry["is_888_hold"] = meta.is_888_hold
+            if meta.modes:
+                entry["modes"] = meta.modes
+        tools.append(entry)
     return JSONResponse({"tools": tools, "count": len(tools)})
 
 
