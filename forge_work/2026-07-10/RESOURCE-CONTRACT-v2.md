@@ -176,3 +176,30 @@ Per Arif's "zen all then push and deploy":
 | `resources.subscribe` | **false** | ✓ removed ghost (was `True` in server card before) |
 | `tools.listChanged` | true | ✓ |
 
+
+---
+
+## 11. Lifecycle Spec Application (2026-07-10, post-deploy)
+
+Per MCP lifecycle spec tip — "Declare it or it doesn't exist":
+
+| Capability | Declared | Honored? |
+|---|---|---|
+| `tools.listChanged` | true | ✓ `_emit_tools_list_changed()` fires on registry change |
+| `resources.listChanged` | true | ✓ NEW `_emit_resources_list_changed()` |
+| `prompts.listChanged` | true | ✓ NEW `_emit_prompts_list_changed()` |
+| `resources.subscribe` | false (omitted effectively) | ✓ declared false — no fake subscription handler |
+| `logging` | NEW `{}` | ✓ clients may set log level; no active emitter yet |
+| `completions` | NEW `{}` | ✓ clients may call completion/complete; implementation deferred |
+
+### NEW emitters (in `server.py`)
+
+| Emitter | Spec method | Use |
+|---|---|---|
+| `_emit_tools_list_changed()` | `notifications/tools/list_changed` | after tool add/remove |
+| `_emit_resources_list_changed()` | `notifications/resources/list_changed` | after paper/template add |
+| `_emit_prompts_list_changed()` | `notifications/prompts/list_changed` | after prompt add |
+| `_emit_resources_updated(uri)` | `notifications/resources/updated` | per-URI content change (only if subscribe: true negotiated — currently false so unused) |
+
+All four emit JSON-RPC-shaped payload; log-channel delivery (Streamable-HTTP limitation per docs-agent).
+
