@@ -1,6 +1,6 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-07-09T05:10Z
+last_verified: 2026-07-10T05:10Z
 live_commit: d1aec520
 live_version: v2026.07.06-phase3.1-rsi-pipeline
 port: 8081
@@ -9,7 +9,7 @@ federation_release: v2026.07.04-MCP-A2A
 changelog: /root/CHANGELOG-2026-07-04.md
 a2a_agent_json: /root/GEOX/.well-known/agent.json
 valid_from: 2026-06-14
-valid_until: 2026-08-08
+valid_until: 2026-08-09
 confidence: high
 scope: /root/geox
 machine_sot: /root/A-FORGE/forge_work/2026-07-09/MACHINE-SOT-2026-07-09.json
@@ -86,7 +86,7 @@ VAULT999  ← immutable record
 | License | Business Source License 1.1 (BSL-1.1) |
 | Governance | arifOS F1–F13 |
 | Authority | Evidence-only |
-| Status | Active (v2026.06.29-BSL-GOVERNANCE); verify with `curl :8081/health` |
+| Status | Active (v2026.07.06-phase3.1-rsi-pipeline); verify with `curl :8081/health` |
 
 [![Forge Pipeline](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml)
 [![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml)
