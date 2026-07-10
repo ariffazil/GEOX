@@ -595,70 +595,102 @@ CONTRAST_MATRIX = """
 
 
 def register_prompts(mcp: Any) -> None:
-    """Register all GEOX prompts."""
+    """Register all GEOX prompts.
 
-    # ── Workflow templates — added in Resource Contract v2 (FORGED 2026-07-10) ──
-    # These four prompts cover the user-facing workflows that the 10 core
-    # pipeline prompts (sense/qc/interpret/...) don't surface directly.
-    # Per MCP docs-agent Prompts specification (2025-06-18): prompts are
-    # user-driven TEMPLATES, application-injected. Each one chains multiple
-    # GEOX tools in the canonical order with F1/F2/F11 discipline.
+    Spec alignment (MCP 2025-06-18):
+    - Workflow prompts declare arguments via function signature
+    - FastMCP auto-generates PromptArgument[] from parameters
+    - Core prompts embed resources via EmbeddedResource
+    """
 
-    async def _analyse_well_log() -> str:
-        """Analyse a single well log end-to-end. Workflow:
-        (1) geox_well_ingest(las_path) → artifact_ref
-        (2) geox_well_qc → depth/register validation
-        (3) geox_petrophysics(vsh=True, porosity=True, sw=True) → curves
-        (4) geox_egs_claim_create with evidence_for/against
-        Outputs: pay summary, net/gross, fluid contacts, claim envelope.
-        Authority: GEOX proposes; arifOS judges; Arif decides.
+    # ── Workflow templates — arguments inferred from signature ───────────
+
+    async def _analyse_well_log(las_path: str, well_name: str = "") -> list[Message]:
+        """Analyse a single well log end-to-end.
+
+        Args:
+            las_path: Path to the LAS file
+            well_name: Well identifier for URI resolution
         """
-        return GEOX_ANALYSE_WELL_LOG_PROMPT
+        return [
+            _msg_text(GEOX_ANALYSE_WELL_LOG_PROMPT),
+            _msg_resource(
+                f"las://{well_name or 'unknown'}",
+                f"LAS path: {las_path}\nWell: {well_name}",
+            ),
+        ]
 
-    async def _screen_prospect() -> str:
-        """Screen a named prospect against the bid-round framework.
-        Workflow:
-        (1) geox_basin(basin_name, mode='overview') → basin context
-        (2) geox_prospect(pospect_ref, mode='screen', evidence_refs=[...])
-        (3) geox_kill_matrix filters (7 filters)
-        (4) geox_egs_claim_challenge on any weak link
-        Output: PROCEED | REVIEW | KILL verdict with full evidence chain.
-        F1-F13 floor compliance inline. Advisory only — arifOS judges.
+    async def _screen_prospect(basin_name: str, prospect_ref: str = "") -> list[Message]:
+        """Screen a named prospect.
+
+        Args:
+            basin_name: Basin identifier
+            prospect_ref: Prospect reference
         """
-        return GEOX_SCREEN_PROSPECT_PROMPT
+        return [
+            _msg_text(GEOX_SCREEN_PROSPECT_PROMPT),
+            _msg_resource(
+                f"geox://basins/{basin_name}/profile",
+                f"Basin: {basin_name}\nProspect: {prospect_ref}",
+            ),
+        ]
 
-    async def _tie_well_to_seismic() -> str:
-        """Comprehensive well-to-seismic tie. Falsification gate.
-        Workflow:
-        (1) geox_well_time_depth_calibrate(las_path, checkshot_path)
-        (2) geox_wavelet_extract_least_squares(well_name, ref, seismic)
-        (3) geox_well_seismic_mistie_rms(threshold_ms=25)
-        (4) geox_tie_preflight → GO/HOLD/VOID verdict
-        (5) If GO: geox_tie_receipt → sealed evidence envelope
-        Constitution: every tie must pass the 25ms RMS gate. HOLD if not.
+    async def _tie_well_to_seismic(
+        well_name: str, las_path: str = "", segy_path: str = "", checkshot_path: str = ""
+    ) -> list[Message]:
+        """Well-to-seismic tie.
+
+        Args:
+            well_name: Well identifier
+            las_path: Path to LAS file
+            segy_path: Path to SEG-Y file
+            checkshot_path: Path to checkshot file
         """
-        return GEOX_TIE_WELL_TO_SEISMIC_PROMPT
+        return [
+            _msg_text(GEOX_TIE_WELL_TO_SEISMIC_PROMPT),
+            _msg_resource(
+                f"las://{well_name}",
+                f"Well: {well_name}\nLAS: {las_path}\nSEG-Y: {segy_path}\nCheckshot: {checkshot_path}",
+            ),
+        ]
 
-    async def _reeval_paper() -> str:
-        """Re-evaluate a citable paper using current models + new data.
-        Workflow:
-        (1) geox_literature_paper(basin, paper_id) → markdown body
-        (2) geox_egs_query_claim(claim_id=...) → provenance of each claim
-        (3) geox_red_team → contradiction scan
-        (4) geox_egs_claim_challenge or geox_egs_evidence_attach (per result)
-        Outputs: claim-by-claim hold/revise ruling, citation chain preserved.
-        Honours F2 TRUTH: every statement cites line/section in original paper.
+    async def _reeval_paper(paper_id: str, basin: str = "") -> list[Message]:
+        """Re-evaluate a citable paper.
+
+        Args:
+            paper_id: Paper identifier
+            basin: Basin context
         """
-        return GEOX_REEVAL_PAPER_PROMPT
+        return [
+            _msg_text(GEOX_REEVAL_PAPER_PROMPT),
+            _msg_resource(
+                f"geox://literature/{paper_id}",
+                f"Paper: {paper_id}\nBasin: {basin}",
+            ),
+        ]
 
-    async def _sense() -> str:
-        return GEOX_SENSE_PROMPT
+    # ── Core Pipeline — resource embedding ──────────────────────────────
 
-    async def _qc() -> str:
-        return GEOX_QC_PROMPT
+    async def _sense(data_description: str = "") -> list[Message]:
+        """INGEST: Raw data → artifact_ref."""
+        return [
+            _msg_text(GEOX_SENSE_PROMPT),
+            _msg_resource("geox://capabilities", "Available ingestion tools and URI schemes."),
+        ]
 
-    async def _interpret() -> str:
-        return GEOX_INTERPRET_PROMPT
+    async def _qc(artifact_ref: str = "") -> list[Message]:
+        """VERIFY: artifact_ref → QC_VERIFIED."""
+        msgs: list[Message] = [_msg_text(GEOX_QC_PROMPT)]
+        if artifact_ref:
+            msgs.append(_msg_resource(f"artifact://geox/{artifact_ref}", f"Artifact: {artifact_ref}"))
+        return msgs
+
+    async def _interpret(claim_ids: str = "") -> list[Message]:
+        """SYNTHESIZE: QC_VERIFIED → claims."""
+        msgs: list[Message] = [_msg_text(GEOX_INTERPRET_PROMPT)]
+        if claim_ids:
+            msgs.append(_msg_resource("geox://claims/index", f"Claim IDs: {claim_ids}"))
+        return msgs
 
     async def _writer() -> str:
         return GEOX_WRITER_PROMPT
@@ -669,16 +701,24 @@ def register_prompts(mcp: Any) -> None:
     async def _cooling_path() -> str:
         return GEOX_COOLING_PATH_PROMPT
 
-    async def _red_team() -> str:
-        return GEOX_RED_TEAM_PROMPT
+    async def _red_team(claim_ids: str = "") -> list[Message]:
+        """CHALLENGE: Claims → contradictions."""
+        msgs: list[Message] = [_msg_text(GEOX_RED_TEAM_PROMPT)]
+        if claim_ids:
+            msgs.append(_msg_resource("geox://claims/index", f"Claim IDs: {claim_ids}"))
+        return msgs
 
-    async def _basin_screen() -> str:
-        return GEOX_BASIN_SCREEN_PROMPT
+    async def _basin_screen(basin_name: str = "") -> list[Message]:
+        """SCREEN: Basin → play fairway."""
+        msgs: list[Message] = [_msg_text(GEOX_BASIN_SCREEN_PROMPT)]
+        if basin_name:
+            msgs.append(_msg_resource(f"geox://basins/{basin_name}/profile", f"Basin: {basin_name}"))
+        return msgs
 
     async def _guard() -> str:
         return GEOX_GUARD_PROMPT
 
-    async def _explain() -> str:
+    async def _explain(panel_data: str = "") -> str:
         return GEOX_EXPLAIN_PROMPT
 
     # ── Core Pipeline ───────────────────────────────────────────────────
