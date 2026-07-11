@@ -76,7 +76,7 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
 _WITNESS_ANNOTATIONS: dict[str, dict] = {
     "geox_data_ingest_bundle": {
         "title": "Data Ingest Bundle",
-        "ui": {"resourceUri": "ui://well_desk"},
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -126,7 +126,7 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_subsurface_generate_candidates": {
         "title": "Subsurface Generate Candidates",
-        "ui": {"resourceUri": "ui://earth_volume"},
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -141,6 +141,7 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_seismic_compute": {
         "title": "Seismic Compute",
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -162,6 +163,7 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_prospect_evaluate": {
         "title": "Prospect Evaluate",
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -169,6 +171,7 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_map_context_scene": {
         "title": "Map Context Scene",
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
