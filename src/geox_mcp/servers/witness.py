@@ -13,7 +13,9 @@ from __future__ import annotations
 from typing import Any
 
 from fastmcp import FastMCP
+from fastmcp.apps import AppConfig, ResourceCSP
 
+from geox_mcp.apps.workbench import GEOX_UI_APPS
 from geox_mcp.tools._register import register_tools_on_server
 from geox_mcp.tools.basin import (
     geox_abstraction_guard,
@@ -243,8 +245,29 @@ _WITNESS_TASKS: set[str] = {
     "geox_evidence_reason",
 }
 
+# ── MCP App View bindings (forged 2026-07-11) ─────────────────────────────
+# Maps visual GEOX tools to the unified workbench resource.
+# When registered via register_tools_on_server(apps=...), the tool's metadata
+# advertises ui.resourceUri so MCP Apps hosts (ChatGPT, Claude, Copilot) know
+# to render the workbench iframe after a tool call.
+_WITNESS_APPS: dict[str, AppConfig] = {
+    name: AppConfig(
+        resourceUri="ui://geox/workbench-v1.html",
+        visibility=["app", "model"],
+    )
+    for name in (
+        "geox_map_context_scene",
+        "geox_seismic_compute",
+        "geox_horizon_contrast_surface",
+        "geox_subsurface_generate_candidates",
+        "geox_prospect_evaluate",
+        "geox_volume_get_frame_tool",  # backward-compat alias
+        "geox_seismic_compute_attribute_tool",  # backward-compat alias
+    )
+}
+
 
 def create_witness_server() -> FastMCP:
     server = FastMCP("geox-witness")
-    register_tools_on_server(server, _WITNESS_TOOLS, _WITNESS_ANNOTATIONS, tasks=_WITNESS_TASKS)
+    register_tools_on_server(server, _WITNESS_TOOLS, _WITNESS_ANNOTATIONS, tasks=_WITNESS_TASKS, apps=_WITNESS_APPS)
     return server

@@ -413,7 +413,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 81  # 2026-07-10 Basin engines: 77 + backstrip + mass_balance + thermal_maturity + claim_graph
+    _EXPECTED_CANONICAL = 76  # 2026-07-11 Post-Zen: -4 deregistered, -1 duplicate physical_reality_interpret
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
@@ -1767,9 +1767,11 @@ _register_prefab_apps()
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from geox_mcp.prompts import register_prompts
+from geox_mcp.apps.workbench import register_workbench
 from geox_mcp.resources import register_resources
 
 register_resources(mcp, is_geox_func=is_geox, enforce_geox_func=_enforce_geox)
+register_workbench(mcp)
 register_prompts(mcp)
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -2862,6 +2864,17 @@ def main() -> None:
         "'stdio' = standard I/O for local agent/proxy use (no port, no network).",
     )
     args = parser.parse_args()
+
+    # ── Boot upstream registry ──────────────────────────────────────────
+    # Register Macrostrat and other external data sources.
+    # Circuit breakers start CLOSED; lazy-connect on first proxied call.
+    try:
+        from geox_core.bridges.upstream_registry import register_defaults
+
+        register_defaults()
+        logger.info("Upstream registry booted: macrostrat registered")
+    except Exception as exc:
+        logger.warning("Upstream registry boot skipped: %s", exc)
 
     if args.transport == "stdio":
         # ── stdio transport: local agent/proxy use ────────────────────

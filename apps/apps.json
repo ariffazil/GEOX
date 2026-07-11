@@ -1,0 +1,88 @@
+{
+  "version": "1",
+  "generated": "2026-07-11",
+  "workbench": "ui://geox/workbench-v1.html",
+  "apps": [
+    {
+      "id": "well-desk",
+      "name": "WellDesk",
+      "title": "GEOX WellDesk — 1D+2D Well Log Viewer + Rock Physics Engine",
+      "uri": "ui://geox/well-desk",
+      "path": "apps/well-desk/index.html",
+      "status": "active",
+      "visual_tools": ["geox_well_ingest", "geox_well_qc", "geox_petrophysics"]
+    },
+    {
+      "id": "prospect-ui",
+      "name": "Basin Explorer",
+      "title": "GEOX Basin Explorer — AAA Grade",
+      "uri": "ui://geox/prospect-ui",
+      "path": "apps/prospect-ui/index.html",
+      "status": "active",
+      "visual_tools": ["geox_basin", "geox_prospect", "geox_map_scene_plan"]
+    },
+    {
+      "id": "seismic-vision-review",
+      "name": "Seismic Vision Review",
+      "title": "GEOX Seismic Vision Review",
+      "uri": "ui://geox/seismic-vision-review",
+      "path": "apps/seismic-vision-review/index.html",
+      "status": "scaffold",
+      "visual_tools": ["geox_seismic_cognition", "geox_vision", "geox_visual_understand"]
+    },
+    {
+      "id": "geox-mcp-visual",
+      "name": "GEOX Dashboard",
+      "title": "GEOX Dashboard Ω",
+      "uri": "ui://geox/geox-mcp-visual",
+      "path": "apps/geox-mcp-visual/index.html",
+      "status": "active",
+      "visual_tools": ["geox_surface_status"]
+    },
+    {
+      "id": "judge-console",
+      "name": "AC Risk Console",
+      "title": "GEOX AC_Risk Console",
+      "uri": "ui://geox/judge-console",
+      "path": "apps/judge-console/index.html",
+      "status": "active",
+      "visual_tools": ["geox_claim", "geox_evidence", "geox_doctrine"]
+    },
+    {
+      "id": "earth-volume",
+      "name": "Seismic Viewer",
+      "title": "GEOX Seismic Viewer",
+      "uri": "ui://geox/earth-volume",
+      "path": "apps/earth-volume/index.html",
+      "status": "active",
+      "visual_tools": ["geox_seismic_compute", "geox_seismic_interpret"]
+    },
+    {
+      "id": "attribute-audit",
+      "name": "Attribute Audit",
+      "title": "GEOX Attribute Audit",
+      "uri": "ui://geox/attribute-audit",
+      "path": "apps/attribute-audit/index.html",
+      "status": "preview",
+      "visual_tools": ["geox_render_audit", "geox_segy_trace_audit"]
+    },
+    {
+      "id": "georeference-map",
+      "name": "Georeference Map",
+      "title": "GEOX Georeference Map",
+      "uri": "ui://geox/georeference-map",
+      "path": "apps/georeference-map/index.html",
+      "status": "scaffold",
+      "visual_tools": ["geox_map_render_preview", "geox_map_export_package"]
+    },
+    {
+      "id": "analog-digitizer",
+      "name": "Analog Digitizer",
+      "title": "GEOX Analog Digitizer",
+      "uri": "ui://geox/analog-digitizer",
+      "path": "apps/analog-digitizer/index.html",
+      "status": "planned",
+      "visual_tools": ["geox_vision"]
+    }
+  ]
+}

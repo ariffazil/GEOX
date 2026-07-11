@@ -29,87 +29,144 @@ logger = logging.getLogger("geox.webmcp")
 GEOX_VERSION = os.getenv("GEOX_VERSION", "2026.06.06")
 GEOX_SEAL = "DITEMPA BUKAN DIBERI"
 
-# ── Canonical tool categories for display ──────────────────────────────────
+# ── Canonical tool categories from live registry (77 tools, 2026-07-11) ──
+# Auto-generated from CANONICAL_PUBLIC_TOOLS + INTERNAL_TOOLS
 TOOL_CATEGORIES: list[dict[str, Any]] = [
     {
-        "category": "Data Ingest & QC",
+        "category": "01 — Well Data Ingest & QC",
         "tools": [
-            "geox_data_ingest_bundle", "geox_data_qc_bundle",
-            "geox_header_inspect", "geox_las_inspect",
-            "geox_seismic_segy_inspect", "geox_dst_ingest_test",
+            "geox_well_ingest",
+            "geox_well_qc",
+            "geox_well_desurvey",
         ],
     },
     {
-        "category": "Evidence & Reasoning",
+        "category": "02 — Petrophysics",
         "tools": [
-            "geox_evidence_discover", "geox_evidence_reason",
-            "geox_evidence_attach", "geox_report_to_workflow",
+            "geox_petrophysics",
         ],
     },
     {
-        "category": "Subsurface & Petrophysics",
+        "category": "03 — Sequence Stratigraphy",
         "tools": [
-            "geox_subsurface_generate_candidates",
-            "geox_subsurface_verify_integrity",
+            "geox_sequence",
+            "geox_simulate_accommodation",
+            "geox_simulate_surfaces",
+            "geox_simulate_sequences",
+            "geox_simulate_routing",
+            "geox_biostrat_parse",
+            "geox_biostrat_nn_age",
+            "geox_biostrat_ruling_check",
+            "geox_biostrat_falsify",
+            "geox_macrostrat_calibrate",
         ],
     },
     {
-        "category": "Seismic Physics",
+        "category": "04 — Seismic Physics & Well Tie",
         "tools": [
-            "geox_seismic_compute", "geox_seismic_compute_attribute_tool",
-            "geox_volume_frame_tool", "geox_blend_volume_tool",
-            "geox_segy_export_tool",
-            "geox_fault_stick_ingest_tool",
-            "geox_attribute_registry_list_tool",
+            "geox_seismic_ingest",
+            "geox_seismic_compute",
+            "geox_seismic_interpret",
+            "geox_segy_audit",
+            "geox_segy_trace_audit",
+            "geox_well_tie_compute",
+            "geox_well_tie",
+            "geox_well_time_depth_calibrate",
+            "geox_well_seismic_mistie_rms",
+            "geox_wavelet_extract_least_squares",
+            "geox_tie_preflight",
+            "geox_tie_receipt",
+            "geox_benchmark_001",
         ],
     },
     {
-        "category": "Horizon & Structure",
+        "category": "05 — Seismic Cognition & Rendering",
         "tools": [
-            "geox_horizon_contrast_surface", "geox_coord_transform_tool",
-            "geox_blockspace_resolution_tool",
+            "geox_seismic_cognition",
+            "geox_rsi_interpret",
+            "geox_physical_reality_interpret",
+            "geox_geological_cognition_run",
+            "geox_render_audit",
+            "geox_panel_d_render",
+            "geox_panel_d_render_mcp",
+            "geox_cognitive_rank_hypotheses",
         ],
     },
     {
-        "category": "Sequence Stratigraphy",
-        "tools": ["geox_sequence_interpret"],
-    },
-    {
-        "category": "Basin & Prospect",
+        "category": "06 — 3D Modeling & Geomechanics",
         "tools": [
-            "geox_basin_resolve", "geox_basin_profile",
-            "geox_prospect_evaluate", "geox_query_intake",
-            "geox_literature_ingest",
+            "geox_3d_model_build",
+            "geox_3d_model",
+            "geox_subsurface_model",
+            "geox_geomechanics",
         ],
     },
     {
-        "category": "Macrostrat (Global Geology)",
+        "category": "07 — Basin & Deep Time",
         "tools": [
-            "geox_basin_profile (mode='macrostrat_units')",
-            "geox_basin_profile (mode='macrostrat_columns')",
+            "geox_basin",
+            "geox_basin_backstrip",
+            "geox_sediment_mass_balance",
+            "geox_thermal_maturity_history",
+            "geox_claim_graph_evaluate",
+            "geox_deep_time_state",
+            "geox_bid_round_screener",
         ],
     },
     {
-        "category": "Claim Engine",
+        "category": "08 — Atlas & Map Rendering",
         "tools": [
-            "geox_claim_create", "geox_claim_validate",
-            "geox_claim_challenge", "geox_claim_seal",
-        ],
-    },
-    {
-        "category": "Governance & Registry",
-        "tools": [
-            "geox_system_registry_status", "geox_abstraction_guard",
+            "geox_atlas",
+            "geox_map_layers_list",
+            "geox_map_scene_plan",
             "geox_map_context_scene",
+            "geox_map_render_preview",
+            "geox_map_export_package",
         ],
     },
     {
-        "category": "Vision V1 (Layer 1)",
+        "category": "09 — Vision & Perception",
         "tools": [
-            "geox_vision_perceptual_inventory",
-            "geox_vision_minimax_inference",
-            "geox_vision_calibrate",
-            "geox_vision_audit",
+            "geox_vision",
+            "geox_visual_understand",
+            "geox_visual_enhance",
+            "geox_visual_generate_hypotheses",
+        ],
+    },
+    {
+        "category": "10 — Evidence & Claims (EGS)",
+        "tools": [
+            "geox_egs_query_entity",
+            "geox_egs_query_claim",
+            "geox_egs_query_uncertainty",
+            "geox_egs_query_provenance",
+            "geox_egs_claim_create",
+            "geox_egs_claim_challenge",
+            "geox_egs_evidence_attach",
+            "geox_egs_evidence_reason",
+            "geox_egs_seismic_compute",
+            "geox_egs_rock_physics",
+            "geox_egs_data_qc_bundle",
+            "geox_egs_scenario_audit",
+            "geox_contrast_detect",
+            "geox_forbidden_claims_scan",
+        ],
+    },
+    {
+        "category": "11 — Internal (Claim/Evidence/Prospect/Doctrine)",
+        "tools": [
+            "geox_claim",
+            "geox_evidence",
+            "geox_prospect",
+            "geox_doctrine",
+        ],
+    },
+    {
+        "category": "12 — Federation & Wealth Bridge",
+        "tools": [
+            "geox_wealth_bridge_run",
+            "geox_wealth_consequence",
+            "geox_surface_status",
         ],
     },
 ]
@@ -121,22 +178,28 @@ _WEBCMP_HTML = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEOX WebMCP Console</title>
+<title>GEOX WebMCP Console — Earth Intelligence</title>
 <style>
-  :root { --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e; --text: #e0e0e0; --accent: #00d4aa; --gold: #d4af37; }
+  :root { --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e; --text: #e0e0e0; --accent: #00d4aa; --gold: #d4af37; --red: #e74c3c; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; line-height: 1.6; }
   .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 0.5rem; }
   h1 { font-size: 1.5rem; }
   h1 span { color: var(--accent); }
   .badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+  .badge.warn { background: var(--gold); }
+  .badge.offline { background: var(--red); color: #fff; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
   .card h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 0.5rem; }
   .card .value { font-size: 1.5rem; font-weight: 700; }
   .card .value.green { color: var(--accent); }
   .card .value.gold { color: var(--gold); }
+  .flex-row { display: flex; gap: 0.5rem; margin: 1rem 0; align-items: center; flex-wrap: wrap; }
+  .flex-row label { font-size: 0.8rem; color: #888; }
+  .flex-row input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.5rem; border-radius: 4px; font-family: monospace; flex: 1; min-width: 120px; }
+  .flex-row input::placeholder { color: #555; }
   .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; }
   .cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; }
   .cat-card h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); margin-bottom: 0.5rem; }
@@ -151,7 +214,14 @@ _WEBCMP_HTML = """<!DOCTYPE html>
   .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: #666; text-align: center; }
   .flex-row { display: flex; gap: 1rem; align-items: center; margin-bottom: 0.5rem; }
   .loading { opacity: 0.5; pointer-events: none; }
+  #map { height: 400px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; }
+  #map-info { font-size: 0.75rem; color: #888; padding: 0.25rem 0; min-height: 1.2rem; }
+  #map-info strong { color: var(--accent); }
+  .map-section { margin-bottom: 1.5rem; }
+  .map-section h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 0.5rem; }
 </style>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 </head>
 <body>
 <div class="container">
@@ -171,15 +241,29 @@ _WEBCMP_HTML = """<!DOCTYPE html>
     </div>
   </div>
 
-  <div id="tool-form">
-    <div class="flex-row">
-      <select id="tool-select" style="flex: 2;"><option value="">Select a tool...</option></select>
-      <button onclick="callTool()" id="call-btn">Call Tool</button>
-    </div>
-    <textarea id="tool-args" placeholder='{"mode": "health"}'></textarea>
+  <div class="map-section">
+    <h3>Interactive Map (MapLibre)</h3>
+    <div id="map"></div>
+    <div id="map-info"></div>
   </div>
 
-  <div id="output"></div>
+  <div id="tool-form">
+    <div class="flex-row" style="gap: 0.75rem;">
+      <select id="tool-select" style="flex: 3; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.5rem; border-radius: 4px; font-family: monospace;">
+        <option value="">Select a tool...</option>
+      </select>
+      <button onclick="callTool()" id="call-btn" style="background: var(--accent); color: #000; border: none; padding: 0.5rem 1.2rem; border-radius: 4px; font-weight: 600; cursor: pointer;">Call Tool</button>
+    </div>
+    <div class="flex-row" style="gap: 0.75rem;">
+      <label>Session ID:</label>
+      <input type="text" id="session-id" placeholder="optional">
+      <label>Actor ID:</label>
+      <input type="text" id="actor-id" placeholder="optional">
+    </div>
+    <textarea id="tool-args" placeholder='Enter tool arguments as JSON, e.g. {"mode": "health"}' style="width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.75rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem; min-height: 60px; resize: vertical;"></textarea>
+  </div>
+
+  <div id="output" class="card" style="display: none; white-space: pre-wrap; font-family: monospace; font-size: 0.85rem; overflow-x: auto;"></div>
 
   <h3 style="margin: 1rem 0 0.5rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #888;">Tool Registry</h3>
   <div class="cat-grid" id="tool-registry"></div>
@@ -191,6 +275,105 @@ _WEBCMP_HTML = """<!DOCTYPE html>
 
 <script>
 const WEBCMP_BASE = '/webmcp';
+const MAP_BBOX = [115.5, 4.0, 120.0, 7.5]; // Sabah basin default
+
+let mapLibreMap = null;
+
+async function loadMapContext(bbox, sessionId, actorId) {
+  const mapInfo = document.getElementById('map-info');
+  mapInfo.innerHTML = 'Loading GEOX scene...';
+  try {
+    const payload = { arguments: { bbox, mode: 'render_geojson' } };
+    if (sessionId) payload.session_id = sessionId;
+    if (actorId) payload.actor_id = actorId;
+    const res = await fetch(WEBCMP_BASE + '/call/geox_map_context_scene', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.verdict === 'VOID') {
+      mapInfo.innerHTML = '<span style="color:var(--red)">Error: ' + (data.error || 'call failed') + '</span>';
+      return null;
+    }
+    // Extract GeoJSON from GEOX evidence envelope
+    // WebMCP wraps: data.result = evidence envelope, data.result.result = tool return
+    const innerResult = data.result?.result || data.result;
+    const geoJson = innerResult?.primary_artifact?.geojson || innerResult;
+    if (!geoJson || !geoJson.features) {
+      mapInfo.innerHTML = 'No GeoJSON data returned. Try a different bbox.';
+      return null;
+    }
+    const featCount = geoJson.features.length;
+    const maruah = innerResult?.primary_artifact?.geojson?.metadata?.maruah_flag;
+    // Build feature type summary
+    const typeCounts = {};
+    geoJson.features.forEach(f => {
+      const t = f.properties?.type || 'unknown';
+      typeCounts[t] = (typeCounts[t] || 0) + 1;
+    });
+    const typeSummary = Object.entries(typeCounts).map(([k,v]) => k + '=' + v).join(' ');
+    mapInfo.innerHTML = '<strong>Scene loaded:</strong> ' + featCount + ' features [' + typeSummary + ']'
+      + (maruah?.maruah_flag ? ' · <span style="color:var(--gold)">' + maruah.maruah_flag + '</span>' : '')
+      + ' · <strong>CRS:</strong> ' + (geoJson.metadata?.crs?.properties?.name || 'EPSG:4326')
+      + ' · <strong>Basins:</strong> ' + (maruah?.intersected_basins?.join(', ') || 'none');
+    return geoJson;
+  } catch (e) {
+    mapInfo.innerHTML = '<span style="color:var(--red)">Fetch error: ' + e.message + '</span>';
+    return null;
+  }
+}
+
+function initMap(geoJson) {
+  if (mapLibreMap) { mapLibreMap.remove(); mapLibreMap = null; }
+  mapLibreMap = new maplibregl.Map({
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    center: [(MAP_BBOX[0] + MAP_BBOX[2]) / 2, (MAP_BBOX[1] + MAP_BBOX[3]) / 2],
+    zoom: 5.5,
+  });
+  mapLibreMap.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+  mapLibreMap.on('load', () => {
+    if (!geoJson) return;
+    // Add GeoJSON source
+    mapLibreMap.addSource('geox-scene', { type: 'geojson', data: geoJson });
+    // Fill layer for polygons
+    mapLibreMap.addLayer({
+      id: 'geox-fill',
+      type: 'fill',
+      source: 'geox-scene',
+      paint: { 'fill-color': ['case', ['==', ['get', 'type'], 'bounding_box'], '#00d4aa', '#d4af37'], 'fill-opacity': 0.15 },
+    });
+    // Outline layer
+    mapLibreMap.addLayer({
+      id: 'geox-outline',
+      type: 'line',
+      source: 'geox-scene',
+      paint: { 'line-color': ['case', ['==', ['get', 'type'], 'bounding_box'], '#00d4aa', '#d4af37'], 'line-width': 2 },
+    });
+    // Fit map to features
+    const bounds = new maplibregl.LngLatBounds();
+    geoJson.features.forEach(f => {
+      if (f.geometry?.type === 'Polygon') {
+        f.geometry.coordinates[0].forEach(c => bounds.extend(c));
+      }
+    });
+    if (!bounds.isEmpty()) mapLibreMap.fitBounds(bounds, { padding: 40 });
+  });
+
+  // Click handler — show feature info
+  mapLibreMap.on('click', 'geox-fill', (e) => {
+    const props = e.features?.[0]?.properties || {};
+    const mapInfo = document.getElementById('map-info');
+    mapInfo.innerHTML = '<strong>Feature:</strong> ' + (props.label || props.type || 'unknown')
+      + ' · <strong>Type:</strong> ' + (props.type || '—')
+      + (props.maruah_flag ? ' · <span style="color:var(--gold)">MARUAH flagged</span>' : '');
+  });
+
+  // Cursor change
+  mapLibreMap.on('mouseenter', 'geox-fill', () => { mapLibreMap.getCanvas().style.cursor = 'pointer'; });
+  mapLibreMap.on('mouseleave', 'geox-fill', () => { mapLibreMap.getCanvas().style.cursor = ''; });
+}
 
 async function init() {
   try {
@@ -202,6 +385,12 @@ async function init() {
   } catch(e) {
     document.getElementById('tool-count').textContent = 'offline';
   }
+
+  // Load GEOX map scene
+  const sessId = document.getElementById('session-id').value.trim();
+  const actId = document.getElementById('actor-id').value.trim();
+  const geoJson = await loadMapContext(MAP_BBOX, sessId, actId);
+  initMap(geoJson);
 
   try {
     const res = await fetch(WEBCMP_BASE + '/tools');
@@ -240,16 +429,23 @@ async function callTool() {
   let args = {};
   try { args = JSON.parse(document.getElementById('tool-args').value || '{}'); } catch(e) { alert('Invalid JSON args'); return; }
 
+  const sessionId = document.getElementById('session-id').value.trim();
+  const actorId = document.getElementById('actor-id').value.trim();
+
   const output = document.getElementById('output');
   output.style.display = 'block';
   output.textContent = 'Calling ' + name + '...';
   document.getElementById('call-btn').classList.add('loading');
 
+  const payload = { arguments: args };
+  if (sessionId) payload.session_id = sessionId;
+  if (actorId) payload.actor_id = actorId;
+
   try {
     const res = await fetch(WEBCMP_BASE + '/call/' + name, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ arguments: args }),
+      body: JSON.stringify(payload),
     });
     const data = await res.json();
     output.textContent = JSON.stringify(data, null, 2);
@@ -277,45 +473,51 @@ async def webmcp_index(request: Request) -> HTMLResponse:
 
 async def webmcp_manifest(request: Request) -> JSONResponse:
     """WebMCP discovery manifest."""
-    return JSONResponse({
-        "schema_version": "1.0",
-        "service": "GEOX WebMCP",
-        "version": GEOX_VERSION,
-        "seal": GEOX_SEAL,
-        "site": {"name": "GEOX Earth Intelligence", "url": "https://geox.arif-fazil.com"},
-        "apis": {"declarative": True, "imperative": True},
-        "endpoints": {
-            "console": "/webmcp",
-            "tools": "/webmcp/tools",
-            "call": "/webmcp/call/{tool_name}",
-            "status": "/webmcp/status",
-        },
-    })
+    return JSONResponse(
+        {
+            "schema_version": "1.0",
+            "service": "GEOX WebMCP",
+            "version": GEOX_VERSION,
+            "seal": GEOX_SEAL,
+            "site": {"name": "GEOX Earth Intelligence", "url": "https://geox.arif-fazil.com"},
+            "apis": {"declarative": True, "imperative": True},
+            "endpoints": {
+                "console": "/webmcp",
+                "tools": "/webmcp/tools",
+                "call": "/webmcp/call/{tool_name}",
+                "status": "/webmcp/status",
+            },
+        }
+    )
 
 
 async def webmcp_tools(request: Request) -> JSONResponse:
     """Return the tool registry with categories."""
-    return JSONResponse({
-        "categories": TOOL_CATEGORIES,
-        "total_tools": sum(len(c["tools"]) for c in TOOL_CATEGORIES),
-        "seal": GEOX_SEAL,
-    })
+    return JSONResponse(
+        {
+            "categories": TOOL_CATEGORIES,
+            "total_tools": sum(len(c["tools"]) for c in TOOL_CATEGORIES),
+            "seal": GEOX_SEAL,
+        }
+    )
 
 
 async def webmcp_status(request: Request) -> JSONResponse:
     """Return GEOX runtime status for the WebMCP console."""
-    return JSONResponse({
-        "status": "healthy",
-        "service": "geox-unified",
-        "version": GEOX_VERSION,
-        "canonical_tools": sum(len(c["tools"]) for c in TOOL_CATEGORIES),
-        "profile": os.getenv("GEOX_PROFILE", "full"),
-        "seal": GEOX_SEAL,
-        "endpoints": {
-            "mcp": "https://geox.arif-fazil.com/mcp",
-            "webmcp": "https://geox.arif-fazil.com/webmcp",
-        },
-    })
+    return JSONResponse(
+        {
+            "status": "healthy",
+            "service": "geox-unified",
+            "version": GEOX_VERSION,
+            "canonical_tools": sum(len(c["tools"]) for c in TOOL_CATEGORIES),
+            "profile": os.getenv("GEOX_PROFILE", "full"),
+            "seal": GEOX_SEAL,
+            "endpoints": {
+                "mcp": "https://geox.arif-fazil.com/mcp",
+                "webmcp": "https://geox.arif-fazil.com/webmcp",
+            },
+        }
+    )
 
 
 async def webmcp_call_tool(request: Request) -> JSONResponse:
@@ -336,6 +538,14 @@ async def webmcp_call_tool(request: Request) -> JSONResponse:
 
     arguments = body.get("arguments", {})
 
+    # Inject session/authority from request headers into tool call
+    session_id = body.get("session_id") or request.headers.get("X-Session-Id")
+    actor_id = body.get("actor_id") or request.headers.get("X-Actor-Id")
+    if session_id and "session_id" not in arguments:
+        arguments["session_id"] = session_id
+    if actor_id and "actor_id" not in arguments:
+        arguments["actor_id"] = actor_id
+
     # Call the tool through MCP (delegated to FastMCP)
     try:
         # Lazy import to avoid circular dependency
@@ -343,15 +553,22 @@ async def webmcp_call_tool(request: Request) -> JSONResponse:
 
         result = await geox_mcp_instance.call_tool(tool_name, arguments)
         parsed = json.loads(result.content[0].text) if result.content else {}
-        return JSONResponse({
-            "verdict": "SEAL",
-            "tool": tool_name,
-            "result": parsed,
-        })
+        return JSONResponse(
+            {
+                "verdict": "SEAL",
+                "tool": tool_name,
+                "session_id": session_id or "",
+                "actor_id": actor_id or "",
+                "result": parsed,
+            }
+        )
     except Exception as e:
         logger.exception(f"WebMCP tool call failed: {tool_name}")
-        return JSONResponse({
-            "verdict": "VOID",
-            "tool": tool_name,
-            "error": str(e),
-        }, status_code=500)
+        return JSONResponse(
+            {
+                "verdict": "VOID",
+                "tool": tool_name,
+                "error": str(e),
+            },
+            status_code=500,
+        )

@@ -29,6 +29,8 @@ from __future__ import annotations
 
 import json
 import logging
+import uuid
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from fastmcp.exceptions import ToolError
@@ -39,6 +41,71 @@ if TYPE_CHECKING:
     from fastmcp.server.middleware import CallNext, MiddlewareContext
 
 logger = logging.getLogger("geox.governance.middleware")
+
+
+# ── Governed rejection envelope schema (P0 #1 fix, 2026-07-10) ─────────────
+# Every error path produces this structured envelope. Never bare strings.
+GOVERNED_ERROR_CODES: dict[str, dict] = {
+    "SCHEMA_REJECTION": {
+        "code": -32002,
+        "http_status": 422,
+        "message_template": "Schema validation failed for '{tool}': {detail}",
+    },
+    "GOVERNANCE_BLOCK": {
+        "code": -32003,
+        "http_status": 423,
+        "message_template": "Governance blocked '{tool}': {detail}",
+    },
+    "INTERNAL_ERROR": {
+        "code": -32001,
+        "http_status": 500,
+        "message_template": "Internal error in '{tool}': {detail}",
+    },
+}
+
+
+def build_governed_error_envelope(
+    tool_name: str,
+    error_class: str,
+    detail: str,
+    session_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict:
+    """Build a governed rejection envelope for any error path.
+
+    Guarantees: status, error_code, trace_id, session_id, evidence_refs, _epistemic
+    Non-null on every path. Never returns bare string.
+    """
+    error_spec = GOVERNED_ERROR_CODES.get(error_class, GOVERNED_ERROR_CODES["INTERNAL_ERROR"])
+
+    return {
+        "jsonrpc": "2.0",
+        "id": None,
+        "error": {
+            "code": error_spec["code"],
+            "message": error_spec["message_template"].format(
+                tool=tool_name,
+                detail=str(detail)[:200],
+            ),
+            "data": {
+                "guard": error_class,
+                "verdict": "HOLD" if error_class != "INTERNAL_ERROR" else "ERROR",
+                "tool": tool_name,
+                "error_class": error_class,
+                "trace_id": trace_id or str(uuid.uuid4()),
+                "session_id": session_id or "anonymous",
+                "evidence_refs": [error_class],
+                "_epistemic": {
+                    "output_class": "ERROR",
+                    "ai_involvement": "NONE",
+                    "authority_claim": "GOVERNED",
+                    "evidence_source": "COMPUTED",
+                    "tagged_at": datetime.now(timezone.utc).isoformat(),
+                    "schema_version": "1.0.0",
+                },
+            },
+        },
+    }
 
 
 class GeoxGovernanceMiddleware(Middleware):
@@ -279,42 +346,118 @@ class GeoxGovernanceMiddleware(Middleware):
 
             if gov_error is not None:
                 # check_governance returns a JSONResponse-shaped dict on HOLD/VOID.
-                # We need to extract the message and re-raise as ToolError so FastMCP
-                # emits a clean MCP error response.
-                err_msg = self._extract_error_message(gov_error)
-                logger.warning(f"GOV_BLOCK: {tool_name} verdict={gov_verdict}: {err_msg[:120]}")
+                # Extract structured error with message, code, and data fields.
+                err = self._extract_error(gov_error)
+                err_data = err.get("data", {})
+                trace_id = err_data.get("trace_id", f"gov-{uuid.uuid4().hex[:12]}")
+
+                # Log the full structured block for server-side debugging
+                logger.warning(
+                    f"GOV_BLOCK: tool={tool_name} "
+                    f"verdict={gov_verdict} "
+                    f"trace_id={trace_id} "
+                    f"code={err.get('code')} "
+                    f"message={str(err.get('message', ''))[:80]} "
+                    f"guard={err_data.get('guard', '?')} "
+                    f"lane={err_data.get('lane', '?')}"
+                )
+
+                # Compose a structured error message that preserves
+                # guard/verdict/lane/reason/fix for client-side parsing.
+                guard = err_data.get("guard", "")
+                lane = err_data.get("lane", "")
+                reason = err_data.get("reason", "")
+                fix = err_data.get("fix", "")
+                parts = [s for s in [guard, f"verdict={gov_verdict}", f"trace={trace_id}"] if s]
+                if lane:
+                    parts.append(f"lane={lane}")
+                if reason:
+                    parts.append(reason[:120])
+                if fix:
+                    parts.append(f"fix: {fix[:120]}")
+                err_msg = " · ".join(parts)
+
                 raise ToolError(err_msg)
 
             logger.debug(f"GOV_PASS: {tool_name} verdict={gov_verdict}")
 
-        return await call_next(context)
+        # ═══ P0 #1 fix: wrap tool execution to catch schema/type errors ═════
+        # FastMCP schema validation errors (PydanticValidationError, TypeError)
+        # propagate through call_next(context) as raw exceptions. Wrap them in
+        # a governed rejection envelope so the client always receives structured JSON.
+        #
+        # MCP App View binding is now handled via `app=AppConfig(...)` on
+        # @mcp.tool() in register_tools_on_server() — see witness.py.
+        try:
+            return await call_next(context)
+        except ToolError:
+            raise  # Already governed — let FastMCP handle normally
+        except (ValueError, TypeError, KeyError, LookupError) as e:
+            # Schema/argument validation errors that bypassed FastMCP's handler
+            raise ToolError(
+                json.dumps(
+                    build_governed_error_envelope(
+                        tool_name=tool_name,
+                        error_class="SCHEMA_REJECTION",
+                        detail=f"{type(e).__name__}: {e}",
+                        session_id=arguments.get("session_id") if isinstance(arguments, dict) else None,
+                    )
+                )
+            )
+        except Exception as e:
+            # Catch-all — every error becomes a governed envelope
+            raise ToolError(
+                json.dumps(
+                    build_governed_error_envelope(
+                        tool_name=tool_name,
+                        error_class="INTERNAL_ERROR",
+                        detail=f"{type(e).__name__}: {e}",
+                        session_id=arguments.get("session_id") if isinstance(arguments, dict) else None,
+                    )
+                )
+            )
 
     # ── HELPERS ────────────────────────────────────────────────────────────────
 
     @staticmethod
-    def _extract_error_message(gov_error: Any) -> str:
+    def _extract_error(gov_error: Any) -> dict[str, Any]:
         """
-        Convert check_governance's JSONResponse-shaped return into a flat
-        error message suitable for ToolError.
+        Convert check_governance's JSONResponse-shaped return into a
+        structured error dict with message, code, and data preserved.
 
         check_governance returns a starlette.responses.JSONResponse or a dict with
         structure: {"error": {"code": -32xxx, "message": "...", "data": {...}}}
         """
         try:
-            # JSONResponse has .body (bytes of JSON)
             if hasattr(gov_error, "body"):
                 body = gov_error.body
                 if isinstance(body, bytes):
                     body = body.decode("utf-8", errors="replace")
                 parsed = json.loads(body)
-                return parsed.get("error", {}).get("message", "governance denied")
-            # dict shape
+                err = parsed.get("error", {})
+                return {
+                    "code": err.get("code", -32000),
+                    "message": err.get("message", "governance denied"),
+                    "data": err.get("data", {}),
+                }
             if isinstance(gov_error, dict):
-                return gov_error.get("error", {}).get("message", "governance denied")
-            # string fallback
-            return str(gov_error)
-        except Exception:
-            return "governance denied (unable to parse response)"
+                err = gov_error.get("error", {})
+                return {
+                    "code": err.get("code", -32000),
+                    "message": err.get("message", "governance denied"),
+                    "data": err.get("data", {}),
+                }
+            return {
+                "code": -32000,
+                "message": str(gov_error),
+                "data": {"raw": str(gov_error)},
+            }
+        except Exception as exc:
+            return {
+                "code": -32000,
+                "message": "governance denied (unable to parse response)",
+                "data": {"parse_error": str(exc)},
+            }
 
 
 # ─── TTL Middleware (Q3 seal 2026-07-03) ──────────────────────────────────
