@@ -1,8 +1,8 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-07-10
+last_verified: 2026-07-11
 valid_from: 2026-06-14
-valid_until: 2026-08-09
+valid_until: 2026-08-10
 confidence: high
 scope: /root/geox
 changes_since_last_verified:
@@ -20,6 +20,10 @@ changes_since_last_verified:
   - GEOX-AUDIT-FIX-001 (FORGE 2026-06-28): 49 backward-compat tools added to GEOX_LANE_MAP — fixed SESSION_REQUIRED blocks on read-only/compute tools
   - GEOX tool surface is runtime-discoverable via tools/list. Source of truth: registry.py CANONICAL_PUBLIC_TOOLS.
   - tests: 75 passed (orchestration), 0 failed — 52 Phase 1 + 23 Phase 2
+  - MCP-APPS-REGISTRATION (2026-07-11): 10 ui:// resources registered with text/html;profile=mcp-app + 1 unified workbench View joined to witness/MapLibre vertical slice
+  - RECONCILE-UI-PATHS (2026-07-11): 3 competing UI injection paths consolidated into 1 canonical path (apps/workbench.py → register_tools_on_server(apps=...))
+  - REGISTRY-CLEANUP (2026-07-11): removed 4 deregistered tools + 1 duplicate; _EXPECTED_CANONICAL 81→76
+  - WEBMCP-MAP (2026-07-11): MapLibre 4.7.1 interactive map with session/auth propagation, click→evidence panel
 -->
 
 # AGENTS.md — geox | arifOS Federation
@@ -75,9 +79,9 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Domain BOUNDARY classification (e.g., Kinabalu Basin registration)
 - Cross-organ biostrat re-assessment coordination
 
-### Phase 2.1/2.2 Clean Architecture — FORGE Status (2026-06-29, LOCKED at 31)
+### Phase 2.1/2.x Clean Architecture — FORGE Status (2026-07-11, LOCKED at 76)
 
-**Surface (31):** `geox_well_ingest`, `geox_well_qc`, `geox_well_desurvey`, `geox_petrophysics`, `geox_sequence`, `geox_seismic_ingest`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_vision`, `geox_subsurface_model`, `geox_geomechanics`, `geox_basin`, `geox_deep_time_state`, `geox_atlas`, `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_map_export_package`, `geox_surface_status`, `geox_egs_query_entity`, `geox_egs_query_claim`, `geox_egs_query_uncertainty`, `geox_egs_query_provenance`, `geox_egs_claim_create`, `geox_egs_claim_challenge`, `geox_egs_evidence_attach`, `geox_egs_evidence_reason`, `geox_egs_seismic_compute`, `geox_egs_rock_physics`, `geox_egs_data_qc_bundle`, `geox_egs_scenario_audit`.
+**Surface (76):** See `registry.py` `CANONICAL_PUBLIC_TOOLS` for the full list. Updated 2026-07-11: removed 4 deregistered Phase Zen tools + 1 duplicate.
 
 **Internal (4):** `geox_claim`, `geox_evidence`, `geox_prospect`, `geox_doctrine`.
 
@@ -89,8 +93,8 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - **Phase 3 deferred (requires 888_HOLD to re-enable)**: 33-tool Earth Dimensions expansion (D1-D17), foundation model backing engines, multi-physics joint inversion (Physics9), CSEM/MT, biostrat, Prithvi-EO-2.0, GEOX-LEM, etc.
 - **W16+ physics-first substrate** (preserved, not a tool): `src/geox_core/schemas/crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`.
 - **Tests:** 837 total, 61 skipped, 17 pre-existing failures.
-- **Constitutional invariant:** `_EXPECTED_CANONICAL = 35` in `src/geox_mcp/server.py`.
-- **Contract epoch:** `2026-07-02-GEOX-35TOOLS-PHASE24`
+- **Constitutional invariant:** `_EXPECTED_CANONICAL = 76` in `src/geox_mcp/server.py` (2026-07-11: -4 deregistered, -1 duplicate).
+- **Contract epoch:** `2026-07-11-GEOX-76TOOLS-MCPAPPS`
 
 ## Build & Test
 

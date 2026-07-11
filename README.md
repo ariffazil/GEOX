@@ -1,6 +1,6 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-07-10T05:10Z
+last_verified: 2026-07-11T05:10Z
 live_commit: d1aec520
 live_version: v2026.07.06-phase3.1-rsi-pipeline
 port: 8081
@@ -9,7 +9,7 @@ federation_release: v2026.07.04-MCP-A2A
 changelog: /root/CHANGELOG-2026-07-04.md
 a2a_agent_json: /root/GEOX/.well-known/agent.json
 valid_from: 2026-06-14
-valid_until: 2026-08-09
+valid_until: 2026-08-10
 confidence: high
 scope: /root/geox
 machine_sot: /root/A-FORGE/forge_work/2026-07-09/MACHINE-SOT-2026-07-09.json

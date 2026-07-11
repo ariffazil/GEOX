@@ -264,8 +264,6 @@ _WITNESS_APPS: dict[str, AppConfig] = {
         "geox_horizon_contrast_surface",
         "geox_subsurface_generate_candidates",
         "geox_prospect_evaluate",
-        "geox_volume_get_frame_tool",  # backward-compat alias
-        "geox_seismic_compute_attribute_tool",  # backward-compat alias
     )
 }
 
