@@ -95,7 +95,51 @@ def register_tools_on(mcp):
 
     @mcp.tool(name="geox_well_ingest", annotations=_geox_annotations("geox_well_ingest"))
     async def _well_ingest(
-        arguments: dict[str, Any] | str | None = None,
+        mode: str = "auto",
+        source_uri: str | None = None,
+        source_type: str = "auto",
+        well_id: str | None = None,
+        standardize_curves: bool = True,
+        normalize_units: bool = True,
+        content_base64: str | None = None,
+        filename: str | None = None,
+        target_dir: str = "/data/geox_las",
+        overwrite: bool = False,
+        batch_mode: bool = False,
+        artifact_refs: list[str] | None = None,
+        qc_strict: bool = True,
+        source_crs: str = "unknown",
+        depth_datum: str | None = None,
+        file_format: str | None = None,
+        las_metadata: dict[str, Any] | None = None,
+        las_curve_info: list[dict[str, Any]] | None = None,
+        segy_metadata: dict[str, Any] | None = None,
+        seismic_metadata: dict[str, Any] | None = None,
+        deviation_metadata: dict[str, Any] | None = None,
+        tops_metadata: dict[str, Any] | None = None,
+        field: str | None = None,
+        reservoir_name: str | None = None,
+        test_name: str | None = None,
+        test_duration_hr: float | None = None,
+        main_flow_hr: float | None = None,
+        main_buildup_hr: float | None = None,
+        choke_size_64ths: float | None = None,
+        bhp_psi: float | None = None,
+        bht_c: float | None = None,
+        whp_psi: float | None = None,
+        wht_c: float | None = None,
+        gas_rate_mmscfd: float | None = None,
+        condensate_rate_stbd: float | None = None,
+        water_rate_stbd: float | None = None,
+        co2_mol_pct: float | None = None,
+        h2s_ppm: float | None = None,
+        bsw_pct: float | None = None,
+        chloride_ppm: float | None = None,
+        wgr_stb_per_mmscf: float | None = None,
+        permeability_md_min: float | None = None,
+        permeability_md_max: float | None = None,
+        skin_min: float | None = None,
+        skin_max: float | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -104,12 +148,36 @@ def register_tools_on(mcp):
         from geox_mcp.tools.well_ingest import geox_well_ingest as _impl
 
         try:
-            arguments = _parse_str_arguments(arguments)
-            if isinstance(arguments, str):
-                arguments = {}  # parse failed, safe fallback
-            args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+            args = _safe_forward(
+                _impl,
+                {
+                    "mode": mode, "source_uri": source_uri, "source_type": source_type,
+                    "well_id": well_id, "standardize_curves": standardize_curves,
+                    "normalize_units": normalize_units, "content_base64": content_base64,
+                    "filename": filename, "target_dir": target_dir, "overwrite": overwrite,
+                    "batch_mode": batch_mode, "artifact_refs": artifact_refs,
+                    "qc_strict": qc_strict, "source_crs": source_crs,
+                    "depth_datum": depth_datum, "file_format": file_format,
+                    "las_metadata": las_metadata, "las_curve_info": las_curve_info,
+                    "segy_metadata": segy_metadata, "seismic_metadata": seismic_metadata,
+                    "deviation_metadata": deviation_metadata, "tops_metadata": tops_metadata,
+                    "field": field, "reservoir_name": reservoir_name,
+                    "test_name": test_name, "test_duration_hr": test_duration_hr,
+                    "main_flow_hr": main_flow_hr, "main_buildup_hr": main_buildup_hr,
+                    "choke_size_64ths": choke_size_64ths, "bhp_psi": bhp_psi,
+                    "bht_c": bht_c, "whp_psi": whp_psi, "wht_c": wht_c,
+                    "gas_rate_mmscfd": gas_rate_mmscfd,
+                    "condensate_rate_stbd": condensate_rate_stbd,
+                    "water_rate_stbd": water_rate_stbd, "co2_mol_pct": co2_mol_pct,
+                    "h2s_ppm": h2s_ppm, "bsw_pct": bsw_pct,
+                    "chloride_ppm": chloride_ppm, "wgr_stb_per_mmscf": wgr_stb_per_mmscf,
+                    "permeability_md_min": permeability_md_min,
+                    "permeability_md_max": permeability_md_max,
+                    "skin_min": skin_min, "skin_max": skin_max,
+                },
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            )
             result = await _impl(**args)
-            # Discovery 8+9: Enrich result with memory + epistemic signals
             return {
                 **(result if isinstance(result, dict) else {"data": result}),
                 "_memory": "LIVE_PROBE",
@@ -122,14 +190,18 @@ def register_tools_on(mcp):
                 },
             }
         except Exception as e:
-            # Discovery 3: Structured error envelope
             from geox_mcp.federation_safety import classify_error
-
             return classify_error(e, source_tool="geox_well_ingest", source_organ="geox")
 
     @mcp.tool(name="geox_well_qc", annotations=_geox_annotations("geox_well_qc"))
     async def _well_qc(
-        arguments: dict[str, Any] | None = None,
+        artifact_ref: str = "",
+        artifact_type: str = "",
+        qc_mode: str = "full",
+        samples: list[dict[str, Any]] | None = None,
+        existing_features: list[str] | None = None,
+        candidate_feature: str | None = None,
+        target_key: str = "value",
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -137,7 +209,16 @@ def register_tools_on(mcp):
         """QC: depth, curves, completeness, FJIS."""
         from geox_mcp.tools.well_qc import geox_well_qc as _impl
 
-        args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        args = _safe_forward(
+            _impl,
+            {
+                "artifact_ref": artifact_ref, "artifact_type": artifact_type,
+                "qc_mode": qc_mode, "samples": samples,
+                "existing_features": existing_features,
+                "candidate_feature": candidate_feature, "target_key": target_key,
+            },
+            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        )
         return await _impl(**args)
 
     # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_well_desurvey", annotations=_geox_annotations("geox_well_desurvey"))
@@ -161,7 +242,52 @@ def register_tools_on(mcp):
 
     @mcp.tool(name="geox_petrophysics", annotations=_geox_annotations("geox_petrophysics"))
     async def _petrophysics(
-        arguments: dict[str, Any] | None = None,
+        mode: str = "generate",
+        target_class: str | None = None,
+        evidence_refs: list[str] | None = None,
+        realizations: int = 3,
+        gr_clean: float = 15,
+        gr_shale: float = 150,
+        vsh_method: str = "linear",
+        matrix_density: float = 2.65,
+        fluid_density: float = 1.0,
+        sw_model: str = "archie",
+        rw: float = 0.05,
+        archie_a: float = 1,
+        archie_m: float = 2,
+        archie_n: float = 2,
+        vsh_cutoff: float = 0.5,
+        phi_cutoff: float = 0.1,
+        sw_cutoff: float = 0.6,
+        rt_cutoff: float = 2,
+        zone_top_m: float | None = None,
+        zone_base_m: float | None = None,
+        basin_context: str | None = None,
+        canon9_profile: str = "malay_basin",
+        target_depth_m: float | None = None,
+        cube_inline: dict[str, Any] | None = None,
+        use_synth_cube: bool = True,
+        lmr_inline: dict[str, Any] | None = None,
+        candidate_ref: str | None = None,
+        domain: str | None = None,
+        well_id: str | None = None,
+        curves: dict[str, Any] | None = None,
+        depth_m: list[float] | None = None,
+        depth_top_m: float | None = None,
+        depth_bot_m: float | None = None,
+        target_properties: list[str] | None = None,
+        basin: str | None = None,
+        rw_ohm_m: float | None = None,
+        rho_matrix_g_cc: float | None = None,
+        rho_fluid_g_cc: float | None = None,
+        patch_size_m: float = 0.5,
+        cell_states: list[dict[str, Any]] | None = None,
+        areal_extent_m2: float = 1e6,
+        pay_zone_thickness_m: float = 50.0,
+        formation_volume_factor: float = 1.3,
+        water_saturation: float = 0.30,
+        oil_density_kg_m3: float = 850.0,
+        recovery_factor: float = 0.30,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -170,7 +296,37 @@ def register_tools_on(mcp):
         from geox_mcp.tools.petrophysics_unified import geox_petrophysics as _impl
 
         try:
-            args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+            args = _safe_forward(
+                _impl,
+                {
+                    "mode": mode, "target_class": target_class,
+                    "evidence_refs": evidence_refs, "realizations": realizations,
+                    "gr_clean": gr_clean, "gr_shale": gr_shale,
+                    "vsh_method": vsh_method, "matrix_density": matrix_density,
+                    "fluid_density": fluid_density, "sw_model": sw_model,
+                    "rw": rw, "archie_a": archie_a, "archie_m": archie_m,
+                    "archie_n": archie_n, "vsh_cutoff": vsh_cutoff,
+                    "phi_cutoff": phi_cutoff, "sw_cutoff": sw_cutoff,
+                    "rt_cutoff": rt_cutoff, "zone_top_m": zone_top_m,
+                    "zone_base_m": zone_base_m, "basin_context": basin_context,
+                    "canon9_profile": canon9_profile, "target_depth_m": target_depth_m,
+                    "cube_inline": cube_inline, "use_synth_cube": use_synth_cube,
+                    "lmr_inline": lmr_inline, "candidate_ref": candidate_ref,
+                    "domain": domain, "well_id": well_id, "curves": curves,
+                    "depth_m": depth_m, "depth_top_m": depth_top_m,
+                    "depth_bot_m": depth_bot_m, "target_properties": target_properties,
+                    "basin": basin, "rw_ohm_m": rw_ohm_m,
+                    "rho_matrix_g_cc": rho_matrix_g_cc,
+                    "rho_fluid_g_cc": rho_fluid_g_cc, "patch_size_m": patch_size_m,
+                    "cell_states": cell_states, "areal_extent_m2": areal_extent_m2,
+                    "pay_zone_thickness_m": pay_zone_thickness_m,
+                    "formation_volume_factor": formation_volume_factor,
+                    "water_saturation": water_saturation,
+                    "oil_density_kg_m3": oil_density_kg_m3,
+                    "recovery_factor": recovery_factor,
+                },
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            )
             result = await _impl(**args)
             return {
                 **(result if isinstance(result, dict) else {"data": result}),
@@ -185,7 +341,6 @@ def register_tools_on(mcp):
             }
         except Exception as e:
             from geox_mcp.federation_safety import classify_error
-
             return classify_error(e, source_tool="geox_petrophysics", source_organ="geox")
 
     @mcp.tool(name="geox_sequence", annotations=_geox_annotations("geox_sequence"))
@@ -349,7 +504,18 @@ def register_tools_on(mcp):
 
     @mcp.tool(name="geox_seismic_ingest", annotations=_geox_annotations("geox_seismic_ingest"))
     async def _seismic_ingest(
-        arguments: dict[str, Any] | None = None,
+        mode: str = "inspect_segy",
+        volume_ref: str | None = None,
+        output_path: str | None = None,
+        sample_interval_ms: float = 4,
+        textual_header: str = "",
+        overwrite: bool = False,
+        provenance: str = "fixture",
+        segy_metadata: dict[str, Any] | None = None,
+        seismic_metadata: dict[str, Any] | None = None,
+        source_uri: str | None = None,
+        source_type: str = "seismic",
+        well_id: str | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -357,12 +523,36 @@ def register_tools_on(mcp):
         """SEG-Y I/O, header inspection."""
         from geox_mcp.tools.seismic_ingest import geox_seismic_ingest as _impl
 
-        args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        args = _safe_forward(
+            _impl,
+            {
+                "mode": mode, "volume_ref": volume_ref, "output_path": output_path,
+                "sample_interval_ms": sample_interval_ms, "textual_header": textual_header,
+                "overwrite": overwrite, "provenance": provenance,
+                "segy_metadata": segy_metadata, "seismic_metadata": seismic_metadata,
+                "source_uri": source_uri, "source_type": source_type, "well_id": well_id,
+            },
+            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        )
         return await _impl(**args)
 
     @mcp.tool(name="geox_seismic_interpret", annotations=_geox_annotations("geox_seismic_interpret"))
     async def _seismic_interpret(
-        arguments: dict[str, Any] | None = None,
+        mode: str = "horizon_contrast",
+        source_uri: str = "",
+        source_type: str = "csv",
+        action: str = "get",
+        volume_ref: str = "",
+        frame_index: int = 0,
+        orientation: str = "inline",
+        provenance: str = "fixture",
+        image_data: str | None = None,
+        blend_mode: str = "alpha",
+        horizon_query: str = "unconformity",
+        threshold: float = 0.5,
+        confidence_cap: float = 0.9,
+        cube_ref: str | None = None,
+        volume_inline: dict[str, Any] | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -370,12 +560,34 @@ def register_tools_on(mcp):
         """Horizon contrast, faults, frames, blend."""
         from geox_mcp.tools.seismic_interpret import geox_seismic_interpret as _impl
 
-        args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        args = _safe_forward(
+            _impl,
+            {
+                "mode": mode, "source_uri": source_uri, "source_type": source_type,
+                "action": action, "volume_ref": volume_ref,
+                "frame_index": frame_index, "orientation": orientation,
+                "provenance": provenance, "image_data": image_data,
+                "blend_mode": blend_mode, "horizon_query": horizon_query,
+                "threshold": threshold, "confidence_cap": confidence_cap,
+                "cube_ref": cube_ref, "volume_inline": volume_inline,
+            },
+            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        )
         return await _impl(**args)
 
     @mcp.tool(name="geox_vision", annotations=_geox_annotations("geox_vision"))
     async def _vision(
-        arguments: dict[str, Any] | None = None,
+        mode: str = "infer_minimax",
+        image_path: str = "",
+        basin_context: str = "unknown",
+        interpretation_goal: str = "Identify structural features",
+        has_segy: bool = False,
+        mimo_backend_url: str | None = None,
+        mimo_model: str | None = None,
+        mcp_url: str | None = None,
+        model_id: str = "minimax-M3-vision",
+        perceptual_inventory: dict[str, Any] | None = None,
+        ground_truth_inventory: dict[str, Any] | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -383,7 +595,19 @@ def register_tools_on(mcp):
         """VLM inference, audit, calibration, perceptual."""
         from geox_mcp.tools.vision_unified import geox_vision as _impl
 
-        args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        args = _safe_forward(
+            _impl,
+            {
+                "mode": mode, "image_path": image_path,
+                "basin_context": basin_context,
+                "interpretation_goal": interpretation_goal,
+                "has_segy": has_segy, "mimo_backend_url": mimo_backend_url,
+                "mimo_model": mimo_model, "mcp_url": mcp_url,
+                "model_id": model_id, "perceptual_inventory": perceptual_inventory,
+                "ground_truth_inventory": ground_truth_inventory,
+            },
+            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        )
         return await _impl(**args)
 
     # ── SEISMIC VISION AI — 4 modes (Phase 3.2, 2026-07-06) ────────────────────
@@ -521,7 +745,20 @@ def register_tools_on(mcp):
 
     @mcp.tool(name="geox_subsurface_model", annotations=_geox_annotations("geox_subsurface_model"))
     async def _subsurface_model(
-        arguments: dict[str, Any] | None = None,
+        mode: str = "joint_inversion",
+        survey_type: str = "gravity",
+        easting_m: tuple[float, ...] | None = None,
+        northing_m: tuple[float, ...] | None = None,
+        prisms: list[dict[str, Any]] | None = None,
+        magnetization_a_m: float = 0.0,
+        field_declination_deg: float = 0.0,
+        field_inclination_deg: float = 0.0,
+        layers: list[dict[str, Any]] | None = None,
+        frequencies_hz: list[float] | None = None,
+        observations: dict[str, Any] | None = None,
+        prior: dict[str, Any] | None = None,
+        max_iter: int = 50,
+        tolerance: float = 0.001,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -529,7 +766,20 @@ def register_tools_on(mcp):
         """Joint inversion, gravity/mag, MT forward."""
         from geox_mcp.tools.subsurface_model import geox_subsurface_model as _impl
 
-        args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        args = _safe_forward(
+            _impl,
+            {
+                "mode": mode, "survey_type": survey_type,
+                "easting_m": easting_m, "northing_m": northing_m,
+                "prisms": prisms, "magnetization_a_m": magnetization_a_m,
+                "field_declination_deg": field_declination_deg,
+                "field_inclination_deg": field_inclination_deg,
+                "layers": layers, "frequencies_hz": frequencies_hz,
+                "observations": observations, "prior": prior,
+                "max_iter": max_iter, "tolerance": tolerance,
+            },
+            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+        )
         return await _impl(**args)
 
     @mcp.tool(name="geox_basin", annotations=_geox_annotations("geox_basin"))
@@ -622,17 +872,64 @@ def register_tools_on(mcp):
 
     @mcp.tool(name="geox_claim", annotations=_geox_annotations("geox_claim"))
     async def _claim(
-        arguments: dict[str, Any] | None = None,
+        mode: str = "create",
+        claim_id: str = "",
+        claim_text: str = "",
+        claim_type: str = "other",
+        truth_class: str = "INTERPRETATION",
+        evidence_ids: list[str] | None = None,
+        uncertainty_p10: float | None = None,
+        uncertainty_p50: float | None = None,
+        uncertainty_p90: float | None = None,
+        uncertainty_distribution: str = "lognormal",
+        alternatives: list[dict[str, Any]] | None = None,
+        provenance: str = "GEOX Claim Engine",
+        authority: str = "GEOX_CLAIM_WORKER",
+        challenge_text: str = "",
+        alternative_claim_text: str = "",
+        alternative_evidence_ids: list[str] | None = None,
+        challenge_evidence_ids: list[str] | None = None,
+        alternative_uncertainty: dict[str, Any] | None = None,
+        challenger_provenance: str = "GEOX Claim Engine",
+        ack_irreversible: bool = False,
+        seal_verdict: str = "SEAL",
+        voxel_state: dict[str, Any] | None = None,
+        evidence_id: str = "",
+        evidence_type: str = "supporting",
+        epistemic_label: str | None = None,
+        forbidden_uses: list[str] | None = None,
+        source_citation: dict[str, Any] | None = None,
+        category: str | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
-        ack_irreversible: bool = False,
     ) -> dict[str, Any]:
         """Create, validate, challenge, seal, attach."""
         from geox_mcp.tools.claim_unified import geox_claim as _impl
 
         args = _safe_forward(
-            _impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id, ack_irreversible=ack_irreversible
+            _impl,
+            {
+                "mode": mode, "claim_id": claim_id, "claim_text": claim_text,
+                "claim_type": claim_type, "truth_class": truth_class,
+                "evidence_ids": evidence_ids, "uncertainty_p10": uncertainty_p10,
+                "uncertainty_p50": uncertainty_p50, "uncertainty_p90": uncertainty_p90,
+                "uncertainty_distribution": uncertainty_distribution,
+                "alternatives": alternatives, "provenance": provenance,
+                "authority": authority, "challenge_text": challenge_text,
+                "alternative_claim_text": alternative_claim_text,
+                "alternative_evidence_ids": alternative_evidence_ids,
+                "challenge_evidence_ids": challenge_evidence_ids,
+                "alternative_uncertainty": alternative_uncertainty,
+                "challenger_provenance": challenger_provenance,
+                "ack_irreversible": ack_irreversible, "seal_verdict": seal_verdict,
+                "voxel_state": voxel_state, "evidence_id": evidence_id,
+                "evidence_type": evidence_type, "epistemic_label": epistemic_label,
+                "forbidden_uses": forbidden_uses, "source_citation": source_citation,
+                "category": category,
+            },
+            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            ack_irreversible=ack_irreversible,
         )
         return await _impl(**args)
 
@@ -1590,7 +1887,7 @@ def register_tools_on(mcp):
 
     # ── Phase 3.3: Tie Receipt + Preflight (2026-07-06) ─────────────────────────
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_tie_receipt", annotations=_geox_annotations("geox_tie_receipt"))
+    # ZEN 2026-07-11 G1: merged into geox_seismic_compute mode=tie_receipt
     async def _geox_tie_receipt(
         well_name: str,
         seismic_volume: str = "",
@@ -1673,7 +1970,7 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_tie_receipt", source_organ="geox")
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_tie_preflight", annotations=_geox_annotations("geox_tie_preflight"))
+    # ZEN 2026-07-11 G1: merged into geox_seismic_compute mode=tie_preflight
     async def _geox_tie_preflight(
         well_name: str,
         decision_context: str = "horizon_calibration",
@@ -1726,10 +2023,7 @@ def register_tools_on(mcp):
 
     # ── GEOX 1D MCP surface (Orthogonal Base) ─────────────────────────────
 
-    @mcp.tool(
-        name="geox_well_time_depth_calibrate",
-        annotations=_geox_annotations("geox_well_time_depth_calibrate"),
-    )
+    # ZEN 2026-07-11 G1: merged into geox_seismic_compute mode — geox_well_time_depth_calibrate
     async def _geox_well_time_depth_calibrate(
         las_path: str,
         checkshot_path: str,
@@ -1761,10 +2055,7 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_well_time_depth_calibrate", source_organ="geox")
 
-    @mcp.tool(
-        name="geox_well_seismic_mistie_rms",
-        annotations=_geox_annotations("geox_well_seismic_mistie_rms"),
-    )
+    # ZEN 2026-07-11 G1: merged into geox_seismic_compute mode — geox_well_seismic_mistie_rms
     async def _geox_well_seismic_mistie_rms(
         synthetic_trace: list[float],
         seismic_trace: list[float],
@@ -1797,10 +2088,7 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_well_seismic_mistie_rms", source_organ="geox")
 
-    @mcp.tool(
-        name="geox_wavelet_extract_least_squares",
-        annotations=_geox_annotations("geox_wavelet_extract_least_squares"),
-    )
+    # ZEN 2026-07-11 G1: merged into geox_seismic_compute mode — geox_wavelet_extract_least_squares
     async def _geox_wavelet_extract_least_squares(
         reflectivity_series: list[float],
         seismic_trace: list[float],
@@ -1875,7 +2163,7 @@ def register_tools_on(mcp):
 
     # ── WELL-TIE P2–P4: Time-Depth Calibrate · Mistie RMS · Wavelet Extract ────
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_well_time_depth_calibrate", annotations=_geox_annotations("geox_well_time_depth_calibrate"))
+    # DEREGISTERED 2026-07-10 — # ZEN 2026-07-11 G1: merged into geox_seismic_compute — geox_well_time_depth_calibrate
     async def _well_time_depth_calibrate(
         las_path: str,
         checkshot_path: str | None = None,
@@ -1923,7 +2211,7 @@ def register_tools_on(mcp):
         except Exception as e:
             return classify_error(e, source_tool="geox_well_time_depth_calibrate", source_organ="geox")
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_well_seismic_mistie_rms", annotations=_geox_annotations("geox_well_seismic_mistie_rms"))
+    # DEREGISTERED 2026-07-10 — # ZEN 2026-07-11 G1: merged into geox_seismic_compute — geox_well_seismic_mistie_rms
     async def _well_seismic_mistie_rms(
         well_name: str,
         synthetic_trace: list[float],
@@ -1965,7 +2253,7 @@ def register_tools_on(mcp):
         except Exception as e:
             return classify_error(e, source_tool="geox_well_seismic_mistie_rms", source_organ="geox")
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_wavelet_extract_least_squares", annotations=_geox_annotations("geox_wavelet_extract_least_squares"))
+    # DEREGISTERED 2026-07-10 — # ZEN 2026-07-11 G1: merged into geox_seismic_compute — geox_wavelet_extract_least_squares
     async def _wavelet_extract_least_squares(
         well_name: str,
         reflectivity_series: list[float],
@@ -2335,7 +2623,7 @@ def register_tools_on(mcp):
     # claim graph evaluation. Complements simulate_* with backward reconstruction.
     # ═══════════════════════════════════════════════════════════════════════════════
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
+    @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
     async def _basin_backstrip(
         well_ref: str,
         stratigraphic_ages: list[dict[str, Any]],
@@ -2365,7 +2653,7 @@ def register_tools_on(mcp):
             uncertainty_realizations=uncertainty_realizations,
         )
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
+    @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
     async def _sediment_mass_balance(
         basin_name: str,
         source_eroded_km3: float,
@@ -2393,7 +2681,7 @@ def register_tools_on(mcp):
             routing_efficiency=routing_efficiency,
         )
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
+    @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
     async def _thermal_maturity_history(
         well_ref: str,
         burial_history: dict[str, Any],
@@ -2498,7 +2786,7 @@ def register_tools_on(mcp):
             "destructiveHint": False,
             "idempotentHint": True,
             "openWorldHint": False,
-            "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
+            "ui": {"resourceUri": "ui://geox/workspace-v1.html"},
         },
     )
     async def _map_context_scene(
@@ -2521,14 +2809,20 @@ def register_tools_on(mcp):
             - coordinate_guardrail: Check coordinates against basin boundaries.
             - georeference_map: Georeference raster or vector data.
 
-        When this tool is called, the MCP host opens the GEOX Earth Workbench
-        (ui://geox/workbench-v1.html) in a sandboxed iframe for interactive map visualization.
+        When this tool is called, the MCP host opens the GEOX Workspace
+        (ui://geox/workspace-v1.html) in a sandboxed iframe for read-only evidence review.
 
         Use when: the user provides a bounding box, coordinates, or asks for
         geological context of a region. Also used for rendering geological maps
         with selectable features.
         """
         from geox_mcp.tools.map_context import geox_map_context_scene as _impl
+
+        # ── DEBUG (2026-07-11): verify identity propagation through bridge ──
+        import logging
+
+        _log = logging.getLogger("geox.canonical.map_context")
+        _log.warning(f"IDENTITY_ARRIVAL: session_id={session_id!r} actor_id={actor_id!r} trace_id={trace_id!r}")
 
         return await _impl(
             bbox=bbox,
@@ -2537,6 +2831,7 @@ def register_tools_on(mcp):
             vp_slice_inline=vp_slice_inline,
             session_id=session_id,
             actor_id=actor_id,
+            trace_id=trace_id,
         )
 
     # ═══════════════════════════════════════════════════════════════════════════════
