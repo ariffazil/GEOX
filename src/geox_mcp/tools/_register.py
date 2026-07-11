@@ -247,13 +247,9 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
 
         # ── F1 AMANAH — idempotency check (replay-safe) ────────────────────
         if idempotency_key:
-            outcome, reason = get_idempotency_store().check(
-                idempotency_key, pre_call.call_hash
-            )
+            outcome, reason = get_idempotency_store().check(idempotency_key, pre_call.call_hash)
             if outcome == "BLOCK":
-                logger.error(
-                    f"F1 idempotency violation on {name}: {reason}"
-                )
+                logger.error(f"F1 idempotency violation on {name}: {reason}")
                 return {
                     "error_code": "F1_IDEMPOTENCY_VIOLATION",
                     "governance_status": "BLOCKED",
@@ -385,7 +381,11 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                                         organ_code="GEOX",
                                     )
                                 )
-                                task.add_done_callback(lambda t: logger.debug(f"Evidence record task done: {t.exception() if t.exception() else 'ok'}"))
+                                task.add_done_callback(
+                                    lambda t: logger.debug(
+                                        f"Evidence record task done: {t.exception() if t.exception() else 'ok'}"
+                                    )
+                                )
                 # Write artifacts
                 if "artifacts" in res:
                     artifacts = res.get("artifacts") or []
@@ -402,7 +402,11 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                                         session_ref=session_id or "geox_session",
                                     )
                                 )
-                                task.add_done_callback(lambda t: logger.debug(f"Artifact record task done: {t.exception() if t.exception() else 'ok'}"))
+                                task.add_done_callback(
+                                    lambda t: logger.debug(
+                                        f"Artifact record task done: {t.exception() if t.exception() else 'ok'}"
+                                    )
+                                )
         except Exception as e:
             logger.debug(f"GEOX Supabase adapter failed (fail-soft): {e}")
 
@@ -485,10 +489,21 @@ def register_tools_on_server(
     tools: list[tuple[str, Any]],
     annotations: dict[str, dict] | None = None,
     tasks: set[str] | None = None,
+    apps: dict[str, Any] | None = None,
 ) -> None:
-    """Register a list of (name, func) tuples on a FastMCP server with receipts + annotations + tasks."""
+    """Register a list of (name, func) tuples on a FastMCP server.
+
+    Args:
+        mcp: FastMCP server instance
+        tools: List of (tool_name, function) tuples
+        annotations: Optional dict mapping tool_name → annotation dict
+        tasks: Set of tool names that should run as background tasks
+        apps: Optional dict mapping tool_name → AppConfig for MCP App View binding
+              (e.g. AppConfig(resourceUri="ui://geox/workbench-v1.html"))
+    """
     annotations = annotations or {}
     tasks = tasks or set()
+    apps = apps or {}
 
     for name, func in tools:
         kwargs: dict[str, Any] = {"name": name}
@@ -505,6 +520,10 @@ def register_tools_on_server(
         # MCP Tasks extension: background execution for long-running async tools
         if name in tasks and asyncio.iscoroutinefunction(func):
             kwargs["task"] = True
+
+        # MCP App View binding: inject AppConfig for visual tools
+        if name in apps:
+            kwargs["app"] = apps[name]
 
         wrapped = _make_receipt_wrapper(func, name)
         mcp.tool(**kwargs)(wrapped)

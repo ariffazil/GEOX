@@ -759,6 +759,32 @@ async def geox_reality_context() -> str:
     return json.dumps(context_map, indent=2)
 
 
+async def geox_webmcp_ui() -> str:
+    """WebMCP Console UI metadata — returns the browser URL and tool count."""
+    try:
+        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+
+        count = len(CANONICAL_PUBLIC_TOOLS)
+    except Exception:
+        count = 0
+    return json.dumps(
+        {
+            "title": "GEOX WebMCP Console",
+            "description": "Earth Intelligence interactive browser interface",
+            "url": "https://geox.arif-fazil.com/webmcp",
+            "version": os.getenv("GEOX_VERSION", "2026.06.06"),
+            "canonical_tools": count,
+            "instructions": (
+                "Open https://geox.arif-fazil.com/webmcp in a browser. "
+                "Browse all 77 GEOX tools by domain category. Select a tool, "
+                "enter JSON arguments, call it interactively. Session/authority "
+                "headers are propagated to tool calls."
+            ),
+        },
+        indent=2,
+    )
+
+
 # ── Registration ──────────────────────────────────────────────────────────────
 
 
@@ -798,9 +824,9 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         description="GEOX identity state — role, authority, seal, version, canon-9 quantities, GDE vocabulary, strat standards.",
         mime_type="application/json",
     )(geox_identity)
-    mcp.resource(
-        "geox://registry/apps", description="List of registered GEOX MCP apps and their manifests.", mime_type="application/json"
-    )(list_geox_apps)
+    # Superseded by geox_apps_index (apps.json) at line 974 — keeping list_geox_apps
+    # function for backward compat until the old path is fully retired.
+    # mcp.resource("geox://registry/apps", ...)(list_geox_apps)  -- REMOVED 2026-07-11
     mcp.resource(
         "geox://profile/status",
         description="GEOX profile status — health, enabled dimensions, version, constitutional floors.",
@@ -900,6 +926,80 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         description="Index of all available basins.",
         mime_type="application/json",
     )(geox_basins_index)
+    # ── MCP App resources (9 GEOX apps, 2026-07-11) ─────────────────────────
+    _APP_READERS = {}
+
+    async def geox_ui_read(app_id: str) -> str:
+        """Read an app HTML file from /root/GEOX/apps/{app_id}/index.html.
+        If app_id has .html extension, read directly: apps/{app_id}"""
+        import json
+        from pathlib import Path
+
+        base = Path("/root/GEOX/apps")
+        if app_id.endswith(".html"):
+            app_path = base / app_id
+        else:
+            app_path = base / app_id / "index.html"
+        if not app_path.exists():
+            return json.dumps({"error": f"App {app_id} not found"})
+        return app_path.read_text()
+
+    async def geox_apps_index() -> str:
+        """Index of all GEOX MCP Apps."""
+        import json
+        from pathlib import Path
+
+        apps_path = Path("/root/GEOX/apps/apps.json")
+        if apps_path.exists():
+            return apps_path.read_text()
+        return "[]"
+
+    GEOX_APPS = [
+        # (workbench registered centrally in apps/workbench.py)
+        ("ui://geox/well-desk", "WellDesk — 1D/2D well log viewer + rock physics"),
+        ("ui://geox/prospect-ui", "Basin Explorer — interactive basin map + prospect evaluation"),
+        ("ui://geox/seismic-vision-review", "Seismic Vision Review — VLM seismic interpretation"),
+        ("ui://geox/geox-mcp-visual", "GEOX Dashboard — live status and tool registry"),
+        ("ui://geox/judge-console", "AC Risk Console — claim/evidence review dashboard"),
+        ("ui://geox/earth-volume", "Seismic Viewer — 3D seismic volume browser"),
+        ("ui://geox/attribute-audit", "Attribute Audit — seismic attribute quality check"),
+        ("ui://geox/georeference-map", "Georeference Map — map georeferencing tool"),
+        ("ui://geox/analog-digitizer", "Analog Digitizer — well log digitization tool"),
+    ]
+
+    def _build_ui_reader(app_id: str):
+        """Build a named async resource reader for an MCP App."""
+
+        async def _reader() -> str:
+            return await geox_ui_read(app_id)
+
+        _reader.__name__ = f"geox_ui_{app_id.replace('.', '_').replace('-', '_')}"
+        return _reader
+
+    for uri, desc in GEOX_APPS:
+        app_id = uri.split("/")[-1]
+        mcp.resource(
+            uri,
+            description=desc,
+            mime_type="text/html;profile=mcp-app",
+        )(_build_ui_reader(app_id))
+
+    mcp.resource(
+        "geox://registry/apps",
+        description="Index of all GEOX MCP Apps with metadata (status, visual_tools, URIs).",
+        mime_type="application/json",
+    )(geox_apps_index)
+
+    mcp.resource(
+        "geox://webmcp",
+        description=(
+            "GEOX WebMCP Console — Earth Intelligence interactive browser UI. "
+            "Open in a web browser at https://geox.arif-fazil.com/webmcp for "
+            "full GUI with tool registry browsing, interactive tool calling, "
+            "live GEOX status, and session/authority propagation."
+        ),
+        mime_type="text/html",
+    )(geox_webmcp_ui)
     mcp.resource(
         "geox://resources/playbooks/index",
         description="Index of playbook files.",

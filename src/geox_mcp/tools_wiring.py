@@ -2442,6 +2442,48 @@ def register_tools_on(mcp):
         )
 
     # ═══════════════════════════════════════════════════════════════════════════════
+    # MACROSTRAT UPSTREAM PROXY — geox_query_macrostrat
+    # Canonical upstream proxy for Macrostrat geological database.
+    # Registered as a dedicated tool (not a basin mode) per Option B blueprint.
+    # ═══════════════════════════════════════════════════════════════════════════════
+
+    @mcp.tool(
+        name="geox_query_macrostrat",
+        annotations=_geox_annotations("geox_query_macrostrat"),
+    )
+    async def _geox_query_macrostrat(
+        arguments: dict[str, Any] | str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Query the Macrostrat geological database for regional stratigraphy, lithology, and age data.
+
+        Macrostrat provides regional surface geology — lithology, age, and
+        stratigraphic columns derived from published geological maps.
+        Data is rung 2 (PROCESS_HYPOTHESIS), not subsurface truth.
+
+        Modes: units, columns, sources, fossils, defs, measurements,
+               lithologies, environments, intervals, strat_names, map_units
+
+        Attribution: CC-BY-4.0 — Peters et al. (2018) doi:10.17605/OSF.IO/YNAXW
+
+        Use when: the agent needs surface geology, lithology columns, or
+        stratigraphic data from the Macrostrat database for a geographic region.
+        """
+        arguments = _parse_str_arguments(arguments) or {}
+        if isinstance(arguments, dict):
+            from geox_mcp.tools.macrostrat_unified import geox_query_macrostrat as _impl
+
+            return await _impl(session_id=session_id, **arguments)
+        return {
+            "ok": False,
+            "tool": "geox_query_macrostrat",
+            "origin": "UPSTREAM_MACROSTRAT",
+            "reason_code": "INVALID_ARGUMENTS",
+            "error": f"Expected dict arguments, got {type(arguments).__name__}",
+        }
+
+    # ═══════════════════════════════════════════════════════════════════════════════
     # POST-REGISTRATION ENRICHMENT — Binding 3 compliance (mcp-builder-doctrine v1.1.0)
     # Injects rich descriptions + "Use when..." trigger from tools_manifest.py
     # into the MCP surface. Without this, the model sees only minimal docstrings.

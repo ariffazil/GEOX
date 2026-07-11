@@ -145,7 +145,7 @@ SURFACE_TOOLS: list[str] = [
     "geox_visual_generate_hypotheses",  # Visual scenario rendering — GEN_HYPOTHESIS
     "geox_panel_d_render",  # Cognitive interpretation render — DER_COGNITIVE_RENDER
     # ── PHYSICAL REALITY PIPELINE (Phase 3.2, 2026-07-06) ───────────────────
-    "geox_physical_reality_interpret",  # Reality gate + multi-attribute panel + horizon/fault extraction
+    # (geox_physical_reality_interpret listed above in seismic domain section)
     "geox_cognitive_rank_hypotheses",  # Rank geological hypotheses by basin prior
     "geox_segy_audit",  # Full SEG-Y trace reality pipeline
     "geox_well_tie",  # Well-to-seismic tie via bruges
@@ -156,21 +156,17 @@ SURFACE_TOOLS: list[str] = [
     # Concurrent scoring: geological risk × capital × evidence × fiscal.
     # F1-F13 floor compliance inline. Advisory only (F13 SOVEREIGN).
     "geox_bid_round_screener",
-    # ── COLLISION ZONE PHYSICS (2) — Phase Zen (2026-07-10) ─────────────────
-    # Two Oceanics physics engine from Arif's Sabah Eureka Ledger v1.0.
-    # Implements: accommodation_ratio, loading_ratio, mass_deficit, bypass_fraction.
-    # Detects 6 Eureka signatures. Margin Principle embedded.
-    "geox_collision_zone",  # Collision zone analysis: two-block physics, prospect bifurcation
-    "geox_collision_chronology",  # Collision chronology: event sequence → duration
-    "geox_diagnose",  # Domain evidence gate: NO_DOMAIN_EVIDENCE / PARTIAL / READY
     # ── EARTH OBSERVE (1) — Phase Zen consolidated (2026-07-10) ─────────────
+    # (geox_collision_zone, geox_collision_chronology, geox_diagnose, geox_observe
+    #  deregistered 2026-07-10 during Phase Zen consolidation — replaced by
+    #  EGS evidence, atlas, and basin-specific tools.)
     # 24 Earth data fetchers + atlas tools consolidated into one surface tool.
     # Modes: earthquake, relief, bathymetry, heatflow, stress, geochem,
     #   plate_reconstruct, paleomag, gravity, ocean, erddap, climate,
     #   hydrology, satellite, uk_petroleum, geology_map, space_weather,
     #   nsta, context_at_location, isitwater, gravity_screen,
     #   judgment_preflight, interpolate_grid, report_to_workflow
-    "geox_observe",
+    # (geox_observe deregistered 2026-07-10 — consolidated into atlas/basin tools)
     # ── BASIN ANALYSIS ENGINES (4) — Phase 0 (2026-07-10) ────────────────────
     # Four canonical basin analysis tools: backstripping, mass balance,
     # thermal maturity, claim graph evaluation. Physics-first, evidence-tagged.

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEOX Workbench v1</title>
+<style>
+  :root { --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e; --text: #e0e0e0; --accent: #00d4aa; --gold: #d4af37; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; font-size: 14px; }
+  .wb-header { display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .wb-header h1 { font-size: 16px; font-weight: 600; }
+  .wb-header h1 span { color: var(--accent); }
+  .wb-header .badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .wb-tabs { display: flex; gap: 0; background: var(--surface); padding: 0 12px; overflow-x: auto; border-bottom: 1px solid var(--border); }
+  .wb-tab { padding: 8px 16px; cursor: pointer; border-bottom: 2px solid transparent; font-size: 13px; color: #888; white-space: nowrap; }
+  .wb-tab:hover { color: var(--text); }
+  .wb-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .wb-content { padding: 0; height: calc(100vh - 90px); }
+  .wb-content iframe { width: 100%; height: 100%; border: none; background: var(--bg); }
+  .wb-status { margin-left: auto; font-size: 11px; color: #666; }
+  #mcp-badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wb-header">
+  <h1>GEOX <span>Workbench</span></h1>
+  <span class="badge">v1</span>
+  <span class="wb-status" id="mcp-status">MCP: <span id="mcp-badge">INIT</span></span>
+</div>
+<div class="wb-tabs" id="tabs"></div>
+<div class="wb-content" id="content">
+  <iframe id="app-frame" srcdoc="<div style='padding:40px;color:#666;text-align:center;'><h2>GEOX Workbench v1</h2><p>Select a tool to begin.</p></div>"></iframe>
+</div>
+
+<script>
+// ── MCP Apps handshake (ui/initialize) ───────────────────────────────────────
+const APP_ID = 'geox-workbench-v1';
+const MCP_ORIGIN = window.location.origin;
+
+function mcpHandshake() {
+  // Notify parent that app is ready
+  window.parent.postMessage({
+    jsonrpc: '2.0',
+    method: 'ui/initialize',
+    params: {
+      appId: APP_ID,
+      displayMode: 'fullscreen',
+    }
+  }, MCP_ORIGIN);
+  document.getElementById('mcp-badge').textContent = 'MCP READY';
+  document.getElementById('mcp-badge').style.background = '#00d4aa';
+}
+
+// Listen for tool notifications
+window.addEventListener('message', (event) => {
+  if (event.origin !== MCP_ORIGIN) return;
+  const msg = event.data;
+  if (!msg || !msg.method) return;
+
+  if (msg.method === 'ui/notifications/tool-input') {
+    const params = msg.params;
+    const toolName = params?.tool || 'unknown';
+    highlightTool(toolName);
+  }
+
+  if (msg.method === 'ui/host-context-change') {
+    const theme = msg.params?.theme;
+    if (theme === 'dark') document.body.style.setProperty('--bg', '#0a0a0f');
+    if (theme === 'light') document.body.style.setProperty('--bg', '#ffffff');
+  }
+});
+
+// ── Tab management ────────────────────────────────────────────────────────────
+const APPS = {
+  'well-desk':      { name: 'WellDesk',      path: '/apps/well-desk/index.html',      tools: ['geox_well_ingest', 'geox_well_qc', 'geox_petrophysics'] },
+  'prospect-ui':    { name: 'Basin Explorer', path: '/apps/prospect-ui/index.html',    tools: ['geox_basin', 'geox_prospect', 'geox_map_scene_plan'] },
+  'seismic-vision': { name: 'Seismic Vision', path: '/apps/seismic-vision-review/index.html', tools: ['geox_seismic_cognition', 'geox_vision'] },
+  'dashboard':      { name: 'Dashboard',      path: '/apps/geox-mcp-visual/index.html', tools: ['geox_surface_status'] },
+  'judge-console':  { name: 'Risk Console',   path: '/apps/judge-console/index.html',  tools: ['geox_claim', 'geox_evidence'] },
+  'earth-volume':   { name: 'Seismic Viewer', path: '/apps/earth-volume/index.html',   tools: ['geox_seismic_compute'] },
+  'attribute-audit':{ name: 'Attr Audit',     path: '/apps/attribute-audit/index.html', tools: ['geox_render_audit'] },
+};
+
+function buildTabs() {
+  const tabs = document.getElementById('tabs');
+  Object.entries(APPS).forEach(([id, app]) => {
+    const tab = document.createElement('div');
+    tab.className = 'wb-tab';
+    tab.textContent = app.name;
+    tab.dataset.appId = id;
+    tab.onclick = () => switchTab(id);
+    tabs.appendChild(tab);
+  });
+  // Activate first tab
+  if (Object.keys(APPS).length > 0) switchTab(Object.keys(APPS)[0]);
+}
+
+function switchTab(appId) {
+  document.querySelectorAll('.wb-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.querySelector(`.wb-tab[data-app-id="${appId}"]`);
+  if (tab) tab.classList.add('active');
+  const app = APPS[appId];
+  if (!app) return;
+  const frame = document.getElementById('app-frame');
+  frame.src = app.path;
+}
+
+function highlightTool(toolName) {
+  for (const [id, app] of Object.entries(APPS)) {
+    if (app.tools.includes(toolName)) {
+      switchTab(id);
+      return;
+    }
+  }
+}
+
+window.addEventListener('load', () => {
+  buildTabs();
+  mcpHandshake();
+});
+</script>
+</body>
+</html>

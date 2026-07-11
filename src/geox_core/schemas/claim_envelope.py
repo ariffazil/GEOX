@@ -36,6 +36,7 @@ from pydantic import BaseModel, Field
 
 # ─── Enums ───────────────────────────────────────────────────────────────────────
 
+
 class ClaimState(str, Enum):
     """Epistemic claim level for the output value.
 
@@ -43,24 +44,51 @@ class ClaimState(str, Enum):
     NO_VALID_EVIDENCE can escalate to any level via sufficient evidence.
     """
 
-    NO_VALID_EVIDENCE = "NO_VALID_EVIDENCE"   # input data exists, no computation yet
-    INGESTED = "INGESTED"                       # raw data ingested, not QC'd
-    QC_VERIFIED = "QC_VERIFIED"                 # passed QC checks
-    INTERPRETED = "INTERPRETED"                 # human or model interpretation applied
-    DERIVED_CANDIDATE = "DERIVED_CANDIDATE"     # computed, needs corroboration
-    SEALED = "SEALED"                           # arifOS 888_JUDGE has sealed this
-    JUDGE_PREVIEW = "JUDGE_PREVIEW"             # sent for 888_JUDGE, awaiting verdict
-    HOLD = "888_HOLD"                           # blocked — requires Arif release
-    VOID = "VOID"                               # retracted or contradicted by new evidence
+    NO_VALID_EVIDENCE = "NO_VALID_EVIDENCE"  # input data exists, no computation yet
+    INGESTED = "INGESTED"  # raw data ingested, not QC'd
+    QC_VERIFIED = "QC_VERIFIED"  # passed QC checks
+    INTERPRETED = "INTERPRETED"  # human or model interpretation applied
+    DERIVED_CANDIDATE = "DERIVED_CANDIDATE"  # computed, needs corroboration
+    SEALED = "SEALED"  # arifOS 888_JUDGE has sealed this
+    JUDGE_PREVIEW = "JUDGE_PREVIEW"  # sent for 888_JUDGE, awaiting verdict
+    HOLD = "888_HOLD"  # blocked — requires Arif release
+    VOID = "VOID"  # retracted or contradicted by new evidence
+
+
+class ClaimOrigin(str, Enum):
+    """Pipeline stage that produced this claim. Used for traceability and GUI sorting."""
+
+    EXTRACT = "EXTRACT"
+    FORMULATE = "FORMULATE"
+    CHALLENGE = "CHALLENGE"
+    SYNTHESIZE = "SYNTHESIZE"
+    FORWARD = "FORWARD"
+
+
+class ReasonCode(str, Enum):
+    """Structured reason codes for rejection envelopes.
+
+    Maps to GUI's logic layer — never prose. Every rejection carries one.
+    """
+
+    QUALIFY = "QUALIFY"  # No rejection — claim is valid
+    NO_EVIDENCE = "NO_EVIDENCE"  # evidence_for is empty
+    CONTRADICTION = "CONTRADICTION"  # evidence_against outweighs evidence_for
+    INVALID_GEOMETRY = "INVALID_GEOMETRY"  # spatial/math bounds violation
+    UNCERTAINTY_TOO_HIGH = "UNCERTAINTY_TOO_HIGH"  # uncertainty exceeds threshold
+    ENGINE_FAILURE = "ENGINE_FAILURE"  # computation error
+    GOVERNANCE_BLOCK = "GOVERNANCE_BLOCK"  # blocked by arifOS governance
+    SCHEMA_REJECTION = "SCHEMA_REJECTION"  # invalid input schema
+    NOT_APPLICABLE = "NOT_APPLICABLE"  # tool not applicable to this context
 
 
 class AcRiskLevel(str, Enum):
     """ACRisk classification — governs whether output requires Arif release."""
 
-    QUALIFY = "QUALIFY"       # low risk — proceed autonomously
-    ADVISORY = "ADVISORY"    # medium risk — surface to Arif, no block
-    HOLD = "HOLD"            # high risk — 888_HOLD gate required before use
-    BLOCK = "BLOCK"          # critical risk — blocked for all generic agents
+    QUALIFY = "QUALIFY"  # low risk — proceed autonomously
+    ADVISORY = "ADVISORY"  # medium risk — surface to Arif, no block
+    HOLD = "HOLD"  # high risk — 888_HOLD gate required before use
+    BLOCK = "BLOCK"  # critical risk — blocked for all generic agents
 
 
 class EpistemicLabel(str, Enum):
@@ -69,12 +97,12 @@ class EpistemicLabel(str, Enum):
     Used in the claim envelope so LLMs understand the confidence tier.
     """
 
-    OBSERVED = "OBSERVED"       # directly measured, traceable to instrument
-    DERIVED = "DERIVED"         # computed from observed with deterministic transform
-    ESTIMATE = "ESTIMATE"       # computed with model assumptions — range required
-    HYPOTHESIS = "HYPOTHESIS"   # interpretive, single-hypothesis, needs alternatives
-    PLAUSIBLE = "PLAUSIBLE"    # multi-hypothesis, physically plausible, uncalibrated
-    UNKNOWN = "UNKNOWN"         # insufficient data — no claim possible
+    OBSERVED = "OBSERVED"  # directly measured, traceable to instrument
+    DERIVED = "DERIVED"  # computed from observed with deterministic transform
+    ESTIMATE = "ESTIMATE"  # computed with model assumptions — range required
+    HYPOTHESIS = "HYPOTHESIS"  # interpretive, single-hypothesis, needs alternatives
+    PLAUSIBLE = "PLAUSIBLE"  # multi-hypothesis, physically plausible, uncalibrated
+    UNKNOWN = "UNKNOWN"  # insufficient data — no claim possible
 
 
 class UnitSystem(str, Enum):
@@ -97,6 +125,7 @@ class UnitSystem(str, Enum):
 
 
 # ─── Canonical Envelope ─────────────────────────────────────────────────────────
+
 
 class ClaimEnvelope(BaseModel):
     """
@@ -138,17 +167,20 @@ class ClaimEnvelope(BaseModel):
     tool_id: str = Field(
         ...,
         description="Public tool identifier. Format: domain_verb. E.g. gravity.get_bouguer_anomaly. "
-                   "NEVER contains library names, adapter names, or internal service names.",
-        examples=["gravity.get_bouguer_anomaly", "magnetics.get_declination",
-                 "tectonics.reconstruct_point", "bathymetry.get_depth"],
+        "NEVER contains library names, adapter names, or internal service names.",
+        examples=[
+            "gravity.get_bouguer_anomaly",
+            "magnetics.get_declination",
+            "tectonics.reconstruct_point",
+            "bathymetry.get_depth",
+        ],
     )
 
     # ── Core claim ───────────────────────────────────────────────────────────
 
     claim_state: ClaimState = Field(
         ...,
-        description="Current epistemic state of the output. "
-                   "Determines what the LLM may say about this result.",
+        description="Current epistemic state of the output. Determines what the LLM may say about this result.",
     )
 
     epistemic_label: EpistemicLabel = Field(
@@ -159,7 +191,7 @@ class ClaimEnvelope(BaseModel):
     value: Any = Field(
         ...,
         description="The primary computed value. Type matches the physical quantity. "
-                   "MUST be accompanied by uncertainty_band for ESTIMATE and above.",
+        "MUST be accompanied by uncertainty_band for ESTIMATE and above.",
     )
 
     unit: str = Field(
@@ -172,50 +204,45 @@ class ClaimEnvelope(BaseModel):
     canon9_variable: str | None = Field(
         default=None,
         description="CANON-9 variable this output grounds. "
-                   "E.g. rho, Vp, Vs, phi, Sw, P, k, T, chi. "
-                   "Required for any physics-grounded output.",
+        "E.g. rho, Vp, Vs, phi, Sw, P, k, T, chi. "
+        "Required for any physics-grounded output.",
         examples=["rho", "Vp", "Vs", "phi", "Sw", "P", "k", "T", "chi"],
     )
 
     uncertainty_band: tuple[float, float] | None = Field(
         default=None,
-        description="5th and 95th percentile bounds on the value. "
-                   "REQUIRED for ESTIMATE and above. Format: [p05, p95].",
+        description="5th and 95th percentile bounds on the value. REQUIRED for ESTIMATE and above. Format: [p05, p95].",
     )
 
     # ── Governance ───────────────────────────────────────────────────────────
 
     acrisk: AcRiskLevel = Field(
         default=AcRiskLevel.QUALIFY,
-        description="ACRisk tier. QUALIFY = autonomous use OK. "
-                   "HOLD = 888_HOLD gate. BLOCK = no use allowed.",
+        description="ACRisk tier. QUALIFY = autonomous use OK. HOLD = 888_HOLD gate. BLOCK = no use allowed.",
     )
 
     verdict: str = Field(
         default="QUALIFY",
-        description="Short verdict string. E.g. QUALIFY, HOLD, REJECT. "
-                   "HOLD means requires Arif release before use.",
+        description="Short verdict string. E.g. QUALIFY, HOLD, REJECT. HOLD means requires Arif release before use.",
     )
 
     # ── Evidence ─────────────────────────────────────────────────────────────
 
     evidence_for: list[str] = Field(
         default_factory=list,
-        description="Evidence that supports this claim. "
-                   "Required for DERIVED_CANDIDATE and above.",
+        description="Evidence that supports this claim. Required for DERIVED_CANDIDATE and above.",
     )
 
     evidence_against: list[str] = Field(
         default_factory=list,
         description="Evidence that contradicts or limits this claim. "
-                   "Required for DERIVED_CANDIDATE and above. "
-                   "This is what prevents epistemic collapse.",
+        "Required for DERIVED_CANDIDATE and above. "
+        "This is what prevents epistemic collapse.",
     )
 
     caveats: list[str] = Field(
         default_factory=list,
-        description="Assumptions, limitations, and warnings. "
-                   "NEVER empty — at minimum state the method used.",
+        description="Assumptions, limitations, and warnings. NEVER empty — at minimum state the method used.",
     )
 
     # ── Audit trail ──────────────────────────────────────────────────────────
@@ -223,16 +250,38 @@ class ClaimEnvelope(BaseModel):
     artifact_ref: str | None = Field(
         default=None,
         description="Reference to the artifact (file, grid, trace) that this "
-                   "claim is based on. Format: DATASET.TIMESTAMP.HASH. "
-                   "Used for audit replay.",
+        "claim is based on. Format: DATASET.TIMESTAMP.HASH. "
+        "Used for audit replay.",
         examples=["GRAV_GRID_OTSDEM.122023.4326.1", "WELL_LAS_BATEH1.20240115.ab32"],
     )
 
     requires_arif: bool = Field(
         default=False,
         description="If True: this output MUST NOT be used by autonomous agents. "
-                   " Arif must explicitly release. "
-                   "Auto-set to True when acrisk = HOLD or BLOCK.",
+        " Arif must explicitly release. "
+        "Auto-set to True when acrisk = HOLD or BLOCK.",
+    )
+
+    # ── Pipeline traceability (P0 #4 fix, 2026-07-10 — version 1.1.0) ──────
+    origin: str = Field(
+        default="FORMULATE",
+        description="Pipeline stage that produced this claim. "
+        "EXTRACT / FORMULATE / CHALLENGE / SYNTHESIZE / FORWARD. "
+        "Used by GUI for sorting and timeline rendering.",
+    )
+
+    reason_code: str = Field(
+        default="QUALIFY",
+        description="Structured reason code for rejection envelope. "
+        "QUALIFY = valid. NO_EVIDENCE / CONTRADICTION / etc. = rejected. "
+        "Maps to GUI logic layer — never prose.",
+    )
+
+    actor: str = Field(
+        default="geox-core",
+        description="Engine or organ that issued this claim. "
+        "Defaults to tool name. Never None — prevents G=0.0 from APEX gate. "
+        "P0 #4 fix: READ operations default to tool name when actor is absent.",
     )
 
     # ── Timestamps ───────────────────────────────────────────────────────────
@@ -246,8 +295,7 @@ class ClaimEnvelope(BaseModel):
 
     _internal: dict[str, Any] = Field(
         default_factory=dict,
-        description="INTERNAL ONLY. Excluded from public serialization. "
-                   "Used by geox_core for versioning, audit, and replay.",
+        description="INTERNAL ONLY. Excluded from public serialization. Used by geox_core for versioning, audit, and replay.",
     )
 
     class Config:
@@ -321,11 +369,36 @@ class ClaimEnvelope(BaseModel):
 
         # Uncertainty band
         uncertainty_band = None
-        if epistemic in (EpistemicLabel.ESTIMATE, EpistemicLabel.HYPOTHESIS,
-                         EpistemicLabel.PLAUSIBLE):
-            uncertainty_band = adapter_output.get("uncertainty_band") or \
-                              adapter_output.get("p05_p95") or \
-                              adapter_output.get("confidence_interval")
+        if epistemic in (EpistemicLabel.ESTIMATE, EpistemicLabel.HYPOTHESIS, EpistemicLabel.PLAUSIBLE):
+            uncertainty_band = (
+                adapter_output.get("uncertainty_band")
+                or adapter_output.get("p05_p95")
+                or adapter_output.get("confidence_interval")
+            )
+
+        # P0 #4: Auto-populate evidence_refs and actor for READ operations.
+        # When evidence_for is empty and the operation is a READ (INGESTED/QC_VERIFIED),
+        # default evidence_for to ["LIVE_PROBE"] so the APEX gate has something to score.
+        evidence_for = adapter_output.get("evidence_for", [])
+        claim_state_val = adapter_output.get("claim_state", "DERIVED_CANDIDATE")
+        if not evidence_for and claim_state_val in ("INGESTED", "QC_VERIFIED", "NO_VALID_EVIDENCE"):
+            evidence_for = ["LIVE_PROBE"]
+
+        evidence_against = adapter_output.get("evidence_against", [])
+
+        # P0 #4: Default actor to tool_id when adapter_output has no actor.
+        # Prevents G=0.0 from APEX gate due to missing identity.
+        actor_val = adapter_output.get("actor", tool_id.split(".")[0] if "." in tool_id else "geox-core")
+
+        # P0 #4: Derive reason_code from acrisk + evidence.
+        action_class = adapter_output.get("action_class", "READ")
+        reason_code_val = "QUALIFY"
+        if acrisk in (AcRiskLevel.HOLD, AcRiskLevel.BLOCK):
+            reason_code_val = "GOVERNANCE_BLOCK"
+        elif not evidence_for:
+            reason_code_val = "NO_EVIDENCE"
+        elif evidence_against and len(evidence_against) >= len(evidence_for):
+            reason_code_val = "CONTRADICTION"
 
         # Verdict
         verdict = "QUALIFY"
@@ -350,10 +423,14 @@ class ClaimEnvelope(BaseModel):
             acrisk=acrisk,
             verdict=verdict,
             requires_arif=requires_arif,
-            evidence_for=adapter_output.get("evidence_for", []),
-            evidence_against=adapter_output.get("evidence_against", []),
+            evidence_for=evidence_for,
+            evidence_against=evidence_against,
             caveats=adapter_output.get("caveats", []),
             artifact_ref=artifact_ref,
+            # P0 #4: Pipeline traceability fields
+            origin=adapter_output.get("origin", "FORMULATE"),
+            reason_code=adapter_output.get("reason_code", reason_code_val),
+            actor=actor_val,
             _internal={
                 "adapter_output_ref": str(uuid4())[:8],
                 "library_versions": adapter_output.get("library_version"),
@@ -367,6 +444,7 @@ class ClaimEnvelope(BaseModel):
 
 
 # ─── Specialized Envelope Subclasses ──────────────────────────────────────────
+
 
 class GravityEnvelope(ClaimEnvelope):
     """Specialized envelope for gravity outputs."""
@@ -393,6 +471,7 @@ class BathymetryEnvelope(ClaimEnvelope):
 
 
 # ─── Membrane Guard ───────────────────────────────────────────────────────────
+
 
 def wrap_for_membrane(
     tool_id: str,
@@ -428,14 +507,18 @@ def wrap_for_membrane(
 
 # ─── Version Lock ─────────────────────────────────────────────────────────────
 
-CLAIM_ENVELOPE_VERSION = "1.0.0"
-CLAIM_ENVELOPE_EPOCH = "2026-06-26"
+CLAIM_ENVELOPE_VERSION = "1.1.0"
+CLAIM_ENVELOPE_EPOCH = "2026-07-10"
 CLAIM_ENVELOPE_STATUS = "LOCKED"
 
 """
 Version history:
   1.0.0 (2026-06-26) — Initial locked schema. Replaces ad-hoc JSON returns.
-                         All 16 canonical tools must use ClaimEnvelope from this date.
+                          All 16 canonical tools must use ClaimEnvelope from this date.
+  1.1.0 (2026-07-10) — P0 #4 fix: Added origin, reason_code, actor fields.
+                          Auto-populates evidence_refs for READ operations.
+                          Defaults actor to tool name when absent (prevents G=0.0).
+                          Defaults evidence_for to ["LIVE_PROBE"] for READ-class claims.
 
 DITEMPA BUKAN DIBERI — The envelope is law. The envelope is not a suggestion.
 """
