@@ -413,7 +413,7 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 76  # 2026-07-11 Post-Zen: -4 deregistered, -1 duplicate physical_reality_interpret
+    _EXPECTED_CANONICAL = 77  # 2026-07-11: 73 surface + 4 internal (geox_map_context_scene promoted from compat)
     if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
         raise ValueError(
             f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "

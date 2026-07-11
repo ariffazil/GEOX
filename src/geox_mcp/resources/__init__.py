@@ -216,18 +216,8 @@ async def geox_identity() -> dict:
     return identity_state
 
 
-async def list_geox_apps() -> list[dict]:
-    manifest_dir = "control_plane/fastmcp/manifests"
-    apps = []
-    if os.path.exists(manifest_dir):
-        for filename in os.listdir(manifest_dir):
-            if filename.endswith(".json"):
-                try:
-                    with open(os.path.join(manifest_dir, filename)) as f:
-                        apps.append(json.load(f))
-                except Exception as e:
-                    logger.error(f"Failed to load manifest {filename}: {e}")
-    return apps
+# list_geox_apps REMOVED 2026-07-11 — superseded by geox_apps_index (apps.json).
+# Function was dead (registration commented out at line 829). No active callers.
 
 
 async def get_profile_status() -> str:
