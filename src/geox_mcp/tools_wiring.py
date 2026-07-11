@@ -2484,6 +2484,62 @@ def register_tools_on(mcp):
         }
 
     # ═══════════════════════════════════════════════════════════════════════════════
+    # MCP APP VISUAL TOOLS — Main server registration (Fix HOLD-2026-07-11)
+    # These tools are also on the witness sub-server via mcp.mount(), but mount does
+    # NOT composite annotations/AppConfig into the main server's tools/list.
+    # Registering here ensures they appear in tools/list with ui.resourceUri bindings.
+    # ═══════════════════════════════════════════════════════════════════════════════
+
+    @mcp.tool(
+        name="geox_map_context_scene",
+        annotations={
+            "title": "Map Context Scene",
+            "readOnlyHint": True,
+            "destructiveHint": False,
+            "idempotentHint": True,
+            "openWorldHint": False,
+            "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
+        },
+    )
+    async def _map_context_scene(
+        bbox: list[float],
+        mode: str = "bbox_context",
+        crs: str = "EPSG:4326",
+        vp_slice_inline: dict[str, Any] | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Spatial bbox context, CRS checks, and causal scene rendering.
+
+        Modes:
+            - bbox_context: Return bbox summary and scene metadata (default).
+            - render_scene: Render causal scene map.
+            - render_geojson: Return GeoJSON FeatureCollection with selectable geological features.
+            - scene_summary: Summarize geological scene context.
+            - crs_check: Validate and transform CRS.
+            - coordinate_guardrail: Check coordinates against basin boundaries.
+            - georeference_map: Georeference raster or vector data.
+
+        When this tool is called, the MCP host opens the GEOX Earth Workbench
+        (ui://geox/workbench-v1.html) in a sandboxed iframe for interactive map visualization.
+
+        Use when: the user provides a bounding box, coordinates, or asks for
+        geological context of a region. Also used for rendering geological maps
+        with selectable features.
+        """
+        from geox_mcp.tools.map_context import geox_map_context_scene as _impl
+
+        return await _impl(
+            bbox=bbox,
+            mode=mode,
+            crs=crs,
+            vp_slice_inline=vp_slice_inline,
+            session_id=session_id,
+            actor_id=actor_id,
+        )
+
+    # ═══════════════════════════════════════════════════════════════════════════════
     # POST-REGISTRATION ENRICHMENT — Binding 3 compliance (mcp-builder-doctrine v1.1.0)
     # Injects rich descriptions + "Use when..." trigger from tools_manifest.py
     # into the MCP surface. Without this, the model sees only minimal docstrings.

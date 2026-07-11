@@ -23,6 +23,7 @@ from fastmcp.apps import AppConfig, ResourceCSP
 logger = logging.getLogger("geox.apps.workbench")
 
 WORKBENCH_URI = "ui://geox/workbench-v1.html"
+WORKBENCH_URI_READABLE = "geox://apps/workbench-v1.html"
 WORKBENCH_FILE = Path(__file__).resolve().parent.parent.parent.parent / "apps" / "workbench-v1.html"
 
 # ── Tools that trigger the workbench View ──────────────────────────────────────
@@ -76,11 +77,26 @@ def register_workbench(mcp: FastMCP) -> None:
             prefers_border=False,
             csp=ResourceCSP(
                 connect_domains=["geox.arif-fazil.com", "macrostrat.org"],
-                resource_domains=["geox.arif-fazil.com"],
+                resource_domains=[
+                    "geox.arif-fazil.com",
+                    "unpkg.com",  # MapLibre GL JS + CSS
+                    "tile.openstreetmap.org",  # OSM raster tiles
+                ],
             ),
         ),
     )
     async def geox_workbench() -> str:
         return WORKBENCH_FILE.read_text(encoding="utf-8")
 
-    logger.info(f"MCP App View registered: {WORKBENCH_URI} ({len(GEOX_UI_TOOLS)} tools bound)")
+    # Also register on readable URI for resources/read access (Fix HOLD-2026-07-11)
+    @mcp.resource(
+        WORKBENCH_URI_READABLE,
+        description=(
+            "GEOX Earth Workbench — readable variant for resources/read access. Same content as ui://geox/workbench-v1.html."
+        ),
+        mime_type="text/html;profile=mcp-app",
+    )
+    async def geox_workbench_readable() -> str:
+        return WORKBENCH_FILE.read_text(encoding="utf-8")
+
+    logger.info(f"MCP App View registered: {WORKBENCH_URI} + readable ({len(GEOX_UI_TOOLS)} tools bound)")

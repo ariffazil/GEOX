@@ -95,9 +95,10 @@ SURFACE_TOOLS: list[str] = [
     "geox_biostrat_falsify",  # Phase 2.7: 8-gate Popperian falsification engine. Any FALSIFIED → overall FALSIFIED.
     "geox_macrostrat_calibrate",  # Phase 2.8: Merge relative biostrat with Macrostrat absolute ages. Biostrat→Ma bridge.
     "geox_atlas",  # Point-in-country + land/water classifier. Natural Earth 10m GeoJSON.
-    # ── EARTH MAP SURFACE (4) — Phase 2.4 (2026-07-02) ─────────────────────────
+    # ── EARTH MAP SURFACE (5) — Phase 2.4 (2026-07-02) ─────────────────────────
     # Layer registry + scene planning + cached preview rendering + governed export.
     # Architecture: tools compute, resources carry data. Truth-class gated.
+    "geox_map_context_scene",  # Spatial bbox context, CRS checks, causal scene rendering w/ GeoJSON features. MCP App: ui://geox/workbench-v1.html
     "geox_map_layers_list",  # Discover available layers for a bbox + theme
     "geox_map_scene_plan",  # Deterministic render recipe (no image yet)
     "geox_map_render_preview",  # Cheap static PNG preview with caching
@@ -234,11 +235,16 @@ CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
 # ║                                                                             ║
 # ║  ⚠️  KNOWN GAPS (Strike 3 audit):                                          ║
 # ║      3 aliases lack explicit lane map entries in organ_governance.py:       ║
-# ║        - geox_dst_ingest_test    → defaults to "reasoning" (too strict)    ║
-# ║        - geox_sequence_interpret → defaults to "reasoning" (too strict)    ║
-# ║        - geox_evidence_reason    → defaults to "reasoning" (too strict)    ║
+# ║       - geox_dst_ingest_test    → defaults to "reasoning" (too strict)    ║
+# ║       - geox_sequence_interpret → defaults to "reasoning" (too strict)    ║
+# ║       - geox_evidence_reason    → defaults to "reasoning" (too strict)    ║
 # ║      These fall back to "reasoning" lane which unnecessarily requires       ║
 # ║      session_id. FIXED in organ_governance.py (Strike 3 patch).             ║
+# ║                                                                             ║
+# ║  REGISTRY CARDINALITY (Fix 2026-07-11): CANONICAL_PUBLIC_TOOLS = 72         ║
+# ║  surface + 4 internal = 76. Plus 1 callable compat tool                     ║
+# ║  (geox_dst_ingest_test) = 77 total callable. _EXPECTED_CANONICAL in         ║
+# ║  server.py tracks the callable count including this compat tool.             ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
 #
 CANONICAL_COMPAT_TOOLS: list[str] = [
@@ -254,7 +260,6 @@ CANONICAL_COMPAT_TOOLS: list[str] = [
     "geox_sequence_interpret",
     "geox_evidence_reason",
     "geox_prospect_evaluate",
-    "geox_map_context_scene",
     "geox_horizon_contrast_surface",
     "geox_coord_transform_tool",
     "geox_blockspace_resolution_tool",

@@ -37,7 +37,6 @@ from geox_mcp.tools.ingestion import (
     geox_las_inspect,
     geox_seismic_segy_inspect,
 )
-from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.petrophysics import (
     geox_subsurface_generate_candidates,
     geox_subsurface_verify_integrity,
@@ -61,7 +60,7 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_sequence_interpret", geox_sequence_interpret),
     ("geox_evidence_reason", geox_evidence_reason),
     ("geox_prospect_evaluate", geox_prospect_evaluate),
-    ("geox_map_context_scene", geox_map_context_scene),
+    # ("geox_map_context_scene", geox_map_context_scene),  # REMOVED 2026-07-11: registered on main server via tools_wiring.py
     ("geox_system_registry_status", geox_system_registry_status),
     ("geox_horizon_contrast_surface", geox_horizon_contrast_surface),
     ("geox_basin_resolve", geox_basin_resolve),
