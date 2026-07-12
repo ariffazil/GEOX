@@ -321,6 +321,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                 # Always propagate session lineage — never conditionally drop.
                 # If caller passed session_id, it must reach every downstream field.
                 res["session_id"] = session_id
+                res["actor_id"] = actor_id
                 if trace_id:
                     res["trace_id"] = trace_id
 
@@ -328,6 +329,7 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                 prov = res.setdefault("provenance", {})
                 if isinstance(prov, dict):
                     prov["session_id"] = session_id
+                    prov["actor_id"] = actor_id
                     if trace_id:
                         prov["trace_id"] = trace_id
                     prov["tool_name"] = name
@@ -417,11 +419,13 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
         # Always propagate — never conditionally drop session lineage
         if isinstance(res, dict) and "epistemic_tag" in res:
             res["session_id"] = session_id
+            res["actor_id"] = actor_id
             if trace_id:
                 res["trace_id"] = trace_id
             prov = res.setdefault("provenance", {})
             if isinstance(prov, dict):
                 prov["session_id"] = session_id
+                prov["actor_id"] = actor_id
                 if trace_id:
                     prov["trace_id"] = trace_id
                 prov["tool_name"] = name

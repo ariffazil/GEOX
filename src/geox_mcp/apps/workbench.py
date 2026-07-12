@@ -1,12 +1,12 @@
 """
-GEOX MCP Apps Workbench — One fixed View for all visual tools.
+GEOX MCP Apps Workbench — interactive map view for visual tools.
 
 Architecture:
-  - One ui://geox/workbench-v1.html resource (fixed, no dynamic params)
-  - All 6+ visual tools point to this single View via AppConfig(resource_uri=...)
-  - Host calls any visual tool → tools/list metadata shows ui.resourceUri →
-    Host opens sandboxed iframe → workbench receives tool-input notification →
-    Workbench renders the appropriate panel based on which tool was called
+  - ui://geox/workbench-v1.html — interactive map + feature selection
+  - ui://geox/workspace-v1.html — read-only workspace (registered in ui/resources.py)
+  - Each tool declares its own ui.resourceUri in tools_manifest.yaml
+  - Host reads ui.resourceUri from tools/list → opens sandboxed iframe →
+    iframe receives tool-result via postMessage → renders accordingly
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
@@ -19,9 +19,11 @@ from pathlib import Path
 
 from fastmcp import FastMCP
 from fastmcp.apps import AppConfig, ResourceCSP
+from geox_mcp.surface_manifest import ui_tool_names
 
 logger = logging.getLogger("geox.apps.workbench")
 
+# ── Resource URIs ─────────────────────────────────────────────────────────────
 WORKBENCH_URI = "ui://geox/workbench-v1.html"
 WORKBENCH_URI_READABLE = "geox://apps/workbench-v1.html"
 WORKBENCH_FILE = Path(__file__).resolve().parent.parent.parent.parent / "apps" / "workbench-v1.html"
@@ -29,19 +31,8 @@ WORKBENCH_FILE = Path(__file__).resolve().parent.parent.parent.parent / "apps" /
 # ── Tools that trigger the workbench View ──────────────────────────────────────
 # When the LLM calls any of these tools, the Host reads ui.resourceUri from
 # the tool's annotations (in tools/list) and opens the workbench iframe.
-GEOX_UI_TOOLS: tuple[str, ...] = (
-    # Map & context
-    "geox_map_context_scene",
-    # Seismic volume & attribute
-    "geox_volume_get_frame_tool",
-    "geox_seismic_compute_attribute_tool",
-    # Horizon interpretation
-    "geox_horizon_contrast_surface",
-    # Subsurface candidates
-    "geox_subsurface_generate_candidates",
-    # Prospect evaluation
-    "geox_prospect_evaluate",
-)
+# Note: geox_map_context_scene uses the workspace (ui/resources.py), not workbench.
+GEOX_UI_TOOLS: tuple[str, ...] = tuple(ui_tool_names())
 
 # ── AppConfig per tool ────────────────────────────────────────────────────────
 # Injected into tools/list metadata AND into tool call responses.
@@ -60,6 +51,9 @@ def register_workbench(mcp: FastMCP) -> None:
     The resource is served at ui://geox/workbench-v1.html with
     MIME type text/html;profile=mcp-app so MCP Apps hosts (ChatGPT,
     Claude, Copilot) render it as a sandboxed iframe.
+
+    The workspace resource (ui://geox/workspace-v1.html) is registered
+    separately in ui/resources.py.
     """
     if not WORKBENCH_FILE.exists():
         logger.warning(f"Workbench HTML not found at {WORKBENCH_FILE}. MCP App View will not be available.")

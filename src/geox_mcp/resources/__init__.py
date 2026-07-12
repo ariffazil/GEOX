@@ -921,13 +921,30 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
 
     async def geox_ui_read(app_id: str) -> str:
         """Read an app HTML file from /root/GEOX/apps/{app_id}/index.html.
-        If app_id has .html extension, read directly: apps/{app_id}"""
+        If app_id has .html extension, read directly: apps/{app_id}
+
+        P0 (2026-07-12 PLAN-001 A): well-desk serves p0.html (single-file MCP Apps
+        shell, connect-src none) unless GEOX_WELL_DESK_UI=full.
+        """
         import json
+        import os
         from pathlib import Path
 
         base = Path("/root/GEOX/apps")
         if app_id.endswith(".html"):
             app_path = base / app_id
+        elif app_id in ("well-desk", "well_desk") and os.getenv(
+            "GEOX_WELL_DESK_UI", "p0"
+        ).strip().lower() in ("p0", "shell", "viz", "p0+", "1", "true", "yes"):
+            # Prefer Viz P0+ canvas shell, then p0, then full index
+            viz = base / "well-desk" / "p0-viz.html"
+            p0 = base / "well-desk" / "p0.html"
+            if viz.exists():
+                app_path = viz
+            elif p0.exists():
+                app_path = p0
+            else:
+                app_path = base / "well-desk" / "index.html"
         else:
             app_path = base / app_id / "index.html"
         if not app_path.exists():
@@ -966,13 +983,30 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         _reader.__name__ = f"geox_ui_{app_id.replace('.', '_').replace('-', '_')}"
         return _reader
 
+    # Prefer AppConfig CSP for well-desk P0 (empty connectDomains).
+    try:
+        from fastmcp.apps import AppConfig, ResourceCSP
+
+        _well_desk_csp = AppConfig(
+            prefersBorder=True,
+            csp=ResourceCSP(
+                connect_domains=[],
+                resource_domains=[],
+            ),
+            permissions=None,
+        )
+    except Exception:  # pragma: no cover
+        _well_desk_csp = None
+
     for uri, desc in GEOX_APPS:
         app_id = uri.split("/")[-1]
-        mcp.resource(
-            uri,
-            description=desc,
-            mime_type="text/html;profile=mcp-app",
-        )(_build_ui_reader(app_id))
+        _kwargs: dict = {
+            "description": desc,
+            "mime_type": "text/html;profile=mcp-app",
+        }
+        if app_id == "well-desk" and _well_desk_csp is not None:
+            _kwargs["app"] = _well_desk_csp
+        mcp.resource(uri, **_kwargs)(_build_ui_reader(app_id))
 
     mcp.resource(
         "geox://registry/apps",
