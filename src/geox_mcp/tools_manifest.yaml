@@ -1611,3 +1611,48 @@ compat_tools:
 - geox_vision_minimax_inference
 - geox_vision_perceptual_inventory
 - geox_volume_frame_tool
+- name: geox_consequence_footprint
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: "Compute physical and ecological consequences of a proposed action"
+  annotations:
+    read_only: true
+    destructive: false
+- name: geox_optionality_loss
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: "Measure destroyed future physical options"
+  annotations:
+    read_only: true
+    destructive: false
+- name: geox_feedback_integrity
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: "Check whether physical monitoring is sufficient to detect drift"
+  annotations:
+    read_only: true
+    destructive: false
+- name: geox_material_truth_challenge
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: "Compare institutional claims against Earth measurements"
+  annotations:
+    read_only: true
+    destructive: false
+- name: geox_cascade_pathway
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: "Model cross-domain propagation from a physical event"
+  annotations:
+    read_only: true
+    destructive: false

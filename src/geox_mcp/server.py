@@ -376,6 +376,114 @@ def _enforce_geox() -> dict[str, Any] | None:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
+
+# ═══════════════════════════════════════════════════════════════════
+# Entropy Integrity Mesh — GEOX Extensions (Phase 2)
+# Material reality anchor. The strongest anti-rhetoric witness.
+# ═══════════════════════════════════════════════════════════════════
+
+@mcp.tool(name="geox_consequence_footprint", annotations=_geox_annotations("geox_consequence_footprint"))
+async def _consequence_footprint(
+    action_description: str = "",
+    affected_area_km2: float | None = None,
+    material_movement_tonnes: float | None = None,
+    emissions_tonnes_co2e: float | None = None,
+    water_impact_m3: float | None = None,
+    habitat_fragmentation: str | None = None,
+    subsidence_risk: str | None = None,
+    contamination_risk: str | None = None,
+    reversibility: str = "UNKNOWN",
+    uncertainty_factor: float = 0.5,
+) -> dict:
+    """Compute physical and ecological consequences of a proposed action.
+    Measures: affected area, material movement, emissions, water impact,
+    habitat fragmentation, subsidence, contamination, reversibility."""
+    import importlib.util as _ilu, os as _os
+    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "consequence_footprint.py")
+    _s = _ilu.spec_from_file_location("cf", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
+    return _m.geox_consequence_footprint(
+        action_description=action_description, affected_area_km2=affected_area_km2,
+        material_movement_tonnes=material_movement_tonnes, emissions_tonnes_co2e=emissions_tonnes_co2e,
+        water_impact_m3=water_impact_m3, habitat_fragmentation=habitat_fragmentation,
+        subsidence_risk=subsidence_risk, contamination_risk=contamination_risk,
+        reversibility=reversibility, uncertainty_factor=uncertainty_factor
+    )
+
+@mcp.tool(name="geox_optionality_loss", annotations=_geox_annotations("geox_optionality_loss"))
+async def _optionality_loss(
+    action_description: str = "",
+    options_destroyed: list[dict] | None = None,
+    options_preserved: list[dict] | None = None,
+) -> dict:
+    """Measure destroyed future physical options.
+    Sterilised reserves, lost aquifer use, irreversible land conversion,
+    inaccessible remediation pathways, reduced resilience."""
+    import importlib.util as _ilu, os as _os
+    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "optionality_loss.py")
+    _s = _ilu.spec_from_file_location("ol", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
+    return _m.geox_optionality_loss(
+        action_description=action_description,
+        options_destroyed=options_destroyed or [],
+        options_preserved=options_preserved
+    )
+
+@mcp.tool(name="geox_feedback_integrity", annotations=_geox_annotations("geox_feedback_integrity"))
+async def _feedback_integrity(
+    monitoring_system: str = "",
+    sensor_coverage_pct: float = 0,
+    baseline_quality: str = "UNKNOWN",
+    missing_measurements: list[str] | None = None,
+    reporting_delay_hours: float = 0,
+    threshold_manipulation_detected: bool = False,
+    excluded_anomalies: list[str] | None = None,
+) -> dict:
+    """Check whether physical monitoring is sufficient to detect drift.
+    Sensor coverage, baseline quality, missing measurements,
+    reporting delay, threshold manipulation, excluded anomalies."""
+    import importlib.util as _ilu, os as _os
+    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "feedback_integrity.py")
+    _s = _ilu.spec_from_file_location("fi", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
+    return _m.geox_feedback_integrity(
+        monitoring_system=monitoring_system, sensor_coverage_pct=sensor_coverage_pct,
+        baseline_quality=baseline_quality, missing_measurements=missing_measurements,
+        reporting_delay_hours=reporting_delay_hours,
+        threshold_manipulation_detected=threshold_manipulation_detected,
+        excluded_anomalies=excluded_anomalies
+    )
+
+@mcp.tool(name="geox_material_truth_challenge", annotations=_geox_annotations("geox_material_truth_challenge"))
+async def _material_truth_challenge(
+    institutional_claim: str = "",
+    earth_measurements: list[dict] | None = None,
+    measurement_confidence: float = 0.5,
+) -> dict:
+    """Challenge institutional claims against Earth measurements.
+    Pattern: 'The institution claims low harm, but Earth measurements show irreversible loss.'"""
+    import importlib.util as _ilu, os as _os
+    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "material_truth_challenge.py")
+    _s = _ilu.spec_from_file_location("mtc", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
+    return _m.geox_material_truth_challenge(
+        institutional_claim=institutional_claim,
+        earth_measurements=earth_measurements or [],
+        measurement_confidence=measurement_confidence
+    )
+
+@mcp.tool(name="geox_cascade_pathway", annotations=_geox_annotations("geox_cascade_pathway"))
+async def _cascade_pathway(
+    intervention: str = "",
+    cascade_graph: list[dict] | None = None,
+) -> dict:
+    """Model how one intervention propagates across geology, groundwater,
+    infrastructure, ecology, communities, capital exposure."""
+    import importlib.util as _ilu, os as _os
+    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "cascade_pathway.py")
+    _s = _ilu.spec_from_file_location("cp", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
+    return _m.geox_cascade_pathway(
+        intervention=intervention,
+        cascade_graph=cascade_graph or []
+    )
+
+
 def compose_geox_servers() -> None:
     """Mount domain sub-servers onto the main GEOX MCP server.
 

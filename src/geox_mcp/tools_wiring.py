@@ -3040,6 +3040,34 @@ def register_tools_on(mcp):
             finally:
                 fcntl.flock(lockf.fileno(), fcntl.LOCK_UN)
 
+        # 5. Vault witness - append IMAGE_SEAL to constitutional outcomes.jsonl
+        try:
+            outcomes_path = vault_dir / "outcomes.jsonl"
+            vault_entry = {
+                "ts": datetime.now(UTC).isoformat(),
+                "event": "IMAGE_SEAL",
+                "actor": actor_id or "ARIF",
+                "session": session_id or "geox_session",
+                "tool": "geox_well_desk_publish",
+                "verdict": "SEAL",
+                "elapsed_ms": 0,
+                "image_sha256": image_sha,
+                "well_id": _wid,
+                "filename": filename,
+                "seal_token": seal_token,
+            }
+            with open(lock_path, "a") as lockf:
+                fcntl.flock(lockf.fileno(), fcntl.LOCK_EX)
+                try:
+                    with open(outcomes_path, "a") as f:
+                        f.write(json.dumps(vault_entry) + "\n")
+                        f.flush()
+                finally:
+                    fcntl.flock(lockf.fileno(), fcntl.LOCK_UN)
+        except Exception as vault_err:
+            # Non-fatal - side ledger already written
+            text += f" (vault witness failed: {vault_err})"
+
         text = f"Image published successfully. Well: {_wid}. Path: {filepath}. Seal: {seal_token}"
 
         # Return to client/conversation
@@ -3066,28 +3094,54 @@ def register_tools_on(mcp):
     )
     async def _render_well_panel(
         well_id: str,
-        depth_top: float = 3000.0,
-        depth_base: float = 4000.0,
+        depth_top: float | None = None,
+        depth_base: float | None = None,
         curves: list[str] | None = None,
+        las_path: str | None = None,
+        interpret: bool = True,
+        rw: float = 0.03,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """OBSERVE · Render a well-log panel as a PNG image with metadata.
+        """OBSERVE · Render well-log panel with petrophysics + earth meaning.
 
-        Generates a multi-track plot of curves (GR, RT, NPHI, RHOB, DT) for a
-        given well_id and depth range, saves the image, registers it with the
-        vault, and returns base64 image data.
+        Default interpret=True: open LAS → Vsh/φe/Sw (DERIVED) + GR motif and
+        reservoir/fluid read (INTERPRETED) on multi-track PNG with meaning panel.
+        Resolves Equinor Volve 15/9-19 and Marmousi demo LAS by well_id or las_path.
 
-        Use when: the user requests a visual plot of well log curves or a well panel.
+        Use when: user wants a well panel, petrophysical interpretation, or earth
+        meaning decoded from open-source or provided LAS.
         """
+        if interpret:
+            try:
+                from geox_mcp.render_well_panel_petro import render_interpreted_panel
+
+                return render_interpreted_panel(
+                    well_id=well_id,
+                    depth_top=depth_top,
+                    depth_base=depth_base,
+                    las_path=las_path,
+                    rw=rw,
+                    session_id=session_id,
+                    actor_id=actor_id,
+                )
+            except Exception as e:
+                return {
+                    "ok": False,
+                    "isError": True,
+                    "message": f"interpreted panel failed: {type(e).__name__}: {e}",
+                    "tool": "geox_render_well_panel",
+                }
+
+        # Minimal scaffold fallback when interpret=False and no LAS workflow
         import io
         import base64
         import hashlib
         import math
-        import json
         import matplotlib
-        matplotlib.use('Agg')
+
+        matplotlib.use("Agg")
         import matplotlib.pyplot as plt
         import numpy as np
         from datetime import datetime, UTC
@@ -3095,184 +3149,50 @@ def register_tools_on(mcp):
         from PIL import Image as PILImage
         from PIL.PngImagePlugin import PngInfo
 
-        def _gen_curve(d_top, d_base, c_type):
-            depth = []
-            values = []
-            step = 0.5
-            d = d_top
-            while d <= d_base:
-                depth.append(d)
-                frac = (d - d_top) / (d_base - d_top)
-                if c_type == "gr":
-                    val = 30 + 80 * math.sin(frac * math.pi * 3) + 20 * math.sin(frac * math.pi * 8)
-                elif c_type == "rt":
-                    val = math.pow(10, 0.5 + 1.5 * frac + 0.3 * math.sin(frac * math.pi * 4))
-                elif c_type == "nphi":
-                    val = 0.05 + 0.25 * math.sin(frac * math.pi * 2)
-                elif c_type == "rhob":
-                    val = 2.65 - 0.4 * math.sin(frac * math.pi * 2)
-                elif c_type == "dt":
-                    val = 55 + 45 * math.sin(frac * math.pi * 2)
-                else:
-                    val = 0.0
-                values.append(val)
-                d += step
-            return np.array(depth), np.array(values)
-
-        _wid = (well_id or "").strip()
-        if not _wid:
-            return {"ok": False, "isError": True, "message": "well_id is required"}
-
-        # Define subplots
-        fig, axes = plt.subplots(1, 4, figsize=(10, 8), sharey=True, facecolor='#0f0f1a')
-        
-        # Adjust layout
-        fig.suptitle(f"GEOX Well Log Panel - {_wid}", color='white', fontsize=14, weight='bold')
-        
-        depths_gr, values_gr = _gen_curve(depth_top, depth_base, "gr")
-        depths_rt, values_rt = _gen_curve(depth_top, depth_base, "rt")
-        depths_nphi, values_nphi = _gen_curve(depth_top, depth_base, "nphi")
-        depths_rhob, values_rhob = _gen_curve(depth_top, depth_base, "rhob")
-        depths_dt, values_dt = _gen_curve(depth_top, depth_base, "dt")
-
-        # Track 1: GR
-        axes[0].plot(values_gr, depths_gr, color='#f1c40f', lw=1.5)
-        axes[0].set_title("GR", color='white')
-        axes[0].set_xlim(0, 150)
-        axes[0].grid(True, color='#333', ls='--')
-        axes[0].set_facecolor('#0f0f1a')
-        axes[0].tick_params(colors='white')
-        axes[0].spines['bottom'].set_color('#555')
-        axes[0].spines['top'].set_color('#555')
-        axes[0].spines['left'].set_color('#555')
-        axes[0].spines['right'].set_color('#555')
-
-        # Track 2: RT
-        axes[1].semilogx(values_rt, depths_rt, color='#2ecc71', lw=1.5)
-        axes[1].set_title("Resistivity", color='white')
-        axes[1].set_xlim(0.2, 2000)
-        axes[1].grid(True, which="both", color='#333', ls='--')
-        axes[1].set_facecolor('#0f0f1a')
-        axes[1].tick_params(colors='white')
-        axes[1].spines['bottom'].set_color('#555')
-        axes[1].spines['top'].set_color('#555')
-        axes[1].spines['left'].set_color('#555')
-        axes[1].spines['right'].set_color('#555')
-
-        # Track 3: Density-Neutron Overlay
-        ax_rhob = axes[2]
-        ax_nphi = ax_rhob.twiny()
-        ax_rhob.plot(values_rhob, depths_rhob, color='#e74c3c', lw=1.5, label="RHOB")
-        ax_nphi.plot(values_nphi, depths_nphi, color='#3498db', lw=1.5, ls='--', label="NPHI")
-        ax_rhob.set_title("RHOB / NPHI", color='white', y=1.05)
-        ax_rhob.set_xlim(1.95, 2.95)
-        ax_nphi.set_xlim(0.45, -0.15) # Neutron scale reversed
-        ax_rhob.grid(True, color='#333', ls='--')
-        ax_rhob.set_facecolor('#0f0f1a')
-        ax_rhob.tick_params(colors='white')
-        ax_nphi.tick_params(colors='white')
-        ax_rhob.spines['bottom'].set_color('#555')
-        ax_rhob.spines['top'].set_color('#555')
-        ax_rhob.spines['left'].set_color('#555')
-        ax_rhob.spines['right'].set_color('#555')
-
-        # Track 4: DT
-        axes[3].plot(values_dt, depths_dt, color='#9b59b6', lw=1.5)
-        axes[3].set_title("Sonic DT", color='white')
-        axes[3].set_xlim(140, 40) # Sonic scale reversed
-        axes[3].grid(True, color='#333', ls='--')
-        axes[3].set_facecolor('#0f0f1a')
-        axes[3].tick_params(colors='white')
-        axes[3].spines['bottom'].set_color('#555')
-        axes[3].spines['top'].set_color('#555')
-        axes[3].spines['left'].set_color('#555')
-        axes[3].spines['right'].set_color('#555')
-
-        axes[0].invert_yaxis()
-        plt.tight_layout()
-
-        # Save to buffer
+        _wid = (well_id or "").strip() or "UNKNOWN"
+        d0 = float(depth_top if depth_top is not None else 3000.0)
+        d1 = float(depth_base if depth_base is not None else 4000.0)
+        d = np.arange(d0, d1 + 0.5, 0.5)
+        frac = (d - d0) / max(d1 - d0, 1e-9)
+        fig, axes = plt.subplots(1, 3, figsize=(8, 7), sharey=True, facecolor="#0f0f1a")
+        fig.suptitle(f"GEOX scaffold — {_wid}", color="white")
+        for ax, v, col, title in zip(
+            axes,
+            (30 + 80 * np.sin(frac * math.pi * 3), 10 ** (0.5 + frac), 0.2 + 0.1 * np.sin(frac * math.pi)),
+            ("#f1c40f", "#2ecc71", "#3498db"),
+            ("GR syn", "RT syn", "φ syn"),
+        ):
+            ax.plot(v, d, color=col)
+            ax.set_title(title, color="white")
+            ax.set_facecolor("#0f0f1a")
+            ax.tick_params(colors="white")
+            ax.invert_yaxis()
         buf = io.BytesIO()
-        plt.savefig(buf, format='png', dpi=100, facecolor='#0f0f1a')
+        plt.savefig(buf, format="png", dpi=100, facecolor="#0f0f1a")
         plt.close()
-        img_bytes = buf.getvalue()
-
-        # Save to file with metadata tEXt chunks
-        renders_dir = Path("/root/GEOX/data/renders")
-        renders_dir.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
-        filename = f"well-panel-{_wid}-{timestamp}.png"
-        filepath = renders_dir / filename
-
-        # Embed tEXt chunks using PIL
-        metadata = {
-            "well_id": _wid,
-            "depth_top": depth_top,
-            "depth_base": depth_base,
-            "generated_at": datetime.now(UTC).isoformat() + "Z",
-            "actor": actor_id or "ARIF",
-            "session_id": session_id or "geox_session",
-            "tool": "geox_render_well_panel",
-            "provenance": "scaffold"
-        }
-        
-        pil_img = PILImage.open(io.BytesIO(img_bytes))
+        renders = Path("/root/GEOX/data/renders")
+        renders.mkdir(parents=True, exist_ok=True)
+        ts = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
+        fp = renders / f"well-panel-scaffold-{_wid}-{ts}.png"
+        img = PILImage.open(io.BytesIO(buf.getvalue()))
         meta = PngInfo()
-        for k, v in metadata.items():
-            meta.add_text(k, str(v))
-        pil_img.save(filepath, "PNG", pnginfo=meta)
-        
-        # Reload bytes to ensure we hash the final saved image
-        final_bytes = filepath.read_bytes()
-        image_sha = f"sha256:{hashlib.sha256(final_bytes).hexdigest()}"
-        seal_token = f"SEAL-IMG-{hashlib.sha256(final_bytes).hexdigest()[:16].upper()}"
-
-        # Write to seal chain
-        seal_entry = {
-            "entry_type": "IMAGE_SEAL",
-            "token": seal_token,
-            "well_id": _wid,
-            "image_sha256": image_sha,
-            "filename": filename,
-            "filepath": str(filepath),
-            "issued_at": datetime.now(UTC).isoformat() + "Z",
-            "actor": actor_id or "ARIF",
-            "session_id": session_id or "geox_session",
-            "metadata": metadata,
-            "epoch": datetime.now(UTC).isoformat() + "Z",
-        }
-
-        # IMAGE_SEAL side ledger only — do not touch constitutional seal_chain.*
-        vault_dir = Path("/root/.local/share/arifos/vault999")
-        vault_dir.mkdir(parents=True, exist_ok=True)
-        chain_path = vault_dir / "image_seal_chain.jsonl"
-        head_path = vault_dir / "image_seal_head.json"
-
-        import fcntl
-        lock_path = vault_dir / ".image_seal.lock"
-        with open(lock_path, "a") as lockf:
-            fcntl.flock(lockf.fileno(), fcntl.LOCK_EX)
-            try:
-                with open(chain_path, "a") as f:
-                    f.write(json.dumps(seal_entry) + "\n")
-                    f.flush()
-                with open(head_path, "w") as f:
-                    json.dump(seal_entry, f)
-            finally:
-                fcntl.flock(lockf.fileno(), fcntl.LOCK_UN)
-
-        base64_str = base64.b64encode(final_bytes).decode('utf-8')
-        text = f"Well log panel rendered and saved to {filepath}. Seal: {seal_token}"
-
+        meta.add_text("provenance", "scaffold")
+        meta.add_text("well_id", _wid)
+        img.save(fp, "PNG", pnginfo=meta)
+        raw = fp.read_bytes()
+        sha = f"sha256:{hashlib.sha256(raw).hexdigest()}"
+        tok = f"SEAL-IMG-{hashlib.sha256(raw).hexdigest()[:16].upper()}"
         return {
             "ok": True,
             "tool": "geox_render_well_panel",
             "well_id": _wid,
-            "seal_token": seal_token,
-            "image_sha256": image_sha,
-            "filepath": str(filepath),
-            "metadata": metadata,
-            "content_text": text,
+            "seal_token": tok,
+            "image_sha256": sha,
+            "filepath": str(fp),
+            "provenance": "scaffold",
+            "content_text": f"Scaffold-only panel → {fp}",
+            "metadata": {"provenance": "scaffold", "well_id": _wid},
+            "image_base64_len": len(base64.b64encode(raw)),
         }
 
     # ═══════════════════════════════════════════════════════════════════════════════

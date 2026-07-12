@@ -212,6 +212,7 @@ def _load_lane_map() -> dict[str, str]:
                 "geox_abstraction_guard": "judgment",  # abstraction safety guard
                 "geox_segy_export_tool": "judgment",  # irreversible SEG-Y export
                 "geox_volume_frame_tool": "judgment",  # irreversible volume write
+                "geox_well_desk_publish": "judgment",  # C2_EXECUTE — image publish + vault seal
             }
         )
         return lane_map

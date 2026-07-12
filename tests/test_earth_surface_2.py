@@ -71,9 +71,9 @@ class TestPlateReconstruction:
     def test_offline_velocities(self):
         f = GPlatesFetcher()
         from geox_core.io.gplates_fetcher import PlateVelocityRequest
-        r = f.velocities(PlateVelocityRequest(age_ma=50))
+        r = f.velocity(PlateVelocityRequest(latitude=4.0, longitude=112.0, age_ma=50))
         assert r.ok is True
-        assert r.count > 0
+        assert r.velocity_cm_yr > 0
 
 
 # ════════════════════════════════════════════════════════════════════════════════
