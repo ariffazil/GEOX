@@ -159,6 +159,7 @@ def _load_lane_map() -> dict[str, str]:
                 "geox_blockspace_resolution_tool": "discovery",  # pure math, no state
                 "geox_attribute_registry_list_tool": "discovery",  # registry read
                 "geox_evidence_discover": "discovery",  # evidence search
+                "geox_surface_status": "discovery",  # P0 fix #120 — health probe, no session needed
                 # ── CONTRAST DETECTION (pure computation, no session) ───────────
                 "geox_contrast_detect": "discovery",  # universal contrast detector — read-only computation
                 # ── BIOSTRAT (read-only parse/lookup, no session) ───────────────
@@ -307,8 +308,13 @@ ASSET_MODE = os.getenv("GEOX_ASSET_MODE", "production")  # production | sandbox 
 
 
 def _get_lane(tool_name: str) -> str:
-    """Get the lane classification for a tool."""
-    return GEOX_LANE_MAP.get(tool_name, "reasoning")
+    """Get the lane classification for a tool.
+
+    Default is "discovery" (no session required) per P0 fix #120.
+    Previously defaulted to "reasoning" which silently session-gated
+    any unregistered tool — including health probes.
+    """
+    return GEOX_LANE_MAP.get(tool_name, "discovery")
 
 
 # ─── Mode-Based Lane Overrides ───────────────────────────────────────────────
