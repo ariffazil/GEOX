@@ -1,12 +1,12 @@
 <!-- SOT-MANIFEST
 owner: Arif (F13 SOVEREIGN)
-last_verified: 2026-07-12T08:30Z
-live_commit_short: 4784103d
+last_verified: 2026-07-12T23:38Z
+live_commit_short: 5bc66284
 live_version: v2026.07.06-phase3.1-rsi-pipeline
 port: 8081
-public_tools: 26
-internal_tools: 55
+mcp_tools_live: 32
 owner_summary: GREEN
+truth_rule: tools/list + /health beat any static count in prose
 federation_release: v2026.07.12-CONSOLIDATION-EPOCH
 mcp_apps: SEP-1865 (ui:// + host proxy)
 gui: https://geox.arif-fazil.com/gui/
