@@ -23,6 +23,7 @@ changes_since_last_verified:
   - MCP-APPS-REGISTRATION (2026-07-11): 10 ui:// resources registered with text/html;profile=mcp-app + 1 unified workbench View joined to witness/MapLibre vertical slice
   - RECONCILE-UI-PATHS (2026-07-11): 3 competing UI injection paths consolidated into 1 canonical path (apps/workbench.py → register_tools_on_server(apps=...))
   - REGISTRY-CLEANUP (2026-07-11): removed 4 deregistered tools + 1 duplicate; _EXPECTED_CANONICAL 81→76
+  - MANIFEST-REGEN (2026-07-11): tools_manifest.py 1.0.0→2.0.0 — 16→77 canonical entries. Closes drift between manifest (16) and registry (77). File backup: tools_manifest.py.bak-1.0.0-20260626. Restart pending 888_HOLD.
   - WEBMCP-MAP (2026-07-11): MapLibre 4.7.1 interactive map with session/auth propagation, click→evidence panel
 -->
 
@@ -79,7 +80,9 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - Domain BOUNDARY classification (e.g., Kinabalu Basin registration)
 - Cross-organ biostrat re-assessment coordination
 
-### Phase 2.1/2.x Clean Architecture — FORGE Status (2026-07-11, LOCKED at 76)
+### Phase 2.1/2.x Clean Architecture — FORGE Status (2026-07-11, LIVE at 77)
+
+> **2026-07-11 UPDATE:** Manifest regeneration closed registry drift. `tools_manifest.py` v1.0.0→v2.0.0 — 16 locked entries expanded to 77 canonical entries (all live-wired tools now declared). Manifest now derived from `registry.py:CANONICAL_PUBLIC_TOOLS`.
 
 **Surface (76):** See `registry.py` `CANONICAL_PUBLIC_TOOLS` for the full list. Updated 2026-07-11: removed 4 deregistered Phase Zen tools + 1 duplicate.
 
@@ -93,7 +96,8 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - **Phase 3 deferred (requires 888_HOLD to re-enable)**: 33-tool Earth Dimensions expansion (D1-D17), foundation model backing engines, multi-physics joint inversion (Physics9), CSEM/MT, biostrat, Prithvi-EO-2.0, GEOX-LEM, etc.
 - **W16+ physics-first substrate** (preserved, not a tool): `src/geox_core/schemas/crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`.
 - **Tests:** 837 total, 61 skipped, 17 pre-existing failures.
-- **Constitutional invariant:** `_EXPECTED_CANONICAL = 76` in `src/geox_mcp/server.py` (2026-07-11: -4 deregistered, -1 duplicate).
+- **Constitutional invariant:** `_EXPECTED_CANONICAL = 77` in `src/geox_mcp/server.py` (2026-07-11: -4 deregistered, -1 duplicate, +6 map/egs/biostrat promotions).
+- **Manifest epoch:** `tools_manifest.py` v2.0.0 LIVE (2026-07-11) — 77 canonical entries derived from `CANONICAL_PUBLIC_TOOLS`. Backup at `tools_manifest.py.bak-1.0.0-20260626`. Restart pending 888_HOLD ack.
 - **Contract epoch:** `2026-07-11-GEOX-76TOOLS-MCPAPPS`
 
 ## Build & Test

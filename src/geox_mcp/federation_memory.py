@@ -29,10 +29,26 @@ _SESSION_TTL_S = 300.0
 
 
 def _ensure_session() -> str | None:
+    """Get or create a session identifier for arifOS MCP calls.
+
+    arifOS runs in stateless_http mode — it does NOT return mcp-session-id
+    headers on initialize. This is by design (PHOENIX-73C). Tool calls work
+    without a session header because arifOS processes each request independently.
+
+    We generate a local session ID for tracking/correlation purposes and
+    proceed with tool calls regardless of whether arifOS returns a server-side
+    session ID.
+    """
     global _session_id, _session_ts
     now = time.time()
     if _session_id and (now - _session_ts) < _SESSION_TTL_S:
         return _session_id
+
+    # Generate a local session ID for request correlation
+    import uuid
+
+    local_sid = f"geox-{uuid.uuid4().hex[:16]}"
+
     try:
         req = urlrequest.Request(
             f"{ARIFOS_MCP_URL}/mcp",
@@ -42,7 +58,7 @@ def _ensure_session() -> str | None:
                     "id": 1,
                     "method": "initialize",
                     "params": {
-                        "protocolVersion": "2025-03-26",
+                        "protocolVersion": "2025-11-25",
                         "capabilities": {},
                         "clientInfo": {"name": "GEOX", "version": "0.1"},
                     },
@@ -57,11 +73,17 @@ def _ensure_session() -> str | None:
             sid = resp.headers.get("mcp-session-id")
             if sid:
                 _session_id = sid
-                _session_ts = now
-                return sid
+            else:
+                # arifOS is stateless — use local ID, tool calls still work
+                _session_id = local_sid
+            _session_ts = now
+            return _session_id
     except (URLError, HTTPError, TimeoutError, OSError):
-        return None
-    return None
+        # arifOS unreachable — still return local ID so callers can proceed
+        # (tool calls will fail with connection error, not session_unavailable)
+        _session_id = local_sid
+        _session_ts = now
+        return _session_id
 
 
 def remember(

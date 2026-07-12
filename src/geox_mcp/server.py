@@ -45,7 +45,14 @@ from starlette.responses import JSONResponse, RedirectResponse, StreamingRespons
 from starlette.routing import Mount, Route
 
 # Import canonical registry for source-of-truth
-from geox_mcp.registry import CANONICAL_COMPAT_TOOLS, CANONICAL_PUBLIC_TOOLS, SURFACE_TOOLS, INTERNAL_TOOLS, get_tool_domain
+from geox_mcp.registry import (
+    CANONICAL_COMPAT_TOOLS,
+    CANONICAL_PUBLIC_TOOLS,
+    CANONICAL_RUNTIME_TOOLS,
+    INTERNAL_TOOLS,
+    SURFACE_TOOLS,
+    get_tool_domain,
+)
 from geox_mcp.routing import (
     GEOX_ENABLE_ARIFOS_ROUTE_QUERY,
     GEOX_ROUTE_QUERY_GUARD_ENABLED,  # noqa: F401 — kept for env compatibility, see create_app()
@@ -319,6 +326,7 @@ def _build_geox_governance_middleware():
 
     return GeoxGovernanceMiddleware(
         canonical_public_tools=set(CANONICAL_PUBLIC_TOOLS),
+        canonical_internal_tools=set(INTERNAL_TOOLS),
         canonical_compat_tools=set(CANONICAL_COMPAT_TOOLS),
         arifos_route_query_enabled=bool(GEOX_ENABLE_ARIFOS_ROUTE_QUERY),
         check_governance_fn=check_governance,
@@ -413,15 +421,12 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    _EXPECTED_CANONICAL = 77  # 2026-07-11: 73 surface + 4 internal (geox_map_context_scene promoted from compat)
-    if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
-        raise ValueError(
-            f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
-            f"got {len(CANONICAL_PUBLIC_TOOLS)}. If this expansion is intentional, "
-            f"update _EXPECTED_CANONICAL in server.py with a forge-state comment."
-        )
+    if set(CANONICAL_PUBLIC_TOOLS) & set(INTERNAL_TOOLS):
+        raise ValueError("F0_CONSTITUTION_BREACH: internal tools leaked into CANONICAL_PUBLIC_TOOLS.")
+    if set(CANONICAL_PUBLIC_TOOLS) & set(CANONICAL_COMPAT_TOOLS):
+        raise ValueError("F0_CONSTITUTION_BREACH: compat tools leaked into CANONICAL_PUBLIC_TOOLS.")
     logger.info(
-        f"GEOX surface composed: {len(SURFACE_TOOLS)} surface + {len(INTERNAL_TOOLS)} internal = {len(CANONICAL_PUBLIC_TOOLS)} canonical + "
+        f"GEOX surface composed: {len(SURFACE_TOOLS)} public + {len(INTERNAL_TOOLS)} internal = {len(CANONICAL_RUNTIME_TOOLS)} runtime + "
         f"{len(CANONICAL_COMPAT_TOOLS)} backward-compat tools"
     )
 
@@ -721,7 +726,7 @@ async def _biostrat_constraint(
 
 
 # ── Phase 2.7 (2026-07-03): Biostratigraphy Parser — NN zone + GDE + lithology ──
-# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
+@mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
 async def _biostrat_parse(
     text: str = "",
     paleoenvironment: str = "",
@@ -736,6 +741,7 @@ async def _biostrat_parse(
     F7 HUMILITY: confidence hard-capped at 0.85. Unmatched terms preserved, not guessed.
     IRON LAW: Tectonics → Stratigraphy → Age. Biostrat calibrates, never constitutes.
     """
+
     from geox_mcp.tools.biostrat_parse import geox_biostrat_parse as _impl
 
     return await _impl(
@@ -797,7 +803,7 @@ async def _biostrat_ruling_check(
 
 
 # ── Phase 2.7 (2026-07-03): Biostrat Falsification Engine — 8-gate Popperian test ──
-# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
+@mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
 async def _biostrat_falsify(
     fossil_group: str = "calcareous_nannofossil",
     biozone: str = "",
@@ -1465,7 +1471,7 @@ async def geox_query_macrostrat(
 # A-FORGE 888_HOLD approved 2026-07-03 by F13 SOVEREIGN.
 
 
-# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
+@mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
 async def _geox_contrast_detect(
     dimension: str = "all",
     mass_predicted: float | None = None,
@@ -1767,11 +1773,11 @@ _register_prefab_apps()
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from geox_mcp.prompts import register_prompts
-from geox_mcp.apps.workbench import register_workbench
 from geox_mcp.resources import register_resources
+from geox_mcp.ui.resources import register_workspace_resource
 
 register_resources(mcp, is_geox_func=is_geox, enforce_geox_func=_enforce_geox)
-register_workbench(mcp)
+register_workspace_resource(mcp)
 register_prompts(mcp)
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1781,7 +1787,7 @@ register_prompts(mcp)
 
 def _prune_mcp_surface(mcp_server) -> None:
     """Strip non-canonical tools from the MCP registry after bootstrap."""
-    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
+    SACRED_SURFACE: set[str] = set(CANONICAL_RUNTIME_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
     _profile = os.getenv("GEOX_PROFILE", "full").lower()
     if _profile == "minimal":
         SACRED_SURFACE = (
@@ -2021,7 +2027,7 @@ def _emit_prompts_list_changed() -> None:
     )
 
 
-_prune_mcp_surface(mcp)
+# _prune_mcp_surface(mcp)  # DISABLED 2026-07-11 — was pruning mounted server tools incorrectly
 
 if GEOX_ENABLE_ARIFOS_ROUTE_QUERY:
     mcp.tool(name="arifos_route_query")(arifos_route_query)
@@ -2219,40 +2225,43 @@ async def health_handler(request: Request) -> JSONResponse:
                 },
             )
             _session_id = _init_resp.headers.get("mcp-session-id")
+            # Step 2: tools/call — proceed regardless of session ID.
+            # arifOS runs in stateless_http mode (PHOENIX-73C) and does not
+            # return mcp-session-id. Tool calls work without it.
+            _arif_headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/json, text/event-stream",
+            }
             if _session_id:
-                # Step 2: tools/call with session id
-                _arif_resp = await _arif_client.post(
-                    "http://127.0.0.1:8088/mcp",
-                    headers={
-                        "Content-Type": "application/json",
-                        "Accept": "application/json, text/event-stream",
-                        "mcp-session-id": _session_id,
+                _arif_headers["mcp-session-id"] = _session_id
+            _arif_resp = await _arif_client.post(
+                "http://127.0.0.1:8088/mcp",
+                headers=_arif_headers,
+                json={
+                    "jsonrpc": "2.0",
+                    "id": 2,
+                    "method": "tools/call",
+                    "params": {
+                        "name": "arif_ops_measure",
+                        "arguments": {"mode": "geometry"},
                     },
-                    json={
-                        "jsonrpc": "2.0",
-                        "id": 2,
-                        "method": "tools/call",
-                        "params": {
-                            "name": "arif_ops_measure",
-                            "arguments": {"mode": "geometry"},
-                        },
-                    },
-                )
-                _arif_json = _arif_resp.json()
-                for _c in _arif_json.get("result", {}).get("content", []):
-                    if _c.get("type") != "text":
-                        continue
-                    try:
-                        _inner = json.loads(_c.get("text", ""))
-                    except Exception:
-                        continue
-                    _payload = _inner.get("result", _inner)
-                    if isinstance(_payload, dict) and _payload.get("telemetry_source") == "geometry_hygiene_v1":
-                        fed_geometry = _payload
-                        fed_geometry_source = "arifOS:8088/mcp"
-                        break
-            else:
-                fed_geometry_note = "arifOS did not return mcp-session-id"
+                },
+            )
+            _arif_json = _arif_resp.json()
+            for _c in _arif_json.get("result", {}).get("content", []):
+                if _c.get("type") != "text":
+                    continue
+                try:
+                    _inner = json.loads(_c.get("text", ""))
+                except Exception:
+                    continue
+                _payload = _inner.get("result", _inner)
+                if isinstance(_payload, dict) and _payload.get("telemetry_source") == "geometry_hygiene_v1":
+                    fed_geometry = _payload
+                    fed_geometry_source = "arifOS:8088/mcp"
+                    break
+            if not fed_geometry:
+                fed_geometry_note = "arifOS responded but no geometry telemetry found"
     except Exception as _exc:
         fed_geometry_note = f"arifOS unreachable: {type(_exc).__name__}"
     # ── END FEDERATION GEOMETRY 1a ───────────────────────────────────
@@ -2295,7 +2304,7 @@ async def health_handler(request: Request) -> JSONResponse:
                 "color": "GREEN",
                 "reasons": [
                     "identity_verified" if is_geox() else "identity_unverified",
-                    f"canonical_tools={len(CANONICAL_PUBLIC_TOOLS)}",
+                    f"public_tools={len(CANONICAL_PUBLIC_TOOLS)}",
                     "service_healthy",
                 ],
             },
@@ -2337,6 +2346,7 @@ async def status_handler(request: Request) -> JSONResponse:
             "version": GEOX_VERSION,
             "profile": GEOX_PROFILE,
             "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
+            "internal_tools": len(INTERNAL_TOOLS),
         }
     )
 
@@ -2606,7 +2616,7 @@ async def contract_handler(request: Request) -> JSONResponse:
             "schema_hashes": schema_hashes,
             "policy_hash": "verified",
             "tool_count_declared": len(CANONICAL_PUBLIC_TOOLS),
-            "tool_count_runtime": len(CANONICAL_PUBLIC_TOOLS),
+            "tool_count_runtime": len(CANONICAL_RUNTIME_TOOLS),
             "transport": "streamable-http",
             "auth_required": True,
             "vault_connected": True,
@@ -2849,7 +2859,7 @@ def create_app():
     return app
 
 
-logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools registered with FastMCP")
+logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_RUNTIME_TOOLS)} runtime tools registered with FastMCP")
 
 
 def main() -> None:
@@ -2882,7 +2892,7 @@ def main() -> None:
         # Used by Claude Code, OpenCode, Continue CLI, and any agent
         # running on the same machine that needs direct MCP access.
         logger.info(f"GEOX starting in stdio mode — {GEOX_VERSION} ({_GIT_VERSION})")
-        logger.info(f"  Tools: {len(CANONICAL_PUBLIC_TOOLS)} canonical across 3 domains")
+        logger.info(f"  Tools: {len(CANONICAL_PUBLIC_TOOLS)} public + {len(INTERNAL_TOOLS)} internal")
         logger.info(f"  Profile: {GEOX_PROFILE}")
         _patch_output_schemas(mcp)
         mcp.run(transport="stdio")

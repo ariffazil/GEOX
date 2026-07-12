@@ -179,20 +179,24 @@ class GeoxGovernanceMiddleware(Middleware):
         self,
         *,
         canonical_public_tools: set[str],
+        canonical_internal_tools: set[str],
         canonical_compat_tools: set[str],
         arifos_route_query_enabled: bool = False,
         check_governance_fn: Any = None,
     ) -> None:
         """
         Args:
-          canonical_public_tools: set of allowed tool names (RT1 allowlist + tools/list surface)
+          canonical_public_tools: set of public tool names (RT1 tools/list surface)
+          canonical_internal_tools: set of internal tool names callable at runtime but hidden from tools/list
           canonical_compat_tools: backward-compat alias names accepted by on_call_tool but NOT exposed in tools/list
           arifos_route_query_enabled: if True, route_query tool gets a pass-through lane
           check_governance_fn: async (tool_name, args) -> (verdict, error_response|None)
                                imported lazily to avoid circular imports at module load.
         """
-        # on_call_tool accepts both canonical + compat (backward compat during transition)
-        self._EXECUTABLE_SURFACE: set[str] = set(canonical_public_tools) | set(canonical_compat_tools)
+        # on_call_tool accepts public + internal + compat surfaces.
+        self._EXECUTABLE_SURFACE: set[str] = (
+            set(canonical_public_tools) | set(canonical_internal_tools) | set(canonical_compat_tools)
+        )
         # on_list_tools exposes ONLY canonical tools to clients (single truth)
         self._PUBLIC_SURFACE: set[str] = set(canonical_public_tools)
         self._arifos_route_query_enabled = arifos_route_query_enabled
@@ -268,15 +272,37 @@ class GeoxGovernanceMiddleware(Middleware):
         else:
             arguments = raw_arguments
 
+        # ── P1 IDENTITY INJECTION (2026-07-11) ──────────────────────────────
+        # arifOS bridge passes governed identity via _envelope; GEOX tools
+        # expect session_id/actor_id/trace_id as top-level function parameters.
+        # Extract from _envelope if present. Without this, every call runs as
+        # anonymous — breaking F3 WITNESS + F11 AUDIT.
+        if isinstance(arguments, dict):
+            _env = arguments.get("_envelope") if isinstance(arguments.get("_envelope"), dict) else None
+            if _env:
+                for _ik in ("session_id", "actor_id", "trace_id"):
+                    if _env.get(_ik) and not arguments.get(_ik):
+                        arguments[_ik] = _env[_ik]
+                        logger.debug(f"IDENTITY_INJECT: {_ik}={_env[_ik]} for '{tool_name}'")
+
         # F1 AMANAH: defensive unwrap — 36 GEOX tools declare `arguments: dict`
         # as a wrapper parameter. MCP clients send flat parameters
         # (mode=..., source_uri=...) which don't match the function signature.
         # Detect when flat params arrive for a wrapper tool and nest them.
+        #
+        # P1 IDENTITY FIX (2026-07-11b): preserve session_id/actor_id/trace_id
+        # at the top level when arg-wrapping. Without this, direct MCP calls
+        # that pass identity as flat parameters lose it inside the wrapper dict,
+        # and the tool defaults to "anonymous". Bridge calls are unaffected
+        # (they inject via _envelope before arg-wrap).
+        _IDENTITY_KEYS = ("session_id", "actor_id", "trace_id")
         if (
             tool_name in self._WRAPPER_TOOLS and "arguments" not in arguments and arguments  # non-empty
         ):
+            _identity_preserved = {k: arguments.pop(k) for k in _IDENTITY_KEYS if k in arguments}
             arguments = {"arguments": arguments}
-            logger.debug(f"ARG_WRAP: nested flat params into arguments dict for '{tool_name}'")
+            arguments.update(_identity_preserved)
+            logger.debug(f"ARG_WRAP: nested flat params into arguments dict for '{tool_name}' (identity preserved: {list(_identity_preserved.keys())})")
 
         # ── RT1: tool name must be in executable surface (canonical + compat) ──
         if tool_name not in self._EXECUTABLE_SURFACE:

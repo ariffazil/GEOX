@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import uuid
 from typing import Any, Literal
 
 from geox_core.enums.statuses import (
@@ -23,6 +24,7 @@ async def geox_map_context_scene(
     # ── Session provenance (Fix HOLD-2026-07-11) ────────────────────────
     session_id: str | None = None,
     actor_id: str | None = None,
+    trace_id: str | None = None,
 ) -> dict:
     """Spatial bbox context, CRS checks, and causal scene rendering.
 
@@ -42,6 +44,9 @@ async def geox_map_context_scene(
                          "depth_m": 2000.0, "slice_id": "..."}). The slice
                          is rendered alongside the bbox summary.
     """
+    # F2 TRUTH: Generate trace_id if not provided (propagate lineage)
+    if not trace_id:
+        trace_id = f"trace-{uuid.uuid4().hex[:12]}"
     # F6 Maruah-first: detect basins intersecting community/indigenous territory
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
@@ -72,7 +77,8 @@ async def geox_map_context_scene(
             "features": [
                 {
                     "type": "Feature",
-                    "properties": {"type": "bounding_box", "label": "Query AOI"},
+                    "id": "aoi-bbox",
+                    "properties": {"id": "aoi-bbox", "type": "bounding_box", "label": "Query AOI", "selectable": True},
                     "geometry": {
                         "type": "Polygon",
                         "coordinates": [
@@ -88,7 +94,8 @@ async def geox_map_context_scene(
                 },
                 {
                     "type": "Feature",
-                    "properties": {"type": "center_point", "label": "AOI Center"},
+                    "id": "aoi-center",
+                    "properties": {"id": "aoi-center", "type": "center_point", "label": "AOI Center", "selectable": True},
                     "geometry": {
                         "type": "Point",
                         "coordinates": [
@@ -109,10 +116,13 @@ async def geox_map_context_scene(
                     geojson["features"].append(
                         {
                             "type": "Feature",
+                            "id": f"maruah-zone-{len(geojson['features'])}",
                             "properties": {
+                                "id": f"maruah-zone-{len(geojson['features'])}",
                                 "type": "maruah_zone",
                                 "label": zone.get("name", "Community/Indigenous Territory"),
                                 "risk": zone.get("risk", "MEDIUM"),
+                                "selectable": True,
                             },
                             "geometry": zone.get("geometry", {"type": "Point", "coordinates": [0, 0]}),
                         }
@@ -143,6 +153,7 @@ async def geox_map_context_scene(
                 "render_payload": render_payload,
                 "scene_rendered": True,
                 "maruah_flag": maruah_flag,
+                "trace_id": trace_id,
             },
             tool_class="observe",
             claim_tag="HYPOTHESIS",
@@ -151,15 +162,25 @@ async def geox_map_context_scene(
             maruah_flag=maruah_flag,
             session_id=session_id,
             actor_id=actor_id,
+            trace_id=trace_id,
             tool_name="geox_map_context_scene",
         )
+        envelope["session_id"] = session_id
+        envelope["actor_id"] = actor_id
+        envelope["trace_id"] = trace_id
+        provenance = envelope.setdefault("provenance", {})
+        if isinstance(provenance, dict):
+            provenance["session_id"] = session_id
+            provenance["actor_id"] = actor_id
+            provenance["trace_id"] = trace_id
         return envelope
 
     # ── GeoJSON features for selectable geology (Fix HOLD-2026-07-11) ──
     _geojson_features: list[dict] = [
         {
             "type": "Feature",
-            "properties": {"type": "bounding_box", "label": "Query AOI"},
+            "id": "aoi-bbox",
+            "properties": {"id": "aoi-bbox", "type": "bounding_box", "label": "Query AOI", "selectable": True},
             "geometry": {
                 "type": "Polygon",
                 "coordinates": [
@@ -175,7 +196,8 @@ async def geox_map_context_scene(
         },
         {
             "type": "Feature",
-            "properties": {"type": "center_point", "label": "AOI Center"},
+            "id": "aoi-center",
+            "properties": {"id": "aoi-center", "type": "center_point", "label": "AOI Center", "selectable": True},
             "geometry": {
                 "type": "Point",
                 "coordinates": [
@@ -194,10 +216,13 @@ async def geox_map_context_scene(
                 _geojson_features.append(
                     {
                         "type": "Feature",
+                        "id": f"maruah-zone-{len(_geojson_features)}",
                         "properties": {
+                            "id": f"maruah-zone-{len(_geojson_features)}",
                             "type": "maruah_zone",
                             "label": zone.get("name", "Community/Indigenous Territory"),
                             "risk": zone.get("risk", "MEDIUM"),
+                            "selectable": True,
                         },
                         "geometry": zone.get("geometry", {"type": "Point", "coordinates": [0, 0]}),
                     }
@@ -211,6 +236,8 @@ async def geox_map_context_scene(
         "mode": mode,
         "crs": crs,
         "scene_rendered": True,
+        "trace_id": trace_id,
+        "ui": {"selectable": True, "feature_id_field": "id"},
     }
     e8_block: dict[str, Any] = {}
     if vp_slice_inline is not None:
@@ -254,8 +281,17 @@ async def geox_map_context_scene(
         maruah_flag=maruah_flag,
         session_id=session_id,
         actor_id=actor_id,
+        trace_id=trace_id,
         tool_name="geox_map_context_scene",
     )
+    envelope["session_id"] = session_id
+    envelope["actor_id"] = actor_id
+    envelope["trace_id"] = trace_id
+    provenance = envelope.setdefault("provenance", {})
+    if isinstance(provenance, dict):
+        provenance["session_id"] = session_id
+        provenance["actor_id"] = actor_id
+        provenance["trace_id"] = trace_id
     if e8_block:
         envelope["e8_velocity_slice"] = e8_block
     return envelope
