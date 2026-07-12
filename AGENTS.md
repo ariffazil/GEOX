@@ -36,6 +36,10 @@ changes_since_last_verified:
 
 > **DITEMPA BUKAN DIBERI** — Earth evidence is forged, not given.
 
+## Live tool surface truth (2026-07-12)
+
+**Runtime fact:** MCP `tools/list` with session ≈ **23 tools**. Registry/manifest may declare **77** as target/canonical catalog — do not treat 77 as live count without `tools/list`.
+
 ## Who You Serve
 
 Arif. This is the **GEOX** organ of the arifOS federation — Earth Intelligence / Governed World Model.
@@ -96,7 +100,7 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 - **Phase 3 deferred (requires 888_HOLD to re-enable)**: 33-tool Earth Dimensions expansion (D1-D17), foundation model backing engines, multi-physics joint inversion (Physics9), CSEM/MT, biostrat, Prithvi-EO-2.0, GEOX-LEM, etc.
 - **W16+ physics-first substrate** (preserved, not a tool): `src/geox_core/schemas/crust_vp_grammar.py`, `intelligence_flow.py`, `kinabalu_corpus.py`, `floor_enforcement.py`.
 - **Tests:** 837 total, 61 skipped, 17 pre-existing failures.
-- **Constitutional invariant:** `_EXPECTED_CANONICAL = 77` in `src/geox_mcp/server.py` (2026-07-11: -4 deregistered, -1 duplicate, +6 map/egs/biostrat promotions).
+- **Constitutional invariant:** `_EXPECTED_CANONICAL = 77  # registry target; LIVE tools/list (session) ≈ 23 as of 2026-07-12 — verify runtime` in `src/geox_mcp/server.py` (2026-07-11: -4 deregistered, -1 duplicate, +6 map/egs/biostrat promotions).
 - **Manifest epoch:** `tools_manifest.py` v2.0.0 LIVE (2026-07-11) — 77 canonical entries derived from `CANONICAL_PUBLIC_TOOLS`. Backup at `tools_manifest.py.bak-1.0.0-20260626`. Restart pending 888_HOLD ack.
 - **Contract epoch:** `2026-07-11-GEOX-76TOOLS-MCPAPPS`
 
