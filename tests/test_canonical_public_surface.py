@@ -43,7 +43,7 @@ class TestWorkspaceSurface:
         assert "No mutation path is enabled." in content.content
 
     def test_workspace_bundle_is_local_and_self_contained(self):
-        html = Path("/root/GEOX/src/geox_mcp/ui/workspace_v1.html").read_text(encoding="utf-8")
+        html = (Path(__file__).resolve().parent.parent / "src" / "geox_mcp" / "ui" / "workspace_v1.html").read_text(encoding="utf-8")
         assert "http://" not in html
         assert "https://" not in html
         assert "fetch(" not in html

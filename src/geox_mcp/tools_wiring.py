@@ -2993,7 +2993,7 @@ def register_tools_on(mcp):
             return {"ok": False, "isError": True, "message": "Invalid PNG signature"}
 
         # 3. Save file
-        renders_dir = Path("/root/GEOX/data/renders")
+        renders_dir = Path(os.environ.get("GEOX_RENDERS_DIR", "/root/GEOX/data/renders"))
         renders_dir.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
         filename = f"well-desk-{_wid}-{timestamp}.png"
@@ -3020,7 +3020,7 @@ def register_tools_on(mcp):
 
         # IMAGE_SEAL is a side ledger — NEVER write seal_chain.jsonl / seal_chain_head.json
         # (those are the constitutional hash chain; IMAGE_SEAL pollution broke head 2026-07-12).
-        vault_dir = Path("/root/.local/share/arifos/vault999")
+        vault_dir = Path(os.environ.get("GEOX_VAULT_IMAGE_DIR", "/root/.local/share/arifos/vault999"))
         vault_dir.mkdir(parents=True, exist_ok=True)
         chain_path = vault_dir / "image_seal_chain.jsonl"
         head_path = vault_dir / "image_seal_head.json"
@@ -3170,7 +3170,7 @@ def register_tools_on(mcp):
         buf = io.BytesIO()
         plt.savefig(buf, format="png", dpi=100, facecolor="#0f0f1a")
         plt.close()
-        renders = Path("/root/GEOX/data/renders")
+        renders = Path(os.environ.get("GEOX_RENDERS_DIR", "/root/GEOX/data/renders"))
         renders.mkdir(parents=True, exist_ok=True)
         ts = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
         fp = renders / f"well-panel-scaffold-{_wid}-{ts}.png"

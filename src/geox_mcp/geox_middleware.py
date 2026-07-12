@@ -74,7 +74,7 @@ def mark_lifecycle_ready(session_id: str, source: str = "unknown") -> None:
     """Mark session ready for tools/call after notifications/initialized."""
     if not session_id:
         return
-    _LIFECYCLE_READY[session_id] = True
+    _LIFECYCLE_READY.pop(session_id, None)
     logger.info("lifecycle: session=%s READY (%s)", session_id[:12], source)
 
 
@@ -326,7 +326,7 @@ class GeoxGovernanceMiddleware(Middleware):
             try:
                 sid = _session_id_from_context(context)
                 if sid:
-                    _LIFECYCLE_READY[sid] = True
+                    _LIFECYCLE_READY.pop(sid, None)
                     logger.info(
                         "lifecycle: session=%s READY (notifications/initialized method=%s)",
                         sid[:12],
@@ -351,7 +351,7 @@ class GeoxGovernanceMiddleware(Middleware):
         if context.type == "notification" and "initialized" in method.lower():
             sid = _session_id_from_context(context)
             if sid:
-                _LIFECYCLE_READY[sid] = True
+                _LIFECYCLE_READY.pop(sid, None)
                 logger.info("lifecycle: session=%s READY via on_message", sid[:12])
         return await call_next(context)
 
