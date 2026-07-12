@@ -1805,6 +1805,7 @@ def _prune_mcp_surface(mcp_server) -> None:
     if not provider:
         return
     components = getattr(provider, "_components", {})
+    total_tools = sum(1 for k in components if k.startswith("tool:"))
     removed: list[str] = []
     for key in list(components.keys()):
         if key.startswith("tool:"):
@@ -1819,8 +1820,17 @@ def _prune_mcp_surface(mcp_server) -> None:
             if not visible:
                 del components[key]
                 removed.append(name)
+    # Safety: if pruning would remove >30% of tools, something is wrong — abort
+    if removed and len(removed) > total_tools * 0.3:
+        logger.error(
+            f"MCP surface prune ABORTED: would remove {len(removed)}/{total_tools} tools (>30%). "
+            f"SACRED_SURFACE has {len(SACRED_SURFACE)} entries. Check YAML manifest completeness."
+        )
+        return
     if removed:
         logger.info(f"MCP surface pruned: {len(removed)} non-canonical tools removed (profile={_profile})")
+        for name in sorted(removed):
+            logger.info(f"  pruned: {name}")
     logger.info(f"MCP surface clean: {len(components)} canonical tools exposed (profile={_profile})")
 
 
@@ -2027,7 +2037,7 @@ def _emit_prompts_list_changed() -> None:
     )
 
 
-# _prune_mcp_surface(mcp)  # DISABLED 2026-07-11 — was pruning mounted server tools incorrectly
+_prune_mcp_surface(mcp)  # RE-ENABLED 2026-07-12 — YAML manifest is now source of truth
 
 if GEOX_ENABLE_ARIFOS_ROUTE_QUERY:
     mcp.tool(name="arifos_route_query")(arifos_route_query)
