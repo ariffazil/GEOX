@@ -5,7 +5,7 @@ live_commit: d1aec520
 live_version: v2026.07.06-phase3.1-rsi-pipeline
 port: 8081
 owner_summary: GREEN
-federation_release: v2026.07.04-MCP-A2A
+federation_release: v2026.07.12-CONSOLIDATION-EPOCH
 changelog: /root/CHANGELOG-2026-07-04.md
 a2a_agent_json: /root/GEOX/.well-known/agent.json
 valid_from: 2026-06-14
