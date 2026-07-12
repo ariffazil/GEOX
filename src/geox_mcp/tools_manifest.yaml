@@ -8,7 +8,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
+  description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files.
+    Auto-detects format.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -27,7 +28,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Quality control checks on well data: depth monotonicity, null percentages, physical range checks, curve completeness.'
+  description: 'Quality control checks on well data: depth monotonicity, null percentages,
+    physical range checks, curve completeness.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -46,10 +48,11 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: >
-    OBSERVE · Open GEOX well-desk interactive view (SEP-1865 MCP App).
+  description: 'OBSERVE · Open GEOX well-desk interactive view (SEP-1865 MCP App).
     Read-only operator summary for a well_id. Hosts with UI open ui://geox/well-desk;
     hosts without UI still receive structured JSON. No mutation.
+
+    '
   input_schema_source: callable
   annotations:
     read_only: true
@@ -70,9 +73,10 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: >
-    MUTATE · Publish a rendered well-desk image with embedded metadata.
+  description: 'MUTATE · Publish a rendered well-desk image with embedded metadata.
     Saves image to /root/GEOX/data/renders/ and seals to VAULT999.
+
+    '
   input_schema_source: callable
   annotations:
     read_only: false
@@ -91,9 +95,10 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: >
-    OBSERVE · Render a well-log panel as a PNG image with metadata.
-    Generates GR, RT, NPHI, RHOB, DT tracks for a given well_id.
+  description: 'OBSERVE · Render a well-log panel as a PNG image with metadata. Generates
+    GR, RT, NPHI, RHOB, DT tracks for a given well_id.
+
+    '
   input_schema_source: callable
   annotations:
     read_only: true
@@ -112,7 +117,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 3D wellbore geometry from deviation survey using minimum curvature method (wellpathpy).
+  description: 3D wellbore geometry from deviation survey using minimum curvature
+    method (wellpathpy).
   input_schema_source: callable
   annotations:
     read_only: true
@@ -131,7 +137,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Compute petrophysical properties: Vsh, porosity, Sw, permeability, net pay. Includes LEM physics-prior inference.'
+  description: 'Compute petrophysical properties: Vsh, porosity, Sw, permeability,
+    net pay. Includes LEM physics-prior inference.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -150,7 +157,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Sequence stratigraphy analysis: GR binning, parasequence packages, systems tract inference, well correlation.'
+  description: 'Sequence stratigraphy analysis: GR binning, parasequence packages,
+    systems tract inference, well correlation.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -169,7 +177,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Multi-attribute physical reality gate plus horizon and fault extraction from seismic volumes.
+  description: Multi-attribute physical reality gate plus horizon and fault extraction
+    from seismic volumes.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -188,7 +197,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Geological cognition engine: pattern recognition and hypothesis generation from multi-domain data.'
+  description: 'Geological cognition engine: pattern recognition and hypothesis generation
+    from multi-domain data.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -207,7 +217,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Cognitive interpretation dashboard rendering for multi-panel seismic displays.
+  description: Cognitive interpretation dashboard rendering for multi-panel seismic
+    displays.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -226,7 +237,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'SEG-Y trace reality pipeline: validate trace headers, amplitudes, and geometry consistency.'
+  description: 'SEG-Y trace reality pipeline: validate trace headers, amplitudes,
+    and geometry consistency.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -245,7 +257,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie computation: cross-correlation and wavelet extraction for time-depth calibration.'
+  description: 'Well-to-seismic tie computation: cross-correlation and wavelet extraction
+    for time-depth calibration.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -264,7 +277,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 3D structural model construction from 2D picks using GemPy implicit modeling.
+  description: 3D structural model construction from 2D picks using GemPy implicit
+    modeling.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -283,7 +297,8 @@ tools:
   lane: judgment
   face: internal
   visibility: internal
-  description: 'Capital consequence bridge: feed geological parameters to WEALTH organ for economic evaluation.'
+  description: 'Capital consequence bridge: feed geological parameters to WEALTH organ
+    for economic evaluation.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -302,7 +317,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Load and inspect seismic data: SEG-Y headers, trace counts, sample intervals, volume metadata.'
+  description: 'Load and inspect seismic data: SEG-Y headers, trace counts, sample
+    intervals, volume metadata.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -321,8 +337,9 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Unified seismic physics: synthetics, well ties, AVO analysis, attributes. Time-depth anchoring uses checkshot
-    data only. Modes include tie_preflight, tie_receipt, wavelet_extract, mistie_rms, time_depth_calibrate (ZEN G1).'
+  description: 'Unified seismic physics: synthetics, well ties, AVO analysis, attributes.
+    Time-depth anchoring uses checkshot data only. Modes include tie_preflight, tie_receipt,
+    wavelet_extract, mistie_rms, time_depth_calibrate (ZEN G1).'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -341,7 +358,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Seismic interpretation: horizon detection, fault picking, volume blending, frame extraction.'
+  description: 'Seismic interpretation: horizon detection, fault picking, volume blending,
+    frame extraction.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -360,7 +378,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'RSI interpretation: relative stratigraphic interpretation from seismic amplitude data.'
+  description: 'RSI interpretation: relative stratigraphic interpretation from seismic
+    amplitude data.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -379,7 +398,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Render quality audit: verify image integrity and annotation accuracy of seismic displays.'
+  description: 'Render quality audit: verify image integrity and annotation accuracy
+    of seismic displays.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -417,7 +437,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Vision-based seismic interpretation using VLMs: analyze seismic images, audit interpretations, calibrate models.'
+  description: 'Vision-based seismic interpretation using VLMs: analyze seismic images,
+    audit interpretations, calibrate models.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -436,7 +457,8 @@ tools:
   lane: judgment
   face: surface
   visibility: public
-  description: 'Multi-physics subsurface modeling: joint inversion, gravity/magnetic forward modeling, MT/CSEM forward modeling.'
+  description: 'Multi-physics subsurface modeling: joint inversion, gravity/magnetic
+    forward modeling, MT/CSEM forward modeling.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -455,7 +477,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate transforms, block resolution.'
+  description: 'Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate
+    transforms, block resolution.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -474,7 +497,8 @@ tools:
   lane: discovery
   face: surface
   visibility: public
-  description: 'Basin intelligence: profiles, resolution, deep time state, Macrostrat API, spatial context, scene rendering.'
+  description: 'Basin intelligence: profiles, resolution, deep time state, Macrostrat
+    API, spatial context, scene rendering.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -493,8 +517,8 @@ tools:
   lane: discovery
   face: surface
   visibility: public
-  description: 'Earth state vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow,
-    subsidence.'
+  description: 'Earth state vector at any geological age: plate polygons, basin architecture,
+    paleobathymetry, heat flow, subsidence.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -532,7 +556,8 @@ tools:
   lane: discovery
   face: surface
   visibility: public
-  description: 'GEOX organ health check: version, tool count, canonical surface status, registration timestamp.'
+  description: 'GEOX organ health check: version, tool count, canonical surface status,
+    registration timestamp.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -570,8 +595,8 @@ tools:
   lane: judgment
   face: internal
   visibility: public
-  description: 'Geological claim lifecycle: create, validate, challenge, seal, attach evidence to structured interpretation
-    claims.'
+  description: 'Geological claim lifecycle: create, validate, challenge, seal, attach
+    evidence to structured interpretation claims.'
   input_schema_source: callable
   annotations:
     read_only: false
@@ -590,8 +615,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Evidence discovery and synthesis: search corpus, cross-domain synthesis, hypothesis generation, contradiction
-    scanning.'
+  description: 'Evidence discovery and synthesis: search corpus, cross-domain synthesis,
+    hypothesis generation, contradiction scanning.'
   input_schema_source: callable
   annotations:
     read_only: false
@@ -610,7 +635,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Prospect evaluation: volumetrics, probability of success, expected value of information, risk assessment.'
+  description: 'Prospect evaluation: volumetrics, probability of success, expected
+    value of information, risk assessment.'
   input_schema_source: callable
   annotations:
     read_only: false
@@ -876,7 +902,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.'
+  description: 'Seismic cognition: AI-assisted pattern recognition in seismic attribute
+    volumes.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -914,7 +941,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: Enhance seismic section readability through contrast and frequency enhancement.
+  description: Enhance seismic section readability through contrast and frequency
+    enhancement.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -933,7 +961,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Generate geological hypotheses across discontinuity gaps in seismic data.
+  description: Generate geological hypotheses across discontinuity gaps in seismic
+    data.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -971,7 +1000,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Rank geological hypotheses by basin-specific prior probability and consistency.
+  description: Rank geological hypotheses by basin-specific prior probability and
+    consistency.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1009,7 +1039,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie via bruges library: cross-correlation and wavelet extraction.'
+  description: 'Well-to-seismic tie via bruges library: cross-correlation and wavelet
+    extraction.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1066,7 +1097,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Bid round screening: evaluate fiscal terms and prospectivity for license rounds.'
+  description: 'Bid round screening: evaluate fiscal terms and prospectivity for license
+    rounds.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1142,7 +1174,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Spatial context scene: renders map layers, basins, and well locations for geographic orientation.'
+  description: 'Spatial context scene: renders map layers, basins, and well locations
+    for geographic orientation.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1163,7 +1196,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Anomalous contrast detection: identify seismic-geological mismatches at formation boundaries.'
+  description: 'Anomalous contrast detection: identify seismic-geological mismatches
+    at formation boundaries.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1258,7 +1292,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Biostratigraphic data parsing: extract age-diagnostic fossil markers from well reports.'
+  description: 'Biostratigraphic data parsing: extract age-diagnostic fossil markers
+    from well reports.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1315,7 +1350,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Biostratigraphic falsification: test fossil age assignments against stratigraphic constraints.'
+  description: 'Biostratigraphic falsification: test fossil age assignments against
+    stratigraphic constraints.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1353,8 +1389,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie receipt: structured record of tie quality metrics and calibration status. [ZEN 2026-07-11
-    G1: use geox_seismic_compute modes]'
+  description: 'Well-to-seismic tie receipt: structured record of tie quality metrics
+    and calibration status. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1373,8 +1409,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie preflight check: verify data completeness and quality before tie computation. [ZEN 2026-07-11
-    G1: use geox_seismic_compute modes]'
+  description: 'Well-to-seismic tie preflight check: verify data completeness and
+    quality before tie computation. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1412,8 +1448,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well time-depth calibration: derive checkshot-based time-depth transform from VSP or checkshot data. [ZEN
-    2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well time-depth calibration: derive checkshot-based time-depth transform
+    from VSP or checkshot data. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1432,8 +1468,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-seismic mistie analysis: compute RMS mistie between well markers and seismic horizons. [ZEN 2026-07-11
-    G1: use geox_seismic_compute modes]'
+  description: 'Well-seismic mistie analysis: compute RMS mistie between well markers
+    and seismic horizons. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1452,8 +1488,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN 2026-07-11 G1: use
-    geox_seismic_compute modes]'
+  description: 'Wavelet extraction: derive source wavelet from well tie using least-squares
+    method. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1491,7 +1527,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Basin backstripping: decompact sedimentary layers and reconstruct subsidence history.'
+  description: 'Basin backstripping: decompact sedimentary layers and reconstruct
+    subsidence history.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1510,7 +1547,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Sediment mass balance: compute volumetric budgets and sediment supply rates for basin analysis.'
+  description: 'Sediment mass balance: compute volumetric budgets and sediment supply
+    rates for basin analysis.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1529,7 +1567,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Thermal maturity history: model burial, heat flow, and vitrinite reflectance evolution over time.'
+  description: 'Thermal maturity history: model burial, heat flow, and vitrinite reflectance
+    evolution over time.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1543,45 +1582,57 @@ tools:
     mutation: false
     physics_guard_required: true
 - name: geox_claim_graph_evaluate
-  domain: earth.basin
-  axis: reason
-  lane: reasoning
-  face: internal
-  visibility: internal
-  description: Evaluate claim graph consistency and identify circular or contradictory assertions.
-  input_schema_source: callable
+  domain: earth.general
+  axis: observe
+  lane: evidence
+  visibility: public
+  description: 'Tool: geox_claim_graph_evaluate'
+- name: geox_consequence_footprint
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: Compute physical and ecological consequences of a proposed action
   annotations:
     read_only: true
     destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
+- name: geox_optionality_loss
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: Measure destroyed future physical options
+  annotations:
+    read_only: true
+    destructive: false
+- name: geox_feedback_integrity
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: Check whether physical monitoring is sufficient to detect drift
+  annotations:
+    read_only: true
+    destructive: false
+- name: geox_material_truth_challenge
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: Compare institutional claims against Earth measurements
+  annotations:
+    read_only: true
+    destructive: false
+- name: geox_cascade_pathway
+  domain: governance
+  axis: entropy
+  lane: evidence
+  visibility: public
+  description: Model cross-domain propagation from a physical event
+  annotations:
+    read_only: true
+    destructive: false
 compat_tools:
-- geox_abstraction_guard
-- geox_attribute_registry_list_tool
-- geox_basin_profile
-- geox_basin_resolve
-- geox_biostrat_constraint
-- geox_blend_volume_tool
-- geox_blockspace_resolution_tool
-- geox_claim_challenge
-- geox_claim_create
-- geox_claim_seal
-- geox_claim_validate
-- geox_coord_transform_tool
-- geox_data_ingest_bundle
-- geox_data_qc_bundle
-- geox_doctrine_anti_beautiful_one
-- geox_doctrine_assumption_register
-- geox_doctrine_godel_review
-- geox_dst_ingest_test
-- geox_emag2_ingest
-- geox_evidence_attach
 - geox_evidence_discover
 - geox_evidence_reason
 - geox_fault_stick_ingest_tool
@@ -1611,48 +1662,23 @@ compat_tools:
 - geox_vision_minimax_inference
 - geox_vision_perceptual_inventory
 - geox_volume_frame_tool
-- name: geox_consequence_footprint
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: "Compute physical and ecological consequences of a proposed action"
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_optionality_loss
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: "Measure destroyed future physical options"
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_feedback_integrity
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: "Check whether physical monitoring is sufficient to detect drift"
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_material_truth_challenge
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: "Compare institutional claims against Earth measurements"
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_cascade_pathway
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: "Model cross-domain propagation from a physical event"
-  annotations:
-    read_only: true
-    destructive: false
+- geox_abstraction_guard
+- geox_attribute_registry_list_tool
+- geox_basin_profile
+- geox_basin_resolve
+- geox_biostrat_constraint
+- geox_blend_volume_tool
+- geox_blockspace_resolution_tool
+- geox_claim_challenge
+- geox_claim_create
+- geox_claim_seal
+- geox_claim_validate
+- geox_coord_transform_tool
+- geox_data_ingest_bundle
+- geox_data_qc_bundle
+- geox_doctrine_anti_beautiful_one
+- geox_doctrine_assumption_register
+- geox_doctrine_godel_review
+- geox_dst_ingest_test
+- geox_emag2_ingest
+- geox_evidence_attach
