@@ -48,9 +48,7 @@ jobs:
           cache: pip
 
       - name: Install GDAL system dependencies
-        # GEOX pyproject pins gdal>=3.13.1 — the wrapper package needs the GDAL
-        # C library + gdal-config binary at wheel-build time. Debian trixie runners
-        # ship libgdal32 (no -dev header, no gdal-config); install both explicitly.
+        # rasterio / geopandas need the GDAL C library at build time.
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
