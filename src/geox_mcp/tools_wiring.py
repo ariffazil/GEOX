@@ -465,38 +465,59 @@ def register_tools_on(mcp):
                 "registered_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             }
 
-        # registry mode — canonical surface only
+        # registry mode — WELL-style rich drift report
         # Domain sourced from GEOX_TOOL_MANIFEST via get_tool_domain() (registry.py).
         # Single source of truth — structured manifest replaces hardcoded inline dict.
-        canonical_list = []
-        for tool_name in CANONICAL_PUBLIC_TOOLS:
-            canonical_list.append(
-                {
-                    "name": tool_name,
-                    "domain": get_tool_domain(tool_name),
-                    "affordance": {
-                        "action_class": "ANALYZE"
-                        if tool_name.startswith("geox_")
-                        and "claim" not in tool_name
-                        and "doctrine" not in tool_name
-                        and "evidence" not in tool_name
-                        and "prospect" not in tool_name
-                        else "OBSERVE",
-                        "mutation": False,
-                        "irreversible": False,
-                        "requires_888_hold": tool_name in ("geox_claim", "geox_prospect"),
-                        "final_authority": "ARIF",
-                    },
-                }
-            )
+        from geox_mcp.surface_manifest import manifest_tool_map
 
+        canonical_set = set(CANONICAL_PUBLIC_TOOLS)
+        all_manifest = manifest_tool_map()
+
+        canonical_list = []
+        phantom_list = []
+        internal_list = []
+
+        for tool_name, entry in sorted(all_manifest.items()):
+            domain = entry.domain if hasattr(entry, "domain") else get_tool_domain(tool_name)
+            if tool_name in canonical_set:
+                canonical_list.append(
+                    {
+                        "name": tool_name,
+                        "domain": domain,
+                        "affordance": {
+                            "action_class": "ANALYZE"
+                            if tool_name.startswith("geox_")
+                            and "claim" not in tool_name
+                            and "doctrine" not in tool_name
+                            and "evidence" not in tool_name
+                            and "prospect" not in tool_name
+                            else "OBSERVE",
+                            "mutation": False,
+                            "irreversible": False,
+                            "requires_888_hold": tool_name in ("geox_claim", "geox_prospect"),
+                            "final_authority": "ARIF",
+                        },
+                    }
+                )
+            elif entry.is_internal if hasattr(entry, "is_internal") else False:
+                internal_list.append(tool_name)
+            else:
+                phantom_list.append(tool_name)
+
+        has_drift = len(phantom_list) > 0
         return {
             "status": "healthy",
             "organ": "GEOX",
             "surface_version": "geox-2f2e65d4",
-            "canonical_tools": canonical_list,
-            "tool_count": len(CANONICAL_PUBLIC_TOOLS),
-            "note": "31 extra tools are registered in FastMCP but NOT in canonical surface. Use this list only.",
+            "canonical_callable": canonical_list,
+            "intended_tools": len(all_manifest),
+            "registered_tools": len(all_manifest),
+            "callable_tools": len(canonical_list),
+            "phantom_tools": phantom_list,
+            "internal_tools": internal_list,
+            "deprecated_callable": [],
+            "alias_conflicts": [],
+            "verdict": "REGISTRY_DRIFT" if has_drift else "REGISTRY_PASS",
             "registered_at": __import__("datetime", fromlist=["datetime"])
             .datetime.now(__import__("datetime", fromlist=["datetime"]).timezone.utc)
             .isoformat(),
