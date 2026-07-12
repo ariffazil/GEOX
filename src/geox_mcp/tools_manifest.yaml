@@ -40,6 +40,72 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+- name: geox_well_desk_open
+  domain: earth.well
+  axis: observe
+  lane: evidence
+  face: surface
+  visibility: public
+  description: >
+    OBSERVE · Open GEOX well-desk interactive view (SEP-1865 MCP App).
+    Read-only operator summary for a well_id. Hosts with UI open ui://geox/well-desk;
+    hosts without UI still receive structured JSON. No mutation.
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui:
+    resource_uri: ui://geox/well-desk
+    mime_type: text/html;profile=mcp-app
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_well_desk_publish
+  domain: earth.well
+  axis: mutate
+  lane: evidence
+  face: surface
+  visibility: public
+  description: >
+    MUTATE · Publish a rendered well-desk image with embedded metadata.
+    Saves image to /root/GEOX/data/renders/ and seals to VAULT999.
+  input_schema_source: callable
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: false
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: MUTATE
+    mutation: true
+    physics_guard_required: false
+- name: geox_render_well_panel
+  domain: earth.well
+  axis: observe
+  lane: evidence
+  face: surface
+  visibility: public
+  description: >
+    OBSERVE · Render a well-log panel as a PNG image with metadata.
+    Generates GR, RT, NPHI, RHOB, DT tracks for a given well_id.
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
 - name: geox_well_desurvey
   domain: earth.well
   axis: compute

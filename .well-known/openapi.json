@@ -14,7 +14,7 @@
         "x-mcp-tools": [
           {
             "axis": "observe",
-            "description": "GEOX well ingest",
+            "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
             "domain": "earth.well",
             "lane": "evidence",
             "name": "geox_well_ingest",
@@ -42,7 +42,7 @@
           },
           {
             "axis": "verify",
-            "description": "GEOX well qc",
+            "description": "Quality control checks on well data: depth monotonicity, null percentages, physical range checks, curve completeness.",
             "domain": "earth.well",
             "lane": "evidence",
             "name": "geox_well_qc",
@@ -69,8 +69,92 @@
             }
           },
           {
+            "axis": "observe",
+            "description": "OBSERVE \u00b7 Open GEOX well-desk interactive view (SEP-1865 MCP App). Read-only operator summary for a well_id. Hosts with UI open ui://geox/well-desk; hosts without UI still receive structured JSON. No mutation.\n",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_well_desk_open",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "mutate",
+            "description": "MUTATE \u00b7 Publish a rendered well-desk image with embedded metadata. Saves image to /root/GEOX/data/renders/ and seals to VAULT999.\n",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_well_desk_publish",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "observe",
+            "description": "OBSERVE \u00b7 Render a well-log panel as a PNG image with metadata. Generates GR, RT, NPHI, RHOB, DT tracks for a given well_id.\n",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_render_well_panel",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
             "axis": "reason",
-            "description": "GEOX petrophysics",
+            "description": "Compute petrophysical properties: Vsh, porosity, Sw, permeability, net pay. Includes LEM physics-prior inference.",
             "domain": "earth.petrophysics",
             "lane": "reasoning",
             "name": "geox_petrophysics",
@@ -98,7 +182,7 @@
           },
           {
             "axis": "reason",
-            "description": "GEOX sequence",
+            "description": "Sequence stratigraphy analysis: GR binning, parasequence packages, systems tract inference, well correlation.",
             "domain": "earth.stratigraphy",
             "lane": "reasoning",
             "name": "geox_sequence",
@@ -126,7 +210,7 @@
           },
           {
             "axis": "observe",
-            "description": "GEOX seismic ingest",
+            "description": "Load and inspect seismic data: SEG-Y headers, trace counts, sample intervals, volume metadata.",
             "domain": "earth.seismic",
             "lane": "evidence",
             "name": "geox_seismic_ingest",
@@ -154,7 +238,7 @@
           },
           {
             "axis": "compute",
-            "description": "GEOX seismic compute",
+            "description": "Unified seismic physics: synthetics, well ties, AVO analysis, attributes. Time-depth anchoring uses checkshot data only. Modes include tie_preflight, tie_receipt, wavelet_extract, mistie_rms, time_depth_calibrate (ZEN G1).",
             "domain": "earth.seismic",
             "lane": "evidence",
             "name": "geox_seismic_compute",
@@ -182,7 +266,7 @@
           },
           {
             "axis": "reason",
-            "description": "GEOX seismic interpret",
+            "description": "Seismic interpretation: horizon detection, fault picking, volume blending, frame extraction.",
             "domain": "earth.seismic",
             "lane": "reasoning",
             "name": "geox_seismic_interpret",
@@ -210,7 +294,7 @@
           },
           {
             "axis": "reason",
-            "description": "GEOX vision",
+            "description": "Vision-based seismic interpretation using VLMs: analyze seismic images, audit interpretations, calibrate models.",
             "domain": "earth.perception",
             "lane": "reasoning",
             "name": "geox_vision",
@@ -238,7 +322,7 @@
           },
           {
             "axis": "reason",
-            "description": "GEOX subsurface model",
+            "description": "Multi-physics subsurface modeling: joint inversion, gravity/magnetic forward modeling, MT/CSEM forward modeling.",
             "domain": "earth.model",
             "lane": "judgment",
             "name": "geox_subsurface_model",
@@ -266,7 +350,7 @@
           },
           {
             "axis": "compute",
-            "description": "GEOX geomechanics",
+            "description": "Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate transforms, block resolution.",
             "domain": "earth.mechanics",
             "lane": "reasoning",
             "name": "geox_geomechanics",
@@ -294,7 +378,7 @@
           },
           {
             "axis": "reason",
-            "description": "GEOX basin",
+            "description": "Basin intelligence: profiles, resolution, deep time state, Macrostrat API, spatial context, scene rendering.",
             "domain": "earth.basin",
             "lane": "discovery",
             "name": "geox_basin",
@@ -322,7 +406,7 @@
           },
           {
             "axis": "reason",
-            "description": "GEOX deep time state",
+            "description": "Earth state vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow, subsidence.",
             "domain": "earth.deep_time",
             "lane": "discovery",
             "name": "geox_deep_time_state",
@@ -350,7 +434,7 @@
           },
           {
             "axis": "verify",
-            "description": "GEOX surface status",
+            "description": "GEOX organ health check: version, tool count, canonical surface status, registration timestamp.",
             "domain": "earth.general",
             "lane": "discovery",
             "name": "geox_surface_status",
@@ -378,94 +462,10 @@
           },
           {
             "axis": "observe",
-            "description": "GEOX map context scene",
+            "description": "Spatial context scene: renders map layers, basins, and well locations for geographic orientation.",
             "domain": "earth.general",
             "lane": "evidence",
             "name": "geox_map_context_scene",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "calibrate",
-            "description": "GEOX well time depth calibrate",
-            "domain": "earth.well",
-            "lane": "evidence",
-            "name": "geox_well_time_depth_calibrate",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "verify",
-            "description": "GEOX well seismic mistie rms",
-            "domain": "earth.seismic",
-            "lane": "evidence",
-            "name": "geox_well_seismic_mistie_rms",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "calibrate",
-            "description": "GEOX wavelet extract least squares",
-            "domain": "earth.seismic",
-            "lane": "evidence",
-            "name": "geox_wavelet_extract_least_squares",
             "parameters": {
               "properties": {
                 "actor_id": {

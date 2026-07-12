@@ -87,6 +87,9 @@ TOOL_TIMEOUTS: dict[str, float] = {
     # Surface-facing canonical tools (Phase 2.1 + EGS, 2026-06-28)
     "geox_well_ingest": 60.0,
     "geox_well_qc": 30.0,
+    "geox_well_desk_open": 15.0,
+    "geox_well_desk_publish": 30.0,
+    "geox_render_well_panel": 30.0,
     "geox_well_desurvey": 30.0,
     "geox_petrophysics": 60.0,
     "geox_sequence": 90.0,
@@ -2130,6 +2133,107 @@ class McpAuthMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
+# Module flag for HTTP lifecycle gate (mirrors geox_middleware env)
+_LIFECYCLE_GATE_HTTP_ENABLED = os.getenv("GEOX_LIFECYCLE_GATE", "1").strip().lower() not in (
+    "0",
+    "false",
+    "off",
+    "no",
+)
+
+
+class McpLifecycleMiddleware(BaseHTTPMiddleware):
+    """Phase A1 (2026-07-12): enforce initialize → notifications/initialized → tools/call.
+
+    Keys readiness by the HTTP Mcp-Session-Id header (the id clients actually send).
+    FastMCP internal session ids can differ — do not use them for this gate.
+    Disable with GEOX_LIFECYCLE_GATE=0.
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        if (
+            not _LIFECYCLE_GATE_HTTP_ENABLED
+            or request.method != "POST"
+            or not request.url.path.startswith("/mcp")
+        ):
+            return await call_next(request)
+
+        body = await request.body()
+
+        async def receive():
+            return {"type": "http.request", "body": body, "more_body": False}
+
+        request = Request(request.scope, receive)
+
+        try:
+            msg = json.loads(body.decode("utf-8") or "{}")
+        except Exception:
+            return await call_next(request)
+
+        if not isinstance(msg, dict):
+            return await call_next(request)
+
+        method = msg.get("method") or ""
+        sid = request.headers.get("mcp-session-id") or request.headers.get("Mcp-Session-Id") or ""
+
+        # Client completed handshake
+        if method in ("notifications/initialized", "initialized") and sid:
+            from geox_mcp.geox_middleware import mark_lifecycle_ready
+
+            mark_lifecycle_ready(sid, source="http-notification")
+            return await call_next(request)
+
+        # Gate tools/call until ready (tools/list soft-allowed)
+        if method == "tools/call" and sid:
+            from geox_mcp.geox_middleware import is_lifecycle_blocked
+
+            if is_lifecycle_blocked(sid):
+                logger.warning(
+                    "LIFECYCLE_BLOCK_HTTP: tools/call before initialized session=%s",
+                    sid[:12],
+                )
+                msg_id = msg.get("id")
+                return JSONResponse(
+                    {
+                        "jsonrpc": "2.0",
+                        "id": msg_id,
+                        "result": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": (
+                                        "MCP_LIFECYCLE: tools/call rejected until client sends "
+                                        "notifications/initialized after initialize. "
+                                        "Sequence: initialize → notifications/initialized → tools/call. "
+                                        "(GEOX Phase A1 lifecycle gate)"
+                                    ),
+                                }
+                            ],
+                            "isError": True,
+                        },
+                    },
+                    status_code=200,
+                    headers={"X-MCP-Lifecycle": "pre-initialized"},
+                )
+
+        response = await call_next(request)
+
+        # After initialize, mark session not-ready using response session id
+        if method == "initialize":
+            resp_sid = (
+                response.headers.get("mcp-session-id")
+                or response.headers.get("Mcp-Session-Id")
+                or sid
+            )
+            if resp_sid:
+                from geox_mcp.geox_middleware import mark_lifecycle_pending
+
+                mark_lifecycle_pending(resp_sid, source="http-initialize")
+                response.headers["X-MCP-Lifecycle"] = "awaiting-initialized"
+
+        return response
+
+
 class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
     """Validate MCP-Protocol-Version header on HTTP requests — MCP spec 2025-06-18 §Transport.
 
@@ -2857,6 +2961,7 @@ def create_app():
     app.add_middleware(EarthAnchorMiddleware)
     # MCP spec compliance middlewares — outermost to innermost:
     #   OriginValidation → McpAuth → McpProtocolVersion → EarthAnchor → SlashRewrite → routes
+    app.add_middleware(McpLifecycleMiddleware)  # Phase A1: init → initialized → tools/call
     app.add_middleware(McpProtocolVersionMiddleware)  # MCP spec §Transport: version header
     app.add_middleware(McpAuthMiddleware)  # MCP spec §Security: Bearer token
     app.add_middleware(OriginValidationMiddleware)  # SEP-2243: DNS rebinding guard (outermost)

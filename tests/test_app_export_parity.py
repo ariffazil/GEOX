@@ -11,11 +11,11 @@ class TestAppExportParity:
         public_mcp_tools = CANONICAL_PUBLIC_TOOLS
 
         assert len(exported_app_tools) == 17
-        assert len(public_mcp_tools) == 28
+        assert len(public_mcp_tools) == 26
         assert "geox_map_context_scene" in exported_app_tools
 
     async def test_registry_truth_stays_pass(self):
         status = await geox_system_registry_status(session_id="SEAL-workspace", actor_id="ARIF")
         assert status["registry_truth"] == "PASS"
         assert len(status["plugin_export_public"]) == 17
-        assert len(status["manifest_public"]) == 28
+        assert len(status["manifest_public"]) == 26

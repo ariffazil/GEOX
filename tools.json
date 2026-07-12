@@ -2,6 +2,9 @@
   "app_export": [
     "geox_well_ingest",
     "geox_well_qc",
+    "geox_well_desk_open",
+    "geox_well_desk_publish",
+    "geox_render_well_panel",
     "geox_petrophysics",
     "geox_sequence",
     "geox_seismic_ingest",
@@ -13,10 +16,7 @@
     "geox_basin",
     "geox_deep_time_state",
     "geox_surface_status",
-    "geox_map_context_scene",
-    "geox_well_time_depth_calibrate",
-    "geox_well_seismic_mistie_rms",
-    "geox_wavelet_extract_least_squares"
+    "geox_map_context_scene"
   ],
   "internal": [
     "geox_well_desurvey",
@@ -66,7 +66,12 @@
     "geox_biostrat_nn_age",
     "geox_biostrat_ruling_check",
     "geox_macrostrat_calibrate",
+    "geox_tie_receipt",
+    "geox_tie_preflight",
     "geox_benchmark_001",
+    "geox_well_time_depth_calibrate",
+    "geox_well_seismic_mistie_rms",
+    "geox_wavelet_extract_least_squares",
     "geox_dst_ingest_test",
     "geox_claim_graph_evaluate"
   ],
@@ -74,6 +79,9 @@
   "public": [
     "geox_well_ingest",
     "geox_well_qc",
+    "geox_well_desk_open",
+    "geox_well_desk_publish",
+    "geox_render_well_panel",
     "geox_petrophysics",
     "geox_sequence",
     "geox_seismic_ingest",
@@ -92,11 +100,6 @@
     "geox_contrast_detect",
     "geox_biostrat_parse",
     "geox_biostrat_falsify",
-    "geox_tie_receipt",
-    "geox_tie_preflight",
-    "geox_well_time_depth_calibrate",
-    "geox_well_seismic_mistie_rms",
-    "geox_wavelet_extract_least_squares",
     "geox_basin_backstrip",
     "geox_sediment_mass_balance",
     "geox_thermal_maturity_history"

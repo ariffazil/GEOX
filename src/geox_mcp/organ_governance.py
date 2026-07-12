@@ -49,6 +49,7 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     # ── WELL DOMAIN (4) ──
     "geox_well_ingest": RiskTier.READONLY,
     "geox_well_qc": RiskTier.READONLY,
+    "geox_well_desk_open": RiskTier.READONLY,
     "geox_petrophysics": RiskTier.READONLY,
     "geox_sequence": RiskTier.READONLY,
     # ── SEISMIC DOMAIN ──
@@ -75,6 +76,9 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     "geox_prospect": RiskTier.C1_ADVISORY,  # mode="seal" → C2
     # ── DOCTRINE DOMAIN (1) ──
     "geox_doctrine": RiskTier.READONLY,
+    # ── VISUAL/DESK DOMAIN ──
+    "geox_well_desk_publish": RiskTier.C2_EXECUTE,
+    "geox_render_well_panel": RiskTier.READONLY,
 }
 
 

@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import uuid
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
@@ -41,6 +42,76 @@ if TYPE_CHECKING:
     from fastmcp.server.middleware import CallNext, MiddlewareContext
 
 logger = logging.getLogger("geox.governance.middleware")
+
+# Phase A1 (2026-07-12): MCP lifecycle gate — reject tools/call until
+# client sends notifications/initialized after initialize (spec 2025-06-18).
+# Soft-allow tools/list (discovery). Env GEOX_LIFECYCLE_GATE=0 disables.
+_LIFECYCLE_GATE_ENABLED = os.getenv("GEOX_LIFECYCLE_GATE", "1").strip().lower() not in (
+    "0",
+    "false",
+    "off",
+    "no",
+)
+# Session-id → ready. Module-level (not ctx state) so HTTP streamable sessions
+# share the flag across initialize / notification / tools/call hops.
+_LIFECYCLE_READY: dict[str, bool] = {}
+
+
+def mark_lifecycle_pending(session_id: str, source: str = "unknown") -> None:
+    """Mark session as post-initialize, awaiting notifications/initialized."""
+    if not session_id:
+        return
+    _LIFECYCLE_READY[session_id] = False
+    logger.info(
+        "lifecycle: session=%s PENDING (%s) gate=%s",
+        session_id[:12],
+        source,
+        "on" if _LIFECYCLE_GATE_ENABLED else "off",
+    )
+
+
+def mark_lifecycle_ready(session_id: str, source: str = "unknown") -> None:
+    """Mark session ready for tools/call after notifications/initialized."""
+    if not session_id:
+        return
+    _LIFECYCLE_READY[session_id] = True
+    logger.info("lifecycle: session=%s READY (%s)", session_id[:12], source)
+
+
+def is_lifecycle_blocked(session_id: str) -> bool:
+    """True if this session must not call tools yet."""
+    if not _LIFECYCLE_GATE_ENABLED or not session_id:
+        return False
+    # Only block when we have explicitly marked pending (False).
+    return _LIFECYCLE_READY.get(session_id) is False
+
+
+def _session_id_from_context(context: "MiddlewareContext[Any]") -> str | None:
+    """Best-effort MCP session id from FastMCP context or message meta."""
+    try:
+        fctx = context.fastmcp_context
+        if fctx is not None:
+            try:
+                sid = fctx.session_id
+                if sid:
+                    return str(sid)
+            except Exception:
+                pass
+    except Exception:
+        pass
+    # Fallback: some transports only expose header via request context
+    try:
+        fctx = context.fastmcp_context
+        rc = getattr(fctx, "request_context", None) if fctx else None
+        req = getattr(rc, "request", None) if rc else None
+        if req is not None:
+            headers = getattr(req, "headers", {}) or {}
+            sid = headers.get("mcp-session-id") or headers.get("Mcp-Session-Id")
+            if sid:
+                return str(sid)
+    except Exception:
+        pass
+    return None
 
 
 # ── Governed rejection envelope schema (P0 #1 fix, 2026-07-10) ─────────────
@@ -215,7 +286,7 @@ class GeoxGovernanceMiddleware(Middleware):
         context: "MiddlewareContext[Any]",
         call_next: "CallNext[Any, Any]",
     ) -> Any:
-        """Log initialize; no enforcement (metadata-only request)."""
+        """Log initialize; mark session as awaiting client notifications/initialized."""
         try:
             client_info = context.message.params.clientInfo if context.message and context.message.params else None
             logger.info(
@@ -225,6 +296,63 @@ class GeoxGovernanceMiddleware(Middleware):
             )
         except Exception:
             pass
+        result = await call_next(context)
+        # After server accepts initialize, session is NOT yet ready for tools/call
+        # until client sends notifications/initialized (Phase A1 lifecycle gate).
+        try:
+            sid = _session_id_from_context(context)
+            if sid:
+                _LIFECYCLE_READY[sid] = False
+                logger.info(
+                    "lifecycle: session=%s awaiting notifications/initialized (gate=%s)",
+                    sid[:12],
+                    "on" if _LIFECYCLE_GATE_ENABLED else "off",
+                )
+        except Exception as exc:
+            logger.debug("lifecycle: could not set pre-init state: %s", exc)
+        return result
+
+    async def on_notification(
+        self,
+        context: "MiddlewareContext[Any]",
+        call_next: "CallNext[Any, Any]",
+    ) -> Any:
+        """Mark session ready on notifications/initialized (Phase A1)."""
+        method = (context.method or "") or ""
+        msg = context.message
+        msg_method = getattr(msg, "method", None) or ""
+        combined = f"{method} {msg_method}".lower()
+        if "initialized" in combined:
+            try:
+                sid = _session_id_from_context(context)
+                if sid:
+                    _LIFECYCLE_READY[sid] = True
+                    logger.info(
+                        "lifecycle: session=%s READY (notifications/initialized method=%s)",
+                        sid[:12],
+                        method or msg_method,
+                    )
+                else:
+                    logger.warning(
+                        "lifecycle: initialized notification without session id (method=%s)",
+                        method or msg_method,
+                    )
+            except Exception as exc:
+                logger.warning("lifecycle: failed to mark ready: %s", exc)
+        return await call_next(context)
+
+    async def on_message(
+        self,
+        context: "MiddlewareContext[Any]",
+        call_next: "CallNext[Any, Any]",
+    ) -> Any:
+        """Also catch initialized via generic message path (some transports)."""
+        method = (context.method or "") or ""
+        if context.type == "notification" and "initialized" in method.lower():
+            sid = _session_id_from_context(context)
+            if sid:
+                _LIFECYCLE_READY[sid] = True
+                logger.info("lifecycle: session=%s READY via on_message", sid[:12])
         return await call_next(context)
 
     async def on_list_tools(
@@ -255,6 +383,10 @@ class GeoxGovernanceMiddleware(Middleware):
         call_next: "CallNext[Any, Any]",
     ) -> Any:
         """RT1 + RT3 + organ_governance for every tools/call."""
+        # Phase A1 lifecycle gate runs at HTTP layer only (McpLifecycleMiddleware).
+        # Do NOT re-gate here: FastMCP internal session_id ≠ Mcp-Session-Id header,
+        # so a second check on fctx.session_id would false-block after HTTP READY.
+
         tool_name: str = getattr(context.message, "name", "")
         raw_arguments = getattr(context.message, "arguments", {}) or {}
 

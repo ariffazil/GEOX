@@ -1,15 +1,15 @@
 {
   "$schema": "arifOS/tools-manifest/v2",
-  "canonical_tools": 78,
-  "internal_tools": 50,
+  "canonical_tools": 81,
+  "internal_tools": 55,
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
   "organ": "geox",
-  "surface_tools": 28,
+  "surface_tools": 26,
   "tools": [
     {
       "app_exposed": true,
       "axis": "observe",
-      "description": "GEOX well ingest",
+      "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
       "domain": "earth.well",
       "expose": true,
       "face": "surface",
@@ -22,7 +22,7 @@
     {
       "app_exposed": true,
       "axis": "verify",
-      "description": "GEOX well qc",
+      "description": "Quality control checks on well data: depth monotonicity, null percentages, physical range checks, curve completeness.",
       "domain": "earth.well",
       "expose": true,
       "face": "surface",
@@ -33,9 +33,51 @@
       "version": "2026.07.11"
     },
     {
+      "app_exposed": true,
+      "axis": "observe",
+      "description": "OBSERVE \u00b7 Open GEOX well-desk interactive view (SEP-1865 MCP App). Read-only operator summary for a well_id. Hosts with UI open ui://geox/well-desk; hosts without UI still receive structured JSON. No mutation.\n",
+      "domain": "earth.well",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_well_desk_open",
+      "ui": {
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_uri": "ui://geox/well-desk"
+      },
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "mutate",
+      "description": "MUTATE \u00b7 Publish a rendered well-desk image with embedded metadata. Saves image to /root/GEOX/data/renders/ and seals to VAULT999.\n",
+      "domain": "earth.well",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_well_desk_publish",
+      "ui": null,
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "observe",
+      "description": "OBSERVE \u00b7 Render a well-log panel as a PNG image with metadata. Generates GR, RT, NPHI, RHOB, DT tracks for a given well_id.\n",
+      "domain": "earth.well",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_render_well_panel",
+      "ui": null,
+      "version": "2026.07.11"
+    },
+    {
       "app_exposed": false,
       "axis": "compute",
-      "description": "GEOX well desurvey",
+      "description": "3D wellbore geometry from deviation survey using minimum curvature method (wellpathpy).",
       "domain": "earth.well",
       "expose": false,
       "face": "internal",
@@ -48,7 +90,7 @@
     {
       "app_exposed": true,
       "axis": "reason",
-      "description": "GEOX petrophysics",
+      "description": "Compute petrophysical properties: Vsh, porosity, Sw, permeability, net pay. Includes LEM physics-prior inference.",
       "domain": "earth.petrophysics",
       "expose": true,
       "face": "surface",
@@ -61,7 +103,7 @@
     {
       "app_exposed": true,
       "axis": "reason",
-      "description": "GEOX sequence",
+      "description": "Sequence stratigraphy analysis: GR binning, parasequence packages, systems tract inference, well correlation.",
       "domain": "earth.stratigraphy",
       "expose": true,
       "face": "surface",
@@ -74,7 +116,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX physical reality interpret",
+      "description": "Multi-attribute physical reality gate plus horizon and fault extraction from seismic volumes.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -87,7 +129,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX geological cognition run",
+      "description": "Geological cognition engine: pattern recognition and hypothesis generation from multi-domain data.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -100,7 +142,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX panel d render mcp",
+      "description": "Cognitive interpretation dashboard rendering for multi-panel seismic displays.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -113,7 +155,7 @@
     {
       "app_exposed": false,
       "axis": "observe",
-      "description": "GEOX segy trace audit",
+      "description": "SEG-Y trace reality pipeline: validate trace headers, amplitudes, and geometry consistency.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -126,7 +168,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX well tie compute",
+      "description": "Well-to-seismic tie computation: cross-correlation and wavelet extraction for time-depth calibration.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -139,7 +181,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX 3d model build",
+      "description": "3D structural model construction from 2D picks using GemPy implicit modeling.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -152,7 +194,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX wealth bridge run",
+      "description": "Capital consequence bridge: feed geological parameters to WEALTH organ for economic evaluation.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -165,7 +207,7 @@
     {
       "app_exposed": true,
       "axis": "observe",
-      "description": "GEOX seismic ingest",
+      "description": "Load and inspect seismic data: SEG-Y headers, trace counts, sample intervals, volume metadata.",
       "domain": "earth.seismic",
       "expose": true,
       "face": "surface",
@@ -178,7 +220,7 @@
     {
       "app_exposed": true,
       "axis": "compute",
-      "description": "GEOX seismic compute",
+      "description": "Unified seismic physics: synthetics, well ties, AVO analysis, attributes. Time-depth anchoring uses checkshot data only. Modes include tie_preflight, tie_receipt, wavelet_extract, mistie_rms, time_depth_calibrate (ZEN G1).",
       "domain": "earth.seismic",
       "expose": true,
       "face": "surface",
@@ -191,7 +233,7 @@
     {
       "app_exposed": true,
       "axis": "reason",
-      "description": "GEOX seismic interpret",
+      "description": "Seismic interpretation: horizon detection, fault picking, volume blending, frame extraction.",
       "domain": "earth.seismic",
       "expose": true,
       "face": "surface",
@@ -204,7 +246,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX rsi interpret",
+      "description": "RSI interpretation: relative stratigraphic interpretation from seismic amplitude data.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -217,7 +259,7 @@
     {
       "app_exposed": false,
       "axis": "verify",
-      "description": "GEOX render audit",
+      "description": "Render quality audit: verify image integrity and annotation accuracy of seismic displays.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -230,7 +272,7 @@
     {
       "app_exposed": false,
       "axis": "compute",
-      "description": "GEOX map export package",
+      "description": "Map export: package map layers and annotations into portable formats.",
       "domain": "earth.map",
       "expose": false,
       "face": "internal",
@@ -243,7 +285,7 @@
     {
       "app_exposed": true,
       "axis": "reason",
-      "description": "GEOX vision",
+      "description": "Vision-based seismic interpretation using VLMs: analyze seismic images, audit interpretations, calibrate models.",
       "domain": "earth.perception",
       "expose": true,
       "face": "surface",
@@ -256,7 +298,7 @@
     {
       "app_exposed": true,
       "axis": "reason",
-      "description": "GEOX subsurface model",
+      "description": "Multi-physics subsurface modeling: joint inversion, gravity/magnetic forward modeling, MT/CSEM forward modeling.",
       "domain": "earth.model",
       "expose": true,
       "face": "surface",
@@ -269,7 +311,7 @@
     {
       "app_exposed": true,
       "axis": "compute",
-      "description": "GEOX geomechanics",
+      "description": "Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate transforms, block resolution.",
       "domain": "earth.mechanics",
       "expose": true,
       "face": "surface",
@@ -282,7 +324,7 @@
     {
       "app_exposed": true,
       "axis": "reason",
-      "description": "GEOX basin",
+      "description": "Basin intelligence: profiles, resolution, deep time state, Macrostrat API, spatial context, scene rendering.",
       "domain": "earth.basin",
       "expose": true,
       "face": "surface",
@@ -295,7 +337,7 @@
     {
       "app_exposed": true,
       "axis": "reason",
-      "description": "GEOX deep time state",
+      "description": "Earth state vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow, subsidence.",
       "domain": "earth.deep_time",
       "expose": true,
       "face": "surface",
@@ -321,7 +363,7 @@
     {
       "app_exposed": true,
       "axis": "verify",
-      "description": "GEOX surface status",
+      "description": "GEOX organ health check: version, tool count, canonical surface status, registration timestamp.",
       "domain": "earth.general",
       "expose": true,
       "face": "surface",
@@ -334,7 +376,7 @@
     {
       "app_exposed": false,
       "axis": "verify",
-      "description": "GEOX forbidden claims scan",
+      "description": "Scan claims repository for forbidden or invalid geological assertions.",
       "domain": "earth.governance",
       "expose": false,
       "face": "internal",
@@ -347,7 +389,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX claim",
+      "description": "Geological claim lifecycle: create, validate, challenge, seal, attach evidence to structured interpretation claims.",
       "domain": "governance.claims",
       "expose": true,
       "face": "internal",
@@ -360,7 +402,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX evidence",
+      "description": "Evidence discovery and synthesis: search corpus, cross-domain synthesis, hypothesis generation, contradiction scanning.",
       "domain": "earth.evidence",
       "expose": true,
       "face": "surface",
@@ -373,7 +415,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX prospect",
+      "description": "Prospect evaluation: volumetrics, probability of success, expected value of information, risk assessment.",
       "domain": "earth.prospect",
       "expose": true,
       "face": "surface",
@@ -555,7 +597,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX seismic cognition",
+      "description": "Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -568,7 +610,7 @@
     {
       "app_exposed": false,
       "axis": "observe",
-      "description": "GEOX visual understand",
+      "description": "Extract visual patterns from seismic section images using deep learning.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -581,7 +623,7 @@
     {
       "app_exposed": false,
       "axis": "compute",
-      "description": "GEOX visual enhance",
+      "description": "Enhance seismic section readability through contrast and frequency enhancement.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -594,7 +636,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX visual generate hypotheses",
+      "description": "Generate geological hypotheses across discontinuity gaps in seismic data.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -607,7 +649,7 @@
     {
       "app_exposed": false,
       "axis": "compute",
-      "description": "GEOX panel d render",
+      "description": "Render cognitive interpretation dashboard for multi-panel seismic analysis.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -620,7 +662,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX cognitive rank hypotheses",
+      "description": "Rank geological hypotheses by basin-specific prior probability and consistency.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -633,7 +675,7 @@
     {
       "app_exposed": false,
       "axis": "verify",
-      "description": "GEOX segy audit",
+      "description": "Full SEG-Y trace reality pipeline: validate headers, amplitudes, geometry.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -646,7 +688,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX well tie",
+      "description": "Well-to-seismic tie via bruges library: cross-correlation and wavelet extraction.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -659,7 +701,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX 3d model",
+      "description": "3D structural model via GemPy from 2D surface picks.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -672,7 +714,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX wealth consequence",
+      "description": "Capital consequence evaluation via WEALTH organ bridge.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -685,7 +727,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX bid round screener",
+      "description": "Bid round screening: evaluate fiscal terms and prospectivity for license rounds.",
       "domain": "earth.basin",
       "expose": false,
       "face": "internal",
@@ -698,7 +740,7 @@
     {
       "app_exposed": false,
       "axis": "observe",
-      "description": "GEOX map layers list",
+      "description": "List available map layers and their spatial extents.",
       "domain": "earth.map",
       "expose": false,
       "face": "internal",
@@ -711,7 +753,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX map scene plan",
+      "description": "Plan map scene composition: layer ordering, zoom, and annotation layout.",
       "domain": "earth.map",
       "expose": false,
       "face": "internal",
@@ -724,7 +766,7 @@
     {
       "app_exposed": false,
       "axis": "compute",
-      "description": "GEOX map render preview",
+      "description": "Render preview of map scene for quality review before export.",
       "domain": "earth.map",
       "expose": false,
       "face": "internal",
@@ -737,7 +779,7 @@
     {
       "app_exposed": true,
       "axis": "observe",
-      "description": "GEOX map context scene",
+      "description": "Spatial context scene: renders map layers, basins, and well locations for geographic orientation.",
       "domain": "earth.general",
       "expose": true,
       "face": "surface",
@@ -753,7 +795,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX contrast detect",
+      "description": "Anomalous contrast detection: identify seismic-geological mismatches at formation boundaries.",
       "domain": "earth.geophysics",
       "expose": true,
       "face": "surface",
@@ -818,7 +860,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX biostrat parse",
+      "description": "Biostratigraphic data parsing: extract age-diagnostic fossil markers from well reports.",
       "domain": "earth.biostratigraphy",
       "expose": true,
       "face": "surface",
@@ -831,7 +873,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX biostrat nn age",
+      "description": "Neural network age prediction from biostratigraphic fossil assemblages.",
       "domain": "earth.stratigraphy",
       "expose": false,
       "face": "internal",
@@ -844,7 +886,7 @@
     {
       "app_exposed": false,
       "axis": "verify",
-      "description": "GEOX biostrat ruling check",
+      "description": "Validate biostratigraphic rulings against regional age models.",
       "domain": "earth.stratigraphy",
       "expose": false,
       "face": "internal",
@@ -857,7 +899,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX biostrat falsify",
+      "description": "Biostratigraphic falsification: test fossil age assignments against stratigraphic constraints.",
       "domain": "earth.biostratigraphy",
       "expose": true,
       "face": "surface",
@@ -870,7 +912,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX macrostrat calibrate",
+      "description": "Calibrate local stratigraphy against Macrostrat global database.",
       "domain": "earth.stratigraphy",
       "expose": false,
       "face": "internal",
@@ -883,10 +925,10 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX tie receipt",
+      "description": "Well-to-seismic tie receipt: structured record of tie quality metrics and calibration status. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]",
       "domain": "earth.well",
-      "expose": true,
-      "face": "surface",
+      "expose": false,
+      "face": "internal",
       "lane": "evidence",
       "mime_type": null,
       "name": "geox_tie_receipt",
@@ -896,10 +938,10 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX tie preflight",
+      "description": "Well-to-seismic tie preflight check: verify data completeness and quality before tie computation. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]",
       "domain": "earth.well",
-      "expose": true,
-      "face": "surface",
+      "expose": false,
+      "face": "internal",
       "lane": "evidence",
       "mime_type": null,
       "name": "geox_tie_preflight",
@@ -909,7 +951,7 @@
     {
       "app_exposed": false,
       "axis": "verify",
-      "description": "GEOX benchmark 001",
+      "description": "Benchmark suite for GEOX tool performance and accuracy validation.",
       "domain": "earth.seismic",
       "expose": false,
       "face": "internal",
@@ -920,12 +962,12 @@
       "version": "2026.07.11"
     },
     {
-      "app_exposed": true,
+      "app_exposed": false,
       "axis": "calibrate",
-      "description": "GEOX well time depth calibrate",
+      "description": "Well time-depth calibration: derive checkshot-based time-depth transform from VSP or checkshot data. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]",
       "domain": "earth.well",
-      "expose": true,
-      "face": "surface",
+      "expose": false,
+      "face": "internal",
       "lane": "evidence",
       "mime_type": null,
       "name": "geox_well_time_depth_calibrate",
@@ -933,12 +975,12 @@
       "version": "2026.07.11"
     },
     {
-      "app_exposed": true,
+      "app_exposed": false,
       "axis": "verify",
-      "description": "GEOX well seismic mistie rms",
+      "description": "Well-seismic mistie analysis: compute RMS mistie between well markers and seismic horizons. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]",
       "domain": "earth.seismic",
-      "expose": true,
-      "face": "surface",
+      "expose": false,
+      "face": "internal",
       "lane": "evidence",
       "mime_type": null,
       "name": "geox_well_seismic_mistie_rms",
@@ -946,12 +988,12 @@
       "version": "2026.07.11"
     },
     {
-      "app_exposed": true,
+      "app_exposed": false,
       "axis": "calibrate",
-      "description": "GEOX wavelet extract least squares",
+      "description": "Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]",
       "domain": "earth.seismic",
-      "expose": true,
-      "face": "surface",
+      "expose": false,
+      "face": "internal",
       "lane": "evidence",
       "mime_type": null,
       "name": "geox_wavelet_extract_least_squares",
@@ -961,7 +1003,7 @@
     {
       "app_exposed": false,
       "axis": "verify",
-      "description": "GEOX dst ingest test",
+      "description": "Test harness for DST data ingestion pipeline.",
       "domain": "earth.well",
       "expose": false,
       "face": "internal",
@@ -974,7 +1016,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX basin backstrip",
+      "description": "Basin backstripping: decompact sedimentary layers and reconstruct subsidence history.",
       "domain": "earth.basin",
       "expose": true,
       "face": "surface",
@@ -987,7 +1029,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX sediment mass balance",
+      "description": "Sediment mass balance: compute volumetric budgets and sediment supply rates for basin analysis.",
       "domain": "earth.basin",
       "expose": true,
       "face": "surface",
@@ -1000,7 +1042,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX thermal maturity history",
+      "description": "Thermal maturity history: model burial, heat flow, and vitrinite reflectance evolution over time.",
       "domain": "earth.basin",
       "expose": true,
       "face": "surface",
@@ -1013,7 +1055,7 @@
     {
       "app_exposed": false,
       "axis": "reason",
-      "description": "GEOX claim graph evaluate",
+      "description": "Evaluate claim graph consistency and identify circular or contradictory assertions.",
       "domain": "earth.basin",
       "expose": false,
       "face": "internal",
