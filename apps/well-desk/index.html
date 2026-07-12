@@ -118,7 +118,8 @@
       </div>
 
       <!-- Physics action bar -->
-      <div style="position:absolute;top:8px;right:8px;z-index:10;">
+      <div style="position:absolute;top:8px;right:8px;z-index:10;display:flex;gap:8px;">
+        <button class="wd-btn wd-btn-primary" id="btnPublishImage" style="background:#8e44ad;color:#fff;border:1px solid #9b59b6;">Publish Image</button>
         <button class="wd-btn wd-btn-primary" id="btnRunPhysics">Run Petrophysics</button>
       </div>
 
@@ -596,13 +597,199 @@
         initTracks();
       });
 
-      // ── MCP Bridge ──────────────────────────────────────────────────────────
-      }
-      
-      // SEP-1865 MCP App protocol bridge — loaded after all other scripts
-      // Provides: window.WELLDESK_MCP_BRIDGE, window.WELLDESK_RENDER
-      if (!window.WELLDESK_MCP_BRIDGE) {
+      // ── PNG Metadata & Publish Image ────────────────────────────────────────
+      const crcTable = (function() {
+        let c;
+        const table = [];
+        for (let n = 0; n < 256; n++) {
+          c = n;
+          for (let k = 0; k < 8; k++) {
+            c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+          }
+          table[n] = c;
+        }
+        return table;
+      })();
 
+      function crc32(buf) {
+        let crc = 0 ^ (-1);
+        for (let i = 0; i < buf.length; i++) {
+          crc = (crc >>> 8) ^ crcTable[(crc ^ buf[i]) & 0xFF];
+        }
+        return (crc ^ (-1)) >>> 0;
+      }
+
+      function writePngMetadata(arrayBuffer, key, value) {
+        const view = new DataView(arrayBuffer);
+        const uint8 = new Uint8Array(arrayBuffer);
+        if (view.getUint32(0) !== 0x89504E47) {
+          throw new Error("Invalid PNG signature");
+        }
+        const chunkText = key + '\0' + value;
+        const chunkData = new TextEncoder().encode(chunkText);
+        const chunkType = new TextEncoder().encode("tEXt");
+        const chunkLength = chunkData.length;
+        const fullChunkSize = 4 + 4 + chunkLength + 4;
+        let offset = 8;
+        while (offset < arrayBuffer.byteLength) {
+          const len = view.getUint32(offset);
+          const type = String.fromCharCode(...uint8.slice(offset + 4, offset + 8));
+          if (type === "IDAT") {
+            const newBuffer = new Uint8Array(arrayBuffer.byteLength + fullChunkSize);
+            newBuffer.set(uint8.slice(0, offset), 0);
+            const chunkView = new DataView(newBuffer.buffer);
+            chunkView.setUint32(offset, chunkLength);
+            newBuffer.set(chunkType, offset + 4);
+            newBuffer.set(chunkData, offset + 8);
+            const crcInput = new Uint8Array(4 + chunkLength);
+            crcInput.set(chunkType, 0);
+            crcInput.set(chunkData, 4);
+            const crc = crc32(crcInput);
+            chunkView.setUint32(offset + 8 + chunkLength, crc);
+            newBuffer.set(uint8.slice(offset), offset + fullChunkSize);
+            return newBuffer.buffer;
+          }
+          offset += 8 + len + 4;
+        }
+        throw new Error("IDAT chunk not found");
+      }
+
+      function showPublishBanner(text, isError = false) {
+        const banner = document.getElementById('publishBanner');
+        if (!banner) return;
+        banner.textContent = text;
+        banner.style.background = isError ? '#e74c3c' : '#27ae60';
+        banner.style.display = 'block';
+        banner.hidden = false;
+        setTimeout(() => {
+          banner.style.display = 'none';
+          banner.hidden = true;
+        }, 8000);
+      }
+
+      document.getElementById('btnPublishImage').addEventListener('click', () => {
+        const container = document.getElementById('trackRenderer');
+        const svgEl = container.querySelector('svg');
+        if (!svgEl) {
+          showPublishBanner("No log tracks rendered yet", true);
+          return;
+        }
+        showPublishBanner("Exporting canvas & embedding metadata...");
+
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svgEl);
+        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(svgBlob);
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          canvas.width = 800;
+          canvas.height = 800;
+          const ctx = canvas.getContext('2d');
+          
+          ctx.fillStyle = '#0f0f1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          // Scale bar
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(40, canvas.height - 30);
+          ctx.lineTo(140, canvas.height - 30);
+          ctx.stroke();
+          ctx.fillStyle = '#fff';
+          ctx.font = '10px monospace';
+          ctx.fillText('100 m Scale', 45, canvas.height - 35);
+          
+          // Epistemic Badges
+          ctx.fillStyle = '#27ae60';
+          ctx.fillRect(20, 20, 130, 24);
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 11px monospace';
+          ctx.fillText('OBS_IMAGE: TRUE', 28, 36);
+          
+          ctx.fillStyle = '#d35400';
+          ctx.fillRect(160, 20, 160, 24);
+          ctx.fillStyle = '#fff';
+          ctx.fillText('INT_GEOLOGY: ACTIVE', 168, 36);
+          
+          // Watermark
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+          ctx.font = 'bold 16px monospace';
+          ctx.fillText('DITEMPA BUKAN DIBERI', canvas.width - 220, canvas.height - 30);
+          
+          // Provenance text
+          ctx.fillStyle = '#888';
+          ctx.font = '10px monospace';
+          ctx.fillText(`WELL: ${state.wellId} | MODE: ${state.mode} | DATE: ${new Date().toISOString()}`, 20, canvas.height - 10);
+          
+          canvas.toBlob(function(blob) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+              const arrayBuffer = reader.result;
+              const metadata = {
+                well_id: state.wellId,
+                porosity: document.getElementById('inputPorosity').value,
+                sw: document.getElementById('inputSw').value,
+                vsh: document.getElementById('inputVsh').value,
+                fluid: document.getElementById('inputFluid').value,
+                net_pay: document.getElementById('netPay').textContent.trim(),
+                grade: document.getElementById('physicsGrade').textContent.trim(),
+                timestamp: new Date().toISOString()
+              };
+              try {
+                const newBuffer = writePngMetadata(arrayBuffer, 'provenance', JSON.stringify(metadata));
+                const newBlob = new Blob([newBuffer], { type: 'image/png' });
+                const reader2 = new FileReader();
+                reader2.onloadend = function() {
+                  const base64Data = reader2.result.split(',')[1];
+                  publishImageToServer(base64Data, metadata);
+                };
+                reader2.readAsDataURL(newBlob);
+              } catch(e) {
+                console.error("Metadata embed failed:", e);
+                const base64Data = reader.result.split(',')[1];
+                publishImageToServer(base64Data, metadata);
+              }
+            };
+            reader.readAsArrayBuffer(blob);
+          }, 'image/png');
+          
+          URL.revokeObjectURL(url);
+        };
+        img.src = url;
+      });
+
+      function publishImageToServer(base64Data, metadata) {
+        if (window.WELLDESK_MCP_BRIDGE && typeof window.WELLDESK_MCP_BRIDGE.requestTool === 'function') {
+          showPublishBanner("Submitting tool call geox_well_desk_publish...");
+          window.WELLDESK_MCP_BRIDGE.requestTool('geox_well_desk_publish', {
+            well_id: metadata.well_id,
+            image_base64: base64Data,
+            metadata: metadata
+          }).then(function(res) {
+            const sc = res?.structuredContent || res || {};
+            const payload = sc.result || sc;
+            if (payload.ok) {
+              showPublishBanner(`Success! Image sealed on VAULT999. Token: ${payload.seal_token}`);
+            } else {
+              showPublishBanner(`Error from server: ${payload.message || 'unknown'}`, true);
+            }
+          }).catch(function(err) {
+            showPublishBanner(`RPC error: ${err.message || String(err)}`, true);
+          });
+        } else {
+          showPublishBanner("Standalone Mode: No MCP Bridge. PNG generated successfully (see console).");
+          console.log("[WellDesk] Metadata:", metadata);
+          console.log("[WellDesk] base64 (first 100 chars):", base64Data.slice(0, 100));
+        }
+      }
+
+      // ── MCP Bridge Handshake ────────────────────────────────────────────────
+      if (window.WELLDESK_MCP_BRIDGE) {
+        console.log('[WellDesk] MCP Bridge already active.');
+      }
       console.log('[WellDesk] Initialized. Well:', state.wellId, 'Mode:', state.mode);
     })();
   </script>
@@ -621,6 +808,11 @@
   <div id="vetoBanner"
        style="display:none;position:fixed;top:32px;left:0;right:0;z-index:9998;
               background:#8e44ad;color:#fff;padding:6px 12px;font-size:13px;
+              font-weight:bold;text-align:center;"
+       hidden></div>
+  <div id="publishBanner"
+       style="display:none;position:fixed;top:64px;left:0;right:0;z-index:9996;
+              background:#27ae60;color:#fff;padding:6px 12px;font-size:13px;
               font-weight:bold;text-align:center;"
        hidden></div>
   <!-- Hidden error banner -->

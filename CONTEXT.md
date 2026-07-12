@@ -6,14 +6,11 @@ valid_until: 2026-08-02
 confidence: high
 scope: /root/geox
 changes_since_last_verified:
-  - 16 dead geox/ submodules archived (adapters, artifacts, canonical, etc.)
-  - geox/core/ duplicate identified (same as root core/) — kept for test compat
-  - entrypoint_unified.sh deprecated (forwards to entrypoint.sh)
-  - Dockerfile confirmed using pyproject.toml (no requirements.txt)
-  - Known Issues section updated — stale CI issues resolved
-  - Production readiness audit: 72% YELLOW, gap tracker created
-  - Artifact envelope contract created (contracts/artifact_envelope.py)
-  - Deprecation calendar enforced (forge_work/DEPRECATION-CALENDAR-2026-07-30.md)
+  - 2026-07-11: MCP Apps registration — 10 ui:// resources, workbench View, MapLibre interactive map
+  - 2026-07-11: Registry cleanup — 76 public tools (-4 deregistered, -1 duplicate)
+  - 2026-07-11: WebMCP categories synced to live 76-tool surface, session/auth propagation
+  - 2026-07-11: Macrostrat integration blueprint + 4 MCP Apps contract deltas
+  - 2026-07-11: RECONCILE — 3 competing UI injection paths → 1 canonical (apps/workbench.py)
 -->
 
 # CONTEXT.md — GEOX (Earth Intelligence)

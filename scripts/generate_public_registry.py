@@ -1,101 +1,151 @@
 #!/usr/bin/env python3
-"""
-Generate Public Tool Registry — GEOX Canonical Surface
-====================================================
-DITEMPA BUKAN DIBERI — Forged, Not Given
-
-Reads CANONICAL_PUBLIC_TOOLS from src/geox_mcp/registry.py (the single source of truth),
-computes a SHA-256 hash of the canonical surface,
-and writes a public registry JSON for runtime parity verification.
-
-Run after any change to the canonical tool surface:
-    python scripts/generate_public_registry.py
-
-Verify parity:
-    python -c "from scripts.control_plane_server_patch import compute_registry_hash; print(compute_registry_hash())"
-
-Epoch: 2026-06-22-GEOX-16TOOLS-PHASE2
-Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
-"""
-
 from __future__ import annotations
 
-import hashlib
 import json
 import sys
-from datetime import UTC, datetime
 from pathlib import Path
 
-REGISTRY_PATH = Path(__file__).parent.parent / "public_registry.json"
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from geox_mcp.surface_manifest import (  # noqa: E402
+    MANIFEST_PATH,
+    WORKSPACE_MIME,
+    WORKSPACE_URI,
+    manifest_tools,
+    plugin_export_tool_names,
+    public_tools,
+)
 
 
-def load_canonical_tools() -> list[str]:
-    """Load CANONICAL_PUBLIC_TOOLS from geox_mcp.registry (single source of truth)."""
-    sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
-    return CANONICAL_PUBLIC_TOOLS
-
-
-def compute_hash(tools: list[str]) -> str:
-    """Compute SHA-256 hash of the canonical tool surface."""
-    canonical_sorted = sorted(tools)
-    payload = json.dumps(
-        {
-            "epoch": "GEOX-11TOOLS-v0.3",
-            "tools": canonical_sorted,
-            "count": len(canonical_sorted),
-            "computed_at": datetime.now(UTC).isoformat(),
+def _public_tool_row(tool) -> dict:
+    return {
+        "name": tool.name,
+        "description": tool.description or tool.name.replace("geox_", "GEOX ").replace("_", " "),
+        "domain": tool.domain,
+        "axis": tool.axis,
+        "lane": tool.lane,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "arguments": {"type": "object", "description": "Tool-specific arguments"},
+                "session_id": {"type": "string", "description": "arifOS constitutional session ID"},
+                "actor_id": {"type": "string", "description": "Calling actor identifier"},
+                "trace_id": {"type": "string", "description": "Trace identifier propagated end-to-end"},
+            },
         },
-        sort_keys=True,
-        indent=2,
-    )
-    return hashlib.sha256(payload.encode()).hexdigest()
-
-
-def main():
-    print("GEOX Public Registry Generator")
-    print("=" * 40)
-
-    try:
-        tools = load_canonical_tools()
-    except Exception as exc:
-        print(f"ERROR: Could not load CANONICAL_TOOLS: {exc}")
-        sys.exit(1)
-
-    canonical_hash = compute_hash(tools)
-    tool_count = len(tools)
-
-    registry = {
-        "epoch": "GEOX-11TOOLS-v0.3",
-        "generated_at": datetime.now(UTC).isoformat(),
-        "canonical_tool_count": tool_count,
-        "registry_hash": canonical_hash,
-        "tools": sorted(tools),
-        "manifest_hash_source": "SHA-256(canonical_tools_sorted)",
     }
 
-    # Write public registry
-    with open(REGISTRY_PATH, "w") as f:
-        json.dump(registry, f, indent=2)
 
-    # Console output
-    print(f"Canonical tools : {tool_count}")
-    print(f"Registry hash   : {canonical_hash}")
-    print(f"Registry written: {REGISTRY_PATH}")
-    print()
-    print("Canonical surface:")
-    for i, tool in enumerate(sorted(tools), 1):
-        print(f"  {i:2d}. {tool}")
+def build_tools_snapshot() -> dict:
+    app_export = set(plugin_export_tool_names())
+    tools = []
+    for tool in manifest_tools():
+        tools.append(
+            {
+                "name": tool.name,
+                "description": tool.description or tool.name.replace("geox_", "GEOX ").replace("_", " "),
+                "version": "2026.07.11",
+                "domain": tool.domain,
+                "axis": tool.axis,
+                "lane": tool.lane,
+                "expose": tool.is_public,
+                "app_exposed": tool.name in app_export,
+                "face": tool.face,
+                "ui": tool.ui,
+                "mime_type": tool.ui.get("mime_type") if tool.ui else None,
+            }
+        )
+    return {
+        "$schema": "arifOS/tools-manifest/v2",
+        "organ": "geox",
+        "version": "2026.07.11",
+        "manifest_path": str(MANIFEST_PATH.relative_to(ROOT)),
+        "canonical_tools": len(tools),
+        "surface_tools": sum(1 for tool in tools if tool["expose"]),
+        "internal_tools": sum(1 for tool in tools if not tool["expose"]),
+        "tools": tools,
+    }
 
-    # Verify
-    if tool_count != 13:
-        print()
-        print(f"WARNING: Expected 13 canonical tools, got {tool_count}")
-        print("Update contracts/enums/statuses.py CANONICAL_TOOLS before proceeding.")
 
-    print()
-    print("Registry generation complete.")
+def build_openapi_snapshot() -> dict:
+    app_export = set(plugin_export_tool_names())
+    public_rows = [_public_tool_row(tool) for tool in public_tools() if tool.name in app_export]
+    return {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "GEOX Earth Intelligence API",
+            "description": (
+                "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. "
+                "window.openai is optional progressive enhancement."
+            ),
+            "version": "2026.07.11",
+        },
+        "paths": {
+            "/mcp": {
+                "post": {
+                    "summary": "MCP JSON-RPC 2.0 endpoint",
+                    "description": (
+                        "Plugin submission, review and publication use metadata scanned "
+                        "or snapshotted from this live MCP endpoint."
+                    ),
+                    "operationId": "mcpEndpoint",
+                    "x-mcp-tools": public_rows,
+                }
+            }
+        },
+    }
+
+
+def build_root_tools_manifest() -> dict:
+    app_export = set(plugin_export_tool_names())
+    return {
+        "version": "2026.07.11",
+        "manifest_path": str(MANIFEST_PATH.relative_to(ROOT)),
+        "public": [tool.name for tool in public_tools()],
+        "app_export": [tool.name for tool in public_tools() if tool.name in app_export],
+        "internal": [tool.name for tool in manifest_tools() if tool.is_internal],
+    }
+
+
+def build_llms_txt() -> str:
+    public = list(public_tools())
+    lines = [
+        f"# GEOX — Earth Intelligence Sovereign Kernel ({len(public)} Public Tools)",
+        "> Doctrine: Physics before narrative. Governed evidence only.",
+        "> Surface: generated from src/geox_mcp/tools_manifest.yaml",
+        "",
+        "## 1. Canonical Tool Surface",
+        "",
+    ]
+    for idx, tool in enumerate(public, start=1):
+        description = tool.description or tool.name.replace("geox_", "").replace("_", " ")
+        lines.append(f"{idx}. **{tool.name}**: {description}")
+    lines.extend(
+        [
+            "",
+            "## 2. Agent Reasoning Logic",
+            "- Evidence before interpretation.",
+            "- Governance stays server-side.",
+            f"- App-enabled workspace URI: `{WORKSPACE_URI}` ({WORKSPACE_MIME}).",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def main() -> int:
+    write_json(ROOT / ".well-known" / "tools.json", build_tools_snapshot())
+    write_json(ROOT / ".well-known" / "openapi.json", build_openapi_snapshot())
+    write_json(ROOT / "tools.json", build_root_tools_manifest())
+    (ROOT / "llms.txt").write_text(build_llms_txt(), encoding="utf-8")
+    print("generated: .well-known/tools.json .well-known/openapi.json tools.json llms.txt")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

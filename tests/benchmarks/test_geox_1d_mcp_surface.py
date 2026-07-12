@@ -125,13 +125,17 @@ async def test_wavelet_extract_least_squares():
 
 
 def test_registry_has_three_tools():
+    """ZEN 2026-07-11 G1: 1D tie tools folded into geox_seismic_compute modes."""
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, SURFACE_TOOLS
 
     for t in (
         "geox_well_time_depth_calibrate",
         "geox_well_seismic_mistie_rms",
         "geox_wavelet_extract_least_squares",
+        "geox_tie_preflight",
+        "geox_tie_receipt",
     ):
-        assert t in SURFACE_TOOLS
-        assert t in CANONICAL_PUBLIC_TOOLS
-    assert len(CANONICAL_PUBLIC_TOOLS) == 73  # 2026-07-09: bumped 72→73 for bid_round_screener (MBR 2026 multi-block)
+        assert t not in SURFACE_TOOLS
+        assert t not in CANONICAL_PUBLIC_TOOLS
+    assert "geox_seismic_compute" in SURFACE_TOOLS
+    assert "geox_seismic_compute" in CANONICAL_PUBLIC_TOOLS

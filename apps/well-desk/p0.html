@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GEOX Well-Desk P0</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; padding: 12px; background: #0b0f14; color: #e6edf3; }
+    .badge { opacity: 0.75; font-size: 11px; letter-spacing: 0.02em; margin-bottom: 8px; }
+    #hold, #veto, #err {
+      display: none; padding: 8px 10px; margin-bottom: 8px; border-radius: 4px; font-size: 13px;
+    }
+    #hold { background: #5c3b00; border: 1px solid #c48a00; }
+    #veto { background: #4a1515; border: 1px solid #c44; }
+    #err { background: #3a1a1a; border: 1px solid #844; }
+    h1 { font-size: 1.15rem; margin: 0 0 8px; font-weight: 600; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+    .card {
+      flex: 1 1 140px; background: #141b24; border: 1px solid #243041;
+      border-radius: 6px; padding: 10px;
+    }
+    .card .k { font-size: 11px; opacity: 0.65; text-transform: uppercase; }
+    .card .v { font-size: 1.1rem; margin-top: 4px; }
+    pre {
+      white-space: pre-wrap; word-break: break-word; font-size: 12px;
+      background: #0f141c; border: 1px solid #243041; border-radius: 6px;
+      padding: 10px; max-height: 50vh; overflow: auto;
+    }
+    button {
+      background: #1a3a4a; color: #e6edf3; border: 1px solid #2a5a6a;
+      border-radius: 4px; padding: 6px 12px; cursor: pointer; font-size: 13px;
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .muted { opacity: 0.6; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="badge">ui://geox/well-desk · SEP-1865 P0 shell · connect-src none · no secrets</div>
+  <div id="hold"></div>
+  <div id="veto"></div>
+  <div id="err"></div>
+  <h1 id="title">GEOX Well-Desk</h1>
+  <p class="muted" id="status">Waiting for host (ui/initialize)…</p>
+  <div class="row">
+    <div class="card"><div class="k">Well</div><div class="v" id="wellId">—</div></div>
+    <div class="card"><div class="k">Mode</div><div class="v" id="mode">—</div></div>
+    <div class="card"><div class="k">Band</div><div class="v" id="band">—</div></div>
+  </div>
+  <p>
+    <button type="button" id="btnRefresh" disabled title="Host-mediated tools/call only">Request refresh via host</button>
+  </p>
+  <pre id="out">{}</pre>
+  <script>
+(function () {
+  'use strict';
+  /* P0: no fetch(), no storage, no external scripts. All data via host postMessage. */
+  var PROTOCOL = '2026-01-26';
+  var nextId = 1;
+  var pending = new Map();
+  var lastArgs = null;
+  var el = {
+    out: document.getElementById('out'),
+    hold: document.getElementById('hold'),
+    veto: document.getElementById('veto'),
+    err: document.getElementById('err'),
+    title: document.getElementById('title'),
+    status: document.getElementById('status'),
+    wellId: document.getElementById('wellId'),
+    mode: document.getElementById('mode'),
+    band: document.getElementById('band'),
+    btn: document.getElementById('btnRefresh'),
+  };
+
+  function show(node, text) {
+    if (!text) { node.style.display = 'none'; node.textContent = ''; return; }
+    node.style.display = 'block';
+    node.textContent = text;
+  }
+
+  function post(msg) {
+    try {
+      parent.postMessage(msg, '*');
+    } catch (e) {
+      show(el.err, 'postMessage failed: ' + e);
+    }
+  }
+
+  function rpcRequest(method, params) {
+    var id = nextId++;
+    return new Promise(function (resolve, reject) {
+      var t = setTimeout(function () {
+        pending.delete(id);
+        reject(new Error('timeout ' + method));
+      }, 15000);
+      pending.set(id, { resolve: resolve, reject: reject, t: t });
+      post({ jsonrpc: '2.0', id: id, method: method, params: params || {} });
+    });
+  }
+
+  function applyArgs(args) {
+    lastArgs = args || {};
+    el.wellId.textContent = lastArgs.well_id || '—';
+    el.mode.textContent = lastArgs.mode || 'summary';
+    el.title.textContent = 'GEOX Well-Desk · ' + (lastArgs.well_id || 'operator');
+  }
+
+  function applyResult(params) {
+    var sc = (params && (params.structuredContent || params)) || {};
+    var holds = sc.holds || (sc.envelope && sc.envelope.holds) || [];
+    var veto = sc.veto || (sc.envelope && sc.envelope.veto);
+    show(el.hold, holds && holds.length ? ('888 HOLD: ' + JSON.stringify(holds)) : '');
+    show(el.veto, veto && veto.active ? ('F13 VETO: ' + (veto.reason || 'active')) : '');
+    if (sc.well_id) el.wellId.textContent = sc.well_id;
+    if (sc.mode) el.mode.textContent = sc.mode;
+    if (sc.band) el.band.textContent = sc.band;
+    else if (sc.summary && sc.summary.band) el.band.textContent = sc.summary.band;
+    el.out.textContent = JSON.stringify(sc, null, 2);
+  }
+
+  function onMessage(ev) {
+    var data = ev.data;
+    if (typeof data === 'string') {
+      try { data = JSON.parse(data); } catch (e) { return; }
+    }
+    if (!data || data.jsonrpc !== '2.0') return;
+
+    if (data.id != null && pending.has(data.id)) {
+      var p = pending.get(data.id);
+      clearTimeout(p.t);
+      pending.delete(data.id);
+      if (data.error) p.reject(data.error);
+      else p.resolve(data.result);
+      return;
+    }
+
+    var m = data.method;
+    if (m === 'ui/notifications/tool-input' || m === 'ui/notifications/tool-input-partial') {
+      applyArgs(data.params && data.params.arguments);
+      el.status.textContent = 'Tool input received from host';
+      el.btn.disabled = false;
+    }
+    if (m === 'ui/notifications/tool-result') {
+      applyResult(data.params || {});
+      el.status.textContent = 'Tool result received (host-mediated)';
+      el.btn.disabled = false;
+    }
+    if (m === 'ui/notifications/tool-cancelled') {
+      show(el.err, 'Tool cancelled by host');
+    }
+  }
+
+  window.addEventListener('message', onMessage);
+
+  el.btn.addEventListener('click', function () {
+    if (!lastArgs || !lastArgs.well_id) {
+      show(el.err, 'No well_id yet — wait for host tool-input');
+      return;
+    }
+    el.btn.disabled = true;
+    el.status.textContent = 'Requesting geox_well_desk_open via host…';
+    rpcRequest('tools/call', {
+      name: 'geox_well_desk_open',
+      arguments: {
+        well_id: lastArgs.well_id,
+        mode: lastArgs.mode || 'summary'
+      }
+    }).then(function (result) {
+      applyResult(result || {});
+      el.status.textContent = 'Refresh complete';
+      el.btn.disabled = false;
+    }).catch(function (err) {
+      show(el.err, 'Host tools/call failed: ' + JSON.stringify(err));
+      el.btn.disabled = false;
+    });
+  });
+
+  /* View lifecycle */
+  post({
+    jsonrpc: '2.0',
+    id: nextId++,
+    method: 'ui/initialize',
+    params: {
+      protocolVersion: PROTOCOL,
+      appInfo: { name: 'geox-well-desk', version: '0.1.0-p0' }
+    }
+  });
+  post({ jsonrpc: '2.0', method: 'ui/notifications/initialized' });
+  el.status.textContent = 'Initialized — waiting for tool-input/tool-result';
+})();
+  </script>
+</body>
+</html>

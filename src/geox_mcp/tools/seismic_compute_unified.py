@@ -15,6 +15,11 @@ Modes:
   interpret / agak    — Pick horizons and track faults (was geox_seismic_interpret)
   cabar               — anomalous contrast falsifier
   sahkan              — well tie validation check
+  tie_preflight       — well-tie preflight (was geox_tie_preflight) [ZEN 2026-07-11 G1]
+  tie_receipt         — well-tie receipt (was geox_tie_receipt)
+  wavelet_extract     — LS wavelet extract (was geox_wavelet_extract_least_squares)
+  mistie_rms          — mistie RMS (was geox_well_seismic_mistie_rms)
+  time_depth_calibrate — TD calibrate (was geox_well_time_depth_calibrate)
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
@@ -38,6 +43,11 @@ async def geox_seismic_compute(
         "agak",
         "cabar",
         "sahkan",
+        "tie_preflight",
+        "tie_receipt",
+        "wavelet_extract",
+        "mistie_rms",
+        "time_depth_calibrate",
     ] = "synthetic",
     volume_ref: str | None = None,
     attribute: str | None = None,
@@ -98,6 +108,20 @@ async def geox_seismic_compute(
     ac_vp: list[float] | None = None,
     ac_rho: list[float] | None = None,
     volume_ref_attr: str | None = None,
+    # ZEN G1: tie_preflight / tie_receipt surface fields
+    well_name: str | None = None,
+    decision_context: str | None = None,
+    answers: str | dict[int, str] | None = None,
+    seismic_volume: str | None = None,
+    polarity_convention: str | None = None,
+    phase_convention: str | None = None,
+    seismic_datum: str | None = None,
+    well_datum: str | None = None,
+    depth_basis: str | None = None,
+    logs_used: str | None = None,
+    las_path: str | None = None,
+    checkshot_path: str | None = None,
+    session_id: str | None = None,
 ) -> dict[str, Any]:
     """Unified seismic computation & exploration.
 
@@ -153,6 +177,92 @@ async def geox_seismic_compute(
     if mode == "sahkan":
         kwargs["mode"] = "well_tie"
         from geox_mcp.tools.seismic_compute import geox_seismic_compute as _impl
+
+        return await _impl(**_filter_args(_impl, kwargs))
+
+    # ── ZEN 2026-07-11 G1: fold standalone 1D-tie tools into modes ─────────
+    if mode == "tie_preflight":
+        from geox_core.schemas.tie_preflight import run_tie_preflight
+
+        answers_raw = kwargs.get("answers") or ""
+        answers_dict: dict[int, str] = {}
+        if isinstance(answers_raw, dict):
+            answers_dict = {int(k): str(v) for k, v in answers_raw.items()}
+        elif isinstance(answers_raw, str) and answers_raw:
+            for pair in answers_raw.split(","):
+                pair = pair.strip()
+                if "=" in pair:
+                    k, v = pair.split("=", 1)
+                    try:
+                        answers_dict[int(k.strip())] = v.strip()
+                    except ValueError:
+                        pass
+        result = run_tie_preflight(
+            well_name=kwargs.get("well_name") or kwargs.get("well_id") or "",
+            decision_context=kwargs.get("decision_context") or "horizon_calibration",
+            answers=answers_dict,
+            session_id=kwargs.get("session_id"),
+        )
+        return {"status": "success", "tool": "geox_tie_preflight", **result}
+
+    if mode == "tie_receipt":
+        from geox_core.schemas.tie_receipt import build_tie_receipt
+
+        logs_used = kwargs.get("logs_used") or ""
+        logs_list = (
+            [x.strip() for x in logs_used.split(",") if x.strip()]
+            if isinstance(logs_used, str)
+            else list(logs_used or [])
+        )
+        receipt = build_tie_receipt(
+            well_name=kwargs.get("well_name") or kwargs.get("well_id") or "",
+            seismic_volume=kwargs.get("seismic_volume") or kwargs.get("volume_ref") or "",
+            session_id=kwargs.get("session_id"),
+            polarity_convention=kwargs.get("polarity_convention") or "",
+            phase_convention=kwargs.get("phase_convention") or "",
+            seismic_datum=kwargs.get("seismic_datum") or "",
+            well_datum=kwargs.get("well_datum") or "",
+            depth_basis=kwargs.get("depth_basis") or "MD",
+            logs_used=logs_list,
+            time_depth_control={
+                "checkshot_present": bool(kwargs.get("time_depth_checkshot")),
+                "vsp_present": bool(kwargs.get("time_depth_vsp")),
+                "confidence": kwargs.get("time_depth_confidence") or "low",
+            },
+            wavelet={
+                "source": kwargs.get("wavelet_source") or "assumed",
+                "phase_confidence": kwargs.get("wavelet_phase_confidence") or "low",
+            },
+            tie_quality={
+                "correlation_score": kwargs.get("correlation_score"),
+                "residual_class": kwargs.get("residual_class") or "unexplained",
+            },
+            rock_physics_status={
+                "lithology_separability": kwargs.get("rock_lithology_sep") or "low",
+                "fluid_separability": kwargs.get("rock_fluid_sep") or "low",
+            },
+            inversion_permission={"allowed": bool(kwargs.get("inversion_allowed"))},
+            decision_permission=kwargs.get("decision_permission") or "HOLD",
+            decision_reason=kwargs.get("decision_reason") or "",
+        )
+        return {"status": "success", "tool": "geox_tie_receipt", "receipt": receipt}
+
+    if mode == "wavelet_extract":
+        from geox_mcp.tools.well_1d_surface import (
+            geox_wavelet_extract_least_squares as _impl,
+        )
+
+        return await _impl(**_filter_args(_impl, kwargs))
+
+    if mode == "mistie_rms":
+        from geox_mcp.tools.well_1d_surface import geox_well_seismic_mistie_rms as _impl
+
+        return await _impl(**_filter_args(_impl, kwargs))
+
+    if mode == "time_depth_calibrate":
+        from geox_mcp.tools.well_1d_surface import (
+            geox_well_time_depth_calibrate as _impl,
+        )
 
         return await _impl(**_filter_args(_impl, kwargs))
 

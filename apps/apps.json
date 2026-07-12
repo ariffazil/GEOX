@@ -1,25 +1,35 @@
 {
-  "version": "1",
+  "version": "2026.07.12",
   "generated": "2026-07-11",
   "workbench": "ui://geox/workbench-v1.html",
   "apps": [
     {
       "id": "well-desk",
       "name": "WellDesk",
-      "title": "GEOX WellDesk — 1D+2D Well Log Viewer + Rock Physics Engine",
+      "title": "GEOX WellDesk \u2014 1D+2D Well Log Viewer + Rock Physics Engine",
       "uri": "ui://geox/well-desk",
       "path": "apps/well-desk/index.html",
       "status": "active",
-      "visual_tools": ["geox_well_ingest", "geox_well_qc", "geox_petrophysics"]
+      "visual_tools": [
+        "geox_well_ingest",
+        "geox_well_qc",
+        "geox_petrophysics"
+      ],
+      "tools": []
     },
     {
       "id": "prospect-ui",
       "name": "Basin Explorer",
-      "title": "GEOX Basin Explorer — AAA Grade",
+      "title": "GEOX Basin Explorer \u2014 AAA Grade",
       "uri": "ui://geox/prospect-ui",
       "path": "apps/prospect-ui/index.html",
       "status": "active",
-      "visual_tools": ["geox_basin", "geox_prospect", "geox_map_scene_plan"]
+      "visual_tools": [
+        "geox_basin",
+        "geox_prospect",
+        "geox_map_scene_plan"
+      ],
+      "tools": []
     },
     {
       "id": "seismic-vision-review",
@@ -28,16 +38,24 @@
       "uri": "ui://geox/seismic-vision-review",
       "path": "apps/seismic-vision-review/index.html",
       "status": "scaffold",
-      "visual_tools": ["geox_seismic_cognition", "geox_vision", "geox_visual_understand"]
+      "visual_tools": [
+        "geox_seismic_cognition",
+        "geox_vision",
+        "geox_visual_understand"
+      ],
+      "tools": []
     },
     {
       "id": "geox-mcp-visual",
       "name": "GEOX Dashboard",
-      "title": "GEOX Dashboard Ω",
+      "title": "GEOX Dashboard \u03a9",
       "uri": "ui://geox/geox-mcp-visual",
       "path": "apps/geox-mcp-visual/index.html",
       "status": "active",
-      "visual_tools": ["geox_surface_status"]
+      "visual_tools": [
+        "geox_surface_status"
+      ],
+      "tools": []
     },
     {
       "id": "judge-console",
@@ -46,7 +64,12 @@
       "uri": "ui://geox/judge-console",
       "path": "apps/judge-console/index.html",
       "status": "active",
-      "visual_tools": ["geox_claim", "geox_evidence", "geox_doctrine"]
+      "visual_tools": [
+        "geox_claim",
+        "geox_evidence",
+        "geox_doctrine"
+      ],
+      "tools": []
     },
     {
       "id": "earth-volume",
@@ -55,7 +78,11 @@
       "uri": "ui://geox/earth-volume",
       "path": "apps/earth-volume/index.html",
       "status": "active",
-      "visual_tools": ["geox_seismic_compute", "geox_seismic_interpret"]
+      "visual_tools": [
+        "geox_seismic_compute",
+        "geox_seismic_interpret"
+      ],
+      "tools": []
     },
     {
       "id": "attribute-audit",
@@ -64,7 +91,11 @@
       "uri": "ui://geox/attribute-audit",
       "path": "apps/attribute-audit/index.html",
       "status": "preview",
-      "visual_tools": ["geox_render_audit", "geox_segy_trace_audit"]
+      "visual_tools": [
+        "geox_render_audit",
+        "geox_segy_trace_audit"
+      ],
+      "tools": []
     },
     {
       "id": "georeference-map",
@@ -73,7 +104,11 @@
       "uri": "ui://geox/georeference-map",
       "path": "apps/georeference-map/index.html",
       "status": "scaffold",
-      "visual_tools": ["geox_map_render_preview", "geox_map_export_package"]
+      "visual_tools": [
+        "geox_map_render_preview",
+        "geox_map_export_package"
+      ],
+      "tools": []
     },
     {
       "id": "analog-digitizer",
@@ -82,7 +117,12 @@
       "uri": "ui://geox/analog-digitizer",
       "path": "apps/analog-digitizer/index.html",
       "status": "planned",
-      "visual_tools": ["geox_vision"]
+      "visual_tools": [
+        "geox_vision"
+      ],
+      "tools": []
     }
-  ]
+  ],
+  "generated_at": "2026-07-12T07:48:05.733958+00:00",
+  "registry_note": "tools[] must \u2286 CANONICAL_PUBLIC_SURFACE.json public_tools"
 }

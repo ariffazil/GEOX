@@ -44,7 +44,7 @@ from geox_mcp.tools.petrophysics import (
 from geox_mcp.tools.prospect import geox_prospect_evaluate
 from geox_mcp.tools.qc import geox_data_qc_bundle
 from geox_mcp.tools.registry import geox_system_registry_status
-from geox_mcp.tools.seismic_compute import geox_seismic_compute
+from geox_mcp.tools.seismic_compute_unified import geox_seismic_compute  # ZEN G1
 from geox_mcp.tools.sequence import geox_sequence_interpret
 
 _WITNESS_TOOLS: list[tuple[str, Any]] = [

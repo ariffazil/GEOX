@@ -37,6 +37,37 @@ from geox_mcp.tools._helpers import (
 logger = logging.getLogger("geox.canonical.registry")
 
 
+def _load_generated_public_surface() -> set[str]:
+    import json
+
+    path = Path(__file__).resolve().parents[3] / ".well-known" / "tools.json"
+    if not path.exists():
+        return set()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return {tool["name"] for tool in payload.get("tools", []) if tool.get("expose", True)}
+
+
+def _load_plugin_export_surface() -> set[str]:
+    import json
+
+    path = Path(__file__).resolve().parents[3] / ".well-known" / "openapi.json"
+    if not path.exists():
+        return set()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    tools = payload.get("paths", {}).get("/mcp", {}).get("post", {}).get("x-mcp-tools", [])
+    return {tool["name"] for tool in tools if isinstance(tool, dict) and tool.get("name")}
+
+
+async def _load_runtime_callable_public_surface() -> set[str]:
+    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+    from geox_mcp.server import create_app, mcp
+
+    create_app()
+    registered = {tool.name for tool in await mcp.list_tools()}
+    public = set(CANONICAL_PUBLIC_TOOLS)
+    return registered & public
+
+
 async def geox_system_registry_status(
     session_id: str | None = None,
     actor_id: str | None = None,
@@ -64,17 +95,35 @@ async def geox_system_registry_status(
     from datetime import datetime
 
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST
+    from geox_mcp.surface_manifest import plugin_export_tool_names
 
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
     now = datetime.now(UTC).isoformat()
 
-    # Manifest vs canonical cross-check (boring, instrumental)
-    _manifest_exposed = {e["name"] for e in GEOX_TOOL_MANIFEST if e.get("expose", True)}
-    _canonical_set = set(CANONICAL_PUBLIC_TOOLS) | {"geox_dst_ingest_test"}
+    manifest_public = {e["name"] for e in GEOX_TOOL_MANIFEST if e.get("visibility") == "public"}
+    expected_app_export = set(plugin_export_tool_names())
+    runtime_callable_public = await _load_runtime_callable_public_surface()
+    mcp_tools_list_public = set(CANONICAL_PUBLIC_TOOLS)
+    generated_public = _load_generated_public_surface() or manifest_public
+    plugin_export_public = _load_plugin_export_surface() or expected_app_export
 
-    phantom_tools = sorted(_manifest_exposed - _canonical_set)
-    missing_from_manifest = sorted(_canonical_set - _manifest_exposed)
-    registry_truth = "PASS" if not phantom_tools and not missing_from_manifest else "DRIFT"
+    manifest_only_tools = sorted(manifest_public - runtime_callable_public)
+    runtime_only_tools = sorted(runtime_callable_public - manifest_public)
+    mcp_list_only_tools = sorted(mcp_tools_list_public - manifest_public)
+    plugin_export_only_tools = sorted(plugin_export_public - expected_app_export)
+    phantom_tools = sorted(generated_public - manifest_public)
+    missing_from_manifest = sorted(manifest_public - generated_public)
+    missing_from_app_export = sorted(expected_app_export - plugin_export_public)
+
+    registry_truth = (
+        "PASS"
+        if manifest_public == runtime_callable_public == mcp_tools_list_public
+        and plugin_export_public == expected_app_export
+        and not phantom_tools
+        and not missing_from_manifest
+        and not missing_from_app_export
+        else "DRIFT"
+    )
 
     # ── Envelope Compliance Scan (Federation Contract §6, §9) ──────────
     # Scans all tool files to report which tools use get_standard_envelope()
@@ -86,6 +135,7 @@ async def geox_system_registry_status(
         import ast as _ast
 
         from geox_mcp.registry import LEGACY_ALIAS_MAP
+
         legacy_names = set(LEGACY_ALIAS_MAP.keys())
         tool_dir = Path(__file__).parent
         for fname in sorted(tool_dir.glob("*.py")):
@@ -116,10 +166,20 @@ async def geox_system_registry_status(
     return {
         "registry_truth": registry_truth,
         "canonical_tools": sorted(CANONICAL_PUBLIC_TOOLS),
-        "callable_tools": sorted(_manifest_exposed),
-        "tools_count": len(_canonical_set),
+        "callable_tools": sorted(runtime_callable_public),
+        "manifest_public": sorted(manifest_public),
+        "runtime_callable_public": sorted(runtime_callable_public),
+        "mcp_tools_list_public": sorted(mcp_tools_list_public),
+        "plugin_export_public": sorted(plugin_export_public),
+        "expected_app_export": sorted(expected_app_export),
+        "tools_count": len(manifest_public),
         "phantom_tools": phantom_tools,
         "missing_from_manifest": missing_from_manifest,
+        "missing_from_app_export": missing_from_app_export,
+        "manifest_only_tools": manifest_only_tools,
+        "runtime_only_tools": runtime_only_tools,
+        "mcp_list_only_tools": mcp_list_only_tools,
+        "plugin_export_only_tools": plugin_export_only_tools,
         "contract_version": "GEOX-SOVEREIGN-v2026.05.22",
         "physics_guard": {"guard_passed": True, "physics_version": _get_git_version()},
         "last_audit": now,
@@ -149,7 +209,12 @@ async def geox_system_registry_status(
             "classified": len([t for t in GEOX_TOOL_MANIFEST if "lane" in t]),
         },
         "note": (
-            None if registry_truth == "PASS" else f"Drift: {len(phantom_tools)} phantom, {len(missing_from_manifest)} missing."
+            None
+            if registry_truth == "PASS"
+            else (
+                f"Drift: manifest_only={len(manifest_only_tools)}, runtime_only={len(runtime_only_tools)}, "
+                f"mcp_list_only={len(mcp_list_only_tools)}, plugin_export_only={len(plugin_export_only_tools)}."
+            )
         ),
     }
 

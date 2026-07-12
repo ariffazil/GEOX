@@ -1,3 +1,6 @@
+> **Canonical federation agent instruction:** `/root/AAA/CLAUDE.md`
+> **Federation contract:** `/root/arifOS/FEDERATION_CONTRACT.md`
+
 # CLAUDE.md — GEOX Agent Instructions
 
 > **GEOX is the earth intelligence organ of the arifOS federation.**
