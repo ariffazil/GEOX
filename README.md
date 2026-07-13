@@ -1,13 +1,13 @@
 <!-- SOT-MANIFEST
 owner: Arif (F13 SOVEREIGN)
-last_verified: 2026-07-12T23:38Z
-live_commit_short: 5bc66284
-live_version: v2026.07.06-phase3.1-rsi-pipeline
+last_verified: 2026-07-13T09:15Z
+live_commit_short: cf8f0c38
+live_version: v2026.07.13-zen15
 port: 8081
-mcp_tools_live: dynamic_from_tools_list
+mcp_tools_live: 15 canonical (ZEN-15)
 owner_summary: GREEN
 truth_rule: tools/list + /health beat any static count in prose
-federation_release: v2026.07.12-CONSOLIDATION-EPOCH
+federation_release: v2026.07.13-ZEN-15
 mcp_apps: SEP-1865 (ui:// + host proxy)
 gui: https://geox.arif-fazil.com/gui/
 package_seal: PLAN-2026-07-12-GEOX-MCP-APP-SLICE-001 (seq 57 wire)
@@ -87,16 +87,17 @@ truth_rule: tools/list + /health beat any static count in prose
 
 ## 1. Live Source of Truth (probe, don’t assume)
 
-Verified **2026-07-12** against production:
+Verified **2026-07-13** against production:
 
 | Fact | Value | Meaning |
 |------|-------|---------|
 | Health | `healthy` · `owner_summary.color = GREEN` | Service fit for observe traffic |
 | Service | `geox-unified` · profile `full` | Production runtime profile |
-| Git identity | `geox-4784103d` | Code identity stamped in health |
+| Git identity | `geox-48b6add5` | Code identity stamped in health |
 | Domain law | `NATURAL_LAW` | Physics bounds active |
-| Public MCP tools | Dynamic count from authenticated `tools/list` | Canonical agent surface |
-| Internal tools | **55** | Capability backlog / gated surface |
+| Public MCP tools | **15** canonical mode-based tools (ZEN-15) | Canonical agent surface |
+| Compat aliases | **69** backward-compat names | Sunset 2026-Q4 |
+| Internal tools | **54** | Capability backlog / gated surface |
 | Port | `127.0.0.1:8081` · public HTTPS | Localhost iron; Caddy/tunnel door |
 | Final authority | **ARIF** | Runtime does not self-authorize |
 | MCP Apps package | SEAL seq **57** wire (observe path) | Guest → AAA host → GEOX |
