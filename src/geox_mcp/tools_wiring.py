@@ -151,31 +151,55 @@ def register_tools_on(mcp):
             args = _safe_forward(
                 _impl,
                 {
-                    "mode": mode, "source_uri": source_uri, "source_type": source_type,
-                    "well_id": well_id, "standardize_curves": standardize_curves,
-                    "normalize_units": normalize_units, "content_base64": content_base64,
-                    "filename": filename, "target_dir": target_dir, "overwrite": overwrite,
-                    "batch_mode": batch_mode, "artifact_refs": artifact_refs,
-                    "qc_strict": qc_strict, "source_crs": source_crs,
-                    "depth_datum": depth_datum, "file_format": file_format,
-                    "las_metadata": las_metadata, "las_curve_info": las_curve_info,
-                    "segy_metadata": segy_metadata, "seismic_metadata": seismic_metadata,
-                    "deviation_metadata": deviation_metadata, "tops_metadata": tops_metadata,
-                    "field": field, "reservoir_name": reservoir_name,
-                    "test_name": test_name, "test_duration_hr": test_duration_hr,
-                    "main_flow_hr": main_flow_hr, "main_buildup_hr": main_buildup_hr,
-                    "choke_size_64ths": choke_size_64ths, "bhp_psi": bhp_psi,
-                    "bht_c": bht_c, "whp_psi": whp_psi, "wht_c": wht_c,
+                    "mode": mode,
+                    "source_uri": source_uri,
+                    "source_type": source_type,
+                    "well_id": well_id,
+                    "standardize_curves": standardize_curves,
+                    "normalize_units": normalize_units,
+                    "content_base64": content_base64,
+                    "filename": filename,
+                    "target_dir": target_dir,
+                    "overwrite": overwrite,
+                    "batch_mode": batch_mode,
+                    "artifact_refs": artifact_refs,
+                    "qc_strict": qc_strict,
+                    "source_crs": source_crs,
+                    "depth_datum": depth_datum,
+                    "file_format": file_format,
+                    "las_metadata": las_metadata,
+                    "las_curve_info": las_curve_info,
+                    "segy_metadata": segy_metadata,
+                    "seismic_metadata": seismic_metadata,
+                    "deviation_metadata": deviation_metadata,
+                    "tops_metadata": tops_metadata,
+                    "field": field,
+                    "reservoir_name": reservoir_name,
+                    "test_name": test_name,
+                    "test_duration_hr": test_duration_hr,
+                    "main_flow_hr": main_flow_hr,
+                    "main_buildup_hr": main_buildup_hr,
+                    "choke_size_64ths": choke_size_64ths,
+                    "bhp_psi": bhp_psi,
+                    "bht_c": bht_c,
+                    "whp_psi": whp_psi,
+                    "wht_c": wht_c,
                     "gas_rate_mmscfd": gas_rate_mmscfd,
                     "condensate_rate_stbd": condensate_rate_stbd,
-                    "water_rate_stbd": water_rate_stbd, "co2_mol_pct": co2_mol_pct,
-                    "h2s_ppm": h2s_ppm, "bsw_pct": bsw_pct,
-                    "chloride_ppm": chloride_ppm, "wgr_stb_per_mmscf": wgr_stb_per_mmscf,
+                    "water_rate_stbd": water_rate_stbd,
+                    "co2_mol_pct": co2_mol_pct,
+                    "h2s_ppm": h2s_ppm,
+                    "bsw_pct": bsw_pct,
+                    "chloride_ppm": chloride_ppm,
+                    "wgr_stb_per_mmscf": wgr_stb_per_mmscf,
                     "permeability_md_min": permeability_md_min,
                     "permeability_md_max": permeability_md_max,
-                    "skin_min": skin_min, "skin_max": skin_max,
+                    "skin_min": skin_min,
+                    "skin_max": skin_max,
                 },
-                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
             )
             result = await _impl(**args)
             return {
@@ -191,6 +215,7 @@ def register_tools_on(mcp):
             }
         except Exception as e:
             from geox_mcp.federation_safety import classify_error
+
             return classify_error(e, source_tool="geox_well_ingest", source_organ="geox")
 
     @mcp.tool(name="geox_well_qc", annotations=_geox_annotations("geox_well_qc"))
@@ -212,12 +237,17 @@ def register_tools_on(mcp):
         args = _safe_forward(
             _impl,
             {
-                "artifact_ref": artifact_ref, "artifact_type": artifact_type,
-                "qc_mode": qc_mode, "samples": samples,
+                "artifact_ref": artifact_ref,
+                "artifact_type": artifact_type,
+                "qc_mode": qc_mode,
+                "samples": samples,
                 "existing_features": existing_features,
-                "candidate_feature": candidate_feature, "target_key": target_key,
+                "candidate_feature": candidate_feature,
+                "target_key": target_key,
             },
-            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
         )
         return await _impl(**args)
 
@@ -299,33 +329,56 @@ def register_tools_on(mcp):
             args = _safe_forward(
                 _impl,
                 {
-                    "mode": mode, "target_class": target_class,
-                    "evidence_refs": evidence_refs, "realizations": realizations,
-                    "gr_clean": gr_clean, "gr_shale": gr_shale,
-                    "vsh_method": vsh_method, "matrix_density": matrix_density,
-                    "fluid_density": fluid_density, "sw_model": sw_model,
-                    "rw": rw, "archie_a": archie_a, "archie_m": archie_m,
-                    "archie_n": archie_n, "vsh_cutoff": vsh_cutoff,
-                    "phi_cutoff": phi_cutoff, "sw_cutoff": sw_cutoff,
-                    "rt_cutoff": rt_cutoff, "zone_top_m": zone_top_m,
-                    "zone_base_m": zone_base_m, "basin_context": basin_context,
-                    "canon9_profile": canon9_profile, "target_depth_m": target_depth_m,
-                    "cube_inline": cube_inline, "use_synth_cube": use_synth_cube,
-                    "lmr_inline": lmr_inline, "candidate_ref": candidate_ref,
-                    "domain": domain, "well_id": well_id, "curves": curves,
-                    "depth_m": depth_m, "depth_top_m": depth_top_m,
-                    "depth_bot_m": depth_bot_m, "target_properties": target_properties,
-                    "basin": basin, "rw_ohm_m": rw_ohm_m,
+                    "mode": mode,
+                    "target_class": target_class,
+                    "evidence_refs": evidence_refs,
+                    "realizations": realizations,
+                    "gr_clean": gr_clean,
+                    "gr_shale": gr_shale,
+                    "vsh_method": vsh_method,
+                    "matrix_density": matrix_density,
+                    "fluid_density": fluid_density,
+                    "sw_model": sw_model,
+                    "rw": rw,
+                    "archie_a": archie_a,
+                    "archie_m": archie_m,
+                    "archie_n": archie_n,
+                    "vsh_cutoff": vsh_cutoff,
+                    "phi_cutoff": phi_cutoff,
+                    "sw_cutoff": sw_cutoff,
+                    "rt_cutoff": rt_cutoff,
+                    "zone_top_m": zone_top_m,
+                    "zone_base_m": zone_base_m,
+                    "basin_context": basin_context,
+                    "canon9_profile": canon9_profile,
+                    "target_depth_m": target_depth_m,
+                    "cube_inline": cube_inline,
+                    "use_synth_cube": use_synth_cube,
+                    "lmr_inline": lmr_inline,
+                    "candidate_ref": candidate_ref,
+                    "domain": domain,
+                    "well_id": well_id,
+                    "curves": curves,
+                    "depth_m": depth_m,
+                    "depth_top_m": depth_top_m,
+                    "depth_bot_m": depth_bot_m,
+                    "target_properties": target_properties,
+                    "basin": basin,
+                    "rw_ohm_m": rw_ohm_m,
                     "rho_matrix_g_cc": rho_matrix_g_cc,
-                    "rho_fluid_g_cc": rho_fluid_g_cc, "patch_size_m": patch_size_m,
-                    "cell_states": cell_states, "areal_extent_m2": areal_extent_m2,
+                    "rho_fluid_g_cc": rho_fluid_g_cc,
+                    "patch_size_m": patch_size_m,
+                    "cell_states": cell_states,
+                    "areal_extent_m2": areal_extent_m2,
                     "pay_zone_thickness_m": pay_zone_thickness_m,
                     "formation_volume_factor": formation_volume_factor,
                     "water_saturation": water_saturation,
                     "oil_density_kg_m3": oil_density_kg_m3,
                     "recovery_factor": recovery_factor,
                 },
-                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
             )
             result = await _impl(**args)
             return {
@@ -341,6 +394,7 @@ def register_tools_on(mcp):
             }
         except Exception as e:
             from geox_mcp.federation_safety import classify_error
+
             return classify_error(e, source_tool="geox_petrophysics", source_organ="geox")
 
     @mcp.tool(name="geox_sequence", annotations=_geox_annotations("geox_sequence"))
@@ -547,13 +601,22 @@ def register_tools_on(mcp):
         args = _safe_forward(
             _impl,
             {
-                "mode": mode, "volume_ref": volume_ref, "output_path": output_path,
-                "sample_interval_ms": sample_interval_ms, "textual_header": textual_header,
-                "overwrite": overwrite, "provenance": provenance,
-                "segy_metadata": segy_metadata, "seismic_metadata": seismic_metadata,
-                "source_uri": source_uri, "source_type": source_type, "well_id": well_id,
+                "mode": mode,
+                "volume_ref": volume_ref,
+                "output_path": output_path,
+                "sample_interval_ms": sample_interval_ms,
+                "textual_header": textual_header,
+                "overwrite": overwrite,
+                "provenance": provenance,
+                "segy_metadata": segy_metadata,
+                "seismic_metadata": seismic_metadata,
+                "source_uri": source_uri,
+                "source_type": source_type,
+                "well_id": well_id,
             },
-            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
         )
         return await _impl(**args)
 
@@ -584,15 +647,25 @@ def register_tools_on(mcp):
         args = _safe_forward(
             _impl,
             {
-                "mode": mode, "source_uri": source_uri, "source_type": source_type,
-                "action": action, "volume_ref": volume_ref,
-                "frame_index": frame_index, "orientation": orientation,
-                "provenance": provenance, "image_data": image_data,
-                "blend_mode": blend_mode, "horizon_query": horizon_query,
-                "threshold": threshold, "confidence_cap": confidence_cap,
-                "cube_ref": cube_ref, "volume_inline": volume_inline,
+                "mode": mode,
+                "source_uri": source_uri,
+                "source_type": source_type,
+                "action": action,
+                "volume_ref": volume_ref,
+                "frame_index": frame_index,
+                "orientation": orientation,
+                "provenance": provenance,
+                "image_data": image_data,
+                "blend_mode": blend_mode,
+                "horizon_query": horizon_query,
+                "threshold": threshold,
+                "confidence_cap": confidence_cap,
+                "cube_ref": cube_ref,
+                "volume_inline": volume_inline,
             },
-            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
         )
         return await _impl(**args)
 
@@ -619,15 +692,21 @@ def register_tools_on(mcp):
         args = _safe_forward(
             _impl,
             {
-                "mode": mode, "image_path": image_path,
+                "mode": mode,
+                "image_path": image_path,
                 "basin_context": basin_context,
                 "interpretation_goal": interpretation_goal,
-                "has_segy": has_segy, "mimo_backend_url": mimo_backend_url,
-                "mimo_model": mimo_model, "mcp_url": mcp_url,
-                "model_id": model_id, "perceptual_inventory": perceptual_inventory,
+                "has_segy": has_segy,
+                "mimo_backend_url": mimo_backend_url,
+                "mimo_model": mimo_model,
+                "mcp_url": mcp_url,
+                "model_id": model_id,
+                "perceptual_inventory": perceptual_inventory,
                 "ground_truth_inventory": ground_truth_inventory,
             },
-            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
         )
         return await _impl(**args)
 
@@ -790,16 +869,24 @@ def register_tools_on(mcp):
         args = _safe_forward(
             _impl,
             {
-                "mode": mode, "survey_type": survey_type,
-                "easting_m": easting_m, "northing_m": northing_m,
-                "prisms": prisms, "magnetization_a_m": magnetization_a_m,
+                "mode": mode,
+                "survey_type": survey_type,
+                "easting_m": easting_m,
+                "northing_m": northing_m,
+                "prisms": prisms,
+                "magnetization_a_m": magnetization_a_m,
                 "field_declination_deg": field_declination_deg,
                 "field_inclination_deg": field_inclination_deg,
-                "layers": layers, "frequencies_hz": frequencies_hz,
-                "observations": observations, "prior": prior,
-                "max_iter": max_iter, "tolerance": tolerance,
+                "layers": layers,
+                "frequencies_hz": frequencies_hz,
+                "observations": observations,
+                "prior": prior,
+                "max_iter": max_iter,
+                "tolerance": tolerance,
             },
-            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
         )
         return await _impl(**args)
 
@@ -931,25 +1018,38 @@ def register_tools_on(mcp):
         args = _safe_forward(
             _impl,
             {
-                "mode": mode, "claim_id": claim_id, "claim_text": claim_text,
-                "claim_type": claim_type, "truth_class": truth_class,
-                "evidence_ids": evidence_ids, "uncertainty_p10": uncertainty_p10,
-                "uncertainty_p50": uncertainty_p50, "uncertainty_p90": uncertainty_p90,
+                "mode": mode,
+                "claim_id": claim_id,
+                "claim_text": claim_text,
+                "claim_type": claim_type,
+                "truth_class": truth_class,
+                "evidence_ids": evidence_ids,
+                "uncertainty_p10": uncertainty_p10,
+                "uncertainty_p50": uncertainty_p50,
+                "uncertainty_p90": uncertainty_p90,
                 "uncertainty_distribution": uncertainty_distribution,
-                "alternatives": alternatives, "provenance": provenance,
-                "authority": authority, "challenge_text": challenge_text,
+                "alternatives": alternatives,
+                "provenance": provenance,
+                "authority": authority,
+                "challenge_text": challenge_text,
                 "alternative_claim_text": alternative_claim_text,
                 "alternative_evidence_ids": alternative_evidence_ids,
                 "challenge_evidence_ids": challenge_evidence_ids,
                 "alternative_uncertainty": alternative_uncertainty,
                 "challenger_provenance": challenger_provenance,
-                "ack_irreversible": ack_irreversible, "seal_verdict": seal_verdict,
-                "voxel_state": voxel_state, "evidence_id": evidence_id,
-                "evidence_type": evidence_type, "epistemic_label": epistemic_label,
-                "forbidden_uses": forbidden_uses, "source_citation": source_citation,
+                "ack_irreversible": ack_irreversible,
+                "seal_verdict": seal_verdict,
+                "voxel_state": voxel_state,
+                "evidence_id": evidence_id,
+                "evidence_type": evidence_type,
+                "epistemic_label": epistemic_label,
+                "forbidden_uses": forbidden_uses,
+                "source_citation": source_citation,
                 "category": category,
             },
-            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
             ack_irreversible=ack_irreversible,
         )
         return await _impl(**args)
@@ -1480,7 +1580,8 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_simulate_sequences", source_organ="geox")
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_simulate_routing", annotations=_geox_annotations("geox_simulate_routing"))
+    # RE-REGISTERED 2026-07-13 — sediment routing for provenance-routing skill (earth-decode-7)
+    @mcp.tool(name="geox_simulate_routing", annotations=_geox_annotations("geox_simulate_routing"))
     async def _simulate_routing(
         source_position_km: float = 0.0,
         source_sand_fraction: float = 0.6,
@@ -2865,14 +2966,9 @@ def register_tools_on(mcp):
             "well_id": _wid,
             "mode": _mode,
             "band": "UNKNOWN",
-            "note": (
-                "P0 operator shell — interactive HTML via host iframe; "
-                "full multi-track desk is GEOX_WELL_DESK_UI=full."
-            ),
+            "note": ("P0 operator shell — interactive HTML via host iframe; full multi-track desk is GEOX_WELL_DESK_UI=full."),
             "views": (
-                ["composite_log", "summary_card"]
-                if _mode == "summary"
-                else ["composite_log", "tracks", "crossplot_placeholder"]
+                ["composite_log", "summary_card"] if _mode == "summary" else ["composite_log", "tracks", "crossplot_placeholder"]
             ),
             "patterns_stolen": [
                 "instant well identity card",
@@ -3048,6 +3144,7 @@ def register_tools_on(mcp):
 
         # Safe append with lock
         import fcntl
+
         lock_path = vault_dir / ".image_seal.lock"
         with open(lock_path, "a") as lockf:
             fcntl.flock(lockf.fileno(), fcntl.LOCK_EX)

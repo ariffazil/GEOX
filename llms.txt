@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (26 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (34 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from src/geox_mcp/tools_manifest.yaml
 
@@ -19,20 +19,28 @@
 10. **geox_seismic_interpret**: Seismic interpretation: horizon detection, fault picking, volume blending, frame extraction.
 11. **geox_vision**: Vision-based seismic interpretation using VLMs: analyze seismic images, audit interpretations, calibrate models.
 12. **geox_subsurface_model**: Multi-physics subsurface modeling: joint inversion, gravity/magnetic forward modeling, MT/CSEM forward modeling.
-13. **geox_geomechanics**: Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate transforms, block resolution.
-14. **geox_basin**: Basin intelligence: profiles, resolution, deep time state, Macrostrat API, spatial context, scene rendering.
-15. **geox_deep_time_state**: Earth state vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow, subsidence.
-16. **geox_surface_status**: GEOX organ health check: version, tool count, canonical surface status, registration timestamp.
-17. **geox_claim**: Geological claim lifecycle: create, validate, challenge, seal, attach evidence to structured interpretation claims.
-18. **geox_evidence**: Evidence discovery and synthesis: search corpus, cross-domain synthesis, hypothesis generation, contradiction scanning.
-19. **geox_prospect**: Prospect evaluation: volumetrics, probability of success, expected value of information, risk assessment.
-20. **geox_map_context_scene**: Spatial context scene: renders map layers, basins, and well locations for geographic orientation.
-21. **geox_contrast_detect**: Anomalous contrast detection: identify seismic-geological mismatches at formation boundaries.
-22. **geox_biostrat_parse**: Biostratigraphic data parsing: extract age-diagnostic fossil markers from well reports.
-23. **geox_biostrat_falsify**: Biostratigraphic falsification: test fossil age assignments against stratigraphic constraints.
-24. **geox_basin_backstrip**: Basin backstripping: decompact sedimentary layers and reconstruct subsidence history.
-25. **geox_sediment_mass_balance**: Sediment mass balance: compute volumetric budgets and sediment supply rates for basin analysis.
-26. **geox_thermal_maturity_history**: Thermal maturity history: model burial, heat flow, and vitrinite reflectance evolution over time.
+13. **geox_gravmag_studio_open**: GEOX GravMag Studio v0.1 — forward-only MCP App. Computes gravity or magnetic anomaly from a prism model via HarmonICAdapter (mock or live) and returns the studio iframe payload at ui://geox/gravmag-studio.html. Verdict is always QUALIFY (never SEAL) — Stage A is forward-only.
+14. **geox_gravmag_studio_screen**: GEOX GravMag Studio v0.2 — Stage B screen (falsification lane). Forward-predicts via geox_gravmag_studio_open, compares against observed_grid, returns misfit stats + verdict (PASS_SCREEN / MARGINAL / FAIL_SCREEN / HOLD) + structured abduction discipline. Never SEALs. Confidence capped at 0.70 per F7 HUMILITY. Unit or grid mismatch returns HOLD (fail-closed).
+15. **geox_geomechanics**: Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate transforms, block resolution.
+16. **geox_basin**: Basin intelligence: profiles, resolution, deep time state, Macrostrat API, spatial context, scene rendering.
+17. **geox_deep_time_state**: Earth state vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow, subsidence.
+18. **geox_surface_status**: GEOX organ health check: version, tool count, canonical surface status, registration timestamp.
+19. **geox_claim**: Geological claim lifecycle: create, validate, challenge, seal, attach evidence to structured interpretation claims.
+20. **geox_evidence**: Evidence discovery and synthesis: search corpus, cross-domain synthesis, hypothesis generation, contradiction scanning.
+21. **geox_prospect**: Prospect evaluation: volumetrics, probability of success, expected value of information, risk assessment.
+22. **geox_map_context_scene**: Spatial context scene: renders map layers, basins, and well locations for geographic orientation.
+23. **geox_contrast_detect**: Anomalous contrast detection: identify seismic-geological mismatches at formation boundaries.
+24. **geox_biostrat_parse**: Biostratigraphic data parsing: extract age-diagnostic fossil markers from well reports.
+25. **geox_biostrat_falsify**: Biostratigraphic falsification: test fossil age assignments against stratigraphic constraints.
+26. **geox_basin_backstrip**: Basin backstripping: decompact sedimentary layers and reconstruct subsidence history.
+27. **geox_sediment_mass_balance**: Sediment mass balance: compute volumetric budgets and sediment supply rates for basin analysis.
+28. **geox_thermal_maturity_history**: Thermal maturity history: model burial, heat flow, and vitrinite reflectance evolution over time.
+29. **geox_claim_graph_evaluate**: Tool: geox_claim_graph_evaluate
+30. **geox_consequence_footprint**: Compute physical and ecological consequences of a proposed action
+31. **geox_optionality_loss**: Measure destroyed future physical options
+32. **geox_feedback_integrity**: Check whether physical monitoring is sufficient to detect drift
+33. **geox_material_truth_challenge**: Compare institutional claims against Earth measurements
+34. **geox_cascade_pathway**: Model cross-domain propagation from a physical event
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.

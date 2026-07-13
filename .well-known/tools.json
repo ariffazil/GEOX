@@ -1,10 +1,10 @@
 {
   "$schema": "arifOS/tools-manifest/v2",
-  "canonical_tools": 81,
-  "internal_tools": 55,
+  "canonical_tools": 88,
+  "internal_tools": 54,
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
   "organ": "geox",
-  "surface_tools": 26,
+  "surface_tools": 34,
   "tools": [
     {
       "app_exposed": true,
@@ -306,6 +306,38 @@
       "mime_type": null,
       "name": "geox_subsurface_model",
       "ui": null,
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "reason",
+      "description": "GEOX GravMag Studio v0.1 \u2014 forward-only MCP App. Computes gravity or magnetic anomaly from a prism model via HarmonICAdapter (mock or live) and returns the studio iframe payload at ui://geox/gravmag-studio.html. Verdict is always QUALIFY (never SEAL) \u2014 Stage A is forward-only.",
+      "domain": "earth.model",
+      "expose": true,
+      "face": "surface",
+      "lane": "judgment",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_gravmag_studio_open",
+      "ui": {
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_uri": "ui://geox/gravmag-studio.html"
+      },
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "reason",
+      "description": "GEOX GravMag Studio v0.2 \u2014 Stage B screen (falsification lane). Forward-predicts via geox_gravmag_studio_open, compares against observed_grid, returns misfit stats + verdict (PASS_SCREEN / MARGINAL / FAIL_SCREEN / HOLD) + structured abduction discipline. Never SEALs. Confidence capped at 0.70 per F7 HUMILITY. Unit or grid mismatch returns HOLD (fail-closed).",
+      "domain": "earth.model",
+      "expose": true,
+      "face": "surface",
+      "lane": "judgment",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_gravmag_studio_screen",
+      "ui": {
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_uri": "ui://geox/gravmag-studio.html"
+      },
       "version": "2026.07.11"
     },
     {
@@ -1053,15 +1085,80 @@
       "version": "2026.07.11"
     },
     {
-      "app_exposed": false,
-      "axis": "reason",
-      "description": "Evaluate claim graph consistency and identify circular or contradictory assertions.",
-      "domain": "earth.basin",
-      "expose": false,
-      "face": "internal",
-      "lane": "reasoning",
+      "app_exposed": true,
+      "axis": "observe",
+      "description": "Tool: geox_claim_graph_evaluate",
+      "domain": "earth.general",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
       "mime_type": null,
       "name": "geox_claim_graph_evaluate",
+      "ui": null,
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "entropy",
+      "description": "Compute physical and ecological consequences of a proposed action",
+      "domain": "governance",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_consequence_footprint",
+      "ui": null,
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "entropy",
+      "description": "Measure destroyed future physical options",
+      "domain": "governance",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_optionality_loss",
+      "ui": null,
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "entropy",
+      "description": "Check whether physical monitoring is sufficient to detect drift",
+      "domain": "governance",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_feedback_integrity",
+      "ui": null,
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "entropy",
+      "description": "Compare institutional claims against Earth measurements",
+      "domain": "governance",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_material_truth_challenge",
+      "ui": null,
+      "version": "2026.07.11"
+    },
+    {
+      "app_exposed": true,
+      "axis": "entropy",
+      "description": "Model cross-domain propagation from a physical event",
+      "domain": "governance",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_cascade_pathway",
       "ui": null,
       "version": "2026.07.11"
     }

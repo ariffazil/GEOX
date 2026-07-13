@@ -376,11 +376,11 @@ def _enforce_geox() -> dict[str, Any] | None:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-
 # ═══════════════════════════════════════════════════════════════════
 # Entropy Integrity Mesh — GEOX Extensions (Phase 2)
 # Material reality anchor. The strongest anti-rhetoric witness.
 # ═══════════════════════════════════════════════════════════════════
+
 
 @mcp.tool(name="geox_consequence_footprint", annotations=_geox_annotations("geox_consequence_footprint"))
 async def _consequence_footprint(
@@ -399,15 +399,33 @@ async def _consequence_footprint(
     Measures: affected area, material movement, emissions, water impact,
     habitat fragmentation, subsidence, contamination, reversibility."""
     import importlib.util as _ilu, os as _os
-    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "consequence_footprint.py")
-    _s = _ilu.spec_from_file_location("cf", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
-    return _m.geox_consequence_footprint(
-        action_description=action_description, affected_area_km2=affected_area_km2,
-        material_movement_tonnes=material_movement_tonnes, emissions_tonnes_co2e=emissions_tonnes_co2e,
-        water_impact_m3=water_impact_m3, habitat_fragmentation=habitat_fragmentation,
-        subsidence_risk=subsidence_risk, contamination_risk=contamination_risk,
-        reversibility=reversibility, uncertainty_factor=uncertainty_factor
+
+    _p = _os.path.join(
+        _os.path.dirname(_os.path.abspath(__file__)),
+        "..",
+        "..",
+        "..",
+        "entropy-integrity",
+        "mcp",
+        "geox",
+        "consequence_footprint.py",
     )
+    _s = _ilu.spec_from_file_location("cf", _p)
+    _m = _ilu.module_from_spec(_s)
+    _s.loader.exec_module(_m)
+    return _m.geox_consequence_footprint(
+        action_description=action_description,
+        affected_area_km2=affected_area_km2,
+        material_movement_tonnes=material_movement_tonnes,
+        emissions_tonnes_co2e=emissions_tonnes_co2e,
+        water_impact_m3=water_impact_m3,
+        habitat_fragmentation=habitat_fragmentation,
+        subsidence_risk=subsidence_risk,
+        contamination_risk=contamination_risk,
+        reversibility=reversibility,
+        uncertainty_factor=uncertainty_factor,
+    )
+
 
 @mcp.tool(name="geox_optionality_loss", annotations=_geox_annotations("geox_optionality_loss"))
 async def _optionality_loss(
@@ -419,13 +437,17 @@ async def _optionality_loss(
     Sterilised reserves, lost aquifer use, irreversible land conversion,
     inaccessible remediation pathways, reduced resilience."""
     import importlib.util as _ilu, os as _os
-    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "optionality_loss.py")
-    _s = _ilu.spec_from_file_location("ol", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
-    return _m.geox_optionality_loss(
-        action_description=action_description,
-        options_destroyed=options_destroyed or [],
-        options_preserved=options_preserved
+
+    _p = _os.path.join(
+        _os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "optionality_loss.py"
     )
+    _s = _ilu.spec_from_file_location("ol", _p)
+    _m = _ilu.module_from_spec(_s)
+    _s.loader.exec_module(_m)
+    return _m.geox_optionality_loss(
+        action_description=action_description, options_destroyed=options_destroyed or [], options_preserved=options_preserved
+    )
+
 
 @mcp.tool(name="geox_feedback_integrity", annotations=_geox_annotations("geox_feedback_integrity"))
 async def _feedback_integrity(
@@ -441,15 +463,30 @@ async def _feedback_integrity(
     Sensor coverage, baseline quality, missing measurements,
     reporting delay, threshold manipulation, excluded anomalies."""
     import importlib.util as _ilu, os as _os
-    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "feedback_integrity.py")
-    _s = _ilu.spec_from_file_location("fi", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
+
+    _p = _os.path.join(
+        _os.path.dirname(_os.path.abspath(__file__)),
+        "..",
+        "..",
+        "..",
+        "entropy-integrity",
+        "mcp",
+        "geox",
+        "feedback_integrity.py",
+    )
+    _s = _ilu.spec_from_file_location("fi", _p)
+    _m = _ilu.module_from_spec(_s)
+    _s.loader.exec_module(_m)
     return _m.geox_feedback_integrity(
-        monitoring_system=monitoring_system, sensor_coverage_pct=sensor_coverage_pct,
-        baseline_quality=baseline_quality, missing_measurements=missing_measurements,
+        monitoring_system=monitoring_system,
+        sensor_coverage_pct=sensor_coverage_pct,
+        baseline_quality=baseline_quality,
+        missing_measurements=missing_measurements,
         reporting_delay_hours=reporting_delay_hours,
         threshold_manipulation_detected=threshold_manipulation_detected,
-        excluded_anomalies=excluded_anomalies
+        excluded_anomalies=excluded_anomalies,
     )
+
 
 @mcp.tool(name="geox_material_truth_challenge", annotations=_geox_annotations("geox_material_truth_challenge"))
 async def _material_truth_challenge(
@@ -460,13 +497,26 @@ async def _material_truth_challenge(
     """Challenge institutional claims against Earth measurements.
     Pattern: 'The institution claims low harm, but Earth measurements show irreversible loss.'"""
     import importlib.util as _ilu, os as _os
-    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "material_truth_challenge.py")
-    _s = _ilu.spec_from_file_location("mtc", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
+
+    _p = _os.path.join(
+        _os.path.dirname(_os.path.abspath(__file__)),
+        "..",
+        "..",
+        "..",
+        "entropy-integrity",
+        "mcp",
+        "geox",
+        "material_truth_challenge.py",
+    )
+    _s = _ilu.spec_from_file_location("mtc", _p)
+    _m = _ilu.module_from_spec(_s)
+    _s.loader.exec_module(_m)
     return _m.geox_material_truth_challenge(
         institutional_claim=institutional_claim,
         earth_measurements=earth_measurements or [],
-        measurement_confidence=measurement_confidence
+        measurement_confidence=measurement_confidence,
     )
+
 
 @mcp.tool(name="geox_cascade_pathway", annotations=_geox_annotations("geox_cascade_pathway"))
 async def _cascade_pathway(
@@ -476,12 +526,14 @@ async def _cascade_pathway(
     """Model how one intervention propagates across geology, groundwater,
     infrastructure, ecology, communities, capital exposure."""
     import importlib.util as _ilu, os as _os
-    _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "cascade_pathway.py")
-    _s = _ilu.spec_from_file_location("cp", _p); _m = _ilu.module_from_spec(_s); _s.loader.exec_module(_m)
-    return _m.geox_cascade_pathway(
-        intervention=intervention,
-        cascade_graph=cascade_graph or []
+
+    _p = _os.path.join(
+        _os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "cascade_pathway.py"
     )
+    _s = _ilu.spec_from_file_location("cp", _p)
+    _m = _ilu.module_from_spec(_s)
+    _s.loader.exec_module(_m)
+    return _m.geox_cascade_pathway(intervention=intervention, cascade_graph=cascade_graph or [])
 
 
 def compose_geox_servers() -> None:
@@ -1047,21 +1099,47 @@ async def _seismic_inversion(
     return (await geox_seismic_inversion(req)).model_dump(mode="json")
 
 
-# ── W13+ FORGE — Phase C: Geomechanics (K, G, E, ν from Physics13State) ──
+# ── W13+ FORGE — Phase C: Geomechanics (K, G, E, ν, AI + Stress Polygon) ──
 @mcp.tool(name="geox_geomechanics", annotations=_geox_annotations("geox_geomechanics"))
 async def _geomechanics(
-    state: dict,
+    mode: str = "derive_moduli",
+    state: dict | None = None,
+    depth_m: float | None = None,
+    sv_mpa: float | None = None,
+    pp_mpa: float = 10.0,
+    friction_coefficient: float = 0.6,
+    avg_density_kg_m3: float = 2300.0,
+    water_depth_m: float = 0.0,
     session_id: str | None = None,
     actor_id: str | None = None,
     trace_id: str | None = None,
     thickness_m: float | None = None,
     rho_fluid: float | None = 1025.0,
 ) -> dict:
-    """Derive geomechanical moduli (K, G, E, ν, AI) from a Physics13State cell.
+    """Geomechanical computations: derive moduli or compute Zoback stress polygon.
 
-    Returns all derived scalars + sanity flags + grade (RAW/AAA) + godel_wall.
-    Optional: buoyancy computation when thickness_m is provided.
+    Modes:
+      derive_moduli (default) - K, G, E, ν, AI from Physics13State.
+        Optional: buoyancy when thickness_m provided.
+        Required: state dict with rho, vp, vs.
+
+      stress_polygon - Zoback (2010) frictional stress polygon.
+        Bounds Shmin and SHmax from Andersonian faulting theory.
+        Required: depth_m or sv_mpa. Optional: pp_mpa, friction_coefficient.
+        Returns stress polygon vertices (A-D) + regime boundaries.
     """
+    if mode == "stress_polygon":
+        from geox_mcp.tools.geomechanics_unified import _compute_stress_polygon
+
+        return _compute_stress_polygon(
+            depth_m=depth_m,
+            sv_mpa=sv_mpa,
+            pp_mpa=pp_mpa,
+            friction_coefficient=friction_coefficient,
+            avg_density_kg_m3=avg_density_kg_m3,
+            water_depth_m=water_depth_m,
+        )
+
     from geox_mcp.tools.geomechanics import (
         GeomechanicsRequest,
         geox_geomechanics,
@@ -1070,7 +1148,7 @@ async def _geomechanics(
     return (
         await geox_geomechanics(
             GeomechanicsRequest(
-                state=state,
+                state=state or {},
                 thickness_m=thickness_m,
                 rho_fluid=rho_fluid,
             )
@@ -2264,11 +2342,7 @@ class McpLifecycleMiddleware(BaseHTTPMiddleware):
     """
 
     async def dispatch(self, request: Request, call_next):
-        if (
-            not _LIFECYCLE_GATE_HTTP_ENABLED
-            or request.method != "POST"
-            or not request.url.path.startswith("/mcp")
-        ):
+        if not _LIFECYCLE_GATE_HTTP_ENABLED or request.method != "POST" or not request.url.path.startswith("/mcp"):
             return await call_next(request)
 
         body = await request.body()
@@ -2333,11 +2407,7 @@ class McpLifecycleMiddleware(BaseHTTPMiddleware):
 
         # After initialize, mark session not-ready using response session id
         if method == "initialize":
-            resp_sid = (
-                response.headers.get("mcp-session-id")
-                or response.headers.get("Mcp-Session-Id")
-                or sid
-            )
+            resp_sid = response.headers.get("mcp-session-id") or response.headers.get("Mcp-Session-Id") or sid
             if resp_sid:
                 from geox_mcp.geox_middleware import mark_lifecycle_pending
 
