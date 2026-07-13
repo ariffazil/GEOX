@@ -218,7 +218,7 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_well_ingest", source_organ="geox")
 
-    @mcp.tool(name="geox_well_qc", annotations=_geox_annotations("geox_well_qc"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_well_qc", annotations=_geox_annotations("geox_well_qc"))
     async def _well_qc(
         artifact_ref: str = "",
         artifact_type: str = "",
@@ -669,7 +669,7 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
-    @mcp.tool(name="geox_vision", annotations=_geox_annotations("geox_vision"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_vision", annotations=_geox_annotations("geox_vision"))
     async def _vision(
         mode: str = "infer_minimax",
         image_path: str = "",
@@ -1054,7 +1054,7 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
-    @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
     async def _evidence(
         mode: str = "synthesize",
         query: str = "",
@@ -2745,7 +2745,7 @@ def register_tools_on(mcp):
     # claim graph evaluation. Complements simulate_* with backward reconstruction.
     # ═══════════════════════════════════════════════════════════════════════════════
 
-    @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
     async def _basin_backstrip(
         well_ref: str,
         stratigraphic_ages: list[dict[str, Any]],
@@ -2775,7 +2775,7 @@ def register_tools_on(mcp):
             uncertainty_realizations=uncertainty_realizations,
         )
 
-    @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
     async def _sediment_mass_balance(
         basin_name: str,
         source_eroded_km3: float,
@@ -2803,7 +2803,7 @@ def register_tools_on(mcp):
             routing_efficiency=routing_efficiency,
         )
 
-    @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
     async def _thermal_maturity_history(
         well_ref: str,
         burial_history: dict[str, Any],
@@ -2911,23 +2911,12 @@ def register_tools_on(mcp):
     except Exception:  # pragma: no cover
         _well_desk_app = None
 
-    @mcp.tool(
-        name="geox_well_desk_open",
-        annotations={
-            "title": "Well Desk Open",
-            "readOnlyHint": True,
-            "destructiveHint": False,
-            "idempotentHint": True,
-            "openWorldHint": False,
-        },
-        meta={
-            "ui": {
-                "resourceUri": "ui://geox/well-desk",
-                "visibility": ["app", "model"],
-            }
-        },
-        **({"app": _well_desk_app} if _well_desk_app is not None else {}),
-    )
+    # DEREGISTERED ZEN-15 — geox_well_desk_open (absorbed into geox_well_desk)
+    # @mcp.tool(
+    #     name="geox_well_desk_open",
+    #     annotations={...},
+    #     meta={...},
+    # )
     async def _well_desk_open(
         well_id: str,
         mode: str = "summary",
@@ -3063,16 +3052,11 @@ def register_tools_on(mcp):
             trace_id=trace_id,
         )
 
-    @mcp.tool(
-        name="geox_well_desk_publish",
-        annotations={
-            "title": "Well Desk Publish Image",
-            "readOnlyHint": False,
-            "destructiveHint": False,
-            "idempotentHint": False,
-            "openWorldHint": False,
-        },
-    )
+    # DEREGISTERED ZEN-15 — geox_well_desk_publish (absorbed into geox_well_desk)
+    # @mcp.tool(
+    #     name="geox_well_desk_publish",
+    #     annotations={...},
+    # )
     async def _well_desk_publish(
         well_id: str,
         image_base64: str,
@@ -3200,16 +3184,11 @@ def register_tools_on(mcp):
             "content_text": text,
         }
 
-    @mcp.tool(
-        name="geox_render_well_panel",
-        annotations={
-            "title": "Render Well Panel",
-            "readOnlyHint": True,
-            "destructiveHint": False,
-            "idempotentHint": True,
-            "openWorldHint": False,
-        },
-    )
+    # DEREGISTERED ZEN-15 — geox_render_well_panel (absorbed into geox_well_desk)
+    # @mcp.tool(
+    #     name="geox_render_well_panel",
+    #     annotations={...},
+    # )
     async def _render_well_panel(
         well_id: str,
         depth_top: float | None = None,
@@ -3312,6 +3291,112 @@ def register_tools_on(mcp):
             "metadata": {"provenance": "scaffold", "well_id": _wid},
             "image_base64_len": len(base64.b64encode(raw)),
         }
+
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # ZEN-15 CANONICAL TOOLS (2026-07-13)
+    # Unified tools absorbing multiple legacy tools into mode-based interfaces.
+    # DITEMPA BUKAN DIBERI.
+    # ═══════════════════════════════════════════════════════════════════════════════
+
+    @mcp.tool(name="geox_gravmag_studio", annotations=_geox_annotations("geox_gravmag_studio"))
+    async def _gravmag_studio(
+        mode: str = "open",
+        survey_type: str = "gravity",
+        easting_m: list[float] | None = None,
+        northing_m: list[float] | None = None,
+        observed_values: list[float] | None = None,
+        prisms: list[dict[str, Any]] | None = None,
+        magnetization_a_m: float = 0.0,
+        field_declination_deg: float = 0.0,
+        field_inclination_deg: float = 0.0,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.
+
+        open   — interactive GravMag Studio UI with forward modeling
+        screen — screening analysis against observed data
+        """
+        if mode == "screen":
+            from geox_mcp.tools.geophysics_studio_screen import geox_gravmag_studio_screen as _impl
+            return await _impl(
+                survey_type=survey_type,
+                easting_m=easting_m or [],
+                northing_m=northing_m or [],
+                observed_values=observed_values or [],
+                prisms=prisms or [],
+                magnetization_a_m=magnetization_a_m,
+                field_declination_deg=field_declination_deg,
+                field_inclination_deg=field_inclination_deg,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+        # Default: open
+        from geox_mcp.tools.geophysics_studio import geox_gravmag_studio_open as _impl
+        return await _impl(
+            survey_type=survey_type,
+            easting_m=easting_m or [],
+            northing_m=northing_m or [],
+            observed_values=observed_values or [],
+            prisms=prisms or [],
+            magnetization_a_m=magnetization_a_m,
+            field_declination_deg=field_declination_deg,
+            field_inclination_deg=field_inclination_deg,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+
+    @mcp.tool(name="geox_well_desk", annotations=_geox_annotations("geox_well_desk"))
+    async def _well_desk(
+        mode: str = "open",
+        well_id: str = "",
+        depth_top: float | None = None,
+        depth_base: float | None = None,
+        curves: list[str] | None = None,
+        las_path: str | None = None,
+        interpret: bool = True,
+        rw: float = 0.03,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Well desk: interactive view, publish, render. Modes: open, publish, render.
+
+        open    — interactive well-desk view (MCP App)
+        publish — render and publish well panel image
+        render  — render well-log panel with petrophysics
+        """
+        if mode == "publish":
+            from geox_mcp.tools.integration_well import geox_well_desk_publish as _impl
+            return await _impl(
+                well_id=well_id,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+        if mode == "render":
+            from geox_mcp.render_well_panel_petro import render_interpreted_panel
+            return render_interpreted_panel(
+                well_id=well_id,
+                depth_top=depth_top,
+                depth_base=depth_base,
+                las_path=las_path,
+                rw=rw,
+                session_id=session_id,
+                actor_id=actor_id,
+            )
+        # Default: open
+        from geox_mcp.tools.integration_well import geox_well_desk_open as _impl
+        return await _impl(
+            well_id=well_id,
+            mode="summary",
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
 
     # ═══════════════════════════════════════════════════════════════════════════════
     # POST-REGISTRATION ENRICHMENT — Binding 3 compliance (mcp-builder-doctrine v1.1.0)

@@ -1,5 +1,5 @@
-manifest_version: 2026.07.11
-generated_from: registry.py bootstrap migration
+manifest_version: 2026.07.13-zen15
+generated_from: "ZEN-14 consolidation \u2014 33\u219214 canonical tools"
 public_transport: mcp
 tools:
 - name: geox_well_ingest
@@ -8,8 +8,7 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files.
-    Auto-detects format.
+  description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -18,115 +17,6 @@ tools:
   ui: null
   plugin:
     exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_well_qc
-  domain: earth.well
-  axis: verify
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Quality control checks on well data: depth monotonicity, null percentages,
-    physical range checks, curve completeness.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_well_desk_open
-  domain: earth.well
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'OBSERVE · Open GEOX well-desk interactive view (SEP-1865 MCP App).
-    Read-only operator summary for a well_id. Hosts with UI open ui://geox/well-desk;
-    hosts without UI still receive structured JSON. No mutation.
-
-    '
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui:
-    resource_uri: ui://geox/well-desk
-    mime_type: text/html;profile=mcp-app
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
-- name: geox_well_desk_publish
-  domain: earth.well
-  axis: mutate
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'MUTATE · Publish a rendered well-desk image with embedded metadata.
-    Saves image to /root/GEOX/data/renders/ and seals to VAULT999.
-
-    '
-  input_schema_source: callable
-  annotations:
-    read_only: false
-    destructive: false
-    idempotent: false
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: MUTATE
-    mutation: true
-    physics_guard_required: false
-- name: geox_render_well_panel
-  domain: earth.well
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'OBSERVE · Render a well-log panel as a PNG image with metadata. Generates
-    GR, RT, NPHI, RHOB, DT tracks for a given well_id.
-
-    '
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
-- name: geox_well_desurvey
-  domain: earth.well
-  axis: compute
-  lane: evidence
-  face: internal
-  visibility: internal
-  description: 3D wellbore geometry from deviation survey using minimum curvature
-    method (wellpathpy).
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -137,8 +27,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Compute petrophysical properties: Vsh, porosity, Sw, permeability,
-    net pay. Includes LEM physics-prior inference.'
+  description: 'Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify,
+    lem_inference, stoip_feed, qc.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -147,166 +37,6 @@ tools:
   ui: null
   plugin:
     exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_sequence
-  domain: earth.stratigraphy
-  axis: reason
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: 'Sequence stratigraphy analysis: GR binning, parasequence packages,
-    systems tract inference, well correlation.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_physical_reality_interpret
-  domain: earth.seismic
-  axis: reason
-  lane: reasoning
-  face: internal
-  visibility: internal
-  description: Multi-attribute physical reality gate plus horizon and fault extraction
-    from seismic volumes.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_geological_cognition_run
-  domain: earth.seismic
-  axis: reason
-  lane: reasoning
-  face: internal
-  visibility: internal
-  description: 'Geological cognition engine: pattern recognition and hypothesis generation
-    from multi-domain data.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_panel_d_render_mcp
-  domain: earth.seismic
-  axis: reason
-  lane: reasoning
-  face: internal
-  visibility: internal
-  description: Cognitive interpretation dashboard rendering for multi-panel seismic
-    displays.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_segy_trace_audit
-  domain: earth.seismic
-  axis: observe
-  lane: evidence
-  face: internal
-  visibility: internal
-  description: 'SEG-Y trace reality pipeline: validate trace headers, amplitudes,
-    and geometry consistency.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_well_tie_compute
-  domain: earth.seismic
-  axis: reason
-  lane: reasoning
-  face: internal
-  visibility: internal
-  description: 'Well-to-seismic tie computation: cross-correlation and wavelet extraction
-    for time-depth calibration.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_3d_model_build
-  domain: earth.seismic
-  axis: reason
-  lane: reasoning
-  face: internal
-  visibility: internal
-  description: 3D structural model construction from 2D picks using GemPy implicit
-    modeling.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_wealth_bridge_run
-  domain: earth.seismic
-  axis: reason
-  lane: judgment
-  face: internal
-  visibility: internal
-  description: 'Capital consequence bridge: feed geological parameters to WEALTH organ
-    for economic evaluation.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -317,8 +47,7 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Load and inspect seismic data: SEG-Y headers, trace counts, sample
-    intervals, volume metadata.'
+  description: SEG-Y I/O, header inspection, export.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -334,12 +63,10 @@ tools:
 - name: geox_seismic_compute
   domain: earth.seismic
   axis: compute
-  lane: evidence
+  lane: reasoning
   face: surface
   visibility: public
-  description: 'Unified seismic physics: synthetics, well ties, AVO analysis, attributes.
-    Time-depth anchoring uses checkshot data only. Modes include tie_preflight, tie_receipt,
-    wavelet_extract, mistie_rms, time_depth_calibrate (ZEN G1).'
+  description: 'Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -358,8 +85,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Seismic interpretation: horizon detection, fault picking, volume blending,
-    frame extraction.'
+  description: 'Unified seismic interpretation: horizon/fault picking, RSI pipeline, vision, contrast detection. Modes: horizon_contrast,
+    fault_sticks, volume_frame, blend, rsi_pipeline, contrast, vision.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -372,14 +99,362 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+- name: geox_subsurface_model
+  domain: earth.model
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Subsurface model building: joint inversion, gravity/magnetic forward, MT forward.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_basin
+  domain: earth.basin
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context,
+    deep time, tectonic reconstruction.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_sequence
+  domain: earth.stratigraphy
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Unified stratigraphy: sequence analysis, biostratigraphic parsing and falsification. Modes: correlation, biostrat_parse,
+    biostrat_falsify.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_geomechanics
+  domain: earth.structure
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_deep_time_state
+  domain: earth.time
+  axis: observe
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Earth State Vector through deep time: GPTS, CO2, sea level, temperature, paleogeography.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_claim
+  domain: governance
+  axis: reason
+  lane: judgment
+  face: surface
+  visibility: public
+  description: 'Unified claim lifecycle: create, validate, challenge, seal, evidence, consequence, optionality, cascade, feedback
+    integrity, truth challenge.'
+  input_schema_source: callable
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: false
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: MUTATE
+    mutation: true
+    physics_guard_required: false
+- name: geox_prospect
+  domain: earth.prospect
+  axis: reason
+  lane: judgment
+  face: surface
+  visibility: public
+  description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_gravmag_studio
+  domain: earth.geophysics
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui:
+    resource_uri: ui://geox/gravmag-studio.html
+    mime_type: text/html;profile=mcp-app
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_well_desk
+  domain: earth.well
+  axis: observe
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui:
+    resource_uri: ui://geox/well-desk
+    mime_type: text/html;profile=mcp-app
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_surface_status
+  domain: earth.meta
+  axis: observe
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Federation-standard registry probe: tool discovery and health status.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_well_desurvey
+  domain: earth.well
+  axis: compute
+  lane: evidence
+  face: internal
+  visibility: internal
+  description: 3D wellbore geometry from deviation survey using minimum curvature method (wellpathpy).
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_physical_reality_interpret
+  domain: earth.seismic
+  axis: reason
+  lane: reasoning
+  face: internal
+  visibility: internal
+  description: Multi-attribute physical reality gate plus horizon and fault extraction from seismic volumes.
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_geological_cognition_run
+  domain: earth.seismic
+  axis: reason
+  lane: reasoning
+  face: internal
+  visibility: internal
+  description: 'Geological cognition engine: pattern recognition and hypothesis generation from multi-domain data.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_panel_d_render_mcp
+  domain: earth.seismic
+  axis: reason
+  lane: reasoning
+  face: internal
+  visibility: internal
+  description: Cognitive interpretation dashboard rendering for multi-panel seismic displays.
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_segy_trace_audit
+  domain: earth.seismic
+  axis: observe
+  lane: evidence
+  face: internal
+  visibility: internal
+  description: 'SEG-Y trace reality pipeline: validate trace headers, amplitudes, and geometry consistency.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_well_tie_compute
+  domain: earth.seismic
+  axis: reason
+  lane: reasoning
+  face: internal
+  visibility: internal
+  description: 'Well-to-seismic tie computation: cross-correlation and wavelet extraction for time-depth calibration.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_3d_model_build
+  domain: earth.seismic
+  axis: reason
+  lane: reasoning
+  face: internal
+  visibility: internal
+  description: 3D structural model construction from 2D picks using GemPy implicit modeling.
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_wealth_bridge_run
+  domain: earth.seismic
+  axis: reason
+  lane: judgment
+  face: internal
+  visibility: internal
+  description: 'Capital consequence bridge: feed geological parameters to WEALTH organ for economic evaluation.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
 - name: geox_rsi_interpret
   domain: earth.seismic
   axis: reason
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'RSI interpretation: relative stratigraphic interpretation from seismic
-    amplitude data.'
+  description: 'RSI interpretation: relative stratigraphic interpretation from seismic amplitude data.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -398,8 +473,7 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Render quality audit: verify image integrity and annotation accuracy
-    of seismic displays.'
+  description: 'Render quality audit: verify image integrity and annotation accuracy of seismic displays.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -431,155 +505,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_vision
-  domain: earth.perception
-  axis: reason
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: 'Vision-based seismic interpretation using VLMs: analyze seismic images,
-    audit interpretations, calibrate models.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_subsurface_model
-  domain: earth.model
-  axis: reason
-  lane: judgment
-  face: surface
-  visibility: public
-  description: 'Multi-physics subsurface modeling: joint inversion, gravity/magnetic
-    forward modeling, MT/CSEM forward modeling.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_gravmag_studio_open
-  domain: earth.model
-  axis: reason
-  lane: judgment
-  face: surface
-  visibility: public
-  description: 'GEOX GravMag Studio v0.1 — forward-only MCP App. Computes gravity
-    or magnetic anomaly from a prism model via HarmonICAdapter (mock or live)
-    and returns the studio iframe payload at ui://geox/gravmag-studio.html.
-    Verdict is always QUALIFY (never SEAL) — Stage A is forward-only.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui:
-    resource_uri: ui://geox/gravmag-studio.html
-    mime_type: text/html;profile=mcp-app
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_gravmag_studio_screen
-  domain: earth.model
-  axis: reason
-  lane: judgment
-  face: surface
-  visibility: public
-  description: 'GEOX GravMag Studio v0.2 — Stage B screen (falsification lane).
-    Forward-predicts via geox_gravmag_studio_open, compares against observed_grid,
-    returns misfit stats + verdict (PASS_SCREEN / MARGINAL / FAIL_SCREEN / HOLD)
-    + structured abduction discipline. Never SEALs. Confidence capped at 0.70
-    per F7 HUMILITY. Unit or grid mismatch returns HOLD (fail-closed).'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui:
-    resource_uri: ui://geox/gravmag-studio.html
-    mime_type: text/html;profile=mcp-app
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_geomechanics
-  domain: earth.mechanics
-  axis: compute
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: 'Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate
-    transforms, block resolution.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_basin
-  domain: earth.basin
-  axis: reason
-  lane: discovery
-  face: surface
-  visibility: public
-  description: 'Basin intelligence: profiles, resolution, deep time state, Macrostrat
-    API, spatial context, scene rendering.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_deep_time_state
-  domain: earth.deep_time
-  axis: reason
-  lane: discovery
-  face: surface
-  visibility: public
-  description: 'Earth state vector at any geological age: plate polygons, basin architecture,
-    paleobathymetry, heat flow, subsidence.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_atlas
   domain: earth.atlas
   axis: observe
@@ -599,26 +524,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_surface_status
-  domain: earth.general
-  axis: verify
-  lane: discovery
-  face: surface
-  visibility: public
-  description: 'GEOX organ health check: version, tool count, canonical surface status,
-    registration timestamp.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_forbidden_claims_scan
   domain: earth.governance
   axis: verify
@@ -631,66 +536,6 @@ tools:
     read_only: true
     destructive: false
     idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_claim
-  domain: governance.claims
-  axis: reason
-  lane: judgment
-  face: internal
-  visibility: public
-  description: 'Geological claim lifecycle: create, validate, challenge, seal, attach
-    evidence to structured interpretation claims.'
-  input_schema_source: callable
-  annotations:
-    read_only: false
-    destructive: false
-    idempotent: false
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_evidence
-  domain: earth.evidence
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Evidence discovery and synthesis: search corpus, cross-domain synthesis,
-    hypothesis generation, contradiction scanning.'
-  input_schema_source: callable
-  annotations:
-    read_only: false
-    destructive: false
-    idempotent: false
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_prospect
-  domain: earth.prospect
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Prospect evaluation: volumetrics, probability of success, expected
-    value of information, risk assessment.'
-  input_schema_source: callable
-  annotations:
-    read_only: false
-    destructive: false
-    idempotent: false
   ui: null
   plugin:
     exposed: false
@@ -951,8 +796,7 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Seismic cognition: AI-assisted pattern recognition in seismic attribute
-    volumes.'
+  description: 'Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -990,8 +834,7 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: Enhance seismic section readability through contrast and frequency
-    enhancement.
+  description: Enhance seismic section readability through contrast and frequency enhancement.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1010,8 +853,7 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Generate geological hypotheses across discontinuity gaps in seismic
-    data.
+  description: Generate geological hypotheses across discontinuity gaps in seismic data.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1049,8 +891,7 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Rank geological hypotheses by basin-specific prior probability and
-    consistency.
+  description: Rank geological hypotheses by basin-specific prior probability and consistency.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1088,8 +929,7 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie via bruges library: cross-correlation and wavelet
-    extraction.'
+  description: 'Well-to-seismic tie via bruges library: cross-correlation and wavelet extraction.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1146,8 +986,7 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Bid round screening: evaluate fiscal terms and prospectivity for license
-    rounds.'
+  description: 'Bid round screening: evaluate fiscal terms and prospectivity for license rounds.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1205,48 +1044,6 @@ tools:
   face: internal
   visibility: internal
   description: Render preview of map scene for quality review before export.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_map_context_scene
-  domain: earth.general
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Spatial context scene: renders map layers, basins, and well locations
-    for geographic orientation.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui:
-    resource_uri: ui://geox/workspace-v1.html
-    mime_type: text/html;profile=mcp-app
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_contrast_detect
-  domain: earth.geophysics
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Anomalous contrast detection: identify seismic-geological mismatches
-    at formation boundaries.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1335,26 +1132,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_biostrat_parse
-  domain: earth.biostratigraphy
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Biostratigraphic data parsing: extract age-diagnostic fossil markers
-    from well reports.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_biostrat_nn_age
   domain: earth.stratigraphy
   axis: reason
@@ -1393,26 +1170,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_biostrat_falsify
-  domain: earth.biostratigraphy
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Biostratigraphic falsification: test fossil age assignments against
-    stratigraphic constraints.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_macrostrat_calibrate
   domain: earth.stratigraphy
   axis: reason
@@ -1438,8 +1195,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie receipt: structured record of tie quality metrics
-    and calibration status. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well-to-seismic tie receipt: structured record of tie quality metrics and calibration status. [ZEN 2026-07-11
+    G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1458,8 +1215,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie preflight check: verify data completeness and
-    quality before tie computation. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well-to-seismic tie preflight check: verify data completeness and quality before tie computation. [ZEN 2026-07-11
+    G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1497,8 +1254,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well time-depth calibration: derive checkshot-based time-depth transform
-    from VSP or checkshot data. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well time-depth calibration: derive checkshot-based time-depth transform from VSP or checkshot data. [ZEN
+    2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1517,8 +1274,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-seismic mistie analysis: compute RMS mistie between well markers
-    and seismic horizons. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well-seismic mistie analysis: compute RMS mistie between well markers and seismic horizons. [ZEN 2026-07-11
+    G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1537,8 +1294,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Wavelet extraction: derive source wavelet from well tie using least-squares
-    method. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN 2026-07-11 G1: use
+    geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1570,158 +1327,24 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_basin_backstrip
-  domain: earth.basin
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Basin backstripping: decompact sedimentary layers and reconstruct
-    subsidence history.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_sediment_mass_balance
-  domain: earth.basin
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Sediment mass balance: compute volumetric budgets and sediment supply
-    rates for basin analysis.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_thermal_maturity_history
-  domain: earth.basin
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Thermal maturity history: model burial, heat flow, and vitrinite reflectance
-    evolution over time.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_claim_graph_evaluate
-  domain: earth.general
-  axis: observe
-  lane: evidence
-  visibility: public
-  description: 'Tool: geox_claim_graph_evaluate'
-- name: geox_consequence_footprint
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: Compute physical and ecological consequences of a proposed action
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_optionality_loss
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: Measure destroyed future physical options
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_feedback_integrity
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: Check whether physical monitoring is sufficient to detect drift
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_material_truth_challenge
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: Compare institutional claims against Earth measurements
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_cascade_pathway
-  domain: governance
-  axis: entropy
-  lane: evidence
-  visibility: public
-  description: Model cross-domain propagation from a physical event
-  annotations:
-    read_only: true
-    destructive: false
 compat_tools:
-- geox_evidence_discover
-- geox_evidence_reason
-- geox_fault_stick_ingest_tool
-- geox_gravity_magnetic_forward
-- geox_header_inspect
-- geox_horizon_contrast_surface
-- geox_icgem_models
-- geox_joint_inversion
-- geox_las_inspect
-- geox_lem_predict
-- geox_literature_ingest
-- geox_mt_forward
-- geox_prithvi_eo_inference
-- geox_prospect_evaluate
-- geox_query_intake
-- geox_query_macrostrat
-- geox_segy_export_tool
-- geox_seismic_compute_attribute_tool
-- geox_seismic_inversion
-- geox_seismic_segy_inspect
-- geox_sequence_interpret
-- geox_subsurface_generate_candidates
-- geox_subsurface_verify_integrity
-- geox_system_registry_status
-- geox_vision_audit
-- geox_vision_calibrate
-- geox_vision_minimax_inference
-- geox_vision_perceptual_inventory
-- geox_volume_frame_tool
 - geox_abstraction_guard
 - geox_attribute_registry_list_tool
+- geox_basin_backstrip
 - geox_basin_profile
 - geox_basin_resolve
 - geox_biostrat_constraint
+- geox_biostrat_falsify
+- geox_biostrat_parse
 - geox_blend_volume_tool
 - geox_blockspace_resolution_tool
+- geox_cascade_pathway
 - geox_claim_challenge
 - geox_claim_create
 - geox_claim_seal
 - geox_claim_validate
+- geox_consequence_footprint
+- geox_contrast_detect
 - geox_coord_transform_tool
 - geox_data_ingest_bundle
 - geox_data_qc_bundle
@@ -1730,4 +1353,47 @@ compat_tools:
 - geox_doctrine_godel_review
 - geox_dst_ingest_test
 - geox_emag2_ingest
+- geox_evidence
 - geox_evidence_attach
+- geox_evidence_discover
+- geox_evidence_reason
+- geox_fault_stick_ingest_tool
+- geox_feedback_integrity
+- geox_gravity_magnetic_forward
+- geox_gravmag_studio_open
+- geox_gravmag_studio_screen
+- geox_header_inspect
+- geox_horizon_contrast_surface
+- geox_icgem_models
+- geox_joint_inversion
+- geox_las_inspect
+- geox_lem_predict
+- geox_literature_ingest
+- geox_map_context_scene
+- geox_material_truth_challenge
+- geox_mt_forward
+- geox_optionality_loss
+- geox_prithvi_eo_inference
+- geox_prospect_evaluate
+- geox_query_intake
+- geox_query_macrostrat
+- geox_render_well_panel
+- geox_sediment_mass_balance
+- geox_segy_export_tool
+- geox_seismic_compute_attribute_tool
+- geox_seismic_inversion
+- geox_seismic_segy_inspect
+- geox_sequence_interpret
+- geox_subsurface_generate_candidates
+- geox_subsurface_verify_integrity
+- geox_system_registry_status
+- geox_thermal_maturity_history
+- geox_vision
+- geox_vision_audit
+- geox_vision_calibrate
+- geox_vision_minimax_inference
+- geox_vision_perceptual_inventory
+- geox_volume_frame_tool
+- geox_well_desk_open
+- geox_well_desk_publish
+- geox_well_qc

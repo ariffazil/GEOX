@@ -79,6 +79,24 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     # ── VISUAL/DESK DOMAIN ──
     "geox_well_desk_publish": RiskTier.C2_EXECUTE,
     "geox_render_well_panel": RiskTier.READONLY,
+    # ── ZEN-15 CANONICAL (2026-07-13) ──
+    "geox_gravmag_studio": RiskTier.READONLY,
+    "geox_well_desk": RiskTier.READONLY,  # mode="publish" → C2 (inherits from well_desk_publish)
+    "geox_contrast_detect": RiskTier.READONLY,
+    "geox_basin_backstrip": RiskTier.READONLY,
+    "geox_sediment_mass_balance": RiskTier.READONLY,
+    "geox_thermal_maturity_history": RiskTier.READONLY,
+    "geox_map_context_scene": RiskTier.READONLY,
+    "geox_biostrat_parse": RiskTier.READONLY,
+    "geox_biostrat_falsify": RiskTier.READONLY,
+    "geox_consequence_footprint": RiskTier.READONLY,
+    "geox_optionality_loss": RiskTier.READONLY,
+    "geox_feedback_integrity": RiskTier.READONLY,
+    "geox_material_truth_challenge": RiskTier.READONLY,
+    "geox_cascade_pathway": RiskTier.READONLY,
+    "geox_gravmag_studio_open": RiskTier.READONLY,
+    "geox_gravmag_studio_screen": RiskTier.READONLY,
+    "geox_well_desk_open": RiskTier.READONLY,
 }
 
 

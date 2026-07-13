@@ -90,6 +90,8 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_well_desk_open": 15.0,
     "geox_well_desk_publish": 30.0,
     "geox_render_well_panel": 30.0,
+    "geox_gravmag_studio": 30.0,
+    "geox_well_desk": 30.0,
     "geox_well_desurvey": 30.0,
     "geox_petrophysics": 60.0,
     "geox_sequence": 90.0,
@@ -382,7 +384,7 @@ def _enforce_geox() -> dict[str, Any] | None:
 # ═══════════════════════════════════════════════════════════════════
 
 
-@mcp.tool(name="geox_consequence_footprint", annotations=_geox_annotations("geox_consequence_footprint"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_consequence_footprint", annotations=_geox_annotations("geox_consequence_footprint"))
 async def _consequence_footprint(
     action_description: str = "",
     affected_area_km2: float | None = None,
@@ -427,7 +429,7 @@ async def _consequence_footprint(
     )
 
 
-@mcp.tool(name="geox_optionality_loss", annotations=_geox_annotations("geox_optionality_loss"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_optionality_loss", annotations=_geox_annotations("geox_optionality_loss"))
 async def _optionality_loss(
     action_description: str = "",
     options_destroyed: list[dict] | None = None,
@@ -449,7 +451,7 @@ async def _optionality_loss(
     )
 
 
-@mcp.tool(name="geox_feedback_integrity", annotations=_geox_annotations("geox_feedback_integrity"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_feedback_integrity", annotations=_geox_annotations("geox_feedback_integrity"))
 async def _feedback_integrity(
     monitoring_system: str = "",
     sensor_coverage_pct: float = 0,
@@ -488,7 +490,7 @@ async def _feedback_integrity(
     )
 
 
-@mcp.tool(name="geox_material_truth_challenge", annotations=_geox_annotations("geox_material_truth_challenge"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_material_truth_challenge", annotations=_geox_annotations("geox_material_truth_challenge"))
 async def _material_truth_challenge(
     institutional_claim: str = "",
     earth_measurements: list[dict] | None = None,
@@ -518,7 +520,7 @@ async def _material_truth_challenge(
     )
 
 
-@mcp.tool(name="geox_cascade_pathway", annotations=_geox_annotations("geox_cascade_pathway"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_cascade_pathway", annotations=_geox_annotations("geox_cascade_pathway"))
 async def _cascade_pathway(
     intervention: str = "",
     cascade_graph: list[dict] | None = None,
@@ -893,7 +895,7 @@ async def _biostrat_constraint(
 
 
 # ── Phase 2.7 (2026-07-03): Biostratigraphy Parser — NN zone + GDE + lithology ──
-@mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
 async def _biostrat_parse(
     text: str = "",
     paleoenvironment: str = "",
@@ -970,7 +972,7 @@ async def _biostrat_ruling_check(
 
 
 # ── Phase 2.7 (2026-07-03): Biostrat Falsification Engine — 8-gate Popperian test ──
-@mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
 async def _biostrat_falsify(
     fossil_group: str = "calcareous_nannofossil",
     biozone: str = "",
@@ -1664,7 +1666,7 @@ async def geox_query_macrostrat(
 # A-FORGE 888_HOLD approved 2026-07-03 by F13 SOVEREIGN.
 
 
-@mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
+    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
 async def _geox_contrast_detect(
     dimension: str = "all",
     mass_predicted: float | None = None,
