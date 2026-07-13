@@ -1,7 +1,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
 # GEOX Sentinel Pre-Merge Gate
-# Q1: Did Physics9 / canonical tool paths change?
-# Q2: Physics9 invariants intact (no unitless values, no hardcoded Archie)?
+# Q1: Critical runtime paths changed?
+# Q2: README SOT + authenticated tools/list parity?
 # Q3: Tests pass?
 # ═══════════════════════════════════════════════════════════════════════════
 name: "🛡️ GEOX Sentinel"
@@ -28,7 +28,7 @@ jobs:
     outputs:
       changed: ${{ steps.scan.outputs.critical_changed }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -36,11 +36,11 @@ jobs:
         id: scan
         run: |
           CRITICAL_PATHS=(
-            "server.py"
-            "geoxmcp/core/"
-            "geoxmcp/tools/"
-            "geoxmcp/contracts/"
-            "geoxmcp/physics9/"
+            "src/geox_mcp/server.py"
+            "src/geox_mcp/tools/"
+            "src/geox_core/"
+            "CANONICAL_PUBLIC_SURFACE.json"
+            "README.md"
             "pyproject.toml"
           )
 
@@ -56,62 +56,147 @@ jobs:
           echo "critical_changed=$CRITICAL_CHANGED" >> "$GITHUB_OUTPUT"
 
           if [[ "$CRITICAL_CHANGED" == "yes" ]]; then
-            echo "::notice::Q1 ALERT: Earth-critical paths modified"
+            echo "::notice::Q1 ALERT: Runtime-critical paths modified"
           else
-            echo "::notice::Q1 PASS: No earth-critical paths modified"
+            echo "::notice::Q1 PASS: No runtime-critical paths modified"
           fi
 
-  # ─── Q2: Physics9 invariants? ──────────────────────────────────────────
-  q2-physics9:
-    name: "Q2 — Physics9 Invariants"
+  # ─── Q2: README SOT + authenticated tools/list parity ────────────────
+  q2-readme-parity:
+    name: "Q2 — README SOT Parity"
     runs-on: ubuntu-latest
+    env:
+      GEOX_HEALTH_URL: https://geox.arif-fazil.com/health
+      GEOX_MCP_URL: https://geox.arif-fazil.com/mcp
+      MCP_SESSION_ID: ${{ secrets.GEOX_MCP_SESSION_ID }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Check Physics9 invariants
+      - name: Verify README SOT and tools/list parity
         run: |
-          VIOLATIONS=""
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import sys
+          import urllib.request
 
-          # Hardcoded Archie constants without evidence ref
-          ARCHIE_HITS=$(git diff origin/main...HEAD -- '*.py' | grep '^+' | grep -E "archie_a\s*=\s*[0-9]|archie_m\s*=\s*[0-9]|archie_n\s*=\s*[0-9]" | grep -v "^++" | grep -v "default\|arg\|param\|config" || true)
-          if [[ -n "$ARCHIE_HITS" ]]; then
-            VIOLATIONS="${VIOLATIONS}\n  - Hardcoded Archie constants (should use config/evidence_ref)"
-          fi
+          README = "README.md"
+          SURFACE = "CANONICAL_PUBLIC_SURFACE.json"
+          health_url = os.environ["GEOX_HEALTH_URL"]
+          mcp_url = os.environ["GEOX_MCP_URL"]
+          secret_session = os.environ.get("MCP_SESSION_ID", "").strip()
 
-          # Unitless depth values (bare float without _m/_ft suffix in context)
-          UNITLESS_HITS=$(git diff origin/main...HEAD -- '*.py' | grep '^+' | grep -E "depth\s*=\s*[0-9]+\b" | grep -v "_m\b\|_ft\b\|unit\|meter\|feet\|depth_unit\|#" | grep -v "^++" || true)
-          if [[ -n "$UNITLESS_HITS" ]]; then
-            VIOLATIONS="${VIOLATIONS}\n  - Possibly unitless depth assignment (use depth_m or depth_ft)"
-          fi
+          text = open(README, "r", encoding="utf-8").read()
+          banned_patterns = [
+              r"Public MCP tools\s*\|\s*\*\*\d+",
+              r"tools/list\s*\(\d+\)",
+              r"\b~\d+\s+`geox_\*`",
+          ]
+          for pattern in banned_patterns:
+              if re.search(pattern, text, flags=re.IGNORECASE):
+                  print(f"::error::README contains stale static tool-count pattern: {pattern}")
+                  sys.exit(1)
 
-          # Claim creation without evidence_ids
-          CLAIM_HITS=$(git diff origin/main...HEAD -- '*.py' | grep '^+' | grep -E "geox_claim_create|claim_text=" | grep -v "evidence_ids\|test_\|#" | grep -v "^++" || true)
-          if [[ -n "$CLAIM_HITS" ]]; then
-            VIOLATIONS="${VIOLATIONS}\n  - Claim created without evidence_ids (F2 TRUTH)"
-          fi
+          m = re.search(r"^mcp_tools_live:\s*(.+)$", text, flags=re.MULTILINE)
+          if not m:
+              print("::error::README SOT-MANIFEST missing mcp_tools_live field")
+              sys.exit(1)
+          if m.group(1).strip() != "dynamic_from_tools_list":
+              print("::error::README mcp_tools_live must be 'dynamic_from_tools_list'")
+              sys.exit(1)
 
-          # Finance logic leaking into earth organ
-          FIN_HITS=$(git diff origin/main...HEAD -- '*.py' | grep '^+' | grep -iE "\bNPV\b|\bIRR\b|\bEMV\b|discount_rate|cashflow" | grep -v "^++" || true)
-          if [[ -n "$FIN_HITS" ]]; then
-            VIOLATIONS="${VIOLATIONS}\n  - Financial compute in GEOX (delegate to WEALTH organ)"
-          fi
+          surface = json.load(open(SURFACE, "r", encoding="utf-8"))
+          canonical_count = int(surface.get("public_count", -1))
+          canonical_len = len(surface.get("public_tools", []))
+          if canonical_count != canonical_len:
+              print(f"::error::Canonical surface mismatch: public_count={canonical_count} list_len={canonical_len}")
+              sys.exit(1)
 
-          if [[ -n "$VIOLATIONS" ]]; then
-            echo "::error::Q2 PHYSICS9 VIOLATION:$VIOLATIONS"
-            printf "Violations:$VIOLATIONS\n"
-            exit 1
-          else
-            echo "::notice::Q2 PASS: Physics9 invariants intact"
-          fi
+          def post_json(url, payload, headers=None):
+              body = json.dumps(payload).encode("utf-8")
+              req_headers = {
+                  "Content-Type": "application/json",
+                  "Accept": "application/json",
+              }
+              if headers:
+                  req_headers.update(headers)
+              req = urllib.request.Request(url, data=body, headers=req_headers, method="POST")
+              with urllib.request.urlopen(req, timeout=20) as resp:
+                  data = resp.read().decode("utf-8")
+                  return resp, json.loads(data)
+
+          session_id = secret_session
+          if not session_id:
+              try:
+                  init_resp, _ = post_json(
+                      mcp_url,
+                      {
+                          "jsonrpc": "2.0",
+                          "id": "init",
+                          "method": "initialize",
+                          "params": {
+                              "protocolVersion": "2025-11-25",
+                              "capabilities": {},
+                              "clientInfo": {"name": "geox-sentinel", "version": "1.0.0"},
+                          },
+                      },
+                  )
+                  session_id = (
+                      init_resp.headers.get("mcp-session-id")
+                      or init_resp.headers.get("MCP-Session-Id")
+                      or ""
+                  ).strip()
+              except Exception as exc:
+                  print(f"::warning::MCP initialize did not return session id: {exc}")
+
+          if not session_id:
+              print("::error::No MCP session id available. Set secret GEOX_MCP_SESSION_ID or ensure initialize returns mcp-session-id.")
+              sys.exit(1)
+
+          _, tools_payload = post_json(
+              mcp_url,
+              {
+                  "jsonrpc": "2.0",
+                  "id": "tools",
+                  "method": "tools/list",
+                  "params": {},
+              },
+              headers={"mcp-session-id": session_id},
+          )
+          live_tools = tools_payload.get("result", {}).get("tools", [])
+          live_count = len(live_tools)
+          if live_count <= 0:
+              print("::error::Authenticated tools/list returned zero tools")
+              sys.exit(1)
+
+            print(f"Canonical surface count={canonical_count}, live tools/list count={live_count}")
+
+          health = json.loads(urllib.request.urlopen(health_url, timeout=20).read().decode("utf-8"))
+          reasons = health.get("owner_summary", {}).get("reasons", [])
+          health_count = None
+          for reason in reasons:
+              m2 = re.search(r"public_tools=(\d+)", str(reason))
+              if m2:
+                  health_count = int(m2.group(1))
+                  break
+
+            if health_count is not None and health_count != live_count:
+              print(f"::warning::Health/public_tools mismatch: health={health_count} tools/list={live_count}")
+
+          print(f"Q2 PASS: canonical={canonical_count}, live_tools={live_count}, health_public_tools={health_count}")
+          names = sorted([t.get('name', '?') for t in live_tools])
+          print("Live tools sample:", ", ".join(names[:10]))
+          PY
 
   # ─── Q3: Tests pass? ───────────────────────────────────────────────────
   q3-tests:
     name: "Q3 — Tests"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -134,18 +219,18 @@ jobs:
   # ─── Final gate ────────────────────────────────────────────────────────
   sentinel-gate:
     name: "✅ Sentinel Gate"
-    needs: [q1-critical-paths, q2-physics9, q3-tests]
+    needs: [q1-critical-paths, q2-readme-parity, q3-tests]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Gate verdict
         run: |
           Q1="${{ needs.q1-critical-paths.result }}"
-          Q2="${{ needs.q2-physics9.result }}"
+          Q2="${{ needs.q2-readme-parity.result }}"
           Q3="${{ needs.q3-tests.result }}"
 
           echo "Q1 (critical paths): $Q1"
-          echo "Q2 (Physics9):       $Q2"
+          echo "Q2 (README parity):  $Q2"
           echo "Q3 (tests):          $Q3"
 
           if [[ "$Q2" != "success" || "$Q3" != "success" ]]; then

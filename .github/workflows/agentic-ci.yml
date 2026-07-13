@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -73,7 +73,8 @@ jobs:
         continue-on-error: true
 
       - name: Build check
-        run: python -c "import import geox" || true
+        run: |
+          python -c "import geox_mcp; print('geox_mcp import OK')" || true
         continue-on-error: true
 
   # ─────────────────────────────────────────────────────────────
@@ -83,8 +84,13 @@ jobs:
     name: "Lane 2 — BIJAKSANA ΔS Φ Ψ Ω"
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      ds-value: ${{ steps.ds.outputs.value }}
+      phi-value: ${{ steps.phi.outputs.value }}
+      psi-value: ${{ steps.psi.outputs.value }}
+      omega-value: ${{ steps.omega.outputs.value }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v6
         with:
@@ -148,7 +154,7 @@ jobs:
     if: always()
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
       - name: Generate Agentic CI Report
         id: report

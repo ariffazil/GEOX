@@ -4,7 +4,7 @@ last_verified: 2026-07-12T23:38Z
 live_commit_short: 5bc66284
 live_version: v2026.07.06-phase3.1-rsi-pipeline
 port: 8081
-mcp_tools_live: 32
+mcp_tools_live: dynamic_from_tools_list
 owner_summary: GREEN
 truth_rule: tools/list + /health beat any static count in prose
 federation_release: v2026.07.12-CONSOLIDATION-EPOCH
@@ -33,7 +33,7 @@ truth_rule: tools/list + /health beat any static count in prose
 ║                                                                          ║
 ║     Witness the subsurface. Label the truth. Never pretend to decide.    ║
 ║                                                                          ║
-║              DITEMPA BUKAN DIBERI — Forged, Not Given                    ║
+║           Evidence-first geoscience for institutional decisions           ║
 ║                                                                          ║
 ╚══════════════════════════════════════════════════════════════════════════╝
 ```
@@ -57,10 +57,10 @@ truth_rule: tools/list + /health beat any static count in prose
 |-------------|------------------|---------------|
 | **Human geoscientist** | GEOX shows what Earth evidence says — not what to drill | Open [GUI](https://geox.arif-fazil.com/gui/) or [Well Desk](https://geox.arif-fazil.com/apps/well-desk/) |
 | **AI agent / MCP client** | Call tools · trust `tools/list` · never invent authority | `curl https://geox.arif-fazil.com/health` then MCP `tools/list` |
-| **Institution / auditor** | Evidence organ under constitutional law; no capital, no SEAL | Sections [Boundary](#6-boundary--what-geox-owns-and-refuses) + [Governance](#7-governance--enterprise-control) |
+| **Institution / auditor** | Evidence-first geoscience service with auditable controls | Sections [Boundary](#6-boundary--what-geox-owns-and-refuses) + [Governance](#7-governance--enterprise-control) |
 | **Platform engineer** | systemd + FastMCP on `:8081`, Caddy public door | Sections [Connect](#8-connect--operate) + [Verify](#9-verify-alive) |
 
-**One sentence:** GEOX is the **Earth witness** of the arifOS federation — physics-bounded subsurface computation that agents can call, humans can see, and institutions can audit — **without** authority to drill, spend, or seal law.
+**One sentence:** GEOX is a **physics-constrained geoscience inference service** that exposes auditable subsurface computations for humans and AI agents, without making operational or financial decisions.
 
 **Competitive lane (F13):** Not another Petrel/DS365 workflow desktop. Those are model-management platforms. GEOX is the **earth-reasoning substrate** that asks: *does this geological story deserve to live?* See [`GENESIS/011_COMPETITIVE_LAYER_MAP.md`](./GENESIS/011_COMPETITIVE_LAYER_MAP.md).
 
@@ -78,7 +78,7 @@ truth_rule: tools/list + /health beat any static count in prose
 | **HOLD** | Policy blocked (lease / arifOS gate) | Not a bug — governance working |
 | **SEAL** | Constitutional / vaulted irreversible record | Human F13 path only |
 | **IMAGE_SEAL** | PNG hash side-ledger (not constitutional chain) | Witness of a picture, not law |
-| **Public tool** | In live `tools/list` (26) | Agents may call |
+| **Public tool** | In live authenticated `tools/list` | Agents may call |
 | **Internal** | Implemented but not on public MCP face | Do not advertise as public |
 
 > **SOT rule:** If this README and `tools/list` disagree, **`tools/list` wins**. Static prose is a snapshot; runtime is truth.
@@ -92,19 +92,19 @@ Verified **2026-07-12** against production:
 | Fact | Value | Meaning |
 |------|-------|---------|
 | Health | `healthy` · `owner_summary.color = GREEN` | Service fit for observe traffic |
-| Service | `geox-unified` · profile `full` | Full organ stack, not stub |
+| Service | `geox-unified` · profile `full` | Production runtime profile |
 | Git identity | `geox-4784103d` | Code identity stamped in health |
 | Domain law | `NATURAL_LAW` | Physics bounds active |
-| Public MCP tools | **26** | Canonical agent surface |
+| Public MCP tools | Dynamic count from authenticated `tools/list` | Canonical agent surface |
 | Internal tools | **55** | Capability backlog / gated surface |
 | Port | `127.0.0.1:8081` · public HTTPS | Localhost iron; Caddy/tunnel door |
-| Final authority | **ARIF** | No organ self-authorizes |
+| Final authority | **ARIF** | Runtime does not self-authorize |
 | MCP Apps package | SEAL seq **57** wire (observe path) | Guest → AAA host → GEOX |
 | Mutate publish via UI | **HOLD** until arifOS lease | Enterprise safety, not missing code |
 
 ```bash
 curl -s https://geox.arif-fazil.com/health | python3 -m json.tool
-# expect: status=healthy, owner_summary.color=GREEN, public_tools=26 (or reasons list)
+# expect: status=healthy, owner_summary.color=GREEN, and public_tools reason present
 ```
 
 Machine contract: [`CANONICAL_PUBLIC_SURFACE.json`](./CANONICAL_PUBLIC_SURFACE.json) · Boundary: [`BOUNDARY.md`](./BOUNDARY.md) · Runbook: [`RUNBOOK.md`](./RUNBOOK.md)
@@ -124,7 +124,7 @@ Machine contract: [`CANONICAL_PUBLIC_SURFACE.json`](./CANONICAL_PUBLIC_SURFACE.j
          ▼                             ▼                             ▼
  ┌───────────────┐           ┌─────────────────┐           ┌─────────────────┐
  │  Web Cockpit  │           │  MCP Apps       │           │  MCP Tools      │
- │  React +      │           │  SEP-1865       │           │  26 public      │
+ │  React +      │           │  SEP-1865       │           │  N public (live)│
  │  MapLibre +   │           │  ui:// HTML in  │           │  FastMCP HTTP   │
  │  Cesium       │           │  chat/IDE/AAA   │           │  / stdio        │
  └───────┬───────┘           └────────┬────────┘           └────────┬────────┘
@@ -152,19 +152,19 @@ Machine contract: [`CANONICAL_PUBLIC_SURFACE.json`](./CANONICAL_PUBLIC_SURFACE.j
 | **MCP** | https://geox.arif-fazil.com/mcp | Agent tool plane (JSON-RPC) | 406 without proper MCP Accept headers — use MCP client |
 | **Apps manifest** | https://geox.arif-fazil.com/apps.json | Catalog of interactive shells | 9 apps declared; status varies |
 | **GUI cockpit** | https://geox.arif-fazil.com/gui/ | Full React operator desk | Deployed (Cesium/MapLibre/D3 assets live) |
-| **Well Desk** | https://geox.arif-fazil.com/apps/well-desk/ | 1D well witness + MCP App shell | **active** · host-mediated tools/call |
+| **Well Desk** | https://geox.arif-fazil.com/apps/well-desk/ | 1D well analysis + MCP App shell | **active** · host-mediated tools/call |
 | **Prospect UI** | …/apps/prospect-ui/ | Prospect / basin cockpit shell | active |
 | **Judge console** | …/apps/judge-console/ | AC risk / claim review shell | active |
 | **Earth volume** | …/apps/earth-volume/ | 3D / volume review shell | active |
 | **Seismic vision** | …/apps/seismic-vision-review/ | Seismic cognition review | scaffold |
-| **AAA host bridge** | `POST /api/mcp-apps/tools/call` | Guest iframe never hits organ ports | Observe open · publish HOLD |
+| **AAA host bridge** | `POST /api/mcp-apps/tools/call` | Guest iframe never hits service ports directly | Observe open · publish HOLD |
 
 **MCP Apps (SEP-1865) — plain language:**  
 A tool can return a **UI resource** (`ui://…` HTML). The host draws it in a sandbox. Clicks that need data go **host → GEOX**, not browser → GEOX. That is the enterprise security model.
 
 ---
 
-## 3. Capability map — 26 public tools (with human meaning)
+## 3. Capability map — Public MCP tools (live-discovered)
 
 > Source: live MCP + `CANONICAL_PUBLIC_SURFACE.json`. Each row: **what it does** · **what success looks like** · **what it must not claim**.
 
@@ -178,7 +178,7 @@ A tool can return a **UI resource** (`ui://…` HTML). The host draws it in a sa
 | `geox_sequence` | GR packages → systems-tract style readout | INTERPRETED stacking | Motif ≠ age certainty |
 | `geox_well_desk_open` | Open well-desk context (OBSERVE) | UI resource / summary | Read path |
 | `geox_render_well_panel` | **Interpreted multi-track PNG** from open LAS | OBS+DER+INT panel + IMAGE_SEAL | Default: real Volve/Marmousi; not scaffold if LAS resolves |
-| `geox_well_desk_publish` | Publish PNG + hash witness | MUTATE | **AAA path HOLD** without arifOS lease |
+| `geox_well_desk_publish` | Publish PNG + hash record | MUTATE | **AAA path HOLD** without arifOS lease |
 
 **Interpreted panel (2026-07-12):**  
 Open LAS (e.g. Equinor **Volve 15/9-19**, CC BY) → tracks GR · RT · RHOB/NPHI · **Vsh** · **φe** · **Sw** + side panel of **earth meaning** (GR motif, reservoir quality, fluid hypothesis, explicit Rw/ρma assumptions). Epistemic stack stamped in PNG metadata and IMAGE side-ledger.
@@ -242,7 +242,7 @@ GEOX is not “ChatGPT with geology words.” It is a **physics-constrained evid
 | **Contradiction** | `evidence_for` · `evidence_against` · `missing_tests` | Weak stories die in the open |
 | **Assumptions** | e.g. Rw, ρma, Archie a/m/n on panels | Defaults are labeled defaults |
 | **Humility** | Confidence capped (F7) | Never 100% geology-from-silicon |
-| **Anti-hantu** | No sentience / soul claims (F9/F10) | Tool, not oracle priest |
+| **Non-anthropomorphic output** | No sentience or consciousness claims | Analytical software, not an autonomous authority |
 
 **RASA (context fit):**  
 `RASA = evidence_credit × (1 − u_ambiguity)` — how well a claim sits in its evidence substrate. Not a replacement for a human geologist; a fast red/amber light for floating abstraction.
@@ -252,7 +252,7 @@ GEOX is not “ChatGPT with geology words.” It is a **physics-constrained evid
 ## 5. Federation position
 
 ```
-Arif (F13 SOVEREIGN) — final veto
+Arif (F13 SOVEREIGN) — final governance authority
         │
         ▼
 arifOS KERNEL :8088 — law, 888 JUDGE, VAULT999
@@ -286,7 +286,7 @@ arifOS KERNEL :8088 — law, 888 JUDGE, VAULT999
 - Basin / backstrip / thermal / mass balance  
 - Spatial context scenes · biostrat parse/falsify  
 - Claims & evidence structures · prospect **compute**  
-- Interactive shells (MCP Apps + GUI assets) · PNG render/witness  
+- Interactive shells (MCP Apps + GUI assets) · PNG render/verification  
 
 ### Refuses (hard)
 
@@ -308,7 +308,7 @@ Full boundary: [`BOUNDARY.md`](./BOUNDARY.md)
 |---------|-----------|--------------------|
 | **Constitutional floors** | F1–F13 via arifOS + local floor enforcement | Audit language shared across federation |
 | **Risk tiers** | OBSERVE vs C2 execute (e.g. publish) | UI observe ≠ publish |
-| **Host CSP** | MCP App guest `connect-src 'none'` | Browser cannot exfil organ traffic |
+| **Host CSP** | MCP App guest `connect-src 'none'` | Browser cannot exfiltrate service traffic |
 | **Host proxy** | AAA `POST /api/mcp-apps/tools/call` | Session lifecycle owned by host |
 | **IMAGE_SEAL** | `image_seal_chain.jsonl` only | Pictures don’t corrupt constitutional head |
 | **License** | BSL-1.1 | Source available; commercial terms explicit |
@@ -317,7 +317,7 @@ Full boundary: [`BOUNDARY.md`](./BOUNDARY.md)
 
 **Package seals (recent):**  
 - MCP Apps observe wire — VAULT seq **57** (guest→AAA→GEOX)  
-- Residual named openly: mutate UI lease; vault-bound client PNG witness optional  
+- Residual named openly: mutate UI lease; vault-bound client PNG verification optional  
 
 ---
 
@@ -398,7 +398,7 @@ curl -sI https://geox.arif-fazil.com/cesium/Cesium.js | head -1
 | Check | Healthy signal | Sick signal |
 |-------|----------------|-------------|
 | `/health` | `status=healthy`, GREEN reasons | restart `geox-mcp`, read journal |
-| `tools/list` | ~26 `geox_*` | YAML/registry crash or profile stub |
+| `tools/list` | Authenticated live `geox_*` surface | Discovery/session failure or profile stub |
 | Panel render | `provenance` contains `OBSERVED:lasio` | scaffold or isError |
 | Publish via AAA | HOLD without lease | If open without lease → security bug |
 
@@ -431,7 +431,7 @@ GEOX/
 | `apps/*` | Conversation UI bodies | Dead iframe / no ui/initialize |
 | `geox-gui` | Operator cockpit | Blank /gui or 404 assets |
 | `data/renders` | PNG outbox | Panel tool “ok” but no file |
-| IMAGE side ledger | Picture witness | Must not rewrite seal_chain head |
+| IMAGE side ledger | Image integrity record | Must not rewrite seal_chain head |
 
 ---
 
@@ -440,7 +440,7 @@ GEOX/
 | Area | State | Evidence | Residual |
 |------|-------|----------|----------|
 | Runtime health | **GREEN** | `/health` identity + tools | Re-probe after deploy |
-| Public MCP contract | **26 tools** | `tools/list` + JSON surface | Internal 55 not public |
+| Public MCP contract | Live-discovered count | authenticated `tools/list` + JSON surface | Internal surface remains non-public |
 | Epistemic labeling | **Live** | Panels + tool envelopes | Enforce on every new tool |
 | MCP Apps observe | **Wired** | AAA host proxy SEAL 57 | External host E2E optional |
 | Mutate from UI | **HOLD by design** | lease message on publish | Full lease UX next |
@@ -469,8 +469,8 @@ Receipts (operators): `/root/A-FORGE/forge_work/2026-07-12/` — package seal, r
 ## 13. License & sovereign
 
 - **License:** Business Source License 1.1 — see [`LICENSE`](LICENSE)  
-- **Sovereign:** Muhammad Arif bin Fazil — F13 absolute veto  
-- **Motto:** *DITEMPA BUKAN DIBERI* — Forged, not given  
+- **Steward:** Muhammad Arif bin Fazil  
+- **Operating principle:** Evidence before action  
 
 ---
 
@@ -479,7 +479,7 @@ Receipts (operators): `/root/A-FORGE/forge_work/2026-07-12/` — package seal, r
 | Need | Path |
 |------|------|
 | Law / SEAL / HOLD | arifOS `:8088` |
-| Earth evidence | **this organ** `:8081` |
+| Earth evidence | **this service** `:8081` |
 | Capital | WEALTH `:18082` |
 | Human readiness | WELL `:18083` |
 | Build / deploy | A-FORGE `:7071` |
@@ -487,4 +487,4 @@ Receipts (operators): `/root/A-FORGE/forge_work/2026-07-12/` — package seal, r
 
 ---
 
-*SOT refreshed 2026-07-12. Re-verify with `/health` and `tools/list` before any production claim. Reality outranks README.*
+*SOT policy: verify `/health` and authenticated `tools/list` before any production claim. Runtime evidence outranks static prose.*
