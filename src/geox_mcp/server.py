@@ -627,8 +627,10 @@ class _McpSlashRewriteMiddleware:
 
 
 register_ui_applets(mcp)
-register_gravmag_studio_tools(mcp)
-register_gravmag_studio_screen_tools(mcp)
+# ZEN-15 v0.2.1 — gravmag studio consolidated into geox_gravmag_studio(mode="open"|"screen")
+# in tools_wiring.py. Standalone registrations removed.
+# register_gravmag_studio_tools(mcp)
+# register_gravmag_studio_screen_tools(mcp)
 
 
 # ── W2-W4 FORGE — Doctrine layer tool registrations ────────────────────────
