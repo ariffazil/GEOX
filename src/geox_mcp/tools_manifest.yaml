@@ -471,6 +471,55 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+- name: geox_gravmag_studio_open
+  domain: earth.model
+  axis: reason
+  lane: judgment
+  face: surface
+  visibility: public
+  description: 'GEOX GravMag Studio v0.1 — forward-only MCP App. Computes gravity
+    or magnetic anomaly from a prism model via HarmonICAdapter (mock or live)
+    and returns the studio iframe payload at ui://geox/gravmag-studio.html.
+    Verdict is always QUALIFY (never SEAL) — Stage A is forward-only.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui:
+    resource_uri: ui://geox/gravmag-studio.html
+    mime_type: text/html;profile=mcp-app
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_gravmag_studio_screen
+  domain: earth.model
+  axis: reason
+  lane: judgment
+  face: surface
+  visibility: public
+  description: 'GEOX GravMag Studio v0.2 — Stage B screen (falsification lane).
+    Forward-predicts via geox_gravmag_studio_open, compares against observed_grid,
+    returns misfit stats + verdict (PASS_SCREEN / MARGINAL / FAIL_SCREEN / HOLD)
+    + structured abduction discipline. Never SEALs. Confidence capped at 0.70
+    per F7 HUMILITY. Unit or grid mismatch returns HOLD (fail-closed).'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui:
+    resource_uri: ui://geox/gravmag-studio.html
+    mime_type: text/html;profile=mcp-app
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
 - name: geox_geomechanics
   domain: earth.mechanics
   axis: compute

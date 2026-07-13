@@ -14,6 +14,10 @@ WORKSPACE_MIME = "text/html;profile=mcp-app"
 WORKBENCH_URI = WORKSPACE_URI
 WORKBENCH_MIME = WORKSPACE_MIME
 
+# GravMag Studio (Stage A — forward only). Registered 2026-07-13.
+GRAVMAG_STUDIO_URI = "ui://geox/gravmag-studio.html"
+GRAVMAG_STUDIO_MIME = WORKSPACE_MIME
+
 
 @dataclass(frozen=True)
 class SurfaceTool:

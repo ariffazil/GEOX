@@ -544,6 +544,8 @@ def compose_geox_servers() -> None:
 
 compose_geox_servers()
 
+from geox_mcp.tools.geophysics_studio import register_gravmag_studio_tools
+from geox_mcp.tools.geophysics_studio_screen import register_gravmag_studio_screen_tools
 from geox_mcp.tools.ui_applets import register_ui_applets
 
 
@@ -571,6 +573,8 @@ class _McpSlashRewriteMiddleware:
 
 
 register_ui_applets(mcp)
+register_gravmag_studio_tools(mcp)
+register_gravmag_studio_screen_tools(mcp)
 
 
 # ── W2-W4 FORGE — Doctrine layer tool registrations ────────────────────────
@@ -1885,10 +1889,11 @@ _register_prefab_apps()
 
 from geox_mcp.prompts import register_prompts
 from geox_mcp.resources import register_resources
-from geox_mcp.ui.resources import register_workspace_resource
+from geox_mcp.ui.resources import register_gravmag_studio_resource, register_workspace_resource
 
 register_resources(mcp, is_geox_func=is_geox, enforce_geox_func=_enforce_geox)
 register_workspace_resource(mcp)
+register_gravmag_studio_resource(mcp)
 register_prompts(mcp)
 
 # ═══════════════════════════════════════════════════════════════════════════════
