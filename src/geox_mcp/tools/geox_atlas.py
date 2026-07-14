@@ -223,7 +223,7 @@ _EEZ_REGISTRY: list[dict[str, Any]] = [
         "nocs": ["ENH"],
     },
     # SE Asia
-    {"sovereign": "Malaysia", "iso3": "MYS", "bbox": [99.5, 0.5, 119.5, 7.5], "fiscal_regime": "PSC", "nocs": ["PETRONAS"]},
+    {"sovereign": "Malaysia", "iso3": "MYS", "bbox": [99.5, 0.5, 119.5, 7.5], "fiscal_regime": "PSC", "nocs": ["Malaysian NOC"]},
     {
         "sovereign": "Indonesia",
         "iso3": "IDN",

@@ -5,7 +5,7 @@
 > **Evidence band:** YELLOW — L4 strategic assessment; public press-release claims not fully verified this pass  
 > **Verdict:** LURUS_ON_OBJECTION — Opencode confused workflow machinery with intelligence  
 > **Supersedes:** Any claim that “GEOX competes directly with Halliburton Geosciences Suite / DSG / DS365 as like-for-like earth modeling”  
-> **Review:** When PETRONAS vendor stack changes, or GEOX product proof lands
+> **Review:** When NOC vendor stack changes, or GEOX product proof lands
 
 ---
 
@@ -28,7 +28,7 @@ Or:
 
 ```text
 Halliburton and SLB manage geoscience workflows.
-TriCipta accelerates PETRONAS AI applications.
+NOC-AI-Partner accelerates NOC AI applications.
 GEOX audits the earth claim itself.
 ```
 
@@ -87,7 +87,7 @@ Layer 1 — Workflow engines
   legacy geoscience stacks
 
 Layer 2 — AI application layer
-  TriCipta AI
+  NOC-AI-Partner AI
   AI.SEEK / GEB
   T.AI surface optimization
   SLB Lumi / AI apps
@@ -130,17 +130,17 @@ Different stacks. Same enterprise-lock problem. Never write “Halliburton Petre
 
 ---
 
-## 6. PETRONAS read (L4 — not full press verification)
+## 6. NOC read (L4 — not full press verification)
 
 Not simple confusion. **Portfolio hedging with internal political cover:**
 
 ```yaml
-PETRONAS_strategy:
+NOC_strategy:
   Halliburton:
     role: safe enterprise backbone
     purpose: proven workflow continuity
     risk: vendor lock-in and low intelligence
-  TriCipta:
+  NOC-AI-Partner:
     role: sovereign AI wedge
     purpose: local/control/co-invested AI capability
     risk: immature, partner-dependent, unproven at scale
@@ -154,7 +154,7 @@ Architecture as survival logic:
 
 ```text
 Halliburton keeps the machine room stable.
-TriCipta tries to create sovereign AI differentiation.
+NOC-AI-Partner tries to create sovereign AI differentiation.
 IBM/T.AI checks the surface-equipment AI box.
 ```
 
@@ -170,10 +170,10 @@ Which system becomes the decision authority for exploration truth?
 
 If unclear, every vendor becomes a dashboard.
 
-Better strategic question than “hedging TriCipta vs Halliburton?”:
+Better strategic question than “hedging NOC-AI-Partner vs Halliburton?”:
 
 ```text
-Is PETRONAS building an intelligence layer above incumbent geoscience systems,
+Is NOC building an intelligence layer above incumbent geoscience systems,
 or just buying three disconnected AI narratives?
 ```
 
@@ -219,10 +219,10 @@ GEOX_position:
 
 ## 8. Competitive table
 
-| Layer | Halliburton DS365 | TriCipta AI | SLB DELFI | GEOX |
+| Layer | Halliburton DS365 | NOC-AI-Partner AI | SLB DELFI | GEOX |
 |-------|-------------------|-------------|-----------|------|
 | Core nature | Workflow engine | Sovereign AI partnership | Platform ecosystem | Earth reasoning substrate |
-| Strength | Enterprise geoscience continuity | PETRONAS-native AI wedge | Deep global platform + apps | Falsifiable physics + governance |
+| Strength | Enterprise geoscience continuity | NOC-native AI wedge | Deep global platform + apps | Falsifiable physics + governance |
 | Weakness | Not true intelligence | Young, partner-dependent | Lock-in, cost, platform gravity | Needs proof and integration |
 | Earth claim | Model management | AI-assisted screening | Platform-scale subsurface AI | Evidence-grounded reasoning |
 | Best role | System of record / workflow | AI application layer | Enterprise digital platform | Truth / audit / intelligence layer |
@@ -236,7 +236,7 @@ GEOX_position:
 verdict: LURUS_ON_YOUR_OBJECTION
 opencode_error: confused workflow platform with intelligence
 DSG_status: useful incumbent machine, not earth intelligence
-TriCipta_status: sovereign AI application wedge
+NOC-AI-Partner_status: sovereign AI application wedge
 SLB_status: future platform threat
 GEOX_lane: falsifiable earth reasoning and governance layer
 

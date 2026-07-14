@@ -52,7 +52,7 @@ def _make_mbr2026_request() -> BidRoundRequest:
     """Full MBR 2026 bid round with 4 blocks (2 Malay exploration, 1 Sabah, 1 DRO)."""
     return BidRoundRequest(
         bid_round_id="MBR_2026",
-        operator="PETRONAS_MPM",
+        operator="NOC_A_MPM",
         operator_actor_id="ARIF",
         blocks=[
             {
@@ -241,7 +241,7 @@ class TestSchemas:
     def test_bid_round_request_valid(self):
         req = BidRoundRequest(
             bid_round_id="MBR_2026",
-            operator="PETRONAS_MPM",
+            operator="NOC_A_MPM",
             operator_actor_id="ARIF",
             blocks=[
                 {
@@ -261,7 +261,7 @@ class TestSchemas:
         with pytest.raises(ValueError):
             BidRoundRequest(
                 bid_round_id="MBR_2026",
-                operator="PETRONAS_MPM",
+                operator="NOC_A_MPM",
                 operator_actor_id="ARIF",
                 blocks=[],
             )
@@ -415,7 +415,7 @@ class TestSecurity:
     async def test_f3_witness_actor_required(self):
         req = BidRoundRequest(
             bid_round_id="MBR_2026",
-            operator="PETRONAS_MPM",
+            operator="NOC_A_MPM",
             operator_actor_id="ARIF",
             blocks=[
                 {
@@ -458,7 +458,7 @@ class TestSecurity:
         with pytest.raises(ValueError, match="sanitization"):
             BidRoundRequest(
                 bid_round_id="$(evil_command)",
-                operator="PETRONAS",
+                operator="NOC_A",
                 operator_actor_id="ARIF",
                 blocks=[
                     {
@@ -476,7 +476,7 @@ class TestSecurity:
         with pytest.raises(ValueError, match="sanitization"):
             BidRoundRequest(
                 bid_round_id="MBR_2026",
-                operator="PETRONAS",
+                operator="NOC_A",
                 operator_actor_id="ARIF`whoami`",
                 blocks=[
                     {

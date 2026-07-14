@@ -1284,7 +1284,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         """Well summary URI parametric resolver.
 
         Returns: header, deviation summary, log availability, top picks.
-        F2 TRUTH: well_id is a PETRONAS canonical name; we MUST verify
+        F2 TRUTH: well_id is a NOC canonical name; we MUST verify
         provenance before returning data. Stub for now.
         """
         canonical = full_uri("well", basin=basin, well_id=well_id)
