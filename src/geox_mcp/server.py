@@ -2600,11 +2600,14 @@ async def health_handler(request: Request) -> JSONResponse:
         _domain_law = "NATURAL_LAW"
         _physics_hash = _os_id.environ.get("GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing")
 
+    # FEDERATION HANDSHAKE (canonical: arifOS/arifosmcp/schemas/federation_enums.py)
+    # See: /root/AAA/governance/FEDERATION_HANDSHAKE.md
     return JSONResponse(
         {
             "status": "healthy",
             "service": "geox-unified",
             "version": GEOX_VERSION,
+            "federation_schema_version": "2.0.0",
             "profile": GEOX_PROFILE,
             "identity": is_geox(),
             "git_version": _GIT_VERSION,
