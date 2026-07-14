@@ -1448,9 +1448,9 @@ def run_geox_001_real_las(
     Honest provenance:
       - LAS curves = OBS (if file exists)
       - Checkshot / seismic extract / horizon = still scenario-derived (SPEC/INT)
-        until real Petronas/field companions are ingested.
+        until real NOC/field companions are ingested.
 
-    Default LAS: data/real_wells/q15_15_9_19/q15_15_9_19.las (North Sea Q15 — not Petronas).
+    Default LAS: data/real_wells/q15_15_9_19/q15_15_9_19.las (North Sea Q15 — not NOC-proprietary).
     """
     default = (
         Path(__file__).resolve().parents[3]
@@ -1472,7 +1472,7 @@ def run_geox_001_real_las(
         result["real_las"] = {
             "status": "MISSING",
             "note": "No real LAS on disk; fell back to synthetic scenario bundle",
-            "petronas_proprietary": "ABSENT",
+            "noc_proprietary": "ABSENT",
         }
         return result
 
@@ -1538,8 +1538,8 @@ def run_geox_001_real_las(
         "path": str(path),
         "well": bundle["well_id"],
         "provenance": "OBS for LAS curves; checkshot/seismic/horizon remain scenario-derived until field companions arrive",
-        "petronas_proprietary": "ABSENT_ON_HOST",
-        "note": "Best real LAS on host is Q15 North Sea 15/9-19 — not a Petronas Malay Basin well",
+        "noc_proprietary": "ABSENT_ON_HOST",
+        "note": "Best real LAS on host is Q15 North Sea 15/9-19 — not a NOC Malay Basin well",
     }
     if las_physics:
         result["las_physics"] = {
@@ -1603,5 +1603,5 @@ if __name__ == "__main__":
     else:
         print(render_killer_yaml(result))
         if result.get("real_las"):
-            print(f"# real_las={result['real_las'].get('status')} petronas={result['real_las'].get('petronas_proprietary')}")
+            print(f"# real_las={result['real_las'].get('status')} noc={result['real_las'].get('noc_proprietary')}")
         print(f"# all_six={result['all_six_success_conditions']} scenario={result['scenario']}")

@@ -49,7 +49,7 @@ Doctrine (GEOX-001 + GENESIS/013): **Orthogonal Base first.**
 
 - Full Petrel-grade 3D structural framework UI  
 - Basin-wide heat-flow for all blocks from one depocenter thickness  
-- Claiming Petronas field calibration without Petronas LAS/SEG-Y  
+- Claiming NOC field calibration without NOC LAS/SEG-Y  
 
 ---
 

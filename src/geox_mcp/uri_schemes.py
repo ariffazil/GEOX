@@ -170,7 +170,7 @@ REGISTRY: tuple[UriTemplate, ...] = (
     UriTemplate(
         name="well",
         path="wells/{basin}/{well_id}",
-        description="Canonical well summary — header, deviation summary, log availability, top picks. {basin}/{well_id} = verbatim PETRONAS naming.",
+        description="Canonical well summary — header, deviation summary, log availability, top picks. {basin}/{well_id} = verbatim NOC naming.",
         mime_type="application/json",
         tier=Tier.TEXT_INLINE,
         access=AccessClass.DOMAIN_ONLY,
