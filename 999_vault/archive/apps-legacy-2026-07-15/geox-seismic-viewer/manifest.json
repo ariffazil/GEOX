@@ -1,0 +1,29 @@
+{
+  "tool": "geox_view_seismic",
+  "description": "Launch GEOX Seismic Viewer MCP App — renders seismic inline/crossline slices with amplitude attributes and horizon overlay.",
+  "input": {
+    "type": "object",
+    "properties": {
+      "line_id": { "type": "string", "description": "Seismic line identifier" },
+      "inline": { "type": "number", "description": "Inline number for display" },
+      "crossline": { "type": "number", "description": "Crossline number for display" },
+      "attribute": { "type": "string", "enum": ["amplitude", "variance", "sweetness", "coherence"], "description": "Seismic attribute to display" },
+      "horizon_overlay": { "type": "boolean", "description": "Toggle horizon overlay" },
+      "depth_time_toggle": { "type": "string", "enum": ["depth", "time"], "description": "Display in depth or time" }
+    },
+    "required": ["inline"]
+  },
+  "output": {
+    "ui": {
+      "resourceUri": "ui://geox-seismic-viewer/index.html",
+      "mode": "inline-or-external"
+    },
+    "notifications": {
+      "teardown": "geox_seismic_teardown"
+    }
+  },
+  "arifos": {
+    "floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "vault_route": "VAULT999"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://gofastmcp.com/schemas/app-config/v1.json",
+  "name": "geox-seismic-viewer",
+  "version": "0.1.0",
+  "domain": "subsurface",
+  "display_name": "GEOX Seismic Viewer",
+  "description": "Interactive seismic section viewer with inline/crossline, amplitude attributes, and horizon overlay — the first visual Earth organ for GEOX.",
+  "entry": "dist/index.html",
+  "capabilities": {
+    "io.modelcontextprotocol/ui": {}
+  },
+  "tools": {
+    "required": ["mcp.geox.geox_seismic_load_line"],
+    "optional": ["mcp.geox.geox_compute_attribute", "mcp.geox.geox_earth3d_load_volume"]
+  },
+  "arifos": {
+    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "vault_route": "VAULT999",
+    "human_in_the_loop": ["export_seismic", "save_horizon"]
+  },
+  "events": {
+    "supported": [
+      "app.initialize",
+      "app.context.patch",
+      "app.state.sync",
+      "tool.request",
+      "tool.result",
+      "ui.action",
+      "ui.state.change",
+      "seismic.slice.change",
+      "attribute.change",
+      "horizon.toggle",
+      "ac_risk.check"
+    ]
+  }
+}

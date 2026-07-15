@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX Basin Explorer — AAA Grade</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --accent-gold: #d4af37;
+            --accent-cyan: #00d4aa;
+            --accent-red: #ff4757;
+            --accent-orange: #ffa502;
+            --accent-green: #2ed573;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090a0;
+            --border-color: #2a2a3a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: 100vh;
+        }
+
+        @media (max-width: 768px) {
+            .app-container { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-header h1 {
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header .subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-section {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-section h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .play-item {
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .play-item:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        .play-item.active {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .play-item .code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-cyan);
+            margin-bottom: 2px;
+        }
+
+        .play-item .name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .play-item .risk {
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .risk.low { color: var(--accent-green); }
+        .risk.medium { color: var(--accent-orange); }
+        .risk.high { color: var(--accent-red); }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .stat-card .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Map Container */
+        .map-container {
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .overlay-card {
+            background: rgba(18, 18, 26, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .overlay-card h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .coordinate-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--accent-cyan);
+        }
+
+        .seal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        /* Layer Control */
+        .layer-control {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(18, 18, 26, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .layer-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .layer-item input[type="checkbox"] {
+            accent-color: var(--accent-cyan);
+        }
+
+        .layer-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        /* Popup Styles */
+        .basin-popup {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .basin-popup h4 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: var(--accent-gold);
+        }
+
+        .basin-popup p {
+            margin: 0 0 6px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .prospect-marker {
+            background: var(--accent-gold);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+        }
+
+        .well-marker {
+            background: var(--accent-cyan);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            width: 8px;
+            height: 8px;
+        }
+        /* Verdict Card */
+        .verdict-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .verdict-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .verdict-badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .verdict-badge.qualified { background: var(--accent-green); color: #000; }
+        .verdict-badge.hold { background: var(--accent-orange); color: #000; }
+        .verdict-badge.void { background: var(--accent-red); color: #fff; }
+
+        .verdict-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+        }
+
+        .verdict-metric:last-child { border-bottom: none; }
+        .verdict-metric .label { color: var(--text-secondary); }
+        .verdict-metric .value { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+
+        .uncertainty-bar {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .uncertainty-fill {
+            height: 100%;
+            background: var(--accent-cyan);
+            transition: width 0.5s ease-in-out;
+        }
+
+        .verdict-footer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .vault-tag {
+            color: var(--accent-gold);
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>🗺️ Basin Explorer</h1>
+                <p class="subtitle">Malay Basin Pilot — AAA Grade</p>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>📊 Basin Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="value">142</div>
+                        <div class="label">Fields</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">12.4</div>
+                        <div class="label">Bnboe</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">48</div>
+                        <div class="label">Plays</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">3</div>
+                        <div class="label">Phases</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>🎯 Play Fairways</h3>
+                <div class="play-item active" data-play="P1">
+                    <div class="code">P1</div>
+                    <div class="name">Clastic Reservoirs</div>
+                    <div class="risk low">● Low Risk</div>
+                </div>
+                <div class="play-item" data-play="P2">
+                    <div class="code">P2</div>
+                    <div class="name">Carbonate Buildups</div>
+                    <div class="risk medium">● Medium Risk</div>
+                </div>
+                <div class="play-item" data-play="P3">
+                    <div class="code">P3</div>
+                    <div class="name">Fractured Basement</div>
+                    <div class="risk high">● High Risk</div>
+                </div>
+                <div class="play-item" data-play="P4">
+                    <div class="code">P4</div>
+                    <div class="name">Deepwater Turbidites</div>
+                    <div class="risk medium">● Medium Risk</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>🔍 Governed Verdict</h3>
+                <div id="prospect-info">
+                    <p style="color: var(--text-secondary); font-size: 13px;">Click on the map to evaluate prospects...</p>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>🖼️ Map Georeferencing</h3>
+                <div id="georef-container" style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; border: 1px dashed var(--border-color); text-align: center;">
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">
+                        Drop analog map image here to fold into Basin context
+                    </p>
+                    <button onclick="document.getElementById('map-upload').click()"
+                            style="background: transparent; border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                        Select Image
+                    </button>
+                    <input type="file" id="map-upload" style="display: none;" accept="image/*" onchange="handleMapUpload(event)">
+                </div>
+                <div id="georef-status" style="margin-top: 10px; display: none;">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Map -->
+        <main class="map-container">
+            <div id="map"></div>
+            
+            <div class="map-overlay">
+                <div class="overlay-card">
+                    <div class="seal-badge">🏛️ DITEMPA BUKAN DIBERI</div>
+                </div>
+                <div class="overlay-card">
+                    <h4>🌐 Coordinates</h4>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="coordinate-display" id="coords">103.500°, 4.000°</div>
+                        <span id="truth-grade" class="verdict-badge qualified" style="padding: 2px 6px; font-size: 9px; background: var(--accent-cyan); color: #000;">VERIFIED</span>
+                    </div>
+                </div>
+                <div class="overlay-card">
+                    <h4>📍 Province</h4>
+                    <div style="font-size: 13px;">Malay Basin</div>
+                </div>
+            </div>
+
+            <div class="layer-control">
+                <div class="layer-item">
+                    <input type="checkbox" id="layer-fields" checked>
+                    <div class="layer-color" style="background: #d4af37;"></div>
+                    <label for="layer-fields">Producing Fields</label>
+                </div>
+                <div class="layer-item">
+                    <input type="checkbox" id="layer-wells" checked>
+                    <div class="layer-color" style="background: #00d4aa;"></div>
+                    <label for="layer-wells">Well Locations</label>
+                </div>
+                <div class="layer-item">
+                    <input type="checkbox" id="layer-seismic">
+                    <div class="layer-color" style="background: #ff4757;"></div>
+                    <label for="layer-seismic">Seismic Coverage</label>
+                </div>
+                <div class="layer-item">
+                    <input type="checkbox" id="layer-verdicts" checked>
+                    <div class="layer-color" style="background: #2ed573;"></div>
+                    <label for="layer-verdicts">Governed Verdicts</label>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Governance Status Constants
+        const Status = {
+            QUALIFY: 'QUALIFY',
+            HOLD: 'HOLD',
+            VOID: 'VOID'
+        };
+
+        // Initialize map centered on Malay Basin
+        const map = L.map('map', {
+            center: [4.5, 104.5],
+            zoom: 7,
+            minZoom: 5,
+            maxZoom: 12
+        });
+
+        // Dark theme map tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Marker groups for governed status
+        const verdictMarkers = L.layerGroup().addTo(map);
+
+        // Sample data and current state
+        let currentPlay = 'P1';
+        let evaluationCount = 0;
+
+        // Mouse coordinate tracking with Epistemic Tagging
+        map.on('mousemove', (e) => {
+            const lat = e.latlng.lat;
+            const lon = e.latlng.lng;
+            document.getElementById('coords').textContent = 
+                `${lon.toFixed(3)}°, ${lat.toFixed(3)}°`;
+            
+            // Epistemic Floor Check: Is this a known geodetic region?
+            const isKnown = lat >= 4.0 && lat <= 7.0 && lon >= 102.5 && lon <= 106.5;
+            const gradeSpan = document.getElementById('truth-grade');
+            
+            if (isKnown) {
+                gradeSpan.textContent = 'VERIFIED';
+                gradeSpan.style.background = 'var(--accent-green)';
+            } else {
+                gradeSpan.textContent = 'CLAIMED';
+                gradeSpan.style.background = 'var(--accent-red)';
+                gradeSpan.style.color = '#fff';
+            }
+        });
+
+        // Click handler
+        map.on('click', (e) => {
+            renderSelectedLocation(e.latlng.lat, e.latlng.lng);
+        });
+
+        function renderSelectedLocation(lat, lon) {
+            const info = document.getElementById('prospect-info');
+            info.innerHTML = `
+                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
+                    <div style="font-family: monospace; color: var(--accent-cyan); margin-bottom: 8px;">
+                        ${lon.toFixed(4)}°, ${lat.toFixed(4)}°
+                    </div>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
+                        Target: Play ${currentPlay}
+                    </p>
+                    
+                    <div style="margin-bottom: 12px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
+                            <span>Complexity</span>
+                            <span id="val-complexity">0.5</span>
+                        </div>
+                        <input type="range" id="complexity" min="0" max="1" step="0.1" value="0.5" 
+                               oninput="document.getElementById('val-complexity').textContent=this.value"
+                               style="width: 100%; accent-color: var(--accent-cyan);">
+                        
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 8px; margin-bottom: 4px;">
+                            <span>Hypotheses (F7)</span>
+                            <span id="val-hypotheses">1</span>
+                        </div>
+                        <input type="range" id="hypotheses" min="1" max="5" step="1" value="1"
+                               oninput="document.getElementById('val-hypotheses').textContent=this.value"
+                               style="width: 100%; accent-color: var(--accent-gold);">
+                    </div>
+
+                    <button onclick="evaluateProspect(${lat}, ${lon})"
+                            id="btn-eval"
+                            style="background: var(--accent-gold); border: none; padding: 8px 16px;
+                                   border-radius: 4px; cursor: pointer; width: 100%;
+                                   font-weight: 600; color: #000; transition: all 0.2s;">
+                        🔥 Run Governed Evaluation
+                    </button>
+                </div>
+            `;
+        }
+
+        async function evaluateProspect(lat, lon) {
+            const btn = document.getElementById('btn-eval');
+            const comp = parseFloat(document.getElementById('complexity').value);
+            const hypos = parseInt(document.getElementById('hypotheses').value);
+            
+            btn.disabled = true;
+            btn.textContent = '⌛ Computing...';
+            btn.style.opacity = '0.5';
+
+            // Simulate MCP Tool Call (geox_prospect_evaluate)
+            setTimeout(() => {
+                const mockResult = generateMockVerdict(lat, lon, comp, hypos);
+                renderVerdictCard(mockResult);
+                addVerdictToMap(mockResult);
+                
+                // Notify parent
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'prospect.evaluate',
+                        data: mockResult
+                    }, '*');
+                }
+            }, 1200);
+        }
+
+        function generateMockVerdict(lat, lon, comp = 0.5, hypos = 1) {
+            evaluationCount++;
+            let verdict = Status.QUALIFY;
+            let reason = null;
+            let holdId = null;
+
+            // Simulate B_cog Logic (Mirroring BiasDetector.py)
+            let b_cog = 0.35; // Default unaided expert
+            if (hypos <= 1 && comp > 0.6) {
+                b_cog = 0.65; // Single model collapse
+                verdict = Status.HOLD;
+                reason = "MODEL_COLLAPSE_F7_BREACH";
+                holdId = `HLD-EXP-${evaluationCount}`;
+            } else if (comp > 0.8) {
+                b_cog = 0.55; // Executive pressure
+                verdict = Status.HOLD;
+                reason = "EXECUTIVE_PRESSURE_DETECTED";
+                holdId = `HLD-PRS-${evaluationCount}`;
+            }
+
+            const acRisk = (0.2 + b_cog) / 2;
+
+            return {
+                id: `PRP-${evaluationCount.toString().padStart(3, '0')}`,
+                lat, lon,
+                verdict: verdict,
+                hold_id: holdId,
+                hold_reason: reason,
+                pg: (0.4 * (1 - acRisk)).toFixed(3),
+                stoiip_mean: 58.0,
+                ac_risk: acRisk.toFixed(3),
+                uncertainty: 0.2,
+                play: currentPlay,
+                timestamp: new Date().toISOString(),
+                vault_ref: `999:TX-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+            };
+        }
+
+        function refreshHoldStatus(holdId) {
+            const label = document.getElementById('hold-status-label');
+            const timer = document.getElementById('hold-timer');
+            
+            if (label) {
+                label.textContent = '⌛ Checking arifOS...';
+                
+                setTimeout(() => {
+                    label.textContent = 'ESCALATED_TO_MANAGER';
+                    label.style.color = 'var(--accent-red)';
+                    if (timer) {
+                        timer.style.width = '30%';
+                        timer.style.background = 'var(--accent-red)';
+                    }
+                }, 800);
+            }
+        }
+
+        function renderVerdictCard(res) {
+            const info = document.getElementById('prospect-info');
+            const statusClass = res.verdict.toLowerCase();
+            
+            let holdHtml = '';
+            if (res.verdict === Status.HOLD) {
+                const holdId = res.hold_id || `HLD-${Math.floor(Date.now()/1000)}`;
+                holdHtml = `
+                    <div style="background: rgba(255, 165, 2, 0.1); border: 1px solid var(--accent-orange); 
+                                padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 11px; font-weight: 700; color: var(--accent-orange);">⚠️ 888_HOLD ACTIVE</span>
+                            <span style="font-family: monospace; font-size: 10px; color: var(--text-secondary);">${holdId}</span>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 8px;">
+                            Reason: ${res.hold_reason || 'Manual Review'}
+                            <br>Status: <span id="hold-status-label" style="color: var(--accent-cyan);">${res.hold_status || 'Awaiting Review'}</span>
+                        </div>
+                        <div class="uncertainty-bar" style="background: rgba(255, 165, 2, 0.2);">
+                            <div id="hold-timer" class="uncertainty-fill" style="width: 100%; background: var(--accent-orange);"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-secondary); margin-top: 4px;">
+                            <span>Escalation: Level ${res.escalation || 0}</span>
+                            <span>Expires in 59m</span>
+                        </div>
+                        <button onclick="refreshHoldStatus('${holdId}')" 
+                                style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); 
+                                       padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-top: 8px; width: 100%; font-size: 10px;">
+                            🔄 Refresh Governance Status
+                        </button>
+                    </div>
+                `;
+                
+                // Start a mock timer drain
+                setTimeout(() => {
+                    const timer = document.getElementById('hold-timer');
+                    if (timer) timer.style.width = '80%';
+                }, 100);
+            }
+
+            info.innerHTML = `
+                <div class="verdict-card">
+                    ${holdHtml}
+                    <div class="verdict-header">
+                        <span style="font-weight: 700; font-family: monospace;">${res.id}</span>
+                        <span class="verdict-badge ${statusClass}">${res.verdict}</span>
+                    </div>
+                    
+                    <div class="verdict-metric">
+                        <span class="label">Play Type</span>
+                        <span class="value">${res.play}</span>
+                    </div>
+                    <div class="verdict-metric">
+                        <span class="label">Prob. Success (Pg)</span>
+                        <span class="value">${res.pg}</span>
+                    </div>
+                    <div class="verdict-metric">
+                        <span class="label">STOIIP (Mean)</span>
+                        <span class="value">${res.stoiip_mean} Mmbbl</span>
+                    </div>
+                    <div class="verdict-metric">
+                        <span class="label">ToAC Risk (dS)</span>
+                        <span class="value" style="color: ${res.ac_risk > 0.6 ? 'var(--accent-red)' : 'var(--accent-green)'}">
+                            ${res.ac_risk}
+                        </span>
+                    </div>
+                    
+                    <div style="margin-top: 10px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary);">
+                            <span>Physical Uncertainty</span>
+                            <span>${(res.uncertainty * 100).toFixed(0)}%</span>
+                        </div>
+                        <div class="uncertainty-bar">
+                            <div class="uncertainty-fill" style="width: ${res.uncertainty * 100}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="verdict-footer">
+                        <span>Vault Ref: <span class="vault-tag">${res.vault_ref}</span></span>
+                        <span>F2 Verified ✓</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addVerdictToMap(res) {
+            const color = res.verdict === Status.QUALIFY ? '#2ed573' : 
+                         res.verdict === Status.HOLD ? '#ffa502' : '#ff4757';
+            
+            const marker = L.circleMarker([res.lat, res.lon], {
+                radius: 10,
+                fillColor: color,
+                color: '#fff',
+                weight: 2,
+                fillOpacity: 0.8
+            }).addTo(verdictMarkers);
+
+            marker.bindPopup(`
+                <div class="basin-popup">
+                    <h4>${res.id} Verdict</h4>
+                    <p>Status: <b style="color: ${color}">${res.verdict}</b></p>
+                    <p>Pg: ${res.pg}</p>
+                    <p>Volume: ${res.stoiip_mean} Mmbbl</p>
+                    <button onclick="renderVerdictCard(${JSON.stringify(res).replace(/"/g, '&quot;')})" 
+                            style="background: var(--bg-tertiary); border: 1px solid var(--border-color); color: #fff; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                        View in Sidebar
+                    </button>
+                </div>
+            `);
+        }
+
+        // Georeferencing Logic
+        let pendingGeoreference = null;
+        let georefPreviewLayer = null;
+
+        function handleMapUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const georefContainer = document.getElementById('georef-container');
+            const georefStatus = document.getElementById('georef-status');
+            
+            georefContainer.style.opacity = '0.5';
+            georefStatus.style.display = 'block';
+            georefStatus.innerHTML = `
+                <div style="font-size: 11px; color: var(--accent-cyan);">
+                    ⌛ Analyzing Analog: ${file.name}...
+                </div>
+            `;
+
+            // Simulate invokeGeoreferenceTool (mcp.geox.map_georeference)
+            setTimeout(() => {
+                const mockGeoref = {
+                    image_path: file.name,
+                    bounds: [[4.1, 103.5], [5.5, 104.8]], // Mocked bounds for Malay Basin
+                    verdict: 'HOLD',
+                    vault_tx: `GEOR-${Math.random().toString(36).substr(2, 6).toUpperCase()}`
+                };
+                
+                pendingGeoreference = mockGeoref;
+                renderGeoreferencePreview(mockGeoref);
+                
+                georefStatus.innerHTML = `
+                    <div class="verdict-card" style="margin-top: 0; padding: 10px;">
+                        <div class="verdict-header" style="margin-bottom: 8px;">
+                            <span style="font-size: 10px; font-weight: 700;">PROPOSED SEAL</span>
+                            <span class="verdict-badge hold">HOLD</span>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 8px;">
+                            ${mockGeoref.image_path} geolocated to Malay Central.
+                            <br>Floor F11 confirmation required.
+                        </div>
+                        <button onclick="sealGeoreference()" 
+                                style="background: var(--accent-cyan); border: none; padding: 4px 12px; 
+                                       border-radius: 4px; cursor: pointer; width: 100%; font-weight: 700; font-size: 11px; color: #000;">
+                            🛡️ Confirm & Seal to Vault
+                        </button>
+                    </div>
+                `;
+                georefContainer.style.opacity = '1';
+            }, 1500);
+        }
+
+        function renderGeoreferencePreview(georef) {
+            if (georefPreviewLayer) map.removeLayer(georefPreviewLayer);
+            
+            georefPreviewLayer = L.rectangle(georef.bounds, {
+                color: 'var(--accent-cyan)',
+                weight: 2,
+                fillOpacity: 0.2,
+                dashArray: '5, 5'
+            }).addTo(map);
+
+            map.fitBounds(georef.bounds, { padding: [20, 20] });
+        }
+
+        function sealGeoreference() {
+            const georefStatus = document.getElementById('georef-status');
+            
+            // Final SEAL logic
+            if (georefPreviewLayer) {
+                georefPreviewLayer.setStyle({
+                    color: 'var(--accent-gold)',
+                    fillOpacity: 0.4,
+                    dashArray: null
+                });
+            }
+
+            georefStatus.innerHTML = `
+                <div class="verdict-card" style="margin-top: 0; padding: 10px; border-color: var(--accent-gold);">
+                    <div class="verdict-header" style="margin-bottom: 8px;">
+                        <span style="font-size: 10px; font-weight: 700;">GEODETIC SEAL</span>
+                        <span class="verdict-badge qualified" style="background: var(--accent-gold);">SEALED</span>
+                    </div>
+                    <div style="font-size: 10px; color: var(--text-secondary);">
+                        Vault TX: <span class="vault-tag">${pendingGeoreference.vault_tx}</span>
+                        <br>Image folded into Basin context (F1/F2 Verified).
+                    </div>
+                </div>
+            `;
+            
+            // Notify parent
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'georeference_sealed',
+                    data: pendingGeoreference
+                }, '*');
+            }
+        }
+
+        // Play selection
+        document.querySelectorAll('.play-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.play-item').forEach(p => p.classList.remove('active'));
+                item.classList.add('active');
+                
+                const play = item.dataset.play;
+                console.log('Selected play:', play);
+                
+                // Notify parent
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'play_selected',
+                        data: { play_code: play }
+                    }, '*');
+                }
+            });
+        });
+
+        // Functions
+        function exploreField(fieldName) {
+            console.log('Exploring field:', fieldName);
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'field_explore',
+                    data: { field_name: fieldName }
+                }, '*');
+            }
+        }
+
+        function evaluateProspect(lat, lon) {
+            console.log('Evaluating prospect at:', lat, lon);
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'evaluate_prospect',
+                    data: { lat, lon }
+                }, '*');
+            }
+        }
+
+        // Layer toggles
+        document.getElementById('layer-fields').addEventListener('change', (e) => {
+            // Toggle fields layer
+            console.log('Fields layer:', e.target.checked);
+        });
+
+        console.log('🔥 GEOX Basin Explorer — AAA Grade Initialized');
+    </script>
+</body>
+</html>

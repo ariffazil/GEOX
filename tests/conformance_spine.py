@@ -129,22 +129,101 @@ def check_earth_layer_seeds() -> dict[str, Any]:
         return {"check": "earth_layer_seeds", "status": "FAIL", "error": str(e)}
 
 
-def check_a2a_agent_card() -> dict[str, Any]:
-    """Verify .well-known/agent.json is valid JSON + has skills array."""
-    card = ROOT / ".well-known" / "agent.json"
-    if not card.exists():
-        return {"check": "a2a_agent_card", "status": "FAIL", "error": ".well-known/agent.json missing"}
+def check_mcp_manifest_conformance() -> dict[str, Any]:
+    """Local MCP-manifest conformance — verifies src/geox_mcp/tools_manifest.yaml
+    (the runtime source of truth) parses, declares a tools list, and contains
+    unique tool names. Replaces the old .well-known/agent.json card-file check
+    (FORGE 2026-07-15 — A2A card consolidation). Local MCP server card
+    (/.well-known/mcp.json) and canonical registry (CANONICAL_PUBLIC_TOOLS)
+    remain the federation discovery surfaces.
+    """
+    import yaml  # local import — PyYAML is a transitive dep via FastMCP/pydantic
+
+    manifest_path = SRC / "geox_mcp" / "tools_manifest.yaml"
+    if not manifest_path.exists():
+        return {
+            "check": "mcp_manifest_conformance",
+            "status": "FAIL",
+            "error": f"{manifest_path.relative_to(ROOT)} missing",
+        }
     try:
-        data = json.loads(card.read_text())
-    except json.JSONDecodeError as e:
-        return {"check": "a2a_agent_card", "status": "FAIL", "error": f"invalid JSON: {e}"}
-    if "skills" not in data or not isinstance(data["skills"], list):
-        return {"check": "a2a_agent_card", "status": "FAIL", "error": "skills array missing"}
+        payload = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    except Exception as e:  # PyYAML parser error
+        return {
+            "check": "mcp_manifest_conformance",
+            "status": "FAIL",
+            "error": f"invalid YAML: {e}",
+        }
+    if not isinstance(payload, dict):
+        return {
+            "check": "mcp_manifest_conformance",
+            "status": "FAIL",
+            "error": "manifest root is not a mapping",
+        }
+    tools_raw = payload.get("tools")
+    if not isinstance(tools_raw, list) or not tools_raw:
+        return {
+            "check": "mcp_manifest_conformance",
+            "status": "FAIL",
+            "error": "'tools' must be a non-empty list",
+        }
+    names = [str(entry.get("name", "")) for entry in tools_raw if isinstance(entry, dict)]
+    dupes = sorted({name for name in names if name and names.count(name) > 1})
+    if dupes:
+        return {
+            "check": "mcp_manifest_conformance",
+            "status": "FAIL",
+            "error": f"duplicate tool names: {dupes}",
+        }
     return {
-        "check": "a2a_agent_card",
+        "check": "mcp_manifest_conformance",
         "status": "PASS",
-        "skill_count": len(data["skills"]),
-        "canonical_tools_count": data.get("canonical_tools", {}).get("count"),
+        "manifest_version": payload.get("manifest_version"),
+        "tool_count": len(names),
+    }
+
+
+def check_no_local_a2a_card_routes() -> dict[str, Any]:
+    """Absence of local A2A card artifacts — after the 2026-07-15 consolidation
+    GEOX does not own /.well-known/agent.json or /.well-known/agent-card.json.
+    Confirms the file artefacts are gone AND that src/geox_mcp/server.py
+    registers no route for them. Catches accidental resurrection of local
+    A2A cards. Federation-wide discovery is delegated to the canonical AAA
+    A2A mesh (peer_coordinator); local MCP server card discovery remains
+    at /.well-known/mcp.json and /.well-known/mcp/server.json (preserved).
+    """
+    removed_files = [
+        ROOT / ".well-known" / "agent.json",
+        ROOT / ".well-known" / "agent-card.json",
+    ]
+    still_present = [str(p.relative_to(ROOT)) for p in removed_files if p.exists()]
+    if still_present:
+        return {
+            "check": "no_local_a2a_card_routes",
+            "status": "FAIL",
+            "error": f"local A2A card files resurrected: {still_present}",
+        }
+
+    server_py = SRC / "geox_mcp" / "server.py"
+    text = server_py.read_text(encoding="utf-8")
+    forbidden_patterns = [
+        '_GEOX_AGENT_CARD',
+        '_geox_agent_card_handler',
+        '"/.well-known/agent.json"',
+        '"/.well-known/agent-card.json"',
+    ]
+    hits = [pat for pat in forbidden_patterns if pat in text]
+    if hits:
+        return {
+            "check": "no_local_a2a_card_routes",
+            "status": "FAIL",
+            "error": f"server.py still references: {hits}",
+        }
+
+    return {
+        "check": "no_local_a2a_card_routes",
+        "status": "PASS",
+        "verified": "no /.well-known/agent{,-card}.json files or routes",
     }
 
 
@@ -216,7 +295,8 @@ CHECKS = [
     check_registry_lock,
     check_contracts_imports,
     check_earth_layer_seeds,
-    check_a2a_agent_card,
+    check_mcp_manifest_conformance,
+    check_no_local_a2a_card_routes,
     check_kinabalu_falsification,
     check_layer_export_package,
 ]

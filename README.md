@@ -1,22 +1,22 @@
 <!-- SOT-MANIFEST
 owner: Arif (F13 SOVEREIGN)
-last_verified: 2026-07-13T09:15Z
-live_commit_short: cf8f0c38
-live_version: v2026.07.13-zen15
+last_verified: 2026-07-15T04:45Z
+live_version: v2026.07.06-phase3.1-rsi-pipeline
 port: 8081
-mcp_tools_live: 15 canonical (ZEN-15)
+domain_law: NATURAL_LAW
+mcp_tools_live: 15
 owner_summary: GREEN
 truth_rule: tools/list + /health beat any static count in prose
-federation_release: v2026.07.13-ZEN-15
+federation_release: v2026.07.15-DOMAIN-CONTRAST
 mcp_apps: SEP-1865 (ui:// + host proxy)
 gui: https://geox.arif-fazil.com/gui/
 package_seal: PLAN-2026-07-12-GEOX-MCP-APP-SLICE-001 (seq 57 wire)
 valid_from: 2026-07-12
-valid_until: 2026-08-12
+valid_until: 2026-08-15
 confidence: high
 scope: /root/GEOX
+domain_contrast: /root/AAA/docs/DOMAIN_ORGAN_CONTRAST.md
 machine_sot: CANONICAL_PUBLIC_SURFACE.json
-truth_rule: tools/list + /health beat any static count in prose
 -->
 
 ```
@@ -40,14 +40,61 @@ truth_rule: tools/list + /health beat any static count in prose
 
 # GEOX — Governed Earth Intelligence
 
-![GEOX Earth Intelligence Banner](./docs/assets/geox_hero_banner.jpg)
+> **DITEMPA BUKAN DIBERI.** It **witnesses** the subsurface. It does **not** drill.
+
+## Identity
+
+| Field | Value |
+|-------|-------|
+| **Domain** | Earth — physics-constrained geoscience inference |
+| **Port** | `:8081` · `https://geox.arif-fazil.com` |
+| **MCP Tools (public)** | **15** — SOT: live `tools/list` |
+| **Primary Physics** | Wave equation · Archie · Physics9 bounds · stratigraphy |
+| **Epistemic Labels** | OBS / DER / INT / SPEC / CLAIM |
+| **License** | BSL-1.1 |
+| **Final Authority** | ARIF (F13 SOVEREIGN) |
+| **Core package** | `src/geox_core/` — see [`CORE_IMPORT_MAP.md`](./CORE_IMPORT_MAP.md) |
+| **Soul** | [`SOUL.md`](./SOUL.md) · Docs index: [`docs/index.md`](./docs/index.md) |
+
+## Federation Position
+
+```
+ARIF (F13) → arifOS KERNEL :8088 → GEOX :8081 (this organ)
+                                      ├→ WEALTH :18082 (capital risk from feeds)
+                                      └→ WELL :18083 (readiness — not well-log)
+```
+
+## What GEOX Owns
+
+- Well-log I/O & QC · petrophysics · sequence motifs  
+- Seismic ingest / compute / interpret · vision assists  
+- Basin / backstrip / thermal / mass balance  
+- Claims & evidence · prospect **compute** (not capital)  
+- MCP Apps + GUI (host-proxied)
+
+## What GEOX Refuses (Hard)
+
+| Refusal | Who owns it instead |
+|---------|---------------------|
+| Drill / no-drill authority | Arif + arifOS SEAL |
+| Capital allocation | WEALTH |
+| Constitutional SEAL | arifOS / VAULT999 |
+| Human diagnosis / readiness law | WELL |
+| Self-authorize mutate | A-FORGE after SEAL |
+
+## Connect
+
+```json
+{ "mcpServers": { "geox": { "url": "https://geox.arif-fazil.com/mcp" } } }
+```
+
+SOT RULE: `tools/list` wins. Runtime evidence outranks static prose.
+
+---
 
 [![Forge Pipeline](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml)
 [![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml)
-[![Governance Gate](https://github.com/ariffazil/GEOX/actions/workflows/governance-gate.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/governance-gate.yml)
 [![License: BSL-1.1](https://img.shields.io/badge/License-BSL--1.1-blue.svg)](LICENSE)
-[![MCP](https://img.shields.io/badge/MCP-2025--11--25-6f42c1)](https://modelcontextprotocol.io)
-[![Live](https://img.shields.io/badge/live-geox.arif--fazil.com-2ea44f)](https://geox.arif-fazil.com/health)
 
 ---
 
@@ -63,6 +110,73 @@ truth_rule: tools/list + /health beat any static count in prose
 **One sentence:** GEOX is a **physics-constrained geoscience inference service** that exposes auditable subsurface computations for humans and AI agents, without making operational or financial decisions.
 
 **Competitive lane (F13):** Not another Petrel/DS365 workflow desktop. Those are model-management platforms. GEOX is the **earth-reasoning substrate** that asks: *does this geological story deserve to live?* See [`GENESIS/011_COMPETITIVE_LAYER_MAP.md`](./GENESIS/011_COMPETITIVE_LAYER_MAP.md).
+
+---
+
+## Domain contrast — GEOX · WEALTH · WELL (federation MCP)
+
+> Full architecture seal: [ARIFOS_MCP_ARCHITECTURE_v2026.07.15](https://github.com/ariffazil/AAA/blob/main/docs/ARIFOS_MCP_ARCHITECTURE_v2026.07.15.md) · Contrast: [DOMAIN_ORGAN_CONTRAST](https://github.com/ariffazil/AAA/blob/main/docs/DOMAIN_ORGAN_CONTRAST.md) · Organ map: [FEDERATION_ORGAN](https://github.com/ariffazil/AAA/blob/main/docs/FEDERATION_ORGAN.md)  
+> **This organ answers to `NATURAL_LAW`.** Not capital law. Not substrate law. Not constitutional law.
+
+Three domain MCP servers share one governance spine (arifOS) and three **orthogonal laws of truth**. Collapsing them is a constitutional error.
+
+| Axis | **GEOX (this repo)** | WEALTH | WELL |
+|------|----------------------|--------|------|
+| Port / MCP | `:8081` · [geox.arif-fazil.com/mcp](https://geox.arif-fazil.com/mcp) | `:18082` · wealth.arif-fazil.com/mcp | `:18083` · well.arif-fazil.com/mcp |
+| GitHub | [ariffazil/GEOX](https://github.com/ariffazil/GEOX) | [ariffazil/WEALTH](https://github.com/ariffazil/WEALTH) | [ariffazil/WELL](https://github.com/ariffazil/WELL) |
+| `domain_law` | **`NATURAL_LAW`** | `CAPITAL_LAW` | `SUBSTRATE_LAW` |
+| Primary axis | Earth / material substrate | Capital / scarcity / allocation geometry | Vitality / readiness / dignity |
+| Live tools (2026-07-15) | **15** | **12** | **27** |
+| Authority | Evidence only | Compute only (advisory) | `REFLECT_ONLY` |
+| May claim | OBS / DER / INT earth facts | Risk envelopes, advisory size | Readiness signals, dignity flags |
+| Must never | Drill · allocate capital · seal law | Move money · claim earth truth | Diagnose · decide fitness · override human |
+
+### Knowledge grammars (Math · Physics · Code)
+
+Grammars are universal. **Primary grammar differs by organ.**
+
+| Grammar | **GEOX** | WEALTH | WELL |
+|---------|----------|--------|------|
+| **Physics** | **Primary** — Physics9 bounds, mass balance, Archie/Gassmann-class transforms, unit honesty | Mapped — capital as conserved flow (runway, burn, risk entropy) | Homeostatic — metabolic flux, fatigue gradients (not medical diagnosis) |
+| **Math** | Transforms, P10/P50/P90, residual RMS, volumetrics | **Primary** — NPV/IRR/EMV/Kelly/Markowitz/VaR | Scores, flux thresholds, entropy measures |
+| **Code / MCP** | FastMCP tools + resources + prompts (`geox_*`) | FastMCP (`wealth_*`) | FastMCP (`well_*`) |
+
+### MCP architecture (this server)
+
+GEOX is a **standalone MCP server**, not a plugin inside arifOS.
+
+| Primitive | Role on GEOX |
+|-----------|----------------|
+| **Tools** | Earth compute & evidence (`geox_*`) — public contract = live `tools/list` |
+| **Resources** | Schema / surface / reality context |
+| **Prompts** | Geoscience reasoning discipline |
+| **Transport** | Streamable HTTP (`:8081/mcp`) + stdio for desktop agents |
+| **Public door** | Caddy → `https://geox.arif-fazil.com/mcp` |
+| **Does not own** | F1–F13 judgment, SEAL, capital authorization, human diagnosis |
+
+**Agentic flow:** intent → arifOS classify/route → **GEOX tools** (evidence) → optional WEALTH (money) / WELL (readiness) → `arif_judge` → SEAL/HOLD/VOID → A-FORGE execute → VAULT999.
+
+```
+Arif (F13) → AAA/Hermes/OpenClaw → arifOS :8088
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    ▼                 ▼                 ▼
+                 GEOX :8081      WEALTH :18082     WELL :18083
+                 NATURAL_LAW     CAPITAL_LAW       SUBSTRATE_LAW
+                 earth evidence  capital compute   vitality reflect
+                    │                 │                 │
+                    └─────────────────┼─────────────────┘
+                                      ▼
+                              arifOS 888 JUDGE → A-FORGE → VAULT999
+```
+
+| Peer | GEOX relationship |
+|------|-------------------|
+| **arifOS** | Governor — GEOX never seals constitutional law |
+| **WEALTH** | Takes volumes/POS-class outputs for capital geometry; GEOX does not allocate |
+| **WELL** | Field/operator readiness mirror; GEOX does not claim human fitness |
+| **A-FORGE** | Hands after SEAL — deploy/mutate only |
+| **AAA** | MCP Apps host + cockpit; proxies tools/call |
 
 ---
 
@@ -108,7 +222,7 @@ curl -s https://geox.arif-fazil.com/health | python3 -m json.tool
 # expect: status=healthy, owner_summary.color=GREEN, and public_tools reason present
 ```
 
-Machine contract: [`CANONICAL_PUBLIC_SURFACE.json`](./CANONICAL_PUBLIC_SURFACE.json) · Boundary: [`BOUNDARY.md`](./BOUNDARY.md) · Runbook: [`RUNBOOK.md`](./RUNBOOK.md)
+Machine contract: [`CANONICAL_PUBLIC_SURFACE.json`](./CANONICAL_PUBLIC_SURFACE.json) · Boundary: [`BOUNDARY.md`](./BOUNDARY.md) · Core imports: [`CORE_IMPORT_MAP.md`](./CORE_IMPORT_MAP.md) · Runbook: [`RUNBOOK.md`](./RUNBOOK.md)
 
 ---
 
@@ -252,26 +366,16 @@ GEOX is not “ChatGPT with geology words.” It is a **physics-constrained evid
 
 ## 5. Federation position
 
-```
-Arif (F13 SOVEREIGN) — final governance authority
-        │
-        ▼
-arifOS KERNEL :8088 — law, 888 JUDGE, VAULT999
-        │
-   ┌────┼────┬────────────┐
-   ▼    ▼    ▼            ▼
- GEOX  WEALTH WELL     A-FORGE
- :8081 :18082 :18083   :7071
- Earth Capital Human   Hands
- evidence advisory reflect execute-after-SEAL
-```
+See **[Domain contrast](#domain-contrast--geox--wealth--well-federation-mcp)** above for the full three-organ table, knowledge grammars, and MCP flow.
+
+Canon: [DOMAIN_ORGAN_CONTRAST.md](https://github.com/ariffazil/AAA/blob/main/docs/DOMAIN_ORGAN_CONTRAST.md) · Peers: [WEALTH](https://github.com/ariffazil/WEALTH) · [WELL](https://github.com/ariffazil/WELL)
 
 | Organ | Role | GEOX relationship |
 |-------|------|-------------------|
 | **arifOS** | Constitution, SEAL/HOLD/VOID | GEOX never seals law |
-| **GEOX** | Earth evidence | This repo |
-| **WEALTH** | Capital thermodynamics | GEOX does not allocate |
-| **WELL** | Human readiness mirror | Reflect only |
+| **GEOX** | Earth evidence (`NATURAL_LAW`) | This repo |
+| **WEALTH** | Capital thermodynamics (`CAPITAL_LAW`) | GEOX does not allocate |
+| **WELL** | Human readiness mirror (`SUBSTRATE_LAW`) | Reflect only |
 | **A-FORGE** | Engineering actuator | Deploys/mutates after SEAL |
 | **AAA** | Cockpit + MCP Apps host | Hosts UI; proxies tools/call |
 | **VAULT999** | Immutable memory | IMAGE_SEAL side-ledger for PNGs; constitutional chain separate |

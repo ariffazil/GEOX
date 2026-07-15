@@ -2978,50 +2978,16 @@ async def adapters_handler(request: Request) -> JSONResponse:
     )
 
 
-# ── A2A Agent Card (Federation Discovery) ──────────────────────────────────
-# FORGE 2026-06-28: /.well-known/agent.json for AAA A2A mesh discovery.
-
-_GEOX_AGENT_CARD = {
-    "schema_version": "0.2",
-    "organ_id": "geox",
-    "name": "GEOX — Governed Earth Intelligence",
-    "role": "earth",
-    "description": (
-        "Earth coprocessor for arifOS federation. Provides geoscience, "
-        "petrophysics, seismic, basin, deep time, and geomechanical evidence "
-        "for constitutional judgment. Evidence-only — never a policy judge."
-    ),
-    "version": "2026.07.06",
-    "url": "https://geox.arif-fazil.com",
-    "a2a_endpoint": "http://127.0.0.1:8081/a2a",
-    "agent_card_url": "http://127.0.0.1:8081/.well-known/agent-card.json",
-    "endpoints": {
-        "mcp": "https://geox.arif-fazil.com/mcp",
-        "health": "https://geox.arif-fazil.com/health",
-        "tools": "https://geox.arif-fazil.com/tools",
-    },
-    "authority_class": "evidence",
-    "allowed_action_classes": ["OBSERVE", "PREPARE"],
-    "max_risk_tier": "T1",
-    "auth": {"type": "none"},
-    "federation": {
-        "protocol": "A2A",
-        "peer_coordinator": "https://aaa.arif-fazil.com",
-        "constitutional_kernel": "https://arifos.arif-fazil.com",
-    },
-    "owned_mcp": list(CANONICAL_PUBLIC_TOOLS),
-    "judge_skills": [],
-    "skills": [
-        {"id": "earth.evidence", "name": "Earth Evidence", "tags": ["geoscience", "evidence"]},
-        {"id": "basin.resolve", "name": "Basin Resolution", "tags": ["basin", "stratigraphy"]},
-        {"id": "seismic.compute", "name": "Seismic Physics", "tags": ["seismic", "forward-model"]},
-    ],
-}
-
-
-async def _geox_agent_card_handler(request):
-    """Serve A2A agent card for federation discovery."""
-    return JSONResponse(_GEOX_AGENT_CARD)
+# ── A2A Agent Card ─────────────────────────────────────────────────────────
+# FORGE 2026-07-15 (A2A card consolidation): local /.well-known/agent.json
+# and /.well-known/agent-card.json were removed from GEOX. Federation-wide
+# agent card discovery is now served exclusively by the canonical A2A mesh
+# at AAA (peer_coordinator). The remaining /.well-known/ routes are:
+#   - mcp.json / mcp/server.json — MCP server card (preserved).
+#   - oauth-* — OAuth 2.0 discovery (preserved).
+#   - webmcp — WebMCP manifest (preserved).
+# Discovery document: tools_manifest.yaml + CANONICAL_PUBLIC_TOOLS in
+# src/geox_mcp/registry.py remain the runtime source of truth.
 
 
 def create_app():
@@ -3115,8 +3081,6 @@ def create_app():
             Route("/adapters", adapters_handler, methods=["GET"]),
             Route("/.well-known/mcp.json", mcp_server_card, methods=["GET"]),
             Route("/.well-known/mcp/server.json", discovery_handler, methods=["GET"]),
-            Route("/.well-known/agent.json", _geox_agent_card_handler, methods=["GET"]),
-            Route("/.well-known/agent-card.json", _geox_agent_card_handler, methods=["GET"]),
             Route("/.well-known/webmcp", webmcp_manifest, methods=["GET"]),
             Route("/.well-known/oauth-protected-resource", _geox_oauth_protected_resource, methods=["GET"]),
             Route("/.well-known/oauth-protected-resource/mcp", _geox_oauth_protected_resource, methods=["GET"]),
