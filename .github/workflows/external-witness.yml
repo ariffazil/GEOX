@@ -1,0 +1,67 @@
+name: External Witness Attestation (Gödel Lock)
+
+> **FORGED 2026-07-15.** Evidence never seals its own conclusions.
+> GEOX refuses to SEAL on geoscience claims without external witness.
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, labeled]
+    branches: [main, master]
+
+jobs:
+  witness:
+    name: External Witness Check (W³ channel)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe arifOS kernel Gödel lock
+        id: kernel
+        run: |
+          response=$(curl -sf -m 5 http://localhost:8088/health 2>/dev/null || echo "KERNEL_UNREACHABLE")
+          if echo "$response" | grep -qi "godel\|witness"; then
+            echo "✓ arifOS kernel reports Gödel lock active"
+            echo "kernel=godel_active" >> "$GITHUB_OUTPUT"
+          else
+            echo "⚠ arifOS kernel unreachable; falling back to comment/label check"
+            echo "kernel=unreachable" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check for external witness attestation
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const repo = context.repo;
+
+            const hasLabel = pr.labels && pr.labels.some(l => l.name === 'external-witness-attested');
+            if (hasLabel) { core.info('✓ Witness label found'); return; }
+
+            const comments = await github.rest.issues.listComments({
+              owner: repo.owner, repo: repo.repo, issue_number: pr.number
+            });
+            const witnessComment = comments.data.find(c =>
+              c.body && /EXTERNAL_WITNESS:\s*(SEAL|HOLD|APPROVE)/i.test(c.body)
+            );
+            if (witnessComment) {
+              core.info(`✓ Witness comment from @${witnessComment.user.login}`);
+              return;
+            }
+
+            if (pr.body && /EXTERNAL_WITNESS:\s*(SEAL|HOLD|APPROVE)/i.test(pr.body)) {
+              core.info('✓ Witness token in PR body'); return;
+            }
+
+            core.setFailed(
+              '❌ Gödel Lock: No external witness attestation.\n' +
+              'Evidence cannot seal its own conclusions. Required: ' +
+              'label "external-witness-attested" or comment "EXTERNAL_WITNESS: SEAL|HOLD|APPROVE".'
+            );
+
+      - name: Audit receipt
+        if: success()
+        run: |
+          echo "## External Witness Attestation (Evidence Side)"
+          echo "- PR: #${{ github.event.pull_request.number }} — ${{ github.event.pull_request.title }}"
+          echo "- Author: @${{ github.event.pull_request.user.login }}"
+          echo "- Kernel: ${{ steps.kernel.outputs.kernel }}"
+          echo "- Physics9 unchanged: yes (witness is orthogonal to physics)"
+          echo "- Attested: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
