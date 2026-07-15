@@ -1,36 +1,25 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-12T07:48:05.868729+00:00",
+  "generated_at": "2026-07-15T05:44:10.065098+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 26,
-  "internal_count": 55,
+  "public_count": 15,
+  "internal_count": 54,
   "public_tools": [
     "geox_well_ingest",
-    "geox_well_qc",
-    "geox_well_desk_open",
-    "geox_well_desk_publish",
-    "geox_render_well_panel",
     "geox_petrophysics",
-    "geox_sequence",
     "geox_seismic_ingest",
     "geox_seismic_compute",
     "geox_seismic_interpret",
-    "geox_vision",
     "geox_subsurface_model",
-    "geox_geomechanics",
     "geox_basin",
+    "geox_sequence",
+    "geox_geomechanics",
     "geox_deep_time_state",
-    "geox_surface_status",
     "geox_claim",
-    "geox_evidence",
     "geox_prospect",
-    "geox_map_context_scene",
-    "geox_contrast_detect",
-    "geox_biostrat_parse",
-    "geox_biostrat_falsify",
-    "geox_basin_backstrip",
-    "geox_sediment_mass_balance",
-    "geox_thermal_maturity_history"
+    "geox_gravmag_studio",
+    "geox_well_desk",
+    "geox_surface_status"
   ],
   "tools": [
     {
@@ -47,79 +36,11 @@
       }
     },
     {
-      "name": "geox_well_qc",
-      "domain": "earth.well",
-      "axis": "verify",
-      "lane": "evidence",
-      "description": "Quality control checks on well data: depth monotonicity, null percentages, physical range checks, curve completeness.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_well_desk_open",
-      "domain": "earth.well",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "OBSERVE \u00b7 Open GEOX well-desk interactive view (SEP-1865 MCP App). Read-only operator summary for a well_id. Hosts with UI open ui://geox/well-desk; hosts without UI still receive structured JSON. No ",
-      "ui": {
-        "resource_uri": "ui://geox/well-desk",
-        "mime_type": "text/html;profile=mcp-app"
-      },
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": false
-      }
-    },
-    {
-      "name": "geox_well_desk_publish",
-      "domain": "earth.well",
-      "axis": "mutate",
-      "lane": "evidence",
-      "description": "MUTATE \u00b7 Publish a rendered well-desk image with embedded metadata. Saves image to /root/GEOX/data/renders/ and seals to VAULT999.\n",
-      "ui": null,
-      "governance": {
-        "action_class": "MUTATE",
-        "mutation": true,
-        "physics_guard_required": false
-      }
-    },
-    {
-      "name": "geox_render_well_panel",
-      "domain": "earth.well",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "OBSERVE \u00b7 Render a well-log panel as a PNG image with metadata. Generates GR, RT, NPHI, RHOB, DT tracks for a given well_id.\n",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": false
-      }
-    },
-    {
       "name": "geox_petrophysics",
       "domain": "earth.petrophysics",
       "axis": "reason",
       "lane": "reasoning",
-      "description": "Compute petrophysical properties: Vsh, porosity, Sw, permeability, net pay. Includes LEM physics-prior inference.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_sequence",
-      "domain": "earth.stratigraphy",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "Sequence stratigraphy analysis: GR binning, parasequence packages, systems tract inference, well correlation.",
+      "description": "Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -132,7 +53,7 @@
       "domain": "earth.seismic",
       "axis": "observe",
       "lane": "evidence",
-      "description": "Load and inspect seismic data: SEG-Y headers, trace counts, sample intervals, volume metadata.",
+      "description": "SEG-Y I/O, header inspection, export.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -144,8 +65,8 @@
       "name": "geox_seismic_compute",
       "domain": "earth.seismic",
       "axis": "compute",
-      "lane": "evidence",
-      "description": "Unified seismic physics: synthetics, well ties, AVO analysis, attributes. Time-depth anchoring uses checkshot data only. Modes include tie_preflight, tie_receipt, wavelet_extract, mistie_rms, time_dep",
+      "lane": "reasoning",
+      "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -158,20 +79,7 @@
       "domain": "earth.seismic",
       "axis": "reason",
       "lane": "reasoning",
-      "description": "Seismic interpretation: horizon detection, fault picking, volume blending, frame extraction.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_vision",
-      "domain": "earth.perception",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "Vision-based seismic interpretation using VLMs: analyze seismic images, audit interpretations, calibrate models.",
+      "description": "Unified seismic interpretation: horizon/fault picking, RSI pipeline, vision, contrast detection. Modes: horizon_contrast, fault_sticks, volume_frame, blend, rsi_pipeline, contrast, vision.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -182,22 +90,9 @@
     {
       "name": "geox_subsurface_model",
       "domain": "earth.model",
-      "axis": "reason",
-      "lane": "judgment",
-      "description": "Multi-physics subsurface modeling: joint inversion, gravity/magnetic forward modeling, MT/CSEM forward modeling.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_geomechanics",
-      "domain": "earth.mechanics",
       "axis": "compute",
       "lane": "reasoning",
-      "description": "Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate transforms, block resolution.",
+      "description": "Subsurface model building: joint inversion, gravity/magnetic forward, MT forward.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -209,8 +104,34 @@
       "name": "geox_basin",
       "domain": "earth.basin",
       "axis": "reason",
-      "lane": "discovery",
-      "description": "Basin intelligence: profiles, resolution, deep time state, Macrostrat API, spatial context, scene rendering.",
+      "lane": "reasoning",
+      "description": "Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_sequence",
+      "domain": "earth.stratigraphy",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Unified stratigraphy: sequence analysis, biostratigraphic parsing and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_geomechanics",
+      "domain": "earth.structure",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -220,23 +141,10 @@
     },
     {
       "name": "geox_deep_time_state",
-      "domain": "earth.deep_time",
-      "axis": "reason",
-      "lane": "discovery",
-      "description": "Earth state vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow, subsidence.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_surface_status",
-      "domain": "earth.general",
-      "axis": "verify",
-      "lane": "discovery",
-      "description": "GEOX organ health check: version, tool count, canonical surface status, registration timestamp.",
+      "domain": "earth.time",
+      "axis": "observe",
+      "lane": "evidence",
+      "description": "Earth State Vector through deep time: GPTS, CO2, sea level, temperature, paleogeography.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -246,36 +154,23 @@
     },
     {
       "name": "geox_claim",
-      "domain": "governance.claims",
+      "domain": "governance",
       "axis": "reason",
       "lane": "judgment",
-      "description": "Geological claim lifecycle: create, validate, challenge, seal, attach evidence to structured interpretation claims.",
+      "description": "Unified claim lifecycle: create, validate, challenge, seal, evidence, consequence, optionality, cascade, feedback integrity, truth challenge.",
       "ui": null,
       "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_evidence",
-      "domain": "earth.evidence",
-      "axis": "reason",
-      "lane": "evidence",
-      "description": "Evidence discovery and synthesis: search corpus, cross-domain synthesis, hypothesis generation, contradiction scanning.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
+        "action_class": "MUTATE",
+        "mutation": true,
+        "physics_guard_required": false
       }
     },
     {
       "name": "geox_prospect",
       "domain": "earth.prospect",
       "axis": "reason",
-      "lane": "evidence",
-      "description": "Prospect evaluation: volumetrics, probability of success, expected value of information, risk assessment.",
+      "lane": "judgment",
+      "description": "Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -284,13 +179,13 @@
       }
     },
     {
-      "name": "geox_map_context_scene",
-      "domain": "earth.general",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "Spatial context scene: renders map layers, basins, and well locations for geographic orientation.",
+      "name": "geox_gravmag_studio",
+      "domain": "earth.geophysics",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.",
       "ui": {
-        "resource_uri": "ui://geox/workspace-v1.html",
+        "resource_uri": "ui://geox/gravmag-studio.html",
         "mime_type": "text/html;profile=mcp-app"
       },
       "governance": {
@@ -300,81 +195,32 @@
       }
     },
     {
-      "name": "geox_contrast_detect",
-      "domain": "earth.geophysics",
-      "axis": "reason",
+      "name": "geox_well_desk",
+      "domain": "earth.well",
+      "axis": "observe",
       "lane": "evidence",
-      "description": "Anomalous contrast detection: identify seismic-geological mismatches at formation boundaries.",
-      "ui": null,
+      "description": "Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.",
+      "ui": {
+        "resource_uri": "ui://geox/well-desk",
+        "mime_type": "text/html;profile=mcp-app"
+      },
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false,
-        "physics_guard_required": true
+        "physics_guard_required": false
       }
     },
     {
-      "name": "geox_biostrat_parse",
-      "domain": "earth.biostratigraphy",
-      "axis": "reason",
+      "name": "geox_surface_status",
+      "domain": "earth.meta",
+      "axis": "observe",
       "lane": "evidence",
-      "description": "Biostratigraphic data parsing: extract age-diagnostic fossil markers from well reports.",
+      "description": "Federation-standard registry probe: tool discovery and health status.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_biostrat_falsify",
-      "domain": "earth.biostratigraphy",
-      "axis": "reason",
-      "lane": "evidence",
-      "description": "Biostratigraphic falsification: test fossil age assignments against stratigraphic constraints.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_basin_backstrip",
-      "domain": "earth.basin",
-      "axis": "reason",
-      "lane": "evidence",
-      "description": "Basin backstripping: decompact sedimentary layers and reconstruct subsidence history.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_sediment_mass_balance",
-      "domain": "earth.basin",
-      "axis": "reason",
-      "lane": "evidence",
-      "description": "Sediment mass balance: compute volumetric budgets and sediment supply rates for basin analysis.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_thermal_maturity_history",
-      "domain": "earth.basin",
-      "axis": "reason",
-      "lane": "evidence",
-      "description": "Thermal maturity history: model burial, heat flow, and vitrinite reflectance evolution over time.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
+        "physics_guard_required": false
       }
     }
   ],
