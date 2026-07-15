@@ -8,3 +8,14 @@
 /.github/workflows.CANONICAL.yml   @ariffazil
 /.github/repo-policy.yml           @ariffazil
 /.github/CODEOWNERS                @ariffazil
+
+# Gödel Lock + External Witness protection (FORGED 2026-07-15)
+/AGENTS.md                         @ariffazil
+*.AGENTS.md                        @ariffazil
+**/AGENTS.md                       @ariffazil
+/GENESIS/                          @ariffazil
+**/GENESIS/                        @ariffazil
+/docs/                             @ariffazil
+/pyproject.toml                    @ariffazil
+/VAULT999/                         @ariffazil
+**/VAULT999/                       @ariffazil
