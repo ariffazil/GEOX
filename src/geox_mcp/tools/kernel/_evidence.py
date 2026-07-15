@@ -81,9 +81,34 @@ def _inject_ensemble_residual_evidence(
             residual["max_deviation"] = round(max(abs(v - mean_v) for v in vals), 6)
 
     # Evidence density: how much data supported the computation
+    # F2 TRUTH / F7 HUMILITY: `uncertainty` may be (a) dict with input_null_pct
+    # which itself may be a dict OR a scalar, (b) string band like "MEDIUM",
+    # (c) scalar float/int/bool, or (d) None.
+    # Without isinstance guards, a string band crashes .get() with AttributeError,
+    # and a scalar input_null_pct violates the dict contract.
+    # Fix sealed 2026-07-14 — closes WAJIB #2 from Claude-fable review.
+    # Hypothesis regression suite at tests/test_evidence_type_guard.py.
+    _unc = result.get("uncertainty")
+    if isinstance(_unc, dict):
+        _raw = _unc.get("input_null_pct", {})
+        if isinstance(_raw, dict):
+            _null_pct = _raw
+        elif _raw is None:
+            _null_pct = {}
+        else:
+            # Scalar float/bool/int passed as input_null_pct — wrap to preserve.
+            _null_pct = {"scalar": _raw}
+    elif isinstance(_unc, str):
+        # String band — preserve provenance, surface as degradation signal.
+        _null_pct = {"band": _unc, "input_null_pct": None, "warning": "uncertainty_was_string_band"}
+    elif _unc is not None:
+        # Scalar (float/int/bool) — geox_candidates emits float directly.
+        _null_pct = {"scalar": _unc, "input_null_pct": None}
+    else:
+        _null_pct = {}
     evidence_density = {
         "n_samples": result.get("n_samples", 0),
-        "null_pct": result.get("uncertainty", {}).get("input_null_pct", {}),
+        "null_pct": _null_pct,
         "data_quality": "HIGH" if result.get("n_samples", 0) > 1000 else "MEDIUM" if result.get("n_samples", 0) > 100 else "LOW",
     }
 
