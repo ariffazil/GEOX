@@ -34,6 +34,23 @@ changes_since_last_verified:
 > 2. Read `/root/CONTEXT.md` (Live Machine State & Ports)
 > 3. Read this file (Repo-Specific Build/Test/Run rules)
 
+---
+
+## 🔒 GÖDEL LOCK — External Witness Required (FORGED 2026-07-15)
+
+> **GEOX prepares evidence. Evidence never seals its own conclusions.**
+> **W³ = ∛(Human × AI × External). Zero in any channel collapses witness.**
+
+GEOX's constitutional boundary: evidence-only, never a policy judge. The Gödel lock formalises this — geoscience claims of `claim_type=seal_bound` cannot self-validate.
+
+**For any `geox_prospect_evaluate` or `geox_claim_seal` with claim_severity ≥ HIGH:**
+1. Compute `claim_severity` from `AC_Risk` + `cross_modal_stability` + `overall_confidence`
+2. Acquire `Φ_external` from outside GEOX (e.g., arifOS kernel, arif via Telegram)
+3. If `Φ_external < 0.5` → **HOLD** (GEOX refuses to emit SEAL)
+4. If `Φ_external ≥ 0.9` → **SEAL with witness chain**
+
+**This repo's external witness requirement:** PRs to `main` touching `/AGENTS.md`, `/VAULT999/`, `/GENESIS/`, `/docs/`, or `/pyproject.toml` require external witness signature. Physics9 boundary changes still require 888_HOLD.
+
 > **DITEMPA BUKAN DIBERI** — Earth evidence is forged, not given.
 
 ## Live tool surface truth (2026-07-12)
