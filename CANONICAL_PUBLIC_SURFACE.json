@@ -1,8 +1,7 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-14T15:50:00+00:00",
-  "source": "tools_manifest.yaml (manifest_version 2026.07.13-zen15) + live runtime owned_mcp @ :8081/.well-known/agent-card.json",
-  "epoch": "ZEN-15 (P0.6 plugin-export-drift reconcile 2026-07-14)",
+  "generated_at": "2026-07-15T05:44:10.065098+00:00",
+  "source": "tools_manifest.yaml",
   "public_count": 15,
   "internal_count": 54,
   "public_tools": [
@@ -28,8 +27,6 @@
       "domain": "earth.well",
       "axis": "observe",
       "lane": "evidence",
-      "face": "surface",
-      "visibility": "public",
       "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
       "ui": null,
       "governance": {
@@ -43,8 +40,6 @@
       "domain": "earth.petrophysics",
       "axis": "reason",
       "lane": "reasoning",
-      "face": "surface",
-      "visibility": "public",
       "description": "Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.",
       "ui": null,
       "governance": {
@@ -58,8 +53,6 @@
       "domain": "earth.seismic",
       "axis": "observe",
       "lane": "evidence",
-      "face": "surface",
-      "visibility": "public",
       "description": "SEG-Y I/O, header inspection, export.",
       "ui": null,
       "governance": {
@@ -73,9 +66,7 @@
       "domain": "earth.seismic",
       "axis": "compute",
       "lane": "reasoning",
-      "face": "surface",
-      "visibility": "public",
-      "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion. Modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute, inversion, ingest, interpret, tengok, agak, cabar, sahkan, tie_preflight, tie_receipt, wavelet_extract, mistie_rms, time_depth_calibrate.",
+      "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -88,8 +79,6 @@
       "domain": "earth.seismic",
       "axis": "reason",
       "lane": "reasoning",
-      "face": "surface",
-      "visibility": "public",
       "description": "Unified seismic interpretation: horizon/fault picking, RSI pipeline, vision, contrast detection. Modes: horizon_contrast, fault_sticks, volume_frame, blend, rsi_pipeline, contrast, vision.",
       "ui": null,
       "governance": {
@@ -103,8 +92,6 @@
       "domain": "earth.model",
       "axis": "compute",
       "lane": "reasoning",
-      "face": "surface",
-      "visibility": "public",
       "description": "Subsurface model building: joint inversion, gravity/magnetic forward, MT forward.",
       "ui": null,
       "governance": {
@@ -118,8 +105,6 @@
       "domain": "earth.basin",
       "axis": "reason",
       "lane": "reasoning",
-      "face": "surface",
-      "visibility": "public",
       "description": "Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.",
       "ui": null,
       "governance": {
@@ -133,8 +118,6 @@
       "domain": "earth.stratigraphy",
       "axis": "reason",
       "lane": "reasoning",
-      "face": "surface",
-      "visibility": "public",
       "description": "Unified stratigraphy: sequence analysis, biostratigraphic parsing and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.",
       "ui": null,
       "governance": {
@@ -148,8 +131,6 @@
       "domain": "earth.structure",
       "axis": "compute",
       "lane": "reasoning",
-      "face": "surface",
-      "visibility": "public",
       "description": "Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.",
       "ui": null,
       "governance": {
@@ -163,8 +144,6 @@
       "domain": "earth.time",
       "axis": "observe",
       "lane": "evidence",
-      "face": "surface",
-      "visibility": "public",
       "description": "Earth State Vector through deep time: GPTS, CO2, sea level, temperature, paleogeography.",
       "ui": null,
       "governance": {
@@ -178,8 +157,6 @@
       "domain": "governance",
       "axis": "reason",
       "lane": "judgment",
-      "face": "surface",
-      "visibility": "public",
       "description": "Unified claim lifecycle: create, validate, challenge, seal, evidence, consequence, optionality, cascade, feedback integrity, truth challenge.",
       "ui": null,
       "governance": {
@@ -193,8 +170,6 @@
       "domain": "earth.prospect",
       "axis": "reason",
       "lane": "judgment",
-      "face": "surface",
-      "visibility": "public",
       "description": "Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.",
       "ui": null,
       "governance": {
@@ -208,8 +183,6 @@
       "domain": "earth.geophysics",
       "axis": "compute",
       "lane": "reasoning",
-      "face": "surface",
-      "visibility": "public",
       "description": "Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.",
       "ui": {
         "resource_uri": "ui://geox/gravmag-studio.html",
@@ -226,8 +199,6 @@
       "domain": "earth.well",
       "axis": "observe",
       "lane": "evidence",
-      "face": "surface",
-      "visibility": "public",
       "description": "Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.",
       "ui": {
         "resource_uri": "ui://geox/well-desk",
@@ -244,8 +215,6 @@
       "domain": "earth.meta",
       "axis": "observe",
       "lane": "evidence",
-      "face": "surface",
-      "visibility": "public",
       "description": "Federation-standard registry probe: tool discovery and health status.",
       "ui": null,
       "governance": {
@@ -255,32 +224,5 @@
       }
     }
   ],
-  "rule": "tools/list MUST equal public_tools. Docs must not hardcode counts.",
-  "p06_drift_reconcile": {
-    "performed_by": "opencode-agent-c",
-    "performed_at": "2026-07-14T15:50:00+00:00",
-    "audit_source": "gpt-5.6 plugin-export drift audit",
-    "removed_extra_13": [
-      "geox_well_qc",
-      "geox_well_desk_open",
-      "geox_well_desk_publish",
-      "geox_render_well_panel",
-      "geox_vision",
-      "geox_evidence",
-      "geox_map_context_scene",
-      "geox_contrast_detect",
-      "geox_biostrat_parse",
-      "geox_biostrat_falsify",
-      "geox_basin_backstrip",
-      "geox_sediment_mass_balance",
-      "geox_thermal_maturity_history"
-    ],
-    "added_missing_4": [
-      "geox_claim",
-      "geox_prospect",
-      "geox_gravmag_studio",
-      "geox_well_desk"
-    ],
-    "rationale": "Live runtime owned_mcp at :8081/.well-known/agent-card.json exposes 15 tools. Composite UI/workflow operations (well_desk, gravmag_studio) are modes of canonical tools, not separate verbs. Live registry.py + tools_manifest.yaml zen15 are the canonical sources; CANONICAL_PUBLIC_SURFACE.json was drifted from pre-zen manifest (26 entries)."
-  }
+  "rule": "tools/list MUST equal public_tools. Docs must not hardcode counts."
 }

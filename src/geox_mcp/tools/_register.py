@@ -39,6 +39,8 @@ _EPISTEMIC_MAP = {
     "OBSERVED": "CLAIM",
     "FACT": "CLAIM",
     "MEASURED": "CLAIM",
+    "COMPUTED": "CLAIM",  # deterministic registry/math enumeration (F2, not geology)
+    "DERIVED": "CLAIM",
     "INTERPRETATION": "PLAUSIBLE",
     "INFERRED": "PLAUSIBLE",
     "HYPOTHESIS": "HYPOTHESIS",

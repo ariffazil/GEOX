@@ -45,7 +45,7 @@ def build_tools_snapshot() -> dict:
             {
                 "name": tool.name,
                 "description": tool.description or tool.name.replace("geox_", "GEOX ").replace("_", " "),
-                "version": "2026.07.11",
+                "version": "2026.07.15",
                 "domain": tool.domain,
                 "axis": tool.axis,
                 "lane": tool.lane,
@@ -59,11 +59,12 @@ def build_tools_snapshot() -> dict:
     return {
         "$schema": "arifOS/tools-manifest/v2",
         "organ": "geox",
-        "version": "2026.07.11",
+        "version": "2026.07.15",
         "manifest_path": str(MANIFEST_PATH.relative_to(ROOT)),
         "canonical_tools": len(tools),
         "surface_tools": sum(1 for tool in tools if tool["expose"]),
         "internal_tools": sum(1 for tool in tools if not tool["expose"]),
+        "policy": "ZEN-15: public == plugin export == CANONICAL_PUBLIC_TOOLS (no phantom app names)",
         "tools": tools,
     }
 
@@ -79,7 +80,7 @@ def build_openapi_snapshot() -> dict:
                 "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. "
                 "window.openai is optional progressive enhancement."
             ),
-            "version": "2026.07.11",
+            "version": "2026.07.15",
         },
         "paths": {
             "/mcp": {
@@ -87,7 +88,8 @@ def build_openapi_snapshot() -> dict:
                     "summary": "MCP JSON-RPC 2.0 endpoint",
                     "description": (
                         "Plugin submission, review and publication use metadata scanned "
-                        "or snapshotted from this live MCP endpoint."
+                        "or snapshotted from this live MCP endpoint. "
+                        "x-mcp-tools MUST equal the 15 ZEN-15 canonical public tools."
                     ),
                     "operationId": "mcpEndpoint",
                     "x-mcp-tools": public_rows,
@@ -100,8 +102,9 @@ def build_openapi_snapshot() -> dict:
 def build_root_tools_manifest() -> dict:
     app_export = set(plugin_export_tool_names())
     return {
-        "version": "2026.07.11",
+        "version": "2026.07.15",
         "manifest_path": str(MANIFEST_PATH.relative_to(ROOT)),
+        "policy": "ZEN-15 single public surface — app_export must equal public",
         "public": [tool.name for tool in public_tools()],
         "app_export": [tool.name for tool in public_tools() if tool.name in app_export],
         "internal": [tool.name for tool in manifest_tools() if tool.is_internal],

@@ -558,20 +558,56 @@ def register_tools_on(mcp):
             else:
                 phantom_list.append(tool_name)
 
-        has_drift = len(phantom_list) > 0
+        # Multi-surface parity (manifest / runtime / plugin export / docs snapshot)
+        from geox_mcp.surface_manifest import plugin_export_tool_names
+        from geox_mcp.tools.registry import (
+            _load_generated_public_surface,
+            _load_plugin_export_surface,
+        )
+
+        expected_app_export = set(plugin_export_tool_names())
+        plugin_export_public = _load_plugin_export_surface() or expected_app_export
+        generated_public = _load_generated_public_surface() or set(canonical_set)
+        plugin_export_only = sorted(plugin_export_public - expected_app_export)
+        missing_from_app_export = sorted(expected_app_export - plugin_export_public)
+        generated_only = sorted(generated_public - set(canonical_set))
+        missing_from_generated = sorted(set(canonical_set) - generated_public)
+
+        has_drift = bool(
+            phantom_list
+            or plugin_export_only
+            or missing_from_app_export
+            or generated_only
+            or missing_from_generated
+            or expected_app_export != set(canonical_set)
+        )
         return {
             "status": "healthy",
             "organ": "GEOX",
-            "surface_version": "geox-2f2e65d4",
+            "surface_version": "geox-2026.07.15-zen15",
             "canonical_callable": canonical_list,
+            "canonical_tools": sorted(canonical_set),
             "intended_tools": len(all_manifest),
             "registered_tools": len(all_manifest),
             "callable_tools": len(canonical_list),
+            "public_count": len(canonical_set),
             "phantom_tools": phantom_list,
             "internal_tools": internal_list,
+            "plugin_export_public": sorted(plugin_export_public),
+            "expected_app_export": sorted(expected_app_export),
+            "plugin_export_only_tools": plugin_export_only,
+            "missing_from_app_export": missing_from_app_export,
+            "generated_public_only": generated_only,
+            "missing_from_generated": missing_from_generated,
             "deprecated_callable": [],
             "alias_conflicts": [],
+            "registry_truth": "DRIFT" if has_drift else "PASS",
             "verdict": "REGISTRY_DRIFT" if has_drift else "REGISTRY_PASS",
+            "perception_class": "OBSERVED",
+            "claim_state": "OBSERVED",
+            "evidence_tag": "COMPUTED",
+            "confidence_level": "HIGH",
+            "humility_score": 0.05,
             "registered_at": __import__("datetime", fromlist=["datetime"])
             .datetime.now(__import__("datetime", fromlist=["datetime"]).timezone.utc)
             .isoformat(),

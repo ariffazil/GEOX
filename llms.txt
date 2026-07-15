@@ -1,46 +1,24 @@
-# GEOX — Earth Intelligence Sovereign Kernel (34 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (15 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from src/geox_mcp/tools_manifest.yaml
 
 ## 1. Canonical Tool Surface
 
 1. **geox_well_ingest**: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
-2. **geox_well_qc**: Quality control checks on well data: depth monotonicity, null percentages, physical range checks, curve completeness.
-3. **geox_well_desk_open**: OBSERVE · Open GEOX well-desk interactive view (SEP-1865 MCP App). Read-only operator summary for a well_id. Hosts with UI open ui://geox/well-desk; hosts without UI still receive structured JSON. No mutation.
-
-4. **geox_well_desk_publish**: MUTATE · Publish a rendered well-desk image with embedded metadata. Saves image to /root/GEOX/data/renders/ and seals to VAULT999.
-
-5. **geox_render_well_panel**: OBSERVE · Render a well-log panel as a PNG image with metadata. Generates GR, RT, NPHI, RHOB, DT tracks for a given well_id.
-
-6. **geox_petrophysics**: Compute petrophysical properties: Vsh, porosity, Sw, permeability, net pay. Includes LEM physics-prior inference.
-7. **geox_sequence**: Sequence stratigraphy analysis: GR binning, parasequence packages, systems tract inference, well correlation.
-8. **geox_seismic_ingest**: Load and inspect seismic data: SEG-Y headers, trace counts, sample intervals, volume metadata.
-9. **geox_seismic_compute**: Unified seismic physics: synthetics, well ties, AVO analysis, attributes. Time-depth anchoring uses checkshot data only. Modes include tie_preflight, tie_receipt, wavelet_extract, mistie_rms, time_depth_calibrate (ZEN G1).
-10. **geox_seismic_interpret**: Seismic interpretation: horizon detection, fault picking, volume blending, frame extraction.
-11. **geox_vision**: Vision-based seismic interpretation using VLMs: analyze seismic images, audit interpretations, calibrate models.
-12. **geox_subsurface_model**: Multi-physics subsurface modeling: joint inversion, gravity/magnetic forward modeling, MT/CSEM forward modeling.
-13. **geox_gravmag_studio_open**: GEOX GravMag Studio v0.1 — forward-only MCP App. Computes gravity or magnetic anomaly from a prism model via HarmonICAdapter (mock or live) and returns the studio iframe payload at ui://geox/gravmag-studio.html. Verdict is always QUALIFY (never SEAL) — Stage A is forward-only.
-14. **geox_gravmag_studio_screen**: GEOX GravMag Studio v0.2 — Stage B screen (falsification lane). Forward-predicts via geox_gravmag_studio_open, compares against observed_grid, returns misfit stats + verdict (PASS_SCREEN / MARGINAL / FAIL_SCREEN / HOLD) + structured abduction discipline. Never SEALs. Confidence capped at 0.70 per F7 HUMILITY. Unit or grid mismatch returns HOLD (fail-closed).
-15. **geox_geomechanics**: Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate transforms, block resolution.
-16. **geox_basin**: Basin intelligence: profiles, resolution, deep time state, Macrostrat API, spatial context, scene rendering.
-17. **geox_deep_time_state**: Earth state vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow, subsidence.
-18. **geox_surface_status**: GEOX organ health check: version, tool count, canonical surface status, registration timestamp.
-19. **geox_claim**: Geological claim lifecycle: create, validate, challenge, seal, attach evidence to structured interpretation claims.
-20. **geox_evidence**: Evidence discovery and synthesis: search corpus, cross-domain synthesis, hypothesis generation, contradiction scanning.
-21. **geox_prospect**: Prospect evaluation: volumetrics, probability of success, expected value of information, risk assessment.
-22. **geox_map_context_scene**: Spatial context scene: renders map layers, basins, and well locations for geographic orientation.
-23. **geox_contrast_detect**: Anomalous contrast detection: identify seismic-geological mismatches at formation boundaries.
-24. **geox_biostrat_parse**: Biostratigraphic data parsing: extract age-diagnostic fossil markers from well reports.
-25. **geox_biostrat_falsify**: Biostratigraphic falsification: test fossil age assignments against stratigraphic constraints.
-26. **geox_basin_backstrip**: Basin backstripping: decompact sedimentary layers and reconstruct subsidence history.
-27. **geox_sediment_mass_balance**: Sediment mass balance: compute volumetric budgets and sediment supply rates for basin analysis.
-28. **geox_thermal_maturity_history**: Thermal maturity history: model burial, heat flow, and vitrinite reflectance evolution over time.
-29. **geox_claim_graph_evaluate**: Tool: geox_claim_graph_evaluate
-30. **geox_consequence_footprint**: Compute physical and ecological consequences of a proposed action
-31. **geox_optionality_loss**: Measure destroyed future physical options
-32. **geox_feedback_integrity**: Check whether physical monitoring is sufficient to detect drift
-33. **geox_material_truth_challenge**: Compare institutional claims against Earth measurements
-34. **geox_cascade_pathway**: Model cross-domain propagation from a physical event
+2. **geox_petrophysics**: Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.
+3. **geox_seismic_ingest**: SEG-Y I/O, header inspection, export.
+4. **geox_seismic_compute**: Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.
+5. **geox_seismic_interpret**: Unified seismic interpretation: horizon/fault picking, RSI pipeline, vision, contrast detection. Modes: horizon_contrast, fault_sticks, volume_frame, blend, rsi_pipeline, contrast, vision.
+6. **geox_subsurface_model**: Subsurface model building: joint inversion, gravity/magnetic forward, MT forward.
+7. **geox_basin**: Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
+8. **geox_sequence**: Unified stratigraphy: sequence analysis, biostratigraphic parsing and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.
+9. **geox_geomechanics**: Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.
+10. **geox_deep_time_state**: Earth State Vector through deep time: GPTS, CO2, sea level, temperature, paleogeography.
+11. **geox_claim**: Unified claim lifecycle: create, validate, challenge, seal, evidence, consequence, optionality, cascade, feedback integrity, truth challenge.
+12. **geox_prospect**: Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.
+13. **geox_gravmag_studio**: Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.
+14. **geox_well_desk**: Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.
+15. **geox_surface_status**: Federation-standard registry probe: tool discovery and health status.
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.
