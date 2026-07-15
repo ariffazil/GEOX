@@ -1,0 +1,39 @@
+{
+  "status": "OK",
+  "scene_id": "scene_7400decf2237",
+  "bbox": [
+    115.0,
+    4.5,
+    119.5,
+    7.5
+  ],
+  "crs": "EPSG:4326",
+  "center": [
+    117.25,
+    6.0
+  ],
+  "width_deg": 4.5,
+  "height_deg": 3.0,
+  "map_purpose": "context",
+  "style_profile": "geox_regional_clean_v1",
+  "style": {
+    "basin_fill_opacity": 0.35,
+    "fault_line_width": 1.2,
+    "label_density": "medium",
+    "color_scheme": "geological_standard",
+    "background": "light_grey"
+  },
+  "layers_ordered": [],
+  "layer_count": 0,
+  "warnings": [
+    "Layer 'sabah_faults' not found in registry. Skipped.",
+    "Layer 'sabah_structural_zones' not found in registry. Skipped.",
+    "Layer 'sabah_mud_volcanoes' not found in registry. Skipped."
+  ],
+  "provenance": {
+    "generated_by": "geox_map_scene_plan",
+    "truth_classes_present": [],
+    "scale_warning": "Regional schematic only. Not survey-grade.",
+    "sources": []
+  }
+}

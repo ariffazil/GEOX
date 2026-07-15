@@ -1,0 +1,61 @@
+{
+  "status": "OK",
+  "scene_id": "scene_3d1fcd04947c",
+  "bbox": [
+    115.5,
+    4.5,
+    118.5,
+    7.0
+  ],
+  "crs": "EPSG:4326",
+  "center": [
+    117.0,
+    5.75
+  ],
+  "width_deg": 3.0,
+  "height_deg": 2.5,
+  "map_purpose": "context",
+  "style_profile": "geox_regional_clean_v1",
+  "style": {
+    "basin_fill_opacity": 0.35,
+    "fault_line_width": 1.2,
+    "label_density": "medium",
+    "color_scheme": "geological_standard",
+    "background": "light_grey"
+  },
+  "layers_ordered": [
+    {
+      "id": "sab_trough",
+      "name": "Sabah Trough",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_ftb",
+      "name": "NW Sabah Fold-Thrust Belt",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_faults_major",
+      "name": "Major Faults (Regional)",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    }
+  ],
+  "layer_count": 3,
+  "warnings": [],
+  "provenance": {
+    "generated_by": "geox_map_scene_plan",
+    "truth_classes_present": [
+      "INTERPRETATION"
+    ],
+    "scale_warning": "Regional schematic only. Not survey-grade.",
+    "sources": [
+      "GEOX curated public synthesis"
+    ]
+  }
+}

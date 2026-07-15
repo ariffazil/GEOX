@@ -1,0 +1,100 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
+  "app_id": "geox.attribute.audit",
+  "version": "0.9.0-PREVIEW",
+  "domain": "governance",
+  "display_name": "Attribute Audit",
+  "description": "Transform-chain inspector for seismic attributes with Malay Basin analog cross-check",
+  "icon": "https://geox.arif-fazil.com/apps/attribute_audit/icon.svg",
+  "required_tools": [
+    "mcp.geox.geox_attribute_audit_stub"
+  ],
+  "optional_tools": [
+    "mcp.geox.compute_ac_risk",
+    "mcp.geox.evaluate_ac_risk_governed"
+  ],
+  "ui_entry": {
+    "resource_uri": "https://geox.arif-fazil.com/apps/attribute_audit/index.html",
+    "mode": "inline-or-external",
+    "capability_required": [
+      "embedded_webview"
+    ],
+    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://api.geox.arif-fazil.com; style-src 'self' 'unsafe-inline';",
+    "sandbox": "allow-scripts allow-same-origin",
+    "inline_config": {
+      "max_width": 1200,
+      "max_height": 900,
+      "resize": true
+    },
+    "external_config": {
+      "window_features": "width=1400,height=1000,menubar=no,toolbar=no"
+    }
+  },
+  "auth": {
+    "mode": "jwt",
+    "token_ttl_seconds": 600,
+    "scopes": [
+      "tenant:{tenant_id}",
+      "role:geoscientist|manager|viewer",
+      "governance:read"
+    ],
+    "refreshable": true
+  },
+  "events": {
+    "supported": [
+      "app.initialize",
+      "app.context.patch",
+      "app.state.sync",
+      "tool.request",
+      "tool.result",
+      "ui.action",
+      "ui.state.change",
+      "auth.challenge",
+      "auth.result",
+      "host.resize",
+      "telemetry.emit"
+    ],
+    "max_payload_size": 524288
+  },
+  "fallback": {
+    "chain": [
+      "inline",
+      "external",
+      "card",
+      "text"
+    ],
+    "external_url": "https://geox.arif-fazil.com/apps/attribute_audit/?session={session_id}",
+    "card_template": "/apps/attribute_audit/card.html"
+  },
+  "arifos": {
+    "required_floors": [
+      "F1",
+      "F2",
+      "F4",
+      "F7",
+      "F10",
+      "F11"
+    ],
+    "audit_level": "full",
+    "vault_route": "999_VAULT",
+    "human_in_the_loop": [
+      "export_attribute_report",
+      "apply_proxy_to_prospect"
+    ]
+  },
+  "meta": {
+    "author": "GEOX Platform Team",
+    "license": "MIT",
+    "repository": "https://github.com/ariffazil/arifos-geox",
+    "homepage": "https://geox.arif-fazil.com/apps/attribute_audit/",
+    "keywords": [
+      "attribute_audit",
+      "transform_chain",
+      "kozeny_carman",
+      "malay_basin",
+      "governance"
+    ],
+    "created_at": "2026-04-13T00:00:00Z",
+    "updated_at": "2026-04-13T00:00:00Z"
+  }
+}

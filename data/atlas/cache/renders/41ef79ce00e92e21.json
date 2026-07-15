@@ -1,0 +1,21 @@
+{
+  "scene_id": "scene_7400decf2237",
+  "bbox": [
+    115.0,
+    4.5,
+    119.5,
+    7.5
+  ],
+  "layers": [],
+  "style_profile": "geox_regional_clean_v1",
+  "rendered_at": "2026-07-05T12:16:35+00:00",
+  "width_px": 1200,
+  "height_px": 600,
+  "format": "image/png",
+  "generated_by": "geox_map_render_preview",
+  "truth_classes": [],
+  "warnings": [
+    "Not survey-grade. Regional schematic for reasoning context only.",
+    "Geometry from Natural Earth / GEOX curated synthesis."
+  ]
+}

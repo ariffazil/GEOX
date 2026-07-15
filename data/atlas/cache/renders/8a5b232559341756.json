@@ -1,0 +1,32 @@
+{
+  "scene_id": "scene_895c518391d8",
+  "bbox": [
+    115.0,
+    4.0,
+    119.5,
+    7.5
+  ],
+  "layers": [
+    "sab_coastline",
+    "sab_nw_basin",
+    "sab_trough",
+    "sab_ftb",
+    "sab_crocker",
+    "sab_trusmadi",
+    "sab_kinabalu",
+    "sab_sandakan",
+    "sab_faults_major",
+    "sab_wells_public"
+  ],
+  "style_profile": "geox_regional_clean_v1",
+  "rendered_at": "2026-07-06T08:43:08+00:00",
+  "width_px": 1400,
+  "height_px": 1000,
+  "format": "image/png",
+  "generated_by": "geox_map_render_preview",
+  "truth_classes": [],
+  "warnings": [
+    "Not survey-grade. Regional schematic for reasoning context only.",
+    "Geometry from Natural Earth / GEOX curated synthesis."
+  ]
+}

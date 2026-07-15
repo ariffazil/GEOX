@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX Georeference Map — SCAFFOLD</title>
+    <style>
+        :root { --bg: #0a0a0f; --panel: #12121a; --text: #e8e8f0; --muted: #9090a0; --accent: #00d4aa; --warn: #ffa502; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; }
+        .container { max-width: 960px; margin: 0 auto; }
+        h1 { font-size: 22px; margin-bottom: 8px; }
+        .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+        .panel { background: var(--panel); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .row { display: flex; gap: 16px; flex-wrap: wrap; }
+        .metric { flex: 1; min-width: 180px; }
+        .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .value { font-size: 18px; font-weight: 700; margin-top: 4px; }
+        .tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: rgba(245,158,11,0.15); color: var(--warn); }
+        .map { width: 100%; height: 240px; background: #1a1a25; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); border: 2px dashed #2a2a3a; }
+        button { padding: 10px 16px; background: var(--accent); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .muted-btn { background: #2a2a3a; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ Georeference Map</h1>
+        <p class="subtitle">Spatial Grounding (111_SENSE) — SCAFFOLD — DITEMPA BUKAN DIBERI</p>
+
+        <div class="panel">
+            <div class="map">Upload TIFF/PDF Map Context — Mock Surface</div>
+        </div>
+
+        <div class="panel">
+            <div class="row">
+                <div class="metric">
+                    <div class="label">Control Points</div>
+                    <div class="value">0 / ≥3 required</div>
+                </div>
+                <div class="metric">
+                    <div class="label">CRS</div>
+                    <div class="value" style="color:var(--muted)">EPSG:4326 (placeholder)</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Reversible</div>
+                    <div class="value" style="color:var(--accent)">True</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Claim Tag</div>
+                    <div class="value"><span class="tag">HYPOTHESIS</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <button id="addPointBtn">Add Mock Control Point</button>
+            <button id="syncBtn" class="muted-btn">Sync State to Host</button>
+            <button id="toolBtn" class="muted-btn">Call MCP Tool</button>
+        </div>
+    </div>
+
+    <script>
+        let points = 0;
+        const bridge = {
+            emit(method, params = {}) {
+                const event = { jsonrpc: "2.0", method, params, timestamp: new Date().toISOString() };
+                if (window.parent !== window) window.parent.postMessage(event, "*");
+                console.log("[GeoreferenceMap]", method, params);
+            }
+        };
+        bridge.emit("app.initialize", { app_id: "geox.georeference.map", version: "0.5.0-SCAFFOLD" });
+
+        document.getElementById("addPointBtn").addEventListener("click", () => {
+            points += 1;
+            bridge.emit("ui.action", { action: "add_control_point", count: points });
+            alert("Mock control point added. Total: " + points);
+        });
+        document.getElementById("syncBtn").addEventListener("click", () => {
+            bridge.emit("ui.state.sync", { control_points: points, crs: "EPSG:4326" });
+        });
+        document.getElementById("toolBtn").addEventListener("click", () => {
+            bridge.emit("callServerTool", { tool: "mcp.geox.geox_georeference_map_stub", args: { image_path: "/mock/map.tiff" } });
+        });
+    </script>
+</body>
+</html>

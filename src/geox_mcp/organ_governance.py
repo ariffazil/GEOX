@@ -124,7 +124,21 @@ async def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int
             resp = await client.post(f"{ARIFOS_KERNEL_URL}/mcp", json=payload, headers=headers)
             resp.raise_for_status()
             result = resp.json()
-            return result.get("result", {"status": "ERROR", "error": "no result in response"})
+            rpc_result = result.get("result", {"status": "ERROR", "error": "no result in response"})
+            if isinstance(rpc_result, dict) and "content" in rpc_result and isinstance(rpc_result["content"], list):
+                for item in rpc_result["content"]:
+                    if isinstance(item, dict) and item.get("type") == "text":
+                        text = item.get("text", "").strip()
+                        if text.startswith("KERNEL_DENY") or text.startswith("ERROR") or text.startswith("HOLD"):
+                            return {"status": "ERROR", "error": text}
+                        try:
+                            parsed = json.loads(text)
+                            if isinstance(parsed, dict):
+                                return parsed
+                        except Exception:
+                            pass
+                        return {"status": "OK", "text": text}
+            return rpc_result
     except Exception as exc:
         logger.error(f"arifOS kernel call failed: {exc}")
         return {"status": "ERROR", "error": str(exc)}
@@ -646,7 +660,7 @@ async def check_governance(
             "actor_id": actor_id,
         }
         logger.info(f"GOV: {tool_name} [C1] → calling arifOS (advisory)...")
-        kernel_result = await _call_arif_kernel("arif_judge_deliberate", judge_params)
+        kernel_result = await _call_arif_kernel("arif_judge", judge_params)
         verdict = kernel_result.get("verdict", "ADVISORY")
         logger.info(f"GOV: {tool_name} [C1] → {verdict} (proceeding anyway)")
         return verdict, None
@@ -674,7 +688,7 @@ async def check_governance(
 
     logger.info(f"GOV: {tool_name} [{risk_tier.value}] → calling arifOS kernel...")
 
-    kernel_result = await _call_arif_kernel("arif_judge_deliberate", judge_params)
+    kernel_result = await _call_arif_kernel("arif_judge", judge_params)
 
     verdict = "HOLD"  # fail-closed default
     reason = "arifOS kernel unreachable or session unbound — fail-closed"

@@ -1,0 +1,25 @@
+{
+  "scene_id": "scene_3d1fcd04947c",
+  "bbox": [
+    115.5,
+    4.5,
+    118.5,
+    7.0
+  ],
+  "layers": [
+    "sab_trough",
+    "sab_ftb",
+    "sab_faults_major"
+  ],
+  "style_profile": "geox_regional_clean_v1",
+  "rendered_at": "2026-07-07T05:58:00+00:00",
+  "width_px": 1200,
+  "height_px": 800,
+  "format": "image/png",
+  "generated_by": "geox_map_render_preview",
+  "truth_classes": [],
+  "warnings": [
+    "Not survey-grade. Regional schematic for reasoning context only.",
+    "Geometry from Natural Earth / GEOX curated synthesis."
+  ]
+}

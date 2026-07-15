@@ -73,6 +73,9 @@ async def geox_claim(
     forbidden_uses: list[str] | None = None,
     source_citation: dict[str, Any] | None = None,
     category: LitCategory | None = None,
+    # ── F11/F3 Identity propagation fields ──────────────────────────────────
+    session_id: str | None = None,
+    actor_id: str | None = None,
 ) -> dict[str, Any]:
     """Unified claim lifecycle — DRAFT → VALIDATED → SEALED.
 
@@ -144,6 +147,8 @@ async def geox_claim(
             claim_id=claim_id,
             ack_irreversible=ack_irreversible,
             seal_verdict=seal_verdict,
+            session_id=session_id,
+            actor_id=actor_id,
         )
         if isinstance(result, dict):
             result["well_constrained_check"] = {
@@ -153,19 +158,25 @@ async def geox_claim(
                 "floor_enforced": "F2_TRUTH",
                 "adr_reference": "ADR-008",
             }
+            result.setdefault("session_id", session_id or "geox-session")
+            result.setdefault("actor_id", actor_id or authority or "geox-governed")
         return result
 
     # ── Validate mode ───────────────────────────────────────────────────────
     if mode == "validate":
         from geox_mcp.tools.claims import geox_claim_validate as _impl
 
-        return await _impl(claim_id=claim_id)
+        result = await _impl(claim_id=claim_id, session_id=session_id, actor_id=actor_id)
+        if isinstance(result, dict):
+            result.setdefault("session_id", session_id or "geox-session")
+            result.setdefault("actor_id", actor_id or authority or "geox-governed")
+        return result
 
     # ── Challenge mode ──────────────────────────────────────────────────────
     if mode == "challenge":
         from geox_mcp.tools.claims import geox_claim_challenge as _impl
 
-        return await _impl(
+        result = await _impl(
             claim_id=claim_id,
             challenge_text=challenge_text,
             alternative_claim_text=alternative_claim_text,
@@ -173,18 +184,30 @@ async def geox_claim(
             challenge_evidence_ids=challenge_evidence_ids,
             alternative_uncertainty=alternative_uncertainty,
             challenger_provenance=challenger_provenance,
+            session_id=session_id,
+            actor_id=actor_id,
         )
+        if isinstance(result, dict):
+            result.setdefault("session_id", session_id or "geox-session")
+            result.setdefault("actor_id", actor_id or authority or "geox-governed")
+        return result
 
     # ── Attach evidence mode ────────────────────────────────────────────────
     if mode == "attach_evidence":
         from geox_mcp.tools.claims import geox_evidence_attach as _impl
 
-        return await _impl(
+        result = await _impl(
             claim_id=claim_id,
             evidence_id=evidence_id,
             evidence_type=evidence_type,
             provenance=provenance,
+            session_id=session_id,
+            actor_id=actor_id,
         )
+        if isinstance(result, dict):
+            result.setdefault("session_id", session_id or "geox-session")
+            result.setdefault("actor_id", actor_id or authority or "geox-governed")
+        return result
 
     # ── Default: Create mode ────────────────────────────────────────────────
     # Build extra_metadata from literature-to-claims extraction fields
@@ -200,7 +223,7 @@ async def geox_claim(
 
     from geox_mcp.tools.claims import geox_claim_create as _impl
 
-    return await _impl(
+    result = await _impl(
         claim_text=claim_text,
         claim_type=claim_type,
         truth_class=truth_class,
@@ -213,4 +236,10 @@ async def geox_claim(
         provenance=provenance,
         authority=authority,
         extra_metadata=lit_metadata or None,
+        session_id=session_id,
+        actor_id=actor_id,
     )
+    if isinstance(result, dict):
+        result.setdefault("session_id", session_id or "geox-session")
+        result.setdefault("actor_id", actor_id or authority or "geox-governed")
+    return result

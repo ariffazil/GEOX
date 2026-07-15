@@ -1,12 +1,21 @@
+"""DEPRECATED package name (organ collision with WELL :18083).
+
+Canonical import path: ``geox.welllog`` (well-log / stratigraphy domain).
+This package re-exports welllog for backward compatibility until 2026-08-15.
 """
-GEOX Well Stratigraphy — MCP-grade well log analysis toolkit
-═══════════════════════════════════════════════════════════════
-
-L1: 10 m GR sensing bins
-L2: Geological package builder (stacking patterns)
-L3: Sequence stratigraphy inference (systems tracts)
-
-DITEMPA BUKAN DIBERI — Forged, Not Given
-"""
-
 from __future__ import annotations
+
+import warnings
+
+warnings.warn(
+    "geox.well is deprecated; use geox.welllog (well-log stratigraphy, not WELL organ).",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+try:
+    from geox.welllog import *  # noqa: F403
+except Exception:
+    pass
+
+__all__ = []

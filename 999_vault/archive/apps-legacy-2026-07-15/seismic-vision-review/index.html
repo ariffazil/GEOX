@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX Seismic Vision Review — SCAFFOLD</title>
+    <style>
+        :root { --bg: #0a0a0f; --panel: #12121a; --text: #e8e8f0; --muted: #9090a0; --accent: #3b82f6; --warn: #f59e0b; --stop: #ef4444; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 { font-size: 22px; margin-bottom: 8px; }
+        .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+        .panel { background: var(--panel); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .row { display: flex; gap: 16px; flex-wrap: wrap; }
+        .metric { flex: 1; min-width: 160px; }
+        .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .value { font-size: 18px; font-weight: 700; margin-top: 4px; }
+        .tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: rgba(245,158,11,0.15); color: var(--warn); }
+        .canvas { width: 100%; height: 280px; background: repeating-linear-gradient(45deg, #1e293b 0px, #1e293b 10px, #0f172a 10px, #0f172a 20px); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); }
+        button { padding: 10px 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .void { background: rgba(239,68,68,0.15); color: var(--stop); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 Seismic Vision Review</h1>
+        <p class="subtitle">Governed VLM interpretation — SCAFFOLD — DITEMPA BUKAN DIBERI</p>
+
+        <div class="panel">
+            <div class="canvas">Mock Seismic Slice — VLM Backend Pending</div>
+        </div>
+
+        <div class="panel">
+            <div class="row">
+                <div class="metric">
+                    <div class="label">Claim Tag</div>
+                    <div class="value"><span class="tag">HYPOTHESIS</span></div>
+                </div>
+                <div class="metric">
+                    <div class="label">Stage 222_REFLECT</div>
+                    <div class="value" style="color:var(--warn)">PENDING</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Fault Picks</div>
+                    <div class="value">2 Mock</div>
+                </div>
+                <div class="metric">
+                    <div class="label">7-Day Probe</div>
+                    <div class="value" style="color:var(--stop)">Requires GT Upload</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <button id="syncBtn">Sync State to Host</button>
+            <button id="toolBtn" style="margin-left:8px;background:#2a2a3a;color:#fff;">Call MCP Tool</button>
+        </div>
+    </div>
+
+    <script>
+        const bridge = {
+            emit(method, params = {}) {
+                const event = { jsonrpc: "2.0", method, params, timestamp: new Date().toISOString() };
+                if (window.parent !== window) window.parent.postMessage(event, "*");
+                console.log("[SeismicVisionReview]", method, params);
+            }
+        };
+        bridge.emit("app.initialize", { app_id: "geox.seismic.vision.review", version: "0.5.0-SCAFFOLD" });
+
+        document.getElementById("syncBtn").addEventListener("click", () => {
+            bridge.emit("ui.state.sync", { claim_tag: "HYPOTHESIS", stage_222_reflect: "PENDING" });
+        });
+        document.getElementById("toolBtn").addEventListener("click", () => {
+            bridge.emit("callServerTool", { tool: "mcp.geox.geox_seismic_vision_review_stub", args: { volume_id: "vol_001" } });
+        });
+    </script>
+</body>
+</html>

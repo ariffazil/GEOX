@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX Analog Digitizer — PLANNED</title>
+    <style>
+        :root { --bg: #0a0a0f; --panel: #12121a; --text: #e8e8f0; --muted: #9090a0; --accent: #8b5cf6; --warn: #f59e0b; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; }
+        .container { max-width: 960px; margin: 0 auto; }
+        h1 { font-size: 22px; margin-bottom: 8px; }
+        .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+        .panel { background: var(--panel); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .value { font-size: 18px; font-weight: 700; margin-top: 4px; }
+        .tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: rgba(139,92,246,0.15); color: var(--accent); }
+        .stage { padding: 10px 12px; border-bottom: 1px solid #1a1a25; }
+        .stage:last-child { border-bottom: none; }
+        .status { font-size: 11px; color: var(--warn); }
+        button { padding: 10px 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .muted-btn { background: #2a2a3a; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📜 Analog Digitizer</h1>
+        <p class="subtitle">Dark-data well log digitization — PLANNED — DITEMPA BUKAN DIBERI</p>
+
+        <div class="panel">
+            <div class="label">Status</div>
+            <div class="value"><span class="tag">DESIGN SPIKE</span></div>
+            <p style="color:var(--muted);font-size:13px;margin-top:8px;">
+                Truth ≥0.99 required before any SEALED LAS used for business decisions.
+            </p>
+        </div>
+
+        <div class="panel">
+            <div class="label">Pipeline Stages</div>
+            <div class="stage">
+                <div style="font-weight:600;">1. Preprocessing</div>
+                <div class="status">PENDING — Image alignment, denoising, grid isolation</div>
+            </div>
+            <div class="stage">
+                <div style="font-weight:600;">2. Neural Interpretation</div>
+                <div class="status">PENDING — CNN/RNN curve tracking</div>
+            </div>
+            <div class="stage">
+                <div style="font-weight:600;">3. Vectorization & Export</div>
+                <div class="status">PENDING — Pixel paths to mathematical vectors → LAS</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <button id="syncBtn">Sync State to Host</button>
+            <button id="toolBtn" class="muted-btn">Call MCP Tool</button>
+        </div>
+    </div>
+
+    <script>
+        const bridge = {
+            emit(method, params = {}) {
+                const event = { jsonrpc: "2.0", method, params, timestamp: new Date().toISOString() };
+                if (window.parent !== window) window.parent.postMessage(event, "*");
+                console.log("[AnalogDigitizer]", method, params);
+            }
+        };
+        bridge.emit("app.initialize", { app_id: "geox.analog.digitizer", version: "0.1.0-PLANNED" });
+
+        document.getElementById("syncBtn").addEventListener("click", () => {
+            bridge.emit("ui.state.sync", { status: "design_spike", claim_tag: "HYPOTHESIS" });
+        });
+        document.getElementById("toolBtn").addEventListener("click", () => {
+            bridge.emit("callServerTool", { tool: "mcp.geox.geox_analog_digitizer_stub", args: { image_path: "/mock/log_scan.png" } });
+        });
+    </script>
+</body>
+</html>

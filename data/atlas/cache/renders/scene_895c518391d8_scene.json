@@ -1,0 +1,113 @@
+{
+  "status": "OK",
+  "scene_id": "scene_895c518391d8",
+  "bbox": [
+    115.0,
+    4.0,
+    119.5,
+    7.5
+  ],
+  "crs": "EPSG:4326",
+  "center": [
+    117.25,
+    5.75
+  ],
+  "width_deg": 4.5,
+  "height_deg": 3.5,
+  "map_purpose": "context",
+  "style_profile": "geox_regional_clean_v1",
+  "style": {
+    "basin_fill_opacity": 0.35,
+    "fault_line_width": 1.2,
+    "label_density": "medium",
+    "color_scheme": "geological_standard",
+    "background": "light_grey"
+  },
+  "layers_ordered": [
+    {
+      "id": "sab_coastline",
+      "name": "Sabah Coastline",
+      "type": "vector",
+      "truth_class": "CONTEXT",
+      "source": "Natural Earth + GEOX curated"
+    },
+    {
+      "id": "sab_nw_basin",
+      "name": "NW Sabah Basin",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_trough",
+      "name": "Sabah Trough",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_ftb",
+      "name": "NW Sabah Fold-Thrust Belt",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_crocker",
+      "name": "Crocker Formation",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_trusmadi",
+      "name": "Trusmadi Formation",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_kinabalu",
+      "name": "Kinabalu Granite",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_sandakan",
+      "name": "Sandakan Basin",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_faults_major",
+      "name": "Major Faults (Regional)",
+      "type": "vector",
+      "truth_class": "INTERPRETATION",
+      "source": "GEOX curated public synthesis"
+    },
+    {
+      "id": "sab_wells_public",
+      "name": "Public Well Locations",
+      "type": "vector",
+      "truth_class": "CONTEXT",
+      "source": "GEOX curated public data"
+    }
+  ],
+  "layer_count": 10,
+  "warnings": [],
+  "provenance": {
+    "generated_by": "geox_map_scene_plan",
+    "truth_classes_present": [
+      "CONTEXT",
+      "INTERPRETATION"
+    ],
+    "scale_warning": "Regional schematic only. Not survey-grade.",
+    "sources": [
+      "GEOX curated public synthesis",
+      "GEOX curated public data",
+      "Natural Earth + GEOX curated"
+    ]
+  }
+}

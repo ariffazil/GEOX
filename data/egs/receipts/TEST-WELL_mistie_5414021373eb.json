@@ -1,0 +1,44 @@
+{
+  "optimal_lag_ms": -12.0,
+  "rms_mistie_ms": 12.0,
+  "correlation_coefficient": 1.0,
+  "residual_rms_normalized": 0.0,
+  "verdict": "SEAL",
+  "threshold_used_ms": 25.0,
+  "verdict_reason": "RMS mistie 12.0 ms within threshold 25.0 ms.",
+  "residual_class": "good_tie",
+  "residual_description": "Residual within acceptable range.",
+  "per_interval_mistie": [],
+  "physics_guard": {
+    "guard_passed": true,
+    "physics_version": "geox-mistie-v1.0.0",
+    "trace_length_samples": 200,
+    "window_length_samples": 200,
+    "window_label": "full trace",
+    "dt_ms": 4.0,
+    "nyquist_hz": 125.0,
+    "max_lag_searched_ms": 50.0,
+    "optimal_lag_ms": -12.0,
+    "equations_used": [
+      "C(\u03c4) = \u03a3_k s(t_k) \u00b7 r(t_k + \u03c4)",
+      "\u03c4* = argmax |C(\u03c4)|"
+    ],
+    "violations": []
+  },
+  "anti_hantu_flags": [
+    "mistie is not tie quality \u2014 it is one metric",
+    "25 ms threshold is resolution limit, not quality grade"
+  ],
+  "vault_receipt": {
+    "receipt_id": "411e927afc0e",
+    "tool": "geox_well_seismic_mistie_rms",
+    "actor": "geox_1d_mcp",
+    "threshold_ms": 25.0,
+    "verdict": "SEAL",
+    "resource_uri": "geox://well/TEST-WELL/mistie/411e927afc0e",
+    "timestamp_utc": "2026-07-11T19:42:48.848467+00:00",
+    "vault999_status": "DRAFT_ONLY",
+    "seal_allowed": false
+  },
+  "resource_uri": "geox://well/TEST-WELL/mistie/411e927afc0e"
+}

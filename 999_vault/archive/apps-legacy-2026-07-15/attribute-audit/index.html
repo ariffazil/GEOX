@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX Attribute Audit — PREVIEW</title>
+    <style>
+        :root { --bg: #0a0a0f; --panel: #12121a; --text: #e8e8f0; --muted: #9090a0; --accent: #00d4aa; --warn: #ffa502; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; }
+        .container { max-width: 960px; margin: 0 auto; }
+        h1 { font-size: 22px; margin-bottom: 8px; }
+        .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+        .panel { background: var(--panel); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .row { display: flex; gap: 16px; flex-wrap: wrap; }
+        .metric { flex: 1; min-width: 180px; }
+        .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .value { font-size: 20px; font-weight: 700; margin-top: 4px; }
+        .tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: rgba(0,212,170,0.15); color: var(--accent); }
+        .chain { font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); line-height: 1.6; }
+        button { padding: 10px 16px; background: var(--accent); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Attribute Audit</h1>
+        <p class="subtitle">Transform-chain inspector — PREVIEW — DITEMPA BUKAN DIBERI</p>
+
+        <div class="panel">
+            <div class="row">
+                <div class="metric">
+                    <div class="label">Attribute</div>
+                    <div class="value">RMS Amplitude</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Porosity Proxy</div>
+                    <div class="value">0.2500</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Permeability Proxy</div>
+                    <div class="value">15.6250 mD</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Claim Tag</div>
+                    <div class="value"><span class="tag">PLAUSIBLE</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="label">Transform Chain</div>
+            <pre class="chain">1. load_volume("vol_001")
+2. compute_attribute("rms_amplitude")
+3. kozeny_carman_proxy(coefficient=1000, exponent=3)</pre>
+        </div>
+
+        <div class="panel">
+            <button id="syncBtn">Sync State to Host</button>
+            <button id="toolBtn" style="margin-left:8px;background:#2a2a3a;color:#fff;">Call MCP Tool</button>
+        </div>
+    </div>
+
+    <script>
+        const bridge = {
+            emit(method, params = {}) {
+                const event = { jsonrpc: "2.0", method, params, timestamp: new Date().toISOString() };
+                if (window.parent !== window) window.parent.postMessage(event, "*");
+                console.log("[AttributeAudit]", method, params);
+            }
+        };
+        bridge.emit("app.initialize", { app_id: "geox.attribute.audit", version: "0.9.0-PREVIEW" });
+
+        document.getElementById("syncBtn").addEventListener("click", () => {
+            bridge.emit("ui.state.sync", { attribute_type: "rms_amplitude", claim_tag: "PLAUSIBLE" });
+        });
+        document.getElementById("toolBtn").addEventListener("click", () => {
+            bridge.emit("callServerTool", { tool: "mcp.geox.geox_attribute_audit_stub", args: { volume_id: "vol_001" } });
+        });
+    </script>
+</body>
+</html>

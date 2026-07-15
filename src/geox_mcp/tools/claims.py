@@ -166,6 +166,9 @@ async def geox_claim_create(
     provenance: str = "GEOX Claim Engine",
     authority: str = "GEOX_CLAIM_WORKER",
     extra_metadata: dict[str, Any] | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     """
     Create a structured Earth interpretation claim with full provenance chain.
@@ -294,6 +297,9 @@ async def geox_claim_create(
 
 async def geox_claim_validate(
     claim_id: str,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     """
     Validate a draft claim against the 16-field earth_memory_envelope schema.
@@ -345,6 +351,9 @@ async def geox_claim_challenge(
     challenge_evidence_ids: list[str] | None = None,
     alternative_uncertainty: dict[str, Any] | None = None,
     challenger_provenance: str = "GEOX Claim Engine",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     """
     Challenge an existing interpretation claim with an alternative interpretation.
@@ -434,6 +443,9 @@ async def geox_evidence_attach(
     evidence_id: str,
     evidence_type: str = "supporting",
     provenance: str = "GEOX Claim Engine",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     """
     Attach an evidence artifact to an existing claim.
@@ -519,6 +531,9 @@ async def geox_claim_seal(
     claim_id: str,
     ack_irreversible: bool = False,
     seal_verdict: Literal["SEAL", "SABAR", "VOID"] = "SEAL",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     """
     Submit a validated claim to arifOS for Vault999 sealing.
@@ -742,10 +757,10 @@ async def geox_claim_seal(
                     },
                 },
             )
-            session_id = init_resp.headers.get("Mcp-Session-Id") or init_resp.headers.get("mcp-session-id") or ""
+            resolved_session = session_id or init_resp.headers.get("Mcp-Session-Id") or init_resp.headers.get("mcp-session-id") or ""
 
             # 2. tools/call arif_vault_seal
-            call_headers = {**mcp_headers, "Mcp-Session-Id": session_id}
+            call_headers = {**mcp_headers, "Mcp-Session-Id": resolved_session}
             call_resp = await client.post(
                 "http://127.0.0.1:8088/mcp",
                 headers=call_headers,
@@ -754,12 +769,12 @@ async def geox_claim_seal(
                     "id": 2,
                     "method": "tools/call",
                     "params": {
-                        "name": "arif_vault_seal",
+                        "name": "arif_seal",
                         "arguments": {
                             "action": "SEAL",
                             "payload": json.dumps(seal_request),
-                            "actor_id": "geox-bridge",
-                            "session_id": session_id,
+                            "actor_id": actor_id or "geox-bridge",
+                            "session_id": resolved_session,
                             "ack_irreversible": bool(ack_irreversible),
                         },
                     },
@@ -769,13 +784,27 @@ async def geox_claim_seal(
             if "error" in result and result["error"]:
                 raise RuntimeError(f"MCP error: {result['error']}")
             mcp_result = result.get("result") or {}
+            if isinstance(mcp_result, dict) and "content" in mcp_result and isinstance(mcp_result["content"], list):
+                for item in mcp_result["content"]:
+                    if isinstance(item, dict) and item.get("type") == "text":
+                        text = item.get("text", "").strip()
+                        if text.startswith("KERNEL_DENY") or text.startswith("ERROR") or text.startswith("HOLD"):
+                            raise RuntimeError(f"arifOS error: {text}")
+                        try:
+                            parsed = json.loads(text)
+                            if isinstance(parsed, dict):
+                                mcp_result = parsed
+                                break
+                        except Exception:
+                            mcp_result = {"text": text}
             return {
                 "status": "SEALED",
                 "seal_receipt": mcp_result,
                 "claim_id": claim_id,
                 "claim_state": "SEALED",
                 "verdict": seal_verdict,
-                "session_id": session_id,
+                "session_id": resolved_session,
+                "actor_id": actor_id or "geox-bridge",
             }
     except Exception as e:
         error_msg = str(e)
@@ -788,6 +817,8 @@ async def geox_claim_seal(
                 "detail": error_msg,
                 "claim_id": claim_id,
                 "required_action": "Check arifOS health and /mcp readiness, then retry.",
+                "session_id": session_id or "",
+                "actor_id": actor_id or "geox-bridge",
             }
         return {
             "status": "HOLD",
@@ -796,6 +827,8 @@ async def geox_claim_seal(
             "detail": error_msg,
             "claim_id": claim_id,
             "required_action": "Check arifOS /mcp endpoint and retry.",
+            "session_id": session_id or "",
+            "actor_id": actor_id or "geox-bridge",
         }
 
 

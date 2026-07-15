@@ -1,0 +1,25 @@
+{
+  "scene_id": "scene_9fddc75713dc",
+  "bbox": [
+    116.0,
+    5.0,
+    117.0,
+    6.0
+  ],
+  "layers": [
+    "ne_coastline"
+  ],
+  "style_profile": "geox_regional_clean_v1",
+  "rendered_at": "2026-07-12T06:57:16+00:00",
+  "width_px": 512,
+  "height_px": 512,
+  "format": "image/png",
+  "generated_by": "geox_map_render_preview",
+  "truth_classes": [
+    "CONTEXT"
+  ],
+  "warnings": [
+    "Not survey-grade. Regional schematic for reasoning context only.",
+    "Geometry from Natural Earth / GEOX curated synthesis."
+  ]
+}
