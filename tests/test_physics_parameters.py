@@ -6,6 +6,7 @@ attenuation, well-tie primitives, and forward_physics9.
 These are pure functions — no mocking required.
 DITEMPA BUKAN DIBERI
 """
+
 import math
 import pytest
 import numpy as np
@@ -32,28 +33,30 @@ from geox_core.physics.parameters import (
     convolve_trace,
     forward_physics9,
 )
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 
 # ── Canonical test state ──────────────────────────────────────────────────
 
+
 @pytest.fixture
 def sandstone_state():
     """Typical shallow marine sandstone parameters."""
-    return Physics9State(
-        rho=2200.0,    # kg/m³
-        vp=2800.0,     # m/s
-        vs=1500.0,     # m/s
-        rho_e=10.0,    # Ω·m
-        chi=1e-4,      # SI
-        k=2.5,         # W/m·K
-        P=20e6,        # 20 MPa pore pressure
-        T=320.0,       # K
-        phi=0.22,      # 22% porosity
+    return Physics13State(
+        rho=2200.0,  # kg/m³
+        vp=2800.0,  # m/s
+        vs=1500.0,  # m/s
+        rho_e=10.0,  # Ω·m
+        chi=1e-4,  # SI
+        k=2.5,  # W/m·K
+        P=20e6,  # 20 MPa pore pressure
+        T=320.0,  # K
+        phi=0.22,  # 22% porosity
     )
 
 
 # ── Elastic Moduli ────────────────────────────────────────────────────────
+
 
 def test_bulk_modulus_positive(sandstone_state):
     """K = ρ(Vp² − 4/3 Vs²) should be positive for real rock."""
@@ -68,13 +71,34 @@ def test_shear_modulus_positive(sandstone_state):
     assert G > 0
 
 
-def test_young_modulus_formula():
-    """E = G(3K + G)/(K + G)"""
-    K, G = 10e9, 5e9
-    E = young_modulus(K, G)
-    expected = G * (3 * K + G) / (K + G)
-    assert E == pytest.approx(expected)
-    assert E > 0
+def test_young_modulus_isotropic_identity():
+    """E = 9KG/(3K+G) — three-way cross-check against isotropic elastic identity.
+
+    Four convicted regression vectors from sovereign probe (2026-07-10).
+    Each: E must match both E=2G(1+ν) and E=3K(1-2ν) to machine epsilon.
+    """
+    vectors = [
+        # (rho, Vp, Vs, E_correct_GPa)
+        (2400, 3000, 1500, 14.4000),  # sovereign's primary kill vector
+        (2500, 4500, 2000, 27.5385),  # higher velocity band
+        (2200, 2000, 1400, 8.7931),  # lower density band
+        (2400, 3000, 1000, 6.9000),  # high Vp/Vs (shale regime)
+    ]
+    for rho, vp, vs, expected_e_gpa in vectors:
+        K = bulk_modulus(vp, vs, rho)
+        G = shear_modulus(vs, rho)
+        E = young_modulus(K, G)
+        nu = poisson_ratio(K, G)
+
+        # Three-way cross-check
+        E_from_G_nu = 2.0 * G * (1.0 + nu)
+        E_from_K_nu = 3.0 * K * (1.0 - 2.0 * nu)
+
+        assert E == pytest.approx(E_from_G_nu, rel=1e-12), f"ρ={rho} Vp={vp} Vs={vs}: E={E} ≠ 2G(1+ν)={E_from_G_nu}"
+        assert E == pytest.approx(E_from_K_nu, rel=1e-12), f"ρ={rho} Vp={vp} Vs={vs}: E={E} ≠ 3K(1-2ν)={E_from_K_nu}"
+        assert E == pytest.approx(expected_e_gpa * 1e9, rel=1e-4), (
+            f"ρ={rho} Vp={vp} Vs={vs}: expected {expected_e_gpa} GPa, got {E / 1e9:.4f} GPa"
+        )
 
 
 def test_poisson_ratio_physical_range():
@@ -127,18 +151,19 @@ def test_fatigue_proxy_min_cycles():
 
 # ── Rock Physics ──────────────────────────────────────────────────────────
 
+
 def test_gardner_density():
     """ρ = α·Vp^β — default α=310, β=0.25."""
     vp = np.array([2000.0, 3000.0, 4000.0])
     rho = gardner_density(vp)
-    expected = 310.0 * (vp ** 0.25)
+    expected = 310.0 * (vp**0.25)
     np.testing.assert_allclose(rho, expected)
 
 
 def test_gardner_density_custom_params():
     vp = np.array([3000.0])
     rho = gardner_density(vp, alpha=320.0, beta=0.26)
-    expected = 320.0 * (3000.0 ** 0.26)
+    expected = 320.0 * (3000.0**0.26)
     np.testing.assert_allclose(rho, expected)
 
 
@@ -160,6 +185,7 @@ def test_faust_velocity():
 
 
 # ── Anisotropy (Thomsen) ──────────────────────────────────────────────────
+
 
 def test_thomsen_parameters():
     vp = np.array([3000.0, 4000.0])
@@ -195,6 +221,7 @@ def test_anisotropic_correction_45_degrees():
 
 # ── Attenuation ───────────────────────────────────────────────────────────
 
+
 def test_spectral_decay_normal():
     """f_decayed = f_initial / (1 + π·f·t/Q)."""
     f_in = 40.0
@@ -227,6 +254,7 @@ def test_time_variant_wavelet_params():
 
 
 # ── Well-Tie Primitives ───────────────────────────────────────────────────
+
 
 def test_impedance_array():
     rho = np.array([2000.0, 2200.0, 2400.0])
@@ -281,10 +309,20 @@ def test_convolve_trace():
 
 # ── Forward Physics9 ──────────────────────────────────────────────────────
 
+
 def test_forward_physics9_keys(sandstone_state):
     result = forward_physics9(sandstone_state)
-    expected_keys = {"K_GPa", "G_GPa", "E_GPa", "nu", "ai_kg_ms2",
-                     "vp_vs_ratio", "thermal_diff", "fatigue_proxy", "acoustic_impedance"}
+    expected_keys = {
+        "K_GPa",
+        "G_GPa",
+        "E_GPa",
+        "nu",
+        "ai_kg_ms2",
+        "vp_vs_ratio",
+        "thermal_diff",
+        "fatigue_proxy",
+        "acoustic_impedance",
+    }
     assert set(result.keys()) == expected_keys
 
 
@@ -306,7 +344,8 @@ def test_forward_physics9_consistency(sandstone_state):
     assert result["acoustic_impedance"] == result["ai_kg_ms2"]
 
 
-# ── Physics9State ─────────────────────────────────────────────────────────
+# ── Physics13State ─────────────────────────────────────────────────────────
+
 
 def test_physics9state_to_vector(sandstone_state):
     v = sandstone_state.to_vector()
@@ -319,20 +358,14 @@ def test_physics9state_to_vector(sandstone_state):
 
 def test_physics9state_frozen():
     """State is immutable — modification raises AttributeError."""
-    state = Physics9State(
-        rho=2000.0, vp=2500.0, vs=1200.0,
-        rho_e=5.0, chi=1e-5, k=2.0, P=10e6, T=300.0, phi=0.2
-    )
+    state = Physics13State(rho=2000.0, vp=2500.0, vs=1200.0, rho_e=5.0, chi=1e-5, k=2.0, P=10e6, T=300.0, phi=0.2)
     with pytest.raises((AttributeError, TypeError)):
         state.rho = 9999.0  # type: ignore
 
 
 def test_physics9state_defaults():
     """Extension params default correctly."""
-    state = Physics9State(
-        rho=2000.0, vp=2500.0, vs=1200.0,
-        rho_e=5.0, chi=1e-5, k=2.0, P=10e6, T=300.0, phi=0.2
-    )
+    state = Physics13State(rho=2000.0, vp=2500.0, vs=1200.0, rho_e=5.0, chi=1e-5, k=2.0, P=10e6, T=300.0, phi=0.2)
     assert state.epsilon == 0.0
     assert state.delta == 0.0
     assert state.gamma == 0.0
@@ -342,7 +375,7 @@ def test_physics9state_defaults():
 
 def test_physics9state_from_vector():
     v = [2350, 2950, 1680, 20, 0.0001, 2.8, 20e6, 320, 0.25, 0.0, 0.0, 0.0, 100.0, 50.0]
-    state = Physics9State.from_vector(v)
+    state = Physics13State.from_vector(v)
     assert state.rho == 2350
     assert state.vp == 2950
     assert state.vs == 1680
@@ -350,7 +383,7 @@ def test_physics9state_from_vector():
 
     # Short vector
     v_short = [2350, 2950, 1680, 20]
-    state_short = Physics9State.from_vector(v_short)
+    state_short = Physics13State.from_vector(v_short)
     assert state_short.rho == 2350
     assert state_short.chi == 0.0
     assert state_short.phi == 0.20
@@ -358,25 +391,25 @@ def test_physics9state_from_vector():
 
 def test_physics9state_grade():
     # Valid
-    state_aaa = Physics9State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
+    state_aaa = Physics13State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
     assert state_aaa.grade() == "AAA"
 
     # Out of bounds porosity
-    state_raw1 = Physics9State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.50)
+    state_raw1 = Physics13State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.50)
     assert state_raw1.grade() == "RAW"
 
     # Out of bounds velocity
-    state_raw2 = Physics9State(rho=2350, vp=7000, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
+    state_raw2 = Physics13State(rho=2350, vp=7000, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
     assert state_raw2.grade() == "RAW"
 
     # Out of bounds density
-    state_raw3 = Physics9State(rho=6000, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
+    state_raw3 = Physics13State(rho=6000, vp=2950, vs=1680, rho_e=20, chi=0, k=2, P=0, T=0, phi=0.25)
     assert state_raw3.grade() == "RAW"
 
 
 def test_compute_earth_material_catalog():
     from geox_core.physics.state import compute_earth_material_catalog
+
     catalog = compute_earth_material_catalog()
     assert "Sandstone" in catalog
     assert catalog["Sandstone"]["rho"] == 2350
-

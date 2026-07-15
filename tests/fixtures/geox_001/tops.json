@@ -1,0 +1,16 @@
+[
+  {
+    "well_id": "Well A",
+    "surface": "Top_Reservoir",
+    "depth_md": 2300.0,
+    "confidence": "INTERPRETATION",
+    "source": "log_motif_pick"
+  },
+  {
+    "well_id": "Well A",
+    "surface": "Base_Reservoir",
+    "depth_md": 2335.0,
+    "confidence": "INTERPRETATION",
+    "source": "log_motif_pick"
+  }
+]

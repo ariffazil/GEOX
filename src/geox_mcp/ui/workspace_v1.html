@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GEOX Workspace v1</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f1e8;
+        --panel: #fffdf8;
+        --ink: #1f2a1f;
+        --muted: #5f6c5f;
+        --line: #d9d2c3;
+        --accent: #1c6b52;
+        --warn: #8a6a17;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Georgia, "Iowan Old Style", serif;
+        background:
+          radial-gradient(circle at top left, rgba(28, 107, 82, 0.08), transparent 32%),
+          linear-gradient(180deg, #f7f3ea 0%, var(--bg) 100%);
+        color: var(--ink);
+      }
+      .shell {
+        min-height: 100vh;
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+      }
+      .hero, .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(31, 42, 31, 0.06);
+      }
+      .hero {
+        padding: 16px 18px;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: start;
+      }
+      .hero h1 {
+        margin: 0 0 6px;
+        font-size: 22px;
+      }
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .badge {
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        border: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .badge.warn {
+        color: var(--warn);
+        background: #fbf5df;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 12px;
+      }
+      .panel {
+        padding: 14px 16px;
+      }
+      .panel h2 {
+        margin: 0 0 10px;
+        font-size: 15px;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .tab {
+        border: 1px solid var(--line);
+        background: #f7f4ed;
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 7px 11px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .tab.active {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+      .artifact {
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        margin-bottom: 8px;
+        background: #fcfaf4;
+        cursor: pointer;
+      }
+      .artifact.active {
+        border-color: var(--accent);
+        background: #eef6f2;
+      }
+      .artifact strong {
+        display: block;
+        font-size: 14px;
+      }
+      .artifact span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 3px;
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .empty {
+        padding: 18px;
+        border: 1px dashed var(--line);
+        border-radius: 12px;
+        color: var(--muted);
+        text-align: center;
+      }
+      @media (max-width: 720px) {
+        .grid { grid-template-columns: 1fr; }
+        .hero { flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <h1>GEOX Workspace</h1>
+          <p>Read-only Earth evidence review surface. No mutation path is enabled.</p>
+        </div>
+        <div id="verdict" class="badge warn">OBSERVE_ONLY</div>
+      </section>
+      <section class="grid">
+        <article class="panel">
+          <h2>Panels</h2>
+          <div id="tabs" class="tabs"></div>
+          <div id="panel-body" class="meta">Waiting for tool result.</div>
+        </article>
+        <aside class="panel">
+          <h2>Artifacts</h2>
+          <div id="artifacts"></div>
+          <div id="selection" class="meta" style="margin-top: 10px;"></div>
+        </aside>
+      </section>
+    </main>
+    <script>
+      const state = {
+        structuredContent: null,
+        widgetState: { panels: ["overview", "evidence"], selectedArtifact: null },
+        activePanel: "overview",
+      };
+
+      function safeText(value, fallback = "") {
+        return typeof value === "string" && value ? value : fallback;
+      }
+
+      function render() {
+        const payload = state.structuredContent || {};
+        const governance = payload.governance || { verdict: "OBSERVE_ONLY", mutation_allowed: false };
+        const artifacts = Array.isArray(payload.artifacts) ? payload.artifacts : [];
+        const panels = Array.isArray(state.widgetState.panels) && state.widgetState.panels.length
+          ? state.widgetState.panels
+          : ["overview", "evidence"];
+
+        const verdict = document.getElementById("verdict");
+        verdict.textContent = governance.verdict || "OBSERVE_ONLY";
+
+        const tabs = document.getElementById("tabs");
+        tabs.innerHTML = "";
+        panels.forEach((panel) => {
+          const button = document.createElement("button");
+          button.className = "tab" + (state.activePanel === panel ? " active" : "");
+          button.textContent = panel;
+          button.addEventListener("click", () => {
+            state.activePanel = panel;
+            render();
+          });
+          tabs.appendChild(button);
+        });
+
+        const panelBody = document.getElementById("panel-body");
+        if (state.activePanel === "overview") {
+          panelBody.innerHTML =
+            "<div><strong>Workspace:</strong> " + safeText(payload.workspace_id, "pending") + "</div>" +
+            "<div><strong>Mode:</strong> " + safeText(payload.mode, "read_only") + "</div>" +
+            "<div><strong>Initial view:</strong> " + safeText(payload.initial_view, "overview") + "</div>" +
+            "<div><strong>Mutation allowed:</strong> " + String(Boolean(governance.mutation_allowed)) + "</div>";
+        } else {
+          panelBody.innerHTML =
+            "<div><strong>Evidence status:</strong> " + safeText(governance.verdict, "OBSERVE_ONLY") + "</div>" +
+            "<div><strong>Artifacts loaded:</strong> " + String(artifacts.length) + "</div>" +
+            "<div><strong>Mutation path:</strong> disabled</div>";
+        }
+
+        const artifactsNode = document.getElementById("artifacts");
+        artifactsNode.innerHTML = "";
+        if (!artifacts.length) {
+          artifactsNode.innerHTML = '<div class="empty">No artifacts selected for this workspace.</div>';
+        } else {
+          artifacts.forEach((artifact) => {
+            const item = document.createElement("button");
+            item.type = "button";
+            item.className = "artifact" + (state.widgetState.selectedArtifact === artifact.ref ? " active" : "");
+            item.innerHTML =
+              "<strong>" + safeText(artifact.label, artifact.ref || "artifact") + "</strong>" +
+              "<span>" + safeText(artifact.kind, "unknown") + " · " + safeText(artifact.status, "unknown") + "</span>";
+            item.addEventListener("click", () => {
+              state.widgetState.selectedArtifact = artifact.ref || null;
+              render();
+            });
+            artifactsNode.appendChild(item);
+          });
+        }
+
+        const selection = document.getElementById("selection");
+        if (state.widgetState.selectedArtifact) {
+          selection.textContent = "Selected artifact: " + state.widgetState.selectedArtifact;
+        } else {
+          selection.textContent = "No artifact selected.";
+        }
+      }
+
+      function adoptToolResult(result) {
+        if (!result || typeof result !== "object") return;
+        state.structuredContent = result.structuredContent || state.structuredContent;
+        const meta = result._meta || {};
+        if (meta.widgetState && typeof meta.widgetState === "object") {
+          state.widgetState = {
+            ...state.widgetState,
+            ...meta.widgetState,
+          };
+        }
+        if (state.widgetState.panels && state.widgetState.panels.includes(state.activePanel) === false) {
+          state.activePanel = state.widgetState.panels[0] || "overview";
+        }
+        render();
+      }
+
+      window.addEventListener("message", (event) => {
+        const data = event.data;
+        if (!data || typeof data !== "object") return;
+        if (data.method === "ui/notifications/tool-result") {
+          adoptToolResult(data.params && data.params.result);
+        }
+        if (data.method === "ui/initialize" && data.params && data.params.toolResult) {
+          adoptToolResult(data.params.toolResult);
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>

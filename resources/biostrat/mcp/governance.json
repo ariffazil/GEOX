@@ -1,0 +1,165 @@
+{
+  "$schema": "mcp://geox/biostrat/governance/v1",
+  "description": "GEOX Biostratigraphy MCP Governance — Truth-Class Hygiene. 11-label truth taxonomy mapped to MCP governance with transition rules, constraints, and violation handling. Ensures biostrat outputs respect evidence-class boundaries.",
+  "organ": "GEOX",
+  "domain": "earth.biostratigraphy",
+  "phase": "2.5",
+  "last_verified": "2026-07-03",
+  "doctrine": "Biostratigraphy calibrates the Earth model. It does not replace the Earth.",
+
+  "truth_classes": {
+    "OBSERVATION_DIRECT": {
+      "rank": 1,
+      "scale": [9, 10],
+      "definition": "Earth physically answered — oil flowed, core recovered, pressure measured",
+      "examples": ["Oil to surface", "DST flow rate", "Pressure build-up", "Core with visible hydrocarbon"],
+      "can_upgrade_to": [],
+      "can_downgrade_to": [],
+      "violation": "Claiming biostrat proves hydrocarbon presence — category error"
+    },
+    "OBSERVATION_MATERIAL": {
+      "rank": 2,
+      "scale": [8, 9.5],
+      "definition": "Rock/fluid physically sampled and measured",
+      "examples": ["Core lithology", "Cuttings sample", "Fluid sample", "Core porosity"],
+      "can_upgrade_to": [],
+      "can_downgrade_to": [],
+      "violation": "Claiming cuttings observation is equivalent to core observation"
+    },
+    "OBSERVATION_BIOLOGICAL": {
+      "rank": 3,
+      "scale": [7, 8.5],
+      "definition": "Fossil/taxon/biozone observed in sample — what was actually seen",
+      "examples": ["NN5 marker taxon identified", "Foram assemblage counted", "Palynomorph assemblage described"],
+      "can_upgrade_to": ["INTERPRETATION_STRATIGRAPHIC"],
+      "can_downgrade_to": [],
+      "violation": "Reporting 'Middle Miocene' without citing which fossils — collapsing observation into interpretation"
+    },
+    "OBSERVATION_PROXY": {
+      "rank": 4,
+      "scale": [6, 8],
+      "definition": "Indirect measured signal — logs, seismic amplitude, mud gas",
+      "examples": ["Gamma ray 80 API", "Resistivity 20 ohm-m", "Seismic amplitude anomaly"],
+      "can_upgrade_to": [],
+      "can_downgrade_to": [],
+      "violation": "Treating resistivity as direct oil indicator without sampling"
+    },
+    "INTERPRETATION_LOCAL": {
+      "rank": 5,
+      "scale": [5.5, 7.5],
+      "definition": "Immediate geological meaning at sample/well scale",
+      "examples": ["Marine-influenced interval", "Sand A is channel fill", "Flooding surface at 2450m"],
+      "can_upgrade_to": ["INTERPRETATION_STRATIGRAPHIC"],
+      "can_downgrade_to": ["OBSERVATION_BIOLOGICAL"],
+      "violation": "Claiming local observation has basin-wide significance without testing"
+    },
+    "INTERPRETATION_STRATIGRAPHIC": {
+      "rank": 6,
+      "scale": [5, 7],
+      "definition": "Correlation, time, surface, or sequence interpretation",
+      "examples": ["Middle Miocene flooding surface", "NN5 interval", "Deep Regional Unconformity identified"],
+      "can_upgrade_to": ["MODEL_STATIC", "MODEL_DYNAMIC"],
+      "can_downgrade_to": ["INTERPRETATION_LOCAL", "OBSERVATION_BIOLOGICAL"],
+      "violation": "Claiming 'NN5 = Middle Miocene = prospect works' — collapsing interpretation into commercial claim"
+    },
+    "MODEL_STATIC": {
+      "rank": 7,
+      "scale": [4, 6.5],
+      "definition": "Structural or depositional model — organization of interpreted data",
+      "examples": ["Closure map", "Channel fairway map", "COB transition zone model"],
+      "can_upgrade_to": ["CLAIM_EXPLORATION"],
+      "can_downgrade_to": ["INTERPRETATION_STRATIGRAPHIC"],
+      "violation": "Presenting model as observation — 'the kitchen is here' without evidence"
+    },
+    "MODEL_DYNAMIC": {
+      "rank": 8,
+      "scale": [3.5, 6],
+      "definition": "Process model — how things happened over time",
+      "examples": ["Charge timing model", "Slab-breakoff model", "Migration pathway model"],
+      "can_upgrade_to": ["CLAIM_EXPLORATION"],
+      "can_downgrade_to": ["MODEL_STATIC"],
+      "violation": "Presenting slab-breakoff as observation rather than geodynamic model"
+    },
+    "CLAIM_EXPLORATION": {
+      "rank": 9,
+      "scale": [3, 6],
+      "definition": "Prospect/play assertion — disciplined hypothesis",
+      "examples": ["P50 volume 150 MMboe", "COS 35%", "Trap is valid", "Reservoir is present"],
+      "can_upgrade_to": ["OBSERVATION_DIRECT"],
+      "can_downgrade_to": ["MODEL_STATIC", "MODEL_DYNAMIC"],
+      "violation": "Claiming 'biostrat proves the prospect' — biostrat cannot prove commerciality"
+    },
+    "EUREKA_LEAP": {
+      "rank": 10,
+      "scale": [2, 5],
+      "definition": "Insight ahead of proof — pattern recognition before evidence complete",
+      "examples": ["New stratigraphic trap concept", "Bypassed play recognition"],
+      "can_upgrade_to": ["CLAIM_EXPLORATION"],
+      "can_downgrade_to": [],
+      "violation": "Entering eureka leap into database as fact without labelling"
+    },
+    "FAITH_STORY": {
+      "rank": 11,
+      "scale": [0, 2],
+      "definition": "Unsupported narrative — aesthetic preference, not evidence",
+      "examples": ["'This basin should work'", "'The seismic looks good'", "'The model is elegant'"],
+      "can_upgrade_to": ["EUREKA_LEAP"],
+      "can_downgrade_to": [],
+      "violation": "Allowing faith story to influence exploration decisions without evidence gate"
+    }
+  },
+
+  "transition_rules": {
+    "rule_1": "DOWNGRADE is always allowed — you can reduce confidence, you cannot fabricate certainty",
+    "rule_2": "UPGRADE requires evidence gate — you must provide new independent evidence to move up",
+    "rule_3": "Collapsing layers (skipping truth classes) is a GOVERNANCE VIOLATION — must be flagged",
+    "rule_4": "Biostrat-specific: OBSERVATION_BIOLOGICAL → INTERPRETATION_STRATIGRAPHIC requires calibration, facies check, and multi-discipline convergence",
+    "rule_5": "Claims cannot be upgraded to OBSERVATION_DIRECT without physical Earth response (flow, core, pressure)"
+  },
+
+  "biostrat_specific_constraints": {
+    "fossil_to_age": {
+      "from": "OBSERVATION_BIOLOGICAL",
+      "to": "INTERPRETATION_STRATIGRAPHIC",
+      "required": ["Calibration table citation", "Zone name preserved", "Facies compatibility check", "Confidence tier assigned"],
+      "forbidden": "Direct fossil-to-age without calibration, zone name, or facies check"
+    },
+    "age_to_play": {
+      "from": "INTERPRETATION_STRATIGRAPHIC",
+      "to": "CLAIM_EXPLORATION",
+      "required": ["Multi-discipline convergence", "Regional calibration", "Independent seismic/log/lithology support"],
+      "forbidden": "Claiming prospect validity from biostrat alone"
+    },
+    "biostrat_to_commercial": {
+      "from": "any",
+      "to": "OBSERVATION_DIRECT",
+      "forbidden": "ABSOLUTELY FORBIDDEN. Biostrat cannot prove commerciality. Only flow, core, pressure, and fluid recovery can."
+    }
+  },
+
+  "violation_handling": {
+    "V1_CATEGORY_ERROR": {
+      "description": "Claim from wrong truth class — e.g. biostrat observation presented as commercial proof",
+      "action": "REJECT with explanation of correct truth class"
+    },
+    "V2_COLLAPSED_LAYER": {
+      "description": "Skipping truth classes — e.g. fossil name directly to age without calibration",
+      "action": "HOLD with required missing evidence"
+    },
+    "V3_OVERP RECISION": {
+      "description": "Claiming confidence HIGH when evidence supports MED-LOW",
+      "action": "DOWNGRADE to correct confidence tier"
+    },
+    "V4_UNFALSIFIABLE": {
+      "description": "Claim too vague to test — cannot be falsified",
+      "action": "REJECT as unscientific"
+    }
+  },
+
+  "constitutional_alignment": {
+    "F2_TRUTH": "Every claim must carry truth-class label. Evidence_for and evidence_against mandatory.",
+    "F4_CLARITY": "Truth-class boundaries enforced. No category mixing without documentation.",
+    "F6_MARUAH": "Scientific dignity — falsification is progress, not failure.",
+    "F7_HUMILITY": "Confidence capped per truth class. OBSERVATION_BIOLOGICAL max 0.85."
+  }
+}

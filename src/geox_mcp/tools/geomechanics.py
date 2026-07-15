@@ -6,7 +6,7 @@ acoustic_impedance, vp_vs_ratio from geox_core.physics.parameters
 as a constitutional MCP tool.
 
 Strategic doc alignment: "Geomechanics" — bulk/young/shear/poisson
-per cell. This tool computes them from a Physics9State and stamps
+per cell. This tool computes them from a Physics13State and stamps
 the result with epistemic_provenance + godel_wall verdict.
 
 DITEMPA BUKAN DIBEI — the modulus is forged, not given.
@@ -16,9 +16,12 @@ from __future__ import annotations
 
 from typing import Optional
 
+import logging
 from pydantic import BaseModel, Field
 
-from geox_core.physics.state import Physics9State
+logger = logging.getLogger("geox.geomechanics")
+
+from geox_core.physics.state import Physics13State
 from geox_core.physics.parameters import (
     bulk_modulus,
     shear_modulus,
@@ -27,29 +30,53 @@ from geox_core.physics.parameters import (
     acoustic_impedance,
     vp_vs_ratio,
     forward_physics9,
+    compute_buoyancy,
 )
 
 
 class GeomechanicsRequest(BaseModel):
-    state: dict = Field(..., description="Physics9State as dict")
+    state: dict = Field(..., description="Physics13State as dict — partial fields OK, from_raw_dict() coerces")
+    thickness_m: Optional[float] = Field(
+        default=None,
+        description="Column thickness [m] for buoyancy computation. Not part of 9-dial — pass explicitly.",
+    )
+    rho_fluid: Optional[float] = Field(
+        default=1025.0,
+        description="Fluid density [kg/m³] for buoyancy. Default seawater 1025.",
+    )
 
 
 class GeomechanicsResponse(BaseModel):
     ok: bool
     tool: str = "geox_geomechanics"
     result: Optional[dict] = None
-    error: Optional[str] = None
+    error: str = ""
 
 
 async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsResponse:
-    """Constitutional MCP tool: derive geomechanical moduli from a Physics9State cell.
+    """Constitutional MCP tool: derive geomechanical moduli from a Physics13State cell.
 
     Returns K, G, E, ν, AI, Vp/Vs and all derived forward-physics scalars.
     Each cell is graded RAW or AAA per Physics9 bounds.
+
+    A1 fix (2026-06-28): uses Physics13State.from_raw_dict() so callers can pass
+    partial/mixed-type dicts without hitting SESSION_REQUIRED.  Buoyancy is
+    available when thickness_m is provided.
     """
+    # F1 AMANAH: validate input structure before computation
+    if not isinstance(request.state, dict):
+        return GeomechanicsResponse(ok=False, error="state must be a dict")
+    if not all(k in request.state for k in ("rho", "vp", "vs")):
+        return GeomechanicsResponse(
+            ok=False,
+            error=f"state dict must contain 'rho', 'vp', 'vs' (required Physics9 fields). Got: {list(request.state.keys())}",
+        )
+
     try:
-        s = Physics9State(**request.state)
+        # A1 fix: from_raw_dict() handles partial/mixed-type dicts gracefully
+        s = Physics13State.from_raw_dict(request.state)
         derived = forward_physics9(s)
+
         # Sanity-check derived moduli against classical bounds
         sanity = []
         if derived["nu"] < 0.0 or derived["nu"] > 0.5:
@@ -85,9 +112,27 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
                 ),
             },
         }
+
+        # A1 fix: optional buoyancy computation (not part of 9-dial, requires thickness)
+        if request.thickness_m is not None:
+            buoyancy = compute_buoyancy(
+                rho_material=s.rho,
+                thickness_m=request.thickness_m,
+                rho_fluid=request.rho_fluid or 1025.0,
+            )
+            result["buoyancy"] = buoyancy
+            result["epistemic_provenance"]["grounding"] = (
+                "elastic_moduli_from_pwave_swave_density + buoyancy_column_from_density_contrast"
+            )
+
         return GeomechanicsResponse(ok=True, result=result)
+    except TypeError as e:
+        return GeomechanicsResponse(ok=False, error=f"TYPE_ERROR: {e}")
+    except ValueError as e:
+        return GeomechanicsResponse(ok=False, error=f"VALUE_ERROR: {e}")
     except Exception as e:
-        return GeomechanicsResponse(ok=False, error=str(e))
+        logger.exception("geox_geomechanics unexpected error")
+        return GeomechanicsResponse(ok=False, error=f"UNEXPECTED: {e}")
 
 
 __all__ = ["GeomechanicsRequest", "GeomechanicsResponse", "geox_geomechanics"]

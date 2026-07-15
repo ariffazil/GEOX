@@ -75,8 +75,8 @@ async def dispatch_alias(old_name: str, canonical_name: str, **kwargs: Any) -> d
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-async def mcp_health_check() -> dict:
-    """Universal health check for federation stability."""
+async def geox_health_check() -> dict:
+    """GEOX organ health check. Canonical name: geox_health_check. Legacy alias: mcp_health_check."""
     try:
         from server import GEOX_VERSION as _v
     except Exception:
@@ -91,12 +91,16 @@ async def mcp_health_check() -> dict:
         "timestamp": datetime.now(UTC).isoformat(),
     }
 
+# Legacy alias
+mcp_health_check = geox_health_check
+
 # REGISTRATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
 _TOOL_REGISTRY: list[tuple[str, Any]] = [
-    ("mcp_health_check", mcp_health_check),
+    ("geox_health_check", geox_health_check),
+    ("mcp_health_check", mcp_health_check),  # legacy alias
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),
     ("geox_data_qc_bundle", geox_data_qc_bundle),
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
@@ -124,9 +128,10 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(name=name)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    # Count is 14: 13 original sovereign tools + history_audit
-    assert len(CANONICAL_PUBLIC_TOOLS) == 21, (
-        f"F0_CONSTITUTION_BREACH: Expected 21 sovereign tools (15 core + 4 well-strat + 2 abduction), "
+    # Count is 16: 12 surface tools + 4 internal tools (claim, evidence, prospect, doctrine)
+    # Phase 2 (2026-06-26): canonical lock — 16 mode-consolidated tools, 21 was pre-consolidation
+    assert len(CANONICAL_PUBLIC_TOOLS) == 16, (
+        f"F0_CONSTITUTION_BREACH: Expected 16 sovereign tools (12 surface + 4 internal), "
         f"got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 

@@ -1,8 +1,8 @@
 <!-- SOT-MANIFEST
 owner: Arif
-last_verified: 2026-06-25
+last_verified: 2026-07-11
 valid_from: 2026-06-14
-valid_until: 2026-07-25
+valid_until: 2026-08-10
 confidence: high
 scope: /root/geox/BOUNDARY.md
 -->
@@ -11,8 +11,8 @@ scope: /root/geox/BOUNDARY.md
 
 > **DITEMPA BUKAN DIBERI** — Forged, not given.
 
-> **Last forge cycle:** W16+ (2026-06-22) — 56 canonical tools, Huang 2021 Vp grammar substrate, intelligence flow schema, Kinabalu multi-physics corpus.
-> **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0`
+> **Last forge cycle:** Phase 3.1 (2026-07-09) — doc drift eliminated, dynamic info stripped from static docs.
+> **Tool surface:** Runtime fact — verify with `tools/list` or `curl :8081/health`. Source: `registry.py`.
 
 ## Owns
 
@@ -58,17 +58,82 @@ scope: /root/geox/BOUNDARY.md
 
 ## Known Boundary Violations (888 HOLD Queue)
 
-1. **Canonical server location** — `geox/server.py` (~1,413 lines) is the canonical unified MCP server, but `geox/geox/` also has a modern dimension-native structure. Two server surfaces exist.
-2. **A-FORGE root contamination** — GEOX artifacts (`arifos_od_siphon.py`, `tests/`, `docker-compose.*`) were found co-located in A-FORGE root. Source of truth must be clarified.
-3. **arifOS deploy references** — `arifOS/deploy/arifOS/docker-compose.yml` references `/root/geox/server.py` directly. GEOX build context should be self-contained.
+1. **Canonical server location** — `src/geox_mcp/server.py` is the canonical unified MCP server, but `geox/geox/core/` also has a dimension-native structure (1D/2D/3D/4D). Two server surfaces exist. **Fix: Archive or merge `geox/geox/core/` into `src/geox_mcp/`. Deprecation set 2026-07-30.**
+2. **Dual entrypoints** — `entrypoint.sh` and `entrypoint_unified.sh` are functionally identical (both exec `python -m geox_mcp.server`). **Fix: Remove `entrypoint_unified.sh`, symlink to `entrypoint.sh`.**
+3. **A-FORGE root contamination** — GEOX artifacts (`arifos_od_siphon.py`, `tests/`, `docker-compose.*`) were found co-located in A-FORGE root. Source of truth must be clarified.
+4. **arifOS deploy references** — `arifOS/deploy/arifOS/docker-compose.yml` references `/root/geox/server.py` directly. GEOX build context should be self-contained.
 
 ## Canonical Tool Surface (Live)
 
-40 tools exposed on port 8081:
-`geox_system_registry_status`, `geox_history_audit`, `geox_data_ingest_bundle`, `geox_data_qc_bundle`, `geox_subsurface_generate_candidates`, `geox_subsurface_verify_integrity`, `geox_seismic_analyze_volume`, `geox_section_interpret_correlation`, `geox_map_context_scene`, `geox_time4d_analyze_system`, `geox_prospect_evaluate`, `geox_prospect_judge_preview`, `geox_prospect_judge_seal`, `geox_evidence_summarize_cross`, `geox_dst_ingest_test`, `geox_stratigraphy_run_pipeline`, `geox_stratigraphy_preview_config`, `geox_task_ingest_las_batch`, `geox_task_metabolize_basin`
+> **Tool count is a runtime fact.** Verify with `tools/list` or `curl :8081/health`.
+> Source of truth: `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS) + `src/geox_mcp/server.py` (_EXPECTED_CANONICAL invariant).
 
 ## Canonical Surfaces
 
 - **MCP Server:** FastMCP unified server (`python server.py`)
 - **Frontend:** `geox-gui/` (React 19 + Vite + MapLibre + CesiumJS)
 - **Test:** `pytest tests/ -q`
+
+---
+
+## Autonomous Authority Charter (AAC v1.0)
+
+GEOX agents (including Hermes, OpenCode, OpenClaw, and A-FORGE executors) operate under a governed autonomy model to optimize performance and prevent unnecessary confirmation latency.
+
+### 1. Class-A Autonomy (No Approval Needed)
+Agents may execute these actions immediately:
+*   **Internal Code Execution:** Running tests, compiling assets, invoking local scripts, executing standard MCP calls.
+*   **Session Management:** Spawning, resuming, checkpointing, or retiring agent sessions.
+*   **Tool Selection:** Selecting which canonical tool, model, or route to invoke.
+*   **Epistemic Tagging:** Appending evidence tags (`CLAIM`, `PLAUSIBLE`, `HYPOTHESIS`, `ESTIMATE`, `UNKNOWN`) to outputs.
+*   **Ledger & Receipt Updates:** Recording execution lineage and updating vitality files.
+*   **A2A Communications:** Exchanging metadata and coordination messages between peer federation agents.
+*   **Self-Healing:** Re-starting service workers, rebuilding caches, and repairing virtual environment configurations.
+
+### 2. Class-B Sovereign Actions (Requires Arif Veto Check)
+Agents MUST request explicit approval from Arif before executing:
+*   **Human/External Contact:** Sending Slack notifications, emails, WhatsApp messages, or external publication logs.
+*   **Asset/Cost Mutation:** Performing actions with external costs, API spending, or cloud deployment billing updates.
+*   **Irreversible State Mutation:** Writing to the VAULT999 ledger, deleting core databases/repositories, or altering git history.
+*   **Public/Reputational Statements:** Deploying code changes to public registries or publishing announcements.
+
+### 3. Class-C Forbidden Actions (Strictly Blocked)
+Agents are strictly prohibited from attempting:
+*   **Identity Impersonation:** Generating signatures representing Arif or other human users.
+*   **Binding Commitments:** Making legal, financial, or licensing agreements.
+*   **Proprietary/Confidential Access:** Reading or extracting unauthorized third-party confidential files.
+*   **Epistemic Deception:** Fabricating test data, bypassing validation schemas, or claiming absolute physical certainty.
+*   **Constitutional Mutating:** Modifying the 13 constitutional floors or the arifOS kernel boundaries.
+
+```yaml
+AUTONOMYCHARTERV1
+Authority:
+  CLASSAAUTONOMOUS:
+    - internalcodeexecution
+    - sessionspawnresume_checkpoint
+    - tool_selection
+    - epistemic_tagging
+    - ledger_update
+    - a2ainternalcomms
+    - self_healing
+
+  CLASSBSOVEREIGN:
+    - human_contact
+    - asset_contact
+    - irreversible_action
+    - external_publication
+
+  CLASSCFORBIDDEN:
+    - impersonate_arif
+    - legalfinancialcommitment
+    - unauthorizedconfidentialaccess
+    - evidence_fabrication
+    - constitutional_mutation
+
+Runtime:
+  RULE: |
+    if action in CLASSAAUTONOMOUS: EXECUTE
+    if action in CLASSBSOVEREIGN: REQUEST_ONCE
+    if action in CLASSCFORBIDDEN: BLOCKANDLOG
+```
+

@@ -170,7 +170,6 @@ async def geox_seismic_well_tie_compute(
     extraction_window_ms: float = 100.0,
     frequency_band: tuple[float, float] = (10.0, 50.0),
     wavelet_type: Literal["ricker", "statistical", "butterworth"] = "ricker",
-    apply_gardner_fallback: bool = False,
     apply_anisotropy_correction: bool = False,
     q_factor: float = 100.0,
 ) -> dict:
@@ -225,10 +224,7 @@ async def geox_seismic_well_tie_compute(
     guard = PhysicsGuard()
 
     try:
-        if apply_gardner_fallback and "rho" in curves:
-            logger.info("F2: Applying Gardner's Equation fallback for density.")
-            rho = gardner_density(vp) / 1000.0
-
+        # Law 5 (Convergence Over Choice): No Gardner fallback. Density must be observed.
         thomsen = {"epsilon": 0, "delta": 0}
         if apply_anisotropy_correction:
             logger.info("F2: Estimating Thomsen parameters for lateral anisotropy correction.")
@@ -347,7 +343,7 @@ async def geox_seismic_well_tie_compute(
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 2. TIME-DEPTH ANCHOR (FIXED — no mocks)
+# 2. TIME-DEPTH ANCHOR — Law 5 Compliant (single path, checkshot-only)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
@@ -355,26 +351,19 @@ async def geox_time_depth_anchor(
     well_id: str,
     checkshot_ref: str,
     drift_threshold_ms: float = 25.0,
-    method: Literal["checkshot", "vsp", "regional_proxy"] = "checkshot",
-    td_fitter: Literal["linear", "polynomial", "vo_k", "layer_cake"] = "linear",
-    td_fitter_kwargs: dict | None = None,
 ) -> dict:
-    """Empirical Time-Depth anchoring using Checkshots or VSP.
+    """Empirical Time-Depth anchoring using Checkshots.
 
     Locks the sonic-integrated time to empirical depth anchors.
     Enforces F2 Truth via drift thresholds.
 
-    Eureka 1 (2026-06-03): `td_fitter` selects which mathematical fitter
-    is used to map depth → TWT between checkshot anchor points. Default
-    "linear" preserves the original piecewise-linear behaviour. Other
-    options: "polynomial" (degree-bounded weighted fit), "vo_k"
-    (linear or exponential compaction, k from checkshots), "layer_cake"
-    (per-formation V_int when formation tops are provided via
-    `td_fitter_kwargs={"tops": [(name, depth), ...]}`).
+    Law 5 (Convergence Over Choice): One path, one method, one fitter.
+    Checkshot-only. Piecewise-linear interpolation between anchors.
+    No fallback. No branching. No "try A then B."
 
-    The chosen fitter's full envelope (equation, coefficients, residuals,
-    physics_guard receipt) is included in the result so the caller can
-    audit which assumption produced the T-D curve.
+    If VSP or regional_proxy calibration is needed, route to a
+    dedicated tool. If polynomial/vo_k/layer_cake fitting is needed,
+    route to a dedicated fitter tool.
     """
 
     if not _artifact_exists(well_id):
@@ -497,32 +486,6 @@ async def geox_time_depth_anchor(
         "equation": "drift = TWT_observed - TWT_sonic integrated",
     }
 
-    # ── Eureka 1: opt-in multi-method T-D fitter ──────────────────────────
-    # When td_fitter != "linear", run the chosen fitter and include its full
-    # envelope (equation, coefficients, residuals, physics_guard receipt) in
-    # the result. Default "linear" preserves the original behaviour exactly.
-    if td_fitter != "linear":
-        try:
-            from geox_core.physics.td_methods import fit_td
-
-            kwargs = td_fitter_kwargs or {}
-            td_result = fit_td(
-                td_fitter,
-                raw,
-                np.asarray(depths, dtype=float),
-                **kwargs,
-            )
-            result["td_fitter"] = td_result.to_dict()
-            logger.info(
-                f"F2/Eureka-1: td_fitter={td_fitter} rmse={td_result.rmse_ms:.3f}ms "
-                f"extrapolation_risk={td_result.extrapolation_risk:.3f} "
-                f"drift_ok={td_result.physics_guard.get('drift_ok', '?')}"
-            )
-        except Exception as exc:
-            # Fail soft — the drift gate already passed; the fitter is additional info
-            logger.warning(f"td_fitter={td_fitter} failed: {exc}")
-            result["td_fitter"] = {"method": td_fitter, "error": str(exc)}
-
     envelope = get_standard_envelope(
         result,
         tool_class="time_depth_anchor",
@@ -640,12 +603,9 @@ async def geox_forward_model_synthetic(
 
         _register_artifact(
             synthetic_ref,
-            well_id=well_id,
-            wavelet_type=wavelet_type,
-            frequency_hz=frequency_hz,
-            trace=[float(x) for x in synthetic],
-            depth=[float(x) for x in depth[: len(synthetic)]],
-            dt_ms=dt_ms,
+            artifact_type="synthetic_seismogram",
+            claim_state="DERIVED_CANDIDATE",
+            source_uri=f"well://{well_id}",
         )
 
     # Physics guard

@@ -398,6 +398,39 @@ def _epistemic_provenance_for_sequence(
                     "description": "GR packages with stacking patterns",
                 },
             ],
+            # ── Eureka 2026-06-10: Pick uncertainty axes (Zahid Zamanshah, 2026) ──
+            # "Where a surface really sits has three independent error sources —
+            # framework, picks, velocity — and they should be carried separately,
+            # not blended into one confident number." (Section 4)
+            # Cycle-skip is a QC down-weight flag, never a silent delete.
+            "pick_uncertainty_axes": {
+                "principle": (
+                    "Three independent error sources; carry separately, never blend "
+                    "into one confident number. Each axis must be scored independently "
+                    "before depth conversion."
+                ),
+                "framework_uncertainty": {
+                    "description": "RGT / chronostratigraphic framework position error",
+                    "propagation": "corrupts every horizon derived from it if non-monotonic",
+                    "rgt_monotonicity_gate": "enforced — non-monotonic age field is geologically impossible",
+                    "independent_from": ["picks", "velocity"],
+                },
+                "pick_uncertainty": {
+                    "description": "Horizon pick displacement — phase consistency and dip consistency",
+                    "dip_consistency_check": "score pick against local slope field",
+                    "phase_consistency_check": "does it hold a constant instantaneous phase?",
+                    "cycle_skip_flag": None,
+                    "cycle_skip_policy": "QC down-weight — never a silent delete",
+                    "independent_from": ["framework", "velocity"],
+                },
+                "velocity_uncertainty": {
+                    "description": "Velocity model error propagating into depth conversion",
+                    "dominant_when": "deep targets, shallow grabens, no checkshot control",
+                    "minor_when": "carbonates with checkshot / VSP calibration",
+                    "independent_from": ["framework", "picks"],
+                },
+                "eureka_ref": "PICK_UNCERTAINTY_AXES_2026_06_10",
+            },
         },
     }
 
@@ -703,6 +736,9 @@ async def _workflow_section_correlation(
     matrix_density: float,
     fluid_density: float,
 ) -> dict[str, Any]:
+    import sys
+
+    sys.path.insert(0, "/root/geox")
 
     # well_tie mode
     if mode == "well_tie":
@@ -1045,25 +1081,24 @@ async def geox_sequence_interpret(
     """
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
-
     _err = validate_tool_inputs(
         "geox_sequence_interpret",
         source=source,
-        depo_env_code=depo_env_code,
-        project_yaml=project_yaml,
-        output_dir=output_dir,
-        section_ref=section_ref,
-        well_refs=well_refs,
-        mode=mode,
-        well_las_paths=well_las_paths,
-        paleoenvironment_input=paleoenvironment_input,
-        checkshot_ref=checkshot_ref,
-        wavelet_mode=wavelet_mode,
-        wavelet_freq_hz=wavelet_freq_hz,
-        polarity=polarity,
-        seismic_ref=seismic_ref,
-        sonic_curve=sonic_curve,
-        density_curve=density_curve,
+            depo_env_code=depo_env_code,
+            project_yaml=project_yaml,
+            output_dir=output_dir,
+            section_ref=section_ref,
+            well_refs=well_refs,
+            mode=mode,
+            well_las_paths=well_las_paths,
+            paleoenvironment_input=paleoenvironment_input,
+            checkshot_ref=checkshot_ref,
+            wavelet_mode=wavelet_mode,
+            wavelet_freq_hz=wavelet_freq_hz,
+            polarity=polarity,
+            seismic_ref=seismic_ref,
+            sonic_curve=sonic_curve,
+            density_curve=density_curve,
     )
     if ctx:
         ctx.report_progress(0, 100)

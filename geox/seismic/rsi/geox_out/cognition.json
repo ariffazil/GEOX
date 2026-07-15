@@ -1,0 +1,722 @@
+{
+  "packages": [
+    {
+      "zone_id": "Z1",
+      "row_range": [
+        0,
+        134
+      ],
+      "depth_proxy": "shallow-upper",
+      "geometry": "SUBPARALLEL",
+      "scale_read": "STRATIGRAPHIC",
+      "metrics": {
+        "mean_coherence": 0.962,
+        "row_cv": 1.024,
+        "col_gradient_norm": 0.0001,
+        "amp_std": 0.5853
+      },
+      "geological_hypotheses": [
+        "Coastal plain to shallow marine transition",
+        "Prodelta / distal fan sequence",
+        "Channel-overbank alternation",
+        "Compaction-modulated continental deposits"
+      ],
+      "epistemic": "DER_IMAGE_GEOMETRY",
+      "note": "Geometry from pixel pattern analysis. Requires stratigraphic context + well tie to confirm."
+    },
+    {
+      "zone_id": "Z2",
+      "row_range": [
+        134,
+        268
+      ],
+      "depth_proxy": "shallow-upper",
+      "geometry": "PARALLEL",
+      "scale_read": "BASIN",
+      "metrics": {
+        "mean_coherence": 0.95,
+        "row_cv": 0.036,
+        "col_gradient_norm": 0.0,
+        "amp_std": 0.5345
+      },
+      "geological_hypotheses": [
+        "Post-rift thermal sag: laterally persistent marine bedding",
+        "Shelf platform: tabular carbonate or marine shale",
+        "Passive margin drift sequence",
+        "Regional transgressive shale seal"
+      ],
+      "epistemic": "DER_IMAGE_GEOMETRY",
+      "note": "Geometry from pixel pattern analysis. Requires stratigraphic context + well tie to confirm."
+    },
+    {
+      "zone_id": "Z3",
+      "row_range": [
+        268,
+        402
+      ],
+      "depth_proxy": "shallow-mid",
+      "geometry": "PARALLEL",
+      "scale_read": "BASIN",
+      "metrics": {
+        "mean_coherence": 0.964,
+        "row_cv": 0.037,
+        "col_gradient_norm": 0.0,
+        "amp_std": 0.505
+      },
+      "geological_hypotheses": [
+        "Post-rift thermal sag: laterally persistent marine bedding",
+        "Shelf platform: tabular carbonate or marine shale",
+        "Passive margin drift sequence",
+        "Regional transgressive shale seal"
+      ],
+      "epistemic": "DER_IMAGE_GEOMETRY",
+      "note": "Geometry from pixel pattern analysis. Requires stratigraphic context + well tie to confirm."
+    },
+    {
+      "zone_id": "Z4",
+      "row_range": [
+        402,
+        536
+      ],
+      "depth_proxy": "shallow-mid",
+      "geometry": "PARALLEL",
+      "scale_read": "BASIN",
+      "metrics": {
+        "mean_coherence": 0.969,
+        "row_cv": 0.03,
+        "col_gradient_norm": 0.0,
+        "amp_std": 0.4904
+      },
+      "geological_hypotheses": [
+        "Post-rift thermal sag: laterally persistent marine bedding",
+        "Shelf platform: tabular carbonate or marine shale",
+        "Passive margin drift sequence",
+        "Regional transgressive shale seal"
+      ],
+      "epistemic": "DER_IMAGE_GEOMETRY",
+      "note": "Geometry from pixel pattern analysis. Requires stratigraphic context + well tie to confirm."
+    },
+    {
+      "zone_id": "Z5",
+      "row_range": [
+        536,
+        670
+      ],
+      "depth_proxy": "shallow-deep",
+      "geometry": "PARALLEL",
+      "scale_read": "BASIN",
+      "metrics": {
+        "mean_coherence": 0.97,
+        "row_cv": 0.03,
+        "col_gradient_norm": 0.0001,
+        "amp_std": 0.4869
+      },
+      "geological_hypotheses": [
+        "Post-rift thermal sag: laterally persistent marine bedding",
+        "Shelf platform: tabular carbonate or marine shale",
+        "Passive margin drift sequence",
+        "Regional transgressive shale seal"
+      ],
+      "epistemic": "DER_IMAGE_GEOMETRY",
+      "note": "Geometry from pixel pattern analysis. Requires stratigraphic context + well tie to confirm."
+    },
+    {
+      "zone_id": "Z6",
+      "row_range": [
+        670,
+        804
+      ],
+      "depth_proxy": "shallow-deep",
+      "geometry": "PARALLEL",
+      "scale_read": "BASIN",
+      "metrics": {
+        "mean_coherence": 0.967,
+        "row_cv": 0.04,
+        "col_gradient_norm": 0.0001,
+        "amp_std": 0.494
+      },
+      "geological_hypotheses": [
+        "Post-rift thermal sag: laterally persistent marine bedding",
+        "Shelf platform: tabular carbonate or marine shale",
+        "Passive margin drift sequence",
+        "Regional transgressive shale seal"
+      ],
+      "epistemic": "DER_IMAGE_GEOMETRY",
+      "note": "Geometry from pixel pattern analysis. Requires stratigraphic context + well tie to confirm."
+    }
+  ],
+  "terminations": [
+    {
+      "horizon_id": "F1",
+      "overall_dip_px_per_px": 0.2654,
+      "zone": "Z5",
+      "left_termination": {
+        "type": "TRUNCATION_OR_TOPLAP",
+        "hypotheses": [
+          "Erosional truncation: unconformity surface cutting horizon",
+          "Toplap: sediment limit at depositional highstand",
+          "Fault cutoff at {side} margin",
+          "Acquisition/processing edge effect"
+        ],
+        "sequence_significance": "HIGH \u2014 possible unconformity surface"
+      },
+      "right_termination": {
+        "type": "CONCORDANCE",
+        "hypotheses": [
+          "Continuous parallel deposition \u2014 no time break",
+          "Section edge artifact (image boundary, not geology)"
+        ],
+        "sequence_significance": "LOW \u2014 no break implied"
+      },
+      "sequence_significance": "HIGH",
+      "epistemic": "INT_SEISMIC_TERMINATION",
+      "required_tests": [
+        "Adjacent line correlation (does termination persist?)",
+        "Well tie (does termination coincide with age break?)",
+        "Attribute map at termination level (amplitude, coherence slice)",
+        "Check termination is not section-edge processing artefact"
+      ]
+    },
+    {
+      "horizon_id": "F2",
+      "overall_dip_px_per_px": 0.1089,
+      "zone": null,
+      "left_termination": {
+        "type": "ONLAP",
+        "hypotheses": [
+          "Transgressive systems tract: sea level rise, sediment lapping onto slope",
+          "Lacustrine onlap onto basin margin (syn-rift lake)",
+          "Compaction drape onto underlying structure",
+          "Imaging artefact: migration smear at left/proximal edge"
+        ],
+        "sequence_significance": "HIGH \u2014 possible sequence boundary or MFS"
+      },
+      "right_termination": {
+        "type": "ONLAP",
+        "hypotheses": [
+          "Transgressive systems tract: sea level rise, sediment lapping onto slope",
+          "Lacustrine onlap onto basin margin (syn-rift lake)",
+          "Compaction drape onto underlying structure",
+          "Imaging artefact: migration smear at right/distal edge"
+        ],
+        "sequence_significance": "HIGH \u2014 possible sequence boundary or MFS"
+      },
+      "sequence_significance": "HIGH",
+      "epistemic": "INT_SEISMIC_TERMINATION",
+      "required_tests": [
+        "Adjacent line correlation (does termination persist?)",
+        "Well tie (does termination coincide with age break?)",
+        "Attribute map at termination level (amplitude, coherence slice)",
+        "Check termination is not section-edge processing artefact"
+      ]
+    },
+    {
+      "horizon_id": "F3",
+      "overall_dip_px_per_px": -0.093,
+      "zone": null,
+      "left_termination": {
+        "type": "CONCORDANCE",
+        "hypotheses": [
+          "Continuous parallel deposition \u2014 no time break",
+          "Section edge artifact (image boundary, not geology)"
+        ],
+        "sequence_significance": "LOW \u2014 no break implied"
+      },
+      "right_termination": {
+        "type": "DOWNLAP",
+        "hypotheses": [
+          "Progradational systems tract: delta/fan building outward",
+          "Clinoform rollover: shelf-margin progradation",
+          "Turbidite lobe termination downdip",
+          "Imaging artefact: differential NMO stretch at right/distal edge"
+        ],
+        "sequence_significance": "HIGH \u2014 marks maximum flooding surface below"
+      },
+      "sequence_significance": "HIGH",
+      "epistemic": "INT_SEISMIC_TERMINATION",
+      "required_tests": [
+        "Adjacent line correlation (does termination persist?)",
+        "Well tie (does termination coincide with age break?)",
+        "Attribute map at termination level (amplitude, coherence slice)",
+        "Check termination is not section-edge processing artefact"
+      ]
+    }
+  ],
+  "artifacts": {
+    "screen_verdict": "WARNING \u2014 2 artifact types flagged, interpretation may be compromised",
+    "n_artifact_types_flagged": 2,
+    "always_true": [
+      "Section displayed in TWO-WAY TIME, not true depth",
+      "All structures require depth conversion before drilling",
+      "Amplitude is NOT direct lithology or fluid without AVO + rock physics",
+      "Seismic resolution is bandwidth-limited (tuning thickness \u2248 \u03bb/4)",
+      "Near-section edges may have edge-of-migration operator artefacts"
+    ],
+    "artifact_details": {
+      "velocity_pullup_sag": {
+        "n_candidates": 2,
+        "candidates": [
+          {
+            "horizon_id": "F1",
+            "parabolic_curvature": 0.001167,
+            "shape": "PULLUP",
+            "artifact_type": "VELOCITY_PULLUP",
+            "probability": "LOW_TO_MODERATE",
+            "geological_alternative": [
+              "Real structural anticline (not velocity effect)",
+              "Compaction drape over underlying high"
+            ],
+            "required_test": "Depth conversion with interval velocity model"
+          },
+          {
+            "horizon_id": "F3",
+            "parabolic_curvature": 0.002395,
+            "shape": "SAG",
+            "artifact_type": "VELOCITY_SAG",
+            "probability": "LOW_TO_MODERATE",
+            "geological_alternative": [
+              "Real structural syncline (not velocity effect)",
+              "Compaction drape over underlying low"
+            ],
+            "required_test": "Depth conversion with interval velocity model"
+          }
+        ],
+        "epistemic": "INT_IMAGING_ARTIFACT",
+        "note": "All structural interpretations require depth conversion. Time domain structures \u2260 depth domain structures."
+      },
+      "multiples": {
+        "n_candidates": 1,
+        "candidates": [
+          {
+            "primary_row": 98,
+            "repeat_row": 196,
+            "spacing_px": 98,
+            "artifact_type": "POSSIBLE_MULTIPLE",
+            "probability": "LOW",
+            "geological_alternative": [
+              "Two distinct real geological reflectors at this spacing",
+              "Interbedded hard layers (tuning effect)"
+            ],
+            "required_test": "Multiple prediction + subtraction processing, or Radon demultiple"
+          }
+        ],
+        "epistemic": "INT_IMAGING_ARTIFACT"
+      }
+    }
+  },
+  "hypotheses": {
+    "basin_context": "malay_basin",
+    "faults": [
+      {
+        "fault_id": "H1",
+        "dip_class": "near-vertical",
+        "conf_proxy": 0.5,
+        "row_span_px": 50,
+        "hypotheses_ranked": [
+          {
+            "rank": 1,
+            "hypothesis": "Normal (syn-rift, NW-trending)",
+            "prior_prob": 0.451,
+            "note": "Highest prior in malay_basin"
+          },
+          {
+            "rank": 2,
+            "hypothesis": "Inverted (reactivated, transpressional)",
+            "prior_prob": 0.26,
+            "note": ""
+          },
+          {
+            "rank": 3,
+            "hypothesis": "Strike-slip (axial fault zone, dextral Late Miocene)",
+            "prior_prob": 0.226,
+            "note": ""
+          },
+          {
+            "rank": 4,
+            "hypothesis": "Reverse / thrust",
+            "prior_prob": 0.036,
+            "note": ""
+          },
+          {
+            "rank": 5,
+            "hypothesis": "Processing artifact",
+            "prior_prob": 0.026,
+            "note": ""
+          }
+        ],
+        "discrimination_tests": [
+          "Check vertical displacement continuity with depth (does throw change?)",
+          "Look for drag folds or growth strata adjacent to fault",
+          "Correlate fault on adjacent seismic lines (is it real 3D feature?)",
+          "Test dip direction (same as regional stress field?)",
+          "Well calibration: look for fault in log character / missing section"
+        ],
+        "confidence_cap": 0.425,
+        "epistemic": "INT_SEISMIC_FAULT_RANKED"
+      },
+      {
+        "fault_id": "H2",
+        "dip_class": "near-vertical",
+        "conf_proxy": 0.5,
+        "row_span_px": 50,
+        "hypotheses_ranked": [
+          {
+            "rank": 1,
+            "hypothesis": "Normal (syn-rift, NW-trending)",
+            "prior_prob": 0.451,
+            "note": "Highest prior in malay_basin"
+          },
+          {
+            "rank": 2,
+            "hypothesis": "Inverted (reactivated, transpressional)",
+            "prior_prob": 0.26,
+            "note": ""
+          },
+          {
+            "rank": 3,
+            "hypothesis": "Strike-slip (axial fault zone, dextral Late Miocene)",
+            "prior_prob": 0.226,
+            "note": ""
+          },
+          {
+            "rank": 4,
+            "hypothesis": "Reverse / thrust",
+            "prior_prob": 0.036,
+            "note": ""
+          },
+          {
+            "rank": 5,
+            "hypothesis": "Processing artifact",
+            "prior_prob": 0.026,
+            "note": ""
+          }
+        ],
+        "discrimination_tests": [
+          "Check vertical displacement continuity with depth (does throw change?)",
+          "Look for drag folds or growth strata adjacent to fault",
+          "Correlate fault on adjacent seismic lines (is it real 3D feature?)",
+          "Test dip direction (same as regional stress field?)",
+          "Well calibration: look for fault in log character / missing section"
+        ],
+        "confidence_cap": 0.425,
+        "epistemic": "INT_SEISMIC_FAULT_RANKED"
+      },
+      {
+        "fault_id": "H3",
+        "dip_class": "near-vertical",
+        "conf_proxy": 0.5,
+        "row_span_px": 50,
+        "hypotheses_ranked": [
+          {
+            "rank": 1,
+            "hypothesis": "Normal (syn-rift, NW-trending)",
+            "prior_prob": 0.451,
+            "note": "Highest prior in malay_basin"
+          },
+          {
+            "rank": 2,
+            "hypothesis": "Inverted (reactivated, transpressional)",
+            "prior_prob": 0.26,
+            "note": ""
+          },
+          {
+            "rank": 3,
+            "hypothesis": "Strike-slip (axial fault zone, dextral Late Miocene)",
+            "prior_prob": 0.226,
+            "note": ""
+          },
+          {
+            "rank": 4,
+            "hypothesis": "Reverse / thrust",
+            "prior_prob": 0.036,
+            "note": ""
+          },
+          {
+            "rank": 5,
+            "hypothesis": "Processing artifact",
+            "prior_prob": 0.026,
+            "note": ""
+          }
+        ],
+        "discrimination_tests": [
+          "Check vertical displacement continuity with depth (does throw change?)",
+          "Look for drag folds or growth strata adjacent to fault",
+          "Correlate fault on adjacent seismic lines (is it real 3D feature?)",
+          "Test dip direction (same as regional stress field?)",
+          "Well calibration: look for fault in log character / missing section"
+        ],
+        "confidence_cap": 0.425,
+        "epistemic": "INT_SEISMIC_FAULT_RANKED"
+      },
+      {
+        "fault_id": "H4",
+        "dip_class": "near-vertical",
+        "conf_proxy": 0.5,
+        "row_span_px": 50,
+        "hypotheses_ranked": [
+          {
+            "rank": 1,
+            "hypothesis": "Normal (syn-rift, NW-trending)",
+            "prior_prob": 0.451,
+            "note": "Highest prior in malay_basin"
+          },
+          {
+            "rank": 2,
+            "hypothesis": "Inverted (reactivated, transpressional)",
+            "prior_prob": 0.26,
+            "note": ""
+          },
+          {
+            "rank": 3,
+            "hypothesis": "Strike-slip (axial fault zone, dextral Late Miocene)",
+            "prior_prob": 0.226,
+            "note": ""
+          },
+          {
+            "rank": 4,
+            "hypothesis": "Reverse / thrust",
+            "prior_prob": 0.036,
+            "note": ""
+          },
+          {
+            "rank": 5,
+            "hypothesis": "Processing artifact",
+            "prior_prob": 0.026,
+            "note": ""
+          }
+        ],
+        "discrimination_tests": [
+          "Check vertical displacement continuity with depth (does throw change?)",
+          "Look for drag folds or growth strata adjacent to fault",
+          "Correlate fault on adjacent seismic lines (is it real 3D feature?)",
+          "Test dip direction (same as regional stress field?)",
+          "Well calibration: look for fault in log character / missing section"
+        ],
+        "confidence_cap": 0.425,
+        "epistemic": "INT_SEISMIC_FAULT_RANKED"
+      },
+      {
+        "fault_id": "H5",
+        "dip_class": "near-vertical",
+        "conf_proxy": 0.5,
+        "row_span_px": 50,
+        "hypotheses_ranked": [
+          {
+            "rank": 1,
+            "hypothesis": "Normal (syn-rift, NW-trending)",
+            "prior_prob": 0.451,
+            "note": "Highest prior in malay_basin"
+          },
+          {
+            "rank": 2,
+            "hypothesis": "Inverted (reactivated, transpressional)",
+            "prior_prob": 0.26,
+            "note": ""
+          },
+          {
+            "rank": 3,
+            "hypothesis": "Strike-slip (axial fault zone, dextral Late Miocene)",
+            "prior_prob": 0.226,
+            "note": ""
+          },
+          {
+            "rank": 4,
+            "hypothesis": "Reverse / thrust",
+            "prior_prob": 0.036,
+            "note": ""
+          },
+          {
+            "rank": 5,
+            "hypothesis": "Processing artifact",
+            "prior_prob": 0.026,
+            "note": ""
+          }
+        ],
+        "discrimination_tests": [
+          "Check vertical displacement continuity with depth (does throw change?)",
+          "Look for drag folds or growth strata adjacent to fault",
+          "Correlate fault on adjacent seismic lines (is it real 3D feature?)",
+          "Test dip direction (same as regional stress field?)",
+          "Well calibration: look for fault in log character / missing section"
+        ],
+        "confidence_cap": 0.425,
+        "epistemic": "INT_SEISMIC_FAULT_RANKED"
+      }
+    ],
+    "horizons": [
+      {
+        "horizon_id": "F1",
+        "continuity": 0.5,
+        "seed_row": 0,
+        "amplitude_proxy": 0.3,
+        "artifact_flags": [],
+        "hypotheses_ranked": [
+          {
+            "rank": 1,
+            "hypothesis": "Post-rift thermal sag marine",
+            "prior_prob": 0.35
+          },
+          {
+            "rank": 2,
+            "hypothesis": "Coastal plain / deltaic (Groups I-J)",
+            "prior_prob": 0.25
+          },
+          {
+            "rank": 3,
+            "hypothesis": "Syn-rift lacustrine / fluvial",
+            "prior_prob": 0.2
+          },
+          {
+            "rank": 4,
+            "hypothesis": "Inversion-related unconformity",
+            "prior_prob": 0.1
+          },
+          {
+            "rank": 5,
+            "hypothesis": "Multiple reflection",
+            "prior_prob": 0.05
+          },
+          {
+            "rank": 6,
+            "hypothesis": "Processing artifact",
+            "prior_prob": 0.05
+          }
+        ],
+        "termination_context": {
+          "left": "TRUNCATION_OR_TOPLAP",
+          "right": "CONCORDANCE",
+          "sequence_significance": "HIGH"
+        },
+        "discrimination_tests": [
+          "Synthetic seismogram well tie (bruges wavelet convolution)",
+          "Check if horizon repeat interval matches water-bottom multiple TWT",
+          "Correlate across multiple seismic lines",
+          "Extract amplitude map at this level for geological pattern",
+          "Test if horizon tracks known stratigraphic marker from wells"
+        ],
+        "confidence_cap": 0.425,
+        "epistemic": "INT_SEISMIC_HORIZON_RANKED"
+      },
+      {
+        "horizon_id": "F2",
+        "continuity": 0.5,
+        "seed_row": 0,
+        "amplitude_proxy": 0.3,
+        "artifact_flags": [],
+        "hypotheses_ranked": [
+          {
+            "rank": 1,
+            "hypothesis": "Post-rift thermal sag marine",
+            "prior_prob": 0.35
+          },
+          {
+            "rank": 2,
+            "hypothesis": "Coastal plain / deltaic (Groups I-J)",
+            "prior_prob": 0.25
+          },
+          {
+            "rank": 3,
+            "hypothesis": "Syn-rift lacustrine / fluvial",
+            "prior_prob": 0.2
+          },
+          {
+            "rank": 4,
+            "hypothesis": "Inversion-related unconformity",
+            "prior_prob": 0.1
+          },
+          {
+            "rank": 5,
+            "hypothesis": "Multiple reflection",
+            "prior_prob": 0.05
+          },
+          {
+            "rank": 6,
+            "hypothesis": "Processing artifact",
+            "prior_prob": 0.05
+          }
+        ],
+        "termination_context": {
+          "left": "ONLAP",
+          "right": "ONLAP",
+          "sequence_significance": "HIGH"
+        },
+        "discrimination_tests": [
+          "Synthetic seismogram well tie (bruges wavelet convolution)",
+          "Check if horizon repeat interval matches water-bottom multiple TWT",
+          "Correlate across multiple seismic lines",
+          "Extract amplitude map at this level for geological pattern",
+          "Test if horizon tracks known stratigraphic marker from wells"
+        ],
+        "confidence_cap": 0.425,
+        "epistemic": "INT_SEISMIC_HORIZON_RANKED"
+      },
+      {
+        "horizon_id": "F3",
+        "continuity": 0.5,
+        "seed_row": 0,
+        "amplitude_proxy": 0.3,
+        "artifact_flags": [],
+        "hypotheses_ranked": [
+          {
+            "rank": 1,
+            "hypothesis": "Post-rift thermal sag marine",
+            "prior_prob": 0.35
+          },
+          {
+            "rank": 2,
+            "hypothesis": "Coastal plain / deltaic (Groups I-J)",
+            "prior_prob": 0.25
+          },
+          {
+            "rank": 3,
+            "hypothesis": "Syn-rift lacustrine / fluvial",
+            "prior_prob": 0.2
+          },
+          {
+            "rank": 4,
+            "hypothesis": "Inversion-related unconformity",
+            "prior_prob": 0.1
+          },
+          {
+            "rank": 5,
+            "hypothesis": "Multiple reflection",
+            "prior_prob": 0.05
+          },
+          {
+            "rank": 6,
+            "hypothesis": "Processing artifact",
+            "prior_prob": 0.05
+          }
+        ],
+        "termination_context": {
+          "left": "CONCORDANCE",
+          "right": "DOWNLAP",
+          "sequence_significance": "HIGH"
+        },
+        "discrimination_tests": [
+          "Synthetic seismogram well tie (bruges wavelet convolution)",
+          "Check if horizon repeat interval matches water-bottom multiple TWT",
+          "Correlate across multiple seismic lines",
+          "Extract amplitude map at this level for geological pattern",
+          "Test if horizon tracks known stratigraphic marker from wells"
+        ],
+        "confidence_cap": 0.425,
+        "epistemic": "INT_SEISMIC_HORIZON_RANKED"
+      }
+    ],
+    "summary": {
+      "n_faults_ranked": 5,
+      "n_horizons_ranked": 3,
+      "top_fault_hypothesis": "Normal (syn-rift, NW-trending)",
+      "top_horizon_hypothesis": "Post-rift thermal sag marine",
+      "basin_context_applied": "malay_basin",
+      "interpretation_law": [
+        "Every feature has multiple causes \u2014 ranked, not single-labelled",
+        "High confidence requires: well tie + multi-line correlation + attribute test",
+        "F7 HUMILITY: confidence cap 0.90 \u2014 always carry non-zero doubt",
+        "The best interpreter knows when the image is lying"
+      ]
+    }
+  },
+  "basin_context": "malay_basin"
+}

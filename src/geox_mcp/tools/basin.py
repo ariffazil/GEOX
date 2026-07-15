@@ -28,6 +28,7 @@ def _get_macrostrat() -> MacrostratClient:
         _MACROSTRAT_CLIENT = MacrostratClient()
     return _MACROSTRAT_CLIENT
 
+
 # Repo-root resolution. Default = path-relative; override via GEOX_RESOURCES_DIR.
 # Fix: prior hardcode `/root/geox/resources` broke CI (runner uses /home/runner/work/...).
 _REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -36,6 +37,105 @@ RESOURCES_DIR = Path(os.environ.get("GEOX_RESOURCES_DIR", str(_REPO_ROOT / "reso
 
 def _normalize_name(name: str) -> str:
     return name.lower().replace(" ", "_").replace("-", "_")
+
+
+# ── Basin Coordinate Registry ────────────────────────────────────────────────
+# FIX 2026-07-06: Enables Macrostrat API fallback for basins without local data.
+# When a basin has no local basin_profile.yaml, we look up its approximate
+# centroid coordinates and query Macrostrat for geological context.
+# This turns "Basin data not found" into "Macrostrat-limited profile."
+_BASIN_COORDS: dict[str, tuple[float, float]] = {
+    # South America
+    "suriname": (5.8, -55.2),
+    "suriname-guyana": (6.5, -55.5),
+    "guyana": (6.8, -58.0),
+    "orinoco": (8.5, -62.0),
+    "barinas-apure": (7.5, -70.0),
+    "eastern_venezuela": (9.0, -63.0),
+    "putumayo": (1.0, -76.0),
+    "llanos": (5.0, -72.0),
+    "magdalena": (7.0, -75.0),
+    "santos": (-25.0, -43.0),
+    "campos": (-22.0, -40.5),
+    "espirito_santo": (-19.0, -38.0),
+    "reconcavo": (-12.0, -38.5),
+    "solimoes": (-3.5, -64.0),
+    "amazonas": (-2.0, -58.0),
+    # Africa
+    "niger_delta": (5.0, 5.5),
+    "west_african_transform": (4.0, -5.0),
+    "kwanza": (-10.0, 13.0),
+    "congo": (-5.0, 11.5),
+    "gabon": (-1.0, 10.0),
+    "mozambique": (-16.0, 41.0),
+    "tanzania": (-7.0, 39.5),
+    "rift_valley": (-2.0, 36.0),
+    "sirte": (29.0, 18.0),
+    "pelagian": (34.0, 12.0),
+    # Europe
+    "north_sea": (56.0, 3.0),
+    "norwegian_sea": (65.0, 5.0),
+    "barents_sea": (73.0, 30.0),
+    "porcupine": (51.5, -11.0),
+    "bay_of_biscay": (44.0, -4.0),
+    # Middle East
+    "persian_gulf": (26.0, 51.0),
+    "zagros": (33.0, 48.0),
+    "rub_al_khali": (21.0, 52.0),
+    "mature": (29.0, 47.0),
+    # Asia
+    "malay_basin": (5.5, 104.5),
+    "basin_melayu": (5.5, 104.5),
+    "sabah": (5.5, 116.0),
+    "sarawak": (3.0, 113.0),
+    "natuna": (4.5, 108.0),
+    "south_china_sea": (15.0, 115.0),
+    "songliao": (46.0, 125.0),
+    "bohai_bay": (38.5, 118.5),
+    "tarim": (39.0, 83.0),
+    "ganges_delta": (22.0, 89.5),
+    "krishna_godavari": (16.0, 81.5),
+    "cambay": (22.0, 72.5),
+    "bombay_offshore": (19.5, 71.5),
+    "sindh": (25.0, 68.0),
+    # North America
+    "permian_basin": (32.0, -102.0),
+    "gulf_of_mexico": (27.0, -90.0),
+    "appalachian": (38.0, -80.0),
+    "williston": (48.0, -103.0),
+    "san_joaquin": (35.5, -119.5),
+    "los_angeles": (34.0, -118.3),
+    "dallas": (32.5, -96.5),
+    "fort_worth": (32.8, -97.3),
+    "anadarko": (35.5, -98.0),
+    "arkoma": (35.0, -95.0),
+    "denver": (40.0, -104.5),
+    "powder_river": (44.0, -105.5),
+    "Uinta": (40.0, -109.5),
+    "paradox": (38.0, -109.0),
+    "san_juan": (36.5, -108.0),
+    # Canada
+    "western_canada": (53.0, -113.0),
+    "mackenzie_delta": (69.0, -135.0),
+    "beaufort": (70.0, -135.0),
+    "jean_dorner": (69.5, -122.0),
+    "atlantic_canada": (44.0, -60.0),
+    # Australia
+    "cooper": (-27.0, 141.0),
+    "surat": (-28.0, 150.0),
+    "carnarvon": (-24.0, 114.0),
+    "browse": (-15.0, 124.0),
+    "bonaparte": (-13.0, 129.0),
+    "otway": (-38.0, 141.0),
+    "gippsland": (-38.5, 147.5),
+    # Russia / Central Asia
+    "west_siberia": (60.0, 72.0),
+    "east_siberia": (62.0, 110.0),
+    "timan_pecora": (64.0, 52.0),
+    "pre_caspian": (47.0, 50.0),
+    "amudarya": (39.0, 59.0),
+    "south_caspian": (39.0, 51.0),
+}
 
 
 async def geox_basin_resolve(
@@ -118,10 +218,22 @@ async def geox_basin_resolve(
 
 async def geox_basin_profile(
     basin_name: str,
-    mode: Literal["overview", "petroleum_system", "stratigraphy", "play_fairway", "risk", "contradiction_scan",
-                    "macrostrat_units", "macrostrat_columns", "macrostrat_lithologies",
-                    "macrostrat_strat_names", "macrostrat_intervals", "macrostrat_fossils",
-                    "macrostrat_geologic_map", "macrostrat_cache_warm"] = "overview",
+    mode: Literal[
+        "overview",
+        "petroleum_system",
+        "stratigraphy",
+        "play_fairway",
+        "risk",
+        "contradiction_scan",
+        "macrostrat_units",
+        "macrostrat_columns",
+        "macrostrat_lithologies",
+        "macrostrat_strat_names",
+        "macrostrat_intervals",
+        "macrostrat_fossils",
+        "macrostrat_geologic_map",
+        "macrostrat_cache_warm",
+    ] = "overview",
     claim_strictness: Literal["screen", "appraise", "decision"] = "screen",
     evidence_refs: list[str] | None = None,
     include_missing_evidence: bool = True,
@@ -166,15 +278,122 @@ async def geox_basin_profile(
     # Macrostrat modes fetch from API — local basin resource dir is optional
     if not mode.startswith("macrostrat_"):
         if not basin_dir.exists():
-            return get_standard_envelope(
-                {"tool": "geox_basin_profile", "error": f"Basin data not found for: {basin_name}"},
-                tool_class="observe",
-                execution_status=ExecutionStatus.ERROR,
-                governance_status=GovernanceStatus.HOLD,
-                claim_state="NO_VALID_EVIDENCE",
-                session_id=session_id,
-                actor_id=actor_id,
-            )
+            # FIX 2026-07-06: Macrostrat API fallback for basins without local data.
+            # Previously returned "Basin data not found" for ALL non-Malay basins.
+            # Now: try Macrostrat geological map API using basin centroid coordinates.
+            coords = _BASIN_COORDS.get(normalized)
+            if coords is None:
+                # Fuzzy match against coordinate registry
+                for key, coord in _BASIN_COORDS.items():
+                    if key in normalized or normalized in key:
+                        coords = coord
+                        break
+
+            if coords:
+                # Return a Macrostrat-limited profile instead of empty error
+                lat_c, lng_c = coords
+                try:
+                    client = _get_macrostrat()
+                    raw_units = await client.get_units(lat=lat_c, lng=lng_c, radius_km=200)
+                    units = client.get_units_summary(raw_units)
+
+                    if units:
+                        # Build a minimal profile from Macrostrat data
+                        oldest_age = max((u.get("b_age", 0) or 0) for u in units)
+                        youngest_age = min((u.get("t_age", 0) or 0) for u in units if u.get("t_age"))
+                        lith_types = list({u.get("lith_type", "unknown") for u in units if u.get("lith_type")})[:5]
+
+                        result = {
+                            "basin_name": basin_name,
+                            "basin_id": normalized.upper(),
+                            "source": "macrostrat.org/api/v2/units (fallback)",
+                            "license": "CC-BY-4.0",
+                            "coverage": "PARTIAL — Macrostrat geological map units only, no petroleum system data",
+                            "centroid": {"lat": lat_c, "lng": lng_c},
+                            "stratigraphic_range_ma": {
+                                "oldest": oldest_age,
+                                "youngest": youngest_age,
+                            },
+                            "dominant_lithologies": lith_types,
+                            "unit_count": len(units),
+                            "sample_units": units[:5],
+                            "missing_vs_local_profile": [
+                                "petroleum_system_summary",
+                                "source_rock",
+                                "reservoir",
+                                "seal",
+                                "trap_style",
+                                "play_fairway",
+                                "claims",
+                                "polygon",
+                            ],
+                            "attribution": client.attribution_markdown(),
+                            "hint": "This basin has no local basin_profile.yaml. Profile built from Macrostrat API. "
+                            "For full petroleum system intelligence, add a basin_profile.yaml to "
+                            f"resources/basins/{normalized}/",
+                        }
+                        return get_standard_envelope(
+                            result,
+                            tool_class="observe",
+                            execution_status=ExecutionStatus.SUCCESS,
+                            governance_status=GovernanceStatus.QUALIFY,
+                            claim_tag="PLAUSIBLE",
+                            claim_state="INTERPRETED",
+                            evidence_refs=["macrostrat.org/api/v2/units"],
+                            session_id=session_id,
+                            actor_id=actor_id,
+                            tool_name="geox_basin_profile",
+                        )
+                    else:
+                        # Macrostrat has no data for this location either
+                        return get_standard_envelope(
+                            {
+                                "tool": "geox_basin_profile",
+                                "error": f"Basin data not found for: {basin_name}",
+                                "hint": f"No local profile AND no Macrostrat units at ({lat_c}, {lng_c}). "
+                                f"Add basin_profile.yaml to resources/basins/{normalized}/",
+                                "macrostrat_tried": True,
+                                "macrostrat_coords": {"lat": lat_c, "lng": lng_c},
+                            },
+                            tool_class="observe",
+                            execution_status=ExecutionStatus.ERROR,
+                            governance_status=GovernanceStatus.HOLD,
+                            claim_state="NO_VALID_EVIDENCE",
+                            session_id=session_id,
+                            actor_id=actor_id,
+                        )
+                except Exception as macro_exc:
+                    logger.warning("Macrostrat fallback failed for %s: %s", basin_name, macro_exc)
+                    return get_standard_envelope(
+                        {
+                            "tool": "geox_basin_profile",
+                            "error": f"Basin data not found for: {basin_name}",
+                            "hint": "Local profile missing. Macrostrat API fallback also failed.",
+                            "macrostrat_error": str(macro_exc),
+                        },
+                        tool_class="observe",
+                        execution_status=ExecutionStatus.ERROR,
+                        governance_status=GovernanceStatus.HOLD,
+                        claim_state="NO_VALID_EVIDENCE",
+                        session_id=session_id,
+                        actor_id=actor_id,
+                    )
+            else:
+                # No coordinates known for this basin
+                return get_standard_envelope(
+                    {
+                        "tool": "geox_basin_profile",
+                        "error": f"Basin data not found for: {basin_name}",
+                        "hint": f"No local profile and no coordinates in registry for '{normalized}'. "
+                        f"Add to _BASIN_COORDS in basin.py or create resources/basins/{normalized}/",
+                    },
+                    tool_class="observe",
+                    execution_status=ExecutionStatus.ERROR,
+                    governance_status=GovernanceStatus.HOLD,
+                    claim_state="NO_VALID_EVIDENCE",
+                    session_id=session_id,
+                    actor_id=actor_id,
+                )
 
     # Load resources
     try:
@@ -311,11 +530,21 @@ async def geox_basin_profile(
                     }
                     if items:
                         mode_data["sample_unit"] = {
-                            k: items[0].get(k) for k in (
-                                "unit_id", "unit_name", "lith", "lith_type",
-                                "t_age", "b_age", "col_id", "best_age",
-                                "Fm", "Gp", "SGp",
-                            ) if k in items[0]
+                            k: items[0].get(k)
+                            for k in (
+                                "unit_id",
+                                "unit_name",
+                                "lith",
+                                "lith_type",
+                                "t_age",
+                                "b_age",
+                                "col_id",
+                                "best_age",
+                                "Fm",
+                                "Gp",
+                                "SGp",
+                            )
+                            if k in items[0]
                         }
                     evidence_loaded.append("macrostrat.org/api/v2/units")
 

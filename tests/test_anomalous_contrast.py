@@ -15,6 +15,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
+from geox_mcp.tools.seismic_compute import geox_seismic_compute
 
 
 def test_no_anomaly_aligned_boundary():
@@ -128,6 +129,54 @@ def test_plain_output_contract():
     assert "equations_used" in result["physics"]
     assert "limitations" in result["physics"]
     print("test_plain_output_contract: PASSED")
+
+
+def test_qi_rung_declares_post_stack_fluid_limit():
+    """Detector must surface the post-stack QI ceiling as first-class metadata."""
+    depth = np.arange(990, 1016, 1.0)
+    ai = np.zeros_like(depth)
+    ai[depth < 1000] = 4_000_000.0
+    ai[(depth >= 1000) & (depth < 1005)] = 4_200_000.0
+    ai[depth >= 1005] = 6_000_000.0
+
+    result = asyncio.run(
+        geox_anomalous_contrast_detector(
+            ai_profile=ai.tolist(),
+            depth=depth.tolist(),
+            formation_tops={"Carbonate_Top": 1000.0},
+            rc_threshold=0.05,
+            geological_boundary_tolerance_m=10.0,
+        )
+    )
+
+    qi_rung = result["qi_rung"]
+    assert qi_rung["current_rung"] == 1
+    assert qi_rung["fluid_separation_possible"] is False
+    assert "CO2" in qi_rung["fluid_types_inseparable"]
+    assert qi_rung["eureka_ref"] == "QI_RUNG_2026_06_10"
+
+
+def test_seismic_compute_surfaces_qi_rung_top_level():
+    """Unified seismic envelope should expose the same QI rung block to agents."""
+    depth = np.arange(990, 1016, 1.0)
+    ai = np.zeros_like(depth)
+    ai[depth < 1000] = 4_000_000.0
+    ai[(depth >= 1000) & (depth < 1005)] = 4_200_000.0
+    ai[depth >= 1005] = 6_000_000.0
+
+    result = asyncio.run(
+        geox_seismic_compute(
+            mode="anomalous_contrast",
+            ai_profile=ai.tolist(),
+            ac_depth=depth.tolist(),
+            formation_tops={"Carbonate_Top": 1000.0},
+            rc_threshold=0.05,
+            geological_boundary_tolerance_m=10.0,
+        )
+    )
+
+    assert result["qi_rung"]["fluid_separation_possible"] is False
+    assert result["qi_rung"]["eureka_ref"] == "QI_RUNG_2026_06_10"
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

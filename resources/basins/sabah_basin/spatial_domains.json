@@ -1,0 +1,31 @@
+{
+  "domain_A": {
+    "name": "offshore_margin",
+    "source": "Franke_2008_seismic_refraction",
+    "Moho_km": {"min": 22, "max": 27},
+    "epistemic": "CLAIM",
+    "note": "Sidek domain_A and domain_C are NOT interchangeable"
+  },
+  "domain_B": {
+    "name": "transitional_margin",
+    "source": "Sidek_2016_LSA_LSD",
+    "Moho_km": {"min": 26, "max": 32},
+    "epistemic": "PLAUSIBLE",
+    "note": "Scenario C corrected"
+  },
+  "domain_C": {
+    "name": "Crocker_Range_interior",
+    "source": "Sidek_2016_LSH_LSL + nBOSS_2026",
+    "Moho_km": {"min": 31, "max": 60},
+    "epistemic": "PLAUSIBLE",
+    "note": "collision-thickened crust — Franke 2008 NOT applicable here. 60 km at thickest (nBOSS)"
+  },
+  "domain_D": {
+    "name": "Dangerous_Grounds_underthrust",
+    "source": "nBOSS_Cornwell_2026_JGR_DOI_10.1029/2025JB031499",
+    "crust_type": "continental (NOT oceanic)",
+    "geometry": "along-strike variations confirmed — NOT simple 2D section",
+    "epistemic": "CLAIM",
+    "note": "High-velocity anomaly East Sabah above Telupid Complex ophiolites"
+  }
+}

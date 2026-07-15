@@ -64,7 +64,6 @@ async def geox_subsurface_generate_candidates(
     use_synth_cube: bool = True,  # if True and no cube_inline, build a synth cube
     # ── Eureka 9 (2026-06-03): lmr_map mode parameters ───────────────────
     lmr_inline: dict[str, Any] | None = None,  # {vp, vs, rho} arrays + fluid_zone
-    castagna_fallback: bool = True,  # if True and vs missing, predict from Vp via Castagna
     ctx: Context | None = None,
 ) -> dict:
     """Generates ensemble subsurface outputs with residuals and data-density maps.
@@ -112,6 +111,9 @@ async def geox_subsurface_generate_candidates(
         return enrich_envelope_with_metabolic(envelope, "geox_subsurface_generate_candidates")
 
     # ── Basin metabolize mode (absorbs geox_task_metabolize_basin) ───────────
+    # F4 CLARITY: prevent unbounded recursion in basin metabolize mode.
+    # The recursive call passes evidence_refs=[single_ref] which won't trigger
+    # this branch again (len == 1, not > 1), so depth=0 guard is sufficient.
     if basin_context is not None and len(evidence_refs) > 1:
         if ctx:
             ctx.report_progress(20, 100)
@@ -270,7 +272,7 @@ async def geox_subsurface_generate_candidates(
             claim_tag="CLAIM",
             evidence_refs=evidence_refs,
             physics_guard=result.get("physics_guard"),
-            confidence_band=(result.get("value_contract") or {}).get("uncertainty_band"),
+            confidence_band=((result.get("value_contract") or {}).get("uncertainty_band") or {}).get("p50"),
         )
     # ── Eureka 8 (2026-06-03): velocity_slice mode branch ─────────────────
     # When target_class == "velocity_slice", route through the E8 keystone
@@ -343,13 +345,11 @@ async def geox_subsurface_generate_candidates(
 
     # ── Eureka 9 (2026-06-03): lmr_map mode branch ──────────────────────
     # When target_class == "lmr_map", route through the E9 keystone: build
-    # {Vp, Vs, rho} fields, apply Castagna mudrock fallback if Vs missing,
-    # compute Lambda-Rho and Mu-Rho (Goodway 1997). Zero new MCP surface.
+    # {Vp, Vs, rho} fields, compute Lambda-Rho and Mu-Rho (Goodway 1997).
+    # Law 5 (Convergence Over Choice): No Castagna fallback. Vs must be provided.
     if target_class == "lmr_map":
         try:
             from geox_core.avo import (
-                CASTAGNA_HONEST_BAND,
-                castagna_mudrock_fallback,
                 lmr_decompose,
             )
 
@@ -359,30 +359,18 @@ async def geox_subsurface_generate_candidates(
                 vp_arr = np.linspace(2200.0, 3000.0, nz)  # typical clastic Vp
                 vs_arr = np.linspace(1200.0, 1500.0, nz)  # typical clastic Vs
                 rho_arr = np.linspace(2.10, 2.40, nz)  # typical density (g/cc)
-                used_castagna = False
             else:
                 vp_arr = np.asarray(lmr_inline["vp"], dtype=float)
                 vs_input = lmr_inline.get("vs")
                 rho_arr = np.asarray(lmr_inline["rho"], dtype=float)
-                if vs_input is None and castagna_fallback:
-                    # Castagna Vp -> Vs fallback (DTS absent)
-                    cf = castagna_mudrock_fallback(
-                        vp_arr,
-                        fluid_zone=str(lmr_inline.get("fluid_zone", "brine")),
-                        unit="m/s",
-                    )
-                    vs_arr = np.asarray(cf["vs"], dtype=float)
-                    used_castagna = True
-                elif vs_input is not None:
-                    vs_arr = np.asarray(vs_input, dtype=float)
-                    used_castagna = False
-                else:
+                if vs_input is None:
                     return {
                         **result,
                         "execution_status": "HOLD",
-                        "reason": "lmr_map mode requires lmr_inline.vp; castagna_fallback=False and no vs supplied",
-                        "e9_status": "NO_VS_NO_FALLBACK",
+                        "reason": "lmr_map mode requires lmr_inline.vs. Castagna fallback removed (Law 5: Convergence Over Choice). Ingest Vs data or use a well with DTS.",
+                        "e9_status": "VS_MISSING",
                     }
+                vs_arr = np.asarray(vs_input, dtype=float)
 
             lmr = lmr_decompose(vp_arr, vs_arr, rho_arr)
             # AVO class is interpretable from Vp/Vs trend (heuristic for the demo)
@@ -397,13 +385,8 @@ async def geox_subsurface_generate_candidates(
                 "mu_rho_mean": float(np.mean(lmr.mu_rho)),
                 "vp_vs_ratio_mean": avg_vp_vs,
                 "avo_class_heuristic": avo_class,
-                "castagna_fallback_used": used_castagna,
-                "honest_flags": (["F2: Castagna mudrock fallback — Vs not observed, predicted from Vp"] if used_castagna else [])
-                + CASTAGNA_HONEST_BAND,
-                "acrisk": 0.20 if not used_castagna else 0.35,
-                "physics_status": (
-                    "DEGRADED (Castagna fallback, no DTS)" if used_castagna else "PLAUSIBLE (Vs observed or no Castagna)"
-                ),
+                "acrisk": 0.20,
+                "physics_status": "PLAUSIBLE (Vs observed)",
             }
             result = {**result, "e9_lmr_map": e9_block}
         except Exception as exc:

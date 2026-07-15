@@ -142,7 +142,7 @@ class ODSiphon:
                     "mean": float(np.mean(log.data)),
                     "std": float(np.std(log.data))
                 }
-            except: continue
+            except Exception: continue
         return log_data
 
     def distill_texture(self, dataset_name):

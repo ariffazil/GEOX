@@ -81,7 +81,6 @@ async def _mode_well_tie(
     extraction_window_ms: float,
     frequency_band: tuple[float, float],
     wavelet_type: str,
-    apply_gardner_fallback: bool,
     apply_anisotropy_correction: bool,
     q_factor: float,
 ) -> dict[str, Any]:
@@ -93,7 +92,6 @@ async def _mode_well_tie(
         extraction_window_ms=extraction_window_ms,
         frequency_band=frequency_band,
         wavelet_type=wavelet_type,  # type: ignore[arg-type]
-        apply_gardner_fallback=apply_gardner_fallback,
         apply_anisotropy_correction=apply_anisotropy_correction,
         q_factor=q_factor,
     )
@@ -108,7 +106,6 @@ async def _mode_time_depth_anchor(
     well_id: str,
     checkshot_ref: str,
     drift_threshold_ms: float,
-    method: str,
 ) -> dict[str, Any]:
     from geox_mcp.tools.seismic_well_tie import geox_time_depth_anchor
 
@@ -116,7 +113,6 @@ async def _mode_time_depth_anchor(
         well_id=well_id,
         checkshot_ref=checkshot_ref,
         drift_threshold_ms=drift_threshold_ms,
-        method=method,  # type: ignore[arg-type]
     )
 
 
@@ -134,15 +130,8 @@ async def _mode_anomalous_contrast(
     vp: list[float] | None,
     rho: list[float] | None,
 ) -> dict[str, Any]:
-    """Hardened anomalous contrast detection — raw physics → governed envelope.
-
-    Cross-Modal Fidelity Theorem (arifOS, 2026-06-05):
-      Physical constraint reduces admissible solution space,
-      which improves inter-modal fidelity (AI) and inter-survey consistency (geoscience).
-      The governed envelope IS the transfer-stable encoding.
-    """
+    """Hardened anomalous contrast detection — raw physics to governed envelope."""
     import numpy as np
-
     from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
 
     raw = await geox_anomalous_contrast_detector(
@@ -163,27 +152,6 @@ async def _mode_anomalous_contrast(
     n_anomalies: int = len(raw.get("anomalies", []))
     total_mistie: float = raw.get("volumetric_impact", {}).get("total_abs_mistie_m", 0.0)
 
-    # ── AC_Risk: computed by L2 governance, not L1 physics ─────────────
-    # ToAC canon: AC_Risk = U_phys × D_transform × B_cog
-    # U_phys derived from anomaly count + mistie magnitude (both independently contribute)
-    # D_transform = 2.0 (seismic → interpreted depth, 2+ transforms per ToAC canon)
-    # B_cog = 0.30 (geological formation tops: well-calibrated, but seismic is indirect measurement)
-    # Note: the old L1 override (governance_escalation from Phase 1) has been removed.
-    # AC_Risk is now the sole basis for constitutional verdicts.
-    U_phys = min(1.0, 0.05 + (n_anomalies * 0.20) + (total_mistie / 80.0))
-    D_transform = 2.0
-    B_cog = 0.30
-    AC_Risk = min(1.0, U_phys * D_transform * B_cog)
-
-    if AC_Risk >= 0.60:
-        ac_risk_verdict = "VOID"
-    elif AC_Risk >= 0.35:
-        ac_risk_verdict = "HOLD"
-    elif AC_Risk >= 0.15:
-        ac_risk_verdict = "QUALIFY"
-    else:
-        ac_risk_verdict = "SEAL"
-
     # ── ClaimTag classification ──────────────────────────────────────────
     if n_anomalies == 0:
         claim_tag = "CLAIM"
@@ -201,48 +169,47 @@ async def _mode_anomalous_contrast(
         artifact_status = ArtifactStatus.IN_REVIEW
         claim_state = "INTERPRETED"
 
-    # ── L1 Advisory Metadata (not verdicts) ───────────────────────────
-    # GEOX emits physical signals. arifOS computes constitutional verdicts.
-    # This separation preserves APEX stack integrity (L1 ≠ L2).
+    # ── Essay #13: Dead Zone Guard + Boundary Condition Escalation ───────
+    # Scan anomalies for hallucination risk and boundary violations.
+    # Override default ClaimTag if critical conditions detected.
     dim_spot_flag = False
-    worst_l1_advisory = None  # raw physics signal, not a governance verdict
-    _l1_severity_rank = {"CRITICAL": 4, "ELEVATED": 3, "WARNING": 2, "MODERATE": 1, "NOMINAL": 0}
+    worst_escalation = None
+    _escalation_rank = {"VOID": 3, "HOLD": 2, "QUALIFY": 1, "SEAL": 0}
 
     for anomaly in raw.get("anomalies", []):
         ar = anomaly.get("attention_residual", {})
+        # Dead zone guard: near-background with high hallucination risk
         hr = ar.get("softmax_hallucination_risk", {})
-        # Dead zone: near-background with high hallucination risk — L1 signal, not verdict
         if hr.get("risk_level") in ("CRITICAL", "ELEVATED") and anomaly.get("rc_ratio", 1.0) < 1.05:
             dim_spot_flag = True
-        # L1 advisory only — do not treat as constitutional verdict
+        # Boundary condition escalation
         esc = ar.get("governance_escalation")
         if esc:
-            sev = _l1_severity_rank.get(esc.get("advisory_status", "NOMINAL"), 0)
-            worst_sev = _l1_severity_rank.get(worst_l1_advisory.get("advisory_status", "NOMINAL") if worst_l1_advisory else "NOMINAL", 0)
-            if sev > worst_sev:
-                worst_l1_advisory = esc
+            if worst_escalation is None or _escalation_rank.get(esc["required_status"], 0) > _escalation_rank.get(
+                worst_escalation["required_status"], 0
+            ):
+                worst_escalation = esc
 
-    # ── arifOS computes verdict from AC_Risk (not from L1 advisory override) ──
-    # L1 advisory signals are surfaced as metadata for arifOS to weigh.
-    # The constitutional verdict is determined by AC_Risk score alone.
-    if ac_risk_verdict == "VOID":
-        gov_status = GovernanceStatus.VOID
+    # Apply override if escalation demands stricter governance than default
+    if worst_escalation:
+        required = worst_escalation["required_status"]
+        if required == "VOID":
+            claim_tag = "HYPOTHESIS"
+            gov_status = GovernanceStatus.VOID
+            artifact_status = ArtifactStatus.REJECTED
+            claim_state = "VOID"
+        elif required == "HOLD" and gov_status not in (GovernanceStatus.VOID,):
+            claim_tag = "HYPOTHESIS"
+            gov_status = GovernanceStatus.HOLD
+            artifact_status = ArtifactStatus.IN_REVIEW
+            claim_state = "888_HOLD"
+
+    # Dim spot guard: high hallucination risk on near-background forces HOLD
+    if dim_spot_flag and gov_status not in (GovernanceStatus.VOID, GovernanceStatus.HOLD):
         claim_tag = "HYPOTHESIS"
-        artifact_status = ArtifactStatus.REJECTED
-        claim_state = "VOID"
-    elif ac_risk_verdict == "HOLD":
         gov_status = GovernanceStatus.HOLD
-        claim_tag = "HYPOTHESIS"
         artifact_status = ArtifactStatus.IN_REVIEW
         claim_state = "888_HOLD"
-    elif ac_risk_verdict == "QUALIFY":
-        gov_status = GovernanceStatus.QUALIFY
-        claim_tag = "PLAUSIBLE"
-        artifact_status = ArtifactStatus.IN_REVIEW
-        claim_state = "INTERPRETED"
-    else:
-        # SEAL: nothing triggered — n_anomalies==0 and clean profile
-        pass  # keep defaults set by n_anomalies branch above
 
     # ── PhysicsGuard: AI physical range check ─────────────────────────────
     ai_arr = np.array(ai_profile, dtype=float)
@@ -281,42 +248,28 @@ async def _mode_anomalous_contrast(
     )
 
     # ── Anomalous Contrast risk metadata ─────────────────────────────────
-    # Maps to: AVO Fluid Factor (Smith & Gidlow, 1987) — deviation from background.
-    # The "background" here is the geological formation tops.
-    # Anomalies ARE the fluid factor: seismic does not match geological.
-    #
-    # Eureka GeoX Theory (2026-06-05): This is the AVO-attention isomorphism.
-    # ΔF = B_obs − m·A_obs  ↔  δ_i = e_i − ē  ↔  ΔV = verdict − floor_expected
-    # All three are instances of: signal = amplify(normalize(obs − background))
+    # AVO fluid factor: deviation of observed reflectivity from background trend.
+    # Anomalies indicate seismic-geological mismatch at formation boundaries.
     envelope["anomalous_contrast"] = {
         "anomalies_detected": n_anomalies,
         "total_abs_mistie_m": round(total_mistie, 2),
         "contradiction_type": "INTERPRETATION_OBSERVATION_MISMATCH" if n_anomalies > 0 else None,
         "ac_severity": "HIGH" if n_anomalies > 2 else ("MEDIUM" if n_anomalies > 0 else "NONE"),
+        "risk_gate": "888_HOLD"
+        if gov_status == GovernanceStatus.HOLD
+        else ("QUALIFY" if gov_status == GovernanceStatus.QUALIFY else "PROCEED"),
         "toac_version": "v2026.06.05",
-        # AC_Risk computed by L2 governance (arifOS reads this, not L1 advisory)
-        "ac_risk": {
-            "score": round(AC_Risk, 3),
-            "U_phys": round(U_phys, 3),
-            "D_transform": D_transform,
-            "B_cog": B_cog,
-            "verdict": ac_risk_verdict,
-        },
-        # L1 advisory metadata: raw physics signals for arifOS to weigh
-        # NOT a constitutional verdict — separated per APEX L1/L2 stack
-        "l1_advisory": {
-            "worst_governance_escalation": worst_l1_advisory,
-            "dim_spot_flag": dim_spot_flag,
-            "toac_note": (
-                "L1 advisory only — arifOS computes constitutional verdict from AC_Risk above. "
-                "δ_i = e_i − ē surfaces here; ΔV = verdict − floor_expected is arifOS jurisdiction."
-            ),
-        },
+        "toac_note": (
+            "Theory of Anomalous Contrast: anomalies are classified as "
+            "INTERPRETATION_OBSERVATION_MISMATCH per contradiction ontology. "
+            "AC_Risk = f(n_anomalies, mistie_magnitude) — simplified from "
+            "governed AC_Risk engine (Physics9State-based). For full governed "
+            "AC_Risk, route through compute_ac_risk_governed with Physics9State inputs."
+        ),
     }
 
-    # ── AVO-Attention Equivalence metadata (Eureka GeoX Theory v2026.06.05) ────
-    # Propagate the raw attention_equivalence from the detector output, augmented
-    # with governance-level context.
+    # ── AVO elastic parameters metadata ──────────────────────────────────
+    # Propagate the raw AVO equivalence from the detector output.
     raw_ae = raw.get("attention_equivalence", {})
     if raw_ae:
         # Augment with per-anomaly AVO class summary
@@ -326,7 +279,7 @@ async def _mode_anomalous_contrast(
             for a in raw.get("anomalies", [])
         ]
         envelope["anomalous_contrast"]["attention_equivalence"] = {
-            "theorem": raw_ae.get("theorem", "Eureka GeoX Theory of Anomalous Contrast"),
+            "theorem": raw_ae.get("theorem", "AVO elastic parameter equivalence"),
             "statement": raw_ae.get("statement", ""),
             "avo_class_summary": {
                 "classes_detected": sorted(set(anomaly_classes)),
@@ -334,8 +287,8 @@ async def _mode_anomalous_contrast(
                     "Class III/IV cannot be distinguished from normal-incidence RC alone. "
                     "Pre-stack angle gathers required per Shuey (1985). Class IV is the "
                     "known false-negative hazard in AVO interpretation (Castagna, 1998). "
-                    "Attention equivalent: the dim-spot problem — δ_i exists but may be "
-                    "masked by softmax normalization, producing α_i ≈ 1/N despite real anomaly."
+                    "Known limitation: Class IV anomalies can produce weak amplitude "
+                    "responses that mimic background, requiring pre-stack data for confirmation."
                 )
                 if "III/IV" in anomaly_classes
                 else None,
@@ -346,11 +299,11 @@ async def _mode_anomalous_contrast(
                     round(sum(attention_residuals) / len(attention_residuals), 2) if attention_residuals else 0.0
                 ),
                 "interpretation": (
-                    f"Anomalies dominate attention by {max(attention_residuals):.1f}× the uniform baseline. "
-                    f"In transformer terms: these 'keys' collectively hijack the softmax distribution."
+                    f"Anomalies show amplitude ratios of {max(attention_residuals):.1f}× the background level, "
+                    f"indicating significant deviation from the regional trend."
                 )
                 if attention_residuals and max(attention_residuals) > 1.5
-                else "No single anomaly dominates attention — distributed across multiple keys.",
+                else "No single anomaly dominates — distributed across multiple formation boundaries.",
             },
             "shared_primitive": raw_ae.get("shared_primitive", []),
             "failure_modes": raw_ae.get("failure_modes", []),
@@ -362,13 +315,20 @@ async def _mode_anomalous_contrast(
                 "interpretation": (
                     f"cross_modal_stability = {envelope.get('cross_modal_stability', 0.0):.2f}. "
                     f"This measures how well the physical evidence survives transfer "
-                    f"across modalities (seismic → text → JSON → attention). "
+                    f"across data formats (seismic → text → JSON). "
                     f"Higher values mean the anomaly signature is robust to format changes."
                 ),
             },
             "ratified": raw_ae.get("ratified", "2026-06-05"),
             "document": raw_ae.get("document", "docs/AVO_ATTENTION_FORMAL_EQUIVALENCE.md"),
         }
+
+    # Surface qi_rung from detector output for top-level agent-readable access.
+    # Agents should check envelope["qi_rung"]["fluid_separation_possible"] before
+    # making any fluid-type claim — if False, the call is HYPOTHESIS by constitution.
+    _qi_rung = raw.get("qi_rung")
+    if _qi_rung:
+        envelope["qi_rung"] = _qi_rung
 
     return enrich_envelope_with_metabolic(envelope, TOOL_NAME)
 
@@ -452,13 +412,11 @@ async def geox_seismic_compute(
     volume_ref: str | None = None,
     extraction_window_ms: float = 100.0,
     frequency_band: tuple[float, float] = (10.0, 50.0),
-    apply_gardner_fallback: bool = False,
     apply_anisotropy_correction: bool = False,
     q_factor: float = 100.0,
     # time_depth_anchor
     checkshot_ref: str | None = None,
     drift_threshold_ms: float = 25.0,
-    td_method: Literal["checkshot", "vsp", "regional_proxy"] = "checkshot",
     # anomalous_contrast
     ai_profile: list[float] | None = None,
     ac_depth: list[float] | None = None,
@@ -483,13 +441,12 @@ async def geox_seismic_compute(
     mode : str
         "synthetic" — forward model S = w * r + n.
         "well_tie" — seismic-to-well tie with cross-correlation.
-        "time_depth_anchor" — checkshot/VSP anchoring.
+        "time_depth_anchor" — checkshot anchoring (single path, Law 5).
         "anomalous_contrast" — detect AC mismatches with AVO class I-IV,
-            attention residual (δ_i = e_i − ē), softmax hallucination risk,
+            reflection coefficient analysis, amplitude ratio statistics,
             approximation tier, and boundary condition flags.
             Governed output with ClaimTag + PhysicsGuard + 888_HOLD gating.
-            Per the Eureka GeoX Theory: AVO fluid factor ΔF ≡ attention
-            residual δ_i ≡ constitutional governance deviation ΔV.
+            AVO fluid factor from intercept-gradient analysis.
         "attribute" — seismic attribute computation via dynamic registry.
 
     Returns
@@ -498,6 +455,63 @@ async def geox_seismic_compute(
     For anomalous_contrast: envelope carries attention_equivalence metadata
     (AVO chain, attention chain, shared primitives, failure modes, trilogy ref).
     """
+    import json
+
+    def _parse_list(val: Any) -> list[float] | None:
+        if isinstance(val, str):
+            try:
+                parsed = json.loads(val)
+                if isinstance(parsed, list):
+                    return [float(x) for x in parsed]
+            except Exception:
+                try:
+                    cleaned = val.strip("[]() ")
+                    if cleaned:
+                        return [float(x.strip()) for x in cleaned.replace(",", " ").split()]
+                except Exception:
+                    pass
+        elif isinstance(val, list):
+            return [float(x) for x in val]
+        return val
+
+    def _parse_tuple(val: Any) -> tuple[float, float] | None:
+        if isinstance(val, str):
+            try:
+                parsed = json.loads(val)
+                if isinstance(parsed, list) and len(parsed) == 2:
+                    return (float(parsed[0]), float(parsed[1]))
+            except Exception:
+                try:
+                    cleaned = val.strip("[]() ")
+                    parts = cleaned.replace(",", " ").split()
+                    if len(parts) == 2:
+                        return (float(parts[0]), float(parts[1]))
+                except Exception:
+                    pass
+        elif isinstance(val, (list, tuple)) and len(val) == 2:
+            return (float(val[0]), float(val[1]))
+        return val
+
+    def _parse_dict(val: Any) -> dict[str, float] | None:
+        if isinstance(val, str):
+            try:
+                parsed = json.loads(val)
+                if isinstance(parsed, dict):
+                    return {str(k): float(v) for k, v in parsed.items()}
+            except Exception:
+                pass
+        return val
+
+    vp = _parse_list(vp)
+    rho = _parse_list(rho)
+    depth = _parse_list(depth)
+    ai_profile = _parse_list(ai_profile)
+    ac_depth = _parse_list(ac_depth)
+    ac_vp = _parse_list(ac_vp)
+    ac_rho = _parse_list(ac_rho)
+    frequency_band = _parse_tuple(frequency_band)
+    formation_tops = _parse_dict(formation_tops)
+
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
 
@@ -564,7 +578,6 @@ async def geox_seismic_compute(
             extraction_window_ms=extraction_window_ms,
             frequency_band=frequency_band,
             wavelet_type=wavelet_type,
-            apply_gardner_fallback=apply_gardner_fallback,
             apply_anisotropy_correction=apply_anisotropy_correction,
             q_factor=q_factor,
         )
@@ -586,7 +599,6 @@ async def geox_seismic_compute(
             well_id=well_id,
             checkshot_ref=checkshot_ref,
             drift_threshold_ms=drift_threshold_ms,
-            method=td_method,
         )
         if ctx:
             ctx.report_progress(100, 100)

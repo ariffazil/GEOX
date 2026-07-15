@@ -2,11 +2,11 @@
 geox_core.engines.joint_inversion — Multi-Physics Joint Inversion Under Physics9
 ═══════════════════════════════════════════════════════════════════════════════════
 The crown jewel: fuses seismic, gravity, magnetics, CSEM/MT, and biostratigraphy
-into one Physics9State per subsurface node.
+into one Physics13State per subsurface node.
 
 Physics:
     Given N geophysical observations {d₁, d₂, ..., dₙ} from different methods,
-    find the Physics9State vector S = {ρ, Vp, Vs, ρ_e, χ, k, P, T, φ} at each
+    find the Physics13State vector S = {ρ, Vp, Vs, ρ_e, χ, k, P, T, φ} at each
     node that simultaneously satisfies all forward models within uncertainty.
 
     Joint objective:
@@ -31,7 +31,7 @@ from typing import Any, Literal
 import numpy as np
 from scipy import optimize
 
-from geox_core.physics.state import Physics9State, EARTH_MATERIAL_CATALOG
+from geox_core.physics.state import Physics13State, EARTH_MATERIAL_CATALOG
 from geox_core.physics.parameters import forward_physics9
 from geox_core.engines.potential_fields import (
     gravity_forward_slab,
@@ -75,7 +75,7 @@ class JointInversionConfig:
 @dataclass
 class JointInversionResult:
     """Result of multi-physics joint inversion."""
-    physics9_states: list[Physics9State]     # one per node
+    physics9_states: list[Physics13State]     # one per node
     misfit_history: list[float]              # total misfit per iteration
     method_misfits: dict[str, list[float]]   # per-method misfit
     converged: bool
@@ -100,19 +100,19 @@ class JointInversionResult:
 # ─── Forward Model Wrappers ─────────────────────────────────────────────────
 
 
-def _forward_seismic(state: Physics9State) -> dict[str, float]:
-    """Extract seismic observables from Physics9State."""
+def _forward_seismic(state: Physics13State) -> dict[str, float]:
+    """Extract seismic observables from Physics13State."""
     ai = state.vp * state.rho
     return {"ai": ai, "vp_vs": state.vp / max(state.vs, 0.001)}
 
 
-def _forward_gravity(state: Physics9State, ref_density: float = 2670.0) -> float:
+def _forward_gravity(state: Physics13State, ref_density: float = 2670.0) -> float:
     """Density contrast → gravity anomaly (simplified slab)."""
     delta_rho = state.rho - ref_density
     return 0.04193 * (delta_rho / 1000.0) * 100.0  # 100m slab, mGal
 
 
-def _forward_magnetics(state: Physics9State) -> float:
+def _forward_magnetics(state: Physics13State) -> float:
     """Susceptibility → magnetic anomaly (simplified)."""
     B0 = 50000e-9
     mu0 = 4.0 * np.pi * 1e-7
@@ -120,7 +120,7 @@ def _forward_magnetics(state: Physics9State) -> float:
     return abs(M) * 1e9  # nT (simplified amplitude)
 
 
-def _forward_em(state: Physics9State) -> float:
+def _forward_em(state: Physics13State) -> float:
     """Resistivity → EM response (apparent resistivity proxy)."""
     return state.rho_e
 
@@ -132,12 +132,12 @@ def _joint_objective(
     state_vector: np.ndarray,
     observations: list[GeophysicalObservation],
     config: JointInversionConfig,
-    reference_states: list[Physics9State] | None = None,
+    reference_states: list[Physics13State] | None = None,
 ) -> float:
     """
     Joint objective function: Φ(S) = Σᵢ wᵢ·||dᵢ - Gᵢ(S)||² + λ·R(S)
 
-    state_vector: flattened Physics9State parameters [rho, vp, vs, rho_e, chi, k, P, T, phi]
+    state_vector: flattened Physics13State parameters [rho, vp, vs, rho_e, chi, k, P, T, phi]
     """
     n_params = 9
     n_nodes = len(state_vector) // n_params
@@ -148,8 +148,8 @@ def _joint_objective(
         start = node_idx * n_params
         sv = state_vector[start:start + n_params]
 
-        # Build Physics9State from vector
-        state = Physics9State(
+        # Build Physics13State from vector
+        state = Physics13State(
             rho=max(1000, min(5000, sv[0])),
             vp=max(1500, min(7000, sv[1])),
             vs=max(500, min(4000, sv[2])),
@@ -212,25 +212,25 @@ def _joint_objective(
 
 def run_joint_inversion(
     observations: list[GeophysicalObservation],
-    initial_states: list[Physics9State],
+    initial_states: list[Physics13State],
     config: JointInversionConfig | None = None,
-    well_constraints: list[Physics9State] | None = None,
+    well_constraints: list[Physics13State] | None = None,
 ) -> JointInversionResult:
     """
     Multi-physics joint inversion under Physics9 governance.
 
     Inverts seismic, gravity, magnetics, CSEM/MT, and biostratigraphy
-    observations simultaneously to find the Physics9State at each node
+    observations simultaneously to find the Physics13State at each node
     that best explains ALL data.
 
     Args:
         observations: list of GeophysicalObservation (one per data type)
-        initial_states: starting Physics9State at each node
+        initial_states: starting Physics13State at each node
         config: inversion configuration
         well_constraints: optional well-constrained states for regularisation
 
     Returns:
-        JointInversionResult with converged Physics9State field
+        JointInversionResult with converged Physics13State field
     """
     if config is None:
         config = JointInversionConfig()
@@ -295,12 +295,12 @@ def run_joint_inversion(
         final_x = x0
         iterations = 0
 
-    # Reconstruct Physics9States
+    # Reconstruct Physics13States
     states = []
     for i in range(n_nodes):
         start = i * n_params
         sv = final_x[start:start + n_params]
-        states.append(Physics9State(
+        states.append(Physics13State(
             rho=float(np.clip(sv[0], 1000, 5000)),
             vp=float(np.clip(sv[1], 1500, 7000)),
             vs=float(np.clip(sv[2], 500, 4000)),

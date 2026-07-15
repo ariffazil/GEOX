@@ -2,7 +2,7 @@
 
 > **Last verified:** 2026-06-22 (W16+ FORGE complete, commit pending push to `origin/main`)
 > **Source of truth:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS), `src/geox_mcp/resources/__init__.py` (resource registrations), `src/geox_mcp/prompts/__init__.py` (prompt registrations)
-> **Server invariant:** `_EXPECTED_CANONICAL = 56` in `src/geox_mcp/server.py`
+> **Server invariant:** `_EXPECTED_CANONICAL = 34` in `src/geox_mcp/server.py`
 > **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0`
 > **Transport:** HTTP/SSE (`https://geox.arif-fazil.com/mcp`) or stdio (`python3 -m geox_mcp.server --transport stdio`)
 > **SDK:** FastMCP 3.4.2 (Python) — `gofastmcp.com`

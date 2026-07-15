@@ -13,9 +13,11 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
+import asyncio
+
 import pytest
 
-from geox_mcp.tools.prospect import _compute_stratum_breakdown, _gini_coefficient
+from geox_mcp.tools.prospect import _compute_stratum_breakdown, _gini_coefficient, geox_prospect_evaluate
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -126,3 +128,24 @@ def test_develop_missing_strata_mentions_5_categories():
         prospect_ref="X",
     )
     assert len(rib["develop"]["missing_strata"]) == 5
+
+
+def test_compute_mode_declares_migration_context_and_pos_ceiling():
+    result = asyncio.run(
+        geox_prospect_evaluate(
+            prospect_ref="PROSPECT-X",
+            mode="screen",
+            evidence_refs=["e1", "e2"],
+        )
+    )
+
+    artifact = result["primary_artifact"]
+    migration_context = artifact["migration_context"]
+    assert migration_context["migration_shadow_scored"] is False
+    assert migration_context["pos_multiplier_applied"] == 1.0
+    assert migration_context["eureka_ref"] == "MIGRATION_SHADOW_SCORING_2026_06_10"
+
+    pos_ceiling = artifact["pos_ceiling_declaration"]
+    assert pos_ceiling["pos_ceiling_basis"] == "pre-QI-screen"
+    assert pos_ceiling["fluid_certified"] is False
+    assert pos_ceiling["eureka_ref"] == "POS_CEILING_2026_06_10"

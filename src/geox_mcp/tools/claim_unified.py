@@ -1,30 +1,48 @@
 """
-geox_claim — Unified Claim Lifecycle (Phase 2)
-═══════════════════════════════════════════════
+geox_claim — Unified Claim Lifecycle (Phase 2.5)
+═══════════════════════════════════════════════════
 Absorbs: geox_claim_create, geox_claim_validate, geox_claim_challenge,
          geox_claim_seal, geox_evidence_attach
 
 Modes: create, validate, challenge, seal, attach_evidence
 
+Added Phase 2.5:
+  - epistemic_label (OBS/DER/INT/SPEC) — arifOS standard epistemic tag
+  - forbidden_uses — list of prohibited applications for the claim
+  - source_citation — literature provenance {url, title, authors, publication}
+  - category — literature taxonomy (reservoir, stratigraphy, source, etc.)
+
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 from typing import Any, Literal
 
+# ── Epistemic label type (arifOS standard) ──────────────────────────────────
+EpistemicLabel = Literal["OBS", "DER", "INT", "SPEC"]
+
+# ── Literature category taxonomy ────────────────────────────────────────────
+LitCategory = Literal[
+    "reservoir",
+    "stratigraphy",
+    "source",
+    "structure",
+    "seal",
+    "charge",
+    "trap",
+    "thermal",
+    "pressure",
+    "seismic",
+    "geochemistry",
+    "petrophysics",
+    "general",
+]
+
+
 async def geox_claim(
     mode: Literal["create", "validate", "challenge", "seal", "attach_evidence"] = "create",
+    # ── Core claim fields ───────────────────────────────────────────────────
     claim_id: str = "",
-    challenge_text: str = "",
-    alternative_claim_text: str = "",
-    alternative_evidence_ids: list[str] | None = None,
-    challenge_evidence_ids: list[str] | None = None,
-    alternative_uncertainty: dict[str, Any] | None = None,
-    challenger_provenance: str = "GEOX Claim Engine",
-    ack_irreversible: bool = False,
-    seal_verdict: str = "SEAL",
-    evidence_id: str = "",
-    evidence_type: str = "supporting",
-    provenance: str = "GEOX Claim Engine",
     claim_text: str = "",
     claim_type: str = "other",
     truth_class: str = "INTERPRETATION",
@@ -34,8 +52,27 @@ async def geox_claim(
     uncertainty_p90: float | None = None,
     uncertainty_distribution: str = "lognormal",
     alternatives: list[dict[str, Any]] | None = None,
+    provenance: str = "GEOX Claim Engine",
     authority: str = "GEOX_CLAIM_WORKER",
+    # ── Challenge fields ────────────────────────────────────────────────────
+    challenge_text: str = "",
+    alternative_claim_text: str = "",
+    alternative_evidence_ids: list[str] | None = None,
+    challenge_evidence_ids: list[str] | None = None,
+    alternative_uncertainty: dict[str, Any] | None = None,
+    challenger_provenance: str = "GEOX Claim Engine",
+    # ── Seal fields ─────────────────────────────────────────────────────────
+    ack_irreversible: bool = False,
+    seal_verdict: str = "SEAL",
     voxel_state: dict[str, Any] | None = None,  # H3 fix: required for seal mode
+    # ── Evidence fields ─────────────────────────────────────────────────────
+    evidence_id: str = "",
+    evidence_type: str = "supporting",
+    # ── Literature-to-claims extraction fields (Phase 2.5) ──────────────────
+    epistemic_label: EpistemicLabel | None = None,
+    forbidden_uses: list[str] | None = None,
+    source_citation: dict[str, Any] | None = None,
+    category: LitCategory | None = None,
 ) -> dict[str, Any]:
     """Unified claim lifecycle — DRAFT → VALIDATED → SEALED.
 
@@ -46,30 +83,15 @@ async def geox_claim(
       seal            - Submit validated claim to arifOS for VAULT999 sealing
                        (H3 fix: requires voxel_state for well_constrained check)
       attach_evidence - Attach evidence artifact to existing claim
+
+    Phase 2.5 literature extraction fields (mode=create):
+      epistemic_label  — OBS (observed) / DER (derived) / INT (interpreted) / SPEC (speculation)
+      forbidden_uses   — List of prohibited applications (e.g. "no site-specific drilling decisions")
+      source_citation  — Literature provenance: {url, title, authors, publication}
+      category         — Literature taxonomy: reservoir, stratigraphy, source, structure, etc.
     """
-    kwargs = locals().copy()
-    if mode == "validate":
-        from geox_mcp.tools.claims import geox_claim_validate as _impl
-        return await _impl(claim_id=kwargs.get("claim_id", ""))
-
-    if mode == "challenge":
-        from geox_mcp.tools.claims import geox_claim_challenge as _impl
-        return await _impl(
-            claim_id=kwargs.get("claim_id", ""),
-            challenge_text=kwargs.get("challenge_text", ""),
-            alternative_claim_text=kwargs.get("alternative_claim_text", ""),
-            alternative_evidence_ids=kwargs.get("alternative_evidence_ids", []),
-            challenge_evidence_ids=kwargs.get("challenge_evidence_ids"),
-            alternative_uncertainty=kwargs.get("alternative_uncertainty"),
-            challenger_provenance=kwargs.get("challenger_provenance", "GEOX Claim Engine"),
-        )
-
+    # ── Seal mode: F2 TRUTH gate (H3 fix, ADR-008) ─────────────────────────
     if mode == "seal":
-        # ── H3 fix (2026-06-22): F2 TRUTH at system level ────────────────────
-        # Per ADR-008, well_constrained check (obs_count >= 3 AND residual < 0.3)
-        # is the system-level gate before any seal. Caller must pass `voxel_state`
-        # dict with `observation_count` and `forward_model_residual` fields.
-        voxel_state = kwargs.get("voxel_state")
         if not voxel_state:
             return {
                 "status": "HOLD",
@@ -83,7 +105,7 @@ async def geox_claim(
                 ),
                 "floor": "F2_TRUTH",
                 "guard": "RT3",
-                "claim_id": kwargs.get("claim_id", ""),
+                "claim_id": claim_id,
                 "required_action": "Pass voxel_state={observation_count: int, forward_model_residual: float, ...} to geox_claim(mode='seal').",
             }
 
@@ -105,7 +127,7 @@ async def geox_claim(
                 ),
                 "floor": "F2_TRUTH",
                 "guard": "RT3",
-                "claim_id": kwargs.get("claim_id", ""),
+                "claim_id": claim_id,
                 "well_constrained": False,
                 "observation_count": obs_count,
                 "forward_model_residual": residual,
@@ -116,14 +138,13 @@ async def geox_claim(
                 ),
             }
 
-        # well_constrained=True → proceed to underlying seal implementation
         from geox_mcp.tools.claims import geox_claim_seal as _impl
+
         result = await _impl(
-            claim_id=kwargs.get("claim_id", ""),
-            ack_irreversible=kwargs.get("ack_irreversible", False),
-            seal_verdict=kwargs.get("seal_verdict", "SEAL"),
+            claim_id=claim_id,
+            ack_irreversible=ack_irreversible,
+            seal_verdict=seal_verdict,
         )
-        # Annotate the result with the well_constrained proof (F11 AUDIT)
         if isinstance(result, dict):
             result["well_constrained_check"] = {
                 "observation_count": obs_count,
@@ -134,27 +155,62 @@ async def geox_claim(
             }
         return result
 
-    if mode == "attach_evidence":
-        from geox_mcp.tools.claims import geox_evidence_attach as _impl
+    # ── Validate mode ───────────────────────────────────────────────────────
+    if mode == "validate":
+        from geox_mcp.tools.claims import geox_claim_validate as _impl
+
+        return await _impl(claim_id=claim_id)
+
+    # ── Challenge mode ──────────────────────────────────────────────────────
+    if mode == "challenge":
+        from geox_mcp.tools.claims import geox_claim_challenge as _impl
+
         return await _impl(
-            claim_id=kwargs.get("claim_id", ""),
-            evidence_id=kwargs.get("evidence_id", ""),
-            evidence_type=kwargs.get("evidence_type", "supporting"),
-            provenance=kwargs.get("provenance", "GEOX Claim Engine"),
+            claim_id=claim_id,
+            challenge_text=challenge_text,
+            alternative_claim_text=alternative_claim_text,
+            alternative_evidence_ids=alternative_evidence_ids or [],
+            challenge_evidence_ids=challenge_evidence_ids,
+            alternative_uncertainty=alternative_uncertainty,
+            challenger_provenance=challenger_provenance,
         )
 
-    # Default: create
+    # ── Attach evidence mode ────────────────────────────────────────────────
+    if mode == "attach_evidence":
+        from geox_mcp.tools.claims import geox_evidence_attach as _impl
+
+        return await _impl(
+            claim_id=claim_id,
+            evidence_id=evidence_id,
+            evidence_type=evidence_type,
+            provenance=provenance,
+        )
+
+    # ── Default: Create mode ────────────────────────────────────────────────
+    # Build extra_metadata from literature-to-claims extraction fields
+    lit_metadata: dict[str, Any] = {}
+    if epistemic_label is not None:
+        lit_metadata["epistemic_label"] = epistemic_label
+    if forbidden_uses is not None:
+        lit_metadata["forbidden_uses"] = forbidden_uses
+    if source_citation is not None:
+        lit_metadata["source_citation"] = source_citation
+    if category is not None:
+        lit_metadata["category"] = category
+
     from geox_mcp.tools.claims import geox_claim_create as _impl
+
     return await _impl(
-        claim_text=kwargs.get("claim_text", ""),
-        claim_type=kwargs.get("claim_type", "other"),
-        truth_class=kwargs.get("truth_class", "INTERPRETATION"),
-        evidence_ids=kwargs.get("evidence_ids", []),
-        uncertainty_p10=kwargs.get("uncertainty_p10"),
-        uncertainty_p50=kwargs.get("uncertainty_p50"),
-        uncertainty_p90=kwargs.get("uncertainty_p90"),
-        uncertainty_distribution=kwargs.get("uncertainty_distribution", "lognormal"),
-        alternatives=kwargs.get("alternatives"),
-        provenance=kwargs.get("provenance", "GEOX Claim Engine"),
-        authority=kwargs.get("authority", "GEOX_CLAIM_WORKER"),
+        claim_text=claim_text,
+        claim_type=claim_type,
+        truth_class=truth_class,
+        evidence_ids=evidence_ids or [],
+        uncertainty_p10=uncertainty_p10,
+        uncertainty_p50=uncertainty_p50,
+        uncertainty_p90=uncertainty_p90,
+        uncertainty_distribution=uncertainty_distribution,
+        alternatives=alternatives,
+        provenance=provenance,
+        authority=authority,
+        extra_metadata=lit_metadata or None,
     )

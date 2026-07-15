@@ -1,0 +1,719 @@
+{
+  "info": {
+    "description": "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. window.openai is optional progressive enhancement.",
+    "title": "GEOX Earth Intelligence API",
+    "version": "2026.07.11"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/mcp": {
+      "post": {
+        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint.",
+        "operationId": "mcpEndpoint",
+        "summary": "MCP JSON-RPC 2.0 endpoint",
+        "x-mcp-tools": [
+          {
+            "axis": "observe",
+            "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_well_ingest",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "verify",
+            "description": "Quality control checks on well data: depth monotonicity, null percentages, physical range checks, curve completeness.",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_well_qc",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "observe",
+            "description": "OBSERVE \u00b7 Open GEOX well-desk interactive view (SEP-1865 MCP App). Read-only operator summary for a well_id. Hosts with UI open ui://geox/well-desk; hosts without UI still receive structured JSON. No mutation.\n",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_well_desk_open",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "mutate",
+            "description": "MUTATE \u00b7 Publish a rendered well-desk image with embedded metadata. Saves image to /root/GEOX/data/renders/ and seals to VAULT999.\n",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_well_desk_publish",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "observe",
+            "description": "OBSERVE \u00b7 Render a well-log panel as a PNG image with metadata. Generates GR, RT, NPHI, RHOB, DT tracks for a given well_id.\n",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_render_well_panel",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Compute petrophysical properties: Vsh, porosity, Sw, permeability, net pay. Includes LEM physics-prior inference.",
+            "domain": "earth.petrophysics",
+            "lane": "reasoning",
+            "name": "geox_petrophysics",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Sequence stratigraphy analysis: GR binning, parasequence packages, systems tract inference, well correlation.",
+            "domain": "earth.stratigraphy",
+            "lane": "reasoning",
+            "name": "geox_sequence",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "observe",
+            "description": "Load and inspect seismic data: SEG-Y headers, trace counts, sample intervals, volume metadata.",
+            "domain": "earth.seismic",
+            "lane": "evidence",
+            "name": "geox_seismic_ingest",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "compute",
+            "description": "Unified seismic physics: synthetics, well ties, AVO analysis, attributes. Time-depth anchoring uses checkshot data only. Modes include tie_preflight, tie_receipt, wavelet_extract, mistie_rms, time_depth_calibrate (ZEN G1).",
+            "domain": "earth.seismic",
+            "lane": "evidence",
+            "name": "geox_seismic_compute",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Seismic interpretation: horizon detection, fault picking, volume blending, frame extraction.",
+            "domain": "earth.seismic",
+            "lane": "reasoning",
+            "name": "geox_seismic_interpret",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Vision-based seismic interpretation using VLMs: analyze seismic images, audit interpretations, calibrate models.",
+            "domain": "earth.perception",
+            "lane": "reasoning",
+            "name": "geox_vision",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Multi-physics subsurface modeling: joint inversion, gravity/magnetic forward modeling, MT/CSEM forward modeling.",
+            "domain": "earth.model",
+            "lane": "judgment",
+            "name": "geox_subsurface_model",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "GEOX GravMag Studio v0.1 \u2014 forward-only MCP App. Computes gravity or magnetic anomaly from a prism model via HarmonICAdapter (mock or live) and returns the studio iframe payload at ui://geox/gravmag-studio.html. Verdict is always QUALIFY (never SEAL) \u2014 Stage A is forward-only.",
+            "domain": "earth.model",
+            "lane": "judgment",
+            "name": "geox_gravmag_studio_open",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "GEOX GravMag Studio v0.2 \u2014 Stage B screen (falsification lane). Forward-predicts via geox_gravmag_studio_open, compares against observed_grid, returns misfit stats + verdict (PASS_SCREEN / MARGINAL / FAIL_SCREEN / HOLD) + structured abduction discipline. Never SEALs. Confidence capped at 0.70 per F7 HUMILITY. Unit or grid mismatch returns HOLD (fail-closed).",
+            "domain": "earth.model",
+            "lane": "judgment",
+            "name": "geox_gravmag_studio_screen",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "compute",
+            "description": "Geomechanical analysis: elastic moduli (K, G, E, Poisson ratio), coordinate transforms, block resolution.",
+            "domain": "earth.mechanics",
+            "lane": "reasoning",
+            "name": "geox_geomechanics",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Basin intelligence: profiles, resolution, deep time state, Macrostrat API, spatial context, scene rendering.",
+            "domain": "earth.basin",
+            "lane": "discovery",
+            "name": "geox_basin",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Earth state vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow, subsidence.",
+            "domain": "earth.deep_time",
+            "lane": "discovery",
+            "name": "geox_deep_time_state",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "verify",
+            "description": "GEOX organ health check: version, tool count, canonical surface status, registration timestamp.",
+            "domain": "earth.general",
+            "lane": "discovery",
+            "name": "geox_surface_status",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "observe",
+            "description": "Spatial context scene: renders map layers, basins, and well locations for geographic orientation.",
+            "domain": "earth.general",
+            "lane": "evidence",
+            "name": "geox_map_context_scene",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "observe",
+            "description": "Tool: geox_claim_graph_evaluate",
+            "domain": "earth.general",
+            "lane": "evidence",
+            "name": "geox_claim_graph_evaluate",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "entropy",
+            "description": "Compute physical and ecological consequences of a proposed action",
+            "domain": "governance",
+            "lane": "evidence",
+            "name": "geox_consequence_footprint",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "entropy",
+            "description": "Measure destroyed future physical options",
+            "domain": "governance",
+            "lane": "evidence",
+            "name": "geox_optionality_loss",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "entropy",
+            "description": "Check whether physical monitoring is sufficient to detect drift",
+            "domain": "governance",
+            "lane": "evidence",
+            "name": "geox_feedback_integrity",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "entropy",
+            "description": "Compare institutional claims against Earth measurements",
+            "domain": "governance",
+            "lane": "evidence",
+            "name": "geox_material_truth_challenge",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "entropy",
+            "description": "Model cross-domain propagation from a physical event",
+            "domain": "governance",
+            "lane": "evidence",
+            "name": "geox_cascade_pathway",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

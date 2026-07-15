@@ -1,0 +1,148 @@
+{
+  "$schema": "geox://biostrat/facies_matrix/v1",
+  "description": "Facies–biozone compatibility matrix for contradiction detection. Encodes B4 Facies Veto doctrine: age interpretation must not violate depositional environment without documented explanation. Sabah-calibrated with NW Borneo margin knowledge.",
+  "doctrine": "B4 Facies Veto — biostrat-as-calibration, not biostrat-as-constitution",
+  "last_verified": "2026-07-03",
+  "epistemic_status": "LIVE_INTELLIGENCE",
+
+  "fossil_groups": {
+    "calcareous_nannofossil": {
+      "NN_zones": {
+        "primary_ecology": "open_marine_photic_zone",
+        "water_depth_range": "neritic_to_bathyal",
+        "preservation_requirements": "calcareous, non-acidic, above CCD",
+        "typical_host_lithologies": ["shale", "marl", "calcareous_mudstone", "chalk", "hemipelagic_mud"],
+        "conflicts_with": {
+          "lithologies": {
+            "COAL_CARBONACEOUS": {"severity": "CONTRADICTION", "note": "Nannofossils cannot form in peat/coal. Requires reworking or thin marine incursion."},
+            "continental_conglomerate": {"severity": "CONTRADICTION", "note": "Nannofossils are marine. Fluvial conglomerate is not."},
+            "red_bed": {"severity": "CONTRADICTION", "note": "Oxidizing continental environment — nannofossils not preserved."}
+          },
+          "environments": {
+            "freshwater_swamp": {"severity": "CONTRADICTION", "note": "No marine water. Check for reworking or misidentified facies."},
+            "fluvial": {"severity": "CONTRADICTION", "note": "River systems do not host calcareous nannoplankton."},
+            "lacustrine": {"severity": "CONTRADICTION", "note": "Lacustrine unless connected to marine. Check for freshwater algae instead."},
+            "alluvial": {"severity": "CONTRADICTION", "note": "Terrestrial. Nannofossils require marine water column."}
+          }
+        },
+        "caution_environments": {
+          "coastal_plain": {"severity": "WEAK_PASS", "note": "Possible if thin marine incursion, marginal marine, or estuarine connection. Check for forams + marine palynomorphs."},
+          "deltaic": {"severity": "WEAK_PASS", "note": "Delta front/prodelta may have marine influence. Check if nannos occur only in marine-influenced intervals."},
+          "estuarine": {"severity": "WEAK_PASS", "note": "Brackish to marine transition possible. Nannofossil abundance should vary with salinity."},
+          "mangrove": {"severity": "WEAK_PASS", "note": "Mangrove is coastal — marine nannos may co-occur with mangrove pollen during transgression."}
+        },
+        "absence_meaning": {
+          "in_marine_facies": {"interpretation": "Dissolution, dilution, or poor preservation", "not": "Non-marine necessarily"},
+          "in_non_marine_facies": {"interpretation": "Expected absence — facies control", "not": "Age gap or unconformity necessarily"},
+          "below_CCD": {"interpretation": "Carbonate dissolution", "not": "Absence of original nannofossil input"}
+        }
+      }
+    },
+    "planktonic_foraminifera": {
+      "primary_ecology": "open_marine",
+      "water_depth_range": "neritic_to_bathyal",
+      "conflicts_with": {
+        "lithologies": {
+          "COAL_CARBONACEOUS": {"severity": "CONTRADICTION", "note": "No planktonic forams in peat swamps."},
+          "evaporite": {"severity": "CONTRADICTION", "note": "Hypersaline — no normal marine planktonic forams."}
+        },
+        "environments": {
+          "freshwater_swamp": {"severity": "CONTRADICTION", "note": "Planktonic forams are exclusively marine."},
+          "fluvial": {"severity": "CONTRADICTION", "note": "Transport possible but rare — flag as reworked unless proven otherwise."},
+          "lacustrine": {"severity": "CONTRADICTION", "note": "No planktonic forams in lakes."}
+        }
+      },
+      "caution_environments": {
+        "coastal_plain": {"severity": "WEAK_PASS", "note": "May indicate marine incursion. Check for benthic forams + marine palynomorphs."},
+        "deltaic": {"severity": "WEAK_PASS", "note": "Planktonics in delta front suggest marine influence. May be transported."}
+      }
+    },
+    "benthic_foraminifera": {
+      "primary_ecology": "benthic_marine",
+      "water_depth_range": "littoral_to_abyssal",
+      "note": "Benthic forams are more tolerant but still require marine or brackish water.",
+      "conflicts_with": {
+        "environments": {
+          "freshwater_swamp": {"severity": "CONTRADICTION", "note": "No marine benthic forams in freshwater swamp."},
+          "fluvial": {"severity": "WEAK_PASS", "note": "Some agglutinated forams tolerate brackish — check assemblage composition."}
+        }
+      }
+    },
+    "palynomorph_marine": {
+      "primary_ecology": "marine",
+      "includes": ["dinoflagellate_cysts", "acritarchs", "foram_test_linings"],
+      "conflicts_with": {
+        "environments": {
+          "freshwater_swamp": {"severity": "CONTRADICTION", "note": "Marine dinocysts in freshwater peat = reworking or contamination."},
+          "fluvial": {"severity": "WEAK_PASS", "note": "May indicate marine influence in coastal river. Check abundance and preservation."}
+        }
+      }
+    },
+    "palynomorph_terrestrial": {
+      "primary_ecology": "terrestrial_to_coastal",
+      "includes": ["pollen", "spores", "fungal_spores"],
+      "note": "Terrestrial palynomorphs are not facies-diagnostic for marine vs non-marine. They indicate proximity to land.",
+      "conflicts_with": {},
+      "caution": "Pollen/spore presence alone does NOT prove non-marine conditions. They can be transported far offshore."
+    },
+    "freshwater_algae": {
+      "primary_ecology": "freshwater_to_brackish",
+      "includes": ["Pediastrum", "Botryococcus", "Zygnemataceae"],
+      "conflicts_with": {
+        "co_occurrence": {
+          "open_marine_nannofossils": {"severity": "WEAK_PASS", "note": "Freshwater algae + marine nannos = fluvial input into marine basin, or reworking. Check proportions."},
+          "planktonic_foraminifera": {"severity": "CONTRADICTION", "note": "Freshwater algae + planktonic forams = mixed signal. Reworking, caving, or fluvial transport into marine."}
+        }
+      }
+    }
+  },
+
+  "malay_basin_specific": {
+    "note": "Based on Yakzan et al. integrated zonation. Palynology is backbone — many intervals are non-marine to marginal marine.",
+    "coastal_plain_facies": {
+      "expected": ["mangrove_pollen", "peat_swamp_pollen", "freshwater_algae", "rare_marine_palynomorphs"],
+      "not_expected": ["abundant_nannofossils", "abundant_planktonic_forams"],
+      "if_present": "Check for marine incursion or flooding surface. May be diachronous."
+    },
+    "marine_flooding_surfaces": {
+      "expected": ["marine_palynomorph_increase", "nannofossil_appearance", "planktonic_foram_pulse", "benthic_foram_shift"],
+      "significance": "Key correlation surface but may be diachronous across basin margin."
+    },
+    "maximum_flooding_surfaces": {
+      "expected": ["peak_marine_palynomorphs", "peak_nannofossil_abundance", "condensed_section_indicators"],
+      "significance": "Most reliable regional correlation surface. Condensed section may concentrate fossils."
+    }
+  },
+
+  "sabah_specific": {
+    "note": "NW Sabah margin has accretionary prism material with deep-marine pre-MMU section and post-MMU shelf/slope progradation. Deep Regional Unconformity separates them.",
+    "pre_MMU_deep_marine": {
+      "description": "Pre-early Middle Miocene: deep-marine clastics, compressed/imbricated",
+      "expected": ["deep_marine_benthic_forams", "bathyal_nannofossils", "hemipelagic_fauna"],
+      "caution": "Reworking risk high — gravity flows may transport older fossils. Tectonic imbrication may repeat or omit section."
+    },
+    "post_MMU_shelf_slope": {
+      "description": "Post-early Middle Miocene: NW-prograding clastic shelf/slope wedge",
+      "expected": ["neritic_to_bathyal_fauna", "progradational_succession", "multiple_unconformities"],
+      "caution": "Diachronous flooding surfaces. Marine influence arrives at different times in different provinces."
+    },
+    "deep_regional_unconformity": {
+      "biozone_signature": "Abrupt biozone gap, missing zones, facies shift from deep marine to shelfal",
+      "not": "Simple time gap — may involve structural overprint"
+    },
+    "provinces": {
+      "inboard_belt": {"typical_play": "Middle Miocene and younger clastic reservoirs", "biozone_relevance": "Post-MMU zonation most relevant"},
+      "outboard_belt": {"typical_play": "Middle Miocene and younger clastic reservoirs", "biozone_relevance": "Similar to Inboard, more distal"},
+      "east_baram_delta": {"typical_play": "Pliocene-Pleistocene deltaic systems", "biozone_relevance": "Younger section, high sedimentation rate"},
+      "nw_sabah_trough": {"typical_play": "Deeper water, possible turbidites", "biozone_relevance": "Bathyal biofacies expected"},
+      "crocker_accretionary_prism": {"typical_play": "Not a conventional play", "biozone_relevance": "Highly disturbed — biostrat may be unreliable"}
+    }
+  },
+
+  "constitutional_alignment": {
+    "F2_TRUTH": "Every facies conflict must cite evidence_for AND evidence_against",
+    "F4_CLARITY": "Separation enforced: observation (fossil seen) vs interpretation (age/environment inferred)",
+    "F6_MARUAH": "Scientific integrity — contradiction surfaced, not suppressed",
+    "F7_HUMILITY": "Confidence hard-capped at 0.85 for biostratigraphic claims"
+  }
+}

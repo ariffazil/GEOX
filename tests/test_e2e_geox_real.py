@@ -32,6 +32,7 @@ from geox_mcp.tools.well import register_well_tools
 
 # ── Fixture: Live MCP instance with all 4 tools registered ──────────────────
 
+
 @pytest.fixture
 def mcp():
     """Yield a FastMCP instance with stratigraphy + well tools registered."""
@@ -98,6 +99,7 @@ def dummy_packages() -> list[dict]:
 
 # ── Helper: async tool caller ───────────────────────────────────────────────
 
+
 async def _call_tool(mcp: FastMCP, name: str, **kwargs):
     """Fetch a registered tool by name and invoke its raw function."""
     tool = await mcp.get_tool(name)
@@ -105,6 +107,7 @@ async def _call_tool(mcp: FastMCP, name: str, **kwargs):
 
 
 # ── Stratigraphy Tests ──────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_geox_stratigraphy_preview_config_valid(mcp, minimal_project_yaml):
@@ -128,7 +131,8 @@ async def test_geox_stratigraphy_preview_config_invalid_yaml(mcp):
 async def test_geox_stratigraphy_run_pipeline_valid(mcp, minimal_project_yaml, tmp_path):
     output_dir = str(tmp_path / "strat_output")
     result = await _call_tool(
-        mcp, "geox_stratigraphy_run_pipeline",
+        mcp,
+        "geox_stratigraphy_run_pipeline",
         project_yaml=minimal_project_yaml,
         output_dir=output_dir,
     )
@@ -141,10 +145,12 @@ async def test_geox_stratigraphy_run_pipeline_valid(mcp, minimal_project_yaml, t
 
 # ── Well Tests ──────────────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_geox_well_compute_gr_bins_valid(mcp, smoke_las_path):
     result = await _call_tool(
-        mcp, "geox_well_compute_gr_bins",
+        mcp,
+        "geox_well_compute_gr_bins",
         source=smoke_las_path,
         zone_top=500.0,
         zone_base=1000.0,
@@ -164,7 +170,8 @@ async def test_geox_well_compute_gr_bins_valid(mcp, smoke_las_path):
 @pytest.mark.asyncio
 async def test_geox_well_compute_gr_bins_invalid_interval(mcp, smoke_las_path):
     result = await _call_tool(
-        mcp, "geox_well_compute_gr_bins",
+        mcp,
+        "geox_well_compute_gr_bins",
         source=smoke_las_path,
         zone_top=1000.0,
         zone_base=500.0,  # inverted
@@ -177,7 +184,8 @@ async def test_geox_well_compute_gr_bins_invalid_interval(mcp, smoke_las_path):
 @pytest.mark.asyncio
 async def test_geox_well_infer_seq_strat_valid(mcp, dummy_packages):
     result = await _call_tool(
-        mcp, "geox_well_infer_seq_strat",
+        mcp,
+        "geox_well_infer_seq_strat",
         packages=dummy_packages,
         depo_env_code="FLUVIAL",
         gr_cutoff_api=75.0,
@@ -196,7 +204,8 @@ async def test_geox_well_infer_seq_strat_valid(mcp, dummy_packages):
 @pytest.mark.asyncio
 async def test_geox_well_infer_seq_strat_empty_packages(mcp):
     result = await _call_tool(
-        mcp, "geox_well_infer_seq_strat",
+        mcp,
+        "geox_well_infer_seq_strat",
         packages=[],
         depo_env_code="FLUVIAL",
     )
@@ -207,7 +216,8 @@ async def test_geox_well_infer_seq_strat_empty_packages(mcp):
 @pytest.mark.asyncio
 async def test_geox_well_infer_seq_strat_bad_depo_env(mcp, dummy_packages):
     result = await _call_tool(
-        mcp, "geox_well_infer_seq_strat",
+        mcp,
+        "geox_well_infer_seq_strat",
         packages=dummy_packages,
         depo_env_code="MARS_CRATER",
     )
@@ -216,6 +226,7 @@ async def test_geox_well_infer_seq_strat_bad_depo_env(mcp, dummy_packages):
 
 
 # ── Ground-truth: tool count ────────────────────────────────────────────────
+
 
 def test_actual_registered_tool_count():
     """
@@ -230,7 +241,7 @@ def test_actual_registered_tool_count():
       The legacy decorator-based files are: stratigraphy.py, well.py,
       well_correlation.py, lem_predict.py. As of W16+ FORGE 2026-06-22,
       all other tools are registered imperatively via the canonical registry
-      in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` (currently 56 tools).
+      in `src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS` (count is runtime fact).
 
       This test guards the LEGACY decorator count — any agent claiming
       a different decorator count is hallucinating.
@@ -267,6 +278,7 @@ def test_actual_registered_tool_count():
         "well_correlation.py": 2,
         "ui_applets.py": 1,
         "velocity_structural_qc.py": 1,
+        "geox_interpolate_grid.py": 1,
         "_register.py": 1,  # one imperative register_tools_on_server call
     }
     expected = sum(expected_decorator_files.values())
@@ -277,13 +289,8 @@ def test_actual_registered_tool_count():
         f"got {actual_files}. If you added/removed a decorator-based tool, "
         f"update expected_decorator_files above."
     )
-    assert count == expected, (
-        f"Expected {expected} decorator calls, found {count}. "
-        f"Files: {decorator_files}"
-    )
+    assert count == expected, f"Expected {expected} decorator calls, found {count}. Files: {decorator_files}"
     # Informational: canonical registry has more tools than decorators.
     # This is by design — see ARCHITECTURE NOTE above.
     if canonical > 0:
-        assert canonical >= expected, (
-            f"Canonical registry ({canonical}) should be ≥ decorator count ({expected})"
-        )
+        assert canonical >= expected, f"Canonical registry ({canonical}) should be ≥ decorator count ({expected})"

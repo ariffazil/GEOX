@@ -3,7 +3,7 @@ GEOX Well Stratigraphy — LAS/CSV Loader with GR Detection
 ═══════════════════════════════════════════════════════════════════════════════
 
 Generalized loader that detects depth and GR columns across LAS and CSV formats.
-Supports PETRONAS naming conventions for GR curves.
+Supports Operator naming conventions for GR curves.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """

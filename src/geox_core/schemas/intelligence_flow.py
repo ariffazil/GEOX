@@ -11,7 +11,7 @@ Architecture: 7 layers + 1 foundation + 1 audit
 
   Layer 0     INGEST       Raw data → typed observations
   Layer 1     WITNESS      OBS-grade measurements (LAS, SEG-Y validated)
-  Layer 2     PHYSICS      DER-grade (joint inversion → Physics9State)
+  Layer 2     PHYSICS      DER-grade (joint inversion → Physics13State)
   Layer 3     ARCHITECTURE INT-grade (crustal domain, COB, tectonics)
   Layer 4     INTERPRET    INT→SPEC transition (biostrat, sequence)
   Layer 5     DECISION     SPEC→action (prospect, wealth feed)
@@ -121,7 +121,7 @@ LAYER_DESCRIPTORS: dict[FlowLayer, dict[str, Any]] = {
         "stage": "DER",
         "purpose": "Multi-physics inversion under Physics9 bounds.",
         "input": "QC'd observations",
-        "output": "Physics9State per cell",
+        "output": "Physics13State per cell",
         "example_tools": [
             "geox_joint_inversion",
             "geox_seismic_compute",
@@ -135,7 +135,7 @@ LAYER_DESCRIPTORS: dict[FlowLayer, dict[str, Any]] = {
         "name": "Architecture",
         "stage": "INT",
         "purpose": "Classify crustal architecture from inverted state.",
-        "input": "Physics9State + crust context (Vp, thickness, heat flow)",
+        "input": "Physics13State + crust context (Vp, thickness, heat flow)",
         "output": "CrustZone classification + domain map",
         "example_tools": [
             "geox_crustal_domain_classify",  # FORGED THIS SESSION
@@ -298,7 +298,7 @@ TOOL_FAMILIES: dict[ToolFamily, dict[str, Any]] = {
         "description": "Crustal architecture from physics-first substrate.",
         "primary_layer": FlowLayer.ARCHITECTURE,
         "tools_complete": [
-            "geox_crustal_domain_classify",  # FORGED this session
+            "geox_anomalous_contrast_detect",  # UPGRADED TO ToAC LOOP
         ],
         "tools_pending": [
             "geox_ductile_layer_detect",

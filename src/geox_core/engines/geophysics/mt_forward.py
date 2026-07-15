@@ -3,7 +3,7 @@ mt_forward.py — W13+ Phase C forge: CSEM/MT 1D forward response.
 
 The missing discipline per strategic vision. Magnetotelluric (MT) and
 Controlled-Source EM (CSEM) measure subsurface electrical resistivity
-(ρₑ). They are the only direct probe of ρₑ in the 9-dial Physics9State.
+(ρₑ). They are the only direct probe of ρₑ in the 9-dial Physics13State.
 
 Forward model:
   For a 1D layered Earth, the MT apparent resistivity is:
@@ -29,7 +29,7 @@ from typing import Optional
 
 import numpy as np
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 
 # Physical constants
@@ -142,12 +142,12 @@ def mt_forward(request: MTForwardRequest) -> dict:
 
 # ───────────────────────────── PHYSICS9 BRIDGE ────────────────────────────────────
 def mt_response_from_physics9(
-    cell_state: Physics9State,
+    cell_state: Physics13State,
     frequencies_hz: tuple[float, ...] = (0.001, 0.01, 0.1, 1.0, 10.0, 100.0),
     overburden_thickness_m: float = 1000.0,
     target_thickness_m: float = 100.0,
 ) -> dict:
-    """Convenience: build a 3-layer MT model from a single Physics9State cell.
+    """Convenience: build a 3-layer MT model from a single Physics13State cell.
 
     Layer 1: overburden (use background ρₑ = 50 Ω·m)
     Layer 2: target (uses cell ρₑ)

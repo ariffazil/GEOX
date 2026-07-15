@@ -1,45 +1,73 @@
-# GEOX — Earth Intelligence Sovereign Kernel (16 Tools)
-> Level: L3 AGI Clerk / Ψ Node
-> Doctrine: Physics before Narrative. F1–F13 Governed.
-> Epoch: 2026-06-22
+# GEOX — Earth Intelligence Sovereign Kernel (30 Tools)
+> Level: L3 AGI Clerk / Psi Node
+> Doctrine: Physics before Narrative. F1-F13 Governed.
+> Epoch: 2026-06-28
 > Seal: DITEMPA BUKAN DIBERI
-> Surface: 16 canonical tools (Phase 2 Clean Architecture)
+> Surface: 30 canonical tools (Phase 2.1 + EGS)
 
 ## 1. Canonical Tool Surface
 
-### Surface-Facing (12 tools)
+### Surface-Facing (26 tools)
 
+#### Well (3)
 1. **geox_well_ingest**: Ingest LAS, SEG-Y, DST, deviation, tops.
 2. **geox_well_qc**: QC — depth monotonicity, curves, completeness, FJIS.
-3. **geox_petrophysics**: Vsh, porosity, Sw, perm, net pay, LEM.
-4. **geox_sequence**: Sequence stratigraphy, correlation.
-5. **geox_seismic_ingest**: SEG-Y I/O, header inspection.
-6. **geox_seismic_compute**: Synthetic, well-tie, AVO, attributes, inversion.
-7. **geox_seismic_interpret**: Horizon contrast, faults, frames, blend.
-8. **geox_vision**: VLM inference, audit, calibration, perceptual.
-9. **geox_subsurface_model**: Joint inversion, gravity/mag, MT forward.
-10. **geox_geomechanics**: K/G/E/ν, coordinate transform, blockspace.
-11. **geox_basin**: Profile, resolve, macrostrat, scene.
-12. **geox_deep_time_state**: Earth State Vector at any geological age.
+3. **geox_well_desurvey**: 3D wellbore trajectory from deviation survey (minimum-curvature).
+
+#### Petrophysics & Sequence (1 + 1)
+4. **geox_petrophysics**: Vsh, porosity, Sw, perm, net pay, LEM.
+5. **geox_sequence**: Sequence stratigraphy, correlation.
+
+#### Seismic (3)
+6. **geox_seismic_ingest**: SEG-Y I/O, header inspection.
+7. **geox_seismic_compute**: Synthetic, well-tie, AVO, attributes, inversion.
+8. **geox_seismic_interpret**: Horizon contrast, faults, frames, blend.
+
+#### Model & Vision (3)
+9. **geox_vision**: VLM inference, audit, calibration, perceptual.
+10. **geox_subsurface_model**: Joint inversion, gravity/mag, MT forward.
+11. **geox_geomechanics**: K/G/E/nu, coordinate transform, blockspace.
+
+#### Basin & Deep Time (2)
+12. **geox_basin**: Profile, resolve, macrostrat, scene.
+13. **geox_deep_time_state**: Earth State Vector at any geological age.
+
+#### Federation (1)
+14. **geox_surface_status**: Registry probe — canonical tool list + health.
+
+#### EGS — Earth Graph System (12)
+15. **geox_egs_query_entity**: Query earth graph entities by type, name, bbox, ID.
+16. **geox_egs_query_claim**: Query claim envelopes by status, domain, entity, author.
+17. **geox_egs_query_uncertainty**: Query uncertainty associated with entity or claim.
+18. **geox_egs_query_provenance**: Query provenance history for an entity.
+19. **geox_egs_claim_create**: Create geological claim with typed evidence structure.
+20. **geox_egs_claim_challenge**: Challenge existing claim with contradictory evidence.
+21. **geox_egs_evidence_attach**: Attach supporting or contradictory evidence to claim.
+22. **geox_egs_evidence_reason**: Analyze evidence for claim — synthesize or grade quality.
+23. **geox_egs_seismic_compute**: Compute seismic properties (AI, EI, Vp/Vs).
+24. **geox_egs_rock_physics**: Voigt-Reuss-Hill velocity bounds from mineral/fluid props.
+25. **geox_egs_data_qc_bundle**: Quality control — completeness, consistency, provenance.
+26. **geox_egs_scenario_audit**: Audit alternative scenarios / competing interpretations.
 
 ### Internal Plumbing (4 tools)
 
-13. **geox_claim**: Create, validate, challenge, seal claims.
-14. **geox_evidence**: Synthesize, discover, attach, reason.
-15. **geox_prospect**: Evaluate, screen, appraise prospects.
-16. **geox_doctrine**: Assumption register, anti-beautiful-one, Gödel review.
+27. **geox_claim**: Create, validate, challenge, seal claims.
+28. **geox_evidence**: Synthesize, discover, attach, reason.
+29. **geox_prospect**: Evaluate, screen, appraise prospects.
+30. **geox_doctrine**: Assumption register, anti-beautiful-one, Godel review.
 
 ## 2. Agent Reasoning Logic
-- Ingest → QC → Petrophysics → Sequence → Interpret → Judge.
+- Ingest -> QC -> Petrophysics -> Sequence -> Interpret -> Judge.
+- EGS: Create claims -> Attach evidence -> Reason -> Challenge -> Audit scenarios.
 
 ## 3. Basin Intelligence
-- **Malay Basin**: Cenozoic rift basin, Groups A–P, gas-prone.
+- **Malay Basin**: Cenozoic rift basin, Groups A-P, gas-prone.
 - **Sabah Basin**: Collision zone, 8 megasequences, Sandakan primary target.
 
 ## 4. Constitutional Floors
-- F1 AMANAH: Reversible-first. Irreversible → sovereign ack.
-- F2 TRUTH: τ ≥ 0.99 accuracy or declare uncertainty.
-- F7 HUMILITY: Ω₀ ∈ [0.03, 0.05]. Never claim certainty without evidence.
+- F1 AMANAH: Reversible-first. Irreversible -> sovereign ack.
+- F2 TRUTH: tau >= 0.99 accuracy or declare uncertainty.
+- F7 HUMILITY: Omega_0 in [0.03, 0.05]. Never claim certainty without evidence.
 - F9 ANTI-HANTU: C_dark < 0.30. No hallucination. No soul claims.
 - F13 SOVEREIGN: Human veto absolute. Arif decides irreversible.
 
@@ -53,8 +81,9 @@
 7. HUMAN JUDGMENT — Sovereign makes final decision.
 
 ## 6. Next Best Actions
-- `geox_basin` → `geox_prospect` → `geox_claim` → `arif_judge`
-- `geox_well_ingest` → `geox_well_qc` → `geox_petrophysics` → `geox_sequence`
-- `geox_seismic_ingest` → `geox_seismic_compute` → `geox_seismic_interpret`
+- `geox_basin` -> `geox_prospect` -> `geox_claim` -> `arif_judge`
+- `geox_well_ingest` -> `geox_well_qc` -> `geox_petrophysics` -> `geox_sequence`
+- `geox_seismic_ingest` -> `geox_seismic_compute` -> `geox_seismic_interpret`
+- `geox_egs_claim_create` -> `geox_egs_evidence_attach` -> `geox_egs_evidence_reason` -> `geox_egs_scenario_audit`
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.

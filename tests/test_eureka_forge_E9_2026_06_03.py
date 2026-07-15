@@ -265,7 +265,7 @@ class TestPhysics9AVOGap(unittest.TestCase):
     lambda_rho, mu_rho, vp_vs_ratio, avo_class.
 
     The lmr_decompose primitive derives lambda_rho + mu_rho (not stored
-    in Physics9State dataclass but in the LMRResult envelope).
+    in Physics13State dataclass but in the LMRResult envelope).
     The vp_vs_ratio is trivially Vp/Vs.
     The avo_class is from shuey_avo.
     """

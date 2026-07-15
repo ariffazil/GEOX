@@ -30,12 +30,14 @@ from pydantic import BaseModel, Field
 
 try:
     import numpy as np
+
     _NUMPY_AVAILABLE = True
 except ImportError:
     _NUMPY_AVAILABLE = False
 
 try:
     import harmonica  # type: ignore  # noqa: F401
+
     _HARMONICA_AVAILABLE = True
 except ImportError:
     _HARMONICA_AVAILABLE = False
@@ -66,10 +68,12 @@ class NonseismicProvenance(BaseModel):
     library: Literal["harmonica", "mock"] = "mock"
     library_version: Optional[str] = None
     forward_model: str = "prism_discrete"
-    units: dict = Field(default_factory=lambda: {
-        "gravity": "mGal",
-        "magnetic": "nT",
-    })
+    units: dict = Field(
+        default_factory=lambda: {
+            "gravity": "mGal",
+            "magnetic": "nT",
+        }
+    )
 
 
 class NonseismicOutput(BaseModel):
@@ -172,9 +176,9 @@ class MockHarmonICBackend:
                 thickness = z_bot - z_top
                 volume = width_e * width_n * thickness
                 # Convert to nT (1 T = 1e9 nT)
-                bx = (mu0 / (4 * np.pi)) * (M * volume * dx / (r ** 3))
-                by = (mu0 / (4 * np.pi)) * (M * volume * dy / (r ** 3))
-                bz = (mu0 / (4 * np.pi)) * (M * volume * z_center / (r ** 3))
+                bx = (mu0 / (4 * np.pi)) * (M * volume * dx / (r**3))
+                by = (mu0 / (4 * np.pi)) * (M * volume * dy / (r**3))
+                bz = (mu0 / (4 * np.pi)) * (M * volume * z_center / (r**3))
                 # Declination rotation
                 dec = np.deg2rad(payload.field_declination_deg)
                 bz_eff = bx * np.sin(dec) + by * np.cos(dec) + bz
@@ -231,6 +235,7 @@ class LiveHarmonICBackend:
             )
         import harmonica as _hm
         import harmonica.forward as _hm_fwd
+
         self._hm = _hm
         self._hm_fwd = _hm_fwd
         self._version = getattr(_hm, "__version__", "unknown")
@@ -281,7 +286,9 @@ class LiveHarmonICBackend:
 
                 gz = self._hm_fwd.prism_gravity(
                     (easting, northing),
-                    (e1, e2), (n1, n2), (z1, z2),
+                    (e1, e2),
+                    (n1, n2),
+                    (z1, z2),
                     density,
                     field="gravity_z",
                 )
@@ -313,7 +320,9 @@ class LiveHarmonICBackend:
 
                 bx = self._hm_fwd.prism_gravity(
                     (easting, northing),
-                    (e1, e2), (n1, n2), (z1, z2),
+                    (e1, e2),
+                    (n1, n2),
+                    (z1, z2),
                     magnetization,
                     field="magnetic_vector",
                     coordinates="cartesian",
@@ -356,9 +365,7 @@ class LiveHarmonICBackend:
             "observed_mGal": observed_gravity_mGal,
             "terrain_effect_mGal": terrain_effect_mGal,
             "bouguer_slab_mGal_per_m": float(bouguer_per_m),
-            "bouguer_anomaly_mGal": float(
-                observed_gravity_mGal + terrain_effect_mGal
-            ),
+            "bouguer_anomaly_mGal": float(observed_gravity_mGal + terrain_effect_mGal),
             "epistemic_label": "DERIVED",
             "caveats": [
                 "Simple slab Bouguer — assumes flat topography",
@@ -428,10 +435,8 @@ class LiveHarmonICBackend:
             "epistemic_label": "DERIVED",
             "confidence": "MEDIUM",
             "caveats": [
-                "RTP degrades at low latitudes — "
-                "inclination < 20° → use amplitude spectral method instead",
-                "Assumes remnant magnetization is negligible — "
-                "if present, RTP will be biased",
+                "RTP degrades at low latitudes — inclination < 20° → use amplitude spectral method instead",
+                "Assumes remnant magnetization is negligible — if present, RTP will be biased",
             ],
             "library": "harmonica",
             "library_version": self._version,
@@ -455,9 +460,7 @@ class HarmonICAdapter:
         return "live" if isinstance(self._backend, LiveHarmonICBackend) else "mock"
 
     def forward(self, payload: GravityMagneticInput) -> NonseismicOutput:
-        input_hash = hashlib.sha256(
-            repr(payload).encode()
-        ).hexdigest()
+        input_hash = hashlib.sha256(repr(payload).encode()).hexdigest()
 
         values = self._backend.forward(payload)
         ne = len(payload.easting_m)
@@ -479,16 +482,138 @@ class HarmonICAdapter:
                 "rung": 3,
                 "grounding": "deterministic_physics_forward_model",
                 "method": "prism_discrete",
-                "caveat": (
-                    "Mock backend uses point-mass approximation. "
-                    "Live HarmonIC uses full prism integration."
-                ),
+                "caveat": ("Mock backend uses point-mass approximation. Live HarmonIC uses full prism integration."),
             },
             godel_wall={
                 "state": "KNOWN",
                 "reason": "Forward model grounded in Newton's law / magnetic dipole; rung-3 derivation.",
             },
         )
+
+
+# ───────────────────────────── GRAVITY SCREEN ─────────────────────────────────
+
+
+def gravity_screen(
+    observed_mGal: list[float],
+    easting_m: list[float],
+    northing_m: list[float],
+    density_kg_m3: float,
+    depth_top_m: float,
+    depth_bottom_m: float,
+    reference_density_kg_m3: float = 2670.0,
+    claim_id: str = "UNKNOWN",
+    hypothesis_prior: float = 0.25,
+) -> dict:
+    """Screen a gravity anomaly against a single-density prism forward model.
+
+    This is the A2 gravity_screen tool — evidence lane, no joint inversion,
+    no judgment required.  Uses HarmonICA (or mock) to compute predicted
+    gravity from a single rectangular prism and compares to observed.
+
+    Returns HYPOTHESIS-screen grade and misfit diagnostics.
+    Does NOT invoke geox_subsurface_model (judgment lane).
+
+    Args:
+        observed_mGal: Observed Bouguer anomaly values [mGal] at each point.
+        easting_m: Easting coordinates [m] for each observed point.
+        northing_m: Northing coordinates [m] for each observed point.
+        density_kg_m3: Prism density [kg/m³] to test.
+        depth_top_m: Top depth of prism [m].
+        depth_bottom_m: Bottom depth of prism [m].
+        reference_density_kg_m3: Background crustal density [kg/m³]. Default 2670.
+        claim_id: Claim being screened (for audit trail).
+        hypothesis_prior: Prior probability of hypothesis [0-1]. Default 0.25.
+
+    Returns:
+        dict with:
+          - screen_grade: "HYPOTHESIS_SCREEN" (always — this is pre-inversion)
+          - misfit_rms_mGal: RMS misfit between observed and predicted
+          - misfit_max_abs_mGal: maximum absolute misfit
+          - density_contrast_kg_m3: (density - reference)
+          - n_points: number of observation points
+          - predicted_mGal: forward-model values at each point
+          - observed_mGal: echo of input
+          - epistemic_label: "DER" (forward-model derived)
+          - hypothesis_updated: float (Bayesian update — PLACEHOLDER, do not trust)
+          - claim_id, hypothesis_prior: audit echo
+          - godel_wall: {"state": "UNDECIDABLE_YET", "reason": "single-prism screening..."}
+    """
+    import math
+
+    # Build input for HarmonICAdapter
+    payload = GravityMagneticInput(
+        survey_type="gravity",
+        easting_m=tuple(easting_m),
+        northing_m=tuple(northing_m),
+        prisms=[
+            {
+                "easting": sum(easting_m) / len(easting_m) if easting_m else 0.0,
+                "northing": sum(northing_m) / len(northing_m) if northing_m else 0.0,
+                "depth_top": depth_top_m,
+                "depth_bottom": depth_bottom_m,
+                "density": density_kg_m3 - reference_density_kg_m3,  # contrast only
+                "width_e": 1.0,  # averaged prism — single-cell approximation
+                "width_n": 1.0,
+            }
+        ],
+    )
+
+    adapter = HarmonICAdapter()
+    output = adapter.forward(payload)
+
+    predicted = output.anomaly_values[: len(observed_mGal)]
+    if len(predicted) < len(observed_mGal):
+        predicted = predicted + [0.0] * (len(observed_mGal) - len(predicted))
+
+    # Misfit metrics
+    n = len(observed_mGal)
+    sum_sq = sum((o - p) ** 2 for o, p in zip(observed_mGal, predicted))
+    rms = math.sqrt(sum_sq / n) if n > 0 else 0.0
+    max_abs = max(abs(o - p) for o, p in zip(observed_mGal, predicted)) if n > 0 else 0.0
+
+    # Density contrast
+    contrast = density_kg_m3 - reference_density_kg_m3
+
+    # Bayesian update (PLACEHOLDER — F2: label correctly)
+    # Simple Gaussian likelihood: P(data|hypothesis) ∝ exp(-misfit²/2σ²)
+    # This is a SCREEN grade, not a posterior — label as DER and note placeholder
+    sigma_mGal = 10.0  # conservative 10 mGal uncertainty
+    log_likelihood = -(rms**2) / (2 * sigma_mGal**2)
+    # Very rough prior/posterior relation — DO NOT TREAT AS REAL BAYESIAN UPDATE
+    hypothesis_updated = hypothesis_prior  # placeholder — not a real posterior
+
+    return {
+        "screen_grade": "HYPOTHESIS_SCREEN",
+        "misfit_rms_mGal": round(rms, 3),
+        "misfit_max_abs_mGal": round(max_abs, 3),
+        "density_contrast_kg_m3": contrast,
+        "density_kg_m3": density_kg_m3,
+        "reference_density_kg_m3": reference_density_kg_m3,
+        "depth_top_m": depth_top_m,
+        "depth_bottom_m": depth_bottom_m,
+        "n_points": n,
+        "predicted_mGal": [round(v, 3) for v in predicted[:n]],
+        "observed_mGal": observed_mGal,
+        "epistemic_label": "DER",
+        "hypothesis_prior": hypothesis_prior,
+        "hypothesis_updated_placeholder": hypothesis_updated,  # F2: NOT a real posterior
+        "library": output.provenance.library,
+        "claim_id": claim_id,
+        "godel_wall": {
+            "state": "UNDECIDABLE_YET",
+            "reason": (
+                "Single-prism screen — forward model only, no joint inversion. "
+                "CLM-NWS-002 hypothesis prior remains 0.25 until Scenario D "
+                "LSD misfit test. Do not treat hypothesis_updated as real posterior."
+            ),
+        },
+        "caveat": (
+            "This is a forward-model screen using a single rectangular prism. "
+            "True gravity interpretation requires geox_subsurface_model (judgment lane) "
+            "for layered crustal structure. gravity_screen is evidence-only."
+        ),
+    }
 
 
 __all__ = [
@@ -500,4 +625,5 @@ __all__ = [
     "MockHarmonICBackend",
     "LiveHarmonICBackend",
     "HarmonICAdapter",
+    "gravity_screen",
 ]

@@ -5,7 +5,7 @@ F2 Truth | F3 Tri-Witness | F9 Ethics
 
 from typing import Any
 
-from geox_core.physics import Physics9State, anomaly_contrast_theory
+from geox_core.physics import Physics13State, anomaly_contrast_theory
 
 
 class PhysicsGuard:
@@ -32,7 +32,7 @@ class PhysicsGuard:
         return True
 
     @staticmethod
-    async def evaluate_epistemic_gate(background: Physics9State, observed: Physics9State) -> dict[str, Any]:
+    async def evaluate_epistemic_gate(background: Physics13State, observed: Physics13State) -> dict[str, Any]:
         """
         Hard-gate for the Wealth Bridge using the Theory of Anomalous Contrast.
         AC_Risk > 1.5 → VOID (Sovereign Block)

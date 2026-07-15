@@ -397,7 +397,7 @@ class PhysicsGuard:
         return ValidationResult(status="PASS")
 
     def validate_physics9_state(self, state: dict[str, Any]) -> ValidationResult:
-        """Validate a complete Physics9State against all bounds."""
+        """Validate a complete Physics13State against all bounds."""
         violations: list[PhysicsViolation] = []
         bounds = {
             "rho": (1000, 5000),
@@ -421,7 +421,7 @@ class PhysicsGuard:
         if violations:
             return ValidationResult(
                 status="PHYSICS_VIOLATION", violations=violations, hold=True,
-                reason="Physics9State bounds exceeded",
+                reason="Physics13State bounds exceeded",
             )
         return ValidationResult(status="PASS")
 

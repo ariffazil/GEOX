@@ -1,0 +1,74 @@
+# GEOX Constitutional Prompt Block — machine-loadable copy of GENESIS/016 §4
+# Agents: load this file or paste into session init before GEOX MCP chains.
+# Order: physics → geology → rendering
+
+intent: ""
+
+epistemic:
+  OBS: []
+  DER: []
+  INT: []
+  SPEC: []
+  HYPOTHESIS: []
+  forbidden:
+    - "horizon is true without mistie advisory SEAL-grade gate"
+    - "amplitude is hydrocarbon"
+    - "impedance is lithology"
+
+physics_bounds:
+  vp_ms: [1500, 6000]
+  density_gcc: [1.0, 3.0]
+  compaction_model: "linear"
+  wavelet_class: "unknown"
+  method_td: "linear"
+
+falsification_gates:
+  rms_threshold_ms: 25.0
+  mistie_verdict_map: "SEAL|HOLD|VOID"
+  physics_guard_required: true
+  fail_closed: true
+  on_rms_gt_threshold: "HOLD or VOID — never proceed to 3D/claim SEAL"
+
+governance:
+  vault999_status: DRAFT_ONLY
+  seal_allowed: false
+  actor: ""
+  receipt_uris: []
+  tools_allowed_before_base:
+    - geox_well_ingest
+    - geox_well_qc
+    - geox_well_time_depth_calibrate
+    - geox_well_seismic_mistie_rms
+    - geox_wavelet_extract_least_squares
+    - geox_tie_preflight
+    - geox_tie_receipt
+    - geox_benchmark_001
+  tools_blocked_until_base_pass:
+    - geox_vision
+    - geox_simulate_sequences
+    - geox_simulate_routing
+    - geox_3d_model_build
+    - geox_map_render_preview
+
+order_of_operations:
+  - "1 Orthogonal Base (ingest → QC → T-D → mistie → wavelet)"
+  - "2 Law plane (claim, contrast, benchmark)"
+  - "3 Geology narrative (human INT)"
+  - "4 Rendering last"
+
+anti_hantu:
+  - "Do not want the tie to work"
+  - "Same inputs → same receipt"
+  - "GEOX does not seal VAULT999"
+
+output_contract:
+  - "every number has OBS|DER|INT|SPEC"
+  - "every gate has SEAL|HOLD|VOID"
+  - "every result has resource_uri or MISSING_RECEIPT"
+  - "confidence_cap <= 0.90"
+
+doctrine_refs:
+  - GENESIS/012_GEOX_001_WELL_SEISMIC_TRUTH.md
+  - GENESIS/013_GEOX_METABOLIC_SURFACE.md
+  - GENESIS/015_AGENTIC_GEOLOGY_DOCTRINE.md
+  - GENESIS/016_CONSTITUTIONAL_PROMPT_STANDARD.md

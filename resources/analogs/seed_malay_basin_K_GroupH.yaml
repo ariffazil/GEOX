@@ -1,7 +1,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 # Seed Analog Factsheet — Malay Basin Group H/I Sandstone
 # ═══════════════════════════════════════════════════════════════════════════════
-# Provenance: Beicip-Franlab / PETRONAS public play-fairway literature,
+# Provenance: Beicip-Franlab / Operator public play-fairway literature,
 # supplemented with 2D seismic QC-verified regional mapping (geox_basin_profile
 # canon). Used to seed geox_analog_atlas MVP scope (5 Malaysian basins).
 # Per the eureka from the 2026-06-08 TriCipta audit: Beicip-Franlab's curated
@@ -36,7 +36,7 @@ epistemic_rung: "INTERPRETATION"
 evidence_refs:
   - "geox://resource/basins/malay_basin/basin_profile.yaml"
   - "beicip-franlab:malay_basin_play_fairway:1985"
-  - "petronas:group_h_i_synthesis:2003"
+  - "operator:group_h_i_synthesis:2003"
 data_quality: "HIGH"
 # ─────────────────────────────────────────────────────────────────────────────
 # Contrast dimensions (ToAC): what an analog user MUST verify before

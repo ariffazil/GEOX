@@ -21,7 +21,7 @@ import math
 import numpy as np
 from scipy import signal
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 # ─── Derived Elastic Moduli ─────────────────────────────────────────────────
 
@@ -37,8 +37,14 @@ def shear_modulus(vs: float, rho: float) -> float:
 
 
 def young_modulus(K: float, G: float) -> float:
-    """E = G(3K + G)/(K + G) [Pa]"""
-    return G * (3 * K + G) / (K + G)
+    """E = 9KG/(3K+G) [Pa] — isotropic elastic identity.
+
+    Three-way equivalent:
+        E = 2G(1+ν)   via elastic identity
+        E = 9KG/(3K+G) via K + G
+        E = 3K(1-2ν)  via K + ν
+    """
+    return 9.0 * K * G / (3.0 * K + G)
 
 
 def poisson_ratio(K: float, G: float) -> float:
@@ -178,12 +184,18 @@ def convolve_trace(reflectivity: np.ndarray, wavelet: np.ndarray) -> np.ndarray:
 # ─── Forward Physics (all derived from a state) ─────────────────────────────
 
 
-def forward_physics9(state: Physics9State) -> dict[str, float]:
+def forward_physics9(state: Physics13State) -> dict[str, float]:
     """Compute all derived scalar properties from a canonical state."""
     K = bulk_modulus(state.vp, state.vs, state.rho)
     G = shear_modulus(state.vs, state.rho)
     E = young_modulus(K, G)
     nu = poisson_ratio(K, G)
+    # Immune system: three-way isotropic identity — catches E-formula bugs.
+    #   E = 2G(1+ν) is the canonical cross-check against independently correct G, ν.
+    #   Without this assert, the E-branch bug class is unrepresentable.
+    assert abs(E - 2.0 * G * (1.0 + nu)) < 1e-6 * max(E, 1e-9), (
+        f"Isotropic identity violation: E={E} ≠ 2G(1+ν)={2 * G * (1 + nu)} (K={K}, G={G}, ν={nu})"
+    )
     ai = acoustic_impedance(state.vp, state.rho)
     vpvsv = vp_vs_ratio(state.vp, state.vs)
     kappa = thermal_diffusivity(state.k, state.rho)
@@ -199,4 +211,52 @@ def forward_physics9(state: Physics9State) -> dict[str, float]:
         "thermal_diff": kappa,
         "fatigue_proxy": fatigue,
         "acoustic_impedance": ai,
+    }
+
+
+# ─── Buoyancy ────────────────────────────────────────────────────────────────
+
+
+def compute_buoyancy(
+    rho_material: float,
+    thickness_m: float,
+    rho_fluid: float = 1025.0,
+    g: float = 9.81,
+) -> dict[str, float | bool | str]:
+    """Compute buoyancy pressure and excess pressure from a rock column.
+
+    Buoyancy pressure = (ρ_material − ρ_fluid) × g × h
+    Positive = material is denser than fluid (sinks / overpressured).
+    Negative = material is lighter than fluid (buoyant / underpressured).
+
+    Args:
+        rho_material: Rock bulk density [kg/m³].
+        thickness_m: Column thickness [m].
+        rho_fluid: Fluid density [kg/m³]. Default 1025 (seawater).
+        g: Gravitational acceleration [m/s²]. Default 9.81.
+
+    Returns:
+        dict with:
+          - buoyancy_pressure_Pa: net buoyancy pressure at column base [Pa]
+          - buoyancy_pressure_MPa: same in [MPa]
+          - density_contrast_kg_m3: (ρ_material − ρ_fluid)
+          - is_buoyant: True if rho_material < rho_fluid
+          - is_overpressured: True if buoyancy_pressure_Pa > 0
+          - epistemic_label: "OBS" if measured density, "DER" if computed
+    """
+    delta_rho = rho_material - rho_fluid
+    pressure_pa = delta_rho * g * thickness_m
+    pressure_mpa = pressure_pa / 1e6
+
+    return {
+        "buoyancy_pressure_Pa": pressure_pa,
+        "buoyancy_pressure_MPa": pressure_mpa,
+        "density_contrast_kg_m3": delta_rho,
+        "is_buoyant": delta_rho < 0,
+        "is_overpressured": pressure_pa > 0,
+        "rho_material_kg_m3": rho_material,
+        "rho_fluid_kg_m3": rho_fluid,
+        "thickness_m": thickness_m,
+        "g_m_s2": g,
+        "epistemic_label": "OBS",
     }

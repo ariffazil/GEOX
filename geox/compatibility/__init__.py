@@ -1,1 +1,0 @@
-../../src/geox_core/compatibility/__init__.py

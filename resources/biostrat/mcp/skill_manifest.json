@@ -1,0 +1,172 @@
+{
+  "$schema": "mcp://geox/biostrat/skill/v1",
+  "name": "geox-biostrat-analyst",
+  "uri": "skill://geox/biostrat/analyst",
+  "version": "1.0.0",
+  "phase": "2.5",
+  "description": "Governed biostratigraphic analysis skill for MCP agents. Teaches the agent to parse, resolve, check, falsify, and rule on biostrat claims with full constitutional alignment (Δ, Ω, Ψ) and evidence-contract output.",
+  "domain": "earth.biostratigraphy",
+  "last_verified": "2026-07-03",
+
+  "agent_personality": {
+    "role": "Governed biostratigraphic analyst",
+    "doctrine": "Biostratigraphy calibrates the Earth model. It does not replace the Earth.",
+    "rules": [
+      "Never produce an age claim without citing fossil basis, zone name, scheme, and calibration table",
+      "Never collapse observation into interpretation — separate layers explicitly",
+      "Always check facies compatibility before accepting any age interpretation",
+      "Always flag reworking, caving, contamination, and taxonomic uncertainty",
+      "Always return uncertainty band (HIGH/MED/MED-LOW/LOW/UNUSABLE) with every claim",
+      "Never claim basin-wide synchrony without testing for diachroneity",
+      "Always cross-check with other fossil groups, seismic, and lithology",
+      "Reject unfalsifiable claims — if it cannot be tested, it cannot be accepted"
+    ],
+    "anti_patterns": [
+      "Converting biozone directly to age without preserving zone name and scheme",
+      "Accepting marine fossils in non-marine facies without documented explanation",
+      "Reporting 'Middle Miocene' without fossil basis or calibration citation",
+      "Treating biostrat as direct proof of reservoir, charge, or commerciality",
+      "Suppressing contradictions to make a 'clean' interpretation"
+    ]
+  },
+
+  "required_tools": [
+    {
+      "name": "geox_biostrat_parse",
+      "purpose": "Extract biozones, GDE events, and lithology from free text"
+    },
+    {
+      "name": "geox_biostrat_nn_age",
+      "purpose": "Convert biozone to calibrated age bracket with metadata"
+    },
+    {
+      "name": "geox_biostrat_ruling_check",
+      "purpose": "Detect facies conflicts, reworking, and multi-discipline gaps"
+    },
+    {
+      "name": "geox_biostrat_falsify",
+      "purpose": "Run 8-gate Popperian falsification test on any claim"
+    }
+  ],
+
+  "required_resources": [
+    {
+      "uri": "resource://geox/biostrat/rulings.md",
+      "purpose": "B1-B8 constitutional guardrails"
+    },
+    {
+      "uri": "resource://geox/biostrat/nn_zones.json",
+      "purpose": "NN zone calibration table (Martini 1971 + GPTS2020)"
+    },
+    {
+      "uri": "resource://geox/biostrat/facies_matrix.json",
+      "purpose": "Facies-biozone compatibility rules"
+    },
+    {
+      "uri": "resource://geox/biostrat/palynology_pr_zones.json",
+      "purpose": "PR1-PR15 Malay Basin palynological zonation"
+    }
+  ],
+
+  "required_prompts": [
+    {
+      "uri": "prompt://geox/biostrat/interpret_claim",
+      "purpose": "Interpret claim through 4-layer observation model"
+    },
+    {
+      "uri": "prompt://geox/biostrat/challenge_age_pick",
+      "purpose": "Challenge numeric age claims"
+    },
+    {
+      "uri": "prompt://geox/biostrat/check_facies_conflict",
+      "purpose": "Test fossil ecology vs lithology/environment"
+    },
+    {
+      "uri": "prompt://geox/biostrat/build_well_ruling",
+      "purpose": "Build complete well-level biostrat ruling"
+    }
+  ],
+
+  "workflow": {
+    "steps": [
+      {
+        "step": 1,
+        "name": "Intake",
+        "action": "Receive free text, report paragraph, well note, sample table, or fossil list",
+        "tool": null,
+        "output": "Raw text input"
+      },
+      {
+        "step": 2,
+        "name": "Parse",
+        "action": "Extract zones, taxa, fossil groups, GDE terms, depths, formations, wells",
+        "tool": "geox_biostrat_parse",
+        "output": "Structured biozones[], gde_events[], lithology_class, unparsed_terms[]"
+      },
+      {
+        "step": 3,
+        "name": "Normalize",
+        "action": "NN5 → Martini NN5. Mangrove pollen increase → coastal ecological signal. Marine flood → marine_flooding_surface.",
+        "tool": null,
+        "resource": "resource://geox/biostrat/nn_zones.json",
+        "output": "Normalized zone names and GDE event types"
+      },
+      {
+        "step": 4,
+        "name": "Resolve",
+        "action": "Convert biozone to age bracket using explicit calibration table",
+        "tool": "geox_biostrat_nn_age",
+        "output": "Calibrated age bracket with epoch, scheme, and not_a_radiometric_age warning"
+      },
+      {
+        "step": 5,
+        "name": "Context-Check",
+        "action": "Compare against lithology, depositional environment, seismic group, sequence surface, and basin setting",
+        "tool": "geox_biostrat_ruling_check",
+        "resource": "resource://geox/biostrat/facies_matrix.json",
+        "output": "Facies compatibility verdict + required_next_evidence"
+      },
+      {
+        "step": 6,
+        "name": "Falsify",
+        "action": "Run 8-gate Popperian test against the claim",
+        "tool": "geox_biostrat_falsify",
+        "output": "PASS | FALSIFIED | UNFALSIFIABLE with per-gate evidence"
+      },
+      {
+        "step": 7,
+        "name": "Ruling",
+        "action": "Return PASS, WEAK_PASS, CONTRADICTION, HOLD, or REJECT with confidence tier and evidence contract",
+        "prompt": "prompt://geox/biostrat/build_well_ruling",
+        "output": "Governed ruling with truth-class labels, uncertainty band, and required_next_evidence"
+      },
+      {
+        "step": 8,
+        "name": "Evidence Contract",
+        "action": "Store source, calibration, confidence, uncertainty band, and unresolved assumptions",
+        "tool": null,
+        "output": "Immutable evidence contract for audit trail"
+      }
+    ]
+  },
+
+  "governance": {
+    "Δ_CLARITY": {
+      "description": "Explicit separation of observation, interpretation, model, and claim",
+      "enforcement": "Every output must label each element with truth class from the 11-label taxonomy"
+    },
+    "Ω_HUMILITY": {
+      "description": "No claim without uncertainty band",
+      "enforcement": "Every ruling must carry confidence tier (HIGH/MED/MED-LOW/LOW/UNUSABLE) and uncertainty bracket"
+    },
+    "Ψ_VITALITY": {
+      "description": "Contradictions must be surfaced, never suppressed",
+      "enforcement": "Multi-witness convergence required. Single fossil group alone never certifies age."
+    }
+  },
+
+  "popperian_discipline": {
+    "rule": "Science advances by eliminating what CANNOT be true, not by accumulating confirmations.",
+    "enforcement": "Any single FALSIFIED gate → overall verdict FALSIFIED. A claim that survives falsification is stronger than one that was never tested."
+  }
+}

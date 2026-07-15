@@ -21,7 +21,7 @@
       "reservoir_seal_matrix.yaml",
       "stratigraphy_groups.yaml"
     ],
-    "source": "Petronas Carigali regional studies",
+    "source": "NOC Carigali regional studies",
     "confidence": "HIGH",
     "valid_until": "2030-12-31",
     "forbidden_uses": [

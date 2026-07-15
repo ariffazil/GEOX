@@ -286,46 +286,37 @@ def _compute_attention_residual(
             }
         )
 
-    # ── Governance Escalation (physics-domain advisory only) ─────────────
-    # GEOX is an L1 domain organ. It may flag physics conditions that *suggest*
-    # governance attention, but it MUST NOT issue constitutional verdicts.
-    # The final SEAL / SABAR / HOLD / VOID verdict is computed by arifOS from
-    # F1–F13, independent of GEOX, using:
-    #     AC_Risk = U_phys × D_transform × B_cog
-    # This field is therefore an ADVISORY_STATUS for arifOS, not a requirement.
+    # ── Governance Escalation (Essay #13 boundary conditions → action) ───
     governance_escalation = None
     if boundary_flags:
         conditions = [f["condition"] for f in boundary_flags]
         if "ADVERSARIAL_DELTA" in conditions:
             governance_escalation = {
-                "advisory_status": "VOID",
+                "required_status": "VOID",
                 "trigger": "ADVERSARIAL_DELTA",
                 "reason": (
-                    "Essay #13, Section 5.3: Adversarial δ detected in the physics model. "
+                    "Essay #13, Section 5.3: Adversarial δ detected. "
                     "Softmax amplifies arbitrarily large perturbations into near-certainty. "
-                    "arifOS should treat this as a high-AC_Risk advisory; final VOID verdict "
-                    "requires independent F1–F13 constitutional review."
+                    "Force VOID — verify this is not acquisition footprint or artifact."
                 ),
             }
         elif "LARGE_CONTRAST" in conditions and "LARGE_MISTIE" in conditions:
             governance_escalation = {
-                "advisory_status": "HOLD",
+                "required_status": "HOLD",
                 "trigger": "LARGE_CONTRAST + LARGE_MISTIE",
                 "reason": (
-                    "Essay #13, Section 5.3: Multiple physics boundary conditions violated. "
-                    "Linearized model (Aki-Richards / Shuey) may not apply. "
-                    "This is a physics-domain advisory for arifOS; final HOLD verdict "
-                    "is computed from F1–F13 and AC_Risk, not by GEOX."
+                    "Essay #13, Section 5.3: Multiple boundary conditions violated. "
+                    "Linearized model (Aki-Richards / Shuey) no longer applies. "
+                    "Equivalent to post-critical angle + numerical saturation."
                 ),
             }
         elif "LARGE_CONTRAST" in conditions or "LARGE_MISTIE" in conditions:
             governance_escalation = {
-                "advisory_status": "HOLD",
+                "required_status": "HOLD",
                 "trigger": conditions[0],
                 "reason": (
-                    "Essay #13, Section 5.3: Physics boundary condition violated. "
-                    "Approximation tier may not hold. Advisory only — final arifOS "
-                    "verdict requires independent constitutional review."
+                    "Essay #13, Section 5.3: Boundary condition violated. "
+                    "Approximation tier may not hold. Human review required."
                 ),
             }
 
@@ -503,10 +494,10 @@ async def geox_anomalous_contrast_detector(
                 resolution = "DEMOTE — seismic pick displaced >20 m; validate with checkshot/VSP"
             elif abs_mistie > 5.0:
                 contradiction_severity = "MEDIUM"
-                resolution = f"QUALIFY — seismic pick displaced {abs_mistie:.0f} m; cross-check with well tie"
+                resolution = "QUALIFY — seismic pick displaced {:.0f} m; cross-check with well tie".format(abs_mistie)
             else:
                 contradiction_severity = "LOW"
-                resolution = f"NOTE — minor mistie {abs_mistie:.0f} m; within picking tolerance but flagged"
+                resolution = "NOTE — minor mistie {:.0f} m; within picking tolerance but flagged".format(abs_mistie)
 
             # ── AVO class classification (conditional, from normal-incidence RC) ──
             rc_ratio_val = rc_at_seismic / max(rc_at_geo, 1e-9)
@@ -606,6 +597,48 @@ async def geox_anomalous_contrast_detector(
                 "volumetric impact is first-order approximation",
                 "AVO class from normal-incidence RC — Shuey (1985) linearization limits apply",
             ],
+        },
+        # ── Eureka QI Rung (2026-06-10): post-stack epistemic ceiling ─────
+        # Zahid Zamanshah (2026): "on one post-stack attribute there is no shear
+        # term, so commercial gas, low-saturation fizz and CO₂ collapse onto the
+        # same low impedance — physically inseparable."
+        # GEOX encodes this as a first-class rung declaration, not a footnote.
+        "qi_rung": {
+            "current_rung": 1,
+            "rung_label": "post-stack-relative-impedance",
+            "rung_description": (
+                "Single post-stack attribute, band-limited relative acoustic impedance. "
+                "No low-frequency model (LFM); low frequencies sit in the null space. "
+                "No shear term — Vs not recoverable from normal-incidence stack alone."
+            ),
+            "fluid_separation_possible": False,
+            "fluid_types_inseparable": ["commercial_gas", "low_saturation_fizz", "CO2", "brine"],
+            "fluid_separation_limitation": (
+                "Post-stack has no shear information. Gas, fizz, and CO₂ produce "
+                "identical low-impedance signatures — physically inseparable without Vp/Vs. "
+                "Any fluid call from post-stack alone is HYPOTHESIS, never CLAIM."
+            ),
+            "next_rung_requires": [
+                "well-tied LFM (absolute impedance, vertically resolved)",
+                "two-term AVO: intercept (A) + gradient (B) from partial angle stacks",
+                "Vp/Vs proxy — minimum viable fluid discriminator",
+            ],
+            "full_qi_requires": [
+                "simultaneous prestack AVO inversion (Aki-Richards / Fatti et al., 1994)",
+                "Vp/Vs, Poisson ratio, LMR (Lambda-Mu-Rho; Goodway et al., 1997)",
+                "extended elastic impedance (Whitcombe, 2002)",
+                "well-tied LFM from logs + migration velocities + structural framework",
+                "Gassmann (1951) fluid substitution + calibrated granular rock-physics model",
+                "geostatistical / facies-constrained inversion with variogram control",
+            ],
+            "forward_consistency_note": (
+                "Forward-consistency gate (Lancaster-Whitcombe, 2000): re-forward-model "
+                "the inversion result and correlate against input seismic. Correlation ≈ 1.0 "
+                "proves the result is DATA-CONSISTENT, not physically correct. "
+                "With no LFM the low frequencies are a slow integration ramp (1/f operator), "
+                "not a calibrated model. Data-consistent ≠ correct."
+            ),
+            "eureka_ref": "QI_RUNG_2026_06_10",
         },
         # ── Eureka GeoX Theory: AVO-Attention Equivalence ─────────────────
         "attention_equivalence": {

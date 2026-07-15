@@ -1,10 +1,10 @@
 [project]
-name = "geox"
-version = "2026.06.06"
-description = "GEOX — Earth Intelligence Sovereign Kernel. Governed geoscience coprocessor under arifOS constitutional floors. 40 canonical MCP tools, 13 constitutional floors (F01-F13)."
+name = "arifos-geox"
+version = "2026.06.30"
+description = "GEOX — Earth Intelligence Sovereign Kernel. Governed geoscience coprocessor under arifOS constitutional floors. Public MCP surface count is runtime fact (tools/list); see CANONICAL_PUBLIC_SURFACE.json. 13 constitutional floors (F01-F13)."
 readme = "README.md"
 requires-python = ">=3.11"
-license = "Apache-2.0"
+license = {text = "BSL-1.1"}
 keywords = [
     "geoscience",
     "petrophysics",
@@ -47,6 +47,7 @@ dependencies = [
     "numpy>=2.4.6",
     "lasio>=0.32",
     "welly>=0.5.2",
+    "wellpathpy>=0.5.2",  # Phase 2.1 (2026-06-28): 3D wellbore geometry — minimum curvature + tangential methods. Used by geox_well_desurvey.
     "striplog>=0.9.2",
     "scipy>=1.17.1",
     "matplotlib>=3.11.0",
@@ -68,27 +69,34 @@ dependencies = [
     # ObsPy — adapter exists in engines/seismic/obspy_adapter.py
     "obspy>=1.4.0",
     # Bruges — rock physics: Gardner, AI, EI, Vp/Vs, AVO, anisotropy
-    "bruges>=2024.1.0",
+    "bruges>=0.4.0",
     # pyGeoPressure — Eaton + Bowers pore pressure prediction (⚠️ 888_HOLD gate required)
-    "pygeopressure>=0.4.0",
+    # NOTE: Not available on PyPI. Adapter exists at engines/seismic/pygeopressure_adapter.py
+    # "pygeopressure>=0.4.0",
     # Devito — symbolic finite-difference wave propagation (FWI engine)
-    "devito>=4.0.0",
+    # MOVED to [seismic] extra — conflicts with arifOS numpy>=2.5.0 (devito requires numpy<=2.4.3)
+    # "devito>=4.8.22",
     # PyLops — linear operators for seismic inversion (sparse spike, AVAz, rank-reduction)
-    "pylops>=2.0.0",
+    "pylops>=2.7.0",
 
     # ─── P1 CRITICAL: Geophysics Inversion ──────────────────────────────────
     # HarmonIC — gravity + magnetics forward (referenced in harmonica_adapter.py)
-    "harmonica>=1.0.0",
+    "harmonica>=0.7.0",
+    # Constrain numba/llvmlite for Python 3.12 compat (harmonica pulls old versions)
+    "numba>=0.65.1",
+    "llvmlite>=0.43.0",
     # SimPEG — gravity, magnetics, EM, DC resistivity inversion
-    "simpeg>=0.7.0",
+    "simpeg>=0.25.2",
     # PyGIMLi — ERT, induced polarization, traveltime tomography, joint inversion
     "pygimli>=1.4.0",
 
     # ─── P1 CRITICAL: Geospatial & Satellite ────────────────────────────────
-    # GDAL — raster/vector geospatial (requires system gdal-dev on some platforms)
-    "gdal>=3.8.0",
-    "geopandas>=1.0.0",
-    "rasterio>=1.4.0",
+    # GDAL — raster/vector geospatial. The Python GDAL binding version must
+    # match the system libgdal exactly, which differs across environments
+    # (VPS: 3.10.3, ubuntu-latest CI: 3.8.x). REMOVED explicit pin — let
+    # rasterio/geopandas built-in bindings handle GDAL. See also: gdal-config.
+    "geopandas>=1.1.4",
+    "rasterio>=1.4.4",
 
     # ─── P1 CRITICAL: Plate Tectonics & Geomodeling ────────────────────────
     # GPlately — plate reconstruction raster/vector through deep time
@@ -96,7 +104,7 @@ dependencies = [
     # GemPy v3 — implicit 3D geological modeling (GPU-accelerated, stochastic)
     "gempy>=2.0.0",
     # LoopStructural — time-aware structural geology (faults, folds, surfaces)
-    "loopstructural>=1.0.0",
+    "loopstructural>=1.6.27",
 
     # ─── P1 CRITICAL: Hydrology & Climate ───────────────────────────────────
     # FloPy — MODFLOW 6/2000/2005 Python interface (USGS groundwater)
@@ -106,7 +114,7 @@ dependencies = [
 
     # ─── P1 CRITICAL: Geochemistry ─────────────────────────────────────────
     # pyrolite — geochemical data processing (trace elements, spider diagrams)
-    "pyrolite>=0.4.0",
+    "pyrolite>=0.3.7",
 ]
 
 [project.optional-dependencies]
@@ -120,6 +128,11 @@ dev = [
 pinn = [
     "torch>=2.12.1",
 ]
+seismic = [
+    # Devito — FWI engine. Requires numpy<=2.4.3, conflicts with arifOS numpy==2.5.0
+    # Install separately: pip install geox[seismic]
+    "devito>=4.8.22",
+]
 all = [
     "numpy>=2.4.6",
     "lasio>=0.32",
@@ -132,7 +145,7 @@ all = [
     "kaleido>=0.2.1",
     "panel>=1.9.3",
     "hvplot>=0.12.2",
-    "holoviews>=1.22.1",
+    "holoviews>=1.23.0",
     "bokeh>=3.9.1",
     "datashader>=0.19.1",
 ]

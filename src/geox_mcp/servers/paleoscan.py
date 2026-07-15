@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import Any
 
 from fastmcp import FastMCP
+from fastmcp.apps import AppConfig
 
 from geox_mcp.tools._register import register_tools_on_server
 from geox_mcp.tools.paleoscan_forge import (
@@ -101,8 +102,28 @@ _PALEOSCAN_TASKS: set[str] = {
     "geox_seismic_compute_attribute_tool",
 }
 
+# MCP App View bindings for backward-compat alias tools on the paleoscan server.
+# These forward to geox_seismic_compute (witness) which already has AppConfig,
+# but the alias names in tools/list also need app.resourceUri for host discovery.
+_PALEOSCAN_APPS: dict[str, AppConfig] = {
+    name: AppConfig(
+        resourceUri="ui://geox/workbench-v1.html",
+        visibility=["app", "model"],
+    )
+    for name in (
+        "geox_volume_frame_tool",
+        "geox_seismic_compute_attribute_tool",
+    )
+}
+
 
 def create_paleoscan_server() -> FastMCP:
     server = FastMCP("geox-paleoscan")
-    register_tools_on_server(server, _PALEOSCAN_TOOLS, _PALEOSCAN_ANNOTATIONS, tasks=_PALEOSCAN_TASKS)
+    register_tools_on_server(
+        server,
+        _PALEOSCAN_TOOLS,
+        _PALEOSCAN_ANNOTATIONS,
+        tasks=_PALEOSCAN_TASKS,
+        apps=_PALEOSCAN_APPS,
+    )
     return server

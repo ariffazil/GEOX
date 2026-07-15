@@ -34,6 +34,7 @@ Reference
   geox_mcp/tools/_register.py (the only caller)
   geox_mcp/organ_governance.py (RiskTier source)
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -61,35 +62,45 @@ logger = logging.getLogger("geox.floor")
 # The previous code had HIGH=0.95 which violated this. Now hard-capped.
 HUMILITY_CAP: float = 0.90
 
+
 # F2 TRUTH — canonical epistemic tag set. Tools emitting other tags
 # are misconfigured and must be flagged.
 class EpistemicTag(StrEnum):
-    CLAIM = "CLAIM"          # FACT / OBSERVED / MEASURED → CLAIM
+    CLAIM = "CLAIM"  # FACT / OBSERVED / MEASURED → CLAIM
     PLAUSIBLE = "PLAUSIBLE"  # INTERPRETATION / INFERRED
     HYPOTHESIS = "HYPOTHESIS"
-    ESTIMATE = "ESTIMATE"    # SPECULATION / ESTIMATE
-    UNKNOWN = "UNKNOWN"      # VOID / UNKNOWN
+    ESTIMATE = "ESTIMATE"  # SPECULATION / ESTIMATE
+    UNKNOWN = "UNKNOWN"  # VOID / UNKNOWN
+
 
 # F11 AUDIT — local append-only log path
-_DEFAULT_AUDIT_LOG = Path(
-    os.environ.get("GEOX_AUDIT_LOG", "/root/geox/999_vault/audit.jsonl")
-)
+_DEFAULT_AUDIT_LOG = Path(os.environ.get("GEOX_AUDIT_LOG", "/root/geox/999_vault/audit.jsonl"))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # F9 ANTI-HANTU — Canonical tool name validation
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def validate_canonical_tool(name: str) -> bool:
-    """F9 ANTI-HANTU — tool name must be in canonical set or legacy alias.
 
-    Defers to the registry; falls back to True if registry is unavailable
-    (e.g., during cold start). The wrapper checks both.
+def validate_canonical_tool(name: str) -> bool:
+    """F9 ANTI-HANTU — tool name must be in canonical set or backward-compat alias.
+
+    Checks (in order):
+      1. CANONICAL_PUBLIC_TOOLS — the 73 canonical tool names
+      2. CANONICAL_COMPAT_TOOLS — the 49 backward-compat aliases (accepted by middleware)
+      3. LEGACY_ALIAS_MAP — empty as of Phase 2.4, kept for future use
+
+    Falls back to True if registry is unavailable (cold start).
+    The middleware (GeoxGovernanceMiddleware.on_call_tool) uses the same
+    canonical ∪ compat union as _EXECUTABLE_SURFACE; floor enforcement
+    must match.
     """
     try:
-        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
+        from geox_mcp.registry import CANONICAL_COMPAT_TOOLS, CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
 
         if name in CANONICAL_PUBLIC_TOOLS:
+            return True
+        if name in CANONICAL_COMPAT_TOOLS:
             return True
         if name in LEGACY_ALIAS_MAP:
             return True
@@ -103,6 +114,7 @@ def validate_canonical_tool(name: str) -> bool:
 # ═══════════════════════════════════════════════════════════════════════════════
 # F7 HUMILITY — Hard cap
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 def cap_humility(quality: float) -> float:
     """F7 HUMILITY — never let evidence_quality exceed the floor cap.
@@ -118,9 +130,7 @@ def cap_humility(quality: float) -> float:
     except (TypeError, ValueError):
         return 0.0
     if q > HUMILITY_CAP:
-        logger.warning(
-            f"F7 HUMILITY: capping evidence_quality {q:.4f} → {HUMILITY_CAP}"
-        )
+        logger.warning(f"F7 HUMILITY: capping evidence_quality {q:.4f} → {HUMILITY_CAP}")
         return HUMILITY_CAP
     if q < 0.0:
         return 0.0
@@ -140,7 +150,7 @@ class EvidenceEnvelope(BaseModel):
     """
 
     model_config = ConfigDict(
-        extra="forbid",       # F4 — no drift
+        extra="forbid",  # F4 — no drift
         frozen=False,
         str_strip_whitespace=True,
     )
@@ -229,9 +239,7 @@ class AuditLog:
         except Exception as exc:
             # F11 fail-soft on infra (disk full, permission denied, etc.)
             # but never block the tool call.
-            logger.error(
-                f"F11 AUDIT: failed to append to {self.path}: {exc}"
-            )
+            logger.error(f"F11 AUDIT: failed to append to {self.path}: {exc}")
 
 
 # Module-level singleton — lazy-initialised
@@ -320,7 +328,7 @@ def enforce_floor_pre_call(
         failed.append("F9")
         return PreCallVerdict(
             outcome="BLOCK",
-            reason=f"F9 ANTI-HANTU: tool name '{tool_name}' not in canonical set",
+            reason=f"F9 ANTI-HANTU: tool name '{tool_name}' not in canonical or compat set",
             call_hash=_compute_call_hash(tool_name, kwargs),
         )
 
@@ -333,10 +341,7 @@ def enforce_floor_pre_call(
             required.append("ack_irreversible")
             return PreCallVerdict(
                 outcome="HOLD",
-                reason=(
-                    f"F13 SOVEREIGN: {risk_upper} tool '{tool_name}' requires "
-                    "ack_irreversible=True"
-                ),
+                reason=(f"F13 SOVEREIGN: {risk_upper} tool '{tool_name}' requires ack_irreversible=True"),
                 required_params=required,
                 call_hash=_compute_call_hash(tool_name, kwargs),
             )
@@ -397,9 +402,7 @@ def enforce_floor_post_call(
                 if capped != original:
                     result["evidence_quality"] = capped
                     capped_quality = capped
-                    warnings.append(
-                        f"F7 HUMILITY: capped {original:.4f} → {capped:.4f}"
-                    )
+                    warnings.append(f"F7 HUMILITY: capped {original:.4f} → {capped:.4f}")
                 evidence_quality = capped
                 passed.append("F7")
             except (TypeError, ValueError):
@@ -464,9 +467,7 @@ class IdempotencyStore:
         # Garbage collect
         if len(self._store) > self._max:
             cutoff = now - self._ttl
-            self._store = {
-                k: v for k, v in self._store.items() if v[1] > cutoff
-            }
+            self._store = {k: v for k, v in self._store.items() if v[1] > cutoff}
         if key not in self._store:
             self._store[key] = (call_hash, now)
             return ("PROCEED", "")

@@ -1,0 +1,12 @@
+{
+  "item": "/root/geox",
+  "archived_at": "2026-07-12T06:17:00Z",
+  "approved_by": "Arif (F13 SOVEREIGN) — Group A",
+  "executed_by": "FORGE (000Ω)",
+  "archive_path": "/root/.archive/repos/geox-2026-07-12",
+  "canonical_path": "/root/GEOX",
+  "reason": "Duplicate checkout. Same remote (https://github.com/ariffazil/GEOX.git), same HEAD (2cdab47d).",
+  "reversible": true,
+  "rollback": "mv /root/.archive/repos/geox-2026-07-12 /root/geox",
+  "observation_period": "1 week"
+}

@@ -1,0 +1,133 @@
+{
+  "$schema": "mcp://geox/biostrat/concepts/v1",
+  "description": "GEOX Biostratigraphy MCP Concepts — Sabah Event Anchors. 4 canonical Sabah event anchors declared as MCP concepts with truth classes, confidence levels, and relationships. Per Arif sovereign ruling R3 (PARTIAL HOLD): recast as event ANCHORS not event horizons — anchoring points for correlation, not surfaces claiming isochroneity.",
+  "organ": "GEOX",
+  "domain": "earth.biostratigraphy.sabah",
+  "region": "NW Sabah Basin, offshore Malaysia",
+  "phase": "2.5",
+  "last_verified": "2026-07-03",
+  "doctrine": "Event anchors are calibration points for correlation. They are NOT assumptions of basin-wide synchrony or direct physical surfaces unless proven by multi-witness evidence.",
+
+  "concepts": {
+    "deep_regional_unconformity": {
+      "uri": "concept://geox/event_anchor/deep_regional_unconformity",
+      "name": "Deep Regional Unconformity / Sabah Orogeny anchor",
+      "type": "UNCONFORMITY + TECTONIC_EVENT",
+      "description": "Separates pre-early Middle Miocene compressed deep-marine clastic wedge from post-early Middle Miocene NW-prograding shelf/slope clastic wedge. Marks the transition from accretionary/prism compression to post-collisional progradation.",
+      "age_bracket_ma": [16.0, 13.0],
+      "truth_class": "INTERPRETATION_STRATIGRAPHIC",
+      "confidence": "MED-HIGH",
+      "confidence_drivers": [
+        "Seismic truncation visible basin-wide",
+        "Biostratigraphic age gap documented",
+        "Facies shift from deep marine to shelfal",
+        "Regional tectonic context (NW Borneo collision ~16-12 Ma)"
+      ],
+      "failure_modes": [
+        "Mistaking facies shift for true unconformity",
+        "Diachronous expression across provinces",
+        "Local structural overprint mimicking regional surface"
+      ],
+      "related_concepts": ["concept://geox/event_anchor/sabah_orogeny"],
+      "biostrat_signature": "Missing NN4-NN5 equivalent zones in some sections. Abrupt shift from bathyal to neritic fauna.",
+      "provinces_affected": ["Inboard Belt", "Outboard Belt", "Crocker Accretionary Prism"],
+      "references": ["Tan & Lamy — tectonic evolution of NW Sabah margin"]
+    },
+
+    "shallow_regional_unconformity": {
+      "uri": "concept://geox/event_anchor/shallow_regional_unconformity",
+      "name": "Shallow Regional Unconformity",
+      "type": "UNCONFORMITY",
+      "description": "Marks later uplift/erosion and reorganization of the Inboard/Outboard clastic systems. Analogous to the ~10-10.5 Ma Upper Miocene Unconformity in Malay Basin. Separates Groups D/E from C.",
+      "age_bracket_ma": [10.5, 7.8],
+      "truth_class": "INTERPRETATION_STRATIGRAPHIC",
+      "confidence": "MED",
+      "confidence_drivers": [
+        "Seismic onlap/truncation in multiple provinces",
+        "Biostratigraphic gap (missing PR11/PR12 equivalents)",
+        "Province reorganization after uplift"
+      ],
+      "failure_modes": [
+        "May be amalgamated with other unconformities in condensed sections",
+        "Province-dependent expression — not everywhere same age",
+        "Poor biostrat control in uplifted/eroded sections"
+      ],
+      "related_concepts": ["concept://geox/event_anchor/cob_transition"],
+      "biostrat_signature": "Missing or condensed NN10-NN11 equivalents. Pollen assemblage shift above unconformity.",
+      "provinces_affected": ["Inboard Belt", "Outboard Belt", "East Baram Delta"]
+    },
+
+    "slab_breakoff_anchor": {
+      "uri": "concept://geox/event_anchor/slab_breakoff",
+      "name": "Slab-breakoff / subduction cessation anchor",
+      "type": "PROCESS_MODEL",
+      "description": "Geodynamic model explaining tectonic relaxation, possible uplift, magmatism pulse, subsidence change, and stress-field shift after cessation of proto-South China Sea subduction beneath NW Borneo. NOT a mappable surface — a process interpretation that may explain multiple observations.",
+      "age_bracket_ma": [16.0, 12.0],
+      "truth_class": "MODEL_DYNAMIC",
+      "confidence": "MED-LOW",
+      "confidence_drivers": [
+        "Timing consistent with South China Sea spreading cessation (~16 Ma)",
+        "Magmatic pulse in some areas (requires geochemical dating)",
+        "Subsidence pattern shift from compression to relaxation"
+      ],
+      "failure_modes": [
+        "Elegant model without local evidence",
+        "Alternative explanations (change in plate boundary, far-field stress)",
+        "No direct geophysical evidence (tomography, heat flow) for slab detachment"
+      ],
+      "required_evidence_for_upgrade": [
+        "Seismic tomography showing detached slab",
+        "Geochemical signature of slab melt in dated volcanics",
+        "Heat flow anomaly consistent with asthenospheric upwelling",
+        "Timing constraints from thermochronology (AFT, AHe, ZHe)"
+      ],
+      "related_concepts": ["concept://geox/event_anchor/deep_regional_unconformity"],
+      "note": "This is the most speculative of the 4 anchors. Per R5 governing principle: remains MODEL_HYPOTHESIS until independently supported by geochemistry, geophysics, and thermochronology."
+    },
+
+    "cob_transition": {
+      "uri": "concept://geox/event_anchor/cob_transition",
+      "name": "COB transition / South China Sea margin inheritance anchor",
+      "type": "CRUSTAL_DOMAIN_TRANSITION",
+      "description": "Continent-Ocean Boundary transition zone beneath NW Sabah. Controls subsidence, heat flow, fault style, basin architecture, and play risk. NOT a line — a ~50 km transition zone of stretched continental crust, hyperextended crust, possible exhumed mantle, volcanic additions, and oceanic crust.",
+      "age_bracket_ma": [32.0, 16.0],
+      "truth_class": "MODEL_STATIC",
+      "confidence": "MED-LOW to MED",
+      "confidence_drivers": [
+        "Gravity/magnetic signatures suggesting crustal transition",
+        "Regional plate reconstruction models",
+        "Subsidence patterns consistent with stretched continental margin"
+      ],
+      "failure_modes": [
+        "COB position varies by method (gravity, magnetics, seismic refraction)",
+        "Transform segmentation creates abrupt boundaries in some segments",
+        "Volcanic overprint may mask transitional crust",
+        "~50 km envelope is a working assumption — may be narrower or wider"
+      ],
+      "required_evidence_for_upgrade": [
+        "Deep seismic refraction/reflection across the margin",
+        "Gravity/magnetic forward model with crustal thickness constraints",
+        "Basement sample geochemistry from wells penetrating transitional crust",
+        "Heat flow measurements across the transition"
+      ],
+      "working_envelope_km": 50,
+      "envelope_note": "50 km is a working uncertainty envelope, not a universal constant. May be narrower where transform margin segments dominate.",
+      "play_implications": [
+        "Heat flow varies across COB — affects maturation timing",
+        "Fault style changes from extensional (continental) to possibly different mechanisms at transition",
+        "Source rock burial depth may increase abruptly oceanward",
+        "Volcanic risk higher in transition zone"
+      ],
+      "provinces_affected": ["NW Sabah Margin", "NW Sabah Trough", "Southern South China Sea Platform"],
+      "references": ["Huang et al. (2021) — OCT template for South China Sea margins"]
+    }
+  },
+
+  "constitutional_alignment": {
+    "R3_scoped_wording": "These are event ANCHORS — calibration points. NOT event HORIZONS — surfaces claiming isochroneity.",
+    "R5_layang_layang": "Slab-breakoff anchor remains MODEL_DYNAMIC pending independent geochemical/geophysical/thermochronological evidence.",
+    "R6_cob_zone": "COB transition modelled as ~50 km zone per ratified R6. Working envelope, not fixed law.",
+    "F2_TRUTH": "Every anchor carries truth class, confidence, and failure modes.",
+    "F6_MARUAH": "Process models (slab-breakoff) clearly distinguished from observations (unconformities)."
+  }
+}

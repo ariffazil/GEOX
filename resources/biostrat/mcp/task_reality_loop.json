@@ -1,0 +1,174 @@
+{
+  "$schema": "mcp://geox/biostrat/task/v1",
+  "name": "biostrat_reality_loop",
+  "uri": "task://geox/biostrat/reality_loop",
+  "version": "1.0.0",
+  "phase": "2.5",
+  "description": "MCP Task — Biostrat Reality Loop. Multi-step agentic workflow: parse → normalize → resolve → context-check → falsify → rule → seal. 6 stages, 4 required tools, 2 required prompts, 4 required resources, 1 governance verdict. Encodes the Arif-spec reality loop as a governed MCP task.",
+  "domain": "earth.biostratigraphy",
+  "last_verified": "2026-07-03",
+
+  "task_definition": {
+    "trigger": "Any biostratigraphic claim, well report, sample table, or fossil list requiring governed interpretation",
+    "output": "Governed biostratigraphic ruling with truth-class labels, confidence tier, per-gate evidence, and immutable evidence contract",
+    "max_iterations": 1,
+    "timeout_seconds": 300,
+    "blast_radius": "LOW",
+    "reversible": true,
+    "requires_888_hold": false
+  },
+
+  "stages": [
+    {
+      "stage": 1,
+      "name": "Intake",
+      "description": "Receive free text, report paragraph, well note, sample table, or fossil list",
+      "action": "Accept input text from user or upstream agent",
+      "tool": null,
+      "output_schema": {
+        "raw_text": "string",
+        "source": "string (user, agent, file)",
+        "format": "string (free_text, table, report_section)"
+      }
+    },
+    {
+      "stage": 2,
+      "name": "Parse",
+      "description": "Extract biozones, GDE events, fossil groups, lithology, and depth information from free text using regex-based deterministic parser",
+      "action": "Call geox_biostrat_parse on input text",
+      "tool": "geox_biostrat_parse",
+      "input": {"text": "$intake.raw_text"},
+      "output_schema": {
+        "biozones": "[{zone, scheme, age_top_ma, age_base_ma, confidence, source_span, evidence_tag}]",
+        "gde_events": "[{event_type, description, confidence, source_span}]",
+        "lithology_class": "string (SAND_PRONE, SHALE_PRONE, CARBONATE, COAL_CARBONACEOUS, HETEROLITHIC, etc.)",
+        "unparsed_terms": "[string]",
+        "warnings": "[string]"
+      }
+    },
+    {
+      "stage": 3,
+      "name": "Normalize + Resolve",
+      "description": "Normalize biozone names to canonical form (NN5 → Martini NN5) and resolve to calibrated age brackets",
+      "action": "For each parsed biozone, call geox_biostrat_nn_age. Apply GDE event normalization from resource.",
+      "tool": "geox_biostrat_nn_age",
+      "resources": [
+        "resource://geox/biostrat/nn_zones.json",
+        "resource://geox/biostrat/palynology_pr_zones.json"
+      ],
+      "input": {"zone": "$parse.biozones[].zone"},
+      "output_schema": {
+        "resolved_zones": "[{zone, scheme, discipline, age_top_ma, age_base_ma, epoch, calibration, not_a_radiometric_age, confidence}]",
+        "normalization_warnings": "[string]"
+      }
+    },
+    {
+      "stage": 4,
+      "name": "Context-Check",
+      "description": "Test each resolved biozone against lithology, depositional environment, and regional framework for physical plausibility",
+      "action": "For each biozone, call geox_biostrat_ruling_check with lithology and environment from parse stage",
+      "tool": "geox_biostrat_ruling_check",
+      "resources": [
+        "resource://geox/biostrat/facies_matrix.json",
+        "resource://geox/biostrat/rulings.md"
+      ],
+      "input": {
+        "biozone": "$resolve.resolved_zones[].zone",
+        "lithology": "$intake.lithology",
+        "environment": "$intake.environment || $parse.gde_events"
+      },
+      "output_schema": {
+        "context_results": "[{biozone, ruling, contradictions, required_next_evidence}]",
+        "facies_violations": "[{gate, severity, message}]"
+      }
+    },
+    {
+      "stage": 5,
+      "name": "Falsify",
+      "description": "Run full 8-gate Popperian falsification test against the strongest claim derived from observations",
+      "action": "Call geox_biostrat_falsify with all available context",
+      "tool": "geox_biostrat_falsify",
+      "prompt": "prompt://geox/biostrat/challenge_age_pick",
+      "input": {
+        "fossil_group": "$parse.biozones[0].group",
+        "biozone": "$resolve.resolved_zones[0].zone",
+        "lithology": "$intake.lithology",
+        "environment": "$intake.environment",
+        "claim": "$interpretation.primary_claim",
+        "region": "$intake.region || 'sabah'"
+      },
+      "output_schema": {
+        "overall_verdict": "PASS | FALSIFIED | UNFALSIFIABLE | WEAK_PASS | HOLD",
+        "falsified_gates": "[G1_FACIES, G2_STRAT_ORDER, ...]",
+        "weak_gates": "[G4_REWORKING, G5_DIACHRONEITY, ...]",
+        "evidence_for": "[string]",
+        "evidence_against": "[string]",
+        "popper_rule_applied": true
+      }
+    },
+    {
+      "stage": 6,
+      "name": "Ruling + Seal",
+      "description": "Synthesize all stage outputs into final governed ruling. Assign confidence tier. Produce evidence contract.",
+      "action": "Compose ruling from all prior stages. Apply 5-tier confidence schema (HIGH/MED/MED-LOW/LOW/UNUSABLE). Assign truth-class labels to every element.",
+      "prompt": "prompt://geox/biostrat/build_well_ruling",
+      "resources": [
+        "resource://geox/biostrat/rulings.md",
+        "resource://geox/biostrat/mcp/governance.json"
+      ],
+      "output_schema": {
+        "final_ruling": {
+          "verdict": "PASS | WEAK_PASS | CONTRADICTION | HOLD | REJECT",
+          "confidence_tier": "HIGH | MED | MED-LOW | LOW | UNUSABLE",
+          "truth_class_assignments": {
+            "observations": "[{item, truth_class: OBSERVATION_BIOLOGICAL}]",
+            "interpretations": "[{item, truth_class: INTERPRETATION_STRATIGRAPHIC}]",
+            "models": "[{item, truth_class: MODEL_STATIC | MODEL_DYNAMIC}]",
+            "claims": "[{item, truth_class: CLAIM_EXPLORATION}]"
+          },
+          "required_next_evidence": "[string]",
+          "unresolved_contradictions": "[{gate, description}]",
+          "evidence_contract": {
+            "source": "string",
+            "calibration": "string",
+            "confidence_drivers": ["string"],
+            "failure_modes": ["string"],
+            "timestamp": "ISO8601"
+          }
+        },
+        "audit_trail": {
+          "stages_executed": ["intake", "parse", "resolve", "context_check", "falsify", "ruling"],
+          "tools_called": ["geox_biostrat_parse", "geox_biostrat_nn_age", "geox_biostrat_ruling_check", "geox_biostrat_falsify"],
+          "prompts_used": ["challenge_age_pick", "build_well_ruling"],
+          "resources_accessed": ["rulings.md", "nn_zones.json", "facies_matrix.json"]
+        }
+      }
+    }
+  ],
+
+  "governance": {
+    "Δ_CLARITY": {
+      "description": "Six distinct stages. No stage collapses into another. Each output labelled with truth class.",
+      "enforcement": "Stage output schemas are strict — missing fields = stage incomplete"
+    },
+    "Ω_HUMILITY": {
+      "description": "Every ruling carries confidence tier. FALSIFIED is valid output — science advances by elimination.",
+      "enforcement": "Maximum confidence for biostrat claims: 0.85 (F7). Falsification confidence: up to 0.90."
+    },
+    "Ψ_VITALITY": {
+      "description": "Contradictions surfaced at stages 4 and 5. Never suppressed to produce 'clean' result.",
+      "enforcement": "Stage 6 output must include unresolved_contradictions even if overall verdict is PASS."
+    },
+    "POPPER_RULE": {
+      "description": "Any single FALSIFIED gate at Stage 5 → overall FALSIFIED regardless of other stages.",
+      "enforcement": "Stage 6 must not override Stage 5 falsification. Falsified claims are falsified — period."
+    }
+  },
+
+  "constitutional_alignment": {
+    "F1_AMANAH": "Task is read-only. No mutation of input data. Output is a ruling, not an edit.",
+    "F2_TRUTH": "Every stage carries evidence_for and evidence_against. Fabrication is impossible — all outputs traceable to stage inputs.",
+    "F4_CLARITY": "6-stage structure enforced. Stage outputs are structured JSON, never collapsed prose.",
+    "F11_AUDIT": "Full audit trail: stages executed, tools called, prompts used, resources accessed, timestamp."
+  }
+}

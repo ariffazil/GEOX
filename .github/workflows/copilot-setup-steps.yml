@@ -17,10 +17,17 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
+      - name: Install GDAL system dependencies
+        # rasterio / geopandas need the GDAL C library at build time.
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libgdal-dev gdal-bin
+          gdal-config --version
       - name: Install GEOX dependencies
         run: pip install -e ".[dev]" -q
       - name: Verify MCP surface loads

@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12",
+  "title": "GEOX GravMag Studio Contract",
+  "description": "Canonical schema for the GEOX gravity/magnetic MCP App. v0.2.0 — Stage A forward + Stage B screen (falsification lane). Evidence lane; never decides alone. DITEMPA BUKAN DIBERI.",
+  "version": "0.2.0",
+  "type": "object",
+  "properties": {
+    "tool_name": {
+      "type": "string",
+      "enum": ["geox_gravmag_studio_open", "geox_gravmag_studio_screen"]
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["forward", "screen"],
+      "description": "Stage A = forward-only (SPECULATION); Stage B = screen with observed comparison (HYPOTHESIS_SCREEN, capped at 0.70)."
+    },
+    "claim_tag": {
+      "type": "string",
+      "enum": ["FACT", "INTERPRETATION", "SPECULATION", "HYPOTHESIS_SCREEN"],
+      "description": "Forward → SPECULATION; Screen → HYPOTHESIS_SCREEN (capped at 0.70 per F7 HUMILITY)."
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["SEAL", "QUALIFY", "HOLD", "VOID", "888_HOLD", "PASS_SCREEN", "MARGINAL", "FAIL_SCREEN"],
+      "description": "Forward → QUALIFY; Screen → PASS_SCREEN / MARGINAL / FAIL_SCREEN / HOLD. Never SEAL."
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "resourceUri": {
+          "type": "string",
+          "const": "ui://geox/gravmag-studio.html"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["inline", "external", "inline-or-external"],
+          "default": "inline"
+        },
+        "app_id": {
+          "type": "string",
+          "const": "geox.gravmag.studio"
+        },
+        "version": {
+          "type": "string",
+          "const": "0.1.0"
+        },
+        "event": {
+          "type": "string",
+          "const": "geox.gravmag.forward"
+        }
+      },
+      "required": ["resourceUri", "app_id", "version"]
+    },
+    "vault_receipt": {
+      "type": "object",
+      "description": "VAULT999 audit receipt. Stage A does NOT auto-seal — only logs.",
+      "properties": {
+        "vault": { "const": "VAULT999" },
+        "tool_name": { "const": "geox_gravmag_studio_open" },
+        "verdict": { "const": "QUALIFY" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "hash": { "type": "string", "description": "SHA256 of input payload (first 16 chars)" }
+      },
+      "required": ["vault", "tool_name", "verdict", "timestamp", "hash"]
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "survey_type": {
+          "type": "string",
+          "enum": ["gravity", "magnetic"],
+          "default": "gravity"
+        },
+        "prisms": {
+          "type": "array",
+          "description": "Rectangular prisms. Each: {easting, northing, depth_top, depth_bottom, width_e, width_n, density (gravity) | susceptibility (magnetic)}.",
+          "items": { "type": "object" }
+        },
+        "magnetization_a_m": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Effective magnetization magnitude A/m (magnetic surveys only)."
+        },
+        "field_declination_deg": { "type": "number", "default": 0.0 },
+        "field_inclination_deg": { "type": "number", "default": 0.0 },
+        "grid_extent_m": {
+          "type": "number",
+          "default": 50000.0,
+          "description": "Half-extent of survey grid in metres (grid is symmetric about origin)."
+        },
+        "grid_n": {
+          "type": "integer",
+          "default": 40,
+          "minimum": 8,
+          "maximum": 200,
+          "description": "Number of grid samples per axis."
+        },
+        "backend": {
+          "type": "string",
+          "enum": ["auto", "mock", "harmonica_live"],
+          "default": "auto",
+          "description": "auto = MockHarmonICBackend unless GEOX_HARMONICA_LIVE=1, then LiveHarmonICBackend."
+        }
+      },
+      "required": ["survey_type"]
+    },
+    "render_payload": {
+      "type": "object",
+      "description": "Data baked into the UI for heatmap rendering.",
+      "properties": {
+        "type": { "const": "anomaly_grid" },
+        "survey_type": { "type": "string" },
+        "anomaly_values": {
+          "type": "array",
+          "items": { "type": "number" },
+          "description": "Flat row-major grid of anomaly values (northing × easting)."
+        },
+        "grid_shape": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "[n_northing, n_easting]"
+        },
+        "units": {
+          "type": "object",
+          "properties": {
+            "gravity": { "const": "mGal" },
+            "magnetic": { "const": "nT" }
+          }
+        },
+        "value_range": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "[min, max] of anomaly grid."
+        },
+        "backend": { "type": "string" },
+        "library_version": { "type": ["string", "null"] },
+        "epistemic_label": {
+          "type": "string",
+          "enum": ["DER", "INT", "SPEC", "OBS", "HYP"]
+        },
+        "caveats": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["type", "survey_type", "anomaly_values", "grid_shape"]
+    },
+    "arifos": {
+      "type": "object",
+      "properties": {
+        "floors_required": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "F1 (reversibility), F2 (label evidence), F7 (confidence cap 0.90), F9 (no fabrication), F11 (audit)."
+        },
+        "human_in_loop": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Anything interpretative requires arifOS 888_JUDGE."
+        },
+        "vault_route": { "const": "VAULT999" }
+      }
+    },
+    "provenance": {
+      "type": "string",
+      "description": "Origin string e.g. harmonica:forward:gravity:5prisms"
+    }
+  },
+  "required": ["tool_name", "claim_tag", "verdict", "ui", "vault_receipt", "input", "render_payload"],
+  "additionalProperties": true
+}
