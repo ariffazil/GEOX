@@ -2,166 +2,87 @@ from __future__ import annotations
 
 from typing import Any
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# GEOX CANONICAL TOOLS — Phase 2 Clean Architecture (2026-06-22)
-# 16 tools. Mode-based consolidation. Evidence-only. Physics-9 governed.
-# ═══════════════════════════════════════════════════════════════════════════════
-#
-# SURFACE-FACING (12 tools):
-#   What external agents (AAA, ART, Copilot, any MCP client) call to get
-#   Earth data or run subsurface analysis. These are the "public API" of GEOX.
-#
-# INTERNAL PLUMBING (4 tools):
-#   Governance, claims, evidence chains, doctrine. Federation constitutional
-#   machinery. Used by arifOS 888_JUDGE and internal workflows.
-#
-#   Total canonical = 16. Live runtime reports canonical_tools=16.
-#   Any change requires 888_HOLD per geox/AGENTS.md.
-#
-# DITEMPA BUKAN DIBERI — Forged, Not Given.
-# ═══════════════════════════════════════════════════════════════════════════════
+from geox_mcp.surface_manifest import (
+    compat_tools,
+    internal_tool_names,
+    manifest_entries_for_registry,
+    manifest_tool_map,
+    public_tool_names,
+    runtime_tool_names,
+)
 
-# ─────────────────────────────────────────────────────────────────────────────
-# SURFACE-FACING TOOLS — Earth Data + Subsurface Analysis (12 tools)
-# ─────────────────────────────────────────────────────────────────────────────
-#
-# What these do: query the planet, analyze subsurface data, return evidence.
-# Who calls them: AAA cockpit, ART, Copilot, any MCP client.
-# Count: 12
-#
-SURFACE_TOOLS: list[str] = [
-    # ── WELL DOMAIN (4) ────────────────────────────────────────────────────────
-    "geox_well_ingest",          # LAS, SEG-Y, DST, deviation, tops ingest
-    "geox_well_qc",              # QC: depth, curves, completeness, FJIS
-    "geox_petrophysics",         # Vsh, porosity, Sw, perm, net pay, LEM
-    "geox_sequence",             # Sequence stratigraphy, correlation
+# ── Ghost tools (ARCHIVED 2026-07-13) ─────────────────────────────────────
+# Tools that exist in the manifest but have been deregistered from the live
+# MCP surface. Excluded from SURFACE_TOOLS and INTERNAL_TOOLS so registry
+# counts match tools/list. Sovereign directive: GEOX-RED-TEAM-2026-07-07.
+# Reactivation requires F13 SOVEREIGN ack.
+GHOST_TOOLS: set[str] = {
+    # Public ghost
+    "geox_claim_graph_evaluate",
+    # Internal ghosts
+    "geox_3d_model",
+    "geox_3d_model_build",
+    "geox_atlas",
+    "geox_bid_round_screener",
+    "geox_biostrat_nn_age",
+    "geox_biostrat_ruling_check",
+    "geox_cognitive_rank_hypotheses",
+    "geox_forbidden_claims_scan",
+    "geox_geological_cognition_run",
+    "geox_macrostrat_calibrate",
+    "geox_map_export_package",
+    "geox_panel_d_render",
+    "geox_panel_d_render_mcp",
+    "geox_physical_reality_interpret",
+    "geox_render_audit",
+    "geox_rsi_interpret",
+    "geox_segy_audit",
+    "geox_segy_trace_audit",
+    "geox_seismic_cognition",
+    "geox_well_desurvey",
+}
+GHOST_COUNT = len(GHOST_TOOLS)
 
-    # ── SEISMIC DOMAIN (4) ─────────────────────────────────────────────────────
-    "geox_seismic_ingest",       # SEG-Y I/O, header inspection
-    "geox_seismic_compute",      # Synthetic, well-tie, AVO, attributes, inversion
-    "geox_seismic_interpret",    # Horizon contrast, faults, frames, blend
-    "geox_vision",               # VLM inference, audit, calibration, perceptual
+# Canonical public surface: only tools intentionally exposed to MCP clients,
+# excluding archived ghosts.
+SURFACE_TOOLS: list[str] = [t for t in public_tool_names() if t not in GHOST_TOOLS]
 
-    # ── MODEL DOMAIN (2) ───────────────────────────────────────────────────────
-    "geox_subsurface_model",     # Joint inversion, gravity/mag, MT forward
-    "geox_geomechanics",         # K/G/E/ν, coordinate transform, blockspace
+# Internal runtime tools: executable inside GEOX but hidden from tools/list,
+# excluding archived ghosts.
+INTERNAL_TOOLS: list[str] = [t for t in internal_tool_names() if t not in GHOST_TOOLS]
 
-    # ── BASIN DOMAIN (2) ───────────────────────────────────────────────────────
-    "geox_basin",                # Profile, resolve, macrostrat, scene
-    "geox_deep_time_state",      # Earth State Vector at any geological age
-]
+# Backward-compat aliases accepted during transition, never exposed publicly.
+CANONICAL_COMPAT_TOOLS: list[str] = list(compat_tools())
 
+# Public = discoverable MCP surface.
+CANONICAL_PUBLIC_TOOLS: list[str] = list(SURFACE_TOOLS)
 
-# ─────────────────────────────────────────────────────────────────────────────
-# INTERNAL PLUMBING — Governance, Claims, Doctrine (4 tools)
-# ─────────────────────────────────────────────────────────────────────────────
-#
-# What these do: constitutional machinery. Claims, evidence chains, judgment,
-#   epistemic guards. Used by arifOS 888_JUDGE and federation workflows.
-# Who calls them: arifOS kernel, 888_JUDGE, internal federation a2a.
-# Count: 4
-#
-INTERNAL_TOOLS: list[str] = [
-    "geox_claim",    # Create, validate, challenge, seal, attach claims
-    "geox_evidence", # Discover, synthesize, abduct, contradict, literature
-    "geox_prospect", # Volumetrics, POS, EVOI, risk assessment (judgment-gated)
-    "geox_doctrine", # Anti-Beautiful-One, assumptions, Gödel, guards
-]
+# Runtime = public + explicitly internal tools.
+CANONICAL_RUNTIME_TOOLS: list[str] = runtime_tool_names()
+
+# Legacy alias routing table intentionally empty until explicit migrations exist.
+LEGACY_ALIAS_MAP: dict[str, str] = {}
+
+# Canonical registry rows consumed by governance, status, and discovery helpers.
+GEOX_TOOL_MANIFEST: list[dict[str, Any]] = manifest_entries_for_registry()
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# CANONICAL PUBLIC TOOLS — Union of surface + internal (16 total)
-# ─────────────────────────────────────────────────────────────────────────────
-#
-# This is the single source of truth for the MCP server invariant check.
-# Surface tools are what the world sees. Internal tools are federation plumbing.
-# Live runtime reports canonical_tools=16; do not change without 888_HOLD.
-#
-CANONICAL_PUBLIC_TOOLS: list[str] = SURFACE_TOOLS + INTERNAL_TOOLS
+def get_tool_domain(tool_name: str) -> str:
+    entry = manifest_tool_map().get(tool_name)
+    return entry.domain if entry else "unknown"
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# BACKWARD COMPAT — old tool names, 1 release cycle
-# ─────────────────────────────────────────────────────────────────────────────
-CANONICAL_COMPAT_TOOLS: list[str] = [
-    "geox_data_ingest_bundle", "geox_data_qc_bundle", "geox_dst_ingest_test",
-    "geox_header_inspect", "geox_las_inspect", "geox_seismic_segy_inspect",
-    "geox_evidence_discover", "geox_subsurface_generate_candidates",
-    "geox_subsurface_verify_integrity", "geox_sequence_interpret",
-    "geox_evidence_reason", "geox_prospect_evaluate", "geox_map_context_scene",
-    "geox_horizon_contrast_surface", "geox_coord_transform_tool",
-    "geox_blockspace_resolution_tool", "geox_volume_frame_tool",
-    "geox_seismic_compute_attribute_tool", "geox_fault_stick_ingest_tool",
-    "geox_attribute_registry_list_tool", "geox_blend_volume_tool",
-    "geox_segy_export_tool", "geox_claim_create", "geox_claim_validate",
-    "geox_claim_challenge", "geox_evidence_attach", "geox_claim_seal",
-    "geox_basin_resolve", "geox_basin_profile", "geox_query_intake",
-    "geox_abstraction_guard", "geox_literature_ingest",
-    "geox_vision_perceptual_inventory", "geox_vision_minimax_inference",
-    "geox_vision_calibrate", "geox_vision_audit", "geox_query_macrostrat",
-    "geox_doctrine_assumption_register", "geox_doctrine_anti_beautiful_one",
-    "geox_doctrine_godel_review", "geox_prithvi_eo_inference",
-    "geox_gravity_magnetic_forward", "geox_emag2_ingest", "geox_icgem_models",
-    "geox_joint_inversion", "geox_mt_forward", "geox_biostrat_constraint",
-    "geox_seismic_inversion", "geox_lem_predict",
-]
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# TOOL MANIFEST — metadata for MCP server
-# ─────────────────────────────────────────────────────────────────────────────
-GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
-    # ── SURFACE-FACING: WELL DOMAIN (4) ───────────────────────────────────────
-    {"name": "geox_well_ingest", "axis": "observe", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_well_qc", "axis": "verify", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_petrophysics", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-    {"name": "geox_sequence", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-
-    # ── SURFACE-FACING: SEISMIC DOMAIN (4) ────────────────────────────────────
-    {"name": "geox_seismic_ingest", "axis": "observe", "lane": "evidence", "expose": True, "face": "surface"},
-    {"name": "geox_seismic_compute", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-    {"name": "geox_seismic_interpret", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-    {"name": "geox_vision", "axis": "reason", "lane": "reasoning", "expose": True, "face": "surface"},
-
-    # ── SURFACE-FACING: MODEL DOMAIN (2) ──────────────────────────────────────
-    {"name": "geox_subsurface_model", "axis": "reason", "lane": "judgment", "expose": True, "face": "surface"},
-    {"name": "geox_geomechanics", "axis": "compute", "lane": "reasoning", "expose": True, "face": "surface"},
-
-    # ── SURFACE-FACING: BASIN DOMAIN (2) ──────────────────────────────────────
-    {"name": "geox_basin", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
-    {"name": "geox_deep_time_state", "axis": "reason", "lane": "discovery", "expose": True, "face": "surface"},
-
-    # ── INTERNAL PLUMBING: GOVERNANCE + DOCTRINE (4) ──────────────────────────
-    {"name": "geox_claim", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
-    {"name": "geox_evidence", "axis": "reason", "lane": "evidence", "expose": True, "face": "internal"},
-    {"name": "geox_prospect", "axis": "reason", "lane": "judgment", "expose": True, "face": "internal"},
-    {"name": "geox_doctrine", "axis": "verify", "lane": "judgment", "expose": True, "face": "internal"},
-]
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# HELPERS
-# ─────────────────────────────────────────────────────────────────────────────
 
 def surface_tool_count() -> int:
-    """Number of surface-facing tools (what the world sees)."""
     return len(SURFACE_TOOLS)
 
 
 def internal_tool_count() -> int:
-    """Number of internal plumbing tools (governance machinery)."""
     return len(INTERNAL_TOOLS)
 
 
-def is_surface_tool(name: str) -> bool:
-    """Check if a tool is surface-facing."""
-    return name in SURFACE_TOOLS
+def is_surface_tool(tool_name: str) -> bool:
+    return tool_name in set(SURFACE_TOOLS)
 
 
-def is_internal_tool(name: str) -> bool:
-    """Check if a tool is internal plumbing."""
-    return name in INTERNAL_TOOLS
-
-
-# Legacy aliases — REMOVED Phase 1 Clean Slate (2026-06-22)
-LEGACY_ALIAS_MAP: dict[str, str] = {}
+def is_internal_tool(tool_name: str) -> bool:
+    return tool_name in set(INTERNAL_TOOLS)

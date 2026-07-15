@@ -1,0 +1,19 @@
+{
+  "schema": "mcp",
+  "version": "2026.06.30",
+  "protocolVersion": "2025-11-25",
+  "name": "GEOX MCP",
+  "description": "Earth intelligence — evidence-only geoscience coprocessor under constitutional floors F1-F13.",
+  "tools": "discoverable via tools/list at runtime",
+  "endpoint": "https://geox.arif-fazil.com/mcp",
+  "identity": {
+    "canonical_name": "GEOX",
+    "service_id": "geox-mcp",
+    "authority": "EVIDENCE_ONLY",
+    "port": 8081
+  },
+  "governance": {
+    "floors": ["F1","F2","F4","F7","F9","F11","F13"],
+    "authority_boundary": "EVIDENCE_ONLY"
+  }
+}

@@ -1,8 +1,8 @@
 # RUNBOOK.md — GEOX (Earth Intelligence)
 
-> **Organ:** GEOX | **Port:** 8081 | **Canonical tools:** **56** (W16+ FORGE 2026-06-22)
-> **Last Updated:** 2026-06-22
-> **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0`
+> **Organ:** GEOX | **Port:** 8081 | **Canonical tools:** Runtime fact — verify with `tools/list`
+> **Last Updated:** 2026-07-09
+> **Source of truth:** `src/geox_mcp/registry.py` + `server.py` _EXPECTED_CANONICAL
 
 ## Start / Stop
 ```bash

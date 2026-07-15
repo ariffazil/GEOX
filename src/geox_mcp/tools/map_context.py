@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import uuid
 from typing import Any, Literal
 
 from geox_core.enums.statuses import (
@@ -16,11 +17,14 @@ logger = logging.getLogger("geox.canonical.map_context")
 async def geox_map_context_scene(
     bbox: list[float],
     mode: Literal[
-        "bbox_context", "crs_check", "render_scene", "scene_summary", "georeference_map", "coordinate_guardrail",
-        "render_geojson"
+        "bbox_context", "crs_check", "render_scene", "scene_summary", "georeference_map", "coordinate_guardrail", "render_geojson"
     ] = "bbox_context",
     crs: str = "EPSG:4326",
     vp_slice_inline: dict[str, Any] | None = None,
+    # ── Session provenance (Fix HOLD-2026-07-11) ────────────────────────
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
 ) -> dict:
     """Spatial bbox context, CRS checks, and causal scene rendering.
 
@@ -40,6 +44,9 @@ async def geox_map_context_scene(
                          "depth_m": 2000.0, "slice_id": "..."}). The slice
                          is rendered alongside the bbox summary.
     """
+    # F2 TRUTH: Generate trace_id if not provided (propagate lineage)
+    if not trace_id:
+        trace_id = f"trace-{uuid.uuid4().hex[:12]}"
     # F6 Maruah-first: detect basins intersecting community/indigenous territory
     # Hardening: validate free-text inputs at boundary.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
@@ -70,21 +77,25 @@ async def geox_map_context_scene(
             "features": [
                 {
                     "type": "Feature",
-                    "properties": {"type": "bounding_box", "label": "Query AOI"},
+                    "id": "aoi-bbox",
+                    "properties": {"id": "aoi-bbox", "type": "bounding_box", "label": "Query AOI", "selectable": True},
                     "geometry": {
                         "type": "Polygon",
-                        "coordinates": [[
-                            [bbox[0], bbox[1]],
-                            [bbox[2], bbox[1]],
-                            [bbox[2], bbox[3]],
-                            [bbox[0], bbox[3]],
-                            [bbox[0], bbox[1]],
-                        ]],
+                        "coordinates": [
+                            [
+                                [bbox[0], bbox[1]],
+                                [bbox[2], bbox[1]],
+                                [bbox[2], bbox[3]],
+                                [bbox[0], bbox[3]],
+                                [bbox[0], bbox[1]],
+                            ]
+                        ],
                     },
                 },
                 {
                     "type": "Feature",
-                    "properties": {"type": "center_point", "label": "AOI Center"},
+                    "id": "aoi-center",
+                    "properties": {"id": "aoi-center", "type": "center_point", "label": "AOI Center", "selectable": True},
                     "geometry": {
                         "type": "Point",
                         "coordinates": [
@@ -99,17 +110,23 @@ async def geox_map_context_scene(
         if maruah_flag:
             try:
                 from geox_core.spatial.maruah_zones import get_maruah_zone_polygons as _get_zones
+
                 zones = _get_zones(bbox, crs)
                 for zone in zones:
-                    geojson["features"].append({
-                        "type": "Feature",
-                        "properties": {
-                            "type": "maruah_zone",
-                            "label": zone.get("name", "Community/Indigenous Territory"),
-                            "risk": zone.get("risk", "MEDIUM"),
-                        },
-                        "geometry": zone.get("geometry", {"type": "Point", "coordinates": [0, 0]}),
-                    })
+                    geojson["features"].append(
+                        {
+                            "type": "Feature",
+                            "id": f"maruah-zone-{len(geojson['features'])}",
+                            "properties": {
+                                "id": f"maruah-zone-{len(geojson['features'])}",
+                                "type": "maruah_zone",
+                                "label": zone.get("name", "Community/Indigenous Territory"),
+                                "risk": zone.get("risk", "MEDIUM"),
+                                "selectable": True,
+                            },
+                            "geometry": zone.get("geometry", {"type": "Point", "coordinates": [0, 0]}),
+                        }
+                    )
             except Exception as exc:
                 geojson["metadata"]["maruah_module_error"] = str(exc)
                 logger.warning(f"MARUAH zone render failed (non-blocking): {exc}")
@@ -117,6 +134,7 @@ async def geox_map_context_scene(
         # Wrap in standardized RenderPayload contract
         try:
             from geox_core.schemas.render_payload import render_map as _render_map
+
             render_payload = _render_map(
                 geojson=geojson,
                 bbox=bbox,
@@ -135,20 +153,91 @@ async def geox_map_context_scene(
                 "render_payload": render_payload,
                 "scene_rendered": True,
                 "maruah_flag": maruah_flag,
+                "trace_id": trace_id,
             },
             tool_class="observe",
             claim_tag="HYPOTHESIS",
             claim_state="INTERPRETED",
             perception_class="DISPLAY",
             maruah_flag=maruah_flag,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+            tool_name="geox_map_context_scene",
         )
+        envelope["session_id"] = session_id
+        envelope["actor_id"] = actor_id
+        envelope["trace_id"] = trace_id
+        provenance = envelope.setdefault("provenance", {})
+        if isinstance(provenance, dict):
+            provenance["session_id"] = session_id
+            provenance["actor_id"] = actor_id
+            provenance["trace_id"] = trace_id
         return envelope
 
+    # ── GeoJSON features for selectable geology (Fix HOLD-2026-07-11) ──
+    _geojson_features: list[dict] = [
+        {
+            "type": "Feature",
+            "id": "aoi-bbox",
+            "properties": {"id": "aoi-bbox", "type": "bounding_box", "label": "Query AOI", "selectable": True},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [bbox[0], bbox[1]],
+                        [bbox[2], bbox[1]],
+                        [bbox[2], bbox[3]],
+                        [bbox[0], bbox[3]],
+                        [bbox[0], bbox[1]],
+                    ]
+                ],
+            },
+        },
+        {
+            "type": "Feature",
+            "id": "aoi-center",
+            "properties": {"id": "aoi-center", "type": "center_point", "label": "AOI Center", "selectable": True},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    (bbox[0] + bbox[2]) / 2,
+                    (bbox[1] + bbox[3]) / 2,
+                ],
+            },
+        },
+    ]
+    if maruah_flag:
+        try:
+            from geox_core.spatial.maruah_zones import get_maruah_zone_polygons as _get_zones
+
+            zones = _get_zones(bbox, crs)
+            for zone in zones:
+                _geojson_features.append(
+                    {
+                        "type": "Feature",
+                        "id": f"maruah-zone-{len(_geojson_features)}",
+                        "properties": {
+                            "id": f"maruah-zone-{len(_geojson_features)}",
+                            "type": "maruah_zone",
+                            "label": zone.get("name", "Community/Indigenous Territory"),
+                            "risk": zone.get("risk", "MEDIUM"),
+                            "selectable": True,
+                        },
+                        "geometry": zone.get("geometry", {"type": "Point", "coordinates": [0, 0]}),
+                    }
+                )
+        except Exception as exc:
+            logger.warning(f"MARUAH zone render failed (non-blocking): {exc}")
+
     artifact = {
+        "geojson_features": _geojson_features,
         "bbox": bbox,
         "mode": mode,
         "crs": crs,
         "scene_rendered": True,
+        "trace_id": trace_id,
+        "ui": {"selectable": True, "feature_id_field": "id"},
     }
     e8_block: dict[str, Any] = {}
     if vp_slice_inline is not None:
@@ -190,7 +279,19 @@ async def geox_map_context_scene(
         claim_state="INTERPRETED",
         perception_class="DISPLAY",
         maruah_flag=maruah_flag,
+        session_id=session_id,
+        actor_id=actor_id,
+        trace_id=trace_id,
+        tool_name="geox_map_context_scene",
     )
+    envelope["session_id"] = session_id
+    envelope["actor_id"] = actor_id
+    envelope["trace_id"] = trace_id
+    provenance = envelope.setdefault("provenance", {})
+    if isinstance(provenance, dict):
+        provenance["session_id"] = session_id
+        provenance["actor_id"] = actor_id
+        provenance["trace_id"] = trace_id
     if e8_block:
         envelope["e8_velocity_slice"] = e8_block
     return envelope

@@ -157,18 +157,28 @@ async def geox_forward_model_synthetic(
                 evidence_refs=[well_id],
             )
         # Resolve density
+        # Resolve density — single path, no fallback (Law 5)
         rho_arr = None
         for mnemonic in ["RHOB", "RHOZ", "DEN"]:
             if mnemonic in curves:
                 rho_arr = curves[mnemonic]
                 break
         if rho_arr is None:
-            # Gardner fallback with constitutional flag
-            rho_arr = 1.741 * (vp_arr**0.25)
-            logger.info("F2: Gardner fallback applied for density (RHOB missing).")
-            gardner_flag = True
-        else:
-            gardner_flag = False
+            return get_standard_envelope(
+                {
+                    "tool": "geox_forward_model_synthetic",
+                    "error_code": "RHO_CURVE_MISSING",
+                    "message": "No RHOB/RHOZ/DEN curve found in well artifact. Gardner fallback removed (Law 5: Convergence Over Choice). Ingest density data or use a well with RHOB.",
+                    "available": list(curves.keys()),
+                },
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
+                evidence_refs=[well_id],
+            )
     else:
         if not vp or not rho or not depth:
             return get_standard_envelope(
@@ -187,7 +197,6 @@ async def geox_forward_model_synthetic(
         vp_arr = np.array(vp, dtype=float)
         rho_arr = np.array(rho, dtype=float)
         depth_arr = np.array(depth, dtype=float)
-        gardner_flag = False
 
     # ── 2. PHYSICS: AI → RC → TWT ────────────────────────────────────────────
     # Ensure consistent units: rho in g/cc → kg/m³ for SI impedance
@@ -232,7 +241,6 @@ async def geox_forward_model_synthetic(
         "wavelet_freq_hz": wavelet_freq,
         "dt_ms": dt_ms,
         "water_depth_m": water_depth_m,
-        "gardner_fallback_used": gardner_flag,
     }
 
     if output_format == "full":

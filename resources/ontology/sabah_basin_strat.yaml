@@ -70,6 +70,70 @@ basin:
         Vp_km_s: [5.0, 6.0]
         description: "Ultramafic–mafic igneous basement"
 
+    velocity_uncertainty:
+      description: "Lateral velocity variation in mobile shale province"
+      shallow_allochthonous_km_s: "±0.3"
+      sandakan_km_s: "±0.4"
+      labang_group_km_s: "±0.5"
+      bongaya_km_s: "±0.6"
+      ophiolite_km_s: "±0.8"
+      tvdss_uncertainty_m: "±200-500"
+      source: "Derived from structural complexity + mobile shale velocity pull-up/pull-down"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KINABALU GRANITE — Thermochronological Cooling Path (Cottam et al. 2013)
+# ─────────────────────────────────────────────────────────────────────────────
+
+kinabalu_granite:
+  type: "Granodiorite pluton (sheeted laccolith)"
+  age_ma: [7.85, 7.22]
+  emplacement_style: "Pulsed — dyke-fed granitic units younging downwards"
+  emplacement_duration_ka: "<800"
+  pulse_duration_ka: [30, 250]
+  protolith_upper_unit: "Attenuated South China continental crust"
+  protolith_middle_unit: "Local crystalline basement melting"
+  tectonic_driver: "Sulu Arc rollback → extension"
+  exhumation_driver: "Lithospheric delamination or slab break-off"
+  NOT_related_to: "Sabah orogeny (terminated ~16 Ma)"
+
+  cooling_path:
+    - system: "zircon_upb"
+      closure_temp_C: 900
+      age_ma: [7.85, 7.22]
+      source: "Cottam et al. 2010 (JGS)"
+      label: "OBS"
+    - system: "biotite_arar"
+      closure_temp_C: 350
+      age_ma: [7.63, 7.32]
+      source: "Cottam et al. 2013 (JGS)"
+      label: "OBS"
+    - system: "zircon_fission_track"
+      closure_temp_C: 240
+      age_ma: [6.6, 5.8]
+      source: "Cottam et al. 2013 (JGS)"
+      label: "OBS"
+    - system: "apatite_he"
+      closure_temp_C: 70
+      age_ma: [5.5, 5.5]
+      source: "Cottam et al. 2013 (JGS)"
+      label: "OBS"
+
+  cooling_rate_C_per_Myr: 360
+  exhumation_rate_mm_yr: ">7"
+  interpretation: |
+    TECTONIC UNROOFING: Cooling rate 360°C/Myr (36–360× faster than erosional exhumation).
+    This records rapid crustal thinning driven by slab break-off or delamination.
+    The granite is a post-collisional tectonic wound, not an orogenic crown.
+    Eureka #4: Cooling rate confirms tectonic, not erosional, exhumation.
+
+  epistemic_status:
+    emplacement_age: "OBS (U-Pb zircon geochronology)"
+    cooling_rates: "DER (computed from closure temperatures + ages)"
+    tectonic_driver: "INT (regional tectonic model)"
+    exhumation_driver: "SPEC (geodynamic model, no direct imaging)"
+
+  source: "Cottam et al. 2013, JGS London, DOI: 10.1144/jgs2011-130"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # STRATIGRAPHIC COLUMN
 # ─────────────────────────────────────────────────────────────────────────────

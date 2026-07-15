@@ -1,0 +1,26 @@
+GEOX Subsurface Coprocessor
+Copyright 2025-2026 Muhammad Arif bin Fazil
+
+This product includes software developed by the GEOX project and its contributors.
+
+GEOX depends on several open-source libraries. Below is an attribution of major dependencies:
+
+1. Welly (https://github.com/agilescientific/welly)
+   License: Apache License 2.0
+   Used for well data structures and log plotting.
+
+2. Lasio (https://github.com/kinverarity1/lasio)
+   License: MIT License
+   Used for LAS log file parsing.
+
+3. Striplog (https://github.com/agilescientific/striplog)
+   License: Apache License 2.0
+   Used for stratigraphic lithology classification.
+
+4. Segyio (https://github.com/equinor/segyio)
+   License: LGPL 3.0
+   Used for SEG-Y seismic volume ingestion.
+
+5. FastMCP (https://github.com/modelcontextprotocol)
+   License: MIT License
+   Used for Model Context Protocol server interface execution.

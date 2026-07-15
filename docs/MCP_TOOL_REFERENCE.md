@@ -3,7 +3,7 @@
 > **Last verified:** 2026-06-21 (commit `657b9eb0`, 54 tools live on `geox-mcp.service`)
 > **Source of truth:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST)
 > **Mirror:** `contracts/canonical_registry.py`
-> **Server invariant:** `_EXPECTED_CANONICAL = 56` in `src/geox_mcp/server.py`
+> **Server invariant:** `_EXPECTED_CANONICAL = 34` in `src/geox_mcp/server.py`
 > **Contract epoch:** `2026-06-22-GEOX-56TOOLS-v3.0` (W16+ FORGE)
 
 ---
@@ -160,10 +160,10 @@ curl -s -X POST http://127.0.0.1:8081/mcp \
 
 - **Source:** [`src/geox_mcp/registry.py`](../../src/geox_mcp/registry.py)
 - **Mirror:** [`contracts/canonical_registry.py`](../../contracts/canonical_registry.py)
-- **Server invariant:** [`src/geox_mcp/server.py`](../../src/geox_mcp/server.py) `_EXPECTED_CANONICAL = 56`
+- **Server invariant:** [`src/geox_mcp/server.py`](../../src/geox_mcp/server.py) `_EXPECTED_CANONICAL = 34`
 - **Constitutional test:** [`tests/unit/test_registry_runtime_truth.py`](../../tests/unit/test_registry_runtime_truth.py)
 - **Audit log:** [`/root/forge_work/2026-06-21_geox-w2-w13-multiphysics-earth-witness.md`](../../../forge_work/2026-06-21_geox-w2-w13-multiphysics-earth-witness.md)
 
 ---
 
-**DITEMPA BUKAN DIBEI — 56 canonical tools, constitutionally wrapped, ready for the kernel to judge.**
+**DITEMPA BUKAN DIBERI — 34 canonical tools, constitutionally wrapped, ready for the kernel to judge.**

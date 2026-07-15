@@ -2,7 +2,7 @@
 multi_physics.py — MCP tool wrappers for Phase C (W13+) multi-physics forge.
 
 W13+ forge: constitutional MCP surface for the joint Earth Witness:
-- geox_joint_inversion: fuse N modalities → one Physics9State per cell
+- geox_joint_inversion: fuse N modalities → one Physics13State per cell
 - geox_mt_forward: 1D CSEM/MT apparent resistivity + phase
 - geox_biostrat_constraint: time-facies admissibility for a cell
 
@@ -30,7 +30,7 @@ from geox_core.engines.geophysics.biostrat_constraint import (
     DepositionalEnvironment,
     evaluate_biostrat_constraint,
 )
-from geox_core.physics.state import SANDSTONE, Physics9State
+from geox_core.physics.state import SANDSTONE, Physics13State
 
 
 # ───────────────────────────── JOINT INVERSION ─────────────────────────────────────
@@ -47,7 +47,7 @@ class ModalityObsSchema(BaseModel):
 
 class JointInversionRequest(BaseModel):
     observations: list[ModalityObsSchema] = Field(default_factory=list)
-    prior: Optional[dict] = Field(default=None, description="Optional Physics9State as dict")
+    prior: Optional[dict] = Field(default=None, description="Optional Physics13State as dict")
     max_iter: int = Field(default=50, ge=1, le=500)
     tolerance: float = Field(default=1e-3, gt=0)
 
@@ -71,7 +71,7 @@ async def geox_joint_inversion(request: JointInversionRequest) -> JointInversion
     """Constitutional MCP tool: joint multi-physics inversion under Physics9 bounds.
 
     Fuses N modalities (seismic impedance, Vp/Vs, gravity, magnetic, MT resistivity)
-    into one Physics9State per cell. Enforces Earth-bounds on every dial.
+    into one Physics13State per cell. Enforces Earth-bounds on every dial.
     """
     try:
         obs = [
@@ -84,7 +84,7 @@ async def geox_joint_inversion(request: JointInversionRequest) -> JointInversion
         ]
         prior = None
         if request.prior:
-            prior = Physics9State(**request.prior)
+            prior = Physics13State(**request.prior)
         req = InversionRequest(
             observations=obs, prior=prior,
             max_iter=request.max_iter, tolerance=request.tolerance,
@@ -143,7 +143,7 @@ async def geox_mt_forward(request: MTForwardRequestSchema) -> MTForwardResponse:
 
 # ───────────────────────────── BIOSTRAT CONSTRAINT ────────────────────────────────
 class BiostratRequest(BaseModel):
-    state: dict = Field(..., description="Physics9State as dict")
+    state: dict = Field(..., description="Physics13State as dict")
     age_ma: float = Field(..., description="Age in Ma")
 
 
@@ -157,7 +157,7 @@ class BiostratResponse(BaseModel):
 async def geox_biostrat_constraint(request: BiostratRequest) -> BiostratResponse:
     """Constitutional MCP tool: biostrat time-facies admissibility check."""
     try:
-        state = Physics9State(**request.state)
+        state = Physics13State(**request.state)
         r = evaluate_biostrat_constraint(state, request.age_ma)
         return BiostratResponse(ok=True, result={
             "zone_name": r.zone_name,

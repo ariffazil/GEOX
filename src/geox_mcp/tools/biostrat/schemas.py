@@ -164,7 +164,7 @@ class BiostratRecord(BaseModel):
     """Normalised internal biostrat data for a single well.
 
     This is the canonical format for ingested enterprise biostrat data
-    (from PETRONAS reports, vendor deliverables, etc.).
+    (from NOC reports, vendor deliverables, etc.).
     """
     well_id: str = Field(..., description="Canonical well identifier")
     field_name: str | None = Field(default=None)

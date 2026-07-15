@@ -1,0 +1,78 @@
+{
+  "$schema": "arifOS/agent-card/v2.0.0",
+  "id": "geox-mcp",
+  "name": "GEOX Earth Intelligence",
+  "description": "Earth intelligence \u2014 seismic, petrophysics, basin, prospect evaluation. Evidence-only. Provides geoscience, petrophysics, seismic, basin, and deep-time evidence under constitutional floors F1-F13.",
+  "version": "2026.07.06",
+  "protocolVersion": "1.0.0",
+  "url": "https://geox.arif-fazil.com",
+  "provider": {
+    "organization": "arifOS Federation",
+    "url": "https://arif-fazil.com"
+  },
+  "service_id": "geox-mcp",
+  "authority": "EVIDENCE_ONLY",
+  "transport": {
+    "port": 8081,
+    "domain": "geox.arif-fazil.com",
+    "endpoint": "https://geox.arif-fazil.com/mcp"
+  },
+  "capabilities": {
+    "domains": [
+      "well",
+      "seismic",
+      "basin",
+      "petrophysics",
+      "prospect",
+      "egs",
+      "geomechanics",
+      "earth_map",
+      "biostratigraphy",
+      "physics_simulation"
+    ],
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "tool_surface": "discoverable via tools/list MCP call at runtime",
+  "resource_surface": "discoverable via resources/list MCP call at runtime",
+  "skills": [
+    {
+      "id": "earth.evidence",
+      "name": "Earth Evidence",
+      "description": "Provide geological, geophysical, or petrophysical evidence for constitutional judgment.",
+      "tags": [
+        "geoscience",
+        "evidence",
+        "earth"
+      ],
+      "floor_scope": [
+        "F2",
+        "F4",
+        "F11"
+      ]
+    }
+  ],
+  "governance": {
+    "floors": [
+      "F1",
+      "F2",
+      "F4",
+      "F7",
+      "F9",
+      "F11",
+      "F13"
+    ],
+    "authority_boundary": "EVIDENCE_ONLY",
+    "physics_invariants": [
+      "Physics9"
+    ],
+    "self_approval_forbidden": true,
+    "authority_class": "specialist"
+  },
+  "metadata": {
+    "consolidated": "2026-07-01T20:00:00Z",
+    "consolidated_by": "FORGE (000\u03a9) \u2014 Phase 2 entropy reduction",
+    "source": "merged from static/agent-card.json (owned_mcp, skills) + .well-known/agent-card.json"
+  }
+}

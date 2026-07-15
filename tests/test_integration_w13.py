@@ -1,5 +1,5 @@
 """Tests for W13+ Phase C integrations:
-- geomechanics (K, G, E, ν, AI from Physics9State)
+- geomechanics (K, G, E, ν, AI from Physics13State)
 - WELL → GEOX (operator decision_class from fatigue)
 - WEALTH ← GEOX (STOIIP + ranking + verdict)
 """

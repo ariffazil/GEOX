@@ -199,10 +199,10 @@ verdicts:
 author:
   name: Muhammad Arif bin Fazil
   email: ariffazil@gmail.com
-  org: PETRONAS Exploration
+  org: Operator Exploration
   github: https://github.com/ariffazil
 
-license: AGPL-3.0
+license: BSL-1.1
 links:
   github: https://github.com/ariffazil/GEOX
   documentation: https://github.com/ariffazil/GEOX#readme

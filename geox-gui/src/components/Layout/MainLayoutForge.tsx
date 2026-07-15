@@ -33,6 +33,8 @@ import { Domain1D } from '../../forge/domain/Domain1D';
 import { Domain2D } from '../../forge/domain/Domain2D';
 import { Domain3D } from '../../forge/domain/Domain3D';
 import { useGEOXStore, useGovernance, useGEOXConnected } from '../../store/geoxStore';
+import { GeoScaleEngine } from '../../forge/scale/GeoScaleEngine';
+import { useGeminiIntelligence } from '../../forge/intelligence/useGeminiIntelligence';
 import '../../styles/designSystem.css';
 
 /**
@@ -307,46 +309,7 @@ const RightSidebar: React.FC = () => {
         )}
 
         {activePanel === 'intel' && (
-          <div className="space-y-4">
-            <div className="geox-card border-violet-500/30">
-              <div className="geox-card__header bg-violet-950/20">
-                <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-violet-400" />
-                  <span className="geox-card__title text-violet-400">Gemini AI</span>
-                </div>
-              </div>
-              <div className="geox-card__body">
-                <p className="text-xs text-slate-400 mb-3">
-                  Earth Intelligence LLM ready for geological interpretation.
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button className="geox-btn geox-btn--secondary text-[10px] py-1.5">
-                    Interpret Log
-                  </button>
-                  <button className="geox-btn geox-btn--secondary text-[10px] py-1.5">
-                    Assess Risk
-                  </button>
-                  <button className="geox-btn geox-btn--secondary text-[10px] py-1.5">
-                    Find Analogs
-                  </button>
-                  <button className="geox-btn geox-btn--secondary text-[10px] py-1.5">
-                    Correlate
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="geox-card">
-              <div className="geox-card__header">
-                <span className="geox-card__title">Macrostrat API</span>
-              </div>
-              <div className="geox-card__body">
-                <TelemetryRow label="Status" value="Connected" status="good" />
-                <TelemetryRow label="Latency" value="120ms" status="normal" />
-                <TelemetryRow label="Cache Hit" value="87%" status="good" />
-              </div>
-            </div>
-          </div>
+          <ForgeIntelligencePanel />
         )}
       </div>
     </div>
@@ -512,6 +475,85 @@ const Header: React.FC = () => {
         </button>
       </div>
     </header>
+  );
+};
+
+/**
+ * Forge Intelligence Panel — wires GeoScaleEngine + useGeminiIntelligence
+ */
+const ForgeIntelligencePanel: React.FC = () => {
+  const { generate, isLoading, error } = useGeminiIntelligence({
+    apiKey: import.meta.env.VITE_GEMINI_API_KEY ?? '',
+    model: 'gemini-1.5-pro',
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
+    maxRetries: 2,
+    timeout: 15000,
+    temperature: 0.2,
+    maxTokens: 1024,
+  });
+
+  useEffect(() => {
+    // Eager-load scale engine to prove it compiles and links
+    const engine = new GeoScaleEngine({
+      domain: '2d',
+      spatial: {
+        crs: 'EPSG:4326',
+        bounds: { minX: 100, minY: 0, maxX: 110, maxY: 10 },
+      },
+      units: { horizontal: 'meters', vertical: 'meters', temporal: 'ma' },
+      precision: { horizontal: 1, vertical: 1, temporal: 0.1 },
+    });
+    engine.calibrate2D(50, 50, {
+      gcps: [],
+      transform: { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 },
+      crs: 'EPSG:4326',
+    });
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      <div className="geox-card border-violet-500/30">
+        <div className="geox-card__header bg-violet-950/20">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-violet-400" />
+            <span className="geox-card__title text-violet-400">Gemini AI</span>
+          </div>
+        </div>
+        <div className="geox-card__body">
+          <p className="text-xs text-slate-400 mb-3">
+            Earth Intelligence LLM status: <span className={isLoading ? 'text-amber-400' : 'text-emerald-400'}>{isLoading ? 'working' : 'ready'}</span>
+          </p>
+          {error && <p className="text-[10px] text-red-400 mb-2">{error}</p>}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              className="geox-btn geox-btn--secondary text-[10px] py-1.5"
+              onClick={() => generate('General geological interpretation request', 'general').catch(() => {})}
+            >
+              Interpret Log
+            </button>
+            <button className="geox-btn geox-btn--secondary text-[10px] py-1.5">
+              Assess Risk
+            </button>
+            <button className="geox-btn geox-btn--secondary text-[10px] py-1.5">
+              Find Analogs
+            </button>
+            <button className="geox-btn geox-btn--secondary text-[10px] py-1.5">
+              Correlate
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="geox-card">
+        <div className="geox-card__header">
+          <span className="geox-card__title">GeoScale Engine</span>
+        </div>
+        <div className="geox-card__body">
+          <TelemetryRow label="Status" value="Loaded" status="good" />
+          <TelemetryRow label="Domains" value="1D/2D/3D/Void" status="good" />
+        </div>
+      </div>
+    </div>
   );
 };
 

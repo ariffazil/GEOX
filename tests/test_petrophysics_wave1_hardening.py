@@ -2,15 +2,12 @@ from __future__ import annotations
 
 import pytest
 
-from contracts.tools.canonical.kernel import _registry
-from contracts.tools.canonical.subsurface import geox_subsurface_generate_candidates
+from geox_mcp.tools._helpers import _registry
+from geox_mcp.tools.petrophysics import geox_subsurface_generate_candidates
 
 
 def _write_las(path, rows: list[tuple[float, float, float, float, float]]) -> None:
-    body = "\n".join(
-        f" {depth:.1f} {gr:.1f} {rt:.2f} {rhob:.2f} {nphi:.2f}"
-        for depth, gr, rt, rhob, nphi in rows
-    )
+    body = "\n".join(f" {depth:.1f} {gr:.1f} {rt:.2f} {rhob:.2f} {nphi:.2f}" for depth, gr, rt, rhob, nphi in rows)
     path.write_text(
         "\n".join(
             [

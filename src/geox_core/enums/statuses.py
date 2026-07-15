@@ -24,8 +24,8 @@ def _compute_physics_guard_version() -> str:
         return "geox-014d3e33"  # shipped fallback — bumped 2026-06-13
 
 
-GEOX_VERSION = "v2026.06.22"
-GEOX_CONTRACT_EPOCH = "2026-06-22-GEOX-56TOOLS-v3.0"
+GEOX_VERSION = "v2026.07.06"
+GEOX_CONTRACT_EPOCH = "2026-07-06-GEOX-PHASE31-RSI-PIPELINE"
 PHYSICS_GUARD_VERSION = _compute_physics_guard_version()
 REGISTRY_HASH = "reg-hash-35d798a"
 TOOL_SCHEMA_HASH = "schema-sha-35d798a"
@@ -117,6 +117,7 @@ class ClaimState(str, Enum):
                          ↓
                    QC_FAILED → NO_VALID_EVIDENCE / ARTIFACT_MISSING / VOID_INPUT
     """
+
     # Entry states
     RAW = "RAW"
     INGESTED = "INGESTED"
@@ -547,7 +548,11 @@ def get_standard_envelope(
 
     # Session propagation (Fix #2 - Arif 2026-05-16)
     # Use explicitly passed session_id, fallback to audit_receipt, fallback to auto-generated
-    _session_id = session_id or (audit_receipt.get("session_id") if audit_receipt else None) or (os.environ.get("GEOX_SESSION_ID") or "anonymous")
+    _session_id = (
+        session_id
+        or (audit_receipt.get("session_id") if audit_receipt else None)
+        or (os.environ.get("GEOX_SESSION_ID") or "anonymous")
+    )
     _trace_id = trace_id or f"trace-{uuid.uuid4().hex[:16]}"
     _parent_trace_id = parent_trace_id or None
 
@@ -658,6 +663,7 @@ def get_standard_envelope(
     # GEOX = Earth Evidence organ. Maps physical signals to 10 APEX gates.
     try:
         from geox_core.apex_envelope_geox import geox_apex_envelope
+
         response["apex"] = geox_apex_envelope(
             tool_name=tool_name or primary_artifact.get("tool", "unknown"),
             claim_state=claim_state,
@@ -673,6 +679,29 @@ def get_standard_envelope(
 
     if ui_resource_uri:
         response["_meta"] = {"ui": {"resourceUri": ui_resource_uri}}
+
+    # C1/C6 REDTEAM fix: GEOX outputs are evidence, not recommendations.
+    # POS, EVOI, AC_Risk are decision-shaping metrics — not neutral evidence.
+    # "QUALIFY" does not mean "drill." arifOS judges. Arif decides.
+    response["geox_advisory"] = {
+        "status": "EVIDENCE_ONLY",
+        "disclaimer": (
+            "GEOX computes evidence — POS, EVOI, AC_Risk, volumetrics. "
+            "These are decision-shaping metrics, not neutral observations. "
+            "GEOX does NOT authorize drilling, investment, or irreversible action. "
+            "arifOS judges. Arif decides."
+        ),
+        "floor": "F13 SOVEREIGN",
+        # C3 REDTEAM note: floor_enforcement runs inside GEOX (self-enforced).
+        # Architecture fix needed: move floor enforcement to arifOS gateway.
+        # Current: GEOX enforces its own governance (architectural weakness).
+        # Target: arifOS enforces floors on GEOX calls (proper separation).
+        "governance_note": (
+            "C3 REDTEAM: Floor enforcement is self-enforced (GEOX process). "
+            "Architectural fix: move to arifOS gateway for proper separation. "
+            "Pending sovereign approval."
+        ),
+    }
 
     return response
 

@@ -277,7 +277,7 @@ def test_image_provenance_is_carried_through(synthetic_faulted_section):
         geox_contrast_views(
             source=synthetic_faulted_section,
             image_provenance={
-                "source": "PETRONAS 2024 KL2V1 TWT composite",
+                "source": "Operator 2024 KL2V1 TWT composite",
                 "scale_bar_TWT_ms": [0, 4000],
                 "crs": "TWT_ms",
                 "well_ties": ["Kinabalu-1", "Layang-Layang-1"],
@@ -287,7 +287,7 @@ def test_image_provenance_is_carried_through(synthetic_faulted_section):
     )
     pa = res["primary_artifact"]
     assert pa["basin_context"] == "Malay Basin — Sabah offshore"
-    assert pa["image_provenance"]["source"] == "PETRONAS 2024 KL2V1 TWT composite"
+    assert pa["image_provenance"]["source"] == "Operator 2024 KL2V1 TWT composite"
 
 
 def test_phase2_modes_explicitly_rejected():

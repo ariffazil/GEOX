@@ -77,9 +77,9 @@ class TestToolFamilies:
                 assert key in desc, f"Family {fam.value} missing key {key}"
 
     def test_family_a_has_crustal_domain_complete(self) -> None:
-        """Family A — geox_crustal_domain_classify was forged this session."""
+        """Family A — geox_anomalous_contrast_detect (ToAC loop) was forged this session."""
         desc = TOOL_FAMILIES[ToolFamily.A_CRUSTAL_ARCHITECTURE]
-        assert "geox_crustal_domain_classify" in desc["tools_complete"]
+        assert "geox_anomalous_contrast_detect" in desc["tools_complete"]
 
     def test_family_d_has_doctrine_complete(self) -> None:
         """Family D — doctrine layer is pre-existing."""

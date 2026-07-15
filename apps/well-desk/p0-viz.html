@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GEOX Well-Desk Viz P0+</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; padding: 10px; background: #0b0f14; color: #e6edf3; }
+    .badge { opacity: 0.7; font-size: 10px; letter-spacing: 0.04em; margin-bottom: 6px; }
+    #hold, #veto, #err {
+      display: none; padding: 8px 10px; margin-bottom: 8px; border-radius: 4px; font-size: 12px;
+    }
+    #hold { background: #5c3b00; border: 1px solid #c48a00; }
+    #veto { background: #4a1515; border: 1px solid #c44; }
+    #err { background: #3a1a1a; border: 1px solid #844; }
+    h1 { font-size: 1.05rem; margin: 0 0 6px; font-weight: 600; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .card {
+      flex: 1 1 100px; background: #141b24; border: 1px solid #243041;
+      border-radius: 6px; padding: 8px;
+    }
+    .card .k { font-size: 10px; opacity: 0.6; text-transform: uppercase; }
+    .card .v { font-size: 1rem; margin-top: 2px; }
+    .muted { opacity: 0.55; font-size: 11px; }
+    #tracks {
+      display: grid;
+      grid-template-columns: 48px 1fr 1fr 1fr 1fr;
+      gap: 4px;
+      background: #0f141c;
+      border: 1px solid #243041;
+      border-radius: 6px;
+      padding: 4px;
+      min-height: 320px;
+    }
+    .track-label {
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      font-size: 10px; opacity: 0.7; display: flex; align-items: center; justify-content: center;
+    }
+    canvas { width: 100%; height: 320px; display: block; background: #0a0e14; border-radius: 3px; cursor: crosshair; }
+    .epi {
+      display: inline-block; font-size: 9px; padding: 2px 6px; border-radius: 3px;
+      border: 1px solid #345; margin-left: 6px; opacity: 0.85;
+    }
+    .epi-obs { color: #7dcea0; border-color: #2d5a3d; }
+    button {
+      background: #1a3a4a; color: #e6edf3; border: 1px solid #2a5a6a;
+      border-radius: 4px; padding: 5px 10px; cursor: pointer; font-size: 12px; margin-right: 6px;
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    pre {
+      white-space: pre-wrap; font-size: 11px; background: #0f141c;
+      border: 1px solid #243041; border-radius: 6px; padding: 8px; max-height: 140px; overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">
+    ui://geox/well-desk · Viz P0+ · canvas tracks (CSP connect-src none) · no CDN ·
+    Plotly vendor on disk for optional inflate
+  </div>
+  <div id="hold"></div>
+  <div id="veto"></div>
+  <div id="err"></div>
+  <h1 id="title">
+    GEOX Well-Desk
+    <span class="epi epi-obs" id="epiBadge">OBS · cap 0.7</span>
+  </h1>
+  <p class="muted" id="status">Waiting for host…</p>
+  <div class="row">
+    <div class="card"><div class="k">Well</div><div class="v" id="wellId">—</div></div>
+    <div class="card"><div class="k">Mode</div><div class="v" id="mode">—</div></div>
+    <div class="card"><div class="k">Depth</div><div class="v" id="depth">—</div></div>
+    <div class="card"><div class="k">Band</div><div class="v" id="band">—</div></div>
+  </div>
+  <p>
+    <button type="button" id="btnRefresh" disabled>Refresh via host</button>
+    <button type="button" id="btnExport" disabled title="Witness export">Export PNG witness</button>
+  </p>
+  <div id="tracks">
+    <div class="track-label">DEPTH</div>
+    <canvas id="cGR" data-curve="GR"></canvas>
+    <canvas id="cRES" data-curve="RES"></canvas>
+    <canvas id="cDT" data-curve="DT"></canvas>
+    <canvas id="cRHOB" data-curve="RHOB"></canvas>
+  </div>
+  <p class="muted" id="cursorInfo">Depth cursor: drag across any track (linked).</p>
+  <pre id="out">{}</pre>
+  <script>
+(function () {
+  'use strict';
+  /* Viz P0+: canvas multi-track + linked depth cursor.
+     No fetch(), no CDN, no storage. Data only via host postMessage.
+     Plotly.js is vendored at vendor/plotly.min.js for a later inflate path
+     (blob/inline under F13) — not loaded here to keep CSP + size tight. */
+  var PROTOCOL = '2026-01-26';
+  var nextId = 1;
+  var pending = new Map();
+  var lastArgs = null;
+  var lastPayload = null;
+  var series = null; // { depths:[], GR:[], RES:[], DT:[], RHOB:[] }
+  var cursorIdx = 0;
+
+  var el = {
+    out: document.getElementById('out'),
+    hold: document.getElementById('hold'),
+    veto: document.getElementById('veto'),
+    err: document.getElementById('err'),
+    title: document.getElementById('title'),
+    status: document.getElementById('status'),
+    wellId: document.getElementById('wellId'),
+    mode: document.getElementById('mode'),
+    band: document.getElementById('band'),
+    depth: document.getElementById('depth'),
+    cursorInfo: document.getElementById('cursorInfo'),
+    epiBadge: document.getElementById('epiBadge'),
+    btn: document.getElementById('btnRefresh'),
+    btnExport: document.getElementById('btnExport'),
+  };
+  var canvases = [
+    document.getElementById('cGR'),
+    document.getElementById('cRES'),
+    document.getElementById('cDT'),
+    document.getElementById('cRHOB'),
+  ];
+
+  function show(node, text) {
+    if (!text) { node.style.display = 'none'; node.textContent = ''; return; }
+    node.style.display = 'block';
+    node.textContent = text;
+  }
+
+  function post(msg) {
+    try { parent.postMessage(msg, '*'); } catch (e) { show(el.err, String(e)); }
+  }
+
+  function rpcRequest(method, params) {
+    var id = nextId++;
+    return new Promise(function (resolve, reject) {
+      var t = setTimeout(function () {
+        pending.delete(id);
+        reject(new Error('timeout ' + method));
+      }, 15000);
+      pending.set(id, { resolve: resolve, reject: reject, t: t });
+      post({ jsonrpc: '2.0', id: id, method: method, params: params || {} });
+    });
+  }
+
+  /** Synthetic demo curves when host has not hydrated real LAS yet */
+  function synthSeries(wellId, n) {
+    n = n || 120;
+    var depths = [], GR = [], RES = [], DT = [], RHOB = [];
+    var d0 = 1500;
+    for (var i = 0; i < n; i++) {
+      var d = d0 + i * 1.0;
+      depths.push(d);
+      var noise = Math.sin(i * 0.17) * 8 + Math.cos(i * 0.03) * 4;
+      GR.push(45 + noise + (i > 40 && i < 70 ? 35 : 0));
+      RES.push(Math.max(0.5, 5 + Math.sin(i * 0.09) * 3 + (i > 50 && i < 65 ? 40 : 0)));
+      DT.push(80 + Math.sin(i * 0.11) * 6 - (i > 40 && i < 70 ? 12 : 0));
+      RHOB.push(2.35 + Math.cos(i * 0.08) * 0.08 - (i > 40 && i < 70 ? 0.15 : 0));
+    }
+    return {
+      well_id: wellId || 'DEMO',
+      depths: depths,
+      GR: GR,
+      RES: RES,
+      DT: DT,
+      RHOB: RHOB,
+      epistemic: { layer: 'SPEC', confidence_cap: 0.4, note: 'synthetic demo until LAS hydrate' },
+    };
+  }
+
+  function resizeCanvas(c) {
+    var r = c.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    c.width = Math.max(1, Math.floor(r.width * dpr));
+    c.height = Math.max(1, Math.floor(r.height * dpr));
+    var ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return ctx;
+  }
+
+  function drawTrack(c, values, depths, color, name, logScale) {
+    var ctx = resizeCanvas(c);
+    var w = c.getBoundingClientRect().width;
+    var h = c.getBoundingClientRect().height;
+    ctx.clearRect(0, 0, w, h);
+    if (!values || !values.length) {
+      ctx.fillStyle = '#456';
+      ctx.font = '11px system-ui';
+      ctx.fillText(name + ' — no data', 8, 20);
+      return;
+    }
+    var minV = values[0], maxV = values[0];
+    for (var i = 1; i < values.length; i++) {
+      if (values[i] < minV) minV = values[i];
+      if (values[i] > maxV) maxV = values[i];
+    }
+    if (logScale) {
+      minV = Math.max(minV, 0.1);
+      maxV = Math.max(maxV, minV * 1.01);
+    }
+    var pad = 6;
+    // grid
+    ctx.strokeStyle = '#1a2430';
+    ctx.lineWidth = 1;
+    for (var g = 0; g < 5; g++) {
+      var gy = pad + (h - 2 * pad) * g / 4;
+      ctx.beginPath();
+      ctx.moveTo(0, gy);
+      ctx.lineTo(w, gy);
+      ctx.stroke();
+    }
+    // curve
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (var j = 0; j < values.length; j++) {
+      var v = values[j];
+      var nx;
+      if (logScale) {
+        nx = pad + (w - 2 * pad) * (Math.log10(Math.max(v, 0.1)) - Math.log10(minV)) /
+          (Math.log10(maxV) - Math.log10(minV) || 1);
+      } else {
+        nx = pad + (w - 2 * pad) * (v - minV) / (maxV - minV || 1);
+      }
+      var ny = pad + (h - 2 * pad) * j / (values.length - 1 || 1);
+      if (j === 0) ctx.moveTo(nx, ny);
+      else ctx.lineTo(nx, ny);
+    }
+    ctx.stroke();
+    // label
+    ctx.fillStyle = color;
+    ctx.font = '10px system-ui';
+    ctx.fillText(name, 6, 14);
+    // cursor
+    if (cursorIdx >= 0 && cursorIdx < values.length) {
+      var cy = pad + (h - 2 * pad) * cursorIdx / (values.length - 1 || 1);
+      ctx.strokeStyle = '#f0c040';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, cy);
+      ctx.lineTo(w, cy);
+      ctx.stroke();
+    }
+  }
+
+  function redrawAll() {
+    if (!series) return;
+    drawTrack(canvases[0], series.GR, series.depths, '#5dade2', 'GR', false);
+    drawTrack(canvases[1], series.RES, series.depths, '#58d68d', 'RES', true);
+    drawTrack(canvases[2], series.DT, series.depths, '#f5b041', 'DT', false);
+    drawTrack(canvases[3], series.RHOB, series.depths, '#af7ac5', 'RHOB', false);
+    if (series.depths && series.depths[cursorIdx] != null) {
+      el.depth.textContent = series.depths[cursorIdx].toFixed(1) + ' m';
+      el.cursorInfo.textContent =
+        'Depth ' + series.depths[cursorIdx].toFixed(1) +
+        ' · GR ' + series.GR[cursorIdx].toFixed(1) +
+        ' · RES ' + series.RES[cursorIdx].toFixed(2) +
+        ' · DT ' + series.DT[cursorIdx].toFixed(1) +
+        ' · RHOB ' + series.RHOB[cursorIdx].toFixed(2);
+    }
+  }
+
+  function setCursorFromEvent(c, ev) {
+    if (!series || !series.depths.length) return;
+    var rect = c.getBoundingClientRect();
+    var y = (ev.clientY - rect.top) / rect.height;
+    y = Math.max(0, Math.min(1, y));
+    cursorIdx = Math.round(y * (series.depths.length - 1));
+    redrawAll();
+  }
+
+  canvases.forEach(function (c) {
+    c.addEventListener('pointerdown', function (ev) {
+      c.setPointerCapture(ev.pointerId);
+      setCursorFromEvent(c, ev);
+    });
+    c.addEventListener('pointermove', function (ev) {
+      if (ev.buttons) setCursorFromEvent(c, ev);
+    });
+  });
+  window.addEventListener('resize', function () { redrawAll(); });
+
+  function applyArgs(args) {
+    lastArgs = args || {};
+    el.wellId.textContent = lastArgs.well_id || '—';
+    el.mode.textContent = lastArgs.mode || 'summary';
+  }
+
+  function applyResult(params) {
+    var sc = (params && (params.structuredContent || params)) || {};
+    // unwrap tool content JSON if needed
+    if (params && params.content && params.content[0] && params.content[0].text) {
+      try {
+        var parsed = JSON.parse(params.content[0].text);
+        if (parsed && typeof parsed === 'object') sc = Object.assign({}, parsed, sc);
+      } catch (e) { /* keep sc */ }
+    }
+    lastPayload = sc;
+    var holds = sc.holds || (sc.envelope && sc.envelope.holds) || [];
+    var veto = sc.veto || (sc.envelope && sc.envelope.veto);
+    show(el.hold, holds && holds.length ? ('888 HOLD: ' + JSON.stringify(holds)) : '');
+    show(el.veto, veto && veto.active ? ('F13 VETO: ' + (veto.reason || 'active')) : '');
+    if (sc.well_id) el.wellId.textContent = sc.well_id;
+    if (sc.mode) el.mode.textContent = sc.mode;
+    if (sc.band) el.band.textContent = sc.band;
+    else if (sc.summary && sc.summary.band) el.band.textContent = sc.summary.band;
+
+    var epi = sc.epistemic || (sc.summary && sc.summary.epistemic) || {};
+    el.epiBadge.textContent = (epi.layer || 'OBS') + ' · cap ' + (epi.confidence_cap != null ? epi.confidence_cap : '—');
+
+    if (sc.curves && sc.depths) {
+      series = {
+        depths: sc.depths,
+        GR: sc.curves.GR || sc.curves.gr,
+        RES: sc.curves.RES || sc.curves.res || sc.curves.ILD,
+        DT: sc.curves.DT || sc.curves.dt,
+        RHOB: sc.curves.RHOB || sc.curves.rhob,
+      };
+    } else {
+      series = synthSeries(sc.well_id || lastArgs && lastArgs.well_id, 120);
+    }
+    cursorIdx = Math.floor((series.depths.length - 1) / 2);
+    redrawAll();
+    el.out.textContent = JSON.stringify({
+      well_id: sc.well_id,
+      mode: sc.mode,
+      band: sc.band || (sc.summary && sc.summary.band),
+      epistemic: epi,
+      ui: sc.ui,
+      note: sc.summary && sc.summary.note,
+    }, null, 2);
+    el.btnExport.disabled = false;
+  }
+
+  function onMessage(ev) {
+    var data = ev.data;
+    if (typeof data === 'string') {
+      try { data = JSON.parse(data); } catch (e) { return; }
+    }
+    if (!data || data.jsonrpc !== '2.0') return;
+
+    if (data.id != null && pending.has(data.id)) {
+      var p = pending.get(data.id);
+      clearTimeout(p.t);
+      pending.delete(data.id);
+      if (data.error) p.reject(data.error);
+      else p.resolve(data.result);
+      return;
+    }
+
+    var m = data.method;
+    if (m === 'ui/notifications/tool-input' || m === 'ui/notifications/tool-input-partial') {
+      applyArgs(data.params && data.params.arguments);
+      // Preview with synthetic until result arrives
+      series = synthSeries(lastArgs && lastArgs.well_id, 120);
+      cursorIdx = 40;
+      redrawAll();
+      el.status.textContent = 'Tool input — synthetic preview until result';
+      el.btn.disabled = false;
+    }
+    if (m === 'ui/notifications/tool-result') {
+      applyResult(data.params || {});
+      el.status.textContent = 'Tool result (host-mediated)';
+      el.btn.disabled = false;
+    }
+    if (m === 'ui/notifications/tool-cancelled') {
+      show(el.err, 'Tool cancelled by host');
+    }
+  }
+
+  window.addEventListener('message', onMessage);
+
+  el.btn.addEventListener('click', function () {
+    if (!lastArgs || !lastArgs.well_id) {
+      show(el.err, 'No well_id — wait for host tool-input');
+      return;
+    }
+    el.btn.disabled = true;
+    rpcRequest('tools/call', {
+      name: 'geox_well_desk_open',
+      arguments: { well_id: lastArgs.well_id, mode: lastArgs.mode || 'summary' },
+    }).then(function (result) {
+      applyResult(result || {});
+      el.status.textContent = 'Refresh complete';
+      el.btn.disabled = false;
+    }).catch(function (err) {
+      show(el.err, 'Host tools/call failed: ' + JSON.stringify(err));
+      el.btn.disabled = false;
+    });
+  });
+
+  /* Witness export: compose tracks into one PNG (client-side only) */
+  el.btnExport.addEventListener('click', function () {
+    if (!series) return;
+    var out = document.createElement('canvas');
+    var tw = 220, th = 320, labelW = 40;
+    out.width = labelW + tw * 4 + 20;
+    out.height = th + 48;
+    var ctx = out.getContext('2d');
+    ctx.fillStyle = '#0b0f14';
+    ctx.fillRect(0, 0, out.width, out.height);
+    ctx.fillStyle = '#e6edf3';
+    ctx.font = '12px system-ui';
+    var wid = el.wellId.textContent;
+    var epi = el.epiBadge.textContent;
+    ctx.fillText('GEOX Well-Desk witness · ' + wid + ' · ' + epi, 8, 16);
+    ctx.font = '10px system-ui';
+    ctx.fillStyle = '#8899aa';
+    ctx.fillText(
+      'depth=' + el.depth.textContent +
+      ' · mode=' + el.mode.textContent +
+      ' · band=' + el.band.textContent +
+      ' · no secrets · host-mediated',
+      8, 32
+    );
+    // draw each track into composite
+    var names = ['GR', 'RES', 'DT', 'RHOB'];
+    for (var i = 0; i < 4; i++) {
+      var src = canvases[i];
+      ctx.drawImage(src, labelW + i * tw, 40, tw - 4, th);
+      ctx.fillStyle = '#8899aa';
+      ctx.fillText(names[i], labelW + i * tw + 6, 52);
+    }
+    try {
+      var a = document.createElement('a');
+      a.download = 'geox-well-desk-' + (wid || 'export') + '.png';
+      a.href = out.toDataURL('image/png');
+      a.click();
+      el.status.textContent = 'Witness PNG exported (client-side; seal not attached yet)';
+    } catch (e) {
+      show(el.err, 'Export failed: ' + e);
+    }
+  });
+
+  post({
+    jsonrpc: '2.0',
+    id: nextId++,
+    method: 'ui/initialize',
+    params: {
+      protocolVersion: PROTOCOL,
+      appInfo: { name: 'geox-well-desk', version: '0.2.0-viz-p0plus' },
+    },
+  });
+  post({ jsonrpc: '2.0', method: 'ui/notifications/initialized' });
+  el.status.textContent = 'Initialized — waiting for tool-input/tool-result';
+  // Standalone preview (no parent host)
+  if (window.parent === window) {
+    series = synthSeries('STANDALONE-DEMO', 120);
+    cursorIdx = 50;
+    el.wellId.textContent = 'STANDALONE-DEMO';
+    el.mode.textContent = 'summary';
+    el.band.textContent = 'UNKNOWN';
+    el.btnExport.disabled = false;
+    redrawAll();
+    el.status.textContent = 'Standalone preview (synthetic)';
+  }
+})();
+  </script>
+</body>
+</html>

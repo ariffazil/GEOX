@@ -378,3 +378,146 @@ async def geox_attribute_registry_list_tool(*args: Any, **kwargs: Any) -> dict:
         "status": "DEPRECATED",
         "message": "geox_attribute_registry_list_tool is now internal. Use arif_ops_measure for system queries.",
     }
+
+
+# ── ZEN-15 CONSOLIDATION (2026-07-13) ──────────────────────────────────────
+# 33 public tools → 15 canonical. These aliases redirect absorbed tools
+# to their canonical parent with the appropriate mode parameter.
+# DITEMPA BUKAN DIBERI.
+
+# ── WELL domain ─────────────────────────────────────────────────────────────
+
+async def geox_well_qc(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_petrophysics(mode='qc') instead."""
+    from geox_mcp.tools.petrophysics_unified import geox_petrophysics
+    kwargs.setdefault("mode", "qc")
+    return await geox_petrophysics(*args, **kwargs)
+
+
+async def geox_well_desk_open(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_well_desk(mode='open') instead."""
+    from geox_mcp.tools.integration_well import geox_well_desk_open as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_well_desk_publish(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_well_desk(mode='publish') instead."""
+    from geox_mcp.tools.integration_well import geox_well_desk_publish as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_render_well_panel(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_well_desk(mode='render') instead."""
+    from geox_mcp.render_well_panel_petro import geox_render_well_panel as _impl
+    return await _impl(*args, **kwargs)
+
+
+# ── SEISMIC domain ──────────────────────────────────────────────────────────
+
+async def geox_vision(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_seismic_interpret(mode='vision') instead."""
+    from geox_mcp.tools.vision_unified import geox_vision as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_contrast_detect(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_seismic_interpret(mode='contrast') instead."""
+    from geox_mcp.tools.contrast_detect import geox_contrast_detect as _impl
+    return await _impl(*args, **kwargs)
+
+
+# ── GRAVMAG domain ──────────────────────────────────────────────────────────
+
+async def geox_gravmag_studio_open(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_gravmag_studio(mode='open') instead."""
+    from geox_mcp.tools.geophysics_studio import geox_gravmag_studio_open as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_gravmag_studio_screen(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_gravmag_studio(mode='screen') instead."""
+    from geox_mcp.tools.geophysics_studio_screen import geox_gravmag_studio_screen as _impl
+    return await _impl(*args, **kwargs)
+
+
+# ── BASIN domain ────────────────────────────────────────────────────────────
+
+async def geox_basin_backstrip(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_basin(mode='backstrip') instead."""
+    from geox_mcp.tools.basin_engines.backstrip_tool import geox_basin_backstrip as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_sediment_mass_balance(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_basin(mode='mass_balance') instead."""
+    from geox_mcp.tools.basin_engines.mass_balance_tool import geox_sediment_mass_balance as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_thermal_maturity_history(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_basin(mode='thermal') instead."""
+    from geox_mcp.tools.basin_engines.thermal_tool import geox_thermal_maturity_history as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_map_context_scene(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_basin(mode='scene') instead."""
+    from geox_mcp.tools.map_context import geox_map_context_scene as _impl
+    return await _impl(*args, **kwargs)
+
+
+# ── STRATIGRAPHY domain ─────────────────────────────────────────────────────
+
+async def geox_biostrat_parse(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_sequence(mode='biostrat_parse') instead."""
+    from geox_mcp.tools.biostrat_parse import geox_biostrat_parse as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_biostrat_falsify(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_sequence(mode='biostrat_falsify') instead."""
+    from geox_mcp.tools.biostrat_falsify import geox_biostrat_falsify as _impl
+    return await _impl(*args, **kwargs)
+
+
+# ── GOVERNANCE domain ───────────────────────────────────────────────────────
+
+async def geox_evidence(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_claim(mode='evidence') instead."""
+    from geox_mcp.tools.evidence_unified import geox_evidence as _impl
+    return await _impl(*args, **kwargs)
+
+
+async def geox_consequence_footprint(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_claim(mode='consequence') instead."""
+    from geox_mcp.tools.claim_unified import geox_claim
+    kwargs.setdefault("mode", "consequence")
+    return await geox_claim(*args, **kwargs)
+
+
+async def geox_optionality_loss(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_claim(mode='optionality') instead."""
+    from geox_mcp.tools.claim_unified import geox_claim
+    kwargs.setdefault("mode", "optionality")
+    return await geox_claim(*args, **kwargs)
+
+
+async def geox_feedback_integrity(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_claim(mode='feedback') instead."""
+    from geox_mcp.tools.claim_unified import geox_claim
+    kwargs.setdefault("mode", "feedback")
+    return await geox_claim(*args, **kwargs)
+
+
+async def geox_material_truth_challenge(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_claim(mode='truth_challenge') instead."""
+    from geox_mcp.tools.claim_unified import geox_claim
+    kwargs.setdefault("mode", "truth_challenge")
+    return await geox_claim(*args, **kwargs)
+
+
+async def geox_cascade_pathway(*args: Any, **kwargs: Any) -> dict:
+    """[DEPRECATED] Use geox_claim(mode='cascade') instead."""
+    from geox_mcp.tools.claim_unified import geox_claim
+    kwargs.setdefault("mode", "cascade")
+    return await geox_claim(*args, **kwargs)

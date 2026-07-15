@@ -9,7 +9,7 @@
 #   NOT: Age → Stratigraphy → Tectonics
 #   If biostrat conflicts with seismic → the surface stays, the age is questioned.
 #
-# Sources: PETRONAS internal reports (Kinabalu, Sabah, NW Sabah studies),
+# Sources: Operator internal reports (Kinabalu, Sabah, NW Sabah studies),
 #          Nannotax3 (mikrotax.org), GTS2012, published literature.
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ taxonomy_atlas:
       note: "Different nomenclature from paleontological usage — use for extant species biology only"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# PRIMARY ZONATION SCHEME — PETRONAS Standard
+# PRIMARY ZONATION SCHEME — Operator Standard
 # ─────────────────────────────────────────────────────────────────────────────
 
 zonation_schemes:
@@ -71,10 +71,10 @@ zonation_schemes:
     name: "Martini (1971)"
     notation: "NN1–NN21 (Neogene), NP1–NP25 (Paleogene)"
     scope: "Cenozoic calcareous nannofossils"
-    usage: "THE anchor for all PETRONAS age calibration"
+    usage: "THE anchor for all operator age calibration"
     references:
       - "Martini, E. (1971) Standard Tertiary and Quaternary calcareous nannoplankton zonation. Proc. 2nd Planktonic Conference Roma, 2: 739–785."
-    petronas_reports:
+    operator_reports:
       - "ZoisitDeep-1 BiostratReport PROOF"
       - "CECIL-1 Biostratigraphy final report 09-06-2026"
       - "MR1_Data Management & Review_PCSB_NW SABAH Regional Study 14_5_26"
@@ -95,7 +95,7 @@ zonation_schemes:
       notation: "CN1–CN15 (Neogene), CP1–CP19 (Paleogene)"
       scope: "Low-latitude coccolith zonation"
       usage: "Alternative to Martini, used alongside NN zones"
-      petronas_reports:
+      operator_reports:
         - "SBO3BTRIBP04"
         - "CECIL-1 Biostratigraphy final report 09-06-2026"
 
@@ -103,7 +103,7 @@ zonation_schemes:
       notation: "CN1–CN15, CP1–CP19"
       scope: "Supplementary modification to low-latitude zonation"
       usage: "Code numbers for low-latitude nannofossil zones"
-      petronas_reports:
+      operator_reports:
         - "Garantung-1 BiostratReport_Proof2025"
         - "CECIL-1 Biostratigraphy final report 09-06-2026"
 
@@ -170,7 +170,7 @@ counting_standards:
     description: "Cascading counts of nannofossil abundance"
     usage: "Industry-standard counting method for abundance data"
     categories: ["rare", "few", "common", "abundant", "dominant"]
-    petronas_reports:
+    operator_reports:
       - "Garantung-1 BiostratReport_Proof2025"
       - "SKO3MOMEGL6679"
 
@@ -198,7 +198,7 @@ epistemic:
   status: LIVE_INTELLIGENCE
   last_verified: "2026-06-16"
   data_sources:
-    - "PETRONAS internal biostrat reports (Kinabalu, Sabah, NW Sabah)"
+    - "Operator internal biostrat reports (Kinabalu, Sabah, NW Sabah)"
     - "Nannotax3 website (mikrotax.org)"
     - "Published literature (Martini, Blow, Agnini, Morley, etc.)"
     - "PBDB API (paleobiodb.org)"

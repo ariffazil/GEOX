@@ -37,7 +37,7 @@ curl http://localhost:8081/health | python3 -m json.tool
 
 # Expected: {"status": "healthy", "service": "geox-unified"}
 
-# List tools (40 canonical tools)
+# List tools (count is runtime fact)
 curl -s http://localhost:8081/tools | python3 -m json.tool | head -30
 
 # System registry status

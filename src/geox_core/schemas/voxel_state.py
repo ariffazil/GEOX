@@ -16,7 +16,7 @@ Plus 3 field-layer metadata fields that make the field/record split queryable:
   • forward_model_residual     — discrepancy between forward-modeled and observed
 
 Backbone:
-  material_state wraps Physics9State (genuine non-conflicting extension).
+  material_state wraps Physics13State (genuine non-conflicting extension).
   Wraps, doesn't replace — Physics9 boundaries (0.02 ≤ φ ≤ 0.45, etc.) untouched.
 
 This is a SKELETON schema — doc-only pilot per ADR-008 Phase 1.
@@ -37,8 +37,8 @@ from typing import Annotated, Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-# Re-export Physics9State — schema wraps, doesn't redefine
-from geox_core.physics.state import Physics9State
+# Re-export Physics13State — schema wraps, doesn't redefine
+from geox_core.physics.state import Physics13State
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -303,9 +303,9 @@ class MaterialState(BaseModel):
     mechanics: MechanicsProperties = Field(default_factory=MechanicsProperties)
 
     # Physics9 anchor — wraps the canonical 9-parameter state
-    physics9_anchor: Optional[Physics9State] = Field(
+    physics9_anchor: Optional[Physics13State] = Field(
         default=None,
-        description="Optional Physics9State anchor — when populated, supplies the canonical 9 physics dials (rho, vp, vs, rho_e, chi, k, P, T, phi)",
+        description="Optional Physics13State anchor — when populated, supplies the canonical 9 physics dials (rho, vp, vs, rho_e, chi, k, P, T, phi)",
     )
 
     @field_validator("lithology", "composition_class")
@@ -527,7 +527,7 @@ class VoxelState4(BaseModel):
       • forward_model_residual — forward-model vs observation mismatch
 
     Backward compatibility:
-      material_state.physics9_anchor wraps Physics9State (the canonical 9-parameter
+      material_state.physics9_anchor wraps Physics13State (the canonical 9-parameter
       vector). Boundaries (0.02 ≤ φ ≤ 0.45, 0.0 ≤ Sw ≤ 1.0, etc.) UNTOUCHED.
     """
 

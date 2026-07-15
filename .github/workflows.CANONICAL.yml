@@ -4,15 +4,21 @@
 # ═══════════════════════════════════════════════════════════════
 
 canonical_workflows:
-  - ci.yml                   # Security scan + test suite + pip-audit
-  - forge.yml                # Validate skills registry and geoscience contracts
-  - publish-image.yml        # Build + push Docker image to GHCR
-  - repo-hygiene-weekly.yml  # Weekly automation-health digest
+  - agentic-ci.yml              # Dual-lane: Standard CI + BIJAKSANA metrics
+  - forge.yml                   # Validate skills registry and geoscience contracts
+  - publish-image.yml           # Build + push Docker image to GHCR
+  - repo-hygiene-weekly.yml     # Weekly automation-health digest
   - repo-routing-validation.yml # Enforces REPO= trailer on commits
+  - governance-gate.yml         # Constitutional audit on every push
+  - sentinel-premerge-gate.yml  # Pre-merge binary gate
+  - auto-merge-dependabot.yml   # Dependabot auto-merge
+  - auto-tag-date.yml           # Auto tag on date
+  - copilot-setup-steps.yml     # Copilot agent setup
 
 required_checks_for_main:
-  - "GEOX CI"
+  - "🧠 Agentic CI"
   - "GEOX Forge Pipeline"
   - "Repo Routing Validation"
+  - "🛡️ GEOX Sentinel"
 
-last_audit: "2026-05-26"
+last_audit: "2026-06-30"

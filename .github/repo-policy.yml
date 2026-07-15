@@ -51,4 +51,16 @@ required_checks:
     tier: core
     required: true
 
+  - name: "Gödel Lock Check"
+    check_name: "Gödel Lock Check"
+    purpose: "External witness (Φ_external) required for SEAL-bound claims"
+    tier: core
+    required: true
+
+  - name: "External Witness Attestation"
+    check_name: "External Witness Attestation"
+    purpose: "Φ_external ≥ 0.5 for irreversible actions; ≥ 0.9 for full SEAL"
+    tier: core
+    required: true
+
 exceptions: []

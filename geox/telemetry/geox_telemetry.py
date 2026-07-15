@@ -1,1 +1,0 @@
-../../src/geox_core/telemetry/geox_telemetry.py

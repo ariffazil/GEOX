@@ -22,6 +22,7 @@ from typing import Any
 @dataclass(frozen=True)
 class ToolDiscovery:
     """LLM-optimized tool discovery metadata — canonical 16 tools only."""
+
     name: str
     domain_verb: str  # external-facing alias, e.g. gravity.get_bouguer_anomaly
     description: str
@@ -44,9 +45,7 @@ class ToolDiscovery:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
-
     # ── WELL DOMAIN ────────────────────────────────────────────────────────────
-
     "geox_well_ingest": ToolDiscovery(
         name="geox_well_ingest",
         domain_verb="well.load_logs",
@@ -65,7 +64,6 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="QUALIFY",
         is_888_hold=False,
     ),
-
     "geox_well_qc": ToolDiscovery(
         name="geox_well_qc",
         domain_verb="well.check_quality",
@@ -84,7 +82,6 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="QUALIFY",
         is_888_hold=False,
     ),
-
     "geox_petrophysics": ToolDiscovery(
         name="geox_petrophysics",
         domain_verb="well.derive_petrophysics",
@@ -103,7 +100,6 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="ADVISORY",
         is_888_hold=False,
     ),
-
     "geox_sequence": ToolDiscovery(
         name="geox_sequence",
         domain_verb="well.correlate",
@@ -122,9 +118,7 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="ADVISORY",
         is_888_hold=False,
     ),
-
     # ── SEISMIC DOMAIN ─────────────────────────────────────────────────────────
-
     "geox_seismic_ingest": ToolDiscovery(
         name="geox_seismic_ingest",
         domain_verb="seismic.load_volume",
@@ -143,12 +137,11 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="QUALIFY",
         is_888_hold=False,
     ),
-
     "geox_seismic_compute": ToolDiscovery(
         name="geox_seismic_compute",
         domain_verb="seismic.compute",
-        description="Seismic computation: synthetics, well ties, AVO analysis, attributes, seismic inversion.",
-        use_when="User wants to compute seismic properties, create synthetics, tie wells to seismic, or analyze AVO. Keywords: 'synthetic', 'well tie', 'AVO', 'attribute', 'inversion', 'RMS amplitude'.",
+        description="Seismic computation: synthetics, well ties, AVO analysis, attributes, seismic inversion. Time-depth anchoring uses checkshot data only.",
+        use_when="User wants to compute seismic properties, create synthetics, tie wells to seismic, or analyze AVO. Keywords: 'synthetic', 'well tie', 'AVO', 'attribute', 'inversion', 'RMS amplitude'. For time-depth: checkshot only (single path).",
         do_not_use_when="User wants to load seismic data (use geox_seismic_ingest) or interpret horizons/faults (use geox_seismic_interpret).",
         keywords=["synthetic", "well tie", "avo", "attribute", "inversion", "rms", "variance", "sweetness", "impedance"],
         examples=[
@@ -158,11 +151,22 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
             "Run AVO analysis on this CDP gather",
         ],
         domain="seismic",
-        modes=["synthetic", "well_tie", "time_depth_anchor", "anomalous_contrast", "attribute", "inversion"],
+        modes=[
+            "synthetic",
+            "well_tie",
+            "time_depth_anchor",
+            "anomalous_contrast",
+            "attribute",
+            "inversion",
+            "tie_preflight",
+            "tie_receipt",
+            "wavelet_extract",
+            "mistie_rms",
+            "time_depth_calibrate",
+        ],
         acrisk="ADVISORY",
         is_888_hold=False,
     ),
-
     "geox_seismic_interpret": ToolDiscovery(
         name="geox_seismic_interpret",
         domain_verb="seismic.interpret",
@@ -181,7 +185,6 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="ADVISORY",
         is_888_hold=False,
     ),
-
     "geox_vision": ToolDiscovery(
         name="geox_vision",
         domain_verb="seismic.analyze_vision",
@@ -200,9 +203,7 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="ADVISORY",
         is_888_hold=False,
     ),
-
     # ── MODEL DOMAIN ───────────────────────────────────────────────────────────
-
     "geox_subsurface_model": ToolDiscovery(
         name="geox_subsurface_model",
         domain_verb="model.joint_inversion",
@@ -221,7 +222,6 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="HOLD",
         is_888_hold=True,
     ),
-
     "geox_geomechanics": ToolDiscovery(
         name="geox_geomechanics",
         domain_verb="model.mechanics",
@@ -240,9 +240,7 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="QUALIFY",
         is_888_hold=False,
     ),
-
     # ── BASIN DOMAIN ───────────────────────────────────────────────────────────
-
     "geox_basin": ToolDiscovery(
         name="geox_basin",
         domain_verb="basin.profile",
@@ -261,14 +259,22 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="QUALIFY",
         is_888_hold=False,
     ),
-
     "geox_deep_time_state": ToolDiscovery(
         name="geox_deep_time_state",
         domain_verb="basin.deep_time",
         description="Earth State Vector at any geological age: plate polygons, basin architecture, paleobathymetry, heat flow, subsidence history. Query by age (Ma), period name, or natural language.",
         use_when="User wants to know the plate configuration, basin architecture, or thermal state at a specific geological age. Keywords: 'deep time', 'plate reconstruction', 'paleobathymetry', 'subsidence', 'Jurassic', 'Cretaceous'.",
         do_not_use_when="User wants to analyze present-day data (use geox_basin for modern basin profiling).",
-        keywords=["deep time", "plate reconstruction", "paleobathymetry", "subsidence", "heat flow", "Ma", "geological age", "paleogeography"],
+        keywords=[
+            "deep time",
+            "plate reconstruction",
+            "paleobathymetry",
+            "subsidence",
+            "heat flow",
+            "Ma",
+            "geological age",
+            "paleogeography",
+        ],
         examples=[
             "What's the plate configuration at 100 Ma?",
             "Show the paleobathymetry of the Tethys Ocean at 50 Ma",
@@ -280,9 +286,7 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="ADVISORY",
         is_888_hold=False,
     ),
-
     # ── GOVERNANCE DOMAIN ──────────────────────────────────────────────────────
-
     "geox_claim": ToolDiscovery(
         name="geox_claim",
         domain_verb="govern.claim",
@@ -301,7 +305,6 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="HOLD",
         is_888_hold=True,
     ),
-
     "geox_evidence": ToolDiscovery(
         name="geox_evidence",
         domain_verb="govern.evidence",
@@ -320,9 +323,7 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="HOLD",
         is_888_hold=True,
     ),
-
     # ── EVALUATION DOMAIN ──────────────────────────────────────────────────────
-
     "geox_prospect": ToolDiscovery(
         name="geox_prospect",
         domain_verb="govern.prospect",
@@ -341,9 +342,7 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="HOLD",
         is_888_hold=True,
     ),
-
     # ── DOCTRINE DOMAIN ────────────────────────────────────────────────────────
-
     "geox_doctrine": ToolDiscovery(
         name="geox_doctrine",
         domain_verb="govern.doctrine",
@@ -369,15 +368,28 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
 # DISCOVERY API
 # ═══════════════════════════════════════════════════════════════════════════════
 
-CANONICAL_TOOL_NAMES: frozenset[str] = frozenset([
-    # Surface (12)
-    "geox_well_ingest", "geox_well_qc", "geox_petrophysics", "geox_sequence",
-    "geox_seismic_ingest", "geox_seismic_compute", "geox_seismic_interpret", "geox_vision",
-    "geox_subsurface_model", "geox_geomechanics",
-    "geox_basin", "geox_deep_time_state",
-    # Internal (4)
-    "geox_claim", "geox_evidence", "geox_prospect", "geox_doctrine",
-])
+CANONICAL_TOOL_NAMES: frozenset[str] = frozenset(
+    [
+        # Surface (12)
+        "geox_well_ingest",
+        "geox_well_qc",
+        "geox_petrophysics",
+        "geox_sequence",
+        "geox_seismic_ingest",
+        "geox_seismic_compute",
+        "geox_seismic_interpret",
+        "geox_vision",
+        "geox_subsurface_model",
+        "geox_geomechanics",
+        "geox_basin",
+        "geox_deep_time_state",
+        # Internal (4)
+        "geox_claim",
+        "geox_evidence",
+        "geox_prospect",
+        "geox_doctrine",
+    ]
+)
 
 
 def get_tool_discovery(tool_name: str) -> ToolDiscovery | None:
@@ -406,10 +418,9 @@ def find_tools_by_keyword(keyword: str) -> list[ToolDiscovery]:
     """Find tools matching a keyword."""
     keyword_lower = keyword.lower()
     return [
-        td for td in TOOL_DISCOVERY.values()
-        if keyword_lower in td.keywords
-        or keyword_lower in td.description.lower()
-        or keyword_lower in td.use_when.lower()
+        td
+        for td in TOOL_DISCOVERY.values()
+        if keyword_lower in td.keywords or keyword_lower in td.description.lower() or keyword_lower in td.use_when.lower()
     ]
 
 
@@ -437,18 +448,18 @@ def format_discovery_for_llm(tool_name: str) -> str:
     td = TOOL_DISCOVERY.get(tool_name)
     if not td:
         return f"Tool '{tool_name}' not found in discovery registry."
-    
+
     modes_str = ""
     if td.modes:
         modes_str = f"\n  Modes: {', '.join(td.modes)}"
-    
+
     return f"""Tool: {td.name}
 Domain: {td.domain}
 Description: {td.description}
 Use when: {td.use_when}
 Do NOT use when: {td.do_not_use_when}
 Examples:
-{chr(10).join(f'  - {ex}' for ex in td.examples)}{modes_str}"""
+{chr(10).join(f"  - {ex}" for ex in td.examples)}{modes_str}"""
 
 
 def format_all_discoveries_for_llm() -> str:
@@ -456,10 +467,10 @@ def format_all_discoveries_for_llm() -> str:
     sections = {}
     for td in TOOL_DISCOVERY.values():
         sections.setdefault(td.domain, []).append(td)
-    
+
     result = "GEOX Tools — Quick Reference\n"
     result += "=" * 50 + "\n\n"
-    
+
     for domain, tools in sorted(sections.items()):
         result += f"【{domain.upper()} DOMAIN】\n"
         for td in tools:
@@ -467,13 +478,14 @@ def format_all_discoveries_for_llm() -> str:
             result += f"    {td.description}\n"
             result += f"    Use when: {td.use_when[:100]}...\n"
         result += "\n"
-    
+
     return result
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MCP RESOURCE — Tool Discovery
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 def get_tool_discovery_resource() -> dict[str, Any]:
     """Return tool discovery as MCP resource for LLMs (canonical 16 only)."""
@@ -499,6 +511,6 @@ def get_tool_discovery_resource() -> dict[str, Any]:
                     "is_888_hold": td.is_888_hold,
                 }
                 for td in get_all_discoveries().values()
-            ]
-        }
+            ],
+        },
     }

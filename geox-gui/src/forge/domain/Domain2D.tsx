@@ -198,12 +198,15 @@ const SeismicCanvas: React.FC<{
     ctx.fillStyle = '#0A0C0E';
     ctx.fillRect(0, 0, width, height);
 
+    const showWiggle = displayMode === 'wiggle' || displayMode === 'wiggle_va';
+    const showVa = displayMode === 'wiggle_va' || displayMode === 'va';
+
     // Draw traces
     for (let t = 0; t < data.traceCount; t++) {
       const trace = data.traces[t];
       const x = t * traceSpacing + traceSpacing / 2;
 
-      if (displayMode === 'wiggle' || displayMode === 'wiggle_va') {
+      if (showWiggle) {
         // Wiggle trace
         ctx.beginPath();
         ctx.strokeStyle = '#E2E8F0';
@@ -223,7 +226,7 @@ const SeismicCanvas: React.FC<{
         ctx.stroke();
 
         // VA fill
-        if (displayMode === 'wiggle_va' || displayMode === 'va') {
+        if (showVa) {
           ctx.beginPath();
           ctx.fillStyle = 'rgba(6, 182, 212, 0.3)';
           

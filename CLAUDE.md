@@ -1,3 +1,6 @@
+> **Canonical federation agent instruction:** `/root/AAA/CLAUDE.md`
+> **Federation contract:** `/root/arifOS/FEDERATION_CONTRACT.md`
+
 # CLAUDE.md — GEOX Agent Instructions
 
 > **GEOX is the earth intelligence organ of the arifOS federation.**
@@ -8,14 +11,14 @@
 
 ## What you are working in
 
-GEOX provides 40 MCP tools for geoscience evidence: well ingest, petrophysics, seismic, prospect evaluation, and vision interpretation. All outputs carry `cross_modal_stability`, `semantic_density_score`, and `dim_spot_flag`.
+GEOX provides canonical MCP tools for geoscience evidence: well ingest, petrophysics, seismic, prospect evaluation, and vision interpretation. All outputs carry `cross_modal_stability`, `semantic_density_score`, and `dim_spot_flag`. Run `tools/list` at runtime for exact count.
 
 ## Build / run / test
 
 ```bash
 cd /root/geox
 pip install -e ".[dev]"                              # or: uv sync --frozen
-PYTHONPATH=src pytest tests/ -q --tb=short          # 229+ tests
+PYTHONPATH=src pytest tests/ -q --tb=short          # test suite
 PYTHONPATH=src python scripts/smoke_test.py         # smoke test
 make lint && make format                             # ruff + mypy
 python server.py                                    # start on :8081
@@ -33,16 +36,16 @@ src/geox_core/   ← physics truth (NOT agent-facing)
     pinn.py                 ← Physics-Informed Neural Net (389 lines)
 
 src/geox_mcp/    ← agent surface (tools, contracts, resources)
-    tools/                  ← all 39 public tools
+    tools/                  ← all public tools
     contracts/              ← tool specs
     servers/                ← server bootstrap
 
 GENESIS/         ← constitutional charter + Cross-Modal Fidelity Theorem
-tests/           ← 60+ files, Nobel-grade physics locks (33/33)
+tests/           ← test suite with physics locks
 apps/            ← welldesk, seismic_vision, earth_volume, judge_console
 ```
 
-## The 39-tool canonical surface (key tools)
+## The canonical tool surface (key tools)
 
 `geox_basin_profile` · `geox_claim_create` · `geox_claim_validate` · `geox_claim_seal` · `geox_prospect_evaluate` · `geox_data_ingest_bundle` · `geox_data_qc_bundle` · `geox_sequence_interpret` · `geox_seismic_compute` · `geox_horizon_contrast_surface` · `geox_subsurface_generate_candidates` · `geox_subsurface_verify_integrity` · `geox_vision_minimax_inference`
 

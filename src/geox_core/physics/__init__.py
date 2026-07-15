@@ -54,13 +54,13 @@ from geox_core.physics.state import (
     SALT,
     SANDSTONE,
     SHALE,
-    Physics9State,
+    Physics13State,
     compute_earth_material_catalog,
 )
 
 __all__ = [
     # state
-    "Physics9State",
+    "Physics13State",
     "EARTH_MATERIAL_CATALOG",
     "SANDSTONE",
     "LIMESTONE",

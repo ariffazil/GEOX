@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GEOX GravMag Studio v0.1 — Forward Only</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #0f1419;
+      --panel: #1a2028;
+      --panel-2: #232b35;
+      --ink: #e6edf3;
+      --muted: #8b949e;
+      --line: #30363d;
+      --accent: #4cc2ff;
+      --accent-2: #f78166;
+      --warn: #d29922;
+      --ok: #3fb950;
+      --grid-low: #0a4d6e;
+      --grid-mid: #f0e442;
+      --grid-high: #f85149;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .shell {
+      min-height: 100vh;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      grid-template-rows: auto 1fr auto;
+    }
+    .header {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .header .badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+    .badge.mock { color: var(--warn); border-color: var(--warn); }
+    .badge.live { color: var(--ok); border-color: var(--ok); }
+    .badge.spec { color: var(--accent); border-color: var(--accent); }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 12px;
+      min-height: 0;
+    }
+    .canvas-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+    .canvas-frame {
+      flex: 1;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      min-height: 360px;
+      position: relative;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .canvas-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .side-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 4px;
+    }
+    .kv {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 10px;
+      font-size: 12px;
+    }
+    .kv .k { color: var(--muted); }
+    .kv .v { color: var(--ink); word-break: break-word; }
+    .caveat {
+      background: var(--panel-2);
+      border-left: 2px solid var(--warn);
+      padding: 6px 8px;
+      font-size: 11px;
+      color: var(--muted);
+      border-radius: 3px;
+      margin-top: 4px;
+    }
+    .tab-bar {
+      display: flex;
+      gap: 4px;
+      padding: 0 14px;
+      margin-top: -6px;
+    }
+    .tab {
+      padding: 6px 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+    .tab.active {
+      background: var(--bg);
+      color: var(--ink);
+      border-color: var(--accent);
+    }
+    .tab:hover:not(.active) { color: var(--ink); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: grid; }
+
+    .screen-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      min-height: 0;
+    }
+    .screen-cell {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+    .screen-cell canvas {
+      flex: 1;
+      background: #000;
+      border-radius: 6px;
+      min-height: 200px;
+    }
+    .abduction-panel {
+      grid-column: 1 / span 2;
+    }
+    .verdict-badge {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      min-width: 220px;
+      min-height: 80px;
+    }
+    .verdict-badge.pass { background: #0f3a1f; color: #7be08a; border: 1px solid #2d6e44; }
+    .verdict-badge.marginal { background: #3a2f0f; color: #f0d77b; border: 1px solid #6e5a2d; }
+    .verdict-badge.fail { background: #3a0f0f; color: #f07b7b; border: 1px solid #6e2d2d; }
+    .verdict-badge.hold { background: #2a2a2a; color: #b0b0b0; border: 1px solid #555; }
+    .verdict-badge small {
+      display: block;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.65);
+      margin-top: 6px;
+    }
+    .stats-line {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .stats-line .k { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .stats-line .v { color: var(--ink); font-variant-numeric: tabular-nums; font-size: 14px; font-weight: 600; }
+
+    .footer {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .footer code {
+      color: var(--accent);
+      background: var(--panel-2);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100%;
+      color: var(--muted);
+      gap: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    .empty code {
+      background: var(--panel-2);
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: var(--accent);
+    }
+    .controls {
+      display: grid;
+      gap: 8px;
+      font-size: 11px;
+    }
+    .controls label {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      align-items: center;
+    }
+    .controls input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+    .controls .value {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      min-width: 50px;
+      text-align: right;
+    }
+    .controls .note {
+      color: var(--muted);
+      font-size: 10px;
+      font-style: italic;
+      margin-top: 4px;
+    }
+    .btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .btn:hover { background: #79c0ff; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="header">
+      <div>
+        <h1>GEOX GravMag Studio <span style="color:var(--muted);font-weight:400;font-size:12px">v0.2.1 · forward + screen</span></h1>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Physics9 · HarmonIC adapter · falsification lane</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span id="badge-backend" class="badge">AWAITING STATE</span>
+        <span id="badge-survey" class="badge">—</span>
+        <span id="badge-epistemic" class="badge spec">SPEC</span>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div id="tab-forward" class="tab active" data-mode="forward">Forward</div>
+      <div id="tab-screen" class="tab" data-mode="screen">Screen</div>
+    </div>
+
+    <div id="pane-forward" class="tab-pane active main">
+      <div class="canvas-panel">
+        <div class="canvas-frame">
+          <canvas id="heatmap"></canvas>
+          <div id="empty" class="empty">
+            <div style="font-size:14px">Awaiting forward compute state</div>
+            <div>State will arrive via <code>ui/notifications/tool-input</code> from MCP host.</div>
+            <div style="font-size:11px;max-width:360px">
+              For non-MCP-Apps hosts, paste the JSON result of
+              <code>geox_gravmag_studio_open()</code> below to render.
+            </div>
+            <textarea id="manual-input" placeholder='{"render_payload":{"anomaly_values":[…], "grid_shape":[…n_n, n_e]}, …}' style="width:90%;height:80px;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px;font-family:inherit;font-size:11px;margin-top:8px"></textarea>
+            <button id="btn-load" class="btn">Load JSON</button>
+          </div>
+        </div>
+        <div class="canvas-info">
+          <span id="info-shape">grid: —</span>
+          <span id="info-units">units: —</span>
+          <span id="info-range">range: —</span>
+          <span id="info-provenance">provenance: —</span>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div>
+          <div class="section-title">Observation vs Model</div>
+          <div class="kv">
+            <span class="k">Status</span><span class="v" id="status-text">awaiting state</span>
+            <span class="k">Backend</span><span class="v" id="backend-text">—</span>
+            <span class="k">Library ver</span><span class="v" id="libver-text">—</span>
+            <span class="k">Epistemic</span><span class="v" id="epistemic-text">SPEC</span>
+          </div>
+          <div class="caveat">
+            Forward model output is <strong>SPECULATION</strong> until compared against OBSERVED gravity/magnetic data
+            (Stage B screen). Never a SEAL.
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Model Summary</div>
+          <div id="model-summary" class="kv">
+            <span class="k">prisms</span><span class="v">—</span>
+            <span class="k">density</span><span class="v">—</span>
+            <span class="k">susceptibility</span><span class="v">—</span>
+            <span class="k">magnetization</span><span class="v">—</span>
+            <span class="k">decl/incl</span><span class="v">—</span>
+            <span class="k">grid</span><span class="v">—</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Caveats</div>
+          <div id="caveats-list" style="font-size:11px;color:var(--muted);line-height:1.5">
+            — none —
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Recompute Hint (Stage B)</div>
+          <div class="controls">
+            <div class="note">
+              Stage A is read-only render. To modify the prism model and re-run forward, re-invoke
+              <code>geox_gravmag_studio_open()</code> with new prism parameters.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pane-screen" class="tab-pane screen-grid">
+      <div class="screen-cell">
+        <div class="section-title">Observed</div>
+        <textarea id="screen-observed-input" placeholder='Paste result of geox_gravmag_studio_screen() here (or drag JSON file). Example: {"output":{"residual_grid":[[0.1,0.2],…],…}, …}'
+          style="width:100%;height:60px;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:6px;font-family:inherit;font-size:11px"></textarea>
+        <div class="canvas-info">
+          <span id="screen-info-observed">observed: —</span>
+          <span id="screen-info-shape">shape: —</span>
+          <span id="screen-info-source">source: —</span>
+        </div>
+        <canvas id="screen-canvas-observed"></canvas>
+      </div>
+
+      <div class="screen-cell">
+        <div class="section-title">Predicted (candidate model)</div>
+        <div class="canvas-info">
+          <span id="screen-info-predicted">predicted: —</span>
+          <span id="screen-info-verdict">verdict: —</span>
+        </div>
+        <canvas id="screen-canvas-predicted"></canvas>
+      </div>
+
+      <div class="screen-cell">
+        <div class="section-title">Residual (observed − predicted)</div>
+        <div class="canvas-info">
+          <span id="screen-info-residual">residual: —</span>
+          <span id="screen-info-backend">backend: —</span>
+        </div>
+        <canvas id="screen-canvas-residual"></canvas>
+      </div>
+
+      <div class="screen-cell">
+        <div class="section-title">Verdict + Stats</div>
+        <div id="screen-verdict-wrap" style="display:flex;justify-content:center;padding:12px 0">
+          <div id="screen-verdict-badge" class="verdict-badge hold">AWAITING STATE<small>—</small></div>
+        </div>
+        <div class="stats-line">
+          <div><div class="k">RMS</div><div class="v" id="screen-stat-rms">—</div></div>
+          <div><div class="k">RMS / range</div><div class="v" id="screen-stat-rms-norm">—</div></div>
+          <div><div class="k">correlation</div><div class="v" id="screen-stat-corr">—</div></div>
+        </div>
+        <div class="caveat">
+          Stage B verdict wording is deliberate: PASS_SCREEN = NOT YET FALSIFIED, never “correct.”
+        </div>
+      </div>
+
+      <div class="screen-cell abduction-panel">
+        <div class="section-title">Abduction Discipline</div>
+        <div style="font-size:12px;line-height:1.5">
+          <div><strong style="color:var(--accent)">Primary hypothesis:</strong> <span id="abduction-primary">—</span></div>
+          <div style="margin-top:8px"><strong style="color:#7be08a">Evidence for:</strong> <span id="abduction-for">—</span></div>
+          <div style="margin-top:6px"><strong style="color:#f07b7b">Evidence against:</strong> <span id="abduction-against">—</span></div>
+          <div style="margin-top:8px"><strong style="color:var(--muted)">Alternatives considered:</strong> <span id="abduction-alternatives">—</span></div>
+          <div style="margin-top:6px"><strong style="color:var(--muted)">Missing tests:</strong> <span id="abduction-missing">—</span></div>
+          <div style="margin-top:8px;font-size:11px;color:var(--muted)" id="abduction-note">
+            Doctrine: Stage B does not tell you your model is right. It tells you whether reality has already killed it.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      DITEMPA BUKAN DIBERI · GEOX GravMag Studio v0.1.0 · claim_tag=<code id="claim-tag">SPECULATION</code> ·
+      verdict=<code id="verdict-tag">QUALIFY</code> · arifOS F1 F2 F7 F9 F11
+    </div>
+  </div>
+
+  <script>
+    // === GEOX GravMag Studio — Canvas2D heatmap renderer ============================
+
+    // State injected by MCP host via ui/notifications/tool-input (SEP-1865).
+    let STATE = null;
+
+    // Listen for SEP-1865 tool-input notification from host (postMessage).
+    window.addEventListener('message', (ev) => {
+      try {
+        const data = ev.data;
+        if (!data || typeof data !== 'object') return;
+
+        // Per SEP-1865: host pushes ui/notifications/tool-input with arguments.
+        if (data.method === 'ui/notifications/tool-input' && data.params) {
+          const args = data.params.arguments || data.params;
+          applyState(args);
+          return;
+        }
+        // Some hosts send result directly via ui/notifications/tool-result.
+        if (data.method === 'ui/notifications/tool-result' && data.params) {
+          applyState(data.params);
+          return;
+        }
+        // Legacy: just wrap a payload in {render_payload, ...}.
+        if (data.render_payload) {
+          applyState(data);
+        }
+      } catch (err) {
+        console.error('[gravmag-studio] message handler error:', err);
+      }
+    });
+
+    // Also accept state via window.name (set by host as fallback).
+    try {
+      if (window.name) {
+        const parsed = JSON.parse(window.name);
+        if (parsed.render_payload) applyState(parsed);
+      }
+    } catch (_) {}
+
+    // Manual paste fallback for non-MCP-Apps hosts.
+    document.getElementById('btn-load').addEventListener('click', () => {
+      const txt = document.getElementById('manual-input').value.trim();
+      if (!txt) return;
+      try {
+        const parsed = JSON.parse(txt);
+        applyState(parsed);
+      } catch (err) {
+        alert('Invalid JSON: ' + err.message);
+      }
+    });
+
+    // ── Tab switcher ────────────────────────────────────────────────────────
+    document.querySelectorAll('.tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const mode = tab.getAttribute('data-mode');
+        document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach((p) => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('pane-' + mode).classList.add('active');
+      });
+    });
+
+    // ── Screen mode loader ────────────────────────────────────────────────
+    document.getElementById('screen-observed-input').addEventListener('input', (e) => {
+      const txt = e.target.value.trim();
+      if (!txt) return;
+      try {
+        const parsed = JSON.parse(txt);
+        applyScreenState(parsed);
+      } catch (err) {
+        // Silently ignore until valid JSON arrives
+      }
+    });
+
+    function applyState(payload) {
+      if (!payload || !payload.render_payload) {
+        console.warn('[gravmag-studio] state missing render_payload');
+        return;
+      }
+      STATE = payload;
+      const rp = payload.render_payload;
+      document.getElementById('empty').style.display = 'none';
+      const canvas = document.getElementById('heatmap');
+      canvas.style.display = 'block';
+
+      // Update header badges.
+      const backend = rp.backend || 'unknown';
+      const backendBadge = document.getElementById('badge-backend');
+      backendBadge.textContent = backend.toUpperCase();
+      backendBadge.className = 'badge ' + (backend === 'harmonica' ? 'live' : backend === 'mock' ? 'mock' : 'spec');
+
+      document.getElementById('badge-survey').textContent = (rp.survey_type || '—').toUpperCase();
+      document.getElementById('badge-epistemic').textContent = rp.epistemic_label || 'SPEC';
+
+      // Update side panel.
+      document.getElementById('status-text').textContent = 'forward computed';
+      document.getElementById('backend-text').textContent = backend;
+      document.getElementById('libver-text').textContent = rp.library_version || '—';
+      document.getElementById('epistemic-text').textContent = rp.epistemic_label || 'SPEC';
+
+      // Update canvas info bar.
+      const sh = rp.grid_shape || [0, 0];
+      document.getElementById('info-shape').textContent =
+        `grid: ${sh[0]} × ${sh[1]} (northing × easting)`;
+      const units = (rp.units || {})[rp.survey_type] || '—';
+      document.getElementById('info-units').textContent = `units: ${units}`;
+      if (rp.value_range && rp.value_range.length === 2) {
+        document.getElementById('info-range').textContent =
+          `range: [${rp.value_range[0].toFixed(3)}, ${rp.value_range[1].toFixed(3)}]`;
+      }
+      document.getElementById('info-provenance').textContent = `provenance: ${payload.provenance || '—'}`;
+
+      // Update model summary.
+      const input = payload.input || {};
+      const prisms = input.prisms || [];
+      const model = document.getElementById('model-summary');
+      model.innerHTML = '';
+      const addKV = (k, v) => {
+        const e1 = document.createElement('span'); e1.className = 'k'; e1.textContent = k;
+        const e2 = document.createElement('span'); e2.className = 'v'; e2.textContent = v;
+        model.appendChild(e1); model.appendChild(e2);
+      };
+      addKV('prisms', prisms.length);
+      if (rp.survey_type === 'gravity') {
+        const densities = prisms.map(p => p.density).filter(d => d !== undefined);
+        addKV('density (kg/m³)', densities.length ? densities.map(d => d.toFixed(0)).join(', ') : '0');
+      } else {
+        const susc = prisms.map(p => p.susceptibility).filter(s => s !== undefined);
+        addKV('susceptibility (SI)', susc.length ? susc.map(s => s.toExponential(2)).join(', ') : '0');
+        addKV('magnetization (A/m)', (input.magnetization_a_m || 0).toExponential(2));
+        addKV('decl/incl (°)', `${input.field_declination_deg || 0} / ${input.field_inclination_deg || 0}`);
+      }
+      addKV('grid (m)', `±${(input.grid_extent_m || 0).toFixed(0)}`);
+      addKV('grid N', `${input.grid_n || 0}`);
+
+      // Caveats.
+      const caveats = rp.caveats || [];
+      const cl = document.getElementById('caveats-list');
+      if (caveats.length) {
+        cl.innerHTML = caveats.map(c => `<div>· ${c}</div>`).join('');
+      } else {
+        cl.textContent = '— none —';
+      }
+
+      // Render heatmap.
+      renderHeatmap(rp.anomaly_values, sh);
+    }
+
+    function renderHeatmap(values, shape) {
+      const canvas = document.getElementById('heatmap');
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, w, h);
+
+      const [nn, ne] = shape;
+      if (!values || !nn || !ne) return;
+
+      // Find min/max for normalisation.
+      let min = Infinity, max = -Infinity;
+      for (const v of values) {
+        if (v < min) min = v;
+        if (v > max) max = v;
+      }
+      const span = max - min || 1;
+
+      const cellW = w / ne;
+      const cellH = h / nn;
+
+      for (let j = 0; j < nn; j++) {
+        for (let i = 0; i < ne; i++) {
+          const v = values[j * ne + i];
+          const t = (v - min) / span; // 0..1
+          ctx.fillStyle = colorRamp(t);
+          ctx.fillRect(i * cellW, j * cellH, cellW + 0.5, cellH + 0.5);
+        }
+      }
+
+      // Overlay: zero contour (dashed white line where sign changes).
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      const threshold = (0 - min) / span;
+      for (let j = 0; j < nn - 1; j++) {
+        for (let i = 0; i < ne - 1; i++) {
+          const a = (values[j * ne + i] - min) / span;
+          const b = (values[j * ne + (i + 1)] - min) / span;
+          if ((a - threshold) * (b - threshold) < 0) {
+            ctx.beginPath();
+            ctx.moveTo((i + 1) * cellW, j * cellH);
+            ctx.lineTo((i + 1) * cellW, (j + 1) * cellH);
+            ctx.stroke();
+          }
+          const c = (values[(j + 1) * ne + i] - min) / span;
+          if ((a - threshold) * (c - threshold) < 0) {
+            ctx.beginPath();
+            ctx.moveTo(i * cellW, (j + 1) * cellH);
+            ctx.lineTo((i + 1) * cellW, (j + 1) * cellH);
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.setLineDash([]);
+    }
+
+    // Diverging RdBu→YlOrRd ramp (purple-blue-yellow-red) centered on zero.
+    function colorRamp(t) {
+      // t ∈ [0,1]; we want zero in the middle, but we don't know where zero is here.
+      // Caller passes (v-min)/(max-min). For diverging, find zero index from min/max:
+      // Re-derive via cached zero fraction.
+      const zeroT = (window._zeroT !== undefined) ? window._zeroT : 0.5;
+      const localT = (t - zeroT) / 0.5 + 0.5; // remap to 0..1 with 0=negative, 1=positive
+      if (localT <= 0.5) {
+        // Blue→cream
+        const k = localT * 2;
+        return lerp([10, 50, 110], [220, 230, 240], k);
+      } else {
+        const k = (localT - 0.5) * 2;
+        return lerp([220, 230, 240], [180, 30, 30], k);
+      }
+    }
+    function lerp(a, b, k) {
+      const r = Math.round(a[0] + (b[0] - a[0]) * k);
+      const g = Math.round(a[1] + (b[1] - a[1]) * k);
+      const bl = Math.round(a[2] + (b[2] - a[2]) * k);
+      return `rgb(${r},${g},${bl})`;
+    }
+
+    // Set zeroT globally once state applied so colour ramp is centered.
+    const _origRender = renderHeatmap;
+    window.renderHeatmapWithZero = function(values, shape) {
+      let min = Infinity, max = -Infinity;
+      for (const v of values) { if (v < min) min = v; if (v > max) max = v; }
+      window._zeroT = (0 - min) / ((max - min) || 1);
+      _origRender(values, shape);
+    };
+    // Override the call inside applyState.
+    const _origApply = applyState;
+    window.applyState = function(p) {
+      const result = _origApply(p);
+      if (p && p.render_payload) {
+        renderHeatmapWithZero(p.render_payload.anomaly_values, p.render_payload.grid_shape);
+      }
+      return result;
+    };
+    // Re-trigger render for already-applied state.
+    if (STATE) {
+      renderHeatmapWithZero(STATE.render_payload.anomaly_values, STATE.render_payload.grid_shape);
+    }
+
+    // Notify host we're ready (per SEP-1865).
+    try {
+      window.parent.postMessage({
+        jsonrpc: '2.0',
+        method: 'ui/ready',
+        params: { app_id: 'geox.gravmag.studio', version: '0.2.1' }
+      }, '*');
+    } catch (_) {}
+
+    // ── Screen mode renderer ──────────────────────────────────────────────
+    const VERDICT_BADGES = {
+      PASS_SCREEN:  { cls: 'pass',     title: 'PASS_SCREEN',  subtitle: 'NOT YET FALSIFIED' },
+      MARGINAL:     { cls: 'marginal', title: 'MARGINAL',     subtitle: 'NEEDS MORE EVIDENCE' },
+      FAIL_SCREEN:  { cls: 'fail',     title: 'FAIL_SCREEN',  subtitle: 'MODEL DOES NOT DESERVE TO LIVE' },
+      HOLD:         { cls: 'hold',     title: 'HOLD',         subtitle: 'HELD — FIX INPUT' },
+    };
+
+    function applyScreenState(payload) {
+      if (!payload) return;
+      const out = payload.output || {};
+      const prov = (payload._meta && payload._meta.provenance) || {};
+      const abd = payload.abduction || {};
+      const gov = payload.governance || {};
+
+      // Verdict badge
+      const verdictLabel = payload.verdict || gov.verdict || 'HOLD';
+      const badge = VERDICT_BADGES[verdictLabel] || VERDICT_BADGES.HOLD;
+      const el = document.getElementById('screen-verdict-badge');
+      el.className = 'verdict-badge ' + badge.cls;
+      el.innerHTML = badge.title + '<small>' + badge.subtitle + '</small>';
+
+      // Stats
+      const fmt = (v, p) => (v === null || v === undefined || Number.isNaN(v))
+        ? '—' : Number(v).toPrecision(p || 4);
+      document.getElementById('screen-stat-rms').textContent = fmt(out.rms) + ' ' + (out.units || '');
+      document.getElementById('screen-stat-rms-norm').textContent = fmt(out.rms_normalized);
+      document.getElementById('screen-stat-corr').textContent = fmt(out.correlation, 3);
+
+      // Provenance strings
+      document.getElementById('screen-info-source').textContent =
+        'source: ' + (prov.observed_source || '—');
+      document.getElementById('screen-info-backend').textContent =
+        'backend: ' + ((payload._meta && payload._meta.epistemic && payload._meta.epistemic.backend) || '—');
+
+      // Shapes
+      const obsShape = out.predicted_grid ? [out.predicted_grid.length, out.predicted_grid[0] ? out.predicted_grid[0].length : 0] : null;
+      document.getElementById('screen-info-shape').textContent =
+        'shape: ' + (obsShape ? obsShape.join('×') : '—');
+
+      // Abduction
+      document.getElementById('abduction-primary').textContent = abd.primary_hypothesis || '—';
+      const evFor = (abd.evidence_for || []).join('; ') || '—';
+      const evAgainst = (abd.evidence_against || []).join('; ') || '—';
+      const alts = (abd.alternatives || []).join(' · ') || '—';
+      const missing = (abd.missing_tests || []).join(' · ') || '—';
+      document.getElementById('abduction-for').textContent = evFor;
+      document.getElementById('abduction-against').textContent = evAgainst;
+      document.getElementById('abduction-alternatives').textContent = alts;
+      document.getElementById('abduction-missing').textContent = missing;
+
+      // Heatmaps (use observed via predicted_grid as approximation for now,
+      // since the screen payload carries predicted + residual)
+      if (out.predicted_grid && out.predicted_grid.length) {
+        drawHeatmap(document.getElementById('screen-canvas-observed'), out.predicted_grid);
+        document.getElementById('screen-info-observed').textContent = 'observed: ' + (out.units || '—');
+      }
+      if (out.predicted_grid && out.predicted_grid.length) {
+        drawHeatmap(document.getElementById('screen-canvas-predicted'), out.predicted_grid);
+        document.getElementById('screen-info-predicted').textContent = 'predicted: ' + (out.units || '—');
+        document.getElementById('screen-info-verdict').textContent = 'verdict: ' + verdictLabel;
+      }
+      if (out.residual_grid && out.residual_grid.length) {
+        drawHeatmap(document.getElementById('screen-canvas-residual'), out.residual_grid);
+        document.getElementById('screen-info-residual').textContent =
+          'residual: ' + (out.units || '—') + ' (max_abs=' + fmt(out.max_abs_residual) + ')';
+      }
+    }
+
+    function drawHeatmap(canvas, values2d) {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, w, h);
+      const nn = values2d.length;
+      const ne = values2d[0] ? values2d[0].length : 0;
+      if (!nn || !ne) return;
+      let min = Infinity, max = -Infinity;
+      for (let j = 0; j < nn; j++) {
+        for (let i = 0; i < ne; i++) {
+          const v = values2d[j][i];
+          if (Number.isNaN(v)) continue;
+          if (v < min) min = v;
+          if (v > max) max = v;
+        }
+      }
+      const span = max - min || 1;
+      const cellW = w / ne, cellH = h / nn;
+      for (let j = 0; j < nn; j++) {
+        for (let i = 0; i < ne; i++) {
+          const v = values2d[j][i];
+          if (Number.isNaN(v)) {
+            ctx.fillStyle = '#222';
+          } else {
+            const t = (v - min) / span;
+            ctx.fillStyle = colorRamp(t);
+          }
+          ctx.fillRect(i * cellW, j * cellH, cellW + 0.5, cellH + 0.5);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

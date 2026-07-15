@@ -40,7 +40,7 @@ from geox_core.physics.state import (
     LIMESTONE,
     SHALE,
     BASEMENT,
-    Physics9State,
+    Physics13State,
 )
 
 
@@ -94,7 +94,7 @@ class TestJointInversion:
                 ModalityObservation(modality="mt_resistivity", value=true_rhoe,
                                     uncertainty=0.10, depth_m=2000.0),
             ],
-            prior=Physics9State(
+            prior=Physics13State(
                 rho=2400.0, vp=2900.0, vs=1650.0, rho_e=20.0,
                 chi=0.0001, k=2.8, P=20e6, T=320.0, phi=0.25,
             ),
@@ -135,7 +135,7 @@ class TestJointInversion:
         req = InversionRequest(
             observations=[ModalityObservation(modality="seismic_impedance",
                                               value=1e9, uncertainty=0.01)],  # nonsense
-            prior=Physics9State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0,
+            prior=Physics13State(rho=2350, vp=2950, vs=1680, rho_e=20, chi=0,
                                 k=2.8, P=20e6, T=320, phi=0.25),
         )
         result = joint_inversion(req)
@@ -195,7 +195,7 @@ class TestMTForward:
         assert r["ok"] is False
 
     def test_response_from_physics9_uses_cell_rhoe(self):
-        s = Physics9State(rho=2000, vp=3000, vs=1700, rho_e=50.0,
+        s = Physics13State(rho=2000, vp=3000, vs=1700, rho_e=50.0,
                           chi=0, k=2.5, P=20e6, T=320, phi=0.20)
         r = mt_response_from_physics9(s)
         assert r["ok"] is True
@@ -246,7 +246,7 @@ class TestBiostratConstraint:
 
     def test_phi_out_of_range_flagged(self):
         # Sandstone but with very high phi (overpressured) at Quaternary zone
-        s = Physics9State(**{**SANDSTONE.__dict__, "phi": 0.05})  # too low for fluvial
+        s = Physics13State(**{**SANDSTONE.__dict__, "phi": 0.05})  # too low for fluvial
         r = evaluate_biostrat_constraint(s, age_ma=1.0)
         assert r.is_consistent is False
         assert any("φ" in n or "Porosity" in n for n in r.notes)

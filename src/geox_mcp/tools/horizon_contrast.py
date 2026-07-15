@@ -537,11 +537,18 @@ def _compute_spill_point(
         spill_idx_in_hull = int(np.argmax(boundary_depths))
         spill_depth = float(boundary_depths[spill_idx_in_hull])
         boundary_method = "convex_hull"
-    except Exception:
-        # Fallback: deepest point overall
-        spill_idx = int(np.argmax(depths))
-        spill_depth = float(depths[spill_idx])
-        boundary_method = "max_depth_fallback"
+    except Exception as exc:
+        # Law 5 (Convergence Over Choice): No fallback. Return error.
+        return {
+            "gate_run": False,
+            "error_code": "CONVEX_HULL_FAILED",
+            "message": f"ConvexHull computation failed: {exc}. No fallback (Law 5). Ensure points form a valid convex hull.",
+            "spill_depth_m": None,
+            "crest_depth_m": None,
+            "column_height_m": None,
+            "trap_type": "ERROR",
+            "is_valid": False,
+        }
 
     # Column height
     column_height = spill_depth - crest_depth

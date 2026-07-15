@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "geox://benchmarks/GEOX-001.schema.json",
+  "title": "GEOX-001 Model Deserves To Live — Receipt Schema",
+  "description": "Well-Seismic Truth Test. If the well does not tie, the model does not get to speak as truth. GEOX emits DRAFT_ONLY; arifOS/VAULT999 owns seal.",
+  "type": "object",
+  "required": [
+    "benchmark_id",
+    "title",
+    "thesis",
+    "all_six_success_conditions",
+    "success_conditions",
+    "pipeline",
+    "GEOX_001_receipt",
+    "constitutional_status",
+    "model_deserves_to_live"
+  ],
+  "properties": {
+    "benchmark_id": { "const": "GEOX-001" },
+    "title": { "const": "Model Deserves To Live" },
+    "thesis": { "type": "string" },
+    "domain": { "const": "GEOX" },
+    "test_type": { "const": "Well-Seismic Truth Test" },
+    "scenario": {
+      "type": "string",
+      "enum": ["good_tie", "mistie_hold", "kill_contradiction"]
+    },
+    "all_six_success_conditions": { "type": "boolean" },
+    "success_conditions": {
+      "type": "object",
+      "required": [
+        "QC_verified_ingested_files",
+        "explicit_evidence_graph",
+        "synthetic_tie_and_drift_result",
+        "claim_with_OBS_DER_INT_SPEC_separation",
+        "active_challenge_or_alternative_interpretation",
+        "verdict_can_say_PROCEED_HOLD_KILL_without_pretending_certainty"
+      ]
+    },
+    "pipeline": {
+      "type": "object",
+      "required": [
+        "000_ingest",
+        "111_qc",
+        "222_evidence_graph",
+        "333_synthetic_tie",
+        "444_claim_create",
+        "555_challenge",
+        "666_falsification_scan",
+        "777_verdict"
+      ]
+    },
+    "GEOX_001_receipt": {
+      "type": "object",
+      "required": [
+        "benchmark",
+        "claim",
+        "verdict",
+        "evidence_classes",
+        "reason",
+        "falsification",
+        "next_test",
+        "constitutional_status"
+      ],
+      "properties": {
+        "verdict": { "enum": ["PROCEED", "HOLD", "KILL"] },
+        "evidence_classes": {
+          "type": "object",
+          "required": ["OBS", "DER", "INT", "SPEC"]
+        },
+        "constitutional_status": {
+          "type": "object",
+          "required": ["GEOX_verdict", "VAULT999_status", "seal_allowed"],
+          "properties": {
+            "VAULT999_status": { "const": "DRAFT_ONLY" },
+            "seal_allowed": { "const": false }
+          }
+        }
+      }
+    },
+    "model_deserves_to_live": { "type": "boolean" },
+    "excluded": { "type": "array", "items": { "type": "string" } }
+  }
+}

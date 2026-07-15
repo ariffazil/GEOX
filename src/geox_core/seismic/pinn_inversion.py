@@ -33,7 +33,7 @@ from typing import Optional
 
 import numpy as np
 
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 from geox_core.physics.parameters import faust_velocity, gardner_density
 
 

@@ -1,7 +1,7 @@
 """
 geox_core.physics.drivers — Dynamic Physics: Forward, Inverse, Contrast
 
-These functions operate on Physics9State and produce predictions or inferences.
+These functions operate on Physics13State and produce predictions or inferences.
 They are the "engine" layer above the static parameters.
 
 DITEMPA BUKAN DIBERI
@@ -13,12 +13,12 @@ import math
 from typing import Any
 
 from geox_core.physics.parameters import forward_physics9
-from geox_core.physics.state import Physics9State
+from geox_core.physics.state import Physics13State
 
 # ─── Lithology Discrimination (Vp/Vs/ρ only) ────────────────────────────────
 
 
-def build_lithology_model(state: Physics9State) -> tuple[str, float, dict[str, float]]:
+def build_lithology_model(state: Physics13State) -> tuple[str, float, dict[str, float]]:
     """
     Vp/Vs/ρ → lithology name + confidence + derived properties.
 
@@ -51,8 +51,8 @@ def build_lithology_model(state: Physics9State) -> tuple[str, float, dict[str, f
 
 
 def anomaly_contrast_theory(
-    background: Physics9State,
-    observed: Physics9State,
+    background: Physics13State,
+    observed: Physics13State,
 ) -> dict[str, Any]:
     """
     AC_Risk = u_ambiguity × D_transform_effective × B_cog
@@ -96,14 +96,14 @@ def anomaly_contrast_theory(
 
 def inverse_physics9(
     measurements: dict[str, float],
-    prior_state: Physics9State | None = None,
+    prior_state: Physics13State | None = None,
 ) -> dict[str, Any]:
     """
     Infer canonical state from sparse measurements.
     Simple ratio-update; not Bayesian MCMC.
     """
     if prior_state is None:
-        prior_state = Physics9State(
+        prior_state = Physics13State(
             rho=2350,
             vp=2950,
             vs=1680,
@@ -115,7 +115,7 @@ def inverse_physics9(
             phi=0.20,
         )
 
-    updated = Physics9State(
+    updated = Physics13State(
         rho=prior_state.rho * measurements.get("density_ratio", 1.0),
         vp=prior_state.vp * measurements.get("vp_ratio", 1.0),
         vs=prior_state.vs * measurements.get("vs_ratio", 1.0),
@@ -140,7 +140,7 @@ def inverse_physics9(
 
 
 def metabolic_loop(
-    initial_state: Physics9State,
+    initial_state: Physics13State,
     measurements: dict[str, float],
     max_iterations: int = 50,
 ) -> dict[str, Any]:
@@ -163,7 +163,7 @@ def metabolic_loop(
             break
 
         delta = residual * 0.1
-        state = Physics9State(
+        state = Physics13State(
             rho=max(1000.0, state.rho * (1.0 - delta)),
             vp=max(1500.0, state.vp * (1.0 - delta * 0.5)),
             vs=max(500.0, state.vs * (1.0 - delta * 0.3)),
@@ -179,7 +179,7 @@ def metabolic_loop(
     return {
         "converged_state": state,
         "final_lithology": litho,
-        "loop_cycles": i + 1,
+        "loop_cycles": _iteration + 1,
         "converged": converged,
         "metadata": {
             "loop_type": "forward_inverse_metabolic",

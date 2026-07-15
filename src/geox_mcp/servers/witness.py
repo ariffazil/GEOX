@@ -13,7 +13,9 @@ from __future__ import annotations
 from typing import Any
 
 from fastmcp import FastMCP
+from fastmcp.apps import AppConfig, ResourceCSP
 
+from geox_mcp.apps.workbench import GEOX_UI_APPS
 from geox_mcp.tools._register import register_tools_on_server
 from geox_mcp.tools.basin import (
     geox_abstraction_guard,
@@ -35,7 +37,6 @@ from geox_mcp.tools.ingestion import (
     geox_las_inspect,
     geox_seismic_segy_inspect,
 )
-from geox_mcp.tools.map_context import geox_map_context_scene
 from geox_mcp.tools.petrophysics import (
     geox_subsurface_generate_candidates,
     geox_subsurface_verify_integrity,
@@ -43,7 +44,7 @@ from geox_mcp.tools.petrophysics import (
 from geox_mcp.tools.prospect import geox_prospect_evaluate
 from geox_mcp.tools.qc import geox_data_qc_bundle
 from geox_mcp.tools.registry import geox_system_registry_status
-from geox_mcp.tools.seismic_compute import geox_seismic_compute
+from geox_mcp.tools.seismic_compute_unified import geox_seismic_compute  # ZEN G1
 from geox_mcp.tools.sequence import geox_sequence_interpret
 
 _WITNESS_TOOLS: list[tuple[str, Any]] = [
@@ -59,7 +60,7 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_sequence_interpret", geox_sequence_interpret),
     ("geox_evidence_reason", geox_evidence_reason),
     ("geox_prospect_evaluate", geox_prospect_evaluate),
-    ("geox_map_context_scene", geox_map_context_scene),
+    # ("geox_map_context_scene", geox_map_context_scene),  # REMOVED 2026-07-11: registered on main server via tools_wiring.py
     ("geox_system_registry_status", geox_system_registry_status),
     ("geox_horizon_contrast_surface", geox_horizon_contrast_surface),
     ("geox_basin_resolve", geox_basin_resolve),
@@ -74,7 +75,7 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
 _WITNESS_ANNOTATIONS: dict[str, dict] = {
     "geox_data_ingest_bundle": {
         "title": "Data Ingest Bundle",
-        "ui": {"resourceUri": "ui://well_desk"},
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -124,7 +125,7 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_subsurface_generate_candidates": {
         "title": "Subsurface Generate Candidates",
-        "ui": {"resourceUri": "ui://earth_volume"},
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -139,6 +140,7 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_seismic_compute": {
         "title": "Seismic Compute",
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -160,6 +162,7 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_prospect_evaluate": {
         "title": "Prospect Evaluate",
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -167,6 +170,7 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_map_context_scene": {
         "title": "Map Context Scene",
+        "ui": {"resourceUri": "ui://geox/workbench-v1.html"},
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
@@ -243,8 +247,27 @@ _WITNESS_TASKS: set[str] = {
     "geox_evidence_reason",
 }
 
+# ── MCP App View bindings (forged 2026-07-11) ─────────────────────────────
+# Maps visual GEOX tools to the unified workbench resource.
+# When registered via register_tools_on_server(apps=...), the tool's metadata
+# advertises ui.resourceUri so MCP Apps hosts (ChatGPT, Claude, Copilot) know
+# to render the workbench iframe after a tool call.
+_WITNESS_APPS: dict[str, AppConfig] = {
+    name: AppConfig(
+        resourceUri="ui://geox/workbench-v1.html",
+        visibility=["app", "model"],
+    )
+    for name in (
+        "geox_map_context_scene",
+        "geox_seismic_compute",
+        "geox_horizon_contrast_surface",
+        "geox_subsurface_generate_candidates",
+        "geox_prospect_evaluate",
+    )
+}
+
 
 def create_witness_server() -> FastMCP:
     server = FastMCP("geox-witness")
-    register_tools_on_server(server, _WITNESS_TOOLS, _WITNESS_ANNOTATIONS, tasks=_WITNESS_TASKS)
+    register_tools_on_server(server, _WITNESS_TOOLS, _WITNESS_ANNOTATIONS, tasks=_WITNESS_TASKS, apps=_WITNESS_APPS)
     return server

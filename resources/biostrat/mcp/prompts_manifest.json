@@ -1,0 +1,122 @@
+{
+  "$schema": "mcp://geox/biostrat/prompts/v1",
+  "description": "GEOX Biostratigraphy MCP Prompt Manifest. 4 prompts for repeatable, structured biostratigraphic reasoning by MCP agents. Prompts are reusable reasoning templates — they encode the discipline, not the data.",
+  "organ": "GEOX",
+  "domain": "earth.biostratigraphy",
+  "phase": "2.5",
+  "last_verified": "2026-07-03",
+
+  "prompts": {
+    "interpret_claim": {
+      "name": "interpret_claim",
+      "uri": "prompt://geox/biostrat/interpret_claim",
+      "description": "Interpret a biostratigraphic claim through the 4-layer model: observation → taxonomy → bioevent → geological interpretation. Separate what was seen from what was inferred.",
+      "goals": [
+        "Parse free-text biostrat claim into structured observations",
+        "Identify fossil group, biozone, and claimed age/environment",
+        "Label each element with truth class (OBSERVATION_BIOLOGICAL, INTERPRETATION_STRATIGRAPHIC, etc.)",
+        "Flag any collapsed claims (e.g. fossil name → age without calibration)"
+      ],
+      "required_resources": [
+        "resource://geox/biostrat/rulings.md",
+        "resource://geox/biostrat/nn_zones.json"
+      ],
+      "required_tools": [
+        "geox_biostrat_parse"
+      ],
+      "template": "Given the biostratigraphic claim: {claim}\n\n1. OBSERVE: Extract all fossil observations, zones, taxa, and sample data.\n2. CLASSIFY: Assign truth classes: OBSERVATION_BIOLOGICAL | INTERPRETATION_STRATIGRAPHIC | CALIBRATED_CHRONOSTRAT_CONSTRAINT | MODEL_HYPOTHESIS | CLAIM_EXPLORATION.\n3. SEPARATE: Identify where the claim collapses layers (e.g. fossil directly to age without calibration).\n4. WARN: Flag any over-precision, missing calibration, or unstated assumptions.\n\nOutput: structured interpretation with truth-class labels and separation warnings.",
+      "governance": {
+        "floors": ["F2_TRUTH", "F4_CLARITY"],
+        "rulings": ["B1_ObservationBeforeAge", "B2_ZoneBeforeMa"]
+      }
+    },
+
+    "challenge_age_pick": {
+      "name": "challenge_age_pick",
+      "uri": "prompt://geox/biostrat/challenge_age_pick",
+      "description": "Challenge a numeric age claim derived from biostratigraphy. Test every assumption: calibration table, taxonomic ID, preservation, facies compatibility, regional applicability.",
+      "goals": [
+        "Identify the fossil basis for the age claim",
+        "Verify calibration table and version",
+        "Check facies compatibility (does the fossil ecology match the lithology?)",
+        "Test for reworking, caving, or contamination",
+        "Check regional applicability (was this calibrated here or imported?)"
+      ],
+      "required_resources": [
+        "resource://geox/biostrat/facies_matrix.json",
+        "resource://geox/biostrat/nn_zones.json",
+        "resource://geox/biostrat/rulings.md"
+      ],
+      "required_tools": [
+        "geox_biostrat_falsify",
+        "geox_biostrat_ruling_check"
+      ],
+      "template": "Challenge the age claim: {age_claim}\nFossil basis: {fossil_basis}\nCalibration: {calibration}\n\n1. CALIBRATION: What table/version was used? Is it current?\n2. FOSSIL: Are the fossils correctly identified? Any synonymy issues?\n3. FACIES: Does the fossil ecology match the depositional environment?\n4. PRESERVATION: Any reworking, caving, or dissolution?\n5. REGIONAL: Was this calibration developed for this basin or imported?\n6. CONVERGENCE: Do other fossil groups, seismic, and lithology agree?\n\nOutput: PASS (claim survives challenge) | WEAK_PASS (claim valid with caveats) | FALSIFIED (claim contradicted) | UNFALSIFIABLE (claim too vague to test).",
+      "governance": {
+        "floors": ["F2_TRUTH", "F6_MARUAH"],
+        "rulings": ["B3_CalibrationExplicit", "B4_FaciesVeto", "B6_MultiDisciplineConvergence"]
+      }
+    },
+
+    "check_facies_conflict": {
+      "name": "check_facies_conflict",
+      "uri": "prompt://geox/biostrat/check_facies_conflict",
+      "description": "Check whether a fossil assemblage is physically compatible with its host lithology and depositional environment. Marine fossils in coal → FALSIFIED. Freshwater algae in deep marine → transported.",
+      "goals": [
+        "Map fossil ecology requirements (marine water, freshwater, brackish)",
+        "Map lithology to canonical class (COAL_CARBONACEOUS, SHALE_PRONE, etc.)",
+        "Map depositional environment to canonical class (freshwater_swamp, marine_shelf, etc.)",
+        "Test compatibility using facies veto matrix",
+        "If contradiction: suggest rescue hypotheses (reworking, thin marine incursion, facies misidentification)"
+      ],
+      "required_resources": [
+        "resource://geox/biostrat/facies_matrix.json"
+      ],
+      "required_tools": [
+        "geox_biostrat_ruling_check"
+      ],
+      "template": "Check facies compatibility for:\nFossil group: {fossil_group}\nBiozone/assemblage: {biozone}\nLithology: {lithology}\nDepositional environment: {environment}\nClaim: {claim}\n\n1. ECOLOGY: What does this fossil group require? (marine, brackish, freshwater?)\n2. LITHOLOGY: Is the host rock compatible with that ecology?\n3. ENVIRONMENT: Is the depositional setting compatible?\n4. CONTRADICTION: If incompatibility found, document the contradiction.\n5. RESCUE: If possible, suggest what would explain the mismatch (reworking, thin marine incursion, etc.)\n\nOutput: PASS (compatible) | CONTRADICTION (incompatible — FALSIFIED) | WEAK_PASS (possible with caveats) | HOLD (insufficient evidence).",
+      "governance": {
+        "floors": ["F2_TRUTH", "F6_MARUAH"],
+        "rulings": ["B4_FaciesVeto"]
+      }
+    },
+
+    "build_well_ruling": {
+      "name": "build_well_ruling",
+      "uri": "prompt://geox/biostrat/build_well_ruling",
+      "description": "Build a complete, uncertainty-bearing biostratigraphic ruling for a single well. Integrate all fossil observations, facies checks, stratigraphic order, and regional context into a single governed verdict.",
+      "goals": [
+        "Compile all biostrat observations from the well",
+        "Resolve each biozone to calibrated age",
+        "Check facies compatibility for each fossil-bearing interval",
+        "Verify stratigraphic ordering (younger above older)",
+        "Detect unconformities (missing zones, abrupt facies shift)",
+        "Cross-check with seismic group and regional framework",
+        "Emit final ruling with confidence tier and required next evidence"
+      ],
+      "required_resources": [
+        "resource://geox/biostrat/rulings.md",
+        "resource://geox/biostrat/nn_zones.json",
+        "resource://geox/biostrat/facies_matrix.json"
+      ],
+      "required_tools": [
+        "geox_biostrat_parse",
+        "geox_biostrat_nn_age",
+        "geox_biostrat_ruling_check",
+        "geox_biostrat_falsify"
+      ],
+      "template": "Build a biostrat ruling for well: {well_name}\nDepth interval: {depth_top} - {depth_base} m\nFossil observations: {observations}\nLithology log: {lithology_summary}\nSeismic group: {seismic_group}\nRegional context: {basin_province}\n\n1. PARSE: Extract all biozones and GDE events.\n2. RESOLVE: Convert each biozone to calibrated age bracket.\n3. ORDER: Check stratigraphic superimposition.\n4. UNCONFORMITY: Detect missing zones or abrupt facies shifts.\n5. FACIES: Test each interval for facies compatibility.\n6. REGIONAL: Check against known tectonic events and unconformities.\n7. RULING: Emit PASS | WEAK_PASS | CONTRADICTION | HOLD with confidence tier (HIGH/MED/MED-LOW/LOW/UNUSABLE).\n8. NEXT: List required_next_evidence for unresolved contradictions.\n\nOutput: Complete well ruling with truth-class labels, confidence, and evidence contract.",
+      "governance": {
+        "floors": ["F2_TRUTH", "F4_CLARITY", "F6_MARUAH", "F7_HUMILITY", "F11_AUDIT"],
+        "rulings": ["ALL_EIGHT"]
+      }
+    }
+  },
+
+  "constitutional_alignment": {
+    "Δ_CLARITY": "Prompts enforce explicit separation of observation, interpretation, model, and claim",
+    "Ω_HUMILITY": "Every prompt output requires confidence tier and uncertainty band",
+    "Ψ_VITALITY": "Prompts surface contradictions, never suppress them"
+  }
+}

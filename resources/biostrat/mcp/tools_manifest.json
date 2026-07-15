@@ -1,0 +1,127 @@
+{
+  "$schema": "mcp://geox/biostrat/tools/v1",
+  "description": "GEOX Biostratigraphy MCP Tool Manifest. Declares 4 tools for MCP agent discovery and capability negotiation per Model Context Protocol spec.",
+  "organ": "GEOX",
+  "domain": "earth.biostratigraphy",
+  "phase": "2.5",
+  "last_verified": "2026-07-03",
+  "epistemic_status": "LIVE_INTELLIGENCE",
+
+  "tools": {
+    "geox_biostrat_parse": {
+      "name": "geox_biostrat_parse",
+      "description": "Extract biozones, GDE events, and lithology from free biostratigraphic text. Multi-zone extraction with evidence tags. Returns biozones[], gde_events[], lithology_class, unparsed_terms[], warnings[].",
+      "action_class": "ANALYZE",
+      "mutation": false,
+      "irreversible": false,
+      "requires_888_hold": false,
+      "blast_radius": "LOW",
+      "capability_tags": ["biostratigraphy", "parsing", "text-extraction", "nannofossil", "zonation"],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "text": {"type": "string", "description": "Free text containing biostratigraphic information"},
+          "paleoenvironment": {"type": "string", "description": "Optional explicit paleoenvironment text"},
+          "lithology": {"type": "string", "description": "Optional explicit lithology text"}
+        }
+      },
+      "output_schema": "geox-output-v0.81",
+      "governance": {
+        "floors": ["F2_TRUTH", "F7_HUMILITY", "F9_ANTI-HANTU"],
+        "rulings": ["B1_ObservationBeforeAge", "B2_ZoneBeforeMa"]
+      }
+    },
+
+    "geox_biostrat_nn_age": {
+      "name": "geox_biostrat_nn_age",
+      "description": "Convert NN biozone to age bracket with explicit calibration metadata. Returns zone, scheme (Martini 1971), age_top_ma, age_base_ma, epoch, calibration, and mandatory not_a_radiometric_age=true warning.",
+      "action_class": "ANALYZE",
+      "mutation": false,
+      "irreversible": false,
+      "requires_888_hold": false,
+      "blast_radius": "LOW",
+      "capability_tags": ["biostratigraphy", "age-calibration", "chronostratigraphy", "nannofossil", "NN-zones"],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "zone": {"type": "string", "description": "Biozone name, e.g. 'NN5', 'NN11A'"},
+          "scheme": {"type": "string", "default": "Martini", "description": "Zonation scheme"},
+          "calibration": {"type": "string", "default": "default", "description": "Calibration table version"}
+        }
+      },
+      "output_schema": "geox-output-v0.81",
+      "governance": {
+        "floors": ["F2_TRUTH", "F7_HUMILITY", "B3_CalibrationExplicit", "B7_RegionalDiachroneity"],
+        "rulings": ["B2_ZoneBeforeMa", "B3_CalibrationExplicit"]
+      }
+    },
+
+    "geox_biostrat_ruling_check": {
+      "name": "geox_biostrat_ruling_check",
+      "description": "Detect contradictions in biostratigraphic interpretations. Tests facies compatibility, reworking/caving, and multi-discipline convergence. Returns PASS | WEAK_PASS | CONTRADICTION | HOLD | REJECT with required_next_evidence.",
+      "action_class": "ANALYZE",
+      "mutation": false,
+      "irreversible": false,
+      "requires_888_hold": false,
+      "blast_radius": "LOW",
+      "capability_tags": ["biostratigraphy", "contradiction-detection", "quality-control", "facies-veto", "ruling"],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "biozone": {"type": "string", "description": "Biozone name, e.g. 'NN5'"},
+          "lithology": {"type": "string", "description": "Free-text lithology description"},
+          "environment": {"type": "string", "description": "Free-text depositional environment"},
+          "claim": {"type": "string", "description": "The geological claim being tested"},
+          "depth_m": {"type": "number", "description": "Optional depth in meters"}
+        }
+      },
+      "output_schema": "geox-output-v0.81",
+      "governance": {
+        "floors": ["F2_TRUTH", "F6_MARUAH", "B4_FaciesVeto", "B5_ReworkingWarning"],
+        "rulings": ["B4_FaciesVeto", "B5_ReworkingWarning", "B6_MultiDisciplineConvergence"]
+      }
+    },
+
+    "geox_biostrat_falsify": {
+      "name": "geox_biostrat_falsify",
+      "description": "8-gate Popperian falsification engine. G1-Facies G2-StratOrder G3-Taxonomy G4-Reworking G5-Diachroneity G6-Seismic G7-Sequence G8-Tectonic. Any single FALSIFIED → overall FALSIFIED. Science advances by eliminating what CANNOT be true.",
+      "action_class": "ANALYZE",
+      "mutation": false,
+      "irreversible": false,
+      "requires_888_hold": false,
+      "blast_radius": "LOW",
+      "capability_tags": ["biostratigraphy", "falsification", "popperian", "quality-control", "scientific-method"],
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "fossil_group": {"type": "string", "default": "calcareous_nannofossil"},
+          "biozone": {"type": "string"},
+          "lithology": {"type": "string"},
+          "environment": {"type": "string"},
+          "claim": {"type": "string"},
+          "claim_type": {"type": "string", "default": "age", "enum": ["age", "environment", "correlation", "unconformity"]},
+          "sample_type": {"type": "string", "default": "cuttings"},
+          "depth_m": {"type": "number"},
+          "reworking_claimed": {"type": "boolean", "default": false},
+          "fault_present": {"type": "boolean", "default": false},
+          "basin_province": {"type": "string"},
+          "claim_is_basinwide": {"type": "boolean", "default": false},
+          "region": {"type": "string", "default": "sabah"}
+        }
+      },
+      "output_schema": "geox-output-v0.81",
+      "governance": {
+        "floors": ["F2_TRUTH", "F4_CLARITY", "F6_MARUAH"],
+        "rulings": ["ALL_EIGHT"],
+        "popper_rule": "Any single FALSIFIED gate → overall FALSIFIED regardless of other passes"
+      }
+    }
+  },
+
+  "constitutional_alignment": {
+    "F2_TRUTH": "Every tool output carries evidence tags, source spans, and calibration provenance",
+    "F4_CLARITY": "Tool inputs and outputs are structured arrays, not collapsed prose",
+    "F7_HUMILITY": "Confidence hard-capped at 0.85 for biostratigraphic claims",
+    "F11_AUDIT": "Every tool call produces a receipt with verdict, risk, and human_review_required"
+  }
+}

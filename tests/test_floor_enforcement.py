@@ -11,6 +11,7 @@ Verifies:
   - F11 AUDIT: append-only local log per call
   - F1 AMANAH: idempotency key dedup
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -78,6 +79,7 @@ class TestCanonicalToolValidation:
         # LEGACY_ALIAS_MAP is currently empty (Phase 2 clean cutover).
         # This test verifies the path works; no aliases to test right now.
         from geox_mcp.registry import LEGACY_ALIAS_MAP
+
         for alias in LEGACY_ALIAS_MAP:
             assert validate_canonical_tool(alias) is True
 
@@ -86,11 +88,11 @@ class TestCanonicalToolValidation:
         assert validate_canonical_tool("geox_fake_tool_99") is False
         assert validate_canonical_tool("") is False
 
-    def test_old_compat_name_fails_f9(self) -> None:
-        """Old compat names are NOT in CANONICAL_PUBLIC_TOOLS → F9 blocks them."""
-        assert validate_canonical_tool("geox_data_ingest_bundle") is False
-        assert validate_canonical_tool("geox_claim_seal") is False
-        assert validate_canonical_tool("geox_system_registry_status") is False
+    def test_old_compat_name_passes_f9(self) -> None:
+        """Backward-compat names are in CANONICAL_COMPAT_TOOLS → F9 allows them."""
+        assert validate_canonical_tool("geox_data_ingest_bundle") is True
+        assert validate_canonical_tool("geox_claim_seal") is True
+        assert validate_canonical_tool("geox_system_registry_status") is True
 
     def test_registry_unavailable_passes(self) -> None:
         # Cold start: registry not importable → fail-open (defensive)
@@ -384,9 +386,7 @@ class TestWrapperIntegration:
             }
 
         wrapped = _make_receipt_wrapper(tool_fn, "geox_well_qc")
-        out = asyncio.run(
-            wrapped(session_id="S1", actor_id="A1")
-        )
+        out = asyncio.run(wrapped(session_id="S1", actor_id="A1"))
         # Note: this dict is the pre-envelope result; the wrapper further
         # wraps it with _geox_wrap_envelope. The evidence_quality in the
         # final envelope is what we check.

@@ -1,60 +1,25 @@
 """
-GEOX — Earth Intelligence Core
+GEOX — Earth Intelligence Runtime Package
 ═══════════════════════════════════════════════════════════════════════════════
 DITEMPA BUKAN DIBERI — Forged, Not Given
-Version: v2026.04.10-EIC (Earth Intelligence Core)
+Version: v2026.07.06-PHASE31 (73 canonical tools: 69 surface + 4 internal)
 
-Simplified, focused, essential.
+Runtime subpackages (live, imported by canonical server or tests):
+  egs/         — Earth Graph System (claims, evidence, provenance, uncertainty)
+  ingest/      — Data ingestion (LAS, CSV, Parquet, SEG-Y)
+  plot_specs/  — Plot specification engines
+  services/    — Asset memory, LAS ingestor
+  skills/      — Earth science skill modules
+  wealth/      — Capital intelligence bridge
+  well/        — Well stratigraphy (L1-L3)
+  core/        — Legacy core (AC risk, volumetrics, sensitivity) — used by tests
 
-The 7 Tools:
-1. geox_compute_ac_risk — ToAC calculation (THE CORE)
-2. geox_load_seismic_line — Seismic with F4 Clarity
-3. geox_build_structural_candidates — Multi-model interpretation
-4. geox_verify_geospatial — Coordinate grounding
-5. geox_feasibility_check — Constitutional firewall
-6. geox_evaluate_prospect — Prospect verdict with 888_HOLD
-7. geox_earth_signals — Live Earth observations
-
-Constitutional Laws: F1, F2, F4, F7, F9, F11, F13
+Canonical MCP server lives in src/geox_mcp/server.py (73 tools: 69 surface + 4 internal).
+This package is the runtime backplane, not the tool surface.
 """
 
-__version__ = "v2026.04.10-EIC"
+__version__ = "v2026.07.06-PHASE31"
 __seal__ = "DITEMPA BUKAN DIBERI"
 
-from .core.ac_risk import (
-    TEARFRAME,
-    AC_RiskResult,
-    AntiHantuScreen,
-    ClaimTag,
-    GovernedACRiskResult,
-    compute_ac_risk,
-    compute_ac_risk_governed,
-)
-from .core.basin_charge import BasinChargeSimulator
-from .core.petro_ensemble import PetroEnsemble
-from .core.sensitivity import SensitivitySweep
-from .core.tool_registry import ErrorCode, ToolRegistry, ToolStatus
-from .core.volumetrics import ProbabilisticVolumetrics
-from .services.asset_memory import AssetMemoryStore
-from .services.las_ingestor import LASIngestor
-
-__all__ = [
-    "__version__",
-    "__seal__",
-    "compute_ac_risk",
-    "compute_ac_risk_governed",
-    "AC_RiskResult",
-    "GovernedACRiskResult",
-    "ClaimTag",
-    "TEARFRAME",
-    "AntiHantuScreen",
-    "PetroEnsemble",
-    "LASIngestor",
-    "ProbabilisticVolumetrics",
-    "BasinChargeSimulator",
-    "AssetMemoryStore",
-    "SensitivitySweep",
-    "ToolRegistry",
-    "ToolStatus",
-    "ErrorCode",
-]
+# Lazy imports — old core modules still used by test suite
+# These will be migrated to src/geox_core/ in a future refactor

@@ -1,0 +1,99 @@
+========================================================================
+  GEOX GEOLOGICAL INTERPRETATION REPORT
+  
+========================================================================
+
+§1 BASIN-SCALE ARCHITECTURE (first cognitive pass)
+------------------------------------------------
+  Z1 [  0–134px]  SUBPARALLEL            coh=0.96
+      → Top hypothesis: Coastal plain to shallow marine transition
+      → Alt:           Prodelta / distal fan sequence
+  Z2 [134–268px]  PARALLEL               coh=0.95
+      → Top hypothesis: Post-rift thermal sag: laterally persistent marine bedding
+      → Alt:           Shelf platform: tabular carbonate or marine shale
+  Z3 [268–402px]  PARALLEL               coh=0.96
+      → Top hypothesis: Post-rift thermal sag: laterally persistent marine bedding
+      → Alt:           Shelf platform: tabular carbonate or marine shale
+  Z4 [402–536px]  PARALLEL               coh=0.97
+      → Top hypothesis: Post-rift thermal sag: laterally persistent marine bedding
+      → Alt:           Shelf platform: tabular carbonate or marine shale
+  Z5 [536–670px]  PARALLEL               coh=0.97
+      → Top hypothesis: Post-rift thermal sag: laterally persistent marine bedding
+      → Alt:           Shelf platform: tabular carbonate or marine shale
+  Z6 [670–804px]  PARALLEL               coh=0.97
+      → Top hypothesis: Post-rift thermal sag: laterally persistent marine bedding
+      → Alt:           Shelf platform: tabular carbonate or marine shale
+
+§2 IMAGING ARTIFACT SCREEN
+------------------------------------------------
+  Verdict: WARNING — 2 artifact types flagged, interpretation may be compromised
+  ⚠  VELOCITY_PULLUP_SAG: 2 candidate(s)
+  ⚠  MULTIPLES: 1 candidate(s)
+  !  Section displayed in TWO-WAY TIME, not true depth
+  !  All structures require depth conversion before drilling
+  !  Amplitude is NOT direct lithology or fluid without AVO + rock physics
+
+§3 FAULT INTERPRETATION (ranked hypotheses)
+------------------------------------------------
+  H1  dip=near-vertical   conf_cap=42%
+      #1 Normal (syn-rift, NW-trending)                 P=0.45
+      #2 Inverted (reactivated, transpressional)        P=0.26
+      #3 Strike-slip (axial fault zone, dextral Late Miocene)  P=0.23
+  H2  dip=near-vertical   conf_cap=42%
+      #1 Normal (syn-rift, NW-trending)                 P=0.45
+      #2 Inverted (reactivated, transpressional)        P=0.26
+      #3 Strike-slip (axial fault zone, dextral Late Miocene)  P=0.23
+  H3  dip=near-vertical   conf_cap=42%
+      #1 Normal (syn-rift, NW-trending)                 P=0.45
+      #2 Inverted (reactivated, transpressional)        P=0.26
+      #3 Strike-slip (axial fault zone, dextral Late Miocene)  P=0.23
+  H4  dip=near-vertical   conf_cap=42%
+      #1 Normal (syn-rift, NW-trending)                 P=0.45
+      #2 Inverted (reactivated, transpressional)        P=0.26
+      #3 Strike-slip (axial fault zone, dextral Late Miocene)  P=0.23
+  H5  dip=near-vertical   conf_cap=42%
+      #1 Normal (syn-rift, NW-trending)                 P=0.45
+      #2 Inverted (reactivated, transpressional)        P=0.26
+      #3 Strike-slip (axial fault zone, dextral Late Miocene)  P=0.23
+
+§4 HORIZON INTERPRETATION (ranked hypotheses)
+------------------------------------------------
+  F1  cont=50%  L-term=TRUNCATION_OR_TOPLAP  R-term=CONCORDANCE  seq=HIGH
+      #1 Post-rift thermal sag marine                   P=0.35
+      #2 Coastal plain / deltaic (Groups I-J)           P=0.25
+  F2  cont=50%  L-term=ONLAP  R-term=ONLAP  seq=HIGH
+      #1 Post-rift thermal sag marine                   P=0.35
+      #2 Coastal plain / deltaic (Groups I-J)           P=0.25
+  F3  cont=50%  L-term=CONCORDANCE  R-term=DOWNLAP  seq=HIGH
+      #1 Post-rift thermal sag marine                   P=0.35
+      #2 Coastal plain / deltaic (Groups I-J)           P=0.25
+
+§5 TERMINATION ANALYSIS (sequence stratigraphy)
+------------------------------------------------
+  ▲ F1  L:TRUNCATION_OR_TOPLAP R:CONCORDANCE          seq_sig=HIGH
+  ▲ F2  L:ONLAP                R:ONLAP                seq_sig=HIGH
+  ▲ F3  L:CONCORDANCE          R:DOWNLAP              seq_sig=HIGH
+
+§6 WHAT THE SEISMIC CANNOT TELL YOU (HOLD)
+------------------------------------------------
+  HOLD: True structural depth (requires velocity model + depth conversion)
+  HOLD: Lithology (requires well calibration + rock physics)
+  HOLD: Fluid type (requires AVO analysis + Zoeppritz/Shuey)
+  HOLD: Formation age (requires well tie + biostratigraphy)
+  HOLD: Reserves / commerciality (requires volumetrics + economic model)
+  HOLD: Fault seal capacity (requires fault rock analysis)
+
+§7 NEXT REQUIRED STEPS
+------------------------------------------------
+  1. Tie synthetic seismogram to nearest well (bruges: Ricker + RC convolution)
+  2. Multi-line correlation: does each feature persist on adjacent sections?
+  3. Horizon amplitude extraction: what is the spatial pattern at each level?
+  4. Depth conversion: velocity model → true structural depth
+  5. AVO analysis on bright spots: fluid discrimination (Shuey two-term)
+  6. Route geological risk to WEALTH: NPV/EMV under ranked uncertainty
+
+========================================================================
+  EPISTEMIC STATUS: INT — all outputs are hypotheses, not facts
+  CONFIDENCE CAP: 0.90 (F7 HUMILITY)
+  OBS_IMAGE ≠ OBS_GEOLOGY
+========================================================================

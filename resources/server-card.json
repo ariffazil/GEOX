@@ -1,11 +1,11 @@
 {
     "name": "GEOX",
-    "version": "v2026.06.22-phase2",
+    "version": "v2026.06.28-phase2.1",
     "domain": "earth-science/subsurface/petroleum-geology",
     "description": "Governed Earth API for subsurface intelligence. Physics-first. ACRisk-stamped. Claim-disciplined.",
     "governance": "arifOS F1-F13 + ToAC + CANON-9",
     "seal": "DITEMPA BUKAN DIBERI",
-    "tools": 16,
+    "tools": 30,
     "resources": 19,
     "prompts": 9,
     "transport": [

@@ -1,0 +1,123 @@
+{
+  "generated_utc": "2026-07-01T21:14:07.336128+00:00",
+  "verification_timestamp": "2026-07-01T21:14:07.336154+00:00",
+  "agent": "FORGE",
+  "session_id": "SEAL-01e890e8b9014b6f",
+  "commit_sha": "ca4c1a730e1b2947d49b908104e99bb6db893ed5",
+  "commit_short": "ca4c1a73",
+  "canonical_tools": 34,
+  "contract_epoch": "2026-07-01-GEOX-34TOOLS-PHASE23",
+  "test_result": "25 passed, 2 warnings in 0.16s",
+  "claims": {
+    "argument_sidecar": {
+      "path": "contracts/schemas/argument_sidecar.py",
+      "sha256": "0338cd52b68e1d7dcdcfe15f78ef12acd7c95ff7cba406ee55d4f044a650789d",
+      "bytes": 16321,
+      "status": "EXISTS"
+    },
+    "federation_envelope": {
+      "path": "contracts/schemas/federation_envelope.py",
+      "sha256": "76faf8605a10041970c7e69d68b91a5e66e786bb11483f401557adae529a0fa1",
+      "bytes": 23381,
+      "status": "EXISTS"
+    },
+    "provenance_schema": {
+      "path": "contracts/schemas/earth/provenance.json",
+      "sha256": "720c835bc514b0f9dd7c2a1e7ec38e6cee0976e9b187854b32923eaf28491eee",
+      "bytes": 5783,
+      "status": "EXISTS"
+    },
+    "earth_memory_envelope": {
+      "path": "contracts/schemas/earth/earth_memory_envelope.json",
+      "sha256": "059bb19440f00363c3d00765b52465ee5d84f54f325357d473a3040e36d26067",
+      "bytes": 9994,
+      "status": "EXISTS"
+    },
+    "claim_state_machine": {
+      "path": "contracts/claim_state_machine.yaml",
+      "sha256": "33253c9ac91f36e3fe2d9474700135c6432945e2f8681f38d03ff03ceda29489",
+      "bytes": 6424,
+      "status": "EXISTS"
+    },
+    "test_argument_sidecar": {
+      "path": "tests/test_argument_sidecar.py",
+      "sha256": "b7469ac402c45d7c6b4d91bf7133cdf7b3638196b1645af5330fed111c5ad3b3",
+      "bytes": 12934,
+      "status": "EXISTS"
+    },
+    "test_federation_envelope": {
+      "path": "tests/test_federation_envelope.py",
+      "sha256": "1a77f46fc1d7f7fc00b76b509496828b70320975cdfde2c800c4ee4d095cc959",
+      "bytes": 17957,
+      "status": "EXISTS"
+    },
+    "test_registry_runtime_truth": {
+      "path": "tests/unit/test_registry_runtime_truth.py",
+      "sha256": "69063dd428e2c338a1a755f711acab9e844e8a9fab5e271f587e36249d9b705b",
+      "bytes": 3500,
+      "status": "EXISTS"
+    },
+    "agent_card": {
+      "path": ".well-known/agent-card.json",
+      "sha256": "16e8305f5350412eadf83bf20aa8135ddd7199909de880171781412953c559ff",
+      "bytes": 2689,
+      "status": "EXISTS"
+    },
+    "scar_ledger": {
+      "path": "geox/core/scar_ledger.py",
+      "sha256": "01ea49da60bed7a1dc2b1bdb83b4b7176734fbdcb3c84aab8706d52758ec4f4e",
+      "bytes": 2966,
+      "status": "EXISTS"
+    },
+    "vault_receipt_eureka": {
+      "path": "/root/VAULT999/GEOX-ARGUMENT-EUREKA-2026-07-01.json",
+      "sha256": "1f4c0d45b1b1f418a83c495615fdd2a085a0a2a67ac25df703683abf7831c1ad",
+      "bytes": 1915,
+      "status": "EXISTS"
+    },
+    "vault_receipt_audit": {
+      "path": "/root/VAULT999/GEOX-EXTERNAL-ANALYSIS-AUDIT-2026-07-01.json",
+      "sha256": "65db981aed89b224b1faeedab1b304e04e06ab29b6a6d24250df25e72f45d6e3",
+      "bytes": 1973,
+      "status": "EXISTS"
+    },
+    "vault_federation_state": {
+      "path": "/root/VAULT999/FEDERATION_STATE_2026-07-01.json",
+      "sha256": "a4041f6d3da811446b8915f415602acd63387e7c00350e857057b1342a475f78",
+      "bytes": 3097,
+      "status": "EXISTS"
+    },
+    "map_tools": {
+      "tools": [
+        "geox_map_layers_list",
+        "geox_map_scene_plan",
+        "geox_map_render_preview"
+      ],
+      "count": 3,
+      "status": "LIVE"
+    }
+  },
+  "export_gate": {
+    "valid_sabah": "ALLOWED",
+    "no_claims": "BLOCKED",
+    "no_rivals": "BLOCKED",
+    "no_evidence": "BLOCKED",
+    "no_uncertainty": "BLOCKED",
+    "uncertainty_blocks": "BLOCKED"
+  },
+  "federation_health": {
+    "arifos": true,
+    "aforge": true,
+    "aaa": true,
+    "geox": true,
+    "wealth": true,
+    "well": true
+  },
+  "all_organs_alive": true,
+  "pr_state": {
+    "pr_41_zod": "CLOSED (not merged)",
+    "pr_39_pyright": "MERGED",
+    "pr_45_pg": "MERGED",
+    "pr_42_types_node": "OPEN (HOLD)"
+  }
+}

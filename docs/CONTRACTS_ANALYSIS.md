@@ -251,7 +251,7 @@ Define explicit behavior for unreviewed HOLD tickets:
    - *Fix:* Replace qualitative bands with quantitative thresholds where possible.
 
 2. **Reliance on undocumented institutional knowledge**
-   - The `bias_scenario` enum includes culturally specific concepts (e.g., "executive pressure" understood within PETRONAS context).
+   - The `bias_scenario` enum includes culturally specific concepts (e.g., "executive pressure" understood within Operator context).
    - *Fix:* Add explicit definitions in an appendix.
 
 3. **No dispute resolution mechanism**

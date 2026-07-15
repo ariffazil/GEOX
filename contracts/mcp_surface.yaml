@@ -2,7 +2,7 @@ schema_version: 1
 kind: arifos.mcp_surface
 owner_repo: GEOX
 status: contract
-last_verified: "2026-05-19"
+last_verified: "2026-06-30"
 runtime_surface:
   primary_transport: streamable_http
   primary_port: 8081
@@ -14,6 +14,19 @@ authority:
     - petrophysics
     - seismic_and_maps
     - prospect_risk
+  resources_owned:
+    - geox://identity
+    - geox://reality/context
+    - geox://registry/apps
+    - geox://profile/status
+    - geox://capabilities
+    - geox://resources/*
+    - geox://claims/*
+    - geox://artifacts/*
+    - geox://basins/*
+    - geox://literature/*
+    - tree777://*
+    - ui://*
   excludes:
     - constitutional_judgment
     - capital_allocation_decision
