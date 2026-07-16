@@ -1,0 +1,49 @@
+age_Ma,sea_level_m,amplitude,order,stage,label,notes
+66.0,20,minor,3,Danian,PgSB1,K-Pg boundary recovery
+63.5,15,minor,3,Danian,PgSB2,early Paleocene
+61.0,25,medium,3,Selandian,PgSB3,mid Paleocene
+59.2,20,minor,3,Selandian,PgSB4,late Paleocene
+57.5,30,medium,3,Thanetian,PgSB5,late Paleocene warming
+55.8,25,minor,3,Thanetian,PgSB6,PETM precursor
+54.5,15,minor,3,Ypresian,PgSB7,PETM recovery
+52.5,35,medium,3,Ypresian,PgSB8,early Eocene
+50.5,20,minor,3,Ypresian,PgSB9,mid early Eocene
+48.5,30,medium,3,Lutetian,PgSB10,mid Eocene
+46.5,25,minor,3,Lutetian,PgSB11,mid Eocene cooling
+44.5,40,medium,3,Bartonian,PgSB12,mid-late Eocene
+42.5,35,medium,3,Bartonian,PgSB13,late Eocene
+40.5,50,medium,3,Priabonian,PgSB14,late Eocene cooling
+38.0,60,medium,3,Priabonian,PgSB15,pre-Oi-1
+36.5,55,medium,3,Priabonian,PgSB16,late Eocene
+35.5,80,major,3,Rupelian,PgSB17,Oi-1 precursor — major glaciation onset
+34.0,100,major,3,Rupelian,PgSB18,Oi-1 — EAIS onset, major lowstand
+33.0,60,medium,3,Rupelian,PgSB19,post-Oi-1 recovery
+31.5,50,medium,3,Rupelian,PgSB20,early Oligocene
+30.0,55,medium,3,Rupelian,PgSB21,mid Oligocene
+28.5,45,medium,3,Chattian,PgSB22,late Oligocene
+27.0,40,medium,3,Chattian,PgSB23,late Oligocene
+25.5,50,medium,3,Chattian,PgSB24,pre-Mi-1
+24.0,55,medium,3,Chattian,PgSB25,late Oligocene
+23.0,80,major,3,Aquitanian,NgSB1,Mi-1 — major Antarctic expansion, lowstand
+21.5,40,medium,3,Aquitanian,NgSB2,early Miocene recovery
+20.0,45,medium,3,Burdigalian,NgSB3,early Miocene
+18.5,35,medium,3,Burdigalian,NgSB4,pre-MCO warming
+17.0,20,minor,3,Burdigalian,NgSB5,MCO onset — reduced ice, highstand
+16.0,15,minor,3,Burdigalian,NgSB6,MCO peak warmth — minimal ice
+15.0,25,medium,3,Langhian,NgSB7,MCO end — cooling begins
+14.0,70,major,3,Serravallian,NgSB8,MMCT — major ice expansion, lowstand
+13.0,55,medium,3,Serravallian,NgSB9,post-MMCT stabilization
+11.6,45,medium,3,Serravallian,NgSB10,mid Miocene
+10.5,50,medium,3,Tortonian,NgSB11,late Miocene — UIU age
+9.5,40,medium,3,Tortonian,NgSB12,late Miocene
+8.5,55,medium,3,Tortonian,NgSB13,late Miocene — SRU age
+7.5,45,medium,3,Tortonian,NgSB14,late Miocene
+6.5,50,medium,3,Messinian,NgSB15,Messinian salinity crisis precursor
+5.5,60,medium,3,Messinian,NgSB16,Messinian — Mediterranean drawdown
+4.5,40,medium,3,Messinian,NgSB17,late Miocene
+3.6,55,medium,3,Zanclean,NgSB18,Pliocene onset
+3.0,40,medium,4,Piacenzian,NgSB19,early Pliocene
+2.5,50,medium,4,Piacenzian,NgSB20,mid Pliocene warmth
+2.0,60,medium,4,Gelasian,QSB1,early Quaternary
+1.8,70,major,4,Gelasian,QSB2,MPT onset — major glaciation
+1.5,80,major,4,Gelasian,QSB3,MPT — quasi-permanent NH ice sheets
