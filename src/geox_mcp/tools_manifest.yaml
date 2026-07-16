@@ -391,6 +391,82 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: false
+- name: geox_falsify
+  domain: governance
+  axis: reason
+  lane: judgment
+  face: surface
+  visibility: public
+  description: 'Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_contradiction_scan
+  domain: governance
+  axis: reason
+  lane: judgment
+  face: surface
+  visibility: public
+  description: 'Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_lem_predict
+  domain: earth.inference
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_to_wealth_bridge
+  domain: governance.bridge
+  axis: reason
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
 - name: geox_well_desurvey
   domain: earth.well
   axis: compute
@@ -1460,7 +1536,6 @@ compat_tools:
 - geox_icgem_models
 - geox_joint_inversion
 - geox_las_inspect
-- geox_lem_predict
 - geox_literature_ingest
 - geox_map_context_scene
 - geox_material_truth_challenge
