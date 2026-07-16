@@ -384,7 +384,7 @@ def _enforce_geox() -> dict[str, Any] | None:
 # ═══════════════════════════════════════════════════════════════════
 
 
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_consequence_footprint", annotations=_geox_annotations("geox_consequence_footprint"))
+# DEREGISTERED ZEN-15 — @mcp.tool(name="geox_consequence_footprint", annotations=_geox_annotations("geox_consequence_footprint"))
 async def _consequence_footprint(
     action_description: str = "",
     affected_area_km2: float | None = None,
@@ -428,8 +428,9 @@ async def _consequence_footprint(
         uncertainty_factor=uncertainty_factor,
     )
 
-
     # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_optionality_loss", annotations=_geox_annotations("geox_optionality_loss"))
+
+
 async def _optionality_loss(
     action_description: str = "",
     options_destroyed: list[dict] | None = None,
@@ -450,8 +451,9 @@ async def _optionality_loss(
         action_description=action_description, options_destroyed=options_destroyed or [], options_preserved=options_preserved
     )
 
-
     # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_feedback_integrity", annotations=_geox_annotations("geox_feedback_integrity"))
+
+
 async def _feedback_integrity(
     monitoring_system: str = "",
     sensor_coverage_pct: float = 0,
@@ -489,8 +491,9 @@ async def _feedback_integrity(
         excluded_anomalies=excluded_anomalies,
     )
 
-
     # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_material_truth_challenge", annotations=_geox_annotations("geox_material_truth_challenge"))
+
+
 async def _material_truth_challenge(
     institutional_claim: str = "",
     earth_measurements: list[dict] | None = None,
@@ -519,8 +522,9 @@ async def _material_truth_challenge(
         measurement_confidence=measurement_confidence,
     )
 
-
     # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_cascade_pathway", annotations=_geox_annotations("geox_cascade_pathway"))
+
+
 async def _cascade_pathway(
     intervention: str = "",
     cascade_graph: list[dict] | None = None,
@@ -558,13 +562,21 @@ def compose_geox_servers() -> None:
 
     witness = create_witness_server()
     paleoscan = create_paleoscan_server()
-    claims = create_claims_server()
     vision = create_vision_server()
 
     # namespace=None preserves original tool names (no prefixing)
     mcp.mount(witness, namespace=None)
     mcp.mount(paleoscan, namespace=None)
-    mcp.mount(claims, namespace=None)
+    # D5: claims sub-server uses **kwargs tools FastMCP rejects.
+    # Canonical surface is mode-dispatched geox_claim on the main server.
+    # Soft-skip so GEOX boot is not crash-looped (was exit-code 1 2026-07-15).
+    try:
+        claims = create_claims_server()
+        mcp.mount(claims, namespace=None)
+    except (ValueError, TypeError) as claims_exc:
+        import logging as _logging
+
+        _logging.getLogger("geox.server").warning("claims sub-server skipped (use geox_claim modes): %s", claims_exc)
     mcp.mount(vision, namespace=None)
 
     # Assert canonical count across all composed servers
@@ -897,7 +909,7 @@ async def _biostrat_constraint(
 
 
 # ── Phase 2.7 (2026-07-03): Biostratigraphy Parser — NN zone + GDE + lithology ──
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
+# DEREGISTERED ZEN-15 — @mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
 async def _biostrat_parse(
     text: str = "",
     paleoenvironment: str = "",
@@ -974,7 +986,7 @@ async def _biostrat_ruling_check(
 
 
 # ── Phase 2.7 (2026-07-03): Biostrat Falsification Engine — 8-gate Popperian test ──
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
+# DEREGISTERED ZEN-15 — @mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
 async def _biostrat_falsify(
     fossil_group: str = "calcareous_nannofossil",
     biozone: str = "",
@@ -1107,7 +1119,7 @@ async def _seismic_inversion(
 @mcp.tool(name="geox_geomechanics", annotations=_geox_annotations("geox_geomechanics"))
 async def _geomechanics(
     mode: str = "derive_moduli",
-    state: dict | None = None,
+    state: dict | str | None = None,
     depth_m: float | None = None,
     sv_mpa: float | None = None,
     pp_mpa: float = 10.0,
@@ -1148,6 +1160,15 @@ async def _geomechanics(
         GeomechanicsRequest,
         geox_geomechanics,
     )
+
+    # F1 AMANAH: MCP transport may serialize dict as JSON string — parse if needed
+    if isinstance(state, str):
+        import json as _json
+
+        try:
+            state = _json.loads(state)
+        except (ValueError, TypeError):
+            return {"ok": False, "error": f"state is a string but not valid JSON: {state[:200]}"}
 
     return (
         await geox_geomechanics(
@@ -1668,7 +1689,7 @@ async def geox_query_macrostrat(
 # A-FORGE 888_HOLD approved 2026-07-03 by F13 SOVEREIGN.
 
 
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
+# DEREGISTERED ZEN-15 — @mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
 async def _geox_contrast_detect(
     dimension: str = "all",
     mass_predicted: float | None = None,

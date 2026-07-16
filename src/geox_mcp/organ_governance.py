@@ -106,8 +106,18 @@ ARIFOS_KERNEL_URL = os.getenv("ARIFOS_KERNEL_URL", "http://127.0.0.1:8088")
 _ARIFOS_KERNEL_TOKEN = os.getenv("ARIFOS_KERNEL_TOKEN", "")
 
 
+# Cached MCP session for kernel calls (initialize → initialized → tools/call)
+_kernel_mcp_session_id: str | None = None
+
+
 async def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int = 20) -> dict[str, Any]:
-    """Call arifOS MCP kernel asynchronously. FAIL-CLOSED on error — returns error dict."""
+    """Call arifOS MCP kernel asynchronously. FAIL-CLOSED on error — returns error dict.
+
+    D5: complete MCP lifecycle (initialize → notifications/initialized → tools/call)
+    so streamable-HTTP kernel gates do not reject bare tools/call.
+    """
+    global _kernel_mcp_session_id
+
     payload = {
         "jsonrpc": "2.0",
         "id": 1,
@@ -115,15 +125,62 @@ async def _call_arif_kernel(tool_name: str, params: dict[str, Any], timeout: int
         "params": {"name": tool_name, "arguments": params},
     }
 
-    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/event-stream",
+    }
     if _ARIFOS_KERNEL_TOKEN:
         headers["Authorization"] = f"Bearer {_ARIFOS_KERNEL_TOKEN}"
 
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
+            # Ensure MCP session + lifecycle
+            if not _kernel_mcp_session_id:
+                init = await client.post(
+                    f"{ARIFOS_KERNEL_URL}/mcp",
+                    json={
+                        "jsonrpc": "2.0",
+                        "id": 0,
+                        "method": "initialize",
+                        "params": {
+                            "protocolVersion": "2025-03-26",
+                            "capabilities": {},
+                            "clientInfo": {"name": "geox-organ-governance", "version": "1.0"},
+                        },
+                    },
+                    headers=headers,
+                )
+                sid = init.headers.get("mcp-session-id") or init.headers.get("Mcp-Session-Id")
+                if sid:
+                    _kernel_mcp_session_id = sid.strip()
+                    headers["Mcp-Session-Id"] = _kernel_mcp_session_id
+                    await client.post(
+                        f"{ARIFOS_KERNEL_URL}/mcp",
+                        json={"jsonrpc": "2.0", "method": "notifications/initialized"},
+                        headers=headers,
+                    )
+            else:
+                headers["Mcp-Session-Id"] = _kernel_mcp_session_id
+
             resp = await client.post(f"{ARIFOS_KERNEL_URL}/mcp", json=payload, headers=headers)
+            # Session expiry → one retry with fresh lifecycle
+            if resp.status_code in (400, 404) and "session" in resp.text.lower():
+                _kernel_mcp_session_id = None
+                return await _call_arif_kernel(tool_name, params, timeout=timeout)
+
             resp.raise_for_status()
-            result = resp.json()
+            # SSE or JSON
+            ctype = resp.headers.get("content-type", "")
+            if "text/event-stream" in ctype:
+                result = None
+                for line in resp.text.splitlines():
+                    if line.startswith("data:"):
+                        result = json.loads(line[5:].strip())
+                        break
+                if result is None:
+                    return {"status": "ERROR", "error": "empty SSE from kernel"}
+            else:
+                result = resp.json()
             rpc_result = result.get("result", {"status": "ERROR", "error": "no result in response"})
             if isinstance(rpc_result, dict) and "content" in rpc_result and isinstance(rpc_result["content"], list):
                 for item in rpc_result["content"]:
@@ -632,6 +689,16 @@ async def check_governance(
         return lane_verdict, lane_error
 
     risk_tier = GEOX_RISK_MAP.get(tool_name, RiskTier.C1_ADVISORY)
+    # D5: geox_claim is mode-dispatched — only seal is C2/judgment; create is evidence
+    if tool_name == "geox_claim" and arguments:
+        effective = arguments
+        if isinstance(arguments.get("arguments"), dict):
+            effective = arguments["arguments"]
+        mode = str(effective.get("mode") or effective.get("action") or "create").lower()
+        if mode in ("create", "validate", "challenge", "attach", "attach_evidence", "query", "list"):
+            risk_tier = RiskTier.C1_ADVISORY
+        elif mode == "seal":
+            risk_tier = RiskTier.IRREVERSIBLE
 
     # ═══ STEP 2: IDENTITY PROPAGATION (P0.1 — lane-aware) ══════════
     id_verdict, id_error = _check_identity_propagation(tool_name, session_id, actor_id, arguments)

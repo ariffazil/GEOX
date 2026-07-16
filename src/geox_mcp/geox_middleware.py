@@ -209,7 +209,7 @@ class GeoxGovernanceMiddleware(Middleware):
         {
             "geox_3d_model",
             "geox_bathymetry_ingest",
-            "geox_claim",
+            # geox_claim is FLAT (mode/session_id/actor_id params) — not an arguments-dict wrapper
             "geox_climate_reanalysis",
             "geox_cognitive_rank_hypotheses",
             "geox_earthquake_catalog",
@@ -416,6 +416,9 @@ class GeoxGovernanceMiddleware(Middleware):
                     if _env.get(_ik) and not arguments.get(_ik):
                         arguments[_ik] = _env[_ik]
                         logger.debug(f"IDENTITY_INJECT: {_ik}={_env[_ik]} for '{tool_name}'")
+            # D3/D5: strip kernel envelope — FastMCP schema rejects unknown kwargs
+            if "_envelope" in arguments:
+                arguments.pop("_envelope", None)
 
         # F1 AMANAH: defensive unwrap — 36 GEOX tools declare `arguments: dict`
         # as a wrapper parameter. MCP clients send flat parameters
