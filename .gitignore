@@ -67,3 +67,7 @@ node_modules/
 geox-gui/node_modules/
 **/.venv/
 
+# Generated repo dump artifacts
+ariffazil-geox.txt
+Copilot/
+
