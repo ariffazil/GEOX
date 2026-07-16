@@ -3338,51 +3338,80 @@ def register_tools_on(mcp):
     async def _gravmag_studio(
         mode: str = "open",
         survey_type: str = "gravity",
-        easting_m: list[float] | None = None,
-        northing_m: list[float] | None = None,
-        observed_values: list[float] | None = None,
         prisms: list[dict[str, Any]] | None = None,
         magnetization_a_m: float = 0.0,
         field_declination_deg: float = 0.0,
         field_inclination_deg: float = 0.0,
+        grid_extent_m: float = 50000.0,
+        grid_n: int = 40,
+        backend: str = "auto",
+        # screen-only params — observed_grid accepts list OR JSON string (MCP transport fix)
+        observed_grid: Any = None,
+        observed_units: str | None = None,
+        observed_source: str | None = None,
+        observed_extent_m: float | None = None,
+        alternatives_declared: Any = None,
+        # governance params (accepted, not forwarded to implementation)
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
         """Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.
 
-        open   — interactive GravMag Studio UI with forward modeling
-        screen — screening analysis against observed data
+        open   — interactive GravMag Studio UI with forward modeling.
+            Params: survey_type, prisms, magnetization_a_m, field_declination_deg,
+            field_inclination_deg, grid_extent_m, grid_n, backend.
+
+        screen — screening analysis against observed data (falsification lane).
+            Additional required params: observed_grid (2D list), observed_units
+            ("mGal"/"nT"), observed_source (provenance string).
+            Optional: observed_extent_m, alternatives_declared.
         """
         if mode == "screen":
+            import json as _json
             from geox_mcp.tools.geophysics_studio_screen import geox_gravmag_studio_screen as _impl
+
+            # F1 AMANAH: MCP transport may serialize nested lists as JSON strings
+            _og = observed_grid or []
+            if isinstance(_og, str):
+                try:
+                    _og = _json.loads(_og)
+                except (ValueError, TypeError):
+                    return {"verdict": "VOID", "error": f"observed_grid is a string but not valid JSON: {_og[:200]}"}
+            _ad = alternatives_declared
+            if isinstance(_ad, str):
+                try:
+                    _ad = _json.loads(_ad)
+                except (ValueError, TypeError):
+                    _ad = None
+
             return await _impl(
                 survey_type=survey_type,
-                easting_m=easting_m or [],
-                northing_m=northing_m or [],
-                observed_values=observed_values or [],
                 prisms=prisms or [],
+                grid_extent_m=grid_extent_m,
+                grid_n=grid_n,
+                observed_grid=_og,
+                observed_units=observed_units or "mGal",
+                observed_source=observed_source or "synthetic_probe",
                 magnetization_a_m=magnetization_a_m,
                 field_declination_deg=field_declination_deg,
                 field_inclination_deg=field_inclination_deg,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                backend=backend,
+                alternatives_declared=_ad,
+                observed_extent_m=observed_extent_m,
             )
         # Default: open
         from geox_mcp.tools.geophysics_studio import geox_gravmag_studio_open as _impl
+
         return await _impl(
             survey_type=survey_type,
-            easting_m=easting_m or [],
-            northing_m=northing_m or [],
-            observed_values=observed_values or [],
             prisms=prisms or [],
             magnetization_a_m=magnetization_a_m,
             field_declination_deg=field_declination_deg,
             field_inclination_deg=field_inclination_deg,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
+            grid_extent_m=grid_extent_m,
+            grid_n=grid_n,
+            backend=backend,
         )
 
     @mcp.tool(name="geox_well_desk", annotations=_geox_annotations("geox_well_desk"))
@@ -3407,6 +3436,7 @@ def register_tools_on(mcp):
         """
         if mode == "publish":
             from geox_mcp.tools.integration_well import geox_well_desk_publish as _impl
+
             return await _impl(
                 well_id=well_id,
                 session_id=session_id,
@@ -3415,6 +3445,7 @@ def register_tools_on(mcp):
             )
         if mode == "render":
             from geox_mcp.render_well_panel_petro import render_interpreted_panel
+
             return render_interpreted_panel(
                 well_id=well_id,
                 depth_top=depth_top,
@@ -3426,6 +3457,7 @@ def register_tools_on(mcp):
             )
         # Default: open
         from geox_mcp.tools.integration_well import geox_well_desk_open as _impl
+
         return await _impl(
             well_id=well_id,
             mode="summary",
