@@ -17,8 +17,7 @@ from geox_mcp.surface_manifest import (
 # counts match tools/list. Sovereign directive: GEOX-RED-TEAM-2026-07-07.
 # Reactivation requires F13 SOVEREIGN ack.
 GHOST_TOOLS: set[str] = {
-    # Public ghost
-    "geox_claim_graph_evaluate",
+    # Public ghost — RESURRECTED 2026-07-16 (removed from ghost set)
     # Internal ghosts
     "geox_3d_model",
     "geox_3d_model_build",

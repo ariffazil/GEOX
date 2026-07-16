@@ -158,6 +158,110 @@ class TestToolContracts:
         # surface_status is defined directly in tools_wiring.py
         assert True  # verified by registry PASS
 
+    def test_geox_evidence_contract(self):
+        """geox_evidence wiring matches geox_evidence unified interface."""
+        from geox_mcp.tools.evidence_unified import geox_evidence
+
+        impl_params = _get_impl_params(geox_evidence)
+        expected = {"mode"}
+        assert expected.issubset(impl_params), f"geox_evidence missing params: {expected - impl_params}"
+
+    def test_geox_vision_contract(self):
+        """geox_vision wiring matches geox_vision unified interface."""
+        from geox_mcp.tools.vision_unified import geox_vision
+
+        impl_params = _get_impl_params(geox_vision)
+        expected = {"mode"}
+        assert expected.issubset(impl_params), f"geox_vision missing params: {expected - impl_params}"
+
+    def test_geox_prospect_contract(self):
+        """geox_prospect wiring matches geox_prospect unified interface."""
+        from geox_mcp.tools.prospect_unified import geox_prospect
+
+        impl_params = _get_impl_params(geox_prospect)
+        expected = {"mode"}
+        assert expected.issubset(impl_params), f"geox_prospect missing params: {expected - impl_params}"
+
+    def test_geox_seismic_interpret_contract(self):
+        """geox_seismic_interpret wiring matches implementation."""
+        from geox_mcp.tools.seismic_interpret import geox_seismic_interpret
+
+        impl_params = _get_impl_params(geox_seismic_interpret)
+        expected = {"mode"}
+        assert expected.issubset(impl_params), f"geox_seismic_interpret missing params: {expected - impl_params}"
+
+    def test_geox_well_tie_contract(self):
+        """geox_well_tie wiring matches implementation."""
+        from geox_mcp.tools.seismic_well_tie import geox_seismic_well_tie_compute
+
+        impl_params = _get_impl_params(geox_seismic_well_tie_compute)
+        expected = {"well_id", "volume_ref"}
+        assert expected.issubset(impl_params), f"geox_well_tie missing params: {expected - impl_params}"
+
+    def test_geox_well_qc_contract(self):
+        """geox_well_qc wiring matches implementation."""
+        from geox_mcp.tools.well_qc import geox_well_qc
+
+        impl_params = _get_impl_params(geox_well_qc)
+        expected = {"artifact_ref", "qc_mode"}
+        assert expected.issubset(impl_params), f"geox_well_qc missing params: {expected - impl_params}"
+
+    def test_geox_well_desurvey_contract(self):
+        """geox_well_desurvey wiring matches implementation."""
+        from geox_mcp.tools.well_desurvey import geox_well_desurvey
+
+        impl_params = _get_impl_params(geox_well_desurvey)
+        expected = {"well_id", "collar", "survey"}
+        assert expected.issubset(impl_params), f"geox_well_desurvey missing params: {expected - impl_params}"
+
+    def test_geox_seismic_inversion_contract(self):
+        """geox_seismic_inversion wiring matches implementation."""
+        from geox_mcp.tools.seismic_inversion import geox_seismic_inversion
+
+        impl_params = _get_impl_params(geox_seismic_inversion)
+        expected = {"request"}
+        assert expected.issubset(impl_params), f"geox_seismic_inversion missing params: {expected - impl_params}"
+
+    def test_geox_observe_contract(self):
+        """geox_observe wiring matches implementation."""
+        from geox_mcp.tools.observe import geox_observe
+
+        impl_params = _get_impl_params(geox_observe)
+        expected = {"mode"}
+        assert expected.issubset(impl_params), f"geox_observe missing params: {expected - impl_params}"
+
+    def test_geox_lem_predict_contract(self):
+        """geox_lem_predict wiring matches implementation."""
+        from geox_mcp.tools.lem_predict import geox_lem_predict
+
+        impl_params = _get_impl_params(geox_lem_predict)
+        expected = {"req"}
+        assert expected.issubset(impl_params), f"geox_lem_predict missing params: {expected - impl_params}"
+
+    def test_geox_macrostrat_calibrate_contract(self):
+        """geox_macrostrat_calibrate wiring matches implementation."""
+        from geox_mcp.tools.macrostrat_calibrate import geox_macrostrat_calibrate
+
+        impl_params = _get_impl_params(geox_macrostrat_calibrate)
+        expected = {"lat", "lng"}
+        assert expected.issubset(impl_params), f"geox_macrostrat_calibrate missing params: {expected - impl_params}"
+
+    def test_geox_basin_profile_contract(self):
+        """geox_basin_profile wiring matches implementation."""
+        from geox_mcp.tools.basin import geox_basin_profile
+
+        impl_params = _get_impl_params(geox_basin_profile)
+        expected = {"basin_name", "mode"}
+        assert expected.issubset(impl_params), f"geox_basin_profile missing params: {expected - impl_params}"
+
+    def test_geox_basin_resolve_contract(self):
+        """geox_basin_resolve wiring matches implementation."""
+        from geox_mcp.tools.basin import geox_basin_resolve
+
+        impl_params = _get_impl_params(geox_basin_resolve)
+        expected = {"name"}
+        assert expected.issubset(impl_params), f"geox_basin_resolve missing params: {expected - impl_params}"
+
 
 # ── Test: no wiring function passes governance params to implementation ───────
 

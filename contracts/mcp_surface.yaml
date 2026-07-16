@@ -1,56 +1,88 @@
-schema_version: 1
+schema_version: 2
 kind: arifos.mcp_surface
 owner_repo: GEOX
 status: contract
-last_verified: "2026-06-30"
+last_verified: "2026-07-16"
+regenerated_by: zen-consolidation
+
 runtime_surface:
   primary_transport: streamable_http
   primary_port: 8081
-  public_domain: https://geox.arif-fazil.com
+  endpoints:
+    direct: https://geox.arif-fazil.com/mcp
+    kernel_gateway: https://mcp.arif-fazil.com/mcp
+    local: http://127.0.0.1:8081/mcp
+  server_card: http://127.0.0.1:8081/.well-known/mcp/server.json
+  protocol_version: "2025-11-25"
+
 authority:
   owns:
     - earth_evidence
-    - well_log_qc
+    - well_log_ingest
     - petrophysics
-    - seismic_and_maps
-    - prospect_risk
+    - seismic_compute_interpret
+    - basin_analysis
+    - stratigraphy_biostrat
+    - geomechanics
+    - deep_time_state
+    - prospect_evaluation
+    - gravmag_forward
+    - well_desk
+    - claim_lifecycle
+    - surface_status
   resources_owned:
     - geox://identity
     - geox://reality/context
-    - geox://registry/apps
     - geox://profile/status
     - geox://capabilities
+    - geox://surface/truth
+    - geox://layers/*
     - geox://resources/*
     - geox://claims/*
     - geox://artifacts/*
     - geox://basins/*
     - geox://literature/*
+    - geox://render/*
+    - geox://well/*
+    - geox://apps/*
+    - geox://registry/*
+    - geox://webmcp
     - tree777://*
-    - ui://*
+    - ui://geox/*
   excludes:
     - constitutional_judgment
     - capital_allocation_decision
     - deployment_substrate
     - final_seal
-expected_tools_or_routes:
-  - geox_data_ingest_bundle
-  - geox_data_qc_bundle
-  - geox_well_analyze_sequence
-  - geox_subsurface_generate_candidates
-  - geox_subsurface_verify_integrity
-  - geox_seismic_analyze_volume
-  - geox_map_context_scene
-  - geox_process_abduction
-  - geox_evidence_contradiction_scan
-  - geox_prospect_evaluate
-  - geox_history_audit
-artifact_policy:
-  machine_readable: required
-  human_readable: required_for_reports
-  evidence_refs: required
-  uncertainty_limits: required
-hold_conditions:
-  - missing_primary_evidence
-  - physics_boundary_violation
-  - coordinate_or_unit_ambiguity
-  - claim_exceeds_observed_data
+
+canonical_tool_count: 15
+canonical_tools:
+  # Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
+  # Live verification: curl -sf http://localhost:8081/tools | python3 -m json.tool
+  - geox_well_ingest
+    - geox_petrophysics
+    - geox_seismic_ingest
+    - geox_seismic_compute
+    - geox_seismic_interpret
+    - geox_subsurface_model
+    - geox_basin
+    - geox_sequence
+    - geox_geomechanics
+    - geox_deep_time_state
+    - geox_claim
+    - geox_prospect
+    - geox_gravmag_studio
+    - geox_well_desk
+    - geox_surface_status
+
+mcp_conformance:
+  lifecycle: initialize → initialized → tools/call (enforced by lifecycle gate)
+  transport: streamable-http with Mcp-Session-Id
+  capabilities_declared: [tools, resources, prompts, logging, completions]
+  pagination: infrastructure ready (resources/pagination.py)
+  spec_version_target: "2025-11-25"
+  spec_migration_notes:
+    - SEP-2575 (stateless): initialize/initialized removed in draft spec
+    - SEP-2567 (sessionless): Mcp-Session-Id removed, use authority_handle as tool arg
+    - SEP-2577 (deprecate): Sampling, Roots, Logging deprecated
+    - MRTR: InputRequiredResult replaces elicitation/create for ack_irreversible

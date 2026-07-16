@@ -1,18 +1,18 @@
 <!-- SOT-MANIFEST
 owner: Arif (F13 SOVEREIGN)
-last_verified: 2026-07-15T04:45Z
+last_verified: 2026-07-16T10:00Z
 live_version: v2026.07.06-phase3.1-rsi-pipeline
 port: 8081
 domain_law: NATURAL_LAW
-mcp_tools_live: 15
+mcp_tools_live: 20
 owner_summary: GREEN
 truth_rule: tools/list + /health beat any static count in prose
-federation_release: v2026.07.15-DOMAIN-CONTRAST
+federation_release: v2026.07.16-RESURRECTION
 mcp_apps: SEP-1865 (ui:// + host proxy)
 gui: https://geox.arif-fazil.com/gui/
 package_seal: PLAN-2026-07-12-GEOX-MCP-APP-SLICE-001 (seq 57 wire)
-valid_from: 2026-07-12
-valid_until: 2026-08-15
+valid_from: 2026-07-16
+valid_until: 2026-08-16
 confidence: high
 scope: /root/GEOX
 domain_contrast: /root/AAA/docs/DOMAIN_ORGAN_CONTRAST.md
@@ -48,8 +48,8 @@ machine_sot: CANONICAL_PUBLIC_SURFACE.json
 |-------|-------|
 | **Domain** | Earth — physics-constrained geoscience inference |
 | **Port** | `:8081` · `https://geox.arif-fazil.com` |
-| **MCP Tools (public)** | **15** — SOT: live `tools/list` |
-| **Primary Physics** | Wave equation · Archie · Physics9 bounds · stratigraphy |
+| **MCP Tools (public)** | **20** — SOT: live `tools/list` (ZEN-20, resurrected 2026-07-16) |
+| **Primary Physics** | Wave equation · Archie · Physics9 bounds · stratigraphy · isostasy · mass balance |
 | **Epistemic Labels** | OBS / DER / INT / SPEC / CLAIM |
 | **License** | BSL-1.1 |
 | **Final Authority** | ARIF (F13 SOVEREIGN) |
@@ -69,7 +69,9 @@ ARIF (F13) → arifOS KERNEL :8088 → GEOX :8081 (this organ)
 - Well-log I/O & QC · petrophysics · sequence motifs  
 - Seismic ingest / compute / interpret · vision assists  
 - Basin / backstrip / thermal / mass balance  
-- Claims & evidence · prospect **compute** (not capital)  
+- **Claims & evidence lifecycle** (create → attach → contradict → evaluate)  
+- **Claim graph evaluation** (DAG-based falsification with dependency propagation)  
+- Prospect **compute** (not capital)  
 - MCP Apps + GUI (host-proxied)
 
 ## What GEOX Refuses (Hard)
@@ -126,7 +128,7 @@ Three domain MCP servers share one governance spine (arifOS) and three **orthogo
 | GitHub | [ariffazil/GEOX](https://github.com/ariffazil/GEOX) | [ariffazil/WEALTH](https://github.com/ariffazil/WEALTH) | [ariffazil/WELL](https://github.com/ariffazil/WELL) |
 | `domain_law` | **`NATURAL_LAW`** | `CAPITAL_LAW` | `SUBSTRATE_LAW` |
 | Primary axis | Earth / material substrate | Capital / scarcity / allocation geometry | Vitality / readiness / dignity |
-| Live tools (2026-07-15) | **15** | **12** | **27** |
+| Live tools (2026-07-16) | **20** | **12** | **27** |
 | Authority | Evidence only | Compute only (advisory) | `REFLECT_ONLY` |
 | May claim | OBS / DER / INT earth facts | Risk envelopes, advisory size | Readiness signals, dignity flags |
 | Must never | Drill · allocate capital · seal law | Move money · claim earth truth | Diagnose · decide fitness · override human |
@@ -283,36 +285,31 @@ A tool can return a **UI resource** (`ui://…` HTML). The host draws it in a sa
 
 > Source: live MCP + `CANONICAL_PUBLIC_SURFACE.json`. Each row: **what it does** · **what success looks like** · **what it must not claim**.
 
-### 3.1 Wells, petrophysics & image intelligence
+### 3.1 Wells, petrophysics & well desk
 
 | Tool | Meaning for a geologist | Agent signal | Guardrail |
 |------|-------------------------|--------------|-----------|
 | `geox_well_ingest` | Load LAS / well bundle into governed store | artifact_ref on success | Format failures → isError, not fake curves |
-| `geox_well_qc` | Depth, nulls, physical range QC | QC grades + flags | Fail open with honesty |
 | `geox_petrophysics` | Vsh, φ, Sw, net pay, LEM modes | DERIVED numbers + assumptions | Archie params are assumptions |
 | `geox_sequence` | GR packages → systems-tract style readout | INTERPRETED stacking | Motif ≠ age certainty |
-| `geox_well_desk_open` | Open well-desk context (OBSERVE) | UI resource / summary | Read path |
-| `geox_render_well_panel` | **Interpreted multi-track PNG** from open LAS | OBS+DER+INT panel + IMAGE_SEAL | Default: real Volve/Marmousi; not scaffold if LAS resolves |
-| `geox_well_desk_publish` | Publish PNG + hash record | MUTATE | **AAA path HOLD** without arifOS lease |
+| `geox_well_desk` | Well desk: open, render, publish interpreted panels | UI resource / panel PNG | Render is OBSERVE; publish is MUTATE (HOLD without lease) |
 
-**Interpreted panel (2026-07-12):**  
+**Interpreted panel:**  
 Open LAS (e.g. Equinor **Volve 15/9-19**, CC BY) → tracks GR · RT · RHOB/NPHI · **Vsh** · **φe** · **Sw** + side panel of **earth meaning** (GR motif, reservoir quality, fluid hypothesis, explicit Rw/ρma assumptions). Epistemic stack stamped in PNG metadata and IMAGE side-ledger.
 
 ```bash
 # Example — open Volve LAS interpreted panel
-mcporter call geox.geox_render_well_panel well_id=volve depth_top=3600 depth_base=3800
+mcporter call geox.geox_well_desk mode=render well_id=volve depth_top=3600 depth_base=3800
 # expect: provenance OBSERVED:lasio+DERIVED:geox_1d+INTERPRETED:earth_meaning
 ```
 
-### 3.2 Seismic & vision
+### 3.2 Seismic
 
 | Tool | Meaning | Signal | Guardrail |
 |------|---------|--------|-----------|
 | `geox_seismic_ingest` | Bring SEGY / volume metadata under evidence | volume_ref | No silent synthetic volumes as OBS |
 | `geox_seismic_compute` | Attributes / physics compute modes | DERIVED cubes/slices | Units + method named |
 | `geox_seismic_interpret` | Horizons / frames / blends | INT over DER | Interpret ≠ seal |
-| `geox_vision` | Image / VLM-assisted seismic cognition | perceptual inventory | F9 — no overclaim |
-| `geox_contrast_detect` | Mass/energy/time/absence anomaly flags | contradiction helper | Thresholds explicit |
 
 ### 3.3 Basin, deep time & mass balance
 
@@ -323,24 +320,23 @@ mcporter call geox.geox_render_well_panel well_id=volve depth_top=3600 depth_bas
 | `geox_sediment_mass_balance` | Sediment budget check | mass consistency | Units m³/Myr class |
 | `geox_thermal_maturity_history` | Ro/Tmax-class thermal path | maturity DER | Needs burial inputs |
 | `geox_deep_time_state` | Earth state at age (plates, bathymetry context) | deep-time vector | External data freshness varies |
-| `geox_map_context_scene` | Bbox / CRS / scene map | spatial context + optional UI | CRS honesty |
 
-### 3.4 Subsurface structure, geomechanics, biostrat
+### 3.4 Subsurface structure & geomechanics
 
 | Tool | Meaning | Signal | Guardrail |
 |------|---------|--------|-----------|
 | `geox_subsurface_model` | Structural / candidate model modes | model artifacts | Not drilling target authority |
 | `geox_geomechanics` | Elastic moduli / rock mechanics transforms | DER mechanical props | Lab calibration when critical |
-| `geox_biostrat_parse` | Fossil/age markers from text | OBS/DER markers | Taxonomy uncertainty |
-| `geox_biostrat_falsify` | Test age claims vs order | falsification receipt | Kill weak age stories |
 
 ### 3.5 Claims, evidence, prospect, health
 
 | Tool | Meaning | Signal | Guardrail |
 |------|---------|--------|-----------|
-| `geox_evidence` | Attach / reason evidence | evidence graph | Multi-discipline argument |
-| `geox_claim` | Structured geological claim | claim object | for / against / missing_tests |
+| `geox_evidence` | Attach / reason evidence (modes: discover, synthesize, abduct, contradict, spatial_block, ingest_literature) | evidence graph | Multi-discipline argument |
+| `geox_claim` | Structured geological claim (modes: create, validate, challenge, seal, attach_evidence) | claim object | for / against / missing_tests |
+| `geox_claim_graph_evaluate` | DAG-based claim dependency evaluation | parent verdict when children fail | AND/OR/WEIGHTED propagation |
 | `geox_prospect` | Prospect evaluation compute | POS/vol context | Not capital; WEALTH owns money |
+| `geox_gravmag_studio` | Gravity/magnetic forward modeling | DER geophysics | Forward only; not inversion authority |
 | `geox_surface_status` | Organ health & surface truth | GREEN/DEGRADED | Agents should call first |
 
 ---
@@ -493,7 +489,7 @@ curl -s https://geox.arif-fazil.com/health | python3 -m json.tool | head
 mcporter list geox
 
 # Interpreted panel smoke (open LAS)
-mcporter call geox.geox_render_well_panel well_id=15/9-19 depth_top=3600 depth_base=3800
+mcporter call geox.geox_well_desk mode=render well_id=15/9-19 depth_top=3600 depth_base=3800
 
 # GUI static
 curl -sI https://geox.arif-fazil.com/gui/ | head -1
@@ -557,17 +553,22 @@ This is **enterprise-ready for evidence and observation**. It is **not** a subst
 
 ---
 
-## 12. What changed recently (2026-07-12 slice)
+## 12. What changed recently (2026-07-16 resurrection)
 
 | Change | Meaning for readers |
 |--------|---------------------|
+| **ZEN-15 → ZEN-20** (5 tools resurrected) | `geox_evidence`, `geox_basin_backstrip`, `geox_sediment_mass_balance`, `geox_thermal_maturity_history`, `geox_claim_graph_evaluate` restored to public surface |
+| systemd path canonicalized | `/root/geox` → `/root/GEOX` — ends directory drift |
+| apps.json ghost cleanup | 10 dead tool references replaced with live ZEN-20 equivalents; 3 apps deprecated |
+| Claim→evidence loop restored | `geox_claim` + `geox_evidence` now form a complete lifecycle |
+| Basin reconstruction live | `geox_basin_backstrip` (Steckler & Watts 1978) + `geox_thermal_maturity_history` (EasyRo/TTI) agent-callable |
+| Claim graph evaluation live | `geox_claim_graph_evaluate` — DAG-based falsification with AND/OR/WEIGHTED dependencies |
+| Contradiction mode available | `geox_evidence(mode="contradict")` — attack hypotheses and surface contradictions |
 | MCP Apps package SEAL (seq 57) | Guest tools/call is real through AAA |
-| IMAGE_SEAL quarantined to side ledger | Constitutional vault head safe |
-| `geox_render_well_panel` + open LAS | Real Volve curves, not sine-wave theater |
-| Petrophysics + earth-meaning panel | Vsh/φe/Sw + motif/fluid text for humans |
-| GUI + app static deploy | Browsers can load cockpit shells |
 
-Receipts (operators): `/root/A-FORGE/forge_work/2026-07-12/` — package seal, research, smokes.
+**What was already live (unchanged):** `geox_well_ingest` · `geox_petrophysics` · `geox_sequence` · `geox_seismic_ingest` · `geox_seismic_compute` · `geox_seismic_interpret` · `geox_subsurface_model` · `geox_basin` · `geox_claim` · `geox_prospect` · `geox_gravmag_studio` · `geox_geomechanics` · `geox_deep_time_state` · `geox_well_desk` · `geox_surface_status`
+
+Receipts (operators): `/root/A-FORGE/forge_work/2026-07-16/` — resurrection seal, SOT audit, gap analysis.
 
 ---
 

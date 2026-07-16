@@ -1,6 +1,10 @@
 """
 GEOX Seismic Vision AI — MCP Tool Wrapper
 ══════════════════════════════════════════
+DEPRECATED 2026-07-16 — All 4 tools deregistered from MCP since 2026-07-10.
+This wrapper exists for backward compat only. Canonical: seismic_vision_ai.py.
+Do NOT re-register without sovereign approval.
+
 Async wrapper for geox_seismic_vision_ai.py sync functions.
 Four modes map to the cognitive visual AI taxonomy:
   geox_visual_understand      → OBS_IMAGE

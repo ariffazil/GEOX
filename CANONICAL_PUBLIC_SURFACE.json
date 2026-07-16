@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-15T05:44:10.065098+00:00",
+  "generated_at": "2026-07-16T10:00:00.000000+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 15,
+  "public_count": 20,
   "internal_count": 54,
   "public_tools": [
     "geox_well_ingest",
@@ -19,7 +19,12 @@
     "geox_prospect",
     "geox_gravmag_studio",
     "geox_well_desk",
-    "geox_surface_status"
+    "geox_surface_status",
+    "geox_evidence",
+    "geox_basin_backstrip",
+    "geox_sediment_mass_balance",
+    "geox_thermal_maturity_history",
+    "geox_claim_graph_evaluate"
   ],
   "tools": [
     {
@@ -216,6 +221,71 @@
       "axis": "observe",
       "lane": "evidence",
       "description": "Federation-standard registry probe: tool discovery and health status.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
+      }
+    },
+    {
+      "name": "geox_evidence",
+      "domain": "governance.evidence",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
+      }
+    },
+    {
+      "name": "geox_basin_backstrip",
+      "domain": "earth.basin",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "1D basin backstripping: Steckler & Watts 1978 Airy isostasy + Sclater & Christie 1980 decompaction. Reconstruct tectonic and total subsidence through time.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_sediment_mass_balance",
+      "domain": "earth.basin",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Source-to-sink sediment volume and mass accounting. Peters 2012 sediment cycling framework with compaction corrections.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_thermal_maturity_history",
+      "domain": "earth.basin",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Burial + heat flow + maturity modeling through time. EasyRo (Sweeney & Burnham 1990) + TTI (Lopatin 1971).",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_claim_graph_evaluate",
+      "domain": "governance",
+      "axis": "reason",
+      "lane": "judgment",
+      "description": "Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependency types and cascade failure propagation.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",

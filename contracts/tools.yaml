@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Last verified: 2026-06-25 (Phase 2 Clean Architecture)
+# Regenerated: 2026-07-16 (zen consolidation)
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,135 +8,119 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: "2026.06.25"
+schema_version: "2026.07.16"
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
-mcp_endpoint: http://127.0.0.1:8081/mcp
+mcp_endpoints:
+  direct: https://geox.arif-fazil.com/mcp
+  kernel_gateway: https://mcp.arif-fazil.com/mcp
+  local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
 
-canonical_tool_count: 16
-contract_epoch: "2026-06-22-GEOX-16TOOLS-PHASE2"
+canonical_tool_count: 15
+contract_epoch: "2026-07-16-GEOX-15TOOLS-ZEN"
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
 
 tools:
-  # ── WELL DOMAIN (4 tools) ──────────────────────────────────────────────────
+  # ── WELL DOMAIN ──────────────────────────────────────────────────────────────
   geox_well_ingest:
-    category: well
-    axis: observe
+    category: earth.well
     lane: evidence
+    risk_tier: readonly
     description: LAS, SEG-Y, DST, deviation, tops ingest
-    session_required: false
-
-  geox_well_qc:
-    category: well
-    axis: verify
-    lane: evidence
-    description: "QC: depth, curves, completeness, FJIS"
-    session_required: false
 
   geox_petrophysics:
-    category: well
-    axis: reason
+    category: earth.petrophysics
     lane: reasoning
-    description: Vsh, porosity, Sw, perm, net pay, LEM
-    session_required: true
+    risk_tier: readonly
+    description: Vsh, porosity, Sw, perm, net pay, LEM, QC
 
-  geox_sequence:
-    category: well
-    axis: reason
-    lane: reasoning
-    description: Sequence stratigraphy, correlation
-    session_required: true
-
-  # ── SEISMIC DOMAIN (4 tools) ───────────────────────────────────────────────
+  # ── SEISMIC DOMAIN ───────────────────────────────────────────────────────────
   geox_seismic_ingest:
-    category: seismic
-    axis: observe
+    category: earth.seismic
     lane: evidence
-    description: SEG-Y I/O, header inspection
-    session_required: false
+    risk_tier: readonly
+    description: SEG-Y I/O, header inspection, export
 
   geox_seismic_compute:
-    category: seismic
-    axis: reason
+    category: earth.seismic
     lane: reasoning
-    description: Synthetic, well-tie, AVO, attributes, inversion
-    session_required: true
+    risk_tier: readonly
+    description: Synthetic, well-tie, attribute, inversion, AVO
 
   geox_seismic_interpret:
-    category: seismic
-    axis: reason
+    category: earth.seismic
     lane: reasoning
-    description: Horizon contrast, faults, frames, blend
-    session_required: true
+    risk_tier: readonly
+    description: Horizon/fault picking, RSI pipeline, vision, contrast
 
-  geox_vision:
-    category: seismic
-    axis: reason
-    lane: reasoning
-    description: VLM inference, audit, calibration, perceptual
-    session_required: true
-
-  # ── MODEL DOMAIN (2 tools) ─────────────────────────────────────────────────
+  # ── MODEL DOMAIN ─────────────────────────────────────────────────────────────
   geox_subsurface_model:
-    category: model
-    axis: reason
-    lane: judgment
-    description: Joint inversion, gravity/mag, MT forward
-    session_required: true
-
-  geox_geomechanics:
-    category: model
-    axis: compute
+    category: earth.model
     lane: reasoning
-    description: "K/G/E/ν, coordinate transform, blockspace"
-    session_required: true
+    risk_tier: c1
+    description: Joint inversion, gravity/magnetic forward, MT forward
 
-  # ── BASIN DOMAIN (2 tools) ─────────────────────────────────────────────────
+  # ── BASIN DOMAIN ─────────────────────────────────────────────────────────────
   geox_basin:
-    category: basin
-    axis: reason
-    lane: discovery
-    description: Profile, resolve, macrostrat, scene
-    session_required: false
+    category: earth.basin
+    lane: reasoning
+    risk_tier: readonly
+    description: Profile, resolve, macrostrat, backstrip, mass balance, thermal
 
+  geox_sequence:
+    category: earth.stratigraphy
+    lane: reasoning
+    risk_tier: readonly
+    description: Sequence analysis, biostratigraphic parsing and falsification
+
+  # ── GEOMECHANICS ─────────────────────────────────────────────────────────────
+  geox_geomechanics:
+    category: earth.structure
+    lane: reasoning
+    risk_tier: readonly
+    description: Bulk/shear/young modulus, poisson ratio, AI, stress polygon
+
+  # ── DEEP TIME ────────────────────────────────────────────────────────────────
   geox_deep_time_state:
-    category: basin
-    axis: reason
-    lane: discovery
-    description: Earth State Vector at any geological age
-    session_required: false
+    category: earth.time
+    lane: evidence
+    risk_tier: readonly
+    description: GPTS, CO2, sea level, temperature, paleogeography
 
-  # ── GOVERNANCE DOMAIN (2 tools) ────────────────────────────────────────────
+  # ── GOVERNANCE ───────────────────────────────────────────────────────────────
   geox_claim:
     category: governance
-    axis: reason
     lane: judgment
-    description: Create, validate, challenge, seal, attach
-    session_required: true
+    risk_tier: c2
+    description: "Claim lifecycle: create, validate, challenge, seal, evidence"
 
-  geox_evidence:
-    category: governance
-    axis: reason
-    lane: evidence
-    description: Discover, synthesize, abduct, contradict, literature
-    session_required: false
-
-  # ── EVALUATION DOMAIN (1 tool) ─────────────────────────────────────────────
   geox_prospect:
-    category: evaluation
-    axis: reason
+    category: earth.prospect
     lane: judgment
+    risk_tier: c1
     description: Volumetrics, POS, EVOI, risk assessment
-    session_required: true
 
-  # ── DOCTRINE DOMAIN (1 tool) ───────────────────────────────────────────────
-  geox_doctrine:
-    category: doctrine
-    axis: verify
-    lane: judgment
-    description: Anti-Beautiful-One, assumptions, Gödel, guards
-    session_required: true
+  # ── GEOPHYSICS ───────────────────────────────────────────────────────────────
+  geox_gravmag_studio:
+    category: earth.geophysics
+    lane: reasoning
+    risk_tier: readonly
+    description: Gravity/magnetic forward modeling and screening
+
+  # ── WELL DESK ────────────────────────────────────────────────────────────────
+  geox_well_desk:
+    category: earth.well
+    lane: evidence
+    risk_tier: readonly
+    description: Interactive view, publish rendered panel, render well panel
+
+  # ── META ─────────────────────────────────────────────────────────────────────
+  geox_surface_status:
+    category: earth.meta
+    lane: discovery
+    risk_tier: readonly
+    description: "Federation-standard registry probe: tool discovery and health"

@@ -1,6 +1,6 @@
 {
-  "version": "2026.07.12",
-  "generated": "2026-07-11",
+  "version": "2026.07.16",
+  "generated": "2026-07-16",
   "workbench": "ui://geox/workbench-v1.html",
   "apps": [
     {
@@ -12,7 +12,7 @@
       "status": "active",
       "visual_tools": [
         "geox_well_ingest",
-        "geox_well_qc",
+        "geox_well_desk",
         "geox_petrophysics"
       ],
       "tools": []
@@ -27,7 +27,7 @@
       "visual_tools": [
         "geox_basin",
         "geox_prospect",
-        "geox_map_scene_plan"
+        "geox_subsurface_model"
       ],
       "tools": []
     },
@@ -37,13 +37,13 @@
       "title": "GEOX Seismic Vision Review",
       "uri": "ui://geox/seismic-vision-review",
       "path": "apps/seismic-vision-review/index.html",
-      "status": "scaffold",
+      "status": "deprecated",
       "visual_tools": [
-        "geox_seismic_cognition",
-        "geox_vision",
-        "geox_visual_understand"
+        "geox_seismic_interpret",
+        "geox_seismic_compute"
       ],
-      "tools": []
+      "tools": [],
+      "deprecation_note": "2026-07-16: vision/cognition tools DEREGISTERED in ZEN-15 cleanup. Use Seismic Viewer instead."
     },
     {
       "id": "geox-mcp-visual",
@@ -66,10 +66,10 @@
       "status": "active",
       "visual_tools": [
         "geox_claim",
-        "geox_evidence",
-        "geox_doctrine"
+        "geox_prospect"
       ],
-      "tools": []
+      "tools": [],
+      "note": "2026-07-16: geox_evidence and geox_doctrine DEREGISTERED. Using claim+prospect for risk assessment."
     },
     {
       "id": "earth-volume",
@@ -90,12 +90,13 @@
       "title": "GEOX Attribute Audit",
       "uri": "ui://geox/attribute-audit",
       "path": "apps/attribute-audit/index.html",
-      "status": "preview",
+      "status": "deprecated",
       "visual_tools": [
-        "geox_render_audit",
-        "geox_segy_trace_audit"
+        "geox_seismic_compute",
+        "geox_seismic_interpret"
       ],
-      "tools": []
+      "tools": [],
+      "deprecation_note": "2026-07-16: render_audit and segy_trace_audit DEREGISTERED. Use Seismic Viewer instead."
     },
     {
       "id": "georeference-map",
@@ -103,12 +104,13 @@
       "title": "GEOX Georeference Map",
       "uri": "ui://geox/georeference-map",
       "path": "apps/georeference-map/index.html",
-      "status": "scaffold",
+      "status": "deprecated",
       "visual_tools": [
-        "geox_map_render_preview",
-        "geox_map_export_package"
+        "geox_basin",
+        "geox_deep_time_state"
       ],
-      "tools": []
+      "tools": [],
+      "deprecation_note": "2026-07-16: map tools DEREGISTERED. Using basin+deep_time for spatial context."
     },
     {
       "id": "analog-digitizer",
@@ -118,11 +120,13 @@
       "path": "apps/analog-digitizer/index.html",
       "status": "planned",
       "visual_tools": [
-        "geox_vision"
+        "geox_well_ingest"
       ],
-      "tools": []
+      "tools": [],
+      "note": "2026-07-16: geox_vision DEREGISTERED. Planned — will use well_ingest + future digitization pipeline."
     }
   ],
-  "generated_at": "2026-07-12T07:48:05.733958+00:00",
-  "registry_note": "tools[] must \u2286 CANONICAL_PUBLIC_SURFACE.json public_tools"
+  "generated_at": "2026-07-16T09:55:00.000000+00:00",
+  "registry_note": "tools[] must be subset of CANONICAL_PUBLIC_SURFACE.json public_tools (ZEN-15). 2026-07-16: cleaned ghost tool references.",
+  "cleanup_log": "2026-07-16: Replaced 10 DEREGISTERED tool references with live ZEN-15 equivalents. 3 apps deprecated (seismic-vision-review, attribute-audit, georeference-map)."
 }
