@@ -35,10 +35,17 @@ basin:
   tectonic_setting: |
     Sabah sits at the collision zone between the Eurasian Plate and the Philippine Sea Plate.
     The basin evolved through:
-    (1) Late Eocene–Oligocene: Rifting, ophiolite emplacement ( basement)
+    (1) Late Eocene–Oligocene: Rifting, ophiolite emplacement (basement)
     (2) Late Oligocene–Early Miocene: Passive margin, deltaic clastic deposition
     (3) Middle–Late Miocene: Collision, uplift, inversion
     (4) Pliocene–Recent: Reactivation, wrench tectonics, continued sedimentation
+
+    CRITICAL UPDATE (NSPW synthesis 2026-07-16):
+    The basin is NOT a simple passive-margin fold belt. It is dominated by the
+    North Sabah–Pagasa Wedge (NSPW), a >500 km syn-collisional, mobile-shale-
+    dominated, sediment-loaded wedge formed after Dangerous Grounds continental
+    crust underthrust NW Borneo. The NSPW is the mechanical spine connecting
+    deep tectonic forcing to shallow stratigraphy and petroleum systems.
 
   structural_elements:
     - name: Kota Kinabalu High
@@ -50,6 +57,222 @@ basin:
     - name: Inversion Structures
       type: Structural inversion
       description: "Middle–Late Miocene inversion created structural traps"
+    - name: Sabah Trough
+      type: Flexural depression
+      description: "NOT a subduction trench — flexural depression caused by NSPW mass loading on hyperextended Dangerous Grounds crust"
+      driver: NSPW_loading
+    - name: Crocker Range
+      type: Crustal uplift
+      description: "Onshore uplift from Dangerous Grounds underthrusting; crustal thickness 24-60 km (Gilligan 2026)"
+      driver: crustal_thickening
+    - name: NSPW toe
+      type: Wedge toe
+      description: "Seaward limit of NSPW imbrication; transition to undeformed Dangerous Grounds"
+
+  # ── NSPW GEOMETRY ──
+  nspw_geometry:
+    type: "syn-collisional_wedge"
+    length_km: 500
+    width_km: 150
+    thickness_km_max: 9
+    thickness_km_palawan: 4
+    footprint_km2: 75000
+    mud_canopy_km2: 1900
+    mud_volcano_centres: 50
+    mud_volcano_area_km2: [4, 80]
+    base_surface: "Nido Limestone reflection (top Dangerous Grounds continental crust)"
+    top_surface: "diachronous — Palawan ~13 Ma, SW Sabah ~10.5 Ma"
+    epistemic: "INT (synthesis of Morley 2023/2024, Aurelio 2014, Ilao 2018)"
+    source: "Morley et al. 2023 Geosphere; Morley 2024 Earth-Science Reviews"
+
+  # ── NSPW TECTONO-STRATIGRAPHIC FRAMEWORK (5 phases) ──
+  nspw_phases:
+    - name: "collision_onset"
+      age_ma: [23, 24]
+      surfaces: [BMU_TCU]
+      processes: ["Dangerous Grounds continental crust enters subduction zone", "End of Crocker accretionary prism", "Transition to syn-collisional wedge"]
+      evidence: "Morley 2024; Hall et al. 2008; Lunt 2022a"
+      epistemic: "MED-HIGH (timing disputed by Lunt)"
+
+    - name: "wedge_growth"
+      age_ma: [13, 23]
+      surfaces: [BMU_TCU, DRU]
+      processes: ["Imbrication", "Folding", "Mass transport", "Sediment incorporation", "4 km clastic loading in mini-basins"]
+      evidence: "Morley 2023; 3D seismic; velocity cubes"
+      epistemic: "HIGH"
+
+    - name: "shale_expulsion"
+      age_ma: [10.5, 13]
+      surfaces: [DRU, UIU]
+      processes: ["Mini-basin formation", "Mobile shale flow", "Mud pipes", "Shale-withdrawal basins", "Overpressure development"]
+      evidence: "Morley 2023; 3D velocity cubes showing low-Vp zones"
+      epistemic: "HIGH"
+
+    - name: "mud_canopy"
+      age_ma: [8.5, 10.5]
+      surfaces: [UIU, SRU]
+      processes: ["Mud volcano coalescence", "1900 km² canopy", "Stage IVC turbidite routing around canopy relief"]
+      evidence: "Morley et al. 2023; Rotan field reservoir data"
+      epistemic: "HIGH"
+
+    - name: "post_wedge_burial"
+      age_ma: [0, 8.5]
+      surfaces: [SRU, present]
+      processes: ["Prograding shelf/delta burial", "DWFTB development", "Triangle zone thrusts", "Active mud volcanism"]
+      evidence: "Morley 2023; present-day mud volcano observations"
+      epistemic: "HIGH"
+
+  # ── ABKSS FRAMEWORK MAPPING ──
+  abkss_framework:
+    description: "Arif's tectono-stratigraphic framework — names tectonic events, not just unconformities"
+    source: "Arif (F13 SOVEREIGN), 2026"
+    mapping:
+      ASAS:
+        age_ma: "Paleogene"
+        meaning: "Syn-rift PSCS margin"
+        nspw_phase: "pre-collision"
+        alignment_with_morley: "PSCS rifting phase"
+        confidence: "HIGH"
+      BEBAS:
+        age_ma: "Oligocene"
+        meaning: "Intra-rift reorganisation"
+        nspw_phase: "pre-collision"
+        alignment_with_morley: "Silent in Morley — Arif's independent contribution"
+        confidence: "MED (your gap = your contribution)"
+      KAPUR:
+        age_ma: "~23 Ma"
+        meaning: "BMU/TCU collision start"
+        nspw_phase: "collision_onset"
+        alignment_with_morley: "Dangerous Grounds entry into subduction"
+        confidence: "HIGH"
+      SABAR:
+        age_ma: "~13 Ma"
+        meaning: "DRU + slab breakoff + NSPW active phase termination"
+        nspw_phase: "wedge_growth → shale_expulsion transition"
+        alignment_with_morley: "Wedge-top unconformity, NOT plate boundary"
+        confidence: "HIGH"
+      SENJA:
+        age_ma: "Post-10.5 Ma"
+        meaning: "Mud canopy + DWFTB inversion"
+        nspw_phase: "mud_canopy → post_wedge_burial"
+        alignment_with_morley: "Post-canopy burial + Stage IV architecture"
+        confidence: "HIGH"
+
+  # ── NSPW UNCONFORMITIES (reclassified) ──
+  nspw_unconformities:
+    BMU_TCU:
+      age_ma: 23
+      type: collision_onset
+      meaning: "Dangerous Grounds continental crust enters subduction zone; end of Crocker accretionary prism"
+      legacy_equivalent: "BMU (Balaguru 2003)"
+      reclassification: "Not collision start in legacy sense — marks transition to NSPW syn-collisional phase"
+      evidence: "Morley 2024; Hall et al. 2008"
+      epistemic: "MED-HIGH"
+    DRU:
+      age_ma: 13
+      type: wedge_top
+      meaning: "Slab breakoff + NSPW active phase termination + uplift/erosion onset"
+      legacy_equivalent: "DRU (Levell 1978; Lunt & Madon 2017 redated to 13-12 Ma)"
+      reclassification: "NOT collision onset — it is the TOP of the NSPW active phase. Driven by slab breakoff, not plate boundary."
+      evidence: "Morley 2024; Lunt & Madon 2017; Pilia et al. 2023 tomography"
+      epistemic: "HIGH (redating confirmed)"
+    UIU:
+      age_ma: 10.5
+      type: minibasin_termination
+      meaning: "End of shale-expulsion basin phase"
+      legacy_equivalent: "UIU"
+      reclassification: "Marks termination of active mini-basin development within NSPW"
+      evidence: "Morley 2023"
+      epistemic: "MED-HIGH"
+    SRU:
+      age_ma: 8.5
+      type: canopy_burial
+      meaning: "Post-canopy burial by prograding shelf/delta systems"
+      legacy_equivalent: "SRU"
+      reclassification: "Marks transition from NSPW-influenced to shelf-dominated deposition"
+      evidence: "Morley 2023; deepwater stratigraphy"
+      epistemic: "MED"
+
+  # ── NSPW MOBILE SHALE PROPERTIES ──
+  nspw_mobile_shale:
+    description: "Overpressured Miocene shales that dominate NSPW structural style"
+    velocity_km_s: [1.5, 2.0]
+    velocity_character: "Very low-Vp zones on 3D velocity cubes"
+    overpressure_gradient: "Near lithostatic"
+    shale_type: "Overpressured Miocene"
+    structural_style: "Shale diapirs, mud volcanoes, shale-withdrawal basins, growth faults"
+    minibasin_width_km: [2, 15]
+    minibasin_depth_km: [3, 4]
+    evidence: "Morley et al. 2023; 3D seismic velocity cubes"
+    epistemic: "HIGH"
+
+  # ── NSPW PETROLEUM SYSTEM ──
+  nspw_petroleum_system:
+    description: "Every element of the working deepwater petroleum system on KL2V2 is provided by the NSPW"
+    trap_types:
+      - "Shale-cored anticlines (diapir flanks)"
+      - "3-way dip closure against shale diapir"
+      - "Growth-fault/inversion closures"
+      - "Mud-canopy topography traps"
+    reservoir_types:
+      - "Stage IVC/IVD turbidite sandstones deposited on/around mud canopy"
+      - "Late middle to early late Miocene deepwater turbidites"
+      - "Confined and unconfined turbidite fans off paleoshelf edge"
+    seal_types:
+      - "Overpressured wedge shales"
+      - "Shale diapirs"
+      - "Intraformational mudstones"
+      - "MTD/shale-filled scours"
+    charge_model: "Short-distance migration preferred; deep sourcing from within wedge + Miocene delta systems"
+    proven_fields:
+      - name: "Rotan"
+        evidence: "Morley et al. 2023 explicitly names Rotan as NSPW mud-canopy-influenced reservoir"
+        epistemic: "HIGH"
+      - name: "Buluh"
+        evidence: "IVC turbidite gas on KL2V2 line"
+        epistemic: "MED-HIGH"
+      - name: "Bun"
+        evidence: "IVC turbidite gas on KL2V2 line"
+        epistemic: "MED-HIGH"
+    failed_wells:
+      - name: "Pekaka"
+        domain: "Platform-margin (west of NSPW)"
+        target: "Oligocene reef"
+        result: "Dry"
+        interpretation: "Outside NSPW footprint — no mobile-shale trap, no wedge charge"
+        epistemic: "UNKNOWN (no WCR available)"
+      - name: "Maligan"
+        domain: "East / Inboard"
+        target: "IVC/IVD"
+        result: "Dry"
+        epistemic: "UNKNOWN"
+
+  # ── COMPETING HYPOTHESES (multi-scale) ──
+  nspw_hypotheses:
+    description: "Three competing-scale hypotheses — complementary, not mutually exclusive"
+    - name: "Morley NSPW"
+      scale: "deep_lithosphere"
+      model: "PSCS subduction → DG underthrusting → NSPW syn-collisional wedge → slab breakoff ~13 Ma"
+      explains: "Underthrusting, slab breakoff, mobile shale, mud canopy, wedge mechanics"
+      evidence_strength: "HIGH (tomography, receiver functions, zircon FT)"
+      limitation: "Often read as offshore-only, disconnected from shelf"
+      source: "Morley 2023/2024; Pilia et al. 2023; Gilligan et al. 2026"
+
+    - name: "Borneo Bending / Sula Indentation"
+      scale: "regional_kinematics"
+      model: "Sula spur indentation → northward force + wedge loading → asymmetric flexure → onshore uplift + offshore subsidence"
+      explains: "Late Neogene onshore-offshore coupling, strike-slip segmentation, continuing differential subsidence"
+      evidence_strength: "MED (satellite gravity, GPS, SAR, earthquake distribution)"
+      limitation: "Describes kinematics, not mechanics — needs Morley for wedge physics"
+      source: "PETRONAS internal (Ahmad Hakim, M Hafiz)"
+
+    - name: "Lunt Stratigraphic Critique"
+      scale: "stratigraphy"
+      model: "BMU/DRU erosional surfaces from deformation cessation; PSCS slab-pull subduction inappropriate"
+      explains: "Onshore Sabah stratigraphy, timing of deformation events"
+      evidence_strength: "MED (strong at stratigraphic scale, weaker against tomographic evidence)"
+      limitation: "Does not provide alternative mechanical model for offshore wedge"
+      source: "Lunt 2022; Lunt & Madon 2017"
 
   seismic_velocity_model:
     description: "Time-depth conversion requires variable velocity model"
@@ -364,17 +587,70 @@ stratigraphy:
 # ─────────────────────────────────────────────────────────────────────────────
 
 seismic_horizons:
+  # ── NSPW-CONTROLLED HORIZONS (physically valid for flattening) ──
+  - horizon: "TOP_NIDO"
+    age_ma: 23
+    description: "Base of NSPW — top Dangerous Grounds continental crust; Nido Limestone reflection"
+    seismic_character: "Strong, gently SE-dipping reflection; traceable under wedge"
+    flattening_tie: "PHYSICALLY VALID — gives paleogeography before wedge loading"
+    nspw_role: "base_surface"
+    epistemic: "HIGH"
+
+  - horizon: "BMU_TCU"
+    age_ma: 23
+    description: "NSPW collision onset — transition from Crocker accretionary prism to syn-collisional wedge"
+    seismic_character: "Boundary between deformed Crocker below and NSPW above"
+    flattening_tie: "PHYSICALLY VALID — marks start of wedge phase"
+    nspw_role: "collision_onset"
+    epistemic: "MED-HIGH"
+
+  - horizon: "DRU"
+    age_ma: 13
+    description: "NSPW wedge-top — slab breakoff + uplift/erosion + shale-expulsion onset"
+    seismic_character: "High-amplitude, regionally mappable; truncation below, onlap above"
+    flattening_tie: "PHYSICALLY VALID — gives post-collisional geometry"
+    nspw_role: "wedge_top"
+    reclassification: "NOT collision onset — it is wedge-top / slab breakoff response"
+    epistemic: "HIGH (redating confirmed by Lunt & Madon 2017)"
+
+  - horizon: "UIU"
+    age_ma: 10.5
+    description: "End of mini-basin development within NSPW"
+    seismic_character: "Marks transition from shale-expulsion to canopy burial"
+    flattening_tie: "PHYSICALLY VALID but use with caution — still within mobile shale zone"
+    nspw_role: "minibasin_termination"
+    epistemic: "MED-HIGH"
+
+  - horizon: "SRU"
+    age_ma: 8.5
+    description: "Post-canopy burial — NSPW buried by prograding shelf systems"
+    seismic_character: "Transition from chaotic/transparent (NSPW) to continuous (shelf)"
+    flattening_tie: "PHYSICALLY VALID — gives post-canopy geometry"
+    nspw_role: "canopy_burial"
+    epistemic: "MED"
+
+  # ── WARNING: MID-WEDGE HORIZONS ──
+  - horizon: "MID_WEDGE_WARNING"
+    age_ma: null
+    description: "ANY horizon between BMU_TCU and SRU within the NSPW mobile shale zone"
+    flattening_tie: "PHYSICALLY INVALID — mobile shale, mini-basin migration, and mud-canopy relief make internal wedge reflectors mechanically unstable and locally diachronous"
+    warning: "Flattening on mid-wedge horizons will destroy structural coherence"
+    source: "NSPW synthesis 2026-07-16; Morley 2023 evidence for mini-basin downbuilding + mobile shale flow"
+
+  # ── LEGACY HORIZONS (pre-NSPW framework) ──
   - horizon: "MIO_UNC"
     age_ma: 12.0
     description: "Major unconformity — marks end of carbonate platform"
     seismic_character: "High-amplitude, continuous, regionally mappable"
-    flattening_tie: "Gomantong Limestone top → use for flattening"
+    flattening_tie: "Use only if outside NSPW footprint"
+    legacy_note: "Approximately coincides with DRU in some areas"
 
   - horizon: "BASE_LABANG"
     age_ma: 16.0
     description: "Top of carbonate platform / base of Labang seal"
     seismic_character: "High-amplitude peak/trough doublet"
     flattening_tie: "Gomantong Limestone top → regional marker"
+    legacy_note: "Pre-NSPW framework; Gomantong is time-equivalent to NSPW wedge growth phase"
 
   - horizon: "BASE_OLIGOCENE"
     age_ma: 28.0
@@ -512,3 +788,114 @@ epistemic_tags:
     data_source: "Production data + SCAL + wireline log correlations"
     confidence: MEDIUM
     caution: "Actual reservoir quality varies significantly within each formation"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NSPW TESTABLE HYPOTHESES (GEOX engine mapping)
+# ─────────────────────────────────────────────────────────────────────────────
+
+nspw_hypotheses_testable:
+  H1_flattening:
+    claim: "Valid flattening horizons are limited to mechanically stable surfaces"
+    test: "Flatten on Top Nido, DRU, SRU; compare against mid-wedge horizon"
+    prediction: "Mid-wedge flattening destroys structural coherence"
+    geox_tool: "geox_well_seismic_mistie_rms + geox_well_time_depth_calibrate"
+    gate: "RMS > 25ms on mid-wedge → hypothesis supported"
+    epistemic: "INT (follows from Morley 2023 evidence)"
+
+  H2_loading_signal:
+    claim: "Backstripped Kinabalu wells should show Miocene loading signal"
+    test: "Backstrip wells across Domain A (NSPW) vs Domain B (DG platform)"
+    prediction: "Domain A shows post-23 Ma loading pulse; Domain B shows thermal decay"
+    geox_tool: "geox_basin_backstrip"
+    gate: "accommodation_ratio >= 2.5 → EUREKA_1_TWO_OCEANICS"
+    epistemic: "INT (follows from Two Oceanics artifact)"
+
+  H3_mass_balance:
+    claim: "Sediment budget should close into NSPW mass sink"
+    test: "Mass balance with NSPW volume as preserved sink"
+    prediction: "Missing mass between upper-plate supply and platform accommodation appears in NSPW"
+    geox_tool: "geox_sediment_mass_balance"
+    gate: "mass_deficit_pct >= 50 → EUREKA_4_MASS_DEFICIT"
+    epistemic: "INT (follows from Morley 2023 + collision zone engine)"
+
+  H4_petroleum_fairways:
+    claim: "Petroleum fairways correlate with mud-canopy/minibasin architecture"
+    test: "Map turbidite reservoir occurrence relative to MIEC margins and diapir crests"
+    prediction: "Successful traps cluster where canopy relief creates trap/seal/reservoir juxtaposition"
+    geox_tool: "geox_prospect + geox_evidence_reason"
+    gate: "Rotan/Buluh/Bun all within NSPW footprint → fairway prediction valid"
+    epistemic: "INT (follows from Morley 2023 + KL2V2 well data)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NSPW → GEOX ENGINE PARAMETERIZATION (no new tools needed)
+# ─────────────────────────────────────────────────────────────────────────────
+
+nspw_geox_parameterization:
+  description: "How to run existing GEOX engines with NSPW-calibrated inputs"
+
+  geox_collision_zone:
+    domain_a:
+      name: "NSPW-Kinabalu"
+      initial_subsidence_km: 4.5
+      loading_rate_m_myr: 530
+      thermal_rate_mm_yr: 0.05
+      sediment_supply_m_myr: 120
+      initial_water_depth_m: 800
+      has_mfs: true
+      source_rock_mature: true
+    domain_b:
+      name: "Dangerous-Grounds-LLB"
+      initial_subsidence_km: 2.0
+      loading_rate_m_myr: 50
+      thermal_rate_mm_yr: 0.20
+      sediment_supply_m_myr: 10
+      initial_water_depth_m: 2000
+      has_mfs: false
+      source_rock_mature: false
+    suture_name: "Sabah Trough"
+    duration_ma: 20.0
+    bypass_fraction: 0.6
+    expected_eurekas: ["EUREKA_1_TWO_OCEANICS", "EUREKA_2_LOADING_PULSE", "EUREKA_4_MASS_DEFICIT", "EUREKA_4_SUTURE_SINK"]
+
+  geox_sediment_mass_balance:
+    basin_name: "NW_SABAH_NSPW"
+    source_eroded_km3: 500000
+    source_density_kg_m3: 2650
+    preserved_volumes:
+      - name: "NSPW_Wedge"
+        volume_km3: 600000
+        avg_porosity: 0.10
+        avg_density_kg_m3: 2400
+        lithology: "overpressured_shale_with_turbidite"
+      - name: "NSPW_Mud_Canopy"
+        volume_km3: 5000
+        avg_porosity: 0.30
+        avg_density_kg_m3: 2100
+        lithology: "mud_volcano_complex"
+    bypassed_km3: 0
+
+  geox_basin_backstrip:
+    wells:
+      kinabalu_domain:
+        - "St. Joseph-1"
+        - "Erb West-1"
+        - "Kinabalu-1"
+        - "Malikai Deep-1"
+        - "Kinarut-1"
+      layang_domain:
+        - "Nuri-1"
+        - "Falkon-1"
+        - "Pekaka-1"
+      suture:
+        - "Tepat-1"
+    timing_windows:
+      collision_onset: [23, 24]
+      wedge_growth: [13, 23]
+      shale_expulsion: [10.5, 13]
+      mud_canopy: [8.5, 10.5]
+      post_wedge_burial: [0, 8.5]
+
+  geox_claim_graph:
+    nodes: 10
+    chain: "PSCS_subduction → DG_underthrusting → BMU_collision → NSPW_wedge → DRU_wedge_top → mobile_shale → mud_canopy → rotan_trap → sabah_trough → kinabalu_prospectivity"
+    critical_edge: "NSPW_wedge → DRU_wedge_top (reclassification of DRU)"

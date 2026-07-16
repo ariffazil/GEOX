@@ -598,7 +598,7 @@ def load_co2_estimate(age_ma: float, age_top_ma: float, age_base_ma: float, dura
                         value=co2_val,
                         units="ppm",
                         epistemic_level="INTERPRETED",
-                        source_citation="Berner GEOCARBSULF v3 (Berner & Kothavala 2001, Beerling & Royer 2011)",
+                        source_citation="Berner GEOCARBSULF v3 (Berner & Kothavala 2001, Beerling & Royer 2011); Rae et al. 2021 (AREPS) for Cenozoic calibration",
                         confidence=0.6,
                         interval_top_ma=age_top_ma,
                         interval_base_ma=age_base_ma,
@@ -1081,31 +1081,72 @@ def load_biotic_realm(age_ma: float) -> EarthStateVariable:
 
 
 def load_ice_extent(age_ma: float) -> EarthStateVariable:
-    """Qualitative ice-extent descriptor — OBSERVED (sediment + δ18O record)."""
+    """Qualitative ice-extent descriptor — OBSERVED (sediment + δ18O record).
+
+    Calibrated against:
+      - Zachos et al. 2001 (Cenozoic δ18O/δ13C compilation)
+      - Westerhold et al. 2020 (high-resolution astronomically tuned stack)
+      - Holbourn et al. 2014 (middle Miocene climatic/cryospheric evolution)
+      - Pekar & DeConto 2006 (USGS ice volume reconstructions)
+      - Lewis et al. 2008 / Escutia et al. 2011 (IODP/ODP Antarctic margin)
+
+    Key calibration points:
+      ~34 Ma (Oi-1): Initial continental-scale Antarctic glaciation
+      34–17 Ma: Dynamic warm-based EAIS, 50-130% modern volume
+      23 Ma (Mi-1): Transient AIS expansion to ~100-125% modern EAIS
+      17–15 Ma (MCO): Middle Miocene Climatic Optimum — warm, reduced AIS
+      ~14 Ma (MMCT): Middle Miocene Climate Transition — 3-5°C cooling, AIS expansion
+      13 Ma: AIS near modern volume, quasi-permanent polar
+      2.58 Ma: Pleistocene glacial-interglacial cycles begin
+    """
     descriptor: str | None = None
+
     if 0 <= age_ma < 2.58:
-        descriptor = "Pleistocene glacial-interglacial cycles (cyclical ice sheets)"
-    elif 2.58 <= age_ma < 33.9:
-        descriptor = "Ice-free (warm-house state)"
+        descriptor = "Pleistocene glacial-interglacial cycles (cyclical NH + SH ice sheets)"
+    elif 2.58 <= age_ma < 14.0:
+        descriptor = "Quasi-permanent Antarctic ice sheet (post-MMCT, near-modern EAIS volume)"
+    elif 14.0 <= age_ma < 15.0:
+        descriptor = "Middle Miocene Climate Transition (MMCT): stepwise AIS expansion, 3-5°C global cooling"
+    elif 15.0 <= age_ma < 17.0:
+        descriptor = "Middle Miocene Climatic Optimum (MCO): warm, reduced Antarctic ice, smaller than modern"
+    elif 17.0 <= age_ma < 22.0:
+        descriptor = "Early-Middle Miocene: dynamic warm-based EAIS, 50-130% modern volume, orbitally paced"
+    elif 22.0 <= age_ma < 24.0:
+        descriptor = "Mi-1 glaciation event: transient AIS expansion to ~100-125% modern EAIS volume"
+    elif 24.0 <= age_ma < 33.9:
+        descriptor = "Oligocene-Early Miocene: dynamic warm-based EAIS, 50-130% modern volume, orbitally paced"
     elif 33.9 <= age_ma < 34.5:
-        descriptor = "EOGM: ephemeral Antarctic glaciation (Oi-1 event)"
-    elif 34.5 <= age_ma < 66.0:
-        descriptor = "Ice-free (warm Eocene)"
+        descriptor = "Oi-1 event: initial continental-scale Antarctic glaciation onset"
+    elif 34.5 <= age_ma < 52.0:
+        descriptor = "Ice-free (warm Eocene, no Antarctic ice sheet)"
+    elif 52.0 <= age_ma < 66.0:
+        descriptor = "Ice-free (early Eocene hothouse, no polar ice)"
     elif 66.0 <= age_ma < 145.0:
         descriptor = "Cretaceous: ice-free (greenhouse)"
     elif 251.0 <= age_ma < 360.0:
         descriptor = "Late Paleozoic Ice Age (Gondwanan glaciation)"
     elif 635 <= age_ma <= 720:
         descriptor = "Snowball Earth (Sturtian + Marinoan glaciations)"
+
     if descriptor is None:
-        descriptor = "ice-free (default)"
+        descriptor = "ice-free (default — no data for this age range)"
+
     return EarthStateVariable(
         name="ice_extent",
         value=descriptor,
         units="descriptor",
         epistemic_level="OBSERVED",
-        source_citation="Crowell (1999), Eyles (2008), Lisiecki & Raymo (2005) LR04",
+        source_citation=(
+            "Zachos et al. 2001 (Science), Westerhold et al. 2020 (Science), "
+            "Holbourn et al. 2014 (EPSL), Pekar & DeConto 2006 (USGS OF 2007-1047)"
+        ),
         coverage_top_ma=0.0,
         coverage_base_ma=720.0,
         confidence=0.85,
+        notes=(
+            "Miocene ice calibration: Mi-1 (~23 Ma) = transient expansion to ~100-125% modern EAIS; "
+            "MCO (~17-15 Ma) = reduced AIS; MMCT (~14 Ma) = stepwise expansion to near-modern; "
+            "post-MMCT (~14-2.58 Ma) = quasi-permanent EAIS. "
+            "Ref: Zachos 2001 Fig 2, Westerhold 2020 Fig 1, Holbourn 2014 Fig 2."
+        ),
     )
