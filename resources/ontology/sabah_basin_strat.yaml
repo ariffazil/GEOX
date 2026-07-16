@@ -248,8 +248,8 @@ basin:
         epistemic: "UNKNOWN"
 
   # ── COMPETING HYPOTHESES (multi-scale) ──
+  # Three competing-scale hypotheses — complementary, not mutually exclusive
   nspw_hypotheses:
-    description: "Three competing-scale hypotheses — complementary, not mutually exclusive"
     - name: "Morley NSPW"
       scale: "deep_lithosphere"
       model: "PSCS subduction → DG underthrusting → NSPW syn-collisional wedge → slab breakoff ~13 Ma"

@@ -91,13 +91,21 @@ def _validate_format(session_id: str) -> bool:
     return all(c in allowed for c in session_id)
 
 
-def _query_arifos_session(session_id: str) -> dict[str, Any] | None:
+# Three-state truth sentinel: arifOS unreachable is NOT the same as "valid".
+# organ_governance.py owns the fail-mode decision based on lane.
+_TRANSPORT_DEGRADED = object()
+
+
+def _query_arifos_session(session_id: str) -> dict[str, Any] | None | object:
     """Ask arifOS kernel to validate the session.
 
-    Returns the session claims dict if valid, None if invalid/rejected.
-    Fail-OPEN on transport error: if arifOS is unreachable, we degrade
-    gracefully and let the call proceed with a warning. This balances
-    F11 (audit) with F8 (system availability).
+    Returns:
+      - dict with valid=True if arifOS confirmed the session
+      - None if arifOS rejected the session (definitive rejection)
+      - _TRANSPORT_DEGRADED sentinel if arifOS is unreachable (indeterminate)
+
+    Three-state truth: we never lie about validation state.
+    The caller (organ_governance) decides fail-open vs fail-closed based on lane.
     """
     try:
         r = httpx.post(
@@ -124,9 +132,9 @@ def _query_arifos_session(session_id: str) -> dict[str, Any] | None:
         logger.warning("arifOS session_validate HTTP %s", r.status_code)
         return None
     except httpx.RequestError as exc:
-        # Fail-open on transport: log and let through with warning.
+        # Three-state truth: degraded ≠ valid. Caller decides fail mode.
         logger.warning("arifOS unreachable for session validation: %s", exc)
-        return {"valid": True, "transport_degraded": True, "session_id": session_id}
+        return _TRANSPORT_DEGRADED
 
 
 def validate_session(
@@ -163,14 +171,23 @@ def validate_session(
             error_message=f"session_id format invalid: {session_id[:8]}...",
         )
 
-    # Ask arifOS to validate
+    # Ask arifOS to validate (three-state: valid dict / None=rejected / _TRANSPORT_DEGRADED)
     claims = _query_arifos_session(session_id)
+    if claims is _TRANSPORT_DEGRADED:
+        return ValidationResult(
+            ok=False,
+            error_code="TRANSPORT_DEGRADED",
+            error_message="arifOS unreachable — session cannot be validated. Lane-aware fail mode applies.",
+        )
     if claims is None:
         return ValidationResult(
             ok=False,
             error_code="SESSION_INVALID",
             error_message="arifOS rejected session_id (expired, unknown, or forged)",
         )
+
+    # At this point: claims is a valid dict (not None, not _TRANSPORT_DEGRADED)
+    assert isinstance(claims, dict)
 
     # Actor binding check
     session_actor = claims.get("actor") or claims.get("actor_id")

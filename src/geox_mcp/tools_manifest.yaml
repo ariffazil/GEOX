@@ -1,4 +1,4 @@
-manifest_version: 2026.07.13-zen15
+manifest_version: 2026.07.16-resurrection
 generated_from: "ZEN-14 consolidation \u2014 33\u219214 canonical tools"
 public_transport: mcp
 tools:
@@ -284,6 +284,101 @@ tools:
   face: surface
   visibility: public
   description: 'Federation-standard registry probe: tool discovery and health status.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_evidence
+  domain: governance.evidence
+  axis: reason
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: false
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_basin_backstrip
+  domain: earth.basin
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: '1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_sediment_mass_balance
+  domain: earth.basin
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Source-to-sink sediment volume and mass accounting. Peters 2012 framework.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_thermal_maturity_history
+  domain: earth.basin
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Burial + heat flow + maturity modeling through time. EasyRo + TTI.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_claim_graph_evaluate
+  domain: governance
+  axis: reason
+  lane: judgment
+  face: surface
+  visibility: public
+  description: 'Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1329,9 +1424,8 @@ tools:
     physics_guard_required: true
 compat_tools:
 - geox_abstraction_guard
-- geox_attribute_registry_list_tool
-- geox_basin_backstrip
-- geox_basin_profile
+ - geox_attribute_registry_list_tool
+ - geox_basin_profile
 - geox_basin_resolve
 - geox_biostrat_constraint
 - geox_biostrat_falsify
@@ -1353,7 +1447,6 @@ compat_tools:
 - geox_doctrine_godel_review
 - geox_dst_ingest_test
 - geox_emag2_ingest
-- geox_evidence
 - geox_evidence_attach
 - geox_evidence_discover
 - geox_evidence_reason
@@ -1378,7 +1471,6 @@ compat_tools:
 - geox_query_intake
 - geox_query_macrostrat
 - geox_render_well_panel
-- geox_sediment_mass_balance
 - geox_segy_export_tool
 - geox_seismic_compute_attribute_tool
 - geox_seismic_inversion
@@ -1387,7 +1479,6 @@ compat_tools:
 - geox_subsurface_generate_candidates
 - geox_subsurface_verify_integrity
 - geox_system_registry_status
-- geox_thermal_maturity_history
 - geox_vision
 - geox_vision_audit
 - geox_vision_calibrate

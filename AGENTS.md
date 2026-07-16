@@ -24,6 +24,7 @@ changes_since_last_verified:
   - RECONCILE-UI-PATHS (2026-07-11): 3 competing UI injection paths consolidated into 1 canonical path (apps/workbench.py → register_tools_on_server(apps=...))
   - REGISTRY-CLEANUP (2026-07-11): removed 4 deregistered tools + 1 duplicate; _EXPECTED_CANONICAL 81→76
   - MANIFEST-REGEN (2026-07-11): tools_manifest.py 1.0.0→2.0.0 — 16→77 canonical entries. Closes drift between manifest (16) and registry (77). File backup: tools_manifest.py.bak-1.0.0-20260626. Restart pending 888_HOLD.
+  - RESURRECTION (2026-07-16): ZEN-15 → ZEN-20. 5 tools resurrected: geox_evidence, geox_basin_backstrip, geox_sediment_mass_balance, geox_thermal_maturity_history, geox_claim_graph_evaluate. Manifest updated, compat cleaned, registry unghosted.
   - WEBMCP-MAP (2026-07-11): MapLibre 4.7.1 interactive map with session/auth propagation, click→evidence panel
 -->
 
@@ -55,7 +56,7 @@ GEOX's constitutional boundary: evidence-only, never a policy judge. The Gödel 
 
 ## Live tool surface truth (2026-07-12)
 
-**Runtime fact:** MCP `tools/list` with session ≈ **23 tools**. Registry/manifest may declare **77** as target/canonical catalog — do not treat 77 as live count without `tools/list`.
+**Runtime fact:** MCP `tools/list` with session ≈ **20 tools** (ZEN-20, resurrected 2026-07-16). Registry/manifest may declare **77** as target/canonical catalog — do not treat 77 as live count without `tools/list`.
 
 ## Who You Serve
 

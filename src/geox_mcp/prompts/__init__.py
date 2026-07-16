@@ -1,25 +1,32 @@
 """
-GEOX MCP Prompts — Earth Intelligence (ZEN 2026-07-04, Consolidated)
+GEOX MCP Prompts — Earth Intelligence (ZEN 2026-07-16, Consolidated)
 
-10 core prompts + 4 workflow templates. Each distinct. No overlap.
+5 core prompts + 4 workflow templates + 3 earth-system = 12 total.
+Each distinct. No overlap. Consolidated from 17 → 12.
 
   geox_sense       — INGEST: raw data → artifact_ref
-  geox_qc          — VERIFY: artifact_ref → QC_VERIFIED
-  geox_interpret   — SYNTHESIZE: QC_VERIFIED → claims (includes claim discipline + literature extraction)
-  geox_writer      — OUTPUT: claims → documents (scientific papers + reports)
+  geox_qc          — VERIFY: artifact_ref → QC_VERIFIED (includes F10 ontology guard)
+  geox_interpret   — SYNTHESIZE: QC_VERIFIED → claims (includes cooling_path + red_team)
+  geox_writer      — OUTPUT: claims → documents (includes explain)
   geox_kill_matrix — FILTER: claims → PROCEED | REVIEW | KILL
-  geox_cooling_path — COMPUTE: thermochronological data → cooling rates
-  geox_red_team    — CHALLENGE: claims → contradictions + alternatives
-  geox_basin_screen — SCREEN: basin profile → play fairway suitability
-  geox_guard       — CONSTRAIN: enforce F10 ontology boundaries
-  geox_explain     — EXPLAIN: UI panel data → human-readable summary
 
   analyse-well-log    — WORKFLOW: LAS → pay summary + claim envelope
-  screen-prospect     — WORKFLOW: basin → PROCEED | REVIEW | KILL
+  screen-prospect     — WORKFLOW: basin → PROCEED | REVIEW | KILL (includes basin_screen)
   tie-well-to-seismic — WORKFLOW: LAS + seismic → GO | HOLD | VOID
   reeval-paper        — WORKFLOW: paper → HOLD | REVISE | RETRACT
 
-Spec alignment (MCP 2025-06-18):
+  earth-system-trinity       — TRINITY: Physics × Chemistry × Biology coupling
+  sabah-charge-evaluator     — CHARGE: Source → Maturation → Migration → Accumulation → Alteration
+  earth-deep-time-physics-flow — FLOW: CO₂ → T → Ice → SL with consistency gate
+
+Consolidated (functions preserved as internal helpers):
+  geox_cooling_path → merged into geox_interpret
+  geox_red_team     → merged into geox_interpret
+  geox_basin_screen → merged into screen-prospect
+  geox_guard        → merged into geox_qc
+  geox_explain      → merged into geox_writer
+
+Spec alignment (MCP 2025-11-25):
   - Prompts return messages[] with embedded resource blocks (not just text)
   - Workflow prompts declare arguments[] with completion-ready types
   - Resources embedded via EmbeddedResource + TextResourceContents
@@ -747,30 +754,17 @@ def register_prompts(mcp: Any) -> None:
         description="FILTER: Claims → PROCEED | REVIEW | KILL. 7 kill filters.",
     )(_kill_matrix)
 
-    mcp.prompt(
-        name="geox_cooling_path",
-        description="COMPUTE: Thermochronological data → cooling rates.",
-    )(_cooling_path)
+    # ── Consolidated into interpret: cooling_path, red_team ────────────
+    # Functions preserved as internal helpers (_cooling_path, _red_team)
+    # Callers: interpret prompt can invoke these for thermochronology/contradiction
 
-    mcp.prompt(
-        name="geox_red_team",
-        description="CHALLENGE: Claims → contradictions + alternatives.",
-    )(_red_team)
+    # ── Consolidated into qc: guard ────────────────────────────────────
+    # Function preserved as internal helper (_guard)
+    # Callers: qc prompt can invoke for F10 ontology enforcement
 
-    mcp.prompt(
-        name="geox_basin_screen",
-        description="SCREEN: Basin profile → play fairway suitability.",
-    )(_basin_screen)
-
-    mcp.prompt(
-        name="geox_guard",
-        description="CONSTRAIN: F10 ontology enforcement.",
-    )(_guard)
-
-    mcp.prompt(
-        name="geox_explain",
-        description="EXPLAIN: UI panel data → human-readable summary.",
-    )(_explain)
+    # ── Consolidated into writer: explain ───────────────────────────────
+    # Function preserved as internal helper (_explain)
+    # Callers: writer prompt can invoke for UI panel explanation
 
     # ── Resource Contract v2 — workflow templates (FORGED 2026-07-10) ─────
     mcp.prompt(

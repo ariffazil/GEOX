@@ -1090,7 +1090,8 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
+    # RESURRECTED 2026-07-16 — evidence is the lifeblood of the claim system
+    @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
     async def _evidence(
         mode: str = "synthesize",
         query: str = "",
@@ -2781,7 +2782,8 @@ def register_tools_on(mcp):
     # claim graph evaluation. Complements simulate_* with backward reconstruction.
     # ═══════════════════════════════════════════════════════════════════════════════
 
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
+    # RESURRECTED 2026-07-16 — Steckler & Watts 1978 + Sclater & Christie 1980 backstripping
+    @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
     async def _basin_backstrip(
         well_ref: str,
         stratigraphic_ages: list[dict[str, Any]],
@@ -2811,7 +2813,8 @@ def register_tools_on(mcp):
             uncertainty_realizations=uncertainty_realizations,
         )
 
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
+    # RESURRECTED 2026-07-16 — Peters 2012 sediment cycling framework
+    @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
     async def _sediment_mass_balance(
         basin_name: str,
         source_eroded_km3: float,
@@ -2839,7 +2842,8 @@ def register_tools_on(mcp):
             routing_efficiency=routing_efficiency,
         )
 
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
+    # RESURRECTED 2026-07-16 — EasyRo (Sweeney & Burnham 1990) + TTI (Lopatin 1971)
+    @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
     async def _thermal_maturity_history(
         well_ref: str,
         burial_history: dict[str, Any],
@@ -2865,7 +2869,8 @@ def register_tools_on(mcp):
             time_step_myr=time_step_myr,
         )
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_claim_graph_evaluate", annotations=_geox_annotations("geox_claim_graph_evaluate"))
+    # RESURRECTED 2026-07-16 — DAG claim graph evaluation for falsification
+    @mcp.tool(name="geox_claim_graph_evaluate", annotations=_geox_annotations("geox_claim_graph_evaluate"))
     async def _claim_graph_evaluate(
         claims: list[dict[str, Any]],
         edges: list[dict[str, Any]],
