@@ -107,7 +107,7 @@ async def run_orthogonal_base(
     """Execute Orthogonal Base tools in order. Fail-closed.
 
     When live MCP handlers raise or data missing, records FAIL/SKIP with honesty.
-    Does not invent Petronas/field data.
+    Does not invent proprietary field data.
     """
     stages: list[StageReceipt] = []
     base_complete = False

@@ -143,7 +143,7 @@ class EarthLayer(BaseModel):
     crs_epsg: int = 4326
 
     # Provenance (lightweight — full sidecar lives in sidecar module)
-    source_id: Optional[str] = Field(None, description="e.g. USGS map ID, PETRONAS dataset ref")
+    source_id: Optional[str] = Field(None, description="e.g. USGS map ID, Malaysian NOC dataset ref")
     source_uri: Optional[str] = Field(None, description="Public URL or local path")
     source_year: Optional[int] = None
     source_author: Optional[str] = None
@@ -348,7 +348,7 @@ def seed_sabah_layers() -> EarthLayerRegistry:
 
     These layers back the geox_map_layers_list tool and the
     geox://layers/* MCP resources. Real layer data comes from upstream
-    sources (USGS, PETRONAS, NPD, BP, etc.) — this seed is for tests
+    sources (USGS, NOC-A, NPD, BP, etc.) — this seed is for tests
     and demo scenes.
     """
     reg = EarthLayerRegistry()
@@ -356,7 +356,7 @@ def seed_sabah_layers() -> EarthLayerRegistry:
         EarthLayer(
             layer_id="sabah.basin_outline.v3",
             name="Sabah Basin Outlines",
-            description="Major sedimentary basins of Sabah (PETRONAS open data v3)",
+            description="Major sedimentary basins of Sabah (NOC-A open data v3)",
             theme="sabah_regional",
             layer_type="vector_polygon",
             truth_class=TruthClass.INTERPRETATION,
@@ -365,10 +365,10 @@ def seed_sabah_layers() -> EarthLayerRegistry:
             bbox_east=119.5,
             bbox_south=4.0,
             bbox_north=7.5,
-            source_id="PETRONAS-Sabah-Basin-v3",
+            source_id="NOC-A-Sabah-Basin-v3",
             source_uri="https://data.example.gov.my/sabah-basin-v3.geojson",
             source_year=2024,
-            source_author="PETRONAS Upstream",
+            source_author="NOC-A Upstream",
             resource_uri="geox://layers/sabah.basin_outline.v3",
             provenance_sidecar_ref=None,
         )
