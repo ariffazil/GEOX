@@ -814,3 +814,131 @@ def register_prompts(mcp: Any) -> None:
             "line/section. F7 HUMILITY: paper claims cap 0.85 (INT not OBS)."
         ),
     )(_reeval_paper)
+
+    # ── Earth System Integration — physics × chemistry × biology ──────────
+
+    async def _earth_system_trinity(age_ma: str = "23.0", focus: str = "sabah") -> list[Message]:
+        """Physics × Chemistry × Biology coupling at a given geological age."""
+        return [
+            _msg_text(
+                f"You are GEOX, the Earth Intelligence coprocessor.\n\n"
+                f"TASK: Analyze the physics-chemistry-biology coupling at {age_ma} Ma.\n"
+                f"FOCUS: {focus}\n\n"
+                f"FRAMEWORK:\n"
+                f"Physics is boss. Chemistry is what physics does when atoms interact. "
+                f"Biology is chemistry that learned to replicate.\n\n"
+                f"At {age_ma} Ma, report:\n\n"
+                f"1. PHYSICS (substrate):\n"
+                f"   - Tectonic state (plate configuration, rifting, collision)\n"
+                f"   - Heat flow and mantle dynamics\n"
+                f"   - Sea level (eustatic + tectonic)\n"
+                f"   - Climate state (greenhouse/icehouse)\n\n"
+                f"2. CHEMISTRY (language):\n"
+                f"   - Ocean chemistry (pH, redox, major ions)\n"
+                f"   - Atmospheric composition (CO₂, CH₄, O₂)\n"
+                f"   - Sediment chemistry (diagenesis, mineralogy)\n"
+                f"   - If Sabah: source rock maturity, kerogen type, fluid chemistry\n\n"
+                f"3. BIOLOGY (author):\n"
+                f"   - Dominant life forms\n"
+                f"   - Carbon cycle role (productivity, burial, weathering)\n"
+                f"   - Source rock potential (marine algae, terrestrial plants)\n"
+                f"   - Biogeochemical feedbacks\n\n"
+                f"4. COUPLING:\n"
+                f"   - How physics constrains chemistry at this age\n"
+                f"   - How chemistry constrains biology at this age\n"
+                f"   - How biology feeds back to physics (if applicable)\n"
+                f"   - The dominant direction of causality at this timescale\n\n"
+                f"RULES:\n"
+                f"- Label all claims OBS/DER/INT/SPEC\n"
+                f"- Use GEOX tools for evidence (geox_deep_time_state, geox_basin)\n"
+                f"- Cross-validate: if CO₂ says warm but ice says expanded, flag inconsistency\n"
+                f"- For Sabah: correlate with ABKSS surfaces\n\n"
+                f"OUTPUT: Structured analysis with epistemic labels. No claims without evidence."
+            ),
+        ]
+
+    async def _sabah_charge_evaluator(well_id: str = "", age_range: str = "23-8") -> list[Message]:
+        """Evaluate petroleum charge potential for Sabah Basin."""
+        return [
+            _msg_text(
+                f"You are GEOX, evaluating petroleum charge for Sabah Basin.\n\n"
+                f"WELL: {well_id or 'regional assessment'}\n"
+                f"AGE RANGE: {age_range} Ma (Miocene — NSPW active phase)\n\n"
+                f"THE CHARGE LOOP:\n"
+                f"1. SOURCE (biology preserved):\n"
+                f"   - What organic matter was deposited?\n"
+                f"   - Marine algae (Type I/II) or terrestrial plants (Type III)?\n"
+                f"   - Use geochemical logs if available (TOC from Passey ΔlogR)\n\n"
+                f"2. MATURATION (chemistry transforms biology):\n"
+                f"   - Is the source rock mature? (Ro > 0.6% for oil, > 1.3% for gas)\n"
+                f"   - What is the burial history? (physics controls thermal exposure)\n\n"
+                f"3. MIGRATION (physics moves chemistry):\n"
+                f"   - What are the carrier beds? (sandstone porosity, permeability)\n"
+                f"   - What is the migration direction? (buoyancy + structural dip)\n\n"
+                f"4. ACCUMULATION (physics + chemistry trap):\n"
+                f"   - Is there a structural trap? (folds, faults, unconformities)\n"
+                f"   - Is there a seal? (shale, salt, diagenetic)\n\n"
+                f"5. ALTERATION (biology + chemistry degrade):\n"
+                f"   - Biodegradation? Water-washing? Thermal cracking?\n\n"
+                f"TOOLS: geox_well_ingest, geox_petrophysics, geox_basin, geox_deep_time_state\n\n"
+                f"OUTPUT: Charge assessment with confidence levels. Label everything."
+            ),
+        ]
+
+    async def _earth_deep_time_physics_flow(age_ma: str = "0", variables: str = "co2,temperature,ice,sea_level") -> list[Message]:
+        """Run the full physics flow at a given age."""
+        return [
+            _msg_text(
+                f"You are GEOX, running the deep-time physics flow at {age_ma} Ma.\n\n"
+                f"VARIABLES: {variables}\n\n"
+                f"PHYSICS FLOW:\n"
+                f"  CO₂ (Rae 2021) ──→ Temperature (Zachos/Westerhold) ──→ Ice (Holbourn/Pekar) ──→ Sea Level (Miller + Haq)\n\n"
+                f"PROCEDURE:\n"
+                f"1. Query geox_deep_time_state at {age_ma} Ma\n"
+                f"2. Extract all four variables\n"
+                f"3. Check physics consistency:\n"
+                f"   - High CO₂ (>500 ppm) → should be warm (>3°C) → low ice → high sea level\n"
+                f"   - Low CO₂ (<300 ppm) → should be cool (<2°C) → high ice → lower sea level\n"
+                f"   - Any violation → flag as INCONSISTENT\n"
+                f"4. Cross-validate:\n"
+                f"   - Miller vs Haq sea level → AGREE or DISAGREE?\n"
+                f"   - If DISAGREE → explain why (methodological difference)\n"
+                f"5. For Sabah: correlate with ABKSS surfaces if age falls in Miocene\n\n"
+                f"SOURCES:\n"
+                f"- CO₂: Berner GEOCARBSULF v3 + Rae et al. 2021 (AREPS)\n"
+                f"- Temperature: Zachos et al. 2001 + Westerhold et al. 2020 (Science)\n"
+                f"- Ice: Holbourn et al. 2014 (EPSL) + Pekar & DeConto 2006 (USGS)\n"
+                f"- Sea Level: Miller et al. 2020 (Science Advances) + Haq & Ogg 2024 (GSA Today)\n\n"
+                f"OUTPUT: Structured physics flow report with consistency verdict."
+            ),
+        ]
+
+    mcp.prompt(
+        name="earth-system-trinity",
+        description=(
+            "PHYSICS × CHEMISTRY × BIOLOGY: analyze the three-body coupling "
+            "at any geological age. Physics sets the stage, chemistry writes "
+            "the script, biology becomes the co-author. For Sabah: correlates "
+            "with ABKSS surfaces. Label all claims OBS/DER/INT/SPEC."
+        ),
+    )(_earth_system_trinity)
+
+    mcp.prompt(
+        name="sabah-charge-evaluator",
+        description=(
+            "CHARGE: evaluate petroleum charge potential for Sabah Basin. "
+            "Integrates source rock (biology), maturation (chemistry), and "
+            "migration pathways (physics) into a single assessment. "
+            "Source → Maturation → Migration → Accumulation → Alteration."
+        ),
+    )(_sabah_charge_evaluator)
+
+    mcp.prompt(
+        name="earth-deep-time-physics-flow",
+        description=(
+            "PHYSICS FLOW: run the full CO₂ → Temperature → Ice → Sea Level "
+            "flow at any age with consistency gate and cross-validation. "
+            "Uses ensemble sea level (Miller + Haq). Flags inconsistencies. "
+            "For Sabah: correlates with ABKSS unconformities."
+        ),
+    )(_earth_deep_time_physics_flow)

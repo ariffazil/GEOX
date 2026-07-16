@@ -933,9 +933,15 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         base = Path("/root/GEOX/apps")
         if app_id.endswith(".html"):
             app_path = base / app_id
-        elif app_id in ("well-desk", "well_desk") and os.getenv(
-            "GEOX_WELL_DESK_UI", "p0"
-        ).strip().lower() in ("p0", "shell", "viz", "p0+", "1", "true", "yes"):
+        elif app_id in ("well-desk", "well_desk") and os.getenv("GEOX_WELL_DESK_UI", "p0").strip().lower() in (
+            "p0",
+            "shell",
+            "viz",
+            "p0+",
+            "1",
+            "true",
+            "yes",
+        ):
             # Prefer Viz P0+ canvas shell, then p0, then full index
             viz = base / "well-desk" / "p0-viz.html"
             p0 = base / "well-desk" / "p0.html"
@@ -1858,6 +1864,109 @@ def geox_deeptime_o2():
     Epistemic: DER — forward biogeochemical model output
     """
     return "geox://deep_time/o2"
+
+
+def geox_earth_physics_flow():
+    """Earth physics flow: CO₂ → Temperature → Ice → Sea Level.
+    URI: geox://earth-system/physics-flow
+    Sources: Rae 2021, Zachos/Westerhold, Holbourn/Pekar, Miller/Haq
+    Epistemic: OBS/DER/INT — cross-validated between independent methods
+    """
+    return json.dumps(
+        {
+            "uri": "geox://earth-system/physics-flow",
+            "flow": "CO₂ → Temperature → Ice → Sea Level",
+            "sources": {
+                "co2": "Berner GEOCARBSULF v3 + Rae et al. 2021 (AREPS)",
+                "temperature": "Zachos et al. 2001 + Westerhold et al. 2020 (Science)",
+                "ice": "Holbourn et al. 2014 (EPSL) + Pekar & DeConto 2006 (USGS)",
+                "sea_level": "Miller et al. 2020 (Science Advances) + Haq & Ogg 2024 (GSA Today)",
+            },
+            "consistency_gate": True,
+            "cross_validation": "Miller vs Haq ensemble with agreement flag",
+            "sabah_correlation": "BMU/TCU/DRU/UIU/SRU ↔ Haq SBs (Δ=0.0 Ma)",
+            "calibration_date": "2026-07-16",
+            "verdict": "UNIFIED — time is the dimension, physics is the constraint",
+        },
+        indent=2,
+    )
+
+
+def geox_sabah_correlation():
+    """Sabah unconformity correlation with Haq & Ogg 2024.
+    URI: geox://earth-system/sabah-correlation
+    Sources: Haq & Ogg 2024 (GSA Today v.34), Morley 2024
+    Epistemic: INT — interpreted correlation
+    """
+    from geox_mcp.tools.deep_time.sea_level_ensemble import load_sabah_boundary_correlation
+
+    corrs = load_sabah_boundary_correlation()
+    return json.dumps(
+        {
+            "uri": "geox://earth-system/sabah-correlation",
+            "correlations": corrs,
+            "interpretation": (
+                "All four Sabah unconformities correlate STRONGLY with Haq & Ogg 2024 "
+                "global sequence boundaries. This means the Sabah surfaces are NOT purely "
+                "tectonic — they have a eustatic signal. The DRU is both a slab-breakoff "
+                "surface (Morley 2024) AND a global sequence boundary (Haq & Ogg 2024)."
+            ),
+            "sources": {
+                "tectonic": "Morley 2024 — atypical syn-collisional wedges",
+                "eustatic": "Haq & Ogg 2024 — Cenozoic sequence boundaries",
+            },
+            "verdict": "TWO INDEPENDENT EVIDENCE LINES CONVERGE",
+        },
+        indent=2,
+    )
+
+
+def geox_earth_trinity():
+    """Physics × Chemistry × Biology coupling framework.
+    URI: geox://earth-system/trinity
+    Epistemic: INT — interpreted framework
+    """
+    return json.dumps(
+        {
+            "uri": "geox://earth-system/trinity",
+            "framework": {
+                "physics": {
+                    "role": "substrate",
+                    "description": "Physics sets the stage — tectonics, heat flow, gravity, sea level",
+                    "timescale": "dominates on short timescales (Ma)",
+                    "examples": "plate collision, subsidence, seismicity, eustasy",
+                },
+                "chemistry": {
+                    "role": "language",
+                    "description": "Chemistry writes the script — reactions, phase equilibria, isotopes",
+                    "timescale": "bridges physics and biology",
+                    "examples": "kerogen maturation, diagenesis, ocean redox, atmospheric composition",
+                },
+                "biology": {
+                    "role": "co-author",
+                    "description": "Biology becomes the co-author — and eventually edits the stage",
+                    "timescale": "dominates on long timescales (100+ Ma)",
+                    "examples": "oxygenic photosynthesis, biomineralization, carbon burial, weathering",
+                },
+            },
+            "law": (
+                "Across geological time, physics is the substrate, chemistry is the language, "
+                "biology is the author that eventually edits the substrate through the language. "
+                "The direction of causality reverses depending on timescale."
+            ),
+            "examples": {
+                "end_permian": "Physics (Siberian Traps) → Chemistry (CO₂, H₂S) → Biology (95% extinction)",
+                "devonian_plants": "Biology (roots, lignin) → Chemistry (CO₂ drawdown) → Physics (glaciation)",
+                "carboniferous_o2": "Biology (coal forests) → Chemistry (O₂ spike) → Physics (giant arthropods)",
+            },
+            "sabah_application": (
+                "Source rock = biology killed and buried by physics, transformed by chemistry, "
+                "re-released by physics (structural traps, migration pathways). "
+                "ABKSS ladder = physics (unconformities) + chemistry+biology (intervals)."
+            ),
+        },
+        indent=2,
+    )
     # ---------------------------------------------------------------------------
     # EARTH DATA ATLAS — MCP PROMPT TEMPLATES
     # Reusable parameterized workflow templates (user-controlled)
@@ -1919,3 +2028,34 @@ def geox_deeptime_o2():
         ),
         arguments=[],
     )
+
+    # ── Earth System Integration Resources ────────────────────────────────
+
+    mcp.resource(
+        "geox://earth-system/physics-flow",
+        description=(
+            "Deep-time physics flow: CO₂ → Temperature → Ice → Sea Level. "
+            "Cross-validated between Miller 2020 and Haq & Ogg 2024. "
+            "Includes physics consistency gate and Sabah boundary correlation."
+        ),
+        mime_type="application/json",
+    )(geox_earth_physics_flow)
+
+    mcp.resource(
+        "geox://earth-system/sabah-correlation",
+        description=(
+            "Sabah unconformity correlation with Haq & Ogg 2024 global sequence boundaries. "
+            "BMU/TCU, DRU, UIU, SRU matched to NgSB1, NgSB9, NgSB11, NgSB13."
+        ),
+        mime_type="application/json",
+    )(geox_sabah_correlation)
+
+    mcp.resource(
+        "geox://earth-system/trinity",
+        description=(
+            "Physics × Chemistry × Biology coupling framework. "
+            "The three-body interaction that makes Earth a planet, not a rock. "
+            "Physics sets the stage, chemistry writes the script, biology becomes the co-author."
+        ),
+        mime_type="application/json",
+    )(geox_earth_trinity)
