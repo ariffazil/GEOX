@@ -511,6 +511,9 @@ def register_tools_on(mcp):
             return {
                 "status": "healthy",
                 "organ": "GEOX",
+                "session_id": session_id,
+                "actor_id": actor_id,
+                "trace_id": trace_id,
                 "version": "v2026.06.22-phase2",
                 "git_version": git_version,
                 "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
@@ -584,6 +587,9 @@ def register_tools_on(mcp):
         return {
             "status": "healthy",
             "organ": "GEOX",
+            "session_id": session_id,
+            "actor_id": actor_id,
+            "trace_id": trace_id,
             "surface_version": "geox-2026.07.15-zen15",
             "canonical_callable": canonical_list,
             "canonical_tools": sorted(canonical_set),
