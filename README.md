@@ -8,11 +8,18 @@ mcp_tools_live: 20
 owner_summary: GREEN
 truth_rule: tools/list + /health beat any static count in prose
 federation_release: v2026.07.16-RESURRECTION
+last_verified: 2026-07-17T16:15Z
 mcp_apps: SEP-1865 (ui:// + host proxy)
 gui: https://geox.arif-fazil.com/gui/
 package_seal: PLAN-2026-07-12-GEOX-MCP-APP-SLICE-001 (seq 57 wire)
 valid_from: 2026-07-16
 valid_until: 2026-08-16
+-->
+
+[![Forge Pipeline](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml)
+[![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml)
+[![🌍 EARTH](https://img.shields.io/badge/%F0%9F%8C%8D%20EARTH-20%20tools-2ea44f)](https://geox.arif-fazil.com/mcp)
+[![License: BSL-1.1](https://img.shields.io/badge/License-BSL--1.1-blue.svg)](LICENSE)
 confidence: high
 scope: /root/GEOX
 domain_contrast: /root/AAA/docs/DOMAIN_ORGAN_CONTRAST.md
