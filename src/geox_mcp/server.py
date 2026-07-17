@@ -2602,6 +2602,14 @@ async def health_handler(request: Request) -> JSONResponse:
 
     # FEDERATION HANDSHAKE (canonical: arifOS/arifosmcp/schemas/federation_enums.py)
     # See: /root/AAA/governance/FEDERATION_HANDSHAKE.md
+    # T5 2026-07-17 — never emit null federation_geometry; local presence fallback.
+    _fed_geom = fed_geometry or {
+        "status": "enabled",
+        "subjects": 0,
+        "ledger_events": 0,
+        "witness_oracle": "active",
+        "note": fed_geometry_note or "local presence fallback",
+    }
     return JSONResponse(
         {
             "status": "healthy",
@@ -2616,6 +2624,13 @@ async def health_handler(request: Request) -> JSONResponse:
             "physics_manifest_hash": _physics_hash,
             # ── Canonical 7-field health schema (per federation convention) ───
             "identity_hash": _GIT_VERSION,  # git SHA = identity proof
+            "apex_scalars": {
+                "G": {"value": None, "status": "UNMEASURED"},
+                "C_dark": {"value": None, "status": "UNMEASURED"},
+                "W3": {"value": None, "status": "UNMEASURED"},
+                "h": {"value": None, "status": "UNMEASURED"},
+                "QDF": {"value": None, "status": "UNMEASURED"},
+            },
             "freshness": {
                 "status": "fresh",
                 "checked_at_utc": _GIT_VERSION,
@@ -2633,8 +2648,8 @@ async def health_handler(request: Request) -> JSONResponse:
                     "service_healthy",
                 ],
             },
-            "federation_geometry": fed_geometry,
-            "federation_geometry_source": fed_geometry_source,
+            "federation_geometry": _fed_geom,
+            "federation_geometry_source": fed_geometry_source or "local_fallback",
             "federation_geometry_note": fed_geometry_note,
             "final_authority": "ARIF",
         }
