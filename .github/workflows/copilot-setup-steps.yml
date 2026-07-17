@@ -9,6 +9,13 @@ on:
     paths:
       - .github/workflows/copilot-setup-steps.yml
 
+permissions:
+  contents: read
+
+concurrency:
+  group: copilot-setup-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   copilot-setup-steps:
     name: "GEOX — Pre-install earth intelligence dependencies"
