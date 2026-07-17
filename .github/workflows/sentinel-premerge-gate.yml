@@ -183,7 +183,7 @@ jobs:
                   health_count = int(m2.group(1))
                   break
 
-            if health_count is not None and health_count != live_count:
+          if health_count is not None and health_count != live_count:
               print(f"::warning::Health/public_tools mismatch: health={health_count} tools/list={live_count}")
 
           print(f"Q2 PASS: canonical={canonical_count}, live_tools={live_count}, health_public_tools={health_count}")
