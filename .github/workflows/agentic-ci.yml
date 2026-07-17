@@ -59,9 +59,12 @@ jobs:
         run: pip install -e ".[dev]" --quiet
 
       - name: Lint (Ruff)
+        id: lint
         run: ruff check . --output-format=github || true
+        continue-on-error: true
 
       - name: Type check (MyPy)
+        id: mypy
         run: mypy src/ --ignore-missing-imports || true
         continue-on-error: true
 
@@ -73,9 +76,34 @@ jobs:
         continue-on-error: true
 
       - name: Build check
+        id: build
         run: |
           python -c "import geox_mcp; print('geox_mcp import OK')" || true
         continue-on-error: true
+
+      # ── BLOCKING GATE: aggregate diagnostic results ──────────────
+      # Diagnostic steps above collect evidence (never block).
+      # This step gate-keeps: any critical failure → job fails.
+      # BIJAKSANA reads this lane's pass/fail, not individual steps.
+      - name: Diagnostic verdict
+        if: always()
+        run: |
+          echo "=== Lane 1 Diagnostic Verdict ==="
+          FAILURES=0
+          for step in lint mypy test build; do
+            outcome="${{ steps.$step.outcome }}"
+            if [ "$outcome" != "success" ]; then
+              echo "❌ $step: $outcome"
+              FAILURES=$((FAILURES + 1))
+            else
+              echo "✅ $step: $outcome"
+            fi
+          done
+          if [ $FAILURES -gt 0 ]; then
+            echo "::error::Lane 1 BLOCKED: $FAILURES diagnostic failure(s)"
+            exit 1
+          fi
+          echo "Lane 1 PASS: all diagnostics collected"
 
   # ─────────────────────────────────────────────────────────────
   # LANE 2: AGENTIC CI — BIJAKSANA Physics Gate

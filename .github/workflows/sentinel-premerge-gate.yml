@@ -172,7 +172,7 @@ jobs:
               print("::error::Authenticated tools/list returned zero tools")
               sys.exit(1)
 
-            print(f"Canonical surface count={canonical_count}, live tools/list count={live_count}")
+          print(f"Canonical surface count={canonical_count}, live tools/list count={live_count}")
 
           health = json.loads(urllib.request.urlopen(health_url, timeout=20).read().decode("utf-8"))
           reasons = health.get("owner_summary", {}).get("reasons", [])
