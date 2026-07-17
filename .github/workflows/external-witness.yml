@@ -8,6 +8,14 @@ on:
     types: [opened, edited, synchronize, labeled]
     branches: [main, master]
 
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: external-witness-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   witness:
     name: External Witness Check (W³ channel)
