@@ -382,7 +382,7 @@ class GeoxGovernanceMiddleware(Middleware):
         context: "MiddlewareContext[Any]",
         call_next: "CallNext[Any, Any]",
     ) -> Any:
-        """RT1 + RT3 + organ_governance for every tools/call."""
+        """RT1 + RT3 + SCT + organ_governance for every tools/call."""
         # Phase A1 lifecycle gate runs at HTTP layer only (McpLifecycleMiddleware).
         # Do NOT re-gate here: FastMCP internal session_id ≠ Mcp-Session-Id header,
         # so a second check on fctx.session_id would false-block after HTTP READY.
@@ -404,6 +404,56 @@ class GeoxGovernanceMiddleware(Middleware):
         else:
             arguments = raw_arguments
 
+        # ── SCT ingress gate (2026-07-17) ──────────────────────────────────
+        # If caller presents an SCT, verify via arifOS. Fail closed on invalid.
+        # SCT optional for GEOX OBSERVE tools (backward-compatible); when present
+        # it must be valid. Irreversible tools may require SCT via env.
+        try:
+            import sys as _sys
+
+            _aaa = "/root/AAA"
+            if _aaa not in _sys.path:
+                _sys.path.insert(0, _aaa)
+            from governance.federation_sct import gate_tool_ingress
+
+            _headers = None
+            try:
+                fctx = context.fastmcp_context
+                rc = getattr(fctx, "request_context", None) if fctx else None
+                req = getattr(rc, "request", None) if rc else None
+                if req is not None:
+                    _headers = dict(getattr(req, "headers", {}) or {})
+            except Exception:
+                _headers = None
+            _require = tool_name in self._IRREVERSIBLE_TOOLS and os.getenv(
+                "GEOX_SCT_REQUIRE_IRREVERSIBLE", "0"
+            ).strip() not in ("0", "false", "off", "no")
+            _sct_rej = gate_tool_ingress(
+                tool_name,
+                arguments if isinstance(arguments, dict) else {},
+                headers=_headers,
+                require_sct=_require,
+                organ="geox",
+            )
+            if _sct_rej is not None:
+                logger.warning(
+                    "SCT_GATE: blocked tool=%s error=%s",
+                    tool_name,
+                    _sct_rej.get("error"),
+                )
+                raise ToolError(
+                    f"SCT_GATE: {_sct_rej.get('error')}: {_sct_rej.get('message')}"
+                )
+            # Strip SCT transport fields so tool Pydantic schemas don't reject them
+            if isinstance(arguments, dict):
+                for _sk in ("session_token", "sct", "arifos_sct"):
+                    arguments.pop(_sk, None)
+        except ToolError:
+            raise
+        except Exception as _sct_exc:
+            # Import/path failure: log; do not open the gate for present tokens.
+            logger.debug("SCT_GATE skipped (infra): %s", _sct_exc)
+
         # ── P1 IDENTITY INJECTION (2026-07-11) ──────────────────────────────
         # arifOS bridge passes governed identity via _envelope; GEOX tools
         # expect session_id/actor_id/trace_id as top-level function parameters.
@@ -419,6 +469,11 @@ class GeoxGovernanceMiddleware(Middleware):
             # D3/D5: strip kernel envelope — FastMCP schema rejects unknown kwargs
             if "_envelope" in arguments:
                 arguments.pop("_envelope", None)
+            # Write cleaned args back so FastMCP tool schema sees them
+            try:
+                context.message.arguments = arguments
+            except Exception:
+                pass
 
         # F1 AMANAH: defensive unwrap — 36 GEOX tools declare `arguments: dict`
         # as a wrapper parameter. MCP clients send flat parameters
