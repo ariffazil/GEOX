@@ -14,7 +14,10 @@
       "id": "mission_decomposition",
       "name": "Mission Decomposition",
       "description": "Break complex missions into executable skill chains",
-      "tags": ["planning", "orchestration"],
+      "tags": [
+        "planning",
+        "orchestration"
+      ],
       "examples": [
         "Decompose flood response into sensing, routing, and hazard assessment",
         "Plan seismic survey with terrain, geodesy, and governance checks"
@@ -24,23 +27,60 @@
       "id": "agent_delegation",
       "name": "Agent Delegation",
       "description": "Delegate subtasks to appropriate specialist agents",
-      "tags": ["delegation", "coordination"]
+      "tags": [
+        "delegation",
+        "coordination"
+      ]
     },
     {
       "id": "resource_allocation",
       "name": "Resource Allocation",
       "description": "Optimize compute, data, and agent resources for mission",
-      "tags": ["optimization", "scheduling"]
+      "tags": [
+        "optimization",
+        "scheduling"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["bearer", "mtls"],
+    "schemes": [
+      "bearer",
+      "mtls"
+    ],
     "credentials": "https://a2a.geox.arif-fazil.com/.well-known/jwks.json"
   },
   "_geox": {
     "domain": "orchestration",
-    "substrates": ["machine", "human"],
+    "substrates": [
+      "machine",
+      "human"
+    ],
     "authority_level": 4,
     "constitutional_floor": "F13_SOVEREIGN"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "planner",
+    "prompts_used": [
+      "🧠 REASON",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }

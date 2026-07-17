@@ -14,35 +14,81 @@
       "id": "agent_coordination",
       "name": "Agent Coordination",
       "description": "Coordinate multiple agents in distributed operations",
-      "tags": ["orchestration", "coordination", "multi-agent"]
+      "tags": [
+        "orchestration",
+        "coordination",
+        "multi-agent"
+      ]
     },
     {
       "id": "void_detect",
       "name": "Void Detection",
       "description": "Detect and characterize void states in operations",
-      "tags": ["orchestration", "void", "edge"]
+      "tags": [
+        "orchestration",
+        "void",
+        "edge"
+      ]
     },
     {
       "id": "edge_handle",
       "name": "Edge Case Handling",
       "description": "Handle boundary conditions and edge cases gracefully",
-      "tags": ["orchestration", "edge", "handling"]
+      "tags": [
+        "orchestration",
+        "edge",
+        "handling"
+      ]
     },
     {
       "id": "fallback_orchestrate",
       "name": "Fallback Orchestration",
       "description": "Orchestrate degraded-mode operation when primary fails",
-      "tags": ["orchestration", "fallback", "resilience"]
+      "tags": [
+        "orchestration",
+        "fallback",
+        "resilience"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["mtls"],
+    "schemes": [
+      "mtls"
+    ],
     "credentials": "https://a2a.geox.arif-fazil.com/.well-known/orchestration-certs.pem"
   },
   "_geox": {
     "domain": "orchestration",
-    "substrates": ["machine", "void"],
+    "substrates": [
+      "machine",
+      "void"
+    ],
     "authority_level": 4,
     "constitutional_floor": "F13_SOVEREIGN"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "orchestration",
+    "prompts_used": [
+      "🌀 SABAR",
+      "🔒 JUDGE",
+      "💎 SEAL"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }

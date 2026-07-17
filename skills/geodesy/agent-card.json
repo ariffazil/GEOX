@@ -14,35 +14,82 @@
       "id": "coordinate_transform",
       "name": "Coordinate Transform",
       "description": "Transform coordinates between CRS, datums, and projections",
-      "tags": ["geodesy", "coordinate", "transform"]
+      "tags": [
+        "geodesy",
+        "coordinate",
+        "transform"
+      ]
     },
     {
       "id": "datum_alignment",
       "name": "Datum Alignment",
       "description": "Align datasets to common geodetic datum",
-      "tags": ["geodesy", "datum", "alignment"]
+      "tags": [
+        "geodesy",
+        "datum",
+        "alignment"
+      ]
     },
     {
       "id": "gps_rtk",
       "name": "GPS RTK Positioning",
       "description": "Real-time kinematic GPS for centimeter-level positioning",
-      "tags": ["geodesy", "gps", "rtk", "positioning"]
+      "tags": [
+        "geodesy",
+        "gps",
+        "rtk",
+        "positioning"
+      ]
     },
     {
       "id": "gravity_model",
       "name": "Gravity Model",
       "description": "Compute geoid, gravity anomalies, and vertical datums",
-      "tags": ["geodesy", "gravity", "geoid"]
+      "tags": [
+        "geodesy",
+        "gravity",
+        "geoid"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["mtls"],
+    "schemes": [
+      "mtls"
+    ],
     "credentials": "https://a2a.geox.arif-fazil.com/.well-known/geodesy-certs.pem"
   },
   "_geox": {
     "domain": "geodesy",
-    "substrates": ["machine", "orbital"],
+    "substrates": [
+      "machine",
+      "orbital"
+    ],
     "authority_level": 2,
     "constitutional_floor": "F8_GROUNDING"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "geodesy",
+    "prompts_used": [
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "🌀 SABAR"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }

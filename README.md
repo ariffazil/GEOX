@@ -117,7 +117,7 @@ SOT RULE: `tools/list` wins. Runtime evidence outranks static prose.
 
 ## Domain contrast — GEOX · WEALTH · WELL (federation MCP)
 
-> Full architecture seal: [ARIFOS_MCP_ARCHITECTURE_v2026.07.15](https://github.com/ariffazil/AAA/blob/main/docs/ARIFOS_MCP_ARCHITECTURE_v2026.07.15.md) · Contrast: [DOMAIN_ORGAN_CONTRAST](https://github.com/ariffazil/AAA/blob/main/docs/DOMAIN_ORGAN_CONTRAST.md) · Organ map: [FEDERATION_ORGAN](https://github.com/ariffazil/AAA/blob/main/docs/FEDERATION_ORGAN.md)  
+> Full architecture seal: [ARIFOS_MCP_ARCHITECTURE_v2026.07.15](https://github.com/ariffazil/AAA/blob/main/docs/ARIFOS_MCP_ARCHITECTURE_v2026.07.15.md) · Contrast: [DOMAIN_ORGAN_CONTRAST](https://github.com/ariffazil/AAA/blob/main/docs/DOMAIN_ORGAN_CONTRAST.md) · Organ map: [FEDERATION_ORGAN](https://github.com/ariffazil/AAA/blob/main/docs/ORGAN.md)  
 > **This organ answers to `NATURAL_LAW`.** Not capital law. Not substrate law. Not constitutional law.
 
 Three domain MCP servers share one governance spine (arifOS) and three **orthogonal laws of truth**. Collapsing them is a constitutional error.

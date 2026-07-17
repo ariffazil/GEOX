@@ -14,34 +14,81 @@
       "id": "seismic_hazard",
       "name": "Seismic Hazard",
       "description": "Assess earthquake hazard and ground motion",
-      "tags": ["seismic", "hazard", "risk"]
+      "tags": [
+        "seismic",
+        "hazard",
+        "risk"
+      ]
     },
     {
       "id": "flood_model",
       "name": "Flood Modeling",
       "description": "Simulate flood extent and depth from rainfall or breach",
-      "tags": ["flood", "hydrology", "simulation"]
+      "tags": [
+        "flood",
+        "hydrology",
+        "simulation"
+      ]
     },
     {
       "id": "landslide_susceptibility",
       "name": "Landslide Susceptibility",
       "description": "Map landslide susceptibility from terrain factors",
-      "tags": ["landslide", "terrain", "risk"]
+      "tags": [
+        "landslide",
+        "terrain",
+        "risk"
+      ]
     },
     {
       "id": "multi_risk",
       "name": "Multi-Risk Assessment",
       "description": "Integrate multiple hazards into composite risk",
-      "tags": ["risk", "integration", "assessment"]
+      "tags": [
+        "risk",
+        "integration",
+        "assessment"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["bearer", "mtls"]
+    "schemes": [
+      "bearer",
+      "mtls"
+    ]
   },
   "_geox": {
     "domain": "hazards",
-    "substrates": ["machine", "environment"],
+    "substrates": [
+      "machine",
+      "environment"
+    ],
     "authority_level": 3,
     "constitutional_floor": "F6_HARMLESS"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "hazards",
+    "prompts_used": [
+      "⚖ MARUAH",
+      "🔒 JUDGE",
+      "🌀 SABAR"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }

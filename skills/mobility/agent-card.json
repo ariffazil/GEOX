@@ -14,35 +14,82 @@
       "id": "route_optimize",
       "name": "Route Optimization",
       "description": "Find optimal routes considering terrain, constraints, and objectives",
-      "tags": ["mobility", "routing", "optimization"]
+      "tags": [
+        "mobility",
+        "routing",
+        "optimization"
+      ]
     },
     {
       "id": "accessibility_map",
       "name": "Accessibility Mapping",
       "description": "Compute accessibility surfaces and isochrones",
-      "tags": ["mobility", "accessibility", "surface"]
+      "tags": [
+        "mobility",
+        "accessibility",
+        "surface"
+      ]
     },
     {
       "id": "traffic_pattern",
       "name": "Traffic Pattern Analysis",
       "description": "Analyze and predict traffic patterns from movement data",
-      "tags": ["mobility", "traffic", "pattern"]
+      "tags": [
+        "mobility",
+        "traffic",
+        "pattern"
+      ]
     },
     {
       "id": "terrain_navigate",
       "name": "Terrain Navigation",
       "description": "Navigate across unmapped or poorly-mapped terrain",
-      "tags": ["mobility", "navigation", "terrain", "void"]
+      "tags": [
+        "mobility",
+        "navigation",
+        "terrain",
+        "void"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["mtls"],
+    "schemes": [
+      "mtls"
+    ],
     "credentials": "https://a2a.geox.arif-fazil.com/.well-known/mobility-certs.pem"
   },
   "_geox": {
     "domain": "mobility",
-    "substrates": ["machine", "human", "void"],
+    "substrates": [
+      "machine",
+      "human",
+      "void"
+    ],
     "authority_level": 3,
     "constitutional_floor": "F1_AMANAH"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "mobility",
+    "prompts_used": [
+      "🔥 FORGE",
+      "🌀 SABAR"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }
