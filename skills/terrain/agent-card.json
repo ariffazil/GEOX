@@ -14,34 +14,76 @@
       "id": "dem_processing",
       "name": "DEM Processing",
       "description": "Process digital elevation models from multiple sources",
-      "tags": ["terrain", "elevation"]
+      "tags": [
+        "terrain",
+        "elevation"
+      ]
     },
     {
       "id": "surface_classify",
       "name": "Surface Classification",
       "description": "Classify land cover and surface types from imagery",
-      "tags": ["classification", "imagery"]
+      "tags": [
+        "classification",
+        "imagery"
+      ]
     },
     {
       "id": "roughness_analysis",
       "name": "Roughness Analysis",
       "description": "Compute terrain roughness indices for mobility and hazard",
-      "tags": ["terrain", "mobility", "hazard"]
+      "tags": [
+        "terrain",
+        "mobility",
+        "hazard"
+      ]
     },
     {
       "id": "slope_aspect",
       "name": "Slope & Aspect",
       "description": "Compute slope gradient and aspect from elevation",
-      "tags": ["terrain", "analysis"]
+      "tags": [
+        "terrain",
+        "analysis"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["bearer"]
+    "schemes": [
+      "bearer"
+    ]
   },
   "_geox": {
     "domain": "terrain",
-    "substrates": ["machine", "orbital"],
+    "substrates": [
+      "machine",
+      "orbital"
+    ],
     "authority_level": 2,
     "constitutional_floor": "F2_TRUTH"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "terrain",
+    "prompts_used": [
+      "🌊 WITNESS",
+      "🌀 SABAR"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }

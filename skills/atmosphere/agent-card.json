@@ -14,35 +14,82 @@
       "id": "weather_ingest",
       "name": "Weather Ingest",
       "description": "Ingest and standardize meteorological data feeds",
-      "tags": ["atmosphere", "weather", "meteorological"]
+      "tags": [
+        "atmosphere",
+        "weather",
+        "meteorological"
+      ]
     },
     {
       "id": "atmospheric_correction",
       "name": "Atmospheric Correction",
       "description": "Correct imagery for atmospheric effects",
-      "tags": ["atmosphere", "correction", "imagery"]
+      "tags": [
+        "atmosphere",
+        "correction",
+        "imagery"
+      ]
     },
     {
       "id": "climate_trend",
       "name": "Climate Trend Analysis",
       "description": "Analyze long-term climate trends and anomalies",
-      "tags": ["atmosphere", "climate", "trend"]
+      "tags": [
+        "atmosphere",
+        "climate",
+        "trend"
+      ]
     },
     {
       "id": "storm_track",
       "name": "Storm Tracking",
       "description": "Track and forecast storm paths and intensity",
-      "tags": ["atmosphere", "storm", "tracking", "hazard"]
+      "tags": [
+        "atmosphere",
+        "storm",
+        "tracking",
+        "hazard"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["mtls"],
+    "schemes": [
+      "mtls"
+    ],
     "credentials": "https://a2a.geox.arif-fazil.com/.well-known/atmosphere-certs.pem"
   },
   "_geox": {
     "domain": "atmosphere",
-    "substrates": ["machine", "orbital", "environment"],
+    "substrates": [
+      "machine",
+      "orbital",
+      "environment"
+    ],
     "authority_level": 2,
     "constitutional_floor": "F2_TRUTH"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "atmosphere",
+    "prompts_used": [
+      "🌊 WITNESS",
+      "🌀 SABAR"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }

@@ -14,29 +14,71 @@
       "id": "constitutional_gate",
       "name": "Constitutional Gate",
       "description": "Enforce arifOS constitutional constraints on operations",
-      "tags": ["governance", "constitutional", "verdict"]
+      "tags": [
+        "governance",
+        "constitutional",
+        "verdict"
+      ]
     },
     {
       "id": "compliance_check",
       "name": "Compliance Check",
       "description": "Check operations against regulatory constraints",
-      "tags": ["compliance", "policy"]
+      "tags": [
+        "compliance",
+        "policy"
+      ]
     },
     {
       "id": "rights_mapping",
       "name": "Rights Mapping",
       "description": "Map tenure, access rights, and restrictions",
-      "tags": ["rights", "boundaries", "policy"]
+      "tags": [
+        "rights",
+        "boundaries",
+        "policy"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["mtls"],
+    "schemes": [
+      "mtls"
+    ],
     "credentials": "https://a2a.geox.arif-fazil.com/.well-known/governance-certs.pem"
   },
   "_geox": {
     "domain": "governance",
-    "substrates": ["machine", "human", "void"],
+    "substrates": [
+      "machine",
+      "human",
+      "void"
+    ],
     "authority_level": 5,
     "constitutional_floor": "F13_SOVEREIGN"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "governance",
+    "prompts_used": [
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🌀 SABAR"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }

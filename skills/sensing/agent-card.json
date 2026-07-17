@@ -14,35 +14,82 @@
       "id": "signal_acquisition",
       "name": "Signal Acquisition",
       "description": "Acquire raw sensor signals from orbital, aerial, or ground platforms",
-      "tags": ["sensing", "acquisition", "signal"]
+      "tags": [
+        "sensing",
+        "acquisition",
+        "signal"
+      ]
     },
     {
       "id": "telemetry_link",
       "name": "Telemetry Link",
       "description": "Establish and maintain data telemetry from remote sensors",
-      "tags": ["sensing", "telemetry", "link"]
+      "tags": [
+        "sensing",
+        "telemetry",
+        "link"
+      ]
     },
     {
       "id": "sensor_calibration",
       "name": "Sensor Calibration",
       "description": "Calibrate sensor outputs against ground truth references",
-      "tags": ["sensing", "calibration", "quality"]
+      "tags": [
+        "sensing",
+        "calibration",
+        "quality"
+      ]
     },
     {
       "id": "noise_filtering",
       "name": "Noise Filtering",
       "description": "Filter atmospheric, electronic, and systematic noise from signals",
-      "tags": ["sensing", "noise", "filtering"]
+      "tags": [
+        "sensing",
+        "noise",
+        "filtering"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["mtls"],
+    "schemes": [
+      "mtls"
+    ],
     "credentials": "https://a2a.geox.arif-fazil.com/.well-known/sensing-certs.pem"
   },
   "_geox": {
     "domain": "sensing",
-    "substrates": ["machine", "infrastructure", "orbital"],
+    "substrates": [
+      "machine",
+      "infrastructure",
+      "orbital"
+    ],
     "authority_level": 2,
     "constitutional_floor": "F3_INPUT_CLARITY"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "sensing",
+    "prompts_used": [
+      "🌊 WITNESS",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }

@@ -14,35 +14,81 @@
       "id": "asset_inventory",
       "name": "Asset Inventory",
       "description": "Inventory and catalog infrastructure assets",
-      "tags": ["infrastructure", "asset", "inventory"]
+      "tags": [
+        "infrastructure",
+        "asset",
+        "inventory"
+      ]
     },
     {
       "id": "network_trace",
       "name": "Network Tracing",
       "description": "Trace connectivity through utility and transport networks",
-      "tags": ["infrastructure", "network", "trace"]
+      "tags": [
+        "infrastructure",
+        "network",
+        "trace"
+      ]
     },
     {
       "id": "urban_growth",
       "name": "Urban Growth Modeling",
       "description": "Model and project urban expansion patterns",
-      "tags": ["infrastructure", "urban", "growth"]
+      "tags": [
+        "infrastructure",
+        "urban",
+        "growth"
+      ]
     },
     {
       "id": "facility_siting",
       "name": "Facility Siting",
       "description": "Optimal site selection for facilities with multi-criteria constraints",
-      "tags": ["infrastructure", "siting", "optimization"]
+      "tags": [
+        "infrastructure",
+        "siting",
+        "optimization"
+      ]
     }
   ],
   "authentication": {
-    "schemes": ["mtls"],
+    "schemes": [
+      "mtls"
+    ],
     "credentials": "https://a2a.geox.arif-fazil.com/.well-known/infrastructure-certs.pem"
   },
   "_geox": {
     "domain": "infrastructure",
-    "substrates": ["machine", "human"],
+    "substrates": [
+      "machine",
+      "human"
+    ],
     "authority_level": 3,
     "constitutional_floor": "F11_COHERENCE"
+  },
+  "kernel_prompts": {
+    "version": "2026.07.16",
+    "doctrine": "DITEMPA BUKAN DIBERI",
+    "zen_format": "single-sigil + single-lexical per zen-md",
+    "skill_role": "infrastructure",
+    "prompts_used": [
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR"
+    ],
+    "all_federation_prompts": [
+      "🌱 BOOT",
+      "🌊 WITNESS",
+      "🧠 REASON",
+      "⚖ MARUAH",
+      "🔍 PREFLIGHT",
+      "🔒 JUDGE",
+      "🔥 FORGE",
+      "💎 SEAL",
+      "🌀 SABAR",
+      "📜 REPLY"
+    ],
+    "reality_loop_orchestrator": "🌀 SABAR",
+    "human_role": "init + seal only — autonomous 6-stage loop"
   }
 }
