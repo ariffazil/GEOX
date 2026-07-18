@@ -27,17 +27,13 @@ from __future__ import annotations
 import base64
 import json
 import time
+from types import SimpleNamespace
 from unittest.mock import patch
 
-import pytest
-
 from geox_mcp.session_enforcement import (
-    AUTHORITY_LEVELS,
-    _cached_kernel_verify,
     _TRANSPORT_DEGRADED,
     validate_session,
 )
-
 
 # ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -232,36 +228,63 @@ class TestC3RedteamValidSessionPreservesId:
 
 
 class TestC3RedteamSctStillWorks:
-    """SCT path must remain functional — local decode is faster and signed."""
+    """SCT path must require authoritative signature verification."""
 
     def test_valid_sct_with_verified_actor_passes(self):
         sct = _make_sct(actor="arif", authority="SOVEREIGN", verified=True)
-        result = validate_session(
-            session_id=sct,
-            actor_id="arif",
-            required_authority="OPERATOR",
-        )
+        with patch("geox_mcp.session_enforcement._verify_sct_authoritatively") as verify:
+            verify.return_value = SimpleNamespace(
+                ok=True,
+                claims={"sid": "SEAL-real", "actor": "arif"},
+                actor="arif",
+                authority="SOVEREIGN",
+                error_code=None,
+                error_message=None,
+            )
+            result = validate_session(
+                session_id=sct,
+                actor_id="arif",
+                required_authority="OPERATOR",
+            )
         assert result.ok is True
         assert result.actor == "arif"
         assert result.authority == "SOVEREIGN"
 
-    def test_expired_sct_rejected(self):
-        sct = _make_sct(actor="arif", ttl=-100)  # already expired
-        result = validate_session(
-            session_id=sct,
-            actor_id="arif",
-            required_authority="OBSERVE_ONLY",
-        )
+    def test_forged_sct_hmac_rejected(self):
+        sct = _make_sct(actor="arif")
+        with patch("geox_mcp.session_enforcement._verify_sct_authoritatively") as verify:
+            verify.return_value = SimpleNamespace(
+                ok=False,
+                claims=None,
+                actor=None,
+                authority=None,
+                error_code="SCT_INVALID",
+                error_message="arifOS rejected SCT",
+            )
+            result = validate_session(
+                session_id=sct,
+                actor_id="arif",
+                required_authority="OBSERVE_ONLY",
+            )
         assert result.ok is False
-        assert result.error_code == "SESSION_EXPIRED"
+        assert result.error_code == "SCT_INVALID"
 
     def test_sct_actor_mismatch_rejected(self):
         sct = _make_sct(actor="arif", authority="OPERATOR")
-        result = validate_session(
-            session_id=sct,
-            actor_id="someone-else",  # different actor
-            required_authority="OBSERVE_ONLY",
-        )
+        with patch("geox_mcp.session_enforcement._verify_sct_authoritatively") as verify:
+            verify.return_value = SimpleNamespace(
+                ok=False,
+                claims=None,
+                actor="arif",
+                authority="OPERATOR",
+                error_code="ACTOR_MISMATCH",
+                error_message="SCT actor mismatch",
+            )
+            result = validate_session(
+                session_id=sct,
+                actor_id="someone-else",
+                required_authority="OBSERVE_ONLY",
+            )
         assert result.ok is False
         assert result.error_code == "ACTOR_MISMATCH"
 

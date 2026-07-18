@@ -7,8 +7,8 @@ validation replaces per-call arifOS kernel calls (kernel too slow for
 per-tool-call validation).
 
 Strategy:
-  1. If caller passes an SCT (sct_v1.<base64>.<hmac>) → decode locally,
-     check expiry, extract actor/authority/sid. No arifOS call needed.
+  1. If caller passes an SCT (sct_v1.<base64>.<hmac>) → verify it through
+     the federation SCT gate backed by arifOS. Decoding is never proof.
   2. If caller passes a SEAL-* session_id (not an SCT) → accept with
      basic format check. The SCT gate in the middleware handles full
      verification for SCT-bearing calls.
@@ -29,20 +29,15 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
-import base64
 import json
 import logging
 import os
-import re
 import time
 from dataclasses import dataclass
 from typing import Any
 
 logger = logging.getLogger("geox_mcp.session_enforcement")
 
-
-# SCT format: sct_v1.<base64url>.<hex/hmac>
-_SCT_RE = re.compile(r"^sct_v1\.([A-Za-z0-9_\-]+)(?:\.([A-Za-z0-9_\-]+))?$")
 
 # Authority ranking for GEOX governance
 AUTHORITY_LEVELS = (
@@ -190,28 +185,24 @@ def _cached_kernel_verify(
     return value
 
 
-def _decode_sct_payload(sct: str) -> dict[str, Any] | None:
-    """Decode SCT payload locally (no arifOS call).
+def _verify_sct_authoritatively(
+    token: str,
+    actor_id: str,
+    required_authority: str,
+) -> Any:
+    """Use the federation verifier; it calls arifOS and fails closed."""
+    import sys
 
-    Returns the decoded JSON payload dict, or None if malformed.
-    Does NOT verify the HMAC signature (that requires arifOS key).
-    Expiry and actor binding are checked by the caller.
-    """
-    match = _SCT_RE.match(sct)
-    if not match:
-        return None
+    aaa_root = "/root/AAA"
+    if aaa_root not in sys.path:
+        sys.path.insert(0, aaa_root)
+    from governance.federation_sct import verify_federation_sct
 
-    payload_b64 = match.group(1)
-    try:
-        # Add padding for base64url decode
-        padded = payload_b64 + "=" * (4 - len(payload_b64) % 4)
-        payload_bytes = base64.urlsafe_b64decode(padded)
-        payload = json.loads(payload_bytes)
-        if isinstance(payload, dict):
-            return payload
-    except (json.JSONDecodeError, Exception) as exc:
-        logger.warning("SCT decode failed: %s", exc)
-    return None
+    return verify_federation_sct(
+        token,
+        expected_actor=actor_id,
+        required_authority=required_authority,
+    )
 
 
 def validate_session(
@@ -222,7 +213,7 @@ def validate_session(
     """Validate a session_id + actor_id pair.
 
     Strategy (fast path first):
-      1. If session_id is an SCT → decode locally, check expiry + actor + authority
+      1. If session_id is an SCT → verify signature/claims through arifOS
       2. If session_id is a SEAL-* string → basic format validation
       3. Reject: empty, anonymous, malformed
 
@@ -247,68 +238,37 @@ def validate_session(
             error_message="actor_id is required (F11 — non-repudiation)",
         )
 
-    # ── PATH 1: SCT token — local decode + validation ──────────────────
+    # ── PATH 1: SCT token — authoritative federation validation ────────
     if session_id.startswith("sct_v1."):
-        payload = _decode_sct_payload(session_id)
-        if payload is None:
-            return ValidationResult(
-                ok=False,
-                error_code="SCT_MALFORMED",
-                error_message="SCT payload could not be decoded",
+        try:
+            verification = _verify_sct_authoritatively(
+                session_id,
+                actor_id,
+                required_authority,
             )
-
-        # Check expiry
-        now = int(time.time())
-        exp = payload.get("exp", 0)
-        nbf = payload.get("nbf", 0)
-        if exp and now > exp:
+        except Exception as exc:
             return ValidationResult(
                 ok=False,
-                error_code="SESSION_EXPIRED",
-                error_message=f"SCT expired at {exp} (now={now})",
+                error_code="TRANSPORT_DEGRADED",
+                error_message=f"SCT verifier unavailable; rejected fail-closed ({type(exc).__name__})",
             )
-        if nbf and now < nbf:
+        if not verification.ok:
             return ValidationResult(
                 ok=False,
-                error_code="SESSION_NOT_YET_VALID",
-                error_message=f"SCT not yet valid (nbf={nbf}, now={now})",
-            )
-
-        # Extract claims
-        sct_actor = payload.get("actor", "")
-        sct_auth = payload.get("auth", "OBSERVE_ONLY")
-        sct_sid = payload.get("sid", "")
-        actor_verified = payload.get("av", False)
-
-        # Actor binding check
-        if sct_actor and actor_id and sct_actor != actor_id:
-            return ValidationResult(
-                ok=False,
-                error_code="ACTOR_MISMATCH",
-                error_message=f"actor_id {actor_id!r} does not match SCT actor {sct_actor!r}",
-            )
-
-        # Authority check
-        if _authority_rank(sct_auth) < _authority_rank(required_authority):
-            return ValidationResult(
-                ok=False,
-                error_code="INSUFFICIENT_AUTHORITY",
-                error_message=f"SCT authority {sct_auth!r} < required {required_authority!r}",
+                error_code=verification.error_code or "SCT_INVALID",
+                error_message=verification.error_message or "arifOS rejected SCT",
             )
 
         logger.info(
-            "SCT_VALID: actor=%s auth=%s sid=%s verified=%s",
-            sct_actor,
-            sct_auth,
-            sct_sid,
-            actor_verified,
+            "SCT_VALID: actor=%s auth=%s",
+            verification.actor,
+            verification.authority,
         )
-
         return ValidationResult(
             ok=True,
-            session=payload,
-            actor=sct_actor or actor_id,
-            authority=sct_auth,
+            session=verification.claims,
+            actor=verification.actor or actor_id,
+            authority=verification.authority or required_authority,
         )
 
     # ── PATH 2: SEAL-* session ID — must be verified against arifOS kernel ──
