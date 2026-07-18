@@ -159,13 +159,19 @@ def _cached_kernel_verify(
                 standing_actor = parsed.get("standing", {}).get("actor", {})
                 actor_verified = standing_actor.get("verified") is True
                 resp_sid = parsed.get("session_id") or parsed.get("standing", {}).get("session_id")
-                has_token = bool(parsed.get("session_token"))
+                # C3 REDTEAM FIX 2026-07-18 (ratified): definitive rejection
+                # Also check result.valid — kernel may issue SCT tokens for
+                # invalid sessions; token presence alone is NOT proof of validity.
+                result_valid = parsed.get("result", {}).get("valid", False)
+                result_session_valid = parsed.get("result", {}).get("session_valid", False)
 
-                # Definitive rejection
                 if status == "ERROR" or effective_verdict == "VOID":
                     value = None
-                # Authoritative: actor verified OR session token present OR sid matches AND actor verified
-                elif actor_verified or has_token or (resp_sid == session_id and actor_verified):
+                elif not result_valid and not result_session_valid:
+                    # Kernel says session is invalid — token issuance is cosmetic
+                    value = None
+                elif actor_verified or (resp_sid == session_id and actor_verified):
+                    # Authoritative: actor verified via kernel binding
                     value = parsed
                 else:
                     # C3 REDTEAM: round-trip equality without verified actor is NOT valid.
@@ -291,18 +297,13 @@ def validate_session(
             return ValidationResult(
                 ok=False,
                 error_code="TRANSPORT_DEGRADED",
-                error_message=(
-                    "arifOS unreachable — cannot verify session. "
-                    "C3 REDTEAM: format-only acceptance is forbidden."
-                ),
+                error_message=("arifOS unreachable — cannot verify session. C3 REDTEAM: format-only acceptance is forbidden."),
             )
         if verified is None:
             return ValidationResult(
                 ok=False,
                 error_code="SESSION_INVALID",
-                error_message=(
-                    f"arifOS rejected session_id (unknown, expired, or forged): {session_id}"
-                ),
+                error_message=(f"arifOS rejected session_id (unknown, expired, or forged): {session_id}"),
             )
 
         # Kernel-verified: extract actor from response
@@ -314,25 +315,15 @@ def validate_session(
             or verified.get("actor")
         )
         kernel_authority = (
-            verified.get("standing", {}).get("authority", {}).get("band")
-            or verified.get("authority")
-            or required_authority
+            verified.get("standing", {}).get("authority", {}).get("band") or verified.get("authority") or required_authority
         )
 
         # Actor binding check
-        if (
-            kernel_actor
-            and actor_id
-            and kernel_actor != "anonymous"
-            and actor_id != "anonymous"
-            and kernel_actor != actor_id
-        ):
+        if kernel_actor and actor_id and kernel_actor != "anonymous" and actor_id != "anonymous" and kernel_actor != actor_id:
             return ValidationResult(
                 ok=False,
                 error_code="ACTOR_MISMATCH",
-                error_message=(
-                    f"actor_id {actor_id!r} does not match kernel session actor {kernel_actor!r}"
-                ),
+                error_message=(f"actor_id {actor_id!r} does not match kernel session actor {kernel_actor!r}"),
             )
 
         # Authority check
@@ -340,9 +331,7 @@ def validate_session(
             return ValidationResult(
                 ok=False,
                 error_code="INSUFFICIENT_AUTHORITY",
-                error_message=(
-                    f"session authority {kernel_authority!r} < required {required_authority!r}"
-                ),
+                error_message=(f"session authority {kernel_authority!r} < required {required_authority!r}"),
             )
 
         logger.info(

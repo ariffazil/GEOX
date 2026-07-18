@@ -60,3 +60,32 @@ def test_valid_claimed_session_preserves_actor_binding(monkeypatch):
 
     assert verdict == "SEAL"
     assert error is None
+
+
+def test_signed_token_is_replaced_with_canonical_session(monkeypatch):
+    monkeypatch.setattr(
+        organ_governance,
+        "validate_session",
+        lambda *_args, **_kwargs: ValidationResult(
+            ok=True,
+            actor="ARIF",
+            authority="OBSERVE_ONLY",
+            session={"sid": "SEAL-canonical-session-0001", "actor": "ARIF"},
+        ),
+    )
+    arguments = {
+        "session_id": "sct_v1.payload.signature",
+        "actor_id": "ARIF",
+    }
+
+    verdict, error = organ_governance._check_identity_propagation(
+        "geox_evidence",
+        session_id=arguments["session_id"],
+        actor_id=arguments["actor_id"],
+        arguments=arguments,
+    )
+
+    assert verdict == "SEAL"
+    assert error is None
+    assert arguments["session_id"] == "SEAL-canonical-session-0001"
+    assert not arguments["session_id"].startswith("sct_v1.")
