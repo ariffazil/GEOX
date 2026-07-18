@@ -548,6 +548,12 @@ def get_standard_envelope(
 
     # Session propagation (Fix #2 - Arif 2026-05-16)
     # Use explicitly passed session_id, fallback to audit_receipt, fallback to auto-generated
+    from geox_core.identity_context import GEOX_IDENTITY_CONTEXT
+
+    governed_identity = GEOX_IDENTITY_CONTEXT.get() or {}
+    session_id = session_id or governed_identity.get("session_id")
+    actor_id = actor_id or governed_identity.get("actor_id")
+    trace_id = trace_id or governed_identity.get("trace_id")
     _session_id = (
         session_id
         or (audit_receipt.get("session_id") if audit_receipt else None)

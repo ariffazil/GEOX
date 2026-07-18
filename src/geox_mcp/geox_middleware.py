@@ -604,6 +604,15 @@ class GeoxGovernanceMiddleware(Middleware):
         #
         # MCP App View binding is now handled via `app=AppConfig(...)` on
         # @mcp.tool() in register_tools_on_server() — see witness.py.
+        from geox_core.identity_context import GEOX_IDENTITY_CONTEXT
+
+        identity_token = GEOX_IDENTITY_CONTEXT.set(
+            {
+                "session_id": arguments.get("session_id"),
+                "actor_id": arguments.get("actor_id"),
+                "trace_id": arguments.get("trace_id"),
+            }
+        )
         try:
             return await call_next(context)
         except ToolError:
@@ -632,6 +641,8 @@ class GeoxGovernanceMiddleware(Middleware):
                     )
                 )
             )
+        finally:
+            GEOX_IDENTITY_CONTEXT.reset(identity_token)
 
     # ── HELPERS ────────────────────────────────────────────────────────────────
 

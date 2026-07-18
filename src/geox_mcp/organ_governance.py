@@ -659,6 +659,15 @@ def _check_identity_propagation(
         )
         return "HOLD", error_response
 
+    # Replace capability material with canonical claims before tool execution.
+    # A signed SCT is proof, not a receipt identifier; never echo the raw token.
+    claims = validation.session if isinstance(validation.session, dict) else {}
+    canonical_session_id = claims.get("sid") or claims.get("session_id") or session_id
+    canonical_actor_id = validation.actor or actor_id
+    if isinstance(arguments, dict):
+        arguments["session_id"] = canonical_session_id
+        arguments["actor_id"] = canonical_actor_id
+
     return "SEAL", None
 
 
