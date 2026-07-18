@@ -27,6 +27,8 @@ from typing import Any
 import httpx
 from starlette.responses import JSONResponse
 
+from geox_mcp.session_enforcement import validate_session
+
 logger = logging.getLogger("geox.governance")
 
 
@@ -381,7 +383,7 @@ LANE_DIRECT_CALL_FORBIDDEN_MESSAGE: dict[str, str] = {
         "JUDGMENT_LANE_DIRECT_CALL: Tool '{tool}' is classified as JUDGMENT lane. "
         "Judgment lane tools MUST be called through arif_kernel_route(mode=bridge, organ=geox). "
         "Direct agent-to-GEOX calls for judgment tools are forbidden per Federation Contract §7. "
-        "Route through arifOS: arif_session_init → arif_lease_issue → arif_kernel_route(mode=bridge, organ=geox, tool_name='{tool}')"
+        "Route through arifOS: arif_init → arif_lease_issue → arif_kernel_route(mode=bridge, organ=geox, tool_name='{tool}')"
     ),
 }
 
@@ -505,7 +507,7 @@ def _check_lane_enforcement(
                             "tool": tool_name,
                             "lane": lane,
                             "reason": reason,
-                            "fix": "Call arif_session_init first to establish governed session.",
+                            "fix": "Call arif_init(mode=init) first to establish governed session.",
                         },
                     },
                 },
@@ -566,11 +568,18 @@ def _check_identity_propagation(
 
     lane = _get_effective_lane(tool_name, arguments)
 
-    # Discovery and Evidence lanes: no identity required
-    if lane in ("discovery", "evidence"):
+    # Discovery and Evidence lanes may be genuinely anonymous. Once a caller
+    # supplies either identity field, however, that is an identity claim and
+    # must be verified. Never let forged credentials silently downgrade to
+    # anonymous access while full content is returned.
+    identity_claimed = bool(
+        (session_id and session_id not in ("anonymous", "null", "None"))
+        or (actor_id and actor_id not in ("anonymous", "null", "None", "geox-governed"))
+    )
+    if lane in ("discovery", "evidence") and not identity_claimed:
         return "SEAL", None
 
-    # Reasoning/Judgment lanes: identity check (supplementary to lane enforcement)
+    # Governed lanes and claimed identities: require a complete, bound pair.
     # actor_id must be present and not null/anonymous
     if not actor_id or actor_id in ("anonymous", "null", "None", ""):
         reason = f"actor_id is '{actor_id}' — {lane} lane tools require actor identity"
@@ -588,7 +597,7 @@ def _check_identity_propagation(
                         "tool": tool_name,
                         "lane": lane,
                         "reason": reason,
-                        "fix": "Pass actor_id from arifOS session. Call arif_session_init first.",
+                        "fix": "Pass actor_id from arifOS session. Call arif_init(mode=init) first.",
                     },
                 },
             },
@@ -613,7 +622,36 @@ def _check_identity_propagation(
                         "tool": tool_name,
                         "lane": lane,
                         "reason": reason,
-                        "fix": "Call arif_session_init first to establish governed session.",
+                        "fix": "Call arif_init(mode=init) first to establish governed session.",
+                    },
+                },
+            },
+            status_code=423,
+        )
+        return "HOLD", error_response
+
+    # SESSION BINDING VALIDATION — verify session_id against arifOS kernel.
+    # Previous code only checked string presence; any non-empty string passed.
+    # Now we validate the session is actually real and bound.
+    validation = validate_session(session_id, actor_id, required_authority="OBSERVE_ONLY")
+    if not validation.ok:
+        reason = f"Session validation failed: {validation.error_code} — {validation.error_message}"
+        logger.warning(f"GOV: {tool_name} [{lane}] → HOLD_SESSION_INVALID: {reason}")
+        error_response = JSONResponse(
+            {
+                "jsonrpc": "2.0",
+                "id": None,
+                "error": {
+                    "code": -32003,
+                    "message": "SESSION_INVALID",
+                    "data": {
+                        "guard": "SESSION_BINDING",
+                        "verdict": "HOLD",
+                        "tool": tool_name,
+                        "lane": lane,
+                        "error_code": validation.error_code,
+                        "reason": reason,
+                        "fix": "Call arif_init(mode=init) to get a valid session_id, then pass it to GEOX tools.",
                     },
                 },
             },
@@ -779,8 +817,7 @@ async def check_governance(
             if not session_bound and risk_tier in (RiskTier.C2_EXECUTE, RiskTier.IRREVERSIBLE):
                 verdict = "HOLD"
                 reason = (
-                    "arifOS: session not bound. C2/IRREVERSIBLE tools require "
-                    "a governed session (arif_session_init) before execution."
+                    "arifOS: session not bound. C2/IRREVERSIBLE tools require a governed session (arif_init) before execution."
                 )
         else:
             reason = f"Unexpected kernel response: {str(kernel_result)[:100]}"

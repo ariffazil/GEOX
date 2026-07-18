@@ -95,7 +95,7 @@ async def geox_system_registry_status(
     F2 Truth: the registry must not lie about what is callable.
 
     Parameters:
-      session_id — optional SEAL-* canonical session ID (from arif_session_init)
+      session_id — optional SEAL-* canonical session ID (from arif_init)
       actor_id   — optional actor binding; omit for anonymous read-only discovery
     """
     # Hardening: validate free-text inputs at boundary.

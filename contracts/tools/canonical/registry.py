@@ -35,8 +35,11 @@ async def geox_system_registry_status(
     _show_legacy = os.getenv("GEOX_SHOW_LEGACY_ALIASES", "false").lower() in ("1", "true", "yes")
 
     # Resolve session context — anonymous mode is allowed for read-only discovery
-    _session_id = session_id or "geox-anon"
+    # C3 REDTEAM FIX 2026-07-18: Preserve real session_id in receipt; never coerce.
+    # If session_id is provided, log it as-is (caller-attributed). Anonymous mode is
+    # only the explicit "no session passed" case. This makes receipts auditable.
     _anonymous = session_id is None
+    _session_id = session_id if session_id else "geox-anon"
     _actor_id = actor_id or ("anonymous" if _anonymous else "unknown")
 
     # Callability probe — cross-check manifest expose=True against CANONICAL_PUBLIC_TOOLS
