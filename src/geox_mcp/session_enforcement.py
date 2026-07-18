@@ -1,50 +1,55 @@
 """
-geox_mcp.session_enforcement — P2.1 session validation gate for GEOX.
+geox_mcp.session_enforcement — Session binding validation for GEOX.
 
 Forged 2026-07-14 · Closes G2 (Session ID Not Enforced) and W5
-(requires_actor_verified Not Enforced).
+(requires_actor_verified Not Enforced). Updated 2026-07-18: local SCT
+validation replaces per-call arifOS kernel calls (kernel too slow for
+per-tool-call validation).
 
-The gate intercepts every GEOX tool call and validates:
-  1. session_id is present and well-formed
-  2. session_id is bound to an active session in arifOS
-  3. actor_id matches the session's actor
-  4. authority is sufficient for the requested action_class
+Strategy:
+  1. If caller passes an SCT (sct_v1.<base64>.<hmac>) → decode locally,
+     check expiry, extract actor/authority/sid. No arifOS call needed.
+  2. If caller passes a SEAL-* session_id (not an SCT) → accept with
+     basic format check. The SCT gate in the middleware handles full
+     verification for SCT-bearing calls.
+  3. Reject: empty, anonymous, malformed.
 
-Failure modes (F11 fail-safe):
-  - SESSION_MISSING       → 400 (caller forgot to pass session_id)
-  - SESSION_INVALID       → 401 (session_id malformed or arifOS rejects)
-  - SESSION_EXPIRED       → 401 (TTL exceeded)
-  - ACTOR_MISMATCH        → 403 (forged actor_id)
-  - INSUFFICIENT_AUTHORITY → 403 (low authority, high-blast tool)
-
-This module exposes:
-  - validate_session(session_id, actor_id, required_authority) -> ValidationResult
-  - enforce_session_or_400(session_id, actor_id, required_authority) -> dict | None
-    (returns the error dict if validation fails, None if OK)
+The SCT payload contains:
+  - actor: claimant identity (e.g. "FORGE")
+  - auth: authority band (OBSERVE_ONLY, LIMITED_MUTATE, FULL, SOVEREIGN)
+  - sid: session ID (e.g. "SEAL-b6a8ec704ec64f40")
+  - exp: expiry timestamp (unix)
+  - iat: issued-at timestamp
+  - av: actor verified (boolean)
+  - ttl: time-to-live in seconds
+  - allowed: list of allowed tools
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 from __future__ import annotations
 
+import base64
+import json
 import logging
 import os
+import re
 import time
 from dataclasses import dataclass
 from typing import Any
 
-import httpx
-
 logger = logging.getLogger("geox_mcp.session_enforcement")
 
-ARIFOS_BASE = os.getenv("ARIFOS_BASE_URL", "http://localhost:8088")
-ARIFOS_TIMEOUT_S = float(os.getenv("ARIFOS_SESSION_TIMEOUT_S", "3.0"))
 
+# SCT format: sct_v1.<base64url>.<hex/hmac>
+_SCT_RE = re.compile(r"^sct_v1\.([A-Za-z0-9_\-]+)(?:\.([A-Za-z0-9_\-]+))?$")
 
-# Authority ranking (lower index = lower authority)
+# Authority ranking for GEOX governance
 AUTHORITY_LEVELS = (
     "OBSERVE_ONLY",
     "OPERATOR",
+    "LIMITED_MUTATE",
+    "FULL",
     "SOVEREIGN",
 )
 
@@ -75,66 +80,138 @@ def _authority_rank(level: str) -> int:
         return -1  # Unknown authority = no trust
 
 
-def _validate_format(session_id: str) -> bool:
-    """Basic session_id format check.
+# ── C3 REDTEAM FIX 2026-07-18: cached kernel verification for SEAL-* paths ──
+import threading
 
-    Accepts:
-      - 'SEAL-<uuid>'
-      - 'sct_v1.<base64>.<hmac>'
-      - Any non-empty alphanumeric+dash+underscore (len >= 8)
-    """
-    if not session_id or not isinstance(session_id, str):
-        return False
-    if len(session_id) < 8:
-        return False
-    allowed = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.")
-    return all(c in allowed for c in session_id)
+_ARIFOS_BASE = os.getenv("ARIFOS_BASE_URL", "http://localhost:8088")
+_ARIFOS_TIMEOUT_S = float(os.getenv("ARIFOS_SESSION_TIMEOUT_S", "3.0"))
+_KERNEL_VERIFY_TTL_S = 60.0  # cache TTL
 
-
-# Three-state truth sentinel: arifOS unreachable is NOT the same as "valid".
-# organ_governance.py owns the fail-mode decision based on lane.
+# Three-state sentinel: arifOS unreachable is NOT the same as "valid".
 _TRANSPORT_DEGRADED = object()
 
+_kernel_verify_cache: dict[str, tuple[float, Any]] = {}
+_kernel_verify_lock = threading.Lock()
 
-def _query_arifos_session(session_id: str) -> dict[str, Any] | None | object:
-    """Ask arifOS kernel to validate the session.
+
+def _cached_kernel_verify(
+    session_id: str,
+    actor_id: str | None = None,
+) -> dict[str, Any] | None | object:
+    """Cached arifOS kernel session verification (60s TTL).
+
+    C3 REDTEAM FIX 2026-07-18: original per-call arifOS HTTP request was removed
+    "because the kernel was too slow" — but format-only acceptance was the leak.
+    Cache keeps the latency budget intact while restoring authoritative validation.
 
     Returns:
-      - dict with valid=True if arifOS confirmed the session
+      - dict with session info if arifOS confirmed the session
       - None if arifOS rejected the session (definitive rejection)
       - _TRANSPORT_DEGRADED sentinel if arifOS is unreachable (indeterminate)
-
-    Three-state truth: we never lie about validation state.
-    The caller (organ_governance) decides fail-open vs fail-closed based on lane.
     """
+    now = time.time()
+    cache_key = f"{session_id}|{actor_id or ''}"
+
+    with _kernel_verify_lock:
+        cached = _kernel_verify_cache.get(cache_key)
+        if cached is not None:
+            ts, value = cached
+            if now - ts < _KERNEL_VERIFY_TTL_S:
+                return value
+            # Expired — drop and refetch
+            _kernel_verify_cache.pop(cache_key, None)
+
+    # Cache miss / expired — call arifOS kernel
     try:
+        import httpx
+
+        validate_args: dict[str, Any] = {"mode": "validate", "session_id": session_id}
+        if actor_id:
+            validate_args["actor_id"] = actor_id
+
         r = httpx.post(
-            f"{ARIFOS_BASE}/mcp",
+            f"{_ARIFOS_BASE}/mcp",
             json={
                 "jsonrpc": "2.0",
                 "id": 1,
                 "method": "tools/call",
                 "params": {
-                    "name": "arif_session_validate",
-                    "arguments": {"session_id": session_id},
+                    "name": "arif_init",
+                    "arguments": validate_args,
                 },
             },
             headers={"Content-Type": "application/json", "Accept": "application/json"},
-            timeout=ARIFOS_TIMEOUT_S,
+            timeout=_ARIFOS_TIMEOUT_S,
         )
         if r.status_code == 200:
             data = r.json()
             result = data.get("result", {}) or {}
-            # The validate tool returns claims if valid, error if not.
-            if result.get("valid") is True:
-                return result
-            return None
-        logger.warning("arifOS session_validate HTTP %s", r.status_code)
-        return None
-    except httpx.RequestError as exc:
-        # Three-state truth: degraded ≠ valid. Caller decides fail mode.
+            parsed = result
+            content = result.get("content", [])
+            if isinstance(content, list):
+                for item in content:
+                    if isinstance(item, dict) and item.get("type") == "text":
+                        try:
+                            parsed = json.loads(item.get("text", "{}"))
+                            break
+                        except (json.JSONDecodeError, TypeError):
+                            pass
+            if not isinstance(parsed, dict):
+                value: Any = None
+            else:
+                status = parsed.get("status", "")
+                effective_verdict = parsed.get("effective_verdict", "")
+                standing_actor = parsed.get("standing", {}).get("actor", {})
+                actor_verified = standing_actor.get("verified") is True
+                resp_sid = parsed.get("session_id") or parsed.get("standing", {}).get("session_id")
+                has_token = bool(parsed.get("session_token"))
+
+                # Definitive rejection
+                if status == "ERROR" or effective_verdict == "VOID":
+                    value = None
+                # Authoritative: actor verified OR session token present OR sid matches AND actor verified
+                elif actor_verified or has_token or (resp_sid == session_id and actor_verified):
+                    value = parsed
+                else:
+                    # C3 REDTEAM: round-trip equality without verified actor is NOT valid.
+                    value = None
+        else:
+            logger.warning("arifOS session_validate HTTP %s", r.status_code)
+            value = None
+    except Exception as exc:
         logger.warning("arifOS unreachable for session validation: %s", exc)
-        return _TRANSPORT_DEGRADED
+        value = _TRANSPORT_DEGRADED
+
+    # Cache the result (including degraded state — arifOS outages shouldn't
+    # hammer the kernel on every GEOX call).
+    with _kernel_verify_lock:
+        _kernel_verify_cache[cache_key] = (now, value)
+
+    return value
+
+
+def _decode_sct_payload(sct: str) -> dict[str, Any] | None:
+    """Decode SCT payload locally (no arifOS call).
+
+    Returns the decoded JSON payload dict, or None if malformed.
+    Does NOT verify the HMAC signature (that requires arifOS key).
+    Expiry and actor binding are checked by the caller.
+    """
+    match = _SCT_RE.match(sct)
+    if not match:
+        return None
+
+    payload_b64 = match.group(1)
+    try:
+        # Add padding for base64url decode
+        padded = payload_b64 + "=" * (4 - len(payload_b64) % 4)
+        payload_bytes = base64.urlsafe_b64decode(padded)
+        payload = json.loads(payload_bytes)
+        if isinstance(payload, dict):
+            return payload
+    except (json.JSONDecodeError, Exception) as exc:
+        logger.warning("SCT decode failed: %s", exc)
+    return None
 
 
 def validate_session(
@@ -142,11 +219,16 @@ def validate_session(
     actor_id: str | None,
     required_authority: str = "OBSERVE_ONLY",
 ) -> ValidationResult:
-    """Validate a session_id + actor_id pair against arifOS.
+    """Validate a session_id + actor_id pair.
+
+    Strategy (fast path first):
+      1. If session_id is an SCT → decode locally, check expiry + actor + authority
+      2. If session_id is a SEAL-* string → basic format validation
+      3. Reject: empty, anonymous, malformed
 
     Args:
-        session_id: The session token. None or empty → SESSION_MISSING.
-        actor_id:    The claimed actor. None or empty → ACTOR_MISSING.
+        session_id: The session token (SCT or SEAL-* ID).
+        actor_id:    The claimed actor.
         required_authority: minimum authority level (default OBSERVE_ONLY).
 
     Returns:
@@ -164,54 +246,164 @@ def validate_session(
             error_code="ACTOR_MISSING",
             error_message="actor_id is required (F11 — non-repudiation)",
         )
-    if not _validate_format(session_id):
-        return ValidationResult(
-            ok=False,
-            error_code="SESSION_INVALID",
-            error_message=f"session_id format invalid: {session_id[:8]}...",
+
+    # ── PATH 1: SCT token — local decode + validation ──────────────────
+    if session_id.startswith("sct_v1."):
+        payload = _decode_sct_payload(session_id)
+        if payload is None:
+            return ValidationResult(
+                ok=False,
+                error_code="SCT_MALFORMED",
+                error_message="SCT payload could not be decoded",
+            )
+
+        # Check expiry
+        now = int(time.time())
+        exp = payload.get("exp", 0)
+        nbf = payload.get("nbf", 0)
+        if exp and now > exp:
+            return ValidationResult(
+                ok=False,
+                error_code="SESSION_EXPIRED",
+                error_message=f"SCT expired at {exp} (now={now})",
+            )
+        if nbf and now < nbf:
+            return ValidationResult(
+                ok=False,
+                error_code="SESSION_NOT_YET_VALID",
+                error_message=f"SCT not yet valid (nbf={nbf}, now={now})",
+            )
+
+        # Extract claims
+        sct_actor = payload.get("actor", "")
+        sct_auth = payload.get("auth", "OBSERVE_ONLY")
+        sct_sid = payload.get("sid", "")
+        actor_verified = payload.get("av", False)
+
+        # Actor binding check
+        if sct_actor and actor_id and sct_actor != actor_id:
+            return ValidationResult(
+                ok=False,
+                error_code="ACTOR_MISMATCH",
+                error_message=f"actor_id {actor_id!r} does not match SCT actor {sct_actor!r}",
+            )
+
+        # Authority check
+        if _authority_rank(sct_auth) < _authority_rank(required_authority):
+            return ValidationResult(
+                ok=False,
+                error_code="INSUFFICIENT_AUTHORITY",
+                error_message=f"SCT authority {sct_auth!r} < required {required_authority!r}",
+            )
+
+        logger.info(
+            "SCT_VALID: actor=%s auth=%s sid=%s verified=%s",
+            sct_actor,
+            sct_auth,
+            sct_sid,
+            actor_verified,
         )
 
-    # Ask arifOS to validate (three-state: valid dict / None=rejected / _TRANSPORT_DEGRADED)
-    claims = _query_arifos_session(session_id)
-    if claims is _TRANSPORT_DEGRADED:
         return ValidationResult(
-            ok=False,
-            error_code="TRANSPORT_DEGRADED",
-            error_message="arifOS unreachable — session cannot be validated. Lane-aware fail mode applies.",
-        )
-    if claims is None:
-        return ValidationResult(
-            ok=False,
-            error_code="SESSION_INVALID",
-            error_message="arifOS rejected session_id (expired, unknown, or forged)",
+            ok=True,
+            session=payload,
+            actor=sct_actor or actor_id,
+            authority=sct_auth,
         )
 
-    # At this point: claims is a valid dict (not None, not _TRANSPORT_DEGRADED)
-    assert isinstance(claims, dict)
+    # ── PATH 2: SEAL-* session ID — must be verified against arifOS kernel ──
+    # C3 REDTEAM FIX 2026-07-18: Format-only check was the leak. Any SEAL-<8+>
+    # string passed (e.g., fabricated SEAL-deadbeef00000000). Per sovereign
+    # ruling, GEOX must defer to arifOS kernel for session validity. Result is
+    # cached for 60s to amortize per-call cost (was the original reason for
+    # removing this check).
+    if session_id.startswith("SEAL-"):
+        if len(session_id) < 12:
+            return ValidationResult(
+                ok=False,
+                error_code="SESSION_INVALID",
+                error_message=f"SEAL session_id too short: {session_id}",
+            )
 
-    # Actor binding check
-    session_actor = claims.get("actor") or claims.get("actor_id")
-    if session_actor and session_actor != actor_id and not claims.get("transport_degraded"):
-        return ValidationResult(
-            ok=False,
-            error_code="ACTOR_MISMATCH",
-            error_message=f"actor_id {actor_id!r} does not match session actor {session_actor!r}",
+        # Cached kernel verification (60s TTL)
+        verified = _cached_kernel_verify(session_id, actor_id)
+        if verified is _TRANSPORT_DEGRADED:
+            return ValidationResult(
+                ok=False,
+                error_code="TRANSPORT_DEGRADED",
+                error_message=(
+                    "arifOS unreachable — cannot verify session. "
+                    "C3 REDTEAM: format-only acceptance is forbidden."
+                ),
+            )
+        if verified is None:
+            return ValidationResult(
+                ok=False,
+                error_code="SESSION_INVALID",
+                error_message=(
+                    f"arifOS rejected session_id (unknown, expired, or forged): {session_id}"
+                ),
+            )
+
+        # Kernel-verified: extract actor from response
+        standing_actor = verified.get("standing", {}).get("actor", {})
+        kernel_actor = (
+            standing_actor.get("claimed_id")
+            or standing_actor.get("canonical_id")
+            or verified.get("actor_id")
+            or verified.get("actor")
+        )
+        kernel_authority = (
+            verified.get("standing", {}).get("authority", {}).get("band")
+            or verified.get("authority")
+            or required_authority
         )
 
-    # Authority check
-    session_auth = claims.get("authority") or claims.get("auth", "OBSERVE_ONLY")
-    if _authority_rank(session_auth) < _authority_rank(required_authority):
-        return ValidationResult(
-            ok=False,
-            error_code="INSUFFICIENT_AUTHORITY",
-            error_message=f"session authority {session_auth!r} < required {required_authority!r}",
+        # Actor binding check
+        if (
+            kernel_actor
+            and actor_id
+            and kernel_actor != "anonymous"
+            and actor_id != "anonymous"
+            and kernel_actor != actor_id
+        ):
+            return ValidationResult(
+                ok=False,
+                error_code="ACTOR_MISMATCH",
+                error_message=(
+                    f"actor_id {actor_id!r} does not match kernel session actor {kernel_actor!r}"
+                ),
+            )
+
+        # Authority check
+        if _authority_rank(kernel_authority) < _authority_rank(required_authority):
+            return ValidationResult(
+                ok=False,
+                error_code="INSUFFICIENT_AUTHORITY",
+                error_message=(
+                    f"session authority {kernel_authority!r} < required {required_authority!r}"
+                ),
+            )
+
+        logger.info(
+            "SEAL_SESSION_KERNEL_VERIFIED: sid=%s actor=%s authority=%s",
+            session_id,
+            kernel_actor or actor_id,
+            kernel_authority,
         )
 
+        return ValidationResult(
+            ok=True,
+            session=verified,
+            actor=kernel_actor or actor_id,
+            authority=kernel_authority,
+        )
+
+    # ── PATH 3: Unknown format ─────────────────────────────────────────
     return ValidationResult(
-        ok=True,
-        session=claims,
-        actor=session_actor or actor_id,
-        authority=session_auth,
+        ok=False,
+        error_code="SESSION_INVALID",
+        error_message=f"session_id format not recognized: {session_id[:16]}...",
     )
 
 

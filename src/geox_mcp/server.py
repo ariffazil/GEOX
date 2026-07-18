@@ -1247,7 +1247,7 @@ async def _judgment_preflight(
             "session_required": True,
             "arifos_route_required": True,
             "governance_sequence": [
-                "1. arif_session_init(mode='init') — establish governed session",
+                "1. arif_init(mode='init') — establish governed session",
                 "2. arif_lease_issue(tool='geox_subsurface_model') — get lease_id",
                 "3. arif_kernel_route(mode='bridge', organ='geox', tool_name='geox_subsurface_model', lease_id=<lease>, session_id=<session>)",
             ],
@@ -1264,7 +1264,7 @@ async def _judgment_preflight(
             "session_required": True,
             "arifos_route_required": True,
             "governance_sequence": [
-                "1. arif_session_init(mode='init') — establish governed session",
+                "1. arif_init(mode='init') — establish governed session",
                 "2. arif_lease_issue(tool='geox_prospect') — get lease_id",
                 "3. arif_kernel_route(mode='bridge', organ='geox', tool_name='geox_prospect', lease_id=<lease>, session_id=<session>)",
             ],
