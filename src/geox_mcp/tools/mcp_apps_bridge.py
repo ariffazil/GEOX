@@ -255,6 +255,7 @@ def list_apps() -> list[dict[str, Any]]:
             "title": app["title"],
             "description": app["description"],
             "external_url": app["external_url"],
+            "resource_type": app.get("resource_type", "rawHtml"),
             "mime_type": app["mime_type"],
         }
         # Include outputSchema if defined for this app's associated tool
