@@ -60,27 +60,27 @@ jobs:
 
       - name: Lint (Ruff)
         id: lint
-        run: ruff check . --output-format=github || true
+        run: ruff check . --output-format=github
 
       - name: Type check (MyPy)
         id: mypy
-        run: mypy src/ --ignore-missing-imports || true
+        run: mypy src/ --ignore-missing-imports
 
       - name: Test (Pytest)
         id: test
         run: |
+          set -o pipefail
           python -m pytest tests/ -q --tb=short 2>&1 | tee test-output.txt
-          echo "passed=$(grep -c 'passed' test-output.txt || echo 0)" >> $GITHUB_OUTPUT
+          PIPESTATUS_0=${PIPESTATUS[0]}
+          echo "exit_code=$PIPESTATUS_0" >> $GITHUB_OUTPUT
+          exit $PIPESTATUS_0
 
       - name: Build check
         id: build
         run: |
-          python -c "import geox_mcp; print('geox_mcp import OK')" || true
+          python -c "import geox_mcp; print('geox_mcp import OK')"
 
-      # ── BLOCKING GATE: aggregate diagnostic results ──────────────
-      # Diagnostic steps above collect evidence (never block).
-      # This step gate-keeps: any critical failure → job fails.
-      # BIJAKSANA reads this lane's pass/fail, not individual steps.
+      # ── BLOCKING GATE: any failure = job fails ──────────────
       - name: Diagnostic verdict
         if: always()
         run: |
@@ -96,9 +96,10 @@ jobs:
             fi
           done
           if [ $FAILURES -gt 0 ]; then
-            echo "::warning::Lane 1 advisory: $FAILURES diagnostic issue(s) — report only, not blocking"
+            echo "❌ Lane 1: $FAILURES diagnostic failure(s) — BLOCKING"
+            exit 1
           fi
-          echo "Lane 1 diagnostics collected"
+          echo "✅ Lane 1 diagnostics passed"
 
   # ─────────────────────────────────────────────────────────────
   # LANE 2: AGENTIC CI — BIJAKSANA Physics Gate

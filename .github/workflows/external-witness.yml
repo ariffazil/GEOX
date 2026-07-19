@@ -1,7 +1,7 @@
 name: External Witness Attestation (Gödel Lock)
 
-> **FORGED 2026-07-15.** Evidence never seals its own conclusions.
-> GEOX refuses to SEAL on geoscience claims without external witness.
+# FORGED 2026-07-15. Evidence never seals its own conclusions.
+# GEOX refuses to SEAL on geoscience claims without external witness.
 
 on:
   pull_request:
