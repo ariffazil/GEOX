@@ -27,7 +27,8 @@ Forged 2026-06-27 20:25 UTC.
 from __future__ import annotations
 
 import os
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from .base import BackendCapabilities, ForecastResult, TimeSeriesBackend
 

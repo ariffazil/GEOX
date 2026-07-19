@@ -11,26 +11,24 @@ DITEMPA BUKAN DIBEI — the cell is forged, not given; the witness testifies, no
 
 from __future__ import annotations
 
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from geox_core.physics.joint_inversion import (
-    InversionRequest,
-    ModalityObservation,
-    joint_inversion,
+from geox_core.engines.geophysics.biostrat_constraint import (
+    evaluate_biostrat_constraint,
 )
 from geox_core.engines.geophysics.mt_forward import (
     MTForwardRequest,
     MTLayer,
     mt_forward,
 )
-from geox_core.engines.geophysics.biostrat_constraint import (
-    BiostratZone,
-    DepositionalEnvironment,
-    evaluate_biostrat_constraint,
+from geox_core.physics.joint_inversion import (
+    InversionRequest,
+    ModalityObservation,
+    joint_inversion,
 )
-from geox_core.physics.state import SANDSTONE, Physics13State
+from geox_core.physics.state import Physics13State
 
 
 # ───────────────────────────── JOINT INVERSION ─────────────────────────────────────
@@ -47,7 +45,7 @@ class ModalityObsSchema(BaseModel):
 
 class JointInversionRequest(BaseModel):
     observations: list[ModalityObsSchema] = Field(default_factory=list)
-    prior: Optional[dict] = Field(default=None, description="Optional Physics13State as dict")
+    prior: dict | None = Field(default=None, description="Optional Physics13State as dict")
     max_iter: int = Field(default=50, ge=1, le=500)
     tolerance: float = Field(default=1e-3, gt=0)
 
@@ -55,16 +53,16 @@ class JointInversionRequest(BaseModel):
 class JointInversionResponse(BaseModel):
     ok: bool
     tool: str = "geox_joint_inversion"
-    state: Optional[dict] = None
-    grade: Optional[str] = None
-    residual_rms: Optional[float] = None
-    iterations: Optional[int] = None
-    modality_count: Optional[int] = None
-    per_modality: Optional[dict] = None
-    observation_hash: Optional[str] = None
-    epistemic_provenance: Optional[dict] = None
-    godel_wall: Optional[dict] = None
-    error: Optional[str] = None
+    state: dict | None = None
+    grade: str | None = None
+    residual_rms: float | None = None
+    iterations: int | None = None
+    modality_count: int | None = None
+    per_modality: dict | None = None
+    observation_hash: str | None = None
+    epistemic_provenance: dict | None = None
+    godel_wall: dict | None = None
+    error: str | None = None
 
 
 async def geox_joint_inversion(request: JointInversionRequest) -> JointInversionResponse:
@@ -124,8 +122,8 @@ class MTForwardRequestSchema(BaseModel):
 class MTForwardResponse(BaseModel):
     ok: bool
     tool: str = "geox_mt_forward"
-    result: Optional[dict] = None
-    error: Optional[str] = None
+    result: dict | None = None
+    error: str | None = None
 
 
 async def geox_mt_forward(request: MTForwardRequestSchema) -> MTForwardResponse:
@@ -150,8 +148,8 @@ class BiostratRequest(BaseModel):
 class BiostratResponse(BaseModel):
     ok: bool
     tool: str = "geox_biostrat_constraint"
-    result: Optional[dict] = None
-    error: Optional[str] = None
+    result: dict | None = None
+    error: str | None = None
 
 
 async def geox_biostrat_constraint(request: BiostratRequest) -> BiostratResponse:

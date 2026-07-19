@@ -684,8 +684,7 @@ async def geox_data_qc_bundle(
                 _saf_chi2 = _chi2_summary
         except Exception as _saf_chi2_exc:
             _saf_chi2 = {"embed_skipped": str(_saf_chi2_exc)[:120]}
-        except Exception as _saf_aov_exc:
-            _saf_anova = {"embed_skipped": str(_saf_aov_exc)[:120]}
+            _saf_anova = {"embed_skipped": str(_saf_chi2_exc)[:120]}
 
         # Red Team Fix: Include curve_warnings and depth_qc in failure logic
         has_range_issues = bool(curve_warnings)

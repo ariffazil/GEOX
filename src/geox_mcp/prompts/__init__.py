@@ -37,9 +37,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from mcp.types import EmbeddedResource, TextResourceContents
 from fastmcp.prompts.base import Message
-
+from mcp.types import EmbeddedResource, TextResourceContents
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Helpers — resource embedding for spec-aligned prompts

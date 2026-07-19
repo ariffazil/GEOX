@@ -17,12 +17,10 @@ Strict Boundary Enforced:
 DITEMPA BUKAN DIBERI.
 """
 
-import numpy as np
-import os
-import json
 import hashlib
-from PIL import Image, ImageEnhance, ImageDraw, ImageFilter
+import os
 
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
 # ═══════════════════════════════════════════════════════════════════════════
 # 1. VISUAL UNDERSTAND (OBS_IMAGE)

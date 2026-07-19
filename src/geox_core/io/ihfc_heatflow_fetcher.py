@@ -21,10 +21,10 @@ from __future__ import annotations
 
 import logging
 import os
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -45,8 +45,8 @@ class HeatFlowMeasurement:
     latitude: float = 0.0
     longitude: float = 0.0
     heat_flow_mw_m2: float = 0.0
-    depth_m: Optional[float] = None
-    year: Optional[int] = None
+    depth_m: float | None = None
+    year: int | None = None
     reference: str = ""
     type: str = "terrestrial"  # terrestrial | marine
 
@@ -64,15 +64,15 @@ class HeatFlowResult(BaseModel):
 
 
 class HeatFlowQuery(BaseModel):
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
     limit: int = Field(100, ge=1, le=10000)
 
 
 class IHFCHeatFlowFetcher:
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get(
             "GEOX_HEATFLOW_CACHE_DIR", "/root/.cache/geox/heatflow"
         ))
@@ -80,7 +80,7 @@ class IHFCHeatFlowFetcher:
         self._offline = os.environ.get("GEOX_HEATFLOW_OFFLINE", "1") != "0"
 
     def query(self, params: HeatFlowQuery) -> HeatFlowResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return self._offline_stub(params.model_dump(exclude_none=True), now)
         return HeatFlowResult(ok=False, mode="live", note="Live IHFC API requires dataset download. See heatflow.world.", fetched_at=now)

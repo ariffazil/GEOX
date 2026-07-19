@@ -97,7 +97,6 @@ class GPlatelyAdapter:
             Reconstructed lon/lat + plate velocity magnitude.
         """
         import gplately as gp
-        from platec import PlateCalculator
 
         # Load rotation model
         if rotation_model_path:

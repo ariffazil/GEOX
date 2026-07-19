@@ -27,19 +27,18 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
-
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ENUMS
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class TruthClass(str, Enum):
+class TruthClass(StrEnum):
     """How grounded is this claim in physical reality?"""
 
     FACT = "FACT"  # Directly observed, sensor-level
@@ -49,7 +48,7 @@ class TruthClass(str, Enum):
     SCENARIO = "SCENARIO"  # What-if model, not a truth claim
 
 
-class ChallengeType(str, Enum):
+class ChallengeType(StrEnum):
     """What kind of rival interpretation is this?"""
 
     GEOPHYSICAL_ARTIFACT = "geophysical_artifact"  # Velocity, migration, acquisition artifact
@@ -64,7 +63,7 @@ class ChallengeType(str, Enum):
     ANALOGUE_MISMATCH = "analogue_mismatch"  # Wrong analogue selected
 
 
-class ReviewState(str, Enum):
+class ReviewState(StrEnum):
     """Where is this argument in the review pipeline?"""
 
     DRAFT = "draft"  # Initial argument, not reviewed

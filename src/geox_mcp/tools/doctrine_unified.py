@@ -16,6 +16,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 from __future__ import annotations
+
 from typing import Any, Literal
 
 
@@ -71,7 +72,8 @@ async def geox_doctrine(
     """
     kwargs = locals().copy()
     if mode == "assumption_register":
-        from geox_mcp.tools.doctrine import geox_doctrine_assumption_register as _impl, AssumptionRegisterRequest
+        from geox_mcp.tools.doctrine import AssumptionRegisterRequest
+        from geox_mcp.tools.doctrine import geox_doctrine_assumption_register as _impl
 
         req = AssumptionRegisterRequest(
             introduced_by=kwargs.get("introduced_by", ""),
@@ -173,7 +175,8 @@ async def geox_doctrine(
         }
 
     # Default: anti_beautiful_one
-    from geox_mcp.tools.doctrine import geox_doctrine_anti_beautiful_one as _impl, BeautyAuditRequest
+    from geox_mcp.tools.doctrine import BeautyAuditRequest
+    from geox_mcp.tools.doctrine import geox_doctrine_anti_beautiful_one as _impl
 
     req = BeautyAuditRequest(
         text=kwargs.get("text", ""),

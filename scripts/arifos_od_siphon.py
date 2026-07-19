@@ -150,7 +150,7 @@ class ODSiphon:
         if self.error: return {"error": self.error}
         try:
             # odseis.Cube usage
-            seis = odseis.Cube(self.survey, dataset_name)
+            odseis.Cube(self.survey, dataset_name)
             return {
                 "kind": "texture",
                 "texture_kind": "amplitude",

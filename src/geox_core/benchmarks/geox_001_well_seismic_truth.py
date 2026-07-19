@@ -29,7 +29,6 @@ import json
 import math
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
-from enum import Enum
 from pathlib import Path
 from typing import Any, Literal
 
@@ -592,7 +591,7 @@ def step_synthetic_tie(bundle: dict[str, Any]) -> TieResult:
 
     corr, residual_rms, lag_samples = cross_correlate(synth, seis)
     # cross_correlate assumes 1 ms/sample; rescale to actual dt
-    mistie_from_corr = float(lag_samples) * (dt_ms if abs(dt_ms - 1.0) > 1e-6 else 1.0)
+    float(lag_samples) * (dt_ms if abs(dt_ms - 1.0) > 1e-6 else 1.0)
 
     synth_peak = float(bundle["synthetic"]["peak_twt_ms"])
     mapped = float(bundle["horizon"]["mapped_twt_ms"])
@@ -1304,7 +1303,6 @@ def _load_bundle_from_dir(path: Path) -> dict[str, Any]:
         return generate_scenario_bundle(scenario)
 
     # Manual assembly fallback
-    import csv
 
     # If LAS exists, regenerate default hold scenario — full re-parse of LAS is
     # available via geox_1d but fixtures are scenario-driven for reproducibility.

@@ -16,25 +16,17 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field
 
-from geox.egs.models.claims import ClaimEnvelope, ClaimStatus
 from geox.egs.models.entities import (
-    Basin,
     EarthGraph,
     Fault,
-    Horizon,
-    Play,
     StratUnit,
-    Survey,
-    Volume,
-    Well,
 )
 from geox.egs.models.provenance import (
-    EvidenceRef,
     ProvenanceAction,
     ProvenanceAgentKind,
     ProvenanceRecord,
@@ -144,7 +136,7 @@ class UpdateHorizonGeom(BaseModel):
         try:
             horizon = graph.horizons[self.horizon_id]
             horizon.version += 1
-            horizon.updated_at = datetime.now(timezone.utc)
+            horizon.updated_at = datetime.now(UTC)
 
             # Surface data would be deserialized to SurfaceMesh3D here
             if self.confidence is not None:
@@ -254,7 +246,7 @@ class UpdateReservoirProperties(BaseModel):
         try:
             unit = graph.strat_units[self.strat_unit_id]
             unit.version += 1
-            unit.updated_at = datetime.now(timezone.utc)
+            unit.updated_at = datetime.now(UTC)
 
             updates = []
             if self.porosity:
@@ -314,7 +306,7 @@ class UpdateChargeModel(BaseModel):
         try:
             play = graph.plays[self.play_id]
             play.version += 1
-            play.updated_at = datetime.now(timezone.utc)
+            play.updated_at = datetime.now(UTC)
 
             # Update source units
             play.source_units.extend([uid for uid in self.source_rock_unit_ids if uid not in play.source_units])

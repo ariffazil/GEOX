@@ -18,34 +18,33 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from .age_resolver import AgeResolution
-from .schemas import (
-    EarthStateVariable,
-    EarthStateVector,
-    EarthStateEnvelope,
-    GovernanceFooter,
+from .data_loaders import (
+    PENDING_DATASETS,
+    load_atmospheric_o2,
+    load_benthic_d18O,
+    load_biotic_realm,
+    load_co2_estimate,
+    load_ice_extent,
+    load_magnetic_polarity,
+    load_sea_level_estimate,
+    load_supercontinent_state,
+    load_temperature_estimate,
 )
 from .formulas import (
-    wrap_solar_luminosity,
     wrap_day_length,
     wrap_orbital_eccentricity,
     wrap_orbital_obliquity,
+    wrap_solar_luminosity,
 )
-from .data_loaders import (
-    load_co2_estimate,
-    load_benthic_d18O,
-    load_temperature_estimate,
-    load_sea_level_estimate,
-    load_magnetic_polarity,
-    load_atmospheric_o2,
-    load_supercontinent_state,
-    load_biotic_realm,
-    load_ice_extent,
-    PENDING_DATASETS,
+from .schemas import (
+    EarthStateEnvelope,
+    EarthStateVariable,
+    EarthStateVector,
+    GovernanceFooter,
 )
-
 
 INTERVAL_DISTRIBUTION_THRESHOLD_MYR = 5.0
 
@@ -59,7 +58,7 @@ def _compute_seal(envelope_dict: dict, ics_chart_version: str) -> str:
     """
     payload = json.dumps(envelope_dict, sort_keys=True, default=str).encode()
     h = hashlib.sha256(payload).hexdigest()[:12]
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    ts = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     return f"VAULT999::DTC::{h}::{ts}"
 
 
@@ -99,7 +98,7 @@ def assemble_earth_state_vector(age_res: AgeResolution) -> EarthStateVector:
     age_top = age_res.top_ma
     age_base = age_res.base_ma
     duration_myr = age_res.duration_myr
-    now_iso = datetime.now(timezone.utc).isoformat()
+    now_iso = datetime.now(UTC).isoformat()
 
     # ─── Formula-based variables (always populated) ─────────────────────────
     solar = wrap_solar_luminosity(midpoint)
@@ -279,7 +278,7 @@ def _build_governance_footer(
         f9_fabrication_guard_active=True,
         ics_chart_version=age_res.ics_chart_version,
         ics_chart_hash=age_res.ics_chart_version,  # placeholder; real hash from caller
-        issued_at=datetime.now(timezone.utc).isoformat(),
+        issued_at=datetime.now(UTC).isoformat(),
         seal=None,  # populated after envelope assembly
         arifos_constitution_version="v2026.05.05-SSCT",
     )

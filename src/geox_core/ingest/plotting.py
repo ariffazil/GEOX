@@ -507,7 +507,7 @@ def render_correlation_panel(
     bundles: list[WellBundle] = []
     wells_failed: list[str] = []
 
-    for path, wid in zip(las_paths, well_ids):
+    for path, wid in zip(las_paths, well_ids, strict=False):
         try:
             bundle = load_well_bundle(path, well_id=wid)
 

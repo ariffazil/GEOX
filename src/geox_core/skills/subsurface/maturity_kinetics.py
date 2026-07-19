@@ -16,10 +16,8 @@ from __future__ import annotations
 
 import math
 from enum import StrEnum
-from typing import Annotated, Optional
 
 from pydantic import BaseModel, Field
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants (McKenzie 1978, Sweeney & Burnham 1990, Suggate 1998)
@@ -126,31 +124,31 @@ class MaturityRequest(BaseModel):
     Accepts either backstrip output dict OR explicit burial history list.
     """
 
-    burial_history: Optional[list[dict[str, float]]] = Field(
+    burial_history: list[dict[str, float]] | None = Field(
         default=None,
         description="Pre-computed burial history from compute_tti() format.",
     )
-    heat_flow_mw_m2: Optional[float] = Field(
+    heat_flow_mw_m2: float | None = Field(
         default=None,
         ge=20.0,
         le=200.0,
         description="Present-day heat flow (mW/m²). If None, use BASAL_HEAT_FLOW_MW_M2.",
     )
-    beta: Optional[float] = Field(
+    beta: float | None = Field(
         default=None,
         ge=1.0,
         le=50.0,
         description="Extension factor β. If provided, heat_flow is computed from β.",
     )
-    strat_column: Optional[list[dict[str, float]]] = Field(
+    strat_column: list[dict[str, float]] | None = Field(
         default=None,
         description="Alternative input: [(depth_km, age_ma), ...].",
     )
-    backstrip_result: Optional[dict] = Field(
+    backstrip_result: dict | None = Field(
         default=None,
         description="Output dict from backstrip_decompaction.compute_subsidence_history().",
     )
-    source_rock_age_ma: Optional[float] = Field(
+    source_rock_age_ma: float | None = Field(
         default=None,
         ge=0.0,
         le=500.0,
@@ -186,7 +184,7 @@ class MaturityResult(BaseModel):
         default=0.0,
         description="Average geothermal gradient (°C/km).",
     )
-    charge_age_ma: Optional[float] = Field(
+    charge_age_ma: float | None = Field(
         default=None,
         description="Age at which source rock reached expulsion threshold (Ma).",
     )
@@ -382,7 +380,7 @@ def build_burial_history_from_stratigraphy(
 
     # Sort by depth descending (deepest first = oldest)
     zipped = sorted(
-        zip(strat_column, ages_ma),
+        zip(strat_column, ages_ma, strict=False),
         key=lambda x: x[0].get("depth_km", 0.0),
         reverse=True,
     )
@@ -457,13 +455,13 @@ def classify_maturity(easy_ro: float) -> tuple[MaturityZone, list[MaturityZone],
 
 
 def compute_maturity_full(
-    burial_history: Optional[list[dict[str, float]]] = None,
-    heat_flow_mw_m2: Optional[float] = None,
-    beta: Optional[float] = None,
-    strat_column: Optional[list[dict[str, float]]] = None,
-    ages_ma: Optional[list[float]] = None,
-    backstrip_result: Optional[dict] = None,
-    source_rock_age_ma: Optional[float] = None,
+    burial_history: list[dict[str, float]] | None = None,
+    heat_flow_mw_m2: float | None = None,
+    beta: float | None = None,
+    strat_column: list[dict[str, float]] | None = None,
+    ages_ma: list[float] | None = None,
+    backstrip_result: dict | None = None,
+    source_rock_age_ma: float | None = None,
 ) -> MaturityResult:
     """Single-entry function for complete thermal maturity computation.
 

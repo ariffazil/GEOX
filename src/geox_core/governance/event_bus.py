@@ -16,13 +16,12 @@ scope: /root/geox/src/geox_core/governance/event_bus.py
 
 from __future__ import annotations
 
-import asyncio
 import hashlib
 import json
 import os
+from collections.abc import Awaitable, Callable
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Awaitable, Callable, Optional
+from datetime import UTC, datetime
 
 # Lazy NATS import — service must not fail to start if nats-py missing.
 try:
@@ -68,10 +67,10 @@ class IntelligenceAtom:
     emitted_at: str = ""                       # ISO 8601 UTC
     emitted_by_organ: str = "geox"
     topic: str = ""
-    parent_atom_id: Optional[str] = None
+    parent_atom_id: str | None = None
 
     # History
-    vault_ref: Optional[str] = None
+    vault_ref: str | None = None
     consumed_by: list = field(default_factory=list)
 
     def compute_id(self) -> str:
@@ -90,7 +89,7 @@ class IntelligenceAtom:
         if not self.atom_id:
             self.atom_id = self.compute_id()
         if not self.emitted_at:
-            self.emitted_at = datetime.now(timezone.utc).isoformat()
+            self.emitted_at = datetime.now(UTC).isoformat()
         if not self.topic:
             self.topic = f"arifos.{self.emitted_by_organ}.intel.atom.{self.tool_name}"
 
@@ -98,7 +97,7 @@ class IntelligenceAtom:
         return json.dumps(asdict(self), default=str).encode()
 
     @classmethod
-    def from_json(cls, data: bytes) -> "IntelligenceAtom":
+    def from_json(cls, data: bytes) -> IntelligenceAtom:
         d = json.loads(data.decode())
         return cls(**d)
 
@@ -196,7 +195,7 @@ class EventBus:
 
 
 # ───────────────────────────── PROCESS-LOCAL SINGLETON ─────────────────────────
-_bus: Optional[EventBus] = None
+_bus: EventBus | None = None
 
 
 def get_bus() -> EventBus:

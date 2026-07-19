@@ -15,8 +15,8 @@ DITEMPA BUKAN DIBERI — open data is forged through trust envelope.
 from __future__ import annotations
 
 import os
-from datetime import datetime, timezone
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -33,8 +33,8 @@ class OceanQuery(BaseModel):
     minlongitude: float = Field(-180, ge=-360, le=360)
     maxlongitude: float = Field(180, ge=-360, le=360)
     variable: str = Field("temperature", description="temperature | salinity | current | chlorophyll | sea_ice")
-    depth_m: Optional[float] = None
-    date: Optional[str] = None
+    depth_m: float | None = None
+    date: str | None = None
 
 
 class OceanResult(BaseModel):
@@ -54,7 +54,7 @@ class CopernicusMarineFetcher:
         self._offline = os.environ.get("GEOX_CMEMS_OFFLINE", "1") != "0"
 
     def query(self, params: OceanQuery) -> OceanResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return OceanResult(
                 ok=True, mode="offline_stub",

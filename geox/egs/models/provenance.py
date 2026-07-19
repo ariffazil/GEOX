@@ -10,19 +10,18 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Literal
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-
+from pydantic import BaseModel, ConfigDict, Field
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Provenance Types
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class ProvenanceAction(str, Enum):
+class ProvenanceAction(StrEnum):
     """The type of action that produced this provenance record."""
 
     CREATED = "created"
@@ -39,7 +38,7 @@ class ProvenanceAction(str, Enum):
     COMPUTED = "computed"
 
 
-class ProvenanceAgentKind(str, Enum):
+class ProvenanceAgentKind(StrEnum):
     """The type of agent that performed the action."""
 
     HUMAN = "human"
@@ -57,7 +56,7 @@ class ProvenanceRecord(BaseModel):
     action: ProvenanceAction = Field(..., description="What was done")
     agent: str = Field(..., description="Who/what performed the action")
     agent_kind: ProvenanceAgentKind = Field(default=ProvenanceAgentKind.UNKNOWN, description="Type of agent")
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     description: str = Field(default="", description="Free-text description")
     entity_type: str = Field(default="", description="Type of entity affected")
     entity_id: str = Field(default="", description="ID of entity affected")
@@ -74,7 +73,7 @@ class ProvenanceRecord(BaseModel):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class EvidenceKind(str, Enum):
+class EvidenceKind(StrEnum):
     """The nature of the evidence."""
 
     WELL_LOG = "well_log"
@@ -97,7 +96,7 @@ class EvidenceKind(str, Enum):
     OTHER = "other"
 
 
-class EvidenceStrength(str, Enum):
+class EvidenceStrength(StrEnum):
     """Strength of the evidence."""
 
     DIRECT_MEASUREMENT = "direct_measurement"
@@ -121,7 +120,7 @@ class EvidenceRef(BaseModel):
     url: str | None = Field(default=None, description="URL to evidence artifact")
     file_path: str | None = Field(default=None, description="Local file path")
     supporting: bool = Field(default=True, description="Does it support or challenge the claim?")
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     created_by: str = Field(default="", description="Who recorded this evidence")
     uncertainty: str = Field(default="", description="Uncertainty associated with this evidence")
     tags: list[str] = Field(default_factory=list)

@@ -15,10 +15,8 @@ from __future__ import annotations
 
 import math
 from enum import StrEnum
-from typing import Annotated, Optional
 
 from pydantic import BaseModel, Field
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants (McKenzie 1978, calibrated)
@@ -189,7 +187,7 @@ def thermal_subsidence(beta: float, time_ma: float, tau_ma: float = TAU_MCKENZIE
 
 def classify_rift_phase(
     beta: float,
-    subsidence_rate_mm_yr: Optional[float] = None,
+    subsidence_rate_mm_yr: float | None = None,
 ) -> tuple[RiftPhase, list[RiftPhase], list[str]]:
     """Classify rift phase from β and subsidence rate.
 
@@ -237,7 +235,7 @@ def compute_rift_kinematics(
     crust_thickness_current_km: float,
     time_since_rift_ma: float = 0.0,
     tau_ma: float = TAU_MCKENZIE_MA,
-    subsidence_rate_mm_yr: Optional[float] = None,
+    subsidence_rate_mm_yr: float | None = None,
 ) -> RiftKinematicsResult:
     """Single-entry function for complete rift kinematics.
 

@@ -17,7 +17,6 @@ import numpy as np
 
 from geox_core.core.geox_1d import (
     compute_porosity_dt,
-    compute_porosity_neutron,
     compute_porosity_rhob,
     compute_sw_archie,
     compute_vsh_gr,

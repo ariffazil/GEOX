@@ -21,9 +21,9 @@ DITEMPA BUKAN DIBERI — Beauty must come after falsification, never before.
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable, Literal
-
+from typing import Literal
 
 # ───────────────────────────── CERTAINTY VOCABULARY ──────────────────────────────
 # Higher weight = stronger certainty claim. Calibrated from real subsurface rhetoric.

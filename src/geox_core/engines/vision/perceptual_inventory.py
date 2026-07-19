@@ -44,7 +44,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -53,27 +53,27 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class AmplitudeCharacter(str, Enum):
+class AmplitudeCharacter(StrEnum):
     BRIGHT = "bright"
     DIM = "dim"
     VARIABLE = "variable"
     TRANSPARENT = "transparent"
 
 
-class ReflectorContinuity(str, Enum):
+class ReflectorContinuity(StrEnum):
     CONTINUOUS = "continuous"
     DISCONTINUOUS = "discontinuous"
     CHAOTIC = "chaotic"
 
 
-class PolarityConvention(str, Enum):
+class PolarityConvention(StrEnum):
     SEG_NORMAL = "SEG-normal"  # positive impedance = peak (trough in display)
     SEG_REVERSE = "SEG-reverse"
     UNKNOWN = "unknown"
     OTHER = "other"
 
 
-class FaultType(str, Enum):
+class FaultType(StrEnum):
     NORMAL = "normal"
     REVERSE = "reverse"
     STRIKE_SLIP = "strike-slip"
@@ -81,7 +81,7 @@ class FaultType(str, Enum):
     UNKNOWN = "unknown"
 
 
-class AmplitudeZoneCharacter(str, Enum):
+class AmplitudeZoneCharacter(StrEnum):
     BRIGHT = "bright"
     DIM = "dim"
     POLARITY_REVERSAL = "polarity-reversal"
@@ -93,7 +93,7 @@ class AmplitudeZoneCharacter(str, Enum):
         return cls.OTHER
 
 
-class AmplitudeZoneOrigin(str, Enum):
+class AmplitudeZoneOrigin(StrEnum):
     LITHOLOGY = "lithology"
     FLUID = "fluid"
     TUNING = "tuning"
@@ -105,13 +105,13 @@ class AmplitudeZoneOrigin(str, Enum):
         return cls.UNKNOWN
 
 
-class DisplayColorPolarity(str, Enum):
+class DisplayColorPolarity(StrEnum):
     RED_POSITIVE = "red-positive"  # Standard SEG red=positive
     BLACK_POSITIVE = "black-positive"
     UNKNOWN = "unknown"
 
 
-class DisplayUnits(str, Enum):
+class DisplayUnits(StrEnum):
     TWT_MS = "TWT-ms"
     TWT_S = "TWT-s"
     DEPTH_M = "depth-m"
@@ -125,7 +125,7 @@ class DisplayUnits(str, Enum):
         return cls.UNKNOWN
 
 
-class VisionVerdict(str, Enum):
+class VisionVerdict(StrEnum):
     """Per the F2 TRUTH floor, VLM-only outputs are INTERPRETATION at best.
     SEAL is reserved for physics-validated claims (which VLM cannot produce
     from pixels alone)."""
@@ -137,7 +137,7 @@ class VisionVerdict(str, Enum):
     VOID = "VOID"  # VLM call failed or AC_Risk exceeded threshold
 
 
-class AcRiskVerdict(str, Enum):
+class AcRiskVerdict(StrEnum):
     """From TOAC_CANON.md: AC_Risk thresholds."""
 
     SEAL = "SEAL"  # < 0.15

@@ -95,10 +95,11 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
         """
         from geox.artifacts.las_sources import LASSourceError, materialize_las_source
         from geox.artifacts.writer import ArtifactValidationError, validate_output_path
-        from geox.plot_specs.schemas import PlotSpecValidationError
-        from geox.plot_specs.validators import build_well_panel_plot_spec
         from geox.renderers.base import RenderRequest
         from geox.renderers.matplotlib_logs import render_multiwell_correlation_panel
+
+        from geox.plot_specs.schemas import PlotSpecValidationError
+        from geox.plot_specs.validators import build_well_panel_plot_spec
 
         # ── Input normalisation ─────────────────────────────────────────────
         if not las_paths:
@@ -280,6 +281,7 @@ def register_well_correlation_tools(mcp: FastMCP) -> None:
             }
         """
         from geox.artifacts.las_sources import LASSourceError, materialize_las_source
+
         from geox.ingest.plotting import CURVE_ALIASES, load_well_bundle
 
         # Resolve path

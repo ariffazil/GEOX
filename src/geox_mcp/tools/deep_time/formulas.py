@@ -12,10 +12,8 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import math
-from math import cos, radians, sin
 
 from .schemas import EarthStateVariable
-
 
 # ─── Solar luminosity (Gough 1981 standard model) ────────────────────────────
 # L/L0 = 1 / (1 + (2/5) * (t/t0))

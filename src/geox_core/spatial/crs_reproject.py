@@ -240,7 +240,7 @@ def roundtrip_tolerance(
     inverse = reproject_points(forward, CANONICAL_CRS, source_crs)
 
     deviations = []
-    for (x_orig, y_orig), (x_inv, y_inv) in zip(points, inverse):
+    for (x_orig, y_orig), (x_inv, y_inv) in zip(points, inverse, strict=False):
         dev = ((x_orig - x_inv) ** 2 + (y_orig - y_inv) ** 2) ** 0.5
         deviations.append(dev)
 

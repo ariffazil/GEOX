@@ -47,7 +47,7 @@ __version__ = "0.1.0"
 __all__ = ["select_backend", "list_backends"]
 
 
-def select_backend(name: str | None = None) -> "TimeSeriesBackend":
+def select_backend(name: str | None = None) -> TimeSeriesBackend:
     """Select a backend by name (or env default).
 
     Args:

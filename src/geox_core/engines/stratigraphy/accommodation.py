@@ -25,10 +25,8 @@ from __future__ import annotations
 
 import math
 from enum import StrEnum
-from typing import Optional
 
 from pydantic import BaseModel, Field
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants
@@ -109,7 +107,7 @@ class AccommodationRequest(BaseModel):
     )
 
     # Eustasy
-    eustatic_curve: Optional[list[EustaticPoint]] = Field(
+    eustatic_curve: list[EustaticPoint] | None = Field(
         default=None,
         description="Sea-level curve through time. If None, uses constant_rate.",
     )
@@ -284,7 +282,7 @@ def decompact_thickness(
 
 def get_eustatic_level(
     time_ma: float,
-    eustatic_curve: Optional[list[EustaticPoint]] = None,
+    eustatic_curve: list[EustaticPoint] | None = None,
     constant_rate_mm_yr: float = 0.0,
 ) -> float:
     """Get eustatic sea level at a given time (m).
@@ -339,9 +337,9 @@ def simulate_accommodation(req: AccommodationRequest) -> AccommodationResult:
 
     # Lithology params for compaction
     if req.dominant_lithology.lower() in ("shale", "mudstone", "clay"):
-        phi0, c_per_km = PHI0_SHALE, C_SHALE_PER_KM
+        _phi0, _c_per_km = PHI0_SHALE, C_SHALE_PER_KM
     else:
-        phi0, c_per_km = PHI0_SAND, C_SAND_PER_KM
+        _phi0, _c_per_km = PHI0_SAND, C_SAND_PER_KM
 
     steps: list[AccommodationStep] = []
     prev_water_depth = req.initial_water_depth_m
@@ -356,7 +354,6 @@ def simulate_accommodation(req: AccommodationRequest) -> AccommodationResult:
 
     # Tracking for MFS detection
     max_water_depth = req.initial_water_depth_m
-    max_water_depth_time = req.duration_ma
 
     for i in range(n_steps):
         t = req.duration_ma - i * dt  # time goes from oldest to youngest
@@ -371,7 +368,7 @@ def simulate_accommodation(req: AccommodationRequest) -> AccommodationResult:
 
         # 2. Eustatic sea level
         eustatic_m = get_eustatic_level(t, req.eustatic_curve, req.eustatic_rate_mm_yr)
-        eustatic_change = eustatic_m - prev_eustatic
+        eustatic_m - prev_eustatic
 
         # 3. Sediment loading isostasy
         sed_load_m = sediment_load_isostasy(cumulative_sediment)
@@ -423,7 +420,6 @@ def simulate_accommodation(req: AccommodationRequest) -> AccommodationResult:
         # Maximum flooding: deepest water
         if water_depth > max_water_depth + 1.0:
             max_water_depth = water_depth
-            max_water_depth_time = t
             is_mfs = True
             surface_type = SurfaceType.MAXIMUM_FLOODING
 

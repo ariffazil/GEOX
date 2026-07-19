@@ -12,8 +12,6 @@ DITEMPA BUKAN DIBEI — nonseismic physics is forged, not given.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 from geox_core.engines.geophysics.harmonica_adapter import (
@@ -44,14 +42,14 @@ class GravityMagneticForwardResponse(BaseModel):
     ok: bool
     tool: str = "geox_gravity_magnetic_forward"
     mode: str
-    output: Optional[NonseismicOutput] = None
-    error: Optional[str] = None
+    output: NonseismicOutput | None = None
+    error: str | None = None
 
 
 async def geox_gravity_magnetic_forward(
     request: GravityMagneticForwardRequest,
     *,
-    adapter: Optional[HarmonICAdapter] = None,
+    adapter: HarmonICAdapter | None = None,
 ) -> GravityMagneticForwardResponse:
     """Constitutional MCP tool: forward-model gravity or magnetic anomaly grid."""
     try:
@@ -79,14 +77,14 @@ class EMAG2FetchRequest(BaseModel):
 class EMAG2FetchResponse(BaseModel):
     ok: bool
     tool: str = "geox_emag2_ingest"
-    result: Optional[EMAG2FetchResult] = None
-    error: Optional[str] = None
+    result: EMAG2FetchResult | None = None
+    error: str | None = None
 
 
 async def geox_emag2_ingest(
     request: EMAG2FetchRequest,
     *,
-    fetcher: Optional[EMAG2Fetcher] = None,
+    fetcher: EMAG2Fetcher | None = None,
 ) -> EMAG2FetchResponse:
     """Constitutional MCP tool: fetch EMAG2v3 global magnetic anomaly grid.
 
@@ -114,7 +112,7 @@ class ICGEMListResponse(BaseModel):
 async def geox_icgem_models(
     request: ICGEMListRequest,
     *,
-    fetcher: Optional[ICGEMFetcher] = None,
+    fetcher: ICGEMFetcher | None = None,
 ) -> ICGEMListResponse:
     """Constitutional MCP tool: list ICGEM global gravity field models."""
     f = fetcher or ICGEMFetcher()

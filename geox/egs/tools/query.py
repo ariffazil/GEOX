@@ -10,17 +10,15 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
-import json
 import logging
 from typing import Any
 
 from fastmcp import FastMCP
 
-from geox.egs.engines.geometry import bounding_box_contains, bounding_box_intersects, haversine_distance
+from geox.egs.engines.geometry import bounding_box_intersects
 from geox.egs.models.claims import ClaimEnvelope, ClaimStatus
 from geox.egs.models.entities import EarthGraph
 from geox.egs.models.provenance import ProvenanceChain
-from geox.egs.models.uncertainty import UncertainValue
 
 logger = logging.getLogger("geox.egs.tools.query")
 

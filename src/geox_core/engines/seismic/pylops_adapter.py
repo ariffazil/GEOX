@@ -109,9 +109,8 @@ class PyLopsAdapter:
         Returns:
             InversionResult envelope with reflectivity + impedance.
         """
-        import pylops as plo
-        from pylops.signalprocessing import Conv1d
         from pylops.optimization.basic import irls
+        from pylops.signalprocessing import Conv1d
 
         traces = np.asarray(seismic_traces, dtype=np.float32)
         if traces.ndim == 1:
@@ -204,8 +203,6 @@ class PyLopsAdapter:
         Returns:
             Elastic parameter cubes: AI, SI, Vp/Vs ratio, lambda-rho.
         """
-        import pylops as plo
-        from pylops.linearoperators import MatrixMult
 
         angles = np.asarray(angle_traces, dtype=np.float32)
         if angles.ndim == 1:

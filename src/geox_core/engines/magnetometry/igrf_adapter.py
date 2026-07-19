@@ -13,11 +13,10 @@ it does not sense the real Earth field. Anomaly = observed - IGRF.
 from __future__ import annotations
 
 import hashlib
-import json
 import logging
 import math
 from dataclasses import dataclass, field
-from typing import Protocol, Optional
+from typing import Protocol
 
 import numpy as np
 
@@ -341,7 +340,7 @@ class IGRFAdapter:
 
 # ─── Module-level factory ─────────────────────────────────────────────────────
 
-_adapter_instance: Optional[IGRFAdapter] = None
+_adapter_instance: IGRFAdapter | None = None
 
 def get_adapter() -> IGRFAdapter:
     """Return the singleton IGRFAdapter instance (live if ppigrf installed)."""

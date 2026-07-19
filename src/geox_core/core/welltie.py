@@ -174,7 +174,7 @@ def compute_vp_from_sonic(
     outside = (vp < 1500) | (vp > 6000)
     n_outside = np.sum(outside)
     if n_outside > 0:
-        warnings.warn(f"{n_outside}/{len(vp)} Vp values outside CANON-9 [1500, 6000] m/s. Clipping to bounds.")
+        warnings.warn(f"{n_outside}/{len(vp)} Vp values outside CANON-9 [1500, 6000] m/s. Clipping to bounds.", stacklevel=2)
         vp = np.clip(vp, 1500, 6000)
 
     return vp

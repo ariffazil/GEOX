@@ -9,9 +9,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
-import json
 import logging
-from datetime import datetime, timezone
 from typing import Any
 
 from fastmcp import FastMCP
@@ -20,8 +18,6 @@ from geox.egs.models.claims import (
     ClaimDomain,
     ClaimEnvelope,
     ClaimStatus,
-    CompetingInterpretation,
-    InterpretationSet,
 )
 from geox.egs.models.provenance import (
     EvidenceKind,
@@ -32,8 +28,8 @@ from geox.egs.models.provenance import (
     ProvenanceChain,
     ProvenanceRecord,
 )
-from geox.egs.models.uncertainty import ConfidenceGrade, UncertainValue
-from geox.egs.tools.query import get_claims, get_provenance, get_graph
+from geox.egs.models.uncertainty import ConfidenceGrade
+from geox.egs.tools.query import get_claims, get_provenance
 
 logger = logging.getLogger("geox.egs.tools.claims")
 
@@ -93,8 +89,8 @@ async def egs_claim_create(
     claims[claim.id] = claim
 
     # Add provenance to global chain
-    from geox.egs.tools.query import get_provenance
     from geox.egs.models.provenance import ProvenanceChain
+    from geox.egs.tools.query import get_provenance
 
     provenance_chains = get_provenance()
     if claim.id not in provenance_chains:

@@ -9,11 +9,17 @@ DITEMPA BUKAN DIBERI.
 """
 
 from __future__ import annotations
+
 from typing import Any
+
 import numpy as np
+
 from geox_core.core.welltie import compute_td_function, cross_correlate
-from geox_core.schemas.mistie_rms import MistieRMSInput, build_mistie_receipt as _build_mistie
-from geox_core.schemas.wavelet_extract import WaveletExtractInput, build_wavelet_receipt as _build_wavelet
+from geox_core.schemas.mistie_rms import MistieRMSInput
+from geox_core.schemas.mistie_rms import build_mistie_receipt as _build_mistie
+from geox_core.schemas.wavelet_extract import WaveletExtractInput
+from geox_core.schemas.wavelet_extract import build_wavelet_receipt as _build_wavelet
+
 
 def _arr(x):
     return np.asarray(x, dtype=float)
@@ -75,7 +81,8 @@ def extract_wavelet_least_squares(inp: WaveletExtractInput) -> dict[str, Any]:
     """Wiener least-squares wavelet extraction: W = S·R*/(|R|²+ε)."""
     r = _arr(inp.reflectivity_series)
     s = _arr(inp.seismic_trace)
-    dt, eps, wavelet_samps = inp.dt_ms, inp.epsilon, int(inp.wavelet_length_ms / dt)
+    dt, eps = inp.dt_ms, inp.epsilon
+    wavelet_samps = int(inp.wavelet_length_ms / dt)
     n = min(len(r), len(s))
     r, s = r[:n], s[:n]
 
@@ -124,11 +131,11 @@ def extract_wavelet_least_squares(inp: WaveletExtractInput) -> dict[str, Any]:
         osyn = np.convolve(r, ricker, mode='same')[:n]
         omask = np.isfinite(osyn) & np.isfinite(s)
         old_corr = float(np.corrcoef(osyn[omask], s[omask])[0,1]) if omask.sum()>10 else 0.0
-    except: pass
+    except Exception: pass
 
     phys = {"compact_support": len(w) <= wavelet_samps+10, "causality_ok": pre_ring<0.60, "pre_ring_ratio": pre_ring, "spectral_division_ok": condition_number < inp.max_condition_number*10, "violations": []}
-    if phys["compact_support"]==False: phys["violations"].append("Wavelet exceeds compact support")
-    if phys["causality_ok"]==False: phys["violations"].append(f"Pre-ring ratio {pre_ring:.2f} suggests non-causal")
+    if not phys["compact_support"]: phys["violations"].append("Wavelet exceeds compact support")
+    if not phys["causality_ok"]: phys["violations"].append(f"Pre-ring ratio {pre_ring:.2f} suggests non-causal")
 
     return _build_wavelet(
         well_name=inp.well_name, wavelet=[float(x) for x in w], dt_ms=dt,
@@ -141,7 +148,9 @@ def extract_wavelet_least_squares(inp: WaveletExtractInput) -> dict[str, Any]:
 
 
 def compute_td_calibrate(*, las_path, checkshot_path=None, checkshot_data=None, method="linear", velocity_bounds=(1500.0,6000.0), residual_threshold_pct=10.0):
-    import json, numpy as np
+    import json
+
+    import numpy as np
     cs_data = checkshot_data
     if checkshot_path and not cs_data:
         with open(checkshot_path) as f:

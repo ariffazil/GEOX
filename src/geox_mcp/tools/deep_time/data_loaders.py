@@ -20,12 +20,10 @@ from __future__ import annotations
 import csv
 import logging
 import os
-import re
 
 from .schemas import (
     EarthStateVariable,
     PolarityState,
-    ReferenceFrame,
 )
 
 logger = logging.getLogger("geox.deep_time.data_loaders")
@@ -95,7 +93,7 @@ def _interpolate_from_table(
             return None
 
         # Sort by age
-        pairs = sorted(zip(ages, values))
+        pairs = sorted(zip(ages, values, strict=False))
         ages = [p[0] for p in pairs]
         values = [p[1] for p in pairs]
 
@@ -580,7 +578,7 @@ def load_co2_estimate(age_ma: float, age_top_ma: float, age_base_ma: float, dura
             confidence=0.05,
             interval_top_ma=age_top_ma,
             interval_base_ma=age_base_ma,
-            warning=f"Cannot be known — not a data gap, an unknowable.",
+            warning="Cannot be known — not a data gap, an unknowable.",
         )
 
     # Try loading from CSV
@@ -602,7 +600,7 @@ def load_co2_estimate(age_ma: float, age_top_ma: float, age_base_ma: float, dura
                         confidence=0.6,
                         interval_top_ma=age_top_ma,
                         interval_base_ma=age_base_ma,
-                        notes=f"Interpolated from GEOCARBSULF CSV. Proxy-derived, model-dependent. Uncertainties: factor 2-3x for Mesozoic-Paleozoic.",
+                        notes="Interpolated from GEOCARBSULF CSV. Proxy-derived, model-dependent. Uncertainties: factor 2-3x for Mesozoic-Paleozoic.",
                         value_min=p10,
                         value_max=p90,
                     )

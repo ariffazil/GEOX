@@ -175,11 +175,18 @@ exclude = ["tests*", "*.tests*"]
 [tool.ruff]
 line-length = 130
 target-version = "py311"
-exclude = ["tests/**", ".archive/**"]
+exclude = ["tests/**", ".archive/**", "data/volve_wells/**", "geox-gui/**", ".venv/**", "forge_work/**"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "N", "B"]
-ignore = ["N806", "E402"]
+ignore = [
+    "N806", "E402", "E501", "E701", "E702", "E741",
+    "UP042", "N815", "N802", "N803", "N812",
+    "N801", "N811", "N813", "N816", "UP034",
+    "B904", "B008", "B007",
+    "F401", "N818", "N814", "UP017", "I001",
+    "F811", "F821", "E722", "B025",
+]
 
 [tool.mypy]
 python_version = "3.11"

@@ -14,16 +14,14 @@ DITEMPA BUKAN DIBEI — the doctrine is forged, not given; it is auditable.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
+from geox_core.anti_beautiful_one import audit, decompose
 from geox_core.assumption_lineage import (
     Assumption,
     AssumptionRegistry,
     get_default_registry,
 )
-from geox_core.anti_beautiful_one import audit, decompose
 from geox_core.godel_wall import GodelWall
 
 
@@ -32,22 +30,22 @@ class AssumptionRegisterRequest(BaseModel):
     introduced_by: str = Field(..., min_length=1, description="Tool name that introduces this assumption")
     rung_origin: int = Field(..., ge=1, le=7)
     description: str = Field(..., min_length=1)
-    parent_assumption_id: Optional[str] = None
-    inherited_from: Optional[str] = None
+    parent_assumption_id: str | None = None
+    inherited_from: str | None = None
     epistemic_label: str = Field(default="DER", pattern="^(OBS|DER|INT|SPEC)$")
 
 
 class AssumptionRegisterResponse(BaseModel):
     ok: bool
     tool: str = "geox_doctrine_assumption_register"
-    assumption: Optional[Assumption] = None
-    error: Optional[str] = None
+    assumption: Assumption | None = None
+    error: str | None = None
 
 
 async def geox_doctrine_assumption_register(
     request: AssumptionRegisterRequest,
     *,
-    registry: Optional[AssumptionRegistry] = None,
+    registry: AssumptionRegistry | None = None,
 ) -> AssumptionRegisterResponse:
     """JUDGMENT-lane MCP tool: register an assumption in the lineage."""
     try:
@@ -78,7 +76,7 @@ class BeautyAuditResponse(BaseModel):
     ok: bool
     tool: str = "geox_doctrine_anti_beautiful_one"
     decomposition_required: bool = False
-    decomposition_prompt: Optional[str] = None
+    decomposition_prompt: str | None = None
     audit: dict = Field(default_factory=dict)
 
 
@@ -130,21 +128,21 @@ class GodelClaimRequest(BaseModel):
 class GodelSealRequest(BaseModel):
     claim_id: str = Field(..., min_length=1)
     action: str = Field(default="review", pattern="^(review|seal|void)$")
-    void_reason: Optional[str] = None
+    void_reason: str | None = None
 
 
 class GodelResponse(BaseModel):
     ok: bool
     tool: str
-    verdict: Optional[dict] = None
-    claim: Optional[dict] = None
-    error: Optional[str] = None
+    verdict: dict | None = None
+    claim: dict | None = None
+    error: str | None = None
 
 
 async def geox_doctrine_godel_register_claim(
     request: GodelClaimRequest,
     *,
-    wall: Optional[GodelWall] = None,
+    wall: GodelWall | None = None,
 ) -> GodelResponse:
     """JUDGMENT-lane MCP tool: register a claim for Gödel Wall review."""
     try:
@@ -162,7 +160,7 @@ async def geox_doctrine_godel_register_claim(
 async def geox_doctrine_godel_review(
     request: GodelSealRequest,
     *,
-    wall: Optional[GodelWall] = None,
+    wall: GodelWall | None = None,
 ) -> GodelResponse:
     """JUDGMENT-lane MCP tool: review / seal / void a claim via Gödel Wall."""
     try:

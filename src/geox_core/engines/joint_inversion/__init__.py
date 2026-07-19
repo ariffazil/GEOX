@@ -31,13 +31,13 @@ from typing import Any, Literal
 import numpy as np
 from scipy import optimize
 
-from geox_core.physics.state import Physics13State, EARTH_MATERIAL_CATALOG
-from geox_core.physics.parameters import forward_physics9
+from geox_core.engines.em import LayerModel, mt_forward_1d
 from geox_core.engines.potential_fields import (
     gravity_forward_slab,
     magnetic_forward_prism,
 )
-from geox_core.engines.em import LayerModel, mt_forward_1d
+from geox_core.physics.parameters import forward_physics9
+from geox_core.physics.state import EARTH_MATERIAL_CATALOG, Physics13State
 
 logger = logging.getLogger("geox.joint_inversion")
 

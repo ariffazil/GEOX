@@ -25,7 +25,7 @@ DITEMPA BUKAN DIBERI — the earth dimensions are forged through evidence.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -33,15 +33,15 @@ logger = logging.getLogger("geox.tools.earth_surface_2")
 
 # ── D4: Heat Flow ──
 class HeatFlowRequest(BaseModel):
-    minlatitude: Optional[float] = None
-    maxlatitude: Optional[float] = None
-    minlongitude: Optional[float] = None
-    maxlongitude: Optional[float] = None
+    minlatitude: float | None = None
+    maxlatitude: float | None = None
+    minlongitude: float | None = None
+    maxlongitude: float | None = None
     limit: int = 100
 
 async def geox_heatflow_query(request: HeatFlowRequest) -> dict[str, Any]:
     """Query IHFC Global Heat Flow Database. OBSERVED — ~91k measurements worldwide."""
-    from geox_core.io.ihfc_heatflow_fetcher import IHFCHeatFlowFetcher, HeatFlowQuery
+    from geox_core.io.ihfc_heatflow_fetcher import HeatFlowQuery, IHFCHeatFlowFetcher
     fetcher = IHFCHeatFlowFetcher()
     q = HeatFlowQuery(**request.model_dump())
     r = fetcher.query(q)
@@ -50,16 +50,16 @@ async def geox_heatflow_query(request: HeatFlowRequest) -> dict[str, Any]:
 
 # ── D5: Crustal Stress ──
 class StressRequest(BaseModel):
-    minlatitude: Optional[float] = None
-    maxlatitude: Optional[float] = None
-    minlongitude: Optional[float] = None
-    maxlongitude: Optional[float] = None
-    quality: Optional[str] = None
+    minlatitude: float | None = None
+    maxlatitude: float | None = None
+    minlongitude: float | None = None
+    maxlongitude: float | None = None
+    quality: str | None = None
     limit: int = 100
 
 async def geox_stress_query(request: StressRequest) -> dict[str, Any]:
     """Query World Stress Map (WSM 2025). OBSERVED — ~100k stress orientation measurements."""
-    from geox_core.io.wsm_stress_fetcher import WSMStressFetcher, StressQuery
+    from geox_core.io.wsm_stress_fetcher import StressQuery, WSMStressFetcher
     fetcher = WSMStressFetcher()
     q = StressQuery(**request.model_dump())
     r = fetcher.query(q)
@@ -83,13 +83,13 @@ async def geox_plate_reconstruct(request: PlateReconstructRequest) -> dict[str, 
 
 # ── D6: Geochemistry ──
 class GeochemRequest(BaseModel):
-    minlatitude: Optional[float] = None
-    maxlatitude: Optional[float] = None
-    minlongitude: Optional[float] = None
-    maxlongitude: Optional[float] = None
-    rock_type: Optional[str] = None
-    min_sio2: Optional[float] = None
-    max_sio2: Optional[float] = None
+    minlatitude: float | None = None
+    maxlatitude: float | None = None
+    minlongitude: float | None = None
+    maxlongitude: float | None = None
+    rock_type: str | None = None
+    min_sio2: float | None = None
+    max_sio2: float | None = None
     limit: int = 100
 
 async def geox_geochem_query(request: GeochemRequest) -> dict[str, Any]:
@@ -103,16 +103,16 @@ async def geox_geochem_query(request: GeochemRequest) -> dict[str, Any]:
 
 # ── D15: UK Petroleum ──
 class UKPetroleumRequest(BaseModel):
-    minlatitude: Optional[float] = None
-    maxlatitude: Optional[float] = None
-    minlongitude: Optional[float] = None
-    maxlongitude: Optional[float] = None
-    status: Optional[str] = None
+    minlatitude: float | None = None
+    maxlatitude: float | None = None
+    minlongitude: float | None = None
+    maxlongitude: float | None = None
+    status: str | None = None
     limit: int = 100
 
 async def geox_uk_petroleum_query(request: UKPetroleumRequest) -> dict[str, Any]:
     """Query NSTA UK petroleum data (wells, fields, licences). OBSERVED — UKCS regulatory data."""
-    from geox_core.io.nsta_uk_fetcher import NSTAUKFetcher, NSTAQuery
+    from geox_core.io.nsta_uk_fetcher import NSTAQuery, NSTAUKFetcher
     fetcher = NSTAUKFetcher()
     q = NSTAQuery(**request.model_dump())
     r = fetcher.query(q)
@@ -126,8 +126,8 @@ class OceanRequest(BaseModel):
     minlongitude: float = -180
     maxlongitude: float = 180
     variable: str = "temperature"
-    depth_m: Optional[float] = None
-    date: Optional[str] = None
+    depth_m: float | None = None
+    date: str | None = None
 
 async def geox_ocean_query(request: OceanRequest) -> dict[str, Any]:
     """Query Copernicus Marine (CMEMS) for ocean physics/BGC. OBSERVED — satellite + model."""
@@ -140,12 +140,12 @@ async def geox_ocean_query(request: OceanRequest) -> dict[str, Any]:
 # ── D10: ERDDAP ──
 class ERDDAPRequest(BaseModel):
     dataset_id: str = Field(..., description="ERDDAP dataset ID")
-    minlatitude: Optional[float] = None
-    maxlatitude: Optional[float] = None
-    minlongitude: Optional[float] = None
-    maxlongitude: Optional[float] = None
-    min_time: Optional[str] = None
-    max_time: Optional[str] = None
+    minlatitude: float | None = None
+    maxlatitude: float | None = None
+    minlongitude: float | None = None
+    maxlongitude: float | None = None
+    min_time: str | None = None
+    max_time: str | None = None
     limit: int = 100
 
 async def geox_erddap_query(request: ERDDAPRequest) -> dict[str, Any]:
@@ -162,11 +162,11 @@ class GeologyMapRequest(BaseModel):
     maxlatitude: float
     minlongitude: float
     maxlongitude: float
-    layers: Optional[str] = None
+    layers: str | None = None
 
 async def geox_geology_map_query(request: GeologyMapRequest) -> dict[str, Any]:
     """Query OneGeology WMS for national geological maps. OBSERVED — aggregated survey data."""
-    from geox_core.io.onegeology_fetcher import OneGeologyFetcher, GeologyMapQuery
+    from geox_core.io.onegeology_fetcher import GeologyMapQuery, OneGeologyFetcher
     fetcher = OneGeologyFetcher()
     r = fetcher.query(GeologyMapQuery(**request.model_dump()))
     return {"ok": r.ok, "mode": r.mode, "tool": "geox_geology_map_query", "features": r.features, "count": r.count, "wms_url": r.wms_url, "citation": r.citation, "note": r.note}
@@ -174,12 +174,12 @@ async def geox_geology_map_query(request: GeologyMapRequest) -> dict[str, Any]:
 
 # ── D8: Paleomagnetism ──
 class PaleomagRequest(BaseModel):
-    minlatitude: Optional[float] = None
-    maxlatitude: Optional[float] = None
-    minlongitude: Optional[float] = None
-    maxlongitude: Optional[float] = None
-    min_age_ma: Optional[float] = None
-    max_age_ma: Optional[float] = None
+    minlatitude: float | None = None
+    maxlatitude: float | None = None
+    minlongitude: float | None = None
+    maxlongitude: float | None = None
+    min_age_ma: float | None = None
+    max_age_ma: float | None = None
     limit: int = 100
 
 async def geox_paleomag_query(request: PaleomagRequest) -> dict[str, Any]:
@@ -196,8 +196,8 @@ class GraceRequest(BaseModel):
     maxlatitude: float = 90
     minlongitude: float = -180
     maxlongitude: float = 180
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
+    start_date: str | None = None
+    end_date: str | None = None
 
 async def geox_gravity_change_query(request: GraceRequest) -> dict[str, Any]:
     """Query GRACE-FO for time-variable gravity (mass change). OBSERVED — satellite gravimetry."""
@@ -227,12 +227,12 @@ async def geox_climate_reanalysis(request: ClimateReanalysisRequest) -> dict[str
 
 # ── D12: Hydrology ──
 class HydrologyRequest(BaseModel):
-    minlatitude: Optional[float] = None
-    maxlatitude: Optional[float] = None
-    minlongitude: Optional[float] = None
-    maxlongitude: Optional[float] = None
-    state_code: Optional[str] = None
-    site_type: Optional[str] = None
+    minlatitude: float | None = None
+    maxlatitude: float | None = None
+    minlongitude: float | None = None
+    maxlongitude: float | None = None
+    state_code: str | None = None
+    site_type: str | None = None
     parameter_code: str = "00060"
     period: str = "P7D"
     limit: int = 100

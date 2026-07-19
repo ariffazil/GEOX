@@ -8,8 +8,6 @@ DITEMPA BUKAN DIBEI — the impedance is forged, not given.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 from geox_core.seismic.pinn_inversion import (
@@ -23,7 +21,7 @@ class SeismicInversionRequestSchema(BaseModel):
     sample_interval_s: float = 0.002
     initial_impedance: float = 7.0e6
     depth_top_m: float = 0.0
-    resistivity_ohm_m: Optional[tuple[float, ...]] = None
+    resistivity_ohm_m: tuple[float, ...] | None = None
     vp_min: float = 1500.0
     vp_max: float = 6000.0
     rho_min: float = 1000.0
@@ -33,8 +31,8 @@ class SeismicInversionRequestSchema(BaseModel):
 class SeismicInversionResponse(BaseModel):
     ok: bool
     tool: str = "geox_seismic_inversion"
-    result: Optional[dict] = None
-    error: Optional[str] = None
+    result: dict | None = None
+    error: str | None = None
 
 
 async def geox_seismic_inversion(

@@ -23,12 +23,10 @@ from geox.egs.models.sts import (
     BasinNode,
     BasinState,
     DiachroneityClass,
-    EvidenceTag,
     StateGraph,
     StateTransitionSurface,
 )
-from geox.egs.models.translation import TranslationEntry, TranslationLayer, layang_layang_example
-
+from geox.egs.models.translation import TranslationLayer, layang_layang_example
 
 # ── In-memory state graphs (reality loop working memory) ───────────────────
 # Persistence to DSG/VAULT999 is Phase 2.6.

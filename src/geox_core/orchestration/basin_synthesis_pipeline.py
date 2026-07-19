@@ -40,10 +40,10 @@ import asyncio
 import math
 import os
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
 from hashlib import sha256
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -53,8 +53,8 @@ from geox_core.orchestration.synthesis_state import SynthesisState
 from geox_core.orchestration.uncertainty_cascade import (
     UncertaintyCascade,
     cap_confidence,
-    cascade_serial,
 )
+from geox_core.physics.state import EARTH_MATERIAL_CATALOG, Physics13State
 from geox_core.schemas.crust_vp_grammar import vp_zone_classify
 from geox_core.schemas.voxel_state import (
     LithologyClass,
@@ -62,14 +62,12 @@ from geox_core.schemas.voxel_state import (
     PhaseFraction,
     PhaseType,
     ProcessState,
-    RecordDensity,
     StrainState,
-    StressRegime,
     StrainStyle,
+    StressRegime,
     VoidState,
     VoxelState4,
 )
-from geox_core.physics.state import Physics13State, EARTH_MATERIAL_CATALOG
 
 # ─── Phase 2: Real fetcher imports ────────────────────────────────────────────
 try:
@@ -80,14 +78,14 @@ except ImportError:
     _GPLATES_AVAILABLE = False
 
 try:
-    from geox_core.io.usgs_earthquake_fetcher import USGSEarthquakeFetcher, EarthquakeQuery  # noqa: F401
+    from geox_core.io.usgs_earthquake_fetcher import EarthquakeQuery, USGSEarthquakeFetcher  # noqa: F401
 
     _USGS_EQ_AVAILABLE = True
 except ImportError:
     _USGS_EQ_AVAILABLE = False
 
 try:
-    from geox_core.io.onegeology_fetcher import OneGeologyFetcher, GeologyMapQuery  # noqa: F401
+    from geox_core.io.onegeology_fetcher import GeologyMapQuery, OneGeologyFetcher  # noqa: F401
 
     _ONEGEOLOGY_AVAILABLE = True
 except ImportError:
@@ -101,7 +99,7 @@ except ImportError:
     _EMAG2_AVAILABLE = False
 
 try:
-    from geox_core.io.ihfc_heatflow_fetcher import IHFCHeatFlowFetcher, HeatFlowQuery  # noqa: F401
+    from geox_core.io.ihfc_heatflow_fetcher import HeatFlowQuery, IHFCHeatFlowFetcher  # noqa: F401
 
     _IHFC_AVAILABLE = True
 except ImportError:
@@ -127,8 +125,8 @@ except ImportError:
 
 try:
     from geox_core.io.wsm_stress_fetcher import (
-        WSMStressFetcher,
         StressResult,
+        WSMStressFetcher,
     )
 
     _WSM_AVAILABLE = True
@@ -198,7 +196,7 @@ class BasinSynthesisReport(BaseModel):
         default_factory=lambda: {"lat": 6.0, "lng": 117.0},
         description="Basin centroid {lat, lng}",
     )
-    age_ma: Optional[float] = Field(default=None, description="Requested deep time age (Ma)")
+    age_ma: float | None = Field(default=None, description="Requested deep time age (Ma)")
 
     # Core outputs
     voxel_field: dict[str, Any] = Field(default_factory=dict, description="Voxel field grid metadata")
@@ -217,7 +215,7 @@ class BasinSynthesisReport(BaseModel):
 
     # Metadata
     generated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         description="When the report was generated (UTC)",
     )
     pipeline_version: str = Field(default=PHASE2_VERSION, description="Pipeline version")
@@ -292,7 +290,7 @@ class FetcherManager:
                     }
                 )
                 return result, True, detail
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 last_error = f"timeout after {FETCHER_TIMEOUT_S}s"
                 self.call_log.append(
                     {
@@ -464,9 +462,9 @@ class BasinSynthesisPipeline:
     async def run(
         self,
         basin_name: str,
-        age_ma: Optional[float] = None,
-        bbox: Optional[list[float]] = None,
-        run_id: Optional[str] = None,
+        age_ma: float | None = None,
+        bbox: list[float] | None = None,
+        run_id: str | None = None,
     ) -> BasinSynthesisReport:
         """Run the full 11-stage basin synthesis pipeline with STRANGE LOOP convergence.
 
@@ -493,8 +491,8 @@ class BasinSynthesisPipeline:
 
         bbox_used = bbox or DEFAULT_BBOX.copy()
 
-        best_report: Optional[BasinSynthesisReport] = None
-        previous_voxel_field: Optional[dict[str, Any]] = None
+        best_report: BasinSynthesisReport | None = None
+        previous_voxel_field: dict[str, Any] | None = None
 
         # ── STRANGE LOOP — iterate until convergence ────────────────────────
         for iteration in range(self.max_iterations):
@@ -532,7 +530,7 @@ class BasinSynthesisPipeline:
                 report.iteration_count = iteration
                 report.converged = True
                 report.delta_S_final = delta_S
-                state.completed_at = datetime.now(timezone.utc)
+                state.completed_at = datetime.now(UTC)
                 return report
 
             # Save best report so far
@@ -558,14 +556,14 @@ class BasinSynthesisPipeline:
         best_report.iteration_count = state.iteration_count
         best_report.converged = state.converged
         best_report.delta_S_final = state.delta_S_history[-1] if state.delta_S_history else 0.0
-        state.completed_at = datetime.now(timezone.utc)
+        state.completed_at = datetime.now(UTC)
 
         return best_report
 
     async def _run_single_pass(
         self,
         basin_name: str,
-        age_ma: Optional[float],
+        age_ma: float | None,
         bbox_used: list[float],
         state: SynthesisState,
         provenance: ProvenanceLedger,
@@ -589,11 +587,11 @@ class BasinSynthesisPipeline:
             result_real = None
             source_label = "mock-resolve"
             try:
-                import urllib.request
                 import json as _json
+                import urllib.request
 
                 req = urllib.request.Request(
-                    f"http://localhost:8081/mcp",
+                    "http://localhost:8081/mcp",
                     data=_json.dumps(
                         {
                             "jsonrpc": "2.0",
@@ -664,7 +662,6 @@ class BasinSynthesisPipeline:
 
             # Try GPlates fetcher — live GWS mode (P0 forged 2026-07-03)
             gplates_ok = False
-            gplates_recon_data: dict[str, Any] = {}
             if _GPLATES_AVAILABLE:
                 try:
                     # Force live GWS mode for synthesis pipeline
@@ -690,7 +687,7 @@ class BasinSynthesisPipeline:
                     if recon_results:
                         gplates_ok = True
                         gplates_source = "gplates-gws-live"
-                        gplates_recon_data = {
+                        {
                             "reconstructions": recon_results,
                             "model_spread": _compute_model_spread(recon_results),
                             "note": f"GPlates GWS live: {len(recon_results)}/{len(model_sequence)} models returned data for {age_ma} Ma",
@@ -772,11 +769,11 @@ class BasinSynthesisPipeline:
             # Try macrostrat via geox_basin
             if True:  # Always attempt
                 try:
-                    import urllib.request
                     import json as _json
+                    import urllib.request
 
                     req = urllib.request.Request(
-                        f"http://localhost:8081/mcp",
+                        "http://localhost:8081/mcp",
                         data=_json.dumps(
                             {
                                 "jsonrpc": "2.0",
@@ -1024,11 +1021,11 @@ class BasinSynthesisPipeline:
             dts_ok = False
             dts_source = "mock-deep-time"
             try:
-                import urllib.request
                 import json as _json
+                import urllib.request
 
                 req = urllib.request.Request(
-                    f"http://localhost:8081/mcp",
+                    "http://localhost:8081/mcp",
                     data=_json.dumps(
                         {
                             "jsonrpc": "2.0",
@@ -1129,7 +1126,7 @@ class BasinSynthesisPipeline:
             state.start_stage(stage_num, "voxel_field_build")
 
             units = result_3.get("units", [])
-            crust_zone = result_4.get("crust_zone", "unknown")
+            result_4.get("crust_zone", "unknown")
             stress_regime = result_2.get("stress_regime", "unknown")
 
             try:
@@ -1368,17 +1365,17 @@ class BasinSynthesisPipeline:
 
         r4 = await stage_4()
         r5 = await stage_5()
-        r6 = await stage_6()
+        await stage_6()
         if state.aborted:
             return await _abort_report(state, provenance, gap_registry, cascade, basin_name, bbox_used, age_ma)
 
-        r7 = await stage_7(r2, r5)
+        await stage_7(r2, r5)
         r8 = await stage_8(r3, r4, r2)
         r9 = await stage_9(r8)
-        r10 = await stage_10()
+        await stage_10()
         report = await stage_11(r1, r8, r9)
 
-        state.completed_at = datetime.now(timezone.utc)
+        state.completed_at = datetime.now(UTC)
         report.total_stages_completed = state.stages_completed
 
         return report
@@ -1444,7 +1441,7 @@ async def _abort_report(
     cascade: UncertaintyCascade,
     basin_name: str,
     bbox: list[float],
-    age_ma: Optional[float],
+    age_ma: float | None,
 ) -> BasinSynthesisReport:
     """Build an aborted report when pipeline halts."""
     return BasinSynthesisReport(

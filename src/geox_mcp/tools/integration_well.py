@@ -19,24 +19,23 @@ DITEMPA BUKAN DIBEI — the operator gates the witness.
 
 from __future__ import annotations
 
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, Field
-
 
 OperatorDecisionClass = Literal["C1", "C2", "C3", "C4", "C5"]
 
 
 class WellStateRequest(BaseModel):
     operator_id: str = Field(default="arif", description="Operator identity to check readiness for")
-    task_description: Optional[str] = Field(default=None, description="Optional context for WELL")
+    task_description: str | None = Field(default=None, description="Optional context for WELL")
 
 
 class WellStateResponse(BaseModel):
     ok: bool
     tool: str = "geox_well_decision_class"
     decision_class: OperatorDecisionClass = "C3"
-    operator_readiness: Optional[str] = None  # GREEN / AMBER / RED
+    operator_readiness: str | None = None  # GREEN / AMBER / RED
     chronic_fatigue: bool = False
     accumulated_session_fatigue: float = 0.0
     rationale: str = ""

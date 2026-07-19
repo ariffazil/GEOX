@@ -18,15 +18,13 @@ KISS: This is a lookup table, not a graph library.
 
 from __future__ import annotations
 
-from enum import Enum
-from typing import Optional
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
-
 # ─── CANON-9 Variables ────────────────────────────────────────────────────────
 
-class Canon9Variable(str, Enum):
+class Canon9Variable(StrEnum):
     Vp = "Vp"      # P-wave velocity — seismic, impedance
     Vs = "Vs"      # S-wave velocity — rock stiffness
     rho = "rho"   # Bulk density — gravity, overburden
@@ -40,7 +38,7 @@ class Canon9Variable(str, Enum):
 
 # ─── Propagation Levels ────────────────────────────────────────────────────────
 
-class Propagation(str, Enum):
+class Propagation(StrEnum):
     """
     What happens when a variable is updated.
 
@@ -273,7 +271,7 @@ _register(
 def get_replan(
     trigger_name: str,
     *,
-    source_tool: Optional[str] = None,
+    source_tool: str | None = None,
 ) -> ReplanEntry | None:
     """
     Look up replan propagation for a trigger.
@@ -293,7 +291,7 @@ def get_replan(
     return entry
 
 
-def requires_hold(trigger_name: str, source_tool: Optional[str] = None) -> bool:
+def requires_hold(trigger_name: str, source_tool: str | None = None) -> bool:
     """True if this trigger requires Arif release before autonomous use."""
     entry = get_replan(trigger_name, source_tool=source_tool)
     return entry is not None and entry.propagation == Propagation.HOLD
@@ -301,7 +299,7 @@ def requires_hold(trigger_name: str, source_tool: Optional[str] = None) -> bool:
 
 def get_downstream_variables(
     trigger_name: str,
-    source_tool: Optional[str] = None,
+    source_tool: str | None = None,
 ) -> list[Canon9Variable]:
     """Return the list of CANON-9 variables affected by this trigger."""
     entry = get_replan(trigger_name, source_tool=source_tool)

@@ -26,9 +26,9 @@ import os
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -71,11 +71,11 @@ class EarthquakeEvent:
     event_type: str  # "earthquake", "quarry blast", "nuclear explosion", etc.
     status: str  # "automatic", "reviewed", "deleted"
     tsunami_flag: int  # 0 or 1
-    felt: Optional[int] = None  # DYFI responses
-    cdi: Optional[float] = None  # Community Determined Intensity
-    mmi: Optional[float] = None  # Modified Mercalli Intensity
-    alert_level: Optional[str] = None  # PAGER: green/yellow/orange/red
-    url: Optional[str] = None  # detail page
+    felt: int | None = None  # DYFI responses
+    cdi: float | None = None  # Community Determined Intensity
+    mmi: float | None = None  # Modified Mercalli Intensity
+    alert_level: str | None = None  # PAGER: green/yellow/orange/red
+    url: str | None = None  # detail page
 
 
 @dataclass
@@ -91,34 +91,34 @@ class EarthquakeCatalogResult:
     citation: str = USGS_CITATION
     fetched_at: str = ""
     note: str = ""
-    error: Optional[str] = None
+    error: str | None = None
 
 
 # ───────────────────────────── QUERY PARAMETERS ───────────────────────────────────
 class EarthquakeQuery(BaseModel):
     """Parameters for a USGS earthquake catalog query."""
 
-    starttime: Optional[str] = Field(
+    starttime: str | None = Field(
         None, description="ISO8601 start time (default: NOW - 30 days)"
     )
-    endtime: Optional[str] = Field(
+    endtime: str | None = Field(
         None, description="ISO8601 end time (default: present)"
     )
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    latitude: Optional[float] = Field(None, ge=-90, le=90, description="Circle center lat")
-    longitude: Optional[float] = Field(None, ge=-180, le=180, description="Circle center lon")
-    maxradiuskm: Optional[float] = Field(None, ge=0, le=20002, description="Circle radius km")
-    minmagnitude: Optional[float] = Field(None, description="Minimum magnitude")
-    maxmagnitude: Optional[float] = Field(None, description="Maximum magnitude")
-    mindepth: Optional[float] = Field(None, ge=-100, le=1000, description="Min depth km")
-    maxdepth: Optional[float] = Field(None, ge=-100, le=1000, description="Max depth km")
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
+    latitude: float | None = Field(None, ge=-90, le=90, description="Circle center lat")
+    longitude: float | None = Field(None, ge=-180, le=180, description="Circle center lon")
+    maxradiuskm: float | None = Field(None, ge=0, le=20002, description="Circle radius km")
+    minmagnitude: float | None = Field(None, description="Minimum magnitude")
+    maxmagnitude: float | None = Field(None, description="Maximum magnitude")
+    mindepth: float | None = Field(None, ge=-100, le=1000, description="Min depth km")
+    maxdepth: float | None = Field(None, ge=-100, le=1000, description="Max depth km")
     limit: int = Field(200, ge=1, le=20000, description="Max events to return")
     orderby: str = Field("time", description="time | time-asc | magnitude | magnitude-asc")
-    alertlevel: Optional[str] = Field(None, description="PAGER: green/yellow/orange/red")
-    eventtype: Optional[str] = Field(None, description="earthquake, quarry blast, etc.")
+    alertlevel: str | None = Field(None, description="PAGER: green/yellow/orange/red")
+    eventtype: str | None = Field(None, description="earthquake, quarry blast, etc.")
     format: str = Field("geojson", description="geojson | csv | quakeml")
 
 
@@ -131,7 +131,7 @@ class USGSEarthquakeFetcher:
     - GEOX_USGS_EQ_OFFLINE=0: live HTTP GET to USGS FDSN API.
     """
 
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get(
             "GEOX_USGS_EQ_CACHE_DIR", "/root/.cache/geox/usgs_earthquake"
         ))
@@ -143,7 +143,7 @@ class USGSEarthquakeFetcher:
 
         Returns schema-translated events with full provenance.
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         query_dict = params.model_dump(exclude_none=True)
 
         if self._offline:
@@ -198,7 +198,7 @@ class USGSEarthquakeFetcher:
             events.append(EarthquakeEvent(
                 event_id=feature.get("id", ""),
                 time_utc=datetime.fromtimestamp(
-                    props.get("time", 0) / 1000, tz=timezone.utc
+                    props.get("time", 0) / 1000, tz=UTC
                 ).isoformat(),
                 latitude=coords[1] if len(coords) > 1 else 0.0,
                 longitude=coords[0] if len(coords) > 0 else 0.0,

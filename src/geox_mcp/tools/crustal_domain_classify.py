@@ -54,16 +54,13 @@ from __future__ import annotations
 
 import hashlib
 import logging
-from datetime import datetime, timezone
-from typing import Any
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from geox_core.schemas.crust_vp_grammar import (
     CrustClassification,
     CrustZone,
-    VpObservation,
-    classify_column,
     vp_zone_classify,
 )
 
@@ -311,7 +308,7 @@ async def geox_crustal_domain_classify(
         cells=cell_results,
         zone_distribution=zone_counts,
         observation_hash=obs_hash,
-        generated_at=datetime.now(timezone.utc).isoformat(),
+        generated_at=datetime.now(UTC).isoformat(),
     )
 
 

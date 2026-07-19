@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Any
 
 logger = logging.getLogger("geox.core.tool_registry")
@@ -34,7 +34,7 @@ class ToolStatus(Enum):
     SCAFFOLD = "scaffold"  # Architecture only, not implemented
 
 
-class Verdict(str, Enum):
+class Verdict(StrEnum):
     """Canonical AC_Risk terminal verdicts."""
 
     SEAL = "SEAL"
@@ -43,7 +43,7 @@ class Verdict(str, Enum):
     VOID = "VOID"
 
 
-class DependencyType(str, Enum):
+class DependencyType(StrEnum):
     """Type of inter-product dependency."""
 
     REQUIRED = "required"

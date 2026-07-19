@@ -27,9 +27,8 @@ import hashlib
 import logging
 import os
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -72,15 +71,15 @@ class ETOPOGridMeta:
 
     source_uri: str
     fetched_at: str
-    sha256: Optional[str]
+    sha256: str | None
     resolution_arcsec: int  # 15, 30, or 60
     version: str  # "bedrock" | "ice_surface"
     crs: str  # "EPSG:4326"
     bbox: tuple[float, float, float, float]  # min_lon, min_lat, max_lon, max_lat
-    elevation_min_m: Optional[float] = None
-    elevation_max_m: Optional[float] = None
-    rows: Optional[int] = None
-    cols: Optional[int] = None
+    elevation_min_m: float | None = None
+    elevation_max_m: float | None = None
+    rows: int | None = None
+    cols: int | None = None
 
 
 class ETOPOFetchResult(BaseModel):
@@ -88,11 +87,11 @@ class ETOPOFetchResult(BaseModel):
 
     ok: bool
     mode: str  # "live" | "offline_stub" | "cached"
-    grid_path: Optional[str] = None
-    meta: Optional[ETOPOGridMeta] = None
+    grid_path: str | None = None
+    meta: ETOPOGridMeta | None = None
     citation: str = ETOPO_CITATION
     note: str = ""
-    error: Optional[str] = None
+    error: str | None = None
 
 
 class ETOPOExtractRequest(BaseModel):
@@ -121,7 +120,7 @@ class ETOPOFetcher:
     - Graceful degradation to offline stub
     """
 
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get(
             "GEOX_ETOPO_CACHE_DIR", "/root/.cache/geox/etopo"
         ))
@@ -141,7 +140,7 @@ class ETOPOFetcher:
             version: "bedrock" or "ice_surface"
             output_format: "geotiff" or "netcdf"
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         if self._offline:
             return self._offline_stub(
@@ -173,7 +172,7 @@ class ETOPOFetcher:
         In offline mode, returns a stub. In live mode, checks cache for
         matching bbox files.
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         if self._offline:
             return self._offline_stub(
@@ -217,7 +216,7 @@ class ETOPOFetcher:
 
     def _check_cache(
         self, resolution: int, version: str, output_format: str
-    ) -> Optional[ETOPOFetchResult]:
+    ) -> ETOPOFetchResult | None:
         """Check local cache for a matching ETOPO file."""
         pattern = f"etopo2022_{resolution}s_{version}*"
         matches = list(self.cache_dir.glob(pattern))

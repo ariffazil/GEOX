@@ -9,7 +9,9 @@ Modes: horizon_contrast, fault_sticks, volume_frame, blend
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 from __future__ import annotations
+
 from typing import Any, Literal
+
 
 async def geox_seismic_interpret(
     mode: Literal["horizon_contrast", "fault_sticks", "volume_frame", "blend"] = "horizon_contrast",

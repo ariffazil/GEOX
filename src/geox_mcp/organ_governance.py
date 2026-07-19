@@ -99,12 +99,8 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     "geox_cascade_pathway": RiskTier.READONLY,
     "geox_gravmag_studio_open": RiskTier.READONLY,
     "geox_gravmag_studio_screen": RiskTier.READONLY,
-    "geox_well_desk_open": RiskTier.READONLY,
     # ── PHASE 2 PROMOTIONS (2026-07-19) ──
     "geox_map_export_package": RiskTier.READONLY,
-    "geox_tie_preflight": RiskTier.READONLY,
-    "geox_tie_receipt": RiskTier.READONLY,
-    "geox_wavelet_extract_least_squares": RiskTier.READONLY,
     "geox_seismic_cognition": RiskTier.READONLY,
     "geox_visual_understand": RiskTier.READONLY,
     "geox_visual_generate_hypotheses": RiskTier.READONLY,

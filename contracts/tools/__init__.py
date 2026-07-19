@@ -17,6 +17,7 @@ from contracts.enums import (
     Transport,
     Verdict,
 )
+
 # CANONICAL_TOOLS moved to src/geox_mcp/registry.py — import from there.
 # Kept here as a re-export for backward compat during transition.
 try:

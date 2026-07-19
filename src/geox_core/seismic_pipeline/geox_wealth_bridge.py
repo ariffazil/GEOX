@@ -14,10 +14,10 @@ Epistemic ladder:
 DITEMPA BUKAN DIBERI.
 """
 
-import numpy as np
-import os
 import json
-import hashlib
+import os
+
+import numpy as np
 
 
 def run_wealth_bridge(gempy_manifest_path: str,
@@ -45,7 +45,7 @@ def run_wealth_bridge(gempy_manifest_path: str,
     if not os.path.exists(gempy_manifest_path) or not os.path.exists(grid_path):
         return {"status": "VOID", "reason": "GemPy model inputs missing"}
     
-    with open(gempy_manifest_path, "r") as f:
+    with open(gempy_manifest_path) as f:
         g_man = json.load(f)
 
     lith_grid = np.load(grid_path)
@@ -67,7 +67,7 @@ def run_wealth_bridge(gempy_manifest_path: str,
     # Target formation code is usually 2.0 in GemPy block model
     unique_ids, counts = np.unique(np.round(lith_grid), return_counts=True)
     print("       Grid unit distribution:")
-    for uid, count in zip(unique_ids, counts):
+    for uid, count in zip(unique_ids, counts, strict=False):
         print(f"         Unit {int(uid)}: {count} cells")
 
     # Assume unit 2 is our target sand
@@ -91,7 +91,7 @@ def run_wealth_bridge(gempy_manifest_path: str,
 
     if os.path.exists(well_manifest_path):
         try:
-            with open(well_manifest_path, "r") as f:
+            with open(well_manifest_path) as f:
                 w_man = json.load(f)
             print(f"  [C3] Calibrated with well: {w_man.get('well_name')} (uwi={w_man.get('uwi')})")
         except Exception as e:
@@ -139,7 +139,7 @@ def run_wealth_bridge(gempy_manifest_path: str,
     risked_annual_cf = annual_cash_flow * gcos
     npv = compute_npv(exploration_capex_usd, [risked_annual_cf] * 10, r_adj)
 
-    print(f"  [C4] Valuation Engine:")
+    print("  [C4] Valuation Engine:")
     print(f"       Geological Chance of Success (Pg): {gcos:.2%}")
     print(f"       Unrisked Success Outcome: {success_outcome/1e6:,.2f} M USD")
     print(f"       Unrisked Failure Outcome: {failure_outcome/1e6:,.2f} M USD")

@@ -25,7 +25,6 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 from datetime import UTC, datetime
 from pathlib import Path
@@ -528,7 +527,7 @@ def _build_epistemic_envelope(
     # Count labels
     obs_items = ["Pixel amplitude (R-B or grayscale inversion)", "Image dimensions", "Pixel array"]
     der_items = [k for k, v in attributes.get("labels", {}).items() if v == "DER_RENDER_CONTRAST"]
-    int_items = [f["id"] + " " + f["label"] for f in faults] + [h["id"] + " " + h["label"] for h in horizons]
+    [f["id"] + " " + f["label"] for f in faults] + [h["id"] + " " + h["label"] for h in horizons]
 
     # Collect all alternatives
     all_alternatives: list[str] = []

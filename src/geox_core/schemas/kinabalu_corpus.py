@@ -25,14 +25,13 @@ Reference:
 from __future__ import annotations
 
 import hashlib
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from geox_core.schemas.intelligence_flow import FlowLayer, FlowStage, FlowPacket
-
+from geox_core.schemas.intelligence_flow import FlowLayer
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Source / evidence taxonomy
@@ -156,7 +155,7 @@ class Claim(BaseModel):
     related_claim_ids: list[str] = Field(default_factory=list)
     # F11 audit
     added_at: str = Field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
 
@@ -283,7 +282,7 @@ class KinabaluCorpus(BaseModel):
     )
     # Build metadata
     built_at: str = Field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
     forge_cycle: str = Field(default="2026-06-22 RSI consolidation")
 

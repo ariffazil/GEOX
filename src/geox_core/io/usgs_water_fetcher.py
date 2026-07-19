@@ -16,9 +16,8 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -32,12 +31,12 @@ USGS_WATER_CITATION = (
 
 
 class WaterQuery(BaseModel):
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    state_code: Optional[str] = Field(None, description="US state FIPS code")
-    site_type: Optional[str] = Field(None, description="ST=stream, GW=well, SP=spring")
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
+    state_code: str | None = Field(None, description="US state FIPS code")
+    site_type: str | None = Field(None, description="ST=stream, GW=well, SP=spring")
     parameter_code: str = Field("00060", description="00060=discharge, 00010=temperature, 72019=GW level")
     period: str = Field("P7D", description="ISO 8601 duration (e.g., P7D, P30D, P1Y)")
     limit: int = Field(100, ge=1, le=10000)
@@ -60,7 +59,7 @@ class USGSWaterFetcher:
         self._offline = os.environ.get("GEOX_USGS_WATER_OFFLINE", "1") != "0"
 
     def query(self, params: WaterQuery) -> WaterResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return WaterResult(
                 ok=True, mode="offline_stub",

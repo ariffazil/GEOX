@@ -16,9 +16,8 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -36,8 +35,8 @@ class GraceQuery(BaseModel):
     maxlatitude: float = Field(90, ge=-90, le=90)
     minlongitude: float = Field(-180, ge=-360, le=360)
     maxlongitude: float = Field(180, ge=-360, le=360)
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
+    start_date: str | None = None
+    end_date: str | None = None
     product: str = Field("TELLUS_GRAC_L3_MASCON_CRI_GRID", description="GRACE product ID")
 
 
@@ -57,7 +56,7 @@ class GRACEFetcher:
         self._offline = os.environ.get("GEOX_GRACE_OFFLINE", "1") != "0"
 
     def query(self, params: GraceQuery) -> GraceResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return GraceResult(
                 ok=True, mode="offline_stub",

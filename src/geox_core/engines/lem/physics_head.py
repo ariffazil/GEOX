@@ -19,9 +19,6 @@ Architecture:
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
-
-import numpy as np
 
 logger = logging.getLogger("geox.lem.physics")
 
@@ -175,11 +172,11 @@ class PhysicsConstraintHead(nn.Module):
     def forward(
         self,
         latents: torch.Tensor,
-        gr: Optional[torch.Tensor] = None,
-        rt: Optional[torch.Tensor] = None,
-        rhob: Optional[torch.Tensor] = None,
-        nphi: Optional[torch.Tensor] = None,
-        depth: Optional[torch.Tensor] = None,
+        gr: torch.Tensor | None = None,
+        rt: torch.Tensor | None = None,
+        rhob: torch.Tensor | None = None,
+        nphi: torch.Tensor | None = None,
+        depth: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
         """
         Predict physical properties and compute physics loss.

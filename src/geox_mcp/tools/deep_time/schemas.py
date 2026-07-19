@@ -9,7 +9,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
@@ -29,7 +29,7 @@ from pydantic import BaseModel, Field
 # EpistemicLevel is a str-Enum so it serializes to JSON as the string value
 # (not a quoted enum repr) and accepts string comparisons like
 # `epistemic_level == "OBSERVED"` without coercion errors.
-class EpistemicLevel(str, Enum):
+class EpistemicLevel(StrEnum):
     """Epistemic provenance of a deep_time variable — drives F7 confidence cap."""
     OBSERVED = "OBSERVED"             # directly measured (e.g. ice core δ18O)
     DERIVED = "DERIVED"               # formula-based from observed inputs
@@ -79,7 +79,7 @@ def cap_confidence(epistemic_level: str, raw_confidence: float) -> float:
 # Normal Superchron (CNS, ~83.6-120.6 Ma) and Kiaman Reversed Superchron
 # (~262-318 Ma) where polarity is KNOWN but provides ZERO dating resolution.
 
-class PolarityState(str, Enum):
+class PolarityState(StrEnum):
     NORMAL = "normal"        # single normal chron
     REVERSED = "reversed"    # single reversed chron
     MIXED = "mixed"          # interval spans >=1 reversal

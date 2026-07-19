@@ -77,3 +77,9 @@ static/gui/cesium/Workers/
 ariffazil-geox.txt
 Copilot/
 
+
+# Volve field data (requires Equinor license)
+data/volve_wells/
+
+# Generated renders
+data/renders/

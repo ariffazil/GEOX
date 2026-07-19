@@ -23,11 +23,13 @@ Epistemic Status:
 DITEMPA BUKAN DIBERI.
 """
 
-import numpy as np
-import os
-import json
 import hashlib
+import json
+import os
+
 import matplotlib
+import numpy as np
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
@@ -99,7 +101,7 @@ def run_well_tie(las_path: str,
 
     if os.path.exists(segy_audit_path):
         try:
-            with open(segy_audit_path, "r") as f:
+            with open(segy_audit_path) as f:
                 audit = json.load(f)
             seismic_dt_ms = audit.get("geometry", {}).get("dt_ms", 2.0)
             wavelet_freq = audit.get("wavelet", {}).get("bruges_ricker_target_hz", 40.0)
@@ -120,7 +122,7 @@ def run_well_tie(las_path: str,
     dz = np.append(dz, dz[-1])  # match length
     twt_inc = 2_000.0 * dz / vp
     well_twt_ms = well_top_twt_ms + np.cumsum(twt_inc)
-    print(f"  [W3] Integrated sonic T-D model built:")
+    print("  [W3] Integrated sonic T-D model built:")
     print(f"       TWT range: {well_twt_ms[0]:.1f}ms to {well_twt_ms[-1]:.1f}ms")
 
     # ── 3. Calculate Reflection Coefficients (RC) ────────────────────

@@ -257,15 +257,6 @@ async def geox_icgem_models(*args: Any, **kwargs: Any) -> dict:
     return await geox_basin(*args, **kwargs)
 
 
-async def geox_map_context_scene(*args: Any, **kwargs: Any) -> dict:
-    """[DEPRECATED] Use geox_basin(mode='scene') instead."""
-    from geox_mcp.tools.basin_unified import geox_basin
-    kwargs.setdefault("mode", "scene")
-    return await geox_basin(*args, **kwargs)
-
-
-# ── GOVERNANCE domain ────────────────────────────────────────────────────────
-
 async def geox_claim_create(*args: Any, **kwargs: Any) -> dict:
     """[DEPRECATED] Use geox_claim(mode='create') instead."""
     from geox_mcp.tools.claim_unified import geox_claim

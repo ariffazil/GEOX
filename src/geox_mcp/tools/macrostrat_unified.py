@@ -13,9 +13,9 @@ DITEMPA BUKAN DIBERI — upstream data is governed, not inherited.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
-from geox_core.bridges.upstream_registry import get_registry, TrustClass
+from geox_core.bridges.upstream_registry import TrustClass, get_registry
 from geox_mcp.tools.macrostrat_client import MacrostratClient
 
 logger = logging.getLogger("geox.macrostrat_unified")
@@ -125,17 +125,17 @@ def _error_envelope(
 
 async def geox_query_macrostrat(
     mode: str = "units",
-    lat: Optional[float] = None,
-    lng: Optional[float] = None,
-    bbox: Optional[list[float]] = None,
-    radius_km: Optional[float] = None,
-    col_id: Optional[int] = None,
-    project_id: Optional[int] = None,
-    lithology: Optional[str] = None,
-    age_top: Optional[float] = None,
-    age_bottom: Optional[float] = None,
+    lat: float | None = None,
+    lng: float | None = None,
+    bbox: list[float] | None = None,
+    radius_km: float | None = None,
+    col_id: int | None = None,
+    project_id: int | None = None,
+    lithology: str | None = None,
+    age_top: float | None = None,
+    age_bottom: float | None = None,
     all_units: bool = False,
-    session_id: Optional[str] = None,
+    session_id: str | None = None,
     **kwargs: Any,
 ) -> dict:
     """Query the Macrostrat geological database.

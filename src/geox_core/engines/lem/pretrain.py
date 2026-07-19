@@ -18,18 +18,16 @@ from __future__ import annotations
 import json
 import logging
 import os
-import time
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 import numpy as np
 
 from .config import LEMConfig
-from .tokenizer import WellLogVQVAE, NUM_CURVES
-from .dataset import WellLogDataset, create_lem_dataloader
-from .model import LEMTransformer, LEMLoss
+from .dataset import WellLogDataset
+from .model import LEMLoss, LEMTransformer
 from .physics_head import PhysicsConstraintHead
+from .tokenizer import NUM_CURVES, WellLogVQVAE
 
 logger = logging.getLogger("geox.lem.pretrain")
 
@@ -37,9 +35,9 @@ try:
     import torch
     import torch.nn as nn
     import torch.nn.functional as F
-    from torch.utils.data import DataLoader
     from torch.optim import AdamW
     from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts
+    from torch.utils.data import DataLoader
     _HAS_TORCH = True
 except ImportError:
     _HAS_TORCH = False
@@ -55,7 +53,7 @@ except ImportError:
 
 def train_tokenizer(
     config: LEMConfig,
-    resume_from: Optional[str] = None,
+    resume_from: str | None = None,
 ) -> dict[str, Any]:
     """
     Phase 1: Train VQ-VAE tokenizer on well log patches.
@@ -256,8 +254,8 @@ def tokenize_dataset(
 
 def pretrain_transformer(
     config: LEMConfig,
-    tokenized_data_path: Optional[str] = None,
-    resume_from: Optional[str] = None,
+    tokenized_data_path: str | None = None,
+    resume_from: str | None = None,
 ) -> dict[str, Any]:
     """
     Phase 3: Pretrain LEMTransformer with masked token modeling.
@@ -406,7 +404,7 @@ def pretrain_transformer(
                     "num_layers": config.pretrain.num_layers,
                     "num_heads": config.pretrain.num_heads,
                 },
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
             }, ckpt_path)
 
         # Early stopping check
@@ -425,7 +423,7 @@ def pretrain_transformer(
             "num_layers": config.pretrain.num_layers,
             "num_heads": config.pretrain.num_heads,
         },
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }, final_path)
 
     summary = {
@@ -515,7 +513,7 @@ def run_pretraining_pipeline(config: LEMConfig) -> dict[str, Any]:
         "tokenizer": tokenizer_summary,
         "tokenize": tokenize_summary,
         "transformer": transformer_summary,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
 

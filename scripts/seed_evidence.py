@@ -5,9 +5,8 @@ from datetime import datetime
 # Path Hack
 sys.path.append(os.path.abspath("."))
 
-from services.evidence_store.store import store
-
 from geox.shared.contracts.schemas import EvidenceKind, EvidenceObject, EvidenceRef, GeoContext, UnitRef, VerticalDomain
+from services.evidence_store.store import store
 
 
 def seed():

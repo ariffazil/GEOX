@@ -8,7 +8,9 @@ Modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute, in
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 from __future__ import annotations
+
 from typing import Any, Literal
+
 
 async def geox_seismic_compute(
     mode: Literal["synthetic", "well_tie", "time_depth_anchor", "anomalous_contrast", "attribute", "inversion"] = "synthetic",
@@ -69,8 +71,9 @@ async def geox_seismic_compute(
         )
 
     # Default: delegate to the canonical geox_seismic_compute implementation (all other modes)
-    from geox_mcp.tools.seismic_compute import geox_seismic_compute as _impl
     import inspect
+
+    from geox_mcp.tools.seismic_compute import geox_seismic_compute as _impl
     kwargs.setdefault("mode", mode)
     # Filter kwargs to only pass params the impl accepts
     impl_params = set(inspect.signature(_impl).parameters.keys())

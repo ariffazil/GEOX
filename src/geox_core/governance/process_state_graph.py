@@ -25,8 +25,7 @@ subsequent tranche with empirical calibration.
 
 from __future__ import annotations
 
-from enum import Enum
-from typing import Optional
+from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -39,13 +38,12 @@ from geox_core.schemas.voxel_state import (
     ProcessState,
 )
 
-
 # ═══════════════════════════════════════════════════════════════════════════════
 # 1. EDGE TYPES
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class EdgeKind(str, Enum):
+class EdgeKind(StrEnum):
     """
     Kind of process-state transition edge.
     """
@@ -74,7 +72,7 @@ class ProcessStateEdge(BaseModel):
         ge=0.0, le=1.0,
         description="Transition probability (per Myr or per unit time, calibration pending)",
     )
-    time_duration_myr: Optional[float] = Field(
+    time_duration_myr: float | None = Field(
         default=None, ge=0.0, description="Typical duration of this transition in Myr"
     )
     evidence_refs: list[str] = Field(
@@ -93,8 +91,8 @@ def _make_initial_state(
     igneous: IgneousContext = IgneousContext.unknown,
     metamorphic: MetamorphicRegime = MetamorphicRegime.unknown,
     transition: LastMajorTransition = LastMajorTransition.unknown,
-    has_been_molten: Optional[bool] = None,
-    has_been_exhumed: Optional[bool] = None,
+    has_been_molten: bool | None = None,
+    has_been_exhumed: bool | None = None,
 ) -> ProcessState:
     """Helper for building initial ProcessState nodes."""
     return ProcessState(
@@ -292,7 +290,7 @@ class ProcessStateGraph(BaseModel):
     def has_been_molten_reachable(
         self,
         start: ProcessState,
-        target_visited: Optional[set[tuple]] = None,
+        target_visited: set[tuple] | None = None,
     ) -> bool:
         """
         Check whether a `has_been_molten=True` state is reachable from `start`.

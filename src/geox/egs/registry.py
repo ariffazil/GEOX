@@ -55,7 +55,7 @@ def init_egs_state() -> None:
     Creates the empty earth graph, claim store, and provenance chains.
     Call once at server startup before registering tools.
     """
-    from geox.egs.tools.query import _EGS_GRAPH, _EGS_CLAIMS, _EGS_PROVENANCE
+    from geox.egs.tools.query import _EGS_CLAIMS, _EGS_GRAPH, _EGS_PROVENANCE
 
     # State is already initialized at import time.
     # This function exists for explicit initialization and logging.

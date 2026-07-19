@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel
@@ -30,7 +30,7 @@ class BoundingBox(BaseModel):
     crs: str | None = None
 
 
-class VerticalDomain(str, Enum):
+class VerticalDomain(StrEnum):
     twt_ms = "twt_ms"
     tvdss_m = "tvdss_m"
     md_m = "md_m"
@@ -45,7 +45,7 @@ class GeoContext(BaseModel):
     units: dict[str, UnitRef]
 
 
-class EvidenceKind(str, Enum):
+class EvidenceKind(StrEnum):
     well = "well"
     seismic = "seismic"
     map = "map"
@@ -69,7 +69,7 @@ class EvidenceObject(BaseModel):
     metadata: dict[str, Any] | None = None
 
 
-class TransformStatus(str, Enum):
+class TransformStatus(StrEnum):
     SUCCESS = "SUCCESS"
     PARTIAL = "PARTIAL"
     FAILED = "FAILED"
@@ -90,7 +90,7 @@ class TransformResult(BaseModel):
     status: TransformStatus
 
 
-class VerdictStatus(str, Enum):
+class VerdictStatus(StrEnum):
     SEAL = "SEAL"
     PARTIAL = "PARTIAL"
     SABAR = "SABAR"

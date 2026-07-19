@@ -24,7 +24,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
@@ -34,7 +34,7 @@ from pydantic import BaseModel, Field
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class ClaimState(str, Enum):
+class ClaimState(StrEnum):
     """Where does this claim sit in the evidence lifecycle?
 
     Maps directly to Eureka 10 metabolic output contract.
@@ -48,7 +48,7 @@ class ClaimState(str, Enum):
     HOLD = "HOLD"  # Governance pause — requires 888_JUDGE
 
 
-class WitnessType(str, Enum):
+class WitnessType(StrEnum):
     """What category of evidence is this witness?
 
     Eureka 1: Reality is never directly held. Maps are not Earth.
@@ -66,7 +66,7 @@ class WitnessType(str, Enum):
     SIGNAL = "signal"
 
 
-class ModelTarget(str, Enum):
+class ModelTarget(StrEnum):
     """Which domain model does this witness update?"""
 
     EARTH = "Earth"
@@ -77,7 +77,7 @@ class ModelTarget(str, Enum):
     SYSTEM = "System"
 
 
-class OrganType(str, Enum):
+class OrganType(StrEnum):
     """Which organ processes this witness."""
 
     GEOX = "GEOX"  # Earth metabolism
@@ -87,7 +87,7 @@ class OrganType(str, Enum):
     ARIFOS = "arifOS"  # Constitutional kernel + routing
 
 
-class ContrastSeverity(str, Enum):
+class ContrastSeverity(StrEnum):
     """How significant is the anomalous contrast?"""
 
     LOW = "LOW"
@@ -96,7 +96,7 @@ class ContrastSeverity(str, Enum):
     CRITICAL = "CRITICAL"
 
 
-class AbstractionUse(str, Enum):
+class AbstractionUse(StrEnum):
     """How can an abstraction be safely used?"""
 
     HEURISTIC = "heuristic"  # Starting point for investigation only
@@ -104,7 +104,7 @@ class AbstractionUse(str, Enum):
     VERIFIED_MODEL = "verified_model"  # Physically/logically confirmed
 
 
-class ConfidenceLevel(str, Enum):
+class ConfidenceLevel(StrEnum):
     """
     Shared confidence language across all organs.
 
@@ -124,7 +124,7 @@ class ConfidenceLevel(str, Enum):
     SEALED = "SEALED"
 
 
-class WitnessStatus(str, Enum):
+class WitnessStatus(StrEnum):
     """
     Lifecycle stage of a witness through the metabolic pipeline.
 
@@ -138,7 +138,7 @@ class WitnessStatus(str, Enum):
     CONTESTED = "CONTESTED"
 
 
-class StalenessRisk(str, Enum):
+class StalenessRisk(StrEnum):
     """How likely is this evidence to be stale?"""
 
     LOW = "LOW"  # Static evidence (geology, legal structure)

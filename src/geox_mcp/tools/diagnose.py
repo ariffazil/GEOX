@@ -16,9 +16,8 @@ DITEMPA BUKAN DIBERI.
 
 from __future__ import annotations
 
-from typing import Any
 from pathlib import Path
-
+from typing import Any
 
 # Canonical evidence stores — scanned at init
 _GEOX_ROOT = Path(__file__).resolve().parents[3]  # /root/geox
@@ -54,7 +53,7 @@ def _scan_evidence_stores() -> None:
     well_dirs = [_GEOX_ROOT / "data" / "geox_las", _GEOX_ROOT / "data" / "real_wells"]
     for wd in well_dirs:
         if wd.exists():
-            for las in wd.glob("*.las"):
+            for _las in wd.glob("*.las"):
                 _BASIN_PROFILES.setdefault("Well Data", wd)
                 break
 

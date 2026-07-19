@@ -16,10 +16,9 @@ from __future__ import annotations
 
 import logging
 import os
-from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -39,7 +38,7 @@ class WellRecord(BaseModel):
     longitude: float = 0.0
     operator: str = ""
     spud_date: str = ""
-    total_depth_m: Optional[float] = None
+    total_depth_m: float | None = None
     status: str = ""
     licence: str = ""
 
@@ -57,16 +56,16 @@ class NSTAResult(BaseModel):
 
 
 class NSTAQuery(BaseModel):
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    status: Optional[str] = None
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
+    status: str | None = None
     limit: int = Field(100, ge=1, le=10000)
 
 
 class NSTAUKFetcher:
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get(
             "GEOX_NSTA_CACHE_DIR", "/root/.cache/geox/nsta_uk"
         ))
@@ -74,7 +73,7 @@ class NSTAUKFetcher:
         self._offline = os.environ.get("GEOX_NSTA_OFFLINE", "1") != "0"
 
     def query(self, params: NSTAQuery) -> NSTAResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return self._offline_stub(params.model_dump(exclude_none=True), now)
         return NSTAResult(ok=False, mode="live", note="Live NSTA requires data portal access.", fetched_at=now)

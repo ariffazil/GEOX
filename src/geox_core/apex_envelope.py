@@ -18,13 +18,14 @@ DITEMPA BUKAN DIBERI
 
 from __future__ import annotations
 
+from datetime import UTC
 from typing import Any
 
 try:
     from arifosmcp.apex_envelope import apex_envelope, apex_envelope_minimal
 except ImportError:
     import math
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     APEX_EQUATION = "g(t)=A(t)\u00b7P(t)\u00b7H(t)\u00b7\u221a(S(t)\u00b7U(t))\u00b7E(t)\u00b2"
 
@@ -66,7 +67,7 @@ except ImportError:
         G = round(dials["A"] * dials["P"] * dials["H"] * math.sqrt(dials["S"] * dials["U"]) * dials["E"] ** 2, 4)
         verdict = "SEAL" if G >= 0.80 else ("SABAR" if G >= 0.50 else "HOLD")
         return {"equation": APEX_EQUATION, "gates": gates, "dials": dials, "G": G, "verdict": verdict,
-                "timestamp": datetime.now(timezone.utc).isoformat()}
+                "timestamp": datetime.now(UTC).isoformat()}
 
     def apex_envelope_minimal(*, tool_name="unknown", actor_id=None, action_class="READ", boundary="LIVE", ok=True):
         return apex_envelope(tool_name=tool_name, actor_id=actor_id, action_class=action_class, boundary=boundary, coherent=ok)

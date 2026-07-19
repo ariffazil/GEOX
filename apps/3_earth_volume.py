@@ -68,7 +68,7 @@ def build_earth_volume_app():
             n_x = st.slider("NX", 20, 80, 50)
             n_y = st.slider("NY", 20, 80, 50)
             n_z = st.slider("NZ", 50, 300, 150)
-            fault_complex = st.checkbox("Include Faults")
+            st.checkbox("Include Faults")
 
         with col2:
             if st.button("Generate Cube", type="primary"):
@@ -121,7 +121,7 @@ def build_earth_volume_app():
             st.markdown("**EARTH.CANON_9**")
             catalog = compute_earth_material_catalog()
             mat_options = list(catalog.keys())
-            selected = st.selectbox("Material", mat_options, index=0)
+            st.selectbox("Material", mat_options, index=0)
 
             st.divider()
             st.markdown("**Anomalous Contrast**")

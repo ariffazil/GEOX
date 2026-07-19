@@ -24,7 +24,7 @@ from __future__ import annotations
 import logging
 import math
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Any, Literal
 
 import numpy as np
@@ -43,7 +43,7 @@ MGAL_PER_MS2 = 1e5 / 1e2  # conversion: m/s² → mGal (1 mGal = 1e-5 m/s²)
 # ─── Enums ───────────────────────────────────────────────────────────────────
 
 
-class AnomalyType(str, Enum):
+class AnomalyType(StrEnum):
     FREE_AIR = "free_air"
     BOUGUER = "bouguer"
     COMPLETE_BOUGUER = "complete_bouguer"
@@ -51,7 +51,7 @@ class AnomalyType(str, Enum):
     TOTAL_FIELD_MAGNETIC = "total_field_magnetic"
 
 
-class CorrectionMethod(str, Enum):
+class CorrectionMethod(StrEnum):
     SLAB = "slab"           # infinite slab approximation
     VOXEL = "voxel"         # discrete voxel superposition
     TESSEROID = "tesseroid"  # spherical (regional)

@@ -29,7 +29,6 @@ import asyncio
 import json
 import logging
 import os
-import numpy as np
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -41,7 +40,7 @@ from fastmcp import FastMCP
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse, RedirectResponse, StreamingResponse
+from starlette.responses import JSONResponse, StreamingResponse
 from starlette.routing import Mount, Route
 
 # Import canonical registry for source-of-truth
@@ -51,13 +50,11 @@ from geox_mcp.registry import (
     CANONICAL_RUNTIME_TOOLS,
     INTERNAL_TOOLS,
     SURFACE_TOOLS,
-    get_tool_domain,
 )
 from geox_mcp.routing import (
     GEOX_ENABLE_ARIFOS_ROUTE_QUERY,
     GEOX_ROUTE_QUERY_GUARD_ENABLED,  # noqa: F401 — kept for env compatibility, see create_app()
     arifos_route_query,
-    record_route_decision,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -303,7 +300,7 @@ mcp = FastMCP(**_mcp_kwargs)
 # Earth Grounding System — typed earth graph, uncertainty algebra,
 # claim/evidence lifecycle, structured query API.
 # "Language models consume EGS; they do not replace it."
-from geox.egs.registry import register_egs_tools, init_egs_state
+from geox.egs.registry import init_egs_state
 
 init_egs_state()
 # DEREGISTERED 2026-07-10: EGS tools disabled (12 tools removed from surface).
@@ -400,7 +397,8 @@ async def _consequence_footprint(
     """Compute physical and ecological consequences of a proposed action.
     Measures: affected area, material movement, emissions, water impact,
     habitat fragmentation, subsidence, contamination, reversibility."""
-    import importlib.util as _ilu, os as _os
+    import importlib.util as _ilu
+    import os as _os
 
     _p = _os.path.join(
         _os.path.dirname(_os.path.abspath(__file__)),
@@ -439,7 +437,8 @@ async def _optionality_loss(
     """Measure destroyed future physical options.
     Sterilised reserves, lost aquifer use, irreversible land conversion,
     inaccessible remediation pathways, reduced resilience."""
-    import importlib.util as _ilu, os as _os
+    import importlib.util as _ilu
+    import os as _os
 
     _p = _os.path.join(
         _os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "optionality_loss.py"
@@ -466,7 +465,8 @@ async def _feedback_integrity(
     """Check whether physical monitoring is sufficient to detect drift.
     Sensor coverage, baseline quality, missing measurements,
     reporting delay, threshold manipulation, excluded anomalies."""
-    import importlib.util as _ilu, os as _os
+    import importlib.util as _ilu
+    import os as _os
 
     _p = _os.path.join(
         _os.path.dirname(_os.path.abspath(__file__)),
@@ -501,7 +501,8 @@ async def _material_truth_challenge(
 ) -> dict:
     """Challenge institutional claims against Earth measurements.
     Pattern: 'The institution claims low harm, but Earth measurements show irreversible loss.'"""
-    import importlib.util as _ilu, os as _os
+    import importlib.util as _ilu
+    import os as _os
 
     _p = _os.path.join(
         _os.path.dirname(_os.path.abspath(__file__)),
@@ -531,7 +532,8 @@ async def _cascade_pathway(
 ) -> dict:
     """Model how one intervention propagates across geology, groundwater,
     infrastructure, ecology, communities, capital exposure."""
-    import importlib.util as _ilu, os as _os
+    import importlib.util as _ilu
+    import os as _os
 
     _p = _os.path.join(
         _os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "cascade_pathway.py"
@@ -610,8 +612,6 @@ def compose_geox_servers() -> None:
 
 compose_geox_servers()
 
-from geox_mcp.tools.geophysics_studio import register_gravmag_studio_tools
-from geox_mcp.tools.geophysics_studio_screen import register_gravmag_studio_screen_tools
 from geox_mcp.tools.ui_applets import register_ui_applets
 
 
@@ -714,8 +714,8 @@ async def _doctrine_godel_review(
     from geox_mcp.tools.doctrine import (
         GodelClaimRequest,
         GodelSealRequest,
-        geox_doctrine_godel_review,
         geox_doctrine_godel_register_claim,
+        geox_doctrine_godel_review,
     )
 
     if not claim_id:
@@ -829,6 +829,8 @@ async def _geochem_kinetics(
     """
     from geox_mcp.tools.geochemistry import (
         GeochemRequest,
+    )
+    from geox_mcp.tools.geochemistry import (
         geox_geochem_kinetics as _impl,
     )
 
@@ -1336,6 +1338,8 @@ async def _lem_predict(
     """
     from geox_mcp.tools.lem_predict import (
         LEMPredictRequest,
+    )
+    from geox_mcp.tools.lem_predict import (
         geox_lem_predict as _impl,
     )
 
@@ -1444,8 +1448,8 @@ async def _geox_atlas(
     Returns:
         Land/water classification + country/sea context + F2 TRUTH metadata.
     """
-    from geox_mcp.tools.geox_atlas import geox_isitwater as _isitwater
     from geox_mcp.tools.geox_atlas import geox_context_at_location as _context
+    from geox_mcp.tools.geox_atlas import geox_isitwater as _isitwater
 
     result: dict = {"lat": lat, "lon": lon, "mode": mode}
 
@@ -1492,8 +1496,8 @@ async def _geox_forbidden_claims_scan(
         Scan results with flagged claims, severity, and suggestions.
     """
     from geox_mcp.tools.forbidden_claims import (
-        scan_forbidden_claims,
         forbidden_claims_summary,
+        scan_forbidden_claims,
     )
 
     flags = scan_forbidden_claims(text)

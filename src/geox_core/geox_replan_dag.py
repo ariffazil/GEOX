@@ -27,14 +27,13 @@ Version: 1.0.0 (locked 2026-06-26)
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 from typing import Any
-
 
 # ─── Invalidation Severity ──────────────────────────────────────────────────────
 
-class InvalidationSeverity(str, Enum):
+class InvalidationSeverity(StrEnum):
     """How serious is this evidence update?"""
 
     PATCH = "PATCH"       # minor: no recomputation needed, log only
@@ -351,7 +350,7 @@ class ReplanReceipt:
     severity: str
     requires_888_hold: bool
     timestamp_utc: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
     evidence_version: str = "v1.0"
     superseded_tools: list[str] = field(default_factory=list)

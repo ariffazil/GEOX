@@ -19,13 +19,13 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 import numpy as np
 
 
-class ClaimTag(str, Enum):
+class ClaimTag(StrEnum):
     OBSERVED = "OBSERVED"  # Direct measurement / ingested
     COMPUTED = "COMPUTED"  # Derived from physics model
     INTERPRETED = "INTERPRETED"  # Multi-source inference

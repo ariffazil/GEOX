@@ -32,21 +32,20 @@ Anti-misconception spine:
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
-from typing import Annotated, Any, Literal, Optional
+from enum import StrEnum
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 # Re-export Physics13State — schema wraps, doesn't redefine
 from geox_core.physics.state import Physics13State
 
-
 # ═══════════════════════════════════════════════════════════════════════════════
 # 1. ENUMS — categorical type systems for each axis
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class LithologyClass(str, Enum):
+class LithologyClass(StrEnum):
     """
     Categorical lithology for material_state.
 
@@ -68,7 +67,7 @@ class LithologyClass(str, Enum):
     unknown = "unknown"
 
 
-class CompositionClass(str, Enum):
+class CompositionClass(StrEnum):
     """
     Bulk composition class.
 
@@ -87,7 +86,7 @@ class CompositionClass(str, Enum):
     unknown = "unknown"
 
 
-class OriginType(str, Enum):
+class OriginType(StrEnum):
     """
     Origin tag for process_state.
 
@@ -101,7 +100,7 @@ class OriginType(str, Enum):
     unknown = "unknown"
 
 
-class DepositionalEnvironment(str, Enum):
+class DepositionalEnvironment(StrEnum):
     """
     Depositional environment for sedimentary rocks.
 
@@ -122,7 +121,7 @@ class DepositionalEnvironment(str, Enum):
     unknown = "unknown"
 
 
-class IgneousContext(str, Enum):
+class IgneousContext(StrEnum):
     """
     Igneous context for igneous rocks.
 
@@ -139,7 +138,7 @@ class IgneousContext(str, Enum):
     unknown = "unknown"
 
 
-class MetamorphicRegime(str, Enum):
+class MetamorphicRegime(StrEnum):
     """
     Metamorphic regime for metamorphic rocks.
 
@@ -156,7 +155,7 @@ class MetamorphicRegime(str, Enum):
     unknown = "unknown"
 
 
-class LastMajorTransition(str, Enum):
+class LastMajorTransition(StrEnum):
     """
     Last major state transition for the voxel.
 
@@ -173,7 +172,7 @@ class LastMajorTransition(str, Enum):
     unknown = "unknown"
 
 
-class StressRegime(str, Enum):
+class StressRegime(StrEnum):
     """
     Dominant stress regime for strain_state.
 
@@ -188,7 +187,7 @@ class StressRegime(str, Enum):
     unknown = "unknown"
 
 
-class StrainStyle(str, Enum):
+class StrainStyle(StrEnum):
     """
     Strain style for strain_state.
 
@@ -203,7 +202,7 @@ class StrainStyle(str, Enum):
     unknown = "unknown"
 
 
-class AnisotropyType(str, Enum):
+class AnisotropyType(StrEnum):
     """
     Type of anisotropy in the voxel.
 
@@ -220,7 +219,7 @@ class AnisotropyType(str, Enum):
     unknown = "unknown"
 
 
-class PhaseType(str, Enum):
+class PhaseType(StrEnum):
     """
     Phase types for void_state occupancy.
 
@@ -252,16 +251,16 @@ class TextureProperties(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=False)
 
-    grain_size_phi: Optional[float] = Field(
+    grain_size_phi: float | None = Field(
         default=None, description="Grain size in phi units (negative = coarser, positive = finer)"
     )
-    sorting: Optional[Literal["very_poor", "poor", "moderate", "well", "very_well"]] = Field(
+    sorting: Literal["very_poor", "poor", "moderate", "well", "very_well"] | None = Field(
         default=None
     )
-    matrix_to_framework_ratio: Optional[float] = Field(
+    matrix_to_framework_ratio: float | None = Field(
         default=None, ge=0.0, le=1.0, description="Matrix fraction (0 = framework-supported, 1 = matrix-dominated)"
     )
-    crystallinity: Optional[float] = Field(
+    crystallinity: float | None = Field(
         default=None, ge=0.0, le=1.0, description="0 = amorphous, 1 = fully crystalline"
     )
 
@@ -276,11 +275,11 @@ class MechanicsProperties(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=False)
 
-    density_kg_m3: Optional[float] = Field(default=None, ge=500.0, le=5000.0)
-    youngs_modulus_pa: Optional[float] = Field(default=None, ge=1e8, le=200e9)
-    poisson_ratio: Optional[float] = Field(default=None, ge=0.0, le=0.5)
-    cohesion_pa: Optional[float] = Field(default=None, ge=0.0)
-    friction_angle_deg: Optional[float] = Field(default=None, ge=0.0, le=90.0)
+    density_kg_m3: float | None = Field(default=None, ge=500.0, le=5000.0)
+    youngs_modulus_pa: float | None = Field(default=None, ge=1e8, le=200e9)
+    poisson_ratio: float | None = Field(default=None, ge=0.0, le=0.5)
+    cohesion_pa: float | None = Field(default=None, ge=0.0)
+    friction_angle_deg: float | None = Field(default=None, ge=0.0, le=90.0)
 
 
 class MaterialState(BaseModel):
@@ -303,7 +302,7 @@ class MaterialState(BaseModel):
     mechanics: MechanicsProperties = Field(default_factory=MechanicsProperties)
 
     # Physics9 anchor — wraps the canonical 9-parameter state
-    physics9_anchor: Optional[Physics13State] = Field(
+    physics9_anchor: Physics13State | None = Field(
         default=None,
         description="Optional Physics13State anchor — when populated, supplies the canonical 9 physics dials (rho, vp, vs, rho_e, chi, k, P, T, phi)",
     )
@@ -332,10 +331,10 @@ class ProcessState(BaseModel):
     igneous_context: IgneousContext = Field(default=IgneousContext.unknown)
     metamorphic_regime: MetamorphicRegime = Field(default=MetamorphicRegime.unknown)
 
-    has_been_molten: Optional[bool] = Field(
+    has_been_molten: bool | None = Field(
         default=None, description="True if this voxel has ever been in melt state"
     )
-    has_been_exhumed: Optional[bool] = Field(
+    has_been_exhumed: bool | None = Field(
         default=None, description="True if brought back toward surface after deep burial"
     )
     last_major_transition: LastMajorTransition = Field(
@@ -367,18 +366,18 @@ class StrainState(BaseModel):
     dominant_stress_regime: StressRegime = Field(default=StressRegime.unknown)
     strain_style: StrainStyle = Field(default=StrainStyle.unknown)
 
-    fold_presence_prob: Optional[float] = Field(
+    fold_presence_prob: float | None = Field(
         default=None, ge=0.0, le=1.0, description="Probability that this voxel is folded"
     )
-    fault_presence_prob: Optional[float] = Field(
+    fault_presence_prob: float | None = Field(
         default=None, ge=0.0, le=1.0, description="Probability that this voxel hosts a fault"
     )
-    fault_sense: Optional[Literal["normal", "reverse", "strike_slip", "oblique"]] = Field(
+    fault_sense: Literal["normal", "reverse", "strike_slip", "oblique"] | None = Field(
         default=None
     )
 
     anisotropy: AnisotropyType = Field(default=AnisotropyType.unknown)
-    anisotropy_strength: Optional[float] = Field(
+    anisotropy_strength: float | None = Field(
         default=None, ge=0.0, le=1.0, description="0 = isotropic, 1 = strongly anisotropic"
     )
 
@@ -409,7 +408,7 @@ class PhaseConnectivity(BaseModel):
 
     phase: PhaseType
     percolation: bool = Field(description="Whether this phase forms a connected network")
-    principal_permeability_md: Optional[list[float]] = Field(
+    principal_permeability_md: list[float] | None = Field(
         default=None,
         min_length=3,
         max_length=3,
@@ -535,7 +534,7 @@ class VoxelState4(BaseModel):
 
     # ─── Identity ───
     voxel_id: str = Field(description="Canonical voxel identifier (e.g., 'voxel@2450.5m')")
-    basin_id: Optional[str] = Field(default=None, description="Basin context (e.g., 'example_basin')")
+    basin_id: str | None = Field(default=None, description="Basin context (e.g., 'example_basin')")
 
     # ─── 4 axes ───
     material_state: MaterialState = Field(default_factory=MaterialState)
@@ -552,17 +551,17 @@ class VoxelState4(BaseModel):
         default=0, ge=0,
         description="Number of record-layer data points informing this voxel",
     )
-    forward_model_residual: Optional[float] = Field(
+    forward_model_residual: float | None = Field(
         default=None, ge=0.0, le=1.0,
         description="Normalized residual between forward-modeled and observed (0 = perfect fit, 1 = total mismatch)",
     )
 
     # ─── Uncertainty + provenance ───
-    overall_confidence: Optional[float] = Field(
+    overall_confidence: float | None = Field(
         default=None, ge=0.0, le=0.90,
         description="Hard-capped 0.90 per F7 HUMILITY; never claims certainty",
     )
-    truth_class: Optional[Literal["FACT", "INTERPRETATION", "SPECULATION"]] = Field(
+    truth_class: Literal["FACT", "INTERPRETATION", "SPECULATION"] | None = Field(
         default=None,
         description="Epistemic label. Per ADR-008, this is derived from residual, not assigned.",
     )
@@ -580,7 +579,7 @@ class VoxelState4(BaseModel):
     # ═════════════════════════════════════════════════════════════════════════
 
     @property
-    def total_porosity(self) -> Optional[float]:
+    def total_porosity(self) -> float | None:
         """
         DERIVED total porosity from void_state.phase_fractions.
 
@@ -598,7 +597,7 @@ class VoxelState4(BaseModel):
         return 1.0 - solid
 
     @property
-    def effective_porosity(self) -> Optional[float]:
+    def effective_porosity(self) -> float | None:
         """
         DERIVED effective (connected) porosity — sum of percolating non-solid phases.
         """
@@ -630,7 +629,7 @@ class VoxelState4(BaseModel):
         )
 
     @property
-    def record_void_indicator(self) -> Optional[str]:
+    def record_void_indicator(self) -> str | None:
         """
         Returns a description of the largest record-density gap, or None if no gaps.
 

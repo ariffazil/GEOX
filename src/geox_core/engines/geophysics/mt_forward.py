@@ -25,12 +25,10 @@ from __future__ import annotations
 import cmath
 import math
 from dataclasses import dataclass, field
-from typing import Optional
 
 import numpy as np
 
 from geox_core.physics.state import Physics13State
-
 
 # Physical constants
 MU0 = 4.0 * math.pi * 1e-7  # H/m

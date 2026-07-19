@@ -23,6 +23,7 @@ from contracts.tools.canonical._helpers import (
     _map_canonical_curves,
     _parse_csv_or_json,
     _register_artifact,
+    _safe_artifact_filename,
     _safe_upload_path,
 )
 

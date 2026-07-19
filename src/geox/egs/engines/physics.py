@@ -11,14 +11,6 @@ leverage existing GEOX physics engines (bruges, geox.core.physics9, etc.).
 
 from __future__ import annotations
 
-import math
-from typing import Any
-
-from pydantic import BaseModel, ConfigDict, Field
-
-from geox.egs.models.uncertainty import IntervalUncertainty, UncertainValue
-
-
 # ═══════════════════════════════════════════════════════════════════════════════
 # Fluid Properties (Batzle-Wang approximations)
 # ═══════════════════════════════════════════════════════════════════════════════

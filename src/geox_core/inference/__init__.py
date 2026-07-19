@@ -18,6 +18,7 @@ Skeleton-only this cycle. Real physics deferred to subsequent forge tranches.
 from __future__ import annotations
 
 from geox_core.inference.voxel_update import (
+    BayesUpdateResult,
     BiasModel,
     ForwardModel,
     ForwardModel1D,
@@ -32,7 +33,6 @@ from geox_core.inference.voxel_update import (
     bayes_update_voxel_sequence,
     ensemble_posteriors,
     gaussian_likelihood,
-    BayesUpdateResult,
 )
 
 __all__ = [

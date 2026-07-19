@@ -14,11 +14,9 @@ F7 HUMILITY: confidence capped at 0.90.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 
 import numpy as np
-
 
 # ── Canonical Closure Temperatures ──────────────────────────────────────────
 # Source: Reiners & Brandon (2006), Farley (2002), Hurford (1986)
@@ -45,7 +43,7 @@ class ThermochronPoint:
     system: str  # e.g., "zircon_upb", "ahe"
     closure_temp_C: float  # °C
     age_ma: float  # Ma (central age)
-    age_uncertainty_ma: Optional[float] = None  # ± Ma (1σ)
+    age_uncertainty_ma: float | None = None  # ± Ma (1σ)
     label: str = "DER"  # Epistemic label
     source: str = ""  # Literature reference
 
@@ -302,14 +300,14 @@ if __name__ == "__main__":
     result = kinabalu_cooling_path()
 
     print(f"\n{'─' * 70}")
-    print(f"KINABALU GRANITE COOLING PATH (Cottam et al. 2013)")
+    print("KINABALU GRANITE COOLING PATH (Cottam et al. 2013)")
     print(f"{'─' * 70}")
     print(f"Points: {len(result.points)}")
     for p in result.points:
         print(f"  {p.system:20s} | {p.closure_temp_C:6.0f}°C | {p.age_ma:6.2f} Ma ± {p.age_uncertainty_ma or 0:.2f}")
-    print(f"\nCooling Path Segments:")
+    print("\nCooling Path Segments:")
     print(result.cooling_path_summary)
-    print(f"\nSummary:")
+    print("\nSummary:")
     print(f"  Mean cooling rate:    {result.mean_cooling_rate_C_per_Myr:.1f} °C/Myr")
     print(f"  Max cooling rate:     {result.max_cooling_rate_C_per_Myr:.1f} °C/Myr")
     print(f"  Mean exhumation:      {result.mean_exhumation_rate_mm_yr:.1f} mm/yr")
@@ -317,7 +315,7 @@ if __name__ == "__main__":
     print(f"  Total cooling:        {result.total_cooling_C:.0f}°C over {result.total_time_Myr:.2f} Myr")
     print(f"  Tectonic unroofing:   {'YES' if result.is_tectonic_unroofing else 'NO'}")
     print(f"  Confidence:           {result.confidence:.2f}")
-    print(f"\nInterpretation:")
+    print("\nInterpretation:")
     print(f"  {result.interpretation}")
     print(f"\n{'=' * 70}")
     print("DITEMPA BUKAN DIBERI — Physics first, AI second.")

@@ -18,8 +18,7 @@ F2 TRUTH: all confidence scores hard-capped at 0.90 (F7 HUMILITY).
 from __future__ import annotations
 
 import json
-import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -108,7 +107,7 @@ _library: dict[str, Any] | None = None
 def _load_library() -> dict[str, Any]:
     global _library
     if _library is None:
-        with open(_ARCHETYPES_JSON, "r") as f:
+        with open(_ARCHETYPES_JSON) as f:
             _library = json.load(f)
     # F7 HUMILITY: assert non-None after load
     assert _library is not None, "Failed to load archetype library"
@@ -591,7 +590,7 @@ if __name__ == "__main__":
     # CLI test
     result = sabah_play_test()
     print(f"\n{'=' * 60}")
-    print(f"SABAH PLAY DISCRIMINATION TEST")
+    print("SABAH PLAY DISCRIMINATION TEST")
     print(f"{'=' * 60}")
     print(f"Climate: {result.climate_regime.value} (conf={result.climate_confidence:.2f})")
     print(f"Best match: {result.best_match.label}")
@@ -599,9 +598,9 @@ if __name__ == "__main__":
     print(f"Verdict: {result.verdict} (conf={result.verdict_confidence:.2f})")
     print(f"Discrimination confidence: {result.discrimination_confidence:.2f}")
     print(f"Top false positive risk: {result.top_false_positive}")
-    print(f"\nAll candidates:")
+    print("\nAll candidates:")
     for m in result.all_candidates[:4]:
         print(f"  {m.label:40s} conf={m.confidence:.2f}  sabah={'YES' if m.is_sabah_relevant else 'no'}")
-    print(f"\nNext steps:")
+    print("\nNext steps:")
     for s in result.next_steps:
         print(f"  → {s}")

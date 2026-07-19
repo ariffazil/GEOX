@@ -22,12 +22,10 @@ from __future__ import annotations
 
 import threading
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Literal, Optional
+from datetime import UTC, datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field
-
 
 # ───────────────────────────── RUNG CONSTANTS (mirror assumption_lineage) ────────
 RUNG_SIGNAL = 1
@@ -58,7 +56,7 @@ class Claim(BaseModel):
     rung: int = Field(..., ge=1, le=7)
     description: str = Field(..., min_length=1)
     depends_on_assumption_ids: list[str] = Field(default_factory=list)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     seal_state: SealState = "UNKNOWN"
 
 
@@ -72,7 +70,7 @@ class SealVerdict(BaseModel):
     reason: str
     can_seal: bool = False
     required_evidence: list[str] = Field(default_factory=list)
-    reviewed_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    reviewed_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 # ───────────────────────────── GÖDEL WALL ─────────────────────────────────────────
@@ -90,8 +88,8 @@ class GodelWall:
         rung: int,
         description: str,
         *,
-        depends_on_assumption_ids: Optional[list[str]] = None,
-        claim_id: Optional[str] = None,
+        depends_on_assumption_ids: list[str] | None = None,
+        claim_id: str | None = None,
     ) -> Claim:
         if not (1 <= rung <= 7):
             raise ValueError(f"rung must be 1..7, got {rung}")
@@ -257,7 +255,7 @@ class GodelWall:
         return SealVerdict(claim_id=claim_id, state="VOID", reason=reason, can_seal=False)
 
     # ── diagnostics ──────────────────────────────────────────────────────────
-    def get(self, claim_id: str) -> Optional[Claim]:
+    def get(self, claim_id: str) -> Claim | None:
         with self._lock:
             return self._claims.get(claim_id)
 

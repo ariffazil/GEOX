@@ -18,7 +18,6 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-
 # ── 1. Constants ──────────────────────────────────────────────────────────────
 DEFAULT_PAGE_SIZE = 50
 MAX_PAGE_SIZE = 500

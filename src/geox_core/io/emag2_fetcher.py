@@ -24,12 +24,10 @@ from __future__ import annotations
 import hashlib
 import os
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 from pydantic import BaseModel, Field
-
 
 # ───────────────────────────── CANONICAL URLS ────────────────────────────────────
 EMAG2_V3_SOURCES = {
@@ -59,7 +57,7 @@ class EMAG2GridMeta:
 
     source_uri: str
     fetched_at: str
-    sha256: Optional[str]
+    sha256: str | None
     resolution_arcmin: float
     crs: str
     bbox: tuple[float, float, float, float]  # min_lon, min_lat, max_lon, max_lat
@@ -70,8 +68,8 @@ class EMAG2FetchResult(BaseModel):
 
     ok: bool
     mode: str  # "live" | "offline_stub"
-    grid_path: Optional[str] = None
-    meta: Optional[EMAG2GridMeta] = None
+    grid_path: str | None = None
+    meta: EMAG2GridMeta | None = None
     citation: str = EMAG2_V3_SOURCES["citation"]
     note: str = ""
 
@@ -82,7 +80,7 @@ class ICGEMGravityModel(BaseModel):
     name: str
     source_uri: str
     citation: str
-    fetched_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    fetched_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 # ───────────────────────────── FETCHER ────────────────────────────────────────────
@@ -99,7 +97,7 @@ class EMAG2Fetcher:
     metadata + a verified-on-disk path.
     """
 
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get(
             "GEOX_EMAG2_CACHE_DIR", "/root/.cache/geox/emag2"
         ))
@@ -125,7 +123,7 @@ class EMAG2Fetcher:
                 grid_path=None,
                 meta=EMAG2GridMeta(
                     source_uri=EMAG2_V3_SOURCES["v3_grid_netcdf"],
-                    fetched_at=datetime.now(timezone.utc).isoformat(),
+                    fetched_at=datetime.now(UTC).isoformat(),
                     sha256=None,
                     resolution_arcmin=2.0,
                     crs="EPSG:4326",

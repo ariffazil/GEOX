@@ -16,9 +16,8 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -37,7 +36,7 @@ class GeologyMapQuery(BaseModel):
     maxlatitude: float = Field(..., ge=-90, le=90)
     minlongitude: float = Field(..., ge=-360, le=360)
     maxlongitude: float = Field(..., ge=-360, le=360)
-    layers: Optional[str] = Field(None, description="WMS layer name")
+    layers: str | None = Field(None, description="WMS layer name")
     output_format: str = Field("application/json", description="WMS GetFeatureInfo format")
 
 
@@ -58,7 +57,7 @@ class OneGeologyFetcher:
         self._offline = os.environ.get("GEOX_ONEGEOLOGY_OFFLINE", "1") != "0"
 
     def query(self, params: GeologyMapQuery) -> GeologyMapResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return GeologyMapResult(
                 ok=True, mode="offline_stub",

@@ -1,17 +1,17 @@
 # WARNING: Auto-generated from server.py to reduce monolith size.
 # DITEMPA BUKAN DIBERI
 
-from typing import Any, Literal
-import sys
-import os
-import json
 import inspect
+import json
 import logging
-from datetime import datetime, UTC
+import os
+from datetime import UTC, datetime
+from typing import Any
+
 import numpy as np
 from pydantic import BaseModel
 
-from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, SURFACE_TOOLS, INTERNAL_TOOLS, get_tool_domain
+from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, get_tool_domain
 from geox_mcp.server import (
     _geox_annotations,
     _safe_forward,
@@ -497,7 +497,8 @@ def register_tools_on(mcp):
         WEALTH has wealth_system_registry_status. GEOX now has geox_surface_status.
         arifOS has arifOS tools for the same purpose.
         """
-        import datetime, subprocess
+        import datetime
+        import subprocess
 
         try:
             git_version = (
@@ -516,7 +517,7 @@ def register_tools_on(mcp):
                 "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
                 "mcp_transport": "http",
                 "mcp_port": 8081,
-                "registered_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                "registered_at": datetime.datetime.now(datetime.UTC).isoformat(),
             }
 
         # registry mode — WELL-style rich drift report
@@ -1521,6 +1522,8 @@ def register_tools_on(mcp):
         """
         from geox_core.engines.stratigraphy.accommodation import (
             AccommodationRequest,
+        )
+        from geox_core.engines.stratigraphy.accommodation import (
             simulate_accommodation as _impl,
         )
 
@@ -1567,6 +1570,8 @@ def register_tools_on(mcp):
         """
         from geox_core.engines.stratigraphy.accommodation import (
             AccommodationRequest,
+        )
+        from geox_core.engines.stratigraphy.accommodation import (
             simulate_accommodation as _acc_impl,
         )
         from geox_core.engines.stratigraphy.surface_first import generate_surfaces as _surf_impl
@@ -1620,10 +1625,12 @@ def register_tools_on(mcp):
         """
         from geox_core.engines.stratigraphy.accommodation import (
             AccommodationRequest,
+        )
+        from geox_core.engines.stratigraphy.accommodation import (
             simulate_accommodation as _acc_impl,
         )
-        from geox_core.engines.stratigraphy.surface_first import generate_surfaces as _surf_impl
         from geox_core.engines.stratigraphy.sequence_emergence import emerge_sequences as _seq_impl
+        from geox_core.engines.stratigraphy.surface_first import generate_surfaces as _surf_impl
 
         try:
             req = AccommodationRequest(
@@ -1679,6 +1686,8 @@ def register_tools_on(mcp):
             BasinGeometry,
             RoutingRequest,
             SedimentSource,
+        )
+        from geox_core.engines.stratigraphy.sediment_routing import (
             simulate_routing as _impl,
         )
 
@@ -1875,8 +1884,8 @@ def register_tools_on(mcp):
         PETROPHYSICS = HOLD from image-only input.
         """
         try:
-            from geox_mcp.federation_safety import classify_error
             from geox_core.seismic_pipeline.geox_physical_reality import GeoxPhysicalReality
+            from geox_mcp.federation_safety import classify_error
 
             engine = GeoxPhysicalReality()
             result = engine.interpret(image_path, output_dir=output_dir)
@@ -1903,6 +1912,7 @@ def register_tools_on(mcp):
         """
         try:
             import sys
+
             from geox_mcp.federation_safety import classify_error
 
             sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
@@ -1947,12 +1957,13 @@ def register_tools_on(mcp):
         """
         try:
             import sys
+
             from geox_mcp.federation_safety import classify_error
 
             sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
+            from geox_geological_cognition import run_geological_cognition
             from geox_panel_d import render_cognitive_panel
             from geox_physical_reality import GeoxPhysicalReality
-            from geox_geological_cognition import run_geological_cognition
 
             # Run full pipeline
             engine = GeoxPhysicalReality()
@@ -2009,16 +2020,17 @@ def register_tools_on(mcp):
         """
         try:
             import sys
+
             from geox_mcp.federation_safety import classify_error
 
             sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
             from geox_segy_trace_reality import (
-                ingest_segy,
-                audit_trace_headers,
                 audit_geometry,
+                audit_trace_headers,
                 check_amplitude_preservation,
                 check_wavelet_phase,
                 compute_trace_attributes,
+                ingest_segy,
             )
 
             ingested = ingest_segy(segy_path)
@@ -2058,6 +2070,7 @@ def register_tools_on(mcp):
         """
         try:
             import sys
+
             from geox_mcp.federation_safety import classify_error
 
             sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
@@ -2369,8 +2382,9 @@ def register_tools_on(mcp):
         """
         try:
             import json
-            from geox_mcp.federation_safety import classify_error
+
             from geox_core.core.welltie_mcp import compute_td_calibrate
+            from geox_mcp.federation_safety import classify_error
 
             cs_data = None
             if checkshot_data:
@@ -2419,9 +2433,10 @@ def register_tools_on(mcp):
         25 ms threshold based on tuning thickness resolution limit.
         """
         try:
-            from geox_mcp.federation_safety import classify_error
             from geox_core.schemas.mistie_rms import MistieRMSInput
+
             from geox_core.core.welltie_mcp import compute_mistie_rms
+            from geox_mcp.federation_safety import classify_error
 
             inp = MistieRMSInput(
                 well_name=well_name,
@@ -2462,9 +2477,10 @@ def register_tools_on(mcp):
         Constitutional gate: condition_number > 10× threshold → VOID.
         """
         try:
-            from geox_mcp.federation_safety import classify_error
             from geox_core.schemas.wavelet_extract import WaveletExtractInput
+
             from geox_core.core.welltie_mcp import extract_wavelet_least_squares
+            from geox_mcp.federation_safety import classify_error
 
             inp = WaveletExtractInput(
                 well_name=well_name,
@@ -2500,6 +2516,7 @@ def register_tools_on(mcp):
         """
         try:
             import sys
+
             from geox_mcp.federation_safety import classify_error
 
             sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
@@ -2531,6 +2548,7 @@ def register_tools_on(mcp):
         """
         try:
             import sys
+
             from geox_mcp.federation_safety import classify_error
 
             sys.path.insert(0, "/root/GEOX/src/geox_core/seismic_pipeline")
@@ -2999,7 +3017,6 @@ def register_tools_on(mcp):
         Do not use when: ingesting new LAS (use geox_well_ingest) or deep QC
         (use geox_well_qc).
         """
-        from datetime import UTC, datetime
 
         _mode = (mode or "summary").strip().lower()
         if _mode not in ("summary", "tracks"):
@@ -3099,10 +3116,10 @@ def register_tools_on(mcp):
         geological context of a region. Also used for rendering geological maps
         with selectable features.
         """
-        from geox_mcp.tools.map_context import geox_map_context_scene as _impl
-
         # ── DEBUG (2026-07-11): verify identity propagation through bridge ──
         import logging
+
+        from geox_mcp.tools.map_context import geox_map_context_scene as _impl
 
         _log = logging.getLogger("geox.canonical.map_context")
         _log.warning(f"IDENTITY_ARRIVAL: session_id={session_id!r} actor_id={actor_id!r} trace_id={trace_id!r}")
@@ -3141,7 +3158,6 @@ def register_tools_on(mcp):
         import base64
         import hashlib
         import json
-        from datetime import datetime, UTC
         from pathlib import Path
 
         # 1. Clean input
@@ -3233,9 +3249,9 @@ def register_tools_on(mcp):
                     fcntl.flock(lockf.fileno(), fcntl.LOCK_UN)
         except Exception as vault_err:
             # Non-fatal - side ledger already written
-            text += f" (vault witness failed: {vault_err})"
+            vault_note = f" (vault witness failed: {vault_err})"
 
-        text = f"Image published successfully. Well: {_wid}. Path: {filepath}. Seal: {seal_token}"
+        text = f"Image published successfully{vault_note}. Well: {_wid}. Path: {filepath}. Seal: {seal_token}"
 
         # Return to client/conversation
         return {
@@ -3297,17 +3313,18 @@ def register_tools_on(mcp):
                 }
 
         # Minimal scaffold fallback when interpret=False and no LAS workflow
-        import io
         import base64
         import hashlib
+        import io
         import math
+
         import matplotlib
 
         matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-        import numpy as np
-        from datetime import datetime, UTC
+        from datetime import UTC, datetime
         from pathlib import Path
+
+        import matplotlib.pyplot as plt
         from PIL import Image as PILImage
         from PIL.PngImagePlugin import PngInfo
 
@@ -3322,7 +3339,7 @@ def register_tools_on(mcp):
             axes,
             (30 + 80 * np.sin(frac * math.pi * 3), 10 ** (0.5 + frac), 0.2 + 0.1 * np.sin(frac * math.pi)),
             ("#f1c40f", "#2ecc71", "#3498db"),
-            ("GR syn", "RT syn", "φ syn"),
+            ("GR syn", "RT syn", "φ syn"), strict=False,
         ):
             ax.plot(v, d, color=col)
             ax.set_title(title, color="white")

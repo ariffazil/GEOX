@@ -1,5 +1,4 @@
 print("ZEN OF PYTHON")
-import this
 
 print("\nZEN OF MCP")
 print("Tools are verbs, not objects.")

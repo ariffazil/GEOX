@@ -7,6 +7,7 @@ Usage:
 Exit 0 = TRUE, 1 = DRIFT
 """
 from __future__ import annotations
+
 import argparse
 import json
 import sys

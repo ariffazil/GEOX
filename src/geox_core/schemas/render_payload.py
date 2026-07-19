@@ -23,14 +23,14 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Literal
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
 
 
-class RenderModality(str, Enum):
+class RenderModality(StrEnum):
     """The visual modality of the render payload."""
     MAP = "map"
     SECTION = "section"
@@ -42,7 +42,7 @@ class RenderModality(str, Enum):
     CLAIM = "claim"
 
 
-class LodLevel(str, Enum):
+class LodLevel(StrEnum):
     """Level of detail — supports progressive loading."""
     COARSE = "coarse"
     MEDIUM = "medium"
@@ -50,7 +50,7 @@ class LodLevel(str, Enum):
     FULL = "full"
 
 
-class GeometryType(str, Enum):
+class GeometryType(StrEnum):
     """How geometry is encoded (all via resource URI, not inline)."""
     GEOJSON = "geojson"           # Map features
     NUMPY_NPZ = "numpy_npz"       # 2D/3D arrays as .npz

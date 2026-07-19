@@ -18,9 +18,9 @@ F4 CLARITY: Strict Pydantic, no drift.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from hashlib import sha256
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -51,7 +51,7 @@ class ProvenanceEntry(BaseModel):
         description="Version identifier of the source tool",
     )
     fetched_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         description="When the data was fetched (UTC)",
     )
     fetch_latency_ms: float = Field(
@@ -69,7 +69,7 @@ class ProvenanceEntry(BaseModel):
         le=0.90,  # F7 HUMILITY cap
         description="Confidence score for this field (0.0–0.90, F7 capped)",
     )
-    gap_flag: Optional[str] = Field(
+    gap_flag: str | None = Field(
         default=None,
         description="If this field came from a fallback/gap, the GapType (None = direct data)",
     )
@@ -96,10 +96,10 @@ class ProvenanceEntry(BaseModel):
         confidence: float = 0.5,
         source_version: str = "unknown",
         fetch_latency_ms: float = 0.0,
-        gap_flag: Optional[str] = None,
+        gap_flag: str | None = None,
         notes: str = "",
         physics9_fill: bool = False,
-        derivation_chain: Optional[list[str]] = None,
+        derivation_chain: list[str] | None = None,
     ) -> ProvenanceEntry:
         """Factory: create a ProvenanceEntry from a raw response.
 
@@ -149,10 +149,10 @@ class ProvenanceLedger(BaseModel):
         confidence: float = 0.5,
         source_version: str = "unknown",
         fetch_latency_ms: float = 0.0,
-        gap_flag: Optional[str] = None,
+        gap_flag: str | None = None,
         notes: str = "",
         physics9_fill: bool = False,
-        derivation_chain: Optional[list[str]] = None,
+        derivation_chain: list[str] | None = None,
     ) -> ProvenanceEntry:
         """Record a new provenance entry."""
         entry = ProvenanceEntry.from_response(
@@ -170,7 +170,7 @@ class ProvenanceLedger(BaseModel):
         self.entries.append(entry)
         return entry
 
-    def get(self, field_name: str) -> Optional[ProvenanceEntry]:
+    def get(self, field_name: str) -> ProvenanceEntry | None:
         """Get the latest provenance entry for a field."""
         for entry in reversed(self.entries):
             if entry.field_name == field_name:
@@ -188,7 +188,7 @@ class ProvenanceLedger(BaseModel):
             summary[entry.field_name] = entry.confidence
         return summary
 
-    def lowest_confidence_field(self) -> Optional[ProvenanceEntry]:
+    def lowest_confidence_field(self) -> ProvenanceEntry | None:
         """Return the entry with the lowest confidence."""
         if not self.entries:
             return None

@@ -26,18 +26,17 @@ Version: 1.0.0 (locked 2026-06-26)
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 from typing import Any, Self
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
 
-
 # ─── Enums ───────────────────────────────────────────────────────────────────────
 
 
-class ClaimState(str, Enum):
+class ClaimState(StrEnum):
     """Epistemic claim level for the output value.
 
     Strict hierarchy — never skip levels.
@@ -55,7 +54,7 @@ class ClaimState(str, Enum):
     VOID = "VOID"  # retracted or contradicted by new evidence
 
 
-class ClaimOrigin(str, Enum):
+class ClaimOrigin(StrEnum):
     """Pipeline stage that produced this claim. Used for traceability and GUI sorting."""
 
     EXTRACT = "EXTRACT"
@@ -65,7 +64,7 @@ class ClaimOrigin(str, Enum):
     FORWARD = "FORWARD"
 
 
-class ReasonCode(str, Enum):
+class ReasonCode(StrEnum):
     """Structured reason codes for rejection envelopes.
 
     Maps to GUI's logic layer — never prose. Every rejection carries one.
@@ -82,7 +81,7 @@ class ReasonCode(str, Enum):
     NOT_APPLICABLE = "NOT_APPLICABLE"  # tool not applicable to this context
 
 
-class AcRiskLevel(str, Enum):
+class AcRiskLevel(StrEnum):
     """ACRisk classification — governs whether output requires Arif release."""
 
     QUALIFY = "QUALIFY"  # low risk — proceed autonomously
@@ -91,7 +90,7 @@ class AcRiskLevel(str, Enum):
     BLOCK = "BLOCK"  # critical risk — blocked for all generic agents
 
 
-class EpistemicLabel(str, Enum):
+class EpistemicLabel(StrEnum):
     """External-facing epistemic label (simplified from internal rung ladder).
 
     Used in the claim envelope so LLMs understand the confidence tier.
@@ -105,7 +104,7 @@ class EpistemicLabel(str, Enum):
     UNKNOWN = "UNKNOWN"  # insufficient data — no claim possible
 
 
-class UnitSystem(str, Enum):
+class UnitSystem(StrEnum):
     """Required unit strings for all physical values."""
 
     METRE = "m"
@@ -287,7 +286,7 @@ class ClaimEnvelope(BaseModel):
     # ── Timestamps ───────────────────────────────────────────────────────────
 
     timestamp_utc: str = Field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat(),
+        default_factory=lambda: datetime.now(UTC).isoformat(),
         description="UTC timestamp of computation. ISO 8601 format.",
     )
 
@@ -391,7 +390,7 @@ class ClaimEnvelope(BaseModel):
         actor_val = adapter_output.get("actor", tool_id.split(".")[0] if "." in tool_id else "geox-core")
 
         # P0 #4: Derive reason_code from acrisk + evidence.
-        action_class = adapter_output.get("action_class", "READ")
+        adapter_output.get("action_class", "READ")
         reason_code_val = "QUALIFY"
         if acrisk in (AcRiskLevel.HOLD, AcRiskLevel.BLOCK):
             reason_code_val = "GOVERNANCE_BLOCK"

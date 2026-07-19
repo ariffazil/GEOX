@@ -100,7 +100,6 @@ class SimPEGAdapter:
         """
         import SimPEG as smp
         from SimPEG.potential_fields import gravity
-        from SimPEG import maps, regularization, optimization, inverse_problem, inversion
 
         # 1D layered earth by default
         test_1d = len(observed_gravity) > 1

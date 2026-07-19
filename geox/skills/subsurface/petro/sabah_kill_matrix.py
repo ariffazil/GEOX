@@ -20,7 +20,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 # ─────────────────────────────────────────────────────────────────────────────
 # OUTPUT SCHEMA
@@ -52,7 +51,7 @@ class KillMatrixResult:
     """
 
     prospect_name: str
-    age_ma: Optional[float]
+    age_ma: float | None
 
     # Per-filter results
     filters: list[KillFilterResult]
@@ -87,7 +86,7 @@ class KillMatrixResult:
 
 
 def _K001_climate_archetype_fit(
-    age_ma: Optional[float],
+    age_ma: float | None,
     claimed_archetype: str,
 ) -> KillFilterResult:
     """
@@ -146,9 +145,9 @@ def _K001_climate_archetype_fit(
 
 
 def _K002_slope_angle_geometry(
-    slope_angle_deg: Optional[float],
+    slope_angle_deg: float | None,
     claimed_archetype: str,
-    age_ma: Optional[float],
+    age_ma: float | None,
 ) -> KillFilterResult:
     """
     K002 — Slope Angle as Archetype Discriminator
@@ -240,8 +239,8 @@ def _K002_slope_angle_geometry(
 
 
 def _K003_resolution_thickness_test(
-    carbonate_thickness_m: Optional[float],
-    seismic_frequency_hz: Optional[float],
+    carbonate_thickness_m: float | None,
+    seismic_frequency_hz: float | None,
 ) -> KillFilterResult:
     """
     K003 — Seismic Resolution vs Thickness Test
@@ -304,15 +303,15 @@ def _K003_resolution_thickness_test(
         filter_name="K003_resolution_thickness_test",
         verdict=KillVerdict.PROCEED,
         evidence=f"carbonate_thickness={carbonate_thickness_m:.0f} m > resolution={resolution_m} m",
-        threshold=f"Thickness above seismic resolution — structure mappable",
+        threshold="Thickness above seismic resolution — structure mappable",
         kill_logic="Resolution-thickness test passed",
     )
 
 
 def _K004_rim_crest_amplitude_test(
-    has_strong_rim: Optional[bool],
-    has_weak_rim: Optional[bool],
-    has_no_rim: Optional[bool],
+    has_strong_rim: bool | None,
+    has_weak_rim: bool | None,
+    has_no_rim: bool | None,
     claimed_archetype: str,
 ) -> KillFilterResult:
     """
@@ -357,7 +356,7 @@ def _K004_rim_crest_amplitude_test(
             return KillFilterResult(
                 filter_name="K004_rim_crest_amplitude_test",
                 verdict=KillVerdict.KILL,
-                evidence=f"claimed=rimmed_platform but NO rim crest visible on seismic",
+                evidence="claimed=rimmed_platform but NO rim crest visible on seismic",
                 threshold="Rimmed platform DEFINITION requires visible rim crest — no rim = not rimmed platform",
                 kill_logic="'Rimmed platform' without rim is a category error. Either the prospect is misclassified or it is a mud volcano / basement high. KILL.",
             )
@@ -367,7 +366,7 @@ def _K004_rim_crest_amplitude_test(
             filter_name="K004_rim_crest_amplitude_test",
             verdict=KillVerdict.REVIEW,
             evidence=f"claimed={claimed_archetype} — rim questionable",
-            threshold=f"Archetype requires visible rim for confirmation",
+            threshold="Archetype requires visible rim for confirmation",
             kill_logic="Rim not clearly visible — requires more data",
         )
 
@@ -381,10 +380,10 @@ def _K004_rim_crest_amplitude_test(
 
 
 def _K005_false_positive_indicator_test(
-    has_chaotic_surface: Optional[bool],
-    has_no_internal_reflectors: Optional[bool],
-    is_isolated_mound_in_deep_water: Optional[bool],
-    slope_angle_deg: Optional[float],
+    has_chaotic_surface: bool | None,
+    has_no_internal_reflectors: bool | None,
+    is_isolated_mound_in_deep_water: bool | None,
+    slope_angle_deg: float | None,
 ) -> KillFilterResult:
     """
     K005 — False Positive Indicator Test
@@ -443,9 +442,9 @@ def _K005_false_positive_indicator_test(
 
 
 def _K006_reservoir_quality_precheck(
-    porosity_fraction: Optional[float],
-    vp_m_s: Optional[float],
-    thickness_m: Optional[float],
+    porosity_fraction: float | None,
+    vp_m_s: float | None,
+    thickness_m: float | None,
 ) -> KillFilterResult:
     """
     K006 — Reservoir Quality Pre-Check
@@ -501,12 +500,12 @@ def _K006_reservoir_quality_precheck(
 
 
 def _K007_mud_volcano_probability(
-    has_chaotic_surface: Optional[bool] = None,
-    has_no_internal_reflectors: Optional[bool] = None,
-    has_no_rim: Optional[bool] = None,
-    is_isolated_mound_in_deep_water: Optional[bool] = None,
-    slope_angle_deg: Optional[float] = None,
-    age_ma: Optional[float] = None,
+    has_chaotic_surface: bool | None = None,
+    has_no_internal_reflectors: bool | None = None,
+    has_no_rim: bool | None = None,
+    is_isolated_mound_in_deep_water: bool | None = None,
+    slope_angle_deg: float | None = None,
+    age_ma: float | None = None,
 ) -> KillFilterResult:
     """
     K007 — Mud Volcano Probability Assessment (Eureka #5)
@@ -618,19 +617,19 @@ KILL_FILTERS = [
 
 def apply_kill_matrix(
     prospect_name: str,
-    age_ma: Optional[float] = None,
+    age_ma: float | None = None,
     claimed_archetype: str = "rimmed_platform",
-    slope_angle_deg: Optional[float] = None,
-    seismic_frequency_hz: Optional[float] = None,
-    carbonate_thickness_m: Optional[float] = None,
-    has_strong_rim: Optional[bool] = None,
-    has_weak_rim: Optional[bool] = None,
-    has_no_rim: Optional[bool] = None,
-    has_chaotic_surface: Optional[bool] = None,
-    has_no_internal_reflectors: Optional[bool] = None,
-    is_isolated_mound_in_deep_water: Optional[bool] = None,
-    vp_m_s: Optional[float] = None,
-    porosity_fraction: Optional[float] = None,
+    slope_angle_deg: float | None = None,
+    seismic_frequency_hz: float | None = None,
+    carbonate_thickness_m: float | None = None,
+    has_strong_rim: bool | None = None,
+    has_weak_rim: bool | None = None,
+    has_no_rim: bool | None = None,
+    has_chaotic_surface: bool | None = None,
+    has_no_internal_reflectors: bool | None = None,
+    is_isolated_mound_in_deep_water: bool | None = None,
+    vp_m_s: float | None = None,
+    porosity_fraction: float | None = None,
 ) -> KillMatrixResult:
     """
     Apply all 7 hard kill filters to a Sabah carbonate prospect.
@@ -822,7 +821,7 @@ SABAH_TEST_PROSPECTS = {
 def run_sabah_kill_matrix_tests() -> None:
     """Run kill matrix against all Sabah test prospects."""
     print(f"\n{'=' * 70}")
-    print(f"SABAH CARBONATE KILL MATRIX — BADALI ET AL. (2024)")
+    print("SABAH CARBONATE KILL MATRIX — BADALI ET AL. (2024)")
     print(f"{'=' * 70}\n")
 
     for name, prospect in SABAH_TEST_PROSPECTS.items():
@@ -844,12 +843,12 @@ def run_sabah_kill_matrix_tests() -> None:
         print(f"SUMMARY: KILL={result.kill_count}  REVIEW={result.review_count}  PASS={result.pass_count}")
 
         if result.kill_reasons:
-            print(f"\nKILL REASONS:")
+            print("\nKILL REASONS:")
             for r in result.kill_reasons:
                 print(f"  • {r}")
 
         if result.data_gaps:
-            print(f"\nDATA GAPS (must resolve before decision):")
+            print("\nDATA GAPS (must resolve before decision):")
             for g in result.data_gaps:
                 print(f"  ? {g}")
 

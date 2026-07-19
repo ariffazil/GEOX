@@ -151,7 +151,7 @@ def build_4d_cube_difference(
 
     # Identify significant change regions
     hotspots = np.where(significance_map > threshold_pct)
-    hotspot_coords = [(iz, iy, ix) for iz, iy, ix in zip(hotspots[0], hotspots[1], hotspots[2])]
+    hotspot_coords = [(iz, iy, ix) for iz, iy, ix in zip(hotspots[0], hotspots[1], hotspots[2], strict=False)]
 
     return {
         "difference_cube": diff_cube.tolist(),

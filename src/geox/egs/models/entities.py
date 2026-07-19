@@ -9,11 +9,11 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Literal
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Geometry Primitives
@@ -77,7 +77,7 @@ class StructuredGrid3D(BaseModel):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class ContactRelation(str, Enum):
+class ContactRelation(StrEnum):
     """Stratigraphic contact relationships."""
 
     CONFORMABLE = "conformable"
@@ -117,8 +117,8 @@ class EarthEntity(BaseModel):
     name: str = Field(..., description="Human-readable entity name")
     description: str = Field(default="", description="Free-text description")
     tags: list[str] = Field(default_factory=list)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     version: int = Field(default=1, description="Entity version number")
     active: bool = Field(default=True, description="Soft-delete flag")
 

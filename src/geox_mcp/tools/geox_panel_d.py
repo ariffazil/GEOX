@@ -28,17 +28,16 @@ Usage:
 DITEMPA BUKAN DIBERI.
 """
 
-import numpy as np
 import matplotlib
+import numpy as np
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import matplotlib.patheffects as pe
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
-from matplotlib.lines import Line2D
-from matplotlib.gridspec import GridSpec
 import os
 
+import matplotlib.patches as mpatches
+import matplotlib.patheffects as pe
+import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 
 # ── Colour palette (geologist convention) ──────────────────────────────
 FAULT_COLOR   = '#FF4444'       # red — fault
@@ -285,8 +284,8 @@ def render_cognitive_panel(attrs: dict, fp: np.ndarray,
     ax_main.set_xlim(0, wc)
     ax_main.set_ylim(hc, 0)
     ax_main.set_title(
-        f'GEOX Cognitive Interpretation — Malay Basin Context\n'
-        f'CV detects · LLM explains · Agent tests · Geologist judges',
+        'GEOX Cognitive Interpretation — Malay Basin Context\n'
+        'CV detects · LLM explains · Agent tests · Geologist judges',
         color='white', fontsize=11, fontweight='bold', pad=8)
     ax_main.set_xlabel('Trace (pixel)', color='#667')
     ax_main.set_ylabel('TWT proxy (pixel) — NOT TRUE DEPTH', color='#667')

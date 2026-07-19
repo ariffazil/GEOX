@@ -103,8 +103,8 @@ def build_welldesk_app():
             md_min = st.number_input("MD Min (m)", 0, 10000, 0)
             md_max = st.number_input("MD Max (m)", 100, 10000, 3500)
             n_samples = st.slider("Samples", 100, 2000, 500)
-            noise = st.slider("Noise", 0.0, 0.15, 0.03)
-            seed = st.number_input("Seed", 1, 999, 42)
+            st.slider("Noise", 0.0, 0.15, 0.03)
+            st.number_input("Seed", 1, 999, 42)
 
         with col2:
             if st.button("Generate", type="primary"):
@@ -153,9 +153,9 @@ def build_welldesk_app():
         st.subheader("Inverse Petrophysics")
         col1, col2 = st.columns([1, 2])
         with col1:
-            rw = st.number_input("Rw (ohm-m)", 0.001, 1.0, 0.03, format="%.3f")
-            phi_cut = st.slider("phi cutoff", 0.05, 0.30, 0.08, 0.01)
-            sw_cut  = st.slider("Sw cutoff", 0.50, 0.90, 0.65, 0.05)
+            st.number_input("Rw (ohm-m)", 0.001, 1.0, 0.03, format="%.3f")
+            st.slider("phi cutoff", 0.05, 0.30, 0.08, 0.01)
+            st.slider("Sw cutoff", 0.50, 0.90, 0.65, 0.05)
             gr_clean = st.number_input("GR clean (API)", 5.0, 50.0, 15.0)
             gr_shale = st.number_input("GR shale (API)", 50.0, 200.0, 150.0)
 
@@ -168,7 +168,7 @@ def build_welldesk_app():
             md_arr = np.array(curves["MD"])
             gr_arr = np.array(curves.get("GR", [80]*len(md_arr)))
             rhob_arr = np.array(curves.get("RHOB", [2.35]*len(md_arr)))
-            dt_arr = np.array(curves.get("DT", [180]*len(md_arr)))
+            np.array(curves.get("DT", [180]*len(md_arr)))
 
             vsh_arr = compute_vsh_gr(gr_arr, gr_clean, gr_shale)
             phi_arr = (np.array(rhob_arr) - 2.65) / (1.0 - 2.65) * -1

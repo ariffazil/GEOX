@@ -5,6 +5,7 @@ Models smectite-illite transformation and kerogen maturation.
 """
 from pydantic import BaseModel
 
+
 class GeochemRequest(BaseModel):
     initial_smectite_frac: float = 0.5
     T_C: float = 100.0  # Temperature

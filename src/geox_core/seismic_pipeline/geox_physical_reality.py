@@ -40,23 +40,25 @@ EPISTEMIC GRAMMAR:
 DITEMPA BUKAN DIBERI.
 """
 
+import matplotlib
 import numpy as np
 from PIL import Image
 from scipy import ndimage
-from scipy.signal import hilbert, find_peaks
-import matplotlib
+from scipy.signal import find_peaks, hilbert
+
 matplotlib.use('Agg')
+import hashlib
+import json
+import os
+import sys
+from datetime import UTC, datetime
+
+import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 from matplotlib.gridspec import GridSpec
 from matplotlib.lines import Line2D
-import matplotlib.patheffects as pe
-import hashlib, json, os, sys
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Optional
 
-UTC = timezone.utc
+UTC = UTC
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -361,7 +363,7 @@ def _extract_horizons(attrs: dict, faults: list, max_horizons: int = 8) -> list:
     Label: INT_SEISMIC_HORIZON (interpreted — needs alternatives)
     """
     agc = attrs['agc']
-    cp = attrs['phase']
+    attrs['phase']
     pc = attrs['coherence']
     hc, wc = agc.shape
     
@@ -781,7 +783,7 @@ class GeoxPhysicalReality:
     """
     
     def interpret(self, image_path: str,
-                  output_dir: Optional[str] = None,
+                  output_dir: str | None = None,
                   max_horizons: int = 8,
                   min_fault_pts: int = 80) -> dict:
         """Full interpretation pipeline.
@@ -798,7 +800,7 @@ class GeoxPhysicalReality:
             output_dir = os.path.join(os.path.dirname(image_path), "geox_out")
         
         print(f"\n{'═'*65}")
-        print(f"  GEOX PHYSICAL REALITY INTERPRETER v1.0")
+        print("  GEOX PHYSICAL REALITY INTERPRETER v1.0")
         print(f"{'═'*65}")
         print(f"  Input:  {image_path}")
         print(f"  Output: {output_dir}")
@@ -827,7 +829,7 @@ class GeoxPhysicalReality:
         # ── P3: ATTRIBUTE STACK ───────────────────────────────────
         print("  [P3] Compute attribute stack (6 attributes)...")
         attrs = _compute_attributes(amp)
-        print(f"  ✅ AGC + Phase + Coherence + Discontinuity + Edge + DipChaos")
+        print("  ✅ AGC + Phase + Coherence + Discontinuity + Edge + DipChaos")
         
         # ── P4: FAULT EXTRACTION ──────────────────────────────────
         print("  [P4] Extract faults (ant-track-lite)...")
@@ -865,8 +867,8 @@ class GeoxPhysicalReality:
         print(f"\n{'═'*65}")
         print(f"  PRODUCT: {len(horizons)} horizons | {len(faults)} faults")
         print(f"  VERDICT: {report['verdict']}")
-        print(f"  EPISTEMIC: image-domain only — geology requires calibration")
-        print(f"  NEXT: segyio (SEG-Y) → bruges (well tie) → GemPy (3D) → WEALTH")
+        print("  EPISTEMIC: image-domain only — geology requires calibration")
+        print("  NEXT: segyio (SEG-Y) → bruges (well tie) → GemPy (3D) → WEALTH")
         print(f"{'═'*65}\n")
         
         # Store raw attributes for downstream use (geological cognition, Panel D)
@@ -898,6 +900,6 @@ if __name__ == "__main__":
         print(f"❌ VOID: {result.get('reason')}")
         sys.exit(1)
     
-    print(f"Outputs:")
+    print("Outputs:")
     for o in result.get("outputs", []):
         print(f"  {o}")

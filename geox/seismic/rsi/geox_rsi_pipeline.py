@@ -18,11 +18,14 @@ Pipeline:
 
 DITEMPA BUKAN DIBERI.
 """
+import hashlib
+import json
+import os
+from datetime import UTC, datetime
+
 import numpy as np
 from PIL import Image
-import hashlib, json, os
-from datetime import datetime, UTC
-from pathlib import Path
+
 
 # ═══════════════════════════════════════════════════════════════
 # P0: INPUT REALITY GATE
@@ -201,7 +204,7 @@ def extract_real_contrast(arr: np.ndarray, polarity: str = "auto") -> dict:
         return {"verdict": "VOID", "reason": "Image must be RGB"}
     
     r = arr[:, :, 0].astype(float)
-    g = arr[:, :, 1].astype(float)
+    arr[:, :, 1].astype(float)
     b = arr[:, :, 2].astype(float)
     
     # Auto-detect polarity: if mean R > mean B, then red = positive
@@ -456,7 +459,6 @@ def run_rsi_pipeline(image_path: str, output_dir: str, code_path: str = None, pr
 # RUN
 # ═══════════════════════════════════════════════════════════════
 if __name__ == "__main__":
-    import sys
     
     image_path = "/tmp/seismic_image_test/seismic_section.jpg"
     output_dir = "/tmp/seismic_image_test/rsi_output"
@@ -479,7 +481,7 @@ if __name__ == "__main__":
     # Print summary
     print(f"\nVerdict: {result['verdict']}")
     print(f"Reason: {result.get('reason', 'N/A')}")
-    print(f"\nStages:")
+    print("\nStages:")
     for stage, data in result["stages"].items():
         v = data.get("verdict", "?")
         print(f"  {stage}: {v}")
@@ -489,13 +491,13 @@ if __name__ == "__main__":
     
     # Print key detections
     det = result["stages"].get("RSI-4_detection", {})
-    print(f"\nDetection (from REAL pixels):")
+    print("\nDetection (from REAL pixels):")
     print(f"  Strong horizons: {det.get('n_strong_horizons', 0)}")
     print(f"  Fault candidates: {det.get('n_fault_candidates', 0)}")
     print(f"  Bright spots: {det.get('n_bright_spots', 0)}")
     
     gov = result["stages"].get("RSI-5_govern", {})
-    print(f"\nEpistemic labels:")
+    print("\nEpistemic labels:")
     for label, items in gov.items():
         if isinstance(items, list) and items:
             print(f"  {label}: {len(items)} items")

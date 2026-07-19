@@ -9,16 +9,14 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from fastmcp import FastMCP
 
-from geox.egs.models.claims import ClaimEnvelope, ClaimStatus
-from geox.egs.models.entities import EarthGraph
-from geox.egs.models.provenance import EvidenceRef, ProvenanceAction, ProvenanceAgentKind, ProvenanceRecord
-from geox.egs.tools.query import get_claims, get_graph, get_provenance
+from geox.egs.models.claims import ClaimStatus
 from geox.egs.models.uncertainty import ConfidenceGrade
+from geox.egs.tools.query import get_claims, get_graph, get_provenance
 
 logger = logging.getLogger("geox.egs.tools.qc")
 
@@ -41,7 +39,7 @@ async def egs_data_qc_bundle(
     claims = get_claims()
     results: dict[str, Any] = {
         "qc_mode": qc_mode,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "checks": [],
         "summary": {"passed": 0, "warnings": 0, "failed": 0},
     }

@@ -148,8 +148,6 @@ def validate_roundtrip(xlsx_path: str, sheet: str = "01_GEO_PACKAGES") -> dict:
         res = png_to_xlsx(png_tmp, xlsx_tmp)
 
         if res["mode"] == "LOSSLESS":
-            import pandas as pd
-
             df2 = pd.read_excel(xlsx_tmp, sheet_name=sheet)
             equal = df1.shape == df2.shape
             return {"ok": equal, "mode": "LOSSLESS", "rows": df1.shape[0], "cols": df1.shape[1]}

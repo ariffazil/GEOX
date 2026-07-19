@@ -9,6 +9,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 from __future__ import annotations
+
 import math
 from typing import Any, Literal
 

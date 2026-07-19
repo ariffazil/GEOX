@@ -32,8 +32,6 @@ import logging
 from datetime import UTC, datetime
 from typing import Any
 
-import httpx
-
 logger = logging.getLogger("geox.epistemic")
 
 # ─── Canonical epistemic levels (matches PostgreSQL ENUM) ───────────────────

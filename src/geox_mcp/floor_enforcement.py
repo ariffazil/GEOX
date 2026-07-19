@@ -42,9 +42,8 @@ import json
 import logging
 import os
 import time
-import uuid
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -412,7 +411,7 @@ def enforce_floor_post_call(
 
     # F11 AUDIT — append-only local log
     audit = AuditRecord(
-        ts=datetime.now(timezone.utc).isoformat(),
+        ts=datetime.now(UTC).isoformat(),
         tool_name=tool_name,
         risk_tier=str(risk_tier),
         actor_id=kwargs.get("actor_id"),

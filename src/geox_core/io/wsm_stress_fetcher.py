@@ -17,9 +17,9 @@ from __future__ import annotations
 import logging
 import os
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -43,7 +43,7 @@ class StressRecord:
     azimuth_deg: float = 0.0  # SHmax orientation
     quality: str = "C"  # A-E
     type: str = "BO"  # BO=borehole breakout, FM=focal mechanism, etc.
-    depth_km: Optional[float] = None
+    depth_km: float | None = None
     regime: str = ""  # NF, SS, TF
 
 
@@ -60,16 +60,16 @@ class StressResult(BaseModel):
 
 
 class StressQuery(BaseModel):
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    quality: Optional[str] = Field(None, description="A-E quality filter")
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
+    quality: str | None = Field(None, description="A-E quality filter")
     limit: int = Field(100, ge=1, le=50000)
 
 
 class WSMStressFetcher:
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get(
             "GEOX_WSM_CACHE_DIR", "/root/.cache/geox/wsm"
         ))
@@ -77,7 +77,7 @@ class WSMStressFetcher:
         self._offline = os.environ.get("GEOX_WSM_OFFLINE", "1") != "0"
 
     def query(self, params: StressQuery) -> StressResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return self._offline_stub(params.model_dump(exclude_none=True), now)
         return StressResult(ok=False, mode="live", note="Live WSM requires CASMO API access or CSV download.", fetched_at=now)

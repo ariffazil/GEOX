@@ -157,8 +157,8 @@ def build_geoprobe_app():
                 # physics9 velocity model AC_Risk
                 st.divider()
                 st.caption("**physics9 interval velocity model**")
-                for i, (t, d, v) in enumerate(zip(times, depths,
-                    [1650,2400,3000,3500,4000,4500,5000][:len(times)])):
+                for _i, (t, d, _v) in enumerate(zip(times, depths,
+                    [1650,2400,3000,3500,4000,4500,5000][:len(times)], strict=False)):
                     vp = (d / (t/1000)) if t > 0 else 0
                     state = Physics9State(rho=2250+vp*0.05, vp=vp, vs=vp*0.58,
                                           rho_e=50, chi=0.001, k=2.5,

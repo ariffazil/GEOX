@@ -22,11 +22,10 @@ from __future__ import annotations
 import hashlib
 import os
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Literal, Optional, Protocol
+from datetime import UTC, datetime
+from typing import Any, Literal, Protocol
 
 from pydantic import BaseModel, Field
-
 
 try:
     import numpy as np
@@ -66,7 +65,7 @@ class GravityMagneticInput:
 class NonseismicProvenance(BaseModel):
     input_hash: str
     library: Literal["harmonica", "mock"] = "mock"
-    library_version: Optional[str] = None
+    library_version: str | None = None
     forward_model: str = "prism_discrete"
     units: dict = Field(
         default_factory=lambda: {
@@ -83,7 +82,7 @@ class NonseismicOutput(BaseModel):
     provenance: NonseismicProvenance
     epistemic_provenance: dict = Field(default_factory=dict)
     godel_wall: dict = Field(default_factory=dict)
-    timestamp_utc: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp_utc: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 # ───────────────────────────── ADAPTER ────────────────────────────────────────────
@@ -273,7 +272,7 @@ class LiveHarmonICBackend:
                 return [0.0] * n_points
 
             total_gz = np.zeros(len(easting))
-            for prism, density in zip(payload.prisms, densities):
+            for prism, density in zip(payload.prisms, densities, strict=False):
                 if density == 0:
                     continue
                 # Rectangular prism bounds
@@ -447,7 +446,7 @@ class LiveHarmonICBackend:
 class HarmonICAdapter:
     """Constitutional adapter for gravity/magnetic forward modeling."""
 
-    def __init__(self, backend: Optional[HarmonICBackend] = None):
+    def __init__(self, backend: HarmonICBackend | None = None):
         if backend is not None:
             self._backend = backend
         elif _HARMONICA_AVAILABLE and os.environ.get("GEOX_HARMONICA_LIVE") == "1":
@@ -568,9 +567,9 @@ def gravity_screen(
 
     # Misfit metrics
     n = len(observed_mGal)
-    sum_sq = sum((o - p) ** 2 for o, p in zip(observed_mGal, predicted))
+    sum_sq = sum((o - p) ** 2 for o, p in zip(observed_mGal, predicted, strict=False))
     rms = math.sqrt(sum_sq / n) if n > 0 else 0.0
-    max_abs = max(abs(o - p) for o, p in zip(observed_mGal, predicted)) if n > 0 else 0.0
+    max_abs = max(abs(o - p) for o, p in zip(observed_mGal, predicted, strict=False)) if n > 0 else 0.0
 
     # Density contrast
     contrast = density_kg_m3 - reference_density_kg_m3
@@ -579,7 +578,7 @@ def gravity_screen(
     # Simple Gaussian likelihood: P(data|hypothesis) ∝ exp(-misfit²/2σ²)
     # This is a SCREEN grade, not a posterior — label as DER and note placeholder
     sigma_mGal = 10.0  # conservative 10 mGal uncertainty
-    log_likelihood = -(rms**2) / (2 * sigma_mGal**2)
+    -(rms**2) / (2 * sigma_mGal**2)
     # Very rough prior/posterior relation — DO NOT TREAT AS REAL BAYESIAN UPDATE
     hypothesis_updated = hypothesis_prior  # placeholder — not a real posterior
 

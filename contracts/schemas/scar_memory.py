@@ -17,13 +17,11 @@ This is the substrate GEOX becomes wiser over time — not just smarter.
 
 from __future__ import annotations
 
-import json
-from datetime import datetime, timezone
-from typing import Any, Literal, Optional
-from uuid import UUID, uuid4
+from datetime import UTC, datetime
+from typing import Any, Literal
+from uuid import uuid4
 
 from pydantic import BaseModel, Field
-
 
 ScarSeverity = Literal["LOW", "MEDIUM", "HIGH", "CRITICAL"]
 ScarCategory = Literal[
@@ -67,9 +65,9 @@ class ScarEvidence(BaseModel):
         "human_testimony",
     ]
     description: str
-    source: Optional[str] = None
-    url: Optional[str] = None
-    attached_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    source: str | None = None
+    url: str | None = None
+    attached_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class Scar(BaseModel):
@@ -88,12 +86,12 @@ class Scar(BaseModel):
     original_claim: str = Field(..., description="The claim that failed or was wrong")
     failure_mode: str = Field(..., description="Plain-language description of the failure")
     domain: str = Field("geoscience", description="Domain this scar applies to")
-    basin_id: Optional[str] = None
-    prospect_id: Optional[str] = None
+    basin_id: str | None = None
+    prospect_id: str | None = None
 
     # Detection
     detected_by: ScarDetectionMethod
-    detected_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    detected_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     # Evidence
     evidence: list[ScarEvidence] = Field(default_factory=list)
@@ -103,26 +101,26 @@ class Scar(BaseModel):
         ...,
         description="What this scar now forbids or requires in future claims",
     )
-    confidence_ceiling: Optional[float] = Field(
+    confidence_ceiling: float | None = Field(
         None,
         ge=0.0,
         le=0.90,
         description="Maximum confidence any analogous claim may carry (F7 HUMILITY cap)",
     )
-    analog_pattern: Optional[str] = Field(
+    analog_pattern: str | None = Field(
         None,
         description="Pattern that, if matched, triggers this scar's constraint",
     )
 
     # Lifecycle
     sealed: bool = Field(False, description="True if scar is sealed to VAULT999")
-    vault_entry_id: Optional[str] = None
-    superseded_by: Optional[str] = Field(
+    vault_entry_id: str | None = None
+    superseded_by: str | None = Field(
         None,
         description="scar_id of newer scar that supersedes this one",
     )
     sealed_by: str = Field("geox_scar_sealer", description="Agent or actor that sealed")
-    sealed_at: Optional[datetime] = None
+    sealed_at: datetime | None = None
 
     def is_active(self) -> bool:
         """Whether this scar currently constrains claims.
@@ -162,7 +160,7 @@ class Scar(BaseModel):
         self.sealed = True
         self.vault_entry_id = vault_entry_id
         self.sealed_by = sealed_by
-        self.sealed_at = datetime.now(timezone.utc)
+        self.sealed_at = datetime.now(UTC)
 
     def to_dict(self) -> dict[str, Any]:
         return self.model_dump(mode="json", exclude_none=True)
@@ -195,10 +193,10 @@ class ScarStore:
         self._scars[scar.scar_id] = scar
         return scar
 
-    def get(self, scar_id: str) -> Optional[Scar]:
+    def get(self, scar_id: str) -> Scar | None:
         return self._scars.get(scar_id)
 
-    def list_active(self, domain: Optional[str] = None, basin_id: Optional[str] = None) -> list[Scar]:
+    def list_active(self, domain: str | None = None, basin_id: str | None = None) -> list[Scar]:
         scars = [s for s in self._scars.values() if s.is_active()]
         if domain:
             scars = [s for s in scars if s.domain == domain]
@@ -213,7 +211,7 @@ class ScarStore:
         scar.seal(vault_entry_id, sealed_by)
         return scar
 
-    def apply_to_claim(self, claim_text: str, claim_confidence: float, domain: Optional[str] = None) -> tuple[float, list[str]]:
+    def apply_to_claim(self, claim_text: str, claim_confidence: float, domain: str | None = None) -> tuple[float, list[str]]:
         """Apply all active matching scars to a candidate claim.
 
         Returns (final_confidence, list_of_block_reasons).

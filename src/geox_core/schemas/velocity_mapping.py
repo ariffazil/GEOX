@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
 
-class VelocityQCGate(str, Enum):
+class VelocityQCGate(StrEnum):
     MULTI_VELOCITY_CONVERGENCE = "multi_velocity_convergence"
     WELL_TIE_TOLERANCE = "well_tie_tolerance"
     TOMOGRAPHY_SENSITIVITY = "tomography_sensitivity"
@@ -13,7 +13,7 @@ class VelocityQCGate(str, Enum):
     CURVATURE_ANALYSIS = "curvature_analysis"
     LITHOLOGICAL_PLAUSIBILITY = "lithological_plausibility"
 
-class VelocityFailureMode(str, Enum):
+class VelocityFailureMode(StrEnum):
     TOMOGRAPHIC_SMOOTHING = "tomographic_smoothing"
     ANISOTROPY_MISPARAMETERIZATION = "anisotropy_misparameterization"
     GAS_CLOUD_PUSHDOWN = "gas_cloud_pushdown"

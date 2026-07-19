@@ -9,7 +9,9 @@ Modes: create, validate, challenge, seal, attach_evidence
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 from __future__ import annotations
+
 from typing import Any, Literal
+
 
 async def geox_claim(
     mode: Literal["create", "validate", "challenge", "seal", "attach_evidence"] = "create",
@@ -164,8 +166,8 @@ async def geox_claim(
 # Falsification Engine — geox_falsify
 # ═══════════════════════════════════════════════════════════════════════════════
 
-import re
 import logging
+import re
 
 logger = logging.getLogger("geox.falsify")
 

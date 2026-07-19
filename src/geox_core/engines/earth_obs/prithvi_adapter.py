@@ -23,9 +23,9 @@ from __future__ import annotations
 
 import hashlib
 import os
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Literal, Optional, Protocol
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from typing import Literal, Protocol
 
 from pydantic import BaseModel, Field
 
@@ -66,7 +66,7 @@ class HLSInput:
     bands: tuple[str, ...] = ("B02", "B03", "B04", "B8A", "B11", "B12")  # S2 subset
     time_range: tuple[str, str] = ("2024-01-01", "2024-12-31")
     cloud_cover_max: float = 0.20
-    source_uri: Optional[str] = None  # s3:// or https://
+    source_uri: str | None = None  # s3:// or https://
 
 
 class PrithviProvenance(BaseModel):
@@ -89,7 +89,7 @@ class PrithviOutput(BaseModel):
     epistemic_provenance: dict = Field(default_factory=dict)
     anti_beautiful_one_check: dict = Field(default_factory=dict)
     godel_wall: dict = Field(default_factory=dict)
-    timestamp_utc: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp_utc: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 # ───────────────────────────── ADAPTER ────────────────────────────────────────────
@@ -186,7 +186,7 @@ class PrithviEOAdapter:
     - Else: use mock (deterministic).
     """
 
-    def __init__(self, backend: Optional[PrithviBackend] = None):
+    def __init__(self, backend: PrithviBackend | None = None):
         if backend is not None:
             self._backend = backend
         elif os.environ.get("GEOX_PRITHVI_LIVE") == "1":

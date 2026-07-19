@@ -23,18 +23,20 @@ logger = logging.getLogger("geox.resources")
 # Single source of truth for all `geox://` URIs. Never scatter raw strings.
 try:
     from geox_mcp.uri_schemes import (
+        REGISTRY,
         SCHEME,
         URI_PATTERN,
         AccessClass,
+        JsonRpcError,
         Tier,
         UriTemplate,
-        JsonRpcError,
-        REGISTRY,
-        get as get_uri_template,
+        fixed_only,
         full_uri,
         is_valid_uri,
         templates_only,
-        fixed_only,
+    )
+    from geox_mcp.uri_schemes import (
+        get as get_uri_template,
     )
 
     _HAS_URI_SCHEMES = True
@@ -44,13 +46,13 @@ except Exception as _e:  # pragma: no cover
 
 try:
     from geox_mcp.resources.pagination import (
-        Page,
-        PageResult,
-        encode_cursor,
-        decode_cursor,
-        slice_page,
         DEFAULT_PAGE_SIZE,
         MAX_PAGE_SIZE,
+        Page,
+        PageResult,
+        decode_cursor,
+        encode_cursor,
+        slice_page,
     )
 
     _HAS_PAGINATION = True
@@ -1420,21 +1422,13 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
                 if not getattr(res, "title", None):
                     try:
                         # Mutate best-effort — FastMCP Resource objects expose fields
-                        setattr(res, "title", template.name.replace("_", " ").title())
+                        res.title = template.name.replace("_", " ").title()
                     except Exception:
                         pass
                 # Apply annotations if missing
                 if not getattr(res, "annotations", None):
                     try:
-                        setattr(
-                            res,
-                            "annotations",
-                            {
-                                "audience": list(template.annotations_audience),
-                                "priority": template.annotations_priority,
-                                "lastModified": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-                            },
-                        )
+                        res.annotations = {"audience": list(template.annotations_audience), "priority": template.annotations_priority, "lastModified": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
                     except Exception:
                         pass
                 patched += 1
@@ -1972,7 +1966,7 @@ def geox_earth_trinity():
     # Reusable parameterized workflow templates (user-controlled)
     # ---------------------------------------------------------------------------
 
-    mcp.prompt(
+    mcp.prompt(  # noqa: F821
         "sabah-pscs-kill-test",
         description=(
             "Sabah PSCS kill-test protocol — full pre-stack depth migration sanity check. "
@@ -1985,7 +1979,7 @@ def geox_earth_trinity():
         arguments=[],
     )
 
-    mcp.prompt(
+    mcp.prompt(  # noqa: F821
         "carbonate-basement-discrim",
         description=(
             "Carbonate vs basement discrimination protocol. "
@@ -2000,7 +1994,7 @@ def geox_earth_trinity():
         arguments=[],
     )
 
-    mcp.prompt(
+    mcp.prompt(  # noqa: F821
         "deep-time-state-query",
         description=(
             "Query the deep-time Earth state vector at a given geological time. "
@@ -2014,7 +2008,7 @@ def geox_earth_trinity():
         arguments=[],
     )
 
-    mcp.prompt(
+    mcp.prompt(  # noqa: F821
         "stratigraphy-correlation",
         description=(
             "Correlate well stratigraphy across a basin using sequence stratigraphy principles. "

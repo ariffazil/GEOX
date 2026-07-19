@@ -4,11 +4,11 @@ from PIL import Image
 from scipy import ndimage
 from scipy.signal import hilbert, find_peaks
 import matplotlib; matplotlib.use('Agg')
+import hashlib
+import json
+from datetime import UTC, datetime
+
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.lines import Line2D
-import hashlib, json, os
-from datetime import datetime, UTC
 
 # ═══ LOAD ═══
 raw = np.array(Image.open("/tmp/seismic_image_test/seismic_greyscale.jpg")).astype(float)
@@ -211,4 +211,4 @@ print("✅ 02")
 
 print(f"\n{'='*60}")
 print(f"PRODUCT: {len(horizons)} horizons + {len(faults)} faults")
-print(f"Geometry: /tmp/seismic_image_test/geometry.json")
+print("Geometry: /tmp/seismic_image_test/geometry.json")

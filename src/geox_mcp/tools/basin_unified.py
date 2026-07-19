@@ -14,6 +14,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 from __future__ import annotations
+
 import math
 from typing import Any, Literal
 
@@ -176,8 +177,8 @@ async def geox_basin(
     if mode == "reconstruct":
         from geox_core.io.gplates_fetcher import (
             GPlatesFetcher,
-            ReconstructionRequest,
             PlateVelocityRequest,
+            ReconstructionRequest,
         )
 
         fetcher = GPlatesFetcher()
