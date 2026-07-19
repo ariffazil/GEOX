@@ -91,6 +91,7 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     "geox_map_context_scene": RiskTier.READONLY,
     "geox_biostrat_parse": RiskTier.READONLY,
     "geox_biostrat_falsify": RiskTier.READONLY,
+    "geox_falsify": RiskTier.READONLY,
     "geox_consequence_footprint": RiskTier.READONLY,
     "geox_optionality_loss": RiskTier.READONLY,
     "geox_feedback_integrity": RiskTier.READONLY,
@@ -99,6 +100,16 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     "geox_gravmag_studio_open": RiskTier.READONLY,
     "geox_gravmag_studio_screen": RiskTier.READONLY,
     "geox_well_desk_open": RiskTier.READONLY,
+    # ── PHASE 2 PROMOTIONS (2026-07-19) ──
+    "geox_map_export_package": RiskTier.READONLY,
+    "geox_tie_preflight": RiskTier.READONLY,
+    "geox_tie_receipt": RiskTier.READONLY,
+    "geox_wavelet_extract_least_squares": RiskTier.READONLY,
+    "geox_seismic_cognition": RiskTier.READONLY,
+    "geox_visual_understand": RiskTier.READONLY,
+    "geox_visual_generate_hypotheses": RiskTier.READONLY,
+    "geox_simulate_accommodation": RiskTier.READONLY,
+    "geox_simulate_sequences": RiskTier.READONLY,
 }
 
 
@@ -258,10 +269,23 @@ def _load_lane_map() -> dict[str, str]:
                 "geox_biostrat_nn_age": "discovery",  # NN zone age lookup — table read
                 "geox_biostrat_ruling_check": "discovery",  # contradiction check — read-only
                 "geox_biostrat_falsify": "discovery",  # 8-gate falsification — read-only
+                "geox_falsify": "discovery",  # Popperian falsification engine — read-only compute, no session
                 # ── MAP TOOLS (read-only render/plan, no session) ───────────────
                 "geox_map_layers_list": "discovery",  # layer registry read
                 "geox_map_scene_plan": "discovery",  # scene planning — pure computation
                 "geox_map_render_preview": "discovery",  # preview render — read-only
+                "geox_map_export_package": "discovery",  # Phase 2 promotion — governed map export, read-only
+                # ── SEISMIC TIE / COGNITION TOOLS (Phase 2 promotion) ────────────
+                "geox_tie_preflight": "discovery",  # well tie preflight — read-only compute
+                "geox_tie_receipt": "discovery",  # well tie receipt — read-only
+                "geox_wavelet_extract_least_squares": "discovery",  # wavelet extraction — pure math
+                "geox_seismic_cognition": "discovery",  # seismic cognition — read-only compute
+                # ── VISION TOOLS (Phase 2 promotion) ─────────────────────────────
+                "geox_visual_understand": "discovery",  # visual understanding — read-only
+                "geox_visual_generate_hypotheses": "discovery",  # hypothesis generation — read-only
+                # ── STRATIGRAPHIC SIMULATION (Phase 2 promotion) ─────────────────
+                "geox_simulate_accommodation": "discovery",  # accommodation simulation — pure compute
+                "geox_simulate_sequences": "discovery",  # sequence simulation — pure compute
                 # ═══ STRIKE 3 FIX (2026-06-30): 3 missing aliases ═══════════════
                 "geox_dst_ingest_test": "evidence",  # DST test data ingest
                 "geox_sequence_interpret": "reasoning",  # sequence interpretation (compute-bound, session OK)
