@@ -44,16 +44,21 @@
       "name": "GEOX Seismic Viewer",
       "url": "https://geox.arif-fazil.com/apps/seismic-vision-review/index.html",
       "ui_resource": "ui://seismic-vision-review/index.html",
-      "description": "Seismic inline/crossline slices with amplitude attributes, horizon overlay, anomalous contrast detection, and cognition review.",
-      "status": "PREVIEW",
+      "description": "Seismic inline/crossline slices with amplitude attributes, horizon overlay, anomalous contrast detection, wavelet extraction, well ties, cognition review, and visual hypothesis generation. Phase 2 hardened — MapLibre 4.7.1 integrated.",
+      "status": "LIVE",
       "tools": [
         "geox_seismic_ingest",
         "geox_seismic_compute",
         "geox_seismic_interpret",
-        "geox_vision"
+        "geox_seismic_cognition",
+        "geox_tie_preflight",
+        "geox_tie_receipt",
+        "geox_wavelet_extract_least_squares",
+        "geox_visual_understand",
+        "geox_visual_generate_hypotheses"
       ],
       "protocol": "mcp-apps/sep-1865",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "id": "geox-basin",
@@ -67,7 +72,9 @@
         "geox_deep_time_state",
         "geox_subsurface_model",
         "geox_map_layers_list",
-        "geox_map_render_preview"
+        "geox_map_render_preview",
+        "geox_simulate_accommodation",
+        "geox_simulate_sequences"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
@@ -83,6 +90,7 @@
         "geox_prospect",
         "geox_evidence",
         "geox_claim",
+        "geox_falsify",
         "geox_map_export_package"
       ],
       "protocol": "mcp-apps/sep-1865",

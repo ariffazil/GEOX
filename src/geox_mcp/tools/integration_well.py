@@ -60,6 +60,7 @@ async def geox_well_decision_class(
             try:
                 # Lazy import: the WELL organ is a separate service
                 from arifosmcp.tools.organ_health import call_organ_tool
+
                 well_assess_homeostasis = call_organ_tool
             except ImportError:
                 # Use a local stub for off-federation operation
@@ -93,18 +94,12 @@ async def geox_well_decision_class(
         elif accumulated >= 0.40:
             decision_class = "C3"
             operator_readiness = "STABLE"
-            rationale = (
-                "Operator session fatigue 0.40-0.65. Proceed with strict bounds. "
-                "Surface uncertainty in every output."
-            )
+            rationale = "Operator session fatigue 0.40-0.65. Proceed with strict bounds. Surface uncertainty in every output."
             godel_state = "KNOWN"
         else:
             decision_class = "C1"
             operator_readiness = "OPTIMAL"
-            rationale = (
-                "Operator fatigue < 0.40. Proceed with strict bounds and "
-                "full evidence envelope."
-            )
+            rationale = "Operator fatigue < 0.40. Proceed with strict bounds and full evidence envelope."
             godel_state = "KNOWN"
 
         return WellStateResponse(
@@ -147,9 +142,92 @@ async def _stub_well_assess(
     }
 
 
+async def geox_well_desk_open(
+    well_id: str = "",
+    mode: str = "summary",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict:
+    """Open well desk summary view (ZEN-15 consolidated — was standalone tool).
+
+    Returns well metadata and curve headers. This is the "open" mode of
+    geox_well_desk, consolidated from the deregistered geox_well_desk_open.
+    """
+    result: dict = {
+        "tool": "geox_well_desk",
+        "mode": "open",
+        "submode": mode,
+        "well_id": well_id,
+        "status": "ready",
+        "curves_available": [],
+        "depth_range_m": None,
+        "message": "Well desk open. Use mode='render' for full panel or mode='publish' for sealed image.",
+    }
+
+    # Try to load LAS if path provided
+    if well_id:
+        try:
+            from geox.ingest.las_reader import read_las_header
+
+            las_path = f"/data/geox_las/{well_id}.las"
+            from pathlib import Path
+
+            if Path(las_path).exists():
+                header = read_las_header(las_path)
+                result["curves_available"] = list(header.get("curves", {}).keys())
+                result["depth_range_m"] = [
+                    header.get("start_depth_m"),
+                    header.get("stop_depth_m"),
+                ]
+                result["well_name"] = header.get("well_name", well_id)
+                result["status"] = "loaded"
+        except Exception:
+            result["message"] = f"Well '{well_id}' not found in /data/geox_las/. Ingest LAS first."
+
+    return result
+
+
+async def geox_well_desk_publish(
+    well_id: str = "",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict:
+    """Publish well desk panel as sealed image (ZEN-15 consolidated).
+
+    Renders the well panel and returns an image artifact_ref.
+    """
+    try:
+        from geox_mcp.render_well_panel_petro import render_interpreted_panel
+
+        panel = render_interpreted_panel(
+            well_id=well_id,
+            session_id=session_id,
+            actor_id=actor_id,
+        )
+        return {
+            "tool": "geox_well_desk",
+            "mode": "publish",
+            "well_id": well_id,
+            "status": "published",
+            "panel": panel,
+        }
+    except Exception as e:
+        return {
+            "tool": "geox_well_desk",
+            "mode": "publish",
+            "well_id": well_id,
+            "status": "error",
+            "error": str(e),
+        }
+
+
 __all__ = [
     "OperatorDecisionClass",
     "WellStateRequest",
     "WellStateResponse",
     "geox_well_decision_class",
+    "geox_well_desk_open",
+    "geox_well_desk_publish",
 ]
