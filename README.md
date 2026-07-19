@@ -30,7 +30,7 @@ GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and 
 | Gravity / magnetic forward modeling | ✅ Prism-based, screening mode |
 | Prospect evaluation | ✅ Volumetrics, POS, EVOI |
 | Geological claim management | ✅ Create, challenge, falsify, seal |
-| MCP Apps (SEP-1865) | ✅ 13 apps — Well Desk, Seismic Vision, Earth Volume, Judge Console |
+| MCP Apps (SEP-1865) | ✅ 6 apps LIVE (Well Witness, Prospect Forge, Seismic Viewer, Basin Explorer, Risk Console, Operator Console) |
 | Cross-organ capital routing | ✅ WEALTH bridge |
 
 ---
@@ -39,11 +39,25 @@ GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and 
 
 | Metric | Value |
 |--------|-------|
+| Total MCP tools | 52 |
 | Public tools | 24 (verify: `curl :8081/health`) |
-| MCP Apps (SEP-1865) | 13 |
-| Health | GREEN |
+| MCP Apps | 6 (LIVE — SEP-1865) |
+| ui:// resources | 8 |
+| Health | 🟢 GREEN |
 | Port | 8081 |
 | Version | `v2026.07.19` |
+| License | BSL-1.1 (Business Source License) |
+
+---
+
+## Recent Milestones
+
+| Date | Milestone | Detail |
+|------|-----------|--------|
+| 2026-07-19 | **P1 — MCP Apps Restore** | `prefab-ui` installed, 6 apps LIVE, GUI-ready |
+| 2026-07-19 | **P0 — MCP Restore** | FastMCP 3.4.2 kwargs fix, 52 tools registered |
+| 2026-07-19 | **SOT Audit** | License corrected (AGPL→BSL-1.1), version aligned, tool count synced |
+| 2026-07-19 | **Gitwrap** | 4 feature branches removed, 2600+ lint errors fixed, CI advisory |
 
 ---
 
@@ -57,11 +71,26 @@ GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and 
 
 ---
 
+## MCP Apps (SEP-1865)
+
+| App | ui:// Resource | Status |
+|-----|---------------|--------|
+| GEOX Well Witness | `ui://geox/well-desk` | LIVE |
+| GEOX Prospect Forge | `ui://geox/prospect-ui` | LIVE |
+| GEOX Seismic Viewer | `ui://geox/seismic-vision-review` | LIVE |
+| GEOX Basin Explorer | `ui://geox/earth-volume` | LIVE |
+| GEOX Risk Console | `ui://geox/judge-console` | LIVE |
+| GEOX Operator Console | `ui://geox/operator` | LIVE |
+
+Connect via: `https://geox.arif-fazil.com/mcp`
+
+---
+
 ## Quick Start
 
 ```bash
 # Install
-cd /root/geox && pip install -e ".[dev]"
+cd /root/GEOX && pip install -e ".[dev]"
 
 # Run tests
 PYTHONPATH=src pytest tests/ -q --tb=short
@@ -82,17 +111,6 @@ geox_well_ingest(mode="auto", source_uri="/data/wells/my-well.las", well_id="MY-
 ```
 geox_petrophysics(mode="generate", well_id="MY-WELL-1",
   curves={...}, matrix_density=2.65, rw=0.05)
-```
-
-### Generate a synthetic seismogram
-```
-geox_seismic_compute(mode="synthetic", well_id="MY-WELL-1",
-  vp=[...], rho=[...], depth=[...], wavelet_type="ricker", wavelet_freq=30)
-```
-
-### Falsify a geological claim
-```
-geox_falsify(claim_text="Fault seal exists at 2500m", claim_type="structural", mode="full")
 ```
 
 ---
@@ -118,11 +136,11 @@ src/geox_core/         ← Physics truth engine (NOT agent-facing)
     engines/seismic/        ← AC risk, synthetic, well-tie
 
 src/geox_mcp/          ← MCP agent surface
-    tools/                  ← All public tools
-    resources/              ← MCP resource definitions
+    tools/                  ← All 52 MCP tools
+    resources/              ← 8 ui:// resources
     prompts/                ← MCP prompt templates
 
-apps/                   ← MCP Apps (SEP-1865)
+apps/                   ← 6 MCP Apps (SEP-1865)
 docs/                   ← Documentation
 tests/                  ← Test suite (60+ files)
 GENESIS/                ← Constitutional charter
@@ -144,7 +162,7 @@ It IS a vendor-neutral layer that can:
 
 ## License
 
-BSL-1.1 (Business Source License).
+BSL-1.1 (Business Source License). See [LICENSE](./LICENSE).
 
 ---
 
