@@ -1,0 +1,41 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
+  "app_id": "geox.x3d.subsurface",
+  "version": "1.0.0-HARDENED",
+  "domain": "subsurface",
+  "display_name": "X3D Cesium Subsurface Viewer",
+  "description": "3D subsurface model viewer with CesiumJS — wired to geox_subsurface_model, geox_simulate_accommodation, geox_simulate_sequences",
+  "icon": "https://geox.arif-fazil.com/cesium/Assets/Images/cesium_credit.png",
+  "required_tools": [
+    "mcp.geox.subsurface_model",
+    "mcp.geox.simulate_accommodation",
+    "mcp.geox.simulate_sequences",
+    "mcp.geox.basin"
+  ],
+  "ui_entry": {
+    "resource_uri": "https://geox.arif-fazil.com/cesium/index.html",
+    "mode": "inline-or-external",
+    "capability_required": ["webgl2", "wasm"],
+    "sandbox": "allow-scripts allow-same-origin"
+  },
+  "events": {
+    "supported": ["app.initialize", "app.state.sync", "ui.action", "ui.state.change", "ui.error", "telemetry.emit"],
+    "max_payload_size": 5242880
+  },
+  "fallback": {
+    "chain": ["inline", "external", "card", "text"],
+    "external_url": "https://geox.arif-fazil.com/cesium/?session={session_id}"
+  },
+  "arifos": {
+    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "audit_level": "standard",
+    "vault_route": "999_VAULT"
+  },
+  "meta": {
+    "author": "GEOX Platform Team",
+    "license": "MIT",
+    "keywords": ["3d", "subsurface", "cesium", "malay-basin", "accommodation", "sequences"],
+    "created_at": "2026-07-19T00:00:00Z",
+    "updated_at": "2026-07-19T00:00:00Z"
+  }
+}
