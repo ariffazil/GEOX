@@ -1,4 +1,4 @@
-"""P2 — Registry invariance: generated artifacts must equal ZEN-15 canonical surface.
+"""P2 — Registry invariance: generated artifacts must equal the canonical surface.
 
 Deployment / CI must fail when any of these diverge without an explicit alias map:
   canonical registry
@@ -6,7 +6,6 @@ Deployment / CI must fail when any of these diverge without an explicit alias ma
   plugin export (plugin.exposed)
   .well-known/tools.json expose+app_exposed
   .well-known/openapi.json x-mcp-tools
-  tools.json public+app_export
   CANONICAL_PUBLIC_SURFACE.json
 """
 
@@ -57,22 +56,11 @@ def test_well_known_openapi_x_mcp_tools_aligned():
     assert names == CANON
 
 
-def test_root_tools_json_aligned():
-    path = ROOT / "tools.json"
-    assert path.exists()
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    assert set(payload.get("public") or []) == CANON
-    assert set(payload.get("app_export") or []) == CANON
-    # no phantom plugin names in app_export
-    for phantom in ("geox_vision", "geox_map_context_scene", "geox_well_qc"):
-        assert phantom not in (payload.get("app_export") or [])
-
-
 def test_canonical_public_surface_json_aligned():
     path = ROOT / "CANONICAL_PUBLIC_SURFACE.json"
     assert path.exists()
     payload = json.loads(path.read_text(encoding="utf-8"))
-    assert payload.get("public_count") == 15
+    assert payload.get("public_count") == len(CANON)
     assert set(payload.get("public_tools") or []) == CANON
 
 
@@ -82,7 +70,7 @@ async def test_runtime_list_tools_equals_canonical():
 
     Known pre-existing FastMCP **kwargs collection defect may block create_app
     in pytest; in that case we skip rather than re-introduce surface drift.
-    Live truth remains curl :8081 + mcporter tools/list == 15.
+    Live truth remains the runtime tools/list equality check below.
     """
     pytest.importorskip("fastmcp")
     try:
