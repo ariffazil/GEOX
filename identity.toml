@@ -1,0 +1,43 @@
+# GEOX Organ Identity — arifOS Federation
+# Forged: 2026-07-19
+# DITEMPA BUKAN DIBERI
+
+[organ]
+name = "GEOX"
+full_name = "Earth Intelligence Organ"
+port = 8081
+role = "Earth Intelligence — seismic, petrophysics, basin analysis, prospect evaluation"
+lane = "SOUL"
+constitutional_class = "DOMAIN_WITNESS"
+mutation_allowed = false
+
+[identity]
+algorithm = "blake3"
+source = "/opt/geox/app/identity.toml"
+fingerprint = "geox-0876f69e"
+
+[did_web]
+# F-005: bind GEOX identity to sovereign did:web document
+# Forged: 2026-07-19T21:46:55Z by kimi-code-FI-008
+# Reference: /root/forge_work/2026-07-19/eureka-synthesis/F-005-GEOX-DIDWEB-PATCH-2026-07-19.md
+did = "did:web:geox.arif-fazil.com"
+controller = "did:web:arif-fazil.com"
+continuity_key = "did:web:arif-fazil.com#arif-fazil"
+continuity_algorithm = "ed25519"
+continuity_multibase = "z6MkncqhqV2Zr5h3LWeWPjsTvn3L5A6YAsDZcjwz7iDht1xh"
+sovereign_document = "https://arif-fazil.com/.well-known/did.json"
+verifiable_credential_proof = "DataIntegrityProof"
+also_known_as = ["did:web:arif-fazil.com#geox"]
+patch_applied_t1 = "2026-07-19T21:46:55Z"
+patch_actor = "kimi-code-FI-008"
+runtime_pending_sovereign_deploy = true
+
+[federation]
+kernel = "arifOS"
+governed_by = "arifOS:8088"
+peers = ["A-FORGE", "AAA", "WEALTH", "WELL"]
+mcp_protocol = "2025-11-25"
+
+[doctrine]
+motto = "DITEMPA BUKAN DIBERI"
+axiom = "Earth evidence only. Never adjudicate. Never execute."
