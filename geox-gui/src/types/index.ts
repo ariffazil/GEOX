@@ -450,7 +450,10 @@ export type GeoxMethod =
   | 'app.context.patch' 
   | 'ui.action' 
   | 'ui.state.sync' 
-  | 'tool.request' 
+  | 'tool.request'
+  | 'tool.input'
+  | 'tool.result'
+  | 'tool.cancelled'
   | 'tool.response';
 
 export interface GeoxEvent<T = any> {

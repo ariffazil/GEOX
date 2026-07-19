@@ -72,8 +72,27 @@ export function useGeoxHostBridge(iframeRef: RefObject<HTMLIFrameElement>) {
         case 'tool.request': {
           const { tool, arguments: args } = data.params;
           console.log(`[GEOX Host] Tool Request: ${tool}`, args);
-          // In a real scenario, the host would call its own MCP client here
-          // and return the result via 'tool.response'
+          // Forward to MCP client and return result via tool.result
+          store.executeToolRequest(tool, args).then(result => {
+            sendToApp('tool.result', {
+              tool,
+              result,
+              requestId: data.id,
+            });
+          }).catch(error => {
+            sendToApp('tool.result', {
+              tool,
+              error: String(error),
+              requestId: data.id,
+            });
+          });
+          break;
+        }
+
+        case 'tool.cancelled': {
+          console.log('[GEOX Host] Tool Cancelled:', data.params);
+          // Propagate cancellation to any in-flight tool execution
+          store.cancelToolExecution(data.params?.requestId);
           break;
         }
 
@@ -87,6 +106,16 @@ export function useGeoxHostBridge(iframeRef: RefObject<HTMLIFrameElement>) {
   }, [iframeRef, store, sendToApp]);
 
   return {
-    sendToApp
+    sendToApp,
+    // MCP-UI bidirectional notification helpers (SEP-1865)
+    sendToolInput: (tool: string, input: Record<string, unknown>, requestId?: string) => {
+      sendToApp('tool.input' as GeoxMethod, { tool, input }, requestId);
+    },
+    sendToolResult: (tool: string, result: unknown, requestId?: string) => {
+      sendToApp('tool.result' as GeoxMethod, { tool, result }, requestId);
+    },
+    sendToolCancelled: (requestId?: string) => {
+      sendToApp('tool.cancelled' as GeoxMethod, { requestId });
+    },
   };
 }
