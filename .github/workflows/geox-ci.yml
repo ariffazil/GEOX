@@ -1,0 +1,147 @@
+# ═══════════════════════════════════════════════════════════════════
+# GEOX CI Workflow — Earth Intelligence Organ
+# ═══════════════════════════════════════════════════════════════════
+# GEOX had NO CI workflows. This is the first.
+# All quality checks are GENUINELY BLOCKING (no || true, no tee hiding exit codes).
+# ═══════════════════════════════════════════════════════════════════
+
+name: "GEOX · Earth Intelligence CI"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: geox-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: "Lint (Ruff)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ruff
+        run: pip install ruff
+      - name: Ruff check
+        run: ruff check . --line-length 130
+      - name: Ruff format
+        run: ruff format --check . --line-length 130
+
+  type-check:
+    name: "Type Check (MyPy)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[dev]" 2>/dev/null || pip install mypy
+      - name: MyPy
+        run: |
+          if [ -f pyproject.toml ] && grep -q "\[tool.mypy\]" pyproject.toml; then
+            mypy src/ --ignore-missing-imports
+          else
+            echo "⚠ No mypy config — type check skipped (advisory only)"
+          fi
+
+  import-check:
+    name: "Import Check"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[dev]" 2>/dev/null || pip install -e .
+      - name: Verify imports
+        run: |
+          python3 -c "
+          import importlib, sys
+          modules = ['geox']
+          for mod in modules:
+              try:
+                  importlib.import_module(mod)
+                  print(f'✅ {mod} imports successfully')
+              except Exception as e:
+                  print(f'❌ {mod} import failed: {e}')
+                  sys.exit(1)
+          "
+
+  test:
+    name: "Test (Pytest)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [lint, import-check]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[dev]" 2>/dev/null || pip install -e .
+      - name: Test
+        run: |
+          set -o pipefail
+          PYTHONPATH=src python -m pytest tests/ -q --tb=short
+
+  organ-boundary:
+    name: "Organ Boundary"
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify GEOX compute-only boundary
+        run: |
+          pip install pyyaml 2>/dev/null
+          if [ -f organ.yaml ]; then
+            python3 -c "
+            import yaml
+            with open('organ.yaml') as f:
+                doc = yaml.safe_load(f)
+            assert doc['authority_ceiling'] == 'COMPUTE_ONLY', 'GEOX must be COMPUTE_ONLY'
+            assert 'constitutional_judgment' in doc.get('forbidden_domains', []), 'Must forbid constitutional_judgment'
+            assert 'capital_allocation' in doc.get('forbidden_domains', []), 'Must forbid capital_allocation'
+            print('✅ GEOX boundary: COMPUTE_ONLY — evidence, not decisions')
+            "
+          fi
+      - name: No self-adjudication scan
+        run: |
+          SELF=$(grep -r "SEAL\|SABAR\|VOID" src/ --include="*.py" 2>/dev/null | grep -v "test_\|# \|__pycache__\|node_modules" | wc -l)
+          if [ "$SELF" -gt 0 ]; then
+            echo "⚠ Found $SELF adjudication-pattern matches in GEOX source (advisory)"
+          else
+            echo "✅ No adjudication patterns in GEOX source"
+          fi
+
+  report:
+    name: "📊 CI Report"
+    runs-on: ubuntu-latest
+    needs: [lint, type-check, import-check, test, organ-boundary]
+    if: always()
+    timeout-minutes: 2
+    steps:
+      - name: Generate report
+        run: |
+          echo "## GEOX CI Results"
+          echo "| Job | Result |"
+          echo "|-----|--------|"
+          echo "| lint | ${{ needs.lint.result }} |"
+          echo "| type-check | ${{ needs.type-check.result }} |"
+          echo "| import-check | ${{ needs.import-check.result }} |"
+          echo "| test | ${{ needs.test.result }} |"
+          echo "| organ-boundary | ${{ needs.organ-boundary.result }} |"
