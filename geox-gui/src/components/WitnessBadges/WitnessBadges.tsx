@@ -11,7 +11,7 @@ import React from 'react';
 import { Shield, AlertTriangle, CheckCircle, XCircle, HelpCircle, Eye } from 'lucide-react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useGovernance, useToACReport } from '../../store/geoxStore';
-import type { ConstitutionalFloor, FloorStatus, FloorId, PerceptionClass, EvidenceTag, Canon9 } from '../../types';
+import type { ConstitutionalFloor, FloorStatus, FloorId, Canon9 } from '../../types';
 import { PERCEPTION_CLASS_META, CANON9_META } from '../../types';
 
 // Badge color configurations
@@ -172,7 +172,7 @@ const PerceptionBadge: React.FC = () => {
     INTERPRET_FROM_LITHOLOGY: 'bg-amber-100 text-amber-700 border-amber-300',
     UNKNOWN: 'bg-gray-100 text-gray-500 border-gray-300',
   };
-  const evColor = evidenceColors[report.evidence_tag] || evidenceColors.UNKNOWN;
+  const _evColor = evidenceColors[report.evidence_tag] || evidenceColors.UNKNOWN;
 
   return (
     <Tooltip.Provider delayDuration={100}>

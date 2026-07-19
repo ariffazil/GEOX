@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  TrendingUp, 
-  Database, 
-  Target, 
-  Layers, 
+import {
+  TrendingUp,
+  Database,
+  Target,
+  Layers,
   Info,
   ChevronRight,
   ShieldCheck,
   Brain,
   Activity,
-  CheckCircle2,
-  Clock,
   ExternalLink,
-  ChevronDown,
-  ChevronUp,
-  Box,
-  History,
-  Zap,
-  Maximize
 } from 'lucide-react';
 import { useMcpTool } from '../../hooks/useMcpTool';
 
@@ -68,6 +60,8 @@ export const MalayBasinPilotDashboard: React.FC = () => {
       }, 2000);
     }
     return () => clearInterval(interval);
+    // Polling cadence is intentionally derived from external call identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showTrace, activeTraceId, traceTool.call]);
 
   return (

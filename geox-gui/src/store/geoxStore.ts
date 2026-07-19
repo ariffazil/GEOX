@@ -18,7 +18,6 @@ import type {
   FloorStatus,
   GovernanceState,
   McpConnectionStatus,
-  ToACState,
   ToACReport,
 } from '../types';
 
