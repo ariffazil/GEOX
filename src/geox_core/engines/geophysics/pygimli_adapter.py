@@ -95,7 +95,6 @@ class PyGIMLIAdapter:
         Returns:
             2D resistivity section + inversion metrics.
         """
-        import pygimli as pg
         from pygimli.physics import ert
 
         # Build ert manager
@@ -176,7 +175,6 @@ class PyGIMLIAdapter:
         Returns:
             Layered resistivity model + depth.
         """
-        import pygimli as pg
         from pygimli.physics import ert
 
         if mn_spacing_m is None:
@@ -257,7 +255,7 @@ class PyGIMLIAdapter:
         resistivities = [1.0 / (conductivity_basement + 1e-6)] * n_layers
         skin_depths = [
             500 * np.sqrt(r * t) if r > 0 else 0
-            for r, t in zip(resistivities, time_gates_s[:n_layers])
+            for r, t in zip(resistivities, time_gates_s[:n_layers], strict=False)
         ]
 
         return {

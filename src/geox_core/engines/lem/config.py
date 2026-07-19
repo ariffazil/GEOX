@@ -10,8 +10,6 @@ Single source of truth — edit here, not in code.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
-
 
 # ── Tokenizer ───────────────────────────────────────────────────────────────
 
@@ -115,7 +113,7 @@ class DataConfig:
     # Data sources
     well_data_dir: str = "data/wells"
     las_file_pattern: str = "*.las"
-    segy_data_dir: Optional[str] = None
+    segy_data_dir: str | None = None
     panel_data_dir: str = "data/geox_panels"
 
     # Well log selection

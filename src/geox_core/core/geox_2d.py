@@ -146,7 +146,7 @@ def interpret_horizons(
     Computes amplitude characteristics and phase.
     """
     picks = []
-    for _i, (t_h, name) in enumerate(zip(horizon_times, layer_names)):
+    for _i, (t_h, name) in enumerate(zip(horizon_times, layer_names, strict=False)):
         t_idx = int(np.interp(t_h, t_coords, np.arange(len(t_coords))))
         t_idx = np.clip(t_idx, 0, seis_data.shape[0] - 1)
 

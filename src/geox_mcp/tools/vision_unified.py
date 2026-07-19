@@ -9,7 +9,9 @@ Modes: infer_minimax, infer_mimo, audit, calibrate, perceptual
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 from __future__ import annotations
+
 from typing import Any, Literal
+
 
 async def geox_vision(
     mode: Literal["infer_minimax", "infer_mimo", "audit", "calibrate", "perceptual"] = "infer_minimax",

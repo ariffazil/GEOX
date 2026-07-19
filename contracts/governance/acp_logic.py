@@ -404,7 +404,6 @@ class FloorEnforcer:
         
         # Check if uncertainty is within F7 bounds
         within_bounds = uncertainty <= F7_MAX_UNCERTAINTY
-        meets_floor = uncertainty >= F7_HUMILITY_FLOOR
         
         if confidence > 0.85 and uncertainty < F7_HUMILITY_FLOOR:
             # Overconfident - force humility

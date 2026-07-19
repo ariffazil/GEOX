@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 import numpy as np
@@ -26,14 +26,14 @@ NO_VALUE = np.nan  # PaleoScan uses a sentinel; GEOX uses IEEE NaN (industry sta
 # ─────────────────── ENUMS ───────────────────
 
 
-class ScanOrientation(str, Enum):
+class ScanOrientation(StrEnum):
     Inline = "inline"
     Crossline = "crossline"
     TimeSlice = "time_slice"
     DepthSlice = "depth_slice"
 
 
-class AttributeCategory(str, Enum):
+class AttributeCategory(StrEnum):
     BasicSeismic = "BasicSeismic"
     ComplexSeismic = "ComplexSeismic"
     Frequency = "Frequency"
@@ -46,7 +46,7 @@ class AttributeCategory(str, Enum):
     TruncationSeismic = "TruncationSeismic"
 
 
-class AttributeType(str, Enum):
+class AttributeType(StrEnum):
     Line = "Line"
     Volume = "Volume"
 
@@ -149,7 +149,7 @@ class Image2d:
         if new_width == self.width and new_height == self.height:
             import warnings
 
-            warnings.warn("Resize to same size — no operation performed", RuntimeWarning)
+            warnings.warn("Resize to same size — no operation performed", RuntimeWarning, stacklevel=2)
             return
         self.width = new_width
         self.height = new_height
@@ -371,7 +371,7 @@ class Image3d(BlockSpace):
         if new_width == self.width and new_height == self.height and new_length == self.length:
             import warnings
 
-            warnings.warn("Resize to same size — no operation performed", RuntimeWarning)
+            warnings.warn("Resize to same size — no operation performed", RuntimeWarning, stacklevel=2)
             return
         self.width = new_width
         self.height = new_height

@@ -16,9 +16,8 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -64,7 +63,7 @@ class NOAASWPCFetcher:
         self._offline = os.environ.get("GEOX_SWPC_OFFLINE", "1") != "0"
 
     def query(self, params: SpaceWeatherQuery) -> SpaceWeatherResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return SpaceWeatherResult(
                 ok=True, mode="offline_stub",

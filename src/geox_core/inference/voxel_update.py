@@ -42,10 +42,11 @@ from __future__ import annotations
 
 import math
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum
-from typing import Any, Callable, Optional, Sequence
+from enum import StrEnum
+from typing import Any
 
 # Pydantic v2 (consistent with voxel_state.py)
 from pydantic import BaseModel, ConfigDict, Field
@@ -57,13 +58,12 @@ from geox_core.schemas.voxel_state import (
     VoxelState4,
 )
 
-
 # ═══════════════════════════════════════════════════════════════════════════════
 # 1. OBSERVATION MODEL — record-layer data types
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class ObservationKind(str, Enum):
+class ObservationKind(StrEnum):
     """
     Kind of record-layer observation.
 
@@ -84,7 +84,7 @@ class ObservationKind(str, Enum):
     vision = "vision"
 
 
-class ObservationSource(str, Enum):
+class ObservationSource(StrEnum):
     """
     Source provenance for the observation.
 
@@ -114,7 +114,7 @@ class Observation:
     source: ObservationSource
     values: dict[str, float]  # e.g. {"vp": 2950.0, "rho": 2350.0}
     uncertainty: dict[str, float] = field(default_factory=dict)  # 1-sigma per channel
-    bias_model: Optional["BiasModel"] = None
+    bias_model: BiasModel | None = None
     timestamp: datetime = field(default_factory=datetime.utcnow)
     provenance: dict[str, Any] = field(default_factory=dict)
 
@@ -568,15 +568,12 @@ def _self_test() -> None:
     Run via: python -m geox_core.inference.voxel_update
     """
     from geox_core.schemas.voxel_state import (
-        LithologyClass,
         MaterialState,
         PhaseFraction,
-        PhaseConnectivity,
-        PhaseType,
         ProcessState,
         StrainState,
-        StressRegime,
         StrainStyle,
+        StressRegime,
         VoidState,
         VoxelState4,
     )

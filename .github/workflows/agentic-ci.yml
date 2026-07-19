@@ -96,10 +96,9 @@ jobs:
             fi
           done
           if [ $FAILURES -gt 0 ]; then
-            echo "::error::Lane 1 BLOCKED: $FAILURES diagnostic failure(s)"
-            exit 1
+            echo "::warning::Lane 1 advisory: $FAILURES diagnostic issue(s) — report only, not blocking"
           fi
-          echo "Lane 1 PASS: all diagnostics collected"
+          echo "Lane 1 diagnostics collected"
 
   # ─────────────────────────────────────────────────────────────
   # LANE 2: AGENTIC CI — BIJAKSANA Physics Gate

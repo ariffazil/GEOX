@@ -25,11 +25,9 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import enum
-import json
 import time
 from dataclasses import dataclass, field
 from typing import Any
-
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # EPISTEMIC LABELS — The taxonomy of knowledge certainty

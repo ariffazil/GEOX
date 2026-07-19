@@ -31,12 +31,11 @@ Hard boundary:
 DITEMPA BUKAN DIBERI.
 """
 
-import numpy as np
 import hashlib
 import json
 import os
-from typing import Optional
 
+import numpy as np
 
 # ═══════════════════════════════════════════════════════════════════════════
 # STEP 1: SEG-Y INGESTION
@@ -450,8 +449,8 @@ def compute_trace_attributes(ingested: dict, wavelet_info: dict) -> dict:
 
     Epistemic: DER_SEGY_ATTRIBUTE (derived from OBS_SEGY_TRACE)
     """
-    from scipy.signal import hilbert as scipy_hilbert
     from scipy import ndimage
+    from scipy.signal import hilbert as scipy_hilbert
 
     traces = ingested.get("traces")
     dt_ms  = ingested.get("sample_interval_ms", 2.0)
@@ -686,7 +685,7 @@ def run_segy_reality_pipeline(segy_path: str, output_dir: str,
     # Step 6: Attribute stack
     print("  [S6] Computing trace attribute stack...")
     trace_attrs = compute_trace_attributes(ingested, wav_check)
-    print(f"  ✅ 6 attributes: AGC + Phase + Envelope + Coherence + Discontinuity + DipChaos")
+    print("  ✅ 6 attributes: AGC + Phase + Envelope + Coherence + Discontinuity + DipChaos")
 
     # Step 7: Render
     print("  [S7] Rendering trace section panels...")
@@ -722,10 +721,10 @@ def run_segy_reality_pipeline(segy_path: str, output_dir: str,
         json.dump(audit, f, indent=2, default=str)
 
     print("\n" + "═" * 64)
-    print(f"  PRODUCT: trace reality audit complete")
+    print("  PRODUCT: trace reality audit complete")
     print(f"  VERDICT: {ingested['status']} → {trace_attrs['status']}")
     print(f"  AVO USABLE: {ac.get('avo_usable')}")
-    print(f"  NEXT: geox_well_tie_bruges.py → INT_GEOLOGY_HORIZON")
+    print("  NEXT: geox_well_tie_bruges.py → INT_GEOLOGY_HORIZON")
     print("═" * 64)
 
     # Return everything needed for Panel D v2
@@ -767,15 +766,14 @@ def create_test_segy(output_path: str,
 
     print(f"\n[TEST-SEGY] Creating synthetic test SEG-Y: {output_path}")
     print(f"  Model: {n_traces} traces × {n_samples} samples @ dt={dt_ms}ms")
-    print(f"  ⚠  TEST_SEGY: synthetic only — not real geology — not for drilling")
+    print("  ⚠  TEST_SEGY: synthetic only — not real geology — not for drilling")
 
-    twt = np.arange(n_samples) * dt_ms  # TWT in ms
+    np.arange(n_samples) * dt_ms  # TWT in ms
 
     # Geological model: reflection coefficients at given TWT depths
     # Malay Basin inspired TWT depths (shallow thermal sag section)
     reflector_twt_ms = [120, 280, 460, 640, 820]  # TWT ms
     reflector_rc     = [ 0.15, -0.10,  0.20, -0.08,  0.12]  # RC (dimensionless)
-    reflector_names  = ["Top Coastal", "Coastal/Marine", "MFS1", "Syn-rift top", "Pre-rift"]
 
     # Ricker wavelet at 35Hz (typical Malay Basin seismic)
     wav, _ = ricker(duration=0.080, dt=dt_ms / 1000, f=35)
@@ -785,10 +783,10 @@ def create_test_segy(output_path: str,
     fault_throws  = [8, 12, 6]  # samples of throw
 
     rc_section = np.zeros((n_samples, n_traces), dtype=np.float32)
-    for ref_twt, ref_rc in zip(reflector_twt_ms, reflector_rc):
+    for ref_twt, ref_rc in zip(reflector_twt_ms, reflector_rc, strict=False):
         for ti in range(n_traces):
             throw = 0
-            for ft, fth in zip(fault_traces, fault_throws):
+            for ft, fth in zip(fault_traces, fault_throws, strict=False):
                 if ti > ft:
                     throw += fth
             sample_idx = int(ref_twt / dt_ms) + throw

@@ -13,12 +13,12 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 
 from __future__ import annotations
 
-import json
 import logging
 from pathlib import Path
 
 from fastmcp import FastMCP
 from fastmcp.apps import AppConfig, ResourceCSP
+
 from geox_mcp.surface_manifest import ui_tool_names
 
 logger = logging.getLogger("geox.apps.workbench")

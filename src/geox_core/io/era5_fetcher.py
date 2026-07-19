@@ -15,7 +15,7 @@ DITEMPA BUKAN DIBERI — open data is forged through trust envelope.
 from __future__ import annotations
 
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -54,7 +54,7 @@ class ERA5Fetcher:
         self._offline = os.environ.get("GEOX_ERA5_OFFLINE", "1") != "0"
 
     def query(self, params: ERA5Query) -> ERA5Result:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return ERA5Result(
                 ok=True, mode="offline_stub",

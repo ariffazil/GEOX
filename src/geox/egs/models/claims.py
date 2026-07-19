@@ -9,22 +9,21 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Literal
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from geox.egs.models.provenance import EvidenceRef, ProvenanceRecord
 from geox.egs.models.uncertainty import ConfidenceGrade, ScenarioSet, UncertainValue
-
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Claim Status Lifecycle
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class ClaimStatus(str, Enum):
+class ClaimStatus(StrEnum):
     """The lifecycle status of a geological claim."""
 
     DRAFT = "draft"  # In progress, not yet submitted
@@ -40,7 +39,7 @@ class ClaimStatus(str, Enum):
     SEALED = "sealed"  # Finalized, immutable
 
 
-class ClaimDomain(str, Enum):
+class ClaimDomain(StrEnum):
     """The domain of the claim within earth science."""
 
     STRATIGRAPHY = "stratigraphy"
@@ -93,8 +92,8 @@ class ClaimEnvelope(BaseModel):
 
     # Provenance
     author: str = Field(default="", description="Who made this claim")
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     provenance: list[ProvenanceRecord] = Field(default_factory=list, description="Change history")
 
     # Governance
@@ -109,7 +108,7 @@ class ClaimEnvelope(BaseModel):
             self.evidence_for.append(evidence)
         else:
             self.evidence_against.append(evidence)
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         # Auto-update status
         if len(self.evidence_against) > 0 and self.status not in (
             ClaimStatus.SEALED,
@@ -120,7 +119,7 @@ class ClaimEnvelope(BaseModel):
     def add_provenance(self, record: ProvenanceRecord) -> None:
         """Add a provenance record."""
         self.provenance.append(record)
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     @property
     def evidence_balance(self) -> float:

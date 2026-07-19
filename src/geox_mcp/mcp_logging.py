@@ -21,7 +21,8 @@ import logging
 import re
 import sys
 import time
-from typing import Any, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 _stderr = logging.getLogger("geox.mcp_log")
 if not _stderr.handlers:

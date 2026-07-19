@@ -50,13 +50,11 @@ from geox_core.enums.statuses import get_standard_envelope
 from .deep_time.data_loaders import (
     PENDING_DATASETS,
     PolarityState,
-    _chrons_in_interval,
     _derive_polarity_from_abbrev,
     _get_chrons,
     _get_subchrons,
     _lookup_chron_at_age,
     _lookup_subchron_at_age,
-    _subchrons_in_interval,
     resolve_polarity_state,
 )
 

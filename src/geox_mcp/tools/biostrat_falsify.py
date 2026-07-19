@@ -33,15 +33,13 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from geox_core.enums.statuses import get_standard_envelope
 from geox_mcp.tools.kernel._biostrat import (
-    parse_nn_zone,
-    nn_age,
-    map_gde,
-    lithology_class,
     clean_text,
+    lithology_class,
+    nn_age,
+    parse_nn_zone,
 )
 
 logger = logging.getLogger("geox.canonical.biostrat_falsification")
@@ -216,7 +214,7 @@ def _gate2_stratigraphic_order(
             "gate": "G2_STRAT_ORDER",
             "verdict": "FALSIFIED",
             "message": f"Older zone '{older_zone}' ({o_top:.1f} Ma) appears ABOVE younger zone '{younger_zone}' ({y_top:.1f} Ma). Reworking, caving, or misidentification required.",
-            "evidence_against": [f"Age inversion without documented reworking or fault"],
+            "evidence_against": ["Age inversion without documented reworking or fault"],
             "evidence_for": [],
             "rescue_hypothesis": "Reworking, caving from uphole, taxonomic misidentification, or fault repetition.",
         }

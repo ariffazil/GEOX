@@ -18,17 +18,15 @@ Forged: 2026-07-03 — the extinction event.
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from .accommodation import (
     AccommodationResult,
     AccommodationStep,
-    SurfaceType,
     StackingPattern,
+    SurfaceType,
 )
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Surface Types — the REAL objects of stratigraphy
@@ -66,7 +64,7 @@ class StratSurface(BaseModel):
         default=False,
         description="Whether this is a key mappable surface (SB, MFS, MRS)",
     )
-    correlative_extent_km: Optional[float] = Field(
+    correlative_extent_km: float | None = Field(
         default=None,
         description="Estimated lateral extent (km). Sloss-scale = 1000s km",
     )
@@ -130,7 +128,7 @@ class SurfaceFirstResult(BaseModel):
 
 def _infer_geometry(
     step: AccommodationStep,
-    prev_step: Optional[AccommodationStep],
+    prev_step: AccommodationStep | None,
 ) -> GeometryType:
     """Infer geometric relationship from physics, not rules."""
     if step.surface_type == SurfaceType.EROSION:
@@ -148,7 +146,7 @@ def _infer_geometry(
 
 def _accommodation_change(
     step: AccommodationStep,
-    prev_step: Optional[AccommodationStep],
+    prev_step: AccommodationStep | None,
 ) -> float:
     """Compute ΔA (accommodation change) between steps."""
     if prev_step is None:
@@ -181,7 +179,7 @@ def generate_surfaces(
     """
     surfaces: list[StratSurface] = []
     packages: list[DepositionalPackage] = []
-    prev_step: Optional[AccommodationStep] = None
+    prev_step: AccommodationStep | None = None
     surface_counter = 0
 
     steps = accommodation.steps
@@ -192,7 +190,7 @@ def generate_surfaces(
             note="Empty accommodation result — no surfaces generated",
         )
 
-    for i, step in enumerate(steps):
+    for _i, step in enumerate(steps):
         delta_a = _accommodation_change(step, prev_step)
 
         # Generate surface if significant

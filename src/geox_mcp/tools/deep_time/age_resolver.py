@@ -17,7 +17,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from .ics_chart import ics_chart_v2024_12, ICSChart, ChronostratUnit
+from .ics_chart import ChronostratUnit, ICSChart, ics_chart_v2024_12
 
 
 @dataclass(frozen=True)

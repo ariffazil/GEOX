@@ -29,7 +29,7 @@ import logging
 import os
 import time
 from pathlib import Path
-from typing import Any, Literal
+from typing import Literal
 
 logger = logging.getLogger("geox.canonical.earth_map")
 
@@ -349,7 +349,6 @@ async def geox_map_render_preview(
     Returns:
         Render result with image content or resource link.
     """
-    import asyncio
 
     registry = _load_registry()
     guardrails = registry.get("guardrails", {})
@@ -525,10 +524,8 @@ async def _render_map_preview(
         import matplotlib
 
         matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
         import matplotlib.patches as mpatches
-        from matplotlib.collections import LineCollection, PatchCollection
-        import numpy as np
+        import matplotlib.pyplot as plt
 
         registry = _load_registry()
         all_layers = {l["id"]: l for l in registry["layers"]}
@@ -562,17 +559,6 @@ async def _render_map_preview(
             "CONTEXT": "#4A90D9",
             "INTERPRETATION": "#E67E22",
             "DECISION_SUPPORT": "#E74C3C",
-        }
-        type_colors = {
-            "coastline": "#2C3E50",
-            "basin": "#3498DB",
-            "fault": "#E74C3C",
-            "formation": "#27AE60",
-            "granite": "#8E44AD",
-            "well": "#F39C12",
-            "city": "#2C3E50",
-            "river": "#3498DB",
-            "boundary": "#7F8C8D",
         }
 
         truth_classes_rendered = []
@@ -870,7 +856,6 @@ async def geox_map_export_package(
     Returns:
         Package manifest with artifact paths, checksums, and provenance references.
     """
-    import asyncio
     import hashlib
     import shutil
     import time
@@ -971,7 +956,7 @@ async def geox_map_export_package(
             )
 
         # Also copy cached provenance if it exists
-        cache_meta = _CACHE_DIR / f"{render_result.get('cache_key', '')}.json"
+        _CACHE_DIR / f"{render_result.get('cache_key', '')}.json"
         # Fallback: check for cached meta matching the scene
         for cm in _CACHE_DIR.glob(f"{scene_plan_id[:12]}*.json"):
             if cm.name.endswith("_scene.json"):

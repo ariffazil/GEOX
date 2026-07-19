@@ -18,9 +18,6 @@ DITEMPA BUKAN DIBEI — the volumetrics are forged, not given.
 
 from __future__ import annotations
 
-import math
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 from geox_core.physics.state import Physics13State
@@ -39,8 +36,8 @@ class WealthFeedRequest(BaseModel):
 class WealthFeedResponse(BaseModel):
     ok: bool
     tool: str = "geox_wealth_feed"
-    feed: Optional[dict] = None
-    error: Optional[str] = None
+    feed: dict | None = None
+    error: str | None = None
 
 
 def stoiip_cell(

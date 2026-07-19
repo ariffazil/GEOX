@@ -42,10 +42,8 @@ Used by:
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
-
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Crust zones — canonical taxonomy

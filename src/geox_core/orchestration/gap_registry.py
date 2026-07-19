@@ -24,9 +24,9 @@ F4 CLARITY: Strict Pydantic, no drift.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -75,7 +75,7 @@ class GapEntry(BaseModel):
         default="No detail provided",
         description="Human-readable description of what data is missing and why",
     )
-    fallback_used: Optional[str] = Field(
+    fallback_used: str | None = Field(
         default=None,
         description="What proxy / fallback / prior was used instead (None if pipeline aborted)",
     )
@@ -86,7 +86,7 @@ class GapEntry(BaseModel):
         description="Confidence of the fallback data (0.0 = complete gap, 1.0 = proxy with full confidence)",
     )
     registered_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         description="When the gap was registered (UTC)",
     )
 
@@ -114,7 +114,7 @@ class GapRegistry(BaseModel):
         gap_type: GapType,
         stage: int,
         detail: str = "",
-        fallback_used: Optional[str] = None,
+        fallback_used: str | None = None,
         gap_confidence: float = 0.0,
     ) -> GapEntry:
         """Register a new gap and return the entry."""

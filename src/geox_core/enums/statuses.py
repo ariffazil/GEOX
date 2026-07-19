@@ -1,5 +1,5 @@
 import os
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
@@ -31,7 +31,7 @@ REGISTRY_HASH = "reg-hash-35d798a"
 TOOL_SCHEMA_HASH = "schema-sha-35d798a"
 
 
-class Dimension(str, Enum):
+class Dimension(StrEnum):
     PROSPECT = "prospect"
     WELL = "well"
     EARTH3D = "earth3d"
@@ -43,7 +43,7 @@ class Dimension(str, Enum):
     DASHBOARD = "dashboard"
 
 
-class ExecutionStatus(str, Enum):
+class ExecutionStatus(StrEnum):
     SUCCESS = "SUCCESS"
     ERROR = "ERROR"
     HALT = "HALT"
@@ -51,7 +51,7 @@ class ExecutionStatus(str, Enum):
     RECOVERABLE_ERROR = "RECOVERABLE_ERROR"
 
 
-class GovernanceStatus(str, Enum):
+class GovernanceStatus(StrEnum):
     APPROVED = "APPROVED"
     QUALIFY = "QUALIFY"
     HOLD = "HOLD"
@@ -62,7 +62,7 @@ class GovernanceStatus(str, Enum):
 Verdict = GovernanceStatus
 
 
-class ArtifactStatus(str, Enum):
+class ArtifactStatus(StrEnum):
     USABLE = "USABLE"
     STAGED = "STAGED"
     REJECTED = "REJECTED"
@@ -74,27 +74,27 @@ class ArtifactStatus(str, Enum):
     IN_REVIEW = "IN_REVIEW"
 
 
-class FloorStatus(str, Enum):
+class FloorStatus(StrEnum):
     ACTIVE = "active"
     INACTIVE = "inactive"
     VOID = "void"
     HALT = "halt"
 
 
-class Runtime(str, Enum):
+class Runtime(StrEnum):
     VPS = "vps"
     FASTMCP = "fastmcp"
     LOCAL = "local"
 
 
-class Transport(str, Enum):
+class Transport(StrEnum):
     HTTP = "http"
     MCP = "mcp"
     STDIO = "stdio"
     SSE = "sse"
 
 
-class ToolCategory(str, Enum):
+class ToolCategory(StrEnum):
     FOUNDATION = "foundation"
     PHYSICS = "physics"
     BRIDGE = "bridge"
@@ -102,14 +102,14 @@ class ToolCategory(str, Enum):
     SYSTEM = "system"
 
 
-class ProspectVerdict(str, Enum):
+class ProspectVerdict(StrEnum):
     DRO = "DRO"
     DRIL = "DRIL"
     HOLD = "HOLD"
     DROP = "DROP"
 
 
-class ClaimState(str, Enum):
+class ClaimState(StrEnum):
     """Canonical artifact/claim lifecycle states (P0.2).
 
     Lifecycle:
@@ -145,13 +145,13 @@ class ClaimState(str, Enum):
     VOID = "VOID"
 
 
-class ClaimTag(str, Enum):
+class ClaimTag(StrEnum):
     CLAIM = "CLAIM"
     PLAUSIBLE = "PLAUSIBLE"
     HYPOTHESIS = "HYPOTHESIS"
 
 
-class EvidenceTag(str, Enum):
+class EvidenceTag(StrEnum):
     EVIDENCE_DIRECT = "EVIDENCE_DIRECT"
     EVIDENCE_MULTI_ZONE = "EVIDENCE_MULTI_ZONE"
     INTERPRET_FROM_LITHOLOGY = "INTERPRET_FROM_LITHOLOGY"
@@ -163,7 +163,7 @@ class EvidenceTag(str, Enum):
     UNKNOWN = "UNKNOWN"
 
 
-class LithoClass(str, Enum):
+class LithoClass(StrEnum):
     CARBONATE = "CARBONATE"
     HETEROLITHIC = "HETEROLITHIC"
     SAND_PRONE = "SAND_PRONE"
@@ -174,20 +174,20 @@ class LithoClass(str, Enum):
     UNKNOWN = "UNKNOWN"
 
 
-class VerticalTrend(str, Enum):
+class VerticalTrend(StrEnum):
     DEEPENING_UPWARD = "DEEPENING_UPWARD"
     SHALLOWING_UPWARD = "SHALLOWING_UPWARD"
     STABLE_OR_AMBIGUOUS = "STABLE_OR_AMBIGUOUS"
     UNKNOWN = "UNKNOWN"
 
 
-class DepthBasis(str, Enum):
+class DepthBasis(StrEnum):
     MD = "MD"
     TVD = "TVD"
     TVDSS = "TVDSS"
 
 
-class PerceptionClass(str, Enum):
+class PerceptionClass(StrEnum):
     MEASURED = "MEASURED"
     DERIVED = "DERIVED"
     DISPLAY = "DISPLAY"
@@ -197,7 +197,7 @@ class PerceptionClass(str, Enum):
 
 # EARTH.CANON_9 — Nine invariant subsurface quantities
 # Every tool that touches subsurface data declares which it reads/writes/constrains.
-class Canon9(str, Enum):
+class Canon9(StrEnum):
     RHO = "rho"  # Bulk density (ρ)
     VP = "Vp"  # P-wave velocity
     VS = "Vs"  # S-wave velocity
@@ -230,7 +230,7 @@ CANON9_TOOL_MAP: dict[str, list[str]] = {
 
 
 # Stratigraphic standard schemes (Kinabalu Basin NN-anchor)
-class StratStandard(str, Enum):
+class StratStandard(StrEnum):
     NN_ZONE = "NN_zone"
     NP_ZONE = "NP_zone"
     STAGE_SABAH = "Stage_Sabah"

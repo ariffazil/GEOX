@@ -21,18 +21,15 @@ scope: /root/geox/src/geox_mcp/events/subscriber.py
 from __future__ import annotations
 
 import asyncio
-import os
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Optional
 
 from geox_core.governance.event_bus import (
-    IntelligenceAtom,
     TOPIC_HOLD,
     TOPIC_VERDICT_PREFIX,
     TOPIC_WEALTH_SIGNAL,
     TOPIC_WELL_OPERATOR,
+    IntelligenceAtom,
     get_bus,
 )
 
@@ -45,23 +42,23 @@ class QuantumState:
     # From WELL
     operator_decision_class: str = "C3"  # default conservative middle
     operator_fatigue: float = 0.5
-    operator_actor_id: Optional[str] = None
-    operator_updated_at: Optional[str] = None
+    operator_actor_id: str | None = None
+    operator_updated_at: str | None = None
 
     # From arifOS Ω
     latest_kernel_verdict: str = ""           # SEAL / SABAR / HOLD / VOID
-    latest_kernel_verdict_atom_id: Optional[str] = None
-    kernel_verdict_updated_at: Optional[str] = None
+    latest_kernel_verdict_atom_id: str | None = None
+    kernel_verdict_updated_at: str | None = None
 
     # From WEALTH
     latest_capital_signal: str = ""           # REJECT / DEFER / ADVANCE
-    latest_capital_asset_id: Optional[str] = None
-    capital_signal_updated_at: Optional[str] = None
+    latest_capital_asset_id: str | None = None
+    capital_signal_updated_at: str | None = None
 
     # Global HOLD
     global_hold: bool = False
     global_hold_reason: str = ""
-    global_hold_at: Optional[str] = None
+    global_hold_at: str | None = None
 
     # Atoms consumed (for audit / replay)
     consumed_atom_ids: list = field(default_factory=list)
@@ -224,7 +221,7 @@ async def _on_hold(atom: IntelligenceAtom) -> None:
 
 
 # ───────────────────────────── MODULE SINGLETON ────────────────────────────────
-_subscriber: Optional[Subscriber] = None
+_subscriber: Subscriber | None = None
 
 
 def get_subscriber() -> Subscriber:

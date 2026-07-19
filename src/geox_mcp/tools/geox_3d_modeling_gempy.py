@@ -14,11 +14,13 @@ Epistemic Status:
 DITEMPA BUKAN DIBERI.
 """
 
-import numpy as np
-import os
-import json
 import hashlib
+import json
+import os
+
 import matplotlib
+import numpy as np
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -40,7 +42,7 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
     if not os.path.exists(model_json_path):
         return {"status": "VOID", "reason": f"File not found: {model_json_path}"}
 
-    with open(model_json_path, "r") as f:
+    with open(model_json_path) as f:
         d = json.load(f)
 
     horizons = d.get("horizons", [])
@@ -57,9 +59,9 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
     wc = x1 - x0
     hc = y1 - y0
 
-    print(f"  [G1] Setup 3D grid:")
+    print("  [G1] Setup 3D grid:")
     print(f"       X: 0 to {wc} px")
-    print(f"       Y: 0 to 500 px (virtual width)")
+    print("       Y: 0 to 500 px (virtual width)")
     print(f"       Z: -{hc} to 0 px (negative TWT depth)")
 
     # ── 2. Create GemPy model ────────────────────────────────────────
@@ -228,7 +230,7 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
     # Custom geologist colour map for layers
     cmap = plt.get_cmap('terrain', len(horizons) + 1)
     
-    im = ax.imshow(slice_2d, cmap=cmap, aspect='auto',
+    ax.imshow(slice_2d, cmap=cmap, aspect='auto',
                    extent=[0, wc, -hc, 0])
     ax.set_xlabel('X (px)', color='#8899aa')
     ax.set_ylabel('Z (px, negative TWT)', color='#8899aa')

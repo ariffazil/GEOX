@@ -33,13 +33,11 @@ Hard law: The best interpreter knows when the image is lying.
 DITEMPA BUKAN DIBERI.
 """
 
-import numpy as np
-from scipy import ndimage
-from scipy.signal import hilbert
-from scipy.stats import variation
-from typing import Optional
 import json
 
+import numpy as np
+from scipy import ndimage
+from scipy.stats import variation
 
 # ═══════════════════════════════════════════════════════════════════════════
 # REFLECTOR PACKAGE CLASSIFIER
@@ -79,7 +77,7 @@ def classify_reflector_packages(agc: np.ndarray, cp: np.ndarray,
         r0 = i * zone_h
         r1 = min(hc, (i + 1) * zone_h)
         zone_agc = agc[r0:r1, :]
-        zone_cp  = cp[r0:r1, :]
+        cp[r0:r1, :]
         zone_pc  = pc[r0:r1, :]
 
         # ── Continuity metrics ──────────────────────────────────────────
@@ -405,7 +403,7 @@ def screen_imaging_artifacts(agc: np.ndarray, cp: np.ndarray,
     for h in horizons:
         pts = np.array(h["pts"])
         rows = pts[:, 1].astype(float)
-        mid_col = len(rows) // 2
+        len(rows) // 2
         # Check if horizon is concave-up (pull-up) or concave-down (sag)
         # Fit a parabola — high curvature = velocity effect candidate
         if len(rows) > 20:
@@ -628,7 +626,7 @@ def rank_hypotheses(faults: list, horizons: list, packages: list,
             "row_span_px": row_span,
             "hypotheses_ranked": [
                 {"rank": i + 1, "hypothesis": h, "prior_prob": p,
-                 "note": f"{'Highest prior in {}'.format(basin_context) if i == 0 else ''}"}
+                 "note": f"{f'Highest prior in {basin_context}' if i == 0 else ''}"}
                 for i, (h, p) in enumerate(ranked)
             ],
             "discrimination_tests": [
@@ -931,9 +929,16 @@ def run_geological_cognition(attrs: dict, fp: np.ndarray,
 # ═══════════════════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     import sys
-    from geox_physical_reality import GeoxPhysicalReality, _compute_attributes, _compute_fault_probability, _extract_amplitude, _crop_seismic_panel, _reality_gate
-    from PIL import Image
+
     import numpy as np
+    from geox_physical_reality import (
+        GeoxPhysicalReality,
+        _compute_attributes,
+        _compute_fault_probability,
+        _crop_seismic_panel,
+        _extract_amplitude,
+    )
+    from PIL import Image
 
     if len(sys.argv) < 2:
         print("Usage: python3 geox_geological_cognition.py <seismic_image> [output_dir] [basin]")
@@ -955,10 +960,9 @@ if __name__ == "__main__":
 
     # Re-extract attrs + faults + horizons WITH full pts arrays
     # (the report dict strips pts for JSON size — cognition needs full geometry)
-    from PIL import Image
     from geox_physical_reality import (
-        _crop_seismic_panel, _extract_amplitude, _compute_attributes,
-        _compute_fault_probability, _extract_faults, _extract_horizons,
+        _extract_faults,
+        _extract_horizons,
     )
     raw = np.array(Image.open(image_path))
     cropped, crop_bbox = _crop_seismic_panel(raw)

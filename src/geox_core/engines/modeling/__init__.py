@@ -7,10 +7,9 @@ Biharmonic interpolation:
 """
 
 from geox_core.engines.modeling.biharmonic_adapter import (
-    biharmonic_inpaint_grid,
     BiharmonicResult,
     __version__,
+    biharmonic_inpaint_grid,
 )
 
 __all__ = ["biharmonic_inpaint_grid", "BiharmonicResult", "__version__"]
-__version__ = "2026.06.29"

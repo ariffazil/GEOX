@@ -11,7 +11,6 @@ import fcntl
 import hashlib
 import io
 import json
-import math
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -183,7 +182,7 @@ def earth_meaning_decode(
         f"Window {depth_top:.1f}–{depth_base:.1f} m MD on well {well_id}.",
         f"GR motif: {motif.get('motif')} — {motif.get('meaning')}",
         f"Vsh mean≈{_fmt(vsh_m)} (Larionov/linear GR), φe mean≈{_fmt(phi_m)} (density–neutron composite, clay-corrected).",
-        f"Net flag (φe≥0.08 & Vsh≤0.5" + (" & Sw≤0.7" if sw is not None else "") + f"): N/G≈{net_frac:.0%}.",
+        "Net flag (φe≥0.08 & Vsh≤0.5" + (" & Sw≤0.7" if sw is not None else "") + f"): N/G≈{net_frac:.0%}.",
         f"Reservoir read: {rq}",
         f"Fluid read: {fluid}",
         "Assumptions: ρma=2.65 g/cc, ρf=1.0, Archie a=1 m=2 n=2, Rw=0.03 Ω·m (North Sea-ish default — NOT measured).",
@@ -256,6 +255,7 @@ def render_interpreted_panel(
         }
 
     import lasio
+
     from geox_core.benchmarks.geox_001_las_physics import compute_las_physics
 
     las = lasio.read(str(resolved), ignore_header_errors=True)

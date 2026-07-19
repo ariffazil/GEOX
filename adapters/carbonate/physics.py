@@ -27,7 +27,6 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # MINERAL ELASTIC CONSTANTS — Mavko et al. (2009)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1289,14 +1288,14 @@ if __name__ == "__main__":
     print("\n[1] Vp AT TYPICAL POROSITY (brine-saturated)")
     print(f"{'Archetype':<40} {'φ_typ':>6} {'Vp':>8} {'ρ':>6} {'AI':>8}")
     print("─" * 70)
-    for arch_id, recipe in ARCHETYPE_RECIPES.items():
+    for _arch_id, recipe in ARCHETYPE_RECIPES.items():
         result = compute_archetype_vp(recipe, recipe.porosity_typical)
         print(
             f"{recipe.label:<40} {recipe.porosity_typical:>5.0%} {result['vp']:>7.0f} {result['rho']:>5.2f} {result['ai']:>7.0f}"
         )
 
     # 2. Vp consistency check
-    print(f"\n[2] VP CONSISTENCY — observed Vp=4720 m/s at φ=20%")
+    print("\n[2] VP CONSISTENCY — observed Vp=4720 m/s at φ=20%")
     bridge = check_vp_consistency(4720.0, 0.20)
     print(f"{'Archetype':<40} {'OK':>4} {'Predicted':>10} {'Residual':>10} {'Conf':>5}")
     print("─" * 70)
@@ -1309,7 +1308,7 @@ if __name__ == "__main__":
         print(f"\n⚠ {bridge.discrimination_gap}")
 
     # 3. 6-Domain Differentiator — Tepat benchmark
-    print(f"\n[3] 6-DOMAIN DIFFERENTIATOR — TEPAT BENCHMARK")
+    print("\n[3] 6-DOMAIN DIFFERENTIATOR — TEPAT BENCHMARK")
     print("─" * 70)
     tepat = run_tepat_calibration()
     for d in tepat.domains:
@@ -1323,7 +1322,7 @@ if __name__ == "__main__":
     print(f"  Explanation: {tepat.explanation}")
 
     # 4. Basement discrimination
-    print(f"\n[4] BASEMENT DISCRIMINATION")
+    print("\n[4] BASEMENT DISCRIMINATION")
     for name, vp, por in [("Tepat", 4700, 0.20), ("Solisip-1", 4800, 0.10), ("Deep (φ=5%)", 5500, 0.05)]:
         result = check_basement_discrimination(vp, por)
         print(
@@ -1332,7 +1331,7 @@ if __name__ == "__main__":
         )
 
     # 5. Sabah calibration
-    print(f"\n[5] SABAH CALIBRATION")
+    print("\n[5] SABAH CALIBRATION")
     cal = sabah_physics_calibration()
     for name, result in cal.items():
         if isinstance(result, SixDomainResult):

@@ -12,8 +12,8 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import Enum, StrEnum
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -47,7 +47,7 @@ class BasinState(Enum):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class DiachroneityClass(str, Enum):
+class DiachroneityClass(StrEnum):
     """No surface is isochronous unless proven. Default: strongly_diachronous."""
 
     ISOCHRONOUS = "isochronous"  # Proven with independent chronometric anchors
@@ -61,7 +61,7 @@ class DiachroneityClass(str, Enum):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class EvidenceTag(str, Enum):
+class EvidenceTag(StrEnum):
     EVIDENCE = "EVIDENCE"  # Observed/measured
     INTERPRET = "INTERPRET"  # Reasoned/inferred
     UNKNOWN = "UNKNOWN"  # Missing data — gap registered
@@ -117,7 +117,7 @@ class StateTransitionSurface(BaseModel):
         default_factory=list,
         description="[{'step':'hypothesize','hash':'sha256:...','ts':'ISO-8601'}]",
     )
-    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     @field_validator("from_state", "to_state")
     @classmethod
@@ -157,7 +157,7 @@ class BasinNode(BaseModel):
     )
 
     claim_tag: EvidenceTag = Field(default=EvidenceTag.INTERPRET)
-    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -195,7 +195,7 @@ class StateGraph(BaseModel):
 
     version: int = Field(default=1)
     claim_tag: EvidenceTag = Field(default=EvidenceTag.INTERPRET)
-    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     # ── Operations ──────────────────────────────────────────────────────────
 

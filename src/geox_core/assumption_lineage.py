@@ -20,11 +20,10 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
-from typing import Literal, Optional
+from datetime import UTC, datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field
-
 
 # ───────────────────────────── EPISTEMIC RUNG (canonical, mirrors geox_core/enums) ──
 # Mirrors the Rung 1-7 ladder from GEOX_FOUNDATIONAL_GAPS. Kept local so this
@@ -56,15 +55,15 @@ class Assumption(BaseModel):
     """
 
     assumption_id: str = Field(default_factory=lambda: f"ASM-{uuid.uuid4().hex[:12]}")
-    parent_assumption_id: Optional[str] = None
+    parent_assumption_id: str | None = None
     introduced_by: str = Field(..., description="Tool name that introduced this assumption")
     rung_origin: int = Field(..., ge=1, le=7, description="Epistemic rung where this assumption was born")
     description: str = Field(..., min_length=1)
     current_status: Literal["active", "falsified", "inherited"] = "active"
-    falsified_at: Optional[datetime] = None
-    falsified_by: Optional[str] = Field(default=None, description="Evidence ID that falsified this assumption")
-    inherited_from: Optional[str] = Field(default=None, description="Assumption ID this was inherited from")
-    introduced_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    falsified_at: datetime | None = None
+    falsified_by: str | None = Field(default=None, description="Evidence ID that falsified this assumption")
+    inherited_from: str | None = Field(default=None, description="Assumption ID this was inherited from")
+    introduced_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     # Provenance tag — required by F2 TRUTH.
     epistemic_label: Literal["OBS", "DER", "INT", "SPEC"] = "DER"
@@ -111,10 +110,10 @@ class AssumptionRegistry:
         rung_origin: int,
         description: str,
         *,
-        parent_assumption_id: Optional[str] = None,
-        inherited_from: Optional[str] = None,
+        parent_assumption_id: str | None = None,
+        inherited_from: str | None = None,
         epistemic_label: Literal["OBS", "DER", "INT", "SPEC"] = "DER",
-        assumption_id: Optional[str] = None,
+        assumption_id: str | None = None,
     ) -> Assumption:
         """Add a new assumption to the lineage. Returns the persisted model."""
         if not (1 <= rung_origin <= 7):
@@ -147,7 +146,7 @@ class AssumptionRegistry:
         assumption_id: str,
         evidence_id: str,
         *,
-        reason: Optional[str] = None,
+        reason: str | None = None,
     ) -> Assumption:
         """Mark an assumption as falsified. Cascades status to descendants."""
         with self._lock:
@@ -160,7 +159,7 @@ class AssumptionRegistry:
             updated = asm.model_copy(
                 update={
                     "current_status": "falsified",
-                    "falsified_at": datetime.now(timezone.utc),
+                    "falsified_at": datetime.now(UTC),
                     "falsified_by": evidence_id,
                     "description": (
                         asm.description + f" [FALSIFIED by {evidence_id}]"
@@ -180,7 +179,7 @@ class AssumptionRegistry:
             return updated
 
     # ── read ─────────────────────────────────────────────────────────────────
-    def get(self, assumption_id: str) -> Optional[Assumption]:
+    def get(self, assumption_id: str) -> Assumption | None:
         with self._lock:
             return self._assumptions.get(assumption_id)
 
@@ -272,7 +271,7 @@ class AssumptionRegistry:
 
 
 # ───────────────────────────── PROCESS-LOCAL SINGLETON ────────────────────────────
-_default_registry: Optional[AssumptionRegistry] = None
+_default_registry: AssumptionRegistry | None = None
 _default_lock = threading.Lock()
 
 

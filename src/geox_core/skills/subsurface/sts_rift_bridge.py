@@ -61,12 +61,8 @@ def compute_basin_state_sequence(
     }
     """
     from geox_core.skills.subsurface.rift_kinematics import (
-        compute_rift_kinematics,
-        compute_beta,
-        initial_subsidence,
-        thermal_subsidence,
-        classify_rift_phase,
         RiftPhase,
+        compute_rift_kinematics,
     )
 
     result = compute_rift_kinematics(

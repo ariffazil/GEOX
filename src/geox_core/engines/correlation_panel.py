@@ -409,7 +409,7 @@ def build_correlation_panel(
     wells: list[WellManifest] = []
     all_warnings: list[str] = []
 
-    for las_path, wname in zip(las_paths, names):
+    for las_path, wname in zip(las_paths, names, strict=False):
         well = WellManifest(
             well_id=wname,
             las_path=las_path,

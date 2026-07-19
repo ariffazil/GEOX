@@ -34,7 +34,7 @@ import logging
 from typing import Any
 
 from geox_core.enums.statuses import get_standard_envelope
-from geox_mcp.tools.kernel._biostrat import NN_AGES, parse_nn_zone, nn_age
+from geox_mcp.tools.kernel._biostrat import nn_age, parse_nn_zone
 from geox_mcp.tools.macrostrat_client import MacrostratClient
 
 logger = logging.getLogger("geox.canonical.macrostrat_calibrate")
@@ -369,7 +369,6 @@ async def geox_macrostrat_calibrate(
     geox_age_top = -999.0
     geox_age_base = -999.0
     geox_found = False
-    geox_source = "none"
 
     if discipline.startswith("calcareous_nannofossil"):
         parsed = parse_nn_zone(normalized_zone)
@@ -378,7 +377,6 @@ async def geox_macrostrat_calibrate(
             geox_age_top, geox_age_base = nn_age(zone_name)
             if geox_age_top > -999:
                 geox_found = True
-                geox_source = "geox_internal_NN_table"
                 evidence_refs_list.append(f"GEOX NN-age table: {zone_name} → {geox_age_top}-{geox_age_base} Ma")
 
     # ── Step 2: Macrostrat interval lookup ────────────────────────────────

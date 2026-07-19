@@ -24,7 +24,6 @@ from .backends.base import TimeSeriesBackend
 from .backends.statistical import StatisticalBackend
 from .backends.ttm import TTMBackend
 
-
 # ── Default selection ──────────────────────────────────────────────────────
 DEFAULT_BACKBONE = "statistical"
 

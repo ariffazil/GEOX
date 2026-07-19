@@ -33,10 +33,9 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import logging
-import math
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Literal
+from enum import StrEnum
+from typing import Any
 
 logger = logging.getLogger("geox.canonical.contrast_detect")
 
@@ -46,7 +45,7 @@ logger = logging.getLogger("geox.canonical.contrast_detect")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class Dimension(str, Enum):
+class Dimension(StrEnum):
     """The seven dimensions of geological systems."""
 
     ENERGY = "energy"
@@ -58,7 +57,7 @@ class Dimension(str, Enum):
     INTELLIGENCE = "intelligence"
 
 
-class AnomalyClass(str, Enum):
+class AnomalyClass(StrEnum):
     """Classification of detected anomalies."""
 
     UNDERPREDICTED = "underpredicted"  # observed > predicted
@@ -68,7 +67,7 @@ class AnomalyClass(str, Enum):
     EXCESS = "excess"  # present but unexpected
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     """Anomaly severity levels."""
 
     LOW = "low"  # within noise, informational
@@ -77,7 +76,7 @@ class Severity(str, Enum):
     CRITICAL = "critical"  # governance escalation required
 
 
-class FivePartViolation(str, Enum):
+class FivePartViolation(StrEnum):
     """Which part of the Five-Part Model is violated."""
 
     SOURCE = "source"
@@ -557,7 +556,7 @@ def audit_dimensional_consistency(
     # Detect cross-dimensional conflicts
     conflicts = []
     mass_contrasts = [c for c in contrasts if c.dimension == Dimension.MASS]
-    time_contrasts = [c for c in contrasts if c.dimension == Dimension.TIME]
+    [c for c in contrasts if c.dimension == Dimension.TIME]
     absence_contrasts = [c for c in contrasts if c.dimension == Dimension.ABSENCE]
 
     # Mass + Absence conflict: if mass is missing AND absence is detected,

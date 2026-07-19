@@ -314,7 +314,7 @@ def bootstrap_structure(
     well_vp_obs: list[dict[str, float]] = []
     for cs in checkshots:
         if "depths" in cs and "twts" in cs:
-            for d, t in zip(cs["depths"], cs["twts"]):
+            for d, t in zip(cs["depths"], cs["twts"], strict=False):
                 if t > 0 and d > 0:
                     v_well = 2.0 * d / (t / 1000.0)
                     v_well = float(np.clip(v_well, VP_MIN, VP_MAX))

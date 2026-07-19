@@ -50,7 +50,7 @@ import json
 import logging
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 import httpx
@@ -64,7 +64,7 @@ ARIFOS_TIMEOUT_MS = 30_000
 CONSTITUTION_HASH = "sha256:geox-constitutional-v2026.05.22"
 
 
-class IrreversibilityLevel(str, Enum):
+class IrreversibilityLevel(StrEnum):
     """How irreversible is the action?"""
     REVERSIBLE = "reversible"       # No lasting consequence
     COSTLY = "costly"              # Financial/time cost, recoverable

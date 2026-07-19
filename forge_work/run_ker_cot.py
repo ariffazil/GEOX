@@ -1,4 +1,3 @@
-import json
 
 def rc(vp1, rho1, vp2, rho2):
     ai1 = vp1 * rho1

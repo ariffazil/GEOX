@@ -85,7 +85,7 @@ def build_seismic_vision_app():
             n_samples = st.slider("Samples", 100, 1000, 500)
             z_max = st.slider("Time (ms)", 1000, 6000, 4000)
             noise_db = st.slider("Noise (dB)", -30, -6, -18)
-            freq = st.slider("Freq (Hz)", 10.0, 60.0, 35.0)
+            st.slider("Freq (Hz)", 10.0, 60.0, 35.0)
 
         with col2:
             if st.button("Generate", type="primary"):

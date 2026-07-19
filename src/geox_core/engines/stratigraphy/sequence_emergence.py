@@ -22,23 +22,20 @@ Forged: 2026-07-03 — the extinction event.
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from .accommodation import (
     AccommodationResult,
-    AccommodationStep,
     StackingPattern,
     SurfaceType,
 )
 from .surface_first import (
     DepositionalPackage,
-    SurfaceFirstResult,
-    StratSurface,
     GeometryType,
+    StratSurface,
+    SurfaceFirstResult,
 )
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Sequence Scale — from parasequence to Sloss

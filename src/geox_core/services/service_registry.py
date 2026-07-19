@@ -23,8 +23,6 @@ Version: 1.0.0 (locked 2026-06-26)
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
-
 
 # ─── Adapter Risk Profile ───────────────────────────────────────────────────────
 

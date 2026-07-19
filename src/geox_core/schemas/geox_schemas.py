@@ -10,7 +10,7 @@ It enforces the separation between identity, witness geometry, and policy-govern
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -20,7 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 # ══════════════════════════════════════════════════════════════════════════════
 
 
-class DomainKind(str, Enum):
+class DomainKind(StrEnum):
     """Naming convention for spatio-temporal domains."""
 
     twt_ms = "twt_ms"
@@ -33,7 +33,7 @@ class DomainKind(str, Enum):
     xy_m = "xy_m"
 
 
-class WitnessKind(str, Enum):
+class WitnessKind(StrEnum):
     """The four essential witnesses of a Causal Scene."""
 
     manifold = "manifold"
@@ -42,7 +42,7 @@ class WitnessKind(str, Enum):
     texture = "texture"
 
 
-class OperatorKind(str, Enum):
+class OperatorKind(StrEnum):
     """The type of comparison being performed."""
 
     residual_z = "residual_z"
@@ -52,7 +52,7 @@ class OperatorKind(str, Enum):
     thermodynamic_audit = "thermodynamic_audit"
 
 
-class ClaimKind(str, Enum):
+class ClaimKind(StrEnum):
     """Types of interpreted subsurface claims."""
 
     horizon3d = "horizon3d"
@@ -62,7 +62,7 @@ class ClaimKind(str, Enum):
     interpreted_polygon = "interpreted_polygon"
 
 
-class TextureKind(str, Enum):
+class TextureKind(StrEnum):
     """Types of volumetric evidence / imagery."""
 
     seismic_amplitude = "seismic_amplitude"
@@ -73,7 +73,7 @@ class TextureKind(str, Enum):
     seismic_stats = "seismic_stats"
 
 
-class Comparator(str, Enum):
+class Comparator(StrEnum):
     """Operation for policy band evaluation."""
 
     lt = "lt"
@@ -85,7 +85,7 @@ class Comparator(str, Enum):
     between = "between"
 
 
-class VerdictCode(str, Enum):
+class VerdictCode(StrEnum):
     """Judgment outcomes governed by the 888_JUDGE."""
 
     pass_green = "pass_green"
@@ -95,7 +95,7 @@ class VerdictCode(str, Enum):
     unknown = "unknown"
 
 
-class SupportKind(str, Enum):
+class SupportKind(StrEnum):
     """Internal topology of a witness's sampling support."""
 
     grid = "grid"

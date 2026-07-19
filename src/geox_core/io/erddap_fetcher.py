@@ -16,9 +16,8 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -33,13 +32,13 @@ ERDDAP_CITATION = (
 
 class ERDDAPQuery(BaseModel):
     dataset_id: str = Field(..., description="ERDDAP dataset ID")
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    min_time: Optional[str] = None
-    max_time: Optional[str] = None
-    variables: Optional[list[str]] = None
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
+    min_time: str | None = None
+    max_time: str | None = None
+    variables: list[str] | None = None
     limit: int = Field(100, ge=1, le=10000)
 
 
@@ -60,7 +59,7 @@ class ERDDAPFetcher:
         self._offline = os.environ.get("GEOX_ERDDAP_OFFLINE", "1") != "0"
 
     def query(self, params: ERDDAPQuery) -> ERDDAPResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return ERDDAPResult(
                 ok=True, mode="offline_stub",

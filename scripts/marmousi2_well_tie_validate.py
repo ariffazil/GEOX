@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 import segyio
+
 from geox_core.core.geox_2d import build_wavelet
 from geox_core.core.welltie import assess_tie_quality
 
@@ -81,7 +82,7 @@ def make_synth(ai: np.ndarray, twt_ms: np.ndarray, t_grid: np.ndarray, freq: flo
     rc = (ai[1:] - ai[:-1]) / denom
     twt_rc = 0.5 * (twt_ms[:-1] + twt_ms[1:])
     rc_g = np.zeros_like(t_grid)
-    for r, t in zip(rc, twt_rc):
+    for r, t in zip(rc, twt_rc, strict=False):
         j = int(round((t - t_grid[0]) / dt))
         if 0 <= j < len(rc_g):
             rc_g[j] += r

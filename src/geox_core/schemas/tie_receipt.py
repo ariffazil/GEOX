@@ -22,18 +22,17 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
-
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ENUMS
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class ConfidenceLevel(str, Enum):
+class ConfidenceLevel(StrEnum):
     """Confidence in a specific measurement or calibration."""
 
     LOW = "low"
@@ -41,7 +40,7 @@ class ConfidenceLevel(str, Enum):
     HIGH = "high"
 
 
-class ResidualClass(str, Enum):
+class ResidualClass(StrEnum):
     """Classified error from synthetic-vs-seismic mismatch.
 
     The metabolizer's core output: what kind of wrongness remains.
@@ -63,7 +62,7 @@ class ResidualClass(str, Enum):
     UNEXPLAINED = "unexplained"  # Residual not yet classified
 
 
-class DecisionPermission(str, Enum):
+class DecisionPermission(StrEnum):
     """Whether the tie supports downstream decision-making."""
 
     PROCEED = "PROCEED"  # Tie supports confidence in downstream interpretation
@@ -71,7 +70,7 @@ class DecisionPermission(str, Enum):
     VOID = "VOID"  # Tie is unreliable; no decisions permitted
 
 
-class WaveletSource(str, Enum):
+class WaveletSource(StrEnum):
     """Where the wavelet came from."""
 
     EXTRACTED = "extracted"  # Extracted from seismic data
@@ -80,7 +79,7 @@ class WaveletSource(str, Enum):
     WELL_DERIVED = "well_derived"  # Derived from well-seismic match
 
 
-class LogQuality(str, Enum):
+class LogQuality(StrEnum):
     """Quality flag for individual well log curves."""
 
     GOOD = "good"
@@ -89,7 +88,7 @@ class LogQuality(str, Enum):
     ABSENT = "absent"  # Curve not available
 
 
-class LithologySeparability(str, Enum):
+class LithologySeparability(StrEnum):
     """Can rock physics distinguish lithology classes in this dataset?"""
 
     LOW = "low"  # Overlapping elastic properties

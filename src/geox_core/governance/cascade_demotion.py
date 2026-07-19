@@ -33,13 +33,13 @@ import hashlib
 import json
 import time
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Any
 
 # ── Enums ────────────────────────────────────────────────────────────────────
 
 
-class AssumptionStatus(str, Enum):
+class AssumptionStatus(StrEnum):
     """The lifecycle of an assumption in the lineage."""
 
     ACTIVE = "active"

@@ -18,24 +18,22 @@ Supports:
 from __future__ import annotations
 
 import glob
-import hashlib
-import json
 import logging
 import os
 import random
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
-from geox_core.ingest.las_reader import load_las, _canonicalise
+from geox_core.ingest.las_reader import _canonicalise, load_las
 
 logger = logging.getLogger("geox.lem.dataset")
 
 try:
     import torch
-    from torch.utils.data import Dataset, DataLoader
+    from torch.utils.data import DataLoader, Dataset
     _HAS_TORCH = True
 except ImportError:
     _HAS_TORCH = False
@@ -80,7 +78,7 @@ class WellPatch:
     depth_end: float
     curves: np.ndarray              # (C, L) — values
     mask: np.ndarray                # (C, L) — null mask
-    token_ids: Optional[np.ndarray] = None  # (L',) after tokenization
+    token_ids: np.ndarray | None = None  # (L',) after tokenization
 
 
 def _resolve_curve(las_data, curve_name: str, aliases: list[str]) -> np.ndarray | None:
@@ -104,7 +102,7 @@ def load_and_preprocess_well(
     min_samples: int = 100,
     clip_outliers: bool = True,
     outlier_std: float = 5.0,
-) -> Optional[WellSample]:
+) -> WellSample | None:
     """Load a LAS file and preprocess into WellSample.
     
     Steps:

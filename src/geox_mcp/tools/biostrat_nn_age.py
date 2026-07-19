@@ -22,10 +22,9 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from geox_core.enums.statuses import get_standard_envelope
-from geox_mcp.tools.kernel._biostrat import nn_age, parse_nn_zone, NN_AGES
+from geox_mcp.tools.kernel._biostrat import nn_age, parse_nn_zone
 
 logger = logging.getLogger("geox.canonical.biostrat_nn_age")
 

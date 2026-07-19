@@ -23,9 +23,6 @@ Pure functions — no I/O, no side effects, no Pydantic model mutation.
 
 from __future__ import annotations
 
-import math
-from typing import Optional
-
 from pydantic import BaseModel, ConfigDict, Field
 
 # ─── Constants ────────────────────────────────────────────────────────────────
@@ -149,7 +146,7 @@ class UncertaintyCascade(BaseModel):
         """Get confidence for a specific stage (0.0 if unset)."""
         return self.stage_confidences.get(stage, 0.0)
 
-    def joint_confidence(self, stages: Optional[list[int]] = None) -> float:
+    def joint_confidence(self, stages: list[int] | None = None) -> float:
         """Compute joint confidence across specified (or all) stages via serial cascade.
 
         Args:

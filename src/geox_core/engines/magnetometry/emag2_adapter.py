@@ -26,7 +26,7 @@ import hashlib
 import json
 import logging
 from dataclasses import dataclass, field
-from typing import Optional, Protocol
+from typing import Protocol
 
 import numpy as np
 
@@ -176,7 +176,7 @@ class MockEMAG2Backend:
         n = len(lats)
         anomalies = np.array([
             float(200.0 * np.sin(np.radians(lat)) * np.cos(np.radians(lon)))
-            for lat, lon in zip(lats, lons)
+            for lat, lon in zip(lats, lons, strict=False)
         ])
         # Compute cumulative distance along profile
         distances = np.zeros(n)
@@ -306,7 +306,7 @@ class LiveEMAG2Backend:
         anomaly_grid = np.full((n_lat, n_lon), np.nan)
         lat_to_idx = {lat: i for i, lat in enumerate(unique_lats)}
         lon_to_idx = {lon: i for i, lon in enumerate(unique_lons)}
-        for lat, lon, val in zip(lats_arr, lons_arr, values_arr):
+        for lat, lon, val in zip(lats_arr, lons_arr, values_arr, strict=False):
             anomaly_grid[lat_to_idx[lat], lon_to_idx[lon]] = val
 
         return EMAG2GridResult(
@@ -352,7 +352,7 @@ class LiveEMAG2Backend:
 
             geometries = [
                 {"x": lon, "y": lat}
-                for lon, lat in zip(batch_lons, batch_lats)
+                for lon, lat in zip(batch_lons, batch_lats, strict=False)
             ]
             params = {
                 "geometry": json.dumps(geometries),
@@ -481,7 +481,7 @@ class EMAG2Adapter:
 
 # ─── Module-level factory ─────────────────────────────────────────────────────
 
-_adapter_instance: Optional[EMAG2Adapter] = None
+_adapter_instance: EMAG2Adapter | None = None
 
 def get_adapter() -> EMAG2Adapter:
     """Return the singleton EMAG2Adapter instance."""

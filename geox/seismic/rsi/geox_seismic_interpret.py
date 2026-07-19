@@ -10,18 +10,21 @@ Proper seismic processing pipeline:
 All on REAL image pixels.
 DITEMPA BUKAN DIBERI.
 """
+import matplotlib
 import numpy as np
 from PIL import Image
 from scipy import ndimage
 from scipy.signal import hilbert
-import matplotlib
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+import hashlib
+import json
+from datetime import UTC, datetime
+
 import matplotlib.patches as mpatches
-from matplotlib.lines import Line2D
+import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
-import hashlib, json, os
-from datetime import datetime, UTC
+from matplotlib.lines import Line2D
 
 # ═══════════════════════════════════════════════════════════════
 # LOAD REAL IMAGE
@@ -42,7 +45,7 @@ def agc(signal_2d, window_ms=200, dt=1):
     """Apply AGC to 2D seismic-like data.
     Window in samples (not ms, since we're in pixel space)."""
     window = max(window_ms // dt, 5)
-    half_w = window // 2
+    window // 2
     result = np.zeros_like(signal_2d)
     for row in range(signal_2d.shape[0]):
         trace = signal_2d[row, :]
@@ -79,6 +82,7 @@ edge_mag_norm = edge_mag / (edge_mag.max() + 1e-9)
 
 # Canny-like thresholding
 from scipy.ndimage import maximum_filter
+
 local_max = maximum_filter(edge_mag_norm, size=5)
 edges_thin = (edge_mag_norm == local_max) & (edge_mag_norm > np.percentile(edge_mag_norm, 92))
 print(f"Edges: {edges_thin.sum()} thin-edge pixels")
@@ -267,9 +271,9 @@ ax.set_xlabel('Pixel X (→ N)'); ax.set_ylabel('Pixel Y (→ TWT)')
 
 legend_items = [
     mpatches.Patch(color='#00ff00', alpha=0.5, label=f'Thin edges ({edges_thin.sum()} px)'),
-    mpatches.Patch(color='#ff0000', alpha=0.3, label=f'Discontinuity (P90+)'),
+    mpatches.Patch(color='#ff0000', alpha=0.3, label='Discontinuity (P90+)'),
     Line2D([0],[0], color='lime', linewidth=4, label=f'Fault zones ({len(fault_zones)})'),
-    Line2D([0],[0], color='yellow', linewidth=1.5, label=f'Top horizons (10)'),
+    Line2D([0],[0], color='yellow', linewidth=1.5, label='Top horizons (10)'),
 ]
 ax.legend(handles=legend_items, loc='lower right', fontsize=8, framealpha=0.9)
 ax.text(0.02, 0.98, f'DER_RENDER | {prov}', transform=ax.transAxes, fontsize=6, color='white', va='top',
@@ -364,13 +368,13 @@ with open("/tmp/seismic_image_test/interpret_manifest.json", "w") as f:
     json.dump(manifest, f, indent=2)
 
 print(f"\n{'='*60}")
-print(f"RESULTS")
+print("RESULTS")
 print(f"{'='*60}")
 print(f"Horizons tracked: {len(horizons)}")
 print(f"Fault zones: {len(fault_zones)}")
 print(f"Edge pixels: {edges_thin.sum()}")
-print(f"Attributes used: AGC, Cosine Phase, Sobel Edges, Lateral Discontinuity")
-print(f"Tracking: Ant tracking (coherence-guided)")
+print("Attributes used: AGC, Cosine Phase, Sobel Edges, Lateral Discontinuity")
+print("Tracking: Ant tracking (coherence-guided)")
 print(f"Image SHA256: {img_sha}")
 print(f"Code SHA256: {code_sha}")
 

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Regenerate CANONICAL_PUBLIC_SURFACE.json from tools_manifest.yaml."""
 from __future__ import annotations
+
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +15,7 @@ from geox_mcp.surface_manifest import (  # noqa: E402
     manifest_tools,
     public_tool_names,
 )
+
 
 def main() -> None:
     load_surface_manifest.cache_clear()
@@ -34,7 +36,7 @@ def main() -> None:
         })
     out = {
         "schema": "geox.canonical_public_surface.v1",
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "source": "tools_manifest.yaml",
         "public_count": len(public),
         "internal_count": len(internal),

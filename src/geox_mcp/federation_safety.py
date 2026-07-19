@@ -25,14 +25,15 @@ DITEMPA BUKAN DIBERI
 
 import functools
 import traceback
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import Any
 
 # ─── Discovery 8: Memory Classification ─────────────────────────────
 
 
-class MemoryClass(str, Enum):
+class MemoryClass(StrEnum):
     LIVE_PROBE = "LIVE_PROBE"  # Directly observed right now
     SESSION_STATE = "SESSION_STATE"  # Current session context
     CACHED_MEMORY = "CACHED_MEMORY"  # Previously observed, may be stale
@@ -45,12 +46,12 @@ class MemoryStatus:
     def __init__(
         self,
         cls: MemoryClass,
-        last_verified: Optional[str] = None,
+        last_verified: str | None = None,
         freshness_ttl_s: int = 300,
-        source: Optional[str] = None,
+        source: str | None = None,
     ):
         self.class_ = cls
-        self.last_verified = last_verified or datetime.now(timezone.utc).isoformat()
+        self.last_verified = last_verified or datetime.now(UTC).isoformat()
         self.freshness_ttl_s = freshness_ttl_s
         self.source = source
         self.is_fresh = self._check_fresh()
@@ -60,12 +61,12 @@ class MemoryStatus:
             return None
         try:
             verified = datetime.fromisoformat(self.last_verified.replace("Z", "+00:00"))
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             return (now - verified).total_seconds() < self.freshness_ttl_s
         except Exception:
             return None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "class": self.class_.value,
             "last_verified": self.last_verified,
@@ -101,7 +102,7 @@ def memory_sealed(source: str = None) -> MemoryStatus:
 # ─── Discovery 9: Epistemic Signal ──────────────────────────────────
 
 
-class EpistemicLayer(str, Enum):
+class EpistemicLayer(StrEnum):
     OBSERVED = "OBS"  # Directly observed
     DERIVED = "DER"  # Computed or derived
     INTERPRETED = "INT"  # Interpreted by agent/human
@@ -113,7 +114,7 @@ class EpistemicSignal:
         self,
         layer: EpistemicLayer,
         confidence: float = 0.7,
-        uncertainty: List[str] = None,
+        uncertainty: list[str] = None,
         source: str = None,
         reversible: bool = True,
         authority_claim: str = "ADVISORY",
@@ -126,7 +127,7 @@ class EpistemicSignal:
         self.reversible = reversible
         self.authority_claim = authority_claim
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "evidence_layer": self.evidence_layer.value,
             "confidence": self.confidence,
@@ -156,7 +157,7 @@ def epistemic_derived(source: str = None, confidence: float = 0.75) -> Epistemic
 
 
 def epistemic_inferred(
-    source: str = None, confidence: float = 0.6, uncertainty: List[str] = None
+    source: str = None, confidence: float = 0.6, uncertainty: list[str] = None
 ) -> EpistemicSignal:
     return EpistemicSignal(
         EpistemicLayer.INTERPRETED,
@@ -167,7 +168,7 @@ def epistemic_inferred(
 
 
 def epistemic_speculative(
-    source: str = None, uncertainty: List[str] = None
+    source: str = None, uncertainty: list[str] = None
 ) -> EpistemicSignal:
     return EpistemicSignal(
         EpistemicLayer.SPECULATIVE,
@@ -180,7 +181,7 @@ def epistemic_speculative(
 # ─── Discovery 3: Structured Error Envelopes ────────────────────────
 
 
-class ErrorClass(str, Enum):
+class ErrorClass(StrEnum):
     BAD_INPUT_SHAPE = "BAD_INPUT_SHAPE"
     BAD_INPUT_VALUE = "BAD_INPUT_VALUE"
     MISSING_REQUIRED_FIELD = "MISSING_REQUIRED_FIELD"
@@ -193,7 +194,7 @@ class ErrorClass(str, Enum):
     TOOL_SURFACE_DRIFT = "TOOL_SURFACE_DRIFT"
 
 
-class Recoverability(str, Enum):
+class Recoverability(StrEnum):
     AGENT_CAN_RETRY = "AGENT_CAN_RETRY"
     AGENT_CAN_ROUTE = "AGENT_CAN_ROUTE"
     ESCALATE_TO_HUMAN = "ESCALATE_TO_HUMAN"
@@ -204,7 +205,7 @@ class Recoverability(str, Enum):
 
 def classify_error(
     error: Exception, source_tool: str = None, source_organ: str = None
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Classify an unknown error into a structured envelope.
     Python equivalent of classifyUnknown() from error-classifier.ts.
@@ -324,7 +325,7 @@ def classify_error(
         "message": msg[:500],
         "next_action": next_action,
         "epistemic_label": "DER",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "source_tool": source_tool,
         "source_organ": source_organ,
         "original_error": traceback.format_exc() if error.__traceback__ else None,
@@ -340,7 +341,7 @@ def enrich_result(
     epistemic: EpistemicLayer = EpistemicLayer.OBSERVED,
     source: str = None,
     confidence: float = 0.85,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Wrap any tool result with memory + epistemic metadata.
     """

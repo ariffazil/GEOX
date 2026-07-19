@@ -20,14 +20,11 @@ scope: /root/geox/src/geox_mcp/events/publisher.py
 from __future__ import annotations
 
 import os
-from typing import Any, Optional
 
 from geox_core.governance.event_bus import (
     IntelligenceAtom,
     get_bus,
-    topic_for_tool,
 )
-
 
 # Global toggle — disable quantum flow publication if env says so.
 # (Useful for testing or when NATS is intentionally down.)
@@ -39,7 +36,7 @@ def build_atom_from_tool_result(
     tool_name: str,
     tool_version: str,
     result: dict,
-    pai_receipt: Optional[dict] = None,
+    pai_receipt: dict | None = None,
     rung: int = 0,
     godel_state: str = "UNKNOWN",
 ) -> IntelligenceAtom:
@@ -75,7 +72,7 @@ async def publish_tool_atom(
     tool_name: str,
     tool_version: str,
     result: dict,
-    pai_receipt: Optional[dict] = None,
+    pai_receipt: dict | None = None,
     rung: int = 0,
     godel_state: str = "UNKNOWN",
 ) -> bool:
@@ -108,7 +105,7 @@ def publish_tool_atom_sync(
     tool_name: str,
     tool_version: str,
     result: dict,
-    pai_receipt: Optional[dict] = None,
+    pai_receipt: dict | None = None,
     rung: int = 0,
     godel_state: str = "UNKNOWN",
 ) -> bool:

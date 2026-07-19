@@ -9,19 +9,17 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
-import math
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
-
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Uncertainty Classification
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-class UncertaintyNature(str, Enum):
+class UncertaintyNature(StrEnum):
     """Epistemic (reducible by more data) vs Aleatory (irreducible randomness)."""
 
     EPISTEMIC = "epistemic"
@@ -29,7 +27,7 @@ class UncertaintyNature(str, Enum):
     MIXED = "mixed"
 
 
-class UncertaintyKind(str, Enum):
+class UncertaintyKind(StrEnum):
     """Structural form of the uncertainty representation."""
 
     INTERVAL = "interval"
@@ -39,7 +37,7 @@ class UncertaintyKind(str, Enum):
     UNKNOWN = "unknown"
 
 
-class ConfidenceGrade(str, Enum):
+class ConfidenceGrade(StrEnum):
     """Grade of confidence based on evidence quality."""
 
     AAA = "AAA"  # Direct measurement, calibrated
@@ -89,7 +87,7 @@ class IntervalUncertainty(BaseModel):
         return self.range / (2 * abs(self.value))
 
 
-class DistributionType(str, Enum):
+class DistributionType(StrEnum):
     """Supported parametric distributions."""
 
     NORMAL = "normal"

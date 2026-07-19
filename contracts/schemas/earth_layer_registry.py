@@ -21,20 +21,19 @@ F11 AUDIT (every layer catalogued = auditable).
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Literal, Optional
-from uuid import UUID, uuid4
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import Any, Literal
+from uuid import uuid4
 
 from pydantic import BaseModel, Field, field_validator
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Truth classes — declares what a layer is allowed to support
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-class TruthClass(str, Enum):
+class TruthClass(StrEnum):
     """Epistemic weight a layer carries in a composed scene.
 
     Mirrors GEOX scene_plan truth_class gating. Layers are NOT all equal —
@@ -64,7 +63,7 @@ MAP_PURPOSE_ALLOW = {
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-class License(str, Enum):
+class License(StrEnum):
     CC0 = "CC0"
     CC_BY = "CC-BY"
     CC_BY_SA = "CC-BY-SA"
@@ -109,7 +108,7 @@ class EarthLayer(BaseModel):
     # Identity
     layer_id: str = Field(..., description="Stable slug, e.g. 'sabah.basin_outline.v3'")
     name: str = Field(..., description="Human-readable name")
-    description: Optional[str] = None
+    description: str | None = None
     theme: Literal[
         "regional_geology",
         "basin",
@@ -134,35 +133,35 @@ class EarthLayer(BaseModel):
     license: License = License.UNKNOWN
 
     # Geographic extent (optional — some layers are global)
-    bbox_west: Optional[float] = Field(None, ge=-180, le=180)
-    bbox_east: Optional[float] = Field(None, ge=-180, le=180)
-    bbox_south: Optional[float] = Field(None, ge=-90, le=90)
-    bbox_north: Optional[float] = Field(None, ge=-90, le=90)
+    bbox_west: float | None = Field(None, ge=-180, le=180)
+    bbox_east: float | None = Field(None, ge=-180, le=180)
+    bbox_south: float | None = Field(None, ge=-90, le=90)
+    bbox_north: float | None = Field(None, ge=-90, le=90)
 
     # CRS
     crs_epsg: int = 4326
 
     # Provenance (lightweight — full sidecar lives in sidecar module)
-    source_id: Optional[str] = Field(None, description="e.g. USGS map ID, Malaysian NOC dataset ref")
-    source_uri: Optional[str] = Field(None, description="Public URL or local path")
-    source_year: Optional[int] = None
-    source_author: Optional[str] = None
-    provenance_sidecar_ref: Optional[str] = Field(None, description="Path to ProvenanceSidecar artifact")
+    source_id: str | None = Field(None, description="e.g. USGS map ID, Malaysian NOC dataset ref")
+    source_uri: str | None = Field(None, description="Public URL or local path")
+    source_year: int | None = None
+    source_author: str | None = None
+    provenance_sidecar_ref: str | None = Field(None, description="Path to ProvenanceSidecar artifact")
 
     # Companion MCP resource URI
-    resource_uri: Optional[str] = Field(None, description="e.g. 'geox://layers/sabah.basin_outline.v3'")
-    resource_size_bytes: Optional[int] = None
+    resource_uri: str | None = Field(None, description="e.g. 'geox://layers/sabah.basin_outline.v3'")
+    resource_size_bytes: int | None = None
 
     # Governance
-    registered_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    registered_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     registered_by: str = "geox"
     version: str = "1.0.0"
     deprecated: bool = False
-    superseded_by: Optional[str] = None
+    superseded_by: str | None = None
 
     # MARUAH check — community territory flag
     community_territory_flag: bool = False
-    community_territory_note: Optional[str] = None
+    community_territory_note: str | None = None
 
     @field_validator("layer_id")
     @classmethod
@@ -191,7 +190,7 @@ class EarthLayer(BaseModel):
         allowed_licenses = LICENSE_ALLOW.get(map_purpose, set())
         return self.license in allowed_licenses
 
-    def governance_gate(self, map_purpose: str, bbox: Optional[list[float]] = None) -> tuple[bool, list[str]]:
+    def governance_gate(self, map_purpose: str, bbox: list[float] | None = None) -> tuple[bool, list[str]]:
         """Run all governance checks. Returns (passes, list_of_block_reasons)."""
         blockers: list[str] = []
         if self.deprecated:
@@ -202,7 +201,7 @@ class EarthLayer(BaseModel):
             blockers.append(f"License '{self.license.value}' not allowed for map_purpose='{map_purpose}'")
         if bbox and len(bbox) == 4:
             if not self.in_bbox(*bbox):
-                blockers.append(f"Layer bbox does not intersect query bbox")
+                blockers.append("Layer bbox does not intersect query bbox")
         if self.community_territory_flag and map_purpose in ("publication", "prospect_review"):
             blockers.append(
                 f"F6 MARUAH: layer flagged for community territory — review required before publication/prospect_review. Note: {self.community_territory_note}"
@@ -229,7 +228,7 @@ class EarthLayerRegistry(BaseModel):
 
     layers: dict[str, EarthLayer] = Field(default_factory=dict)
     registry_version: str = "1.0.0"
-    registry_created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    registry_created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     def register(self, layer: EarthLayer) -> tuple[bool, str]:
         """Register a layer. Returns (success, message)."""
@@ -238,7 +237,7 @@ class EarthLayerRegistry(BaseModel):
         self.layers[layer.layer_id] = layer
         return True, f"Registered layer '{layer.layer_id}'"
 
-    def deprecate(self, layer_id: str, superseded_by: Optional[str] = None) -> tuple[bool, str]:
+    def deprecate(self, layer_id: str, superseded_by: str | None = None) -> tuple[bool, str]:
         if layer_id not in self.layers:
             return False, f"Layer '{layer_id}' not found"
         self.layers[layer_id].deprecated = True
@@ -246,10 +245,10 @@ class EarthLayerRegistry(BaseModel):
             self.layers[layer_id].superseded_by = superseded_by
         return True, f"Deprecated layer '{layer_id}'"
 
-    def get(self, layer_id: str) -> Optional[EarthLayer]:
+    def get(self, layer_id: str) -> EarthLayer | None:
         return self.layers.get(layer_id)
 
-    def list(self) -> dict[str, "EarthLayer"]:
+    def list(self) -> dict[str, EarthLayer]:
         """Return all registered layers keyed by layer_id.
 
         Public read-only snapshot — used by the MCP resource router
@@ -261,7 +260,7 @@ class EarthLayerRegistry(BaseModel):
     def list_for_bbox(
         self,
         bbox: list[float],
-        theme: Optional[str] = None,
+        theme: str | None = None,
         map_purpose: str = "context",
         include_unavailable: bool = False,
     ) -> tuple[list[EarthLayer], list[dict[str, Any]]]:
@@ -286,7 +285,7 @@ class EarthLayerRegistry(BaseModel):
                     unavailable.append({"layer_id": layer.layer_id, "blockers": blockers})
         return available, unavailable
 
-    def export_package(self, layer_id: str) -> Optional[dict[str, Any]]:
+    def export_package(self, layer_id: str) -> dict[str, Any] | None:
         """Build an exportable package descriptor for a layer.
 
         This is the data shape returned by `geox://layers/{layer_id}/package`
@@ -312,7 +311,7 @@ class EarthLayerRegistry(BaseModel):
             "f2_truth": constitutional["F2_truth"],
             "f6_maruah": constitutional["F6_maruah"],
         }
-        bbox: Optional[list[float]] = None
+        bbox: list[float] | None = None
         if (
             layer.bbox_west is not None
             and layer.bbox_east is not None
@@ -332,7 +331,7 @@ class EarthLayerRegistry(BaseModel):
             "governance": governance,
             "f_loors": constitutional,
             "checksum_algorithm": "sha256",
-            "exported_at": datetime.now(timezone.utc).isoformat(),
+            "exported_at": datetime.now(UTC).isoformat(),
             "audit_id": f"geox.layer.audit.{uuid4()}",
             "constitutional": constitutional,
         }

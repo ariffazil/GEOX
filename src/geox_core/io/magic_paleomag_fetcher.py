@@ -16,9 +16,8 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -34,12 +33,12 @@ MAGIC_CITATION = (
 
 
 class PaleomagQuery(BaseModel):
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    min_age_ma: Optional[float] = None
-    max_age_ma: Optional[float] = None
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
+    min_age_ma: float | None = None
+    max_age_ma: float | None = None
     limit: int = Field(100, ge=1, le=10000)
 
 
@@ -60,7 +59,7 @@ class MagICFetcher:
         self._offline = os.environ.get("GEOX_MAGIC_OFFLINE", "1") != "0"
 
     def query(self, params: PaleomagQuery) -> PaleomagResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return PaleomagResult(
                 ok=True, mode="offline_stub",

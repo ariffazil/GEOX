@@ -7,6 +7,7 @@ DITEMPA BUKAN DIBERI — Forged 2026-07-06.
 """
 
 from __future__ import annotations
+
 import asyncio
 from typing import Any
 

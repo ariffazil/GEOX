@@ -13,10 +13,11 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 from __future__ import annotations
+
 from typing import Any
 
 try:
-    from mcp_ui_server import create_ui_resource, UIMetadataKey
+    from mcp_ui_server import UIMetadataKey, create_ui_resource
     _MCP_UI_SERVER_AVAILABLE = True
 except ImportError:
     _MCP_UI_SERVER_AVAILABLE = False

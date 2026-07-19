@@ -33,7 +33,7 @@ import logging
 from typing import Any
 
 from geox_core.enums.statuses import get_standard_envelope
-from geox_mcp.tools.kernel._biostrat import lithology_class, map_gde, parse_nn_zone, nn_age
+from geox_mcp.tools.kernel._biostrat import lithology_class, map_gde, parse_nn_zone
 
 logger = logging.getLogger("geox.canonical.biostrat_ruling")
 

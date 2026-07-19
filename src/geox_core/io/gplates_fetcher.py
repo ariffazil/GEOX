@@ -27,9 +27,9 @@ import json
 import logging
 import os
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import requests
 from pydantic import BaseModel, Field
@@ -77,10 +77,10 @@ class ReconstructionRequest(BaseModel):
 class ReconstructionResult(BaseModel):
     ok: bool
     mode: str
-    reconstructed_lat: Optional[float] = None
-    reconstructed_lon: Optional[float] = None
-    age_ma: Optional[float] = None
-    plate_id: Optional[int] = None
+    reconstructed_lat: float | None = None
+    reconstructed_lon: float | None = None
+    age_ma: float | None = None
+    plate_id: int | None = None
     model: str = ""
     source_uri: str = GPLATES_GWS_BASE
     citation: str = GPLATES_CITATION
@@ -99,12 +99,12 @@ class PlateVelocityRequest(BaseModel):
 class PlateVelocityResult(BaseModel):
     ok: bool
     mode: str
-    velocity_cm_yr: Optional[float] = None
-    azimuth_deg: Optional[float] = None
-    lat_rate_cm_yr: Optional[float] = None
-    lon_rate_cm_yr: Optional[float] = None
-    plate_id: Optional[int] = None
-    age_ma: Optional[float] = None
+    velocity_cm_yr: float | None = None
+    azimuth_deg: float | None = None
+    lat_rate_cm_yr: float | None = None
+    lon_rate_cm_yr: float | None = None
+    plate_id: int | None = None
+    age_ma: float | None = None
     model: str = ""
     source_uri: str = GPLATES_GWS_BASE
     citation: str = GPLATES_CITATION
@@ -121,7 +121,7 @@ class PaleoCoastlineResult(BaseModel):
     ok: bool
     mode: str
     coastlines_geojson: dict[str, Any] = {}
-    age_ma: Optional[float] = None
+    age_ma: float | None = None
     model: str = ""
     source_uri: str = GPLATES_GWS_BASE
     citation: str = GPLATES_CITATION
@@ -141,7 +141,7 @@ class GPlatesFetcher:
       3. offline    — stub responses (always available)
     """
 
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get("GEOX_GPLATES_CACHE_DIR", "/root/.cache/geox/gplates"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_GPLATES_OFFLINE", "1") != "0"
@@ -172,7 +172,7 @@ class GPlatesFetcher:
         raw = f"{endpoint}:{json.dumps(params, sort_keys=True)}"
         return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
-    def _cache_get(self, key: str) -> Optional[dict[str, Any]]:
+    def _cache_get(self, key: str) -> dict[str, Any] | None:
         cache_file = self.cache_dir / f"{key}.json"
         if not cache_file.exists():
             return None
@@ -197,7 +197,7 @@ class GPlatesFetcher:
 
     def _gws_reconstruct(
         self, lon: float, lat: float, age_ma: float, model: str
-    ) -> tuple[Optional[float], Optional[float], Optional[int]]:
+    ) -> tuple[float | None, float | None, int | None]:
         """Call GWS reconstruct_points. Returns (lon, lat, plate_id) or (None, None, None)."""
         gws_model = self._resolve_model(model)
         params = {"lon": lon, "lat": lat, "time": age_ma, "model": gws_model}
@@ -226,7 +226,7 @@ class GPlatesFetcher:
             logger.warning(f"GWS reconstruct failed: {e}")
         return None, None, None
 
-    def _gws_coastlines(self, age_ma: float, model: str) -> Optional[dict[str, Any]]:
+    def _gws_coastlines(self, age_ma: float, model: str) -> dict[str, Any] | None:
         """Call GWS reconstruct/coastlines. Returns GeoJSON feature collection or None."""
         gws_model = self._resolve_model(model)
         params = {"time": age_ma, "model": gws_model}
@@ -250,7 +250,7 @@ class GPlatesFetcher:
 
     def reconstruct(self, req: ReconstructionRequest) -> ReconstructionResult:
         """Reconstruct a point to its paleo-position at age_ma."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         # ── pyGPlates local mode ─────────────────────────────────
         if self._pygplates_available and not self._offline:
@@ -319,7 +319,7 @@ class GPlatesFetcher:
 
     def velocity(self, req: PlateVelocityRequest) -> PlateVelocityResult:
         """Compute plate velocity at a point by finite-difference of two reconstructions."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return PlateVelocityResult(
                 ok=True,
@@ -405,7 +405,7 @@ class GPlatesFetcher:
 
     def paleocoastlines(self, req: PaleoCoastlineRequest) -> PaleoCoastlineResult:
         """Fetch paleo-coastlines for a given age."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return PaleoCoastlineResult(
                 ok=True,

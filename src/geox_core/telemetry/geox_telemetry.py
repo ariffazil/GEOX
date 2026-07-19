@@ -21,11 +21,11 @@ import os
 import time
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
-class ClaimTag(str, Enum):
+class ClaimTag(StrEnum):
     OBSERVED = "OBSERVED"
     COMPUTED = "COMPUTED"
     INTERPRETED = "INTERPRETED"

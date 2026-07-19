@@ -21,17 +21,12 @@ jobs:
     name: External Witness Check (W³ channel)
     runs-on: ubuntu-latest
     steps:
-      - name: Probe arifOS kernel Gödel lock
+      - name: Note — Gödel Lock (arifOS kernel)
         id: kernel
         run: |
-          response=$(curl -sf -m 5 http://localhost:8088/health 2>/dev/null || echo "KERNEL_UNREACHABLE")
-          if echo "$response" | grep -qi "godel\|witness"; then
-            echo "✓ arifOS kernel reports Gödel lock active"
-            echo "kernel=godel_active" >> "$GITHUB_OUTPUT"
-          else
-            echo "⚠ arifOS kernel unreachable; falling back to comment/label check"
-            echo "kernel=unreachable" >> "$GITHUB_OUTPUT"
-          fi
+          # arifOS kernel runs on VPS only; in CI we rely on label/comment attestation
+          echo "⚠ CI environment — external witness via label/comment only"
+          echo "kernel=ci_environment" >> "$GITHUB_OUTPUT"
 
       - name: Check for external witness attestation
         uses: actions/github-script@v7

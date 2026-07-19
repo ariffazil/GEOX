@@ -16,10 +16,9 @@ from __future__ import annotations
 
 import logging
 import os
-from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -37,10 +36,10 @@ class GeochemSample(BaseModel):
     latitude: float = 0.0
     longitude: float = 0.0
     rock_type: str = ""
-    age_ma: Optional[float] = None
-    sio2: Optional[float] = None
-    mgo: Optional[float] = None
-    al2o3: Optional[float] = None
+    age_ma: float | None = None
+    sio2: float | None = None
+    mgo: float | None = None
+    al2o3: float | None = None
     reference: str = ""
 
 
@@ -57,18 +56,18 @@ class GeochemResult(BaseModel):
 
 
 class GeochemQuery(BaseModel):
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    rock_type: Optional[str] = None
-    min_sio2: Optional[float] = None
-    max_sio2: Optional[float] = None
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
+    rock_type: str | None = None
+    min_sio2: float | None = None
+    max_sio2: float | None = None
     limit: int = Field(100, ge=1, le=10000)
 
 
 class EarthChemFetcher:
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get(
             "GEOX_EARTHCHEM_CACHE_DIR", "/root/.cache/geox/earthchem"
         ))
@@ -76,7 +75,7 @@ class EarthChemFetcher:
         self._offline = os.environ.get("GEOX_EARTHCHEM_OFFLINE", "1") != "0"
 
     def query(self, params: GeochemQuery) -> GeochemResult:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         if self._offline:
             return self._offline_stub(params.model_dump(exclude_none=True), now)
         return GeochemResult(ok=False, mode="live", note="Live EarthChem API requires httpx client. See EARTHCHEM_API.", fetched_at=now)

@@ -23,9 +23,6 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import Any, Optional
-
-import numpy as np
 
 logger = logging.getLogger("geox.lem.model")
 
@@ -103,8 +100,8 @@ class GeoLocationEmbedding(nn.Module):
 
     def forward(
         self,
-        basin_ids: Optional[torch.Tensor] = None,
-        coords: Optional[torch.Tensor] = None,
+        basin_ids: torch.Tensor | None = None,
+        coords: torch.Tensor | None = None,
     ) -> torch.Tensor:
         """
         Args:
@@ -226,11 +223,11 @@ class LEMTransformer(nn.Module):
     def forward(
         self,
         tokens: torch.Tensor,
-        modality_ids: Optional[torch.Tensor] = None,
-        depth_positions: Optional[torch.Tensor] = None,
-        basin_ids: Optional[torch.Tensor] = None,
-        coords: Optional[torch.Tensor] = None,
-        mask: Optional[torch.Tensor] = None,
+        modality_ids: torch.Tensor | None = None,
+        depth_positions: torch.Tensor | None = None,
+        basin_ids: torch.Tensor | None = None,
+        coords: torch.Tensor | None = None,
+        mask: torch.Tensor | None = None,
         return_embeddings: bool = False,
     ) -> dict[str, torch.Tensor]:
         """
@@ -363,8 +360,8 @@ class LEMLoss(nn.Module):
         logits: torch.Tensor,
         target_tokens: torch.Tensor,
         mask: torch.Tensor,
-        query_embeddings: Optional[torch.Tensor] = None,
-        positive_embeddings: Optional[torch.Tensor] = None,
+        query_embeddings: torch.Tensor | None = None,
+        positive_embeddings: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
         """
         Args:

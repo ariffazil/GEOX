@@ -29,8 +29,8 @@ from __future__ import annotations
 import hashlib
 import logging
 import time
-from dataclasses import dataclass, field
-from typing import Any, Literal
+from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 
@@ -51,7 +51,7 @@ class BiharmonicResult:
 
     grid: np.ndarray
     confidence: np.ndarray
-    nodata_mask: "np.ndarray[Any, np.dtype[np.bool_]]"
+    nodata_mask: np.ndarray[Any, np.dtype[np.bool_]]
     epistemic_label: str
     metrics: dict[str, Any]
     provenance: dict[str, str]
@@ -67,7 +67,7 @@ def _grid_hash(arr: np.ndarray, salt: str = "") -> str:
 
 
 def _distance_decay(
-    known_mask: "np.ndarray[Any, np.dtype[np.bool_]]",
+    known_mask: np.ndarray[Any, np.dtype[np.bool_]],
     decay_km: float = CONF_MAX_KM,
 ) -> np.ndarray:
     """Compute confidence from nearest known cell (distance-decay)."""
@@ -144,13 +144,13 @@ def biharmonic_inpaint_grid(
         raise ValueError(f"Grid has {total_pixels:,} pixels, max is {MAX_PIXELS:,}.")
 
     # ── Nodata mask ──────────────────────────────────────────────────────
-    nodata_mask: "np.ndarray[Any, np.dtype[np.bool_]]"
+    nodata_mask: np.ndarray[Any, np.dtype[np.bool_]]
     if nodata_value is not None:
         nodata_mask = arr == nodata_value
     else:
         nodata_mask = np.isnan(arr)
 
-    known_mask: "np.ndarray[Any, np.dtype[np.bool_]]" = ~nodata_mask
+    known_mask: np.ndarray[Any, np.dtype[np.bool_]] = ~nodata_mask
 
     if not known_mask.any():
         raise ValueError("All cells are nodata — nothing to interpolate.")
@@ -162,7 +162,7 @@ def biharmonic_inpaint_grid(
         wx, wy = anisotropic_weights
         if wx <= 0 or wy <= 0:
             raise ValueError("Anisotropic weights must be positive.")
-        arr_stretched = arr.copy()
+        arr.copy()
         # Simple approach: scale Y coordinates by weight ratio
         # skimage inpaint doesn't support anisotropy directly;
         # apply via image transform (note: simplified for v1)

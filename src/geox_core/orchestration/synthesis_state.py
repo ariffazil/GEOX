@@ -17,9 +17,9 @@ F13 SOVEREIGN: No self-elevation — this is a state record, not a judge.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -43,13 +43,13 @@ class PrimitiveInvocation(BaseModel):
     tool_name: str = Field(..., min_length=1, description="Name of the tool/fetcher invoked")
     mode: str = Field(default="default", description="Mode/operation used")
     invoked_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         description="When the tool was invoked (UTC)",
     )
     latency_ms: float = Field(default=0.0, ge=0.0, description="Response latency in ms")
     success: bool = Field(default=False, description="Whether the call succeeded")
     error_detail: str = Field(default="", description="Error message if failed")
-    fallback_used: Optional[str] = Field(default=None, description="Fallback tool used if primary failed")
+    fallback_used: str | None = Field(default=None, description="Fallback tool used if primary failed")
     raw_response_hash: str = Field(default="", description="Hash of response for audit")
 
 
@@ -61,10 +61,10 @@ class StageRecord(BaseModel):
     stage: int = Field(ge=1, le=11, description="Stage number (1-11)")
     name: str = Field(..., min_length=1, description="Stage name (e.g. 'resolve', 'tectonic_skeleton')")
     status: StageStatus = Field(default=StageStatus.PENDING, description="Current stage status")
-    started_at: Optional[datetime] = Field(default=None, description="When stage started")
-    completed_at: Optional[datetime] = Field(default=None, description="When stage completed")
+    started_at: datetime | None = Field(default=None, description="When stage started")
+    completed_at: datetime | None = Field(default=None, description="When stage completed")
     primitives_invoked: list[PrimitiveInvocation] = Field(default_factory=list, description="All tool invocations in this stage")
-    fallback_path_taken: Optional[str] = Field(default=None, description="Which fallback chain was used (if any)")
+    fallback_path_taken: str | None = Field(default=None, description="Which fallback chain was used (if any)")
     confidence: float = Field(default=0.0, ge=0.0, le=0.90, description="Stage-level confidence (F7 capped)")
     outputs_summary: dict[str, Any] = Field(default_factory=dict, description="Key outputs from this stage")
     notes: str = Field(default="", description="Any contextual notes")
@@ -89,10 +89,10 @@ class SynthesisState(BaseModel):
         description="Unique run identifier (e.g. 'synthesis-2026-06-26-001')",
     )
     started_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         description="Pipeline start time (UTC)",
     )
-    completed_at: Optional[datetime] = Field(default=None, description="Pipeline completion time (UTC)")
+    completed_at: datetime | None = Field(default=None, description="Pipeline completion time (UTC)")
     aborted: bool = Field(default=False, description="True if pipeline was aborted")
     abort_reason: str = Field(default="", description="Why pipeline aborted (if applicable)")
 
@@ -114,7 +114,7 @@ class SynthesisState(BaseModel):
         le=20,
         description="Maximum strange loop iterations before accepting best result",
     )
-    previous_s_state: Optional[dict[str, Any]] = Field(
+    previous_s_state: dict[str, Any] | None = Field(
         default=None,
         description="S(x,t) from previous iteration for ΔS computation",
     )
@@ -154,7 +154,7 @@ class SynthesisState(BaseModel):
             stage=stage,
             name=name,
             status=StageStatus.IN_PROGRESS,
-            started_at=datetime.now(timezone.utc),
+            started_at=datetime.now(UTC),
         )
         self.stages[stage] = record
         return record
@@ -163,15 +163,15 @@ class SynthesisState(BaseModel):
         self,
         stage: int,
         confidence: float = 0.5,
-        outputs: Optional[dict[str, Any]] = None,
-        fallback_used: Optional[str] = None,
+        outputs: dict[str, Any] | None = None,
+        fallback_used: str | None = None,
         notes: str = "",
     ) -> StageRecord:
         """Mark a stage as completed (or fallback_used)."""
         record = self.stages.get(stage)
         if record is None:
             record = self.start_stage(stage, f"stage_{stage}")
-        record.completed_at = datetime.now(timezone.utc)
+        record.completed_at = datetime.now(UTC)
         record.status = StageStatus.FALLBACK_USED if fallback_used else StageStatus.COMPLETED
         record.fallback_path_taken = fallback_used
         record.confidence = min(confidence, 0.90)
@@ -188,12 +188,12 @@ class SynthesisState(BaseModel):
         if record is None:
             record = self.start_stage(stage, f"stage_{stage}")
         record.status = StageStatus.ABORTED
-        record.completed_at = datetime.now(timezone.utc)
+        record.completed_at = datetime.now(UTC)
         record.notes = f"ABORTED: {reason}"
         self.stages[stage] = record
         self.aborted = True
         self.abort_reason = reason
-        self.completed_at = datetime.now(timezone.utc)
+        self.completed_at = datetime.now(UTC)
         return record
 
     def record_invocation(
@@ -204,7 +204,7 @@ class SynthesisState(BaseModel):
         success: bool = False,
         latency_ms: float = 0.0,
         error_detail: str = "",
-        fallback_used: Optional[str] = None,
+        fallback_used: str | None = None,
         raw_response_hash: str = "",
     ) -> PrimitiveInvocation:
         """Log a tool invocation within a stage."""

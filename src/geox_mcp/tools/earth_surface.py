@@ -21,28 +21,25 @@ DITEMPA BUKAN DIBERI — the physical earth is forged through evidence.
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
+from geox_core.io.etopo_fetcher import (
+    ETOPO_CITATION,
+    ETOPOExtractRequest,
+    ETOPOFetcher,
+)
+from geox_core.io.gebco_fetcher import (
+    GEBCO_CITATION,
+    GEBCOExtractRequest,
+    GEBCOFetcher,
+)
 from geox_core.io.usgs_earthquake_fetcher import (
-    EarthquakeCatalogResult,
+    USGS_CITATION,
     EarthquakeEvent,
     EarthquakeQuery,
     USGSEarthquakeFetcher,
-    USGS_CITATION,
-)
-from geox_core.io.etopo_fetcher import (
-    ETOPOExtractRequest,
-    ETOPOFetchResult,
-    ETOPOFetcher,
-    ETOPO_CITATION,
-)
-from geox_core.io.gebco_fetcher import (
-    GEBCOExtractRequest,
-    GEBCOFetchResult,
-    GEBCOFetcher,
-    GEBCO_CITATION,
 )
 
 logger = logging.getLogger("geox.tools.earth_surface")
@@ -53,23 +50,23 @@ logger = logging.getLogger("geox.tools.earth_surface")
 class EarthquakeCatalogRequest(BaseModel):
     """Request for USGS earthquake catalog query."""
 
-    starttime: Optional[str] = Field(None, description="ISO8601 start (default: NOW-30d)")
-    endtime: Optional[str] = Field(None, description="ISO8601 end (default: now)")
-    minlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    maxlatitude: Optional[float] = Field(None, ge=-90, le=90)
-    minlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    maxlongitude: Optional[float] = Field(None, ge=-360, le=360)
-    latitude: Optional[float] = Field(None, ge=-90, le=90, description="Circle center lat")
-    longitude: Optional[float] = Field(None, ge=-180, le=180, description="Circle center lon")
-    maxradiuskm: Optional[float] = Field(None, ge=0, le=20002, description="Circle radius km")
-    minmagnitude: Optional[float] = Field(None, description="Minimum magnitude")
-    maxmagnitude: Optional[float] = Field(None, description="Maximum magnitude")
-    mindepth: Optional[float] = Field(None, ge=-100, le=1000, description="Min depth km")
-    maxdepth: Optional[float] = Field(None, ge=-100, le=1000, description="Max depth km")
+    starttime: str | None = Field(None, description="ISO8601 start (default: NOW-30d)")
+    endtime: str | None = Field(None, description="ISO8601 end (default: now)")
+    minlatitude: float | None = Field(None, ge=-90, le=90)
+    maxlatitude: float | None = Field(None, ge=-90, le=90)
+    minlongitude: float | None = Field(None, ge=-360, le=360)
+    maxlongitude: float | None = Field(None, ge=-360, le=360)
+    latitude: float | None = Field(None, ge=-90, le=90, description="Circle center lat")
+    longitude: float | None = Field(None, ge=-180, le=180, description="Circle center lon")
+    maxradiuskm: float | None = Field(None, ge=0, le=20002, description="Circle radius km")
+    minmagnitude: float | None = Field(None, description="Minimum magnitude")
+    maxmagnitude: float | None = Field(None, description="Maximum magnitude")
+    mindepth: float | None = Field(None, ge=-100, le=1000, description="Min depth km")
+    maxdepth: float | None = Field(None, ge=-100, le=1000, description="Max depth km")
     limit: int = Field(100, ge=1, le=20000, description="Max events to return")
     orderby: str = Field("time", description="time | time-asc | magnitude | magnitude-asc")
-    alertlevel: Optional[str] = Field(None, description="PAGER: green/yellow/orange/red")
-    eventtype: Optional[str] = Field(None, description="earthquake, quarry blast, etc.")
+    alertlevel: str | None = Field(None, description="PAGER: green/yellow/orange/red")
+    eventtype: str | None = Field(None, description="earthquake, quarry blast, etc.")
 
 
 class EarthquakeCatalogResponse(BaseModel):
@@ -156,10 +153,10 @@ class ReliefIngestRequest(BaseModel):
     """Request for ETOPO global relief data."""
 
     mode: str = Field("global", description="global | bbox")
-    west: Optional[float] = Field(None, ge=-180, le=180)
-    east: Optional[float] = Field(None, ge=-180, le=180)
-    south: Optional[float] = Field(None, ge=-90, le=90)
-    north: Optional[float] = Field(None, ge=-90, le=90)
+    west: float | None = Field(None, ge=-180, le=180)
+    east: float | None = Field(None, ge=-180, le=180)
+    south: float | None = Field(None, ge=-90, le=90)
+    north: float | None = Field(None, ge=-90, le=90)
     resolution: int = Field(15, description="Arc-seconds: 15, 30, or 60")
     version: str = Field("bedrock", description="bedrock | ice_surface")
     output_format: str = Field("geotiff", description="geotiff | netcdf")
@@ -171,8 +168,8 @@ class ReliefIngestResponse(BaseModel):
     ok: bool
     tool: str = "geox_relief_ingest"
     mode: str  # "live" | "offline_stub" | "cached"
-    grid_path: Optional[str] = None
-    meta: Optional[dict[str, Any]] = None
+    grid_path: str | None = None
+    meta: dict[str, Any] | None = None
     citation: str = ETOPO_CITATION
     note: str = ""
     epistemic_status: str = "OBSERVED"  # measured elevation data
@@ -253,10 +250,10 @@ class BathymetryIngestRequest(BaseModel):
     """Request for GEBCO bathymetry data."""
 
     mode: str = Field("global", description="global | bbox")
-    west: Optional[float] = Field(None, ge=-180, le=180)
-    east: Optional[float] = Field(None, ge=-180, le=180)
-    south: Optional[float] = Field(None, ge=-90, le=90)
-    north: Optional[float] = Field(None, ge=-90, le=90)
+    west: float | None = Field(None, ge=-180, le=180)
+    east: float | None = Field(None, ge=-180, le=180)
+    south: float | None = Field(None, ge=-90, le=90)
+    north: float | None = Field(None, ge=-90, le=90)
     variant: str = Field("ice_surface", description="ice_surface | sub_ice | tid")
     output_format: str = Field("netcdf", description="netcdf | geotiff")
 
@@ -267,9 +264,9 @@ class BathymetryIngestResponse(BaseModel):
     ok: bool
     tool: str = "geox_bathymetry_ingest"
     mode: str  # "live" | "offline_stub" | "cached" | "opendap"
-    grid_path: Optional[str] = None
-    opendap_url: Optional[str] = None
-    meta: Optional[dict[str, Any]] = None
+    grid_path: str | None = None
+    opendap_url: str | None = None
+    meta: dict[str, Any] | None = None
     citation: str = GEBCO_CITATION
     note: str = ""
     epistemic_status: str = "OBSERVED"  # measured bathymetry

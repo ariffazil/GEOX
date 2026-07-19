@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import Enum, StrEnum
 from typing import Any, Literal
 
 import numpy as np
@@ -32,14 +32,14 @@ logger = logging.getLogger("geox.biostrat")
 # ─── Zonation Schemes ───────────────────────────────────────────────────────
 
 
-class FossilGroup(str, Enum):
+class FossilGroup(StrEnum):
     CONODONT = "conodont"
     FORAMINIFERA = "foraminifera"
     NANNOFOSSIL = "nannofossil"
     PALYNOMORPH = "palynomorph"
 
 
-class ZoneType(str, Enum):
+class ZoneType(StrEnum):
     RANGE = "range"           # total range zone
     INTERVAL = "interval"     # interval zone
     ASSEMBLAGE = "assemblage" # assemblage zone
@@ -309,7 +309,7 @@ def assign_zones_to_well(
 
         if len(depth_points) >= 2:
             # Sort by depth
-            sorted_pairs = sorted(zip(depth_points, age_points))
+            sorted_pairs = sorted(zip(depth_points, age_points, strict=False))
             dp_sorted = [p[0] for p in sorted_pairs]
             ap_sorted = [p[1] for p in sorted_pairs]
             age_model = np.interp(depth_axis, dp_sorted, ap_sorted)
@@ -321,7 +321,7 @@ def assign_zones_to_well(
 
     # Build facies constraints
     facies_constraints = []
-    for zone, interval in zip(matched_zones, depth_intervals):
+    for zone, interval in zip(matched_zones, depth_intervals, strict=False):
         if zone.facies_hint:
             facies_constraints.append({
                 "depth_top_m": interval[0],
@@ -333,7 +333,7 @@ def assign_zones_to_well(
 
     # Confidence curve
     confidence_curve = np.ones_like(depth_axis) * 0.5  # default
-    for zone, interval in zip(matched_zones, depth_intervals):
+    for zone, interval in zip(matched_zones, depth_intervals, strict=False):
         mask = (depth_axis >= interval[0]) & (depth_axis <= interval[1])
         confidence_curve[mask] = zone.confidence
 

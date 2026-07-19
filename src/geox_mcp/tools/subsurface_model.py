@@ -8,7 +8,9 @@ Modes: joint_inversion, gravity_magnetic, mt_forward
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 from __future__ import annotations
+
 from typing import Any, Literal
+
 
 async def geox_subsurface_model(
     mode: Literal["joint_inversion", "gravity_magnetic", "mt_forward"] = "joint_inversion",

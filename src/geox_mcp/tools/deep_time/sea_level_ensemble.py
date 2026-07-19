@@ -16,8 +16,8 @@ from __future__ import annotations
 import csv
 import logging
 import os
-from dataclasses import dataclass, field
-from enum import Enum
+from dataclasses import dataclass
+from enum import StrEnum
 from typing import Any
 
 logger = logging.getLogger("geox.sea_level_ensemble")
@@ -25,7 +25,7 @@ logger = logging.getLogger("geox.sea_level_ensemble")
 _DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 
-class SeaLevelSource(str, Enum):
+class SeaLevelSource(StrEnum):
     MILLER_2020 = "miller_2020"
     HAQ_OGG_2024 = "haq_ogg_2024"
     ENSEMBLE = "ensemble"
@@ -82,7 +82,7 @@ def _interpolate(rows: list[dict], age_ma: float, age_key: str, val_key: str) ->
         return None
 
     # Exact match
-    for a, v in zip(ages, vals):
+    for a, v in zip(ages, vals, strict=False):
         if abs(a - age_ma) < 0.01:
             return v
 

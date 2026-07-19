@@ -1,7 +1,8 @@
-import yaml
 import json
 import sys
 from pathlib import Path
+
+import yaml
 
 try:
     import jsonschema
@@ -12,6 +13,7 @@ except ImportError:
     import jsonschema
 
 from openapi_schema_validator import validate
+
 
 def resolve_ref(ref_str, current_dir):
     """Simple $ref resolver for local files."""

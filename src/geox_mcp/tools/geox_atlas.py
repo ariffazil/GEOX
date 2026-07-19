@@ -549,7 +549,7 @@ async def run_golden_tests() -> tuple[int, int]:
         is_water_test = expected_country is None
 
         if is_water_test:
-            ok = result["is_water"] == True
+            ok = result["is_water"]
         else:
             ok = result["country"] == expected_country or result["country_iso3"] == test["expected_iso3"]
 

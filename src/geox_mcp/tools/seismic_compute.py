@@ -132,6 +132,7 @@ async def _mode_anomalous_contrast(
 ) -> dict[str, Any]:
     """Hardened anomalous contrast detection — raw physics to governed envelope."""
     import numpy as np
+
     from geox_mcp.tools.anomalous_contrast import geox_anomalous_contrast_detector
 
     raw = await geox_anomalous_contrast_detector(

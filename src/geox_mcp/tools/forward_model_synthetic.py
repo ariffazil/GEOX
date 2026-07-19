@@ -249,7 +249,7 @@ async def geox_forward_model_synthetic(
         primary_artifact["rc_series"] = rc.tolist()
         primary_artifact["twt_axis_ms"] = t_uniform.tolist()
         primary_artifact["depth_axis_m"] = depth_arr.tolist()
-        primary_artifact["depth_to_twt_table"] = [{"depth_m": float(d), "twt_ms": float(t)} for d, t in zip(depth_arr, twt)]
+        primary_artifact["depth_to_twt_table"] = [{"depth_m": float(d), "twt_ms": float(t)} for d, t in zip(depth_arr, twt, strict=False)]
         primary_artifact["wavelet_signature"] = wavelet.tolist()
 
     envelope = get_standard_envelope(

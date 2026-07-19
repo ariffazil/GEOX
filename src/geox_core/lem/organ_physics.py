@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -188,7 +188,7 @@ class PhysicsGuard:
         vsh: np.ndarray,
         phi: np.ndarray,
         sw: np.ndarray,
-        rt: Optional[np.ndarray] = None,
+        rt: np.ndarray | None = None,
     ) -> PhysicsGuardResult:
         """Check petrophysical predictions against CANON-9 bounds + Archie."""
         violations: list[dict[str, Any]] = []

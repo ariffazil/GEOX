@@ -27,8 +27,6 @@ import json
 import logging
 from typing import Any
 
-import numpy as np
-
 logger = logging.getLogger("geox.engines.hydrogeology.flopy_adapter")
 
 _FLOPY_VERSION: str | None = None
@@ -102,7 +100,6 @@ class FloPyAdapter:
             Steady-state head field + water budget.
         """
         import flopy as fp
-        import numpy as np
 
         xmin, xmax, ymin, ymax = model_extent
         delr = (xmax - xmin) / ncol

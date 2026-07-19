@@ -15,9 +15,8 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
-
 
 # ── 1. Scheme root ────────────────────────────────────────────────────────────
 SCHEME = "geox"
@@ -25,7 +24,7 @@ URI_PATTERN = re.compile(r"^geox://[A-Za-z0-9._/\-{}]+$")
 
 
 # ── 2. Access classes (F13 SOVEREIGN) ─────────────────────────────────────────
-class AccessClass(str, Enum):
+class AccessClass(StrEnum):
     """F13-gated access tiers. Order is sensitivity-ascending."""
 
     PUBLIC = "PUBLIC"  # anyone can read
@@ -35,7 +34,7 @@ class AccessClass(str, Enum):
 
 
 # ── 3. Resource tier (what kind of transport) ─────────────────────────────────
-class Tier(str, Enum):
+class Tier(StrEnum):
     """Transport tier — drives `read` return shape per MCP 2025-11-25."""
 
     TEXT_INLINE = "TEXT_INLINE"  # TextResourceContents{ text }

@@ -8,7 +8,9 @@ Modes: inspect_segy, export_segy, inspect_seismic_meta
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 from __future__ import annotations
+
 from typing import Any, Literal
+
 
 async def geox_seismic_ingest(
     mode: Literal["inspect_segy", "export_segy", "inspect_seismic_meta"] = "inspect_segy",

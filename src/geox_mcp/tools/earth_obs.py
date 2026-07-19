@@ -15,15 +15,13 @@ DITEMPA BUKAN DIBEI — the trust envelope lives in this file, not in the engine
 
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 from geox_core.engines.earth_obs.prithvi_adapter import (
     HLSInput,
     PrithviEOAdapter,
-    PrithviTask,
     PrithviOutput,
+    PrithviTask,
 )
 
 
@@ -34,22 +32,22 @@ class PrithviEOInferenceRequest(BaseModel):
     time_range: tuple[str, str] = ("2024-01-01", "2024-12-31")
     cloud_cover_max: float = Field(default=0.20, ge=0.0, le=1.0)
     task: PrithviTask = "land_cover"
-    source_uri: Optional[str] = None
+    source_uri: str | None = None
 
 
 class PrithviEOInferenceResponse(BaseModel):
     ok: bool
     tool: str = "geox_prithvi_eo_inference"
     mode: str  # "live" | "mock"
-    output: Optional[PrithviOutput] = None
-    error: Optional[str] = None
+    output: PrithviOutput | None = None
+    error: str | None = None
 
 
 # ───────────────────────────── TOOL ENTRY POINT ───────────────────────────────────
 async def geox_prithvi_eo_inference(
     request: PrithviEOInferenceRequest,
     *,
-    adapter: Optional[PrithviEOAdapter] = None,
+    adapter: PrithviEOAdapter | None = None,
 ) -> PrithviEOInferenceResponse:
     """Constitutional MCP tool: run Prithvi-EO-2.0 on an HLS tile.
 

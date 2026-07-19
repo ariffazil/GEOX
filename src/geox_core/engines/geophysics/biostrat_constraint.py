@@ -20,13 +20,11 @@ DITEMPA BUKAN DIBEI — time-facies constraint is forged, not given.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
 import math
-from typing import Literal, Optional
+from dataclasses import dataclass, field
+from typing import Literal
 
 from geox_core.physics.state import EARTH_MATERIAL_CATALOG, Physics13State
-
 
 # ───────────────────────────── ZONE CATALOG ───────────────────────────────────────
 DepositionalEnvironment = Literal[
@@ -113,7 +111,7 @@ class BiostratConstraintResult:
 
     zone_name: str
     zone_admissible_materials: tuple[str, ...]
-    cell_material_match: Optional[str]
+    cell_material_match: str | None
     is_material_admissible: bool
     is_phi_in_range: bool
     is_vpvs_in_range: bool
@@ -124,7 +122,7 @@ class BiostratConstraintResult:
 def evaluate_biostrat_constraint(
     state: Physics13State,
     age_ma: float,
-    zones: Optional[list[BiostratZone]] = None,
+    zones: list[BiostratZone] | None = None,
 ) -> BiostratConstraintResult:
     """Check whether a Physics13State is admissible for a biostrat zone at given age.
 

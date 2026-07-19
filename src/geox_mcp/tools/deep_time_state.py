@@ -35,9 +35,9 @@ import logging
 from geox_core.enums.statuses import get_standard_envelope
 
 from .deep_time import (
-    resolve_age_query,
     assemble_earth_state_vector,
     assemble_envelope,
+    resolve_age_query,
 )
 
 logger = logging.getLogger("geox.canonical.deep_time_state")
@@ -104,7 +104,7 @@ async def geox_deep_time_state(
     # Step 0 — Resolve biozone to age bracket (Phase 2.7, 2026-07-03)
     biozone_source = None
     if biozone:
-        from geox_mcp.tools.kernel._biostrat import parse_nn_zone, nn_age
+        from geox_mcp.tools.kernel._biostrat import nn_age, parse_nn_zone
 
         parsed = parse_nn_zone(biozone)
         zone_name = parsed["zone"]

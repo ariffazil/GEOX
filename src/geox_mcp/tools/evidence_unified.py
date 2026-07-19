@@ -8,7 +8,9 @@ Modes: discover, synthesize, abduct, contradict, spatial_block, ingest_literatur
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 from __future__ import annotations
+
 from typing import Any, Literal
+
 
 async def geox_evidence(
     mode: Literal["discover", "synthesize", "abduct", "contradict", "spatial_block", "ingest_literature"] = "synthesize",

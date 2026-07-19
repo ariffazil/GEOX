@@ -17,10 +17,8 @@ F13 SOVEREIGN: drill decisions require arifOS 888_JUDGE SEAL.
 
 from __future__ import annotations
 
-import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Optional
 
 # ── ARIF 6-DOMAIN DIFFERENTIATOR (inline, copied from physics.py) ─────────
 # Copied verbatim from: /root/GEOX/adapters/carbonate/physics.py (sealed canon)
@@ -313,7 +311,6 @@ from geox.skills.subsurface.petro.sabah_kill_matrix import (
     _K002_slope_angle_geometry,
 )
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # PSCS EVIDENCE FILTER — KT-6/KT-7/KT-8 results
 # ─────────────────────────────────────────────────────────────────────────────
@@ -329,7 +326,7 @@ class PSCSVerdict(Enum):
 class PSCSFilterResult:
     """PSCS subduction evidence filter result."""
 
-    pscs_age_ma: Optional[float]  # Ophiolite age (Barremian-Aptian = 115-125 Ma)
+    pscs_age_ma: float | None  # Ophiolite age (Barremian-Aptian = 115-125 Ma)
     has_pscs_oceanic_crust: bool  # Lahad Datu Ophiolite N-MORB fragments
     has_pscs_slab_image: bool  # Wu & Suppe 2018 slab at 45-55 km
     has_pscs_detachment_ambiguity: bool  # Franke et al. 2008: 6-8 km reflector = detachment
@@ -385,41 +382,41 @@ class SabahProspect:
 
     name: str
     location: str
-    age_ma: Optional[float]  # Miocene = Icehouse (5.3-23 Ma)
-    depth_m: Optional[float]  # TVDss metres
+    age_ma: float | None  # Miocene = Icehouse (5.3-23 Ma)
+    depth_m: float | None  # TVDss metres
     archetype: str  # Badali 7-type
-    slope_angle_deg: Optional[float]
+    slope_angle_deg: float | None
 
     # Typical rock physics ranges (Mid-Miocene carbonate build-up)
-    vp_top_m_s: Optional[float] = None
-    vp_base_m_s: Optional[float] = None
-    vp_vs_ratio: Optional[float] = None
-    rho_g_cc: Optional[float] = None
-    porosity: Optional[float] = None
-    sw: Optional[float] = None  # water saturation
+    vp_top_m_s: float | None = None
+    vp_base_m_s: float | None = None
+    vp_vs_ratio: float | None = None
+    rho_g_cc: float | None = None
+    porosity: float | None = None
+    sw: float | None = None  # water saturation
 
     # Seismic
-    curvature: Optional[float] = None
-    is_mounded: Optional[bool] = None
-    has_onlap: Optional[bool] = None
-    is_isolated_buildup: Optional[bool] = None
-    has_flat_top: Optional[bool] = None
-    has_steep_flanks: Optional[bool] = None
-    top_reflector_strength: Optional[float] = None
-    top_reflector_continuity: Optional[float] = None
-    internal_character: Optional[str] = None
-    base_character: Optional[str] = None
-    coherency: Optional[float] = None
-    rms_amplitude: Optional[float] = None
-    envelope_strength: Optional[float] = None
-    sweetness: Optional[float] = None
-    is_on_structural_high: Optional[bool] = None
-    is_away_from_clastic_feeder: Optional[bool] = None
-    regional_analog_match: Optional[bool] = None
-    avo_class: Optional[str] = None
-    csem_resistivity_pattern: Optional[str] = None
-    gravity_signature: Optional[str] = None
-    ftg_anomaly: Optional[bool] = None
+    curvature: float | None = None
+    is_mounded: bool | None = None
+    has_onlap: bool | None = None
+    is_isolated_buildup: bool | None = None
+    has_flat_top: bool | None = None
+    has_steep_flanks: bool | None = None
+    top_reflector_strength: float | None = None
+    top_reflector_continuity: float | None = None
+    internal_character: str | None = None
+    base_character: str | None = None
+    coherency: float | None = None
+    rms_amplitude: float | None = None
+    envelope_strength: float | None = None
+    sweetness: float | None = None
+    is_on_structural_high: bool | None = None
+    is_away_from_clastic_feeder: bool | None = None
+    regional_analog_match: bool | None = None
+    avo_class: str | None = None
+    csem_resistivity_pattern: str | None = None
+    gravity_signature: str | None = None
+    ftg_anomaly: bool | None = None
 
     # PSCS context
     in_pscs_belt: bool = True  # All 4 prospects in NW Sabah PSCS belt
@@ -638,7 +635,7 @@ class ProspectDiscriminationResult:
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-def _climate_regime(age_ma: Optional[float]) -> str:
+def _climate_regime(age_ma: float | None) -> str:
     """Determine climate regime from age (Badali 2024)."""
     if age_ma is None:
         return "unknown"
@@ -649,7 +646,7 @@ def _climate_regime(age_ma: Optional[float]) -> str:
     return "Transition"
 
 
-def _climate_regime_strict(age_ma: Optional[float]) -> str:
+def _climate_regime_strict(age_ma: float | None) -> str:
     """
     Strict climate regime classification (Eureka fix — Megah 22 Ma).
 
@@ -678,48 +675,48 @@ def _climate_regime_strict(age_ma: Optional[float]) -> str:
 
 
 def discriminate_prospect(
-    prospect_name: Optional[str] = None,  # Required for explicit calls; auto-set when use_known_prospect
+    prospect_name: str | None = None,  # Required for explicit calls; auto-set when use_known_prospect
     # ── Domain 1: Geometry ───────────────────────────────────────────────
-    curvature: Optional[float] = None,
-    is_mounded: Optional[bool] = None,
-    has_onlap: Optional[bool] = None,
-    is_isolated_buildup: Optional[bool] = None,
-    has_flat_top: Optional[bool] = None,
-    has_steep_flanks: Optional[bool] = None,
+    curvature: float | None = None,
+    is_mounded: bool | None = None,
+    has_onlap: bool | None = None,
+    is_isolated_buildup: bool | None = None,
+    has_flat_top: bool | None = None,
+    has_steep_flanks: bool | None = None,
     # ── Domain 2: Reflection ──────────────────────────────────────────────
-    top_reflector_strength: Optional[float] = None,
-    top_reflector_continuity: Optional[float] = None,
-    internal_character: Optional[str] = None,
-    base_character: Optional[str] = None,
-    coherency: Optional[float] = None,
+    top_reflector_strength: float | None = None,
+    top_reflector_continuity: float | None = None,
+    internal_character: str | None = None,
+    base_character: str | None = None,
+    coherency: float | None = None,
     # ── Domain 3: Attributes ─────────────────────────────────────────────
-    rms_amplitude: Optional[float] = None,
-    envelope_strength: Optional[float] = None,
-    sweetness: Optional[float] = None,
-    spectral_decomposition_rgb: Optional[str] = None,
-    avoe: Optional[float] = None,
+    rms_amplitude: float | None = None,
+    envelope_strength: float | None = None,
+    sweetness: float | None = None,
+    spectral_decomposition_rgb: str | None = None,
+    avoe: float | None = None,
     # ── Domain 4: Stratigraphy ─────────────────────────────────────────────
-    age_ma: Optional[float] = None,
-    is_on_structural_high: Optional[bool] = None,
-    is_away_from_clastic_feeder: Optional[bool] = None,
-    regional_analog_match: Optional[bool] = None,
+    age_ma: float | None = None,
+    is_on_structural_high: bool | None = None,
+    is_away_from_clastic_feeder: bool | None = None,
+    regional_analog_match: bool | None = None,
     # ── Domain 5: Velocity/AVO ────────────────────────────────────────────
-    vp_top_m_s: Optional[float] = None,
-    vp_base_m_s: Optional[float] = None,
-    vp_vs_ratio: Optional[float] = None,
-    ai: Optional[float] = None,
-    avo_class: Optional[str] = None,
-    stacking_velocity_top: Optional[float] = None,
-    stacking_velocity_base: Optional[float] = None,
+    vp_top_m_s: float | None = None,
+    vp_base_m_s: float | None = None,
+    vp_vs_ratio: float | None = None,
+    ai: float | None = None,
+    avo_class: str | None = None,
+    stacking_velocity_top: float | None = None,
+    stacking_velocity_base: float | None = None,
     # ── Domain 6: Integration ─────────────────────────────────────────────
-    csem_resistivity_pattern: Optional[str] = None,
-    gravity_signature: Optional[str] = None,
-    ftg_anomaly: Optional[bool] = None,
-    magnetic_signature: Optional[str] = None,
+    csem_resistivity_pattern: str | None = None,
+    gravity_signature: str | None = None,
+    ftg_anomaly: bool | None = None,
+    magnetic_signature: str | None = None,
     # ── Override options ─────────────────────────────────────────────────
-    use_known_prospect: Optional[str] = None,  # "Tepat" | "Solisip" | "Layang" | "Megah"
-    claimed_archetype: Optional[str] = None,  # Override archetype for kill matrix
-    slope_angle_deg: Optional[float] = None,  # Override for kill matrix
+    use_known_prospect: str | None = None,  # "Tepat" | "Solisip" | "Layang" | "Megah"
+    claimed_archetype: str | None = None,  # Override archetype for kill matrix
+    slope_angle_deg: float | None = None,  # Override for kill matrix
 ) -> ProspectDiscriminationResult:
     """
     Run full Sabah prospect discrimination.
@@ -736,7 +733,7 @@ def discriminate_prospect(
     """
 
     # ── 1. Load known prospect if requested ──────────────────────────────────
-    prospect: Optional[SabahProspect] = None
+    prospect: SabahProspect | None = None
     if use_known_prospect:
         if use_known_prospect not in SABAH_PROSPECTS:
             raise ValueError(f"Unknown prospect '{use_known_prospect}'. Available: {list(SABAH_PROSPECTS.keys())}")
@@ -912,7 +909,6 @@ def discriminate_prospect(
 
 
 if __name__ == "__main__":
-    import json
 
     print("=" * 70)
     print("Sabah Prospect Discrimination Engine — ARIF 6-Domain + Kill Matrix")
@@ -933,7 +929,7 @@ if __name__ == "__main__":
         print(f"  KT scorecard: {result.kt_scorecard}")
         print(f"  Next action:  {result.next_action}")
 
-        print(f"\n  Domain scores:")
+        print("\n  Domain scores:")
         print(f"    D1 Geometry:     {result.domain_1_geometry_score:.2f}")
         print(f"    D2 Reflection:   {result.domain_2_reflection_score:.2f}")
         print(f"    D3 Attributes:   {result.domain_3_attributes_score:.2f}")

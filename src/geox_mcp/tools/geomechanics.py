@@ -14,33 +14,26 @@ DITEMPA BUKAN DIBEI — the modulus is forged, not given.
 
 from __future__ import annotations
 
-from typing import Optional
-
 import logging
+
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger("geox.geomechanics")
 
-from geox_core.physics.state import Physics13State
 from geox_core.physics.parameters import (
-    bulk_modulus,
-    shear_modulus,
-    young_modulus,
-    poisson_ratio,
-    acoustic_impedance,
-    vp_vs_ratio,
-    forward_physics9,
     compute_buoyancy,
+    forward_physics9,
 )
+from geox_core.physics.state import Physics13State
 
 
 class GeomechanicsRequest(BaseModel):
     state: dict = Field(..., description="Physics13State as dict — partial fields OK, from_raw_dict() coerces")
-    thickness_m: Optional[float] = Field(
+    thickness_m: float | None = Field(
         default=None,
         description="Column thickness [m] for buoyancy computation. Not part of 9-dial — pass explicitly.",
     )
-    rho_fluid: Optional[float] = Field(
+    rho_fluid: float | None = Field(
         default=1025.0,
         description="Fluid density [kg/m³] for buoyancy. Default seawater 1025.",
     )
@@ -49,7 +42,7 @@ class GeomechanicsRequest(BaseModel):
 class GeomechanicsResponse(BaseModel):
     ok: bool
     tool: str = "geox_geomechanics"
-    result: Optional[dict] = None
+    result: dict | None = None
     error: str = ""
 
 

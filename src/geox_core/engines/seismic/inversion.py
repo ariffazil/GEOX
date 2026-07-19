@@ -21,19 +21,17 @@ Author: FORGE (000Ω) | DITEMPA BUKAN DIBERI
 from __future__ import annotations
 
 import logging
-import math
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Literal
 
 import numpy as np
-from scipy import signal, linalg
+from scipy import linalg, signal
 
 from geox_core.physics.parameters import (
-    acoustic_impedance,
-    ricker_wavelet,
-    reflectivity_array,
     convolve_trace,
+    reflectivity_array,
+    ricker_wavelet,
 )
 
 logger = logging.getLogger("geox.inversion")
@@ -42,13 +40,13 @@ logger = logging.getLogger("geox.inversion")
 # ─── Enums ───────────────────────────────────────────────────────────────────
 
 
-class InversionMethod(str, Enum):
+class InversionMethod(StrEnum):
     COLOURED = "coloured"
     MODEL_BASED = "model_based"
     PINN = "pinn"
 
 
-class ConfidenceBand(str, Enum):
+class ConfidenceBand(StrEnum):
     HIGH = "HIGH"        # r > 0.9
     MODERATE = "MODERATE"  # 0.7 < r <= 0.9
     LOW = "LOW"          # r <= 0.7

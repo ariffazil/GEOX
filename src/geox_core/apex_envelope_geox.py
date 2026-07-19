@@ -12,6 +12,7 @@ APEX-MCP-001 binding.
 
 from __future__ import annotations
 
+from datetime import UTC
 from typing import Any
 
 try:
@@ -22,7 +23,7 @@ try:
 except ImportError:
     # Inline fallback if the shared module isn't on the path
     import math
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     APEX_EQUATION = "g(t)=A(t)\u00b7P(t)\u00b7H(t)\u00b7\u221a(S(t)\u00b7U(t))\u00b7E(t)\u00b2"
 
@@ -61,7 +62,7 @@ except ImportError:
         E = gates["energy"]["score"]
         G = round(A * P * H * math.sqrt(S * U) * E ** 2, 4)
         verdict = "VOID" if f13_halt else ("SEAL" if G >= 0.80 else ("SABAR" if G >= 0.50 else "HOLD"))
-        return {"equation": APEX_EQUATION, "gates": gates, "dials": {"A": round(A, 4), "P": round(P, 4), "H": round(H, 4), "S": round(S, 4), "U": round(U, 4), "E": round(E, 4)}, "G": G, "verdict": verdict, "timestamp": datetime.now(timezone.utc).isoformat()}
+        return {"equation": APEX_EQUATION, "gates": gates, "dials": {"A": round(A, 4), "P": round(P, 4), "H": round(H, 4), "S": round(S, 4), "U": round(U, 4), "E": round(E, 4)}, "G": G, "verdict": verdict, "timestamp": datetime.now(UTC).isoformat()}
 
 
 # ── Claim state → confidence mapping ──────────────────────────────────────

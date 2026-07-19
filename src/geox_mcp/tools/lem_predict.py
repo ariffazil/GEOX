@@ -38,9 +38,9 @@ from __future__ import annotations
 
 import hashlib
 import math
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Literal, Optional
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import Any, Literal
 
 import numpy as np
 from pydantic import BaseModel, Field, field_validator
@@ -84,7 +84,7 @@ PHYSICS9_BOUNDS = {
 # ── Enumerations ───────────────────────────────────────────────────────────
 
 
-class ClaimState(str, Enum):
+class ClaimState(StrEnum):
     """Claim state machine — mirrors the universal claim state."""
     DRAFT = "DRAFT"
     VALIDATED = "VALIDATED"
@@ -94,7 +94,7 @@ class ClaimState(str, Enum):
     VOID = "VOID"              # rejected
 
 
-class LEMMode(str, Enum):
+class LEMMode(StrEnum):
     """Inference mode — substrate mode of operation."""
     PHYSICS_PRIOR = "physics_prior"   # mock-default until weights deploy
     TRANSFORMER = "transformer"       # requires federated weights (888_HOLD gated)
@@ -118,8 +118,8 @@ class LEMPredictRequest(BaseModel):
     depth_m: list[float] = Field(
         ..., description="Depth samples in MD (m), monotonically increasing, same length as curves."
     )
-    depth_top_m: Optional[float] = Field(None, description="Top of inference window; None = first sample.")
-    depth_bot_m: Optional[float] = Field(None, description="Bottom of inference window; None = last sample.")
+    depth_top_m: float | None = Field(None, description="Top of inference window; None = first sample.")
+    depth_bot_m: float | None = Field(None, description="Bottom of inference window; None = last sample.")
     target_properties: list[str] = Field(
         default_factory=lambda: ["porosity", "sw"],
         description=f"Subset of {list(SUPPORTED_PROPERTIES)} to predict.",
@@ -128,13 +128,13 @@ class LEMPredictRequest(BaseModel):
         default=LEMMode.PHYSICS_PRIOR,
         description="Inference mode. Default physics_prior until federated weights deploy.",
     )
-    basin: Optional[str] = Field(None, description="Basin name for context-aware priors.")
-    rw_ohm_m: Optional[float] = Field(None, description="Override Archie Rw (Ω·m). If absent, default used.")
-    rho_matrix_g_cc: Optional[float] = Field(None, description="Override matrix density (g/cc).")
-    rho_fluid_g_cc: Optional[float] = Field(None, description="Override fluid density (g/cc).")
+    basin: str | None = Field(None, description="Basin name for context-aware priors.")
+    rw_ohm_m: float | None = Field(None, description="Override Archie Rw (Ω·m). If absent, default used.")
+    rho_matrix_g_cc: float | None = Field(None, description="Override matrix density (g/cc).")
+    rho_fluid_g_cc: float | None = Field(None, description="Override fluid density (g/cc).")
     patch_size_m: float = Field(default=_PATCH_SIZE_M_DEFAULT, ge=0.1, le=10.0)
-    actor_id: Optional[str] = Field(None, description="Calling actor (injected by arifOS).")
-    session_id: Optional[str] = Field(None, description="Governing session (injected by arifOS).")
+    actor_id: str | None = Field(None, description="Calling actor (injected by arifOS).")
+    session_id: str | None = Field(None, description="Governing session (injected by arifOS).")
 
     @field_validator("curves")
     @classmethod
@@ -189,7 +189,7 @@ class LEMPredictResult(BaseModel):
     claim_state: ClaimState = ClaimState.QUALIFIED  # LEM prediction is QUALIFIED until SEAL
     mode_used: LEMMode
     well_id: str
-    basin: Optional[str] = None
+    basin: str | None = None
     depth_window_m: tuple[float, float]
     cells: list[LEMCellPrediction]
     n_cells: int
@@ -201,7 +201,7 @@ class LEMPredictResult(BaseModel):
     next_best_actions: list[str] = Field(default_factory=list)
     audit_receipt: dict[str, Any] = Field(default_factory=dict)
     human_final_authority: str = "Arif"
-    generated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    generated_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 # ── Physics-prior inference core ──────────────────────────────────────────

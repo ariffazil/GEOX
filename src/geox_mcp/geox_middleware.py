@@ -31,7 +31,7 @@ import json
 import logging
 import os
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from fastmcp.exceptions import ToolError
@@ -86,7 +86,7 @@ def is_lifecycle_blocked(session_id: str) -> bool:
     return _LIFECYCLE_READY.get(session_id) is False
 
 
-def _session_id_from_context(context: "MiddlewareContext[Any]") -> str | None:
+def _session_id_from_context(context: MiddlewareContext[Any]) -> str | None:
     """Best-effort MCP session id from FastMCP context or message meta."""
     try:
         fctx = context.fastmcp_context
@@ -171,7 +171,7 @@ def build_governed_error_envelope(
                     "ai_involvement": "NONE",
                     "authority_claim": "GOVERNED",
                     "evidence_source": "COMPUTED",
-                    "tagged_at": datetime.now(timezone.utc).isoformat(),
+                    "tagged_at": datetime.now(UTC).isoformat(),
                     "schema_version": "1.0.0",
                 },
             },
@@ -283,8 +283,8 @@ class GeoxGovernanceMiddleware(Middleware):
 
     async def on_initialize(
         self,
-        context: "MiddlewareContext[Any]",
-        call_next: "CallNext[Any, Any]",
+        context: MiddlewareContext[Any],
+        call_next: CallNext[Any, Any],
     ) -> Any:
         """Log initialize; mark session as awaiting client notifications/initialized."""
         try:
@@ -314,8 +314,8 @@ class GeoxGovernanceMiddleware(Middleware):
 
     async def on_notification(
         self,
-        context: "MiddlewareContext[Any]",
-        call_next: "CallNext[Any, Any]",
+        context: MiddlewareContext[Any],
+        call_next: CallNext[Any, Any],
     ) -> Any:
         """Mark session ready on notifications/initialized (Phase A1)."""
         method = (context.method or "") or ""
@@ -343,8 +343,8 @@ class GeoxGovernanceMiddleware(Middleware):
 
     async def on_message(
         self,
-        context: "MiddlewareContext[Any]",
-        call_next: "CallNext[Any, Any]",
+        context: MiddlewareContext[Any],
+        call_next: CallNext[Any, Any],
     ) -> Any:
         """Also catch initialized via generic message path (some transports)."""
         method = (context.method or "") or ""
@@ -357,8 +357,8 @@ class GeoxGovernanceMiddleware(Middleware):
 
     async def on_list_tools(
         self,
-        context: "MiddlewareContext[Any]",
-        call_next: "CallNext[Any, Any]",
+        context: MiddlewareContext[Any],
+        call_next: CallNext[Any, Any],
     ) -> Any:
         """Filter tools/list to canonical public surface only.
 
@@ -379,8 +379,8 @@ class GeoxGovernanceMiddleware(Middleware):
 
     async def on_call_tool(
         self,
-        context: "MiddlewareContext[Any]",
-        call_next: "CallNext[Any, Any]",
+        context: MiddlewareContext[Any],
+        call_next: CallNext[Any, Any],
     ) -> Any:
         """RT1 + RT3 + SCT + organ_governance for every tools/call."""
         # Phase A1 lifecycle gate runs at HTTP layer only (McpLifecycleMiddleware).

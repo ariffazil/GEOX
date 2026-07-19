@@ -31,9 +31,8 @@ import hashlib
 import logging
 import os
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -77,16 +76,16 @@ class GEBCOGridMeta:
 
     source_uri: str
     fetched_at: str
-    sha256: Optional[str]
+    sha256: str | None
     resolution_arcsec: int = 15
     grid_version: str = "GEBCO_2026"
     variant: str = "ice_surface"  # "ice_surface" | "sub_ice" | "tid"
     crs: str = "EPSG:4326"
     bbox: tuple[float, float, float, float] = (-180.0, -90.0, 180.0, 90.0)
-    depth_min_m: Optional[float] = None
-    depth_max_m: Optional[float] = None
-    rows: Optional[int] = None
-    cols: Optional[int] = None
+    depth_min_m: float | None = None
+    depth_max_m: float | None = None
+    rows: int | None = None
+    cols: int | None = None
 
 
 class GEBCOFetchResult(BaseModel):
@@ -94,12 +93,12 @@ class GEBCOFetchResult(BaseModel):
 
     ok: bool
     mode: str  # "live" | "offline_stub" | "cached" | "opendap"
-    grid_path: Optional[str] = None
-    opendap_url: Optional[str] = None
-    meta: Optional[GEBCOGridMeta] = None
+    grid_path: str | None = None
+    opendap_url: str | None = None
+    meta: GEBCOGridMeta | None = None
     citation: str = GEBCO_CITATION
     note: str = ""
-    error: Optional[str] = None
+    error: str | None = None
 
 
 class GEBCOExtractRequest(BaseModel):
@@ -127,7 +126,7 @@ class GEBCOFetcher:
     - Graceful degradation to offline stub
     """
 
-    def __init__(self, cache_dir: Optional[str] = None):
+    def __init__(self, cache_dir: str | None = None):
         self.cache_dir = Path(cache_dir or os.environ.get(
             "GEOX_GEBCO_CACHE_DIR", "/root/.cache/geox/gebco"
         ))
@@ -145,7 +144,7 @@ class GEBCOFetcher:
             variant: "ice_surface", "sub_ice", or "tid"
             output_format: "netcdf" or "geotiff"
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         if self._offline:
             return self._offline_stub(variant=variant, bbox=(-180.0, -90.0, 180.0, 90.0), now=now)
@@ -171,7 +170,7 @@ class GEBCOFetcher:
 
         Prefers OPeNDAP for server-side subsetting. Falls back to local cache.
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         if self._offline:
             return self._offline_stub(
@@ -235,7 +234,7 @@ class GEBCOFetcher:
             citation=GEBCO_CITATION,
         )
 
-    def _build_opendap_url(self, request: GEBCOExtractRequest) -> Optional[str]:
+    def _build_opendap_url(self, request: GEBCOExtractRequest) -> str | None:
         """Build an OPeNDAP URL for server-side bbox subsetting.
 
         Format: {base}/GEBCO_2026.nc?elevation[{lat_start}:{lat_end}][{lon_start}:{lon_end}]
@@ -259,7 +258,7 @@ class GEBCOFetcher:
             f"?elevation[{lat_start}:1:{lat_end}][{lon_start}:1:{lon_end}]"
         )
 
-    def _check_cache(self, variant: str, output_format: str) -> Optional[GEBCOFetchResult]:
+    def _check_cache(self, variant: str, output_format: str) -> GEBCOFetchResult | None:
         """Check local cache for a matching GEBCO file."""
         pattern = f"gebco_2026_{variant}*"
         matches = list(self.cache_dir.glob(pattern))

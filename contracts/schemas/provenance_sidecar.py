@@ -19,12 +19,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
-from typing import Any, Literal, Optional
-from uuid import UUID, uuid4
+from datetime import UTC, datetime
+from typing import Any, Literal
+from uuid import uuid4
 
 from pydantic import BaseModel, Field, field_validator
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # W3C PROV Core Types — Agent, Activity, Entity, Attribution
@@ -37,8 +36,8 @@ class ProvAgent(BaseModel):
 
     agent_id: str = Field(..., description="Stable identifier (e.g., 'arifOS', 'geox_v1.0', 'arif')")
     agent_type: Literal["Person", "Organization", "SoftwareAgent"] = "SoftwareAgent"
-    name: Optional[str] = None
-    role: Optional[str] = Field(None, description="e.g., 'operator', 'operator_sovereign', 'system'")
+    name: str | None = None
+    role: str | None = Field(None, description="e.g., 'operator', 'operator_sovereign', 'system'")
 
 
 class ProvActivity(BaseModel):
@@ -47,11 +46,11 @@ class ProvActivity(BaseModel):
     activity_id: str = Field(..., description="Stable activity identifier")
     activity_type: str = Field(..., description="e.g., 'geox_seismic_compute', 'geox_petrophysics'")
     started_at: datetime
-    ended_at: Optional[datetime] = None
+    ended_at: datetime | None = None
     used_inputs: list[str] = Field(default_factory=list, description="Input artifact URIs")
     parameters: dict[str, Any] = Field(default_factory=dict)
-    geox_version: Optional[str] = None
-    git_commit: Optional[str] = None
+    geox_version: str | None = None
+    git_commit: str | None = None
     model_versions: dict[str, str] = Field(default_factory=dict)
 
 
@@ -62,9 +61,9 @@ class ProvEntity(BaseModel):
     entity_type: str = Field(..., description="e.g., 'map_preview', 'claim', 'volumetrics'")
     checksum: str = Field(..., description="SHA-256 of artifact content")
     checksum_algorithm: Literal["sha256"] = "sha256"
-    content_type: Optional[str] = None
-    size_bytes: Optional[int] = None
-    media_uri: Optional[str] = Field(None, description="Where the artifact lives")
+    content_type: str | None = None
+    size_bytes: int | None = None
+    media_uri: str | None = Field(None, description="Where the artifact lives")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -80,8 +79,8 @@ class ISO19115Metadata(BaseModel):
     """
 
     title: str
-    abstract: Optional[str] = None
-    purpose: Optional[str] = None
+    abstract: str | None = None
+    purpose: str | None = None
     status: Literal["draft", "validated", "sealed_candidate", "rejected", "superseded"] = "draft"
     topic_category: Literal[
         "geoscientificInformation",
@@ -94,29 +93,29 @@ class ISO19115Metadata(BaseModel):
 
     # Reference system
     crs_epsg: int = Field(4326, description="EPSG code (default WGS84)")
-    crs_name: Optional[str] = "WGS84"
+    crs_name: str | None = "WGS84"
 
     # Geographic extent
-    bbox_west: Optional[float] = Field(None, ge=-180, le=180)
-    bbox_east: Optional[float] = Field(None, ge=-180, le=180)
-    bbox_south: Optional[float] = Field(None, ge=-90, le=90)
-    bbox_north: Optional[float] = Field(None, ge=-90, le=90)
+    bbox_west: float | None = Field(None, ge=-180, le=180)
+    bbox_east: float | None = Field(None, ge=-180, le=180)
+    bbox_south: float | None = Field(None, ge=-90, le=90)
+    bbox_north: float | None = Field(None, ge=-90, le=90)
 
     # Temporal extent
-    temporal_start: Optional[datetime] = None
-    temporal_end: Optional[datetime] = None
+    temporal_start: datetime | None = None
+    temporal_end: datetime | None = None
 
     # Lineage (ISO 19115 'LI_Lineage' condensed)
-    lineage_statement: Optional[str] = None
+    lineage_statement: str | None = None
 
     # Distribution
-    distribution_format: Optional[str] = None
-    access_constraints: Optional[str] = None
-    use_constraints: Optional[str] = None
+    distribution_format: str | None = None
+    access_constraints: str | None = None
+    use_constraints: str | None = None
 
     @field_validator("bbox_west", "bbox_east")
     @classmethod
-    def _bbox_lon_valid(cls, v: Optional[float]) -> Optional[float]:
+    def _bbox_lon_valid(cls, v: float | None) -> float | None:
         return v
 
 
@@ -133,7 +132,7 @@ class GeMSMapMetadata(BaseModel):
     """
 
     map_id: str
-    map_name: Optional[str] = None
+    map_name: str | None = None
     map_type: Literal[
         "geologic",
         "lithologic",
@@ -144,10 +143,10 @@ class GeMSMapMetadata(BaseModel):
         "prospect",
         "uncertainty",
     ] = "geologic"
-    scale: Optional[int] = Field(None, ge=1, description="Map scale denominator")
-    publisher: Optional[str] = None
-    publication_year: Optional[int] = None
-    series: Optional[str] = None
+    scale: int | None = Field(None, ge=1, description="Map scale denominator")
+    publisher: str | None = None
+    publication_year: int | None = None
+    series: str | None = None
     source_license: Literal[
         "CC0",
         "CC-BY",
@@ -179,30 +178,30 @@ class HumanReview(BaseModel):
     ]
     reviewed_at: datetime
     verdict: Literal["approved", "rejected", "needs_revision", "abstain"]
-    notes: Optional[str] = None
-    signature: Optional[str] = Field(None, description="Cryptographic signature, if any")
+    notes: str | None = None
+    signature: str | None = Field(None, description="Cryptographic signature, if any")
 
 
 class ArifOSReview(BaseModel):
     """arifOS kernel review — required for SEAL-eligible artifacts."""
 
-    arifos_review_id: Optional[str] = None
-    session_id: Optional[str] = None
+    arifos_review_id: str | None = None
+    session_id: str | None = None
     verdict: Literal["SEAL", "HOLD", "SABAR", "VOID", "PENDING"] = "PENDING"
     floor_checks_passed: list[str] = Field(
         default_factory=list,
         description="F1-F13 IDs that passed, e.g. ['F2_TRUTH', 'F11_AUDIT']",
     )
     floor_checks_failed: list[str] = Field(default_factory=list)
-    reviewed_at: Optional[datetime] = None
+    reviewed_at: datetime | None = None
 
 
 class VaultReceiptRef(BaseModel):
     """Pointer to the VAULT999 immutable record (if sealed)."""
 
-    vault_entry_id: Optional[str] = None
-    sealed_at: Optional[datetime] = None
-    chain_hash: Optional[str] = None
+    vault_entry_id: str | None = None
+    sealed_at: datetime | None = None
+    chain_hash: str | None = None
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -229,12 +228,12 @@ class ProvenanceSidecar(BaseModel):
 
     # ISO 19115 / GeMS
     iso_19115: ISO19115Metadata
-    gems: Optional[GeMSMapMetadata] = None
+    gems: GeMSMapMetadata | None = None
 
     # Governance trail
     human_reviews: list[HumanReview] = Field(default_factory=list)
-    arifos_review: Optional[ArifOSReview] = None
-    vault_receipt: Optional[VaultReceiptRef] = None
+    arifos_review: ArifOSReview | None = None
+    vault_receipt: VaultReceiptRef | None = None
 
     # Processing steps (ordered)
     processing_steps: list[str] = Field(default_factory=list)
@@ -243,7 +242,7 @@ class ProvenanceSidecar(BaseModel):
     input_checksums: dict[str, str] = Field(default_factory=dict)
 
     # Sidecar metadata
-    sidecar_created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    sidecar_created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     sidecar_version: str = "1.0.0"
 
     def export_gate(self) -> tuple[bool, list[str]]:
@@ -289,15 +288,15 @@ class ProvenanceSidecar(BaseModel):
         activity_type: str,
         agent_id: str,
         iso_19115: ISO19115Metadata,
-        gems: Optional[GeMSMapMetadata] = None,
-        geox_version: Optional[str] = None,
-        git_commit: Optional[str] = None,
-    ) -> "ProvenanceSidecar":
+        gems: GeMSMapMetadata | None = None,
+        geox_version: str | None = None,
+        git_commit: str | None = None,
+    ) -> ProvenanceSidecar:
         """Convenience builder for the common case.
 
         Makes the sidecar easy to attach without forgetting required fields.
         """
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         checksum = ProvenanceSidecar.compute_checksum(artifact_content)
         size = len(artifact_content) if isinstance(artifact_content, (bytes, str)) else None
 

@@ -18,7 +18,7 @@ import logging
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Optional
+from typing import Any
 
 logger = logging.getLogger("geox.upstream_registry")
 
@@ -95,16 +95,16 @@ class UpstreamSpec:
 
     name: str  # e.g. "macrostrat"
     transport: str  # "streamable_http" | "stdio" | "rest_api"
-    url: Optional[str] = None  # endpoint URL (http/stdio command)
-    auth: Optional[dict[str, Any]] = None  # auth config (None = public)
+    url: str | None = None  # endpoint URL (http/stdio command)
+    auth: dict[str, Any] | None = None  # auth config (None = public)
     staleness_band: str = "GREEN<24h|YELLOW<7d|RED>7d"
     trust_class: TrustClass = TrustClass.EXTERNAL_AUTHORITATIVE
     allowed_tools: list[str] = field(default_factory=lambda: ["*"])
     timeout_s: float = 15.0
     circuit_breaker: CircuitBreaker = field(default_factory=CircuitBreaker)
     # REST API specific (when transport="rest_api")
-    base_url: Optional[str] = None
-    api_key_env: Optional[str] = None
+    base_url: str | None = None
+    api_key_env: str | None = None
 
     def staleness_band_for(self, age_hours: float) -> StalenessBand:
         if age_hours < 24:
@@ -168,7 +168,7 @@ class UpstreamRegistry:
 
 # ── Singleton ─────────────────────────────────────────────────────────────────
 
-_REGISTRY: Optional[UpstreamRegistry] = None
+_REGISTRY: UpstreamRegistry | None = None
 
 
 def get_registry() -> UpstreamRegistry:

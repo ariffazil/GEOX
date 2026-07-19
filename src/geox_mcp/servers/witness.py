@@ -13,9 +13,8 @@ from __future__ import annotations
 from typing import Any
 
 from fastmcp import FastMCP
-from fastmcp.apps import AppConfig, ResourceCSP
+from fastmcp.apps import AppConfig
 
-from geox_mcp.apps.workbench import GEOX_UI_APPS
 from geox_mcp.tools._register import register_tools_on_server
 from geox_mcp.tools.basin import (
     geox_abstraction_guard,

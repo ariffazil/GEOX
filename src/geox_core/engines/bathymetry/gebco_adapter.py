@@ -24,11 +24,9 @@ F9 ANTI-HANTU: GEBCO in unsurveyed ocean areas uses gravity-derived
 """
 from __future__ import annotations
 
-import hashlib
-import json
 import logging
 from dataclasses import dataclass, field
-from typing import Optional, Protocol
+from typing import Protocol
 
 import numpy as np
 
@@ -305,7 +303,7 @@ class LiveGEBCOBackend:
         batch_lats = []
         batch_lons = []
 
-        for lat, lon in zip(dense_lats, dense_lons):
+        for lat, lon in zip(dense_lats, dense_lons, strict=False):
             batch_lats.append(lat)
             batch_lons.append(lon)
             if len(batch_lats) >= BATCH:
@@ -340,7 +338,7 @@ class LiveGEBCOBackend:
     def _batch_sample(self, lats: list[float], lons: list[float]) -> list[float]:
         """Sample GEBCO at multiple points via batch endpoint."""
         elevations = []
-        for lat, lon in zip(lats, lons):
+        for lat, lon in zip(lats, lons, strict=False):
             try:
                 params = {"lat": lat, "lon": lon}
                 resp = self.client.get(
@@ -424,7 +422,7 @@ class GEBCOAdapter:
 
 # ─── Module-level factory ─────────────────────────────────────────────────────
 
-_adapter_instance: Optional[GEBCOAdapter] = None
+_adapter_instance: GEBCOAdapter | None = None
 
 def get_adapter() -> GEBCOAdapter:
     """Return the singleton GEBCOAdapter instance."""

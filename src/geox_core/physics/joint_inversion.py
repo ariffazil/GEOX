@@ -32,8 +32,7 @@ from __future__ import annotations
 import hashlib
 import math
 from dataclasses import dataclass, field, replace
-from datetime import datetime, timezone
-from typing import Literal, Optional
+from typing import Literal
 
 import numpy as np
 
@@ -58,9 +57,9 @@ class InversionRequest:
 
     observations: list[ModalityObservation] = field(default_factory=list)
     # Prior: best-guess Physics13State (from wells / catalog)
-    prior: Optional[Physics13State] = None
+    prior: Physics13State | None = None
     # Bounds: per-dial min/max for solver
-    bounds: Optional[dict[str, tuple[float, float]]] = None
+    bounds: dict[str, tuple[float, float]] | None = None
     # Convergence thresholds
     max_iter: int = 50
     tolerance: float = 1e-3
@@ -68,8 +67,8 @@ class InversionRequest:
     # Default OFF — existing callers see no change.
     # Stage 6 forge: wired to Huang 2021 Vp grammar.
     classify_crust_zone: bool = False
-    crust_thickness_km: Optional[float] = None  # used if classify_crust_zone=True
-    heat_flow_mw_m2: Optional[float] = None     # used if classify_crust_zone=True
+    crust_thickness_km: float | None = None  # used if classify_crust_zone=True
+    heat_flow_mw_m2: float | None = None     # used if classify_crust_zone=True
     include_zone_diagnostics: bool = False      # verbose diagnostic_basis in result
 
 

@@ -32,11 +32,12 @@ from typing import Any
 
 from geox_core.enums.statuses import get_standard_envelope
 from geox_mcp.tools.kernel._biostrat import (
-    parse_nn_zone,
-    nn_age,
-    map_gde as _map_gde,
-    lithology_class,
     clean_text,
+    lithology_class,
+    nn_age,
+)
+from geox_mcp.tools.kernel._biostrat import (
+    map_gde as _map_gde,
 )
 
 logger = logging.getLogger("geox.canonical.biostrat_parse")
@@ -89,7 +90,7 @@ def _extract_all_biozones(text: str) -> list[dict[str, Any]]:
     Handles: NN5, NN 5, Zone NN5, Martini NN5, NN19-20, etc.
     """
     results: list[dict[str, Any]] = []
-    upper = text.upper()
+    text.upper()
     clean = clean_text(text)
 
     if not clean:

@@ -21,18 +21,17 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
-
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ENUMS
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class CheckStatus(str, Enum):
+class CheckStatus(StrEnum):
     """Status of a single preflight check."""
 
     PASS = "PASS"
@@ -41,7 +40,7 @@ class CheckStatus(str, Enum):
     UNKNOWN = "UNKNOWN"
 
 
-class PreflightVerdict(str, Enum):
+class PreflightVerdict(StrEnum):
     """Overall preflight verdict."""
 
     GO = "GO"  # All critical checks pass; proceed with tie
@@ -49,7 +48,7 @@ class PreflightVerdict(str, Enum):
     VOID = "VOID"  # Critical failures; tie is unreliable
 
 
-class DecisionContext(str, Enum):
+class DecisionContext(StrEnum):
     """What decision is the tie supporting?
 
     Same data, different burden of proof.

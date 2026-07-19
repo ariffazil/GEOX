@@ -24,19 +24,18 @@ DITEMPA BUKAN DIBERI — Forged, Not Given
 """
 
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
-
 
 # ──────────────────────────────────────────────────────────────────────────────
 # FEDERATION ENUMS — Shared across all organs
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-class OrganID(str, Enum):
+class OrganID(StrEnum):
     """Which organ produced or receives this envelope."""
 
     ARIFOS = "arifOS"
@@ -48,7 +47,7 @@ class OrganID(str, Enum):
     VAULT999 = "VAULT999"
 
 
-class AutonomyBand(str, Enum):
+class AutonomyBand(StrEnum):
     """What level of autonomous action is permitted for this envelope.
 
     Maps to the A-R-I-F operating roles and T1/T2/T3 tiers.
@@ -64,7 +63,7 @@ class AutonomyBand(str, Enum):
     IRREVERSIBLE = "IRREVERSIBLE"  # Cannot be undone — requires F13
 
 
-class ReversibilityClass(str, Enum):
+class ReversibilityClass(StrEnum):
     """How reversible is the proposed action?"""
 
     FULL = "FULL"  # Completely undoable (git revert, delete temp file)
@@ -72,7 +71,7 @@ class ReversibilityClass(str, Enum):
     NONE = "NONE"  # Cannot be undone (vault seal, external comms, money)
 
 
-class RiskClass(str, Enum):
+class RiskClass(StrEnum):
     """Constitutional risk tier for this envelope."""
 
     LOW = "LOW"  # Standard operations, no floor checks needed
@@ -81,7 +80,7 @@ class RiskClass(str, Enum):
     CRITICAL = "CRITICAL"  # All floors + F13 SOVEREIGN required
 
 
-class ExecutionStatus(str, Enum):
+class ExecutionStatus(StrEnum):
     """Where is this envelope in the metabolic loop?"""
 
     SENSED = "SENSED"  # Evidence gathered (GEOX/WEALTH/WELL output)
@@ -96,7 +95,7 @@ class ExecutionStatus(str, Enum):
     VOID = "VOID"  # Rejected or invalidated
 
 
-class MetabolicPhase(str, Enum):
+class MetabolicPhase(StrEnum):
     """Which phase of the metabolic loop is this envelope in?"""
 
     SENSE = "sense"

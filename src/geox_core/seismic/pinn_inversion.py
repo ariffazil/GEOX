@@ -27,13 +27,10 @@ DITEMPA BUKAN DIBEI — the impedance is forged, not given.
 from __future__ import annotations
 
 import hashlib
-import math
 from dataclasses import dataclass, field
-from typing import Optional
 
 import numpy as np
 
-from geox_core.physics.state import Physics13State
 from geox_core.physics.parameters import faust_velocity, gardner_density
 
 
@@ -45,7 +42,7 @@ class SeismicInversionRequest:
     sample_interval_s: float = 0.002  # 2 ms default
     initial_impedance: float = 7.0e6  # ρ · Vp at top; typical shale ~ 2350*2950
     depth_top_m: float = 0.0
-    resistivity_ohm_m: Optional[tuple[float, ...]] = None
+    resistivity_ohm_m: tuple[float, ...] | None = None
     # Prior bounds
     vp_min: float = 1500.0
     vp_max: float = 6000.0

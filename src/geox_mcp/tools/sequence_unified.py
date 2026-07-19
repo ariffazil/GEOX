@@ -6,7 +6,9 @@ Absorbs: geox_sequence_interpret (renamed, same API)
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 from __future__ import annotations
+
 from typing import Any, Literal
+
 
 async def geox_sequence(
     workflow: Literal["single_well", "project", "preview", "section_correlation"] = "single_well",

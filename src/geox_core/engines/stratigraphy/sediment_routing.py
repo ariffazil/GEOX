@@ -29,10 +29,8 @@ from __future__ import annotations
 import math
 import random
 from enum import StrEnum
-from typing import Optional
 
 from pydantic import BaseModel, Field
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants
@@ -185,7 +183,7 @@ class RoutingRequest(BaseModel):
         le=5.0,
         description="Time step (Myr)",
     )
-    seed: Optional[int] = Field(
+    seed: int | None = Field(
         default=None,
         description="Random seed for reproducibility (autogenic cycles)",
     )
@@ -406,7 +404,6 @@ def simulate_routing(req: RoutingRequest) -> RoutingResult:
 
     # Active delta lobe position (for avulsion tracking)
     active_lobe_pos = req.sources[0].position_km
-    active_lobe_sand = 0.0
     bypass_total = 0.0
 
     for step in range(n_steps):
@@ -427,7 +424,7 @@ def simulate_routing(req: RoutingRequest) -> RoutingResult:
             for cell in range(n_cells):
                 pos_km = cell * dx + dx / 2.0
                 gradient = _gradient_at_position(pos_km, req.geometry)
-                water_depth_m = max(0.0, pos_km * gradient * 100.0)  # simplified
+                max(0.0, pos_km * gradient * 100.0)  # simplified
 
                 # 3. Transport capacity for each grain size
                 sand_capacity = _transport_capacity(

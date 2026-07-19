@@ -105,7 +105,8 @@ async def geox_petrophysics(
         return await _impl(candidate_ref=candidate_ref, domain=domain)
 
     if mode == "stoip_feed":
-        from geox_mcp.tools.integration_wealth import geox_wealth_feed as _impl, WealthFeedRequest
+        from geox_mcp.tools.integration_wealth import WealthFeedRequest
+        from geox_mcp.tools.integration_wealth import geox_wealth_feed as _impl
 
         req = WealthFeedRequest(
             cell_states=cell_states or [],
