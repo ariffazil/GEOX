@@ -1,19 +1,62 @@
 {
-  "schema": "mcp",
-  "version": "2026.06.30",
-  "protocolVersion": "2025-11-25",
-  "name": "GEOX MCP",
-  "description": "Earth intelligence — evidence-only geoscience coprocessor under constitutional floors F1-F13.",
-  "tools": "discoverable via tools/list at runtime",
+  "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/specification/main/schema/mcp-server.json",
+  "name": "GEOX — Earth Intelligence",
+  "version": "v2026.07.19",
+  "description": "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. Evidence-only earth intelligence: basin analysis, seismic interpretation, petrophysics, prospect evaluation, deep-time paleogeography, and 9 interactive MCP Apps.",
+  "repository": "https://github.com/ariffazil/GEOX",
+  "license": "BSL-1.1",
+  "author": {
+    "name": "Muhammad Arif bin Fazil",
+    "url": "https://arif-fazil.com"
+  },
   "endpoint": "https://geox.arif-fazil.com/mcp",
-  "identity": {
-    "canonical_name": "GEOX",
-    "service_id": "geox-mcp",
-    "authority": "EVIDENCE_ONLY",
-    "port": 8081
+  "transport": ["streamable-http", "sse"],
+  "protocolVersion": "2025-06-18",
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true,
+    "tasks": true,
+    "ui": true
+  },
+  "tools": {
+    "totalRegistered": 78,
+    "publicCount": 24,
+    "categories": {
+      "basin": ["geox_basin", "geox_basin_backstrip", "geox_sediment_mass_balance", "geox_thermal_maturity_history"],
+      "seismic": ["geox_seismic_compute", "geox_seismic_ingest", "geox_seismic_interpret"],
+      "petrophysics": ["geox_petrophysics"],
+      "well": ["geox_well_desk", "geox_well_ingest"],
+      "prospect": ["geox_prospect"],
+      "geophysics": ["geox_gravmag_studio", "geox_geomechanics", "geox_subsurface_model"],
+      "stratigraphy": ["geox_sequence"],
+      "deep_time": ["geox_deep_time_state"],
+      "governance": ["geox_claim", "geox_claim_graph_evaluate", "geox_contradiction_scan", "geox_evidence", "geox_falsify"],
+      "bridge": ["geox_to_wealth_bridge"],
+      "inference": ["geox_lem_predict"],
+      "meta": ["geox_surface_status"]
+    }
+  },
+  "mcpApps": {
+    "count": 9,
+    "apps": [
+      "ui://geox/well-desk",
+      "ui://geox/prospect-ui",
+      "ui://geox/seismic-vision-review",
+      "ui://geox/geox-mcp-visual",
+      "ui://geox/judge-console",
+      "ui://geox/earth-volume",
+      "ui://geox/attribute-audit",
+      "ui://geox/georeference-map",
+      "ui://geox/analog-digitizer"
+    ],
+    "manifestUrl": "https://geox.arif-fazil.com/apps.json"
   },
   "governance": {
-    "floors": ["F1","F2","F4","F7","F9","F11","F13"],
-    "authority_boundary": "EVIDENCE_ONLY"
-  }
+    "framework": "arifOS F1-F13",
+    "authority": "EVIDENCE_ONLY",
+    "sovereign": "ARIF (F13)",
+    "seal": "DITEMPA BUKAN DIBERI"
+  },
+  "seal": "DITEMPA BUKAN DIBERI"
 }
