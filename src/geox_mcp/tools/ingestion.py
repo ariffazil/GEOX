@@ -7,7 +7,7 @@ import jsonschema
 
 logger = logging.getLogger("geox.ingestion")
 
-SCHEMA_DIR = "/root/geox/schemas/earth"
+SCHEMA_DIR = "/root/GEOX/schemas/earth"
 
 
 def load_schema(schema_name: str) -> dict:
