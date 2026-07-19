@@ -43,7 +43,7 @@ GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and 
 | MCP Apps (SEP-1865) | 13 |
 | Health | GREEN |
 | Port | 8081 |
-| Version | `v2026.07.17` |
+| Version | `v2026.07.19` |
 
 ---
 

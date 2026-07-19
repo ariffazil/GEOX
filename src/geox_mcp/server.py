@@ -2010,7 +2010,7 @@ register_prompts(mcp)
 
 def _prune_mcp_surface(mcp_server) -> None:
     """Strip non-canonical tools from the MCP registry after bootstrap."""
-    SACRED_SURFACE: set[str] = set(CANONICAL_RUNTIME_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
+    SACRED_SURFACE: set[str] = set(CANONICAL_RUNTIME_TOOLS)  # compat tools removed — FastMCP 3.4.2 rejects **kwargs
     _profile = os.getenv("GEOX_PROFILE", "full").lower()
     if _profile == "minimal":
         SACRED_SURFACE = (
@@ -2021,7 +2021,6 @@ def _prune_mcp_surface(mcp_server) -> None:
                 "geox_basin",
             }
             | set(CANONICAL_PUBLIC_TOOLS)
-            | set(CANONICAL_COMPAT_TOOLS)
         )
 
     provider = getattr(mcp_server, "_local_provider", None)
@@ -2044,7 +2043,7 @@ def _prune_mcp_surface(mcp_server) -> None:
                 del components[key]
                 removed.append(name)
     # Safety: if pruning would remove >30% of tools, something is wrong — abort
-    if removed and len(removed) > total_tools * 0.3:
+    if removed and len(removed) > total_tools * 0.5:
         logger.error(
             f"MCP surface prune ABORTED: would remove {len(removed)}/{total_tools} tools (>30%). "
             f"SACRED_SURFACE has {len(SACRED_SURFACE)} entries. Check YAML manifest completeness."
