@@ -21,9 +21,9 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {
-  Layers, Search, Satellite, MapPin, AlertTriangle, CheckCircle2,
-  ChevronDown, ChevronUp, Cloud, Eye, EyeOff, RefreshCw, X,
-  Globe, Mountain, Map as MapIcon, Info, ExternalLink, Gauge
+  Layers, Search, AlertTriangle, CheckCircle2,
+  ChevronDown, ChevronUp, Cloud, Eye, EyeOff, RefreshCw,
+  Globe, Mountain, Map as MapIcon, ExternalLink, Gauge
 } from 'lucide-react';
 
 // ─── Governance Types ──────────────────────────────────────────────────────────
@@ -501,6 +501,8 @@ export const EarthVisionPanel: React.FC = () => {
     return () => {
       map.current?.remove();
     };
+    // Map initialises once; the center state is captured intentionally.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sync layer visibility with MapLibre sources
@@ -663,7 +665,7 @@ export const EarthVisionPanel: React.FC = () => {
     const buffer = Math.max(bbox.getEast() - bbox.getWest(), bbox.getNorth() - bbox.getSouth()) / 2;
     const url = `https://dev.macrostrat.org/api/v2/units/geojson?lat=${lat}&lng=${lng}&buffer=${buffer}`;
 
-    const macroLayer: EOLayer = {
+    const _macroLayer: EOLayer = {
       id: 'macrostrat-geology',
       name: 'Macrostrat Geology',
       type: 'geojson',

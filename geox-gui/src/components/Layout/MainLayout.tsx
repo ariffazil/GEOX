@@ -20,7 +20,7 @@ import {
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Separator from '@radix-ui/react-separator';
 import { WitnessBadges, WitnessBadgesCompact } from '../WitnessBadges/WitnessBadges';
-import { MalayBasinPilotDashboard } from '../MalayBasinPilot/MalayBasinPilotDashboard';
+import { MalayBasinPilotDashboard as _MalayBasinPilotDashboard } from '../MalayBasinPilot/MalayBasinPilotDashboard';
 import { EarthVisionPanel } from '../EarthVision/EarthVisionPanel';
 import { WellContextDesk } from '../WellContextDesk/WellContextDesk';
 import { VerdictConsole } from '../VerdictConsole/VerdictConsole';
