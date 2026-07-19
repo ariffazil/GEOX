@@ -153,92 +153,12 @@ tools:
       read_only: true
       destructive: false
       idempotent: true
-  - name: geox_evidence
-    domain: governance.evidence
-    axis: reason
-    lane: evidence
-    access: public
-    description: 'Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.'
-    annotations:
-      read_only: true
-      destructive: false
-      idempotent: false
-  - name: geox_basin_backstrip
-    domain: earth.basin
-    axis: compute
-    lane: reasoning
-    access: public
-    description: '1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.'
-    annotations:
-      read_only: true
-      destructive: false
-      idempotent: true
-  - name: geox_sediment_mass_balance
-    domain: earth.basin
-    axis: compute
-    lane: reasoning
-    access: public
-    description: 'Source-to-sink sediment volume and mass accounting. Peters 2012 framework.'
-    annotations:
-      read_only: true
-      destructive: false
-      idempotent: true
-  - name: geox_thermal_maturity_history
-    domain: earth.basin
-    axis: compute
-    lane: reasoning
-    access: public
-    description: 'Burial + heat flow + maturity modeling through time. EasyRo + TTI.'
-    annotations:
-      read_only: true
-      destructive: false
-      idempotent: true
-  - name: geox_claim_graph_evaluate
-    domain: governance
-    axis: reason
-    lane: judgment
-    access: public
-    description: 'Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.'
-    annotations:
-      read_only: true
-      destructive: false
-      idempotent: true
   - name: geox_falsify
     domain: governance
     axis: reason
     lane: judgment
     access: public
     description: 'Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.'
-    annotations:
-      read_only: true
-      destructive: false
-      idempotent: true
-  - name: geox_contradiction_scan
-    domain: governance
-    axis: reason
-    lane: judgment
-    access: public
-    description: 'Scan claims for contradictions using 13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL → 888_HOLD.'
-    annotations:
-      read_only: true
-      destructive: false
-      idempotent: true
-  - name: geox_lem_predict
-    domain: earth.inference
-    axis: reason
-    lane: reasoning
-    access: public
-    description: 'LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.'
-    annotations:
-      read_only: true
-      destructive: false
-      idempotent: true
-  - name: geox_to_wealth_bridge
-    domain: governance.bridge
-    axis: reason
-    lane: evidence
-    access: public
-    description: 'Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.'
     annotations:
       read_only: true
       destructive: false

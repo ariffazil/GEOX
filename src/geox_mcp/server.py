@@ -2013,15 +2013,12 @@ def _prune_mcp_surface(mcp_server) -> None:
     SACRED_SURFACE: set[str] = set(CANONICAL_RUNTIME_TOOLS)  # compat tools removed — FastMCP 3.4.2 rejects **kwargs
     _profile = os.getenv("GEOX_PROFILE", "full").lower()
     if _profile == "minimal":
-        SACRED_SURFACE = (
-            {
-                "geox_well_ingest",
-                "geox_well_qc",
-                "geox_petrophysics",
-                "geox_basin",
-            }
-            | set(CANONICAL_PUBLIC_TOOLS)
-        )
+        SACRED_SURFACE = {
+            "geox_well_ingest",
+            "geox_well_qc",
+            "geox_petrophysics",
+            "geox_basin",
+        } | set(CANONICAL_PUBLIC_TOOLS)
 
     provider = getattr(mcp_server, "_local_provider", None)
     if not provider:
@@ -2709,29 +2706,76 @@ async def status_handler(request: Request) -> JSONResponse:
 
 
 async def discovery_handler(request: Request) -> JSONResponse:
+    """Rich MCP server discovery — tool categories, MCP Apps, governance.
+
+    Forged 2026-07-20: upgraded from minimal (241 bytes) to full rich schema
+    for registry discovery. Tool categories are derived live from the manifest.
+    """
+    from collections import defaultdict
+
+    from geox_mcp.tools_manifest import CANONICAL_TOOLS
+
+    # Build tool categories from live manifest
+    categories: dict[str, list[str]] = defaultdict(list)
+    for name in CANONICAL_PUBLIC_TOOLS:
+        if name in CANONICAL_TOOLS:
+            domain = CANONICAL_TOOLS[name].domain
+            cat = domain.replace("earth.", "").replace("governance.", "")
+            categories[cat].append(name)
+        else:
+            categories["other"].append(name)
+
     return JSONResponse(
         {
-            "name": "GEOX",
+            "name": "GEOX — Earth Intelligence",
             "version": GEOX_VERSION,
-            "protocol_version": "2025-11-25",
+            "description": (
+                "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. "
+                "Evidence-only earth intelligence: basin analysis, seismic interpretation, "
+                "petrophysics, prospect evaluation, deep-time paleogeography, and interactive MCP Apps."
+            ),
+            "repository": "https://github.com/ariffazil/GEOX",
+            "license": "BSL-1.1",
+            "author": {
+                "name": "Muhammad Arif bin Fazil",
+                "url": "https://arif-fazil.com",
+            },
+            "endpoint": "https://geox.arif-fazil.com/mcp",
+            "transport": ["streamable-http", "sse"],
+            "protocolVersion": "2025-06-18",
             "capabilities": {
-                "tools": {"listChanged": True},
-                # Per MCP docs-agent lifecycle spec (2025-06-18) — declare
-                # only what we implement. subscribe is reserved for forward
-                # work; not currently wired through FastMCP — do not
-                # silently fail. Forged 2026-07-10 (v2).
-                "resources": {"listChanged": True},
-                "prompts": {"listChanged": True},
-                # logging: {} declares clients may send logging/setLevel /
-                # notifications/message (server logs at the requested
-                # level). No active emitter — server logs at INFO default
-                # via journald.
-                "logging": {},
-                # completions: {} declares clients may invoke
-                # completion/complete for template {param} enumeration.
-                # Implementation deferred — see forge_work/2026-07-10/
-                # RESOURCE-CONTRACT-v2.md §"Future work".
-                "completions": {},
+                "tools": True,
+                "resources": True,
+                "prompts": True,
+                "tasks": True,
+                "ui": True,
+            },
+            "tools": {
+                "totalRegistered": len(CANONICAL_PUBLIC_TOOLS) + len(INTERNAL_TOOLS),
+                "publicCount": len(CANONICAL_PUBLIC_TOOLS),
+                "categories": dict(sorted(categories.items())),
+            },
+            "apps": [
+                {"name": "Well Witness", "uri": "ui://geox/well-desk"},
+                {"name": "Prospect Forge", "uri": "ui://geox/prospect-ui"},
+                {"name": "Seismic Vision Review", "uri": "ui://geox/seismic-vision-review"},
+                {"name": "GEOX MCP Visual", "uri": "ui://geox/geox-mcp-visual"},
+                {"name": "Judge Console", "uri": "ui://geox/judge-console"},
+                {"name": "Earth Volume", "uri": "ui://geox/earth-volume"},
+                {"name": "Attribute Audit", "uri": "ui://geox/attribute-audit"},
+                {"name": "Georeference Map", "uri": "ui://geox/georeference-map"},
+                {"name": "Analog Digitizer", "uri": "ui://geox/analog-digitizer"},
+            ],
+            "governance": {
+                "constitution": "arifOS F1-F13",
+                "authority": "Evidence-only — never a policy judge",
+                "evidence": "Gödel Lock enforced — external witness required for seal-bound claims",
+                "floors": {
+                    "F1_AMANAH": "Reversible operations, backup before mutate",
+                    "F2_TRUTH": "Epistemic labels OBS/DER/INT/SPEC on all claims",
+                    "F7_HUMILITY": "Confidence capped at 0.90",
+                    "F13_SOVEREIGN": "Arif holds final veto",
+                },
             },
             "seal": GEOX_SEAL,
         }

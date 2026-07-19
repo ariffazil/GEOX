@@ -3339,7 +3339,8 @@ def register_tools_on(mcp):
             axes,
             (30 + 80 * np.sin(frac * math.pi * 3), 10 ** (0.5 + frac), 0.2 + 0.1 * np.sin(frac * math.pi)),
             ("#f1c40f", "#2ecc71", "#3498db"),
-            ("GR syn", "RT syn", "φ syn"), strict=False,
+            ("GR syn", "RT syn", "φ syn"),
+            strict=False,
         ):
             ax.plot(v, d, color=col)
             ax.set_title(title, color="white")
@@ -3402,6 +3403,7 @@ def register_tools_on(mcp):
         """
         if mode == "screen":
             from geox_mcp.tools.geophysics_studio_screen import geox_gravmag_studio_screen as _impl
+
             return await _impl(
                 survey_type=survey_type,
                 easting_m=easting_m or [],
@@ -3417,6 +3419,7 @@ def register_tools_on(mcp):
             )
         # Default: open
         from geox_mcp.tools.geophysics_studio import geox_gravmag_studio_open as _impl
+
         return await _impl(
             survey_type=survey_type,
             easting_m=easting_m or [],
@@ -3453,6 +3456,7 @@ def register_tools_on(mcp):
         """
         if mode == "publish":
             from geox_mcp.tools.integration_well import geox_well_desk_publish as _impl
+
             return await _impl(
                 well_id=well_id,
                 session_id=session_id,
@@ -3461,6 +3465,7 @@ def register_tools_on(mcp):
             )
         if mode == "render":
             from geox_mcp.render_well_panel_petro import render_interpreted_panel
+
             return render_interpreted_panel(
                 well_id=well_id,
                 depth_top=depth_top,
@@ -3472,6 +3477,7 @@ def register_tools_on(mcp):
             )
         # Default: open
         from geox_mcp.tools.integration_well import geox_well_desk_open as _impl
+
         return await _impl(
             well_id=well_id,
             mode="summary",
@@ -3492,6 +3498,7 @@ def register_tools_on(mcp):
     ) -> dict[str, Any]:
         """List all registered GEOX MCP Apps (SEP-1865). Returns app_id, uri, title, description, and external_url for each discoverable app. MCP Apps Hosts use this to populate their app launcher."""
         from geox_mcp.tools.mcp_apps_bridge import list_apps as _impl
+
         apps = _impl()
         return {
             "content": [{"type": "text", "text": json.dumps(apps, indent=2)}],
@@ -3506,6 +3513,265 @@ def register_tools_on(mcp):
                 }
             },
         }
+
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # P0 REGISTRY DRIFT FIX — 8 manifest-only tools wired to callable surface
+    # Forged 2026-07-20. These had implementations but no @mcp.tool decorators.
+    # ═══════════════════════════════════════════════════════════════════════════════
+
+    @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
+    async def _basin_backstrip(
+        well_ref: str,
+        stratigraphic_ages: list[dict[str, Any]],
+        lithology_model: dict[str, Any],
+        palaeobathymetry_model: dict[str, Any],
+        sea_level_model_ref: str = "",
+        water_density_kg_m3: float = 1030.0,
+        mantle_density_kg_m3: float = 3300.0,
+        uncertainty_realizations: int = 1000,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980."""
+        from geox_mcp.tools.basin_engines.backstrip_tool import geox_basin_backstrip as _impl
+
+        args = _safe_forward(
+            _impl,
+            {
+                "well_ref": well_ref,
+                "stratigraphic_ages": stratigraphic_ages,
+                "lithology_model": lithology_model,
+                "palaeobathymetry_model": palaeobathymetry_model,
+                "sea_level_model_ref": sea_level_model_ref,
+                "water_density_kg_m3": water_density_kg_m3,
+                "mantle_density_kg_m3": mantle_density_kg_m3,
+                "uncertainty_realizations": uncertainty_realizations,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
+
+    @mcp.tool(name="geox_claim_graph_evaluate", annotations=_geox_annotations("geox_claim_graph_evaluate"))
+    async def _claim_graph_evaluate(
+        claims: list[dict[str, Any]],
+        edges: list[dict[str, Any]],
+        initial_verdicts: dict[str, str] | None = None,
+        failure_propagation: str = "cascade",
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Evaluate a claim dependency graph (AND/OR/WEIGHTED propagation)."""
+        from geox_mcp.tools.basin_engines.claim_graph_tool import geox_claim_graph_evaluate as _impl
+
+        args = _safe_forward(
+            _impl,
+            {
+                "claims": claims,
+                "edges": edges,
+                "initial_verdicts": initial_verdicts,
+                "failure_propagation": failure_propagation,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
+
+    @mcp.tool(name="geox_contradiction_scan", annotations=_geox_annotations("geox_contradiction_scan"))
+    async def _contradiction_scan(
+        claim_text: str = "",
+        claim_type: str = "general",
+        mode: str = "full",
+        context: dict[str, Any] | None = None,
+        evidence: dict[str, Any] | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Popperian falsification: scan claims for internal contradictions."""
+        from geox_mcp.tools.contradiction_scan import geox_contradiction_scan as _impl
+
+        args = _safe_forward(
+            _impl,
+            {
+                "claim_text": claim_text,
+                "claim_type": claim_type,
+                "mode": mode,
+                "context": context,
+                "evidence": evidence,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
+
+    @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
+    async def _evidence(
+        evidence_id: str = "",
+        evidence_type: str = "supporting",
+        claim_id: str = "",
+        claim_text: str = "",
+        epistemic_label: str | None = None,
+        forbidden_uses: list[str] | None = None,
+        source_citation: dict[str, Any] | None = None,
+        category: str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Unified evidence lifecycle: attach, discover, summarize, cross-reference."""
+        from geox_mcp.tools.evidence_unified import geox_evidence as _impl
+
+        args = _safe_forward(
+            _impl,
+            {
+                "evidence_id": evidence_id,
+                "evidence_type": evidence_type,
+                "claim_id": claim_id,
+                "claim_text": claim_text,
+                "epistemic_label": epistemic_label,
+                "forbidden_uses": forbidden_uses,
+                "source_citation": source_citation,
+                "category": category,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
+
+    @mcp.tool(name="geox_lem_predict", annotations=_geox_annotations("geox_lem_predict"))
+    async def _lem_predict(
+        target_depth_m: float | None = None,
+        basin_context: str | None = None,
+        cube_inline: dict[str, Any] | None = None,
+        lmr_inline: dict[str, Any] | None = None,
+        use_synth_cube: bool = True,
+        candidate_ref: str | None = None,
+        domain: str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Litho-Elastic prediction via LEM inference engine."""
+        from geox_mcp.tools.lem_predict import geox_lem_predict as _impl
+
+        args = _safe_forward(
+            _impl,
+            {
+                "target_depth_m": target_depth_m,
+                "basin_context": basin_context,
+                "cube_inline": cube_inline,
+                "lmr_inline": lmr_inline,
+                "use_synth_cube": use_synth_cube,
+                "candidate_ref": candidate_ref,
+                "domain": domain,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
+
+    @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
+    async def _sediment_mass_balance(
+        basin_name: str,
+        source_eroded_km3: float,
+        source_density_kg_m3: float = 2650.0,
+        preserved_volumes: list[dict[str, Any]] | None = None,
+        bypassed_km3: float = 0.0,
+        dissolved_km3: float = 0.0,
+        routing_efficiency: float | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Source-to-sink sediment mass balance with compaction correction."""
+        from geox_mcp.tools.basin_engines.mass_balance_tool import geox_sediment_mass_balance as _impl
+
+        args = _safe_forward(
+            _impl,
+            {
+                "basin_name": basin_name,
+                "source_eroded_km3": source_eroded_km3,
+                "source_density_kg_m3": source_density_kg_m3,
+                "preserved_volumes": preserved_volumes,
+                "bypassed_km3": bypassed_km3,
+                "dissolved_km3": dissolved_km3,
+                "routing_efficiency": routing_efficiency,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
+
+    @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
+    async def _thermal_maturity_history(
+        well_ref: str,
+        burial_history: dict[str, Any],
+        heat_flow_history: dict[str, Any] | None = None,
+        surface_temp_c: float = 20.0,
+        geothermal_gradient_c_km: float = 30.0,
+        time_step_myr: float = 1.0,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Burial + heat flow + maturity modelling (EasyRo + TTI)."""
+        from geox_mcp.tools.basin_engines.thermal_tool import geox_thermal_maturity_history as _impl
+
+        args = _safe_forward(
+            _impl,
+            {
+                "well_ref": well_ref,
+                "burial_history": burial_history,
+                "heat_flow_history": heat_flow_history,
+                "surface_temp_c": surface_temp_c,
+                "geothermal_gradient_c_km": geothermal_gradient_c_km,
+                "time_step_myr": time_step_myr,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
+
+    @mcp.tool(name="geox_to_wealth_bridge", annotations=_geox_annotations("geox_to_wealth_bridge"))
+    async def _to_wealth_bridge(
+        prospect_ref: str,
+        eval_mode: str = "npv",
+        discount_rate: float = 0.10,
+        well_cost_musd: float | None = None,
+        field_size_mmboe: float | None = None,
+        oil_price_usd: float = 70.0,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """GEOX→WEALTH governed handoff: prospect evaluation to capital model."""
+        from geox_mcp.tools.wealth_bridge_tool import geox_to_wealth_bridge as _impl
+
+        args = _safe_forward(
+            _impl,
+            {
+                "prospect_ref": prospect_ref,
+                "eval_mode": eval_mode,
+                "discount_rate": discount_rate,
+                "well_cost_musd": well_cost_musd,
+                "field_size_mmboe": field_size_mmboe,
+                "oil_price_usd": oil_price_usd,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
 
     # ═══════════════════════════════════════════════════════════════════════════════
     try:
