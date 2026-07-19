@@ -45,14 +45,7 @@ from starlette.responses import JSONResponse, RedirectResponse, StreamingRespons
 from starlette.routing import Mount, Route
 
 # Import canonical registry for source-of-truth
-from geox_mcp.registry import (
-    CANONICAL_COMPAT_TOOLS,
-    CANONICAL_PUBLIC_TOOLS,
-    CANONICAL_RUNTIME_TOOLS,
-    INTERNAL_TOOLS,
-    SURFACE_TOOLS,
-    get_tool_domain,
-)
+from geox_mcp.registry import CANONICAL_COMPAT_TOOLS, CANONICAL_PUBLIC_TOOLS, SURFACE_TOOLS, INTERNAL_TOOLS, get_tool_domain
 from geox_mcp.routing import (
     GEOX_ENABLE_ARIFOS_ROUTE_QUERY,
     GEOX_ROUTE_QUERY_GUARD_ENABLED,  # noqa: F401 — kept for env compatibility, see create_app()
@@ -67,7 +60,7 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.07.17"
+GEOX_VERSION = "v2026.07.06-phase3.1-rsi-pipeline"
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
 # Phase 2.7 (2026-07-03): +1 geox_biostrat_parse — biostratigraphy parsing (NN zones, GDE, lithology).
 # Backward-compat wrappers for 49 legacy alias names.
@@ -87,11 +80,6 @@ TOOL_TIMEOUTS: dict[str, float] = {
     # Surface-facing canonical tools (Phase 2.1 + EGS, 2026-06-28)
     "geox_well_ingest": 60.0,
     "geox_well_qc": 30.0,
-    "geox_well_desk_open": 15.0,
-    "geox_well_desk_publish": 30.0,
-    "geox_render_well_panel": 30.0,
-    "geox_gravmag_studio": 30.0,
-    "geox_well_desk": 30.0,
     "geox_well_desurvey": 30.0,
     "geox_petrophysics": 60.0,
     "geox_sequence": 90.0,
@@ -331,7 +319,6 @@ def _build_geox_governance_middleware():
 
     return GeoxGovernanceMiddleware(
         canonical_public_tools=set(CANONICAL_PUBLIC_TOOLS),
-        canonical_internal_tools=set(INTERNAL_TOOLS),
         canonical_compat_tools=set(CANONICAL_COMPAT_TOOLS),
         arifos_route_query_enabled=bool(GEOX_ENABLE_ARIFOS_ROUTE_QUERY),
         check_governance_fn=check_governance,
@@ -378,170 +365,6 @@ def _enforce_geox() -> dict[str, Any] | None:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-# ═══════════════════════════════════════════════════════════════════
-# Entropy Integrity Mesh — GEOX Extensions (Phase 2)
-# Material reality anchor. The strongest anti-rhetoric witness.
-# ═══════════════════════════════════════════════════════════════════
-
-
-# DEREGISTERED ZEN-15 — @mcp.tool(name="geox_consequence_footprint", annotations=_geox_annotations("geox_consequence_footprint"))
-async def _consequence_footprint(
-    action_description: str = "",
-    affected_area_km2: float | None = None,
-    material_movement_tonnes: float | None = None,
-    emissions_tonnes_co2e: float | None = None,
-    water_impact_m3: float | None = None,
-    habitat_fragmentation: str | None = None,
-    subsidence_risk: str | None = None,
-    contamination_risk: str | None = None,
-    reversibility: str = "UNKNOWN",
-    uncertainty_factor: float = 0.5,
-) -> dict:
-    """Compute physical and ecological consequences of a proposed action.
-    Measures: affected area, material movement, emissions, water impact,
-    habitat fragmentation, subsidence, contamination, reversibility."""
-    import importlib.util as _ilu, os as _os
-
-    _p = _os.path.join(
-        _os.path.dirname(_os.path.abspath(__file__)),
-        "..",
-        "..",
-        "..",
-        "entropy-integrity",
-        "mcp",
-        "geox",
-        "consequence_footprint.py",
-    )
-    _s = _ilu.spec_from_file_location("cf", _p)
-    _m = _ilu.module_from_spec(_s)
-    _s.loader.exec_module(_m)
-    return _m.geox_consequence_footprint(
-        action_description=action_description,
-        affected_area_km2=affected_area_km2,
-        material_movement_tonnes=material_movement_tonnes,
-        emissions_tonnes_co2e=emissions_tonnes_co2e,
-        water_impact_m3=water_impact_m3,
-        habitat_fragmentation=habitat_fragmentation,
-        subsidence_risk=subsidence_risk,
-        contamination_risk=contamination_risk,
-        reversibility=reversibility,
-        uncertainty_factor=uncertainty_factor,
-    )
-
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_optionality_loss", annotations=_geox_annotations("geox_optionality_loss"))
-
-
-async def _optionality_loss(
-    action_description: str = "",
-    options_destroyed: list[dict] | None = None,
-    options_preserved: list[dict] | None = None,
-) -> dict:
-    """Measure destroyed future physical options.
-    Sterilised reserves, lost aquifer use, irreversible land conversion,
-    inaccessible remediation pathways, reduced resilience."""
-    import importlib.util as _ilu, os as _os
-
-    _p = _os.path.join(
-        _os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "optionality_loss.py"
-    )
-    _s = _ilu.spec_from_file_location("ol", _p)
-    _m = _ilu.module_from_spec(_s)
-    _s.loader.exec_module(_m)
-    return _m.geox_optionality_loss(
-        action_description=action_description, options_destroyed=options_destroyed or [], options_preserved=options_preserved
-    )
-
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_feedback_integrity", annotations=_geox_annotations("geox_feedback_integrity"))
-
-
-async def _feedback_integrity(
-    monitoring_system: str = "",
-    sensor_coverage_pct: float = 0,
-    baseline_quality: str = "UNKNOWN",
-    missing_measurements: list[str] | None = None,
-    reporting_delay_hours: float = 0,
-    threshold_manipulation_detected: bool = False,
-    excluded_anomalies: list[str] | None = None,
-) -> dict:
-    """Check whether physical monitoring is sufficient to detect drift.
-    Sensor coverage, baseline quality, missing measurements,
-    reporting delay, threshold manipulation, excluded anomalies."""
-    import importlib.util as _ilu, os as _os
-
-    _p = _os.path.join(
-        _os.path.dirname(_os.path.abspath(__file__)),
-        "..",
-        "..",
-        "..",
-        "entropy-integrity",
-        "mcp",
-        "geox",
-        "feedback_integrity.py",
-    )
-    _s = _ilu.spec_from_file_location("fi", _p)
-    _m = _ilu.module_from_spec(_s)
-    _s.loader.exec_module(_m)
-    return _m.geox_feedback_integrity(
-        monitoring_system=monitoring_system,
-        sensor_coverage_pct=sensor_coverage_pct,
-        baseline_quality=baseline_quality,
-        missing_measurements=missing_measurements,
-        reporting_delay_hours=reporting_delay_hours,
-        threshold_manipulation_detected=threshold_manipulation_detected,
-        excluded_anomalies=excluded_anomalies,
-    )
-
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_material_truth_challenge", annotations=_geox_annotations("geox_material_truth_challenge"))
-
-
-async def _material_truth_challenge(
-    institutional_claim: str = "",
-    earth_measurements: list[dict] | None = None,
-    measurement_confidence: float = 0.5,
-) -> dict:
-    """Challenge institutional claims against Earth measurements.
-    Pattern: 'The institution claims low harm, but Earth measurements show irreversible loss.'"""
-    import importlib.util as _ilu, os as _os
-
-    _p = _os.path.join(
-        _os.path.dirname(_os.path.abspath(__file__)),
-        "..",
-        "..",
-        "..",
-        "entropy-integrity",
-        "mcp",
-        "geox",
-        "material_truth_challenge.py",
-    )
-    _s = _ilu.spec_from_file_location("mtc", _p)
-    _m = _ilu.module_from_spec(_s)
-    _s.loader.exec_module(_m)
-    return _m.geox_material_truth_challenge(
-        institutional_claim=institutional_claim,
-        earth_measurements=earth_measurements or [],
-        measurement_confidence=measurement_confidence,
-    )
-
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_cascade_pathway", annotations=_geox_annotations("geox_cascade_pathway"))
-
-
-async def _cascade_pathway(
-    intervention: str = "",
-    cascade_graph: list[dict] | None = None,
-) -> dict:
-    """Model how one intervention propagates across geology, groundwater,
-    infrastructure, ecology, communities, capital exposure."""
-    import importlib.util as _ilu, os as _os
-
-    _p = _os.path.join(
-        _os.path.dirname(_os.path.abspath(__file__)), "..", "..", "..", "entropy-integrity", "mcp", "geox", "cascade_pathway.py"
-    )
-    _s = _ilu.spec_from_file_location("cp", _p)
-    _m = _ilu.module_from_spec(_s)
-    _s.loader.exec_module(_m)
-    return _m.geox_cascade_pathway(intervention=intervention, cascade_graph=cascade_graph or [])
-
-
 def compose_geox_servers() -> None:
     """Mount domain sub-servers onto the main GEOX MCP server.
 
@@ -562,21 +385,13 @@ def compose_geox_servers() -> None:
 
     witness = create_witness_server()
     paleoscan = create_paleoscan_server()
+    claims = create_claims_server()
     vision = create_vision_server()
 
     # namespace=None preserves original tool names (no prefixing)
     mcp.mount(witness, namespace=None)
     mcp.mount(paleoscan, namespace=None)
-    # D5: claims sub-server uses **kwargs tools FastMCP rejects.
-    # Canonical surface is mode-dispatched geox_claim on the main server.
-    # Soft-skip so GEOX boot is not crash-looped (was exit-code 1 2026-07-15).
-    try:
-        claims = create_claims_server()
-        mcp.mount(claims, namespace=None)
-    except (ValueError, TypeError) as claims_exc:
-        import logging as _logging
-
-        _logging.getLogger("geox.server").warning("claims sub-server skipped (use geox_claim modes): %s", claims_exc)
+    mcp.mount(claims, namespace=None)
     mcp.mount(vision, namespace=None)
 
     # Assert canonical count across all composed servers
@@ -598,20 +413,21 @@ def compose_geox_servers() -> None:
     # EGS Phase 1 (2026-06-28): 12 EGS tools added (egs_query_*, egs_claim_*, etc.)
     # Live runtime reports canonical_tools=30. Any expansion requires 888_HOLD per
     # geox/AGENTS.md. F13 SOVEREIGN invariant.
-    if set(CANONICAL_PUBLIC_TOOLS) & set(INTERNAL_TOOLS):
-        raise ValueError("F0_CONSTITUTION_BREACH: internal tools leaked into CANONICAL_PUBLIC_TOOLS.")
-    if set(CANONICAL_PUBLIC_TOOLS) & set(CANONICAL_COMPAT_TOOLS):
-        raise ValueError("F0_CONSTITUTION_BREACH: compat tools leaked into CANONICAL_PUBLIC_TOOLS.")
+    _EXPECTED_CANONICAL = 81  # 2026-07-10 Basin engines: 77 + backstrip + mass_balance + thermal_maturity + claim_graph
+    if len(CANONICAL_PUBLIC_TOOLS) != _EXPECTED_CANONICAL:
+        raise ValueError(
+            f"F0_CONSTITUTION_BREACH: Expected {_EXPECTED_CANONICAL} canonical tools, "
+            f"got {len(CANONICAL_PUBLIC_TOOLS)}. If this expansion is intentional, "
+            f"update _EXPECTED_CANONICAL in server.py with a forge-state comment."
+        )
     logger.info(
-        f"GEOX surface composed: {len(SURFACE_TOOLS)} public + {len(INTERNAL_TOOLS)} internal = {len(CANONICAL_RUNTIME_TOOLS)} runtime + "
+        f"GEOX surface composed: {len(SURFACE_TOOLS)} surface + {len(INTERNAL_TOOLS)} internal = {len(CANONICAL_PUBLIC_TOOLS)} canonical + "
         f"{len(CANONICAL_COMPAT_TOOLS)} backward-compat tools"
     )
 
 
 compose_geox_servers()
 
-from geox_mcp.tools.geophysics_studio import register_gravmag_studio_tools
-from geox_mcp.tools.geophysics_studio_screen import register_gravmag_studio_screen_tools
 from geox_mcp.tools.ui_applets import register_ui_applets
 
 
@@ -639,10 +455,6 @@ class _McpSlashRewriteMiddleware:
 
 
 register_ui_applets(mcp)
-# ZEN-15 v0.2.1 — gravmag studio consolidated into geox_gravmag_studio(mode="open"|"screen")
-# in tools_wiring.py. Standalone registrations removed.
-# register_gravmag_studio_tools(mcp)
-# register_gravmag_studio_screen_tools(mcp)
 
 
 # ── W2-W4 FORGE — Doctrine layer tool registrations ────────────────────────
@@ -909,7 +721,7 @@ async def _biostrat_constraint(
 
 
 # ── Phase 2.7 (2026-07-03): Biostratigraphy Parser — NN zone + GDE + lithology ──
-# DEREGISTERED ZEN-15 — @mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_parse", annotations=_geox_annotations("geox_biostrat_parse"))
 async def _biostrat_parse(
     text: str = "",
     paleoenvironment: str = "",
@@ -924,7 +736,6 @@ async def _biostrat_parse(
     F7 HUMILITY: confidence hard-capped at 0.85. Unmatched terms preserved, not guessed.
     IRON LAW: Tectonics → Stratigraphy → Age. Biostrat calibrates, never constitutes.
     """
-
     from geox_mcp.tools.biostrat_parse import geox_biostrat_parse as _impl
 
     return await _impl(
@@ -986,7 +797,7 @@ async def _biostrat_ruling_check(
 
 
 # ── Phase 2.7 (2026-07-03): Biostrat Falsification Engine — 8-gate Popperian test ──
-# DEREGISTERED ZEN-15 — @mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_biostrat_falsify", annotations=_geox_annotations("geox_biostrat_falsify"))
 async def _biostrat_falsify(
     fossil_group: str = "calcareous_nannofossil",
     biozone: str = "",
@@ -1115,65 +926,30 @@ async def _seismic_inversion(
     return (await geox_seismic_inversion(req)).model_dump(mode="json")
 
 
-# ── W13+ FORGE — Phase C: Geomechanics (K, G, E, ν, AI + Stress Polygon) ──
+# ── W13+ FORGE — Phase C: Geomechanics (K, G, E, ν from Physics13State) ──
 @mcp.tool(name="geox_geomechanics", annotations=_geox_annotations("geox_geomechanics"))
 async def _geomechanics(
-    mode: str = "derive_moduli",
-    state: dict | str | None = None,
-    depth_m: float | None = None,
-    sv_mpa: float | None = None,
-    pp_mpa: float = 10.0,
-    friction_coefficient: float = 0.6,
-    avg_density_kg_m3: float = 2300.0,
-    water_depth_m: float = 0.0,
+    state: dict,
     session_id: str | None = None,
     actor_id: str | None = None,
     trace_id: str | None = None,
     thickness_m: float | None = None,
     rho_fluid: float | None = 1025.0,
 ) -> dict:
-    """Geomechanical computations: derive moduli or compute Zoback stress polygon.
+    """Derive geomechanical moduli (K, G, E, ν, AI) from a Physics13State cell.
 
-    Modes:
-      derive_moduli (default) - K, G, E, ν, AI from Physics13State.
-        Optional: buoyancy when thickness_m provided.
-        Required: state dict with rho, vp, vs.
-
-      stress_polygon - Zoback (2010) frictional stress polygon.
-        Bounds Shmin and SHmax from Andersonian faulting theory.
-        Required: depth_m or sv_mpa. Optional: pp_mpa, friction_coefficient.
-        Returns stress polygon vertices (A-D) + regime boundaries.
+    Returns all derived scalars + sanity flags + grade (RAW/AAA) + godel_wall.
+    Optional: buoyancy computation when thickness_m is provided.
     """
-    if mode == "stress_polygon":
-        from geox_mcp.tools.geomechanics_unified import _compute_stress_polygon
-
-        return _compute_stress_polygon(
-            depth_m=depth_m,
-            sv_mpa=sv_mpa,
-            pp_mpa=pp_mpa,
-            friction_coefficient=friction_coefficient,
-            avg_density_kg_m3=avg_density_kg_m3,
-            water_depth_m=water_depth_m,
-        )
-
     from geox_mcp.tools.geomechanics import (
         GeomechanicsRequest,
         geox_geomechanics,
     )
 
-    # F1 AMANAH: MCP transport may serialize dict as JSON string — parse if needed
-    if isinstance(state, str):
-        import json as _json
-
-        try:
-            state = _json.loads(state)
-        except (ValueError, TypeError):
-            return {"ok": False, "error": f"state is a string but not valid JSON: {state[:200]}"}
-
     return (
         await geox_geomechanics(
             GeomechanicsRequest(
-                state=state or {},
+                state=state,
                 thickness_m=thickness_m,
                 rho_fluid=rho_fluid,
             )
@@ -1247,7 +1023,7 @@ async def _judgment_preflight(
             "session_required": True,
             "arifos_route_required": True,
             "governance_sequence": [
-                "1. arif_init(mode='init') — establish governed session",
+                "1. arif_session_init(mode='init') — establish governed session",
                 "2. arif_lease_issue(tool='geox_subsurface_model') — get lease_id",
                 "3. arif_kernel_route(mode='bridge', organ='geox', tool_name='geox_subsurface_model', lease_id=<lease>, session_id=<session>)",
             ],
@@ -1264,7 +1040,7 @@ async def _judgment_preflight(
             "session_required": True,
             "arifos_route_required": True,
             "governance_sequence": [
-                "1. arif_init(mode='init') — establish governed session",
+                "1. arif_session_init(mode='init') — establish governed session",
                 "2. arif_lease_issue(tool='geox_prospect') — get lease_id",
                 "3. arif_kernel_route(mode='bridge', organ='geox', tool_name='geox_prospect', lease_id=<lease>, session_id=<session>)",
             ],
@@ -1689,7 +1465,7 @@ async def geox_query_macrostrat(
 # A-FORGE 888_HOLD approved 2026-07-03 by F13 SOVEREIGN.
 
 
-# DEREGISTERED ZEN-15 — @mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
+# DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_contrast_detect", annotations=_geox_annotations("geox_contrast_detect"))
 async def _geox_contrast_detect(
     dimension: str = "all",
     mass_predicted: float | None = None,
@@ -1992,11 +1768,8 @@ _register_prefab_apps()
 
 from geox_mcp.prompts import register_prompts
 from geox_mcp.resources import register_resources
-from geox_mcp.ui.resources import register_gravmag_studio_resource, register_workspace_resource
 
 register_resources(mcp, is_geox_func=is_geox, enforce_geox_func=_enforce_geox)
-register_workspace_resource(mcp)
-register_gravmag_studio_resource(mcp)
 register_prompts(mcp)
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -2006,7 +1779,7 @@ register_prompts(mcp)
 
 def _prune_mcp_surface(mcp_server) -> None:
     """Strip non-canonical tools from the MCP registry after bootstrap."""
-    SACRED_SURFACE: set[str] = set(CANONICAL_RUNTIME_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
+    SACRED_SURFACE: set[str] = set(CANONICAL_PUBLIC_TOOLS) | set(CANONICAL_COMPAT_TOOLS)
     _profile = os.getenv("GEOX_PROFILE", "full").lower()
     if _profile == "minimal":
         SACRED_SURFACE = (
@@ -2024,7 +1797,6 @@ def _prune_mcp_surface(mcp_server) -> None:
     if not provider:
         return
     components = getattr(provider, "_components", {})
-    total_tools = sum(1 for k in components if k.startswith("tool:"))
     removed: list[str] = []
     for key in list(components.keys()):
         if key.startswith("tool:"):
@@ -2039,17 +1811,8 @@ def _prune_mcp_surface(mcp_server) -> None:
             if not visible:
                 del components[key]
                 removed.append(name)
-    # Safety: if pruning would remove >30% of tools, something is wrong — abort
-    if removed and len(removed) > total_tools * 0.3:
-        logger.error(
-            f"MCP surface prune ABORTED: would remove {len(removed)}/{total_tools} tools (>30%). "
-            f"SACRED_SURFACE has {len(SACRED_SURFACE)} entries. Check YAML manifest completeness."
-        )
-        return
     if removed:
         logger.info(f"MCP surface pruned: {len(removed)} non-canonical tools removed (profile={_profile})")
-        for name in sorted(removed):
-            logger.info(f"  pruned: {name}")
     logger.info(f"MCP surface clean: {len(components)} canonical tools exposed (profile={_profile})")
 
 
@@ -2256,7 +2019,7 @@ def _emit_prompts_list_changed() -> None:
     )
 
 
-_prune_mcp_surface(mcp)  # RE-ENABLED 2026-07-12 — YAML manifest is now source of truth
+_prune_mcp_surface(mcp)
 
 if GEOX_ENABLE_ARIFOS_ROUTE_QUERY:
     mcp.tool(name="arifos_route_query")(arifos_route_query)
@@ -2347,99 +2110,6 @@ class McpAuthMiddleware(BaseHTTPMiddleware):
                 status_code=401,
             )
         return await call_next(request)
-
-
-# Module flag for HTTP lifecycle gate (mirrors geox_middleware env)
-_LIFECYCLE_GATE_HTTP_ENABLED = os.getenv("GEOX_LIFECYCLE_GATE", "1").strip().lower() not in (
-    "0",
-    "false",
-    "off",
-    "no",
-)
-
-
-class McpLifecycleMiddleware(BaseHTTPMiddleware):
-    """Phase A1 (2026-07-12): enforce initialize → notifications/initialized → tools/call.
-
-    Keys readiness by the HTTP Mcp-Session-Id header (the id clients actually send).
-    FastMCP internal session ids can differ — do not use them for this gate.
-    Disable with GEOX_LIFECYCLE_GATE=0.
-    """
-
-    async def dispatch(self, request: Request, call_next):
-        if not _LIFECYCLE_GATE_HTTP_ENABLED or request.method != "POST" or not request.url.path.startswith("/mcp"):
-            return await call_next(request)
-
-        body = await request.body()
-
-        async def receive():
-            return {"type": "http.request", "body": body, "more_body": False}
-
-        request = Request(request.scope, receive)
-
-        try:
-            msg = json.loads(body.decode("utf-8") or "{}")
-        except Exception:
-            return await call_next(request)
-
-        if not isinstance(msg, dict):
-            return await call_next(request)
-
-        method = msg.get("method") or ""
-        sid = request.headers.get("mcp-session-id") or request.headers.get("Mcp-Session-Id") or ""
-
-        # Client completed handshake
-        if method in ("notifications/initialized", "initialized") and sid:
-            from geox_mcp.geox_middleware import mark_lifecycle_ready
-
-            mark_lifecycle_ready(sid, source="http-notification")
-            return await call_next(request)
-
-        # Gate tools/call until ready (tools/list soft-allowed)
-        if method == "tools/call" and sid:
-            from geox_mcp.geox_middleware import is_lifecycle_blocked
-
-            if is_lifecycle_blocked(sid):
-                logger.warning(
-                    "LIFECYCLE_BLOCK_HTTP: tools/call before initialized session=%s",
-                    sid[:12],
-                )
-                msg_id = msg.get("id")
-                return JSONResponse(
-                    {
-                        "jsonrpc": "2.0",
-                        "id": msg_id,
-                        "result": {
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": (
-                                        "MCP_LIFECYCLE: tools/call rejected until client sends "
-                                        "notifications/initialized after initialize. "
-                                        "Sequence: initialize → notifications/initialized → tools/call. "
-                                        "(GEOX Phase A1 lifecycle gate)"
-                                    ),
-                                }
-                            ],
-                            "isError": True,
-                        },
-                    },
-                    status_code=200,
-                    headers={"X-MCP-Lifecycle": "pre-initialized"},
-                )
-
-        response = await call_next(request)
-
-        # After initialize, mark session not-ready using response session id
-        if method == "initialize":
-            resp_sid = response.headers.get("mcp-session-id") or response.headers.get("Mcp-Session-Id") or sid
-            if resp_sid:
-                from geox_mcp.geox_middleware import mark_lifecycle_pending
-
-                mark_lifecycle_pending(resp_sid, source="http-initialize")
-                response.headers["X-MCP-Lifecycle"] = "awaiting-initialized"
-
-        return response
 
 
 class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
@@ -2547,43 +2217,40 @@ async def health_handler(request: Request) -> JSONResponse:
                 },
             )
             _session_id = _init_resp.headers.get("mcp-session-id")
-            # Step 2: tools/call — proceed regardless of session ID.
-            # arifOS runs in stateless_http mode (PHOENIX-73C) and does not
-            # return mcp-session-id. Tool calls work without it.
-            _arif_headers = {
-                "Content-Type": "application/json",
-                "Accept": "application/json, text/event-stream",
-            }
             if _session_id:
-                _arif_headers["mcp-session-id"] = _session_id
-            _arif_resp = await _arif_client.post(
-                "http://127.0.0.1:8088/mcp",
-                headers=_arif_headers,
-                json={
-                    "jsonrpc": "2.0",
-                    "id": 2,
-                    "method": "tools/call",
-                    "params": {
-                        "name": "arif_ops_measure",
-                        "arguments": {"mode": "geometry"},
+                # Step 2: tools/call with session id
+                _arif_resp = await _arif_client.post(
+                    "http://127.0.0.1:8088/mcp",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Accept": "application/json, text/event-stream",
+                        "mcp-session-id": _session_id,
                     },
-                },
-            )
-            _arif_json = _arif_resp.json()
-            for _c in _arif_json.get("result", {}).get("content", []):
-                if _c.get("type") != "text":
-                    continue
-                try:
-                    _inner = json.loads(_c.get("text", ""))
-                except Exception:
-                    continue
-                _payload = _inner.get("result", _inner)
-                if isinstance(_payload, dict) and _payload.get("telemetry_source") == "geometry_hygiene_v1":
-                    fed_geometry = _payload
-                    fed_geometry_source = "arifOS:8088/mcp"
-                    break
-            if not fed_geometry:
-                fed_geometry_note = "arifOS responded but no geometry telemetry found"
+                    json={
+                        "jsonrpc": "2.0",
+                        "id": 2,
+                        "method": "tools/call",
+                        "params": {
+                            "name": "arif_ops_measure",
+                            "arguments": {"mode": "geometry"},
+                        },
+                    },
+                )
+                _arif_json = _arif_resp.json()
+                for _c in _arif_json.get("result", {}).get("content", []):
+                    if _c.get("type") != "text":
+                        continue
+                    try:
+                        _inner = json.loads(_c.get("text", ""))
+                    except Exception:
+                        continue
+                    _payload = _inner.get("result", _inner)
+                    if isinstance(_payload, dict) and _payload.get("telemetry_source") == "geometry_hygiene_v1":
+                        fed_geometry = _payload
+                        fed_geometry_source = "arifOS:8088/mcp"
+                        break
+            else:
+                fed_geometry_note = "arifOS did not return mcp-session-id"
     except Exception as _exc:
         fed_geometry_note = f"arifOS unreachable: {type(_exc).__name__}"
     # ── END FEDERATION GEOMETRY 1a ───────────────────────────────────
@@ -2600,43 +2267,19 @@ async def health_handler(request: Request) -> JSONResponse:
         _domain_law = "NATURAL_LAW"
         _physics_hash = _os_id.environ.get("GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing")
 
-    # FEDERATION HANDSHAKE (canonical: arifOS/arifosmcp/schemas/federation_enums.py)
-    # See: /root/AAA/governance/FEDERATION_HANDSHAKE.md
-    # T5 2026-07-17 — never emit null federation_geometry; local presence fallback.
-    _fed_geom = fed_geometry or {
-        "status": "enabled",
-        "subjects": 0,
-        "ledger_events": 0,
-        "witness_oracle": "active",
-        "note": fed_geometry_note or "local presence fallback",
-    }
     return JSONResponse(
         {
             "status": "healthy",
             "service": "geox-unified",
             "version": GEOX_VERSION,
-            "federation_schema_version": "2.0.0",
             "profile": GEOX_PROFILE,
-            "identity": {
-                "algorithm": "sha256",
-                "value": _GIT_VERSION,
-                "git_version": _GIT_VERSION,
-                "verified": is_geox(),
-                "source": "git_version",
-            },
+            "identity": is_geox(),
             "git_version": _GIT_VERSION,
             # ── GEOX identity anchor (NATURAL_LAW, not constitutional) ───
             "domain_law": _domain_law,
             "physics_manifest_hash": _physics_hash,
             # ── Canonical 7-field health schema (per federation convention) ───
             "identity_hash": _GIT_VERSION,  # git SHA = identity proof
-            "apex_scalars": {
-                "G": {"value": None, "status": "UNMEASURED"},
-                "C_dark": {"value": None, "status": "UNMEASURED"},
-                "W3": {"value": None, "status": "UNMEASURED"},
-                "h": {"value": None, "status": "UNMEASURED"},
-                "QDF": {"value": None, "status": "UNMEASURED"},
-            },
             "freshness": {
                 "status": "fresh",
                 "checked_at_utc": _GIT_VERSION,
@@ -2650,12 +2293,12 @@ async def health_handler(request: Request) -> JSONResponse:
                 "color": "GREEN",
                 "reasons": [
                     "identity_verified" if is_geox() else "identity_unverified",
-                    f"public_tools={len(CANONICAL_PUBLIC_TOOLS)}",
+                    f"canonical_tools={len(CANONICAL_PUBLIC_TOOLS)}",
                     "service_healthy",
                 ],
             },
-            "federation_geometry": _fed_geom,
-            "federation_geometry_source": fed_geometry_source or "local_fallback",
+            "federation_geometry": fed_geometry,
+            "federation_geometry_source": fed_geometry_source,
             "federation_geometry_note": fed_geometry_note,
             "final_authority": "ARIF",
         }
@@ -2692,7 +2335,6 @@ async def status_handler(request: Request) -> JSONResponse:
             "version": GEOX_VERSION,
             "profile": GEOX_PROFILE,
             "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
-            "internal_tools": len(INTERNAL_TOOLS),
         }
     )
 
@@ -2962,7 +2604,7 @@ async def contract_handler(request: Request) -> JSONResponse:
             "schema_hashes": schema_hashes,
             "policy_hash": "verified",
             "tool_count_declared": len(CANONICAL_PUBLIC_TOOLS),
-            "tool_count_runtime": len(CANONICAL_RUNTIME_TOOLS),
+            "tool_count_runtime": len(CANONICAL_PUBLIC_TOOLS),
             "transport": "streamable-http",
             "auth_required": True,
             "vault_connected": True,
@@ -3023,16 +2665,50 @@ async def adapters_handler(request: Request) -> JSONResponse:
     )
 
 
-# ── A2A Agent Card ─────────────────────────────────────────────────────────
-# FORGE 2026-07-15 (A2A card consolidation): local /.well-known/agent.json
-# and /.well-known/agent-card.json were removed from GEOX. Federation-wide
-# agent card discovery is now served exclusively by the canonical A2A mesh
-# at AAA (peer_coordinator). The remaining /.well-known/ routes are:
-#   - mcp.json / mcp/server.json — MCP server card (preserved).
-#   - oauth-* — OAuth 2.0 discovery (preserved).
-#   - webmcp — WebMCP manifest (preserved).
-# Discovery document: tools_manifest.yaml + CANONICAL_PUBLIC_TOOLS in
-# src/geox_mcp/registry.py remain the runtime source of truth.
+# ── A2A Agent Card (Federation Discovery) ──────────────────────────────────
+# FORGE 2026-06-28: /.well-known/agent.json for AAA A2A mesh discovery.
+
+_GEOX_AGENT_CARD = {
+    "schema_version": "0.2",
+    "organ_id": "geox",
+    "name": "GEOX — Governed Earth Intelligence",
+    "role": "earth",
+    "description": (
+        "Earth coprocessor for arifOS federation. Provides geoscience, "
+        "petrophysics, seismic, basin, deep time, and geomechanical evidence "
+        "for constitutional judgment. Evidence-only — never a policy judge."
+    ),
+    "version": "2026.07.06",
+    "url": "https://geox.arif-fazil.com",
+    "a2a_endpoint": "http://127.0.0.1:8081/a2a",
+    "agent_card_url": "http://127.0.0.1:8081/.well-known/agent-card.json",
+    "endpoints": {
+        "mcp": "https://geox.arif-fazil.com/mcp",
+        "health": "https://geox.arif-fazil.com/health",
+        "tools": "https://geox.arif-fazil.com/tools",
+    },
+    "authority_class": "evidence",
+    "allowed_action_classes": ["OBSERVE", "PREPARE"],
+    "max_risk_tier": "T1",
+    "auth": {"type": "none"},
+    "federation": {
+        "protocol": "A2A",
+        "peer_coordinator": "https://aaa.arif-fazil.com",
+        "constitutional_kernel": "https://arifos.arif-fazil.com",
+    },
+    "owned_mcp": list(CANONICAL_PUBLIC_TOOLS),
+    "judge_skills": [],
+    "skills": [
+        {"id": "earth.evidence", "name": "Earth Evidence", "tags": ["geoscience", "evidence"]},
+        {"id": "basin.resolve", "name": "Basin Resolution", "tags": ["basin", "stratigraphy"]},
+        {"id": "seismic.compute", "name": "Seismic Physics", "tags": ["seismic", "forward-model"]},
+    ],
+}
+
+
+async def _geox_agent_card_handler(request):
+    """Serve A2A agent card for federation discovery."""
+    return JSONResponse(_GEOX_AGENT_CARD)
 
 
 def create_app():
@@ -3126,6 +2802,8 @@ def create_app():
             Route("/adapters", adapters_handler, methods=["GET"]),
             Route("/.well-known/mcp.json", mcp_server_card, methods=["GET"]),
             Route("/.well-known/mcp/server.json", discovery_handler, methods=["GET"]),
+            Route("/.well-known/agent.json", _geox_agent_card_handler, methods=["GET"]),
+            Route("/.well-known/agent-card.json", _geox_agent_card_handler, methods=["GET"]),
             Route("/.well-known/webmcp", webmcp_manifest, methods=["GET"]),
             Route("/.well-known/oauth-protected-resource", _geox_oauth_protected_resource, methods=["GET"]),
             Route("/.well-known/oauth-protected-resource/mcp", _geox_oauth_protected_resource, methods=["GET"]),
@@ -3157,7 +2835,6 @@ def create_app():
     app.add_middleware(EarthAnchorMiddleware)
     # MCP spec compliance middlewares — outermost to innermost:
     #   OriginValidation → McpAuth → McpProtocolVersion → EarthAnchor → SlashRewrite → routes
-    app.add_middleware(McpLifecycleMiddleware)  # Phase A1: init → initialized → tools/call
     app.add_middleware(McpProtocolVersionMiddleware)  # MCP spec §Transport: version header
     app.add_middleware(McpAuthMiddleware)  # MCP spec §Security: Bearer token
     app.add_middleware(OriginValidationMiddleware)  # SEP-2243: DNS rebinding guard (outermost)
@@ -3170,7 +2847,7 @@ def create_app():
     return app
 
 
-logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_RUNTIME_TOOLS)} runtime tools registered with FastMCP")
+logger.info(f"Phase 2 unified tools wired: {len(CANONICAL_PUBLIC_TOOLS)} canonical tools registered with FastMCP")
 
 
 def main() -> None:
@@ -3203,7 +2880,7 @@ def main() -> None:
         # Used by Claude Code, OpenCode, Continue CLI, and any agent
         # running on the same machine that needs direct MCP access.
         logger.info(f"GEOX starting in stdio mode — {GEOX_VERSION} ({_GIT_VERSION})")
-        logger.info(f"  Tools: {len(CANONICAL_PUBLIC_TOOLS)} public + {len(INTERNAL_TOOLS)} internal")
+        logger.info(f"  Tools: {len(CANONICAL_PUBLIC_TOOLS)} canonical across 3 domains")
         logger.info(f"  Profile: {GEOX_PROFILE}")
         _patch_output_schemas(mcp)
         mcp.run(transport="stdio")

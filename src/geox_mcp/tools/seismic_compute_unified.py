@@ -1,60 +1,23 @@
 """
-geox_seismic_compute — Unified Seismic Computation (Phase 2.8)
-════════════════════════════════════════════════════════════════
-Absorbs: geox_seismic_compute, geox_seismic_ingest, geox_seismic_interpret,
-         geox_seismic_compute_attribute_tool, geox_seismic_inversion
+geox_seismic_compute — Unified Seismic Computation (Phase 2)
+════════════════════════════════════════════════════════════
+Absorbs: geox_seismic_compute, geox_seismic_compute_attribute_tool, geox_seismic_inversion
 
-Modes:
-  synthetic           — Forward model S = w * r + n
-  well_tie            — Seismic-to-well tie with cross-correlation
-  time_depth_anchor   — Checkshot/VSP anchoring
-  anomalous_contrast  — AVO class I-IV anomalous contrast detection
-  attribute           — Seismic attribute computation
-  inversion           — 1D post-stack PINN seismic inversion
-  ingest / tengok     — Ingest seismic volume headers (was geox_seismic_ingest)
-  interpret / agak    — Pick horizons and track faults (was geox_seismic_interpret)
-  cabar               — anomalous contrast falsifier
-  sahkan              — well tie validation check
-  tie_preflight       — well-tie preflight (was geox_tie_preflight) [ZEN 2026-07-11 G1]
-  tie_receipt         — well-tie receipt (was geox_tie_receipt)
-  wavelet_extract     — LS wavelet extract (was geox_wavelet_extract_least_squares)
-  mistie_rms          — mistie RMS (was geox_well_seismic_mistie_rms)
-  time_depth_calibrate — TD calibrate (was geox_well_time_depth_calibrate)
+Modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute, inversion
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
-
 from __future__ import annotations
 from typing import Any, Literal
-import inspect
-
 
 async def geox_seismic_compute(
-    mode: Literal[
-        "synthetic",
-        "well_tie",
-        "time_depth_anchor",
-        "anomalous_contrast",
-        "attribute",
-        "inversion",
-        "ingest",
-        "interpret",
-        "tengok",
-        "agak",
-        "cabar",
-        "sahkan",
-        "tie_preflight",
-        "tie_receipt",
-        "wavelet_extract",
-        "mistie_rms",
-        "time_depth_calibrate",
-    ] = "synthetic",
-    volume_ref: str | None = None,
-    attribute: str | None = None,
+    mode: Literal["synthetic", "well_tie", "time_depth_anchor", "anomalous_contrast", "attribute", "inversion"] = "synthetic",
+    volume_ref: str = "",
+    attribute: str = "rms",
     frame_index: int | None = None,
-    orientation: str | None = None,
+    orientation: str = "inline",
     window_size: int = 11,
-    provenance: str | None = None,
+    provenance: str = "fixture",
     reflectivity: list[float] | None = None,
     sample_interval_s: float = 0.002,
     initial_impedance: float = 7000000,
@@ -72,203 +35,20 @@ async def geox_seismic_compute(
     dt_ms: float = 2.0,
     noise_db: float = 0.0,
     output_format: str = "json",
-    # SEG-Y / Ingest parameters
-    output_path: str | None = None,
-    sample_interval_ms: float = 4,
-    textual_header: str = "",
-    overwrite: bool = False,
-    segy_metadata: dict[str, Any] | None = None,
-    seismic_metadata: dict[str, Any] | None = None,
-    source_uri: str | None = None,
-    source_type: str = "seismic",
-    # Interpret parameters
-    action: str = "get",
-    image_data: str | None = None,
-    blend_mode: str = "alpha",
-    horizon_query: str = "unconformity",
-    threshold: float = 0.5,
-    confidence_cap: float = 0.9,
-    cube_ref: str | None = None,
-    volume_inline: dict[str, Any] | None = None,
-    attribute_data: dict[str, list[float]] | None = None,
-    # Well-tie / checkshot / anomalous contrast parameters
-    extraction_window_ms: float = 100.0,
-    frequency_band: tuple[float, float] = (10.0, 50.0),
-    apply_gardner_fallback: bool = False,
-    apply_anisotropy_correction: bool = False,
-    q_factor: float = 100.0,
-    checkshot_ref: str | None = None,
-    drift_threshold_ms: float = 25.0,
-    td_method: str = "checkshot",
-    ai_profile: list[float] | None = None,
-    ac_depth: list[float] | None = None,
-    formation_tops: dict[str, float] | None = None,
-    rc_threshold: float = 0.05,
-    geological_boundary_tolerance_m: float = 5.0,
-    ac_vp: list[float] | None = None,
-    ac_rho: list[float] | None = None,
-    volume_ref_attr: str | None = None,
-    # ZEN G1: tie_preflight / tie_receipt surface fields
-    well_name: str | None = None,
-    decision_context: str | None = None,
-    answers: str | dict[int, str] | None = None,
-    seismic_volume: str | None = None,
-    polarity_convention: str | None = None,
-    phase_convention: str | None = None,
-    seismic_datum: str | None = None,
-    well_datum: str | None = None,
-    depth_basis: str | None = None,
-    logs_used: str | None = None,
-    las_path: str | None = None,
-    checkshot_path: str | None = None,
-    session_id: str | None = None,
 ) -> dict[str, Any]:
-    """Unified seismic computation & exploration.
+    """Unified seismic computation.
 
     Modes:
       synthetic          - Forward model S = w * r + n
       well_tie           - Seismic-to-well tie with cross-correlation
       time_depth_anchor  - Checkshot/VSP anchoring
       anomalous_contrast - AVO class I-IV anomalous contrast detection
-      attribute          - Seismic attribute computation
+      attribute          - Seismic attribute computation (RMS, variance, sweetness, etc.)
       inversion          - 1D post-stack PINN seismic inversion
-      ingest / tengok    - Ingest seismic volume headers
-      interpret / agak   - Pick horizons and track faults
-      cabar              - anomalous contrast falsifier
-      sahkan             - well tie validation check
     """
     kwargs = locals().copy()
-
-    # Convert empty strings to None to satisfy validate_tool_inputs
-    for k, v in list(kwargs.items()):
-        if v == "":
-            kwargs[k] = None
-
-    def _filter_args(func: Any, args_dict: dict[str, Any]) -> dict[str, Any]:
-        sig = inspect.signature(func)
-        has_var_keyword = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
-        if has_var_keyword:
-            return args_dict
-        return {k: v for k, v in args_dict.items() if k in sig.parameters}
-
-    if mode in ("ingest", "tengok"):
-        from geox_mcp.tools.seismic_ingest import geox_seismic_ingest as _impl
-
-        if kwargs.get("mode") == "tengok":
-            kwargs["mode"] = "inspect_segy"
-        return await _impl(**_filter_args(_impl, kwargs))
-
-    if mode in ("interpret", "agak"):
-        from geox_mcp.tools.seismic_interpret import geox_seismic_interpret as _impl
-
-        if kwargs.get("mode") == "agak":
-            kwargs["mode"] = "horizon_contrast"
-        return await _impl(**_filter_args(_impl, kwargs))
-
-    if mode == "cabar":
-        kwargs["mode"] = "anomalous_contrast"
-        kwargs["ac_depth"] = kwargs.get("ac_depth") or kwargs.get("depth")
-        kwargs["ac_vp"] = kwargs.get("ac_vp") or kwargs.get("vp")
-        kwargs["ac_rho"] = kwargs.get("ac_rho") or kwargs.get("rho")
-        from geox_mcp.tools.seismic_compute import geox_seismic_compute as _impl
-
-        return await _impl(**_filter_args(_impl, kwargs))
-
-    if mode == "sahkan":
-        kwargs["mode"] = "well_tie"
-        from geox_mcp.tools.seismic_compute import geox_seismic_compute as _impl
-
-        return await _impl(**_filter_args(_impl, kwargs))
-
-    # ── ZEN 2026-07-11 G1: fold standalone 1D-tie tools into modes ─────────
-    if mode == "tie_preflight":
-        from geox_core.schemas.tie_preflight import run_tie_preflight
-
-        answers_raw = kwargs.get("answers") or ""
-        answers_dict: dict[int, str] = {}
-        if isinstance(answers_raw, dict):
-            answers_dict = {int(k): str(v) for k, v in answers_raw.items()}
-        elif isinstance(answers_raw, str) and answers_raw:
-            for pair in answers_raw.split(","):
-                pair = pair.strip()
-                if "=" in pair:
-                    k, v = pair.split("=", 1)
-                    try:
-                        answers_dict[int(k.strip())] = v.strip()
-                    except ValueError:
-                        pass
-        result = run_tie_preflight(
-            well_name=kwargs.get("well_name") or kwargs.get("well_id") or "",
-            decision_context=kwargs.get("decision_context") or "horizon_calibration",
-            answers=answers_dict,
-            session_id=kwargs.get("session_id"),
-        )
-        return {"status": "success", "tool": "geox_tie_preflight", **result}
-
-    if mode == "tie_receipt":
-        from geox_core.schemas.tie_receipt import build_tie_receipt
-
-        logs_used = kwargs.get("logs_used") or ""
-        logs_list = (
-            [x.strip() for x in logs_used.split(",") if x.strip()]
-            if isinstance(logs_used, str)
-            else list(logs_used or [])
-        )
-        receipt = build_tie_receipt(
-            well_name=kwargs.get("well_name") or kwargs.get("well_id") or "",
-            seismic_volume=kwargs.get("seismic_volume") or kwargs.get("volume_ref") or "",
-            session_id=kwargs.get("session_id"),
-            polarity_convention=kwargs.get("polarity_convention") or "",
-            phase_convention=kwargs.get("phase_convention") or "",
-            seismic_datum=kwargs.get("seismic_datum") or "",
-            well_datum=kwargs.get("well_datum") or "",
-            depth_basis=kwargs.get("depth_basis") or "MD",
-            logs_used=logs_list,
-            time_depth_control={
-                "checkshot_present": bool(kwargs.get("time_depth_checkshot")),
-                "vsp_present": bool(kwargs.get("time_depth_vsp")),
-                "confidence": kwargs.get("time_depth_confidence") or "low",
-            },
-            wavelet={
-                "source": kwargs.get("wavelet_source") or "assumed",
-                "phase_confidence": kwargs.get("wavelet_phase_confidence") or "low",
-            },
-            tie_quality={
-                "correlation_score": kwargs.get("correlation_score"),
-                "residual_class": kwargs.get("residual_class") or "unexplained",
-            },
-            rock_physics_status={
-                "lithology_separability": kwargs.get("rock_lithology_sep") or "low",
-                "fluid_separability": kwargs.get("rock_fluid_sep") or "low",
-            },
-            inversion_permission={"allowed": bool(kwargs.get("inversion_allowed"))},
-            decision_permission=kwargs.get("decision_permission") or "HOLD",
-            decision_reason=kwargs.get("decision_reason") or "",
-        )
-        return {"status": "success", "tool": "geox_tie_receipt", "receipt": receipt}
-
-    if mode == "wavelet_extract":
-        from geox_mcp.tools.well_1d_surface import (
-            geox_wavelet_extract_least_squares as _impl,
-        )
-
-        return await _impl(**_filter_args(_impl, kwargs))
-
-    if mode == "mistie_rms":
-        from geox_mcp.tools.well_1d_surface import geox_well_seismic_mistie_rms as _impl
-
-        return await _impl(**_filter_args(_impl, kwargs))
-
-    if mode == "time_depth_calibrate":
-        from geox_mcp.tools.well_1d_surface import (
-            geox_well_time_depth_calibrate as _impl,
-        )
-
-        return await _impl(**_filter_args(_impl, kwargs))
-
     if mode == "attribute":
         from geox_mcp.tools.paleoscan_forge import geox_seismic_compute_attribute_tool as _impl
-
         return await _impl(
             volume_ref=kwargs.get("volume_ref", ""),
             attribute_name=kwargs.get("attribute", "rms"),
@@ -280,7 +60,6 @@ async def geox_seismic_compute(
 
     if mode == "inversion":
         from geox_mcp.tools.seismic_inversion import geox_seismic_inversion as _impl
-
         return await _impl(
             reflectivity=kwargs.get("reflectivity"),
             sample_interval_s=kwargs.get("sample_interval_s", 0.002),
@@ -289,8 +68,11 @@ async def geox_seismic_compute(
             resistivity_ohm_m=kwargs.get("resistivity_ohm_m"),
         )
 
-    # Default: delegate to the canonical geox_seismic_compute implementation
+    # Default: delegate to the canonical geox_seismic_compute implementation (all other modes)
     from geox_mcp.tools.seismic_compute import geox_seismic_compute as _impl
-
+    import inspect
     kwargs.setdefault("mode", mode)
-    return await _impl(**_filter_args(_impl, kwargs))
+    # Filter kwargs to only pass params the impl accepts
+    impl_params = set(inspect.signature(_impl).parameters.keys())
+    filtered = {k: v for k, v in kwargs.items() if k in impl_params}
+    return await _impl(**filtered)
