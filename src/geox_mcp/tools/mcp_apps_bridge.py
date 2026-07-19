@@ -30,7 +30,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "1D well log viewer with petrophysics, formation tops, and physics9 integration",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "externalUrl",  # Streamlit app — served externally
         "external_url": "https://geox.arif-fazil.com/apps/well-desk/",
+        "html_fallback": "<h1>GEOX WellDesk</h1><p>1D well log viewer. Open externally.</p>",
     },
     "seismic_vision": {
         "uri": "ui://geox/seismic-vision",
@@ -38,7 +40,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "2D/3D seismic viewer with inline/xline, horizon picking, and attribute analysis",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "external_url": "https://geox.arif-fazil.com/apps/seismic-vision-review/",
+        "resource_type": "externalUrl",  # Cesium 3D — too heavy for rawHtml
+        "external_url": "https://geox.arif-fazil.com/gui/seismic_viewer/",
+        "html_fallback": "<h1>GEOX Seismic Vision</h1><p>2D/3D seismic viewer. Open in cockpit.</p>",
     },
     "earth_volume": {
         "uri": "ui://geox/earth-volume",
@@ -46,7 +50,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "3D subsurface volume renderer with Cesium globe integration",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "externalUrl",  # 3D volumes — too heavy
         "external_url": "https://geox.arif-fazil.com/apps/earth-volume/",
+        "html_fallback": "<h1>GEOX Earth Volume</h1><p>3D subsurface renderer. Open in cockpit.</p>",
     },
     "judge_console": {
         "uri": "ui://geox/judge-console",
@@ -54,6 +60,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "888 Judge deliberation console with claim review and falsification tracking",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",  # Lightweight — fine as rawHtml
         "external_url": "https://geox.arif-fazil.com/apps/judge-console/",
     },
     "geoprobe": {
@@ -62,7 +69,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Multi-dimensional prospect evaluation with risk, volumetrics, and economics",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "externalUrl",  # Heavy dashboards
         "external_url": "https://geox.arif-fazil.com/apps/prospect-ui/",
+        "html_fallback": "<h1>GEOX GeoProbe</h1><p>Prospect evaluation dashboard. Open in cockpit.</p>",
     },
     "basin_explorer": {
         "uri": "ui://geox/basin-explorer",
@@ -70,7 +79,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Interactive basin analysis with maps, cross-sections, and stratigraphic columns",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "externalUrl",  # MapLibre + D3 — heavy
         "external_url": "https://geox.arif-fazil.com/gui/basin_explorer/",
+        "html_fallback": "<h1>GEOX Basin Explorer</h1><p>Interactive basin maps. Open in cockpit.</p>",
     },
     "visual_hub": {
         "uri": "ui://geox/visual-hub",
@@ -78,6 +89,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "5-in-1 visual dashboard: WellDesk 1D + SeisVis 2D + CubeProbe 3D + TimeLapse 4D + PhysicCore",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",  # Hub — lightweight index
         "external_url": "https://geox.arif-fazil.com/apps/geox-mcp-visual/",
     },
     "catalog": {
@@ -86,6 +98,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Searchable registry of 44 earth intelligence skills across 11 domains",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",  # Lightweight
         "external_url": "https://geox.arif-fazil.com/apps/site/catalog.html",
         # SEP-2106: JSON Schema 2020-12 outputSchema for MCP-UI host discovery
         "outputSchema": {
@@ -273,7 +286,7 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
 
     Args:
         app_id: Key from GEOX_APPS registry
-        html_content: Optional HTML content for the app. If None, creates a minimal shell.
+        html_content: Optional HTML content for rawHtml apps. Ignored for externalUrl apps.
 
     Returns:
         UIResource-compatible dict for tools/call response content array, or None if SDK unavailable.
@@ -285,15 +298,26 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
     if not app:
         return None
 
-    if html_content is None:
-        html_content = f"<h1>{app['title']}</h1><p>{app['description']}</p>"
+    resource_type = app.get("resource_type", "rawHtml")
 
     try:
-        resource = create_ui_resource({
-            "uri": app["uri"],
-            "content": {"type": "rawHtml", "htmlString": html_content},
-            "encoding": "text",
-        })
+        if resource_type == "externalUrl":
+            # Heavy apps (Cesium, MapLibre) — use external URL to avoid embedding 5-20MB
+            resource = create_ui_resource({
+                "uri": app["uri"],
+                "content": {"type": "externalUrl", "externalUrl": app["external_url"]},
+                "encoding": "text",
+            })
+        else:
+            # Lightweight apps — embed HTML directly
+            if html_content is None:
+                html_content = app.get("html_fallback", f"<h1>{app['title']}</h1><p>{app['description']}</p>")
+            resource = create_ui_resource({
+                "uri": app["uri"],
+                "content": {"type": "rawHtml", "htmlString": html_content},
+                "encoding": "text",
+            })
+
         return {
             "type": "resource",
             "resource": {
