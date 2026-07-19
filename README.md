@@ -39,11 +39,11 @@ GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and 
 
 | Metric | Value |
 |--------|-------|
-| Public tools | 18 (verify: `curl :8081/health`) |
+| Public tools | 24 (verify: `curl :8081/health`) |
 | MCP Apps (SEP-1865) | 13 |
 | Health | GREEN |
 | Port | 8081 |
-| Version | `v2026.07.19` |
+| Version | `v2026.07.17` |
 
 ---
 
@@ -144,7 +144,7 @@ It IS a vendor-neutral layer that can:
 
 ## License
 
-AGPL-3.0. Open for all Earth scientists.
+BSL-1.1 (Business Source License).
 
 ---
 

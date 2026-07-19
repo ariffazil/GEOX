@@ -1,34 +1,34 @@
 {
-    "name": "GEOX",
-    "version": "v2026.06.28-phase2.1",
-    "domain": "earth-science/subsurface/petroleum-geology",
-    "description": "Governed Earth API for subsurface intelligence. Physics-first. ACRisk-stamped. Claim-disciplined.",
-    "governance": "arifOS F1-F13 + ToAC + CANON-9",
-    "seal": "DITEMPA BUKAN DIBERI",
-    "tools": 30,
-    "resources": 19,
-    "prompts": 9,
-    "transport": [
-        "streamable-http",
-        "sse"
-    ],
-    "auth": {
-        "type": "bearer",
-        "env_var": "GEOX_SECRET_TOKEN"
-    },
-    "entrypoint": {
-        "module": "geox_mcp.server",
-        "package": "src"
-    },
-    "health_endpoint": "/health",
-    "documentation": {
-        "readme": "README_MIGRATION.md",
-        "capabilities": "resources/capabilities/geox_capabilities.json"
-    },
-    "maintainer": {
-        "name": "Arif",
-        "org": "arifOS Federation"
-    },
-    "license": "AGPL-3.0",
-    "repository": "https://github.com/ariffazil/geox"
+  "name": "GEOX",
+  "version": "v2026.06.28-phase2.1",
+  "domain": "earth-science/subsurface/petroleum-geology",
+  "description": "Governed Earth API for subsurface intelligence. Physics-first. ACRisk-stamped. Claim-disciplined.",
+  "governance": "arifOS F1-F13 + ToAC + CANON-9",
+  "seal": "DITEMPA BUKAN DIBERI",
+  "tools": 30,
+  "resources": 19,
+  "prompts": 9,
+  "transport": [
+    "streamable-http",
+    "sse"
+  ],
+  "auth": {
+    "type": "bearer",
+    "env_var": "GEOX_SECRET_TOKEN"
+  },
+  "entrypoint": {
+    "module": "geox_mcp.server",
+    "package": "src"
+  },
+  "health_endpoint": "/health",
+  "documentation": {
+    "readme": "README_MIGRATION.md",
+    "capabilities": "resources/capabilities/geox_capabilities.json"
+  },
+  "maintainer": {
+    "name": "Arif",
+    "org": "arifOS Federation"
+  },
+  "license": "BSL-1.1",
+  "repository": "https://github.com/ariffazil/geox"
 }

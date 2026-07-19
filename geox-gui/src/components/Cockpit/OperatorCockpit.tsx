@@ -116,11 +116,23 @@ function initialToken(): string {
 }
 
 const SessionGate: React.FC<{
-  onBound: (identity: GeoxSessionIdentity, status: GeoxSurfaceStatus) => void;
+  onBound: (identity: GeoxSessionIdentity | null, status: GeoxSurfaceStatus) => void;
 }> = ({ onBound }) => {
   const [token, setToken] = useState(initialToken);
-  const [state, setState] = useState<'idle' | 'verifying' | 'error'>('idle');
+  const [state, setState] = useState<'idle' | 'verifying' | 'error' | 'connecting'>('idle');
   const [error, setError] = useState('');
+
+  // Auto-connect anonymously — no token needed for read-only access
+  useEffect(() => {
+    if (token.trim()) return; // user has a token, let the normal flow handle it
+    setState('connecting');
+    geoxMcpClient.connect()
+      .then((status) => onBound(null, status))
+      .catch((caught) => {
+        setState('error');
+        setError(caught instanceof Error ? caught.message : 'Connection failed.');
+      });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const bind = useCallback(async (candidate: string) => {
     setState('verifying');
@@ -200,8 +212,13 @@ export const OperatorCockpit: React.FC = () => {
     [activeView],
   );
 
-  const onBound = useCallback((nextIdentity: GeoxSessionIdentity, status: GeoxSurfaceStatus) => {
-    setIdentity(nextIdentity);
+  const onBound = useCallback((nextIdentity: GeoxSessionIdentity | null, status: GeoxSurfaceStatus) => {
+    // Anonymous users get a synthetic identity so the cockpit renders
+    setIdentity(nextIdentity ?? {
+      actorId: 'anonymous',
+      sessionId: 'anon-' + Date.now(),
+      expiresAt: null,
+    });
     setSurfaceStatus(status);
   }, []);
 

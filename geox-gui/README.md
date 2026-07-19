@@ -237,7 +237,7 @@ Candidate C ─────────
 
 ## License
 
-AGPL-3.0
+BSL-1.1
 
 ---
 
