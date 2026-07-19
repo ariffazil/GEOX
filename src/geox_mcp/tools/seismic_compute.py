@@ -514,25 +514,24 @@ async def geox_seismic_compute(
     formation_tops = _parse_dict(formation_tops)
 
     # Hardening: validate free-text inputs at boundary.
+    # Mode-discriminated: only validate fields required by the selected mode.
     from geox_mcp.tools.kernel._validation import validate_tool_inputs
 
-    _err = validate_tool_inputs(
-        "geox_seismic_compute",
-        well_id=well_id,
-        vp=vp,
-        rho=rho,
-        depth=depth,
-        wavelet_params=wavelet_params,
-        volume_ref=volume_ref,
-        checkshot_ref=checkshot_ref,
-        ai_profile=ai_profile,
-        ac_depth=ac_depth,
-        formation_tops=formation_tops,
-        ac_vp=ac_vp,
-        ac_rho=ac_rho,
-        volume_ref_attr=volume_ref_attr,
-        attribute=attribute,
-    )
+    _validation_kwargs: dict[str, Any] = {}
+    if mode == "synthetic":
+        _validation_kwargs.update({"vp": vp, "rho": rho, "depth": depth, "wavelet_params": wavelet_params})
+    elif mode == "well_tie":
+        _validation_kwargs.update({"well_id": well_id, "volume_ref": volume_ref, "checkshot_ref": checkshot_ref})
+    elif mode == "time_depth_anchor":
+        _validation_kwargs.update({"well_id": well_id, "checkshot_ref": checkshot_ref})
+    elif mode == "anomalous_contrast":
+        _validation_kwargs.update(
+            {"ai_profile": ai_profile, "ac_depth": ac_depth, "ac_vp": ac_vp, "ac_rho": ac_rho, "formation_tops": formation_tops}
+        )
+    elif mode == "attribute":
+        _validation_kwargs.update({"volume_ref": volume_ref, "volume_ref_attr": volume_ref_attr, "attribute": attribute})
+
+    _err = validate_tool_inputs("geox_seismic_compute", **_validation_kwargs)
     if ctx:
         ctx.report_progress(0, 100)
 

@@ -7,6 +7,7 @@ Modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute, in
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 from typing import Any, Literal
@@ -14,7 +15,7 @@ from typing import Any, Literal
 
 async def geox_seismic_compute(
     mode: Literal["synthetic", "well_tie", "time_depth_anchor", "anomalous_contrast", "attribute", "inversion"] = "synthetic",
-    volume_ref: str = "",
+    volume_ref: str | None = None,
     attribute: str = "rms",
     frame_index: int | None = None,
     orientation: str = "inline",
@@ -51,6 +52,7 @@ async def geox_seismic_compute(
     kwargs = locals().copy()
     if mode == "attribute":
         from geox_mcp.tools.paleoscan_forge import geox_seismic_compute_attribute_tool as _impl
+
         return await _impl(
             volume_ref=kwargs.get("volume_ref", ""),
             attribute_name=kwargs.get("attribute", "rms"),
@@ -62,6 +64,7 @@ async def geox_seismic_compute(
 
     if mode == "inversion":
         from geox_mcp.tools.seismic_inversion import geox_seismic_inversion as _impl
+
         return await _impl(
             reflectivity=kwargs.get("reflectivity"),
             sample_interval_s=kwargs.get("sample_interval_s", 0.002),
@@ -74,6 +77,7 @@ async def geox_seismic_compute(
     import inspect
 
     from geox_mcp.tools.seismic_compute import geox_seismic_compute as _impl
+
     kwargs.setdefault("mode", mode)
     # Filter kwargs to only pass params the impl accepts
     impl_params = set(inspect.signature(_impl).parameters.keys())

@@ -319,7 +319,13 @@ def validate_session(
         )
 
         # Actor binding check
-        if kernel_actor and actor_id and kernel_actor != "anonymous" and actor_id != "anonymous" and kernel_actor != actor_id:
+        if (
+            kernel_actor
+            and actor_id
+            and kernel_actor != "anonymous"
+            and actor_id != "anonymous"
+            and kernel_actor.casefold() != actor_id.casefold()
+        ):
             return ValidationResult(
                 ok=False,
                 error_code="ACTOR_MISMATCH",
