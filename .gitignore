@@ -67,6 +67,12 @@ node_modules/
 geox-gui/node_modules/
 **/.venv/
 
+# Generated GEOX cockpit runtime (rebuilt from the cesium npm package)
+static/gui/cesium/Assets/
+static/gui/cesium/ThirdParty/
+static/gui/cesium/Widgets/
+static/gui/cesium/Workers/
+
 # Generated repo dump artifacts
 ariffazil-geox.txt
 Copilot/

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX Malay Basin — End-to-End Workflow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/gui/assets/geox-mcp-bridge.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap');
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --surface2: #1a1a25;
+            --gold: #d4af37;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+            --emerald: #34d399;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text: #e8e8f0;
+            --text2: #9090a0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+
+        .step-card {
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        .step-card.active { border-color: var(--gold); }
+        .step-card.completed { border-color: var(--emerald); background: rgba(52,211,153,0.02); }
+        .step-card.failed { border-color: var(--red); background: rgba(239,68,68,0.02); }
+        .step-card.running { border-color: var(--blue); }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .step-number {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--surface2);
+            color: var(--text2);
+            flex-shrink: 0;
+        }
+        .step-card.active .step-number { background: var(--gold); color: #000; }
+        .step-card.completed .step-number { background: var(--emerald); color: #000; }
+        .step-card.failed .step-number { background: var(--red); color: #fff; }
+        .step-card.running .step-number { background: var(--blue); color: #fff; animation: pulse 1s infinite; }
+
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .step-title { font-weight: 600; font-size: 15px; }
+        .step-desc { font-size: 12px; color: var(--text2); }
+        
+        .step-tool { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--amber); }
+        .step-output {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--surface2);
+            border-radius: 8px;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .step-output.show { display: block; }
+        .step-output.success { border-left: 3px solid var(--emerald); }
+        .step-output.error { border-left: 3px solid var(--red); }
+
+        .run-btn {
+            padding: 6px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--gold);
+            background: rgba(212,175,55,0.1);
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+        .run-btn:hover { background: rgba(212,175,55,0.2); }
+        .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .run-all-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--gold), #b8941f);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 24px;
+        }
+        .run-all-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,175,55,0.3); }
+        .run-all-btn:disabled { opacity: 0.5; transform: none; }
+
+        .header { text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--surface2); }
+        .header h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--gold), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .header .subtitle { color: var(--text2); font-size: 14px; }
+        #mcpStatusE2E {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 12px;
+            font-size: 11px; margin-top: 8px;
+        }
+        .progress-bar {
+            height: 4px; background: var(--surface2); border-radius: 2px;
+            margin-bottom: 24px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--gold), var(--emerald));
+            border-radius: 2px; transition: width 0.5s;
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Malay Basin E2E Workflow</h1>
+            <p class="subtitle">GEOX Earth Witness — DITEMPA BUKAN DIBERI</p>
+            <span id="mcpStatusE2E" style="border:1px solid var(--text2);color:var(--text2);">⏳ Checking MCP...</span>
+        </div>
+
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+        <button class="run-all-btn" id="runAllBtn">▶ RUN ALL 6 STEPS</button>
+
+        <!-- Step 1: Basin Profile -->
+        <div class="step-card" id="step1">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div>
+                    <div class="step-title">Basin Profile</div>
+                    <div class="step-desc">Profile Malay Basin — tectonic, stratigraphic, petroleum systems</div>
+                </div>
+                <div style="margin-left:auto;">
+                    <span class="step-tool">geox_basin</span>
+                    <button class="run-btn" data-step="1" style="margin-left:8px;">▶ Run</button>
+                </div>
+            </div>
+            <div class="step-output" id="output1"></div>
+        </div>
+
+        <!-- Step 2: Deep Time Context -->
+        <div class="step-card" id="step2">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div>
+                    <div class="step-title">Deep Time State</div>
+                    <div class="step-desc">Earth state at Malay Basin depositional time (~30 Ma)</div>
+                </div>
+                <div style="margin-left:auto;">
+                    <span class="step-tool">geox_deep_time_state</span>
+                    <button class="run-btn" data-step="2" style="margin-left:8px;">▶ Run</button>
+                </div>
+            </div>
+            <div class="step-output" id="output2"></div>
+        </div>
+
+        <!-- Step 3: Seismic Cognition -->
+        <div class="step-card" id="step3">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div>
+                    <div class="step-title">Seismic Cognition</div>
+                    <div class="step-desc">Seismic cognition on Malay Basin 3D volume</div>
+                </div>
+                <div style="margin-left:auto;">
+                    <span class="step-tool">geox_seismic_compute</span>
+                    <button class="run-btn" data-step="3" style="margin-left:8px;">▶ Run</button>
+                </div>
+            </div>
+            <div class="step-output" id="output3"></div>
+        </div>
+
+        <!-- Step 4: Prospect Evaluation -->
+        <div class="step-card" id="step4">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div>
+                    <div class="step-title">Prospect Evaluation</div>
+                    <div class="step-desc">Evaluate a Malay Basin prospect (Dulang area)</div>
+                </div>
+                <div style="margin-left:auto;">
+                    <span class="step-tool">geox_prospect</span>
+                    <button class="run-btn" data-step="4" style="margin-left:8px;">▶ Run</button>
+                </div>
+            </div>
+            <div class="step-output" id="output4"></div>
+        </div>
+
+        <!-- Step 5: Falsify Claim -->
+        <div class="step-card" id="step5">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div>
+                    <div class="step-title">Falsify Claim</div>
+                    <div class="step-desc">Test a geological claim about Malay Basin through Popperian falsification</div>
+                </div>
+                <div style="margin-left:auto;">
+                    <span class="step-tool">geox_falsify</span>
+                    <button class="run-btn" data-step="5" style="margin-left:8px;">▶ Run</button>
+                </div>
+            </div>
+            <div class="step-output" id="output5"></div>
+        </div>
+
+        <!-- Step 6: Evidence Summary -->
+        <div class="step-card" id="step6">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div>
+                    <div class="step-title">Evidence Synthesis</div>
+                    <div class="step-desc">Synthesize all evidence into grounded conclusion</div>
+                </div>
+                <div style="margin-left:auto;">
+                    <span class="step-tool">geox_evidence</span>
+                    <button class="run-btn" data-step="6" style="margin-left:8px;">▶ Run</button>
+                </div>
+            </div>
+            <div class="step-output" id="output6"></div>
+        </div>
+    </div>
+
+    <script>
+        // MCP Status
+        (async () => {
+            const el = document.getElementById('mcpStatusE2E');
+            try {
+                const alive = await GEOX_MCP.ping();
+                el.textContent = alive ? '✅ MCP Connected' : '❌ MCP Disconnected';
+                el.style.borderColor = alive ? 'var(--emerald)' : 'var(--red)';
+                el.style.color = alive ? 'var(--emerald)' : 'var(--red)';
+            } catch {
+                el.textContent = '❌ MCP Disconnected';
+                el.style.borderColor = 'var(--red)';
+                el.style.color = 'var(--red)';
+            }
+        })();
+
+        function updateProgress() {
+            const total = 6;
+            let completed = 0;
+            for (let i = 1; i <= total; i++) {
+                const card = document.getElementById(`step${i}`);
+                if (card.classList.contains('completed')) completed++;
+            }
+            document.getElementById('progressFill').style.width = `${(completed / total) * 100}%`;
+        }
+
+        async function runStep(stepNum) {
+            const card = document.getElementById(`step${stepNum}`);
+            const output = document.getElementById(`output${stepNum}`);
+            const btn = card.querySelector('.run-btn');
+            
+            card.className = 'step-card running';
+            btn.disabled = true;
+            output.innerHTML = '<span style="color:var(--blue);">⏳ Running...</span>';
+            output.className = 'step-output show';
+
+            try {
+                let result;
+                switch (stepNum) {
+                    case 1:
+                        result = await GEOX_MCP.tools.basin('Malay Basin', 'profile');
+                        output.innerHTML = `<div style="color:var(--emerald);font-weight:600;">✅ Basin Profile</div>
+                            <div style="color:var(--text2);margin-top:4px;">${result.summary || JSON.stringify(result).slice(0, 400)}</div>`;
+                        break;
+                    case 2:
+                        result = await GEOX_MCP.callTool('geox_deep_time_state', { age_ma: 30, period: 'Oligocene', include_pending_datasets: true });
+                        output.innerHTML = `<div style="color:var(--emerald);font-weight:600;">✅ Deep Time State</div>
+                            <div style="color:var(--text2);margin-top:4px;">${result.summary || JSON.stringify(result).slice(0, 400)}</div>`;
+                        break;
+                    case 3:
+                        result = await GEOX_MCP.callTool('geox_seismic_compute', { mode: 'synthetic', wavelet_freq: 30, sample_interval_s: 0.002 });
+                        output.innerHTML = `<div style="color:var(--emerald);font-weight:600;">✅ Seismic Computation</div>
+                            <div style="color:var(--text2);margin-top:4px;">${result.summary || 'Synthetic computed for Malay Basin parameters'}</div>`;
+                        break;
+                    case 4:
+                        result = await GEOX_MCP.callTool('geox_prospect', { prospect_ref: 'DULANG-MAIN', mode: 'screen' });
+                        output.innerHTML = `<div style="color:var(--emerald);font-weight:600;">✅ Prospect Screening</div>
+                            <div style="color:var(--text2);margin-top:4px;">${result.summary || JSON.stringify(result).slice(0, 400)}</div>`;
+                        break;
+                    case 5:
+                        result = await GEOX_MCP.tools.falsify('The Malay Basin is a Cenozoic rift basin with Oligocene-Miocene clastic fill', 'geological');
+                        const filters = result.kill_matrix || result.filters || [];
+                        const passCount = filters.filter(f => f.verdict === 'PASS').length;
+                        const killCount = filters.filter(f => f.verdict === 'KILL').length;
+                        const filterHtml = filters.length > 0 ? `
+                            <div style="margin-top:8px;border:1px solid #333;border-radius:6px;padding:8px;">
+                                <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#9090a0;margin-bottom:6px;">7-Filter Kill Matrix</div>
+                                ${filters.map(f => `
+                                    <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:11px;font-family:var(--font-mono);">
+                                        <span>${f.id || f.name}: ${f.description || ''}</span>
+                                        <span style="color:${f.verdict === 'PASS' ? '#2ed573' : '#ff4757'};font-weight:600;">${f.verdict || 'UNKNOWN'}</span>
+                                    </div>
+                                `).join('')}
+                                <div style="margin-top:6px;padding-top:6px;border-top:1px solid #333;font-size:11px;">
+                                    <span style="color:#2ed573;">${passCount} PASS</span> · <span style="color:#ff4757;">${killCount} KILL</span> · 
+                                    Overall: <span style="color:${killCount === 0 ? '#2ed573' : '#ff4757'};font-weight:600;">${killCount === 0 ? 'PROCEED' : 'KILLED'}</span>
+                                </div>
+                            </div>
+                        ` : '';
+                        output.innerHTML = `<div style="color:var(--emerald);font-weight:600;">✅ Falsification Complete</div>
+                            <div style="color:var(--text2);margin-top:4px;">${result.summary || JSON.stringify(result).slice(0, 400)}</div>
+                            ${filterHtml}`;
+                        break;
+                    case 6:
+                        result = await GEOX_MCP.callTool('geox_evidence', { mode: 'synthesize', query: 'Malay Basin petroleum system', scope: 'all' });
+                        output.innerHTML = `<div style="color:var(--emerald);font-weight:600;">✅ Evidence Synthesized</div>
+                            <div style="color:var(--text2);margin-top:4px;">${result.summary || JSON.stringify(result).slice(0, 400)}</div>`;
+                        break;
+                }
+                card.className = 'step-card completed';
+                output.className = 'step-output show success';
+            } catch (err) {
+                output.innerHTML = `<div style="color:var(--red);font-weight:600;">❌ Failed</div>
+                    <div style="color:var(--text2);margin-top:4px;font-size:11px;">${err.message}</div>`;
+                card.className = 'step-card failed';
+                output.className = 'step-output show error';
+            }
+            btn.disabled = false;
+            updateProgress();
+        }
+
+        // Individual step buttons
+        document.querySelectorAll('.run-btn').forEach(btn => {
+            btn.addEventListener('click', () => runStep(parseInt(btn.dataset.step)));
+        });
+
+        // Run All
+        document.getElementById('runAllBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('runAllBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Running 6 steps...';
+            for (let i = 1; i <= 6; i++) {
+                await runStep(i);
+            }
+            btn.textContent = '✅ COMPLETE — Run Again';
+            btn.disabled = false;
+        });
+
+        // Step descriptions
+        console.log('🔥 GEOX Malay Basin E2E Workflow — DITEMPA BUKAN DIBERI');
+    </script>
+</body>
+</html>
