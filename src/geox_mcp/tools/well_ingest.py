@@ -171,12 +171,14 @@ async def geox_well_ingest(
     # is wrapped as ToolResult with structured_content + is_error + meta.ttlMs.
     # Validation failures reach the agent as recoverable tool execution errors
     # (SEP-1303), not buried JSON in result.content.
-    if mode in ("las", "auto") and source_uri and (las_metadata or las_curve_info):
+    if mode in ("las", "auto") and (las_metadata or las_curve_info):
         from geox_mcp.tools.ingestion import geox_las_inspect as _impl
 
-        if mode == "auto" and any(source_uri.lower().endswith(ext) for ext in (".las", ".LAS")):
+        if mode == "las":
             return _inspect_to_tool_result(await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or []))
-        elif mode == "las":
+        elif mode == "auto" and source_uri and any(source_uri.lower().endswith(ext) for ext in (".las", ".LAS")):
+            return _inspect_to_tool_result(await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or []))
+        elif mode == "auto":
             return _inspect_to_tool_result(await _impl(las_metadata=las_metadata or {}, las_curve_info=las_curve_info or []))
 
     if mode in ("segy", "auto") and segy_metadata:
