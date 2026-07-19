@@ -1,0 +1,43 @@
+{
+  "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
+  "app_id": "geox.malay-basin.e2e",
+  "version": "1.0.0-HARDENED",
+  "domain": "workflow",
+  "display_name": "Malay Basin End-to-End Workflow",
+  "description": "6-step E2E workflow connecting geox_basin → geox_deep_time_state → geox_seismic_compute → geox_prospect → geox_falsify → geox_evidence",
+  "icon": "https://geox.arif-fazil.com/geox-icon.svg",
+  "required_tools": [
+    "mcp.geox.basin",
+    "mcp.geox.deep_time_state",
+    "mcp.geox.seismic_compute",
+    "mcp.geox.prospect",
+    "mcp.geox.falsify",
+    "mcp.geox.evidence"
+  ],
+  "ui_entry": {
+    "resource_uri": "https://geox.arif-fazil.com/malay_basin_workflow.html",
+    "mode": "inline-or-external",
+    "capability_required": ["embedded_webview"],
+    "sandbox": "allow-scripts allow-same-origin"
+  },
+  "events": {
+    "supported": ["app.initialize", "ui.action", "ui.state.change", "telemetry.emit"],
+    "max_payload_size": 1048576
+  },
+  "fallback": {
+    "chain": ["inline", "external", "card", "text"],
+    "external_url": "https://geox.arif-fazil.com/malay_basin_workflow.html"
+  },
+  "arifos": {
+    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11"],
+    "audit_level": "standard",
+    "vault_route": "999_VAULT"
+  },
+  "meta": {
+    "author": "GEOX Platform Team",
+    "license": "MIT",
+    "keywords": ["malay-basin", "workflow", "e2e", "falsify", "prospect", "seismic"],
+    "created_at": "2026-07-19T00:00:00Z",
+    "updated_at": "2026-07-19T00:00:00Z"
+  }
+}

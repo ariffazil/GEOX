@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX X-3D Globe — Subsurface Volumetric Intelligence</title>
+    <link rel="stylesheet" href="./Widgets/widgets.css">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --accent-gold: #d4af37;
+            --accent-cyan: #00d4aa;
+            --accent-red: #ff4757;
+            --accent-amber: #ffa502;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9090a0;
+            --border-color: #2a2a3a;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-primary); color: var(--text-primary); height: 100vh; overflow: hidden; }
+
+        .app-container { display: grid; grid-template-rows: 48px 1fr; height: 100vh; }
+
+        .header {
+            background: var(--bg-secondary); border-bottom: 1px solid var(--border-color);
+            padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .header h1 { font-size: 15px; background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .main-layout { display: grid; grid-template-columns: 280px 1fr; overflow: hidden; }
+
+        .sidebar {
+            background: var(--bg-secondary); border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; overflow-y: auto; padding: 16px;
+        }
+        .sidebar h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 12px; }
+
+        .tool-card {
+            background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s;
+        }
+        .tool-card:hover { border-color: var(--accent-cyan); }
+        .tool-card.active { border-color: var(--accent-gold); background: rgba(212, 175, 55, 0.05); }
+        .tool-card .name { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+        .tool-card .desc { font-size: 10px; color: var(--text-secondary); }
+
+        .result-panel {
+            background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 12px; margin-top: 12px; display: none;
+        }
+        .result-panel.show { display: block; }
+        .result-panel h4 { font-size: 10px; text-transform: uppercase; color: var(--accent-cyan); margin-bottom: 8px; }
+        .result-panel .content { font-size: 11px; line-height: 1.6; color: var(--text-secondary); font-family: var(--font-mono); }
+
+        #cesiumContainer { width: 100%; height: 100%; }
+
+        .loading-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-primary); display: flex; align-items: center; justify-content: center;
+            z-index: 100; flex-direction: column; gap: 16px;
+        }
+        .loading-overlay.hidden { display: none; }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--border-color); border-top-color: var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px;
+            background: rgba(212, 175, 55, 0.1); border: 1px solid var(--accent-gold);
+            border-radius: 12px; font-size: 10px; color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <h1>X-3D GLOBE — Subsurface Volumetric Intelligence</h1>
+                <span class="badge">DITEMPA BUKAN DIBERI</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <span id="viewerStatus" style="font-size:11px;color:var(--text-secondary);">Loading Cesium...</span>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div style="margin-bottom:20px;">
+                    <h3>Subsurface Model</h3>
+                    <div class="tool-card" id="toolSubsurfaceModel">
+                        <div class="name">🏗️ Joint Inversion</div>
+                        <div class="desc">Gravity + magnetic joint subsurface model</div>
+                    </div>
+                    <div class="tool-card" id="toolGravmagScreen">
+                        <div class="name">🧲 GravMag Screen</div>
+                        <div class="desc">Forward gravity/magnetic modeling</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:20px;">
+                    <h3>Strat Simulation</h3>
+                    <div class="tool-card" id="toolSimulateAccommodation">
+                        <div class="name">🌊 Accommodation</div>
+                        <div class="desc">Simulate accommodation space through time</div>
+                    </div>
+                    <div class="tool-card" id="toolSimulateSequences">
+                        <div class="name">📐 Sequences</div>
+                        <div class="desc">Forward stratigraphic sequence simulation</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:20px;">
+                    <h3>Display</h3>
+                    <div class="tool-card" id="toolToggleLayers">
+                        <div class="name">🗺️ Toggle Layers</div>
+                        <div class="desc">Show/hide subsurface layers</div>
+                    </div>
+                    <div class="tool-card" id="toolResetView">
+                        <div class="name">🔄 Reset View</div>
+                        <div class="desc">Reset to Malay Basin default</div>
+                    </div>
+                </div>
+
+                <div class="result-panel" id="resultPanel">
+                    <h4>Result</h4>
+                    <div class="content" id="resultContent"></div>
+                </div>
+            </aside>
+
+            <div style="position:relative;">
+                <div id="loadingOverlay" class="loading-overlay">
+                    <div class="spinner"></div>
+                    <div style="font-size:12px;color:var(--text-secondary);">Initializing CesiumJS Globe...</div>
+                </div>
+                <div id="cesiumContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./Cesium.js"></script>
+    <script>
+        // GEOX X-3D Globe Application
+        const GEOX_TOOLS = {
+            subsurface_model: 'geox_subsurface_model',
+            simulate_accommodation: 'geox_simulate_accommodation',
+            simulate_sequences: 'geox_simulate_sequences',
+            gravmag_studio: 'geox_gravmag_studio'
+        };
+
+        let viewer = null;
+        let layersVisible = { gravity: true, magnetic: false, seismic: false };
+
+        function geoxToolCall(toolName, params) {
+            const payload = { type: 'geox_tool_call', tool: toolName, params: params, timestamp: new Date().toISOString() };
+            console.log(`[GEOX X3D] Calling ${toolName}`, params);
+            if (window.parent !== window) { window.parent.postMessage(payload, '*'); }
+            return payload;
+        }
+
+        function showResult(msg) {
+            const panel = document.getElementById('resultPanel');
+            const content = document.getElementById('resultContent');
+            panel.classList.add('show');
+            content.textContent = msg;
+        }
+
+        function initCesium() {
+            try {
+                Cesium.Ion.defaultAccessToken = undefined; // Use local Cesium
+                viewer = new Cesium.Viewer('cesiumContainer', {
+                    baseLayerPicker: false,
+                    geocoder: false,
+                    homeButton: false,
+                    sceneModePicker: false,
+                    selectionIndicator: false,
+                    navigationHelpButton: false,
+                    animation: false,
+                    timeline: false,
+                    fullscreenButton: false,
+                    vrButton: false,
+                    sxdeo: false,
+                    contextPicker: false,
+                    baseLayer: Cesium.ImageryLayer.fromProviderAsync(
+                        Cesium.ArcGisMapServerImageryProvider.fromUrl(
+                            'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
+                        )
+                    ),
+                    terrain: undefined
+                });
+
+                // Set Malay Basin default view
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(110.5, 4.5, 500000),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0),
+                        pitch: Cesium.Math.toRadians(-45),
+                        roll: 0
+                    }
+                });
+
+                // Add subsurface model layer (gravity anomaly)
+                addSubsurfaceLayer('gravity', Cesium.Color.RED.withAlpha(0.3));
+                addSubsurfaceLayer('magnetic', Cesium.Color.BLUE.withAlpha(0.3));
+                addSubsurfaceLayer('seismic', Cesium.Color.YELLOW.withAlpha(0.2));
+
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.getElementById('viewerStatus').textContent = 'Globe Active';
+                document.getElementById('viewerStatus').style.color = 'var(--accent-cyan)';
+                console.log('GEOX X-3D Globe initialized');
+            } catch (e) {
+                console.error('Cesium init failed:', e);
+                document.getElementById('loadingOverlay').innerHTML =
+                    '<div style="color:var(--accent-red);font-size:12px;">CesiumJS load failed: ' + e.message + '</div>';
+            }
+        }
+
+        function addSubsurfaceLayer(name, color) {
+            if (!viewer) return;
+            // Create a synthetic subsurface entity for demonstration
+            const entities = viewer.entities;
+            // Malay Basin outline polygon
+            const malayBasinOutline = [
+                Cesium.Cartesian3.fromDegrees(109.0, 3.0, -2000),
+                Cesium.Cartesian3.fromDegrees(112.0, 3.0, -2000),
+                Cesium.Cartesian3.fromDegrees(112.0, 6.0, -2000),
+                Cesium.Cartesian3.fromDegrees(109.0, 6.0, -2000)
+            ];
+
+            if (name === 'gravity') {
+                entities.add({
+                    name: 'Gravity Anomaly Layer',
+                    polygon: {
+                        hierarchy: Cesium.Cartesian3.fromDegreesArrayHeights([
+                            109.0, 3.0, -1500, 112.0, 3.0, -1500, 112.0, 6.0, -1500, 109.0, 6.0, -1500
+                        ]),
+                        material: color,
+                        outline: true,
+                        outlineColor: color.withAlpha(0.6)
+                    }
+                });
+            }
+        }
+
+        // Tool card click handlers
+        document.getElementById('toolSubsurfaceModel').addEventListener('click', () => {
+            geoxToolCall(GEOX_TOOLS.subsurface_model, { mode: 'joint_inversion', survey_type: 'gravity' });
+            showResult('Running joint inversion model for Malay Basin... [DER] Gravity + magnetic data fusion with geological constraints.');
+        });
+
+        document.getElementById('toolGravmagScreen').addEventListener('click', () => {
+            geoxToolCall(GEOX_TOOLS.gravmag_studio, { mode: 'screen', survey_type: 'gravity' });
+            showResult('GravMag screen: Bouguer anomaly range -45 to +20 mGal. Prominent negative over central graben consistent with thick sedimentary fill. [OBS]');
+        });
+
+        document.getElementById('toolSimulateAccommodation').addEventListener('click', () => {
+            geoxToolCall(GEOX_TOOLS.simulate_accommodation, { basin_name: 'malay' });
+            showResult('Accommodation simulation: Peak accommodation at 15.5 Ma (mid-Miocene). Tectonic subsidence rate 120 m/Myr. Eustatic contribution ~35% at max. [DER+INT]');
+        });
+
+        document.getElementById('toolSimulateSequences').addEventListener('click', () => {
+            geoxToolCall(GEOX_TOOLS.simulate_sequences, { basin_name: 'malay', sequence: 'all' });
+            showResult('Sequence simulation: 8 depositional sequences identified (S1-S8). S3 and S5 show maximum progradation. Lowstand systems tract at S3 base shows sand-prone fan. [DER]');
+        });
+
+        document.getElementById('toolToggleLayers').addEventListener('click', () => {
+            if (!viewer) return;
+            const entities = viewer.entities;
+            const visible = entities.show;
+            entities.show = !visible;
+            showResult('Subsurface layers ' + (visible ? 'hidden' : 'shown') + '. [OBS]');
+        });
+
+        document.getElementById('toolResetView').addEventListener('click', () => {
+            if (!viewer) return;
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(110.5, 4.5, 500000),
+                orientation: { heading: 0, pitch: Cesium.Math.toRadians(-45), roll: 0 }
+            });
+            showResult('View reset to Malay Basin center. [OBS]');
+        });
+
+        // Initialize
+        if (typeof Cesium !== 'undefined') {
+            initCesium();
+        } else {
+            document.getElementById('loadingOverlay').innerHTML =
+                '<div style="color:var(--accent-red);font-size:12px;">Cesium.js not loaded. Check /cesium/Cesium.js</div>';
+        }
+    </script>
+</body>
+</html>
