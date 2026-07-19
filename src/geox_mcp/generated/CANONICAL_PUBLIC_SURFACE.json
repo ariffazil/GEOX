@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-15T05:44:10.065098+00:00",
+  "generated_at": "2026-07-19T17:18:06.517917+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 15,
+  "public_count": 24,
   "internal_count": 54,
   "public_tools": [
     "geox_well_ingest",
@@ -19,7 +19,16 @@
     "geox_prospect",
     "geox_gravmag_studio",
     "geox_well_desk",
-    "geox_surface_status"
+    "geox_surface_status",
+    "geox_evidence",
+    "geox_basin_backstrip",
+    "geox_sediment_mass_balance",
+    "geox_thermal_maturity_history",
+    "geox_claim_graph_evaluate",
+    "geox_falsify",
+    "geox_contradiction_scan",
+    "geox_lem_predict",
+    "geox_to_wealth_bridge"
   ],
   "tools": [
     {
@@ -216,6 +225,123 @@
       "axis": "observe",
       "lane": "evidence",
       "description": "Federation-standard registry probe: tool discovery and health status.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
+      }
+    },
+    {
+      "name": "geox_evidence",
+      "domain": "governance.evidence",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
+      }
+    },
+    {
+      "name": "geox_basin_backstrip",
+      "domain": "earth.basin",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_sediment_mass_balance",
+      "domain": "earth.basin",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Source-to-sink sediment volume and mass accounting. Peters 2012 framework.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_thermal_maturity_history",
+      "domain": "earth.basin",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Burial + heat flow + maturity modeling through time. EasyRo + TTI.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_claim_graph_evaluate",
+      "domain": "governance",
+      "axis": "reason",
+      "lane": "judgment",
+      "description": "Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
+      }
+    },
+    {
+      "name": "geox_falsify",
+      "domain": "governance",
+      "axis": "reason",
+      "lane": "judgment",
+      "description": "Popperian falsification engine \u2014 Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL \u2192 rejected. All PASS \u2192 PROCEED to 888_JUDGE.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_contradiction_scan",
+      "domain": "governance",
+      "axis": "reason",
+      "lane": "judgment",
+      "description": "Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL \u2192888_HOLD.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
+      }
+    },
+    {
+      "name": "geox_lem_predict",
+      "domain": "earth.inference",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "LEM inference \u2014 predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_to_wealth_bridge",
+      "domain": "governance.bridge",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
