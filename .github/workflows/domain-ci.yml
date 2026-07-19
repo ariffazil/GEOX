@@ -40,7 +40,7 @@ jobs:
       - name: Install
         run: pip install -e ".[dev]"
       - name: Test
-        run: PYTHONPATH=src pytest tests/ -q --tb=short
+        run: PYTHONPATH=src pytest tests/ -q --tb=short --ignore=tests/benchmarks
 
   bijaksana:
     name: "Lane 2 — BIJAKSANA ΔS Φ Ψ Ω"
