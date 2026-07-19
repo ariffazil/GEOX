@@ -2610,6 +2610,7 @@ async def health_handler(request: Request) -> JSONResponse:
         "witness_oracle": "active",
         "note": fed_geometry_note or "local presence fallback",
     }
+    _public_count = len(CANONICAL_PUBLIC_TOOLS)
     return JSONResponse(
         {
             "status": "healthy",
@@ -2630,6 +2631,9 @@ async def health_handler(request: Request) -> JSONResponse:
             "physics_manifest_hash": _physics_hash,
             # ── Canonical 7-field health schema (per federation convention) ───
             "identity_hash": _GIT_VERSION,  # git SHA = identity proof
+            # ── Tool surface visibility (T₁ audit fix 2026-07-19) ───
+            "tools_loaded": _public_count,
+            "canonical_tools": _public_count,
             "apex_scalars": {
                 "G": {"value": None, "status": "UNMEASURED"},
                 "C_dark": {"value": None, "status": "UNMEASURED"},
