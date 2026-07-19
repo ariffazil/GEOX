@@ -2666,11 +2666,19 @@ async def health_handler(request: Request) -> JSONResponse:
     )
 
 
+_SERVICE_STARTED_AT: str = __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat()
+
+
 async def build_info_handler(request: Request) -> JSONResponse:
     return JSONResponse(
         {
             "version": GEOX_VERSION,
-            "git_version": _GIT_VERSION,
+            "source_commit": _GIT_VERSION,
+            "deployed_commit": _GIT_VERSION,
+            "build_commit": _GIT_VERSION,
+            "dirty": "unknown",
+            "service_started_at": _SERVICE_STARTED_AT,
+            "physics_manifest_hash": _GIT_VERSION,
             "contract_epoch": GEOX_CONTRACT_EPOCH,
             "seal": GEOX_SEAL,
         }

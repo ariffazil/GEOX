@@ -1,7 +1,7 @@
 {
   "name": "geox-gui",
   "version": "2026.04.10",
-  "description": "GEOX Earth Witness — Governed Geologist Cockpit (DITEMPA BUKAN DIBERI)",
+  "description": "GEOX Earth Witness \u2014 Governed Geologist Cockpit (DITEMPA BUKAN DIBERI)",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -57,7 +57,7 @@
     "constitutional-ai"
   ],
   "author": "Muhammad Arif bin Fazil <ariffazil@gmail.com>",
-  "license": "AGPL-3.0",
+  "license": "BSL-1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/ariffazil/GEOX.git",
