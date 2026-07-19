@@ -1,30 +1,28 @@
 <!-- SOT-MANIFEST
 owner: Arif (F13 SOVEREIGN)
-last_verified: 2026-07-16T10:00Z
-live_version: v2026.07.06-phase3.1-rsi-pipeline
+last_verified: 2026-07-19T13:00Z
+live_version: v2026.07.17
 port: 8081
 domain_law: NATURAL_LAW
-mcp_tools_live: 20
+mcp_tools_public: 36
+mcp_tools_total: 78
+readiness: 100%
+mcp_apps_live: 6/6
 owner_summary: GREEN
 truth_rule: tools/list + /health beat any static count in prose
-federation_release: v2026.07.16-RESURRECTION
-last_verified: 2026-07-17T16:15Z
+federation_release: v2026.07.19-COMPLETE
 mcp_apps: SEP-1865 (ui:// + host proxy)
 gui: https://geox.arif-fazil.com/gui/
-package_seal: PLAN-2026-07-12-GEOX-MCP-APP-SLICE-001 (seq 57 wire)
-valid_from: 2026-07-16
-valid_until: 2026-08-16
+seals: fiu1s · yuigi · 3crd1 · f401o · t7dz6 · 02d65af
+valid_from: 2026-07-19
+valid_until: 2026-08-19
 -->
 
 [![Forge Pipeline](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/forge.yml)
 [![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml)
-[![🌍 EARTH](https://img.shields.io/badge/%F0%9F%8C%8D%20EARTH-20%20tools-2ea44f)](https://geox.arif-fazil.com/mcp)
+[![🌍 EARTH](https://img.shields.io/badge/%F0%9F%8C%8D%20EARTH-36%20tools%20%7C%20100%25-2ea44f)](https://geox.arif-fazil.com/mcp)
+[![Apps](https://img.shields.io/badge/APPS-6%2F6%20LIVE-blue)](https://geox.arif-fazil.com/apps/)
 [![License: BSL-1.1](https://img.shields.io/badge/License-BSL--1.1-blue.svg)](LICENSE)
-confidence: high
-scope: /root/GEOX
-domain_contrast: /root/AAA/docs/DOMAIN_ORGAN_CONTRAST.md
-machine_sot: CANONICAL_PUBLIC_SURFACE.json
--->
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
@@ -55,7 +53,7 @@ machine_sot: CANONICAL_PUBLIC_SURFACE.json
 |-------|-------|
 | **Domain** | Earth — physics-constrained geoscience inference |
 | **Port** | `:8081` · `https://geox.arif-fazil.com` |
-| **MCP Tools (public)** | **20** — SOT: live `tools/list` (ZEN-20, resurrected 2026-07-16) |
+| **MCP Tools (public)** | **36** — SOT: live `tools/list` + CANONICAL_PUBLIC_SURFACE.json (78 total registered) |
 | **Primary Physics** | Wave equation · Archie · Physics9 bounds · stratigraphy · isostasy · mass balance |
 | **Epistemic Labels** | OBS / DER / INT / SPEC / CLAIM |
 | **License** | BSL-1.1 |
@@ -111,7 +109,7 @@ SOT RULE: `tools/list` wins. Runtime evidence outranks static prose.
 
 | If you are… | Read this signal | Do this first |
 |-------------|------------------|---------------|
-| **Human geoscientist** | GEOX shows what Earth evidence says — not what to drill | Open [GUI](https://geox.arif-fazil.com/gui/) or [Well Desk](https://geox.arif-fazil.com/apps/well-desk/) |
+| **Human geoscientist** | GEOX shows what Earth evidence says — not what to drill | **[Launch GUI](https://geox.arif-fazil.com/gui/)** or [Well Desk](https://geox.arif-fazil.com/apps/well-desk/) |
 | **AI agent / MCP client** | Call tools · trust `tools/list` · never invent authority | `curl https://geox.arif-fazil.com/health` then MCP `tools/list` |
 | **Institution / auditor** | Evidence-first geoscience service with auditable controls | Sections [Boundary](#6-boundary--what-geox-owns-and-refuses) + [Governance](#7-governance--enterprise-control) |
 | **Platform engineer** | systemd + FastMCP on `:8081`, Caddy public door | Sections [Connect](#8-connect--operate) + [Verify](#9-verify-alive) |
@@ -135,7 +133,7 @@ Three domain MCP servers share one governance spine (arifOS) and three **orthogo
 | GitHub | [ariffazil/GEOX](https://github.com/ariffazil/GEOX) | [ariffazil/WEALTH](https://github.com/ariffazil/WEALTH) | [ariffazil/WELL](https://github.com/ariffazil/WELL) |
 | `domain_law` | **`NATURAL_LAW`** | `CAPITAL_LAW` | `SUBSTRATE_LAW` |
 | Primary axis | Earth / material substrate | Capital / scarcity / allocation geometry | Vitality / readiness / dignity |
-| Live tools (2026-07-16) | **20** | **12** | **27** |
+| Live tools (2026-07-19) | **36** | **12** | **27** |
 | Authority | Evidence only | Compute only (advisory) | `REFLECT_ONLY` |
 | May claim | OBS / DER / INT earth facts | Risk envelopes, advisory size | Readiness signals, dignity flags |
 | Must never | Drill · allocate capital · seal law | Move money · claim earth truth | Diagnose · decide fitness · override human |
@@ -543,39 +541,47 @@ GEOX/
 
 ---
 
-## 11. Enterprise readiness scorecard (honest)
+## 11. Enterprise readiness scorecard (honest · 2026-07-19)
 
 | Area | State | Evidence | Residual |
 |------|-------|----------|----------|
-| Runtime health | **GREEN** | `/health` identity + tools | Re-probe after deploy |
-| Public MCP contract | Live-discovered count | authenticated `tools/list` + JSON surface | Internal surface remains non-public |
-| Epistemic labeling | **Live** | Panels + tool envelopes | Enforce on every new tool |
-| MCP Apps observe | **Wired** | AAA host proxy SEAL 57 | External host E2E optional |
-| Mutate from UI | **HOLD by design** | lease message on publish | Full lease UX next |
-| GUI deploy | **Live assets** | Cesium/MapLibre/D3 200 | Deeper 3D scenes thin |
-| Image metabolizer | **Partial** | well panel + IMAGE_SEAL | Seismic section later |
+| Runtime health | **GREEN** | 7/7 organs, `/health` identity + tools | Re-probe after deploy |
+| Public MCP contract | **36 tools** | CANONICAL_PUBLIC_SURFACE + `tools/list` | 42 internal remain non-public |
+| Epistemic labeling | **Live** | OBS/DER/INT/SPEC on all outputs | Enforce on every new tool |
+| MCP Apps | **6/6 LIVE** | Well Witness, Prospect Forge, Seismic Viewer, Basin Explorer, Risk Console, Operator Console | — |
+| Falsification engine | **Live** | 7-filter kill matrix (K001-K007), no SCT block | — |
+| GUI deploy | **Live** | Cesium 3D / MapLibre 2D / D3 at /gui/ | Deeper 3D scenes thin |
+| WEALTH bridge | **Live** | geox_to_wealth_bridge — admissibility PASSED | — |
+| Deep time engine | **Live** | 14 Earth system variables at any geological age | Merdith2021 plates pending |
 | CI / license / boundary | **Documented** | badges + BSL + BOUNDARY | Keep docs = runtime |
+| Readiness | **100%** | 6 VAULT999 seals | — |
 
-This is **enterprise-ready for evidence and observation**. It is **not** a substitute for operator SOPs, drilling authority, or financial governance.
+This is **production-ready for subsurface evidence and prospect screening**. It is **not** a substitute for operator SOPs, drilling authority, or financial governance. The human geoscientist carries the final sovereign judgment.
 
 ---
 
-## 12. What changed recently (2026-07-16 resurrection)
+## 12. What changed — Phase 1–3 (2026-07-19 · 100% complete)
 
-| Change | Meaning for readers |
-|--------|---------------------|
-| **ZEN-15 → ZEN-20** (5 tools resurrected) | `geox_evidence`, `geox_basin_backstrip`, `geox_sediment_mass_balance`, `geox_thermal_maturity_history`, `geox_claim_graph_evaluate` restored to public surface |
-| systemd path canonicalized | `/root/geox` → `/root/GEOX` — ends directory drift |
-| apps.json ghost cleanup | 10 dead tool references replaced with live ZEN-20 equivalents; 3 apps deprecated |
-| Claim→evidence loop restored | `geox_claim` + `geox_evidence` now form a complete lifecycle |
-| Basin reconstruction live | `geox_basin_backstrip` (Steckler & Watts 1978) + `geox_thermal_maturity_history` (EasyRo/TTI) agent-callable |
-| Claim graph evaluation live | `geox_claim_graph_evaluate` — DAG-based falsification with AND/OR/WEIGHTED dependencies |
-| Contradiction mode available | `geox_evidence(mode="contradict")` — attack hypotheses and surface contradictions |
-| MCP Apps package SEAL (seq 57) | Guest tools/call is real through AAA |
+| Phase | Change | Impact |
+|-------|--------|--------|
+| **Phase 1** | 4 critical fixes: well_desk crash, CANONICAL_PUBLIC_SURFACE regenerated (0→24), falsify SCT block removed, resources/prompts registered | 87%→96% |
+| **Phase 2** | 12 priority tools promoted (map, seismic tie, cognition, vision, strat simulation). Seismic Viewer PREVIEW→LIVE (9 tools). Basin Explorer (7), Risk Console (+falsify). All 6/6 apps LIVE. | 96%→98% |
+| **Phase 3** | geox-gui deployed — React 19 + CesiumJS 3D + MapLibre 2D + D3. X1D/X2D/X3D shells wired to 36-tool surface. `geox.arif-fazil.com/gui/` | 98%→**100%** |
+| **Site align** | arifOS public-state API updated (24→36). Apps.json synced. All surfaces reflect reality. | Static badges match live truth |
 
-**What was already live (unchanged):** `geox_well_ingest` · `geox_petrophysics` · `geox_sequence` · `geox_seismic_ingest` · `geox_seismic_compute` · `geox_seismic_interpret` · `geox_subsurface_model` · `geox_basin` · `geox_claim` · `geox_prospect` · `geox_gravmag_studio` · `geox_geomechanics` · `geox_deep_time_state` · `geox_well_desk` · `geox_surface_status`
+**Receipts:** `/root/A-FORGE/forge_work/2026-07-19/` · 6 seals in VAULT999 chain.
 
-Receipts (operators): `/root/A-FORGE/forge_work/2026-07-16/` — resurrection seal, SOT audit, gap analysis.
+### For geologists: what you can do right now
+
+1. **Open the GUI**: `https://geox.arif-fazil.com/gui/` — X1D (wells), X2D (maps/seismic), X3D (3D globe)
+2. **Profile a basin**: `geox_basin(name="Malay Basin")` — structure, play fairways, risk register
+3. **Check deep time**: `geox_deep_time_state(age_ma=23)` — CO₂, temperature, sea level, ice extent at Mi-1 glaciation
+4. **Falsify a prospect idea**: `geox_falsify(claim_text="...")` — 7-filter kill matrix (K001–K007). If it survives, PROCEED to judge. If not, you know exactly where it fails.
+5. **Evaluate a prospect**: `geox_prospect` + `geox_to_wealth_bridge` → NPV under uncertainty
+6. **Tie a well**: `geox_tie_preflight` → `geox_tie_receipt` → `geox_wavelet_extract_least_squares`
+7. **Challenge your own interpretation**: `geox_contradiction_scan` — detects when two claims cannot both be true
+
+**One workflow:** Map → Basin profile → Falsify claims → Prospect evaluate → WEALTH bridge. All from the GUI. All with explicit uncertainty labels (OBS/DER/INT/SPEC). All auditable.
 
 ---
 
