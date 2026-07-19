@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOX Seismic Viewer</title>
+    <title>GEOX Seismic Viewer — X2D Cognition Shell</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/gui/assets/geox-mcp-bridge.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=JetBrains+Mono&display=swap');
+        @import url('https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css');
         
         :root {
             --geox-black: #0a0a0c;
             --geox-accent: #3b82f6;
+            --geox-cognition: #8b5cf6;
+            --geox-visual: #f59e0b;
             --geox-warn: #f59e0b;
             --geox-stop: #ef4444;
             --geox-glass: rgba(20, 20, 25, 0.85);
@@ -50,17 +54,14 @@
 </head>
 <body class="flex flex-col">
 
-    <!-- Header / Navigation -->
+    <!-- Header -->
     <header class="glass h-14 flex items-center justify-between px-6 z-50">
         <div class="flex items-center gap-3">
             <div class="w-2 h-6 bg-blue-500 rounded-full animate-pulse"></div>
-            <h1 class="font-semibold text-lg tracking-tight">GEOX <span class="text-blue-400">SEISMIC</span></h1>
+            <h1 class="font-semibold text-lg tracking-tight">GEOX <span class="text-blue-400">SEISMIC</span> <span class="text-purple-400 text-xs">X2D COGNITION</span></h1>
         </div>
         <div class="flex items-center gap-4 text-xs font-medium">
-            <div class="flex items-center gap-2 px-3 py-1 bg-slate-800 rounded-full">
-                <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                <span class="opacity-70">WIKI-G: ACTIVE</span>
-            </div>
+            <span id="mcpStatusX2d" class="px-3 py-1 bg-slate-800 rounded-full border border-slate-700">⏳ MCP...</span>
             <button id="holdBtn" class="flex items-center gap-2 px-4 py-1 bg-amber-600/20 text-amber-500 border border-amber-600/30 rounded-full hover:bg-amber-600/30 transition-all">
                 <span class="font-bold tracking-widest">888_HOLD</span>
             </button>
@@ -71,11 +72,11 @@
     <main class="flex-1 relative flex overflow-hidden">
         
         <!-- Left Pane: Controls -->
-        <aside class="w-72 glass border-r divide-y divide-white/5 flex flex-col p-4 gap-6 z-40">
+        <aside class="w-72 glass border-r divide-y divide-white/5 flex flex-col p-4 gap-4 z-40 overflow-y-auto">
             <div>
-                <label class="text-[10px] uppercase tracking-widest text-slate-500 mb-3 block">Display Canon</label>
-                <div class="space-y-4">
-                    <div class="space-y-2">
+                <label class="text-[10px] uppercase tracking-widest text-slate-500 mb-2 block">Display Canon</label>
+                <div class="space-y-3">
+                    <div class="space-y-1">
                         <div class="flex justify-between text-[11px] mono">
                             <span>ToAC CONTRAST</span>
                             <span id="contrastVal">1.2x</span>
@@ -83,23 +84,58 @@
                         <input type="range" id="contrast" min="0.5" max="3" step="0.1" value="1.2" 
                                class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
                     </div>
-                </div>
-            </div>
-
-            <div class="pt-4">
-                <label class="text-[10px] uppercase tracking-widest text-slate-500 mb-3 block">Claim Evidence</label>
-                <div class="space-y-2">
-                    <div class="p-3 bg-blue-500/5 border border-blue-500/10 rounded-lg">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[10px] font-bold text-blue-400">CLAIM</span>
-                            <span class="text-[9px] opacity-50 mono">v1.2</span>
-                        </div>
-                        <p class="text-[11px] leading-relaxed opacity-80 italic">Seismic section vertically exaggerated 5.0x for structural clarity.</p>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-slate-500 mb-1 block">Volume Ref</label>
+                        <select id="volumeRef" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs">
+                            <option value="MALAY-BASIN-3D">Malay Basin 3D</option>
+                            <option value="DEMO-SYNTHETIC">Demo Synthetic</option>
+                            <option value="PENYU-3D">Penyu 3D</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="orientation" class="flex-1 bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs">
+                            <option value="inline">Inline</option>
+                            <option value="xline">Crossline</option>
+                            <option value="timeslice">Timeslice</option>
+                        </select>
+                        <input type="number" id="frameIndex" value="250" class="w-16 bg-slate-800 border border-slate-700 rounded px-2 py-1 text-xs mono text-center">
                     </div>
                 </div>
             </div>
 
-            <div class="mt-auto pt-4 flex flex-col gap-2">
+            <!-- X2D Cognition Toolbar -->
+            <div class="space-y-2">
+                <label class="text-[10px] uppercase tracking-widest text-slate-500 block">🧠 X2D Tools</label>
+                <button id="btnCognition" class="w-full py-2 px-3 bg-purple-600/20 text-purple-400 border border-purple-600/30 rounded text-xs hover:bg-purple-600/30 transition-all">
+                    🔬 Seismic Cognition
+                </button>
+                <button id="btnVisualUnderstand" class="w-full py-2 px-3 bg-amber-600/20 text-amber-400 border border-amber-600/30 rounded text-xs hover:bg-amber-600/30 transition-all">
+                    👁️ Visual Understand
+                </button>
+                <button id="btnGenerateHypotheses" class="w-full py-2 px-3 bg-emerald-600/20 text-emerald-400 border border-emerald-600/30 rounded text-xs hover:bg-emerald-600/30 transition-all">
+                    🧩 Generate Hypotheses
+                </button>
+            </div>
+
+            <!-- Results Panel -->
+            <div id="x2dResults" class="hidden space-y-2">
+                <label class="text-[10px] uppercase tracking-widest text-slate-500 block">📋 Results</label>
+                <div id="x2dResultsContent" class="p-3 bg-slate-800/50 border border-slate-700 rounded-lg text-[11px] leading-relaxed max-h-48 overflow-y-auto">
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <label class="text-[10px] uppercase tracking-widest text-slate-500 mb-2 block">Claim Evidence</label>
+                <div class="p-3 bg-blue-500/5 border border-blue-500/10 rounded-lg">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-bold text-blue-400">CLAIM</span>
+                        <span class="text-[9px] opacity-50 mono">v1.2</span>
+                    </div>
+                    <p class="text-[11px] leading-relaxed opacity-80 italic" id="claimText">Seismic section vertically exaggerated 5.0x for structural clarity.</p>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-2 flex flex-col gap-2">
                 <button id="syncState" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-xs border border-white/10 rounded transition-all">
                     SYNC TO LLM
                 </button>
@@ -110,11 +146,35 @@
         <div class="flex-1 relative seismic-canvas overflow-hidden">
             <div id="scanline" class="scanline" style="top: 50%;"></div>
             
-            <!-- Context HUD overlay -->
+            <!-- Context HUD -->
             <div class="absolute bottom-6 left-6 flex gap-4">
                 <div class="glass px-4 py-2 rounded-lg border border-white/10 flex flex-col pointer-events-none">
                     <span class="text-[10px] text-slate-500 tracking-widest lowercase">z-depth</span>
                     <span id="coordZ" class="mono text-lg text-blue-400">4250.0 ms</span>
+                </div>
+                <div class="glass px-4 py-2 rounded-lg border border-white/10 flex flex-col pointer-events-none">
+                    <span class="text-[10px] text-slate-500 tracking-widest lowercase">Cognition</span>
+                    <span id="cognitionStatus" class="mono text-sm text-purple-400">IDLE</span>
+                </div>
+            </div>
+
+            <!-- MapLibre Mini-Map -->
+            <div id="mapPanel" class="absolute bottom-6 right-6 w-64 h-48 rounded-lg overflow-hidden border border-white/20 shadow-2xl z-30" style="display:none;">
+                <div id="miniMap" style="width:100%;height:100%;"></div>
+                <button id="closeMap" class="absolute top-1 right-1 w-5 h-5 bg-black/60 text-white rounded text-xs flex items-center justify-center hover:bg-black/80">x</button>
+            </div>
+            <button id="toggleMap" class="absolute bottom-6 right-6 glass px-3 py-1.5 rounded border border-white/10 text-[10px] text-slate-400 hover:text-white hover:border-blue-500/30 transition-all z-30">
+                🗺️ Map
+            </button>
+
+            <!-- Cognition Results Overlay -->
+            <div id="cognitionOverlay" class="hidden absolute inset-0 glass bg-slate-900/80 z-40 flex items-center justify-center p-12">
+                <div class="max-w-2xl w-full bg-slate-900 border border-purple-600/50 p-8 rounded-2xl shadow-2xl max-h-[80vh] overflow-y-auto">
+                    <h2 class="text-xl font-bold mb-4 text-purple-400">🧠 Cognition Results</h2>
+                    <div id="cognitionResultsContent" class="text-sm leading-relaxed opacity-90 space-y-3"></div>
+                    <button id="closeCognition" class="mt-6 w-full py-3 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-500 transition-all">
+                        CLOSE
+                    </button>
                 </div>
             </div>
 
@@ -135,35 +195,24 @@
 
     </main>
 
-    <!-- UI Bridge Script -->
+    <!-- UI Bridge + X2D MCP Logic -->
     <script>
-        // GEOX UI Bridge Logic
-        const bridge = {
-            async emit(method, params = {}) {
-                const event = {
-                    jsonrpc: "2.0",
-                    method,
-                    params,
-                    timestamp: new Date().toISOString()
-                };
-                console.log(`[GEOX Bridge] Emitting: ${method}`, event);
-                
-                // standard postMessage pattern for iframes
-                if (window.parent !== window) {
-                    window.parent.postMessage(event, "*");
-                }
-            },
-            
-            init() {
-                this.emit("app.initialize", {
-                    app_id: "geox.seismic.viewer",
-                    version: "1.0.0",
-                    host_capabilities: ["mcp_tools", "artifacts"]
-                });
+        // MCP connection check
+        (async () => {
+            const statusEl = document.getElementById('mcpStatusX2d');
+            try {
+                const alive = await GEOX_MCP.ping();
+                statusEl.innerHTML = alive ? '✅ MCP' : '❌ MCP DOWN';
+                statusEl.className = alive ? 'px-3 py-1 rounded-full border text-xs ' + 
+                    'bg-green-900/30 text-green-400 border-green-600/30' : 
+                    'px-3 py-1 rounded-full border text-xs bg-red-900/30 text-red-400 border-red-600/30';
+            } catch {
+                statusEl.innerHTML = '❌ MCP DOWN';
+                statusEl.className = 'px-3 py-1 rounded-full border text-xs bg-red-900/30 text-red-400 border-red-600/30';
             }
-        };
+        })();
 
-        // Interactive UI logic
+        // DOM refs
         const contrast = document.getElementById('contrast');
         const contrastVal = document.getElementById('contrastVal');
         const holdBtn = document.getElementById('holdBtn');
@@ -172,17 +221,117 @@
         const syncBtn = document.getElementById('syncState');
         const scanline = document.getElementById('scanline');
         const coordZ = document.getElementById('coordZ');
+        const cognitionStatus = document.getElementById('cognitionStatus');
+        const x2dResults = document.getElementById('x2dResults');
+        const x2dResultsContent = document.getElementById('x2dResultsContent');
+        const cognitionOverlay = document.getElementById('cognitionOverlay');
+        const cognitionResultsContent = document.getElementById('cognitionResultsContent');
 
+        const bridge = {
+            async emit(method, params = {}) {
+                const event = { jsonrpc: "2.0", method, params, timestamp: new Date().toISOString() };
+                console.log(`[GEOX X2D] Emitting: ${method}`, event);
+                if (window.parent !== window) window.parent.postMessage(event, "*");
+            },
+            init() {
+                this.emit("app.initialize", { app_id: "geox.seismic.viewer.x2d", version: "1.0.0" });
+            }
+        };
+
+        // ===== X2D.1: Seismic Cognition =====
+        document.getElementById('btnCognition').addEventListener('click', async () => {
+            const volRef = document.getElementById('volumeRef').value;
+            const frame = parseInt(document.getElementById('frameIndex').value) || 0;
+            const orient = document.getElementById('orientation').value;
+            
+            cognitionStatus.textContent = 'PROCESSING...';
+            x2dResults.classList.remove('hidden');
+            x2dResultsContent.innerHTML = '<div class="text-purple-400">⏳ Running seismic cognition...</div>';
+
+            try {
+                const result = await GEOX_MCP.tools.seismicCognition(volRef, frame, orient);
+                cognitionStatus.textContent = 'DONE';
+                
+                // Show in overlay
+                cognitionOverlay.classList.remove('hidden');
+                cognitionResultsContent.innerHTML = `
+                    <div class="border border-purple-600/30 rounded-lg p-4 bg-purple-600/5">
+                        <h3 class="font-semibold text-purple-400 mb-2">Seismic Cognition — ${volRef}</h3>
+                        <p>${result.summary || 'Cognition analysis complete.'}</p>
+                        ${result.features ? `
+                        <div class="mt-3 space-y-1">
+                            ${result.features.map(f => `<div class="flex gap-2 text-xs">
+                                <span class="text-purple-400">•</span>
+                                <span>${f}</span>
+                            </div>`).join('')}
+                        </div>` : ''}
+                        ${result.horizons ? `
+                        <div class="mt-3">
+                            <span class="text-xs text-purple-400">Horizons detected: ${result.horizons}</span>
+                        </div>` : ''}
+                    </div>
+                `;
+
+                x2dResultsContent.innerHTML = `
+                    <div class="text-purple-400 font-semibold">✅ Cognition complete</div>
+                    <div class="text-xs opacity-70 mt-1">${result.summary || 'Analysis done for ' + volRef}</div>
+                `;
+                bridge.emit("ui.action", { action: "cognition_complete", volume: volRef });
+            } catch (err) {
+                cognitionStatus.textContent = 'ERROR';
+                x2dResultsContent.innerHTML = `<div class="text-red-400">❌ ${err.message}</div>`;
+            }
+        });
+
+        // ===== X2D.2: Visual Understand =====
+        document.getElementById('btnVisualUnderstand').addEventListener('click', async () => {
+            x2dResults.classList.remove('hidden');
+            x2dResultsContent.innerHTML = '<div class="text-amber-400">⏳ Analyzing visual context...</div>';
+            try {
+                // Use a placeholder — real image data would come from canvas capture
+                const result = await GEOX_MCP.tools.visualUnderstand(
+                    'seismic_viewer_frame_' + document.getElementById('frameIndex').value,
+                    'analyze'
+                );
+                x2dResultsContent.innerHTML = `
+                    <div class="text-amber-400 font-semibold">✅ Visual Analysis</div>
+                    <div class="text-xs opacity-70 mt-1">${result.summary || JSON.stringify(result).slice(0, 300)}</div>
+                `;
+            } catch (err) {
+                x2dResultsContent.innerHTML = `<div class="text-red-400">❌ ${err.message}</div>`;
+            }
+        });
+
+        // ===== X2D.3: Generate Hypotheses =====
+        document.getElementById('btnGenerateHypotheses').addEventListener('click', async () => {
+            x2dResults.classList.remove('hidden');
+            x2dResultsContent.innerHTML = '<div class="text-emerald-400">⏳ Generating structural hypotheses...</div>';
+            try {
+                const result = await GEOX_MCP.tools.visualGenerateHypotheses(
+                    'seismic_' + document.getElementById('volumeRef').value,
+                    { structural_style: 'extensional', min_confidence: 0.3 }
+                );
+                x2dResultsContent.innerHTML = `
+                    <div class="text-emerald-400 font-semibold">✅ Hypotheses Generated</div>
+                    <div class="text-xs opacity-70 mt-2 space-y-1">
+                        ${result.hypotheses ? result.hypotheses.map(h => 
+                            `<div>🧩 ${h}</div>`
+                        ).join('') : (result.summary || JSON.stringify(result).slice(0, 300))}
+                    </div>
+                `;
+                bridge.emit("ui.action", { action: "hypotheses_generated" });
+            } catch (err) {
+                x2dResultsContent.innerHTML = `<div class="text-red-400">❌ ${err.message}</div>`;
+            }
+        });
+
+        // ===== UI Wiring =====
         contrast.addEventListener('input', (e) => {
-            const val = e.target.value;
-            contrastVal.innerText = `${val}x`;
-            bridge.emit("ui.action", { action: "contrast_change", value: parseFloat(val) });
+            contrastVal.innerText = `${e.target.value}x`;
+            bridge.emit("ui.action", { action: "contrast_change", value: parseFloat(e.target.value) });
         });
 
-        holdBtn.addEventListener('click', () => {
-            holdOverlay.classList.toggle('hidden');
-        });
-
+        holdBtn.addEventListener('click', () => holdOverlay.classList.toggle('hidden'));
         resolveHold.addEventListener('click', () => {
             holdOverlay.classList.add('hidden');
             bridge.emit("ui.action", { action: "hold_resolve", type: "sign_off" });
@@ -191,8 +340,13 @@
         syncBtn.addEventListener('click', () => {
             bridge.emit("ui.state.sync", { 
                 z_depth: coordZ.innerText,
-                contrast_scale: contrast.value 
+                contrast_scale: contrast.value,
+                volume: document.getElementById('volumeRef').value
             });
+        });
+
+        document.getElementById('closeCognition').addEventListener('click', () => {
+            cognitionOverlay.classList.add('hidden');
         });
 
         window.addEventListener('mousemove', (e) => {
@@ -200,13 +354,61 @@
                 const rect = e.target.getBoundingClientRect();
                 const y = e.clientY - rect.top;
                 scanline.style.top = `${y}px`;
-                const depth = (y / rect.height * 8000).toFixed(1);
-                coordZ.innerText = `${depth} ms`;
+                coordZ.innerText = `${(y / rect.height * 8000).toFixed(1)} ms`;
             }
         });
 
-        // Initialize App
         bridge.init();
+
+        // ===== MapLibre Mini-Map =====
+        let miniMapInstance = null;
+        const mapPanel = document.getElementById('mapPanel');
+        const toggleMapBtn = document.getElementById('toggleMap');
+        const closeMapBtn = document.getElementById('closeMap');
+
+        toggleMapBtn.addEventListener('click', () => {
+            const visible = mapPanel.style.display !== 'none';
+            mapPanel.style.display = visible ? 'none' : 'block';
+            toggleMapBtn.style.display = visible ? 'block' : 'none';
+            if (!visible && !miniMapInstance) {
+                try {
+                    miniMapInstance = new maplibregl.Map({
+                        container: 'miniMap',
+                        style: {
+                            version: 8,
+                            sources: {
+                                osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256 }
+                            },
+                            layers: [{ id: 'osm', type: 'raster', source: 'osm' }]
+                        },
+                        center: [110.5, 4.5],
+                        zoom: 6,
+                        attributionControl: false
+                    });
+                    miniMapInstance.addControl(new maplibregl.NavigationControl(), 'top-left');
+                    // Add well markers
+                    const wells = [
+                        { name: 'Dulang-A1', lng: 110.2, lat: 4.8 },
+                        { name: 'Tiong-3', lng: 110.8, lat: 4.3 },
+                        { name: 'Seligi-1', lng: 109.8, lat: 5.1 }
+                    ];
+                    wells.forEach(w => {
+                        new maplibregl.Marker({ color: '#d4af37' })
+                            .setLngLat([w.lng, w.lat])
+                            .setPopup(new maplibregl.Popup().setText(w.name))
+                            .addTo(miniMapInstance);
+                    });
+                } catch(e) {
+                    console.warn('MapLibre init failed:', e);
+                }
+            }
+        });
+        closeMapBtn.addEventListener('click', () => {
+            mapPanel.style.display = 'none';
+            toggleMapBtn.style.display = 'block';
+        });
+
+        console.log('🔥 GEOX Seismic Viewer — X2D Cognition Shell Hardened');
     </script>
 </body>
 </html>

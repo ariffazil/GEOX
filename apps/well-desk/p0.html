@@ -158,9 +158,9 @@
       return;
     }
     el.btn.disabled = true;
-    el.status.textContent = 'Requesting geox_well_desk_open via host…';
+    el.status.textContent = 'Requesting geox_well_desk via host…';
     rpcRequest('tools/call', {
-      name: 'geox_well_desk_open',
+      name: 'geox_well_desk',
       arguments: {
         well_id: lastArgs.well_id,
         mode: lastArgs.mode || 'summary'

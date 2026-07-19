@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOX Basin Explorer — AAA Grade</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <title>GEOX Basin Explorer — MapLibre HD</title>
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+    <script src="/gui/assets/geox-mcp-bridge.js"></script>
     <style>
         :root {
             --bg-primary: #0a0a0f;
@@ -42,7 +43,6 @@
             .sidebar { display: none; }
         }
 
-        /* Sidebar */
         .sidebar {
             background: var(--bg-secondary);
             border-right: 1px solid var(--border-color);
@@ -92,14 +92,8 @@
             border: 1px solid transparent;
         }
 
-        .play-item:hover {
-            border-color: var(--accent-cyan);
-        }
-
-        .play-item.active {
-            border-color: var(--accent-gold);
-            background: rgba(212, 175, 55, 0.1);
-        }
+        .play-item:hover { border-color: var(--accent-cyan); }
+        .play-item.active { border-color: var(--accent-gold); background: rgba(212, 175, 55, 0.1); }
 
         .play-item .code {
             font-family: 'JetBrains Mono', monospace;
@@ -108,21 +102,12 @@
             margin-bottom: 2px;
         }
 
-        .play-item .name {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .play-item .risk {
-            font-size: 11px;
-            margin-top: 4px;
-        }
-
+        .play-item .name { font-size: 13px; font-weight: 500; }
+        .play-item .risk { font-size: 11px; margin-top: 4px; }
         .risk.low { color: var(--accent-green); }
         .risk.medium { color: var(--accent-orange); }
         .risk.high { color: var(--accent-red); }
 
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -147,11 +132,6 @@
             font-size: 11px;
             color: var(--text-secondary);
             margin-top: 4px;
-        }
-
-        /* Map Container */
-        .map-container {
-            position: relative;
         }
 
         #map {
@@ -203,98 +183,70 @@
             color: var(--accent-gold);
         }
 
-        /* Layer Control */
-        .layer-control {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: rgba(18, 18, 26, 0.95);
+        .action-btn {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-bottom: 6px;
         }
 
-        .layer-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 0;
-            font-size: 13px;
+        .action-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 170, 0.05);
         }
 
-        .layer-item input[type="checkbox"] {
-            accent-color: var(--accent-cyan);
+        .action-btn.primary {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+            font-weight: 600;
         }
 
-        .layer-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
+        .action-btn.primary:hover { background: #e5c048; }
+
+        #mcpBasinStatus {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 12px; font-size: 10px; margin-bottom: 8px;
         }
 
-        /* Popup Styles */
         .basin-popup {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #e8e8f0;
         }
+        .basin-popup h4 { margin: 0 0 8px 0; font-size: 14px; color: var(--accent-gold); }
+        .basin-popup p { margin: 0 0 4px 0; font-size: 12px; color: #aaa; }
 
-        .basin-popup h4 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            color: var(--accent-gold);
+        .maplibregl-popup-content {
+            background: #12121a !important;
+            color: #e8e8f0 !important;
+            border: 1px solid #2a2a3a !important;
         }
-
-        .basin-popup p {
-            margin: 0 0 6px 0;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .prospect-marker {
-            background: var(--accent-gold);
-            border: 2px solid #fff;
-            border-radius: 50%;
-            width: 12px;
-            height: 12px;
-        }
-
-        .well-marker {
-            background: var(--accent-cyan);
-            border: 2px solid #fff;
-            border-radius: 50%;
-            width: 8px;
-            height: 8px;
-        }
+        .maplibregl-popup-tip { border-top-color: #12121a !important; }
+        .maplibregl-popup-close-button { color: #9090a0 !important; font-size: 18px !important; }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1>🗺️ Basin Explorer</h1>
-                <p class="subtitle">Malay Basin Pilot — AAA Grade</p>
+                <p class="subtitle">MapLibre GL · Malay Basin Pilot</p>
+                <span id="mcpBasinStatus" style="border:1px solid var(--border-color);color:var(--text-secondary);">⏳ MCP...</span>
             </div>
 
             <div class="sidebar-section">
                 <h3>📊 Basin Statistics</h3>
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="value">142</div>
-                        <div class="label">Fields</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="value">12.4</div>
-                        <div class="label">Bnboe</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="value">48</div>
-                        <div class="label">Plays</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="value">3</div>
-                        <div class="label">Phases</div>
-                    </div>
+                    <div class="stat-card"><div class="value">142</div><div class="label">Fields</div></div>
+                    <div class="stat-card"><div class="value">12.4</div><div class="label">Bnboe</div></div>
+                    <div class="stat-card"><div class="value">48</div><div class="label">Plays</div></div>
+                    <div class="stat-card"><div class="value">3</div><div class="label">Phases</div></div>
                 </div>
             </div>
 
@@ -323,17 +275,22 @@
             </div>
 
             <div class="sidebar-section">
-                <h3>🔍 Selected Prospect</h3>
+                <h3>🛠️ MCP Tools</h3>
+                <button class="action-btn" id="btnBasinProfile">🌍 Basin Profile</button>
+                <button class="action-btn" id="btnProspectScreen">🎯 Screen Prospects</button>
+                <button class="action-btn primary" id="btnEvaluateClick">📍 Evaluate Clicked Point</button>
+            </div>
+
+            <div class="sidebar-section" style="flex:1;">
+                <h3>🔍 Selected</h3>
                 <div id="prospect-info" style="color: var(--text-secondary); font-size: 13px;">
-                    Click on the map to explore prospects...
+                    Click on the map or run tools...
                 </div>
             </div>
         </aside>
 
-        <!-- Map -->
-        <main class="map-container">
+        <main class="map-container" style="position:relative;">
             <div id="map"></div>
-            
             <div class="map-overlay">
                 <div class="overlay-card">
                     <div class="seal-badge">🏛️ DITEMPA BUKAN DIBERI</div>
@@ -347,197 +304,241 @@
                     <div style="font-size: 13px;">Malay Basin</div>
                 </div>
             </div>
-
-            <div class="layer-control">
-                <div class="layer-item">
-                    <input type="checkbox" id="layer-fields" checked>
-                    <div class="layer-color" style="background: #d4af37;"></div>
-                    <label for="layer-fields">Producing Fields</label>
-                </div>
-                <div class="layer-item">
-                    <input type="checkbox" id="layer-wells" checked>
-                    <div class="layer-color" style="background: #00d4aa;"></div>
-                    <label for="layer-wells">Well Locations</label>
-                </div>
-                <div class="layer-item">
-                    <input type="checkbox" id="layer-seismic">
-                    <div class="layer-color" style="background: #ff4757;"></div>
-                    <label for="layer-seismic">Seismic Coverage</label>
-                </div>
-                <div class="layer-item">
-                    <input type="checkbox" id="layer-licenses">
-                    <div class="layer-color" style="background: #ffa502;"></div>
-                    <label for="layer-licenses">License Blocks</label>
-                </div>
-            </div>
         </main>
     </div>
 
     <script>
-        // Initialize map centered on Malay Basin
-        const map = L.map('map', {
-            center: [4.5, 104.5],
+        // MCP connection
+        (async () => {
+            const el = document.getElementById('mcpBasinStatus');
+            try {
+                const alive = await GEOX_MCP.ping();
+                el.textContent = alive ? '✅ MCP Connected' : '❌ MCP Down';
+                el.style.borderColor = alive ? 'var(--accent-green)' : 'var(--accent-red)';
+                el.style.color = alive ? 'var(--accent-green)' : 'var(--accent-red)';
+            } catch {
+                el.textContent = '❌ MCP Down';
+                el.style.borderColor = 'var(--accent-red)';
+                el.style.color = 'var(--accent-red)';
+            }
+        })();
+
+        // ===== MapLibre GL Map =====
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: {
+                version: 8,
+                sources: {
+                    'osm-tiles': {
+                        type: 'raster',
+                        tiles: ['https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'],
+                        tileSize: 256,
+                        attribution: '&copy; OpenStreetMap &copy; CARTO'
+                    }
+                },
+                layers: [{
+                    id: 'osm-tiles-layer',
+                    type: 'raster',
+                    source: 'osm-tiles',
+                    minzoom: 0,
+                    maxzoom: 22
+                }]
+            },
+            center: [104.5, 4.5],
             zoom: 7,
             minZoom: 5,
             maxZoom: 12
         });
 
-        // Dark theme map tiles
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CARTO',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
+        // Navigation controls
+        map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
 
-        // Sample basin boundary (simplified Malay Basin)
-        const basinBoundary = L.polygon([
-            [3.0, 102.5], [6.0, 102.5], [7.0, 105.0], 
-            [6.5, 106.5], [4.0, 106.5], [3.0, 105.0]
-        ], {
-            color: '#d4af37',
-            fillColor: '#d4af37',
-            fillOpacity: 0.1,
-            weight: 2,
-            dashArray: '5, 10'
-        }).addTo(map);
-
-        basinBoundary.bindPopup(`
-            <div class="basin-popup">
-                <h4>Malay Basin</h4>
-                <p>Cenozoic rift basin</p>
-                <p>142 fields discovered</p>
-                <p>12.4 Bnboe recoverable</p>
-            </div>
-        `);
-
-        // Sample producing fields
-        const fields = [
-            { name: 'Dulang', lat: 4.8, lon: 104.2, production: 450, status: 'producing' },
-            { name: 'Tiong', lat: 5.2, lon: 103.8, production: 320, status: 'producing' },
-            { name: 'Demo-A', lat: 4.5, lon: 104.8, production: 280, status: 'producing' },
-            { name: 'Tabu', lat: 5.5, lon: 104.5, production: 190, status: 'producing' },
-            { name: 'Seligi', lat: 4.2, lon: 103.5, production: 150, status: 'producing' },
-        ];
-
-        fields.forEach(field => {
-            const marker = L.circleMarker([field.lat, field.lon], {
-                radius: 8,
-                fillColor: '#d4af37',
-                color: '#fff',
-                weight: 2,
-                fillOpacity: 0.9
-            }).addTo(map);
-
-            marker.bindPopup(`
-                <div class="basin-popup">
-                    <h4>🏭 ${field.name} Field</h4>
-                    <p>Production: ${field.production} kbpd</p>
-                    <p>Status: ${field.status}</p>
-                    <button onclick="exploreField('${field.name}')" 
-                            style="background: #d4af37; border: none; padding: 6px 12px; 
-                                   border-radius: 4px; cursor: pointer; margin-top: 8px;">
-                        Explore
-                    </button>
-                </div>
-            `);
-        });
-
-        // Sample well locations
-        const wells = [
-            { name: 'Dulang-1', lat: 4.82, lon: 104.18 },
-            { name: 'Tiong-3', lat: 5.18, lon: 103.82 },
-            { name: 'Demo-Well-A', lat: 4.48, lon: 104.78 },
-        ];
-
-        wells.forEach(well => {
-            L.circleMarker([well.lat, well.lon], {
-                radius: 5,
-                fillColor: '#00d4aa',
-                color: '#fff',
-                weight: 1,
-                fillOpacity: 0.8
-            }).addTo(map).bindPopup(`
-                <div class="basin-popup">
-                    <h4>🛢️ ${well.name}</h4>
-                    <p>Type: Exploration well</p>
-                </div>
-            `);
-        });
-
-        // Mouse coordinate tracking
-        map.on('mousemove', (e) => {
-            document.getElementById('coords').textContent = 
-                `${e.latlng.lng.toFixed(3)}°, ${e.latlng.lat.toFixed(3)}°`;
-        });
-
-        // Click handler
-        map.on('click', (e) => {
-            const info = document.getElementById('prospect-info');
-            info.innerHTML = `
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px;">
-                    <div style="font-family: monospace; color: var(--accent-cyan); margin-bottom: 8px;">
-                        ${e.latlng.lng.toFixed(4)}°, ${e.latlng.lat.toFixed(4)}°
-                    </div>
-                    <div style="font-size: 12px; color: var(--text-secondary);">
-                        Click to run prospect evaluation...
-                    </div>
-                    <button onclick="evaluateProspect(${e.latlng.lat}, ${e.latlng.lng})"
-                            style="background: var(--accent-gold); border: none; padding: 8px 16px;
-                                   border-radius: 4px; cursor: pointer; margin-top: 8px; width: 100%;
-                                   font-weight: 600; color: #000;">
-                        🔥 Evaluate Prospect
-                    </button>
-                </div>
-            `;
-        });
-
-        // Play selection
-        document.querySelectorAll('.play-item').forEach(item => {
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.play-item').forEach(p => p.classList.remove('active'));
-                item.classList.add('active');
-                
-                const play = item.dataset.play;
-                console.log('Selected play:', play);
-                
-                // Notify parent
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        type: 'play_selected',
-                        data: { play_code: play }
-                    }, '*');
+        map.on('load', () => {
+            // Basin boundary polygon
+            map.addSource('basin-boundary', {
+                type: 'geojson',
+                data: {
+                    type: 'Feature',
+                    properties: { name: 'Malay Basin' },
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [[[102.5,3.0],[102.5,6.0],[105.0,7.0],[106.5,6.5],[106.5,4.0],[105.0,3.0],[102.5,3.0]]]
+                    }
                 }
+            });
+            map.addLayer({
+                id: 'basin-boundary-fill',
+                type: 'fill',
+                source: 'basin-boundary',
+                paint: {
+                    'fill-color': '#d4af37',
+                    'fill-opacity': 0.08
+                }
+            });
+            map.addLayer({
+                id: 'basin-boundary-line',
+                type: 'line',
+                source: 'basin-boundary',
+                paint: {
+                    'line-color': '#d4af37',
+                    'line-width': 2,
+                    'line-dasharray': [5, 5],
+                    'line-opacity': 0.6
+                }
+            });
+
+            // Producing fields
+            const fields = [
+                { name: 'Dulang', lat: 4.8, lon: 104.2, prod: 450 },
+                { name: 'Tiong', lat: 5.2, lon: 103.8, prod: 320 },
+                { name: 'Demo-A', lat: 4.5, lon: 104.8, prod: 280 },
+                { name: 'Tabu', lat: 5.5, lon: 104.5, prod: 190 },
+                { name: 'Seligi', lat: 4.2, lon: 103.5, prod: 150 },
+            ];
+
+            map.addSource('fields', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: fields.map(f => ({
+                        type: 'Feature',
+                        properties: { name: f.name, production: f.prod, status: 'producing' },
+                        geometry: { type: 'Point', coordinates: [f.lon, f.lat] }
+                    }))
+                }
+            });
+            map.addLayer({
+                id: 'fields-layer',
+                type: 'circle',
+                source: 'fields',
+                paint: {
+                    'circle-radius': 8,
+                    'circle-color': '#d4af37',
+                    'circle-stroke-color': '#fff',
+                    'circle-stroke-width': 2
+                }
+            });
+            map.addLayer({
+                id: 'fields-label',
+                type: 'symbol',
+                source: 'fields',
+                layout: {
+                    'text-field': ['get', 'name'],
+                    'text-offset': [0, -1.5],
+                    'text-size': 12,
+                    'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold']
+                },
+                paint: {
+                    'text-color': '#e8e8f0',
+                    'text-halo-color': '#000',
+                    'text-halo-width': 1
+                }
+            });
+
+            // Wells
+            const wells = [
+                { name: 'Dulang-1', lat: 4.82, lon: 104.18 },
+                { name: 'Tiong-3', lat: 5.18, lon: 103.82 },
+                { name: 'Demo-Well-A', lat: 4.48, lon: 104.78 }
+            ];
+            map.addSource('wells', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: wells.map(w => ({
+                        type: 'Feature',
+                        properties: { name: w.name },
+                        geometry: { type: 'Point', coordinates: [w.lon, w.lat] }
+                    }))
+                }
+            });
+            map.addLayer({
+                id: 'wells-layer',
+                type: 'circle',
+                source: 'wells',
+                paint: {
+                    'circle-radius': 5,
+                    'circle-color': '#00d4aa',
+                    'circle-stroke-color': '#fff',
+                    'circle-stroke-width': 1
+                }
+            });
+
+            // Click popup
+            map.on('click', (e) => {
+                const lngLat = e.lngLat;
+                document.getElementById('prospect-info').innerHTML = `
+                    <div style="background:var(--bg-tertiary);padding:12px;border-radius:6px;">
+                        <div style="font-family:monospace;color:var(--accent-cyan);margin-bottom:8px;">
+                            ${lngLat.lng.toFixed(4)}°, ${lngLat.lat.toFixed(4)}°
+                        </div>
+                        <div style="font-size:12px;color:var(--text-secondary);">
+                            Click "Evaluate" to run prospect screening
+                        </div>
+                    </div>`;
+                new maplibregl.Popup()
+                    .setLngLat(lngLat)
+                    .setHTML(`<div class="basin-popup"><h4>📍 ${lngLat.lng.toFixed(3)}°, ${lngLat.lat.toFixed(3)}°</h4><p>Malay Basin · Click "Evaluate Clicked Point"</p></div>`)
+                    .addTo(map);
+            });
+
+            // Cursor crosshair
+            map.on('mousemove', (e) => {
+                document.getElementById('coords').textContent = `${e.lngLat.lng.toFixed(3)}°, ${e.lngLat.lat.toFixed(3)}°`;
             });
         });
 
-        // Functions
-        function exploreField(fieldName) {
-            console.log('Exploring field:', fieldName);
-            if (window.parent !== window) {
-                window.parent.postMessage({
-                    type: 'field_explore',
-                    data: { field_name: fieldName }
-                }, '*');
+        // ===== MCP Tools =====
+        // Basin Profile
+        document.getElementById('btnBasinProfile').addEventListener('click', async () => {
+            const info = document.getElementById('prospect-info');
+            info.innerHTML = '<div style="color:var(--accent-cyan);">⏳ Running basin profile...</div>';
+            try {
+                const result = await GEOX_MCP.tools.basin('Malay Basin', 'profile');
+                info.innerHTML = `<div style="background:var(--bg-tertiary);padding:12px;border-radius:6px;">
+                    <div style="color:var(--accent-gold);font-weight:600;margin-bottom:8px;">🌍 Malay Basin Profile</div>
+                    <div style="font-size:12px;color:var(--text-secondary);">${result.summary || JSON.stringify(result).slice(0, 400)}</div>
+                </div>`;
+            } catch (err) {
+                info.innerHTML = `<div style="color:var(--accent-red);">❌ ${err.message}</div>`;
             }
-        }
-
-        function evaluateProspect(lat, lon) {
-            console.log('Evaluating prospect at:', lat, lon);
-            if (window.parent !== window) {
-                window.parent.postMessage({
-                    type: 'evaluate_prospect',
-                    data: { lat, lon }
-                }, '*');
-            }
-        }
-
-        // Layer toggles
-        document.getElementById('layer-fields').addEventListener('change', (e) => {
-            // Toggle fields layer
-            console.log('Fields layer:', e.target.checked);
         });
 
-        console.log('🔥 GEOX Basin Explorer — AAA Grade Initialized');
+        // Screen Prospects
+        document.getElementById('btnProspectScreen').addEventListener('click', async () => {
+            const info = document.getElementById('prospect-info');
+            info.innerHTML = '<div style="color:var(--accent-cyan);">⏳ Screening prospects...</div>';
+            try {
+                const result = await GEOX_MCP.callTool('geox_prospect', { prospect_ref: 'MALAY-BASIN-MULTI', mode: 'screen' });
+                info.innerHTML = `<div style="background:var(--bg-tertiary);padding:12px;border-radius:6px;">
+                    <div style="color:var(--accent-gold);font-weight:600;margin-bottom:8px;">🎯 Prospect Screening</div>
+                    <div style="font-size:12px;color:var(--text-secondary);">${result.summary || JSON.stringify(result).slice(0, 400)}</div>
+                </div>`;
+            } catch (err) {
+                info.innerHTML = `<div style="color:var(--accent-red);">❌ ${err.message}</div>`;
+            }
+        });
+
+        // Evaluate clicked coordinates
+        document.getElementById('btnEvaluateClick').addEventListener('click', async () => {
+            const center = map.getCenter();
+            const info = document.getElementById('prospect-info');
+            info.innerHTML = `<div style="color:var(--accent-cyan);">⏳ Evaluating at ${center.lng.toFixed(3)}°, ${center.lat.toFixed(3)}°...</div>`;
+            try {
+                const result = await GEOX_MCP.callTool('geox_prospect', {
+                    prospect_ref: `CLICK-${center.lat.toFixed(3)}-${center.lng.toFixed(3)}`,
+                    mode: 'screen'
+                });
+                info.innerHTML = `<div style="background:var(--bg-tertiary);padding:12px;border-radius:6px;">
+                    <div style="color:var(--accent-gold);font-weight:600;margin-bottom:8px;">📍 ${center.lng.toFixed(3)}°, ${center.lat.toFixed(3)}°</div>
+                    <div style="font-size:12px;color:var(--text-secondary);">${result.summary || 'Prospect evaluation complete'}</div>
+                </div>`;
+            } catch (err) {
+                info.innerHTML = `<div style="color:var(--accent-red);">❌ ${err.message}</div>`;
+            }
+        });
+
+        console.log('🔥 GEOX Basin Explorer — MapLibre GL Hardened');
     </script>
 </body>
 </html>

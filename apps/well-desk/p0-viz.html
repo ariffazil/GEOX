@@ -380,7 +380,7 @@
     }
     el.btn.disabled = true;
     rpcRequest('tools/call', {
-      name: 'geox_well_desk_open',
+      name: 'geox_well_desk',
       arguments: { well_id: lastArgs.well_id, mode: lastArgs.mode || 'summary' },
     }).then(function (result) {
       applyResult(result || {});
