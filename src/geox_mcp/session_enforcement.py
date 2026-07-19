@@ -356,12 +356,38 @@ def validate_session(
     )
 
 
+def _error_code_to_http_status(error_code: str | None) -> int:
+    """Map session validation error codes to HTTP status codes.
+
+    Three-way differentiation (FORGED 2026-07-18):
+      400 — client error: missing/malformed session (routine log)
+      401 — security event: token present but invalid/forged (→ VAULT999)
+      403 — policy event: valid token, insufficient authority
+    """
+    if error_code is None:
+        return 400
+    # 400 — missing or malformed client input
+    if error_code in ("SESSION_MISSING", "ACTOR_MISSING"):
+        return 400
+    # 403 — valid identity but insufficient authority
+    if error_code in ("INSUFFICIENT_AUTHORITY",):
+        return 403
+    # 401 — token present but invalid, forged, or unverifiable
+    # SESSION_INVALID, SCT_INVALID, ACTOR_MISMATCH, TRANSPORT_DEGRADED
+    return 401
+
+
 def enforce_session_or_400(
     session_id: str | None,
     actor_id: str | None,
     required_authority: str = "OBSERVE_ONLY",
 ) -> dict[str, Any] | None:
     """Convenience wrapper: returns error dict if validation fails, None if OK.
+
+    Error taxonomy (FORGED 2026-07-18):
+      - 400 Missing session    — no token provided (client error, routine log)
+      - 401 Invalid session    — token present but invalid/forged (security event)
+      - 403 Insufficient auth  — valid token, authority too low (policy event)
 
     Usage in GEOX tool:
         err = enforce_session_or_400(session_id, actor_id, required_authority="OPERATOR")
@@ -371,8 +397,10 @@ def enforce_session_or_400(
     result = validate_session(session_id, actor_id, required_authority)
     if result.ok:
         return None
+    http_status = _error_code_to_http_status(result.error_code)
     return {
         "error": result.error_code,
+        "http_status": http_status,
         "message": result.error_message,
         "session_id": session_id,
         "actor_id": actor_id,

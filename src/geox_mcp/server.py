@@ -2617,7 +2617,13 @@ async def health_handler(request: Request) -> JSONResponse:
             "version": GEOX_VERSION,
             "federation_schema_version": "2.0.0",
             "profile": GEOX_PROFILE,
-            "identity": is_geox(),
+            "identity": {
+                "algorithm": "sha256",
+                "value": _GIT_VERSION,
+                "git_version": _GIT_VERSION,
+                "verified": is_geox(),
+                "source": "git_version",
+            },
             "git_version": _GIT_VERSION,
             # ── GEOX identity anchor (NATURAL_LAW, not constitutional) ───
             "domain_law": _domain_law,
