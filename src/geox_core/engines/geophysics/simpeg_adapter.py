@@ -67,10 +67,7 @@ class SimPEGAdapter:
 
     def _check_dependencies(self) -> None:
         if not _SIMPEG_AVAILABLE:
-            raise ImportError(
-                "SimPEG>=0.21.0 is required for potential field inversion. "
-                "Install with: pip install SimPEG"
-            )
+            raise ImportError("SimPEG>=0.21.0 is required for potential field inversion. Install with: pip install SimPEG")
 
     def gravity_inversion(
         self,
@@ -105,10 +102,7 @@ class SimPEGAdapter:
         test_1d = len(observed_gravity) > 1
         if test_1d:
             # 2D surface profile
-            smp.Mesh.TensorMesh([
-                np.linspace(0, 5000, mesh_cells // 10),
-                np.linspace(-3000, 0, 10)
-            ], "x1x2")
+            smp.Mesh.TensorMesh([np.linspace(0, 5000, mesh_cells // 10), np.linspace(-3000, 0, 10)], "x1x2")
 
             # Survey
             receiver_list = gravity.receivers.Point(receiver_locs)
@@ -121,12 +115,14 @@ class SimPEGAdapter:
         # Density model
         np.zeros(mesh_cells)  # density contrast
 
-        params_hash = _sha256_params({
-            "method": "gravity_inversion",
-            "mesh_cells": mesh_cells,
-            "background_density": background_density,
-            "max_iterations": max_iterations,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "gravity_inversion",
+                "mesh_cells": mesh_cells,
+                "background_density": background_density,
+                "max_iterations": max_iterations,
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -137,8 +133,7 @@ class SimPEGAdapter:
             "epistemic_label": "ESTIMATE",
             "confidence": "MEDIUM",
             "caveats": [
-                "Gravity is non-unique — different density distributions "
-                "can produce identical anomalies",
+                "Gravity is non-unique — different density distributions can produce identical anomalies",
                 "Requires independent calibration (seismic, well) for CLAIM",
                 "1D assumption may miss lateral density variations",
             ],
@@ -173,14 +168,16 @@ class SimPEGAdapter:
         Returns:
             Susceptibility contrast model + inversion metrics.
         """
-        params_hash = _sha256_params({
-            "method": "magnetics_inversion",
-            "inclination_deg": inclination_deg,
-            "declination_deg": declination_deg,
-            "magnetization_azimuth": magnetization_azimuth,
-            "magnetization_dip": magnetization_dip,
-            "mesh_cells": mesh_cells,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "magnetics_inversion",
+                "inclination_deg": inclination_deg,
+                "declination_deg": declination_deg,
+                "magnetization_azimuth": magnetization_azimuth,
+                "magnetization_dip": magnetization_dip,
+                "mesh_cells": mesh_cells,
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -192,10 +189,8 @@ class SimPEGAdapter:
             "epistemic_label": "ESTIMATE",
             "confidence": "MEDIUM",
             "caveats": [
-                "TMI is sensitive to remanent magnetization — "
-                "ignoring it can cause significant depth errors",
-                "Non-unique: multiple susceptibility distributions "
-                "produce identical TMI",
+                "TMI is sensitive to remanent magnetization — ignoring it can cause significant depth errors",
+                "Non-unique: multiple susceptibility distributions produce identical TMI",
                 "Requires ground truth (borehole magnetics) for CLAIM",
             ],
             "library": "SimPEG",
@@ -237,12 +232,14 @@ class SimPEGAdapter:
 
         # 1D layered model (2-3 layers)
         depth_layers = np.array([0.0, 1000.0, 3000.0, 10000.0])  # m
-        resistivity_layers = np.array([
-            sediment_resistivity_ohm_m,
-            sediment_resistivity_ohm_m * 2,
-            basement_resistivity_ohm_m,
-            basement_resistivity_ohm_m * 5,
-        ])
+        resistivity_layers = np.array(
+            [
+                sediment_resistivity_ohm_m,
+                sediment_resistivity_ohm_m * 2,
+                basement_resistivity_ohm_m,
+                basement_resistivity_ohm_m * 5,
+            ]
+        )
 
         # Cagniard-Tikhonov approximation for 1D MT
         # Z(ω) = 0.2 * sqrt(ρ/period) * e^(i*phase/2)
@@ -252,12 +249,14 @@ class SimPEGAdapter:
         # δ ≈ 500 * sqrt(ρ * T) [m]
         skin_depths = 500 * np.sqrt(np.array(apparent_resistivity) * period_s)
 
-        params_hash = _sha256_params({
-            "method": "mt_1d_inversion",
-            "n_periods": n_periods,
-            "sediment_resistivity_ohm_m": sediment_resistivity_ohm_m,
-            "basement_resistivity_ohm_m": basement_resistivity_ohm_m,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "mt_1d_inversion",
+                "n_periods": n_periods,
+                "sediment_resistivity_ohm_m": sediment_resistivity_ohm_m,
+                "basement_resistivity_ohm_m": basement_resistivity_ohm_m,
+            }
+        )
 
         return {
             "status": "COMPUTED",

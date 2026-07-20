@@ -24,19 +24,21 @@ from pydantic import BaseModel, Field
 
 # ─── CANON-9 Variables ────────────────────────────────────────────────────────
 
+
 class Canon9Variable(StrEnum):
-    Vp = "Vp"      # P-wave velocity — seismic, impedance
-    Vs = "Vs"      # S-wave velocity — rock stiffness
-    rho = "rho"   # Bulk density — gravity, overburden
-    phi = "phi"   # Porosity — storage capacity
-    Sw = "Sw"     # Water saturation — moveable HC
-    P = "P"       # Pore pressure — kick risk, compaction
-    k = "k"       # Permeability — flow capacity
-    T = "T"       # Temperature — maturity, diagenesis
-    chi = "chi"   # Magnetic susceptibility — anomaly
+    Vp = "Vp"  # P-wave velocity — seismic, impedance
+    Vs = "Vs"  # S-wave velocity — rock stiffness
+    rho = "rho"  # Bulk density — gravity, overburden
+    phi = "phi"  # Porosity — storage capacity
+    Sw = "Sw"  # Water saturation — moveable HC
+    P = "P"  # Pore pressure — kick risk, compaction
+    k = "k"  # Permeability — flow capacity
+    T = "T"  # Temperature — maturity, diagenesis
+    chi = "chi"  # Magnetic susceptibility — anomaly
 
 
 # ─── Propagation Levels ────────────────────────────────────────────────────────
+
 
 class Propagation(StrEnum):
     """
@@ -46,41 +48,36 @@ class Propagation(StrEnum):
     advisory:  Replan and surface to Arif. No block — Arif can override.
     hold:      Replan and require Arif explicit release. BLOCKED for autonomous agents.
     """
-    AUTO = "auto"          # low risk — autonomous propagation OK
+
+    AUTO = "auto"  # low risk — autonomous propagation OK
     ADVISORY = "advisory"  # medium risk — surface to Arif, no block
-    HOLD = "hold"          # high risk — 888_HOLD gate, Arif release required
+    HOLD = "hold"  # high risk — 888_HOLD gate, Arif release required
 
 
 # ─── Replan Trigger ───────────────────────────────────────────────────────────
+
 
 class ReplanTrigger(BaseModel):
     """
     One trigger event: something changed, here is what it affects
     and how far the replan propagates.
     """
-    trigger_name: str = Field(
-        description="Canonical name of the trigger event. E.g. new_well_data, insar_subsidence_anomaly."
-    )
-    source_tool: str = Field(
-        description="The GEOX tool that produced the new evidence. E.g. geox_well_ingest."
-    )
-    affected_variables: list[Canon9Variable] = Field(
-        description="Which CANON-9 variables are updated by this trigger."
-    )
-    propagation: Propagation = Field(
-        description="How far the replan propagates through the DAG."
-    )
-    reason: str = Field(
-        description="Why this propagation level. Short sentence."
-    )
+
+    trigger_name: str = Field(description="Canonical name of the trigger event. E.g. new_well_data, insar_subsidence_anomaly.")
+    source_tool: str = Field(description="The GEOX tool that produced the new evidence. E.g. geox_well_ingest.")
+    affected_variables: list[Canon9Variable] = Field(description="Which CANON-9 variables are updated by this trigger.")
+    propagation: Propagation = Field(description="How far the replan propagates through the DAG.")
+    reason: str = Field(description="Why this propagation level. Short sentence.")
 
 
 # ─── Replan Entry ─────────────────────────────────────────────────────────────
+
 
 class ReplanEntry(BaseModel):
     """
     One row in the replan DAG: trigger → affected variables → propagation.
     """
+
     trigger_name: str
     source_tool: str
     affected_variables: list[Canon9Variable]
@@ -267,6 +264,7 @@ _register(
 
 
 # ─── Query API ────────────────────────────────────────────────────────────────
+
 
 def get_replan(
     trigger_name: str,

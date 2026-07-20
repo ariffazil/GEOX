@@ -54,7 +54,9 @@ def build_atom_from_tool_result(
         tool_name=tool_name,
         tool_version=tool_version,
         result=result,
-        pai_receipt=pai_receipt or embedded_pai or {
+        pai_receipt=pai_receipt
+        or embedded_pai
+        or {
             "actor_id": "geox",
             "actor_role": "earth_witness",
             "human_root": None,
@@ -117,21 +119,25 @@ def publish_tool_atom_sync(
         return False
     try:
         import asyncio
+
         try:
             loop = asyncio.get_event_loop()
         except RuntimeError:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-        return loop.create_task(
-            publish_tool_atom(
-                tool_name=tool_name,
-                tool_version=tool_version,
-                result=result,
-                pai_receipt=pai_receipt,
-                rung=rung,
-                godel_state=godel_state,
+        return (
+            loop.create_task(
+                publish_tool_atom(
+                    tool_name=tool_name,
+                    tool_version=tool_version,
+                    result=result,
+                    pai_receipt=pai_receipt,
+                    rung=rung,
+                    godel_state=godel_state,
+                )
             )
-        ) is not None
+            is not None
+        )
     except Exception:  # noqa: BLE001
         return False
 

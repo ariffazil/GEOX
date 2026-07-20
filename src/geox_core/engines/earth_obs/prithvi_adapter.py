@@ -32,6 +32,7 @@ from pydantic import BaseModel, Field
 # Lazy import so we can mock without GPU stack
 try:
     import numpy as np  # noqa: F401
+
     _NUMPY_AVAILABLE = True
 except ImportError:
     _NUMPY_AVAILABLE = False
@@ -39,6 +40,7 @@ except ImportError:
 try:
     # The real package is `terratorch` from IBM. We import lazily.
     import terratorch  # type: ignore  # noqa: F401
+
     _TERRATORCH_AVAILABLE = True
 except ImportError:
     _TERRATORCH_AVAILABLE = False
@@ -46,11 +48,11 @@ except ImportError:
 
 # ───────────────────────────── SCHEMAS ────────────────────────────────────────────
 PrithviTask = Literal[
-    "flood_mapping",       # binary water mask
-    "burn_scars",          # binary fire damage mask
-    "land_cover",          # multi-class LCCS
-    "multi_temporal_crop", # crop type classification
-    "scene_reasoning",     # multimodal Q&A on EO scene
+    "flood_mapping",  # binary water mask
+    "burn_scars",  # binary fire damage mask
+    "land_cover",  # multi-class LCCS
+    "multi_temporal_crop",  # crop type classification
+    "scene_reasoning",  # multimodal Q&A on EO scene
 ]
 
 
@@ -126,8 +128,12 @@ class MockPrithviBackend:
         if task == "land_cover":
             return {
                 "classes": {
-                    "water": 0.01, "forest": 0.62, "grassland": 0.20,
-                    "cropland": 0.10, "urban": 0.05, "bare": 0.02,
+                    "water": 0.01,
+                    "forest": 0.62,
+                    "grassland": 0.20,
+                    "cropland": 0.10,
+                    "urban": 0.05,
+                    "bare": 0.02,
                 },
                 "seed": h,
             }
@@ -166,13 +172,10 @@ class LivePrithviBackend:
 
     def infer(self, payload: HLSInput, task: PrithviTask) -> dict:
         if not self.is_available():
-            raise RuntimeError(
-                f"Prithvi weights not available at {self.weights_path}"
-            )
+            raise RuntimeError(f"Prithvi weights not available at {self.weights_path}")
         # Placeholder — actual inference wired when 888 deploys weights.
         raise NotImplementedError(
-            "Live Prithvi inference pending 888_HOLD weight deployment. "
-            "Use MockPrithviBackend in the interim."
+            "Live Prithvi inference pending 888_HOLD weight deployment. Use MockPrithviBackend in the interim."
         )
 
 
@@ -190,9 +193,7 @@ class PrithviEOAdapter:
         if backend is not None:
             self._backend = backend
         elif os.environ.get("GEOX_PRITHVI_LIVE") == "1":
-            self._backend = LivePrithviBackend(
-                weights_path=os.environ.get("GEOX_PRITHVI_WEIGHTS", "/srv/models/prithvi-eo-2.0")
-            )
+            self._backend = LivePrithviBackend(weights_path=os.environ.get("GEOX_PRITHVI_WEIGHTS", "/srv/models/prithvi-eo-2.0"))
         else:
             self._backend = MockPrithviBackend()
 
@@ -202,12 +203,14 @@ class PrithviEOAdapter:
 
     def infer(self, payload: HLSInput, task: PrithviTask) -> PrithviOutput:
         # Hash input for provenance (F2 TRUTH).
-        payload_bytes = repr({
-            "tile_id": payload.tile_id,
-            "bands": list(payload.bands),
-            "time_range": list(payload.time_range),
-            "task": task,
-        }).encode()
+        payload_bytes = repr(
+            {
+                "tile_id": payload.tile_id,
+                "bands": list(payload.bands),
+                "time_range": list(payload.time_range),
+                "task": task,
+            }
+        ).encode()
         input_hash = hashlib.sha256(payload_bytes).hexdigest()
 
         result = self._backend.infer(payload, task)

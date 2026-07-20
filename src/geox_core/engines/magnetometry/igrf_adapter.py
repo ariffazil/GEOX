@@ -10,6 +10,7 @@ CANON-9 links: χ (magnetic susceptibility context), MWD tool correction.
 F9 ANTI-HANTU: This adapter computes from IGRF-14 coefficients —
 it does not sense the real Earth field. Anomaly = observed - IGRF.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -24,15 +25,17 @@ logger = logging.getLogger(__name__)
 
 # ─── Result Schemas ──────────────────────────────────────────────────────────
 
+
 @dataclass(frozen=True)
 class IGRFResult:
     """Result from a single-point IGRF field computation."""
-    Be: float       # East component (nT)
-    Bn: float       # North component (nT)
-    Bu: float       # Up component (nT)
-    F: float        # Total field intensity (nT)
-    D: float        # Declination (degrees, positive East)
-    I: float        # Inclination (degrees, positive down)
+
+    Be: float  # East component (nT)
+    Bn: float  # North component (nT)
+    Bu: float  # Up component (nT)
+    F: float  # Total field intensity (nT)
+    D: float  # Declination (degrees, positive East)
+    I: float  # Inclination (degrees, positive down)
     lat: float
     lon: float
     alt_km: float
@@ -45,6 +48,7 @@ class IGRFResult:
 @dataclass(frozen=True)
 class IGRFGridResult:
     """Result from a grid of IGRF field computations."""
+
     lats: np.ndarray
     lons: np.ndarray
     F_grid: np.ndarray
@@ -60,6 +64,7 @@ class IGRFGridResult:
 @dataclass(frozen=True)
 class MagneticDeclinationResult:
     """Magnetic declination only — common MWD correction output."""
+
     D_deg: float
     I_deg: float
     F_nT: float
@@ -74,35 +79,37 @@ class MagneticDeclinationResult:
 @dataclass(frozen=True)
 class IGRFInput:
     """Input specification for IGRF field computation."""
+
     lat: float
     lon: float
-    date_year: float        # no default — must be explicit
+    date_year: float  # no default — must be explicit
     alt_km: float = 0.0
     coordinates: str = "geodetic"  # geodetic | geocentric
 
 
 # ─── Backend Protocol ────────────────────────────────────────────────────────
 
+
 class IGRFBackend(Protocol):
     """Protocol for IGRF computation backends."""
+
     def field(self, lat: float, lon: float, alt_km: float, date_year: float) -> IGRFResult:
         """Compute IGRF field components at a single point."""
         ...
+
     def grid(
-        self,
-        lat_min: float, lat_max: float,
-        lon_min: float, lon_max: float,
-        resolution_arcmin: float,
-        date_year: float
+        self, lat_min: float, lat_max: float, lon_min: float, lon_max: float, resolution_arcmin: float, date_year: float
     ) -> IGRFGridResult:
         """Compute IGRF on a regular grid."""
         ...
+
     def declination(self, lat: float, lon: float, alt_km: float, date_year: float) -> MagneticDeclinationResult:
         """Compute magnetic declination at a single point (MWD use case)."""
         ...
 
 
 # ─── Mock Backend (no ppigrf installed) ─────────────────────────────────────
+
 
 class MockIGRFBackend:
     """
@@ -112,8 +119,9 @@ class MockIGRFBackend:
     F9 ANTI-HANTU: These are NOT real field values.
     Use for geometry/shape testing only. Never claim as real data.
     """
+
     IGRF14_DIPOLE_MOMENT = 7.794e22  # Approximate Earth dipole moment
-    IGRF14_INCLINATION = 66.0        # Approximate dipole inclination (degrees)
+    IGRF14_INCLINATION = 66.0  # Approximate dipole inclination (degrees)
 
     def field(self, lat: float, lon: float, alt_km: float, date_year: float) -> IGRFResult:
         # Simple dipole approximation
@@ -123,56 +131,66 @@ class MockIGRFBackend:
         I_approx = self.IGRF14_INCLINATION * math.sin(lat_rad)
         D_approx = 0.0  # Dipole has no declination; real D varies with longitude
         return IGRFResult(
-            Be=0.0, Bn=0.0, Bu=0.0,
-            F=F_approx, D=D_approx, I=I_approx,
-            lat=lat, lon=lon, alt_km=alt_km, date_year=date_year,
+            Be=0.0,
+            Bn=0.0,
+            Bu=0.0,
+            F=F_approx,
+            D=D_approx,
+            I=I_approx,
+            lat=lat,
+            lon=lon,
+            alt_km=alt_km,
+            date_year=date_year,
             model="IGRF-14-MOCK",
-            claim_state="HYPOTHESIS_MOCK"
+            claim_state="HYPOTHESIS_MOCK",
         )
 
     def grid(
-        self,
-        lat_min: float, lat_max: float,
-        lon_min: float, lon_max: float,
-        resolution_arcmin: float,
-        date_year: float
+        self, lat_min: float, lat_max: float, lon_min: float, lon_max: float, resolution_arcmin: float, date_year: float
     ) -> IGRFGridResult:
         n_lat = int((lat_max - lat_min) / (resolution_arcmin / 60.0)) + 1
         n_lon = int((lon_max - lon_min) / (resolution_arcmin / 60.0)) + 1
         lats = np.linspace(lat_min, lat_max, n_lat)
         lons = np.linspace(lon_min, lon_max, n_lon)
-        F_grid = np.array([
-            [25_000 + 15_000 * math.sin(math.radians(lat)) for lon in lons]
-            for lat in lats
-        ])
+        F_grid = np.array([[25_000 + 15_000 * math.sin(math.radians(lat)) for lon in lons] for lat in lats])
         return IGRFGridResult(
-            lats=lats, lons=lons, F_grid=F_grid,
+            lats=lats,
+            lons=lons,
+            F_grid=F_grid,
             D_grid=np.zeros_like(F_grid),
             shape=(n_lat, n_lon),
             resolution_arcmin=resolution_arcmin,
             date_year=date_year,
             model="IGRF-14-MOCK",
-            claim_state="HYPOTHESIS_MOCK"
+            claim_state="HYPOTHESIS_MOCK",
         )
 
     def declination(self, lat: float, lon: float, alt_km: float, date_year: float) -> MagneticDeclinationResult:
         result = self.field(lat, lon, alt_km, date_year)
         return MagneticDeclinationResult(
-            D_deg=result.D, I_deg=result.I, F_nT=result.F,
-            lat=lat, lon=lon, alt_km=alt_km, date_year=date_year,
-            claim_state="HYPOTHESIS_MOCK"
+            D_deg=result.D,
+            I_deg=result.I,
+            F_nT=result.F,
+            lat=lat,
+            lon=lon,
+            alt_km=alt_km,
+            date_year=date_year,
+            claim_state="HYPOTHESIS_MOCK",
         )
 
 
 # ─── Live Backend (ppigrf installed) ─────────────────────────────────────────
+
 
 class LiveIGRFBackend:
     """
     Live IGRF-14 backend using ppigrf.
     ppigrf is pure Python / numpy — no Fortran compiler required.
     """
+
     def __init__(self):
         import ppigrf  # noqa: F401 — raises ImportError if not installed
+
         self.ppigrf = __import__("ppigrf")
         logger.info("IGRF live backend initialised with ppigrf")
 
@@ -180,6 +198,7 @@ class LiveIGRFBackend:
         # ppigrf.igrf() returns (Be, Bn, Bu) in nT for geocentric coords
         # Input: lat/lon in degrees, alt in km, decimal year
         import ppigrf
+
         # Convert geodetic to geocentric if needed
         # ppigrf.igrf expects geodetic (lat, lon, alt_km, year)
         Be, Bn, Bu = ppigrf.igrf(lon, lat, alt_km, date_year)
@@ -191,20 +210,25 @@ class LiveIGRFBackend:
         H = math.sqrt(Be**2 + Bn**2)
         I = math.degrees(math.atan2(Bu, H))
         return IGRFResult(
-            Be=float(Be), Bn=float(Bn), Bu=float(Bu),
-            F=float(F), D=float(D), I=float(I),
-            lat=lat, lon=lon, alt_km=alt_km, date_year=date_year,
-            model="IGRF-14", claim_state="DERIVED"
+            Be=float(Be),
+            Bn=float(Bn),
+            Bu=float(Bu),
+            F=float(F),
+            D=float(D),
+            I=float(I),
+            lat=lat,
+            lon=lon,
+            alt_km=alt_km,
+            date_year=date_year,
+            model="IGRF-14",
+            claim_state="DERIVED",
         )
 
     def grid(
-        self,
-        lat_min: float, lat_max: float,
-        lon_min: float, lon_max: float,
-        resolution_arcmin: float,
-        date_year: float
+        self, lat_min: float, lat_max: float, lon_min: float, lon_max: float, resolution_arcmin: float, date_year: float
     ) -> IGRFGridResult:
         import ppigrf
+
         n_lat = int((lat_max - lat_min) / (resolution_arcmin / 60.0)) + 1
         n_lon = int((lon_max - lon_min) / (resolution_arcmin / 60.0)) + 1
         lats = np.linspace(lat_min, lat_max, n_lat)
@@ -217,23 +241,33 @@ class LiveIGRFBackend:
                 F_grid[i, j] = math.sqrt(Be**2 + Bn**2 + Bu**2)
                 D_grid[i, j] = math.degrees(math.atan2(Be, Bn))
         return IGRFGridResult(
-            lats=lats, lons=lons, F_grid=F_grid, D_grid=D_grid,
+            lats=lats,
+            lons=lons,
+            F_grid=F_grid,
+            D_grid=D_grid,
             shape=(n_lat, n_lon),
             resolution_arcmin=resolution_arcmin,
             date_year=date_year,
-            model="IGRF-14", claim_state="DERIVED"
+            model="IGRF-14",
+            claim_state="DERIVED",
         )
 
     def declination(self, lat: float, lon: float, alt_km: float, date_year: float) -> MagneticDeclinationResult:
         result = self.field(lat, lon, alt_km, date_year)
         return MagneticDeclinationResult(
-            D_deg=result.D, I_deg=result.I, F_nT=result.F,
-            lat=lat, lon=lon, alt_km=alt_km, date_year=date_year,
-            claim_state="DERIVED"
+            D_deg=result.D,
+            I_deg=result.I,
+            F_nT=result.F,
+            lat=lat,
+            lon=lon,
+            alt_km=alt_km,
+            date_year=date_year,
+            claim_state="DERIVED",
         )
 
 
 # ─── Adapter ─────────────────────────────────────────────────────────────────
+
 
 @dataclass
 class IGRFAdapter:
@@ -252,6 +286,7 @@ class IGRFAdapter:
     field deviates from IGRF by tens to thousands of nT — these
     deviations ARE the magnetic anomaly and are what we explore for.
     """
+
     backend: IGRFBackend = field(default_factory=MockIGRFBackend)
 
     def is_available(self) -> bool:
@@ -284,15 +319,11 @@ class IGRFAdapter:
             >>> print(f"Declination: {result.D:.2f}°, Inclination: {result.I:.2f}°")
         """
         logger.info(
-            f"IGRF field at ({lat:.4f}, {lon:.4f}, {alt_km:.4f} km), "
-            f"year {date_year:.4f}, backend={type(self.backend).__name__}"
+            f"IGRF field at ({lat:.4f}, {lon:.4f}, {alt_km:.4f} km), year {date_year:.4f}, backend={type(self.backend).__name__}"
         )
         result = self.backend.field(lat, lon, alt_km, date_year)
         self._hash_input(lat, lon, alt_km, date_year)
-        logger.info(
-            f"IGRF result: F={result.F:.1f} nT, D={result.D:.2f}°, I={result.I:.2f}° "
-            f"[{result.claim_state}]"
-        )
+        logger.info(f"IGRF result: F={result.F:.1f} nT, D={result.D:.2f}°, I={result.I:.2f}° [{result.claim_state}]")
         return result
 
     def declination(self, lat: float, lon: float, alt_km: float = 0.0, date_year: float = 2025.0) -> MagneticDeclinationResult:
@@ -311,10 +342,12 @@ class IGRFAdapter:
 
     def grid(
         self,
-        lat_min: float, lat_max: float,
-        lon_min: float, lon_max: float,
+        lat_min: float,
+        lat_max: float,
+        lon_min: float,
+        lon_max: float,
         resolution_arcmin: float = 10.0,
-        date_year: float = 2025.0
+        date_year: float = 2025.0,
     ) -> IGRFGridResult:
         """
         Compute IGRF-14 on a regular grid — for regional grid preparation.
@@ -342,6 +375,7 @@ class IGRFAdapter:
 
 _adapter_instance: IGRFAdapter | None = None
 
+
 def get_adapter() -> IGRFAdapter:
     """Return the singleton IGRFAdapter instance (live if ppigrf installed)."""
     global _adapter_instance
@@ -351,8 +385,5 @@ def get_adapter() -> IGRFAdapter:
             logger.info("IGRFAdapter: live backend (ppigrf installed)")
         else:
             _adapter_instance = IGRFAdapter(backend=MockIGRFBackend())
-            logger.warning(
-                "IGRFAdapter: mock backend (ppigrf not installed). "
-                "Install with: pip install ppigrf"
-            )
+            logger.warning("IGRFAdapter: mock backend (ppigrf not installed). Install with: pip install ppigrf")
     return _adapter_instance

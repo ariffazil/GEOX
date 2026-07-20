@@ -318,7 +318,7 @@ def gaussian_likelihood(
 
         # Gaussian log-likelihood: -0.5 * ((x - mu) / sigma)^2 - log(sigma)
         residual_normalized = (obs_value - pred_value) / sigma
-        log_lik += -0.5 * residual_normalized ** 2 - math.log(sigma)
+        log_lik += -0.5 * residual_normalized**2 - math.log(sigma)
         n_channels += 1
 
     if n_channels == 0:
@@ -522,10 +522,7 @@ def ensemble_posteriors(
       • Identify non-compatible priors (low likelihood)
       • Carry forward the top-K as "surviving hypotheses"
     """
-    return [
-        bayes_update_voxel(prior, forward_model, observation)
-        for prior in priors
-    ]
+    return [bayes_update_voxel(prior, forward_model, observation) for prior in priors]
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

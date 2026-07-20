@@ -6,7 +6,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 WHAT THIS IS:
   A read-only GEOX MCP tool that takes a Macrostrat geomagnetic polarity
   interval (chron or subchron) and returns its FULL EPISTEMIC ENVELOPE:
-  
+
     - Polarity (normal/reversed/mixed/superchron/unresolved)
     - Epistemic level (OBSERVED/DERIVED/INTERPRETED/SPECULATION/UNKNOWN)
     - Confidence score (0.00–0.99, capped at 0.90 per F7 HUMILITY)
@@ -14,7 +14,7 @@ WHAT THIS IS:
     - Governance verdict (SEAL/PLAUSIBLE/PARTIAL/HOLD/VOID)
     - F9 ANTI-HANTU guard status
     - Uncertainty boundaries (where available)
-  
+
   This is the demonstration artifact that GEOX produces to show Macrostrat
   what their data looks like with epistemic metadata added.
 
@@ -133,7 +133,10 @@ async def geox_provenance_gpts(
     """
     logger.info(
         "geox_provenance_gpts called: name=%s age=%s range=[%s, %s]",
-        interval_name, age_ma, interval_top_ma, interval_base_ma,
+        interval_name,
+        age_ma,
+        interval_top_ma,
+        interval_base_ma,
     )
 
     # ── Resolve the interval ──────────────────────────────────────────────────
@@ -178,7 +181,8 @@ async def geox_provenance_gpts(
             "notes": note,
         }
         return get_standard_envelope(
-            result, tool_class="compute",
+            result,
+            tool_class="compute",
             claim_tag="HYPOTHESIS" if governance_verdict == "HOLD" else "PLAUSIBLE",
             claim_state="INTERPRETED",
             humility_score=0.10 if epistemic == "UNKNOWN" else 0.90,
@@ -225,13 +229,13 @@ async def geox_provenance_gpts(
     if b_age <= 23:
         pct_uncertainty = 0.005  # 0.5%
     elif b_age <= 66:
-        pct_uncertainty = 0.01   # 1%
+        pct_uncertainty = 0.01  # 1%
     elif b_age <= 145:
-        pct_uncertainty = 0.02   # 2%
+        pct_uncertainty = 0.02  # 2%
     elif b_age <= 170:
-        pct_uncertainty = 0.05   # 5%
+        pct_uncertainty = 0.05  # 5%
     else:
-        pct_uncertainty = None   # UNRESOLVED
+        pct_uncertainty = None  # UNRESOLVED
 
     if pct_uncertainty:
         age_error = dur * pct_uncertainty
@@ -279,8 +283,8 @@ async def geox_provenance_gpts(
     else:
         notes = (
             f"Resolved via Macrostrat GPTS (GTS2020). "
-            f"Age uncertainty: ±{age_error:.4f} Ma ({pct_uncertainty*100:.1f}%) "
-            f"at {confidence*100:.0f}% confidence."
+            f"Age uncertainty: ±{age_error:.4f} Ma ({pct_uncertainty * 100:.1f}%) "
+            f"at {confidence * 100:.0f}% confidence."
         )
 
     # ── Build uncertainty bounds ────────────────────────────────────────────
@@ -293,7 +297,7 @@ async def geox_provenance_gpts(
             "method": "approximate_from_gpts_duration",
             "note": (
                 f"Uncertainty estimated from GTS2020 calibration quality. "
-                f"Age error: ±{age_error:.4f} Ma ({pct_uncertainty*100:.1f}% of interval duration). "
+                f"Age error: ±{age_error:.4f} Ma ({pct_uncertainty * 100:.1f}% of interval duration). "
                 f"Use published GTS2020 standard deviation for rigorous P10/P90."
             ),
         }
@@ -364,6 +368,7 @@ async def geox_provenance_gpts(
 
 
 # ─── Helper: resolve chron by name ────────────────────────────────────────────
+
 
 def _resolve_chron_by_name(name: str) -> dict[str, Any] | None:
     """Find a chron by exact or prefix name match."""

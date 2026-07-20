@@ -50,6 +50,7 @@ STATUS:
 888_HOLD PACKET:
   See forge_work/2026-06-22-888-hold-crustal-domain-classify.md
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -85,12 +86,8 @@ class CrustCellObservation(BaseModel):
     )
 
     # Spatial anchor (optional but recommended)
-    lat: float | None = Field(
-        default=None, ge=-90.0, le=90.0, description="Latitude (WGS84)."
-    )
-    lon: float | None = Field(
-        default=None, ge=-180.0, le=180.0, description="Longitude (WGS84)."
-    )
+    lat: float | None = Field(default=None, ge=-90.0, le=90.0, description="Latitude (WGS84).")
+    lon: float | None = Field(default=None, ge=-180.0, le=180.0, description="Longitude (WGS84).")
     # Vp at this cell
     vp_km_s: float = Field(
         ...,
@@ -204,9 +201,7 @@ class CrustDomainMap(BaseModel):
         description="SHA-256 of sorted cell inputs (F1 AMANAH).",
     )
     generated_at: str
-    source_paper: str = Field(
-        default="Huang et al. (2021) — Tectonics"
-    )
+    source_paper: str = Field(default="Huang et al. (2021) — Tectonics")
     sovereignty_note: str = Field(
         default=(
             "Domain BOUNDARIES are sovereign territory (F13). "
@@ -223,18 +218,20 @@ class CrustDomainMap(BaseModel):
 
 def _observation_hash(cells: list[CrustCellObservation]) -> str:
     """SHA-256 of sorted cell inputs. F1 AMANAH — content-addressed audit."""
-    payload = repr(sorted(
-        (
-            c.cell_id or "",
-            round(c.vp_km_s, 6),
-            round(c.depth_km, 6),
-            c.crust_thickness_km,
-            c.heat_flow_mw_m2,
-            c.source,
-            c.method,
+    payload = repr(
+        sorted(
+            (
+                c.cell_id or "",
+                round(c.vp_km_s, 6),
+                round(c.depth_km, 6),
+                c.crust_thickness_km,
+                c.heat_flow_mw_m2,
+                c.source,
+                c.method,
+            )
+            for c in cells
         )
-        for c in cells
-    )).encode()
+    ).encode()
     return f"sha256:{hashlib.sha256(payload).hexdigest()[:16]}"
 
 
@@ -285,11 +282,7 @@ async def geox_crustal_domain_classify(
             crust_zone=classification.zone,
             confidence=classification.confidence,
             alternative_zones=classification.alternative_zones,
-            diagnostic_basis=(
-                classification.diagnostic_basis
-                if request.include_diagnostics
-                else []
-            ),
+            diagnostic_basis=(classification.diagnostic_basis if request.include_diagnostics else []),
             evidence_rank=classification.evidence_rank,
             source=cell.source,
         )

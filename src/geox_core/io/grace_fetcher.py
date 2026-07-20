@@ -25,8 +25,7 @@ logger = logging.getLogger("geox.io.grace")
 
 GRACE_BASE = "https://podaac.jpl.nasa.gov"
 GRACE_CITATION = (
-    "NASA JPL (2024). GRACE/GRACE-FO Level-3 Monthly Mass Grids. "
-    "PO.DAAC. https://podaac.jpl.nasa.gov. Public Domain."
+    "NASA JPL (2024). GRACE/GRACE-FO Level-3 Monthly Mass Grids. PO.DAAC. https://podaac.jpl.nasa.gov. Public Domain."
 )
 
 
@@ -59,9 +58,11 @@ class GRACEFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return GraceResult(
-                ok=True, mode="offline_stub",
+                ok=True,
+                mode="offline_stub",
                 data=[{"latitude": 5.0, "longitude": 110.0, "lwe_thickness_cm": -0.5, "date": "2024-01"}],
-                count=1, fetched_at=now,
-                note="Offline stub. Requires Earthdata token for PO.DAAC."
+                count=1,
+                fetched_at=now,
+                note="Offline stub. Requires Earthdata token for PO.DAAC.",
             )
         return GraceResult(ok=False, mode="live", note="Live requires PO.DAAC API + Earthdata token.", fetched_at=now)

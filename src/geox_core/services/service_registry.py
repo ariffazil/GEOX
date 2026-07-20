@@ -26,11 +26,13 @@ from dataclasses import dataclass
 
 # ─── Adapter Risk Profile ───────────────────────────────────────────────────────
 
+
 class AdapterStatus:
     """Adapter lifecycle status."""
-    EXPERIMENTAL = "EXPERIMENTAL"   # not yet validated; do not trust
-    STABLE = "STABLE"               # validated; proceed with normal use
-    DEPRECATED = "DEPRECATED"       # will be removed; migrate to replacement
+
+    EXPERIMENTAL = "EXPERIMENTAL"  # not yet validated; do not trust
+    STABLE = "STABLE"  # validated; proceed with normal use
+    DEPRECATED = "DEPRECATED"  # will be removed; migrate to replacement
     CALIBRATION_REQUIRED = "CALIBRATION_REQUIRED"  # needs offset well or reference data
 
 
@@ -51,6 +53,7 @@ class AdapterEntry:
       replaces: Adapter this replaces (if DEPRECATED)
       replaced_by: Adapter that replaces this (if DEPRECATED)
     """
+
     adapter_name: str
     library_name: str
     library_version: str
@@ -66,11 +69,9 @@ class AdapterEntry:
 # ─── Service Registry ──────────────────────────────────────────────────────────
 
 SERVICE_REGISTRY: dict[str, AdapterEntry] = {
-
     # ══════════════════════════════════════════════════════════════════════════════
     # PETROPHYSICS — bruges_adapter
     # ══════════════════════════════════════════════════════════════════════════════
-
     "bruges_adapter": AdapterEntry(
         adapter_name="geox_core.engines.petrophysics.bruges_adapter",
         library_name="bruges",
@@ -81,11 +82,9 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     # ══════════════════════════════════════════════════════════════════════════════
     # SEISMIC — devito_adapter, pylops_adapter, pygeopressure_adapter
     # ══════════════════════════════════════════════════════════════════════════════
-
     "devito_adapter": AdapterEntry(
         adapter_name="geox_core.engines.seismic.devito_adapter",
         library_name="devito",
@@ -96,7 +95,6 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     "pylops_adapter": AdapterEntry(
         adapter_name="geox_core.engines.seismic.pylops_adapter",
         library_name="pylops",
@@ -107,7 +105,6 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     "pygeopressure_adapter": AdapterEntry(
         adapter_name="geox_core.engines.seismic.pygeopressure_adapter",
         library_name="pygeopressure",
@@ -123,11 +120,9 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
             "Required: at least 2 offset wells with measured pore pressures in same basin."
         ),
     ),
-
     # ══════════════════════════════════════════════════════════════════════════════
     # GEOPHYSICS — harmonica_adapter, simpeg_adapter, pygimli_adapter, igrf_adapter
     # ══════════════════════════════════════════════════════════════════════════════
-
     "harmonica_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geophysics.harmonica_adapter",
         library_name="harmonica",
@@ -138,7 +133,6 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     "simpeg_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geophysics.simpeg_adapter",
         library_name="simpeg",
@@ -155,7 +149,6 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
             "in drill planning or pore pressure prediction."
         ),
     ),
-
     "pygimli_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geophysics.pygimli_adapter",
         library_name="pygimli",
@@ -166,7 +159,6 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     "igrf_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geophysics.igrf_adapter",
         library_name="ppigrf",
@@ -177,11 +169,9 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     # ══════════════════════════════════════════════════════════════════════════════
     # GEOSPATIAL — gplately_adapter, gplates_ws_adapter, gempy_adapter, loopstructural_adapter
     # ══════════════════════════════════════════════════════════════════════════════
-
     "gplately_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geospatial.gplately_adapter",
         library_name="gplately",
@@ -192,7 +182,6 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     "gplates_ws_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geospatial.gplates_ws_adapter",
         library_name="gwspy",
@@ -207,7 +196,6 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
             "Use for single-point reconstruction only."
         ),
     ),
-
     "gempy_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geospatial.gempy_adapter",
         library_name="gempy",
@@ -218,7 +206,6 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     "loopstructural_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geospatial.loopstructural_adapter",
         library_name="loopstructural",
@@ -229,11 +216,9 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
         requires_888_hold=False,
         calibration_notes="",
     ),
-
     # ══════════════════════════════════════════════════════════════════════════════
     # HYDROGEOLOGY — flopy_adapter
     # ══════════════════════════════════════════════════════════════════════════════
-
     "flopy_adapter": AdapterEntry(
         adapter_name="geox_core.engines.hydrogeology.flopy_adapter",
         library_name="flopy",
@@ -249,6 +234,7 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
 
 # ─── Lookup Helpers ─────────────────────────────────────────────────────────────
 
+
 def get_adapter_entry(adapter_name: str) -> AdapterEntry | None:
     """Look up an adapter by name."""
     return SERVICE_REGISTRY.get(adapter_name)
@@ -262,33 +248,23 @@ def get_adapter_library_version(adapter_name: str) -> str:
 
 def get_adapters_for_tool(mcp_tool_name: str) -> list[AdapterEntry]:
     """Return all adapters that contribute to a canonical MCP tool."""
-    return [
-        entry for entry in SERVICE_REGISTRY.values()
-        if mcp_tool_name in entry.canonical_tools
-    ]
+    return [entry for entry in SERVICE_REGISTRY.values() if mcp_tool_name in entry.canonical_tools]
 
 
 def get_888_hold_adapters() -> list[str]:
     """Return all adapter names that require Arif release."""
-    return [
-        name for name, entry in SERVICE_REGISTRY.items()
-        if entry.requires_888_hold
-    ]
+    return [name for name, entry in SERVICE_REGISTRY.items() if entry.requires_888_hold]
 
 
 def get_calibration_required_adapters() -> list[str]:
     """Return all adapter names that need calibration data."""
-    return [
-        name for name, entry in SERVICE_REGISTRY.items()
-        if entry.status == AdapterStatus.CALIBRATION_REQUIRED
-    ]
+    return [name for name, entry in SERVICE_REGISTRY.items() if entry.status == AdapterStatus.CALIBRATION_REQUIRED]
 
 
 def get_unstable_adapters() -> list[str]:
     """Return adapter names that are EXPERIMENTAL or DEPRECATED."""
     return [
-        name for name, entry in SERVICE_REGISTRY.items()
-        if entry.status in (AdapterStatus.EXPERIMENTAL, AdapterStatus.DEPRECATED)
+        name for name, entry in SERVICE_REGISTRY.items() if entry.status in (AdapterStatus.EXPERIMENTAL, AdapterStatus.DEPRECATED)
     ]
 
 

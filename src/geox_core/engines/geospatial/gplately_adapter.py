@@ -67,10 +67,7 @@ class GPlatelyAdapter:
 
     def _check_dependencies(self) -> None:
         if not _GPLATELY_AVAILABLE:
-            raise ImportError(
-                "gplately>=2.0.0 is required for plate reconstruction. "
-                "Install with: pip install gplately"
-            )
+            raise ImportError("gplately>=2.0.0 is required for plate reconstruction. Install with: pip install gplately")
 
     def reconstruct_points(
         self,
@@ -108,7 +105,9 @@ class GPlatelyAdapter:
         # Reconstruction
         if rotation_model:
             recon_lon, recon_lat, _ = rotation_model.get_point_at_age(
-                lon, lat, reconstruction_age_ma,
+                lon,
+                lat,
+                reconstruction_age_ma,
                 anchor_plate_id=anchor_plate_id,
                 time_plate_id=time_plate_id,
             )
@@ -120,16 +119,18 @@ class GPlatelyAdapter:
             recon_lat = lat
 
         # Plate velocity magnitude (simple distance-based proxy)
-        dist_recon = np.sqrt((recon_lon - lon)**2 + (recon_lat - lat)**2)
+        dist_recon = np.sqrt((recon_lon - lon) ** 2 + (recon_lat - lat) ** 2)
         velocity_proxy = dist_recon / reconstruction_age_ma if reconstruction_age_ma > 0 else 0
 
-        params_hash = _sha256_params({
-            "method": "reconstruct_points",
-            "n_points": len(lon),
-            "reconstruction_age_ma": reconstruction_age_ma,
-            "anchor_plate_id": anchor_plate_id,
-            "time_plate_id": time_plate_id,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "reconstruct_points",
+                "n_points": len(lon),
+                "reconstruction_age_ma": reconstruction_age_ma,
+                "anchor_plate_id": anchor_plate_id,
+                "time_plate_id": time_plate_id,
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -137,8 +138,8 @@ class GPlatelyAdapter:
             "reconstruction_age_ma": reconstruction_age_ma,
             "input_lon_deg": lon.tolist(),
             "input_lat_deg": lat.tolist(),
-            "reconstructed_lon_deg": recon_lon.tolist() if hasattr(recon_lon, 'tolist') else list(recon_lon),
-            "reconstructed_lat_deg": recon_lat.tolist() if hasattr(recon_lat, 'tolist') else list(recon_lat),
+            "reconstructed_lon_deg": recon_lon.tolist() if hasattr(recon_lon, "tolist") else list(recon_lon),
+            "reconstructed_lat_deg": recon_lat.tolist() if hasattr(recon_lat, "tolist") else list(recon_lat),
             "velocity_proxy_deg_ma": velocity_proxy.tolist(),
             "anchor_plate_id": anchor_plate_id,
             "time_plate_id": time_plate_id,
@@ -148,10 +149,8 @@ class GPlatelyAdapter:
                 "Plate reconstructions depend on the rotation model used — "
                 "Müller2019,Setterfield,Scotese produce different paleogeographies",
                 "Points near plate boundaries may have large uncertainties",
-                "Reconstruction at >200 Ma has higher uncertainty due to "
-                "Pangea configuration ambiguity",
-                "raster reconstruction NOT included here — "
-                "use reconstruct_raster for paleogeographic maps",
+                "Reconstruction at >200 Ma has higher uncertainty due to Pangea configuration ambiguity",
+                "raster reconstruction NOT included here — use reconstruct_raster for paleogeographic maps",
             ],
             "library": "gplately",
             "library_version": _GPLATELY_VERSION,
@@ -175,12 +174,14 @@ class GPlatelyAdapter:
         Returns:
             Angular velocity vectors [deg/Ma] per plate + azimuth of motion.
         """
-        params_hash = _sha256_params({
-            "method": "compute_plate_velocities",
-            "reconstruction_age_ma": reconstruction_age_ma,
-            "age_range_ma": age_range_ma,
-            "n_plates": len(plate_ids) if plate_ids else "all",
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "compute_plate_velocities",
+                "reconstruction_age_ma": reconstruction_age_ma,
+                "age_range_ma": age_range_ma,
+                "n_plates": len(plate_ids) if plate_ids else "all",
+            }
+        )
 
         # Simplified angular velocity per plate
         # Full implementation requires rotation model + PlateCalculator
@@ -204,10 +205,8 @@ class GPlatelyAdapter:
             "epistemic_label": "PLAUSIBLE",
             "confidence": "LOW",
             "caveats": [
-                "Plate velocities depend on rotation model — "
-                "different models yield different angular velocities",
-                "Absolute plate motion computed relative to mantle hotspot frame — "
-                "other reference frames give different results",
+                "Plate velocities depend on rotation model — different models yield different angular velocities",
+                "Absolute plate motion computed relative to mantle hotspot frame — other reference frames give different results",
             ],
             "library": "gplately",
             "library_version": _GPLATELY_VERSION,

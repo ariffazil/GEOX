@@ -21,23 +21,23 @@ from pydantic import BaseModel, Field, field_validator
 # ── Zone Schemes ──────────────────────────────────────────────────────────────
 
 ZONE_SCHEMES = Literal[
-    "Martini_1971_NN",      # Neogene nannofossil (NN1–NN21)
-    "Martini_1971_NP",      # Paleogene nannofossil (NP1–NP25)
-    "Sissingh_1977_CC",     # Cretaceous nannofossil (CC1–CC26)
-    "Bukry_1973_CN",        # Neogene low-lat coccolith (CN1–CN15)
+    "Martini_1971_NN",  # Neogene nannofossil (NN1–NN21)
+    "Martini_1971_NP",  # Paleogene nannofossil (NP1–NP25)
+    "Sissingh_1977_CC",  # Cretaceous nannofossil (CC1–CC26)
+    "Bukry_1973_CN",  # Neogene low-lat coccolith (CN1–CN15)
     "Okada_Bukry_1980_CP",  # Paleogene low-lat coccolith (CP1–CP19)
-    "Agnini_2014_CNP",      # Paleocene nannofossil
-    "Agnini_2014_CNE",      # Eocene nannofossil
-    "Agnini_2014_CNO",      # Oligocene nannofossil
-    "Blow_1969_N",          # Neogene planktonic foram (N1–N23)
-    "Blow_1969_P",          # Paleogene planktonic foram (P1–P22)
-    "Wade_2011",            # Updated Cenozoic planktonic foram
-    "Lunt_2016_LBF",        # Larger benthic foram (SE Asia)
-    "Morley_1991_PALYNO",   # SE Asia palynology
-    "SSB_1995",             # Malaysian palynology (old)
-    "SSB_2013",             # Malaysian palynology (new)
-    "ICS_GLOBAL",           # ICS chronostratigraphic stages
-    "CUSTOM",               # User-defined
+    "Agnini_2014_CNP",  # Paleocene nannofossil
+    "Agnini_2014_CNE",  # Eocene nannofossil
+    "Agnini_2014_CNO",  # Oligocene nannofossil
+    "Blow_1969_N",  # Neogene planktonic foram (N1–N23)
+    "Blow_1969_P",  # Paleogene planktonic foram (P1–P22)
+    "Wade_2011",  # Updated Cenozoic planktonic foram
+    "Lunt_2016_LBF",  # Larger benthic foram (SE Asia)
+    "Morley_1991_PALYNO",  # SE Asia palynology
+    "SSB_1995",  # Malaysian palynology (old)
+    "SSB_2013",  # Malaysian palynology (new)
+    "ICS_GLOBAL",  # ICS chronostratigraphic stages
+    "CUSTOM",  # User-defined
 ]
 
 FOSSIL_GROUPS = Literal[
@@ -56,12 +56,14 @@ FOSSIL_GROUPS = Literal[
 
 # ── Biozone Definition ───────────────────────────────────────────────────────
 
+
 class Biozone(BaseModel):
     """A biostratigraphic zone definition from published literature.
 
     Represents a single zone (e.g., NN21, NP25, N17) with its age range,
     defining events, and bibliographic reference.
     """
+
     zone_id: str = Field(..., description="Zone code, e.g. 'NN21', 'NP25', 'N17'")
     scheme: ZONE_SCHEMES = Field(..., description="Zonation scheme name")
     fossil_group: FOSSIL_GROUPS = Field(..., description="Fossil group")
@@ -86,39 +88,29 @@ class Biozone(BaseModel):
 
 # ── Biostratigraphic Event ───────────────────────────────────────────────────
 
+
 class BioEvent(BaseModel):
     """A single biostratigraphic observation from a well sample.
 
     Represents a First Occurrence (FO) or Last Occurrence (LO) of a taxon
     at a specific depth in a well.
     """
+
     well_id: str = Field(..., description="Well identifier")
     taxon: str = Field(..., description="Taxon name, e.g. 'Emiliania huxleyi'")
-    event_type: Literal["FO", "LO", "FAD", "LAD", "present", "absent"] = Field(
-        ..., description="Type of biostratigraphic event"
-    )
+    event_type: Literal["FO", "LO", "FAD", "LAD", "present", "absent"] = Field(..., description="Type of biostratigraphic event")
     depth_m: float = Field(..., description="Measured depth in metres")
-    depth_datum: Literal["KB", "MSL", "DF", "RT"] = Field(
-        default="KB", description="Depth reference datum"
-    )
+    depth_datum: Literal["KB", "MSL", "DF", "RT"] = Field(default="KB", description="Depth reference datum")
     zone: str | None = Field(default=None, description="Assigned zone, e.g. 'NN21'")
     zone_scheme: ZONE_SCHEMES | None = Field(default=None, description="Zone scheme")
     fossil_group: FOSSIL_GROUPS | None = Field(default=None)
     age_ma: float | None = Field(default=None, description="Calculated age in Ma")
-    age_uncertainty_ma: float | None = Field(
-        default=None, description="Age uncertainty (±Ma)"
-    )
-    confidence: Literal["definite", "probable", "questionable"] = Field(
-        default="probable", description="Pick confidence"
-    )
+    age_uncertainty_ma: float | None = Field(default=None, description="Age uncertainty (±Ma)")
+    confidence: Literal["definite", "probable", "questionable"] = Field(default="probable", description="Pick confidence")
     reworked: bool = Field(default=False, description="Reworking flag")
     caving: bool = Field(default=False, description="Caving contamination flag")
-    preservation: Literal["good", "moderate", "poor", "barren"] = Field(
-        default="moderate"
-    )
-    abundance: Literal["rare", "few", "common", "abundant", "dominant"] = Field(
-        default="common"
-    )
+    preservation: Literal["good", "moderate", "poor", "barren"] = Field(default="moderate")
+    abundance: Literal["rare", "few", "common", "abundant", "dominant"] = Field(default="common")
     analyst: str | None = Field(default=None)
     analysis_date: str | None = Field(default=None)
     vendor: str | None = Field(default=None, description="Lab/vendor name")
@@ -130,25 +122,21 @@ class BioEvent(BaseModel):
 
 # ── Taxon Record (from PBDB/Mikrotax) ────────────────────────────────────────
 
+
 class TaxonRecord(BaseModel):
     """Resolved taxonomic record from external database.
 
     Synthesised from PBDB taxonomy API and/or Mikrotax.
     """
+
     name: str = Field(..., description="Taxon name")
     accepted_name: str = Field(..., description="Accepted/valid name (after synonym resolution)")
-    rank: Literal["class", "order", "family", "genus", "species", "subspecies"] = Field(
-        default="species"
-    )
+    rank: Literal["class", "order", "family", "genus", "species", "subspecies"] = Field(default="species")
     parent: str | None = Field(default=None, description="Parent taxon name")
     fossil_group: FOSSIL_GROUPS | None = Field(default=None)
     pbdb_oid: str | None = Field(default=None, description="PBDB taxon OID, e.g. 'txn:421517'")
-    first_occurrence_ma: float | None = Field(
-        default=None, description="FAD age (oldest occurrence)"
-    )
-    last_occurrence_ma: float | None = Field(
-        default=None, description="LAD age (youngest occurrence)"
-    )
+    first_occurrence_ma: float | None = Field(default=None, description="FAD age (oldest occurrence)")
+    last_occurrence_ma: float | None = Field(default=None, description="LAD age (youngest occurrence)")
     n_occurrences: int | None = Field(default=None, description="PBDB occurrence count")
     extant: bool | None = Field(default=None)
     synonyms: list[str] = Field(default_factory=list)
@@ -160,12 +148,14 @@ class TaxonRecord(BaseModel):
 
 # ── Internal Well Biostrat Record ────────────────────────────────────────────
 
+
 class BiostratRecord(BaseModel):
     """Normalised internal biostrat data for a single well.
 
     This is the canonical format for ingested enterprise biostrat data
     (from NOC reports, vendor deliverables, etc.).
     """
+
     well_id: str = Field(..., description="Canonical well identifier")
     field_name: str | None = Field(default=None)
     basin: str | None = Field(default=None, description="Basin name")
@@ -178,13 +168,9 @@ class BiostratRecord(BaseModel):
     age_ma: float | None = Field(default=None, description="Derived age (Ma)")
     age_top_ma: float | None = Field(default=None)
     age_base_ma: float | None = Field(default=None)
-    confidence: Literal["definite", "probable", "questionable"] = Field(
-        default="probable"
-    )
+    confidence: Literal["definite", "probable", "questionable"] = Field(default="probable")
     reworked: bool = Field(default=False)
-    preservation: Literal["good", "moderate", "poor", "barren"] = Field(
-        default="moderate"
-    )
+    preservation: Literal["good", "moderate", "poor", "barren"] = Field(default="moderate")
     events: list[BioEvent] = Field(default_factory=list, description="Individual FO/LO events")
     eod: str | None = Field(default=None, description="Depositional environment")
     source_report: str | None = Field(default=None)
@@ -196,20 +182,19 @@ class BiostratRecord(BaseModel):
 
 # ── Age Model Point ──────────────────────────────────────────────────────────
 
+
 class AgeModelPoint(BaseModel):
     """A marker point for age-depth modelling.
 
     Can come from biostrat zones, seismic ties, DST ages, or other sources.
     """
+
     depth_m: float = Field(..., description="Measured depth (mMD)")
     age_ma: float = Field(..., description="Age in Ma")
-    source_type: Literal[
-        "biostrat_zone", "biostrat_event", "seismic_tie",
-        "dst_age", "radiometric", "magnetostrat", "other"
-    ] = Field(default="biostrat_zone")
-    confidence: Literal["definite", "probable", "questionable"] = Field(
-        default="probable"
+    source_type: Literal["biostrat_zone", "biostrat_event", "seismic_tie", "dst_age", "radiometric", "magnetostrat", "other"] = (
+        Field(default="biostrat_zone")
     )
+    confidence: Literal["definite", "probable", "questionable"] = Field(default="probable")
     zone: str | None = Field(default=None)
     taxon: str | None = Field(default=None)
     reference: str = Field(default="")
@@ -218,8 +203,10 @@ class AgeModelPoint(BaseModel):
 
 # ── Biostrat QC Result ───────────────────────────────────────────────────────
 
+
 class BiostratQC(BaseModel):
     """Quality control result for a biostrat pick or well."""
+
     well_id: str
     zone: str
     depth_m: float
@@ -229,16 +216,16 @@ class BiostratQC(BaseModel):
     range_violation: bool = Field(default=False, description="Zone out of expected depth range")
     age_inversion: bool = Field(default=False, description="Younger zone below older zone")
     missing_marker: bool = Field(default=False, description="Expected marker taxon absent")
-    confidence_adjusted: Literal["definite", "probable", "questionable"] = Field(
-        default="probable"
-    )
+    confidence_adjusted: Literal["definite", "probable", "questionable"] = Field(default="probable")
     notes: str = Field(default="")
 
 
 # ── Correlation Result ───────────────────────────────────────────────────────
 
+
 class WellPick(BaseModel):
     """A zone pick in a well for correlation."""
+
     well_id: str
     zone: str
     scheme: ZONE_SCHEMES
@@ -250,24 +237,21 @@ class WellPick(BaseModel):
 
 class CorrelationResult(BaseModel):
     """Result of cross-well biostrat correlation."""
+
     wells: list[str] = Field(..., description="Well IDs included")
     scheme: ZONE_SCHEMES
-    composite_zones: list[dict[str, Any]] = Field(
-        default_factory=list, description="Composite standard zone picks"
-    )
-    diachroneity_flags: list[dict[str, Any]] = Field(
-        default_factory=list, description="Zones with diachronous behaviour"
-    )
-    correlation_matrix: dict[str, dict[str, float]] = Field(
-        default_factory=dict, description="Well-pair correlation confidence"
-    )
+    composite_zones: list[dict[str, Any]] = Field(default_factory=list, description="Composite standard zone picks")
+    diachroneity_flags: list[dict[str, Any]] = Field(default_factory=list, description="Zones with diachronous behaviour")
+    correlation_matrix: dict[str, dict[str, float]] = Field(default_factory=dict, description="Well-pair correlation confidence")
     notes: str = Field(default="")
 
 
 # ── MCP Tool Envelope ────────────────────────────────────────────────────────
 
+
 class BiostratEnvelope(BaseModel):
     """Standard MCP output envelope for biostrat tools."""
+
     status: Literal["ok", "partial", "error"]
     tool: str
     data: dict[str, Any] = Field(default_factory=dict)

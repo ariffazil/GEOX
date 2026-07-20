@@ -22,13 +22,13 @@ class VelocityStructuralEngine:
         uncertainty_band: str = "P10-P90 Not Calculated",
         proxy_id: str | None = None,
         lineage: list[dict] | None = None,
-        evidence_handles: list[str] | None = None
+        evidence_handles: list[str] | None = None,
     ) -> VelocityRenderPayload:
         """
         Runs the doctrine logic. Calculate AC Risk.
         Returns the RenderPayload compliant with Binary Transport Doctrine.
         """
-        
+
         # 1. Determine failed and missing gates
         all_gates = set(VelocityQCGate)
         cleared_set = set(cleared_gates)
@@ -39,7 +39,7 @@ class VelocityStructuralEngine:
 
         for gate in failed_gates:
             ac_risk += self.policy.qc_penalty_map.get(gate, 0.0)
-            
+
         for failure in identified_failures:
             ac_risk += self.policy.failure_mode_penalty_map.get(failure, 0.0)
 
@@ -48,10 +48,10 @@ class VelocityStructuralEngine:
 
         # 3. Determine if structural proxy is valid (Threshold from policy)
         is_valid = ac_risk < self.policy.max_acceptable_ac_risk
-        
+
         # 4. Construct Claim Grammar
         missing_tests = [gate.value for gate in failed_gates]
-        
+
         claim = VelocityStructuralClaim(
             proxy_id=proxy_id or f"proxy_{cube_id}",
             cube_id=cube_id,
@@ -67,16 +67,12 @@ class VelocityStructuralEngine:
             missing_tests=missing_tests,
             uncertainty_band=uncertainty_band,
             ac_risk=round(ac_risk, 3),
-            is_structural_proxy_valid=is_valid
+            is_structural_proxy_valid=is_valid,
         )
 
         # 5. Construct Binary Transport Envelope
         manifest_uri = f"geox://render/cubes/{cube_id}/manifest"
-        
-        payload = VelocityRenderPayload(
-            renderable=True,
-            cube_manifest_uri=manifest_uri,
-            claim=claim
-        )
+
+        payload = VelocityRenderPayload(renderable=True, cube_manifest_uri=manifest_uri, claim=claim)
 
         return payload

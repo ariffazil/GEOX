@@ -238,43 +238,59 @@ LBF_ZONES: dict[str, tuple[float, float]] = {
 
 SCHEME_REGISTRY: dict[str, dict[str, Any]] = {
     "Martini_1971_NN": {
-        "zones": NN_ZONES, "fossil_group": "calcareous_nannofossil",
-        "prefix": "NN", "reference": "Martini, E. (1971) Proc. 2nd Planktonic Conf. Roma, 2: 739-785.",
+        "zones": NN_ZONES,
+        "fossil_group": "calcareous_nannofossil",
+        "prefix": "NN",
+        "reference": "Martini, E. (1971) Proc. 2nd Planktonic Conf. Roma, 2: 739-785.",
         "period": "Neogene",
     },
     "Martini_1971_NP": {
-        "zones": NP_ZONES, "fossil_group": "calcareous_nannofossil",
-        "prefix": "NP", "reference": "Martini, E. (1971) Proc. 2nd Planktonic Conf. Roma, 2: 739-785.",
+        "zones": NP_ZONES,
+        "fossil_group": "calcareous_nannofossil",
+        "prefix": "NP",
+        "reference": "Martini, E. (1971) Proc. 2nd Planktonic Conf. Roma, 2: 739-785.",
         "period": "Paleogene",
     },
     "Sissingh_1977_CC": {
-        "zones": CC_ZONES, "fossil_group": "calcareous_nannofossil",
-        "prefix": "CC", "reference": "Sissingh, F.H. (1977) Proc. K. Ned. Akad. Wet. B80: 56-69.",
+        "zones": CC_ZONES,
+        "fossil_group": "calcareous_nannofossil",
+        "prefix": "CC",
+        "reference": "Sissingh, F.H. (1977) Proc. K. Ned. Akad. Wet. B80: 56-69.",
         "period": "Cretaceous",
     },
     "Bukry_1973_CN": {
-        "zones": CN_ZONES, "fossil_group": "calcareous_nannofossil",
-        "prefix": "CN", "reference": "Bukry, D. (1973) Initial Rep. DSDP 20: 75-80.",
+        "zones": CN_ZONES,
+        "fossil_group": "calcareous_nannofossil",
+        "prefix": "CN",
+        "reference": "Bukry, D. (1973) Initial Rep. DSDP 20: 75-80.",
         "period": "Neogene",
     },
     "Okada_Bukry_1980_CP": {
-        "zones": CP_ZONES, "fossil_group": "calcareous_nannofossil",
-        "prefix": "CP", "reference": "Okada, H. & Bukry, D. (1980) Mar. Micropaleontol. 5: 321-325.",
+        "zones": CP_ZONES,
+        "fossil_group": "calcareous_nannofossil",
+        "prefix": "CP",
+        "reference": "Okada, H. & Bukry, D. (1980) Mar. Micropaleontol. 5: 321-325.",
         "period": "Paleogene",
     },
     "Blow_1969_N": {
-        "zones": N_ZONES, "fossil_group": "planktonic_foram",
-        "prefix": "N", "reference": "Blow, W.H. (1969) Proc. 1st Int. Conf. Planktonic Microfossils, 1: 199-422.",
+        "zones": N_ZONES,
+        "fossil_group": "planktonic_foram",
+        "prefix": "N",
+        "reference": "Blow, W.H. (1969) Proc. 1st Int. Conf. Planktonic Microfossils, 1: 199-422.",
         "period": "Neogene",
     },
     "Blow_1969_P": {
-        "zones": P_ZONES, "fossil_group": "planktonic_foram",
-        "prefix": "P", "reference": "Blow, W.H. (1969) Proc. 1st Int. Conf. Planktonic Microfossils, 1: 199-422.",
+        "zones": P_ZONES,
+        "fossil_group": "planktonic_foram",
+        "prefix": "P",
+        "reference": "Blow, W.H. (1969) Proc. 1st Int. Conf. Planktonic Microfossils, 1: 199-422.",
         "period": "Paleogene",
     },
     "Lunt_2016_LBF": {
-        "zones": LBF_ZONES, "fossil_group": "larger_benthic_foram",
-        "prefix": "T", "reference": "Lunt, P. (2016) SE Asia larger foraminifera biozonation.",
+        "zones": LBF_ZONES,
+        "fossil_group": "larger_benthic_foram",
+        "prefix": "T",
+        "reference": "Lunt, P. (2016) SE Asia larger foraminifera biozonation.",
         "period": "Cenozoic",
     },
 }
@@ -346,11 +362,13 @@ def parse_zone(text: str) -> list[dict[str, str]]:
             if not zone_id:
                 continue
 
-            results.append({
-                "zone": zone_id,
-                "scheme": scheme,
-                "evidence_tag": "EVIDENCE_DIRECT",
-            })
+            results.append(
+                {
+                    "zone": zone_id,
+                    "scheme": scheme,
+                    "evidence_tag": "EVIDENCE_DIRECT",
+                }
+            )
 
     # Deduplicate
     seen = set()
@@ -458,14 +476,16 @@ def list_zones_for_scheme(scheme: str) -> list[dict[str, Any]]:
     info = SCHEME_REGISTRY[scheme]
     result = []
     for zone_id, (top, base) in info["zones"].items():
-        result.append({
-            "zone_id": zone_id,
-            "age_top_ma": top,
-            "age_base_ma": base,
-            "scheme": scheme,
-            "fossil_group": info["fossil_group"],
-            "period": info["period"],
-        })
+        result.append(
+            {
+                "zone_id": zone_id,
+                "age_top_ma": top,
+                "age_base_ma": base,
+                "scheme": scheme,
+                "fossil_group": info["fossil_group"],
+                "period": info["period"],
+            }
+        )
     return result
 
 
@@ -484,6 +504,7 @@ def get_scheme_reference(scheme: str) -> str:
 
 
 # ── Convenience: Re-export NN parser for backward compatibility ──────────────
+
 
 def parse_nn_zone(value: str) -> dict[str, str]:
     """Legacy-compatible NN zone parser.

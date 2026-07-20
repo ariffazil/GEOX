@@ -46,12 +46,12 @@ class QuantumState:
     operator_updated_at: str | None = None
 
     # From arifOS Ω
-    latest_kernel_verdict: str = ""           # SEAL / SABAR / HOLD / VOID
+    latest_kernel_verdict: str = ""  # SEAL / SABAR / HOLD / VOID
     latest_kernel_verdict_atom_id: str | None = None
     kernel_verdict_updated_at: str | None = None
 
     # From WEALTH
-    latest_capital_signal: str = ""           # REJECT / DEFER / ADVANCE
+    latest_capital_signal: str = ""  # REJECT / DEFER / ADVANCE
     latest_capital_asset_id: str | None = None
     capital_signal_updated_at: str | None = None
 
@@ -126,18 +126,14 @@ def apply_atom(atom: IntelligenceAtom) -> None:
             # C5 = auto-HOLD
             if decision == "C5":
                 _state.global_hold = True
-                _state.global_hold_reason = (
-                    f"WELL operator {actor} at C5 (fatigue={fatigue:.2f})"
-                )
+                _state.global_hold_reason = f"WELL operator {actor} at C5 (fatigue={fatigue:.2f})"
                 _state.global_hold_at = atom.emitted_at
 
         # arifOS kernel verdict
         if atom.topic.startswith(TOPIC_VERDICT_PREFIX):
             # Prioritize constitutional_verdict (the actual arifOS verdict)
             # over godel_wall_state (the GEOX-internal epistemic state).
-            _state.latest_kernel_verdict = (
-                atom.constitutional_verdict or atom.godel_wall_state
-            )
+            _state.latest_kernel_verdict = atom.constitutional_verdict or atom.godel_wall_state
             _state.latest_kernel_verdict_atom_id = atom.atom_id
             _state.kernel_verdict_updated_at = atom.emitted_at
 
@@ -182,18 +178,10 @@ class Subscriber:
         if not await bus.connect():
             return False
 
-        self._tasks.append(asyncio.create_task(
-            bus.subscribe(f"{TOPIC_WELL_OPERATOR}.*", _on_well_operator)
-        ))
-        self._tasks.append(asyncio.create_task(
-            bus.subscribe(f"{TOPIC_VERDICT_PREFIX}.*", _on_kernel_verdict)
-        ))
-        self._tasks.append(asyncio.create_task(
-            bus.subscribe(f"{TOPIC_WEALTH_SIGNAL}.*", _on_wealth_signal)
-        ))
-        self._tasks.append(asyncio.create_task(
-            bus.subscribe(TOPIC_HOLD, _on_hold)
-        ))
+        self._tasks.append(asyncio.create_task(bus.subscribe(f"{TOPIC_WELL_OPERATOR}.*", _on_well_operator)))
+        self._tasks.append(asyncio.create_task(bus.subscribe(f"{TOPIC_VERDICT_PREFIX}.*", _on_kernel_verdict)))
+        self._tasks.append(asyncio.create_task(bus.subscribe(f"{TOPIC_WEALTH_SIGNAL}.*", _on_wealth_signal)))
+        self._tasks.append(asyncio.create_task(bus.subscribe(TOPIC_HOLD, _on_hold)))
         self._running = True
         return True
 

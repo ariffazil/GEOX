@@ -84,12 +84,10 @@ class ObsPyAdapter:
     def _check_dependencies(self) -> None:
         try:
             import obspy
+
             self._obspy_version = obspy.__version__
         except ImportError as exc:
-            raise ImportError(
-                "ObsPy is required for seismic operations. "
-                "Install with: pip install 'geox[seismic]'"
-            ) from exc
+            raise ImportError("ObsPy is required for seismic operations. Install with: pip install 'geox[seismic]'") from exc
 
     def _sha256_params(self, params: dict) -> str:
         """Fingerprint parameters for reproducibility."""
@@ -99,8 +97,7 @@ class ObsPyAdapter:
     def _make_stats(self, trace) -> TraceStats:
         coords = {}
         if hasattr(trace.stats, "coordinates"):
-            coords = {"lat": float(trace.stats.coordinates.latitude),
-                       "lon": float(trace.stats.coordinates.longitude)}
+            coords = {"lat": float(trace.stats.coordinates.latitude), "lon": float(trace.stats.coordinates.longitude)}
         return TraceStats(
             station=str(getattr(trace.stats, "station", "")),
             network=str(getattr(trace.stats, "network", "")),
@@ -114,13 +111,15 @@ class ObsPyAdapter:
         )
 
     def _add_log(self, step: str, library: str, params: dict) -> None:
-        self._processing_log.append({
-            "step": step,
-            "library": library,
-            "version": self._obspy_version,
-            "params": params,
-            "params_hash": self._sha256_params(params),
-        })
+        self._processing_log.append(
+            {
+                "step": step,
+                "library": library,
+                "version": self._obspy_version,
+                "params": params,
+                "params_hash": self._sha256_params(params),
+            }
+        )
 
     def load_seismic(
         self,
@@ -170,20 +169,22 @@ class ObsPyAdapter:
 
         traces = []
         for tr in stream:
-            traces.append({
-                "data": tr.data.tolist(),
-                "stats": {
-                    "station": str(tr.stats.station),
-                    "network": str(tr.stats.network),
-                    "channel": str(tr.stats.channel),
-                    "starttime": str(tr.stats.starttime),
-                    "endtime": str(tr.stats.endtime),
-                    "sampling_rate": float(tr.stats.sampling_rate),
-                    "delta": float(tr.stats.delta),
-                    "npts": int(tr.stats.npts),
-                    "coordinates": getattr(tr.stats, "coordinates", None),
-                },
-            })
+            traces.append(
+                {
+                    "data": tr.data.tolist(),
+                    "stats": {
+                        "station": str(tr.stats.station),
+                        "network": str(tr.stats.network),
+                        "channel": str(tr.stats.channel),
+                        "starttime": str(tr.stats.starttime),
+                        "endtime": str(tr.stats.endtime),
+                        "sampling_rate": float(tr.stats.sampling_rate),
+                        "delta": float(tr.stats.delta),
+                        "npts": int(tr.stats.npts),
+                        "coordinates": getattr(tr.stats, "coordinates", None),
+                    },
+                }
+            )
 
         return {
             "status": "LOADED",
@@ -224,20 +225,21 @@ class ObsPyAdapter:
         n_samples = len(arr)
 
         self._processing_log = []
-        self._add_log("attribute_computation", "obspy", {
-            "attribute": attribute,
-            "sample_rate": sample_rate,
-            "window_size": window_size,
-            "n_samples": n_samples,
-        })
+        self._add_log(
+            "attribute_computation",
+            "obspy",
+            {
+                "attribute": attribute,
+                "sample_rate": sample_rate,
+                "window_size": window_size,
+                "n_samples": n_samples,
+            },
+        )
 
         if attribute == "rms":
             window = min(window_size, n_samples)
             padded = np.pad(arr, (window // 2, window - 1 - window // 2), mode="edge")
-            rms = np.array([
-                np.sqrt(np.mean(padded[i:i + window] ** 2))
-                for i in range(n_samples)
-            ])
+            rms = np.array([np.sqrt(np.mean(padded[i : i + window] ** 2)) for i in range(n_samples)])
             result = float(np.mean(rms))
             unit = "amplitude_units"
             description = "Root-mean-square amplitude in sliding window"
@@ -246,10 +248,7 @@ class ObsPyAdapter:
         elif attribute == "variance":
             window = min(window_size, n_samples)
             padded = np.pad(arr, (window // 2, window - 1 - window // 2), mode="edge")
-            var = np.array([
-                np.var(padded[i:i + window])
-                for i in range(n_samples)
-            ])
+            var = np.array([np.var(padded[i : i + window]) for i in range(n_samples)])
             result = float(np.mean(var))
             unit = "amplitude_units^2"
             description = "Variance of amplitude in sliding window"
@@ -257,6 +256,7 @@ class ObsPyAdapter:
 
         elif attribute == "sweetness":
             from scipy.ndimage import uniform_filter1d
+
             if n_samples < window_size:
                 return {
                     "status": "ERROR",
@@ -285,7 +285,7 @@ class ObsPyAdapter:
                 }
             padded = np.pad(arr, (window, window), mode="edge")
             n_windows = n_samples - window + 1
-            windowed = np.array([padded[i:i + window] for i in range(n_windows)])
+            windowed = np.array([padded[i : i + window] for i in range(n_windows)])
             mean_vals = np.mean(windowed, axis=1)
             cross = np.correlate(arr[:n_windows], mean_vals, mode="valid") / window
             coherence = np.abs(cross)
@@ -311,11 +311,13 @@ class ObsPyAdapter:
             "confidence": confidence,
             "n_samples": n_samples,
             "processing_log": list(self._processing_log),
-            "parameters_hash": self._sha256_params({
-                "attribute": attribute,
-                "window_size": window_size,
-                "n_samples": n_samples,
-            }),
+            "parameters_hash": self._sha256_params(
+                {
+                    "attribute": attribute,
+                    "window_size": window_size,
+                    "n_samples": n_samples,
+                }
+            ),
             "library_versions": {
                 "obspy": self._obspy_version,
                 "numpy": NUMPY_VERSION,
@@ -351,10 +353,7 @@ class ObsPyAdapter:
             freqmin = filter_params.get("freqmin", 1.0)
             freqmax = filter_params.get("freqmax", 50.0)
             corners = filter_params.get("corners", 4)
-            arr_filtered = signal.butter(
-                N=corners, Wn=[freqmin, freqmax], btype="bandpass",
-                fs=sample_rate, output="sos"
-            )
+            arr_filtered = signal.butter(N=corners, Wn=[freqmin, freqmax], btype="bandpass", fs=sample_rate, output="sos")
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 result = signal.sosfilt(arr_filtered, arr)
@@ -393,7 +392,7 @@ class ObsPyAdapter:
                 result[-taper_window:] *= taper[taper_window:]
             else:
                 result = arr
-            step_desc = f"taper {max_percentage*100}% ({type_})"
+            step_desc = f"taper {max_percentage * 100}% ({type_})"
 
         else:
             return {
@@ -412,10 +411,12 @@ class ObsPyAdapter:
             "data": result.tolist(),
             "n_samples": len(result),
             "processing_log": list(self._processing_log),
-            "parameters_hash": self._sha256_params({
-                "filter_type": filter_type,
-                "filter_params": filter_params,
-            }),
+            "parameters_hash": self._sha256_params(
+                {
+                    "filter_type": filter_type,
+                    "filter_params": filter_params,
+                }
+            ),
             "library_versions": {
                 "obspy": self._obspy_version,
                 "numpy": NUMPY_VERSION,
@@ -450,11 +451,15 @@ class ObsPyAdapter:
         n = len(arr)
 
         self._processing_log = []
-        self._add_log("ac_detection", "geox", {
-            "window_size": window_size,
-            "threshold_sigma": threshold_sigma,
-            "n_samples": n,
-        })
+        self._add_log(
+            "ac_detection",
+            "geox",
+            {
+                "window_size": window_size,
+                "threshold_sigma": threshold_sigma,
+                "n_samples": n,
+            },
+        )
 
         if n < window_size * 2:
             return {
@@ -466,7 +471,7 @@ class ObsPyAdapter:
 
         semblance_vals = np.zeros(n)
         for i in range(window_size, n - window_size):
-            window = arr[i - window_size:i + window_size]
+            window = arr[i - window_size : i + window_size]
             np.mean(window)
             window_var = np.var(window)
             point_var = np.var(arr[i])
@@ -476,10 +481,7 @@ class ObsPyAdapter:
                 semblance_vals[i] = 1.0
 
         np.convolve(arr, np.ones(window_size) / window_size, mode="same")
-        local_var = np.array([
-            np.var(arr[max(0, i - window_size):min(n, i + window_size)])
-            for i in range(n)
-        ])
+        local_var = np.array([np.var(arr[max(0, i - window_size) : min(n, i + window_size)]) for i in range(n)])
         global_var = np.var(arr)
         variance_ratio = np.where(global_var > 1e-10, local_var / global_var, 1.0)
 
@@ -494,11 +496,15 @@ class ObsPyAdapter:
         else:
             ac_class = "HIGH_AC"
 
-        self._add_log("ac_classification", "geox", {
-            "ac_score": ac_score,
-            "ac_class": ac_class,
-            "anomaly_fraction": float(np.sum(anomaly_mask) / n),
-        })
+        self._add_log(
+            "ac_classification",
+            "geox",
+            {
+                "ac_score": ac_score,
+                "ac_class": ac_class,
+                "anomaly_fraction": float(np.sum(anomaly_mask) / n),
+            },
+        )
 
         return {
             "status": "COMPUTED",
@@ -510,11 +516,13 @@ class ObsPyAdapter:
             "variance_ratio_mean": round(float(np.mean(variance_ratio)), 4),
             "confidence": "MEDIUM",
             "processing_log": list(self._processing_log),
-            "parameters_hash": self._sha256_params({
-                "window_size": window_size,
-                "threshold_sigma": threshold_sigma,
-                "n_samples": n,
-            }),
+            "parameters_hash": self._sha256_params(
+                {
+                    "window_size": window_size,
+                    "threshold_sigma": threshold_sigma,
+                    "n_samples": n,
+                }
+            ),
             "library_versions": {
                 "obspy": self._obspy_version,
                 "numpy": NUMPY_VERSION,

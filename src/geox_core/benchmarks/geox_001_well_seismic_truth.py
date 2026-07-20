@@ -52,9 +52,7 @@ BENCHMARK_ID = "GEOX-001"
 BENCHMARK_NAME = "Well-Seismic Truth Test"
 BENCHMARK_TITLE = "Model Deserves To Live"
 THESIS = "If the well does not tie, the model does not get to speak as truth."
-TARGET_CLAIM_TEMPLATE = (
-    "Horizon {horizon} represents the top reservoir at {well}."
-)
+TARGET_CLAIM_TEMPLATE = "Horizon {horizon} represents the top reservoir at {well}."
 
 # Threshold law (locked 2026-07-09 — GEOX-001 receipt design)
 # mistie_ms:   PROCEED ≤15 · HOLD (15, 25] · KILL >25 (unless independently repaired)
@@ -307,9 +305,7 @@ def generate_scenario_bundle(scenario: ScenarioName = SCENARIO_HOLD) -> dict[str
     rc = compute_reflectivity(ai, polarity="SEG_NORMAL")
     # interface midpoints for TWT
     twt_rc = 0.5 * (twt_full[:-1] + twt_full[1:])
-    synth, twt_s = generate_synthetic_trace(
-        rc, twt_rc, wavelet_type="ricker", wavelet_freq_hz=30.0, noise_db=-22, rng_seed=42
-    )
+    synth, twt_s = generate_synthetic_trace(rc, twt_rc, wavelet_type="ricker", wavelet_freq_hz=30.0, noise_db=-22, rng_seed=42)
     dt_ms = float(np.median(np.diff(twt_s))) if len(twt_s) > 1 else 1.0
     seismic, twt_seis = _build_seismic_from_synthetic(synth, twt_s, mapped_shift_ms, dt_ms)
 
@@ -359,9 +355,7 @@ def generate_scenario_bundle(scenario: ScenarioName = SCENARIO_HOLD) -> dict[str
     # Density-neutron separation strength
     # score = mean(NPHI) + (2.65 - mean(RHOB)); higher = clearer sand/fluid flag
     sand_mask = (depth >= reservoir_top_m) & (depth < reservoir_top_m + 35.0)
-    dn_sep_score = float(
-        np.mean(curves["NPHI"][sand_mask]) + (2.65 - np.mean(curves["RHOB"][sand_mask]))
-    )
+    dn_sep_score = float(np.mean(curves["NPHI"][sand_mask]) + (2.65 - np.mean(curves["RHOB"][sand_mask])))
     # weak if score < 0.65 (HOLD path default ~0.55; PROCEED path ~0.77)
     dn_weak = (not strong_dn) or dn_sep_score < 0.65
 
@@ -653,9 +647,7 @@ def step_classify_epistemic(bundle: dict[str, Any], tie: TieResult) -> dict[str,
         "top_reservoir_log_pick": "INT",  # log motif pick is interpretation
         "horizon_h1_mapped_event": "INT",
         "reservoir_presence_from_gr_rt": "INT" if petro.get("gr_resistivity_supports_sand") else "SPEC",
-        "reservoir_presence_from_dn": (
-            "INT" if petro.get("density_neutron_separation_weak") else "DER"
-        ),
+        "reservoir_presence_from_dn": ("INT" if petro.get("density_neutron_separation_weak") else "DER"),
         "velocity_model": "SPEC",
         "horizon_equals_top_reservoir_claim": "INT",
         "closure_after_velocity_uncertainty": "SPEC",
@@ -724,10 +716,7 @@ def step_create_claim(
     )
     evidence_against.append(
         {
-            "item": (
-                f"velocity model uncertainty ±{tie.velocity_uncertainty_ms:.1f} ms "
-                "can erase closure"
-            ),
+            "item": (f"velocity model uncertainty ±{tie.velocity_uncertainty_ms:.1f} ms can erase closure"),
             "rung": "SPEC",
             "source": "n_velocity",
         }
@@ -740,10 +729,7 @@ def step_create_claim(
         if t.get("well_id") != well and t.get("surface") == "Top_Reservoir":
             evidence_against.append(
                 {
-                    "item": (
-                        f"nearby well {t['well_id']} top at {t['depth_md']} m "
-                        "contradicts depth trend"
-                    ),
+                    "item": (f"nearby well {t['well_id']} top at {t['depth_md']} m contradicts depth trend"),
                     "rung": "INT",
                     "source": "n_tops",
                 }
@@ -803,8 +789,7 @@ def step_challenge_claim(claim: ClaimBundle, tie: TieResult, bundle: dict[str, A
             "text": MANDATORY_ALTERNATIVES[2],
             "rung": "SPEC",
             "detail": (
-                f"velocity_uncertainty_ms={tie.velocity_uncertainty_ms}; "
-                f"checkshot_drift_max_ms={tie.checkshot_drift_max_ms}"
+                f"velocity_uncertainty_ms={tie.velocity_uncertainty_ms}; checkshot_drift_max_ms={tie.checkshot_drift_max_ms}"
             ),
             "status": "active_challenge",
         },
@@ -836,24 +821,14 @@ def step_falsification_scan(tie: TieResult, claim: ClaimBundle, bundle: dict[str
             test_id="revised_checkshot_mistie_gt_25ms",
             statement="if revised checkshot still gives >25 ms mistie, kill horizon tie",
             threshold=f"abs(mistie_ms) > {MISTIE_KILL_MS}",
-            current_status=(
-                "falsified"
-                if abs_m > MISTIE_KILL_MS
-                else "weakened"
-                if abs_m > MISTIE_HOLD_MS
-                else "confirmed"
-            ),
+            current_status=("falsified" if abs_m > MISTIE_KILL_MS else "weakened" if abs_m > MISTIE_HOLD_MS else "confirmed"),
             implication="Horizon H1 cannot be promoted as Top_Reservoir without re-pick or T-D repair",
         ),
         FalsificationTest(
             test_id="nearby_well_top_breaks_depth_trend",
             statement="if nearby well top contradicts depth trend, downgrade prospect",
             threshold="offset top residual vs regional trend > 50 m",
-            current_status=(
-                "falsified"
-                if any(t.get("well_id") != bundle["well_id"] for t in bundle["tops"])
-                else "unverified"
-            ),
+            current_status=("falsified" if any(t.get("well_id") != bundle["well_id"] for t in bundle["tops"]) else "unverified"),
             implication="Multi-well depth consistency required before structural map trust",
         ),
         FalsificationTest(
@@ -881,11 +856,7 @@ def step_falsification_scan(tie: TieResult, claim: ClaimBundle, bundle: dict[str
             test_id="density_neutron_weak_support",
             statement="if density-neutron cannot support sand, reservoir claim stays INTERPRETATION",
             threshold="dn_separation_score < 0.15",
-            current_status=(
-                "weakened"
-                if bundle["petro_diagnostics"].get("density_neutron_separation_weak")
-                else "confirmed"
-            ),
+            current_status=("weakened" if bundle["petro_diagnostics"].get("density_neutron_separation_weak") else "confirmed"),
             implication="Petrophysical support for reservoir is motif-only (GR/RT), not hard OBS",
         ),
     ]
@@ -902,11 +873,7 @@ def step_verdict(
     reasons: list[str] = []
     next_tests: list[str] = list(claim.missing_tests[:3])
     # always append alternate-velocity falsification line for receipt shape
-    falsif_lines = [
-        f.statement
-        for f in falsification
-        if f.current_status in ("falsified", "weakened", "unverified")
-    ]
+    falsif_lines = [f.statement for f in falsification if f.current_status in ("falsified", "weakened", "unverified")]
 
     qc_fail = [r for r in qc if r.status == "FAIL"]
     if qc_fail:
@@ -925,8 +892,7 @@ def step_verdict(
     drift = tie.checkshot_drift_max_ms
     corr = tie.correlation
     offset_kill = any(
-        f.test_id == "nearby_well_top_breaks_depth_trend" and f.current_status == "falsified"
-        for f in falsification
+        f.test_id == "nearby_well_top_breaks_depth_trend" and f.current_status == "falsified" for f in falsification
     )
     triggers: list[str] = []
 
@@ -976,9 +942,7 @@ def step_verdict(
         if drift > CHECKSHOT_DRIFT_HOLD_MS:
             reasons.append("checkshot drift exceeds threshold")
         if any("density-neutron" in e["item"] for e in claim.evidence_against):
-            reasons.append(
-                "GR/resistivity motif supports sand, but density-neutron separation is weak"
-            )
+            reasons.append("GR/resistivity motif supports sand, but density-neutron separation is weak")
         reasons.append("top pick confidence is INTERPRETATION, not OBSERVATION")
         reasons.append("velocity model uncertainty can erase closure")
         live = False
@@ -1001,9 +965,7 @@ def step_verdict(
         ]
     else:
         verdict = "HOLD"
-        reasons.append(
-            f"tie quality {tie.quality} / residual {tie.residual_class} insufficient for PROCEED"
-        )
+        reasons.append(f"tie quality {tie.quality} / residual {tie.residual_class} insufficient for PROCEED")
         reasons.append(f"mistie={tie.mistie_ms:+.1f} ms correlation={corr:.2f}")
         live = False
         triggers.append("fallback_hold")
@@ -1103,17 +1065,11 @@ def run_geox_001(
             "residual_class": tie.residual_class,
             "residual_description": f"mistie_ms={tie.mistie_ms}, quality={tie.quality}",
             "residual_severity": (
-                "critical"
-                if abs(tie.mistie_ms) >= MISTIE_KILL_MS
-                else "high"
-                if abs(tie.mistie_ms) >= MISTIE_HOLD_MS
-                else "low"
+                "critical" if abs(tie.mistie_ms) >= MISTIE_KILL_MS else "high" if abs(tie.mistie_ms) >= MISTIE_HOLD_MS else "low"
             ),
         },
         rock_physics_status={
-            "lithology_separability": "low"
-            if bundle["petro_diagnostics"].get("density_neutron_separation_weak")
-            else "medium",
+            "lithology_separability": "low" if bundle["petro_diagnostics"].get("density_neutron_separation_weak") else "medium",
             "fluid_separability": "low",
         },
         inversion_permission={
@@ -1137,12 +1093,10 @@ def run_geox_001(
         "QC_verified_ingested_files": all(r.status != "FAIL" for r in qc),
         "explicit_evidence_graph": bool(graph.get("nodes")) and bool(graph.get("edges")),
         "synthetic_tie_and_drift_result": tie.mistie_ms is not None and tie.correlation is not None,
-        "claim_with_OBS_DER_INT_SPEC_separation": bool(epistemic)
-        and claim.rung in ("OBS", "DER", "INT", "SPEC"),
+        "claim_with_OBS_DER_INT_SPEC_separation": bool(epistemic) and claim.rung in ("OBS", "DER", "INT", "SPEC"),
         "active_challenge_or_alternative_interpretation": len(claim.alternatives) >= 4,
         "verdict_can_say_PROCEED_HOLD_KILL_without_pretending_certainty": (
-            verdict_block["verdict"] in ("PROCEED", "HOLD", "KILL")
-            and verdict_block["confidence_cap"] <= 0.90
+            verdict_block["verdict"] in ("PROCEED", "HOLD", "KILL") and verdict_block["confidence_cap"] <= 0.90
         ),
         # legacy keys (compat with earlier tests)
         "1_qc_verified": all(r.status != "FAIL" for r in qc),
@@ -1432,7 +1386,7 @@ def load_real_las_curves(las_path: str | Path) -> dict[str, np.ndarray]:
     if "RHOB" not in out2:
         # Gardner fallback marked later as DER not OBS
         vp = compute_vp_from_sonic(out2["DT"], out2["DEPT"], dt_unit="usft")
-        out2["RHOB"] = (0.31 * (vp**0.25))  # rough Gardner g/cm3
+        out2["RHOB"] = 0.31 * (vp**0.25)  # rough Gardner g/cm3
         out2["_rhob_gardner"] = np.array([1.0])
     return out2
 
@@ -1450,13 +1404,7 @@ def run_geox_001_real_las(
 
     Default LAS: data/real_wells/q15_15_9_19/q15_15_9_19.las (North Sea Q15 — not NOC-proprietary).
     """
-    default = (
-        Path(__file__).resolve().parents[3]
-        / "data"
-        / "real_wells"
-        / "q15_15_9_19"
-        / "q15_15_9_19.las"
-    )
+    default = Path(__file__).resolve().parents[3] / "data" / "real_wells" / "q15_15_9_19" / "q15_15_9_19.las"
     # workspace may be /root/geox or /root/GEOX
     candidates = [
         Path(las_path) if las_path else None,
@@ -1523,9 +1471,7 @@ def run_geox_001_real_las(
         bundle["petro_diagnostics"]["phi_e_p50"] = pe.get("p50")
         bundle["petro_diagnostics"]["phi_e_p10"] = pe.get("p10")
         bundle["petro_diagnostics"]["phi_e_p90"] = pe.get("p90")
-        bundle["petro_diagnostics"]["net_to_gross_log"] = (las_physics.get("stats") or {}).get(
-            "net_to_gross"
-        )
+        bundle["petro_diagnostics"]["net_to_gross_log"] = (las_physics.get("stats") or {}).get("net_to_gross")
         bundle["petro_diagnostics"]["porosity_source"] = "DER_FROM_LAS_CURVES"
     except Exception as exc:
         las_physics = {"status": "FAIL", "error": str(exc)[:200]}

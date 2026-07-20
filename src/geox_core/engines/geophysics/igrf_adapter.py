@@ -68,10 +68,7 @@ class IGRFAdapter:
 
     def _check_dependencies(self) -> None:
         if not _PPIGRF_AVAILABLE:
-            raise ImportError(
-                "ppigrf is required for IGRF geomagnetic calculations. "
-                "Install with: pip install ppigrf"
-            )
+            raise ImportError("ppigrf is required for IGRF geomagnetic calculations. Install with: pip install ppigrf")
 
     def compute_igrf(
         self,
@@ -96,17 +93,16 @@ class IGRFAdapter:
 
         if epoch_year is None:
             import datetime
+
             now = datetime.datetime.now()
             epoch_year = now.year + (now.timetuple().tm_yday - 1) / 365.25
 
         # ppigrf.igrf returns (Be, Bn, Bu) in nanotesla
-        Be, Bn, Bu = pp.igrf(
-            latitude_deg, longitude_deg, altitude_m, epoch_year
-        )
+        Be, Bn, Bu = pp.igrf(latitude_deg, longitude_deg, altitude_m, epoch_year)
 
         # Derived quantities
         H = np.sqrt(Be**2 + Bn**2)  # horizontal intensity [nT]
-        F = np.sqrt(H**2 + Bu**2)    # total intensity [nT]
+        F = np.sqrt(H**2 + Bu**2)  # total intensity [nT]
 
         # Declination [degrees, positive east]
         D = np.arctan2(Be, Bn) * 180 / np.pi
@@ -115,21 +111,20 @@ class IGRFAdapter:
         I = np.arctan2(Bu, H) * 180 / np.pi
 
         # Secular variation (annual change in field)
-        dBe, dBn, dBu = pp.igrf(
-            latitude_deg, longitude_deg, altitude_m, epoch_year + 1.0,
-            isv=1, iextrap=0
-        )
+        dBe, dBn, dBu = pp.igrf(latitude_deg, longitude_deg, altitude_m, epoch_year + 1.0, isv=1, iextrap=0)
         dD = np.arctan2(dBe, dBn) * 180 / np.pi - D
         dI = np.arctan2(dBu, np.sqrt(dBe**2 + dBn**2)) * 180 / np.pi - I
         dF = np.sqrt(dBe**2 + dBn**2 + dBu**2) - F
 
-        params_hash = _sha256_params({
-            "lat": latitude_deg,
-            "lon": longitude_deg,
-            "alt_m": altitude_m,
-            "epoch": epoch_year,
-            "model": "IGRF-14",
-        })
+        params_hash = _sha256_params(
+            {
+                "lat": latitude_deg,
+                "lon": longitude_deg,
+                "alt_m": altitude_m,
+                "epoch": epoch_year,
+                "model": "IGRF-14",
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -205,9 +200,7 @@ class IGRFAdapter:
             "confidence": "HIGH",
             "caveats": [
                 "Use for survey correction only — not lithospheric interpretation",
-                "Annual change rate: {:.3f} deg/yr".format(
-                    result["secular_variation"]["dD_deg_per_yr"]
-                ),
+                "Annual change rate: {:.3f} deg/yr".format(result["secular_variation"]["dD_deg_per_yr"]),
             ],
             "library": "ppigrf",
             "library_version": _PPIGRF_VERSION,
@@ -258,10 +251,8 @@ class IGRFAdapter:
             "epistemic_label": "DERIVED",
             "confidence": "MEDIUM",
             "caveats": [
-                "Assumes IGRF main field is correct — "
-                "model errors propagate into anomaly",
-                "Crustal anomaly still contains induced + remanent components — "
-                "separate with Vector Magnetic data if possible",
+                "Assumes IGRF main field is correct — model errors propagate into anomaly",
+                "Crustal anomaly still contains induced + remanent components — separate with Vector Magnetic data if possible",
                 "High latitude (>60°): IGRF accuracy degrades",
             ],
             "library": "ppigrf",
@@ -272,8 +263,7 @@ class IGRFAdapter:
     @staticmethod
     def _cardinal_direction(declination_deg: float) -> str:
         """Convert declination to cardinal direction string."""
-        dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
-                "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
         ix = int((declination_deg % 360 + 11.25) / 22.5) % 16
         return dirs[ix]
 

@@ -21,7 +21,7 @@ import os
 import matplotlib
 import numpy as np
 
-matplotlib.use('Agg')
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
@@ -46,9 +46,9 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
         d = json.load(f)
 
     horizons = d.get("horizons", [])
-    faults   = d.get("faults", [])
+    faults = d.get("faults", [])
     horizon_polylines = d.get("horizon_polylines_full", {})
-    fault_polylines   = d.get("fault_polylines_full", {})
+    fault_polylines = d.get("fault_polylines_full", {})
 
     if not horizons:
         return {"status": "VOID", "reason": "No horizons to model"}
@@ -70,21 +70,17 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
     resolution = [60, 10, 60]  # low-res for fast execution
 
     geo_model = gp.create_geomodel(
-        project_name='GEOX_3D_Model',
+        project_name="GEOX_3D_Model",
         extent=extent,
         resolution=resolution,
-        structural_frame=gp.data.StructuralFrame.initialize_default_structure()
+        structural_frame=gp.data.StructuralFrame.initialize_default_structure(),
     )
 
     # ── 3. Define structural frame groups and elements explicitly ──────
     geo_model.structural_frame.structural_groups.clear()
 
     # Create stratigraphic series
-    strat_group = gp.data.StructuralGroup(
-        name='Strat_Series',
-        elements=[],
-        structural_relation=StackRelationType.ERODE
-    )
+    strat_group = gp.data.StructuralGroup(name="Strat_Series", elements=[], structural_relation=StackRelationType.ERODE)
 
     # Initialize stratigraphic elements (horizons)
     for h in horizons:
@@ -93,7 +89,7 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
             name=hid,
             color=next(geo_model.structural_frame.color_generator),
             surface_points=gp.data.SurfacePointsTable.initialize_empty(),
-            orientations=gp.data.OrientationsTable.initialize_empty()
+            orientations=gp.data.OrientationsTable.initialize_empty(),
         )
         strat_group.append_element(el)
 
@@ -106,18 +102,18 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
             name=fid,
             color=next(geo_model.structural_frame.color_generator),
             surface_points=gp.data.SurfacePointsTable.initialize_empty(),
-            orientations=gp.data.OrientationsTable.initialize_empty()
+            orientations=gp.data.OrientationsTable.initialize_empty(),
         )
         fault_group = gp.data.StructuralGroup(
             name=f"Group_{fid}",
             elements=[fault_el],
             structural_relation=StackRelationType.FAULT,
-            fault_relations=gp.data.FaultsRelationSpecialCase.OFFSET_ALL
+            fault_relations=gp.data.FaultsRelationSpecialCase.OFFSET_ALL,
         )
         geo_model.structural_frame.append_group(fault_group)
 
-    print('  ✅ Frame groups initialized:', [g.name for g in geo_model.structural_frame.structural_groups])
-    print('  ✅ Frame elements initialized:', [e.name for g in geo_model.structural_frame.structural_groups for e in g.elements])
+    print("  ✅ Frame groups initialized:", [g.name for g in geo_model.structural_frame.structural_groups])
+    print("  ✅ Frame elements initialized:", [e.name for g in geo_model.structural_frame.structural_groups for e in g.elements])
 
     # ── 4. Populate surface points (Horizons) ────────────────────────
     # We place the main 2D profile at Y=250.
@@ -126,8 +122,8 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
     xs, ys, zs = [], [], []
 
     for h in horizons:
-        hid  = h["id"]
-        pts  = horizon_polylines.get(hid, [])
+        hid = h["id"]
+        pts = horizon_polylines.get(hid, [])
         if not pts:
             continue
         # Decimate to avoid over-constraining the spline (every 25th point)
@@ -140,18 +136,14 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
                 zs.append(-float(pz))  # Z is negative depth
                 surf_names.append(hid)
 
-    gp.add_surface_points(
-        geo_model=geo_model,
-        x=xs, y=ys, z=zs,
-        elements_names=surf_names
-    )
+    gp.add_surface_points(geo_model=geo_model, x=xs, y=ys, z=zs, elements_names=surf_names)
     print(f"  [G2] Surface points added: {len(xs)} points for {len(horizons)} horizons")
 
     # Add default horizontal orientations for stability
     for h in horizons:
-        hid  = h["id"]
+        hid = h["id"]
         # Add orientation at centre of profile (X = wc/2, Y = 250)
-        pts  = horizon_polylines.get(hid, [])
+        pts = horizon_polylines.get(hid, [])
         if pts:
             mid_pt = pts[len(pts) // 2]
             gp.add_orientations(
@@ -160,7 +152,7 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
                 y=[250.0],
                 z=[-float(mid_pt[1])],
                 elements_names=[hid],
-                pole_vector=[[0.0, 0.0, 1.0]]  # normal horizontal
+                pole_vector=[[0.0, 0.0, 1.0]],  # normal horizontal
             )
 
     # ── 5. Populate faults ───────────────────────────────────────────
@@ -180,37 +172,25 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
                 fz.append(-float(pz))
                 f_names.append(fid)
 
-        gp.add_surface_points(
-            geo_model=geo_model,
-            x=fx, y=fy, z=fz,
-            elements_names=f_names
-        )
+        gp.add_surface_points(geo_model=geo_model, x=fx, y=fy, z=fz, elements_names=f_names)
 
         gp.add_orientations(
             geo_model=geo_model,
-            x=[float(decimated_fpts[len(decimated_fpts)//2][0])],
+            x=[float(decimated_fpts[len(decimated_fpts) // 2][0])],
             y=[250.0],
-            z=[-float(decimated_fpts[len(decimated_fpts)//2][1])],
+            z=[-float(decimated_fpts[len(decimated_fpts) // 2][1])],
             elements_names=[fid],
-            pole_vector=[[0.9, 0.0, 0.1]]  # steep dip vector
+            pole_vector=[[0.9, 0.0, 0.1]],  # steep dip vector
         )
         print(f"  [G3] Fault element populated: {fid} ({len(fx)} points)")
 
     # Enable faulting relations
-    gp.set_is_fault(
-        frame=geo_model,
-        fault_groups=[f"Group_{f['id']}" for f in faults]
-    )
+    gp.set_is_fault(frame=geo_model, fault_groups=[f"Group_{f['id']}" for f in faults])
 
     # ── 6. Compute geological model ──────────────────────────────────
     print("  [G4] Computing 3D model using GemPy backend...")
     try:
-        gp.compute_model(
-            gempy_model=geo_model,
-            engine_config=gp.data.GemPyEngineConfig(
-                backend=gp.data.AvailableBackends.numpy
-            )
-        )
+        gp.compute_model(gempy_model=geo_model, engine_config=gp.data.GemPyEngineConfig(backend=gp.data.AvailableBackends.numpy))
         print("  ✅ 3D model computed successfully.")
     except Exception as e:
         return {"status": "VOID", "reason": f"GemPy compute failed: {e}"}
@@ -224,35 +204,39 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
     # Extract 2D slice at middle Y index
     slice_2d = lith_grid[:, ny // 2, :].T  # shape (nz, nx)
 
-    fig, ax = plt.subplots(figsize=(12, 8), facecolor='#0a0d14')
-    ax.set_facecolor('#0a0d14')
-    
+    fig, ax = plt.subplots(figsize=(12, 8), facecolor="#0a0d14")
+    ax.set_facecolor("#0a0d14")
+
     # Custom geologist colour map for layers
-    cmap = plt.get_cmap('terrain', len(horizons) + 1)
-    
-    ax.imshow(slice_2d, cmap=cmap, aspect='auto',
-                   extent=[0, wc, -hc, 0])
-    ax.set_xlabel('X (px)', color='#8899aa')
-    ax.set_ylabel('Z (px, negative TWT)', color='#8899aa')
-    ax.set_title('GemPy 3D Model Slice (Y=250) — INT_3D_STRUCTURE', color='white', fontsize=11)
-    ax.tick_params(colors='#8899aa')
-    ax.grid(color='#223344', linestyle='--', alpha=0.5)
+    cmap = plt.get_cmap("terrain", len(horizons) + 1)
+
+    ax.imshow(slice_2d, cmap=cmap, aspect="auto", extent=[0, wc, -hc, 0])
+    ax.set_xlabel("X (px)", color="#8899aa")
+    ax.set_ylabel("Z (px, negative TWT)", color="#8899aa")
+    ax.set_title("GemPy 3D Model Slice (Y=250) — INT_3D_STRUCTURE", color="white", fontsize=11)
+    ax.tick_params(colors="#8899aa")
+    ax.grid(color="#223344", linestyle="--", alpha=0.5)
 
     # Overlay faults as white lines
     for f in faults:
         fid = f["id"]
         fpts = np.array(fault_polylines.get(fid, []))
         if len(fpts) > 0:
-            ax.plot(fpts[:, 0], -fpts[:, 1], '--', color='white', lw=2.0, label=fid)
+            ax.plot(fpts[:, 0], -fpts[:, 1], "--", color="white", lw=2.0, label=fid)
 
     # Add epistemic label
-    ax.text(0.01, 0.02,
-            'INT_3D_STRUCTURE: GemPy block model.\nRequires well tie & spatial validation.',
-            transform=ax.transAxes, color='#FFE566', fontsize=7.5,
-            bbox=dict(boxstyle='round', facecolor='#1a1a0a', alpha=0.85))
+    ax.text(
+        0.01,
+        0.02,
+        "INT_3D_STRUCTURE: GemPy block model.\nRequires well tie & spatial validation.",
+        transform=ax.transAxes,
+        color="#FFE566",
+        fontsize=7.5,
+        bbox=dict(boxstyle="round", facecolor="#1a1a0a", alpha=0.85),
+    )
 
     plot_path = os.path.join(output_dir, "G5_gempy_3d_slice.png")
-    plt.savefig(plot_path, dpi=150, bbox_inches='tight', facecolor='#0a0d14')
+    plt.savefig(plot_path, dpi=150, bbox_inches="tight", facecolor="#0a0d14")
     plt.close()
     print(f"  ✅ Renders saved: {plot_path}")
 
@@ -260,9 +244,7 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
     grid_path = os.path.join(output_dir, "lithology_grid.npy")
     np.save(grid_path, lith_grid)
 
-    prov_hash = hashlib.sha256(
-        (model_json_path + "gempy_3d_v1").encode()
-    ).hexdigest()[:16]
+    prov_hash = hashlib.sha256((model_json_path + "gempy_3d_v1").encode()).hexdigest()[:16]
 
     manifest = {
         "status": "INT_3D_STRUCTURE",
@@ -287,6 +269,7 @@ def run_gempy_3d_model(model_json_path: str, output_dir: str) -> dict:
 
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) < 2:
         print("Usage: python3 geox_3d_modeling_gempy.py <geoseismic_model.json> [output_dir]")
         sys.exit(1)

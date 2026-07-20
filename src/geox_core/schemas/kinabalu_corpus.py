@@ -22,6 +22,7 @@ Reference:
   forge_work/2026-06-22-kinabalu-vector-manifest.json
   forge_work/2026-06-22-kinabalu-eureka-capsule.md
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -122,10 +123,7 @@ class Paper(BaseModel):
 
     def compute_hash(self) -> str:
         """F1 AMANAH — content-addressed hash."""
-        payload = (
-            f"{self.paper_id}|{self.title}|{','.join(self.authors)}|{self.year}|"
-            f"{self.doi or ''}|{self.url or ''}"
-        )
+        payload = f"{self.paper_id}|{self.title}|{','.join(self.authors)}|{self.year}|{self.doi or ''}|{self.url or ''}"
         return f"sha256:{hashlib.sha256(payload.encode()).hexdigest()[:16]}"
 
 
@@ -154,9 +152,7 @@ class Claim(BaseModel):
     # Cross-references
     related_claim_ids: list[str] = Field(default_factory=list)
     # F11 audit
-    added_at: str = Field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    added_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -281,9 +277,7 @@ class KinabaluCorpus(BaseModel):
         default="neo4j://geox-vps:7687/kinabalu",
     )
     # Build metadata
-    built_at: str = Field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    built_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
     forge_cycle: str = Field(default="2026-06-22 RSI consolidation")
 
 

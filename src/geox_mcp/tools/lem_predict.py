@@ -50,14 +50,14 @@ from geox_core.enums.statuses import get_standard_envelope
 # ── Constants ─────────────────────────────────────────────────────────────
 
 # Physics9 default priors (overridable via tool inputs where allowed)
-_RHO_MATRIX_DEFAULT = 2.65     # g/cc, sandstone matrix
-_RHO_FLUID_DEFAULT = 1.00      # g/cc, freshwater
-_RW_DEFAULT = 0.05             # ohm·m, formation water resistivity (basin-overridable)
-_A_DEFAULT = 1.0               # Archie tortuosity
-_M_DEFAULT = 2.0               # Archie cementation exponent
-_N_DEFAULT = 2.0               # Archie saturation exponent
-_PATCH_SIZE_M_DEFAULT = 0.5    # depth patch size in metres
-_CONFIDENCE_CAP = 0.90         # F7 HUMILITY hard cap
+_RHO_MATRIX_DEFAULT = 2.65  # g/cc, sandstone matrix
+_RHO_FLUID_DEFAULT = 1.00  # g/cc, freshwater
+_RW_DEFAULT = 0.05  # ohm·m, formation water resistivity (basin-overridable)
+_A_DEFAULT = 1.0  # Archie tortuosity
+_M_DEFAULT = 2.0  # Archie cementation exponent
+_N_DEFAULT = 2.0  # Archie saturation exponent
+_PATCH_SIZE_M_DEFAULT = 0.5  # depth patch size in metres
+_CONFIDENCE_CAP = 0.90  # F7 HUMILITY hard cap
 
 # Property list supported by the substrate
 SUPPORTED_PROPERTIES = (
@@ -76,7 +76,7 @@ INFERENCE_MODES = ("physics_prior", "transformer", "hybrid")
 PHYSICS9_BOUNDS = {
     "porosity": (0.02, 0.45),
     "sw": (0.0, 1.0),
-    "vp": (1480.0, 5500.0),       # m/s
+    "vp": (1480.0, 5500.0),  # m/s
     "pressure_gradient": (9.5, 14.0),  # kPa/m (hydrostatic to mild overpressure)
 }
 
@@ -86,19 +86,21 @@ PHYSICS9_BOUNDS = {
 
 class ClaimState(StrEnum):
     """Claim state machine — mirrors the universal claim state."""
+
     DRAFT = "DRAFT"
     VALIDATED = "VALIDATED"
-    SEALED = "SEALED"          # only via arifOS 888 JUDGE; GEOX never self-seals
-    QUALIFIED = "QUALIFIED"    # advisory
-    HOLD = "HOLD"              # waiting on evidence
-    VOID = "VOID"              # rejected
+    SEALED = "SEALED"  # only via arifOS 888 JUDGE; GEOX never self-seals
+    QUALIFIED = "QUALIFIED"  # advisory
+    HOLD = "HOLD"  # waiting on evidence
+    VOID = "VOID"  # rejected
 
 
 class LEMMode(StrEnum):
     """Inference mode — substrate mode of operation."""
-    PHYSICS_PRIOR = "physics_prior"   # mock-default until weights deploy
-    TRANSFORMER = "transformer"       # requires federated weights (888_HOLD gated)
-    HYBRID = "hybrid"                 # physics prior + transformer residual
+
+    PHYSICS_PRIOR = "physics_prior"  # mock-default until weights deploy
+    TRANSFORMER = "transformer"  # requires federated weights (888_HOLD gated)
+    HYBRID = "hybrid"  # physics prior + transformer residual
 
 
 # ── Request / Response models ─────────────────────────────────────────────
@@ -115,9 +117,7 @@ class LEMPredictRequest(BaseModel):
             "All curves must share the same length; depth_m is provided separately."
         ),
     )
-    depth_m: list[float] = Field(
-        ..., description="Depth samples in MD (m), monotonically increasing, same length as curves."
-    )
+    depth_m: list[float] = Field(..., description="Depth samples in MD (m), monotonically increasing, same length as curves.")
     depth_top_m: float | None = Field(None, description="Top of inference window; None = first sample.")
     depth_bot_m: float | None = Field(None, description="Bottom of inference window; None = last sample.")
     target_properties: list[str] = Field(
@@ -301,7 +301,7 @@ def _infer_cell(
             phi_for_sw = out.get("porosity", {}).get("value", 0.15)
             phi_for_sw = max(phi_for_sw, 1e-3)
             # F = a / (phi^m); Sw^n = F * Rw / RT
-            f_archie = a_archie / (phi_for_sw ** m_archie)
+            f_archie = a_archie / (phi_for_sw**m_archie)
             sw_n = f_archie * rw / rt
             sw = sw_n ** (1.0 / n_archie)
             sw = _clip(sw, *PHYSICS9_BOUNDS["sw"])
@@ -383,7 +383,7 @@ def _infer_cell(
             phi = out["porosity"]["value"]
             # Timur / Coates-style proxy: k ≈ φ^4 / (1-φ)^2 × 1e4 (mD, scaled)
             phi_clip = _clip(phi, 0.03, 0.4)
-            k = (phi_clip ** 4) / ((1.0 - phi_clip) ** 2) * 100.0
+            k = (phi_clip**4) / ((1.0 - phi_clip) ** 2) * 100.0
             out["permeability_proxy"] = {
                 "value": k,
                 "uncertainty_1sigma": round(k * 0.5, 4),  # 50% relative uncertainty baseline
@@ -448,9 +448,16 @@ async def geox_lem_predict(req: LEMPredictRequest) -> dict[str, Any]:
 
     for i0, i1, p_top, p_bot in patches:
         preds, ac_overall, notes = _infer_cell(
-            curves_np, i0, i1, req.target_properties,
-            rw=rw, rho_matrix=rho_matrix, rho_fluid=rho_fluid,
-            a_archie=_A_DEFAULT, m_archie=_M_DEFAULT, n_archie=_N_DEFAULT,
+            curves_np,
+            i0,
+            i1,
+            req.target_properties,
+            rw=rw,
+            rho_matrix=rho_matrix,
+            rho_fluid=rho_fluid,
+            a_archie=_A_DEFAULT,
+            m_archie=_M_DEFAULT,
+            n_archie=_N_DEFAULT,
         )
         # AC risk → grade mapping
         if ac_overall < 0.20:
@@ -490,8 +497,7 @@ async def geox_lem_predict(req: LEMPredictRequest) -> dict[str, Any]:
     elif req.mode == LEMMode.HYBRID:
         weights_status = "mock_default"
         notes_all.append(
-            "HYBRID mode requested; physics_prior was used as the residual prior. "
-            "Transformer residual gated by 888_HOLD."
+            "HYBRID mode requested; physics_prior was used as the residual prior. Transformer residual gated by 888_HOLD."
         )
     else:
         weights_status = "physics_prior_only"
@@ -586,8 +592,7 @@ async def geox_lem_predict(req: LEMPredictRequest) -> dict[str, Any]:
         actor_id=req.actor_id,
         session_id=req.session_id,
         next_best_actions=[
-            {"tool": name, "reason": "follow-on for LEM cell output"}
-            for name in (n for n in result.next_best_actions if n)
+            {"tool": name, "reason": "follow-on for LEM cell output"} for name in (n for n in result.next_best_actions if n)
         ],
         tool_version="geox_lem_predict/1.0.0 (W14+ FORGE 2026-06-21)",
     )

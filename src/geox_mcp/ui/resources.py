@@ -70,10 +70,7 @@ def register_gravmag_studio_resource(mcp: FastMCP) -> None:
 
     @mcp.resource(
         GRAVMAG_STUDIO_URI,
-        description=(
-            "GEOX GravMag Studio v0.1 — forward-only Canvas2D heatmap renderer. "
-            "Hosted by geox_gravmag_studio_open."
-        ),
+        description=("GEOX GravMag Studio v0.1 — forward-only Canvas2D heatmap renderer. Hosted by geox_gravmag_studio_open."),
         mime_type=GRAVMAG_STUDIO_MIME,
         app=AppConfig(
             prefers_border=True,

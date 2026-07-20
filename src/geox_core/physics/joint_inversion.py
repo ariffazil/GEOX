@@ -68,8 +68,8 @@ class InversionRequest:
     # Stage 6 forge: wired to Huang 2021 Vp grammar.
     classify_crust_zone: bool = False
     crust_thickness_km: float | None = None  # used if classify_crust_zone=True
-    heat_flow_mw_m2: float | None = None     # used if classify_crust_zone=True
-    include_zone_diagnostics: bool = False      # verbose diagnostic_basis in result
+    heat_flow_mw_m2: float | None = None  # used if classify_crust_zone=True
+    include_zone_diagnostics: bool = False  # verbose diagnostic_basis in result
 
 
 # ───────────────────────────── FORWARD OPERATORS ─────────────────────────────────
@@ -113,7 +113,7 @@ def forward_magnetic_tmi(state: Physics13State, depth_m: float) -> float:
     volume = 1e6  # m³ cell
     inc = math.radians(60.0)
     r = math.sqrt(depth_m * depth_m + 1e6)
-    return (mu0 / (4 * math.pi)) * (M * volume * math.cos(inc)) / (r ** 3) * 1e9
+    return (mu0 / (4 * math.pi)) * (M * volume * math.cos(inc)) / (r**3) * 1e9
 
 
 def forward_mt_resistivity(state: Physics13State) -> float:
@@ -180,8 +180,15 @@ def joint_inversion(request: InversionRequest) -> dict:
 
     # Prior or default Sandstone
     state = request.prior or Physics13State(
-        rho=2350.0, vp=2950.0, vs=1680.0, rho_e=20.0,
-        chi=0.0001, k=2.8, P=20e6, T=320.0, phi=0.25,
+        rho=2350.0,
+        vp=2950.0,
+        vs=1680.0,
+        rho_e=20.0,
+        chi=0.0001,
+        k=2.8,
+        P=20e6,
+        T=320.0,
+        phi=0.25,
     )
 
     if not request.observations:
@@ -264,17 +271,18 @@ def joint_inversion(request: InversionRequest) -> dict:
     for obs in request.observations:
         pred = _forward_observation(state, obs)
         rel = (pred - obs.value) / max(abs(obs.value), 1e-6) if obs.value != 0 else 0.0
-        per_modality.setdefault(obs.modality, []).append({
-            "observed": obs.value,
-            "predicted": pred,
-            "relative_error": rel,
-        })
+        per_modality.setdefault(obs.modality, []).append(
+            {
+                "observed": obs.value,
+                "predicted": pred,
+                "relative_error": rel,
+            }
+        )
 
     # Provenance hash
-    payload = repr(sorted([
-        (o.modality, round(o.value, 6), round(o.uncertainty, 6), round(o.depth_m, 3))
-        for o in request.observations
-    ])).encode()
+    payload = repr(
+        sorted([(o.modality, round(o.value, 6), round(o.uncertainty, 6), round(o.depth_m, 3)) for o in request.observations])
+    ).encode()
     obs_hash = hashlib.sha256(payload).hexdigest()
 
     result = {
@@ -315,6 +323,7 @@ def joint_inversion(request: InversionRequest) -> dict:
             PostInversionZoneHook,
             classify_state_post_inversion,
         )
+
         hook = PostInversionZoneHook(
             crust_thickness_km=request.crust_thickness_km,
             heat_flow_mw_m2=request.heat_flow_mw_m2,

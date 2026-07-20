@@ -65,10 +65,7 @@ class PyGIMLIAdapter:
 
     def _check_dependencies(self) -> None:
         if not _PYGIMLI_AVAILABLE:
-            raise ImportError(
-                "pygimli>=1.6.0 is required for electrical geophysics. "
-                "Install with: pip install pygimli"
-            )
+            raise ImportError("pygimli>=1.6.0 is required for electrical geophysics. Install with: pip install pygimli")
 
     def ert_inversion(
         self,
@@ -98,9 +95,7 @@ class PyGIMLIAdapter:
         from pygimli.physics import ert
 
         # Build ert manager
-        scheme = ert.createGeometricFactors(
-            n_electrodes, survey_type=survey_type
-        )
+        scheme = ert.createGeometricFactors(n_electrodes, survey_type=survey_type)
 
         # Create data container
         data = ert.createData(scheme, a=apparent_resistivity)
@@ -120,14 +115,16 @@ class PyGIMLIAdapter:
         x_coords = mesh.nodeCenters()[:, 0]
         z_coords = mesh.nodeCenters()[:, 1]
 
-        params_hash = _sha256_params({
-            "method": "ert_inversion",
-            "n_electrodes": n_electrodes,
-            "survey_type": survey_type,
-            "mesh_quality": mesh_quality,
-            "lambda_reg": lambda_reg,
-            "max_iterations": max_iterations,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "ert_inversion",
+                "n_electrodes": n_electrodes,
+                "survey_type": survey_type,
+                "mesh_quality": mesh_quality,
+                "lambda_reg": lambda_reg,
+                "max_iterations": max_iterations,
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -143,10 +140,8 @@ class PyGIMLIAdapter:
             "epistemic_label": "ESTIMATE",
             "confidence": "MEDIUM",
             "caveats": [
-                "ERT is non-unique — different resistivity distributions "
-                "can produce identical apparent resistivity curves",
-                "2D inversion assumes no out-of-plane changes — "
-                "3D survey needed for complex geology",
+                "ERT is non-unique — different resistivity distributions can produce identical apparent resistivity curves",
+                "2D inversion assumes no out-of-plane changes — 3D survey needed for complex geology",
                 "Requires borehole control for CLAIM — drill or core needed",
             ],
             "library": "pygimli",
@@ -195,11 +190,13 @@ class PyGIMLIAdapter:
         layer_thicknesses = model.layerThicknesses()
         layer_depths = np.cumsum(layer_thicknesses)
 
-        params_hash = _sha256_params({
-            "method": "dc_sounding",
-            "n_electrodes": len(ab_spacing_m),
-            "n_layers": n_layers,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "dc_sounding",
+                "n_electrodes": len(ab_spacing_m),
+                "n_layers": n_layers,
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -212,8 +209,7 @@ class PyGIMLIAdapter:
             "epistemic_label": "ESTIMATE",
             "confidence": "LOW",
             "caveats": [
-                "1D sounding assumes horizontal layers — "
-                "lateral variations introduce significant error",
+                "1D sounding assumes horizontal layers — lateral variations introduce significant error",
                 "Requires known layer count or joint inversion with other methods",
                 "Shallow investigation depth limited by MN spacing",
             ],
@@ -243,20 +239,19 @@ class PyGIMLIAdapter:
         Returns:
             Conductivity-depth model + time-depth conversion.
         """
-        params_hash = _sha256_params({
-            "method": "tem_inversion",
-            "n_time_gates": len(time_gates_s),
-            "loop_radius_m": loop_radius_m,
-            "n_layers": n_layers,
-            "conductivity_basement": conductivity_basement,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "tem_inversion",
+                "n_time_gates": len(time_gates_s),
+                "loop_radius_m": loop_radius_m,
+                "n_layers": n_layers,
+                "conductivity_basement": conductivity_basement,
+            }
+        )
 
         # Skin depth per layer: δ ≈ 500 * sqrt(ρ*T) [m]
         resistivities = [1.0 / (conductivity_basement + 1e-6)] * n_layers
-        skin_depths = [
-            500 * np.sqrt(r * t) if r > 0 else 0
-            for r, t in zip(resistivities, time_gates_s[:n_layers], strict=False)
-        ]
+        skin_depths = [500 * np.sqrt(r * t) if r > 0 else 0 for r, t in zip(resistivities, time_gates_s[:n_layers], strict=False)]
 
         return {
             "status": "COMPUTED",

@@ -23,6 +23,7 @@ Stage B (NOT in this file): add `geox_gravmag_studio_screen` with
 gravity_screen integration + RMS misfit.
 Stage C (NOT in this file): wrap SimPEG cross-gradient joint inversion.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -322,9 +323,7 @@ async def geox_gravmag_studio_open(
         "grid_n": grid_n,
         "backend": backend,
     }
-    input_hash = hashlib.sha256(
-        json.dumps(input_dict, sort_keys=True, default=str).encode()
-    ).hexdigest()[:16]
+    input_hash = hashlib.sha256(json.dumps(input_dict, sort_keys=True, default=str).encode()).hexdigest()[:16]
 
     response: dict[str, Any] = {
         "tool_name": TOOL_NAME,
@@ -352,8 +351,7 @@ async def geox_gravmag_studio_open(
             "vault_route": "VAULT999",
         },
         "provenance": (
-            f"harmonica:forward:{survey_type}:{len(prisms)}prisms:"
-            f"{grid_n}x{grid_n}@±{grid_extent_m:.0f}m:{lib_label}"
+            f"harmonica:forward:{survey_type}:{len(prisms)}prisms:{grid_n}x{grid_n}@±{grid_extent_m:.0f}m:{lib_label}"
         ),
         "library": lib_label,
         "library_version": library_version,

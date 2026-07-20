@@ -24,14 +24,8 @@ logger = logging.getLogger("geox.io.landsat_stac")
 
 STAC_BASE = "https://planetarycomputer.microsoft.com/api/stac/v1"
 EARTHDATA_CMR = "https://cmr.earthdata.nasa.gov/stac/LPCLOUD"
-LANDSAT_CITATION = (
-    "USGS/NASA Landsat (2024). Landsat Collection 2 via STAC. "
-    "Public Domain. Microsoft Planetary Computer gateway."
-)
-MODIS_CITATION = (
-    "NASA LP DAAC (2024). MODIS Land Products via STAC. "
-    "Public Domain."
-)
+LANDSAT_CITATION = "USGS/NASA Landsat (2024). Landsat Collection 2 via STAC. Public Domain. Microsoft Planetary Computer gateway."
+MODIS_CITATION = "NASA LP DAAC (2024). MODIS Land Products via STAC. Public Domain."
 
 
 class SatelliteQuery(BaseModel):
@@ -65,9 +59,12 @@ class LandsatSTACFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return SatelliteResult(
-                ok=True, mode="offline_stub",
+                ok=True,
+                mode="offline_stub",
                 items=[{"id": "LC08_L2SP_stub", "collection": params.collection, "cloud_cover": 5.0, "datetime": "2024-06-15"}],
-                count=1, collection=params.collection, fetched_at=now,
-                note="Offline stub. Requires STAC client (pystac-client)."
+                count=1,
+                collection=params.collection,
+                fetched_at=now,
+                note="Offline stub. Requires STAC client (pystac-client).",
             )
         return SatelliteResult(ok=False, mode="live", note="Live requires pystac-client.", fetched_at=now)

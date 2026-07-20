@@ -10,6 +10,7 @@ L5 Graphiti: advisory only (worker neutralized; 888 injects via raw Cypher).
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
+
 from __future__ import annotations
 
 import json

@@ -254,15 +254,11 @@ class TextureProperties(BaseModel):
     grain_size_phi: float | None = Field(
         default=None, description="Grain size in phi units (negative = coarser, positive = finer)"
     )
-    sorting: Literal["very_poor", "poor", "moderate", "well", "very_well"] | None = Field(
-        default=None
-    )
+    sorting: Literal["very_poor", "poor", "moderate", "well", "very_well"] | None = Field(default=None)
     matrix_to_framework_ratio: float | None = Field(
         default=None, ge=0.0, le=1.0, description="Matrix fraction (0 = framework-supported, 1 = matrix-dominated)"
     )
-    crystallinity: float | None = Field(
-        default=None, ge=0.0, le=1.0, description="0 = amorphous, 1 = fully crystalline"
-    )
+    crystallinity: float | None = Field(default=None, ge=0.0, le=1.0, description="0 = amorphous, 1 = fully crystalline")
 
 
 class MechanicsProperties(BaseModel):
@@ -292,12 +288,8 @@ class MaterialState(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=False)
 
-    lithology: LithologyClass = Field(
-        default=LithologyClass.unknown, description="Categorical lithology class"
-    )
-    composition_class: CompositionClass = Field(
-        default=CompositionClass.unknown, description="Bulk composition class"
-    )
+    lithology: LithologyClass = Field(default=LithologyClass.unknown, description="Categorical lithology class")
+    composition_class: CompositionClass = Field(default=CompositionClass.unknown, description="Bulk composition class")
     texture: TextureProperties = Field(default_factory=TextureProperties)
     mechanics: MechanicsProperties = Field(default_factory=MechanicsProperties)
 
@@ -325,29 +317,18 @@ class ProcessState(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=False)
 
     origin: OriginType = Field(default=OriginType.unknown)
-    depositional_environment: DepositionalEnvironment = Field(
-        default=DepositionalEnvironment.unknown
-    )
+    depositional_environment: DepositionalEnvironment = Field(default=DepositionalEnvironment.unknown)
     igneous_context: IgneousContext = Field(default=IgneousContext.unknown)
     metamorphic_regime: MetamorphicRegime = Field(default=MetamorphicRegime.unknown)
 
-    has_been_molten: bool | None = Field(
-        default=None, description="True if this voxel has ever been in melt state"
-    )
-    has_been_exhumed: bool | None = Field(
-        default=None, description="True if brought back toward surface after deep burial"
-    )
-    last_major_transition: LastMajorTransition = Field(
-        default=LastMajorTransition.unknown
-    )
+    has_been_molten: bool | None = Field(default=None, description="True if this voxel has ever been in melt state")
+    has_been_exhumed: bool | None = Field(default=None, description="True if brought back toward surface after deep burial")
+    last_major_transition: LastMajorTransition = Field(default=LastMajorTransition.unknown)
 
     @model_validator(mode="after")
     def _cross_check_origin_with_environment(self):
         # Soft validation — flag mismatches but don't reject
-        if (
-            self.origin == OriginType.sedimentary
-            and self.depositional_environment == DepositionalEnvironment.none
-        ):
+        if self.origin == OriginType.sedimentary and self.depositional_environment == DepositionalEnvironment.none:
             # sedimentary origin should have an environment (or 'unknown', not 'none')
             pass  # warning, not error — user might genuinely be uncertain
         return self
@@ -366,20 +347,14 @@ class StrainState(BaseModel):
     dominant_stress_regime: StressRegime = Field(default=StressRegime.unknown)
     strain_style: StrainStyle = Field(default=StrainStyle.unknown)
 
-    fold_presence_prob: float | None = Field(
-        default=None, ge=0.0, le=1.0, description="Probability that this voxel is folded"
-    )
+    fold_presence_prob: float | None = Field(default=None, ge=0.0, le=1.0, description="Probability that this voxel is folded")
     fault_presence_prob: float | None = Field(
         default=None, ge=0.0, le=1.0, description="Probability that this voxel hosts a fault"
     )
-    fault_sense: Literal["normal", "reverse", "strike_slip", "oblique"] | None = Field(
-        default=None
-    )
+    fault_sense: Literal["normal", "reverse", "strike_slip", "oblique"] | None = Field(default=None)
 
     anisotropy: AnisotropyType = Field(default=AnisotropyType.unknown)
-    anisotropy_strength: float | None = Field(
-        default=None, ge=0.0, le=1.0, description="0 = isotropic, 1 = strongly anisotropic"
-    )
+    anisotropy_strength: float | None = Field(default=None, ge=0.0, le=1.0, description="0 = isotropic, 1 = strongly anisotropic")
 
 
 class PhaseFraction(BaseModel):
@@ -414,9 +389,7 @@ class PhaseConnectivity(BaseModel):
         max_length=3,
         description="Principal permeabilities [k1, k2, k3] in mD, sparse form",
     )
-    isolated_pockets: bool = Field(
-        default=False, description="True if phase exists only in disconnected pockets"
-    )
+    isolated_pockets: bool = Field(default=False, description="True if phase exists only in disconnected pockets")
 
 
 class VoidState(BaseModel):
@@ -445,9 +418,7 @@ class VoidState(BaseModel):
         # anti_misconception: void is multi-phase, not scalar porosity.
         for p in v:
             if p.fraction < 0.0 or p.fraction > 1.0:
-                raise ValueError(
-                    f"phase fraction must be in [0, 1]; got {p.fraction} for {p.phase}"
-                )
+                raise ValueError(f"phase fraction must be in [0, 1]; got {p.fraction} for {p.phase}")
         return v
 
     @model_validator(mode="after")
@@ -464,9 +435,7 @@ class VoidState(BaseModel):
         # Step 1: add field_residual if missing (atomic-scale emptiness, always present)
         phases_present = {p.phase for p in self.phase_fractions}
         if PhaseType.field_residual not in phases_present:
-            self.phase_fractions.append(
-                PhaseFraction(phase=PhaseType.field_residual, fraction=0.0)
-            )
+            self.phase_fractions.append(PhaseFraction(phase=PhaseType.field_residual, fraction=0.0))
 
         # Step 2: renormalize so fractions sum exactly to 1.0
         total = sum(p.fraction for p in self.phase_fractions)
@@ -496,7 +465,8 @@ class RecordDensity(BaseModel):
     t_window_start_ma: float = Field(description="Start of time window (Ma)")
     t_window_end_ma: float = Field(description="End of time window (Ma)")
     density: float = Field(
-        ge=0.0, le=1.0,
+        ge=0.0,
+        le=1.0,
         description="Fraction of time window preserved in rock (0 = total record void, 1 = complete)",
     )
 
@@ -548,17 +518,22 @@ class VoxelState4(BaseModel):
         description="Per-time-window record coverage. Unconformities → density ≈ 0.",
     )
     observation_count: int = Field(
-        default=0, ge=0,
+        default=0,
+        ge=0,
         description="Number of record-layer data points informing this voxel",
     )
     forward_model_residual: float | None = Field(
-        default=None, ge=0.0, le=1.0,
+        default=None,
+        ge=0.0,
+        le=1.0,
         description="Normalized residual between forward-modeled and observed (0 = perfect fit, 1 = total mismatch)",
     )
 
     # ─── Uncertainty + provenance ───
     overall_confidence: float | None = Field(
-        default=None, ge=0.0, le=0.90,
+        default=None,
+        ge=0.0,
+        le=0.90,
         description="Hard-capped 0.90 per F7 HUMILITY; never claims certainty",
     )
     truth_class: Literal["FACT", "INTERPRETATION", "SPECULATION"] | None = Field(
@@ -589,11 +564,7 @@ class VoxelState4(BaseModel):
         """
         if not self.void_state.phase_fractions:
             return None
-        solid = sum(
-            p.fraction
-            for p in self.void_state.phase_fractions
-            if p.phase == PhaseType.solid_mineral
-        )
+        solid = sum(p.fraction for p in self.void_state.phase_fractions if p.phase == PhaseType.solid_mineral)
         return 1.0 - solid
 
     @property
@@ -603,9 +574,7 @@ class VoxelState4(BaseModel):
         """
         if not self.void_state.phase_connectivity:
             return None
-        percolating_phases = {
-            pc.phase for pc in self.void_state.phase_connectivity if pc.percolation
-        }
+        percolating_phases = {pc.phase for pc in self.void_state.phase_connectivity if pc.percolation}
         if not percolating_phases:
             return 0.0
         total = 0.0
@@ -622,11 +591,7 @@ class VoxelState4(BaseModel):
         Returns True iff observation_count ≥ 3 AND forward_model_residual < 0.3.
         Per ADR-008: gates geox_claim seal.
         """
-        return (
-            self.observation_count >= 3
-            and self.forward_model_residual is not None
-            and self.forward_model_residual < 0.3
-        )
+        return self.observation_count >= 3 and self.forward_model_residual is not None and self.forward_model_residual < 0.3
 
     @property
     def record_void_indicator(self) -> str | None:

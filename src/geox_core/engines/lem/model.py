@@ -30,6 +30,7 @@ try:
     import torch
     import torch.nn as nn
     import torch.nn.functional as F
+
     _HAS_TORCH = True
 except ImportError:
     _HAS_TORCH = False
@@ -39,6 +40,7 @@ except ImportError:
 
 
 # ── Positional Encoding ─────────────────────────────────────────────────────
+
 
 class SinusoidalPositionalEncoding(nn.Module):
     """Sinusoidal positional encoding for depth-aware positioning."""
@@ -54,13 +56,13 @@ class SinusoidalPositionalEncoding(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Add positional encoding to input.
-        
+
         Args:
             x: (B, T, D) input tokens
         Returns:
             (B, T, D) input with position added
         """
-        return x + self.pe[:, :x.size(1), :]
+        return x + self.pe[:, : x.size(1), :]
 
 
 class LearnedDepthEncoding(nn.Module):
@@ -83,6 +85,7 @@ class LearnedDepthEncoding(nn.Module):
 
 
 # ── Geolocation Embedding ───────────────────────────────────────────────────
+
 
 class GeoLocationEmbedding(nn.Module):
     """Learned embedding for geographic location (basin, lat/lon)."""
@@ -128,24 +131,25 @@ class GeoLocationEmbedding(nn.Module):
 
 # ── Cross-Modal Fusion Transformer ──────────────────────────────────────────
 
+
 class LEMTransformer(nn.Module):
     """
     GEOX Large Earth Model — Transformer backbone.
-    
+
     Takes token sequences from VQ tokenizer and learns
     contextual geological representations via masked modeling.
     """
 
     def __init__(
         self,
-        vocab_size: int = 512,           # Codebook size
+        vocab_size: int = 512,  # Codebook size
         embed_dim: int = 256,
         num_heads: int = 8,
         num_layers: int = 6,
         ff_dim: int = 1024,
         dropout: float = 0.1,
         max_seq_len: int = 512,
-        num_modalities: int = 3,         # well_log, seismic, basin
+        num_modalities: int = 3,  # well_log, seismic, basin
         num_basins: int = 50,
         use_geolocation: bool = True,
     ):
@@ -159,13 +163,13 @@ class LEMTransformer(nn.Module):
 
         # Token embeddings (from codebook)
         self.token_embed = nn.Embedding(vocab_size, embed_dim)
-        
+
         # Modality type embeddings
         self.modality_embed = nn.Embedding(num_modalities, embed_dim)
-        
+
         # Positional encoding
         self.pos_encoder = SinusoidalPositionalEncoding(embed_dim, max_seq_len)
-        
+
         # Geolocation
         if use_geolocation:
             self.geo_embed = GeoLocationEmbedding(
@@ -239,7 +243,7 @@ class LEMTransformer(nn.Module):
             coords: (B, 2) lat/lon coordinates
             mask: (B, T) attention mask (True = masked/padded)
             return_embeddings: If True, also return intermediate embeddings
-        
+
         Returns:
             dict with:
                 - 'logits': (B, T, V) token predictions
@@ -309,18 +313,18 @@ class LEMTransformer(nn.Module):
     ) -> torch.Tensor:
         """
         Predict tokens at masked positions.
-        
+
         Args:
             tokens: (B, T) tokens with MASK tokens at mask_positions
             mask_positions: (B, M) integer positions of masked tokens
             **kwargs: Passed to forward()
-        
+
         Returns:
             predictions: (B, M, V) logits for each masked position
         """
         outputs = self.forward(tokens, **kwargs)
         logits = outputs["logits"]  # (B, T, V)
-        
+
         # Gather predictions at masked positions
         B, M = mask_positions.shape
         mask_positions = mask_positions.unsqueeze(-1).expand(B, M, logits.size(-1))
@@ -333,7 +337,7 @@ class LEMTransformer(nn.Module):
         **kwargs,
     ) -> torch.Tensor:
         """Get contrastive projection of sequence embedding.
-        
+
         Used for stratigraphy-aware contrastive learning.
         """
         outputs = self.forward(tokens, return_embeddings=False, **kwargs)
@@ -342,6 +346,7 @@ class LEMTransformer(nn.Module):
 
 
 # ── Pretraining Loss ────────────────────────────────────────────────────────
+
 
 class LEMLoss(nn.Module):
     """Combined loss for GEOX-LEM pretraining."""
@@ -370,7 +375,7 @@ class LEMLoss(nn.Module):
             mask: (B, T) boolean — True where masked (loss computed)
             query_embeddings: (B, D) for contrastive learning
             positive_embeddings: (B, D) positive pairs
-        
+
         Returns:
             dict with 'mtm_loss', 'contrastive_loss', 'total_loss'
         """
@@ -391,10 +396,13 @@ class LEMLoss(nn.Module):
         contrastive_loss = torch.tensor(0.0, device=logits.device)
         if query_embeddings is not None and positive_embeddings is not None:
             # InfoNCE loss
-            sim = torch.matmul(
-                F.normalize(query_embeddings, dim=-1),
-                F.normalize(positive_embeddings, dim=-1).T,
-            ) / self.temperature  # (B, B)
+            sim = (
+                torch.matmul(
+                    F.normalize(query_embeddings, dim=-1),
+                    F.normalize(positive_embeddings, dim=-1).T,
+                )
+                / self.temperature
+            )  # (B, B)
 
             labels = torch.arange(sim.size(0), device=sim.device)
             contrastive_loss = F.cross_entropy(sim, labels)

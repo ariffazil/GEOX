@@ -51,6 +51,7 @@ class AgeResolution:
 
 # ─── Helper: build AgeResolution from a ChronostratUnit ──────────────────────
 
+
 def _from_unit(
     unit: ChronostratUnit,
     matched_input: str,
@@ -89,7 +90,7 @@ def _from_point(
     top_ma = max(0.0, age_ma - half_window)
     base_ma = age_ma + half_window
     epoch, period, era = chart.unit_containing(age_ma)
-    named = (epoch.name if epoch else (period.name if period else (era.name if era else "unresolved")))
+    named = epoch.name if epoch else (period.name if period else (era.name if era else "unresolved"))
     rank = epoch.rank if epoch else (period.rank if period else (era.rank if era else "point"))
     return AgeResolution(
         top_ma=top_ma,
@@ -106,6 +107,7 @@ def _from_point(
 
 
 # ─── Main resolver ────────────────────────────────────────────────────────────
+
 
 def resolve_age_query(
     age_ma: float | None = None,
@@ -132,9 +134,7 @@ def resolve_age_query(
     if age_top_ma is not None and age_bot_ma is not None:
         top, base = sorted((float(age_top_ma), float(age_bot_ma)))
         epoch, period_unit, era = chart.unit_containing((top + base) / 2.0)
-        named = (
-            epoch.name if epoch else (period_unit.name if period_unit else (era.name if era else "explicit range"))
-        )
+        named = epoch.name if epoch else (period_unit.name if period_unit else (era.name if era else "explicit range"))
         rank = epoch.rank if epoch else (period_unit.rank if period_unit else (era.rank if era else "range"))
         return AgeResolution(
             top_ma=top,

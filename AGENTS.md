@@ -4,7 +4,7 @@ last_verified: 2026-07-11
 valid_from: 2026-06-14
 valid_until: 2026-08-10
 confidence: high
-scope: /root/geox
+scope: /root/GEOX
 changes_since_last_verified:
   - A1: Physics9State.from_raw_dict() added (state.py) — removes session wall for partial dicts
   - A1: compute_buoyancy() added (parameters.py) — buoyancy pressure from density contrast + thickness
@@ -125,7 +125,7 @@ The founding charter lives in `GENESIS/` and is binding for all agents operating
 ## Build & Test
 
 ```bash
-cd /root/geox
+cd /root/GEOX
 
 # Install (editable)
 pip install -e ".[dev]"

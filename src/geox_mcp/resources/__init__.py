@@ -1428,7 +1428,11 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
                 # Apply annotations if missing
                 if not getattr(res, "annotations", None):
                     try:
-                        res.annotations = {"audience": list(template.annotations_audience), "priority": template.annotations_priority, "lastModified": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+                        res.annotations = {
+                            "audience": list(template.annotations_audience),
+                            "priority": template.annotations_priority,
+                            "lastModified": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                        }
                     except Exception:
                         pass
                 patched += 1

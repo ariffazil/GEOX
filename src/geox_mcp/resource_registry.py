@@ -41,16 +41,34 @@ logger = logging.getLogger("geox.resource_registry")
 REGISTRY_DB_PATH = os.getenv("GEOX_RESOURCE_REGISTRY_DB", "/root/geox/resource_registry.db")
 
 ResourceType = Literal[
-    "seismic_volume", "well_log", "seismic_attribute", "structural_map",
-    "stratigraphic_column", "petrophysics_run", "prospect_evaluation",
-    "basin_profile", "literature_reference", "interpretation_claim",
-    "evidence_bundle", "qc_report", "audit_receipt",
+    "seismic_volume",
+    "well_log",
+    "seismic_attribute",
+    "structural_map",
+    "stratigraphic_column",
+    "petrophysics_run",
+    "prospect_evaluation",
+    "basin_profile",
+    "literature_reference",
+    "interpretation_claim",
+    "evidence_bundle",
+    "qc_report",
+    "audit_receipt",
 ]
 
 ResourceState = Literal[
-    "RAW", "INGESTED", "QC_VERIFIED", "QC_VERIFIED_WITH_WARNINGS",
-    "COMPUTED", "INTERPRETED", "DERIVED_CANDIDATE", "REVIEW_PENDING",
-    "QUALIFIED", "SEALED", "VOID", "888_HOLD",
+    "RAW",
+    "INGESTED",
+    "QC_VERIFIED",
+    "QC_VERIFIED_WITH_WARNINGS",
+    "COMPUTED",
+    "INTERPRETED",
+    "DERIVED_CANDIDATE",
+    "REVIEW_PENDING",
+    "QUALIFIED",
+    "SEALED",
+    "VOID",
+    "888_HOLD",
 ]
 
 URI_SCHEME_MAP = {
@@ -68,6 +86,7 @@ URI_SCHEME_MAP = {
 # ═══════════════════════════════════════════════════════════════════════════════
 # Database
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 def _get_connection() -> sqlite3.Connection:
     """Get a connection to the resource registry database."""
@@ -143,6 +162,7 @@ _init_db()
 # URI Resolution
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def _compute_content_hash(data: dict[str, Any]) -> str:
     """SHA-256 hash of resource payload for immutability verification."""
     canonical = json.dumps(data, sort_keys=True, default=str, separators=(",", ":"))
@@ -203,6 +223,7 @@ def resolve_uri(uri: str) -> dict[str, Any] | None:
 # Resource Registration
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def register_resource(
     resource_type: ResourceType,
     *,
@@ -237,11 +258,10 @@ def register_resource(
     if physics_manifest_hash is None:
         try:
             from geox_core.physics.manifest import get_physics_manifest_hash
+
             physics_manifest_hash = get_physics_manifest_hash()
         except Exception:
-            physics_manifest_hash = os.environ.get(
-                "GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing"
-            )
+            physics_manifest_hash = os.environ.get("GEOX_PHYSICS_MANIFEST_HASH", "sha256:missing")
 
     conn = _get_connection()
     try:
@@ -253,26 +273,39 @@ def register_resource(
                 created_at, updated_at, actor_id, session_id)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
-                resource_id, uri, resource_type, state, producer_tool,
-                well_id, basin_id, content_hash, content_hash, physics_manifest_hash,
-                json.dumps(claim_links or []), json.dumps(input_refs or []),
-                json.dumps(evidence_refs or []), json.dumps(metadata or {}),
-                now, now, actor_id, session_id,
+                resource_id,
+                uri,
+                resource_type,
+                state,
+                producer_tool,
+                well_id,
+                basin_id,
+                content_hash,
+                content_hash,
+                physics_manifest_hash,
+                json.dumps(claim_links or []),
+                json.dumps(input_refs or []),
+                json.dumps(evidence_refs or []),
+                json.dumps(metadata or {}),
+                now,
+                now,
+                actor_id,
+                session_id,
             ),
         )
 
         # Record dependencies
-        for dep_id in (input_refs or []):
+        for dep_id in input_refs or []:
             conn.execute(
                 "INSERT OR IGNORE INTO resource_dependencies (resource_id, depends_on_id, dependency_type) VALUES (?, ?, 'input')",
                 (resource_id, dep_id),
             )
-        for ev_id in (evidence_refs or []):
+        for ev_id in evidence_refs or []:
             conn.execute(
                 "INSERT OR IGNORE INTO resource_dependencies (resource_id, depends_on_id, dependency_type) VALUES (?, ?, 'evidence')",
                 (resource_id, ev_id),
             )
-        for claim_id in (claim_links or []):
+        for claim_id in claim_links or []:
             conn.execute(
                 "INSERT OR IGNORE INTO resource_dependencies (resource_id, depends_on_id, dependency_type) VALUES (?, ?, 'claim')",
                 (resource_id, claim_id),
@@ -327,6 +360,7 @@ def update_resource_state(
 # ═══════════════════════════════════════════════════════════════════════════════
 # Resource Queries (Federation Contract §4 — Registry Questions)
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 def query_resources(
     *,
@@ -442,6 +476,7 @@ def _row_to_dict(row: sqlite3.Row) -> dict[str, Any]:
 # In-Memory Bridge — transparently upgrade old _register_artifact calls
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def bridge_register_artifact(
     artifact_id: str,
     **kwargs: Any,
@@ -469,6 +504,7 @@ def bridge_register_artifact(
     # Also update the in-memory registry for backward compatibility
     try:
         from geox_mcp.tools._artifact_helpers import _register_artifact
+
         _register_artifact(artifact_id, **kwargs)
     except Exception:
         pass
@@ -480,6 +516,7 @@ def bridge_register_artifact(
 # Registry Health & Stats
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def registry_stats() -> dict[str, Any]:
     """Return registry health and statistics."""
     conn = _get_connection()
@@ -487,9 +524,7 @@ def registry_stats() -> dict[str, Any]:
     by_type_rows = conn.execute(
         "SELECT resource_type, COUNT(*) as cnt FROM resources GROUP BY resource_type ORDER BY cnt DESC"
     ).fetchall()
-    by_state_rows = conn.execute(
-        "SELECT state, COUNT(*) as cnt FROM resources GROUP BY state ORDER BY cnt DESC"
-    ).fetchall()
+    by_state_rows = conn.execute("SELECT state, COUNT(*) as cnt FROM resources GROUP BY state ORDER BY cnt DESC").fetchall()
     conn.close()
 
     return {

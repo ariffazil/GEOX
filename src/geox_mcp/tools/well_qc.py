@@ -7,6 +7,7 @@ Modes: full, header, curves, depth, completeness, feature_info
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import logging

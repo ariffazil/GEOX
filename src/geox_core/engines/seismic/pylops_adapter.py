@@ -80,10 +80,7 @@ class PyLopsAdapter:
 
     def _check_dependencies(self) -> None:
         if not _PYLOPS_AVAILABLE:
-            raise ImportError(
-                "pylops>=2.0.0 is required for seismic linear operators. "
-                "Install with: pip install pylops"
-            )
+            raise ImportError("pylops>=2.0.0 is required for seismic linear operators. Install with: pip install pylops")
 
     def sparse_spike_inversion(
         self,
@@ -120,6 +117,7 @@ class PyLopsAdapter:
 
         # Wavelet (assumed Ricker 20 Hz if not provided)
         import scipy.signal as signal
+
         dt = 0.004  # 4ms sample rate
         f0 = 20.0
         nw = 61
@@ -132,31 +130,31 @@ class PyLopsAdapter:
         # Solve via IRLS for L1 sparsity
         if method == "l1":
             # IRLS for sparse spike
-            x, _ = irls(Gop, traces.ravel(), nspikes=n_spikes or nt // 10,
-                        thresh=noise_threshold, nouter=50)
+            x, _ = irls(Gop, traces.ravel(), nspikes=n_spikes or nt // 10, thresh=noise_threshold, nouter=50)
             reflectivity = x.reshape(nt, nr)
         elif method == "cauchy":
-            x, _ = irls(Gop, traces.ravel(), nspikes=n_spikes or nt // 10,
-                        thresh=noise_threshold, epsc=1e-4, nouter=50)
+            x, _ = irls(Gop, traces.ravel(), nspikes=n_spikes or nt // 10, thresh=noise_threshold, epsc=1e-4, nouter=50)
             reflectivity = x.reshape(nt, nr)
         else:
             # Least squares
             from pylops.optimization.leastsquares import regularized_inversion
-            x = regularized_inversion(Gop, traces.ravel(), [],
-                                     epsR=1e-3, **{})[0]
+
+            x = regularized_inversion(Gop, traces.ravel(), [], epsR=1e-3, **{})[0]
             reflectivity = x.reshape(nt, nr)
 
         # Integrate for acoustic impedance
         ai = np.cumsum(reflectivity, axis=0) * np.mean(np.diff(tw))
 
-        params_hash = _sha256_params({
-            "method": "sparse_spike",
-            "submethod": method,
-            "nt": nt,
-            "nr": nr,
-            "noise_threshold": noise_threshold,
-            "wavelet_freq_hz": f0,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "sparse_spike",
+                "submethod": method,
+                "nt": nt,
+                "nr": nr,
+                "noise_threshold": noise_threshold,
+                "wavelet_freq_hz": f0,
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -213,8 +211,8 @@ class PyLopsAdapter:
         theta_rad = np.deg2rad(angles)  # [n_angles, nt]
         G = np.zeros((n_angles, 3))
         G[:, 0] = 0.5  # A coefficient
-        G[:, 1] = 0.5 * np.sin(theta_rad[:, 0])**2  # B coefficient (approximate)
-        G[:, 2] = np.sin(theta_rad[:, 0])**2 * np.tan(theta_rad[:, 0])**2  # C
+        G[:, 1] = 0.5 * np.sin(theta_rad[:, 0]) ** 2  # B coefficient (approximate)
+        G[:, 2] = np.sin(theta_rad[:, 0]) ** 2 * np.tan(theta_rad[:, 0]) ** 2  # C
 
         # Solve least squares per time sample
         AI = np.zeros((n_angles, nt))
@@ -227,12 +225,14 @@ class PyLopsAdapter:
             AI[:, it] = np.exp(0.5 * x[0])  # approximate AI
             SI[:, it] = np.exp(x[2])  # approximate SI
 
-        params_hash = _sha256_params({
-            "method": "avaz",
-            "submethod": method,
-            "n_angles": n_angles,
-            "vp_vs_ratio": vp_vs_ratio,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "avaz",
+                "submethod": method,
+                "n_angles": n_angles,
+                "vp_vs_ratio": vp_vs_ratio,
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -289,12 +289,14 @@ class PyLopsAdapter:
         interpolated = ROp.inverse() @ radondata
         interpolated = interpolated.reshape(nt, nh)
 
-        params_hash = _sha256_params({
-            "method": "radon_interpolation",
-            "nt": nt,
-            "nh": nh,
-            "nq": nq,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "radon_interpolation",
+                "nt": nt,
+                "nh": nh,
+                "nq": nq,
+            }
+        )
 
         return {
             "status": "COMPUTED",

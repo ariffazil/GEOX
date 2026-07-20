@@ -757,7 +757,9 @@ async def geox_claim_seal(
                     },
                 },
             )
-            resolved_session = session_id or init_resp.headers.get("Mcp-Session-Id") or init_resp.headers.get("mcp-session-id") or ""
+            resolved_session = (
+                session_id or init_resp.headers.get("Mcp-Session-Id") or init_resp.headers.get("mcp-session-id") or ""
+            )
 
             # 2. tools/call arif_vault_seal
             call_headers = {**mcp_headers, "Mcp-Session-Id": resolved_session}

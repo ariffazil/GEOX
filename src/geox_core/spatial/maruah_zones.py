@@ -65,28 +65,31 @@ def get_maruah_zone_polygons(bbox: list[float], crs: str = "EPSG:4326") -> list[
     for zone_id, info in _KNOWN_TERRITORIES.items():
         zb = info["bbox"]
         # Check bbox intersection
-        if (bbox[0] <= zb[2] and bbox[2] >= zb[0] and
-            bbox[1] <= zb[3] and bbox[3] >= zb[1]):
+        if bbox[0] <= zb[2] and bbox[2] >= zb[0] and bbox[1] <= zb[3] and bbox[3] >= zb[1]:
             # Intersecting — emit as simple bbox polygon
-            zones.append({
-                "type": "Feature",
-                "properties": {
-                    "name": info.get("name", zone_id),
-                    "type": "maruah_zone",
-                    "risk": info.get("risk", "MEDIUM"),
-                    "description": f"MARUAH-sensitive territory: {info.get('name', zone_id)}",
-                },
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [[
-                        [zb[0], zb[1]],
-                        [zb[2], zb[1]],
-                        [zb[2], zb[3]],
-                        [zb[0], zb[3]],
-                        [zb[0], zb[1]],
-                    ]],
-                },
-            })
+            zones.append(
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "name": info.get("name", zone_id),
+                        "type": "maruah_zone",
+                        "risk": info.get("risk", "MEDIUM"),
+                        "description": f"MARUAH-sensitive territory: {info.get('name', zone_id)}",
+                    },
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                [zb[0], zb[1]],
+                                [zb[2], zb[1]],
+                                [zb[2], zb[3]],
+                                [zb[0], zb[3]],
+                                [zb[0], zb[1]],
+                            ]
+                        ],
+                    },
+                }
+            )
             logger.info(f"MARUAH zone intersected: {info.get('name', zone_id)} (risk={info['risk']})")
 
     if not zones:

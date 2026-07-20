@@ -48,6 +48,7 @@ logger = logging.getLogger("geox.joint_inversion")
 @dataclass
 class GeophysicalObservation:
     """Single geophysical observation with metadata."""
+
     method: Literal["seismic", "gravity", "magnetics", "csem", "mt", "biostrat"]
     values: np.ndarray
     uncertainties: np.ndarray
@@ -59,6 +60,7 @@ class GeophysicalObservation:
 @dataclass
 class JointInversionConfig:
     """Configuration for joint inversion."""
+
     max_iterations: int = 50
     convergence_threshold: float = 0.01
     smoothness_weight: float = 0.01
@@ -75,9 +77,10 @@ class JointInversionConfig:
 @dataclass
 class JointInversionResult:
     """Result of multi-physics joint inversion."""
-    physics9_states: list[Physics13State]     # one per node
-    misfit_history: list[float]              # total misfit per iteration
-    method_misfits: dict[str, list[float]]   # per-method misfit
+
+    physics9_states: list[Physics13State]  # one per node
+    misfit_history: list[float]  # total misfit per iteration
+    method_misfits: dict[str, list[float]]  # per-method misfit
     converged: bool
     iterations: int
     final_total_misfit: float
@@ -146,7 +149,7 @@ def _joint_objective(
 
     for node_idx in range(n_nodes):
         start = node_idx * n_params
-        sv = state_vector[start:start + n_params]
+        sv = state_vector[start : start + n_params]
 
         # Build Physics13State from vector
         state = Physics13State(
@@ -193,7 +196,7 @@ def _joint_objective(
         # Smoothness regularisation (penalise large jumps between nodes)
         if node_idx > 0 and reference_states is not None:
             prev_start = (node_idx - 1) * n_params
-            prev_sv = state_vector[prev_start:prev_start + n_params]
+            prev_sv = state_vector[prev_start : prev_start + n_params]
             smooth_penalty = np.sum((sv - prev_sv) ** 2)
             total_misfit += config.smoothness_weight * smooth_penalty
 
@@ -242,25 +245,34 @@ def run_joint_inversion(
     x0 = np.zeros(n_nodes * n_params)
     for i, state in enumerate(initial_states):
         start = i * n_params
-        x0[start:start + n_params] = [
-            state.rho, state.vp, state.vs, state.rho_e,
-            state.chi, state.k, state.P, state.T, state.phi,
+        x0[start : start + n_params] = [
+            state.rho,
+            state.vp,
+            state.vs,
+            state.rho_e,
+            state.chi,
+            state.k,
+            state.P,
+            state.T,
+            state.phi,
         ]
 
     # Bounds for each parameter
     bounds = []
     for _ in range(n_nodes):
-        bounds.extend([
-            (1000, 5000),    # rho
-            (1500, 7000),    # vp
-            (500, 4000),     # vs
-            (0.1, 1e6),      # rho_e
-            (0, 0.1),        # chi
-            (0.1, 10),       # k
-            (1e5, 1e9),      # P
-            (200, 600),      # T
-            (0.01, 0.45),    # phi
-        ])
+        bounds.extend(
+            [
+                (1000, 5000),  # rho
+                (1500, 7000),  # vp
+                (500, 4000),  # vs
+                (0.1, 1e6),  # rho_e
+                (0, 0.1),  # chi
+                (0.1, 10),  # k
+                (1e5, 1e9),  # P
+                (200, 600),  # T
+                (0.01, 0.45),  # phi
+            ]
+        )
 
     # Track misfits
     misfit_history = []
@@ -299,18 +311,20 @@ def run_joint_inversion(
     states = []
     for i in range(n_nodes):
         start = i * n_params
-        sv = final_x[start:start + n_params]
-        states.append(Physics13State(
-            rho=float(np.clip(sv[0], 1000, 5000)),
-            vp=float(np.clip(sv[1], 1500, 7000)),
-            vs=float(np.clip(sv[2], 500, 4000)),
-            rho_e=float(np.clip(sv[3], 0.1, 1e6)),
-            chi=float(np.clip(sv[4], 0, 0.1)),
-            k=float(np.clip(sv[5], 0.1, 10)),
-            P=float(np.clip(sv[6], 1e5, 1e9)),
-            T=float(np.clip(sv[7], 200, 600)),
-            phi=float(np.clip(sv[8], 0.01, 0.45)),
-        ))
+        sv = final_x[start : start + n_params]
+        states.append(
+            Physics13State(
+                rho=float(np.clip(sv[0], 1000, 5000)),
+                vp=float(np.clip(sv[1], 1500, 7000)),
+                vs=float(np.clip(sv[2], 500, 4000)),
+                rho_e=float(np.clip(sv[3], 0.1, 1e6)),
+                chi=float(np.clip(sv[4], 0, 0.1)),
+                k=float(np.clip(sv[5], 0.1, 10)),
+                P=float(np.clip(sv[6], 1e5, 1e9)),
+                T=float(np.clip(sv[7], 200, 600)),
+                phi=float(np.clip(sv[8], 0.01, 0.45)),
+            )
+        )
 
     # Compute per-method misfits for the final state
     for obs in observations:
@@ -381,29 +395,41 @@ def quick_joint_inversion(
     """
     observations = []
     if ai_observations is not None:
-        observations.append(GeophysicalObservation(
-            method="seismic", values=ai_observations,
-            uncertainties=np.ones(len(ai_observations)),
-            coordinates=np.arange(len(ai_observations)).reshape(-1, 1),
-        ))
+        observations.append(
+            GeophysicalObservation(
+                method="seismic",
+                values=ai_observations,
+                uncertainties=np.ones(len(ai_observations)),
+                coordinates=np.arange(len(ai_observations)).reshape(-1, 1),
+            )
+        )
     if gravity_observations is not None:
-        observations.append(GeophysicalObservation(
-            method="gravity", values=gravity_observations,
-            uncertainties=np.ones(len(gravity_observations)),
-            coordinates=np.arange(len(gravity_observations)).reshape(-1, 1),
-        ))
+        observations.append(
+            GeophysicalObservation(
+                method="gravity",
+                values=gravity_observations,
+                uncertainties=np.ones(len(gravity_observations)),
+                coordinates=np.arange(len(gravity_observations)).reshape(-1, 1),
+            )
+        )
     if magnetics_observations is not None:
-        observations.append(GeophysicalObservation(
-            method="magnetics", values=magnetics_observations,
-            uncertainties=np.ones(len(magnetics_observations)),
-            coordinates=np.arange(len(magnetics_observations)).reshape(-1, 1),
-        ))
+        observations.append(
+            GeophysicalObservation(
+                method="magnetics",
+                values=magnetics_observations,
+                uncertainties=np.ones(len(magnetics_observations)),
+                coordinates=np.arange(len(magnetics_observations)).reshape(-1, 1),
+            )
+        )
     if resistivity_observations is not None:
-        observations.append(GeophysicalObservation(
-            method="mt", values=resistivity_observations,
-            uncertainties=np.ones(len(resistivity_observations)),
-            coordinates=np.arange(len(resistivity_observations)).reshape(-1, 1),
-        ))
+        observations.append(
+            GeophysicalObservation(
+                method="mt",
+                values=resistivity_observations,
+                uncertainties=np.ones(len(resistivity_observations)),
+                coordinates=np.arange(len(resistivity_observations)).reshape(-1, 1),
+            )
+        )
 
     # Default initial states from sandstone
     sandstone = EARTH_MATERIAL_CATALOG["Sandstone"]

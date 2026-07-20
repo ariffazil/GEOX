@@ -34,6 +34,7 @@ logger = logging.getLogger("geox.lem.dataset")
 try:
     import torch
     from torch.utils.data import DataLoader, Dataset
+
     _HAS_TORCH = True
 except ImportError:
     _HAS_TORCH = False
@@ -45,12 +46,12 @@ except ImportError:
 
 # Canonical curve names and their LAS mnemonics (ordered by priority)
 CURVE_ALIASES: dict[str, list[str]] = {
-    "GR":   ["GR", "GAM", "GAMMA", "GR_1", "GRC"],
-    "RT":   ["RT", "RES", "RESIST", "ILD", "ILD_LOG", "RD", "DEEP_RES"],
+    "GR": ["GR", "GAM", "GAMMA", "GR_1", "GRC"],
+    "RT": ["RT", "RES", "RESIST", "ILD", "ILD_LOG", "RD", "DEEP_RES"],
     "RHOB": ["RHOB", "RHO", "DEN", "DENSITY", "ZDEN"],
     "NPHI": ["NPHI", "PHI", "NPOR", "NEUT", "TNPH"],
-    "DT":   ["DT", "AC", "SONIC", "DTC", "DT_CO"],
-    "SP":   ["SP", "SPONTANEOUS", "SP_1"],
+    "DT": ["DT", "AC", "SONIC", "DTC", "DT_CO"],
+    "SP": ["SP", "SPONTANEOUS", "SP_1"],
 }
 
 CANONICAL_CURVES = list(CURVE_ALIASES.keys())  # ["GR", "RT", "RHOB", "NPHI", "DT", "SP"]
@@ -59,13 +60,15 @@ NUM_CURVES = len(CANONICAL_CURVES)
 
 # ── Data Structures ─────────────────────────────────────────────────────────
 
+
 @dataclass
 class WellSample:
     """Preprocessed well log data ready for patch extraction."""
+
     well_id: str
-    depth_md: np.ndarray            # (N,) depth in meters
-    curves: dict[str, np.ndarray]   # curve_name → (N,) array
-    null_mask: np.ndarray           # (N, C) boolean — True where null
+    depth_md: np.ndarray  # (N,) depth in meters
+    curves: dict[str, np.ndarray]  # curve_name → (N,) array
+    null_mask: np.ndarray  # (N, C) boolean — True where null
     n_samples: int
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -73,11 +76,12 @@ class WellSample:
 @dataclass
 class WellPatch:
     """A single patch extracted from a well."""
+
     well_id: str
     depth_start: float
     depth_end: float
-    curves: np.ndarray              # (C, L) — values
-    mask: np.ndarray                # (C, L) — null mask
+    curves: np.ndarray  # (C, L) — values
+    mask: np.ndarray  # (C, L) — null mask
     token_ids: np.ndarray | None = None  # (L',) after tokenization
 
 
@@ -95,6 +99,7 @@ def _resolve_curve(las_data, curve_name: str, aliases: list[str]) -> np.ndarray 
 
 # ── Preprocessing ───────────────────────────────────────────────────────────
 
+
 def load_and_preprocess_well(
     las_path: str,
     required_curves: tuple[str, ...] = ("GR",),
@@ -104,7 +109,7 @@ def load_and_preprocess_well(
     outlier_std: float = 5.0,
 ) -> WellSample | None:
     """Load a LAS file and preprocess into WellSample.
-    
+
     Steps:
       1. Load via GEOX las_reader
       2. Extract available curves using alias mapping
@@ -191,7 +196,11 @@ def load_and_preprocess_well(
         else:
             aligned_curves[name] = arr
 
-    depth = bundle.depth_md[:min_len] if hasattr(bundle, 'depth_md') and len(bundle.depth_md) >= min_len else np.arange(min_len, dtype=float)
+    depth = (
+        bundle.depth_md[:min_len]
+        if hasattr(bundle, "depth_md") and len(bundle.depth_md) >= min_len
+        else np.arange(min_len, dtype=float)
+    )
 
     return WellSample(
         well_id=Path(las_path).stem,
@@ -209,18 +218,19 @@ def load_and_preprocess_well(
 
 # ── Patch Extraction ────────────────────────────────────────────────────────
 
+
 def extract_patches(
     sample: WellSample,
     patch_length: int = 32,
     patch_stride: int = 8,
 ) -> list[WellPatch]:
     """Extract overlapping patches from a well sample.
-    
+
     Args:
         sample: Preprocessed well data
         patch_length: Number of depth samples per patch
         patch_stride: Stride between patches
-    
+
     Returns:
         List of WellPatch objects
     """
@@ -237,8 +247,8 @@ def extract_patches(
     for i, name in enumerate(CANONICAL_CURVES):
         if name in sample.curves:
             arr = sample.curves[name]
-            curve_matrix[i, :len(arr)] = arr[:n]
-            mask_matrix[i, :len(arr)] = np.isnan(arr[:n])
+            curve_matrix[i, : len(arr)] = arr[:n]
+            mask_matrix[i, : len(arr)] = np.isnan(arr[:n])
 
     # Fill missing curves with mean of available values
     for i in range(NUM_CURVES):
@@ -263,23 +273,26 @@ def extract_patches(
         patch_curves = curve_matrix[:, start:end]  # (C, L)
         patch_mask = mask_matrix[:, start:end]
 
-        patches.append(WellPatch(
-            well_id=sample.well_id,
-            depth_start=float(sample.depth_md[start]) if start < len(sample.depth_md) else 0.0,
-            depth_end=float(sample.depth_md[end - 1]) if end - 1 < len(sample.depth_md) else 0.0,
-            curves=patch_curves,
-            mask=patch_mask,
-        ))
+        patches.append(
+            WellPatch(
+                well_id=sample.well_id,
+                depth_start=float(sample.depth_md[start]) if start < len(sample.depth_md) else 0.0,
+                depth_end=float(sample.depth_md[end - 1]) if end - 1 < len(sample.depth_md) else 0.0,
+                curves=patch_curves,
+                mask=patch_mask,
+            )
+        )
 
     return patches
 
 
 # ── PyTorch Dataset ─────────────────────────────────────────────────────────
 
+
 class WellLogDataset(Dataset):
     """
     PyTorch dataset for GEOX-LEM training.
-    
+
     Loads LAS files, extracts patches, and returns:
       - curves: (C, L) normalized well log patch
       - mask: (C, L) null indicator
@@ -341,7 +354,7 @@ class WellLogDataset(Dataset):
         patch = self.patches[idx]
         return {
             "curves": torch.from_numpy(patch.curves).float(),  # (C, L)
-            "mask": torch.from_numpy(patch.mask).bool(),       # (C, L)
+            "mask": torch.from_numpy(patch.mask).bool(),  # (C, L)
             "well_id": patch.well_id,
             "depth_start": patch.depth_start,
             "depth_end": patch.depth_end,
@@ -363,6 +376,7 @@ class WellLogDataset(Dataset):
 
 # ── Factory Functions ──────────────────────────────────────────────────────
 
+
 def create_lem_dataloader(
     data_dir: str = "data/wells",
     batch_size: int = 64,
@@ -372,7 +386,7 @@ def create_lem_dataloader(
     shuffle: bool = True,
 ) -> dict[str, Any]:
     """Create a DataLoader for GEOX-LEM training.
-    
+
     Returns dict with 'loader', 'dataset', and 'summary'.
     """
     if not _HAS_TORCH:
@@ -421,13 +435,15 @@ def inspect_data(data_dir: str = "data/wells") -> dict[str, Any]:
             summary["total_curves_found"].update(sample.curves.keys())
             summary["sample_counts"].append(sample.n_samples)
             if len(sample.depth_md) >= 2:
-                summary["depth_ranges"].append({
-                    "well": sample.well_id,
-                    "top": float(sample.depth_md[0]),
-                    "base": float(sample.depth_md[-1]),
-                    "samples": sample.n_samples,
-                    "curves": list(sample.curves.keys()),
-                })
+                summary["depth_ranges"].append(
+                    {
+                        "well": sample.well_id,
+                        "top": float(sample.depth_md[0]),
+                        "base": float(sample.depth_md[-1]),
+                        "samples": sample.n_samples,
+                        "curves": list(sample.curves.keys()),
+                    }
+                )
 
     summary["total_curves_found"] = list(summary["total_curves_found"])
     return summary

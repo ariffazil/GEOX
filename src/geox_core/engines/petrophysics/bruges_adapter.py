@@ -223,12 +223,15 @@ class BrugesAdapter:
         c2 = -8.0 * k**2 * sin_theta**2
         c3 = 1.0 - 4.0 * k**2 * sin_theta**2
 
-        ei = (vp**c1) * (vs**(c2 / (1 + c2))) * (rho**(c3 / (1 + c2)))
+        ei = (vp**c1) * (vs ** (c2 / (1 + c2))) * (rho ** (c3 / (1 + c2)))
 
-        params_hash = _sha256_params({
-            "theta": theta, "k": k,
-            "vp_shape": list(vp.shape),
-        })
+        params_hash = _sha256_params(
+            {
+                "theta": theta,
+                "k": k,
+                "vp_shape": list(vp.shape),
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -304,8 +307,11 @@ class BrugesAdapter:
         # Aki-Richards coefficients
         rc0 = (dvp / (2.0 * vp_avg)) + (drho / (2.0 * rho_avg))
         a = rc0
-        b = 0.5 * (dvp / vp_avg) - 4.0 * (vs_avg**2 / vp_avg**2) * (dvs / vs_avg) \
+        b = (
+            0.5 * (dvp / vp_avg)
+            - 4.0 * (vs_avg**2 / vp_avg**2) * (dvs / vs_avg)
             - 0.5 * (vs_avg**2 / vp_avg**2) * (drho / rho_avg)
+        )
 
         # Zero-offset RC
         ai_top = vp_top * rho_top

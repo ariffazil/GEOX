@@ -40,23 +40,24 @@ class FossilGroup(StrEnum):
 
 
 class ZoneType(StrEnum):
-    RANGE = "range"           # total range zone
-    INTERVAL = "interval"     # interval zone
-    ASSEMBLAGE = "assemblage" # assemblage zone
-    ABUNDANCE = "abundance"   # abundance zone
+    RANGE = "range"  # total range zone
+    INTERVAL = "interval"  # interval zone
+    ASSEMBLAGE = "assemblage"  # assemblage zone
+    ABUNDANCE = "abundance"  # abundance zone
 
 
 @dataclass
 class BiostratZone:
     """A single biostratigraphic zone."""
+
     zone_name: str
     fossil_group: FossilGroup
     zone_type: ZoneType
     key_species: list[str]
-    top_age_ma: float          # youngest occurrence (Ma)
-    bottom_age_ma: float       # oldest occurrence (Ma)
-    facies_hint: str = ""      # depositional environment
-    confidence: float = 0.8    # 0-1
+    top_age_ma: float  # youngest occurrence (Ma)
+    bottom_age_ma: float  # oldest occurrence (Ma)
+    facies_hint: str = ""  # depositional environment
+    confidence: float = 0.8  # 0-1
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -75,10 +76,11 @@ class BiostratZone:
 @dataclass
 class FossilOccurrence:
     """A fossil occurrence in a well/core sample."""
+
     species: str
     fossil_group: FossilGroup
     depth_m: float
-    abundance: int = 1         # count
+    abundance: int = 1  # count
     preservation: str = "moderate"  # good/moderate/poor
     identification_method: str = "visual"  # visual/SEM/microCT
     metadata: dict[str, Any] = field(default_factory=dict)
@@ -87,10 +89,11 @@ class FossilOccurrence:
 @dataclass
 class ZonationResult:
     """Result of biostratigraphic zonation."""
+
     well_id: str
     zones: list[BiostratZone]
     depth_intervals: list[tuple[float, float]]  # (top_m, bottom_m)
-    age_model: np.ndarray | None     # depth → age interpolation
+    age_model: np.ndarray | None  # depth → age interpolation
     depth_axis: np.ndarray | None
     confidence_curve: np.ndarray | None
     facies_constraints: list[dict[str, Any]]
@@ -323,13 +326,15 @@ def assign_zones_to_well(
     facies_constraints = []
     for zone, interval in zip(matched_zones, depth_intervals, strict=False):
         if zone.facies_hint:
-            facies_constraints.append({
-                "depth_top_m": interval[0],
-                "depth_bottom_m": interval[1],
-                "facies": zone.facies_hint,
-                "zone": zone.zone_name,
-                "confidence": zone.confidence,
-            })
+            facies_constraints.append(
+                {
+                    "depth_top_m": interval[0],
+                    "depth_bottom_m": interval[1],
+                    "facies": zone.facies_hint,
+                    "zone": zone.zone_name,
+                    "confidence": zone.confidence,
+                }
+            )
 
     # Confidence curve
     confidence_curve = np.ones_like(depth_axis) * 0.5  # default

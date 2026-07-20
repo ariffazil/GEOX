@@ -24,10 +24,7 @@ from pydantic import BaseModel, Field
 logger = logging.getLogger("geox.io.erddap")
 
 ERDDAP_BASE = "https://coastwatch.pfeg.noaa.gov/erddap"
-ERDDAP_CITATION = (
-    "NOAA CoastWatch / ERDDAP (2024). "
-    "https://coastwatch.pfeg.noaa.gov/erddap. Public Domain."
-)
+ERDDAP_CITATION = "NOAA CoastWatch / ERDDAP (2024). https://coastwatch.pfeg.noaa.gov/erddap. Public Domain."
 
 
 class ERDDAPQuery(BaseModel):
@@ -62,10 +59,13 @@ class ERDDAPFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return ERDDAPResult(
-                ok=True, mode="offline_stub",
+                ok=True,
+                mode="offline_stub",
                 data=[{"time": "2024-01-01", "latitude": 5.0, "longitude": 110.0, "sst": 29.0}],
-                count=1, dataset_id=params.dataset_id, fetched_at=now,
-                note=f"Offline stub for dataset '{params.dataset_id}'."
+                count=1,
+                dataset_id=params.dataset_id,
+                fetched_at=now,
+                note=f"Offline stub for dataset '{params.dataset_id}'.",
             )
         return ERDDAPResult(ok=False, mode="live", note="Live ERDDAP requires HTTP client.", fetched_at=now)
 

@@ -70,9 +70,7 @@ class StressQuery(BaseModel):
 
 class WSMStressFetcher:
     def __init__(self, cache_dir: str | None = None):
-        self.cache_dir = Path(cache_dir or os.environ.get(
-            "GEOX_WSM_CACHE_DIR", "/root/.cache/geox/wsm"
-        ))
+        self.cache_dir = Path(cache_dir or os.environ.get("GEOX_WSM_CACHE_DIR", "/root/.cache/geox/wsm"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_WSM_OFFLINE", "1") != "0"
 
@@ -87,4 +85,12 @@ class WSMStressFetcher:
             {"latitude": 2.0, "longitude": 110.0, "azimuth_deg": 35.0, "quality": "B", "type": "BO", "regime": "SS"},
             {"latitude": 6.0, "longitude": 116.0, "azimuth_deg": 15.0, "quality": "C", "type": "FM", "regime": "TF"},
         ]
-        return StressResult(ok=True, mode="offline_stub", records=samples, count=len(samples), query_params=qd, fetched_at=now, note="Offline mode (GEOX_WSM_OFFLINE=1).")
+        return StressResult(
+            ok=True,
+            mode="offline_stub",
+            records=samples,
+            count=len(samples),
+            query_params=qd,
+            fetched_at=now,
+            note="Offline mode (GEOX_WSM_OFFLINE=1).",
+        )

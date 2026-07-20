@@ -286,7 +286,6 @@ async def geox_data_qc_bundle(
         # outlier density, we surface this as a SAF-grounded warning and
         # downgrade the claim_state to QC_VERIFIED_WITH_WARNINGS.
         try:
-
             _arifos_kernel = os.environ.get("ARIFOS_HOME", "/root") + "/arifOS"
             import os as _os_saf
             import uuid as _uuid_saf

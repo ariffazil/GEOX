@@ -69,8 +69,7 @@ class LoopStructuralAdapter:
     def _check_dependencies(self) -> None:
         if not _LOOPSTRUCTURAL_AVAILABLE:
             raise ImportError(
-                "loopstructural>=2.0.0 is required for structural geology modeling. "
-                "Install with: pip install loopstructural"
+                "loopstructural>=2.0.0 is required for structural geology modeling. Install with: pip install loopstructural"
             )
 
     def fault_network_model(
@@ -80,9 +79,7 @@ class LoopStructuralAdapter:
         fault_dip_direction_deg: float,
         fault_displacement_m: float,
         fault_name: str = "Fault_1",
-        model_extent: tuple[float, float, float, float, float, float] = (
-            0, 10000, 0, 10000, -5000, 0
-        ),
+        model_extent: tuple[float, float, float, float, float, float] = (0, 10000, 0, 10000, -5000, 0),
         resolution: tuple[int, int, int] = (30, 30, 30),
     ) -> dict[str, Any]:
         """
@@ -100,15 +97,17 @@ class LoopStructuralAdapter:
         Returns:
             Fault surface mesh + displacement field + horizon cut relationships.
         """
-        params_hash = _sha256_params({
-            "method": "fault_network",
-            "fault_name": fault_name,
-            "fault_dip_deg": fault_dip_deg,
-            "fault_dip_direction_deg": fault_dip_direction_deg,
-            "fault_displacement_m": fault_displacement_m,
-            "model_extent": model_extent,
-            "resolution": resolution,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "fault_network",
+                "fault_name": fault_name,
+                "fault_dip_deg": fault_dip_deg,
+                "fault_dip_direction_deg": fault_dip_direction_deg,
+                "fault_displacement_m": fault_displacement_m,
+                "model_extent": model_extent,
+                "resolution": resolution,
+            }
+        )
 
         # Fault surface normal
         dip_rad = np.deg2rad(fault_dip_deg)
@@ -139,10 +138,8 @@ class LoopStructuralAdapter:
             "epistemic_label": "ESTIMATE",
             "confidence": "MEDIUM",
             "caveats": [
-                "Fault geometry derived from 2D trace + assumed dip — "
-                "requires seismic or borehole calibration for CLAIM",
-                "Fault displacement is net slip — "
-                "throw, heave, and uplift components require separate analysis",
+                "Fault geometry derived from 2D trace + assumed dip — requires seismic or borehole calibration for CLAIM",
+                "Fault displacement is net slip — throw, heave, and uplift components require separate analysis",
                 "Multiple intersecting faults require overprinting logic — "
                 "use sequential structural history for complex networks",
                 "Balanced cross-section restoration recommended to validate",
@@ -180,19 +177,24 @@ class LoopStructuralAdapter:
         Returns:
             Fold axis orientation + fold geometry parameters.
         """
-        params_hash = _sha256_params({
-            "method": "fold_model",
-            "fold_name": fold_name,
-            "fold_type": fold_type,
-            "interlimb_angle_deg": interlimb_angle_deg,
-            "wavelength_m": wavelength_m,
-            "amplitude_m": amplitude_m,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "fold_model",
+                "fold_name": fold_name,
+                "fold_type": fold_type,
+                "interlimb_angle_deg": interlimb_angle_deg,
+                "wavelength_m": wavelength_m,
+                "amplitude_m": amplitude_m,
+            }
+        )
 
         fold_classification = (
-            "ISoclinal" if interlimb_angle_deg < 10
-            else "TIGHT" if interlimb_angle_deg < 30
-            else "OPEN" if interlimb_angle_deg < 70
+            "ISoclinal"
+            if interlimb_angle_deg < 10
+            else "TIGHT"
+            if interlimb_angle_deg < 30
+            else "OPEN"
+            if interlimb_angle_deg < 70
             else "GENTLE"
         )
 
@@ -211,8 +213,7 @@ class LoopStructuralAdapter:
             "epistemic_label": "ESTIMATE",
             "confidence": "LOW",
             "caveats": [
-                "Fold geometry is interpretive — "
-                "outcrop or seismic control required for CLAIM",
+                "Fold geometry is interpretive — outcrop or seismic control required for CLAIM",
                 "Cylindrical assumption may fail for non-cylindrical folds",
                 "Detachment folds require knowledge of detachment horizon depth",
             ],

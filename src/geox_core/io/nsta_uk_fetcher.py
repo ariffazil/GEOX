@@ -27,8 +27,7 @@ logger = logging.getLogger("geox.io.nsta_uk")
 NSTA_BASE = "https://www.nstauthority.co.uk"
 NSTA_DATA = "https://data.nstauthority.co.uk"
 NSTA_CITATION = (
-    "North Sea Transition Authority (2024). UK Petroleum Data. "
-    "https://data.nstauthority.co.uk. Open Government Licence v3.0."
+    "North Sea Transition Authority (2024). UK Petroleum Data. https://data.nstauthority.co.uk. Open Government Licence v3.0."
 )
 
 
@@ -66,9 +65,7 @@ class NSTAQuery(BaseModel):
 
 class NSTAUKFetcher:
     def __init__(self, cache_dir: str | None = None):
-        self.cache_dir = Path(cache_dir or os.environ.get(
-            "GEOX_NSTA_CACHE_DIR", "/root/.cache/geox/nsta_uk"
-        ))
+        self.cache_dir = Path(cache_dir or os.environ.get("GEOX_NSTA_CACHE_DIR", "/root/.cache/geox/nsta_uk"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_NSTA_OFFLINE", "1") != "0"
 
@@ -82,4 +79,12 @@ class NSTAUKFetcher:
         samples = [
             {"well_name": "22/14a-1", "latitude": 57.5, "longitude": 1.2, "operator": "NSTA_stub", "status": "SUSPENDED"},
         ]
-        return NSTAResult(ok=True, mode="offline_stub", wells=samples, count=len(samples), query_params=qd, fetched_at=now, note="Offline mode (GEOX_NSTA_OFFLINE=1).")
+        return NSTAResult(
+            ok=True,
+            mode="offline_stub",
+            wells=samples,
+            count=len(samples),
+            query_params=qd,
+            fetched_at=now,
+            note="Offline mode (GEOX_NSTA_OFFLINE=1).",
+        )

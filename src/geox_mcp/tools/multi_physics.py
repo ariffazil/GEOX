@@ -34,8 +34,11 @@ from geox_core.physics.state import Physics13State
 # ───────────────────────────── JOINT INVERSION ─────────────────────────────────────
 class ModalityObsSchema(BaseModel):
     modality: Literal[
-        "seismic_impedance", "seismic_vpvs", "gravity",
-        "magnetic", "mt_resistivity",
+        "seismic_impedance",
+        "seismic_vpvs",
+        "gravity",
+        "magnetic",
+        "mt_resistivity",
     ]
     value: float
     uncertainty: float = Field(default=0.05, gt=0)
@@ -74,8 +77,10 @@ async def geox_joint_inversion(request: JointInversionRequest) -> JointInversion
     try:
         obs = [
             ModalityObservation(
-                modality=o.modality, value=o.value,
-                uncertainty=o.uncertainty, weight=o.weight,
+                modality=o.modality,
+                value=o.value,
+                uncertainty=o.uncertainty,
+                weight=o.weight,
                 depth_m=o.depth_m,
             )
             for o in request.observations
@@ -84,13 +89,16 @@ async def geox_joint_inversion(request: JointInversionRequest) -> JointInversion
         if request.prior:
             prior = Physics13State(**request.prior)
         req = InversionRequest(
-            observations=obs, prior=prior,
-            max_iter=request.max_iter, tolerance=request.tolerance,
+            observations=obs,
+            prior=prior,
+            max_iter=request.max_iter,
+            tolerance=request.tolerance,
         )
         result = joint_inversion(req)
         if not result["ok"]:
             return JointInversionResponse(
-                ok=False, error=result.get("error", "inversion_failed"),
+                ok=False,
+                error=result.get("error", "inversion_failed"),
             )
         return JointInversionResponse(
             ok=True,
@@ -157,16 +165,19 @@ async def geox_biostrat_constraint(request: BiostratRequest) -> BiostratResponse
     try:
         state = Physics13State(**request.state)
         r = evaluate_biostrat_constraint(state, request.age_ma)
-        return BiostratResponse(ok=True, result={
-            "zone_name": r.zone_name,
-            "zone_admissible_materials": list(r.zone_admissible_materials),
-            "cell_material_match": r.cell_material_match,
-            "is_material_admissible": r.is_material_admissible,
-            "is_phi_in_range": r.is_phi_in_range,
-            "is_vpvs_in_range": r.is_vpvs_in_range,
-            "is_consistent": r.is_consistent,
-            "notes": list(r.notes),
-        })
+        return BiostratResponse(
+            ok=True,
+            result={
+                "zone_name": r.zone_name,
+                "zone_admissible_materials": list(r.zone_admissible_materials),
+                "cell_material_match": r.cell_material_match,
+                "is_material_admissible": r.is_material_admissible,
+                "is_phi_in_range": r.is_phi_in_range,
+                "is_vpvs_in_range": r.is_vpvs_in_range,
+                "is_consistent": r.is_consistent,
+                "notes": list(r.notes),
+            },
+        )
     except Exception as e:
         return BiostratResponse(ok=False, error=str(e))
 

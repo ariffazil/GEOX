@@ -104,14 +104,16 @@ async def geox_workflow_run_canon(
             "claim_state": "NO_VALID_EVIDENCE",
         }
 
-    step_outputs.append({
-        "step": 1,
-        "tool": "geox_data_ingest_bundle",
-        "claim_state": _claim_state(step1),
-        "artifact_ref": step1.get("artifact_ref") or step1.get("artifact", {}).get("artifact_ref"),
-        "status": "OK" if step1.get("status") != "ERROR" else "ERROR",
-        "next_tool": "geox_data_qc_bundle",
-    })
+    step_outputs.append(
+        {
+            "step": 1,
+            "tool": "geox_data_ingest_bundle",
+            "claim_state": _claim_state(step1),
+            "artifact_ref": step1.get("artifact_ref") or step1.get("artifact", {}).get("artifact_ref"),
+            "status": "OK" if step1.get("status") != "ERROR" else "ERROR",
+            "next_tool": "geox_data_qc_bundle",
+        }
+    )
 
     if step1.get("status") == "ERROR" or _claim_state(step1) == "NO_VALID_EVIDENCE":
         workflow_halted = True
@@ -134,14 +136,16 @@ async def geox_workflow_run_canon(
                 "claim_state": "NO_VALID_EVIDENCE",
             }
 
-        step_outputs.append({
-            "step": 2,
-            "tool": "geox_data_qc_bundle",
-            "claim_state": _claim_state(step2),
-            "artifact_ref": step2.get("artifact_ref") or step2.get("artifact", {}).get("artifact_ref"),
-            "status": "OK" if step2.get("status") != "ERROR" else "ERROR",
-            "next_tool": "geox_subsurface_generate_candidates",
-        })
+        step_outputs.append(
+            {
+                "step": 2,
+                "tool": "geox_data_qc_bundle",
+                "claim_state": _claim_state(step2),
+                "artifact_ref": step2.get("artifact_ref") or step2.get("artifact", {}).get("artifact_ref"),
+                "status": "OK" if step2.get("status") != "ERROR" else "ERROR",
+                "next_tool": "geox_subsurface_generate_candidates",
+            }
+        )
 
         if _is_hold(step2) and abort_on_hold:
             workflow_halted = True
@@ -149,11 +153,7 @@ async def geox_workflow_run_canon(
 
         # Use QC artifact ref for downstream
         if not workflow_halted:
-            artifact_ref = (
-                step2.get("artifact_ref")
-                or step2.get("artifact", {}).get("artifact_ref")
-                or artifact_ref
-            )
+            artifact_ref = step2.get("artifact_ref") or step2.get("artifact", {}).get("artifact_ref") or artifact_ref
     else:
         step2 = None
         artifact_ref = None
@@ -173,25 +173,23 @@ async def geox_workflow_run_canon(
                 "claim_state": "NO_VALID_EVIDENCE",
             }
 
-        step_outputs.append({
-            "step": 3,
-            "tool": "geox_subsurface_generate_candidates",
-            "claim_state": _claim_state(step3),
-            "artifact_ref": step3.get("artifact_ref") or step3.get("artifact", {}).get("artifact_ref"),
-            "status": "OK" if step3.get("status") != "ERROR" else "ERROR",
-            "next_tool": "geox_process_abduction",
-        })
+        step_outputs.append(
+            {
+                "step": 3,
+                "tool": "geox_subsurface_generate_candidates",
+                "claim_state": _claim_state(step3),
+                "artifact_ref": step3.get("artifact_ref") or step3.get("artifact", {}).get("artifact_ref"),
+                "status": "OK" if step3.get("status") != "ERROR" else "ERROR",
+                "next_tool": "geox_process_abduction",
+            }
+        )
 
         if _is_hold(step3) and abort_on_hold:
             workflow_halted = True
             halt_reason = "Candidates generation returned HOLD"
 
         if not workflow_halted:
-            candidate_ref = (
-                step3.get("artifact_ref")
-                or step3.get("artifact", {}).get("artifact_ref")
-                or artifact_ref
-            )
+            candidate_ref = step3.get("artifact_ref") or step3.get("artifact", {}).get("artifact_ref") or artifact_ref
     else:
         step3 = None
         candidate_ref = artifact_ref
@@ -210,24 +208,22 @@ async def geox_workflow_run_canon(
                 "claim_state": "NO_VALID_EVIDENCE",
             }
 
-        step_outputs.append({
-            "step": 4,
-            "tool": "geox_process_abduction",
-            "claim_state": _claim_state(step4),
-            "artifact_ref": step4.get("artifact_ref") or step4.get("artifact", {}).get("artifact_ref"),
-            "status": "OK" if step4.get("status") != "ERROR" else "ERROR",
-            "next_tool": "geox_evidence_contradiction_scan" if auto_contradiction else "geox_evidence_summarize_cross",
-        })
+        step_outputs.append(
+            {
+                "step": 4,
+                "tool": "geox_process_abduction",
+                "claim_state": _claim_state(step4),
+                "artifact_ref": step4.get("artifact_ref") or step4.get("artifact", {}).get("artifact_ref"),
+                "status": "OK" if step4.get("status") != "ERROR" else "ERROR",
+                "next_tool": "geox_evidence_contradiction_scan" if auto_contradiction else "geox_evidence_summarize_cross",
+            }
+        )
 
         if _is_hold(step4) and abort_on_hold:
             workflow_halted = True
             halt_reason = "Abduction returned HOLD"
 
-        abduction_ref = (
-            step4.get("artifact_ref")
-            or step4.get("artifact", {}).get("artifact_ref")
-            or candidate_ref
-        )
+        abduction_ref = step4.get("artifact_ref") or step4.get("artifact", {}).get("artifact_ref") or candidate_ref
     else:
         step4 = None
         abduction_ref = candidate_ref
@@ -247,26 +243,28 @@ async def geox_workflow_run_canon(
                 "claim_state": "NO_VALID_EVIDENCE",
             }
 
-        step_outputs.append({
-            "step": 5,
-            "tool": "geox_evidence_contradiction_scan",
-            "claim_state": _claim_state(step5),
-            "artifact_ref": step5.get("artifact_ref") or step5.get("artifact", {}).get("artifact_ref"),
-            "status": "OK" if step5.get("status") != "ERROR" else "ERROR",
-            "contradictions_found": step5.get("decision_support", {}).get("contradictions", []) if isinstance(step5.get("decision_support"), dict) else [],
-            "auto_hold": step5.get("decision_support", {}).get("auto_hold_triggers") if isinstance(step5.get("decision_support"), dict) else None,
-            "next_tool": "geox_evidence_summarize_cross",
-        })
+        step_outputs.append(
+            {
+                "step": 5,
+                "tool": "geox_evidence_contradiction_scan",
+                "claim_state": _claim_state(step5),
+                "artifact_ref": step5.get("artifact_ref") or step5.get("artifact", {}).get("artifact_ref"),
+                "status": "OK" if step5.get("status") != "ERROR" else "ERROR",
+                "contradictions_found": step5.get("decision_support", {}).get("contradictions", [])
+                if isinstance(step5.get("decision_support"), dict)
+                else [],
+                "auto_hold": step5.get("decision_support", {}).get("auto_hold_triggers")
+                if isinstance(step5.get("decision_support"), dict)
+                else None,
+                "next_tool": "geox_evidence_summarize_cross",
+            }
+        )
 
         if _is_hold(step5) and abort_on_hold:
             workflow_halted = True
             halt_reason = "Contradiction scan triggered HOLD"
 
-        scan_ref = (
-            step5.get("artifact_ref")
-            or step5.get("artifact", {}).get("artifact_ref")
-            or abduction_ref
-        )
+        scan_ref = step5.get("artifact_ref") or step5.get("artifact", {}).get("artifact_ref") or abduction_ref
     else:
         step5 = None
         scan_ref = abduction_ref
@@ -286,19 +284,17 @@ async def geox_workflow_run_canon(
                 "claim_state": "NO_VALID_EVIDENCE",
             }
 
-        step_outputs.append({
-            "step": 6,
-            "tool": "geox_evidence_summarize_cross",
-            "claim_state": _claim_state(step6),
-            "artifact_ref": step6.get("artifact_ref") or step6.get("artifact", {}).get("artifact_ref"),
-            "status": "OK" if step6.get("status") != "ERROR" else "ERROR",
-        })
-
-        final_artifact_ref = (
-            step6.get("artifact_ref")
-            or step6.get("artifact", {}).get("artifact_ref")
-            or scan_ref
+        step_outputs.append(
+            {
+                "step": 6,
+                "tool": "geox_evidence_summarize_cross",
+                "claim_state": _claim_state(step6),
+                "artifact_ref": step6.get("artifact_ref") or step6.get("artifact", {}).get("artifact_ref"),
+                "status": "OK" if step6.get("status") != "ERROR" else "ERROR",
+            }
         )
+
+        final_artifact_ref = step6.get("artifact_ref") or step6.get("artifact", {}).get("artifact_ref") or scan_ref
     else:
         step6 = None
         final_artifact_ref = scan_ref
@@ -358,7 +354,9 @@ async def geox_workflow_run_canon(
                 "reason": "Verify GEOX health before trusting workflow output",
                 "priority": "low",
             },
-        ] if not workflow_halted else [
+        ]
+        if not workflow_halted
+        else [
             {
                 "tool": "geox_data_qc_bundle" if halt_reason and "QC" in halt_reason else "geox_data_ingest_bundle",
                 "reason": f"Resolve: {halt_reason}",

@@ -48,6 +48,7 @@ def _make_metabolic_return(source_crs: str = "unknown", depth_datum: str | None 
     P1.4: Injects CRS provenance into every ingest envelope without
     needing to pass source_crs through all 21 return paths.
     """
+
     def _metabolic_return(
         envelope: dict,
         witness_status: str = "RAW",
@@ -71,6 +72,7 @@ def _make_metabolic_return(source_crs: str = "unknown", depth_datum: str | None 
             witness_status=witness_status,
             **kwargs,
         )
+
     return _metabolic_return
 
 

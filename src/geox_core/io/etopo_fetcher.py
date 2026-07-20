@@ -121,9 +121,7 @@ class ETOPOFetcher:
     """
 
     def __init__(self, cache_dir: str | None = None):
-        self.cache_dir = Path(cache_dir or os.environ.get(
-            "GEOX_ETOPO_CACHE_DIR", "/root/.cache/geox/etopo"
-        ))
+        self.cache_dir = Path(cache_dir or os.environ.get("GEOX_ETOPO_CACHE_DIR", "/root/.cache/geox/etopo"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_ETOPO_OFFLINE", "1") != "0"
 
@@ -192,9 +190,7 @@ class ETOPOFetcher:
                 grid_path=str(cached_path),
                 meta=ETOPOGridMeta(
                     source_uri=ETOPO_GRID_EXTRACT,
-                    fetched_at=datetime.fromtimestamp(
-                        cached_path.stat().st_mtime
-                    ).isoformat(),
+                    fetched_at=datetime.fromtimestamp(cached_path.stat().st_mtime).isoformat(),
                     sha256=self._sha256(cached_path),
                     resolution_arcsec=request.resolution,
                     version=request.version,
@@ -214,9 +210,7 @@ class ETOPOFetcher:
             citation=ETOPO_CITATION,
         )
 
-    def _check_cache(
-        self, resolution: int, version: str, output_format: str
-    ) -> ETOPOFetchResult | None:
+    def _check_cache(self, resolution: int, version: str, output_format: str) -> ETOPOFetchResult | None:
         """Check local cache for a matching ETOPO file."""
         pattern = f"etopo2022_{resolution}s_{version}*"
         matches = list(self.cache_dir.glob(pattern))

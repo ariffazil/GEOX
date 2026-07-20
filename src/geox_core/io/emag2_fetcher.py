@@ -98,9 +98,7 @@ class EMAG2Fetcher:
     """
 
     def __init__(self, cache_dir: str | None = None):
-        self.cache_dir = Path(cache_dir or os.environ.get(
-            "GEOX_EMAG2_CACHE_DIR", "/root/.cache/geox/emag2"
-        ))
+        self.cache_dir = Path(cache_dir or os.environ.get("GEOX_EMAG2_CACHE_DIR", "/root/.cache/geox/emag2"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_EMAG2_OFFLINE", "1") != "0"
 
@@ -224,10 +222,7 @@ class ICGEMFetcher:
         ICGEMGravityModel(
             name="XGM2019",
             source_uri=f"{ICGEM_BASE_URL}",
-            citation=(
-                "Zingerle et al. (2020). The experimental gravity field model "
-                "XGM2019. GFZ Potsdam."
-            ),
+            citation=("Zingerle et al. (2020). The experimental gravity field model XGM2019. GFZ Potsdam."),
         ),
     ]
 

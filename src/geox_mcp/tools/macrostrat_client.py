@@ -70,6 +70,7 @@ SE_ASIA_HOTSPOTS: list[dict[str, Any]] = [
 
 # ── Cache Layer ────────────────────────────────────────────────────────────────
 
+
 def _init_cache_db() -> None:
     """Create persistent SQLite cache if it doesn't exist."""
     _CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -118,8 +119,7 @@ def _get_from_persistent_cache(cache_key: str) -> Any | None:
     return None
 
 
-def _set_persistent_cache(cache_key: str, endpoint: str, params: dict[str, Any],
-                          response: Any, ttl: float = 86400.0) -> None:
+def _set_persistent_cache(cache_key: str, endpoint: str, params: dict[str, Any], response: Any, ttl: float = 86400.0) -> None:
     """Write to persistent SQLite cache."""
     try:
         with sqlite3.connect(str(_CACHE_DB)) as conn:
@@ -127,8 +127,7 @@ def _set_persistent_cache(cache_key: str, endpoint: str, params: dict[str, Any],
                 """INSERT OR REPLACE INTO macrostrat_cache
                    (cache_key, endpoint, params, response, cached_at, ttl)
                    VALUES (?, ?, ?, ?, ?, ?)""",
-                (cache_key, endpoint, json.dumps(params, sort_keys=True, default=str),
-                 json.dumps(response), time.time(), ttl),
+                (cache_key, endpoint, json.dumps(params, sort_keys=True, default=str), json.dumps(response), time.time(), ttl),
             )
             conn.commit()
     except Exception as exc:
@@ -136,6 +135,7 @@ def _set_persistent_cache(cache_key: str, endpoint: str, params: dict[str, Any],
 
 
 # ── Macrostrat Client ──────────────────────────────────────────────────────────
+
 
 class MacrostratClient:
     """Dedicated client for the Macrostrat API v2.
@@ -155,8 +155,9 @@ class MacrostratClient:
 
     # ── Core HTTP ────────────────────────────────────────────────────────
 
-    async def _request(self, endpoint: str, params: dict[str, Any] | None = None,
-                       use_cache: bool = True, cache_ttl: float = 86400.0) -> dict[str, Any]:
+    async def _request(
+        self, endpoint: str, params: dict[str, Any] | None = None, use_cache: bool = True, cache_ttl: float = 86400.0
+    ) -> dict[str, Any]:
         """Make a Macrostrat API request with multi-layer caching.
 
         Cache layers (tried in order):
@@ -210,16 +211,20 @@ class MacrostratClient:
 
     # ── Units ────────────────────────────────────────────────────────────
 
-    async def get_units(self, lat: float | None = None, lng: float | None = None,
-                        radius_km: float | None = None,
-                        bbox: tuple[float, float, float, float] | None = None,
-                        col_id: int | None = None,
-                        unit_id: int | None = None,
-                        interval_name: str | None = None,
-                        strat_name_id: int | None = None,
-                        project_id: int | None = None,
-                        all_units: bool = False,
-                        **extra: Any) -> dict[str, Any]:
+    async def get_units(
+        self,
+        lat: float | None = None,
+        lng: float | None = None,
+        radius_km: float | None = None,
+        bbox: tuple[float, float, float, float] | None = None,
+        col_id: int | None = None,
+        unit_id: int | None = None,
+        interval_name: str | None = None,
+        strat_name_id: int | None = None,
+        project_id: int | None = None,
+        all_units: bool = False,
+        **extra: Any,
+    ) -> dict[str, Any]:
         """Get rock units from Macrostrat.
 
         Returns units near a point, within a radius, or in a bbox.
@@ -252,15 +257,19 @@ class MacrostratClient:
 
     # ── Columns ──────────────────────────────────────────────────────────
 
-    async def get_columns(self, lat: float | None = None, lng: float | None = None,
-                          radius_km: float | None = None,
-                          bbox: tuple[float, float, float, float] | None = None,
-                          col_id: int | None = None,
-                          col_name: str | None = None,
-                          col_group: str | None = None,
-                          project_id: int | None = None,
-                          all_columns: bool = False,
-                          **extra: Any) -> dict[str, Any]:
+    async def get_columns(
+        self,
+        lat: float | None = None,
+        lng: float | None = None,
+        radius_km: float | None = None,
+        bbox: tuple[float, float, float, float] | None = None,
+        col_id: int | None = None,
+        col_name: str | None = None,
+        col_group: str | None = None,
+        project_id: int | None = None,
+        all_columns: bool = False,
+        **extra: Any,
+    ) -> dict[str, Any]:
         """Get stratigraphic columns.
 
         Columns define the regional rock packages ordered by age.
@@ -291,14 +300,17 @@ class MacrostratClient:
 
     # ── Geologic Map Units ───────────────────────────────────────────────
 
-    async def get_geologic_units_map(self, lat: float | None = None,
-                                      lng: float | None = None,
-                                      radius_km: float | None = None,
-                                      bbox: tuple[float, float, float, float] | None = None,
-                                      source_id: int | None = None,
-                                      scale: str | None = None,
-                                      all_units: bool = False,
-                                      **extra: Any) -> dict[str, Any]:
+    async def get_geologic_units_map(
+        self,
+        lat: float | None = None,
+        lng: float | None = None,
+        radius_km: float | None = None,
+        bbox: tuple[float, float, float, float] | None = None,
+        source_id: int | None = None,
+        scale: str | None = None,
+        all_units: bool = False,
+        **extra: Any,
+    ) -> dict[str, Any]:
         """Get geologic map polygons (2.5M+ features).
 
         This is Macrostrat's richest spatial dataset — homogenized maps
@@ -333,10 +345,9 @@ class MacrostratClient:
         """Get depositional environments."""
         return await self._request("defs/environments", {"all": all_} if all_ else {})
 
-    async def get_strat_names(self, strat_name: str | None = None,
-                               rank: str | None = None,
-                               all_: bool = False,
-                               limit: int = 50) -> dict[str, Any]:
+    async def get_strat_names(
+        self, strat_name: str | None = None, rank: str | None = None, all_: bool = False, limit: int = 50
+    ) -> dict[str, Any]:
         """Get stratigraphic names lexicon (51k+ entries).
 
         Resolves formation, member, group names to ages, lithology, and hierarchy.
@@ -371,11 +382,14 @@ class MacrostratClient:
 
     # ── Fossils ──────────────────────────────────────────────────────────
 
-    async def get_fossils(self, unit_id: int | None = None,
-                           interval_name: str | None = None,
-                           taxon: str | None = None,
-                           col_id: int | None = None,
-                           limit: int = 50) -> dict[str, Any]:
+    async def get_fossils(
+        self,
+        unit_id: int | None = None,
+        interval_name: str | None = None,
+        taxon: str | None = None,
+        col_id: int | None = None,
+        limit: int = 50,
+    ) -> dict[str, Any]:
         """Get PBDB fossil occurrences matched to Macrostrat units."""
         params: dict[str, Any] = {}
         if unit_id:
@@ -421,15 +435,17 @@ class MacrostratClient:
         result = []
         for feat in features:
             props = feat.get("properties", {})
-            result.append({
-                "col_id": props.get("col_id"),
-                "col_name": props.get("col_name"),
-                "col_group": props.get("col_group"),
-                "lat": props.get("lat"),
-                "lng": props.get("lng"),
-                "col_type": props.get("col_type"),
-                "project_id": props.get("project_id"),
-            })
+            result.append(
+                {
+                    "col_id": props.get("col_id"),
+                    "col_name": props.get("col_name"),
+                    "col_group": props.get("col_group"),
+                    "lat": props.get("lat"),
+                    "lng": props.get("lng"),
+                    "col_type": props.get("col_type"),
+                    "project_id": props.get("project_id"),
+                }
+            )
         return result
 
     # ── Attribution ──────────────────────────────────────────────────────
@@ -494,24 +510,27 @@ class MacrostratClient:
             try:
                 # Units near basin
                 units = await self.get_units(
-                    lat=hotspot["lat"], lng=hotspot["lng"],
+                    lat=hotspot["lat"],
+                    lng=hotspot["lng"],
                     radius_km=hotspot["radius_km"],
                 )
                 unit_count = len(self.get_units_summary(units))
                 # Geologic map polygons
                 maps = await self.get_geologic_units_map(
-                    lat=hotspot["lat"], lng=hotspot["lng"],
+                    lat=hotspot["lat"],
+                    lng=hotspot["lng"],
                     radius_km=hotspot["radius_km"],
                 )
-                results["warmed"].append({
-                    "basin": hotspot["name"],
-                    "lat": hotspot["lat"],
-                    "lng": hotspot["lng"],
-                    "units_found": unit_count,
-                    "maps_found": len(maps.get("success", {}).get("data", [])),
-                })
-                logger.info("SE Asia cache warm: %s = %d units",
-                            hotspot["name"], unit_count)
+                results["warmed"].append(
+                    {
+                        "basin": hotspot["name"],
+                        "lat": hotspot["lat"],
+                        "lng": hotspot["lng"],
+                        "units_found": unit_count,
+                        "maps_found": len(maps.get("success", {}).get("data", [])),
+                    }
+                )
+                logger.info("SE Asia cache warm: %s = %d units", hotspot["name"], unit_count)
             except Exception as exc:
                 results["errors"].append({"basin": hotspot["name"], "error": str(exc)})
                 logger.warning("SE Asia cache warm FAIL: %s: %s", hotspot["name"], exc)

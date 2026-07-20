@@ -69,12 +69,11 @@ class ProcessStateEdge(BaseModel):
     to_state: ProcessState = Field(description="Ending process state")
     edge_kind: EdgeKind = Field(default=EdgeKind.unknown)
     probability: float = Field(
-        ge=0.0, le=1.0,
+        ge=0.0,
+        le=1.0,
         description="Transition probability (per Myr or per unit time, calibration pending)",
     )
-    time_duration_myr: float | None = Field(
-        default=None, ge=0.0, description="Typical duration of this transition in Myr"
-    )
+    time_duration_myr: float | None = Field(default=None, ge=0.0, description="Typical duration of this transition in Myr")
     evidence_refs: list[str] = Field(
         default_factory=list, description="Artifact refs supporting this edge (per Claim 2 / Claim 3)"
     )
@@ -273,19 +272,11 @@ class ProcessStateGraph(BaseModel):
 
         Returns list of edges where from_state matches.
         """
-        return [
-            edge
-            for edge in self.edges
-            if _states_match(edge.from_state, from_state)
-        ]
+        return [edge for edge in self.edges if _states_match(edge.from_state, from_state)]
 
     def find_incoming(self, to_state: ProcessState) -> list[ProcessStateEdge]:
         """Find all edges terminating at a given ProcessState."""
-        return [
-            edge
-            for edge in self.edges
-            if _states_match(edge.to_state, to_state)
-        ]
+        return [edge for edge in self.edges if _states_match(edge.to_state, to_state)]
 
     def has_been_molten_reachable(
         self,

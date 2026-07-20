@@ -148,9 +148,15 @@ class DevitoAdapter:
         # p = dev.Function(name="p", grid=grid, dtype=np.float32)  # not used here
 
         # Source (Ricker wavelet)
-        dev.PointSource(name="src", grid=grid, coordinates=np.array([
-            [nx * spacing[0] / 2, nz * spacing[1] / 2]  # center source
-        ]))
+        dev.PointSource(
+            name="src",
+            grid=grid,
+            coordinates=np.array(
+                [
+                    [nx * spacing[0] / 2, nz * spacing[1] / 2]  # center source
+                ]
+            ),
+        )
         # Devito TimeFunction update
         pde = dev.Eq(u.dt2 - vp**2 * u.laplace)
         stencil = dev.solve(pde, u.forward)
@@ -181,21 +187,25 @@ class DevitoAdapter:
                 "library_version": _DEVITO_VERSION,
             }
 
-        v_model_hash = _sha256_params({
-            "vp_shape": list(vp.shape),
-            "vp_max": float(np.max(vp)),
-            "vp_min": float(np.min(vp)),
-        })
+        v_model_hash = _sha256_params(
+            {
+                "vp_shape": list(vp.shape),
+                "vp_max": float(np.max(vp)),
+                "vp_min": float(np.min(vp)),
+            }
+        )
 
-        params_hash = _sha256_params({
-            "method": "acoustic_2d",
-            "shape": shape,
-            "spacing": spacing,
-            "dt_ms": dt_ms,
-            "n_steps": n_steps,
-            "wavelet_freq_hz": wavelet_freq_hz,
-            "wavelet_type": wavelet_type,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "acoustic_2d",
+                "shape": shape,
+                "spacing": spacing,
+                "dt_ms": dt_ms,
+                "n_steps": n_steps,
+                "wavelet_freq_hz": wavelet_freq_hz,
+                "wavelet_type": wavelet_type,
+            }
+        )
 
         return {
             "status": "COMPUTED",
@@ -261,6 +271,7 @@ class DevitoAdapter:
 
         # Ricker wavelet
         import scipy.signal as signal
+
         if wavelet_type == "ricker":
             tw = 0.1
             w = signal.ricker(n_samples, wavelet_freq_hz * tw)
@@ -273,12 +284,14 @@ class DevitoAdapter:
         # Convolve reflectivity with wavelet
         synth = np.convolve(rc, w, mode="same")[:n_samples]
 
-        params_hash = _sha256_params({
-            "n_layers": len(vp),
-            "wavelet_freq_hz": wavelet_freq_hz,
-            "wavelet_type": wavelet_type,
-            "dt_ms": dt_ms,
-        })
+        params_hash = _sha256_params(
+            {
+                "n_layers": len(vp),
+                "wavelet_freq_hz": wavelet_freq_hz,
+                "wavelet_type": wavelet_type,
+                "dt_ms": dt_ms,
+            }
+        )
 
         return {
             "status": "COMPUTED",

@@ -18,6 +18,7 @@ from typing import Any
 
 try:
     from mcp_ui_server import UIMetadataKey, create_ui_resource
+
     _MCP_UI_SERVER_AVAILABLE = True
 except ImportError:
     _MCP_UI_SERVER_AVAILABLE = False
@@ -107,9 +108,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
             "properties": {
                 "skills": {"type": "array", "description": "List of registered earth intelligence skills"},
                 "domains": {"type": "array", "description": "List of skill domains"},
-                "count": {"type": "integer", "description": "Total number of skills"}
-            }
-        }
+                "count": {"type": "integer", "description": "Total number of skills"},
+            },
+        },
     },
 }
 
@@ -122,9 +123,12 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
             "basin_name": {"type": "string", "description": "Basin name"},
             "observed": {"type": "object", "description": "OBS-class evidence: stratigraphy, heat flow, structural style"},
             "derived": {"type": "object", "description": "DER-class: subsidence curves, thermal maturity, mass balance"},
-            "interpreted": {"type": "object", "description": "INT-class: play fairways, risk register, petroleum system elements"},
-            "contradictions": {"type": "array", "description": "Detected contradictions in basin model"}
-        }
+            "interpreted": {
+                "type": "object",
+                "description": "INT-class: play fairways, risk register, petroleum system elements",
+            },
+            "contradictions": {"type": "array", "description": "Detected contradictions in basin model"},
+        },
     },
     "geox_claim": {
         "type": "object",
@@ -135,8 +139,8 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
             "filters_run": {"type": "integer"},
             "filters_passed": {"type": "integer"},
             "filters_failed": {"type": "integer"},
-            "truth_class": {"type": "string", "enum": ["OBS", "DER", "INT", "SPEC"]}
-        }
+            "truth_class": {"type": "string", "enum": ["OBS", "DER", "INT", "SPEC"]},
+        },
     },
     "geox_falsify": {
         "type": "object",
@@ -145,13 +149,19 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
             "filters_run": {"type": "integer"},
             "filters_passed": {"type": "integer"},
             "filters_failed": {"type": "integer"},
-            "results": {"type": "array", "items": {"type": "object", "properties": {
-                "filter_id": {"type": "string"},
-                "filter_name": {"type": "string"},
-                "verdict": {"type": "string"},
-                "findings": {"type": "array"}
-            }}}
-        }
+            "results": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "filter_id": {"type": "string"},
+                        "filter_name": {"type": "string"},
+                        "verdict": {"type": "string"},
+                        "findings": {"type": "array"},
+                    },
+                },
+            },
+        },
     },
     "geox_prospect": {
         "type": "object",
@@ -160,8 +170,8 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
             "volumetrics": {"type": "object", "description": "P10/P50/P90 volume estimates"},
             "risk": {"type": "object", "description": "Geological risk factors (trap, reservoir, seal, charge, timing)"},
             "pos": {"type": "number", "description": "Probability of Success"},
-            "evoi": {"type": "number", "description": "Expected Value of Information"}
-        }
+            "evoi": {"type": "number", "description": "Expected Value of Information"},
+        },
     },
     "geox_petrophysics": {
         "type": "object",
@@ -169,8 +179,8 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
             "vsh": {"type": "array", "description": "Volume of shale log"},
             "porosity": {"type": "array", "description": "Effective porosity log"},
             "sw": {"type": "array", "description": "Water saturation log"},
-            "net_pay": {"type": "object", "description": "Net pay summary: gross, net, N:G ratio"}
-        }
+            "net_pay": {"type": "object", "description": "Net pay summary: gross, net, N:G ratio"},
+        },
     },
     "geox_seismic_compute": {
         "type": "object",
@@ -178,21 +188,27 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
             "synthetic_trace": {"type": "array", "description": "Synthetic seismogram amplitudes"},
             "well_tie_correlation": {"type": "number", "description": "Cross-correlation coefficient"},
             "time_depth_table": {"type": "array", "description": "T-D pairs"},
-            "attributes": {"type": "object", "description": "Computed seismic attributes"}
-        }
+            "attributes": {"type": "object", "description": "Computed seismic attributes"},
+        },
     },
     "geox_list_apps": {
         "type": "object",
         "properties": {
-            "apps": {"type": "array", "items": {"type": "object", "properties": {
-                "app_id": {"type": "string"},
-                "uri": {"type": "string"},
-                "title": {"type": "string"},
-                "description": {"type": "string"}
-            }}},
+            "apps": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "app_id": {"type": "string"},
+                        "uri": {"type": "string"},
+                        "title": {"type": "string"},
+                        "description": {"type": "string"},
+                    },
+                },
+            },
             "count": {"type": "integer"},
-            "standard": {"type": "string", "const": "SEP-1865"}
-        }
+            "standard": {"type": "string", "const": "SEP-1865"},
+        },
     },
 }
 
@@ -305,20 +321,24 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
     try:
         if resource_type == "externalUrl":
             # Heavy apps (Cesium, MapLibre) — use external URL to avoid embedding 5-20MB
-            resource = create_ui_resource({
-                "uri": app["uri"],
-                "content": {"type": "externalUrl", "externalUrl": app["external_url"]},
-                "encoding": "text",
-            })
+            resource = create_ui_resource(
+                {
+                    "uri": app["uri"],
+                    "content": {"type": "externalUrl", "externalUrl": app["external_url"]},
+                    "encoding": "text",
+                }
+            )
         else:
             # Lightweight apps — embed HTML directly
             if html_content is None:
                 html_content = app.get("html_fallback", f"<h1>{app['title']}</h1><p>{app['description']}</p>")
-            resource = create_ui_resource({
-                "uri": app["uri"],
-                "content": {"type": "rawHtml", "htmlString": html_content},
-                "encoding": "text",
-            })
+            resource = create_ui_resource(
+                {
+                    "uri": app["uri"],
+                    "content": {"type": "rawHtml", "htmlString": html_content},
+                    "encoding": "text",
+                }
+            )
 
         return {
             "type": "resource",

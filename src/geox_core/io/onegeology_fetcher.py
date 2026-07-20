@@ -26,8 +26,7 @@ logger = logging.getLogger("geox.io.onegeology")
 ONEGEOLOGY_BASE = "https://www.onegeology.org"
 ONEGEOLOGY_WMS_CATALOG = "https://portal.onegeology.org/OnegeologyGlobal/MapServer/WMSServer"
 ONEGEOLOGY_CITATION = (
-    "OneGeology (2024). Global Geological Maps Portal. "
-    "https://www.onegeology.org. Various national survey licenses."
+    "OneGeology (2024). Global Geological Maps Portal. https://www.onegeology.org. Various national survey licenses."
 )
 
 
@@ -60,9 +59,12 @@ class OneGeologyFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return GeologyMapResult(
-                ok=True, mode="offline_stub",
+                ok=True,
+                mode="offline_stub",
                 features=[{"properties": {"LITHOLOGY": "Sandstone", "AGE": "Miocene"}}],
-                count=1, wms_url=ONEGEOLOGY_WMS_CATALOG, fetched_at=now,
-                note="Offline stub. Live requires WMS GetMap/GetFeatureInfo."
+                count=1,
+                wms_url=ONEGEOLOGY_WMS_CATALOG,
+                fetched_at=now,
+                note="Offline stub. Live requires WMS GetMap/GetFeatureInfo.",
             )
         return GeologyMapResult(ok=False, mode="live", note="Live requires WMS client.", fetched_at=now)
