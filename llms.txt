@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (36 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (30 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from src/geox_mcp/tools_manifest.yaml
 
@@ -29,17 +29,11 @@
 23. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
 24. **geox_to_wealth_bridge**: Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.
 25. **geox_map_export_package**: Map export: package map layers and annotations into portable formats.
-26. **geox_seismic_cognition**: Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.
-27. **geox_visual_understand**: Extract visual patterns from seismic section images using deep learning.
-28. **geox_visual_generate_hypotheses**: Generate geological hypotheses across discontinuity gaps in seismic data.
-29. **geox_map_layers_list**: List available map layers and their spatial extents.
-30. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
-31. **geox_map_render_preview**: Render preview of map scene for quality review before export.
-32. **geox_simulate_accommodation**: simulate accommodation
-33. **geox_simulate_sequences**: simulate sequences
-34. **geox_tie_receipt**: Well-to-seismic tie receipt: structured record of tie quality metrics and calibration status. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]
-35. **geox_tie_preflight**: Well-to-seismic tie preflight check: verify data completeness and quality before tie computation. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]
-36. **geox_wavelet_extract_least_squares**: Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]
+26. **geox_visual_understand**: Extract visual patterns from seismic section images using deep learning.
+27. **geox_visual_generate_hypotheses**: Generate geological hypotheses across discontinuity gaps in seismic data.
+28. **geox_map_layers_list**: List available map layers and their spatial extents.
+29. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
+30. **geox_map_render_preview**: Render preview of map scene for quality review before export.
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.

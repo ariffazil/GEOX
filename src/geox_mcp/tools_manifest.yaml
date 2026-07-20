@@ -965,8 +965,8 @@ tools:
   domain: earth.seismic
   axis: reason
   lane: reasoning
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: 'Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.'
   input_schema_source: callable
   annotations:
@@ -1231,8 +1231,8 @@ tools:
   domain: earth.stratigraphy
   axis: reason
   lane: reasoning
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: ''
   input_schema_source: callable
   annotations:
@@ -1269,8 +1269,8 @@ tools:
   domain: earth.stratigraphy
   axis: reason
   lane: reasoning
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: ''
   input_schema_source: callable
   annotations:
@@ -1364,8 +1364,8 @@ tools:
   domain: earth.well
   axis: reason
   lane: evidence
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: 'Well-to-seismic tie receipt: structured record of tie quality metrics and calibration status. [ZEN 2026-07-11
     G1: use geox_seismic_compute modes]'
   input_schema_source: callable
@@ -1384,8 +1384,8 @@ tools:
   domain: earth.well
   axis: reason
   lane: evidence
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: 'Well-to-seismic tie preflight check: verify data completeness and quality before tie computation. [ZEN 2026-07-11
     G1: use geox_seismic_compute modes]'
   input_schema_source: callable
@@ -1463,8 +1463,8 @@ tools:
   domain: earth.seismic
   axis: calibrate
   lane: evidence
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: 'Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN 2026-07-11 G1: use
     geox_seismic_compute modes]'
   input_schema_source: callable

@@ -1,6 +1,6 @@
 {
   "$schema": "https://geox.arif-fazil.com/schemas/apps-manifest/v1.json",
-  "version": "2026.07.20-promoted-12",
+  "version": "2026.07.20-corrected-9promoted",
   "generated_at": "2026-07-20T08:56:37Z",
   "authority": "GEOX public surface \u2014 MCP Apps manifest (machine-generated from CANONICAL_PUBLIC_TOOLS)",
   "seal": "DITEMPA BUKAN DIBERI",
@@ -50,15 +50,11 @@
       "description": "Seismic inline/crossline slices with amplitude attributes, horizon overlay, anomalous contrast detection, wavelet extraction, well ties, cognition review, and visual hypothesis generation. Phase 2 hardened \u2014 MapLibre 4.7.1 integrated.",
       "status": "LIVE",
       "tools": [
-        "geox_seismic_cognition",
         "geox_seismic_compute",
         "geox_seismic_ingest",
         "geox_seismic_interpret",
-        "geox_tie_preflight",
-        "geox_tie_receipt",
         "geox_visual_generate_hypotheses",
-        "geox_visual_understand",
-        "geox_wavelet_extract_least_squares"
+        "geox_visual_understand"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.1.0"
@@ -77,8 +73,6 @@
         "geox_map_layers_list",
         "geox_map_render_preview",
         "geox_sediment_mass_balance",
-        "geox_simulate_accommodation",
-        "geox_simulate_sequences",
         "geox_subsurface_model",
         "geox_thermal_maturity_history"
       ],

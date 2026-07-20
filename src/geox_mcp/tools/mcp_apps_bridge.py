@@ -85,6 +85,36 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "external_url": "https://geox.arif-fazil.com/gui/basin_explorer/",
         "html_fallback": "<h1>GEOX Basin Explorer</h1><p>Interactive basin maps. Open in cockpit.</p>",
     },
+    "earth_map": {
+        "uri": "ui://geox/earth-map",
+        "title": "GEOX Earth Map",
+        "description": "Interactive geological map with layer discovery, scene planning, preview rendering, and governed export. 4-verb chain: list→plan→render→export.",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "externalUrl",
+        "external_url": "https://geox.arif-fazil.com/earth",
+        "html_fallback": "<h1>GEOX Earth Map</h1><p>Interactive globe with Macrostrat geology, plate boundaries, and live earthquakes. Open at arif-fazil.com/earth.</p>",
+    },
+    "prospect_studio": {
+        "uri": "ui://geox/prospect-studio",
+        "title": "GEOX Prospect Studio",
+        "description": "Prospect evaluation with structure, closures, risk, and volume analysis",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "externalUrl",
+        "external_url": "https://geox.arif-fazil.com/apps/prospect-ui/",
+        "html_fallback": "<h1>GEOX Prospect Studio</h1><p>Prospect evaluation dashboard. Open in cockpit.</p>",
+    },
+    "risk_console": {
+        "uri": "ui://geox/risk-console",
+        "title": "GEOX Risk Console",
+        "description": "Decision log, evidence review, hold queue, and export for governed decisions",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "externalUrl",
+        "external_url": "https://geox.arif-fazil.com/apps/judge-console/",
+        "html_fallback": "<h1>GEOX Risk Console</h1><p>Claim/evidence review dashboard with 888_HOLD gating. Open in cockpit.</p>",
+    },
     "visual_hub": {
         "uri": "ui://geox/visual-hub",
         "title": "GEOX Visual Output Hub",
@@ -291,6 +321,9 @@ _app_to_tool: dict[str, str] = {
     "judge_console": "geox_falsify",
     "geoprobe": "geox_prospect",
     "basin_explorer": "geox_basin",
+    "earth_map": "geox_map_layers_list",
+    "prospect_studio": "geox_prospect",
+    "risk_console": "geox_claim",
 }
 
 
