@@ -333,6 +333,8 @@ async def geox_layers_index() -> str:
     if reg is None:
         return json.dumps({"error": "earth_layer_registry unavailable", "layers": []})
     layers = reg.list()
+    from contracts.schemas.earth_layer_registry import MAP_PURPOSE_ALLOW  # noqa: F811
+
     return json.dumps(
         {
             "uri_template": "geox://layers/{layer_id}/package",
@@ -340,13 +342,13 @@ async def geox_layers_index() -> str:
             "layers": [
                 {
                     "layer_id": lid,
-                    "title": layer.title,
+                    "title": layer.name,
                     "license": layer.license.value,
                     "truth_class": layer.truth_class.value,
                     "bbox": [layer.bbox_west, layer.bbox_south, layer.bbox_east, layer.bbox_north],
-                    "map_purposes_allowed": [p.value for p, ok in layer.map_purpose_allow.items() if ok],
+                    "map_purposes_allowed": [p for p in MAP_PURPOSE_ALLOW if layer.allowed_for(p)],
                     "f6_maruah_flagged": layer.community_territory_flag,
-                    "f11_audit_id": layer.audit_id,
+                    "f11_audit_id": f"geox.layer.audit.{layer.layer_id}",
                 }
                 for lid, layer in layers.items()
             ],
