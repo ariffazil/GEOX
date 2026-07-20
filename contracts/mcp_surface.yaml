@@ -55,12 +55,12 @@ authority:
     - deployment_substrate
     - final_seal
 
-canonical_tool_count: 24
-internal_tool_count: 34
+canonical_tool_count: 30
+internal_tool_count: 30
 canonical_tools:
   # Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
   # Live verification: curl -sf http://localhost:8081/health
-  # Updated: 2026-07-20 by FORGE core fix
+  # Updated: 2026-07-20 (Synchronized 30/30 canonical tools)
   - geox_basin
   - geox_basin_backstrip
   - geox_claim
@@ -72,6 +72,10 @@ canonical_tools:
   - geox_geomechanics
   - geox_gravmag_studio
   - geox_lem_predict
+  - geox_map_export_package
+  - geox_map_layers_list
+  - geox_map_render_preview
+  - geox_map_scene_plan
   - geox_petrophysics
   - geox_prospect
   - geox_sediment_mass_balance
@@ -83,6 +87,8 @@ canonical_tools:
   - geox_surface_status
   - geox_thermal_maturity_history
   - geox_to_wealth_bridge
+  - geox_visual_generate_hypotheses
+  - geox_visual_understand
   - geox_well_desk
   - geox_well_ingest
 
