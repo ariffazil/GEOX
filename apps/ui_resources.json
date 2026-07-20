@@ -1,0 +1,537 @@
+{
+  "version": "2026.07.20",
+  "generated": "2026-07-20T08:45:00Z",
+  "standard": "SEP-1865",
+  "organ": "geox",
+  "apps": [
+    {
+      "app_id": "well_desk",
+      "uri": "ui://geox/well-desk",
+      "title": "GEOX WellDesk",
+      "description": "1D well log viewer with petrophysics, formation tops, and physics9 integration",
+      "external_url": "https://geox.arif-fazil.com/apps/well-desk/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "vsh": {
+            "type": "array",
+            "description": "Volume of shale log"
+          },
+          "porosity": {
+            "type": "array",
+            "description": "Effective porosity log"
+          },
+          "sw": {
+            "type": "array",
+            "description": "Water saturation log"
+          },
+          "net_pay": {
+            "type": "object",
+            "description": "Net pay summary: gross, net, N:G ratio"
+          }
+        }
+      }
+    },
+    {
+      "app_id": "seismic_vision",
+      "uri": "ui://geox/seismic-vision",
+      "title": "GEOX Seismic Vision",
+      "description": "2D/3D seismic viewer with inline/xline, horizon picking, and attribute analysis",
+      "external_url": "https://geox.arif-fazil.com/gui/seismic_viewer/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "synthetic_trace": {
+            "type": "array",
+            "description": "Synthetic seismogram amplitudes"
+          },
+          "well_tie_correlation": {
+            "type": "number",
+            "description": "Cross-correlation coefficient"
+          },
+          "time_depth_table": {
+            "type": "array",
+            "description": "T-D pairs"
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Computed seismic attributes"
+          }
+        }
+      }
+    },
+    {
+      "app_id": "earth_volume",
+      "uri": "ui://geox/earth-volume",
+      "title": "GEOX Earth Volume",
+      "description": "3D subsurface volume renderer with Cesium globe integration",
+      "external_url": "https://geox.arif-fazil.com/apps/earth-volume/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "synthetic_trace": {
+            "type": "array",
+            "description": "Synthetic seismogram amplitudes"
+          },
+          "well_tie_correlation": {
+            "type": "number",
+            "description": "Cross-correlation coefficient"
+          },
+          "time_depth_table": {
+            "type": "array",
+            "description": "T-D pairs"
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Computed seismic attributes"
+          }
+        }
+      }
+    },
+    {
+      "app_id": "judge_console",
+      "uri": "ui://geox/judge-console",
+      "title": "GEOX Judge Console",
+      "description": "888 Judge deliberation console with claim review and falsification tracking",
+      "external_url": "https://geox.arif-fazil.com/apps/judge-console/",
+      "resource_type": "rawHtml",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "SURVIVED",
+              "FALSIFIED",
+              "INCONCLUSIVE"
+            ]
+          },
+          "filters_run": {
+            "type": "integer"
+          },
+          "filters_passed": {
+            "type": "integer"
+          },
+          "filters_failed": {
+            "type": "integer"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "filter_id": {
+                  "type": "string"
+                },
+                "filter_name": {
+                  "type": "string"
+                },
+                "verdict": {
+                  "type": "string"
+                },
+                "findings": {
+                  "type": "array"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "app_id": "geoprobe",
+      "uri": "ui://geox/geoprobe",
+      "title": "GEOX GeoProbe",
+      "description": "Multi-dimensional prospect evaluation with risk, volumetrics, and economics",
+      "external_url": "https://geox.arif-fazil.com/apps/prospect-ui/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "prospect_ref": {
+            "type": "string"
+          },
+          "volumetrics": {
+            "type": "object",
+            "description": "P10/P50/P90 volume estimates"
+          },
+          "risk": {
+            "type": "object",
+            "description": "Geological risk factors (trap, reservoir, seal, charge, timing)"
+          },
+          "pos": {
+            "type": "number",
+            "description": "Probability of Success"
+          },
+          "evoi": {
+            "type": "number",
+            "description": "Expected Value of Information"
+          }
+        }
+      }
+    },
+    {
+      "app_id": "basin_explorer",
+      "uri": "ui://geox/basin-explorer",
+      "title": "GEOX Basin Explorer",
+      "description": "Interactive basin analysis with maps, cross-sections, and stratigraphic columns",
+      "external_url": "https://geox.arif-fazil.com/gui/basin_explorer/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "basin_name": {
+            "type": "string",
+            "description": "Basin name"
+          },
+          "observed": {
+            "type": "object",
+            "description": "OBS-class evidence: stratigraphy, heat flow, structural style"
+          },
+          "derived": {
+            "type": "object",
+            "description": "DER-class: subsidence curves, thermal maturity, mass balance"
+          },
+          "interpreted": {
+            "type": "object",
+            "description": "INT-class: play fairways, risk register, petroleum system elements"
+          },
+          "contradictions": {
+            "type": "array",
+            "description": "Detected contradictions in basin model"
+          }
+        }
+      }
+    },
+    {
+      "app_id": "earth_map",
+      "uri": "ui://geox/earth-map",
+      "title": "GEOX Earth Map",
+      "description": "Interactive geological map with layer discovery, scene planning, preview rendering, and governed export. 4-verb chain: list→plan→render→export.",
+      "external_url": "https://geox.arif-fazil.com/earth",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app"
+    },
+    {
+      "app_id": "prospect_studio",
+      "uri": "ui://geox/prospect-studio",
+      "title": "GEOX Prospect Studio",
+      "description": "Prospect evaluation with structure, closures, risk, and volume analysis",
+      "external_url": "https://geox.arif-fazil.com/apps/prospect-ui/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "prospect_ref": {
+            "type": "string"
+          },
+          "volumetrics": {
+            "type": "object",
+            "description": "P10/P50/P90 volume estimates"
+          },
+          "risk": {
+            "type": "object",
+            "description": "Geological risk factors (trap, reservoir, seal, charge, timing)"
+          },
+          "pos": {
+            "type": "number",
+            "description": "Probability of Success"
+          },
+          "evoi": {
+            "type": "number",
+            "description": "Expected Value of Information"
+          }
+        }
+      }
+    },
+    {
+      "app_id": "risk_console",
+      "uri": "ui://geox/risk-console",
+      "title": "GEOX Risk Console",
+      "description": "Decision log, evidence review, hold queue, and export for governed decisions",
+      "external_url": "https://geox.arif-fazil.com/apps/judge-console/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "claim_id": {
+            "type": "string"
+          },
+          "claim_text": {
+            "type": "string"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "SURVIVED",
+              "FALSIFIED",
+              "INCONCLUSIVE"
+            ]
+          },
+          "filters_run": {
+            "type": "integer"
+          },
+          "filters_passed": {
+            "type": "integer"
+          },
+          "filters_failed": {
+            "type": "integer"
+          },
+          "truth_class": {
+            "type": "string",
+            "enum": [
+              "OBS",
+              "DER",
+              "INT",
+              "SPEC"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "app_id": "visual_hub",
+      "uri": "ui://geox/visual-hub",
+      "title": "GEOX Visual Output Hub",
+      "description": "5-in-1 visual dashboard: WellDesk 1D + SeisVis 2D + CubeProbe 3D + TimeLapse 4D + PhysicCore",
+      "external_url": "https://geox.arif-fazil.com/apps/geox-mcp-visual/",
+      "resource_type": "rawHtml",
+      "mime_type": "text/html;profile=mcp-app"
+    },
+    {
+      "app_id": "catalog",
+      "uri": "ui://geox/catalog",
+      "title": "GEOX Skills Catalog",
+      "description": "Searchable registry of 44 earth intelligence skills across 11 domains",
+      "external_url": "https://geox.arif-fazil.com/apps/site/catalog.html",
+      "resource_type": "rawHtml",
+      "mime_type": "text/html;profile=mcp-app"
+    }
+  ],
+  "tool_to_app": {
+    "well_desk": "geox_petrophysics",
+    "seismic_vision": "geox_seismic_compute",
+    "earth_volume": "geox_seismic_compute",
+    "judge_console": "geox_falsify",
+    "geoprobe": "geox_prospect",
+    "basin_explorer": "geox_basin",
+    "earth_map": "geox_map_layers_list",
+    "prospect_studio": "geox_prospect",
+    "risk_console": "geox_claim"
+  },
+  "output_schemas": {
+    "geox_basin": {
+      "type": "object",
+      "properties": {
+        "basin_name": {
+          "type": "string",
+          "description": "Basin name"
+        },
+        "observed": {
+          "type": "object",
+          "description": "OBS-class evidence: stratigraphy, heat flow, structural style"
+        },
+        "derived": {
+          "type": "object",
+          "description": "DER-class: subsidence curves, thermal maturity, mass balance"
+        },
+        "interpreted": {
+          "type": "object",
+          "description": "INT-class: play fairways, risk register, petroleum system elements"
+        },
+        "contradictions": {
+          "type": "array",
+          "description": "Detected contradictions in basin model"
+        }
+      }
+    },
+    "geox_claim": {
+      "type": "object",
+      "properties": {
+        "claim_id": {
+          "type": "string"
+        },
+        "claim_text": {
+          "type": "string"
+        },
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "SURVIVED",
+            "FALSIFIED",
+            "INCONCLUSIVE"
+          ]
+        },
+        "filters_run": {
+          "type": "integer"
+        },
+        "filters_passed": {
+          "type": "integer"
+        },
+        "filters_failed": {
+          "type": "integer"
+        },
+        "truth_class": {
+          "type": "string",
+          "enum": [
+            "OBS",
+            "DER",
+            "INT",
+            "SPEC"
+          ]
+        }
+      }
+    },
+    "geox_falsify": {
+      "type": "object",
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "SURVIVED",
+            "FALSIFIED",
+            "INCONCLUSIVE"
+          ]
+        },
+        "filters_run": {
+          "type": "integer"
+        },
+        "filters_passed": {
+          "type": "integer"
+        },
+        "filters_failed": {
+          "type": "integer"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "filter_id": {
+                "type": "string"
+              },
+              "filter_name": {
+                "type": "string"
+              },
+              "verdict": {
+                "type": "string"
+              },
+              "findings": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "geox_prospect": {
+      "type": "object",
+      "properties": {
+        "prospect_ref": {
+          "type": "string"
+        },
+        "volumetrics": {
+          "type": "object",
+          "description": "P10/P50/P90 volume estimates"
+        },
+        "risk": {
+          "type": "object",
+          "description": "Geological risk factors (trap, reservoir, seal, charge, timing)"
+        },
+        "pos": {
+          "type": "number",
+          "description": "Probability of Success"
+        },
+        "evoi": {
+          "type": "number",
+          "description": "Expected Value of Information"
+        }
+      }
+    },
+    "geox_petrophysics": {
+      "type": "object",
+      "properties": {
+        "vsh": {
+          "type": "array",
+          "description": "Volume of shale log"
+        },
+        "porosity": {
+          "type": "array",
+          "description": "Effective porosity log"
+        },
+        "sw": {
+          "type": "array",
+          "description": "Water saturation log"
+        },
+        "net_pay": {
+          "type": "object",
+          "description": "Net pay summary: gross, net, N:G ratio"
+        }
+      }
+    },
+    "geox_seismic_compute": {
+      "type": "object",
+      "properties": {
+        "synthetic_trace": {
+          "type": "array",
+          "description": "Synthetic seismogram amplitudes"
+        },
+        "well_tie_correlation": {
+          "type": "number",
+          "description": "Cross-correlation coefficient"
+        },
+        "time_depth_table": {
+          "type": "array",
+          "description": "T-D pairs"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Computed seismic attributes"
+        }
+      }
+    },
+    "geox_list_apps": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "app_id": {
+                "type": "string"
+              },
+              "uri": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "count": {
+          "type": "integer"
+        },
+        "standard": {
+          "type": "string",
+          "const": "SEP-1865"
+        }
+      }
+    }
+  }
+}

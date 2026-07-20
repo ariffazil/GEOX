@@ -1,9 +1,9 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-19T17:18:06.517917+00:00",
+  "generated_at": "2026-07-20T08:55:47.484887+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 24,
-  "internal_count": 54,
+  "public_count": 36,
+  "internal_count": 42,
   "public_tools": [
     "geox_well_ingest",
     "geox_petrophysics",
@@ -28,7 +28,19 @@
     "geox_falsify",
     "geox_contradiction_scan",
     "geox_lem_predict",
-    "geox_to_wealth_bridge"
+    "geox_to_wealth_bridge",
+    "geox_map_export_package",
+    "geox_seismic_cognition",
+    "geox_visual_understand",
+    "geox_visual_generate_hypotheses",
+    "geox_map_layers_list",
+    "geox_map_scene_plan",
+    "geox_map_render_preview",
+    "geox_simulate_accommodation",
+    "geox_simulate_sequences",
+    "geox_tie_receipt",
+    "geox_tie_preflight",
+    "geox_wavelet_extract_least_squares"
   ],
   "tools": [
     {
@@ -347,6 +359,162 @@
         "action_class": "OBSERVE",
         "mutation": false,
         "physics_guard_required": false
+      }
+    },
+    {
+      "name": "geox_map_export_package",
+      "domain": "earth.map",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Map export: package map layers and annotations into portable formats.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_seismic_cognition",
+      "domain": "earth.seismic",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_visual_understand",
+      "domain": "earth.seismic",
+      "axis": "observe",
+      "lane": "evidence",
+      "description": "Extract visual patterns from seismic section images using deep learning.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_visual_generate_hypotheses",
+      "domain": "earth.seismic",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Generate geological hypotheses across discontinuity gaps in seismic data.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_map_layers_list",
+      "domain": "earth.map",
+      "axis": "observe",
+      "lane": "discovery",
+      "description": "List available map layers and their spatial extents.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_map_scene_plan",
+      "domain": "earth.map",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Plan map scene composition: layer ordering, zoom, and annotation layout.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_map_render_preview",
+      "domain": "earth.map",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Render preview of map scene for quality review before export.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_simulate_accommodation",
+      "domain": "earth.stratigraphy",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_simulate_sequences",
+      "domain": "earth.stratigraphy",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_tie_receipt",
+      "domain": "earth.well",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Well-to-seismic tie receipt: structured record of tie quality metrics and calibration status. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_tie_preflight",
+      "domain": "earth.well",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Well-to-seismic tie preflight check: verify data completeness and quality before tie computation. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_wavelet_extract_least_squares",
+      "domain": "earth.seismic",
+      "axis": "calibrate",
+      "lane": "evidence",
+      "description": "Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
       }
     }
   ],

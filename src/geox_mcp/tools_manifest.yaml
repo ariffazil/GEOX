@@ -661,8 +661,8 @@ tools:
   domain: earth.map
   axis: compute
   lane: reasoning
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: 'Map export: package map layers and annotations into portable formats.'
   input_schema_source: callable
   annotations:
@@ -965,8 +965,8 @@ tools:
   domain: earth.seismic
   axis: reason
   lane: reasoning
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: 'Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.'
   input_schema_source: callable
   annotations:
@@ -984,8 +984,8 @@ tools:
   domain: earth.seismic
   axis: observe
   lane: evidence
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: Extract visual patterns from seismic section images using deep learning.
   input_schema_source: callable
   annotations:
@@ -1022,8 +1022,8 @@ tools:
   domain: earth.seismic
   axis: reason
   lane: reasoning
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: Generate geological hypotheses across discontinuity gaps in seismic data.
   input_schema_source: callable
   annotations:
@@ -1174,8 +1174,8 @@ tools:
   domain: earth.map
   axis: observe
   lane: discovery
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: List available map layers and their spatial extents.
   input_schema_source: callable
   annotations:
@@ -1193,8 +1193,8 @@ tools:
   domain: earth.map
   axis: reason
   lane: reasoning
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: 'Plan map scene composition: layer ordering, zoom, and annotation layout.'
   input_schema_source: callable
   annotations:
@@ -1212,8 +1212,8 @@ tools:
   domain: earth.map
   axis: compute
   lane: reasoning
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: Render preview of map scene for quality review before export.
   input_schema_source: callable
   annotations:
@@ -1231,8 +1231,8 @@ tools:
   domain: earth.stratigraphy
   axis: reason
   lane: reasoning
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: ''
   input_schema_source: callable
   annotations:
@@ -1269,8 +1269,8 @@ tools:
   domain: earth.stratigraphy
   axis: reason
   lane: reasoning
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: ''
   input_schema_source: callable
   annotations:
@@ -1364,8 +1364,8 @@ tools:
   domain: earth.well
   axis: reason
   lane: evidence
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: 'Well-to-seismic tie receipt: structured record of tie quality metrics and calibration status. [ZEN 2026-07-11
     G1: use geox_seismic_compute modes]'
   input_schema_source: callable
@@ -1384,8 +1384,8 @@ tools:
   domain: earth.well
   axis: reason
   lane: evidence
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: 'Well-to-seismic tie preflight check: verify data completeness and quality before tie computation. [ZEN 2026-07-11
     G1: use geox_seismic_compute modes]'
   input_schema_source: callable
@@ -1463,8 +1463,8 @@ tools:
   domain: earth.seismic
   axis: calibrate
   lane: evidence
-  face: internal
-  visibility: internal
+  face: surface
+  visibility: public
   description: 'Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN 2026-07-11 G1: use
     geox_seismic_compute modes]'
   input_schema_source: callable
