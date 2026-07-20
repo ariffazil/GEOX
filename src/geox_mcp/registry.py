@@ -28,17 +28,13 @@ GHOST_TOOLS: set[str] = {
     "geox_cognitive_rank_hypotheses",
     "geox_forbidden_claims_scan",
     "geox_geological_cognition_run",
-    "geox_macrostrat_calibrate",
-    "geox_map_export_package",
-    "geox_panel_d_render",
+    "geox_macrostrat_calibrate",    "geox_panel_d_render",
     "geox_panel_d_render_mcp",
     "geox_physical_reality_interpret",
     "geox_render_audit",
     "geox_rsi_interpret",
     "geox_segy_audit",
-    "geox_segy_trace_audit",
-    "geox_seismic_cognition",
-    "geox_well_desurvey",
+    "geox_segy_trace_audit",    "geox_well_desurvey",
 }
 GHOST_COUNT = len(GHOST_TOOLS)
 

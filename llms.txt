@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (15 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (36 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from src/geox_mcp/tools_manifest.yaml
 
@@ -19,6 +19,27 @@
 13. **geox_gravmag_studio**: Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.
 14. **geox_well_desk**: Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.
 15. **geox_surface_status**: Federation-standard registry probe: tool discovery and health status.
+16. **geox_evidence**: Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.
+17. **geox_basin_backstrip**: 1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.
+18. **geox_sediment_mass_balance**: Source-to-sink sediment volume and mass accounting. Peters 2012 framework.
+19. **geox_thermal_maturity_history**: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
+20. **geox_claim_graph_evaluate**: Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.
+21. **geox_falsify**: Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.
+22. **geox_contradiction_scan**: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
+23. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
+24. **geox_to_wealth_bridge**: Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.
+25. **geox_map_export_package**: Map export: package map layers and annotations into portable formats.
+26. **geox_seismic_cognition**: Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.
+27. **geox_visual_understand**: Extract visual patterns from seismic section images using deep learning.
+28. **geox_visual_generate_hypotheses**: Generate geological hypotheses across discontinuity gaps in seismic data.
+29. **geox_map_layers_list**: List available map layers and their spatial extents.
+30. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
+31. **geox_map_render_preview**: Render preview of map scene for quality review before export.
+32. **geox_simulate_accommodation**: simulate accommodation
+33. **geox_simulate_sequences**: simulate sequences
+34. **geox_tie_receipt**: Well-to-seismic tie receipt: structured record of tie quality metrics and calibration status. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]
+35. **geox_tie_preflight**: Well-to-seismic tie preflight check: verify data completeness and quality before tie computation. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]
+36. **geox_wavelet_extract_least_squares**: Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.

@@ -8,7 +8,7 @@
   "paths": {
     "/mcp": {
       "post": {
-        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint. x-mcp-tools MUST equal the 24 ZEN-24 canonical public tools.",
+        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint. x-mcp-tools MUST equal the 15 ZEN-15 canonical public tools.",
         "operationId": "mcpEndpoint",
         "summary": "MCP JSON-RPC 2.0 endpoint",
         "x-mcp-tools": [
@@ -433,90 +433,6 @@
             }
           },
           {
-            "axis": "compute",
-            "description": "1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.",
-            "domain": "earth.basin",
-            "lane": "reasoning",
-            "name": "geox_basin_backstrip",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "reason",
-            "description": "Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.",
-            "domain": "governance",
-            "lane": "judgment",
-            "name": "geox_claim_graph_evaluate",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "reason",
-            "description": "Scan claims for contradictions using 13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE).",
-            "domain": "governance",
-            "lane": "judgment",
-            "name": "geox_contradiction_scan",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
             "axis": "reason",
             "description": "Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.",
             "domain": "governance.evidence",
@@ -545,39 +461,11 @@
             }
           },
           {
-            "axis": "reason",
-            "description": "Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right.",
-            "domain": "governance",
-            "lane": "judgment",
-            "name": "geox_falsify",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "reason",
-            "description": "LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie).",
-            "domain": "earth.inference",
+            "axis": "compute",
+            "description": "1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.",
+            "domain": "earth.basin",
             "lane": "reasoning",
-            "name": "geox_lem_predict",
+            "name": "geox_basin_backstrip",
             "parameters": {
               "properties": {
                 "actor_id": {
@@ -634,6 +522,118 @@
             "domain": "earth.basin",
             "lane": "reasoning",
             "name": "geox_thermal_maturity_history",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.",
+            "domain": "governance",
+            "lane": "judgment",
+            "name": "geox_claim_graph_evaluate",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Popperian falsification engine \u2014 Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL \u2192 rejected. All PASS \u2192 PROCEED to 888_JUDGE.",
+            "domain": "governance",
+            "lane": "judgment",
+            "name": "geox_falsify",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL \u2192888_HOLD.",
+            "domain": "governance",
+            "lane": "judgment",
+            "name": "geox_contradiction_scan",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "LEM inference \u2014 predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.",
+            "domain": "earth.inference",
+            "lane": "reasoning",
+            "name": "geox_lem_predict",
             "parameters": {
               "properties": {
                 "actor_id": {

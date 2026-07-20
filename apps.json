@@ -1,8 +1,8 @@
 {
   "$schema": "https://geox.arif-fazil.com/schemas/apps-manifest/v1.json",
-  "version": "2026.07.20",
-  "generated_at": "2026-07-20T08:47:16Z",
-  "authority": "GEOX public surface \u2014 MCP Apps manifest",
+  "version": "2026.07.20-promoted-12",
+  "generated_at": "2026-07-20T08:56:37Z",
+  "authority": "GEOX public surface \u2014 MCP Apps manifest (machine-generated from CANONICAL_PUBLIC_TOOLS)",
   "seal": "DITEMPA BUKAN DIBERI",
   "protocol": "mcp-apps/sep-1865",
   "apps": [
@@ -35,6 +35,7 @@
         "geox_basin",
         "geox_claim",
         "geox_evidence",
+        "geox_map_scene_plan",
         "geox_prospect",
         "geox_to_wealth_bridge"
       ],
@@ -49,9 +50,15 @@
       "description": "Seismic inline/crossline slices with amplitude attributes, horizon overlay, anomalous contrast detection, wavelet extraction, well ties, cognition review, and visual hypothesis generation. Phase 2 hardened \u2014 MapLibre 4.7.1 integrated.",
       "status": "LIVE",
       "tools": [
+        "geox_seismic_cognition",
         "geox_seismic_compute",
         "geox_seismic_ingest",
-        "geox_seismic_interpret"
+        "geox_seismic_interpret",
+        "geox_tie_preflight",
+        "geox_tie_receipt",
+        "geox_visual_generate_hypotheses",
+        "geox_visual_understand",
+        "geox_wavelet_extract_least_squares"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.1.0"
@@ -64,11 +71,14 @@
       "description": "Basin modeling, deep time reconstruction, stratigraphy, sediment routing, and thermal history.",
       "status": "LIVE",
       "tools": [
-        "geox_basin",
         "geox_basin_backstrip",
         "geox_deep_time_state",
         "geox_gravmag_studio",
+        "geox_map_layers_list",
+        "geox_map_render_preview",
         "geox_sediment_mass_balance",
+        "geox_simulate_accommodation",
+        "geox_simulate_sequences",
         "geox_subsurface_model",
         "geox_thermal_maturity_history"
       ],
@@ -83,12 +93,10 @@
       "description": "Constitutional AC risk, claim-tag evidence, prospect evaluation, and kill matrix adjudication console.",
       "status": "LIVE",
       "tools": [
-        "geox_claim",
         "geox_claim_graph_evaluate",
         "geox_contradiction_scan",
-        "geox_evidence",
         "geox_falsify",
-        "geox_prospect"
+        "geox_map_export_package"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
