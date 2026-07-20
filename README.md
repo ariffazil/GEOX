@@ -1,8 +1,8 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-19T17:00Z
-valid_until: 2026-08-19
-federation_release: v2026.07.19-ZEN-CONVERGENCE
+last_verified: 2026-07-20T16:25Z
+valid_until: 2026-08-20
+federation_release: v2026.07.20-ZEN-CONVERGENCE
 live_commit: c2397743
 truth_rule: live :8081/health + tools/list beat any static count in prose
 -->
