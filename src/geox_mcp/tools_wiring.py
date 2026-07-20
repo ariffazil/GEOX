@@ -750,7 +750,7 @@ def register_tools_on(mcp):
     # ── SEISMIC VISION AI — 4 modes (Phase 3.2, 2026-07-06) ────────────────────
     # Cognitive visual AI taxonomy: OBS_IMAGE / DER_RENDER_ENHANCEMENT / GEN_HYPOTHESIS / DER_COGNITIVE_RENDER
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_visual_understand", annotations=_geox_annotations("geox_visual_understand"))
+    @mcp.tool(name="geox_visual_understand", annotations=_geox_annotations("geox_visual_understand"))
     async def _visual_understand(
         arguments: dict[str, Any] | None = None,
         session_id: str | None = None,
@@ -776,7 +776,7 @@ def register_tools_on(mcp):
         args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         return await _impl(**args)
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_visual_generate_hypotheses", annotations=_geox_annotations("geox_visual_generate_hypotheses"))
+    @mcp.tool(name="geox_visual_generate_hypotheses", annotations=_geox_annotations("geox_visual_generate_hypotheses"))
     async def _visual_generate_hypotheses(
         arguments: dict[str, Any] | None = None,
         session_id: str | None = None,
@@ -2567,7 +2567,7 @@ def register_tools_on(mcp):
 
     # ── GEOLOGICAL MAP PIPELINE — 4-Verb Chain (2026-07-02 FORGE) ────────────
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_map_layers_list", annotations=_geox_annotations("geox_map_layers_list"))
+    @mcp.tool(name="geox_map_layers_list", annotations=_geox_annotations("geox_map_layers_list"))
     async def _map_layers_list(
         bbox: list[float],
         theme: str | None = None,
@@ -2581,7 +2581,7 @@ def register_tools_on(mcp):
 
         return await _auto_call(_impl, {"bbox": bbox, "theme": theme, "include_unavailable": include_unavailable})
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_map_scene_plan", annotations=_geox_annotations("geox_map_scene_plan"))
+    @mcp.tool(name="geox_map_scene_plan", annotations=_geox_annotations("geox_map_scene_plan"))
     async def _map_scene_plan(
         bbox: list[float],
         layer_ids: list[str] | None = None,
@@ -2608,7 +2608,7 @@ def register_tools_on(mcp):
             },
         )
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_map_render_preview", annotations=_geox_annotations("geox_map_render_preview"))
+    @mcp.tool(name="geox_map_render_preview", annotations=_geox_annotations("geox_map_render_preview"))
     async def _map_render_preview(
         scene_id: str | None = None,
         bbox: list[float] | None = None,
@@ -2639,7 +2639,7 @@ def register_tools_on(mcp):
             },
         )
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_map_export_package", annotations=_geox_annotations("geox_map_export_package"))
+    @mcp.tool(name="geox_map_export_package", annotations=_geox_annotations("geox_map_export_package"))
     async def _map_export_package(
         scene_plan_id: str,
         formats: list[str] | None = None,
