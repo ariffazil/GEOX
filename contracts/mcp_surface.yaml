@@ -2,8 +2,8 @@ schema_version: 2
 kind: arifos.mcp_surface
 owner_repo: GEOX
 status: contract
-last_verified: "2026-07-16"
-regenerated_by: zen-consolidation
+last_verified: "2026-07-20"
+regenerated_by: forge-core-fix-2026-07-20
 
 runtime_surface:
   primary_transport: streamable_http
@@ -55,25 +55,36 @@ authority:
     - deployment_substrate
     - final_seal
 
-canonical_tool_count: 15
+canonical_tool_count: 24
+internal_tool_count: 34
 canonical_tools:
   # Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
-  # Live verification: curl -sf http://localhost:8081/tools | python3 -m json.tool
+  # Live verification: curl -sf http://localhost:8081/health
+  # Updated: 2026-07-20 by FORGE core fix
+  - geox_basin
+  - geox_basin_backstrip
+  - geox_claim
+  - geox_claim_graph_evaluate
+  - geox_contradiction_scan
+  - geox_deep_time_state
+  - geox_evidence
+  - geox_falsify
+  - geox_geomechanics
+  - geox_gravmag_studio
+  - geox_lem_predict
+  - geox_petrophysics
+  - geox_prospect
+  - geox_sediment_mass_balance
+  - geox_seismic_compute
+  - geox_seismic_ingest
+  - geox_seismic_interpret
+  - geox_sequence
+  - geox_subsurface_model
+  - geox_surface_status
+  - geox_thermal_maturity_history
+  - geox_to_wealth_bridge
+  - geox_well_desk
   - geox_well_ingest
-    - geox_petrophysics
-    - geox_seismic_ingest
-    - geox_seismic_compute
-    - geox_seismic_interpret
-    - geox_subsurface_model
-    - geox_basin
-    - geox_sequence
-    - geox_geomechanics
-    - geox_deep_time_state
-    - geox_claim
-    - geox_prospect
-    - geox_gravmag_studio
-    - geox_well_desk
-    - geox_surface_status
 
 mcp_conformance:
   lifecycle: initialize → initialized → tools/call (enforced by lifecycle gate)

@@ -8,6 +8,7 @@ Modes: horizon_contrast, fault_sticks, volume_frame, blend
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 from typing import Any, Literal
@@ -41,6 +42,7 @@ async def geox_seismic_interpret(
     kwargs = locals().copy()
     if mode == "fault_sticks":
         from geox_mcp.tools.paleoscan_forge import geox_fault_stick_ingest_tool as _impl
+
         return await _impl(
             source_uri=kwargs.get("source_uri", ""),
             source_type=kwargs.get("source_type", "csv"),
@@ -48,6 +50,7 @@ async def geox_seismic_interpret(
 
     if mode == "volume_frame":
         from geox_mcp.tools.paleoscan_forge import geox_volume_frame_tool as _impl
+
         return await _impl(
             action=kwargs.get("action", "get"),
             volume_ref=kwargs.get("volume_ref", ""),
@@ -59,6 +62,7 @@ async def geox_seismic_interpret(
 
     if mode == "blend":
         from geox_mcp.tools.paleoscan_forge import geox_blend_volume_tool as _impl
+
         return await _impl(
             blend_mode=kwargs.get("blend_mode", "alpha"),
             **{k: v for k, v in kwargs.items() if k != "mode"},
@@ -66,4 +70,37 @@ async def geox_seismic_interpret(
 
     # Default: horizon_contrast
     from geox_mcp.tools.horizon_contrast import geox_horizon_contrast_surface as _impl
-    return await _impl(**{k: v for k, v in kwargs.items() if k != "mode"})
+
+    # ZEN fix 2026-07-20: map MCP surface params to impl params.
+    # horizon_contrast_surface expects attribute_data + depth arrays,
+    # not the file-level source_uri/action params. If caller passed
+    # file-level params without computed attribute data, signal clearly.
+    has_attribute_data = "attribute_data" in kwargs and kwargs["attribute_data"] is not None
+    has_source = kwargs.get("source_uri") or kwargs.get("volume_ref")
+
+    if not has_attribute_data:
+        if has_source:
+            return {
+                "ok": False,
+                "error": "horizon_contrast requires pre-computed attribute_data + depth arrays.",
+                "hint": "Use geox_seismic_compute(mode='attribute') first to compute attributes, then pass attribute_data and depth arrays.",
+                "provided_params": {
+                    k: v for k, v in kwargs.items() if k in ("source_uri", "volume_ref", "frame_index", "orientation") and v
+                },
+                "required_params": ["attribute_data", "depth"],
+                "tool": "geox_seismic_interpret",
+            }
+        return {
+            "ok": False,
+            "error": "horizon_contrast requires attribute_data (dict of attribute→array) and depth (list of floats).",
+            "required_params": ["attribute_data", "depth"],
+            "tool": "geox_seismic_interpret",
+        }
+
+    # Filter to only impl-accepted params
+    import inspect as _inspect
+
+    _sig = _inspect.signature(_impl)
+    _accepted = set(_sig.parameters.keys())
+    _filtered = {k: v for k, v in kwargs.items() if k in _accepted and k != "mode"}
+    return await _impl(**_filtered)

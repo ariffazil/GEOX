@@ -695,7 +695,7 @@ async def check_governance(
     tool_name: str,
     arguments: dict[str, Any],
     session_id: str | None = None,
-    actor_id: str = "geox-governed",
+    actor_id: str = "anonymous",
     fail_closed: bool = True,
     is_direct_call: bool = True,
 ) -> tuple[str, JSONResponse | None]:
