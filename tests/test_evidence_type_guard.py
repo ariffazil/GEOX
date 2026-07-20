@@ -121,46 +121,52 @@ except ImportError:  # property-based tests skipped if hypothesis missing
     st = None
 
 
-# Anything JSON-serialisable that *could* be passed as `uncertainty`
-uncertainty_st = st.one_of(
-    st.none(),
-    st.booleans(),
-    st.floats(min_value=0.0, max_value=1.0, allow_nan=False, allow_infinity=False),
-    st.integers(min_value=0, max_value=100),
-    st.text(min_size=1, max_size=16),
-    st.dictionaries(
-        keys=st.sampled_from(["input_null_pct", "p10", "p50", "p90", "band"]),
-        values=st.one_of(
-            st.floats(min_value=0.0, max_value=1.0, allow_nan=False),
-            st.text(max_size=8),
-            st.dictionaries(
-                keys=st.sampled_from(["GR", "NPHI", "RHOB", "RT", "DT"]),
-                values=st.floats(min_value=0.0, max_value=1.0, allow_nan=False),
-                max_size=3,
+if _HYPOTHESIS_AVAILABLE:
+    # Anything JSON-serialisable that *could* be passed as `uncertainty`
+    uncertainty_st = st.one_of(
+        st.none(),
+        st.booleans(),
+        st.floats(min_value=0.0, max_value=1.0, allow_nan=False, allow_infinity=False),
+        st.integers(min_value=0, max_value=100),
+        st.text(min_size=1, max_size=16),
+        st.dictionaries(
+            keys=st.sampled_from(["input_null_pct", "p10", "p50", "p90", "band"]),
+            values=st.one_of(
+                st.floats(min_value=0.0, max_value=1.0, allow_nan=False),
+                st.text(max_size=8),
+                st.dictionaries(
+                    keys=st.sampled_from(["GR", "NPHI", "RHOB", "RT", "DT"]),
+                    values=st.floats(min_value=0.0, max_value=1.0, allow_nan=False),
+                    max_size=3,
+                ),
             ),
+            max_size=3,
         ),
-        max_size=3,
-    ),
-)
+    )
+else:
+    uncertainty_st = None
 
 
-@pytest.mark.skipif(not _HYPOTHESIS_AVAILABLE, reason="hypothesis not installed")
-@given(uncertainty=uncertainty_st, n_samples=st.integers(min_value=0, max_value=5000))
-@settings(max_examples=200, deadline=None)
-def test_property_uncertainty_never_crashes(uncertainty, n_samples):
-    """Whatever shape `uncertainty` takes, _inject_ensemble_residual_evidence
-    must not raise. The whole point of the type guard is fail-safe degradation."""
-    r = {
-        "execution_status": "SUCCESS",
-        "phit_p50": 0.22,
-        "n_samples": n_samples,
-        "uncertainty": uncertainty,
-    }
-    out = _inject_ensemble_residual_evidence(r)
-    # Invariants — output must always have these keys when SUCCESS
-    assert "ensemble" in out
-    assert "residual" in out
-    assert "evidence_density" in out
-    assert "humility_score" in out
-    # null_pct must always be a dict (the type guard's contract)
-    assert isinstance(out["evidence_density"]["null_pct"], dict)
+if _HYPOTHESIS_AVAILABLE:
+    @given(uncertainty=uncertainty_st, n_samples=st.integers(min_value=0, max_value=5000))
+    @settings(max_examples=200, deadline=None)
+    def test_property_uncertainty_never_crashes(uncertainty, n_samples):
+        """Whatever shape `uncertainty` takes, _inject_ensemble_residual_evidence
+        must not raise. The whole point of the type guard is fail-safe degradation."""
+        r = {
+            "execution_status": "SUCCESS",
+            "phit_p50": 0.22,
+            "n_samples": n_samples,
+            "uncertainty": uncertainty,
+        }
+        out = _inject_ensemble_residual_evidence(r)
+        # Invariants — output must always have these keys when SUCCESS
+        assert "ensemble" in out
+        assert "residual" in out
+        assert "evidence_density" in out
+        assert "humility_score" in out
+        # null_pct must always be a dict (the type guard's contract)
+        assert isinstance(out["evidence_density"]["null_pct"], dict)
+else:
+    def test_property_uncertainty_never_crashes():
+        pytest.skip("hypothesis not installed")
