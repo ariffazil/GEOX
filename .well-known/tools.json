@@ -1,7 +1,7 @@
 {
   "$schema": "arifOS/tools-manifest/v2",
-  "canonical_tools": 69,
-  "internal_tools": 54,
+  "canonical_tools": 24,
+  "internal_tools": 34,
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
   "organ": "geox",
   "policy": "ZEN-15: public == plugin export == CANONICAL_PUBLIC_TOOLS (no phantom app names)",
@@ -1053,5 +1053,7 @@
       "version": "2026.07.16"
     }
   ],
-  "version": "2026.07.15"
+  "version": "2026.07.15",
+  "last_verified": "2026-07-20",
+  "regenerated_by": "forge-core-fix"
 }

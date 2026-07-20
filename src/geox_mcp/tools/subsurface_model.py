@@ -7,6 +7,7 @@ Modes: joint_inversion, gravity_magnetic, mt_forward
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 from typing import Any, Literal
@@ -38,20 +39,34 @@ async def geox_subsurface_model(
     kwargs = locals().copy()
     if mode == "gravity_magnetic":
         from geox_mcp.tools.geophysics_nonseismic import geox_gravity_magnetic_forward as _impl
+
         return await _impl(**{k: v for k, v in kwargs.items() if k != "mode"})
 
     if mode == "mt_forward":
         from geox_mcp.tools.multi_physics import geox_mt_forward as _impl
+
         return await _impl(
             layers=kwargs.get("layers"),
             frequencies_hz=kwargs.get("frequencies_hz"),
         )
 
     # Default: joint_inversion
-    from geox_mcp.tools.multi_physics import geox_joint_inversion as _impl
-    return await _impl(
-        observations=kwargs.get("observations"),
-        prior=kwargs.get("prior"),
-        max_iter=kwargs.get("max_iter", 50),
-        tolerance=kwargs.get("tolerance", 0.001),
-    )
+    from geox_mcp.tools.multi_physics import JointInversionRequest, geox_joint_inversion as _impl
+
+    # Construct proper Pydantic request from flat kwargs (ZEN fix 2026-07-20)
+    try:
+        request = JointInversionRequest(
+            observations=kwargs.get("observations") or [],
+            prior=kwargs.get("prior"),
+            max_iter=kwargs.get("max_iter", 50),
+            tolerance=kwargs.get("tolerance", 0.001),
+        )
+        result = await _impl(request)
+        return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
+    except Exception as e:
+        return {
+            "ok": False,
+            "error": f"joint_inversion failed: {e}",
+            "hint": "Provide observations (list of modality dicts) and optional prior state.",
+            "tool": "geox_subsurface_model",
+        }

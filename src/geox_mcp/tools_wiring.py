@@ -3658,25 +3658,29 @@ def register_tools_on(mcp):
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """Litho-Elastic prediction via LEM inference engine."""
-        from geox_mcp.tools.lem_predict import geox_lem_predict as _impl
+        """Litho-Elastic prediction via LEM inference engine.
 
-        args = _safe_forward(
-            _impl,
-            {
-                "target_depth_m": target_depth_m,
-                "basin_context": basin_context,
-                "cube_inline": cube_inline,
-                "lmr_inline": lmr_inline,
-                "use_synth_cube": use_synth_cube,
-                "candidate_ref": candidate_ref,
-                "domain": domain,
-            },
+        Simplified surface: accepts target depth + basin context.
+        Internally constructs LEMPredictRequest for the physics-prior engine.
+        For full curve-based prediction, use the LEM engine directly via
+        geox_petrophysics(mode='lem_inference') with well log data.
+        """
+        from geox_mcp.tools.lem_predict import LEMPredictRequest, geox_lem_predict as _impl
+
+        # Construct a valid minimal request from surface params.
+        # Full-curve prediction requires geox_petrophysics(mode='lem_inference').
+        req = LEMPredictRequest(
+            well_id=candidate_ref or "lem-synthetic",
+            curves={"GR": [75.0], "RT": [5.0], "RHOB": [2.35]},
+            depth_m=[target_depth_m] if target_depth_m else [1500.0],
+            depth_top_m=target_depth_m,
+            depth_bot_m=target_depth_m,
+            basin=basin_context,
             session_id=session_id,
             actor_id=actor_id,
-            trace_id=trace_id,
         )
-        return await _impl(**args)
+        result = await _impl(req)
+        return result if isinstance(result, dict) else result.model_dump(mode="json")
 
     @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
     async def _sediment_mass_balance(
@@ -3745,27 +3749,41 @@ def register_tools_on(mcp):
     @mcp.tool(name="geox_to_wealth_bridge", annotations=_geox_annotations("geox_to_wealth_bridge"))
     async def _to_wealth_bridge(
         prospect_ref: str,
-        eval_mode: str = "npv",
+        npv_usd: float | None = None,
+        irr: float | None = None,
+        breakeven_usd: float | None = None,
         discount_rate: float = 0.10,
-        well_cost_musd: float | None = None,
-        field_size_mmboe: float | None = None,
-        oil_price_usd: float = 70.0,
+        risk_geo: float = 0.0,
+        sigma_market: float = 0.0,
+        sigma_policy: float = 0.0,
+        admissibility: str = "admitted",
+        epistemic_source: str = "ESTIMATE",
+        penalty_infinite: bool = False,
+        carbon_cost_usd: float = 0.0,
+        delay_risk: float = 0.0,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """GEOX→WEALTH governed handoff: prospect evaluation to capital model."""
+        """GEOX→WEALTH governed handoff: prospect economics to capital model."""
         from geox_mcp.tools.wealth_bridge_tool import geox_to_wealth_bridge as _impl
 
         args = _safe_forward(
             _impl,
             {
-                "prospect_ref": prospect_ref,
-                "eval_mode": eval_mode,
+                "prospect_id": prospect_ref,
+                "npv_usd": npv_usd,
+                "irr": irr,
+                "breakeven_usd": breakeven_usd,
                 "discount_rate": discount_rate,
-                "well_cost_musd": well_cost_musd,
-                "field_size_mmboe": field_size_mmboe,
-                "oil_price_usd": oil_price_usd,
+                "risk_geo": risk_geo,
+                "sigma_market": sigma_market,
+                "sigma_policy": sigma_policy,
+                "admissibility": admissibility,
+                "epistemic_source": epistemic_source,
+                "penalty_infinite": penalty_infinite,
+                "carbon_cost_usd": carbon_cost_usd,
+                "delay_risk": delay_risk,
             },
             session_id=session_id,
             actor_id=actor_id,

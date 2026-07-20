@@ -1172,15 +1172,31 @@ async def _geomechanics(
         except (ValueError, TypeError):
             return {"ok": False, "error": f"state is a string but not valid JSON: {state[:200]}"}
 
-    return (
-        await geox_geomechanics(
+    # Guard: derive_moduli requires state with rho, vp, vs
+    if not state or not isinstance(state, dict):
+        return {
+            "ok": False,
+            "tool": "geox_geomechanics",
+            "error": "derive_moduli requires state dict with rho, vp, vs.",
+            "hint": 'Provide state as {"rho": 2300, "vp": 3500, "vs": 2000} for typical sandstone.',
+        }
+
+    try:
+        result = await geox_geomechanics(
             GeomechanicsRequest(
-                state=state or {},
+                state=state,
                 thickness_m=thickness_m,
-                rho_fluid=rho_fluid,
+                rho_fluid=rho_fluid if rho_fluid is not None else 1025.0,
             )
         )
-    ).model_dump(mode="json")
+        return result.model_dump(mode="json")
+    except Exception as e:
+        return {
+            "ok": False,
+            "tool": "geox_geomechanics",
+            "error": f"{type(e).__name__}: {e}",
+            "hint": "Provide state dict with rho, vp, vs for derive_moduli mode.",
+        }
 
 
 # ── W13+ FORGE — A2 GRAVITY SCREEN (evidence lane, no judgment required) ──
