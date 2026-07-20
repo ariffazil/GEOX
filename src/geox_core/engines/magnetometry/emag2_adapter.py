@@ -20,6 +20,7 @@ F9 ANTI-HANTU: EMAG2 at 2' is a MODEL GRID, not raw observation.
   anomaly field, but it has been upward-continued, merged, and filtered.
   Treat as DERIVED, not OBSERVED.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -32,6 +33,7 @@ import numpy as np
 
 try:
     import httpx
+
     HAS_HTTPX = True
 except ImportError:
     HAS_HTTPX = False
@@ -40,19 +42,18 @@ logger = logging.getLogger(__name__)
 
 # ─── Constants ────────────────────────────────────────────────────────────────
 
-EMAG2_ARCGIS_URL = (
-    "https://gis.ngdc.noaa.gov/arcgis/rest/services"
-    "/EMAG2v3/ImageServer/getSamples"
-)
+EMAG2_ARCGIS_URL = "https://gis.ngdc.noaa.gov/arcgis/rest/services/EMAG2v3/ImageServer/getSamples"
 # Default spatial reference: WGS84 (EPSG:4326)
 EMAG2_SR = 4326
 
 
 # ─── Result Schemas ────────────────────────────────────────────────────────────
 
+
 @dataclass(frozen=True)
 class EMAG2SampleResult:
     """Single-point EMAG2 magnetic anomaly value."""
+
     lat: float
     lon: float
     anomaly_nT: float
@@ -69,6 +70,7 @@ class EMAG2SampleResult:
 @dataclass(frozen=True)
 class EMAG2GridResult:
     """EMAG2 magnetic anomaly on a regular grid."""
+
     lats: np.ndarray
     lons: np.ndarray
     anomaly_grid: np.ndarray
@@ -81,6 +83,7 @@ class EMAG2GridResult:
 @dataclass(frozen=True)
 class EMAG2ProfileResult:
     """EMAG2 anomaly values along a profile (for QC against real survey lines)."""
+
     lats: np.ndarray
     lons: np.ndarray
     cumulative_distance_km: np.ndarray
@@ -92,6 +95,7 @@ class EMAG2ProfileResult:
 @dataclass(frozen=True)
 class EMAG2Input:
     """Input specification for EMAG2 queries."""
+
     lat: float
     lon: float
     coordinates: str = "geodetic"  # geodetic | geocentric
@@ -99,28 +103,27 @@ class EMAG2Input:
 
 # ─── Backend Protocol ────────────────────────────────────────────────────────
 
+
 class EMAG2Backend(Protocol):
     """Protocol for EMAG2 data retrieval backends."""
+
     def sample(self, lat: float, lon: float) -> EMAG2SampleResult:
         """Get EMAG2 anomaly at a single lat/lon point."""
         ...
+
     def grid(
-        self,
-        lat_min: float, lat_max: float,
-        lon_min: float, lon_max: float,
-        resolution_arcmin: float = 2.0
+        self, lat_min: float, lat_max: float, lon_min: float, lon_max: float, resolution_arcmin: float = 2.0
     ) -> EMAG2GridResult:
         """Get EMAG2 anomaly grid for a bounding box."""
         ...
-    def profile(
-        self,
-        lats: list[float], lons: list[float]
-    ) -> EMAG2ProfileResult:
+
+    def profile(self, lats: list[float], lons: list[float]) -> EMAG2ProfileResult:
         """Get EMAG2 anomaly along a profile (list of lat/lon waypoints)."""
         ...
 
 
 # ─── Mock Backend ─────────────────────────────────────────────────────────────
+
 
 class MockEMAG2Backend:
     """
@@ -129,10 +132,10 @@ class MockEMAG2Backend:
     F9 ANTI-HANTU: These are NOT real EMAG2 values.
     Use for geometry and integration testing only.
     """
+
     def __init__(self):
         logger.warning(
-            "EMAG2 mock backend active — not real EMAG2 data. "
-            "Install httpx and ensure network access for live EMAG2 queries."
+            "EMAG2 mock backend active — not real EMAG2 data. Install httpx and ensure network access for live EMAG2 queries."
         )
 
     def sample(self, lat: float, lon: float) -> EMAG2SampleResult:
@@ -140,63 +143,53 @@ class MockEMAG2Backend:
         lat_rad = np.radians(lat)
         anomaly = 200.0 * np.sin(lat_rad) * np.cos(np.radians(lon))
         return EMAG2SampleResult(
-            lat=lat, lon=lon,
-            anomaly_nT=float(anomaly),
-            resolution_arcmin=2.0,
-            claim_state="HYPOTHESIS_MOCK"
+            lat=lat, lon=lon, anomaly_nT=float(anomaly), resolution_arcmin=2.0, claim_state="HYPOTHESIS_MOCK"
         )
 
     def grid(
-        self,
-        lat_min: float, lat_max: float,
-        lon_min: float, lon_max: float,
-        resolution_arcmin: float = 2.0
+        self, lat_min: float, lat_max: float, lon_min: float, lon_max: float, resolution_arcmin: float = 2.0
     ) -> EMAG2GridResult:
         n_lat = int((lat_max - lat_min) / (resolution_arcmin / 60.0)) + 1
         n_lon = int((lon_max - lon_min) / (resolution_arcmin / 60.0)) + 1
         lats = np.linspace(lat_min, lat_max, n_lat)
         lons = np.linspace(lon_min, lon_max, n_lon)
-        anomaly_grid = np.array([
-            [
-                float(200.0 * np.sin(np.radians(lat)) * np.cos(np.radians(lon)))
-                for lon in lons
-            ]
-            for lat in lats
-        ])
+        anomaly_grid = np.array(
+            [[float(200.0 * np.sin(np.radians(lat)) * np.cos(np.radians(lon))) for lon in lons] for lat in lats]
+        )
         return EMAG2GridResult(
-            lats=lats, lons=lons, anomaly_grid=anomaly_grid,
-            shape=(n_lat, n_lon), resolution_arcmin=resolution_arcmin,
-            claim_state="HYPOTHESIS_MOCK"
+            lats=lats,
+            lons=lons,
+            anomaly_grid=anomaly_grid,
+            shape=(n_lat, n_lon),
+            resolution_arcmin=resolution_arcmin,
+            claim_state="HYPOTHESIS_MOCK",
         )
 
-    def profile(
-        self,
-        lats: list[float], lons: list[float]
-    ) -> EMAG2ProfileResult:
+    def profile(self, lats: list[float], lons: list[float]) -> EMAG2ProfileResult:
         n = len(lats)
-        anomalies = np.array([
-            float(200.0 * np.sin(np.radians(lat)) * np.cos(np.radians(lon)))
-            for lat, lon in zip(lats, lons, strict=False)
-        ])
+        anomalies = np.array(
+            [float(200.0 * np.sin(np.radians(lat)) * np.cos(np.radians(lon))) for lat, lon in zip(lats, lons, strict=False)]
+        )
         # Compute cumulative distance along profile
         distances = np.zeros(n)
         for i in range(1, n):
-            dlat = np.radians(lats[i] - lats[i-1])
-            dlon = np.radians(lons[i] - lons[i-1])
-            a = np.sin(dlat/2)**2 + np.cos(np.radians(lats[i-1])) * \
-                np.cos(np.radians(lats[i])) * np.sin(dlon/2)**2
-            c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
-            distances[i] = distances[i-1] + 6371.0 * c  # km
+            dlat = np.radians(lats[i] - lats[i - 1])
+            dlon = np.radians(lons[i] - lons[i - 1])
+            a = np.sin(dlat / 2) ** 2 + np.cos(np.radians(lats[i - 1])) * np.cos(np.radians(lats[i])) * np.sin(dlon / 2) ** 2
+            c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+            distances[i] = distances[i - 1] + 6371.0 * c  # km
         return EMAG2ProfileResult(
-            lats=np.array(lats), lons=np.array(lons),
+            lats=np.array(lats),
+            lons=np.array(lons),
             cumulative_distance_km=distances,
             anomaly_profile_nT=anomalies,
             n_points=n,
-            claim_state="HYPOTHESIS_MOCK"
+            claim_state="HYPOTHESIS_MOCK",
         )
 
 
 # ─── Live Backend (NOAA ArcGIS REST) ──────────────────────────────────────────
+
 
 class LiveEMAG2Backend:
     """
@@ -211,12 +204,10 @@ class LiveEMAG2Backend:
       interpolation: Bilinear | NearestNeighbor
       f: json
     """
+
     def __init__(self):
         if not HAS_HTTPX:
-            raise ImportError(
-                "EMAG2 live backend requires httpx. "
-                "Install: pip install httpx"
-            )
+            raise ImportError("EMAG2 live backend requires httpx. Install: pip install httpx")
         self.client = httpx.Client(timeout=30.0)
         logger.info("EMAG2 live backend initialised (NOAA ArcGIS REST)")
 
@@ -240,23 +231,12 @@ class LiveEMAG2Backend:
             value = float(data["samples"][0]["value"])
             data["samples"][0].get("location", {})
             # EMAG2 is in nT — already anomaly
-            return EMAG2SampleResult(
-                lat=lat, lon=lon,
-                anomaly_nT=value,
-                resolution_arcmin=2.0,
-                claim_state="DERIVED"
-            )
+            return EMAG2SampleResult(lat=lat, lon=lon, anomaly_nT=value, resolution_arcmin=2.0, claim_state="DERIVED")
         else:
-            raise ValueError(
-                f"EMAG2 sample returned no data for ({lat}, {lon}). "
-                f"Response: {data}"
-            )
+            raise ValueError(f"EMAG2 sample returned no data for ({lat}, {lon}). Response: {data}")
 
     def grid(
-        self,
-        lat_min: float, lat_max: float,
-        lon_min: float, lon_max: float,
-        resolution_arcmin: float = 2.0
+        self, lat_min: float, lat_max: float, lon_min: float, lon_max: float, resolution_arcmin: float = 2.0
     ) -> EMAG2GridResult:
         """
         Query EMAG2 on a regular grid via envelope query.
@@ -266,10 +246,7 @@ class LiveEMAG2Backend:
         resolution, use profile() with generated waypoints.
         """
         params = {
-            "geometry": json.dumps({
-                "xmin": lon_min, "ymin": lat_min,
-                "xmax": lon_max, "ymax": lat_max
-            }),
+            "geometry": json.dumps({"xmin": lon_min, "ymin": lat_min, "xmax": lon_max, "ymax": lat_max}),
             "geometryType": "esriGeometryEnvelope",
             "sr": EMAG2_SR,
             "returnFirstValueOnly": "false",
@@ -310,17 +287,15 @@ class LiveEMAG2Backend:
             anomaly_grid[lat_to_idx[lat], lon_to_idx[lon]] = val
 
         return EMAG2GridResult(
-            lats=unique_lats, lons=unique_lons,
+            lats=unique_lats,
+            lons=unique_lons,
             anomaly_grid=anomaly_grid,
             shape=anomaly_grid.shape,
             resolution_arcmin=2.0,
-            claim_state="DERIVED"
+            claim_state="DERIVED",
         )
 
-    def profile(
-        self,
-        lats: list[float], lons: list[float]
-    ) -> EMAG2ProfileResult:
+    def profile(self, lats: list[float], lons: list[float]) -> EMAG2ProfileResult:
         """
         Query EMAG2 along a profile defined by waypoints.
 
@@ -331,29 +306,27 @@ class LiveEMAG2Backend:
 
         # Generate dense waypoints along the profile
         import math
+
         dense_lats = [lats[0]]
         dense_lons = [lons[0]]
         for i in range(1, len(lats)):
-            dlat = abs(lats[i] - lats[i-1])
-            dlon = abs(lons[i] - lons[i-1])
+            dlat = abs(lats[i] - lats[i - 1])
+            dlon = abs(lons[i] - lons[i - 1])
             # Estimate number of 1-km steps
             n_steps = max(int(math.sqrt(dlat**2 + dlon**2) * 111.0), 1)
             for j in range(1, n_steps + 1):
                 t = j / n_steps
-                dense_lats.append(lats[i-1] + t * (lats[i] - lats[i-1]))
-                dense_lons.append(lons[i-1] + t * (lons[i] - lons[i-1]))
+                dense_lats.append(lats[i - 1] + t * (lats[i] - lats[i - 1]))
+                dense_lons.append(lons[i - 1] + t * (lons[i] - lons[i - 1]))
 
         # Batch query (ArcGIS limit ~1000 points per request)
         BATCH = 500
         all_anomalies = []
         for batch_start in range(0, len(dense_lats), BATCH):
-            batch_lats = dense_lats[batch_start:batch_start+BATCH]
-            batch_lons = dense_lons[batch_start:batch_start+BATCH]
+            batch_lats = dense_lats[batch_start : batch_start + BATCH]
+            batch_lons = dense_lons[batch_start : batch_start + BATCH]
 
-            geometries = [
-                {"x": lon, "y": lat}
-                for lon, lat in zip(batch_lons, batch_lats, strict=False)
-            ]
+            geometries = [{"x": lon, "y": lat} for lon, lat in zip(batch_lons, batch_lats, strict=False)]
             params = {
                 "geometry": json.dumps(geometries),
                 "geometryType": "esriGeometryPoint",
@@ -372,12 +345,14 @@ class LiveEMAG2Backend:
         n = len(dense_lats)
         distances = np.zeros(n)
         for i in range(1, n):
-            dlat = np.radians(dense_lats[i] - dense_lats[i-1])
-            dlon = np.radians(dense_lons[i] - dense_lons[i-1])
-            a = np.sin(dlat/2)**2 + np.cos(np.radians(dense_lats[i-1])) * \
-                np.cos(np.radians(dense_lats[i])) * np.sin(dlon/2)**2
-            c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
-            distances[i] = distances[i-1] + 6371.0 * c
+            dlat = np.radians(dense_lats[i] - dense_lats[i - 1])
+            dlon = np.radians(dense_lons[i] - dense_lons[i - 1])
+            a = (
+                np.sin(dlat / 2) ** 2
+                + np.cos(np.radians(dense_lats[i - 1])) * np.cos(np.radians(dense_lats[i])) * np.sin(dlon / 2) ** 2
+            )
+            c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+            distances[i] = distances[i - 1] + 6371.0 * c
 
         return EMAG2ProfileResult(
             lats=np.array(dense_lats),
@@ -385,11 +360,12 @@ class LiveEMAG2Backend:
             cumulative_distance_km=distances,
             anomaly_profile_nT=np.array(all_anomalies),
             n_points=n,
-            claim_state="DERIVED"
+            claim_state="DERIVED",
         )
 
 
 # ─── Adapter ──────────────────────────────────────────────────────────────────
+
 
 @dataclass
 class EMAG2Adapter:
@@ -411,6 +387,7 @@ class EMAG2Adapter:
       continued to 4 km altitude equivalent. The 2' grid does NOT
       represent near-surface magnetic variations at <1 km wavelength.
     """
+
     backend: EMAG2Backend = field(default_factory=MockEMAG2Backend)
 
     def is_available(self) -> bool:
@@ -434,17 +411,11 @@ class EMAG2Adapter:
         """
         logger.info(f"EMAG2 sample at ({lat:.4f}, {lon:.4f})")
         result = self.backend.sample(lat, lon)
-        logger.info(
-            f"EMAG2: anomaly={result.anomaly_nT:.1f} nT "
-            f"[{result.claim_state}]"
-        )
+        logger.info(f"EMAG2: anomaly={result.anomaly_nT:.1f} nT [{result.claim_state}]")
         return result
 
     def grid(
-        self,
-        lat_min: float, lat_max: float,
-        lon_min: float, lon_max: float,
-        resolution_arcmin: float = 2.0
+        self, lat_min: float, lat_max: float, lon_min: float, lon_max: float, resolution_arcmin: float = 2.0
     ) -> EMAG2GridResult:
         """
         Get EMAG2 anomaly grid for a bounding box.
@@ -455,15 +426,11 @@ class EMAG2Adapter:
         """
         if (lat_max - lat_min) > 60 or (lon_max - lon_min) > 60:
             logger.warning(
-                "Large EMAG2 query area (>60°). Consider chunking or "
-                "using a lower resolution to avoid ArcGIS timeout."
+                "Large EMAG2 query area (>60°). Consider chunking or using a lower resolution to avoid ArcGIS timeout."
             )
         return self.backend.grid(lat_min, lat_max, lon_min, lon_max, resolution_arcmin)
 
-    def profile(
-        self,
-        lats: list[float], lons: list[float]
-    ) -> EMAG2ProfileResult:
+    def profile(self, lats: list[float], lons: list[float]) -> EMAG2ProfileResult:
         """
         Get EMAG2 anomaly along a survey profile.
 
@@ -483,6 +450,7 @@ class EMAG2Adapter:
 
 _adapter_instance: EMAG2Adapter | None = None
 
+
 def get_adapter() -> EMAG2Adapter:
     """Return the singleton EMAG2Adapter instance."""
     global _adapter_instance
@@ -496,8 +464,5 @@ def get_adapter() -> EMAG2Adapter:
                 _adapter_instance = EMAG2Adapter()
         else:
             _adapter_instance = EMAG2Adapter()
-            logger.warning(
-                "EMAG2Adapter: mock backend (httpx not installed). "
-                "Install with: pip install httpx"
-            )
+            logger.warning("EMAG2Adapter: mock backend (httpx not installed). Install with: pip install httpx")
     return _adapter_instance

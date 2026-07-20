@@ -194,10 +194,10 @@ async def emit_mcp_log(
     # Ops always sees stderr (zen tip 6) — unfiltered for operators
     _stderr_mirror(level_l, message, data)
 
-
     # Protocol channel FREEZE (SEP-2577): default OFF — stderr + HOLD_CANDIDATE only.
     # Set MCP_PROTOCOL_LOGGING=1 only for legacy client compatibility during deprecation window.
     import os as _os
+
     _proto = _os.environ.get("MCP_PROTOCOL_LOGGING", "0").strip().lower() in ("1", "true", "yes")
     if not _proto:
         return

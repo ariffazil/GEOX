@@ -8,6 +8,7 @@ Modes: create, validate, challenge, seal, attach_evidence
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 from typing import Any, Literal
@@ -52,10 +53,12 @@ async def geox_claim(
     kwargs = locals().copy()
     if mode == "validate":
         from geox_mcp.tools.claims import geox_claim_validate as _impl
+
         return await _impl(claim_id=kwargs.get("claim_id", ""))
 
     if mode == "challenge":
         from geox_mcp.tools.claims import geox_claim_challenge as _impl
+
         return await _impl(
             claim_id=kwargs.get("claim_id", ""),
             challenge_text=kwargs.get("challenge_text", ""),
@@ -120,6 +123,7 @@ async def geox_claim(
 
         # well_constrained=True → proceed to underlying seal implementation
         from geox_mcp.tools.claims import geox_claim_seal as _impl
+
         result = await _impl(
             claim_id=kwargs.get("claim_id", ""),
             ack_irreversible=kwargs.get("ack_irreversible", False),
@@ -138,6 +142,7 @@ async def geox_claim(
 
     if mode == "attach_evidence":
         from geox_mcp.tools.claims import geox_evidence_attach as _impl
+
         return await _impl(
             claim_id=kwargs.get("claim_id", ""),
             evidence_id=kwargs.get("evidence_id", ""),
@@ -147,6 +152,7 @@ async def geox_claim(
 
     # Default: create
     from geox_mcp.tools.claims import geox_claim_create as _impl
+
     return await _impl(
         claim_text=kwargs.get("claim_text", ""),
         claim_type=kwargs.get("claim_type", "other"),
@@ -190,7 +196,10 @@ FALSIFICATION_FILTERS: list[dict[str, Any]] = [
         "name": "Stratigraphic Consistency",
         "description": "Does the claim respect stratigraphic superposition and known basin history?",
         "patterns": [
-            (r"\b(miocene|pliocene|oligocene|eocene|cretaceous|jurassic|triassic|permian|carboniferous|devonian|silurian|ordovician|cambrian)\b", "_check_age_basin_consistency"),
+            (
+                r"\b(miocene|pliocene|oligocene|eocene|cretaceous|jurassic|triassic|permian|carboniferous|devonian|silurian|ordovician|cambrian)\b",
+                "_check_age_basin_consistency",
+            ),
             (r"\b(sandstone|shale|carbonate|limestone|dolomite|coal|evaporite|volcaniclastic)\b", "_check_lithology_depth"),
         ],
     },
@@ -246,14 +255,26 @@ def _check_porosity_depth(match: re.Match, claim: str) -> dict[str, Any]:
     max_phi = 0.45  # max initial porosity
     decay = 0.0004  # compaction coefficient
     expected_max = max_phi * (2.71828 ** (-decay * depth))
-    
+
     findings = []
     if porosity > 50:
-        findings.append({"severity": "FATAL", "reason": f"Porosity {porosity}% exceeds physical maximum (~50%) for sedimentary rocks"})
+        findings.append(
+            {"severity": "FATAL", "reason": f"Porosity {porosity}% exceeds physical maximum (~50%) for sedimentary rocks"}
+        )
     elif porosity > expected_max * 100 * 1.3:  # 30% tolerance
-        findings.append({"severity": "HIGH", "reason": f"Porosity {porosity}% exceeds Athy-compaction expected max {expected_max*100:.1f}% at {depth}m"})
+        findings.append(
+            {
+                "severity": "HIGH",
+                "reason": f"Porosity {porosity}% exceeds Athy-compaction expected max {expected_max * 100:.1f}% at {depth}m",
+            }
+        )
     elif porosity > expected_max * 100:
-        findings.append({"severity": "MEDIUM", "reason": f"Porosity {porosity}% is high but possible at {depth}m (expected max ~{expected_max*100:.1f}%)"})
+        findings.append(
+            {
+                "severity": "MEDIUM",
+                "reason": f"Porosity {porosity}% is high but possible at {depth}m (expected max ~{expected_max * 100:.1f}%)",
+            }
+        )
     else:
         findings.append({"severity": "PASS", "reason": f"Porosity {porosity}% at {depth}m is physically plausible"})
     return {"filter": "K001", "findings": findings}
@@ -279,7 +300,9 @@ def _check_temperature_depth(match: re.Match, claim: str) -> dict[str, Any]:
     if gradient < 10:
         findings.append({"severity": "HIGH", "reason": f"Implied geothermal gradient {gradient:.0f}°C/km is unusually low"})
     elif gradient > 55:
-        findings.append({"severity": "FATAL", "reason": f"Implied geothermal gradient {gradient:.0f}°C/km exceeds crustal plausibility"})
+        findings.append(
+            {"severity": "FATAL", "reason": f"Implied geothermal gradient {gradient:.0f}°C/km exceeds crustal plausibility"}
+        )
     elif gradient > 45:
         findings.append({"severity": "MEDIUM", "reason": f"Implied geothermal gradient {gradient:.0f}°C/km is high (hot basin)"})
     else:
@@ -289,7 +312,12 @@ def _check_temperature_depth(match: re.Match, claim: str) -> dict[str, Any]:
 
 def _check_pressure_depth(match: re.Match, claim: str) -> dict[str, Any]:
     findings = []
-    findings.append({"severity": "INFO", "reason": "Pressure-depth check: verify against hydrostatic (0.433 psi/ft) and lithostatic (~1.0 psi/ft) gradients"})
+    findings.append(
+        {
+            "severity": "INFO",
+            "reason": "Pressure-depth check: verify against hydrostatic (0.433 psi/ft) and lithostatic (~1.0 psi/ft) gradients",
+        }
+    )
     return {"filter": "K005", "findings": findings}
 
 
@@ -299,7 +327,12 @@ def _check_age_basin_consistency(match: re.Match, claim: str) -> dict[str, Any]:
     # Malay Basin context: primarily Oligocene-Miocene fill
     malay_valid = ["miocene", "pliocene", "oligocene", "eocene"]
     if age not in malay_valid and "malay" in claim.lower():
-        findings.append({"severity": "MEDIUM", "reason": f"{age.title()} age mentioned; Malay Basin fill is primarily Oligocene-Miocene. Verify stratigraphic context."})
+        findings.append(
+            {
+                "severity": "MEDIUM",
+                "reason": f"{age.title()} age mentioned; Malay Basin fill is primarily Oligocene-Miocene. Verify stratigraphic context.",
+            }
+        )
     else:
         findings.append({"severity": "PASS", "reason": f"{age.title()} age is consistent with SE Asian basin stratigraphy"})
     return {"filter": "K002", "findings": findings}
@@ -310,9 +343,13 @@ def _check_lithology_depth(match: re.Match, claim: str) -> dict[str, Any]:
     findings = []
     # Check for depth-related lithology issues
     if "evaporite" in lith:
-        findings.append({"severity": "INFO", "reason": "Evaporite presence requires restricted basin conditions — verify depositional model"})
+        findings.append(
+            {"severity": "INFO", "reason": "Evaporite presence requires restricted basin conditions — verify depositional model"}
+        )
     elif "coal" in lith:
-        findings.append({"severity": "INFO", "reason": "Coal indicates terrestrial/fluvio-deltaic deposition — verify paleoenvironment"})
+        findings.append(
+            {"severity": "INFO", "reason": "Coal indicates terrestrial/fluvio-deltaic deposition — verify paleoenvironment"}
+        )
     else:
         findings.append({"severity": "PASS", "reason": f"{lith.title()} lithology is geologically common"})
     return {"filter": "K002", "findings": findings}
@@ -326,7 +363,12 @@ def _check_geothermal_gradient(match: re.Match, claim: str) -> dict[str, Any]:
     if 15 <= gradient <= 50:
         findings.append({"severity": "PASS", "reason": f"Geothermal gradient {gradient:.0f}°C/km within normal range (15-50)"})
     elif gradient < 15:
-        findings.append({"severity": "MEDIUM", "reason": f"Geothermal gradient {gradient:.0f}°C/km is below normal range (cold basin/foreland)"})
+        findings.append(
+            {
+                "severity": "MEDIUM",
+                "reason": f"Geothermal gradient {gradient:.0f}°C/km is below normal range (cold basin/foreland)",
+            }
+        )
     else:
         findings.append({"severity": "HIGH", "reason": f"Geothermal gradient {gradient:.0f}°C/km above normal range"})
     return {"filter": "K003", "findings": findings}
@@ -345,23 +387,38 @@ def _check_compaction_porosity(match: re.Match | None, claim: str) -> dict[str, 
             depth = float(depth_str)
             max_phi = 0.45 * (2.71828 ** (-0.0004 * depth)) * 100
             if poro > max_phi * 1.5:
-                findings.append({"severity": "HIGH", "reason": f"Porosity {poro}% at {depth}m far exceeds Athy max {max_phi:.1f}%"})
+                findings.append(
+                    {"severity": "HIGH", "reason": f"Porosity {poro}% at {depth}m far exceeds Athy max {max_phi:.1f}%"}
+                )
     return {"filter": "K004", "findings": findings}
 
 
 def _check_pressure_bounds(match: re.Match | None, claim: str) -> dict[str, Any]:
     """K005: Check pressure bounds."""
     findings = []
-    findings.append({"severity": "INFO", "reason": "Pressure check requires explicit depth and gradient context. Verify against offset well data."})
+    findings.append(
+        {
+            "severity": "INFO",
+            "reason": "Pressure check requires explicit depth and gradient context. Verify against offset well data.",
+        }
+    )
     return {"filter": "K005", "findings": findings}
 
 
 def _flag_contradiction(match: re.Match, claim: str) -> dict[str, Any]:
-    return {"filter": "K006", "findings": [{"severity": "HIGH", "reason": f"Potential logical contradiction detected: '{match.group(0)}'"}]}
+    return {
+        "filter": "K006",
+        "findings": [{"severity": "HIGH", "reason": f"Potential logical contradiction detected: '{match.group(0)}'"}],
+    }
 
 
 def _flag_speculative(match: re.Match, claim: str) -> dict[str, Any]:
-    return {"filter": "K007", "findings": [{"severity": "INFO", "reason": f"Speculative language: '{match.group(0)}'. Evidence strength should be verified."}]}
+    return {
+        "filter": "K007",
+        "findings": [
+            {"severity": "INFO", "reason": f"Speculative language: '{match.group(0)}'. Evidence strength should be verified."}
+        ],
+    }
 
 
 async def geox_falsify(
@@ -400,7 +457,7 @@ async def geox_falsify(
 
     for filt in FALSIFICATION_FILTERS:
         filter_results: list[dict[str, Any]] = []
-        
+
         # Try pattern-based checks (only for patterns belonging to this filter)
         for pattern_str, handler_name in filt.get("patterns", []):
             for match in re.finditer(pattern_str, claim_text, re.IGNORECASE):
@@ -439,12 +496,14 @@ async def geox_falsify(
         else:
             filter_verdict = "INCONCLUSIVE"
 
-        results.append({
-            "filter_id": filt["id"],
-            "filter_name": filt["name"],
-            "verdict": filter_verdict,
-            "findings": filter_results,
-        })
+        results.append(
+            {
+                "filter_id": filt["id"],
+                "filter_name": filt["name"],
+                "verdict": filter_verdict,
+                "findings": filter_results,
+            }
+        )
 
     # Overall verdict
     if fatal_count > 0:

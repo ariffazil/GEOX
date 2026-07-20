@@ -38,17 +38,36 @@ except ImportError:
         v.update(extra)
         return v
 
-    def apex_envelope(*, tool_name="unknown", confidence=0.88, evidence_strength=0.95,
-                      boundary="LIVE", uncertainty_declared=True, evidence_refs=None,
-                      evidence_quality="UNKNOWN", coherent=True, actor_id=None,
-                      action_class="READ", proof_level="ZKPC_OBSERVATION", **kw):
+    def apex_envelope(
+        *,
+        tool_name="unknown",
+        confidence=0.88,
+        evidence_strength=0.95,
+        boundary="LIVE",
+        uncertainty_declared=True,
+        evidence_refs=None,
+        evidence_quality="UNKNOWN",
+        coherent=True,
+        actor_id=None,
+        action_class="READ",
+        proof_level="ZKPC_OBSERVATION",
+        **kw,
+    ):
         gates = {
-            "amanah": _gate(confidence <= evidence_strength + 0.05, min(1.0, evidence_strength / max(confidence, 1e-6)),
-                           f"confidence {confidence:.2f} <= evidence {evidence_strength:.2f}"),
-            "presence": _gate(True, {"LIVE": 1.0, "CACHED": 0.8, "INFERRED": 0.5}.get(boundary, 0.5), boundary, boundary=boundary),
-            "humility": _gate(uncertainty_declared, 1.0 if uncertainty_declared else 0.3, "declared" if uncertainty_declared else "undeclared"),
-            "signal": _gate(len(evidence_refs or []) > 0, min(1.0, 0.3 + len(evidence_refs or []) * 0.2),
-                           f"{len(evidence_refs or [])} refs"),
+            "amanah": _gate(
+                confidence <= evidence_strength + 0.05,
+                min(1.0, evidence_strength / max(confidence, 1e-6)),
+                f"confidence {confidence:.2f} <= evidence {evidence_strength:.2f}",
+            ),
+            "presence": _gate(
+                True, {"LIVE": 1.0, "CACHED": 0.8, "INFERRED": 0.5}.get(boundary, 0.5), boundary, boundary=boundary
+            ),
+            "humility": _gate(
+                uncertainty_declared, 1.0 if uncertainty_declared else 0.3, "declared" if uncertainty_declared else "undeclared"
+            ),
+            "signal": _gate(
+                len(evidence_refs or []) > 0, min(1.0, 0.3 + len(evidence_refs or []) * 0.2), f"{len(evidence_refs or [])} refs"
+            ),
             "understanding": _gate(coherent, 0.9 if coherent else 0.2, "coherent" if coherent else "incoherent"),
             "energy": _gate(True, 0.8, "default"),
             "authority": _gate(bool(actor_id), 1.0 if actor_id else 0.0, f"actor={actor_id}", actor_id=actor_id),
@@ -57,7 +76,9 @@ except ImportError:
             "sovereign": _gate(True, 1.0, "no F13 halt"),
         }
         dials = {
-            "A": round(_geometric_mean([gates["amanah"]["score"], gates["humility"]["score"], gates["understanding"]["score"]]), 4),
+            "A": round(
+                _geometric_mean([gates["amanah"]["score"], gates["humility"]["score"], gates["understanding"]["score"]]), 4
+            ),
             "P": round(gates["presence"]["score"], 4),
             "H": round(min(gates["authority"]["score"], gates["sovereign"]["score"]), 4),
             "S": round(gates["signal"]["score"], 4),
@@ -66,8 +87,14 @@ except ImportError:
         }
         G = round(dials["A"] * dials["P"] * dials["H"] * math.sqrt(dials["S"] * dials["U"]) * dials["E"] ** 2, 4)
         verdict = "SEAL" if G >= 0.80 else ("SABAR" if G >= 0.50 else "HOLD")
-        return {"equation": APEX_EQUATION, "gates": gates, "dials": dials, "G": G, "verdict": verdict,
-                "timestamp": datetime.now(UTC).isoformat()}
+        return {
+            "equation": APEX_EQUATION,
+            "gates": gates,
+            "dials": dials,
+            "G": G,
+            "verdict": verdict,
+            "timestamp": datetime.now(UTC).isoformat(),
+        }
 
     def apex_envelope_minimal(*, tool_name="unknown", actor_id=None, action_class="READ", boundary="LIVE", ok=True):
         return apex_envelope(tool_name=tool_name, actor_id=actor_id, action_class=action_class, boundary=boundary, coherent=ok)
@@ -86,12 +113,19 @@ def geox_apex_envelope(
 ) -> dict[str, Any]:
     """Build APEX envelope from GEOX-specific signals."""
     _claim_confidence = {
-        "OBSERVED": 0.95, "DERIVED_CANDIDATE": 0.85, "INTERPRETED": 0.75,
-        "HYPOTHESIS": 0.60, "VOID": 0.20, "888_HOLD": 0.30,
+        "OBSERVED": 0.95,
+        "DERIVED_CANDIDATE": 0.85,
+        "INTERPRETED": 0.75,
+        "HYPOTHESIS": 0.60,
+        "VOID": 0.20,
+        "888_HOLD": 0.30,
     }
     _perception_boundary = {
-        "OBSERVED": "LIVE", "DERIVED": "CACHED", "INTERPRETED_LOCAL": "CACHED",
-        "HYPOTHESIS": "INFERRED", "PROCESS_HYPOTHESIS": "INFERRED",
+        "OBSERVED": "LIVE",
+        "DERIVED": "CACHED",
+        "INTERPRETED_LOCAL": "CACHED",
+        "HYPOTHESIS": "INFERRED",
+        "PROCESS_HYPOTHESIS": "INFERRED",
     }
     cs = (claim_state or "HYPOTHESIS").upper()
     pc = (perception_class or "HYPOTHESIS").upper()

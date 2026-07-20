@@ -24,10 +24,7 @@ from pydantic import BaseModel, Field
 logger = logging.getLogger("geox.io.noaa_swpc")
 
 SWPC_BASE = "https://services.swpc.noaa.gov"
-SWPC_CITATION = (
-    "NOAA Space Weather Prediction Center (2024). "
-    "https://www.swpc.noaa.gov. Public Domain."
-)
+SWPC_CITATION = "NOAA Space Weather Prediction Center (2024). https://www.swpc.noaa.gov. Public Domain."
 
 
 class SpaceWeatherQuery(BaseModel):
@@ -66,10 +63,13 @@ class NOAASWPCFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return SpaceWeatherResult(
-                ok=True, mode="offline_stub",
+                ok=True,
+                mode="offline_stub",
                 data=[{"time_tag": "2024-06-25T00:00:00Z", "kp": 3, "estimated": True}],
-                count=1, product=params.product, fetched_at=now,
-                note=f"Offline stub for '{params.product}'. Set GEOX_SWPC_OFFLINE=0 for live data."
+                count=1,
+                product=params.product,
+                fetched_at=now,
+                note=f"Offline stub for '{params.product}'. Set GEOX_SWPC_OFFLINE=0 for live data.",
             )
         return SpaceWeatherResult(ok=False, mode="live", note="Live requires HTTP client.", fetched_at=now)
 

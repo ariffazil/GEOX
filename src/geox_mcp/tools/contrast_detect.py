@@ -728,9 +728,7 @@ def contrast_detect(
     ):
         spread = _distribution_spread_ratio(d)
         if spread is not None and spread > 0.5:
-            variance_warnings.append(
-                f"{name} P10–P90 spread {spread:.0%} of P50 — high epistemic width; HOLD promotion"
-            )
+            variance_warnings.append(f"{name} P10–P90 spread {spread:.0%} of P50 — high epistemic width; HOLD promotion")
 
     contrasts: list[ContrastResult] = []
     dims_to_check = [d.strip().lower() for d in dimension.split(",")]

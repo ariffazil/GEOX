@@ -11,6 +11,7 @@ All epistemic labels exposed per `contracts/geox_gravmag_studio_contract.json` v
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -104,10 +105,7 @@ def _validate_observed_source(observed_source: str, survey_type: str) -> str | N
             return f"icgem requires survey_type=gravity, got {survey_type!r}"
         return None
     # Bare / unrecognised names
-    allowed = (
-        ", ".join(OBSERVED_SOURCE_REAL)
-        + ", or synthetic_*"
-    )
+    allowed = ", ".join(OBSERVED_SOURCE_REAL) + ", or synthetic_*"
     return f"observed_source={observed_source!r} not in whitelist ({allowed})"
 
 
@@ -128,6 +126,7 @@ def _check_fetcher_availability(observed_source: str) -> str | None:
     try:
         if observed_source == "emag2v3":
             from geox_core.io.emag2_fetcher import EMAG2Fetcher  # noqa: PLC0415
+
             fetcher = EMAG2Fetcher()
             result = fetcher.fetch()
             if result.mode == "offline_stub":
@@ -145,6 +144,7 @@ def _check_fetcher_availability(observed_source: str) -> str | None:
             )
         if observed_source == "icgem":
             from geox_core.io.emag2_fetcher import ICGEMFetcher  # noqa: PLC0415
+
             fetcher = ICGEMFetcher()
             models = fetcher.list_models()
             if not models:
@@ -342,9 +342,7 @@ async def geox_gravmag_studio_screen(
     # ── Unit sanity gate (fail-closed) ──────────────────────────────────────
     expected_units = "mGal" if survey_type == "gravity" else "nT"
     if observed_units != expected_units:
-        return _hold_envelope(
-            reason=f"observed.units={observed_units} ≠ expected {expected_units} for survey_type={survey_type}"
-        )
+        return _hold_envelope(reason=f"observed.units={observed_units} ≠ expected {expected_units} for survey_type={survey_type}")
 
     # ── Grid shape sanity gate (fail-closed) ───────────────────────────────
     if not observed_grid or not isinstance(observed_grid, list):
@@ -352,9 +350,7 @@ async def geox_gravmag_studio_screen(
     ny_obs = len(observed_grid)
     nx_obs = len(observed_grid[0]) if ny_obs > 0 else 0
     if ny_obs != grid_n or nx_obs != grid_n:
-        return _hold_envelope(
-            reason=f"observed_grid shape ({ny_obs}x{nx_obs}) ≠ grid_n² ({grid_n}x{grid_n})"
-        )
+        return _hold_envelope(reason=f"observed_grid shape ({ny_obs}x{nx_obs}) ≠ grid_n² ({grid_n}x{grid_n})")
     # Verify rectangularity
     for row in observed_grid:
         if len(row) != nx_obs:
@@ -362,9 +358,7 @@ async def geox_gravmag_studio_screen(
 
     # ── Grid extent sanity gate (fail-closed, tightening #3) ──────────────
     if observed_extent_m is not None and abs(observed_extent_m - grid_extent_m) > 1.0:
-        return _hold_envelope(
-            reason=f"observed extent {observed_extent_m} m ≠ predicted {grid_extent_m} m (tolerance 1 m)"
-        )
+        return _hold_envelope(reason=f"observed extent {observed_extent_m} m ≠ predicted {grid_extent_m} m (tolerance 1 m)")
 
     # ── Forward predict via Stage A (reuse — no new physics) ───────────────
     forward_kwargs: dict[str, Any] = dict(
@@ -387,14 +381,12 @@ async def geox_gravmag_studio_screen(
         return _hold_envelope(reason=f"forward engine raised: {exc}")
 
     if forward_result.get("verdict") == "VOID":
-        return _hold_envelope(
-            reason=f"forward tool returned VOID: {forward_result.get('caveats', ['unknown'])[0]}"
-        )
+        return _hold_envelope(reason=f"forward tool returned VOID: {forward_result.get('caveats', ['unknown'])[0]}")
 
     pred_flat = forward_result["render_payload"]["anomaly_values"]
     nx = forward_result["render_payload"]["grid_shape"][1]
     ny = forward_result["render_payload"]["grid_shape"][0]
-    predicted_grid = [pred_flat[i * nx:(i + 1) * nx] for i in range(ny)]
+    predicted_grid = [pred_flat[i * nx : (i + 1) * nx] for i in range(ny)]
 
     # ── Misfit math with explicit NaN guard (tightening #2) ────────────────
     obs_flat = []
@@ -440,10 +432,10 @@ async def geox_gravmag_studio_screen(
         residual_grid.append(res_row)
 
     # ── Abduction discipline (auto-populate if absent) ────────────────────
-    alternatives = list(alternatives_declared) if alternatives_declared else (
-        list(_DEFAULT_ALTERNATIVES_GRAVITY)
-        if survey_type == "gravity"
-        else list(_DEFAULT_ALTERNATIVES_MAGNETIC)
+    alternatives = (
+        list(alternatives_declared)
+        if alternatives_declared
+        else (list(_DEFAULT_ALTERNATIVES_GRAVITY) if survey_type == "gravity" else list(_DEFAULT_ALTERNATIVES_MAGNETIC))
     )
 
     # ── Vault receipt (audit, not SEAL) ────────────────────────────────────

@@ -44,8 +44,8 @@ from scipy.stats import variation
 # Reads geometry across the full section — basin scale first
 # ═══════════════════════════════════════════════════════════════════════════
 
-def classify_reflector_packages(agc: np.ndarray, cp: np.ndarray,
-                                 pc: np.ndarray, n_zones: int = 5) -> list:
+
+def classify_reflector_packages(agc: np.ndarray, cp: np.ndarray, pc: np.ndarray, n_zones: int = 5) -> list:
     """Divide section into horizontal zones, classify each by reflector geometry.
 
     A geologist reads top-down: basin architecture first, then structural,
@@ -78,7 +78,7 @@ def classify_reflector_packages(agc: np.ndarray, cp: np.ndarray,
         r1 = min(hc, (i + 1) * zone_h)
         zone_agc = agc[r0:r1, :]
         cp[r0:r1, :]
-        zone_pc  = pc[r0:r1, :]
+        zone_pc = pc[r0:r1, :]
 
         # ── Continuity metrics ──────────────────────────────────────────
         # Mean phase coherence (how continuous are reflectors laterally?)
@@ -164,22 +164,24 @@ def classify_reflector_packages(agc: np.ndarray, cp: np.ndarray,
             ]
             scale = "STRATIGRAPHIC"
 
-        packages.append({
-            "zone_id": f"Z{i + 1}",
-            "row_range": [int(r0), int(r1)],
-            "depth_proxy": f"shallow-{'upper' if i < 2 else 'mid' if i < 4 else 'deep'}",
-            "geometry": geometry,
-            "scale_read": scale,
-            "metrics": {
-                "mean_coherence": round(mean_coherence, 3),
-                "row_cv": round(row_cv, 3),
-                "col_gradient_norm": round(col_gradient_norm, 4),
-                "amp_std": round(amp_std, 4),
-            },
-            "geological_hypotheses": geological_hint,
-            "epistemic": "DER_IMAGE_GEOMETRY",
-            "note": "Geometry from pixel pattern analysis. Requires stratigraphic context + well tie to confirm.",
-        })
+        packages.append(
+            {
+                "zone_id": f"Z{i + 1}",
+                "row_range": [int(r0), int(r1)],
+                "depth_proxy": f"shallow-{'upper' if i < 2 else 'mid' if i < 4 else 'deep'}",
+                "geometry": geometry,
+                "scale_read": scale,
+                "metrics": {
+                    "mean_coherence": round(mean_coherence, 3),
+                    "row_cv": round(row_cv, 3),
+                    "col_gradient_norm": round(col_gradient_norm, 4),
+                    "amp_std": round(amp_std, 4),
+                },
+                "geological_hypotheses": geological_hint,
+                "epistemic": "DER_IMAGE_GEOMETRY",
+                "note": "Geometry from pixel pattern analysis. Requires stratigraphic context + well tie to confirm.",
+            }
+        )
 
     return packages
 
@@ -189,8 +191,8 @@ def classify_reflector_packages(agc: np.ndarray, cp: np.ndarray,
 # Where horizons terminate = most information-rich point in seismic
 # ═══════════════════════════════════════════════════════════════════════════
 
-def detect_terminations(horizons: list, agc: np.ndarray,
-                        packages: list) -> list:
+
+def detect_terminations(horizons: list, agc: np.ndarray, packages: list) -> list:
     """Detect reflector termination patterns at horizon endpoints.
 
     Termination types (after Vail et al. 1977):
@@ -220,19 +222,19 @@ def detect_terminations(horizons: list, agc: np.ndarray,
         cols = pts[:, 0].astype(float)
 
         # ── Left termination (proximal / updip end) ──────────────────
-        left_rows = rows[:max(5, len(rows) // 8)]
+        left_rows = rows[: max(5, len(rows) // 8)]
         left_trend = float(np.polyfit(np.arange(len(left_rows)), left_rows, 1)[0])
 
         # ── Right termination (distal / downdip end) ─────────────────
-        right_rows = rows[-max(5, len(rows) // 8):]
+        right_rows = rows[-max(5, len(rows) // 8) :]
         right_trend = float(np.polyfit(np.arange(len(right_rows)), right_rows, 1)[0])
 
         # ── Overall dip of horizon ────────────────────────────────────
         overall_dip = float(np.polyfit(cols, rows, 1)[0])
 
         # ── Amplitude at termination ──────────────────────────────────
-        left_amp  = float(np.mean(np.abs(agc[int(rows[0]):int(rows[0])+3,  :wc//10])))
-        right_amp = float(np.mean(np.abs(agc[int(rows[-1]):int(rows[-1])+3, -wc//10:])))
+        left_amp = float(np.mean(np.abs(agc[int(rows[0]) : int(rows[0]) + 3, : wc // 10])))
+        right_amp = float(np.mean(np.abs(agc[int(rows[-1]) : int(rows[-1]) + 3, -wc // 10 :])))
 
         # ── Classify terminations ─────────────────────────────────────
         def classify_end(trend, end_amp, side):
@@ -280,35 +282,37 @@ def detect_terminations(horizons: list, agc: np.ndarray,
                     "sequence_significance": "HIGH — possible unconformity surface",
                 }
 
-        left_term  = classify_end(left_trend,  left_amp,  "left/proximal")
+        left_term = classify_end(left_trend, left_amp, "left/proximal")
         right_term = classify_end(right_trend, right_amp, "right/distal")
 
         # Which zone is this horizon in?
         zone_id = None
         for pkg in packages:
-            if pkg["row_range"][0] <= int(rows[len(rows)//2]) < pkg["row_range"][1]:
+            if pkg["row_range"][0] <= int(rows[len(rows) // 2]) < pkg["row_range"][1]:
                 zone_id = pkg["zone_id"]
                 break
 
-        results.append({
-            "horizon_id": h["id"],
-            "overall_dip_px_per_px": round(overall_dip, 4),
-            "zone": zone_id,
-            "left_termination": left_term,
-            "right_termination": right_term,
-            "sequence_significance": (
-                "HIGH" if "HIGH" in left_term["sequence_significance"]
-                       or "HIGH" in right_term["sequence_significance"]
-                else "LOW"
-            ),
-            "epistemic": "INT_SEISMIC_TERMINATION",
-            "required_tests": [
-                "Adjacent line correlation (does termination persist?)",
-                "Well tie (does termination coincide with age break?)",
-                "Attribute map at termination level (amplitude, coherence slice)",
-                "Check termination is not section-edge processing artefact",
-            ],
-        })
+        results.append(
+            {
+                "horizon_id": h["id"],
+                "overall_dip_px_per_px": round(overall_dip, 4),
+                "zone": zone_id,
+                "left_termination": left_term,
+                "right_termination": right_term,
+                "sequence_significance": (
+                    "HIGH"
+                    if "HIGH" in left_term["sequence_significance"] or "HIGH" in right_term["sequence_significance"]
+                    else "LOW"
+                ),
+                "epistemic": "INT_SEISMIC_TERMINATION",
+                "required_tests": [
+                    "Adjacent line correlation (does termination persist?)",
+                    "Well tie (does termination coincide with age break?)",
+                    "Attribute map at termination level (amplitude, coherence slice)",
+                    "Check termination is not section-edge processing artefact",
+                ],
+            }
+        )
 
     return results
 
@@ -318,9 +322,8 @@ def detect_terminations(horizons: list, agc: np.ndarray,
 # The geologist's first question: "Is the image lying?"
 # ═══════════════════════════════════════════════════════════════════════════
 
-def screen_imaging_artifacts(agc: np.ndarray, cp: np.ndarray,
-                              fp: np.ndarray, faults: list,
-                              horizons: list) -> dict:
+
+def screen_imaging_artifacts(agc: np.ndarray, cp: np.ndarray, fp: np.ndarray, faults: list, horizons: list) -> dict:
     """Screen for common seismic imaging artifacts.
 
     These are features that look geological but are acoustic/processing illusions:
@@ -374,21 +377,23 @@ def screen_imaging_artifacts(agc: np.ndarray, cp: np.ndarray,
     for br in bright_rows:
         # Check coherence below bright row
         if br + 20 < hc:
-            below_coh = np.mean(cp[br + 5:br + 25, :])
+            below_coh = np.mean(cp[br + 5 : br + 25, :])
             if below_coh < 0.2:
-                wipeout_candidates.append({
-                    "bright_row": int(br),
-                    "wipeout_rows": [int(br + 5), int(min(hc, br + 50))],
-                    "coherence_below": round(float(below_coh), 3),
-                    "artifact_type": "GAS_WIPEOUT_CHIMNEY",
-                    "probability": "MODERATE",
-                    "geological_alternative": [
-                        "Real gas charge below bright spot (direct hydrocarbon indicator)",
-                        "Fault damage zone (not gas)",
-                        "Chaotic mass transport below unconformity",
-                    ],
-                    "required_test": "AVO analysis + rock physics forward model",
-                })
+                wipeout_candidates.append(
+                    {
+                        "bright_row": int(br),
+                        "wipeout_rows": [int(br + 5), int(min(hc, br + 50))],
+                        "coherence_below": round(float(below_coh), 3),
+                        "artifact_type": "GAS_WIPEOUT_CHIMNEY",
+                        "probability": "MODERATE",
+                        "geological_alternative": [
+                            "Real gas charge below bright spot (direct hydrocarbon indicator)",
+                            "Fault damage zone (not gas)",
+                            "Chaotic mass transport below unconformity",
+                        ],
+                        "required_test": "AVO analysis + rock physics forward model",
+                    }
+                )
 
     if wipeout_candidates:
         artifacts["gas_wipeout_chimney"] = {
@@ -412,18 +417,20 @@ def screen_imaging_artifacts(agc: np.ndarray, cp: np.ndarray,
             curvature = float(abs(coeffs[0]))  # coefficient of x^2
             if curvature > 0.001:
                 shape = "PULLUP" if coeffs[0] < 0 else "SAG"
-                pullup_candidates.append({
-                    "horizon_id": h["id"],
-                    "parabolic_curvature": round(curvature, 6),
-                    "shape": shape,
-                    "artifact_type": f"VELOCITY_{shape}",
-                    "probability": "LOW_TO_MODERATE",
-                    "geological_alternative": [
-                        f"Real structural {'anticline' if shape == 'PULLUP' else 'syncline'} (not velocity effect)",
-                        f"Compaction drape over underlying {'high' if shape == 'PULLUP' else 'low'}",
-                    ],
-                    "required_test": "Depth conversion with interval velocity model",
-                })
+                pullup_candidates.append(
+                    {
+                        "horizon_id": h["id"],
+                        "parabolic_curvature": round(curvature, 6),
+                        "shape": shape,
+                        "artifact_type": f"VELOCITY_{shape}",
+                        "probability": "LOW_TO_MODERATE",
+                        "geological_alternative": [
+                            f"Real structural {'anticline' if shape == 'PULLUP' else 'syncline'} (not velocity effect)",
+                            f"Compaction drape over underlying {'high' if shape == 'PULLUP' else 'low'}",
+                        ],
+                        "required_test": "Depth conversion with interval velocity model",
+                    }
+                )
 
     if pullup_candidates:
         artifacts["velocity_pullup_sag"] = {
@@ -438,7 +445,7 @@ def screen_imaging_artifacts(agc: np.ndarray, cp: np.ndarray,
     row_amp_smooth = ndimage.gaussian_filter1d(row_amp_n, sigma=3)
     peaks = []
     for r in range(1, hc - 1):
-        if row_amp_smooth[r] > row_amp_smooth[r-1] and row_amp_smooth[r] > row_amp_smooth[r+1]:
+        if row_amp_smooth[r] > row_amp_smooth[r - 1] and row_amp_smooth[r] > row_amp_smooth[r + 1]:
             if row_amp_smooth[r] > 0.5:
                 peaks.append(r)
 
@@ -450,18 +457,20 @@ def screen_imaging_artifacts(agc: np.ndarray, cp: np.ndarray,
             if spacing > 30:
                 ratio = spacing / (peaks[i] + 1e-10)
                 if abs(ratio - round(ratio)) < 0.1:
-                    multiple_candidates.append({
-                        "primary_row": int(peaks[i]),
-                        "repeat_row": int(peaks[j]),
-                        "spacing_px": int(spacing),
-                        "artifact_type": "POSSIBLE_MULTIPLE",
-                        "probability": "LOW",
-                        "geological_alternative": [
-                            "Two distinct real geological reflectors at this spacing",
-                            "Interbedded hard layers (tuning effect)",
-                        ],
-                        "required_test": "Multiple prediction + subtraction processing, or Radon demultiple",
-                    })
+                    multiple_candidates.append(
+                        {
+                            "primary_row": int(peaks[i]),
+                            "repeat_row": int(peaks[j]),
+                            "spacing_px": int(spacing),
+                            "artifact_type": "POSSIBLE_MULTIPLE",
+                            "probability": "LOW",
+                            "geological_alternative": [
+                                "Two distinct real geological reflectors at this spacing",
+                                "Interbedded hard layers (tuning effect)",
+                            ],
+                            "required_test": "Multiple prediction + subtraction processing, or Radon demultiple",
+                        }
+                    )
                     break
         if multiple_candidates:
             break
@@ -479,9 +488,9 @@ def screen_imaging_artifacts(agc: np.ndarray, cp: np.ndarray,
     fft_col = np.abs(np.fft.rfft(col_var))
     dominant_freq = int(np.argmax(fft_col[1:]) + 1)  # exclude DC
     footprint_period = wc / dominant_freq if dominant_freq > 0 else None
-    footprint_flag = (footprint_period is not None
-                      and 10 < footprint_period < wc * 0.5
-                      and fft_col[dominant_freq] > 3 * np.median(fft_col[1:]))
+    footprint_flag = (
+        footprint_period is not None and 10 < footprint_period < wc * 0.5 and fft_col[dominant_freq] > 3 * np.median(fft_col[1:])
+    )
 
     if footprint_flag:
         artifacts["acquisition_footprint"] = {
@@ -570,9 +579,9 @@ GENERIC_BASIN_PRIOR = {
 }
 
 
-def rank_hypotheses(faults: list, horizons: list, packages: list,
-                    terminations: list, artifacts: dict,
-                    basin_context: str = "malay_basin") -> dict:
+def rank_hypotheses(
+    faults: list, horizons: list, packages: list, terminations: list, artifacts: dict, basin_context: str = "malay_basin"
+) -> dict:
     """Rank geological hypotheses per feature.
 
     This is the core of geologist-grade interpretation:
@@ -619,26 +628,32 @@ def rank_hypotheses(faults: list, horizons: list, packages: list,
         # Sort descending
         ranked = sorted(fault_prior.items(), key=lambda x: x[1], reverse=True)
 
-        results["faults"].append({
-            "fault_id": f["id"],
-            "dip_class": dip,
-            "conf_proxy": conf_proxy,
-            "row_span_px": row_span,
-            "hypotheses_ranked": [
-                {"rank": i + 1, "hypothesis": h, "prior_prob": p,
-                 "note": f"{f'Highest prior in {basin_context}' if i == 0 else ''}"}
-                for i, (h, p) in enumerate(ranked)
-            ],
-            "discrimination_tests": [
-                "Check vertical displacement continuity with depth (does throw change?)",
-                "Look for drag folds or growth strata adjacent to fault",
-                "Correlate fault on adjacent seismic lines (is it real 3D feature?)",
-                "Test dip direction (same as regional stress field?)",
-                "Well calibration: look for fault in log character / missing section",
-            ],
-            "confidence_cap": min(0.90, conf_proxy * 0.85),
-            "epistemic": "INT_SEISMIC_FAULT_RANKED",
-        })
+        results["faults"].append(
+            {
+                "fault_id": f["id"],
+                "dip_class": dip,
+                "conf_proxy": conf_proxy,
+                "row_span_px": row_span,
+                "hypotheses_ranked": [
+                    {
+                        "rank": i + 1,
+                        "hypothesis": h,
+                        "prior_prob": p,
+                        "note": f"{f'Highest prior in {basin_context}' if i == 0 else ''}",
+                    }
+                    for i, (h, p) in enumerate(ranked)
+                ],
+                "discrimination_tests": [
+                    "Check vertical displacement continuity with depth (does throw change?)",
+                    "Look for drag folds or growth strata adjacent to fault",
+                    "Correlate fault on adjacent seismic lines (is it real 3D feature?)",
+                    "Test dip direction (same as regional stress field?)",
+                    "Well calibration: look for fault in log character / missing section",
+                ],
+                "confidence_cap": min(0.90, conf_proxy * 0.85),
+                "epistemic": "INT_SEISMIC_FAULT_RANKED",
+            }
+        )
 
     # ── Horizon hypothesis ranking ────────────────────────────────────────
     horiz_prior = dict(prior["horizon_types"])
@@ -675,31 +690,30 @@ def rank_hypotheses(faults: list, horizons: list, packages: list,
         # Find associated termination
         term = next((t for t in terminations if t["horizon_id"] == h["id"]), None)
 
-        results["horizons"].append({
-            "horizon_id": h["id"],
-            "continuity": continuity,
-            "seed_row": seed_row,
-            "amplitude_proxy": amp_proxy,
-            "artifact_flags": artifact_flags,
-            "hypotheses_ranked": [
-                {"rank": i + 1, "hypothesis": hy, "prior_prob": p}
-                for i, (hy, p) in enumerate(ranked)
-            ],
-            "termination_context": {
-                "left": term["left_termination"]["type"] if term else "NOT_ANALYSED",
-                "right": term["right_termination"]["type"] if term else "NOT_ANALYSED",
-                "sequence_significance": term["sequence_significance"] if term else "UNKNOWN",
-            },
-            "discrimination_tests": [
-                "Synthetic seismogram well tie (bruges wavelet convolution)",
-                "Check if horizon repeat interval matches water-bottom multiple TWT",
-                "Correlate across multiple seismic lines",
-                "Extract amplitude map at this level for geological pattern",
-                "Test if horizon tracks known stratigraphic marker from wells",
-            ],
-            "confidence_cap": min(0.90, continuity * 0.85),
-            "epistemic": "INT_SEISMIC_HORIZON_RANKED",
-        })
+        results["horizons"].append(
+            {
+                "horizon_id": h["id"],
+                "continuity": continuity,
+                "seed_row": seed_row,
+                "amplitude_proxy": amp_proxy,
+                "artifact_flags": artifact_flags,
+                "hypotheses_ranked": [{"rank": i + 1, "hypothesis": hy, "prior_prob": p} for i, (hy, p) in enumerate(ranked)],
+                "termination_context": {
+                    "left": term["left_termination"]["type"] if term else "NOT_ANALYSED",
+                    "right": term["right_termination"]["type"] if term else "NOT_ANALYSED",
+                    "sequence_significance": term["sequence_significance"] if term else "UNKNOWN",
+                },
+                "discrimination_tests": [
+                    "Synthetic seismogram well tie (bruges wavelet convolution)",
+                    "Check if horizon repeat interval matches water-bottom multiple TWT",
+                    "Correlate across multiple seismic lines",
+                    "Extract amplitude map at this level for geological pattern",
+                    "Test if horizon tracks known stratigraphic marker from wells",
+                ],
+                "confidence_cap": min(0.90, continuity * 0.85),
+                "epistemic": "INT_SEISMIC_HORIZON_RANKED",
+            }
+        )
 
     # ── Summary ───────────────────────────────────────────────────────────
     results["summary"] = {
@@ -723,9 +737,8 @@ def rank_hypotheses(faults: list, horizons: list, packages: list,
 # GEOLOGIST'S REPORT — structured output a geologist can read
 # ═══════════════════════════════════════════════════════════════════════════
 
-def build_geologist_report(packages: list, terminations: list,
-                            artifacts: dict, hypotheses: dict,
-                            prov_short: str) -> str:
+
+def build_geologist_report(packages: list, terminations: list, artifacts: dict, hypotheses: dict, prov_short: str) -> str:
     """Build a structured plain-text report in the style of a geologist's
     interpretation memo. This is what GEOX presents to the human geologist.
     """
@@ -757,10 +770,7 @@ def build_geologist_report(packages: list, terminations: list,
     lines.append("\n§3 FAULT INTERPRETATION (ranked hypotheses)")
     lines.append("-" * 48)
     for fh in hypotheses.get("faults", []):
-        lines.append(
-            f"  {fh['fault_id']}  dip={fh['dip_class']:<14}  "
-            f"conf_cap={fh['confidence_cap']:.0%}"
-        )
+        lines.append(f"  {fh['fault_id']}  dip={fh['dip_class']:<14}  conf_cap={fh['confidence_cap']:.0%}")
         for rh in fh["hypotheses_ranked"][:3]:
             lines.append(f"      #{rh['rank']} {rh['hypothesis']:<45}  P={rh['prior_prob']:.2f}")
 
@@ -770,10 +780,7 @@ def build_geologist_report(packages: list, terminations: list,
         term_l = hh["termination_context"]["left"]
         term_r = hh["termination_context"]["right"]
         seq_sig = hh["termination_context"]["sequence_significance"]
-        lines.append(
-            f"  {hh['horizon_id']}  cont={hh['continuity']:.0%}  "
-            f"L-term={term_l}  R-term={term_r}  seq={seq_sig}"
-        )
+        lines.append(f"  {hh['horizon_id']}  cont={hh['continuity']:.0%}  L-term={term_l}  R-term={term_r}  seq={seq_sig}")
         for rh in hh["hypotheses_ranked"][:2]:
             lines.append(f"      #{rh['rank']} {rh['hypothesis']:<45}  P={rh['prior_prob']:.2f}")
         if hh["artifact_flags"]:
@@ -831,14 +838,19 @@ def build_geologist_report(packages: list, terminations: list,
 # PUBLIC API — integrate with GeoxPhysicalReality
 # ═══════════════════════════════════════════════════════════════════════════
 
-def run_geological_cognition(attrs: dict, fp: np.ndarray,
-                              faults: list, horizons: list,
-                              output_dir: str,
-                              basin_context: str = "malay_basin",
-                              prov_short: str = "",
-                              raw_arr=None,
-                              crop_bbox=None,
-                              prov: dict = None) -> dict:
+
+def run_geological_cognition(
+    attrs: dict,
+    fp: np.ndarray,
+    faults: list,
+    horizons: list,
+    output_dir: str,
+    basin_context: str = "malay_basin",
+    prov_short: str = "",
+    raw_arr=None,
+    crop_bbox=None,
+    prov: dict = None,
+) -> dict:
     """Run the full geological cognition pass.
 
     Takes outputs from geox_physical_reality.py and adds the reasoning layer:
@@ -851,11 +863,12 @@ def run_geological_cognition(attrs: dict, fp: np.ndarray,
     Returns enriched interpretation dict.
     """
     import os
+
     os.makedirs(output_dir, exist_ok=True)
 
-    agc = attrs['agc']
-    cp  = attrs['phase']
-    pc  = attrs['coherence']
+    agc = attrs["agc"]
+    cp = attrs["phase"]
+    pc = attrs["coherence"]
 
     print("  [COG-1] Basin-scale package classification...")
     packages = classify_reflector_packages(agc, cp, pc, n_zones=6)
@@ -887,7 +900,7 @@ def run_geological_cognition(attrs: dict, fp: np.ndarray,
         "packages": packages,
         "terminations": terminations,
         "artifacts": {k: v for k, v in artifacts.items() if k != "artifacts"}
-                    | {"artifact_details": artifacts.get("artifacts", {})},
+        | {"artifact_details": artifacts.get("artifacts", {})},
         "hypotheses": hypotheses,
         "basin_context": basin_context,
     }
@@ -904,10 +917,10 @@ def run_geological_cognition(attrs: dict, fp: np.ndarray,
     if raw_arr is not None:
         try:
             from geox_panel_d import render_cognitive_panel
+
             panel_d_path = render_cognitive_panel(
-                attrs, fp, faults, horizons,
-                packages, terminations, artifacts, hypotheses,
-                raw_arr, crop_bbox, prov, output_dir)
+                attrs, fp, faults, horizons, packages, terminations, artifacts, hypotheses, raw_arr, crop_bbox, prov, output_dir
+            )
         except Exception as e:
             print(f"  ⚠ Panel D failed: {e} (non-fatal)")
 
@@ -964,6 +977,7 @@ if __name__ == "__main__":
         _extract_faults,
         _extract_horizons,
     )
+
     raw = np.array(Image.open(image_path))
     cropped, crop_bbox = _crop_seismic_panel(raw)
     amp = _extract_amplitude(cropped)
@@ -971,16 +985,19 @@ if __name__ == "__main__":
     fp = _compute_fault_probability(attrs)
 
     # Re-extract with full pts (needed by cognition module)
-    faults   = _extract_faults(fp, min_pts=80, max_faults=15)
+    faults = _extract_faults(fp, min_pts=80, max_faults=15)
     horizons = _extract_horizons(attrs, faults, max_horizons=8)
 
     # Rebuild fault/horizon lists from report
     prov = result.get("input", {}).get("provenance", {})
-    prov_short = f"img:{prov.get('image_sha256_short','?')} | {prov.get('run_tag','?')}"
+    prov_short = f"img:{prov.get('image_sha256_short', '?')} | {prov.get('run_tag', '?')}"
 
     print("\n[PHASE 2] Geological Cognition Pass...")
     cog = run_geological_cognition(
-        attrs, fp, faults, horizons,
+        attrs,
+        fp,
+        faults,
+        horizons,
         output_dir=output_dir,
         basin_context=basin,
         prov_short=prov_short,

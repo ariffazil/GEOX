@@ -244,9 +244,7 @@ async def geox_well_seismic_mistie_rms(
         )
         envelope = MistieResultMCP(
             optimal_lag_ms=float(raw.get("optimal_lag_ms") or 0.0),
-            rms_mistie_ms=float(raw.get("rms_mistie_ms") or 0.0)
-            if np.isfinite(float(raw.get("rms_mistie_ms") or 0))
-            else 1e9,
+            rms_mistie_ms=float(raw.get("rms_mistie_ms") or 0.0) if np.isfinite(float(raw.get("rms_mistie_ms") or 0)) else 1e9,
             correlation_coefficient=float(raw.get("correlation_coefficient") or 0.0),
             residual_rms_normalized=raw.get("residual_rms_normalized"),
             verdict=verdict,  # type: ignore[arg-type]

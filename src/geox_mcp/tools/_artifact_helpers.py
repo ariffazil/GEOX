@@ -17,7 +17,7 @@ MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB limit for base64 uploads
 
 def _compute_content_hash(file_path: str) -> str | None:
     """Compute SHA-256 hash of a file's content.
-    
+
     Returns hex digest string, or None if file cannot be read.
     Used for artifact immutability verification (Module A).
     """
@@ -38,7 +38,7 @@ def _artifact_exists(artifact_id: str) -> bool:
 
 def _register_artifact(artifact_id: str, **kwargs) -> str:
     """Register an artifact in the in-memory store.
-    
+
     Automatically computes content_hash from las_path if available.
     The hash becomes the immutable artifact fingerprint.
     """
@@ -48,7 +48,7 @@ def _register_artifact(artifact_id: str, **kwargs) -> str:
         content_hash = _compute_content_hash(str(las_path))
         if content_hash:
             kwargs["content_hash"] = f"sha256:{content_hash}"
-    
+
     _artifact_registry[artifact_id] = kwargs
     _artifact_store[artifact_id] = kwargs  # Keep a copy for direct access if needed
     return artifact_id

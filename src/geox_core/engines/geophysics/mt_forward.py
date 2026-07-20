@@ -127,8 +127,7 @@ def mt_forward(request: MTForwardRequest) -> dict:
             "grounding": "maxwell_equations_1d_recursion",
             "method": "wait_recursion_cagniard_tikhonov",
             "caveat": (
-                "1D layered Earth assumption. Real MT requires 2D/3D and "
-                "static-shift correction. Phase wrap at 90° is normal."
+                "1D layered Earth assumption. Real MT requires 2D/3D and static-shift correction. Phase wrap at 90° is normal."
             ),
         },
         "godel_wall": {

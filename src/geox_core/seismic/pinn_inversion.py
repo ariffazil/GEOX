@@ -94,7 +94,7 @@ def pinn_invert(request: SeismicInversionRequest) -> dict:
     depth = request.depth_top_m + np.arange(len(ai)) * (request.sample_interval_s * 1500.0)
     # Approx Vp from depth-resistivity Faust if available
     if request.resistivity_ohm_m is not None and len(request.resistivity_ohm_m) >= len(ai):
-        rt = np.array(request.resistivity_ohm_m[:len(ai)], dtype=float)
+        rt = np.array(request.resistivity_ohm_m[: len(ai)], dtype=float)
         vp_from_faust = faust_velocity(depth, rt)
         # Constrain to bounds
         vp_from_faust = np.clip(vp_from_faust, request.vp_min, request.vp_max)
@@ -131,16 +131,12 @@ def pinn_invert(request: SeismicInversionRequest) -> dict:
             "rung": 5,  # MODEL
             "grounding": "recursive_inversion_plus_faust_gardner_prior",
             "method": "1d_post_stack_pinn_baseline",
-            "caveat": (
-                "Deterministic 1D baseline. Full PINN training pending "
-                "w13+_pinn_adapter (production weight deployment)."
-            ),
+            "caveat": ("Deterministic 1D baseline. Full PINN training pending w13+_pinn_adapter (production weight deployment)."),
         },
         "godel_wall": {
             "state": "KNOWN",
             "reason": (
-                "1D inversion grounded in recursive impedance + "
-                "Faust + Gardner physical relations; Physics9 bounds enforced."
+                "1D inversion grounded in recursive impedance + Faust + Gardner physical relations; Physics9 bounds enforced."
             ),
         },
     }

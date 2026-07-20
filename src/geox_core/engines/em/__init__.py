@@ -36,9 +36,9 @@ logger = logging.getLogger("geox.em")
 
 # ─── Constants ───────────────────────────────────────────────────────────────
 
-MU_0 = 4.0 * np.pi * 1e-7   # T·m/A — vacuum permeability
-OMEGA_0 = 1.0 / MU_0         # convenience
-EPSILON_0 = 8.854e-12         # F/m — vacuum permittivity (negligible at exploration freqs)
+MU_0 = 4.0 * np.pi * 1e-7  # T·m/A — vacuum permeability
+OMEGA_0 = 1.0 / MU_0  # convenience
+EPSILON_0 = 8.854e-12  # F/m — vacuum permittivity (negligible at exploration freqs)
 
 
 # ─── Data Classes ────────────────────────────────────────────────────────────
@@ -47,7 +47,8 @@ EPSILON_0 = 8.854e-12         # F/m — vacuum permittivity (negligible at explo
 @dataclass
 class LayerModel:
     """1D layered earth model."""
-    thicknesses_m: np.ndarray   # layer thicknesses (last layer = half-space, thickness = inf)
+
+    thicknesses_m: np.ndarray  # layer thicknesses (last layer = half-space, thickness = inf)
     resistivities_ohmm: np.ndarray  # layer resistivities
 
     @property
@@ -69,12 +70,13 @@ class LayerModel:
 @dataclass
 class CSEMResult:
     """Result of CSEM forward modeling."""
+
     frequencies_hz: np.ndarray
-    ex_amplitude: np.ndarray       # |E_x| at receiver [V/m]
-    ey_amplitude: np.ndarray       # |E_y| at receiver [V/m]
-    hx_amplitude: np.ndarray       # |H_x| at receiver [A/m]
-    hy_amplitude: np.ndarray       # |H_y| at receiver [A/m]
-    offset_m: float                # source-receiver offset
+    ex_amplitude: np.ndarray  # |E_x| at receiver [V/m]
+    ey_amplitude: np.ndarray  # |E_y| at receiver [V/m]
+    hx_amplitude: np.ndarray  # |H_x| at receiver [A/m]
+    hy_amplitude: np.ndarray  # |H_y| at receiver [A/m]
+    offset_m: float  # source-receiver offset
     source_depth_m: float
     receiver_depth_m: float
     layer_model: LayerModel
@@ -96,11 +98,12 @@ class CSEMResult:
 @dataclass
 class MTResult:
     """Result of MT forward modeling."""
+
     frequencies_hz: np.ndarray
     impedance_complex: np.ndarray  # Z(f) [Ω] — complex
     apparent_resistivity: np.ndarray  # ρ_a [Ω·m]
-    phase_deg: np.ndarray          # phase [degrees]
-    tipper: np.ndarray | None      # T(f) — vertical field transfer function
+    phase_deg: np.ndarray  # phase [degrees]
+    tipper: np.ndarray | None  # T(f) — vertical field transfer function
     layer_model: LayerModel
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -181,7 +184,7 @@ def mt_forward_1d(
 
         # Apparent resistivity: ρ_a = |Z|² / (ωμ₀)
         abs_Z = abs(Z)
-        apparent_resistivity[fi] = abs_Z ** 2 / (omega * MU_0)
+        apparent_resistivity[fi] = abs_Z**2 / (omega * MU_0)
 
         # Phase: φ = arctan(Im(Z)/Re(Z))
         phase[fi] = np.degrees(np.arctan2(Z.imag, Z.real))
@@ -276,7 +279,7 @@ def csem_forward_1d(
         # Far-field approximation for horizontal electric dipole
         # E_x ∝ (source_moment / r²) · exp(-r/δ) · cos(φ)
         # where r = sqrt(offset² + vertical_sep²), δ = skin depth
-        r = math.sqrt(offset_m ** 2 + (source_depth_m - receiver_depth_m) ** 2)
+        r = math.sqrt(offset_m**2 + (source_depth_m - receiver_depth_m) ** 2)
         if r < 1.0:
             r = 1.0
 
@@ -286,7 +289,7 @@ def csem_forward_1d(
         # Geometric spreading (1/r² for near-field, 1/r for far-field)
         lambda_ratio = r / max(skin_depth, 1.0)
         if lambda_ratio < 1.0:
-            spreading = 1.0 / (r ** 2)  # near-field
+            spreading = 1.0 / (r**2)  # near-field
         else:
             spreading = 1.0 / (r * skin_depth)  # far-field
 
@@ -341,11 +344,13 @@ def csem_apparent_resistivity(
     omega = 2.0 * np.pi * csem_result.frequencies_hz
     Z_ratio = csem_result.ex_amplitude / np.maximum(csem_result.hy_amplitude, 1e-30)
 
-    rho_a = Z_ratio ** 2 / (omega * MU_0)
-    phase = np.degrees(np.arctan2(
-        np.imag(csem_result.ex_amplitude + 1j * csem_result.hy_amplitude),
-        np.real(csem_result.ex_amplitude + 1j * csem_result.hy_amplitude),
-    ))
+    rho_a = Z_ratio**2 / (omega * MU_0)
+    phase = np.degrees(
+        np.arctan2(
+            np.imag(csem_result.ex_amplitude + 1j * csem_result.hy_amplitude),
+            np.real(csem_result.ex_amplitude + 1j * csem_result.hy_amplitude),
+        )
+    )
 
     return {
         "apparent_resistivity_ohmm": rho_a,
@@ -405,11 +410,7 @@ def mt_sensitivity_1d(
                     if parameter == "resistivity"
                     else layer_model.thicknesses_m[layer_idx]
                 )
-                sensitivity[fi, layer_idx] = (
-                    (perturbed_rho_a[fi] - base_rho_a[fi])
-                    / base_rho_a[fi]
-                    / (delta / param_val)
-                )
+                sensitivity[fi, layer_idx] = (perturbed_rho_a[fi] - base_rho_a[fi]) / base_rho_a[fi] / (delta / param_val)
 
     return {
         "frequencies_hz": frequencies_hz.tolist(),

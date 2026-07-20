@@ -69,10 +69,7 @@ class GemPyAdapter:
 
     def _check_dependencies(self) -> None:
         if not _GEMPY_AVAILABLE:
-            raise ImportError(
-                "gempy>=3.0.0 is required for 3D geomodeling. "
-                "Install with: pip install gempy"
-            )
+            raise ImportError("gempy>=3.0.0 is required for 3D geomodeling. Install with: pip install gempy")
 
     def simple_stratigraphic_model(
         self,
@@ -97,14 +94,16 @@ class GemPyAdapter:
         Returns:
             GemPy model object reference + scalar field + formation labels.
         """
-        params_hash = _sha256_params({
-            "method": "simple_stratigraphic",
-            "n_surface_points": len(surface_points),
-            "n_formations": len(formation_names),
-            "basement_depth_m": basement_depth_m,
-            "extent": extent,
-            "resolution": resolution,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "simple_stratigraphic",
+                "n_surface_points": len(surface_points),
+                "n_formations": len(formation_names),
+                "basement_depth_m": basement_depth_m,
+                "extent": extent,
+                "resolution": resolution,
+            }
+        )
 
         # Verify grid size
         n_cells = resolution[0] * resolution[1] * resolution[2]
@@ -130,10 +129,8 @@ class GemPyAdapter:
             "epistemic_label": "ESTIMATE",
             "confidence": "MEDIUM",
             "caveats": [
-                "GemPy model is only as good as input structural data — "
-                "boreholes, seismic, outcrop control needed for CLAIM",
-                "Implicit modeling assumes continuous surfaces — "
-                "discontinuous features (channels, reefs) need explicit handling",
+                "GemPy model is only as good as input structural data — boreholes, seismic, outcrop control needed for CLAIM",
+                "Implicit modeling assumes continuous surfaces — discontinuous features (channels, reefs) need explicit handling",
                 "Fault modeling requires additional fault function setup",
                 "Physical properties (φ, k) require separate petrophysical modeling",
             ],
@@ -164,16 +161,18 @@ class GemPyAdapter:
         Returns:
             Ensemble of model tops/depths + confidence intervals.
         """
-        params_hash = _sha256_params({
-            "method": "probabilistic",
-            "n_simulations": n_simulations,
-            "n_surface_points": len(surface_points) if surface_points is not None else 0,
-            "n_formations": len(formation_names) if formation_names else 0,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "probabilistic",
+                "n_simulations": n_simulations,
+                "n_surface_points": len(surface_points) if surface_points is not None else 0,
+                "n_formations": len(formation_names) if formation_names else 0,
+            }
+        )
 
         # Monte Carlo: perturb surface point Z by ±10% as uncertainty proxy
         depth_ensemble = {}
-        for formation in (formation_names or ["Top", "Base"]):
+        for formation in formation_names or ["Top", "Base"]:
             base_depth = 1000.0  # proxy if no input
             ensemble = np.random.normal(base_depth, base_depth * 0.1, n_simulations)
             depth_ensemble[formation] = {
@@ -192,10 +191,8 @@ class GemPyAdapter:
             "epistemic_label": "HYPOTHESIS",
             "confidence": "LOW",
             "caveats": [
-                "Probabilistic model uses Gaussian perturbation — "
-                "real structural uncertainty may not be Gaussian",
-                "Uncertainty only captures structural geometry — "
-                "not petrophysical property uncertainty",
+                "Probabilistic model uses Gaussian perturbation — real structural uncertainty may not be Gaussian",
+                "Uncertainty only captures structural geometry — not petrophysical property uncertainty",
                 "p10/p50/p90 require enough simulations (≥100) to be meaningful",
             ],
             "library": "gempy",

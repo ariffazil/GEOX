@@ -13,19 +13,20 @@ from dataclasses import dataclass, field
 
 # ── Tokenizer ───────────────────────────────────────────────────────────────
 
+
 @dataclass
 class TokenizerConfig:
     """VQ-VAE tokenizer configuration for well log discretization."""
 
     # Input
     input_curves: tuple[str, ...] = ("GR", "RT", "RHOB", "NPHI", "DT", "SP")
-    patch_length: int = 32          # Depth window (samples)
-    patch_stride: int = 8           # Stride between patches
+    patch_length: int = 32  # Depth window (samples)
+    patch_stride: int = 8  # Stride between patches
 
     # VQ codebook
-    codebook_size: int = 512        # Number of geological tokens
-    codebook_dim: int = 64          # Embedding dimension per token
-    commitment_beta: float = 0.25   # VQ commitment loss weight
+    codebook_size: int = 512  # Number of geological tokens
+    codebook_dim: int = 64  # Embedding dimension per token
+    commitment_beta: float = 0.25  # VQ commitment loss weight
 
     # Encoder/Decoder
     encoder_hidden: tuple[int, ...] = (128, 64)
@@ -38,6 +39,7 @@ class TokenizerConfig:
 
 
 # ── Pretraining ─────────────────────────────────────────────────────────────
+
 
 @dataclass
 class PretrainConfig:
@@ -68,7 +70,7 @@ class PretrainConfig:
 
     # Masked Token Modeling
     mask_ratio: float = 0.30
-    mask_block_size: int = 8       # Consecutive tokens to mask as block
+    mask_block_size: int = 8  # Consecutive tokens to mask as block
 
     # Contrastive learning
     contrastive_weight: float = 0.1
@@ -77,20 +79,21 @@ class PretrainConfig:
 
     # Hardware
     num_workers: int = 4
-    device: str = "cpu"            # Fallback — will detect CUDA if available
-    amp: bool = False              # Mixed precision (requires GPU)
+    device: str = "cpu"  # Fallback — will detect CUDA if available
+    amp: bool = False  # Mixed precision (requires GPU)
 
 
 # ── Physics Head ────────────────────────────────────────────────────────────
+
 
 @dataclass
 class PhysicsHeadConfig:
     """Forward-physics decoder for constraining LEM outputs."""
 
     # Rock physics models to apply
-    use_gardner: bool = True       # Density from Vp
-    use_faust: bool = True         # Velocity from resistivity + depth
-    use_archie: bool = True        # Sw from resistivity + porosity
+    use_gardner: bool = True  # Density from Vp
+    use_faust: bool = True  # Velocity from resistivity + depth
+    use_archie: bool = True  # Sw from resistivity + porosity
     use_density_porosity: bool = True  # Phi from density
 
     # Physics loss weights
@@ -106,6 +109,7 @@ class PhysicsHeadConfig:
 
 # ── Data Pipeline ───────────────────────────────────────────────────────────
 
+
 @dataclass
 class DataConfig:
     """Training data pipeline configuration."""
@@ -117,12 +121,12 @@ class DataConfig:
     panel_data_dir: str = "data/geox_panels"
 
     # Well log selection
-    min_depth_samples: int = 100       # Skip wells with fewer samples
-    max_null_pct: float = 0.50         # Skip wells with >50% missing curves
+    min_depth_samples: int = 100  # Skip wells with fewer samples
+    max_null_pct: float = 0.50  # Skip wells with >50% missing curves
     required_curves: tuple[str, ...] = ("GR",)  # At minimum GR must exist
 
     # Normalization
-    normalize_per_well: bool = True    # Z-score per well
+    normalize_per_well: bool = True  # Z-score per well
     clip_outliers: bool = True
     outlier_std_threshold: float = 5.0
 
@@ -134,9 +138,11 @@ class DataConfig:
 
 # ── Master Config ───────────────────────────────────────────────────────────
 
+
 @dataclass
 class LEMConfig:
     """Master configuration for GEOX-LEM."""
+
     tokenizer: TokenizerConfig = field(default_factory=TokenizerConfig)
     pretrain: PretrainConfig = field(default_factory=PretrainConfig)
     physics: PhysicsHeadConfig = field(default_factory=PhysicsHeadConfig)

@@ -155,22 +155,27 @@ def assemble_earth_state_vector(age_res: AgeResolution) -> EarthStateVector:
 
     # ─── Count real vs pending vs UNKNOWN ───────────────────────────────────
     all_vars = [
-        solar, day_length, ecc, obliquity,
-        co2, temp, sea_level, mag, o2, benthic,
-        supercontinent, biotic, ice, paleogeo,
+        solar,
+        day_length,
+        ecc,
+        obliquity,
+        co2,
+        temp,
+        sea_level,
+        mag,
+        o2,
+        benthic,
+        supercontinent,
+        biotic,
+        ice,
+        paleogeo,
     ]
-    n_real = sum(
-        1 for v in all_vars
-        if v.value is not None and v.epistemic_level not in ("NO_DATA", "UNKNOWN")
-    )
+    n_real = sum(1 for v in all_vars if v.value is not None and v.epistemic_level not in ("NO_DATA", "UNKNOWN"))
     n_pending = sum(1 for v in all_vars if v.epistemic_level == "NO_DATA")
     n_unknown = sum(1 for v in all_vars if v.epistemic_level == "UNKNOWN")
 
     # ─── Overall confidence (mean of non-null variable confidences) ─────────
-    real_confs = [
-        v.confidence for v in all_vars
-        if v.value is not None and v.epistemic_level not in ("NO_DATA", "UNKNOWN")
-    ]
+    real_confs = [v.confidence for v in all_vars if v.value is not None and v.epistemic_level not in ("NO_DATA", "UNKNOWN")]
     if real_confs:
         overall_conf = sum(real_confs) / len(real_confs)
         overall_conf = min(overall_conf, 0.90)
@@ -302,38 +307,46 @@ def assemble_envelope(
             if vector.atmospheric_co2_ppm.epistemic_level == "NO_DATA":
                 pending.append({"variable": "atmospheric_co2_ppm", **PENDING_DATASETS.get("co2", {})})
             elif vector.atmospheric_co2_ppm.epistemic_level == "UNKNOWN":
-                unknown.append({
-                    "variable": "atmospheric_co2_ppm",
-                    "reason": vector.atmospheric_co2_ppm.notes,
-                    "f9_action": "Refuse fabrication. Accept UNKNOWN or ingest deep-time proxy if exists.",
-                })
+                unknown.append(
+                    {
+                        "variable": "atmospheric_co2_ppm",
+                        "reason": vector.atmospheric_co2_ppm.notes,
+                        "f9_action": "Refuse fabrication. Accept UNKNOWN or ingest deep-time proxy if exists.",
+                    }
+                )
         if vector.global_temperature_anomaly_c:
             if vector.global_temperature_anomaly_c.epistemic_level == "NO_DATA":
                 pending.append({"variable": "global_temperature_anomaly_c", **PENDING_DATASETS.get("temperature", {})})
             elif vector.global_temperature_anomaly_c.epistemic_level == "UNKNOWN":
-                unknown.append({
-                    "variable": "global_temperature_anomaly_c",
-                    "reason": vector.global_temperature_anomaly_c.notes,
-                    "f9_action": "Refuse fabrication. Accept UNKNOWN.",
-                })
+                unknown.append(
+                    {
+                        "variable": "global_temperature_anomaly_c",
+                        "reason": vector.global_temperature_anomaly_c.notes,
+                        "f9_action": "Refuse fabrication. Accept UNKNOWN.",
+                    }
+                )
         if vector.benthic_d18O_permil:
             if vector.benthic_d18O_permil.epistemic_level == "NO_DATA":
                 pending.append({"variable": "benthic_d18O_permil", **PENDING_DATASETS.get("temperature", {})})
             elif vector.benthic_d18O_permil.epistemic_level == "UNKNOWN":
-                unknown.append({
-                    "variable": "benthic_d18O_permil",
-                    "reason": vector.benthic_d18O_permil.notes,
-                    "f9_action": "Use brachiopod or phosphate δ18O for older intervals.",
-                })
+                unknown.append(
+                    {
+                        "variable": "benthic_d18O_permil",
+                        "reason": vector.benthic_d18O_permil.notes,
+                        "f9_action": "Use brachiopod or phosphate δ18O for older intervals.",
+                    }
+                )
         if vector.eustatic_sea_level_m:
             if vector.eustatic_sea_level_m.epistemic_level == "NO_DATA":
                 pending.append({"variable": "eustatic_sea_level_m", **PENDING_DATASETS.get("sea_level", {})})
             elif vector.eustatic_sea_level_m.epistemic_level == "UNKNOWN":
-                unknown.append({
-                    "variable": "eustatic_sea_level_m",
-                    "reason": vector.eustatic_sea_level_m.notes,
-                    "f9_action": "Refuse fabrication.",
-                })
+                unknown.append(
+                    {
+                        "variable": "eustatic_sea_level_m",
+                        "reason": vector.eustatic_sea_level_m.notes,
+                        "f9_action": "Refuse fabrication.",
+                    }
+                )
         if vector.geomagnetic_polarity:
             if vector.geomagnetic_polarity.epistemic_level == "NO_DATA":
                 pending.append({"variable": "geomagnetic_polarity", **PENDING_DATASETS.get("magnetic_polarity", {})})
@@ -341,46 +354,71 @@ def assemble_envelope(
             if vector.atmospheric_o2_pal.epistemic_level == "NO_DATA":
                 pending.append({"variable": "atmospheric_o2_pal", **PENDING_DATASETS.get("o2", {})})
             elif vector.atmospheric_o2_pal.epistemic_level == "UNKNOWN":
-                unknown.append({
-                    "variable": "atmospheric_o2_pal",
-                    "reason": vector.atmospheric_o2_pal.notes,
-                    "f9_action": "Refuse fabrication.",
-                })
-        if vector.paleogeography_summary and vector.paleogeography_summary.notes and "Merdith" in vector.paleogeography_summary.notes:
+                unknown.append(
+                    {
+                        "variable": "atmospheric_o2_pal",
+                        "reason": vector.atmospheric_o2_pal.notes,
+                        "f9_action": "Refuse fabrication.",
+                    }
+                )
+        if (
+            vector.paleogeography_summary
+            and vector.paleogeography_summary.notes
+            and "Merdith" in vector.paleogeography_summary.notes
+        ):
             pending.append({"variable": "paleogeography_summary", **PENDING_DATASETS.get("paleogeography", {})})
 
     # Sources list (deduplicated)
     sources_seen = set()
     sources = []
     for var in [
-        vector.solar_luminosity_fraction, vector.day_length_hours,
-        vector.orbital_eccentricity, vector.orbital_obliquity_deg,
-        vector.geomagnetic_polarity, vector.atmospheric_co2_ppm,
-        vector.benthic_d18O_permil, vector.global_temperature_anomaly_c,
-        vector.eustatic_sea_level_m, vector.atmospheric_o2_pal,
-        vector.supercontinent_state, vector.biotic_realm,
-        vector.ice_extent, vector.paleogeography_summary,
+        vector.solar_luminosity_fraction,
+        vector.day_length_hours,
+        vector.orbital_eccentricity,
+        vector.orbital_obliquity_deg,
+        vector.geomagnetic_polarity,
+        vector.atmospheric_co2_ppm,
+        vector.benthic_d18O_permil,
+        vector.global_temperature_anomaly_c,
+        vector.eustatic_sea_level_m,
+        vector.atmospheric_o2_pal,
+        vector.supercontinent_state,
+        vector.biotic_realm,
+        vector.ice_extent,
+        vector.paleogeography_summary,
     ]:
-        if var and var.source_citation and var.source_citation not in sources_seen and "pending" not in (var.source_citation or "").lower():
+        if (
+            var
+            and var.source_citation
+            and var.source_citation not in sources_seen
+            and "pending" not in (var.source_citation or "").lower()
+        ):
             sources_seen.add(var.source_citation)
-            sources.append({
-                "citation": var.source_citation,
-                "doi": var.source_doi,
-                "coverage_top_ma": var.coverage_top_ma,
-                "coverage_base_ma": var.coverage_base_ma,
-                "type": var.epistemic_level.lower(),
-            })
+            sources.append(
+                {
+                    "citation": var.source_citation,
+                    "doi": var.source_doi,
+                    "coverage_top_ma": var.coverage_top_ma,
+                    "coverage_base_ma": var.coverage_base_ma,
+                    "type": var.epistemic_level.lower(),
+                }
+            )
 
     # Build governance footer
     governance = _build_governance_footer(vector, age_res)
 
     # Epistemic summary
     real_vars = sum(
-        1 for v in [
-            vector.solar_luminosity_fraction, vector.day_length_hours,
-            vector.orbital_eccentricity, vector.orbital_obliquity_deg,
-            vector.supercontinent_state, vector.biotic_realm,
-            vector.ice_extent, vector.paleogeography_summary,
+        1
+        for v in [
+            vector.solar_luminosity_fraction,
+            vector.day_length_hours,
+            vector.orbital_eccentricity,
+            vector.orbital_obliquity_deg,
+            vector.supercontinent_state,
+            vector.biotic_realm,
+            vector.ice_extent,
+            vector.paleogeography_summary,
         ]
         if v and v.value is not None
     )

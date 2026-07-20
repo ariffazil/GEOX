@@ -315,8 +315,7 @@ def _compute_attention_residual(
                 "required_status": "HOLD",
                 "trigger": conditions[0],
                 "reason": (
-                    "Essay #13, Section 5.3: Boundary condition violated. "
-                    "Approximation tier may not hold. Human review required."
+                    "Essay #13, Section 5.3: Boundary condition violated. Approximation tier may not hold. Human review required."
                 ),
             }
 

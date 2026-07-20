@@ -25,8 +25,7 @@ logger = logging.getLogger("geox.io.usgs_water")
 
 USGS_WATER_BASE = "https://waterservices.usgs.gov/nwis"
 USGS_WATER_CITATION = (
-    "USGS Water Resources (2024). National Water Information System. "
-    "https://waterservices.usgs.gov. Public Domain."
+    "USGS Water Resources (2024). National Water Information System. https://waterservices.usgs.gov. Public Domain."
 )
 
 
@@ -62,9 +61,21 @@ class USGSWaterFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return WaterResult(
-                ok=True, mode="offline_stub",
-                sites=[{"site_code": "12345678", "site_name": "Sample Creek", "latitude": 38.9, "longitude": -77.0, "value": 150.0, "unit": "cfs"}],
-                count=1, query_params=params.model_dump(exclude_none=True), fetched_at=now,
-                note="Offline stub. USGS Water covers US only."
+                ok=True,
+                mode="offline_stub",
+                sites=[
+                    {
+                        "site_code": "12345678",
+                        "site_name": "Sample Creek",
+                        "latitude": 38.9,
+                        "longitude": -77.0,
+                        "value": 150.0,
+                        "unit": "cfs",
+                    }
+                ],
+                count=1,
+                query_params=params.model_dump(exclude_none=True),
+                fetched_at=now,
+                note="Offline stub. USGS Water covers US only.",
             )
         return WaterResult(ok=False, mode="live", note="Live requires HTTP client to USGS Water Services.", fetched_at=now)

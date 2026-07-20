@@ -170,8 +170,7 @@ def earth_meaning_decode(
     if sw_m is not None and phi_m is not None:
         if sw_m <= 0.55 and phi_m >= 0.10 and (vsh_m or 1) < 0.45:
             fluid = (
-                "possible hydrocarbon-bearing interval (Archie Sw low) — "
-                "HYPOTHESIS until Rw/m/n calibrated and MDT/DST confirm"
+                "possible hydrocarbon-bearing interval (Archie Sw low) — HYPOTHESIS until Rw/m/n calibrated and MDT/DST confirm"
             )
         elif sw_m >= 0.75:
             fluid = "water-wet / high Sw character (Archie) — brine-filled more likely"
@@ -532,7 +531,17 @@ def render_interpreted_panel(
     for i, line in enumerate(text_lines[:48]):
         weight = "bold" if i == 0 else "normal"
         color = "#f1c40f" if i == 0 else "#dfe6e9"
-        ax_txt.text(0.02, y, line, transform=ax_txt.transAxes, fontsize=7.2, color=color, va="top", fontweight=weight, family="DejaVu Sans")
+        ax_txt.text(
+            0.02,
+            y,
+            line,
+            transform=ax_txt.transAxes,
+            fontsize=7.2,
+            color=color,
+            va="top",
+            fontweight=weight,
+            family="DejaVu Sans",
+        )
         y -= 0.028
         if y < 0.02:
             break

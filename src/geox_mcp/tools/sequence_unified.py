@@ -5,6 +5,7 @@ Absorbs: geox_sequence_interpret (renamed, same API)
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 from typing import Any, Literal
@@ -43,6 +44,7 @@ async def geox_sequence(
     Delegates to geox_sequence_interpret implementation.
     """
     from geox_mcp.tools.sequence import geox_sequence_interpret as _impl
+
     return await _impl(
         workflow=workflow,
         source=source,

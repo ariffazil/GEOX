@@ -425,9 +425,12 @@ class GeoxGovernanceMiddleware(Middleware):
                     _headers = dict(getattr(req, "headers", {}) or {})
             except Exception:
                 _headers = None
-            _require = tool_name in self._IRREVERSIBLE_TOOLS and os.getenv(
-                "GEOX_SCT_REQUIRE_IRREVERSIBLE", "0"
-            ).strip() not in ("0", "false", "off", "no")
+            _require = tool_name in self._IRREVERSIBLE_TOOLS and os.getenv("GEOX_SCT_REQUIRE_IRREVERSIBLE", "0").strip() not in (
+                "0",
+                "false",
+                "off",
+                "no",
+            )
             _sct_rej = gate_tool_ingress(
                 tool_name,
                 arguments if isinstance(arguments, dict) else {},
@@ -441,9 +444,7 @@ class GeoxGovernanceMiddleware(Middleware):
                     tool_name,
                     _sct_rej.get("error"),
                 )
-                raise ToolError(
-                    f"SCT_GATE: {_sct_rej.get('error')}: {_sct_rej.get('message')}"
-                )
+                raise ToolError(f"SCT_GATE: {_sct_rej.get('error')}: {_sct_rej.get('message')}")
             # Strip SCT transport fields so tool Pydantic schemas don't reject them
             if isinstance(arguments, dict):
                 for _sk in ("session_token", "sct", "arifos_sct"):
@@ -492,7 +493,9 @@ class GeoxGovernanceMiddleware(Middleware):
             _identity_preserved = {k: arguments.pop(k) for k in _IDENTITY_KEYS if k in arguments}
             arguments = {"arguments": arguments}
             arguments.update(_identity_preserved)
-            logger.debug(f"ARG_WRAP: nested flat params into arguments dict for '{tool_name}' (identity preserved: {list(_identity_preserved.keys())})")
+            logger.debug(
+                f"ARG_WRAP: nested flat params into arguments dict for '{tool_name}' (identity preserved: {list(_identity_preserved.keys())})"
+            )
 
         # ── RT1: tool name must be in executable surface (canonical + compat) ──
         if tool_name not in self._EXECUTABLE_SURFACE:

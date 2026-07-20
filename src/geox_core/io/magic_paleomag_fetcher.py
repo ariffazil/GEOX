@@ -62,9 +62,21 @@ class MagICFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return PaleomagResult(
-                ok=True, mode="offline_stub",
-                records=[{"latitude": 4.0, "longitude": 112.0, "age_ma": 15.0, "declination": 355.0, "inclination": 5.0, "polarity": "normal"}],
-                count=1, query_params=params.model_dump(exclude_none=True), fetched_at=now,
-                note="Offline stub. Set GEOX_MAGIC_OFFLINE=0 for live MagIC API."
+                ok=True,
+                mode="offline_stub",
+                records=[
+                    {
+                        "latitude": 4.0,
+                        "longitude": 112.0,
+                        "age_ma": 15.0,
+                        "declination": 355.0,
+                        "inclination": 5.0,
+                        "polarity": "normal",
+                    }
+                ],
+                count=1,
+                query_params=params.model_dump(exclude_none=True),
+                fetched_at=now,
+                note="Offline stub. Set GEOX_MAGIC_OFFLINE=0 for live MagIC API.",
             )
         return PaleomagResult(ok=False, mode="live", note="Live MagIC API requires httpx.", fetched_at=now)

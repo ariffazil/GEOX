@@ -20,6 +20,7 @@ Reference:
   Deformation in the Northwestern Margin of the South China Sea
   (OBS2013-1, ±0.3 km/s Vp uncertainty, 10,346 picked arrivals).
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -56,11 +57,7 @@ def _depth_km_from_state(state: Physics13State, observations: list[Any]) -> floa
     Strategy: take the median observation depth.
     Falls back to 0.0 if no observations with depth.
     """
-    depths: list[float] = [
-        float(obs.depth_m)
-        for obs in observations
-        if hasattr(obs, "depth_m") and obs.depth_m is not None
-    ]
+    depths: list[float] = [float(obs.depth_m) for obs in observations if hasattr(obs, "depth_m") and obs.depth_m is not None]
     if not depths:
         return 0.0
     depths_sorted = sorted(depths)

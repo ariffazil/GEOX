@@ -38,18 +38,19 @@ except ImportError:
 # ── Curve Definition ────────────────────────────────────────────────────────
 
 CURVE_DEFINITIONS: dict[str, dict] = {
-    "GR":  {"idx": 0, "unit": "API",  "description": "Gamma Ray",           "transform": None},
-    "RT":  {"idx": 1, "unit": "ohm.m", "description": "Deep Resistivity",   "transform": "log10"},
-    "RHOB":{"idx": 2, "unit": "g/cc", "description": "Bulk Density",        "transform": None},
-    "NPHI":{"idx": 3, "unit": "v/v",  "description": "Neutron Porosity",    "transform": None},
-    "DT":  {"idx": 4, "unit": "us/ft","description": "Sonic Travel Time",   "transform": None},
-    "SP":  {"idx": 5, "unit": "mV",   "description": "Spontaneous Potential","transform": None},
+    "GR": {"idx": 0, "unit": "API", "description": "Gamma Ray", "transform": None},
+    "RT": {"idx": 1, "unit": "ohm.m", "description": "Deep Resistivity", "transform": "log10"},
+    "RHOB": {"idx": 2, "unit": "g/cc", "description": "Bulk Density", "transform": None},
+    "NPHI": {"idx": 3, "unit": "v/v", "description": "Neutron Porosity", "transform": None},
+    "DT": {"idx": 4, "unit": "us/ft", "description": "Sonic Travel Time", "transform": None},
+    "SP": {"idx": 5, "unit": "mV", "description": "Spontaneous Potential", "transform": None},
 }
 
 NUM_CURVES = len(CURVE_DEFINITIONS)  # 6
 
 
 # ── Curve-Type Embedding ───────────────────────────────────────────────────
+
 
 class CurveTypeEmbedding(nn.Module):
     """Learned embedding for each curve type (GR, RT, RHOB, etc.)."""
@@ -60,7 +61,7 @@ class CurveTypeEmbedding(nn.Module):
 
     def forward(self, x: torch.Tensor, curve_indices: torch.Tensor) -> torch.Tensor:
         """Add curve-type information to input features.
-        
+
         Args:
             x: (B, C, L) input tensor
             curve_indices: (B, C) or (C,) curve type indices
@@ -73,13 +74,14 @@ class CurveTypeEmbedding(nn.Module):
             c_emb = c_emb.unsqueeze(0).unsqueeze(-1)  # (1, C, D, 1)
         else:
             c_emb = c_emb.unsqueeze(-1)  # (B, C, D, 1)
-        
+
         # We need to project curve embed to match input dim per curve
         # For now: just return x (curves are already separate channels)
         return x
 
 
 # ── VQ-VAE Encoder ─────────────────────────────────────────────────────────
+
 
 class VQEncoder(nn.Module):
     """Downsampling encoder for well log patches."""
@@ -97,11 +99,13 @@ class VQEncoder(nn.Module):
         modules: list[nn.Module] = []
         prev = in_channels
         for h in hidden_dims:
-            modules.extend([
-                nn.Conv1d(prev, h, kernel_size=3, stride=1, padding=1),
-                nn.BatchNorm1d(h),
-                nn.LeakyReLU(0.2),
-            ])
+            modules.extend(
+                [
+                    nn.Conv1d(prev, h, kernel_size=3, stride=1, padding=1),
+                    nn.BatchNorm1d(h),
+                    nn.LeakyReLU(0.2),
+                ]
+            )
             prev = h
 
         self.encoder = nn.Sequential(*modules)
@@ -134,11 +138,13 @@ class VQDecoder(nn.Module):
         modules: list[nn.Module] = []
         prev = latent_dim
         for h in hidden_dims:
-            modules.extend([
-                nn.Conv1d(prev, h, kernel_size=3, stride=1, padding=1),
-                nn.BatchNorm1d(h),
-                nn.LeakyReLU(0.2),
-            ])
+            modules.extend(
+                [
+                    nn.Conv1d(prev, h, kernel_size=3, stride=1, padding=1),
+                    nn.BatchNorm1d(h),
+                    nn.LeakyReLU(0.2),
+                ]
+            )
             prev = h
 
         self.decoder = nn.Sequential(*modules)
@@ -156,6 +162,7 @@ class VQDecoder(nn.Module):
 
 
 # ── Vector Quantization ────────────────────────────────────────────────────
+
 
 class VectorQuantizer(nn.Module):
     """Vector quantization layer with EMA codebook update."""
@@ -183,10 +190,10 @@ class VectorQuantizer(nn.Module):
     def forward(self, z: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """
         Quantize continuous latent to nearest codebook entry.
-        
+
         Args:
             z: (B, D, L) — encoded features
-        
+
         Returns:
             z_q: Quantized features (B, D, L)
             encoding_indices: (B, L) — indices into codebook
@@ -199,9 +206,7 @@ class VectorQuantizer(nn.Module):
 
         # Compute distances to codebook: ||z - e||^2
         dist = (
-            flat.pow(2).sum(1, keepdim=True)
-            - 2 * flat @ self.embedding.T
-            + self.embedding.pow(2).sum(1, keepdim=True).T
+            flat.pow(2).sum(1, keepdim=True) - 2 * flat @ self.embedding.T + self.embedding.pow(2).sum(1, keepdim=True).T
         )  # (B*L, K)
 
         # Find nearest
@@ -222,10 +227,11 @@ class VectorQuantizer(nn.Module):
 
 # ── VQ-VAE Model ────────────────────────────────────────────────────────────
 
+
 class WellLogVQVAE(nn.Module):
     """
     VQ-VAE for well log tokenization.
-    
+
     Converts continuous multi-curve log patches into discrete
     geological tokens from a learned codebook.
     """
@@ -265,10 +271,10 @@ class WellLogVQVAE(nn.Module):
 
     def encode(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """Encode patches to tokens.
-        
+
         Args:
             x: (B, C, L) input patches
-        
+
         Returns:
             z_q: (B, D, L') quantized features
             tokens: (B, L') discrete token indices
@@ -279,21 +285,19 @@ class WellLogVQVAE(nn.Module):
 
     def decode(self, z_q: torch.Tensor) -> torch.Tensor:
         """Decode from quantized features.
-        
+
         Args:
             z_q: (B, D, L') quantized features
-        
+
         Returns:
             x_recon: (B, C, L) reconstructed patches
         """
         return self.decoder(z_q)
 
-    def forward(
-        self, x: torch.Tensor
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """
         Full forward pass: encode → quantize → decode.
-        
+
         Returns:
             x_recon, tokens, commitment_loss, codebook_loss
         """
@@ -302,8 +306,9 @@ class WellLogVQVAE(nn.Module):
         x_recon = self.decoder(z_q)
         return x_recon, tokens, commitment_loss, codebook_loss
 
-    def loss(self, x: torch.Tensor, x_recon: torch.Tensor, 
-             commitment_loss: torch.Tensor, codebook_loss: torch.Tensor) -> dict[str, torch.Tensor]:
+    def loss(
+        self, x: torch.Tensor, x_recon: torch.Tensor, commitment_loss: torch.Tensor, codebook_loss: torch.Tensor
+    ) -> dict[str, torch.Tensor]:
         """Compute total VQ-VAE loss with optional physics constraint."""
         recon_loss = F.mse_loss(x_recon, x)
         total = recon_loss + commitment_loss + codebook_loss
@@ -316,7 +321,7 @@ class WellLogVQVAE(nn.Module):
 
     def get_geological_vocabulary(self) -> dict[int, dict]:
         """Return the learned codebook mapped to geological meaning.
-        
+
         Returns dict mapping token_id → {
             'prototype': np.ndarray of shape (C,) — mean curve values
             'frequency': int — how often used in training

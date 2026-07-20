@@ -1,4 +1,3 @@
-
 from mcp.server.fastmcp import FastMCP
 from pydantic import Field
 
@@ -18,7 +17,7 @@ def register_velocity_tools(mcp: FastMCP):
         Evaluates a velocity cube for its validity as a structural mapping proxy.
         Enforces the 8 QC gates and identifies 6 critical failure modes.
         Returns a Binary Transport RenderPayload with a strict Epistemic Claim (EARTHMODEL).
-        """
+        """,
     )
     def geox_velocity_structural_mapping_qc(
         cube_id: str = Field(..., description="The ID of the velocity cube to evaluate"),
@@ -30,10 +29,10 @@ def register_velocity_tools(mcp: FastMCP):
         uncertainty_band: str = Field("P10-P90 Not Calculated", description="Uncertainty spread across realizations"),
         proxy_id: str | None = Field(None, description="Unique proxy packet ID"),
         lineage: list[dict] | None = Field(None, description="List of VelocityLineageEvent dicts"),
-        evidence_handles: list[str] | None = Field(None, description="URIs pointing to QC artifacts")
+        evidence_handles: list[str] | None = Field(None, description="URIs pointing to QC artifacts"),
     ) -> dict:
         """
-        Executes the VelocityStructuralEngine to compute AC Risk and 
+        Executes the VelocityStructuralEngine to compute AC Risk and
         format the claim according to the GEOX Epistemic Ladder.
         """
         # In production, policy could be loaded from db based on region. Using default.
@@ -48,9 +47,9 @@ def register_velocity_tools(mcp: FastMCP):
             uncertainty_band=uncertainty_band,
             proxy_id=proxy_id,
             lineage=lineage,
-            evidence_handles=evidence_handles
+            evidence_handles=evidence_handles,
         )
-        
+
         # Return as JSON dictionary for MCP transport
         # The frontend will use cube_manifest_uri to fetch the actual 3D bricks via binary transport
         return payload.model_dump()

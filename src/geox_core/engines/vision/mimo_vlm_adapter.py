@@ -272,7 +272,7 @@ class MiMoVLMAdapter:
         self.backend_id = getattr(self.backend, "backend_id", f"mimo-{model_name.split('/')[-1]}")
         self.execution_mode = execution_mode
         self.model_name = model_name
-        
+
         # JITU circuit breaker: refuse generative modes
         if execution_mode == "generative":
             raise MiMoVisionError(
@@ -302,7 +302,7 @@ class MiMoVLMAdapter:
             MiMoVisionResult with .success and either .inventory or .error
         """
         t0 = time.time()
-        
+
         # F1 AMANAH: verify image exists
         if not os.path.exists(image_path):
             return MiMoVisionResult(
@@ -314,7 +314,7 @@ class MiMoVLMAdapter:
 
         # Build prompt with basin context
         prompt = MIMO_VISION_PROMPT_TEMPLATE.format(basin_context=basin_context)
-        
+
         # Call MiMo backend
         try:
             raw = self.backend.call(
@@ -384,7 +384,9 @@ class MiMoVLMAdapter:
         try:
             data = json.loads(cleaned)
         except json.JSONDecodeError as e:
-            raise MiMoVisionError(f"MiMo response is not valid JSON: {str(e)[:200]}. Response starts with: {cleaned[:100]}") from e
+            raise MiMoVisionError(
+                f"MiMo response is not valid JSON: {str(e)[:200]}. Response starts with: {cleaned[:100]}"
+            ) from e
 
         if not isinstance(data, dict):
             raise MiMoVisionError(f"MiMo response is JSON but not a dict. Got type: {type(data).__name__}")
@@ -600,9 +602,7 @@ class MiMoHTTPBackend:
                     "content": [
                         {
                             "type": "image_url",
-                            "image_url": {
-                                "url": f"data:{mime_type};base64,{image_b64}"
-                            },
+                            "image_url": {"url": f"data:{mime_type};base64,{image_b64}"},
                         },
                         {
                             "type": "text",
@@ -650,13 +650,13 @@ class MiMoHTTPBackend:
             choices = response_json.get("choices", [])
             if not choices:
                 raise MiMoVisionError("MiMo response has no choices")
-            
+
             message = choices[0].get("message", {})
             content = message.get("content", "")
-            
+
             if not content:
                 raise MiMoVisionError("MiMo returned empty content")
-            
+
             return content
         except (KeyError, IndexError, TypeError) as e:
             raise MiMoVisionError(f"Failed to parse MiMo response: {e}. Response: {response_data[:300]}")

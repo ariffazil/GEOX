@@ -26,6 +26,7 @@ try:
     import torch
     import torch.nn as nn
     import torch.nn.functional as F
+
     _HAS_TORCH = True
 except ImportError:
     _HAS_TORCH = False
@@ -38,6 +39,7 @@ except ImportError:
 
 # These are pure torch functions that mirror geox_core.physics.parameters
 # but operate on tensors for differentiable loss computation.
+
 
 def gardner_density_torch(vp: torch.Tensor, alpha: float = 310.0, beta: float = 0.25) -> torch.Tensor:
     """ρ = α · Vp^β — Gardner's equation (differentiable)."""
@@ -65,7 +67,7 @@ def archie_sw_torch(
     """Sw = (a · Rw / (Rt · φ^m))^(1/n) — Archie's equation."""
     phi = phi.clamp(min=0.001)
     rt = rt.clamp(min=0.01)
-    return ((a * rw) / (rt * phi ** m)) ** (1.0 / n)
+    return ((a * rw) / (rt * phi**m)) ** (1.0 / n)
 
 
 def density_porosity_torch(
@@ -79,11 +81,12 @@ def density_porosity_torch(
 
 # ── Physics Head ────────────────────────────────────────────────────────────
 
+
 class PhysicsConstraintHead(nn.Module):
     """
     Forward physics decoder that predicts physical properties
     from LEM latent representations and computes physics loss.
-    
+
     This is NOT a separate network head — it is a mathematical
     constraint layer that enforces GEOX CANON-9 physics.
     """
@@ -141,20 +144,32 @@ class PhysicsConstraintHead(nn.Module):
         # Property prediction heads (latent → physical properties)
         # These are small MLPs that map the LEM latent to each property
         self.vsh_head = nn.Sequential(
-            nn.Linear(latent_dim, 32), nn.ReLU(), nn.Linear(32, 1), nn.Sigmoid(),
+            nn.Linear(latent_dim, 32),
+            nn.ReLU(),
+            nn.Linear(32, 1),
+            nn.Sigmoid(),
         )
         self.phi_head = nn.Sequential(
-            nn.Linear(latent_dim, 32), nn.ReLU(), nn.Linear(32, 1),
+            nn.Linear(latent_dim, 32),
+            nn.ReLU(),
+            nn.Linear(32, 1),
             nn.Sigmoid(),  # φ ∈ [0, 1]
         )
         self.sw_head = nn.Sequential(
-            nn.Linear(latent_dim, 32), nn.ReLU(), nn.Linear(32, 1), nn.Sigmoid(),
+            nn.Linear(latent_dim, 32),
+            nn.ReLU(),
+            nn.Linear(32, 1),
+            nn.Sigmoid(),
         )
         self.vp_head = nn.Sequential(
-            nn.Linear(latent_dim, 32), nn.ReLU(), nn.Linear(32, 1),
+            nn.Linear(latent_dim, 32),
+            nn.ReLU(),
+            nn.Linear(32, 1),
         )
         self.density_head = nn.Sequential(
-            nn.Linear(latent_dim, 32), nn.ReLU(), nn.Linear(32, 1),
+            nn.Linear(latent_dim, 32),
+            nn.ReLU(),
+            nn.Linear(32, 1),
         )
 
     def enforce_bounds(self, vsh: torch.Tensor, phi: torch.Tensor, sw: torch.Tensor) -> torch.Tensor:
@@ -180,7 +195,7 @@ class PhysicsConstraintHead(nn.Module):
     ) -> dict[str, torch.Tensor]:
         """
         Predict physical properties and compute physics loss.
-        
+
         Args:
             latents: (B, T, D) LEM token embeddings
             gr: (B, T) gamma ray (optional, for Vsh calibration)
@@ -188,15 +203,15 @@ class PhysicsConstraintHead(nn.Module):
             rhob: (B, T) bulk density (optional, for density φ)
             nphi: (B, T) neutron porosity (optional)
             depth: (B, T) depth in meters (optional, for Faust)
-        
+
         Returns:
             dict with predicted properties and loss terms
         """
         # Predict properties from latents
         vsh = self.vsh_head(latents).squeeze(-1)  # (B, T)
-        phi = self.phi_head(latents).squeeze(-1)   # (B, T)
-        sw = self.sw_head(latents).squeeze(-1)     # (B, T)
-        vp = self.vp_head(latents).squeeze(-1)     # (B, T)
+        phi = self.phi_head(latents).squeeze(-1)  # (B, T)
+        sw = self.sw_head(latents).squeeze(-1)  # (B, T)
+        vp = self.vp_head(latents).squeeze(-1)  # (B, T)
         density = self.density_head(latents).squeeze(-1)  # (B, T)
 
         # Bound penalty
@@ -208,8 +223,12 @@ class PhysicsConstraintHead(nn.Module):
         # Archie consistency: Sw_pred ≈ Sw_Archie(Rt, φ)
         if self.use_archie and rt is not None:
             sw_archie = archie_sw_torch(
-                rt, phi, rw=self.rw, a=self.archie_a,
-                m=self.archie_m, n=self.archie_n,
+                rt,
+                phi,
+                rw=self.rw,
+                a=self.archie_a,
+                m=self.archie_m,
+                n=self.archie_n,
             ).clamp(0, self.sw_max)
             archie_loss = F.mse_loss(sw, sw_archie)
             total_physics_loss = total_physics_loss + self.lambda_archie * archie_loss

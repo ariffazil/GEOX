@@ -28,8 +28,15 @@ from geox_core.physics.state import EARTH_MATERIAL_CATALOG, Physics13State
 
 # ───────────────────────────── ZONE CATALOG ───────────────────────────────────────
 DepositionalEnvironment = Literal[
-    "marine_shelf", "deep_marine", "reef", "sabkha", "fluvial",
-    "deltaic", "lacustrine", "volcaniclastic", "basement",
+    "marine_shelf",
+    "deep_marine",
+    "reef",
+    "sabkha",
+    "fluvial",
+    "deltaic",
+    "lacustrine",
+    "volcaniclastic",
+    "basement",
 ]
 
 
@@ -55,51 +62,69 @@ class BiostratZone:
 BUILTIN_ZONES: list[BiostratZone] = [
     BiostratZone(
         name="Quaternary_Alluvium",
-        age_top_ma=0.0, age_base_ma=2.6,
+        age_top_ma=0.0,
+        age_base_ma=2.6,
         environment="fluvial",
         admissible_materials=("Sandstone", "Shale"),
-        phi_min=0.15, phi_max=0.40,
-        vpvs_min=1.7, vpvs_max=2.5,
+        phi_min=0.15,
+        phi_max=0.40,
+        vpvs_min=1.7,
+        vpvs_max=2.5,
     ),
     BiostratZone(
         name="Miocene_Reef",
-        age_top_ma=5.3, age_base_ma=23.0,
+        age_top_ma=5.3,
+        age_base_ma=23.0,
         environment="reef",
         admissible_materials=("Limestone", "Dolomite"),
-        phi_min=0.05, phi_max=0.30,
-        vpvs_min=1.8, vpvs_max=2.2,
+        phi_min=0.05,
+        phi_max=0.30,
+        vpvs_min=1.8,
+        vpvs_max=2.2,
     ),
     BiostratZone(
         name="Cretaceous_Shale",
-        age_top_ma=66.0, age_base_ma=145.0,
+        age_top_ma=66.0,
+        age_base_ma=145.0,
         environment="marine_shelf",
         admissible_materials=("Shale", "Limestone"),
-        phi_min=0.05, phi_max=0.25,
-        vpvs_min=1.7, vpvs_max=2.4,
+        phi_min=0.05,
+        phi_max=0.25,
+        vpvs_min=1.7,
+        vpvs_max=2.4,
     ),
     BiostratZone(
         name="Jurassic_Sabkha",
-        age_top_ma=145.0, age_base_ma=201.0,
+        age_top_ma=145.0,
+        age_base_ma=201.0,
         environment="sabkha",
         admissible_materials=("Anhydrite", "Salt", "Dolomite"),
-        phi_min=0.01, phi_max=0.15,
-        vpvs_min=1.7, vpvs_max=2.0,
+        phi_min=0.01,
+        phi_max=0.15,
+        vpvs_min=1.7,
+        vpvs_max=2.0,
     ),
     BiostratZone(
         name="Carboniferous_Coal",
-        age_top_ma=298.9, age_base_ma=358.9,
+        age_top_ma=298.9,
+        age_base_ma=358.9,
         environment="deltaic",
         admissible_materials=("Coal", "Shale", "Sandstone"),
-        phi_min=0.05, phi_max=0.30,
-        vpvs_min=1.6, vpvs_max=2.6,
+        phi_min=0.05,
+        phi_max=0.30,
+        vpvs_min=1.6,
+        vpvs_max=2.6,
     ),
     BiostratZone(
         name="Precambrian_Basement",
-        age_top_ma=541.0, age_base_ma=4000.0,
+        age_top_ma=541.0,
+        age_base_ma=4000.0,
         environment="basement",
         admissible_materials=("Basement",),
-        phi_min=0.0, phi_max=0.10,
-        vpvs_min=1.6, vpvs_max=1.9,
+        phi_min=0.0,
+        phi_max=0.10,
+        vpvs_min=1.6,
+        vpvs_max=1.9,
     ),
 ]
 
@@ -176,20 +201,11 @@ def evaluate_biostrat_constraint(
 
     notes = []
     if not is_material:
-        notes.append(
-            f"Cell material '{best_name}' not in zone admissible list "
-            f"{zone.admissible_materials}."
-        )
+        notes.append(f"Cell material '{best_name}' not in zone admissible list {zone.admissible_materials}.")
     if not is_phi:
-        notes.append(
-            f"Porosity φ={state.phi:.3f} outside zone range "
-            f"[{zone.phi_min:.3f}, {zone.phi_max:.3f}]."
-        )
+        notes.append(f"Porosity φ={state.phi:.3f} outside zone range [{zone.phi_min:.3f}, {zone.phi_max:.3f}].")
     if not is_vpvs:
-        notes.append(
-            f"Vp/Vs={vpvs:.3f} outside zone range "
-            f"[{zone.vpvs_min:.3f}, {zone.vpvs_max:.3f}]."
-        )
+        notes.append(f"Vp/Vs={vpvs:.3f} outside zone range [{zone.vpvs_min:.3f}, {zone.vpvs_max:.3f}].")
     if is_consistent:
         notes.append("Cell is admissible for this biostrat zone.")
 

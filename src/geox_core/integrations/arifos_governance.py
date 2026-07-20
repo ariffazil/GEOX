@@ -66,15 +66,17 @@ CONSTITUTION_HASH = "sha256:geox-constitutional-v2026.05.22"
 
 class IrreversibilityLevel(StrEnum):
     """How irreversible is the action?"""
-    REVERSIBLE = "reversible"       # No lasting consequence
-    COSTLY = "costly"              # Financial/time cost, recoverable
-    STRUCTURAL = "structural"       # Changes structure, hard to undo
+
+    REVERSIBLE = "reversible"  # No lasting consequence
+    COSTLY = "costly"  # Financial/time cost, recoverable
+    STRUCTURAL = "structural"  # Changes structure, hard to undo
     IRREVERSIBLE = "irreversible"  # Permanent: drilling, capital commit
 
 
 @dataclass
 class GovernedPayload:
     """Standard governed action payload for arifOS judge."""
+
     session_id: str
     actor: str
     tool_name: str

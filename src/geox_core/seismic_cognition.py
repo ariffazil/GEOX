@@ -40,12 +40,13 @@ class EpistemicLabel(enum.Enum):
     Every output from the cognition engine MUST carry exactly one label.
     The label determines what claims can be made from that output.
     """
-    OBS_IMAGE = "OBS_IMAGE"           # Raw pixel observation — NOT geological truth
-    DER_ATTRIBUTE = "DER_ATTRIBUTE"   # Derived from computation (CV, physics)
-    INT_SEISMIC = "INT_SEISMIC"       # Interpretation (hypothesis, NOT proven geology)
-    DER_SYNTHETIC = "DER_SYNTHETIC"   # Generated/simulated (diffusion, interpolation)
-    INT_GEOLOGY = "INT_GEOLOGY"       # Well-tied geological interpretation
-    GOVERNANCE = "GOVERNANCE"         # Decision/verdict
+
+    OBS_IMAGE = "OBS_IMAGE"  # Raw pixel observation — NOT geological truth
+    DER_ATTRIBUTE = "DER_ATTRIBUTE"  # Derived from computation (CV, physics)
+    INT_SEISMIC = "INT_SEISMIC"  # Interpretation (hypothesis, NOT proven geology)
+    DER_SYNTHETIC = "DER_SYNTHETIC"  # Generated/simulated (diffusion, interpolation)
+    INT_GEOLOGY = "INT_GEOLOGY"  # Well-tied geological interpretation
+    GOVERNANCE = "GOVERNANCE"  # Decision/verdict
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -61,10 +62,11 @@ class CognitionLayer:
     The engine enforces that outputs from a layer cannot exceed its declared
     capabilities.
     """
+
     name: str
     epistemic_label: EpistemicLabel
-    capabilities: list[str]    # What this layer CAN do
-    limitations: list[str]     # What this layer CANNOT do
+    capabilities: list[str]  # What this layer CAN do
+    limitations: list[str]  # What this layer CANNOT do
     required_inputs: list[str]
 
 
@@ -226,9 +228,10 @@ CONFIDENCE_CAP = 0.90
 @dataclass
 class VisualFeature:
     """A single visual feature extracted from seismic image."""
-    feature_type: str          # e.g., "bright_amplitude", "reflector_termination"
-    description: str           # Human-readable description
-    location: dict[str, Any]   # Approximate spatial location
+
+    feature_type: str  # e.g., "bright_amplitude", "reflector_termination"
+    description: str  # Human-readable description
+    location: dict[str, Any]  # Approximate spatial location
     raw_measurements: dict[str, Any] = field(default_factory=dict)
     epistemic_label: EpistemicLabel = EpistemicLabel.OBS_IMAGE
 
@@ -236,9 +239,10 @@ class VisualFeature:
 @dataclass
 class Hypothesis:
     """A geological hypothesis generated from visual features."""
-    interpretation: str        # e.g., "possible fault"
-    alternatives: list[str]    # Alternative explanations
-    confidence: float          # 0.0 - 0.90 (capped)
+
+    interpretation: str  # e.g., "possible fault"
+    alternatives: list[str]  # Alternative explanations
+    confidence: float  # 0.0 - 0.90 (capped)
     supporting_features: list[str] = field(default_factory=list)
     missing_evidence: list[str] = field(default_factory=list)
     epistemic_label: EpistemicLabel = EpistemicLabel.INT_SEISMIC
@@ -250,8 +254,9 @@ class Hypothesis:
 @dataclass
 class SyntheticOutput:
     """A generated/synthetic output from the GEN_MODEL layer."""
+
     description: str
-    method: str                # e.g., "diffusion_interpolation", "continuation"
+    method: str  # e.g., "diffusion_interpolation", "continuation"
     confidence: float
     epistemic_label: EpistemicLabel = EpistemicLabel.DER_SYNTHETIC
     warning: str = "Diffusion may assist perception. Diffusion must not decide geology."
@@ -260,6 +265,7 @@ class SyntheticOutput:
 @dataclass
 class PhysicsAudit:
     """Result of physics validation."""
+
     seg_y_valid: bool = False
     amplitude_audit: dict[str, Any] = field(default_factory=dict)
     phase_audit: dict[str, Any] = field(default_factory=dict)
@@ -274,6 +280,7 @@ class PhysicsAudit:
 @dataclass
 class CognitionResult:
     """Complete result from the seismic cognition pipeline."""
+
     # Layer outputs
     visual_features: list[VisualFeature] = field(default_factory=list)
     cv_detections: list[dict[str, Any]] = field(default_factory=list)
@@ -301,10 +308,7 @@ class CognitionResult:
 
     def has_well_tie(self) -> bool:
         """Check if well-tie calibration has been performed."""
-        return (
-            self.physics_audit is not None
-            and self.physics_audit.well_tie_score is not None
-        )
+        return self.physics_audit is not None and self.physics_audit.well_tie_score is not None
 
     def has_geological_interpretation(self) -> bool:
         """Check if a human geologist has provided judgment."""
@@ -374,6 +378,7 @@ class CognitionResult:
 @dataclass
 class GovernanceVerdict:
     """Final governance decision from Layer 7."""
+
     verdict: str  # HOLD | ADVANCE | REJECT | SEAL
     reasons: list[str] = field(default_factory=list)
     confidence_cap_applied: bool = False
@@ -412,8 +417,7 @@ SEISMIC_COGNITION_DOCTRINE: list[str] = [
     "No pixels, no observation. No code, no repeatability. No LLM, no semantic bridge. "
     "No diffusion, weaker imagination. No physics, no Earth truth. "
     "No geologist, no professional judgment. No governance, no safe consequence.",
-    "The best seismic interpreters are not the ones who 'see more.' "
-    "They are the ones who know when the image is lying.",
+    "The best seismic interpreters are not the ones who 'see more.' They are the ones who know when the image is lying.",
     "Image-first cognition → SEG-Y validation → Well-tie geology → Governance decision.",
     "Every visual feature has multiple possible causes. Non-uniqueness is not a bug — "
     "it is the fundamental nature of geophysical inference.",
@@ -556,9 +560,7 @@ class SeismicCognitionEngine:
 
     # ── Layer 5: Physics Validation ──────────────────────────────────────────
 
-    async def validate_with_segy(
-        self, segy_path: str, prior: CognitionResult
-    ) -> CognitionResult:
+    async def validate_with_segy(self, segy_path: str, prior: CognitionResult) -> CognitionResult:
         """Layer 5: Physical audit against SEG-Y traces.
 
         Validates amplitude, phase, frequency consistency.
@@ -578,9 +580,7 @@ class SeismicCognitionEngine:
 
     # ── Layer 6: Well-Tie Calibration ────────────────────────────────────────
 
-    async def calibrate_with_wells(
-        self, well_data: dict[str, Any], prior: CognitionResult
-    ) -> CognitionResult:
+    async def calibrate_with_wells(self, well_data: dict[str, Any], prior: CognitionResult) -> CognitionResult:
         """Layer 6: Well-tie calibration and professional judgment interface.
 
         Presents ranked hypotheses with evidence for human decision.
@@ -731,9 +731,7 @@ class SeismicCognitionEngine:
         ]
         return features
 
-    async def _layer_cv_detection(
-        self, visual_features: list[VisualFeature]
-    ) -> list[dict[str, Any]]:
+    async def _layer_cv_detection(self, visual_features: list[VisualFeature]) -> list[dict[str, Any]]:
         """Layer 2: Computer vision feature detection.
 
         DER_ATTRIBUTE outputs are computed from pixel data.
@@ -819,15 +817,13 @@ class SeismicCognitionEngine:
 
                 # Look up non-uniqueness table
                 base_feature = det_type.replace("_candidate", "")
-                possible_causes = self.non_uniqueness.get(base_feature, [
-                    "unknown cause — additional investigation required"
-                ])
+                possible_causes = self.non_uniqueness.get(base_feature, ["unknown cause — additional investigation required"])
 
                 # Primary interpretation (first cause = most likely, NOT certain)
                 primary = possible_causes[0] if possible_causes else "undetermined"
-                alternatives = possible_causes[1:] if len(possible_causes) > 1 else [
-                    "no alternatives identified — investigate further"
-                ]
+                alternatives = (
+                    possible_causes[1:] if len(possible_causes) > 1 else ["no alternatives identified — investigate further"]
+                )
 
                 # Confidence is LOW for image-only interpretation
                 # Only well-tied + physics-validated can approach 0.90
@@ -850,24 +846,24 @@ class SeismicCognitionEngine:
 
         # If no detections, still generate a cautionary hypothesis
         if not hypotheses:
-            hypotheses.append(Hypothesis(
-                interpretation="insufficient visual features for interpretation",
-                alternatives=["image quality may be inadequate", "features below resolution"],
-                confidence=0.10,
-                supporting_features=[],
-                missing_evidence=[
-                    "Higher resolution image",
-                    "Additional seismic lines",
-                    "Well control",
-                ],
-                epistemic_label=EpistemicLabel.INT_SEISMIC,
-            ))
+            hypotheses.append(
+                Hypothesis(
+                    interpretation="insufficient visual features for interpretation",
+                    alternatives=["image quality may be inadequate", "features below resolution"],
+                    confidence=0.10,
+                    supporting_features=[],
+                    missing_evidence=[
+                        "Higher resolution image",
+                        "Additional seismic lines",
+                        "Well control",
+                    ],
+                    epistemic_label=EpistemicLabel.INT_SEISMIC,
+                )
+            )
 
         return hypotheses
 
-    async def _layer_gen_model(
-        self, prior: CognitionResult
-    ) -> list[SyntheticOutput]:
+    async def _layer_gen_model(self, prior: CognitionResult) -> list[SyntheticOutput]:
         """Layer 4: Constrained generative reasoning.
 
         "Diffusion may assist perception. Diffusion must not decide geology."
@@ -890,19 +886,19 @@ class SeismicCognitionEngine:
             synthetic.append(synth)
 
         # Always add a gap interpolation note
-        synthetic.append(SyntheticOutput(
-            description="Gap interpolation across data voids — synthetic only, not observation",
-            method="interpolation",
-            confidence=0.30,
-            epistemic_label=EpistemicLabel.DER_SYNTHETIC,
-            warning="Interpolated data carries no observational weight. Use for perception assistance only.",
-        ))
+        synthetic.append(
+            SyntheticOutput(
+                description="Gap interpolation across data voids — synthetic only, not observation",
+                method="interpolation",
+                confidence=0.30,
+                epistemic_label=EpistemicLabel.DER_SYNTHETIC,
+                warning="Interpolated data carries no observational weight. Use for perception assistance only.",
+            )
+        )
 
         return synthetic
 
-    async def _layer_physics_validation(
-        self, segy_path: str, prior: CognitionResult
-    ) -> PhysicsAudit:
+    async def _layer_physics_validation(self, segy_path: str, prior: CognitionResult) -> PhysicsAudit:
         """Layer 5: Physical audit against SEG-Y traces.
 
         This is where PIXELS meet PHYSICS.
@@ -949,9 +945,7 @@ class SeismicCognitionEngine:
 
         return audit
 
-    async def _compute_well_tie(
-        self, well_data: dict[str, Any], prior: CognitionResult
-    ) -> dict[str, Any]:
+    async def _compute_well_tie(self, well_data: dict[str, Any], prior: CognitionResult) -> dict[str, Any]:
         """Compute well-tie score from well data and seismic."""
         # In production, this would compute synthetic seismogram correlation
         well_tie_result: dict[str, Any] = {
@@ -964,27 +958,20 @@ class SeismicCognitionEngine:
         has_logs = any(k in well_data for k in ["vp", "vs", "density", "dt", "rhob"])
 
         if not has_synthetic and not has_logs:
-            well_tie_result["issues"].append(
-                "No synthetic seismogram or well logs provided — well tie impossible"
-            )
+            well_tie_result["issues"].append("No synthetic seismogram or well logs provided — well tie impossible")
             return well_tie_result
 
         if has_synthetic:
             # In production: cross-correlation with seismic trace
-            well_tie_result["score"] = well_data.get("synthetic_seismogram", {}).get(
-                "correlation_coefficient", None
-            )
+            well_tie_result["score"] = well_data.get("synthetic_seismogram", {}).get("correlation_coefficient", None)
         elif has_logs:
             well_tie_result["issues"].append(
-                "Well logs available but synthetic seismogram not computed — "
-                "compute synthetic before well tie"
+                "Well logs available but synthetic seismogram not computed — compute synthetic before well tie"
             )
 
         return well_tie_result
 
-    async def _layer_human_geologist(
-        self, well_data: dict[str, Any], prior: CognitionResult
-    ) -> dict[str, Any]:
+    async def _layer_human_geologist(self, well_data: dict[str, Any], prior: CognitionResult) -> dict[str, Any]:
         """Layer 6: Professional judgment interface.
 
         NEVER auto-decides. Always presents for judgment.
@@ -996,8 +983,8 @@ class SeismicCognitionEngine:
         judgment_interface: dict[str, Any] = {
             "mode": "PRESENTATION_ONLY",
             "warning": "This interface presents evidence for human judgment. "
-                       "It does NOT auto-decide. A professional geologist must "
-                       "evaluate and decide.",
+            "It does NOT auto-decide. A professional geologist must "
+            "evaluate and decide.",
             "ranked_hypotheses": [
                 {
                     "rank": i + 1,
@@ -1021,19 +1008,13 @@ class SeismicCognitionEngine:
 
         # What's missing for a SEAL verdict?
         if not prior.has_physics_validation():
-            judgment_interface["missing_for_seal"].append(
-                "PHYSICS_VALIDATION required before any geological claim"
-            )
+            judgment_interface["missing_for_seal"].append("PHYSICS_VALIDATION required before any geological claim")
         if not prior.has_well_tie():
-            judgment_interface["missing_for_seal"].append(
-                "WELL_TIE required before economic/value claims"
-            )
+            judgment_interface["missing_for_seal"].append("WELL_TIE required before economic/value claims")
 
         return judgment_interface
 
-    async def _layer_governance(
-        self, result: CognitionResult
-    ) -> GovernanceVerdict:
+    async def _layer_governance(self, result: CognitionResult) -> GovernanceVerdict:
         """Layer 7: Constitutional decision gate.
 
         Enforces all constitutional invariants:
@@ -1069,20 +1050,15 @@ class SeismicCognitionEngine:
         for h in result.hypotheses:
             if h.epistemic_label == EpistemicLabel.OBS_IMAGE:
                 # OBS_IMAGE cannot make geological claims
-                if any(word in h.interpretation.lower()
-                       for word in ["formation", "reservoir", "source rock", "trap"]):
+                if any(word in h.interpretation.lower() for word in ["formation", "reservoir", "source rock", "trap"]):
                     verdict.anti_hantu_pass = False
-                    verdict.reasons.append(
-                        f"F9 ANTI-HANTU: geological claim from OBS_IMAGE: {h.interpretation}"
-                    )
+                    verdict.reasons.append(f"F9 ANTI-HANTU: geological claim from OBS_IMAGE: {h.interpretation}")
 
         # Check synthetic labeling
         for s in result.synthetic_outputs:
             if s.epistemic_label != EpistemicLabel.DER_SYNTHETIC:
                 verdict.anti_hantu_pass = False
-                verdict.reasons.append(
-                    "F9 ANTI-HANTU: synthetic output not labeled DER_SYNTHETIC"
-                )
+                verdict.reasons.append("F9 ANTI-HANTU: synthetic output not labeled DER_SYNTHETIC")
 
         # Determine verdict
         if not verdict.anti_hantu_pass:
@@ -1090,27 +1066,19 @@ class SeismicCognitionEngine:
             verdict.reasons.append("REJECT: anti-hantu violation detected")
         elif not result.has_physics_validation():
             verdict.verdict = "HOLD"
-            verdict.reasons.append(
-                "HOLD: physics validation required before ADVANCE"
-            )
+            verdict.reasons.append("HOLD: physics validation required before ADVANCE")
         elif result.has_physics_validation() and not result.has_well_tie():
             # Physics done but no well tie — can ADVANCE but not SEAL
             verdict.verdict = "ADVANCE"
-            verdict.reasons.append(
-                "ADVANCE: physics validated, well tie pending for SEAL"
-            )
+            verdict.reasons.append("ADVANCE: physics validated, well tie pending for SEAL")
         elif result.has_physics_validation() and result.has_well_tie():
             # Both done — can consider SEAL
             if result.has_geological_interpretation():
                 verdict.verdict = "SEAL"
-                verdict.reasons.append(
-                    "SEAL: physics validated, well-tied, geological interpretation accepted"
-                )
+                verdict.reasons.append("SEAL: physics validated, well-tied, geological interpretation accepted")
             else:
                 verdict.verdict = "ADVANCE"
-                verdict.reasons.append(
-                    "ADVANCE: physics validated, well-tied, awaiting human judgment for SEAL"
-                )
+                verdict.reasons.append("ADVANCE: physics validated, well-tied, awaiting human judgment for SEAL")
 
         return verdict
 

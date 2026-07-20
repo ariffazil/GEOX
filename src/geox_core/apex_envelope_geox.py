@@ -36,15 +36,29 @@ except ImportError:
         pos = [v for v in vals if v > 0]
         return (math.prod(pos) ** (1.0 / len(pos))) if pos else 0.0
 
-    def apex_envelope(*, tool_name: str = "unknown", confidence: float = 0.88, evidence_strength: float = 0.95,
-                      boundary: str = "LIVE", uncertainty_declared: bool = True,
-                      coherent: bool = True, actor_id: str | None = None,
-                      action_class: str = "READ", proof_level: str = "ZKPC_OBSERVATION",
-                      f13_halt: bool = False, **_kw: Any) -> dict[str, Any]:
+    def apex_envelope(
+        *,
+        tool_name: str = "unknown",
+        confidence: float = 0.88,
+        evidence_strength: float = 0.95,
+        boundary: str = "LIVE",
+        uncertainty_declared: bool = True,
+        coherent: bool = True,
+        actor_id: str | None = None,
+        action_class: str = "READ",
+        proof_level: str = "ZKPC_OBSERVATION",
+        f13_halt: bool = False,
+        **_kw: Any,
+    ) -> dict[str, Any]:
         gates = {
-            "amanah": _gate(confidence <= evidence_strength + 0.05, min(1.0, evidence_strength / max(confidence, 1e-6)),
-                           f"confidence {confidence:.2f} <= evidence {evidence_strength:.2f}"),
-            "presence": _gate(True, {"LIVE": 1.0, "CACHED": 0.8, "INFERRED": 0.5}.get(boundary, 0.5), boundary, boundary=boundary),
+            "amanah": _gate(
+                confidence <= evidence_strength + 0.05,
+                min(1.0, evidence_strength / max(confidence, 1e-6)),
+                f"confidence {confidence:.2f} <= evidence {evidence_strength:.2f}",
+            ),
+            "presence": _gate(
+                True, {"LIVE": 1.0, "CACHED": 0.8, "INFERRED": 0.5}.get(boundary, 0.5), boundary, boundary=boundary
+            ),
             "humility": _gate(uncertainty_declared, 1.0 if uncertainty_declared else 0.3, "uncertainty declared"),
             "signal": _gate(True, 0.7, "default signal"),
             "understanding": _gate(coherent, 0.9 if coherent else 0.2, "coherent" if coherent else "incoherent"),
@@ -60,9 +74,16 @@ except ImportError:
         S = gates["signal"]["score"]
         U = _gmean([gates["reversibility"]["score"], gates["proof"]["score"]])
         E = gates["energy"]["score"]
-        G = round(A * P * H * math.sqrt(S * U) * E ** 2, 4)
+        G = round(A * P * H * math.sqrt(S * U) * E**2, 4)
         verdict = "VOID" if f13_halt else ("SEAL" if G >= 0.80 else ("SABAR" if G >= 0.50 else "HOLD"))
-        return {"equation": APEX_EQUATION, "gates": gates, "dials": {"A": round(A, 4), "P": round(P, 4), "H": round(H, 4), "S": round(S, 4), "U": round(U, 4), "E": round(E, 4)}, "G": G, "verdict": verdict, "timestamp": datetime.now(UTC).isoformat()}
+        return {
+            "equation": APEX_EQUATION,
+            "gates": gates,
+            "dials": {"A": round(A, 4), "P": round(P, 4), "H": round(H, 4), "S": round(S, 4), "U": round(U, 4), "E": round(E, 4)},
+            "G": G,
+            "verdict": verdict,
+            "timestamp": datetime.now(UTC).isoformat(),
+        }
 
 
 # ── Claim state → confidence mapping ──────────────────────────────────────
@@ -108,7 +129,11 @@ def geox_apex_envelope(
     confidence = _CLAIM_STATE_CONFIDENCE.get(cs, 0.50)
     boundary = _PERCEPTION_CLASS_BOUNDARY.get(pc, "INFERRED")
     evidence_quality = "HIGH" if len(refs) >= 3 else ("MEDIUM" if len(refs) >= 1 else "LOW")
-    gs = str(governance_status.value if hasattr(governance_status, "value") else governance_status).upper() if governance_status else "UNKNOWN"
+    gs = (
+        str(governance_status.value if hasattr(governance_status, "value") else governance_status).upper()
+        if governance_status
+        else "UNKNOWN"
+    )
     coherent = gs in _GOVERNANCE_STATUS_OK
 
     return apex_envelope(

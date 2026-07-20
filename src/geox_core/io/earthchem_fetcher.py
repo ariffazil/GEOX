@@ -25,10 +25,7 @@ from pydantic import BaseModel, Field
 logger = logging.getLogger("geox.io.earthchem")
 
 EARTHCHEM_API = "https://petdb.org/earthchemapi/v4"
-EARTHCHEM_CITATION = (
-    "EarthChem (2024). EarthChem Portal / PetDB. "
-    "Columbia University / LDEO. https://www.earthchem.org. CC-BY."
-)
+EARTHCHEM_CITATION = "EarthChem (2024). EarthChem Portal / PetDB. Columbia University / LDEO. https://www.earthchem.org. CC-BY."
 
 
 class GeochemSample(BaseModel):
@@ -68,9 +65,7 @@ class GeochemQuery(BaseModel):
 
 class EarthChemFetcher:
     def __init__(self, cache_dir: str | None = None):
-        self.cache_dir = Path(cache_dir or os.environ.get(
-            "GEOX_EARTHCHEM_CACHE_DIR", "/root/.cache/geox/earthchem"
-        ))
+        self.cache_dir = Path(cache_dir or os.environ.get("GEOX_EARTHCHEM_CACHE_DIR", "/root/.cache/geox/earthchem"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_EARTHCHEM_OFFLINE", "1") != "0"
 
@@ -78,11 +73,21 @@ class EarthChemFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return self._offline_stub(params.model_dump(exclude_none=True), now)
-        return GeochemResult(ok=False, mode="live", note="Live EarthChem API requires httpx client. See EARTHCHEM_API.", fetched_at=now)
+        return GeochemResult(
+            ok=False, mode="live", note="Live EarthChem API requires httpx client. See EARTHCHEM_API.", fetched_at=now
+        )
 
     def _offline_stub(self, qd: dict, now: str) -> GeochemResult:
         samples = [
             {"sample_id": "EC_stub_001", "latitude": 4.5, "longitude": 112.0, "rock_type": "basalt", "sio2": 49.5, "mgo": 7.2},
             {"sample_id": "EC_stub_002", "latitude": 2.0, "longitude": 109.0, "rock_type": "granite", "sio2": 72.1, "mgo": 0.8},
         ]
-        return GeochemResult(ok=True, mode="offline_stub", samples=samples, count=len(samples), query_params=qd, fetched_at=now, note="Offline mode (GEOX_EARTHCHEM_OFFLINE=1).")
+        return GeochemResult(
+            ok=True,
+            mode="offline_stub",
+            samples=samples,
+            count=len(samples),
+            query_params=qd,
+            fetched_at=now,
+            note="Offline mode (GEOX_EARTHCHEM_OFFLINE=1).",
+        )

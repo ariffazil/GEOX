@@ -38,6 +38,7 @@ try:
     from torch.optim import AdamW
     from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts
     from torch.utils.data import DataLoader
+
     _HAS_TORCH = True
 except ImportError:
     _HAS_TORCH = False
@@ -51,13 +52,14 @@ except ImportError:
 
 # ── Phase 1: Tokenizer Training ─────────────────────────────────────────────
 
+
 def train_tokenizer(
     config: LEMConfig,
     resume_from: str | None = None,
 ) -> dict[str, Any]:
     """
     Phase 1: Train VQ-VAE tokenizer on well log patches.
-    
+
     Returns training summary with loss history and codebook statistics.
     """
     if not _HAS_TORCH:
@@ -129,7 +131,7 @@ def train_tokenizer(
 
         if (epoch + 1) % 10 == 0:
             logger.info(
-                f"Tokenizer epoch {epoch+1}/{config.tokenizer.tokenizer_epochs} | "
+                f"Tokenizer epoch {epoch + 1}/{config.tokenizer.tokenizer_epochs} | "
                 f"recon={epoch_losses['recon']:.6f} commit={epoch_losses['commit']:.6f} "
                 f"total={epoch_losses['total']:.6f}"
             )
@@ -164,13 +166,14 @@ def train_tokenizer(
 
 # ── Phase 2: Tokenize All Data ──────────────────────────────────────────────
 
+
 def tokenize_dataset(
     config: LEMConfig,
     tokenizer_ckpt: str,
 ) -> dict[str, Any]:
     """
     Phase 2: Run trained tokenizer on all well data to produce token sequences.
-    
+
     Saves tokenized dataset to checkpoint_dir for Phase 3 pretraining.
     """
     if not _HAS_TORCH:
@@ -252,6 +255,7 @@ def tokenize_dataset(
 
 # ── Phase 3: Transformer Pretraining ────────────────────────────────────────
 
+
 def pretrain_transformer(
     config: LEMConfig,
     tokenized_data_path: str | None = None,
@@ -259,7 +263,7 @@ def pretrain_transformer(
 ) -> dict[str, Any]:
     """
     Phase 3: Pretrain LEMTransformer with masked token modeling.
-    
+
     Uses tokenized data from Phase 2.
     """
     if not _HAS_TORCH:
@@ -310,7 +314,9 @@ def pretrain_transformer(
         weight_decay=config.pretrain.weight_decay,
     )
     scheduler = CosineAnnealingWarmRestarts(
-        optimizer, T_0=config.pretrain.warmup_steps, T_mult=2,
+        optimizer,
+        T_0=config.pretrain.warmup_steps,
+        T_mult=2,
     )
 
     # Convert tokens to tensors
@@ -333,7 +339,7 @@ def pretrain_transformer(
         n_batches = (N + batch_size - 1) // batch_size
 
         for batch_start in range(0, N, batch_size):
-            batch_idx = perm[batch_start: batch_start + batch_size]
+            batch_idx = perm[batch_start : batch_start + batch_size]
             batch_tokens = tokens_tensor[batch_idx]  # (B, T)
 
             # Create masked version
@@ -382,7 +388,7 @@ def pretrain_transformer(
 
         if (epoch + 1) % 10 == 0:
             logger.info(
-                f"Pretrain epoch {epoch+1}/{config.pretrain.max_epochs} | "
+                f"Pretrain epoch {epoch + 1}/{config.pretrain.max_epochs} | "
                 f"mtm={epoch_losses['mtm']:.4f} physics={epoch_losses['physics']:.4f} "
                 f"total={epoch_losses['total']:.4f}"
             )
@@ -392,39 +398,45 @@ def pretrain_transformer(
             best_loss = epoch_losses["total"]
             os.makedirs(config.checkpoint_dir, exist_ok=True)
             ckpt_path = os.path.join(config.checkpoint_dir, "lem_best.pt")
-            torch.save({
-                "model": model.state_dict(),
-                "physics_head": physics_head.state_dict(),
-                "optimizer": optimizer.state_dict(),
-                "epoch": epoch,
-                "loss": best_loss,
-                "config": {
-                    "vocab_size": config.tokenizer.codebook_size,
-                    "embed_dim": config.pretrain.embed_dim,
-                    "num_layers": config.pretrain.num_layers,
-                    "num_heads": config.pretrain.num_heads,
+            torch.save(
+                {
+                    "model": model.state_dict(),
+                    "physics_head": physics_head.state_dict(),
+                    "optimizer": optimizer.state_dict(),
+                    "epoch": epoch,
+                    "loss": best_loss,
+                    "config": {
+                        "vocab_size": config.tokenizer.codebook_size,
+                        "embed_dim": config.pretrain.embed_dim,
+                        "num_layers": config.pretrain.num_layers,
+                        "num_heads": config.pretrain.num_heads,
+                    },
+                    "timestamp": datetime.now(UTC).isoformat(),
                 },
-                "timestamp": datetime.now(UTC).isoformat(),
-            }, ckpt_path)
+                ckpt_path,
+            )
 
         # Early stopping check
         if epoch > 50 and epoch_losses["total"] > best_loss * 3:
-            logger.info(f"Early stopping at epoch {epoch+1} (loss diverging)")
+            logger.info(f"Early stopping at epoch {epoch + 1} (loss diverging)")
             break
 
     # Save final
     final_path = os.path.join(config.checkpoint_dir, "lem_final.pt")
-    torch.save({
-        "model": model.state_dict(),
-        "physics_head": physics_head.state_dict(),
-        "config": {
-            "vocab_size": config.tokenizer.codebook_size,
-            "embed_dim": config.pretrain.embed_dim,
-            "num_layers": config.pretrain.num_layers,
-            "num_heads": config.pretrain.num_heads,
+    torch.save(
+        {
+            "model": model.state_dict(),
+            "physics_head": physics_head.state_dict(),
+            "config": {
+                "vocab_size": config.tokenizer.codebook_size,
+                "embed_dim": config.pretrain.embed_dim,
+                "num_layers": config.pretrain.num_layers,
+                "num_heads": config.pretrain.num_heads,
+            },
+            "timestamp": datetime.now(UTC).isoformat(),
         },
-        "timestamp": datetime.now(UTC).isoformat(),
-    }, final_path)
+        final_path,
+    )
 
     summary = {
         "status": "complete",
@@ -444,6 +456,7 @@ def pretrain_transformer(
 
 # ── Masking Helper ──────────────────────────────────────────────────────────
 
+
 def _create_masked_input(
     tokens: torch.Tensor,
     mask_ratio: float = 0.30,
@@ -452,13 +465,13 @@ def _create_masked_input(
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """
     Create masked input for MTM pretraining.
-    
+
     Args:
         tokens: (B, T) input tokens
         mask_ratio: Fraction of tokens to mask
         mask_block_size: Consecutive tokens masked as a block
         mask_token_id: Token ID to use for [MASK]
-    
+
     Returns:
         masked_tokens: (B, T) input with mask tokens
         mask: (B, T) boolean — True where masked
@@ -477,7 +490,7 @@ def _create_masked_input(
         n_blocks = max(1, num_masked // mask_block_size)
         selected_starts = starts[:n_blocks]
         for s in selected_starts:
-            mask[b, s: s + mask_block_size] = True
+            mask[b, s : s + mask_block_size] = True
 
     # Create masked input
     masked_tokens = tokens.clone()
@@ -491,10 +504,11 @@ def _create_masked_input(
 
 # ── Main ────────────────────────────────────────────────────────────────────
 
+
 def run_pretraining_pipeline(config: LEMConfig) -> dict[str, Any]:
     """
     Run the full pretraining pipeline end-to-end.
-    
+
     Returns combined summary of all phases.
     """
     # Phase 1: Train tokenizer

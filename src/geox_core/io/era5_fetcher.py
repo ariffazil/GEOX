@@ -57,9 +57,11 @@ class ERA5Fetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return ERA5Result(
-                ok=True, mode="offline_stub",
+                ok=True,
+                mode="offline_stub",
                 data=[{"latitude": 5.0, "longitude": 110.0, "2m_temperature": 300.5, "date": params.date}],
-                count=1, fetched_at=now,
-                note="Offline stub. Requires CDS API key (free registration)."
+                count=1,
+                fetched_at=now,
+                note="Offline stub. Requires CDS API key (free registration).",
             )
         return ERA5Result(ok=False, mode="live", note="Live requires CDS API client.", fetched_at=now)

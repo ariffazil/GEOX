@@ -331,13 +331,20 @@ class PhysicsGuard:
             val = output.get(param)
             if val is not None and isinstance(val, (int, float)):
                 if val < lo or val > hi:
-                    violations.append(PhysicsViolation(
-                        parameter=param, value=float(val),
-                        min_bound=lo, max_bound=hi, severity="CRITICAL",
-                    ))
+                    violations.append(
+                        PhysicsViolation(
+                            parameter=param,
+                            value=float(val),
+                            min_bound=lo,
+                            max_bound=hi,
+                            severity="CRITICAL",
+                        )
+                    )
         if violations:
             return ValidationResult(
-                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                status="PHYSICS_VIOLATION",
+                violations=violations,
+                hold=True,
                 reason="Gravity bounds exceeded",
             )
         return ValidationResult(status="PASS")
@@ -349,13 +356,20 @@ class PhysicsGuard:
             val = output.get(param)
             if val is not None and isinstance(val, (int, float)):
                 if val < lo or val > hi:
-                    violations.append(PhysicsViolation(
-                        parameter=param, value=float(val),
-                        min_bound=lo, max_bound=hi, severity="CRITICAL",
-                    ))
+                    violations.append(
+                        PhysicsViolation(
+                            parameter=param,
+                            value=float(val),
+                            min_bound=lo,
+                            max_bound=hi,
+                            severity="CRITICAL",
+                        )
+                    )
         if violations:
             return ValidationResult(
-                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                status="PHYSICS_VIOLATION",
+                violations=violations,
+                hold=True,
                 reason="Magnetics bounds exceeded",
             )
         return ValidationResult(status="PASS")
@@ -367,13 +381,20 @@ class PhysicsGuard:
             val = output.get(param)
             if val is not None and isinstance(val, (int, float)):
                 if val < lo or val > hi:
-                    violations.append(PhysicsViolation(
-                        parameter=param, value=float(val),
-                        min_bound=lo, max_bound=hi, severity="CRITICAL",
-                    ))
+                    violations.append(
+                        PhysicsViolation(
+                            parameter=param,
+                            value=float(val),
+                            min_bound=lo,
+                            max_bound=hi,
+                            severity="CRITICAL",
+                        )
+                    )
         if violations:
             return ValidationResult(
-                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                status="PHYSICS_VIOLATION",
+                violations=violations,
+                hold=True,
                 reason="EM bounds exceeded",
             )
         return ValidationResult(status="PASS")
@@ -385,13 +406,20 @@ class PhysicsGuard:
             val = output.get(param)
             if val is not None and isinstance(val, (int, float)):
                 if val < lo or val > hi:
-                    violations.append(PhysicsViolation(
-                        parameter=param, value=float(val),
-                        min_bound=lo, max_bound=hi, severity="CRITICAL",
-                    ))
+                    violations.append(
+                        PhysicsViolation(
+                            parameter=param,
+                            value=float(val),
+                            min_bound=lo,
+                            max_bound=hi,
+                            severity="CRITICAL",
+                        )
+                    )
         if violations:
             return ValidationResult(
-                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                status="PHYSICS_VIOLATION",
+                violations=violations,
+                hold=True,
                 reason="Seismic inversion bounds exceeded",
             )
         return ValidationResult(status="PASS")
@@ -414,13 +442,20 @@ class PhysicsGuard:
             val = state.get(param)
             if val is not None:
                 if val < lo or val > hi:
-                    violations.append(PhysicsViolation(
-                        parameter=param, value=float(val),
-                        min_bound=lo, max_bound=hi, severity="CRITICAL",
-                    ))
+                    violations.append(
+                        PhysicsViolation(
+                            parameter=param,
+                            value=float(val),
+                            min_bound=lo,
+                            max_bound=hi,
+                            severity="CRITICAL",
+                        )
+                    )
         if violations:
             return ValidationResult(
-                status="PHYSICS_VIOLATION", violations=violations, hold=True,
+                status="PHYSICS_VIOLATION",
+                violations=violations,
+                hold=True,
                 reason="Physics13State bounds exceeded",
             )
         return ValidationResult(status="PASS")

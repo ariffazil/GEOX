@@ -165,17 +165,19 @@ def _find_unit_age_for_biozone(units: list[dict[str, Any]], biozone_age_top: flo
         overlap_ma = max(0, overlap_bottom - overlap_top)
 
         if overlap_ma > 0:
-            matching_units.append({
-                "unit_id": unit.get("id"),
-                "unit_name": unit.get("name", unit.get("strat_name", "unnamed")),
-                "unit_age_top_ma": unit_top,
-                "unit_age_bottom_ma": unit_bottom,
-                "lithology": unit.get("lith", unit.get("lithology", "")),
-                "environment": unit.get("environ", unit.get("environment", "")),
-                "overlap_ma": overlap_ma,
-                "formation": unit.get("strat_name", ""),
-                "col_id": unit.get("col_id"),
-            })
+            matching_units.append(
+                {
+                    "unit_id": unit.get("id"),
+                    "unit_name": unit.get("name", unit.get("strat_name", "unnamed")),
+                    "unit_age_top_ma": unit_top,
+                    "unit_age_bottom_ma": unit_bottom,
+                    "lithology": unit.get("lith", unit.get("lithology", "")),
+                    "environment": unit.get("environ", unit.get("environment", "")),
+                    "overlap_ma": overlap_ma,
+                    "formation": unit.get("strat_name", ""),
+                    "col_id": unit.get("col_id"),
+                }
+            )
 
     matching_units.sort(key=lambda u: u["overlap_ma"], reverse=True)
 
@@ -241,14 +243,14 @@ def _compute_ruling(
                 return {
                     "ruling": "CONTRADICTION",
                     "reason": f"Biostrat age [{biostrat_top}-{biostrat_base} Ma] does not overlap with "
-                              f"any Macrostrat unit at this location. Nearest unit is "
-                              f"{gap:.1f} Ma away.",
+                    f"any Macrostrat unit at this location. Nearest unit is "
+                    f"{gap:.1f} Ma away.",
                     "confidence": 0.5,
                 }
             return {
                 "ruling": "WEAK_PASS",
                 "reason": f"Biostrat zone has age bracket but no overlapping Macrostrat unit. "
-                          f"Closest unit is {gap:.1f} Ma away. Uncertainty high.",
+                f"Closest unit is {gap:.1f} Ma away. Uncertainty high.",
                 "confidence": 0.4,
             }
         return {
@@ -267,29 +269,30 @@ def _compute_ruling(
         return {
             "ruling": "PASS",
             "reason": f"Biostrat age [{biostrat_top}-{biostrat_base} Ma] agrees with "
-                      f"Macrostrat unit '{best['unit_name']}' [{best['unit_age_top_ma']}-{best['unit_age_bottom_ma']} Ma]. "
-                      f"Delta = {age_diff:.2f} Ma.",
+            f"Macrostrat unit '{best['unit_name']}' [{best['unit_age_top_ma']}-{best['unit_age_bottom_ma']} Ma]. "
+            f"Delta = {age_diff:.2f} Ma.",
             "confidence": 0.85 if biostrat_discipline == "calcareous_nannofossil" else 0.70,
         }
     elif age_diff < 2.0:
         return {
             "ruling": "WEAK_PASS",
             "reason": f"Biostrat age [{biostrat_top}-{biostrat_base} Ma] partially overlaps with "
-                      f"Macrostrat unit '{best['unit_name']}' [{best['unit_age_top_ma']}-{best['unit_age_bottom_ma']} Ma]. "
-                      f"Delta = {age_diff:.2f} Ma within tolerance (±2 Ma).",
+            f"Macrostrat unit '{best['unit_name']}' [{best['unit_age_top_ma']}-{best['unit_age_bottom_ma']} Ma]. "
+            f"Delta = {age_diff:.2f} Ma within tolerance (±2 Ma).",
             "confidence": 0.65,
         }
     else:
         return {
             "ruling": "CONTRADICTION",
             "reason": f"Biostrat age [{biostrat_top}-{biostrat_base} Ma] conflicts with "
-                      f"Macrostrat unit '{best['unit_name']}' [{best['unit_age_top_ma']}-{best['unit_age_bottom_ma']} Ma]. "
-                      f"Delta = {age_diff:.2f} Ma exceeds tolerance. Check reworking, caving, or miscorrelation.",
+            f"Macrostrat unit '{best['unit_name']}' [{best['unit_age_top_ma']}-{best['unit_age_bottom_ma']} Ma]. "
+            f"Delta = {age_diff:.2f} Ma exceeds tolerance. Check reworking, caving, or miscorrelation.",
             "confidence": 0.90,
         }
 
 
 # ── Main tool function ───────────────────────────────────────────────────
+
 
 async def geox_macrostrat_calibrate(
     biozone: str = "",
@@ -343,9 +346,12 @@ async def geox_macrostrat_calibrate(
     if not biozone:
         return get_standard_envelope(
             {"biozone": "", "error": "No biozone provided."},
-            tool_class="compute", claim_tag="HYPOTHESIS",
-            claim_state="NO_VALID_EVIDENCE", uncertainty="High",
-            humility_score=0.0, evidence_refs=[],
+            tool_class="compute",
+            claim_tag="HYPOTHESIS",
+            claim_state="NO_VALID_EVIDENCE",
+            uncertainty="High",
+            humility_score=0.0,
+            evidence_refs=[],
             audit_receipt={"verdict": "NO_INPUT", "risk": "LOW"},
             tool_name="geox_macrostrat_calibrate",
             equations_used=["NN age table (GPTS2020)", "Macrostrat interval lookup"],
@@ -451,18 +457,36 @@ async def geox_macrostrat_calibrate(
         ruling_data = _compute_ruling(merged_top, merged_base, discipline, unit_match)
     elif macro_int_found and geox_found:
         # Compare GEOX age vs Macrostrat interval
-        diff = abs((geox_age_top + geox_age_base)/2 - (macro_int_top + macro_int_base)/2)
+        diff = abs((geox_age_top + geox_age_base) / 2 - (macro_int_top + macro_int_base) / 2)
         if diff < 0.5:
             ruling_data = {"ruling": "PASS", "reason": "GEOX internal age agrees with Macrostrat interval.", "confidence": 0.85}
         elif diff < 2.0:
-            ruling_data = {"ruling": "WEAK_PASS", "reason": f"GEOX age vs Macrostrat interval delta = {diff:.1f} Ma.", "confidence": 0.65}
+            ruling_data = {
+                "ruling": "WEAK_PASS",
+                "reason": f"GEOX age vs Macrostrat interval delta = {diff:.1f} Ma.",
+                "confidence": 0.65,
+            }
         else:
-            ruling_data = {"ruling": "CONTRADICTION", "reason": f"GEOX age conflicts with Macrostrat interval by {diff:.1f} Ma.", "confidence": 0.90}
-            contradictions.append(f"GEOX internal age ({geox_age_top}-{geox_age_base} Ma) vs Macrostrat interval ({macro_int_top}-{macro_int_base} Ma)")
+            ruling_data = {
+                "ruling": "CONTRADICTION",
+                "reason": f"GEOX age conflicts with Macrostrat interval by {diff:.1f} Ma.",
+                "confidence": 0.90,
+            }
+            contradictions.append(
+                f"GEOX internal age ({geox_age_top}-{geox_age_base} Ma) vs Macrostrat interval ({macro_int_top}-{macro_int_base} Ma)"
+            )
     elif geox_found:
-        ruling_data = {"ruling": "WEAK_PASS", "reason": "GEOX internal calibration only. No Macrostrat cross-reference available.", "confidence": 0.60}
+        ruling_data = {
+            "ruling": "WEAK_PASS",
+            "reason": "GEOX internal calibration only. No Macrostrat cross-reference available.",
+            "confidence": 0.60,
+        }
     elif macro_int_found:
-        ruling_data = {"ruling": "WEAK_PASS", "reason": "Macrostrat interval calibration only. No GEOX internal age for this zone type.", "confidence": 0.50}
+        ruling_data = {
+            "ruling": "WEAK_PASS",
+            "reason": "Macrostrat interval calibration only. No GEOX internal age for this zone type.",
+            "confidence": 0.50,
+        }
     else:
         ruling_data = {"ruling": "HOLD", "reason": "No calibration source found for this biozone.", "confidence": 0.0}
 
@@ -472,10 +496,10 @@ async def geox_macrostrat_calibrate(
         if best:
             unit_top = best.get("unit_age_top_ma", 0)
             unit_bottom = best.get("unit_age_bottom_ma", 0)
-            if abs((merged_top + merged_base)/2 - (unit_top + unit_bottom)/2) > 3.0:
+            if abs((merged_top + merged_base) / 2 - (unit_top + unit_bottom) / 2) > 3.0:
                 contradictions.append(
                     f"Calibrated age ({merged_top}-{merged_base} Ma) differs from Macrostrat unit "
-                    f"'{best.get('unit_name','?')}' ({unit_top}-{unit_bottom} Ma) by >3 Ma"
+                    f"'{best.get('unit_name', '?')}' ({unit_top}-{unit_bottom} Ma) by >3 Ma"
                 )
 
     # ── Build payload ────────────────────────────────────────────────────
@@ -517,8 +541,11 @@ async def geox_macrostrat_calibrate(
     else:
         env_uncertainty = "High"
 
-    claim_state_val = "INTERPRETED" if ruling_data["ruling"] in ("PASS", "WEAK_PASS") else \
-                      ("DERIVED_CANDIDATE" if ruling_data["ruling"] == "HOLD" else "HYPOTHESIS")
+    claim_state_val = (
+        "INTERPRETED"
+        if ruling_data["ruling"] in ("PASS", "WEAK_PASS")
+        else ("DERIVED_CANDIDATE" if ruling_data["ruling"] == "HOLD" else "HYPOTHESIS")
+    )
 
     return get_standard_envelope(
         payload,
@@ -545,5 +572,7 @@ async def geox_macrostrat_calibrate(
         next_best_actions=[
             {"tool": "geox_biostrat_ruling_check", "reason": "Cross-validate this calibration against facies and strat order."},
             {"tool": "geox_basin", "reason": "If HOLD, try geox_basin(mode='macrostrat_units') with a wider radius."},
-        ] if ruling_data["ruling"] in ("HOLD", "CONTRADICTION") else [],
+        ]
+        if ruling_data["ruling"] in ("HOLD", "CONTRADICTION")
+        else [],
     )

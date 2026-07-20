@@ -80,9 +80,7 @@ def memory_live(source: str = None) -> MemoryStatus:
     return MemoryStatus(MemoryClass.LIVE_PROBE, source=source)
 
 
-def memory_cached(
-    last_verified: str, ttl_s: int = 300, source: str = None
-) -> MemoryStatus:
+def memory_cached(last_verified: str, ttl_s: int = 300, source: str = None) -> MemoryStatus:
     return MemoryStatus(
         MemoryClass.CACHED_MEMORY,
         last_verified=last_verified,
@@ -156,9 +154,7 @@ def epistemic_derived(source: str = None, confidence: float = 0.75) -> Epistemic
     )
 
 
-def epistemic_inferred(
-    source: str = None, confidence: float = 0.6, uncertainty: list[str] = None
-) -> EpistemicSignal:
+def epistemic_inferred(source: str = None, confidence: float = 0.6, uncertainty: list[str] = None) -> EpistemicSignal:
     return EpistemicSignal(
         EpistemicLayer.INTERPRETED,
         confidence=confidence,
@@ -167,9 +163,7 @@ def epistemic_inferred(
     )
 
 
-def epistemic_speculative(
-    source: str = None, uncertainty: list[str] = None
-) -> EpistemicSignal:
+def epistemic_speculative(source: str = None, uncertainty: list[str] = None) -> EpistemicSignal:
     return EpistemicSignal(
         EpistemicLayer.SPECULATIVE,
         confidence=0.3,
@@ -203,9 +197,7 @@ class Recoverability(StrEnum):
     RETRY_SAME_LATER = "RETRY_SAME_LATER"
 
 
-def classify_error(
-    error: Exception, source_tool: str = None, source_organ: str = None
-) -> dict[str, Any]:
+def classify_error(error: Exception, source_tool: str = None, source_organ: str = None) -> dict[str, Any]:
     """
     Classify an unknown error into a structured envelope.
     Python equivalent of classifyUnknown() from error-classifier.ts.
@@ -234,9 +226,7 @@ def classify_error(
         next_action = f"Check file format and retry ({source_tool} parser)"
 
     # Missing/required patterns
-    elif any(
-        kw in msg_lower for kw in ["missing", "required", "cannot be null", "undefined"]
-    ):
+    elif any(kw in msg_lower for kw in ["missing", "required", "cannot be null", "undefined"]):
         error_class = ErrorClass.MISSING_REQUIRED_FIELD
         recoverability = Recoverability.AGENT_CAN_RETRY
         layer = "input_validation"
@@ -244,9 +234,7 @@ def classify_error(
         next_action = "Provide missing fields and retry"
 
     # Invalid/out of range patterns
-    elif any(
-        kw in msg_lower for kw in ["invalid", "out of range", "must be", "expected"]
-    ):
+    elif any(kw in msg_lower for kw in ["invalid", "out of range", "must be", "expected"]):
         error_class = ErrorClass.BAD_INPUT_VALUE
         recoverability = Recoverability.AGENT_CAN_RETRY
         layer = "argument_semantic"
@@ -254,10 +242,7 @@ def classify_error(
         next_action = "Fix input values and retry"
 
     # Authority/permission patterns
-    elif any(
-        kw in msg_lower
-        for kw in ["lease", "authority", "forbidden", "unauthorized", "permission"]
-    ):
+    elif any(kw in msg_lower for kw in ["lease", "authority", "forbidden", "unauthorized", "permission"]):
         error_class = ErrorClass.AUTHORITY_BLOCK
         recoverability = Recoverability.ESCALATE_TO_888_HOLD
         layer = "authority"
@@ -265,10 +250,7 @@ def classify_error(
         next_action = "Request lease or escalate to 888_HOLD"
 
     # Floor patterns
-    elif any(
-        kw in msg_lower
-        for kw in ["floor", "constitution", "amanah", "truth", "sovereign"]
-    ):
+    elif any(kw in msg_lower for kw in ["floor", "constitution", "amanah", "truth", "sovereign"]):
         error_class = ErrorClass.FLOOR_BLOCK
         recoverability = Recoverability.ESCALATE_TO_888_HOLD
         layer = "floor"
@@ -276,10 +258,7 @@ def classify_error(
         next_action = "Constitutional floor violation — escalate to arifOS judge"
 
     # Drift patterns
-    elif any(
-        kw in msg_lower
-        for kw in ["drift", "schema change", "surface drift", "tool removed"]
-    ):
+    elif any(kw in msg_lower for kw in ["drift", "schema change", "surface drift", "tool removed"]):
         error_class = ErrorClass.TOOL_SURFACE_DRIFT
         recoverability = Recoverability.ESCALATE_TO_888_HOLD
         layer = "surface_drift"
@@ -287,10 +266,7 @@ def classify_error(
         next_action = "MCP tool surface changed — investigate drift cause"
 
     # Timeout/rate limit patterns
-    elif any(
-        kw in msg_lower
-        for kw in ["timeout", "etimedout", "econnrefused", "rate limit", "429"]
-    ):
+    elif any(kw in msg_lower for kw in ["timeout", "etimedout", "econnrefused", "rate limit", "429"]):
         error_class = ErrorClass.RESOURCE_EXHAUSTED
         recoverability = Recoverability.RETRY_SAME_LATER
         layer = "resource"
@@ -298,10 +274,7 @@ def classify_error(
         next_action = "Back off and retry with exponential delay"
 
     # Network patterns
-    elif any(
-        kw in msg_lower
-        for kw in ["econnreset", "503", "502", "fetch failed", "network"]
-    ):
+    elif any(kw in msg_lower for kw in ["econnreset", "503", "502", "fetch failed", "network"]):
         error_class = ErrorClass.DOWNSTREAM_FAILURE
         recoverability = Recoverability.AGENT_CAN_ROUTE
         layer = "external_dep"
@@ -353,9 +326,7 @@ def enrich_result(
             "confidence": min(confidence, 0.90),
             "source": source,
             "reversible": True,
-            "authority_claim": "EVIDENCE"
-            if epistemic == EpistemicLayer.OBSERVED
-            else "ADVISORY",
+            "authority_claim": "EVIDENCE" if epistemic == EpistemicLayer.OBSERVED else "ADVISORY",
         },
     }
 
@@ -383,11 +354,7 @@ def safe_tool(tool_name: str, organ: str = "unknown"):
                 result = await func(*args, **kwargs)
 
                 # If result is already enriched, pass through
-                if (
-                    isinstance(result, dict)
-                    and "_memory" in result
-                    and "_epistemic" in result
-                ):
+                if isinstance(result, dict) and "_memory" in result and "_epistemic" in result:
                     return result
 
                 # Enrich the result

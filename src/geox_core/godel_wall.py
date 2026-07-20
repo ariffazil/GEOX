@@ -36,6 +36,7 @@ RUNG_MODEL = 5
 RUNG_JUDGMENT = 6
 RUNG_NARRATIVE = 7
 
+
 # Imports kept lazy so this module is testable without geox_core deps.
 def _rung_of_assumption(assumption_registry, assumption_id: str) -> int:
     """Look up an assumption's rung via the supplied registry."""
@@ -135,8 +136,7 @@ class GodelWall:
                     recursive_dependency=True,
                     cycle_path=cycle,
                     reason=(
-                        "Recursive dependency detected — claim cannot be "
-                        "closed by assumptions that themselves depend on it."
+                        "Recursive dependency detected — claim cannot be closed by assumptions that themselves depend on it."
                     ),
                     can_seal=False,
                 )
@@ -150,10 +150,7 @@ class GodelWall:
                 v = SealVerdict(
                     claim_id=claim_id,
                     state="UNKNOWN",
-                    reason=(
-                        "Claim has no grounding assumptions. "
-                        "Attach at least one Rung 1-3 observation before sealing."
-                    ),
+                    reason=("Claim has no grounding assumptions. Attach at least one Rung 1-3 observation before sealing."),
                     can_seal=False,
                     required_evidence=["RUNG_2_OBSERVATION"],
                 )
@@ -191,10 +188,7 @@ class GodelWall:
             v = SealVerdict(
                 claim_id=claim_id,
                 state="KNOWN",
-                reason=(
-                    f"All {len(deps)} grounding assumption(s) sit at rung < "
-                    f"{claim.rung}. Iron Law satisfied. Sealable."
-                ),
+                reason=(f"All {len(deps)} grounding assumption(s) sit at rung < {claim.rung}. Iron Law satisfied. Sealable."),
                 can_seal=True,
             )
             self._claims[claim_id] = claim.model_copy(update={"seal_state": v.state})
@@ -219,9 +213,7 @@ class GodelWall:
         # Treat claim_id as a synthetic node; if any dependency chain leads back
         # to claim_id via parent links, we have a cycle.
         visited: set[str] = set()
-        stack: list[tuple[str, list[str]]] = [
-            (cid, [cid]) for cid in claim.depends_on_assumption_ids
-        ]
+        stack: list[tuple[str, list[str]]] = [(cid, [cid]) for cid in claim.depends_on_assumption_ids]
         while stack:
             node, path = stack.pop()
             if node == claim.claim_id and len(path) > 1:

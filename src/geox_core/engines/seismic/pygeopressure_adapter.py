@@ -98,8 +98,7 @@ class PyGeoPressureAdapter:
     def _check_dependencies(self) -> None:
         if not _PYGEO_AVAILABLE:
             raise ImportError(
-                "pygeopressure>=0.4.0 is required for geopressure prediction. "
-                "Install with: pip install pygeopressure"
+                "pygeopressure>=0.4.0 is required for geopressure prediction. Install with: pip install pygeopressure"
             )
 
     def predict_eaton(
@@ -147,7 +146,7 @@ class PyGeoPressureAdapter:
         delta_t = np.clip(delta_t, 0.0, None)  # only for overpressured zones
 
         # Eaton equation: PP = OB - (OB - HP) * (dT_nc / dT_obs)^n
-        pp_eaton = ob - ncr * (delta_t / (1e6 / velocity_m_s - 1e6 / v_nc + 1e-6))**n
+        pp_eaton = ob - ncr * (delta_t / (1e6 / velocity_m_s - 1e6 / v_nc + 1e-6)) ** n
         pp_eaton = np.clip(pp_eaton, hp, ob)  # clamp to physical bounds
 
         # Effective stress
@@ -157,12 +156,14 @@ class PyGeoPressureAdapter:
         calibration_status = "CALIBRATED" if is_calibrated else "UNCALIBRATED"
         confidence = 0.82 if is_calibrated else 0.72
 
-        params_hash = _sha256_params({
-            "method": "eaton",
-            "n": n,
-            "overburden_kg_m3": overburden_kg_m3,
-            "is_calibrated": is_calibrated,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "eaton",
+                "n": n,
+                "overburden_kg_m3": overburden_kg_m3,
+                "is_calibrated": is_calibrated,
+            }
+        )
 
         caveats = [
             "Eaton exponent n is empirical — regional calibration required",
@@ -228,7 +229,7 @@ class PyGeoPressureAdapter:
 
         # Effective stress (virgin compaction curve)
         # σ = ((V - A) / B)^4
-        sigma_virgin = np.maximum((velocity_m_s - a_bowers) / b_bowers, 1e-6)**4
+        sigma_virgin = np.maximum((velocity_m_s - a_bowers) / b_bowers, 1e-6) ** 4
         sigma_virgin = np.clip(sigma_virgin, 0.0, ob[-1] if len(ob) else 100.0)
 
         # Bowers PP = OB - σ_virgin
@@ -236,13 +237,15 @@ class PyGeoPressureAdapter:
         pp_bowers = np.clip(pp_bowers, hp, ob)
 
         is_calibrated = calibration_data is not None
-        params_hash = _sha256_params({
-            "method": "bowers",
-            "a": a_bowers,
-            "b": b_bowers,
-            "c": c_bowers,
-            "is_calibrated": is_calibrated,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "bowers",
+                "a": a_bowers,
+                "b": b_bowers,
+                "c": c_bowers,
+                "is_calibrated": is_calibrated,
+            }
+        )
 
         caveats = [
             "Bowers coefficients A, B, C are basin-specific",

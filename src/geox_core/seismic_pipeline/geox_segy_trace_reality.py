@@ -41,6 +41,7 @@ import numpy as np
 # STEP 1: SEG-Y INGESTION
 # ═══════════════════════════════════════════════════════════════════════════
 
+
 def ingest_segy(segy_path: str) -> dict:
     """Open a SEG-Y file and extract raw traces + binary header.
 
@@ -65,14 +66,14 @@ def ingest_segy(segy_path: str) -> dict:
                 "samples_per_trace": int(f.bin[segyio.BinField.Samples]),
                 "sample_interval_us": int(f.bin[segyio.BinField.Interval]),
                 "data_sample_format": int(f.bin[segyio.BinField.Format]),
-                "traces":   int(f.tracecount),
-                "sorting":  str(f.sorting),
+                "traces": int(f.tracecount),
+                "sorting": str(f.sorting),
             }
 
-            sample_interval_s  = bin_header["sample_interval_us"] / 1_000_000
-            n_samples          = bin_header["samples_per_trace"]
-            n_traces           = bin_header["traces"]
-            twt_axis           = np.arange(n_samples) * sample_interval_s * 1000  # ms
+            sample_interval_s = bin_header["sample_interval_us"] / 1_000_000
+            n_samples = bin_header["samples_per_trace"]
+            n_traces = bin_header["traces"]
+            twt_axis = np.arange(n_samples) * sample_interval_s * 1000  # ms
 
             # Load all traces into array (float32)
             traces = np.zeros((n_samples, n_traces), dtype=np.float32)
@@ -83,38 +84,41 @@ def ingest_segy(segy_path: str) -> dict:
             headers = []
             for ti in range(min(n_traces, 500)):  # sample first 500
                 h = f.header[ti]
-                headers.append({
-                    "trace_idx":  ti,
-                    "cdp":        int(h[segyio.TraceField.CDP]),
-                    "inline":     int(h[segyio.TraceField.INLINE_3D]),
-                    "crossline":  int(h[segyio.TraceField.CROSSLINE_3D]),
-                    "offset":     int(h[segyio.TraceField.offset]),
-                    "x":          int(h[segyio.TraceField.CDP_X]),
-                    "y":          int(h[segyio.TraceField.CDP_Y]),
-                    "elevation":  int(h[segyio.TraceField.ElevationScalar]),
-                })
+                headers.append(
+                    {
+                        "trace_idx": ti,
+                        "cdp": int(h[segyio.TraceField.CDP]),
+                        "inline": int(h[segyio.TraceField.INLINE_3D]),
+                        "crossline": int(h[segyio.TraceField.CROSSLINE_3D]),
+                        "offset": int(h[segyio.TraceField.offset]),
+                        "x": int(h[segyio.TraceField.CDP_X]),
+                        "y": int(h[segyio.TraceField.CDP_Y]),
+                        "elevation": int(h[segyio.TraceField.ElevationScalar]),
+                    }
+                )
 
     except Exception as e:
         return {"status": "VOID", "reason": f"segyio open failed: {e}"}
 
     return {
-        "status":    "OBS_SEGY_TRACE",
+        "status": "OBS_SEGY_TRACE",
         "segy_path": segy_path,
-        "sha256":    sha256,
+        "sha256": sha256,
         "sha256_short": sha256[:16],
         "bin_header": bin_header,
-        "twt_ms":    twt_axis.tolist(),
+        "twt_ms": twt_axis.tolist(),
         "n_samples": n_samples,
-        "n_traces":  n_traces,
+        "n_traces": n_traces,
         "sample_interval_ms": sample_interval_s * 1000,
-        "traces":    traces,       # ndarray (n_samples, n_traces) float32
-        "headers":   headers,
+        "traces": traces,  # ndarray (n_samples, n_traces) float32
+        "headers": headers,
     }
 
 
 # ═══════════════════════════════════════════════════════════════════════════
 # STEP 2: TRACE HEADER AUDIT
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 def audit_trace_headers(ingested: dict) -> dict:
     """Audit trace headers for completeness and consistency.
@@ -132,12 +136,12 @@ def audit_trace_headers(ingested: dict) -> dict:
     if not headers:
         return {"status": "VOID", "reason": "No headers to audit"}
 
-    cdps      = [h["cdp"]       for h in headers]
-    inlines   = [h["inline"]    for h in headers]
+    cdps = [h["cdp"] for h in headers]
+    inlines = [h["inline"] for h in headers]
     crosslines = [h["crossline"] for h in headers]
-    offsets   = [h["offset"]    for h in headers]
-    xs        = [h["x"]         for h in headers]
-    ys        = [h["y"]         for h in headers]
+    offsets = [h["offset"] for h in headers]
+    xs = [h["x"] for h in headers]
+    ys = [h["y"] for h in headers]
 
     # CDP regularity
     cdp_diffs = np.diff(sorted(set(cdps)))
@@ -179,16 +183,16 @@ def audit_trace_headers(ingested: dict) -> dict:
         "status": "OBS_SEGY_HEADER",
         "header_audit": {
             "n_headers_checked": len(headers),
-            "cdp_range":    [min(cdps), max(cdps)],
-            "cdp_spacing":  round(cdp_spacing, 2),
-            "cdp_regular":  cdp_regular,
+            "cdp_range": [min(cdps), max(cdps)],
+            "cdp_spacing": round(cdp_spacing, 2),
+            "cdp_regular": cdp_regular,
             "inline_populated": il_populated,
             "crossline_populated": xl_populated,
-            "data_type":    data_type,
+            "data_type": data_type,
             "xy_populated": xy_nonzero,
-            "xy_range_m":   [round(xy_range_x, 0), round(xy_range_y, 0)],
-            "verdict":      verdict,
-            "flags":        flags,
+            "xy_range_m": [round(xy_range_x, 0), round(xy_range_y, 0)],
+            "verdict": verdict,
+            "flags": flags,
         },
     }
 
@@ -196,6 +200,7 @@ def audit_trace_headers(ingested: dict) -> dict:
 # ═══════════════════════════════════════════════════════════════════════════
 # STEP 3: GEOMETRY AUDIT
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 def audit_geometry(ingested: dict) -> dict:
     """Audit the physical geometry of the seismic volume.
@@ -210,15 +215,15 @@ def audit_geometry(ingested: dict) -> dict:
     Epistemic: OBS_SEGY_GEOMETRY
     """
     n_samples = ingested.get("n_samples", 0)
-    n_traces  = ingested.get("n_traces",  0)
-    dt_ms     = ingested.get("sample_interval_ms", 2.0)
-    twt_ms    = ingested.get("twt_ms", [])
+    n_traces = ingested.get("n_traces", 0)
+    dt_ms = ingested.get("sample_interval_ms", 2.0)
+    twt_ms = ingested.get("twt_ms", [])
 
     if n_samples == 0 or n_traces == 0:
         return {"status": "VOID", "reason": "Empty geometry"}
 
-    twt_max_ms    = twt_ms[-1] if twt_ms else n_samples * dt_ms
-    nyquist_hz    = 1000 / (2 * dt_ms)
+    twt_max_ms = twt_ms[-1] if twt_ms else n_samples * dt_ms
+    nyquist_hz = 1000 / (2 * dt_ms)
     typical_seismic_bw = "OK" if nyquist_hz >= 125 else "LOW — dt may limit resolution"
 
     flags = []
@@ -239,10 +244,10 @@ def audit_geometry(ingested: dict) -> dict:
         "status": "OBS_SEGY_GEOMETRY",
         "geometry": {
             "n_samples": n_samples,
-            "n_traces":  n_traces,
-            "dt_ms":     dt_ms,
+            "n_traces": n_traces,
+            "dt_ms": dt_ms,
             "twt_range_ms": [0, round(twt_max_ms, 2)],
-            "nyquist_hz":   round(nyquist_hz, 1),
+            "nyquist_hz": round(nyquist_hz, 1),
             "bandwidth_status": typical_seismic_bw,
             "malay_basin_twt_plausible": in_range,
             "flags": flags,
@@ -254,6 +259,7 @@ def audit_geometry(ingested: dict) -> dict:
 # ═══════════════════════════════════════════════════════════════════════════
 # STEP 4: AMPLITUDE PRESERVATION CHECK
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 def check_amplitude_preservation(ingested: dict) -> dict:
     """Check whether trace amplitudes are likely to be preserved.
@@ -280,14 +286,14 @@ def check_amplitude_preservation(ingested: dict) -> dict:
     n_samples, n_traces = traces.shape
 
     # RMS per trace
-    rms_per_trace = np.sqrt(np.mean(traces ** 2, axis=0))
+    rms_per_trace = np.sqrt(np.mean(traces**2, axis=0))
     rms_mean = float(np.mean(rms_per_trace))
-    rms_cv   = float(np.std(rms_per_trace) / (rms_mean + 1e-10))
+    rms_cv = float(np.std(rms_per_trace) / (rms_mean + 1e-10))
 
     # DC bias (mean should be near zero for zero-phase processed data)
     dc_per_trace = np.mean(traces, axis=0)
     dc_mean = float(np.mean(np.abs(dc_per_trace)))
-    dc_flag  = dc_mean > 0.05 * rms_mean
+    dc_flag = dc_mean > 0.05 * rms_mean
 
     # Clipping (max amplitude same across many traces = hard limiter)
     max_per_trace = np.max(np.abs(traces), axis=0)
@@ -312,10 +318,10 @@ def check_amplitude_preservation(ingested: dict) -> dict:
     return {
         "status": "DER_SEGY_AMPLITUDE",
         "amplitude": {
-            "rms_mean":     round(rms_mean, 6),
-            "rms_cv":       round(rms_cv, 4),
+            "rms_mean": round(rms_mean, 6),
+            "rms_cv": round(rms_cv, 4),
             "dc_bias_flag": dc_flag,
-            "clip_fraction":round(clip_frac, 4),
+            "clip_fraction": round(clip_frac, 4),
             "polarity_first_peak": first_peak_sign,
             "amplitude_preserved": preserved,
             "flags": flags,
@@ -329,6 +335,7 @@ def check_amplitude_preservation(ingested: dict) -> dict:
 # ═══════════════════════════════════════════════════════════════════════════
 # STEP 5: WAVELET / PHASE CHECK
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 def check_wavelet_phase(ingested: dict) -> dict:
     """Estimate wavelet character from the data.
@@ -347,19 +354,19 @@ def check_wavelet_phase(ingested: dict) -> dict:
     - Frequency content constrains vertical resolution
     """
     traces = ingested.get("traces")
-    dt_ms  = ingested.get("sample_interval_ms", 2.0)
+    dt_ms = ingested.get("sample_interval_ms", 2.0)
     if traces is None:
         return {"status": "VOID", "reason": "No traces"}
 
     # Stack a sample of traces for stable autocorrelation estimate
     n_samples, n_traces = traces.shape
-    sample_traces = traces[:, ::max(1, n_traces // 50)]  # up to 50 representative traces
+    sample_traces = traces[:, :: max(1, n_traces // 50)]  # up to 50 representative traces
     stack = np.mean(sample_traces, axis=1)
 
     # Autocorrelation
-    ac = np.correlate(stack, stack, mode='full')
-    ac = ac[n_samples - 1:]  # keep positive lags only
-    ac /= ac[0] + 1e-10       # normalise
+    ac = np.correlate(stack, stack, mode="full")
+    ac = ac[n_samples - 1 :]  # keep positive lags only
+    ac /= ac[0] + 1e-10  # normalise
 
     # Dominant period: first zero crossing of autocorrelation
     zero_cross = None
@@ -368,11 +375,11 @@ def check_wavelet_phase(ingested: dict) -> dict:
             zero_cross = i
             break
     dominant_period_ms = (zero_cross * dt_ms * 2) if zero_cross else None
-    dominant_freq_hz   = (1000 / dominant_period_ms) if dominant_period_ms else None
+    dominant_freq_hz = (1000 / dominant_period_ms) if dominant_period_ms else None
 
     # Power spectrum
     fft_amp = np.abs(np.fft.rfft(stack))
-    freqs   = np.fft.rfftfreq(n_samples, d=dt_ms / 1000)
+    freqs = np.fft.rfftfreq(n_samples, d=dt_ms / 1000)
     peak_idx = np.argmax(fft_amp[1:]) + 1
     peak_freq = float(freqs[peak_idx])
 
@@ -380,7 +387,7 @@ def check_wavelet_phase(ingested: dict) -> dict:
     threshold = fft_amp.max() * 0.5  # -6dB ~ 0.5 amplitude
     above = np.where(fft_amp >= threshold)[0]
     if len(above) >= 2:
-        f_low  = float(freqs[above[0]])
+        f_low = float(freqs[above[0]])
         f_high = float(freqs[above[-1]])
         bandwidth_hz = f_high - f_low
     else:
@@ -389,9 +396,9 @@ def check_wavelet_phase(ingested: dict) -> dict:
     # Phase estimate: zero-phase data has symmetric autocorrelation
     # Use correlation between stack and its abs envelope as proxy
     from scipy.signal import hilbert as scipy_hilbert
+
     envelope_stack = np.abs(scipy_hilbert(stack))
-    phase_corr = float(np.corrcoef(np.abs(stack[:n_samples//4]),
-                                    envelope_stack[:n_samples//4])[0, 1])
+    phase_corr = float(np.corrcoef(np.abs(stack[: n_samples // 4]), envelope_stack[: n_samples // 4])[0, 1])
     phase_class = "NEAR_ZERO_PHASE" if abs(phase_corr) < 0.3 else "MIXED_PHASE"
 
     # Tuning thickness at dominant frequency
@@ -399,20 +406,20 @@ def check_wavelet_phase(ingested: dict) -> dict:
     v_avg_mps = 2000
     if dominant_freq_hz:
         wavelength_m = v_avg_mps / dominant_freq_hz
-        tuning_ms    = (wavelength_m / 4) / v_avg_mps * 2000  # TWT ms
+        tuning_ms = (wavelength_m / 4) / v_avg_mps * 2000  # TWT ms
     else:
         wavelength_m = None
-        tuning_ms    = None
+        tuning_ms = None
 
     return {
         "status": "DER_SEGY_WAVELET",
         "wavelet": {
-            "dominant_freq_hz":    round(peak_freq, 1),
-            "autocorr_freq_hz":    round(dominant_freq_hz, 1) if dominant_freq_hz else None,
-            "bandwidth_hz":        round(bandwidth_hz, 1),
-            "f_low_hz":            round(f_low, 1),
-            "f_high_hz":           round(f_high, 1),
-            "phase_class":         phase_class,
+            "dominant_freq_hz": round(peak_freq, 1),
+            "autocorr_freq_hz": round(dominant_freq_hz, 1) if dominant_freq_hz else None,
+            "bandwidth_hz": round(bandwidth_hz, 1),
+            "f_low_hz": round(f_low, 1),
+            "f_high_hz": round(f_high, 1),
+            "phase_class": phase_class,
             "tuning_thickness_ms": round(tuning_ms, 1) if tuning_ms else None,
             "tuning_thickness_m_at_v2000": round(wavelength_m / 4, 1) if wavelength_m else None,
             "bruges_ricker_target_hz": round(peak_freq, 0) if peak_freq else 40.0,
@@ -428,6 +435,7 @@ def check_wavelet_phase(ingested: dict) -> dict:
 # ═══════════════════════════════════════════════════════════════════════════
 # STEP 6: TRACE ATTRIBUTE STACK (from real traces)
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 def compute_trace_attributes(ingested: dict, wavelet_info: dict) -> dict:
     """Compute 6-attribute stack from real SEG-Y traces.
@@ -453,7 +461,7 @@ def compute_trace_attributes(ingested: dict, wavelet_info: dict) -> dict:
     from scipy.signal import hilbert as scipy_hilbert
 
     traces = ingested.get("traces")
-    dt_ms  = ingested.get("sample_interval_ms", 2.0)
+    dt_ms = ingested.get("sample_interval_ms", 2.0)
     if traces is None:
         return {"status": "VOID", "reason": "No traces"}
 
@@ -463,16 +471,13 @@ def compute_trace_attributes(ingested: dict, wavelet_info: dict) -> dict:
     window = max(10, int(50 / dt_ms))  # 50ms window
     agc = np.zeros_like(traces)
     for ti in range(n_traces):
-        rms_win = np.array([
-            np.sqrt(np.mean(traces[max(0, s - window):s + window, ti] ** 2))
-            for s in range(n_samples)
-        ])
+        rms_win = np.array([np.sqrt(np.mean(traces[max(0, s - window) : s + window, ti] ** 2)) for s in range(n_samples)])
         agc[:, ti] = traces[:, ti] / (rms_win + 1e-10)
 
     # ── 2. Instantaneous phase ───────────────────────────────────────
     analytic = scipy_hilbert(traces, axis=0)
     inst_phase = np.angle(analytic)
-    cos_phase  = np.cos(inst_phase)
+    cos_phase = np.cos(inst_phase)
 
     # ── 3. Instantaneous amplitude (envelope) ────────────────────────
     envelope = np.abs(analytic)
@@ -483,9 +488,9 @@ def compute_trace_attributes(ingested: dict, wavelet_info: dict) -> dict:
     coherence = np.zeros((n_samples, n_traces), dtype=np.float32)
     hw = 3  # half-window
     for ti in range(hw, n_traces - hw):
-        block = traces[:, ti - hw:ti + hw + 1]
+        block = traces[:, ti - hw : ti + hw + 1]
         num = np.sum(block, axis=1) ** 2
-        den = np.sum(block ** 2, axis=1) * (2 * hw + 1)
+        den = np.sum(block**2, axis=1) * (2 * hw + 1)
         coherence[:, ti] = num / (den + 1e-10)
 
     # ── 5. Discontinuity (1 - coherence, smoothed) ───────────────────
@@ -493,9 +498,9 @@ def compute_trace_attributes(ingested: dict, wavelet_info: dict) -> dict:
     discontinuity = ndimage.gaussian_filter(discontinuity, sigma=1.5)
 
     # ── 6. Structural dip (structure tensor, simplified) ─────────────
-    gx = ndimage.sobel(agc, axis=1)   # lateral gradient
-    gz = ndimage.sobel(agc, axis=0)   # vertical gradient
-    dip_chaos = np.sqrt(gx ** 2 + gz ** 2) / (np.abs(agc) + 1e-10)
+    gx = ndimage.sobel(agc, axis=1)  # lateral gradient
+    gz = ndimage.sobel(agc, axis=0)  # vertical gradient
+    dip_chaos = np.sqrt(gx**2 + gz**2) / (np.abs(agc) + 1e-10)
     dip_chaos = np.clip(dip_chaos, 0, np.percentile(dip_chaos, 99))
 
     # ── Normalise all to [0,1] for attribute composite ───────────────
@@ -506,16 +511,16 @@ def compute_trace_attributes(ingested: dict, wavelet_info: dict) -> dict:
     return {
         "status": "DER_SEGY_ATTRIBUTE",
         "attrs": {
-            "agc":          agc.astype(np.float32),
-            "phase":        cos_phase.astype(np.float32),
-            "envelope":     norm01(env_norm).astype(np.float32),
-            "coherence":    coherence.astype(np.float32),
-            "discontinuity":norm01(discontinuity).astype(np.float32),
-            "dip_chaos":    norm01(dip_chaos).astype(np.float32),
+            "agc": agc.astype(np.float32),
+            "phase": cos_phase.astype(np.float32),
+            "envelope": norm01(env_norm).astype(np.float32),
+            "coherence": coherence.astype(np.float32),
+            "discontinuity": norm01(discontinuity).astype(np.float32),
+            "dip_chaos": norm01(dip_chaos).astype(np.float32),
         },
         "dt_ms": dt_ms,
         "n_samples": n_samples,
-        "n_traces":  n_traces,
+        "n_traces": n_traces,
         "bruges_wavelet_target_hz": wavelet_info.get("wavelet", {}).get("bruges_ricker_target_hz", 40.0),
         "note": "Attributes computed from OBS_SEGY_TRACE. Amplitude is real. Phase is real. Geometry is real.",
     }
@@ -525,8 +530,8 @@ def compute_trace_attributes(ingested: dict, wavelet_info: dict) -> dict:
 # STEP 7: RENDER TRACE SECTION (for Panel D v2)
 # ═══════════════════════════════════════════════════════════════════════════
 
-def render_trace_section(ingested: dict, attrs: dict, output_dir: str,
-                          title_suffix: str = "") -> dict:
+
+def render_trace_section(ingested: dict, attrs: dict, output_dir: str, title_suffix: str = "") -> dict:
     """Render the trace-amplitude section as a seismic display.
 
     This is the equivalent of the pixel-domain render in geox_physical_reality.py,
@@ -539,80 +544,87 @@ def render_trace_section(ingested: dict, attrs: dict, output_dir: str,
     Epistemic: DER_SEGY_RENDER (derived display of OBS_SEGY_TRACE)
     """
     import matplotlib
-    matplotlib.use('Agg')
+
+    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
 
     os.makedirs(output_dir, exist_ok=True)
 
-    twt   = ingested.get("twt_ms", [])
+    twt = ingested.get("twt_ms", [])
     traces = ingested.get("traces")
     n_samples, n_traces = traces.shape
     twt_arr = np.array(twt) if twt else np.arange(n_samples)
 
-    agc   = attrs["attrs"]["agc"]
+    agc = attrs["attrs"]["agc"]
     phase = attrs["attrs"]["phase"]
-    env   = attrs["attrs"]["envelope"]
-    coh   = attrs["attrs"]["coherence"]
-    disc  = attrs["attrs"]["discontinuity"]
-    dip   = attrs["attrs"]["dip_chaos"]
+    env = attrs["attrs"]["envelope"]
+    coh = attrs["attrs"]["coherence"]
+    disc = attrs["attrs"]["discontinuity"]
+    dip = attrs["attrs"]["dip_chaos"]
 
     # ── T1: Amplitude section ─────────────────────────────────────────
-    fig, ax = plt.subplots(figsize=(18, 10), facecolor='#0a0d14')
-    ax.set_facecolor('#0a0d14')
+    fig, ax = plt.subplots(figsize=(18, 10), facecolor="#0a0d14")
+    ax.set_facecolor("#0a0d14")
     vmax = np.percentile(np.abs(agc), 97)
-    ax.imshow(agc, cmap='seismic', aspect='auto',
-              vmin=-vmax, vmax=vmax, alpha=0.95,
-              extent=[0, n_traces, twt_arr[-1], twt_arr[0]])
-    ax.set_xlabel('Trace', color='#667')
-    ax.set_ylabel('TWT (ms) — OBS_SEGY_TRACE domain', color='#667')
+    ax.imshow(
+        agc, cmap="seismic", aspect="auto", vmin=-vmax, vmax=vmax, alpha=0.95, extent=[0, n_traces, twt_arr[-1], twt_arr[0]]
+    )
+    ax.set_xlabel("Trace", color="#667")
+    ax.set_ylabel("TWT (ms) — OBS_SEGY_TRACE domain", color="#667")
     ax.set_title(
-        f'SEG-Y Trace Amplitude Section — OBS_SEGY_TRACE{title_suffix}\n'
-        f'AGC-normalised | sample_interval={ingested["sample_interval_ms"]:.1f}ms | '
-        f'{n_traces} traces × {n_samples} samples',
-        color='white', fontsize=10)
-    ax.tick_params(colors='#445')
-    ax.text(0.01, 0.02,
-            'DER_SEGY_RENDER: amplitude display. Real traces. Phase real. Geometry real.\n'
-            'Amplitude ≠ lithology/fluid without AVO + rock physics.',
-            transform=ax.transAxes, color='#FFE566', fontsize=7.5,
-            bbox=dict(boxstyle='round', facecolor='#1a1a0a', alpha=0.85))
+        f"SEG-Y Trace Amplitude Section — OBS_SEGY_TRACE{title_suffix}\n"
+        f"AGC-normalised | sample_interval={ingested['sample_interval_ms']:.1f}ms | "
+        f"{n_traces} traces × {n_samples} samples",
+        color="white",
+        fontsize=10,
+    )
+    ax.tick_params(colors="#445")
+    ax.text(
+        0.01,
+        0.02,
+        "DER_SEGY_RENDER: amplitude display. Real traces. Phase real. Geometry real.\n"
+        "Amplitude ≠ lithology/fluid without AVO + rock physics.",
+        transform=ax.transAxes,
+        color="#FFE566",
+        fontsize=7.5,
+        bbox=dict(boxstyle="round", facecolor="#1a1a0a", alpha=0.85),
+    )
     plt.tight_layout()
     t1_path = os.path.join(output_dir, "T1_amplitude_section.png")
-    plt.savefig(t1_path, dpi=150, bbox_inches='tight', facecolor='#0a0d14')
+    plt.savefig(t1_path, dpi=150, bbox_inches="tight", facecolor="#0a0d14")
     plt.close()
     print(f"  ✅ T1 amplitude: {t1_path}")
 
     # ── T2: 6-attribute composite ─────────────────────────────────────
-    fig = plt.figure(figsize=(24, 12), facecolor='#0a0d14')
-    gs  = GridSpec(2, 3, figure=fig, hspace=0.35, wspace=0.25)
+    fig = plt.figure(figsize=(24, 12), facecolor="#0a0d14")
+    gs = GridSpec(2, 3, figure=fig, hspace=0.35, wspace=0.25)
     specs = [
-        (agc,   'seismic',  'AGC (normalised amplitude)',     '①'),
-        (phase, 'twilight', 'Cosine Phase',                   '②'),
-        (env,   'hot',      'Envelope / Instantaneous Amp',   '③'),
-        (coh,   'plasma',   'Coherence (semblance)',          '④'),
-        (disc,  'YlOrRd',   'Discontinuity (fault proxy)',    '⑤'),
-        (dip,   'magma',    'Dip Chaos (structure tensor)',   '⑥'),
+        (agc, "seismic", "AGC (normalised amplitude)", "①"),
+        (phase, "twilight", "Cosine Phase", "②"),
+        (env, "hot", "Envelope / Instantaneous Amp", "③"),
+        (coh, "plasma", "Coherence (semblance)", "④"),
+        (disc, "YlOrRd", "Discontinuity (fault proxy)", "⑤"),
+        (dip, "magma", "Dip Chaos (structure tensor)", "⑥"),
     ]
     for idx, (data, cmap, label, num) in enumerate(specs):
         ax = fig.add_subplot(gs[idx // 3, idx % 3])
-        ax.set_facecolor('#0a0d14')
+        ax.set_facecolor("#0a0d14")
         vmax_a = np.percentile(np.abs(data), 98)
-        kwargs = dict(cmap=cmap, aspect='auto',
-                      extent=[0, n_traces, twt_arr[-1], twt_arr[0]])
-        if cmap == 'seismic':
+        kwargs = dict(cmap=cmap, aspect="auto", extent=[0, n_traces, twt_arr[-1], twt_arr[0]])
+        if cmap == "seismic":
             kwargs.update(vmin=-vmax_a, vmax=vmax_a)
         else:
             kwargs.update(vmin=0, vmax=vmax_a)
         ax.imshow(data, **kwargs)
-        ax.set_title(f"{num} {label}", color='#aaccff', fontsize=9)
-        ax.set_ylabel('TWT (ms)', color='#445', fontsize=7)
-        ax.tick_params(colors='#445', labelsize=6)
+        ax.set_title(f"{num} {label}", color="#aaccff", fontsize=9)
+        ax.set_ylabel("TWT (ms)", color="#445", fontsize=7)
+        ax.tick_params(colors="#445", labelsize=6)
 
-    fig.suptitle('SEG-Y Attribute Stack — DER_SEGY_ATTRIBUTE', color='white', fontsize=11)
+    fig.suptitle("SEG-Y Attribute Stack — DER_SEGY_ATTRIBUTE", color="white", fontsize=11)
     plt.tight_layout()
     t2_path = os.path.join(output_dir, "T2_attribute_composite.png")
-    plt.savefig(t2_path, dpi=150, bbox_inches='tight', facecolor='#0a0d14')
+    plt.savefig(t2_path, dpi=150, bbox_inches="tight", facecolor="#0a0d14")
     plt.close()
     print(f"  ✅ T2 attributes: {t2_path}")
 
@@ -623,8 +635,8 @@ def render_trace_section(ingested: dict, attrs: dict, output_dir: str,
 # FULL PIPELINE RUNNER
 # ═══════════════════════════════════════════════════════════════════════════
 
-def run_segy_reality_pipeline(segy_path: str, output_dir: str,
-                               basin_context: str = "malay_basin") -> dict:
+
+def run_segy_reality_pipeline(segy_path: str, output_dir: str, basin_context: str = "malay_basin") -> dict:
     """Run the full SEG-Y trace reality pipeline (steps 1–6).
 
     Steps 7–10 (horizon comparison, well tie, bruges, INT_GEOLOGY) are
@@ -646,8 +658,10 @@ def run_segy_reality_pipeline(segy_path: str, output_dir: str,
     if ingested["status"] == "VOID":
         print(f"  ❌ VOID: {ingested['reason']}")
         return ingested
-    print(f"  ✅ {ingested['n_traces']} traces × {ingested['n_samples']} samples "
-          f"| dt={ingested['sample_interval_ms']:.1f}ms | sha={ingested['sha256_short']}")
+    print(
+        f"  ✅ {ingested['n_traces']} traces × {ingested['n_samples']} samples "
+        f"| dt={ingested['sample_interval_ms']:.1f}ms | sha={ingested['sha256_short']}"
+    )
 
     # Step 2: Header audit
     print("  [S2] Trace header audit...")
@@ -662,8 +676,10 @@ def run_segy_reality_pipeline(segy_path: str, output_dir: str,
     print("  [S3] Geometry audit...")
     geom_audit = audit_geometry(ingested)
     ga = geom_audit.get("geometry", {})
-    print(f"  ✅ TWT: {ga.get('twt_range_ms')} ms | Nyquist: {ga.get('nyquist_hz')}Hz | "
-          f"Malay Basin plausible: {ga.get('malay_basin_twt_plausible')}")
+    print(
+        f"  ✅ TWT: {ga.get('twt_range_ms')} ms | Nyquist: {ga.get('nyquist_hz')}Hz | "
+        f"Malay Basin plausible: {ga.get('malay_basin_twt_plausible')}"
+    )
     if ga.get("flags"):
         for fl in ga["flags"]:
             print(f"  ⚠  {fl}")
@@ -672,15 +688,19 @@ def run_segy_reality_pipeline(segy_path: str, output_dir: str,
     print("  [S4] Amplitude preservation check...")
     amp_check = check_amplitude_preservation(ingested)
     ac = amp_check.get("amplitude", {})
-    print(f"  ✅ RMS={ac.get('rms_mean'):.4f} | CV={ac.get('rms_cv'):.3f} | "
-          f"AVO-usable: {ac.get('avo_usable')} | verdict: {ac.get('verdict')}")
+    print(
+        f"  ✅ RMS={ac.get('rms_mean'):.4f} | CV={ac.get('rms_cv'):.3f} | "
+        f"AVO-usable: {ac.get('avo_usable')} | verdict: {ac.get('verdict')}"
+    )
 
     # Step 5: Wavelet check
     print("  [S5] Wavelet / phase check...")
     wav_check = check_wavelet_phase(ingested)
     wv = wav_check.get("wavelet", {})
-    print(f"  ✅ Dominant freq: {wv.get('dominant_freq_hz')}Hz | BW: {wv.get('bandwidth_hz')}Hz | "
-          f"Phase: {wv.get('phase_class')} | Tuning: {wv.get('tuning_thickness_ms')}ms")
+    print(
+        f"  ✅ Dominant freq: {wv.get('dominant_freq_hz')}Hz | BW: {wv.get('bandwidth_hz')}Hz | "
+        f"Phase: {wv.get('phase_class')} | Tuning: {wv.get('tuning_thickness_ms')}ms"
+    )
 
     # Step 6: Attribute stack
     print("  [S6] Computing trace attribute stack...")
@@ -689,26 +709,23 @@ def run_segy_reality_pipeline(segy_path: str, output_dir: str,
 
     # Step 7: Render
     print("  [S7] Rendering trace section panels...")
-    renders = render_trace_section(ingested, trace_attrs, output_dir,
-                                   title_suffix=f" | {basin_context}")
+    renders = render_trace_section(ingested, trace_attrs, output_dir, title_suffix=f" | {basin_context}")
 
     # ── Provenance hash of full pipeline ─────────────────────────────
-    pipeline_hash = hashlib.sha256(
-        (ingested["sha256"] + "segy_reality_v1").encode()
-    ).hexdigest()[:16]
+    pipeline_hash = hashlib.sha256((ingested["sha256"] + "segy_reality_v1").encode()).hexdigest()[:16]
 
     # Save audit JSON
     audit = {
-        "segy_sha256":   ingested["sha256"],
-        "sha256_short":  ingested["sha256_short"],
+        "segy_sha256": ingested["sha256"],
+        "sha256_short": ingested["sha256_short"],
         "pipeline_hash": pipeline_hash,
-        "bin_header":    ingested["bin_header"],
-        "header_audit":  header_audit.get("header_audit", {}),
-        "geometry":      geom_audit.get("geometry", {}),
-        "amplitude":     amp_check.get("amplitude", {}),
-        "wavelet":       wav_check.get("wavelet", {}),
+        "bin_header": ingested["bin_header"],
+        "header_audit": header_audit.get("header_audit", {}),
+        "geometry": geom_audit.get("geometry", {}),
+        "amplitude": amp_check.get("amplitude", {}),
+        "wavelet": wav_check.get("wavelet", {}),
         "basin_context": basin_context,
-        "renders":       renders,
+        "renders": renders,
         "next_steps": [
             "geox_well_tie_bruges.py — synthetic seismogram + well tie",
             "Horizon picks (ant-track + DP) on trace data",
@@ -729,14 +746,14 @@ def run_segy_reality_pipeline(segy_path: str, output_dir: str,
 
     # Return everything needed for Panel D v2
     return {
-        "ingested":      ingested,
-        "header_audit":  header_audit,
-        "geom_audit":    geom_audit,
-        "amp_check":     amp_check,
-        "wav_check":     wav_check,
-        "trace_attrs":   trace_attrs,
-        "renders":       renders,
-        "audit_path":    audit_path,
+        "ingested": ingested,
+        "header_audit": header_audit,
+        "geom_audit": geom_audit,
+        "amp_check": amp_check,
+        "wav_check": wav_check,
+        "trace_attrs": trace_attrs,
+        "renders": renders,
+        "audit_path": audit_path,
     }
 
 
@@ -746,9 +763,8 @@ def run_segy_reality_pipeline(segy_path: str, output_dir: str,
 # Label: TEST_SEGY — not real geology. Never use for drilling decisions.
 # ═══════════════════════════════════════════════════════════════════════════
 
-def create_test_segy(output_path: str,
-                     n_traces: int = 200, n_samples: int = 500,
-                     dt_ms: float = 2.0) -> str:
+
+def create_test_segy(output_path: str, n_traces: int = 200, n_samples: int = 500, dt_ms: float = 2.0) -> str:
     """Create a geologically realistic synthetic SEG-Y for pipeline testing.
 
     Geology model (Malay Basin inspired, but TEST only):
@@ -773,14 +789,14 @@ def create_test_segy(output_path: str,
     # Geological model: reflection coefficients at given TWT depths
     # Malay Basin inspired TWT depths (shallow thermal sag section)
     reflector_twt_ms = [120, 280, 460, 640, 820]  # TWT ms
-    reflector_rc     = [ 0.15, -0.10,  0.20, -0.08,  0.12]  # RC (dimensionless)
+    reflector_rc = [0.15, -0.10, 0.20, -0.08, 0.12]  # RC (dimensionless)
 
     # Ricker wavelet at 35Hz (typical Malay Basin seismic)
     wav, _ = ricker(duration=0.080, dt=dt_ms / 1000, f=35)
 
     # Fault locations (trace indices where fault displaces reflectors)
     fault_traces = [55, 110, 165]
-    fault_throws  = [8, 12, 6]  # samples of throw
+    fault_throws = [8, 12, 6]  # samples of throw
 
     rc_section = np.zeros((n_samples, n_traces), dtype=np.float32)
     for ref_twt, ref_rc in zip(reflector_twt_ms, reflector_rc, strict=False):
@@ -796,11 +812,12 @@ def create_test_segy(output_path: str,
     # Convolve with wavelet
     traces = np.zeros_like(rc_section)
     for ti in range(n_traces):
-        traces[:, ti] = np.convolve(rc_section[:, ti], wav, mode='same')
+        traces[:, ti] = np.convolve(rc_section[:, ti], wav, mode="same")
 
     # Add geological noise (coloured, not white)
     noise = np.random.randn(n_samples, n_traces).astype(np.float32)
     from scipy.ndimage import gaussian_filter
+
     noise = gaussian_filter(noise, sigma=(2, 1)) * 0.04
 
     # Simulate a simple multiple (water-bottom repeat at 2× shallowest reflector)
@@ -816,16 +833,16 @@ def create_test_segy(output_path: str,
     dt_us = int(dt_ms * 1000)
 
     spec = segyio.spec()
-    spec.sorting  = 2   # CDP sort
-    spec.format   = 1   # IEEE 4-byte float
-    spec.samples  = np.arange(n_samples, dtype=np.float32) * dt_ms
+    spec.sorting = 2  # CDP sort
+    spec.format = 1  # IEEE 4-byte float
+    spec.samples = np.arange(n_samples, dtype=np.float32) * dt_ms
     spec.tracecount = n_traces
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
     with segyio.create(output_path, spec) as f:
         f.bin.update(
-            tsort=2,   # CDP_SORTING (segyio enum varies by version)
+            tsort=2,  # CDP_SORTING (segyio enum varies by version)
             hdt=dt_us,
             dto=dt_us,
             hns=n_samples,
@@ -833,14 +850,14 @@ def create_test_segy(output_path: str,
         )
         for ti in range(n_traces):
             f.header[ti] = {
-                segyio.TraceField.CDP:          ti + 1,
-                segyio.TraceField.FieldRecord:  1,
-                segyio.TraceField.TraceNumber:  ti + 1,
-                segyio.TraceField.INLINE_3D:    1,
+                segyio.TraceField.CDP: ti + 1,
+                segyio.TraceField.FieldRecord: 1,
+                segyio.TraceField.TraceNumber: ti + 1,
+                segyio.TraceField.INLINE_3D: 1,
                 segyio.TraceField.CROSSLINE_3D: ti + 1,
-                segyio.TraceField.CDP_X:        int(ti * 25),   # 25m CDP spacing
-                segyio.TraceField.CDP_Y:        0,
-                segyio.TraceField.offset:       0,
+                segyio.TraceField.CDP_X: int(ti * 25),  # 25m CDP spacing
+                segyio.TraceField.CDP_Y: 0,
+                segyio.TraceField.offset: 0,
                 segyio.TraceField.DelayRecordingTime: 0,
             }
             f.trace[ti] = traces[:, ti]
@@ -869,9 +886,9 @@ if __name__ == "__main__":
         print(f"\nRun pipeline: python3 geox_segy_trace_reality.py {test_path}")
         sys.exit(0)
 
-    segy_path  = sys.argv[1]
+    segy_path = sys.argv[1]
     output_dir = sys.argv[2] if len(sys.argv) > 2 else "/tmp/geox_segy_out"
-    basin      = sys.argv[3] if len(sys.argv) > 3 else "malay_basin"
+    basin = sys.argv[3] if len(sys.argv) > 3 else "malay_basin"
 
     result = run_segy_reality_pipeline(segy_path, output_dir, basin)
     if result.get("status") != "VOID":

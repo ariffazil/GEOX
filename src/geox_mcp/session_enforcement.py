@@ -170,11 +170,14 @@ def _cached_kernel_verify(
                 elif not result_valid and not result_session_valid:
                     # Kernel says session is invalid — token issuance is cosmetic
                     value = None
-                elif actor_verified or (resp_sid == session_id and actor_verified):
-                    # Authoritative: actor verified via kernel binding
+                elif resp_sid == session_id:
+                    # Authoritative: kernel confirmed session round-trip match
+                    value = parsed
+                elif actor_verified:
+                    # Fallback: actor verified even if resp_sid missing
                     value = parsed
                 else:
-                    # C3 REDTEAM: round-trip equality without verified actor is NOT valid.
+                    # C3 REDTEAM: no round-trip match AND no verified actor → reject
                     value = None
         else:
             logger.warning("arifOS session_validate HTTP %s", r.status_code)

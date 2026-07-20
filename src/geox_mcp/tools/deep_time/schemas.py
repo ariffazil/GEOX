@@ -31,13 +31,14 @@ from pydantic import BaseModel, Field
 # `epistemic_level == "OBSERVED"` without coercion errors.
 class EpistemicLevel(StrEnum):
     """Epistemic provenance of a deep_time variable — drives F7 confidence cap."""
-    OBSERVED = "OBSERVED"             # directly measured (e.g. ice core δ18O)
-    DERIVED = "DERIVED"               # formula-based from observed inputs
-    INTERPRETED = "INTERPRETED"       # model output, calibrated
+
+    OBSERVED = "OBSERVED"  # directly measured (e.g. ice core δ18O)
+    DERIVED = "DERIVED"  # formula-based from observed inputs
+    INTERPRETED = "INTERPRETED"  # model output, calibrated
     PROCESS_HYPOTHESIS = "PROCESS_HYPOTHESIS"  # process-model prediction
-    SPECULATION = "SPECULATION"       # analogy / statistics-based inference
-    NO_DATA = "NO_DATA"               # dataset not yet ingested
-    UNKNOWN = "UNKNOWN"               # cannot be known at this age (F9 guard)
+    SPECULATION = "SPECULATION"  # analogy / statistics-based inference
+    NO_DATA = "NO_DATA"  # dataset not yet ingested
+    UNKNOWN = "UNKNOWN"  # cannot be known at this age (F9 guard)
 
 
 EPISTEMIC_CONFIDENCE_CAP = {
@@ -79,10 +80,11 @@ def cap_confidence(epistemic_level: str, raw_confidence: float) -> float:
 # Normal Superchron (CNS, ~83.6-120.6 Ma) and Kiaman Reversed Superchron
 # (~262-318 Ma) where polarity is KNOWN but provides ZERO dating resolution.
 
+
 class PolarityState(StrEnum):
-    NORMAL = "normal"        # single normal chron
-    REVERSED = "reversed"    # single reversed chron
-    MIXED = "mixed"          # interval spans >=1 reversal
+    NORMAL = "normal"  # single normal chron
+    REVERSED = "reversed"  # single reversed chron
+    MIXED = "mixed"  # interval spans >=1 reversal
     SUPERCHRON = "superchron"  # CNS or Kiaman — polarity known, dating power NULL
     UNRESOLVED = "unresolved"  # pre-M29 (>157 Ma) — no calibrated GPTS
 
@@ -106,6 +108,7 @@ ReferenceFrame = Literal[
 
 # ─── Per-variable wrapper ─────────────────────────────────────────────────────
 
+
 class EarthStateVariable(BaseModel):
     """A single Earth state variable with full epistemic envelope."""
 
@@ -128,9 +131,9 @@ class EarthStateVariable(BaseModel):
     # ─── Reference-frame fields (for variables that need them) ───────────────
     # Used by sea_level, paleogeography, plate models. Optional for
     # variables where it's not meaningful (solar luminosity, day length).
-    reference_curve: str | None = None      # e.g. "Haq2014", "Merdith2021"
+    reference_curve: str | None = None  # e.g. "Haq2014", "Merdith2021"
     reference_component: str | None = None  # "long_term" | "short_term" | "composite"
-    reference_datum: str | None = None      # "present_msl" | "modern_obliquity" etc.
+    reference_datum: str | None = None  # "present_msl" | "modern_obliquity" etc.
 
     # ─── Interval-aggregation fields (for variables returned as distributions) ─
     # When the age_resolver returns a wide interval (>5 Myr), scalar variables
@@ -146,6 +149,7 @@ class EarthStateVariable(BaseModel):
 
 # ─── Aggregate Earth State Vector ─────────────────────────────────────────────
 
+
 class EarthStateVector(BaseModel):
     """The full Earth State Vector for a resolved deep-time interval.
 
@@ -158,7 +162,7 @@ class EarthStateVector(BaseModel):
     # Time-resolved variables
     geomagnetic_polarity: EarthStateVariable | None = None
     atmospheric_co2_ppm: EarthStateVariable | None = None
-    benthic_d18O_permil: EarthStateVariable | None = None       # OBSERVED measurement
+    benthic_d18O_permil: EarthStateVariable | None = None  # OBSERVED measurement
     global_temperature_anomaly_c: EarthStateVariable | None = None  # INTERPRETED (depends on assumptions)
     eustatic_sea_level_m: EarthStateVariable | None = None
     atmospheric_o2_pal: EarthStateVariable | None = None
@@ -192,6 +196,7 @@ class EarthStateVector(BaseModel):
 
 # ─── Governance footer (F11 AUDIT + F1/F13 SOVEREIGN) ────────────────────────
 
+
 class GovernanceFooter(BaseModel):
     """Mandatory audit footer for every Earth State Vector.
 
@@ -208,19 +213,20 @@ class GovernanceFooter(BaseModel):
     version: str = "v1.0"
     ics_version: str = "v2024/12"
     kernel: str = "arifOS"
-    verdict: str = "PARTIAL"           # SEAL | PLAUSIBLE | PARTIAL | HOLD | VOID
+    verdict: str = "PARTIAL"  # SEAL | PLAUSIBLE | PARTIAL | HOLD | VOID
     lowest_confidence_field: str | None = None
     lowest_confidence_value: float | None = None
-    risk: str = "LOW"                 # LOW | MEDIUM | HIGH
+    risk: str = "LOW"  # LOW | MEDIUM | HIGH
     human_review_required: bool = False
     f9_fabrication_guard_active: bool = True
-    seal: str | None = None           # populated by caller: VAULT999::DTC::<hash>::<ts>
+    seal: str | None = None  # populated by caller: VAULT999::DTC::<hash>::<ts>
     ics_chart_hash: str | None = None
     issued_at: str | None = None
     arifos_constitution_version: str = "v2026.05.05-SSCT"
 
 
 # ─── Top-level envelope (the public return type) ──────────────────────────────
+
 
 class EarthStateEnvelope(BaseModel):
     """Public MCP return envelope for geox_deep_time_state."""

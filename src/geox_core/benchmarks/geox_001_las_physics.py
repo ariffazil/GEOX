@@ -36,6 +36,7 @@ def compute_las_physics(
 
     All outputs labeled DER (computed). Input curves remain OBS when from file.
     """
+
     def _arr(*keys: str) -> np.ndarray | None:
         for k in keys:
             if k in curves and curves[k] is not None:

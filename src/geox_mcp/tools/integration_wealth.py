@@ -81,20 +81,23 @@ async def geox_wealth_feed(request: WealthFeedRequest) -> WealthFeedResponse:
         total_recoverable = 0.0
         for i, s in enumerate(cells):
             vol = stoiip_cell(
-                phi=s.phi, sw=request.water_saturation,
+                phi=s.phi,
+                sw=request.water_saturation,
                 areal_extent_m2=request.areal_extent_m2,
                 pay_zone_thickness_m=request.pay_zone_thickness_m,
                 formation_volume_factor=request.formation_volume_factor,
                 recovery_factor=request.recovery_factor,
             )
             total_recoverable += vol["recoverable_bbl"]
-            per_cell.append({
-                "cell_index": i,
-                "state_grade": s.grade(),
-                "phi": s.phi,
-                "stoiip_bbl": vol["stoiip_bbl"],
-                "recoverable_bbl": vol["recoverable_bbl"],
-            })
+            per_cell.append(
+                {
+                    "cell_index": i,
+                    "state_grade": s.grade(),
+                    "phi": s.phi,
+                    "stoiip_bbl": vol["stoiip_bbl"],
+                    "recoverable_bbl": vol["recoverable_bbl"],
+                }
+            )
 
         # Simple ranking: average porosity × (1 - Sw) × RF
         avg_phi = sum(c.phi for c in cells) / max(1, len(cells))
@@ -113,14 +116,12 @@ async def geox_wealth_feed(request: WealthFeedRequest) -> WealthFeedResponse:
         # Shale, Basement, Coal, Anhydrite, Salt are NOT producible reservoirs.
         try:
             from geox_core.physics.drivers import build_lithology_model
+
             lithology_counts: dict[str, int] = {}
             for c in cells:
                 litho, _conf, _ = build_lithology_model(c)
                 lithology_counts[litho] = lithology_counts.get(litho, 0) + 1
-            producible_count = sum(
-                v for k, v in lithology_counts.items()
-                if k in ("Sandstone", "Limestone", "Dolomite")
-            )
+            producible_count = sum(v for k, v in lithology_counts.items() if k in ("Sandstone", "Limestone", "Dolomite"))
             producible_fraction = producible_count / max(1, len(cells))
         except Exception:
             producible_fraction = 1.0  # conservative fallback
@@ -128,11 +129,7 @@ async def geox_wealth_feed(request: WealthFeedRequest) -> WealthFeedResponse:
         # Also defensible phi cap: shales typically > 0.28, reservoirs rarely.
         producible_phi = max(0.0, min(avg_phi, 0.28) - 0.05)
         producible_score = (
-            producible_phi
-            * (1 - request.water_saturation)
-            * request.recovery_factor
-            * avg_grade_aaa
-            * producible_fraction
+            producible_phi * (1 - request.water_saturation) * request.recovery_factor * avg_grade_aaa * producible_fraction
         )
 
         if avg_grade_aaa < 0.5 or producible_fraction < 0.3 or producible_score < 0.005:
@@ -146,8 +143,7 @@ async def geox_wealth_feed(request: WealthFeedRequest) -> WealthFeedResponse:
         elif producible_score < 0.015:
             verdict = "DEFER"
             rationale = (
-                f"Producible score {producible_score:.3f} below 0.015 threshold. "
-                "Acquire more data before committing capital."
+                f"Producible score {producible_score:.3f} below 0.015 threshold. Acquire more data before committing capital."
             )
         else:
             verdict = "ADVANCE"
@@ -160,7 +156,9 @@ async def geox_wealth_feed(request: WealthFeedRequest) -> WealthFeedResponse:
         feed = {
             "n_cells": len(cells),
             "total_recoverable_bbl": total_recoverable,
-            "phi_p10": p10, "phi_p50": p50, "phi_p90": p90,
+            "phi_p10": p10,
+            "phi_p50": p50,
+            "phi_p90": p90,
             "avg_phi": avg_phi,
             "avg_grade_aaa_fraction": avg_grade_aaa,
             "ranking_score": ranking_score,
@@ -172,8 +170,7 @@ async def geox_wealth_feed(request: WealthFeedRequest) -> WealthFeedResponse:
                 "grounding": "volumetric_arithmetic_on_physics9",
                 "method": "monte_carlo_lite_phi_percentiles",
                 "caveat": (
-                    "Single-facies volumetric. WEALTH organ should consume "
-                    "this feed and apply full portfolio + NPV modelling."
+                    "Single-facies volumetric. WEALTH organ should consume this feed and apply full portfolio + NPV modelling."
                 ),
             },
             "godel_wall": {

@@ -53,9 +53,11 @@ def compute_mistie_rms(inp: MistieRMSInput) -> dict[str, Any]:
     residual = s_w - r_w
     rms = float(np.sqrt(np.mean(residual**2)))
     norm_rms = float(rms / (np.std(r_w) + 1e-9))
-    local_corr = float(np.corrcoef(s_w, r_w)[0,1]) if len(s_w) > 2 else 0.0
+    local_corr = float(np.corrcoef(s_w, r_w)[0, 1]) if len(s_w) > 2 else 0.0
 
-    per_interval = [{"interval_name": "target_zone", "top_ms": float(t1), "base_ms": float(t2), "rms_ms": rms, "correlation": local_corr}]
+    per_interval = [
+        {"interval_name": "target_zone", "top_ms": float(t1), "base_ms": float(t2), "rms_ms": rms, "correlation": local_corr}
+    ]
 
     residual_class = "unexplained"
     residual_desc = ""
@@ -65,16 +67,30 @@ def compute_mistie_rms(inp: MistieRMSInput) -> dict[str, Any]:
         residual_class = "time_depth_error"
         residual_desc = f"Large lag {time_shift_ms:.1f} ms suggests time-depth error"
 
-    phys = {"bounds_ok": True, "lag_ok": abs(time_shift_ms) <= inp.max_lag_ms, "correlation_ok": corr_coef >= 0.40, "violations": []}
+    phys = {
+        "bounds_ok": True,
+        "lag_ok": abs(time_shift_ms) <= inp.max_lag_ms,
+        "correlation_ok": corr_coef >= 0.40,
+        "violations": [],
+    }
     if abs(time_shift_ms) > inp.max_lag_ms:
         phys["violations"].append(f"Lag {time_shift_ms:.1f} ms exceeds max {inp.max_lag_ms:.0f} ms")
 
     return _build_mistie(
-        well_name=inp.well_name, optimal_lag_ms=float(time_shift_ms), rms_mistie_ms=rms,
-        correlation_coefficient=float(corr_coef), residual_rms_normalized=norm_rms,
-        threshold_ms=inp.threshold_ms, max_lag_searched_ms=inp.max_lag_ms,
-        samples_in_window=len(s_w), per_interval=per_interval,
-        residual_class=residual_class, residual_description=residual_desc, physics_guard=phys, session_id=inp.session_id)
+        well_name=inp.well_name,
+        optimal_lag_ms=float(time_shift_ms),
+        rms_mistie_ms=rms,
+        correlation_coefficient=float(corr_coef),
+        residual_rms_normalized=norm_rms,
+        threshold_ms=inp.threshold_ms,
+        max_lag_searched_ms=inp.max_lag_ms,
+        samples_in_window=len(s_w),
+        per_interval=per_interval,
+        residual_class=residual_class,
+        residual_description=residual_desc,
+        physics_guard=phys,
+        session_id=inp.session_id,
+    )
 
 
 def extract_wavelet_least_squares(inp: WaveletExtractInput) -> dict[str, Any]:
@@ -86,11 +102,12 @@ def extract_wavelet_least_squares(inp: WaveletExtractInput) -> dict[str, Any]:
     n = min(len(r), len(s))
     r, s = r[:n], s[:n]
 
-    R = np.fft.rfft(r); S = np.fft.rfft(s)
-    freqs = np.fft.rfftfreq(n, d=dt/1000.0)
-    R_power = np.abs(R)**2
+    R = np.fft.rfft(r)
+    S = np.fft.rfft(s)
+    freqs = np.fft.rfftfreq(n, d=dt / 1000.0)
+    R_power = np.abs(R) ** 2
     R_max = max(np.max(R_power), 1e-12)
-    condition_number = float(R_max / (np.min(R_power[R_power>0] or 1) + 1e-12))
+    condition_number = float(R_max / (np.min(R_power[R_power > 0] or 1) + 1e-12))
     W_hat = S * np.conj(R) / (R_power + eps)
     signal_mask = R_power > eps * R_max
     if not np.any(signal_mask):
@@ -99,58 +116,90 @@ def extract_wavelet_least_squares(inp: WaveletExtractInput) -> dict[str, Any]:
 
     w_full = np.fft.irfft(W_hat, n=n)
     if len(w_full) > wavelet_samps:
-        energy = np.convolve(w_full**2, np.ones(21), mode='same')
+        energy = np.convolve(w_full**2, np.ones(21), mode="same")
         peak_idx = int(np.argmax(energy))
         half = wavelet_samps // 2
         start = max(0, peak_idx - half)
-        w = w_full[start:min(n, start + wavelet_samps)]
+        w = w_full[start : min(n, start + wavelet_samps)]
     else:
         w = w_full
 
-    q1_len = max(1, len(w)//4)
-    pre_ring = float(np.sum(w[:q1_len]**2) / (np.sum(w**2) + 1e-12))
-    if pre_ring < 0.10: pc = "zero_phase"
-    elif pre_ring > 0.40: pc = "minimum_phase"
-    else: pc = "mixed_phase"
+    q1_len = max(1, len(w) // 4)
+    pre_ring = float(np.sum(w[:q1_len] ** 2) / (np.sum(w**2) + 1e-12))
+    if pre_ring < 0.10:
+        pc = "zero_phase"
+    elif pre_ring > 0.40:
+        pc = "minimum_phase"
+    else:
+        pc = "mixed_phase"
     W_fft = np.fft.rfft(w, n=n)
-    phase_deg = float(np.degrees(np.angle(np.mean(W_fft[signal_mask[:len(W_fft)]]))))
+    phase_deg = float(np.degrees(np.angle(np.mean(W_fft[signal_mask[: len(W_fft)]]))))
     W_mag = np.abs(W_fft)
     W_peak = np.max(W_mag) or 1.0
-    above = freqs[:len(W_mag)][W_mag >= W_peak/np.sqrt(2)]
-    bandwidth = float(np.max(above)-np.min(above)) if len(above)>1 else 0.0
+    above = freqs[: len(W_mag)][W_mag >= W_peak / np.sqrt(2)]
+    bandwidth = float(np.max(above) - np.min(above)) if len(above) > 1 else 0.0
 
-    new_synth = np.convolve(r, w, mode='same')[:n]
+    new_synth = np.convolve(r, w, mode="same")[:n]
     cmask = np.isfinite(new_synth) & np.isfinite(s)
-    new_corr = float(np.corrcoef(new_synth[cmask], s[cmask])[0,1]) if cmask.sum()>10 else 0.0
-    new_rms = float(np.sqrt(np.mean((new_synth[cmask]-s[cmask])**2)))
+    new_corr = float(np.corrcoef(new_synth[cmask], s[cmask])[0, 1]) if cmask.sum() > 10 else 0.0
+    new_rms = float(np.sqrt(np.mean((new_synth[cmask] - s[cmask]) ** 2)))
 
     old_corr = 0.0
     try:
         from geox_core.core.welltie import build_wavelet_from_type
-        ricker = build_wavelet_from_type("ricker", 20.0, dt)
-        osyn = np.convolve(r, ricker, mode='same')[:n]
-        omask = np.isfinite(osyn) & np.isfinite(s)
-        old_corr = float(np.corrcoef(osyn[omask], s[omask])[0,1]) if omask.sum()>10 else 0.0
-    except Exception: pass
 
-    phys = {"compact_support": len(w) <= wavelet_samps+10, "causality_ok": pre_ring<0.60, "pre_ring_ratio": pre_ring, "spectral_division_ok": condition_number < inp.max_condition_number*10, "violations": []}
-    if not phys["compact_support"]: phys["violations"].append("Wavelet exceeds compact support")
-    if not phys["causality_ok"]: phys["violations"].append(f"Pre-ring ratio {pre_ring:.2f} suggests non-causal")
+        ricker = build_wavelet_from_type("ricker", 20.0, dt)
+        osyn = np.convolve(r, ricker, mode="same")[:n]
+        omask = np.isfinite(osyn) & np.isfinite(s)
+        old_corr = float(np.corrcoef(osyn[omask], s[omask])[0, 1]) if omask.sum() > 10 else 0.0
+    except Exception:
+        pass
+
+    phys = {
+        "compact_support": len(w) <= wavelet_samps + 10,
+        "causality_ok": pre_ring < 0.60,
+        "pre_ring_ratio": pre_ring,
+        "spectral_division_ok": condition_number < inp.max_condition_number * 10,
+        "violations": [],
+    }
+    if not phys["compact_support"]:
+        phys["violations"].append("Wavelet exceeds compact support")
+    if not phys["causality_ok"]:
+        phys["violations"].append(f"Pre-ring ratio {pre_ring:.2f} suggests non-causal")
 
     return _build_wavelet(
-        well_name=inp.well_name, wavelet=[float(x) for x in w], dt_ms=dt,
-        phase_class=pc, phase_degrees_estimated=phase_deg, condition_number=condition_number,
-        epsilon_used=eps, spectral_bandwidth_hz=bandwidth,
-        new_synthetic=[float(x) for x in new_synth], new_correlation=new_corr,
-        new_rms_mistie_ms=new_rms, old_correlation=old_corr,
-        max_condition_number=inp.max_condition_number, min_correlation_after=inp.min_correlation_after,
-        physics_guard=phys, session_id=inp.session_id)
+        well_name=inp.well_name,
+        wavelet=[float(x) for x in w],
+        dt_ms=dt,
+        phase_class=pc,
+        phase_degrees_estimated=phase_deg,
+        condition_number=condition_number,
+        epsilon_used=eps,
+        spectral_bandwidth_hz=bandwidth,
+        new_synthetic=[float(x) for x in new_synth],
+        new_correlation=new_corr,
+        new_rms_mistie_ms=new_rms,
+        old_correlation=old_corr,
+        max_condition_number=inp.max_condition_number,
+        min_correlation_after=inp.min_correlation_after,
+        physics_guard=phys,
+        session_id=inp.session_id,
+    )
 
 
-def compute_td_calibrate(*, las_path, checkshot_path=None, checkshot_data=None, method="linear", velocity_bounds=(1500.0,6000.0), residual_threshold_pct=10.0):
+def compute_td_calibrate(
+    *,
+    las_path,
+    checkshot_path=None,
+    checkshot_data=None,
+    method="linear",
+    velocity_bounds=(1500.0, 6000.0),
+    residual_threshold_pct=10.0,
+):
     import json
 
     import numpy as np
+
     cs_data = checkshot_data
     if checkshot_path and not cs_data:
         with open(checkshot_path) as f:
@@ -163,10 +212,13 @@ def compute_td_calibrate(*, las_path, checkshot_path=None, checkshot_data=None, 
         in_data = False
         for line in f:
             line = line.strip()
-            if line.startswith("~A"): in_data = True; continue
+            if line.startswith("~A"):
+                in_data = True
+                continue
             if in_data and line:
                 parts = line.split()
-                if len(parts) >= 1: curves.setdefault("DEPT",[]).append(float(parts[0]))
+                if len(parts) >= 1:
+                    curves.setdefault("DEPT", []).append(float(parts[0]))
     depth = np.array(curves["DEPT"], dtype=float)
     result = compute_td_function(cs_data, depth, method=method)
     receipt = result.to_dict() if hasattr(result, "to_dict") else result

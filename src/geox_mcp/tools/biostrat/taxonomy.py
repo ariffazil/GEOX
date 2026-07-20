@@ -55,9 +55,7 @@ class PBDBClient:
 
     # ── Taxa ──────────────────────────────────────────────────────────────
 
-    async def taxa_autocomplete(
-        self, name: str, limit: int = 10
-    ) -> list[dict[str, Any]]:
+    async def taxa_autocomplete(self, name: str, limit: int = 10) -> list[dict[str, Any]]:
         """Autocomplete a taxon name.
 
         Args:
@@ -107,11 +105,14 @@ class PBDBClient:
         Returns:
             TaxonRecord or None if not found
         """
-        data = await self._get("taxa/list.json", {
-            "base_name": taxon_name,
-            "show": "attr,app,ecospace",
-            "limit": 5,
-        })
+        data = await self._get(
+            "taxa/list.json",
+            {
+                "base_name": taxon_name,
+                "show": "attr,app,ecospace",
+                "limit": 5,
+            },
+        )
         records = data.get("records", [])
         if not records:
             return None
@@ -174,9 +175,7 @@ class PBDBClient:
 
     # ── Intervals (Geologic Time) ─────────────────────────────────────────
 
-    async def intervals_list(
-        self, scale: int = 1, limit: int = 200
-    ) -> list[dict[str, Any]]:
+    async def intervals_list(self, scale: int = 1, limit: int = 200) -> list[dict[str, Any]]:
         """List geochronologic intervals.
 
         Args:
@@ -331,6 +330,7 @@ class MikrotaxClient:
 
 # ── Unified Resolver ─────────────────────────────────────────────────────────
 
+
 async def resolve_taxon(
     taxon_name: str,
     pbdb: PBDBClient | None = None,
@@ -408,11 +408,18 @@ async def resolve_taxon(
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
+
 def _pbdb_rank(rnk: Any) -> str:
     """Convert PBDB numeric rank to string."""
     rank_map = {
-        5: "genus", 6: "species", 3: "family", 4: "subfamily",
-        9: "class", 10: "order", 7: "subgenus", 8: "subspecies",
+        5: "genus",
+        6: "species",
+        3: "family",
+        4: "subfamily",
+        9: "class",
+        10: "order",
+        7: "subgenus",
+        8: "subspecies",
     }
     if isinstance(rnk, int):
         return rank_map.get(rnk, str(rnk))

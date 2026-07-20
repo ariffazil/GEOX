@@ -158,9 +158,7 @@ async def run_orthogonal_base(
                 )
                 custody["ingest"] = "PASS"
         except Exception as exc:
-            stages.append(
-                StageReceipt("000_well_ingest", "geox_well_ingest", "FAIL", str(exc)[:300])
-            )
+            stages.append(StageReceipt("000_well_ingest", "geox_well_ingest", "FAIL", str(exc)[:300]))
     else:
         stages.append(
             StageReceipt(
@@ -198,9 +196,7 @@ async def run_orthogonal_base(
         except Exception as exc:
             stages.append(StageReceipt("111_well_qc", "geox_well_qc", "FAIL", str(exc)[:300]))
     else:
-        stages.append(
-            StageReceipt("111_well_qc", "geox_well_qc", "SKIP", "skipped — ingest not PASS")
-        )
+        stages.append(StageReceipt("111_well_qc", "geox_well_qc", "SKIP", "skipped — ingest not PASS"))
 
     # ── 3. optional checkshot / tops ingest ───────────────────────────
     for label, path, mode in (
@@ -223,9 +219,7 @@ async def run_orthogonal_base(
                     )
                 )
             except Exception as exc:
-                stages.append(
-                    StageReceipt(f"000_ingest_{label}", "geox_well_ingest", "FAIL", str(exc)[:200])
-                )
+                stages.append(StageReceipt(f"000_ingest_{label}", "geox_well_ingest", "FAIL", str(exc)[:200]))
         else:
             stages.append(
                 StageReceipt(
@@ -243,13 +237,9 @@ async def run_orthogonal_base(
             from geox_mcp.tools.well_ingest import geox_well_ingest
 
             r = await geox_well_ingest(mode="segy", source_uri=str(sp), well_id=well_id)
-            stages.append(
-                StageReceipt("000_seismic_ingest", "geox_well_ingest", "PASS", "seismic path accepted")
-            )
+            stages.append(StageReceipt("000_seismic_ingest", "geox_well_ingest", "PASS", "seismic path accepted"))
         except Exception as exc:
-            stages.append(
-                StageReceipt("000_seismic_ingest", "geox_seismic_ingest", "HOLD", str(exc)[:200])
-            )
+            stages.append(StageReceipt("000_seismic_ingest", "geox_seismic_ingest", "HOLD", str(exc)[:200]))
     else:
         stages.append(
             StageReceipt(
@@ -292,9 +282,7 @@ async def run_orthogonal_base(
         )
         custody["tie_preflight"] = st
     except Exception as exc:
-        stages.append(
-            StageReceipt("222_tie_preflight", "geox_tie_preflight", "FAIL", str(exc)[:300])
-        )
+        stages.append(StageReceipt("222_tie_preflight", "geox_tie_preflight", "FAIL", str(exc)[:300]))
 
     # ── 6. well_tie / synthetic custody marker ────────────────────────
     # Full physics still in geox_001 engine; here we mark the tool obligation
@@ -318,26 +306,19 @@ async def run_orthogonal_base(
     )
 
     # Base complete if no FAIL on critical stages
-    critical_fail = any(
-        s.status == "FAIL" and s.stage in ("000_well_ingest", "111_well_qc") for s in stages
-    )
+    critical_fail = any(s.status == "FAIL" and s.stage in ("000_well_ingest", "111_well_qc") for s in stages)
     # For synthetic-only runs, SKIP on ingest is allowed but base_complete=False for field claims
     ingest_pass = any(s.stage == "000_well_ingest" and s.status == "PASS" for s in stages)
     qc_ok = any(s.stage == "111_well_qc" and s.status in ("PASS", "HOLD") for s in stages)
     base_complete = (not critical_fail) and (
-        (ingest_pass and qc_ok)
-        or all(s.status != "FAIL" for s in stages if s.tool in ("geox_tie_preflight",))
+        (ingest_pass and qc_ok) or all(s.status != "FAIL" for s in stages if s.tool in ("geox_tie_preflight",))
     )
     # Stricter: cognitive blocked unless at least preflight ran without FAIL
-    preflight_ok = any(
-        s.stage == "222_tie_preflight" and s.status in ("PASS", "HOLD") for s in stages
-    )
+    preflight_ok = any(s.stage == "222_tie_preflight" and s.status in ("PASS", "HOLD") for s in stages)
     base_complete = base_complete and preflight_ok and not critical_fail
 
     custody["base_complete"] = base_complete
-    custody["field_ready"] = bool(
-        las and las.exists() and checkshot_path and Path(checkshot_path).exists() and seismic_path
-    )
+    custody["field_ready"] = bool(las and las.exists() and checkshot_path and Path(checkshot_path).exists() and seismic_path)
 
     return {
         "status": "success" if not critical_fail else "fail",
@@ -413,8 +394,6 @@ async def run_geox_001_with_orthogonal_route(
         "geox_vision": gate_tool("geox_vision", base.get("base_complete", False)),
         "geox_simulate_routing": gate_tool("geox_simulate_routing", base.get("base_complete", False)),
         "geox_claim": gate_tool("geox_claim", base.get("base_complete", False)),
-        "geox_3d_model_build": gate_tool(
-            "geox_3d_model_build", base.get("base_complete", False)
-        ),
+        "geox_3d_model_build": gate_tool("geox_3d_model_build", base.get("base_complete", False)),
     }
     return result

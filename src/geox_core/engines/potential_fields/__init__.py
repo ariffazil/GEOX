@@ -33,10 +33,10 @@ logger = logging.getLogger("geox.potential_fields")
 
 # ─── Constants ───────────────────────────────────────────────────────────────
 
-G_CONST = 6.674e-11       # m³/(kg·s²) — gravitational constant
+G_CONST = 6.674e-11  # m³/(kg·s²) — gravitational constant
 MU_0 = 4 * np.pi * 1e-7  # T·m/A — vacuum permeability
 EARTH_RADIUS_M = 6371000  # m
-BOUGUER_DENSITY = 2670    # kg/m³ — standard reduction density
+BOUGUER_DENSITY = 2670  # kg/m³ — standard reduction density
 MGAL_PER_MS2 = 1e5 / 1e2  # conversion: m/s² → mGal (1 mGal = 1e-5 m/s²)
 
 
@@ -52,8 +52,8 @@ class AnomalyType(StrEnum):
 
 
 class CorrectionMethod(StrEnum):
-    SLAB = "slab"           # infinite slab approximation
-    VOXEL = "voxel"         # discrete voxel superposition
+    SLAB = "slab"  # infinite slab approximation
+    VOXEL = "voxel"  # discrete voxel superposition
     TESSEROID = "tesseroid"  # spherical (regional)
 
 
@@ -63,6 +63,7 @@ class CorrectionMethod(StrEnum):
 @dataclass
 class GravityAnomaly:
     """Result of gravity forward modeling."""
+
     anomaly_type: AnomalyType
     values_mgal: np.ndarray
     x_coords: np.ndarray
@@ -89,6 +90,7 @@ class GravityAnomaly:
 @dataclass
 class MagneticAnomaly:
     """Result of magnetic forward modeling."""
+
     anomaly_type: AnomalyType
     values_nt: np.ndarray
     x_coords: np.ndarray
@@ -119,6 +121,7 @@ class MagneticAnomaly:
 @dataclass
 class BouguerCorrections:
     """Complete Bouguer anomaly corrections."""
+
     observed_gravity_mgal: np.ndarray
     latitude_correction_mgal: np.ndarray
     free_air_correction_mgal: np.ndarray
@@ -181,7 +184,7 @@ def latitude_correction(latitude_deg: np.ndarray) -> np.ndarray:
     """
     lat_rad = np.deg2rad(latitude_deg)
     sin2 = np.sin(lat_rad) ** 2
-    sin4 = sin2 ** 2
+    sin4 = sin2**2
     return 978032.67715 * (1.0 + 0.0052790414 * sin2 + 0.0000232718 * sin4)
 
 
@@ -228,12 +231,12 @@ def gravity_forward_voxel(
             rx = x_obs[i] - x_nodes[j]
             ry = y_obs[i] - y_nodes[j]
             rz = z_obs[i] - z_nodes[j]
-            r = math.sqrt(rx ** 2 + ry ** 2 + rz ** 2)
+            r = math.sqrt(rx**2 + ry**2 + rz**2)
             if r < 1.0:
                 r = 1.0  # singularity guard
 
             # Vertical component of gravitational attraction
-            dg[i] += G * density_contrast[j] * volume * rz / (r ** 3)
+            dg[i] += G * density_contrast[j] * volume * rz / (r**3)
 
     # Convert to mGal
     return dg * 1e5
@@ -321,7 +324,7 @@ def magnetic_forward_voxel(
             rx = x_obs[i] - x_nodes[j]
             ry = y_obs[i] - y_nodes[j]
             rz = z_obs[i] - z_nodes[j]
-            r = math.sqrt(rx ** 2 + ry ** 2 + rz ** 2)
+            r = math.sqrt(rx**2 + ry**2 + rz**2)
             if r < 1.0:
                 r = 1.0
 
@@ -335,7 +338,7 @@ def magnetic_forward_voxel(
             m_dot_r = mhat_x * rhat_x + mhat_y * rhat_y + mhat_z * rhat_z
 
             # Dipole field: B = μ₀/4π · M · V · (3(m̂·r̂)r̂ - m̂) / r³
-            factor = mu0 / (4.0 * np.pi) * susceptibility[j] * B0 / mu0 * volume / (r ** 3)
+            factor = mu0 / (4.0 * np.pi) * susceptibility[j] * B0 / mu0 * volume / (r**3)
 
             Bx = factor * (3.0 * m_dot_r * rhat_x - mhat_x)
             By = factor * (3.0 * m_dot_r * rhat_y - mhat_y)
@@ -383,12 +386,12 @@ def magnetic_forward_prism(
 
     for i in range(n_obs):
         x = x_obs[i]
-        r2 = x ** 2 + z_c ** 2
+        r2 = x**2 + z_c**2
         if r2 < 1.0:
             r2 = 1.0
 
         # Simplified total field anomaly
-        dt[i] = (mu0 / (4.0 * np.pi)) * M * thickness * width_m * z_c * np.sin(inc) / (r2 ** 1.5)
+        dt[i] = (mu0 / (4.0 * np.pi)) * M * thickness * width_m * z_c * np.sin(inc) / (r2**1.5)
 
     return dt * 1e9  # nT
 
@@ -512,10 +515,10 @@ def joint_gravity_magnetic_model(
       - Basement highs (high ρ, moderate χ)
     """
     # Normalize anomalies
-    g_norm = (gravity_anomaly.values_mgal - np.mean(gravity_anomaly.values_mgal))
+    g_norm = gravity_anomaly.values_mgal - np.mean(gravity_anomaly.values_mgal)
     g_norm = g_norm / (np.std(g_norm) + 1e-6)
 
-    m_norm = (magnetic_anomaly.values_nt - np.mean(magnetic_anomaly.values_nt))
+    m_norm = magnetic_anomaly.values_nt - np.mean(magnetic_anomaly.values_nt)
     m_norm = m_norm / (np.std(m_norm) + 1e-6)
 
     # Cross-correlation

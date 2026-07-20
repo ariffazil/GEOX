@@ -63,10 +63,7 @@ class FloPyAdapter:
 
     def _check_dependencies(self) -> None:
         if not _FLOPY_AVAILABLE:
-            raise ImportError(
-                "flopy>=3.10.0 is required for groundwater modeling. "
-                "Install with: pip install flopy"
-            )
+            raise ImportError("flopy>=3.10.0 is required for groundwater modeling. Install with: pip install flopy")
 
     def steady_state_model(
         self,
@@ -117,17 +114,23 @@ class FloPyAdapter:
 
         # Discretization
         fp.modflow.ModflowDis(
-            mf, nlay=nlay, nrow=nrow, ncol=ncol,
-            delr=delr, delc=delc,
-            top=top_m, botm=bottom_m,
-            xul=xmin, yul=ymax,
-            nper=nper, perlen=1.0, nstp=1,
+            mf,
+            nlay=nlay,
+            nrow=nrow,
+            ncol=ncol,
+            delr=delr,
+            delc=delc,
+            top=top_m,
+            botm=bottom_m,
+            xul=xmin,
+            yul=ymax,
+            nper=nper,
+            perlen=1.0,
+            nstp=1,
         )
 
         # Properties (UPW package)
-        fp.modflow.ModflowUpw(
-            mf, k=k_h_m_d, hk=k_h_m_d, vka=k_h_m_d / 10, ss=1e-5, sy=0.2
-        )
+        fp.modflow.ModflowUpw(mf, k=k_h_m_d, hk=k_h_m_d, vka=k_h_m_d / 10, ss=1e-5, sy=0.2)
 
         # Recharge (RCH package)
         fp.modflow.ModflowRch(mf, rech=recharge_m_d)
@@ -159,14 +162,19 @@ class FloPyAdapter:
                 else:
                     obs_heads[f"x{ox:.0f}_y{oy:.0f}"] = None
 
-        params_hash = _sha256_params({
-            "method": "steady_state",
-            "model_extent": model_extent,
-            "nlay": nlay, "nrow": nrow, "ncol": ncol,
-            "k_h_m_d": k_h_m_d,
-            "recharge_m_d": recharge_m_d,
-            "top_m": top_m, "bottom_m": bottom_m,
-        })
+        params_hash = _sha256_params(
+            {
+                "method": "steady_state",
+                "model_extent": model_extent,
+                "nlay": nlay,
+                "nrow": nrow,
+                "ncol": ncol,
+                "k_h_m_d": k_h_m_d,
+                "recharge_m_d": recharge_m_d,
+                "top_m": top_m,
+                "bottom_m": bottom_m,
+            }
+        )
 
         n_cells = nlay * nrow * ncol
         if n_cells > 1_000_000:
@@ -191,13 +199,10 @@ class FloPyAdapter:
             "epistemic_label": "ESTIMATE",
             "confidence": 0.70 if heads is not None else 0.50,
             "caveats": [
-                "Model is UNCALIBRATED without head observations — "
-                "requires measured water levels for CLAIM",
-                "Hydraulic conductivity assumed uniform — "
-                "spatial heterogeneity requires calibration or geophysics",
+                "Model is UNCALIBRATED without head observations — requires measured water levels for CLAIM",
+                "Hydraulic conductivity assumed uniform — spatial heterogeneity requires calibration or geophysics",
                 caveat_grid,
-                "Recharge estimated from precipitation — "
-                "actual recharge may differ significantly",
+                "Recharge estimated from precipitation — actual recharge may differ significantly",
             ],
             "library": "flopy",
             "library_version": _FLOPY_VERSION,
@@ -239,8 +244,7 @@ class FloPyAdapter:
             "effective_stress_mpa": float(depth_m * rho_water_kg_m3 * g_m_s2 / 1e6 - p_mpa),
             "epistemic_label": "ESTIMATE",
             "caveats": [
-                "Assumes hydrostatic conditions — "
-                "compaction-driven pressure may deviate significantly",
+                "Assumes hydrostatic conditions — compaction-driven pressure may deviate significantly",
                 "Requires confirmation that head is measured at datum",
             ],
             "library": "flopy",

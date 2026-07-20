@@ -98,12 +98,8 @@ class EarthquakeCatalogResult:
 class EarthquakeQuery(BaseModel):
     """Parameters for a USGS earthquake catalog query."""
 
-    starttime: str | None = Field(
-        None, description="ISO8601 start time (default: NOW - 30 days)"
-    )
-    endtime: str | None = Field(
-        None, description="ISO8601 end time (default: present)"
-    )
+    starttime: str | None = Field(None, description="ISO8601 start time (default: NOW - 30 days)")
+    endtime: str | None = Field(None, description="ISO8601 end time (default: present)")
     minlatitude: float | None = Field(None, ge=-90, le=90)
     maxlatitude: float | None = Field(None, ge=-90, le=90)
     minlongitude: float | None = Field(None, ge=-360, le=360)
@@ -132,9 +128,7 @@ class USGSEarthquakeFetcher:
     """
 
     def __init__(self, cache_dir: str | None = None):
-        self.cache_dir = Path(cache_dir or os.environ.get(
-            "GEOX_USGS_EQ_CACHE_DIR", "/root/.cache/geox/usgs_earthquake"
-        ))
+        self.cache_dir = Path(cache_dir or os.environ.get("GEOX_USGS_EQ_CACHE_DIR", "/root/.cache/geox/usgs_earthquake"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_USGS_EQ_OFFLINE", "1") != "0"
 
@@ -157,9 +151,7 @@ class USGSEarthquakeFetcher:
             result.note = f"Live query failed ({e}), returning stub data."
             return result
 
-    def _live_query(
-        self, params: EarthquakeQuery, query_dict: dict, now: str
-    ) -> EarthquakeCatalogResult:
+    def _live_query(self, params: EarthquakeQuery, query_dict: dict, now: str) -> EarthquakeCatalogResult:
         """Execute a live HTTP query to USGS FDSN API."""
 
         # Build query string
@@ -195,26 +187,26 @@ class USGSEarthquakeFetcher:
             geom = feature.get("geometry", {})
             coords = geom.get("coordinates", [None, None, None])
 
-            events.append(EarthquakeEvent(
-                event_id=feature.get("id", ""),
-                time_utc=datetime.fromtimestamp(
-                    props.get("time", 0) / 1000, tz=UTC
-                ).isoformat(),
-                latitude=coords[1] if len(coords) > 1 else 0.0,
-                longitude=coords[0] if len(coords) > 0 else 0.0,
-                depth_km=coords[2] if len(coords) > 2 else 0.0,
-                magnitude=props.get("mag", 0.0) or 0.0,
-                magnitude_type=props.get("magType", ""),
-                place=props.get("place", ""),
-                event_type=props.get("type", "earthquake"),
-                status=props.get("status", "automatic"),
-                tsunami_flag=props.get("tsunami", 0),
-                felt=props.get("felt"),
-                cdi=props.get("cdi"),
-                mmi=props.get("mmi"),
-                alert_level=props.get("alert"),
-                url=props.get("url"),
-            ))
+            events.append(
+                EarthquakeEvent(
+                    event_id=feature.get("id", ""),
+                    time_utc=datetime.fromtimestamp(props.get("time", 0) / 1000, tz=UTC).isoformat(),
+                    latitude=coords[1] if len(coords) > 1 else 0.0,
+                    longitude=coords[0] if len(coords) > 0 else 0.0,
+                    depth_km=coords[2] if len(coords) > 2 else 0.0,
+                    magnitude=props.get("mag", 0.0) or 0.0,
+                    magnitude_type=props.get("magType", ""),
+                    place=props.get("place", ""),
+                    event_type=props.get("type", "earthquake"),
+                    status=props.get("status", "automatic"),
+                    tsunami_flag=props.get("tsunami", 0),
+                    felt=props.get("felt"),
+                    cdi=props.get("cdi"),
+                    mmi=props.get("mmi"),
+                    alert_level=props.get("alert"),
+                    url=props.get("url"),
+                )
+            )
         return events
 
     def _offline_stub(self, query_dict: dict, now: str) -> EarthquakeCatalogResult:

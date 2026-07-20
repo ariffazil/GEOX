@@ -135,9 +135,7 @@ class AssumptionRegistry:
                 raise ValueError(f"duplicate assumption_id: {asm.assumption_id}")
             # Validate parent exists if claimed.
             if asm.parent_assumption_id and asm.parent_assumption_id not in self._assumptions:
-                raise ValueError(
-                    f"parent_assumption_id {asm.parent_assumption_id!r} not in registry"
-                )
+                raise ValueError(f"parent_assumption_id {asm.parent_assumption_id!r} not in registry")
             self._assumptions[asm.assumption_id] = asm
         return asm
 
@@ -173,9 +171,7 @@ class AssumptionRegistry:
             # Cascade: mark all descendants as inherited-from-falsified
             descendants = self.descendants(assumption_id)
             for child in descendants:
-                self._assumptions[child.assumption_id] = child.model_copy(
-                    update={"current_status": "inherited"}
-                )
+                self._assumptions[child.assumption_id] = child.model_copy(update={"current_status": "inherited"})
             return updated
 
     # ── read ─────────────────────────────────────────────────────────────────
@@ -193,11 +189,7 @@ class AssumptionRegistry:
 
     def active_for_tool(self, tool_name: str) -> list[Assumption]:
         with self._lock:
-            return [
-                a
-                for a in self._assumptions.values()
-                if a.introduced_by == tool_name and a.current_status == "active"
-            ]
+            return [a for a in self._assumptions.values() if a.introduced_by == tool_name and a.current_status == "active"]
 
     def falsified(self) -> list[Assumption]:
         with self._lock:

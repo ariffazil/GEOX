@@ -31,11 +31,7 @@ from pydantic import BaseModel, Field
 logger = logging.getLogger("geox.io.heatflow")
 
 HEATFLOW_BASE = "https://heatflow.world"
-HEATFLOW_CITATION = (
-    "Lucazeau, F. (2024). Global Heat Flow Database (IHFC). "
-    "GFZ Data Services. https://heatflow.world. "
-    "CC-BY-4.0."
-)
+HEATFLOW_CITATION = "Lucazeau, F. (2024). Global Heat Flow Database (IHFC). GFZ Data Services. https://heatflow.world. CC-BY-4.0."
 
 
 @dataclass
@@ -73,9 +69,7 @@ class HeatFlowQuery(BaseModel):
 
 class IHFCHeatFlowFetcher:
     def __init__(self, cache_dir: str | None = None):
-        self.cache_dir = Path(cache_dir or os.environ.get(
-            "GEOX_HEATFLOW_CACHE_DIR", "/root/.cache/geox/heatflow"
-        ))
+        self.cache_dir = Path(cache_dir or os.environ.get("GEOX_HEATFLOW_CACHE_DIR", "/root/.cache/geox/heatflow"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_HEATFLOW_OFFLINE", "1") != "0"
 
@@ -83,11 +77,21 @@ class IHFCHeatFlowFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return self._offline_stub(params.model_dump(exclude_none=True), now)
-        return HeatFlowResult(ok=False, mode="live", note="Live IHFC API requires dataset download. See heatflow.world.", fetched_at=now)
+        return HeatFlowResult(
+            ok=False, mode="live", note="Live IHFC API requires dataset download. See heatflow.world.", fetched_at=now
+        )
 
     def _offline_stub(self, qd: dict, now: str) -> HeatFlowResult:
         samples = [
             {"latitude": 4.0, "longitude": 112.0, "heat_flow_mw_m2": 65.0, "type": "marine", "reference": "IHFC 2024"},
             {"latitude": 5.5, "longitude": 115.0, "heat_flow_mw_m2": 78.0, "type": "marine", "reference": "IHFC 2024"},
         ]
-        return HeatFlowResult(ok=True, mode="offline_stub", measurements=samples, count=len(samples), query_params=qd, fetched_at=now, note="Offline mode (GEOX_HEATFLOW_OFFLINE=1).")
+        return HeatFlowResult(
+            ok=True,
+            mode="offline_stub",
+            measurements=samples,
+            count=len(samples),
+            query_params=qd,
+            fetched_at=now,
+            note="Offline mode (GEOX_HEATFLOW_OFFLINE=1).",
+        )

@@ -39,6 +39,7 @@ Used by:
   - Fossil COB Surface (Phase I Deliverable 2)
   - geox_evidence_reason (future: cross-domain synthesis)
 """
+
 from __future__ import annotations
 
 from enum import StrEnum
@@ -83,7 +84,7 @@ HYPERTHINNED_MAGNETIC_ANOMALY_NT = 170.0  # observed in Zhongshanan
 
 # Ductile mid-crustal layer — Zhongsha Trough
 DUCTILE_VP_TOP_THRESHOLD = 6.4  # below this Vp = ductile
-DUCTILE_STEP_KM_S = 0.3        # +0.3 km/s jump at top of lower crust
+DUCTILE_STEP_KM_S = 0.3  # +0.3 km/s jump at top of lower crust
 DUCTILE_THICKNESS_KM = 5.0
 DUCTILE_DEPTH_TOP_KM = 8.0
 DUCTILE_DEPTH_BOT_KM = 13.0
@@ -279,9 +280,7 @@ def vp_zone_classify(
     # Vp < 3.5 km/s = sediment (water 1.5, soft 2–3, consolidated 3–3.5).
     # Vp > 8.5 km/s = sub-Moho / asthenosphere.
     if vp_km_s < 3.5:
-        diag.append(
-            f"Vp {vp_km_s} km/s < 3.5 km/s — sediment-like, not crust"
-        )
+        diag.append(f"Vp {vp_km_s} km/s < 3.5 km/s — sediment-like, not crust")
         return CrustClassification(
             zone=CrustZone.UNKNOWN,
             confidence=0.10,
@@ -291,9 +290,7 @@ def vp_zone_classify(
             evidence_rank="SPEC",
         )
     if vp_km_s > 8.5:
-        diag.append(
-            f"Vp {vp_km_s} km/s > 8.5 km/s — sub-Moho / mantle, not crust"
-        )
+        diag.append(f"Vp {vp_km_s} km/s > 8.5 km/s — sub-Moho / mantle, not crust")
         return CrustClassification(
             zone=CrustZone.UNKNOWN,
             confidence=0.10,
@@ -310,10 +307,7 @@ def vp_zone_classify(
         7.6 <= vp_km_s <= 7.9
         and crust_thickness_km is not None
         and crust_thickness_km < 8.0
-        and (
-            heat_flow_mw_m2 is None
-            or heat_flow_mw_m2 <= SERPENTINIZED_HEATFLOW_MW_M2
-        )
+        and (heat_flow_mw_m2 is None or heat_flow_mw_m2 <= SERPENTINIZED_HEATFLOW_MW_M2)
     ):
         diag.append(
             f"Vp ~{SERPENTINIZED_VP} km/s (sub-Moho) + thin crust "
@@ -335,11 +329,7 @@ def vp_zone_classify(
 
     # ── 2. HVL underplating (contrast-only — not in NW margin) ────────────
     # Tightened: requires Vp 7.2–8.0 + crust >30 km. NW margin doesn't show this.
-    if (
-        HVL_VP_THRESHOLD < vp_km_s <= 8.0
-        and crust_thickness_km is not None
-        and crust_thickness_km > 30.0
-    ):
+    if HVL_VP_THRESHOLD < vp_km_s <= 8.0 and crust_thickness_km is not None and crust_thickness_km > 30.0:
         diag.append(f"Vp > {HVL_VP_THRESHOLD} km/s + crust > 25 km = HVL signature")
         diag.append("Note: NW SCS margin does NOT show this (Huang 2021)")
         confidence = 0.70
@@ -355,18 +345,12 @@ def vp_zone_classify(
         )
 
     # ── 3. Ductile mid-crustal layer ───────────────────────────────────────
-    if (
-        vp_km_s <= DUCTILE_VP_TOP_THRESHOLD
-        and depth_km is not None
-        and DUCTILE_DEPTH_TOP_KM <= depth_km <= DUCTILE_DEPTH_BOT_KM
-    ):
+    if vp_km_s <= DUCTILE_VP_TOP_THRESHOLD and depth_km is not None and DUCTILE_DEPTH_TOP_KM <= depth_km <= DUCTILE_DEPTH_BOT_KM:
         diag.append(
             f"Vp ≤ {DUCTILE_VP_TOP_THRESHOLD} km/s at depth "
             f"{depth_km} km (ductile window {DUCTILE_DEPTH_TOP_KM}–{DUCTILE_DEPTH_BOT_KM} km)"
         )
-        diag.append(
-            f"Expected +{DUCTILE_STEP_KM_S} km/s jump at top of lower crust"
-        )
+        diag.append(f"Expected +{DUCTILE_STEP_KM_S} km/s jump at top of lower crust")
         confidence = 0.85
         alts.append(CrustZone.STRETCHED_CONTINENTAL)
         alts.append(CrustZone.NORMAL_CONTINENTAL)
@@ -387,12 +371,9 @@ def vp_zone_classify(
         and vp_km_s <= 7.0
     ):
         diag.append(
-            f"Crust thickness {crust_thickness_km} km ≤ "
-            f"{HYPERTHINNED_THICKNESS_KM + 1.0} km = hyperthinned OCT signature"
+            f"Crust thickness {crust_thickness_km} km ≤ {HYPERTHINNED_THICKNESS_KM + 1.0} km = hyperthinned OCT signature"
         )
-        diag.append(
-            f"Expected β ≈ 5, magnetic anomaly ~{HYPERTHINNED_MAGNETIC_ANOMALY_NT:.0f} nT"
-        )
+        diag.append(f"Expected β ≈ 5, magnetic anomaly ~{HYPERTHINNED_MAGNETIC_ANOMALY_NT:.0f} nT")
         confidence = 0.80
         alts.append(CrustZone.SERPENTINIZED_MANTLE)
         alts.append(CrustZone.OCEANIC_CRUST)
@@ -411,13 +392,8 @@ def vp_zone_classify(
         and crust_thickness_km is not None
         and crust_thickness_km > STRETCHED_THICKNESS_KM
     ):
-        diag.append(
-            f"Vp {vp_km_s} km/s in lower-crust range "
-            f"({STRETCHED_LOWER_CRUST_VP}–{LOWER_CRUST_VP_MAX}) + thickened crust"
-        )
-        diag.append(
-            f"Expected magmatic underplating +{LOWER_CRUST_THICKENING_KM} km"
-        )
+        diag.append(f"Vp {vp_km_s} km/s in lower-crust range ({STRETCHED_LOWER_CRUST_VP}–{LOWER_CRUST_VP_MAX}) + thickened crust")
+        diag.append(f"Expected magmatic underplating +{LOWER_CRUST_THICKENING_KM} km")
         confidence = 0.75
         alts.append(CrustZone.STRETCHED_CONTINENTAL)
         alts.append(CrustZone.NORMAL_CONTINENTAL)
@@ -430,11 +406,12 @@ def vp_zone_classify(
         )
 
     # ── 6. Stretched continental ───────────────────────────────────────────
-    if vp_km_s <= STRETCHED_UPPER_CRUST_VP_MAX and crust_thickness_km is not None and crust_thickness_km <= STRETCHED_THICKNESS_KM + 3.0:
-        diag.append(
-            f"Vp {vp_km_s} km/s ≤ {STRETCHED_UPPER_CRUST_VP_MAX} (upper crust) + "
-            f"crust ~{STRETCHED_THICKNESS_KM} km"
-        )
+    if (
+        vp_km_s <= STRETCHED_UPPER_CRUST_VP_MAX
+        and crust_thickness_km is not None
+        and crust_thickness_km <= STRETCHED_THICKNESS_KM + 3.0
+    ):
+        diag.append(f"Vp {vp_km_s} km/s ≤ {STRETCHED_UPPER_CRUST_VP_MAX} (upper crust) + crust ~{STRETCHED_THICKNESS_KM} km")
         diag.append("Expected β ≈ 3.0–3.8 (Xisha Trough template)")
         confidence = 0.70
         alts.append(CrustZone.NORMAL_CONTINENTAL)

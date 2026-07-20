@@ -36,12 +36,12 @@ logger = logging.getLogger("geox.epistemic")
 
 # ─── Canonical epistemic levels (matches PostgreSQL ENUM) ───────────────────
 EPISTEMIC_LEVELS = {
-    "OBSERVED",     # Direct measurement
-    "DERIVED",      # Physics-based computation
+    "OBSERVED",  # Direct measurement
+    "DERIVED",  # Physics-based computation
     "INTERPRETED",  # Proxy with intermediate assumptions
     "SPECULATION",  # Unconstrained analogy
-    "UNKNOWN",      # Cannot be known in principle
-    "NO_DATA",      # Exists but not ingested
+    "UNKNOWN",  # Cannot be known in principle
+    "NO_DATA",  # Exists but not ingested
 }
 
 # Confidence: soft cap per F7 HUMILITY
@@ -55,33 +55,33 @@ EPISTEMIC_BASE = "https://macrostrat.org/api/v2/epistemic"
 
 # ─── Validation ──────────────────────────────────────────────────────────────
 
+
 def validate_epistemic_level(level: str) -> str:
     """Validate and normalize an epistemic level string."""
     upper = level.upper()
     if upper not in EPISTEMIC_LEVELS:
-        raise ValueError(
-            f"Invalid epistemic level: {level!r}. "
-            f"Must be one of: {', '.join(sorted(EPISTEMIC_LEVELS))}"
-        )
+        raise ValueError(f"Invalid epistemic level: {level!r}. Must be one of: {', '.join(sorted(EPISTEMIC_LEVELS))}")
     return upper
 
 
 def cap_confidence(confidence: float) -> float:
     """Cap confidence at MAX_CONFIDENCE per F7 HUMILITY.
-    
+
     Returns capped value. Logs a warning if capping was applied.
     """
     if confidence > MAX_CONFIDENCE:
         logger.warning(
             "F7 HUMILITY: confidence %.2f capped to %.2f. "
             "No geological value exceeds 0.90 certainty at epistemic level OBSERVED.",
-            confidence, MAX_CONFIDENCE,
+            confidence,
+            MAX_CONFIDENCE,
         )
         return MAX_CONFIDENCE
     return confidence
 
 
 # ─── Classification functions ───────────────────────────────────────────────
+
 
 def classify_entity(
     table_name: str,
@@ -142,7 +142,11 @@ def classify_entity(
 
     logger.info(
         "Entity classified: %s/%s → %s (confidence %.2f, classifier=%s)",
-        table_name, row_id, level, capped, classifier_id,
+        table_name,
+        row_id,
+        level,
+        capped,
+        classifier_id,
     )
 
     return {
@@ -197,8 +201,10 @@ def set_uncertainty_bounds(
 
     if not (p10 <= p50 <= p90):
         logger.warning(
-            "Uncertainty bounds not monotonic: P10=%.4f, P50=%.4f, P90=%.4f. "
-            "Expected P10 <= P50 <= P90.", p10, p50, p90,
+            "Uncertainty bounds not monotonic: P10=%.4f, P50=%.4f, P90=%.4f. Expected P10 <= P50 <= P90.",
+            p10,
+            p50,
+            p90,
         )
 
     record = {
@@ -216,7 +222,13 @@ def set_uncertainty_bounds(
 
     logger.info(
         "Uncertainty set: %s/%s.%s → [%.4f, %.4f, %.4f] (%s)",
-        table_name, row_id, column_name, p10, p50, p90, distribution,
+        table_name,
+        row_id,
+        column_name,
+        p10,
+        p50,
+        p90,
+        distribution,
     )
 
     return {
@@ -226,6 +238,7 @@ def set_uncertainty_bounds(
 
 
 # ─── GEOX-GPTS enrichment (generates epistemic metadata from frozen CSV) ───
+
 
 def classify_gpts_interval(
     interval_name: str,
@@ -284,8 +297,7 @@ def classify_gpts_interval(
         "classifier_type": "automated",
         "classifier_id": "GEOX_GTS2020_v1",
         "source_citation": (
-            "Macrostrat GPTS (frozen CSV, macrostrat.org/api/v2/defs/intervals?timescale_id=22,23), "
-            "Ogg (2020) GTS2020 Chapter 5"
+            "Macrostrat GPTS (frozen CSV, macrostrat.org/api/v2/defs/intervals?timescale_id=22,23), Ogg (2020) GTS2020 Chapter 5"
         ),
         "notes": notes,
     }

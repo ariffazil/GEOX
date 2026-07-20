@@ -3,7 +3,6 @@ Tests for GEOX → WEALTH Adapter (WELD-002)
 DITEMPA BUKAN DIBERI
 """
 
-
 import pytest
 
 try:

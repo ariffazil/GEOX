@@ -22,8 +22,7 @@ from pydantic import BaseModel, Field
 
 CMEMS_BASE = "https://marine.copernicus.eu"
 CMEMS_CITATION = (
-    "Copernicus Marine Service (2024). CMEMS — Global Ocean Physics and BGC. "
-    "https://marine.copernicus.eu. EU Open Data License."
+    "Copernicus Marine Service (2024). CMEMS — Global Ocean Physics and BGC. https://marine.copernicus.eu. EU Open Data License."
 )
 
 
@@ -57,9 +56,12 @@ class CopernicusMarineFetcher:
         now = datetime.now(UTC).isoformat()
         if self._offline:
             return OceanResult(
-                ok=True, mode="offline_stub",
+                ok=True,
+                mode="offline_stub",
                 data=[{"latitude": 5.0, "longitude": 110.0, params.variable: 28.5}],
-                count=1, variable=params.variable, fetched_at=now,
-                note="Offline stub. Requires copernicusmarine Python package + registration."
+                count=1,
+                variable=params.variable,
+                fetched_at=now,
+                note="Offline stub. Requires copernicusmarine Python package + registration.",
             )
         return OceanResult(ok=False, mode="live", note="Live requires copernicusmarine package.", fetched_at=now)

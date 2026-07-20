@@ -3,6 +3,7 @@
 Canonical import path: ``geox.welllog`` (well-log / stratigraphy domain).
 This package re-exports welllog for backward compatibility until 2026-08-15.
 """
+
 from __future__ import annotations
 
 import warnings

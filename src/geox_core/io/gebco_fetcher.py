@@ -127,9 +127,7 @@ class GEBCOFetcher:
     """
 
     def __init__(self, cache_dir: str | None = None):
-        self.cache_dir = Path(cache_dir or os.environ.get(
-            "GEOX_GEBCO_CACHE_DIR", "/root/.cache/geox/gebco"
-        ))
+        self.cache_dir = Path(cache_dir or os.environ.get("GEOX_GEBCO_CACHE_DIR", "/root/.cache/geox/gebco"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self._offline = os.environ.get("GEOX_GEBCO_OFFLINE", "1") != "0"
 
@@ -198,8 +196,7 @@ class GEBCOFetcher:
                 ),
                 citation=GEBCO_CITATION,
                 note=(
-                    "OPeNDAP URL generated for server-side subsetting. "
-                    "Use with xarray/opendap client to fetch the actual data."
+                    "OPeNDAP URL generated for server-side subsetting. Use with xarray/opendap client to fetch the actual data."
                 ),
             )
 
@@ -253,10 +250,7 @@ class GEBCOFetcher:
         lat_end = int((request.north + 90) * samples_per_deg)
 
         # OPeNDAP constraint expression
-        return (
-            f"{base}/GEBCO_2026.nc"
-            f"?elevation[{lat_start}:1:{lat_end}][{lon_start}:1:{lon_end}]"
-        )
+        return f"{base}/GEBCO_2026.nc?elevation[{lat_start}:1:{lat_end}][{lon_start}:1:{lon_end}]"
 
     def _check_cache(self, variant: str, output_format: str) -> GEBCOFetchResult | None:
         """Check local cache for a matching GEBCO file."""

@@ -47,10 +47,10 @@ class InversionMethod(StrEnum):
 
 
 class ConfidenceBand(StrEnum):
-    HIGH = "HIGH"        # r > 0.9
+    HIGH = "HIGH"  # r > 0.9
     MODERATE = "MODERATE"  # 0.7 < r <= 0.9
-    LOW = "LOW"          # r <= 0.7
-    VOID = "VOID"        # failed validation
+    LOW = "LOW"  # r <= 0.7
+    VOID = "VOID"  # failed validation
 
 
 # ─── Data Classes ────────────────────────────────────────────────────────────
@@ -59,6 +59,7 @@ class ConfidenceBand(StrEnum):
 @dataclass
 class LowFrequencyModel:
     """Low-frequency impedance model from well logs + horizons."""
+
     depth: np.ndarray
     ai_lfm: np.ndarray
     cutoff_hz: float = 12.0
@@ -69,6 +70,7 @@ class LowFrequencyModel:
 @dataclass
 class WaveletEstimate:
     """Estimated seismic wavelet."""
+
     samples: np.ndarray
     dt_ms: float
     frequency_hz: float
@@ -79,16 +81,17 @@ class WaveletEstimate:
 @dataclass
 class InversionResult:
     """Output of any inversion method."""
+
     method: InversionMethod
-    ai_absolute: np.ndarray          # Absolute AI [kg/m²·s]
-    ai_relative: np.ndarray | None   # Relative AI (coloured only)
-    depth: np.ndarray                # Depth axis [m]
-    time_ms: np.ndarray              # Time axis [ms]
-    correlation: float               # r(observed, predicted)
+    ai_absolute: np.ndarray  # Absolute AI [kg/m²·s]
+    ai_relative: np.ndarray | None  # Relative AI (coloured only)
+    depth: np.ndarray  # Depth axis [m]
+    time_ms: np.ndarray  # Time axis [ms]
+    correlation: float  # r(observed, predicted)
     confidence: ConfidenceBand
     low_freq_model: LowFrequencyModel | None
     wavelet: WaveletEstimate
-    residual: np.ndarray             # observed - predicted
+    residual: np.ndarray  # observed - predicted
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -109,6 +112,7 @@ class InversionResult:
 @dataclass
 class ConsistencyGate:
     """Re-forward-model gate: inversion result must reproduce input seismic."""
+
     r_forward: float
     threshold: float = 0.90
     passed: bool = False
@@ -185,8 +189,8 @@ def _build_lfm_from_wells(
     ai_stack = np.zeros(max_len)
     count = np.zeros(max_len)
     for ai in well_ais:
-        ai_stack[:len(ai)] += ai
-        count[:len(ai)] += 1
+        ai_stack[: len(ai)] += ai
+        count[: len(ai)] += 1
     count[count == 0] = 1
     ai_avg = ai_stack / count
 
@@ -237,22 +241,22 @@ def _estimate_wavelet_from_well(
 
         # Toeplitz matrix
         rc_padded = np.zeros(n)
-        rc_padded[:len(rc)] = rc
+        rc_padded[: len(rc)] = rc
         R = linalg.toeplitz(rc_padded)
-        eps = 1e-6 * np.max(R ** 2)
+        eps = 1e-6 * np.max(R**2)
         w = linalg.solve(R.T @ R + eps * np.eye(n), R.T @ s)
 
         # Trim to meaningful part
         centre = len(w) // 2
         half_len = min(40, centre)
-        w_trimmed = w[centre - half_len: centre + half_len + 1]
+        w_trimmed = w[centre - half_len : centre + half_len + 1]
         w_trimmed = w_trimmed / (np.max(np.abs(w_trimmed)) + 1e-12)
 
     else:
         # Statistical: autocorrelation of seismic ≈ wavelet autocorrelation
         n = min(len(seismic_trace), 128)
         ac = np.correlate(seismic_trace[:n], seismic_trace[:n], mode="full")
-        ac = ac[n - 1:]  # one-sided
+        ac = ac[n - 1 :]  # one-sided
         ac = ac / (ac[0] + 1e-12)
 
         # Spectral factorisation (Kolmogorov)
@@ -334,9 +338,7 @@ def coloured_inversion(
     if lfm is not None and len(lfm.ai_lfm) == n:
         ai_absolute = ai_relative + lfm.ai_lfm
     elif lfm is not None:
-        ai_lfm_interp = np.interp(
-            np.arange(n), np.linspace(0, n - 1, len(lfm.ai_lfm)), lfm.ai_lfm
-        )
+        ai_lfm_interp = np.interp(np.arange(n), np.linspace(0, n - 1, len(lfm.ai_lfm)), lfm.ai_lfm)
         ai_absolute = ai_relative + ai_lfm_interp
 
     # Predict seismic from inverted AI (consistency check)
@@ -424,7 +426,7 @@ def model_based_inversion(
         # Match lengths
         n_min = min(len(seismic_trace), len(synthetic))
         residual = seismic_trace[:n_min] - synthetic[:n_min]
-        residuals.append(float(np.sqrt(np.mean(residual ** 2))))
+        residuals.append(float(np.sqrt(np.mean(residual**2))))
 
         # Jacobian (finite difference approximation)
         delta = np.max(np.abs(ai_current)) * 0.001 + 1e-6
@@ -449,7 +451,7 @@ def model_based_inversion(
         max_update = np.max(np.abs(ai_current)) * 0.1
         update = np.clip(update, -max_update, max_update)
 
-        ai_current[:len(update)] += update[:n_ai]
+        ai_current[: len(update)] += update[:n_ai]
 
         # Enforce physical bounds
         ai_current = np.clip(ai_current, 1000, 50000)
@@ -543,12 +545,12 @@ def pinn_assisted_inversion(
 
         # Data misfit
         misfit = seismic_trace[:n_min] - predicted[:n_min]
-        data_loss = np.mean(misfit ** 2)
+        data_loss = np.mean(misfit**2)
 
         # Smoothness regularisation (second derivative)
         if len(ai) > 2:
             d2 = np.diff(ai, n=2)
-            smooth_loss = np.mean(d2 ** 2)
+            smooth_loss = np.mean(d2**2)
         else:
             smooth_loss = 0.0
 
@@ -573,12 +575,12 @@ def pinn_assisted_inversion(
             rc_p = reflectivity_array(ai_plus)
             pred_p = convolve_trace(rc_p, wavelet)
             misfit_p = seismic_trace[:n_min] - pred_p[:n_min]
-            data_loss_p = np.mean(misfit_p ** 2)
+            data_loss_p = np.mean(misfit_p**2)
 
             # Smoothness gradient
             if len(ai_plus) > 2:
                 d2_p = np.diff(ai_plus, n=2)
-                smooth_loss_p = np.mean(d2_p ** 2)
+                smooth_loss_p = np.mean(d2_p**2)
             else:
                 smooth_loss_p = 0.0
 
@@ -703,11 +705,9 @@ def run_inversion_pipeline(
                 initial_ai = lfm.ai_lfm
             else:
                 initial_ai = np.linspace(5000, 10000, len(seismic_trace))
-        result = model_based_inversion(seismic_trace, initial_ai, dt_ms=dt_ms,
-                                       iterations=iterations, lfm=lfm)
+        result = model_based_inversion(seismic_trace, initial_ai, dt_ms=dt_ms, iterations=iterations, lfm=lfm)
     elif method == "pinn":
-        result = pinn_assisted_inversion(seismic_trace, well_ai, dt_ms, lfm,
-                                          wavelet_freq_hz, iterations=iterations)
+        result = pinn_assisted_inversion(seismic_trace, well_ai, dt_ms, lfm, wavelet_freq_hz, iterations=iterations)
     else:
         raise ValueError(f"Unknown inversion method: {method}")
 

@@ -32,6 +32,7 @@ Reference:
   forge_work/2026-06-22-rsi-roadmap.md
   docs/GEOX_INTELLIGENCE_FLOW.md
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -138,9 +139,9 @@ LAYER_DESCRIPTORS: dict[FlowLayer, dict[str, Any]] = {
         "output": "CrustZone classification + domain map",
         "example_tools": [
             "geox_crustal_domain_classify",  # FORGED THIS SESSION
-            "geox_ductile_layer_detect",     # Family A — pending
-            "geox_cob_zone_map",              # Family A — pending
-            "geox_basement_register",         # Family A — pending
+            "geox_ductile_layer_detect",  # Family A — pending
+            "geox_cob_zone_map",  # Family A — pending
+            "geox_basement_register",  # Family A — pending
         ],
         "lem_role": "analog matching via crust-type priors",
         "doctrine_gate": "F7, F13 (domain BOUNDARIES sovereign)",
@@ -181,11 +182,11 @@ LAYER_DESCRIPTORS: dict[FlowLayer, dict[str, Any]] = {
         "input": "Any layer's typed packet",
         "output": "Embedding + analog matches + anomaly scores",
         "example_tools": [
-            "geox_lem_predict",                # FORGED W14+
-            "geox_lem_encode",                  # Family E — pending
-            "geox_lem_analog_match",            # Family E — pending
-            "geox_lem_anomaly_score",           # Family E — pending
-            "geox_lem_fine_tune_basin",         # Family E — pending (888_HOLD)
+            "geox_lem_predict",  # FORGED W14+
+            "geox_lem_encode",  # Family E — pending
+            "geox_lem_analog_match",  # Family E — pending
+            "geox_lem_anomaly_score",  # Family E — pending
+            "geox_lem_fine_tune_basin",  # Family E — pending (888_HOLD)
         ],
         "lem_role": "self",
         "doctrine_gate": "F9 (LEM outputs DERIVED, never SEAL alone)",
@@ -200,8 +201,8 @@ LAYER_DESCRIPTORS: dict[FlowLayer, dict[str, Any]] = {
             "geox_doctrine_assumption_register",
             "geox_doctrine_anti_beautiful_one",
             "geox_doctrine_godel_review",
-            "geox_paradox_register",            # Family D — pending
-            "geox_age_anchor_validator",        # Family D — pending
+            "geox_paradox_register",  # Family D — pending
+            "geox_age_anchor_validator",  # Family D — pending
         ],
         "lem_role": "audit only — does not consume LEM output",
         "doctrine_gate": "self-evident",
@@ -232,9 +233,7 @@ class FlowPacket(BaseModel):
     source_tool: str = Field(..., min_length=1)
     session_id: str | None = None
     actor_id: str | None = None
-    timestamp: str = Field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    timestamp: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
     # Content-addressed audit (F1 AMANAH)
     content_hash: str | None = None
     # Doctrine verdict
@@ -261,9 +260,7 @@ class FlowSession(BaseModel):
     session_id: str = Field(..., min_length=8)
     basin_name: str | None = None
     actor_id: str | None = None
-    started_at: str = Field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    started_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
     packets: list[FlowPacket] = Field(default_factory=list)
     # Final state when decision reached
     final_decision: str | None = None
@@ -338,8 +335,8 @@ TOOL_FAMILIES: dict[ToolFamily, dict[str, Any]] = {
         "primary_layer": FlowLayer.AUDIT,
         "tools_complete": [
             "geox_doctrine_assumption_register",  # pre-existing
-            "geox_doctrine_anti_beautiful_one",   # pre-existing
-            "geox_doctrine_godel_review",          # pre-existing
+            "geox_doctrine_anti_beautiful_one",  # pre-existing
+            "geox_doctrine_godel_review",  # pre-existing
         ],
         "tools_pending": [
             "geox_paradox_register",

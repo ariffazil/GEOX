@@ -47,6 +47,7 @@ logger = logging.getLogger("geox.tools.earth_surface")
 
 # ───────────────────────────── 1. EARTHQUAKE CATALOG ─────────────────────────────
 
+
 class EarthquakeCatalogRequest(BaseModel):
     """Request for USGS earthquake catalog query."""
 
@@ -149,6 +150,7 @@ def _event_to_dict(e: EarthquakeEvent) -> dict[str, Any]:
 
 # ───────────────────────────── 2. RELIEF INGEST (ETOPO) ─────────────────────────
 
+
 class ReliefIngestRequest(BaseModel):
     """Request for ETOPO global relief data."""
 
@@ -194,9 +196,7 @@ async def geox_relief_ingest(
     try:
         fetcher = ETOPOFetcher()
 
-        if request.mode == "bbox" and all(
-            v is not None for v in [request.west, request.east, request.south, request.north]
-        ):
+        if request.mode == "bbox" and all(v is not None for v in [request.west, request.east, request.south, request.north]):
             extract = ETOPOExtractRequest(
                 west=request.west,
                 east=request.east,
@@ -246,6 +246,7 @@ async def geox_relief_ingest(
 
 # ───────────────────────────── 3. BATHYMETRY INGEST (GEBCO) ─────────────────────
 
+
 class BathymetryIngestRequest(BaseModel):
     """Request for GEBCO bathymetry data."""
 
@@ -291,9 +292,7 @@ async def geox_bathymetry_ingest(
     try:
         fetcher = GEBCOFetcher()
 
-        if request.mode == "bbox" and all(
-            v is not None for v in [request.west, request.east, request.south, request.north]
-        ):
+        if request.mode == "bbox" and all(v is not None for v in [request.west, request.east, request.south, request.north]):
             extract = GEBCOExtractRequest(
                 west=request.west,
                 east=request.east,

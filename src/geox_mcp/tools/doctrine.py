@@ -107,9 +107,7 @@ async def geox_doctrine_anti_beautiful_one(request: BeautyAuditRequest) -> Beaut
         audit={
             "verdict": a.verdict,
             "action": a.action,
-            "beauty_overreach_score": (
-                None if a.beauty_overreach_score == float("inf") else a.beauty_overreach_score
-            ),
+            "beauty_overreach_score": (None if a.beauty_overreach_score == float("inf") else a.beauty_overreach_score),
             "certainty_gradient": a.certainty_gradient,
             "grounding_gradient": a.grounding_gradient,
             "matched_certainty": list(a.matched_certainty),

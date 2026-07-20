@@ -27,6 +27,7 @@ from datetime import UTC, datetime
 try:
     import nats  # type: ignore
     from nats.js.errors import NotFoundError  # type: ignore
+
     _NATS_AVAILABLE = True
 except ImportError:
     _NATS_AVAILABLE = False
@@ -48,9 +49,9 @@ class IntelligenceAtom:
     """
 
     # Identity (canonical)
-    atom_id: str = ""                          # sha256 of canonical payload
-    tool_name: str = ""                        # e.g. "geox_joint_inversion"
-    tool_version: str = ""                     # e.g. "geox-657b9eb0"
+    atom_id: str = ""  # sha256 of canonical payload
+    tool_name: str = ""  # e.g. "geox_joint_inversion"
+    tool_version: str = ""  # e.g. "geox-657b9eb0"
 
     # Payload (tool-specific)
     result: dict = field(default_factory=dict)
@@ -59,12 +60,12 @@ class IntelligenceAtom:
     pai_receipt: dict = field(default_factory=dict)
 
     # Constitutional state
-    epistemic_ladder_rung: int = 0              # 1-7
-    godel_wall_state: str = "UNKNOWN"          # KNOWN/UNKNOWN/UNDECIDABLE_YET/VOID
-    constitutional_verdict: str = ""           # SEAL/SABAR/HOLD/VOID (set by arifOS Ω)
+    epistemic_ladder_rung: int = 0  # 1-7
+    godel_wall_state: str = "UNKNOWN"  # KNOWN/UNKNOWN/UNDECIDABLE_YET/VOID
+    constitutional_verdict: str = ""  # SEAL/SABAR/HOLD/VOID (set by arifOS Ω)
 
     # Topology
-    emitted_at: str = ""                       # ISO 8601 UTC
+    emitted_at: str = ""  # ISO 8601 UTC
     emitted_by_organ: str = "geox"
     topic: str = ""
     parent_atom_id: str | None = None
@@ -75,13 +76,17 @@ class IntelligenceAtom:
 
     def compute_id(self) -> str:
         """SHA-256 of canonical payload (excludes atom_id itself)."""
-        canonical = json.dumps({
-            "tool_name": self.tool_name,
-            "tool_version": self.tool_version,
-            "result": self.result,
-            "pai_receipt": self.pai_receipt,
-            "parent_atom_id": self.parent_atom_id,
-        }, sort_keys=True, default=str).encode()
+        canonical = json.dumps(
+            {
+                "tool_name": self.tool_name,
+                "tool_version": self.tool_version,
+                "result": self.result,
+                "pai_receipt": self.pai_receipt,
+                "parent_atom_id": self.parent_atom_id,
+            },
+            sort_keys=True,
+            default=str,
+        ).encode()
         return "sha256:" + hashlib.sha256(canonical).hexdigest()
 
     def seal(self) -> None:
@@ -179,6 +184,7 @@ class EventBus:
         if not await self.connect():
             return False
         try:
+
             async def _wrapped(msg):
                 try:
                     atom = IntelligenceAtom.from_json(msg.data)

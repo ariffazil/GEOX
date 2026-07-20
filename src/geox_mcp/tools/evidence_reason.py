@@ -501,7 +501,9 @@ def _contradiction_scan(hypotheses: list[dict[str, Any]], evidence: dict[str, An
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-async def _phase_synthesize(evidence_refs: list[str], export_format: str, output_path: str | None) -> dict[str, Any]:
+async def _phase_synthesize(
+    evidence_refs: list[str], export_format: str, output_path: str | None, llm_reason: bool = False
+) -> dict[str, Any]:
     artifact = {
         "refs": evidence_refs,
         "graph": "synthesized",
@@ -511,6 +513,25 @@ async def _phase_synthesize(evidence_refs: list[str], export_format: str, output
             "Every visual artifact must be accompanied by its claim_state, depth_basis, and artifact validation status."
         ),
     }
+
+    # LLM-POWERED SYNTHESIS (2026-07-20): Use arifOS arif_think for geological reasoning
+    synthesis_text = None
+    if llm_reason and evidence_refs:
+        try:
+            from arifosmcp.runtime.tools import _synthesize_async
+
+            query = f"Synthesize geological evidence from these artifacts: {', '.join(evidence_refs[:5])}"
+            llm_result = await _synthesize_async(query, reasoning_mode="reason")
+            synthesis_text = llm_result.get("bounded_answer")
+            if synthesis_text:
+                artifact["llm_synthesis"] = synthesis_text
+                artifact["llm_confidence"] = llm_result.get("overall_confidence", 0.5)
+                artifact["llm_source"] = "arifOS arif_think (DeepSeek)"
+            else:
+                logger.warning("LLM synthesis returned empty — falling back to template")
+        except Exception as exc:
+            logger.warning("LLM synthesis unavailable: %s — using template", exc)
+
     result = get_standard_envelope(
         artifact,
         tool_class="compute",

@@ -8,6 +8,7 @@ Modes: infer_minimax, infer_mimo, audit, calibrate, perceptual
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 from typing import Any, Literal
@@ -38,6 +39,7 @@ async def geox_vision(
     kwargs = locals().copy()
     if mode == "infer_mimo":
         from geox_mcp.tools.vision import geox_vision_mimo_inference as _impl
+
         return await _impl(
             image_path=kwargs.get("image_path", ""),
             basin_context=kwargs.get("basin_context", "unknown"),
@@ -49,14 +51,17 @@ async def geox_vision(
 
     if mode == "audit":
         from geox_mcp.tools.vision import geox_vision_audit as _impl
+
         return await _impl(**{k: v for k, v in kwargs.items() if k != "mode"})
 
     if mode == "calibrate":
         from geox_mcp.tools.vision import geox_vision_calibrate as _impl
+
         return await _impl(**{k: v for k, v in kwargs.items() if k != "mode"})
 
     if mode == "perceptual":
         from geox_mcp.tools.vision import geox_vision_perceptual_inventory as _impl
+
         return await _impl(
             image_path=kwargs.get("image_path", ""),
             model_id=kwargs.get("model_id", "minimax-M3-vision"),
@@ -65,6 +70,7 @@ async def geox_vision(
 
     # Default: infer_minimax
     from geox_mcp.tools.vision import geox_vision_minimax_inference as _impl
+
     return await _impl(
         image_path=kwargs.get("image_path", ""),
         basin_context=kwargs.get("basin_context", "unknown"),

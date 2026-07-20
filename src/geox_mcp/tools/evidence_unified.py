@@ -7,6 +7,7 @@ Modes: discover, synthesize, abduct, contradict, spatial_block, ingest_literatur
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 from typing import Any, Literal
@@ -44,6 +45,7 @@ async def geox_evidence(
     kwargs = locals().copy()
     if mode == "discover":
         from geox_mcp.tools.data import geox_evidence_discover as _impl
+
         return await _impl(
             query=kwargs.get("query", ""),
             scope=kwargs.get("scope", "all"),
@@ -52,6 +54,7 @@ async def geox_evidence(
 
     if mode == "ingest_literature":
         from geox_mcp.tools.basin import geox_literature_ingest as _impl
+
         return await _impl(
             file_path=kwargs.get("file_path", ""),
             basin_name=kwargs.get("basin_name"),
@@ -59,6 +62,7 @@ async def geox_evidence(
 
     # Default: delegate to geox_evidence_reason for synthesize/abduct/contradict/spatial_block
     from geox_mcp.tools.evidence_reason import geox_evidence_reason as _impl
+
     return await _impl(
         phase=mode if mode != "synthesize" else "synthesize",
         evidence_refs=kwargs.get("evidence_refs"),

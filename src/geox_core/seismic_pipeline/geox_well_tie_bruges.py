@@ -30,15 +30,12 @@ import os
 import matplotlib
 import numpy as np
 
-matplotlib.use('Agg')
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
 
-def run_well_tie(las_path: str,
-                 segy_audit_path: str,
-                 output_dir: str,
-                 well_top_twt_ms: float = 600.0) -> dict:
+def run_well_tie(las_path: str, segy_audit_path: str, output_dir: str, well_top_twt_ms: float = 600.0) -> dict:
     """Run the well-to-seismic tie using sonic, density, and bruges Ricker wavelet.
 
     Parameters:
@@ -62,7 +59,7 @@ def run_well_tie(las_path: str,
     # ── Load well log ────────────────────────────────────────────────
     if not os.path.exists(las_path):
         return {"status": "VOID", "reason": f"LAS file not found: {las_path}"}
-    
+
     with open(las_path, "rb") as f:
         las_bytes = f.read()
     las_sha256 = hashlib.sha256(las_bytes).hexdigest()
@@ -80,7 +77,7 @@ def run_well_tie(las_path: str,
             return {"status": "VOID", "reason": f"Missing required curve: {req}"}
 
     depth = las["DEPT"]
-    dt_log = las["DT"]      # us/ft
+    dt_log = las["DT"]  # us/ft
     rhob_log = las["RHOB"]  # g/cc
     gr_log = las["GR"] if "GR" in las.keys() else np.zeros_like(depth)
 
@@ -132,24 +129,24 @@ def run_well_tie(las_path: str,
     # ── 4. Resample curves and RC to regular time grid ───────────────
     # Target time grid: from well_twt_ms[0] to well_twt_ms[-1] with step seismic_dt_ms
     time_grid = np.arange(well_twt_ms[0], well_twt_ms[-1], seismic_dt_ms)
-    
+
     # Interpolate RC and logging curves to time grid
-    rc_time   = np.interp(time_grid, well_twt_ms, rc)
-    gr_time   = np.interp(time_grid, well_twt_ms, gr_log)
+    rc_time = np.interp(time_grid, well_twt_ms, rc)
+    gr_time = np.interp(time_grid, well_twt_ms, gr_log)
     rhob_time = np.interp(time_grid, well_twt_ms, rhob_log)
-    vp_time   = np.interp(time_grid, well_twt_ms, vp)
+    vp_time = np.interp(time_grid, well_twt_ms, vp)
 
     # ── 5. Convolve with Ricker wavelet (using bruges) ───────────────
     # Wavelet duration: 120ms (0.12s)
     # Target dt is in seconds for bruges ricker
     wavelet_dt_sec = seismic_dt_ms / 1000.0
     wav, wav_t = ricker(duration=0.120, dt=wavelet_dt_sec, f=wavelet_freq)
-    
-    synthetic = np.convolve(rc_time, wav, mode='same')
+
+    synthetic = np.convolve(rc_time, wav, mode="same")
     print(f"  [W4] Generated synthetic seismogram convolved with {wavelet_freq}Hz Ricker wavelet")
 
     # ── 6. Save data and plot well tie ──────────────────────────────
-    fig = plt.figure(figsize=(16, 12), facecolor='#0a0d14')
+    fig = plt.figure(figsize=(16, 12), facecolor="#0a0d14")
     gs = GridSpec(1, 5, figure=fig, wspace=0.3)
 
     ax0 = fig.add_subplot(gs[0, 0])  # Gamma Ray
@@ -159,67 +156,70 @@ def run_well_tie(las_path: str,
     ax4 = fig.add_subplot(gs[0, 4])  # Synthetic Trace
 
     for ax in [ax0, ax1, ax2, ax3, ax4]:
-        ax.set_facecolor('#0a0d14')
-        ax.spines['bottom'].set_color('#334455')
-        ax.spines['top'].set_color('#334455')
-        ax.spines['left'].set_color('#334455')
-        ax.spines['right'].set_color('#334455')
-        ax.tick_params(colors='#8899aa', labelsize=8)
+        ax.set_facecolor("#0a0d14")
+        ax.spines["bottom"].set_color("#334455")
+        ax.spines["top"].set_color("#334455")
+        ax.spines["left"].set_color("#334455")
+        ax.spines["right"].set_color("#334455")
+        ax.tick_params(colors="#8899aa", labelsize=8)
 
     # Plot Gamma Ray
-    ax0.plot(gr_time, time_grid, color='#00FF87', lw=1.5)
-    ax0.set_xlabel('GR (GAPI)', color='#8899aa', fontsize=9)
-    ax0.set_ylabel('TWT (ms)', color='#8899aa', fontsize=10)
+    ax0.plot(gr_time, time_grid, color="#00FF87", lw=1.5)
+    ax0.set_xlabel("GR (GAPI)", color="#8899aa", fontsize=9)
+    ax0.set_ylabel("TWT (ms)", color="#8899aa", fontsize=10)
     ax0.set_ylim(time_grid[-1], time_grid[0])
-    ax0.grid(color='#223344', linestyle='--', alpha=0.5)
+    ax0.grid(color="#223344", linestyle="--", alpha=0.5)
 
     # Plot RHOB and DT
-    ax1.plot(rhob_time, time_grid, color='#00D4FF', lw=1.5, label='RHOB')
+    ax1.plot(rhob_time, time_grid, color="#00D4FF", lw=1.5, label="RHOB")
     ax1_twin = ax1.twiny()
-    ax1_twin.plot(vp_time / 1000, time_grid, color='#FFE566', lw=1.2, label='Vp')
-    ax1_twin.tick_params(colors='#FFE566', labelsize=8)
-    ax1.set_xlabel('RHOB (g/cc)', color='#00D4FF', fontsize=9)
-    ax1_twin.set_xlabel('Vp (km/s)', color='#FFE566', fontsize=9)
+    ax1_twin.plot(vp_time / 1000, time_grid, color="#FFE566", lw=1.2, label="Vp")
+    ax1_twin.tick_params(colors="#FFE566", labelsize=8)
+    ax1.set_xlabel("RHOB (g/cc)", color="#00D4FF", fontsize=9)
+    ax1_twin.set_xlabel("Vp (km/s)", color="#FFE566", fontsize=9)
     ax1.set_ylim(time_grid[-1], time_grid[0])
-    ax1.grid(color='#223344', linestyle='--', alpha=0.5)
+    ax1.grid(color="#223344", linestyle="--", alpha=0.5)
 
     # Plot Acoustic Impedance
-    ax2.plot(ai, well_twt_ms, color='#FF6BD6', lw=1.5)
-    ax2.set_xlabel('AI ((m/s)*(g/cc))', color='#8899aa', fontsize=9)
+    ax2.plot(ai, well_twt_ms, color="#FF6BD6", lw=1.5)
+    ax2.set_xlabel("AI ((m/s)*(g/cc))", color="#8899aa", fontsize=9)
     ax2.set_ylim(time_grid[-1], time_grid[0])
-    ax2.grid(color='#223344', linestyle='--', alpha=0.5)
+    ax2.grid(color="#223344", linestyle="--", alpha=0.5)
 
     # Plot Reflection Coefficient
-    ax3.vlines(rc_time, time_grid, time_grid, color='#888888', alpha=0.3)
-    ax3.plot(rc_time, time_grid, color='#8899aa', drawstyle='steps-mid', lw=1.0)
-    ax3.set_xlabel('RC', color='#8899aa', fontsize=9)
+    ax3.vlines(rc_time, time_grid, time_grid, color="#888888", alpha=0.3)
+    ax3.plot(rc_time, time_grid, color="#8899aa", drawstyle="steps-mid", lw=1.0)
+    ax3.set_xlabel("RC", color="#8899aa", fontsize=9)
     ax3.set_ylim(time_grid[-1], time_grid[0])
-    ax3.grid(color='#223344', linestyle='--', alpha=0.5)
+    ax3.grid(color="#223344", linestyle="--", alpha=0.5)
 
     # Plot Synthetic Seismogram
-    ax4.plot(synthetic, time_grid, color='#FFE566', lw=1.5, label='Synthetic')
-    ax4.fill_betweenx(time_grid, 0, synthetic, where=(synthetic > 0), color='#FFE566', alpha=0.4)
-    ax4.fill_betweenx(time_grid, 0, synthetic, where=(synthetic < 0), color='#FF4444', alpha=0.4)
-    ax4.set_xlabel('Synthetic Amplitude', color='#8899aa', fontsize=9)
+    ax4.plot(synthetic, time_grid, color="#FFE566", lw=1.5, label="Synthetic")
+    ax4.fill_betweenx(time_grid, 0, synthetic, where=(synthetic > 0), color="#FFE566", alpha=0.4)
+    ax4.fill_betweenx(time_grid, 0, synthetic, where=(synthetic < 0), color="#FF4444", alpha=0.4)
+    ax4.set_xlabel("Synthetic Amplitude", color="#8899aa", fontsize=9)
     ax4.set_ylim(time_grid[-1], time_grid[0])
-    ax4.grid(color='#223344', linestyle='--', alpha=0.5)
+    ax4.grid(color="#223344", linestyle="--", alpha=0.5)
 
     fig.suptitle(
-        f'GEOX Well-to-Seismic Tie & Synthetic (bruges)\n'
+        f"GEOX Well-to-Seismic Tie & Synthetic (bruges)\n"
         f"Well: {las.well['WELL'].value} | dt={seismic_dt_ms}ms | f={wavelet_freq}Hz Ricker | T-D integrated from {well_top_twt_ms}ms",
-        color='white', fontsize=12, y=0.98)
+        color="white",
+        fontsize=12,
+        y=0.98,
+    )
 
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plot_path = os.path.join(output_dir, "W3_well_tie_synthetic.png")
-    plt.savefig(plot_path, dpi=150, bbox_inches='tight', facecolor='#0a0d14')
+    plt.savefig(plot_path, dpi=150, bbox_inches="tight", facecolor="#0a0d14")
     plt.close()
     print(f"  ✅ Plot saved: {plot_path}")
 
     # Output manifest
     manifest = {
         "status": "DER_WELL_TWT",
-        "well_name": str(las.well['WELL'].value),
-        "uwi": str(las.well['UWI'].value),
+        "well_name": str(las.well["WELL"].value),
+        "uwi": str(las.well["UWI"].value),
         "las_sha256": las_sha256,
         "segy_sha256": segy_sha,
         "depth_range_m": [float(depth[0]), float(depth[-1])],
@@ -242,6 +242,7 @@ def run_well_tie(las_path: str,
 
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) < 3:
         print("Usage: python3 geox_well_tie_bruges.py <las_file> <segy_audit.json> [output_dir] [top_twt_ms]")
         sys.exit(1)
