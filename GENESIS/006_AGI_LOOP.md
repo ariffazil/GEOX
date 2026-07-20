@@ -339,7 +339,7 @@ For consequence_class ∈ {REPUTATIONAL, NONE}:
 Organ    | Role | domain_law      | Manifest File                      | Hash
 ─────────┼──────┼─────────────────┼────────────────────────────────────┼─────
 arifOS   | R6   | CONSTITUTION_LAW| GENESIS/000_KERNEL_CANON.md        | sha256:...
-GEOX     | R4   | NATURAL_LAW     | GENESIS/004_PHYSICS_MANIFEST.md     | sha256:b51811b1...
+GEOX     | R4   | NATURAL_LAW     | GENESIS/003a_PHYSICS_MANIFEST.md    | sha256:b51811b1...
 WEALTH   | R4   | CAPITAL_LAW      | canon/001_CAPITAL_MANIFEST.md       | sha256:9e5c55b4...
 WELL     | R4   | SUBSTRATE_LAW    | GENESIS/012_SUBSTRATE_MANIFEST.md    | sha256:fd21db85...
 VAULT999 | R7   | IMMUTABLE_LAW    | (vault hash chain)                  | sha256:...
@@ -443,8 +443,8 @@ geox_evidence_reason           → S4 (Verification)
 geox_subsurface_verify_integrity → S4 (Verification — Physics9 gate)
 geox_evidence_discover         → S5 (Gap Elicitor — what's missing)
 geox_prospect_evaluate         → S4 → S6 (Verification → Governance boundary)
-arif_judge_deliberate          → S6 (Governor)
-arif_vault_seal                → S7 (Vault)
+arif_judge                    → S6 (Governor)
+arif_seal                     → S7 (Vault)
 ```
 
 ---
@@ -481,7 +481,7 @@ arif_vault_seal                → S7 (Vault)
 
 ```text
 000_KERNEL_CANON.md       — arifOS constitution. Governs R6.
-004_PHYSICS_MANIFEST.md   — GEOX domain law. Governs R4 for geology.
+003a_PHYSICS_MANIFEST.md  — GEOX domain law. Governs R4 for geology. (was 004, now redirects)
 005_AGI_LOOP_RESEARCH.md  — Literature grounding (41 papers, 3 domains).
 006_AGI_LOOP.md           — THIS FILE. The loop as architectural primitive.
 ```
