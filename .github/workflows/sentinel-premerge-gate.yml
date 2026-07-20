@@ -28,7 +28,7 @@ jobs:
     outputs:
       changed: ${{ steps.scan.outputs.critical_changed }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -70,7 +70,7 @@ jobs:
       GEOX_MCP_URL: https://geox.arif-fazil.com/mcp
       MCP_SESSION_ID: ${{ secrets.GEOX_MCP_SESSION_ID }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -196,7 +196,7 @@ jobs:
     name: "Q3 — Tests"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v6
