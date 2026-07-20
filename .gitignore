@@ -84,3 +84,6 @@ data/volve_wells/
 # Generated renders
 data/renders/
 geox/seismic/rsi/geox_out/*.png
+
+# Test run artifacts
+data/egs/receipts/TEST-*.json
