@@ -1,8 +1,8 @@
 {
   "$schema": "https://geox.arif-fazil.com/schemas/apps-manifest/v1.json",
-  "version": "2026.07.10",
-  "generated_at": "2026-07-10T16:18:00Z",
-  "authority": "GEOX public surface — MCP Apps manifest",
+  "version": "2026.07.20",
+  "generated_at": "2026-07-20T08:47:16Z",
+  "authority": "GEOX public surface \u2014 MCP Apps manifest",
   "seal": "DITEMPA BUKAN DIBERI",
   "protocol": "mcp-apps/sep-1865",
   "apps": [
@@ -14,10 +14,12 @@
       "description": "Well log, petrophysics, and stratigraphy viewer with forward/inverse rock physics engine. Integrated well correlation with petrophysical ToAC audit.",
       "status": "LIVE",
       "tools": [
-        "geox_well_ingest",
+        "geox_geomechanics",
+        "geox_lem_predict",
         "geox_petrophysics",
         "geox_sequence",
-        "geox_geomechanics"
+        "geox_well_desk",
+        "geox_well_ingest"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
@@ -27,14 +29,14 @@
       "name": "GEOX Prospect Forge",
       "url": "https://geox.arif-fazil.com/apps/prospect-ui/index.html",
       "ui_resource": "ui://prospect-ui/index.html",
-      "description": "Full prospect maturation cockpit — georeferencing, B_cog bias referee, AC risk, and governed verdicts.",
+      "description": "Full prospect maturation cockpit \u2014 georeferencing, B_cog bias referee, AC risk, and governed verdicts.",
       "status": "LIVE",
       "tools": [
-        "geox_prospect",
-        "geox_evidence",
-        "geox_claim",
         "geox_basin",
-        "geox_map_scene_plan"
+        "geox_claim",
+        "geox_evidence",
+        "geox_prospect",
+        "geox_to_wealth_bridge"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
@@ -44,18 +46,12 @@
       "name": "GEOX Seismic Viewer",
       "url": "https://geox.arif-fazil.com/apps/seismic-vision-review/index.html",
       "ui_resource": "ui://seismic-vision-review/index.html",
-      "description": "Seismic inline/crossline slices with amplitude attributes, horizon overlay, anomalous contrast detection, wavelet extraction, well ties, cognition review, and visual hypothesis generation. Phase 2 hardened — MapLibre 4.7.1 integrated.",
+      "description": "Seismic inline/crossline slices with amplitude attributes, horizon overlay, anomalous contrast detection, wavelet extraction, well ties, cognition review, and visual hypothesis generation. Phase 2 hardened \u2014 MapLibre 4.7.1 integrated.",
       "status": "LIVE",
       "tools": [
-        "geox_seismic_ingest",
         "geox_seismic_compute",
-        "geox_seismic_interpret",
-        "geox_seismic_cognition",
-        "geox_tie_preflight",
-        "geox_tie_receipt",
-        "geox_wavelet_extract_least_squares",
-        "geox_visual_understand",
-        "geox_visual_generate_hypotheses"
+        "geox_seismic_ingest",
+        "geox_seismic_interpret"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.1.0"
@@ -69,12 +65,12 @@
       "status": "LIVE",
       "tools": [
         "geox_basin",
+        "geox_basin_backstrip",
         "geox_deep_time_state",
+        "geox_gravmag_studio",
+        "geox_sediment_mass_balance",
         "geox_subsurface_model",
-        "geox_map_layers_list",
-        "geox_map_render_preview",
-        "geox_simulate_accommodation",
-        "geox_simulate_sequences"
+        "geox_thermal_maturity_history"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
@@ -87,11 +83,12 @@
       "description": "Constitutional AC risk, claim-tag evidence, prospect evaluation, and kill matrix adjudication console.",
       "status": "LIVE",
       "tools": [
-        "geox_prospect",
-        "geox_evidence",
         "geox_claim",
+        "geox_claim_graph_evaluate",
+        "geox_contradiction_scan",
+        "geox_evidence",
         "geox_falsify",
-        "geox_map_export_package"
+        "geox_prospect"
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
@@ -101,9 +98,11 @@
       "name": "GEOX Operator Console",
       "url": "https://geox.arif-fazil.com/",
       "ui_resource": "ui://operator/index.html",
-      "description": "Unified operator dashboard — tool health, app links, canonical tool list, diagnostic tools, and federation status.",
+      "description": "Unified operator dashboard \u2014 tool health, app links, canonical tool list, diagnostic tools, and federation status.",
       "status": "LIVE",
-      "tools": [],
+      "tools": [
+        "geox_surface_status"
+      ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
     }
