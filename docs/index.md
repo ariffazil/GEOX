@@ -26,11 +26,35 @@
 | [README_WELL_DESK.md](./README_WELL_DESK.md) | Well-desk UI (well-log, not WELL organ) |
 | [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md) | Release |
 | [CHANGELOG.md](./CHANGELOG.md) | Changelog |
+| [ZEN_15_SURFACE.md](./ZEN_15_SURFACE.md) | Public 15-tool surface |
+| [FEDERATION.md](./FEDERATION.md) | Federation cross-link doc + ATLAS333 map |
+| [RUNBOOK.md](./RUNBOOK.md) | Operational runbook |
+| [SECURITY.md](./SECURITY.md) | Security policy |
+| [QUICKSTART.md](./QUICKSTART.md) | Quickstart guide |
+| [HEALTHCHECK.md](./HEALTHCHECK.md) | Health check procedures |
+| [CONTEXT.md](./CONTEXT.md) | Live organ state and tool surface |
+| [PROTOCOL_CONFORMANCE.md](./PROTOCOL_CONFORMANCE.md) | Protocol conformance statement |
+| [DATA_SOURCES_REGISTRY.md](./DATA_SOURCES_REGISTRY.md) | Registered data sources |
 
 ## Root doctrine (not under docs/)
 
 - `../README.md` · `../BOUNDARY.md` · `../CORE_IMPORT_MAP.md` · `../SOUL.md` · `../AGENTS.md`  
 - `../FEDERATION_CONTRACT.md` · `../CANONICAL_PUBLIC_SURFACE.json`
+
+## Supplementary docs (subdirectories)
+
+| Directory | Contents |
+|-----------|----------|
+| `adr/` | Architecture Decision Records |
+| `analysis/` | Technical analysis notes |
+| `demo/` | Demo guides and doctrine |
+| `engines/` | Engine specifications (Reasoner, Critic) |
+| `eureka_insights/` | Eureka insight records |
+| `integration/` | Integration notes |
+| `operations/` | Operations guides |
+| `plans/` | Roadmaps and future plans |
+| `superpowers/` | Superpower specs |
+| `theory/` | Theoretical foundations |
 
 ## Archive
 
@@ -38,4 +62,3 @@
 - Older `archive/` trees retained
 
 **DITEMPA BUKAN DIBERI**
-| [ZEN_15_SURFACE.md](./ZEN_15_SURFACE.md) | Public 15-tool surface |
