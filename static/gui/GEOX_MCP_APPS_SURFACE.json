@@ -1,0 +1,426 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": 249439.267619772,
+  "organ": "GEOX",
+  "total_canonical_tools": 30,
+  "total_ui_resources": 20,
+  "active_ui_resources": 16,
+  "deprecated_ui_resources": 3,
+  "planned_ui_resources": 1,
+  "ui_resources": [
+    {
+      "id": "analog-digitizer",
+      "uri": "ui://geox/analog-digitizer",
+      "title": "geox_ui_analog_digitizer",
+      "status": "planned",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 3835,
+      "content_hash": "sha256:87e6ed4986d3d482",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "attribute-audit",
+      "uri": "ui://geox/attribute-audit",
+      "title": "geox_ui_attribute_audit",
+      "status": "deprecated",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 3823,
+      "content_hash": "sha256:4f9c98a14d254802",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": "2026-07-16: render_audit and segy_trace_audit DEREGISTERED. Use Seismic Viewer instead."
+    },
+    {
+      "id": "basin-explorer",
+      "uri": "ui://geox/basin-explorer",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 75,
+      "content_hash": "sha256:5c306a359542543f",
+      "bound_tools": [
+        "geox_basin"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "catalog",
+      "uri": "ui://geox/catalog",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 310,
+      "content_hash": "sha256:44f7d2bd1acd3ef4",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "earth-map",
+      "uri": "ui://geox/earth-map",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 142,
+      "content_hash": "sha256:659b1b1016846d35",
+      "bound_tools": [
+        "geox_map_layers_list"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "earth-volume",
+      "uri": "ui://geox/earth-volume",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 73,
+      "content_hash": "sha256:72d2606e5ff1de8c",
+      "bound_tools": [
+        "geox_seismic_compute"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "geoprobe",
+      "uri": "ui://geox/geoprobe",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 76,
+      "content_hash": "sha256:83cbed868a24de74",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "georeference-map",
+      "uri": "ui://geox/georeference-map",
+      "title": "geox_ui_georeference_map",
+      "status": "deprecated",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 4237,
+      "content_hash": "sha256:20364faf54215e4b",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": "2026-07-16: map tools DEREGISTERED. Using basin+deep_time for spatial context."
+    },
+    {
+      "id": "geox-mcp-visual",
+      "uri": "ui://geox/geox-mcp-visual",
+      "title": "geox_ui_geox_mcp_visual",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 142676,
+      "content_hash": "sha256:9c4ced2659a2c670",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "gravmag-studio",
+      "uri": "ui://geox/gravmag-studio.html",
+      "title": "geox_gravmag_studio_v1",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 30977,
+      "content_hash": "sha256:20f9e3b93ae19248",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "judge-console",
+      "uri": "ui://geox/judge-console",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 310,
+      "content_hash": "sha256:a081e5f8cd66c794",
+      "bound_tools": [
+        "geox_falsify"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "prospect-studio",
+      "uri": "ui://geox/prospect-studio",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 83,
+      "content_hash": "sha256:10362ea45bf196dc",
+      "bound_tools": [
+        "geox_prospect"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "prospect-ui",
+      "uri": "ui://geox/prospect-ui",
+      "title": "geox_ui_prospect_ui",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 35137,
+      "content_hash": "sha256:6b771f45c0ebd037",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "risk-console",
+      "uri": "ui://geox/risk-console",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 103,
+      "content_hash": "sha256:78f1879de30c1f87",
+      "bound_tools": [
+        "geox_claim"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "seismic-vision",
+      "uri": "ui://geox/seismic-vision",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 73,
+      "content_hash": "sha256:499c18bdf8d0c327",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "seismic-vision-review",
+      "uri": "ui://geox/seismic-vision-review",
+      "title": "geox_ui_seismic_vision_review",
+      "status": "deprecated",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 4007,
+      "content_hash": "sha256:d6f875dfcb8ff370",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": "2026-07-16: vision/cognition tools DEREGISTERED in ZEN-15 cleanup. Use Seismic Viewer instead."
+    },
+    {
+      "id": "visual-hub",
+      "uri": "ui://geox/visual-hub",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 341,
+      "content_hash": "sha256:a4f628f69fca2854",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "well-desk",
+      "uri": "ui://geox/well-desk",
+      "title": "_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 65,
+      "content_hash": "sha256:554b646ef742e89c",
+      "bound_tools": [
+        "geox_petrophysics"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "workbench-v1",
+      "uri": "ui://geox/workbench-v1.html",
+      "title": "geox_workbench",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 12247,
+      "content_hash": "sha256:bcbacb01399f01ce",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "workspace-v1",
+      "uri": "ui://geox/workspace-v1.html",
+      "title": "geox_workspace_v1",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 8774,
+      "content_hash": "sha256:af5cb8bc1a518d09",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    }
+  ]
+}

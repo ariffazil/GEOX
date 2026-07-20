@@ -353,7 +353,7 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
 
     app = GEOX_APPS.get(app_id)
     if not app:
-        return None
+        raise KeyError(f"Unknown GEOX app_id: '{app_id}' in GEOX_APPS registry")
 
     resource_type = app.get("resource_type", "rawHtml")
 
@@ -387,8 +387,9 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
                 "text": resource.resource.text,
             },
         }
-    except Exception:
-        return None
+    except Exception as exc:
+        logger.error("Failed to create UI resource for app '%s' (%s): %s", app_id, app.get("uri"), exc)
+        raise ValueError(f"Failed to create UI resource for app '{app_id}' ({app.get('uri')}): {exc}") from exc
 
 
 def register_mcp_apps_resources(mcp: Any) -> None:

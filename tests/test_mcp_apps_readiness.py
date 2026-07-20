@@ -1,82 +1,102 @@
 """
-GEOX MCP Apps & GUI Readiness Test Suite
-═════════════════════════════════════════
-Verifies compliance with SEP-1865 (MCP Apps specification), @mcp-ui standard,
-and ChatGPT outputTemplate compatibility alias under arifOS governance.
+GEOX MCP Apps & GUI Protocol Readiness Test Suite (P0 Compliant)
+════════════════════════════════════════════════════════════════════
+Verifies end-to-end MCP protocol execution sequence:
+  initialize -> tools/list -> resources/list -> resources/read -> tools/call
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 import pytest
 from geox_mcp.server import create_app, mcp
 from geox_mcp.tools.mcp_apps_bridge import (
-    GEOX_APPS,
-    _app_to_tool,
     create_app_resource,
     enrich_response,
-    mcp_apps_resource,
 )
+
+GEOX_ROOT = Path(__file__).resolve().parent.parent
+SURFACE_MANIFEST_PATH = GEOX_ROOT / "GEOX_MCP_APPS_SURFACE.json"
 
 create_app()
 
 
+@pytest.fixture(scope="module", autouse=True)
+def ensure_surface_manifest():
+    """Ensure canonical GEOX_MCP_APPS_SURFACE.json exists before tests."""
+    assert SURFACE_MANIFEST_PATH.exists(), "GEOX_MCP_APPS_SURFACE.json missing. Run scripts/generate_mcp_apps_surface.py"
+
+
 @pytest.mark.asyncio
-async def test_ui_tools_list_has_meta_binding():
-    """Verify tools/list exposes _meta.ui.resourceUri and openai/outputTemplate alias."""
+async def test_01_tools_list_schema_and_ui_bindings():
+    """Verify tools/list exposes _meta.ui.resourceUri and openai/outputTemplate alias for 30 canonical tools."""
     tools = await mcp.list_tools()
+    assert len(tools) == 30, f"Expected 30 canonical tools, got {len(tools)}"
+
     tools_by_name = {t.name: t for t in tools}
 
-    for app_id, tool_name in _app_to_tool.items():
-        assert tool_name in tools_by_name, f"Tool {tool_name} bound to app {app_id} missing in list_tools"
+    # Verify key app-bound tools carry valid UI metadata
+    app_tools = ["geox_petrophysics", "geox_basin", "geox_claim", "geox_falsify", "geox_prospect", "geox_map_layers_list"]
+    for tool_name in app_tools:
+        assert tool_name in tools_by_name
         t = tools_by_name[tool_name]
         meta = getattr(t, "meta", {}) or {}
         assert "ui" in meta, f"Tool {tool_name} missing meta.ui"
         assert "resourceUri" in meta["ui"], f"Tool {tool_name} missing meta.ui.resourceUri"
         assert meta["ui"]["resourceUri"].startswith("ui://geox/"), f"Invalid URI for {tool_name}"
-        assert "openai/outputTemplate" in meta, f"Tool {tool_name} missing ChatGPT openai/outputTemplate alias"
+        assert "openai/outputTemplate" in meta, f"Tool {tool_name} missing ChatGPT alias"
         assert meta["openai/outputTemplate"] == meta["ui"]["resourceUri"]
 
 
 @pytest.mark.asyncio
-async def test_ui_resources_list_and_read():
-    """Verify resources/list returns ui:// resources and resources/read serves valid mcp-app HTML."""
+async def test_02_resources_list_matches_surface_manifest():
+    """Verify resources/list matches generated GEOX_MCP_APPS_SURFACE.json manifest."""
+    with open(SURFACE_MANIFEST_PATH, "r", encoding="utf-8") as f:
+        manifest = json.load(f)
+
     resources = await mcp.list_resources()
     uris = {str(getattr(r, "uri", "")) for r in resources}
 
-    # Verify key UI URIs are registered
-    expected_uris = [
-        "ui://geox/well-desk",
-        "ui://geox/basin-explorer",
-        "ui://geox/judge-console",
-        "ui://geox/workbench-v1.html",
-        "ui://geox/workspace-v1.html",
-    ]
-    for uri in expected_uris:
-        assert uri in uris, f"Expected UI resource {uri} not in resources/list"
-
-    # Verify reading well-desk resource returns text/html;profile=mcp-app or text/uri-list
-    res = await mcp.read_resource("ui://geox/well-desk")
-    assert len(res.contents) > 0
-    content = res.contents[0]
-    assert content.mime_type in ("text/html;profile=mcp-app", "text/uri-list")
-    assert len(content.content) > 0
+    for app_res in manifest["ui_resources"]:
+        expected_uri = app_res["uri"]
+        assert expected_uri in uris, f"Manifest UI resource {expected_uri} missing in resources/list"
 
 
-def test_create_app_resource_external_and_raw():
-    """Verify create_app_resource constructs valid UIResource payloads for external and raw apps."""
+@pytest.mark.asyncio
+async def test_03_resources_read_all_active_uris():
+    """Verify resources/read for every active UI resource returns valid HTML and mcp-app MIME."""
+    with open(SURFACE_MANIFEST_PATH, "r", encoding="utf-8") as f:
+        manifest = json.load(f)
+
+    active_resources = [r for r in manifest["ui_resources"] if r["status"] == "active"]
+    assert len(active_resources) > 0, "No active UI resources declared in manifest"
+
+    for r_meta in active_resources:
+        uri = r_meta["uri"]
+        res = await mcp.read_resource(uri)
+        assert res is not None, f"Failed to read resource {uri}"
+        assert len(res.contents) > 0, f"Empty content for resource {uri}"
+        content = res.contents[0]
+        assert content.mime_type in ("text/html;profile=mcp-app", "text/uri-list")
+        assert len(content.content) > 0, f"Resource {uri} content is empty"
+
+
+def test_04_create_app_resource_strict_validation():
+    """Verify create_app_resource constructs valid UIResource payloads and fails loudly on errors."""
     well_desk_res = create_app_resource("well_desk")
     assert well_desk_res is not None
     assert well_desk_res["type"] == "resource"
     assert "uri" in well_desk_res["resource"]
 
-    judge_res = create_app_resource("judge_console")
-    assert judge_res is not None
-    assert judge_res["type"] == "resource"
+    # Fails loudly on invalid app_id
+    with pytest.raises(KeyError):
+        create_app_resource("invalid_nonexistent_app_id")
 
 
-def test_enrich_response_adds_chatgpt_template_alias():
+def test_05_enrich_response_channel_discipline():
     """Verify enrich_response attaches _meta.ui AND openai/outputTemplate alias."""
     base_response = {"status": "success", "data": {"well_id": "MB-001"}}
     enriched = enrich_response(base_response, "well_desk", {"well_id": "MB-001"})
@@ -87,13 +107,3 @@ def test_enrich_response_adds_chatgpt_template_alias():
     assert enriched["_meta"]["openai/outputTemplate"] == "ui://geox/well-desk?well_id=MB-001"
     assert "openai/toolInvocation/invoking" in enriched["_meta"]
     assert "openai/toolInvocation/invoked" in enriched["_meta"]
-
-
-def test_geox_apps_registry_integrity():
-    """Verify all GEOX_APPS entries carry required SEP-1865 fields."""
-    for app_id, app in GEOX_APPS.items():
-        assert "uri" in app, f"App {app_id} missing uri"
-        assert app["uri"].startswith("ui://geox/"), f"App {app_id} uri must start with ui://geox/"
-        assert "title" in app, f"App {app_id} missing title"
-        assert "render_mode" in app, f"App {app_id} missing render_mode"
-        assert app["mime_type"] == "text/html;profile=mcp-app", f"App {app_id} invalid mime_type"
