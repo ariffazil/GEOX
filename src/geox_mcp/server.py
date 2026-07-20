@@ -3237,10 +3237,17 @@ def create_app():
     app.add_middleware(McpAuthMiddleware)  # MCP spec §Security: Bearer token
     app.add_middleware(OriginValidationMiddleware)  # SEP-2243: DNS rebinding guard (outermost)
 
-    # Dynamic FastMCP Tool Registration
+    # Dynamic FastMCP Tool & Resource Registration
+    from geox_mcp.apps.workbench import register_workbench
+    from geox_mcp.tools.mcp_apps_bridge import enrich_mcp_tools_with_apps, register_mcp_apps_resources
     from geox_mcp.tools_wiring import register_tools_on
+    from geox_mcp.ui.resources import register_all_ui_resources
 
+    register_all_ui_resources(mcp)
+    register_workbench(mcp)
+    register_mcp_apps_resources(mcp)
     register_tools_on(mcp)
+    enrich_mcp_tools_with_apps(mcp)
 
     return app
 

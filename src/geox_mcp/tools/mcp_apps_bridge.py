@@ -14,7 +14,10 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
+
+logger = logging.getLogger("geox.tools.mcp_apps_bridge")
 
 try:
     from mcp_ui_server import UIMetadataKey, create_ui_resource
@@ -274,7 +277,10 @@ def mcp_apps_resource(app_id: str, params: dict[str, Any] | None = None) -> dict
                     "audience": ["geoscientist", "interpreter"],
                     "priority": 0.8,
                 },
-            }
+            },
+            "openai/outputTemplate": uri,
+            "openai/toolInvocation/invoking": f"Rendering {app['title']}...",
+            "openai/toolInvocation/invoked": f"{app['title']} ready",
         }
     }
 
@@ -357,7 +363,7 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
             resource = create_ui_resource(
                 {
                     "uri": app["uri"],
-                    "content": {"type": "externalUrl", "externalUrl": app["external_url"]},
+                    "content": {"type": "externalUrl", "iframeUrl": app["external_url"]},
                     "encoding": "text",
                 }
             )
@@ -383,3 +389,125 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
         }
     except Exception:
         return None
+
+
+def register_mcp_apps_resources(mcp: Any) -> None:
+    """Register all GEOX_APPS UI resources on the FastMCP server instance.
+
+    Ensures resources/read for any ui://geox/* app URI returns valid HTML or external URL
+    resource with text/html;profile=mcp-app MIME type.
+    """
+    try:
+        from fastmcp.apps import AppConfig, ResourceCSP
+
+        default_csp = ResourceCSP(
+            connect_domains=["geox.arif-fazil.com", "macrostrat.org"],
+            resource_domains=["geox.arif-fazil.com", "unpkg.com", "tile.openstreetmap.org", "cdn.jsdelivr.net"],
+        )
+    except ImportError:
+        AppConfig = None
+        default_csp = None
+
+    for app_id, app in GEOX_APPS.items():
+        uri = app["uri"]
+        title = app["title"]
+        desc = app["description"]
+        mime_type = app.get("mime_type", "text/html;profile=mcp-app")
+        ext_url = app.get("external_url", "")
+        html_fallback = app.get(
+            "html_fallback",
+            f"<!DOCTYPE html><html><head><meta charset='utf-8'><title>{title}</title></head><body><h1>{title}</h1><p>{desc}</p><p><a href='{ext_url}'>Open {title}</a></p></body></html>",
+        )
+
+        def _make_handler(content: str):
+            async def _handler() -> str:
+                return content
+            return _handler
+
+        kwargs: dict[str, Any] = {
+            "description": f"{title} — {desc}",
+            "mime_type": mime_type,
+        }
+        if AppConfig and default_csp:
+            kwargs["app"] = AppConfig(prefers_border=True, csp=default_csp)
+
+        try:
+            mcp.resource(uri, **kwargs)(_make_handler(html_fallback))
+        except Exception as e:
+            logger.debug("Resource %s already registered or skipped: %s", uri, e)
+
+    logger.info("Registered GEOX MCP Apps UI resources (%d total in registry)", len(GEOX_APPS))
+
+
+def enrich_mcp_tools_with_apps(mcp: Any) -> None:
+    """Enrich registered FastMCP tool definitions with _meta.ui and openai/outputTemplate.
+
+    Ensures tools/list exposes _meta.ui.resourceUri for all GEOX MCP Apps across
+    the main server and all mounted sub-servers.
+    """
+    providers = list(getattr(mcp, "providers", []))
+    local_p = getattr(mcp, "_local_provider", None)
+    if local_p and local_p not in providers:
+        providers.insert(0, local_p)
+
+    all_components: dict[str, Any] = {}
+    for p in providers:
+        comps = getattr(p, "_components", {})
+        if isinstance(comps, dict):
+            all_components.update(comps)
+        sub_server = getattr(p, "server", None)
+        if sub_server:
+            sub_comps = getattr(getattr(sub_server, "_local_provider", None), "_components", {})
+            if isinstance(sub_comps, dict):
+                all_components.update(sub_comps)
+
+    count = 0
+    # First: enrich tools explicitly mapped in _app_to_tool
+    for app_id, tool_name in _app_to_tool.items():
+        key = f"tool:{tool_name}@"
+        if key in all_components:
+            comp = all_components[key]
+            app_info = GEOX_APPS.get(app_id)
+            if not app_info:
+                continue
+            uri = app_info["uri"]
+            if not hasattr(comp, "meta") or comp.meta is None:
+                comp.meta = {}
+            comp.meta["ui"] = {
+                "resourceUri": uri,
+                "title": app_info["title"],
+                "renderMode": app_info["render_mode"],
+                "mimeType": app_info["mime_type"],
+            }
+            comp.meta["openai/outputTemplate"] = uri
+            comp.meta["openai/toolInvocation/invoking"] = f"Rendering {app_info['title']}..."
+            comp.meta["openai/toolInvocation/invoked"] = f"{app_info['title']} ready"
+            count += 1
+
+    # Second: also scan all registered components across all providers/sub-servers
+    for key, comp in all_components.items():
+        if key.startswith("tool:"):
+            ui_uri = None
+            if hasattr(comp, "app") and comp.app and getattr(comp.app, "resource_uri", None):
+                ui_uri = comp.app.resource_uri
+            elif hasattr(comp, "meta") and isinstance(comp.meta, dict) and "ui" in comp.meta:
+                ui_uri = comp.meta["ui"].get("resourceUri")
+            elif hasattr(comp, "annotations") and comp.annotations and getattr(comp.annotations, "ui", None):
+                ui_info = comp.annotations.ui
+                if isinstance(ui_info, dict):
+                    ui_uri = ui_info.get("resourceUri")
+                elif hasattr(ui_info, "resourceUri"):
+                    ui_uri = getattr(ui_info, "resourceUri")
+
+            if ui_uri:
+                if not hasattr(comp, "meta") or comp.meta is None:
+                    comp.meta = {}
+                if "ui" not in comp.meta:
+                    comp.meta["ui"] = {"resourceUri": ui_uri}
+                comp.meta["openai/outputTemplate"] = ui_uri
+                comp.meta.setdefault("openai/toolInvocation/invoking", "Rendering interactive UI...")
+                comp.meta.setdefault("openai/toolInvocation/invoked", "UI ready")
+
+    logger.info("Enriched %d tools with MCP Apps UI metadata", count)
+
+
