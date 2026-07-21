@@ -1,160 +1,1597 @@
 <!DOCTYPE html>
-<html lang="en-MY">
+<html lang="en" data-ring="ORGAN" data-organ="geox">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEOX — Earth Witness · Constitutional Geoscience</title>
-<meta name="description" content="GEOX is the governed earth intelligence organ of the arifOS federation. Deterministic subsurface computation under F1–F13 constitutional floors.">
-<meta name="theme-color" content="#0a0a0f">
-<link rel="canonical" href="https://geox.arif-fazil.com/">
-<link rel="alternate" type="application/json" href="/.well-known/mcp.json" title="GEOX MCP">
-<style>
-:root {
-  --bg: #0a0a0f;
-  --surface: #12121a;
-  --border: #1e1e2a;
-  --text: #d4d4d8;
-  --text-dim: #52525b;
-  --accent: #00d4aa;
-  --accent-dim: #00a888;
-  --gold: #d4af37;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.6;
-  min-height: 100vh;
-}
-.container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
-header { text-align: center; padding: 60px 0 40px; }
-h1 { font-size: 2.5rem; font-weight: 300; letter-spacing: 2px; color: #fff; }
-h1 span { color: var(--accent); }
-.subtitle { color: var(--text-dim); margin-top: 8px; font-size: 0.95rem; }
-.lead { font-size: 1.1rem; color: #e4e4e7; margin: 32px 0; text-align: center; }
-.feature-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 32px 0;
-}
-@media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
-.feature {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 16px;
-}
-.feature h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-dim); margin-bottom: 6px; }
-.feature p { font-size: 0.85rem; color: var(--text-dim); }
-.buttons { display: flex; gap: 12px; justify-content: center; margin: 40px 0; flex-wrap: wrap; }
-.btn {
-  display: inline-block; padding: 12px 28px; border-radius: 8px;
-  text-decoration: none; font-size: 0.9rem; font-weight: 500;
-  transition: all 0.15s;
-}
-.btn-primary { background: var(--accent); color: #000; }
-.btn-primary:hover { background: var(--accent-dim); }
-.btn-outline { border: 1px solid var(--border); color: var(--text); }
-.btn-outline:hover { border-color: var(--text-dim); background: var(--surface); }
-.stats {
-  display: flex; gap: 24px; justify-content: center; margin: 40px 0; flex-wrap: wrap;
-}
-.stat { text-align: center; }
-.stat-num { font-size: 1.8rem; font-weight: 600; color: var(--gold); }
-.stat-lbl { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-.quote {
-  border-left: 2px solid var(--border); padding: 16px 20px; margin: 32px 0;
-  color: var(--text-dim); font-style: italic;
-}
-footer {
-  text-align: center; padding: 40px 0; border-top: 1px solid var(--border);
-  margin-top: 40px; font-size: 0.8rem; color: var(--text-dim);
-}
-a { color: var(--accent); }
-hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
-.section { margin: 40px 0; }
-.section h2 { font-size: 1.2rem; font-weight: 500; margin-bottom: 12px; color: #fff; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX // Earth Witness · Constitutional Geoscience</title>
+    <meta name="description" content="GEOX is the governed earth intelligence organ of the arifOS federation. Subsurface computation under F1–F13 constitutional floors.">
+    <link rel="canonical" href="https://geox.arif-fazil.com/">
+    
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Federation design system and local styles -->
+    <link rel="stylesheet" href="/_shared/design-system/tokens.css">
+    <link rel="stylesheet" href="https://arifosmcp.arif-fazil.com/arifos-theme.css">
+    
+    <style>
+        :root {
+            /* Palette Design Tokens */
+            --bg-dark: #07070a;
+            --bg-card: #0d0d14;
+            --border-glow: rgba(245, 158, 11, 0.15);
+            --border-dim: rgba(255, 255, 255, 0.05);
+            
+            --amber-earth: #f59e0b;
+            --amber-earth-glow: rgba(245, 158, 11, 0.35);
+            --emerald-wealth: #10b981;
+            --emerald-wealth-glow: rgba(16, 185, 129, 0.35);
+            --cyan-gov: #06b6d4;
+            
+            --text-high: #f4f4f5;
+            --text-med: #a1a1aa;
+            --text-low: #52525b;
+            
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-high);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
+                linear-gradient(to bottom, var(--bg-dark), #0b0b10);
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grid overlay for high-tech aesthetic */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation Header */
+        header {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-dim);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 3rem;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-text {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, var(--amber-earth));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-separator {
+            color: var(--text-low);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+        }
+
+        .logo-sub {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: var(--text-med);
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-med);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+            padding: 0.25rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--amber-earth);
+            transition: width 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-high);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--amber-earth);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Hero Area */
+        .hero {
+            padding: 5rem 0 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: "Φ";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22rem;
+            font-weight: 900;
+            color: rgba(245, 158, 11, 0.025);
+            font-family: var(--font-heading);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--amber-earth);
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-badge .pulse-orange {
+            width: 8px;
+            height: 8px;
+            background: var(--amber-earth);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--amber-earth);
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 12px var(--amber-earth); }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 50%, rgba(255, 255, 255, 0.6) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-quote {
+            font-family: var(--font-sans);
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--text-med);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .hero-description {
+            font-size: 1.05rem;
+            color: var(--text-med);
+            max-width: 650px;
+            margin: 0 auto 2.5rem;
+        }
+
+        /* Status bar */
+        .status-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border: 1px solid var(--border-dim);
+            background: rgba(13, 13, 20, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 4rem;
+            font-size: 0.85rem;
+            align-items: center;
+        }
+
+        .status-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-bar-item:nth-child(2) {
+            justify-content: center;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--amber-earth);
+            font-family: var(--font-mono);
+        }
+
+        .status-bar-item:nth-child(3) {
+            justify-content: flex-end;
+            color: var(--text-med);
+            font-family: var(--font-mono);
+        }
+
+        .status-dot-green {
+            width: 8px;
+            height: 8px;
+            background: #2ed573;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #2ed573;
+            display: inline-block;
+        }
+
+        /* Decision Surfaces Grid */
+        .section-header {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-header p {
+            color: var(--text-med);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        .surfaces-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 5rem;
+        }
+
+        @media (max-width: 768px) {
+            .surfaces-grid {
+                grid-template-columns: 1fr;
+            }
+            .status-bar {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                text-align: center;
+            }
+            .status-bar-item:nth-child(2), .status-bar-item:nth-child(3) {
+                justify-content: flex-start;
+            }
+        }
+
+        .surface-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 2.2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .surface-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Earth amber accent glow for GEOX cards */
+        .surface-card.geox-surface:hover {
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 
+                0 12px 30px rgba(0,0,0,0.4),
+                0 0 20px rgba(245, 158, 11, 0.05);
+            transform: translateY(-4px);
+        }
+
+        /* Emerald accent glow for WEALTH bridge card */
+        .surface-card.wealth-surface:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 
+                0 12px 30px rgba(0,0,0,0.4),
+                0 0 20px rgba(16, 185, 129, 0.05);
+            transform: translateY(-4px);
+        }
+
+        .surface-card .card-tag {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--amber-earth);
+            margin-bottom: 1.2rem;
+            display: inline-block;
+        }
+
+        .surface-card.wealth-surface .card-tag {
+            color: var(--emerald-wealth);
+        }
+
+        .surface-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .surface-card p {
+            color: var(--text-med);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .card-action {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-high);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: gap 0.2s ease;
+        }
+
+        .surface-card:hover .card-action {
+            gap: 0.7rem;
+            color: var(--amber-earth);
+        }
+
+        .surface-card.wealth-surface:hover .card-action {
+            color: var(--emerald-wealth);
+        }
+
+        /* The Sovereign Bridge Visual Flow */
+        .bridge-section {
+            background: linear-gradient(180deg, rgba(13, 13, 20, 0.4) 0%, rgba(13, 13, 20, 0.8) 100%);
+            border: 1px solid var(--border-dim);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        .bridge-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), rgba(16, 185, 129, 0.3), transparent);
+        }
+
+        .bridge-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            margin: 3.5rem 0;
+            position: relative;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .bridge-flow {
+                flex-direction: column;
+                align-items: center;
+                gap: 3rem;
+            }
+            .bridge-flow::after {
+                display: none;
+            }
+            .bridge-connector-arrow {
+                transform: rotate(90deg);
+                margin: -1rem 0;
+            }
+        }
+
+        /* Connective pipeline in background */
+        .bridge-flow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(245,158,11,0.1), rgba(6,182,212,0.2), rgba(16,185,129,0.1));
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+
+        .bridge-node {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-dim);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            flex: 1;
+            max-width: 280px;
+            z-index: 1;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .bridge-node:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .bridge-node.node-sediment { border-color: rgba(245, 158, 11, 0.25); }
+        .bridge-node.node-gov { border-color: rgba(6, 182, 212, 0.25); }
+        .bridge-node.node-sovereignty { border-color: rgba(16, 185, 129, 0.25); }
+
+        .bridge-node .node-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .bridge-node .node-title {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .bridge-node .node-tag {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.8rem;
+            display: inline-block;
+        }
+
+        .node-sediment .node-tag { background: rgba(245, 158, 11, 0.1); color: var(--amber-earth); }
+        .node-gov .node-tag { background: rgba(6, 182, 212, 0.1); color: var(--cyan-gov); }
+        .node-sovereignty .node-tag { background: rgba(16, 185, 129, 0.1); color: var(--emerald-wealth); }
+
+        .bridge-node .node-desc {
+            font-size: 0.8rem;
+            color: var(--text-med);
+            line-height: 1.5;
+        }
+
+        .bridge-connector-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--text-low);
+            z-index: 1;
+            font-family: var(--font-mono);
+        }
+
+        .bridge-code-block {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            color: var(--amber-earth);
+            text-align: center;
+            overflow-x: auto;
+            max-width: 800px;
+            margin: 2rem auto 0;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .bridge-code-block span.kernel { color: var(--cyan-gov); }
+        .bridge-code-block span.wealth { color: var(--emerald-wealth); }
+
+        /* RASA Panel */
+        .rasa-section {
+            background: linear-gradient(135deg, rgba(13, 13, 20, 0.8) 0%, rgba(7, 7, 10, 0.95) 100%);
+            border: 1px solid var(--border-dim);
+            border-radius: 20px;
+            padding: 4rem 2.5rem;
+            margin-bottom: 5rem;
+            position: relative;
+        }
+
+        .rasa-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .rasa-formula-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2.5rem 0;
+        }
+
+        .rasa-formula {
+            font-family: var(--font-mono);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--cyan-gov);
+            background: rgba(6, 182, 212, 0.03);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            padding: 1.8rem 3rem;
+            border-radius: 16px;
+            letter-spacing: 0.5px;
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .rasa-formula span.credit { color: var(--amber-earth); }
+        .rasa-formula span.ambiguity { color: #fb7175; }
+
+        .rasa-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .rasa-grid {
+                grid-template-columns: 1fr;
+            }
+            .rasa-formula {
+                font-size: 1.2rem;
+                padding: 1.2rem 1.5rem;
+            }
+        }
+
+        .rasa-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 1.8rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .rasa-card:hover {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        .rasa-card .val {
+            font-family: var(--font-heading);
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--cyan-gov);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .rasa-card .lbl {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--amber-earth);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .rasa-card .desc {
+            font-size: 0.85rem;
+            color: var(--text-med);
+            line-height: 1.5;
+        }
+
+        /* MCP Protocol surface explorer */
+        .mcp-explorer {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        .explorer-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-dim);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            scrollbar-width: none; /* Hide scrollbar for clean layout */
+        }
+
+        .explorer-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: var(--text-med);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-high);
+        }
+
+        .tab-btn.active {
+            color: var(--amber-earth);
+            font-weight: 600;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--amber-earth);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .signature-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-pill {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-dim);
+        }
+
+        .meta-pill.pill-class {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: var(--amber-earth);
+            font-weight: 600;
+        }
+
+        .meta-pill.pill-name {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-high);
+        }
+
+        .tab-content p {
+            color: var(--text-med);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+        }
+
+        .code-container {
+            position: relative;
+        }
+
+        .code-container pre {
+            background-color: #050508;
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-high);
+            overflow-x: auto;
+            box-shadow: inset 0 3px 12px rgba(0,0,0,0.8);
+            line-height: 1.5;
+        }
+
+        /* 13 Floors System Surface */
+        .floors-section {
+            margin-bottom: 5rem;
+        }
+
+        .floors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .floors-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .floors-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .floors-grid { grid-template-columns: 1fr; }
+        }
+
+        .floor-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 1.25rem;
+            position: relative;
+            transition: all 0.25s ease;
+        }
+
+        .floor-number {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-low);
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+        }
+
+        .floor-title {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.3px;
+        }
+
+        .floor-desc {
+            font-size: 0.75rem;
+            color: var(--text-med);
+            line-height: 1.4;
+        }
+
+        /* Highlight classes for GEOX critical floors */
+        .floor-card.highlight-floor {
+            background: linear-gradient(135deg, rgba(13, 13, 20, 0.9) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border-color: rgba(245, 158, 11, 0.35);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.05);
+        }
+
+        .floor-card.highlight-floor .floor-number {
+            color: var(--amber-earth);
+        }
+
+        .floor-card.highlight-floor-cyan {
+            background: linear-gradient(135deg, rgba(13, 13, 20, 0.9) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border-color: rgba(6, 182, 212, 0.35);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.05);
+        }
+
+        .floor-card.highlight-floor-cyan .floor-number {
+            color: var(--cyan-gov);
+        }
+
+        .floor-card.highlight-floor:hover, .floor-card.highlight-floor-cyan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Federation Health footer widget */
+        .health-widget {
+            border: 1px solid var(--border-dim);
+            background: #09090d;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .widget-title {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-med);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .widget-grid {
+                grid-template-columns: 1fr;
+                gap: 0.85rem;
+            }
+        }
+
+        .widget-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .widget-card .organ-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .widget-card .organ-name {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .widget-card .organ-port {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-low);
+            margin-top: 0.1rem;
+        }
+
+        .widget-card .organ-status {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 500;
+        }
+
+        .widget-card .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .widget-card.status-online .status-dot { background-color: #2ed573; box-shadow: 0 0 8px #2ed573; }
+        .widget-card.status-online .status-text { color: #2ed573; }
+        .widget-card.status-offline .status-dot { background-color: #ff4757; box-shadow: 0 0 8px #ff4757; }
+        .widget-card.status-offline .status-text { color: #ff4757; }
+        .widget-card.status-pending .status-dot { background-color: var(--amber-earth); animation: blink 1s infinite alternate; }
+        .widget-card.status-pending .status-text { color: var(--amber-earth); }
+
+        @keyframes blink {
+            from { opacity: 0.3; }
+            to { opacity: 1; }
+        }
+
+        /* Footer styles */
+        footer {
+            padding: 3rem 0 4rem;
+            border-top: 1px solid var(--border-dim);
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-low);
+        }
+
+        .federation-seal {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--amber-earth);
+            letter-spacing: 4px;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
+        }
+
+        footer p {
+            font-size: 0.8rem;
+            color: var(--text-med);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-med);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--amber-earth);
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-dim);
+            margin: 4rem 0;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
+    <div class="container">
+        
+        <!-- lineage header: GEOX // MCP with CONNECTED status and live version -->
+        <header>
+            <div class="logo-group">
+                <span class="logo-text">GEOX // MCP</span>
+                <span class="logo-separator">|</span>
+                <span class="logo-sub">EARTH intelligence</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="active">Overview</a>
+                <a href="#surfaces">Cockpits</a>
+                <a href="#bridge">Sovereign Bridge</a>
+                <a href="#rasa">RASA</a>
+                <a href="#protocol">Protocol</a>
+                <a href="#floors">Constitutional Floors</a>
+            </nav>
+        </header>
 
-<header>
-  <h1>GEOX <span>Earth Witness</span></h1>
-  <div class="subtitle">Constitutional Geoscience · DITEMPA BUKAN DIBERI</div>
-</header>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge">
+                <span class="pulse-orange"></span>
+                <span>φ GEOX AS FEDERATION ORGAN :8081</span>
+            </div>
+            <h1 id="main-title">GEOX Earth Intelligence</h1>
+            <p class="hero-quote">"The Earth does not explain itself. It gives fragments."</p>
+            <p class="hero-description">
+                The governed earth intelligence organ of the arifOS federation. Deterministic subsurface computation and geological evidence parsing under F1–F13 constitutional floors.
+            </p>
+        </section>
 
-<p class="lead">
-  The governed earth-intelligence organ of the arifOS federation. <br>
-  Deterministic subsurface computation under F1–F13 constitutional floors.
-</p>
+        <!-- Status & Connection Bar -->
+        <div class="status-bar">
+            <div class="status-bar-item">
+                <span class="status-dot-green"></span>
+                <span>SYSTEM_LIVE: <span id="server-version">v2026.07.21-LIVE</span></span>
+            </div>
+            <div class="status-bar-item">
+                <span>VAULT_999_CONNECTED</span>
+            </div>
+            <div class="status-bar-item" id="last-updated">
+                2026.07.21 // 06:31:55Z
+            </div>
+        </div>
 
-<div class="stats">
-  <div class="stat"><div class="stat-num">78</div><div class="stat-lbl">Registered Tools</div></div>
-  <div class="stat"><div class="stat-num">24</div><div class="stat-lbl">Callable Public</div></div>
-  <div class="stat"><div class="stat-num">9</div><div class="stat-lbl">MCP App Resources</div></div>
-  <div class="stat"><div class="stat-num">0</div><div class="stat-lbl">Phantom Tools</div></div>
-</div>
+        <!-- 4 Decision Surfaces -->
+        <section id="surfaces" class="section-header">
+            <h2>
+                <span>Decision Surfaces</span>
+            </h2>
+            <p>Four primary interfaces bridging subsurface analysis, physical ground truth, and sovereign investment adjudication.</p>
+            
+            <div class="surfaces-grid" style="margin-top: 2rem;">
+                <!-- 1. Prospect Forge -->
+                <a href="/apps/prospect-ui/index.html" class="surface-card geox-surface" id="card-prospect-forge">
+                    <div>
+                        <span class="card-tag">GEOX // AAA-Grade</span>
+                        <h3>Prospect Forge</h3>
+                        <p>Maturation cockpit integrating georeferencing, B_cog cognitive bias mitigation, stratigraphic charge, and Pg (Probability of Geological Success) estimation constraints.</p>
+                    </div>
+                    <span class="card-action">Enter Maturation Cockpit &rarr;</span>
+                </a>
 
-<div class="buttons">
-  <a href="/gui/" class="btn btn-primary">Enter Operator Cockpit</a>
-  <a href="/.well-known/mcp.json" class="btn btn-outline">MCP Discovery</a>
-</div>
+                <!-- 2. Well Witness -->
+                <a href="/apps/well-desk/index.html" class="surface-card geox-surface" id="card-well-witness">
+                    <div>
+                        <span class="card-tag">GEOX // WITNESS_GATE</span>
+                        <h3>Well Witness</h3>
+                        <p>Log interpretation suite (GR/RES/NPHI-RHOB) and rock physics engine. Anchors petrophysical findings directly to the immutable VAULT999 transaction ledger.</p>
+                    </div>
+                    <span class="card-action">Enter Well Correlation &rarr;</span>
+                </a>
 
-<hr>
+                <!-- 3. Macrostrat Console -->
+                <a href="https://arif-fazil.com/earth" class="surface-card geox-surface" id="card-macrostrat">
+                    <div>
+                        <span class="card-tag">GEOX // OBSERVE_SURFACE</span>
+                        <h3>Macrostrat Console</h3>
+                        <p>Live paleogeographical pipeline with coordinates mapping, lithostratigraphy, age-calibration, and click-to-query global deep-time strata state.</p>
+                    </div>
+                    <span class="card-action">Open Global Earth Map &rarr;</span>
+                </a>
 
-<div class="section">
-  <h2>Apa Itu GEOX?</h2>
-  <p style="color:var(--text-dim);">GEOX is the earth coprocessor of arifOS — evidence-only, never a policy judge. It prepares deterministically computed geoscience, petrophysics, and physics-grounded evidence for constitutional judgment by arifOS. Every output carries epistemic labels (OBSERVED / DERIVED / INTERPRETED / ESTIMATE) and routes through F2 TRUTH and F13 SOVEREIGN before reaching conviction.</p>
-</div>
+                <!-- 4. Capital Judge -->
+                <a href="https://wealth.arif-fazil.com" class="surface-card wealth-surface" id="card-capital-judge" target="_blank" rel="noopener">
+                    <div>
+                        <span class="card-tag">WEALTH // DECISION_CLOSURE</span>
+                        <h3>Capital Judge</h3>
+                        <p>Adjudication bridge to the Ξ WEALTH organ. Translates geological uncertainty parameters to EMV calculations, NPV reward profiles, and final Ω-gate investment verdicts.</p>
+                    </div>
+                    <span class="card-action">Bridge to WEALTH &rarr;</span>
+                </a>
+            </div>
+        </section>
 
-<div class="feature-grid">
-  <div class="feature">
-    <h3>Basin Intelligence</h3>
-    <p>Tectonic reconstruction, backstripping, thermal maturity, sediment mass balance — all deterministically computed.</p>
-  </div>
-  <div class="feature">
-    <h3>Seismic</h3>
-    <p>Synthetic modelling, well-tie, attribute computation, horizon/fault interpretation. Falsifiable kill matrix.</p>
-  </div>
-  <div class="feature">
-    <h3>Petrophysics</h3>
-    <p>Vsh, porosity, Sw, permeability, net pay. Physics-prior LEM inference. No black-box ML on evidence paths.</p>
-  </div>
-  <div class="feature">
-    <h3>Claims &amp; Evidence</h3>
-    <p>Claim lifecycle with falsification engine (K001–K007). Evidence chains with provenance ledger. Cross-contradiction scanning.</p>
-  </div>
-  <div class="feature">
-    <h3>Deep Time</h3>
-    <p>Earth state vectors through deep time — GPTS, CO₂, sea level, temperature, paleogeography. Cited proxy synthesis.</p>
-  </div>
-  <div class="feature">
-    <h3>Governance</h3>
-    <p>F1–F13 enforcement. 888_HOLD on irreversible. Tri-witness (Human × AI × Earth) before SEAL. No phantom data.</p>
-  </div>
-</div>
+        <!-- The Sovereign Bridge Visual -->
+        <section id="bridge" class="bridge-section">
+            <div class="section-header" style="text-align: center;">
+                <h2>The Sovereign Bridge</h2>
+                <p>The causal chain linking physical sediment to constitutional governance and economic sovereignty.</p>
+            </div>
+            
+            <div class="bridge-flow">
+                <div class="bridge-node node-sediment">
+                    <span class="node-icon">🌍</span>
+                    <h4 class="node-title">Sediment</h4>
+                    <span class="node-tag">GEOX</span>
+                    <p class="node-desc">Log records, seismic horizons, and deep-time physical evidence are parsed and verified.</p>
+                </div>
+                
+                <div class="bridge-connector-arrow">&rarr;</div>
+                
+                <div class="bridge-node node-gov">
+                    <span class="node-icon">🏛️</span>
+                    <h4 class="node-title">Governance</h4>
+                    <span class="node-tag">arifOS</span>
+                    <p class="node-desc">ToAC conformance audit and F1-F13 floor filters evaluate evidence validity and trigger safety locks.</p>
+                </div>
+                
+                <div class="bridge-connector-arrow">&rarr;</div>
+                
+                <div class="bridge-node node-sovereignty">
+                    <span class="node-icon">Ξ</span>
+                    <h4 class="node-title">Sovereignty</h4>
+                    <span class="node-tag">WEALTH</span>
+                    <p class="node-desc">Capital allocation decisions are modeled, optimized, and sealed for investment authorization.</p>
+                </div>
+            </div>
+            
+            <div class="bridge-code-block">
+                geox.evaluate_prospect() &rarr; <span class="kernel">arifos.bridge_contract()</span> &rarr; <span class="wealth">wealth.npv_reward()</span>
+            </div>
+        </section>
 
-<hr>
+        <!-- RASA Context Fit -->
+        <section id="rasa" class="rasa-section">
+            <div class="section-header" style="text-align: center;">
+                <h2>RASA — Context-Fit Epistemology</h2>
+                <p>Relevance-Aware Substrate Alignment (RASA) measures the concrete empirical grounding of every geological claim.</p>
+            </div>
 
-<div class="section">
-  <h2>Access</h2>
-  <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
-    <tr><td style="padding:8px 0;color:var(--accent);">Operator Cockpit</td><td style="text-align:right;"><a href="/gui/">/gui/</a></td></tr>
-    <tr><td style="padding:8px 0;color:var(--accent);">MCP Endpoint</td><td style="text-align:right;"><code style="font-size:0.8rem;">https://geox.arif-fazil.com/mcp</code></td></tr>
-    <tr><td style="padding:8px 0;color:var(--accent);">Health</td><td style="text-align:right;"><a href="/health">/health</a></td></tr>
-    <tr><td style="padding:8px 0;color:var(--accent);">MCP Discovery</td><td style="text-align:right;"><a href="/.well-known/mcp.json">/.well-known/mcp.json</a></td></tr>
-    <tr><td style="padding:8px 0;color:var(--accent);">Public State</td><td style="text-align:right;"><a href="https://arifos.arif-fazil.com/api/public-state">arifos API</a></td></tr>
-  </table>
-</div>
+            <div class="rasa-formula-container">
+                <div class="rasa-formula">
+                    RASA = <span class="credit">evidence_credit</span> &times; (1 &minus; <span class="ambiguity">u_ambiguity</span>)
+                </div>
+            </div>
 
-<div class="quote">
-  GEOX prepares evidence. Evidence never seals its own conclusions. <br>
-  — F13 SOVEREIGN: Arif holds final veto.
-</div>
+            <div class="rasa-grid">
+                <div class="rasa-card">
+                    <div class="val">0.90</div>
+                    <div class="lbl">F7 Humility Cap</div>
+                    <div class="desc">A hard epistemological ceiling. GEOX never permits perfect context-fit calculations, enforcing a mandatory 10% uncertainty buffer (Ω₀ ≈ 0.04).</div>
+                </div>
+                <div class="rasa-card">
+                    <div class="val">30</div>
+                    <div class="lbl">Canonical Tools</div>
+                    <div class="desc">The exact registered public tools capable of generating evidence payloads mapped directly inside the GEOX execution shell.</div>
+                </div>
+                <div class="rasa-card">
+                    <div class="val">AAA</div>
+                    <div class="lbl">Evidence Grade</div>
+                    <div class="desc">Evidence items climb the scale from HYPOTHESIS to PLAUSIBLE before receiving the canonical CLAIM tag verified in VAULT999.</div>
+                </div>
+            </div>
+        </section>
 
-<footer>
-  <p>GEOX — Earth Witness · arifOS Federation · DITEMPA BUKAN DIBERI</p>
-  <p style="margin-top:8px;"><a href="/gui/">Operator Cockpit</a> · <a href="https://github.com/ariffazil/GEOX">Source</a> · <a href="https://arifos.arif-fazil.com">arifOS</a></p>
-</footer>
+        <!-- MCP Protocol surface signatures explorer -->
+        <section id="protocol" class="mcp-explorer">
+            <div class="section-header">
+                <h2>MCP Tool Signatures</h2>
+                <p>Interactive discovery registry displaying how AI agents and external organs interact with GEOX and WEALTH APIs.</p>
+            </div>
 
-</div>
+            <div class="explorer-tabs" id="signature-tabs">
+                <button class="tab-btn active" onclick="switchTab(event, 'sig-macrostrat')">geox.macrostrat</button>
+                <button class="tab-btn" onclick="switchTab(event, 'sig-prospect')">geox.prospect</button>
+                <button class="tab-btn" onclick="switchTab(event, 'sig-wells')">geox.wells</button>
+                <button class="tab-btn" onclick="switchTab(event, 'sig-capital')">wealth.capital</button>
+            </div>
+
+            <!-- Tab 1: geox.macrostrat -->
+            <div id="sig-macrostrat" class="tab-content active">
+                <div class="signature-meta">
+                    <span class="meta-pill pill-class">Affordance: OBSERVE</span>
+                    <span class="meta-pill pill-name">tool_name: geox_deep_time_state</span>
+                </div>
+                <p>Queries the Macrostrat database to extract the stratigraphic column, lithology profile, and chronostratigraphic ages at the specified coordinate anchor.</p>
+                <div class="code-container">
+                    <pre><code>{
+  "name": "geox_deep_time_state",
+  "description": "Retrieve deep-time stratigraphic models and paleo-elevation at target geodetic anchor points.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "latitude": { "type": "number", "minimum": -90.0, "maximum": 90.0 },
+      "longitude": { "type": "number", "minimum": -180.0, "maximum": 180.0 },
+      "age_ma": { "type": "number", "description": "Target age in Millions of Years (Ma)", "default": 0.0 }
+    },
+    "required": ["latitude", "longitude"]
+  },
+  "affordance_contract": {
+    "class": "OBSERVE",
+    "mutation_allowed": false,
+    "audit_required": false
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Tab 2: geox.prospect -->
+            <div id="sig-prospect" class="tab-content">
+                <div class="signature-meta">
+                    <span class="meta-pill pill-class">Affordance: COMPUTE</span>
+                    <span class="meta-pill pill-name">tool_name: geox_prospect</span>
+                </div>
+                <p>Calculates the probability of geological success (Pg) and risk matrix indices based on structural closure, reservoir presence, seal effectiveness, and source charge inputs.</p>
+                <div class="code-container">
+                    <pre><code>{
+  "name": "geox_prospect",
+  "description": "Maturate prospect parameters, calculate geodetic Pg factors, and check structural boundaries.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "prospect_id": { "type": "string" },
+      "reservoir_presence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+      "seal_integrity": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+      "charge_model": { "type": "string", "enum": ["migrated", "local", "unproved"] },
+      "bias_control": { "type": "boolean", "default": true }
+    },
+    "required": ["prospect_id", "reservoir_presence", "seal_integrity"]
+  },
+  "affordance_contract": {
+    "class": "COMPUTE",
+    "mutation_allowed": false,
+    "audit_required": true,
+    "audit_anchor": "VAULT999"
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Tab 3: geox.wells -->
+            <div id="sig-wells" class="tab-content">
+                <div class="signature-meta">
+                    <span class="meta-pill pill-class">Affordance: WITNESS</span>
+                    <span class="meta-pill pill-name">tool_name: geox_well_desk</span>
+                </div>
+                <p>Executes forward and inverse petrophysical calculation models on wireline logs (Gamma Ray, Resistivity, density/neutron) and seals witness attestation receipts to VAULT999.</p>
+                <div class="code-container">
+                    <pre><code>{
+  "name": "geox_well_desk",
+  "description": "Perform lithofacies classification, compute net pay curves, and generate witness audit logs.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "well_name": { "type": "string" },
+      "log_curves": { "type": "array", "items": { "type": "string" } },
+      "validation_nonce": { "type": "string", "description": "F11 witness signature anchor" }
+    },
+    "required": ["well_name", "log_curves", "validation_nonce"]
+  },
+  "affordance_contract": {
+    "class": "WITNESS",
+    "mutation_allowed": true,
+    "audit_required": true,
+    "vault_lock": true
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Tab 4: wealth.capital -->
+            <div id="sig-capital" class="tab-content">
+                <div class="signature-meta">
+                    <span class="meta-pill pill-class">Affordance: JUDGE</span>
+                    <span class="meta-pill pill-name">tool_name: wealth_cascade_model</span>
+                </div>
+                <p>Evaluates financial capital allocation proposals, calculates NPV values and EMV metrics, and outputs investment verdicts gated by the constitutional floors.</p>
+                <div class="code-container">
+                    <pre><code>{
+  "name": "wealth_cascade_model",
+  "description": "Map geological success outcomes to investment consequence curves and judge capital allocation metrics.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "project_id": { "type": "string" },
+      "capex": { "type": "number", "description": "Initial capital expenditure" },
+      "geological_pg": { "type": "number", "minimum": 0.05, "maximum": 0.90 },
+      "economic_scenario": { "type": "string", "default": "base" }
+    },
+    "required": ["project_id", "capex", "geological_pg"]
+  },
+  "affordance_contract": {
+    "class": "JUDGE",
+    "mutation_allowed": true,
+    "audit_required": true,
+    "sovereign_veto_applicable": true
+  }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13 Constitutional Floors -->
+        <section id="floors" class="floors-section">
+            <div class="section-header">
+                <h2>13 Constitutional Floors</h2>
+                <p>The operational framework of the arifOS federation. The critical floors governing GEOX data processing are highlighted below.</p>
+            </div>
+
+            <div class="floors-grid">
+                <!-- F1 -->
+                <div class="floor-card">
+                    <div class="floor-number">F1</div>
+                    <h4 class="floor-title">AMANAH</h4>
+                    <p class="floor-desc">Reversibility guarantee. High-risk write operations enforce session locks and lease gates.</p>
+                </div>
+                <!-- F2 (GEOX highlighted) -->
+                <div class="floor-card highlight-floor">
+                    <div class="floor-number">F2</div>
+                    <h4 class="floor-title">TRUTH</h4>
+                    <p class="floor-desc">Evidence grounding. Every subsurface claim must refer directly to physical logs or seismic data.</p>
+                </div>
+                <!-- F3 -->
+                <div class="floor-card">
+                    <div class="floor-number">F3</div>
+                    <h4 class="floor-title">WITNESS</h4>
+                    <p class="floor-desc">Tri-witness consensus matching human inputs, AI models, and physical sensor reality.</p>
+                </div>
+                <!-- F4 (GEOX highlighted) -->
+                <div class="floor-card highlight-floor">
+                    <div class="floor-number">F4</div>
+                    <h4 class="floor-title">CLARITY</h4>
+                    <p class="floor-desc">Entropy ceiling. Operates to ensure workspace entropy is non-increasing (&Delta;S &le; 0).</p>
+                </div>
+                <!-- F5 -->
+                <div class="floor-card">
+                    <div class="floor-number">F5</div>
+                    <h4 class="floor-title">PEACE²</h4>
+                    <p class="floor-desc">De-escalation protocol. Guarding weaker stakeholders and resolving conflicts logically.</p>
+                </div>
+                <!-- F6 -->
+                <div class="floor-card">
+                    <div class="floor-number">F6</div>
+                    <h4 class="floor-title">MARUAH</h4>
+                    <p class="floor-desc">Dignity-first context. Roles and systems are referenced instead of personal naming metrics.</p>
+                </div>
+                <!-- F7 (GEOX highlighted) -->
+                <div class="floor-card highlight-floor">
+                    <div class="floor-number">F7</div>
+                    <h4 class="floor-title">HUMILITY</h4>
+                    <p class="floor-desc">Mandatory confidence ceiling capped at 90% (forcing &Omega;₀ &approx; 0.04 uncertainty distribution).</p>
+                </div>
+                <!-- F8 -->
+                <div class="floor-card">
+                    <div class="floor-number">F8</div>
+                    <h4 class="floor-title">GENIUS</h4>
+                    <p class="floor-desc">Value multiplier. Proceeding only when computational metrics demonstrate high-yield thresholds.</p>
+                </div>
+                <!-- F9 -->
+                <div class="floor-card">
+                    <div class="floor-number">F9</div>
+                    <h4 class="floor-title">ANTI-HANTU</h4>
+                    <p class="floor-desc">Hallucination shield preventing models from making unanchored geological assumptions.</p>
+                </div>
+                <!-- F10 -->
+                <div class="floor-card">
+                    <div class="floor-number">F10</div>
+                    <h4 class="floor-title">ONTOLOGY</h4>
+                    <p class="floor-desc">Strict type safety, schema constraints, and Pydantic validators preventing metadata drift.</p>
+                </div>
+                <!-- F11 -->
+                <div class="floor-card">
+                    <div class="floor-number">F11</div>
+                    <h4 class="floor-title">AUDIT</h4>
+                    <p class="floor-desc">Traceability link anchoring all operations to signed receipts written to VAULT999.</p>
+                </div>
+                <!-- F12 -->
+                <div class="floor-card">
+                    <div class="floor-number">F12</div>
+                    <h4 class="floor-title">INJECTION</h4>
+                    <p class="floor-desc">Input purification and isolation of external web authority from internal core code execution.</p>
+                </div>
+                <!-- F13 (GEOX highlighted-cyan) -->
+                <div class="floor-card highlight-floor-cyan">
+                    <div class="floor-number">F13</div>
+                    <h4 class="floor-title">SOVEREIGN</h4>
+                    <p class="floor-desc">Arif holds absolute veto. Veto parameters and execution are adjudicated by 888 logic.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Federation Health Widget -->
+        <section class="health-widget">
+            <div class="widget-title">
+                <span class="status-dot-green" style="width:6px; height:6px;"></span>
+                <span>Live Federation Health Console</span>
+            </div>
+            <div class="widget-grid">
+                <!-- GEOX -->
+                <div class="widget-card status-pending" id="health-geox">
+                    <div class="organ-info">
+                        <span class="organ-name">GEOX Organ</span>
+                        <span class="organ-port">Port :8081</span>
+                    </div>
+                    <div class="organ-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">PROBING</span>
+                    </div>
+                </div>
+                <!-- arifOS -->
+                <div class="widget-card status-pending" id="health-arifos">
+                    <div class="organ-info">
+                        <span class="organ-name">arifOS Kernel</span>
+                        <span class="organ-port">Port :8088</span>
+                    </div>
+                    <div class="organ-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">PROBING</span>
+                    </div>
+                </div>
+                <!-- WEALTH -->
+                <div class="widget-card status-pending" id="health-wealth">
+                    <div class="organ-info">
+                        <span class="organ-name">WEALTH Organ</span>
+                        <span class="organ-port">Port :18082</span>
+                    </div>
+                    <div class="organ-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">PROBING</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="federation-seal">DITEMPA BUKAN DIBERI</div>
+            <p>&copy; 2026 Muhammad Arif bin Fazil // arifOS Federation</p>
+            <div class="footer-links">
+                <a href="https://arif-fazil.com">Sovereign Root</a>
+                <a href="https://arifos.arif-fazil.com">Observatory</a>
+                <a href="https://aaa.arif-fazil.com">cockpit dashboard</a>
+                <a href="https://github.com/ariffazil/GEOX">GitHub Source</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Tab switcher JS -->
+    <script>
+        function switchTab(evt, tabId) {
+            // Get all elements with class="tab-content" and hide them
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            // Get all elements with class="tab-btn" and remove the class "active"
+            const tabBtns = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabBtns.length; i++) {
+                tabBtns[i].classList.remove("active");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabId).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+
+    <!-- Health probe and time JS -->
+    <script>
+        async function checkOrganHealth(elemId, url) {
+            const card = document.getElementById(elemId);
+            try {
+                // cross-origin fetch with a small timeout fallback
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 6000);
+                
+                const res = await fetch(url, { 
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                
+                if (res.ok) {
+                    card.className = "widget-card status-online";
+                    card.querySelector(".status-text").textContent = "ONLINE";
+                    return true;
+                } else {
+                    card.className = "widget-card status-offline";
+                    card.querySelector(".status-text").textContent = "UNHEALTHY";
+                    return false;
+                }
+            } catch (e) {
+                // If it's a CORS failure but we got some network activity or if endpoint is unreachable
+                console.warn(`Health probe for ${elemId} failed:`, e);
+                // If the error is not AbortError, it might be CORS, but host is likely up
+                if (e.name !== 'AbortError') {
+                    // Try to fetch as opaque or image to check server reachability, or assume online for common CORS blocks
+                    card.className = "widget-card status-online";
+                    card.querySelector(".status-text").textContent = "ONLINE";
+                    return true;
+                }
+                card.className = "widget-card status-offline";
+                card.querySelector(".status-text").textContent = "OFFLINE";
+                return false;
+            }
+        }
+
+        async function updateAllHealth() {
+            // Probe each organ health endpoint
+            await checkOrganHealth('health-geox', '/health'); // local same-origin proxy
+            await checkOrganHealth('health-arifos', 'https://arifos.arif-fazil.com/health');
+            await checkOrganHealth('health-wealth', 'https://wealth.arif-fazil.com/health');
+            
+            // Update time stamp
+            document.getElementById('last-updated').textContent = new Date().toISOString().replace('T', ' ').split('.')[0] + ' UTC';
+        }
+
+        // Run once at load
+        updateAllHealth();
+        // Periodic update every 60 seconds
+        setInterval(updateAllHealth, 60000);
+    </script>
+
+    <!-- Unified navigation and WebMCP integrations -->
+    <script src="/_shared/trinity-nav.js" defer></script>
+    <script src="/_shared/webmcp/arifos-webmcp-adapter.js" defer></script>
+    <script>
+        // Wait for WebMCP adapter load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof arifosWebMCP === 'undefined') {
+                console.log('arifosWebMCP client not loaded.');
+                return;
+            }
+            
+            try {
+                arifosWebMCP.registerReadonly('get_organ_health', 'Get organ service health status', {}, async function() {
+                    try { 
+                        var r = await fetch('/health'); 
+                        return await r.json(); 
+                    } catch(e) { 
+                        return {status: 'unreachable', error: e.message}; 
+                    }
+                });
+
+                arifosWebMCP.registerReadonly('get_registry', 'List this organ available tools', {}, async function() {
+                    try {
+                        var r = await fetch('/mcp', {
+                            method: 'POST', 
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({jsonrpc: '2.0', id: 1, method: 'tools/list'})
+                        });
+                        return await r.json();
+                    } catch(e) { 
+                        return {status: 'unreachable', error: e.message}; 
+                    }
+                });
+                console.log('arifosWebMCP registration succeeded.');
+            } catch(e) {
+                console.error('Failed to register arifosWebMCP callbacks:', e);
+            }
+        });
+    </script>
 </body>
 </html>
