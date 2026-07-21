@@ -1429,6 +1429,7 @@
                     <div class="organ-info">
                         <span class="organ-name">GEOX Organ</span>
                         <span class="organ-port">Port :8081</span>
+                        <span class="organ-reason" style="font-size: 0.6rem; color: var(--text-low); font-family: var(--font-mono); margin-top: 0.15rem; display: block; text-transform: uppercase;"></span>
                     </div>
                     <div class="organ-status">
                         <span class="status-dot"></span>
@@ -1440,6 +1441,7 @@
                     <div class="organ-info">
                         <span class="organ-name">arifOS Kernel</span>
                         <span class="organ-port">Port :8088</span>
+                        <span class="organ-reason" style="font-size: 0.6rem; color: var(--text-low); font-family: var(--font-mono); margin-top: 0.15rem; display: block; text-transform: uppercase;"></span>
                     </div>
                     <div class="organ-status">
                         <span class="status-dot"></span>
@@ -1451,6 +1453,7 @@
                     <div class="organ-info">
                         <span class="organ-name">WEALTH Organ</span>
                         <span class="organ-port">Port :18082</span>
+                        <span class="organ-reason" style="font-size: 0.6rem; color: var(--text-low); font-family: var(--font-mono); margin-top: 0.15rem; display: block; text-transform: uppercase;"></span>
                     </div>
                     <div class="organ-status">
                         <span class="status-dot"></span>
@@ -1501,8 +1504,8 @@
     <script>
         async function checkOrganHealth(elemId, url) {
             const card = document.getElementById(elemId);
+            const reasonEl = card.querySelector(".organ-reason");
             try {
-                // cross-origin fetch with a small timeout fallback
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 6000);
                 
@@ -1516,24 +1519,41 @@
                 if (res.ok) {
                     card.className = "widget-card status-online";
                     card.querySelector(".status-text").textContent = "ONLINE";
+                    reasonEl.textContent = `HTTP ${res.status} OK`;
+                    reasonEl.style.color = "#2ed573";
                     return true;
                 } else {
                     card.className = "widget-card status-offline";
                     card.querySelector(".status-text").textContent = "UNHEALTHY";
+                    reasonEl.textContent = `HTTP ${res.status} ${res.statusText || 'Error'}`;
+                    reasonEl.style.color = "#ff4757";
                     return false;
                 }
             } catch (e) {
-                // If it's a CORS failure but we got some network activity or if endpoint is unreachable
                 console.warn(`Health probe for ${elemId} failed:`, e);
-                // If the error is not AbortError, it might be CORS, but host is likely up
-                if (e.name !== 'AbortError') {
-                    // Try to fetch as opaque or image to check server reachability, or assume online for common CORS blocks
-                    card.className = "widget-card status-online";
-                    card.querySelector(".status-text").textContent = "ONLINE";
-                    return true;
+                if (e.name === 'AbortError') {
+                    card.className = "widget-card status-offline";
+                    card.querySelector(".status-text").textContent = "OFFLINE";
+                    reasonEl.textContent = "TIMEOUT (>6S)";
+                    reasonEl.style.color = "#ff4757";
+                } else if (e instanceof TypeError) {
+                    if (elemId === 'health-geox') {
+                        card.className = "widget-card status-offline";
+                        card.querySelector(".status-text").textContent = "OFFLINE";
+                        reasonEl.textContent = "CONN_REFUSED";
+                        reasonEl.style.color = "#ff4757";
+                    } else {
+                        card.className = "widget-card status-online";
+                        card.querySelector(".status-text").textContent = "ONLINE";
+                        reasonEl.textContent = "CORS RESTRICTED (HOST UP)";
+                        reasonEl.style.color = "var(--amber-earth)";
+                    }
+                } else {
+                    card.className = "widget-card status-offline";
+                    card.querySelector(".status-text").textContent = "UNKNOWN";
+                    reasonEl.textContent = (e.message || "UNREACHABLE").toUpperCase();
+                    reasonEl.style.color = "var(--text-low)";
                 }
-                card.className = "widget-card status-offline";
-                card.querySelector(".status-text").textContent = "OFFLINE";
                 return false;
             }
         }
