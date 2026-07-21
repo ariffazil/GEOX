@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": 249439.267619772,
+  "generated_at": 322888.852,
   "organ": "GEOX",
-  "total_canonical_tools": 30,
+  "total_canonical_tools": 31,
   "total_ui_resources": 20,
   "active_ui_resources": 16,
   "deprecated_ui_resources": 3,
@@ -51,13 +51,17 @@
     {
       "id": "basin-explorer",
       "uri": "ui://geox/basin-explorer",
-      "title": "_handler",
+      "title": "GEOX Basin Explorer",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 75,
       "content_hash": "sha256:5c306a359542543f",
       "bound_tools": [
-        "geox_basin"
+        "geox_basin",
+        "geox_basin_backstrip",
+        "geox_sediment_mass_balance",
+        "geox_sequence",
+        "geox_thermal_maturity_history"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -73,12 +77,14 @@
     {
       "id": "catalog",
       "uri": "ui://geox/catalog",
-      "title": "_handler",
+      "title": "GEOX Skills Catalog",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 310,
       "content_hash": "sha256:44f7d2bd1acd3ef4",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_surface_status"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -93,13 +99,16 @@
     {
       "id": "earth-map",
       "uri": "ui://geox/earth-map",
-      "title": "_handler",
+      "title": "GEOX Earth Map",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 142,
       "content_hash": "sha256:659b1b1016846d35",
       "bound_tools": [
-        "geox_map_layers_list"
+        "geox_map_export_package",
+        "geox_map_layers_list",
+        "geox_map_render_preview",
+        "geox_map_scene_plan"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -115,13 +124,15 @@
     {
       "id": "earth-volume",
       "uri": "ui://geox/earth-volume",
-      "title": "_handler",
+      "title": "GEOX Earth Volume",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 73,
       "content_hash": "sha256:72d2606e5ff1de8c",
       "bound_tools": [
-        "geox_seismic_compute"
+        "geox_deep_time_state",
+        "geox_seismic_compute",
+        "geox_subsurface_model"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -137,12 +148,16 @@
     {
       "id": "geoprobe",
       "uri": "ui://geox/geoprobe",
-      "title": "_handler",
+      "title": "GEOX GeoProbe",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 76,
       "content_hash": "sha256:83cbed868a24de74",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_geomechanics",
+        "geox_gravmag_studio",
+        "geox_to_wealth_bridge"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -217,12 +232,14 @@
     {
       "id": "judge-console",
       "uri": "ui://geox/judge-console",
-      "title": "_handler",
+      "title": "GEOX Judge Console",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 310,
       "content_hash": "sha256:a081e5f8cd66c794",
       "bound_tools": [
+        "geox_contradiction_scan",
+        "geox_evidence",
         "geox_falsify"
       ],
       "csp_domains": [
@@ -239,7 +256,7 @@
     {
       "id": "prospect-studio",
       "uri": "ui://geox/prospect-studio",
-      "title": "_handler",
+      "title": "GEOX Prospect Studio",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 83,
@@ -281,13 +298,14 @@
     {
       "id": "risk-console",
       "uri": "ui://geox/risk-console",
-      "title": "_handler",
+      "title": "GEOX Risk Console",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 103,
       "content_hash": "sha256:78f1879de30c1f87",
       "bound_tools": [
-        "geox_claim"
+        "geox_claim",
+        "geox_claim_graph_evaluate"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -303,12 +321,15 @@
     {
       "id": "seismic-vision",
       "uri": "ui://geox/seismic-vision",
-      "title": "_handler",
+      "title": "GEOX Seismic Vision",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 73,
       "content_hash": "sha256:499c18bdf8d0c327",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_seismic_ingest",
+        "geox_seismic_interpret"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -343,12 +364,14 @@
     {
       "id": "visual-hub",
       "uri": "ui://geox/visual-hub",
-      "title": "_handler",
+      "title": "GEOX Visual Output Hub",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 341,
       "content_hash": "sha256:a4f628f69fca2854",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_workspace"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -363,13 +386,15 @@
     {
       "id": "well-desk",
       "uri": "ui://geox/well-desk",
-      "title": "_handler",
+      "title": "GEOX WellDesk",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 65,
       "content_hash": "sha256:554b646ef742e89c",
       "bound_tools": [
-        "geox_petrophysics"
+        "geox_petrophysics",
+        "geox_well_desk",
+        "geox_well_ingest"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",

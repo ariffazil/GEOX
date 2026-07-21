@@ -34,7 +34,7 @@ def ensure_surface_manifest():
 async def test_01_tools_list_schema_and_ui_bindings():
     """Verify tools/list exposes _meta.ui.resourceUri and openai/outputTemplate alias for 30 canonical tools."""
     tools = await mcp.list_tools()
-    assert len(tools) == 30, f"Expected 30 canonical tools, got {len(tools)}"
+    assert len(tools) == 31, f"Expected 31 canonical tools, got {len(tools)}"
 
     tools_by_name = {t.name: t for t in tools}
 
@@ -54,7 +54,7 @@ async def test_01_tools_list_schema_and_ui_bindings():
 @pytest.mark.asyncio
 async def test_02_resources_list_matches_surface_manifest():
     """Verify resources/list matches generated GEOX_MCP_APPS_SURFACE.json manifest."""
-    with open(SURFACE_MANIFEST_PATH, "r", encoding="utf-8") as f:
+    with open(SURFACE_MANIFEST_PATH, encoding="utf-8") as f:
         manifest = json.load(f)
 
     resources = await mcp.list_resources()
@@ -68,7 +68,7 @@ async def test_02_resources_list_matches_surface_manifest():
 @pytest.mark.asyncio
 async def test_03_resources_read_all_active_uris():
     """Verify resources/read for every active UI resource returns valid HTML and mcp-app MIME."""
-    with open(SURFACE_MANIFEST_PATH, "r", encoding="utf-8") as f:
+    with open(SURFACE_MANIFEST_PATH, encoding="utf-8") as f:
         manifest = json.load(f)
 
     active_resources = [r for r in manifest["ui_resources"] if r["status"] == "active"]

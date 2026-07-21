@@ -467,6 +467,7 @@ def register_mcp_apps_resources(mcp: Any) -> None:
             return _handler
 
         kwargs: dict[str, Any] = {
+            "name": title,
             "description": f"{title} — {desc}",
             "mime_type": mime_type,
         }
@@ -562,7 +563,7 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
                 if isinstance(ui_info, dict):
                     ui_uri = ui_info.get("resourceUri")
                 elif hasattr(ui_info, "resourceUri"):
-                    ui_uri = getattr(ui_info, "resourceUri")
+                    ui_uri = ui_info.resourceUri
 
             if ui_uri:
                 if not hasattr(comp, "meta") or comp.meta is None:
