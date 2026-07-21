@@ -87,3 +87,9 @@ geox/seismic/rsi/geox_out/*.png
 
 # Test run artifacts
 data/egs/receipts/TEST-*.json
+
+# Local state and forge work
+state/
+src/geox_mcp/state/
+forge_work/
+src/geox_mcp/tools/biostrat_calibrate.py
