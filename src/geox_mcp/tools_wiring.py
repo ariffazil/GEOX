@@ -323,6 +323,19 @@ def register_tools_on(mcp):
         trace_id: str | None = None,
     ) -> dict[str, Any]:
         """Vsh, porosity, Sw, perm, net pay, LEM."""
+        # H2 P1: Auto-inject workspace context for empty well_id/basin
+        if not well_id or not basin:
+            try:
+                from geox_mcp.state.workspace import get_workspace
+
+                ws = get_workspace("default")
+                if not well_id and ws.well_id:
+                    well_id = ws.well_id
+                if not basin and ws.basin:
+                    basin = ws.basin
+            except Exception:
+                pass
+
         from geox_mcp.tools.petrophysics_unified import geox_petrophysics as _impl
 
         try:
@@ -971,6 +984,17 @@ def register_tools_on(mcp):
         signatures, so every parameter of basin_unified.geox_basin is declared here.
         Session metadata is forwarded only if the impl signature accepts it.
         """
+        # H2 P1: Auto-inject workspace context for empty basin_name
+        if not basin_name:
+            try:
+                from geox_mcp.state.workspace import get_workspace
+
+                ws = get_workspace("default")
+                if ws.basin:
+                    basin_name = ws.basin
+            except Exception:
+                pass
+
         from geox_mcp.tools.basin_unified import geox_basin as _impl
 
         args = _safe_forward(
@@ -1188,6 +1212,17 @@ def register_tools_on(mcp):
         ack_irreversible: bool = False,
     ) -> dict[str, Any]:
         """Volumetrics, POS, EVOI, risk assessment. Pattern A wrapper."""
+        # H2 P1: Auto-inject workspace context for empty prospect_ref
+        if not prospect_ref:
+            try:
+                from geox_mcp.state.workspace import get_workspace
+
+                ws = get_workspace("default")
+                if ws.prospect_ref:
+                    prospect_ref = ws.prospect_ref
+            except Exception:
+                pass
+
         from geox_mcp.tools.prospect_unified import geox_prospect as _impl
 
         args = _safe_forward(
@@ -2977,6 +3012,270 @@ def register_tools_on(mcp):
         }
 
     # ═══════════════════════════════════════════════════════════════════════════════
+    # BIOSTRAT SUBSTRATE — Phase T1 hardening (2026-07-21, FORGE session SEAL-613335b1f5f34abe).
+    # Thin MCP wrappers over existing library code. NO new zonation, NO new taxa,
+    # NO schema changes, NO calibration edits. Surface only.
+    # Library: src/geox_mcp/tools/biostrat/{taxonomy,schemas}.py + biostrat_falsify.py (~1,771 LOC)
+    # ═══════════════════════════════════════════════════════════════════════════════
+
+    @mcp.tool(
+        name="geox_biostrat_resolve_taxon",
+        annotations=_geox_annotations("geox_biostrat_resolve_taxon"),
+    )
+    async def _geox_biostrat_resolve_taxon(
+        arguments: dict[str, Any] | str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Resolve a taxon name to a canonical TaxonRecord via PBDB + Mikrotax.
+
+        Strategy: PBDB first (structured JSON, FAD/LAD ages), Mikrotax fallback
+        (may return empty per GEOX code comment 2026-06-16).
+
+        Attribution: PBDB data — CC-BY (paleobiodb.org); Mikrotax — Nannotax3
+        citation (Young, Bown, Lees 2022).
+
+        Use when: agent needs to canonicalize a fossil name and obtain FAD/LAD ages.
+        Do not use when: regional calibration is required (use Mikrotax or local
+        Sabah synthesis — not in scope of this wrapper).
+        """
+        arguments = _parse_str_arguments(arguments) or {}
+        if not isinstance(arguments, dict):
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_resolve_taxon",
+                "reason_code": "INVALID_ARGUMENTS",
+                "error": f"Expected dict arguments, got {type(arguments).__name__}",
+            }
+        taxon_name = arguments.get("taxon_name")
+        if not taxon_name:
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_resolve_taxon",
+                "reason_code": "MISSING_TAXON_NAME",
+                "error": "Required argument 'taxon_name' not provided.",
+            }
+        from geox_mcp.tools.biostrat.taxonomy import resolve_taxon as _impl
+
+        record = await _impl(taxon_name=taxon_name)
+        if record is None:
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_resolve_taxon",
+                "reason_code": "TAXON_NOT_FOUND",
+                "error": f"Taxon '{taxon_name}' not found in PBDB or Mikrotax.",
+            }
+        return {
+            "ok": True,
+            "tool": "geox_biostrat_resolve_taxon",
+            "data": record.model_dump() if hasattr(record, "model_dump") else record.dict(),
+            "attribution": {
+                "license": "CC-BY",
+                "sources": ["PBDB", "Mikrotax (Nannotax3)"],
+                "provenance": getattr(record, "provenance", "PBDB/Mikrotax"),
+            },
+        }
+
+    @mcp.tool(
+        name="geox_biostrat_lookup_zone",
+        annotations=_geox_annotations("geox_biostrat_lookup_zone"),
+    )
+    async def _geox_biostrat_lookup_zone(
+        arguments: dict[str, Any] | str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Look up canonical zone metadata: scheme, age range, source.
+
+        Uses PBDB intervals for nanno (scale=5) and foram (scale=24) zones.
+        SE Asia-specific schemes (Lunt 2016 LBF, SSB 1995/2013, Morley 1991) are
+        NOT in PBDB — returns SCHEME_NOT_IN_PBDB; use Mikrotax or local reference.
+
+        Attribution: PBDB data — CC-BY (paleobiodb.org).
+
+        Use when: agent needs zone age range for correlation or calibration.
+        Do not use when: SE Asia regional calibration is needed (T3.16 HOLD).
+        """
+        arguments = _parse_str_arguments(arguments) or {}
+        if not isinstance(arguments, dict):
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_lookup_zone",
+                "reason_code": "INVALID_ARGUMENTS",
+                "error": f"Expected dict arguments, got {type(arguments).__name__}",
+            }
+        zone_code = arguments.get("zone_code")
+        scheme = arguments.get("scheme", "Martini_1971_NN")
+        if not zone_code:
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_lookup_zone",
+                "reason_code": "MISSING_ZONE_CODE",
+                "error": "Required argument 'zone_code' not provided.",
+            }
+
+        # Scheme → PBDB scale mapping. ROUTING ONLY — no new zonation schemes.
+        # nanno scales: NN/NP/CC/CN/CP/CNP/CNE/CNO → 5; foram scales: N/P/Wade → 24.
+        # SE Asia schemes (LBF/SSB/Morley) intentionally absent → SCHEME_NOT_IN_PBDB.
+        scheme_to_scale = {
+            "Martini_1971_NN": 5,
+            "Martini_1971_NP": 5,
+            "Sissingh_1977_CC": 5,
+            "Bukry_1973_CN": 5,
+            "Okada_Bukry_1980_CP": 5,
+            "Agnini_2014_CNP": 5,
+            "Agnini_2014_CNE": 5,
+            "Agnini_2014_CNO": 5,
+            "Blow_1969_N": 24,
+            "Blow_1969_P": 24,
+            "Wade_2011": 24,
+        }
+        if scheme not in scheme_to_scale:
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_lookup_zone",
+                "reason_code": "SCHEME_NOT_IN_PBDB",
+                "error": (
+                    f"Scheme '{scheme}' has no PBDB scale mapping. "
+                    "SE Asia-specific schemes (Lunt 2016 LBF, SSB 1995/2013, "
+                    "Morley 1991) require Mikrotax or local reference (out of scope)."
+                ),
+            }
+        scale = scheme_to_scale[scheme]
+
+        from geox_mcp.tools.biostrat.taxonomy import PBDBClient
+
+        client = PBDBClient()
+        try:
+            intervals = await client.intervals_list(scale=scale, limit=200)
+        finally:
+            await client.close()
+
+        zone_upper = str(zone_code).upper().strip()
+        match = None
+        for iv in intervals:
+            name = str(iv.get("nam", "")).upper()
+            if name == zone_upper or name.startswith(zone_upper):
+                match = iv
+                break
+
+        if not match:
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_lookup_zone",
+                "reason_code": "ZONE_NOT_FOUND",
+                "error": f"Zone '{zone_code}' not found in PBDB scale={scale} (scheme={scheme}).",
+                "data": {"scale": scale, "available_count": len(intervals)},
+            }
+        return {
+            "ok": True,
+            "tool": "geox_biostrat_lookup_zone",
+            "data": {
+                "zone_code": zone_code,
+                "scheme": scheme,
+                "name": match.get("nam"),
+                "age_top_ma": match.get("ea"),
+                "age_bottom_ma": match.get("la"),
+                "pbdb_oid": match.get("oid"),
+            },
+            "source": "PBDB",
+            "attribution": {
+                "license": "CC-BY",
+                "citation": "Paleobiology Database (paleobiodb.org)",
+            },
+        }
+
+    @mcp.tool(
+        name="geox_biostrat_falsify",
+        annotations=_geox_annotations("geox_biostrat_falsify"),
+    )
+    async def _geox_biostrat_falsify(
+        arguments: dict[str, Any] | str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Biostrat Falsification Engine — 8-gate Popperian test of any biostrat claim.
+
+        Single FALSIFIED gate → overall verdict FALSIFIED. Science advances by
+        elimination, not confirmation.
+
+        Gates: G1 facies / G2 strat order / G3 taxonomy / G4 reworking /
+               G5 diachroneity / G6 seismic / G7 sequence / G8 tectonic.
+
+        Returns governed envelope with per-gate verdicts, evidence_for/evidence_against,
+        falsified_gates list, and overall verdict (PASS / WEAK_PASS / FALSIFIED /
+        UNFALSIFIABLE / HOLD).
+
+        Use when: agent needs to verify a biostrat interpretation against physical,
+        stratigraphic, taxonomic, and tectonic reality. The "jewel" of GEOX biostrat.
+
+        Do not use when: building new zonations or taxonomies (T2.6 calibrate scope).
+        """
+        arguments = _parse_str_arguments(arguments) or {}
+        if not isinstance(arguments, dict):
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_falsify",
+                "reason_code": "INVALID_ARGUMENTS",
+                "error": f"Expected dict arguments, got {type(arguments).__name__}",
+            }
+        from geox_mcp.tools.biostrat_falsify import geox_biostrat_falsify as _impl
+
+        return await _impl(**arguments)
+
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # BIOSTRAT CALIBRATE — Phase T2.6 (2026-07-21, FORGE session).
+    # Conservative calibration layer. Converts biostrat evidence (zone + taxon +
+    # optional context) into a defensible age bracket, with falsify integration.
+    # NO new zones, NO new taxa, NO schema changes, NO bridge to Macrostrat.
+    # Library: src/geox_mcp/tools/biostrat_calibrate.py
+    # ═══════════════════════════════════════════════════════════════════════════════
+
+    @mcp.tool(
+        name="geox_biostrat_calibrate",
+        annotations=_geox_annotations("geox_biostrat_calibrate"),
+    )
+    async def _geox_biostrat_calibrate(
+        arguments: dict[str, Any] | str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Conservative biostrat calibration — defensible age bracket from zone + taxon.
+
+        T2.6 — calibration only. Does NOT seal. Does NOT bridge to Macrostrat.
+
+        Combines:
+          - zone_to_biozone()   → canonical zone bracket (NN/NP/CC/CN/CP/N/P/LBF)
+          - resolve_taxon()     → PBDB FAD/LAD with Mikrotax fallback
+          - validate_zone_domain() → cross-era / cross-scheme guard
+          - geox_biostrat_falsify() → optional 8-gate Popperian check
+
+        Verdict grammar (T2.6): PARTIAL | SABAR | HOLD | VOID | UNKNOWN.
+        T2.6 NEVER emits SEAL — that is for sovereign/judge path.
+
+        Returns: ok, tool, data { calibrated_age_min_ma, calibrated_age_max_ma,
+        best_age_label, input_basis, sources_used, evidence_for, evidence_against,
+        uncertainty_notes, falsification_summary, confidence_tier, verdict,
+        audit_receipt }.
+
+        Use when: agent needs a defensible age bracket from biostrat inputs and
+        accepts conservative uncertainty.
+        Do not use when: bridging to Macrostrat (T2.7), sealing (T3.x), or
+        claiming authoritative age (use arifOS arif_judge for sovereign verdicts).
+        """
+        arguments = _parse_str_arguments(arguments) or {}
+        if not isinstance(arguments, dict):
+            return {
+                "ok": False,
+                "tool": "geox_biostrat_calibrate",
+                "reason_code": "INVALID_ARGUMENTS",
+                "error": f"Expected dict arguments, got {type(arguments).__name__}",
+            }
+        from geox_mcp.tools.biostrat_calibrate import geox_biostrat_calibrate as _impl
+
+        return await _impl(**arguments)
+
+    # ═══════════════════════════════════════════════════════════════════════════════
     # MCP APP VISUAL TOOLS — Main server registration (Fix HOLD-2026-07-11)
     # These tools are also on the witness sub-server via mcp.mount(), but mount does
     # NOT composite annotations/AppConfig into the main server's tools/list.
@@ -3790,6 +4089,44 @@ def register_tools_on(mcp):
             trace_id=trace_id,
         )
         return await _impl(**args)
+
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # H2: GEOX Workspace Tool — persistent session context (P1)
+    # ═══════════════════════════════════════════════════════════════════════════════
+    try:
+        from geox_mcp.tools.workspace_tool import geox_workspace
+
+        @mcp.tool(name="geox_workspace", annotations=_geox_annotations("geox_workspace"))
+        async def _workspace(
+            mode: str = "view",
+            basin: str | None = None,
+            play: str | None = None,
+            well_id: str | None = None,
+            field: str | None = None,
+            prospect_ref: str | None = None,
+            session_id: str = "default",
+        ):
+            """GEOX Workspace — persistent geological context across all tools.
+
+            Set your basin/play/well once and every subsequent tool
+            (Earth Volume, Prospect Studio, Basin Explorer) inherits the context.
+
+            Modes: set (set context), view (see current state), history (tool call log),
+                   evidence (evidence stack), relations (knowledge graph), reset (clear).
+            """
+            return await geox_workspace(
+                mode=mode,
+                basin=basin,
+                play=play,
+                well_id=well_id,
+                field=field,
+                prospect_ref=prospect_ref,
+                session_id=session_id,
+            )
+
+        logger.info("H2: geox_workspace tool registered")
+    except Exception as e:
+        logger.warning("H2: geox_workspace registration skipped: %s", e)
 
     # ═══════════════════════════════════════════════════════════════════════════════
     try:

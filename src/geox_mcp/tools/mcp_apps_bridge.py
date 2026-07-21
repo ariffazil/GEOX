@@ -36,7 +36,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "externalUrl",  # Streamlit app — served externally
-        "external_url": "https://geox.arif-fazil.com/apps/well-desk/",
+        "external_url": "https://geox.arif-fazil.com/cockpit/well_context_desk/",
         "html_fallback": "<h1>GEOX WellDesk</h1><p>1D well log viewer. Open externally.</p>",
     },
     "seismic_vision": {
@@ -46,7 +46,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "externalUrl",  # Cesium 3D — too heavy for rawHtml
-        "external_url": "https://geox.arif-fazil.com/gui/seismic_viewer/",
+        "external_url": "https://geox.arif-fazil.com/cockpit/seismic_viewer/",
         "html_fallback": "<h1>GEOX Seismic Vision</h1><p>2D/3D seismic viewer. Open in cockpit.</p>",
     },
     "earth_volume": {
@@ -85,7 +85,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "externalUrl",  # MapLibre + D3 — heavy
-        "external_url": "https://geox.arif-fazil.com/gui/basin_explorer/",
+        "external_url": "https://geox.arif-fazil.com/cockpit/basin_explorer/",
         "html_fallback": "<h1>GEOX Basin Explorer</h1><p>Interactive basin maps. Open in cockpit.</p>",
     },
     "earth_map": {
@@ -320,7 +320,9 @@ def list_apps() -> list[dict[str, Any]]:
 
 
 # Map app IDs to their primary tool names
+# H1 P0: Extended to cover all registered apps + additional tools
 _app_to_tool: dict[str, str] = {
+    # Core visual tools (original 7)
     "well_desk": "geox_petrophysics",
     "seismic_vision": "geox_seismic_compute",
     "earth_volume": "geox_seismic_compute",
@@ -330,6 +332,44 @@ _app_to_tool: dict[str, str] = {
     "earth_map": "geox_map_layers_list",
     "prospect_studio": "geox_prospect",
     "risk_console": "geox_claim",
+    # H1 P0: Map remaining apps to their primary tools
+    "visual_hub": "geox_surface_status",
+    "catalog": "geox_surface_status",
+}
+
+# H1 P0: Additional tool-to-app assignments for tools without their own app
+# Each entry maps tool_name → app_id (the GEOX_APPS key to use for UI)
+_tool_app_fallback: dict[str, str] = {
+    # Well tools → WellDesk
+    "geox_well_ingest": "well_desk",
+    "geox_well_desk": "well_desk",
+    "geox_well_desurvey": "well_desk",
+    # Seismic tools → Seismic Vision
+    "geox_seismic_ingest": "seismic_vision",
+    "geox_seismic_interpret": "seismic_vision",
+    # Basin tools → Basin Explorer
+    "geox_basin_backstrip": "basin_explorer",
+    "geox_sediment_mass_balance": "basin_explorer",
+    "geox_thermal_maturity_history": "basin_explorer",
+    "geox_deep_time_state": "earth_volume",
+    # Sequence → Basin Explorer
+    "geox_sequence": "basin_explorer",
+    # Map chain → Earth Map
+    "geox_map_scene_plan": "earth_map",
+    "geox_map_render_preview": "earth_map",
+    "geox_map_export_package": "earth_map",
+    # Evidence → Judge Console
+    "geox_evidence": "judge_console",
+    "geox_contradiction_scan": "judge_console",
+    "geox_claim_graph_evaluate": "risk_console",
+    # Geomechanics & modeling → GeoProbe
+    "geox_geomechanics": "geoprobe",
+    "geox_subsurface_model": "earth_volume",
+    "geox_gravmag_studio": "geoprobe",
+    # H2: Workspace tool → Visual Hub
+    "geox_workspace": "visual_hub",
+    # Bridge → Prospect Studio
+    "geox_to_wealth_bridge": "geoprobe",
 }
 
 
@@ -423,6 +463,7 @@ def register_mcp_apps_resources(mcp: Any) -> None:
         def _make_handler(content: str):
             async def _handler() -> str:
                 return content
+
             return _handler
 
         kwargs: dict[str, Any] = {
@@ -485,6 +526,29 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
             comp.meta["openai/toolInvocation/invoked"] = f"{app_info['title']} ready"
             count += 1
 
+    # H1 P0: Enrich tools via fallback mapping (every tool gets a visual landing zone)
+    for tool_name, app_id in _tool_app_fallback.items():
+        key = f"tool:{tool_name}@"
+        if key in all_components and key not in {f"tool:{t}@" for t in _app_to_tool.values()}:
+            comp = all_components[key]
+            app_info = GEOX_APPS.get(app_id)
+            if not app_info:
+                continue
+            uri = app_info["uri"]
+            if not hasattr(comp, "meta") or comp.meta is None:
+                comp.meta = {}
+            if "ui" not in comp.meta:  # Don't overwrite explicit mappings
+                comp.meta["ui"] = {
+                    "resourceUri": uri,
+                    "title": app_info["title"],
+                    "renderMode": app_info["render_mode"],
+                    "mimeType": app_info["mime_type"],
+                }
+                comp.meta["openai/outputTemplate"] = uri
+                comp.meta["openai/toolInvocation/invoking"] = f"Rendering {app_info['title']}..."
+                comp.meta["openai/toolInvocation/invoked"] = f"{app_info['title']} ready"
+                count += 1
+
     # Second: also scan all registered components across all providers/sub-servers
     for key, comp in all_components.items():
         if key.startswith("tool:"):
@@ -510,5 +574,3 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
                 comp.meta.setdefault("openai/toolInvocation/invoked", "UI ready")
 
     logger.info("Enriched %d tools with MCP Apps UI metadata", count)
-
-

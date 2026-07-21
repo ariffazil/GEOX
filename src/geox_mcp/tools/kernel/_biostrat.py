@@ -2,6 +2,26 @@
 kernel/_biostrat.py — Biostratigraphy parsing, zone lookup, GDE mapping.
 ToAC v1: evidence-tagged abstraction from source text to structured codes.
 
+═══════════════════════════════════════════════════════════════════════════════
+SOVEREIGN LEGACY NOTICE — 2026-07-21 (T2.6-S2 corpus + A1 canonicalisation)
+═══════════════════════════════════════════════════════════════════════════════
+This module carries age dictionaries (NN_AGES, NP_AGES, CC_AGES, UC_AGES) that
+DIVERGE from the canonical registry in geox_mcp/tools/biostrat/zones.py by up
+to 11.1 Myr (CC1, see BIOSTRAT-T2_6-S1-OBSERVE-RECEIPT divergence table).
+
+For new GEOX biostrat code: use geox_mcp.tools.biostrat.zones.zone_to_biozone()
+or SCHEME_REGISTRY (canonical per ARIF A1 approval, 2026-07-21).
+
+This module is retained ONLY for:
+  - validate_zone_domain() — cross-era mismatch guard (no age lookup).
+  - parse_nn_zone() — legacy text parsing helper.
+  - lithology_class() / map_gde() — taxonomy-of-lithology + GDE mapping
+    (independent of age registries).
+
+nn_age() / _ALL_ZONES — DO NOT IMPORT FOR AGE LOOKUP. Use zones.py.
+
+═══════════════════════════════════════════════════════════════════════════════
+
 Supports: NN (Neogene nannofossil), NP (Paleogene nannofossil),
           CC (Cretaceous nannofossil, Sissingh 1977),
           UC (Upper Cretaceous nannofossil, Burnett 1998).
@@ -441,12 +461,32 @@ def map_gde(paleoenvironment: str, lithology: str = "") -> dict[str, Any]:
 
 
 def lithology_class(lithology: str) -> str:
-    """Classify lithology text into canonical LithoClass."""
+    """Classify lithology text into canonical LithoClass.
+
+    FIX 2026-07-21 (T2.6-S3 F2): vocabulary extended so falsify G1's
+    substring check ('evaporite' in litho_class.lower(), etc.) fires for
+    the canonical lithology trigger words used by FOSSIL_ECOLOGY in
+    biostrat_falsify.py (COAL_CARBONACEOUS, evaporite, red_bed,
+    continental_conglomerate).
+
+    The returned class name is the literal trigger word (lowercased) where
+    possible, so G1's `if bad_litho.lower() in litho_class.lower()` matches.
+    """
     text = clean_text(lithology).lower()
     if not text:
         return "UNKNOWN"
     if re.search(r"limestone|carbonate|dolomite|chalk", text):
         return "CARBONATE"
+    # Evaporite family — needed by G1's excluded_lithologies check for
+    # calcareous_nannofossil + planktonic_foraminifera.
+    if re.search(r"evaporite|anhydrite|gypsum|halite|salt\b", text):
+        return "evaporite"
+    # Red beds — needed by G1 for calcareous_nannofossil.
+    if re.search(r"red.bed|redbed|red sandstone|red.shale", text):
+        return "red_bed"
+    # Continental conglomerate — needed by G1 for calcareous_nannofossil.
+    if re.search(r"continental.conglomerate|fluvial.conglomerate|alluvial.conglomerate", text):
+        return "continental_conglomerate"
     if re.search(r"interbedded|alternating|sandy and shaly|sand.*shale|shale.*sand|heterolithic", text):
         return "HETEROLITHIC"
     if re.search(r"sandstone|sand\b|sandy", text) and not re.search(r"shale|clay|mud", text):
