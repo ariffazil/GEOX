@@ -3,6 +3,32 @@ biostrat/zones.py — Multi-scheme biostratigraphic zone engine.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 
+═══════════════════════════════════════════════════════════════════════════════
+SOVEREIGN CANONICAL AUTHORITY — GEOX biostrat age registry
+═══════════════════════════════════════════════════════════════════════════════
+Approved by ARIF on 2026-07-21 (T2.6-S2 corpus proved A1 is zero-drift).
+
+For all NEW GEOX biostrat code (geox_biostrat_*, geox_biostrat_*):
+  >>> THIS FILE IS THE CANONICAL AGE AUTHORITY. <<<
+
+Sole exception: kernel/_biostrat.py::nn_age() may be invoked by legacy
+internal code (validate_zone_domain, parse_nn_zone). That path is
+DOCUMENTED as legacy; new code MUST NOT import nn_age() for age lookup.
+
+Aging reference: Martini (1971) NN/NP, Blow (1969) N/P, Sissingh (1977) CC,
+Bukry (1973) CN, Okada & Bukry (1980) CP, Lunt (2016) LBF (T-letter codes).
+
+Why Martini-1971 as canonical:
+  - T2.6-S2 corpus used these zones; A1 does not change any corpus result.
+  - This is the published-original reference scheme — straightforward to cite.
+  - All calibrator consumers (geox_biostrat_calibrate, geox_biostrat_lookup_zone)
+    use this file's zone_to_biozone() / SCHEME_REGISTRY.
+
+If a future sovereign review (T3.x+) selects GTS2012-revised ages as canonical,
+that change belongs in THIS file — not by silently mixing sources elsewhere.
+
+═══════════════════════════════════════════════════════════════════════════════
+
 Handles zone parsing, age lookup, and cross-scheme mapping for:
 - Martini (1971) NN zones (Neogene nannofossil)
 - Martini (1971) NP zones (Paleogene nannofossil)
@@ -386,27 +412,37 @@ def zone_age(zone_id: str, scheme: str | None = None) -> tuple[float, float]:
     """Look up (age_top_Ma, age_base_Ma) for a zone.
 
     Args:
-        zone_id: Zone code, e.g. "NN21", "NP25", "N17"
+        zone_id: Zone code, e.g. "NN21", "NP25", "N17", "Tf1" (case-insensitive)
         scheme: Optional scheme name for disambiguation
 
     Returns:
         (age_top_Ma, age_base_Ma) or (-999.25, -999.25) if not found
+
+    FIX 2026-07-21 (T2.6-S3 F1): lookup is case-insensitive to support LBF
+    (Lunt 2016) zone codes which use mixed-case keys (Tf1, Te2, etc.).
     """
     if not zone_id:
         return (-999.25, -999.25)
 
     zone_upper = zone_id.upper().strip()
 
+    def _ci_lookup(zones_dict):
+        for k, v in zones_dict.items():
+            if k.upper() == zone_upper:
+                return v
+        return None
+
     # If scheme is provided, look up directly
     if scheme and scheme in SCHEME_REGISTRY:
-        zones = SCHEME_REGISTRY[scheme]["zones"]
-        if zone_upper in zones:
-            return zones[zone_upper]
+        match = _ci_lookup(SCHEME_REGISTRY[scheme]["zones"])
+        if match is not None:
+            return match
 
     # Try all schemes
     for _name, info in SCHEME_REGISTRY.items():
-        if zone_upper in info["zones"]:
-            return info["zones"][zone_upper]
+        match = _ci_lookup(info["zones"])
+        if match is not None:
+            return match
 
     return (-999.25, -999.25)
 
@@ -415,13 +451,20 @@ def zone_to_biozone(zone_id: str, scheme: str | None = None) -> Biozone | None:
     """Convert a zone_id to a full Biozone object.
 
     Args:
-        zone_id: Zone code
+        zone_id: Zone code, e.g. "NN21", "Tf1" (case-insensitive)
         scheme: Optional scheme name
 
     Returns:
-        Biozone object or None if not found
+        Biozone object or None if not found.
+
+    FIX 2026-07-21 (T2.6-S3 F1): lookup is now case-insensitive so LBF
+    (Lunt 2016) zone codes like 'Tf1', 'Te2' resolve correctly. The
+    canonical mixed-case key (e.g. 'Tf1') is preserved in Biozone.zone_id
+    for downstream labelling fidelity.
     """
-    zone_upper = zone_id.upper().strip()
+    if not zone_id:
+        return None
+    zone_norm = zone_id.strip().upper()
 
     # Try specified scheme first, then all
     schemes_to_try = [scheme] if scheme else []
@@ -432,10 +475,16 @@ def zone_to_biozone(zone_id: str, scheme: str | None = None) -> Biozone | None:
             continue
         info = SCHEME_REGISTRY[s]
         zones = info["zones"]
-        if zone_upper in zones:
-            top, base = zones[zone_upper]
+        # Case-insensitive key match — preserve canonical case in Biozone.zone_id
+        canonical_key = None
+        for k in zones:
+            if k.upper() == zone_norm:
+                canonical_key = k
+                break
+        if canonical_key is not None:
+            top, base = zones[canonical_key]
             return Biozone(
-                zone_id=zone_upper,
+                zone_id=canonical_key,
                 scheme=s,  # type: ignore[arg-type]
                 fossil_group=info["fossil_group"],  # type: ignore[arg-type]
                 age_top_ma=top,
