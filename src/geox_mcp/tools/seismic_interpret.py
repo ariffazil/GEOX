@@ -244,7 +244,7 @@ async def geox_seismic_interpret(
             emit_bundle=emit_bundle,
             hypothesis_count=hyp_n,
         )
-        stamped = _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm)
+        stamped = _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, transport=_transport)
         stamped["preferred_hypothesis"] = None
         return stamped
 
@@ -307,6 +307,7 @@ async def geox_seismic_interpret(
                     "preferred_hypothesis": None,
                 },
                 mode_norm,
+                transport=_transport,
             )
         # propose-only bundle
         cal = calibration or {"input_class": "image_only" if path else "unknown"}
@@ -326,7 +327,7 @@ async def geox_seismic_interpret(
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
             }
-        return _stamp_qualified(bundle, mode_norm)
+        return _stamp_qualified(bundle, mode_norm, transport=_transport)
 
     # ── interpret_section / rsi_pipeline ──
     if mode_norm in ("interpret_section", "rsi_pipeline"):
@@ -378,7 +379,7 @@ async def geox_seismic_interpret(
                 request=request or {"hypothesis_count": 3},
             )
             result["preferred_hypothesis"] = None
-        return _stamp_qualified(result, mode_norm)
+        return _stamp_qualified(result, mode_norm, transport=_transport)
 
     # ── segy_slice ──
     if mode_norm == "segy_slice":
@@ -400,7 +401,7 @@ async def geox_seismic_interpret(
             frame_index=frame_index or 0,
             orientation=orientation or "inline",
         )
-        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm)
+        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, transport=_transport)
 
     if mode_norm == "fault_sticks":
         from geox_mcp.tools.paleoscan_forge import geox_fault_stick_ingest_tool as _impl
@@ -541,7 +542,7 @@ async def geox_seismic_interpret(
     )
 
     if isinstance(result, dict):
-        result = _stamp_qualified(result, "horizon_contrast")
+        result = _stamp_qualified(result, "horizon_contrast", transport=_transport)
         result["capability_note"] = (
             "1D multi-attribute boundary detector. Not HorizonSurface3D. "
             "Not structural framework. Agent proposes; GEOX assists; Arif seals."
