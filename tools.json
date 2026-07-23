@@ -77,7 +77,7 @@
     "geox_dst_ingest_test"
   ],
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
-  "policy": "Generated 2026-07-23T03:34:24.983514+00:00 \u2014 app_export \u2282 public (25 of 31 tools plugin-exposed)",
+  "policy": "Generated 2026-07-23T03:55:56.493017+00:00 \u2014 app_export \u2282 public (25 of 31 tools plugin-exposed)",
   "public": [
     "geox_well_ingest",
     "geox_petrophysics",
