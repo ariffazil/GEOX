@@ -554,6 +554,7 @@ _tool_app_fallback: dict[str, str] = {
     "geox_well_ingest": "well_desk",
     "geox_well_desk": "well_desk",
     "geox_well_desurvey": "well_desk",
+    "geox_lem_predict": "well_desk",  # PR3: LEM → Well Witness
     # Seismic tools → Seismic Vision
     "geox_seismic_ingest": "seismic_vision",
     "geox_seismic_interpret": "seismic_vision",
@@ -580,7 +581,84 @@ _tool_app_fallback: dict[str, str] = {
     "geox_workspace": "visual_hub",
     # Bridge → Prospect Studio
     "geox_to_wealth_bridge": "geoprobe",
+    # PR3: visual cognition → visual hub
+    "geox_visual_understand": "visual_hub",
+    "geox_visual_generate_hypotheses": "visual_hub",
 }
+
+
+def compact_structured_for_ui(
+    result: Any,
+    *,
+    tool: str,
+    app_id: str,
+    keys: list[str] | None = None,
+    max_str: int = 500,
+    max_list: int = 20,
+) -> dict[str, Any]:
+    """Build a compact structuredContent payload safe for host iframes + model context.
+
+    Drops dense arrays and truncates long strings. Never invents geology.
+    """
+    base: dict[str, Any] = {"tool": tool, "ok": True}
+    if not isinstance(result, dict):
+        base["data_type"] = type(result).__name__
+        return base
+
+    prefer = keys or [
+        "status",
+        "mode",
+        "verdict",
+        "claim_id",
+        "claim_text",
+        "basin_name",
+        "well_id",
+        "message",
+        "band",
+        "epistemic",
+        "truth_class",
+        "filters_run",
+        "filters_passed",
+        "filters_failed",
+        "summary",
+        "pos",
+        "risk",
+        "net_pay",
+        "contradictions",
+        "error",
+        "error_class",
+        "ok",
+    ]
+    for k in prefer:
+        if k not in result:
+            continue
+        v = result[k]
+        if isinstance(v, str) and len(v) > max_str:
+            base[k] = v[:max_str] + "…"
+        elif isinstance(v, list) and len(v) > max_list:
+            base[k] = v[:max_list]
+            base[f"{k}_truncated"] = True
+            base[f"{k}_total"] = len(v)
+        elif isinstance(v, dict) and len(json_dumps_len(v)) > 4000:
+            # keep only shallow keys
+            base[k] = {sk: sv for sk, sv in list(v.items())[:15] if not isinstance(sv, (list, dict))}
+            base[f"{k}_compacted"] = True
+        else:
+            base[k] = v
+
+    if result.get("ok") is False:
+        base["ok"] = False
+    base.setdefault("ui", {"resourceUri": GEOX_APPS.get(app_id, {}).get("uri", f"ui://geox/{app_id}")})
+    return base
+
+
+def json_dumps_len(obj: Any) -> int:
+    try:
+        import json as _json
+
+        return len(_json.dumps(obj, default=str))
+    except Exception:
+        return 0
 
 
 def get_output_schema(tool_name: str) -> dict[str, Any] | None:
