@@ -21,10 +21,20 @@ WORKSPACE_FILE = Path(__file__).with_name("workspace_v1.html")
 GRAVMAG_STUDIO_FILE = Path(__file__).with_name("static") / "gravmag_studio.html"
 
 
+def _uri_registered(mcp: FastMCP, uri: str) -> bool:
+    local = getattr(mcp, "_local_provider", None)
+    comps = getattr(local, "_components", {}) if local else {}
+    return f"resource:{uri}@" in comps
+
+
 def register_workspace_resource(mcp: FastMCP) -> None:
-    """Register the read-only GEOX workspace widget resource."""
+    """Register the read-only GEOX workspace widget resource (idempotent)."""
     if not WORKSPACE_FILE.exists():
         logger.warning("Workspace HTML not found at %s", WORKSPACE_FILE)
+        return
+
+    if _uri_registered(mcp, WORKSPACE_URI):
+        logger.debug("Workspace resource already registered: %s — skip", WORKSPACE_URI)
         return
 
     html = WORKSPACE_FILE.read_text(encoding="utf-8")
@@ -44,13 +54,15 @@ def register_workspace_resource(mcp: FastMCP) -> None:
     async def geox_workspace_v1() -> str:
         return html
 
-    @mcp.resource(
-        WORKSPACE_READABLE_URI,
-        description="Readable alias for GEOX Workspace v1.",
-        mime_type=WORKSPACE_MIME,
-    )
-    async def geox_workspace_v1_readable() -> str:
-        return html
+    if not _uri_registered(mcp, WORKSPACE_READABLE_URI):
+
+        @mcp.resource(
+            WORKSPACE_READABLE_URI,
+            description="Readable alias for GEOX Workspace v1.",
+            mime_type=WORKSPACE_MIME,
+        )
+        async def geox_workspace_v1_readable() -> str:
+            return html
 
     logger.info("Workspace resource registered: %s", WORKSPACE_URI)
 
@@ -64,6 +76,10 @@ def register_gravmag_studio_resource(mcp: FastMCP) -> None:
     """
     if not GRAVMAG_STUDIO_FILE.exists():
         logger.warning("GravMag Studio HTML not found at %s", GRAVMAG_STUDIO_FILE)
+        return
+
+    if _uri_registered(mcp, GRAVMAG_STUDIO_URI):
+        logger.debug("GravMag Studio already registered: %s — skip", GRAVMAG_STUDIO_URI)
         return
 
     html = GRAVMAG_STUDIO_FILE.read_text(encoding="utf-8")

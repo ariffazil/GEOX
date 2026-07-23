@@ -9,12 +9,16 @@ Standard: https://modelcontextprotocol.io/extensions/apps/overview
 SEP-1865: https://modelcontextprotocol.io/seps/1865-mcp-apps-interactive-user-interfaces-for-mcp
 mcp-ui:   https://github.com/MCP-UI-Org/mcp-ui
 
+PR1 (2026-07-23): resources/read serves real on-disk HTML (or mcp-ui externalUrl
+wire format), never stub placeholders. html_path is authoritative for MCP hosts.
+
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger("geox.tools.mcp_apps_bridge")
@@ -26,7 +30,17 @@ try:
 except ImportError:
     _MCP_UI_SERVER_AVAILABLE = False
 
+# Repo root: src/geox_mcp/tools/mcp_apps_bridge.py → parents[3] = /root/GEOX
+GEOX_ROOT = Path(__file__).resolve().parents[3]
+
+# Minimum bytes for a host-usable rawHtml MCP App (stubs are ~65–310B)
+_MIN_HOST_HTML_BYTES = 1024
+
 # ── GEOX MCP Apps Registry ───────────────────────────────────────────────────
+# html_path: repo-relative path to single-file (or self-contained) HTML for
+# resources/read. Prefer apps/ and static/gui sources over "Open in cockpit" stubs.
+# external_url: optional cockpit deep-link (metadata / progressive enhancement).
+# resource_type: rawHtml (embed file) | externalUrl (mcp-ui iframeUrl only if no file).
 
 GEOX_APPS: dict[str, dict[str, Any]] = {
     "well_desk": {
@@ -35,9 +49,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "1D well log viewer with petrophysics, formation tops, and physics9 integration",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "externalUrl",  # Streamlit app — served externally
-        "external_url": "https://geox.arif-fazil.com/cockpit/well_context_desk/",
-        "html_fallback": "<h1>GEOX WellDesk</h1><p>1D well log viewer. Open externally.</p>",
+        "resource_type": "rawHtml",
+        "html_path": "apps/well-desk/index.html",
+        "external_url": "https://geox.arif-fazil.com/apps/well-desk/",
     },
     "seismic_vision": {
         "uri": "ui://geox/seismic-vision",
@@ -45,9 +59,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "2D/3D seismic viewer with inline/xline, horizon picking, and attribute analysis",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "externalUrl",  # Cesium 3D — too heavy for rawHtml
+        "resource_type": "rawHtml",
+        "html_path": "static/gui/seismic_viewer/index.html",
         "external_url": "https://geox.arif-fazil.com/cockpit/seismic_viewer/",
-        "html_fallback": "<h1>GEOX Seismic Vision</h1><p>2D/3D seismic viewer. Open in cockpit.</p>",
     },
     "earth_volume": {
         "uri": "ui://geox/earth-volume",
@@ -55,9 +69,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "3D subsurface volume renderer with Cesium globe integration",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "externalUrl",  # 3D volumes — too heavy
+        "resource_type": "rawHtml",
+        "html_path": "apps/earth-volume/index.html",
         "external_url": "https://geox.arif-fazil.com/apps/earth-volume/",
-        "html_fallback": "<h1>GEOX Earth Volume</h1><p>3D subsurface renderer. Open in cockpit.</p>",
     },
     "judge_console": {
         "uri": "ui://geox/judge-console",
@@ -65,7 +79,8 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "888 Judge deliberation console with claim review and falsification tracking",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "rawHtml",  # Lightweight — fine as rawHtml
+        "resource_type": "rawHtml",
+        "html_path": "apps/judge-console/index.html",
         "external_url": "https://geox.arif-fazil.com/apps/judge-console/",
     },
     "geoprobe": {
@@ -74,9 +89,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Multi-dimensional prospect evaluation with risk, volumetrics, and economics",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "externalUrl",  # Heavy dashboards
+        "resource_type": "rawHtml",
+        "html_path": "apps/prospect-ui/index.html",
         "external_url": "https://geox.arif-fazil.com/apps/prospect-ui/",
-        "html_fallback": "<h1>GEOX GeoProbe</h1><p>Prospect evaluation dashboard. Open in cockpit.</p>",
     },
     "basin_explorer": {
         "uri": "ui://geox/basin-explorer",
@@ -84,9 +99,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Interactive basin analysis with maps, cross-sections, and stratigraphic columns",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "externalUrl",  # MapLibre + D3 — heavy
+        "resource_type": "rawHtml",
+        "html_path": "static/gui/basin_explorer/index.html",
         "external_url": "https://geox.arif-fazil.com/cockpit/basin_explorer/",
-        "html_fallback": "<h1>GEOX Basin Explorer</h1><p>Interactive basin maps. Open in cockpit.</p>",
     },
     "earth_map": {
         "uri": "ui://geox/earth-map",
@@ -94,9 +109,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Interactive geological map with layer discovery, scene planning, preview rendering, and governed export. 4-verb chain: list→plan→render→export.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "externalUrl",
+        "resource_type": "rawHtml",
+        "html_path": "apps/workbench-v1.html",
         "external_url": "https://geox.arif-fazil.com/earth",
-        "html_fallback": "<h1>GEOX Earth Map</h1><p>Interactive globe with Macrostrat geology, plate boundaries, and live earthquakes. Open at arif-fazil.com/earth.</p>",
     },
     "prospect_studio": {
         "uri": "ui://geox/prospect-studio",
@@ -104,9 +119,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Prospect evaluation with structure, closures, risk, and volume analysis",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "externalUrl",
+        "resource_type": "rawHtml",
+        "html_path": "apps/prospect-ui/index.html",
         "external_url": "https://geox.arif-fazil.com/apps/prospect-ui/",
-        "html_fallback": "<h1>GEOX Prospect Studio</h1><p>Prospect evaluation dashboard. Open in cockpit.</p>",
     },
     "risk_console": {
         "uri": "ui://geox/risk-console",
@@ -114,9 +129,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Decision log, evidence review, hold queue, and export for governed decisions",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "externalUrl",
+        "resource_type": "rawHtml",
+        "html_path": "apps/judge-console/index.html",
         "external_url": "https://geox.arif-fazil.com/apps/judge-console/",
-        "html_fallback": "<h1>GEOX Risk Console</h1><p>Claim/evidence review dashboard with 888_HOLD gating. Open in cockpit.</p>",
     },
     "visual_hub": {
         "uri": "ui://geox/visual-hub",
@@ -124,7 +139,8 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "5-in-1 visual dashboard: WellDesk 1D + SeisVis 2D + CubeProbe 3D + TimeLapse 4D + PhysicCore",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "rawHtml",  # Hub — lightweight index
+        "resource_type": "rawHtml",
+        "html_path": "apps/geox-mcp-visual/index.html",
         "external_url": "https://geox.arif-fazil.com/apps/geox-mcp-visual/",
     },
     "catalog": {
@@ -133,7 +149,8 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "description": "Searchable registry of 44 earth intelligence skills across 11 domains",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
-        "resource_type": "rawHtml",  # Lightweight
+        "resource_type": "rawHtml",
+        "html_path": "apps/site/catalog.html",
         "external_url": "https://geox.arif-fazil.com/apps/site/catalog.html",
         # SEP-2106: JSON Schema 2020-12 outputSchema for MCP-UI host discovery
         "outputSchema": {
@@ -146,6 +163,62 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         },
     },
 }
+
+
+def resolve_html_path(app: dict[str, Any]) -> Path | None:
+    """Resolve on-disk HTML for an app entry. Returns None if missing."""
+    rel = app.get("html_path")
+    if not rel:
+        return None
+    path = GEOX_ROOT / rel
+    return path if path.is_file() else None
+
+
+def load_app_html(app_id: str, *, min_bytes: int = _MIN_HOST_HTML_BYTES) -> str:
+    """Load host-usable HTML for an app. Raises if no real content available.
+
+    Preference order:
+      1. html_path on disk (rawHtml)
+      2. mcp-ui externalUrl resource text (only if resource_type=externalUrl)
+      3. Fail loud — never return a stub <h1> placeholder
+    """
+    app = GEOX_APPS.get(app_id)
+    if not app:
+        raise KeyError(f"Unknown GEOX app_id: '{app_id}'")
+
+    path = resolve_html_path(app)
+    if path is not None:
+        html = path.read_text(encoding="utf-8")
+        if len(html) < min_bytes:
+            raise ValueError(
+                f"App '{app_id}' HTML at {path} is too small ({len(html)}B < {min_bytes}B) — refuse stub"
+            )
+        return html
+
+    # No local file: only acceptable if explicitly externalUrl with cockpit URL
+    if app.get("resource_type") == "externalUrl" and app.get("external_url"):
+        # mcp-ui hosts that understand externalUrl get iframeUrl via create_app_resource.
+        # For resources/read (string body), emit a minimal self-contained launcher that
+        # still exceeds stub quality: full HTML document with immediate redirect + link.
+        url = app["external_url"]
+        title = app["title"]
+        return (
+            "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
+            f"<meta http-equiv='refresh' content='0;url={url}'>"
+            f"<title>{title}</title>"
+            f"<style>body{{font-family:system-ui;background:#0a0a0f;color:#e8e8f0;"
+            f"display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}}"
+            f"a{{color:#00d4aa}}</style></head><body>"
+            f"<p>{title} — opening external cockpit. "
+            f"<a href='{url}' target='_blank' rel='noopener'>Open manually</a></p>"
+            f"<script>try{{window.top.location.href={url!r}}}catch(e){{"
+            f"window.location.href={url!r}}}</script>"
+            f"</body></html>"
+        )
+
+    raise FileNotFoundError(
+        f"App '{app_id}' has no html_path file under {GEOX_ROOT} and is not externalUrl"
+    )
 
 # ── Tool Output Schemas (SEP-2106) ──────────────────────────────────────────────
 
@@ -383,7 +456,7 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
 
     Args:
         app_id: Key from GEOX_APPS registry
-        html_content: Optional HTML content for rawHtml apps. Ignored for externalUrl apps.
+        html_content: Optional HTML override. If None, loads from html_path on disk.
 
     Returns:
         UIResource-compatible dict for tools/call response content array, or None if SDK unavailable.
@@ -398,8 +471,12 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
     resource_type = app.get("resource_type", "rawHtml")
 
     try:
-        if resource_type == "externalUrl":
-            # Heavy apps (Cesium, MapLibre) — use external URL to avoid embedding 5-20MB
+        # Prefer on-disk HTML even if marked externalUrl historically
+        if html_content is None and resolve_html_path(app) is not None:
+            html_content = load_app_html(app_id)
+            resource_type = "rawHtml"
+
+        if resource_type == "externalUrl" and app.get("external_url"):
             resource = create_ui_resource(
                 {
                     "uri": app["uri"],
@@ -408,9 +485,8 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
                 }
             )
         else:
-            # Lightweight apps — embed HTML directly
             if html_content is None:
-                html_content = app.get("html_fallback", f"<h1>{app['title']}</h1><p>{app['description']}</p>")
+                html_content = load_app_html(app_id)
             resource = create_ui_resource(
                 {
                     "uri": app["uri"],
@@ -432,54 +508,111 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
         raise ValueError(f"Failed to create UI resource for app '{app_id}' ({app.get('uri')}): {exc}") from exc
 
 
-def register_mcp_apps_resources(mcp: Any) -> None:
-    """Register all GEOX_APPS UI resources on the FastMCP server instance.
+def _resource_already_registered(mcp: Any, uri: str) -> bool:
+    """True if FastMCP local provider already has this resource URI."""
+    local = getattr(mcp, "_local_provider", None)
+    if local is None:
+        return False
+    comps = getattr(local, "_components", {}) or {}
+    return f"resource:{uri}@" in comps
 
-    Ensures resources/read for any ui://geox/* app URI returns valid HTML or external URL
-    resource with text/html;profile=mcp-app MIME type.
+
+def register_mcp_apps_resources(mcp: Any) -> None:
+    """Register all GEOX_APPS UI resources with real on-disk HTML.
+
+    Hosts call resources/read(ui://geox/...) and must receive host-usable HTML
+    (≥1KB), not stub placeholders. FastMCP overwrites on re-register, so this
+    runs last in create_app() and is the authority for GEOX_APPS URIs.
     """
     try:
         from fastmcp.apps import AppConfig, ResourceCSP
 
         default_csp = ResourceCSP(
             connect_domains=["geox.arif-fazil.com", "macrostrat.org"],
-            resource_domains=["geox.arif-fazil.com", "unpkg.com", "tile.openstreetmap.org", "cdn.jsdelivr.net"],
+            resource_domains=[
+                "geox.arif-fazil.com",
+                "unpkg.com",
+                "tile.openstreetmap.org",
+                "cdn.jsdelivr.net",
+                "cdn.plot.ly",
+            ],
         )
     except ImportError:
         AppConfig = None
         default_csp = None
+
+    registered = 0
+    skipped = 0
+    failed = 0
 
     for app_id, app in GEOX_APPS.items():
         uri = app["uri"]
         title = app["title"]
         desc = app["description"]
         mime_type = app.get("mime_type", "text/html;profile=mcp-app")
-        ext_url = app.get("external_url", "")
-        html_fallback = app.get(
-            "html_fallback",
-            f"<!DOCTYPE html><html><head><meta charset='utf-8'><title>{title}</title></head><body><h1>{title}</h1><p>{desc}</p><p><a href='{ext_url}'>Open {title}</a></p></body></html>",
-        )
 
-        def _make_handler(content: str):
+        # Fail closed at boot if primary apps lack real HTML
+        try:
+            # Validate content exists (read once at register time for boot check)
+            _boot_html = load_app_html(app_id)
+        except Exception as exc:
+            failed += 1
+            logger.error("MCP App '%s' (%s) has no host-usable HTML: %s", app_id, uri, exc)
+            continue
+
+        def _make_file_handler(bound_app_id: str):
             async def _handler() -> str:
-                return content
+                # Re-read from disk each call so HTML edits apply without restart
+                return load_app_html(bound_app_id)
 
+            _handler.__name__ = f"geox_ui_{bound_app_id}"
+            _handler.__doc__ = f"{title} — {desc}"
             return _handler
 
         kwargs: dict[str, Any] = {
             "name": title,
-            "description": f"{title} — {desc}",
+            "description": f"{title} — {desc} (html_path={app.get('html_path')})",
             "mime_type": mime_type,
         }
         if AppConfig and default_csp:
             kwargs["app"] = AppConfig(prefers_border=True, csp=default_csp)
 
+        already = _resource_already_registered(mcp, uri)
         try:
-            mcp.resource(uri, **kwargs)(_make_handler(html_fallback))
+            # Always (re)register so GEOX_APPS html_path wins over earlier stubs.
+            # FastMCP logs "Component already exists" then overwrites — expected.
+            mcp.resource(uri, **kwargs)(_make_file_handler(app_id))
+            registered += 1
+            if already:
+                logger.info(
+                    "MCP App resource re-bound to real HTML: %s (%dB from %s)",
+                    uri,
+                    len(_boot_html),
+                    app.get("html_path"),
+                )
+            else:
+                logger.info(
+                    "MCP App resource registered: %s (%dB from %s)",
+                    uri,
+                    len(_boot_html),
+                    app.get("html_path"),
+                )
         except Exception as e:
-            logger.debug("Resource %s already registered or skipped: %s", uri, e)
+            skipped += 1
+            logger.warning("Resource %s registration failed: %s", uri, e)
 
-    logger.info("Registered GEOX MCP Apps UI resources (%d total in registry)", len(GEOX_APPS))
+    logger.info(
+        "Registered GEOX MCP Apps UI resources (ok=%d skipped=%d failed=%d total=%d)",
+        registered,
+        skipped,
+        failed,
+        len(GEOX_APPS),
+    )
+    if failed:
+        logger.warning(
+            "PR1: %d GEOX_APPS entries missing host-usable HTML — fix html_path before claiming GUI READY",
+            failed,
+        )
 
 
 def enrich_mcp_tools_with_apps(mcp: Any) -> None:

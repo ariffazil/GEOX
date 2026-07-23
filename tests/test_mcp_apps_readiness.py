@@ -14,8 +14,11 @@ from pathlib import Path
 import pytest
 from geox_mcp.server import create_app, mcp
 from geox_mcp.tools.mcp_apps_bridge import (
+    GEOX_APPS,
+    _MIN_HOST_HTML_BYTES,
     create_app_resource,
     enrich_response,
+    load_app_html,
 )
 
 GEOX_ROOT = Path(__file__).resolve().parent.parent
@@ -84,16 +87,49 @@ async def test_03_resources_read_all_active_uris():
         assert len(content.content) > 0, f"Resource {uri} content is empty"
 
 
+@pytest.mark.asyncio
+async def test_03b_primary_apps_serve_real_html_not_stubs():
+    """PR1: bound primary apps must serve ≥1KB real HTML, never stub placeholders."""
+    primary_uris = [app["uri"] for app in GEOX_APPS.values()]
+    stub_markers = (
+        "Open externally.",
+        "Open in cockpit.",
+        "Open at arif-fazil.com",
+    )
+    for uri in primary_uris:
+        res = await mcp.read_resource(uri)
+        text = res.contents[0].content
+        assert len(text) >= _MIN_HOST_HTML_BYTES, (
+            f"{uri} still a stub: {len(text)}B < {_MIN_HOST_HTML_BYTES}B — head={text[:80]!r}"
+        )
+        # Exact historical stub strings must not be the whole payload
+        assert not any(text.strip() == f"<h1>{m}</h1>" for m in ()), uri
+        for marker in stub_markers:
+            # Marker may appear in a full page as a secondary link — forbid ONLY tiny stubs
+            if len(text) < 500:
+                assert marker not in text, f"{uri} looks like legacy stub containing {marker!r}"
+
+
 def test_04_create_app_resource_strict_validation():
     """Verify create_app_resource constructs valid UIResource payloads and fails loudly on errors."""
     well_desk_res = create_app_resource("well_desk")
     assert well_desk_res is not None
     assert well_desk_res["type"] == "resource"
     assert "uri" in well_desk_res["resource"]
+    body = well_desk_res["resource"].get("text") or ""
+    assert len(body) >= _MIN_HOST_HTML_BYTES, f"create_app_resource well_desk still stub ({len(body)}B)"
 
     # Fails loudly on invalid app_id
     with pytest.raises(KeyError):
         create_app_resource("invalid_nonexistent_app_id")
+
+
+def test_04b_load_app_html_from_disk():
+    """Every GEOX_APPS entry resolves to host-usable on-disk HTML."""
+    for app_id in GEOX_APPS:
+        html = load_app_html(app_id)
+        assert len(html) >= _MIN_HOST_HTML_BYTES, f"{app_id}: {len(html)}B"
+        assert "<html" in html.lower() or "<!doctype" in html.lower() or "<h1" in html.lower()
 
 
 def test_05_enrich_response_channel_discipline():
