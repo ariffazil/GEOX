@@ -430,6 +430,7 @@ async def geox_seismic_compute(
     volume_ref_attr: str | None = None,
     attribute: str = "rms",
     ctx: Context | None = None,
+    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Unified seismic physics engine.
 

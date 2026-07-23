@@ -85,5 +85,10 @@
       "datum": "MSL",
       "epistemic_label": "INT_SEISMIC_HORIZON"
     }
+  ],
+  "invalid_examples": [
+    {
+      "domain": "survey_time"
+    }
   ]
 }

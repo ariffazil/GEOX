@@ -17,6 +17,62 @@ _EQUATION = (
 )
 
 
+def validate_k_taper(
+    distances: Any,
+    displacements: Any,
+    max_displacement: float,
+    half_length: float,
+) -> dict[str, Any]:
+    """Validates throw tapering against the idealized Barnett/Walsh elliptical displacement profile.
+    distances: Array of distances from the point of maximum displacement.
+    displacements: Array of calculated displacement values.
+    """
+    import numpy as np
+
+    dists = np.asarray(distances, dtype=np.float64)
+    disps = np.asarray(displacements, dtype=np.float64)
+
+    if len(dists) == 0 or len(disps) == 0 or half_length <= 0:
+        return {"status": "INCONCLUSIVE", "verdict": "INCONCLUSIVE", "reason": "Empty distances/displacements or zero half_length"}
+
+    errors = []
+    for dist, disp in zip(dists, disps):
+        qn = dist / half_length
+        if qn > 1.05:
+            return {
+                "status": "REJECTED",
+                "verdict": "KILL",
+                "reason": f"Data point at distance {dist} exceeds fault half-length {half_length}.",
+            }
+
+        qn_clipped = min(qn, 1.0)
+        sn = 2.0 * np.sqrt(((1.0 + qn_clipped) ** 2 / 2.0) - qn_clipped**2) * (1.0 - qn_clipped)
+        expected_disp = sn * max_displacement
+
+        error = np.abs(disp - expected_disp) / (max_displacement + 1e-9)
+        errors.append(error)
+
+    mean_error = float(np.mean(errors))
+
+    if mean_error <= 0.20:
+        return {
+            "status": "PASSED",
+            "verdict": "PASS",
+            "mean_taper_error": float(mean_error),
+            "max_displacement": float(max_displacement),
+            "half_length": float(half_length),
+        }
+    else:
+        return {
+            "status": "REJECTED",
+            "verdict": "KILL",
+            "mean_taper_error": float(mean_error),
+            "max_displacement": float(max_displacement),
+            "half_length": float(half_length),
+            "reason": f"Displacement profile error of {mean_error * 100:.1f}% exceeds structural tolerance (20%).",
+        }
+
+
 def _profile_values(fault: dict[str, Any]) -> list[float] | None:
     prof = fault.get("throw_profile")
     if not prof:
@@ -73,6 +129,14 @@ def gate_k_throw(framework: dict[str, Any]) -> dict[str, Any]:
             "UNMEASURED",
             reason="No faults provided",
             equation=_EQUATION,
+            inputs={"n_faults": 0},
+            thresholds={"tip_to_mid_ratio_pass": 0.75, "tip_vs_mid_ratio_kill": 0.9},
+            calculated_result={"kills": 0, "passes": 0, "unmeasured": 0},
+            exceptions_considered=["explicit tip_taper flag", "multi-peak linkage"],
+            evidence_refs=[
+                "Barnett et al. 1987 AAPG — Displacement geometry",
+                "Walsh & Watterson 1988 — Elliptical fault tips",
+            ],
             gate_type="hard_mixed",
         )
 
@@ -131,8 +195,13 @@ def gate_k_throw(framework: dict[str, Any]) -> dict[str, Any]:
         status,  # type: ignore[arg-type]
         inputs={"n_faults": len(faults)},
         equation=_EQUATION,
-        thresholds={"tip_vs_mid_ratio_kill": 0.9},
+        thresholds={"tip_vs_mid_ratio_kill": 0.9, "tip_to_mid_ratio_pass": 0.75},
         calculated_result={"kills": kills, "passes": passes, "unmeasured": unmeas},
+        exceptions_considered=["explicit tip_taper flag", "multi-peak linkage"],
+        evidence_refs=[
+            "Barnett et al. 1987 AAPG — Displacement geometry",
+            "Walsh & Watterson 1988 — Elliptical fault tips",
+        ],
         reason=reason,
         findings=findings,
         gate_type="hard_mixed",

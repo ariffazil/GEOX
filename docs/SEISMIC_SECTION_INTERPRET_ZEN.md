@@ -156,7 +156,8 @@ Score: agent pick **inside human IQR** on ≥N sections = “competent human ban
 | **P0** contract truth | Phase **B** | **DONE** — attribute_data+depth, honest router, TRANSPORT_OK, QUALIFIED_CANDIDATE | discriminated-union schema gen + CI drift lock |
 | **P0/P1 gates** | Phase **C** | **PARTIAL LIVE** — all 7 K* + G2 topology + restore/vel stubs | VE-true dip · receipt formula fields · restore numerics |
 | **P1 propose** | Phase **A** | **PARTIAL LIVE** — RSI interpret_section · ≥3 alts · thin schemas v1.1 | attribute-snap · optional ONNX SAM · research CNN flag |
-| **P1 SEG-Y** | Phase **D** | **PARTIAL LIVE** — segy_slice MeasurementContext | xarray backbone · full inline grid path |
+| **P1 image classical** | Phase **A+** | **LIVE** — `classical_section` / `interpret_section` (structure tensor+DP) | primary product path |
+| **P1 SEG-Y** | Phase **D** | **OPTIONAL** — segy_slice live; not required for product | only if user supplies volume |
 | **P2** accreditation | Phase **E** | OPEN | F3/CRACKS harness · Alcalde pack · well-tie ensemble · G8 · release checklist |
 
 **Claim rights by stage**
@@ -187,15 +188,20 @@ Every nontrivial seismic output:
 - WEALTH NPV from ungated structure  
 - Theatre “GEOX vs humans” without benchmark identity  
 - New public MCP tools when a **mode** suffices  
+- **Requiring full SEG-Y / 3D volume as the only path** — F13 product is **image section first**  
+- Sealed structural framework from image_only (constitutionally barred)
 
 ---
 
 ## 10. External source archive
 
-Full dual-source dump (Claude + ChatGPT research merge):  
-`/root/forge_work/2026-07-23/EXTERNAL-SEISMIC-BLUEPRINT-CLAUDE-CHATGPT.md`  
+| Source | Path / note |
+|--------|-------------|
+| Claude + ChatGPT | `forge_work/2026-07-23/EXTERNAL-SEISMIC-BLUEPRINT-CLAUDE-CHATGPT.md` |
+| Gemini dual-lane + SEG-Y deep dive | session prompt 2026-07-23 (image-first **overrides** Gemini SEG-Y-primary packaging) |
 
-This zen file is the **operational SOT**. External dump is evidence, not runtime doctrine.
+This zen file is the **operational SOT**. External essays are evidence, not runtime doctrine.  
+**F13 override:** product path = **section image → propose → gate → compare → human**. SEG-Y is enrichment only.
 
 ---
 
