@@ -44,15 +44,23 @@ Local max verdict: **QUALIFIED_CANDIDATE**. Transport allow: **TRANSPORT_OK** �
 
 ## 2. Architecture (zen)
 
+**Sovereign product preference (F13 2026-07-23):**  
+**Primary input = seismic section image** (PNG/JPG raster). Full SEG-Y volume is **optional upgrade**, not required for the assisted loop.
+
+Gemini dual-lane (aligned): **propose lane** → **falsify lane** → arifOS SEAL only. Image is for draft structural candidates + uncertainty, not sealed Earth truth (Bond/Alcalde conceptual uncertainty).
+
 ```
-┌─ G0 MEASURE ──────────────────────────────────────────────┐
-│  Preferred: SEG-Y (segyio) → MeasurementContext + grid    │
-│  Allowed:   image_only + VE + SHA-256 + INT_SEISMIC forever│
+┌─ G0 MEASURE (IMAGE-FIRST) ────────────────────────────────┐
+│  PRIMARY: section image + VE + SHA-256 + axis notes       │
+│           input_class=image_only · INT_SEISMIC forever    │
+│  OPTIONAL: SEG-Y slice when user has volume (higher truth)│
+│  Without scale: digitise + propose OK; true dip/throw/V   │
+│               = UNMEASURED (never invent)                 │
 └────────────────────────────┬──────────────────────────────┘
                              ▼
-┌─ G1 PROPOSE ──────────────────────────────────────────────┐
-│  RSI / attributes / future ONNX CNN-SAM · ≥3 alternatives │
-│  Snap sticks to attribute maxima when available           │
+┌─ G1 PROPOSE (image geometry) ─────────────────────────────┐
+│  Classical CV + RSI · ≥3 alternatives · CANDIDATE only    │
+│  Pixel domain until calibration; snap to edges/coherence  │
 └────────────────────────────┬──────────────────────────────┘
                              ▼
 ┌─ G2–G9 + K* VALIDATE ─────────────────────────────────────┐
@@ -67,6 +75,7 @@ Local max verdict: **QUALIFIED_CANDIDATE**. Transport allow: **TRANSPORT_OK** �
                              ▼
 ┌─ G10 HANDOFF ─────────────────────────────────────────────┐
 │  Ensemble + uncertainty only → WEALTH (never single map)  │
+│  image_only → seal_eligibility=false always               │
 └───────────────────────────────────────────────────────────┘
 ```
 
@@ -94,7 +103,7 @@ Implemented: `src/geox_mcp/tools/structure_gates/`. Spec detail: K-SPEC file.
 
 | G | Type | Zen meaning |
 |---|------|-------------|
-| G0 | Hard | Measurement identity (SEG-Y preferred; image_only capped) |
+| G0 | Hard | Measurement identity (**image-first**; image_only capped; SEG-Y optional) |
 | G1 | Soft | Propose with alternatives + confidence |
 | G2 | Hard | Topology |
 | G3 | Mixed | Displacement (throw + D/L) |
