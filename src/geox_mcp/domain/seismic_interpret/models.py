@@ -14,7 +14,16 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class StrictModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    """Base for REQUEST models — ignore unknown top-level fields.
+
+    Per audit 2026-07-23: top-level MCP transport metadata
+    (`session_id`, `actor_id`, `source_sha256`, …) must pass through
+    to handlers. Per-FIELD type validation remains strict; unknown
+    fields are ignored, NOT raised. Output models use `extra="allow"`
+    explicitly (see GateResultModel).
+    """
+
+    model_config = ConfigDict(extra="ignore")
 
 
 # ── Calibration ──────────────────────────────────────────────────────────────
@@ -176,7 +185,9 @@ InterpretRequest = Annotated[
 # ── Output bundle ────────────────────────────────────────────────────────────
 
 
-class GateResultModel(StrictModel):
+class GateResultModel(BaseModel):
+    """Output gate receipt — `extra="allow"` so handlers can attach findings."""
+
     model_config = ConfigDict(extra="allow")  # allow findings etc.
     gate_id: str
     status: Literal["PASS", "WARN", "KILL", "UNMEASURED"]
