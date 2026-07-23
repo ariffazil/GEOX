@@ -1,21 +1,47 @@
 # 🌊 SEISMIC — Section Interpret Zen
 
 > **SOT** for automated seismic section / volume interpretation in GEOX.  
-> Absorbs external Claude + ChatGPT engineering blueprints (2026-07-23) + F13 sealed arc.  
+> Absorbs external Claude + ChatGPT + Gemini blueprints (2026-07-23) + F13 sealed arc.  
 > **Law:** GEOX proposes + falsifies Earth evidence. arifOS seals. Arif decides.  
 > **Not:** autonomous structural authority · greyscale = geology · local SEAL.
 
-**Tip baseline:** `eb90c7ce`+ · 31 public tools · modes on `geox_seismic_interpret`  
-**B-final / C-hard:** interpretation_bundle · UNMEASURED · gate receipts · multi-hypothesis  
+**Tip baseline:** `78963c61` · 31 public tools · modes on `geox_seismic_interpret`  
 **Related:** `SEISMIC_STRUCTURAL_VALIDATION_GATES_G0_G10.md` · `SEISMIC_FAULT_PHYSICS_GATES_K_SPEC.md`  
-**Code:** `tools/structure_gates/*` · `structure_validate.py` · `seismic_rsi.py` · `seismic_segy_slice.py`
+**Code:** `structure_gates/*` · `structure_validate.py` · `classical_section_propose.py` · `seismic_rsi.py`
 
 ---
 
-## 0. One equation
+## 0. Eureka (strategy lock)
+
+**Industry default:** obsess over Phase A — unverified ML that “draws the right lines.”  
+**GEOX unfair advantage:** invert it. **Adjudication spine first** (Phase C). Propose is a hostile witness.
+
+| Truth | Consequence |
+|-------|-------------|
+| Perfect automated interpretation is a **statistical illusion** | Never claim “GEOX interprets Earth” |
+| Perfect falsification is **deterministic math** | Commit weeks to gates, not GPUs |
+| Bond-class conceptual uncertainty: ~21% of 412 humans got tectonic setting right on the same image | Multi-hypothesis + human adjudicate is not a bug |
+| Fine-scale over-interpretation injects noise | Prefer coarse alternatives + kill evidence over rugose “precision” |
+
+**POS (sealed strategy, not marketing):**
+
+| Bet | POS | Role |
+|-----|-----|------|
+| **B** contract | ~0.9 → **shipped** | Oxygen — nothing downstream without hard public contract |
+| **C** gates (descoped restore) | ~0.75 → **shipped / demonstrated** | Merciless moat — Andersonian dip, D/L, throw taper as NumPy |
+| **A full** autonomous field ML | **~0.3** | Do not fund as product claim |
+| **A descoped** hostile-witness propose | **~0.6** → **classical live** | Generate candidates; label INT/SPEC; gate everything |
+
+**Proof that ends the argument:** K-DIP / K-THROW kill a deliberately impossible pick end-to-end with receipt_hash. Re-probeable on tip `78963c61`.
+
+**Commit the weeks to the adjudication spine.** Let the industry waste cycles on a perfect proposal model.
+
+---
+
+## 0.1 One equation
 
 ```
-measurement → propose (INT/SPEC) → physics gates (K*/G*) → falsify/claim → receipt → arifOS SEAL?
+measurement → propose (INT/SPEC, hostile) → physics gates (K*/G*) → falsify/claim → receipt → arifOS SEAL?
 ```
 
 Vision/ML is always the **propose** half. Deterministic geometry+physics is the **validate** half.  
@@ -30,9 +56,11 @@ Marketing claims about foundation models **exceed** reproducible field evidence 
 | `horizon_contrast` | 1D multi-attr boundary | DER / INT |
 | `fault_sticks` | stick **ingest** only | OBS (geometry file) |
 | `volume_frame` / `blend` | frame I/O | OBS |
-| `structure_validate` | K*/G* matrix | DER |
-| `interpret_section` / `rsi_pipeline` | image-true CV propose | **INT_SEISMIC** |
-| `segy_slice` | SEG-Y → MeasurementContext | **OBS** wavefield |
+| `structure_validate` | K*/G* matrix (the moat) | DER |
+| `classical_section` / `interpret_section` | **PRIMARY** image propose (hostile witness) | **INT_SEISMIC** |
+| `interpret` | propose → gate → ≥3 hyps | INT |
+| `rsi_pipeline` | legacy comparator only | INT_SEISMIC |
+| `segy_slice` | optional volume path | **OBS** wavefield |
 
 Also: `geox_falsify(claim_type=structural_*)` · `geox_visual_understand` (HOLD without VLM) · `geox_seismic_ingest` / `compute`.
 
