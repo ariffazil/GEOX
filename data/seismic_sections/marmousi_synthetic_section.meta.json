@@ -1,0 +1,16 @@
+{
+  "n_traces_used": 800,
+  "n_samples": 1001,
+  "dt_ms": 4.0,
+  "backend": "segyio",
+  "total_traces": 2721,
+  "png_path": "/root/GEOX/data/seismic_sections/marmousi_synthetic_section.png",
+  "png_sha256": "fa725bc96127666b81d3aaa45e128d452abe920b8b4692273f090e1a7c980c0d",
+  "png_bytes": 78741,
+  "png_shape": [
+    600,
+    800
+  ],
+  "segy_path": "/root/GEOX/data/marmousi_work/SYNTHETIC_time.segy",
+  "segy_sha256": "3843344f58657f69377fad448bfd9c6f3d24f86ec3b367d04699759d3151de51"
+}
