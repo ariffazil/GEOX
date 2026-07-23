@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": 59314.102,
+  "generated_at": 59698.582,
   "organ": "GEOX",
   "total_canonical_tools": 31,
   "total_ui_resources": 20,
@@ -370,6 +370,8 @@
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
       "bound_tools": [
+        "geox_visual_generate_hypotheses",
+        "geox_visual_understand",
         "geox_workspace"
       ],
       "csp_domains": [
@@ -392,6 +394,7 @@
       "content_bytes": 16708,
       "content_hash": "sha256:3e5deb3d8d9b8d72",
       "bound_tools": [
+        "geox_lem_predict",
         "geox_petrophysics",
         "geox_well_desk",
         "geox_well_ingest"
