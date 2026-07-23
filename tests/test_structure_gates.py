@@ -171,3 +171,28 @@ async def test_interpret_mode_structure_validate():
     assert r.get("mode") == "structure_validate"
     assert r.get("local_verdict") == "QUALIFIED_CANDIDATE"
     assert r.get("gates", {}).get("K-DIP", {}).get("verdict") == "PASS"
+
+@pytest.mark.asyncio
+async def test_k_dip_ve_correction_kills_apparent_normal():
+    """Apparent steep dip under high VE may be shallow true reverse — and vice versa.
+    High VE makes apparent dips look steeper: true = atan(tan(app)/VE).
+    60° apparent at VE=3 → true ~26.6° → fails normal prior → KILL without reactivation.
+    """
+    from geox_mcp.tools.structure_validate import geox_structure_validate
+
+    r = await geox_structure_validate(
+        framework={
+            "faults": [
+                {
+                    "fault_id": "F_ve",
+                    "regime_prior": "normal",
+                    "dip_deg_image": 60.0,
+                }
+            ],
+            "measurement_context": {"geometry": {"vertical_exaggeration": 3.0}},
+        }
+    )
+    assert r["gates"]["K-DIP"]["verdict"] == "KILL"
+    finding = r["gates"]["K-DIP"]["findings"][0]
+    assert finding.get("dip_meta", {}).get("ve_corrected") is True
+    assert finding["dip_deg"] < 40  # true dip collapsed under VE=3
