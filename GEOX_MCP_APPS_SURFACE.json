@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": 322888.852,
+  "generated_at": "2026-07-23T03:55:21.328546+00:00",
   "organ": "GEOX",
   "total_canonical_tools": 31,
   "total_ui_resources": 20,
@@ -447,5 +447,6 @@
       ],
       "deprecation_note": null
     }
-  ]
+  ],
+  "source": "generated from src/geox_mcp/tools_manifest.yaml + apps/resources/read"
 }

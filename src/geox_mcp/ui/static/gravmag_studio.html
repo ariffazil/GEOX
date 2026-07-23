@@ -467,8 +467,18 @@
     // State injected by MCP host via ui/notifications/tool-input (SEP-1865).
     let STATE = null;
 
+    // Allowed origins for postMessage (MCP Apps hosts).
+    const ALLOWED_ORIGINS = [
+      "https://chatgpt.com",
+      "https://claude.ai",
+      "https://geox.arif-fazil.com",
+      "https://arif-fazil.com",
+    ];
+
     // Listen for SEP-1865 tool-input notification from host (postMessage).
     window.addEventListener('message', (ev) => {
+      // Origin check: only accept messages from allowed hosts. Null origin = sandboxed iframe.
+      if (!ALLOWED_ORIGINS.includes(ev.origin) && ev.origin !== "null") return;
       try {
         const data = ev.data;
         if (!data || typeof data !== 'object') return;
@@ -597,11 +607,16 @@
       addKV('grid (m)', `±${(input.grid_extent_m || 0).toFixed(0)}`);
       addKV('grid N', `${input.grid_n || 0}`);
 
-      // Caveats.
+      // Caveats — use textContent, never innerHTML with external data.
       const caveats = rp.caveats || [];
       const cl = document.getElementById('caveats-list');
+      cl.innerHTML = '';
       if (caveats.length) {
-        cl.innerHTML = caveats.map(c => `<div>· ${c}</div>`).join('');
+        caveats.forEach(c => {
+          const div = document.createElement('div');
+          div.textContent = '· ' + c;
+          cl.appendChild(div);
+        });
       } else {
         cl.textContent = '— none —';
       }
@@ -717,14 +732,24 @@
       renderHeatmapWithZero(STATE.render_payload.anomaly_values, STATE.render_payload.grid_shape);
     }
 
-    // Notify host we're ready (per SEP-1865).
+    // Notify host we're ready (per SEP-1865). Use target origin '*'
+    // only as fallback; prefer the first allowed origin if available.
     try {
+      const targetOrigin = ALLOWED_ORIGINS.includes(document.referrer && new URL(document.referrer).origin)
+        ? new URL(document.referrer).origin
+        : window.location.ancestorOrigins?.[0] || '*';
       window.parent.postMessage({
         jsonrpc: '2.0',
         method: 'ui/ready',
-        params: { app_id: 'geox.gravmag.studio', version: '0.2.1' }
+        params: { app_id: 'geox.gravmag.studio', version: '0.2.2' }
+      }, targetOrigin);
+    } catch (_) {
+      window.parent.postMessage({
+        jsonrpc: '2.0',
+        method: 'ui/ready',
+        params: { app_id: 'geox.gravmag.studio', version: '0.2.2' }
       }, '*');
-    } catch (_) {}
+    }
 
     // ── Screen mode renderer ──────────────────────────────────────────────
     const VERDICT_BADGES = {

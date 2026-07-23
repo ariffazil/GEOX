@@ -5,9 +5,315 @@
 <meta http-equiv="Content-Type" content="text/html;profile=mcp-app">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GEOX Workbench v1</title>
-<!-- MapLibre GL -->
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script type="module">
+// ═══════════════════════════════════════════════════════════════
+// GEOX Workbench v1.1 — MCP Apps compliant (ext-apps SDK)
+// ═══════════════════════════════════════════════════════════════
+import { App, PostMessageTransport } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.5.1/dist/index.js";
+
+const ALLOWED_ORIGINS = [
+  "https://chatgpt.com",
+  "https://claude.ai",
+  "https://geox.arif-fazil.com",
+  "https://arif-fazil.com",
+];
+
+// ── State ──────────────────────────────────────────────────────
+let toolResult = null;
+let sessionId = null;
+let actorId = null;
+let mapInstance = null;
+
+// ── DOM helpers (NO innerHTML with user data) ──────────────────
+const $ = (id) => document.getElementById(id);
+
+function el(tag, attrs = {}, children = []) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "className") e.className = v;
+    else if (k === "textContent") e.textContent = String(v);
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2).toLowerCase(), v);
+    else e.setAttribute(k, v);
+  }
+  for (const c of children) {
+    if (typeof c === "string") e.appendChild(document.createTextNode(c));
+    else if (c) e.appendChild(c);
+  }
+  return e;
+}
+
+// ── UI Updates ─────────────────────────────────────────────────
+function updateMCPStatus(connected) {
+  const badge = $("mcp-badge");
+  badge.textContent = connected ? "CONNECTED" : "DISCONNECTED";
+  badge.className = connected ? "mcp-connected" : "mcp-disconnected";
+}
+
+function updateSessionBadge() {
+  const sd = $("session-display");
+  sd.innerHTML = ""; // Only safe: we control sessionId
+  if (sessionId) {
+    const span = el("span", { className: "session-badge verified", textContent: `session: ${sessionId.slice(0, 20)}…` });
+    sd.appendChild(span);
+  }
+}
+
+function renderFeatures(features) {
+  $("empty-state").style.display = "none";
+  const panel = $("feature-panel");
+  panel.style.display = "block";
+  panel.innerHTML = ""; // Clear, then rebuild with DOM
+
+  panel.appendChild(el("h3", { textContent: "Features" }));
+
+  if (features.length === 0) {
+    panel.appendChild(el("div", { className: "field" }, [
+      el("label", { textContent: "Status" }),
+      el("div", { className: "value", textContent: "Scene rendered — no selectable features" }),
+    ]));
+  } else {
+    panel.appendChild(el("div", { className: "field" }, [
+      el("label", { textContent: "Count" }),
+      el("div", { className: "value", textContent: `${features.length} feature(s)` }),
+    ]));
+
+    features.forEach((f, i) => {
+      const props = f.properties || {};
+      const type = props.type || "feature";
+      const label = props.label || `Feature ${i + 1}`;
+      const risk = props.risk || null;
+      const riskColor = risk === "HIGH" ? "#f87171" : "#fbbf24";
+
+      const card = el("div", {
+        className: "field",
+        style: "cursor:pointer;padding:8px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px;",
+        onClick: () => selectFeature(i),
+      }, [
+        el("label", { textContent: label }),
+        el("div", { className: "value" }, [
+          document.createTextNode(type),
+          risk ? el("span", { style: `color:${riskColor}`, textContent: ` · ${risk}` }) : null,
+        ].filter(Boolean)),
+      ]);
+      panel.appendChild(card);
+    });
+  }
+
+  // Provenance section
+  panel.appendChild(el("h3", { textContent: "Provenance", style: "margin-top:16px;" }));
+  panel.appendChild(el("div", { className: "field" }, [
+    el("label", { textContent: "Session" }),
+    el("div", { className: "value", textContent: sessionId || "anonymous" }),
+  ]));
+  panel.appendChild(el("div", { className: "field" }, [
+    el("label", { textContent: "Actor" }),
+    el("div", { className: "value", textContent: actorId || "anonymous" }),
+  ]));
+
+  // Epistemic tags
+  const claimState = toolResult?.claim_state || toolResult?.claimState || "INTERPRETED";
+  const uncert = toolResult?.uncertainty || "Moderate";
+  panel.appendChild(el("div", { className: "field" }, [
+    el("label", { textContent: "Epistemic Class" }),
+    el("div", {}, [
+      el("span", { className: "pill int", textContent: claimState }),
+      document.createTextNode(" "),
+      el("span", { className: "pill obs", textContent: uncert }),
+    ]),
+  ]));
+
+  // Governance flags
+  if (toolResult?.maruah_flag) {
+    panel.appendChild(el("div", { className: "field" }, [
+      el("label", { textContent: "MARUAH" }),
+      el("div", {}, [el("span", { className: "pill-hold", textContent: "Territory flag" })]),
+    ]));
+  }
+  if (toolResult?.governance_status === "HOLD") {
+    panel.appendChild(el("div", { className: "field" }, [
+      el("label", { textContent: "888 HOLD" }),
+      el("div", {}, [el("span", { className: "pill-hold", textContent: "HOLD" })]),
+    ]));
+  }
+
+  renderMap(features);
+}
+
+function selectFeature(index) {
+  const features = extractFeatures(toolResult);
+  if (!features || !features[index]) return;
+
+  const props = features[index].properties || {};
+  const panel = $("feature-panel");
+  panel.innerHTML = "";
+
+  panel.appendChild(el("h3", { textContent: "Selected Feature" }));
+  for (const [k, v] of Object.entries(props)) {
+    panel.appendChild(el("div", { className: "field" }, [
+      el("label", { textContent: k }),
+      el("div", { className: "value", textContent: String(v) }),
+    ]));
+  }
+  const btn = el("button", {
+    textContent: "Back to list",
+    style: "margin-top:12px;padding:6px 12px;background:var(--accent);color:#000;border:none;border-radius:6px;cursor:pointer;",
+    onClick: () => renderFeatures(features),
+  });
+  panel.appendChild(btn);
+}
+
+// ── Map ────────────────────────────────────────────────────────
+function extractFeatures(data) {
+  if (data?.geojson?.features) return data.geojson.features;
+  if (data?.geojson_features) return data.geojson_features;
+  if (data?.render_payload?.geojson?.features) return data.render_payload.geojson.features;
+  return [];
+}
+
+function renderMap(features) {
+  const mapEl = $("map");
+  if (!mapInstance) {
+    mapInstance = new maplibregl.Map({
+      container: "map",
+      style: {
+        version: 8,
+        sources: {
+          osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, attribution: "© OpenStreetMap" },
+        },
+        layers: [{ id: "osm-layer", type: "raster", source: "osm", minzoom: 0, maxzoom: 19 }],
+      },
+      center: [118.0, 5.5],
+      zoom: 5,
+    });
+    mapInstance.on("load", () => addMapFeatures(features));
+  } else {
+    ["geox-features-fill", "geox-features-line", "geox-features-circle"].forEach((id) => {
+      if (mapInstance.getLayer(id)) mapInstance.removeLayer(id);
+    });
+    if (mapInstance.getSource("geox-features")) mapInstance.removeSource("geox-features");
+    addMapFeatures(features);
+  }
+}
+
+function addMapFeatures(features) {
+  if (!mapInstance || !features?.length) return;
+  const fc = { type: "FeatureCollection", features };
+  mapInstance.addSource("geox-features", { type: "geojson", data: fc });
+  mapInstance.addLayer({ id: "geox-features-fill", type: "fill", source: "geox-features", paint: { "fill-color": "#00d4aa", "fill-opacity": 0.15 }, filter: ["==", "$type", "Polygon"] });
+  mapInstance.addLayer({ id: "geox-features-line", type: "line", source: "geox-features", paint: { "line-color": "#00d4aa", "line-width": 2 }, filter: ["==", "$type", "Polygon"] });
+  mapInstance.addLayer({ id: "geox-features-circle", type: "circle", source: "geox-features", paint: { "circle-color": "#00d4aa", "circle-radius": 6, "circle-stroke-width": 2, "circle-stroke-color": "#fff" }, filter: ["==", "$type", "Point"] });
+
+  try {
+    const bounds = new maplibregl.LngLatBounds();
+    features.forEach((f) => {
+      if (f.geometry?.type === "Point") bounds.extend(f.geometry.coordinates);
+      else if (f.geometry?.type === "Polygon") f.geometry.coordinates[0].forEach((c) => bounds.extend(c));
+    });
+    if (!bounds.isEmpty()) mapInstance.fitBounds(bounds, { padding: 60 });
+  } catch (e) { /* ignore */ }
+
+  ["geox-features-fill", "geox-features-circle"].forEach((layer) => {
+    mapInstance.on("click", layer, (e) => {
+      if (e.features?.[0]) {
+        const idx = features.indexOf(e.features[0]);
+        if (idx >= 0) selectFeature(idx);
+      }
+    });
+  });
+}
+
+// ── MCP App Initialization ─────────────────────────────────────
+async function init() {
+  const app = new App({ name: "geox-workbench", version: "1.1.0" });
+
+  app.ontoolinput = (input) => {
+    // Initial tool input — use arguments if provided
+  };
+
+  app.ontoolresult = (result) => {
+    toolResult = result;
+    sessionId = result?.session_id || result?.audit_receipt?.session_id || sessionId;
+    actorId = result?.actor_id || result?.audit_receipt?.actor_id || actorId;
+    updateSessionBadge();
+
+    const features = extractFeatures(result);
+    renderFeatures(features);
+  };
+
+  app.onhostcontextchanged = (ctx) => {
+    if (ctx?.sessionId) {
+      sessionId = ctx.sessionId;
+      updateSessionBadge();
+    }
+    if (ctx?.actorId) {
+      actorId = ctx.actorId;
+    }
+  };
+
+  app.onteardown = async () => {
+    if (mapInstance) {
+      mapInstance.remove();
+      mapInstance = null;
+    }
+    return {};
+  };
+
+  try {
+    await app.connect(new PostMessageTransport(window.parent, window.parent));
+    updateMCPStatus(true);
+  } catch (err) {
+    console.warn("[Workbench] MCP App connect failed, falling back to manual mode:", err);
+    updateMCPStatus(false);
+    setupManualFallback();
+  }
+}
+
+// ── Manual fallback (legacy protocol, origin-checked) ──────────
+function setupManualFallback() {
+  window.addEventListener("message", (event) => {
+    if (!ALLOWED_ORIGINS.includes(event.origin) && event.origin !== "null") return;
+    if (event.source !== window.parent) return;
+
+    try {
+      const msg = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+      if (!msg || typeof msg !== "object") return;
+
+      if (msg.method === "ui/notifications/tool-result" || msg.type === "tool_result") {
+        const result = msg.params?.result || msg.data || msg.result || msg;
+        toolResult = result;
+        sessionId = result?.session_id || sessionId;
+        actorId = result?.actor_id || actorId;
+        updateSessionBadge();
+        const features = extractFeatures(result);
+        renderFeatures(features);
+      }
+      if (msg.type === "session" || msg.method === "session") {
+        sessionId = msg.sessionId || msg.session_id || sessionId;
+        actorId = msg.actorId || msg.actor_id || actorId;
+        updateSessionBadge();
+      }
+    } catch (e) {
+      console.warn("[Workbench] Invalid message:", e);
+    }
+  });
+
+  // Signal readiness (legacy)
+  if (window.parent) {
+    window.parent.postMessage(
+      JSON.stringify({ jsonrpc: "2.0", method: "ui/ready", params: { version: "1.1.0" } }),
+      "*"
+    );
+  }
+}
+
+// ── Boot ───────────────────────────────────────────────────────
+init().catch((err) => {
+  console.error("[Workbench] Init failed:", err);
+  setupManualFallback();
+});
+</script>
 <style>
   :root { --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e; --text: #e0e0e0; --accent: #00d4aa; --gold: #d4af37; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -44,7 +350,7 @@
 <body>
 <div class="wb-header">
   <h1>GEOX <span>Workbench</span></h1>
-  <span class="badge">v1</span>
+  <span class="badge">v1.1</span>
   <span id="session-display"><span class="session-badge anonymous">session: —</span></span>
   <span id="mcp-status">MCP: <span id="mcp-badge" class="mcp-disconnected">DISCONNECTED</span></span>
 </div>
@@ -52,216 +358,12 @@
   <div id="map"></div>
   <div class="wb-panel" id="info-panel">
     <div class="empty-state" id="empty-state">
-      <div style="font-size: 32px;">🗺️</div>
-      <h3 style="color: var(--accent); margin-top: 12px;">GEOX Workbench Ready</h3>
+      <div style="font-size:32px;">🗺️</div>
+      <h3 style="color:var(--accent);margin-top:12px;">GEOX Workbench Ready</h3>
       <p>Call a map tool to render features here.<br/>Select a feature to inspect its properties.</p>
     </div>
     <div id="feature-panel" style="display:none;"></div>
   </div>
 </div>
-
-<script>
-// ═══════════════════════════════════════════════════════════════
-// MCP Apps postMessage Protocol — lightweight App runtime
-// ═══════════════════════════════════════════════════════════════
-const MCP_APP = {
-  connected: false,
-  toolResult: null,
-  sessionId: null,
-  actorId: null,
-
-  connect() {
-    window.addEventListener('message', (event) => {
-      if (event.source !== window.parent) return;
-      try {
-        const msg = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-        this._handleMessage(msg);
-      } catch (e) {
-        console.warn('[MCP App] Invalid message:', e);
-      }
-    });
-    // Signal readiness to host
-    this._post({ type: 'ready', version: '1.0.0' });
-    this.connected = true;
-    this._updateUI();
-  },
-
-  _handleMessage(msg) {
-    if (msg.type === 'tool_result' || msg.type === 'tool-notification') {
-      this.toolResult = msg.data || msg.result || msg;
-      this._renderResult(this.toolResult);
-      this._updateUI();
-    } else if (msg.type === 'session') {
-      this.sessionId = msg.sessionId || msg.session_id || null;
-      this.actorId = msg.actorId || msg.actor_id || null;
-      this._updateUI();
-    } else if (msg.type === 'ready') {
-      this.connected = true;
-      this._updateUI();
-    }
-  },
-
-  callServerTool(name, args) {
-    this._post({ type: 'call_tool', name, arguments: args || {} });
-  },
-
-  _post(data) {
-    if (window.parent) {
-      window.parent.postMessage(JSON.stringify(data), '*');
-    }
-  },
-
-  _updateUI() {
-    const badge = document.getElementById('mcp-badge');
-    badge.textContent = this.connected ? 'CONNECTED' : 'DISCONNECTED';
-    badge.className = this.connected ? 'mcp-connected' : 'mcp-disconnected';
-    const sd = document.getElementById('session-display');
-    if (this.sessionId) {
-      sd.innerHTML = `<span class="session-badge verified">session: ${this.sessionId.slice(0, 20)}…</span>`;
-    }
-  },
-
-  _renderResult(data) {
-    document.getElementById('empty-state').style.display = 'none';
-    const panel = document.getElementById('feature-panel');
-    panel.style.display = 'block';
-
-    // Parse GeoJSON features from result
-    let features = [];
-    if (data?.geojson?.features) features = data.geojson.features;
-    else if (data?.geojson_features) features = data.geojson_features;
-    else if (data?.render_payload?.geojson?.features) features = data.render_payload.geojson.features;
-
-    // Extract session/actor
-    this.sessionId = data?.session_id || data?.audit_receipt?.session_id || this.sessionId;
-    this.actorId = data?.actor_id || data?.audit_receipt?.actor_id || this.actorId;
-    this._updateUI();
-
-    // Build HTML for feature list
-    let html = '<h3>Features</h3>';
-    if (features.length === 0) {
-      html += '<div class="field"><label>Status</label><div class="value">Scene rendered — no selectable features</div></div>';
-    } else {
-      html += `<div class="field"><label>Count</label><div class="value">${features.length} feature(s)</div></div>`;
-      features.forEach((f, i) => {
-        const props = f.properties || {};
-        const type = props.type || 'feature';
-        const label = props.label || `Feature ${i + 1}`;
-        const risk = props.risk || null;
-        html += `<div class="field" style="cursor:pointer;padding:8px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px;" onclick="MCP_APP._selectFeature(${i})">`;
-        html += `<label>${label}</label>`;
-        html += `<div class="value">${type}${risk ? ` · <span style="color:${risk === 'HIGH' ? '#f87171' : '#fbbf24'}">${risk}</span>` : ''}</div>`;
-        html += `</div>`;
-      });
-    }
-
-    // Add provenance
-    html += '<h3 style="margin-top:16px;">Provenance</h3>';
-    html += `<div class="field"><label>Session</label><div class="value">${this.sessionId || 'anonymous'}</div></div>`;
-    html += `<div class="field"><label>Actor</label><div class="value">${this.actorId || 'anonymous'}</div></div>`;
-
-    // Epistemic tags
-    const claimTag = data?.claim_tag || data?.claimState || 'HYPOTHESIS';
-    const claimState = data?.claim_state || data?.claimState || 'INTERPRETED';
-    const uncert = data?.uncertainty || 'Moderate';
-    html += `<div class="field"><label>Epistemic Class</label><div>`;
-    html += `<span class="pill int">${claimState}</span> <span class="pill obs">${uncert}</span>`;
-    html += `</div></div>`;
-
-    // Governance flags
-    if (data?.maruah_flag) {
-      html += `<div class="field"><label>MARUAH</label><div><span class="pill-hold">Territory flag</span></div></div>`;
-    }
-    if (data?.governance_status === 'HOLD') {
-      html += `<div class="field"><label>888 HOLD</label><div><span class="pill-hold">HOLD</span></div></div>`;
-    }
-
-    panel.innerHTML = html;
-    this._renderMap(features);
-  },
-
-  _selectFeature(index) {
-    const data = this.toolResult;
-    let features = [];
-    if (data?.geojson?.features) features = data.geojson.features;
-    else if (data?.geojson_features) features = data.geojson_features;
-
-    if (features[index]) {
-      const props = features[index].properties || {};
-      const panel = document.getElementById('feature-panel');
-      let html = '<h3>Selected Feature</h3>';
-      for (const [k, v] of Object.entries(props)) {
-        html += `<div class="field"><label>${k}</label><div class="value">${v}</div></div>`;
-      }
-      html += '<button onclick="MCP_APP._renderResult(MCP_APP.toolResult)" style="margin-top:12px;padding:6px 12px;background:var(--accent);color:#000;border:none;border-radius:6px;cursor:pointer;">Back to list</button>';
-      panel.innerHTML = html;
-    }
-  },
-
-  _renderMap(features) {
-    const mapEl = document.getElementById('map');
-    if (!mapEl._map) {
-      mapEl._map = new maplibregl.Map({
-        container: 'map',
-        style: {
-          version: 8,
-          sources: {
-            'osm': { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, attribution: '© OpenStreetMap' }
-          },
-          layers: [{ id: 'osm-layer', type: 'raster', source: 'osm', minzoom: 0, maxzoom: 19 }]
-        },
-        center: [118.0, 5.5], zoom: 5
-      });
-      mapEl._map.on('load', () => this._addFeatures(features));
-    } else {
-      // Remove old layer
-      if (mapEl._map.getLayer('geox-features-fill')) mapEl._map.removeLayer('geox-features-fill');
-      if (mapEl._map.getLayer('geox-features-line')) mapEl._map.removeLayer('geox-features-line');
-      if (mapEl._map.getLayer('geox-features-circle')) mapEl._map.removeLayer('geox-features-circle');
-      if (mapEl._map.getSource('geox-features')) mapEl._map.removeSource('geox-features');
-      this._addFeatures(features);
-    }
-  },
-
-  _addFeatures(features) {
-    const map = document.getElementById('map')._map;
-    if (!map || !features?.length) return;
-    const fc = { type: 'FeatureCollection', features };
-    map.addSource('geox-features', { type: 'geojson', data: fc });
-    map.addLayer({ id: 'geox-features-fill', type: 'fill', source: 'geox-features', paint: { 'fill-color': '#00d4aa', 'fill-opacity': 0.15 }, filter: ['==', '$type', 'Polygon'] });
-    map.addLayer({ id: 'geox-features-line', type: 'line', source: 'geox-features', paint: { 'line-color': '#00d4aa', 'line-width': 2 }, filter: ['==', '$type', 'Polygon'] });
-    map.addLayer({ id: 'geox-features-circle', type: 'circle', source: 'geox-features', paint: { 'circle-color': '#00d4aa', 'circle-radius': 6, 'circle-stroke-width': 2, 'circle-stroke-color': '#fff' }, filter: ['==', '$type', 'Point'] });
-
-    // Fit bounds
-    try {
-      const bounds = new maplibregl.LngLatBounds();
-      features.forEach(f => {
-        if (f.geometry?.type === 'Point') bounds.extend(f.geometry.coordinates);
-        else if (f.geometry?.type === 'Polygon') f.geometry.coordinates[0].forEach(c => bounds.extend(c));
-      });
-      if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 60 });
-    } catch(e) { /* ignore bounds error */ }
-
-    // Click handler
-    map.on('click', 'geox-features-fill', (e) => {
-      if (e.features?.[0]) {
-        const idx = features.indexOf(e.features[0]);
-        if (idx >= 0) MCP_APP._selectFeature(idx);
-      }
-    });
-    map.on('click', 'geox-features-circle', (e) => {
-      if (e.features?.[0]) {
-        const idx = features.indexOf(e.features[0]);
-        if (idx >= 0) MCP_APP._selectFeature(idx);
-      }
-    });
-  }
-};
-
-// ═══════════════════════════════════════════════════════════════
-// Boot
-// ═══════════════════════════════════════════════════════════════
-MCP_APP.connect();
-</script>
 </body>
 </html>
