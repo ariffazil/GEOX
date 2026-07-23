@@ -35,12 +35,18 @@ class TestWorkspaceSurface:
         uris = {str(getattr(resource, "uri", "")) for resource in resources}
         assert WORKSPACE_URI in uris
 
-        resource = await mcp.read_resource("geox://apps/workspace-v1.html")
+        # Canonical MCP App is ui:// (mcp-app MIME). geox:// is a plain-html mirror.
+        resource = await mcp.read_resource(WORKSPACE_URI)
         content = resource.contents[0]
         assert content.mime_type == WORKSPACE_MIME
         assert "<!doctype html>" in content.content.lower()
         assert "GEOX Workspace" in content.content
         assert "No mutation path is enabled." in content.content
+
+        mirror = await mcp.read_resource("geox://apps/workspace-v1.html")
+        mirror_content = mirror.contents[0]
+        assert mirror_content.mime_type == "text/html"
+        assert "GEOX Workspace" in mirror_content.content
 
     def test_workspace_bundle_is_local_and_self_contained(self):
         html = (Path(__file__).resolve().parent.parent / "src" / "geox_mcp" / "ui" / "workspace_v1.html").read_text(encoding="utf-8")

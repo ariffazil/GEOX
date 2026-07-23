@@ -82,13 +82,16 @@ def register_workbench(mcp: FastMCP) -> None:
     async def geox_workbench() -> str:
         return WORKBENCH_FILE.read_text(encoding="utf-8")
 
-    # Also register on readable URI for resources/read access (Fix HOLD-2026-07-11)
+    # Content mirror for resources/read (HOLD-2026-07-11). MUST stay plain
+    # text/html — not profile=mcp-app — otherwise MCPJam "Listed UI Resources
+    # Valid" flags geox:// as a non-ui:// UI resource.
     @mcp.resource(
         WORKBENCH_URI_READABLE,
         description=(
-            "GEOX Earth Workbench — readable variant for resources/read access. Same content as ui://geox/workbench-v1.html."
+            "GEOX Earth Workbench — content mirror for resources/read. "
+            "MCP App host surface is ui://geox/workbench-v1.html."
         ),
-        mime_type="text/html;profile=mcp-app",
+        mime_type="text/html",
     )
     async def geox_workbench_readable() -> str:
         return WORKBENCH_FILE.read_text(encoding="utf-8")

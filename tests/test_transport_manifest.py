@@ -6,7 +6,7 @@ from pathlib import Path
 
 from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, CANONICAL_RUNTIME_TOOLS, INTERNAL_TOOLS
 from geox_mcp.server import create_app, mcp
-from geox_mcp.surface_manifest import WORKSPACE_MIME, manifest_tools, plugin_export_tool_names
+from geox_mcp.surface_manifest import WORKSPACE_MIME, WORKSPACE_URI, manifest_tools, plugin_export_tool_names
 
 create_app()
 
@@ -58,10 +58,16 @@ class TestManifestTopology:
         assert set(_llms_tools()) == manifest_public
 
     async def test_workbench_resource_is_readable(self):
-        resource = await mcp.read_resource("geox://apps/workspace-v1.html")
+        # ui:// = MCP App; geox:// = plain-html content mirror (not mcp-app MIME)
+        resource = await mcp.read_resource(WORKSPACE_URI)
         content = resource.contents[0]
         assert content.mime_type == WORKSPACE_MIME
         assert "GEOX Workspace" in content.content
+
+        mirror = await mcp.read_resource("geox://apps/workspace-v1.html")
+        mirror_content = mirror.contents[0]
+        assert mirror_content.mime_type == "text/html"
+        assert "GEOX Workspace" in mirror_content.content
 
     def test_generated_artifacts_are_reproducible(self):
         tracked = [
