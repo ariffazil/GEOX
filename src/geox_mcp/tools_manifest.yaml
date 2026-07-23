@@ -86,11 +86,11 @@ tools:
   face: surface
   visibility: public
   description: >-
-    Governed seismic-analysis assist (NOT autonomous structural framework).
-    Live modes: horizon_contrast (1D, attribute_data+depth), fault_sticks, volume_frame, blend,
-    structure_validate (G/K gates), interpret_section/rsi_pipeline (image INT_SEISMIC),
-    segy_slice (MeasurementContext). NOT live: vision, track_horizon, extract_faults, build_structure.
-    Local verdict max QUALIFIED_CANDIDATE — arifOS seals only.
+    One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL).
+    Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate,
+    interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC),
+    segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash.
+    preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.
   input_schema_source: callable
   annotations:
     read_only: true

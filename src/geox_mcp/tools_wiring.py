@@ -757,23 +757,29 @@ def register_tools_on(mcp):
         confidence_cap: float = 0.9,
         cube_ref: str | None = None,
         volume_inline: dict[str, Any] | None = None,
-        # Phase C/A/D
+        # Phase C/A/D + B-final bundle
         image_path: str | None = None,
+        artifact_ref: str | None = None,
         framework: dict[str, Any] | None = None,
         faults: list[dict[str, Any]] | None = None,
         horizons: list[dict[str, Any]] | None = None,
         measurement_context: dict[str, Any] | None = None,
+        calibration: dict[str, Any] | None = None,
+        earth_constraints: dict[str, Any] | None = None,
+        request: dict[str, Any] | None = None,
         segy_path: str | None = None,
         max_faults: int = 20,
         max_horizons: int = 12,
+        emit_bundle: bool = True,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """Seismic interpret modes: horizon_contrast, fault_sticks, volume_frame, blend,
-        structure_validate, interpret_section/rsi_pipeline (image INT_SEISMIC), segy_slice.
+        """One semantic capability: propose geometry, physics-gate, compare hypotheses.
 
-        Local verdicts are QUALIFIED_CANDIDATE only — arifOS seals. Not autonomous structural SEAL.
+        Modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate,
+        interpret, interpret_section/rsi_pipeline, segy_slice.
+        Local verdict QUALIFIED_CANDIDATE only. preferred_hypothesis always null from GEOX.
         """
         from geox_mcp.tools.seismic_interpret import geox_seismic_interpret as _impl
 
@@ -803,13 +809,18 @@ def register_tools_on(mcp):
                 "cube_ref": cube_ref,
                 "volume_inline": volume_inline,
                 "image_path": image_path,
+                "artifact_ref": artifact_ref,
                 "framework": framework,
                 "faults": faults,
                 "horizons": horizons,
                 "measurement_context": measurement_context,
+                "calibration": calibration,
+                "earth_constraints": earth_constraints,
+                "request": request,
                 "segy_path": segy_path,
                 "max_faults": max_faults,
                 "max_horizons": max_horizons,
+                "emit_bundle": emit_bundle,
             },
             session_id=session_id,
             actor_id=actor_id,

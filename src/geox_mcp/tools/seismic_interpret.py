@@ -6,15 +6,18 @@ Live modes (public, callable):
   fault_sticks       — Fault stick CSV/GeoJSON ingest (not auto-extract)
   volume_frame       — Volume frame read/write
   blend              — Alpha/RGB volume blending
-  structure_validate — G2–G9 + K-* structural falsifier
+  structure_validate — G2–G9 + K-* structural falsifier (+ interpretation_bundle)
+  interpret          — propose→validate→compare bundle (framework and/or image)
   interpret_section  — RSI image-true propose (INT_SEISMIC, QUALIFIED_CANDIDATE)
-  rsi_pipeline       — thin alias → geox_rsi_interpret (F13 execute-all 2026-07-23)
+  rsi_pipeline       — thin alias → geox_rsi_interpret
+  section_image      — alias interpret_section
   segy_slice         — Phase D: SEG-Y → MeasurementContext + amplitude stats
 
 Still HOLD (not public-executable):
   vision, track_horizon, extract_faults, build_structure, observe_image, falsify
 
 Local engine verdicts are QUALIFIED_CANDIDATE at most — arifOS seals.
+preferred_hypothesis always null from GEOX (human adjudicates).
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
 
@@ -30,9 +33,12 @@ _LIVE_MODES = frozenset(
         "volume_frame",
         "blend",
         "structure_validate",
+        "interpret",
         "interpret_section",
         "rsi_pipeline",
+        "section_image",
         "segy_slice",
+        "segy_2d",
     }
 )
 
@@ -90,13 +96,18 @@ async def geox_seismic_interpret(
     blend_mode: str = "alpha",
     # ── section / RSI / structure / SEG-Y ──
     image_path: str | None = None,
+    artifact_ref: str | None = None,
     framework: dict[str, Any] | None = None,
     faults: list[dict[str, Any]] | None = None,
     horizons: list[dict[str, Any]] | None = None,
     measurement_context: dict[str, Any] | None = None,
+    calibration: dict[str, Any] | None = None,
+    earth_constraints: dict[str, Any] | None = None,
+    request: dict[str, Any] | None = None,
     segy_path: str | None = None,
     max_faults: int = 20,
     max_horizons: int = 12,
+    emit_bundle: bool = True,
     # ── legacy ──
     horizon_query: str = "unconformity",
     threshold: float = 0.5,
@@ -107,11 +118,16 @@ async def geox_seismic_interpret(
     """Unified seismic interpretation — public modes.
 
     Local engine verdicts are QUALIFIED_CANDIDATE at most — arifOS seals.
+    preferred_hypothesis is never set by GEOX.
     """
     mode_norm = (mode or "horizon_contrast").strip().lower()
 
     if mode_norm == "contrast":
         mode_norm = "horizon_contrast"
+    if mode_norm == "section_image":
+        mode_norm = "interpret_section"
+    if mode_norm == "segy_2d":
+        mode_norm = "segy_slice"
 
     if mode_norm in _NOT_YET_MODES and mode_norm not in _LIVE_MODES:
         return {
@@ -143,17 +159,106 @@ async def geox_seismic_interpret(
     if mode_norm == "structure_validate":
         from geox_mcp.tools.structure_validate import geox_structure_validate as _impl
 
+        hyp_n = 3
+        if isinstance(request, dict) and request.get("hypothesis_count"):
+            hyp_n = int(request["hypothesis_count"])
         result = await _impl(
             framework=framework,
             faults=faults,
             horizons=horizons,
             measurement_context=measurement_context,
+            calibration=calibration,
+            earth_constraints=earth_constraints,
+            emit_bundle=emit_bundle,
+            hypothesis_count=hyp_n,
         )
-        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm)
+        stamped = _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm)
+        stamped["preferred_hypothesis"] = None
+        return stamped
+
+    # ── interpret: full propose→validate→compare bundle ──
+    if mode_norm == "interpret":
+        from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
+        from geox_mcp.tools.structure_validate import geox_structure_validate as _sv
+
+        path = image_path or artifact_ref or source_uri or ""
+        fw: dict[str, Any] = dict(framework or {})
+        if faults is not None:
+            fw["faults"] = faults
+        if horizons is not None:
+            fw["horizons"] = horizons
+        propose_result = None
+        if path and not fw.get("faults"):
+            from geox_mcp.tools.seismic_rsi import geox_rsi_interpret as _rsi
+
+            propose_result = await _rsi(
+                image_path=path,
+                mode="horizon_fault_pick",
+                max_faults=max_faults,
+                max_horizons=max_horizons,
+            )
+            # light map RSI faults into framework if present
+            if isinstance(propose_result, dict) and propose_result.get("geometry"):
+                geom = propose_result["geometry"]
+                fw.setdefault("faults", [])
+                fw.setdefault("horizons", [])
+                # keep propose separate; gates need explicit physics attrs
+        if fw.get("faults") or fw.get("horizons") or fw.get("velocity"):
+            sv = await _sv(
+                framework=fw,
+                measurement_context=measurement_context,
+                calibration=calibration
+                or {"input_class": "image_only" if path else "unknown", "calibrated": False},
+                earth_constraints=earth_constraints,
+                emit_bundle=True,
+                hypothesis_count=int((request or {}).get("hypothesis_count") or 3),
+            )
+            bundle = sv.get("interpretation_bundle") or sv
+            return _stamp_qualified(
+                {
+                    **(bundle if isinstance(bundle, dict) else {}),
+                    "ok": True,
+                    "structure_validate": {
+                        k: sv.get(k)
+                        for k in (
+                            "combined_gate_verdict",
+                            "kills",
+                            "passes",
+                            "unmeasured",
+                            "gates",
+                        )
+                    },
+                    "propose": {
+                        "ran": propose_result is not None,
+                        "verdict": (propose_result or {}).get("verdict"),
+                    },
+                    "preferred_hypothesis": None,
+                },
+                mode_norm,
+            )
+        # propose-only bundle
+        cal = calibration or {"input_class": "image_only" if path else "unknown"}
+        bundle = build_interpretation_bundle(
+            propose_result=propose_result if isinstance(propose_result, dict) else None,
+            calibration=cal,
+            earth_constraints=earth_constraints,
+            request=request or {"hypothesis_count": 3},
+        )
+        if not path and not fw:
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": "interpret",
+                "error": "MISSING_INPUT",
+                "message": "interpret requires framework faults/horizons and/or image_path/artifact_ref.",
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+            }
+        return _stamp_qualified(bundle, mode_norm)
 
     # ── interpret_section / rsi_pipeline ──
     if mode_norm in ("interpret_section", "rsi_pipeline"):
-        path = image_path or source_uri or ""
+        path = image_path or artifact_ref or source_uri or ""
         if not path:
             return {
                 "ok": False,
@@ -181,9 +286,8 @@ async def geox_seismic_interpret(
         result["epistemic_label"] = "INT_SEISMIC"
         result["capability_note"] = (
             "RSI image-true propose. Pixel domain ≠ subsurface. "
-            "Not OBS_GEOLOGY. Run structure_validate on picks. arifOS SEAL only."
+            "Not OBS_GEOLOGY. Run structure_validate / mode=interpret on picks. arifOS SEAL only."
         )
-        # Ensure ≥3 alternatives always (G1) — pad from RSI alternatives if thin
         alts = result.get("alternatives")
         if not alts:
             result["alternatives"] = [
@@ -191,6 +295,17 @@ async def geox_seismic_interpret(
                 {"model_id": "relay_segmented", "prior": "faults as relays / hard-linked segments"},
                 {"model_id": "artifact_dominant", "prior": "picks dominated by acquisition/processing artifacts"},
             ]
+        if emit_bundle:
+            from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
+
+            cal = calibration or {"input_class": "image_only", "calibrated": False}
+            result["interpretation_bundle"] = build_interpretation_bundle(
+                propose_result=result,
+                calibration=cal,
+                earth_constraints=earth_constraints,
+                request=request or {"hypothesis_count": 3},
+            )
+            result["preferred_hypothesis"] = None
         return _stamp_qualified(result, mode_norm)
 
     # ── segy_slice ──
