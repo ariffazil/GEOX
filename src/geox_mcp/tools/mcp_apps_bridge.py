@@ -666,42 +666,25 @@ def get_output_schema(tool_name: str) -> dict[str, Any] | None:
     return TOOL_OUTPUT_SCHEMAS.get(tool_name)
 
 
-def create_app_resource(app_id: str, html_content: str | None = None) -> dict[str, Any] | None:
-    """Create a SEP-1865 MCP Apps UI resource using mcp-ui-server SDK.
+def create_app_resource(app_id: str, html_content: str | None = None) -> dict[str, Any]:
+    """Create a SEP-1865 MCP Apps UI resource using mcp-ui-server SDK or fallback.
 
     Args:
         app_id: Key from GEOX_APPS registry
         html_content: Optional HTML override. If None, loads from html_path on disk.
 
     Returns:
-        UIResource-compatible dict for tools/call response content array, or None if SDK unavailable.
+        UIResource-compatible dict for tools/call response content array.
     """
-    if not _MCP_UI_SERVER_AVAILABLE:
-        return None
-
     app = GEOX_APPS.get(app_id)
     if not app:
         raise KeyError(f"Unknown GEOX app_id: '{app_id}' in GEOX_APPS registry")
 
-    resource_type = app.get("resource_type", "rawHtml")
+    if html_content is None:
+        html_content = load_app_html(app_id)
 
-    try:
-        # Prefer on-disk HTML even if marked externalUrl historically
-        if html_content is None and resolve_html_path(app) is not None:
-            html_content = load_app_html(app_id)
-            resource_type = "rawHtml"
-
-        if resource_type == "externalUrl" and app.get("external_url"):
-            resource = create_ui_resource(
-                {
-                    "uri": app["uri"],
-                    "content": {"type": "externalUrl", "iframeUrl": app["external_url"]},
-                    "encoding": "text",
-                }
-            )
-        else:
-            if html_content is None:
-                html_content = load_app_html(app_id)
+    if _MCP_UI_SERVER_AVAILABLE:
+        try:
             resource = create_ui_resource(
                 {
                     "uri": app["uri"],
@@ -709,18 +692,28 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
                     "encoding": "text",
                 }
             )
+            if resource and hasattr(resource, "resource"):
+                return {
+                    "type": "resource",
+                    "resource": {
+                        "uri": getattr(resource.resource, "uri", app["uri"]),
+                        "mimeType": getattr(resource.resource, "mimeType", app["mime_type"]),
+                        "text": getattr(resource.resource, "text", html_content),
+                    },
+                }
+        except Exception as exc:
+            logger.warning("Failed to create UI resource for app '%s': %s", app_id, exc)
 
-        return {
-            "type": "resource",
-            "resource": {
-                "uri": resource.resource.uri,
-                "mimeType": resource.resource.mimeType,
-                "text": resource.resource.text,
-            },
-        }
-    except Exception as exc:
-        logger.error("Failed to create UI resource for app '%s' (%s): %s", app_id, app.get("uri"), exc)
-        raise ValueError(f"Failed to create UI resource for app '{app_id}' ({app.get('uri')}): {exc}") from exc
+    return {
+        "type": "resource",
+        "resource": {
+            "uri": app["uri"],
+            "name": app["title"],
+            "description": app["description"],
+            "mimeType": app["mime_type"],
+            "text": html_content,
+        },
+    }
 
 
 def _resource_already_registered(mcp: Any, uri: str) -> bool:
