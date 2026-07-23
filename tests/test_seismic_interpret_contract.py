@@ -38,17 +38,19 @@ def test_interpret_request_discriminated_union_modes():
     adapter.validate_python({"mode": "segy_slice", "segy_path": "/tmp/x.segy"})
     adapter.validate_python({"mode": "interpret", "framework": {"faults": [{"fault_id": "F1"}]}})
 
-    # unknown mode
+    # unknown mode still rejected by discriminator
     with pytest.raises(ValidationError):
         adapter.validate_python({"mode": "not_a_real_mode"})
 
-    # extra field forbidden on branch
+    # Per-field type validation remains strict (audit 2026-07-23):
+    # unknown fields pass through (ignored) so MCP transport metadata
+    # (session_id, actor_id, source_sha256) is not rejected, but
+    # wrong types on declared fields ARE rejected.
     with pytest.raises(ValidationError):
         adapter.validate_python(
             {
                 "mode": "fault_sticks",
-                "source_uri": "x",
-                "totally_unknown_param": 1,
+                "source_uri": 123,  # declared field, wrong type
             }
         )
 
