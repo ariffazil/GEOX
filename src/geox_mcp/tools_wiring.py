@@ -833,10 +833,21 @@ def register_tools_on(mcp):
         trace_id: str | None = None,
     ) -> dict[str, Any]:
         """Extract visual patterns from seismic image. epistemic: OBS_IMAGE."""
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
         from geox_mcp.tools.seismic_vision_ai_async import geox_visual_understand_async as _impl
 
         args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
-        return await _impl(**args)
+        result = await _impl(**args)
+        return wrap_as_ui_tool_result(
+            result,
+            app_id="visual_hub",
+            structured_override=compact_structured_for_ui(
+                result if isinstance(result, dict) else {"data": result},
+                tool="geox_visual_understand",
+                app_id="visual_hub",
+            ),
+            text="Visual understand complete. UI: ui://geox/visual-hub.",
+        )
 
     # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_visual_enhance", annotations=_geox_annotations("geox_visual_enhance"))
     async def _visual_enhance(
@@ -859,10 +870,21 @@ def register_tools_on(mcp):
         trace_id: str | None = None,
     ) -> dict[str, Any]:
         """Generate visual alternatives across discontinuity gaps. epistemic: GEN_HYPOTHESIS."""
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
         from geox_mcp.tools.seismic_vision_ai_async import geox_visual_generate_hypotheses_async as _impl
 
         args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
-        return await _impl(**args)
+        result = await _impl(**args)
+        return wrap_as_ui_tool_result(
+            result,
+            app_id="visual_hub",
+            structured_override=compact_structured_for_ui(
+                result if isinstance(result, dict) else {"data": result},
+                tool="geox_visual_generate_hypotheses",
+                app_id="visual_hub",
+            ),
+            text="Visual hypotheses generated. UI: ui://geox/visual-hub.",
+        )
 
     # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_panel_d_render", annotations=_geox_annotations("geox_panel_d_render"))
     async def _panel_d_render(
@@ -1099,7 +1121,22 @@ def register_tools_on(mcp):
             actor_id=actor_id,
             trace_id=trace_id,
         )
-        return await _impl(**args)
+        result = await _impl(**args)
+        # PR3: 3-channel UI → basin-explorer
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
+
+        _bname = basin_name or name or (result.get("basin_name") if isinstance(result, dict) else "")
+        return wrap_as_ui_tool_result(
+            result,
+            app_id="basin_explorer",
+            params={"basin_name": _bname, "mode": mode} if _bname else {"mode": mode},
+            structured_override=compact_structured_for_ui(
+                result if isinstance(result, dict) else {"data": result},
+                tool="geox_basin",
+                app_id="basin_explorer",
+            ),
+            text=f"Basin {mode}: {_bname or 'unspecified'}. UI: ui://geox/basin-explorer.",
+        )
 
     @mcp.tool(name="geox_claim", annotations=_geox_annotations("geox_claim"))
     async def _claim(
@@ -1175,7 +1212,21 @@ def register_tools_on(mcp):
             trace_id=trace_id,
             ack_irreversible=ack_irreversible,
         )
-        return await _impl(**args)
+        result = await _impl(**args)
+        # PR3: 3-channel UI → risk-console
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
+
+        return wrap_as_ui_tool_result(
+            result,
+            app_id="risk_console",
+            params={"mode": mode, "claim_id": claim_id} if claim_id else {"mode": mode},
+            structured_override=compact_structured_for_ui(
+                result if isinstance(result, dict) else {"data": result},
+                tool="geox_claim",
+                app_id="risk_console",
+            ),
+            text=f"Claim {mode}: {(claim_id or claim_text or '')[:80]}. UI: ui://geox/risk-console.",
+        )
 
     @mcp.tool(name="geox_falsify", annotations=_geox_annotations("geox_falsify"))
     async def _falsify(
@@ -1204,7 +1255,22 @@ def register_tools_on(mcp):
             actor_id=actor_id,
             trace_id=trace_id,
         )
-        return await _impl(**args)
+        result = await _impl(**args)
+        # PR3: 3-channel UI → judge-console
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
+
+        verdict = result.get("verdict") if isinstance(result, dict) else None
+        return wrap_as_ui_tool_result(
+            result,
+            app_id="judge_console",
+            params={"mode": mode},
+            structured_override=compact_structured_for_ui(
+                result if isinstance(result, dict) else {"data": result},
+                tool="geox_falsify",
+                app_id="judge_console",
+            ),
+            text=f"Falsify {mode}: verdict={verdict}. claim={(claim_text or '')[:60]}. UI: ui://geox/judge-console.",
+        )
 
     # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
     async def _evidence(
@@ -3953,7 +4019,19 @@ def register_tools_on(mcp):
             actor_id=actor_id,
             trace_id=trace_id,
         )
-        return await _impl(**args)
+        result = await _impl(**args)
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
+
+        return wrap_as_ui_tool_result(
+            result,
+            app_id="risk_console",
+            structured_override=compact_structured_for_ui(
+                result if isinstance(result, dict) else {"data": result},
+                tool="geox_claim_graph_evaluate",
+                app_id="risk_console",
+            ),
+            text="Claim graph evaluate complete. UI: ui://geox/risk-console.",
+        )
 
     @mcp.tool(name="geox_contradiction_scan", annotations=_geox_annotations("geox_contradiction_scan"))
     async def _contradiction_scan(
@@ -3982,7 +4060,20 @@ def register_tools_on(mcp):
             actor_id=actor_id,
             trace_id=trace_id,
         )
-        return await _impl(**args)
+        result = await _impl(**args)
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
+
+        return wrap_as_ui_tool_result(
+            result,
+            app_id="judge_console",
+            params={"mode": mode},
+            structured_override=compact_structured_for_ui(
+                result if isinstance(result, dict) else {"data": result},
+                tool="geox_contradiction_scan",
+                app_id="judge_console",
+            ),
+            text=f"Contradiction scan {mode}: {(claim_text or '')[:60]}. UI: ui://geox/judge-console.",
+        )
 
     @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
     async def _evidence(
@@ -4017,7 +4108,20 @@ def register_tools_on(mcp):
             actor_id=actor_id,
             trace_id=trace_id,
         )
-        return await _impl(**args)
+        result = await _impl(**args)
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
+
+        return wrap_as_ui_tool_result(
+            result,
+            app_id="judge_console",
+            params={"claim_id": claim_id} if claim_id else None,
+            structured_override=compact_structured_for_ui(
+                result if isinstance(result, dict) else {"data": result},
+                tool="geox_evidence",
+                app_id="judge_console",
+            ),
+            text=f"Evidence {evidence_type}: claim={claim_id or 'n/a'}. UI: ui://geox/judge-console.",
+        )
 
     @mcp.tool(name="geox_lem_predict", annotations=_geox_annotations("geox_lem_predict"))
     async def _lem_predict(
@@ -4054,7 +4158,21 @@ def register_tools_on(mcp):
             actor_id=actor_id,
         )
         result = await _impl(req)
-        return result if isinstance(result, dict) else result.model_dump(mode="json")
+        payload = result if isinstance(result, dict) else result.model_dump(mode="json")
+        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
+
+        return wrap_as_ui_tool_result(
+            payload,
+            app_id="well_desk",
+            params={"mode": "lem", "depth_m": target_depth_m},
+            structured_override=compact_structured_for_ui(
+                payload, tool="geox_lem_predict", app_id="well_desk"
+            ),
+            text=(
+                f"LEM predict depth={target_depth_m} basin={basin_context or 'n/a'}. "
+                f"UI: ui://geox/well-desk."
+            ),
+        )
 
     @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
     async def _sediment_mass_balance(

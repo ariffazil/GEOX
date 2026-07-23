@@ -159,10 +159,12 @@ TOOL_TIMEOUT_DEFAULT = 60.0
 # idempotentHint: True for read-only tools (calling twice = same result)
 
 # Read-only tools: query, compute, simulation, ingest, QC, parse, atlas, map, status
+# PR3: all four MCP hints set explicitly (silence is risky — defaults false/true/false/true).
 _GEOX_READONLY_ANNOTATIONS = {
     "readOnlyHint": True,
     "destructiveHint": False,
     "idempotentHint": True,
+    "openWorldHint": False,
 }
 
 # State-creating tools: claim creation, evidence attachment, prospect evaluation
@@ -170,6 +172,7 @@ _GEOX_STATE_ANNOTATIONS = {
     "readOnlyHint": False,
     "destructiveHint": False,
     "idempotentHint": False,
+    "openWorldHint": False,
 }
 
 # Export tools: create files/artifacts (not destructive, but not read-only)
@@ -177,6 +180,7 @@ _GEOX_EXPORT_ANNOTATIONS = {
     "readOnlyHint": False,
     "destructiveHint": False,
     "idempotentHint": True,
+    "openWorldHint": True,
 }
 
 # Tools that create state (not read-only)
@@ -191,14 +195,35 @@ _GEOX_STATE_TOOLS = {
     "geox_map_export_package",
 }
 
+# Tools that may call external services / open world (Macrostrat, tiles, HTTP)
+_GEOX_OPEN_WORLD_TOOLS = {
+    "geox_basin",
+    "geox_map_layers_list",
+    "geox_map_scene_plan",
+    "geox_map_render_preview",
+    "geox_map_export_package",
+    "geox_deep_time_state",
+    "geox_to_wealth_bridge",
+    "geox_surface_status",
+    "geox_visual_understand",
+    "geox_visual_generate_hypotheses",
+}
+
 
 def _geox_annotations(tool_name: str) -> dict[str, bool]:
-    """Return MCP annotations for a GEOX tool based on its behavior."""
+    """Return MCP annotations for a GEOX tool based on its behavior.
+
+    Always sets all four hints: readOnlyHint, destructiveHint, idempotentHint, openWorldHint.
+    """
     if tool_name in _GEOX_STATE_TOOLS:
-        return _GEOX_STATE_ANNOTATIONS
-    if "export" in tool_name:
-        return _GEOX_EXPORT_ANNOTATIONS
-    return _GEOX_READONLY_ANNOTATIONS
+        base = dict(_GEOX_STATE_ANNOTATIONS)
+    elif "export" in tool_name:
+        base = dict(_GEOX_EXPORT_ANNOTATIONS)
+    else:
+        base = dict(_GEOX_READONLY_ANNOTATIONS)
+    if tool_name in _GEOX_OPEN_WORLD_TOOLS or tool_name.startswith("geox_map_"):
+        base["openWorldHint"] = True
+    return base
 
 
 # FAIL-CLOSED AUTH (F1 Amanah) — only enforced for remote HTTP, not local stdio

@@ -197,3 +197,105 @@ async def test_07_well_desk_resource_is_host_bridge_shell():
     assert "ui/initialize" in html or "ui/notifications/tool-result" in html
     # Must not depend on relative bridge scripts (broken in MCP iframe)
     assert "./src/bridge/MCPBridge.js" not in html
+
+
+@pytest.mark.asyncio
+async def test_08_all_tools_have_four_annotations_and_ui_binding():
+    """PR3: 31 tools — full MCP annotation quartet + ui.resourceUri (or documented)."""
+    tools = await mcp.list_tools()
+    assert len(tools) == 31
+    needed = ("readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint")
+    missing_ann = []
+    missing_ui = []
+    for t in tools:
+        ann = getattr(t, "annotations", None)
+        keys = {}
+        if ann is not None:
+            if hasattr(ann, "model_dump"):
+                keys = ann.model_dump()
+            elif isinstance(ann, dict):
+                keys = ann
+            else:
+                keys = {k: getattr(ann, k, None) for k in needed}
+        if any(keys.get(k) is None for k in needed):
+            missing_ann.append((t.name, {k: keys.get(k) for k in needed}))
+        meta = getattr(t, "meta", None) or {}
+        ui = meta.get("ui") if isinstance(meta, dict) else None
+        if not ui or not ui.get("resourceUri"):
+            missing_ui.append(t.name)
+    assert not missing_ann, f"Incomplete annotations: {missing_ann}"
+    assert not missing_ui, f"Missing UI binding: {missing_ui}"
+
+
+@pytest.mark.asyncio
+async def test_09_golden_prompts_direct_indirect_negative():
+    """PR3 host-path golden prompts (in-process host simulation).
+
+    DIRECT  — open Well Witness for A10
+    INDIRECT — petrophysics should still bind UI
+    NEGATIVE — missing well_id → isError + readable text (no crash)
+    """
+    from fastmcp.tools import ToolResult
+
+    def _channels(result):
+        if isinstance(result, ToolResult):
+            content, sc, meta, err = result.content, result.structured_content or {}, result.meta or {}, result.is_error
+        else:
+            content = getattr(result, "content", None) or []
+            sc = getattr(result, "structured_content", None) or getattr(result, "structuredContent", None) or {}
+            meta = getattr(result, "meta", None) or {}
+            err = bool(getattr(result, "is_error", False) or getattr(result, "isError", False))
+        texts = []
+        for b in content or []:
+            t = getattr(b, "text", None) or (b.get("text") if isinstance(b, dict) else None)
+            if t:
+                texts.append(t)
+        return texts, sc, meta, err
+
+    # DIRECT
+    direct = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": "A10"})
+    texts, sc, meta, err = _channels(direct)
+    assert not err
+    assert texts
+    assert sc.get("well_id") == "A10" or sc.get("summary", {}).get("well_id") == "A10"
+    assert (meta.get("ui") or {}).get("resourceUri", "").startswith("ui://geox/well-desk")
+    res = await mcp.read_resource("ui://geox/well-desk")
+    assert "ui/initialize" in res.contents[0].content or "tool-result" in res.contents[0].content
+
+    # INDIRECT — data tool that should still open UI
+    indirect = await mcp.call_tool(
+        "geox_petrophysics",
+        {"mode": "generate", "well_id": "A10", "use_synth_cube": True},
+    )
+    texts2, sc2, meta2, err2 = _channels(indirect)
+    assert texts2
+    assert (meta2.get("ui") or {}).get("resourceUri", "").startswith("ui://geox/well-desk")
+
+    # NEGATIVE — refuse without well_id, keep session alive (isError path)
+    negative = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": ""})
+    texts3, sc3, meta3, err3 = _channels(negative)
+    assert err3 or sc3.get("ok") is False or sc3.get("error_class")
+    assert texts3, "negative path must return readable text"
+    # UI meta still present so host does not crash on binding
+    assert (meta3.get("ui") or {}).get("resourceUri", "").startswith("ui://geox/")
+
+
+@pytest.mark.asyncio
+async def test_10_judge_and_basin_three_channel():
+    """PR3: falsify + basin return 3-channel UI bindings."""
+    from fastmcp.tools import ToolResult
+
+    def _meta_ui(result):
+        meta = result.meta if isinstance(result, ToolResult) else getattr(result, "meta", None) or {}
+        return (meta or {}).get("ui") or {}
+
+    falsify = await mcp.call_tool(
+        "geox_falsify",
+        {"claim_text": "This sandstone was deposited in a deep marine basin at 5000m water depth with beach facies.", "mode": "full"},
+    )
+    ui_f = _meta_ui(falsify)
+    assert ui_f.get("resourceUri", "").startswith("ui://geox/judge-console"), ui_f
+
+    basin = await mcp.call_tool("geox_basin", {"mode": "profile", "basin_name": "malay-basin"})
+    ui_b = _meta_ui(basin)
+    assert ui_b.get("resourceUri", "").startswith("ui://geox/basin-explorer"), ui_b
