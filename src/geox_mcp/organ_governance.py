@@ -476,11 +476,11 @@ def _check_lane_enforcement(
     """Lane-based authority enforcement (Federation Contract §3).
 
     Returns:
-      ("SEAL", None) if the call is authorized for this lane.
+      ("TRANSPORT_OK", None) if the call is authorized for this lane (not constitutional SEAL).
       ("HOLD", JSONResponse) if lane enforcement blocks the call.
     """
     if ASSET_MODE == "sandbox":
-        return "SEAL", None
+        return "TRANSPORT_OK", None
 
     lane = _get_effective_lane(tool_name, arguments)
 
@@ -563,7 +563,7 @@ def _check_lane_enforcement(
 
     # ── DISCOVERY / EVIDENCE LANE: always allowed ───────────────────
     logger.info(f"LANE: {tool_name} [{lane}] → ALLOWED")
-    return "SEAL", None
+    return "TRANSPORT_OK", None
 
 
 def _check_identity_propagation(
@@ -579,12 +579,12 @@ def _check_identity_propagation(
     are checked by _check_lane_enforcement instead.
 
     Returns:
-      ("SEAL", None) if identity is valid and bound, or lane-exempt.
+      ("TRANSPORT_OK", None) if identity is valid and bound, or lane-exempt.
       ("HOLD", JSONResponse) if identity is missing for governed lanes.
     """
     if ASSET_MODE == "sandbox":
         logger.info(f"GOV: {tool_name} [SANDBOX] → identity check bypassed")
-        return "SEAL", None
+        return "TRANSPORT_OK", None
 
     lane = _get_effective_lane(tool_name, arguments)
 
@@ -597,7 +597,7 @@ def _check_identity_propagation(
         or (actor_id and actor_id not in ("anonymous", "null", "None", "geox-governed"))
     )
     if lane in ("discovery", "evidence") and not identity_claimed:
-        return "SEAL", None
+        return "TRANSPORT_OK", None
 
     # Governed lanes and claimed identities: require a complete, bound pair.
     # actor_id must be present and not null/anonymous
@@ -688,7 +688,7 @@ def _check_identity_propagation(
         arguments["session_id"] = canonical_session_id
         arguments["actor_id"] = canonical_actor_id
 
-    return "SEAL", None
+    return "TRANSPORT_OK", None
 
 
 async def check_governance(
@@ -703,7 +703,7 @@ async def check_governance(
     Check governance for a GEOX tool call.
 
     Returns: (verdict, error_response_or_None)
-      - ("SEAL", None) → proceed with execution
+      - ("TRANSPORT_OK", None) → proceed with execution (not constitutional SEAL)
       - ("ADVISORY", None) → proceed (kernel noted the call)
       - ("HOLD", dict) → blocked, return dict as JSON error response
       - ("VOID", dict) → rejected, return dict as JSON error response
@@ -775,7 +775,7 @@ async def check_governance(
     # READONLY — log and proceed
     if risk_tier == RiskTier.READONLY:
         logger.info(f"GOV: {tool_name} [READONLY] → SEAL (log only)")
-        return "SEAL", None
+        return "TRANSPORT_OK", None
 
     # C1 ADVISORY — call kernel but proceed regardless
     if risk_tier == RiskTier.C1_ADVISORY:
@@ -852,9 +852,13 @@ async def check_governance(
             reason = f"Unexpected kernel response: {str(kernel_result)[:100]}"
             logger.warning(f"GOV: {tool_name} [{risk_tier.value}] → unexpected kernel response")
 
-    if verdict == "SEAL":
-        logger.info(f"GOV: {tool_name} [{risk_tier.value}] → SEAL ✅")
-        return "SEAL", None
+    # TRANSPORT_OK = execution permitted. Constitutional SEAL is arifOS-only (never this layer).
+    if verdict in ("SEAL", "TRANSPORT_OK", "ALLOW", "PROCEED"):
+        logger.info(
+            f"GOV: {tool_name} [{risk_tier.value}] → TRANSPORT_OK "
+            f"(kernel_verdict={verdict}; SEAL word reserved for constitutional seal)"
+        )
+        return "TRANSPORT_OK", None
 
     # HOLD or VOID — block execution (fail-closed)
     error_msg = f"arifOS {verdict}: {reason}"

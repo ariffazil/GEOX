@@ -847,26 +847,35 @@ def register_tools_on(mcp):
 
     @mcp.tool(name="geox_visual_understand", annotations=_geox_annotations("geox_visual_understand"))
     async def _visual_understand(
-        arguments: dict[str, Any] | None = None,
+        image_path: str = "",
+        mode: str = "full",
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """Extract visual patterns from seismic image. epistemic: OBS_IMAGE."""
-        from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
+        """OBS_IMAGE perception assist. Without VLM backend returns HOLD (no fabricated structure).
+
+        image_path: absolute path to seismic image on the host.
+        Does NOT produce OBS_GEOLOGY. Max local verdict QUALIFIED_CANDIDATE.
+        """
+        from geox_mcp.tools.mcp_apps_bridge import wrap_as_ui_tool_result
         from geox_mcp.tools.seismic_vision_ai_async import geox_visual_understand_async as _impl
 
-        args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
-        result = await _impl(**args)
+        result = await _impl(image_path=image_path or "", mode=mode or "full")
+        is_hold = isinstance(result, dict) and (
+            result.get("status") in ("HOLD", "VOID") or result.get("ok") is False
+        )
+        text = (
+            f"Visual understand HOLD: {result.get('error') or result.get('reason') or 'no backend'}"
+            if is_hold
+            else "Visual understand complete (OBS_IMAGE only). UI: ui://geox/visual-hub."
+        )
+        # Preserve full result — do not compact away HOLD truth (F2)
         return wrap_as_ui_tool_result(
             result,
             app_id="visual_hub",
-            structured_override=compact_structured_for_ui(
-                result if isinstance(result, dict) else {"data": result},
-                tool="geox_visual_understand",
-                app_id="visual_hub",
-            ),
-            text="Visual understand complete. UI: ui://geox/visual-hub.",
+            structured_override=result if isinstance(result, dict) else {"data": result},
+            text=text,
         )
 
     # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_visual_enhance", annotations=_geox_annotations("geox_visual_enhance"))

@@ -31,14 +31,30 @@ def geox_visual_understand(image_path: str, mode: str = "full", vlm_client_callb
     """Extract visual patterns from a seismic image without making geological claims.
 
     If a vlm_client_callback is provided, it delegates the visual query to the active LLM.
-    Otherwise, it falls back to a deterministic computer vision pattern scan.
+    Without a perception backend: HOLD — never invent discontinuities or terminations.
+
+    P0 2026-07-23 (sovereign): hard-coded CV fallback deleted. False evidence is F2 violation.
+    Correct fallback is HOLD, not plausible-looking geological observations.
     """
-    if not os.path.exists(image_path):
-        return {"status": "VOID", "reason": f"File not found: {image_path}"}
+    if not image_path or not os.path.exists(image_path):
+        return {
+            "ok": False,
+            "status": "HOLD",
+            "error": "NO_IMAGE",
+            "reason": f"File not found or empty path: {image_path!r}",
+            "governance_status": "HOLD",
+            "local_verdict": "QUALIFIED_CANDIDATE",
+            "seal_authority": "arifOS_only",
+            "epistemic": "NO_VALID_PERCEPTION",
+            "claim_tag": "HYPOTHESIS",
+        }
 
     with open(image_path, "rb") as f:
         img_bytes = f.read()
     sha256 = hashlib.sha256(img_bytes).hexdigest()
+
+    im = Image.open(image_path)
+    w, h = im.size
 
     # If VLM callback is available, use it (platform agnostic)
     if vlm_client_callback:
@@ -48,31 +64,50 @@ def geox_visual_understand(image_path: str, mode: str = "full", vlm_client_callb
                 "apparent breaks, termination shapes, and potential imaging artifacts. Do NOT use "
                 "interpretive geological names (e.g. reservoir, oil, gas, formation top)."
             )
-            return vlm_client_callback(image_path, prompt)
+            out = vlm_client_callback(image_path, prompt)
+            if isinstance(out, dict):
+                out.setdefault("image_hash", sha256)
+                out.setdefault("dimensions", [w, h])
+                out.setdefault("input_class", "image_only")
+                out.setdefault("epistemic_note", "OBS_IMAGE ≠ OBS_GEOLOGY. Pixels observed; geology requires calibration.")
+                out.setdefault("local_verdict", "QUALIFIED_CANDIDATE")
+                out.setdefault("seal_authority", "arifOS_only")
+            return out
         except Exception as e:
-            print(f"  ⚠ VLM callback failed: {e} (falling back to CV)")
+            return {
+                "ok": False,
+                "status": "HOLD",
+                "error": "VLM_BACKEND_FAILED",
+                "reason": str(e)[:300],
+                "image_hash": sha256,
+                "dimensions": [w, h],
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+                "seal_authority": "arifOS_only",
+                "epistemic": "NO_VALID_PERCEPTION",
+                "claim_tag": "HYPOTHESIS",
+                "hint": "Register a real VLM callback or use SEG-Y attribute pipelines. Do not invent structure.",
+            }
 
-    # Fallback to local CV/structural feature metadata analysis
-    im = Image.open(image_path)
-    w, h = im.size
-
+    # No perception backend — HOLD (never fabricate discontinuities)
     return {
-        "status": "OBS_IMAGE",
+        "ok": False,
+        "status": "HOLD",
+        "error": "NO_PERCEPTION_BACKEND",
+        "reason": "No VLM callback registered. Hard-coded structure inventory is prohibited (F2 TRUTH).",
         "image_hash": sha256,
         "dimensions": [w, h],
-        "continuity_zones": [
-            {"depth_px": [0, int(h * 0.2)], "pattern": "SUBPARALLEL", "coherence": 0.96},
-            {"depth_px": [int(h * 0.2), h], "pattern": "PARALLEL", "coherence": 0.95},
-        ],
-        "discontinuities": [
-            {"x_px": 417, "y_px": [603, 750], "character": "sharp_offset_break"},
-            {"x_px": 605, "y_px": [450, 600], "character": "reflector_interruption"},
-        ],
-        "terminations": [
-            {"x_px": 50, "y_px": 280, "type": "TRUNCATION_OR_TOPLAP"},
-            {"x_px": 900, "y_px": 460, "type": "DOWNLAP"},
-        ],
-        "artifact_risks": [{"type": "POSSIBLE_MULTIPLE", "y_px": [240, 480], "reason": "symmetric spacing"}],
+        "input_class": "image_only",
+        "governance_status": "HOLD",
+        "local_verdict": "QUALIFIED_CANDIDATE",
+        "seal_authority": "arifOS_only",
+        "epistemic": "NO_VALID_PERCEPTION",
+        "claim_tag": "HYPOTHESIS",
+        "transport_status": "TRANSPORT_OK",
+        "hint": (
+            "Provide vlm_client_callback, or use geox_seismic_interpret(mode=horizon_contrast) "
+            "with attribute_data+depth from SEG-Y — not screenshot fabrication."
+        ),
     }
 
 
