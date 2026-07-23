@@ -12,9 +12,11 @@ Live modes (public, callable):
   rsi_pipeline       — thin alias → geox_rsi_interpret
   section_image      — alias interpret_section
   segy_slice         — Phase D: SEG-Y → MeasurementContext + amplitude stats
+  track_horizon      — F1 zen: 2D phase-aware DP track → horizon polylines
+  measure_throw      — F1 zen: cutoffs → dmax_m/length_m/throw_profile_m + gates
 
 Still HOLD (not public-executable):
-  vision, track_horizon, extract_faults, build_structure, observe_image, falsify
+  vision, extract_faults, build_structure, observe_image, falsify
 
 Local engine verdicts are QUALIFIED_CANDIDATE at most — arifOS seals.
 preferred_hypothesis always null from GEOX (human adjudicates).
@@ -40,6 +42,9 @@ _LIVE_MODES = frozenset(
         "section_image",
         "segy_slice",
         "segy_2d",
+        "track_horizon",  # F1 zen 2D phase track
+        "measure_throw",  # F1 zen throw → structure gates
+        "cutoff_throw",  # alias measure_throw
     }
 )
 
@@ -50,8 +55,7 @@ _NOT_YET_MODES: dict[str, str] = {
         "Vision modes (geox_visual_understand / geox_vision_*) are separate tools. "
         "geox_seismic_interpret does not run VLM. Call geox_visual_understand for OBS_IMAGE."
     ),
-    "track_horizon": "P1 not built — phase-consistent 2D/3D tracking not on public surface.",
-    "extract_faults": "Auto fault-plane extraction not proven. Use fault_sticks ingest or interpret_section.",
+    "extract_faults": "Auto fault-plane extraction not proven. Use measure_throw + structure_validate.",
     "build_structure": "Use structure_validate on a proposed framework; full build_structure loop later.",
     "falsify": "Use geox_falsify (claim_type=structural_*) for claim physics checks.",
     "observe_image": "Use geox_visual_understand for OBS_IMAGE (HOLD without VLM).",
@@ -200,6 +204,41 @@ async def geox_seismic_interpret(
         mode_norm = "interpret_section"
     if mode_norm == "segy_2d":
         mode_norm = "segy_slice"
+    if mode_norm == "cutoff_throw":
+        mode_norm = "measure_throw"
+
+    # ── F1 zen: track_horizon ──
+    if mode_norm == "track_horizon":
+        from geox_mcp.tools.seismic_zen_f1 import zen_track_horizon
+
+        result = await zen_track_horizon(
+            image_path=image_path or artifact_ref or source_uri or None,
+            amplitude_grid=(request or {}).get("amplitude_grid") if isinstance(request, dict) else None,
+            volume_inline=volume_inline,
+            max_horizons=max_horizons,
+            seed_rows=(request or {}).get("seed_rows") if isinstance(request, dict) else None,
+            provenance=provenance or "fixture",
+            request=request,
+        )
+        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, _transport)
+
+    # ── F1 zen: measure_throw → optional structure_validate ──
+    if mode_norm == "measure_throw":
+        from geox_mcp.tools.seismic_zen_f1 import zen_measure_throw
+
+        result = await zen_measure_throw(
+            horizons=horizons,
+            faults=faults,
+            image_path=image_path or artifact_ref or source_uri or None,
+            amplitude_grid=(request or {}).get("amplitude_grid") if isinstance(request, dict) else None,
+            volume_inline=volume_inline,
+            max_horizons=max_horizons,
+            calibration=calibration,
+            request=request,
+            provenance=provenance or "fixture",
+            run_gates=bool((request or {}).get("run_gates", True)) if isinstance(request, dict) else True,
+        )
+        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, _transport)
 
     if mode_norm in _NOT_YET_MODES and mode_norm not in _LIVE_MODES:
         return {
