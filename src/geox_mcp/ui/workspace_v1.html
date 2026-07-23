@@ -131,13 +131,16 @@
     </main>
 
     <script type="module">
-      import { App, PostMessageTransport } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.5.1/dist/index.js";
+      import { App, PostMessageTransport } from "https://unpkg.com/@modelcontextprotocol/ext-apps@1.7.4/dist/src/app-with-deps.js";
 
       const ALLOWED_ORIGINS = [
         "https://chatgpt.com",
         "https://claude.ai",
         "https://geox.arif-fazil.com",
         "https://arif-fazil.com",
+        "http://127.0.0.1:18999",  // E2E test server
+        "http://127.0.0.1:*",      // local dev
+        "http://localhost:*",      // local dev
       ];
 
       const state = {
@@ -301,6 +304,10 @@
 
       render();
       initMCPApp();
+      // Signal readiness + expose render for E2E tests
+      window.__WORKSPACE_READY = true;
+      window.__workspace_adoptResult = adoptToolResult;
+      window.__workspace_state = state;
     </script>
   </body>
 </html>

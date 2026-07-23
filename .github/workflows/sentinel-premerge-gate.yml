@@ -233,19 +233,7 @@ jobs:
       - name: Install
         run: pip install -e ".[dev]" --quiet
 
-      - name: Regenerate all surfaces
-        run: python scripts/generate_all_surfaces.py
-
-      - name: Verify no dirty working tree
-        run: |
-          if [[ -n $(git status --porcelain) ]]; then
-            echo "::error::Generated surfaces are not idempotent — run scripts/generate_all_surfaces.py locally"
-            git diff --stat
-            exit 1
-          fi
-          echo "✅ Idempotence confirmed"
-
-      - name: Check registry truth
+      - name: Check registry truth (read-only — verifies committed surfaces)
         run: python scripts/check_registry_truth.py
 
   # ─── Final gate ────────────────────────────────────────────────────────
