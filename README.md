@@ -1,11 +1,12 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-20T16:25Z
-valid_until: 2026-08-20
+last_verified: 2026-07-24T00:00Z
+valid_until: 2026-08-24
 federation_release: v2026.07.20-ZEN-CONVERGENCE
 live_commit: c2397743
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: dynamic_from_tools_list
+epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
 
 # 🌊 GEOX — Subsurface Intelligence Workbench
@@ -19,37 +20,42 @@ mcp_tools_live: dynamic_from_tools_list
 
 GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and geological observations; computes petrophysics, synthetics, and basin models; and preserves every interpretation with evidence, alternatives, and uncertainty.
 
-| Task | Status |
-|------|--------|
-| LAS well log ingestion | ✅ Marmousi + Volve field wells |
-| Petrophysical computation | ✅ Vsh, φ, Sw — Archie + density methods |
-| SEG-Y seismic inspection | ✅ Header, trace count, sample rate, coordinates |
-| Synthetic seismogram generation | ✅ Ricker / Ormsby / Klauder wavelets |
-| Seismic attribute computation | ✅ RMS, sweetness, variance, spectral |
-| Seismic interpretation (horizon / fault) | ✅ Contrast detection + RSI pipeline |
-| Basin analysis + deep-time context | ✅ Backstrip, thermal maturity, mass balance |
-| Sequence stratigraphy | ✅ Well correlation + biostrat parsing |
-| Geomechanics | ✅ Moduli, stress polygon, pore pressure |
-| Gravity / magnetic forward modeling | ✅ Prism-based, screening mode |
-| Prospect evaluation | ✅ Volumetrics, POS, EVOI |
-| Geological claim management | ✅ Create, challenge, falsify, seal |
-| MCP Apps (SEP-1865) | ✅ 6 apps LIVE (Well Witness, Prospect Forge, Seismic Viewer, Basin Explorer, Risk Console, Operator Console) |
-| Cross-organ capital routing | ✅ WEALTH bridge |
+Each capability below carries an **epistemic label** — the same OBS / DER / INT / SPEC standard GEOX enforces on its own outputs:
+
+| Task | Status | Label |
+|------|--------|-------|
+| LAS well log ingestion | ✅ Marmousi + Volve field wells | OBS |
+| Petrophysical computation | ✅ Vsh, φ, Sw — Archie + density methods | OBS |
+| SEG-Y seismic inspection | ✅ Header, trace count, sample rate, coordinates | OBS |
+| Synthetic seismogram generation | ✅ Ricker / Ormsby / Klauder wavelets | OBS |
+| Seismic attribute computation | ✅ RMS, sweetness, variance, spectral | OBS |
+| Seismic interpretation (horizon / fault) | ✅ Contrast detection + RSI pipeline | DER |
+| Basin analysis + deep-time context | ✅ Backstrip, thermal maturity, mass balance | DER |
+| Sequence stratigraphy | ✅ Well correlation + biostrat parsing | DER |
+| Geomechanics | ✅ Moduli, stress polygon, pore pressure | DER |
+| Gravity / magnetic forward modeling | ✅ Prism-based, screening mode | DER |
+| Prospect evaluation | ✅ Volumetrics, POS, EVOI | DER |
+| Geological claim management | ✅ Create, challenge, falsify, seal | OBS |
+| MCP Apps (SEP-1865) | ✅ 6 apps LIVE (Well Witness, Prospect Forge, Seismic Viewer, Basin Explorer, Risk Console, Operator Console) | OBS |
+| Cross-organ capital routing | ⚠️ WEALTH bridge — implemented, integration-sealed tests pending | INT |
+
+> **Label key:** OBS = directly validated against test data · DER = computed from validated inputs · INT = interpreted / integration claim pending sealed evidence · SPEC = assumed, not yet tested.
 
 ---
 
 ## Live Surface
 
-| Metric | Value |
-|--------|-------|
-| Total MCP tools | 52 |
-| Public tools | 24 (verify: `curl :8081/health`) |
-| MCP Apps | 6 (LIVE — SEP-1865) |
-| ui:// resources | 8 |
-| Health | 🟢 GREEN |
-| Port | 8081 |
-| Version | `v2026.07.19` |
-| License | BSL-1.1 (Business Source License) |
+| Metric | Value | Source of truth |
+|--------|-------|-----------------|
+| MCP tools | dynamic — see `tools/list` | `curl https://geox.arif-fazil.com:8081/health` |
+| MCP Apps | 6 (LIVE — SEP-1865) | `ui://` resources below |
+| ui:// resources | 8 | server manifest |
+| Health | **not asserted statically** — verify live | `curl :8081/health` |
+| Port | 8081 | deployment config |
+| Version | `v2026.07.20-ZEN-CONVERGENCE` | SOT-MANIFEST |
+| License | BSL-1.1 (see transition note below) | [LICENSE](./LICENSE) |
+
+> **F4 Clarity rule:** This README does not assert runtime health or tool counts as static prose. Per the SOT truth rule, the live `/health` endpoint and `tools/list` response are the only valid witnesses. A snapshot claim would be stale the moment it is read.
 
 ---
 
@@ -61,6 +67,7 @@ GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and 
 | 2026-07-19 | **P0 — MCP Restore** | FastMCP 3.4.2 kwargs fix, 52 tools registered |
 | 2026-07-19 | **SOT Audit** | License corrected (AGPL→BSL-1.1), version aligned, tool count synced |
 | 2026-07-19 | **Gitwrap** | 4 feature branches removed, 2600+ lint errors fixed, CI advisory |
+| 2026-07-24 | **README Constitutional Audit** | Version drift resolved, static health claims removed, epistemic labels applied, license transition documented |
 
 ---
 
@@ -91,6 +98,8 @@ Connect via: `https://geox.arif-fazil.com/mcp`
 
 ## Quick Start
 
+**Prerequisites:** Python 3.11+, pip, and (for seismic workflows) write access to a data directory for LAS / SEG-Y ingestion.
+
 ```bash
 # Install
 cd /root/GEOX && pip install -e ".[dev]"
@@ -101,7 +110,7 @@ PYTHONPATH=src pytest tests/ -q --tb=short
 # Start server
 python -m geox_mcp.server
 
-# Health check
+# Health check — the only valid health witness
 curl http://localhost:8081/health
 ```
 
@@ -129,6 +138,8 @@ GEOX separates four things that most subsurface software conflates:
 
 Every output carries an epistemic label (OBS / DER / INT / SPEC) and an uncertainty band.
 
+**Failure contract:** when governance checks fail, GEOX fails closed — `888_HOLD` for outputs awaiting human ratification, `VOID` for ungrounded claims. No silent degradation, no ungoverned output.
+
 ---
 
 ## Repository
@@ -139,7 +150,7 @@ src/geox_core/         ← Physics truth engine (NOT agent-facing)
     engines/seismic/        ← AC risk, synthetic, well-tie
 
 src/geox_mcp/          ← MCP agent surface
-    tools/                  ← All 52 MCP tools
+    tools/                  ← All MCP tools (count: see tools/list)
     resources/              ← 8 ui:// resources
     prompts/                ← MCP prompt templates
 
@@ -163,10 +174,26 @@ It IS a vendor-neutral layer that can:
 
 ---
 
+## Next Horizons
+
+> Items below are **SPEC** until sealed by test evidence. This section documents what is being forged — not what is claimed.
+
+| Horizon | Blocker / dependency | Status |
+|---------|---------------------|--------|
+| Volve SEG-Y full seismic pipeline | Equinor license clearance | ⚠️ Gated |
+| WEALTH bridge integration sealing | End-to-end sealed test (geology → capital route) | INT → target OBS |
+| Expanded `ui://` resource surface | SEP-1865 spec evolution | SPEC |
+| Public tool inventory publication | `tools/list` snapshot in `docs/` per release | Planned |
+
+---
+
 ## License
 
-BSL-1.1 (Business Source License). See [LICENSE](./LICENSE).
+**BSL-1.1 (Business Source License).** See [LICENSE](./LICENSE).
+
+> **Transition note (2026-07-19):** GEOX was previously published under AGPL. The SOT Audit of 2026-07-19 corrected this to BSL-1.1. Forks and clones obtained **before** that date remain governed by the license text they were obtained under; all copies from 2026-07-19 onward are BSL-1.1.
 
 ---
 
 *Maintained under F13 SOVEREIGN. Built on Marmousi, validated on Volve.*
+*DITEMPA BUKAN DIBERI — truth must cool before it rules.*
