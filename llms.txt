@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (30 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (31 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from src/geox_mcp/tools_manifest.yaml
 
@@ -24,7 +24,7 @@
 18. **geox_sediment_mass_balance**: Source-to-sink sediment volume and mass accounting. Peters 2012 framework.
 19. **geox_thermal_maturity_history**: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
 20. **geox_claim_graph_evaluate**: Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.
-21. **geox_falsify**: Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.
+21. **geox_falsify**: Popperian falsification engine. Modes: full (Kill Matrix K001-K007 + contradiction scan), quick (Kill Matrix only), physics_only (contradiction scan only), carbonate_igneous_rte (Arif Burgess-RTE Matrix — carbonate vs igneous discrimination using Burgess morphology, rheology, thermodynamics, and elasticity with Sabah-weighted scoring). GENESIS/015: physics must prove the claim is right. ANY KILL → rejected. Constitutional rule: absence of thermal evidence ≠ proof of carbonate.
 22. **geox_contradiction_scan**: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
 23. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
 24. **geox_to_wealth_bridge**: Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.
@@ -34,6 +34,7 @@
 28. **geox_map_layers_list**: List available map layers and their spatial extents.
 29. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
 30. **geox_map_render_preview**: Render preview of map scene for quality review before export.
+31. **geox_workspace**: GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.

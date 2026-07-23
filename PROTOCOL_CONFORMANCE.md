@@ -5,8 +5,8 @@
 ## MCP Conformance
 | Requirement | Status | Evidence |
 |------------|--------|----------|
-| llms.txt | ✅ | `/root/GEOX/llms.txt` — 15 public tools declared, canonical tool surface from `tools_manifest.yaml` |
-| tools/list | ✅ | `:8081` — 24 tools loaded, 24 canonical (geox_basin, geox_petrophysics, geox_seismic_compute, geox_seismic_ingest, geox_seismic_interpret, geox_well_ingest, geox_well_desk, geox_claim, geox_deep_time_state, geox_geomechanics, geox_gravmag_studio, geox_prospect, geox_sequence, geox_subsurface_model, geox_surface_status, geox_thermal_maturity_history, geox_evidence, geox_falsify, geox_contradiction_scan, geox_claim_graph_evaluate, geox_lem_predict, geox_sediment_mass_balance, geox_to_wealth_bridge, geox_basin_backstrip) |
+| llms.txt | ✅ | `/root/GEOX/llms.txt` — generated from `tools_manifest.yaml` via `scripts/generate_all_surfaces.py` |
+| tools/list | ✅ | `:8081` — live count from `geox_surface_status(mode="registry")` or `curl :8081/health` |
 | health endpoint | ✅ | `:8081/health` — returns status, service (geox-unified), tools_loaded, canonical_tools, federation_schema_version, git_version |
 | Surface audit | ✅ | `CANONICAL_PUBLIC_SURFACE.json` and `tools_sot.yaml` — live registry vs manifest |
 
@@ -23,8 +23,8 @@
 | Task schema | ⚠️ | Supports A2A task operations via federation routing (AAA gateway) |
 | Streaming | ❌ | No SSE streaming support |
 | MCP server discovery | ✅ | `/.well-known/mcp/server.json` and `/.well-known/agent.json` |
-| OpenAPI | ✅ | `/.well-known/openapi.json` |
-| Tool manifest | ✅ | `/.well-known/tools.json` |
+| OpenAPI | ✅ | `/.well-known/openapi.json` — generated from `tools_manifest.yaml` |
+| Tool manifest | ✅ | `/.well-known/tools.json` — generated from `tools_manifest.yaml` |
 
 ## XMCP Conformance
 | Requirement | Status | Evidence |
@@ -38,15 +38,14 @@
 |-----|----------|--------|
 | A2A Streaming | P2 | No SSE; acceptable for L3 domain organ. Most GEOX computations are synchronous |
 | XMCP App schema | P3 | Not applicable — GEOX serves evidence, not apps |
-| llms.txt tool count mismatch | P1 | llms.txt declares 15 tools but live surface has 24. llms.txt should be regenerated from live `tools/list` |
 
 ## Required Compliance
 - L3 Protocol: MCP (mandatory) + FastMCP (mandatory for Python organs) + A2A (agent card mandatory)
 - GEOX is evidence-only — computes, never adjudicates
-- 24 operational tools, zero drift between loaded and canonical
+- All derived surfaces generated via `python scripts/generate_all_surfaces.py`
+- Tool counts are a runtime fact — see `geox_surface_status(mode="registry")` or `curl :8081/health`
 - Physics9 doctrine: physics before narrative
-- Next milestone: Regenerate llms.txt to match live 24-tool surface (P1)
 
 ---
-Generated: 2026-07-19 · Authority: AAA Control Plane
+Generated: 2026-07-23 · Authority: AAA Control Plane
 DITEMPA BUKAN DIBERI
