@@ -58,7 +58,43 @@ _NOT_YET_MODES: dict[str, str] = {
 }
 
 
-def _stamp_qualified(result: dict[str, Any], mode: str) -> dict[str, Any]:
+def _json_safe(obj: Any) -> Any:
+    """Make tool payloads JSON-serializable for MCP structuredContent.
+
+    RSI/geometry paths leak numpy scalars (esp. numpy.bool_, float64). FastMCP
+    then fails json.dumps → clients see 'outputSchema defined but no structured
+    output returned' even though governance ALLOWED and the engine succeeded.
+    """
+    if obj is None or isinstance(obj, (str, int, float, bool)):
+        return obj
+    if isinstance(obj, dict):
+        return {str(k): _json_safe(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_json_safe(v) for v in obj]
+    # numpy scalars / arrays (and similar)
+    item = getattr(obj, "item", None)
+    if callable(item):
+        try:
+            return _json_safe(item())
+        except Exception:
+            pass
+    tolist = getattr(obj, "tolist", None)
+    if callable(tolist):
+        try:
+            return _json_safe(tolist())
+        except Exception:
+            pass
+    if hasattr(obj, "__fspath__"):
+        return str(obj)
+    # last resort — keep transport alive over perfect fidelity
+    return str(obj)
+
+
+def _stamp_qualified(
+    result: dict[str, Any],
+    mode: str,
+    transport: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     result.setdefault("tool", "geox_seismic_interpret")
     result["mode"] = mode
     result["local_verdict"] = "QUALIFIED_CANDIDATE"
@@ -70,7 +106,21 @@ def _stamp_qualified(result: dict[str, Any], mode: str) -> dict[str, Any]:
     # RSI may return verdict PARTIAL — map transport language
     if result.get("verdict") == "SEAL":
         result["verdict"] = "PARTIAL"
-    return result
+    # Envelope fields that help outputSchema / clients without changing geology
+    result.setdefault("status", "OK" if result.get("ok", True) else "HOLD")
+    if result.get("preferred_hypothesis") is not False:
+        result.setdefault("preferred_hypothesis", None)
+    result.setdefault("claim_tag", "HYPOTHESIS")
+    # Inject declared MCP transport metadata into provenance so callers can
+    # correlate response → call. Only non-None fields are stamped (avoids
+    # # stamping None and overwriting existing provenance).
+    if transport:
+        prov = result.setdefault("provenance", {})
+        if isinstance(prov, dict):
+            for k, v in transport.items():
+                if v is not None:
+                    prov.setdefault(k, v)
+    return _json_safe(result)
 
 
 async def geox_seismic_interpret(
@@ -109,6 +159,15 @@ async def geox_seismic_interpret(
     max_faults: int = 20,
     max_horizons: int = 12,
     emit_bundle: bool = True,
+    # ── MCP transport envelope (declared in TransportAwareRequest) ──
+    # Must be explicit on the handler signature so they actually flow
+    # through to provenance. FastMCP rejects **kwargs on tools, so each
+    # transport field is declared by name. The schema layer (extra=forbid
+    # + TransportAwareRequest) guarantees typos here trip loudly.
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+    source_sha256: str | None = None,
     # ── legacy ──
     horizon_query: str = "unconformity",
     threshold: float = 0.5,
@@ -120,7 +179,18 @@ async def geox_seismic_interpret(
 
     Local engine verdicts are QUALIFIED_CANDIDATE at most — arifOS seals.
     preferred_hypothesis is never set by GEOX.
+
+    Transport metadata (session_id, actor_id, trace_id, source_sha256) is
+    declared on the schema (TransportAwareRequest) AND on this signature,
+    so it survives both validation and dispatch.
     """
+    # Inject transport into a single dict we propagate everywhere
+    _transport: dict[str, Any] = {
+        "session_id": session_id,
+        "actor_id": actor_id,
+        "trace_id": trace_id,
+        "source_sha256": source_sha256,
+    }
     mode_norm = (mode or "horizon_contrast").strip().lower()
 
     if mode_norm == "contrast":
