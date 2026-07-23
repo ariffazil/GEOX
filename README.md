@@ -2,8 +2,8 @@
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
 last_verified: 2026-07-24T00:00Z
 valid_until: 2026-08-24
-federation_release: v2026.07.20-ZEN-CONVERGENCE
-live_commit: c2397743
+federation_release: v2026.07.23-PHASE-C-SEALED
+live_commit: 8b45a88e
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: dynamic_from_tools_list
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
@@ -36,6 +36,7 @@ Each capability below carries an **epistemic label** — the same OBS / DER / IN
 | Gravity / magnetic forward modeling | ✅ Prism-based, screening mode | DER |
 | Prospect evaluation | ✅ Volumetrics, POS, EVOI | DER |
 | Geological claim management | ✅ Create, challenge, falsify, seal | OBS |
+| Structural geology battery | ✅ 6/6 Malay Basin battery green — K-DIP arccos (SVD normal vector), full-trace K-THROW (tip→centre→tip), zero-false-negative regime aliasing | OBS |
 | MCP Apps (SEP-1865) | ✅ 6 apps LIVE (Well Witness, Prospect Forge, Seismic Viewer, Basin Explorer, Risk Console, Operator Console) | OBS |
 | Cross-organ capital routing | ⚠️ WEALTH bridge — implemented, integration-sealed tests pending | INT |
 
@@ -47,15 +48,15 @@ Each capability below carries an **epistemic label** — the same OBS / DER / IN
 
 | Metric | Value | Source of truth |
 |--------|-------|-----------------|
-| MCP tools | dynamic — see `tools/list` | `curl https://geox.arif-fazil.com:8081/health` |
+| MCP tools (public canonical) | 31 — live-witnessed 2026-07-23 (`tools_loaded: 31`) | `curl :8081/health` + `tools/list` |
 | MCP Apps | 6 (LIVE — SEP-1865) | `ui://` resources below |
 | ui:// resources | 8 | server manifest |
 | Health | **not asserted statically** — verify live | `curl :8081/health` |
 | Port | 8081 | deployment config |
-| Version | `v2026.07.20-ZEN-CONVERGENCE` | SOT-MANIFEST |
-| License | BSL-1.1 (see transition note below) | [LICENSE](./LICENSE) |
+| Version | `v2026.07.23-PHASE-C-SEALED` | SOT-MANIFEST |
+| License | BSL-1.1 → Apache 2.0 on 2029-06-29 (see note below) | [LICENSE](./LICENSE) + `pyproject.toml` |
 
-> **F4 Clarity rule:** This README does not assert runtime health or tool counts as static prose. Per the SOT truth rule, the live `/health` endpoint and `tools/list` response are the only valid witnesses. A snapshot claim would be stale the moment it is read.
+> **F4 Clarity rule:** Runtime health and tool counts are witnessed live, not asserted as static prose — per the SOT truth rule, `/health` and `tools/list` are the only valid witnesses. The value 31 above is an OBS-recorded snapshot of the 2026-07-23 witness, not a standing claim. (Earlier prose citing 52 tools reflected an unconsolidated legacy list and has been retired.)
 
 ---
 
@@ -64,10 +65,12 @@ Each capability below carries an **epistemic label** — the same OBS / DER / IN
 | Date | Milestone | Detail |
 |------|-----------|--------|
 | 2026-07-19 | **P1 — MCP Apps Restore** | `prefab-ui` installed, 6 apps LIVE, GUI-ready |
-| 2026-07-19 | **P0 — MCP Restore** | FastMCP 3.4.2 kwargs fix, 52 tools registered |
+| 2026-07-19 | **P0 — MCP Restore** | FastMCP 3.4.2 kwargs fix, tools registered |
 | 2026-07-19 | **SOT Audit** | License corrected (AGPL→BSL-1.1), version aligned, tool count synced |
 | 2026-07-19 | **Gitwrap** | 4 feature branches removed, 2600+ lint errors fixed, CI advisory |
-| 2026-07-24 | **README Constitutional Audit** | Version drift resolved, static health claims removed, epistemic labels applied, license transition documented |
+| 2026-07-23 | **Phase C Sealed State** | K-DIP arccos (SVD normal vector math), full-trace K-THROW (tip→centre→tip), zero-false-negative regime aliasing (extensional/compressional), SEP-1865 3-channel UI bindings — **75/75 unit tests + 6/6 Malay Basin battery green** |
+| 2026-07-23 | **License Falsification Audit** | AGPL marking identified as drift; BSL-1.1 confirmed against LICENSE + `pyproject.toml` (commit `8b45a88e`) |
+| 2026-07-24 | **README Constitutional Audit** | Three-way divergence reconciled: Phase C facts merged, epistemic labels applied, static health claims removed |
 
 ---
 
@@ -150,13 +153,13 @@ src/geox_core/         ← Physics truth engine (NOT agent-facing)
     engines/seismic/        ← AC risk, synthetic, well-tie
 
 src/geox_mcp/          ← MCP agent surface
-    tools/                  ← All MCP tools (count: see tools/list)
+    tools/                  ← Canonical public tool surface (31, live-witnessed)
     resources/              ← 8 ui:// resources
     prompts/                ← MCP prompt templates
 
 apps/                   ← 6 MCP Apps (SEP-1865)
 docs/                   ← Documentation
-tests/                  ← Test suite (60+ files)
+tests/                  ← Test suite (60+ files; 75/75 unit + 6/6 structure battery)
 GENESIS/                ← Constitutional charter
 ```
 
@@ -189,9 +192,9 @@ It IS a vendor-neutral layer that can:
 
 ## License
 
-**BSL-1.1 (Business Source License).** See [LICENSE](./LICENSE).
+**BSL-1.1 (Business Source License 1.1)** — converts to **Apache 2.0 on 2029-06-29** per the Change Date in [LICENSE](./LICENSE) (confirmed against `pyproject.toml`).
 
-> **Transition note (2026-07-19):** GEOX was previously published under AGPL. The SOT Audit of 2026-07-19 corrected this to BSL-1.1. Forks and clones obtained **before** that date remain governed by the license text they were obtained under; all copies from 2026-07-19 onward are BSL-1.1.
+> **License history:** GEOX was briefly marked AGPL prior to the 2026-07-19 SOT Audit, which corrected it to BSL-1.1; a falsification audit on 2026-07-23 re-confirmed BSL-1.1 as canonical. All copies from 2026-07-19 onward are BSL-1.1.
 
 ---
 
