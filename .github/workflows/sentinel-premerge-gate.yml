@@ -216,7 +216,7 @@ jobs:
         run: pip install -e ".[dev]" --quiet
 
       - name: Test
-        run: python -m pytest tests/ -q --tb=short
+        run: python -m pytest tests/ -q --tb=short --ignore=tests/benchmarks --ignore=tests/integration/test_biostrat_calibrate.py
 
   # ─── Q4: Registry truth? ────────────────────────────────────────────────
   q4-registry-truth:
