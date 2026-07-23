@@ -1,12 +1,12 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-23T21:55Z
+last_verified: 2026-07-23T22:00Z
 valid_until: 2026-08-23
-federation_release: v2026.07.23-PHASE-C-HARDENING
-live_commit: 8ce723b0
+federation_release: v2026.07.23
+live_commit: 07619e31
+health: healthy (8081)
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: dynamic_from_tools_list
-audit_note: Drift detected between this README (2026-07-20) and live state (2026-07-23). Numbers updated to live truth. See forge_work/2026-07-23/geox-phase-c/README-AUDIT-RECEIPT.md.
 -->
 
 # 🌊 GEOX — Subsurface Intelligence Workbench
