@@ -274,3 +274,38 @@ async def test_k_vel_unmeasured_without_velocity():
         emit_bundle=False,
     )
     assert r["gates"]["K-VEL"]["status"] == "UNMEASURED"
+
+
+@pytest.mark.asyncio
+async def test_alias_keys_dmax_m_throw_profile_m_kill():
+    """Sovereign metric keys must reach gates (Option 3 alias map).
+
+    Reproduction case K-DL-K-THROW-REPRODUCTION-CASE-2026-07-23T2228Z:
+    dmax_m=27 / length_m=100 → D/L=0.27 must KILL on K-DL, not UNMEASURED.
+    throw_profile_m tapered list must be readable by K-THROW.
+    """
+    from geox_mcp.tools.structure_gates.k_dl import gate_k_dl
+    from geox_mcp.tools.structure_gates.k_throw import gate_k_throw
+    from geox_mcp.tools.structure_validate import geox_structure_validate
+
+    sovereign = {
+        "faults": [
+            {
+                "fault_id": "FZ_impossible",
+                "dmax_m": 27.0,
+                "length_m": 100.0,
+                "throw_profile_m": [10, 12, 15, 18, 22, 27, 22, 18, 15, 12, 10],
+            }
+        ]
+    }
+    kdl = gate_k_dl(sovereign)
+    kth = gate_k_throw(sovereign)
+    assert kdl["status"] == "KILL", kdl
+    findings = kdl.get("findings") or []
+    assert findings and findings[0].get("d_over_l") == pytest.approx(0.27)
+    assert kth["status"] == "PASS", kth  # tapered profile
+
+    r = await geox_structure_validate(framework=sovereign, emit_bundle=False)
+    assert r["gates"]["K-DL"]["status"] == "KILL"
+    assert "K-DL" in r["kills"]
+    assert r["combined_gate_verdict"] == "KILL"

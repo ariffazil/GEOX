@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import Any
 
 from geox_mcp.domain.seismic_physics.receipts import make_gate_receipt
+from geox_mcp.tools.structure_gates.normalize import normalize_fault
 
 _EQUATION = (
     "Barnett 1987: throw max near centre, taper to 0 at elliptical tip-line. "
@@ -18,14 +19,10 @@ _EQUATION = (
 
 
 def _profile_values(fault: dict[str, Any]) -> list[float] | None:
-    prof = fault.get("throw_profile")
+    # normalize_fault maps throw_profile_m / throw_samples → throw_profile
+    f = normalize_fault(fault) if isinstance(fault, dict) else {}
+    prof = f.get("throw_profile")
     if not prof:
-        simple = fault.get("throw_samples")
-        if isinstance(simple, (list, tuple)) and simple:
-            try:
-                return [float(x) for x in simple]
-            except (TypeError, ValueError):
-                return None
         return None
     vals: list[float] = []
     for station in prof:
@@ -34,7 +31,7 @@ def _profile_values(fault: dict[str, Any]) -> list[float] | None:
             continue
         if not isinstance(station, dict):
             continue
-        for key in ("throw", "throw_ms", "throw_m", "displacement", "value"):
+        for key in ("throw", "throw_ms", "throw_m", "displacement", "dmax_m", "value"):
             if key in station and station[key] is not None:
                 try:
                     vals.append(float(station[key]))
@@ -79,7 +76,8 @@ def gate_k_throw(framework: dict[str, Any]) -> dict[str, Any]:
     findings: list[dict[str, Any]] = []
     kills = passes = unmeas = 0
 
-    for f in faults:
+    for raw in faults:
+        f = normalize_fault(raw) if isinstance(raw, dict) else {}
         fid = f.get("fault_id") or f.get("id") or "unknown"
         tip_flag = str(f.get("tip_taper") or "").lower()
         if tip_flag == "fail":
@@ -98,7 +96,10 @@ def gate_k_throw(framework: dict[str, Any]) -> dict[str, Any]:
                     "fault_id": fid,
                     "verdict": "UNMEASURED",
                     "status": "UNMEASURED",
-                    "reason": "No throw_profile / tip_taper",
+                    "reason": (
+                        "No throw_profile / tip_taper "
+                        "(accepts aliases: throw_profile_m, throw_samples, …)"
+                    ),
                 }
             )
             continue

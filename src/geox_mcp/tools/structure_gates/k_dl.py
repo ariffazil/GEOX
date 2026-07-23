@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Any
 
 from geox_mcp.domain.seismic_physics.receipts import make_gate_receipt
+from geox_mcp.tools.structure_gates.normalize import normalize_fault
 
 _D_L_LO = 1e-3
 _D_L_HI = 1e-1
@@ -27,9 +28,10 @@ def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
     findings: list[dict[str, Any]] = []
     kills = passes = unmeas = warns = 0
 
-    for f in faults:
+    for raw in faults:
+        f = normalize_fault(raw) if isinstance(raw, dict) else {}
         fid = f.get("fault_id") or f.get("id") or "unknown"
-        d = f.get("max_displacement") or f.get("max_throw")
+        d = f.get("max_displacement")
         length = f.get("length") or f.get("length_m") or f.get("length_px")
         linkage = bool(f.get("linkage_story") or f.get("relay_ramp") or f.get("segment_linkage"))
 
@@ -38,7 +40,15 @@ def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
                 throws = []
                 for s in f["throw_profile"]:
                     if isinstance(s, dict):
-                        throws.append(float(s.get("throw") or s.get("throw_m") or 0))
+                        throws.append(
+                            float(
+                                s.get("throw")
+                                or s.get("throw_m")
+                                or s.get("displacement")
+                                or s.get("value")
+                                or 0
+                            )
+                        )
                     else:
                         throws.append(float(s))
                 d = max(throws) if throws else None
@@ -54,7 +64,14 @@ def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
                     "fault_id": fid,
                     "verdict": "UNMEASURED",
                     "status": "UNMEASURED",
-                    "reason": "Missing max_displacement or length",
+                    "reason": (
+                        "Missing max_displacement or length "
+                        "(accepts aliases: dmax_m, max_throw, length_m, …)"
+                    ),
+                    "aliases_checked": {
+                        "d": ["max_displacement", "dmax_m", "max_throw", "throw_profile→max"],
+                        "l": ["length", "length_m", "trace_length_m"],
+                    },
                 }
             )
             continue
