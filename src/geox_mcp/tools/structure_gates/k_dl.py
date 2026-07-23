@@ -17,11 +17,54 @@ _EARTH_HI = 0.05
 _EQUATION = "D/L = max_displacement / length; Earth bulk ~0.005–0.05; global ~1e-3–1e-1"
 
 
+def validate_k_scale(max_displacement: float, fault_length: float) -> dict[str, Any]:
+    """Validates if fault maximum displacement scales within geomechanical limits relative to length.
+    Standard scaling holds that c = max_displacement / fault_length lies between 0.001 and 1.0.
+    """
+    if fault_length <= 0:
+        return {"status": "REJECTED", "verdict": "KILL", "reason": "Fault length must be greater than zero"}
+
+    c = float(max_displacement) / float(fault_length)
+
+    if 0.001 <= c <= 1.0:
+        return {
+            "status": "PASSED",
+            "verdict": "PASS",
+            "scaling_coefficient": float(c),
+            "bounds": [0.001, 1.0],
+        }
+    else:
+        return {
+            "status": "REJECTED",
+            "verdict": "KILL",
+            "scaling_coefficient": float(c),
+            "bounds": [0.001, 1.0],
+            "reason": f"Displacement-to-length coefficient of {c:.5f} is geomechanically anomalous.",
+        }
+
+
 def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
     faults = framework.get("faults") or []
     if not faults:
         return make_gate_receipt(
-            "K-DL", "UNMEASURED", reason="No faults", equation=_EQUATION, gate_type="soft_likelihood"
+            "K-DL",
+            "UNMEASURED",
+            reason="No faults",
+            equation=_EQUATION,
+            inputs={"n_faults": 0},
+            thresholds={
+                "global_lo": _D_L_LO,
+                "global_hi": _D_L_HI,
+                "earth_lo": _EARTH_LO,
+                "earth_hi": _EARTH_HI,
+            },
+            calculated_result={"kills": 0, "passes": 0, "warns": 0, "unmeasured": 0},
+            exceptions_considered=["linkage_story", "relay_ramp", "segment_linkage"],
+            evidence_refs=[
+                "Kim & Sanderson 2005 — D/L scaling for faults",
+                "Torabi & Berg 2011 — D/L in deformed layers",
+            ],
+            gate_type="soft_likelihood",
         )
 
     findings: list[dict[str, Any]] = []
@@ -121,6 +164,7 @@ def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
     return make_gate_receipt(
         "K-DL",
         status,  # type: ignore[arg-type]
+        inputs={"n_faults": len(faults)},
         equation=_EQUATION,
         thresholds={
             "global_lo": _D_L_LO,
@@ -129,6 +173,11 @@ def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
             "earth_hi": _EARTH_HI,
         },
         calculated_result={"kills": kills, "passes": passes, "warns": warns, "unmeasured": unmeas},
+        exceptions_considered=["linkage_story", "relay_ramp", "segment_linkage"],
+        evidence_refs=[
+            "Kim & Sanderson 2005 — D/L scaling for faults",
+            "Torabi & Berg 2011 — D/L in deformed layers",
+        ],
         reason=f"kills={kills} passes={passes} warns={warns} unmeasured={unmeas}",
         findings=findings,
         gate_type="soft_likelihood",

@@ -8,10 +8,11 @@ Live modes (public, callable):
   blend              — Alpha/RGB volume blending
   structure_validate — G2–G9 + K-* structural falsifier (+ interpretation_bundle)
   interpret          — propose→validate→compare bundle (framework and/or image)
-  interpret_section  — RSI image-true propose (INT_SEISMIC, QUALIFIED_CANDIDATE)
-  rsi_pipeline       — thin alias → geox_rsi_interpret
-  section_image      — alias interpret_section
-  segy_slice         — Phase D: SEG-Y → MeasurementContext + amplitude stats
+  classical_section  — image-first classical CV baseline (structure tensor+DP) PRIMARY
+  interpret_section  — alias classical_section (image product path)
+  rsi_pipeline       — legacy RSI-only propose (comparator)
+  section_image      — alias classical_section
+  segy_slice         — optional SEG-Y path (not required)
 
 Still HOLD (not public-executable):
   vision, track_horizon, extract_faults, build_structure, observe_image, falsify
@@ -34,6 +35,7 @@ _LIVE_MODES = frozenset(
         "blend",
         "structure_validate",
         "interpret",
+        "classical_section",
         "interpret_section",
         "rsi_pipeline",
         "section_image",
@@ -124,8 +126,8 @@ async def geox_seismic_interpret(
 
     if mode_norm == "contrast":
         mode_norm = "horizon_contrast"
-    if mode_norm == "section_image":
-        mode_norm = "interpret_section"
+    if mode_norm in ("section_image", "interpret_section"):
+        mode_norm = "classical_section"  # F13 image-first product path
     if mode_norm == "segy_2d":
         mode_norm = "segy_slice"
 
@@ -176,7 +178,46 @@ async def geox_seismic_interpret(
         stamped["preferred_hypothesis"] = None
         return stamped
 
-    # ── interpret: full propose→validate→compare bundle ──
+    # ── classical_section: image-first PRIMARY propose baseline ──
+    if mode_norm == "classical_section":
+        path = image_path or artifact_ref or source_uri or ""
+        if not path:
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": "classical_section",
+                "error": "MISSING_IMAGE_PATH",
+                "message": "classical_section requires image_path (absolute host path to section PNG/JPG).",
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+                "input_class": "image_only",
+                "epistemic_label": "INT_SEISMIC",
+            }
+        from geox_mcp.tools.classical_section_propose import geox_classical_section_propose as _cv
+
+        result = await _cv(
+            image_path=path,
+            max_faults=max_faults,
+            max_horizons=max_horizons,
+            run_gates=False,  # gates on mode=interpret / structure_validate only
+            calibration=calibration or {"input_class": "image_only", "calibrated": False},
+        )
+        if not isinstance(result, dict):
+            result = {"data": result}
+        if emit_bundle and result.get("framework") and not result.get("interpretation_bundle"):
+            from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
+
+            result["interpretation_bundle"] = build_interpretation_bundle(
+                frameworks_or_primary=result["framework"],
+                observations=result.get("observations"),
+                calibration=calibration or {"input_class": "image_only"},
+                request=request or {"hypothesis_count": 3},
+                model_revision="classical_section_v1",
+            )
+            result["preferred_hypothesis"] = None
+        return _stamp_qualified(result, mode_norm)
+
+    # ── interpret: classical propose (if image) → validate → compare ──
     if mode_norm == "interpret":
         from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
         from geox_mcp.tools.structure_validate import geox_structure_validate as _sv
@@ -188,25 +229,28 @@ async def geox_seismic_interpret(
         if horizons is not None:
             fw["horizons"] = horizons
         propose_result = None
-        if path and not fw.get("faults"):
-            from geox_mcp.tools.seismic_rsi import geox_rsi_interpret as _rsi
+        if path and not fw.get("faults") and not fw.get("horizons"):
+            from geox_mcp.tools.classical_section_propose import (
+                geox_classical_section_propose as _cv,
+            )
 
-            propose_result = await _rsi(
+            propose_result = await _cv(
                 image_path=path,
-                mode="horizon_fault_pick",
                 max_faults=max_faults,
                 max_horizons=max_horizons,
+                run_gates=False,
+                calibration=calibration or {"input_class": "image_only", "calibrated": False},
             )
-            # light map RSI faults into framework if present
-            if isinstance(propose_result, dict) and propose_result.get("geometry"):
-                geom = propose_result["geometry"]
-                fw.setdefault("faults", [])
-                fw.setdefault("horizons", [])
-                # keep propose separate; gates need explicit physics attrs
+            if isinstance(propose_result, dict) and propose_result.get("framework"):
+                pf = propose_result["framework"]
+                fw.setdefault("faults", pf.get("faults") or [])
+                fw.setdefault("horizons", pf.get("horizons") or [])
+                if pf.get("measurement_context"):
+                    fw.setdefault("measurement_context", pf["measurement_context"])
         if fw.get("faults") or fw.get("horizons") or fw.get("velocity"):
             sv = await _sv(
                 framework=fw,
-                measurement_context=measurement_context,
+                measurement_context=measurement_context or fw.get("measurement_context"),
                 calibration=calibration
                 or {"input_class": "image_only" if path else "unknown", "calibrated": False},
                 earth_constraints=earth_constraints,
@@ -230,13 +274,14 @@ async def geox_seismic_interpret(
                     },
                     "propose": {
                         "ran": propose_result is not None,
-                        "verdict": (propose_result or {}).get("verdict"),
+                        "method": "classical_section",
+                        "n_faults": (propose_result or {}).get("n_faults"),
+                        "n_horizons": (propose_result or {}).get("n_horizons"),
                     },
                     "preferred_hypothesis": None,
                 },
                 mode_norm,
             )
-        # propose-only bundle
         cal = calibration or {"input_class": "image_only" if path else "unknown"}
         bundle = build_interpretation_bundle(
             propose_result=propose_result if isinstance(propose_result, dict) else None,
@@ -256,8 +301,8 @@ async def geox_seismic_interpret(
             }
         return _stamp_qualified(bundle, mode_norm)
 
-    # ── interpret_section / rsi_pipeline ──
-    if mode_norm in ("interpret_section", "rsi_pipeline"):
+    # ── rsi_pipeline: legacy RSI-only (comparator, not primary product) ──
+    if mode_norm == "rsi_pipeline":
         path = image_path or artifact_ref or source_uri or ""
         if not path:
             return {
@@ -265,7 +310,7 @@ async def geox_seismic_interpret(
                 "tool": "geox_seismic_interpret",
                 "mode": mode_norm,
                 "error": "MISSING_IMAGE_PATH",
-                "message": "interpret_section/rsi_pipeline requires image_path (absolute host path).",
+                "message": "rsi_pipeline requires image_path (absolute host path).",
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
                 "input_class": "image_only",
@@ -285,8 +330,8 @@ async def geox_seismic_interpret(
         result["input_class"] = "image_only"
         result["epistemic_label"] = "INT_SEISMIC"
         result["capability_note"] = (
-            "RSI image-true propose. Pixel domain ≠ subsurface. "
-            "Not OBS_GEOLOGY. Run structure_validate / mode=interpret on picks. arifOS SEAL only."
+            "Legacy RSI propose (comparator). Prefer mode=classical_section for product path. "
+            "Pixel domain ≠ subsurface. arifOS SEAL only."
         )
         alts = result.get("alternatives")
         if not alts:

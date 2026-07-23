@@ -27,6 +27,11 @@ def gate_k_vel(framework: dict[str, Any]) -> dict[str, Any]:
             "UNMEASURED",
             reason="No velocity / T–D provided — will not substitute regional V",
             equation=_EQUATION,
+            inputs={"velocity_provided": False},
+            thresholds={"lithology_bands_m_s": _LITHO_V, "global_hard": [500.0, 9000.0]},
+            calculated_result={"v": None, "lithology": None, "monotonic": None, "positive": None},
+            exceptions_considered=["regional_velocity_substitution"],
+            evidence_refs=["rock-physics bands — Mavko et al. 2009"],
             gate_type="hard_veto",
         )
 
@@ -75,6 +80,10 @@ def gate_k_vel(framework: dict[str, Any]) -> dict[str, Any]:
             "UNMEASURED",
             reason="Velocity fields incomplete",
             equation=_EQUATION,
+            inputs={"velocity_provided": True, "interval_v_m_s": None},
+            thresholds={"lithology_bands_m_s": _LITHO_V, "global_hard": [500.0, 9000.0]},
+            calculated_result={"v": None, "lithology": litho, "monotonic": monotonic, "positive": positive},
+            evidence_refs=["rock-physics bands — Mavko et al. 2009"],
             gate_type="hard_veto",
         )
 
@@ -88,9 +97,12 @@ def gate_k_vel(framework: dict[str, Any]) -> dict[str, Any]:
     return make_gate_receipt(
         "K-VEL",
         status,  # type: ignore[arg-type]
+        inputs={"interval_v_m_s": v, "lithology_prior": litho},
         equation=_EQUATION,
         thresholds={"lithology_bands_m_s": _LITHO_V},
-        calculated_result={"v": v, "lithology": litho},
+        calculated_result={"v": v, "lithology": litho, "monotonic": monotonic, "positive": positive},
+        exceptions_considered=["regional_velocity_substitution"],
+        evidence_refs=["rock-physics bands — Mavko et al. 2009"],
         reason=f"combined={status}",
         findings=findings,
         gate_type="hard_veto",

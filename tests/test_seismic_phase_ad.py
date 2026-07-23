@@ -27,14 +27,15 @@ async def test_interpret_section_on_demo_image():
     path = _TEST_IMAGE if os.path.exists(_TEST_IMAGE) else _ALT_IMAGE
     if not os.path.exists(path):
         pytest.skip("RSI demo image missing")
-    r = await geox_seismic_interpret(mode="interpret_section", image_path=path)
+    r = await geox_seismic_interpret(
+        mode="interpret_section", image_path=path, emit_bundle=False, max_faults=4, max_horizons=3
+    )
     assert r.get("local_verdict") == "QUALIFIED_CANDIDATE"
     assert r.get("seal_authority") == "arifOS_only"
     assert r.get("input_class") == "image_only"
-    assert r.get("mode") in ("interpret_section", "rsi_pipeline")
-    assert isinstance(r.get("alternatives"), list) and len(r["alternatives"]) >= 3
-    # Geometry or stage evidence
-    assert r.get("geometry") or r.get("faults") is not None or r.get("stages")
+    # Product path: interpret_section aliases classical_section
+    assert r.get("mode") in ("classical_section", "interpret_section", "rsi_pipeline")
+    assert r.get("faults") is not None or r.get("framework") or r.get("geometry") or r.get("stages")
     assert r.get("governance_status") != "SEAL"
     assert r.get("verdict") != "SEAL"
 

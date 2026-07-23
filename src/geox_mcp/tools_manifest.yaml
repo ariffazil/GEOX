@@ -87,10 +87,11 @@ tools:
   visibility: public
   description: >-
     One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL).
-    Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate,
-    interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC),
-    segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash.
-    preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.
+    Image-first product: classical_section / interpret_section (structure tensor+DP on PNG/JPG).
+    Also: interpret (bundle ≥3), structure_validate, rsi_pipeline (legacy comparator),
+    horizon_contrast, fault_sticks, volume_frame, blend, segy_slice (optional).
+    Gates PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis null from GEOX.
+    Local max QUALIFIED_CANDIDATE — arifOS seals only.
   input_schema_source: callable
   annotations:
     read_only: true

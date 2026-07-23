@@ -383,7 +383,7 @@ def _contradiction_scan_light(
 
 
 async def geox_falsify(
-    claim_text: str,
+    claim_text: str = "Structural claim falsification",
     claim_type: str = "general",
     mode: Literal["full", "quick", "physics_only", "kill_matrix_only"] = "full",
     kill_matrix: list[str] | None = None,
@@ -391,51 +391,98 @@ async def geox_falsify(
     evidence: dict[str, Any] | None = None,
     session_id: str | None = None,
     actor_id: str | None = None,
+    regime: str | None = None,
+    proposal_coords: list[list[float]] | None = None,
+    coords: list[list[float]] | None = None,
+    max_disp: float | None = None,
+    length: float | None = None,
+    distances: list[float] | None = None,
+    displacements: list[float] | None = None,
+    epistemic_tag: str | None = None,
+    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Popperian falsification engine — tests claims against physical filters.
 
     GENESIS/015 architecture: physics must prove the claim is right.
-    Runs the7 Kill Matrix filters (K001-K007) + contradiction scan.
-
-    Args:
-        claim_text: The claim to falsify (precise, falsifiable statement).
-        claim_type: Type of claim (horizon, fault, trap, reservoir, etc.).
-        mode: Falsification depth:
-            - full: Kill Matrix + contradiction scan
-            - quick: Kill Matrix only
-            - physics_only: contradiction scan only
-            - kill_matrix_only: alias for quick
-        kill_matrix: Specific filters to run (default: all7).
-            Use ["K001","K002",...] to run specific filters.
-        context: Geological context for Kill Matrix filters.
-            Keys: climate_archetype, depositional_environment, age_ma,
-            slope_angle_deg, has_internal_reflectors, etc.
-        evidence: Evidence data for contradiction scan.
-            Keys: temperature_c, depth_m, porosity_pct, lithology, etc.
-        session_id: MCP session ID.
-        actor_id: Actor ID for audit trail.
-
-    Returns:
-        Structured falsification result with overall verdict:
-        - PROCEED: survives all filters → send to arifOS 888_JUDGE
-        - REVIEW: flagged but not killed → resolve before proceeding
-        - KILL: claim falsified → rejected
+    Runs the 7 Kill Matrix filters (K001-K007) + structural physics gates (K-DIP, etc.) + contradiction scan.
     """
-    ctx = context or {}
-    ev = evidence or {}
+    ctx = dict(context or {})
+    ev = dict(evidence or {})
+
+    # Extract direct arguments into context if passed top-level
+    if regime:
+        ctx["regime"] = regime
+    if proposal_coords or coords:
+        ctx["proposal_coords"] = proposal_coords or coords
+    if max_disp is not None:
+        ctx["max_disp"] = max_disp
+    if length is not None:
+        ctx["length"] = length
+    if distances:
+        ctx["distances"] = distances
+    if displacements:
+        ctx["displacements"] = displacements
+    if epistemic_tag:
+        ctx["epistemic_tag"] = epistemic_tag
 
     result: dict[str, Any] = {
         "claim_text": claim_text,
         "claim_type": claim_type,
         "mode": mode,
+        "session_id": session_id or "GEOX-SESSION-ACTIVE",
         "tool": "geox_falsify",
     }
+
+    # Execute K-DIP NumPy gate if coordinate points and regime are supplied
+    p_coords = ctx.get("proposal_coords") or ctx.get("coords")
+    p_regime = ctx.get("regime") or ctx.get("structural_regime")
+    if p_coords and p_regime:
+        from geox_mcp.tools.structure_gates.k_dip import validate_k_dip
+        dip_res = validate_k_dip(p_coords, p_regime)
+        result["k_dip_gate"] = dip_res
+        if dip_res.get("status") in ("REJECTED", "KILL"):
+            result["overall_verdict"] = "KILL"
+            result["status"] = "REJECTED"
+            result["gate"] = "K-DIP"
+            result["reason"] = dip_res.get("reason")
+            result["888_HOLD"] = True
+
+    # Execute K-SCALE gate if max_disp and length are supplied
+    p_max_disp = ctx.get("max_disp") or ctx.get("max_displacement")
+    p_length = ctx.get("length") or ctx.get("fault_length")
+    if p_max_disp is not None and p_length is not None:
+        from geox_mcp.tools.structure_gates.k_dl import validate_k_scale
+        scale_res = validate_k_scale(p_max_disp, p_length)
+        result["k_scale_gate"] = scale_res
+        if scale_res.get("status") in ("REJECTED", "KILL") and result.get("overall_verdict") != "KILL":
+            result["overall_verdict"] = "KILL"
+            result["status"] = "REJECTED"
+            result["gate"] = "K-SCALE"
+            result["reason"] = scale_res.get("reason")
+            result["888_HOLD"] = True
+
+    # Execute K-TAPER gate if distances and displacements profile supplied
+    p_dists = ctx.get("distances")
+    p_disps = ctx.get("displacements")
+    if p_dists and p_disps and p_max_disp and p_length:
+        from geox_mcp.tools.structure_gates.k_throw import validate_k_taper
+        taper_res = validate_k_taper(p_dists, p_disps, float(p_max_disp), float(p_length) / 2.0)
+        result["k_taper_gate"] = taper_res
+        if taper_res.get("status") in ("REJECTED", "KILL") and result.get("overall_verdict") != "KILL":
+            result["overall_verdict"] = "KILL"
+            result["status"] = "REJECTED"
+            result["gate"] = "K-TAPER"
+            result["reason"] = taper_res.get("reason")
+            result["888_HOLD"] = True
 
     # Run Kill Matrix
     if mode in ("full", "quick", "kill_matrix_only"):
         km_result = _run_kill_matrix(ctx, kill_matrix)
         result["kill_matrix"] = km_result
-        result["overall_verdict"] = km_result["overall_verdict"]
+        if "overall_verdict" not in result:
+            result["overall_verdict"] = km_result["overall_verdict"]
+        elif km_result["overall_verdict"] == "KILL":
+            result["overall_verdict"] = "KILL"
     else:
         result["kill_matrix"] = {"overall_verdict": "SKIPPED", "reason": f"mode={mode}"}
 

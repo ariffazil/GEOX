@@ -27,6 +27,67 @@ _EQUATION = (
 )
 
 
+def validate_k_dip(coords: Any, regime: str) -> dict[str, Any]:
+    """Validates if the dip of a proposed fault plane conforms to Andersonian geomechanics.
+    coords: Nx3 numpy array or list of spatial points (x, y, z) defining the fault surface.
+    regime: one of 'extensional', 'compressional', 'strike_slip', 'normal', 'reverse', 'thrust'
+    """
+    import numpy as np
+
+    coords_arr = np.asarray(coords, dtype=np.float64)
+    if len(coords_arr) < 3:
+        return {"status": "INCONCLUSIVE", "verdict": "INCONCLUSIVE", "reason": "Insufficient points for dip calculation"}
+
+    centroid = coords_arr.mean(axis=0)
+    shifted = coords_arr - centroid
+
+    _, _, vh = np.linalg.svd(shifted)
+    normal = vh[2, :]
+
+    nz = normal[2] if len(normal) > 2 else normal[-1]
+    norm_magnitude = np.linalg.norm(normal)
+
+    if norm_magnitude == 0:
+        return {"status": "REJECTED", "verdict": "KILL", "reason": "Zero-magnitude normal vector"}
+
+    dip_rad = np.arccos(np.clip(np.abs(nz) / (norm_magnitude + 1e-9), 0.0, 1.0))
+    dip_deg = float(np.degrees(dip_rad))
+
+    if dip_deg > 90.0:
+        dip_deg = 180.0 - dip_deg
+
+    regime_clean = regime.lower().strip()
+    bounds_map = {
+        "extensional": (45.0, 75.0),
+        "normal": (45.0, 75.0),
+        "compressional": (15.0, 45.0),
+        "thrust": (15.0, 45.0),
+        "reverse": (15.0, 45.0),
+        "strike_slip": (75.0, 90.0),
+        "strike-slip": (75.0, 90.0),
+    }
+
+    min_dip, max_dip = bounds_map.get(regime_clean, (0.0, 90.0))
+
+    if min_dip <= dip_deg <= max_dip:
+        return {
+            "status": "PASSED",
+            "verdict": "PASS",
+            "dip_calculated": float(dip_deg),
+            "regime": regime,
+            "bounds": [min_dip, max_dip],
+        }
+    else:
+        return {
+            "status": "REJECTED",
+            "verdict": "KILL",
+            "dip_calculated": float(dip_deg),
+            "regime": regime,
+            "bounds": [min_dip, max_dip],
+            "reason": f"Calculated dip of {dip_deg:.1f} degrees violates Andersonian limits [{min_dip}, {max_dip}] for a {regime} regime.",
+        }
+
+
 def _ve_of(framework: dict[str, Any], fault: dict[str, Any]) -> float | None:
     for src in (fault, framework.get("measurement_context") or {}, framework.get("calibration") or {}, framework):
         if not isinstance(src, dict):
@@ -129,6 +190,15 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
             "UNMEASURED",
             reason="No faults provided",
             equation=_EQUATION,
+            inputs={"n_faults": 0},
+            thresholds={"regime_ranges_deg": _REGIME_RANGES},
+            calculated_result={"kills": 0, "passes": 0, "warns": 0, "unmeasured": 0},
+            exceptions_considered=["reactivation_evidence", "fluid_pressure_exception"],
+            evidence_refs=[
+                "Anderson 1951 — The dynamics of faulting",
+                "Célérier 2008 — ROG: potential for renewed slip",
+                "Alcalde 2019 — VE bias in apparent dip measurements",
+            ],
             gate_type="hard_conditional",
         )
 

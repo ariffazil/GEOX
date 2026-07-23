@@ -99,5 +99,10 @@
       "coordinate": { "crs": "EPSG:32631" },
       "epistemic_label": "INT_SEISMIC_FAULT"
     }
+  ],
+  "invalid_examples": [
+    {
+      "domain": "pixel"
+    }
   ]
 }
