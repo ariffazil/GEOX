@@ -2,52 +2,88 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://geox.os/schemas/earth/horizon.json",
   "title": "Horizon Schema",
-  "description": "Metadata for a geological horizon",
-  "schema_id": "horizon_v1",
-  "schema_version": "1.0.0",
+  "description": "Geological horizon polyline / surface pick (pixel, survey time, or depth domain)",
+  "schema_id": "horizon_v1_1",
+  "schema_version": "1.1.0",
   "changelog": [
-    "1.0.0 - Initial release"
+    "1.1.0 - Polylines, phase, confidence, fault_block, gates (2026-07-23 Phase A)",
+    "1.0.0 - Initial release (name+CRS only)"
   ],
   "type": "object",
   "properties": {
-    "horizon_name": {
-      "type": "string"
+    "horizon_id": { "type": "string" },
+    "horizon_name": { "type": "string" },
+    "domain": {
+      "type": "string",
+      "enum": ["pixel", "survey_time", "survey_depth", "unknown"]
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["peak", "trough", "zero_cross", "unknown"]
+    },
+    "points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "x": { "type": "number" },
+          "y": { "type": "number" },
+          "trace_index": { "type": "number" },
+          "sample_index": { "type": "number" },
+          "inline": { "type": "number" },
+          "xline": { "type": "number" },
+          "twt_ms": { "type": "number" },
+          "depth_m": { "type": "number" }
+        }
+      }
+    },
+    "fault_block_id": { "type": ["string", "null"] },
+    "order_index": { "type": "integer" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "confidence_per_node": {
+      "type": "array",
+      "items": { "type": "number" }
+    },
+    "p10_p50_p90_shift_samples": {
+      "type": "array",
+      "items": { "type": "integer" },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["PASS", "KILL", "INCONCLUSIVE"]
+      }
     },
     "coordinate": {
       "type": "object",
       "properties": {
-        "crs": {
-          "type": "string"
-        }
+        "crs": { "type": "string" }
       },
-      "required": [
-        "crs"
-      ]
+      "required": ["crs"]
     },
-    "datum": {
-      "type": "string"
+    "datum": { "type": "string" },
+    "epistemic_label": {
+      "type": "string",
+      "enum": ["OBS", "DER", "INT_SEISMIC", "INT_SEISMIC_HORIZON", "SPEC"]
     }
   },
-  "required": [
-    "horizon_name",
-    "coordinate",
-    "datum"
-  ],
+  "required": ["horizon_name"],
   "examples": [
     {
+      "horizon_id": "H1",
       "horizon_name": "Top-Jurassic",
-      "coordinate": {
-        "crs": "EPSG:32631"
-      },
-      "datum": "MSL"
-    }
-  ],
-  "invalid_examples": [
-    {
-      "horizon_name": "Top-Jurassic",
-      "coordinate": {
-        "crs": "EPSG:32631"
-      }
+      "domain": "survey_time",
+      "phase": "peak",
+      "points": [
+        { "inline": 100, "xline": 200, "twt_ms": 1250.0 }
+      ],
+      "confidence": 0.6,
+      "coordinate": { "crs": "EPSG:32631" },
+      "datum": "MSL",
+      "epistemic_label": "INT_SEISMIC_HORIZON"
     }
   ]
 }

@@ -434,11 +434,93 @@ async def geox_falsify(
     stratigraphic consistency, geothermal gradient, compaction, pressure,
     logical consistency, and evidence sufficiency.
 
+    Structural claim types route to G/K structure gates:
+      structural_fault | structural_horizon | structural_framework
+
     Any single filter returning FATAL or HIGH → overall FALSIFIED.
     All filters PASS → SURVIVED (but never PROVEN — Popper).
 
     DITEMPA BUKAN DIBERI — Forged, Not Given.
     """
+    ctype = (claim_type or "general").strip().lower()
+    # ── Structural physics gates (Phase C) ──
+    if ctype in (
+        "structural_fault",
+        "structural_horizon",
+        "structural_framework",
+        "structure",
+        "fault_framework",
+    ):
+        from geox_mcp.tools.structure_validate import geox_structure_validate
+
+        fw: dict[str, Any] = {}
+        if isinstance(context, dict):
+            fw = dict(context)
+            # accept nested framework key
+            if "framework" in fw and isinstance(fw["framework"], dict):
+                nested = dict(fw["framework"])
+                nested.update({k: v for k, v in fw.items() if k != "framework"})
+                fw = nested
+        if isinstance(evidence, dict):
+            for k in ("faults", "horizons", "velocity", "restore", "claims", "measurement_context"):
+                if k in evidence and k not in fw:
+                    fw[k] = evidence[k]
+
+        if not claim_text.strip() and not fw.get("faults") and not fw.get("horizons"):
+            return {
+                "execution_status": "INVALID",
+                "verdict": "INCONCLUSIVE",
+                "filters_run": 0,
+                "filters_passed": 0,
+                "filters_failed": 0,
+                "results": [],
+                "claim_type": claim_type,
+                "honesty_banner": "Structural falsify needs claim_text or context.faults/horizons.",
+            }
+
+        # If only claim text, leave framework empty → structure_validate empty HOLD
+        sv = await geox_structure_validate(framework=fw or None, claim_text=claim_text)
+        kills = sv.get("kills") or []
+        passes = sv.get("passes") or []
+        overall = sv.get("overall_verdict", "INCONCLUSIVE")
+        gate_results = []
+        for gname, gval in (sv.get("gates") or {}).items():
+            gate_results.append(
+                {
+                    "filter_id": gname,
+                    "filter_name": gname,
+                    "verdict": (
+                        "FALSIFIED"
+                        if gval.get("verdict") == "KILL"
+                        else ("PASS" if gval.get("verdict") == "PASS" else "INCONCLUSIVE")
+                    ),
+                    "findings": gval.get("findings") or [{"reason": gval.get("reason")}],
+                }
+            )
+        return {
+            "execution_status": "SUCCESS",
+            "verdict": overall if overall != "FALSIFIED" else "FALSIFIED",
+            "reason": (
+                f"Structural gates: kills={kills}, passes={passes}. "
+                f"combined={sv.get('combined_gate_verdict')}"
+            ),
+            "filters_run": len(gate_results),
+            "filters_passed": len(passes),
+            "filters_failed": len(kills),
+            "results": gate_results,
+            "structure_validate": sv,
+            "claim_text": (claim_text or "")[:500],
+            "claim_type": claim_type,
+            "mode": mode,
+            "epistemic_label": "DER",
+            "local_verdict": "QUALIFIED_CANDIDATE",
+            "seal_authority": "arifOS_only",
+            "honesty_banner": (
+                "Structural falsification via K-*/G* gates. "
+                "SURVIVED ≠ proven. arifOS SEAL only."
+            ),
+        }
+
     if not claim_text.strip():
         return {
             "execution_status": "INVALID",

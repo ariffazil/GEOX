@@ -757,15 +757,23 @@ def register_tools_on(mcp):
         confidence_cap: float = 0.9,
         cube_ref: str | None = None,
         volume_inline: dict[str, Any] | None = None,
+        # Phase C/A/D
+        image_path: str | None = None,
+        framework: dict[str, Any] | None = None,
+        faults: list[dict[str, Any]] | None = None,
+        horizons: list[dict[str, Any]] | None = None,
+        measurement_context: dict[str, Any] | None = None,
+        segy_path: str | None = None,
+        max_faults: int = 20,
+        max_horizons: int = 12,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """1D multi-attribute boundary detector + fault_sticks ingest + volume frames.
+        """Seismic interpret modes: horizon_contrast, fault_sticks, volume_frame, blend,
+        structure_validate, interpret_section/rsi_pipeline (image INT_SEISMIC), segy_slice.
 
-        Live modes: horizon_contrast, fault_sticks, volume_frame, blend.
-        Not a 2D section picker / structural framework builder.
-        Local verdicts are QUALIFIED_CANDIDATE only — arifOS seals.
+        Local verdicts are QUALIFIED_CANDIDATE only — arifOS seals. Not autonomous structural SEAL.
         """
         from geox_mcp.tools.seismic_interpret import geox_seismic_interpret as _impl
 
@@ -794,6 +802,14 @@ def register_tools_on(mcp):
                 "confidence_cap": confidence_cap,
                 "cube_ref": cube_ref,
                 "volume_inline": volume_inline,
+                "image_path": image_path,
+                "framework": framework,
+                "faults": faults,
+                "horizons": horizons,
+                "measurement_context": measurement_context,
+                "segy_path": segy_path,
+                "max_faults": max_faults,
+                "max_horizons": max_horizons,
             },
             session_id=session_id,
             actor_id=actor_id,

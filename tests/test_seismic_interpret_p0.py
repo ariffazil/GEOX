@@ -60,17 +60,30 @@ async def test_normalized_amplitude_does_not_use_ai_guard():
 
 
 @pytest.mark.asyncio
-async def test_mode_router_honest_hold_for_rsi_and_vision():
+async def test_mode_router_honest_hold_for_vision_still_not_public():
     from geox_mcp.tools.seismic_interpret import geox_seismic_interpret
 
-    for mode in ("rsi_pipeline", "vision", "track_horizon", "extract_faults"):
+    for mode in ("vision", "track_horizon", "extract_faults", "observe_image"):
         r = await geox_seismic_interpret(mode=mode)
         assert r.get("ok") is False
         assert r.get("error") in ("MODE_NOT_PUBLIC", "UNKNOWN_MODE")
         assert r.get("live_modes")
         assert "horizon_contrast" in r["live_modes"]
+        assert "structure_validate" in r["live_modes"]
         # Must NOT return the old "requires attribute_data" error for wrong mode
         assert "attribute_data" not in (r.get("message") or "").lower() or r.get("error") == "MODE_NOT_PUBLIC"
+
+
+@pytest.mark.asyncio
+async def test_rsi_pipeline_requires_image_path_not_mode_not_public():
+    """F13 execute-all 2026-07-23: rsi_pipeline is live thin wrapper — needs image_path."""
+    from geox_mcp.tools.seismic_interpret import geox_seismic_interpret
+
+    r = await geox_seismic_interpret(mode="rsi_pipeline")
+    assert r.get("ok") is False
+    assert r.get("error") == "MISSING_IMAGE_PATH"
+    assert r.get("local_verdict") == "QUALIFIED_CANDIDATE"
+
 
 
 @pytest.mark.asyncio
