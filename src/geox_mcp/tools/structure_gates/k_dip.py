@@ -15,7 +15,9 @@ from geox_mcp.domain.seismic_physics.receipts import make_gate_receipt
 
 _REGIME_RANGES: dict[str, tuple[float, float]] = {
     "normal": (55.0, 70.0),
+    "extensional": (55.0, 70.0),  # alias (matches geox_seismic_interpret vocabulary)
     "reverse": (20.0, 40.0),
+    "compressional": (20.0, 40.0),  # alias (matches geox_seismic_interpret vocabulary)
     "thrust": (20.0, 40.0),
     "strike_slip": (75.0, 90.0),
     "strike-slip": (75.0, 90.0),
