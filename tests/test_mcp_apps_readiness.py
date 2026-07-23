@@ -143,3 +143,57 @@ def test_05_enrich_response_channel_discipline():
     assert enriched["_meta"]["openai/outputTemplate"] == "ui://geox/well-desk?well_id=MB-001"
     assert "openai/toolInvocation/invoking" in enriched["_meta"]
     assert "openai/toolInvocation/invoked" in enriched["_meta"]
+
+
+@pytest.mark.asyncio
+async def test_06_well_witness_three_channel_return():
+    """PR2: geox_well_desk open returns content + structuredContent + meta.ui."""
+    from fastmcp.tools import ToolResult
+
+    result = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": "A10"})
+    assert result is not None
+
+    # FastMCP ToolResult or converted CallToolResult
+    if isinstance(result, ToolResult):
+        content = result.content
+        sc = result.structured_content or {}
+        meta = result.meta or {}
+        is_error = result.is_error
+    else:
+        # ToolResult-like from call_tool
+        content = getattr(result, "content", None) or []
+        sc = getattr(result, "structured_content", None) or getattr(result, "structuredContent", None) or {}
+        meta = getattr(result, "meta", None) or {}
+        is_error = bool(getattr(result, "is_error", False) or getattr(result, "isError", False))
+
+    assert not is_error, f"well_desk open failed: {result}"
+    # content channel — non-empty text
+    texts = []
+    for block in content or []:
+        t = getattr(block, "text", None) or (block.get("text") if isinstance(block, dict) else None)
+        if t:
+            texts.append(t)
+    assert texts, "content channel empty"
+    assert any("Well" in t or "well" in t for t in texts)
+
+    # structured channel — hydrate keys for p0-viz
+    assert isinstance(sc, dict)
+    assert sc.get("well_id") == "A10" or sc.get("summary", {}).get("well_id") == "A10"
+    assert "epistemic" in sc or "summary" in sc
+
+    # meta channel — UI binding
+    ui = meta.get("ui") if isinstance(meta, dict) else None
+    assert ui is not None, f"meta.ui missing: {meta}"
+    assert str(ui.get("resourceUri", "")).startswith("ui://geox/well-desk")
+    assert meta.get("openai/outputTemplate", "").startswith("ui://geox/well-desk")
+
+
+@pytest.mark.asyncio
+async def test_07_well_desk_resource_is_host_bridge_shell():
+    """PR2: ui://geox/well-desk serves p0-viz (ui/initialize), not multi-file index."""
+    res = await mcp.read_resource("ui://geox/well-desk")
+    html = res.contents[0].content
+    assert len(html) >= _MIN_HOST_HTML_BYTES
+    assert "ui/initialize" in html or "ui/notifications/tool-result" in html
+    # Must not depend on relative bridge scripts (broken in MCP iframe)
+    assert "./src/bridge/MCPBridge.js" not in html

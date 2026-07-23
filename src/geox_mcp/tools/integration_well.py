@@ -141,50 +141,191 @@ async def _stub_well_assess(
     }
 
 
+def _downsample_series(values: list[float], max_n: int = 200) -> list[float]:
+    """Evenly downsample a 1D series for iframe hydrate (keep UI payload small)."""
+    if not values:
+        return []
+    n = len(values)
+    if n <= max_n:
+        return [float(v) if v is not None else float("nan") for v in values]
+    step = max(1, n // max_n)
+    out = [float(values[i]) if values[i] is not None else float("nan") for i in range(0, n, step)]
+    return out[:max_n]
+
+
+def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
+    """Best-effort LAS curve load for Well Witness hydrate. Never invent physics."""
+    from pathlib import Path
+
+    candidates = [
+        Path(f"/data/geox_las/{well_id}.las"),
+        Path(f"/data/geox_las/{well_id}"),
+        Path(f"/root/GEOX/fixtures/{well_id}.las"),
+        Path(f"/root/GEOX/fixtures/_DEMO_SYNTHETIC/{well_id}.las"),
+        Path("/root/GEOX/fixtures/geox_smoke_test.las") if well_id in ("DEMO", "SMOKE", "geox_smoke_test") else None,
+    ]
+    las_path = next((p for p in candidates if p is not None and p.is_file()), None)
+    if las_path is None:
+        # Case-insensitive scan of /data/geox_las
+        data_dir = Path("/data/geox_las")
+        if data_dir.is_dir():
+            wid = well_id.lower().replace(" ", "")
+            for p in data_dir.glob("*.las"):
+                if wid in p.stem.lower().replace(" ", ""):
+                    las_path = p
+                    break
+    if las_path is None:
+        return {"status": "no_las", "curves_available": [], "depths": None, "curves": None}
+
+    try:
+        import lasio
+
+        las = lasio.read(str(las_path), ignore_header_errors=True)
+        mnemonics = [c.mnemonic.upper() for c in las.curves]
+        depths_raw = list(las.index) if las.index is not None else []
+        depths = _downsample_series([float(d) for d in depths_raw], max_n)
+
+        def _curve(names: tuple[str, ...]) -> list[float] | None:
+            for name in names:
+                if name in mnemonics:
+                    idx = mnemonics.index(name)
+                    arr = list(las.curves[idx].data)
+                    return _downsample_series([float(x) if x == x else float("nan") for x in arr], max_n)
+            return None
+
+        curves = {
+            "GR": _curve(("GR", "GAMMA", "SGR", "CGR")),
+            "RES": _curve(("RT", "RES", "ILD", "LLD", "RD", "RDEEP")),
+            "DT": _curve(("DT", "DTCO", "AC", "DTC")),
+            "RHOB": _curve(("RHOB", "DEN", "ZDEN", "RHOZ")),
+        }
+        # Drop empty tracks
+        curves = {k: v for k, v in curves.items() if v is not None}
+        available = [c.mnemonic for c in las.curves]
+        depth_range = [depths[0], depths[-1]] if depths else None
+        return {
+            "status": "loaded",
+            "las_path": str(las_path),
+            "well_name": getattr(las.well, "WELL", None) and str(getattr(las.well.WELL, "value", well_id)) or well_id,
+            "curves_available": available,
+            "depth_range_m": depth_range,
+            "depths": depths,
+            "curves": curves if curves else None,
+            "n_samples_ui": len(depths),
+            "n_samples_source": len(depths_raw),
+        }
+    except Exception as exc:
+        return {
+            "status": "load_error",
+            "curves_available": [],
+            "depths": None,
+            "curves": None,
+            "error": str(exc)[:200],
+        }
+
+
 async def geox_well_desk_open(
     well_id: str = "",
     mode: str = "summary",
     session_id: str | None = None,
     actor_id: str | None = None,
     trace_id: str | None = None,
-) -> dict:
-    """Open well desk summary view (ZEN-15 consolidated — was standalone tool).
+):
+    """Open Well Witness (MCP App) — 3-channel return for host iframe hydrate.
 
-    Returns well metadata and curve headers. This is the "open" mode of
-    geox_well_desk, consolidated from the deregistered geox_well_desk_open.
+    Returns ToolResult:
+      content            — short operator text
+      structured_content — well_id/mode/band/curves/depths for p0-viz.html
+      meta.ui.resourceUri — ui://geox/well-desk
     """
-    result: dict = {
+    from geox_mcp.tools.mcp_apps_bridge import ui_tool_result
+
+    _mode = (mode or "summary").strip().lower()
+    if _mode not in ("summary", "tracks", "open"):
+        _mode = "summary"
+    if _mode == "open":
+        _mode = "summary"
+    _wid = (well_id or "").strip()
+    if not _wid:
+        return ui_tool_result(
+            app_id="well_desk",
+            text="well_id is required for geox_well_desk open",
+            structured={
+                "ok": False,
+                "tool": "geox_well_desk",
+                "error_class": "MISSING_REQUIRED_FIELD",
+                "message": "well_id is required",
+            },
+            is_error=True,
+        )
+
+    loaded = _load_well_curves_for_ui(_wid)
+    band = "LOADED" if loaded.get("status") == "loaded" else "UNKNOWN"
+    epi_cap = 0.85 if loaded.get("curves") else 0.70
+    epi_layer = "OBS" if loaded.get("curves") else "OBS"
+
+    structured = {
+        "ok": True,
         "tool": "geox_well_desk",
-        "mode": "open",
-        "submode": mode,
-        "well_id": well_id,
-        "status": "ready",
-        "curves_available": [],
-        "depth_range_m": None,
-        "message": "Well desk open. Use mode='render' for full panel or mode='publish' for sealed image.",
+        "mode": _mode,
+        "submode": _mode,
+        "well_id": _wid,
+        "well_name": loaded.get("well_name", _wid),
+        "band": band,
+        "status": loaded.get("status", "ready"),
+        "curves_available": loaded.get("curves_available") or [],
+        "depth_range_m": loaded.get("depth_range_m"),
+        "depths": loaded.get("depths"),
+        "curves": loaded.get("curves"),
+        "n_samples_ui": loaded.get("n_samples_ui"),
+        "summary": {
+            "well_id": _wid,
+            "mode": _mode,
+            "band": band,
+            "note": (
+                "Well Witness hydrate — curves downsampled for MCP App iframe."
+                if loaded.get("curves")
+                else "No LAS curves found; host shell may show synthetic preview until ingest."
+            ),
+            "views": (
+                ["composite_log", "summary_card"]
+                if _mode == "summary"
+                else ["composite_log", "tracks", "crossplot_placeholder"]
+            ),
+        },
+        "epistemic": {
+            "layer": epi_layer,
+            "confidence_cap": epi_cap,
+            "note": "Curves OBS from LAS when present; never invent pay or saturation here.",
+        },
+        "ui": {
+            "resourceUri": "ui://geox/well-desk",
+            "protocol": "SEP-1865",
+            "shell": "p0-viz",
+        },
+        "session_id": session_id,
+        "actor_id": actor_id,
+        "trace_id": trace_id,
+        "w0": "OPERATOR_VETO_INTACT",
+        "final_authority": "ARIF",
+        "message": (
+            f"Well desk open: {_wid} ({band}). "
+            f"curves={list((loaded.get('curves') or {}).keys()) or 'none'}."
+        ),
     }
 
-    # Try to load LAS if path provided
-    if well_id:
-        try:
-            from geox.ingest.las_reader import read_las_header
-
-            las_path = f"/data/geox_las/{well_id}.las"
-            from pathlib import Path
-
-            if Path(las_path).exists():
-                header = read_las_header(las_path)
-                result["curves_available"] = list(header.get("curves", {}).keys())
-                result["depth_range_m"] = [
-                    header.get("start_depth_m"),
-                    header.get("stop_depth_m"),
-                ]
-                result["well_name"] = header.get("well_name", well_id)
-                result["status"] = "loaded"
-        except Exception:
-            result["message"] = f"Well '{well_id}' not found in /data/geox_las/. Ingest LAS first."
-
-    return result
+    n_curves = len(loaded.get("curves") or {})
+    text = (
+        f"Well Witness: well_id={_wid} mode={_mode} band={band}. "
+        f"UI tracks={n_curves}. resource=ui://geox/well-desk. "
+        f"{'LAS loaded.' if loaded.get('status') == 'loaded' else 'No LAS — ingest first or use demo id.'}"
+    )
+    return ui_tool_result(
+        app_id="well_desk",
+        text=text,
+        structured=structured,
+        params={"well_id": _wid, "mode": _mode},
+    )
 
 
 async def geox_well_desk_publish(
