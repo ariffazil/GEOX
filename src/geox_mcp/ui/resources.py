@@ -55,11 +55,14 @@ def register_workspace_resource(mcp: FastMCP) -> None:
         return html
 
     if not _uri_registered(mcp, WORKSPACE_READABLE_URI):
-
+        # Plain text/html — NOT profile=mcp-app. MCPJam/OpenAI "Listed UI
+        # Resources Valid" treats any mcp-app MIME as a UI resource and then
+        # requires the ui:// scheme. This geox:// alias is a content mirror
+        # only; the real MCP App is WORKSPACE_URI (ui://...).
         @mcp.resource(
             WORKSPACE_READABLE_URI,
-            description="Readable alias for GEOX Workspace v1.",
-            mime_type=WORKSPACE_MIME,
+            description="Readable alias for GEOX Workspace v1 (content mirror; MCP App is ui://geox/workspace-v1.html).",
+            mime_type="text/html",
         )
         async def geox_workspace_v1_readable() -> str:
             return html
