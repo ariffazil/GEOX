@@ -13,704 +13,97 @@
         "summary": "MCP JSON-RPC 2.0 endpoint",
         "x-mcp-tools": [
           {
-            "axis": "observe",
-            "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
-            "domain": "earth.well",
-            "lane": "evidence",
-            "name": "geox_well_ingest",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_basin"
           },
           {
-            "axis": "reason",
-            "description": "Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.",
-            "domain": "earth.petrophysics",
-            "lane": "reasoning",
-            "name": "geox_petrophysics",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_basin_backstrip"
           },
           {
-            "axis": "observe",
-            "description": "SEG-Y I/O, header inspection, export.",
-            "domain": "earth.seismic",
-            "lane": "evidence",
-            "name": "geox_seismic_ingest",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_claim"
           },
           {
-            "axis": "compute",
-            "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
-            "domain": "earth.seismic",
-            "lane": "reasoning",
-            "name": "geox_seismic_compute",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_claim_graph_evaluate"
           },
           {
-            "axis": "reason",
-            "description": "Unified seismic interpretation: horizon/fault picking, RSI pipeline, vision, contrast detection. Modes: horizon_contrast, fault_sticks, volume_frame, blend, rsi_pipeline, contrast, vision.",
-            "domain": "earth.seismic",
-            "lane": "reasoning",
-            "name": "geox_seismic_interpret",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_contradiction_scan"
           },
           {
-            "axis": "compute",
-            "description": "Subsurface model building: joint inversion, gravity/magnetic forward, MT forward.",
-            "domain": "earth.model",
-            "lane": "reasoning",
-            "name": "geox_subsurface_model",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_deep_time_state"
           },
           {
-            "axis": "reason",
-            "description": "Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.",
-            "domain": "earth.basin",
-            "lane": "reasoning",
-            "name": "geox_basin",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_evidence"
           },
           {
-            "axis": "reason",
-            "description": "Unified stratigraphy: sequence analysis, biostratigraphic parsing and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.",
-            "domain": "earth.stratigraphy",
-            "lane": "reasoning",
-            "name": "geox_sequence",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_falsify"
           },
           {
-            "axis": "compute",
-            "description": "Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.",
-            "domain": "earth.structure",
-            "lane": "reasoning",
-            "name": "geox_geomechanics",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_geomechanics"
           },
           {
-            "axis": "observe",
-            "description": "Earth State Vector through deep time: GPTS, CO2, sea level, temperature, paleogeography.",
-            "domain": "earth.time",
-            "lane": "evidence",
-            "name": "geox_deep_time_state",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_gravmag_studio"
           },
           {
-            "axis": "reason",
-            "description": "Unified claim lifecycle: create, validate, challenge, seal, evidence, consequence, optionality, cascade, feedback integrity, truth challenge.",
-            "domain": "governance",
-            "lane": "judgment",
-            "name": "geox_claim",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_lem_predict"
           },
           {
-            "axis": "reason",
-            "description": "Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.",
-            "domain": "earth.prospect",
-            "lane": "judgment",
-            "name": "geox_prospect",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_map_export_package"
           },
           {
-            "axis": "compute",
-            "description": "Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.",
-            "domain": "earth.geophysics",
-            "lane": "reasoning",
-            "name": "geox_gravmag_studio",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_map_layers_list"
           },
           {
-            "axis": "observe",
-            "description": "Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.",
-            "domain": "earth.well",
-            "lane": "evidence",
-            "name": "geox_well_desk",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_map_render_preview"
           },
           {
-            "axis": "observe",
-            "description": "Federation-standard registry probe: tool discovery and health status.",
-            "domain": "earth.meta",
-            "lane": "evidence",
-            "name": "geox_surface_status",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_map_scene_plan"
           },
           {
-            "axis": "reason",
-            "description": "Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.",
-            "domain": "governance.evidence",
-            "lane": "evidence",
-            "name": "geox_evidence",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_petrophysics"
           },
           {
-            "axis": "compute",
-            "description": "1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.",
-            "domain": "earth.basin",
-            "lane": "reasoning",
-            "name": "geox_basin_backstrip",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_prospect"
           },
           {
-            "axis": "compute",
-            "description": "Source-to-sink sediment volume and mass accounting. Peters 2012 framework.",
-            "domain": "earth.basin",
-            "lane": "reasoning",
-            "name": "geox_sediment_mass_balance",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_sediment_mass_balance"
           },
           {
-            "axis": "compute",
-            "description": "Burial + heat flow + maturity modeling through time. EasyRo + TTI.",
-            "domain": "earth.basin",
-            "lane": "reasoning",
-            "name": "geox_thermal_maturity_history",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_seismic_compute"
           },
           {
-            "axis": "reason",
-            "description": "Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.",
-            "domain": "governance",
-            "lane": "judgment",
-            "name": "geox_claim_graph_evaluate",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_seismic_ingest"
           },
           {
-            "axis": "reason",
-            "description": "Popperian falsification engine. Modes: full (Kill Matrix K001-K007 + contradiction scan), quick (Kill Matrix only), physics_only (contradiction scan only), carbonate_igneous_rte (Arif Burgess-RTE Matrix \u2014 carbonate vs igneous discrimination using Burgess morphology, rheology, thermodynamics, and elasticity with Sabah-weighted scoring). GENESIS/015: physics must prove the claim is right. ANY KILL \u2192 rejected. Constitutional rule: absence of thermal evidence \u2260 proof of carbonate.",
-            "domain": "governance",
-            "lane": "judgment",
-            "name": "geox_falsify",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_seismic_interpret"
           },
           {
-            "axis": "reason",
-            "description": "Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL \u2192888_HOLD.",
-            "domain": "governance",
-            "lane": "judgment",
-            "name": "geox_contradiction_scan",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_sequence"
           },
           {
-            "axis": "reason",
-            "description": "LEM inference \u2014 predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.",
-            "domain": "earth.inference",
-            "lane": "reasoning",
-            "name": "geox_lem_predict",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_subsurface_model"
           },
           {
-            "axis": "reason",
-            "description": "Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.",
-            "domain": "governance.bridge",
-            "lane": "evidence",
-            "name": "geox_to_wealth_bridge",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_surface_status"
           },
           {
-            "axis": "observe",
-            "description": "GEOX Workspace \u2014 persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.",
-            "domain": "earth.meta",
-            "lane": "evidence",
-            "name": "geox_workspace",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
+            "name": "geox_thermal_maturity_history"
+          },
+          {
+            "name": "geox_to_wealth_bridge"
+          },
+          {
+            "name": "geox_visual_generate_hypotheses"
+          },
+          {
+            "name": "geox_visual_understand"
+          },
+          {
+            "name": "geox_well_desk"
+          },
+          {
+            "name": "geox_well_ingest"
+          },
+          {
+            "name": "geox_workspace"
           }
         ]
       }
