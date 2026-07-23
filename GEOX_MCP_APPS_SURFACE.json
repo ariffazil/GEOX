@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.0.0",
-  "generated_at": "2026-07-23T03:55:21.328546+00:00",
+  "schema_version": "2.0.0",
+  "generated_at": "2026-07-23T03:57:05.702905+00:00",
   "organ": "GEOX",
   "total_canonical_tools": 31,
   "total_ui_resources": 20,
@@ -26,7 +26,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "planned"
     },
     {
       "id": "attribute-audit",
@@ -46,7 +47,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-07-16: render_audit and segy_trace_audit DEREGISTERED. Use Seismic Viewer instead."
+      "deprecation_note": "2026-07-16: render_audit and segy_trace_audit DEREGISTERED. Use Seismic Viewer instead.",
+      "type": "deprecated"
     },
     {
       "id": "basin-explorer",
@@ -72,7 +74,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "catalog",
@@ -94,7 +97,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "earth-map",
@@ -119,7 +123,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "earth-volume",
@@ -143,7 +148,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "geoprobe",
@@ -167,7 +173,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "georeference-map",
@@ -187,7 +194,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-07-16: map tools DEREGISTERED. Using basin+deep_time for spatial context."
+      "deprecation_note": "2026-07-16: map tools DEREGISTERED. Using basin+deep_time for spatial context.",
+      "type": "deprecated"
     },
     {
       "id": "geox-mcp-visual",
@@ -207,7 +215,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "embedded_app"
     },
     {
       "id": "gravmag-studio",
@@ -227,7 +236,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "embedded_app"
     },
     {
       "id": "judge-console",
@@ -251,7 +261,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "prospect-studio",
@@ -273,7 +284,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "prospect-ui",
@@ -293,7 +305,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "embedded_app"
     },
     {
       "id": "risk-console",
@@ -316,7 +329,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "seismic-vision",
@@ -339,7 +353,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "seismic-vision-review",
@@ -359,7 +374,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-07-16: vision/cognition tools DEREGISTERED in ZEN-15 cleanup. Use Seismic Viewer instead."
+      "deprecation_note": "2026-07-16: vision/cognition tools DEREGISTERED in ZEN-15 cleanup. Use Seismic Viewer instead.",
+      "type": "deprecated"
     },
     {
       "id": "visual-hub",
@@ -381,7 +397,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "well-desk",
@@ -405,7 +422,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "external_launcher"
     },
     {
       "id": "workbench-v1",
@@ -425,7 +443,8 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "embedded_app"
     },
     {
       "id": "workspace-v1",
@@ -445,8 +464,36 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": null
+      "deprecation_note": null,
+      "type": "embedded_app"
     }
   ],
-  "source": "generated from src/geox_mcp/tools_manifest.yaml + apps/resources/read"
+  "source": "collapsed from apps.json + mcp_apps_bridge.py + server.py registration",
+  "summary": {
+    "embedded_apps": 5,
+    "external_launchers": 11,
+    "deprecated": 3,
+    "planned": 1,
+    "total": 20,
+    "embedded_ids": [
+      "geox-mcp-visual",
+      "gravmag-studio",
+      "prospect-ui",
+      "workbench-v1",
+      "workspace-v1"
+    ],
+    "launcher_ids": [
+      "basin-explorer",
+      "catalog",
+      "earth-map",
+      "earth-volume",
+      "geoprobe",
+      "judge-console",
+      "prospect-studio",
+      "risk-console",
+      "seismic-vision",
+      "visual-hub",
+      "well-desk"
+    ]
+  }
 }

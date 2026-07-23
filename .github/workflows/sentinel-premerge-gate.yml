@@ -10,6 +10,8 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
   merge_group:
 
 permissions:
@@ -216,10 +218,40 @@ jobs:
       - name: Test
         run: python -m pytest tests/ -q --tb=short
 
+  # ─── Q4: Registry truth? ────────────────────────────────────────────────
+  q4-registry-truth:
+    name: "Q4 — Registry Truth"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: pip install -e ".[dev]" --quiet
+
+      - name: Regenerate all surfaces
+        run: python scripts/generate_all_surfaces.py
+
+      - name: Verify no dirty working tree
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "::error::Generated surfaces are not idempotent — run scripts/generate_all_surfaces.py locally"
+            git diff --stat
+            exit 1
+          fi
+          echo "✅ Idempotence confirmed"
+
+      - name: Check registry truth
+        run: python scripts/check_registry_truth.py
+
   # ─── Final gate ────────────────────────────────────────────────────────
   sentinel-gate:
     name: "✅ Sentinel Gate"
-    needs: [q1-critical-paths, q2-readme-parity, q3-tests]
+    needs: [q1-critical-paths, q2-readme-parity, q3-tests, q4-registry-truth]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -228,12 +260,14 @@ jobs:
           Q1="${{ needs.q1-critical-paths.result }}"
           Q2="${{ needs.q2-readme-parity.result }}"
           Q3="${{ needs.q3-tests.result }}"
+          Q4="${{ needs.q4-registry-truth.result }}"
 
-          echo "Q1 (critical paths): $Q1"
-          echo "Q2 (README parity):  $Q2"
-          echo "Q3 (tests):          $Q3"
+          echo "Q1 (critical paths):  $Q1"
+          echo "Q2 (README parity):   $Q2"
+          echo "Q3 (tests):           $Q3"
+          echo "Q4 (registry truth):  $Q4"
 
-          if [[ "$Q2" != "success" || "$Q3" != "success" ]]; then
+          if [[ "$Q2" != "success" || "$Q3" != "success" || "$Q4" != "success" ]]; then
             echo "::error::SENTINEL BLOCK — PR cannot merge"
             exit 1
           fi

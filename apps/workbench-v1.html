@@ -45,9 +45,26 @@ function el(tag, attrs = {}, children = []) {
 }
 
 // ── UI Updates ─────────────────────────────────────────────────
+function setStatus(text, state) {
+  const dot = $("status-dot");
+  const st = $("status-text");
+  dot.className = "status-dot " + state;
+  st.textContent = text;
+}
+
+function showError(msg) {
+  const banner = $("error-banner");
+  banner.className = "error-banner visible";
+  $("error-text").textContent = msg;
+}
+
+function hideError() {
+  $("error-banner").className = "error-banner";
+}
+
 function updateMCPStatus(connected) {
   const badge = $("mcp-badge");
-  badge.textContent = connected ? "CONNECTED" : "DISCONNECTED";
+  badge.textContent = connected ? "CONNECTED" : "FALLBACK";
   badge.className = connected ? "mcp-connected" : "mcp-disconnected";
 }
 
@@ -226,10 +243,14 @@ function addMapFeatures(features) {
 
 // ── MCP App Initialization ─────────────────────────────────────
 async function init() {
-  const app = new App({ name: "geox-workbench", version: "1.1.0" });
+  setStatus("Connecting to MCP host...", "loading");
+  $("mcp-badge").className = "mcp-loading";
+  $("mcp-badge").textContent = "CONNECTING";
+
+  const app = new App({ name: "geox-workbench", version: "1.2.0" });
 
   app.ontoolinput = (input) => {
-    // Initial tool input — use arguments if provided
+    setStatus("Received tool input", "ok");
   };
 
   app.ontoolresult = (result) => {
@@ -237,8 +258,11 @@ async function init() {
     sessionId = result?.session_id || result?.audit_receipt?.session_id || sessionId;
     actorId = result?.actor_id || result?.audit_receipt?.actor_id || actorId;
     updateSessionBadge();
+    hideError();
 
     const features = extractFeatures(result);
+    $("status-map").textContent = features.length ? `${features.length} features` : "";
+    setStatus("Tool result rendered", "ok");
     renderFeatures(features);
   };
 
@@ -250,6 +274,7 @@ async function init() {
     if (ctx?.actorId) {
       actorId = ctx.actorId;
     }
+    setStatus("Host context received", "ok");
   };
 
   app.onteardown = async () => {
@@ -257,15 +282,22 @@ async function init() {
       mapInstance.remove();
       mapInstance = null;
     }
+    setStatus("Disconnected", "error");
     return {};
   };
 
   try {
+    setStatus("Connecting via ext-apps SDK...", "loading");
     await app.connect(new PostMessageTransport(window.parent, window.parent));
     updateMCPStatus(true);
+    setStatus("Connected — MCP Apps SDK", "ok");
+    hideError();
   } catch (err) {
     console.warn("[Workbench] MCP App connect failed, falling back to manual mode:", err);
     updateMCPStatus(false);
+    setStatus("SDK failed — manual fallback", "error");
+    showError("ext-apps SDK connect failed: " + (err.message || "unknown").slice(0, 100) + ". Using manual fallback.");
+    $("btn-reconnect").style.display = "inline-block";
     setupManualFallback();
   }
 }
@@ -345,14 +377,35 @@ init().catch((err) => {
   #mcp-badge { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
   .mcp-connected { background: var(--accent); color: #000; }
   .mcp-disconnected { background: #5a1a1a; color: #fca5a5; }
+  .mcp-loading { background: #3a3a1a; color: #fbbf24; animation: pulse 1.5s infinite; }
+  .mcp-error { background: #5a1a1a; color: #fca5a5; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .status-bar { padding: 6px 16px; background: var(--surface); border-bottom: 1px solid var(--border); font-size: 11px; color: #888; display: flex; gap: 16px; align-items: center; }
+  .status-bar .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .status-dot.loading { background: #fbbf24; animation: pulse 1.5s infinite; }
+  .status-dot.ok { background: var(--accent); }
+  .status-dot.error { background: #f87171; }
+  .btn-reconnect { padding: 4px 10px; background: var(--border); color: var(--text); border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 11px; }
+  .btn-reconnect:hover { background: #333; }
+  .error-banner { background: #2a1a1a; border-bottom: 1px solid #5a1a1a; padding: 8px 16px; font-size: 12px; color: #fca5a5; display: none; }
+  .error-banner.visible { display: flex; align-items: center; justify-content: space-between; }
 </style>
 </head>
 <body>
 <div class="wb-header">
   <h1>GEOX <span>Workbench</span></h1>
-  <span class="badge">v1.1</span>
+  <span class="badge">v1.2</span>
   <span id="session-display"><span class="session-badge anonymous">session: —</span></span>
-  <span id="mcp-status">MCP: <span id="mcp-badge" class="mcp-disconnected">DISCONNECTED</span></span>
+  <span id="mcp-status">MCP: <span id="mcp-badge" class="mcp-loading">CONNECTING</span></span>
+</div>
+<div class="status-bar" id="status-bar">
+  <span><span class="status-dot loading" id="status-dot"></span> <span id="status-text">Initializing...</span></span>
+  <span id="status-map"></span>
+  <span style="margin-left:auto;"><button class="btn-reconnect" id="btn-reconnect" onclick="location.reload()" style="display:none;">⟳ Reconnect</button></span>
+</div>
+<div class="error-banner" id="error-banner">
+  <span id="error-text"></span>
+  <button class="btn-reconnect" onclick="location.reload()">⟳ Retry</button>
 </div>
 <div class="wb-container">
   <div id="map"></div>
