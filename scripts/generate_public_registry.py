@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,7 +46,7 @@ def build_tools_snapshot() -> dict:
             {
                 "name": tool.name,
                 "description": tool.description or tool.name.replace("geox_", "GEOX ").replace("_", " "),
-                "version": "2026.07.15",
+                "version": datetime.now(UTC).strftime("%Y.%m.%d"),
                 "domain": tool.domain,
                 "axis": tool.axis,
                 "lane": tool.lane,
@@ -59,12 +60,12 @@ def build_tools_snapshot() -> dict:
     return {
         "$schema": "arifOS/tools-manifest/v2",
         "organ": "geox",
-        "version": "2026.07.15",
+        "version": datetime.now(UTC).strftime("%Y.%m.%d"),
         "manifest_path": str(MANIFEST_PATH.relative_to(ROOT)),
         "canonical_tools": len(tools),
         "surface_tools": sum(1 for tool in tools if tool["expose"]),
         "internal_tools": sum(1 for tool in tools if not tool["expose"]),
-        "policy": "ZEN-15: public == plugin export == CANONICAL_PUBLIC_TOOLS (no phantom app names)",
+        "policy": "public == manifest public surface — plugin export is subset (not all public tools are plugin-exposed)",
         "tools": tools,
     }
 
@@ -80,7 +81,7 @@ def build_openapi_snapshot() -> dict:
                 "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. "
                 "window.openai is optional progressive enhancement."
             ),
-            "version": "2026.07.15",
+            "version": datetime.now(UTC).strftime("%Y.%m.%d"),
         },
         "paths": {
             "/mcp": {
@@ -89,7 +90,7 @@ def build_openapi_snapshot() -> dict:
                     "description": (
                         "Plugin submission, review and publication use metadata scanned "
                         "or snapshotted from this live MCP endpoint. "
-                        "x-mcp-tools MUST equal the 15 ZEN-15 canonical public tools."
+                        f"x-mcp-tools MUST equal the {len(public_rows)} canonical plugin-exposed tools."
                     ),
                     "operationId": "mcpEndpoint",
                     "x-mcp-tools": public_rows,
@@ -101,12 +102,13 @@ def build_openapi_snapshot() -> dict:
 
 def build_root_tools_manifest() -> dict:
     app_export = set(plugin_export_tool_names())
+    public_list = list(public_tools())
     return {
-        "version": "2026.07.15",
+        "version": datetime.now(UTC).strftime("%Y.%m.%d"),
         "manifest_path": str(MANIFEST_PATH.relative_to(ROOT)),
-        "policy": "ZEN-15 single public surface — app_export must equal public",
-        "public": [tool.name for tool in public_tools()],
-        "app_export": [tool.name for tool in public_tools() if tool.name in app_export],
+        "policy": f"Generated {datetime.now(UTC).isoformat()} — app_export ⊂ public ({len(app_export)} of {len(public_list)} tools plugin-exposed)",
+        "public": [tool.name for tool in public_list],
+        "app_export": [tool.name for tool in public_list if tool.name in app_export],
         "internal": [tool.name for tool in manifest_tools() if tool.is_internal],
     }
 

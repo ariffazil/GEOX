@@ -23,7 +23,8 @@
     "geox_falsify",
     "geox_contradiction_scan",
     "geox_lem_predict",
-    "geox_to_wealth_bridge"
+    "geox_to_wealth_bridge",
+    "geox_workspace"
   ],
   "internal": [
     "geox_well_desurvey",
@@ -76,7 +77,7 @@
     "geox_dst_ingest_test"
   ],
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
-  "policy": "ZEN-15 single public surface \u2014 app_export must equal public",
+  "policy": "Generated 2026-07-23T03:34:24.983514+00:00 \u2014 app_export \u2282 public (25 of 31 tools plugin-exposed)",
   "public": [
     "geox_well_ingest",
     "geox_petrophysics",
@@ -107,7 +108,8 @@
     "geox_visual_generate_hypotheses",
     "geox_map_layers_list",
     "geox_map_scene_plan",
-    "geox_map_render_preview"
+    "geox_map_render_preview",
+    "geox_workspace"
   ],
-  "version": "2026.07.15"
+  "version": "2026.07.23"
 }

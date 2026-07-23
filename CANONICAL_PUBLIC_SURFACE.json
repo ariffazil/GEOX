@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-20T09:01:08.860683+00:00",
+  "generated_at": "2026-07-23T03:34:24.848116+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 30,
+  "public_count": 31,
   "internal_count": 48,
   "public_tools": [
     "geox_well_ingest",
@@ -34,7 +34,8 @@
     "geox_visual_generate_hypotheses",
     "geox_map_layers_list",
     "geox_map_scene_plan",
-    "geox_map_render_preview"
+    "geox_map_render_preview",
+    "geox_workspace"
   ],
   "tools": [
     {
@@ -308,7 +309,7 @@
       "domain": "governance",
       "axis": "reason",
       "lane": "judgment",
-      "description": "Popperian falsification engine \u2014 Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL \u2192 rejected. All PASS \u2192 PROCEED to 888_JUDGE.",
+      "description": "Popperian falsification engine. Modes: full (Kill Matrix K001-K007 + contradiction scan), quick (Kill Matrix only), physics_only (contradiction scan only), carbonate_igneous_rte (Arif Burgess-RTE Matr",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -431,6 +432,22 @@
         "action_class": "OBSERVE",
         "mutation": false,
         "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_workspace",
+      "domain": "earth.meta",
+      "axis": "observe",
+      "lane": "evidence",
+      "description": "GEOX Workspace \u2014 persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.",
+      "ui": {
+        "resource_uri": "ui://geox/visual-hub",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
       }
     }
   ],
