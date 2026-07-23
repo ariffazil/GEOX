@@ -85,8 +85,12 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Unified seismic interpretation: horizon/fault picking, RSI pipeline, vision, contrast detection. Modes: horizon_contrast,
-    fault_sticks, volume_frame, blend, rsi_pipeline, contrast, vision.'
+  description: >-
+    Governed seismic-analysis assist (NOT autonomous structural framework).
+    Live modes: horizon_contrast (1D multi-attribute boundary detector — needs attribute_data+depth),
+    fault_sticks (ingest only), volume_frame, blend.
+    NOT live via this tool: rsi_pipeline, vision, track_horizon, extract_faults, build_structure
+    (internal or P1). Local verdict max QUALIFIED_CANDIDATE — arifOS seals only.
   input_schema_source: callable
   annotations:
     read_only: true

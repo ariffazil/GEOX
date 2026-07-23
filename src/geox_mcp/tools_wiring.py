@@ -735,6 +735,14 @@ def register_tools_on(mcp):
     @mcp.tool(name="geox_seismic_interpret", annotations=_geox_annotations("geox_seismic_interpret"))
     async def _seismic_interpret(
         mode: str = "horizon_contrast",
+        # P0: public schema must accept horizon_contrast inputs (sovereign 2026-07-23)
+        attribute_data: dict[str, list[float]] | None = None,
+        depth: list[float] | None = None,
+        geological_query: str = "sequence_boundary",
+        well_ties: dict[str, float] | None = None,
+        peak_threshold: float = 1.5,
+        min_separation_m: float = 20.0,
+        custom_query: dict[str, float] | None = None,
         source_uri: str = "",
         source_type: str = "csv",
         action: str = "get",
@@ -753,13 +761,25 @@ def register_tools_on(mcp):
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """Horizon contrast, faults, frames, blend."""
+        """1D multi-attribute boundary detector + fault_sticks ingest + volume frames.
+
+        Live modes: horizon_contrast, fault_sticks, volume_frame, blend.
+        Not a 2D section picker / structural framework builder.
+        Local verdicts are QUALIFIED_CANDIDATE only — arifOS seals.
+        """
         from geox_mcp.tools.seismic_interpret import geox_seismic_interpret as _impl
 
         args = _safe_forward(
             _impl,
             {
                 "mode": mode,
+                "attribute_data": attribute_data,
+                "depth": depth,
+                "geological_query": geological_query,
+                "well_ties": well_ties,
+                "peak_threshold": peak_threshold,
+                "min_separation_m": min_separation_m,
+                "custom_query": custom_query,
                 "source_uri": source_uri,
                 "source_type": source_type,
                 "action": action,

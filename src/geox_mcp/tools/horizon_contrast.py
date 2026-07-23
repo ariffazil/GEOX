@@ -818,15 +818,39 @@ async def geox_horizon_contrast_surface(
         ctx.report_progress(80, 100)
 
     # ── Step 5: Geological Alignment Governance ───────────────────────────
-    # Physics9 guard: AI range check
-    ai_vals = attribute_data.get("amplitude", [0])
-    ai_arr = np.array(ai_vals, dtype=float)
-    ai_lower, ai_upper = 2000.0, 35000.0
-    physics_ok = (
-        bool(ai_lower <= float(np.min(ai_arr)) <= ai_upper and ai_lower <= float(np.max(ai_arr)) <= ai_upper)
-        if len(ai_arr) > 0
-        else True
-    )
+    # P0 2026-07-23: amplitude ≠ acoustic impedance (sovereign verdict).
+    # AI range guard applies ONLY to acoustic_impedance / relative_impedance.
+    # seismic_amplitude (and legacy amplitude with |v|≲100) uses separate bounds.
+    physics_ok = True
+    physics_notes: list[str] = []
+
+    ai_vals = attribute_data.get("acoustic_impedance") or attribute_data.get("relative_impedance")
+    if ai_vals is not None:
+        ai_arr = np.array(ai_vals, dtype=float)
+        ai_lower, ai_upper = 2000.0, 35000.0
+        if len(ai_arr) > 0:
+            amin, amax = float(np.nanmin(ai_arr)), float(np.nanmax(ai_arr))
+            physics_ok = bool(ai_lower <= amin <= ai_upper and ai_lower <= amax <= ai_upper)
+            if not physics_ok:
+                physics_notes.append(
+                    f"acoustic_impedance out of physical range [{ai_lower},{ai_upper}]: "
+                    f"observed [{amin:.1f},{amax:.1f}]"
+                )
+    else:
+        # No AI channel — do not apply AI guard to seismic amplitude
+        amp = attribute_data.get("seismic_amplitude") or attribute_data.get("amplitude")
+        if amp is not None:
+            amp_arr = np.array(amp, dtype=float)
+            if len(amp_arr) > 0:
+                amax = float(np.nanmax(np.abs(amp_arr)))
+                # Typical normalized seismic ±1..±10000; reject nonsense only
+                if amax > 1e6:
+                    physics_ok = False
+                    physics_notes.append(f"seismic_amplitude |max|={amax:.0f} exceeds sanity bound 1e6")
+                else:
+                    physics_notes.append(
+                        "physics_guard: seismic_amplitude present — AI-range check skipped (correct)"
+                    )
 
     strat_col = ABKSS_STRATIGRAPHIC_COLUMN if stratigraphic_framework == "ABKSS" else []
     geo_alignment = _geological_alignment_check(
@@ -844,17 +868,19 @@ async def geox_horizon_contrast_surface(
     n_flags = len(geo_alignment.get("flags", []))
     has_well_ties = bool(well_ties)
 
+    # P0: GEOX-local engine NEVER emits SEAL. Max local verdict = QUALIFIED_CANDIDATE (QUALIFY).
+    # Only arifOS may SEAL. Sovereign 2026-07-23.
     if n_candidates == 0:
         claim_tag = "HYPOTHESIS"
         gov_status = GovernanceStatus.HOLD
         claim_state = "INTERPRETED"
-    elif geo_alignment.get("requires_888_hold", False):
+    elif geo_alignment.get("requires_888_hold", False) or not physics_ok:
         claim_tag = "PLAUSIBLE"
         gov_status = GovernanceStatus.HOLD
         claim_state = "INTERPRETED"
-    elif n_candidates > 0 and has_well_ties and n_flags == 0:
-        claim_tag = "CLAIM"
-        gov_status = GovernanceStatus.SEAL
+    elif n_candidates > 0 and has_well_ties and n_flags == 0 and physics_ok:
+        claim_tag = "PLAUSIBLE"  # was CLAIM+SEAL — demoted: local only
+        gov_status = GovernanceStatus.QUALIFY
         claim_state = "QC_VERIFIED"
     else:
         claim_tag = "PLAUSIBLE"
@@ -886,7 +912,10 @@ async def geox_horizon_contrast_surface(
         evidence_refs=list(well_ties.keys()) if well_ties else [],
         physics_guard={
             "guard_passed": physics_ok,
-            "physics_version": "geox-horizon-v2026.06.05",
+            "physics_version": "geox-horizon-v2026.07.23-amplitude-ai-split",
+            "notes": physics_notes,
+            "local_verdict": "QUALIFIED_CANDIDATE",
+            "seal_authority": "arifOS_only",
             "equations_used": [
                 "AI = Vp × ρ",
                 "δ_i = A_obs − A_bg",
