@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": 58980.988,
+  "generated_at": 59314.102,
   "organ": "GEOX",
   "total_canonical_tools": 31,
   "total_ui_resources": 20,
@@ -389,8 +389,8 @@
       "title": "GEOX WellDesk",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 35629,
-      "content_hash": "sha256:e0ed919e8b2393cf",
+      "content_bytes": 16708,
+      "content_hash": "sha256:3e5deb3d8d9b8d72",
       "bound_tools": [
         "geox_petrophysics",
         "geox_well_desk",

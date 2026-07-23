@@ -202,17 +202,39 @@ def register_tools_on(mcp):
                 trace_id=trace_id,
             )
             result = await _impl(**args)
-            return {
-                **(result if isinstance(result, dict) else {"data": result}),
-                "_memory": "LIVE_PROBE",
-                "_epistemic": {
-                    "evidence_layer": "OBS",
-                    "confidence": 0.85,
-                    "source": "geox_well_ingest",
-                    "reversible": True,
-                    "authority_claim": "EVIDENCE",
-                },
-            }
+            if isinstance(result, dict):
+                result = {
+                    **result,
+                    "_memory": "LIVE_PROBE",
+                    "_epistemic": {
+                        "evidence_layer": "OBS",
+                        "confidence": 0.85,
+                        "source": "geox_well_ingest",
+                        "reversible": True,
+                        "authority_claim": "EVIDENCE",
+                    },
+                }
+            # PR2: 3-channel UI return so hosts open Well Witness after ingest
+            from geox_mcp.tools.mcp_apps_bridge import wrap_as_ui_tool_result
+
+            _wid = well_id
+            if isinstance(result, dict):
+                _wid = _wid or result.get("well_id")
+            elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
+                _wid = _wid or result.structured_content.get("well_id")
+            _is_err = bool(getattr(result, "is_error", False)) or (
+                isinstance(result, dict) and (result.get("isError") or result.get("ok") is False)
+            )
+            return wrap_as_ui_tool_result(
+                result,
+                app_id="well_desk",
+                params={"well_id": _wid} if _wid else None,
+                text=(
+                    None
+                    if _is_err
+                    else f"Well ingest complete for {_wid or 'unknown'}. Open Well Witness for tracks."
+                ),
+            )
         except Exception as e:
             from geox_mcp.federation_safety import classify_error
 
@@ -394,17 +416,57 @@ def register_tools_on(mcp):
                 trace_id=trace_id,
             )
             result = await _impl(**args)
-            return {
-                **(result if isinstance(result, dict) else {"data": result}),
-                "_memory": "LIVE_PROBE",
-                "_epistemic": {
-                    "evidence_layer": "DER",
-                    "confidence": 0.80,
-                    "source": "geox_petrophysics",
-                    "reversible": True,
-                    "authority_claim": "EVIDENCE",
-                },
-            }
+            if isinstance(result, dict):
+                result = {
+                    **result,
+                    "_memory": "LIVE_PROBE",
+                    "_epistemic": {
+                        "evidence_layer": "DER",
+                        "confidence": 0.80,
+                        "source": "geox_petrophysics",
+                        "reversible": True,
+                        "authority_claim": "EVIDENCE",
+                    },
+                }
+            # PR2: 3-channel UI return → Well Witness panel
+            from geox_mcp.tools.mcp_apps_bridge import wrap_as_ui_tool_result
+
+            _wid = well_id or (result.get("well_id") if isinstance(result, dict) else None)
+            # Compact structured payload for iframe (drop dense arrays from model path)
+            sc_override = None
+            if isinstance(result, dict):
+                sc_override = {
+                    "ok": result.get("ok", True),
+                    "tool": "geox_petrophysics",
+                    "mode": mode,
+                    "well_id": _wid,
+                    "band": "DERIVED",
+                    "summary": {
+                        "well_id": _wid,
+                        "mode": mode,
+                        "band": "DERIVED",
+                        "note": "Petrophysics complete — open Well Witness for tracks.",
+                    },
+                    "epistemic": result.get("_epistemic")
+                    or {"layer": "DER", "confidence_cap": 0.80},
+                    "net_pay": result.get("net_pay"),
+                    "status": result.get("status", "computed"),
+                    # Pass through compact curve summaries if already small
+                    "curves_available": list((result.get("curves") or {}).keys())
+                    if isinstance(result.get("curves"), dict)
+                    else result.get("curves_available"),
+                    "message": result.get("message") or f"Petrophysics mode={mode} well_id={_wid}",
+                }
+            return wrap_as_ui_tool_result(
+                result,
+                app_id="well_desk",
+                params={"well_id": _wid, "mode": "tracks"} if _wid else None,
+                structured_override=sc_override,
+                text=(
+                    f"Petrophysics ({mode}) for {_wid or 'workspace'}. "
+                    f"UI: ui://geox/well-desk. DER layer — not a seal."
+                ),
+            )
         except Exception as e:
             from geox_mcp.federation_safety import classify_error
 
@@ -3753,19 +3815,26 @@ def register_tools_on(mcp):
         publish — render and publish well panel image
         render  — render well-log panel with petrophysics
         """
+        from geox_mcp.tools.mcp_apps_bridge import wrap_as_ui_tool_result
+
         if mode == "publish":
             from geox_mcp.tools.integration_well import geox_well_desk_publish as _impl
 
-            return await _impl(
+            pub = await _impl(
                 well_id=well_id,
                 session_id=session_id,
                 actor_id=actor_id,
                 trace_id=trace_id,
             )
+            return wrap_as_ui_tool_result(
+                pub,
+                app_id="well_desk",
+                params={"well_id": well_id, "mode": "publish"} if well_id else None,
+            )
         if mode == "render":
             from geox_mcp.render_well_panel_petro import render_interpreted_panel
 
-            return render_interpreted_panel(
+            rendered = render_interpreted_panel(
                 well_id=well_id,
                 depth_top=depth_top,
                 depth_base=depth_base,
@@ -3774,12 +3843,18 @@ def register_tools_on(mcp):
                 session_id=session_id,
                 actor_id=actor_id,
             )
-        # Default: open
+            return wrap_as_ui_tool_result(
+                rendered,
+                app_id="well_desk",
+                params={"well_id": well_id, "mode": "render"} if well_id else None,
+                text=f"Well panel rendered for {well_id or 'unknown'}.",
+            )
+        # Default: open — already returns 3-channel ToolResult
         from geox_mcp.tools.integration_well import geox_well_desk_open as _impl
 
         return await _impl(
             well_id=well_id,
-            mode="summary",
+            mode="summary" if mode in ("open", "summary", "") else mode,
             session_id=session_id,
             actor_id=actor_id,
             trace_id=trace_id,

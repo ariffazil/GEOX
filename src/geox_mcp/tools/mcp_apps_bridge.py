@@ -50,7 +50,9 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
-        "html_path": "apps/well-desk/index.html",
+        # p0-viz: self-contained host bridge (ui/initialize + tool-result hydrate).
+        # Full multi-file index.html needs sibling scripts — breaks in MCP iframe.
+        "html_path": "apps/well-desk/p0-viz.html",
         "external_url": "https://geox.arif-fazil.com/apps/well-desk/",
     },
     "seismic_vision": {
@@ -345,6 +347,16 @@ def mcp_apps_resource(app_id: str, params: dict[str, Any] | None = None) -> dict
                 "title": app["title"],
                 "renderMode": app["render_mode"],
                 "mimeType": app["mime_type"],
+                "csp": {
+                    "connectDomains": ["geox.arif-fazil.com", "macrostrat.org"],
+                    "resourceDomains": [
+                        "geox.arif-fazil.com",
+                        "unpkg.com",
+                        "tile.openstreetmap.org",
+                        "cdn.jsdelivr.net",
+                        "cdn.plot.ly",
+                    ],
+                },
                 # SEP-973: Additional tool metadata
                 "annotations": {
                     "audience": ["geoscientist", "interpreter"],
@@ -369,6 +381,131 @@ def enrich_response(response: dict[str, Any], app_id: str, params: dict[str, Any
     if meta:
         response.update(meta)
     return response
+
+
+def ui_meta(app_id: str, params: dict[str, Any] | None = None, **extra: Any) -> dict[str, Any]:
+    """Flat meta dict for ToolResult.meta (not nested under _meta)."""
+    block = mcp_apps_resource(app_id, params).get("_meta", {})
+    if extra:
+        block = {**block, **extra}
+    return block
+
+
+def ui_tool_result(
+    *,
+    app_id: str,
+    text: str,
+    structured: dict[str, Any],
+    params: dict[str, Any] | None = None,
+    is_error: bool = False,
+    extra_meta: dict[str, Any] | None = None,
+) -> Any:
+    """Build a 3-channel MCP Apps ToolResult for host iframe hydrate.
+
+    Channels:
+      content            — short text for model / non-UI hosts
+      structured_content — widget props (no secrets, no dense raw dumps)
+      meta               — ui.resourceUri + openai/* aliases + optional extra
+
+    Returns ToolResult when fastmcp is available; otherwise a plain dict
+    with content/structuredContent/_meta keys for tests/offline.
+    """
+    try:
+        from fastmcp.tools import ToolResult
+        from mcp.types import TextContent
+    except ImportError:  # pragma: no cover
+        payload = {
+            "content": [{"type": "text", "text": text}],
+            "structuredContent": structured,
+            "_meta": ui_meta(app_id, params, **(extra_meta or {})),
+            "isError": is_error,
+        }
+        return payload
+
+    meta = ui_meta(app_id, params, **(extra_meta or {}))
+    return ToolResult(
+        content=[TextContent(type="text", text=text)],
+        structured_content=structured,
+        meta=meta,
+        is_error=is_error,
+    )
+
+
+def wrap_as_ui_tool_result(
+    result: Any,
+    *,
+    app_id: str,
+    text: str | None = None,
+    params: dict[str, Any] | None = None,
+    structured_override: dict[str, Any] | None = None,
+) -> Any:
+    """Wrap a dict or ToolResult so it always carries 3-channel UI binding.
+
+    - dict → new ToolResult
+    - ToolResult → clone with UI meta merged; structured_content preserved
+    - other → wrap under {"data": result}
+    """
+    try:
+        from fastmcp.tools import ToolResult
+        from mcp.types import TextContent
+    except ImportError:  # pragma: no cover
+        if isinstance(result, dict):
+            sc = structured_override or result
+            summary = text or result.get("message") or result.get("status") or f"{app_id} result"
+            return ui_tool_result(app_id=app_id, text=str(summary), structured=sc, params=params)
+        return ui_tool_result(
+            app_id=app_id,
+            text=text or f"{app_id} result",
+            structured=structured_override or {"data": result},
+            params=params,
+        )
+
+    if isinstance(result, ToolResult):
+        sc = structured_override or result.structured_content or {}
+        if not isinstance(sc, dict):
+            sc = {"data": sc}
+        content = result.content
+        if text is not None:
+            content = [TextContent(type="text", text=text)]
+        elif not content:
+            content = [TextContent(type="text", text=f"{app_id} ready")]
+        meta = dict(result.meta or {})
+        meta.update(ui_meta(app_id, params))
+        return ToolResult(
+            content=content,
+            structured_content=sc,
+            meta=meta,
+            is_error=bool(result.is_error),
+        )
+
+    if isinstance(result, dict):
+        sc = structured_override or {
+            k: v
+            for k, v in result.items()
+            if not str(k).startswith("_") and k not in ("content", "structuredContent", "_meta")
+        }
+        summary = text
+        if summary is None:
+            summary = (
+                result.get("content_text")
+                or result.get("message")
+                or result.get("status")
+                or f"{app_id}: ok={result.get('ok', result.get('status', 'done'))}"
+            )
+        return ui_tool_result(
+            app_id=app_id,
+            text=str(summary),
+            structured=sc,
+            params=params,
+            is_error=bool(result.get("isError") or result.get("is_error") or result.get("ok") is False),
+        )
+
+    return ui_tool_result(
+        app_id=app_id,
+        text=text or f"{app_id} result",
+        structured=structured_override or {"data": result},
+        params=params,
+    )
 
 
 def list_apps() -> list[dict[str, Any]]:
