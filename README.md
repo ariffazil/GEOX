@@ -5,6 +5,7 @@ valid_until: 2026-08-20
 federation_release: v2026.07.20-ZEN-CONVERGENCE
 live_commit: c2397743
 truth_rule: live :8081/health + tools/list beat any static count in prose
+mcp_tools_live: dynamic_from_tools_list
 -->
 
 # 🌊 GEOX — Subsurface Intelligence Workbench
