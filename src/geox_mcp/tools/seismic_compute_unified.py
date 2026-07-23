@@ -38,6 +38,10 @@ async def geox_seismic_compute(
     dt_ms: float = 2.0,
     noise_db: float = 0.0,
     output_format: str = "json",
+    # F1 zen section inputs (attribute mode)
+    image_path: str | None = None,
+    amplitude_grid: list[list[float]] | None = None,
+    volume_inline: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Unified seismic computation.
 
@@ -46,20 +50,23 @@ async def geox_seismic_compute(
       well_tie           - Seismic-to-well tie with cross-correlation
       time_depth_anchor  - Checkshot/VSP anchoring
       anomalous_contrast - AVO class I-IV anomalous contrast detection
-      attribute          - Seismic attribute computation (RMS, variance, sweetness, etc.)
+      attribute          - F1 zen: rms/coherence/discontinuity/dip on 2D section
       inversion          - 1D post-stack PINN seismic inversion
     """
     kwargs = locals().copy()
     if mode == "attribute":
-        from geox_mcp.tools.paleoscan_forge import geox_seismic_compute_attribute_tool as _impl
+        # F1 zen: real 2D section attributes (rms/coherence/dip). Volume-only
+        # refs without a frame still HOLD honestly.
+        from geox_mcp.tools.seismic_zen_f1 import zen_attribute
 
-        return await _impl(
-            volume_ref=kwargs.get("volume_ref", ""),
-            attribute_name=kwargs.get("attribute", "rms"),
-            frame_index=kwargs.get("frame_index"),
-            orientation=kwargs.get("orientation", "inline"),
-            window_size=kwargs.get("window_size", 11),
-            provenance=kwargs.get("provenance", "fixture"),
+        return await zen_attribute(
+            attribute=str(kwargs.get("attribute") or "coherence"),
+            window_size=int(kwargs.get("window_size") or 11),
+            volume_ref=kwargs.get("volume_ref") or None,
+            volume_inline=kwargs.get("volume_inline"),
+            image_path=kwargs.get("image_path"),
+            amplitude_grid=kwargs.get("amplitude_grid"),
+            provenance=str(kwargs.get("provenance") or "fixture"),
         )
 
     if mode == "inversion":
