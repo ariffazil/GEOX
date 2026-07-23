@@ -35,6 +35,7 @@ _LIVE_MODES = frozenset(
         "structure_validate",
         "interpret",
         "interpret_section",
+        "classical_section",  # alias → interpret_section (image-first propose)
         "rsi_pipeline",
         "section_image",
         "segy_slice",
@@ -124,7 +125,8 @@ async def geox_seismic_interpret(
 
     if mode_norm == "contrast":
         mode_norm = "horizon_contrast"
-    if mode_norm == "section_image":
+    if mode_norm in ("section_image", "classical_section"):
+        # classical_section: declared image-first propose path (structure tensor / RSI)
         mode_norm = "interpret_section"
     if mode_norm == "segy_2d":
         mode_norm = "segy_slice"
@@ -338,6 +340,18 @@ async def geox_seismic_interpret(
     if mode_norm == "volume_frame":
         from geox_mcp.tools.paleoscan_forge import geox_volume_frame_tool as _impl
 
+        if not (volume_ref or "").strip():
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": "volume_frame",
+                "error": "MISSING_REQUIRED_FIELD",
+                "message": "volume_frame requires volume_ref (ingested seismic volume artifact id).",
+                "required_params": ["volume_ref"],
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+                "claim_tag": "VOID",
+            }
         return await _impl(
             action=action or "get",
             volume_ref=volume_ref or "",
@@ -350,11 +364,50 @@ async def geox_seismic_interpret(
     if mode_norm == "blend":
         from geox_mcp.tools.paleoscan_forge import geox_blend_volume_tool as _impl
 
-        return await _impl(
-            blend_mode=blend_mode or "alpha",
-            volume_ref=volume_ref or "",
-            provenance=provenance or "fixture",
-        )
+        # Contract: alpha needs volume_ref_1+2; RGB needs red/green/blue refs.
+        # Do not pass a single volume_ref (TypeError + silent mis-dispatch).
+        if not volume_ref and not (request and isinstance(request, dict)):
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": "blend",
+                "error": "MISSING_REQUIRED_FIELD",
+                "message": (
+                    "blend requires volume refs: alpha → volume_ref_1+volume_ref_2 "
+                    "(pass via request={...}); RGB → volume_ref_red/green/blue."
+                ),
+                "required_params": ["volume_ref_1", "volume_ref_2"],
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+                "claim_tag": "VOID",
+            }
+        blend_kwargs: dict[str, Any] = {"blend_mode": blend_mode or "alpha"}
+        if isinstance(request, dict):
+            for k in (
+                "volume_ref_1",
+                "volume_ref_2",
+                "volume_ref_3",
+                "volume_ref_red",
+                "volume_ref_green",
+                "volume_ref_blue",
+                "alpha",
+            ):
+                if k in request:
+                    blend_kwargs[k] = request[k]
+        # legacy single volume_ref is insufficient — still declare contract
+        if not any(blend_kwargs.get(k) for k in ("volume_ref_1", "volume_ref_red")):
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": "blend",
+                "error": "MISSING_REQUIRED_FIELD",
+                "message": "blend missing volume_ref_1/volume_ref_2 (or RGB refs) in request.",
+                "required_params": ["volume_ref_1", "volume_ref_2"],
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+                "claim_tag": "VOID",
+            }
+        return await _impl(**blend_kwargs)
 
     # ── horizon_contrast ──
     attrs = attribute_data
