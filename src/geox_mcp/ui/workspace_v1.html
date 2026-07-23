@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html;profile=mcp-app">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>GEOX Workspace v1</title>
     <style>
@@ -14,6 +15,7 @@
         --line: #d9d2c3;
         --accent: #1c6b52;
         --warn: #8a6a17;
+        --loading-bg: #e8efe8;
       }
       * { box-sizing: border-box; }
       body {
@@ -43,15 +45,8 @@
         gap: 16px;
         align-items: start;
       }
-      .hero h1 {
-        margin: 0 0 6px;
-        font-size: 22px;
-      }
-      .hero p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 14px;
-      }
+      .hero h1 { margin: 0 0 6px; font-size: 22px; }
+      .hero p { margin: 0; color: var(--muted); font-size: 14px; }
       .badge {
         padding: 8px 12px;
         border-radius: 999px;
@@ -61,27 +56,19 @@
         border: 1px solid var(--line);
         white-space: nowrap;
       }
-      .badge.warn {
-        color: var(--warn);
-        background: #fbf5df;
-      }
+      .badge.warn { color: var(--warn); background: #fbf5df; }
+      .badge.ok { color: var(--accent); background: #e6f4ef; }
+      .badge.loading { color: #666; background: var(--loading-bg); }
+      .badge.error { color: #a33; background: #fdf0f0; }
       .grid {
         display: grid;
         grid-template-columns: 1.2fr 0.8fr;
         gap: 12px;
       }
-      .panel {
-        padding: 14px 16px;
-      }
-      .panel h2 {
-        margin: 0 0 10px;
-        font-size: 15px;
-      }
+      .panel { padding: 14px 16px; }
+      .panel h2 { margin: 0 0 10px; font-size: 15px; }
       .tabs {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 12px;
+        display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
       }
       .tab {
         border: 1px solid var(--line);
@@ -92,11 +79,7 @@
         font-size: 12px;
         cursor: pointer;
       }
-      .tab.active {
-        background: var(--accent);
-        color: #fff;
-        border-color: var(--accent);
-      }
+      .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
       .artifact {
         padding: 10px 12px;
         border: 1px solid var(--line);
@@ -105,25 +88,12 @@
         background: #fcfaf4;
         cursor: pointer;
       }
-      .artifact.active {
-        border-color: var(--accent);
-        background: #eef6f2;
-      }
-      .artifact strong {
-        display: block;
-        font-size: 14px;
-      }
-      .artifact span {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        margin-top: 3px;
-      }
-      .meta {
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.5;
-      }
+      .artifact.active { border-color: var(--accent); background: #eef6f2; }
+      .artifact strong { display: block; font-size: 14px; }
+      .artifact span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+      .meta { color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .meta-row { display: flex; gap: 8px; margin-bottom: 4px; }
+      .meta-row .label { color: var(--muted); min-width: 120px; }
       .empty {
         padding: 18px;
         border: 1px dashed var(--line);
@@ -144,7 +114,7 @@
           <h1>GEOX Workspace</h1>
           <p>Read-only Earth evidence review surface. No mutation path is enabled.</p>
         </div>
-        <div id="verdict" class="badge warn">OBSERVE_ONLY</div>
+        <div id="verdict" class="badge loading">CONNECTING</div>
       </section>
       <section class="grid">
         <article class="panel">
@@ -155,19 +125,39 @@
         <aside class="panel">
           <h2>Artifacts</h2>
           <div id="artifacts"></div>
-          <div id="selection" class="meta" style="margin-top: 10px;"></div>
+          <div id="selection" class="meta" style="margin-top: 10px;">No artifact selected.</div>
         </aside>
       </section>
     </main>
-    <script>
+
+    <script type="module">
+      import { App, PostMessageTransport } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.5.1/dist/index.js";
+
+      const ALLOWED_ORIGINS = [
+        "https://chatgpt.com",
+        "https://claude.ai",
+        "https://geox.arif-fazil.com",
+        "https://arif-fazil.com",
+      ];
+
       const state = {
         structuredContent: null,
         widgetState: { panels: ["overview", "evidence"], selectedArtifact: null },
         activePanel: "overview",
+        connected: false,
       };
 
-      function safeText(value, fallback = "") {
-        return typeof value === "string" && value ? value : fallback;
+      function qs(sel) { return document.querySelector(sel); }
+      function qsi(id) { return document.getElementById(id); }
+
+      function safeText(value, fallback) {
+        return typeof value === "string" && value ? value : (fallback || "");
+      }
+
+      function setBadge(text, cls) {
+        const b = qsi("verdict");
+        b.textContent = text;
+        b.className = "badge " + cls;
       }
 
       function render() {
@@ -178,48 +168,52 @@
           ? state.widgetState.panels
           : ["overview", "evidence"];
 
-        const verdict = document.getElementById("verdict");
-        verdict.textContent = governance.verdict || "OBSERVE_ONLY";
+        setBadge(governance.verdict || "OBSERVE_ONLY", state.connected ? "ok" : "warn");
 
-        const tabs = document.getElementById("tabs");
+        // Tabs
+        const tabs = qsi("tabs");
         tabs.innerHTML = "";
         panels.forEach((panel) => {
-          const button = document.createElement("button");
-          button.className = "tab" + (state.activePanel === panel ? " active" : "");
-          button.textContent = panel;
-          button.addEventListener("click", () => {
-            state.activePanel = panel;
-            render();
-          });
-          tabs.appendChild(button);
+          const btn = document.createElement("button");
+          btn.className = "tab" + (state.activePanel === panel ? " active" : "");
+          btn.textContent = panel;
+          btn.addEventListener("click", () => { state.activePanel = panel; render(); });
+          tabs.appendChild(btn);
         });
 
-        const panelBody = document.getElementById("panel-body");
+        // Panel body — use textContent for all user data
+        const panelBody = qsi("panel-body");
+        panelBody.innerHTML = "";
         if (state.activePanel === "overview") {
-          panelBody.innerHTML =
-            "<div><strong>Workspace:</strong> " + safeText(payload.workspace_id, "pending") + "</div>" +
-            "<div><strong>Mode:</strong> " + safeText(payload.mode, "read_only") + "</div>" +
-            "<div><strong>Initial view:</strong> " + safeText(payload.initial_view, "overview") + "</div>" +
-            "<div><strong>Mutation allowed:</strong> " + String(Boolean(governance.mutation_allowed)) + "</div>";
+          appendMetaRow(panelBody, "Workspace:", safeText(payload.workspace_id, "pending"));
+          appendMetaRow(panelBody, "Mode:", safeText(payload.mode, "read_only"));
+          appendMetaRow(panelBody, "Initial view:", safeText(payload.initial_view, "overview"));
+          appendMetaRow(panelBody, "Mutation allowed:", String(Boolean(governance.mutation_allowed)));
         } else {
-          panelBody.innerHTML =
-            "<div><strong>Evidence status:</strong> " + safeText(governance.verdict, "OBSERVE_ONLY") + "</div>" +
-            "<div><strong>Artifacts loaded:</strong> " + String(artifacts.length) + "</div>" +
-            "<div><strong>Mutation path:</strong> disabled</div>";
+          appendMetaRow(panelBody, "Evidence status:", safeText(governance.verdict, "OBSERVE_ONLY"));
+          appendMetaRow(panelBody, "Artifacts loaded:", String(artifacts.length));
+          appendMetaRow(panelBody, "Mutation path:", "disabled");
         }
 
-        const artifactsNode = document.getElementById("artifacts");
+        // Artifacts
+        const artifactsNode = qsi("artifacts");
         artifactsNode.innerHTML = "";
         if (!artifacts.length) {
-          artifactsNode.innerHTML = '<div class="empty">No artifacts selected for this workspace.</div>';
+          const d = document.createElement("div");
+          d.className = "empty";
+          d.textContent = "No artifacts selected for this workspace.";
+          artifactsNode.appendChild(d);
         } else {
           artifacts.forEach((artifact) => {
             const item = document.createElement("button");
             item.type = "button";
             item.className = "artifact" + (state.widgetState.selectedArtifact === artifact.ref ? " active" : "");
-            item.innerHTML =
-              "<strong>" + safeText(artifact.label, artifact.ref || "artifact") + "</strong>" +
-              "<span>" + safeText(artifact.kind, "unknown") + " · " + safeText(artifact.status, "unknown") + "</span>";
+            const strong = document.createElement("strong");
+            strong.textContent = safeText(artifact.label, artifact.ref || "artifact");
+            const span = document.createElement("span");
+            span.textContent = safeText(artifact.kind, "unknown") + " · " + safeText(artifact.status, "unknown");
+            item.appendChild(strong);
+            item.appendChild(span);
             item.addEventListener("click", () => {
               state.widgetState.selectedArtifact = artifact.ref || null;
               render();
@@ -228,12 +222,22 @@
           });
         }
 
-        const selection = document.getElementById("selection");
-        if (state.widgetState.selectedArtifact) {
-          selection.textContent = "Selected artifact: " + state.widgetState.selectedArtifact;
-        } else {
-          selection.textContent = "No artifact selected.";
-        }
+        qsi("selection").textContent = state.widgetState.selectedArtifact
+          ? "Selected artifact: " + state.widgetState.selectedArtifact
+          : "No artifact selected.";
+      }
+
+      function appendMetaRow(parent, label, value) {
+        const row = document.createElement("div");
+        row.className = "meta-row";
+        const lbl = document.createElement("span");
+        lbl.className = "label";
+        lbl.textContent = label;
+        const val = document.createElement("span");
+        val.textContent = value;
+        row.appendChild(lbl);
+        row.appendChild(val);
+        parent.appendChild(row);
       }
 
       function adoptToolResult(result) {
@@ -241,29 +245,62 @@
         state.structuredContent = result.structuredContent || state.structuredContent;
         const meta = result._meta || {};
         if (meta.widgetState && typeof meta.widgetState === "object") {
-          state.widgetState = {
-            ...state.widgetState,
-            ...meta.widgetState,
-          };
+          state.widgetState = { ...state.widgetState, ...meta.widgetState };
         }
-        if (state.widgetState.panels && state.widgetState.panels.includes(state.activePanel) === false) {
+        if (state.widgetState.panels && !state.widgetState.panels.includes(state.activePanel)) {
           state.activePanel = state.widgetState.panels[0] || "overview";
         }
         render();
       }
 
-      window.addEventListener("message", (event) => {
-        const data = event.data;
-        if (!data || typeof data !== "object") return;
-        if (data.method === "ui/notifications/tool-result") {
-          adoptToolResult(data.params && data.params.result);
+      // ── MCP App Mode ────────────────────────────────────────
+      async function initMCPApp() {
+        const app = new App({ name: "geox-workspace", version: "1.1.0" });
+
+        app.ontoolresult = (result) => {
+          adoptToolResult(result);
+        };
+
+        app.ontoolinput = (input) => {
+          if (input?.structuredContent) {
+            state.structuredContent = input.structuredContent;
+            render();
+          }
+        };
+
+        app.onteardown = async () => ({});
+        app.onhostcontextchanged = () => {};
+
+        try {
+          await app.connect(new PostMessageTransport(window.parent, window.parent));
+          state.connected = true;
+          setBadge("CONNECTED", "ok");
+        } catch (err) {
+          console.warn("[Workspace] SDK connect failed, using manual fallback:", err);
+          setupManualFallback();
         }
-        if (data.method === "ui/initialize" && data.params && data.params.toolResult) {
-          adoptToolResult(data.params.toolResult);
-        }
-      });
+      }
+
+      // ── Manual fallback (origin-checked, DOM-safe) ──────────
+      function setupManualFallback() {
+        window.addEventListener("message", (event) => {
+          if (!ALLOWED_ORIGINS.includes(event.origin) && event.origin !== "null") return;
+          const data = event.data;
+          if (!data || typeof data !== "object") return;
+
+          if (data.method === "ui/notifications/tool-result") {
+            adoptToolResult(data.params && data.params.result);
+          }
+          if (data.method === "ui/initialize" && data.params && data.params.toolResult) {
+            adoptToolResult(data.params.toolResult);
+          }
+        });
+        state.connected = true;
+        setBadge("FALLBACK", "warn");
+      }
 
       render();
+      initMCPApp();
     </script>
   </body>
 </html>
