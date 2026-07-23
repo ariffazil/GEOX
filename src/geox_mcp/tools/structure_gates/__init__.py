@@ -1,9 +1,9 @@
 """Structural physics / topology gates (G2–G9 + K-*).
 
-Each gate returns PASS | KILL | INCONCLUSIVE + receipt.
-Any KILL → model rejected for that gate; correlated gates are not blind POS multiply.
+Status: PASS | WARN | KILL | UNMEASURED + receipt_hash.
+Any KILL → model rejected. Correlated — not blind POS multiply.
 
-DITEMPA BUKAN DIBERI — Forged, Not Given.
+DITEMPA BUKAN DIBERI.
 """
 
 from __future__ import annotations
@@ -32,12 +32,12 @@ __all__ = [
 
 def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     """Run full structural gate matrix on a StructuralFramework-like dict."""
-    gates = [
+    gates_spec = [
         ("K-DIP", gate_k_dip),
         ("K-THROW", gate_k_throw),
         ("K-DL", gate_k_dl),
         ("G2", gate_g2_topology),
-        ("K-XCUT", gate_g2_topology),  # topology covers cross/cut; alias receipt
+        ("K-XCUT", gate_g2_topology),
         ("K-RESTORE", gate_k_restore),
         ("K-VEL", gate_k_vel),
         ("K-GROWTH", gate_k_growth),
@@ -45,54 +45,46 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     results: dict[str, Any] = {}
     kills: list[str] = []
     passes: list[str] = []
-    inconclusive: list[str] = []
+    warns: list[str] = []
+    unmeasured: list[str] = []
 
-    # Run unique callables once; alias G2/K-XCUT share topology
-    seen_fn: set[int] = set()
     topology_result: dict[str, Any] | None = None
-    for name, fn in gates:
+    for name, fn in gates_spec:
         if fn is gate_g2_topology:
-            if id(fn) not in seen_fn:
+            if topology_result is None:
                 topology_result = fn(framework)
-                seen_fn.add(id(fn))
-            r = topology_result or {"verdict": "INCONCLUSIVE", "reason": "topology not run"}
+            r = dict(topology_result)
             if name == "K-XCUT":
-                r = {**r, "gate": "K-XCUT", "alias_of": "G2"}
+                r = {**r, "gate": "K-XCUT", "gate_id": "K-XCUT", "alias_of": "G2"}
         else:
             r = fn(framework)
         results[name] = r
-        v = r.get("verdict", "INCONCLUSIVE")
+        v = r.get("status") or r.get("verdict") or "UNMEASURED"
         if v == "KILL":
             kills.append(name)
         elif v == "PASS":
             passes.append(name)
+        elif v == "WARN":
+            warns.append(name)
         else:
-            inconclusive.append(name)
+            unmeasured.append(name)
 
     if kills:
         combined = "KILL"
-    elif not passes and inconclusive:
-        combined = "INCONCLUSIVE"
-    elif passes and not kills:
-        # Partial PASS: hard gates that ran may pass while soft stay inconclusive
-        hard_names = {"K-DIP", "K-THROW", "G2", "K-RESTORE", "K-VEL"}
-        hard_kills = [k for k in kills if k in hard_names]
-        if hard_kills:
-            combined = "KILL"
-        elif any(results.get(h, {}).get("verdict") == "PASS" for h in ("K-DIP", "K-THROW")):
-            combined = "PASS" if not inconclusive else "PARTIAL"
-        else:
-            combined = "INCONCLUSIVE"
+    elif passes or warns:
+        combined = "PASS" if not unmeasured else "PARTIAL"
     else:
-        combined = "INCONCLUSIVE"
+        combined = "UNMEASURED"
 
     return {
         "gates": results,
         "combined_verdict": combined,
         "kills": kills,
         "passes": passes,
-        "inconclusive": inconclusive,
+        "warns": warns,
+        "unmeasured": unmeasured,
+        "inconclusive": unmeasured,  # legacy alias
         "local_verdict": "QUALIFIED_CANDIDATE",
         "seal_authority": "arifOS_only",
-        "note": "Correlated gates — not blind POS product. KILL on any hard physics gate rejects model.",
+        "note": "Correlated gates — not blind POS. UNMEASURED ≠ PASS. KILL rejects model.",
     }

@@ -1,13 +1,7 @@
 """K-DIP — dip vs regime prior (Andersonian conditional).
 
-Normal 55–70°, reverse 20–40°, strike-slip subvertical (~75–90°).
-Outside range without reactivation evidence → KILL.
-Missing dip → INCONCLUSIVE.
-
-VE correction (Alcalde 2019): if only dip_deg_image is supplied and
-measurement_context.geometry.vertical_exaggeration (or vertical_exaggeration)
-is set, convert apparent dip → true dip before the regime test:
-  tan(true) = tan(apparent) / VE
+Without calibrated true dip → UNMEASURED (never guess).
+With true/VE-corrected dip outside regime without exception → KILL.
 
 DITEMPA BUKAN DIBERI.
 """
@@ -17,7 +11,8 @@ from __future__ import annotations
 import math
 from typing import Any
 
-# Degrees; inclusive ranges (subsurface / VE-corrected space)
+from geox_mcp.domain.seismic_physics.receipts import make_gate_receipt
+
 _REGIME_RANGES: dict[str, tuple[float, float]] = {
     "normal": (55.0, 70.0),
     "reverse": (20.0, 40.0),
@@ -26,10 +21,14 @@ _REGIME_RANGES: dict[str, tuple[float, float]] = {
     "strike-slip": (75.0, 90.0),
 }
 
+_EQUATION = (
+    "true_dip = atan(tan(apparent_dip)/VE) when only image dip + VE; "
+    "else use dip_deg_subsurface. Test true_dip ∈ regime_range."
+)
+
 
 def _ve_of(framework: dict[str, Any], fault: dict[str, Any]) -> float | None:
-    """Vertical exaggeration H:V scale factor (>0). 1.0 = true section."""
-    for src in (fault, framework.get("measurement_context") or {}, framework):
+    for src in (fault, framework.get("measurement_context") or {}, framework.get("calibration") or {}, framework):
         if not isinstance(src, dict):
             continue
         for key in ("vertical_exaggeration", "ve", "V_E"):
@@ -51,12 +50,29 @@ def _ve_of(framework: dict[str, Any], fault: dict[str, Any]) -> float | None:
     return None
 
 
-def _dip_of(fault: dict[str, Any], framework: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
-    """Return (dip_for_test_deg, meta). Prefer subsurface; else image ± VE correction."""
+def _is_calibrated(framework: dict[str, Any], fault: dict[str, Any]) -> bool:
+    if fault.get("dip_deg_subsurface") is not None:
+        return True
+    if fault.get("dip_calibrated") is True or fault.get("dip_is_true") is True:
+        return True
+    mc = framework.get("measurement_context") or {}
+    cal = framework.get("calibration") or {}
+    if mc.get("calibrated") or cal.get("calibrated"):
+        return True
+    # VE present allows conversion of image dip → true
+    if _ve_of(framework, fault) is not None:
+        return True
+    return False
+
+
+def _true_dip(fault: dict[str, Any], framework: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
     meta: dict[str, Any] = {}
     if fault.get("dip_deg_subsurface") is not None:
         try:
-            return float(fault["dip_deg_subsurface"]), {"domain": "subsurface", "ve_corrected": False}
+            return float(fault["dip_deg_subsurface"]), {
+                "domain": "subsurface",
+                "ve_corrected": False,
+            }
         except (TypeError, ValueError):
             pass
 
@@ -72,12 +88,22 @@ def _dip_of(fault: dict[str, Any], framework: dict[str, Any]) -> tuple[float | N
     if apparent is None:
         return None, meta
 
+    if not _is_calibrated(framework, fault):
+        meta.update({"domain": "image_uncalibrated", "unmeasured": True, "dip_deg_image": apparent})
+        return None, meta  # signal UNMEASURED
+
     ve = _ve_of(framework, fault)
     if ve is None or abs(ve - 1.0) < 1e-9:
-        meta.update({"domain": "image_or_true", "ve": ve, "ve_corrected": False})
-        return apparent, meta
+        # calibrated flag without VE: treat image dip as true only if explicitly calibrated
+        if fault.get("dip_calibrated") or fault.get("dip_is_true") or (
+            (framework.get("measurement_context") or {}).get("calibrated")
+            or (framework.get("calibration") or {}).get("calibrated")
+        ):
+            meta.update({"domain": "calibrated_image", "ve": ve or 1.0, "ve_corrected": False})
+            return apparent, meta
+        meta.update({"domain": "image_uncalibrated", "unmeasured": True})
+        return None, meta
 
-    # tan(true) = tan(apparent) / VE  — protect near-vertical
     if apparent >= 89.9:
         true_dip = 90.0
     else:
@@ -98,74 +124,82 @@ def _dip_of(fault: dict[str, Any], framework: dict[str, Any]) -> tuple[float | N
 def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
     faults = framework.get("faults") or []
     if not faults:
-        return {
-            "gate": "K-DIP",
-            "verdict": "INCONCLUSIVE",
-            "reason": "No faults provided",
-            "findings": [],
-        }
+        return make_gate_receipt(
+            "K-DIP",
+            "UNMEASURED",
+            reason="No faults provided",
+            equation=_EQUATION,
+            gate_type="hard_conditional",
+        )
 
     findings: list[dict[str, Any]] = []
-    kills = 0
-    passes = 0
-    inconclusive = 0
+    kills = passes = warns = unmeas = 0
+    inputs_acc: list[dict[str, Any]] = []
 
     for f in faults:
         fid = f.get("fault_id") or f.get("id") or "unknown"
-        dip, dip_meta = _dip_of(f, framework)
+        dip, dip_meta = _true_dip(f, framework)
         regime = str(f.get("regime_prior") or f.get("regime") or "unknown").lower().strip()
         reactivation = bool(
             f.get("reactivation_evidence")
             or f.get("reactivation")
             or f.get("fluid_pressure_exception")
         )
+        inputs_acc.append({"fault_id": fid, "regime": regime, "dip_meta": dip_meta})
 
         if dip is None:
-            inconclusive += 1
+            unmeas += 1
             findings.append(
                 {
                     "fault_id": fid,
-                    "verdict": "INCONCLUSIVE",
-                    "reason": "Missing dip_deg_image/subsurface",
+                    "verdict": "UNMEASURED",
+                    "status": "UNMEASURED",
+                    "reason": (
+                        "True dip unmeasured — need dip_deg_subsurface, "
+                        "VE for image dip, or calibrated=true"
+                    ),
+                    "dip_meta": dip_meta,
                 }
             )
             continue
 
         if regime in ("unknown", "", "none"):
-            inconclusive += 1
+            unmeas += 1
             findings.append(
                 {
                     "fault_id": fid,
-                    "verdict": "INCONCLUSIVE",
+                    "verdict": "UNMEASURED",
+                    "status": "UNMEASURED",
                     "dip_deg": dip,
+                    "reason": "regime_prior unknown",
                     "dip_meta": dip_meta,
-                    "reason": "regime_prior unknown — cannot apply Andersonian prior",
                 }
             )
             continue
 
         lo_hi = _REGIME_RANGES.get(regime)
         if lo_hi is None:
-            inconclusive += 1
+            unmeas += 1
             findings.append(
                 {
                     "fault_id": fid,
-                    "verdict": "INCONCLUSIVE",
+                    "verdict": "UNMEASURED",
+                    "status": "UNMEASURED",
                     "dip_deg": dip,
                     "regime": regime,
-                    "reason": f"Unrecognized regime_prior '{regime}'",
+                    "reason": f"Unrecognized regime '{regime}'",
                 }
             )
             continue
 
         lo, hi = lo_hi
-        in_range = lo <= dip <= hi
-        if in_range:
+        if lo <= dip <= hi:
             passes += 1
             findings.append(
                 {
                     "fault_id": fid,
                     "verdict": "PASS",
+                    "status": "PASS",
                     "dip_deg": dip,
                     "dip_meta": dip_meta,
                     "regime": regime,
@@ -173,16 +207,17 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                 }
             )
         elif reactivation:
-            passes += 1
+            warns += 1
             findings.append(
                 {
                     "fault_id": fid,
-                    "verdict": "PASS",
+                    "verdict": "WARN",
+                    "status": "WARN",
                     "dip_deg": dip,
                     "dip_meta": dip_meta,
                     "regime": regime,
                     "expected_range": [lo, hi],
-                    "reason": "Outside range but reactivation/fluid_pressure exception flagged",
+                    "reason": "Outside range; reactivation/fluid_pressure exception",
                     "epistemic": "SPECULATIVE",
                 }
             )
@@ -192,34 +227,42 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                 {
                     "fault_id": fid,
                     "verdict": "KILL",
+                    "status": "KILL",
                     "dip_deg": dip,
                     "dip_meta": dip_meta,
                     "regime": regime,
                     "expected_range": [lo, hi],
-                    "reason": (
-                        f"Dip {dip:.1f}° outside {regime} prior [{lo},{hi}] "
-                        "without reactivation evidence"
-                    ),
+                    "reason": f"Dip {dip:.1f}° outside {regime} prior [{lo},{hi}]",
                 }
             )
 
     if kills:
-        verdict = "KILL"
+        status = "KILL"
         reason = f"{kills} fault(s) fail K-DIP"
-    elif passes and not inconclusive:
-        verdict = "PASS"
-        reason = f"All {passes} fault(s) within regime dip prior"
-    elif passes:
-        verdict = "PASS"  # hard kills only reject; partial evidence still PASS survivors
-        reason = f"{passes} PASS, {inconclusive} INCONCLUSIVE (no KILL)"
+    elif unmeas and not passes and not warns:
+        status = "UNMEASURED"
+        reason = "True dip not measurable without calibration"
+    elif passes or warns:
+        status = "PASS" if not warns else "WARN"
+        reason = f"passes={passes} warns={warns} unmeasured={unmeas}"
     else:
-        verdict = "INCONCLUSIVE"
+        status = "UNMEASURED"
         reason = "No conclusive dip/regime pairs"
 
-    return {
-        "gate": "K-DIP",
-        "verdict": verdict,
-        "reason": reason,
-        "findings": findings,
-        "type": "hard_conditional",
-    }
+    return make_gate_receipt(
+        "K-DIP",
+        status,  # type: ignore[arg-type]
+        inputs={"faults": inputs_acc},
+        equation=_EQUATION,
+        thresholds={"regime_ranges_deg": _REGIME_RANGES},
+        calculated_result={"kills": kills, "passes": passes, "warns": warns, "unmeasured": unmeas},
+        exceptions_considered=["reactivation_evidence", "fluid_pressure_exception"],
+        evidence_refs=[
+            "Anderson 1951 — The dynamics of faulting",
+            "Célérier 2008 — ROG: potential for renewed slip",
+            "Alcalde 2019 — VE bias in apparent dip measurements",
+        ],
+        reason=reason,
+        findings=findings,
+        gate_type="hard_conditional",
+    )

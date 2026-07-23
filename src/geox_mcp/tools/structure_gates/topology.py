@@ -1,14 +1,16 @@
 """G2 / K-XCUT — horizon topology hard veto.
 
-Non-crossing (same section order), no negative thickness between ordered pairs.
-Missing geometry → INCONCLUSIVE.
-
+Missing geometry → UNMEASURED. Cross/order fail → KILL.
 DITEMPA BUKAN DIBERI.
 """
 
 from __future__ import annotations
 
 from typing import Any
+
+from geox_mcp.domain.seismic_physics.receipts import make_gate_receipt
+
+_EQUATION = "Horizons non-crossing; order_index shallow→deep implies mean y monotonic if depth-down"
 
 
 def _ys(horizon: dict[str, Any]) -> list[float] | None:
@@ -27,15 +29,30 @@ def _ys(horizon: dict[str, Any]) -> list[float] | None:
     return ys if ys else None
 
 
+def _to_xy(horizon: dict[str, Any]) -> list[tuple[float, float]] | None:
+    pts = horizon.get("points") or horizon.get("pts")
+    if not pts:
+        return None
+    out: list[tuple[float, float]] = []
+    for i, p in enumerate(pts):
+        if isinstance(p, (list, tuple)) and len(p) >= 2:
+            out.append((float(p[0]), float(p[1])))
+        elif isinstance(p, dict):
+            x = p.get("x", p.get("trace_index", p.get("inline", i)))
+            y = p.get("y", p.get("twt_ms", p.get("depth_m", p.get("sample"))))
+            if x is None or y is None:
+                continue
+            out.append((float(x), float(y)))
+    return out if len(out) >= 2 else None
+
+
 def _segments_cross(a: list[tuple[float, float]], b: list[tuple[float, float]]) -> bool:
-    """Simple polyline cross test in 2D (image/survey domain)."""
     def orient(p, q, r):
         return (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1])
 
     def on_seg(p, q, r):
-        return (
-            min(p[0], r[0]) <= q[0] <= max(p[0], r[0])
-            and min(p[1], r[1]) <= q[1] <= max(p[1], r[1])
+        return min(p[0], r[0]) <= q[0] <= max(p[0], r[0]) and min(p[1], r[1]) <= q[1] <= max(
+            p[1], r[1]
         )
 
     def intersects(p1, q1, p2, q2):
@@ -60,47 +77,40 @@ def _segments_cross(a: list[tuple[float, float]], b: list[tuple[float, float]]) 
     return False
 
 
-def _to_xy(horizon: dict[str, Any]) -> list[tuple[float, float]] | None:
-    pts = horizon.get("points") or horizon.get("pts")
-    if not pts:
-        return None
-    out: list[tuple[float, float]] = []
-    for i, p in enumerate(pts):
-        if isinstance(p, (list, tuple)) and len(p) >= 2:
-            out.append((float(p[0]), float(p[1])))
-        elif isinstance(p, dict):
-            x = p.get("x", p.get("trace_index", p.get("inline", i)))
-            y = p.get("y", p.get("twt_ms", p.get("depth_m", p.get("sample"))))
-            if x is None or y is None:
-                continue
-            out.append((float(x), float(y)))
-    return out if len(out) >= 2 else None
-
-
 def gate_g2_topology(framework: dict[str, Any]) -> dict[str, Any]:
     horizons = framework.get("horizons") or []
     findings: list[dict[str, Any]] = []
 
-    if len(horizons) < 2:
-        return {
-            "gate": "G2",
-            "verdict": "INCONCLUSIVE",
-            "reason": "Need ≥2 horizons for topology",
-            "findings": [],
-            "type": "hard_veto",
-        }
+    # Explicit polarity reverse without relay
+    if framework.get("throw_polarity_reversal") and not framework.get("relay_zone"):
+        return make_gate_receipt(
+            "G2",
+            "KILL",
+            reason="Throw polarity reverse without relay",
+            equation=_EQUATION,
+            findings=[{"verdict": "KILL", "reason": "polarity_reversal"}],
+            gate_type="hard_veto",
+        )
 
-    # Explicit flags from caller
     if framework.get("topology_cross") is True or framework.get("horizons_cross") is True:
-        return {
-            "gate": "G2",
-            "verdict": "KILL",
-            "reason": "Caller flagged horizons_cross/topology_cross",
-            "findings": [{"verdict": "KILL", "reason": "explicit cross flag"}],
-            "type": "hard_veto",
-        }
+        return make_gate_receipt(
+            "G2",
+            "KILL",
+            reason="Caller flagged horizons_cross",
+            equation=_EQUATION,
+            findings=[{"verdict": "KILL", "reason": "explicit cross flag"}],
+            gate_type="hard_veto",
+        )
 
-    # Pairwise cross
+    if len(horizons) < 2:
+        return make_gate_receipt(
+            "G2",
+            "UNMEASURED",
+            reason="Need ≥2 horizons for topology",
+            equation=_EQUATION,
+            gate_type="hard_veto",
+        )
+
     for i in range(len(horizons)):
         for j in range(i + 1, len(horizons)):
             hi, hj = horizons[i], horizons[j]
@@ -115,58 +125,52 @@ def gate_g2_topology(framework: dict[str, Any]) -> dict[str, Any]:
                     }
                 )
 
-    # Negative thickness: ordered by order_index, mean y should be monotonic if depth-down
-    ordered = sorted(
-        horizons,
-        key=lambda h: h.get("order_index", h.get("order", 0)),
-    )
+    ordered = sorted(horizons, key=lambda h: h.get("order_index", h.get("order", 0)))
     means: list[tuple[str, float]] = []
     for h in ordered:
         ys = _ys(h)
         if ys:
             means.append((str(h.get("horizon_id") or h.get("id")), sum(ys) / len(ys)))
-
-    if len(means) >= 2:
-        # Assume increasing y = deeper (or TWT). order_index small = shallow.
+    if len(means) >= 2 and all("order_index" in h or "order" in h for h in ordered):
         for k in range(len(means) - 1):
             if means[k][1] > means[k + 1][1] + 1e-6:
-                # Possible inverted order / negative thickness if order claims shallow→deep
-                if all("order_index" in h or "order" in h for h in ordered):
-                    findings.append(
-                        {
-                            "verdict": "KILL",
-                            "reason": (
-                                f"Negative thickness / order inversion: "
-                                f"{means[k][0]} mean_y={means[k][1]:.2f} > "
-                                f"{means[k+1][0]} mean_y={means[k+1][1]:.2f}"
-                            ),
-                        }
-                    )
+                findings.append(
+                    {
+                        "verdict": "KILL",
+                        "reason": (
+                            f"Negative thickness / order inversion: "
+                            f"{means[k][0]} > {means[k+1][0]}"
+                        ),
+                    }
+                )
 
     if any(f.get("verdict") == "KILL" for f in findings):
-        return {
-            "gate": "G2",
-            "verdict": "KILL",
-            "reason": "Topology hard veto",
-            "findings": findings,
-            "type": "hard_veto",
-        }
+        return make_gate_receipt(
+            "G2",
+            "KILL",
+            reason="Topology hard veto",
+            equation=_EQUATION,
+            findings=findings,
+            calculated_result={"n_kill_findings": len(findings)},
+            gate_type="hard_veto",
+        )
 
-    # All have geometry and no cross
     with_geom = sum(1 for h in horizons if _to_xy(h))
     if with_geom < 2:
-        return {
-            "gate": "G2",
-            "verdict": "INCONCLUSIVE",
-            "reason": "Insufficient polyline geometry",
-            "findings": findings,
-            "type": "hard_veto",
-        }
+        return make_gate_receipt(
+            "G2",
+            "UNMEASURED",
+            reason="Insufficient polyline geometry",
+            equation=_EQUATION,
+            findings=findings,
+            gate_type="hard_veto",
+        )
 
-    return {
-        "gate": "G2",
-        "verdict": "PASS",
-        "reason": "No horizon cross / order inversion detected",
-        "findings": findings,
-        "type": "hard_veto",
-    }
+    return make_gate_receipt(
+        "G2",
+        "PASS",
+        reason="No horizon cross / order inversion detected",
+        equation=_EQUATION,
+        findings=findings,
+        gate_type="hard_veto",
+    )

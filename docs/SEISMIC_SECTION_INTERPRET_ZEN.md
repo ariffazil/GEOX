@@ -5,7 +5,8 @@
 > **Law:** GEOX proposes + falsifies Earth evidence. arifOS seals. Arif decides.  
 > **Not:** autonomous structural authority · greyscale = geology · local SEAL.
 
-**Tip baseline:** `824e532a` · 31 public tools · modes on `geox_seismic_interpret`  
+**Tip baseline:** `eb90c7ce`+ · 31 public tools · modes on `geox_seismic_interpret`  
+**B-final / C-hard:** interpretation_bundle · UNMEASURED · gate receipts · multi-hypothesis  
 **Related:** `SEISMIC_STRUCTURAL_VALIDATION_GATES_G0_G10.md` · `SEISMIC_FAULT_PHYSICS_GATES_K_SPEC.md`  
 **Code:** `tools/structure_gates/*` · `structure_validate.py` · `seismic_rsi.py` · `seismic_segy_slice.py`
 

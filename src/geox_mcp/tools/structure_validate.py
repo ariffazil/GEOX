@@ -1,12 +1,9 @@
 """geox_structure_validate — structural framework falsification (G2–G9 + K-*).
 
-Internal/product path. Prefer calling via:
-  - geox_seismic_interpret(mode=structure_validate, framework=...)
-  - geox_falsify(claim_type=structural_fault|structural_horizon|structural_framework, context=framework)
+Returns gate matrix + optional interpretation_bundle (multi-hypothesis).
+UNMEASURED when scale/V missing. Never local SEAL.
 
-Never emits local SEAL. Max local_verdict = QUALIFIED_CANDIDATE.
-
-DITEMPA BUKAN DIBERI — Forged, Not Given.
+DITEMPA BUKAN DIBERI.
 """
 
 from __future__ import annotations
@@ -21,18 +18,13 @@ async def geox_structure_validate(
     faults: list[dict[str, Any]] | None = None,
     horizons: list[dict[str, Any]] | None = None,
     measurement_context: dict[str, Any] | None = None,
+    calibration: dict[str, Any] | None = None,
+    earth_constraints: dict[str, Any] | None = None,
     gates: list[str] | None = None,
     claim_text: str = "",
+    emit_bundle: bool = False,
+    hypothesis_count: int = 3,
 ) -> dict[str, Any]:
-    """Validate a structural framework against physics/topology gates.
-
-    Args:
-        framework: StructuralFramework-like dict (faults, horizons, claims, velocity, restore)
-        faults / horizons: optional top-level convenience (merged into framework)
-        measurement_context: G0 identity (input_class, sha256, VE, ...)
-        gates: optional subset filter by gate name (default all)
-        claim_text: free text for receipt only
-    """
     fw: dict[str, Any] = dict(framework or {})
     if faults is not None:
         fw["faults"] = faults
@@ -40,6 +32,18 @@ async def geox_structure_validate(
         fw["horizons"] = horizons
     if measurement_context is not None:
         fw["measurement_context"] = measurement_context
+    if calibration is not None:
+        fw["calibration"] = calibration
+        mc = dict(fw.get("measurement_context") or {})
+        if calibration.get("vertical_exaggeration") is not None:
+            geom = dict(mc.get("geometry") or {})
+            geom["vertical_exaggeration"] = calibration["vertical_exaggeration"]
+            mc["geometry"] = geom
+        if calibration.get("calibrated"):
+            mc["calibrated"] = True
+        if calibration.get("input_class"):
+            mc["input_class"] = calibration["input_class"]
+        fw["measurement_context"] = mc
 
     if not fw.get("faults") and not fw.get("horizons") and not fw.get("velocity") and not fw.get("restore"):
         return {
@@ -57,39 +61,47 @@ async def geox_structure_validate(
     if gates:
         want = {g.upper() for g in gates}
         filtered = {k: v for k, v in matrix["gates"].items() if k.upper() in want or k in want}
-        kills = [k for k, v in filtered.items() if v.get("verdict") == "KILL"]
-        passes = [k for k, v in filtered.items() if v.get("verdict") == "PASS"]
-        inconclusive = [k for k, v in filtered.items() if v.get("verdict") == "INCONCLUSIVE"]
+        kills = [k for k, v in filtered.items() if (v.get("status") or v.get("verdict")) == "KILL"]
+        passes = [k for k, v in filtered.items() if (v.get("status") or v.get("verdict")) == "PASS"]
+        unmeasured = [
+            k
+            for k, v in filtered.items()
+            if (v.get("status") or v.get("verdict")) in ("UNMEASURED", "INCONCLUSIVE")
+        ]
         if kills:
             combined = "KILL"
-        elif passes and not kills:
-            combined = "PASS" if not inconclusive else "PARTIAL"
+        elif passes:
+            combined = "PASS" if not unmeasured else "PARTIAL"
         else:
-            combined = "INCONCLUSIVE"
+            combined = "UNMEASURED"
         matrix = {
             **matrix,
             "gates": filtered,
             "combined_verdict": combined,
             "kills": kills,
             "passes": passes,
-            "inconclusive": inconclusive,
+            "unmeasured": unmeasured,
+            "inconclusive": unmeasured,
         }
 
     mc = fw.get("measurement_context") or {}
     input_class = mc.get("input_class") or fw.get("input_class") or "unknown"
-
     combined = matrix["combined_verdict"]
     if combined == "KILL":
-        gov = "HOLD"
-        overall = "FALSIFIED"
+        gov, overall = "HOLD", "FALSIFIED"
     elif combined in ("PASS", "PARTIAL"):
-        gov = "QUALIFY"
-        overall = "SURVIVED"
+        gov, overall = "QUALIFY", "SURVIVED"
     else:
-        gov = "HOLD"
-        overall = "INCONCLUSIVE"
+        gov, overall = "HOLD", "UNMEASURED"
 
-    return {
+    # Ensure every gate has receipt_hash
+    for gname, gval in (matrix.get("gates") or {}).items():
+        if isinstance(gval, dict) and not gval.get("receipt_hash"):
+            from geox_mcp.domain.seismic_physics.receipts import receipt_hash
+
+            gval["receipt_hash"] = receipt_hash(gval)
+
+    out: dict[str, Any] = {
         "ok": True,
         "tool": "geox_structure_validate",
         "overall_verdict": overall,
@@ -97,7 +109,9 @@ async def geox_structure_validate(
         "gates": matrix["gates"],
         "kills": matrix["kills"],
         "passes": matrix["passes"],
-        "inconclusive": matrix["inconclusive"],
+        "warns": matrix.get("warns") or [],
+        "unmeasured": matrix.get("unmeasured") or matrix.get("inconclusive") or [],
+        "inconclusive": matrix.get("unmeasured") or matrix.get("inconclusive") or [],
         "input_class": input_class,
         "measurement_context": mc or None,
         "claim_text": (claim_text or "")[:500],
@@ -106,10 +120,27 @@ async def geox_structure_validate(
         "governance_status": gov,
         "local_verdict": "QUALIFIED_CANDIDATE",
         "seal_authority": "arifOS_only",
+        "seal_eligibility": False,
         "epistemic_label": "DER",
         "honesty_banner": (
             "Structure gates falsify impossible geometry. "
-            "SURVIVED ≠ proven Earth model. arifOS SEAL only. "
-            "image_only remains INT_SEISMIC."
+            "UNMEASURED when scale/velocity missing — never invent. "
+            "SURVIVED ≠ proven. arifOS SEAL only."
         ),
     }
+
+    if emit_bundle or hypothesis_count:
+        from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
+
+        bundle = build_interpretation_bundle(
+            frameworks_or_primary=fw,
+            calibration=calibration or mc,
+            earth_constraints=earth_constraints,
+            request={"hypothesis_count": max(3, hypothesis_count or 3)},
+        )
+        out["interpretation_bundle"] = bundle
+        out["hypotheses"] = bundle.get("hypotheses")
+        out["preferred_hypothesis"] = None
+        out["limitations"] = bundle.get("limitations")
+
+    return out
