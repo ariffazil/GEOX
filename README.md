@@ -1,9 +1,9 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-20T16:25Z
-valid_until: 2026-08-20
-federation_release: v2026.07.20-ZEN-CONVERGENCE
-live_commit: c2397743
+last_verified: 2026-07-23T21:24Z
+valid_until: 2026-08-23
+federation_release: v2026.07.23-PHASE-C-SEALED
+live_commit: geox-32af0d61
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: dynamic_from_tools_list
 -->
@@ -42,14 +42,14 @@ GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and 
 
 | Metric | Value |
 |--------|-------|
-| Total MCP tools | 52 |
-| Public tools | 24 (verify: `curl :8081/health`) |
+| Total MCP tools | 31 (canonical) |
+| Public tools | 31 (verify: `curl :8081/health`) |
 | MCP Apps | 6 (LIVE — SEP-1865) |
 | ui:// resources | 8 |
 | Health | 🟢 GREEN |
 | Port | 8081 |
-| Version | `v2026.07.19` |
-| License | BSL-1.1 (Business Source License) |
+| Version | `v2026.07.17` |
+| License | AGPL-3.0 |
 
 ---
 
@@ -57,6 +57,7 @@ GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and 
 
 | Date | Milestone | Detail |
 |------|-----------|--------|
+| 2026-07-23 | **Phase C Sealed State** | Geomechanical gates hardened (K-DIP arccos, full-trace K-THROW), regime aliasing zero-false-negatives, Malay Basin battery 6/6 green, SEP-1865 3-channel bindings verified |
 | 2026-07-19 | **P1 — MCP Apps Restore** | `prefab-ui` installed, 6 apps LIVE, GUI-ready |
 | 2026-07-19 | **P0 — MCP Restore** | FastMCP 3.4.2 kwargs fix, 52 tools registered |
 | 2026-07-19 | **SOT Audit** | License corrected (AGPL→BSL-1.1), version aligned, tool count synced |
