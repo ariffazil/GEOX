@@ -87,10 +87,10 @@ tools:
   visibility: public
   description: >-
     Governed seismic-analysis assist (NOT autonomous structural framework).
-    Live modes: horizon_contrast (1D multi-attribute boundary detector — needs attribute_data+depth),
-    fault_sticks (ingest only), volume_frame, blend.
-    NOT live via this tool: rsi_pipeline, vision, track_horizon, extract_faults, build_structure
-    (internal or P1). Local verdict max QUALIFIED_CANDIDATE — arifOS seals only.
+    Live modes: horizon_contrast (1D, attribute_data+depth), fault_sticks, volume_frame, blend,
+    structure_validate (G/K gates), interpret_section/rsi_pipeline (image INT_SEISMIC),
+    segy_slice (MeasurementContext). NOT live: vision, track_horizon, extract_faults, build_structure.
+    Local verdict max QUALIFIED_CANDIDATE — arifOS seals only.
   input_schema_source: callable
   annotations:
     read_only: true

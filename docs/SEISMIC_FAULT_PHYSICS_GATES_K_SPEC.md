@@ -23,7 +23,7 @@ INCONCLUSIVE is valid (see live `geox_falsify` on Andersonian normal fault witho
 |------|--------|
 | Checking (falsify / claim) | LIVE — disciplined INCONCLUSIVE works |
 | Proposing (section interpret) | CODE partial; public path repaired for 1D contrast only |
-| K-* product suite | **NOT BUILT** — this file is the binding spec |
+| K-* product suite | **BUILT** — structure_validate + falsify structural_* (2026-07-23) |
 
 ## Benchmark
 
