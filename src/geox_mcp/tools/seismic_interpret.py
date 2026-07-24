@@ -654,20 +654,27 @@ async def geox_seismic_interpret(
                 except Exception as exc:
                     render_info = {"ok": False, "error": "RENDER_FAILED", "message": str(exc)[:200]}
 
-            out_payload: dict[str, Any] = {
-                **(bundle if isinstance(bundle, dict) else {}),
-                "ok": True,
-                "input_hash": input_hash,
-                "gate_summary": gsum,
+            from geox_mcp.tools.section_render import compact_interpret_envelope, store_detail_receipt
+
+            verbosity = "compact"
+            if isinstance(request, dict):
+                verbosity = str(request.get("verbosity") or request.get("detail") or "compact").lower()
+
+            n_hyps = len((bundle or {}).get("hypotheses") or []) if isinstance(bundle, dict) else 3
+            render_ref = None
+            if render_info and render_info.get("png_path"):
+                render_ref = f"geox://artifacts/{Path(render_info['png_path']).name}"
+
+            full_detail = {
+                "interpretation_bundle": bundle if isinstance(bundle, dict) else {},
                 "structure_validate": {
                     "combined_gate_verdict": sv.get("combined_gate_verdict"),
                     "kills": sv.get("kills"),
                     "passes": sv.get("passes"),
                     "warns": sv.get("warns"),
                     "unmeasured": sv.get("unmeasured"),
-                    # compact by default; full gates under gates_full
-                    "gates": gsum.get("gates"),
-                    "gates_full": gates,
+                    "gates": gates,
+                    "cutoffs": sv.get("cutoffs"),
                 },
                 "propose": {
                     "ran": propose_result is not None,
@@ -675,18 +682,59 @@ async def geox_seismic_interpret(
                     "n_faults": (propose_result or {}).get("n_faults"),
                     "n_horizons": (propose_result or {}).get("n_horizons"),
                 },
-                "preferred_hypothesis": None,
+                "render": render_info,
+                "input_hash": input_hash,
+                "calibration": cal,
+                "transport": _transport,
             }
-            if render_info:
-                out_payload["render"] = {
-                    "ok": render_info.get("ok"),
-                    "png_path": render_info.get("png_path"),
-                    "png_sha256": render_info.get("png_sha256"),
-                    "receipt_hash": render_info.get("receipt_hash"),
-                    "content_hash": render_info.get("content_hash"),
+            stored = store_detail_receipt(full_detail, prefix="interpret")
+            receipt_hash = stored.get("detail_sha256", "")[:16]
+            if render_info and render_info.get("receipt_hash"):
+                receipt_hash = str(render_info["receipt_hash"])[:16]
+
+            if verbosity in ("full", "verbose", "debug"):
+                out_payload = {
+                    **(bundle if isinstance(bundle, dict) else {}),
+                    "ok": True,
+                    "input_hash": input_hash,
+                    "gate_summary": gsum,
+                    "structure_validate": full_detail["structure_validate"],
+                    "propose": full_detail["propose"],
+                    "preferred_hypothesis": None,
+                    "detail_ref": stored.get("detail_ref"),
+                    "receipt_hash": receipt_hash,
+                    "render": {
+                        "ok": (render_info or {}).get("ok"),
+                        "png_path": (render_info or {}).get("png_path"),
+                        "png_sha256": (render_info or {}).get("png_sha256"),
+                        "receipt_hash": (render_info or {}).get("receipt_hash"),
+                        "render_ref": render_ref,
+                    }
+                    if render_info
+                    else None,
                 }
-                if isinstance(out_payload.get("provenance"), dict):
-                    out_payload["provenance"]["render_png_sha256"] = render_info.get("png_sha256")
+            else:
+                # P4 progressive disclosure — default ≤2KB-class envelope
+                out_payload = compact_interpret_envelope(
+                    verdict="QUALIFIED_CANDIDATE",
+                    input_class=str(cal.get("input_class") or "image_only"),
+                    n_hypotheses=max(n_hyps, 3),
+                    gate_summary={
+                        "pass": len(gsum.get("passes") or []),
+                        "warn": len(gsum.get("warns") or []),
+                        "kill": len(gsum.get("kills") or []),
+                        "unmeasured": len(gsum.get("unmeasured") or []),
+                    },
+                    render_ref=render_ref,
+                    detail_ref=stored.get("detail_ref"),
+                    receipt_hash=receipt_hash,
+                    extras={
+                        "ok": True,
+                        "input_hash": input_hash,
+                        "combined_gate_verdict": sv.get("combined_gate_verdict"),
+                        "cutoffs_n": len(sv.get("cutoffs") or []),
+                    },
+                )
             return _stamp_qualified(out_payload, mode_norm, transport=_transport)
         bundle = build_interpretation_bundle(
             propose_result=propose_result if isinstance(propose_result, dict) else None,

@@ -561,7 +561,7 @@ def register_tools_on(mcp):
     # DITEMPA BUKAN DIBERI.
 
     @mcp.tool(name="geox_surface_status", annotations=_geox_annotations("geox_surface_status"))
-    async def geox_surface_status(
+    async def geox_surface_status(  # noqa: PLR0915 — surface probe
         mode: str = "registry",
         session_id: str | None = None,
         actor_id: str | None = None,
@@ -644,7 +644,7 @@ def register_tools_on(mcp):
                 phantom_list.append(tool_name)
 
         # Multi-surface parity (manifest / runtime / plugin export / docs snapshot)
-        from geox_mcp.surface_manifest import plugin_export_tool_names
+        from geox_mcp.surface_manifest import plugin_export_tool_names, surface_attestation
         from geox_mcp.tools.registry import (
             _load_generated_public_surface,
             _load_plugin_export_surface,
@@ -658,6 +658,7 @@ def register_tools_on(mcp):
         generated_only = sorted(generated_public - set(canonical_set))
         missing_from_generated = sorted(set(canonical_set) - generated_public)
 
+        attestation = surface_attestation()
         has_drift = bool(
             phantom_list
             or plugin_export_only
@@ -665,17 +666,23 @@ def register_tools_on(mcp):
             or generated_only
             or missing_from_generated
             or expected_app_export != set(canonical_set)
+            or not attestation.get("ok")
+            or attestation.get("public_count") != len(canonical_set)
         )
         return {
             "status": "healthy",
             "organ": "GEOX",
-            "surface_version": "geox-2026.07.15-zen15",
+            "surface_version": attestation.get("surface_version") or "geox-zen15-2026.07.24",
+            "surface_name": attestation.get("surface_name") or "ZEN-15",
+            "surface_hash": attestation.get("surface_hash"),
+            "surface_attestation": attestation,
             "canonical_callable": canonical_list,
             "canonical_tools": sorted(canonical_set),
             "intended_tools": len(all_manifest),
             "registered_tools": len(all_manifest),
             "callable_tools": len(canonical_list),
             "public_count": len(canonical_set),
+            "public_count_target": attestation.get("public_count_target") or 15,
             "phantom_tools": phantom_list,
             "internal_tools": internal_list,
             "plugin_export_public": sorted(plugin_export_public),
