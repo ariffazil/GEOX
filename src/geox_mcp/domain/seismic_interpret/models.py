@@ -62,7 +62,11 @@ class AxisSpec(StrictModel):
 
 
 class Calibration(StrictModel):
-    """Measurement identity / scale. Missing scale → gates UNMEASURED."""
+    """Measurement identity / scale. Missing scale → gates UNMEASURED.
+
+    Chat-minimal keys (bin_spacing_m, velocity_td, VE) enable auto-derive of
+    K-DIP / K-THROW / K-VEL / K-RESTORE / K-GROWTH inputs.
+    """
 
     x_axis: AxisSpec | None = None
     vertical_axis: AxisSpec | None = None
@@ -70,9 +74,15 @@ class Calibration(StrictModel):
     polarity: Literal["SEG_NORMAL", "SEG_REVERSE", "UNKNOWN"] = "UNKNOWN"
     phase_degrees: float | None = None
     sample_interval_ms: float | None = None
+    sample_rate_ms: float | None = None  # alias of sample_interval_ms
+    bin_spacing_m: float | None = None
+    velocity_td: list[dict[str, Any]] | None = None  # [{twt_ms, depth_m}, ...]
+    velocity_linear_m_s: float | None = None  # synthetic linear T–D helper
+    well_tie: dict[str, Any] | None = None  # {cmp, well_ref}
     input_class: Literal["image_only", "segy_slice", "segy_2d", "segy_3d", "unknown"] = "unknown"
     calibrated: bool = False  # explicit flag when axes are trusted
     sha256: str | None = None
+    calibration_hash: str | None = None
     crs: str | None = None
     vertical_datum: str | None = None
 
@@ -123,6 +133,7 @@ class StructureValidateMode(TransportAwareRequest):
 class SectionImageMode(TransportAwareRequest):
     mode: Literal["interpret_section", "rsi_pipeline", "section_image", "classical_section"] = "interpret_section"
     image_path: str | None = None
+    image_data: str | None = None  # base64 / data-URL from chat clients (≤2MB decoded)
     artifact_ref: str | None = None
     source_uri: str | None = None
     max_faults: int = 20
@@ -172,6 +183,7 @@ class InterpretBundleMode(TransportAwareRequest):
     artifact_ref: str | None = None
     artifact_type: Literal["section_image", "segy_2d", "segy_3d", "interpreted_section", "framework"] = "framework"
     image_path: str | None = None
+    image_data: str | None = None  # base64 / data-URL from chat clients
     segy_path: str | None = None
     framework: dict[str, Any] | None = None
     faults: list[dict[str, Any]] | None = None

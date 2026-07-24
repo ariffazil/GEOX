@@ -39,7 +39,21 @@ async def geox_structure_validate(
             geom = dict(mc.get("geometry") or {})
             geom["vertical_exaggeration"] = calibration["vertical_exaggeration"]
             mc["geometry"] = geom
-        if calibration.get("calibrated"):
+        # Chat calibration keys → measurement_context.geometry
+        for src_k, dst_k in (
+            ("bin_spacing_m", "bin_spacing_m"),
+            ("sample_rate_ms", "sample_rate_ms"),
+            ("sample_interval_ms", "sample_rate_ms"),
+            ("ve", "vertical_exaggeration"),
+        ):
+            if calibration.get(src_k) is not None:
+                geom = dict(mc.get("geometry") or {})
+                geom[dst_k] = calibration[src_k]
+                mc["geometry"] = geom
+        if calibration.get("calibrated") or any(
+            calibration.get(k) is not None
+            for k in ("bin_spacing_m", "vertical_exaggeration", "velocity_td", "velocity_linear_m_s")
+        ):
             mc["calibrated"] = True
         if calibration.get("input_class"):
             mc["input_class"] = calibration["input_class"]
@@ -56,6 +70,7 @@ async def geox_structure_validate(
             "seal_authority": "arifOS_only",
         }
 
+    # Geometry adapt + calibration derive happen inside run_all_structure_gates
     matrix = run_all_structure_gates(fw)
 
     if gates:

@@ -280,9 +280,12 @@ def build_interpretation_bundle(
             unmeasured_gates=sorted(all_unmeasured),
         ),
         provenance=ProvenanceModel(
-            input_hash=cal.get("sha256") or (primary.get("measurement_context") or {}).get("sha256"),
+            input_hash=cal.get("sha256")
+            or cal.get("calibration_hash")
+            or (primary.get("measurement_context") or {}).get("sha256")
+            or (primary.get("measurement_context") or {}).get("calibration_hash"),
             model_revision=model_revision,
-            algorithm_versions={"structure_gates": "v1", "bundle": "b-final"},
+            algorithm_versions={"structure_gates": "v1", "bundle": "b-final", "calibration_derive": "v1"},
             parameter_hash=_param_hash({"cal": cal, "req": req}),
         ),
         local_verdict="QUALIFIED_CANDIDATE",
