@@ -38,7 +38,6 @@ _LIVE_MODES = frozenset(
         "interpret",
         "classical_section",
         "interpret_section",
-        "classical_section",  # alias → interpret_section (image-first propose)
         "rsi_pipeline",
         "section_image",
         "segy_slice",

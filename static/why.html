@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" data-ring="ORGAN" data-organ="geox">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is GEOX? · Earth Evidence Operating System</title>
+    <meta name="description" content="GEOX is not a geological toolkit. It is an Earth Evidence Operating System — the governed substrate that separates Observation, Derivation, Interpretation, and Speculation so assumptions never become facts.">
+    <link rel="canonical" href="https://geox.arif-fazil.com/why.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/_shared/design-system/tokens.css">
+    <link rel="stylesheet" href="https://arifosmcp.arif-fazil.com/arifos-theme.css">
+
+    <style>
+        :root {
+            --bg-dark: #07070a;
+            --bg-card: #0d0d14;
+            --border-glow: rgba(245, 158, 11, 0.15);
+            --border-dim: rgba(255, 255, 255, 0.05);
+            --amber-earth: #f59e0b;
+            --amber-earth-glow: rgba(245, 158, 11, 0.35);
+            --emerald-wealth: #10b981;
+            --cyan-gov: #06b6d4;
+            --text-high: #f4f4f5;
+            --text-med: #a1a1aa;
+            --text-low: #52525b;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-high);
+            font-family: var(--font-sans);
+            line-height: 1.65;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(245, 158, 11, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 45%),
+                linear-gradient(to bottom, var(--bg-dark), #0b0b10);
+            background-attachment: fixed;
+        }
+        .container { max-width: 880px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+        header {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-dim);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(7, 7, 10, 0.85);
+        }
+        .logo-group { display: flex; align-items: center; gap: 0.75rem; }
+        .logo-text {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, var(--amber-earth));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-sep { color: var(--text-low); font-family: var(--font-mono); }
+        .logo-sub {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: var(--text-med);
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-med);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--amber-earth); }
+        .nav-links a.active { color: var(--amber-earth); }
+
+        /* Hero */
+        .hero {
+            padding: 6rem 0 4rem;
+            text-align: center;
+            position: relative;
+        }
+        .hero::before {
+            content: "Φ";
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22rem;
+            font-weight: 900;
+            color: rgba(245, 158, 11, 0.025);
+            font-family: var(--font-heading);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--amber-earth);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+        }
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 3.8rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 60%, rgba(255, 255, 255, 0.55) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-sub {
+            font-family: var(--font-sans);
+            font-size: 1.35rem;
+            font-weight: 300;
+            color: var(--text-med);
+            max-width: 680px;
+            margin: 0 auto;
+            line-height: 1.55;
+        }
+
+        /* Section blocks */
+        section { padding: 3rem 0; }
+        .section-tag {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--amber-earth);
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 1.25rem;
+            color: #fff;
+        }
+        h3 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-high);
+            margin-bottom: 0.6rem;
+        }
+        p { color: var(--text-med); font-size: 1.05rem; margin-bottom: 1rem; }
+        p strong { color: var(--text-high); font-weight: 600; }
+        p em { color: var(--amber-earth); font-style: normal; }
+
+        /* Warung kopi contrasts */
+        .contrast {
+            background: rgba(13, 13, 20, 0.55);
+            border: 1px solid var(--border-dim);
+            border-left: 3px solid var(--amber-earth);
+            border-radius: 8px;
+            padding: 2rem 2.25rem;
+            margin: 2rem 0;
+        }
+        .contrast + .contrast { margin-top: 1.5rem; }
+        .contrast-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--amber-earth);
+            margin-bottom: 0.85rem;
+            display: block;
+        }
+        .contrast-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 640px) { .contrast-row { grid-template-columns: 1fr; } }
+        .contrast-col h4 {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .contrast-col.old h4 { color: var(--text-low); }
+        .contrast-col.new h4 { color: var(--amber-earth); }
+        .contrast-col p { font-size: 1rem; margin-bottom: 0; line-height: 1.55; }
+
+        /* Audience paths */
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) { .audience-grid { grid-template-columns: 1fr; } }
+        .audience-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 10px;
+            padding: 1.75rem 1.5rem;
+            transition: border-color 0.2s;
+        }
+        .audience-card:hover { border-color: rgba(245, 158, 11, 0.3); }
+        .audience-card .who {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--amber-earth);
+            margin-bottom: 0.85rem;
+        }
+        .audience-card .ask { color: var(--text-high); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem; }
+        .audience-card .where {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-med);
+            border-top: 1px solid var(--border-dim);
+            padding-top: 0.85rem;
+        }
+        .audience-card .where a { color: var(--amber-earth); text-decoration: none; }
+        .audience-card .where a:hover { text-decoration: underline; }
+
+        /* The moat */
+        .moat {
+            background: linear-gradient(180deg, rgba(13, 13, 20, 0.6) 0%, rgba(7, 7, 10, 0.9) 100%);
+            border: 1px solid var(--border-dim);
+            border-radius: 16px;
+            padding: 3rem 2.5rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        .moat-line {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+        .moat-line .accent {
+            color: var(--amber-earth);
+            background: rgba(245, 158, 11, 0.08);
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+        }
+        .moat-sub {
+            font-size: 1rem;
+            color: var(--text-med);
+            font-weight: 300;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* Big quote (the kapanathalan line) */
+        .kapanathalan {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-high);
+            text-align: center;
+            padding: 4rem 1rem;
+            border-top: 1px solid var(--border-dim);
+            border-bottom: 1px solid var(--border-dim);
+            margin: 4rem 0 2rem;
+        }
+        .kapanathalan em {
+            color: var(--amber-earth);
+            font-style: normal;
+        }
+
+        /* CTA */
+        .cta-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 3rem 0 2rem;
+            flex-wrap: wrap;
+        }
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.95rem 1.6rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .cta.primary {
+            background: linear-gradient(135deg, var(--amber-earth), #d97706);
+            color: #07070a;
+            border: 1px solid var(--amber-earth);
+        }
+        .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
+        .cta.secondary {
+            background: transparent;
+            color: var(--text-high);
+            border: 1px solid var(--border-dim);
+        }
+        .cta.secondary:hover { border-color: rgba(245, 158, 11, 0.3); color: var(--amber-earth); }
+
+        footer {
+            padding: 3rem 0 4rem;
+            border-top: 1px solid var(--border-dim);
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-low);
+            margin-top: 4rem;
+        }
+        .federation-seal {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--amber-earth);
+            letter-spacing: 4px;
+            margin-bottom: 0.8rem;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        .footer-links a {
+            color: var(--text-med);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+        .footer-links a:hover { color: var(--amber-earth); }
+
+        /* ZEN PULSE — Sacred Navigation Law */
+        .zen-pulse {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+            background: rgba(13, 13, 20, 0.7);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 0.85rem 0;
+            margin: 1.5rem 0;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+        }
+        @media (max-width: 768px) { .zen-pulse { grid-template-columns: 1fr; } }
+        .zp-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0 1.25rem;
+            border-left: 1px solid var(--border-dim);
+        }
+        .zp-item:first-child { border-left: none; }
+        @media (max-width: 768px) { .zp-item { padding: 0.35rem 0; border-left: none; } }
+        .zp-ask {
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.62rem;
+            white-space: nowrap;
+        }
+        .zp-val {
+            color: var(--text-high);
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+        .zp-val.gold { color: var(--amber-earth); }
+        .zp-val em { color: var(--amber-earth); font-style: normal; }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <header>
+            <div class="logo-group">
+                <span class="logo-text">GEOX</span>
+                <span class="logo-sep">|</span>
+                <span class="logo-sub">EARTH INTELLIGENCE</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="why.html" class="active">Why</a>
+                <a href="constitution.html">Constitution</a>
+                <a href="agents.html">Agents</a>
+            </nav>
+        </header>
+
+        <!-- ZEN PULSE -->
+        <div class="zen-pulse" style="margin: 0 0 1rem 0;">
+            <div class="zp-item"><span class="zp-ask">Where am I?</span><span class="zp-val">GEOX · Why</span></div>
+            <div class="zp-item"><span class="zp-ask">Why care?</span><span class="zp-val gold">You want to <em>understand</em> before doing.</span></div>
+            <div class="zp-item"><span class="zp-ask">What next?</span><span class="zp-val"><a href="#what-now" style="color: var(--amber-earth); text-decoration: none;">Read or pick a verb ↓</a></span></div>
+        </div>
+
+        <section class="hero">
+            <span class="hero-eyebrow">What is GEOX · warung kopi version</span>
+            <h1>Most geological software<br>stores interpretations.</h1>
+            <p class="hero-sub">GEOX stores <em>evidence</em>. And that single decision changes everything.</p>
+            <div class="hero-cta-row" style="margin-top: 2rem;">
+                <a href="#the-four-sentences" class="cta primary">Read the 4 sentences &nbsp;↓</a>
+                <a href="index.html#what-do-you-want">Or pick a verb</a>
+            </div>
+        </section>
+
+        <section>
+            <span class="section-tag">01 · The Moat</span>
+            <h2>The four sentences you need to understand GEOX</h2>
+
+            <div class="contrast">
+                <span class="contrast-label">Sentence one</span>
+                <div class="contrast-row">
+                    <div class="contrast-col old">
+                        <h4>Most geological software</h4>
+                        <p>stores interpretations. Picks a horizon, draws a polygon, declares a reservoir. The model becomes the truth.</p>
+                    </div>
+                    <div class="contrast-col new">
+                        <h4>GEOX</h4>
+                        <p>stores <strong>evidence</strong>. The interpretation still happens — but it cannot exist without its lineage, alternatives, and uncertainty.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contrast">
+                <span class="contrast-label">Sentence two</span>
+                <div class="contrast-row">
+                    <div class="contrast-col old">
+                        <h4>Most systems</h4>
+                        <p>tell you <em>what they think</em>. A probability. A classification. A polygon. Take it or leave it.</p>
+                    </div>
+                    <div class="contrast-col new">
+                        <h4>GEOX</h4>
+                        <p>tells you <em>why it thinks it</em>. The evidence. The alternatives. The gaps. The confidence band. Always with provenance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contrast">
+                <span class="contrast-label">Sentence three</span>
+                <div class="contrast-row">
+                    <div class="contrast-col old">
+                        <h4>Most exploration failures</h4>
+                        <p>happen because <strong>assumptions become facts</strong>. Nobody remembered who first said "this is the reservoir" — or what they assumed to get there.</p>
+                    </div>
+                    <div class="contrast-col new">
+                        <h4>GEOX prevents that</h4>
+                        <p>by separating every output into one of four epistemic labels — <strong>OBS · DER · INT · SPEC</strong> — and refusing to promote them silently.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contrast">
+                <span class="contrast-label">Sentence four</span>
+                <div class="contrast-row">
+                    <div class="contrast-col old">
+                        <h4>Most AI</h4>
+                        <p>gives you answers. Fast answers, confident answers — and no way to tell which ones you should bet on.</p>
+                    </div>
+                    <div class="contrast-col new">
+                        <h4>GEOX</h4>
+                        <p>gives you the <strong>audit trail</strong>. Every claim is anchored. Every alternative is registered. Every failure is a HOLD, never a silent shrug.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="kapanathalan">
+            Not faster hallucination. <em>Disciplined Earth intelligence.</em>
+        </div>
+
+        <section>
+            <span class="section-tag">02 · The Position</span>
+            <h2>Stop calling it a toolkit</h2>
+            <p>GEOX is not a collection of petrophysics and seismic calculators wrapped in an MCP server. That is the surface. The real thing is bigger:</p>
+
+            <div class="moat">
+                <div class="moat-line">
+                    GEOX is an <span class="accent">Earth Evidence Operating System</span>.
+                </div>
+                <p class="moat-sub">The governed substrate that disciplines AI claims about the Earth — separating what was measured, what was computed, what was concluded, and what was assumed. So assumptions never become facts.</p>
+            </div>
+
+            <p>It does not replace Petrel, DecisionSpace, or OSDU. It sits <em>above</em> them. It ingests what they produce, challenges what they conclude, preserves what they assume, and routes the consequence to capital, governance, or further investigation.</p>
+
+            <p>The repository itself already shows the real moat. It is not the tools — it is the <strong>epistemology</strong>. The discipline of refusing to let an interpretation become a fact without its evidence attached.</p>
+        </section>
+
+        <section>
+            <span class="section-tag">03 · Where to go next</span>
+            <h2>If you are a…</h2>
+
+            <div class="audience-grid">
+                <div class="audience-card">
+                    <div class="who">Geologist / Basin lead</div>
+                    <p class="ask">You want to <em>see</em> the geology. Logs, cross-sections, prospects, structure, regional context. Not APIs.</p>
+                    <div class="where">Go to → <a href="index.html#surfaces">Workbench Surface</a> on the home page.</div>
+                </div>
+
+                <div class="audience-card">
+                    <div class="who">Investor / Executive</div>
+                    <p class="ask">You want to know <em>what it means</em>. What is the consequence. What is the risk. Should you sign.</p>
+                    <div class="where">Go to → <a href="constitution.html">Constitution</a> — RASA, F1–F13, 888_HOLD.</div>
+                </div>
+
+                <div class="audience-card">
+                    <div class="who">Engineer / Agent builder</div>
+                    <p class="ask">You want to know <em>what to call</em>. Tools, schemas, contracts, transport.</p>
+                    <div class="where">Go to → <a href="agents.html">Agent Surface</a> — MCP, JSON contracts, tool registry.</div>
+                </div>
+            </div>
+
+            <div class="cta-row">
+                <a href="index.html" class="cta primary">Open GEOX &nbsp;→</a>
+                <a href="constitution.html" class="cta secondary">Read the Constitution</a>
+            </div>
+        </section>
+
+        <footer>
+            <div class="federation-seal">DITEMPA BUKAN DIBERI</div>
+            <p>GEOX · Earth Evidence Operating System · arifOS federation</p>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="constitution.html">Constitution</a>
+                <a href="agents.html">Agents</a>
+                <a href="https://github.com/ariffazil/GEOX">Source</a>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>

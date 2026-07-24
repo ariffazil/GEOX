@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" data-ring="ORGAN" data-organ="geox">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX Constitution · DITEMPA BUKAN DIBERI</title>
+    <meta name="description" content="The constitutional layer of GEOX: OBS/DER/INT/SPEC epistemic labels, RASA context-fit, 888_HOLD, and the 13 floors of arifOS.">
+    <link rel="canonical" href="https://geox.arif-fazil.com/constitution.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/_shared/design-system/tokens.css">
+    <link rel="stylesheet" href="https://arifosmcp.arif-fazil.com/arifos-theme.css">
+
+    <style>
+        :root {
+            --bg-dark: #07070a;
+            --bg-card: #0d0d14;
+            --border-glow: rgba(6, 182, 212, 0.15);
+            --border-dim: rgba(255, 255, 255, 0.05);
+            --amber-earth: #f59e0b;
+            --amber-earth-glow: rgba(245, 158, 11, 0.35);
+            --emerald-wealth: #10b981;
+            --cyan-gov: #06b6d4;
+            --cyan-gov-glow: rgba(6, 182, 212, 0.35);
+            --text-high: #f4f4f5;
+            --text-med: #a1a1aa;
+            --text-low: #52525b;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-high);
+            font-family: var(--font-sans);
+            line-height: 1.65;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(6, 182, 212, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 90% 90%, rgba(245, 158, 11, 0.03) 0%, transparent 45%),
+                linear-gradient(to bottom, var(--bg-dark), #0b0b10);
+            background-attachment: fixed;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+        header {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-dim);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(7, 7, 10, 0.85);
+        }
+        .logo-group { display: flex; align-items: center; gap: 0.75rem; }
+        .logo-text {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, var(--amber-earth));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-sep { color: var(--text-low); font-family: var(--font-mono); }
+        .logo-sub {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: var(--text-med);
+            background: rgba(6, 182, 212, 0.08);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-med);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--cyan-gov); }
+        .nav-links a.active { color: var(--cyan-gov); }
+
+        /* Hero */
+        .hero {
+            padding: 6rem 0 3rem;
+            text-align: center;
+            position: relative;
+        }
+        .hero::before {
+            content: "Ω";
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22rem;
+            font-weight: 900;
+            color: rgba(6, 182, 212, 0.025);
+            font-family: var(--font-heading);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(6, 182, 212, 0.05);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--cyan-gov);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+        }
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 3.6rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 60%, var(--cyan-gov) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-motto {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--amber-earth);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .hero-sub {
+            font-family: var(--font-sans);
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: var(--text-med);
+            max-width: 720px;
+            margin: 1.5rem auto 0;
+            line-height: 1.55;
+        }
+
+        section { padding: 2.5rem 0; }
+
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        h2 .num {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--cyan-gov);
+            background: rgba(6, 182, 212, 0.08);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+        h3 {
+            font-family: var(--font-heading);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-high);
+            margin-bottom: 0.5rem;
+        }
+        p { color: var(--text-med); font-size: 1rem; margin-bottom: 0.85rem; }
+        p strong { color: var(--text-high); font-weight: 600; }
+        p em { color: var(--cyan-gov); font-style: normal; }
+
+        /* Epistemic labels — the four */
+        .epistemic-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0 2.5rem;
+        }
+        @media (max-width: 900px) { .epistemic-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 540px) { .epistemic-grid { grid-template-columns: 1fr; } }
+        .epi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 10px;
+            padding: 1.5rem 1.25rem;
+            transition: all 0.2s ease;
+        }
+        .epi-card:hover { transform: translateY(-2px); }
+        .epi-card .label {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 0.35rem 0.7rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.85rem;
+        }
+        .epi-card.obs .label { background: rgba(16, 185, 129, 0.12); color: var(--emerald-wealth); }
+        .epi-card.der .label { background: rgba(6, 182, 212, 0.12); color: var(--cyan-gov); }
+        .epi-card.int .label { background: rgba(245, 158, 11, 0.12); color: var(--amber-earth); }
+        .epi-card.spec .label { background: rgba(239, 68, 68, 0.12); color: #fb7175; }
+        .epi-card h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+        .epi-card p { font-size: 0.85rem; line-height: 1.5; margin-bottom: 0; }
+        .epi-card .ex {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-low);
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-dim);
+        }
+
+        /* RASA panel */
+        .rasa-panel {
+            background: linear-gradient(135deg, rgba(13, 13, 20, 0.8) 0%, rgba(7, 7, 10, 0.95) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+        .rasa-formula {
+            font-family: var(--font-mono);
+            font-size: 1.4rem;
+            color: var(--cyan-gov);
+            background: rgba(6, 182, 212, 0.03);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .rasa-formula .credit { color: var(--amber-earth); }
+        .rasa-formula .ambig { color: #fb7175; }
+        .rasa-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        @media (max-width: 768px) { .rasa-grid { grid-template-columns: 1fr; } }
+        .rasa-stat {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-dim);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+        }
+        .rasa-stat .val {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--cyan-gov);
+            line-height: 1;
+            margin-bottom: 0.4rem;
+        }
+        .rasa-stat .lbl {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--amber-earth);
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+        }
+        .rasa-stat .desc { font-size: 0.82rem; color: var(--text-med); line-height: 1.45; margin-bottom: 0; }
+
+        /* 888_HOLD */
+        .hold-panel {
+            background: rgba(13, 13, 20, 0.6);
+            border: 1px solid rgba(251, 113, 117, 0.25);
+            border-left: 4px solid #fb7175;
+            border-radius: 10px;
+            padding: 2rem 2.25rem;
+            margin: 2rem 0;
+        }
+        .hold-panel .signal {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #fb7175;
+            background: rgba(251, 113, 117, 0.08);
+            border: 1px solid rgba(251, 113, 117, 0.2);
+            padding: 0.35rem 0.7rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+        .hold-panel h3 { color: var(--text-high); }
+
+        /* Floors */
+        .floors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.85rem;
+            margin-top: 1.5rem;
+        }
+        @media (max-width: 1024px) { .floors-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .floors-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .floors-grid { grid-template-columns: 1fr; } }
+        .floor-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 1.1rem 1.15rem;
+            transition: all 0.25s ease;
+        }
+        .floor-card:hover { transform: translateY(-2px); }
+        .floor-card.critical { border-color: rgba(245, 158, 11, 0.35); background: linear-gradient(135deg, rgba(13, 13, 20, 0.9) 0%, rgba(245, 158, 11, 0.05) 100%); }
+        .floor-card.critical-cyan { border-color: rgba(6, 182, 212, 0.35); background: linear-gradient(135deg, rgba(13, 13, 20, 0.9) 0%, rgba(6, 182, 212, 0.05) 100%); }
+        .floor-num {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: bold;
+            margin-bottom: 0.35rem;
+        }
+        .floor-card.critical .floor-num { color: var(--amber-earth); }
+        .floor-card.critical-cyan .floor-num { color: var(--cyan-gov); }
+        .floor-card .floor-num { color: var(--text-low); }
+        .floor-card h4 {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.3px;
+        }
+        .floor-card p { font-size: 0.72rem; color: var(--text-med); line-height: 1.4; margin-bottom: 0; }
+
+        /* Promotion ladder */
+        .ladder {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 2rem 2.25rem;
+            margin: 2rem 0;
+        }
+        .ladder ol {
+            list-style: none;
+            counter-reset: ladder;
+            padding: 0;
+        }
+        .ladder li {
+            counter-increment: ladder;
+            padding: 0.85rem 0 0.85rem 3rem;
+            position: relative;
+            border-left: 1px dashed var(--border-dim);
+            margin-left: 0.85rem;
+        }
+        .ladder li::before {
+            content: counter(ladder);
+            position: absolute;
+            left: -1rem;
+            top: 0.7rem;
+            width: 2rem;
+            height: 2rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--amber-earth);
+            color: var(--amber-earth);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ladder li:last-child { border-left-color: transparent; }
+        .ladder li strong { color: var(--text-high); display: block; margin-bottom: 0.2rem; }
+        .ladder li span { color: var(--text-med); font-size: 0.9rem; }
+        .ladder li.sealed::before {
+            background: var(--emerald-wealth);
+            border-color: var(--emerald-wealth);
+            color: var(--bg-dark);
+        }
+        .ladder li.sealed strong { color: var(--emerald-wealth); }
+
+        /* Memory law table */
+        .memory-law {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+        }
+        .memory-law th, .memory-law td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-dim);
+        }
+        .memory-law th {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--cyan-gov);
+            background: rgba(6, 182, 212, 0.04);
+        }
+        .memory-law td { color: var(--text-med); }
+        .memory-law td:first-child { color: var(--text-high); font-weight: 600; }
+
+        /* CTA */
+        .cta-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 3rem 0 2rem;
+            flex-wrap: wrap;
+        }
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.95rem 1.6rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .cta.primary {
+            background: linear-gradient(135deg, var(--cyan-gov), #0891b2);
+            color: #07070a;
+            border: 1px solid var(--cyan-gov);
+        }
+        .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(6, 182, 212, 0.25); }
+        .cta.secondary {
+            background: transparent;
+            color: var(--text-high);
+            border: 1px solid var(--border-dim);
+        }
+        .cta.secondary:hover { border-color: rgba(6, 182, 212, 0.4); color: var(--cyan-gov); }
+
+        footer {
+            padding: 3rem 0 4rem;
+            border-top: 1px solid var(--border-dim);
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-low);
+            margin-top: 4rem;
+        }
+        .federation-seal {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--cyan-gov);
+            letter-spacing: 4px;
+            margin-bottom: 0.8rem;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        .footer-links a {
+            color: var(--text-med);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+        .footer-links a:hover { color: var(--cyan-gov); }
+
+        /* ZEN PULSE — Sacred Navigation Law */
+        .zen-pulse {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+            background: rgba(13, 13, 20, 0.7);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 0.85rem 0;
+            margin: 1.5rem 0;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+        }
+        @media (max-width: 768px) { .zen-pulse { grid-template-columns: 1fr; } }
+        .zp-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0 1.25rem;
+            border-left: 1px solid var(--border-dim);
+        }
+        .zp-item:first-child { border-left: none; }
+        @media (max-width: 768px) { .zp-item { padding: 0.35rem 0; border-left: none; } }
+        .zp-ask {
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.62rem;
+            white-space: nowrap;
+        }
+        .zp-val {
+            color: var(--text-high);
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+        .zp-val.gold { color: var(--amber-earth); }
+        .zp-val em { color: var(--amber-earth); font-style: normal; }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <header>
+            <div class="logo-group">
+                <span class="logo-text">GEOX</span>
+                <span class="logo-sep">|</span>
+                <span class="logo-sub">CONSTITUTION</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="why.html">Why</a>
+                <a href="constitution.html" class="active">Constitution</a>
+                <a href="agents.html">Agents</a>
+            </nav>
+        </header>
+
+        <!-- ZEN PULSE -->
+        <div class="zen-pulse" style="margin: 0 0 1rem 0;">
+            <div class="zp-item"><span class="zp-ask">Where am I?</span><span class="zp-val">GEOX · Constitution</span></div>
+            <div class="zp-item"><span class="zp-ask">Why care?</span><span class="zp-val gold">You want to <em>understand</em> the rules before you challenge them.</span></div>
+            <div class="zp-item"><span class="zp-ask">What next?</span><span class="zp-val"><a href="#01" style="color: var(--cyan-gov); text-decoration: none;">Read or pick a verb ↓</a></span></div>
+        </div>
+
+        <section class="hero">
+            <span class="hero-eyebrow">Why does GEOX behave this way?</span>
+            <h1>The Constitution</h1>
+            <div class="hero-motto">DITEMPA BUKAN DIBERI</div>
+            <p class="hero-sub">Forged, not given. Seven sections. Read in order — or jump to the one you need.</p>
+            <div class="hero-cta-row" style="margin-top: 2rem; display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;">
+                <a href="#01" class="cta primary">Read labels</a>
+                <a href="#02" class="cta primary" style="background: linear-gradient(135deg, var(--amber-earth), #d97706); color: #07070a;">Read RASA</a>
+                <a href="#03" class="cta primary" style="background: linear-gradient(135deg, #fb7175, #b91c1c);">Read 888_HOLD</a>
+                <a href="#06" class="cta primary" style="background: linear-gradient(135deg, var(--cyan-gov), #0891b2);">Read the 13 floors</a>
+                <a href="index.html#what-do-you-want">Or pick a verb →</a>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">01</span> The Four Epistemic Labels</h2>
+            <p>Every claim GEOX emits is tagged with one of four labels. The label determines how the claim is allowed to move, what it can authorize, and when it must be <strong>HOLD</strong>-ed. This is the doctrine of <em>no naked Earth claims</em>.</p>
+
+            <div class="epistemic-grid">
+                <div class="epi-card obs">
+                    <span class="label">OBS</span>
+                    <h3>Observation</h3>
+                    <p>What was measured or recorded. The only label permitted to ground a claim.</p>
+                    <div class="ex">e.g. GR curve exists 1200–2800 m MD</div>
+                </div>
+                <div class="epi-card der">
+                    <span class="label">DER</span>
+                    <h3>Derivation</h3>
+                    <p>What was computed from validated observations. Deterministic outputs of physics.</p>
+                    <div class="ex">e.g. Porosity from density log, Archie Sw</div>
+                </div>
+                <div class="epi-card int">
+                    <span class="label">INT</span>
+                    <h3>Interpretation</h3>
+                    <p>What was concluded from OBS+DER. Always requires evidence, alternatives, and uncertainty.</p>
+                    <div class="ex">e.g. Interval may be clean sand; net reservoir candidate</div>
+                </div>
+                <div class="epi-card spec">
+                    <span class="label">SPEC</span>
+                    <h3>Speculation</h3>
+                    <p>What was assumed — explicitly. Never promoted silently. Carries a SEAL gate.</p>
+                    <div class="ex">e.g. Migration pathway, fluid phase assumption</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">02</span> RASA — Context-Fit Epistemology</h2>
+            <p>Relevance-Aware Substrate Alignment measures the concrete empirical grounding of every geological claim. The formula is intentionally punishing: <em>evidence_credit is multiplied, not added</em>. Remove the evidence and the context-fit goes to zero.</p>
+
+            <div class="rasa-panel">
+                <div class="rasa-formula">
+                    RASA = <span class="credit">evidence_credit</span> &times; (1 &minus; <span class="ambig">u_ambiguity</span>)
+                </div>
+
+                <div class="rasa-grid">
+                    <div class="rasa-stat">
+                        <div class="val">0.90</div>
+                        <div class="lbl">F7 Humility Cap</div>
+                        <p class="desc">A hard epistemological ceiling. GEOX never permits perfect context-fit calculations — enforcing a mandatory 10% uncertainty buffer (Ω₀ ≈ 0.04).</p>
+                    </div>
+                    <div class="rasa-stat">
+                        <div class="val">AAA</div>
+                        <div class="lbl">Evidence Grade</div>
+                        <p class="desc">Evidence climbs from HYPOTHESIS → PLAUSIBLE → CLAIM. Only AAA-graded evidence can ground a SEAL.</p>
+                    </div>
+                    <div class="rasa-stat">
+                        <div class="val">888</div>
+                        <div class="lbl">Sovereign Judge</div>
+                        <p class="desc">Even when RASA passes, only the human sovereign (F13) may seal the consequence into VAULT999.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">03</span> 888_HOLD</h2>
+
+            <div class="hold-panel">
+                <span class="signal">SIGNAL · 888_HOLD</span>
+                <h3>Failure is a HOLD, never a shrug.</h3>
+                <p>When governance checks fail, GEOX fails closed. The output is <strong>HOLD</strong> — frozen, awaiting human ratification — or <strong>VOID</strong> if the underlying claim cannot be grounded. There is no silent degradation. There is no ungoverned output. The worst a geoscientist can get from GEOX is <em>"I don't know, and here is exactly why"</em>.</p>
+                <p>888_HOLD is the federational anchor for every irreversible decision. The 888 is the constitutional judge. HOLD means: <strong>the substrate has reached its edge, and a human must now ratify</strong>.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">04</span> Memory Boundary Law</h2>
+            <p>Three layers of memory. They are not interchangeable. Crossing them without attestation is the failure mode GEOX exists to prevent.</p>
+
+            <table class="memory-law">
+                <thead>
+                    <tr>
+                        <th>Memory type</th>
+                        <th>Owner</th>
+                        <th>Role</th>
+                        <th>May…</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Agent Memory</td>
+                        <td>Workers</td>
+                        <td>Cognitive — how the mind worked</td>
+                        <td>suggest</td>
+                    </tr>
+                    <tr>
+                        <td>Earth Memory</td>
+                        <td>GEOX</td>
+                        <td>Domain — what the Earth record claims</td>
+                        <td>claim (with evidence)</td>
+                    </tr>
+                    <tr>
+                        <td>Vault Memory</td>
+                        <td>VAULT999</td>
+                        <td>Sealed consequence — what was officially approved</td>
+                        <td>attest</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>The rule:</strong> Agent memory may suggest. Earth memory may claim. Vault memory may attest. <em>arifOS may authorize. Arif may approve.</em></p>
+        </section>
+
+        <section>
+            <h2><span class="num">05</span> The Promotion Ladder</h2>
+            <p>Every interpretation climbs the same six-step ladder. Each promotion requires more evidence — and the SEAL is the only irreversible step.</p>
+
+            <div class="ladder">
+                <ol>
+                    <li><strong>Scratch thought</strong><span>no provenance, internal scratchpad only</span></li>
+                    <li><strong>Agent note</strong><span>advisory, attached to a tool call</span></li>
+                    <li><strong>Draft Earth claim</strong><span>unreviewed, schema-validated</span></li>
+                    <li><strong>Validated Earth claim</strong><span>schema-valid, evidence attached, alternatives registered</span></li>
+                    <li><strong>Reviewed interpretation</strong><span>human or AI peer review complete, uncertainty banded</span></li>
+                    <li class="sealed"><strong>Sealed decision</strong><span>authoritative record, hash-chained into VAULT999</span></li>
+                </ol>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">06</span> The 13 Constitutional Floors</h2>
+            <p>The operational framework of the arifOS federation. Critical floors for GEOX — evidence grounding, entropy ceiling, humility cap, sovereign veto — are highlighted.</p>
+
+            <div class="floors-grid">
+                <div class="floor-card">
+                    <div class="floor-num">F1</div>
+                    <h4>AMANAH</h4>
+                    <p>Reversibility. High-risk writes enforce session locks.</p>
+                </div>
+                <div class="floor-card critical">
+                    <div class="floor-num">F2</div>
+                    <h4>TRUTH</h4>
+                    <p>Evidence grounding. Every claim refers to logs or seismic.</p>
+                </div>
+                <div class="floor-card">
+                    <div class="floor-num">F3</div>
+                    <h4>WITNESS</h4>
+                    <p>Tri-witness — human × AI × physical.</p>
+                </div>
+                <div class="floor-card critical">
+                    <div class="floor-num">F4</div>
+                    <h4>CLARITY</h4>
+                    <p>ΔS ≤ 0. Outputs must reduce entropy.</p>
+                </div>
+                <div class="floor-card">
+                    <div class="floor-num">F5</div>
+                    <h4>PEACE²</h4>
+                    <p>De-escalation. Guard the weaker stakeholder.</p>
+                </div>
+                <div class="floor-card">
+                    <div class="floor-num">F6</div>
+                    <h4>MARUAH</h4>
+                    <p>Dignity. Roles, not personal metrics.</p>
+                </div>
+                <div class="floor-card critical">
+                    <div class="floor-num">F7</div>
+                    <h4>HUMILITY</h4>
+                    <p>Confidence cap 0.90. Forced Ω₀ ≈ 0.04.</p>
+                </div>
+                <div class="floor-card">
+                    <div class="floor-num">F8</div>
+                    <h4>GENIUS</h4>
+                    <p>Value multiplier ≥ 0.80.</p>
+                </div>
+                <div class="floor-card">
+                    <div class="floor-num">F9</div>
+                    <h4>ANTI-HANTU</h4>
+                    <p>Hallucination shield. No unanchored assumptions.</p>
+                </div>
+                <div class="floor-card">
+                    <div class="floor-num">F10</div>
+                    <h4>ONTOLOGY</h4>
+                    <p>Type safety. Schema constraints.</p>
+                </div>
+                <div class="floor-card">
+                    <div class="floor-num">F11</div>
+                    <h4>AUDIT</h4>
+                    <p>Traceability. Signed receipts to VAULT999.</p>
+                </div>
+                <div class="floor-card">
+                    <div class="floor-num">F12</div>
+                    <h4>INJECTION</h4>
+                    <p>Input purification. External authority isolation.</p>
+                </div>
+                <div class="floor-card critical-cyan">
+                    <div class="floor-num">F13</div>
+                    <h4>SOVEREIGN</h4>
+                    <p>Human veto FINAL. 888 logic adjudicates.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">07</span> The Final Operating Command</h2>
+            <p style="font-size: 1.1rem; color: var(--text-high); line-height: 1.7; border-left: 3px solid var(--amber-earth); padding-left: 1.5rem; margin: 2rem 0;">
+                Do not build a map chatbot. Do not build a Petrel clone first.
+                Do not let agent memory become Earth truth. Do not allow naked numbers.
+                Do not allow unproven interpretations to become sealed claims.
+                <br><br>
+                <em style="color: var(--amber-earth);">Build the canonical Earth contract. Build strict schemas. Build metadata inspectors. Build the interpretation claim engine. Build abductive challenge tools. Bind all high-impact actions to arifOS judgment. Seal consequences in VAULT999.</em>
+                <br><br>
+                <strong>The goal is not faster hallucination. The goal is disciplined Earth intelligence.</strong>
+            </p>
+        </section>
+
+        <div class="cta-row">
+            <a href="why.html" class="cta primary">Why GEOX &nbsp;→</a>
+            <a href="agents.html" class="cta secondary">For Agents &amp; Engineers</a>
+            <a href="index.html" class="cta secondary">← Home</a>
+        </div>
+
+        <footer>
+            <div class="federation-seal">DITEMPA BUKAN DIBERI</div>
+            <p>GEOX · Earth Evidence Operating System · arifOS federation</p>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="why.html">Why GEOX</a>
+                <a href="agents.html">Agents</a>
+                <a href="https://github.com/ariffazil/GEOX">Source</a>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>

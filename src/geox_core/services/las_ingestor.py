@@ -364,7 +364,6 @@ class LASIngestor:
         # ── CONSTITUTIONAL GATE 3: Unit Governance (F05 Peace) ──
         depth_unit = _las_header_str(las.well, "UNIT", "STRT", "STOP").upper()
         # Common pattern: STRT.M 100.00 or STRT.F
-        valid_units = ("M", "METRE", "METER", "FT", "FEET", "FOOT", "F", ".F", ".FT", ".FEET")
         has_valid = any(u in depth_unit for u in ("M", "METRE", "METER", "FT", "FEET", "FOOT")) or depth_unit.strip().startswith(("F", ".F"))
         if not has_valid:
             # Try to find unit in curve header for depth

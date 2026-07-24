@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOX // Earth Witness · Constitutional Geoscience</title>
-    <meta name="description" content="GEOX is the governed earth intelligence organ of the arifOS federation. Subsurface computation under F1–F13 constitutional floors.">
+    <title>GEOX · Earth Evidence Operating System</title>
+    <meta name="description" content="GEOX is the Earth Evidence Operating System of the arifOS federation. From Evidence → Interpretation → Consequence. Governed geological claims under F1–F13 constitutional floors.">
     <link rel="canonical" href="https://geox.arif-fazil.com/">
-    
+
     <!-- Google Fonts for premium typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Federation design system and local styles -->
     <link rel="stylesheet" href="/_shared/design-system/tokens.css">
     <link rel="stylesheet" href="https://arifosmcp.arif-fazil.com/arifos-theme.css">
-    
+
     <style>
         :root {
             /* Palette Design Tokens */
@@ -23,17 +23,18 @@
             --bg-card: #0d0d14;
             --border-glow: rgba(245, 158, 11, 0.15);
             --border-dim: rgba(255, 255, 255, 0.05);
-            
+
             --amber-earth: #f59e0b;
             --amber-earth-glow: rgba(245, 158, 11, 0.35);
             --emerald-wealth: #10b981;
             --emerald-wealth-glow: rgba(16, 185, 129, 0.35);
             --cyan-gov: #06b6d4;
-            
+            --cyan-gov-glow: rgba(6, 182, 212, 0.35);
+
             --text-high: #f4f4f5;
             --text-med: #a1a1aa;
             --text-low: #52525b;
-            
+
             --font-sans: 'Inter', -apple-system, sans-serif;
             --font-heading: 'Outfit', sans-serif;
             --font-mono: 'Fira Code', monospace;
@@ -51,7 +52,7 @@
             font-family: var(--font-sans);
             line-height: 1.6;
             min-height: 100vh;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.04) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
                 linear-gradient(to bottom, var(--bg-dark), #0b0b10);
@@ -60,12 +61,11 @@
             overflow-x: hidden;
         }
 
-        /* Subtle grid overlay for high-tech aesthetic */
         body::before {
             content: '';
             position: absolute;
             inset: 0;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
             background-size: 40px 40px;
@@ -74,7 +74,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1240px;
             margin: 0 auto;
             padding: 0 2rem;
             position: relative;
@@ -93,7 +93,8 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            margin-bottom: 3rem;
+            margin-bottom: 0;
+            background: rgba(7, 7, 10, 0.7);
         }
 
         .logo-group {
@@ -120,13 +121,14 @@
 
         .logo-sub {
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             letter-spacing: 1px;
             color: var(--text-med);
             background: rgba(245, 158, 11, 0.08);
             border: 1px solid rgba(245, 158, 11, 0.2);
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
+            text-transform: uppercase;
         }
 
         .nav-links {
@@ -136,47 +138,23 @@
         }
 
         .nav-links a {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--text-med);
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.2s ease;
-            position: relative;
+            font-family: var(--font-mono);
+            transition: color 0.2s ease;
             padding: 0.25rem 0;
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background-color: var(--amber-earth);
-            transition: width 0.2s ease;
-        }
+        .nav-links a:hover { color: var(--amber-earth); }
+        .nav-links a.active { color: var(--amber-earth); }
 
-        .nav-links a:hover {
-            color: var(--text-high);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a.active {
-            color: var(--amber-earth);
-        }
-
-        .nav-links a.active::after {
-            width: 100%;
-        }
-
-        /* Hero Area */
+        /* === HERO === */
         .hero {
-            padding: 5rem 0 4rem;
+            padding: 5.5rem 0 3.5rem;
             text-align: center;
             position: relative;
         }
@@ -187,7 +165,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 22rem;
+            font-size: 24rem;
             font-weight: 900;
             color: rgba(245, 158, 11, 0.025);
             font-family: var(--font-heading);
@@ -204,10 +182,10 @@
             padding: 0.4rem 1rem;
             border-radius: 50px;
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--amber-earth);
             margin-bottom: 2rem;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
@@ -228,33 +206,86 @@
 
         .hero h1 {
             font-family: var(--font-heading);
-            font-size: 3.5rem;
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
             font-weight: 800;
-            letter-spacing: -1px;
-            line-height: 1.15;
+            letter-spacing: -1.5px;
+            line-height: 1.05;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 50%, rgba(255, 255, 255, 0.6) 100%);
+            background: linear-gradient(135deg, #ffffff 60%, rgba(255, 255, 255, 0.55) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .hero-quote {
-            font-family: var(--font-sans);
-            font-size: 1.4rem;
-            font-weight: 300;
-            color: var(--text-med);
-            max-width: 800px;
-            margin: 0 auto 1.5rem;
-            line-height: 1.6;
-            font-style: italic;
+        .hero h1 .accent {
+            background: linear-gradient(135deg, var(--amber-earth), #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-mono);
+            font-size: 1.05rem;
+            color: var(--amber-earth);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1.75rem;
         }
 
         .hero-description {
-            font-size: 1.05rem;
+            font-size: 1.15rem;
             color: var(--text-med);
-            max-width: 650px;
-            margin: 0 auto 2.5rem;
+            max-width: 760px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+            font-weight: 300;
         }
+
+        .hero-thesis {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-high);
+            max-width: 720px;
+            margin: 1.5rem auto 0;
+            line-height: 1.5;
+        }
+
+        .hero-thesis .divider { color: var(--amber-earth); margin: 0 0.6rem; font-weight: 400; }
+
+        .hero-cta-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.5rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .cta.primary {
+            background: linear-gradient(135deg, var(--amber-earth), #d97706);
+            color: #07070a;
+            border: 1px solid var(--amber-earth);
+        }
+        .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
+        .cta.secondary {
+            background: transparent;
+            color: var(--text-high);
+            border: 1px solid var(--border-dim);
+        }
+        .cta.secondary:hover { border-color: rgba(245, 158, 11, 0.3); color: var(--amber-earth); }
 
         /* Status bar */
         .status-bar {
@@ -265,17 +296,15 @@
             backdrop-filter: blur(8px);
             border-radius: 12px;
             padding: 1rem 1.5rem;
-            margin-bottom: 4rem;
+            margin: 1rem 0 4rem;
             font-size: 0.85rem;
             align-items: center;
         }
-
         .status-bar-item {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-
         .status-bar-item:nth-child(2) {
             justify-content: center;
             font-weight: 600;
@@ -283,13 +312,11 @@
             color: var(--amber-earth);
             font-family: var(--font-mono);
         }
-
         .status-bar-item:nth-child(3) {
             justify-content: flex-end;
             color: var(--text-med);
             font-family: var(--font-mono);
         }
-
         .status-dot-green {
             width: 8px;
             height: 8px;
@@ -298,55 +325,276 @@
             box-shadow: 0 0 10px #2ed573;
             display: inline-block;
         }
+        @media (max-width: 768px) {
+            .status-bar { grid-template-columns: 1fr; gap: 0.75rem; text-align: center; }
+            .status-bar-item:nth-child(2), .status-bar-item:nth-child(3) { justify-content: flex-start; }
+        }
 
-        /* Decision Surfaces Grid */
+        /* === SECTION HEADERS === */
         .section-header {
             margin-bottom: 2rem;
             position: relative;
         }
-
         .section-header h2 {
             font-family: var(--font-heading);
-            font-size: 1.8rem;
+            font-size: 1.85rem;
             font-weight: 700;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            margin-bottom: 0.4rem;
         }
-
+        .section-header .num {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--amber-earth);
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
         .section-header p {
             color: var(--text-med);
             font-size: 0.95rem;
             margin-top: 0.25rem;
+            max-width: 720px;
         }
 
+        /* === STICKY 3-SECOND ANSWER PULSE ===
+           The Sacred Navigation Law — every page answers in 3 seconds:
+           Where am I? / Why should I care? / What can I do next?
+        */
+        .zen-pulse {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+            background: rgba(13, 13, 20, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-dim);
+            border-bottom: 1px solid var(--border-dim);
+            padding: 0.85rem 0;
+            margin: 0 0 3rem 0;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            position: sticky;
+            top: 76px;
+            z-index: 99;
+        }
+        @media (max-width: 768px) {
+            .zen-pulse { grid-template-columns: 1fr; gap: 0.5rem; }
+        }
+        .zp-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0 1.5rem;
+            border-left: 1px solid var(--border-dim);
+        }
+        .zp-item:first-child { border-left: none; padding-left: 0; }
+        @media (max-width: 768px) {
+            .zp-item { padding: 0.35rem 0; border-left: none; }
+        }
+        .zp-ask {
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.62rem;
+            white-space: nowrap;
+        }
+        .zp-val {
+            color: var(--text-high);
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+        .zp-val.gold { color: var(--amber-earth); }
+        .zp-val .delta { color: var(--text-med); font-weight: 400; }
+
+        /* === INTENT CARDS (verbs, not nouns) ===
+           One Screen = One Question. Surface the 20% verb-first.
+        */
+        .intent-section { margin: 4rem 0 5rem 0; }
+        .intent-section .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+        }
+        .intent-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.85rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 900px) { .intent-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 540px) { .intent-grid { grid-template-columns: 1fr; } }
+
+        .intent-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 10px;
+            padding: 1.4rem 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .intent-card:hover {
+            border-color: rgba(245, 158, 11, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .intent-card .verb {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--amber-earth);
+            letter-spacing: -0.3px;
+            line-height: 1.15;
+        }
+        .intent-card .object {
+            color: var(--text-high);
+            font-size: 0.92rem;
+            font-weight: 500;
+        }
+        .intent-card .you-get {
+            color: var(--text-med);
+            font-size: 0.78rem;
+            line-height: 1.45;
+            font-family: var(--font-mono);
+            margin-top: 0.35rem;
+        }
+        .intent-card .arrow {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-low);
+            margin-top: 0.5rem;
+        }
+        .intent-card:hover .arrow { color: var(--amber-earth); }
+
+        /* === COLLAPSIBLE DETAILS (Show Less, Reveal More) === */
+        details.zen-reveal {
+            background: rgba(13, 13, 20, 0.5);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 0;
+            margin: 1.25rem 0;
+            overflow: hidden;
+        }
+        details.zen-reveal[open] {
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+        details.zen-reveal > summary {
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-med);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            list-style: none;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: color 0.2s;
+        }
+        details.zen-reveal > summary::-webkit-details-marker { display: none; }
+        details.zen-reveal > summary::before {
+            content: "▶";
+            color: var(--amber-earth);
+            font-size: 0.6rem;
+            transition: transform 0.2s;
+        }
+        details.zen-reveal[open] > summary::before { transform: rotate(90deg); }
+        details.zen-reveal > summary:hover { color: var(--text-high); }
+        details.zen-reveal > .reveal-body {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            border-top: 1px solid var(--border-dim);
+        }
+
+        /* === THE CONTRAST === */
+        .contrast-section {
+            margin: 5rem 0;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-dim);
+            border-bottom: 1px solid var(--border-dim);
+        }
+        .contrast-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 2rem;
+            background: rgba(13, 13, 20, 0.5);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .contrast-table th, .contrast-table td {
+            padding: 1.1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-dim);
+            vertical-align: top;
+        }
+        .contrast-table thead th {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--text-med);
+        }
+        .contrast-table thead th.geox-col {
+            color: var(--amber-earth);
+            background: rgba(245, 158, 11, 0.05);
+        }
+        .contrast-table tbody tr:last-child td { border-bottom: none; }
+        .contrast-table tbody tr:hover { background: rgba(255,255,255,0.01); }
+        .contrast-table td {
+            font-size: 0.95rem;
+            color: var(--text-med);
+            line-height: 1.55;
+        }
+        .contrast-table td:first-child {
+            color: var(--text-high);
+            font-weight: 600;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        .contrast-table td.geox-cell {
+            color: var(--text-high);
+            background: rgba(245, 158, 11, 0.025);
+        }
+        .contrast-table td.geox-cell strong {
+            color: var(--amber-earth);
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .contrast-table thead { display: none; }
+            .contrast-table, .contrast-table tbody, .contrast-table tr, .contrast-table td { display: block; width: 100%; }
+            .contrast-table td { border-bottom: none; padding: 0.75rem 1.5rem; }
+            .contrast-table td:first-child { padding-top: 1.25rem; background: rgba(0,0,0,0.3); }
+            .contrast-table td.geox-cell { background: rgba(245,158,11,0.04); border-left: 3px solid var(--amber-earth); }
+            .contrast-table tr { margin-bottom: 1rem; }
+        }
+
+        /* === 4 SURFACES HUB === */
         .surfaces-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            gap: 1.25rem;
             margin-bottom: 5rem;
         }
-
-        @media (max-width: 768px) {
-            .surfaces-grid {
-                grid-template-columns: 1fr;
-            }
-            .status-bar {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-                text-align: center;
-            }
-            .status-bar-item:nth-child(2), .status-bar-item:nth-child(3) {
-                justify-content: flex-start;
-            }
-        }
-
+        @media (max-width: 768px) { .surfaces-grid { grid-template-columns: 1fr; } }
         .surface-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-dim);
             border-radius: 12px;
-            padding: 2.2rem;
+            padding: 2rem 2rem;
             text-decoration: none;
             color: inherit;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -355,9 +603,8 @@
             justify-content: space-between;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            min-height: 280px;
         }
-
         .surface-card::before {
             content: '';
             position: absolute;
@@ -368,53 +615,64 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 100%);
             pointer-events: none;
         }
-
-        /* Earth amber accent glow for GEOX cards */
-        .surface-card.geox-surface:hover {
-            border-color: rgba(245, 158, 11, 0.3);
-            box-shadow: 
-                0 12px 30px rgba(0,0,0,0.4),
-                0 0 20px rgba(245, 158, 11, 0.05);
-            transform: translateY(-4px);
-        }
-
-        /* Emerald accent glow for WEALTH bridge card */
-        .surface-card.wealth-surface:hover {
-            border-color: rgba(16, 185, 129, 0.3);
-            box-shadow: 
-                0 12px 30px rgba(0,0,0,0.4),
-                0 0 20px rgba(16, 185, 129, 0.05);
-            transform: translateY(-4px);
-        }
+        .surface-card:hover { transform: translateY(-4px); border-color: rgba(245, 158, 11, 0.3); }
+        .surface-card[data-color="earth"]:hover { border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(245, 158, 11, 0.06); }
+        .surface-card[data-color="gov"]:hover { border-color: rgba(6, 182, 212, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(6, 182, 212, 0.06); }
+        .surface-card[data-color="wealth"]:hover { border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(16, 185, 129, 0.06); }
+        .surface-card[data-color="agent"]:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(139, 92, 246, 0.06); }
 
         .surface-card .card-tag {
             font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--amber-earth);
-            margin-bottom: 1.2rem;
+            letter-spacing: 1.8px;
+            margin-bottom: 1rem;
             display: inline-block;
         }
-
-        .surface-card.wealth-surface .card-tag {
-            color: var(--emerald-wealth);
-        }
+        .surface-card[data-color="earth"] .card-tag { color: var(--amber-earth); }
+        .surface-card[data-color="gov"] .card-tag { color: var(--cyan-gov); }
+        .surface-card[data-color="wealth"] .card-tag { color: var(--emerald-wealth); }
+        .surface-card[data-color="agent"] .card-tag { color: #a78bfa; }
 
         .surface-card h3 {
             font-family: var(--font-heading);
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #fff;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.6rem;
         }
-
+        .surface-card .audience {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.85rem;
+        }
         .surface-card p {
             color: var(--text-med);
             font-size: 0.92rem;
             line-height: 1.6;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
+        .surface-card .questions {
+            margin-bottom: 1.5rem;
+        }
+        .surface-card .questions li {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-med);
+            padding: 0.35rem 0;
+            list-style: none;
+        }
+        .surface-card .questions li::before {
+            content: "→ ";
+            color: var(--amber-earth);
+            margin-right: 0.4rem;
+        }
+        .surface-card[data-color="gov"] .questions li::before { color: var(--cyan-gov); }
+        .surface-card[data-color="wealth"] .questions li::before { color: var(--emerald-wealth); }
+        .surface-card[data-color="agent"] .questions li::before { color: #a78bfa; }
 
         .card-action {
             font-family: var(--font-mono);
@@ -425,18 +683,59 @@
             align-items: center;
             gap: 0.4rem;
             transition: gap 0.2s ease;
+            margin-top: auto;
         }
+        .surface-card:hover .card-action { gap: 0.7rem; }
+        .surface-card[data-color="earth"]:hover .card-action { color: var(--amber-earth); }
+        .surface-card[data-color="gov"]:hover .card-action { color: var(--cyan-gov); }
+        .surface-card[data-color="wealth"]:hover .card-action { color: var(--emerald-wealth); }
+        .surface-card[data-color="agent"]:hover .card-action { color: #a78bfa; }
 
-        .surface-card:hover .card-action {
-            gap: 0.7rem;
+        /* === AUDIENCE MINI-CARDS === */
+        .audience-section { margin: 5rem 0; }
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 1024px) { .audience-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 540px) { .audience-grid { grid-template-columns: 1fr; } }
+        .aud-card {
+            background: rgba(13, 13, 20, 0.5);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 1.5rem 1.25rem;
+            transition: all 0.2s;
+        }
+        .aud-card:hover { border-color: rgba(245, 158, 11, 0.25); transform: translateY(-2px); }
+        .aud-card .role {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
             color: var(--amber-earth);
+            margin-bottom: 0.75rem;
         }
-
-        .surface-card.wealth-surface:hover .card-action {
-            color: var(--emerald-wealth);
+        .aud-card .ask {
+            font-size: 0.95rem;
+            color: var(--text-high);
+            line-height: 1.5;
+            font-weight: 500;
+            margin-bottom: 0.85rem;
         }
+        .aud-card .where {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-med);
+        }
+        .aud-card .where a {
+            color: var(--amber-earth);
+            text-decoration: none;
+        }
+        .aud-card .where a:hover { text-decoration: underline; }
 
-        /* The Sovereign Bridge Visual Flow */
+        /* === SOVEREIGN BRIDGE — preserved but condensed === */
         .bridge-section {
             background: linear-gradient(180deg, rgba(13, 13, 20, 0.4) 0%, rgba(13, 13, 20, 0.8) 100%);
             border: 1px solid var(--border-dim);
@@ -445,7 +744,6 @@
             margin-bottom: 5rem;
             position: relative;
         }
-
         .bridge-section::before {
             content: '';
             position: absolute;
@@ -453,34 +751,20 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), rgba(16, 185, 129, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), rgba(6, 182, 212, 0.3), rgba(16, 185, 129, 0.3), transparent);
         }
-
         .bridge-flow {
             display: flex;
             justify-content: space-between;
             align-items: stretch;
-            margin: 3.5rem 0;
+            margin: 2.5rem 0 1.5rem;
             position: relative;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
-
         @media (max-width: 900px) {
-            .bridge-flow {
-                flex-direction: column;
-                align-items: center;
-                gap: 3rem;
-            }
-            .bridge-flow::after {
-                display: none;
-            }
-            .bridge-connector-arrow {
-                transform: rotate(90deg);
-                margin: -1rem 0;
-            }
+            .bridge-flow { flex-direction: column; align-items: center; }
+            .bridge-connector-arrow { transform: rotate(90deg); margin: -0.5rem 0; }
         }
-
-        /* Connective pipeline in background */
         .bridge-flow::after {
             content: '';
             position: absolute;
@@ -492,12 +776,11 @@
             z-index: 0;
             transform: translateY(-50%);
         }
-
         .bridge-node {
             background: var(--bg-dark);
             border: 1px solid var(--border-dim);
-            border-radius: 16px;
-            padding: 2rem 1.5rem;
+            border-radius: 14px;
+            padding: 1.75rem 1.4rem;
             text-align: center;
             flex: 1;
             max-width: 280px;
@@ -506,381 +789,57 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
         }
-
-        .bridge-node:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255,255,255,0.1);
-        }
-
-        .bridge-node.node-sediment { border-color: rgba(245, 158, 11, 0.25); }
+        .bridge-node:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.1); }
+        .bridge-node.node-earth { border-color: rgba(245, 158, 11, 0.25); }
         .bridge-node.node-gov { border-color: rgba(6, 182, 212, 0.25); }
-        .bridge-node.node-sovereignty { border-color: rgba(16, 185, 129, 0.25); }
-
-        .bridge-node .node-icon {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
+        .bridge-node.node-wealth { border-color: rgba(16, 185, 129, 0.25); }
+        .bridge-node .node-icon { font-size: 1.8rem; margin-bottom: 0.6rem; display: inline-block; }
         .bridge-node .node-title {
             font-family: var(--font-heading);
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: #fff;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.5px;
+            margin-bottom: 0.35rem;
         }
-
         .bridge-node .node-tag {
             font-family: var(--font-mono);
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             padding: 0.15rem 0.5rem;
             border-radius: 4px;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.6rem;
             display: inline-block;
         }
-
-        .node-sediment .node-tag { background: rgba(245, 158, 11, 0.1); color: var(--amber-earth); }
+        .node-earth .node-tag { background: rgba(245, 158, 11, 0.1); color: var(--amber-earth); }
         .node-gov .node-tag { background: rgba(6, 182, 212, 0.1); color: var(--cyan-gov); }
-        .node-sovereignty .node-tag { background: rgba(16, 185, 129, 0.1); color: var(--emerald-wealth); }
-
-        .bridge-node .node-desc {
-            font-size: 0.8rem;
-            color: var(--text-med);
-            line-height: 1.5;
-        }
-
+        .node-wealth .node-tag { background: rgba(16, 185, 129, 0.1); color: var(--emerald-wealth); }
+        .bridge-node .node-desc { font-size: 0.78rem; color: var(--text-med); line-height: 1.5; }
         .bridge-connector-arrow {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--text-low);
             z-index: 1;
             font-family: var(--font-mono);
         }
-
         .bridge-code-block {
             background-color: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border-dim);
             border-radius: 8px;
-            padding: 1.25rem;
+            padding: 1.1rem;
             font-family: var(--font-mono);
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: var(--amber-earth);
             text-align: center;
             overflow-x: auto;
-            max-width: 800px;
-            margin: 2rem auto 0;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+            max-width: 720px;
+            margin: 1rem auto 0;
         }
-
         .bridge-code-block span.kernel { color: var(--cyan-gov); }
         .bridge-code-block span.wealth { color: var(--emerald-wealth); }
 
-        /* RASA Panel */
-        .rasa-section {
-            background: linear-gradient(135deg, rgba(13, 13, 20, 0.8) 0%, rgba(7, 7, 10, 0.95) 100%);
-            border: 1px solid var(--border-dim);
-            border-radius: 20px;
-            padding: 4rem 2.5rem;
-            margin-bottom: 5rem;
-            position: relative;
-        }
-
-        .rasa-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .rasa-formula-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 2.5rem 0;
-        }
-
-        .rasa-formula {
-            font-family: var(--font-mono);
-            font-size: 1.6rem;
-            font-weight: 500;
-            color: var(--cyan-gov);
-            background: rgba(6, 182, 212, 0.03);
-            border: 1px solid rgba(6, 182, 212, 0.2);
-            padding: 1.8rem 3rem;
-            border-radius: 16px;
-            letter-spacing: 0.5px;
-            box-shadow: 
-                0 8px 32px rgba(0,0,0,0.3),
-                inset 0 1px 0 rgba(255,255,255,0.05);
-            text-align: center;
-            max-width: 100%;
-        }
-
-        .rasa-formula span.credit { color: var(--amber-earth); }
-        .rasa-formula span.ambiguity { color: #fb7175; }
-
-        .rasa-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        @media (max-width: 768px) {
-            .rasa-grid {
-                grid-template-columns: 1fr;
-            }
-            .rasa-formula {
-                font-size: 1.2rem;
-                padding: 1.2rem 1.5rem;
-            }
-        }
-
-        .rasa-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-dim);
-            border-radius: 12px;
-            padding: 1.8rem;
-            transition: border-color 0.2s ease;
-        }
-
-        .rasa-card:hover {
-            border-color: rgba(255,255,255,0.08);
-        }
-
-        .rasa-card .val {
-            font-family: var(--font-heading);
-            font-size: 2.4rem;
-            font-weight: 800;
-            color: var(--cyan-gov);
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .rasa-card .lbl {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--amber-earth);
-            margin-bottom: 0.8rem;
-            font-weight: 600;
-        }
-
-        .rasa-card .desc {
-            font-size: 0.85rem;
-            color: var(--text-med);
-            line-height: 1.5;
-        }
-
-        /* MCP Protocol surface explorer */
-        .mcp-explorer {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-dim);
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin-bottom: 5rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-        }
-
-        .explorer-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border-dim);
-            margin-bottom: 1.5rem;
-            overflow-x: auto;
-            scrollbar-width: none; /* Hide scrollbar for clean layout */
-        }
-
-        .explorer-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 1rem 1.5rem;
-            color: var(--text-med);
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            white-space: nowrap;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-high);
-        }
-
-        .tab-btn.active {
-            color: var(--amber-earth);
-            font-weight: 600;
-        }
-
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: var(--amber-earth);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .signature-meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .meta-pill {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            padding: 0.3rem 0.75rem;
-            border-radius: 4px;
-            border: 1px solid var(--border-dim);
-        }
-
-        .meta-pill.pill-class {
-            background: rgba(245, 158, 11, 0.08);
-            border-color: rgba(245, 158, 11, 0.2);
-            color: var(--amber-earth);
-            font-weight: 600;
-        }
-
-        .meta-pill.pill-name {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-high);
-        }
-
-        .tab-content p {
-            color: var(--text-med);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            max-width: 800px;
-        }
-
-        .code-container {
-            position: relative;
-        }
-
-        .code-container pre {
-            background-color: #050508;
-            border: 1px solid var(--border-dim);
-            border-radius: 8px;
-            padding: 1.5rem;
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--text-high);
-            overflow-x: auto;
-            box-shadow: inset 0 3px 12px rgba(0,0,0,0.8);
-            line-height: 1.5;
-        }
-
-        /* 13 Floors System Surface */
-        .floors-section {
-            margin-bottom: 5rem;
-        }
-
-        .floors-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        @media (max-width: 1024px) {
-            .floors-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 768px) {
-            .floors-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 480px) {
-            .floors-grid { grid-template-columns: 1fr; }
-        }
-
-        .floor-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-dim);
-            border-radius: 8px;
-            padding: 1.25rem;
-            position: relative;
-            transition: all 0.25s ease;
-        }
-
-        .floor-number {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--text-low);
-            font-weight: bold;
-            margin-bottom: 0.4rem;
-        }
-
-        .floor-title {
-            font-family: var(--font-heading);
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.4rem;
-            letter-spacing: 0.3px;
-        }
-
-        .floor-desc {
-            font-size: 0.75rem;
-            color: var(--text-med);
-            line-height: 1.4;
-        }
-
-        /* Highlight classes for GEOX critical floors */
-        .floor-card.highlight-floor {
-            background: linear-gradient(135deg, rgba(13, 13, 20, 0.9) 0%, rgba(245, 158, 11, 0.05) 100%);
-            border-color: rgba(245, 158, 11, 0.35);
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.05);
-        }
-
-        .floor-card.highlight-floor .floor-number {
-            color: var(--amber-earth);
-        }
-
-        .floor-card.highlight-floor-cyan {
-            background: linear-gradient(135deg, rgba(13, 13, 20, 0.9) 0%, rgba(6, 182, 212, 0.05) 100%);
-            border-color: rgba(6, 182, 212, 0.35);
-            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.05);
-        }
-
-        .floor-card.highlight-floor-cyan .floor-number {
-            color: var(--cyan-gov);
-        }
-
-        .floor-card.highlight-floor:hover, .floor-card.highlight-floor-cyan:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Federation Health footer widget */
+        /* === HEALTH WIDGET === */
         .health-widget {
             border: 1px solid var(--border-dim);
             background: #09090d;
@@ -889,10 +848,9 @@
             margin-bottom: 3rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-
         .widget-title {
             font-family: var(--font-mono);
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--text-med);
@@ -901,20 +859,12 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .widget-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
         }
-
-        @media (max-width: 768px) {
-            .widget-grid {
-                grid-template-columns: 1fr;
-                gap: 0.85rem;
-            }
-        }
-
+        @media (max-width: 768px) { .widget-grid { grid-template-columns: 1fr; } }
         .widget-card {
             background: rgba(255, 255, 255, 0.01);
             border: 1px solid var(--border-dim);
@@ -924,26 +874,27 @@
             align-items: center;
             justify-content: space-between;
         }
-
-        .widget-card .organ-info {
-            display: flex;
-            flex-direction: column;
-        }
-
+        .widget-card .organ-info { display: flex; flex-direction: column; }
         .widget-card .organ-name {
             font-family: var(--font-heading);
             font-weight: 700;
             font-size: 0.9rem;
             color: #fff;
         }
-
         .widget-card .organ-port {
             font-family: var(--font-mono);
             font-size: 0.65rem;
             color: var(--text-low);
             margin-top: 0.1rem;
         }
-
+        .widget-card .organ-reason {
+            font-size: 0.6rem;
+            color: var(--text-low);
+            font-family: var(--font-mono);
+            margin-top: 0.15rem;
+            display: block;
+            text-transform: uppercase;
+        }
         .widget-card .organ-status {
             display: flex;
             align-items: center;
@@ -952,27 +903,26 @@
             font-size: 0.72rem;
             font-weight: 500;
         }
-
         .widget-card .status-dot {
             width: 7px;
             height: 7px;
             border-radius: 50%;
             display: inline-block;
         }
-
         .widget-card.status-online .status-dot { background-color: #2ed573; box-shadow: 0 0 8px #2ed573; }
         .widget-card.status-online .status-text { color: #2ed573; }
         .widget-card.status-offline .status-dot { background-color: #ff4757; box-shadow: 0 0 8px #ff4757; }
         .widget-card.status-offline .status-text { color: #ff4757; }
         .widget-card.status-pending .status-dot { background-color: var(--amber-earth); animation: blink 1s infinite alternate; }
         .widget-card.status-pending .status-text { color: var(--amber-earth); }
+        @keyframes blink { from { opacity: 0.3; } to { opacity: 1; } }
 
-        @keyframes blink {
-            from { opacity: 0.3; }
-            to { opacity: 1; }
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-dim);
+            margin: 4rem 0;
         }
 
-        /* Footer styles */
         footer {
             padding: 3rem 0 4rem;
             border-top: 1px solid var(--border-dim);
@@ -980,7 +930,6 @@
             font-size: 0.8rem;
             color: var(--text-low);
         }
-
         .federation-seal {
             font-family: var(--font-mono);
             font-size: 0.9rem;
@@ -990,20 +939,13 @@
             margin-bottom: 0.8rem;
             text-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
         }
-
-        footer p {
-            font-size: 0.8rem;
-            color: var(--text-med);
-            margin-bottom: 1.5rem;
-        }
-
+        footer p { font-size: 0.8rem; color: var(--text-med); margin-bottom: 1.5rem; }
         .footer-links {
             display: flex;
             justify-content: center;
             gap: 2rem;
             flex-wrap: wrap;
         }
-
         .footer-links a {
             color: var(--text-med);
             text-decoration: none;
@@ -1011,496 +953,405 @@
             font-size: 0.75rem;
             transition: color 0.2s ease;
         }
-
-        .footer-links a:hover {
-            color: var(--amber-earth);
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid var(--border-dim);
-            margin: 4rem 0;
-        }
+        .footer-links a:hover { color: var(--amber-earth); }
     </style>
 </head>
 <body>
     <div class="container">
-        
-        <!-- lineage header: GEOX // MCP with CONNECTED status and live version -->
+
         <header>
             <div class="logo-group">
-                <span class="logo-text">GEOX // MCP</span>
+                <span class="logo-text">GEOX</span>
                 <span class="logo-separator">|</span>
-                <span class="logo-sub">EARTH intelligence</span>
+                <span class="logo-sub">Earth Evidence OS</span>
             </div>
             <nav class="nav-links">
-                <a href="#" class="active">Overview</a>
-                <a href="#surfaces">Cockpits</a>
-                <a href="#bridge">Sovereign Bridge</a>
-                <a href="#rasa">RASA</a>
-                <a href="#protocol">Protocol</a>
-                <a href="#floors">Constitutional Floors</a>
+                <a href="#" class="active">Home</a>
+                <a href="#what-do-you-want">What do you want?</a>
+                <a href="why.html">Why</a>
+                <a href="constitution.html">Constitution</a>
+                <a href="agents.html">Agents</a>
             </nav>
         </header>
 
-        <!-- Hero Section -->
+        <!-- ZEN PULSE — the Sacred Navigation Law (Where am I / Why care / What next) -->
+        <div class="zen-pulse" aria-label="Navigation law">
+            <div class="zp-item">
+                <span class="zp-ask">Where am I?</span>
+                <span class="zp-val">GEOX · Home</span>
+            </div>
+            <div class="zp-item">
+                <span class="zp-ask">Why care?</span>
+                <span class="zp-val gold" id="zp-why">Evidence preserved. <span class="delta">Failure = HOLD.</span></span>
+            </div>
+            <div class="zp-item">
+                <span class="zp-ask">What next?</span>
+                <span class="zp-val" id="zp-next">Pick a verb below ↓</span>
+            </div>
+        </div>
+
+        <!-- HERO -->
         <section class="hero">
             <div class="hero-badge">
                 <span class="pulse-orange"></span>
-                <span>φ GEOX AS FEDERATION ORGAN :8081</span>
+                <span>φ GEOX · arifOS federation organ · :8081</span>
             </div>
-            <h1 id="main-title">GEOX Earth Intelligence</h1>
-            <p class="hero-quote">"The Earth does not explain itself. It gives fragments."</p>
+            <h1>
+                What are you trying to <span class="accent">understand</span>?
+            </h1>
+            <div class="hero-tagline">Explore · Analyze · Reconstruct · Challenge · Compare · Ask</div>
             <p class="hero-description">
-                The governed earth intelligence organ of the arifOS federation. Deterministic subsurface computation and geological evidence parsing under F1–F13 constitutional floors.
+                GEOX is the governed substrate that disciplines AI claims about the Earth.
+                Evidence preserved. Uncertainty explicit. Failure = HOLD.
             </p>
+            <div class="hero-thesis">
+                Not faster hallucination.<span class="divider">·</span><em>Disciplined Earth intelligence.</em>
+            </div>
+
+            <div class="hero-cta-row">
+                <a href="#what-do-you-want" class="cta primary">Pick a verb &nbsp;↓</a>
+                <a href="why.html" class="cta secondary">Or read the warung kopi version</a>
+            </div>
         </section>
 
-        <!-- Status & Connection Bar -->
+        <!-- Live Status Bar -->
         <div class="status-bar">
             <div class="status-bar-item">
                 <span class="status-dot-green"></span>
-                <span>SYSTEM_LIVE: <span id="server-version">v2026.07.21-LIVE</span></span>
+                <span>SYSTEM_LIVE: <span id="server-version">v2026.07.23-PHASE-C-SEALED</span></span>
             </div>
             <div class="status-bar-item">
                 <span>VAULT_999_CONNECTED</span>
             </div>
             <div class="status-bar-item" id="last-updated">
-                2026.07.21 // 06:31:55Z
+                2026.07.23 // LIVE
             </div>
         </div>
 
-        <!-- 4 Decision Surfaces -->
-        <section id="surfaces" class="section-header">
-            <h2>
-                <span>Decision Surfaces</span>
-            </h2>
-            <p>Four primary interfaces bridging subsurface analysis, physical ground truth, and sovereign investment adjudication.</p>
-            
-            <div class="surfaces-grid" style="margin-top: 2rem;">
-                <!-- 1. Prospect Forge -->
-                <a href="/apps/prospect-ui/index.html" class="surface-card geox-surface" id="card-prospect-forge">
-                    <div>
-                        <span class="card-tag">GEOX // AAA-Grade</span>
-                        <h3>Prospect Forge</h3>
-                        <p>Maturation cockpit integrating georeferencing, B_cog cognitive bias mitigation, stratigraphic charge, and Pg (Probability of Geological Success) estimation constraints.</p>
-                    </div>
-                    <span class="card-action">Enter Maturation Cockpit &rarr;</span>
-                </a>
-
-                <!-- 2. Well Witness -->
-                <a href="/apps/well-desk/index.html" class="surface-card geox-surface" id="card-well-witness">
-                    <div>
-                        <span class="card-tag">GEOX // WITNESS_GATE</span>
-                        <h3>Well Witness</h3>
-                        <p>Log interpretation suite (GR/RES/NPHI-RHOB) and rock physics engine. Anchors petrophysical findings directly to the immutable VAULT999 transaction ledger.</p>
-                    </div>
-                    <span class="card-action">Enter Well Correlation &rarr;</span>
-                </a>
-
-                <!-- 3. Macrostrat Console -->
-                <a href="https://arif-fazil.com/earth" class="surface-card geox-surface" id="card-macrostrat">
-                    <div>
-                        <span class="card-tag">GEOX // OBSERVE_SURFACE</span>
-                        <h3>Macrostrat Console</h3>
-                        <p>Live paleogeographical pipeline with coordinates mapping, lithostratigraphy, age-calibration, and click-to-query global deep-time strata state.</p>
-                    </div>
-                    <span class="card-action">Open Global Earth Map &rarr;</span>
-                </a>
-
-                <!-- 4. Capital Judge -->
-                <a href="https://wealth.arif-fazil.com" class="surface-card wealth-surface" id="card-capital-judge" target="_blank" rel="noopener">
-                    <div>
-                        <span class="card-tag">WEALTH // DECISION_CLOSURE</span>
-                        <h3>Capital Judge</h3>
-                        <p>Adjudication bridge to the Ξ WEALTH organ. Translates geological uncertainty parameters to EMV calculations, NPV reward profiles, and final Ω-gate investment verdicts.</p>
-                    </div>
-                    <span class="card-action">Bridge to WEALTH &rarr;</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- The Sovereign Bridge Visual -->
-        <section id="bridge" class="bridge-section">
-            <div class="section-header" style="text-align: center;">
-                <h2>The Sovereign Bridge</h2>
-                <p>The causal chain linking physical sediment to constitutional governance and economic sovereignty.</p>
-            </div>
-            
-            <div class="bridge-flow">
-                <div class="bridge-node node-sediment">
-                    <span class="node-icon">🌍</span>
-                    <h4 class="node-title">Sediment</h4>
-                    <span class="node-tag">GEOX</span>
-                    <p class="node-desc">Log records, seismic horizons, and deep-time physical evidence are parsed and verified.</p>
-                </div>
-                
-                <div class="bridge-connector-arrow">&rarr;</div>
-                
-                <div class="bridge-node node-gov">
-                    <span class="node-icon">🏛️</span>
-                    <h4 class="node-title">Governance</h4>
-                    <span class="node-tag">arifOS</span>
-                    <p class="node-desc">ToAC conformance audit and F1-F13 floor filters evaluate evidence validity and trigger safety locks.</p>
-                </div>
-                
-                <div class="bridge-connector-arrow">&rarr;</div>
-                
-                <div class="bridge-node node-sovereignty">
-                    <span class="node-icon">Ξ</span>
-                    <h4 class="node-title">Sovereignty</h4>
-                    <span class="node-tag">WEALTH</span>
-                    <p class="node-desc">Capital allocation decisions are modeled, optimized, and sealed for investment authorization.</p>
-                </div>
-            </div>
-            
-            <div class="bridge-code-block">
-                geox.evaluate_prospect() &rarr; <span class="kernel">arifos.bridge_contract()</span> &rarr; <span class="wealth">wealth.npv_reward()</span>
-            </div>
-        </section>
-
-        <!-- RASA Context Fit -->
-        <section id="rasa" class="rasa-section">
-            <div class="section-header" style="text-align: center;">
-                <h2>RASA — Context-Fit Epistemology</h2>
-                <p>Relevance-Aware Substrate Alignment (RASA) measures the concrete empirical grounding of every geological claim.</p>
-            </div>
-
-            <div class="rasa-formula-container">
-                <div class="rasa-formula">
-                    RASA = <span class="credit">evidence_credit</span> &times; (1 &minus; <span class="ambiguity">u_ambiguity</span>)
-                </div>
-            </div>
-
-            <div class="rasa-grid">
-                <div class="rasa-card">
-                    <div class="val">0.90</div>
-                    <div class="lbl">F7 Humility Cap</div>
-                    <div class="desc">A hard epistemological ceiling. GEOX never permits perfect context-fit calculations, enforcing a mandatory 10% uncertainty buffer (Ω₀ ≈ 0.04).</div>
-                </div>
-                <div class="rasa-card">
-                    <div class="val">30</div>
-                    <div class="lbl">Canonical Tools</div>
-                    <div class="desc">The exact registered public tools capable of generating evidence payloads mapped directly inside the GEOX execution shell.</div>
-                </div>
-                <div class="rasa-card">
-                    <div class="val">AAA</div>
-                    <div class="lbl">Evidence Grade</div>
-                    <div class="desc">Evidence items climb the scale from HYPOTHESIS to PLAUSIBLE before receiving the canonical CLAIM tag verified in VAULT999.</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- MCP Protocol surface signatures explorer -->
-        <section id="protocol" class="mcp-explorer">
+        <!-- THE CONTRAST -->
+        <section class="contrast-section" id="contrast">
             <div class="section-header">
-                <h2>MCP Tool Signatures</h2>
-                <p>Interactive discovery registry displaying how AI agents and external organs interact with GEOX and WEALTH APIs.</p>
+                <h2><span class="num">01</span> The Moat</h2>
+                <p>Five contrasts that explain why GEOX is not "another geological toolkit". Without this table, the visitor sees features. With it, the visitor understands purpose.</p>
             </div>
 
-            <div class="explorer-tabs" id="signature-tabs">
-                <button class="tab-btn active" onclick="switchTab(event, 'sig-macrostrat')">geox.macrostrat</button>
-                <button class="tab-btn" onclick="switchTab(event, 'sig-prospect')">geox.prospect</button>
-                <button class="tab-btn" onclick="switchTab(event, 'sig-wells')">geox.wells</button>
-                <button class="tab-btn" onclick="switchTab(event, 'sig-capital')">wealth.capital</button>
-            </div>
+            <table class="contrast-table">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>Traditional Software</th>
+                        <th class="geox-col">GEOX</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Evidence</td>
+                        <td>Stored interpretations. The model becomes the truth.</td>
+                        <td class="geox-cell"><strong>Evidence preserved</strong> with every claim — interpretation cannot exist without its lineage.</td>
+                    </tr>
+                    <tr>
+                        <td>Uncertainty</td>
+                        <td>False certainty. A number is given, no band around it.</td>
+                        <td class="geox-cell"><strong>Uncertainty explicit</strong> — P10/P50/P90 bands mandatory. F7 caps confidence at 0.90.</td>
+                    </tr>
+                    <tr>
+                        <td>Claims</td>
+                        <td>Claims forgotten. Nobody remembers who first said what.</td>
+                        <td class="geox-cell"><strong>Claims audited</strong> — every interpretation has evidence, alternatives, and an audit trail.</td>
+                    </tr>
+                    <tr>
+                        <td>Failure</td>
+                        <td>Failure equals silence. The system quietly degrades.</td>
+                        <td class="geox-cell"><strong>Failure equals HOLD</strong> — frozen awaiting human ratification. Never a shrug.</td>
+                    </tr>
+                    <tr>
+                        <td>Decision</td>
+                        <td>Decision opaque. No way to reconstruct why.</td>
+                        <td class="geox-cell"><strong>Decision traceable</strong> — hash-chained into VAULT999. Forever reproducible.</td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <!-- Tab 1: geox.macrostrat -->
-            <div id="sig-macrostrat" class="tab-content active">
-                <div class="signature-meta">
-                    <span class="meta-pill pill-class">Affordance: OBSERVE</span>
-                    <span class="meta-pill pill-name">tool_name: geox_deep_time_state</span>
-                </div>
-                <p>Queries the Macrostrat database to extract the stratigraphic column, lithology profile, and chronostratigraphic ages at the specified coordinate anchor.</p>
-                <div class="code-container">
-                    <pre><code>{
-  "name": "geox_deep_time_state",
-  "description": "Retrieve deep-time stratigraphic models and paleo-elevation at target geodetic anchor points.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "latitude": { "type": "number", "minimum": -90.0, "maximum": 90.0 },
-      "longitude": { "type": "number", "minimum": -180.0, "maximum": 180.0 },
-      "age_ma": { "type": "number", "description": "Target age in Millions of Years (Ma)", "default": 0.0 }
-    },
-    "required": ["latitude", "longitude"]
-  },
-  "affordance_contract": {
-    "class": "OBSERVE",
-    "mutation_allowed": false,
-    "audit_required": false
-  }
-}</code></pre>
-                </div>
-            </div>
-
-            <!-- Tab 2: geox.prospect -->
-            <div id="sig-prospect" class="tab-content">
-                <div class="signature-meta">
-                    <span class="meta-pill pill-class">Affordance: COMPUTE</span>
-                    <span class="meta-pill pill-name">tool_name: geox_prospect</span>
-                </div>
-                <p>Calculates the probability of geological success (Pg) and risk matrix indices based on structural closure, reservoir presence, seal effectiveness, and source charge inputs.</p>
-                <div class="code-container">
-                    <pre><code>{
-  "name": "geox_prospect",
-  "description": "Maturate prospect parameters, calculate geodetic Pg factors, and check structural boundaries.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "prospect_id": { "type": "string" },
-      "reservoir_presence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
-      "seal_integrity": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
-      "charge_model": { "type": "string", "enum": ["migrated", "local", "unproved"] },
-      "bias_control": { "type": "boolean", "default": true }
-    },
-    "required": ["prospect_id", "reservoir_presence", "seal_integrity"]
-  },
-  "affordance_contract": {
-    "class": "COMPUTE",
-    "mutation_allowed": false,
-    "audit_required": true,
-    "audit_anchor": "VAULT999"
-  }
-}</code></pre>
-                </div>
-            </div>
-
-            <!-- Tab 3: geox.wells -->
-            <div id="sig-wells" class="tab-content">
-                <div class="signature-meta">
-                    <span class="meta-pill pill-class">Affordance: WITNESS</span>
-                    <span class="meta-pill pill-name">tool_name: geox_well_desk</span>
-                </div>
-                <p>Executes forward and inverse petrophysical calculation models on wireline logs (Gamma Ray, Resistivity, density/neutron) and seals witness attestation receipts to VAULT999.</p>
-                <div class="code-container">
-                    <pre><code>{
-  "name": "geox_well_desk",
-  "description": "Perform lithofacies classification, compute net pay curves, and generate witness audit logs.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "well_name": { "type": "string" },
-      "log_curves": { "type": "array", "items": { "type": "string" } },
-      "validation_nonce": { "type": "string", "description": "F11 witness signature anchor" }
-    },
-    "required": ["well_name", "log_curves", "validation_nonce"]
-  },
-  "affordance_contract": {
-    "class": "WITNESS",
-    "mutation_allowed": true,
-    "audit_required": true,
-    "vault_lock": true
-  }
-}</code></pre>
-                </div>
-            </div>
-
-            <!-- Tab 4: wealth.capital -->
-            <div id="sig-capital" class="tab-content">
-                <div class="signature-meta">
-                    <span class="meta-pill pill-class">Affordance: JUDGE</span>
-                    <span class="meta-pill pill-name">tool_name: wealth_cascade_model</span>
-                </div>
-                <p>Evaluates financial capital allocation proposals, calculates NPV values and EMV metrics, and outputs investment verdicts gated by the constitutional floors.</p>
-                <div class="code-container">
-                    <pre><code>{
-  "name": "wealth_cascade_model",
-  "description": "Map geological success outcomes to investment consequence curves and judge capital allocation metrics.",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "project_id": { "type": "string" },
-      "capex": { "type": "number", "description": "Initial capital expenditure" },
-      "geological_pg": { "type": "number", "minimum": 0.05, "maximum": 0.90 },
-      "economic_scenario": { "type": "string", "default": "base" }
-    },
-    "required": ["project_id", "capex", "geological_pg"]
-  },
-  "affordance_contract": {
-    "class": "JUDGE",
-    "mutation_allowed": true,
-    "audit_required": true,
-    "sovereign_veto_applicable": true
-  }
-}</code></pre>
-                </div>
-            </div>
+            <p style="text-align: center; margin-top: 2.5rem; color: var(--text-high); font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600;">
+                The contrast creates meaning. <span style="color: var(--amber-earth);">Without it, the visitor sees features. With it, they understand purpose.</span>
+            </p>
         </section>
 
-        <!-- 13 Constitutional Floors -->
-        <section id="floors" class="floors-section">
+        <!-- INTENT CARDS (verbs, not nouns) -->
+        <section class="intent-section" id="what-do-you-want">
             <div class="section-header">
-                <h2>13 Constitutional Floors</h2>
-                <p>The operational framework of the arifOS federation. The critical floors governing GEOX data processing are highlighted below.</p>
+                <h2><span class="num">02</span> What are you trying to understand?</h2>
+                <p>One verb. One object. Two clicks to act. GEOX does the rest — agents gather evidence, models generate interpretations, contradictions are surfaced.</p>
             </div>
 
-            <div class="floors-grid">
-                <!-- F1 -->
-                <div class="floor-card">
-                    <div class="floor-number">F1</div>
-                    <h4 class="floor-title">AMANAH</h4>
-                    <p class="floor-desc">Reversibility guarantee. High-risk write operations enforce session locks and lease gates.</p>
+            <div class="intent-grid">
+                <a href="apps/well-desk/index.html" class="intent-card">
+                    <div class="verb">Explore</div>
+                    <div class="object">a basin or a field</div>
+                    <div class="you-get">→ Well logs · seismic · structure · context</div>
+                    <span class="arrow">2 clicks → Workbench</span>
+                </a>
+                <a href="apps/well-desk/index.html" class="intent-card">
+                    <div class="verb">Analyze</div>
+                    <div class="object">a well or an interval</div>
+                    <div class="you-get">→ Vsh · φ · Sw · net pay · uncertainty band</div>
+                    <span class="arrow">2 clicks → Well Witness</span>
+                </a>
+                <a href="apps/prospect-ui/index.html" class="intent-card">
+                    <div class="verb">Reconstruct</div>
+                    <div class="object">a region at depth</div>
+                    <div class="you-get">→ Burial · thermal · structural history</div>
+                    <span class="arrow">2 clicks → Prospect Forge</span>
+                </a>
+                <a href="constitution.html#contradiction-scan" class="intent-card">
+                    <div class="verb">Challenge</div>
+                    <div class="object">an existing interpretation</div>
+                    <div class="you-get">→ Alternatives · contradictions · falsification</div>
+                    <span class="arrow">1 click → Constitution</span>
+                </a>
+                <a href="apps/prospect-ui/index.html" class="intent-card">
+                    <div class="verb">Compare</div>
+                    <div class="object">two models or two basins</div>
+                    <div class="you-get">→ Side-by-side · risk · POS · EVOI</div>
+                    <span class="arrow">2 clicks → Prospect Forge</span>
+                </a>
+                <a href="agents.html" class="intent-card">
+                    <div class="verb">Ask</div>
+                    <div class="object">GEOX — directly</div>
+                    <div class="you-get">→ MCP tool · JSON contract · evidence</div>
+                    <span class="arrow">1 click → Agent Surface</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 4 SURFACES — IA map (behind the verbs) -->
+        <section id="surfaces">
+            <div class="section-header">
+                <h2><span class="num">03</span> Where things live</h2>
+                <p>If you already know what you want — pick the surface. The verbs above route into these four areas.</p>
+            </div>
+
+            <div class="surfaces-grid">
+                <!-- 1. Why GEOX (Human deep read) -->
+                <a href="why.html" class="surface-card" data-color="earth">
+                    <div>
+                        <span class="card-tag">Human · deep read</span>
+                        <h3>Why GEOX</h3>
+                        <div class="audience">Executives · Students · Curious</div>
+                        <p>The warung-kopi version of the GEOX story. Most geological software stores interpretations — GEOX stores evidence. And that single decision changes everything.</p>
+                        <ul class="questions">
+                            <li>"So what?"</li>
+                            <li>"Why does this exist?"</li>
+                            <li>"Should I care?"</li>
+                        </ul>
+                    </div>
+                    <span class="card-action">Read the why &nbsp;→</span>
+                </a>
+
+                <!-- 2. Workbench (Geologist) -->
+                <a href="apps/well-desk/index.html" class="surface-card" data-color="gov">
+                    <div>
+                        <span class="card-tag">Workbench · geologist</span>
+                        <h3>Workbench</h3>
+                        <div class="audience">Geologists · Basin teams · Petrophysicists</div>
+                        <p>Petrel meets Bloomberg Terminal. Well Witness, Prospect Forge, Basin Explorer, Seismic Viewer — interactive geology with full evidence grounding on every operation.</p>
+                        <ul class="questions">
+                            <li>"Show me the geology."</li>
+                            <li>"Where is the closure?"</li>
+                            <li>"What does the log say?"</li>
+                        </ul>
+                    </div>
+                    <span class="card-action">Enter the workbench &nbsp;→</span>
+                </a>
+
+                <!-- 3. Constitution (Philosophy) -->
+                <a href="constitution.html" class="surface-card" data-color="wealth">
+                    <div>
+                        <span class="card-tag">Constitution · philosophy</span>
+                        <h3>The Constitution</h3>
+                        <div class="audience">Governance · Compliance · Auditors · The skeptical</div>
+                        <p>Why GEOX behaves the way it does. OBS/DER/INT/SPEC epistemic labels, RASA context-fit, 888_HOLD, the 13 floors. DITEMPA BUKAN DIBERI.</p>
+                        <ul class="questions">
+                            <li>"Why does GEOX behave this way?"</li>
+                            <li>"What is RASA?"</li>
+                            <li>"What does 888_HOLD mean?"</li>
+                        </ul>
+                    </div>
+                    <span class="card-action">Read the constitution &nbsp;→</span>
+                </a>
+
+                <!-- 4. Agents (MCP / API) -->
+                <a href="agents.html" class="surface-card" data-color="agent">
+                    <div>
+                        <span class="card-tag">Agent · MCP / API</span>
+                        <h3>For Agents</h3>
+                        <div class="audience">LLM clients · MCP hosts · Agent frameworks</div>
+                        <p>The governed MCP tool surface. 31 canonical tools, JSON schemas, sample invocations, the failure contract. Live-witnessed from <code>/health</code> + <code>tools/list</code>.</p>
+                        <ul class="questions">
+                            <li>"What can I call?"</li>
+                            <li>"What contracts must I respect?"</li>
+                            <li>"What does HOLD mean for my agent?"</li>
+                        </ul>
+                    </div>
+                    <span class="card-action">Open agent surface &nbsp;→</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- AUDIENCE — verb-first paths -->
+        <section class="audience-section">
+            <div class="section-header">
+                <h2><span class="num">04</span> Who are you, and what do you want to do?</h2>
+                <p>Pick the verb. We'll route you there.</p>
+            </div>
+
+            <div class="audience-grid">
+                <div class="aud-card">
+                    <div class="role">Geologist · basin lead</div>
+                    <div class="ask">I want to <em>explore</em> and <em>analyze</em>.</div>
+                    <div class="where">→ <a href="apps/well-desk/index.html">Open the Workbench</a></div>
                 </div>
-                <!-- F2 (GEOX highlighted) -->
-                <div class="floor-card highlight-floor">
-                    <div class="floor-number">F2</div>
-                    <h4 class="floor-title">TRUTH</h4>
-                    <p class="floor-desc">Evidence grounding. Every subsurface claim must refer directly to physical logs or seismic data.</p>
+                <div class="aud-card">
+                    <div class="role">Executive · investor</div>
+                    <div class="ask">I want to <em>compare</em> and <em>decide</em>.</div>
+                    <div class="where">→ <a href="constitution.html">Read the Constitution</a></div>
                 </div>
-                <!-- F3 -->
-                <div class="floor-card">
-                    <div class="floor-number">F3</div>
-                    <h4 class="floor-title">WITNESS</h4>
-                    <p class="floor-desc">Tri-witness consensus matching human inputs, AI models, and physical sensor reality.</p>
+                <div class="aud-card">
+                    <div class="role">Engineer · agent builder</div>
+                    <div class="ask">I want to <em>call</em> and <em>integrate</em>.</div>
+                    <div class="where">→ <a href="agents.html">Open the Agent Surface</a></div>
                 </div>
-                <!-- F4 (GEOX highlighted) -->
-                <div class="floor-card highlight-floor">
-                    <div class="floor-number">F4</div>
-                    <h4 class="floor-title">CLARITY</h4>
-                    <p class="floor-desc">Entropy ceiling. Operates to ensure workspace entropy is non-increasing (&Delta;S &le; 0).</p>
-                </div>
-                <!-- F5 -->
-                <div class="floor-card">
-                    <div class="floor-number">F5</div>
-                    <h4 class="floor-title">PEACE²</h4>
-                    <p class="floor-desc">De-escalation protocol. Guarding weaker stakeholders and resolving conflicts logically.</p>
-                </div>
-                <!-- F6 -->
-                <div class="floor-card">
-                    <div class="floor-number">F6</div>
-                    <h4 class="floor-title">MARUAH</h4>
-                    <p class="floor-desc">Dignity-first context. Roles and systems are referenced instead of personal naming metrics.</p>
-                </div>
-                <!-- F7 (GEOX highlighted) -->
-                <div class="floor-card highlight-floor">
-                    <div class="floor-number">F7</div>
-                    <h4 class="floor-title">HUMILITY</h4>
-                    <p class="floor-desc">Mandatory confidence ceiling capped at 90% (forcing &Omega;₀ &approx; 0.04 uncertainty distribution).</p>
-                </div>
-                <!-- F8 -->
-                <div class="floor-card">
-                    <div class="floor-number">F8</div>
-                    <h4 class="floor-title">GENIUS</h4>
-                    <p class="floor-desc">Value multiplier. Proceeding only when computational metrics demonstrate high-yield thresholds.</p>
-                </div>
-                <!-- F9 -->
-                <div class="floor-card">
-                    <div class="floor-number">F9</div>
-                    <h4 class="floor-title">ANTI-HANTU</h4>
-                    <p class="floor-desc">Hallucination shield preventing models from making unanchored geological assumptions.</p>
-                </div>
-                <!-- F10 -->
-                <div class="floor-card">
-                    <div class="floor-number">F10</div>
-                    <h4 class="floor-title">ONTOLOGY</h4>
-                    <p class="floor-desc">Strict type safety, schema constraints, and Pydantic validators preventing metadata drift.</p>
-                </div>
-                <!-- F11 -->
-                <div class="floor-card">
-                    <div class="floor-number">F11</div>
-                    <h4 class="floor-title">AUDIT</h4>
-                    <p class="floor-desc">Traceability link anchoring all operations to signed receipts written to VAULT999.</p>
-                </div>
-                <!-- F12 -->
-                <div class="floor-card">
-                    <div class="floor-number">F12</div>
-                    <h4 class="floor-title">INJECTION</h4>
-                    <p class="floor-desc">Input purification and isolation of external web authority from internal core code execution.</p>
-                </div>
-                <!-- F13 (GEOX highlighted-cyan) -->
-                <div class="floor-card highlight-floor-cyan">
-                    <div class="floor-number">F13</div>
-                    <h4 class="floor-title">SOVEREIGN</h4>
-                    <p class="floor-desc">Arif holds absolute veto. Veto parameters and execution are adjudicated by 888 logic.</p>
+                <div class="aud-card">
+                    <div class="role">Student · curious</div>
+                    <div class="ask">I want to <em>understand</em> before doing.</div>
+                    <div class="where">→ <a href="why.html">Read Why GEOX</a></div>
                 </div>
             </div>
         </section>
 
-        <!-- Live Federation Health Widget -->
-        <section class="health-widget">
-            <div class="widget-title">
-                <span class="status-dot-green" style="width:6px; height:6px;"></span>
-                <span>Live Federation Health Console</span>
-            </div>
-            <div class="widget-grid">
-                <!-- GEOX -->
-                <div class="widget-card status-pending" id="health-geox">
-                    <div class="organ-info">
-                        <span class="organ-name">GEOX Organ</span>
-                        <span class="organ-port">Port :8081</span>
-                        <span class="organ-reason" style="font-size: 0.6rem; color: var(--text-low); font-family: var(--font-mono); margin-top: 0.15rem; display: block; text-transform: uppercase;"></span>
+        <!-- COLLAPSIBLE: Sovereign Bridge — for the systems-thinker -->
+        <details class="zen-reveal" id="bridge">
+            <summary>The Sovereign Bridge · how Earth becomes capital</summary>
+            <div class="reveal-body">
+                <div class="bridge-flow" style="margin: 2rem 0;">
+                    <div class="bridge-node node-earth">
+                        <span class="node-icon">🌍</span>
+                        <h4 class="node-title">Earth</h4>
+                        <span class="node-tag">GEOX</span>
+                        <p class="node-desc">Logs, seismic, outcrops, biostrat, deep-time context — parsed, verified, labeled OBS/DER/INT/SPEC.</p>
                     </div>
-                    <div class="organ-status">
-                        <span class="status-dot"></span>
-                        <span class="status-text">PROBING</span>
+
+                    <div class="bridge-connector-arrow">&rarr;</div>
+
+                    <div class="bridge-node node-gov">
+                        <span class="node-icon">🏛️</span>
+                        <h4 class="node-title">Governance</h4>
+                        <span class="node-tag">arifOS</span>
+                        <p class="node-desc">F1–F13 floor filters evaluate evidence validity. 888_HOLD if a claim awaits ratification.</p>
+                    </div>
+
+                    <div class="bridge-connector-arrow">&rarr;</div>
+
+                    <div class="bridge-node node-wealth">
+                        <span class="node-icon">Ξ</span>
+                        <h4 class="node-title">Sovereignty</h4>
+                        <span class="node-tag">WEALTH</span>
+                        <p class="node-desc">Capital decisions modeled, optimized, and sealed. NPV/IRR/EMV computed, never allocated.</p>
                     </div>
                 </div>
-                <!-- arifOS -->
-                <div class="widget-card status-pending" id="health-arifos">
-                    <div class="organ-info">
-                        <span class="organ-name">arifOS Kernel</span>
-                        <span class="organ-port">Port :8088</span>
-                        <span class="organ-reason" style="font-size: 0.6rem; color: var(--text-low); font-family: var(--font-mono); margin-top: 0.15rem; display: block; text-transform: uppercase;"></span>
-                    </div>
-                    <div class="organ-status">
-                        <span class="status-dot"></span>
-                        <span class="status-text">PROBING</span>
-                    </div>
-                </div>
-                <!-- WEALTH -->
-                <div class="widget-card status-pending" id="health-wealth">
-                    <div class="organ-info">
-                        <span class="organ-name">WEALTH Organ</span>
-                        <span class="organ-port">Port :18082</span>
-                        <span class="organ-reason" style="font-size: 0.6rem; color: var(--text-low); font-family: var(--font-mono); margin-top: 0.15rem; display: block; text-transform: uppercase;"></span>
-                    </div>
-                    <div class="organ-status">
-                        <span class="status-dot"></span>
-                        <span class="status-text">PROBING</span>
-                    </div>
+
+                <div class="bridge-code-block">
+                    geox.evaluate_prospect() &rarr; <span class="kernel">arifos.bridge_contract()</span> &rarr; <span class="wealth">wealth.npv_reward()</span>
                 </div>
             </div>
-        </section>
+        </details>
+
+        <!-- COLLAPSIBLE: Live Federation Health — for the operator -->
+        <details class="zen-reveal" id="health">
+            <summary>Live Federation Health · operational signal</summary>
+            <div class="reveal-body">
+                <div class="widget-grid" style="margin-top: 1.5rem;">
+                    <div class="widget-card status-pending" id="health-geox">
+                        <div class="organ-info">
+                            <span class="organ-name">GEOX Organ</span>
+                            <span class="organ-port">Port :8081</span>
+                            <span class="organ-reason"></span>
+                        </div>
+                        <div class="organ-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">PROBING</span>
+                        </div>
+                    </div>
+                    <div class="widget-card status-pending" id="health-arifos">
+                        <div class="organ-info">
+                            <span class="organ-name">arifOS Kernel</span>
+                            <span class="organ-port">Port :8088</span>
+                            <span class="organ-reason"></span>
+                        </div>
+                        <div class="organ-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">PROBING</span>
+                        </div>
+                    </div>
+                    <div class="widget-card status-pending" id="health-wealth">
+                        <div class="organ-info">
+                            <span class="organ-name">WEALTH Organ</span>
+                            <span class="organ-port">Port :18082</span>
+                            <span class="organ-reason"></span>
+                        </div>
+                        <div class="organ-status">
+                            <span class="status-dot"></span>
+                            <span class="status-text">PROBING</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </details>
 
         <hr>
 
-        <!-- Footer -->
         <footer>
             <div class="federation-seal">DITEMPA BUKAN DIBERI</div>
-            <p>&copy; 2026 Muhammad Arif bin Fazil // arifOS Federation</p>
+            <p>&copy; 2026 Muhammad Arif bin Fazil · arifOS Federation · Earth Evidence Operating System</p>
             <div class="footer-links">
+                <a href="why.html">Why GEOX</a>
+                <a href="constitution.html">Constitution</a>
+                <a href="agents.html">For Agents</a>
+                <a href="apps/well-desk/index.html">Workbench</a>
                 <a href="https://arif-fazil.com">Sovereign Root</a>
-                <a href="https://arifos.arif-fazil.com">Observatory</a>
-                <a href="https://aaa.arif-fazil.com">cockpit dashboard</a>
-                <a href="https://github.com/ariffazil/GEOX">GitHub Source</a>
+                <a href="https://github.com/ariffazil/GEOX">Source</a>
             </div>
         </footer>
 
     </div>
 
-    <!-- Tab switcher JS -->
+    <!-- Zen Pulse reactivity — update "What next?" based on intent-card hover -->
     <script>
-        function switchTab(evt, tabId) {
-            // Get all elements with class="tab-content" and hide them
-            const tabContents = document.getElementsByClassName("tab-content");
-            for (let i = 0; i < tabContents.length; i++) {
-                tabContents[i].classList.remove("active");
-            }
-
-            // Get all elements with class="tab-btn" and remove the class "active"
-            const tabBtns = document.getElementsByClassName("tab-btn");
-            for (let i = 0; i < tabBtns.length; i++) {
-                tabBtns[i].classList.remove("active");
-            }
-
-            // Show the current tab, and add an "active" class to the button that opened the tab
-            document.getElementById(tabId).classList.add("active");
-            evt.currentTarget.classList.add("active");
-        }
+        (function() {
+            const zpNext = document.getElementById('zp-next');
+            const zpWhy = document.getElementById('zp-why');
+            const cards = document.querySelectorAll('.intent-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    const verb = card.querySelector('.verb')?.textContent?.trim();
+                    const object = card.querySelector('.object')?.textContent?.trim();
+                    const arrow = card.querySelector('.arrow')?.textContent?.trim();
+                    if (zpNext && verb && object) {
+                        zpNext.textContent = `${verb} ${object} · ${arrow || ''}`;
+                        zpNext.style.color = 'var(--amber-earth)';
+                    }
+                });
+                card.addEventListener('mouseleave', () => {
+                    if (zpNext) {
+                        zpNext.textContent = 'Pick a verb below ↓';
+                        zpNext.style.color = '';
+                    }
+                });
+            });
+        })();
     </script>
 
-    <!-- Health probe and time JS -->
+    <!-- Health probe and time JS — kept identical to preserve live operational signal -->
     <script>
         async function checkOrganHealth(elemId, url) {
             const card = document.getElementById(elemId);
@@ -1508,14 +1359,13 @@
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 6000);
-                
-                const res = await fetch(url, { 
+                const res = await fetch(url, {
                     method: 'GET',
                     headers: { 'Accept': 'application/json' },
                     signal: controller.signal
                 });
                 clearTimeout(timeoutId);
-                
+
                 if (res.ok) {
                     card.className = "widget-card status-online";
                     card.querySelector(".status-text").textContent = "ONLINE";
@@ -1530,7 +1380,6 @@
                     return false;
                 }
             } catch (e) {
-                console.warn(`Health probe for ${elemId} failed:`, e);
                 if (e.name === 'AbortError') {
                     card.className = "widget-card status-offline";
                     card.querySelector(".status-text").textContent = "OFFLINE";
@@ -1559,59 +1408,13 @@
         }
 
         async function updateAllHealth() {
-            // Probe each organ health endpoint
-            await checkOrganHealth('health-geox', '/health'); // local same-origin proxy
+            await checkOrganHealth('health-geox', '/health');
             await checkOrganHealth('health-arifos', 'https://arifos.arif-fazil.com/health');
             await checkOrganHealth('health-wealth', 'https://wealth.arif-fazil.com/health');
-            
-            // Update time stamp
             document.getElementById('last-updated').textContent = new Date().toISOString().replace('T', ' ').split('.')[0] + ' UTC';
         }
-
-        // Run once at load
         updateAllHealth();
-        // Periodic update every 60 seconds
         setInterval(updateAllHealth, 60000);
-    </script>
-
-    <!-- Unified navigation and WebMCP integrations -->
-    <script src="/_shared/trinity-nav.js" defer></script>
-    <script src="/_shared/webmcp/arifos-webmcp-adapter.js" defer></script>
-    <script>
-        // Wait for WebMCP adapter load
-        window.addEventListener('DOMContentLoaded', () => {
-            if (typeof arifosWebMCP === 'undefined') {
-                console.log('arifosWebMCP client not loaded.');
-                return;
-            }
-            
-            try {
-                arifosWebMCP.registerReadonly('get_organ_health', 'Get organ service health status', {}, async function() {
-                    try { 
-                        var r = await fetch('/health'); 
-                        return await r.json(); 
-                    } catch(e) { 
-                        return {status: 'unreachable', error: e.message}; 
-                    }
-                });
-
-                arifosWebMCP.registerReadonly('get_registry', 'List this organ available tools', {}, async function() {
-                    try {
-                        var r = await fetch('/mcp', {
-                            method: 'POST', 
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({jsonrpc: '2.0', id: 1, method: 'tools/list'})
-                        });
-                        return await r.json();
-                    } catch(e) { 
-                        return {status: 'unreachable', error: e.message}; 
-                    }
-                });
-                console.log('arifosWebMCP registration succeeded.');
-            } catch(e) {
-                console.error('Failed to register arifosWebMCP callbacks:', e);
-            }
-        });
     </script>
 </body>
 </html>
