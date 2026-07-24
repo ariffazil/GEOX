@@ -170,8 +170,34 @@ DEMO_WELL_REGISTRY = {
     "VOLVE_15_9_19",
 }
 
-_GEOX_ROOT = os.environ.get("GEOX_ROOT", "/root/GEOX")
+
+def _repo_root() -> Path:
+    """Repo root portable for VPS (/root/GEOX) and CI (runner workdir)."""
+    from pathlib import Path
+
+    env = os.environ.get("GEOX_ROOT")
+    if env:
+        return Path(env)
+    # src/geox_mcp/tools/integration_well.py → parents[3] = repo root
+    return Path(__file__).resolve().parents[3]
+
+
+_GEOX_ROOT = str(_repo_root())
 _DEMO_WELLS_CACHE: dict | None = None
+
+
+def _safe_is_file(p) -> bool:
+    try:
+        return p.is_file()
+    except OSError:
+        return False
+
+
+def _safe_is_dir(p) -> bool:
+    try:
+        return p.is_dir()
+    except OSError:
+        return False
 
 
 def _load_demo_wells_registry() -> dict:
@@ -182,16 +208,20 @@ def _load_demo_wells_registry() -> dict:
     import json
     from pathlib import Path
 
+    root = _repo_root()
+    # Prefer package-relative paths first — never hard-depend on /root/GEOX (CI runner).
     paths = [
-        Path(_GEOX_ROOT) / "resources" / "demo_wells.json",
-        Path("/opt/geox/app/resources/demo_wells.json"),
+        root / "resources" / "demo_wells.json",
         Path(__file__).resolve().parents[3] / "resources" / "demo_wells.json",
+        Path("/opt/geox/app/resources/demo_wells.json"),
     ]
     for p in paths:
-        if p.is_file():
+        if _safe_is_file(p):
             try:
                 _DEMO_WELLS_CACHE = json.loads(p.read_text(encoding="utf-8"))
                 return _DEMO_WELLS_CACHE
+            except OSError:
+                continue
             except Exception:
                 continue
     _DEMO_WELLS_CACHE = {"wells": []}
@@ -230,11 +260,12 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
 
     # 0. Canonical demo registry path (highest priority for DEMO ids)
     las_path = None
+    root = _repo_root()
     if demo_entry and demo_entry.get("las_path"):
         rel = demo_entry["las_path"]
-        for root in (Path(_GEOX_ROOT), Path("/opt/geox/app"), Path("/root/GEOX")):
-            cand = root / rel
-            if cand.is_file():
+        for base in (root, Path("/opt/geox/app")):
+            cand = base / rel
+            if _safe_is_file(cand):
                 las_path = cand
                 data_class = demo_entry.get("data_class") or "DEMO"
                 geography = demo_entry.get("geography")
@@ -251,14 +282,13 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
             Path(f"/data/wells/{wid}"),
             Path(f"/data/geox_las/{wid}.las"),
             Path(f"/data/geox_las/{wid}"),
-            Path(f"{_GEOX_ROOT}/data/geox_las/{wid}.las"),
-            Path(f"/root/GEOX/data/geox_las/{wid}.las"),
-            Path(f"/root/GEOX/fixtures/{wid}.las"),
+            root / "data" / "geox_las" / f"{wid}.las",
+            root / "fixtures" / f"{wid}.las",
             Path(f"/opt/geox/app/fixtures/{wid}.las"),
-            Path(f"/root/GEOX/fixtures/_DEMO_SYNTHETIC/{wid}.las"),
-            Path(f"/root/GEOX/fixtures/_DEMO_SYNTHETIC/{wid}_SANDAKAN.las"),
+            root / "fixtures" / "_DEMO_SYNTHETIC" / f"{wid}.las",
+            root / "fixtures" / "_DEMO_SYNTHETIC" / f"{wid}_SANDAKAN.las",
         ]
-        las_path = next((p for p in candidates if p is not None and p.is_file()), None)
+        las_path = next((p for p in candidates if p is not None and _safe_is_file(p)), None)
 
     # 1b. Check in-memory artifact registry for las_path (post-ingest)
     if las_path is None:
@@ -268,7 +298,7 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
             entry = _get_artifact(wid) or _get_artifact(f"well_las:{wid}")
             if entry and entry.get("las_path"):
                 p = Path(entry["las_path"])
-                if p.is_file():
+                if _safe_is_file(p):
                     las_path = p
                     data_class = entry.get("data_class") or "INGESTED"
         except Exception:
@@ -280,13 +310,16 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
             Path(well_data_dir),
             Path("/data/wells"),
             Path("/data/geox_las"),
-            Path(f"{_GEOX_ROOT}/data/geox_las"),
-            Path("/root/GEOX/data/geox_las"),
-            Path("/root/GEOX/fixtures/_DEMO_SYNTHETIC"),
+            root / "data" / "geox_las",
+            root / "fixtures" / "_DEMO_SYNTHETIC",
         ]:
-            if search_dir_path.is_dir():
+            if _safe_is_dir(search_dir_path):
                 target_stem = wid.lower().replace(" ", "").replace("-", "").replace("_", "")
-                for p in search_dir_path.glob("*.las"):
+                try:
+                    las_iter = search_dir_path.glob("*.las")
+                except OSError:
+                    continue
+                for p in las_iter:
                     p_stem = p.stem.lower().replace(" ", "").replace("-", "").replace("_", "")
                     if target_stem == p_stem or target_stem in p_stem or p_stem in target_stem:
                         las_path = p
@@ -297,12 +330,11 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
     # 3. Demo fallback ONLY for explicit DEMO ids
     if las_path is None and is_demo:
         demo_candidates = [
-            Path(f"{_GEOX_ROOT}/data/geox_las/DEMO-KINABALU.las"),
-            Path("/root/GEOX/data/geox_las/DEMO-KINABALU.las"),
-            Path("/root/GEOX/fixtures/geox_smoke_test.las"),
+            root / "data" / "geox_las" / "DEMO-KINABALU.las",
+            root / "fixtures" / "geox_smoke_test.las",
             Path("/opt/geox/app/fixtures/geox_smoke_test.las"),
         ]
-        las_path = next((p for p in demo_candidates if p is not None and p.is_file()), None)
+        las_path = next((p for p in demo_candidates if p is not None and _safe_is_file(p)), None)
         is_fixture_fallback = True
         data_class = data_class if data_class != "UNKNOWN" else "DEMO"
 

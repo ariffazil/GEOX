@@ -934,7 +934,10 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         import os
         from pathlib import Path
 
-        base = Path("/root/GEOX/apps")
+        # Portable repo root (CI runner workdir ≠ /root/GEOX)
+        # resources/__init__.py → parents[3] = repo root
+        root = Path(os.environ.get("GEOX_ROOT") or Path(__file__).resolve().parents[3])
+        base = root / "apps"
         if app_id.endswith(".html"):
             app_path = base / app_id
         elif app_id in ("well-desk", "well_desk") and os.getenv("GEOX_WELL_DESK_UI", "p0").strip().lower() in (
@@ -949,26 +952,37 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             # Prefer Viz P0+ canvas shell, then p0, then full index
             viz = base / "well-desk" / "p0-viz.html"
             p0 = base / "well-desk" / "p0.html"
-            if viz.exists():
-                app_path = viz
-            elif p0.exists():
-                app_path = p0
-            else:
+            try:
+                if viz.exists():
+                    app_path = viz
+                elif p0.exists():
+                    app_path = p0
+                else:
+                    app_path = base / "well-desk" / "index.html"
+            except OSError:
                 app_path = base / "well-desk" / "index.html"
         else:
             app_path = base / app_id / "index.html"
-        if not app_path.exists():
-            return json.dumps({"error": f"App {app_id} not found"})
-        return app_path.read_text()
+        try:
+            if not app_path.exists():
+                return json.dumps({"error": f"App {app_id} not found"})
+            return app_path.read_text()
+        except OSError as e:
+            return json.dumps({"error": f"App {app_id} unreadable: {e}"})
 
     async def geox_apps_index() -> str:
         """Index of all GEOX MCP Apps."""
         import json
+        import os
         from pathlib import Path
 
-        apps_path = Path("/root/GEOX/apps/apps.json")
-        if apps_path.exists():
-            return apps_path.read_text()
+        root = Path(os.environ.get("GEOX_ROOT") or Path(__file__).resolve().parents[3])
+        apps_path = root / "apps" / "apps.json"
+        try:
+            if apps_path.exists():
+                return apps_path.read_text()
+        except OSError:
+            pass
         return "[]"
 
     GEOX_APPS = [

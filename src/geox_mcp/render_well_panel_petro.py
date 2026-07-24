@@ -17,17 +17,30 @@ from typing import Any
 
 import numpy as np
 
-# Open LAS registry (local copies)
+
+def _repo_root() -> Path:
+    import os
+
+    env = os.environ.get("GEOX_ROOT")
+    if env:
+        return Path(env)
+    # src/geox_mcp/render_well_panel_petro.py → parents[2] = repo root
+    return Path(__file__).resolve().parents[2]
+
+
+_ROOT = _repo_root()
+
+# Open LAS registry (local copies) — paths relative to portable repo root
 OPEN_LAS_REGISTRY: dict[str, Path] = {
-    "15/9-19": Path("/root/GEOX/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las"),
-    "15-9-19": Path("/root/GEOX/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las"),
-    "volve-15-9-19": Path("/root/GEOX/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las"),
-    "volve": Path("/root/GEOX/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las"),
-    "q15_15_9_19": Path("/root/GEOX/data/real_wells/q15_15_9_19/q15_15_9_19.las"),
-    "f02-1": Path("/root/GEOX/data/wells/marmousi-F02-1.las"),
-    "f03-2": Path("/root/GEOX/data/wells/marmousi-F03-2.las"),
-    "f06-1": Path("/root/GEOX/data/wells/marmousi-F06-1.las"),
-    "marmousi-f02-1": Path("/root/GEOX/data/wells/marmousi-F02-1.las"),
+    "15/9-19": _ROOT / "data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+    "15-9-19": _ROOT / "data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+    "volve-15-9-19": _ROOT / "data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+    "volve": _ROOT / "data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+    "q15_15_9_19": _ROOT / "data/real_wells/q15_15_9_19/q15_15_9_19.las",
+    "f02-1": _ROOT / "data/wells/marmousi-F02-1.las",
+    "f03-2": _ROOT / "data/wells/marmousi-F03-2.las",
+    "f06-1": _ROOT / "data/wells/marmousi-F06-1.las",
+    "marmousi-f02-1": _ROOT / "data/wells/marmousi-F02-1.las",
 }
 
 _ALIAS = {
@@ -53,15 +66,20 @@ def resolve_las(well_id: str, las_path: str | None = None) -> Path | None:
             if path.is_file():
                 return path
     for root in (
-        Path("/root/GEOX/data/geox_las"),
-        Path("/root/GEOX/data/real_wells"),
-        Path("/root/GEOX/data/wells"),
+        _ROOT / "data/geox_las",
+        _ROOT / "data/real_wells",
+        _ROOT / "data/wells",
+        _ROOT / "fixtures",
+        _ROOT / "fixtures/_DEMO_SYNTHETIC",
     ):
-        if not root.exists():
+        try:
+            if not root.exists():
+                continue
+            for p in root.rglob("*.las"):
+                if compact in p.stem.lower().replace("_", "-"):
+                    return p
+        except OSError:
             continue
-        for p in root.rglob("*.las"):
-            if compact in p.stem.lower().replace("_", "-"):
-                return p
     return None
 
 
@@ -552,7 +570,7 @@ def render_interpreted_panel(
     plt.close()
     img_bytes = buf.getvalue()
 
-    renders_dir = Path("/root/GEOX/data/renders")
+    renders_dir = _ROOT / "data" / "renders"
     renders_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     safe_wid = _wid.replace("/", "-").replace(" ", "_")
