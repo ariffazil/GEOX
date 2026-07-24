@@ -47,6 +47,10 @@ def main() -> None:
     for rel in (
         "CANONICAL_PUBLIC_SURFACE.json",
         "src/geox_mcp/generated/CANONICAL_PUBLIC_SURFACE.json",
+        # docs/ target = per-release snapshot the README and CI can reference.
+        # Kills the "52 vs 31" prose-drift class permanently: if the count in
+        # the snapshot diverges from the live tools/list, the drift test fails.
+        "docs/canonical_public_tools.json",
     ):
         path = ROOT / rel
         path.parent.mkdir(parents=True, exist_ok=True)

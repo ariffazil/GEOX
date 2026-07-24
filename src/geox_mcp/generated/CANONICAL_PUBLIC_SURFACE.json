@@ -1,6 +1,6 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-23T03:55:56.359977+00:00",
+  "generated_at": "2026-07-24T02:37:59.060022+00:00",
   "source": "tools_manifest.yaml",
   "public_count": 31,
   "internal_count": 48,
@@ -95,7 +95,7 @@
       "domain": "earth.seismic",
       "axis": "reason",
       "lane": "reasoning",
-      "description": "Unified seismic interpretation: horizon/fault picking, RSI pipeline, vision, contrast detection. Modes: horizon_contrast, fault_sticks, volume_frame, blend, rsi_pipeline, contrast, vision.",
+      "description": "One semantic capability \u2014 propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Image-first product: classical_section / interpret_section (structure tensor+DP on PNG/JPG). Also: i",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -309,7 +309,7 @@
       "domain": "governance",
       "axis": "reason",
       "lane": "judgment",
-      "description": "Popperian falsification engine. Modes: full (Kill Matrix K001-K007 + contradiction scan), quick (Kill Matrix only), physics_only (contradiction scan only), carbonate_igneous_rte (Arif Burgess-RTE Matr",
+      "description": "Popperian falsification engine \u2014 Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL \u2192 rejected. All PASS \u2192 PROCEED to 888_JUDGE.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
