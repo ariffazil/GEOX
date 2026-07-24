@@ -14,6 +14,11 @@ epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 > **DITEMPA BUKAN DIBERI** — Forged, not given.
 > Earth evidence layer of the arifOS federation. Physics-governed. Evidence-only. Never decides alone.
 
+![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)
+![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-evidence%20only-1f6feb)
+![Federation](https://img.shields.io/badge/Federation-v2026.07.24-0a7b83)
+![License](https://img.shields.io/github/license/ariffazil/GEOX?label=License)
+
 ---
 
 ## GEOX in One Minute

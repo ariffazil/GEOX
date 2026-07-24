@@ -31,6 +31,18 @@ concurrency:
 
 jobs:
 
+  secrets:
+    name: 🔐 Secrets Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # ─────────────────────────────────────────────────────────────
   # LANE 1: STANDARD CI
   # ─────────────────────────────────────────────────────────────
