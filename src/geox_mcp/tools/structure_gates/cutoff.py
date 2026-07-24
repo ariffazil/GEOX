@@ -272,15 +272,15 @@ def gate_k_polarity(framework: dict[str, Any]) -> dict[str, Any]:
                 }
             )
         else:
-            # soft kill — polarity mismatch without exception
-            warns += 1  # WARN not KILL: K-DIP-style sole-source kill forbidden
+            # Hard contradiction — cutoff sense opposes regime_prior without exception
+            kills += 1
             findings.append(
                 {
                     "fault_id": fid,
-                    "status": "WARN",
+                    "status": "KILL",
                     "cutoff_sense": sense,
                     "regime_prior": regime,
-                    "reason": "cutoff sense disagrees with regime_prior — needs throw/growth/restore chain",
+                    "reason": "cutoff sense contradicts regime_prior without reactivation/inversion exception",
                 }
             )
 
@@ -294,13 +294,16 @@ def gate_k_polarity(framework: dict[str, Any]) -> dict[str, Any]:
     return make_gate_receipt(
         "K-POLARITY",
         status,  # type: ignore[arg-type]
-        equation="CutoffPair sense vs regime_prior; reactivation → WARN not KILL; dip never sole-source",
+        equation="CutoffPair sense vs regime_prior; reactivation → WARN; hard contradiction → KILL; dip never sole-source",
         inputs={"n_faults": len(faults), "n_cutoffs": len(cutoffs)},
-        thresholds={"reactivation_exception": True, "dip_alone_kill": False},
+        inputs_used=["faults", "cutoffs", "horizons"],
+        measurement_units="ms (TWT) for throw; sense from cutoff geometry",
+        thresholds={"reactivation_exception": True, "dip_alone_kill": False, "hard_contradiction": "KILL"},
+        threshold_source="Bond 2007 multi-interpretation discipline; arifOS F2 TRUTH",
         calculated_result={"kills": kills, "passes": passes, "warns": warns, "unmeasured": unmeas},
-        reason=f"passes={passes} warns={warns} unmeasured={unmeas}",
+        reason=f"kills={kills} passes={passes} warns={warns} unmeasured={unmeas}",
         findings=findings,
-        gate_type="soft_conditional",
+        gate_type="hard_conditional",
         exceptions_considered=["reactivation", "inversion", "section_obliquity", "VE_distortion"],
         evidence_refs=["Bond 2007 multi-interpretation", "Anderson 1951 (dip filter only)"],
     )

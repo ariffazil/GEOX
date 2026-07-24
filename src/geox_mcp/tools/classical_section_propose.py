@@ -176,6 +176,7 @@ async def geox_classical_section_propose(
     include_attribute_stats: bool = True,
     run_gates: bool = False,
     calibration: dict[str, Any] | None = None,
+    earth_constraints: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Propose horizons + faults from a seismic section image (classical CV).
 
@@ -332,11 +333,11 @@ async def geox_classical_section_propose(
                     "label": "DER_RENDER_CONTRAST",
                 }
 
-    alternatives = [
-        {"model_id": "through_going", "prior": "primary classical pick set"},
-        {"model_id": "relay_segmented", "prior": "faults as relays / segments"},
-        {"model_id": "artifact_dominant", "prior": "processing/noise dominant"},
-    ]
+    # W3 hardening (2026-07-24): stop manufacturing fake alternatives here.
+    # The proposer is one named witness (classical_cv). The interpretation
+    # bundle builder is the only place that emits multiple hypotheses, and it
+    # does so from explicit witness records — never by renaming a copy.
+    alternatives: list[dict[str, Any]] = []
 
     out.update(
         {
@@ -386,6 +387,7 @@ async def geox_classical_section_propose(
             frameworks_or_primary=framework,
             observations=observations,
             calibration=cal,
+            earth_constraints=earth_constraints,
             propose_result={
                 "horizons": fw_horizons,
                 "faults": fw_faults,
@@ -401,6 +403,7 @@ async def geox_classical_section_propose(
                 frameworks_or_primary=framework,
                 observations=observations,
                 calibration=cal,
+                earth_constraints=earth_constraints,
                 request={"hypothesis_count": 3},
                 model_revision="classical_section_v1",
             )

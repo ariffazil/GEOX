@@ -30,10 +30,9 @@ changes_since_last_verified:
 
 ## Canonical Tool Surface
 
-- **Source of truth:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS list) + `src/geox_mcp/server.py` (_EXPECTED_CANONICAL invariant)
+- **Source of truth:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS list = 32 tools)
 - **Runtime discovery:** `tools/list` MCP call or `curl :8081/health`
 - **Backward-compat aliases** in `CANONICAL_COMPAT_TOOLS` — scheduled for deletion 2026-07-30
-- Invariant `_EXPECTED_CANONICAL = 34` in `src/geox_mcp/server.py`
 - Map surface: `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_map_export_package` (Phase 2.3 + 2.4)
 
 ## Key Updates (2026-07-02 FORGE)
@@ -41,7 +40,7 @@ changes_since_last_verified:
 - **Dual surface cleanup**: 16 dead `geox/` submodules archived to `.archive/`
 - **entrypoint_unified.sh deprecated** — forwards to `entrypoint.sh`; remove after 2026-07-30
 - **Dockerfile confirmed clean** — uses `pyproject.toml` + `pip install .`
-- **Live surface verified**: 35 tools on :8081, all ANALYZE class, mutation=false
+- **Live surface verified**: 32 canonical tools on :8081, all ANALYZE class, mutation=false
 - **`geox_map_export_package` live** — completes the map verb chain with PROV sidecar + STAC catalog
 - **Artifact envelope contract** — `contracts/artifact_envelope.py` — forensic traceability for all tool returns
 - **Production readiness audit** — 11-gate scorecard: 72% YELLOW. Gap tracker: `forge_work/FORGE_PRODUCTION_GAPS.md`
@@ -51,7 +50,7 @@ changes_since_last_verified:
 - **Verdict:** YELLOW (72%) — concept strong, production gaps real
 - **Gap tracker:** `forge_work/FORGE_PRODUCTION_GAPS.md`
 - **Production audit:** `forge_work/PRODUCTION-READINESS-AUDIT-2026-07-02.md`
-- **P0 (1 day):** Stamp `_envelope` on 35 tools, fix 1 test failure
+- **P0 (1 day):** Stamp `_envelope` on 32 tools, fix 1 test failure
 - **P1 (8 days):** Unified QC runner, challenge gate, forbidden-claims classifier
 - **P2 (7 days):** Risk bands, evidence floors, petrophysics compute gaps
 - **Conveyor belt:** Ingest → QC → Compute → Claim → Challenge → Uncertainty → Reproducibility → Safety → arifOS

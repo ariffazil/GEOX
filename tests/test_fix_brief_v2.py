@@ -10,25 +10,21 @@ import json
 import pytest
 
 
-def test_p0_surface_attestation_zen15():
+def test_p0_surface_attestation_public_32():
+    """MASTER FORGE W8: do not reduce surface this repair — 32 public tools."""
     from geox_mcp.surface_manifest import load_surface_manifest, public_tool_names, surface_attestation
 
     load_surface_manifest.cache_clear()
     names = public_tool_names()
     att = surface_attestation()
     assert att["ok"] is True
-    assert att["public_count"] == 15
-    assert att["public_count_target"] == 15
-    assert att["surface_name"] == "ZEN-15"
-    assert att["surface_version"]
-    assert att["surface_hash"]
-    assert len(names) == 15
-    # core adjudication on surface
+    assert att["public_count"] == 32
+    assert att["public_count_target"] == 32
+    assert len(names) == 32
     assert "geox_seismic_interpret" in names
     assert "geox_claim" in names
-    # demoted
-    assert "geox_workspace" not in names
-    assert "geox_falsify" not in names
+    assert "geox_workspace" in names
+    assert "geox_falsify" in names
 
 
 def test_p1_anonymous_geometry_rejected():

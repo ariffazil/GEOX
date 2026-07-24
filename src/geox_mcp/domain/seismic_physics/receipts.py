@@ -10,7 +10,7 @@ import hashlib
 import json
 from typing import Any, Literal
 
-GateStatus = Literal["PASS", "WARN", "KILL", "UNMEASURED"]
+GateStatus = Literal["PASS", "WARN", "KILL", "UNMEASURED", "NOT_APPLICABLE"]
 
 
 def receipt_hash(payload: dict[str, Any]) -> str:
@@ -25,12 +25,17 @@ def make_gate_receipt(
     status: GateStatus,
     *,
     inputs: dict[str, Any] | None = None,
+    inputs_used: list[str] | None = None,
+    measurement_units: str = "",
     equation: str = "",
+    equation_or_rule: str = "",
     thresholds: dict[str, Any] | None = None,
+    threshold_source: str = "",
     calculated_result: dict[str, Any] | None = None,
     exceptions_considered: list[str] | None = None,
     evidence_refs: list[str] | None = None,
     reason: str = "",
+    missing_inputs: list[str] | None = None,
     findings: list[dict[str, Any]] | None = None,
     gate_type: str = "physics",
 ) -> dict[str, Any]:
@@ -38,6 +43,7 @@ def make_gate_receipt(
 
     `verdict` mirrors `status` for backward compatibility (UNMEASURED kept as-is).
     """
+    eq = equation_or_rule or equation
     receipt: dict[str, Any] = {
         "gate": gate_id,
         "gate_id": gate_id,
@@ -45,11 +51,16 @@ def make_gate_receipt(
         "verdict": status,  # alias — includes UNMEASURED
         "reason": reason,
         "inputs": inputs or {},
-        "equation": equation,
+        "inputs_used": inputs_used or [],
+        "measurement_units": measurement_units,
+        "equation": eq,
+        "equation_or_rule": eq,
         "thresholds": thresholds or {},
+        "threshold_source": threshold_source,
         "calculated_result": calculated_result or {},
         "exceptions_considered": exceptions_considered or [],
         "evidence_refs": evidence_refs or [],
+        "missing_inputs": missing_inputs or [],
         "findings": findings or [],
         "type": gate_type,
     }

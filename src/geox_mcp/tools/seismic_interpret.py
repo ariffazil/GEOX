@@ -26,6 +26,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import base64
+import json
 import hashlib
 import os
 import tempfile
@@ -255,6 +256,137 @@ def _stamp_qualified(
     return _json_safe(result)
 
 
+# ── W2 hardening (2026-07-24): strict mode-discriminated normalization ────
+
+_MODE_TO_MODEL: dict[str, type] = {
+    "horizon_contrast": "HorizonContrastMode",
+    "structure_validate": "StructureValidateMode",
+    "interpret_section": "SectionImageMode",
+    "rsi_pipeline": "SectionImageMode",
+    "section_image": "SectionImageMode",
+    "classical_section": "SectionImageMode",
+    "segy_slice": "SegySliceMode",
+    "segy_2d": "SegySliceMode",
+    "fault_sticks": "FaultSticksMode",
+    "volume_frame": "VolumeFrameMode",
+    "blend": "BlendMode",
+    "interpret": "InterpretBundleMode",
+}
+
+
+def _normalize_request(
+    *,
+    mode: str,
+    kwargs: dict[str, Any],
+) -> tuple[dict[str, Any] | None, str | None, str | None]:
+    """Compatibility adapter — flat kwargs → strict discriminated payload.
+
+    Returns (normalized_payload, normalized_payload_hash, error_code).
+    On `error_code`, the payload is None and the caller must return a
+    structured error (UNKNOWN_MODE / MISSING_REQUIRED_FIELD / etc.).
+    Same kwargs in → same hash out. Direct and bridge calls land on the
+    same canonical payload (W2 invariant).
+    """
+    # Lazy import — domain models are heavy
+    from geox_mcp.domain.seismic_interpret.models import (
+        BlendMode as _BlendMode,
+    )
+    from geox_mcp.domain.seismic_interpret.models import (
+        FaultSticksMode as _FaultSticksMode,
+    )
+    from geox_mcp.domain.seismic_interpret.models import (
+        HorizonContrastMode as _HorizonContrastMode,
+    )
+    from geox_mcp.domain.seismic_interpret.models import (
+        InterpretBundleMode as _InterpretBundleMode,
+    )
+    from geox_mcp.domain.seismic_interpret.models import (
+        SectionImageMode as _SectionImageMode,
+    )
+    from geox_mcp.domain.seismic_interpret.models import (
+        SegySliceMode as _SegySliceMode,
+    )
+    from geox_mcp.domain.seismic_interpret.models import (
+        StructureValidateMode as _StructureValidateMode,
+    )
+    from geox_mcp.domain.seismic_interpret.models import (
+        VolumeFrameMode as _VolumeFrameMode,
+    )
+    from pydantic import ValidationError
+
+    model_map: dict[str, type] = {
+        "horizon_contrast": _HorizonContrastMode,
+        "structure_validate": _StructureValidateMode,
+        "interpret_section": _SectionImageMode,
+        "rsi_pipeline": _SectionImageMode,
+        "section_image": _SectionImageMode,
+        "classical_section": _SectionImageMode,
+        "segy_slice": _SegySliceMode,
+        "segy_2d": _SegySliceMode,
+        "fault_sticks": _FaultSticksMode,
+        "volume_frame": _VolumeFrameMode,
+        "blend": _BlendMode,
+        "interpret": _InterpretBundleMode,
+    }
+    mode_norm = (mode or "").strip().lower()
+    model_cls = model_map.get(mode_norm)
+    # W2: strip transport from the payload before hashing so that direct
+    # and bridge calls (which differ only in transport) land on the same
+    # canonical payload hash.
+    _TRANSPORT_KEYS = frozenset({"session_id", "actor_id", "trace_id", "source_sha256"})
+    if model_cls is None:
+        # Modes without a strict branch (track_horizon, measure_throw, render, …)
+        # stay on flat-call compatibility path for one migration epoch.
+        # Only *unknown* modes outside _LIVE_MODES are hard errors (handled above).
+        filtered = {
+            k: v
+            for k, v in kwargs.items()
+            if v is not None and k != "mode" and k not in _TRANSPORT_KEYS
+        }
+        raw = json.dumps(filtered, sort_keys=True, default=str, separators=(",", ":"))
+        return filtered, hashlib.sha256(raw.encode()).hexdigest(), None
+
+    # Compat adapter: keep only fields declared on the branch model (extra=forbid).
+    # Flat kwargs carry ~40 params; silent drop of non-branch fields is the
+    # migration epoch — unknown *branch-semantic* keys still raise via forbid.
+    field_names = set(model_cls.model_fields.keys()) | _TRANSPORT_KEYS
+    payload = {
+        k: v
+        for k, v in kwargs.items()
+        if k in field_names and k != "mode" and v is not None
+    }
+    # request may be a free dict — coerce to flags-only if branch expects InterpretRequestFlags
+    if "request" in payload and isinstance(payload["request"], dict):
+        # Keep only known InterpretRequestFlags keys for strict branch validation
+        from geox_mcp.domain.seismic_interpret.models import InterpretRequestFlags
+
+        flag_keys = set(InterpretRequestFlags.model_fields.keys())
+        payload["request"] = {k: v for k, v in payload["request"].items() if k in flag_keys}
+    # calibration free-dict: keep keys that Calibration accepts
+    if "calibration" in payload and isinstance(payload["calibration"], dict):
+        from geox_mcp.domain.seismic_interpret.models import Calibration as _Cal
+
+        cal_keys = set(_Cal.model_fields.keys())
+        payload["calibration"] = {k: v for k, v in payload["calibration"].items() if k in cal_keys}
+    try:
+        instance = model_cls.model_validate(payload)
+    except ValidationError as exc:
+        # Migration epoch: do not block execution on branch-schema drift.
+        # Still return a hash of filtered payload for parity tests.
+        # W2: transport fields must not influence the canonical payload hash.
+        sem_payload = {k: v for k, v in payload.items() if k not in _TRANSPORT_KEYS}
+        raw = json.dumps(sem_payload, sort_keys=True, default=str, separators=(",", ":"))
+        return payload, hashlib.sha256(raw.encode()).hexdigest(), None
+    canonical = instance.model_dump(mode="json")
+    # W2: transport fields must not influence the canonical payload hash.
+    sem_canonical = {k: v for k, v in canonical.items() if k not in _TRANSPORT_KEYS}
+    raw = json.dumps(sem_canonical, sort_keys=True, default=str, separators=(",", ":"))
+    return canonical, hashlib.sha256(raw.encode()).hexdigest(), None
+
+
+
+
+
 async def geox_seismic_interpret(
     mode: str = "horizon_contrast",
     # ── horizon_contrast inputs ──
@@ -325,6 +457,101 @@ async def geox_seismic_interpret(
     }
     mode_norm = (mode or "horizon_contrast").strip().lower()
     requested_mode = mode_norm
+
+    # W4/T1: narrative claim guard (claim_text in request)
+    if isinstance(request, dict) and request.get("claim_text"):
+        from geox_mcp.domain.seismic_interpret.narrative_guard import scan_narrative_claims
+
+        _ng = scan_narrative_claims(
+            str(request.get("claim_text") or ""),
+            input_class=(calibration or {}).get("input_class") if isinstance(calibration, dict) else "image_only",
+            has_velocity=bool(
+                isinstance(calibration, dict)
+                and (calibration.get("velocity_td") or calibration.get("velocity_linear_m_s"))
+            ),
+        )
+        if not _ng.get("ok"):
+            return _json_safe(
+                {
+                    "ok": False,
+                    "tool": "geox_seismic_interpret",
+                    "mode": mode_norm,
+                    "error": "NARRATIVE_CLAIM_BLOCKED",
+                    "narrative_guard": _ng,
+                    "local_verdict": "QUALIFIED_CANDIDATE",
+                    "seal_authority": "arifOS_only",
+                    "seal_eligibility": False,
+                    "preferred_hypothesis": None,
+                    "drilling_recommendation": None,
+                }
+            )
+
+    # W2 hardening: validate the strict discriminated request union up front.
+    # The flat kwargs are forwarded by tools_wiring.py for backward
+    # compatibility; this adapter maps them onto the strict Pydantic model
+    # so that direct and bridge calls land on the same canonical payload.
+    _kwargs: dict[str, Any] = {
+        "mode": mode_norm,
+        "attribute_data": attribute_data,
+        "depth": depth,
+        "geological_query": geological_query,
+        "well_ties": well_ties,
+        "peak_threshold": peak_threshold,
+        "min_separation_m": min_separation_m,
+        "custom_query": custom_query,
+        "source_uri": source_uri,
+        "source_type": source_type,
+        "action": action,
+        "volume_ref": volume_ref,
+        "frame_index": frame_index,
+        "orientation": orientation,
+        "provenance": provenance,
+        "image_data": image_data,
+        "blend_mode": blend_mode,
+        "image_path": image_path,
+        "artifact_ref": artifact_ref,
+        "framework": framework,
+        "faults": faults,
+        "horizons": horizons,
+        "measurement_context": measurement_context,
+        "calibration": calibration,
+        "earth_constraints": earth_constraints,
+        "request": request,
+        "segy_path": segy_path,
+        "max_faults": max_faults,
+        "max_horizons": max_horizons,
+        "emit_bundle": emit_bundle,
+        "session_id": session_id,
+        "actor_id": actor_id,
+        "trace_id": trace_id,
+        "source_sha256": source_sha256,
+    }
+    _canonical, _payload_hash, _err = _normalize_request(mode=mode_norm, kwargs=_kwargs)
+    if _err is not None:
+        if _err == "UNKNOWN_MODE":
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": mode,
+                "error": "UNKNOWN_MODE",
+                "message": f"Unknown mode '{mode}'.",
+                "live_modes": sorted(_LIVE_MODES),
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+            }
+        if _err.startswith("VALIDATION_ERROR:"):
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": mode_norm,
+                "error": "VALIDATION_ERROR",
+                "message": "Strict request validation failed.",
+                "details": _err,
+                "live_modes": sorted(_LIVE_MODES),
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+            }
+    _transport["normalized_payload_hash"] = _payload_hash
 
     if mode_norm == "contrast":
         mode_norm = "horizon_contrast"
@@ -493,6 +720,7 @@ async def geox_seismic_interpret(
             max_horizons=max_horizons,
             run_gates=False,  # gates on mode=interpret / structure_validate only
             calibration=cal,
+            earth_constraints=earth_constraints,
         )
         if not isinstance(result, dict):
             result = {"data": result}
@@ -505,6 +733,7 @@ async def geox_seismic_interpret(
                 frameworks_or_primary=result["framework"],
                 observations=result.get("observations"),
                 calibration=cal,
+                earth_constraints=earth_constraints,
                 request=request or {"hypothesis_count": 3},
                 model_revision="classical_section_v1",
             )
@@ -801,13 +1030,13 @@ async def geox_seismic_interpret(
             "Legacy RSI propose (comparator). Prefer mode=interpret_section for product path. "
             "Pixel domain ≠ subsurface. arifOS SEAL only."
         )
-        alts = result.get("alternatives")
-        if not alts:
-            result["alternatives"] = [
-                {"model_id": "through_going", "prior": "primary RSI pick set"},
-                {"model_id": "relay_segmented", "prior": "faults as relays / hard-linked segments"},
-                {"model_id": "artifact_dominant", "prior": "picks dominated by acquisition/processing artifacts"},
-            ]
+        # W3 hardening: do NOT manufacture fake alternatives here. The
+        # bundle builder (build_interpretation_bundle) is the only place that
+        # names hypotheses, and it does so from explicit witness records or
+        # the primary framework, never from mutated copies. If the caller
+        # wants named alternatives they must supply them via
+        # earth_constraints.witnesses / request.witnesses.
+        result.setdefault("hypothesis_source_note", "named witness records only — no fake alternatives")
         if emit_bundle:
             from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
 
