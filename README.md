@@ -45,6 +45,21 @@ OBSERVED DATA → DERIVATION → INTERPRETATION → CHALLENGE → FALSIFICATION 
 
 Claims can be created, challenged, falsified, recomputed, sealed (immutable record), or held (888_HOLD — awaiting human ratification). Every state transition carries an epistemic label and uncertainty band.
 
+```mermaid
+graph LR
+    subgraph GEOX [🌍 GEOX — Geological Claim Engine]
+        OBS[📊 OBS<br/>Measured<br/>Logs · Seismic · Wells] -->|ingest| DER[📐 DER<br/>Computed<br/>Porosity · Impedance · Sw]
+        DER -->|interpret| INT[🧠 INT<br/>Interpreted<br/>Reservoir · Seal · Charge]
+        INT -->|assume| SPEC[🔮 SPEC<br/>Speculated<br/>Fluid · Migration]
+    end
+    INT -->|challenge| FALSIFY{⚡ Falsify<br/>Kill Matrix K001-K007}
+    FALSIFY -->|KILL| REJECT[❌ Rejected]
+    FALSIFY -->|PASS| JUDGE{⚖️ arifOS 888<br/>Constitutional Judge}
+    JUDGE -->|SEAL| VAULT[(VAULT999<br/>Immutable Claim)]
+    JUDGE -->|HOLD| REVIEW[⏸️ Human Review]
+    JUDGE -->|VOID| BLOCK[🚫 Blocked]
+```
+
 ---
 
 ## Capabilities
