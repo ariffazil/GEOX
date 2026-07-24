@@ -216,7 +216,13 @@ jobs:
         run: pip install -e ".[dev]" --quiet
 
       - name: Test
-        run: python -m pytest tests/ -q --tb=short --ignore=tests/benchmarks --ignore=tests/integration/test_biostrat_calibrate.py
+        # W0 ship gate — readiness suite + alignment (matches geox-ci / domain-ci)
+        run: |
+          PYTHONPATH=src python -m pytest -q --tb=short \
+            tests/test_mcp_apps_readiness.py \
+            tests/test_demo_well_hydrate.py \
+            tests/test_visual_image_publish.py \
+            tests/alignment/
 
   # ─── Q4: Registry truth? ────────────────────────────────────────────────
   q4-registry-truth:
