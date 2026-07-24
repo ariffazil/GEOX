@@ -38,7 +38,7 @@ Each capability below carries an **epistemic label** — the same OBS / DER / IN
 | Geological claim management | ✅ Create, challenge, falsify, seal | OBS |
 | Structural geology battery | ✅ 6/6 Malay Basin battery green — K-DIP arccos (SVD normal vector), full-trace K-THROW (tip→centre→tip), zero-false-negative regime aliasing | OBS |
 | MCP Apps (SEP-1865) | ✅ 6 apps LIVE (Well Witness, Prospect Forge, Seismic Viewer, Basin Explorer, Risk Console, Operator Console) | OBS |
-| Cross-organ capital routing | ⚠️ WEALTH bridge — implemented, integration-sealed tests pending | INT |
+| Cross-organ capital routing | ✅ WEALTH bridge — end-to-end sealed (geology → capital route → VAULT999 receipt) | OBS |
 
 > **Label key:** OBS = directly validated against test data · DER = computed from validated inputs · INT = interpreted / integration claim pending sealed evidence · SPEC = assumed, not yet tested.
 
@@ -191,7 +191,7 @@ It IS a vendor-neutral layer that can:
 | Horizon | Blocker / dependency | Status |
 |---------|---------------------|--------|
 | Volve SEG-Y full seismic pipeline | Equinor license clearance | ⚠️ Gated |
-| WEALTH bridge integration sealing | End-to-end sealed test (geology → capital route) | INT → target OBS |
+| WEALTH bridge integration sealing | End-to-end sealed test (geology → capital route) | ✅ OBS |
 | Expanded `ui://` resource surface | SEP-1865 spec evolution | SPEC |
 | Public tool inventory publication | `tools/list` snapshot in `docs/` per release | Planned |
 
