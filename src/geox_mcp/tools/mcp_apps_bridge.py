@@ -561,6 +561,7 @@ _tool_app_fallback: dict[str, str] = {
     # Well tools → WellDesk
     "geox_well_ingest": "well_desk",
     "geox_well_desk": "well_desk",
+    "geox_well_qc": "well_desk",  # P0 2026-07-24: only public tool previously unbound
     "geox_well_desurvey": "well_desk",
     "geox_lem_predict": "well_desk",  # PR3: LEM → Well Witness
     # Seismic tools → Seismic Vision

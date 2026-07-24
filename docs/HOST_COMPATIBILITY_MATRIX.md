@@ -1,23 +1,26 @@
 # GEOX MCP Host Compatibility Matrix
 
-This document provides the compatibility and validation status of the 33-tool GEOX MCP service across various host environments. All tests were verified against the unified FastMCP v3.x server surface.
+This document provides the compatibility and validation status of the **32-tool** GEOX MCP service across host environments.  
+**SOT:** live `tools/list` + `curl :8081/health` beat this file. Updated 2026-07-24.
 
 ## Compatibility Matrix
 
-| MCP Host Environment | tools/list = 33 | resources/list | resources/read | prompts/list | prompts/get | consolidated tools | literature ingest | query intake | abstraction guard | status |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **MCP Inspector** | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **FULL** |
-| **Claude Code** | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **FULL** |
-| **Claude Desktop** | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **FULL** |
-| **VS Code Copilot MCP** | PASS | N/A | N/A | N/A | N/A | PASS | PASS | PASS | PASS | **PARTIAL** |
-| **OpenAI / ChatGPT Connector** | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **FULL** |
-| **OpenAI Responses API Remote MCP** | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **FULL** |
+| MCP Host Environment | tools/list = 32 | resources/list | resources/read | prompts/list | prompts/get | WellDesk ui:// | status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **MCP Inspector** | PASS | PASS | PASS | PASS | PASS | p0-viz | **FULL** |
+| **Claude Code / Grok** | PASS | PASS | PASS | PASS | PASS | p0-viz | **FULL** |
+| **Claude Desktop** | PASS | PASS | PASS | PASS | PASS | p0-viz | **FULL** |
+| **VS Code Copilot MCP** | PASS | N/A | N/A | N/A | N/A | meta only | **PARTIAL** |
+| **OpenAI / ChatGPT Connector** | PASS | PASS | PASS | PASS | PASS | p0-viz | **FULL*** |
+| **OpenAI Responses API Remote MCP** | PASS | PASS | PASS | PASS | PASS | p0-viz | **FULL*** |
 
-*Note: VS Code Copilot MCP does not support first-class MCP resources or prompts natively, but has access to the full 33-tool surface.*
+\* ChatGPT visual QA re-run after 2026-07-24 deploy still deferred — protocol surface ready; host screenshot not re-sealed this session.
+
+*Note: VS Code Copilot MCP does not support first-class MCP resources or prompts natively, but has access to the full 32-tool surface.*
 
 ## Tested Key Endpoints
 
-- **Tools (tools/list & tools/call):** Exposes exactly 33 orthogonal tools. Checks for category error, basin constraints, and physics guardrails are active on all boundaries.
+- **Tools (tools/list & tools/call):** Exposes **32** public tools (incl. `geox_well_qc`). Physics guardrails and session gates active.
 - **Resources (resources/list & resources/read):**
   - `geox://identity`: returns core substrate witness state.
   - `geox://surface/truth`: dynamically validates the tool count (33) across README, server-card, llms.txt, and capabilities.
