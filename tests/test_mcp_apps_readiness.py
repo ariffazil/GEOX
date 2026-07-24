@@ -37,7 +37,8 @@ def ensure_surface_manifest():
 async def test_01_tools_list_schema_and_ui_bindings():
     """Verify tools/list exposes _meta.ui.resourceUri and openai/outputTemplate alias for 30 canonical tools."""
     tools = await mcp.list_tools()
-    assert len(tools) == 31, f"Expected 31 canonical tools, got {len(tools)}"
+    # Live public surface is 32 tools (incl. geox_well_qc) as of 2026-07-24
+    assert len(tools) == 32, f"Expected 32 canonical tools, got {len(tools)}"
 
     tools_by_name = {t.name: t for t in tools}
 
@@ -201,9 +202,9 @@ async def test_07_well_desk_resource_is_host_bridge_shell():
 
 @pytest.mark.asyncio
 async def test_08_all_tools_have_four_annotations_and_ui_binding():
-    """PR3: 31 tools — full MCP annotation quartet + ui.resourceUri (or documented)."""
+    """PR3: 32 tools — full MCP annotation quartet + ui.resourceUri (or documented)."""
     tools = await mcp.list_tools()
-    assert len(tools) == 31
+    assert len(tools) == 32
     needed = ("readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint")
     missing_ann = []
     missing_ui = []

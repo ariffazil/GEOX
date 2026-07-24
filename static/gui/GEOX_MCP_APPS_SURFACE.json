@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": 59698.582,
+  "generated_at": 105153.013,
   "organ": "GEOX",
-  "total_canonical_tools": 31,
-  "total_ui_resources": 20,
-  "active_ui_resources": 16,
+  "total_canonical_tools": 32,
+  "total_ui_resources": 22,
+  "active_ui_resources": 18,
   "deprecated_ui_resources": 3,
   "planned_ui_resources": 1,
   "ui_resources": [
@@ -211,6 +211,26 @@
     },
     {
       "id": "gravmag-studio",
+      "uri": "ui://geox/gravmag-studio",
+      "title": "_alias_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 32029,
+      "content_hash": "sha256:dc40fb98f565881f",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "gravmag-studio",
       "uri": "ui://geox/gravmag-studio.html",
       "title": "geox_gravmag_studio_v1",
       "status": "active",
@@ -391,13 +411,14 @@
       "title": "GEOX WellDesk",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 16708,
-      "content_hash": "sha256:3e5deb3d8d9b8d72",
+      "content_bytes": 23612,
+      "content_hash": "sha256:ab1c4ae9b5623dad",
       "bound_tools": [
         "geox_lem_predict",
         "geox_petrophysics",
         "geox_well_desk",
-        "geox_well_ingest"
+        "geox_well_ingest",
+        "geox_well_qc"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -418,6 +439,26 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 17470,
       "content_hash": "sha256:5cd8639a8ea977df",
+      "bound_tools": [],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "workspace-v1",
+      "uri": "ui://geox/workspace-v1",
+      "title": "_alias_handler",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 11477,
+      "content_hash": "sha256:563493114642f55e",
       "bound_tools": [],
       "csp_domains": [
         "geox.arif-fazil.com",

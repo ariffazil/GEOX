@@ -1,23 +1,58 @@
 # GEOX MCP Apps Verification Matrix
 
-| Widget URI | Backing tool(s) | resources/read OK | Renders in host | Tool round-trip from iframe | Empty-state OK | Error-state OK | CSP parity | Status |
-|---|---|---|---|---|---|---|---|---|
-| `ui://geox/well-desk` | `geox_well_desk` | ✅ YES (17 KB) | ✅ PASS (Canvas2D) | ✅ PASS (SEP-1865) | ✅ PASS (Clear error) | ✅ PASS (NO_LAS_DATA) | ✅ PASS (Parity) | **READY** |
-| `ui://well/desk` | `geox_well_desk` | ✅ YES (11.5 KB) | ✅ PASS (Canvas2D) | ✅ PASS (SEP-1865) | ✅ PASS (Clear error) | ✅ PASS (NO_LAS_DATA) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/workspace-v1.html` | `geox_workspace_v1_open` | ✅ YES (11.5 KB) | ✅ PASS (Evidence DOM) | ✅ PASS (SEP-1865) | ✅ PASS (Message) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/workspace-v1` | `geox_workspace_v1_open` | ✅ YES (11.5 KB) | ✅ PASS (Evidence DOM) | ✅ PASS (SEP-1865) | ✅ PASS (Message) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/workbench-v1.html` | `geox_workspace_v1_open` | ✅ YES (17.5 KB) | ✅ PASS (Evidence DOM) | ✅ PASS (SEP-1865) | ✅ PASS (Message) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/gravmag-studio.html` | `geox_gravmag_studio` | ✅ YES (32 KB) | ✅ PASS (Canvas2D Heatmap) | ✅ PASS (SEP-1865) | ✅ PASS (Preview mode) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/gravmag-studio` | `geox_gravmag_studio` | ✅ YES (32 KB) | ✅ PASS (Canvas2D Heatmap) | ✅ PASS (SEP-1865) | ✅ PASS (Preview mode) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/seismic-vision` | `geox_seismic_mode_router` | ✅ YES (22 KB) | ✅ PASS (2D/3D Viewer) | ✅ PASS (SEP-1865) | ✅ PASS (Empty trace msg) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/earth-volume` | `geox_earth_volume` | ✅ YES (9.3 KB) | ✅ PASS (3D Volume DOM) | ✅ PASS (SEP-1865) | ✅ PASS (Placeholder) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/judge-console` | `geox_judge_console` | ✅ YES (34 KB) | ✅ PASS (Audit Panel) | ✅ PASS (SEP-1865) | ✅ PASS (Empty queue) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/geoprobe` | `geox_geoprobe` | ✅ YES (35 KB) | ✅ PASS (Probe Dashboard) | ✅ PASS (SEP-1865) | ✅ PASS (Default probe) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/basin-explorer` | `geox_basin_explorer` | ✅ YES (20.7 KB) | ✅ PASS (Basin Panel) | ✅ PASS (SEP-1865) | ✅ PASS (No selection) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/earth-map` | `geox_earth_map` | ✅ YES (17.5 KB) | ✅ PASS (Cesium/OSM Map) | ✅ PASS (SEP-1865) | ✅ PASS (Global view) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/prospect-studio` | `geox_prospect_studio` | ✅ YES (35 KB) | ✅ PASS (Prospect Dashboard) | ✅ PASS (SEP-1865) | ✅ PASS (No closure) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/risk-console` | `geox_risk_console` | ✅ YES (34 KB) | ✅ PASS (Risk Audit) | ✅ PASS (SEP-1865) | ✅ PASS (Empty risk log) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/visual-hub` | `geox_visual_hub` | ✅ YES (142 KB) | ✅ PASS (5-in-1 Dashboard) | ✅ PASS (SEP-1865) | ✅ PASS (Hub ready) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/catalog` | `geox_catalog` | ✅ YES (3 KB) | ✅ PASS (Skills Registry) | ✅ PASS (SEP-1865) | ✅ PASS (44 skills) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/prospect-ui` | `geox_prospect_ui` | ✅ YES (35 KB) | ✅ PASS (Prospect View) | ✅ PASS (SEP-1865) | ✅ PASS (No prospect) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
-| `ui://geox/geox-mcp-visual` | `geox_visual_hub` | ✅ YES (142 KB) | ✅ PASS (Visual Engine) | ✅ PASS (SEP-1865) | ✅ PASS (Dashboard ready) | ✅ PASS (Handled) | ✅ PASS (Parity) | **READY** |
+> **SOT date:** 2026-07-24 · **Live tools:** 32 · **Host shell WellDesk:** `p0-viz.html`  
+> **Truth rule:** `resources/read` + readiness tests beat this table.  
+> Labels: `READY` = host-usable now · `PARTIAL` = HTML serves, flow incomplete · `PLANNED` · `DEPRECATED`
+
+## Primary host apps (MCP iframe)
+
+| Widget URI | Backing tool(s) | HTML on disk | Host bridge | Epistemic | Status |
+|---|---|---|---|---|---|
+| `ui://geox/well-desk` | `geox_well_desk`, `geox_petrophysics`, `geox_well_ingest`, `geox_well_qc`, `geox_lem_predict` | `apps/well-desk/p0-viz.html` | SEP-1865 `ui/initialize` | SYNTHETIC badge | **READY** (P0+) |
+| `ui://geox/basin-explorer` | `geox_basin`, `geox_basin_backstrip`, … | `static/gui/basin_explorer/index.html` | tool meta | — | **READY** |
+| `ui://geox/judge-console` | `geox_falsify`, `geox_evidence`, … | `apps/judge-console/index.html` | tool meta | — | **READY** |
+| `ui://geox/earth-map` | map chain | `apps/workbench-v1.html` | tool meta | — | **READY** |
+| `ui://geox/prospect-studio` | `geox_prospect` | `apps/prospect-ui/index.html` | tool meta | — | **READY** |
+| `ui://geox/risk-console` | `geox_claim`, … | `apps/judge-console/index.html` | tool meta | — | **READY** |
+| `ui://geox/visual-hub` | visual tools + workspace | `apps/geox-mcp-visual/index.html` | tool meta | — | **READY** |
+| `ui://geox/seismic-vision` | seismic ingest/interpret | `static/gui/seismic_viewer/index.html` | tool meta | — | **READY** |
+| `ui://geox/earth-volume` | subsurface / deep time | `apps/earth-volume/index.html` | tool meta | — | **READY** |
+| `ui://geox/geoprobe` | geomechanics / prospect | `apps/prospect-ui/index.html` | tool meta | — | **READY** |
+| `ui://geox/catalog` | `geox_surface_status` | `apps/site/catalog.html` | tool meta | — | **READY** |
+
+## Public browser URLs (Caddy `/var/www/html/geox`)
+
+| URL | Serves | Status |
+|---|---|---|
+| `https://geox.arif-fazil.com/apps/well-desk/index.html` | Full modular WellDesk | **READY** (deployed 2026-07-24) |
+| `https://geox.arif-fazil.com/apps/well-desk/p0-viz.html` | Host shell twin | **READY** |
+| MCP `ui://geox/well-desk` | **p0-viz only** (not multi-file index) | **READY** for host |
+
+## Gate tests
+
+```bash
+cd /root/GEOX && PYTHONPATH=src pytest tests/test_mcp_apps_readiness.py -q
+# Target: 0 failed (expect 32 tools, all UI-bound)
+```
+
+## Explicit non-goals / residual
+
+| Item | Status |
+|---|---|
+| Real LAS hydrate into p0-viz tracks | PARTIAL — needs tool-result curves |
+| `generate` vaulted evidence_refs | OPEN |
+| ChatGPT live visual QA re-run | DEFERRED |
+| Multi-file `index.html` inside MCP iframe | NOT supported (relative scripts / CSP) |
+
+## Deprecated / planned
+
+| ID | Status |
+|---|---|
+| attribute-audit | DEPRECATED |
+| georeference-map | DEPRECATED |
+| seismic-vision-review | DEPRECATED |
+| analog-digitizer | PLANNED |
+
+---
+
+*Rewritten 2026-07-24 after F2 audit — prior "all READY" matrix overclaimed 33-tool surface.*
