@@ -70,13 +70,22 @@ CLAIM_STATES: dict[str, str] = {
 CANONICAL_ALIASES = {
     "GR": ["GR", "GRC", "CGR", "SGR", "GAMMA"],
     "RT": ["RT", "ILD", "LLD", "RDEP", "RESDEEP", "AT90", "RESD", "RES_DEEP"],
-    "RHOB": ["RHOB", "DEN", "DENS", "ZDEN"],
-    "NPHI": ["NPHI", "NEUT", "TNPH", "CNCF"],
-    "DT": ["DT", "DTC", "AC"],
+    "RHOB": ["RHOB", "DEN", "DENS", "ZDEN", "RHOZ"],
+    "NPHI": ["NPHI", "NEUT", "TNPH", "CNCF", "PHI"],
+    "DT": ["DT", "DTCO", "DTC", "AC", "SONIC"],
     "PEF": ["PEF", "PE"],
     "CALI": ["CALI", "HCAL", "CAL", "DCAL"],
     "SP": ["SP"],
     "DTS": ["DTS", "DTSM"],
+}
+
+# Family prefix mapping rules for suffixed mnemonics (e.g. SONIC_DESPIKED -> DT)
+_FAMILY_PREFIXES = {
+    "DT": ("SONIC", "DT", "DTCO", "DTC", "AC"),
+    "RHOB": ("RHOB", "RHOZ", "ZDEN", "DEN", "DENS"),
+    "GR": ("GR", "GAMMA", "CGR", "SGR"),
+    "RT": ("ILD", "LLD", "RDEP", "RES", "AT90", "RESD", "RT"),
+    "NPHI": ("NPHI", "NEUT", "TNPH", "CNCF"),
 }
 
 # Physical range QC limits per canonical curve
@@ -89,20 +98,33 @@ _CURVE_RANGES = {
 }
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# INTERNAL HELPER FUNCTIONS (not MCP tools)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-
 def _map_canonical_curves(raw_mnemonics: list[str]) -> tuple[dict[str, str], list[str]]:
     """Map raw LAS mnemonics to canonical names. Returns (canonical_map, missing_canonicals)."""
-    raw_upper = {m.upper() for m in raw_mnemonics}
+    raw_upper = [m.upper() for m in raw_mnemonics]
     canonical_map: dict[str, str] = {}  # canonical -> raw mnemonic used
+
     for canon, aliases in CANONICAL_ALIASES.items():
+        # First check exact alias matches
+        found_raw = None
         for alias in aliases:
-            if alias in raw_upper:
-                canonical_map[canon] = alias
+            for raw in raw_upper:
+                if raw == alias:
+                    found_raw = raw
+                    break
+            if found_raw:
                 break
+
+        # If no exact match, check family prefix matching (e.g. SONIC_DESPIKED -> DT)
+        if not found_raw and canon in _FAMILY_PREFIXES:
+            prefixes = _FAMILY_PREFIXES[canon]
+            for raw in raw_upper:
+                if any(raw.startswith(p + "_") or raw.startswith(p + "-") or raw == p for p in prefixes):
+                    found_raw = raw
+                    break
+
+        if found_raw:
+            canonical_map[canon] = found_raw
+
     missing = [c for c in CANONICAL_ALIASES if c not in canonical_map]
     return canonical_map, missing
 
@@ -113,21 +135,30 @@ def _detect_depth_unit(las_path: str) -> str:
         import lasio
 
         las = lasio.read(las_path, ignore_data=True)
+        raw_unit = ""
         # Check DEPT curve unit
         for key in ["DEPT", "DEPTH", "MD"]:
             try:
                 unit = las.curves[key].unit.upper().strip()
                 if unit:
-                    return unit
+                    raw_unit = unit
+                    break
             except Exception:
                 pass
         # Fall back to STRT unit in well header
-        try:
-            strt_unit = las.well["STRT"].unit.upper().strip()
-            if strt_unit:
-                return strt_unit
-        except Exception:
-            pass
+        if not raw_unit:
+            try:
+                strt_unit = las.well["STRT"].unit.upper().strip()
+                if strt_unit:
+                    raw_unit = strt_unit
+            except Exception:
+                pass
+
+        if raw_unit in ("F", "FT", "FEET", "FOOT", ".F", ".FT", ".FEET"):
+            return "FT"
+        if raw_unit in ("M", "METRE", "METER", "METRES", "METERS", ".M"):
+            return "M"
+        return raw_unit or "UNKNOWN"
     except Exception:
         pass
     return "UNKNOWN"

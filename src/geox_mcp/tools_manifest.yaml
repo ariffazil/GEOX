@@ -289,6 +289,25 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: false
+- name: geox_well_qc
+  domain: earth.well
+  axis: reason
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Quality control for well data: depth monotonicity, null %, physical range checks.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
 - name: geox_surface_status
   domain: earth.meta
   axis: observe
@@ -1621,4 +1640,3 @@ compat_tools:
 - geox_volume_frame_tool
 - geox_well_desk_open
 - geox_well_desk_publish
-- geox_well_qc

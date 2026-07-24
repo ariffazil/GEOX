@@ -26,7 +26,7 @@ logger = logging.getLogger("geox.canonical.qc")
 
 async def geox_data_qc_bundle(
     artifact_ref: str,
-    artifact_type: str,
+    artifact_type: str = "well_log",
     qc_mode: Literal["full", "header", "curves", "depth", "completeness", "feature_info"] = "full",
     # ── Eureka 2026-06-05 (FJIS): feature_info mode inputs ───────────────
     # Required when qc_mode='feature_info'. Ignored otherwise.
@@ -34,6 +34,9 @@ async def geox_data_qc_bundle(
     existing_features: list[str] | None = None,
     candidate_feature: str | None = None,
     target_key: str = "value",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
 ) -> dict:
     """Real QC: depth monotonicity, null %, physical range checks.
 

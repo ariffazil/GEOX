@@ -419,6 +419,11 @@ def ui_tool_result(
         }
         return payload
 
+    # 3-channel truth law: error state must never carry false-success text
+    _FALSE_SUCCESS = ("complete", "ready", "loaded", "success")
+    if is_error and any(w in text.lower() for w in _FALSE_SUCCESS):
+        text = "[GEOX ERROR] Tool execution failed — check structuredContent for details."
+
     meta = ui_meta(app_id, params, **(extra_meta or {}))
     return ToolResult(
         content=[TextContent(type="text", text=text)],
@@ -487,12 +492,20 @@ def wrap_as_ui_tool_result(
                 or result.get("status")
                 or f"{app_id}: ok={result.get('ok', result.get('status', 'done'))}"
             )
+        _is_err = bool(
+            result.get("isError")
+            or result.get("is_error")
+            or result.get("ok") is False
+            or result.get("status") == "INVALID"
+            or result.get("execution_status") in ("ERROR", "FAILED")
+            or (isinstance(result.get("primary_artifact"), dict) and result["primary_artifact"].get("status") == "ERROR")
+        )
         return ui_tool_result(
             app_id=app_id,
             text=str(summary),
             structured=sc,
             params=params,
-            is_error=bool(result.get("isError") or result.get("is_error") or result.get("ok") is False),
+            is_error=_is_err,
         )
 
     return ui_tool_result(

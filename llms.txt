@@ -8,7 +8,7 @@
 2. **geox_petrophysics**: Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.
 3. **geox_seismic_ingest**: SEG-Y I/O, header inspection, export.
 4. **geox_seismic_compute**: Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.
-5. **geox_seismic_interpret**: Unified seismic interpretation: horizon/fault picking, RSI pipeline, vision, contrast detection. Modes: horizon_contrast, fault_sticks, volume_frame, blend, rsi_pipeline, contrast, vision.
+5. **geox_seismic_interpret**: One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.
 6. **geox_subsurface_model**: Subsurface model building: joint inversion, gravity/magnetic forward, MT forward.
 7. **geox_basin**: Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
 8. **geox_sequence**: Unified stratigraphy: sequence analysis, biostratigraphic parsing and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.
@@ -24,7 +24,7 @@
 18. **geox_sediment_mass_balance**: Source-to-sink sediment volume and mass accounting. Peters 2012 framework.
 19. **geox_thermal_maturity_history**: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
 20. **geox_claim_graph_evaluate**: Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.
-21. **geox_falsify**: Popperian falsification engine. Modes: full (Kill Matrix K001-K007 + contradiction scan), quick (Kill Matrix only), physics_only (contradiction scan only), carbonate_igneous_rte (Arif Burgess-RTE Matrix — carbonate vs igneous discrimination using Burgess morphology, rheology, thermodynamics, and elasticity with Sabah-weighted scoring). GENESIS/015: physics must prove the claim is right. ANY KILL → rejected. Constitutional rule: absence of thermal evidence ≠ proof of carbonate.
+21. **geox_falsify**: Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.
 22. **geox_contradiction_scan**: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
 23. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
 24. **geox_to_wealth_bridge**: Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.

@@ -18,12 +18,15 @@ logger = logging.getLogger("geox.well_qc")
 
 async def geox_well_qc(
     artifact_ref: str,
-    artifact_type: str,
+    artifact_type: str = "well_log",
     qc_mode: str = "full",
     samples: list[dict[str, Any]] | None = None,
     existing_features: list[str] | None = None,
     candidate_feature: str | None = None,
     target_key: str = "value",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
 ) -> dict[str, Any]:
     """Quality control for well data — depth monotonicity, null %, physical range checks.
 
@@ -37,7 +40,7 @@ async def geox_well_qc(
     """
     from geox_mcp.tools.qc import geox_data_qc_bundle as _impl
 
-    return await _impl(
+    res = await _impl(
         artifact_ref=artifact_ref,
         artifact_type=artifact_type,
         qc_mode=qc_mode,
@@ -45,4 +48,15 @@ async def geox_well_qc(
         existing_features=existing_features,
         candidate_feature=candidate_feature,
         target_key=target_key,
+        session_id=session_id,
+        actor_id=actor_id,
+        trace_id=trace_id,
     )
+    if isinstance(res, dict):
+        res.setdefault("session_id", session_id)
+        res.setdefault("actor_id", actor_id)
+        res.setdefault("trace_id", trace_id)
+        if "governance" in res and isinstance(res["governance"], dict):
+            res["governance"]["session_id"] = session_id or res["governance"].get("session_id")
+            res["governance"]["actor_id"] = actor_id or res["governance"].get("actor_id")
+    return res

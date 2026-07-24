@@ -340,3 +340,29 @@ async def test_10b_judge_basin_tools_list_bindings():
     assert (by_name["geox_visual_understand"].meta or {}).get("ui", {}).get("resourceUri", "").startswith(
         "ui://geox/visual-hub"
     )
+
+
+@pytest.mark.asyncio
+async def test_11_phase_01_truth_floor_and_csp_parity():
+    """Verify Phase 0.1 Truth Floor enforcement, demo provenance badges, and CSP parity."""
+    from geox_mcp.tools.integration_well import geox_well_desk
+
+    # 1. Random unknown well ID must return clear error, NOT silent curves
+    err_res = await geox_well_desk(well_id="XYZ-99", mode="open")
+    assert getattr(err_res, "isError", True) is True
+    assert "No LAS ingested for XYZ-99" in err_res.content[0].text
+    assert err_res.structured_content.get("error_class") == "NO_LAS_DATA"
+
+    # 2. Demo well ID must return curves with provenance badge
+    demo_res = await geox_well_desk(well_id="DEMO-KINABALU", mode="open")
+    assert getattr(demo_res, "isError", False) is False
+    assert demo_res.structured_content.get("provenance_badge") == "DATA: DEMO FIXTURE — NOT REAL WELL DATA"
+    assert "DATA: DEMO FIXTURE" in demo_res.content[0].text
+
+    # 3. Alias URIs resolve cleanly
+    resources = await mcp.list_resources()
+    uris = {str(r.uri) for r in resources}
+    assert "ui://geox/workspace-v1" in uris
+    assert "ui://geox/gravmag-studio" in uris
+    assert "ui://well/desk" in uris
+

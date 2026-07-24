@@ -363,11 +363,13 @@ class LASIngestor:
 
         # ── CONSTITUTIONAL GATE 3: Unit Governance (F05 Peace) ──
         depth_unit = _las_header_str(las.well, "UNIT", "STRT", "STOP").upper()
-        # Common pattern: STRT.M 100.00
-        if "M" not in depth_unit and "FT" not in depth_unit and "FEET" not in depth_unit:
+        # Common pattern: STRT.M 100.00 or STRT.F
+        valid_units = ("M", "METRE", "METER", "FT", "FEET", "FOOT", "F", ".F", ".FT", ".FEET")
+        has_valid = any(u in depth_unit for u in ("M", "METRE", "METER", "FT", "FEET", "FOOT")) or depth_unit.strip().startswith(("F", ".F"))
+        if not has_valid:
             # Try to find unit in curve header for depth
-            depth_curve_unit = str(las.curves[0].unit or "").upper()
-            if "M" not in depth_curve_unit and "FT" not in depth_curve_unit:
+            depth_curve_unit = str(las.curves[0].unit or "").upper().strip()
+            if not any(u in depth_curve_unit for u in ("M", "METRE", "METER", "FT", "FEET", "FOOT")) and depth_curve_unit not in ("F", ".F"):
                 raise ConstitutionalRefusal(
                     "Depth units missing or ambiguous. Refusing to guess between M/FT.", {"path": str(path)}
                 )
@@ -408,16 +410,25 @@ class LASIngestor:
 
         well_id = asset_id or (uwi_str if uwi_str != "UNKNOWN" else source.stem)
 
-        # Missing channels — use canonical alias expansion
+        # Missing channels — use canonical alias expansion & family prefix matching
         loaded_set = set(loaded_curves)
         missing = []
-        if not loaded_set.intersection(self.GR_ALIASES):
+
+        def _has_family(aliases, prefixes):
+            if loaded_set.intersection(aliases):
+                return True
+            for c in loaded_set:
+                if any(c.startswith(p + "_") or c.startswith(p + "-") or c == p for p in prefixes):
+                    return True
+            return False
+
+        if not _has_family(self.GR_ALIASES, ("GR", "GAMMA", "CGR", "SGR")):
             missing.append("GR")
-        if not loaded_set.intersection(self.RESISTIVITY_ALIASES):
+        if not _has_family(self.RESISTIVITY_ALIASES, ("ILD", "LLD", "RDEP", "RES", "AT90", "RESD", "RT")):
             missing.append("RT")
-        if not loaded_set.intersection(self.DENSITY_ALIASES):
+        if not _has_family(self.DENSITY_ALIASES, ("RHOB", "RHOZ", "ZDEN", "DEN", "DENS")):
             missing.append("RHOB")
-        if not loaded_set.intersection(self.POROSITY_ALIASES):
+        if not _has_family(self.POROSITY_ALIASES, ("NPHI", "NEUT", "TNPH", "CNCF", "PHI")):
             missing.append("NPHI")
 
         # Suitability
@@ -437,6 +448,8 @@ class LASIngestor:
         else:
             claim_state = ClaimTag.HYPOTHESIS
 
+        qc_prerequisite_met = (qcfail_count == 0 and suitability in ("decision_ready", "screening_only"))
+
         limitations = []
         if missing:
             limitations.append(f"Missing recommended curves: {missing}")
@@ -452,7 +465,7 @@ class LASIngestor:
             missing_channels=missing,
             suitability=suitability,
             claim_state=claim_state,
-            qc_prerequisite_met=(suitability != "void"),
+            qc_prerequisite_met=qc_prerequisite_met,
             limitations=limitations,
             vault_receipt={},
         )

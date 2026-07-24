@@ -103,7 +103,7 @@ def register_tools_on(mcp):
         normalize_units: bool = True,
         content_base64: str | None = None,
         filename: str | None = None,
-        target_dir: str = "/data/geox_las",
+        target_dir: str = "/data/wells",
         overwrite: bool = False,
         batch_mode: bool = False,
         artifact_refs: list[str] | None = None,
@@ -223,7 +223,14 @@ def register_tools_on(mcp):
             elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
                 _wid = _wid or result.structured_content.get("well_id")
             _is_err = bool(getattr(result, "is_error", False)) or (
-                isinstance(result, dict) and (result.get("isError") or result.get("ok") is False)
+                isinstance(result, dict) and (result.get("isError") or result.get("ok") is False or result.get("status") == "INVALID")
+            ) or (
+                hasattr(result, "structured_content") and isinstance(result.structured_content, dict) and (
+                    result.structured_content.get("status") == "INVALID"
+                    or result.structured_content.get("ok") is False
+                    or result.structured_content.get("execution_status") in ("ERROR", "FAILED")
+                    or (isinstance(result.structured_content.get("primary_artifact"), dict) and result.structured_content["primary_artifact"].get("status") == "ERROR")
+                )
             )
             return wrap_as_ui_tool_result(
                 result,
@@ -240,10 +247,10 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_well_ingest", source_organ="geox")
 
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_well_qc", annotations=_geox_annotations("geox_well_qc"))
+    @mcp.tool(name="geox_well_qc", annotations=_geox_annotations("geox_well_qc"))
     async def _well_qc(
         artifact_ref: str = "",
-        artifact_type: str = "",
+        artifact_type: str = "well_log",
         qc_mode: str = "full",
         samples: list[dict[str, Any]] | None = None,
         existing_features: list[str] | None = None,
