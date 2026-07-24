@@ -7,8 +7,7 @@ deliberately forbids producing a final geological verdict:
   - Output is always CANDIDATE_GEOMETRY, never OBS_GEOLOGY.
   - Every model carries a model_manifest (license, intended use,
     prohibited_use, training_dataset_refs).
-  - Promotion to live surface requires ≥5 benchmark gates (F3,
-    CRACKS, Parihaka, SEAM, CRACKS-like).
+  - Promotion to live surface requires ≥5 benchmark gates.
 
 Doctrine:
   - Models PROPOSE. Gates CHALLENGE.
@@ -22,22 +21,17 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
-# ──────────────────────────────────────────────────────────────────────
-# Model manifest (license-aware, AAPG/AGPL/CC-aware)
-# ──────────────────────────────────────────────────────────────────────
-
-
 License = Literal[
     "Apache-2.0",
     "MIT",
     "BSD-3-Clause",
     "BSL-1.1",
     "EUPL-1.2",
-    "LGPL-3.0",  # dynamic-link only
+    "LGPL-3.0",
     "CC-BY-4.0",
     "CC-BY-SA-4.0",
-    "CC-BY-NC-4.0",  # RESEARCH ONLY — flagged
-    "GPL-3.0",  # AVOID in commercial core
+    "CC-BY-NC-4.0",
+    "GPL-3.0",
     "Research-only",
 ]
 
@@ -47,7 +41,7 @@ class ModelManifest:
     """Every ONNX proposer must carry this manifest."""
 
     model_id: str
-    revision: str  # sha256 of weights file
+    revision: str
     license: License
     training_dataset_refs: list[str] = field(default_factory=list)
     intended_use: Literal["candidate_generation", "feature_extraction"] = "candidate_generation"
@@ -58,7 +52,6 @@ class ModelManifest:
     ])
 
     def is_commercial_safe(self) -> bool:
-        """Reject CC-BY-NC and GPL from the commercial core."""
         if self.license in ("CC-BY-NC-4.0", "Research-only"):
             return False
         if self.license.startswith("GPL"):
@@ -66,17 +59,9 @@ class ModelManifest:
         return True
 
 
-# ──────────────────────────────────────────────────────────────────────
-# Adapter interface
-# ──────────────────────────────────────────────────────────────────────
-
-
 @dataclass
 class CandidateGeometry:
-    """Generic candidate geometry output.
-
-    The proposer must produce ONLY this shape — no Earth-verdict fields.
-    """
+    """Generic candidate geometry output — never an Earth-verdict field."""
 
     horizons: list[dict[str, Any]] = field(default_factory=list)
     faults: list[dict[str, Any]] = field(default_factory=list)
@@ -100,12 +85,7 @@ class CandidateGeometry:
 
 
 class OnnxModelAdapter:
-    """Abstract base for any ONNX proposer.
-
-    Concrete adapters subclass this, validate the model_manifest on load,
-    and never produce a final verdict. The interface is deliberately tiny
-    so the proposer cannot smuggle out-of-scope claims.
-    """
+    """Abstract base for any ONNX proposer."""
 
     def __init__(self, manifest: ModelManifest, weights_path: str = ""):
         if not manifest.is_commercial_safe():
@@ -118,23 +98,12 @@ class OnnxModelAdapter:
         self._loaded = False
 
     def load(self) -> None:
-        """Load weights into an ONNX Runtime session.
-
-        Concrete subclass MUST set self._loaded = True. Stub here for
-        interfaces that defer to a remote engine (which would require
-        888_HOLD).
-        """
         self._loaded = True
 
     def propose(self, image: Any, calibration: dict[str, Any] | None = None) -> CandidateGeometry:
-        """Run inference. Returns CANDIDATE_GEOMETRY only.
-
-        Subclass MUST NOT return any field that hints at geological truth.
-        """
         raise NotImplementedError("subclass must implement propose()")
 
     def refuse_to_seal(self) -> dict[str, Any]:
-        """Mandatory: every proposer must declare its refusal to seal."""
         return {
             "model_id": self.manifest.model_id,
             "refuses": [
@@ -154,17 +123,8 @@ class OnnxModelAdapter:
         }
 
 
-# ──────────────────────────────────────────────────────────────────────
-# Stub adapter — for tests + RGT/classical baseline as a model
-# ──────────────────────────────────────────────────────────────────────
-
-
 class ClassicalBaselineAdapter(OnnxModelAdapter):
-    """Wraps the classical baseline as a 'proposer' so it can flow through
-    the same propose → validate → falsify pipeline as a neural model.
-
-    Manifest is locked Apache-2.0; no license risk.
-    """
+    """Wraps the classical baseline as a 'proposer'."""
 
     def __init__(self, weights_path: str = ""):
         super().__init__(
@@ -172,14 +132,13 @@ class ClassicalBaselineAdapter(OnnxModelAdapter):
                 model_id="geox-classical-baseline-v1",
                 revision="classical-v1",
                 license="Apache-2.0",
-                training_dataset_refs=[],  # synthetic / classical, no training data
+                training_dataset_refs=[],
                 intended_use="candidate_generation",
             ),
             weights_path=weights_path,
         )
 
     def propose(self, image: Any, calibration: dict[str, Any] | None = None) -> CandidateGeometry:
-        # Lazy import to avoid circular dep
         from geox_mcp.tools.seismic_classical import classical_baseline
 
         out = classical_baseline(image)

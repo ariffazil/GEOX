@@ -8,14 +8,15 @@ Live modes (public, callable):
   blend              — Alpha/RGB volume blending
   structure_validate — G2–G9 + K-* structural falsifier (+ interpretation_bundle)
   interpret          — propose→validate→compare bundle (framework and/or image)
-  classical_section  — image-first classical CV baseline (structure tensor+DP) PRIMARY
-  interpret_section  — alias classical_section (image product path)
-  rsi_pipeline       — legacy RSI-only propose (comparator)
-  section_image      — alias classical_section
-  segy_slice         — optional SEG-Y path (not required)
+  interpret_section  — RSI image-true propose (INT_SEISMIC, QUALIFIED_CANDIDATE)
+  rsi_pipeline       — thin alias → geox_rsi_interpret
+  section_image      — alias interpret_section
+  segy_slice         — Phase D: SEG-Y → MeasurementContext + amplitude stats
+  track_horizon      — F1 zen: 2D phase-aware DP track → horizon polylines
+  measure_throw      — F1 zen: cutoffs → dmax_m/length_m/throw_profile_m + gates
 
 Still HOLD (not public-executable):
-  vision, track_horizon, extract_faults, build_structure, observe_image, falsify
+  vision, extract_faults, build_structure, observe_image, falsify
 
 Local engine verdicts are QUALIFIED_CANDIDATE at most — arifOS seals.
 preferred_hypothesis always null from GEOX (human adjudicates).
@@ -37,10 +38,14 @@ _LIVE_MODES = frozenset(
         "interpret",
         "classical_section",
         "interpret_section",
+        "classical_section",  # alias → interpret_section (image-first propose)
         "rsi_pipeline",
         "section_image",
         "segy_slice",
         "segy_2d",
+        "track_horizon",  # F1 zen 2D phase track
+        "measure_throw",  # F1 zen throw → structure gates
+        "cutoff_throw",  # alias measure_throw
     }
 )
 
@@ -51,15 +56,50 @@ _NOT_YET_MODES: dict[str, str] = {
         "Vision modes (geox_visual_understand / geox_vision_*) are separate tools. "
         "geox_seismic_interpret does not run VLM. Call geox_visual_understand for OBS_IMAGE."
     ),
-    "track_horizon": "P1 not built — phase-consistent 2D/3D tracking not on public surface.",
-    "extract_faults": "Auto fault-plane extraction not proven. Use fault_sticks ingest or interpret_section.",
+    "extract_faults": "Auto fault-plane extraction not proven. Use measure_throw + structure_validate.",
     "build_structure": "Use structure_validate on a proposed framework; full build_structure loop later.",
     "falsify": "Use geox_falsify (claim_type=structural_*) for claim physics checks.",
     "observe_image": "Use geox_visual_understand for OBS_IMAGE (HOLD without VLM).",
 }
 
 
-def _stamp_qualified(result: dict[str, Any], mode: str) -> dict[str, Any]:
+def _json_safe(obj: Any) -> Any:
+    """Make tool payloads JSON-serializable for MCP structuredContent.
+
+    RSI/geometry paths leak numpy scalars (esp. numpy.bool_, float64). FastMCP
+    then fails json.dumps → clients see 'outputSchema defined but no structured
+    output returned' even though governance ALLOWED and the engine succeeded.
+    """
+    if obj is None or isinstance(obj, (str, int, float, bool)):
+        return obj
+    if isinstance(obj, dict):
+        return {str(k): _json_safe(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_json_safe(v) for v in obj]
+    # numpy scalars / arrays (and similar)
+    item = getattr(obj, "item", None)
+    if callable(item):
+        try:
+            return _json_safe(item())
+        except Exception:
+            pass
+    tolist = getattr(obj, "tolist", None)
+    if callable(tolist):
+        try:
+            return _json_safe(tolist())
+        except Exception:
+            pass
+    if hasattr(obj, "__fspath__"):
+        return str(obj)
+    # last resort — keep transport alive over perfect fidelity
+    return str(obj)
+
+
+def _stamp_qualified(
+    result: dict[str, Any],
+    mode: str,
+    transport: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     result.setdefault("tool", "geox_seismic_interpret")
     result["mode"] = mode
     result["local_verdict"] = "QUALIFIED_CANDIDATE"
@@ -71,7 +111,21 @@ def _stamp_qualified(result: dict[str, Any], mode: str) -> dict[str, Any]:
     # RSI may return verdict PARTIAL — map transport language
     if result.get("verdict") == "SEAL":
         result["verdict"] = "PARTIAL"
-    return result
+    # Envelope fields that help outputSchema / clients without changing geology
+    result.setdefault("status", "OK" if result.get("ok", True) else "HOLD")
+    if result.get("preferred_hypothesis") is not False:
+        result.setdefault("preferred_hypothesis", None)
+    result.setdefault("claim_tag", "HYPOTHESIS")
+    # Inject declared MCP transport metadata into provenance so callers can
+    # correlate response → call. Only non-None fields are stamped (avoids
+    # # stamping None and overwriting existing provenance).
+    if transport:
+        prov = result.setdefault("provenance", {})
+        if isinstance(prov, dict):
+            for k, v in transport.items():
+                if v is not None:
+                    prov.setdefault(k, v)
+    return _json_safe(result)
 
 
 async def geox_seismic_interpret(
@@ -110,6 +164,15 @@ async def geox_seismic_interpret(
     max_faults: int = 20,
     max_horizons: int = 12,
     emit_bundle: bool = True,
+    # ── MCP transport envelope (declared in TransportAwareRequest) ──
+    # Must be explicit on the handler signature so they actually flow
+    # through to provenance. FastMCP rejects **kwargs on tools, so each
+    # transport field is declared by name. The schema layer (extra=forbid
+    # + TransportAwareRequest) guarantees typos here trip loudly.
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+    source_sha256: str | None = None,
     # ── legacy ──
     horizon_query: str = "unconformity",
     threshold: float = 0.5,
@@ -121,15 +184,62 @@ async def geox_seismic_interpret(
 
     Local engine verdicts are QUALIFIED_CANDIDATE at most — arifOS seals.
     preferred_hypothesis is never set by GEOX.
+
+    Transport metadata (session_id, actor_id, trace_id, source_sha256) is
+    declared on the schema (TransportAwareRequest) AND on this signature,
+    so it survives both validation and dispatch.
     """
+    # Inject transport into a single dict we propagate everywhere
+    _transport: dict[str, Any] = {
+        "session_id": session_id,
+        "actor_id": actor_id,
+        "trace_id": trace_id,
+        "source_sha256": source_sha256,
+    }
     mode_norm = (mode or "horizon_contrast").strip().lower()
 
     if mode_norm == "contrast":
         mode_norm = "horizon_contrast"
-    if mode_norm in ("section_image", "interpret_section"):
-        mode_norm = "classical_section"  # F13 image-first product path
+    if mode_norm in ("section_image", "classical_section"):
+        # classical_section: declared image-first propose path (structure tensor / RSI)
+        mode_norm = "interpret_section"
     if mode_norm == "segy_2d":
         mode_norm = "segy_slice"
+    if mode_norm == "cutoff_throw":
+        mode_norm = "measure_throw"
+
+    # ── F1 zen: track_horizon ──
+    if mode_norm == "track_horizon":
+        from geox_mcp.tools.seismic_zen_f1 import zen_track_horizon
+
+        result = await zen_track_horizon(
+            image_path=image_path or artifact_ref or source_uri or None,
+            amplitude_grid=(request or {}).get("amplitude_grid") if isinstance(request, dict) else None,
+            volume_inline=volume_inline,
+            max_horizons=max_horizons,
+            seed_rows=(request or {}).get("seed_rows") if isinstance(request, dict) else None,
+            provenance=provenance or "fixture",
+            request=request,
+        )
+        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, _transport)
+
+    # ── F1 zen: measure_throw → optional structure_validate ──
+    if mode_norm == "measure_throw":
+        from geox_mcp.tools.seismic_zen_f1 import zen_measure_throw
+
+        result = await zen_measure_throw(
+            horizons=horizons,
+            faults=faults,
+            image_path=image_path or artifact_ref or source_uri or None,
+            amplitude_grid=(request or {}).get("amplitude_grid") if isinstance(request, dict) else None,
+            volume_inline=volume_inline,
+            max_horizons=max_horizons,
+            calibration=calibration,
+            request=request,
+            provenance=provenance or "fixture",
+            run_gates=bool((request or {}).get("run_gates", True)) if isinstance(request, dict) else True,
+        )
+        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, _transport)
 
     if mode_norm in _NOT_YET_MODES and mode_norm not in _LIVE_MODES:
         return {
@@ -174,7 +284,7 @@ async def geox_seismic_interpret(
             emit_bundle=emit_bundle,
             hypothesis_count=hyp_n,
         )
-        stamped = _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm)
+        stamped = _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, transport=_transport)
         stamped["preferred_hypothesis"] = None
         return stamped
 
@@ -281,6 +391,7 @@ async def geox_seismic_interpret(
                     "preferred_hypothesis": None,
                 },
                 mode_norm,
+                transport=_transport,
             )
         cal = calibration or {"input_class": "image_only" if path else "unknown"}
         bundle = build_interpretation_bundle(
@@ -299,7 +410,7 @@ async def geox_seismic_interpret(
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
             }
-        return _stamp_qualified(bundle, mode_norm)
+        return _stamp_qualified(bundle, mode_norm, transport=_transport)
 
     # ── rsi_pipeline: legacy RSI-only (comparator, not primary product) ──
     if mode_norm == "rsi_pipeline":
@@ -351,7 +462,7 @@ async def geox_seismic_interpret(
                 request=request or {"hypothesis_count": 3},
             )
             result["preferred_hypothesis"] = None
-        return _stamp_qualified(result, mode_norm)
+        return _stamp_qualified(result, mode_norm, transport=_transport)
 
     # ── segy_slice ──
     if mode_norm == "segy_slice":
@@ -373,7 +484,7 @@ async def geox_seismic_interpret(
             frame_index=frame_index or 0,
             orientation=orientation or "inline",
         )
-        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm)
+        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, transport=_transport)
 
     if mode_norm == "fault_sticks":
         from geox_mcp.tools.paleoscan_forge import geox_fault_stick_ingest_tool as _impl
@@ -383,6 +494,18 @@ async def geox_seismic_interpret(
     if mode_norm == "volume_frame":
         from geox_mcp.tools.paleoscan_forge import geox_volume_frame_tool as _impl
 
+        if not (volume_ref or "").strip():
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": "volume_frame",
+                "error": "MISSING_REQUIRED_FIELD",
+                "message": "volume_frame requires volume_ref (ingested seismic volume artifact id).",
+                "required_params": ["volume_ref"],
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+                "claim_tag": "VOID",
+            }
         return await _impl(
             action=action or "get",
             volume_ref=volume_ref or "",
@@ -395,11 +518,50 @@ async def geox_seismic_interpret(
     if mode_norm == "blend":
         from geox_mcp.tools.paleoscan_forge import geox_blend_volume_tool as _impl
 
-        return await _impl(
-            blend_mode=blend_mode or "alpha",
-            volume_ref=volume_ref or "",
-            provenance=provenance or "fixture",
-        )
+        # Contract: alpha needs volume_ref_1+2; RGB needs red/green/blue refs.
+        # Do not pass a single volume_ref (TypeError + silent mis-dispatch).
+        if not volume_ref and not (request and isinstance(request, dict)):
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": "blend",
+                "error": "MISSING_REQUIRED_FIELD",
+                "message": (
+                    "blend requires volume refs: alpha → volume_ref_1+volume_ref_2 "
+                    "(pass via request={...}); RGB → volume_ref_red/green/blue."
+                ),
+                "required_params": ["volume_ref_1", "volume_ref_2"],
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+                "claim_tag": "VOID",
+            }
+        blend_kwargs: dict[str, Any] = {"blend_mode": blend_mode or "alpha"}
+        if isinstance(request, dict):
+            for k in (
+                "volume_ref_1",
+                "volume_ref_2",
+                "volume_ref_3",
+                "volume_ref_red",
+                "volume_ref_green",
+                "volume_ref_blue",
+                "alpha",
+            ):
+                if k in request:
+                    blend_kwargs[k] = request[k]
+        # legacy single volume_ref is insufficient — still declare contract
+        if not any(blend_kwargs.get(k) for k in ("volume_ref_1", "volume_ref_red")):
+            return {
+                "ok": False,
+                "tool": "geox_seismic_interpret",
+                "mode": "blend",
+                "error": "MISSING_REQUIRED_FIELD",
+                "message": "blend missing volume_ref_1/volume_ref_2 (or RGB refs) in request.",
+                "required_params": ["volume_ref_1", "volume_ref_2"],
+                "governance_status": "HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+                "claim_tag": "VOID",
+            }
+        return await _impl(**blend_kwargs)
 
     # ── horizon_contrast ──
     attrs = attribute_data
@@ -463,7 +625,7 @@ async def geox_seismic_interpret(
     )
 
     if isinstance(result, dict):
-        result = _stamp_qualified(result, "horizon_contrast")
+        result = _stamp_qualified(result, "horizon_contrast", transport=_transport)
         result["capability_note"] = (
             "1D multi-attribute boundary detector. Not HorizonSurface3D. "
             "Not structural framework. Agent proposes; GEOX assists; Arif seals."

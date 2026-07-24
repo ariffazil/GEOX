@@ -14,6 +14,7 @@ from geox_mcp.tools.structure_gates.growth import gate_k_growth
 from geox_mcp.tools.structure_gates.k_dip import gate_k_dip
 from geox_mcp.tools.structure_gates.k_dl import gate_k_dl
 from geox_mcp.tools.structure_gates.k_throw import gate_k_throw
+from geox_mcp.tools.structure_gates.normalize import normalize_fault, normalize_framework
 from geox_mcp.tools.structure_gates.restore import gate_k_restore
 from geox_mcp.tools.structure_gates.topology import gate_g2_topology
 from geox_mcp.tools.structure_gates.velocity import gate_k_vel
@@ -26,12 +27,17 @@ __all__ = [
     "gate_k_restore",
     "gate_k_vel",
     "gate_k_growth",
+    "normalize_fault",
+    "normalize_framework",
     "run_all_structure_gates",
 ]
 
 
 def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     """Run full structural gate matrix on a StructuralFramework-like dict."""
+    # Alias metric-suffixed demo keys (dmax_m, throw_profile_m, …) → canonical
+    # so K-DL/K-THROW can kill rather than silently UNMEASURED.
+    framework = normalize_framework(framework)
     gates_spec = [
         ("K-DIP", gate_k_dip),
         ("K-THROW", gate_k_throw),

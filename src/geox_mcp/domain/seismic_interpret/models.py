@@ -1,7 +1,10 @@
 """Pydantic contracts for geox_seismic_interpret (B-final).
 
-Discriminated unions by mode. extra=forbid per branch.
-interpretation_bundle is the single semantic output envelope.
+Discriminated unions by mode. Request branches: extra=forbid + declared
+transport envelope (session_id/actor_id/…) so MCP metadata is retained
+and semantic typos (imagepath) still raise loudly.
+
+Output models use extra=allow for findings attachments.
 
 DITEMPA BUKAN DIBERI.
 """
@@ -14,7 +17,29 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class StrictModel(BaseModel):
-    model_config = ConfigDict(extra="ignore")
+    """Semantic strictness — unknown fields forbidden (typo tripwire)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class TransportAwareRequest(StrictModel):
+    """Request branch base: declared MCP transport envelope + forbid extras.
+
+    Why not extra=\"ignore\":
+      - ignore silently drops session_id/actor_id (handlers never see them)
+      - ignore also swallows typos (imagepath → looks like VOID_NO_DATA)
+
+    Why not bare extra=\"allow\":
+      - loses the tripwire for misspelled semantic fields
+
+    Declared transport keys pass validation and survive model_dump().
+    Unknown semantic keys still raise ValidationError.
+    """
+
+    session_id: str | None = None
+    actor_id: str | None = None
+    trace_id: str | None = None
+    source_sha256: str | None = None
 
 
 # ── Calibration ──────────────────────────────────────────────────────────────
@@ -74,7 +99,7 @@ class InterpretRequestFlags(StrictModel):
 # ── Mode-discriminated requests ──────────────────────────────────────────────
 
 
-class HorizonContrastMode(StrictModel):
+class HorizonContrastMode(TransportAwareRequest):
     mode: Literal["horizon_contrast"] = "horizon_contrast"
     attribute_data: dict[str, list[float]]
     depth: list[float]
@@ -86,7 +111,7 @@ class HorizonContrastMode(StrictModel):
     calibration: Calibration | None = None
 
 
-class StructureValidateMode(StrictModel):
+class StructureValidateMode(TransportAwareRequest):
     mode: Literal["structure_validate"] = "structure_validate"
     framework: dict[str, Any] | None = None
     faults: list[dict[str, Any]] | None = None
@@ -97,8 +122,10 @@ class StructureValidateMode(StrictModel):
     claim_text: str = ""
 
 
-class SectionImageMode(StrictModel):
-    mode: Literal["interpret_section", "rsi_pipeline", "section_image"] = "interpret_section"
+class SectionImageMode(TransportAwareRequest):
+    mode: Literal["interpret_section", "rsi_pipeline", "section_image", "classical_section"] = (
+        "interpret_section"
+    )
     image_path: str | None = None
     artifact_ref: str | None = None
     source_uri: str | None = None
@@ -109,7 +136,7 @@ class SectionImageMode(StrictModel):
     request: InterpretRequestFlags | None = None
 
 
-class SegySliceMode(StrictModel):
+class SegySliceMode(TransportAwareRequest):
     mode: Literal["segy_slice", "segy_2d"] = "segy_slice"
     segy_path: str | None = None
     source_uri: str | None = None
@@ -119,13 +146,13 @@ class SegySliceMode(StrictModel):
     calibration: Calibration | None = None
 
 
-class FaultSticksMode(StrictModel):
+class FaultSticksMode(TransportAwareRequest):
     mode: Literal["fault_sticks"] = "fault_sticks"
     source_uri: str = ""
     source_type: str = "csv"
 
 
-class VolumeFrameMode(StrictModel):
+class VolumeFrameMode(TransportAwareRequest):
     mode: Literal["volume_frame"] = "volume_frame"
     action: str = "get"
     volume_ref: str = ""
@@ -135,14 +162,14 @@ class VolumeFrameMode(StrictModel):
     image_data: str | None = None
 
 
-class BlendMode(StrictModel):
+class BlendMode(TransportAwareRequest):
     mode: Literal["blend"] = "blend"
     blend_mode: str = "alpha"
     volume_ref: str = ""
     provenance: str = "fixture"
 
 
-class InterpretBundleMode(StrictModel):
+class InterpretBundleMode(TransportAwareRequest):
     """Full propose→validate→compare loop emitting interpretation_bundle."""
 
     mode: Literal["interpret"] = "interpret"
@@ -176,7 +203,9 @@ InterpretRequest = Annotated[
 # ── Output bundle ────────────────────────────────────────────────────────────
 
 
-class GateResultModel(StrictModel):
+class GateResultModel(BaseModel):
+    """Output gate receipt — `extra="allow"` so handlers can attach findings."""
+
     model_config = ConfigDict(extra="allow")  # allow findings etc.
     gate_id: str
     status: Literal["PASS", "WARN", "KILL", "UNMEASURED"]
