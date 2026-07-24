@@ -85,20 +85,28 @@ def sticks_or_picks_to_points(obj: dict[str, Any]) -> list[dict[str, float]] | N
     return out if len(out) >= 2 else (out if out else None)
 
 
-def adapt_fault(fault: dict[str, Any]) -> dict[str, Any]:
-    """Canonicalize one fault: fault_id + points (+ keep sticks for audit)."""
+def adapt_fault(fault: dict[str, Any], *, reject_anonymous: bool = True) -> dict[str, Any]:
+    """Canonicalize one fault: fault_id + points (+ keep sticks for audit).
+
+    P1: anonymous geometry is rejected (ANONYMOUS_GEOMETRY), not defaulted to "unknown".
+    """
     if not isinstance(fault, dict):
         return fault
     out = dict(fault)
 
-    # A4: name → fault_id
+    # A4 / P1: name → fault_id (mandatory identity)
     if out.get("fault_id") is None:
         for k in ("id", "name", "label", "fault_name", "fid"):
-            if out.get(k) is not None and str(out[k]).strip():
+            if out.get(k) is not None and str(out[k]).strip() and str(out[k]).strip().lower() != "unknown":
                 out["fault_id"] = str(out[k]).strip()
                 break
-    if out.get("fault_id") is None:
-        out["fault_id"] = "unknown"
+    if out.get("fault_id") is None or str(out.get("fault_id")).strip().lower() == "unknown":
+        if reject_anonymous:
+            out["_reject"] = "ANONYMOUS_GEOMETRY"
+            out["_reject_message"] = "Fault requires fault_id or name — anonymous geometry refused"
+            out.pop("fault_id", None)
+        else:
+            out["fault_id"] = "unknown"
 
     pts = sticks_or_picks_to_points(out)
     if pts:
@@ -110,7 +118,7 @@ def adapt_fault(fault: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
-def adapt_horizon(horizon: dict[str, Any]) -> dict[str, Any]:
+def adapt_horizon(horizon: dict[str, Any], *, reject_anonymous: bool = True) -> dict[str, Any]:
     """Canonicalize one horizon: horizon_id + points."""
     if not isinstance(horizon, dict):
         return horizon
@@ -118,11 +126,16 @@ def adapt_horizon(horizon: dict[str, Any]) -> dict[str, Any]:
 
     if out.get("horizon_id") is None:
         for k in ("id", "name", "label", "horizon_name", "hid"):
-            if out.get(k) is not None and str(out[k]).strip():
+            if out.get(k) is not None and str(out[k]).strip() and str(out[k]).strip().lower() != "unknown":
                 out["horizon_id"] = str(out[k]).strip()
                 break
-    if out.get("horizon_id") is None:
-        out["horizon_id"] = "unknown"
+    if out.get("horizon_id") is None or str(out.get("horizon_id")).strip().lower() == "unknown":
+        if reject_anonymous:
+            out["_reject"] = "ANONYMOUS_GEOMETRY"
+            out["_reject_message"] = "Horizon requires horizon_id or name — anonymous geometry refused"
+            out.pop("horizon_id", None)
+        else:
+            out["horizon_id"] = "unknown"
 
     pts = sticks_or_picks_to_points(out)
     if pts:
@@ -132,21 +145,42 @@ def adapt_horizon(horizon: dict[str, Any]) -> dict[str, Any]:
 
 
 def adapt_framework_geometry(framework: dict[str, Any] | None) -> dict[str, Any]:
-    """Deep-copy framework; adapt all faults and horizons to canonical geometry."""
+    """Deep-copy framework; adapt all faults and horizons to canonical geometry.
+
+    Rejected anonymous objects are moved to framework['_rejected'] and excluded
+    from faults/horizons lists so gates never see fault_id='unknown' defaults.
+    """
     if not framework:
         return {}
     fw = deepcopy(framework)
+    rejected: list[dict[str, Any]] = list(fw.get("_rejected") or [])
+
+    def _filter_list(items: list[Any], kind: str) -> list[Any]:
+        out: list[Any] = []
+        for raw in items:
+            if not isinstance(raw, dict):
+                out.append(raw)
+                continue
+            adapted = adapt_fault(raw) if kind == "fault" else adapt_horizon(raw)
+            if adapted.get("_reject"):
+                rejected.append({"kind": kind, "error": adapted["_reject"], "message": adapted.get("_reject_message"), "raw_keys": list(raw.keys())})
+                continue
+            out.append(adapted)
+        return out
+
     faults = fw.get("faults")
     if isinstance(faults, list):
-        fw["faults"] = [adapt_fault(f) if isinstance(f, dict) else f for f in faults]
+        fw["faults"] = _filter_list(faults, "fault")
     horizons = fw.get("horizons")
     if isinstance(horizons, list):
-        fw["horizons"] = [adapt_horizon(h) if isinstance(h, dict) else h for h in horizons]
+        fw["horizons"] = _filter_list(horizons, "horizon")
     for nest_key in ("structural_framework", "framework", "geometry"):
         nested = fw.get(nest_key)
         if isinstance(nested, dict):
             if isinstance(nested.get("faults"), list):
-                nested["faults"] = [adapt_fault(f) if isinstance(f, dict) else f for f in nested["faults"]]
+                nested["faults"] = _filter_list(nested["faults"], "fault")
             if isinstance(nested.get("horizons"), list):
-                nested["horizons"] = [adapt_horizon(h) if isinstance(h, dict) else h for h in nested["horizons"]]
+                nested["horizons"] = _filter_list(nested["horizons"], "horizon")
+    if rejected:
+        fw["_rejected"] = rejected
     return fw

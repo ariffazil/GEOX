@@ -294,20 +294,46 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                 }
             )
         else:
-            kills += 1
-            findings.append(
-                {
-                    "fault_id": fid,
-                    "verdict": "KILL",
-                    "status": "KILL",
-                    "dip_deg": dip,
-                    "dip_meta": dip_meta,
-                    "regime": regime,
-                    "expected_range": [lo, hi],
-                    "reason": f"Dip {dip:.1f}° outside {regime} prior [{lo},{hi}]",
-                    "epistemic": "DERIVED" if dip_meta.get("ve_corrected") else "OBSERVED",
-                }
-            )
+            # P2 doctrine: K-DIP is a FILTER, not sole-source polarity judge.
+            # Steep dip + reverse regime without reactivation was historically KILL;
+            # with inversion/reactivation common on Malay-style sections, demote to
+            # WARN unless caller forbids (strict_andersonian=True on framework).
+            strict = bool(framework.get("strict_andersonian"))
+            if not strict:
+                warns += 1
+                findings.append(
+                    {
+                        "fault_id": fid,
+                        "verdict": "WARN",
+                        "status": "WARN",
+                        "dip_deg": dip,
+                        "dip_meta": dip_meta,
+                        "regime": regime,
+                        "expected_range": [lo, hi],
+                        "reason": (
+                            f"Dip {dip:.1f}° outside {regime} prior [{lo},{hi}] — "
+                            "FILTER only; use K-POLARITY cutoffs + throw/growth/restore as JUDGE. "
+                            "May be reactivated inversion / section obliquity."
+                        ),
+                        "epistemic": "DERIVED" if dip_meta.get("ve_corrected") else "OBSERVED",
+                        "note": "K-DIP never sole-sources polarity kill (FIX BRIEF v2 P2)",
+                    }
+                )
+            else:
+                kills += 1
+                findings.append(
+                    {
+                        "fault_id": fid,
+                        "verdict": "KILL",
+                        "status": "KILL",
+                        "dip_deg": dip,
+                        "dip_meta": dip_meta,
+                        "regime": regime,
+                        "expected_range": [lo, hi],
+                        "reason": f"Dip {dip:.1f}° outside {regime} prior [{lo},{hi}] (strict_andersonian)",
+                        "epistemic": "DERIVED" if dip_meta.get("ve_corrected") else "OBSERVED",
+                    }
+                )
 
     if kills:
         status = "KILL"

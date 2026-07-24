@@ -1,0 +1,1 @@
+/root/GEOX/fixtures/geox_smoke_test.las
