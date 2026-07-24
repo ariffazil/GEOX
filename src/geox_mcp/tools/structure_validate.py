@@ -112,29 +112,50 @@ async def geox_structure_validate(
 
             gval["receipt_hash"] = receipt_hash(gval)
 
+    # Compact gate_summary counts for progressive disclosure (P4)
+    from geox_mcp.tools.section_render import compact_gate_summary
+
+    gsum = compact_gate_summary(matrix.get("gates") or {})
+    # Re-run is not needed — cutoffs live on framework after gates
+    # matrix path stores cutoffs only if we re-derive; pull from a fresh normalize
+    from geox_mcp.tools.structure_gates import derive_cutoff_pairs, normalize_framework
+
+    fw_n = normalize_framework(fw)
+    cutoffs = fw_n.get("cutoffs") or derive_cutoff_pairs(fw_n.get("faults") or [], fw_n.get("horizons") or [])
+
     out: dict[str, Any] = {
         "ok": True,
         "tool": "geox_structure_validate",
         "overall_verdict": overall,
         "combined_gate_verdict": combined,
         "gates": matrix["gates"],
+        "gate_summary": {
+            "pass": len(gsum.get("passes") or []),
+            "warn": len(gsum.get("warns") or []),
+            "kill": len(gsum.get("kills") or []),
+            "unmeasured": len(gsum.get("unmeasured") or []),
+        },
         "kills": matrix["kills"],
         "passes": matrix["passes"],
         "warns": matrix.get("warns") or [],
         "unmeasured": matrix.get("unmeasured") or matrix.get("inconclusive") or [],
         "inconclusive": matrix.get("unmeasured") or matrix.get("inconclusive") or [],
+        "cutoffs": cutoffs,
+        "rejected_geometry": fw_n.get("_rejected") or fw.get("_rejected") or [],
         "input_class": input_class,
         "measurement_context": mc or None,
         "claim_text": (claim_text or "")[:500],
-        "n_faults": len(fw.get("faults") or []),
-        "n_horizons": len(fw.get("horizons") or []),
+        "n_faults": len(fw_n.get("faults") or fw.get("faults") or []),
+        "n_horizons": len(fw_n.get("horizons") or fw.get("horizons") or []),
         "governance_status": gov,
         "local_verdict": "QUALIFIED_CANDIDATE",
         "seal_authority": "arifOS_only",
         "seal_eligibility": False,
+        "preferred_hypothesis": None,
         "epistemic_label": "DER",
         "honesty_banner": (
             "Structure gates falsify impossible geometry. "
+            "K-DIP is a filter not sole polarity judge (use K-POLARITY cutoffs). "
             "UNMEASURED when scale/velocity missing — never invent. "
             "SURVIVED ≠ proven. arifOS SEAL only."
         ),
@@ -153,5 +174,22 @@ async def geox_structure_validate(
         out["hypotheses"] = bundle.get("hypotheses")
         out["preferred_hypothesis"] = None
         out["limitations"] = bundle.get("limitations")
+
+    # P7 multi-witness: external geometry bundles under same section
+    witnesses = None
+    if isinstance(earth_constraints, dict):
+        witnesses = earth_constraints.get("witnesses")
+    if not witnesses and isinstance(fw.get("witnesses"), list):
+        witnesses = fw["witnesses"]
+    if witnesses:
+        from geox_mcp.tools.structure_gates.witness import gate_all_witnesses, register_witnesses
+
+        reg = register_witnesses(fw, witnesses)
+        out["multi_witness"] = {
+            "n": len(reg),
+            "results": gate_all_witnesses(reg, calibration=calibration),
+            "note": "Symmetric gates on all witnesses — no preferred hypothesis from GEOX",
+        }
+        out["preferred_hypothesis"] = None
 
     return out

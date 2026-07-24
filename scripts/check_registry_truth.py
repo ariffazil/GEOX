@@ -106,9 +106,32 @@ def main() -> int:
     else:
         check(False, ".well-known/tools.json exists")
 
-    # ── 5. geox_workspace in both public + plugin_export ───────────────────
-    check("geox_workspace" in manifest, "geox_workspace in public_tools")
-    check("geox_workspace" in plugin_export, "geox_workspace in plugin_export")
+    # ── 5. ZEN-15 core tools on public surface (FIX BRIEF v2 P0) ───────────
+    zen15 = {
+        "geox_well_ingest",
+        "geox_well_qc",
+        "geox_petrophysics",
+        "geox_sequence",
+        "geox_well_desk",
+        "geox_seismic_ingest",
+        "geox_seismic_compute",
+        "geox_seismic_interpret",
+        "geox_basin",
+        "geox_deep_time_state",
+        "geox_geomechanics",
+        "geox_subsurface_model",
+        "geox_claim",
+        "geox_prospect",
+        "geox_surface_status",
+    }
+    check(len(manifest) == 15, f"public surface is ZEN-15 (got {len(manifest)})")
+    missing_zen = sorted(zen15 - manifest)
+    extra_zen = sorted(manifest - zen15)
+    check(not missing_zen, f"ZEN-15 tools present (missing: {missing_zen})")
+    check(not extra_zen, f"no public extras beyond ZEN-15 (extra: {extra_zen})")
+    # demoted tools must not be public
+    check("geox_workspace" not in manifest, "geox_workspace demoted to internal")
+    check("geox_falsify" not in manifest, "geox_falsify demoted to internal")
 
     # ── 6. PROTOCOL_CONFORMANCE.md has no hardcoded counts ─────────────────
     proto_path = ROOT / "PROTOCOL_CONFORMANCE.md"

@@ -345,3 +345,65 @@ def compact_gate_summary(gates: dict[str, Any] | None) -> dict[str, Any]:
         "warns": warns,
         "unmeasured": unmeasured,
     }
+
+
+def store_detail_receipt(payload: dict[str, Any], *, prefix: str = "geox_detail") -> dict[str, Any]:
+    """Persist full gate/hypothesis envelope; return detail_ref + hash (P4)."""
+    import os
+    import tempfile
+    from pathlib import Path as _P
+
+    raw = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":")).encode()
+    h = hashlib.sha256(raw).hexdigest()
+    root = _P(os.environ.get("GEOX_RECEIPT_DIR", "/tmp/geox_receipts"))
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / f"{prefix}_{h[:16]}.json"
+    path.write_bytes(raw)
+    return {
+        "detail_ref": f"geox://receipts/{path.name}",
+        "detail_path": str(path),
+        "detail_sha256": h,
+        "bytes": len(raw),
+    }
+
+
+def compact_interpret_envelope(
+    *,
+    verdict: str = "QUALIFIED_CANDIDATE",
+    input_class: str = "image_only",
+    n_hypotheses: int = 0,
+    gate_summary: dict[str, Any] | None = None,
+    render_ref: str | None = None,
+    detail_ref: str | None = None,
+    receipt_hash: str | None = None,
+    extras: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """≤2KB-class progressive disclosure default (P4)."""
+    gs = gate_summary or {}
+    if "pass" not in gs and "passes" in gs:
+        gs = {
+            "pass": len(gs.get("passes") or []),
+            "warn": len(gs.get("warns") or []),
+            "kill": len(gs.get("kills") or []),
+            "unmeasured": len(gs.get("unmeasured") or []),
+        }
+    out = {
+        "verdict": verdict,
+        "local_verdict": "QUALIFIED_CANDIDATE",
+        "seal_authority": "arifOS_only",
+        "preferred_hypothesis": None,
+        "input_class": input_class,
+        "hypotheses": n_hypotheses,
+        "gate_summary": {
+            "pass": int(gs.get("pass") or 0),
+            "warn": int(gs.get("warn") or 0),
+            "kill": int(gs.get("kill") or 0),
+            "unmeasured": int(gs.get("unmeasured") or 0),
+        },
+        "render_ref": render_ref,
+        "detail_ref": detail_ref,
+        "receipt_hash": receipt_hash,
+    }
+    if extras:
+        out.update(extras)
+    return out
