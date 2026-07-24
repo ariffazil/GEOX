@@ -51,9 +51,7 @@ def _segments_cross(a: list[tuple[float, float]], b: list[tuple[float, float]]) 
         return (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1])
 
     def on_seg(p, q, r):
-        return min(p[0], r[0]) <= q[0] <= max(p[0], r[0]) and min(p[1], r[1]) <= q[1] <= max(
-            p[1], r[1]
-        )
+        return min(p[0], r[0]) <= q[0] <= max(p[0], r[0]) and min(p[1], r[1]) <= q[1] <= max(p[1], r[1])
 
     def intersects(p1, q1, p2, q2):
         o1, o2 = orient(p1, q1, p2), orient(p1, q1, q2)
@@ -149,10 +147,7 @@ def gate_g2_topology(framework: dict[str, Any]) -> dict[str, Any]:
                 findings.append(
                     {
                         "verdict": "KILL",
-                        "reason": (
-                            f"Negative thickness / order inversion: "
-                            f"{means[k][0]} > {means[k+1][0]}"
-                        ),
+                        "reason": (f"Negative thickness / order inversion: {means[k][0]} > {means[k + 1][0]}"),
                     }
                 )
 

@@ -833,8 +833,7 @@ async def geox_horizon_contrast_surface(
             physics_ok = bool(ai_lower <= amin <= ai_upper and ai_lower <= amax <= ai_upper)
             if not physics_ok:
                 physics_notes.append(
-                    f"acoustic_impedance out of physical range [{ai_lower},{ai_upper}]: "
-                    f"observed [{amin:.1f},{amax:.1f}]"
+                    f"acoustic_impedance out of physical range [{ai_lower},{ai_upper}]: observed [{amin:.1f},{amax:.1f}]"
                 )
     else:
         # No AI channel — do not apply AI guard to seismic amplitude
@@ -848,9 +847,7 @@ async def geox_horizon_contrast_surface(
                     physics_ok = False
                     physics_notes.append(f"seismic_amplitude |max|={amax:.0f} exceeds sanity bound 1e6")
                 else:
-                    physics_notes.append(
-                        "physics_guard: seismic_amplitude present — AI-range check skipped (correct)"
-                    )
+                    physics_notes.append("physics_guard: seismic_amplitude present — AI-range check skipped (correct)")
 
     strat_col = ABKSS_STRATIGRAPHIC_COLUMN if stratigraphic_framework == "ABKSS" else []
     geo_alignment = _geological_alignment_check(

@@ -741,9 +741,7 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
         html_content = load_app_html(app_id)
 
     resource_type = (
-        "externalUrl"
-        if (app.get("external_url") and resolve_html_path(app) is None and html_content is None)
-        else "rawHtml"
+        "externalUrl" if (app.get("external_url") and resolve_html_path(app) is None and html_content is None) else "rawHtml"
     )
 
     try:

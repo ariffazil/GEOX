@@ -122,12 +122,8 @@ def build_interpretation_bundle(
     """Assemble interpretation_bundle. preferred_hypothesis always None from GEOX."""
     from geox_mcp.tools.structure_gates import run_all_structure_gates
 
-    cal = calibration if isinstance(calibration, dict) else (
-        calibration.model_dump() if calibration else {}
-    )
-    req = request if isinstance(request, dict) else (
-        request.model_dump() if request else InterpretRequestFlags().model_dump()
-    )
+    cal = calibration if isinstance(calibration, dict) else (calibration.model_dump() if calibration else {})
+    req = request if isinstance(request, dict) else (request.model_dump() if request else InterpretRequestFlags().model_dump())
     hyp_n = int(req.get("hypothesis_count") or 3)
 
     primary = dict(frameworks_or_primary or {})
@@ -242,7 +238,7 @@ def build_interpretation_bundle(
         while len(hypotheses) < 3:
             hypotheses.append(
                 HypothesisModel(
-                    hypothesis_id=f"HYP-00{len(hypotheses)+1}",
+                    hypothesis_id=f"HYP-00{len(hypotheses) + 1}",
                     structural_style="unspecified_alternative",
                     confidence=0.15,
                     epistemic_class="SPECULATION",

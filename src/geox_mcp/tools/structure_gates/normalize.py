@@ -107,7 +107,5 @@ def normalize_framework(framework: dict[str, Any] | None) -> dict[str, Any]:
     for nest_key in ("structural_framework", "framework", "geometry"):
         nested = fw.get(nest_key)
         if isinstance(nested, dict) and isinstance(nested.get("faults"), list):
-            nested["faults"] = [
-                normalize_fault(f) if isinstance(f, dict) else f for f in nested["faults"]
-            ]
+            nested["faults"] = [normalize_fault(f) if isinstance(f, dict) else f for f in nested["faults"]]
     return fw

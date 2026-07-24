@@ -83,9 +83,7 @@ def _faults_to_framework(faults: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 points.append({"x": c, "y": r})
             elif isinstance(p, dict):
                 points.append(p)
-        dip_img = _estimate_apparent_dip_deg(
-            [[p["y"], p["x"]] for p in points] if points else []
-        )
+        dip_img = _estimate_apparent_dip_deg([[p["y"], p["x"]] for p in points] if points else [])
         # length proxy in pixels
         length_px = float(len(points)) if points else None
         out.append(
@@ -130,7 +128,7 @@ def _horizons_to_framework(horizons: list[dict[str, Any]]) -> list[dict[str, Any
         mean_y = float(np.mean([p["y"] for p in points])) if points else float(i)
         out.append(
             {
-                "horizon_id": h.get("id") or f"H{i+1}",
+                "horizon_id": h.get("id") or f"H{i + 1}",
                 "domain": "pixel",
                 "points": points,
                 "order_index": i,
@@ -319,13 +317,8 @@ async def geox_classical_section_propose(
     }
 
     observations = {
-        "reflector_continuity": [
-            {"horizon_id": h["horizon_id"], "continuity": h.get("continuity")}
-            for h in fw_horizons
-        ],
-        "discontinuities": [
-            {"fault_id": f["fault_id"], "n_points": f.get("n_points")} for f in fw_faults
-        ],
+        "reflector_continuity": [{"horizon_id": h["horizon_id"], "continuity": h.get("continuity")} for h in fw_horizons],
+        "discontinuities": [{"fault_id": f["fault_id"], "n_points": f.get("n_points")} for f in fw_faults],
         "image_quality_flags": [],
         "attribute_summary": {},
     }
@@ -363,8 +356,7 @@ async def geox_classical_section_propose(
                 "True dip/throw UNMEASURED without calibration."
             ),
             "honesty_banner": (
-                "CANDIDATE_GEOMETRY from structure tensor + DP. "
-                "Always physics-gated before any claim. Human adjudicates."
+                "CANDIDATE_GEOMETRY from structure tensor + DP. Always physics-gated before any claim. Human adjudicates."
             ),
         }
     )

@@ -83,9 +83,7 @@ class EarthConstraints(StrictModel):
     checkshots: list[dict[str, Any]] = Field(default_factory=list)
     velocity_model_ref: str | None = None
     stratigraphic_framework_ref: str | None = None
-    structural_regime: Literal[
-        "extension", "contraction", "strike_slip", "salt", "unknown"
-    ] = "unknown"
+    structural_regime: Literal["extension", "contraction", "strike_slip", "salt", "unknown"] = "unknown"
 
 
 class InterpretRequestFlags(StrictModel):
@@ -123,9 +121,7 @@ class StructureValidateMode(TransportAwareRequest):
 
 
 class SectionImageMode(TransportAwareRequest):
-    mode: Literal["interpret_section", "rsi_pipeline", "section_image", "classical_section"] = (
-        "interpret_section"
-    )
+    mode: Literal["interpret_section", "rsi_pipeline", "section_image", "classical_section"] = "interpret_section"
     image_path: str | None = None
     artifact_ref: str | None = None
     source_uri: str | None = None
@@ -174,9 +170,7 @@ class InterpretBundleMode(TransportAwareRequest):
 
     mode: Literal["interpret"] = "interpret"
     artifact_ref: str | None = None
-    artifact_type: Literal[
-        "section_image", "segy_2d", "segy_3d", "interpreted_section", "framework"
-    ] = "framework"
+    artifact_type: Literal["section_image", "segy_2d", "segy_3d", "interpreted_section", "framework"] = "framework"
     image_path: str | None = None
     segy_path: str | None = None
     framework: dict[str, Any] | None = None
@@ -222,9 +216,7 @@ class HypothesisModel(StrictModel):
     fault_blocks: list[dict[str, Any]] = Field(default_factory=list)
     structural_style: str = "unknown"
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
-    epistemic_class: Literal[
-        "OBSERVATION", "DERIVATION", "INTERPRETATION", "SPECULATION"
-    ] = "INTERPRETATION"
+    epistemic_class: Literal["OBSERVATION", "DERIVATION", "INTERPRETATION", "SPECULATION"] = "INTERPRETATION"
     supporting_evidence: list[str] = Field(default_factory=list)
     contradicting_evidence: list[str] = Field(default_factory=list)
     physics_gates: list[dict[str, Any]] = Field(default_factory=list)

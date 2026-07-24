@@ -45,11 +45,13 @@ class ModelManifest:
     license: License
     training_dataset_refs: list[str] = field(default_factory=list)
     intended_use: Literal["candidate_generation", "feature_extraction"] = "candidate_generation"
-    prohibited_use: list[str] = field(default_factory=lambda: [
-        "final_verdict",
-        "autonomous_structure_acceptance",
-        "capital_forecast",
-    ])
+    prohibited_use: list[str] = field(
+        default_factory=lambda: [
+            "final_verdict",
+            "autonomous_structure_acceptance",
+            "capital_forecast",
+        ]
+    )
 
     def is_commercial_safe(self) -> bool:
         if self.license in ("CC-BY-NC-4.0", "Research-only"):

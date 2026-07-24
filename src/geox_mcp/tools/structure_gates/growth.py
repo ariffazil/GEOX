@@ -12,10 +12,7 @@ _EQUATION = "EI = hanging_wall_thickness / footwall_thickness; growth claim requ
 def gate_k_growth(framework: dict[str, Any]) -> dict[str, Any]:
     claims = framework.get("claims") or {}
     growth_claimed = bool(
-        claims.get("growth")
-        or claims.get("syn_kinematic")
-        or framework.get("growth_claimed")
-        or framework.get("syn_kinematic")
+        claims.get("growth") or claims.get("syn_kinematic") or framework.get("growth_claimed") or framework.get("syn_kinematic")
     )
     ei = claims.get("expansion_index")
     if ei is None:
@@ -97,11 +94,13 @@ def gate_k_growth(framework: dict[str, Any]) -> dict[str, Any]:
             "Castelltort et al. — sedimentary vs tectonic mimic",
         ],
         calculated_result={"expansion_index": ei_f},
-        findings=[{
-            "verdict": "WARN",
-            "expansion_index": ei_f,
-            "growth_claimed": True,
-            "reason": "EI>1 supports growth but does not prove it; sedimentary mimic possible",
-        }],
+        findings=[
+            {
+                "verdict": "WARN",
+                "expansion_index": ei_f,
+                "growth_claimed": True,
+                "reason": "EI>1 supports growth but does not prove it; sedimentary mimic possible",
+            }
+        ],
         gate_type="soft_conditional",
     )

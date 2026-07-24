@@ -34,7 +34,11 @@ def validate_k_taper(
     disps = np.asarray(displacements, dtype=np.float64)
 
     if len(dists) == 0 or len(disps) == 0 or half_length <= 0:
-        return {"status": "INCONCLUSIVE", "verdict": "INCONCLUSIVE", "reason": "Empty distances/displacements or zero half_length"}
+        return {
+            "status": "INCONCLUSIVE",
+            "verdict": "INCONCLUSIVE",
+            "reason": "Empty distances/displacements or zero half_length",
+        }
 
     errors = []
     for dist, disp in zip(dists, disps, strict=False):
@@ -160,10 +164,7 @@ def gate_k_throw(framework: dict[str, Any]) -> dict[str, Any]:
                     "fault_id": fid,
                     "verdict": "UNMEASURED",
                     "status": "UNMEASURED",
-                    "reason": (
-                        "No throw_profile / tip_taper "
-                        "(accepts aliases: throw_profile_m, throw_samples, …)"
-                    ),
+                    "reason": ("No throw_profile / tip_taper (accepts aliases: throw_profile_m, throw_samples, …)"),
                 }
             )
             continue

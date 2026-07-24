@@ -329,9 +329,7 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
                 if name in mnemonics:
                     idx = mnemonics.index(name)
                     arr = list(las.curves[idx].data)
-                    return _downsample_series(
-                        [float(x) if x == x else float("nan") for x in arr], max_n
-                    )
+                    return _downsample_series([float(x) if x == x else float("nan") for x in arr], max_n)
             return None
 
         curves = {
@@ -345,9 +343,7 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
 
         out_curves = {k: v for k, v in curves.items() if v is not None}
         well_name = (
-            str(getattr(las.well, "WELL", None).value).strip()
-            if hasattr(las, "well") and hasattr(las.well, "WELL")
-            else wid
+            str(getattr(las.well, "WELL", None).value).strip() if hasattr(las, "well") and hasattr(las.well, "WELL") else wid
         )
         if not well_name or well_name == "UNKNOWN":
             well_name = wid
@@ -371,8 +367,7 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
         if is_fixture_fallback or is_demo or data_class in ("DEMO", "SYNTHETIC_LABEL", "OPEN_OSS"):
             if data_class == "OPEN_OSS":
                 res["provenance_badge"] = (
-                    "DATA: OPEN OSS LAS (e.g. Volve North Sea) — real measurements, "
-                    "NOT Malay Basin; DEMO context only"
+                    "DATA: OPEN OSS LAS (e.g. Volve North Sea) — real measurements, NOT Malay Basin; DEMO context only"
                 )
             else:
                 res["provenance_badge"] = "DATA: DEMO FIXTURE — NOT REAL WELL DATA"
@@ -477,9 +472,7 @@ async def geox_well_desk_open(
                 else "DEMO/OPEN fixture — curves loaded; NOT a field seal."
             ),
             "views": (
-                ["composite_log", "summary_card"]
-                if _mode == "summary"
-                else ["composite_log", "tracks", "crossplot_placeholder"]
+                ["composite_log", "summary_card"] if _mode == "summary" else ["composite_log", "tracks", "crossplot_placeholder"]
             ),
         },
         "epistemic": {
@@ -508,8 +501,7 @@ async def geox_well_desk_open(
     n_curves = len(loaded.get("curves") or {})
     badge_str = f" [{loaded['provenance_badge']}]" if loaded.get("provenance_badge") else ""
     text = (
-        f"Well Witness: well_id={_wid} mode={_mode} band={band}. "
-        f"UI tracks={n_curves}. resource=ui://geox/well-desk.{badge_str}"
+        f"Well Witness: well_id={_wid} mode={_mode} band={band}. UI tracks={n_curves}. resource=ui://geox/well-desk.{badge_str}"
     )
     return ui_tool_result(
         app_id="well_desk",

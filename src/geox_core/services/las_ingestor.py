@@ -364,11 +364,16 @@ class LASIngestor:
         # ── CONSTITUTIONAL GATE 3: Unit Governance (F05 Peace) ──
         depth_unit = _las_header_str(las.well, "UNIT", "STRT", "STOP").upper()
         # Common pattern: STRT.M 100.00 or STRT.F
-        has_valid = any(u in depth_unit for u in ("M", "METRE", "METER", "FT", "FEET", "FOOT")) or depth_unit.strip().startswith(("F", ".F"))
+        has_valid = any(u in depth_unit for u in ("M", "METRE", "METER", "FT", "FEET", "FOOT")) or depth_unit.strip().startswith(
+            ("F", ".F")
+        )
         if not has_valid:
             # Try to find unit in curve header for depth
             depth_curve_unit = str(las.curves[0].unit or "").upper().strip()
-            if not any(u in depth_curve_unit for u in ("M", "METRE", "METER", "FT", "FEET", "FOOT")) and depth_curve_unit not in ("F", ".F"):
+            if not any(u in depth_curve_unit for u in ("M", "METRE", "METER", "FT", "FEET", "FOOT")) and depth_curve_unit not in (
+                "F",
+                ".F",
+            ):
                 raise ConstitutionalRefusal(
                     "Depth units missing or ambiguous. Refusing to guess between M/FT.", {"path": str(path)}
                 )
@@ -447,7 +452,7 @@ class LASIngestor:
         else:
             claim_state = ClaimTag.HYPOTHESIS
 
-        qc_prerequisite_met = (qcfail_count == 0 and suitability in ("decision_ready", "screening_only"))
+        qc_prerequisite_met = qcfail_count == 0 and suitability in ("decision_ready", "screening_only")
 
         limitations = []
         if missing:

@@ -222,25 +222,31 @@ def register_tools_on(mcp):
                 _wid = _wid or result.get("well_id")
             elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
                 _wid = _wid or result.structured_content.get("well_id")
-            _is_err = bool(getattr(result, "is_error", False)) or (
-                isinstance(result, dict) and (result.get("isError") or result.get("ok") is False or result.get("status") == "INVALID")
-            ) or (
-                hasattr(result, "structured_content") and isinstance(result.structured_content, dict) and (
-                    result.structured_content.get("status") == "INVALID"
-                    or result.structured_content.get("ok") is False
-                    or result.structured_content.get("execution_status") in ("ERROR", "FAILED")
-                    or (isinstance(result.structured_content.get("primary_artifact"), dict) and result.structured_content["primary_artifact"].get("status") == "ERROR")
+            _is_err = (
+                bool(getattr(result, "is_error", False))
+                or (
+                    isinstance(result, dict)
+                    and (result.get("isError") or result.get("ok") is False or result.get("status") == "INVALID")
+                )
+                or (
+                    hasattr(result, "structured_content")
+                    and isinstance(result.structured_content, dict)
+                    and (
+                        result.structured_content.get("status") == "INVALID"
+                        or result.structured_content.get("ok") is False
+                        or result.structured_content.get("execution_status") in ("ERROR", "FAILED")
+                        or (
+                            isinstance(result.structured_content.get("primary_artifact"), dict)
+                            and result.structured_content["primary_artifact"].get("status") == "ERROR"
+                        )
+                    )
                 )
             )
             return wrap_as_ui_tool_result(
                 result,
                 app_id="well_desk",
                 params={"well_id": _wid} if _wid else None,
-                text=(
-                    None
-                    if _is_err
-                    else f"Well ingest complete for {_wid or 'unknown'}. Open Well Witness for tracks."
-                ),
+                text=(None if _is_err else f"Well ingest complete for {_wid or 'unknown'}. Open Well Witness for tracks."),
             )
         except Exception as e:
             from geox_mcp.federation_safety import classify_error
@@ -454,8 +460,7 @@ def register_tools_on(mcp):
                         "band": "DERIVED",
                         "note": "Petrophysics complete — open Well Witness for tracks.",
                     },
-                    "epistemic": result.get("_epistemic")
-                    or {"layer": "DER", "confidence_cap": 0.80},
+                    "epistemic": result.get("_epistemic") or {"layer": "DER", "confidence_cap": 0.80},
                     "net_pay": result.get("net_pay"),
                     "status": result.get("status", "computed"),
                     # Pass through compact curve summaries if already small
@@ -469,10 +474,7 @@ def register_tools_on(mcp):
                 app_id="well_desk",
                 params={"well_id": _wid, "mode": "tracks"} if _wid else None,
                 structured_override=sc_override,
-                text=(
-                    f"Petrophysics ({mode}) for {_wid or 'workspace'}. "
-                    f"UI: ui://geox/well-desk. DER layer — not a seal."
-                ),
+                text=(f"Petrophysics ({mode}) for {_wid or 'workspace'}. UI: ui://geox/well-desk. DER layer — not a seal."),
             )
         except Exception as e:
             from geox_mcp.federation_safety import classify_error
@@ -896,9 +898,7 @@ def register_tools_on(mcp):
         from geox_mcp.tools.seismic_vision_ai_async import geox_visual_understand_async as _impl
 
         result = await _impl(image_path=image_path or "", mode=mode or "full")
-        is_hold = isinstance(result, dict) and (
-            result.get("status") in ("HOLD", "VOID") or result.get("ok") is False
-        )
+        is_hold = isinstance(result, dict) and (result.get("status") in ("HOLD", "VOID") or result.get("ok") is False)
         text = (
             f"Visual understand HOLD: {result.get('error') or result.get('reason') or 'no backend'}"
             if is_hold
@@ -3973,10 +3973,7 @@ def register_tools_on(mcp):
                 petro,
                 app_id="well_desk",
                 params={"well_id": well_id, "mode": "petro"} if well_id else None,
-                text=(
-                    f"Well desk petro (lem_inference path) for {well_id or 'unknown'}. "
-                    f"ADVISORY · NOT_SEALED."
-                ),
+                text=(f"Well desk petro (lem_inference path) for {well_id or 'unknown'}. ADVISORY · NOT_SEALED."),
             )
         if mode == "render":
             from geox_mcp.render_well_panel_petro import render_interpreted_panel
@@ -4257,13 +4254,8 @@ def register_tools_on(mcp):
             payload,
             app_id="well_desk",
             params={"mode": "lem", "depth_m": target_depth_m},
-            structured_override=compact_structured_for_ui(
-                payload, tool="geox_lem_predict", app_id="well_desk"
-            ),
-            text=(
-                f"LEM predict depth={target_depth_m} basin={basin_context or 'n/a'}. "
-                f"UI: ui://geox/well-desk."
-            ),
+            structured_override=compact_structured_for_ui(payload, tool="geox_lem_predict", app_id="well_desk"),
+            text=(f"LEM predict depth={target_depth_m} basin={basin_context or 'n/a'}. UI: ui://geox/well-desk."),
         )
 
     @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))

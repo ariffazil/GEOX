@@ -59,9 +59,7 @@ def structure_tensor(image: np.ndarray, sigma: float = 1.0) -> dict[str, np.ndar
 
     dip_rad = np.where(np.abs(Izz) > 1e-9, np.arctan2(Ixz, Izz), 0.0)
     azimuth_rad = np.where(np.abs(Ixx) > 1e-9, np.arctan2(Ixz, Ixx), 0.0)
-    coherence = np.where(
-        (eig1 + eig2) > 1e-9, (eig1 - eig2) / (eig1 + eig2), 0.0
-    )
+    coherence = np.where((eig1 + eig2) > 1e-9, (eig1 - eig2) / (eig1 + eig2), 0.0)
 
     return {
         "dip_rad": dip_rad,
@@ -83,7 +81,7 @@ def semblance_coherence(image: np.ndarray, window: int = 5) -> np.ndarray:
 
     img = image.astype(np.float32)
     num = uniform_filter(img, size=(window, 1)) ** 2
-    den = uniform_filter(img ** 2, size=(window, 1))
+    den = uniform_filter(img**2, size=(window, 1))
     coherence = np.where(den > 1e-9, num / den, 0.0)
     return np.clip(coherence, 0.0, 1.0)
 
@@ -123,9 +121,7 @@ def ridge_extraction(
     return _merge_ridge_points(ridges, distance_thresh=3.0)
 
 
-def _merge_ridge_points(
-    ridges: list[dict[str, Any]], distance_thresh: float = 3.0
-) -> list[dict[str, Any]]:
+def _merge_ridge_points(ridges: list[dict[str, Any]], distance_thresh: float = 3.0) -> list[dict[str, Any]]:
     if not ridges:
         return []
     used = [False] * len(ridges)

@@ -63,11 +63,7 @@ async def geox_structure_validate(
         filtered = {k: v for k, v in matrix["gates"].items() if k.upper() in want or k in want}
         kills = [k for k, v in filtered.items() if (v.get("status") or v.get("verdict")) == "KILL"]
         passes = [k for k, v in filtered.items() if (v.get("status") or v.get("verdict")) == "PASS"]
-        unmeasured = [
-            k
-            for k, v in filtered.items()
-            if (v.get("status") or v.get("verdict")) in ("UNMEASURED", "INCONCLUSIVE")
-        ]
+        unmeasured = [k for k, v in filtered.items() if (v.get("status") or v.get("verdict")) in ("UNMEASURED", "INCONCLUSIVE")]
         if kills:
             combined = "KILL"
         elif passes:
