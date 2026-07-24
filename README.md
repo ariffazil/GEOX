@@ -1,13 +1,15 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-24T00:00Z
+last_verified: 2026-07-24T16:00Z
 valid_until: 2026-08-24
-federation_release: v2026.07.24-PHASE-C-SEALED
-live_commit: f00c25ca
+federation_release: v2026.07.24
+live_commit: f1537312
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: dynamic_from_tools_list
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
+
+**SOT:** 2026-07-24 | **seal_seq:** `f1537312`
 
 # 🌊 GEOX — Evidence-First Geological Intelligence
 
@@ -114,7 +116,7 @@ Each capability below carries the same OBS / DER / INT / SPEC standard:
 | ui:// resources | 8 | server manifest |
 | Health | **not asserted statically** — verify live | `curl :8081/health` |
 | Port | 8081 | deployment config |
-| Version | `v2026.07.23-PHASE-C-SEALED` | SOT-MANIFEST |
+| Version | `v2026.07.24` | SOT-MANIFEST |
 | License | BSL-1.1 → Apache 2.0 on 2029-06-29 (see note below) | [LICENSE](./LICENSE) + `pyproject.toml` |
 
 > **F4 Clarity rule:** Runtime health and tool counts are witnessed live, not asserted as static prose — per the SOT truth rule, `/health` and `tools/list` are the only valid witnesses. The value 31 above is an OBS-recorded snapshot of the 2026-07-23 witness, not a standing claim. (Earlier prose citing 52 tools reflected an unconsolidated legacy list and has been retired.)
