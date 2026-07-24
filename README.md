@@ -2,25 +2,54 @@
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
 last_verified: 2026-07-24T00:00Z
 valid_until: 2026-08-24
-federation_release: v2026.07.23-PHASE-C-SEALED
-live_commit: 8b45a88e
+federation_release: v2026.07.24-PHASE-C-SEALED
+live_commit: f00c25ca
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: dynamic_from_tools_list
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
 
-# 🌊 GEOX — Subsurface Intelligence Workbench
+# 🌊 GEOX — Evidence-First Geological Intelligence
 
 > **DITEMPA BUKAN DIBERI** — Forged, not given.
-> Earth evidence layer of the arifOS federation. Physics9-governed. Evidence-only. Never decides alone.
+> Earth evidence layer of the arifOS federation. Physics-governed. Evidence-only. Never decides alone.
 
 ---
 
-## What GEOX Does
+## GEOX in One Minute
 
-GEOX is the **earth intelligence organ** — it ingests well logs, seismic, and geological observations; computes petrophysics, synthetics, and basin models; and preserves every interpretation with evidence, alternatives, and uncertainty.
+GEOX is an evidence-first geological intelligence coprocessor. It ingests wells, seismic, and geological observations; computes subsurface workflows; tracks uncertainty; and preserves the provenance behind every geological claim.
 
-Each capability below carries an **epistemic label** — the same OBS / DER / INT / SPEC standard GEOX enforces on its own outputs:
+Unlike traditional interpretation software, GEOX separates:
+
+| Layer | Meaning | Example |
+|-------|---------|---------|
+| **OBS** | Observed — what was measured | Log value, seismic amplitude |
+| **DER** | Derived — what was computed | Porosity, impedance |
+| **INT** | Interpreted — what was concluded | Reservoir, seal, charge |
+| **SPEC** | Speculated — what was assumed | Fluid phase, migration pathway |
+
+Most geological software produces answers. GEOX produces **claims with provenance** — so human experts can separate measurement from inference.
+
+### Why GEOX Exists
+
+Modern subsurface workflows generate interpretations faster than they preserve reasoning. GEOX exists to preserve the chain from evidence to decision — so geological conclusions remain auditable, challengeable, and reproducible.
+
+GEOX is a **geological falsification engine**: the objective is not to confirm interpretations, but to continuously test them against evidence. A claim survives because competing explanations failed, not because it was preferred.
+
+### Claim Lifecycle
+
+```
+OBSERVED DATA → DERIVATION → INTERPRETATION → CHALLENGE → FALSIFICATION → SEAL or HOLD
+```
+
+Claims can be created, challenged, falsified, recomputed, sealed (immutable record), or held (888_HOLD — awaiting human ratification). Every state transition carries an epistemic label and uncertainty band.
+
+---
+
+## Capabilities
+
+Each capability below carries the same OBS / DER / INT / SPEC standard:
 
 | Task | Status | Label |
 |------|--------|-------|
@@ -60,22 +89,6 @@ Each capability below carries an **epistemic label** — the same OBS / DER / IN
 
 ---
 
-## Recent Milestones
-
-| Date | Milestone | Detail |
-|------|-----------|--------|
-| 2026-07-23 | **Phase C hardening** | K-DIP/K-DL/K-THROW regime aliases wired (commit `8ce723b0`); 6/6 Malay Basin test battery PASS |
-| 2026-07-23 | **Audit drift fix** | README reconciled with live `health` + `tools/list` (this update) |
-| 2026-07-19 | **P1 — MCP Apps Restore** | `prefab-ui` installed, 6 apps LIVE, GUI-ready |
-| 2026-07-19 | **P0 — MCP Restore** | FastMCP 3.4.2 kwargs fix, tools registered |
-| 2026-07-19 | **SOT Audit** | License corrected (AGPL→BSL-1.1), version aligned, tool count synced |
-| 2026-07-19 | **Gitwrap** | 4 feature branches removed, 2600+ lint errors fixed, CI advisory |
-| 2026-07-23 | **Phase C Sealed State** | K-DIP arccos (SVD normal vector math), full-trace K-THROW (tip→centre→tip), zero-false-negative regime aliasing (extensional/compressional), SEP-1865 3-channel UI bindings — **75/75 unit tests + 6/6 Malay Basin battery green** |
-| 2026-07-23 | **License Falsification Audit** | AGPL marking identified as drift; BSL-1.1 confirmed against LICENSE + `pyproject.toml` (commit `8b45a88e`) |
-| 2026-07-24 | **README Constitutional Audit** | Three-way divergence reconciled: Phase C facts merged, epistemic labels applied, static health claims removed |
-
----
-
 ## Validated Datasets
 
 | Dataset | Type | Status |
@@ -88,7 +101,7 @@ Each capability below carries an **epistemic label** — the same OBS / DER / IN
 
 ## MCP Apps (SEP-1865)
 
-Live surface (verified via `resources/list` on `geox-8ce723b0`):
+Live surface (verified via `resources/list` on `geox-f00c25ca`):
 
 | App | ui:// Resource | Status |
 |-----|---------------|--------|
@@ -148,7 +161,20 @@ GEOX separates four things that most subsurface software conflates:
 
 Every output carries an epistemic label (OBS / DER / INT / SPEC) and an uncertainty band.
 
-**Failure contract:** when governance checks fail, GEOX fails closed — `888_HOLD` for outputs awaiting human ratification, `VOID` for ungrounded claims. No silent degradation, no ungoverned output.
+**Failure contract:** when governance checks fail, GEOX fails closed — `888_HOLD` (result generated but awaiting human ratification) for outputs needing review, `VOID` for ungrounded claims. No silent degradation, no ungoverned output.
+
+### Governance Vocabulary
+
+GEOX operates within the arifOS federation's constitutional framework. Key terms:
+
+| Term | Meaning |
+|------|---------|
+| **Physics-governed** | Where geological interpretations conflict with physical observations, observations win until falsified |
+| **F13 SOVEREIGN** | Human veto — Arif's decision is final. No agent self-authorizes |
+| **888_HOLD** | Governance state: result generated but awaiting human ratification before action |
+| **VAULT999** | Append-only, hash-chained immutable record — decisions are sealed, not overwritten |
+| **SEP-1865** | MCP Apps specification — the protocol that defines how GEOX UI apps connect to the MCP surface |
+| **SOT** | Source of Truth — the live runtime state (`/health`, `tools/list`) that beats any static claim |
 
 ---
 
@@ -194,6 +220,22 @@ It IS a vendor-neutral layer that can:
 | WEALTH bridge integration sealing | End-to-end sealed test (geology → capital route) | ✅ OBS |
 | Expanded `ui://` resource surface | SEP-1865 spec evolution | SPEC |
 | Public tool inventory publication | `tools/list` snapshot in `docs/` per release | Planned |
+
+---
+
+## Audit History
+
+> Governance record — not required for understanding GEOX. Preserved here for constitutional traceability.
+
+| Date | Milestone | Detail |
+|------|-----------|--------|
+| 2026-07-24 | **Federation Unification** | 5 branches resolved to main; PR #133 (WEALTH bridge Forge 2) merged; P0C connector regen; remote surface cleaned |
+| 2026-07-23 | **Phase C hardening** | K-DIP/K-DL/K-THROW regime aliases wired (commit `8ce723b0`); 6/6 Malay Basin test battery PASS |
+| 2026-07-23 | **Phase C Sealed State** | K-DIP arccos (SVD normal vector math), full-trace K-THROW (tip→centre→tip), zero-false-negative regime aliasing — **75/75 unit tests + 6/6 Malay Basin battery green** |
+| 2026-07-23 | **License Falsification Audit** | AGPL marking identified as drift; BSL-1.1 confirmed against LICENSE + `pyproject.toml` |
+| 2026-07-19 | **P0/P1 — MCP Restore** | FastMCP 3.4.2 kwargs fix, tools registered; `prefab-ui` installed, 6 apps LIVE, GUI-ready |
+| 2026-07-19 | **SOT Audit** | License corrected (AGPL→BSL-1.1), version aligned, tool count synced |
+| 2026-07-19 | **Gitwrap** | 4 feature branches removed, 2600+ lint errors fixed, CI advisory |
 
 ---
 
