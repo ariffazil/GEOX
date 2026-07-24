@@ -1,11 +1,11 @@
 {
   "$schema": "arifOS/tools-manifest/v2",
-  "canonical_tools": 79,
+  "canonical_tools": 80,
   "internal_tools": 48,
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
   "organ": "geox",
   "policy": "public == manifest public surface \u2014 plugin export is subset (not all public tools are plugin-exposed)",
-  "surface_tools": 31,
+  "surface_tools": 32,
   "tools": [
     {
       "app_exposed": true,
@@ -193,6 +193,19 @@
         "mime_type": "text/html;profile=mcp-app",
         "resource_uri": "ui://geox/well-desk"
       },
+      "version": "2026.07.24"
+    },
+    {
+      "app_exposed": true,
+      "axis": "reason",
+      "description": "Quality control for well data: depth monotonicity, null %, physical range checks.",
+      "domain": "earth.well",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_well_qc",
+      "ui": null,
       "version": "2026.07.24"
     },
     {

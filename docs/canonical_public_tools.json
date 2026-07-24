@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-24T02:37:59.060022+00:00",
+  "generated_at": "2026-07-24T08:07:25.387339+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 31,
+  "public_count": 32,
   "internal_count": 48,
   "public_tools": [
     "geox_well_ingest",
@@ -19,6 +19,7 @@
     "geox_prospect",
     "geox_gravmag_studio",
     "geox_well_desk",
+    "geox_well_qc",
     "geox_surface_status",
     "geox_evidence",
     "geox_basin_backstrip",
@@ -95,7 +96,7 @@
       "domain": "earth.seismic",
       "axis": "reason",
       "lane": "reasoning",
-      "description": "One semantic capability \u2014 propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Image-first product: classical_section / interpret_section (structure tensor+DP on PNG/JPG). Also: i",
+      "description": "One semantic capability \u2014 propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (inte",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -224,6 +225,19 @@
         "action_class": "OBSERVE",
         "mutation": false,
         "physics_guard_required": false
+      }
+    },
+    {
+      "name": "geox_well_qc",
+      "domain": "earth.well",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Quality control for well data: depth monotonicity, null %, physical range checks.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
       }
     },
     {

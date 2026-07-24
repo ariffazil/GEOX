@@ -73,6 +73,17 @@ body {
   font-size: 11px;
 }
 
+.wd-header-epistemic {
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  color: #0a0a12;
+  background: #fa0;
+  border: 1px solid #fc0;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
 .wd-header-badge {
   margin-left: auto;
   font-size: 9px;

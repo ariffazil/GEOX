@@ -72,10 +72,14 @@ async def geox_petrophysics(
     """Unified petrophysics — Vsh, porosity, Sw, permeability, net pay, LEM inference.
 
     Modes:
-      generate       - Generate subsurface candidates (petrophysical realizations)
-      verify         - Verify integrity against Physics9 bounds
-      lem_inference  - LEM physics-prior inference (porosity, Sw, Vp, lithology)
+      generate       - Subsurface candidates (REQUIRES target_class + evidence_refs)
+      verify         - Integrity check (REQUIRES candidate_ref + domain — not multi-well list)
+      lem_inference  - Curve-based physics-prior (REQUIRES well_id + curves + depth_m)
       stoip_feed     - STOIIP ranking feed for WEALTH organ
+
+    CLAIM (runtime): there is no mode='qc' on this tool — use geox_well_qc.
+    CLAIM (runtime): well_id is a single string, not a multi-well array.
+    For exploratory Archie/Vsh/phi on curves without evidence store, use lem_inference.
     """
     if mode == "lem_inference":
         if not well_id or not curves or not depth_m:

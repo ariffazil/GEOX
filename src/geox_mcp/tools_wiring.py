@@ -4361,6 +4361,8 @@ def register_tools_on(mcp):
             field: str | None = None,
             prospect_ref: str | None = None,
             session_id: str = "default",
+            actor_id: str | None = None,
+            trace_id: str | None = None,
         ):
             """GEOX Workspace — persistent geological context across all tools.
 
@@ -4369,6 +4371,8 @@ def register_tools_on(mcp):
 
             Modes: set (set context), view (see current state), history (tool call log),
                    evidence (evidence stack), relations (knowledge graph), reset (clear).
+
+            Governance: pass actor_id + valid session_id (from arif_init) — evidence lane.
             """
             return await geox_workspace(
                 mode=mode,
@@ -4378,6 +4382,8 @@ def register_tools_on(mcp):
                 field=field,
                 prospect_ref=prospect_ref,
                 session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
             )
 
         logger.info("H2: geox_workspace tool registered")

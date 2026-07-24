@@ -2,8 +2,8 @@
   "schema_version": "io.modelcontextprotocol/ui/1.0",
   "app_id": "geox.subsurface.well-desk",
   "name": "GEOX WellDesk",
-  "version": "1.0.0-skeleton",
-  "description": "1D + 2D well log viewer with forward/metabolic/inverse rock physics engine. Earth-domain coprocessor for the arifOS constitutional federation.",
+  "version": "2026.07.24",
+  "description": "1D + 2D well log viewer with multi-well correlation, GEOX-aligned petrophysics params, forward/metabolic/inverse rock physics. Explicit SYNTHETIC epistemic badges. Earth-domain coprocessor for the arifOS constitutional federation.",
   "ui_entry": {
     "type": "resource_uri",
     "resource_uri": "https://geox.arif-fazil.com/apps/well-desk/index.html"
@@ -18,8 +18,26 @@
       "physics.result",
       "vault.seal"
     ],
-    "tools": ["geox_well_desk_launch"],
-    "render_modes": ["1d_track", "2d_correlation", "crossplot", "forward", "inverse", "metabolic"]
+    "tools": [
+      "geox_well_desk",
+      "geox_petrophysics",
+      "geox_well_ingest",
+      "geox_well_qc",
+      "geox_workspace"
+    ],
+    "render_modes": ["1d_track", "2d_correlation", "crossplot", "forward", "inverse", "metabolic"],
+    "data_classes": ["SYNTHETIC", "MEASURED", "HYBRID"],
+    "petro_defaults": {
+      "gr_clean": 15,
+      "gr_shale": 150,
+      "rw": 0.05,
+      "archie_a": 1.0,
+      "archie_m": 2.0,
+      "archie_n": 2.0,
+      "vsh_cutoff": 0.5,
+      "phi_cutoff": 0.1,
+      "sw_cutoff": 0.6
+    }
   },
   "arifos": {
     "constitutional_federation": "geox",
