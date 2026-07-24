@@ -20,6 +20,7 @@ import inspect
 from typing import Any
 
 import pytest
+from pydantic import TypeAdapter, ValidationError
 
 
 def test_interpret_request_discriminated_union_modes():
@@ -236,18 +237,16 @@ async def test_undeclared_argument_explicit_failure():
     from pydantic import TypeAdapter
 
     ta = TypeAdapter(SeismicInterpretRequest)
-    # Bare union: Pydantic drops extras (documented limitation).
-    parsed = ta.validate_python(
-        {
-            "mode": "horizon_contrast",
-            "attribute_data": {"rms": [1.0, 2.0, 3.0]},
-            "depth": [100.0, 200.0, 300.0],
-            "this_is_not_a_field": True,
-        }
-    )
-    assert getattr(parsed, "this_is_not_a_field", None) is None, (
-        "Bare union silently drops extras (Pydantic limitation)"
-    )
+    # Branch-level extra=forbid: unknown keys must fail loudly (A1 / F13).
+    with pytest.raises(ValidationError):
+        ta.validate_python(
+            {
+                "mode": "horizon_contrast",
+                "attribute_data": {"rms": [1.0, 2.0, 3.0]},
+                "depth": [100.0, 200.0, 300.0],
+                "this_is_not_a_field": True,
+            }
+        )
 
 
 # ──────────────────────────────────────────────────────────────────────

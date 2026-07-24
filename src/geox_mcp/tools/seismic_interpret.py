@@ -25,6 +25,11 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
+import base64
+import hashlib
+import os
+import tempfile
+from pathlib import Path
 from typing import Any
 
 # Modes the handler can execute today
@@ -62,6 +67,10 @@ _NOT_YET_MODES: dict[str, str] = {
 }
 
 
+# Max raw decoded image bytes for chat base64 (~2 MiB). Downscale after if larger.
+_MAX_IMAGE_BYTES = 2 * 1024 * 1024
+
+
 def _json_safe(obj: Any) -> Any:
     """Make tool payloads JSON-serializable for MCP structuredContent.
 
@@ -92,6 +101,124 @@ def _json_safe(obj: Any) -> Any:
         return str(obj)
     # last resort — keep transport alive over perfect fidelity
     return str(obj)
+
+
+def _sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _resolve_image_input(
+    *,
+    image_path: str | None = None,
+    image_data: str | None = None,
+    artifact_ref: str | None = None,
+    source_uri: str | None = None,
+) -> dict[str, Any]:
+    """Resolve server path and/or base64 chat image → local path + input_hash.
+
+    Returns:
+      {ok, path?, input_hash?, error?, message?, source?}
+    """
+    # 1) base64 / data-URL from chat clients
+    if image_data and str(image_data).strip():
+        raw = str(image_data).strip()
+        if raw.startswith("data:") and "," in raw:
+            raw = raw.split(",", 1)[1]
+        try:
+            blob = base64.b64decode(raw, validate=False)
+        except Exception as exc:
+            return {
+                "ok": False,
+                "error": "INVALID_IMAGE_DATA",
+                "message": f"image_data is not valid base64: {exc}",
+            }
+        if not blob:
+            return {"ok": False, "error": "EMPTY_IMAGE_DATA", "message": "image_data decoded empty"}
+        input_hash = _sha256_bytes(blob)
+        # size-cap: if too large, try server-side downscale
+        if len(blob) > _MAX_IMAGE_BYTES:
+            try:
+                from io import BytesIO
+
+                from PIL import Image
+
+                im = Image.open(BytesIO(blob))
+                im = im.convert("RGB")
+                # iterative downscale until under cap
+                w, h = im.size
+                while True:
+                    buf = BytesIO()
+                    im.save(buf, format="JPEG", quality=85)
+                    out = buf.getvalue()
+                    if len(out) <= _MAX_IMAGE_BYTES or w < 256 or h < 256:
+                        blob = out
+                        break
+                    w, h = max(256, int(w * 0.75)), max(256, int(h * 0.75))
+                    im = im.resize((w, h))
+                input_hash = _sha256_bytes(blob)  # hash of stored payload
+            except Exception:
+                return {
+                    "ok": False,
+                    "error": "IMAGE_TOO_LARGE",
+                    "message": (
+                        f"image_data {len(blob)} bytes exceeds {_MAX_IMAGE_BYTES} "
+                        "and downscale failed — compress client-side"
+                    ),
+                }
+        suffix = ".jpg"
+        # sniff
+        if blob[:8] == b"\x89PNG\r\n\x1a\n":
+            suffix = ".png"
+        elif blob[:2] == b"\xff\xd8":
+            suffix = ".jpg"
+        fd, tmp_path = tempfile.mkstemp(prefix="geox_img_", suffix=suffix)
+        try:
+            os.write(fd, blob)
+        finally:
+            os.close(fd)
+        return {
+            "ok": True,
+            "path": tmp_path,
+            "input_hash": input_hash,
+            "source": "image_data",
+            "bytes": len(blob),
+            "ephemeral": True,
+        }
+
+    # 2) filesystem path
+    path = (image_path or artifact_ref or source_uri or "").strip()
+    if not path:
+        return {
+            "ok": False,
+            "error": "MISSING_IMAGE",
+            "message": "Provide image_path (host path) or image_data (base64, ≤2MB).",
+        }
+    p = Path(path)
+    if not p.is_file():
+        return {
+            "ok": False,
+            "error": "IMAGE_NOT_FOUND",
+            "message": f"image_path not found on server: {path}",
+            "path": path,
+        }
+    try:
+        data = p.read_bytes()
+        input_hash = _sha256_bytes(data)
+    except Exception as exc:
+        return {
+            "ok": False,
+            "error": "IMAGE_READ_FAILED",
+            "message": str(exc),
+            "path": path,
+        }
+    return {
+        "ok": True,
+        "path": str(p),
+        "input_hash": input_hash,
+        "source": "image_path",
+        "bytes": len(data),
+        "ephemeral": False,
+    }
 
 
 def _stamp_qualified(
@@ -196,11 +323,12 @@ async def geox_seismic_interpret(
         "source_sha256": source_sha256,
     }
     mode_norm = (mode or "horizon_contrast").strip().lower()
+    requested_mode = mode_norm
 
     if mode_norm == "contrast":
         mode_norm = "horizon_contrast"
     if mode_norm in ("section_image", "classical_section"):
-        # classical_section: declared image-first propose path (structure tensor / RSI)
+        # classical_section / section_image → interpret_section (image-first propose)
         mode_norm = "interpret_section"
     if mode_norm == "segy_2d":
         mode_norm = "segy_slice"
@@ -287,68 +415,123 @@ async def geox_seismic_interpret(
         stamped["preferred_hypothesis"] = None
         return stamped
 
-    # ── classical_section: image-first PRIMARY propose baseline ──
-    if mode_norm == "classical_section":
-        path = image_path or artifact_ref or source_uri or ""
-        if not path:
+    # ── interpret_section (aliases: section_image, classical_section) ──
+    # A1: must NEVER fall through to horizon_contrast default.
+    if mode_norm == "interpret_section":
+        resolved = _resolve_image_input(
+            image_path=image_path,
+            image_data=image_data,
+            artifact_ref=artifact_ref,
+            source_uri=source_uri,
+        )
+        if not resolved.get("ok"):
             return {
                 "ok": False,
                 "tool": "geox_seismic_interpret",
-                "mode": "classical_section",
-                "error": "MISSING_IMAGE_PATH",
-                "message": "classical_section requires image_path (absolute host path to section PNG/JPG).",
+                "mode": "interpret_section",
+                "requested_mode": requested_mode,
+                "error": resolved.get("error") or "MISSING_IMAGE",
+                "message": resolved.get("message")
+                or "interpret_section requires image_path or image_data (base64).",
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
                 "input_class": "image_only",
                 "epistemic_label": "INT_SEISMIC",
             }
+        path = resolved["path"]
+        input_hash = resolved.get("input_hash")
         from geox_mcp.tools.classical_section_propose import geox_classical_section_propose as _cv
 
+        cal = dict(calibration or {"input_class": "image_only", "calibrated": False})
+        cal.setdefault("input_class", "image_only")
+        if input_hash:
+            cal["sha256"] = input_hash
         result = await _cv(
             image_path=path,
             max_faults=max_faults,
             max_horizons=max_horizons,
             run_gates=False,  # gates on mode=interpret / structure_validate only
-            calibration=calibration or {"input_class": "image_only", "calibrated": False},
+            calibration=cal,
         )
         if not isinstance(result, dict):
             result = {"data": result}
+        result["input_hash"] = input_hash
+        result["image_source"] = resolved.get("source")
         if emit_bundle and result.get("framework") and not result.get("interpretation_bundle"):
             from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
 
             result["interpretation_bundle"] = build_interpretation_bundle(
                 frameworks_or_primary=result["framework"],
                 observations=result.get("observations"),
-                calibration=calibration or {"input_class": "image_only"},
+                calibration=cal,
                 request=request or {"hypothesis_count": 3},
                 model_revision="classical_section_v1",
             )
             result["preferred_hypothesis"] = None
-        return _stamp_qualified(result, mode_norm)
+            # ensure provenance.input_hash
+            ib = result.get("interpretation_bundle")
+            if isinstance(ib, dict):
+                prov = ib.setdefault("provenance", {})
+                if isinstance(prov, dict) and input_hash:
+                    prov["input_hash"] = input_hash
+                    if cal.get("calibration_hash") or cal.get("sha256"):
+                        prov.setdefault("calibration_hash", cal.get("calibration_hash") or cal.get("sha256"))
+        # Preserve caller's mode name when alias (classical_section / section_image)
+        stamp_mode = (
+            requested_mode
+            if requested_mode in ("interpret_section", "classical_section", "section_image")
+            else "interpret_section"
+        )
+        stamped = _stamp_qualified(result, stamp_mode, transport=_transport)
+        stamped["requested_mode"] = requested_mode
+        stamped["resolved_mode"] = "interpret_section"
+        return stamped
 
     # ── interpret: classical propose (if image) → validate → compare ──
     if mode_norm == "interpret":
         from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
         from geox_mcp.tools.structure_validate import geox_structure_validate as _sv
 
-        path = image_path or artifact_ref or source_uri or ""
         fw: dict[str, Any] = dict(framework or {})
         if faults is not None:
             fw["faults"] = faults
         if horizons is not None:
             fw["horizons"] = horizons
         propose_result = None
-        if path and not fw.get("faults") and not fw.get("horizons"):
+        input_hash = None
+        has_image = bool(image_data or image_path or artifact_ref or source_uri)
+        if has_image and not fw.get("faults") and not fw.get("horizons"):
+            resolved = _resolve_image_input(
+                image_path=image_path,
+                image_data=image_data,
+                artifact_ref=artifact_ref,
+                source_uri=source_uri,
+            )
+            if not resolved.get("ok"):
+                return {
+                    "ok": False,
+                    "tool": "geox_seismic_interpret",
+                    "mode": "interpret",
+                    "error": resolved.get("error"),
+                    "message": resolved.get("message"),
+                    "governance_status": "HOLD",
+                    "local_verdict": "QUALIFIED_CANDIDATE",
+                }
+            path = resolved["path"]
+            input_hash = resolved.get("input_hash")
             from geox_mcp.tools.classical_section_propose import (
                 geox_classical_section_propose as _cv,
             )
 
+            cal_prop = dict(calibration or {"input_class": "image_only", "calibrated": False})
+            if input_hash:
+                cal_prop["sha256"] = input_hash
             propose_result = await _cv(
                 image_path=path,
                 max_faults=max_faults,
                 max_horizons=max_horizons,
                 run_gates=False,
-                calibration=calibration or {"input_class": "image_only", "calibrated": False},
+                calibration=cal_prop,
             )
             if isinstance(propose_result, dict) and propose_result.get("framework"):
                 pf = propose_result["framework"]
@@ -356,20 +539,44 @@ async def geox_seismic_interpret(
                 fw.setdefault("horizons", pf.get("horizons") or [])
                 if pf.get("measurement_context"):
                     fw.setdefault("measurement_context", pf["measurement_context"])
+        # Framework-only path: still run gates with calibration derive
+        cal = dict(
+            calibration
+            or {
+                "input_class": "image_only" if has_image else "unknown",
+                "calibrated": bool(calibration and (
+                    calibration.get("bin_spacing_m")
+                    or calibration.get("vertical_exaggeration")
+                    or calibration.get("velocity_td")
+                    or calibration.get("velocity_linear_m_s")
+                )),
+            }
+        )
+        if input_hash:
+            cal["sha256"] = input_hash
         if fw.get("faults") or fw.get("horizons") or fw.get("velocity"):
             sv = await _sv(
                 framework=fw,
                 measurement_context=measurement_context or fw.get("measurement_context"),
-                calibration=calibration or {"input_class": "image_only" if path else "unknown", "calibrated": False},
+                calibration=cal,
                 earth_constraints=earth_constraints,
                 emit_bundle=True,
                 hypothesis_count=int((request or {}).get("hypothesis_count") or 3),
             )
             bundle = sv.get("interpretation_bundle") or sv
+            if isinstance(bundle, dict):
+                prov = bundle.setdefault("provenance", {})
+                if isinstance(prov, dict):
+                    if input_hash:
+                        prov["input_hash"] = input_hash
+                    ch = cal.get("calibration_hash") or cal.get("sha256")
+                    if ch:
+                        prov.setdefault("calibration_hash", ch)
             return _stamp_qualified(
                 {
                     **(bundle if isinstance(bundle, dict) else {}),
                     "ok": True,
+                    "input_hash": input_hash,
                     "structure_validate": {
                         k: sv.get(k)
                         for k in (
@@ -378,6 +585,7 @@ async def geox_seismic_interpret(
                             "passes",
                             "unmeasured",
                             "gates",
+                            "warns",
                         )
                     },
                     "propose": {
@@ -391,40 +599,53 @@ async def geox_seismic_interpret(
                 mode_norm,
                 transport=_transport,
             )
-        cal = calibration or {"input_class": "image_only" if path else "unknown"}
         bundle = build_interpretation_bundle(
             propose_result=propose_result if isinstance(propose_result, dict) else None,
             calibration=cal,
             earth_constraints=earth_constraints,
             request=request or {"hypothesis_count": 3},
         )
-        if not path and not fw:
+        if not has_image and not fw:
             return {
                 "ok": False,
                 "tool": "geox_seismic_interpret",
                 "mode": "interpret",
                 "error": "MISSING_INPUT",
-                "message": "interpret requires framework faults/horizons and/or image_path/artifact_ref.",
+                "message": (
+                    "interpret requires framework faults/horizons and/or image_path/image_data."
+                ),
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
             }
+        if isinstance(bundle, dict) and input_hash:
+            prov = bundle.setdefault("provenance", {})
+            if isinstance(prov, dict):
+                prov["input_hash"] = input_hash
         return _stamp_qualified(bundle, mode_norm, transport=_transport)
 
     # ── rsi_pipeline: legacy RSI-only (comparator, not primary product) ──
     if mode_norm == "rsi_pipeline":
-        path = image_path or artifact_ref or source_uri or ""
-        if not path:
+        resolved = _resolve_image_input(
+            image_path=image_path,
+            image_data=image_data,
+            artifact_ref=artifact_ref,
+            source_uri=source_uri,
+        )
+        if not resolved.get("ok"):
             return {
                 "ok": False,
                 "tool": "geox_seismic_interpret",
                 "mode": mode_norm,
-                "error": "MISSING_IMAGE_PATH",
-                "message": "rsi_pipeline requires image_path (absolute host path).",
+                "error": resolved.get("error") or "MISSING_IMAGE_PATH",
+                "message": resolved.get("message")
+                or "rsi_pipeline requires image_path or image_data.",
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
                 "input_class": "image_only",
                 "epistemic_label": "INT_SEISMIC",
             }
+        path = resolved["path"]
+        input_hash = resolved.get("input_hash")
         from geox_mcp.tools.seismic_rsi import geox_rsi_interpret as _rsi
 
         result = await _rsi(
@@ -438,8 +659,9 @@ async def geox_seismic_interpret(
         result["ok"] = result.get("verdict") not in ("VOID",)
         result["input_class"] = "image_only"
         result["epistemic_label"] = "INT_SEISMIC"
+        result["input_hash"] = input_hash
         result["capability_note"] = (
-            "Legacy RSI propose (comparator). Prefer mode=classical_section for product path. "
+            "Legacy RSI propose (comparator). Prefer mode=interpret_section for product path. "
             "Pixel domain ≠ subsurface. arifOS SEAL only."
         )
         alts = result.get("alternatives")
@@ -452,7 +674,9 @@ async def geox_seismic_interpret(
         if emit_bundle:
             from geox_mcp.domain.seismic_interpret.bundle import build_interpretation_bundle
 
-            cal = calibration or {"input_class": "image_only", "calibrated": False}
+            cal = dict(calibration or {"input_class": "image_only", "calibrated": False})
+            if input_hash:
+                cal["sha256"] = input_hash
             result["interpretation_bundle"] = build_interpretation_bundle(
                 propose_result=result,
                 calibration=cal,
@@ -460,6 +684,11 @@ async def geox_seismic_interpret(
                 request=request or {"hypothesis_count": 3},
             )
             result["preferred_hypothesis"] = None
+            ib = result.get("interpretation_bundle")
+            if isinstance(ib, dict) and input_hash:
+                prov = ib.setdefault("provenance", {})
+                if isinstance(prov, dict):
+                    prov["input_hash"] = input_hash
         return _stamp_qualified(result, mode_norm, transport=_transport)
 
     # ── segy_slice ──
@@ -561,7 +790,24 @@ async def geox_seismic_interpret(
             }
         return await _impl(**blend_kwargs)
 
-    # ── horizon_contrast ──
+    # ── horizon_contrast only — A1: never silent default for other live modes ──
+    if mode_norm != "horizon_contrast":
+        # Live mode declared but no handler branch above → hard fail (not remap)
+        return {
+            "ok": False,
+            "tool": "geox_seismic_interpret",
+            "mode": mode_norm,
+            "requested_mode": requested_mode,
+            "error": "MODE_HANDLER_MISSING",
+            "message": (
+                f"Mode '{mode_norm}' is live but no handler executed. "
+                "This is a server bug — do not silently fall back to horizon_contrast."
+            ),
+            "live_modes": sorted(_LIVE_MODES),
+            "governance_status": "HOLD",
+            "local_verdict": "QUALIFIED_CANDIDATE",
+        }
+
     attrs = attribute_data
     depths = depth
     if volume_inline and isinstance(volume_inline, dict):
@@ -586,7 +832,11 @@ async def geox_seismic_interpret(
             "live_modes": sorted(_LIVE_MODES),
             "governance_status": "HOLD",
             "local_verdict": "QUALIFIED_CANDIDATE",
-            "hint": ("Use mode=segy_slice for MeasurementContext, or build 1D profiles then pass attribute_data+depth."),
+            "hint": (
+                "Use mode=interpret_section / interpret for 2D section images; "
+                "mode=structure_validate for framework gates; "
+                "or pass attribute_data+depth for 1D contrast."
+            ),
         }
 
     attrs = dict(attrs)

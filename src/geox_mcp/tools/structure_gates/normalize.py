@@ -5,6 +5,9 @@ Input contracts and demo payloads often use metric-suffixed keys
 names (max_displacement, length, throw_profile). Without aliasing,
 K-DL/K-THROW return UNMEASURED and never falsify — fail-safe but blind.
 
+Also adapts chat geometry (sticks/picks/name) → fault_id + points so
+G2/K-XCUT/K-DIP can see geometry.
+
 Normalize once before the gate matrix so kill math can fire.
 
 DITEMPA BUKAN DIBERI.
@@ -14,6 +17,12 @@ from __future__ import annotations
 
 from copy import deepcopy
 from typing import Any
+
+from geox_mcp.tools.structure_gates.geometry_adapt import (
+    adapt_fault,
+    adapt_framework_geometry,
+    adapt_horizon,
+)
 
 # Canonical ← accepted aliases (first non-None wins; order is preference)
 _D_KEYS = (
@@ -65,7 +74,8 @@ def normalize_fault(fault: dict[str, Any]) -> dict[str, Any]:
     """Return a shallow-copied fault with canonical gate fields filled from aliases."""
     if not isinstance(fault, dict):
         return fault
-    out = dict(fault)
+    # Geometry first: name→fault_id, sticks→points
+    out = adapt_fault(fault)
 
     d = _first(out, _D_KEYS)
     if d is not None and out.get("max_displacement") is None:
@@ -88,24 +98,40 @@ def normalize_fault(fault: dict[str, Any]) -> dict[str, Any]:
     if prof is not None and out.get("throw_profile") is None:
         out["throw_profile"] = prof
 
-    # id aliases
+    # id aliases (name already handled in adapt_fault)
     if out.get("fault_id") is None and out.get("id") is not None:
         out["fault_id"] = out["id"]
+    if out.get("fault_id") is None and out.get("name") is not None:
+        out["fault_id"] = str(out["name"])
 
     return out
 
 
+def normalize_horizon(horizon: dict[str, Any]) -> dict[str, Any]:
+    """Canonicalize horizon id + picks → points."""
+    if not isinstance(horizon, dict):
+        return horizon
+    return adapt_horizon(horizon)
+
+
 def normalize_framework(framework: dict[str, Any] | None) -> dict[str, Any]:
-    """Deep-copy framework and normalize every fault entry (and nested variants)."""
+    """Deep-copy framework and normalize every fault/horizon entry."""
     if not framework:
         return {}
-    fw = deepcopy(framework)
+    # sticks/picks → points, name → id
+    fw = adapt_framework_geometry(framework)
     faults = fw.get("faults")
     if isinstance(faults, list):
         fw["faults"] = [normalize_fault(f) if isinstance(f, dict) else f for f in faults]
+    horizons = fw.get("horizons")
+    if isinstance(horizons, list):
+        fw["horizons"] = [normalize_horizon(h) if isinstance(h, dict) else h for h in horizons]
     # Some payloads nest under structural_framework / framework
     for nest_key in ("structural_framework", "framework", "geometry"):
         nested = fw.get(nest_key)
-        if isinstance(nested, dict) and isinstance(nested.get("faults"), list):
-            nested["faults"] = [normalize_fault(f) if isinstance(f, dict) else f for f in nested["faults"]]
+        if isinstance(nested, dict):
+            if isinstance(nested.get("faults"), list):
+                nested["faults"] = [normalize_fault(f) if isinstance(f, dict) else f for f in nested["faults"]]
+            if isinstance(nested.get("horizons"), list):
+                nested["horizons"] = [normalize_horizon(h) if isinstance(h, dict) else h for h in nested["horizons"]]
     return fw

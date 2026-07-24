@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from geox_mcp.tools.structure_gates.calibration_derive import apply_calibration
 from geox_mcp.tools.structure_gates.growth import gate_k_growth
 from geox_mcp.tools.structure_gates.k_dip import gate_k_dip
 from geox_mcp.tools.structure_gates.k_dl import gate_k_dl
@@ -29,12 +30,33 @@ __all__ = [
     "gate_k_growth",
     "normalize_fault",
     "normalize_framework",
+    "apply_calibration",
     "run_all_structure_gates",
 ]
 
 
 def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     """Run full structural gate matrix on a StructuralFramework-like dict."""
+    # Calibration derive (sticks+bin+T–D → dips/throws/lengths) THEN normalize
+    cal = None
+    if isinstance(framework, dict):
+        cal = framework.get("calibration")
+        if not cal and isinstance(framework.get("measurement_context"), dict):
+            # pull VE/bin from measurement_context.geometry if present
+            geom = (framework["measurement_context"] or {}).get("geometry") or {}
+            if geom or framework.get("measurement_context", {}).get("calibrated"):
+                cal = {
+                    "vertical_exaggeration": geom.get("vertical_exaggeration"),
+                    "bin_spacing_m": geom.get("bin_spacing_m"),
+                    "sample_rate_ms": geom.get("sample_rate_ms"),
+                    "calibrated": framework["measurement_context"].get("calibrated"),
+                    "input_class": framework["measurement_context"].get("input_class"),
+                    "velocity_td": (framework.get("calibration") or {}).get("velocity_td")
+                    if isinstance(framework.get("calibration"), dict)
+                    else None,
+                }
+        if cal:
+            framework = apply_calibration(framework, cal if isinstance(cal, dict) else {})
     # Alias metric-suffixed demo keys (dmax_m, throw_profile_m, …) → canonical
     # so K-DL/K-THROW can kill rather than silently UNMEASURED.
     framework = normalize_framework(framework)

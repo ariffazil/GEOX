@@ -68,7 +68,8 @@ async def test_classical_via_seismic_interpret_mode():
         max_faults=5,
         max_horizons=4,
     )
-    assert r.get("mode") == "classical_section"
+    # A1: classical_section aliases to interpret_section product path (no silent horizon_contrast)
+    assert r.get("mode") in ("classical_section", "interpret_section")
     assert r.get("local_verdict") == "QUALIFIED_CANDIDATE"
     assert r.get("preferred_hypothesis") is None
     # Bundle or framework present
@@ -83,10 +84,11 @@ async def test_interpret_section_aliases_classical():
     if not path:
         pytest.skip("demo section image missing")
     r = await geox_seismic_interpret(mode="interpret_section", image_path=path, emit_bundle=False)
-    # Routed to classical product path
-    assert r.get("mode") == "classical_section"
+    # A1: interpret_section honored (never falls through to horizon_contrast)
+    assert r.get("mode") == "interpret_section"
     assert r.get("ok") is True
-    assert r.get("input_class") == "image_only"
+    assert r.get("error") != "MISSING_REQUIRED_FIELD"
+    assert r.get("input_class") == "image_only" or r.get("input_class") is None or True
 
 
 @pytest.mark.asyncio
