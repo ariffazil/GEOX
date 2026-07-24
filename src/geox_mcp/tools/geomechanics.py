@@ -58,11 +58,25 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
     """
     # F1 AMANAH: validate input structure before computation
     if not isinstance(request.state, dict):
-        return GeomechanicsResponse(ok=False, error="state must be a dict")
-    if not all(k in request.state for k in ("rho", "vp", "vs")):
+        return GeomechanicsResponse(ok=False, result={}, error="state must be a dict")
+
+    # SURVIVAL-OF-THE-FITTEST FIX 2026-07-24: alias normalization.
+    # Accept common suffix-typed aliases (rho_kg_m3, vp_m_s, vs_m_s) so
+    # callers using SI-with-units keys still derive the canonical keys.
+    # This is a one-way copy — we do not mutate the caller's dict.
+    state = dict(request.state)
+    if "rho" not in state and "rho_kg_m3" in state:
+        state["rho"] = state["rho_kg_m3"]
+    if "vp" not in state and "vp_m_s" in state:
+        state["vp"] = state["vp_m_s"]
+    if "vs" not in state and "vs_m_s" in state:
+        state["vs"] = state["vs_m_s"]
+
+    if not all(k in state for k in ("rho", "vp", "vs")):
         return GeomechanicsResponse(
             ok=False,
-            error=f"state dict must contain 'rho', 'vp', 'vs' (required Physics9 fields). Got: {list(request.state.keys())}",
+            result={},
+            error=f"state dict must contain 'rho', 'vp', 'vs' (required Physics9 fields; aliases rho_kg_m3/vp_m_s/vs_m_s accepted). Got: {list(request.state.keys())}",
         )
 
     try:
@@ -120,12 +134,12 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
 
         return GeomechanicsResponse(ok=True, result=result)
     except TypeError as e:
-        return GeomechanicsResponse(ok=False, error=f"TYPE_ERROR: {e}")
+        return GeomechanicsResponse(ok=False, result={}, error=f"TYPE_ERROR: {e}")
     except ValueError as e:
-        return GeomechanicsResponse(ok=False, error=f"VALUE_ERROR: {e}")
+        return GeomechanicsResponse(ok=False, result={}, error=f"VALUE_ERROR: {e}")
     except Exception as e:
         logger.exception("geox_geomechanics unexpected error")
-        return GeomechanicsResponse(ok=False, error=f"UNEXPECTED: {e}")
+        return GeomechanicsResponse(ok=False, result={}, error=f"UNEXPECTED: {e}")
 
 
 __all__ = ["GeomechanicsRequest", "GeomechanicsResponse", "geox_geomechanics"]

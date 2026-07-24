@@ -768,44 +768,26 @@ def register_prompts(mcp: Any) -> None:
     # ── Resource Contract v2 — workflow templates (FORGED 2026-07-10) ─────
     mcp.prompt(
         name="analyse-well-log",
-        description=(
-            "ANALYSE: single-well petrophysics + interpretation. "
-            "Takes a LAS file end-to-end → pay summary + claim envelope. "
-            "Workflow: well_ingest → well_qc → petrophysics → claim_create. "
-            "F2 TRUTH: every pay call cites depth+curve+cutoff. F7: cap 0.90. "
-            "F11: every claim carries actor_signature + read_at_iso."
-        ),
+        description="ANALYSE: single-well petrophysics + interpretation. LAS → pay summary + claim envelope.",
+
     )(_analyse_well_log)
 
     mcp.prompt(
         name="screen-prospect",
-        description=(
-            "SCREEN: bid-round prospect screening via 7 kill filters (K001-K007). "
-            "Output: PROCEED | REVIEW | KILL with surviving filter scores + "
-            "required follow-up data. F1 AMANAH, F6 MARUAH, F9 ANTI-HANTU, F11 "
-            "AUDIT. Advisory only — arifOS judges, Arif decides."
-        ),
+        description="SCREEN: bid-round prospect screening via 7 kill filters (K001-K007). Output: PROCEED | REVIEW | KILL.",
+
     )(_screen_prospect)
 
     mcp.prompt(
         name="tie-well-to-seismic",
-        description=(
-            "TIE: comprehensive well-to-seismic tie with falsification gates. "
-            "Workflow: time_depth_calibrate → wavelet_extract → mistie_rms → "
-            "tie_preflight → tie_receipt. RMS > 25ms → HOLD. No checkshot → "
-            "HOLD. Wavelet condition > 100× → VOID. F11 AUDIT sealed receipt."
-        ),
+        description="TIE: comprehensive well-to-seismic tie with falsification gates. RMS>25ms→HOLD, no checkshot→HOLD, wavelet condition>100×→VOID.",
+
     )(_tie_well_to_seismic)
 
     mcp.prompt(
         name="reeval-paper",
-        description=(
-            "REEVAL: paper re-evaluation protocol. Workflow: literature_paper "
-            "→ claim_parse → red_team_contradictions → claim_challenge or "
-            "evidence_attach. Output: HOLD | REVISE | RETRACT per claim with "
-            "citation chain preserved. F2 TRUTH: every statement cites "
-            "line/section. F7 HUMILITY: paper claims cap 0.85 (INT not OBS)."
-        ),
+        description="REEVAL: paper re-evaluation protocol. Output: HOLD | REVISE | RETRACT per claim with citation chain preserved.",
+
     )(_reeval_paper)
 
     # ── Earth System Integration — physics × chemistry × biology ──────────
@@ -908,30 +890,18 @@ def register_prompts(mcp: Any) -> None:
 
     mcp.prompt(
         name="earth-system-trinity",
-        description=(
-            "PHYSICS × CHEMISTRY × BIOLOGY: analyze the three-body coupling "
-            "at any geological age. Physics sets the stage, chemistry writes "
-            "the script, biology becomes the co-author. For Sabah: correlates "
-            "with ABKSS surfaces. Label all claims OBS/DER/INT/SPEC."
-        ),
+        description="PHYSICS × CHEMISTRY × BIOLOGY: analyze three-body coupling at any geological age.",
+
     )(_earth_system_trinity)
 
     mcp.prompt(
         name="sabah-charge-evaluator",
-        description=(
-            "CHARGE: evaluate petroleum charge potential for Sabah Basin. "
-            "Integrates source rock (biology), maturation (chemistry), and "
-            "migration pathways (physics) into a single assessment. "
-            "Source → Maturation → Migration → Accumulation → Alteration."
-        ),
+        description="CHARGE: evaluate petroleum charge potential for Sabah Basin. Source→Maturation→Migration→Accumulation→Alteration.",
+
     )(_sabah_charge_evaluator)
 
     mcp.prompt(
         name="earth-deep-time-physics-flow",
-        description=(
-            "PHYSICS FLOW: run the full CO₂ → Temperature → Ice → Sea Level "
-            "flow at any age with consistency gate and cross-validation. "
-            "Uses ensemble sea level (Miller + Haq). Flags inconsistencies. "
-            "For Sabah: correlates with ABKSS unconformities."
-        ),
+        description="PHYSICS FLOW: run CO₂ → Temperature → Ice → Sea Level flow with consistency gate and cross-validation.",
+
     )(_earth_deep_time_physics_flow)

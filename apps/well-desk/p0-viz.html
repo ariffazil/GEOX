@@ -66,6 +66,7 @@
     GEOX Well-Desk
     <span class="epi epi-obs" id="epiBadge">OBS · cap 0.7</span>
   </h1>
+  <div id="demoBadge" style="display:none; background:#8a6a17; color:#fff; padding:6px 10px; border-radius:4px; font-weight:bold; font-size:11px; margin-bottom:8px; letter-spacing:0.04em;">DATA: DEMO FIXTURE — NOT REAL WELL DATA</div>
   <p class="muted" id="status">Waiting for host…</p>
   <div class="row">
     <div class="card"><div class="k">Well</div><div class="v" id="wellId">—</div></div>
@@ -114,6 +115,7 @@
     depth: document.getElementById('depth'),
     cursorInfo: document.getElementById('cursorInfo'),
     epiBadge: document.getElementById('epiBadge'),
+    demoBadge: document.getElementById('demoBadge'),
     btn: document.getElementById('btnRefresh'),
     btnExport: document.getElementById('btnExport'),
   };
@@ -124,6 +126,10 @@
     document.getElementById('cRHOB'),
   ];
 
+  /* ── Security: allowed origins (populated at initialization time) ─────── */
+  var _allowedOrigin = null;
+  var _allowedSource = null;
+
   function show(node, text) {
     if (!text) { node.style.display = 'none'; node.textContent = ''; return; }
     node.style.display = 'block';
@@ -131,7 +137,9 @@
   }
 
   function post(msg) {
-    try { parent.postMessage(msg, '*'); } catch (e) { show(el.err, String(e)); }
+    /* Only reply to the exact origin that initialized us */
+    var target = _allowedOrigin || (window.location !== window.parent.location ? document.referrer : window.location.origin);
+    try { parent.postMessage(msg, target || window.location.origin); } catch (e) { show(el.err, String(e)); }
   }
 
   function rpcRequest(method, params) {
@@ -310,7 +318,9 @@
 
     var epi = sc.epistemic || (sc.summary && sc.summary.epistemic) || {};
     el.epiBadge.textContent = (epi.layer || 'OBS') + ' · cap ' + (epi.confidence_cap != null ? epi.confidence_cap : '—');
+    show(el.demoBadge, sc.provenance_badge || '');
 
+    var isDemo = (sc.well_id || (lastArgs && lastArgs.well_id) || '').toUpperCase().startsWith('DEMO-');
     if (sc.curves && sc.depths) {
       series = {
         depths: sc.depths,
@@ -319,10 +329,16 @@
         DT: sc.curves.DT || sc.curves.dt,
         RHOB: sc.curves.RHOB || sc.curves.rhob,
       };
-    } else {
+    } else if (isDemo) {
+      /* Synthetic is allowed only for explicit DEMO- wells */
       series = synthSeries(sc.well_id || lastArgs && lastArgs.well_id, 120);
+      show(el.demoBadge, 'DATA: SYNTHETIC DEMONSTRATION — NOT EARTH EVIDENCE');
+    } else {
+      /* Real or unknown well — empty state, never synthesise */
+      series = null;
+      show(el.demoBadge, '');
     }
-    cursorIdx = Math.floor((series.depths.length - 1) / 2);
+    cursorIdx = series ? Math.floor((series.depths.length - 1) / 2) : 0;
     redrawAll();
     el.out.textContent = JSON.stringify({
       well_id: sc.well_id,
@@ -336,11 +352,27 @@
   }
 
   function onMessage(ev) {
+    /* ── P0 SECURITY: origin + source validation ───────────────────────── */
+    if (_allowedOrigin && ev.origin !== _allowedOrigin) {
+      console.warn('[WellDesk] Rejected message from unexpected origin:', ev.origin);
+      return;
+    }
+    if (_allowedSource && ev.source !== _allowedSource) {
+      console.warn('[WellDesk] Rejected message from unexpected source');
+      return;
+    }
+
     var data = ev.data;
     if (typeof data === 'string') {
       try { data = JSON.parse(data); } catch (e) { return; }
     }
     if (!data || data.jsonrpc !== '2.0') return;
+
+    /* Capture allowed origin and source on first governed message */
+    if (!_allowedOrigin && ev.origin && ev.origin !== 'null') {
+      _allowedOrigin = ev.origin;
+      _allowedSource = ev.source;
+    }
 
     if (data.id != null && pending.has(data.id)) {
       var p = pending.get(data.id);
@@ -354,11 +386,17 @@
     var m = data.method;
     if (m === 'ui/notifications/tool-input' || m === 'ui/notifications/tool-input-partial') {
       applyArgs(data.params && data.params.arguments);
-      // Preview with synthetic until result arrives
-      series = synthSeries(lastArgs && lastArgs.well_id, 120);
-      cursorIdx = 40;
-      redrawAll();
-      el.status.textContent = 'Tool input — synthetic preview until result';
+      /* Synthetic preview only for DEMO- wells */
+      var wid = (lastArgs && lastArgs.well_id) || '';
+      if (wid.toUpperCase().startsWith('DEMO-')) {
+        series = synthSeries(wid, 120);
+        cursorIdx = 40;
+        redrawAll();
+        el.status.textContent = 'Tool input — synthetic preview (DEMO)';
+      } else {
+        series = null;
+        el.status.textContent = 'Tool input — awaiting real LAS data';
+      }
       el.btn.disabled = false;
     }
     if (m === 'ui/notifications/tool-result') {

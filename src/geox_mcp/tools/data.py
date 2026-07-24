@@ -84,7 +84,7 @@ async def geox_data_ingest_bundle(
     normalize_units: bool = True,
     content_base64: str | None = None,
     filename: str | None = None,
-    target_dir: str = "/data/geox_las",
+    target_dir: str = os.environ.get("GEOX_WELL_DATA_DIR", "/data/wells"),
     overwrite: bool = False,
     # Batch mode (absorbs geox_task_ingest_las_batch)
     batch_mode: bool = False,
@@ -651,14 +651,16 @@ async def geox_data_ingest_bundle(
         depth_conversion_applied = False
         depth_unit_normalized = depth_unit_original
 
-        needs_conversion = normalize_units and depth_unit_original.upper() in ("FT", "FEET", "FOOT")
+        needs_conversion = normalize_units and depth_unit_original.upper() in ("FT", "FEET", "FOOT", "F", ".F", ".FT", ".FEET")
         if needs_conversion:
             # Multiply stored depth values (apply 0.3048 ft→m)
             depth_unit_normalized = "M"
             depth_conversion_applied = True
-            # Update depth_range in out if present
+            # Update depth_range and depth_range_m in out
             if "depth_range" in out and isinstance(out["depth_range"], list):
-                out["depth_range"] = [v * 0.3048 for v in out["depth_range"]]
+                out["depth_range"] = [round(v * 0.3048, 4) for v in out["depth_range"]]
+            if "depth_range_m" in out and isinstance(out["depth_range_m"], list):
+                out["depth_range_m"] = [round(v * 0.3048, 4) for v in out["depth_range_m"]]
 
         # Overlay MCP context
         out["tool"] = "geox_data_ingest_bundle"

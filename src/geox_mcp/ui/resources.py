@@ -27,6 +27,18 @@ def _uri_registered(mcp: FastMCP, uri: str) -> bool:
     return f"resource:{uri}@" in comps
 
 
+GEOX_RESOURCE_CSP = ResourceCSP(
+    connect_domains=["geox.arif-fazil.com", "macrostrat.org"],
+    resource_domains=[
+        "geox.arif-fazil.com",
+        "unpkg.com",
+        "tile.openstreetmap.org",
+        "cdn.jsdelivr.net",
+        "cdn.plot.ly",
+    ],
+)
+
+
 def register_workspace_resource(mcp: FastMCP) -> None:
     """Register the read-only GEOX workspace widget resource (idempotent)."""
     if not WORKSPACE_FILE.exists():
@@ -45,10 +57,7 @@ def register_workspace_resource(mcp: FastMCP) -> None:
         mime_type=WORKSPACE_MIME,
         app=AppConfig(
             prefers_border=True,
-            csp=ResourceCSP(
-                connect_domains=[],
-                resource_domains=[],
-            ),
+            csp=GEOX_RESOURCE_CSP,
         ),
     )
     async def geox_workspace_v1() -> str:
@@ -93,10 +102,7 @@ def register_gravmag_studio_resource(mcp: FastMCP) -> None:
         mime_type=GRAVMAG_STUDIO_MIME,
         app=AppConfig(
             prefers_border=True,
-            csp=ResourceCSP(
-                connect_domains=[],
-                resource_domains=[],
-            ),
+            csp=GEOX_RESOURCE_CSP,
         ),
     )
     async def geox_gravmag_studio_v1() -> str:
@@ -105,7 +111,36 @@ def register_gravmag_studio_resource(mcp: FastMCP) -> None:
     logger.info("GravMag Studio resource registered: %s", GRAVMAG_STUDIO_URI)
 
 
+def register_alias_resources(mcp: FastMCP) -> None:
+    """Register exact alias URIs (without .html and ui://well/desk) for zero-friction client resolution."""
+    aliases = [
+        ("ui://geox/workspace-v1", WORKSPACE_FILE, WORKSPACE_MIME, "GEOX Workspace v1 alias (without .html extension)"),
+        ("ui://geox/gravmag-studio", GRAVMAG_STUDIO_FILE, GRAVMAG_STUDIO_MIME, "GEOX GravMag Studio alias (without .html extension)"),
+        ("ui://well/desk", WORKSPACE_FILE, WORKSPACE_MIME, "Well Desk alias (mirrored from GEOX WellDesk)"),
+    ]
+    for uri, filepath, mime, desc in aliases:
+        if filepath.exists() and not _uri_registered(mcp, uri):
+            html = filepath.read_text(encoding="utf-8")
+
+            def _make_handler(content: str):
+                async def _alias_handler() -> str:
+                    return content
+
+                return _alias_handler
+
+            mcp.resource(
+                uri,
+                description=desc,
+                mime_type=mime,
+                app=AppConfig(
+                    prefers_border=True,
+                    csp=GEOX_RESOURCE_CSP,
+                ),
+            )(_make_handler(html))
+
+
 def register_all_ui_resources(mcp: FastMCP) -> None:
-    """Register every GEOX UI resource — workspace + GravMag Studio."""
+    """Register every GEOX UI resource — workspace + GravMag Studio + URI aliases."""
     register_workspace_resource(mcp)
     register_gravmag_studio_resource(mcp)
+    register_alias_resources(mcp)

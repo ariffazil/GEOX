@@ -108,7 +108,7 @@ async def geox_well_ingest(
     normalize_units: bool = True,
     content_base64: str | None = None,
     filename: str | None = None,
-    target_dir: str = "/data/geox_las",
+    target_dir: str = "/data/wells",
     overwrite: bool = False,
     batch_mode: bool = False,
     artifact_refs: list[str] | None = None,
@@ -246,13 +246,13 @@ async def geox_well_ingest(
             skin_max=skin_max,
         )
 
-    # Fallback: full data_ingest_bundle for auto mode with files
-    if mode == "auto":
+    # Fallback: full data_ingest_bundle for auto/las mode with files
+    if mode in ("auto", "las"):
         from geox_mcp.tools.data import geox_data_ingest_bundle as _impl
 
         return await _impl(
             source_uri=source_uri,
-            source_type=source_type,
+            source_type=source_type if source_type != "auto" else ("well" if mode == "las" else "auto"),
             well_id=well_id,
             standardize_curves=standardize_curves,
             normalize_units=normalize_units,

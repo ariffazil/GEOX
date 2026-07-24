@@ -185,14 +185,28 @@ async def geox_seismic_segy_inspect(segy_metadata: dict[str, Any]) -> dict[str, 
     if segy_metadata.get("format") == "UNKNOWN":
         report["errors"].append("SEG-Y format is unknown — cannot validate encoding")
 
-    if segy_metadata.get("sample_interval_ms", 0) <= 0:
+    # SURVIVAL-OF-THE-FITTEST FIX 2026-07-24: defensive type coercion.
+    # String values for numeric SEG-Y fields (e.g. "4" instead of 4) would
+    # otherwise raise `<= not supported between 'int' and 'str'`. Coerce
+    # via float() and degrade to a structured error rather than crashing.
+    def _coerce_num(value, default=0):
+        if value is None:
+            return default
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return default
+
+    sample_interval = _coerce_num(segy_metadata.get("sample_interval_ms"), 0)
+    if sample_interval <= 0:
         report["errors"].append("Sample interval must be positive")
 
-    if segy_metadata.get("trace_count", 0) <= 0:
+    trace_count = _coerce_num(segy_metadata.get("trace_count"), 0)
+    if trace_count <= 0:
         report["errors"].append("Trace count must be positive")
 
     if segy_metadata.get("inline_start") and segy_metadata.get("inline_end"):
-        if segy_metadata["inline_end"] < segy_metadata["inline_start"]:
+        if _coerce_num(segy_metadata["inline_end"]) < _coerce_num(segy_metadata["inline_start"]):
             report["errors"].append("inline_end < inline_start — coordinate range error")
 
     return report
