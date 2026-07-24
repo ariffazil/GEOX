@@ -1,0 +1,210 @@
+# smithery.yaml — GEOX Smithery MCP Registry Configuration
+# DITEMPA BUKAN DIBERI
+#
+# Smithery is a marketplace for MCP servers
+# Registry: https://smithery.ai
+
+name: geox-earth-witness
+version: "0.5.0"
+display_name: "GEOX — Geological Intelligence Coprocessor"
+description: |
+  GEOX is a governed, agentic geological intelligence coprocessor for arifOS.
+  Provides physically-grounded geological prospect evaluation using Large Earth Models,
+  seismic VLM interpretation, basin simulation, and geospatial verification.
+  
+  Key capabilities:
+  - Prospect evaluation with constitutional floor enforcement
+  - Structural validation (fault mechanics, shortening calculations)
+  - Geological memory RAG over past evaluations
+  - Tri-app architecture: Map + Cross Section + Seismic Section
+  
+  Verdict outcomes: SEAL (high confidence), PARTIAL (supported with caveats),
+  SABAR (wait/gather more), VOID (contradictions detected)
+
+category: science
+subcategory: geology
+
+# MCP protocol
+mcp_version: "2025-11-25"
+transport: http
+command: python
+args: ["server.py"]
+
+# Installation
+install:
+  method: pip
+  package: arifos-geox
+  source: https://github.com/ariffazil/geox
+  python_version: ">=3.11"
+
+# Sovereign 11 Tools — Forged Surface (2026-05-22)
+# Replaces 35+ phantom/dead/redundant tools with 11 honest, minimal, complete tools.
+tools:
+  - id: geox_data_ingest_bundle
+    name: geox_data_ingest_bundle
+    description: Lazy ingest LAS/CSV/SEG-Y/JSON/GeoJSON/Parquet/analog log into the artifact store. Supports single-file and batch_mode. Returns artifact_ref for downstream tools.
+    input_schema:
+      type: object
+      properties:
+        source_uri: { type: string, description: "Path or URL to the data file" }
+        source_type: { type: string, enum: [well, seismic, earth3d, auto, tops, biostrat, checkshot] }
+        batch_mode: { type: boolean, default: false }
+        artifact_refs: { type: array, items: { type: string }, description: "Required when batch_mode=true" }
+      required: [source_uri]
+
+  - id: geox_data_qc_bundle
+    name: geox_data_qc_bundle
+    description: Unified QC gate — header, unit, missingness, spike, and range verification. Promotes artifact_ref to QC_VERIFIED on pass; blocks on fail.
+    input_schema:
+      type: object
+      properties:
+        artifact_ref: { type: string }
+        qc_mode: { type: string, enum: [full, header, curves, depth, completeness], default: full }
+      required: [artifact_ref]
+
+  - id: geox_dst_ingest_test
+    name: geox_dst_ingest_test
+    description: Structured Drill-Stem Test ingestion — computes CGR, WGR, hydrocarbon gas, drawdown proxy, and CO2/H2S classification.
+    input_schema:
+      type: object
+      properties:
+        well_id: { type: string }
+      required: [well_id]
+
+  - id: geox_subsurface_generate_candidates
+    name: geox_subsurface_generate_candidates
+    description: Petrophysics + structural geometry ensemble (MIN/MID/MAX realizations) with residuals, evidence_density, and assumptions. Supports multi-well basin metabolize mode.
+    input_schema:
+      type: object
+      properties:
+        target_class: { type: string, enum: [petrophysics, structure, flattening, vsh, porosity, saturation, netpay, permeability, gr_motif, lithology] }
+        evidence_refs: { type: array, items: { type: string } }
+        basin_context: { type: string, description: "Enable basin metabolize mode when set" }
+      required: [target_class, evidence_refs]
+
+  - id: geox_subsurface_verify_integrity
+    name: geox_subsurface_verify_integrity
+    description: Physics-9 integrity gate — enforces nine physical law constraints on candidate outputs. SEAL/FAIL/HOLD verdict.
+    input_schema:
+      type: object
+      properties:
+        candidate_ref: { type: string }
+        domain: { type: string, enum: [petrophysics, structure, seismic, geochemistry] }
+      required: [candidate_ref, domain]
+
+  - id: geox_seismic_compute
+    name: geox_seismic_compute
+    description: Unified seismic physics engine. Modes: synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute (honest placeholder).
+    input_schema:
+      type: object
+      properties:
+        mode: { type: string, enum: [synthetic, well_tie, time_depth_anchor, anomalous_contrast, attribute] }
+        well_id: { type: string }
+      required: [mode]
+
+  - id: geox_sequence_interpret
+    name: geox_sequence_interpret
+    description: Unified sequence stratigraphy engine. Workflows: single_well, project, preview, section_correlation. Replaces 7 predecessor tools.
+    input_schema:
+      type: object
+      properties:
+        workflow: { type: string, enum: [single_well, project, preview, section_correlation] }
+        source: { type: string }
+        project_yaml: { type: string }
+      required: [workflow]
+
+  - id: geox_evidence_reason
+    name: geox_evidence_reason
+    description: Unified evidence synthesis, abduction, and contradiction engine. Phases: synthesize, abduct, contradict, full.
+    input_schema:
+      type: object
+      properties:
+        phase: { type: string, enum: [synthesize, abduct, contradict, full], default: full }
+        evidence_refs: { type: array, items: { type: string } }
+      required: [evidence_refs]
+
+  - id: geox_prospect_evaluate
+    name: geox_prospect_evaluate
+    description: Integrated prospect evaluation with reversible preview and irreversible seal. Modes: screen, appraise, develop. Verdicts: compute, preview, seal.
+    input_schema:
+      type: object
+      properties:
+        prospect_ref: { type: string }
+        mode: { type: string, enum: [screen, appraise, develop], default: screen }
+        verdict: { type: string, enum: [compute, preview, seal], default: compute }
+        ack_irreversible: { type: boolean, default: false }
+      required: [prospect_ref]
+
+  - id: geox_map_context_scene
+    name: geox_map_context_scene
+    description: Geospatial context, CRS validation, georeferencing, basin atlas lookup, and F6 Maruah territory flag.
+    input_schema:
+      type: object
+      properties:
+        bbox: { type: array, items: { type: number }, description: "[min_lon, min_lat, max_lon, max_lat]" }
+        mode: { type: string, enum: [bbox_context, crs_check, render_scene, scene_summary, georeference_map, coordinate_guardrail], default: bbox_context }
+      required: [bbox]
+
+  - id: geox_system_registry_status
+    name: geox_system_registry_status
+    description: Contract introspection — tool count, alias table, manifest parity, health, and federation status. Returns canonical_tool_count=11.
+    input_schema:
+      type: object
+      properties: {}
+      required: []
+
+  - id: geox_history_audit
+    name: geox_history_audit
+    description: VAULT999 lineage retrieval — prior runs, provenance chain, artifact versions, and decision delta for a prospect or artifact_ref.
+    input_schema:
+      type: object
+      properties:
+        artifact_ref: { type: string }
+        depth: { type: integer, default: 10, description: "Max history entries to return" }
+      required: [artifact_ref]
+
+# Constitutional governance
+governance:
+  floors:
+    - id: F1
+      name: Amanah
+      description: Reversibility
+    - id: F2
+      name: Truth
+      description: All claims Earth-verified
+    - id: F4
+      name: Clarity
+      description: Units and coordinates required
+    - id: F7
+      name: Humility
+      description: Uncertainty calibrated
+    - id: F9
+      name: Anti-Hantu
+      description: No hallucinated geology
+    - id: F11
+      name: Authority
+      description: Provenance mandatory
+    - id: F13
+      name: Sovereign
+      description: Human veto hook active
+
+# Verdict system
+verdicts:
+  SEAL: { confidence_min: 0.80, action: auto_proceed }
+  PARTIAL: { confidence_min: 0.50, action: proceed_with_caveats }
+  SABAR: { confidence_min: 0.25, action: hold_wait_data }
+  VOID: { confidence_min: 0.00, action: block_stop }
+
+# Author
+author:
+  name: Muhammad Arif bin Fazil
+  email: ariffazil@gmail.com
+  org: Operator Exploration
+  github: https://github.com/ariffazil
+
+license: BSL-1.1
+links:
+  github: https://github.com/ariffazil/GEOX
+  documentation: https://github.com/ariffazil/GEOX#readme
+
+seal: DITEMPA BUKAN DIBERI
