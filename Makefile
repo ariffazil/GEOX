@@ -55,7 +55,7 @@ forge: clean-temp sot-bump security-audit
 # DEMO LAS aliases are NOT committed (absolute-path symlinks break clean clones).
 # They are recreated here from tracked fixtures. Clean clone path:
 #   make deploy-apps   # or: make seed-demo-las && make seed-evidence
-.PHONY: seed-evidence seed-demo-las deploy-apps readiness-test apps-catalog
+.PHONY: seed-evidence seed-demo-las deploy-apps readiness-test apps-catalog generate-mcp-apps-surface
 
 # firstword = this Makefile (includes of forge.mk must not steal GEOX_ROOT)
 GEOX_ROOT := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
@@ -100,6 +100,10 @@ deploy-apps:
 
 readiness-test:
 	PYTHONPATH=src $(PYTHON) -m pytest tests/test_mcp_apps_readiness.py tests/test_visual_image_publish.py tests/test_demo_well_hydrate.py -q --tb=line
+
+# W2: regenerate MCP Apps surface; fails closed if any active UI is zero-bound
+generate-mcp-apps-surface:
+	PYTHONPATH=src $(PYTHON) scripts/generate_mcp_apps_surface.py
 
 apps-catalog:
 	cp -f apps/index.html /var/www/html/geox/apps/index.html

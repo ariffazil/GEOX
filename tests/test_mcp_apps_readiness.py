@@ -335,6 +335,25 @@ async def test_10b_judge_basin_tools_list_bindings():
     assert (by_name["geox_visual_understand"].meta or {}).get("ui", {}).get("resourceUri", "").startswith("ui://geox/visual-hub")
 
 
+def test_10c_surface_manifest_active_zero_bound():
+    """W2: active UI resources must not regress to zero-bound after generate.
+
+    Sealed hand-fix can be green while generate_mcp_apps_surface.py re-introduces
+    empty bound_tools on alias URIs (.html twins, geox-mcp-visual). This gate
+    fails closed on any active zero-bound row in the committed surface.
+    """
+    with open(SURFACE_MANIFEST_PATH, encoding="utf-8") as f:
+        manifest = json.load(f)
+
+    active = [r for r in manifest.get("ui_resources", []) if r.get("status") == "active"]
+    assert active, "surface has no active UI resources"
+    zero = [r["uri"] for r in active if not (r.get("bound_tools") or [])]
+    assert not zero, f"active zero-bound UI resources (run scripts/generate_mcp_apps_surface.py): {zero}"
+    # field present after W2 generator
+    if "active_zero_bound" in manifest:
+        assert manifest["active_zero_bound"] == 0
+
+
 @pytest.mark.asyncio
 async def test_11_phase_01_truth_floor_and_csp_parity():
     """Verify Phase 0.1 Truth Floor enforcement, demo provenance badges, and CSP parity."""

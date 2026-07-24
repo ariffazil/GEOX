@@ -93,25 +93,35 @@ jobs:
           python -c "import geox_mcp; print('geox_mcp import OK')"
 
       # ── BLOCKING GATE: any failure = job fails ──────────────
+      # NOTE: GitHub expressions cannot use shell vars (steps.$step is invalid → 0s workflow fail).
       - name: Diagnostic verdict
         if: always()
+        env:
+          OUT_LINT: ${{ steps.lint.outcome }}
+          OUT_MYPY: ${{ steps.mypy.outcome }}
+          OUT_TEST: ${{ steps.test.outcome }}
+          OUT_BUILD: ${{ steps.build.outcome }}
         run: |
           echo "=== Lane 1 Diagnostic Verdict ==="
           FAILURES=0
-          for step in lint mypy test build; do
-            outcome="${{ steps.$step.outcome }}"
+          check() {
+            local name="$1" outcome="$2"
             if [ "$outcome" != "success" ]; then
-              echo "❌ $step: $outcome"
+              echo "FAIL $name: $outcome"
               FAILURES=$((FAILURES + 1))
             else
-              echo "✅ $step: $outcome"
+              echo "OK   $name: $outcome"
             fi
-          done
+          }
+          check lint  "$OUT_LINT"
+          check mypy  "$OUT_MYPY"
+          check test  "$OUT_TEST"
+          check build "$OUT_BUILD"
           if [ $FAILURES -gt 0 ]; then
-            echo "❌ Lane 1: $FAILURES diagnostic failure(s) — BLOCKING"
+            echo "Lane 1: $FAILURES diagnostic failure(s) — BLOCKING"
             exit 1
           fi
-          echo "✅ Lane 1 diagnostics passed"
+          echo "Lane 1 diagnostics passed"
 
   # ─────────────────────────────────────────────────────────────
   # LANE 2: AGENTIC CI — BIJAKSANA Physics Gate
@@ -235,7 +245,7 @@ jobs:
           fi
           echo "Verdict: $VERDICT"
           
-          # Write JSON report
+          # Write JSON report (quote omega — may be numeric or ERROR string)
           cat > agentic_ci_report.json << EOF
           {
             "organ": "geox",
@@ -245,10 +255,10 @@ jobs:
             "timestamp": "$(date -u '+%Y-%m-%dT%H:%M:%SZ')",
             "lane_1_standard": "$STANDARD_OK",
             "lane_2_bijaksana": {
-              "ds": $DS,
-              "phi": $PHI,
+              "ds": ${DS:-0},
+              "phi": ${PHI:-0},
               "psi": "$PSI",
-              "omega": $OMEGA
+              "omega": "$OMEGA"
             },
             "verdict": "$VERDICT",
             "label": "Agentic CI"
