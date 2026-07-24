@@ -1,43 +1,116 @@
-# GEOX — Earth Intelligence Sovereign Kernel (32 Public Tools)
-> Doctrine: Physics before narrative. Governed evidence only.
-> Surface: generated from src/geox_mcp/tools_manifest.yaml
+# GEOX — Earth Intelligence (arifOS Federation)
+## Machine & Agent Interface Specification
 
-## 1. Canonical Tool Surface
+**Version:** 2026.07.24  
+**URL:** https://geox.arif-fazil.com  
+**MCP:** https://geox.arif-fazil.com/mcp  
+**Source:** https://github.com/ariffazil/GEOX  
+**Port (local):** 8081 · **Tools:** 32 public · **License:** BSL-1.1  
 
-1. **geox_well_ingest**: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
-2. **geox_petrophysics**: Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.
-3. **geox_seismic_ingest**: SEG-Y I/O, header inspection, export.
-4. **geox_seismic_compute**: Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.
-5. **geox_seismic_interpret**: One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.
-6. **geox_subsurface_model**: Subsurface model building: joint inversion, gravity/magnetic forward, MT forward.
-7. **geox_basin**: Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
-8. **geox_sequence**: Unified stratigraphy: sequence analysis, biostratigraphic parsing and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.
-9. **geox_geomechanics**: Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.
-10. **geox_deep_time_state**: Earth State Vector through deep time: GPTS, CO2, sea level, temperature, paleogeography.
-11. **geox_claim**: Unified claim lifecycle: create, validate, challenge, seal, evidence, consequence, optionality, cascade, feedback integrity, truth challenge.
-12. **geox_prospect**: Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.
-13. **geox_gravmag_studio**: Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.
-14. **geox_well_desk**: Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.
-15. **geox_well_qc**: Quality control for well data: depth monotonicity, null %, physical range checks.
-16. **geox_surface_status**: Federation-standard registry probe: tool discovery and health status.
-17. **geox_evidence**: Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.
-18. **geox_basin_backstrip**: 1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.
-19. **geox_sediment_mass_balance**: Source-to-sink sediment volume and mass accounting. Peters 2012 framework.
-20. **geox_thermal_maturity_history**: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
-21. **geox_claim_graph_evaluate**: Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.
-22. **geox_falsify**: Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.
-23. **geox_contradiction_scan**: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
-24. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
-25. **geox_to_wealth_bridge**: Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.
-26. **geox_map_export_package**: Map export: package map layers and annotations into portable formats.
-27. **geox_visual_understand**: Extract visual patterns from seismic section images using deep learning.
-28. **geox_visual_generate_hypotheses**: Generate geological hypotheses across discontinuity gaps in seismic data.
-29. **geox_map_layers_list**: List available map layers and their spatial extents.
-30. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
-31. **geox_map_render_preview**: Render preview of map scene for quality review before export.
-32. **geox_workspace**: GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.
+> **Physics before narrative. Evidence only — never adjudicates.**  
+> Authority ceiling: **COMPUTE_ONLY** — DEMO ≠ earth truth · Volve = North Sea.
 
-## 2. Agent Reasoning Logic
-- Evidence before interpretation.
-- Governance stays server-side.
-- App-enabled workspace URI: `ui://geox/workspace-v1.html` (text/html;profile=mcp-app).
+---
+
+## What GEOX Is
+
+Earth intelligence organ of the arifOS federation. Wells, seismic, petrophysics,
+basin analysis, prospect screening, falsification, and map/visual MCP Apps.
+Outputs are governed evidence envelopes — not SEAL/VOID judgments.
+
+## Federation Organs
+
+| Organ | Role | Port | Link |
+|-------|------|------|------|
+| arifOS | Constitutional kernel — judge, seal | 8088 | https://arifos.arif-fazil.com |
+| AAA | Cockpit + A2A | 3001 | https://aaa.arif-fazil.com |
+| A-FORGE | Execution shell | 7071 | https://mcp.arif-fazil.com |
+| **GEOX** | Earth intelligence | 8081 | ← you are here |
+| WEALTH | Capital intelligence | 18082 | https://wealth.arif-fazil.com |
+| WELL | Vitality guard (REFLECT_ONLY) | 18083 | https://well.arif-fazil.com |
+| HERMES | Multi-modal / Telegram bridge | — | https://t.me/arifos |
+
+Contract: https://arifos.arif-fazil.com · `/root/FEDERATION_CONTRACT.md`
+
+---
+
+## Discovery Endpoints
+
+| Path | Purpose |
+|------|---------|
+| `/health` | Runtime health + tool count + git identity |
+| `/mcp` | MCP streamable-http (POST tools; GET discovery) |
+| `/llms.txt` | This file — agent map |
+| `/apps/well-desk/p0-viz.html` | MCP host WellDesk shell |
+| `/apps/well-desk/index.html` | Full browser WellDesk |
+| Agent card | `/.well-known/agent-card.json` |
+| Surface | `GEOX_MCP_APPS_SURFACE.json` (repo) |
+
+**Truth rule:** live `tools/list` and `/health` beat static prose. Identity: `geox-<gitsha>`.
+
+---
+
+## Public MCP Tools (32)
+
+### Well / petrophysics
+- `geox_well_ingest` · `geox_well_desk` · `geox_well_qc` · `geox_petrophysics` · `geox_lem_predict`
+
+### Seismic / subsurface
+- `geox_seismic_ingest` · `geox_seismic_compute` · `geox_seismic_interpret` · `geox_subsurface_model` · `geox_geomechanics` · `geox_gravmag_studio`
+
+### Basin / sequence / deep time
+- `geox_basin` · `geox_basin_backstrip` · `geox_sediment_mass_balance` · `geox_thermal_maturity_history` · `geox_sequence` · `geox_deep_time_state`
+
+### Claims / evidence / falsify
+- `geox_claim` · `geox_claim_graph_evaluate` · `geox_evidence` · `geox_falsify` · `geox_contradiction_scan` · `geox_prospect`
+
+### Map / visual / workspace
+- `geox_map_layers_list` · `geox_map_scene_plan` · `geox_map_render_preview` · `geox_map_export_package`
+- `geox_visual_understand` · `geox_visual_generate_hypotheses` · `geox_workspace` · `geox_surface_status`
+- `geox_to_wealth_bridge`
+
+### MCP Apps (host iframes)
+Primary: `ui://geox/well-desk` (p0-viz host shell). Also basin-explorer, judge-console, seismic-vision, visual-hub, earth-map, prospect-studio, catalog.
+
+### Demo wells (fixture, not MEASURED earth)
+`DEMO-KINABALU` · `DEMO_WELL_A` · `DEMO_WELL_B` · `DEMO-VOLVE` (OPEN_OSS North Sea)
+
+---
+
+## Boundaries (hard)
+
+- NEVER issue SEAL/VOID/SABAR — route judgment to arifOS  
+- NEVER treat DEMO LAS as field MEASURED truth  
+- NEVER claim Malay Basin for Volve / North Sea fixtures  
+- NEVER self-authorize capital via to_wealth_bridge (evidence only)  
+- preferred_hypothesis from seismic interpret is always null from GEOX  
+
+## Epistemic Tags
+
+OBS / DER / INT / SPEC. Demo paths badge SYNTHETIC or DEMO. Petro on demo = ADVISORY · NOT_SEALED.
+
+## Runtime Layout
+
+- `src/geox_mcp/` — FastMCP server, tools, MCP Apps bridge  
+- `apps/well-desk/p0-viz.html` — host-usable WellDesk  
+- `scripts/generate_mcp_apps_surface.py` — surface SOT (fail-closed zero-bound)  
+- systemd: `geox-mcp.service` → :8081  
+
+## Build & Test
+
+```bash
+pip install -e ".[dev]"
+make readiness-test          # ship gate
+make generate-mcp-apps-surface
+curl -s http://127.0.0.1:8081/health
+```
+
+## For Agents
+
+1. Read this file + `/health`  
+2. Connect MCP: `https://geox.arif-fazil.com/mcp`  
+3. Open wells via `geox_well_desk` mode=open; bind UI `ui://geox/well-desk`  
+4. Route SEAL-grade claims through arifOS  
+5. Crawl federation: https://arifos.arif-fazil.com/llms.txt  
+
+DITEMPA BUKAN DIBERI — Forged, Not Given.
