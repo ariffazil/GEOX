@@ -31,7 +31,8 @@ TIMEOUT = 10.0
 
 
 async def geox_to_wealth_bridge(
-    prospect_id: str,
+    prospect_id: str | None = None,
+    mode: str = "prospect",
     npv_usd: float | None = None,
     irr: float | None = None,
     breakeven_usd: float | None = None,
@@ -49,32 +50,49 @@ async def geox_to_wealth_bridge(
     d_s: float = 0.0,
     session_id: str | None = None,
     actor_id: str | None = None,
+    # ── Sovereign Natural Capital mode inputs (P1, 2026-07-24) ──
+    petroleum_reserves_mmboe: float | None = None,
+    petroleum_reserve_epistemic: str | None = None,
+    petroleum_replacement_ratio: float | None = None,
+    petroleum_replacement_epistemic: str | None = None,
+    water_security_index: float | None = None,
+    water_security_epistemic: str | None = None,
+    agricultural_land_ha: float | None = None,
+    agricultural_land_epistemic: str | None = None,
+    mineral_reserves_value_usd: float | None = None,
+    mineral_reserves_epistemic: str | None = None,
+    forest_cover_pct: float | None = None,
+    forest_cover_epistemic: str | None = None,
+    biodiversity_index: float | None = None,
+    biodiversity_epistemic: str | None = None,
+    flood_exposure_area_km2: float | None = None,
+    flood_exposure_epistemic: str | None = None,
+    coastal_exposure_km: float | None = None,
+    coastal_exposure_epistemic: str | None = None,
+    climate_risk_score: float | None = None,
+    climate_risk_epistemic: str | None = None,
+    energy_import_dependence_pct: float | None = None,
+    energy_import_dependence_epistemic: str | None = None,
+    physical_infrastructure_score: float | None = None,
+    physical_infrastructure_epistemic: str | None = None,
+    # ── Evidence provenance ──
+    data_source: str | None = None,
 ) -> dict[str, Any]:
     """Governed bridge: GEOX evidence → WEALTH capital computation via MCP.
 
-    Creates an MCP session with WEALTH, invokes capital_primitive
-    with NPV mode, and returns both GEOX source evidence and WEALTH
-    capital interpretation. Never reinterprets geological observations.
+    Modes:
+      prospect               — petroleum prospect NPV/IRR (default)
+      sovereign_natural_capital — national physical balance sheet (P1 2026-07-24)
+
+    The sovereign_natural_capital mode covers petroleum reserves, water security,
+    agricultural land, minerals, forest/biodiversity, flood/coastal exposure,
+    climate risk, energy-import dependence, and physical infrastructure.
+    Every field preserves its own OBS / DER / INT / SPEC classification.
+    GEOX supplies physical evidence; WEALTH may derive economic consequences.
 
     Args:
-        prospect_id: Unique prospect identifier.
-        npv_usd: Net present value in USD.
-        irr: Internal rate of return (0-1).
-        breakeven_usd: Breakeven price per unit.
-        discount_rate: Discount rate (default 10%).
-        risk_geo: Geological risk (0-1).
-        sigma_market: Market volatility.
-        sigma_policy: Policy risk.
-        admissibility: Governance status (admitted/blocked/conditional).
-        epistemic_source: Evidence quality tag (OBS/DER/INT/SPEC/ESTIMATE).
-        penalty_infinite: Whether penalty is infinite (blocked prospect).
-        carbon_cost_usd: Carbon cost per tCO2e.
-        delay_risk: Delay risk factor (0-1).
-        required_modifications: List of required modifications.
-        peace2: Peace² score.
-        d_s: Entropy delta.
-        session_id: arifOS session ID for federation envelope.
-        actor_id: Authenticated actor identity.
+        mode: "prospect" or "sovereign_natural_capital"
+        ... existing prospect params ...
 
     Returns:
         Federation response with GEOX source evidence + WEALTH result.
@@ -83,6 +101,136 @@ async def geox_to_wealth_bridge(
     invocation_id = f"inv-{uuid.uuid4().hex[:8]}"
     geo_session = session_id or f"geox-bridge-{uuid.uuid4().hex[:8]}"
     geo_actor = actor_id or "geox-bridge"
+
+    # ── SOVEREIGN NATURAL CAPITAL MODE ──────────────────────────────
+    if mode == "sovereign_natural_capital":
+        natural_capital_fields = {
+            "petroleum_reserves_mmboe": (petroleum_reserves_mmboe, petroleum_reserve_epistemic or "ESTIMATE"),
+            "petroleum_replacement_ratio": (petroleum_replacement_ratio, petroleum_replacement_epistemic or "ESTIMATE"),
+            "water_security_index": (water_security_index, water_security_epistemic or "ESTIMATE"),
+            "agricultural_land_ha": (agricultural_land_ha, agricultural_land_epistemic or "ESTIMATE"),
+            "mineral_reserves_value_usd": (mineral_reserves_value_usd, mineral_reserves_epistemic or "ESTIMATE"),
+            "forest_cover_pct": (forest_cover_pct, forest_cover_epistemic or "ESTIMATE"),
+            "biodiversity_index": (biodiversity_index, biodiversity_epistemic or "ESTIMATE"),
+            "flood_exposure_area_km2": (flood_exposure_area_km2, flood_exposure_epistemic or "ESTIMATE"),
+            "coastal_exposure_km": (coastal_exposure_km, coastal_exposure_epistemic or "ESTIMATE"),
+            "climate_risk_score": (climate_risk_score, climate_risk_epistemic or "ESTIMATE"),
+            "energy_import_dependence_pct": (energy_import_dependence_pct, energy_import_dependence_epistemic or "ESTIMATE"),
+            "physical_infrastructure_score": (physical_infrastructure_score, physical_infrastructure_epistemic or "ESTIMATE"),
+        }
+        provided = {k: {"value": v, "epistemic_tag": e} for k, (v, e) in natural_capital_fields.items() if v is not None}
+
+        if not provided:
+            return {
+                "tool": "geox_to_wealth_bridge",
+                "mode": "sovereign_natural_capital",
+                "trace_id": trace_id,
+                "status": "UNKNOWN",
+                "message": "No natural capital data provided. Requires physical evidence inputs.",
+                "fields_available": 0,
+                "fields_total": len(natural_capital_fields),
+                "epistemic_tag": "UNKNOWN",
+                "boundary": "GEOX supplies physical evidence; WEALTH may derive economic consequences.",
+                "w0": "OPERATOR_VETO_INTACT / EARTH_EVIDENCE_GATE",
+            }
+
+        geox_evidence = {
+            "mode": "sovereign_natural_capital",
+            "data_source": data_source or "user_reported",
+            "fields_provided": len(provided),
+            "fields_total": len(natural_capital_fields),
+            "missing_fields": sorted(set(natural_capital_fields.keys()) - set(provided.keys())),
+            "natural_capital": provided,
+            "composite_epistemic_tag": (
+                "OBSERVED"
+                if all(e in ("OBSERVED", "DERIVED") for _, e in natural_capital_fields.values() if _[0] is not None)
+                else "DERIVED"
+            ),
+            "sovereign_readiness": (
+                "READY_FOR_WEALTH" if len(provided) >= 9 else "PARTIAL" if len(provided) >= 5 else "INSUFFICIENT"
+            ),
+        }
+
+        # ── Bridge to WEALTH wisdom for capital consequence inference ──
+        wealth_result = None
+        wealth_error = None
+        try:
+            async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+                init_resp = await client.post(
+                    WEALTH_MCP_URL,
+                    json={
+                        "jsonrpc": "2.0",
+                        "id": 1,
+                        "method": "initialize",
+                        "params": {
+                            "protocolVersion": "2025-11-25",
+                            "capabilities": {},
+                            "clientInfo": {"name": "GEOX-bridge", "version": "v2026.07.24"},
+                        },
+                    },
+                )
+                init_resp.raise_for_status()
+                wealth_session = init_resp.headers.get("Mcp-Session-Id", "")
+                await client.post(
+                    WEALTH_MCP_URL,
+                    json={"jsonrpc": "2.0", "method": "notifications/initialized"},
+                    headers={"Mcp-Session-Id": wealth_session} if wealth_session else {},
+                )
+                call_resp = await client.post(
+                    WEALTH_MCP_URL,
+                    json={
+                        "jsonrpc": "2.0",
+                        "id": 2,
+                        "method": "tools/call",
+                        "params": {
+                            "name": "capital_wisdom",
+                            "arguments": {
+                                "mode": "evaluate",
+                                "proposal": f"Sovereign natural capital assessment with {len(provided)} fields",
+                                "context": {"natural_capital_fields": len(provided), "source": "GEOX-bridge"},
+                                "session_id": geo_session,
+                                "actor_id": geo_actor,
+                            },
+                        },
+                    },
+                    headers={"Mcp-Session-Id": wealth_session} if wealth_session else {},
+                )
+                call_resp.raise_for_status()
+                wealth_data = call_resp.json()
+                wealth_result = wealth_data.get("result") if "result" in call_resp else call_resp.get("error")
+        except Exception as exc:
+            wealth_error = {"message": str(exc)}
+            logger.warning(f"GEOX natural capital → WEALTH bridge: {exc}")
+
+        return {
+            "tool": "geox_to_wealth_bridge",
+            "mode": "sovereign_natural_capital",
+            "trace_id": trace_id,
+            "invocation_id": invocation_id,
+            "session_id": geo_session,
+            "actor_id": geo_actor,
+            "source_organ": "GEOX",
+            "destination_organ": "WEALTH",
+            "bridged": wealth_error is None,
+            "geox_evidence": geox_evidence,
+            "wealth_result": wealth_result,
+            "wealth_error": wealth_error,
+            "status": "OK" if wealth_error is None else "DEGRADED",
+            "message": (
+                f"Natural capital assessment with {len(provided)}/{len(natural_capital_fields)} fields bridged to WEALTH"
+            ),
+            "boundary": "GEOX supplies physical evidence; WEALTH may derive economic consequences.",
+        }
+
+    # ── PROSPECT MODE (original) ─────────────────────────────────────
+    if prospect_id is None:
+        return {
+            "tool": "geox_to_wealth_bridge",
+            "error": "MISSING_PROSPECT_ID",
+            "message": "prospect_id is required for mode='prospect'",
+            "trace_id": trace_id,
+            "status": "REFUSED",
+        }
 
     # F13: blocked nodes cannot cross
     if admissibility == "blocked":

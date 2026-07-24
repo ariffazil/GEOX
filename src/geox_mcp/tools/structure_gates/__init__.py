@@ -11,6 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from geox_mcp.tools.structure_gates.calibration_derive import apply_calibration
+from geox_mcp.tools.structure_gates.cutoff import derive_cutoff_pairs, gate_k_polarity
 from geox_mcp.tools.structure_gates.growth import gate_k_growth
 from geox_mcp.tools.structure_gates.k_dip import gate_k_dip
 from geox_mcp.tools.structure_gates.k_dl import gate_k_dl
@@ -28,6 +29,8 @@ __all__ = [
     "gate_k_restore",
     "gate_k_vel",
     "gate_k_growth",
+    "gate_k_polarity",
+    "derive_cutoff_pairs",
     "normalize_fault",
     "normalize_framework",
     "apply_calibration",
@@ -36,7 +39,12 @@ __all__ = [
 
 
 def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
-    """Run full structural gate matrix on a StructuralFramework-like dict."""
+    """Run full structural gate matrix on a StructuralFramework-like dict.
+
+    Discrimination chain (P2): calibration → VE/T–D → true dip (FILTER) →
+    cutoff sense (K-POLARITY) → throw taper → growth → restoration (JUDGE).
+    K-DIP never sole-sources a polarity kill.
+    """
     # Calibration derive (sticks+bin+T–D → dips/throws/lengths) THEN normalize
     cal = None
     if isinstance(framework, dict):
@@ -60,8 +68,15 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     # Alias metric-suffixed demo keys (dmax_m, throw_profile_m, …) → canonical
     # so K-DL/K-THROW can kill rather than silently UNMEASURED.
     framework = normalize_framework(framework)
+    # P2: CutoffPairs before polarity / throw consumers
+    if not framework.get("cutoffs") and (framework.get("faults") or framework.get("horizons")):
+        framework["cutoffs"] = derive_cutoff_pairs(
+            framework.get("faults") or [],
+            framework.get("horizons") or [],
+        )
     gates_spec = [
         ("K-DIP", gate_k_dip),
+        ("K-POLARITY", gate_k_polarity),
         ("K-THROW", gate_k_throw),
         ("K-DL", gate_k_dl),
         ("G2", gate_g2_topology),

@@ -1,0 +1,1 @@
+/root/GEOX/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las

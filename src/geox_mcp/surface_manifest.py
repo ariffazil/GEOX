@@ -116,10 +116,14 @@ def load_surface_manifest() -> dict[str, Any]:
 
     return {
         "manifest_version": str(payload.get("manifest_version") or ""),
+        "surface_version": str(payload.get("surface_version") or payload.get("manifest_version") or ""),
+        "surface_name": str(payload.get("surface_name") or ""),
+        "public_count_target": payload.get("public_count_target"),
         "generated_from": str(payload.get("generated_from") or ""),
         "public_transport": str(payload.get("public_transport") or "mcp"),
         "tools": tuple(tools),
         "compat_tools": tuple(compat_names),
+        "doctrine": payload.get("doctrine") or {},
     }
 
 
@@ -195,3 +199,32 @@ def webmcp_categories() -> list[dict[str, Any]]:
         {"category": category, "tools": sorted(names)}
         for category, names in sorted(categories.items(), key=lambda item: item[0].lower())
     ]
+
+
+def surface_version() -> str:
+    """Constitutional surface version — must match runtime tools/list public count doctrine."""
+    return str(load_surface_manifest().get("surface_version") or "")
+
+
+def surface_attestation() -> dict:
+    """Boot/arif_init-class attestation: version + public tool set hash."""
+    import hashlib
+    import json
+
+    names = public_tool_names()
+    payload = {
+        "surface_version": surface_version(),
+        "surface_name": load_surface_manifest().get("surface_name"),
+        "public_count": len(names),
+        "public_count_target": load_surface_manifest().get("public_count_target"),
+        "public_tools": names,
+    }
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    payload["surface_hash"] = hashlib.sha256(raw).hexdigest()
+    payload["ok"] = (
+        payload["public_count_target"] is None
+        or int(payload["public_count_target"]) == payload["public_count"]
+    )
+    if not payload["ok"]:
+        payload["error"] = "SURFACE_COUNT_DRIFT"
+    return payload

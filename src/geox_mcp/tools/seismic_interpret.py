@@ -50,6 +50,7 @@ _LIVE_MODES = frozenset(
         "track_horizon",  # F1 zen 2D phase track
         "measure_throw",  # F1 zen throw → structure gates
         "cutoff_throw",  # alias measure_throw
+        "render",  # deterministic section overlay PNG (human loop)
     }
 )
 
@@ -394,9 +395,40 @@ async def geox_seismic_interpret(
             "local_verdict": "QUALIFIED_CANDIDATE",
         }
 
+    # ── render: deterministic section overlay (human loop) ──
+    if mode_norm == "render":
+        from geox_mcp.tools.section_render import geox_section_render as _render
+
+        resolved_path = image_path or artifact_ref or source_uri or None
+        if image_data and not resolved_path:
+            ri = _resolve_image_input(image_data=image_data)
+            if ri.get("ok"):
+                resolved_path = ri.get("path")
+        title = "GEOX section · QUALIFIED_CANDIDATE"
+        hyp_id = None
+        out_path = None
+        if isinstance(request, dict):
+            title = str(request.get("title") or title)
+            hyp_id = request.get("hypothesis_id")
+            out_path = request.get("output_path")
+        result = await _render(
+            image_path=resolved_path,
+            faults=faults,
+            horizons=horizons,
+            framework=framework,
+            annotations=(request or {}).get("annotations") if isinstance(request, dict) else None,
+            title=title,
+            receipt_hash=(request or {}).get("receipt_hash") if isinstance(request, dict) else None,
+            hypothesis_id=hyp_id,
+            output_path=out_path,
+            calibration=calibration,
+        )
+        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, transport=_transport)
+
     # ── structure_validate ──
     if mode_norm == "structure_validate":
         from geox_mcp.tools.structure_validate import geox_structure_validate as _impl
+        from geox_mcp.tools.section_render import compact_gate_summary
 
         hyp_n = 3
         if isinstance(request, dict) and request.get("hypothesis_count"):
@@ -413,6 +445,15 @@ async def geox_seismic_interpret(
         )
         stamped = _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, transport=_transport)
         stamped["preferred_hypothesis"] = None
+        # Zen compact summary (full gates still available under "gates" unless detail=compact_only)
+        if isinstance(stamped, dict) and stamped.get("gates"):
+            stamped["gate_summary"] = compact_gate_summary(stamped["gates"])
+            detail = "full"
+            if isinstance(request, dict):
+                detail = str(request.get("detail") or "full").lower()
+            if detail in ("compact", "summary", "zen"):
+                stamped["gates_detail"] = stamped.pop("gates")
+                stamped["gates"] = stamped["gate_summary"]["gates"]
         return stamped
 
     # ── interpret_section (aliases: section_image, classical_section) ──
@@ -555,6 +596,8 @@ async def geox_seismic_interpret(
         if input_hash:
             cal["sha256"] = input_hash
         if fw.get("faults") or fw.get("horizons") or fw.get("velocity"):
+            from geox_mcp.tools.section_render import compact_gate_summary, geox_section_render
+
             sv = await _sv(
                 framework=fw,
                 measurement_context=measurement_context or fw.get("measurement_context"),
@@ -572,33 +615,79 @@ async def geox_seismic_interpret(
                     ch = cal.get("calibration_hash") or cal.get("sha256")
                     if ch:
                         prov.setdefault("calibration_hash", ch)
-            return _stamp_qualified(
-                {
-                    **(bundle if isinstance(bundle, dict) else {}),
-                    "ok": True,
-                    "input_hash": input_hash,
-                    "structure_validate": {
-                        k: sv.get(k)
-                        for k in (
-                            "combined_gate_verdict",
-                            "kills",
-                            "passes",
-                            "unmeasured",
-                            "gates",
-                            "warns",
-                        )
-                    },
-                    "propose": {
-                        "ran": propose_result is not None,
-                        "method": "classical_section",
-                        "n_faults": (propose_result or {}).get("n_faults"),
-                        "n_horizons": (propose_result or {}).get("n_horizons"),
-                    },
-                    "preferred_hypothesis": None,
+
+            gates = sv.get("gates") or {}
+            gsum = compact_gate_summary(gates)
+
+            # Auto-render primary hypothesis for human loop (skip if request.render=false)
+            render_info = None
+            do_render = True
+            if isinstance(request, dict) and request.get("render") is False:
+                do_render = False
+            if do_render and (fw.get("faults") or fw.get("horizons")):
+                try:
+                    # Prefer image from propose / caller
+                    rpath = image_path or artifact_ref or source_uri
+                    if image_data and not rpath:
+                        ri = _resolve_image_input(image_data=image_data)
+                        if ri.get("ok"):
+                            rpath = ri.get("path")
+                            input_hash = input_hash or ri.get("input_hash")
+                    # Also try classical propose path image
+                    if not rpath and isinstance(propose_result, dict):
+                        rpath = (propose_result.get("image_path") or propose_result.get("stages", {}).get("R0_reality_gate", {}).get("image_path"))
+                    rh = None
+                    if gates:
+                        # first gate receipt as stamp seed
+                        for g in gates.values():
+                            if isinstance(g, dict) and g.get("receipt_hash"):
+                                rh = g["receipt_hash"]
+                                break
+                    render_info = await geox_section_render(
+                        image_path=rpath,
+                        framework=fw,
+                        title="GEOX interpret · HYP-001 · QUALIFIED_CANDIDATE",
+                        receipt_hash=rh,
+                        hypothesis_id="HYP-001",
+                        calibration=cal,
+                    )
+                except Exception as exc:
+                    render_info = {"ok": False, "error": "RENDER_FAILED", "message": str(exc)[:200]}
+
+            out_payload: dict[str, Any] = {
+                **(bundle if isinstance(bundle, dict) else {}),
+                "ok": True,
+                "input_hash": input_hash,
+                "gate_summary": gsum,
+                "structure_validate": {
+                    "combined_gate_verdict": sv.get("combined_gate_verdict"),
+                    "kills": sv.get("kills"),
+                    "passes": sv.get("passes"),
+                    "warns": sv.get("warns"),
+                    "unmeasured": sv.get("unmeasured"),
+                    # compact by default; full gates under gates_full
+                    "gates": gsum.get("gates"),
+                    "gates_full": gates,
                 },
-                mode_norm,
-                transport=_transport,
-            )
+                "propose": {
+                    "ran": propose_result is not None,
+                    "method": "classical_section",
+                    "n_faults": (propose_result or {}).get("n_faults"),
+                    "n_horizons": (propose_result or {}).get("n_horizons"),
+                },
+                "preferred_hypothesis": None,
+            }
+            if render_info:
+                out_payload["render"] = {
+                    "ok": render_info.get("ok"),
+                    "png_path": render_info.get("png_path"),
+                    "png_sha256": render_info.get("png_sha256"),
+                    "receipt_hash": render_info.get("receipt_hash"),
+                    "content_hash": render_info.get("content_hash"),
+                }
+                if isinstance(out_payload.get("provenance"), dict):
+                    out_payload["provenance"]["render_png_sha256"] = render_info.get("png_sha256")
+            return _stamp_qualified(out_payload, mode_norm, transport=_transport)
         bundle = build_interpretation_bundle(
             propose_result=propose_result if isinstance(propose_result, dict) else None,
             calibration=cal,
