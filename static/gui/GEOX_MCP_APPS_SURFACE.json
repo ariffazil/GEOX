@@ -195,7 +195,11 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_visual_understand",
+        "geox_visual_generate_hypotheses",
+        "geox_surface_status"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -237,7 +241,9 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 32029,
       "content_hash": "sha256:dc40fb98f565881f",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_gravmag_studio"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -281,7 +287,9 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 35137,
       "content_hash": "sha256:6b771f45c0ebd037",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_prospect"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -460,7 +468,9 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 17470,
       "content_hash": "sha256:5cd8639a8ea977df",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_map_layers_list"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -502,7 +512,9 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 11477,
       "content_hash": "sha256:563493114642f55e",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_workspace"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
