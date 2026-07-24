@@ -208,6 +208,8 @@ async def geox_to_wealth_bridge(
     else:
         result["wealth_error"] = wealth_error
         result["status"] = "DEGRADED"
-        result["message"] = f"Prospect {prospect_id}: GEOX evidence ready, WEALTH unavailable ({wealth_error.get('message', 'unknown')})"
+        result["message"] = (
+            f"Prospect {prospect_id}: GEOX evidence ready, WEALTH unavailable ({wealth_error.get('message', 'unknown')})"
+        )
 
     return result

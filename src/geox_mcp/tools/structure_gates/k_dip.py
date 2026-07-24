@@ -24,8 +24,7 @@ _REGIME_RANGES: dict[str, tuple[float, float]] = {
 }
 
 _EQUATION = (
-    "true_dip = atan(tan(apparent_dip)/VE) when only image dip + VE; "
-    "else use dip_deg_subsurface. Test true_dip ∈ regime_range."
+    "true_dip = atan(tan(apparent_dip)/VE) when only image dip + VE; else use dip_deg_subsurface. Test true_dip ∈ regime_range."
 )
 
 
@@ -158,9 +157,13 @@ def _true_dip(fault: dict[str, Any], framework: dict[str, Any]) -> tuple[float |
     ve = _ve_of(framework, fault)
     if ve is None or abs(ve - 1.0) < 1e-9:
         # calibrated flag without VE: treat image dip as true only if explicitly calibrated
-        if fault.get("dip_calibrated") or fault.get("dip_is_true") or (
-            (framework.get("measurement_context") or {}).get("calibrated")
-            or (framework.get("calibration") or {}).get("calibrated")
+        if (
+            fault.get("dip_calibrated")
+            or fault.get("dip_is_true")
+            or (
+                (framework.get("measurement_context") or {}).get("calibrated")
+                or (framework.get("calibration") or {}).get("calibrated")
+            )
         ):
             meta.update({"domain": "calibrated_image", "ve": ve or 1.0, "ve_corrected": False})
             return apparent, meta
@@ -212,11 +215,7 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
         fid = f.get("fault_id") or f.get("id") or "unknown"
         dip, dip_meta = _true_dip(f, framework)
         regime = str(f.get("regime_prior") or f.get("regime") or "unknown").lower().strip()
-        reactivation = bool(
-            f.get("reactivation_evidence")
-            or f.get("reactivation")
-            or f.get("fluid_pressure_exception")
-        )
+        reactivation = bool(f.get("reactivation_evidence") or f.get("reactivation") or f.get("fluid_pressure_exception"))
         inputs_acc.append({"fault_id": fid, "regime": regime, "dip_meta": dip_meta})
 
         if dip is None:
@@ -226,10 +225,7 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                     "fault_id": fid,
                     "verdict": "UNMEASURED",
                     "status": "UNMEASURED",
-                    "reason": (
-                        "True dip unmeasured — need dip_deg_subsurface, "
-                        "VE for image dip, or calibrated=true"
-                    ),
+                    "reason": ("True dip unmeasured — need dip_deg_subsurface, VE for image dip, or calibrated=true"),
                     "dip_meta": dip_meta,
                     "epistemic": "UNMEASURED",
                 }

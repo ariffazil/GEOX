@@ -66,9 +66,7 @@ def add_seeds(
             "correction": "add_seeds",
             "n_horizon_seeds": len(horizon_seeds or []),
             "n_fault_seeds": len(fault_seeds or []),
-            "receipt_hash": _hash_correction(
-                "add_seeds", {"h": len(horizon_seeds or []), "f": len(fault_seeds or [])}
-            ),
+            "receipt_hash": _hash_correction("add_seeds", {"h": len(horizon_seeds or []), "f": len(fault_seeds or [])}),
         },
     }
 
@@ -182,9 +180,7 @@ def freeze_accepted_geometry(framework: dict[str, Any]) -> dict[str, Any]:
         "receipt": {
             "correction": "freeze_accepted_geometry",
             "frozen_at_iso": fw["provenance"]["frozen_at_iso"],
-            "receipt_hash": _hash_correction(
-                "freeze_accepted_geometry", {"ts": fw["provenance"]["frozen_at_iso"]}
-            ),
+            "receipt_hash": _hash_correction("freeze_accepted_geometry", {"ts": fw["provenance"]["frozen_at_iso"]}),
         },
     }
 
@@ -208,6 +204,7 @@ def rerun_gates(framework: dict[str, Any], *, gates: list[str] | None = None) ->
 
 def _now_iso() -> str:
     from datetime import datetime, timezone
+
     return datetime.now(timezone.utc).isoformat()
 
 

@@ -28,19 +28,13 @@ from geox_mcp.domain.seismic_physics.receipts import (
 # ──────────────────────────────────────────────────────────────────────
 
 STATUS_LEGEND: dict[str, str] = {
-    "PASS": (
-        "All required inputs present, gate math passes thresholds, "
-        "no exceptions engaged."
-    ),
+    "PASS": ("All required inputs present, gate math passes thresholds, no exceptions engaged."),
     "WARN": (
         "Gate math passes primary threshold, but a soft caveat holds "
         "(e.g. linkage, reactivation, lithology band edge). "
         "Not a kill; not blind accept."
     ),
-    "KILL": (
-        "Required inputs present and gate math exceeds hard thresholds. "
-        "Model rejected on this gate."
-    ),
+    "KILL": ("Required inputs present and gate math exceeds hard thresholds. Model rejected on this gate."),
     "UNMEASURED": (
         "Required input missing or uncalibrated. Gate refuses to compute; "
         "downstream MUST NOT guess. Image-only inputs without scale are "

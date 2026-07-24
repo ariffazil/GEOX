@@ -88,8 +88,7 @@ def register_workbench(mcp: FastMCP) -> None:
     @mcp.resource(
         WORKBENCH_URI_READABLE,
         description=(
-            "GEOX Earth Workbench — content mirror for resources/read. "
-            "MCP App host surface is ui://geox/workbench-v1.html."
+            "GEOX Earth Workbench — content mirror for resources/read. MCP App host surface is ui://geox/workbench-v1.html."
         ),
         mime_type="text/html",
     )

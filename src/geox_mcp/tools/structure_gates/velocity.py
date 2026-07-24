@@ -39,9 +39,7 @@ def gate_k_vel(framework: dict[str, Any]) -> dict[str, Any]:
     if v is None:
         v = framework.get("interval_v_m_s")
     litho = str(
-        (vel.get("lithology_prior") if isinstance(vel, dict) else None)
-        or framework.get("lithology_prior")
-        or "unknown"
+        (vel.get("lithology_prior") if isinstance(vel, dict) else None) or framework.get("lithology_prior") or "unknown"
     ).lower()
     monotonic = vel.get("td_monotonic") if isinstance(vel, dict) else framework.get("td_monotonic")
     positive = vel.get("positive") if isinstance(vel, dict) else framework.get("v_positive")
@@ -57,9 +55,7 @@ def gate_k_vel(framework: dict[str, Any]) -> dict[str, Any]:
             vv = float(v)
             lo, hi = _LITHO_V.get(litho, _LITHO_V["unknown"])
             if vv < 500 or vv > 9000:
-                findings.append(
-                    {"verdict": "KILL", "reason": f"V={vv} physically impossible", "v": vv}
-                )
+                findings.append({"verdict": "KILL", "reason": f"V={vv} physically impossible", "v": vv})
             elif not (lo <= vv <= hi):
                 findings.append(
                     {
@@ -69,9 +65,7 @@ def gate_k_vel(framework: dict[str, Any]) -> dict[str, Any]:
                     }
                 )
             else:
-                findings.append(
-                    {"verdict": "PASS", "reason": f"V={vv} ok for {litho}", "v": vv}
-                )
+                findings.append({"verdict": "PASS", "reason": f"V={vv} ok for {litho}", "v": vv})
         except (TypeError, ValueError):
             findings.append({"verdict": "UNMEASURED", "reason": "Non-numeric velocity"})
     elif not findings:

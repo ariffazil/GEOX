@@ -500,10 +500,7 @@ async def geox_falsify(
         return {
             "execution_status": "SUCCESS",
             "verdict": overall if overall != "FALSIFIED" else "FALSIFIED",
-            "reason": (
-                f"Structural gates: kills={kills}, passes={passes}. "
-                f"combined={sv.get('combined_gate_verdict')}"
-            ),
+            "reason": (f"Structural gates: kills={kills}, passes={passes}. combined={sv.get('combined_gate_verdict')}"),
             "filters_run": len(gate_results),
             "filters_passed": len(passes),
             "filters_failed": len(kills),
@@ -515,10 +512,7 @@ async def geox_falsify(
             "epistemic_label": "DER",
             "local_verdict": "QUALIFIED_CANDIDATE",
             "seal_authority": "arifOS_only",
-            "honesty_banner": (
-                "Structural falsification via K-*/G* gates. "
-                "SURVIVED ≠ proven. arifOS SEAL only."
-            ),
+            "honesty_banner": ("Structural falsification via K-*/G* gates. SURVIVED ≠ proven. arifOS SEAL only."),
         }
 
     if not claim_text.strip():

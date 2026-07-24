@@ -72,6 +72,7 @@ def _qualified(mode: str, body: dict[str, Any], tool: str) -> dict[str, Any]:
 
 # ── section loaders ──────────────────────────────────────────────────────────
 
+
 def load_section_2d(
     *,
     image_path: str | None = None,
@@ -167,10 +168,14 @@ def load_section_2d(
         )
         return arr, meta
 
-    return np.zeros((0, 0)), {**meta, "error": "No section: pass image_path | amplitude_grid | volume_inline | provenance=fixture"}
+    return np.zeros((0, 0)), {
+        **meta,
+        "error": "No section: pass image_path | amplitude_grid | volume_inline | provenance=fixture",
+    }
 
 
 # ── F1.1 attributes ──────────────────────────────────────────────────────────
+
 
 def compute_attributes_2d(
     amp: np.ndarray,
@@ -275,6 +280,7 @@ def compute_attributes_2d(
 
 # ── F1.2 phase track ─────────────────────────────────────────────────────────
 
+
 def track_horizons_2d(
     amp: np.ndarray,
     *,
@@ -337,6 +343,7 @@ def track_horizons_2d(
 
 
 # ── F1.3 throw measure ───────────────────────────────────────────────────────
+
 
 def measure_throw_from_horizons(
     horizons: list[dict[str, Any]],
@@ -413,8 +420,10 @@ def measure_throw_from_horizons(
                 # linear interp around col
                 left = max((x for x in xs if x <= col), default=xs[0])
                 right = min((x for x in xs if x >= col), default=xs[-1])
-                y_c = by_x[left] if left == right else by_x[left] + (by_x[right] - by_x[left]) * (
-                    (col - left) / max(1, right - left)
+                y_c = (
+                    by_x[left]
+                    if left == right
+                    else by_x[left] + (by_x[right] - by_x[left]) * ((col - left) / max(1, right - left))
                 )
             else:
                 y_c = by_x[col]
@@ -488,6 +497,7 @@ def measure_throw_from_horizons(
 
 
 # ── public entry points (called by tool modes) ───────────────────────────────
+
 
 async def zen_attribute(
     *,
@@ -583,9 +593,7 @@ async def zen_track_horizon(
     )
     body["section_meta"] = meta
     body["governance_status"] = "HOLD"
-    body["honesty_banner"] = (
-        "SURVIVED ≠ proven. Horizons are INT_SEISMIC candidates. arifOS seals only."
-    )
+    body["honesty_banner"] = "SURVIVED ≠ proven. Horizons are INT_SEISMIC candidates. arifOS seals only."
     return _qualified("track_horizon", body, "geox_seismic_interpret")
 
 

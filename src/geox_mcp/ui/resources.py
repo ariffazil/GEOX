@@ -115,7 +115,12 @@ def register_alias_resources(mcp: FastMCP) -> None:
     """Register exact alias URIs (without .html and ui://well/desk) for zero-friction client resolution."""
     aliases = [
         ("ui://geox/workspace-v1", WORKSPACE_FILE, WORKSPACE_MIME, "GEOX Workspace v1 alias (without .html extension)"),
-        ("ui://geox/gravmag-studio", GRAVMAG_STUDIO_FILE, GRAVMAG_STUDIO_MIME, "GEOX GravMag Studio alias (without .html extension)"),
+        (
+            "ui://geox/gravmag-studio",
+            GRAVMAG_STUDIO_FILE,
+            GRAVMAG_STUDIO_MIME,
+            "GEOX GravMag Studio alias (without .html extension)",
+        ),
         ("ui://well/desk", WORKSPACE_FILE, WORKSPACE_MIME, "Well Desk alias (mirrored from GEOX WellDesk)"),
     ]
     for uri, filepath, mime, desc in aliases:

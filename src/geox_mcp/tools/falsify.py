@@ -438,6 +438,7 @@ async def geox_falsify(
     p_regime = ctx.get("regime") or ctx.get("structural_regime")
     if p_coords and p_regime:
         from geox_mcp.tools.structure_gates.k_dip import validate_k_dip
+
         dip_res = validate_k_dip(p_coords, p_regime)
         result["k_dip_gate"] = dip_res
         if dip_res.get("status") in ("REJECTED", "KILL"):
@@ -452,6 +453,7 @@ async def geox_falsify(
     p_length = ctx.get("length") or ctx.get("fault_length")
     if p_max_disp is not None and p_length is not None:
         from geox_mcp.tools.structure_gates.k_dl import validate_k_scale
+
         scale_res = validate_k_scale(p_max_disp, p_length)
         result["k_scale_gate"] = scale_res
         if scale_res.get("status") in ("REJECTED", "KILL") and result.get("overall_verdict") != "KILL":
@@ -466,6 +468,7 @@ async def geox_falsify(
     p_disps = ctx.get("displacements")
     if p_dists and p_disps and p_max_disp and p_length:
         from geox_mcp.tools.structure_gates.k_throw import validate_k_taper
+
         taper_res = validate_k_taper(p_dists, p_disps, float(p_max_disp), float(p_length) / 2.0)
         result["k_taper_gate"] = taper_res
         if taper_res.get("status") in ("REJECTED", "KILL") and result.get("overall_verdict") != "KILL":

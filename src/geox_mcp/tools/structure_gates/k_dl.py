@@ -83,15 +83,7 @@ def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
                 throws = []
                 for s in f["throw_profile"]:
                     if isinstance(s, dict):
-                        throws.append(
-                            float(
-                                s.get("throw")
-                                or s.get("throw_m")
-                                or s.get("displacement")
-                                or s.get("value")
-                                or 0
-                            )
-                        )
+                        throws.append(float(s.get("throw") or s.get("throw_m") or s.get("displacement") or s.get("value") or 0))
                     else:
                         throws.append(float(s))
                 d = max(throws) if throws else None
@@ -107,10 +99,7 @@ def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
                     "fault_id": fid,
                     "verdict": "UNMEASURED",
                     "status": "UNMEASURED",
-                    "reason": (
-                        "Missing max_displacement or length "
-                        "(accepts aliases: dmax_m, max_throw, length_m, …)"
-                    ),
+                    "reason": ("Missing max_displacement or length (accepts aliases: dmax_m, max_throw, length_m, …)"),
                     "aliases_checked": {
                         "d": ["max_displacement", "dmax_m", "max_throw", "throw_profile→max"],
                         "l": ["length", "length_m", "trace_length_m"],
@@ -122,9 +111,7 @@ def gate_k_dl(framework: dict[str, Any]) -> dict[str, Any]:
         ratio = float(d) / float(length)
         if _EARTH_LO <= ratio <= _EARTH_HI:
             passes += 1
-            findings.append(
-                {"fault_id": fid, "verdict": "PASS", "status": "PASS", "d_over_l": ratio}
-            )
+            findings.append({"fault_id": fid, "verdict": "PASS", "status": "PASS", "d_over_l": ratio})
         elif _D_L_LO <= ratio <= _D_L_HI:
             warns += 1
             findings.append(

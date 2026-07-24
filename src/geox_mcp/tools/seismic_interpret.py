@@ -360,8 +360,7 @@ async def geox_seismic_interpret(
             sv = await _sv(
                 framework=fw,
                 measurement_context=measurement_context or fw.get("measurement_context"),
-                calibration=calibration
-                or {"input_class": "image_only" if path else "unknown", "calibrated": False},
+                calibration=calibration or {"input_class": "image_only" if path else "unknown", "calibrated": False},
                 earth_constraints=earth_constraints,
                 emit_bundle=True,
                 hypothesis_count=int((request or {}).get("hypothesis_count") or 3),
@@ -587,9 +586,7 @@ async def geox_seismic_interpret(
             "live_modes": sorted(_LIVE_MODES),
             "governance_status": "HOLD",
             "local_verdict": "QUALIFIED_CANDIDATE",
-            "hint": (
-                "Use mode=segy_slice for MeasurementContext, or build 1D profiles then pass attribute_data+depth."
-            ),
+            "hint": ("Use mode=segy_slice for MeasurementContext, or build 1D profiles then pass attribute_data+depth."),
         }
 
     attrs = dict(attrs)

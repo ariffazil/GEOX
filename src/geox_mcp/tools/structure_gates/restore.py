@@ -31,8 +31,7 @@ from geox_mcp.domain.seismic_physics.receipts import make_gate_receipt
 _DEFAULT_TOL = 0.05  # 5% line-length / area residual
 
 _EQUATION = (
-    "residual = max(|hw-fw|/max(hw,fw), |a_above-a_below|/max(a_above,a_below)) "
-    "— line-length + area balance (Dahlstrom 1969)"
+    "residual = max(|hw-fw|/max(hw,fw), |a_above-a_below|/max(a_above,a_below)) — line-length + area balance (Dahlstrom 1969)"
 )
 
 
@@ -76,9 +75,7 @@ def _fault_lengths(fault: dict[str, Any]) -> tuple[float | None, float | None]:
 def _fault_areas(fault: dict[str, Any]) -> tuple[float | None, float | None]:
     """Return (area_above, area_below). Caller-supplied from horizon polygons
     clipped by the fault trace."""
-    if isinstance(fault.get("area_above_m2"), (int, float)) and isinstance(
-        fault.get("area_below_m2"), (int, float)
-    ):
+    if isinstance(fault.get("area_above_m2"), (int, float)) and isinstance(fault.get("area_below_m2"), (int, float)):
         return float(fault["area_above_m2"]), float(fault["area_below_m2"])
     return None, None
 
@@ -105,14 +102,9 @@ def gate_k_restore(framework: dict[str, Any]) -> dict[str, Any]:
     if residual is None:
         residual = framework.get("restore_residual")
     closes = restore.get("closes") if isinstance(restore, dict) else framework.get("restore_closes")
-    self_intersect = (
-        restore.get("self_intersection") if isinstance(restore, dict)
-        else framework.get("restore_self_intersection")
-    )
+    self_intersect = restore.get("self_intersection") if isinstance(restore, dict) else framework.get("restore_self_intersection")
     tol = float(
-        (restore.get("tolerance") if isinstance(restore, dict) else None)
-        or framework.get("restore_tolerance")
-        or _DEFAULT_TOL
+        (restore.get("tolerance") if isinstance(restore, dict) else None) or framework.get("restore_tolerance") or _DEFAULT_TOL
     )
 
     findings: list[dict[str, Any]] = []
@@ -141,10 +133,7 @@ def gate_k_restore(framework: dict[str, Any]) -> dict[str, Any]:
                     {
                         "fault_id": fid,
                         "verdict": "UNMEASURED",
-                        "reason": (
-                            "Missing hanging_wall/footwall_segments or area_above/below_m2 — "
-                            "cannot compute balance"
-                        ),
+                        "reason": ("Missing hanging_wall/footwall_segments or area_above/below_m2 — cannot compute balance"),
                     }
                 )
                 continue
@@ -189,14 +178,9 @@ def gate_k_restore(framework: dict[str, Any]) -> dict[str, Any]:
     if any(f.get("verdict") == "KILL" for f in findings):
         status = "KILL"
         reason = "Restoration hard veto"
-    elif any(f.get("verdict") == "PASS" for f in findings) and not any(
-        f.get("verdict") == "UNMEASURED" for f in findings
-    ):
+    elif any(f.get("verdict") == "PASS" for f in findings) and not any(f.get("verdict") == "UNMEASURED" for f in findings):
         status = "PASS"
-        reason = (
-            f"All {sum(1 for f in findings if f.get('verdict') == 'PASS')} "
-            f"fault(s) balanced within {tol}"
-        )
+        reason = f"All {sum(1 for f in findings if f.get('verdict') == 'PASS')} fault(s) balanced within {tol}"
     elif residual is not None:
         # Caller-supplied residual branch
         try:

@@ -769,25 +769,21 @@ def register_prompts(mcp: Any) -> None:
     mcp.prompt(
         name="analyse-well-log",
         description="ANALYSE: single-well petrophysics + interpretation. LAS → pay summary + claim envelope.",
-
     )(_analyse_well_log)
 
     mcp.prompt(
         name="screen-prospect",
         description="SCREEN: bid-round prospect screening via 7 kill filters (K001-K007). Output: PROCEED | REVIEW | KILL.",
-
     )(_screen_prospect)
 
     mcp.prompt(
         name="tie-well-to-seismic",
         description="TIE: comprehensive well-to-seismic tie with falsification gates. RMS>25ms→HOLD, no checkshot→HOLD, wavelet condition>100×→VOID.",
-
     )(_tie_well_to_seismic)
 
     mcp.prompt(
         name="reeval-paper",
         description="REEVAL: paper re-evaluation protocol. Output: HOLD | REVISE | RETRACT per claim with citation chain preserved.",
-
     )(_reeval_paper)
 
     # ── Earth System Integration — physics × chemistry × biology ──────────
@@ -891,17 +887,14 @@ def register_prompts(mcp: Any) -> None:
     mcp.prompt(
         name="earth-system-trinity",
         description="PHYSICS × CHEMISTRY × BIOLOGY: analyze three-body coupling at any geological age.",
-
     )(_earth_system_trinity)
 
     mcp.prompt(
         name="sabah-charge-evaluator",
         description="CHARGE: evaluate petroleum charge potential for Sabah Basin. Source→Maturation→Migration→Accumulation→Alteration.",
-
     )(_sabah_charge_evaluator)
 
     mcp.prompt(
         name="earth-deep-time-physics-flow",
         description="PHYSICS FLOW: run CO₂ → Temperature → Ice → Sea Level flow with consistency gate and cross-validation.",
-
     )(_earth_deep_time_physics_flow)
