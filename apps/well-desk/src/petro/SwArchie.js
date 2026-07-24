@@ -16,7 +16,8 @@ class SwArchie {
    * @param m — cementation exponent (default 2.0)
    * @param n — saturation exponent (default 2.0)
    */
-  static archie(rt, phi, rw, a = 0.62, m = 2.0, n = 2.0) {
+  // Defaults aligned to GEOX geox_petrophysics (a=1.0, m=2, n=2) — not Humble a=0.62
+  static archie(rt, phi, rw, a = 1.0, m = 2.0, n = 2.0) {
     if (phi <= 0 || rt <= 0 || rw <= 0) return 1.0;
     const sw = Math.pow((a * rw) / (Math.pow(phi, m) * rt), 1 / n);
     return Math.max(0, Math.min(1, sw));
@@ -60,13 +61,23 @@ class SwArchie {
   /**
    * Compute Sw curve from log arrays
    */
-  static computeCurve(rtArray, phiArray, rw, vshArray = null, method = "archie", rsh = 4.0) {
+  static computeCurve(
+    rtArray,
+    phiArray,
+    rw,
+    vshArray = null,
+    method = "archie",
+    rsh = 4.0,
+    a = 1.0,
+    m = 2.0,
+    n = 2.0
+  ) {
     return rtArray.map((rt, i) => {
       const phi = phiArray[i];
       if (vshArray && vshArray[i] > 0.1 && method !== "archie") {
-        return this.indonesian(rt, phi, rw, vshArray[i], rsh);
+        return this.indonesian(rt, phi, rw, vshArray[i], rsh, a, m, n);
       }
-      return this.archie(rt, phi, rw);
+      return this.archie(rt, phi, rw, a, m, n);
     });
   }
 }

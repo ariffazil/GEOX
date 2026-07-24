@@ -35,6 +35,8 @@ async def geox_workspace(
     field: str | None = None,
     prospect_ref: str | None = None,
     session_id: str = _DEFAULT_SESSION,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
 ) -> dict[str, Any]:
     """Set or view the GEOX workspace context.
 
@@ -51,7 +53,12 @@ async def geox_workspace(
         field: Field name (e.g. 'Kikeh')
         prospect_ref: Prospect reference string
         session_id: Session identifier (default: 'default')
+        actor_id: Calling actor (required by evidence-lane middleware; accepted for schema parity)
+        trace_id: End-to-end trace id (accepted for schema parity; not stored as authority)
     """
+    # actor_id / trace_id are governance envelope fields — accepted here so FastMCP
+    # schema and P0_IDENTITY_PROPAGATION middleware agree (no dead-end HOLD).
+    _ = actor_id, trace_id
     ws: GeoxWorkspace = get_workspace(session_id)
 
     if mode == "set":

@@ -11,12 +11,13 @@
     <!-- HEADER -->
     <header class="wd-header">
       <span class="wd-header-title">WellDesk</span>
-      <select id="wellSelect" class="wd-header-well-select">
-        <option value="BEK-2">BEK-2</option>
-        <option value="DUL-A1">DUL-A1</option>
-        <option value="TNG-3">TNG-3</option>
-        <option value="SLG-1">SLG-1</option>
+      <select id="wellSelect" class="wd-header-well-select" title="Demo wells — SYNTHETIC scaffold unless MCP hydrates real LAS">
+        <option value="DEMO_SANDAKAN_A">DEMO_SANDAKAN_A (synth)</option>
+        <option value="DEMO_SANDAKAN_B">DEMO_SANDAKAN_B (synth)</option>
+        <option value="VOLVE_15_9_19">VOLVE_15_9_19 (label)</option>
+        <option value="MALAY_DEMO_01">MALAY_DEMO_01 (synth)</option>
       </select>
+      <span id="dataClassBadge" class="wd-header-epistemic" title="F2 TRUTH — data class">SYNTHETIC</span>
       <span id="mcpStatus" style="color:#666;font-size:9px;">STANDALONE</span>
       <span class="wd-header-badge">DITEMPA BUKAN DIBERI</span>
     </header>
@@ -29,55 +30,52 @@
         <div class="wd-info-grid" id="wellInfo">
           <div class="wd-info-item">
             <div class="wd-info-label">Total Depth</div>
-            <div class="wd-info-value" id="totalDepth">4,250 m</div>
+            <div class="wd-info-value" id="totalDepth">3,200 m</div>
           </div>
           <div class="wd-info-item">
-            <div class="wd-info-label">Elevation</div>
-            <div class="wd-info-value" id="elevation">-32 m</div>
+            <div class="wd-info-label">KB Elev</div>
+            <div class="wd-info-value" id="elevation">+28 m</div>
           </div>
           <div class="wd-info-item">
-            <div class="wd-info-label">Spud Date</div>
-            <div class="wd-info-value" id="spudDate">2024-03-15</div>
+            <div class="wd-info-label">Basin / Play</div>
+            <div class="wd-info-value" id="basinPlay">Sandakan / Tertiary</div>
           </div>
           <div class="wd-info-item">
-            <div class="wd-info-label">Status</div>
-            <div class="wd-info-value" id="wellStatus">Producing</div>
+            <div class="wd-info-label">Data Class</div>
+            <div class="wd-info-value" id="wellStatus">SYNTHETIC scaffold</div>
           </div>
         </div>
       </div>
 
-      <!-- Documents -->
+      <!-- Petrophysics Parameters (GEOX-aligned) -->
       <div class="wd-section">
-        <div class="wd-section-title">Documents</div>
-        <div class="wd-doc-list" id="docList">
-          <div class="wd-doc-item">
-            <span class="wd-doc-icon">&#128196;</span>
-            <div>
-              <div>Formation Evaluation</div>
-              <div class="wd-doc-meta">PDF &bull; 2.4 MB &bull; 2024-04-20</div>
-            </div>
+        <div class="wd-section-title">Petro Params (GEOX defaults)</div>
+        <div class="wd-input-group">
+          <label class="wd-input-label">GR clean / shale</label>
+          <div style="display:flex;gap:4px;">
+            <input type="number" class="wd-input" id="inputGrClean" value="15" step="1" title="gr_clean">
+            <input type="number" class="wd-input" id="inputGrShale" value="150" step="1" title="gr_shale">
           </div>
-          <div class="wd-doc-item">
-            <span class="wd-doc-icon">&#128202;</span>
-            <div>
-              <div>Core Analysis Report</div>
-              <div class="wd-doc-meta">XLSX &bull; 856 KB &bull; 2024-04-18</div>
-            </div>
+        </div>
+        <div class="wd-input-group">
+          <label class="wd-input-label">Rw / a / m / n</label>
+          <div style="display:flex;gap:4px;">
+            <input type="number" class="wd-input" id="inputRw" value="0.05" step="0.01" title="Rw ohm-m">
+            <input type="number" class="wd-input" id="inputArchieA" value="1.0" step="0.01" title="archie a">
+            <input type="number" class="wd-input" id="inputArchieM" value="2.0" step="0.1" title="archie m">
+            <input type="number" class="wd-input" id="inputArchieN" value="2.0" step="0.1" title="archie n">
           </div>
-          <div class="wd-doc-item">
-            <span class="wd-doc-icon">&#128247;</span>
-            <div>
-              <div>Thin Section Photos</div>
-              <div class="wd-doc-meta">ZIP &bull; 45.2 MB &bull; 2024-04-15</div>
-            </div>
+        </div>
+        <div class="wd-input-group">
+          <label class="wd-input-label">Cutoffs Vsh / φ / Sw</label>
+          <div style="display:flex;gap:4px;">
+            <input type="number" class="wd-input" id="inputVshCut" value="0.50" min="0" max="1" step="0.05" title="vsh_cutoff">
+            <input type="number" class="wd-input" id="inputPhiCut" value="0.10" min="0" max="0.5" step="0.01" title="phi_cutoff">
+            <input type="number" class="wd-input" id="inputSwCut" value="0.60" min="0" max="1" step="0.05" title="sw_cutoff">
           </div>
-          <div class="wd-doc-item">
-            <span class="wd-doc-icon">&#128200;</span>
-            <div>
-              <div>Pressure Tests</div>
-              <div class="wd-doc-meta">LAS &bull; 1.2 MB &bull; 2024-04-12</div>
-            </div>
-          </div>
+        </div>
+        <div style="color:#666;font-size:9px;margin-top:4px;">
+          Matches geox_petrophysics defaults. Standalone = local calc (not sealed).
         </div>
       </div>
 
@@ -111,6 +109,7 @@
       <div style="position:absolute;top:8px;left:8px;z-index:10;">
         <div class="wd-mode-tabs">
           <button class="wd-mode-tab active" data-mode="log">Log View</button>
+          <button class="wd-mode-tab" data-mode="correlation">Correlation</button>
           <button class="wd-mode-tab" data-mode="xplot">X-Plot</button>
           <button class="wd-mode-tab" data-mode="table">Table</button>
           <button class="wd-mode-tab" data-mode="interpretation">Interpretation</button>
@@ -125,6 +124,9 @@
 
       <!-- Track renderer mount point -->
       <div id="trackRenderer" style="width:100%;height:100%;overflow:auto;padding-top:40px;"></div>
+
+      <!-- Multi-well correlation (hidden by default) -->
+      <div id="correlationContainer" style="display:none;padding-top:40px;overflow:auto;height:100%;"></div>
 
       <!-- XPlot mount point (hidden by default) -->
       <div id="xplotContainer" style="display:none;padding-top:40px;"></div>
@@ -150,22 +152,29 @@
         <div class="wd-physics-panel" id="petroResults">
           <div class="wd-physics-result">
             <div class="wd-info-item">
-              <div class="wd-info-label">Net Pay</div>
-              <div class="wd-physics-value" id="netPay">127.5 <span class="wd-physics-unit">m</span></div>
+              <div class="wd-info-label">Vsh (avg)</div>
+              <div class="wd-physics-value" id="vshAvg">— <span class="wd-physics-unit">v/v</span></div>
             </div>
             <div class="wd-info-item">
-              <div class="wd-info-label">Porosity (phi)</div>
-              <div class="wd-physics-value" id="porosity">0.18 <span class="wd-physics-unit">v/v</span></div>
+              <div class="wd-info-label">Net Pay</div>
+              <div class="wd-physics-value" id="netPay">— <span class="wd-physics-unit">m</span></div>
+            </div>
+            <div class="wd-info-item">
+              <div class="wd-info-label">Porosity (φ)</div>
+              <div class="wd-physics-value" id="porosity">— <span class="wd-physics-unit">v/v</span></div>
             </div>
             <div class="wd-info-item">
               <div class="wd-info-label">Water Sat (Sw)</div>
-              <div class="wd-physics-value" id="waterSat">0.32 <span class="wd-physics-unit">v/v</span></div>
+              <div class="wd-physics-value" id="waterSat">— <span class="wd-physics-unit">v/v</span></div>
             </div>
             <div class="wd-info-item">
-              <div class="wd-info-label">Grade</div>
-              <div class="wd-physics-value" id="physicsGrade" style="color:#0f0;">AAA</div>
+              <div class="wd-info-label">Epistemic</div>
+              <div class="wd-physics-value" id="physicsGrade" style="color:#fa0;font-size:11px;">UNRUN · SYNTH</div>
             </div>
           </div>
+        </div>
+        <div id="petroNote" style="color:#666;font-size:9px;margin-top:6px;line-height:1.3;">
+          Run Petrophysics for local Archie/Vsh/φ. GEOX MCP seal requires geox_petrophysics(mode=lem_inference|generate) + session.
         </div>
       </div>
 
@@ -259,48 +268,79 @@
 
       // ── State ───────────────────────────────────────────────────────────────
       const state = {
-        wellId: 'BEK-2',
-        mode: '1d',
-        depthTop: 3000,
-        depthBase: 4000,
+        wellId: 'DEMO_SANDAKAN_A',
+        mode: 'log',
+        depthTop: 2500,
+        depthBase: 3200,
         physics9: null,
-        activeCurves: ['gr', 'rt', 'nphi']
+        activeCurves: ['gr', 'rt', 'nphi'],
+        dataClass: 'SYNTHETIC',
+        lastPetro: null
       };
 
-      // ── Scaffold Data Generator ─────────────────────────────────────────────
-      function generateScaffold(wellId) {
-        const scaffolds = {
-          'BEK-2': { por: 0.22, sw: 0.35, vsh: 0.12, fluid: 'brine', td: 4250, elev: -32 },
-          'DUL-A1': { por: 0.18, sw: 0.42, vsh: 0.25, fluid: 'oil', td: 3800, elev: -28 },
-          'TNG-3': { por: 0.15, sw: 0.55, vsh: 0.35, fluid: 'brine', td: 2950, elev: -45 },
-          'SLG-1': { por: 0.20, sw: 0.30, vsh: 0.15, fluid: 'oil', td: 2100, elev: -15 }
+      // ── Scaffold Data Generator (explicit SYNTHETIC — F2 TRUTH) ─────────────
+      // Seeded PRNG so multi-well correlation is stable across reloads.
+      function mulberry32(a) {
+        return function() {
+          let t = a += 0x6D2B79F5;
+          t = Math.imul(t ^ t >>> 15, t | 1);
+          t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+          return ((t ^ t >>> 14) >>> 0) / 4294967296;
         };
-        return scaffolds[wellId] || scaffolds['BEK-2'];
       }
 
-      function generateCurve(depthTop, depthBase, curveType) {
+      function generateScaffold(wellId) {
+        const scaffolds = {
+          'DEMO_SANDAKAN_A': {
+            por: 0.22, sw: 0.35, vsh: 0.18, fluid: 'oil', td: 3200, elev: 28,
+            basin: 'Sandakan', play: 'Tertiary sandstone', seed: 101, zoneTop: 2500, zoneBase: 2800,
+            tops: [{ name: 'Top Sand A', depth: 2550, color: '#0af' }, { name: 'Shale B', depth: 2680, color: '#fa0' }]
+          },
+          'DEMO_SANDAKAN_B': {
+            por: 0.19, sw: 0.42, vsh: 0.28, fluid: 'oil', td: 3100, elev: 31,
+            basin: 'Sandakan', play: 'Tertiary sandstone', seed: 202, zoneTop: 2520, zoneBase: 2820,
+            tops: [{ name: 'Top Sand A', depth: 2580, color: '#0af' }, { name: 'Shale B', depth: 2710, color: '#fa0' }]
+          },
+          'VOLVE_15_9_19': {
+            por: 0.17, sw: 0.48, vsh: 0.22, fluid: 'oil', td: 3600, elev: 45,
+            basin: 'North Sea (Volve)', play: 'Middle Jurassic', seed: 303, zoneTop: 2800, zoneBase: 3200,
+            tops: [{ name: 'Hugin', depth: 2900, color: '#0f0' }, { name: 'Draupne', depth: 3050, color: '#f44' }],
+            note: 'Label only — real LAS at data/volve_wells when hydrated via geox_well_ingest'
+          },
+          'MALAY_DEMO_01': {
+            por: 0.20, sw: 0.45, vsh: 0.30, fluid: 'brine', td: 2900, elev: 12,
+            basin: 'Malay Basin', play: 'Group H / Tertiary', seed: 404, zoneTop: 2400, zoneBase: 2700,
+            tops: [{ name: 'Group H', depth: 2450, color: '#0af' }, { name: 'Group I', depth: 2600, color: '#fa0' }],
+            note: 'SYNTHETIC Malay-style demo — not public Tapis LAS (those URLs in many blogs are false)'
+          }
+        };
+        return scaffolds[wellId] || scaffolds['DEMO_SANDAKAN_A'];
+      }
+
+      function generateCurve(depthTop, depthBase, curveType, seed = 42) {
         const depth = [];
         const values = [];
         const step = 0.5; // 0.5m sample interval
+        const rng = mulberry32(seed + curveType.charCodeAt(0) * 17);
         for (let d = depthTop; d <= depthBase; d += step) {
           depth.push(d);
           const frac = (d - depthTop) / (depthBase - depthTop);
           let val;
           switch (curveType) {
             case 'gr':
-              val = 30 + 80 * Math.sin(frac * Math.PI * 3) + 20 * Math.sin(frac * Math.PI * 8) + (Math.random() - 0.5) * 10;
+              val = 30 + 80 * Math.sin(frac * Math.PI * 3) + 20 * Math.sin(frac * Math.PI * 8) + (rng() - 0.5) * 10;
               break;
             case 'rt':
               val = Math.pow(10, 0.5 + 1.5 * frac + 0.3 * Math.sin(frac * Math.PI * 4));
               break;
             case 'nphi':
-              val = 0.05 + 0.25 * Math.sin(frac * Math.PI * 2) + (Math.random() - 0.5) * 0.02;
+              val = 0.05 + 0.25 * Math.sin(frac * Math.PI * 2) + (rng() - 0.5) * 0.02;
               break;
             case 'rhob':
-              val = 2.65 - 0.4 * Math.sin(frac * Math.PI * 2) + (Math.random() - 0.5) * 0.03;
+              val = 2.65 - 0.4 * Math.sin(frac * Math.PI * 2) + (rng() - 0.5) * 0.03;
               break;
             case 'dt':
-              val = 55 + 45 * Math.sin(frac * Math.PI * 2) + (Math.random() - 0.5) * 5;
+              val = 55 + 45 * Math.sin(frac * Math.PI * 2) + (rng() - 0.5) * 5;
               break;
             default:
               val = 0;
@@ -308,6 +348,20 @@
           values.push(val);
         }
         return { depth, values };
+      }
+
+      function petroParams() {
+        return {
+          grClean: parseFloat(document.getElementById('inputGrClean').value) || 15,
+          grShale: parseFloat(document.getElementById('inputGrShale').value) || 150,
+          rw: parseFloat(document.getElementById('inputRw').value) || 0.05,
+          a: parseFloat(document.getElementById('inputArchieA').value) || 1.0,
+          m: parseFloat(document.getElementById('inputArchieM').value) || 2.0,
+          n: parseFloat(document.getElementById('inputArchieN').value) || 2.0,
+          vshCut: parseFloat(document.getElementById('inputVshCut').value) || 0.5,
+          phiCut: parseFloat(document.getElementById('inputPhiCut').value) || 0.1,
+          swCut: parseFloat(document.getElementById('inputSwCut').value) || 0.6
+        };
       }
 
       // ── Track Renderer Setup ────────────────────────────────────────────────
@@ -323,28 +377,30 @@
           trackHeight: 800
         });
 
+        const seed = generateScaffold(state.wellId).seed || 42;
+
         // GR Track
-        const grData = generateCurve(state.depthTop, state.depthBase, 'gr');
+        const grData = generateCurve(state.depthTop, state.depthBase, 'gr', seed);
         const grTrack = new GRTrack();
         grTrack.setData(grData.depth, grData.values);
         trackRenderer.addTrack(grTrack);
 
         // RT Track
-        const rtData = generateCurve(state.depthTop, state.depthBase, 'rt');
+        const rtData = generateCurve(state.depthTop, state.depthBase, 'rt', seed);
         const rtTrack = new ResistivityTrack();
         rtTrack.setData(rtData.depth, rtData.values);
         trackRenderer.addTrack(rtTrack);
 
         // NPHI-RHOB Track
-        const nphiData = generateCurve(state.depthTop, state.depthBase, 'nphi');
-        const rhobData = generateCurve(state.depthTop, state.depthBase, 'rhob');
+        const nphiData = generateCurve(state.depthTop, state.depthBase, 'nphi', seed);
+        const rhobData = generateCurve(state.depthTop, state.depthBase, 'rhob', seed);
         const poroTrack = new PoroDensityTrack();
         poroTrack.setNPHI(nphiData.depth, nphiData.values);
         poroTrack.setRHOB(rhobData.depth, rhobData.values);
         trackRenderer.addTrack(poroTrack);
 
         // DT Track
-        const dtData = generateCurve(state.depthTop, state.depthBase, 'dt');
+        const dtData = generateCurve(state.depthTop, state.depthBase, 'dt', seed);
         const dtTrack = new SonicTrack();
         dtTrack.setData(dtData.depth, dtData.values);
         trackRenderer.addTrack(dtTrack);
@@ -357,12 +413,63 @@
           tab.classList.add('active');
 
           const mode = tab.dataset.mode;
+          state.mode = mode;
           document.getElementById('trackRenderer').style.display = mode === 'log' ? 'block' : 'none';
           document.getElementById('xplotContainer').style.display = mode === 'xplot' ? 'block' : 'none';
+          document.getElementById('correlationContainer').style.display = mode === 'correlation' ? 'block' : 'none';
 
           if (mode === 'xplot') initXPlot();
+          if (mode === 'correlation') initCorrelation();
+          if (mode === 'table' || mode === 'interpretation') {
+            document.getElementById('trackRenderer').style.display = 'block';
+          }
         });
       });
+
+      // ── Multi-well Correlation ──────────────────────────────────────────────
+      let multiWellPanel = null;
+
+      function initCorrelation() {
+        const container = document.getElementById('correlationContainer');
+        container.innerHTML = '';
+        const note = document.createElement('div');
+        note.style.cssText = 'color:#888;font-size:10px;padding:4px 8px;';
+        note.textContent = 'SYNTHETIC multi-well GR strip + formation tops. Not a sealed GEOX multi-well verify (that needs candidate_ref+domain).';
+        container.appendChild(note);
+        const mount = document.createElement('div');
+        mount.id = 'multiWellMount';
+        container.appendChild(mount);
+
+        multiWellPanel = new MultiWellPanel('multiWellMount', {
+          depthTop: state.depthTop,
+          depthBase: state.depthBase,
+          trackHeight: 700,
+          wellWidth: 140,
+          gapBetweenWells: 80
+        });
+
+        const wellIds = ['DEMO_SANDAKAN_A', 'DEMO_SANDAKAN_B', 'MALAY_DEMO_01'];
+        wellIds.forEach((wid) => {
+          const sc = generateScaffold(wid);
+          const gr = generateCurve(state.depthTop, state.depthBase, 'gr', sc.seed);
+          multiWellPanel.addWell({
+            id: wid,
+            name: wid,
+            depth: gr.depth,
+            gr: gr.values,
+            tops: sc.tops || []
+          });
+        });
+        // Auto-tie common tops where names match across adjacent wells
+        for (let i = 0; i < wellIds.length - 1; i++) {
+          const a = generateScaffold(wellIds[i]).tops || [];
+          const b = generateScaffold(wellIds[i + 1]).tops || [];
+          a.forEach((ta) => {
+            const tb = b.find((x) => x.name === ta.name);
+            if (tb) multiWellPanel.addTieLine(i, ta.depth, i + 1, tb.depth, ta.color || '#888');
+          });
+        }
+      }
 
       // ── XPlot ───────────────────────────────────────────────────────────────
       let xplot = null;
@@ -532,69 +639,104 @@
         vault.renderPanel('vaultPanel');
       });
 
-      // ── Petrophysics ────────────────────────────────────────────────────────
+      // ── Petrophysics (local GEOX-aligned; not a VAULT seal) ──────────────────
       document.getElementById('btnRunPhysics').addEventListener('click', () => {
         const scaffold = generateScaffold(state.wellId);
-        const grData = generateCurve(state.depthTop, state.depthBase, 'gr');
-        const vshArr = VshCalc.computeCurve(grData.values, 'linear');
-        const avgVsh = vshArr.reduce((a, b) => a + b, 0) / vshArr.length / 100; // Normalize
+        const p = petroParams();
+        const seed = scaffold.seed || 42;
+        const grData = generateCurve(state.depthTop, state.depthBase, 'gr', seed);
+        // VshCalc returns fraction 0–1 — do NOT divide by 100 (F2 fix 2026-07-24)
+        const vshArr = VshCalc.computeCurve(grData.values, 'linear', p.grClean, p.grShale);
+        const avgVsh = vshArr.reduce((a, b) => a + b, 0) / vshArr.length;
 
-        const rhobData = generateCurve(state.depthTop, state.depthBase, 'rhob');
-        const nphiData = generateCurve(state.depthTop, state.depthBase, 'nphi');
-        const dtData = generateCurve(state.depthTop, state.depthBase, 'dt');
+        const rhobData = generateCurve(state.depthTop, state.depthBase, 'rhob', seed);
+        const nphiData = generateCurve(state.depthTop, state.depthBase, 'nphi', seed);
+        const dtData = generateCurve(state.depthTop, state.depthBase, 'dt', seed);
 
         const porosities = PorosityCalc.computeCurves(
-          rhobData.values, nphiData.values, dtData.values,
-          vshArr.map(v => v / 100)
+          rhobData.values, nphiData.values, dtData.values, vshArr
         );
         const avgPhi = porosities.phiX.reduce((a, b) => a + b, 0) / porosities.phiX.length;
 
-        const rtData = generateCurve(state.depthTop, state.depthBase, 'rt');
-        const swArr = SwArchie.computeCurve(rtData.values, porosities.phiX, 0.05);
+        const rtData = generateCurve(state.depthTop, state.depthBase, 'rt', seed);
+        const swArr = SwArchie.computeCurve(
+          rtData.values, porosities.phiX, p.rw, vshArr, 'archie', 4.0, p.a, p.m, p.n
+        );
         const avgSw = swArr.reduce((a, b) => a + b, 0) / swArr.length;
 
-        // Pay count (simple: phi > 0.12 and Sw < 0.5)
+        // Net pay: Vsh < cut & phi > cut & Sw < cut (GEOX-aligned cutoffs)
         let netPay = 0;
         for (let i = 0; i < porosities.phiX.length; i++) {
-          if (porosities.phiX[i] > 0.12 && swArr[i] < 0.5) {
+          if (vshArr[i] < p.vshCut && porosities.phiX[i] > p.phiCut && swArr[i] < p.swCut) {
             netPay += 0.5; // 0.5m sample interval
           }
         }
 
+        document.getElementById('vshAvg').innerHTML = `${avgVsh.toFixed(2)} <span class="wd-physics-unit">v/v</span>`;
         document.getElementById('netPay').innerHTML = `${netPay.toFixed(1)} <span class="wd-physics-unit">m</span>`;
         document.getElementById('porosity').innerHTML = `${avgPhi.toFixed(2)} <span class="wd-physics-unit">v/v</span>`;
         document.getElementById('waterSat').innerHTML = `${avgSw.toFixed(2)} <span class="wd-physics-unit">v/v</span>`;
+        document.getElementById('physicsGrade').textContent = 'COMPUTED · SYNTH · NOT SEALED';
+        document.getElementById('physicsGrade').style.color = '#fa0';
+        document.getElementById('petroNote').textContent =
+          `Local: linear Vsh + ND φ + Archie a=${p.a} m=${p.m} n=${p.n} Rw=${p.rw}. ` +
+          `To govern: geox_petrophysics(mode=lem_inference, well_id, curves, depth_m) after geox_well_ingest.`;
 
-        // AC_Risk: anomaly contrast indicator
+        state.lastPetro = { avgVsh, avgPhi, avgSw, netPay, params: p, wellId: state.wellId };
+
+        // AC_Risk: anomaly vs scaffold priors (heuristic only — not arifOS verdict)
         const acRisk = Math.abs(avgPhi - scaffold.por) + Math.abs(avgSw - scaffold.sw);
         document.getElementById('acRiskValue').textContent = acRisk.toFixed(3);
         const statusEl = document.getElementById('acRiskStatus');
         if (acRisk < 0.1) {
-          statusEl.textContent = 'SEAL';
+          statusEl.textContent = 'PASS';
           statusEl.className = 'wd-ac-risk-status seal';
-          document.getElementById('acRiskDesc').textContent = 'Low risk — Physical grounding strong';
+          document.getElementById('acRiskDesc').textContent = 'Low contrast to scaffold priors — still SYNTH, not SEAL';
         } else if (acRisk < 0.3) {
           statusEl.textContent = 'RAW';
           statusEl.className = 'wd-ac-risk-status raw';
-          document.getElementById('acRiskDesc').textContent = 'Medium risk — Validate against core';
+          document.getElementById('acRiskDesc').textContent = 'Medium contrast — validate against core / real LAS';
         } else {
-          statusEl.textContent = 'VIOLATION';
+          statusEl.textContent = 'HOLD';
           statusEl.className = 'wd-ac-risk-status violation';
-          document.getElementById('acRiskDesc').textContent = 'High risk — PhysicsGuard triggered';
+          document.getElementById('acRiskDesc').textContent = 'High contrast — do not treat as earth truth';
         }
+
+        vault.build({
+          well_id: state.wellId,
+          data_class: state.dataClass,
+          vsh_avg: avgVsh,
+          phi_avg: avgPhi,
+          sw_avg: avgSw,
+          net_pay_m: netPay,
+          params: p,
+          authority_claim: 'ADVISORY',
+          output_class: 'COMPUTED_SYNTHETIC'
+        }, { F2: true, F7: true, F9: true, F11: true });
+        vault.renderPanel('vaultPanel');
       });
 
       // ── Well Selection ──────────────────────────────────────────────────────
-      document.getElementById('wellSelect').addEventListener('change', (e) => {
-        state.wellId = e.target.value;
-        const scaffold = generateScaffold(state.wellId);
+      function applyWellMeta(wellId) {
+        const scaffold = generateScaffold(wellId);
+        state.depthTop = scaffold.zoneTop || 2500;
+        state.depthBase = scaffold.zoneBase || Math.min(scaffold.td, (scaffold.zoneTop || 2500) + 500);
         document.getElementById('totalDepth').textContent = `${scaffold.td.toLocaleString()} m`;
-        document.getElementById('elevation').textContent = `${scaffold.elev} m`;
+        document.getElementById('elevation').textContent = `${scaffold.elev >= 0 ? '+' : ''}${scaffold.elev} m`;
+        document.getElementById('basinPlay').textContent = `${scaffold.basin} / ${scaffold.play}`;
+        document.getElementById('wellStatus').textContent = scaffold.note || 'SYNTHETIC scaffold';
+        document.getElementById('dataClassBadge').textContent = state.dataClass;
         document.getElementById('inputPorosity').value = scaffold.por;
         document.getElementById('inputSw').value = scaffold.sw;
         document.getElementById('inputVsh').value = scaffold.vsh;
         document.getElementById('inputFluid').value = scaffold.fluid;
+      }
+
+      document.getElementById('wellSelect').addEventListener('change', (e) => {
+        state.wellId = e.target.value;
+        applyWellMeta(state.wellId);
         initTracks();
+        if (state.mode === 'correlation') initCorrelation();
       });
 
       // ── PNG Metadata & Publish Image ────────────────────────────────────────
@@ -790,7 +932,9 @@
       if (window.WELLDESK_MCP_BRIDGE) {
         console.log('[WellDesk] MCP Bridge already active.');
       }
-      console.log('[WellDesk] Initialized. Well:', state.wellId, 'Mode:', state.mode);
+      applyWellMeta(state.wellId);
+      initTracks();
+      console.log('[WellDesk] Initialized. Well:', state.wellId, 'Mode:', state.mode, 'dataClass:', state.dataClass);
     })();
   </script>
 
