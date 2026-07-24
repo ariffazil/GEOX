@@ -38,11 +38,9 @@ def add_seeds(
     horizon_seeds: list[tuple[int, int]] | None = None,
     fault_seeds: list[tuple[int, int]] | None = None,
 ) -> dict[str, Any]:
-    """Append human seed points to the framework."""
     fw = copy.deepcopy(framework)
     horizons = fw.setdefault("horizons", [])
     faults = fw.setdefault("faults", [])
-
     if horizon_seeds:
         horizons.append(
             {
@@ -62,30 +60,27 @@ def add_seeds(
                 "provenance": {"added_by": "human", "correction": "add_seeds"},
             }
         )
-
     return {
         "framework": fw,
         "receipt": {
             "correction": "add_seeds",
             "n_horizon_seeds": len(horizon_seeds or []),
             "n_fault_seeds": len(fault_seeds or []),
-            "receipt_hash": _hash_correction("add_seeds", {"h": len(horizon_seeds or []), "f": len(fault_seeds or [])}),
+            "receipt_hash": _hash_correction(
+                "add_seeds", {"h": len(horizon_seeds or []), "f": len(fault_seeds or [])}
+            ),
         },
     }
 
 
 def remove_segment(framework: dict[str, Any], *, target_type: str, target_id: str) -> dict[str, Any]:
-    """Remove one horizon or fault from the framework."""
     fw = copy.deepcopy(framework)
     if target_type == "horizon":
-        fw["horizons"] = [h for h in fw.get("horizons", [])
-                          if h.get("horizon_id") != target_id]
+        fw["horizons"] = [h for h in fw.get("horizons", []) if h.get("horizon_id") != target_id]
     elif target_type == "fault":
-        fw["faults"] = [f for f in fw.get("faults", [])
-                        if f.get("fault_id") != target_id]
+        fw["faults"] = [f for f in fw.get("faults", []) if f.get("fault_id") != target_id]
     else:
         raise ValueError(f"unknown target_type: {target_type}")
-
     return {
         "framework": fw,
         "receipt": {
@@ -98,7 +93,6 @@ def remove_segment(framework: dict[str, Any], *, target_type: str, target_id: st
 
 
 def join_faults(framework: dict[str, Any], *, fault_ids: list[str]) -> dict[str, Any]:
-    """Merge two faults into one (linkage correction)."""
     fw = copy.deepcopy(framework)
     faults = fw.get("faults", [])
     chosen = [f for f in faults if f.get("fault_id") in fault_ids]
@@ -120,7 +114,6 @@ def join_faults(framework: dict[str, Any], *, fault_ids: list[str]) -> dict[str,
 
 
 def split_fault(framework: dict[str, Any], *, fault_id: str, at_xy: tuple[float, float]) -> dict[str, Any]:
-    """Split a fault into two at a point."""
     fw = copy.deepcopy(framework)
     faults = fw.get("faults", [])
     target = next((f for f in faults if f.get("fault_id") == fault_id), None)
@@ -144,7 +137,6 @@ def split_fault(framework: dict[str, Any], *, fault_id: str, at_xy: tuple[float,
 
 
 def mark_unconformity(framework: dict[str, Any], *, horizon_id: str, surface_type: str) -> dict[str, Any]:
-    """Mark an existing horizon as an unconformity / erosional surface."""
     fw = copy.deepcopy(framework)
     h = next((h for h in fw.get("horizons", []) if h.get("horizon_id") == horizon_id), None)
     if h is None:
@@ -163,7 +155,6 @@ def mark_unconformity(framework: dict[str, Any], *, horizon_id: str, surface_typ
 
 
 def select_alternative(framework: dict[str, Any], *, horizon_id: str, alternative_id: str) -> dict[str, Any]:
-    """Pick one of the candidate correlations for an ambiguous horizon."""
     fw = copy.deepcopy(framework)
     h = next((h for h in fw.get("horizons", []) if h.get("horizon_id") == horizon_id), None)
     if h is None:
@@ -182,7 +173,6 @@ def select_alternative(framework: dict[str, Any], *, horizon_id: str, alternativ
 
 
 def freeze_accepted_geometry(framework: dict[str, Any]) -> dict[str, Any]:
-    """Mark the current geometry as frozen (arifOS SEAL-eligible)."""
     fw = copy.deepcopy(framework)
     fw.setdefault("provenance", {})["frozen_at_iso"] = _now_iso()
     fw["provenance"]["accepted_by"] = "human_interpreter"
@@ -192,13 +182,14 @@ def freeze_accepted_geometry(framework: dict[str, Any]) -> dict[str, Any]:
         "receipt": {
             "correction": "freeze_accepted_geometry",
             "frozen_at_iso": fw["provenance"]["frozen_at_iso"],
-            "receipt_hash": _hash_correction("freeze_accepted_geometry", {"ts": fw["provenance"]["frozen_at_iso"]}),
+            "receipt_hash": _hash_correction(
+                "freeze_accepted_geometry", {"ts": fw["provenance"]["frozen_at_iso"]}
+            ),
         },
     }
 
 
 def rerun_gates(framework: dict[str, Any], *, gates: list[str] | None = None) -> dict[str, Any]:
-    """Re-evaluate the structural matrix on a corrected framework."""
     from geox_mcp.tools.structure_gates import run_all_structure_gates
 
     matrix = run_all_structure_gates(framework)

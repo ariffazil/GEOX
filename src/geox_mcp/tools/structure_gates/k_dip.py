@@ -231,6 +231,7 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                         "VE for image dip, or calibrated=true"
                     ),
                     "dip_meta": dip_meta,
+                    "epistemic": "UNMEASURED",
                 }
             )
             continue
@@ -245,6 +246,7 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                     "dip_deg": dip,
                     "reason": "regime_prior unknown",
                     "dip_meta": dip_meta,
+                    "epistemic": "UNMEASURED",
                 }
             )
             continue
@@ -260,6 +262,7 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                     "dip_deg": dip,
                     "regime": regime,
                     "reason": f"Unrecognized regime '{regime}'",
+                    "epistemic": "UNMEASURED",
                 }
             )
             continue
@@ -276,6 +279,7 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                     "dip_meta": dip_meta,
                     "regime": regime,
                     "expected_range": [lo, hi],
+                    "epistemic": "DERIVED" if dip_meta.get("ve_corrected") else "OBSERVED",
                 }
             )
         elif reactivation:
@@ -305,6 +309,7 @@ def gate_k_dip(framework: dict[str, Any]) -> dict[str, Any]:
                     "regime": regime,
                     "expected_range": [lo, hi],
                     "reason": f"Dip {dip:.1f}° outside {regime} prior [{lo},{hi}]",
+                    "epistemic": "DERIVED" if dip_meta.get("ve_corrected") else "OBSERVED",
                 }
             )
 

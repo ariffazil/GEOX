@@ -192,9 +192,7 @@ def load_app_html(app_id: str, *, min_bytes: int = _MIN_HOST_HTML_BYTES) -> str:
     if path is not None:
         html = path.read_text(encoding="utf-8")
         if len(html) < min_bytes:
-            raise ValueError(
-                f"App '{app_id}' HTML at {path} is too small ({len(html)}B < {min_bytes}B) — refuse stub"
-            )
+            raise ValueError(f"App '{app_id}' HTML at {path} is too small ({len(html)}B < {min_bytes}B) — refuse stub")
         return html
 
     # No local file: only acceptable if explicitly externalUrl with cockpit URL
@@ -218,9 +216,8 @@ def load_app_html(app_id: str, *, min_bytes: int = _MIN_HOST_HTML_BYTES) -> str:
             f"</body></html>"
         )
 
-    raise FileNotFoundError(
-        f"App '{app_id}' has no html_path file under {GEOX_ROOT} and is not externalUrl"
-    )
+    raise FileNotFoundError(f"App '{app_id}' has no html_path file under {GEOX_ROOT} and is not externalUrl")
+
 
 # ── Tool Output Schemas (SEP-2106) ──────────────────────────────────────────────
 
@@ -480,9 +477,7 @@ def wrap_as_ui_tool_result(
 
     if isinstance(result, dict):
         sc = structured_override or {
-            k: v
-            for k, v in result.items()
-            if not str(k).startswith("_") and k not in ("content", "structuredContent", "_meta")
+            k: v for k, v in result.items() if not str(k).startswith("_") and k not in ("content", "structuredContent", "_meta")
         }
         summary = text
         if summary is None:
@@ -667,7 +662,7 @@ def get_output_schema(tool_name: str) -> dict[str, Any] | None:
 
 
 def create_app_resource(app_id: str, html_content: str | None = None) -> dict[str, Any]:
-    """Create a SEP-1865 MCP Apps UI resource using mcp-ui-server SDK or fallback.
+    """Create a SEP-1865 MCP Apps UI resource.
 
     Args:
         app_id: Key from GEOX_APPS registry
@@ -675,6 +670,7 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
 
     Returns:
         UIResource-compatible dict for tools/call response content array.
+        Falls back to a hand-built dict if the mcp-ui-server SDK is unavailable.
     """
     app = GEOX_APPS.get(app_id)
     if not app:
@@ -683,37 +679,62 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
     if html_content is None:
         html_content = load_app_html(app_id)
 
-    if _MCP_UI_SERVER_AVAILABLE:
-        try:
-            resource = create_ui_resource(
-                {
-                    "uri": app["uri"],
-                    "content": {"type": "rawHtml", "htmlString": html_content},
-                    "encoding": "text",
-                }
+    try:
+        # Prefer on-disk HTML even if marked externalUrl historically
+        if html_content is None and resolve_html_path(app) is not None:
+            html_content = load_app_html(app_id)
+            resource_type = "rawHtml"
+
+        if resource_type == "externalUrl" and app.get("external_url"):
+            payload: dict[str, Any] = {
+                "uri": app["uri"],
+                "content": {"type": "externalUrl", "iframeUrl": app["external_url"]},
+                "encoding": "text",
+            }
+            text = (
+                "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
+                f"<meta http-equiv='refresh' content='0;url={app['external_url']}'>"
+                f"<title>{app['title']}</title></head><body>"
+                f"<p>{app['title']} — opening external cockpit. "
+                f"<a href='{app['external_url']}' target='_blank' rel='noopener'>Open manually</a></p>"
+                f"</body></html>"
             )
-            if resource and hasattr(resource, "resource"):
+        else:
+            if html_content is None:
+                html_content = load_app_html(app_id)
+            payload = {
+                "uri": app["uri"],
+                "content": {"type": "rawHtml", "htmlString": html_content},
+                "encoding": "text",
+            }
+            text = html_content
+
+        if _MCP_UI_SERVER_AVAILABLE:
+            try:
+                resource = create_ui_resource(payload)
                 return {
                     "type": "resource",
                     "resource": {
-                        "uri": getattr(resource.resource, "uri", app["uri"]),
-                        "mimeType": getattr(resource.resource, "mimeType", app["mime_type"]),
-                        "text": getattr(resource.resource, "text", html_content),
+                        "uri": resource.resource.uri,
+                        "mimeType": resource.resource.mimeType,
+                        "text": resource.resource.text,
                     },
                 }
-        except Exception as exc:
-            logger.warning("Failed to create UI resource for app '%s': %s", app_id, exc)
+            except Exception as exc:
+                logger.warning("mcp-ui-server create_ui_resource failed for %s: %s; using fallback", app_id, exc)
 
-    return {
-        "type": "resource",
-        "resource": {
-            "uri": app["uri"],
-            "name": app["title"],
-            "description": app["description"],
-            "mimeType": app["mime_type"],
-            "text": html_content,
-        },
-    }
+        # Fallback: hand-built SEP-1865 resource dict (no SDK required)
+        return {
+            "type": "resource",
+            "resource": {
+                "uri": app["uri"],
+                "mimeType": app.get("mime_type", "text/html;profile=mcp-app"),
+                "text": text,
+            },
+        }
+    except Exception as exc:
+        logger.error("Failed to create UI resource for app '%s' (%s): %s", app_id, app.get("uri"), exc)
+        raise ValueError(f"Failed to create UI resource for app '{app_id}' ({app.get('uri')}): {exc}") from exc
 
 
 def _resource_already_registered(mcp: Any, uri: str) -> bool:
@@ -768,13 +789,13 @@ def register_mcp_apps_resources(mcp: Any) -> None:
             logger.error("MCP App '%s' (%s) has no host-usable HTML: %s", app_id, uri, exc)
             continue
 
-        def _make_file_handler(bound_app_id: str):
+        def _make_file_handler(bound_app_id: str, bound_title: str = title, bound_desc: str = desc):
             async def _handler() -> str:
                 # Re-read from disk each call so HTML edits apply without restart
                 return load_app_html(bound_app_id)
 
             _handler.__name__ = f"geox_ui_{bound_app_id}"
-            _handler.__doc__ = f"{title} — {desc}"
+            _handler.__doc__ = f"{bound_title} — {bound_desc}"
             return _handler
 
         kwargs: dict[str, Any] = {

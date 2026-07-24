@@ -20,9 +20,9 @@ class TestAppExportParity:
         public_mcp_tools = list(CANONICAL_PUBLIC_TOOLS)
         manifest_public = public_tool_names()
 
-        assert len(exported_app_tools) == 24
-        assert len(public_mcp_tools) == 24
-        assert len(manifest_public) == 24
+        assert len(exported_app_tools) == 31
+        assert len(public_mcp_tools) == 31
+        assert len(manifest_public) == 31
         assert set(exported_app_tools) == set(public_mcp_tools) == set(manifest_public)
 
         # Required canonical names (must not vanish from app export)

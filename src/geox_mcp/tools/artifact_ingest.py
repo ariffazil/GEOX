@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import os
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from typing import Any, Literal
 
@@ -33,8 +33,8 @@ class IngestedArtifact:
     sha256: str
     size_bytes: int
     ingested_at_iso: str
-    artifact_hash_chain: str = ""  # sha256 over the canonical metadata
-    calibration_sha: str = ""     # sha256 of the calibration blob (if any)
+    artifact_hash_chain: str = ""
+    calibration_sha: str = ""
     note: str = ""
 
     def to_dict(self) -> dict[str, Any]:
@@ -61,16 +61,11 @@ def ingest_artifact(
     calibration: dict[str, Any] | None = None,
     note: str = "",
 ) -> dict[str, Any]:
-    """Ingest an artifact from a local path.
-
-    Returns:
-        IngestedArtifact dict with sha256 + provenance.
-    """
+    """Ingest an artifact from a local path."""
     if not artifact_ref:
         raise ValueError("artifact_ref required")
 
     if not os.path.exists(artifact_ref):
-        # Allow remote URI / opaque ref without local hash; mark note
         size_bytes = 0
         sha = "sha256:unresolved"
     else:
@@ -92,19 +87,14 @@ def ingest_artifact(
         note=note,
     )
 
-    # Hash-chain over the canonical metadata
     canon = repr(sorted(art.to_dict().items())).encode("utf-8")
     art_hash = hashlib.sha256(canon).hexdigest()
     art.artifact_hash_chain = "sha256:" + art_hash
-
     return art.to_dict()
 
 
 def validate_calibration_state(calibration: dict[str, Any] | None) -> dict[str, Any]:
-    """Return a state map of which calibration fields are present.
-
-    Used by gates to decide UNMEASURED vs WARN vs PASS.
-    """
+    """Return a state map of which calibration fields are present."""
     if not calibration:
         return {"calibrated": False, "missing": ["all"]}
     required = [
