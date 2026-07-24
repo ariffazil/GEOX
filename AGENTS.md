@@ -12,7 +12,7 @@ scope: /root/GEOX
 > **ZEN:** `/root/AAA/prompts/AAA-ZEN-ALIGNMENT.md` — 18 operational rules. Load at boot.
 
 ## Identity
-Canonical earth coprocessor. Port 8081. ~20 live tools via tools/list. Evidence-only — never a policy judge.
+Canonical earth coprocessor. Port 8081. 32 canonical tools via tools/list. Evidence-only — never a policy judge.
 
 ## Build & Test
 ```bash

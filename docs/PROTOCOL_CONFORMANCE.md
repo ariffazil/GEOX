@@ -7,7 +7,7 @@
 
 | Protocol | Status | Detail |
 |----------|--------|--------|
-| MCP Server | ✅ CONFORMANT | 24 public tools, 100% envelope compliance |
+| MCP Server | ✅ CONFORMANT | 32 public tools, 100% envelope compliance |
 | FastMCP 3.4.2 | ✅ CONFORMANT | 139 compat wrappers removed, 0 **kwargs on surface |
 | JSON-RPC 2.0 | ✅ CONFORMANT | All endpoints respond to JSON-RPC |
 | SSE | ✅ CONFORMANT | Legacy SSE at /sse, backwards compat |
@@ -18,8 +18,8 @@
 | DID:WEB | ❌ GAP | No did:web document published |
 
 ## MCP Tool Surface
-- **Public:** 24 canonical tools (0 phantoms, 0 manifest-only)
-- **Internal:** 34 internal tools
+- **Public:** 32 canonical tools (0 phantoms, 0 manifest-only)
+- **Internal:** 30 internal tools
 - **MCP Apps:** 9 (Well Witness, Prospect Forge, Seismic Viewer, etc.)
 - **Registry:** PASS (0 drift since 2026-07-19 fix)
 

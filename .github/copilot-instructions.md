@@ -36,9 +36,9 @@ make build && systemctl restart geox-mcp
 | `tests/` | 60+ files including Nobel-grade physics locks (33/33) |
 | `apps/` | Standalone apps: welldesk, seismic_vision, earth_volume |
 
-## Canonical MCP surface (33 tools)
+## Canonical MCP surface (32 tools)
 
-Core: `geox_basin_profile`, `geox_claim_create`, `geox_prospect_evaluate`, `geox_data_ingest_bundle`, `geox_sequence_interpret`, `geox_seismic_compute`, `geox_subsurface_generate_candidates`, `geox_horizon_contrast_surface`, `geox_vision_minimax_inference`
+Core: `geox_basin`, `geox_claim`, `geox_prospect`, `geox_seismic_compute`, `geox_seismic_interpret`, `geox_petrophysics`, `geox_well_ingest`, `geox_surface_status` (see `CANONICAL_PUBLIC_SURFACE.json` for full list)
 
 ## Physics9 constraints
 

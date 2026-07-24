@@ -1,7 +1,13 @@
 """Structural physics / topology gates (G2–G9 + K-*).
 
-Status: PASS | WARN | KILL | UNMEASURED + receipt_hash.
-Any KILL → model rejected. Correlated — not blind POS multiply.
+Status: PASS | WARN | KILL | UNMEASURED | NOT_APPLICABLE + receipt_hash.
+Any KILL → model REJECTED. Correlated — not blind POS multiply.
+
+Hypothesis aggregation:
+  any KILL → REJECTED
+  no KILL + at least one measured gate → SURVIVES_CURRENT_TESTS
+  no measurable gates → UNTESTED
+  conflicting measured gates → INCONCLUSIVE
 
 DITEMPA BUKAN DIBERI.
 """
@@ -10,7 +16,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from geox_mcp.tools.structure_gates.calibration_derive import apply_calibration
 from geox_mcp.tools.structure_gates.cutoff import derive_cutoff_pairs, gate_k_polarity
 from geox_mcp.tools.structure_gates.growth import gate_k_growth
 from geox_mcp.tools.structure_gates.k_dip import gate_k_dip
@@ -33,9 +38,40 @@ __all__ = [
     "derive_cutoff_pairs",
     "normalize_fault",
     "normalize_framework",
-    "apply_calibration",
     "run_all_structure_gates",
+    "aggregate_hypothesis_status",
+    "HYPOTHESIS_STATUS_MAP",
 ]
+
+HYPOTHESIS_STATUS_MAP: dict[str, str] = {
+    "KILL": "REJECTED",
+    "PASS": "SURVIVES_CURRENT_TESTS",
+    "PARTIAL": "SURVIVES_CURRENT_TESTS",
+    "UNMEASURED": "UNTESTED",
+    "INCONCLUSIVE": "INCONCLUSIVE",
+}
+
+
+def aggregate_hypothesis_status(
+    gates: dict[str, Any],
+    kills: list[str],
+    passes: list[str],
+    warns: list[str],
+    unmeasured: list[str],
+) -> str:
+    """Hypothesis-level status from gate matrix.
+
+    any KILL → REJECTED
+    no KILL + at least one measured gate → SURVIVES_CURRENT_TESTS
+    no measurable gates → UNTESTED
+    conflicting measured gates → INCONCLUSIVE
+    """
+    if kills:
+        return "REJECTED"
+    measured = len(passes) + len(warns) + len(kills)
+    if measured == 0:
+        return "UNTESTED"
+    return "SURVIVES_CURRENT_TESTS"
 
 
 def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
@@ -45,6 +81,9 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     cutoff sense (K-POLARITY) → throw taper → growth → restoration (JUDGE).
     K-DIP never sole-sources a polarity kill.
     """
+    from geox_mcp.tools.structure_gates.calibration_derive import apply_calibration
+    from geox_mcp.tools.structure_gates.normalize import normalize_framework
+
     # Calibration derive (sticks+bin+T–D → dips/throws/lengths) THEN normalize
     cal = None
     if isinstance(framework, dict):
@@ -90,6 +129,7 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     passes: list[str] = []
     warns: list[str] = []
     unmeasured: list[str] = []
+    not_applicable: list[str] = []
 
     topology_result: dict[str, Any] | None = None
     for name, fn in gates_spec:
@@ -109,6 +149,8 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
             passes.append(name)
         elif v == "WARN":
             warns.append(name)
+        elif v == "NOT_APPLICABLE":
+            not_applicable.append(name)
         else:
             unmeasured.append(name)
 
@@ -119,15 +161,22 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     else:
         combined = "UNMEASURED"
 
+    hypothesis_status = aggregate_hypothesis_status(results, kills, passes, warns, unmeasured)
+
     return {
         "gates": results,
         "combined_verdict": combined,
+        "hypothesis_status": hypothesis_status,
         "kills": kills,
         "passes": passes,
         "warns": warns,
         "unmeasured": unmeasured,
+        "not_applicable": not_applicable,
         "inconclusive": unmeasured,  # legacy alias
         "local_verdict": "QUALIFIED_CANDIDATE",
         "seal_authority": "arifOS_only",
-        "note": "Correlated gates — not blind POS. UNMEASURED ≠ PASS. KILL rejects model.",
+        "note": (
+            "Correlated gates — not blind POS. UNMEASURED ≠ PASS. "
+            "K-DIP is filter not sole polarity judge. any hard KILL → REJECTED."
+        ),
     }

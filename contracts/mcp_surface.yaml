@@ -55,12 +55,12 @@ authority:
     - deployment_substrate
     - final_seal
 
-canonical_tool_count: 30
+canonical_tool_count: 32
 internal_tool_count: 30
 canonical_tools:
   # Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
   # Live verification: curl -sf http://localhost:8081/health
-  # Updated: 2026-07-20 (Synchronized 30/30 canonical tools)
+  # Updated: 2026-07-24 (Synchronized to 32 canonical tools from registry.py)
   - geox_basin
   - geox_basin_backstrip
   - geox_claim
@@ -91,6 +91,8 @@ canonical_tools:
   - geox_visual_understand
   - geox_well_desk
   - geox_well_ingest
+  - geox_well_qc
+  - geox_workspace
 
 mcp_conformance:
   lifecycle: initialize → initialized → tools/call (enforced by lifecycle gate)
