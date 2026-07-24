@@ -45,6 +45,18 @@ OBSERVED DATA → DERIVATION → INTERPRETATION → CHALLENGE → FALSIFICATION 
 
 Claims can be created, challenged, falsified, recomputed, sealed (immutable record), or held (888_HOLD — awaiting human ratification). Every state transition carries an epistemic label and uncertainty band.
 
+### Federation Organs
+
+| Organ | Role | Port | Repo |
+|-------|------|------|------|
+| arifOS | Constitutional kernel — judge, seal, VAULT999 | 8088 | [ariffazil/arifos](https://github.com/ariffazil/arifos) |
+| AAA | Cockpit + A2A identity layer | 3001 | [ariffazil/AAA](https://github.com/ariffazil/AAA) |
+| A-FORGE | Execution shell — build, deploy, forge | 7071 | [ariffazil/A-FORGE](https://github.com/ariffazil/A-FORGE) |
+| **GEOX** | Earth intelligence — wells, seismic, petrophysics | 8081 | ← you are here |
+| WEALTH | Capital intelligence — NPV, IRR, EMV | 18082 | [ariffazil/WEALTH](https://github.com/ariffazil/WEALTH) |
+| WELL | Vitality guard — REFLECT_ONLY | 18083 | [ariffazil/WELL](https://github.com/ariffazil/WELL) |
+| HERMES | Multi-modal bridge + Telegram relay | 8644 | [ariffazil/HERMES](https://github.com/ariffazil/HERMES) |
+
 ```mermaid
 graph LR
     subgraph GEOX [🌍 GEOX — Geological Claim Engine]
