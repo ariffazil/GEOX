@@ -1,6 +1,6 @@
 [project]
 name = "arifos-geox"
-version = "2026.07.19"
+version = "2026.07.24"
 description = "GEOX — Earth Intelligence Sovereign Kernel. Governed geoscience coprocessor under arifOS constitutional floors. Public MCP surface count is runtime fact (tools/list); see CANONICAL_PUBLIC_SURFACE.json. 13 constitutional floors (F01-F13)."
 readme = "README.md"
 requires-python = ">=3.11"
