@@ -3960,6 +3960,24 @@ def register_tools_on(mcp):
                 app_id="well_desk",
                 params={"well_id": well_id, "mode": "publish"} if well_id else None,
             )
+        if mode in ("petro", "lem_inference", "petrophysics"):
+            from geox_mcp.tools.integration_well import geox_well_desk_petro as _impl
+
+            petro = await _impl(
+                well_id=well_id,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+            return wrap_as_ui_tool_result(
+                petro,
+                app_id="well_desk",
+                params={"well_id": well_id, "mode": "petro"} if well_id else None,
+                text=(
+                    f"Well desk petro (lem_inference path) for {well_id or 'unknown'}. "
+                    f"ADVISORY · NOT_SEALED."
+                ),
+            )
         if mode == "render":
             from geox_mcp.render_well_panel_petro import render_interpreted_panel
 
@@ -3972,11 +3990,22 @@ def register_tools_on(mcp):
                 session_id=session_id,
                 actor_id=actor_id,
             )
+            # G3.4 epistemic: never SEAL language on demo
+            if isinstance(rendered, dict):
+                from geox_mcp.tools.integration_well import _is_demo_well_id
+
+                if _is_demo_well_id(well_id or ""):
+                    rendered = {
+                        **rendered,
+                        "authority_claim": "ADVISORY",
+                        "seal_status": "NOT_SEALED",
+                        "data_class": "DEMO",
+                    }
             return wrap_as_ui_tool_result(
                 rendered,
                 app_id="well_desk",
                 params={"well_id": well_id, "mode": "render"} if well_id else None,
-                text=f"Well panel rendered for {well_id or 'unknown'}.",
+                text=f"Well panel rendered for {well_id or 'unknown'} (ADVISORY).",
             )
         # Default: open — already returns 3-channel ToolResult
         from geox_mcp.tools.integration_well import geox_well_desk_open as _impl

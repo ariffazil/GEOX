@@ -84,22 +84,22 @@ async def geox_petrophysics(
     if mode == "lem_inference":
         if not well_id or not curves or not depth_m:
             return {"status": "INVALID", "errors": ["well_id, curves, and depth_m required for lem_inference mode"]}
-        from geox_mcp.tools.lem_predict import geox_lem_predict as _impl
+        from geox_mcp.tools.lem_predict import LEMPredictRequest, geox_lem_predict as _impl
 
-        return await _impl(
+        req = LEMPredictRequest(
             well_id=well_id,
             curves=curves,
             depth_m=depth_m,
             depth_top_m=depth_top_m,
             depth_bot_m=depth_bot_m,
-            target_properties=target_properties,
-            mode="physics_prior",
+            target_properties=target_properties or ["porosity", "sw"],
             basin=basin,
             rw_ohm_m=rw_ohm_m,
             rho_matrix_g_cc=rho_matrix_g_cc,
             rho_fluid_g_cc=rho_fluid_g_cc,
             patch_size_m=patch_size_m,
         )
+        return await _impl(req)
 
     if mode == "verify":
         if not candidate_ref or not domain:

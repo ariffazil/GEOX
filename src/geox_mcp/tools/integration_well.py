@@ -154,12 +154,67 @@ def _downsample_series(values: list[float], max_n: int = 200) -> list[float]:
     return out[:max_n]
 
 
-DEMO_WELL_REGISTRY = {"DEMO-KINABALU", "DEMO-VOLVE", "DEMO-SMOKE", "DEMO-01", "DEMO", "SMOKE"}
+# Legacy set kept for callers; canonical map is resources/demo_wells.json
+DEMO_WELL_REGISTRY = {
+    "DEMO-KINABALU",
+    "DEMO-VOLVE",
+    "DEMO-SMOKE",
+    "DEMO-01",
+    "DEMO",
+    "SMOKE",
+    "DEMO_WELL_A",
+    "DEMO_WELL_B",
+    "DEMO_SANDAKAN_A",
+    "DEMO_SANDAKAN_B",
+    "MALAY_DEMO_01",
+    "VOLVE_15_9_19",
+}
+
+_GEOX_ROOT = os.environ.get("GEOX_ROOT", "/root/GEOX")
+_DEMO_WELLS_CACHE: dict | None = None
+
+
+def _load_demo_wells_registry() -> dict:
+    """Load canonical demo well → LAS map (Batch A G1.1)."""
+    global _DEMO_WELLS_CACHE
+    if _DEMO_WELLS_CACHE is not None:
+        return _DEMO_WELLS_CACHE
+    import json
+    from pathlib import Path
+
+    paths = [
+        Path(_GEOX_ROOT) / "resources" / "demo_wells.json",
+        Path("/opt/geox/app/resources/demo_wells.json"),
+        Path(__file__).resolve().parents[3] / "resources" / "demo_wells.json",
+    ]
+    for p in paths:
+        if p.is_file():
+            try:
+                _DEMO_WELLS_CACHE = json.loads(p.read_text(encoding="utf-8"))
+                return _DEMO_WELLS_CACHE
+            except Exception:
+                continue
+    _DEMO_WELLS_CACHE = {"wells": []}
+    return _DEMO_WELLS_CACHE
+
+
+def _resolve_demo_entry(well_id: str) -> dict | None:
+    """Match well_id against demo registry primary id or aliases."""
+    wid = well_id.strip()
+    reg = _load_demo_wells_registry()
+    for w in reg.get("wells") or []:
+        names = {str(w.get("well_id", "")), *list(w.get("aliases") or [])}
+        names_u = {n.upper() for n in names if n}
+        if wid.upper() in names_u:
+            return w
+    return None
 
 
 def _is_demo_well_id(well_id: str) -> bool:
     wid = well_id.strip().upper()
-    return wid.startswith("DEMO-") or wid.startswith("DEMO_") or wid in DEMO_WELL_REGISTRY
+    if wid.startswith("DEMO-") or wid.startswith("DEMO_") or wid in {x.upper() for x in DEMO_WELL_REGISTRY}:
+        return True
+    return _resolve_demo_entry(well_id) is not None
 
 
 def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
@@ -168,66 +223,97 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
 
     wid = well_id.strip()
     is_demo = _is_demo_well_id(wid)
+    demo_entry = _resolve_demo_entry(wid)
+    data_class = "UNKNOWN"
+    geography = None
+    is_fixture_fallback = False
+
+    # 0. Canonical demo registry path (highest priority for DEMO ids)
+    las_path = None
+    if demo_entry and demo_entry.get("las_path"):
+        rel = demo_entry["las_path"]
+        for root in (Path(_GEOX_ROOT), Path("/opt/geox/app"), Path("/root/GEOX")):
+            cand = root / rel
+            if cand.is_file():
+                las_path = cand
+                data_class = demo_entry.get("data_class") or "DEMO"
+                geography = demo_entry.get("geography")
+                is_fixture_fallback = True
+                break
 
     # 1. Look for explicit LAS files on disk
     well_data_dir = os.environ.get("GEOX_WELL_DATA_DIR", "/data/wells")
-    candidates = [
-        Path(f"{well_data_dir}/{wid}.las"),
-        Path(f"{well_data_dir}/{wid}"),
-        Path(f"/data/wells/{wid}.las"),
-        Path(f"/data/wells/{wid}"),
-        Path(f"/data/geox_las/{wid}.las"),
-        Path(f"/data/geox_las/{wid}"),
-        Path(f"/root/GEOX/fixtures/{wid}.las"),
-        Path(f"/opt/geox/app/fixtures/{wid}.las"),
-        Path(f"/root/GEOX/fixtures/_DEMO_SYNTHETIC/{wid}.las"),
-    ]
-    las_path = next((p for p in candidates if p is not None and p.is_file()), None)
+    if las_path is None:
+        candidates = [
+            Path(f"{well_data_dir}/{wid}.las"),
+            Path(f"{well_data_dir}/{wid}"),
+            Path(f"/data/wells/{wid}.las"),
+            Path(f"/data/wells/{wid}"),
+            Path(f"/data/geox_las/{wid}.las"),
+            Path(f"/data/geox_las/{wid}"),
+            Path(f"{_GEOX_ROOT}/data/geox_las/{wid}.las"),
+            Path(f"/root/GEOX/data/geox_las/{wid}.las"),
+            Path(f"/root/GEOX/fixtures/{wid}.las"),
+            Path(f"/opt/geox/app/fixtures/{wid}.las"),
+            Path(f"/root/GEOX/fixtures/_DEMO_SYNTHETIC/{wid}.las"),
+            Path(f"/root/GEOX/fixtures/_DEMO_SYNTHETIC/{wid}_SANDAKAN.las"),
+        ]
+        las_path = next((p for p in candidates if p is not None and p.is_file()), None)
 
-    # 1b. Check in-memory artifact registry for las_path
+    # 1b. Check in-memory artifact registry for las_path (post-ingest)
     if las_path is None:
         try:
             from geox_mcp.tools._helpers import _get_artifact
+
             entry = _get_artifact(wid) or _get_artifact(f"well_las:{wid}")
             if entry and entry.get("las_path"):
                 p = Path(entry["las_path"])
                 if p.is_file():
                     las_path = p
+                    data_class = entry.get("data_class") or "INGESTED"
         except Exception:
             pass
 
-    # 2. Case-insensitive scan of /data/wells and /data/geox_las for ingested wells
+    # 2. Case-insensitive scan of well dirs for ingested wells
     if las_path is None:
-        for search_dir_path in [Path(well_data_dir), Path("/data/wells"), Path("/data/geox_las")]:
+        for search_dir_path in [
+            Path(well_data_dir),
+            Path("/data/wells"),
+            Path("/data/geox_las"),
+            Path(f"{_GEOX_ROOT}/data/geox_las"),
+            Path("/root/GEOX/data/geox_las"),
+            Path("/root/GEOX/fixtures/_DEMO_SYNTHETIC"),
+        ]:
             if search_dir_path.is_dir():
                 target_stem = wid.lower().replace(" ", "").replace("-", "").replace("_", "")
                 for p in search_dir_path.glob("*.las"):
                     p_stem = p.stem.lower().replace(" ", "").replace("-", "").replace("_", "")
-                    if target_stem == p_stem:
+                    if target_stem == p_stem or target_stem in p_stem or p_stem in target_stem:
                         las_path = p
                         break
                 if las_path:
                     break
 
-    # 3. Demo fallback ONLY for explicit DEMO-* IDs
-    is_fixture_fallback = False
-    if las_path is None:
-        if is_demo:
-            demo_candidates = [
-                Path("/data/geox_las/DEMO-KINABALU.las"),
-                Path("/root/GEOX/fixtures/geox_smoke_test.las"),
-                Path("/opt/geox/app/fixtures/geox_smoke_test.las"),
-            ]
-            las_path = next((p for p in demo_candidates if p is not None and p.is_file()), None)
-            is_fixture_fallback = True
+    # 3. Demo fallback ONLY for explicit DEMO ids
+    if las_path is None and is_demo:
+        demo_candidates = [
+            Path(f"{_GEOX_ROOT}/data/geox_las/DEMO-KINABALU.las"),
+            Path("/root/GEOX/data/geox_las/DEMO-KINABALU.las"),
+            Path("/root/GEOX/fixtures/geox_smoke_test.las"),
+            Path("/opt/geox/app/fixtures/geox_smoke_test.las"),
+        ]
+        las_path = next((p for p in demo_candidates if p is not None and p.is_file()), None)
+        is_fixture_fallback = True
+        data_class = data_class if data_class != "UNKNOWN" else "DEMO"
 
     if las_path is None:
         return {
             "status": "no_las",
-            "error": f"No LAS ingested for {wid}. Use geox_well_ingest or a DEMO-* id.",
+            "error": f"No LAS ingested for {wid}. Use geox_well_ingest or a DEMO-* / DEMO_WELL_* id.",
             "curves_available": [],
             "depths": None,
             "curves": None,
+            "data_class": "EMPTY",
         }
 
     try:
@@ -243,21 +329,31 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
                 if name in mnemonics:
                     idx = mnemonics.index(name)
                     arr = list(las.curves[idx].data)
-                    return _downsample_series([float(x) if x == x else float("nan") for x in arr], max_n)
+                    return _downsample_series(
+                        [float(x) if x == x else float("nan") for x in arr], max_n
+                    )
             return None
 
         curves = {
             "GR": _curve(("GR", "GAMMA", "SGR", "CGR")),
-            "RES": _curve(("RT", "RES", "ILD", "LLD", "RD", "RDEEP")),
+            "RES": _curve(("RT", "RES", "ILD", "LLD", "RD", "RDEEP", "AT90")),
             "DT": _curve(("DT", "DTCO", "AC", "DTC")),
             "RHOB": _curve(("RHOB", "DEN", "ZDEN", "RHOZ")),
+            "NPHI": _curve(("NPHI", "NEU", "TNPH", "NPOR")),
         }
-        avail = [m for m in mnemonics if m not in ("DEPT", "DEPTH")]
+        avail = [m for m in mnemonics if m not in ("DEPT", "DEPTH", "MD")]
 
         out_curves = {k: v for k, v in curves.items() if v is not None}
-        well_name = str(getattr(las.well, "WELL", None).value).strip() if hasattr(las, "well") and hasattr(las.well, "WELL") else wid
+        well_name = (
+            str(getattr(las.well, "WELL", None).value).strip()
+            if hasattr(las, "well") and hasattr(las.well, "WELL")
+            else wid
+        )
         if not well_name or well_name == "UNKNOWN":
             well_name = wid
+
+        if data_class == "UNKNOWN":
+            data_class = "DEMO" if (is_fixture_fallback or is_demo) else "MEASURED"
 
         res = {
             "status": "loaded",
@@ -268,9 +364,18 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
             "curves": out_curves,
             "n_samples_ui": len(depths),
             "is_fixture_fallback": is_fixture_fallback or is_demo,
+            "las_path": str(las_path),
+            "data_class": data_class,
+            "geography": geography,
         }
-        if is_fixture_fallback or is_demo:
-            res["provenance_badge"] = "DATA: DEMO FIXTURE — NOT REAL WELL DATA"
+        if is_fixture_fallback or is_demo or data_class in ("DEMO", "SYNTHETIC_LABEL", "OPEN_OSS"):
+            if data_class == "OPEN_OSS":
+                res["provenance_badge"] = (
+                    "DATA: OPEN OSS LAS (e.g. Volve North Sea) — real measurements, "
+                    "NOT Malay Basin; DEMO context only"
+                )
+            else:
+                res["provenance_badge"] = "DATA: DEMO FIXTURE — NOT REAL WELL DATA"
         return res
     except Exception as e:
         return {
@@ -279,6 +384,7 @@ def _load_well_curves_for_ui(well_id: str, max_n: int = 200) -> dict:
             "curves_available": [],
             "depths": None,
             "curves": None,
+            "data_class": "ERROR",
         }
 
 
@@ -339,6 +445,7 @@ async def geox_well_desk_open(
     epi_cap = 0.85 if loaded.get("curves") else 0.70
     epi_layer = "OBS" if loaded.get("curves") else "OBS"
 
+    data_class = loaded.get("data_class") or ("DEMO" if loaded.get("provenance_badge") else "MEASURED")
     structured = {
         "ok": True,
         "tool": "geox_well_desk",
@@ -354,14 +461,20 @@ async def geox_well_desk_open(
         "curves": loaded.get("curves"),
         "n_samples_ui": loaded.get("n_samples_ui"),
         "provenance_badge": loaded.get("provenance_badge"),
+        "data_class": data_class,
+        "geography": loaded.get("geography"),
+        "las_path": loaded.get("las_path"),
+        "authority_claim": "ADVISORY",
+        "output_class": "COMPUTED" if not loaded.get("provenance_badge") else "DEMO_FIXTURE",
         "summary": {
             "well_id": _wid,
             "mode": _mode,
             "band": band,
+            "data_class": data_class,
             "note": (
-                "Well Witness hydrate — curves loaded."
+                "Well Witness hydrate — curves loaded from LAS."
                 if not loaded.get("provenance_badge")
-                else "DEMO FIXTURE — curves loaded from demo dataset."
+                else "DEMO/OPEN fixture — curves loaded; NOT a field seal."
             ),
             "views": (
                 ["composite_log", "summary_card"]
@@ -371,8 +484,9 @@ async def geox_well_desk_open(
         },
         "epistemic": {
             "layer": epi_layer,
-            "confidence_cap": epi_cap,
+            "confidence_cap": epi_cap if data_class not in ("DEMO", "SYNTHETIC_LABEL") else 0.70,
             "note": "Curves OBS from LAS when present; never invent pay or saturation here.",
+            "seal_status": "NOT_SEALED",
         },
         "ui": {
             "resourceUri": "ui://geox/well-desk",
@@ -386,7 +500,8 @@ async def geox_well_desk_open(
         "final_authority": "ARIF",
         "message": (
             f"Well desk open: {_wid} ({band}). "
-            f"curves={list((loaded.get('curves') or {}).keys()) or 'none'}."
+            f"curves={list((loaded.get('curves') or {}).keys()) or 'none'} "
+            f"data_class={data_class}."
         ),
     }
 
@@ -410,24 +525,44 @@ async def geox_well_desk_publish(
     actor_id: str | None = None,
     trace_id: str | None = None,
 ) -> dict:
-    """Publish well desk panel as sealed image (ZEN-15 consolidated).
+    """Publish well desk panel image (ZEN-15 consolidated).
 
-    Renders the well panel and returns an image artifact_ref.
+    Renders the well panel. Never claims SEAL unless an arifOS verdict is present.
+    G3.4: authority_claim stays ADVISORY for demo/synthetic.
     """
     try:
         from geox_mcp.render_well_panel_petro import render_interpreted_panel
+
+        is_demo = _is_demo_well_id(well_id or "")
+        demo_entry = _resolve_demo_entry(well_id or "")
+        data_class = (demo_entry or {}).get("data_class") or ("DEMO" if is_demo else "MEASURED")
 
         panel = render_interpreted_panel(
             well_id=well_id,
             session_id=session_id,
             actor_id=actor_id,
         )
+        # Strip accidental seal language from panel if demo
+        if isinstance(panel, dict) and is_demo:
+            panel = {**panel, "seal_status": "NOT_SEALED", "authority_claim": "ADVISORY"}
+
         return {
             "tool": "geox_well_desk",
             "mode": "publish",
             "well_id": well_id,
             "status": "published",
             "panel": panel,
+            "data_class": data_class,
+            "authority_claim": "ADVISORY",
+            "seal_status": "NOT_SEALED",
+            "output_class": "DEMO_FIXTURE" if is_demo else "COMPUTED",
+            "epistemic": {
+                "note": "Publish is ADVISORY witness export — not arifOS SEAL",
+                "seal_status": "NOT_SEALED",
+            },
+            "session_id": session_id,
+            "actor_id": actor_id,
+            "trace_id": trace_id,
         }
     except Exception as e:
         return {
@@ -436,6 +571,111 @@ async def geox_well_desk_publish(
             "well_id": well_id,
             "status": "error",
             "error": str(e),
+            "authority_claim": "ADVISORY",
+            "seal_status": "NOT_SEALED",
+        }
+
+
+async def geox_well_desk_petro(
+    well_id: str = "",
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
+) -> dict:
+    """Run lem_inference-style petro on loaded LAS curves (Batch B G1.3).
+
+    Uses geox_petrophysics(mode=lem_inference) when curves resolve.
+    Returns ADVISORY envelope — never SEAL.
+    """
+    loaded = _load_well_curves_for_ui(well_id or "")
+    if loaded.get("status") != "loaded" or not loaded.get("curves") or not loaded.get("depths"):
+        return {
+            "ok": False,
+            "tool": "geox_well_desk",
+            "mode": "petro",
+            "well_id": well_id,
+            "error_class": "NO_LAS_DATA",
+            "message": loaded.get("error") or "No curves for petro",
+            "authority_claim": "ADVISORY",
+            "seal_status": "NOT_SEALED",
+        }
+
+    curves = loaded["curves"]
+    # Map RES → RT for lem if needed
+    lem_curves = {
+        "GR": curves.get("GR") or [],
+        "RT": curves.get("RES") or curves.get("RT") or [],
+        "RHOB": curves.get("RHOB") or [],
+        "NPHI": curves.get("NPHI") or [],
+        "DT": curves.get("DT") or [],
+    }
+    # Drop empty
+    lem_curves = {k: v for k, v in lem_curves.items() if v}
+    depth_m = loaded["depths"]
+
+    try:
+        from geox_mcp.tools.lem_predict import LEMPredictRequest, geox_lem_predict
+
+        # Align curve lengths to depth
+        n = len(depth_m)
+        aligned = {}
+        for k, v in lem_curves.items():
+            if len(v) == n:
+                aligned[k] = v
+            elif len(v) > n:
+                aligned[k] = v[:n]
+            else:
+                continue
+        if "GR" not in aligned and "RHOB" not in aligned:
+            return {
+                "ok": False,
+                "tool": "geox_well_desk",
+                "mode": "petro",
+                "well_id": well_id,
+                "error_class": "INSUFFICIENT_CURVES",
+                "message": f"Need GR/RHOB for petro; have {list(lem_curves.keys())}",
+                "authority_claim": "ADVISORY",
+                "seal_status": "NOT_SEALED",
+            }
+
+        req = LEMPredictRequest(
+            well_id=well_id or "UNKNOWN",
+            curves=aligned,
+            depth_m=depth_m,
+            depth_top_m=depth_m[0] if depth_m else None,
+            depth_bot_m=depth_m[-1] if depth_m else None,
+            target_properties=["porosity", "sw", "lithology"],
+            rw_ohm_m=0.05,
+            rho_matrix_g_cc=2.65,
+            rho_fluid_g_cc=1.0,
+            actor_id=actor_id,
+            session_id=session_id,
+        )
+        result = await geox_lem_predict(req)
+        return {
+            "ok": True,
+            "tool": "geox_well_desk",
+            "mode": "petro",
+            "well_id": well_id,
+            "data_class": loaded.get("data_class"),
+            "provenance_badge": loaded.get("provenance_badge"),
+            "authority_claim": "ADVISORY",
+            "seal_status": "NOT_SEALED",
+            "output_class": "COMPUTED_DEMO" if loaded.get("provenance_badge") else "COMPUTED",
+            "petro": result,
+            "session_id": session_id,
+            "actor_id": actor_id,
+            "trace_id": trace_id,
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "tool": "geox_well_desk",
+            "mode": "petro",
+            "well_id": well_id,
+            "error": str(e),
+            "authority_claim": "ADVISORY",
+            "seal_status": "NOT_SEALED",
         }
 
 
@@ -450,4 +690,5 @@ __all__ = [
     "geox_well_desk",
     "geox_well_desk_open",
     "geox_well_desk_publish",
+    "geox_well_desk_petro",
 ]

@@ -145,6 +145,46 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "html_path": "apps/geox-mcp-visual/index.html",
         "external_url": "https://geox.arif-fazil.com/apps/geox-mcp-visual/",
     },
+    "gravmag_studio": {
+        "uri": "ui://geox/gravmag-studio",
+        "title": "GEOX GravMag Studio",
+        "description": "Gravity/magnetics studio — preview heatmaps and field interpretation",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",
+        "html_path": "src/geox_mcp/ui/static/gravmag_studio.html",
+        "external_url": "https://geox.arif-fazil.com/apps/geox-mcp-visual/",
+    },
+    "workspace_v1": {
+        "uri": "ui://geox/workspace-v1",
+        "title": "GEOX Workspace",
+        "description": "Persistent basin/play/well workspace context viewer",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",
+        "html_path": "apps/workbench-v1.html",
+        "external_url": "https://geox.arif-fazil.com/apps/workbench-v1.html",
+    },
+    "workbench_v1": {
+        "uri": "ui://geox/workbench-v1",
+        "title": "GEOX Workbench",
+        "description": "Map/workbench shell for earth map tools",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",
+        "html_path": "apps/workbench-v1.html",
+        "external_url": "https://geox.arif-fazil.com/apps/workbench-v1.html",
+    },
+    "prospect_ui": {
+        "uri": "ui://geox/prospect-ui",
+        "title": "GEOX Prospect UI",
+        "description": "Prospect evaluation UI (alias of Prospect Studio shell)",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",
+        "html_path": "apps/prospect-ui/index.html",
+        "external_url": "https://geox.arif-fazil.com/apps/prospect-ui/",
+    },
     "catalog": {
         "uri": "ui://geox/catalog",
         "title": "GEOX Skills Catalog",
@@ -551,8 +591,13 @@ _app_to_tool: dict[str, str] = {
     "prospect_studio": "geox_prospect",
     "risk_console": "geox_claim",
     # H1 P0: Map remaining apps to their primary tools
-    "visual_hub": "geox_surface_status",
+    "visual_hub": "geox_visual_understand",
     "catalog": "geox_surface_status",
+    # Batch F: former zero-bound actives
+    "gravmag_studio": "geox_gravmag_studio",
+    "workspace_v1": "geox_workspace",
+    "workbench_v1": "geox_map_layers_list",
+    "prospect_ui": "geox_prospect",
 }
 
 # H1 P0: Additional tool-to-app assignments for tools without their own app
@@ -586,13 +631,16 @@ _tool_app_fallback: dict[str, str] = {
     "geox_geomechanics": "geoprobe",
     "geox_subsurface_model": "earth_volume",
     "geox_gravmag_studio": "geoprobe",
-    # H2: Workspace tool → Visual Hub
-    "geox_workspace": "visual_hub",
+    # H2: Workspace tool → dedicated workspace shell (Batch F)
+    "geox_workspace": "workspace_v1",
     # Bridge → Prospect Studio
     "geox_to_wealth_bridge": "geoprobe",
     # PR3: visual cognition → visual hub
     "geox_visual_understand": "visual_hub",
     "geox_visual_generate_hypotheses": "visual_hub",
+    # Batch F bindings
+    "geox_gravmag_studio": "gravmag_studio",
+    "geox_surface_status": "catalog",
 }
 
 
