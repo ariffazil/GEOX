@@ -679,6 +679,12 @@ def create_app_resource(app_id: str, html_content: str | None = None) -> dict[st
     if html_content is None:
         html_content = load_app_html(app_id)
 
+    resource_type = (
+        "externalUrl"
+        if (app.get("external_url") and resolve_html_path(app) is None and html_content is None)
+        else "rawHtml"
+    )
+
     try:
         # Prefer on-disk HTML even if marked externalUrl historically
         if html_content is None and resolve_html_path(app) is not None:
