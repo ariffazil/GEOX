@@ -151,7 +151,8 @@ async def test_06_well_witness_three_channel_return():
     """PR2: geox_well_desk open returns content + structuredContent + meta.ui."""
     from fastmcp.tools import ToolResult
 
-    result = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": "A10"})
+    # DEMO-KINABALU is fixture-backed (clean clone + CI); A10 is not earth-truth LAS
+    result = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": "DEMO-KINABALU"})
     assert result is not None
 
     # FastMCP ToolResult or converted CallToolResult
@@ -179,7 +180,10 @@ async def test_06_well_witness_three_channel_return():
 
     # structured channel — hydrate keys for p0-viz
     assert isinstance(sc, dict)
-    assert sc.get("well_id") == "A10" or sc.get("summary", {}).get("well_id") == "A10"
+    assert sc.get("well_id") in ("DEMO-KINABALU", "A10") or sc.get("summary", {}).get("well_id") in (
+        "DEMO-KINABALU",
+        "A10",
+    )
     assert "epistemic" in sc or "summary" in sc
 
     # meta channel — UI binding
@@ -232,7 +236,7 @@ async def test_08_all_tools_have_four_annotations_and_ui_binding():
 async def test_09_golden_prompts_direct_indirect_negative():
     """PR3 host-path golden prompts (in-process host simulation).
 
-    DIRECT  — open Well Witness for A10 (evidence lane; no arifOS session)
+    DIRECT  — open Well Witness for DEMO-KINABALU (fixture LAS; no arifOS session)
     INDIRECT — tools/list shows petrophysics UI binding (call path needs live session)
     NEGATIVE — missing well_id → isError + readable text (no crash)
     """
@@ -253,12 +257,12 @@ async def test_09_golden_prompts_direct_indirect_negative():
                 texts.append(t)
         return texts, sc, meta, err
 
-    # DIRECT
-    direct = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": "A10"})
+    # DIRECT — fixture-backed demo id (works on clean clone + CI)
+    direct = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": "DEMO-KINABALU"})
     texts, sc, meta, err = _channels(direct)
     assert not err
     assert texts
-    assert sc.get("well_id") == "A10" or sc.get("summary", {}).get("well_id") == "A10"
+    assert sc.get("well_id") == "DEMO-KINABALU" or sc.get("summary", {}).get("well_id") == "DEMO-KINABALU"
     assert (meta.get("ui") or {}).get("resourceUri", "").startswith("ui://geox/well-desk")
     res = await mcp.read_resource("ui://geox/well-desk")
     assert "ui/initialize" in res.contents[0].content or "tool-result" in res.contents[0].content
