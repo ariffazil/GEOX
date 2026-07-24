@@ -1,12 +1,13 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": 105637.622,
+  "generated_at": "2026-07-24T09:54:30.795219+00:00",
   "organ": "GEOX",
   "total_canonical_tools": 32,
   "total_ui_resources": 23,
   "active_ui_resources": 19,
   "deprecated_ui_resources": 3,
   "planned_ui_resources": 1,
+  "active_zero_bound": 0,
   "ui_resources": [
     {
       "id": "analog-digitizer",
@@ -16,7 +17,9 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 3835,
       "content_hash": "sha256:87e6ed4986d3d482",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_well_ingest"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -36,7 +39,10 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 986,
       "content_hash": "sha256:87c69cea12877bd7",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_seismic_compute",
+        "geox_seismic_interpret"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -106,6 +112,7 @@
       "content_hash": "sha256:5cd8639a8ea977df",
       "bound_tools": [
         "geox_map_export_package",
+        "geox_map_layers_list",
         "geox_map_render_preview",
         "geox_map_scene_plan"
       ],
@@ -131,6 +138,7 @@
       "bound_tools": [
         "geox_deep_time_state",
         "geox_seismic_compute",
+        "geox_seismic_interpret",
         "geox_subsurface_model"
       ],
       "csp_domains": [
@@ -154,6 +162,7 @@
       "content_hash": "sha256:6b771f45c0ebd037",
       "bound_tools": [
         "geox_geomechanics",
+        "geox_prospect",
         "geox_to_wealth_bridge"
       ],
       "csp_domains": [
@@ -175,7 +184,10 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 1023,
       "content_hash": "sha256:dc9a14e5b99f7842",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_basin",
+        "geox_deep_time_state"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -196,9 +208,9 @@
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
       "bound_tools": [
-        "geox_visual_understand",
+        "geox_surface_status",
         "geox_visual_generate_hypotheses",
-        "geox_surface_status"
+        "geox_visual_understand"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -264,9 +276,11 @@
       "content_bytes": 34295,
       "content_hash": "sha256:b7b25d6b5c9c0e25",
       "bound_tools": [
+        "geox_claim",
         "geox_contradiction_scan",
         "geox_evidence",
-        "geox_falsify"
+        "geox_falsify",
+        "geox_prospect"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -280,7 +294,7 @@
       "deprecation_note": null
     },
     {
-      "id": "prospect-studio",
+      "id": "prospect-ui",
       "uri": "ui://geox/prospect-studio",
       "title": "GEOX Prospect Studio",
       "status": "active",
@@ -288,7 +302,9 @@
       "content_bytes": 35137,
       "content_hash": "sha256:6b771f45c0ebd037",
       "bound_tools": [
-        "geox_prospect"
+        "geox_basin",
+        "geox_prospect",
+        "geox_subsurface_model"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -310,7 +326,9 @@
       "content_bytes": 35137,
       "content_hash": "sha256:6b771f45c0ebd037",
       "bound_tools": [
-        "geox_prospect"
+        "geox_basin",
+        "geox_prospect",
+        "geox_subsurface_model"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -355,6 +373,7 @@
       "content_bytes": 21894,
       "content_hash": "sha256:011cd775e36dc03f",
       "bound_tools": [
+        "geox_seismic_compute",
         "geox_seismic_ingest",
         "geox_seismic_interpret"
       ],
@@ -377,7 +396,10 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 1037,
       "content_hash": "sha256:525cd1a31875071c",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_seismic_compute",
+        "geox_seismic_interpret"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -398,6 +420,7 @@
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
       "bound_tools": [
+        "geox_surface_status",
         "geox_visual_generate_hypotheses",
         "geox_visual_understand"
       ],
@@ -424,6 +447,7 @@
         "geox_lem_predict",
         "geox_petrophysics",
         "geox_well_desk",
+        "geox_well_desurvey",
         "geox_well_ingest",
         "geox_well_qc"
       ],
