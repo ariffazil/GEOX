@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": 105153.013,
+  "generated_at": 105637.622,
   "organ": "GEOX",
   "total_canonical_tools": 32,
-  "total_ui_resources": 22,
-  "active_ui_resources": 18,
+  "total_ui_resources": 23,
+  "active_ui_resources": 19,
   "deprecated_ui_resources": 3,
   "planned_ui_resources": 1,
   "ui_resources": [
@@ -106,7 +106,6 @@
       "content_hash": "sha256:5cd8639a8ea977df",
       "bound_tools": [
         "geox_map_export_package",
-        "geox_map_layers_list",
         "geox_map_render_preview",
         "geox_map_scene_plan"
       ],
@@ -155,7 +154,6 @@
       "content_hash": "sha256:6b771f45c0ebd037",
       "bound_tools": [
         "geox_geomechanics",
-        "geox_gravmag_studio",
         "geox_to_wealth_bridge"
       ],
       "csp_domains": [
@@ -212,12 +210,14 @@
     {
       "id": "gravmag-studio",
       "uri": "ui://geox/gravmag-studio",
-      "title": "_alias_handler",
+      "title": "GEOX GravMag Studio",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 32029,
       "content_hash": "sha256:dc40fb98f565881f",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_gravmag_studio"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -281,9 +281,7 @@
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 35137,
       "content_hash": "sha256:6b771f45c0ebd037",
-      "bound_tools": [
-        "geox_prospect"
-      ],
+      "bound_tools": [],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -298,12 +296,14 @@
     {
       "id": "prospect-ui",
       "uri": "ui://geox/prospect-ui",
-      "title": "geox_ui_prospect_ui",
+      "title": "GEOX Prospect UI",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 35137,
       "content_hash": "sha256:6b771f45c0ebd037",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_prospect"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -391,8 +391,7 @@
       "content_hash": "sha256:9c4ced2659a2c670",
       "bound_tools": [
         "geox_visual_generate_hypotheses",
-        "geox_visual_understand",
-        "geox_workspace"
+        "geox_visual_understand"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -433,6 +432,28 @@
     },
     {
       "id": "workbench-v1",
+      "uri": "ui://geox/workbench-v1",
+      "title": "GEOX Workbench",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 17470,
+      "content_hash": "sha256:5cd8639a8ea977df",
+      "bound_tools": [
+        "geox_map_layers_list"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "workbench-v1",
       "uri": "ui://geox/workbench-v1.html",
       "title": "geox_workbench",
       "status": "active",
@@ -454,12 +475,14 @@
     {
       "id": "workspace-v1",
       "uri": "ui://geox/workspace-v1",
-      "title": "_alias_handler",
+      "title": "GEOX Workspace",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 11477,
-      "content_hash": "sha256:563493114642f55e",
-      "bound_tools": [],
+      "content_bytes": 17470,
+      "content_hash": "sha256:5cd8639a8ea977df",
+      "bound_tools": [
+        "geox_workspace"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",

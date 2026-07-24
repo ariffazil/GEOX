@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "organ": "GEOX",
+  "updated": "2026-07-24",
+  "policy": "DEMO wells only. NEVER treat as earth truth. F2 TRUTH floor.",
+  "wells": [
+    {
+      "well_id": "DEMO-KINABALU",
+      "aliases": ["DEMO_KINABALU", "DEMO-01", "DEMO"],
+      "las_path": "fixtures/geox_smoke_test.las",
+      "data_class": "DEMO",
+      "geography": "Generic smoke fixture (not a real field)",
+      "basin": null,
+      "synth_allowed": true,
+      "notes": "Primary readiness test well ID"
+    },
+    {
+      "well_id": "DEMO_WELL_A",
+      "aliases": ["DEMO_SANDAKAN_A", "DEMO-SANDAKAN-A", "DEMO_WELL_A_SANDAKAN"],
+      "las_path": "fixtures/_DEMO_SYNTHETIC/DEMO_WELL_A_SANDAKAN.las",
+      "data_class": "DEMO",
+      "geography": "Sabah-style synthetic (Sandakan Fm window) — NOT real field data",
+      "basin": "Sabah (synthetic)",
+      "synth_allowed": false,
+      "notes": "On-disk synthetic LAS with GR/RT/RHOB/NPHI/DT"
+    },
+    {
+      "well_id": "DEMO_WELL_B",
+      "aliases": ["DEMO_SANDAKAN_B", "DEMO-SANDAKAN-B", "DEMO_WELL_B_SANDAKAN"],
+      "las_path": "fixtures/_DEMO_SYNTHETIC/DEMO_WELL_B_SANDAKAN.las",
+      "data_class": "DEMO",
+      "geography": "Sabah-style synthetic offset well — NOT real field data",
+      "basin": "Sabah (synthetic)",
+      "synth_allowed": false,
+      "notes": "Companion well for multi-well demos"
+    },
+    {
+      "well_id": "DEMO-VOLVE",
+      "aliases": ["VOLVE_15_9_19", "15/9-19", "DEMO_VOLVE"],
+      "las_path": "data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+      "data_class": "OPEN_OSS",
+      "geography": "North Sea (Equinor Volve) — NOT SE Asia",
+      "basin": "North Sea",
+      "synth_allowed": false,
+      "notes": "Real open LAS; geography must never be labeled Malay Basin"
+    },
+    {
+      "well_id": "DEMO-SMOKE",
+      "aliases": ["SMOKE", "QQQ_FFF"],
+      "las_path": "fixtures/QQQ_FFF_test_well.las",
+      "data_class": "DEMO",
+      "geography": "Test fixture",
+      "basin": null,
+      "synth_allowed": true,
+      "notes": "Secondary smoke fixture"
+    },
+    {
+      "well_id": "MALAY_DEMO_01",
+      "aliases": ["MALAY-DEMO-01"],
+      "las_path": "fixtures/_DEMO_SYNTHETIC/DEMO_WELL_A_SANDAKAN.las",
+      "data_class": "SYNTHETIC_LABEL",
+      "geography": "Malay-style label only — uses Sandakan synthetic LAS as stand-in",
+      "basin": "Malay Basin (label only)",
+      "synth_allowed": false,
+      "notes": "No public Tapis LAS; do not claim Malay MEASURED data"
+    }
+  ]
+}
