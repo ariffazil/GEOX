@@ -37,7 +37,7 @@ def validate_k_taper(
         return {"status": "INCONCLUSIVE", "verdict": "INCONCLUSIVE", "reason": "Empty distances/displacements or zero half_length"}
 
     errors = []
-    for dist, disp in zip(dists, disps):
+    for dist, disp in zip(dists, disps, strict=False):
         qn = dist / half_length
         if qn > 1.05:
             return {

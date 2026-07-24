@@ -30,10 +30,9 @@ async def main() -> None:
     # Load apps.json definitions if available
     apps_meta: dict[str, Any] = {}
     if APPS_JSON_PATH.exists():
-        with open(APPS_JSON_PATH, "r", encoding="utf-8") as f:
+        with open(APPS_JSON_PATH, encoding="utf-8") as f:
             apps_meta = json.load(f)
 
-    apps_by_id = {app["id"]: app for app in apps_meta.get("apps", [])}
     apps_by_uri = {app["uri"]: app for app in apps_meta.get("apps", [])}
 
     resources = await mcp.list_resources()

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" data-ring="ORGAN" data-organ="geox">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOX for Agents · MCP Tool Surface</title>
+    <meta name="description" content="GEOX agent surface — MCP tool registry, JSON contracts, transport endpoints, and live health probe.">
+    <link rel="canonical" href="https://geox.arif-fazil.com/agents.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/_shared/design-system/tokens.css">
+    <link rel="stylesheet" href="https://arifosmcp.arif-fazil.com/arifos-theme.css">
+
+    <style>
+        :root {
+            --bg-dark: #07070a;
+            --bg-card: #0d0d14;
+            --border-glow: rgba(16, 185, 129, 0.15);
+            --border-dim: rgba(255, 255, 255, 0.05);
+            --amber-earth: #f59e0b;
+            --emerald-wealth: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.35);
+            --cyan-gov: #06b6d4;
+            --text-high: #f4f4f5;
+            --text-med: #a1a1aa;
+            --text-low: #52525b;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-high);
+            font-family: var(--font-sans);
+            line-height: 1.65;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 10% 90%, rgba(16, 185, 129, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 90% 10%, rgba(245, 158, 11, 0.03) 0%, transparent 45%),
+                linear-gradient(to bottom, var(--bg-dark), #0b0b10);
+            background-attachment: fixed;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+        header {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-dim);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(7, 7, 10, 0.85);
+        }
+        .logo-group { display: flex; align-items: center; gap: 0.75rem; }
+        .logo-text {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, var(--emerald-wealth));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo-sep { color: var(--text-low); font-family: var(--font-mono); }
+        .logo-sub {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: var(--text-med);
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-med);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--emerald-wealth); }
+        .nav-links a.active { color: var(--emerald-wealth); }
+
+        /* Hero */
+        .hero {
+            padding: 5rem 0 3rem;
+            position: relative;
+        }
+        .hero::before {
+            content: "{ }";
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16rem;
+            font-weight: 900;
+            color: rgba(16, 185, 129, 0.025);
+            font-family: var(--font-mono);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--emerald-wealth);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 60%, var(--emerald-wealth) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-sub {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            color: var(--text-med);
+            max-width: 720px;
+            line-height: 1.55;
+        }
+
+        section { padding: 2rem 0; }
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        h2 .num {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--emerald-wealth);
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+        h3 {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-high);
+            margin-bottom: 0.5rem;
+        }
+        p { color: var(--text-med); font-size: 0.95rem; margin-bottom: 0.85rem; }
+        p strong { color: var(--text-high); font-weight: 600; }
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-dim);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            color: var(--emerald-wealth);
+        }
+
+        /* Endpoint cards */
+        .endpoints {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        @media (max-width: 900px) { .endpoints { grid-template-columns: 1fr; } }
+        .endpoint {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+        }
+        .endpoint .method {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--emerald-wealth);
+            margin-bottom: 0.5rem;
+        }
+        .endpoint .path {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: var(--text-high);
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+        .endpoint .desc { font-size: 0.85rem; color: var(--text-med); margin-bottom: 0; }
+
+        /* Tools grid */
+        .tool-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.4rem 0.85rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-dim);
+            background: transparent;
+            color: var(--text-med);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover { color: var(--emerald-wealth); border-color: rgba(16, 185, 129, 0.3); }
+        .filter-btn.active {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.4);
+            color: var(--emerald-wealth);
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.85rem;
+        }
+        @media (max-width: 900px) { .tools-grid { grid-template-columns: 1fr; } }
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 1.1rem 1.25rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .tool-card:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+            transform: translateY(-1px);
+        }
+        .tool-card .name {
+            font-family: var(--font-mono);
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--emerald-wealth);
+            margin-bottom: 0.45rem;
+        }
+        .tool-card .desc {
+            font-size: 0.82rem;
+            color: var(--text-med);
+            line-height: 1.45;
+            margin-bottom: 0.75rem;
+        }
+        .tool-card .meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .tool-card .badge {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.04);
+            color: var(--text-low);
+            border: 1px solid var(--border-dim);
+        }
+        .tool-card .badge.lane-observe { color: var(--emerald-wealth); border-color: rgba(16, 185, 129, 0.2); }
+        .tool-card .badge.lane-reason { color: var(--cyan-gov); border-color: rgba(6, 182, 212, 0.2); }
+        .tool-card .badge.lane-compute { color: var(--amber-earth); border-color: rgba(245, 158, 11, 0.2); }
+        .tool-card .badge.lane-judgment { color: #fb7175; border-color: rgba(251, 113, 117, 0.2); }
+        .tool-card .badge.lane-discovery { color: var(--text-med); }
+
+        /* Code block */
+        pre {
+            background-color: #050508;
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-high);
+            overflow-x: auto;
+            box-shadow: inset 0 3px 12px rgba(0,0,0,0.5);
+            line-height: 1.55;
+            margin: 1rem 0;
+        }
+        pre .key { color: var(--emerald-wealth); }
+        pre .str { color: var(--amber-earth); }
+        pre .com { color: var(--text-low); font-style: italic; }
+
+        /* Health widget */
+        .health-strip {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        .health-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 220px;
+        }
+        .health-card .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--amber-earth);
+            animation: pulse 1.5s infinite;
+        }
+        .health-card.online .dot { background: #2ed573; box-shadow: 0 0 10px #2ed573; animation: none; }
+        .health-card.offline .dot { background: #ff4757; animation: none; }
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+        .health-card .label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-med);
+        }
+        .health-card .val {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--text-high);
+            font-size: 0.95rem;
+        }
+
+        .contract-box {
+            background: rgba(13, 13, 20, 0.6);
+            border: 1px solid var(--border-dim);
+            border-left: 3px solid var(--emerald-wealth);
+            border-radius: 8px;
+            padding: 1.5rem 1.75rem;
+            margin: 1.5rem 0;
+        }
+
+        footer {
+            padding: 3rem 0 4rem;
+            border-top: 1px solid var(--border-dim);
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-low);
+            margin-top: 4rem;
+        }
+        .federation-seal {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--emerald-wealth);
+            letter-spacing: 4px;
+            margin-bottom: 0.8rem;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        .footer-links a {
+            color: var(--text-med);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+        }
+        .footer-links a:hover { color: var(--emerald-wealth); }
+
+        /* ZEN PULSE — Sacred Navigation Law */
+        .zen-pulse {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+            background: rgba(13, 13, 20, 0.7);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 0.85rem 0;
+            margin: 1.5rem 0;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+        }
+        @media (max-width: 768px) { .zen-pulse { grid-template-columns: 1fr; } }
+        .zp-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0 1.25rem;
+            border-left: 1px solid var(--border-dim);
+        }
+        .zp-item:first-child { border-left: none; }
+        @media (max-width: 768px) { .zp-item { padding: 0.35rem 0; border-left: none; } }
+        .zp-ask {
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.62rem;
+            white-space: nowrap;
+        }
+        .zp-val {
+            color: var(--text-high);
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+        .zp-val.gold { color: var(--amber-earth); }
+        .zp-val em { color: var(--emerald-wealth); font-style: normal; }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <header>
+            <div class="logo-group">
+                <span class="logo-text">GEOX</span>
+                <span class="logo-sep">|</span>
+                <span class="logo-sub">AGENT SURFACE</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="why.html">Why</a>
+                <a href="constitution.html">Constitution</a>
+                <a href="agents.html" class="active">Agents</a>
+            </nav>
+        </header>
+
+        <!-- ZEN PULSE -->
+        <div class="zen-pulse" style="margin: 0 0 1rem 0;">
+            <div class="zp-item"><span class="zp-ask">Where am I?</span><span class="zp-val">GEOX · Agent Surface</span></div>
+            <div class="zp-item"><span class="zp-ask">Why care?</span><span class="zp-val gold">You want to <em>call</em> GEOX from your agent.</span></div>
+            <div class="zp-item"><span class="zp-ask">What next?</span><span class="zp-val"><a href="#sample" style="color: var(--emerald-wealth); text-decoration: none;">Copy a sample call ↓</a></span></div>
+        </div>
+
+        <section class="hero">
+            <span class="hero-eyebrow">MCP · JSON contracts · live</span>
+            <h1>Call GEOX from your agent</h1>
+            <p class="hero-sub">You want to ingest wells, compute petrophysics, or file claims — without hallucinating. Here's the API and the failure contract.</p>
+
+            <div class="health-strip" id="health-strip" style="margin-top: 2rem;">
+                <div class="health-card" id="health-card">
+                    <span class="dot"></span>
+                    <div>
+                        <div class="label">GEOX Server</div>
+                        <div class="val" id="health-text">PROBING…</div>
+                    </div>
+                </div>
+                <div class="health-card">
+                    <span class="dot" id="tool-count-dot"></span>
+                    <div>
+                        <div class="label">Public tools</div>
+                        <div class="val" id="tool-count">— live witness —</div>
+                    </div>
+                </div>
+                <div class="health-card">
+                    <span class="dot"></span>
+                    <div>
+                        <div class="label">Endpoint</div>
+                        <div class="val">/mcp · :8081</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">01</span> Endpoints</h2>
+            <p>All GEOX tools are exposed through a single Model Context Protocol surface. Transport: HTTP and stdio. Auth: session-token gated at the federation boundary.</p>
+
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="method">MCP · POST</div>
+                    <div class="path">/mcp</div>
+                    <p class="desc">Primary tool surface. <code>tools/list</code>, <code>tools/call</code>, <code>resources/list</code>.</p>
+                </div>
+                <div class="endpoint">
+                    <div class="method">GET</div>
+                    <div class="path">/health</div>
+                    <p class="desc">Liveness + version + tool count. Witness endpoint — only valid health source.</p>
+                </div>
+                <div class="endpoint">
+                    <div class="method">GET</div>
+                    <div class="path">/tools/list</div>
+                    <p class="desc">Authoritative tool inventory. Snapshots to <code>CANONICAL_PUBLIC_SURFACE.json</code>.</p>
+                </div>
+            </div>
+
+            <div class="contract-box">
+                <strong>Public URL:</strong> <code>https://geox.arif-fazil.com/mcp</code><br>
+                <strong>Local dev:</strong> <code>http://localhost:8081/mcp</code><br>
+                <strong>Stdio:</strong> <code>python -m geox_mcp.server</code> (FastMCP 3.4.2)
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">02</span> Sample Invocations</h2>
+
+            <h3>Ingest a well log</h3>
+<pre><code><span class="com">// MCP tool call — tools/call</span>
+{
+  <span class="key">"method"</span>: <span class="str">"tools/call"</span>,
+  <span class="key">"params"</span>: {
+    <span class="key">"name"</span>: <span class="str">"geox_well_ingest"</span>,
+    <span class="key">"arguments"</span>: {
+      <span class="key">"mode"</span>: <span class="str">"auto"</span>,
+      <span class="key">"source_uri"</span>: <span class="str">"/data/wells/marmousi-1.las"</span>,
+      <span class="key">"well_id"</span>: <span class="str">"MARMOUSI-1"</span>,
+      <span class="key">"standardize_curves"</span>: <span class="key">true</span>,
+      <span class="key">"qc_strict"</span>: <span class="key">true</span>
+    }
+  }
+}</code></pre>
+
+            <h3>Compute petrophysics</h3>
+<pre><code>{
+  <span class="key">"method"</span>: <span class="str">"tools/call"</span>,
+  <span class="key">"params"</span>: {
+    <span class="key">"name"</span>: <span class="str">"geox_petrophysics"</span>,
+    <span class="key">"arguments"</span>: {
+      <span class="key">"mode"</span>: <span class="str">"generate"</span>,
+      <span class="key">"well_id"</span>: <span class="str">"MARMOUSI-1"</span>,
+      <span class="key">"depth_top_m"</span>: <span class="key">2200</span>,
+      <span class="key">"depth_bot_m"</span>: <span class="key">2400</span>,
+      <span class="key">"archie_a"</span>: <span class="key">1.0</span>,
+      <span class="key">"archie_m"</span>: <span class="key">2.0</span>,
+      <span class="key">"archie_n"</span>: <span class="key">2.0</span>,
+      <span class="key">"rw_ohm_m"</span>: <span class="key">0.05</span>
+    }
+  }
+}</code></pre>
+
+            <h3>Create an interpretation claim</h3>
+<pre><code>{
+  <span class="key">"method"</span>: <span class="str">"tools/call"</span>,
+  <span class="key">"params"</span>: {
+    <span class="key">"name"</span>: <span class="str">"geox_claim"</span>,
+    <span class="key">"arguments"</span>: {
+      <span class="key">"mode"</span>: <span class="str">"create"</span>,
+      <span class="key">"claim_text"</span>: <span class="str">"Interval 2200-2400 m MD may be clean sand; candidate net reservoir."</span>,
+      <span class="key">"claim_type"</span>: <span class="str">"interpretation"</span>,
+      <span class="key">"truth_class"</span>: <span class="str">"INTERPRETATION"</span>,
+      <span class="key">"evidence_ids"</span>: [<span class="str">"petro:MARMOUSI-1:2300"</span>, <span class="str">"logs:MARMOUSI-1:GR"</span>],
+      <span class="key">"uncertainty_p50"</span>: <span class="key">0.62</span>,
+      <span class="key">"uncertainty_p90"</span>: <span class="key">0.85</span>,
+      <span class="key">"alternatives"</span>: [
+        {<span class="key">"text"</span>: <span class="str">"Tight streak — log effect only"</span>, <span class="key">"p"</span>: <span class="key">0.18</span>},
+        {<span class="key">"text"</span>: <span class="str">"Fresh water — low resistivity"</span>, <span class="key">"p"</span>: <span class="key">0.12</span>},
+        {<span class="key">"text"</span>: <span class="str">"Processing artifact"</span>, <span class="key">"p"</span>: <span class="key">0.08</span>}
+      ]
+    }
+  }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2><span class="num">03</span> Tool Registry</h2>
+            <p>The 31 public tools below match the SOT snapshot at <code>CANONICAL_PUBLIC_SURFACE.json</code>. The live count returned by <code>:8081/health</code> (shown in the hero strip) is the authoritative witness — the list below may lag by a release.</p>
+
+            <div class="tool-filters">
+                <button class="filter-btn active" data-filter="all">All (SOT snapshot)</button>
+                <button class="filter-btn" data-filter="evidence">observe · evidence</button>
+                <button class="filter-btn" data-filter="reasoning">reason · reasoning</button>
+                <button class="filter-btn" data-filter="judgment">judgment · judgment</button>
+                <button class="filter-btn" data-filter="discovery">discovery</button>
+            </div>
+
+            <div class="tools-grid" id="tools-grid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="num">04</span> Failure Contract</h2>
+            <p>Every GEOX tool returns one of three outcomes. There is no fourth "successfully failed" state.</p>
+
+            <div class="contract-box">
+                <strong style="color: var(--emerald-wealth);">PASS</strong> — claim grounded, evidence attached, alternatives registered, uncertainty banded.<br>
+                <strong style="color: var(--amber-earth);">888_HOLD</strong> — claim awaits human ratification. No irreversible action may proceed.<br>
+                <strong style="color: #fb7175;">VOID</strong> — claim cannot be grounded. Returns the contradiction or missing evidence.
+            </div>
+
+            <p>When you call a tool, you are not asking GEOX "what do you think". You are asking it "show me the evidence". The tool will return either the evidence, a HOLD, or a VOID — never an ungrounded assertion.</p>
+        </section>
+
+        <section>
+            <h2><span class="num">05</span> Machine-Readable</h2>
+            <p>For agents that prefer reading structured documents over rendered HTML:</p>
+
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="method">TXT</div>
+                    <div class="path">/llms.txt</div>
+                    <p class="desc">Compact tool inventory + reasoning logic, formatted for LLM ingestion.</p>
+                </div>
+                <div class="endpoint">
+                    <div class="method">JSON</div>
+                    <div class="path">CANONICAL_PUBLIC_SURFACE.json</div>
+                    <p class="desc">Full schema, governance flags, action_class per tool.</p>
+                </div>
+                <div class="endpoint">
+                    <div class="method">MD</div>
+                    <div class="path">/docs/MCP_TOOL_REFERENCE.md</div>
+                    <p class="desc">Per-tool reference with examples, parameters, and return shapes.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="federation-seal">DITEMPA BUKAN DIBERI</div>
+            <p>GEOX · Earth Evidence Operating System · arifOS federation</p>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="why.html">Why GEOX</a>
+                <a href="constitution.html">Constitution</a>
+                <a href="https://github.com/ariffazil/GEOX">Source</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // Tool registry — synced from CANONICAL_PUBLIC_SURFACE.json (read-only reference)
+        const TOOLS = [
+            { name: "geox_well_ingest", desc: "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.", lane: "evidence" },
+            { name: "geox_petrophysics", desc: "Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Archie + density methods.", lane: "reasoning" },
+            { name: "geox_seismic_ingest", desc: "SEG-Y I/O, header inspection, export.", lane: "evidence" },
+            { name: "geox_seismic_compute", desc: "Synthetic, well tie, time-depth anchor, contrast attributes, inversion.", lane: "reasoning" },
+            { name: "geox_seismic_interpret", desc: "Propose geometry, physics-gate, compare hypotheses. NOT autonomous SEAL.", lane: "reasoning" },
+            { name: "geox_subsurface_model", desc: "Joint inversion, gravity/magnetic forward, MT forward modeling.", lane: "reasoning" },
+            { name: "geox_basin", desc: "Profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, deep time, tectonic reconstruction.", lane: "reasoning" },
+            { name: "geox_sequence", desc: "Well correlation, biostrat parsing and falsification.", lane: "reasoning" },
+            { name: "geox_geomechanics", desc: "Moduli, stress polygon, pore pressure, acoustic impedance.", lane: "reasoning" },
+            { name: "geox_deep_time_state", desc: "Earth State Vector through deep time: GPTS, CO2, sea level, temperature, paleogeography.", lane: "evidence" },
+            { name: "geox_claim", desc: "Create, validate, challenge, seal, evidence, consequence, optionality, cascade, feedback integrity, truth challenge.", lane: "judgment" },
+            { name: "geox_prospect", desc: "Volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.", lane: "judgment" },
+            { name: "geox_gravmag_studio", desc: "Gravity/magnetic forward modeling and screening. ui://geox/gravmag-studio.html.", lane: "reasoning" },
+            { name: "geox_well_desk", desc: "Well desk: interactive view, publish rendered panel, render well panel. ui://geox/well-desk.", lane: "evidence" },
+            { name: "geox_surface_status", desc: "Federation-standard registry probe: tool discovery and health status.", lane: "evidence" },
+            { name: "geox_evidence", desc: "Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block.", lane: "evidence" },
+            { name: "geox_basin_backstrip", desc: "1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980.", lane: "reasoning" },
+            { name: "geox_sediment_mass_balance", desc: "Source-to-sink sediment volume and mass accounting. Peters 2012 framework.", lane: "reasoning" },
+            { name: "geox_thermal_maturity_history", desc: "Burial + heat flow + maturity modeling through time. EasyRo + TTI.", lane: "reasoning" },
+            { name: "geox_claim_graph_evaluate", desc: "Evaluate parent claim validity when child claims fail. DAG with AND/OR/WEIGHTED.", lane: "judgment" },
+            { name: "geox_falsify", desc: "Popperian falsification — Kill Matrix K001–K007 + contradiction scan.", lane: "judgment" },
+            { name: "geox_contradiction_scan", desc: "Scan claims for contradictions using 13-type ontology. Classifies severity + resolution.", lane: "judgment" },
+            { name: "geox_lem_predict", desc: "LEM inference — predict rock properties (porosity, Sw, lithology) from well logs.", lane: "reasoning" },
+            { name: "geox_to_wealth_bridge", desc: "Cross-organ bridge: GEOX prospect economics → WEALTH score_kernel input.", lane: "evidence" },
+            { name: "geox_map_export_package", desc: "Package map layers and annotations into portable formats.", lane: "reasoning" },
+            { name: "geox_visual_understand", desc: "Extract visual patterns from seismic section images using deep learning.", lane: "evidence" },
+            { name: "geox_visual_generate_hypotheses", desc: "Generate geological hypotheses across discontinuity gaps in seismic data.", lane: "reasoning" },
+            { name: "geox_map_layers_list", desc: "List available map layers and their spatial extents.", lane: "discovery" },
+            { name: "geox_map_scene_plan", desc: "Plan map scene composition: layer ordering, zoom, and annotation layout.", lane: "reasoning" },
+            { name: "geox_map_render_preview", desc: "Render preview of map scene for quality review before export.", lane: "reasoning" },
+            { name: "geox_workspace", desc: "Persistent geological context across all tools. Set basin/play/well once; every tool inherits.", lane: "evidence" }
+        ];
+
+        const grid = document.getElementById("tools-grid");
+        function renderTools(filter) {
+            const items = filter === "all" ? TOOLS : TOOLS.filter(t => t.lane === filter);
+            grid.innerHTML = items.map(t => `
+                <div class="tool-card">
+                    <div class="name">${t.name}</div>
+                    <div class="desc">${t.desc}</div>
+                    <div class="meta">
+                        <span class="badge lane-${t.lane}">${t.lane}</span>
+                        <span class="badge">MUTATE: false</span>
+                    </div>
+                </div>
+            `).join("");
+        }
+        renderTools("all");
+
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                renderTools(btn.dataset.filter);
+            });
+        });
+
+        // Health probe
+        async function probeHealth() {
+            const card = document.getElementById("health-card");
+            const text = document.getElementById("health-text");
+            try {
+                const ctrl = new AbortController();
+                const tid = setTimeout(() => ctrl.abort(), 5000);
+                const r = await fetch("/health", { signal: ctrl.signal });
+                clearTimeout(tid);
+                if (r.ok) {
+                    const j = await r.json();
+                    card.classList.add("online");
+                    const tools = j.tools_loaded ?? j.tools ?? "—";
+                    text.textContent = "ONLINE · " + tools + " tools";
+                    document.getElementById("tool-count").textContent = tools + " live";
+                    document.getElementById("tool-count-dot").style.background = "#2ed573";
+                    document.getElementById("tool-count-dot").style.boxShadow = "0 0 10px #2ed573";
+                } else {
+                    card.classList.add("offline");
+                    text.textContent = "UNHEALTHY · HTTP " + r.status;
+                }
+            } catch (e) {
+                if (e.name === "AbortError") {
+                    card.classList.add("offline");
+                    text.textContent = "OFFLINE · TIMEOUT";
+                } else {
+                    // CORS / connection error — surface honestly
+                    card.classList.add("offline");
+                    text.textContent = "UNREACHABLE · " + (e.message || "CORS").slice(0, 30);
+                }
+            }
+        }
+        probeHealth();
+        setInterval(probeHealth, 60000);
+    </script>
+</body>
+</html>

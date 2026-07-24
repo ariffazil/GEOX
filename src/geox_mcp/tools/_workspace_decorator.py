@@ -19,7 +19,8 @@ from __future__ import annotations
 
 import functools
 import logging
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 from geox_mcp.state.workspace import get_workspace
 
