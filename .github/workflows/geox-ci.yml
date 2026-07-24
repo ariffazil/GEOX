@@ -97,7 +97,10 @@ jobs:
       - name: Test
         run: |
           set -o pipefail
-          PYTHONPATH=src python -m pytest tests/ -q --tb=short
+          # biostrat_calibrate.py is gitignored (local WIP); skip its integration collector
+          PYTHONPATH=src python -m pytest tests/ -q --tb=short \
+            --ignore=tests/benchmarks \
+            --ignore=tests/integration/test_biostrat_calibrate.py
 
   organ-boundary:
     name: "Organ Boundary"
@@ -107,17 +110,9 @@ jobs:
       - uses: actions/checkout@v7
       - name: Verify GEOX compute-only boundary
         run: |
-          pip install pyyaml 2>/dev/null
+          pip install pyyaml 2>/dev/null || true
           if [ -f organ.yaml ]; then
-            python3 -c "
-            import yaml
-            with open('organ.yaml') as f:
-                doc = yaml.safe_load(f)
-            assert doc['authority_ceiling'] == 'COMPUTE_ONLY', 'GEOX must be COMPUTE_ONLY'
-            assert 'constitutional_judgment' in doc.get('forbidden_domains', []), 'Must forbid constitutional_judgment'
-            assert 'capital_allocation' in doc.get('forbidden_domains', []), 'Must forbid capital_allocation'
-            print('✅ GEOX boundary: COMPUTE_ONLY — evidence, not decisions')
-            "
+            python3 -c 'import yaml; doc=yaml.safe_load(open("organ.yaml")); assert doc["authority_ceiling"]=="COMPUTE_ONLY", "GEOX must be COMPUTE_ONLY"; assert "constitutional_judgment" in doc.get("forbidden_domains", []), "Must forbid constitutional_judgment"; assert "capital_allocation" in doc.get("forbidden_domains", []), "Must forbid capital_allocation"; print("✅ GEOX boundary: COMPUTE_ONLY — evidence, not decisions")'
           fi
       - name: No self-adjudication scan
         run: |

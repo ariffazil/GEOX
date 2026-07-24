@@ -52,10 +52,30 @@ forge: clean-temp sot-bump security-audit
 	@echo "⛓️  GEOX forge gate passed."
 
 # ── MCP Apps deploy + evidence seed (Batch C / E) ───────────────────────────
-.PHONY: seed-evidence deploy-apps readiness-test apps-catalog
+# DEMO LAS aliases are NOT committed (absolute-path symlinks break clean clones).
+# They are recreated here from tracked fixtures. Clean clone path:
+#   make deploy-apps   # or: make seed-demo-las && make seed-evidence
+.PHONY: seed-evidence seed-demo-las deploy-apps readiness-test apps-catalog
+
+# firstword = this Makefile (includes of forge.mk must not steal GEOX_ROOT)
+GEOX_ROOT := $(abspath $(dir $(firstword $(MAKEFILE_LIST))))
 
 seed-evidence:
 	PYTHONPATH=src $(PYTHON) scripts/seed_demo_evidence.py
+
+seed-demo-las:
+	@mkdir -p $(GEOX_ROOT)/data/geox_las
+	# Tracked fixtures only — recreate convenience aliases for local hydrate
+	ln -sfn $(GEOX_ROOT)/fixtures/geox_smoke_test.las $(GEOX_ROOT)/data/geox_las/DEMO-KINABALU.las
+	ln -sfn $(GEOX_ROOT)/fixtures/_DEMO_SYNTHETIC/DEMO_WELL_A_SANDAKAN.las $(GEOX_ROOT)/data/geox_las/DEMO_WELL_A.las
+	ln -sfn $(GEOX_ROOT)/fixtures/_DEMO_SYNTHETIC/DEMO_WELL_B_SANDAKAN.las $(GEOX_ROOT)/data/geox_las/DEMO_WELL_B.las
+	ln -sfn $(GEOX_ROOT)/fixtures/_DEMO_SYNTHETIC/DEMO_WELL_A_SANDAKAN.las $(GEOX_ROOT)/data/geox_las/DEMO_SANDAKAN_A.las
+	ln -sfn $(GEOX_ROOT)/fixtures/_DEMO_SYNTHETIC/DEMO_WELL_B_SANDAKAN.las $(GEOX_ROOT)/data/geox_las/DEMO_SANDAKAN_B.las
+	@if [ -f $(GEOX_ROOT)/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las ]; then \
+	  ln -sfn $(GEOX_ROOT)/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las $(GEOX_ROOT)/data/geox_las/DEMO-VOLVE.las; \
+	  ln -sfn $(GEOX_ROOT)/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las $(GEOX_ROOT)/data/geox_las/VOLVE_15_9_19.las; \
+	fi
+	@echo "✓ seed-demo-las — aliases under data/geox_las/ (not git-tracked)"
 
 deploy-apps:
 	@echo "→ Deploy WellDesk + active apps to public Caddy tree"
@@ -70,11 +90,7 @@ deploy-apps:
 	cp -f apps/index.html /var/www/html/geox/apps/index.html
 	rsync -a apps/well-desk/ /opt/geox/app/apps/well-desk/
 	rsync -a resources/demo_wells.json /opt/geox/app/resources/demo_wells.json 2>/dev/null || mkdir -p /opt/geox/app/resources && cp resources/demo_wells.json /opt/geox/app/resources/
-	# convenience LAS aliases
-	ln -sfn /root/GEOX/fixtures/geox_smoke_test.las /root/GEOX/data/geox_las/DEMO-KINABALU.las
-	ln -sfn /root/GEOX/fixtures/_DEMO_SYNTHETIC/DEMO_WELL_A_SANDAKAN.las /root/GEOX/data/geox_las/DEMO_WELL_A.las
-	ln -sfn /root/GEOX/fixtures/_DEMO_SYNTHETIC/DEMO_WELL_B_SANDAKAN.las /root/GEOX/data/geox_las/DEMO_WELL_B.las
-	ln -sfn /root/GEOX/data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las /root/GEOX/data/geox_las/DEMO-VOLVE.las
+	$(MAKE) seed-demo-las
 	chown -R www-data:www-data /var/www/html/geox/apps
 	$(MAKE) seed-evidence
 	systemctl restart geox-mcp
