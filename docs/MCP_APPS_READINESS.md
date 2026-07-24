@@ -19,11 +19,18 @@
 ## Deploy (one path)
 
 ```bash
-# From /root/GEOX
+# From GEOX repo root (any clone path — not hardcoded /root/GEOX)
 make deploy-apps
 # = rsync apps → /var/www/html/geox/apps + /opt/geox/app/apps
+#   + seed-demo-las (DEMO* aliases from tracked fixtures)
 #   + seed demo evidence + restart geox-mcp
 ```
+
+### Clean clone note (W0.2)
+
+- `data/geox_las/DEMO*.las` are **local symlinks**, not committed (absolute/path-specific).
+- Tracked sources: `fixtures/geox_smoke_test.las`, `fixtures/_DEMO_SYNTHETIC/*`, `data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las`.
+- After fresh clone: `make seed-demo-las` or full `make deploy-apps`.
 
 ## Smoke (host hydrate)
 

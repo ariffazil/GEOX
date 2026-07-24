@@ -630,7 +630,8 @@ _tool_app_fallback: dict[str, str] = {
     # Geomechanics & modeling → GeoProbe
     "geox_geomechanics": "geoprobe",
     "geox_subsurface_model": "earth_volume",
-    "geox_gravmag_studio": "geoprobe",
+    # Batch F: gravmag owns dedicated studio (was geoprobe — F601 dup fixed 2026-07-24)
+    "geox_gravmag_studio": "gravmag_studio",
     # H2: Workspace tool → dedicated workspace shell (Batch F)
     "geox_workspace": "workspace_v1",
     # Bridge → Prospect Studio
@@ -638,8 +639,6 @@ _tool_app_fallback: dict[str, str] = {
     # PR3: visual cognition → visual hub
     "geox_visual_understand": "visual_hub",
     "geox_visual_generate_hypotheses": "visual_hub",
-    # Batch F bindings
-    "geox_gravmag_studio": "gravmag_studio",
     "geox_surface_status": "catalog",
 }
 
