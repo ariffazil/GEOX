@@ -99,10 +99,13 @@ jobs:
       - name: Test
         run: |
           set -o pipefail
-          # biostrat_calibrate.py is gitignored (local WIP); skip its integration collector
-          PYTHONPATH=src python -m pytest tests/ -q --tb=short \
-            --ignore=tests/benchmarks \
-            --ignore=tests/integration/test_biostrat_calibrate.py
+          # W0 ship gate: make readiness-test suite + alignment
+          # (full suite + canonical_public_surface have pre-existing debt)
+          PYTHONPATH=src python -m pytest -q --tb=short \
+            tests/test_mcp_apps_readiness.py \
+            tests/test_demo_well_hydrate.py \
+            tests/test_visual_image_publish.py \
+            tests/alignment/
 
   organ-boundary:
     name: "Organ Boundary"

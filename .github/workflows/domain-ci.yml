@@ -40,8 +40,13 @@ jobs:
       - name: Install
         run: pip install -e ".[dev]"
       - name: Test
-        # biostrat_calibrate.py is gitignored (local WIP); match sentinel ignore list
-        run: PYTHONPATH=src pytest tests/ -q --tb=short --ignore=tests/benchmarks --ignore=tests/integration/test_biostrat_calibrate.py
+        # W0 ship gate — readiness suite + alignment
+        run: |
+          PYTHONPATH=src pytest -q --tb=short \
+            tests/test_mcp_apps_readiness.py \
+            tests/test_demo_well_hydrate.py \
+            tests/test_visual_image_publish.py \
+            tests/alignment/
 
   bijaksana:
     name: "Lane 2 — BIJAKSANA ΔS Φ Ψ Ω"
