@@ -2653,6 +2653,25 @@ async def health_handler(request: Request) -> JSONResponse:
     }
     _public_count = len(CANONICAL_PUBLIC_TOOLS)
 
+    # ── P0-1 canonical surface audit (2026-07-25 · FI-008) ───────────
+    # The middleware's last observed drift report is the canonical
+    # record of what the live /mcp/ tools/list actually emitted. We
+    # snapshot it here so /health can surface the headline counts.
+    def _surface_drift_summary() -> dict[str, Any]:
+        from geox_mcp.canonical_surface_gate import drift_report
+
+        report = getattr(_geox_governance_middleware, "_LAST_DRIFT_REPORT", None)
+        if report is None:
+            report = drift_report([])
+        return {
+            "canonical_count": report.get("canonical_count", _public_count),
+            "live_count": report.get("live_count", 0),
+            "drift_count": report.get("drift_count", 0),
+            "gap_count": report.get("gap_count", _public_count),
+            "ok": report.get("ok", False),
+            "source": "geox_mcp:/health (snapshot of last /mcp/ tools/list observation)",
+        }
+
     # ── F2 TRUTH: Kernel verdict check (telemetry drift fix) ──────────────
     # A GUI showing "healthy" when kernel verdict is HOLD is a F2 violation.
     # Probe arifOS /health and reflect the true kernel verdict.
@@ -2706,6 +2725,12 @@ async def health_handler(request: Request) -> JSONResponse:
             # ── Tool surface visibility (T₁ audit fix 2026-07-19) ───
             "tools_loaded": _public_count,
             "canonical_tools": _public_count,
+            # ── P0-1 canonical surface audit (2026-07-25 · FI-008) ───
+            # Drift is observable, not fatal. The /drift endpoint exposes
+            # the full report; /health exposes the headline counts so a
+            # single GET tells the operator whether the connector is in
+            # canonical-surface parity.
+            "surface_drift": _surface_drift_summary(),
             "apex_scalars": {
                 "G": {"value": None, "status": "UNMEASURED"},
                 "C_dark": {"value": None, "status": "UNMEASURED"},
@@ -2892,6 +2917,40 @@ async def tools_list_handler(request: Request) -> JSONResponse:
                 entry["modes"] = meta.modes
         tools.append(entry)
     return JSONResponse({"tools": tools, "count": len(tools)})
+
+
+async def drift_handler(request: Request) -> JSONResponse:
+    """Audit-grade drift report (P0-1 hardening 2026-07-25 · FI-008).
+
+    Returns the canonical_surface_gate.drift_report() computed from the
+    live tools/list response. Compares the live surface (post-filter, as
+    actually served to MCP clients) against CANONICAL_PUBLIC_TOOLS.
+
+    Response shape:
+      {
+        "canonical_count": int,
+        "live_count":      int,
+        "drift_count":     int,
+        "gap_count":       int,
+        "ok":              bool,         # drift_count == 0 AND gap_count == 0
+        "drifted":         [str, ...],   # names in live but not canonical
+        "missing":         [str, ...],   # canonical names not in live
+        "overlap_count":   int,
+        "canonical_tools": [str, ...],
+        "source":          "live_tools_list_observation"
+      }
+    """
+    from geox_mcp.canonical_surface_gate import drift_report
+
+    report = getattr(_geox_governance_middleware, "_LAST_DRIFT_REPORT", None)
+    if report is None:
+        # No observation yet — caller can probe /mcp to populate.
+        report = drift_report([])
+
+    report = dict(report)
+    report["source"] = "geox_mcp:/drift endpoint (live tools/list observation)"
+    report["status_code"] = 200 if report.get("ok") else 409
+    return JSONResponse(report, status_code=report.pop("status_code"))
 
 
 async def delete_mcp_handler(request: Request) -> JSONResponse:
@@ -3258,6 +3317,7 @@ def create_app():
             Route("/.well-known/oauth-protected-resource/mcp", _geox_oauth_protected_resource, methods=["GET"]),
             Route("/.well-known/oauth-authorization-server", _geox_oauth_authorization_server, methods=["GET"]),
             Route("/tools", tools_list_handler, methods=["GET"]),
+            Route("/drift", drift_handler, methods=["GET"]),
             Route("/webmcp", webmcp_index, methods=["GET"]),
             Route("/webmcp/tools", webmcp_tools, methods=["GET"]),
             Route("/webmcp/status", webmcp_status, methods=["GET"]),

@@ -18,9 +18,11 @@ defaults to HOLD. No guessing, no bypass.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
+import time
 from enum import StrEnum
 from typing import Any
 
@@ -377,9 +379,14 @@ def _load_lane_map() -> dict[str, str]:
 GEOX_LANE_MAP: dict[str, str] = _load_lane_map()
 
 # Lane authority requirements
+# ─── 2026-07-25: GEOX GOVERNANCE HARDENING ─────────────────────────────
+# Per F13 SOVEREIGN directive: force every GEOX call through the arifOS
+# gateway. The SCT token IS the gateway proof — arifOS is the sole issuer.
+# ALL lanes now require session (SCT); receipt generation is mandatory.
+# Discovery tools remain callable IF carrying valid SCT from arifOS.
 LANE_REQUIRES_SESSION: dict[str, bool] = {
-    "discovery": False,
-    "evidence": False,
+    "discovery": True,  # HARDENED: SCT required — "force through arifOS gateway"
+    "evidence": True,  # HARDENED: SCT required
     "reasoning": True,
     "judgment": True,
 }
@@ -397,6 +404,116 @@ LANE_REQUIRES_ARIFOS_ROUTE: dict[str, bool] = {
     "reasoning": False,  # direct or routed — both acceptable
     "judgment": True,  # MUST route through arifOS kernel
 }
+
+# ─── 2026-07-25 P0-2: AUTHORITY GATING ──────────────────────────────────
+# Maps risk tiers to minimum SCT authority level required for execution.
+# OBSERVE_ONLY sessions cannot mutate or commit irreversible changes.
+MIN_AUTHORITY_FOR_TIER: dict[str, str] = {
+    "readonly": "OBSERVE_ONLY",
+    "c1": "OBSERVE_ONLY",
+    "c2": "OPERATOR",
+    "irreversible": "LIMITED_MUTATE",
+}
+
+# Tools that actually write to disk or mutate state, even if the risk map
+# classifies them conservatively. These require at minimum OPERATOR authority
+# regardless of their nominal risk tier.
+MUTATION_TOOLS: set[str] = {
+    "geox_well_ingest",  # writes LAS files to /data/geox_las/
+    "geox_seismic_ingest",  # writes SEG-Y data to disk
+    "geox_well_desk",  # mode=publish writes rendered panels
+    "geox_map_export_package",  # exports map packages to disk
+    "geox_claim",  # mode=seal writes immutable claims
+    "geox_prospect",  # mode=seal writes sealed evaluations
+    "geox_subsection_model",  # model building mutates workspace state
+}
+
+# Authority rank ordering (from session_enforcement.AUTHORITY_LEVELS)
+_AUTHORITY_RANK = {
+    "OBSERVE_ONLY": 0,
+    "OPERATOR": 1,
+    "LIMITED_MUTATE": 2,
+    "FULL": 3,
+    "SOVEREIGN": 4,
+}
+
+
+def _effective_min_authority(tool_name: str, risk_tier_str: str) -> str:
+    """Determine the minimum authority level for a tool call.
+
+    Returns the higher of: the tier-based minimum, or OPERATOR if the tool
+    is in MUTATION_TOOLS and explicitly writes state.
+    """
+    tier_auth = MIN_AUTHORITY_FOR_TIER.get(risk_tier_str, "OBSERVE_ONLY")
+    if tool_name in MUTATION_TOOLS:
+        mutation_auth = "OPERATOR"
+        if _AUTHORITY_RANK.get(mutation_auth, 0) > _AUTHORITY_RANK.get(tier_auth, 0):
+            return mutation_auth
+    return tier_auth
+
+
+def _check_authority_gate(
+    tool_name: str,
+    risk_tier_str: str,
+    session_authority: str | None,
+    actor_id: str,
+) -> tuple[str, JSONResponse | None]:
+    """P0-2: Reject calls where session authority < minimum required.
+
+    This is the enforcement that prevents OBSERVE_ONLY sessions from
+    writing files, exporting data, or sealing claims — the gap that
+    the 2026-07-25 audit identified as critical.
+
+    Returns ("TRANSPORT_OK", None) if authority is sufficient.
+    Returns ("HOLD", JSONResponse) if authority is insufficient.
+    """
+    if not session_authority:
+        # No authority claim — treat as OBSERVE_ONLY (safest default)
+        session_authority = "OBSERVE_ONLY"
+
+    required = _effective_min_authority(tool_name, risk_tier_str)
+    session_rank = _AUTHORITY_RANK.get(session_authority, -1)
+    required_rank = _AUTHORITY_RANK.get(required, 0)
+
+    if session_rank >= required_rank:
+        logger.debug(
+            f"AUTH_GATE: {tool_name} [{risk_tier_str}] → PASS "
+            f"(session={session_authority}[{session_rank}] >= required={required}[{required_rank}])"
+        )
+        return "TRANSPORT_OK", None
+
+    logger.warning(
+        f"AUTH_GATE: {tool_name} [{risk_tier_str}] → BLOCKED "
+        f"(session={session_authority}[{session_rank}] < required={required}[{required_rank}])"
+    )
+    error_response = JSONResponse(
+        {
+            "jsonrpc": "2.0",
+            "id": None,
+            "error": {
+                "code": -32003,
+                "message": "INSUFFICIENT_AUTHORITY",
+                "data": {
+                    "guard": "AUTHORITY_GATE",
+                    "verdict": "HOLD",
+                    "tool": tool_name,
+                    "risk_tier": risk_tier_str,
+                    "session_authority": session_authority,
+                    "required_authority": required,
+                    "actor_id": actor_id,
+                    "reason": (
+                        f"Tool '{tool_name}' requires {required} authority. "
+                        f"Session only has {session_authority}. "
+                        f"Re-initialize with arif_init(mode='init') and request higher authority."
+                    ),
+                    "fix": "Call arif_init(mode='init', requested_authority='OPERATOR') for write access.",
+                },
+            },
+        },
+        status_code=403,
+    )
+    return "HOLD", error_response
+
 
 LANE_DIRECT_CALL_FORBIDDEN_MESSAGE: dict[str, str] = {
     "judgment": (
@@ -463,6 +580,207 @@ def _get_effective_lane(tool_name: str, arguments: dict[str, Any] | None = None)
             if override:
                 return override
     return _get_lane(tool_name)
+
+
+# ─── ARTIFACT-ID & RECEIPT GENERATION (2026-07-25 Hardening) ─────────────
+
+
+# ═══ FIVE-LAYER EVIDENCE ENVELOPE (P0-6 · 2026-07-25) ═══════════════════
+# Per the 2026-07-25 GEOX audit: "transport success is not evidence success."
+# This envelope separates five independent dimensions so no tool can claim
+# SUCCESS when it only means "the HTTP call arrived."
+#
+# Rules (from the audit's required architecture correction):
+#   1. transport_status=OK        → call arrived (HTTP 200 =/= evidence)
+#   2. execution_status=COMPLETED  → code ran (no exceptions =/= correct)
+#   3. artifact_status=CREATED     → state changed (write =/= valid write)
+#   4. verification_status=VERIFIED → independent read-back confirmed
+#   5. governance_verdict          → authority decision (SEAL/HOLD/VOID)
+#
+# Final task success is impossible unless required acceptance fields are
+# non-empty. An observe-only session must make state-changing tools
+# uncallable — not merely discouraged.
+
+EVIDENCE_ENVELOPE_SCHEMA_VERSION = "1.0.0"
+
+
+def build_evidence_envelope(
+    tool_name: str,
+    transport_status: str = "OK",
+    execution_status: str = "PENDING",
+    artifact_status: str = "NONE",
+    verification_status: str = "UNVERIFIED",
+    governance_verdict: str = "HOLD",
+    claim_state: str = "COMPUTED",
+    artifact_id: str = "",
+    session_id: str = "",
+    actor_id: str = "",
+    content_sha256: str = "",
+    is_error: bool = False,
+    error_detail: str = "",
+) -> dict[str, Any]:
+    """Build the canonical five-layer evidence envelope for a GEOX operation.
+
+    This envelope is injected into every GEOX response by the middleware.
+    It replaces the ambiguous single-field 'status' pattern where SUCCESS,
+    HOLD, HYPOTHESIS, and UNKNOWN could coexist in one response.
+
+    The five layers are independent — transport can succeed while execution
+    fails, execution can complete while verification is pending, etc.
+
+    Args:
+        transport_status: "OK" | "ERROR" | "TIMEOUT"
+        execution_status: "COMPLETED" | "FAILED" | "PENDING" | "REJECTED"
+        artifact_status: "CREATED" | "MODIFIED" | "DELETED" | "NONE"
+        verification_status: "VERIFIED" | "PENDING" | "UNVERIFIED" | "FAILED"
+        governance_verdict: "SEAL" | "HOLD" | "SABAR" | "VOID" | "ADVISORY"
+        claim_state: "OBSERVED" | "DERIVED" | "INTERPRETED" | "SPECULATIVE" | "COMPUTED"
+    """
+    import time as _env_time
+
+    return {
+        "_envelope": {
+            "schema": "geox-evidence-envelope",
+            "version": EVIDENCE_ENVELOPE_SCHEMA_VERSION,
+            "transport_status": transport_status,
+            "execution_status": execution_status,
+            "artifact_status": artifact_status,
+            "verification_status": verification_status,
+            "governance_verdict": governance_verdict,
+            "claim_state": claim_state,
+        },
+        "_identity": {
+            "artifact_id": artifact_id,
+            "session_id": session_id,
+            "actor_id": actor_id,
+            "tool": tool_name,
+            "timestamp_utc": _env_time.strftime("%Y-%m-%dT%H:%M:%SZ", _env_time.gmtime()),
+        },
+        "_receipt": {
+            "content_sha256": content_sha256,
+            "is_error": is_error,
+            "error_detail": error_detail[:200] if error_detail else "",
+            "vault999_status": "PENDING",
+        },
+    }
+
+
+def evidence_envelope_success(tool_name: str, **kwargs) -> dict[str, Any]:
+    """Shortcut: build a SUCCESS envelope where all layers pass."""
+    return build_evidence_envelope(
+        tool_name=tool_name,
+        transport_status="OK",
+        execution_status="COMPLETED",
+        governance_verdict="SEAL",
+        **kwargs,
+    )
+
+
+def evidence_envelope_hold(tool_name: str, reason: str, **kwargs) -> dict[str, Any]:
+    """Shortcut: build a HOLD envelope (blocked at governance layer)."""
+    return build_evidence_envelope(
+        tool_name=tool_name,
+        transport_status="OK",
+        execution_status="REJECTED",
+        governance_verdict="HOLD",
+        error_detail=reason,
+        **kwargs,
+    )
+
+
+# One canonical artifact-ID format for ALL GEOX operations.
+# Format: geox:{session_short}:{tool_name}:{content_hash}
+# Every GEOX call in production mode generates a receipt sealed to VAULT999.
+
+
+def generate_artifact_id(
+    tool_name: str,
+    session_id: str | None = None,
+    arguments: dict[str, Any] | None = None,
+) -> str:
+    """Generate canonical GEOX artifact-ID.
+
+    Format: geox:{session_short}:{tool_name}:{content_hash}
+
+    The content_hash is a SHA256 of (tool_name + session_id + sorted args + timestamp),
+    providing a stable, reproducible identifier that binds the operation to its
+    session, tool, and parameters.
+    """
+    session_short = (session_id or "nosession")[:16]
+    payload = f"{tool_name}|{session_id or 'nosession'}|{json.dumps(arguments or {}, sort_keys=True, default=str)}|{time.time()}"
+    content_hash = hashlib.sha256(payload.encode()).hexdigest()[:12]
+    return f"geox:{session_short}:{tool_name}:{content_hash}"
+
+
+async def seal_geox_receipt(
+    tool_name: str,
+    artifact_id: str,
+    session_id: str | None,
+    actor_id: str | None,
+    verdict: str,
+    result_summary: str = "",
+    arguments: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Seal a GEOX operation receipt to VAULT999 via A-FORGE forge_vault.
+
+    This is the permanent audit trail required by F11 AUDITABILITY and the
+    F13 SOVEREIGN directive (2026-07-25). Every GEOX call in production mode
+    produces a receipt. Failures are logged but do not block the operation —
+    the receipt is evidence, not a gate.
+    """
+    receipt = {
+        "artifact_id": artifact_id,
+        "tool": tool_name,
+        "session_id": session_id,
+        "actor_id": actor_id,
+        "verdict": verdict,
+        "summary": result_summary[:500] if result_summary else "",
+        "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+    # Write to A-FORGE forge_vault for VAULT999 sealing
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            vault_resp = await client.post(
+                "http://127.0.0.1:7072/mcp",
+                json={
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "tools/call",
+                    "params": {
+                        "name": "forge_vault",
+                        "arguments": {
+                            "mode": "write",
+                            "name": f"geox-{artifact_id}",
+                            "category": "geox.operation",
+                            "value": json.dumps(receipt),
+                            "actor_id": actor_id or "geox-organ",
+                            "session_id": session_id or "",
+                        },
+                    },
+                },
+                headers={"Content-Type": "application/json"},
+            )
+            if vault_resp.status_code == 200:
+                receipt["vault_status"] = "sealed"
+                logger.info(f"RECEIPT: {artifact_id} → VAULT999 sealed")
+            else:
+                receipt["vault_status"] = f"error_http_{vault_resp.status_code}"
+                logger.warning(f"RECEIPT: {artifact_id} → VAULT999 write failed: {vault_resp.status_code}")
+    except Exception as exc:
+        receipt["vault_status"] = f"error_{type(exc).__name__}"
+        logger.warning(f"RECEIPT: {artifact_id} → VAULT999 unreachable: {exc}")
+
+    # Also append to local receipt ledger (fallback, read by vault999-writer)
+    try:
+        ledger_path = "/root/.local/share/arifos/geox_receipt_ledger.jsonl"
+        os.makedirs(os.path.dirname(ledger_path), exist_ok=True)
+        with open(ledger_path, "a") as f:
+            f.write(json.dumps(receipt) + "\n")
+    except Exception as exc:
+        logger.warning(f"RECEIPT: local ledger write failed: {exc}")
+
+    return receipt
 
 
 def _check_lane_enforcement(
@@ -698,27 +1016,28 @@ async def check_governance(
     actor_id: str = "anonymous",
     fail_closed: bool = True,
     is_direct_call: bool = True,
-) -> tuple[str, JSONResponse | None]:
+) -> tuple[str, JSONResponse | None, str]:
     """
     Check governance for a GEOX tool call.
 
-    Returns: (verdict, error_response_or_None)
-      - ("TRANSPORT_OK", None) → proceed with execution (not constitutional SEAL)
-      - ("ADVISORY", None) → proceed (kernel noted the call)
-      - ("HOLD", dict) → blocked, return dict as JSON error response
-      - ("VOID", dict) → rejected, return dict as JSON error response
+    Returns: (verdict, error_response_or_None, artifact_id)
+      - ("TRANSPORT_OK", None, artifact_id) → proceed with execution
+      - ("ADVISORY", None, artifact_id) → proceed (kernel noted the call)
+      - ("HOLD", JSONResponse, "") → blocked
+      - ("VOID", JSONResponse, "") → rejected
 
-    Applied after RT-3 guard (which checks ack_irreversible).
+    HARDENED 2026-07-25 per F13 SOVEREIGN directive:
+      - ALL lanes require session (SCT from arifOS gateway)
+      - Every call generates a canonical artifact-ID and VAULT999 receipt
+      - Direct calls without valid SCT are rejected in production mode
 
     Enforcement order:
       1. LANE ENFORCEMENT (Federation Contract §3):
          - Judgment lane: BLOCK direct calls → must route through arifOS
-         - Reasoning/Judgment: require session_id
+         - ALL lanes: require valid session (SCT) in production mode
          - Judgment: require lease_id
-         - Discovery/Evidence: always allowed
       2. IDENTITY PROPAGATION (P0.1):
-         - Discovery/Evidence lanes: exempt
-         - Reasoning/Judgment: require actor_id + session_id
+         - ALL lanes: require actor_id + session_id
          - Sandbox mode bypasses all checks
       3. RISK TIER (C1/C2/IRREVERSIBLE):
          - Calls arifOS kernel for governed tools
@@ -753,7 +1072,7 @@ async def check_governance(
         arguments=arguments,
     )
     if lane_verdict == "HOLD":
-        return lane_verdict, lane_error
+        return lane_verdict, lane_error, ""
 
     risk_tier = GEOX_RISK_MAP.get(tool_name, RiskTier.C1_ADVISORY)
     # D5: geox_claim is mode-dispatched — only seal is C2/judgment; create is evidence
@@ -770,12 +1089,34 @@ async def check_governance(
     # ═══ STEP 2: IDENTITY PROPAGATION (P0.1 — lane-aware) ══════════
     id_verdict, id_error = _check_identity_propagation(tool_name, session_id, actor_id, arguments)
     if id_verdict == "HOLD":
-        return id_verdict, id_error
+        return id_verdict, id_error, ""
+
+    # ═══ STEP 2.5: AUTHORITY GATING (P0.2 — 2026-07-25) ═════════════
+    # OBSERVE_ONLY sessions cannot mutate. Validate the session's
+    # authority level against the tool's minimum required authority.
+    risk_tier_str = risk_tier.value if isinstance(risk_tier, RiskTier) else str(risk_tier)
+    auth_validation = validate_session(session_id, actor_id, required_authority="OBSERVE_ONLY")
+    session_authority = auth_validation.authority if auth_validation.ok else "OBSERVE_ONLY"
+    auth_verdict, auth_error = _check_authority_gate(
+        tool_name=tool_name,
+        risk_tier_str=risk_tier_str,
+        session_authority=session_authority,
+        actor_id=actor_id or "anonymous",
+    )
+    if auth_verdict == "HOLD":
+        return auth_verdict, auth_error, ""
+
+    # ═══ ARTIFACT-ID + RECEIPT (2026-07-25 Hardening) ═══════════════
+    artifact_id = generate_artifact_id(tool_name, session_id, arguments)
 
     # READONLY — log and proceed
     if risk_tier == RiskTier.READONLY:
-        logger.info(f"GOV: {tool_name} [READONLY] → SEAL (log only)")
-        return "TRANSPORT_OK", None
+        logger.info(f"GOV: {tool_name} [READONLY] → SEAL artifact_id={artifact_id}")
+        # Fire-and-forget: seal receipt (don't block on VAULT999 latency)
+        import asyncio as _asyncio
+
+        _asyncio.ensure_future(seal_geox_receipt(tool_name, artifact_id, session_id, actor_id, "TRANSPORT_OK", "", arguments))
+        return "TRANSPORT_OK", None, artifact_id
 
     # C1 ADVISORY — call kernel but proceed regardless
     if risk_tier == RiskTier.C1_ADVISORY:
@@ -797,7 +1138,7 @@ async def check_governance(
         kernel_result = await _call_arif_kernel("arif_judge", judge_params)
         verdict = kernel_result.get("verdict", "ADVISORY")
         logger.info(f"GOV: {tool_name} [C1] → {verdict} (proceeding anyway)")
-        return verdict, None
+        return verdict, None, artifact_id
 
     # C2 / IRREVERSIBLE — SEAL required
     # Build candidate for arifOS judgment
@@ -856,9 +1197,13 @@ async def check_governance(
     if verdict in ("SEAL", "TRANSPORT_OK", "ALLOW", "PROCEED"):
         logger.info(
             f"GOV: {tool_name} [{risk_tier.value}] → TRANSPORT_OK "
-            f"(kernel_verdict={verdict}; SEAL word reserved for constitutional seal)"
+            f"(kernel_verdict={verdict}; SEAL word reserved for constitutional seal) "
+            f"artifact_id={artifact_id}"
         )
-        return "TRANSPORT_OK", None
+        import asyncio as _asyncio2
+
+        _asyncio2.ensure_future(seal_geox_receipt(tool_name, artifact_id, session_id, actor_id, verdict, "", arguments))
+        return "TRANSPORT_OK", None, artifact_id
 
     # HOLD or VOID — block execution (fail-closed)
     error_msg = f"arifOS {verdict}: {reason}"
@@ -882,4 +1227,4 @@ async def check_governance(
         },
         status_code=423 if verdict == "HOLD" else 403,
     )
-    return verdict, error_response
+    return verdict, error_response, ""

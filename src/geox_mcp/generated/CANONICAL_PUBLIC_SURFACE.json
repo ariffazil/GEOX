@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-07-25T06:08:21.865021+00:00",
+  "generated_at": "2026-07-25T08:21:58.948990+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 32,
+  "public_count": 33,
   "internal_count": 48,
   "public_tools": [
     "geox_well_ingest",
@@ -20,6 +20,7 @@
     "geox_gravmag_studio",
     "geox_well_desk",
     "geox_well_qc",
+    "geox_well_view",
     "geox_surface_status",
     "geox_evidence",
     "geox_basin_backstrip",
@@ -238,6 +239,24 @@
         "action_class": "OBSERVE",
         "mutation": false,
         "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_well_view",
+      "domain": "earth.well",
+      "axis": "observe",
+      "lane": "evidence",
+      "description": "Well Witness View \u2014 hydrate real LAS curves into interactive tracks for WellDesk/Well Witness widgets.",
+      "ui": {
+        "resource_uri": "ui://geox/well-desk",
+        "title": "GEOX WellDesk",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
       }
     },
     {

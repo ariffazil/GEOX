@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from geox_mcp.surface_manifest import (
@@ -83,3 +84,85 @@ def is_surface_tool(tool_name: str) -> bool:
 
 def is_internal_tool(tool_name: str) -> bool:
     return tool_name in set(INTERNAL_TOOLS)
+
+
+# ── P0-2 authority policy (2026-07-25 · FI-008) ─────────────────────────
+# Per-tool minimum authority for tools/call admission. Computed from the
+# manifest's governance.action_class plus a small override table for tools
+# whose effective action depends on call-time arguments (e.g. geox_well_ingest
+# with overwrite=True is a MUTATE despite the manifest declaring OBSERVE).
+#
+# Authority ranks (from session_enforcement.AUTHORITY_LEVELS):
+#   OBSERVE_ONLY < OPERATOR < LIMITED_MUTATE < FULL < SOVEREIGN
+#
+# F1 AMANAH: when a caller presents an authority band, it MUST be at least
+# the value returned by ``required_authority_for``. Lower → 403 rejection.
+
+# Default required authority by tool action_class.
+_ACTION_CLASS_AUTH: dict[str, str] = {
+    "OBSERVE": "OBSERVE_ONLY",
+    "MUTATE": "LIMITED_MUTATE",
+    "EXECUTE": "LIMITED_MUTATE",
+}
+
+# Tools whose mutating-ness depends on call-time arguments (override the
+# manifest's action_class when the relevant arg is truthy).
+_MUTATING_ARG_OVERRIDES: dict[str, tuple[str, ...]] = {
+    # tool_name: (arg_names, any-true → LIMITED_MUTATE, all-false → OBSERVE_ONLY)
+    "geox_well_ingest": ("overwrite",),
+    "geox_evidence": ("forbidden_uses",),  # attaching forbidden uses is a mutation
+}
+
+# Env flag: when false, session enforcement is bypassed for OBSERVE-only
+# tools (backward-compat). When true (default for production), every call
+# must present a verified session_id. Per F13: this default lives in env,
+# not in code, so the sovereign can flip it without a redeploy.
+_REQUIRE_SESSION_ENV = "GEOX_REQUIRE_SESSION_FOR_MUTATE"
+
+
+def require_session_for_all() -> bool:
+    """Return True iff every tools/call MUST carry a session_id.
+
+    Default: True (every call requires session). Override via env
+    ``GEOX_REQUIRE_SESSION_FOR_MUTATE=0`` for local dev / smoke tests.
+    """
+    val = os.getenv(_REQUIRE_SESSION_ENV, "1").strip().lower()
+    return val not in ("0", "false", "off", "no")
+
+
+def required_authority_for(tool_name: str, arguments: dict[str, Any] | None = None) -> str:
+    """Return the minimum authority required to call ``tool_name``.
+
+    Resolution order:
+      1. Per-tool mutating-arg overrides (when supplied arguments include
+         any of the listed arg names set truthy, the tool is treated as
+         MUTATE for the duration of this call).
+      2. Manifest ``governance.action_class`` for the tool.
+      3. Default: ``OBSERVE_ONLY`` (safe-fail — never grant MUTATE by
+         absence of declaration).
+
+    Returns one of: ``OBSERVE_ONLY`` | ``LIMITED_MUTATE``. Callers SHOULD
+    rank-compare against the session's authority band and reject with 403
+    when the session is below the required level.
+    """
+    arguments = arguments or {}
+
+    # 1. mutating-arg overrides
+    override = _MUTATING_ARG_OVERRIDES.get(tool_name)
+    if override:
+        if any(bool(arguments.get(arg)) for arg in override):
+            return "LIMITED_MUTATE"
+
+    # 2. manifest action_class
+    entry = manifest_tool_map().get(tool_name)
+    if entry is not None:
+        action = str(entry.governance.get("action_class", "OBSERVE") or "OBSERVE").upper()
+        return _ACTION_CLASS_AUTH.get(action, "OBSERVE_ONLY")
+
+    # 3. safe-fail default
+    return "OBSERVE_ONLY"
+
+
+def is_mutating_call(tool_name: str, arguments: dict[str, Any] | None = None) -> bool:
+    """Return True iff ``required_authority_for`` resolves to LIMITED_MUTATE."""
+    return required_authority_for(tool_name, arguments) == "LIMITED_MUTATE"

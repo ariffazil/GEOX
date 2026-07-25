@@ -15,6 +15,7 @@
     "geox_gravmag_studio",
     "geox_well_desk",
     "geox_well_qc",
+    "geox_well_view",
     "geox_surface_status",
     "geox_evidence",
     "geox_basin_backstrip",
@@ -84,7 +85,7 @@
     "geox_dst_ingest_test"
   ],
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
-  "policy": "Generated 2026-07-25T06:08:22.005201+00:00 \u2014 app_export \u2282 public (32 of 32 tools plugin-exposed)",
+  "policy": "Generated 2026-07-25T08:21:59.085488+00:00 \u2014 app_export \u2282 public (33 of 33 tools plugin-exposed)",
   "public": [
     "geox_well_ingest",
     "geox_petrophysics",
@@ -101,6 +102,7 @@
     "geox_gravmag_studio",
     "geox_well_desk",
     "geox_well_qc",
+    "geox_well_view",
     "geox_surface_status",
     "geox_evidence",
     "geox_basin_backstrip",

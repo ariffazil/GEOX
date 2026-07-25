@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (32 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (33 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from src/geox_mcp/tools_manifest.yaml
 
@@ -19,23 +19,24 @@
 13. **geox_gravmag_studio**: Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.
 14. **geox_well_desk**: Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.
 15. **geox_well_qc**: Quality control for well data: depth monotonicity, null %, physical range checks.
-16. **geox_surface_status**: Federation-standard registry probe: tool discovery and health status.
-17. **geox_evidence**: Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.
-18. **geox_basin_backstrip**: 1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.
-19. **geox_sediment_mass_balance**: Source-to-sink sediment volume and mass accounting. Peters 2012 framework.
-20. **geox_thermal_maturity_history**: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
-21. **geox_claim_graph_evaluate**: Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.
-22. **geox_falsify**: Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.
-23. **geox_contradiction_scan**: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
-24. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
-25. **geox_to_wealth_bridge**: Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.
-26. **geox_map_export_package**: Map export: package map layers and annotations into portable formats.
-27. **geox_visual_understand**: Extract visual patterns from seismic section images using deep learning.
-28. **geox_visual_generate_hypotheses**: Generate geological hypotheses across discontinuity gaps in seismic data.
-29. **geox_map_layers_list**: List available map layers and their spatial extents.
-30. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
-31. **geox_map_render_preview**: Render preview of map scene for quality review before export.
-32. **geox_workspace**: GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.
+16. **geox_well_view**: Well Witness View — hydrate real LAS curves into interactive tracks for WellDesk/Well Witness widgets.
+17. **geox_surface_status**: Federation-standard registry probe: tool discovery and health status.
+18. **geox_evidence**: Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.
+19. **geox_basin_backstrip**: 1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.
+20. **geox_sediment_mass_balance**: Source-to-sink sediment volume and mass accounting. Peters 2012 framework.
+21. **geox_thermal_maturity_history**: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
+22. **geox_claim_graph_evaluate**: Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.
+23. **geox_falsify**: Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.
+24. **geox_contradiction_scan**: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
+25. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
+26. **geox_to_wealth_bridge**: Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.
+27. **geox_map_export_package**: Map export: package map layers and annotations into portable formats.
+28. **geox_visual_understand**: Extract visual patterns from seismic section images using deep learning.
+29. **geox_visual_generate_hypotheses**: Generate geological hypotheses across discontinuity gaps in seismic data.
+30. **geox_map_layers_list**: List available map layers and their spatial extents.
+31. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
+32. **geox_map_render_preview**: Render preview of map scene for quality review before export.
+33. **geox_workspace**: GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.

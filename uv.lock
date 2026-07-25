@@ -277,7 +277,7 @@ source = { editable = "." }
 dependencies = [
     { name = "bruges" },
     { name = "cdsapi" },
-    { name = "fastmcp", extra = ["tasks"] },
+    { name = "fastmcp", extra = ["apps", "tasks"] },
     { name = "flopy" },
     { name = "gempy" },
     { name = "geopandas" },
@@ -333,7 +333,7 @@ all = [
     { name = "welly" },
 ]
 dev = [
-    { name = "fastmcp", extra = ["tasks"] },
+    { name = "fastmcp", extra = ["apps", "tasks"] },
     { name = "hypothesis" },
     { name = "mypy" },
     { name = "pytest" },
@@ -360,8 +360,8 @@ requires-dist = [
     { name = "cdsapi", specifier = ">=0.7.0" },
     { name = "datashader", marker = "extra == 'all'", specifier = ">=0.19.1" },
     { name = "devito", marker = "extra == 'seismic'", specifier = ">=4.8.22" },
-    { name = "fastmcp", extras = ["tasks"], specifier = "==3.4.4" },
-    { name = "fastmcp", extras = ["tasks"], marker = "extra == 'dev'", specifier = ">=3.4.2,<4.0" },
+    { name = "fastmcp", extras = ["apps", "tasks"], specifier = "==3.4.4" },
+    { name = "fastmcp", extras = ["apps", "tasks"], marker = "extra == 'dev'", specifier = ">=3.4.2,<4.0" },
     { name = "flopy", specifier = ">=3.10.0" },
     { name = "gempy", specifier = ">=2.0.0" },
     { name = "geopandas", specifier = ">=1.1.4" },
@@ -1548,6 +1548,9 @@ wheels = [
 ]
 
 [package.optional-dependencies]
+apps = [
+    { name = "fastmcp-slim", extra = ["apps"] },
+]
 tasks = [
     { name = "fastmcp-slim", extra = ["tasks"] },
 ]
@@ -1570,6 +1573,9 @@ wheels = [
 ]
 
 [package.optional-dependencies]
+apps = [
+    { name = "prefab-ui" },
+]
 client = [
     { name = "authlib" },
     { name = "exceptiongroup" },
@@ -4518,6 +4524,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/83/43/85ef45e8b36c6a48546af7b266592dc32d7f67837a6514d111bced6d7d75/pooch-1.9.0.tar.gz", hash = "sha256:de46729579b9857ffd3e741987a2f6d5e0e03219892c167c6578c0091fb511ed", size = 61788, upload-time = "2026-01-30T19:15:09.649Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2a/2d/d4bf65e47cea8ff2c794a600c4fd1273a7902f268757c531e0ee9f18aa58/pooch-1.9.0-py3-none-any.whl", hash = "sha256:f265597baa9f760d25ceb29d0beb8186c243d6607b0f60b83ecf14078dbc703b", size = 67175, upload-time = "2026-01-30T19:15:08.36Z" },
+]
+
+[[package]]
+name = "prefab-ui"
+version = "0.20.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cyclopts" },
+    { name = "pydantic" },
+    { name = "rich" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/41/99/4e61eb3d3f8b09bdaa28bda3c99971264555f486a485333cb8e6f56c7d8c/prefab_ui-0.20.2.tar.gz", hash = "sha256:4ac17ebf8ec1c5a918a188625837fc608157907430a59c4feb8adac80e01262b", size = 4118979, upload-time = "2026-06-03T02:13:49.312Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4a/d0/59b697dd5a44e632fcc4aba42ff5f88224df672ffea1f5e9a5a9e9e50698/prefab_ui-0.20.2-py3-none-any.whl", hash = "sha256:861d4914e4d9120996b4d5c6753788beeca433754d7bb3cfbd13f9dba7ea8e85", size = 1852274, upload-time = "2026-06-03T02:13:47.539Z" },
 ]
 
 [[package]]
