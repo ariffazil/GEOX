@@ -265,82 +265,200 @@ def register_tools_on(mcp):
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
+        max_samples: int = 2000,
     ) -> dict[str, Any]:
-        """Well Witness View — hydrate real LAS curves into interactive tracks.
+        """Well Witness View — hydrate LAS curves into interactive tracks.
 
-        Reads a LAS file and returns curve data arrays (depth + GR/RES/DT/RHOB)
-        in structuredContent.curves for direct WellDesk track hydration.
-        Falls back to well_ingest metadata if no LAS file is available.
+        Prompt B (2026-07-25):
+          1. Resolve well_id via demo registry / data/geox_las / ingest store
+             (no longer requires source_uri for DEMO-* wells).
+          2. Return curves+depths for WellDesk track hydrate.
+          3. Seal a content-hash receipt (VAULT999 or PENDING) on success.
+
+        F2: DEMO fixtures carry data_class + provenance_badge — never MEASURED.
         """
+        import hashlib
+
         from geox_mcp.tools.mcp_apps_bridge import wrap_as_ui_tool_result
 
         _GEOX_ROOT = Path(__file__).resolve().parents[3]
-
         _curves: dict[str, list[float]] = {}
         _depths: list[float] = []
         _meta: dict[str, Any] = {}
         _is_err = False
         _text = ""
+        _las_path: str | None = None
+        _data_class = "UNKNOWN"
+        _receipt: dict[str, Any] | None = None
+        _max_n = max(100, min(int(max_samples or 2000), 20000))
 
-        # Try to load real LAS data
+        def _hydrate_from_path(path: Path, wid: str | None) -> tuple[bool, str]:
+            nonlocal _curves, _depths, _meta, well_id, _las_path, _data_class
+            try:
+                import lasio
+
+                _las = lasio.read(str(path), ignore_header_errors=True)
+                raw_depths = [float(d) for d in _las.index]
+                # Downsample for UI if huge
+                step = max(1, len(raw_depths) // _max_n) if len(raw_depths) > _max_n else 1
+                _depths = raw_depths[::step]
+                null_v = -999.25
+                try:
+                    null_v = float(_las.well.NULL.value)
+                except Exception:
+                    pass
+                for _mnemonic in ("GR", "RES", "RT", "ILD", "DT", "RHOB", "NPHI"):
+                    if _mnemonic in _las.keys():
+                        raw = [
+                            float(v) if v == v and float(v) != null_v else float("nan")
+                            for v in _las[_mnemonic]
+                        ]
+                        _curves[_mnemonic] = raw[::step]
+                # Prefer RES alias over RT if both missing RES
+                if "RES" not in _curves and "RT" in _curves:
+                    _curves["RES"] = _curves["RT"]
+                well_id = wid or (
+                    str(_las.well.WELL.value).strip() if hasattr(_las.well, "WELL") else path.stem
+                ) or path.stem
+                _las_path = str(path)
+                _meta = {
+                    "well_id": well_id,
+                    "start_md": _depths[0] if _depths else None,
+                    "stop_md": _depths[-1] if _depths else None,
+                    "null_value": null_v,
+                    "curves_loaded": list(_curves.keys()),
+                    "n_samples": len(_depths),
+                    "las_path": _las_path,
+                    "data_class": _data_class,
+                }
+                if not _curves or not _depths:
+                    return False, f"LAS at {path} parsed but has no usable curves/depths."
+                return True, (
+                    f"Well View ready for {well_id}: {len(_depths)} depth points, "
+                    f"curves={list(_curves.keys())}. Tracks hydrating."
+                )
+            except ImportError:
+                return False, "LAS hydration unavailable: lasio not installed."
+            except Exception as exc:
+                logger.warning("LAS_HYDRATE_FAIL: %s", exc)
+                return False, f"LAS read failed: {type(exc).__name__}: {exc}"
+
+        # ── Path 1: explicit source_uri ─────────────────────────────────
         if source_uri:
             _path = Path(source_uri)
             if not _path.is_absolute():
                 _path = _GEOX_ROOT / _path
             if _path.is_file() and _path.suffix.lower() in (".las", ".LAS"):
-                try:
-                    import lasio
-
-                    _las = lasio.read(str(_path))
-                    _depths = [float(d) for d in _las.index]
-                    for _mnemonic in ("GR", "RES", "RT", "ILD", "DT", "RHOB", "NPHI", "DEPT"):
-                        if _mnemonic in _las.keys():
-                            _arr = [float(v) if v != _las.well.NULL else 0.0 for v in _las[_mnemonic]]
-                            _curves[_mnemonic] = _arr
-                    well_id = well_id or _las.well.WELL.value or _path.stem
-                    _meta = {
-                        "well_id": well_id,
-                        "start_md": float(_las.well.STRT.value) if _las.well.STRT.value else None,
-                        "stop_md": float(_las.well.STOP.value) if _las.well.STOP.value else None,
-                        "null_value": float(_las.well.NULL.value) if _las.well.NULL.value else -999.25,
-                        "curves_loaded": list(_curves.keys()),
-                    }
-                    _text = (
-                        f"Well View ready for {well_id}: {len(_depths)} depth points, "
-                        f"curves={list(_curves.keys())}. Tracks hydrating with real Earth data."
-                    )
-                    logger.info("LAS_HYDRATE: loaded %s (%d curve(s), %d depth points)", well_id, len(_curves), len(_depths))
-                except ImportError:
-                    _is_err = True
-                    _text = "LAS hydration unavailable: lasio not installed."
-                except Exception as _las_exc:
-                    _is_err = True
-                    _text = f"LAS read failed: {type(_las_exc).__name__}: {_las_exc}"
-                    logger.warning("LAS_HYDRATE_FAIL: %s", _las_exc)
+                _data_class = "FILE"
+                ok_h, msg = _hydrate_from_path(_path, well_id)
+                _is_err = not ok_h
+                _text = msg
             else:
-                _text = f"No LAS file found at {_path}. Use geox_well_ingest to inspect file first."
+                _is_err = True
+                _text = f"No LAS file found at {_path}. Use geox_well_ingest or DEMO-* well_id."
+
+        # ── Path 2: resolve well_id via demo registry / geox_las / ingest ─
         elif well_id:
-            _is_err = True
-            _text = (
-                f"Well '{well_id}': NOT_FOUND — no LAS source provided. "
-                f"Use source_uri to hydrate tracks, or geox_well_ingest first."
-            )
+            from geox_mcp.tools.integration_well import _load_well_curves_for_ui
+
+            loaded = _load_well_curves_for_ui(well_id, max_n=_max_n)
+            if loaded.get("status") == "loaded" and loaded.get("curves"):
+                _curves = {k: v for k, v in (loaded.get("curves") or {}).items() if v}
+                _depths = list(loaded.get("depths") or [])
+                _las_path = loaded.get("las_path")
+                _data_class = loaded.get("data_class") or "DEMO"
+                well_id = loaded.get("well_name") or well_id
+                _meta = {
+                    "well_id": well_id,
+                    "start_md": _depths[0] if _depths else None,
+                    "stop_md": _depths[-1] if _depths else None,
+                    "curves_loaded": list(_curves.keys()),
+                    "n_samples": len(_depths),
+                    "las_path": _las_path,
+                    "data_class": _data_class,
+                    "geography": loaded.get("geography"),
+                    "is_fixture_fallback": loaded.get("is_fixture_fallback"),
+                    "provenance_badge": loaded.get("provenance_badge"),
+                    "curves_available": loaded.get("curves_available"),
+                }
+                _text = (
+                    f"Well View ready for {well_id}: {len(_depths)} depth points, "
+                    f"curves={list(_curves.keys())} "
+                    f"[{_data_class}]. Tracks hydrating."
+                )
+                _is_err = False
+            else:
+                _is_err = True
+                _text = (
+                    loaded.get("error")
+                    or f"Well '{well_id}': NOT_FOUND — no LAS resolved. "
+                    "Use DEMO-KINABALU / DEMO-VOLVE or geox_well_ingest + source_uri."
+                )
         else:
             _is_err = True
             _text = "Well View requires well_id or source_uri."
 
+        # ── VAULT999 content-hash receipt (success path only) ───────────
+        if not _is_err and _curves and _depths:
+            try:
+                from geox_mcp.seal_receipt import RiskClass, Reversibility, seal_receipt
+
+                payload_for_hash = {
+                    "well_id": well_id,
+                    "las_path": _las_path,
+                    "n_samples": len(_depths),
+                    "curves": sorted(_curves.keys()),
+                    "depth_range": [_depths[0], _depths[-1]] if _depths else None,
+                    "data_class": _data_class,
+                }
+                sha = hashlib.sha256(
+                    json.dumps(payload_for_hash, sort_keys=True, default=str).encode()
+                ).hexdigest()
+                seal = seal_receipt(
+                    tool="geox_well_view",
+                    artifact_id=f"well_view:{well_id}",
+                    artifact_sha256=sha,
+                    actor_id=actor_id,
+                    session_id=session_id,
+                    verdict="QUALIFY",
+                    risk_class=RiskClass.LOW,
+                    reversibility=Reversibility.FULL,
+                )
+                _receipt = {
+                    "state": seal.state,
+                    "ref": seal.ref,
+                    "sha256": sha,
+                    "vault_pending": getattr(seal, "vault_pending", seal.state != "SEALED"),
+                    "error": getattr(seal, "error", None),
+                }
+                _meta["receipt"] = _receipt
+                if seal.state == "SEALED":
+                    _text += f" Receipt {seal.ref}."
+                else:
+                    _text += f" Receipt {seal.state} (vault not final)."
+            except Exception as _seal_exc:
+                logger.warning("WELL_VIEW_RECEIPT: %s", _seal_exc)
+                _receipt = {"state": "FAILED", "error": type(_seal_exc).__name__}
+                _meta["receipt"] = _receipt
+
         _structured = {
             "ok": not _is_err,
             "isError": _is_err,
-            "status": "NOT_FOUND" if _is_err and "NOT_FOUND" in _text else ("ERROR" if _is_err else "OK"),
+            "status": (
+                "NOT_FOUND"
+                if _is_err and ("NOT_FOUND" in _text or "No LAS" in _text)
+                else ("ERROR" if _is_err else "OK")
+            ),
             "well_id": well_id,
             "mode": "view",
-            "data_mode": "view",
-            "source_uri": source_uri,
+            "data_mode": "view" if not _is_err else "unknown",
+            "source_uri": source_uri or _las_path,
             "curves": _curves,
             "depths": _depths,
             "meta": _meta,
             "message": _text,
+            "data_class": _data_class,
+            "receipt": _receipt,
         }
         if _is_err:
             _structured["error"] = _text
@@ -352,6 +470,7 @@ def register_tools_on(mcp):
                 "ok": not _is_err,
                 "isError": _is_err,
                 "status": _structured["status"],
+                "receipt": _receipt,
             },
             app_id="well_desk",
             params={"well_id": well_id} if well_id else None,

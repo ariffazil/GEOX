@@ -481,7 +481,9 @@ class WitnessProvenance(BaseModel):
 
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
     witness_id: str
-    witness_type: Literal["independent_model", "classical_cv", "human_supplied", "deterministic_transform", "empty_conceptual"] = "empty_conceptual"
+    witness_type: Literal[
+        "independent_model", "classical_cv", "human_supplied", "deterministic_transform", "empty_conceptual"
+    ] = "empty_conceptual"
     model_or_method: str
     prompt_hash: str | None = None
     source_geometry_hash: str
@@ -596,7 +598,7 @@ class CanonicalInterpretationBundle(BaseModel):
     horizons: list[Horizon] = Field(default_factory=list)
     faults: list[Fault] = Field(default_factory=list)
     fault_cutoffs: list[FaultCutoff] = Field(default_factory=list)
-    hypotheses: list["Hypothesis"] = Field(default_factory=list)
+    hypotheses: list[Hypothesis] = Field(default_factory=list)
     gate_results: list[GateResult] = Field(default_factory=list)
     render_artifacts: list[RenderArtifact] = Field(default_factory=list)
     preferred_hypothesis: str | None = None

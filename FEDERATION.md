@@ -2,8 +2,8 @@
 
 > SOT: 2026-07-25 | seal_seq: fed-phase-7-zen
 > Authority: F13 SOVEREIGN
-> role: EARTH
-> layer: L4
+> role: DOMAIN
+> layer: L3
 > mcp: geox_* — https://geox.arif-fazil.com/mcp
 
 ---

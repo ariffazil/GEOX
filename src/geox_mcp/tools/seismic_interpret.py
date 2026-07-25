@@ -163,8 +163,7 @@ def _resolve_image_input(
                     "ok": False,
                     "error": "IMAGE_TOO_LARGE",
                     "message": (
-                        f"image_data {len(blob)} bytes exceeds {_MAX_IMAGE_BYTES} "
-                        "and downscale failed — compress client-side"
+                        f"image_data {len(blob)} bytes exceeds {_MAX_IMAGE_BYTES} and downscale failed — compress client-side"
                     ),
                 }
         suffix = ".jpg"
@@ -353,11 +352,7 @@ def _normalize_request(
         # Modes without a strict branch (track_horizon, measure_throw, render, …)
         # stay on flat-call compatibility path for one migration epoch.
         # Only *unknown* modes outside _LIVE_MODES are hard errors (handled above).
-        filtered = {
-            k: v
-            for k, v in kwargs.items()
-            if v is not None and k != "mode" and k not in _TRANSPORT_KEYS
-        }
+        filtered = {k: v for k, v in kwargs.items() if v is not None and k != "mode" and k not in _TRANSPORT_KEYS}
         raw = json.dumps(filtered, sort_keys=True, default=str, separators=(",", ":"))
         return filtered, hashlib.sha256(raw.encode()).hexdigest(), None
 
@@ -365,11 +360,7 @@ def _normalize_request(
     # Flat kwargs carry ~40 params; silent drop of non-branch fields is the
     # migration epoch — unknown *branch-semantic* keys still raise via forbid.
     field_names = set(model_cls.model_fields.keys()) | _TRANSPORT_KEYS
-    payload = {
-        k: v
-        for k, v in kwargs.items()
-        if k in field_names and k != "mode" and v is not None
-    }
+    payload = {k: v for k, v in kwargs.items() if k in field_names and k != "mode" and v is not None}
     # request may be a free dict — coerce to flags-only if branch expects InterpretRequestFlags
     if "request" in payload and isinstance(payload["request"], dict):
         # Keep only known InterpretRequestFlags keys for strict branch validation
@@ -385,7 +376,7 @@ def _normalize_request(
         payload["calibration"] = {k: v for k, v in payload["calibration"].items() if k in cal_keys}
     try:
         instance = model_cls.model_validate(payload)
-    except ValidationError as exc:
+    except ValidationError as exc:  # noqa: F841 (exception captured for debug path)
         # Migration epoch: do not block execution on branch-schema drift.
         # Still return a hash of filtered payload for parity tests.
         # W2: transport fields must not influence the canonical payload hash.
@@ -397,9 +388,6 @@ def _normalize_request(
     sem_canonical = {k: v for k, v in canonical.items() if k not in _TRANSPORT_KEYS}
     raw = json.dumps(sem_canonical, sort_keys=True, default=str, separators=(",", ":"))
     return canonical, hashlib.sha256(raw.encode()).hexdigest(), None
-
-
-
 
 
 async def geox_seismic_interpret(
@@ -481,8 +469,7 @@ async def geox_seismic_interpret(
             str(request.get("claim_text") or ""),
             input_class=(calibration or {}).get("input_class") if isinstance(calibration, dict) else "image_only",
             has_velocity=bool(
-                isinstance(calibration, dict)
-                and (calibration.get("velocity_td") or calibration.get("velocity_linear_m_s"))
+                isinstance(calibration, dict) and (calibration.get("velocity_td") or calibration.get("velocity_linear_m_s"))
             ),
         )
         if not _ng.get("ok"):
@@ -714,8 +701,7 @@ async def geox_seismic_interpret(
                 "mode": "interpret_section",
                 "requested_mode": requested_mode,
                 "error": resolved.get("error") or "MISSING_IMAGE",
-                "message": resolved.get("message")
-                or "interpret_section requires image_path or image_data (base64).",
+                "message": resolved.get("message") or "interpret_section requires image_path or image_data (base64).",
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
                 "input_class": "image_only",
@@ -829,12 +815,15 @@ async def geox_seismic_interpret(
             calibration
             or {
                 "input_class": "image_only" if has_image else "unknown",
-                "calibrated": bool(calibration and (
-                    calibration.get("bin_spacing_m")
-                    or calibration.get("vertical_exaggeration")
-                    or calibration.get("velocity_td")
-                    or calibration.get("velocity_linear_m_s")
-                )),
+                "calibrated": bool(
+                    calibration
+                    and (
+                        calibration.get("bin_spacing_m")
+                        or calibration.get("vertical_exaggeration")
+                        or calibration.get("velocity_td")
+                        or calibration.get("velocity_linear_m_s")
+                    )
+                ),
             }
         )
         if input_hash:
@@ -879,7 +868,9 @@ async def geox_seismic_interpret(
                             input_hash = input_hash or ri.get("input_hash")
                     # Also try classical propose path image
                     if not rpath and isinstance(propose_result, dict):
-                        rpath = (propose_result.get("image_path") or propose_result.get("stages", {}).get("R0_reality_gate", {}).get("image_path"))
+                        rpath = propose_result.get("image_path") or propose_result.get("stages", {}).get(
+                            "R0_reality_gate", {}
+                        ).get("image_path")
                     rh = None
                     if gates:
                         # first gate receipt as stamp seed
@@ -992,9 +983,7 @@ async def geox_seismic_interpret(
                 "tool": "geox_seismic_interpret",
                 "mode": "interpret",
                 "error": "MISSING_INPUT",
-                "message": (
-                    "interpret requires framework faults/horizons and/or image_path/image_data."
-                ),
+                "message": ("interpret requires framework faults/horizons and/or image_path/image_data."),
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
             }
@@ -1018,8 +1007,7 @@ async def geox_seismic_interpret(
                 "tool": "geox_seismic_interpret",
                 "mode": mode_norm,
                 "error": resolved.get("error") or "MISSING_IMAGE_PATH",
-                "message": resolved.get("message")
-                or "rsi_pipeline requires image_path or image_data.",
+                "message": resolved.get("message") or "rsi_pipeline requires image_path or image_data.",
                 "governance_status": "HOLD",
                 "local_verdict": "QUALIFIED_CANDIDATE",
                 "input_class": "image_only",

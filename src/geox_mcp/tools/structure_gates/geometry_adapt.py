@@ -120,7 +120,8 @@ def adapt_fault(fault: dict[str, Any], *, reject_anonymous: bool = True) -> dict
             )
         )
         if _has_geom:
-            import hashlib, json as _json
+            import hashlib
+            import json as _json
 
             _stable = _json.dumps({k: out.get(k) for k in sorted(out) if out.get(k) is not None}, sort_keys=True, default=str)
             out["fault_id"] = f"auto-{hashlib.sha256(_stable.encode()).hexdigest()[:8]}"
