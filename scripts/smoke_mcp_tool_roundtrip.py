@@ -129,6 +129,14 @@ def check_live_mcp() -> list[str]:
         )
         return failures
 
+    # 2b) lifecycle: notifications/initialized (Phase A1 gate)
+    _http_json(
+        "POST",
+        MCP,
+        {"jsonrpc": "2.0", "method": "notifications/initialized"},
+        headers={"mcp-session-id": sid, "Mcp-Session-Id": sid},
+    )
+
     # 3) tools/call geox_surface_status
     # Authority session optional — we fail on serialization, not on SESSION_MISSING.
     code, call_body, _ = _http_json(
