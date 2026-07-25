@@ -398,25 +398,60 @@ def register_tools_on(mcp):
             _is_err = True
             _text = "Well View requires well_id or source_uri."
 
-        # ── VAULT999 content-hash receipt (success path only) ───────────
+        # ── Prompt C: canonical artifact spine + VAULT999 receipt ──────
+        _canon_ref: str | None = None
         if not _is_err and _curves and _depths:
             try:
+                from geox_mcp.artifact_identity import make_artifact_id, sha256_for_file
+                from geox_mcp.tools._helpers import _register_artifact
+
+                if _las_path and Path(_las_path).is_file():
+                    sha = sha256_for_file(_las_path) or hashlib.sha256(
+                        json.dumps(
+                            {"well_id": well_id, "n": len(_depths)}, sort_keys=True
+                        ).encode()
+                    ).hexdigest()
+                else:
+                    sha = hashlib.sha256(
+                        json.dumps(
+                            {
+                                "well_id": well_id,
+                                "n_samples": len(_depths),
+                                "curves": sorted(_curves.keys()),
+                            },
+                            sort_keys=True,
+                        ).encode()
+                    ).hexdigest()
+                _canon_ref = make_artifact_id(
+                    "well_las", f"well:{well_id}", sha
+                )
+                try:
+                    _register_artifact(
+                        f"well_las:{well_id}",
+                        las_path=_las_path,
+                        curves=list(_curves.keys()),
+                        claim_state="RAW_OBSERVATION",
+                        source_uri=_las_path or source_uri,
+                        artifact_type="well_log",
+                    )
+                    _register_artifact(
+                        _canon_ref,
+                        las_path=_las_path,
+                        curves=list(_curves.keys()),
+                        claim_state="RAW_OBSERVATION",
+                        source_uri=_las_path or source_uri,
+                        artifact_type="well_log",
+                    )
+                except Exception as _reg_exc:
+                    logger.debug("WELL_VIEW_REGISTER: %s", _reg_exc)
+                _meta["canonical_artifact_ref"] = _canon_ref
+                _meta["artifact_sha256"] = sha
+
                 from geox_mcp.seal_receipt import RiskClass, Reversibility, seal_receipt
 
-                payload_for_hash = {
-                    "well_id": well_id,
-                    "las_path": _las_path,
-                    "n_samples": len(_depths),
-                    "curves": sorted(_curves.keys()),
-                    "depth_range": [_depths[0], _depths[-1]] if _depths else None,
-                    "data_class": _data_class,
-                }
-                sha = hashlib.sha256(
-                    json.dumps(payload_for_hash, sort_keys=True, default=str).encode()
-                ).hexdigest()
                 seal = seal_receipt(
                     tool="geox_well_view",
-                    artifact_id=f"well_view:{well_id}",
+                    artifact_id=_canon_ref,
                     artifact_sha256=sha,
                     actor_id=actor_id,
                     session_id=session_id,
@@ -428,14 +463,15 @@ def register_tools_on(mcp):
                     "state": seal.state,
                     "ref": seal.ref,
                     "sha256": sha,
+                    "canonical_artifact_ref": _canon_ref,
                     "vault_pending": getattr(seal, "vault_pending", seal.state != "SEALED"),
                     "error": getattr(seal, "error", None),
                 }
                 _meta["receipt"] = _receipt
                 if seal.state == "SEALED":
-                    _text += f" Receipt {seal.ref}."
+                    _text += f" Artifact {_canon_ref[:48]}… Receipt {seal.ref}."
                 else:
-                    _text += f" Receipt {seal.state} (vault not final)."
+                    _text += f" Artifact registered; receipt {seal.state}."
             except Exception as _seal_exc:
                 logger.warning("WELL_VIEW_RECEIPT: %s", _seal_exc)
                 _receipt = {"state": "FAILED", "error": type(_seal_exc).__name__}
@@ -459,6 +495,8 @@ def register_tools_on(mcp):
             "message": _text,
             "data_class": _data_class,
             "receipt": _receipt,
+            "canonical_artifact_ref": _canon_ref,
+            "artifact_ref": _canon_ref or (f"well_las:{well_id}" if well_id and not _is_err else None),
         }
         if _is_err:
             _structured["error"] = _text
