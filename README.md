@@ -1,6 +1,6 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-24T16:00Z
+last_verified: 2026-07-25T06:00Z
 valid_until: 2026-08-24
 federation_release: v2026.07.25
 live_commit: f1537312
@@ -9,7 +9,7 @@ mcp_tools_live: dynamic_from_tools_list
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
 
-**SOT:** 2026-07-24 | **seal_seq:** `f1537312`
+**SOT:** 2026-07-25 | **seal_seq:** `f1537312`
 
 # 🌊 GEOX — Evidence-First Geological Intelligence
 
@@ -18,7 +18,7 @@ epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 
 ![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)
 ![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-evidence%20only-1f6feb)
-![Federation](https://img.shields.io/badge/Federation-v2026.07.24-0a7b83)
+![Federation](https://img.shields.io/badge/Federation-v2026.07.25-0a7b83)
 ![License](https://img.shields.io/github/license/ariffazil/GEOX?label=License)
 
 ---
@@ -111,7 +111,7 @@ Each capability below carries the same OBS / DER / INT / SPEC standard:
 
 | Metric | Value | Source of truth |
 |--------|-------|-----------------|
-| MCP tools (public canonical) | 31 — live-witnessed 2026-07-23 (`tools_loaded: 31`) | `curl :8081/health` + `tools/list` |
+| MCP tools (public canonical) | 32 — live-witnessed 2026-07-25 (`tools_loaded: 32`) | `curl :8081/health` + `tools/list` |
 | MCP Apps | 6 (LIVE — SEP-1865) | `ui://` resources below |
 | ui:// resources | 8 | server manifest |
 | Health | **not asserted statically** — verify live | `curl :8081/health` |
@@ -119,7 +119,7 @@ Each capability below carries the same OBS / DER / INT / SPEC standard:
 | Version | `v2026.07.24` | SOT-MANIFEST |
 | License | BSL-1.1 → Apache 2.0 on 2029-06-29 (see note below) | [LICENSE](./LICENSE) + `pyproject.toml` |
 
-> **F4 Clarity rule:** Runtime health and tool counts are witnessed live, not asserted as static prose — per the SOT truth rule, `/health` and `tools/list` are the only valid witnesses. The value 31 above is an OBS-recorded snapshot of the 2026-07-23 witness, not a standing claim. (Earlier prose citing 52 tools reflected an unconsolidated legacy list and has been retired.)
+> **F4 Clarity rule:** Runtime health and tool counts are witnessed live, not asserted as static prose — per the SOT truth rule, `/health` and `tools/list` are the only valid witnesses. The value 32 above is an OBS-recorded snapshot of the 2026-07-25 witness, not a standing claim. (Earlier prose citing 52 tools reflected an unconsolidated legacy list and has been retired.)
 
 ---
 
@@ -220,7 +220,7 @@ src/geox_core/         ← Physics truth engine (NOT agent-facing)
     engines/seismic/        ← AC risk, synthetic, well-tie
 
 src/geox_mcp/          ← MCP agent surface
-    tools/                  ← Canonical public tool surface (31, live-witnessed)
+    tools/                  ← Canonical public tool surface (32, live-witnessed)
     resources/              ← 8 ui:// resources
     prompts/                ← MCP prompt templates
 
@@ -263,7 +263,8 @@ It IS a vendor-neutral layer that can:
 
 | Date | Milestone | Detail |
 |------|-----------|--------|
-| 2026-07-24 | **Federation Unification** | 5 branches resolved to main; PR #133 (WEALTH bridge Forge 2) merged; P0C connector regen; remote surface cleaned |
+| 2026-07-25 | **Deep MCP Readiness Audit** | FIGHT-TEST: 3-agent audit (OpenCode + Claude + ChatGPT); 8 surgical fixes deployed — session binding, false-confidence wrapper, AVO auto-compute, structure falsification auto-ID, correlation HALT-on-empty, ToAC overclaim correction, petrophysics auto-QC gate, ok:true→false on INVALID |
+
 | 2026-07-23 | **Phase C hardening** | K-DIP/K-DL/K-THROW regime aliases wired (commit `8ce723b0`); 6/6 Malay Basin test battery PASS |
 | 2026-07-23 | **Phase C Sealed State** | K-DIP arccos (SVD normal vector math), full-trace K-THROW (tip→centre→tip), zero-false-negative regime aliasing — **75/75 unit tests + 6/6 Malay Basin battery green** |
 | 2026-07-23 | **License Falsification Audit** | AGPL marking identified as drift; BSL-1.1 confirmed against LICENSE + `pyproject.toml` |
