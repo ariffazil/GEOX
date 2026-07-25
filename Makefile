@@ -23,6 +23,10 @@ test:
 smoke:
 	PYTHONPATH=src $(PYTHON) scripts/smoke_test.py
 
+# P1: offline_stub must fail closed when GEOX_REQUIRE_LIVE=1
+smoke-require-live:
+	PYTHONPATH=src $(PYTHON) scripts/smoke_require_live.py
+
 build:
 	$(DOCKER) build -t geox:latest .
 

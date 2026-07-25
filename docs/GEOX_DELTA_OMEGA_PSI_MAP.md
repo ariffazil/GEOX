@@ -98,14 +98,25 @@ VAULT999     →  record
 
 ## 6. Engineering backlog (ordered)
 
-| P | Work | Risk |
-|---|------|------|
-| **P0** | Health: never emit NOMINAL G (this commit + restart) | Low |
-| **P1** | Tool results: stamp `ext_witness_ready: bool` + `mode` | Low |
-| **P1** | Smoke: fail if offline_stub under `GEOX_REQUIRE_LIVE=1` | Low |
-| **P2** | Bridge: session apex_scalars on interpret receipts | Med |
-| **P2** | Drift: tools_loaded 33 vs live 73 surface_drift | Med |
-| **P3** | Archive cold fetchers after import-graph proof | Med |
+| P | Work | Risk | Status |
+|---|------|------|--------|
+| **P0** | Health: never emit NOMINAL G (this commit + restart) | Low | **DONE** `3103fa47` |
+| **P1** | Tool results: stamp `ext_witness_ready: bool` + `data_mode` | Low | **DONE** `ext_witness_stamp` + middleware |
+| **P1** | Smoke: fail if offline_stub under `GEOX_REQUIRE_LIVE=1` | Low | **DONE** `make smoke-require-live` |
+| **P1** | Session apex_scalars on interpret receipts | Low | **DONE** `session_apex` + `_stamp_qualified` |
+| **P2** | Drift: tools_loaded 33 vs live 73 surface_drift | Med | open |
+| **P3** | Archive cold fetchers after import-graph proof | Med | open |
+
+### P1 agent surface
+
+```
+result.data_mode          # live | offline_stub | derived | ...
+result.ext_witness_ready  # True only for live-equivalent
+result.apex_scalars       # kernel echo (interpret receipts)
+result.g_authority        # arifos.health | unmeasured
+```
+
+Env: `GEOX_REQUIRE_LIVE=1` → middleware raises `REQUIRE_LIVE_FAIL` on offline_stub.
 
 ---
 

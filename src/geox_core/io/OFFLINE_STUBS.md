@@ -31,14 +31,16 @@
 ## Entropy policy
 
 1. **Never** promote `mode=offline_stub` results to SEAL-grade Earth claims.  
-2. Agents must surface `mode` in every GEOX evidence envelope.  
+2. Agents must surface `data_mode` + `ext_witness_ready` in every GEOX evidence envelope.  
 3. Full archive to cold storage requires import-graph proof (`rg` zero callers) — deferred.  
-4. Live enable is per-fetcher env flip after credential audit (T2).
+4. Live enable is per-fetcher env flip after credential audit (T2).  
+5. **`GEOX_REQUIRE_LIVE=1`** — middleware fail-closed on offline_stub (`make smoke-require-live`).
 
-## H7 resolution this session
+## H7 resolution
 
 - Documented inventory (entropy: ambiguity → clarity).  
 - No mass delete (would break import surface).  
-- Next: per-organ smoke that fails if stub used under `require_live=1`.
+- P1 stamps: `geox_mcp.ext_witness_stamp` on every tool result.  
+- P1 smoke: `scripts/smoke_require_live.py` / `make smoke-require-live`.
 
 DITEMPA BUKAN DIBERI
