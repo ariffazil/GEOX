@@ -85,8 +85,8 @@ def derive_cutoff_pairs(
             continue
         # hanging-wall side heuristic: left of S-dipping, right of N-dipping
         # from stick: if cmp decreases with depth → S-dipping-ish → HW often north (right)
-        dc = fpts[-1][0] - fpts[0][0]
-        dt = fpts[-1][1] - fpts[0][1]
+        dc = fpts[-1][0] - fpts[0][0]  # noqa: F841
+        dt = fpts[-1][1] - fpts[0][1]  # noqa: F841
         # for reverse/normal sense we compare which side is deeper at cutoff
         for h in horizons:
             if not isinstance(h, dict):

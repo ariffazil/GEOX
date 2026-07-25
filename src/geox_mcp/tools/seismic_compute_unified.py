@@ -74,7 +74,7 @@ async def geox_seismic_compute(
     kwargs = locals().copy()
     # Auto-compute AI from vp*rho for anomalous_contrast when not provided directly
     if kwargs.get("ai_profile") is None and kwargs.get("vp") and kwargs.get("rho"):
-        kwargs["ai_profile"] = [v * r for v, r in zip(kwargs["vp"], kwargs["rho"])]
+        kwargs["ai_profile"] = [v * r for v, r in zip(kwargs["vp"], kwargs["rho"], strict=False)]
     if kwargs.get("ac_depth") is None:
         kwargs["ac_depth"] = kwargs.get("depth")
     if kwargs.get("ac_vp") is None:

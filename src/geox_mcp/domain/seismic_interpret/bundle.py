@@ -91,7 +91,7 @@ def build_interpretation_bundle(
 
     cal = calibration if isinstance(calibration, dict) else (calibration.model_dump() if calibration else {})
     req = request if isinstance(request, dict) else (request.model_dump() if request else InterpretRequestFlags().model_dump())
-    hyp_n = int(req.get("hypothesis_count") or 3)
+    hyp_n = int(req.get("hypothesis_count") or 3)  # noqa: F841 (reserved for future multi-hypothesis scoring)
     ec = earth_constraints if isinstance(earth_constraints, dict) else {}
 
     primary = dict(frameworks_or_primary or {})
@@ -182,24 +182,26 @@ def build_interpretation_bundle(
 
         # Empty conceptual alternatives (explicitly NOT copy-derived geometry clones)
         for i in range(2):
-            hypotheses.append({
-                "hypothesis_id": f"HYP-CONCEPTUAL-00{i+1}",
-                "witness_id": f"W-conceptual-{i+1}",
-                "witness_type": "empty_conceptual",
-                "model_or_method": "requires_measurements",
-                "structural_style": "unspecified",
-                "status": "UNTESTED",
-                "hypothesis_status": "UNTESTED",
-                "evidence_coverage": 0.0,
-                "calibration_status": "UNCALIBRATED",
-                "confidence_value": None,
-                "confidence_basis": None,
-                "confidence": 0.0,
-                "derivation": "empty_conceptual — geometry not supplied; states required measurements only",
-                "supporting_evidence": [],
-                "contradicting_evidence": [],
-                "unresolved_measurements": ["axis_calibration", "velocity_model", "independent_geometry"],
-            })
+            hypotheses.append(
+                {
+                    "hypothesis_id": f"HYP-CONCEPTUAL-00{i + 1}",
+                    "witness_id": f"W-conceptual-{i + 1}",
+                    "witness_type": "empty_conceptual",
+                    "model_or_method": "requires_measurements",
+                    "structural_style": "unspecified",
+                    "status": "UNTESTED",
+                    "hypothesis_status": "UNTESTED",
+                    "evidence_coverage": 0.0,
+                    "calibration_status": "UNCALIBRATED",
+                    "confidence_value": None,
+                    "confidence_basis": None,
+                    "confidence": 0.0,
+                    "derivation": "empty_conceptual — geometry not supplied; states required measurements only",
+                    "supporting_evidence": [],
+                    "contradicting_evidence": [],
+                    "unresolved_measurements": ["axis_calibration", "velocity_model", "independent_geometry"],
+                }
+            )
 
     # Independent witnesses (ChatGPT / Claude / classical-CV / human) — never averaged
     wit_list = list(independent_witnesses or [])
@@ -233,7 +235,7 @@ def build_interpretation_bundle(
         measured_w = applicable_w - len(unmeas_w)
         hypotheses.append(
             HypothesisModel(
-                hypothesis_id=w.get("hypothesis_id") or f"HYP-W-{i+2:03d}",
+                hypothesis_id=w.get("hypothesis_id") or f"HYP-W-{i + 2:03d}",
                 witness_id=w.get("witness_id") or f"W-{src}",
                 witness_type=str(w.get("witness_type") or "independent_model"),
                 model_or_method=str(w.get("model_or_method") or src),
@@ -332,23 +334,25 @@ def build_interpretation_bundle(
             ).model_dump()
         )
         for i in range(2):
-            hypotheses.append({
-                "hypothesis_id": f"HYP-CONCEPTUAL-00{i+1}",
-                "witness_id": "empty_conceptual",
-                "witness_type": "empty_conceptual",
-                "model_or_method": "requires_measurements",
-                "structural_style": "",
-                "status": "UNTESTED",
-                "hypothesis_status": "UNTESTED",
-                "evidence_coverage": 0.0,
-                "calibration_status": "UNCALIBRATED",
-                "confidence_value": None,
-                "confidence_basis": None,
-                "derivation": "No geometry proposed — requires axis calibration, velocity model, and independent witness geometry",
-                "supporting_evidence": [],
-                "contradicting_evidence": [],
-                "unresolved_measurements": ["axis_calibration", "velocity_model", "independent_geometry"],
-            })
+            hypotheses.append(
+                {
+                    "hypothesis_id": f"HYP-CONCEPTUAL-00{i + 1}",
+                    "witness_id": "empty_conceptual",
+                    "witness_type": "empty_conceptual",
+                    "model_or_method": "requires_measurements",
+                    "structural_style": "",
+                    "status": "UNTESTED",
+                    "hypothesis_status": "UNTESTED",
+                    "evidence_coverage": 0.0,
+                    "calibration_status": "UNCALIBRATED",
+                    "confidence_value": None,
+                    "confidence_basis": None,
+                    "derivation": "No geometry proposed — requires axis calibration, velocity model, and independent witness geometry",
+                    "supporting_evidence": [],
+                    "contradicting_evidence": [],
+                    "unresolved_measurements": ["axis_calibration", "velocity_model", "independent_geometry"],
+                }
+            )
 
     missing_scale = not (
         cal.get("calibrated")
