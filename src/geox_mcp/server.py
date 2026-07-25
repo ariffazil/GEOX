@@ -2782,6 +2782,41 @@ async def health_handler(request: Request) -> JSONResponse:
         _kernel_ok = False
         _kernel_note = f"kernel unreachable: {type(_ke).__name__}"
 
+    # ── G-fold: live apex scalars from arifOS kernel /health ──────────
+    # F2 TRUTH: never invent NOMINAL 0.5. Constitutional G is minted only via
+    # arif_think(mode='apex'); health may carry MEASURED/UNMEASURED echoes.
+    # Reject legacy status "NOMINAL" (fabricated vitals). See:
+    # AAA/governance/G_FOLD_AS_COMPASS.md · MULTIMODAL_AGI_DOCTRINE.md
+    _UNMEASURED_APEX: dict[str, dict[str, object]] = {
+        "G": {"value": None, "status": "UNMEASURED"},
+        "C_dark": {"value": None, "status": "UNMEASURED"},
+        "W3": {"value": None, "status": "UNMEASURED"},
+        "h": {"value": None, "status": "UNMEASURED"},
+        "QDF": {"value": None, "status": "UNMEASURED"},
+    }
+    _apex_scalars: dict[str, dict[str, object]] = {
+        k: dict(v) for k, v in _UNMEASURED_APEX.items()
+    }
+    try:
+        _kh_apex = _kh_data.get("apex_scalars")  # type: ignore[union-attr]
+        if isinstance(_kh_apex, dict):
+            for _k in _UNMEASURED_APEX:
+                _v = _kh_apex.get(_k)
+                if not isinstance(_v, dict) or "value" not in _v:
+                    continue
+                _st = str(_v.get("status") or "").upper()
+                # Fabricated NOMINAL / missing status → honest UNMEASURED
+                if _st in ("", "NOMINAL", "DEFAULT", "STUB"):
+                    continue
+                _apex_scalars[_k] = {
+                    "value": _v.get("value"),
+                    "status": _st or "MEASURED",
+                    "source": "arifos.health",
+                    "g_canonical_source": "arif_think.mode=apex",
+                }
+    except Exception:
+        pass
+
     _geo_status = "healthy" if _kernel_ok else "degraded"
     _owner_color = "GREEN" if _kernel_ok else "AMBER"
     _owner_reasons = [
@@ -2825,13 +2860,7 @@ async def health_handler(request: Request) -> JSONResponse:
             # arifOS deployment drift surfaces here. Until arifOS-side
             # E.2 lands, GEOX makes the breach visible to operators.
             "deployment_drift": await _probe_arifos_deployment_drift(),
-            "apex_scalars": {
-                "G": {"value": 0.5, "status": "NOMINAL"},
-                "C_dark": {"value": 0.02, "status": "NOMINAL"},
-                "W3": {"value": 0.8, "status": "NOMINAL"},
-                "h": {"value": 0.04, "status": "NOMINAL"},
-                "QDF": {"value": 0.0, "status": "NOMINAL"},
-            },
+            "apex_scalars": _apex_scalars,
             "freshness": {
                 "status": "fresh",
                 "checked_at_utc": _GIT_VERSION,
