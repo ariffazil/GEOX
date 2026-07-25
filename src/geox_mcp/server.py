@@ -2684,12 +2684,7 @@ async def health_handler(request: Request) -> JSONResponse:
             async with httpx.AsyncClient(timeout=2.0) as _client:
                 _resp = await _client.get("http://127.0.0.1:8088/api/build-info")
                 _data = _resp.json()
-            running_sha = (
-                _data.get("sha")
-                or _data.get("short_sha")
-                or _data.get("deployed_commit")
-                or "unknown"
-            )
+            running_sha = _data.get("sha") or _data.get("short_sha") or _data.get("deployed_commit") or "unknown"
 
             # 2. Read the source commit from arifOS's git HEAD.
             source_sha = "unknown"
@@ -2709,14 +2704,8 @@ async def health_handler(request: Request) -> JSONResponse:
 
             # 3. Compare short shas (audit's exact invariant).
             source_short = source_sha[:7] if source_sha != "unknown" else "unknown"
-            running_short = (
-                running_sha[:7] if running_sha != "unknown" else "unknown"
-            )
-            drift = (
-                source_short != "unknown"
-                and running_short != "unknown"
-                and source_short != running_short
-            )
+            running_short = running_sha[:7] if running_sha != "unknown" else "unknown"
+            drift = source_short != "unknown" and running_short != "unknown" and source_short != running_short
 
             return {
                 "source_commit": source_sha,
@@ -2724,9 +2713,7 @@ async def health_handler(request: Request) -> JSONResponse:
                 "deployed_commit": running_sha,  # built == deployed for the federation case
                 "drift": drift,
                 "status": "degraded" if drift else "aligned",
-                "source": (
-                    "arifOS:/api/build-info + /root/arifOS/.git HEAD (P0-5 GEOX-side probe)"
-                ),
+                "source": ("arifOS:/api/build-info + /root/arifOS/.git HEAD (P0-5 GEOX-side probe)"),
                 "rule": "source_commit == built_commit == deployed_commit",
             }
         except Exception as _de:
@@ -2776,9 +2763,7 @@ async def health_handler(request: Request) -> JSONResponse:
             from geox_mcp.canonical_surface_gate import canonical_set
 
             pub = canonical_set()
-            live_public = [n for n in live_names if n in pub] or (
-                list(pub) if _public_count >= len(pub) else live_names
-            )
+            live_public = [n for n in live_names if n in pub] or (list(pub) if _public_count >= len(pub) else live_names)
             report = drift_report(live_public)
             source = "geox_mcp:/health (bootstrap from registered tools; no tools/list yet)"
         return {
@@ -2824,9 +2809,7 @@ async def health_handler(request: Request) -> JSONResponse:
         "h": {"value": None, "status": "UNMEASURED"},
         "QDF": {"value": None, "status": "UNMEASURED"},
     }
-    _apex_scalars: dict[str, dict[str, object]] = {
-        k: dict(v) for k, v in _UNMEASURED_APEX.items()
-    }
+    _apex_scalars: dict[str, dict[str, object]] = {k: dict(v) for k, v in _UNMEASURED_APEX.items()}
     try:
         _kh_apex = _kh_data.get("apex_scalars")  # type: ignore[union-attr]
         if isinstance(_kh_apex, dict):
@@ -2855,6 +2838,32 @@ async def health_handler(request: Request) -> JSONResponse:
         f"kernel_verdict={_kernel_verdict}",
         "service_healthy" if _kernel_ok else "kernel_not_SEAL",
     ]
+
+    # ── F2 TRUTH: surface drift gate (2026-07-25) ──────────────────────
+    # A healthy badge during drift = Floor-2 violation.
+    # Consume the middleware's filtered-surface drift report.
+    _surface_drift = _surface_drift_summary()
+    if not _surface_drift.get("ok", True):
+        _geo_status = "degraded"
+        _owner_color = "AMBER"
+        _owner_reasons.append(
+            f"surface_drift: {_surface_drift.get('drift_count', 0)} drifted, {_surface_drift.get('gap_count', 0)} gaps"
+        )
+
+    # ── F2 TRUTH: registry truth gate (2026-07-25) ────────────────────
+    # check_registry_truth.py exit 1 = registry inconsistency.
+    # Runtime probe: compare manifest counts vs canonical declared count.
+    try:
+        from geox_mcp.surface_manifest import manifest_tool_map
+
+        _manifest = manifest_tool_map()
+        _manifest_count = len([e for e in _manifest.values() if not (hasattr(e, "is_internal") and e.is_internal)])
+        if _manifest_count != len(CANONICAL_PUBLIC_TOOLS):
+            _geo_status = "degraded"
+            _owner_color = "AMBER"
+            _owner_reasons.append(f"registry_truth: manifest={_manifest_count} canonical={len(CANONICAL_PUBLIC_TOOLS)}")
+    except Exception:
+        pass  # registry truth probe is advisory; degrade gracefully
 
     return JSONResponse(
         {
