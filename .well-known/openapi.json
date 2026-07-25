@@ -8,7 +8,7 @@
   "paths": {
     "/mcp": {
       "post": {
-        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint. x-mcp-tools MUST equal the 32 canonical plugin-exposed tools.",
+        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint. x-mcp-tools MUST equal the 33 canonical plugin-exposed tools.",
         "operationId": "mcpEndpoint",
         "summary": "MCP JSON-RPC 2.0 endpoint",
         "x-mcp-tools": [
@@ -410,6 +410,34 @@
             "domain": "earth.well",
             "lane": "evidence",
             "name": "geox_well_qc",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "observe",
+            "description": "Well Witness View \u2014 hydrate real LAS curves into interactive tracks for WellDesk/Well Witness widgets.",
+            "domain": "earth.well",
+            "lane": "evidence",
+            "name": "geox_well_view",
             "parameters": {
               "properties": {
                 "actor_id": {

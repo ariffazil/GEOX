@@ -362,19 +362,71 @@ class GeoxGovernanceMiddleware(Middleware):
     ) -> Any:
         """Filter tools/list to canonical public surface only.
 
-        Single truth: clients see ONLY the 16 canonical tools from
+        Single truth: clients see ONLY the canonical tools from
         CANONICAL_PUBLIC_TOOLS. Compat aliases are accepted by on_call_tool
         but never exposed in tools/list. This eliminates the split-brain
         where clients discovered old names that F9 would block.
+
+        Audit-grade (P0-1 hardening 2026-07-25 · FI-008):
+          - All drift is logged at WARNING with the SURFACE_DRIFT /
+            SURFACE_GAP event codes from canonical_surface_gate.
+          - Drift count + last drift report are stored on the middleware
+            instance so the /drift HTTP endpoint can surface them.
+          - When no drift is observed, a single INFO line is emitted
+            with the SURFACE_OK event code (suitable for health probes).
         """
         result = await call_next(context)
         if result is None:
             return result
-        # Filter to PUBLIC surface only (canonical 16, not compat)
-        filtered = [t for t in result if getattr(t, "name", None) in self._PUBLIC_SURFACE]
+
+        # Lazy import to avoid circular dependency at module load.
+        from geox_mcp.canonical_surface_gate import (
+            canonical_set,
+            drift_report,
+            EVT_SURFACE_DRIFT,
+            EVT_SURFACE_GAP,
+            EVT_SURFACE_OK,
+        )
+
+        live_names = sorted(getattr(t, "name", "") for t in result if getattr(t, "name", None))
+        canonical = canonical_set()
+        canonical_public_tools = self._PUBLIC_SURFACE
+
+        # Filter to PUBLIC surface only (canonical, not compat).
+        filtered = [t for t in result if getattr(t, "name", None) in canonical_public_tools]
         removed = len(result) - len(filtered)
+
+        # Build audit-grade drift report.
+        report = drift_report(live_names)
+        # Stash for /drift endpoint.
+        self._LAST_DRIFT_REPORT = report
+
         if removed:
-            logger.debug(f"surface_filter: removed {removed} non-canonical tools from tools/list")
+            logger.warning(
+                "%s live_count=%d canonical_count=%d drift_count=%d removed=%s",
+                EVT_SURFACE_DRIFT,
+                report["live_count"],
+                report["canonical_count"],
+                report["drift_count"],
+                report["drifted"],
+            )
+            if report["missing"]:
+                logger.warning(
+                    "%s canonical_count=%d live_count=%d gap_count=%d missing=%s",
+                    EVT_SURFACE_GAP,
+                    report["canonical_count"],
+                    report["live_count"],
+                    report["gap_count"],
+                    report["missing"],
+                )
+        else:
+            logger.info(
+                "%s live_count=%d canonical_count=%d ok=true",
+                EVT_SURFACE_OK,
+                report["live_count"],
+                report["canonical_count"],
+            )
+
         return filtered
 
     async def on_call_tool(
@@ -403,6 +455,67 @@ class GeoxGovernanceMiddleware(Middleware):
                 arguments = {}
         else:
             arguments = raw_arguments
+
+        # ── P0-2 authority gate (2026-07-25 · FI-008) ────────────────────
+        # Admit-or-reject at the gateway. Replaces the pre-P0-2 behavior
+        # where SCT was optional and anonymous OBSERVE-ONLY calls could
+        # trigger MUTATE tools (the audit's "observe-only allowed
+        # persistent ingestion" failure). Opt-out via
+        # GEOX_REQUIRE_SESSION_FOR_MUTATE=0 for dev/smoke environments.
+        try:
+            from geox_mcp.authority_gate import (
+                AuthorityRejection,
+                enforce_authority,
+            )
+
+            enforce_authority(tool_name=tool_name, arguments=arguments)
+        except AuthorityRejection as _auth_rej:
+            envelope = _auth_rej.to_envelope()
+            envelope["gate"] = (
+                f"P0-2 gateway authority (http {_auth_rej.http_status})"
+            )
+            logger.warning(
+                "AUTH_GATE: blocked tool=%s error=%s http=%d session=%s actor=%s",
+                tool_name,
+                _auth_rej.error_code,
+                _auth_rej.http_status,
+                _auth_rej.session_id or "anonymous",
+                _auth_rej.actor_id or "anonymous",
+            )
+            raise ToolError(
+                json.dumps(
+                    {
+                        "guard": _auth_rej.error_code,
+                        "verdict": "HOLD",
+                        "lane": "P0-2-authority",
+                        "reason": _auth_rej.message,
+                        "fix": (
+                            "Provide a verified session_id (SCT or SEAL-* "
+                            "format) and an actor_id. Required authority for "
+                            f"'{tool_name}' is {_auth_rej.required_authority}."
+                        ),
+                        "http_status": _auth_rej.http_status,
+                        "session_id": _auth_rej.session_id,
+                        "actor_id": _auth_rej.actor_id,
+                        "required_authority": _auth_rej.required_authority,
+                        "session_authority": _auth_rej.session_authority,
+                    }
+                )
+            )
+        except Exception as _gate_exc:
+            # Fail-closed: a broken gate must not silently admit.
+            logger.error("AUTH_GATE: infrastructure failure: %s", _gate_exc)
+            raise ToolError(
+                json.dumps(
+                    {
+                        "guard": "AUTH_GATE_DEGRADED",
+                        "verdict": "HOLD",
+                        "lane": "P0-2-authority",
+                        "reason": f"authority gate infrastructure error: {type(_gate_exc).__name__}",
+                        "fix": "Inspect logs; restore arifOS SCT kernel reachability.",
+                    }
+                )
+            )
 
         # ── SCT ingress gate (2026-07-17) ──────────────────────────────────
         # If caller presents an SCT, verify via arifOS. Fail closed on invalid.
@@ -550,7 +663,7 @@ class GeoxGovernanceMiddleware(Middleware):
         # ── Organ governance: route C2+/IRREVERSIBLE through arifOS kernel ──
         if self._check_governance is not None:
             try:
-                gov_verdict, gov_error = await self._check_governance(
+                gov_verdict, gov_error, artifact_id = await self._check_governance(
                     tool_name=tool_name,
                     arguments=arguments,
                     is_direct_call=True,  # Raw MCP call = direct agent call
@@ -598,7 +711,21 @@ class GeoxGovernanceMiddleware(Middleware):
 
                 raise ToolError(err_msg)
 
-            logger.debug(f"GOV_PASS: {tool_name} verdict={gov_verdict}")
+            logger.debug(f"GOV_PASS: {tool_name} verdict={gov_verdict} artifact_id={artifact_id}")
+
+            # ═══ 2026-07-25 HARDENING: Inject artifact_id into tool response ═══
+            # Extract session/actor from arguments for the governance envelope.
+            _gov_sid = arguments.get("session_id", "") if isinstance(arguments, dict) else ""
+            _gov_aid = arguments.get("actor_id", "anonymous") if isinstance(arguments, dict) else "anonymous"
+            import time as _time_mod
+
+            _governance_envelope = {
+                "artifact_id": artifact_id,
+                "gate_verdict": gov_verdict,
+                "session_id": _gov_sid,
+                "actor_id": _gov_aid,
+                "timestamp_utc": _time_mod.strftime("%Y-%m-%dT%H:%M:%SZ", _time_mod.gmtime()),
+            }
 
         # ═══ P0 #1 fix: wrap tool execution to catch schema/type errors ═════
         # FastMCP schema validation errors (PydanticValidationError, TypeError)

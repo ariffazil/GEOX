@@ -1,11 +1,11 @@
 {
   "$schema": "arifOS/tools-manifest/v2",
-  "canonical_tools": 80,
+  "canonical_tools": 81,
   "internal_tools": 48,
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
   "organ": "geox",
   "policy": "public == manifest public surface \u2014 plugin export is subset (not all public tools are plugin-exposed)",
-  "surface_tools": 32,
+  "surface_tools": 33,
   "tools": [
     {
       "app_exposed": true,
@@ -206,6 +206,24 @@
       "mime_type": null,
       "name": "geox_well_qc",
       "ui": null,
+      "version": "2026.07.25"
+    },
+    {
+      "app_exposed": true,
+      "axis": "observe",
+      "description": "Well Witness View \u2014 hydrate real LAS curves into interactive tracks for WellDesk/Well Witness widgets.",
+      "domain": "earth.well",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_well_view",
+      "ui": {
+        "mime_type": "text/html;profile=mcp-app",
+        "render_mode": "panel",
+        "resource_uri": "ui://geox/well-desk",
+        "title": "GEOX WellDesk"
+      },
       "version": "2026.07.25"
     },
     {

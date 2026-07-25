@@ -55,12 +55,13 @@ authority:
     - deployment_substrate
     - final_seal
 
-canonical_tool_count: 32
+canonical_tool_count: 33
 internal_tool_count: 30
 canonical_tools:
   # Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
   # Live verification: curl -sf http://localhost:8081/health
-  # Updated: 2026-07-24 (Synchronized to 32 canonical tools from registry.py)
+  # Updated: 2026-07-25 (Synchronized to 33 canonical tools from registry.py)
+  # Added: geox_well_view (P0-1 hardening 2026-07-25 · FI-008)
   - geox_basin
   - geox_basin_backstrip
   - geox_claim
@@ -92,6 +93,7 @@ canonical_tools:
   - geox_well_desk
   - geox_well_ingest
   - geox_well_qc
+  - geox_well_view
   - geox_workspace
 
 mcp_conformance:
