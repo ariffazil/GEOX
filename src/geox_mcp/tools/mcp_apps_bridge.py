@@ -850,14 +850,22 @@ def wrap_as_ui_tool_result(
                 or result.get("status")
                 or f"{app_id}: ok={result.get('ok', result.get('status', 'done'))}"
             )
-        _is_err = bool(
-            result.get("isError")
-            or result.get("is_error")
-            or result.get("ok") is False
-            or result.get("status") == "INVALID"
-            or result.get("execution_status") in ("ERROR", "FAILED")
-            or (isinstance(result.get("primary_artifact"), dict) and result["primary_artifact"].get("status") == "ERROR")
-        )
+        try:
+            from geox_mcp.result_truth import result_is_error
+
+            _is_err = result_is_error(result)
+        except Exception:
+            _is_err = bool(
+                result.get("isError")
+                or result.get("is_error")
+                or result.get("ok") is False
+                or result.get("status") in ("INVALID", "NOT_FOUND", "ERROR")
+                or result.get("execution_status") in ("ERROR", "FAILED")
+                or (
+                    isinstance(result.get("primary_artifact"), dict)
+                    and result["primary_artifact"].get("status") == "ERROR"
+                )
+            )
         return ui_tool_result(
             app_id=app_id,
             text=str(summary),

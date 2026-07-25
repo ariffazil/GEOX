@@ -96,6 +96,26 @@ def _validate_bbox(bbox: list[float]) -> str | None:
 
 # ── TOOL 1: geox_map_layers_list ────────────────────────────────────────────
 
+# Spatial defaults for layers missing explicit bbox (F2: no silent global availability)
+_SABAH_DEFAULT_BBOX = [115.0, 4.0, 119.5, 7.5]
+_SEA_DEFAULT_BBOX = [95.0, -11.0, 141.0, 25.0]
+_GLOBAL_BBOX = [-180.0, -90.0, 180.0, 90.0]
+
+
+def _layer_effective_bbox(layer: dict) -> tuple[list[float] | None, str]:
+    """Return (bbox, source). source: declared|global|default_sabah|default_sea|none."""
+    declared = layer.get("bbox")
+    if isinstance(declared, list) and len(declared) == 4:
+        return declared, "declared"
+    lid = str(layer.get("id") or "")
+    if lid.startswith(("ne_", "global_")):
+        return list(_GLOBAL_BBOX), "global"
+    if lid.startswith("sab_"):
+        return list(_SABAH_DEFAULT_BBOX), "default_sabah"
+    if lid.startswith(("sea_", "malaysia")):
+        return list(_SEA_DEFAULT_BBOX), "default_sea"
+    return None, "none"
+
 
 async def geox_map_layers_list(
     bbox: list[float],
@@ -112,6 +132,8 @@ async def geox_map_layers_list(
 
     Returns:
         Layer catalogue with metadata, truth classes, and availability.
+        Layers without spatial extent never claim available=true outside
+        their default regional footprint (Sabah / SE Asia / global).
     """
     bbox_err = _validate_bbox(bbox)
     if bbox_err:
@@ -145,44 +167,77 @@ async def geox_map_layers_list(
             }
         theme_layer_ids = set(themes[theme])
 
-    # Filter layers
+    # Filter layers — always apply spatial filter (F2 no false availability)
     matched = []
     for layer in all_layers:
-        # Theme filter
         if theme_layer_ids is not None and layer["id"] not in theme_layer_ids:
             continue
 
-        # Availability filter
-        if not include_unavailable and not layer.get("available", True):
+        registry_available = bool(layer.get("available", True))
+        eff_bbox, bbox_source = _layer_effective_bbox(layer)
+
+        if eff_bbox is None:
+            # No extent → cannot claim available for any bbox
+            if not include_unavailable:
+                continue
+            matched.append(
+                {
+                    "id": layer["id"],
+                    "name": layer["name"],
+                    "type": layer["type"],
+                    "geometry_type": layer.get("geometry_type", "unknown"),
+                    "source": layer["source"],
+                    "truth_class": layer["truth_class"],
+                    "scale": layer.get("scale", "unknown"),
+                    "available": False,
+                    "available_reason": "no_spatial_extent",
+                    "bbox_source": "none",
+                    "description": layer.get("description", ""),
+                }
+            )
             continue
 
-        # Bbox intersection filter
-        layer_bbox = layer.get("bbox")
-        if layer_bbox and not _bbox_intersects(bbox, layer_bbox):
+        if not _bbox_intersects(bbox, eff_bbox):
             continue
 
-        matched.append(
-            {
-                "id": layer["id"],
-                "name": layer["name"],
-                "type": layer["type"],
-                "geometry_type": layer.get("geometry_type", "unknown"),
-                "source": layer["source"],
-                "truth_class": layer["truth_class"],
-                "scale": layer.get("scale", "unknown"),
-                "available": layer.get("available", True),
-                "description": layer.get("description", ""),
-            }
-        )
+        # Outside declared registry availability
+        if not registry_available and not include_unavailable:
+            continue
+
+        available = registry_available
+        available_reason = None
+        if bbox_source.startswith("default_") and available:
+            available_reason = f"extent_assumed_{bbox_source}"
+
+        entry = {
+            "id": layer["id"],
+            "name": layer["name"],
+            "type": layer["type"],
+            "geometry_type": layer.get("geometry_type", "unknown"),
+            "source": layer["source"],
+            "truth_class": layer["truth_class"],
+            "scale": layer.get("scale", "unknown"),
+            "available": available,
+            "bbox": eff_bbox,
+            "bbox_source": bbox_source,
+            "description": layer.get("description", ""),
+        }
+        if available_reason:
+            entry["available_reason"] = available_reason
+        if not available:
+            entry["available_reason"] = entry.get("available_reason") or "registry_unavailable"
+        matched.append(entry)
 
     return {
         "status": "OK",
+        "ok": True,
         "bbox": bbox,
         "crs": "EPSG:4326",
         "theme": theme,
         "layers": matched,
         "layer_count": len(matched),
         "guardrails": guardrails,
+        "data_mode": "catalog",
     }
 
 

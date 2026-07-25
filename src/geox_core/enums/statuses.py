@@ -667,19 +667,46 @@ def get_standard_envelope(
 
     # ── APEX Runtime Governance Envelope (APEX-MCP-001) ──────────────────
     # GEOX = Earth Evidence organ. Maps physical signals to 10 APEX gates.
+    # READ envelopes with zero evidence_refs always fail signal gate → constant
+    # G≈0.16 HOLD noise that contradicts execution_status=SUCCESS. Omit full
+    # apex on empty-ref READ; constitutional G stays arif_think(mode=apex) only.
     try:
-        from geox_core.apex_envelope_geox import geox_apex_envelope
-
-        response["apex"] = geox_apex_envelope(
-            tool_name=tool_name or primary_artifact.get("tool", "unknown"),
-            claim_state=claim_state,
-            perception_class=perception_class or "HYPOTHESIS",
-            evidence_refs=evidence_refs or [],
-            humility_score=humility_score,
-            uncertainty=uncertainty,
-            governance_status=governance_status,
-            actor_id=actor_id or os.environ.get("GEOX_ACTOR_ID"),
+        _refs = evidence_refs or []
+        _gs = str(
+            governance_status.value if hasattr(governance_status, "value") else governance_status
+            or ""
+        ).upper()
+        _is_read_no_claim = len(_refs) == 0 and _gs in (
+            "QUALIFY",
+            "PASS",
+            "ADVISORY",
+            "HOLD",
+            "UNKNOWN",
+            "",
         )
+        if _is_read_no_claim and not (
+            (claim_state or "").upper() in ("OBSERVED", "DERIVED_CANDIDATE") and _refs
+        ):
+            response["apex"] = {
+                "emitted": False,
+                "reason": "READ_NO_REFS — full apex omitted (signal gate would be constant HOLD noise)",
+                "action_class": "READ",
+                "g_note": "Constitutional G only via arif_think(mode=apex); GEOX does not mint G",
+            }
+        else:
+            from geox_core.apex_envelope_geox import geox_apex_envelope
+
+            response["apex"] = geox_apex_envelope(
+                tool_name=tool_name or primary_artifact.get("tool", "unknown"),
+                claim_state=claim_state,
+                perception_class=perception_class or "HYPOTHESIS",
+                evidence_refs=_refs,
+                humility_score=humility_score,
+                uncertainty=uncertainty,
+                governance_status=governance_status,
+                actor_id=actor_id or os.environ.get("GEOX_ACTOR_ID"),
+            )
+            response["apex"]["emitted"] = True
     except Exception:
         pass  # APEX envelope is additive; never breaks tool output
 

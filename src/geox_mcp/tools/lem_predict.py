@@ -601,6 +601,8 @@ async def geox_lem_predict(req: LEMPredictRequest) -> dict[str, Any]:
 
 def _envelope_error(message: str, req: LEMPredictRequest) -> dict[str, Any]:
     return {
+        "ok": False,
+        "isError": True,
         "execution_status": "ERROR",
         "tool_class": "lem_inference",
         "claim_state": "VOID",

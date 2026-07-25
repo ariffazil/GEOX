@@ -31,6 +31,7 @@ Delete this file and remove the 3-line ``filter_tools_list`` call from the
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import logging
@@ -125,12 +126,15 @@ def drift_report(
     drift = sorted(live_set - _CANONICAL_SET)
     gap = sorted(_CANONICAL_SET - live_set)
     overlap = sorted(live_set & _CANONICAL_SET)
+    # Phase A: drift (extra compat/legacy tools on the live surface) is
+    # expected — the middleware filters them from tools/list.  ok=False only
+    # when canonical tools are MISSING from the live surface (gaps).
     return {
         "canonical_count": len(_CANONICAL_SET),
         "live_count": len(live_set),
         "drift_count": len(drift),
         "gap_count": len(gap),
-        "ok": len(drift) == 0 and len(gap) == 0,
+        "ok": len(gap) == 0,
         "drifted": drift,
         "missing": gap,
         "overlap_count": len(overlap),

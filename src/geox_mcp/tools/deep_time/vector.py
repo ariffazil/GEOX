@@ -48,6 +48,82 @@ from .schemas import (
 
 INTERVAL_DISTRIBUTION_THRESHOLD_MYR = 5.0
 
+# Canonical mass-extinction windows (Ma before present). Inclusive edges.
+# Used to populate mass_extinction_events_in_window (was hardcoded []).
+_MASS_EXTINCTIONS: list[dict] = [
+    {
+        "id": "K-Pg",
+        "name": "Cretaceous–Paleogene (K-Pg) mass extinction",
+        "age_ma": 66.0,
+        "window_ma": 0.5,  # ±0.5 Myr recognition window
+        "severity": "big_five",
+        "notes": "Non-avian dinosaurs, ammonites, ~75% species; Chicxulub + Deccan context",
+        "citation": "Gradstein et al. (2020) GTS2020; Schulte et al. (2010) Science",
+    },
+    {
+        "id": "P-Tr",
+        "name": "Permian–Triassic (P-Tr) mass extinction",
+        "age_ma": 251.9,
+        "window_ma": 1.0,
+        "severity": "big_five",
+        "notes": "~96% marine species; end-Permian crisis",
+        "citation": "Gradstein et al. (2020) GTS2020",
+    },
+    {
+        "id": "Tr-J",
+        "name": "Triassic–Jurassic mass extinction",
+        "age_ma": 201.4,
+        "window_ma": 1.0,
+        "severity": "big_five",
+        "notes": "End-Triassic biotic crisis",
+        "citation": "Gradstein et al. (2020) GTS2020",
+    },
+    {
+        "id": "Late-Devonian",
+        "name": "Late Devonian extinctions",
+        "age_ma": 372.0,
+        "window_ma": 8.0,
+        "severity": "big_five",
+        "notes": "Kellwasser / Hangenberg pulses (approx. mid-window)",
+        "citation": "Gradstein et al. (2020) GTS2020",
+    },
+    {
+        "id": "O-S",
+        "name": "Ordovician–Silurian mass extinction",
+        "age_ma": 443.8,
+        "window_ma": 2.0,
+        "severity": "big_five",
+        "notes": "End-Ordovician biotic crisis",
+        "citation": "Gradstein et al. (2020) GTS2020",
+    },
+]
+
+
+def _mass_extinctions_in_interval(top_ma: float, base_ma: float) -> list:
+    """Return extinction events whose age falls in [top_ma, base_ma] (or near edges)."""
+    lo, hi = (top_ma, base_ma) if top_ma <= base_ma else (base_ma, top_ma)
+    # Point queries (duration ~0): expand by each event's window
+    out = []
+    for ev in _MASS_EXTINCTIONS:
+        a = float(ev["age_ma"])
+        w = float(ev.get("window_ma") or 0.5)
+        # Hit if event age overlaps query interval expanded by half-window
+        if (a + w) >= lo and (a - w) <= hi:
+            out.append(
+                EarthStateVariable(
+                    name=f"mass_extinction:{ev['id']}",
+                    value=f"{ev['id']} @ {a} Ma — {ev['name']}",
+                    units="event",
+                    epistemic_level="OBSERVED",
+                    source_citation=ev["citation"],
+                    coverage_top_ma=a - w,
+                    coverage_base_ma=a + w,
+                    notes=f"{ev['notes']} | severity={ev['severity']}",
+                    confidence=0.95,
+                )
+            )
+    return out
+
 
 def _compute_seal(envelope_dict: dict, ics_chart_version: str) -> str:
     """Compute a deterministic VAULT999-style seal for the envelope.
@@ -197,7 +273,9 @@ def assemble_earth_state_vector(age_res: AgeResolution) -> EarthStateVector:
         orbital_eccentricity=ecc,
         orbital_obliquity_deg=obliquity,
         biotic_realm=biotic,
-        mass_extinction_events_in_window=[],
+        mass_extinction_events_in_window=_mass_extinctions_in_interval(
+            age_res.top_ma, age_res.base_ma
+        ),
         ics_chart_version=age_res.ics_chart_version,
         ics_chart_hash=None,
         n_variables_with_real_data=n_real,

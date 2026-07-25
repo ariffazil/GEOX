@@ -205,12 +205,9 @@ def register_tools_on(mcp):
             )
             result = await _impl(**args)
             if isinstance(result, dict):
-                _is_err_ingest = (
-                    result.get("status") == "INVALID"
-                    or result.get("isError") is True
-                    or "error" in result
-                    or result.get("ok") is False
-                )
+                from geox_mcp.result_truth import result_is_error as _result_is_error
+
+                _is_err_ingest = _result_is_error(result)
                 result = {
                     **result,
                     "_memory": "LIVE_PROBE",
@@ -323,21 +320,39 @@ def register_tools_on(mcp):
             else:
                 _text = f"No LAS file found at {_path}. Use geox_well_ingest to inspect file first."
         elif well_id:
-            _text = f"Well {well_id}: no LAS source provided. Use source_uri to hydrate tracks."
+            _is_err = True
+            _text = (
+                f"Well '{well_id}': NOT_FOUND — no LAS source provided. "
+                f"Use source_uri to hydrate tracks, or geox_well_ingest first."
+            )
         else:
             _is_err = True
             _text = "Well View requires well_id or source_uri."
 
         _structured = {
+            "ok": not _is_err,
+            "isError": _is_err,
+            "status": "NOT_FOUND" if _is_err and "NOT_FOUND" in _text else ("ERROR" if _is_err else "OK"),
             "well_id": well_id,
             "mode": "view",
+            "data_mode": "view",
             "source_uri": source_uri,
             "curves": _curves,
             "depths": _depths,
             "meta": _meta,
+            "message": _text,
         }
+        if _is_err:
+            _structured["error"] = _text
         return wrap_as_ui_tool_result(
-            {"well_id": well_id, "curves": _curves, "depths": _depths},
+            {
+                "well_id": well_id,
+                "curves": _curves,
+                "depths": _depths,
+                "ok": not _is_err,
+                "isError": _is_err,
+                "status": _structured["status"],
+            },
             app_id="well_desk",
             params={"well_id": well_id} if well_id else None,
             text=_text,
@@ -521,13 +536,10 @@ def register_tools_on(mcp):
             )
             result = await _impl(**args)
             if isinstance(result, dict):
-                # Determine if the result is genuinely errored
-                _is_error = (
-                    result.get("status") == "INVALID"
-                    or result.get("isError") is True
-                    or "error" in result
-                    or result.get("ok") is False
-                )
+                # Determine if the result is genuinely errored (never empty error="")
+                from geox_mcp.result_truth import result_is_error as _result_is_error
+
+                _is_error = _result_is_error(result)
                 # Stage 1 outputSchema enforcement: SUCCESS with null evidence is a false success.
                 # An MCP tool must NEVER claim success when it computed nothing.
                 _exec_ok = result.get("execution_status") in ("SUCCESS", None)
@@ -563,12 +575,9 @@ def register_tools_on(mcp):
             # Compact structured payload for iframe (drop dense arrays from model path)
             sc_override = None
             if isinstance(result, dict):
-                _sc_is_err = (
-                    result.get("status") == "INVALID"
-                    or result.get("isError") is True
-                    or "error" in result
-                    or result.get("ok") is False
-                )
+                from geox_mcp.result_truth import result_is_error as _result_is_error
+
+                _sc_is_err = _result_is_error(result)
                 sc_override = {
                     "ok": False if _sc_is_err else result.get("ok", True),
                     "tool": "geox_petrophysics",
@@ -579,7 +588,11 @@ def register_tools_on(mcp):
                         "well_id": _wid,
                         "mode": mode,
                         "band": "DERIVED",
-                        "note": "Petrophysics complete — open Well Witness for tracks.",
+                        "note": (
+                            "Petrophysics incomplete — status INVALID; ingest LAS / supply curves first."
+                            if _sc_is_err
+                            else "Petrophysics complete — open Well Witness for tracks."
+                        ),
                     },
                     "epistemic": result.get("_epistemic")
                     or ({"layer": "UNKNOWN", "confidence_cap": 0.10} if _sc_is_err else {"layer": "DER", "confidence_cap": 0.80}),
@@ -4589,31 +4602,53 @@ def register_tools_on(mcp):
 
                 return classify_error(exc, source_tool=_tool, source_organ="geox")
 
-            # Detect error state in dict results
+            # Detect error state in dict results (F2: empty error="" is NOT failure)
             _is_err = False
             if isinstance(result, dict):
-                _is_err = (
-                    result.get("ok") is False
-                    or result.get("isError") is True
-                    or result.get("status") == "INVALID"
-                    or result.get("execution_status") in ("ERROR", "FAILED")
-                    or "error" in result
-                )
+                from geox_mcp.result_truth import result_is_error as _result_is_error
+
+                _is_err = _result_is_error(result)
                 # ENFORCE: empty evidence with ok: true → isError: true
+                _meta_keys = {
+                    "ok",
+                    "isError",
+                    "status",
+                    "error",
+                    "tool",
+                    "mode",
+                    "data_mode",
+                    "ext_witness_ready",
+                    "ext_witness_note",
+                    "provenance",
+                    "_memory",
+                    "_epistemic",
+                    "message",
+                    "apex",
+                    "geox_advisory",
+                    "_meta",
+                    "_evidence_receipt",
+                }
                 _has_evidence = any(
-                    k not in ("ok", "isError", "status", "error", "tool", "mode", "_memory", "_epistemic", "message")
-                    and result.get(k) is not None
-                    for k in result
+                    k not in _meta_keys and result.get(k) is not None for k in result
                 )
                 if not _has_evidence and not _is_err and result.get("ok") is not False:
                     logger.warning(f"EVIDENCE_GAP: {_tool} returned ok but no evidence fields")
                     result["isError"] = True
-                    result.setdefault("error", "Tool returned no evidence — transport success ≠ evidence success")
+                    result.setdefault(
+                        "error",
+                        "Tool returned no evidence — transport success ≠ evidence success",
+                    )
                     _is_err = True
                 elif _is_err:
-                    result.setdefault("isError", True)
+                    result["isError"] = True
+                    # Keep ok consistent with isError when ok claimed success
+                    if result.get("ok") is True:
+                        result["ok"] = False
                 else:
-                    result.setdefault("isError", False)
+                    result["isError"] = False
+                    # Clear vacuous error keys so clients don't misread
+                    if result.get("error") == "":
+                        result.pop("error", None)
 
                 # Inject outputSchema reference from canonical registry
                 from geox_mcp.tools.mcp_apps_bridge import get_output_schema
