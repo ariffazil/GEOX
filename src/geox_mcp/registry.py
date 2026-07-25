@@ -106,11 +106,28 @@ _ACTION_CLASS_AUTH: dict[str, str] = {
 }
 
 # Tools whose mutating-ness depends on call-time arguments (override the
-# manifest's action_class when the relevant arg is truthy).
+# manifest's action_class). Two override shapes:
+#
+#   _MUTATING_ARG_OVERRIDES: truthy-arg triggers MUTATE
+#     tool_name → tuple of arg_names; any-true → LIMITED_MUTATE
+#
+#   _MUTATING_VALUE_OVERRIDES: arg-equals-value triggers MUTATE
+#     tool_name → dict of {arg_name: matching_value}; match → LIMITED_MUTATE
+#
+# Both lists feed ``required_authority_for`` and are evaluated before the
+# manifest's action_class is consulted. The audit-reproducible cases live
+# here: the SEAL modes of geox_claim / geox_prospect MUST require
+# LIMITED_MUTATE even though the manifest declares action_class: OBSERVE.
 _MUTATING_ARG_OVERRIDES: dict[str, tuple[str, ...]] = {
-    # tool_name: (arg_names, any-true → LIMITED_MUTATE, all-false → OBSERVE_ONLY)
+    # tool_name: tuple of arg_names; any-true → LIMITED_MUTATE
     "geox_well_ingest": ("overwrite",),
     "geox_evidence": ("forbidden_uses",),  # attaching forbidden uses is a mutation
+}
+
+_MUTATING_VALUE_OVERRIDES: dict[str, dict[str, Any]] = {
+    # tool_name: {arg_name: matching_value}; match → LIMITED_MUTATE
+    "geox_claim": {"mode": "seal"},  # mode=seal is the irreversible path
+    "geox_prospect": {"verdict": "seal"},  # verdict=seal is the irreversible path
 }
 
 # Env flag: when false, session enforcement is bypassed for OBSERVE-only
@@ -147,11 +164,15 @@ def required_authority_for(tool_name: str, arguments: dict[str, Any] | None = No
     """
     arguments = arguments or {}
 
-    # 1. mutating-arg overrides
-    override = _MUTATING_ARG_OVERRIDES.get(tool_name)
-    if override:
-        if any(bool(arguments.get(arg)) for arg in override):
-            return "LIMITED_MUTATE"
+    # 1. mutating-arg overrides (any-truthy or specific-value triggers MUTATE)
+    arg_override = _MUTATING_ARG_OVERRIDES.get(tool_name)
+    if arg_override and any(bool(arguments.get(arg)) for arg in arg_override):
+        return "LIMITED_MUTATE"
+    value_override = _MUTATING_VALUE_OVERRIDES.get(tool_name)
+    if value_override:
+        for arg_name, expected in value_override.items():
+            if arguments.get(arg_name) == expected:
+                return "LIMITED_MUTATE"
 
     # 2. manifest action_class
     entry = manifest_tool_map().get(tool_name)

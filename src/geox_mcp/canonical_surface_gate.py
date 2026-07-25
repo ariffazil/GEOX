@@ -34,7 +34,8 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import logging
-from typing import Any, Iterable, Sequence
+from typing import Any
+from collections.abc import Iterable, Sequence
 
 from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 

@@ -2653,6 +2653,94 @@ async def health_handler(request: Request) -> JSONResponse:
     }
     _public_count = len(CANONICAL_PUBLIC_TOOLS)
 
+    # ── P0-5 deployment invariant (2026-07-25 · FI-008) ─────────────
+    # Surface the arifOS deployment drift to GEOX clients. The audit found
+    # that arifOS reports source/built/deployed commits with drift=true
+    # while its /health still returns "healthy" — a direct invariant
+    # breach (F1 AMANAH). Until arifOS's own health endpoint is fixed
+    # to surface drift, GEOX exposes the truth here so operators can
+    # detect the breach from any organ's health probe.
+    #
+    # This is the GEOX-side half of the deployment invariant: detect
+    # drift in arifOS and refuse healthy on this side too. arifOS-side
+    # fix (Phase E.2) is tracked separately — this fix is GEOX-local,
+    # reversible, and observable.
+    async def _probe_arifos_deployment_drift() -> dict[str, Any]:
+        """P0-5 deployment invariant — GEOX-side observability for arifOS drift.
+
+        Computes source_commit (git HEAD) and compares to the running
+        arifOS sha (from /api/build-info). When they diverge, arifOS is
+        in a state where its deployed code doesn't match its source —
+        exactly the audit's reported breach.
+
+        This is GEOX-LOCAL observability: it does not require an arifOS
+        source change. The arifOS-side fix (E.2) is separate and tracks
+        as the sovereign ack item.
+        """
+        try:
+            import httpx
+
+            # 1. Read the running arifOS sha from /api/build-info.
+            async with httpx.AsyncClient(timeout=2.0) as _client:
+                _resp = await _client.get("http://127.0.0.1:8088/api/build-info")
+                _data = _resp.json()
+            running_sha = (
+                _data.get("sha")
+                or _data.get("short_sha")
+                or _data.get("deployed_commit")
+                or "unknown"
+            )
+
+            # 2. Read the source commit from arifOS's git HEAD.
+            source_sha = "unknown"
+            try:
+                import subprocess
+
+                _head_proc = subprocess.run(
+                    ["git", "-C", "/root/arifOS", "rev-parse", "HEAD"],
+                    capture_output=True,
+                    text=True,
+                    timeout=2.0,
+                )
+                if _head_proc.returncode == 0:
+                    source_sha = _head_proc.stdout.strip()
+            except Exception:
+                pass
+
+            # 3. Compare short shas (audit's exact invariant).
+            source_short = source_sha[:7] if source_sha != "unknown" else "unknown"
+            running_short = (
+                running_sha[:7] if running_sha != "unknown" else "unknown"
+            )
+            drift = (
+                source_short != "unknown"
+                and running_short != "unknown"
+                and source_short != running_short
+            )
+
+            return {
+                "source_commit": source_sha,
+                "built_commit": running_sha,
+                "deployed_commit": running_sha,  # built == deployed for the federation case
+                "drift": drift,
+                "status": "degraded" if drift else "aligned",
+                "source": (
+                    "arifOS:/api/build-info + /root/arifOS/.git HEAD (P0-5 GEOX-side probe)"
+                ),
+                "rule": "source_commit == built_commit == deployed_commit",
+            }
+        except Exception as _de:
+            return {
+                "source_commit": "unknown",
+                "built_commit": "unknown",
+                "deployed_commit": "unknown",
+                "drift": None,  # unknown — neither true nor false
+                "status": "unknown",
+                "source": "arifOS:/api/build-info (probe failed)",
+                "error": f"{type(_de).__name__}: {_de}",
+                "rule": "source_commit == built_commit == deployed_commit",
+            }
+
     # ── P0-1 canonical surface audit (2026-07-25 · FI-008) ───────────
     # The middleware's last observed drift report is the canonical
     # record of what the live /mcp/ tools/list actually emitted. We
@@ -2731,6 +2819,10 @@ async def health_handler(request: Request) -> JSONResponse:
             # single GET tells the operator whether the connector is in
             # canonical-surface parity.
             "surface_drift": _surface_drift_summary(),
+            # ── P0-5 deployment invariant (2026-07-25 · FI-008) ───
+            # arifOS deployment drift surfaces here. Until arifOS-side
+            # E.2 lands, GEOX makes the breach visible to operators.
+            "deployment_drift": await _probe_arifos_deployment_drift(),
             "apex_scalars": {
                 "G": {"value": None, "status": "UNMEASURED"},
                 "C_dark": {"value": None, "status": "UNMEASURED"},
