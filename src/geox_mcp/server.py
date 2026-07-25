@@ -2652,9 +2652,40 @@ async def health_handler(request: Request) -> JSONResponse:
         "note": fed_geometry_note or "local presence fallback",
     }
     _public_count = len(CANONICAL_PUBLIC_TOOLS)
+
+    # ── F2 TRUTH: Kernel verdict check (telemetry drift fix) ──────────────
+    # A GUI showing "healthy" when kernel verdict is HOLD is a F2 violation.
+    # Probe arifOS /health and reflect the true kernel verdict.
+    _kernel_verdict = "UNKNOWN"
+    _kernel_ok = True
+    _kernel_note = None
+    try:
+        async with httpx.AsyncClient(timeout=2.0) as _kh_client:
+            _kh_resp = await _kh_client.get("http://127.0.0.1:8088/health")
+            _kh_data = _kh_resp.json()
+            _thermo = _kh_data.get("thermodynamic", {})
+            if isinstance(_thermo, dict):
+                _kernel_verdict = _thermo.get("verdict", "UNKNOWN")
+            _kernel_ok = _kh_data.get("status") == "healthy" and _kernel_verdict == "SEAL"
+            if not _kernel_ok:
+                _kernel_note = f"kernel verdict={_kernel_verdict} (expected SEAL)"
+    except Exception as _ke:
+        _kernel_ok = False
+        _kernel_note = f"kernel unreachable: {type(_ke).__name__}"
+
+    _geo_status = "healthy" if _kernel_ok else "degraded"
+    _owner_color = "GREEN" if _kernel_ok else "AMBER"
+    _owner_reasons = [
+        "identity_verified" if is_geox() else "identity_unverified",
+        f"public_tools={len(CANONICAL_PUBLIC_TOOLS)}",
+        f"kernel_verdict={_kernel_verdict}",
+        "service_healthy" if _kernel_ok else "kernel_not_SEAL",
+    ]
+
     return JSONResponse(
         {
-            "status": "healthy",
+            "status": _geo_status,
+            "kernel_verdict": _kernel_verdict,
             "service": "geox-unified",
             "version": GEOX_VERSION,
             "federation_schema_version": "2.0.0",
@@ -2692,12 +2723,8 @@ async def health_handler(request: Request) -> JSONResponse:
                 "expired_after_seconds": 3600,
             },
             "owner_summary": {
-                "color": "GREEN",
-                "reasons": [
-                    "identity_verified" if is_geox() else "identity_unverified",
-                    f"public_tools={len(CANONICAL_PUBLIC_TOOLS)}",
-                    "service_healthy",
-                ],
+                "color": _owner_color,
+                "reasons": _owner_reasons,
             },
             "federation_geometry": _fed_geom,
             "federation_geometry_source": fed_geometry_source or "local_fallback",

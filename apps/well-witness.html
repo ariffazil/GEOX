@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html;profile=mcp-app">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEOX Well Witness — Ingest → Petrophysics → View</title>
+<style>
+:root { color-scheme: dark; font-family: system-ui, -apple-system, sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #060a0e; color: #c9d1d9; padding: 12px; min-height: 100vh; }
+.zen-pulse {
+  display: flex; gap: 16px; align-items: center; padding: 8px 14px;
+  background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+  font-size: 11px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.zen-pulse .zp-item { display: flex; gap: 4px; align-items: baseline; }
+.zen-pulse .zp-ask { opacity: 0.5; font-size: 10px; text-transform: uppercase; }
+.zen-pulse .zp-val { font-weight: 600; }
+.zen-pulse .zp-val.gold { color: #d29922; }
+.banner { display: none; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 12px; font-weight: 600; }
+.banner.hold { display: block; background: #3d2700; border: 1px solid #d29922; color: #d29922; }
+.banner.veto { display: block; background: #3d0a0a; border: 1px solid #da3633; color: #da3633; }
+.banner.err { display: block; background: #2d1a1a; border: 1px solid #844; color: #f77; }
+.pipeline { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.step {
+  flex: 1 1 140px; padding: 12px; border-radius: 8px; border: 1px solid #21262d;
+  background: #0d1117; text-align: center; transition: border-color 0.3s;
+}
+.step .step-num { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.step .step-label { font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.04em; }
+.step .step-status { font-size: 12px; margin-top: 6px; font-weight: 600; }
+.step.done { border-color: #238636; }
+.step.done .step-num { color: #3fb950; }
+.step.active { border-color: #d29922; }
+.step.active .step-num { color: #d29922; }
+.step.pending { opacity: 0.5; }
+.step.pending .step-num { color: #484f58; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.card {
+  flex: 1 1 100px; background: #0d1117; border: 1px solid #21262d;
+  border-radius: 6px; padding: 10px;
+}
+.card .k { font-size: 10px; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.04em; }
+.card .v { font-size: 1.1rem; margin-top: 3px; font-weight: 600; }
+canvas { width: 100%; height: 200px; display: block; background: #0a0e14; border-radius: 4px; }
+.tracks { display: grid; grid-template-columns: 40px 1fr 1fr 1fr; gap: 4px; margin-bottom: 10px; }
+.track-label {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: 9px; opacity: 0.5; display: flex; align-items: center; justify-content: center;
+}
+pre { font-size: 11px; background: #0d1117; border: 1px solid #21262d; border-radius: 6px; padding: 10px; max-height: 120px; overflow: auto; white-space: pre-wrap; }
+.muted { opacity: 0.5; font-size: 11px; margin-bottom: 8px; }
+.epi {
+  display: inline-block; font-size: 9px; padding: 1px 5px; border-radius: 3px;
+  border: 1px solid #30363d; opacity: 0.8; margin-left: 6px;
+}
+.epi-obs { color: #7dcea0; border-color: #1b4d2e; }
+</style>
+</head>
+<body>
+
+<div class="zen-pulse">
+  <div class="zp-item"><span class="zp-ask">Where?</span><span class="zp-val">GEOX · Well Witness</span></div>
+  <div class="zp-item"><span class="zp-ask">Why care?</span><span class="zp-val gold">Evidence-preserved. Each datum has provenance. Failure = HOLD.</span></div>
+  <div class="zp-item"><span class="zp-ask">Next?</span><span class="zp-val">Review the pipeline below ↓</span></div>
+</div>
+
+<div id="holdBanner" class="banner hold"></div>
+<div id="vetoBanner" class="banner veto"></div>
+<div id="errBanner" class="banner err"></div>
+
+<div class="pipeline">
+  <div class="step active" id="step1">
+    <div class="step-num">1</div>
+    <div class="step-label">Ingest</div>
+    <div class="step-status">Waiting</div>
+  </div>
+  <div class="step pending" id="step2">
+    <div class="step-num">2</div>
+    <div class="step-label">Petrophysics</div>
+    <div class="step-status">Pending</div>
+  </div>
+  <div class="step pending" id="step3">
+    <div class="step-num">3</div>
+    <div class="step-label">View</div>
+    <div class="step-status">Pending</div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card"><div class="k">Well</div><div class="v" id="wellId">—</div></div>
+  <div class="card"><div class="k">Depth Range</div><div class="v" id="depthRange">—</div></div>
+  <div class="card"><div class="k">Curves</div><div class="v" id="curveCount">—</div></div>
+  <div class="card"><div class="k">QC</div><div class="v" id="qcStatus">—</div></div>
+</div>
+
+<div class="row">
+  <div class="card"><div class="k">Vsh (mean)</div><div class="v" id="vshMean">—</div></div>
+  <div class="card"><div class="k">φ (mean)</div><div class="v" id="phiMean">—</div></div>
+  <div class="card"><div class="k">Sw (mean)</div><div class="v" id="swMean">—</div></div>
+  <div class="card"><div class="k">Net Pay</div><div class="v" id="netPay">—</div></div>
+</div>
+
+<div class="tracks">
+  <div class="track-label">DEPTH</div>
+  <canvas id="cGR" data-curve="GR"></canvas>
+  <canvas id="cRES" data-curve="RES"></canvas>
+  <canvas id="cDT" data-curve="DT"></canvas>
+</div>
+
+<p class="muted">Evidence chain: ingest → QC → petrophysics → view. All computations local. No CDN data exfiltration.</p>
+<pre id="receipt">{}</pre>
+
+<script>
+(function() {
+  'use strict';
+  var PROTOCOL = '2026-01-26';
+  var nextId = 1, pending = new Map();
+  var series = null;
+
+  var el = {
+    receipt: document.getElementById('receipt'),
+    holdBanner: document.getElementById('holdBanner'),
+    vetoBanner: document.getElementById('vetoBanner'),
+    errBanner: document.getElementById('errBanner'),
+    step1: document.getElementById('step1'),
+    step2: document.getElementById('step2'),
+    step3: document.getElementById('step3'),
+    wellId: document.getElementById('wellId'),
+    depthRange: document.getElementById('depthRange'),
+    curveCount: document.getElementById('curveCount'),
+    qcStatus: document.getElementById('qcStatus'),
+    vshMean: document.getElementById('vshMean'),
+    phiMean: document.getElementById('phiMean'),
+    swMean: document.getElementById('swMean'),
+    netPay: document.getElementById('netPay'),
+  };
+
+  function send(method, params) {
+    var id = String(nextId++);
+    return new Promise(function(resolve, reject) {
+      var timer = setTimeout(function() { pending.delete(id); reject(new Error('timeout')); }, 15000);
+      pending.set(id, { resolve: resolve, reject: reject, timer: timer });
+      var msg = { jsonrpc: '2.0', id: id, method: method, params: params || {} };
+      window.parent.postMessage(msg, '*');
+    });
+  }
+
+  window.addEventListener('message', function(evt) {
+    var data = evt.data;
+    if (!data || !data.jsonrpc) return;
+    if (data.id && pending.has(data.id)) {
+      var p = pending.get(data.id);
+      clearTimeout(p.timer);
+      pending.delete(data.id);
+      if (data.error) p.reject(data.error);
+      else p.resolve(data.result);
+      return;
+    }
+    if (data.method === 'ui/notifications/tool-input') {
+      handleInput(data.params);
+    } else if (data.method === 'ui/notifications/tool-result') {
+      handleResult(data.params);
+    }
+  });
+
+  function handleInput(params) {
+    el.receipt.textContent = JSON.stringify(params, null, 2);
+    el.step1.className = 'step done';
+    el.step1.querySelector('.step-status').textContent = 'Received';
+    el.step2.className = 'step active';
+    el.step2.querySelector('.step-status').textContent = 'Computing';
+  }
+
+  function handleResult(params) {
+    try {
+      var sc = (params && params.structuredContent) || params || {};
+      var result = sc.result || sc.data || sc;
+
+      el.step2.className = 'step done';
+      el.step2.querySelector('.step-status').textContent = 'Complete';
+      el.step3.className = 'step done';
+      el.step3.querySelector('.step-status').textContent = 'Rendered';
+
+      el.wellId.textContent = result.well_id || result.wellId || '—';
+      el.depthRange.textContent = result.depth_range_m
+        ? result.depth_range_m.top + '–' + result.depth_range_m.base + ' m'
+        : '—';
+      el.curveCount.textContent = (result.curves_loaded || result.curves || []).length || '—';
+      el.qcStatus.textContent = result.qc_flags && result.qc_flags.length ? '⚠ Flags' : '✅ Clean';
+
+      if (result.vsh) {
+        var vsh = result.vsh; el.vshMean.textContent = mean(vsh).toFixed(2);
+        drawTrack('cGR', vsh, '#7dcea0', 'Vsh');
+      }
+      if (result.porosity) {
+        var poro = result.porosity; el.phiMean.textContent = mean(poro).toFixed(2);
+        drawTrack('cRES', poro, '#58a6ff', 'Porosity');
+      }
+      if (result.sw) {
+        var sw = result.sw; el.swMean.textContent = mean(sw).toFixed(2);
+        drawTrack('cDT', sw, '#d29922', 'Sw');
+      }
+      if (result.net_pay) {
+        el.netPay.textContent = (result.net_pay.net != null)
+          ? result.net_pay.net + ' m (N:G ' + (result.net_pay['N:G'] || result.net_pay.ng_ratio || '—') + ')'
+          : '—';
+      }
+
+      el.receipt.textContent = JSON.stringify({ ok: true, tool: sc.tool || 'geox_well_view', summary: 'Well Witness rendered' }, null, 2);
+    } catch(e) {
+      el.errBanner.style.display = 'block';
+      el.errBanner.textContent = 'RENDER ERROR: ' + e.message;
+    }
+  }
+
+  function mean(arr) {
+    if (!arr || !arr.length) return NaN;
+    return arr.reduce(function(a,b) { return a + b; }, 0) / arr.length;
+  }
+
+  function drawTrack(canvasId, values, color, label) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas || !values || !values.length) return;
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width = canvas.offsetWidth || 200;
+    var h = canvas.height = 200;
+    ctx.clearRect(0, 0, w, h);
+    var n = Math.min(values.length, 500);
+    var step = Math.max(1, Math.floor(values.length / n));
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    var yMin = Infinity, yMax = -Infinity;
+    var sampled = [];
+    for (var i = 0; i < values.length; i += step) {
+      var v = values[i];
+      if (v == null || isNaN(v)) continue;
+      yMin = Math.min(yMin, v); yMax = Math.max(yMax, v);
+      sampled.push({ i: i, v: v });
+    }
+    var yRange = yMax - yMin || 1;
+    for (var j = 0; j < sampled.length; j++) {
+      var x = (j / sampled.length) * (w - 20) + 10;
+      var y = h - 20 - ((sampled[j].v - yMin) / yRange) * (h - 30);
+      if (j === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.font = '10px system-ui';
+    ctx.fillText(label, 4, 14);
+  }
+
+  send('ui/initialize', { protocolVersion: PROTOCOL, appName: 'geox-well-witness', appVersion: '1.0.0' })
+    .then(function() { return send('ui/notifications/initialized', {}); })
+    .catch(function() { /* standalone mode */ });
+
+})();
+</script>
+</body>
+</html>

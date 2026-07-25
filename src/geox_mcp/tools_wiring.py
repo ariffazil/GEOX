@@ -1,11 +1,13 @@
 # WARNING: Auto-generated from server.py to reduce monolith size.
 # DITEMPA BUKAN DIBERI
 
+import functools
 import inspect
 import json
 import logging
 import os
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -258,6 +260,89 @@ def register_tools_on(mcp):
             from geox_mcp.federation_safety import classify_error
 
             return classify_error(e, source_tool="geox_well_ingest", source_organ="geox")
+
+    @mcp.tool(name="geox_well_view", annotations=_geox_annotations("geox_well_view"))
+    async def _well_view(
+        well_id: str | None = None,
+        source_uri: str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Well Witness View — hydrate real LAS curves into interactive tracks.
+
+        Reads a LAS file and returns curve data arrays (depth + GR/RES/DT/RHOB)
+        in structuredContent.curves for direct WellDesk track hydration.
+        Falls back to well_ingest metadata if no LAS file is available.
+        """
+        from geox_mcp.tools.mcp_apps_bridge import wrap_as_ui_tool_result
+
+        _GEOX_ROOT = Path(__file__).resolve().parents[3]
+
+        _curves: dict[str, list[float]] = {}
+        _depths: list[float] = []
+        _meta: dict[str, Any] = {}
+        _is_err = False
+        _text = ""
+
+        # Try to load real LAS data
+        if source_uri:
+            _path = Path(source_uri)
+            if not _path.is_absolute():
+                _path = _GEOX_ROOT / _path
+            if _path.is_file() and _path.suffix.lower() in (".las", ".LAS"):
+                try:
+                    import lasio
+
+                    _las = lasio.read(str(_path))
+                    _depths = [float(d) for d in _las.index]
+                    for _mnemonic in ("GR", "RES", "RT", "ILD", "DT", "RHOB", "NPHI", "DEPT"):
+                        if _mnemonic in _las.keys():
+                            _arr = [float(v) if v != _las.well.NULL else 0.0 for v in _las[_mnemonic]]
+                            _curves[_mnemonic] = _arr
+                    well_id = well_id or _las.well.WELL.value or _path.stem
+                    _meta = {
+                        "well_id": well_id,
+                        "start_md": float(_las.well.STRT.value) if _las.well.STRT.value else None,
+                        "stop_md": float(_las.well.STOP.value) if _las.well.STOP.value else None,
+                        "null_value": float(_las.well.NULL.value) if _las.well.NULL.value else -999.25,
+                        "curves_loaded": list(_curves.keys()),
+                    }
+                    _text = (
+                        f"Well View ready for {well_id}: {len(_depths)} depth points, "
+                        f"curves={list(_curves.keys())}. Tracks hydrating with real Earth data."
+                    )
+                    logger.info("LAS_HYDRATE: loaded %s (%d curve(s), %d depth points)", well_id, len(_curves), len(_depths))
+                except ImportError:
+                    _is_err = True
+                    _text = "LAS hydration unavailable: lasio not installed."
+                except Exception as _las_exc:
+                    _is_err = True
+                    _text = f"LAS read failed: {type(_las_exc).__name__}: {_las_exc}"
+                    logger.warning("LAS_HYDRATE_FAIL: %s", _las_exc)
+            else:
+                _text = f"No LAS file found at {_path}. Use geox_well_ingest to inspect file first."
+        elif well_id:
+            _text = f"Well {well_id}: no LAS source provided. Use source_uri to hydrate tracks."
+        else:
+            _is_err = True
+            _text = "Well View requires well_id or source_uri."
+
+        _structured = {
+            "well_id": well_id,
+            "mode": "view",
+            "source_uri": source_uri,
+            "curves": _curves,
+            "depths": _depths,
+            "meta": _meta,
+        }
+        return wrap_as_ui_tool_result(
+            {"well_id": well_id, "curves": _curves, "depths": _depths},
+            app_id="well_desk",
+            params={"well_id": well_id} if well_id else None,
+            text=_text,
+            structured_override=_structured,
+        )
 
     @mcp.tool(name="geox_well_qc", annotations=_geox_annotations("geox_well_qc"))
     async def _well_qc(
@@ -4478,3 +4563,112 @@ def register_tools_on(mcp):
         )
     except Exception as e:
         logger.warning(f"MANIFEST_ENRICH: skipped — {e}")
+
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # H1 P1.1: Evidence-Chain Enforcement — wraps every tool handler with
+    # isError + empty-evidence detection + outputSchema injection.
+    # Fixes the transport-success ≠ evidence-success defect (Roadmap §1).
+    # ═══════════════════════════════════════════════════════════════════════════════
+    _EVIDENCE_WRAPPED = 0
+    _EVIDENCE_SKIPPED = 0
+    for _comp_key, _comp in list(_components.items()):
+        if not _comp_key.startswith("tool:geox_"):
+            continue
+        _tool_name = _comp_key.removeprefix("tool:").rstrip("@")
+        _orig_fn = getattr(_comp, "fn", None)
+        if _orig_fn is None:
+            _EVIDENCE_SKIPPED += 1
+            continue
+
+        @functools.wraps(_orig_fn)
+        async def _evidence_wrapper(*args, _tool=_tool_name, _orig=_orig_fn, **kwargs):
+            try:
+                result = await _orig(*args, **kwargs)
+            except Exception as exc:
+                from geox_mcp.federation_safety import classify_error
+
+                return classify_error(exc, source_tool=_tool, source_organ="geox")
+
+            # Detect error state in dict results
+            _is_err = False
+            if isinstance(result, dict):
+                _is_err = (
+                    result.get("ok") is False
+                    or result.get("isError") is True
+                    or result.get("status") == "INVALID"
+                    or result.get("execution_status") in ("ERROR", "FAILED")
+                    or "error" in result
+                )
+                # ENFORCE: empty evidence with ok: true → isError: true
+                _has_evidence = any(
+                    k not in ("ok", "isError", "status", "error", "tool", "mode", "_memory", "_epistemic", "message")
+                    and result.get(k) is not None
+                    for k in result
+                )
+                if not _has_evidence and not _is_err and result.get("ok") is not False:
+                    logger.warning(f"EVIDENCE_GAP: {_tool} returned ok but no evidence fields")
+                    result["isError"] = True
+                    result.setdefault("error", "Tool returned no evidence — transport success ≠ evidence success")
+                    _is_err = True
+                elif _is_err:
+                    result.setdefault("isError", True)
+                else:
+                    result.setdefault("isError", False)
+
+                # Inject outputSchema reference from canonical registry
+                from geox_mcp.tools.mcp_apps_bridge import get_output_schema
+
+                _schema = get_output_schema(_tool)
+                if _schema:
+                    result.setdefault("_meta", {})
+                    if isinstance(result["_meta"], dict):
+                        result["_meta"].setdefault("outputSchema", _schema)
+
+                # P1.3: Content-hash evidence receipt (SHA-256)
+                import hashlib
+
+                _receipt_keys = [k for k in result if not k.startswith("_") and k not in ("content", "structuredContent")]
+                _receipt_data = {k: result[k] for k in _receipt_keys if k in result}
+                try:
+                    _payload = json.dumps(_receipt_data, default=str, sort_keys=True).encode()
+                    _hash = hashlib.sha256(_payload).hexdigest()
+                    result["_evidence_receipt"] = {
+                        "sha256": _hash,
+                        "tool": _tool,
+                        "timestamp": datetime.now(UTC).isoformat(),
+                        "isError": _is_err,
+                    }
+                except Exception:
+                    pass
+
+                # P1.4: False-success monitor — detect confident-but-empty outputs
+                try:
+                    from geox_mcp.monitoring.false_success_detector import FalseSuccessDetector, _FALSE_SUCCESS_SEED_CORPUS
+
+                    _fs_detector = FalseSuccessDetector(corpus_documents=_FALSE_SUCCESS_SEED_CORPUS)
+                    _text_content = json.dumps({k: v for k, v in result.items() if not k.startswith("_")}, default=str)[:2000]
+                    _fs_report = _fs_detector.detect(_text_content, result, _tool)
+                    if _fs_report.verdict != "CLEAN":
+                        result.setdefault("_false_success", _fs_report.to_dict())
+                        if not _is_err and _fs_report.verdict == "FALSE_SUCCESS":
+                            logger.warning(
+                                "FALSE_SUCCESS: %s score=%.3f — confident language with no evidence",
+                                _tool,
+                                _fs_report.score,
+                            )
+                except Exception:
+                    pass
+
+            elif hasattr(result, "is_error"):
+                _is_err = bool(result.is_error)
+
+            return result
+
+        _comp.fn = _evidence_wrapper
+        _EVIDENCE_WRAPPED += 1
+
+    logger.info(
+        "EVIDENCE_CHAIN: wrapped %d tools with isError + empty-evidence enforcement (%d skipped)",
+        _EVIDENCE_WRAPPED,
+        _EVIDENCE_SKIPPED,
+    )

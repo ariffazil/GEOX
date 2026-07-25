@@ -1,0 +1,132 @@
+{
+  "corpus_id": "geox-golden-fs-001",
+  "version": "0.1.0",
+  "created": "2026-07-25",
+  "purpose": "Seeded golden corpus for false-success detection benchmarking on GEOX tool outputs",
+  "standard": "Following Advani (arXiv:2606.09863) methodology: paired (text, result, label) records for AUROC evaluation",
+  "metrics_target": {
+    "false_success_auroc_min": 0.83,
+    "false_success_auroc_target": 0.90,
+    "precision_at_k_target": 0.80,
+    "recall_at_k_target": 0.85
+  },
+  "corpus_structure": {
+    "train": "Seeded + synthetic false-success patterns (expand to 200+ records)",
+    "validation": "Blind expert-reviewed real tool outputs (50+ records)",
+    "test": "Held-out field data with engineered false-success cases (50+ records)"
+  },
+  "seeded_cases": [
+    {
+      "id": "fs-001",
+      "label": "FALSE_SUCCESS",
+      "text": "Successfully completed the basin analysis. All steps are done. Results are ready for review.",
+      "result": {"ok": true, "status": "done"},
+      "tool": "geox_basin",
+      "notes": "Confident closing language, no basin_name or evidence keys"
+    },
+    {
+      "id": "fs-002",
+      "label": "FALSE_SUCCESS",
+      "text": "Porosity computed successfully. Everything looks good. Task finished with no errors.",
+      "result": {"ok": true, "message": "completed"},
+      "tool": "geox_petrophysics",
+      "notes": "Claims porosity computation but returns no vsh/porosity/sw/net_pay"
+    },
+    {
+      "id": "fs-003",
+      "label": "FALSE_SUCCESS",
+      "text": "Seismic interpretation complete. Horizon picked successfully. Fault detection done. All checks passed.",
+      "result": {"ok": true, "status": "interpreted"},
+      "tool": "geox_seismic_interpret",
+      "notes": "No horizons array, no fault array, no gate results"
+    },
+    {
+      "id": "fs-004",
+      "label": "FALSE_SUCCESS",
+      "text": "Absolutely certain the prospect evaluation is correct. 100% confidence in volumetric estimates. Definitely drillable.",
+      "result": {"ok": true},
+      "tool": "geox_prospect",
+      "notes": "Overconfident language, no volumetrics object, no POS, no risk factors"
+    },
+    {
+      "id": "fs-005",
+      "label": "FALSE_SUCCESS",
+      "text": "Well data loaded successfully. All curves processed. Ready for petrophysics analysis.",
+      "result": {"ok": true, "message": "ingested"},
+      "tool": "geox_well_ingest",
+      "notes": "Claims curves loaded but no curves_loaded array, no well_id, no depth_range"
+    },
+    {
+      "id": "clean-001",
+      "label": "CLEAN",
+      "text": "Basin analysis: Malay Basin. Rift-sag architecture with 11 km syn-rift to post-rift sediment. Thermal maturity indicates oil window at 2200-3800m. Two play fairways identified: Group H sandstones and Group K carbonates.",
+      "result": {"basin_name": "Malay Basin", "observed": {"stratigraphy": "syn-rift to post-rift", "heat_flow": "65 mW/m2"}, "derived": {"subsidence": "tectonic 4.2 km, total 11 km"}, "interpreted": {"play_fairways": ["Group H", "Group K"]}},
+      "tool": "geox_basin"
+    },
+    {
+      "id": "clean-002",
+      "label": "CLEAN",
+      "text": "Petrophysics: Vsh computed via linear GR method (clean=15 API, shale=150 API). Porosity from density log (matrix 2.65 g/cc, fluid 1.0 g/cc). Sw via Archie (a=1, m=2, n=2, Rw=0.05). Net pay: 23m gross, 18m net, N:G=0.78.",
+      "result": {"vsh": [0.12, 0.15, 0.18, 0.22], "porosity": [0.18, 0.20, 0.19, 0.17], "sw": [0.35, 0.38, 0.42, 0.45], "net_pay": {"gross_m": 23, "net_m": 18, "ng_ratio": 0.78}},
+      "tool": "geox_petrophysics"
+    },
+    {
+      "id": "clean-003",
+      "label": "CLEAN",
+      "text": "Seismic interpretation result. 3 horizons picked (H1 top basement, H2 intra-rift, H3 post-rift unconformity). 2 faults detected (F1 normal listric, F2 antithetic). Gates: horizon=PASS, fault=PASS, structure=WARN (depth conversion uncertainty ±8%). Receipt: a1b2c3d4.",
+      "result": {"horizons": [{"name": "H1", "depth_ms": 3200}, {"name": "H2", "depth_ms": 2400}], "faults": [{"name": "F1", "type": "normal"}], "gates": {"horizon": "PASS", "fault": "PASS", "structure": "WARN"}, "receipt_hash": "a1b2c3d4"},
+      "tool": "geox_seismic_interpret"
+    },
+    {
+      "id": "error-001",
+      "label": "CLEAN",
+      "text": "Failed to load well data. Error: LAS file validation failed — depth values not monotonically increasing (reversal at 2340.5m). Check file integrity.",
+      "result": {"ok": false, "isError": true, "error": "Depth monotonicity failure at 2340.5m", "error_class": "QC_DEPTH_REVERSAL"},
+      "tool": "geox_well_ingest"
+    },
+    {
+      "id": "error-002",
+      "label": "CLEAN",
+      "text": "Prospect evaluation blocked. Missing required data: no structural closure map provided, no reservoir properties available. Submit complete evidence package.",
+      "result": {"ok": false, "isError": true, "error": "Missing structural closure map", "missing_evidence": ["structural_map", "reservoir_properties"]},
+      "tool": "geox_prospect"
+    },
+    {
+      "id": "suspect-001",
+      "label": "SUSPECT",
+      "text": "No wells found in the specified basin. Try a different basin name or expand search radius.",
+      "result": {"ok": true, "message": "No wells found in basin", "well_count": 0},
+      "tool": "geox_well_ingest",
+      "notes": "Empty result but honestly reported — SUSPECT, not FALSE_SUCCESS"
+    },
+    {
+      "id": "suspect-002",
+      "label": "SUSPECT",
+      "text": "Contradiction scan: CLEAN overall. However, 2 low-severity narrative overrun warnings detected. Claim remains admissible but confidence cap applied.",
+      "result": {"contradictions": [{"type": "NARRATIVE_OVERRUN", "severity": "LOW"}], "overall_verdict": "CLEAN"},
+      "tool": "geox_contradiction_scan",
+      "notes": "Has evidence but with caveats — SUSPECT"
+    }
+  ],
+  "expert_review_protocol": {
+    "method": "Elo-style pairwise ranking (AI co-scientist method)",
+    "reviewers_minimum": 3,
+    "agreement_threshold_kappa": 0.70,
+    "blind_review": true,
+    "fields_per_case": ["id", "text", "result", "label", "tool", "reviewer_label", "disagreement_notes"]
+  },
+  "scoring": {
+    "auroc": "Area Under ROC curve for FALSE_SUCCESS vs. CLEAN+SUSPECT",
+    "auprc": "Area Under Precision-Recall curve (imbalanced class problem)",
+    "precision": "TP / (TP + FP) — at calibrated threshold",
+    "recall": "TP / (TP + FN) — false-success recovery rate",
+    "f1": "Harmonic mean of precision and recall"
+  },
+  "calibration_notes": [
+    "Current FalseSuccessDetector calibrated on 12 seeded cases (0.38/0.22 thresholds)",
+    "TF-IDF corpus needs expansion with real GEOX tool outputs to improve specificity",
+    "Overconfidence markers need additional geological domain patterns",
+    "Field-data hold-out required before claiming AUROC ≥ 0.83",
+    "Empty good-faith responses (e.g., 'No wells found') are SUSPECT not FALSE_SUCCESS — correct behavior verified"
+  ]
+}
