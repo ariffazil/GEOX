@@ -342,6 +342,30 @@ async def geox_data_ingest_bundle(
             artifact_type="well_log",
         )
 
+        # P0-3 (2026-07-25 · FI-008): also emit the canonical
+        # artifact:// reference so downstream consumers (QC, petrophysics,
+        # model-build) have a single canonical identity contract. Legacy
+        # `artifact_ref` is preserved for back-compat.
+        canonical_artifact_ref = None
+        try:
+            from geox_mcp.tools._artifact_identity import (
+                canonicalize_well_ref,
+                make_artifact_id,
+            )
+
+            canonical_id = canonicalize_well_ref(well_name=derived_well_id, uwi=None)
+            if canonical_id and sha256:
+                canonical_artifact_ref = make_artifact_id(
+                    kind="well_las",
+                    canonical_id=canonical_id,
+                    sha256=sha256,
+                )
+        except Exception as _cx:
+            logger.debug(
+                "INGEST_CANONICAL_REF: failed to build canonical ref: %s",
+                _cx,
+            )
+
         return _return(
             get_standard_envelope(
                 {
@@ -349,6 +373,7 @@ async def geox_data_ingest_bundle(
                     "tool": "geox_data_ingest_bundle",
                     "stored_path": str(target_path),
                     "artifact_ref": artifact_ref,
+                    "canonical_artifact_ref": canonical_artifact_ref,
                     "well_id": derived_well_id,
                     "sha256": sha256,
                     "loaded_curves": loaded_curves,
@@ -663,9 +688,21 @@ async def geox_data_ingest_bundle(
                 out["depth_range_m"] = [round(v * 0.3048, 4) for v in out["depth_range_m"]]
 
         # Overlay MCP context
-        out["tool"] = "geox_data_ingest_bundle"
+        out["tool"] = "geox_well_ingest"  # Stage 2: consolidated app name
         out["artifact_ref"] = artifact_ref
-        out["asset_id"] = artifact_ref
+        # P0-3: Normalize asset_id — strip legacy prefix (well_las:NAME → NAME)
+        # so downstream QC compares identity, not transport reference.
+        try:
+            from geox_mcp.artifact_identity import parse_artifact_ref
+
+            parsed = parse_artifact_ref(artifact_ref)
+            if parsed and parsed.get("canonical_id"):
+                cid = parsed["canonical_id"]
+                out["asset_id"] = cid[len("well:") :] if cid.startswith("well:") else cid
+            else:
+                out["asset_id"] = artifact_ref
+        except Exception:
+            out["asset_id"] = artifact_ref
         out["source_uri"] = source_uri
         out["source_type"] = detected_type
         out["well_id"] = derived_well_id

@@ -24,6 +24,47 @@ from geox_mcp.tools._helpers import (
 logger = logging.getLogger("geox.canonical.qc")
 
 
+def _normalize_artifact_ref_for_ingestor(artifact_ref: str) -> str:
+    """P0-3 hardening 2026-07-25 · FI-008 — strip legacy prefix before ingest.
+
+    The audit identified that passing the raw ``artifact_ref`` (e.g.
+    ``well_las:GEOX-AUDIT-01``) as ``asset_id`` to LASIngestor causes the
+    ConstitutionalRefusal: the ingestor compares the full ref to the LAS
+    header UWI/WELL values and finds a mismatch because of the prefix.
+
+    This helper parses the ref via the canonical identity module and
+    returns the bare asset identifier that the ingestor's identity gate
+    expects: UWI when known, else ``well:<WELL>``, else the display name,
+    else the raw input as a last resort.
+    """
+    try:
+        from geox_mcp.artifact_identity import parse_artifact_ref  # Stage 2: public module
+
+        parsed = parse_artifact_ref(artifact_ref)
+    except Exception as _exc:
+        logger.debug(
+            "QC_NORMALIZE: parse_artifact_ref failed for %r: %s — falling back to raw",
+            artifact_ref,
+            _exc,
+        )
+        return artifact_ref
+
+    if parsed is None:
+        return artifact_ref
+
+    # Prefer UWI-form canonical_id (industry standard). Strip the
+    # ``well:`` namespace if the canonical_id carries one.
+    canonical_id = parsed.get("canonical_id") or ""
+    if canonical_id and not canonical_id.startswith("well:"):
+        return canonical_id
+    if canonical_id.startswith("well:"):
+        bare = canonical_id[len("well:") :]
+        if bare:
+            return bare
+    # Fallback to display_name, then raw.
+    return parsed.get("display_name") or artifact_ref
+
+
 async def geox_data_qc_bundle(
     artifact_ref: str,
     artifact_type: str = "well_log",
@@ -255,7 +296,10 @@ async def geox_data_qc_bundle(
         from geox_core.services.las_ingestor import LASIngestor
 
         ingestor = LASIngestor()
-        well_result = ingestor.ingest(path=las_path, asset_id=artifact_ref)
+        # P0-3: normalize the ref so LASIngestor's UWI/WELL identity gate
+        # doesn't reject it due to legacy ``well_las:`` prefix.
+        normalized_asset_id = _normalize_artifact_ref_for_ingestor(artifact_ref)
+        well_result = ingestor.ingest(path=las_path, asset_id=normalized_asset_id)
         qc_result = ingestor.qc_logs(well_result, las_path)
         qc_dict = qc_result.to_dict()
 
