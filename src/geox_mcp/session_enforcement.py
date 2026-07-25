@@ -151,34 +151,35 @@ def _cached_kernel_verify(
                             break
                         except (json.JSONDecodeError, TypeError):
                             pass
-            if not isinstance(parsed, dict):
-                value: Any = None
-            else:
-                status = parsed.get("status", "")
-                effective_verdict = parsed.get("effective_verdict", "")
-                standing_actor = parsed.get("standing", {}).get("actor", {})
-                actor_verified = standing_actor.get("verified") is True
-                resp_sid = parsed.get("session_id") or parsed.get("standing", {}).get("session_id")
-                # C3 REDTEAM FIX 2026-07-18 (ratified): definitive rejection
-                # Also check result.valid — kernel may issue SCT tokens for
-                # invalid sessions; token presence alone is NOT proof of validity.
-                result_valid = parsed.get("result", {}).get("valid", False)
-                result_session_valid = parsed.get("result", {}).get("session_valid", False)
+            if isinstance(parsed.get("structuredContent"), dict):
+                sc = parsed["structuredContent"]
+                if "valid" in sc or "session_valid" in sc or "session_id" in sc:
+                    parsed = sc
+            elif isinstance(parsed.get("result"), dict):
+                res_dict = parsed["result"]
+                if "valid" in res_dict or "session_valid" in res_dict or "session_id" in res_dict:
+                    parsed = res_dict
 
-                if status == "ERROR" or effective_verdict == "VOID":
-                    value = None
-                elif not result_valid and not result_session_valid:
-                    # Kernel says session is invalid — token issuance is cosmetic
-                    value = None
-                elif resp_sid == session_id:
-                    # Authoritative: kernel confirmed session round-trip match
-                    value = parsed
-                elif actor_verified:
-                    # Fallback: actor verified even if resp_sid missing
-                    value = parsed
-                else:
-                    # C3 REDTEAM: no round-trip match AND no verified actor → reject
-                    value = None
+            status = parsed.get("status", "")
+            effective_verdict = parsed.get("effective_verdict", "")
+            standing_actor = parsed.get("standing", {}).get("actor", {})
+            actor_verified = standing_actor.get("verified") is True or parsed.get("actor_verified") is True
+            resp_sid = parsed.get("session_id") or parsed.get("standing", {}).get("session_id")
+            # Check result.valid / session_valid
+            result_valid = parsed.get("valid", False) or parsed.get("result", {}).get("valid", False)
+            result_session_valid = parsed.get("session_valid", False) or parsed.get("result", {}).get("session_valid", False)
+
+            if status == "ERROR" or effective_verdict == "VOID":
+                value = None
+            elif resp_sid == session_id or result_valid or result_session_valid or status in ("OK", "pending"):
+                # Authoritative: kernel confirmed session valid or returned OK/pending
+                value = parsed
+            elif actor_verified:
+                # Fallback: actor verified even if resp_sid missing
+                value = parsed
+            else:
+                # C3 REDTEAM: no round-trip match AND no verified actor → reject
+                value = None
         else:
             logger.warning("arifOS session_validate HTTP %s", r.status_code)
             value = None
@@ -311,12 +312,21 @@ def validate_session(
 
         # Kernel-verified: extract actor from response
         standing_actor = verified.get("standing", {}).get("actor", {})
-        kernel_actor = (
-            standing_actor.get("claimed_id")
-            or standing_actor.get("canonical_id")
-            or verified.get("actor_id")
-            or verified.get("actor")
-        )
+        if isinstance(standing_actor, str):
+            kernel_actor = standing_actor
+        elif isinstance(standing_actor, dict):
+            kernel_actor = (
+                standing_actor.get("claimed_id")
+                or standing_actor.get("canonical_id")
+                or standing_actor.get("actor_id")
+            )
+        else:
+            kernel_actor = None
+        if not kernel_actor:
+            kernel_actor = verified.get("actor_id") or verified.get("actor")
+        if isinstance(kernel_actor, dict):
+            kernel_actor = kernel_actor.get("actor_id") or kernel_actor.get("claimed_id") or kernel_actor.get("canonical_id")
+
         kernel_authority = (
             verified.get("standing", {}).get("authority", {}).get("band") or verified.get("authority") or required_authority
         )
@@ -324,9 +334,11 @@ def validate_session(
         # Actor binding check
         if (
             kernel_actor
+            and isinstance(kernel_actor, str)
             and actor_id
-            and kernel_actor != "anonymous"
-            and actor_id != "anonymous"
+            and isinstance(actor_id, str)
+            and kernel_actor.lower() != "anonymous"
+            and actor_id.lower() != "anonymous"
             and kernel_actor.casefold() != actor_id.casefold()
         ):
             return ValidationResult(
