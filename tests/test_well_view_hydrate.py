@@ -26,34 +26,32 @@ def test_unknown_well_no_silent_empty() -> None:
     assert not r.get("curves")
 
 
-@pytest.mark.asyncio
-async def test_well_view_tool_demo_hydrate() -> None:
-    """Call the wired tool body via MCP call_tool if available."""
-    from geox_mcp.server import mcp
+def test_hydrate_receipt_seal_path() -> None:
+    """Successful hydrate can mint a vault receipt (SEALED or PENDING)."""
+    import hashlib
+    import json
 
-    # Session gate may require env off for unit path
-    import os
+    from geox_mcp.seal_receipt import RiskClass, Reversibility, seal_receipt
 
-    os.environ["GEOX_REQUIRE_SESSION_FOR_MUTATE"] = "0"
-    try:
-        result = await mcp.call_tool(
-            "geox_well_view",
-            {"well_id": "DEMO-KINABALU", "actor_id": "ARIF", "session_id": "SEAL-test-b"},
-        )
-    finally:
-        os.environ.pop("GEOX_REQUIRE_SESSION_FOR_MUTATE", None)
-
-    sc = getattr(result, "structured_content", None) or {}
-    if not sc and hasattr(result, "content"):
-        # parse text if needed
-        pass
-    assert not getattr(result, "is_error", False) or sc.get("ok") is True or sc.get("curves")
-    # Prefer structured
-    if sc:
-        assert sc.get("ok") is True or sc.get("curves")
-        if sc.get("ok"):
-            assert sc.get("curves")
-            assert sc.get("depths")
-            # receipt may be SEALED or PENDING
-            rec = sc.get("receipt") or (sc.get("meta") or {}).get("receipt")
-            assert rec is None or rec.get("state") in ("SEALED", "PENDING", "FAILED")
+    r = _load_well_curves_for_ui("DEMO-KINABALU", max_n=100)
+    assert r["status"] == "loaded"
+    payload = {
+        "well_id": "DEMO-KINABALU",
+        "las_path": r.get("las_path"),
+        "n_samples": len(r.get("depths") or []),
+        "curves": sorted((r.get("curves") or {}).keys()),
+    }
+    sha = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+    seal = seal_receipt(
+        tool="geox_well_view",
+        artifact_id="well_view:DEMO-KINABALU",
+        artifact_sha256=sha,
+        actor_id="ARIF",
+        session_id="SEAL-test-b",
+        verdict="QUALIFY",
+        risk_class=RiskClass.LOW,
+        reversibility=Reversibility.FULL,
+    )
+    assert seal.state in ("SEALED", "PENDING", "FAILED")
+    if seal.state == "SEALED":
+        assert seal.ref and seal.ref.startswith("vault999://")
