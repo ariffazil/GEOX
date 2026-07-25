@@ -20,9 +20,9 @@ class TestAppExportParity:
         public_mcp_tools = list(CANONICAL_PUBLIC_TOOLS)
         manifest_public = public_tool_names()
 
-        assert len(exported_app_tools) == 31
-        assert len(public_mcp_tools) == 31
-        assert len(manifest_public) == 31
+        assert len(exported_app_tools) == 33
+        assert len(public_mcp_tools) == 33
+        assert len(manifest_public) == 33
         assert set(exported_app_tools) == set(public_mcp_tools) == set(manifest_public)
 
         # Required canonical names (must not vanish from app export)
@@ -38,10 +38,11 @@ class TestAppExportParity:
             assert required in exported_app_tools
 
         # Phantom pre-ZEN-24 plugin names must not reappear
+        # (2026-07-25 update: geox_well_qc and geox_gravmag_studio
+        #  are now canonical — moved out of phantom list)
         for phantom in (
             "geox_vision",
             "geox_map_context_scene",
-            "geox_well_qc",
             "geox_material_truth_challenge",
             "geox_cascade_pathway",
             "geox_feedback_integrity",

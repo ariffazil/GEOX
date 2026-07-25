@@ -802,6 +802,21 @@ class GeoxGovernanceMiddleware(Middleware):
                     tool_name,
                     _stamp_exc,
                 )
+            # ── Stage-1 outputSchema enforcement (2026-07-25) ──────────────
+            # SUCCESS with null evidence = FAILURE (commit 80fc80fd pattern).
+            # Applied to all 32 canonical tools via per-tool evidence contracts.
+            try:
+                from geox_mcp.evidence_postcondition import (
+                    check_evidence_postcondition,
+                )
+
+                result = check_evidence_postcondition(tool_name, result)
+            except Exception as _ev_exc:
+                logger.warning(
+                    "EVIDENCE_POST: failed for tool=%s: %s",
+                    tool_name,
+                    _ev_exc,
+                )
             return result
         except ToolError:
             raise  # Already governed — let FastMCP handle normally
