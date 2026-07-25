@@ -61,8 +61,7 @@ class RequireLiveError(Exception):
         self.mode = mode
         self.detail = detail
         msg = (
-            f"REQUIRE_LIVE_FAIL: tool={tool_name} mode={mode} "
-            f"(GEOX_REQUIRE_LIVE=1 rejects offline_stub Ext). {detail}"
+            f"REQUIRE_LIVE_FAIL: tool={tool_name} mode={mode} (GEOX_REQUIRE_LIVE=1 rejects offline_stub Ext). {detail}"
         ).strip()
         super().__init__(msg)
 
@@ -196,20 +195,74 @@ def infer_mode(tool_name: str, result: dict[str, Any]) -> str:
         # These fetchers default offline_stub when env offline — if no mode, assume stub.
         return "offline_stub"
 
-    # Pure interpretation / compute without external fetch → derived
+    # ── Tool-category defaults (covers entire canonical surface) ──────
+    #   derived   = computation, lookup, interpretation, rendering
+    #   registry  = metadata about the system itself
+    #   bridge    = cross-organ routing
+    #   unknown   = truly indeterminate (should be rare)
+
+    if "map_layers" in tn or tn.endswith("map_layers_list"):
+        return "catalog"
+
     if any(
         s in tn
         for s in (
-            "interpret",
-            "petrophysics",
-            "structure_validate",
-            "prospect",
+            "basin",
+            "backstrip",
+            "claim_graph",
+            "contradiction",
+            "deep_time",
+            "evidence",
             "falsify",
-            "claim",
-            "qc",
+            "geomechanics",
+            "gravmag",
+            "lem_predict",
+            "map_",
+            "petrophysics",
+            "prospect",
+            "sediment",
+            "seismic_compute",
+            "seismic_ingest",
+            "seismic_interpret",
+            "sequence",
+            "subsurface",
+            "thermal",
+            "visual_",
+            "well_ingest",
+            "well_qc",
+            "interpret",
+            "structure_validate",
             "volumetric",
+            "qc",
+            "claim",
         )
     ):
+        return "derived"
+
+    if any(
+        s in tn
+        for s in (
+            "surface_status",
+            "workspace",
+            "claim",
+        )
+    ):
+        return "registry"
+
+    if "to_wealth" in tn:
+        return "bridge"
+
+    if any(
+        s in tn
+        for s in (
+            "well_desk",
+            "well_view",
+        )
+    ):
+        return "view"
+
+    # Last resort: if result has substantial computed data, treat as derived
+    if isinstance(result, dict) and any(result.get(k) for k in ("data", "variables", "layers", "summary", "result")):
         return "derived"
 
     return "unknown"
@@ -217,9 +270,7 @@ def infer_mode(tool_name: str, result: dict[str, Any]) -> str:
 
 def _is_mcp_tool_result(result: Any) -> bool:
     """True for FastMCP ToolResult (must keep .to_mcp_result())."""
-    return callable(getattr(result, "to_mcp_result", None)) and hasattr(
-        result, "structured_content"
-    )
+    return callable(getattr(result, "to_mcp_result", None)) and hasattr(result, "structured_content")
 
 
 def _as_dict(result: Any) -> dict[str, Any] | None:
@@ -294,10 +345,20 @@ def stamp_ext_witness(
     # else: keep tool operation mode; data_mode holds Ext_witness truth
 
     if not ready:
-        out.setdefault(
-            "ext_witness_note",
-            f"mode={data_mode} is not Ext_witness-ready for SEAL geometry (need live)",
-        )
+        # Softer note for catalog/derived/registry — still not Ext_witness live
+        if data_mode in ("derived", "catalog", "registry", "view", "bridge", "synthetic"):
+            out.setdefault(
+                "ext_witness_note",
+                f"mode={data_mode}: metabolized/catalog evidence — not live Ext_witness for SEAL geometry",
+            )
+        else:
+            out.setdefault(
+                "ext_witness_note",
+                f"mode={data_mode} is not Ext_witness-ready for SEAL geometry (need live)",
+            )
+    # Prefer explicit data_mode tokens from known enums
+    if data_mode == "catalog":
+        out.setdefault("data_mode", "catalog")
 
     prov = out.get("provenance")
     prov = dict(prov) if isinstance(prov, dict) else {}
@@ -334,6 +395,7 @@ def _stamp_tool_result(result: Any, *, tool_name: str) -> Any:
     """Stamp FastMCP ToolResult.structured_content; keep to_mcp_result().
 
     Rebuilds ToolResult so content text matches stamped structured_content.
+    Normalises is_error to the tool's own ``ok`` / ``status`` signal.
     """
     sc = getattr(result, "structured_content", None)
     meta = getattr(result, "meta", None)
@@ -342,6 +404,21 @@ def _stamp_tool_result(result: Any, *, tool_name: str) -> Any:
     if isinstance(sc, dict):
         stamped_sc = stamp_ext_witness(sc, tool_name=tool_name)
         stamped_sc = enforce_require_live(stamped_sc, tool_name=tool_name)
+
+        # ── isError normalisation (2026-07-25) ──────────────────────
+        # Some tools return {ok:true, error:""} which FastMCP maps to
+        # isError=true because ``error`` is a recognised signal key.
+        # Detect this: if the tool body claims success, override.
+        tool_claims_success = stamped_sc.get("ok") is True or stamped_sc.get("status") in ("OK", "SUCCESS", "COMPLETED", "PASS")
+        has_error_content = bool(
+            stamped_sc.get("error") and stamped_sc.get("error") != "" and stamped_sc.get("error") is not None
+        )
+        if tool_claims_success and not has_error_content:
+            is_error = False
+        elif has_error_content and not tool_claims_success:
+            is_error = True
+        # else: preserve original (ambiguous)
+
         try:
             from fastmcp.tools.base import ToolResult
 
@@ -352,8 +429,7 @@ def _stamp_tool_result(result: Any, *, tool_name: str) -> Any:
             )
         except Exception as exc:  # noqa: BLE001
             logger.warning(
-                "EXT_WITNESS_STAMP: ToolResult rebuild failed tool=%s: %s — "
-                "mutating structured_content in place",
+                "EXT_WITNESS_STAMP: ToolResult rebuild failed tool=%s: %s — mutating structured_content in place",
                 tool_name,
                 exc,
             )

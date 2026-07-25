@@ -396,35 +396,43 @@ class GeoxGovernanceMiddleware(Middleware):
         filtered = [t for t in result if getattr(t, "name", None) in canonical_public_tools]
         removed = len(result) - len(filtered)
 
-        # Build audit-grade drift report.
-        report = drift_report(live_names)
-        # Stash for /drift endpoint.
-        self._LAST_DRIFT_REPORT = report
+        # Build dual drift reports:
+        #   raw_report  — unfiltered → raw counts for journal diagnostics
+        #   client_report — filtered → what /health and /drift surface
+        raw_report = drift_report(live_names)
+        filtered_names = sorted(getattr(t, "name", "") for t in filtered if getattr(t, "name", None))
+        client_report = drift_report(filtered_names)
+        # Stash the CLIENT-FACING report for /health and /drift endpoints.
+        self._LAST_DRIFT_REPORT = client_report
 
         if removed:
             logger.warning(
-                "%s live_count=%d canonical_count=%d drift_count=%d removed=%s",
+                "%s raw_live=%d raw_drift=%d canonical=%d client_live=%d client_ok=%s removed=%s",
                 EVT_SURFACE_DRIFT,
-                report["live_count"],
-                report["canonical_count"],
-                report["drift_count"],
-                report["drifted"],
+                raw_report["live_count"],
+                raw_report["drift_count"],
+                raw_report["canonical_count"],
+                client_report["live_count"],
+                str(client_report["ok"]).lower(),
+                raw_report["drifted"][:10]
+                if len(raw_report["drifted"]) <= 10
+                else raw_report["drifted"][:10] + [f"... +{len(raw_report['drifted']) - 10}"],
             )
-            if report["missing"]:
+            if client_report["missing"]:
                 logger.warning(
                     "%s canonical_count=%d live_count=%d gap_count=%d missing=%s",
                     EVT_SURFACE_GAP,
-                    report["canonical_count"],
-                    report["live_count"],
-                    report["gap_count"],
-                    report["missing"],
+                    client_report["canonical_count"],
+                    client_report["live_count"],
+                    client_report["gap_count"],
+                    client_report["missing"],
                 )
         else:
             logger.info(
                 "%s live_count=%d canonical_count=%d ok=true",
                 EVT_SURFACE_OK,
-                report["live_count"],
-                report["canonical_count"],
+                client_report["live_count"],
+                client_report["canonical_count"],
             )
 
         return filtered
@@ -754,6 +762,7 @@ class GeoxGovernanceMiddleware(Middleware):
                 from geox_mcp.envelope_normalizer import (
                     normalize_envelope_for_mutation,
                 )
+
                 result = normalize_envelope_for_mutation(
                     tool_name=tool_name,
                     result=result,

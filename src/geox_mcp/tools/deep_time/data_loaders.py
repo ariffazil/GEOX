@@ -1031,10 +1031,11 @@ def load_biotic_realm(age_ma: float) -> EarthStateVariable:
         descriptor = "Quaternary: humans (Homo), megafauna, ice-age biota"
     elif 2.58 <= age_ma < 23.03:
         descriptor = "Neogene: modern mammal families, grassland expansion, hominid evolution"
-    elif 23.03 <= age_ma < 66.0:
+    elif 23.03 <= age_ma <= 66.0:
+        # Include 66.0 Ma as Paleogene (K-Pg boundary = base Paleocene / end Cretaceous)
         descriptor = "Paleogene: post-K-Pg mammal radiation, angiosperm dominance, first primates"
-    elif 66.0 <= age_ma < 145.0:
-        descriptor = "Cretaceous: dinosaurs (non-avian), ammonites, angiosperms diversify, K-Pg mass extinction"
+    elif 66.0 < age_ma < 145.0:
+        descriptor = "Cretaceous: dinosaurs (non-avian), ammonites, angiosperms diversify"
     elif 145.0 <= age_ma < 201.4:
         descriptor = "Jurassic: dinosaurs peak, first birds, mammals small, Pangea rifting"
     elif 201.4 <= age_ma < 251.902:
@@ -1117,9 +1118,10 @@ def load_ice_extent(age_ma: float) -> EarthStateVariable:
         descriptor = "Oi-1 event: initial continental-scale Antarctic glaciation onset"
     elif 34.5 <= age_ma < 52.0:
         descriptor = "Ice-free (warm Eocene, no Antarctic ice sheet)"
-    elif 52.0 <= age_ma < 66.0:
-        descriptor = "Ice-free (early Eocene hothouse, no polar ice)"
-    elif 66.0 <= age_ma < 145.0:
+    elif 52.0 <= age_ma <= 66.0:
+        # 66 Ma = K-Pg / base Paleocene — ice-free greenhouse to early Paleogene
+        descriptor = "Ice-free (K-Pg / early Paleogene; no polar ice sheets)"
+    elif 66.0 < age_ma < 145.0:
         descriptor = "Cretaceous: ice-free (greenhouse)"
     elif 251.0 <= age_ma < 360.0:
         descriptor = "Late Paleozoic Ice Age (Gondwanan glaciation)"
