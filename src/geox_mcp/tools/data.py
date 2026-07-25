@@ -366,6 +366,75 @@ async def geox_data_ingest_bundle(
                 _cx,
             )
 
+        # P0-4 D.3 (2026-07-25 · FI-008): wire seal_receipt + verify_artifact
+        # + envelope into the mutating ingest path. Replaces the audit's
+        # "VAULT999-PENDING" finding with a deterministic verification +
+        # sealed receipt before the tool returns success.
+        #
+        # Fail-soft: if verification or sealing fails, the tool still
+        # returns the artifact (the legacy artifact_ref is preserved), but
+        # the envelope surfaces the failure so downstream consumers can
+        # see the gap. This is the audit's "transport success vs evidence
+        # success" distinction: transport success remains; evidence
+        # success is reported explicitly with status.
+        envelope: dict[str, Any] = {}
+        try:
+            from geox_mcp.tools._artifact_identity import verify_artifact
+            from geox_mcp.seal_receipt import (
+                build_verification_envelope,
+                seal_receipt,
+            )
+
+            verification = verify_artifact(
+                str(target_path),
+                expected_sha256=sha256,
+                expected_metadata={"well": derived_well_id, "uwi": ""},
+                check_registry=_artifact_exists,
+            )
+
+            actor_id = (
+                (arguments.get("actor_id") if isinstance(arguments, dict) else None)
+                or "anonymous"
+            )
+            session_id = (
+                (arguments.get("session_id") if isinstance(arguments, dict) else None)
+                or "anonymous"
+            )
+
+            seal = seal_receipt(
+                tool="geox_data_ingest_bundle",
+                artifact_id=canonical_artifact_ref or artifact_ref,
+                artifact_sha256=sha256,
+                actor_id=actor_id,
+                session_id=session_id,
+                verdict="SEAL",
+            )
+
+            envelope = build_verification_envelope(
+                artifact_status="CREATED",
+                verification_status=verification.verification_status,
+                artifact_id=canonical_artifact_ref or artifact_ref,
+                artifact_sha256=sha256,
+                actor_id=actor_id,
+                session_id=session_id,
+                tool="geox_data_ingest_bundle",
+                verification_reason=verification.reason,
+                receipt=seal,
+                claim_state="FILE_IMPORTED",
+            )
+            envelope["verification_checks"] = list(verification.checks)
+            envelope["verification_artifact_path"] = verification.artifact_path
+        except Exception as _envelope_exc:
+            logger.warning(
+                "INGEST_ENVELOPE: envelope construction failed (fail-soft): %s",
+                _envelope_exc,
+            )
+            envelope = {
+                "verification_status": "UNVERIFIED",
+                "receipt": {"state": "PENDING", "ref": None},
+                "error": f"{type(_envelope_exc).__name__}: {_envelope_exc}",
+            }
+
         return _return(
             get_standard_envelope(
                 {
@@ -380,6 +449,9 @@ async def geox_data_ingest_bundle(
                     "curve_count": len(loaded_curves),
                     "depth_range_m": diagnostics["depth_range_m"],
                     "claim_state": "FILE_IMPORTED",
+                    # P0-4: the verification envelope is the canonical
+                    # success contract (audit-defined 5-status schema).
+                    "envelope": envelope,
                 },
                 tool_class="ingress",
                 execution_status=ExecutionStatus.SUCCESS,

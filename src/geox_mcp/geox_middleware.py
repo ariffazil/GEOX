@@ -471,9 +471,7 @@ class GeoxGovernanceMiddleware(Middleware):
             enforce_authority(tool_name=tool_name, arguments=arguments)
         except AuthorityRejection as _auth_rej:
             envelope = _auth_rej.to_envelope()
-            envelope["gate"] = (
-                f"P0-2 gateway authority (http {_auth_rej.http_status})"
-            )
+            envelope["gate"] = f"P0-2 gateway authority (http {_auth_rej.http_status})"
             logger.warning(
                 "AUTH_GATE: blocked tool=%s error=%s http=%d session=%s actor=%s",
                 tool_name,
@@ -661,6 +659,7 @@ class GeoxGovernanceMiddleware(Middleware):
                     )
 
         # ── Organ governance: route C2+/IRREVERSIBLE through arifOS kernel ──
+        _governance_envelope: dict = {}  # P0-6: initialised always
         if self._check_governance is not None:
             try:
                 gov_verdict, gov_error, artifact_id = await self._check_governance(
@@ -744,7 +743,29 @@ class GeoxGovernanceMiddleware(Middleware):
             }
         )
         try:
-            return await call_next(context)
+            result = await call_next(context)
+            # P0-6: Inject 5-layer evidence envelope into response
+            result = self._inject_evidence_envelope(result, tool_name, _governance_envelope)
+            # P0-4 D.4+D.5 (2026-07-25 · FI-008): for mutating tools,
+            # guarantee the audit-defined 5-status envelope contract and
+            # downgrade governance_verdict when the contract is incomplete.
+            # This closes the "transport success ≠ evidence success" gap.
+            try:
+                from geox_mcp.envelope_normalizer import (
+                    normalize_envelope_for_mutation,
+                )
+                result = normalize_envelope_for_mutation(
+                    tool_name=tool_name,
+                    result=result,
+                    arguments=arguments,
+                )
+            except Exception as _norm_exc:
+                logger.warning(
+                    "ENVELOPE_NORMALIZER: failed for tool=%s: %s",
+                    tool_name,
+                    _norm_exc,
+                )
+            return result
         except ToolError:
             raise  # Already governed — let FastMCP handle normally
         except (ValueError, TypeError, KeyError, LookupError) as e:
@@ -775,6 +796,31 @@ class GeoxGovernanceMiddleware(Middleware):
             GEOX_IDENTITY_CONTEXT.reset(identity_token)
 
     # ── HELPERS ────────────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _inject_evidence_envelope(result, tool_name, gov_envelope):
+        """P0-6: Inject 5-layer evidence envelope into tool response dict."""
+        if not isinstance(gov_envelope, dict):
+            return result
+        try:
+            from geox_mcp.organ_governance import build_evidence_envelope
+
+            if isinstance(result, dict) and not isinstance(result.get("content"), list):
+                envelope = build_evidence_envelope(
+                    tool_name=tool_name,
+                    transport_status="OK",
+                    execution_status="COMPLETED",
+                    artifact_status="CREATED" if gov_envelope.get("artifact_id") else "NONE",
+                    verification_status="PENDING",
+                    governance_verdict=gov_envelope.get("gate_verdict", "ADVISORY"),
+                    artifact_id=gov_envelope.get("artifact_id", ""),
+                    session_id=gov_envelope.get("session_id", ""),
+                    actor_id=gov_envelope.get("actor_id", "anonymous"),
+                )
+                result["_evidence_envelope"] = envelope
+            return result
+        except Exception:
+            return result
 
     @staticmethod
     def _extract_error(gov_error: Any) -> dict[str, Any]:

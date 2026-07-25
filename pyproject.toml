@@ -115,6 +115,30 @@ dependencies = [
     # ─── P1 CRITICAL: Geochemistry ─────────────────────────────────────────
     # pyrolite — geochemical data processing (trace elements, spider diagrams)
     "pyrolite>=0.3.7",
+
+    # ─── P0 STAGE 2: Artifact spine (2026-07-25 · FI-008) ────────────────────
+    # The roadmap requires migration to xarray/zarr/dask with pint units,
+    # explicit CRS/datum/TVDSS, and OSDU-aligned lineage. These are CORE
+    # to agentic earth intelligence, not optional — agents must pass
+    # references (URI + selection + content hash), never arrays or bare
+    # file paths.
+    #
+    # xarray — labeled N-D arrays (depth, inline, xline, time)
+    "xarray>=2026.4.0",
+    # dask — lazy out-of-core parallelism over chunked zarr
+    "dask>=2026.4.0",
+    # zarr v3 — chunked, compressed, JSON metadata, cloud-native storage
+    "zarr>=3.0",
+    # numcodecs — pluggable codecs for zarr (Blosc, Zstd, Delta, etc.)
+    "numcodecs>=0.13",
+    # pint — unit safety on every curve/attribute (Stage 2 enforces units)
+    "pint>=0.24",
+    # fsspec — filesystem abstraction (s3://, gs://, file://, in-memory)
+    # Already transitive; declare explicitly so artifacts can be passed
+    # by URI consistently.
+    "fsspec>=2026.4.0",
+    # netCDF4 — alternative chunked backend for xarray.open_dataset
+    "netCDF4>=1.7",
 ]
 
 [project.optional-dependencies]
