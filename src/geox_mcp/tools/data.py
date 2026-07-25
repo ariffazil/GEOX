@@ -729,6 +729,23 @@ async def geox_data_ingest_bundle(
             "timestamp": datetime.now(UTC).isoformat(),
             "hash": digest,
         }
+
+        # P0-4: Independent dual-control verification
+        # Reopen file → SHA-256 → parse headers → compare → VERIFIED or HOLD
+        try:
+            from geox_mcp.verify_ingest import verify_ingest_independent
+
+            out["_p04_verification"] = verify_ingest_independent(
+                las_path=local_path,
+                stored_metadata=out,
+                artifact_ref=artifact_ref,
+            )
+        except Exception as _p04_err:
+            out["_p04_verification"] = {
+                "verdict": "UNVERIFIED",
+                "reason": f"verification failed: {_p04_err}",
+            }
+
         return _return(
             get_standard_envelope(
                 out,
