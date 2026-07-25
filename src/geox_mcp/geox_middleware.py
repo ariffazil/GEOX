@@ -765,6 +765,34 @@ class GeoxGovernanceMiddleware(Middleware):
                     tool_name,
                     _norm_exc,
                 )
+            # P1 (2026-07-25): stamp mode + ext_witness_ready on every result.
+            # GEOX_REQUIRE_LIVE=1 fail-closes offline_stub Ext for SEAL geometry.
+            try:
+                from geox_mcp.ext_witness_stamp import (
+                    RequireLiveError,
+                    stamp_and_gate,
+                )
+
+                result = stamp_and_gate(result, tool_name=tool_name)
+            except RequireLiveError as _live_exc:
+                raise ToolError(
+                    json.dumps(
+                        {
+                            "error_class": "REQUIRE_LIVE_FAIL",
+                            "tool": tool_name,
+                            "mode": getattr(_live_exc, "mode", "offline_stub"),
+                            "detail": str(_live_exc),
+                            "ext_witness_ready": False,
+                            "fix": "Set GEOX_REQUIRE_LIVE=0 for stub smoke, or enable live fetcher env.",
+                        }
+                    )
+                ) from _live_exc
+            except Exception as _stamp_exc:
+                logger.warning(
+                    "EXT_WITNESS_STAMP: failed for tool=%s: %s",
+                    tool_name,
+                    _stamp_exc,
+                )
             return result
         except ToolError:
             raise  # Already governed — let FastMCP handle normally

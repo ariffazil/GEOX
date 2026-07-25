@@ -253,6 +253,21 @@ def _stamp_qualified(
             for k, v in transport.items():
                 if v is not None:
                     prov.setdefault(k, v)
+    # P1: interpret receipts carry session apex (read-only kernel echo).
+    # GEOX never mints constitutional G — g_authority stamps the source.
+    try:
+        from geox_mcp.session_apex import attach_session_apex
+
+        # Interpret is derived metabolism, not live Earth fetch.
+        result.setdefault("data_mode", "derived")
+        result.setdefault("ext_witness_ready", False)
+        result = attach_session_apex(result)
+    except Exception:  # noqa: BLE001 — apex is advisory; geology still returns
+        result.setdefault("g_authority", "unmeasured")
+        result.setdefault(
+            "g_note",
+            "session apex attach failed — constitutional G still arif_think only",
+        )
     return _json_safe(result)
 
 
