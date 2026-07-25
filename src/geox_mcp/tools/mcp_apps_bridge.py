@@ -660,6 +660,19 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
             "history": {"type": "array", "description": "Workspace state history"},
         },
     },
+    "geox_well_view": {
+        "type": "object",
+        "properties": {
+            "well_id": {"type": "string", "description": "Well identifier"},
+            "source_uri": {"type": "string", "description": "LAS file path"},
+            "curves": {
+                "type": "object",
+                "description": "Curve data: {GR: [...], RES: [...], DT: [...], RHOB: [...], NPHI: [...]}",
+            },
+            "depths": {"type": "array", "items": {"type": "number"}, "description": "Depth array (metres)"},
+            "meta": {"type": "object", "description": "Well metadata: start_md, stop_md, null_value, curves_loaded"},
+        },
+    },
 }
 
 
