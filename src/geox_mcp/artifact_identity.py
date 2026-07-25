@@ -100,6 +100,11 @@ def make_artifact_id(
         raise ValueError(f"invalid kind: {kind!r} (must match ^[a-z][a-z0-9_]+$)")
     if not canonical_id:
         raise ValueError("canonical_id is required")
+    # URL path segment must not contain / or @ (breaks parse regex [^/@]+)
+    # e.g. Volve well names like 15/9-F-1B → 15_9-F-1B
+    canonical_id = (
+        str(canonical_id).replace("/", "_").replace("@", "_").replace(" ", "_")
+    )
     clean_sha = sha256.removeprefix("sha256:")
     if not re.match(r"^[0-9a-f]{64}$", clean_sha):
         raise ValueError(f"invalid sha256: {sha256!r} (expected 64 hex chars)")

@@ -902,20 +902,47 @@ async def _workflow_section_correlation(
     # GR motif / sequence stratigraphy modes
     from geox_core.core.geox_1d import process_las_file
 
+    # Prompt C: resolve well_refs via artifact spine (artifact:// · well_las: · DEMO-*)
     well_sources: list[tuple[str, str]] = []
-    for i, ref in enumerate(well_refs):
+    resolved_meta: list[dict] = []
+    for i, ref in enumerate(well_refs or []):
         entry = _get_artifact(ref)
-        if entry and entry.get("las_path"):
+        if entry and entry.get("las_path") and Path(entry["las_path"]).exists():
             well_sources.append((ref, entry["las_path"]))
-        elif well_las_paths and i < len(well_las_paths):
+            resolved_meta.append({"ref": ref, "source": "store", "las_path": entry["las_path"]})
+            continue
+        try:
+            from geox_mcp.artifact_resolve import resolve_well_las
+
+            r = resolve_well_las(ref)
+            if r.get("ok") and r.get("las_path"):
+                label = r.get("canonical_artifact_ref") or r.get("well_id") or ref
+                well_sources.append((label, r["las_path"]))
+                resolved_meta.append(
+                    {
+                        "ref": ref,
+                        "source": r.get("source"),
+                        "las_path": r["las_path"],
+                        "canonical_artifact_ref": r.get("canonical_artifact_ref"),
+                        "well_id": r.get("well_id"),
+                    }
+                )
+                continue
+        except Exception:
+            pass
+        if well_las_paths and i < len(well_las_paths):
             well_sources.append((ref, well_las_paths[i]))
+            resolved_meta.append({"ref": ref, "source": "path_arg", "las_path": well_las_paths[i]})
     if not well_sources and well_las_paths:
         for i, lp in enumerate(well_las_paths):
-            wid = well_refs[i] if i < len(well_refs) else f"well_{i}"
+            wid = (well_refs[i] if well_refs and i < len(well_refs) else f"well_{i}")
             well_sources.append((wid, lp))
+            resolved_meta.append({"ref": wid, "source": "path_arg", "las_path": lp})
     if not well_sources:
         return _error_envelope(
-            "NO_LAS_SOURCES", "No LAS paths available. Provide well_refs with registered artifacts or well_las_paths."
+            "NO_LAS_SOURCES",
+            "No LAS paths available. Provide well_refs (artifact://, well_las:, DEMO-*) "
+            "with resolvable artifacts or well_las_paths.",
         )
 
     motifs_by_well: dict[str, dict] = {}
@@ -1153,12 +1180,51 @@ async def geox_sequence_interpret(
         ctx.report_progress(15, 100)
 
     if workflow == "single_well":
-        if not source or zone_top is None or zone_base is None:
-            return _error_envelope("MISSING_PARAMS", "single_well workflow requires source, zone_top, and zone_base.")
+        # Prompt C: resolve source via artifact spine when not a bare path
+        resolved_source = source
+        resolved_canon = None
+        if not resolved_source and well_refs:
+            try:
+                from geox_mcp.artifact_resolve import resolve_well_las
+
+                r0 = resolve_well_las(well_refs[0])
+                if r0.get("ok") and r0.get("las_path"):
+                    resolved_source = r0["las_path"]
+                    resolved_canon = r0.get("canonical_artifact_ref")
+            except Exception:
+                pass
+        if resolved_source and not Path(str(resolved_source)).exists():
+            try:
+                from geox_mcp.artifact_resolve import resolve_well_las
+
+                r1 = resolve_well_las(str(resolved_source))
+                if r1.get("ok") and r1.get("las_path"):
+                    resolved_source = r1["las_path"]
+                    resolved_canon = r1.get("canonical_artifact_ref")
+            except Exception:
+                pass
+
+        # Auto zone from LAS depth range when not supplied (demo / smoke path)
+        if resolved_source and (zone_top is None or zone_base is None):
+            try:
+                depth_arr, _gr, _meta = _load_las_or_csv(str(resolved_source))
+                if zone_top is None:
+                    zone_top = float(depth_arr[0])
+                if zone_base is None:
+                    zone_base = float(depth_arr[-1])
+            except Exception:
+                pass
+
+        if not resolved_source or zone_top is None or zone_base is None:
+            return _error_envelope(
+                "MISSING_PARAMS",
+                "single_well requires source (or well_refs resolving to LAS) and zone_top/zone_base "
+                "(or a LAS with readable depth range).",
+            )
         if ctx:
             ctx.report_progress(30, 100)
         result = await _workflow_single_well(
-            source=source,
+            source=str(resolved_source),
             zone_top=zone_top,
             zone_base=zone_base,
             depo_env_code=depo_env_code,
@@ -1168,6 +1234,12 @@ async def geox_sequence_interpret(
             gr_cutoff_api=gr_cutoff_api,
             detail_level=detail_level,
         )
+        # Stamp canonical artifact when resolved via spine
+        if isinstance(result, dict) and resolved_canon:
+            pa = result.get("primary_artifact")
+            if isinstance(pa, dict):
+                pa["canonical_artifact_ref"] = resolved_canon
+                pa.setdefault("source_resolved_via", "artifact_spine")
         if ctx:
             ctx.report_progress(100, 100)
         return result
