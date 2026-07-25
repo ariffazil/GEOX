@@ -381,7 +381,6 @@ class GeoxGovernanceMiddleware(Middleware):
 
         # Lazy import to avoid circular dependency at module load.
         from geox_mcp.canonical_surface_gate import (
-            canonical_set,
             drift_report,
             EVT_SURFACE_DRIFT,
             EVT_SURFACE_GAP,
@@ -389,7 +388,6 @@ class GeoxGovernanceMiddleware(Middleware):
         )
 
         live_names = sorted(getattr(t, "name", "") for t in result if getattr(t, "name", None))
-        canonical = canonical_set()
         canonical_public_tools = self._PUBLIC_SURFACE
 
         # Filter to PUBLIC surface only (canonical, not compat).
