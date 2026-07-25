@@ -185,6 +185,26 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "html_path": "apps/prospect-ui/index.html",
         "external_url": "https://geox.arif-fazil.com/apps/prospect-ui/",
     },
+    "analog_digitizer": {
+        "uri": "ui://geox/analog-digitizer",
+        "title": "GEOX Analog Digitizer",
+        "description": "Dark-data well log curve extraction — manual point-picking with LAS export",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",
+        "html_path": "apps/analog-digitizer/index.html",
+        "external_url": "https://geox.arif-fazil.com/apps/analog-digitizer/",
+    },
+    "well_witness": {
+        "uri": "ui://geox/well-witness",
+        "title": "GEOX Well Witness",
+        "description": "Consolidated well analysis pipeline: ingest → petrophysics → interactive view with provenance chain",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",
+        "html_path": "apps/well-witness.html",
+        "external_url": "https://geox.arif-fazil.com/apps/well-witness.html",
+    },
     "catalog": {
         "uri": "ui://geox/catalog",
         "title": "GEOX Skills Catalog",
@@ -353,6 +373,291 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict[str, Any]] = {
             },
             "count": {"type": "integer"},
             "standard": {"type": "string", "const": "SEP-1865"},
+        },
+    },
+    # ── H1 P0.1: 25 additional outputSchema definitions ─────────────────────
+    # Well family
+    "geox_well_ingest": {
+        "type": "object",
+        "properties": {
+            "well_id": {"type": "string", "description": "Canonical well identifier"},
+            "curves_loaded": {"type": "array", "items": {"type": "string"}, "description": "Loaded log curve mnemonics"},
+            "depth_range_m": {"type": "object", "description": "{top, base} depth range in metres"},
+            "format": {"type": "string", "description": "Source format (LAS, DLIS, SEG-Y)"},
+            "qc_flags": {"type": "array", "description": "Quality control findings"},
+        },
+    },
+    "geox_well_desk": {
+        "type": "object",
+        "properties": {
+            "well_id": {"type": "string"},
+            "curves": {"type": "object", "description": "Rendered curve data by depth"},
+            "tops": {"type": "object", "description": "Formation tops {name: depth_md}"},
+            "panel_image": {"type": "string", "description": "Base64-encoded well panel image"},
+            "interpretation_notes": {"type": "array", "description": "Interpretation annotations"},
+        },
+    },
+    "geox_well_qc": {
+        "type": "object",
+        "properties": {
+            "artifact_ref": {"type": "string"},
+            "qc_mode": {"type": "string"},
+            "checks": {"type": "array", "items": {"type": "object"}, "description": "QC check results"},
+            "pass_count": {"type": "integer"},
+            "fail_count": {"type": "integer"},
+            "warn_count": {"type": "integer"},
+        },
+    },
+    "geox_lem_predict": {
+        "type": "object",
+        "properties": {
+            "target_depth_m": {"type": "number"},
+            "predicted_properties": {"type": "object", "description": "Predicted rock properties (porosity, Sw, lithology)"},
+            "method": {"type": "string", "description": "Physics-prior or ML mode used"},
+            "basin_context": {"type": "string"},
+        },
+    },
+    # Seismic family
+    "geox_seismic_ingest": {
+        "type": "object",
+        "properties": {
+            "volume_ref": {"type": "string", "description": "Canonical volume identifier"},
+            "format": {"type": "string", "description": "Source format (SEG-Y, ZGY, VDS)"},
+            "headers": {"type": "object", "description": "Binary + textual header summary"},
+            "geometry": {
+                "type": "object",
+                "description": "{n_inlines, n_xlines, n_samples, sample_rate_ms, inline_range, xline_range}",
+            },
+            "qc_flags": {"type": "array", "description": "Ingest QC findings"},
+        },
+    },
+    "geox_seismic_interpret": {
+        "type": "object",
+        "properties": {
+            "mode": {"type": "string", "description": "Interpretation mode (horizon_contrast, fault_sticks, volume_frame, etc.)"},
+            "horizons": {"type": "array", "description": "Picked horizon geometries"},
+            "faults": {"type": "array", "description": "Picked fault geometries"},
+            "gates": {
+                "type": "object",
+                "description": "Physics gate results {horizon, fault, structure, thermal} with PASS|WARN|KILL|UNMEASURED",
+            },
+            "receipt_hash": {"type": "string", "description": "Content hash of interpretation artifact"},
+            "candidates": {"type": "integer", "description": "Number of competing interpretation candidates"},
+        },
+    },
+    # Basin family
+    "geox_basin_backstrip": {
+        "type": "object",
+        "properties": {
+            "well_ref": {"type": "string"},
+            "tectonic_subsidence": {"type": "array", "description": "Tectonic subsidence vs time"},
+            "total_subsidence": {"type": "array", "description": "Total subsidence vs time"},
+            "reconstructions": {"type": "object", "description": "Per-model reconstruction results"},
+            "uncertainty_realizations": {"type": "integer"},
+        },
+    },
+    "geox_sediment_mass_balance": {
+        "type": "object",
+        "properties": {
+            "basin_name": {"type": "string"},
+            "source_eroded_km3": {"type": "number"},
+            "preserved_km3": {"type": "number"},
+            "bypassed_km3": {"type": "number"},
+            "dissolved_km3": {"type": "number"},
+            "routing_efficiency": {"type": "number"},
+            "mass_closure_pct": {"type": "number", "description": "Percent mass balance closure"},
+        },
+    },
+    "geox_thermal_maturity_history": {
+        "type": "object",
+        "properties": {
+            "well_ref": {"type": "string"},
+            "vitrinite_reflectance": {"type": "array", "description": "EasyRo vs depth"},
+            "tti": {"type": "array", "description": "Time-Temperature Index vs depth"},
+            "oil_window": {"type": "object", "description": "{top_m, base_m} for oil generation window"},
+            "gas_window": {"type": "object", "description": "{top_m, base_m} for gas generation window"},
+        },
+    },
+    "geox_sequence": {
+        "type": "object",
+        "properties": {
+            "mode": {"type": "string"},
+            "correlation_panels": {"type": "array", "description": "Multi-well correlation panels"},
+            "sequence_boundaries": {"type": "array", "description": "Identified sequence boundaries"},
+            "systems_tracts": {"type": "object", "description": "LST/TST/HST assignments"},
+            "biostratigraphic_markers": {"type": "array"},
+        },
+    },
+    # Map family
+    "geox_map_layers_list": {
+        "type": "object",
+        "properties": {
+            "layers": {"type": "array", "items": {"type": "object"}, "description": "Available map layers with spatial extents"},
+            "bbox": {"type": "array", "description": "Query bounding box [min_lon, min_lat, max_lon, max_lat]"},
+            "crs": {"type": "string", "description": "Coordinate reference system"},
+        },
+    },
+    "geox_map_scene_plan": {
+        "type": "object",
+        "properties": {
+            "scene_id": {"type": "string"},
+            "layers": {"type": "array", "items": {"type": "object"}, "description": "Composed layer stack"},
+            "bbox": {"type": "array"},
+            "style_profile": {"type": "string"},
+            "annotations": {"type": "array"},
+        },
+    },
+    "geox_map_render_preview": {
+        "type": "object",
+        "properties": {
+            "scene_id": {"type": "string"},
+            "preview_url": {"type": "string", "description": "Rendered preview image URL"},
+            "width_px": {"type": "integer"},
+            "height_px": {"type": "integer"},
+            "format": {"type": "string"},
+        },
+    },
+    "geox_map_export_package": {
+        "type": "object",
+        "properties": {
+            "scene_plan_id": {"type": "string"},
+            "export_formats": {"type": "array", "items": {"type": "string"}},
+            "package_path": {"type": "string"},
+            "provenance_included": {"type": "boolean"},
+            "content_hash": {"type": "string"},
+        },
+    },
+    # Governance / evidence family
+    "geox_evidence": {
+        "type": "object",
+        "properties": {
+            "evidence_id": {"type": "string"},
+            "claim_id": {"type": "string"},
+            "epistemic_label": {"type": "string", "description": "OBS / DER / INT / SPEC"},
+            "evidence_type": {"type": "string", "description": "supporting / contradicting / missing"},
+            "source_citation": {"type": "object"},
+            "forbidden_uses": {"type": "array"},
+        },
+    },
+    "geox_contradiction_scan": {
+        "type": "object",
+        "properties": {
+            "claim_text": {"type": "string"},
+            "contradictions": {
+                "type": "array",
+                "items": {"type": "object"},
+                "description": "Detected contradictions with types and severity",
+            },
+            "overall_verdict": {"type": "string", "description": "CLEAN / FLAGGED / FATAL"},
+            "severity_counts": {"type": "object", "description": "{FATAL, HIGH, MEDIUM, LOW} counts"},
+        },
+    },
+    "geox_claim_graph_evaluate": {
+        "type": "object",
+        "properties": {
+            "claims": {"type": "array", "items": {"type": "object"}},
+            "edges": {"type": "array", "items": {"type": "object"}},
+            "propagated_verdicts": {"type": "object", "description": "Per-claim propagated verdicts"},
+            "cascade_failures": {"type": "array", "description": "Claims that failed due to dependency failure"},
+        },
+    },
+    # Earth / geophysics family
+    "geox_deep_time_state": {
+        "type": "object",
+        "properties": {
+            "age_ma": {"type": "number", "description": "Target age in millions of years"},
+            "paleogeography": {"type": "object", "description": "Plate positions, coastlines, topography"},
+            "climate_state": {"type": "object", "description": "CO2, temperature, sea level, ice volume"},
+            "ocean_chemistry": {"type": "object", "description": "pH, oxygenation, carbonate saturation"},
+            "biosphere": {"type": "object", "description": "Key fossils, extinction events, diversity"},
+        },
+    },
+    "geox_geomechanics": {
+        "type": "object",
+        "properties": {
+            "mode": {"type": "string", "description": "derive_moduli / blockspace / coord_transform"},
+            "stress_polygon_vertices": {
+                "type": "object",
+                "description": "A(hydrostatic), B(normal), C(strike-slip), D(reverse) limits",
+            },
+            "sv_mpa": {"type": "number", "description": "Vertical stress (MPa)"},
+            "friction_coefficient": {"type": "number"},
+            "moduli": {"type": "object", "description": "K, G, E, nu, AI derived from physics state"},
+        },
+    },
+    "geox_gravmag_studio": {
+        "type": "object",
+        "properties": {
+            "survey_type": {"type": "string", "description": "gravity / magnetic"},
+            "forward_model": {"type": "object", "description": "Forward modelled response at survey points"},
+            "prism_bodies": {"type": "array", "description": "Subsurface prism body definitions"},
+            "fit_residual_rms": {"type": "number"},
+        },
+    },
+    "geox_subsurface_model": {
+        "type": "object",
+        "properties": {
+            "mode": {"type": "string", "description": "joint_inversion / gravity_forward / magnetic_forward / MT_forward"},
+            "inverted_model": {"type": "object", "description": "Inverted property volumes"},
+            "forward_response": {"type": "object", "description": "Computed forward response"},
+            "iterations": {"type": "integer"},
+            "misfit": {"type": "number"},
+        },
+    },
+    "geox_to_wealth_bridge": {
+        "type": "object",
+        "properties": {
+            "prospect_ref": {"type": "string"},
+            "npv_usd": {"type": "number"},
+            "irr": {"type": "number"},
+            "breakeven_usd": {"type": "number"},
+            "score_kernel_input": {"type": "object", "description": "WEALTH score_kernel formatted input"},
+            "epistemic_source": {"type": "string"},
+        },
+    },
+    # Visual family
+    "geox_visual_understand": {
+        "type": "object",
+        "properties": {
+            "image_path": {"type": "string"},
+            "mode": {"type": "string"},
+            "patterns_detected": {"type": "array", "items": {"type": "object"}, "description": "Detected geological patterns"},
+            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        },
+    },
+    "geox_visual_generate_hypotheses": {
+        "type": "object",
+        "properties": {
+            "hypotheses": {
+                "type": "array",
+                "items": {"type": "object"},
+                "description": "Generated competing geological hypotheses",
+            },
+            "discontinuity_gap": {"type": "object", "description": "The seismic discontinuity gap being bridged"},
+            "count": {"type": "integer", "description": "Number of hypotheses generated"},
+        },
+    },
+    # Meta / status family
+    "geox_surface_status": {
+        "type": "object",
+        "properties": {
+            "status": {"type": "string", "description": "healthy / degraded / down"},
+            "surface_version": {"type": "string"},
+            "public_count": {"type": "integer"},
+            "public_count_target": {"type": "integer"},
+            "canonical_tools": {"type": "array", "items": {"type": "string"}},
+            "verdict": {"type": "string"},
+        },
+    },
+    "geox_workspace": {
+        "type": "object",
+        "properties": {
+            "mode": {"type": "string"},
+            "basin": {"type": "string"},
+            "play": {"type": "string"},
+            "well_id": {"type": "string"},
+            "prospect_ref": {"type": "string"},
+            "history": {"type": "array", "description": "Workspace state history"},
         },
     },
 }
@@ -598,6 +903,8 @@ _app_to_tool: dict[str, str] = {
     "workspace_v1": "geox_workspace",
     "workbench_v1": "geox_map_layers_list",
     "prospect_ui": "geox_prospect",
+    "well_witness": "geox_petrophysics",
+    "analog_digitizer": "geox_well_ingest",
 }
 
 # H1 P0: Additional tool-to-app assignments for tools without their own app

@@ -1,77 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOX Analog Digitizer — PLANNED</title>
-    <style>
-        :root { --bg: #0a0a0f; --panel: #12121a; --text: #e8e8f0; --muted: #9090a0; --accent: #8b5cf6; --warn: #f59e0b; }
-        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; }
-        .container { max-width: 960px; margin: 0 auto; }
-        h1 { font-size: 22px; margin-bottom: 8px; }
-        .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
-        .panel { background: var(--panel); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
-        .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .value { font-size: 18px; font-weight: 700; margin-top: 4px; }
-        .tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: rgba(139,92,246,0.15); color: var(--accent); }
-        .stage { padding: 10px 12px; border-bottom: 1px solid #1a1a25; }
-        .stage:last-child { border-bottom: none; }
-        .status { font-size: 11px; color: var(--warn); }
-        button { padding: 10px 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
-        .muted-btn { background: #2a2a3a; color: #fff; }
-    </style>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html;profile=mcp-app">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEOX Analog Digitizer — Well Log Curve Extraction</title>
+<style>
+:root { color-scheme: dark; font-family: system-ui, -apple-system, sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #060a0e; color: #c9d1d9; padding: 12px; min-height: 100vh; user-select: none; }
+.zen-pulse {
+  display: flex; gap: 16px; align-items: center; padding: 8px 14px;
+  background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+  font-size: 11px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.zp-item { display: flex; gap: 4px; align-items: baseline; }
+.zp-ask { opacity: 0.5; font-size: 10px; text-transform: uppercase; }
+.zp-val { font-weight: 600; }
+.zp-val.gold { color: #d29922; }
+.toolbar {
+  display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;
+  padding: 8px; background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+}
+.toolbar button {
+  padding: 6px 14px; border-radius: 6px; border: 1px solid #30363d;
+  background: #161b22; color: #c9d1d9; font-size: 12px; cursor: pointer;
+  font-weight: 500; transition: background 0.15s;
+}
+.toolbar button:hover { background: #21262d; }
+.toolbar button.active { background: #1a3a4a; border-color: #58a6ff; color: #58a6ff; }
+.toolbar button.export { background: #1a3a1a; border-color: #238636; color: #3fb950; margin-left: auto; }
+.canvas-wrap {
+  position: relative; background: #0a0e14; border: 1px solid #21262d;
+  border-radius: 8px; overflow: hidden; min-height: 350px;
+}
+canvas { display: block; width: 100%; height: 400px; cursor: crosshair; }
+.info-row { display: flex; gap: 8px; margin-top: 10px; font-size: 11px; }
+.info-row .stat {
+  flex: 1; padding: 6px 10px; background: #0d1117; border: 1px solid #21262d;
+  border-radius: 6px;
+}
+.info-row .stat .k { opacity: 0.5; text-transform: uppercase; font-size: 9px; letter-spacing: 0.04em; }
+.info-row .stat .v { font-weight: 600; font-size: 13px; }
+pre { font-size: 11px; background: #0d1117; border: 1px solid #21262d; border-radius: 6px; padding: 10px; max-height: 100px; overflow: auto; white-space: pre-wrap; margin-top: 8px; }
+.legend { display: flex; gap: 12px; font-size: 11px; margin-top: 6px; }
+.legend span { display: flex; align-items: center; gap: 4px; }
+.legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>📜 Analog Digitizer</h1>
-        <p class="subtitle">Dark-data well log digitization — PLANNED — DITEMPA BUKAN DIBERI</p>
 
-        <div class="panel">
-            <div class="label">Status</div>
-            <div class="value"><span class="tag">DESIGN SPIKE</span></div>
-            <p style="color:var(--muted);font-size:13px;margin-top:8px;">
-                Truth ≥0.99 required before any SEALED LAS used for business decisions.
-            </p>
-        </div>
+<div class="zen-pulse">
+  <div class="zp-item"><span class="zp-ask">Where?</span><span class="zp-val">GEOX · Analog Digitizer</span></div>
+  <div class="zp-item"><span class="zp-ask">Why care?</span><span class="zp-val gold">Dark-data well logs → structured LAS. Truth ≥0.99 required before business use.</span></div>
+  <div class="zp-item"><span class="zp-ask">Next?</span><span class="zp-val">Pick curves below ↓</span></div>
+</div>
 
-        <div class="panel">
-            <div class="label">Pipeline Stages</div>
-            <div class="stage">
-                <div style="font-weight:600;">1. Preprocessing</div>
-                <div class="status">PENDING — Image alignment, denoising, grid isolation</div>
-            </div>
-            <div class="stage">
-                <div style="font-weight:600;">2. Neural Interpretation</div>
-                <div class="status">PENDING — CNN/RNN curve tracking</div>
-            </div>
-            <div class="stage">
-                <div style="font-weight:600;">3. Vectorization & Export</div>
-                <div class="status">PENDING — Pixel paths to mathematical vectors → LAS</div>
-            </div>
-        </div>
+<div class="toolbar">
+  <button id="btnGR" class="active" data-curve="GR">GR (green)</button>
+  <button id="btnRES" data-curve="RES">RES (blue)</button>
+  <button id="btnDT" data-curve="DT">DT (gold)</button>
+  <button id="btnUndo">Undo last</button>
+  <button id="btnClear">Clear all</button>
+  <button id="btnExport" class="export">Export → LAS</button>
+</div>
 
-        <div class="panel">
-            <button id="syncBtn">Sync State to Host</button>
-            <button id="toolBtn" class="muted-btn">Call MCP Tool</button>
-        </div>
-    </div>
+<div class="canvas-wrap">
+  <canvas id="c"></canvas>
+</div>
 
-    <script>
-        const bridge = {
-            emit(method, params = {}) {
-                const event = { jsonrpc: "2.0", method, params, timestamp: new Date().toISOString() };
-                if (window.parent !== window) window.parent.postMessage(event, "*");
-                console.log("[AnalogDigitizer]", method, params);
-            }
-        };
-        bridge.emit("app.initialize", { app_id: "geox.analog.digitizer", version: "0.1.0-PLANNED" });
+<div class="info-row">
+  <div class="stat"><div class="k">Points</div><div class="v" id="pointCount">0</div></div>
+  <div class="stat"><div class="k">Active curve</div><div class="v" id="activeCurve">GR</div></div>
+  <div class="stat"><div class="k">Depth range</div><div class="v" id="depthInfo">—</div></div>
+  <div class="stat"><div class="k">Image</div><div class="v" id="imgStatus">No image loaded</div></div>
+</div>
 
-        document.getElementById("syncBtn").addEventListener("click", () => {
-            bridge.emit("ui.state.sync", { status: "design_spike", claim_tag: "HYPOTHESIS" });
-        });
-        document.getElementById("toolBtn").addEventListener("click", () => {
-            bridge.emit("callServerTool", { tool: "mcp.geox.geox_analog_digitizer_stub", args: { image_path: "/mock/log_scan.png" } });
-        });
-    </script>
+<div class="legend">
+  <span><span class="dot" style="background:#7dcea0"></span> GR</span>
+  <span><span class="dot" style="background:#58a6ff"></span> RES</span>
+  <span><span class="dot" style="background:#d29922"></span> DT</span>
+</div>
+<pre id="receipt">{}</pre>
+
+<script>
+(function() {
+  'use strict';
+  var PROTOCOL = '2026-01-26';
+  var nextId = 1, pending = new Map();
+  var activeCurve = 'GR';
+  var curves = { GR: [], RES: [], DT: [] };
+  var colors = { GR: '#7dcea0', RES: '#58a6ff', DT: '#d29922' };
+  var img = null;
+  var depthTop = 0, depthBot = 4000;
+
+  var canvas = document.getElementById('c');
+  var ctx = canvas.getContext('2d');
+
+  var el = {
+    pointCount: document.getElementById('pointCount'),
+    activeCurve: document.getElementById('activeCurve'),
+    depthInfo: document.getElementById('depthInfo'),
+    imgStatus: document.getElementById('imgStatus'),
+    receipt: document.getElementById('receipt'),
+  };
+
+  function resizeCanvas() {
+    var rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = 400;
+    redraw();
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  function redraw() {
+    var w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    if (img) {
+      ctx.globalAlpha = 0.6;
+      ctx.drawImage(img, 20, 10, w - 40, h - 30);
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.strokeStyle = '#21262d';
+    ctx.lineWidth = 0.5;
+    for (var i = 0; i < 5; i++) {
+      var dy = 10 + (h - 30) * i / 4;
+      ctx.beginPath(); ctx.moveTo(20, dy); ctx.lineTo(w - 20, dy); ctx.stroke();
+    }
+
+    for (var c in curves) {
+      var pts = curves[c];
+      if (pts.length < 2) continue;
+      ctx.strokeStyle = colors[c];
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (var j = 0; j < pts.length; j++) {
+        if (j === 0) ctx.moveTo(pts[j].x, pts[j].y);
+        else ctx.lineTo(pts[j].x, pts[j].y);
+      }
+      ctx.stroke();
+
+      for (var k = 0; k < pts.length; k++) {
+        ctx.fillStyle = colors[c];
+        ctx.beginPath(); ctx.arc(pts[k].x, pts[k].y, 3, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+  }
+
+  canvas.addEventListener('click', function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    curves[activeCurve].push({ x: x, y: y });
+    el.pointCount.textContent = Object.values(curves).reduce(function(a,b) { return a + b.length; }, 0);
+    redraw();
+  });
+
+  function updateButtons() {
+    ['GR','RES','DT'].forEach(function(c) {
+      var btn = document.getElementById('btn' + c);
+      if (c === activeCurve) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+    el.activeCurve.textContent = activeCurve;
+  }
+
+  document.getElementById('btnGR').addEventListener('click', function() { activeCurve = 'GR'; updateButtons(); });
+  document.getElementById('btnRES').addEventListener('click', function() { activeCurve = 'RES'; updateButtons(); });
+  document.getElementById('btnDT').addEventListener('click', function() { activeCurve = 'DT'; updateButtons(); });
+
+  document.getElementById('btnUndo').addEventListener('click', function() {
+    if (curves[activeCurve].length > 0) {
+      curves[activeCurve].pop();
+      el.pointCount.textContent = Object.values(curves).reduce(function(a,b) { return a + b.length; }, 0);
+      redraw();
+    }
+  });
+
+  document.getElementById('btnClear').addEventListener('click', function() {
+    curves = { GR: [], RES: [], DT: [] };
+    el.pointCount.textContent = '0';
+    redraw();
+  });
+
+  document.getElementById('btnExport').addEventListener('click', function() {
+    var las = ['~VERSION', ' 2.0', '~WELL', ' WELL .  .  .  .  .  .', '~CURVE'];
+    var h = canvas.height, xMin = 20, xMax = canvas.width - 20, yMin = 10, yMax = h - 20;
+    for (var c in curves) {
+      var pts = curves[c];
+      if (pts.length < 2) continue;
+      var depthStep = (depthBot - depthTop) / pts.length;
+      var values = pts.map(function(p, i) {
+        var depth = depthTop + i * depthStep;
+        var val = ((p.x - xMin) / (xMax - xMin)) * 150; // Normalize to 0-150 API
+        return { d: depth, v: val };
+      });
+      las.push(' ' + c + ' .  .  .  : ' + c + ' curve');
+      las.push('~A  ' + c);
+      for (var j = 0; j < values.length; j++) {
+        las.push(' ' + values[j].d.toFixed(1) + '  ' + values[j].v.toFixed(4));
+      }
+    }
+    var exportText = las.join('\n');
+    el.receipt.textContent = '# LAS Export (' + Object.keys(curves).filter(function(c) { return curves[c].length > 1; }).join(', ') + ')\n' +
+      Object.keys(curves).filter(function(c) { return curves[c].length > 1; }).join(' ') + '\n' +
+      'Total points: ' + Object.values(curves).reduce(function(a,b) { return a + b.length; }, 0);
+
+    window.parent.postMessage({
+      jsonrpc: '2.0',
+      method: 'ui/message',
+      params: {
+        type: 'las_export',
+        curve_count: Object.keys(curves).filter(function(c) { return curves[c].length > 1; }).length,
+        total_points: Object.values(curves).reduce(function(a,b) { return a + b.length; }, 0),
+        data: exportText.substring(0, 4000)
+      }
+    }, '*');
+  });
+
+  function handleToolResult(params) {
+    try {
+      var sc = (params && params.structuredContent) || params || {};
+      var data = sc.data || sc.result || sc;
+
+      if (data.image_base64) {
+        img = new Image();
+        img.onload = function() { el.imgStatus.textContent = 'Loaded (' + img.width + '×' + img.height + ')'; resizeCanvas(); };
+        img.src = 'data:image/png;base64,' + data.image_base64;
+        el.imgStatus.textContent = 'Loading...';
+      }
+      if (data.depth_top != null) depthTop = data.depth_top;
+      if (data.depth_bot != null) depthBot = data.depth_bot;
+      if (data.well_id) el.depthInfo.textContent = data.well_id + ': ' + depthTop + '–' + depthBot + ' m';
+
+      el.receipt.textContent = JSON.stringify({ ok: true, curves_available: ['GR','RES','DT'], image_loaded: !!img }, null, 2);
+    } catch(e) {
+      el.receipt.textContent = JSON.stringify({ error: e.message }, null, 2);
+    }
+  }
+
+  function send(method, params) {
+    var id = String(nextId++);
+    return new Promise(function(resolve, reject) {
+      var timer = setTimeout(function() { pending.delete(id); reject(new Error('timeout')); }, 15000);
+      pending.set(id, { resolve: resolve, reject: reject, timer: timer });
+      window.parent.postMessage({ jsonrpc: '2.0', id: id, method: method, params: params || {} }, '*');
+    });
+  }
+
+  window.addEventListener('message', function(evt) {
+    var data = evt.data;
+    if (!data || !data.jsonrpc) return;
+    if (data.id && pending.has(data.id)) {
+      var p = pending.get(data.id);
+      clearTimeout(p.timer); pending.delete(data.id);
+      if (data.error) p.reject(data.error);
+      else p.resolve(data.result);
+      return;
+    }
+    if (data.method === 'ui/notifications/tool-result') { handleToolResult(data.params); }
+    if (data.method === 'ui/notifications/tool-input') {
+      el.receipt.textContent = JSON.stringify({ status: 'input_received' }, null, 2);
+    }
+  });
+
+  send('ui/initialize', { protocolVersion: PROTOCOL, appName: 'geox-analog-digitizer', appVersion: '1.0.0' })
+    .then(function() { return send('ui/notifications/initialized', {}); })
+    .catch(function() { /* standalone */ });
+
+  resizeCanvas();
+  el.receipt.textContent = JSON.stringify({
+    status: 'ready',
+    curves: ['GR', 'RES', 'DT'],
+    mode: 'point_picking',
+    note: 'Click on canvas to pick points. Toggle curves via toolbar buttons. Export generates LAS-format output. F1: digitized data is NOT sealed — human review required before business use.'
+  }, null, 2);
+})();
+</script>
 </body>
 </html>
