@@ -2,7 +2,7 @@
   "info": {
     "description": "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. window.openai is optional progressive enhancement.",
     "title": "GEOX Earth Intelligence API",
-    "version": "2026.07.24"
+    "version": "2026.07.25"
   },
   "openapi": "3.0.0",
   "paths": {
