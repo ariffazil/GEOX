@@ -794,21 +794,81 @@ async def _workflow_section_correlation(
             uncertainty="Moderate" if tie_verdict == "UNDETERMINED" else "Low",
         )
 
-    # correlation mode
+    # correlation mode — multi-well tops + optional auto tops from LAS depth range
     if mode == "correlation":
-        markers = []
-        # Only produce markers if tops were supplied and well_refs exist
-        if tops and well_refs:
-            for well_name, well_tops in tops.items():
-                for top_name, top_depth in well_tops.items() if isinstance(well_tops, dict) else {}:
-                    markers.append(
-                        {
-                            "well": well_name,
-                            "marker": top_name,
-                            "depth_m": top_depth,
-                            "tie_type": "observed" if top_depth is not None else "hypothesized",
-                        }
-                    )
+        from geox_mcp.artifact_resolve import resolve_well_las
+
+        markers: list[dict] = []
+        wells_resolved: list[dict] = []
+        user_tops = dict(tops or {})
+        tops_auto_derived = not bool(user_tops)
+        # well_id → tops dict used for markers
+        tops_by_well: dict[str, dict] = {}
+
+        for ref in well_refs or []:
+            r = resolve_well_las(ref)
+            if not r.get("ok"):
+                wells_resolved.append({"ref": ref, "ok": False, "error": r.get("error")})
+                continue
+            wid = r.get("well_id") or ref
+            wells_resolved.append(
+                {
+                    "ref": ref,
+                    "ok": True,
+                    "well_id": wid,
+                    "las_path": r.get("las_path"),
+                    "canonical_artifact_ref": r.get("canonical_artifact_ref"),
+                    "source": r.get("source"),
+                }
+            )
+            # Explicit tops: match by ref, well_id, or case-insensitive
+            explicit = (
+                user_tops.get(ref)
+                or user_tops.get(wid)
+                or next(
+                    (
+                        user_tops[k]
+                        for k in user_tops
+                        if str(k).upper() == str(ref).upper()
+                        or str(k).upper() == str(wid).upper()
+                    ),
+                    None,
+                )
+            )
+            if isinstance(explicit, dict):
+                tops_by_well[wid] = explicit
+                continue
+            # Auto tops only when caller supplied none for this well
+            if r.get("las_path") and not user_tops:
+                try:
+                    depth_arr, _gr, _meta = _load_las_or_csv(r["las_path"])
+                    d0, d1 = float(depth_arr[0]), float(depth_arr[-1])
+                    span = d1 - d0
+                    tops_by_well[wid] = {
+                        "Top_Zone": round(d0 + 0.15 * span, 2),
+                        "Mid_Zone": round(d0 + 0.50 * span, 2),
+                        "Base_Zone": round(d0 + 0.85 * span, 2),
+                    }
+                except Exception:
+                    pass
+
+        for well_name, well_tops in tops_by_well.items():
+            if not isinstance(well_tops, dict):
+                continue
+            for top_name, top_depth in well_tops.items():
+                markers.append(
+                    {
+                        "well": well_name,
+                        "marker": top_name,
+                        "depth_m": top_depth,
+                        "tie_type": (
+                            "observed"
+                            if user_tops and top_depth is not None
+                            else "hypothesized"
+                        ),
+                    }
+                )
+
         if not markers:
             return get_standard_envelope(
                 {
@@ -817,11 +877,12 @@ async def _workflow_section_correlation(
                     "mode": "correlation",
                     "section_ref": section_ref,
                     "wells": well_refs,
+                    "wells_resolved": wells_resolved,
                     "markers": [],
                     "error_code": "NO_VALID_CORRELATION",
                     "message": (
-                        "Correlation requires formation tops per well to establish markers. "
-                        "No markers could be derived from supplied tops or well data."
+                        "Correlation requires formation tops per well (or resolvable LAS "
+                        "for auto Top/Mid/Base zone markers). No markers derived."
                     ),
                 },
                 tool_class="interpret",
@@ -834,14 +895,38 @@ async def _workflow_section_correlation(
                 evidence_tag="EVIDENCE_MISSING",
                 strat_standard=strat_standard or {"scheme": "NN_zone", "reference_chart": ""},
             )
+
+        # Simple multi-well marker panel: group by marker name
+        by_marker: dict[str, list] = {}
+        for m in markers:
+            by_marker.setdefault(str(m["marker"]), []).append(m)
+        panel = [
+            {
+                "marker": name,
+                "n_wells": len(hits),
+                "depth_range_m": [
+                    min(h["depth_m"] for h in hits if h.get("depth_m") is not None),
+                    max(h["depth_m"] for h in hits if h.get("depth_m") is not None),
+                ]
+                if any(h.get("depth_m") is not None for h in hits)
+                else None,
+                "ties": hits,
+            }
+            for name, hits in by_marker.items()
+        ]
+
         artifact = {
             "section_ref": section_ref,
             "wells": well_refs,
+            "wells_resolved": wells_resolved,
             "markers": markers,
+            "correlation_panel": panel,
+            "tops_auto_derived": tops_auto_derived,
+            "n_wells_ok": sum(1 for w in wells_resolved if w.get("ok")),
             "tie_type_policy": (
                 "Each marker tie must be tagged: observed (well log pick), "
-                "derived (from seismic interpretation), or hypothesized (GR motif extrapolation). "
-                "Untagged markers default to hypothesized."
+                "derived (from seismic interpretation), or hypothesized (auto zone / GR). "
+                "Auto tops from LAS depth percentiles are hypothesized — not MEASURED picks."
             ),
         }
         return get_standard_envelope(
@@ -850,11 +935,11 @@ async def _workflow_section_correlation(
             execution_status=ExecutionStatus.SUCCESS,
             governance_status=GovernanceStatus.QUALIFY,
             artifact_status=ArtifactStatus.COMPUTED,
-            claim_tag="PLAUSIBLE",
-            claim_state="INTERPRETED",
+            claim_tag="PLAUSIBLE" if not tops_auto_derived else "HYPOTHESIS",
+            claim_state="INTERPRETED" if not tops_auto_derived else "DERIVED_CANDIDATE",
             perception_class="DERIVED",
-            evidence_tag="EVIDENCE_DIRECT",
-            uncertainty="Moderate",
+            evidence_tag="EVIDENCE_DIRECT" if not tops_auto_derived else "EVIDENCE_INDIRECT",
+            uncertainty="Moderate" if not tops_auto_derived else "High",
             strat_standard=strat_standard or {"scheme": "NN_zone", "reference_chart": ""},
         )
 
@@ -985,6 +1070,7 @@ async def _workflow_section_correlation(
                 "mode": "gr_motif",
                 "section_ref": section_ref,
                 "wells_processed": len(well_sources),
+                "wells_resolved": resolved_meta,
                 "motifs_by_well": motifs_by_well,
                 "claim_state": "DERIVED_CANDIDATE",
             },
@@ -1265,8 +1351,14 @@ async def geox_sequence_interpret(
         return result
 
     if workflow == "section_correlation":
-        if not section_ref or not well_refs:
-            return _error_envelope("MISSING_PARAMS", "section_correlation workflow requires section_ref and well_refs.")
+        if not well_refs:
+            return _error_envelope(
+                "MISSING_PARAMS",
+                "section_correlation requires well_refs (artifact://, well_las:, DEMO-*).",
+            )
+        # Default section label when caller only has wells (demo / smoke path)
+        if not section_ref:
+            section_ref = f"section:panel-{'-'.join(str(w)[:12] for w in well_refs[:3])}"
         if ctx:
             ctx.report_progress(30, 100)
         result = await _workflow_section_correlation(
