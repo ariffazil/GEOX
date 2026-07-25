@@ -27,6 +27,14 @@ smoke:
 smoke-require-live:
 	PYTHONPATH=src $(PYTHON) scripts/smoke_require_live.py
 
+# P1 fix gate: ToolResult keeps to_mcp_result + live tools/call round-trip
+smoke-mcp-roundtrip:
+	PYTHONPATH=src $(PYTHON) scripts/smoke_mcp_tool_roundtrip.py
+
+# Deploy gate: health honesty + require-live + MCP tool wire
+smoke-deploy: smoke-require-live smoke-mcp-roundtrip
+	@echo "✓ smoke-deploy green"
+
 build:
 	$(DOCKER) build -t geox:latest .
 

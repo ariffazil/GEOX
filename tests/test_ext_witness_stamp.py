@@ -125,3 +125,39 @@ def test_stamp_pydantic_like_model() -> None:
 
 def test_non_dict_passthrough() -> None:
     assert stamp_ext_witness("raw", tool_name="x") == "raw"
+
+
+def test_stamp_preserves_fastmcp_toolresult_to_mcp_result() -> None:
+    """P1 regression: middleware must not strip ToolResult.to_mcp_result().
+
+    FastMCP wire path does ``return result.to_mcp_result()``. Stamping a raw
+    model_dump into a dict crashes every tools/call.
+    """
+    from fastmcp.tools.base import ToolResult
+
+    tr = ToolResult(
+        structured_content={
+            "ok": True,
+            "status": "OK",
+            "mode": "offline_stub",
+            "tool": "geox_surface_status",
+        }
+    )
+    out = stamp_and_gate(tr, tool_name="geox_surface_status")
+    assert hasattr(out, "to_mcp_result"), f"lost to_mcp_result: {type(out)}"
+    assert not isinstance(out, dict)
+    wire = out.to_mcp_result()
+    assert wire is not None
+    sc = getattr(out, "structured_content", None) or {}
+    assert sc.get("ext_witness_ready") is False
+    assert sc.get("data_mode") == "offline_stub"
+
+
+def test_stamp_toolresult_live_ready() -> None:
+    from fastmcp.tools.base import ToolResult
+
+    tr = ToolResult(structured_content={"ok": True, "mode": "live", "count": 2})
+    out = stamp_and_gate(tr, tool_name="geox_earthquake_catalog")
+    assert hasattr(out, "to_mcp_result")
+    assert out.structured_content.get("ext_witness_ready") is True
+    out.to_mcp_result()  # must not raise
