@@ -436,12 +436,30 @@ def register_tools_on(mcp):
             )
             result = await _impl(**args)
             if isinstance(result, dict):
+                # Determine if the result is genuinely errored
                 _is_error = (
                     result.get("status") == "INVALID"
                     or result.get("isError") is True
                     or "error" in result
                     or result.get("ok") is False
                 )
+                # Stage 1 outputSchema enforcement: SUCCESS with null evidence is a false success.
+                # An MCP tool must NEVER claim success when it computed nothing.
+                _exec_ok = result.get("execution_status") in ("SUCCESS", None)
+                _net_pay_null = result.get("net_pay") is None
+                _curves_empty = not result.get("curves_available") and not result.get("curves")
+                _empty_compute = result.get("curves_available") == [] or result.get("curves_available") is None
+                if not _is_error and _exec_ok and _net_pay_null and _empty_compute:
+                    _is_error = True
+                    result["execution_status"] = "ERROR"
+                    result["governance_status"] = "HOLD"
+                    result["status"] = "INVALID"
+                    result["error"] = (
+                        "EVIDENCE_SCHEMA_VIOLATION: Petrophysics returned SUCCESS but produced "
+                        "no net_pay and no curves. This is a false success — the tool computed "
+                        "nothing. Expected: finite Vsh/φ/Sw arrays and deterministic net_pay. "
+                        "Ingest a LAS file with well_id first."
+                    )
                 result = {
                     **result,
                     "_memory": "LIVE_PROBE",
