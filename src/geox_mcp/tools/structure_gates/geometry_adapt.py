@@ -101,9 +101,32 @@ def adapt_fault(fault: dict[str, Any], *, reject_anonymous: bool = True) -> dict
                 out["fault_id"] = str(out[k]).strip()
                 break
     if out.get("fault_id") is None or str(out.get("fault_id")).strip().lower() == "unknown":
-        if reject_anonymous:
+        # If fault carries geometric keys (max_displacement, length, throw_profile, dip),
+        # auto-generate an ID rather than silently rejecting — silent drop blocks K-DIP/K-THROW.
+        _has_geom = any(
+            out.get(k) is not None
+            for k in (
+                "max_displacement",
+                "length",
+                "throw_profile",
+                "dip_deg",
+                "dip_deg_subsurface",
+                "dip_deg_image",
+                "dmax_m",
+                "Dmax",
+                "length_m",
+                "L_m",
+                "L",
+            )
+        )
+        if _has_geom:
+            import hashlib, json as _json
+
+            _stable = _json.dumps({k: out.get(k) for k in sorted(out) if out.get(k) is not None}, sort_keys=True, default=str)
+            out["fault_id"] = f"auto-{hashlib.sha256(_stable.encode()).hexdigest()[:8]}"
+        elif reject_anonymous:
             out["_reject"] = "ANONYMOUS_GEOMETRY"
-            out["_reject_message"] = "Fault requires fault_id or name — anonymous geometry refused"
+            out["_reject_message"] = "Fault requires fault_id or name and has no geometric keys — anonymous geometry refused"
             out.pop("fault_id", None)
         else:
             out["fault_id"] = "unknown"
@@ -163,7 +186,14 @@ def adapt_framework_geometry(framework: dict[str, Any] | None) -> dict[str, Any]
                 continue
             adapted = adapt_fault(raw) if kind == "fault" else adapt_horizon(raw)
             if adapted.get("_reject"):
-                rejected.append({"kind": kind, "error": adapted["_reject"], "message": adapted.get("_reject_message"), "raw_keys": list(raw.keys())})
+                rejected.append(
+                    {
+                        "kind": kind,
+                        "error": adapted["_reject"],
+                        "message": adapted.get("_reject_message"),
+                        "raw_keys": list(raw.keys()),
+                    }
+                )
                 continue
             out.append(adapted)
         return out

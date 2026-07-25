@@ -643,10 +643,13 @@ async def geox_anomalous_contrast_detector(
         "attention_equivalence": {
             "theorem": "Eureka GeoX Theory of Anomalous Contrast (2026-06-05)",
             "statement": (
-                "An AVO anomalous contrast in the physical subsurface maps "
-                "isomorphically to an attention anomaly in a physics-constrained "
-                "transformer. Both implement the contrast primitive: "
-                "signal = amplify(normalize(observation − background))."
+                "An AVO anomalous contrast in the physical subsurface and an "
+                "attention anomaly in a physics-constrained transformer share the "
+                "same contrast structure: signal = amplify(normalize(observation − background)). "
+                "These are structurally analogous templates, not ontologically identical objects. "
+                "AVO is grounded in elastic rock physics; attention is a model-space statistic. "
+                "They map into one dimensionless contrast representation: "
+                "C_d(x|B,Q) = N_d[O_d(x) − E_d(x|B)] per domain d."
             ),
             "avo_chain": (
                 "Zoeppritz (exact 4×4) → Aki-Richards (linearized) → Shuey (A + B·sin²θ) → "

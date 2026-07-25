@@ -796,10 +796,48 @@ async def _workflow_section_correlation(
 
     # correlation mode
     if mode == "correlation":
+        markers = []
+        # Only produce markers if tops were supplied and well_refs exist
+        if tops and well_refs:
+            for well_name, well_tops in tops.items():
+                for top_name, top_depth in well_tops.items() if isinstance(well_tops, dict) else {}:
+                    markers.append(
+                        {
+                            "well": well_name,
+                            "marker": top_name,
+                            "depth_m": top_depth,
+                            "tie_type": "observed" if top_depth is not None else "hypothesized",
+                        }
+                    )
+        if not markers:
+            return get_standard_envelope(
+                {
+                    "tool": TOOL_NAME,
+                    "workflow": "section_correlation",
+                    "mode": "correlation",
+                    "section_ref": section_ref,
+                    "wells": well_refs,
+                    "markers": [],
+                    "error_code": "NO_VALID_CORRELATION",
+                    "message": (
+                        "Correlation requires formation tops per well to establish markers. "
+                        "No markers could be derived from supplied tops or well data."
+                    ),
+                },
+                tool_class="interpret",
+                execution_status=ExecutionStatus.HALT,
+                governance_status=GovernanceStatus.HOLD,
+                artifact_status=ArtifactStatus.REJECTED,
+                claim_tag="HYPOTHESIS",
+                claim_state="NO_VALID_EVIDENCE",
+                perception_class="DERIVED",
+                evidence_tag="EVIDENCE_MISSING",
+                strat_standard=strat_standard or {"scheme": "NN_zone", "reference_chart": ""},
+            )
         artifact = {
             "section_ref": section_ref,
             "wells": well_refs,
-            "markers": [],
+            "markers": markers,
             "tie_type_policy": (
                 "Each marker tie must be tagged: observed (well log pick), "
                 "derived (from seismic interpretation), or hypothesized (GR motif extrapolation). "
@@ -809,10 +847,14 @@ async def _workflow_section_correlation(
         return get_standard_envelope(
             artifact,
             tool_class="interpret",
-            claim_tag="HYPOTHESIS",
+            execution_status=ExecutionStatus.SUCCESS,
+            governance_status=GovernanceStatus.QUALIFY,
+            artifact_status=ArtifactStatus.COMPUTED,
+            claim_tag="PLAUSIBLE",
             claim_state="INTERPRETED",
             perception_class="DERIVED",
             evidence_tag="EVIDENCE_DIRECT",
+            uncertainty="Moderate",
             strat_standard=strat_standard or {"scheme": "NN_zone", "reference_chart": ""},
         )
 

@@ -42,6 +42,24 @@ async def geox_seismic_compute(
     image_path: str | None = None,
     amplitude_grid: list[list[float]] | None = None,
     volume_inline: dict[str, Any] | None = None,
+    # anomalous_contrast
+    ai_profile: list[float] | None = None,
+    ac_depth: list[float] | None = None,
+    formation_tops: dict[str, float] | None = None,
+    rc_threshold: float = 0.05,
+    geological_boundary_tolerance_m: float = 5.0,
+    ac_vp: list[float] | None = None,
+    ac_rho: list[float] | None = None,
+    # well_tie extras
+    extraction_window_ms: float = 100.0,
+    frequency_band: tuple[float, float] = (10.0, 50.0),
+    apply_anisotropy_correction: bool = False,
+    q_factor: float = 100.0,
+    # time_depth_anchor extras
+    checkshot_ref: str | None = None,
+    drift_threshold_ms: float = 25.0,
+    # attribute extras
+    volume_ref_attr: str | None = None,
 ) -> dict[str, Any]:
     """Unified seismic computation.
 
@@ -54,6 +72,15 @@ async def geox_seismic_compute(
       inversion          - 1D post-stack PINN seismic inversion
     """
     kwargs = locals().copy()
+    # Auto-compute AI from vp*rho for anomalous_contrast when not provided directly
+    if kwargs.get("ai_profile") is None and kwargs.get("vp") and kwargs.get("rho"):
+        kwargs["ai_profile"] = [v * r for v, r in zip(kwargs["vp"], kwargs["rho"])]
+    if kwargs.get("ac_depth") is None:
+        kwargs["ac_depth"] = kwargs.get("depth")
+    if kwargs.get("ac_vp") is None:
+        kwargs["ac_vp"] = kwargs.get("vp")
+    if kwargs.get("ac_rho") is None:
+        kwargs["ac_rho"] = kwargs.get("rho")
     if mode == "attribute":
         # F1 zen: real 2D section attributes (rms/coherence/dip). Volume-only
         # refs without a frame still HOLD honestly.

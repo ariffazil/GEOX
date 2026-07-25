@@ -203,15 +203,21 @@ def register_tools_on(mcp):
             )
             result = await _impl(**args)
             if isinstance(result, dict):
+                _is_err_ingest = (
+                    result.get("status") == "INVALID"
+                    or result.get("isError") is True
+                    or "error" in result
+                    or result.get("ok") is False
+                )
                 result = {
                     **result,
                     "_memory": "LIVE_PROBE",
                     "_epistemic": {
-                        "evidence_layer": "OBS",
-                        "confidence": 0.85,
+                        "evidence_layer": "UNKNOWN" if _is_err_ingest else "OBS",
+                        "confidence": 0.10 if _is_err_ingest else 0.85,
                         "source": "geox_well_ingest",
                         "reversible": True,
-                        "authority_claim": "EVIDENCE",
+                        "authority_claim": "ADVISORY" if _is_err_ingest else "EVIDENCE",
                     },
                 }
             # PR2: 3-channel UI return so hosts open Well Witness after ingest
@@ -430,15 +436,21 @@ def register_tools_on(mcp):
             )
             result = await _impl(**args)
             if isinstance(result, dict):
+                _is_error = (
+                    result.get("status") == "INVALID"
+                    or result.get("isError") is True
+                    or "error" in result
+                    or result.get("ok") is False
+                )
                 result = {
                     **result,
                     "_memory": "LIVE_PROBE",
                     "_epistemic": {
-                        "evidence_layer": "DER",
-                        "confidence": 0.80,
+                        "evidence_layer": "UNKNOWN" if _is_error else "DER",
+                        "confidence": 0.10 if _is_error else 0.80,
                         "source": "geox_petrophysics",
                         "reversible": True,
-                        "authority_claim": "EVIDENCE",
+                        "authority_claim": "ADVISORY" if _is_error else "EVIDENCE",
                     },
                 }
             # PR2: 3-channel UI return → Well Witness panel
@@ -448,8 +460,14 @@ def register_tools_on(mcp):
             # Compact structured payload for iframe (drop dense arrays from model path)
             sc_override = None
             if isinstance(result, dict):
+                _sc_is_err = (
+                    result.get("status") == "INVALID"
+                    or result.get("isError") is True
+                    or "error" in result
+                    or result.get("ok") is False
+                )
                 sc_override = {
-                    "ok": result.get("ok", True),
+                    "ok": False if _sc_is_err else result.get("ok", True),
                     "tool": "geox_petrophysics",
                     "mode": mode,
                     "well_id": _wid,
@@ -460,9 +478,10 @@ def register_tools_on(mcp):
                         "band": "DERIVED",
                         "note": "Petrophysics complete — open Well Witness for tracks.",
                     },
-                    "epistemic": result.get("_epistemic") or {"layer": "DER", "confidence_cap": 0.80},
+                    "epistemic": result.get("_epistemic")
+                    or ({"layer": "UNKNOWN", "confidence_cap": 0.10} if _sc_is_err else {"layer": "DER", "confidence_cap": 0.80}),
                     "net_pay": result.get("net_pay"),
-                    "status": result.get("status", "computed"),
+                    "status": result.get("status", "INVALID" if _sc_is_err else "computed"),
                     # Pass through compact curve summaries if already small
                     "curves_available": list((result.get("curves") or {}).keys())
                     if isinstance(result.get("curves"), dict)
