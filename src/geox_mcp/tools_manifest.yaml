@@ -301,6 +301,29 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+- name: geox_well_view
+  domain: earth.well
+  axis: observe
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Well Witness View — hydrate real LAS curves into interactive tracks for WellDesk/Well Witness widgets.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui:
+    resource_uri: ui://geox/well-desk
+    title: GEOX WellDesk
+    render_mode: panel
+    mime_type: text/html;profile=mcp-app
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
 - name: geox_surface_status
   domain: earth.meta
   axis: observe
@@ -1614,9 +1637,9 @@ compat_tools:
 - geox_volume_frame_tool
 - geox_well_desk_open
 - geox_well_desk_publish
-surface_version: geox-public-32-2026.07.24
-surface_name: CANONICAL_PUBLIC_32
-public_count_target: 32
+surface_version: geox-public-33-2026.07.25
+surface_name: CANONICAL_PUBLIC_33
+public_count_target: 33
 doctrine:
   public_surface: 32 tools — live operational surface
   zen15_status: ARCHIVED historical document — not runtime truth
