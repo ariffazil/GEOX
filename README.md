@@ -1,25 +1,26 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-25T06:00Z
-valid_until: 2026-08-24
-federation_release: v2026.07.25
-live_commit: 26b4915b
+last_verified: 2026-07-26T21:53:00Z
+valid_until: 2026-08-26
+federation_release: v2026.07.26
+live_commit: 62994c47
 truth_rule: live :8081/health + tools/list beat any static count in prose
-mcp_tools_live: dynamic_from_tools_list
+mcp_tools_live: 33
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
 
-**SOT:** 2026-07-25 | **seal_seq:** `26b4915b`
+**SOT:** 2026-07-26 | **seal_seq:** `62994c47` | **Status:** `999_SEAL`
 
-# 🌊 GEOX — Evidence-First Geological Intelligence
+# 🌍 GEOX — Evidence-First Geological Intelligence & Subsurface Coprocessor
 
 > **DITEMPA BUKAN DIBERI** — Forged, not given.
-> Earth evidence layer of the arifOS federation. Physics-governed. Evidence-only. Never decides alone.
+> Corporate-grade Earth intelligence engine for the arifOS federation. Physics-governed. Evidence-provenance bound.
 
 ![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)
-![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-evidence%20only-1f6feb)
-![Federation](https://img.shields.io/badge/Federation-v2026.07.25-0a7b83)
+![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-33%20Canonical%20Tools-1f6feb)
+![Federation](https://img.shields.io/badge/Federation-v2026.07.26-0a7b83)
 ![License](https://img.shields.io/github/license/ariffazil/GEOX?label=License)
+
 
 ---
 
@@ -111,13 +112,15 @@ Each capability below carries the same OBS / DER / INT / SPEC standard:
 
 | Metric | Value | Source of truth |
 |--------|-------|-----------------|
-| MCP tools (public canonical) | 32 — live-witnessed 2026-07-25 (`tools_loaded: 32`) | `curl :8081/health` + `tools/list` |
+| MCP tools (public canonical) | **33 canonical tools** — live-witnessed (`tools_loaded: 33`) | `curl :8081/health` + `tools/list` |
 | MCP Apps | 19 active + 3 deprecated + 1 planned (SEP-1865) — canonical source: `GEOX_MCP_APPS_SURFACE.json` | `resources/list` |
-| ui:// resources | 8 | server manifest |
-| Health | **not asserted statically** — verify live | `curl :8081/health` |
+| ui:// resources & endpoints | 9 (incl. `geox://project-state/canonical.json`) | server manifest |
+| Workbench UI | Linked 4-View Canvas (**Map, Seismic, Well, Claims**) | `workspace_v1.html` |
+| Health | `healthy` (`verified: true`) | `curl :8081/health` |
 | Port | 8081 | deployment config |
-| Version | `v2026.07.24` | SOT-MANIFEST |
-| License | BSL-1.1 → Apache 2.0 on 2029-06-29 (see note below) | [LICENSE](./LICENSE) + `pyproject.toml` |
+| Deployed Version | `geox-62994c47` (v2026.07.26) | SOT-MANIFEST |
+| License | BSL-1.1 → Apache 2.0 on 2029-06-29 | [LICENSE](./LICENSE) + `pyproject.toml` |
+
 
 > **F4 Clarity rule:** Runtime health and tool counts are witnessed live, not asserted as static prose — per the SOT truth rule, `/health` and `tools/list` are the only valid witnesses. The value 32 above is an OBS-recorded snapshot of the 2026-07-25 witness, not a standing claim. (Earlier prose citing 52 tools reflected an unconsolidated legacy list and has been retired.)
 
