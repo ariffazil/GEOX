@@ -144,8 +144,43 @@ def register_alias_resources(mcp: FastMCP) -> None:
             )(_make_handler(html))
 
 
+def register_project_state_resource(mcp: FastMCP) -> None:
+    """Register canonical GeoProjectState JSON resource endpoint."""
+    uri = "geox://project-state/canonical.json"
+    if _uri_registered(mcp, uri):
+        return
+
+    from geox_mcp.contracts.geo_project_state import CoordinateReferenceSystem, GeoProjectState, ScenarioBranch
+
+    default_state = GeoProjectState(
+        project_id="PROJ-BARAM-DEMO",
+        project_name="Baram Delta Deepwater Prospect",
+        coordinate_reference=CoordinateReferenceSystem(crs_code="EPSG:32650", projected_unit="m"),
+        scenarios=[
+            ScenarioBranch(
+                scenario_id="Scenario_A_Channel",
+                title="Turbidite Channel Complex",
+                hypothesis_summary="High-amplitude anomaly represents Miocene basin-floor fan",
+                supporting_evidence=["amplitude_bright_spot", "well_A_sand_count"],
+                volumetric_p50_mmboe=120.5,
+                gcos=0.35,
+            )
+        ],
+    )
+
+    @mcp.resource(
+        uri,
+        description="Canonical GeoProjectState JSON state container resource.",
+        mime_type="application/json",
+    )
+    async def geox_project_state_canonical() -> str:
+        return default_state.model_dump_json(indent=2)
+
+
 def register_all_ui_resources(mcp: FastMCP) -> None:
-    """Register every GEOX UI resource — workspace + GravMag Studio + URI aliases."""
+    """Register every GEOX UI resource — workspace + GravMag Studio + URI aliases + GeoProjectState."""
     register_workspace_resource(mcp)
     register_gravmag_studio_resource(mcp)
     register_alias_resources(mcp)
+    register_project_state_resource(mcp)
+
