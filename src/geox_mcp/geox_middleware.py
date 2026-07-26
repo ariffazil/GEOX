@@ -752,6 +752,8 @@ class GeoxGovernanceMiddleware(Middleware):
             result = await call_next(context)
             # P0-6: Inject 5-layer evidence envelope into response
             result = self._inject_evidence_envelope(result, tool_name, _governance_envelope)
+            # P3 CONFORMANCE (2026-07-26): Inject canonical ClaimState/WitnessType/OrganType
+            result = self._inject_well_conformance(result, tool_name)
             # P0-4 D.4+D.5 (2026-07-25 · FI-008): for mutating tools,
             # guarantee the audit-defined 5-status envelope contract and
             # downgrade governance_verdict when the contract is incomplete.
@@ -868,6 +870,77 @@ class GeoxGovernanceMiddleware(Middleware):
                     actor_id=gov_envelope.get("actor_id", "anonymous"),
                 )
                 result["_evidence_envelope"] = envelope
+            return result
+        except Exception:
+            return result
+
+    @staticmethod
+    def _inject_well_conformance(result, tool_name):
+        """P3 CONFORMANCE (2026-07-26): Inject ClaimState/WitnessType/OrganType."""
+        try:
+            # Determine organ type from tool name
+            ot = "GEOX"
+            if tool_name.startswith(("geox_basin",)):
+                ot = "BASIN"
+            elif tool_name.startswith(("geox_seismic",)):
+                ot = "SEISMIC"
+            elif tool_name.startswith(("geox_well",)):
+                ot = "WELL"
+            elif tool_name.startswith(("geox_prospect",)):
+                ot = "PROSPECT"
+            elif tool_name.startswith(("geox_claim",)):
+                ot = "CLAIM"
+            elif tool_name.startswith(("geox_map",)):
+                ot = "MAP"
+            elif tool_name.startswith(("geox_petrophysics",)):
+                ot = "PETROPHYSICS"
+            elif tool_name.startswith(("geox_visual",)):
+                ot = "VISUAL"
+            elif tool_name.startswith(("geox_surface", "geox_registry")):
+                ot = "FEDERATION"
+
+            # Extract domain from result
+            domain = {}
+            if isinstance(result, dict):
+                domain = result
+            elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
+                domain = result.structured_content
+            elif hasattr(result, "content") and result.content:
+                raw = result.content[0].text if hasattr(result.content[0], "text") else str(result.content[0])
+                try:
+                    import json as _json
+
+                    domain = _json.loads(raw) if isinstance(raw, str) else raw
+                except Exception:
+                    domain = {}
+
+            # Auto-detect claim state
+            cs = "HOLD"
+            verdict = str(domain.get("verdict", domain.get("status", ""))).upper() if isinstance(domain, dict) else ""
+            truth = str(domain.get("truth_class", domain.get("epistemic_tag", ""))).upper() if isinstance(domain, dict) else ""
+            if truth in ("LIVE", "OBSERVED", "VERIFIED", "SEALED"):
+                cs = "OBSERVED"
+            elif truth in ("DERIVED", "INTERPRETED", "QUALIFIED") or verdict in ("STABLE", "PASS", "REGISTRY_PASS"):
+                cs = "QUALIFIED"
+            elif verdict in ("HYPOTHESIS", "PLAUSIBLE") or isinstance(domain, dict) and domain.get("ok") is True:
+                cs = "HYPOTHESIS"
+
+            wt = "AI" if isinstance(domain, dict) and not domain.get("ext_witnesses") else "HYBRID"
+
+            conformance = {
+                "_well_conformance": {
+                    "claim_state": cs,
+                    "witness_type": wt,
+                    "organ_type": ot,
+                    "conformance_version": "v1.0",
+                    "conformant": True,
+                }
+            }
+
+            if isinstance(result, dict):
+                result = {**conformance, **result}
+            elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
+                result.structured_content = {**conformance, **result.structured_content}
             return result
         except Exception:
             return result
