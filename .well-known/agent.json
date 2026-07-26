@@ -1,8 +1,10 @@
 {
   "name": "GEOX",
   "description": "Sovereign Earth Intelligence \u2014 geological, petrophysical, seismic, basin, sequence stratigraphy, and provenance evidence under F1-F13 constitutional governance. Evidence-only: never policy judges; arifOS 888_JUDGE owns the verdict.",
-  "version": "2026.07.11",
+  "version": "2026.07.25",
   "url": "https://geox.arif-fazil.com/mcp",
+  "documentation_url": "https://geox.arif-fazil.com/llms.txt",
+  "agent_card_url": "https://geox.arif-fazil.com/.well-known/agent-card.json",
   "provider": {
     "organization": "arifOS Federation",
     "sovereign": "Muhammad Arif bin Fazil (F13 SOVEREIGN)",
@@ -111,11 +113,26 @@
   "ledger": "VAULT999",
   "seal_protocol": "arif_seal (irreversible hash chain, anchored)",
   "metadata": {
-    "generated_at": "2026-07-01",
-    "generator": "GEOX A2A Agent Card builder",
+    "generated_at": "2026-07-25",
+    "generator": "GEOX A2A Agent Card builder + public-surface parity audit",
     "spec": "github.com/a2aproject/A2A v1.0"
   },
   "tools_manifest": "https://geox.arif-fazil.com/tools.json",
   "apps_manifest": "https://geox.arif-fazil.com/apps.json",
-  "openapi_manifest": "https://geox.arif-fazil.com/openapi.json"
+  "openapi_manifest": "https://geox.arif-fazil.com/openapi.json",
+  "public_surface_audit": {
+    "manifest": "static/PUBLIC_SURFACE_MANIFEST.json",
+    "sitemap": "https://geox.arif-fazil.com/sitemap.xml",
+    "renderer": "scripts/render_public_surface.py",
+    "checker": "scripts/render_public_surface.py --check",
+    "last_verified": "2026-07-25",
+    "no_delete_sync": "preserved_overlays in PUBLIC_SURFACE_MANIFEST.json are protected by tests/test_public_surface_parity.py",
+    "spa_shell_signature": "<div id=\"root\"></div> backed by type=module script",
+    "rejects": [
+      "/wiki.html",
+      "/network.html",
+      "/catalog.html"
+    ],
+    "rejects_reason": "soft-404 — no backing canonical asset; superseded by /apps/index.html (MCP Apps catalog) and /apps/site/catalog.html (skills catalog)"
+  }
 }
