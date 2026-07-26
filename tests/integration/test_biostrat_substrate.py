@@ -284,8 +284,9 @@ def test_t1_4_pytest_file_exists_and_runs():
 def test_wiring_biostrat_tools_registered():
     """geox_biostrat_resolve_taxon, lookup_zone, falsify must be registered in tools_wiring.py."""
     wiring_path = Path(__file__).resolve().parents[2] / "src" / "geox_mcp" / "tools_wiring.py"
-    source = wiring_path.read_text()
+    source = wiring_path.read_text(encoding="utf-8")
     tree = ast.parse(source)
+
 
     registered_tools: set[str] = set()
     for node in ast.walk(tree):
