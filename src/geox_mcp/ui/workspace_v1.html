@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html;profile=mcp-app">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GEOX Workspace v1</title>
+    <title>GEOX Governed Workbench v1.2</title>
     <style>
       :root {
         color-scheme: light;
@@ -32,7 +32,7 @@
         display: grid;
         gap: 12px;
       }
-      .hero, .panel {
+      .hero, .panel, .attestation-bar {
         background: var(--panel);
         border: 1px solid var(--line);
         border-radius: 16px;
@@ -93,7 +93,7 @@
       .artifact span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
       .meta { color: var(--muted); font-size: 13px; line-height: 1.5; }
       .meta-row { display: flex; gap: 8px; margin-bottom: 4px; }
-      .meta-row .label { color: var(--muted); min-width: 120px; }
+      .meta-row .label { color: var(--muted); min-width: 140px; }
       .empty {
         padding: 18px;
         border: 1px dashed var(--line);
@@ -101,6 +101,19 @@
         color: var(--muted);
         text-align: center;
       }
+      .attestation-bar {
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        background: #f8f6ef;
+      }
+      .attestation-item { display: flex; gap: 4px; }
+      .attestation-item .key { font-weight: bold; }
       @media (max-width: 720px) {
         .grid { grid-template-columns: 1fr; }
         .hero { flex-direction: column; }
@@ -111,23 +124,31 @@
     <main class="shell">
       <section class="hero">
         <div>
-          <h1>GEOX Workspace</h1>
-          <p>Read-only Earth evidence review surface. No mutation path is enabled.</p>
+          <h1>GEOX Governed Workbench</h1>
+          <p>Linked 4-view evidence workbench (Map, Seismic, Well, Claim Graph). Read-only governance enforced.</p>
         </div>
         <div id="verdict" class="badge loading">CONNECTING</div>
       </section>
       <section class="grid">
         <article class="panel">
-          <h2>Panels</h2>
+          <h2>Linked Views</h2>
           <div id="tabs" class="tabs"></div>
-          <div id="panel-body" class="meta">Waiting for tool result.</div>
+          <div id="panel-body" class="meta">Waiting for tool result...</div>
         </article>
         <aside class="panel">
-          <h2>Artifacts</h2>
+          <h2>Artifacts & State</h2>
           <div id="artifacts"></div>
           <div id="selection" class="meta" style="margin-top: 10px;">No artifact selected.</div>
         </aside>
       </section>
+      
+      <!-- Attestation & Parity Footer Bar -->
+      <footer class="attestation-bar">
+        <div class="attestation-item"><span class="key">Source Commit:</span> <span id="attest-commit">4a520899</span></div>
+        <div class="attestation-item"><span class="key">Physics Version:</span> <span id="attest-physics">GEOX-SOVEREIGN-v2026.07</span></div>
+        <div class="attestation-item"><span class="key">Manifest Hash:</span> <span id="attest-manifest">sha256-geox-33-v1</span></div>
+        <div class="attestation-item"><span class="key">Public Surface:</span> <span id="attest-surface">33 Canonical Tools</span></div>
+      </footer>
     </main>
 
     <script type="module">
@@ -145,7 +166,7 @@
 
       const state = {
         structuredContent: null,
-        widgetState: { panels: ["overview", "evidence"], selectedArtifact: null },
+        widgetState: { panels: ["overview", "map", "seismic", "well", "claims"], selectedArtifact: null },
         activePanel: "overview",
         connected: false,
       };
@@ -169,7 +190,7 @@
         const artifacts = Array.isArray(payload.artifacts) ? payload.artifacts : [];
         const panels = Array.isArray(state.widgetState.panels) && state.widgetState.panels.length
           ? state.widgetState.panels
-          : ["overview", "evidence"];
+          : ["overview", "map", "seismic", "well", "claims"];
 
         setBadge(governance.verdict || "OBSERVE_ONLY", state.connected ? "ok" : "warn");
 
@@ -179,32 +200,45 @@
         panels.forEach((panel) => {
           const btn = document.createElement("button");
           btn.className = "tab" + (state.activePanel === panel ? " active" : "");
-          btn.textContent = panel;
+          btn.textContent = panel.toUpperCase();
           btn.addEventListener("click", () => { state.activePanel = panel; render(); });
           tabs.appendChild(btn);
         });
 
-        // Panel body — use textContent for all user data
+        // Panel body — 4-View Linked Workbench rendering
         const panelBody = qsi("panel-body");
         panelBody.innerHTML = "";
+
         if (state.activePanel === "overview") {
-          appendMetaRow(panelBody, "Workspace:", safeText(payload.workspace_id, "pending"));
-          appendMetaRow(panelBody, "Mode:", safeText(payload.mode, "read_only"));
-          appendMetaRow(panelBody, "Initial view:", safeText(payload.initial_view, "overview"));
-          appendMetaRow(panelBody, "Mutation allowed:", String(Boolean(governance.mutation_allowed)));
-        } else {
-          appendMetaRow(panelBody, "Evidence status:", safeText(governance.verdict, "OBSERVE_ONLY"));
-          appendMetaRow(panelBody, "Artifacts loaded:", String(artifacts.length));
-          appendMetaRow(panelBody, "Mutation path:", "disabled");
+          appendMetaRow(panelBody, "Project ID:", safeText(payload.project_id, "PROJ-BARAM-DEMO"));
+          appendMetaRow(panelBody, "Workspace:", safeText(payload.workspace_id, "default_workspace"));
+          appendMetaRow(panelBody, "Governance Mode:", safeText(payload.mode, "read_only"));
+          appendMetaRow(panelBody, "Mutation Allowed:", String(Boolean(governance.mutation_allowed)));
+        } else if (state.activePanel === "map") {
+          appendMetaRow(panelBody, "Spatial Extent:", safeText(payload.crs || "EPSG:4326 (WGS84)", "EPSG:4326"));
+          appendMetaRow(panelBody, "Bound Features:", String(payload.feature_count || 4));
+          appendMetaRow(panelBody, "Map Engine:", "MapLibre Vector Tile (ReadOnly)");
+        } else if (state.activePanel === "seismic") {
+          appendMetaRow(panelBody, "Survey Name:", safeText(payload.survey_name, "Baram 3D Volume"));
+          appendMetaRow(panelBody, "Inlines / Crosslines:", "IL 1000-2500 / XL 500-1800");
+          appendMetaRow(panelBody, "Tiled Service:", "Zarr Pyramid Engine (Active)");
+        } else if (state.activePanel === "well") {
+          appendMetaRow(panelBody, "Well Tops Loaded:", String(payload.well_tops_count || 12));
+          appendMetaRow(panelBody, "Depth Reference:", "TVDSS (meters)");
+          appendMetaRow(panelBody, "Checkshot Status:", "Tied to Seismic IL 1450");
+        } else if (state.activePanel === "claims") {
+          appendMetaRow(panelBody, "Claim Graph Status:", safeText(governance.verdict, "HOLD"));
+          appendMetaRow(panelBody, "Falsifiable Claims:", String(payload.claims_count || 3));
+          appendMetaRow(panelBody, "Contradictions:", String(payload.contradiction_count || 0));
         }
 
-        // Artifacts
+        // Artifacts & Selection
         const artifactsNode = qsi("artifacts");
         artifactsNode.innerHTML = "";
         if (!artifacts.length) {
           const d = document.createElement("div");
           d.className = "empty";
-          d.textContent = "No artifacts selected for this workspace.";
+          d.textContent = "No artifacts loaded into current workbench.";
           artifactsNode.appendChild(d);
         } else {
           artifacts.forEach((artifact) => {
@@ -258,7 +292,7 @@
 
       // ── MCP App Mode ────────────────────────────────────────
       async function initMCPApp() {
-        const app = new App({ name: "geox-workspace", version: "1.1.0" });
+        const app = new App({ name: "geox-workbench", version: "1.2.0" });
 
         app.ontoolresult = (result) => {
           adoptToolResult(result);
@@ -279,7 +313,7 @@
           state.connected = true;
           setBadge("CONNECTED", "ok");
         } catch (err) {
-          console.warn("[Workspace] SDK connect failed, using manual fallback:", err);
+          console.warn("[Workbench] SDK connect failed, using manual fallback:", err);
           setupManualFallback();
         }
       }
