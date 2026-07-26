@@ -274,6 +274,8 @@ def test_actual_registered_tool_count():
     # Expected decorator count = sum across legacy decorator files
     # Update this when a new decorator-based tool is added.
     expected_decorator_files = {
+        "geophysics_studio.py": 1,
+        "geophysics_studio_screen.py": 1,
         "stratigraphy.py": 2,
         "well.py": 4,
         "well_correlation.py": 2,
