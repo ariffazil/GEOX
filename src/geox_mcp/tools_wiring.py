@@ -93,9 +93,36 @@ def register_tools_on(mcp):
     # delegates to the unified async function via a single 'arguments' dict
     # (FastMCP rejects **kwargs). Clients call as:
     #   {"name": "geox_basin", "arguments": {"arguments": {"mode": "...", "basin_name": "..."}}}
-    # ═══════════════════════════════════════════════════════════════════════════════
+    @mcp.tool(name="geox_biostrat_calibrate", annotations=_geox_annotations("geox_biostrat_calibrate"))
+    async def _biostrat_calibrate(
+        taxon_name: str = "",
+        zone_code: str = "",
+        scheme: str = "",
+        fossil_group: str = "",
+        lithology: str = "",
+        environment: str = "",
+        run_falsify: bool = False,
+        claim: str = "",
+        region: str = "",
+        sample_type: str = "",
+    ) -> dict[str, Any]:
+        """Calibrate relative biostratigraphy into age brackets with evidence and audit receipt."""
+        from geox_mcp.tools.biostrat_calibrate import geox_biostrat_calibrate as _impl
+        return await _impl(
+            taxon_name=taxon_name,
+            zone_code=zone_code,
+            scheme=scheme,
+            fossil_group=fossil_group,
+            lithology=lithology,
+            environment=environment,
+            run_falsify=run_falsify,
+            claim=claim,
+            region=region,
+            sample_type=sample_type,
+        )
 
     @mcp.tool(name="geox_well_ingest", annotations=_geox_annotations("geox_well_ingest"))
+
     async def _well_ingest(
         mode: str = "auto",
         source_uri: str | None = None,
