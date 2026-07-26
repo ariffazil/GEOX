@@ -1,0 +1,292 @@
+{
+  "schema": "geox.public_surface_manifest.v1",
+  "purpose": "Deterministic single source of truth for the GEOX organ-owned public discovery surface. Generated sitemap.xml and agent.json audit fields are derived from this manifest. No-delete sync: every entry has a backing canonical asset on disk. SPA-shell entries (Operator Cockpit) are kept but flagged.",
+  "generated_at": "2026-07-25",
+  "generator": "scripts/render_public_surface.py",
+  "owner": "GEOX organ (https://geox.arif-fazil.com)",
+  "base_url": "https://geox.arif-fazil.com",
+  "discovery_paths": {
+    "sitemap": "/sitemap.xml",
+    "robots": "/robots.txt",
+    "llms": "/llms.txt",
+    "agent_json": "/.well-known/agent.json",
+    "agent_card": "/.well-known/agent-card.json",
+    "openapi": "/openapi.json",
+    "tools": "/tools.json",
+    "apps": "/apps.json"
+  },
+  "spa_shell_signature": "<div id=\"root\"></div> backed by type=module script — render content client-side; flag as cockpit_spa_shell, keep entry, lower priority",
+  "soft_404_signature": "path listed in sitemap but no backing asset on disk, OR asset < 200 bytes html, OR lastmod older than 180 days with no audit note",
+  "kinds": {
+    "homepage": "Earth Evidence Operating System landing page",
+    "discoverability": "robots.txt / sitemap.xml / llms.txt — public discovery scaffolding",
+    "doctrine": "Substantive prose: constitution / why / agents",
+    "substrate": "Substantive HTML page rendered server-side",
+    "cockpit_spa_shell": "React SPA shell that hydrates client-side; keep, lower priority",
+    "mcp_app": "MCP App host page (geox://apps/* or ui://geox/*)",
+    "basin_overlay": "Basin-specific mapping / E2E workflow overlay",
+    "tool_harness": "Standalone tool harness page (workbench, well-witness, etc.)",
+    "skills_catalog": "Skills / tools catalog page"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "asset": "static/index.html",
+      "kind": "homepage",
+      "priority": 1.0,
+      "lastmod": "2026-07-24",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/why.html",
+      "asset": "static/why.html",
+      "kind": "doctrine",
+      "priority": 0.95,
+      "lastmod": "2026-07-24",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/constitution.html",
+      "asset": "static/constitution.html",
+      "kind": "doctrine",
+      "priority": 0.85,
+      "lastmod": "2026-07-24",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/agents.html",
+      "asset": "static/agents.html",
+      "kind": "doctrine",
+      "priority": 0.8,
+      "lastmod": "2026-07-24",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/llms.txt",
+      "asset": "static/llms.txt",
+      "kind": "discoverability",
+      "priority": 0.7,
+      "lastmod": "2026-07-25",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/robots.txt",
+      "asset": "static/robots.txt",
+      "kind": "discoverability",
+      "priority": 0.1,
+      "lastmod": "2026-07-25",
+      "exposed_via": ["robots_only"]
+    },
+    {
+      "path": "/gui/index.html",
+      "asset": "static/gui/index.html",
+      "kind": "cockpit_spa_shell",
+      "priority": 0.5,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"],
+      "spa_shell": true,
+      "note": "Operator Cockpit — React SPA shell. Substance_score determined by client-side hydrator; preserve overlay."
+    },
+    {
+      "path": "/gui/manifesto.html",
+      "asset": "static/gui/manifesto.html",
+      "kind": "substrate",
+      "priority": 0.6,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/gui/malay_basin_workflow.html",
+      "asset": "static/gui/malay_basin_workflow.html",
+      "kind": "basin_overlay",
+      "priority": 0.7,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/gui/cesium/index.html",
+      "asset": "static/gui/cesium/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/gui/ac_risk_console/index.html",
+      "asset": "static/gui/ac_risk_console/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/gui/basin_explorer/index.html",
+      "asset": "static/gui/basin_explorer/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/gui/seismic_viewer/index.html",
+      "asset": "static/gui/seismic_viewer/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/gui/well_context_desk/index.html",
+      "asset": "static/gui/well_context_desk/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/gui/webmcp/index.html",
+      "asset": "static/gui/webmcp/index.html",
+      "kind": "mcp_app",
+      "priority": 0.5,
+      "lastmod": "2026-07-20",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/index.html",
+      "asset": "apps/index.html",
+      "kind": "skills_catalog",
+      "priority": 0.7,
+      "lastmod": "2026-07-24",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/workbench-v1.html",
+      "asset": "apps/workbench-v1.html",
+      "kind": "tool_harness",
+      "priority": 0.6,
+      "lastmod": "2026-07-23",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/well-witness.html",
+      "asset": "apps/well-witness.html",
+      "kind": "tool_harness",
+      "priority": 0.6,
+      "lastmod": "2026-07-25",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/well-desk/index.html",
+      "asset": "apps/well-desk/index.html",
+      "kind": "mcp_app",
+      "priority": 0.7,
+      "lastmod": "2026-07-24",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/well-desk/p0-viz.html",
+      "asset": "apps/well-desk/p0-viz.html",
+      "kind": "mcp_app",
+      "priority": 0.7,
+      "lastmod": "2026-07-24",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/well-desk/map-unified.html",
+      "asset": "apps/well-desk/map-unified.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-01",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/earth-volume/index.html",
+      "asset": "apps/earth-volume/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-01",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/judge-console/index.html",
+      "asset": "apps/judge-console/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-01",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/prospect-ui/index.html",
+      "asset": "apps/prospect-ui/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-01",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/geox-mcp-visual/index.html",
+      "asset": "apps/geox-mcp-visual/index.html",
+      "kind": "mcp_app",
+      "priority": 0.6,
+      "lastmod": "2026-07-01",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/analog-digitizer/index.html",
+      "asset": "apps/analog-digitizer/index.html",
+      "kind": "tool_harness",
+      "priority": 0.5,
+      "lastmod": "2026-07-25",
+      "exposed_via": ["sitemap"]
+    },
+    {
+      "path": "/apps/site/catalog.html",
+      "asset": "apps/site/catalog.html",
+      "kind": "skills_catalog",
+      "priority": 0.5,
+      "lastmod": "2026-07-01",
+      "exposed_via": ["sitemap"]
+    }
+  ],
+  "preserved_overlays": {
+    "policy": "no-delete sync — these overlays must never be silently dropped by a future sweep. Listed here so a regression that removes them from the discovery surface fires the parity test.",
+    "mcp_apps": [
+      {"app_id": "geox.well-desk", "uri": "ui://geox/well-desk", "host": "/apps/well-desk/index.html"},
+      {"app_id": "geox.well-desk.p0-viz", "uri": "ui://geox/well-desk", "host": "/apps/well-desk/p0-viz.html"},
+      {"app_id": "geox.well-desk.map-unified", "uri": "ui://geox/earth-map", "host": "/apps/well-desk/map-unified.html"},
+      {"app_id": "geox.earth-volume", "uri": "ui://geox/earth-volume", "host": "/apps/earth-volume/index.html"},
+      {"app_id": "geox.judge-console", "uri": "ui://geox/judge-console", "host": "/apps/judge-console/index.html"},
+      {"app_id": "geox.prospect-studio", "uri": "ui://geox/prospect-studio", "host": "/apps/prospect-ui/index.html"},
+      {"app_id": "geox.visual-hub", "uri": "ui://geox/visual-hub", "host": "/apps/geox-mcp-visual/index.html"},
+      {"app_id": "geox.analog-digitizer", "uri": "ui://geox/analog-digitizer", "host": "/apps/analog-digitizer/index.html"},
+      {"app_id": "geox.catalog", "uri": "ui://geox/catalog", "host": "/apps/index.html"},
+      {"app_id": "geox.ac_risk.console", "uri": "ui://geox/ac_risk_console", "host": "/gui/ac_risk_console/index.html"},
+      {"app_id": "geox.basin.explorer", "uri": "ui://geox/basin_explorer", "host": "/gui/basin_explorer/index.html"},
+      {"app_id": "geox.seismic.viewer", "uri": "ui://geox/seismic_viewer", "host": "/gui/seismic_viewer/index.html"},
+      {"app_id": "geox.well.context-desk", "uri": "ui://geox/well_context_desk", "host": "/gui/well_context_desk/index.html"},
+      {"app_id": "geox.x3d.subsurface", "uri": "ui://geox/cesium", "host": "/gui/cesium/index.html"},
+      {"app_id": "geox.webmcp.root", "uri": "ui://geox/webmcp", "host": "/gui/webmcp/index.html"},
+      {"app_id": "geox.malay-basin.e2e", "uri": "ui://geox/malay-basin-workflow", "host": "/gui/malay_basin_workflow.html"}
+    ],
+    "basin_overlays": [
+      {"basin": "Malay Basin", "host": "/gui/malay_basin_workflow.html", "manifest": "/static/gui/manifest-e2e.json"}
+    ],
+    "cockpit_overlays": [
+      {"name": "Operator Cockpit", "host": "/gui/index.html", "kind": "cockpit_spa_shell"}
+    ]
+  },
+  "removed_entries": [
+    {
+      "path": "/catalog.html",
+      "reason": "No backing asset at /static/catalog.html — superseded by /apps/index.html (MCP Apps catalog) and /apps/site/catalog.html (skills catalog)."
+    },
+    {
+      "path": "/wiki.html",
+      "reason": "No backing asset anywhere under repo (soft-404). Federation knowledge lives at https://arifos.arif-fazil.com/llms.txt."
+    },
+    {
+      "path": "/network.html",
+      "reason": "No backing asset anywhere under repo (soft-404). Federation topology lives at FEDERATION.md and llms.txt."
+    }
+  ]
+}
