@@ -7,6 +7,8 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import logging
 from dataclasses import dataclass
 from typing import Any
@@ -65,7 +67,6 @@ async def resolve_taxon(taxon_name: str) -> TaxonRecord | None:
     except Exception as exc:
         logger.warning("PBDB resolve_taxon failed for %s: %s", name, exc)
 
-
     # Fallback to Mikrotax check
     try:
         async with httpx.AsyncClient(timeout=8.0) as client:
@@ -113,13 +114,20 @@ async def geox_biostrat_calibrate(
     falsification_summary: dict[str, Any] | None = None
 
     if not taxon_name.strip() and not zone_code.strip():
+        audit_payload = {
+            "taxon_name": taxon_name,
+            "zone_code": zone_code,
+            "verdict": "UNKNOWN",
+            "reason": "EMPTY_INPUTS",
+        }
+        receipt_hash = hashlib.sha256(json.dumps(audit_payload, sort_keys=True).encode("utf-8")).hexdigest()
         audit_receipt = {
             "tool": "geox_biostrat_calibrate",
             "phase": "T2.6",
             "verdict": "UNKNOWN",
             "confidence": "BLOCKED",
             "popper_rule_applied": False,
-            "hash": "sha256-calibrated-biostrat-v1",
+            "hash": receipt_hash,
         }
         return {
             "ok": False,
@@ -202,22 +210,30 @@ async def geox_biostrat_calibrate(
 
     cal_min: float | None = None
     cal_max: float | None = None
+    has_contradiction = False
 
     if zone_min is not None and zone_max is not None and taxon_min is not None and taxon_max is not None:
-        cal_min = max(zone_min, taxon_min)
-        cal_max = min(zone_max, taxon_max)
-        if cal_min <= cal_max:
+        inter_top = max(zone_min, taxon_min)
+        inter_base = min(zone_max, taxon_max)
+        if inter_top <= inter_base:
+            cal_min, cal_max = inter_top, inter_base
             evidence_for.append(f"Taxon + Zone overlap narrowed bracket to {cal_min:.2f}-{cal_max:.2f} Ma")
         else:
-            cal_min, cal_max = cal_max, cal_min
-            evidence_for.append(f"Taxon + Zone bracket: {cal_min:.2f}-{cal_max:.2f} Ma")
+            # GEOLOGICAL CONTRADICTION: empty intersection! Never swap or manufacture non-existent overlap.
+            has_contradiction = True
+            cal_min, cal_max = None, None
+            evidence_against.append(
+                f"Geological contradiction: Zone bracket [{zone_min:.2f}-{zone_max:.2f} Ma] "
+                f"and Taxon bracket [{taxon_min:.2f}-{taxon_max:.2f} Ma] have zero overlap."
+            )
+            uncertainty_notes.append("Empty intersection between zone age and taxon age")
     elif zone_min is not None and zone_max is not None:
         cal_min, cal_max = zone_min, zone_max
     elif taxon_min is not None and taxon_max is not None:
         cal_min, cal_max = taxon_min, taxon_max
 
-    if is_falsified:
-        verdict = "VOID"
+    if is_falsified or has_contradiction:
+        verdict = "VOID" if is_falsified else "HOLD"
         confidence_tier = "BLOCKED"
     elif input_basis == "taxon_only" and (rec is None or rec.first_occurrence_ma is None):
         verdict = "HOLD"
@@ -231,13 +247,26 @@ async def geox_biostrat_calibrate(
 
     label = f"{cal_min:.2f}-{cal_max:.2f} Ma" if (cal_min is not None and cal_max is not None) else "UNBOUNDED"
 
+    hash_payload = {
+        "taxon_name": taxon_name,
+        "zone_code": zone_code,
+        "scheme": scheme,
+        "cal_min": cal_min,
+        "cal_max": cal_max,
+        "sources_used": sorted(sources_used),
+        "evidence_for": sorted(evidence_for),
+        "evidence_against": sorted(evidence_against),
+        "verdict": verdict,
+    }
+    receipt_hash = hashlib.sha256(json.dumps(hash_payload, sort_keys=True).encode("utf-8")).hexdigest()
+
     audit_receipt = {
         "tool": "geox_biostrat_calibrate",
         "phase": "T2.6",
         "verdict": verdict,
         "confidence": confidence_tier,
-        "popper_rule_applied": is_falsified,
-        "hash": "sha256-calibrated-biostrat-v1",
+        "popper_rule_applied": is_falsified or has_contradiction,
+        "hash": receipt_hash,
     }
 
     return {

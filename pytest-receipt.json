@@ -1,0 +1,654 @@
+{
+  "spec_version": "1.0",
+  "timestamp_utc": "2026-07-26T13:26:12.053109+00:00",
+  "commit": "6ff5d9e1fe34476595d12b052346d7d90aebf0d2",
+  "environment": {
+    "python_version": "3.12.12",
+    "platform": "win32",
+    "cwd": "C:\\ariffazil\\geox"
+  },
+  "pytest_counts": {
+    "collected": 0,
+    "passed": 1754,
+    "failed": 96,
+    "errors": 7,
+    "skipped": 84,
+    "deselected": 0,
+    "total_outcomes": 1941
+  },
+  "verbatim_summary_line": "96 failed, 1754 passed, 84 skipped, 746 warnings, 7 errors in 829.86s (0:13:49)",
+  "duration_seconds": 835.19,
+  "gate_breakdown": {
+    "gate_a_core_physics_failures": 84,
+    "gate_a_encoding_failures": 0,
+    "gate_a_count_assertion_failures": 0,
+    "gate_b_ui_browser_failures": 7,
+    "gate_c_federation_external_failures": 13
+  },
+  "failures": [
+    {
+      "nodeid": "geox.biharmonic:biharmonic_adapter.py:181",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "assert len(hyps) >= 3",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_federation.py::TestFederationSubstrate::test_f1_all_13_floors_active",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_federation.py::TestFederationSubstrate::test_f1_substrate_signs_exist",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_federation.py::TestFederationSubstrate::test_f1_floor_rules_have_actions",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF1Amanah::test_t1_1_per_agent_write_isolation",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF1Amanah::test_t1_3_tamper_detection",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF7Humility::test_t7_1_cap_enforcement",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF7Humility::test_t7_2_override_path",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF10Ontology::test_t10_1_canonical_types_only",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF11Audit::test_t11_1_insert_audit",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF13Sovereign::test_t13_1_reject_unapproved_high",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF13Sovereign::test_t13_2_approval_path",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::TestF13Sovereign::test_t13_3_low_blast_no_approval_needed",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/alignment/test_align_substrate.py::test_substrate_health",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestGeologyClaimToCapitalRoute::test_admissible_prospect_seals_with_receipt",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestGeologyClaimToCapitalRoute::test_negative_prospect_holds_with_receipt",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestEpistemicTagPreservedE2E::test_tag_survives_bridge_to_score_kernel[UNKNOWN]",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestEpistemicTagPreservedE2E::test_tag_survives_bridge_to_score_kernel[ESTIMATE]",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestEpistemicTagPreservedE2E::test_tag_survives_bridge_to_score_kernel[HYPOTHESIS]",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestEpistemicTagPreservedE2E::test_tag_survives_bridge_to_score_kernel[PLAUSIBLE]",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestEpistemicTagPreservedE2E::test_tag_survives_bridge_to_score_kernel[CLAIM]",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestIrreversibilityE2E::test_bridge_marks_irreversible_false",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestVault999ReceiptChain::test_receipt_has_required_fields",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/integration/test_wealth_bridge_end_to_end.py::TestVault999ReceiptChain::test_receipt_verdict_matches_score_kernel",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_load_analog_parses_seeded_file",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_score_exact_match_high_similarity",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_score_structurally_different_fires_dangerous_flag",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_score_no_query_fields_returns_low_or_neutral",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_clean_query_returns_qualify",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_dangerous_query_returns_hold",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_corpus_filter_basin_ids_works",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_min_data_quality_filter",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_contrast_mode_similarity_only_strips_contrast",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_contrast_mode_contrast_only_strips_similarity",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_min_similarity_filter",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_analog_atlas.py::test_doctrine_8_missing_evidence_surface",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_app_export_parity.py::TestAppExportParity::test_registry_truth_is_pass_when_surfaces_aligned",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_biharmonic_grid.py::TestBiharmonicEngine::test_max_dim_exactly_2048_accepted",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_classical_section.py::test_interpret_image_uses_classical_then_gates",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_e2e_geox_real.py::test_actual_registered_tool_count",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_earth_surface_2.py::TestPlateReconstruction::test_offline_reconstruct",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_earth_surface_2.py::TestPlateReconstruction::test_offline_velocities",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_earth_surface_2.py::TestEarthSurface2MCPTools::test_plate_reconstruct",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_earth_surface_extended.py::TestGPlatesFetcher::test_offline_reconstruct",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_earth_surface_extended.py::TestGPlatesFetcher::test_mcp_tool",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_fix_brief_v2.py::test_p0_surface_attestation_public_32",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_forward_model_synthetic.py::test_forward_model_with_raw_arrays",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_gravmag_studio_forward.py::test_manifest_entry_is_present_and_unique",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_lem_predict.py::test_geox_lem_predict_in_canonical_registry",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_lem_predict.py::test_expected_canonical_count_is_26",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_master_forge_truth_loop.py::test_t9_surface_truth_32",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_master_forge_truth_loop.py::test_w9_session_identity_fields_distinct",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_master_forge_truth_loop.py::test_w9_session_expired_structured",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_mcp_apps_readiness.py::test_06_well_witness_three_channel_return",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_mcp_apps_readiness.py::test_08_all_tools_have_four_annotations_and_ui_binding",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_mcp_apps_readiness.py::test_09_golden_prompts_direct_indirect_negative",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_compute_unified_modes.py::test_seismic_compute_unified_ingest",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_compute_unified_modes.py::test_seismic_compute_unified_interpret",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_compute_unified_modes.py::test_seismic_compute_unified_sahkan",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_interpret_contract.py::test_artifact_ingest_emits_hash_and_chain",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_interpret_p0.py::test_mode_router_honest_hold_for_vision_still_not_public",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_interpret_p0.py::test_rsi_pipeline_requires_image_path_not_mode_not_public",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_mode_router_contracts.py::test_empty_input_mode_contracts_are_distinct",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_mode_router_contracts.py::test_rsi_pipeline_empty_is_not_horizon_contrast_error",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_pipeline_end_to_end.py::TestSeismicPipelineEndToEnd::test_01_image_cognition_pipeline",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_pipeline_end_to_end.py::TestSeismicPipelineEndToEnd::test_02_segy_and_well_tie_pipeline",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_pipeline_end_to_end.py::TestSeismicPipelineEndToEnd::test_03_gempy_and_wealth_bridge",
+      "category": "GATE_C_FEDERATION_EXTERNAL",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_seismic_rsi.py::TestRealityGate::test_gate_fails_on_tiny_image",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_rsi.py::TestRSIInterpret::test_full_pipeline",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_rsi.py::TestRSIInterpret::test_render_audit_tool",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_rsi.py::TestRSIInterpret::test_higher_percentile_fewer_faults",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_rsi.py::TestForbiddenClaimsIntegration::test_forbidden_claims_present_in_output",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_seismic_rsi.py::TestCanonicalRegistration::test_rsi_tools_in_surface",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_session_echo.py::test_surface_status_echoes_federation_context[registry]",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_session_echo.py::test_surface_status_echoes_federation_context[health]",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_surface_invariance.py::test_runtime_list_tools_equals_canonical",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_transport_envelope_propagation.py::test_transport_reaches_response_provenance",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_transport_manifest.py::TestManifestTopology::test_public_internal_split_is_explicit_and_disjoint",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_transport_manifest.py::TestManifestTopology::test_generated_artifacts_are_reproducible",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_truth_loop_hardening.py::test_w10_deployment_drift_invariant",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_visual_image_publish.py::test_render_well_panel",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_visual_understand_p0_truth.py::test_no_backend_holds_not_fabricates",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_zen_scaffolding.py::test_artifact_ingest_emits_hash_and_chain",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_claimed_identity_validation.py::test_anonymous_evidence_lane_remains_read_only_accessible",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_claimed_identity_validation.py::test_valid_claimed_session_preserves_actor_binding",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_claimed_identity_validation.py::test_signed_token_is_replaced_with_canonical_session",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureInspection::test_good_las2_passes_inspection",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureInspection::test_good_las2_curves_validated",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureInspection::test_good_las3_ft_trigger_unit_conversion",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureRejection::test_reject_nonmonotonic_depth",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureRejection::test_reject_duplicate_depth",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureRejection::test_reject_missing_curves",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureRejection::test_reject_no_version_section",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureRejection::test_reject_empty_data_section",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_las_fixture_pack.py::TestLASFixtureRejection::test_reject_negative_depth",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_registry_runtime_truth.py::TestRegistryRuntimeTruth::test_runtime_public_surface_equals_manifest_public",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/unit/test_registry_runtime_truth.py::TestRegistryRuntimeTruth::test_registry_status_reports_no_drift",
+      "category": "GATE_A_CORE_PHYSICS",
+      "root_cause_snippet": "",
+      "environmental": false
+    },
+    {
+      "nodeid": "tests/test_e2e_mcp_apps_browser.py::TestWorkspaceRender::test_initial_shell_loads",
+      "category": "GATE_B_UI_BROWSER",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_e2e_mcp_apps_browser.py::TestWorkspaceRender::test_renders_artifacts",
+      "category": "GATE_B_UI_BROWSER",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_e2e_mcp_apps_browser.py::TestWorkspaceRender::test_renders_workspace_id",
+      "category": "GATE_B_UI_BROWSER",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_e2e_mcp_apps_browser.py::TestWorkspaceClick::test_tab_switching",
+      "category": "GATE_B_UI_BROWSER",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_e2e_mcp_apps_browser.py::TestWorkspaceClick::test_artifact_selection",
+      "category": "GATE_B_UI_BROWSER",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_e2e_mcp_apps_browser.py::TestWorkspaceSecurity::test_xss_payload_rendered_as_text",
+      "category": "GATE_B_UI_BROWSER",
+      "root_cause_snippet": "",
+      "environmental": true
+    },
+    {
+      "nodeid": "tests/test_e2e_mcp_apps_browser.py::TestWorkspaceSecurity::test_empty_result_no_crash",
+      "category": "GATE_B_UI_BROWSER",
+      "root_cause_snippet": "",
+      "environmental": true
+    }
+  ]
+}

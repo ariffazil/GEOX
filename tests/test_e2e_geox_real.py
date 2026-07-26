@@ -250,7 +250,8 @@ def test_actual_registered_tool_count():
     count = 0
     decorator_files = []
     for py_file in tools_dir.glob("*.py"):
-        source = py_file.read_text()
+        source = py_file.read_text(encoding="utf-8")
+
         tree = ast.parse(source)
         file_count = 0
         for node in ast.walk(tree):
