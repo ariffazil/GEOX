@@ -138,26 +138,44 @@ def _http_status_for(error_code: str | None) -> int:
 
 def extract_identity(
     arguments: dict[str, Any] | None,
-) -> tuple[str | None, str | None]:
-    """Extract (session_id, actor_id) from tool arguments + _envelope fallback.
+) -> tuple[str | None, str | None, str | None]:
+    """Extract (session_id, actor_id, session_token) from tool arguments + _envelope fallback.
+
+    FORGED 2026-07-27 (FI-008 · GEOX authority-sync fix):
+      The arifOS kernel `validate` mode downgrades live authority to OBSERVER
+      on SEAL-* paths (returns actor.authority_level=OBSERVER even when
+      the original session was SOVEREIGN). To bypass the downgrade we
+      also extract the SCT session_token from arguments/_envelope so
+      `validate_session` can route through the SCT path, which decodes
+      the signed payload and reads the real `auth` claim (e.g. "FULL").
 
     Args:
         arguments: parsed tool arguments (possibly containing _envelope).
 
     Returns:
-        (session_id, actor_id) — either may be None.
+        (session_id, actor_id, session_token) — any may be None.
     """
     if not isinstance(arguments, dict):
-        return None, None
+        return None, None, None
     session_id = arguments.get("session_id")
     actor_id = arguments.get("actor_id")
+    session_token = (
+        arguments.get("session_token")
+        or arguments.get("sct")
+        or arguments.get("arifos_sct")
+    )
     env = arguments.get("_envelope")
     if isinstance(env, dict):
         if not session_id and env.get("session_id"):
             session_id = env["session_id"]
         if not actor_id and env.get("actor_id"):
             actor_id = env["actor_id"]
-    return session_id, actor_id
+        if not session_token:
+            for k in ("session_token", "sct", "arifos_sct"):
+                if env.get(k):
+                    session_token = env[k]
+                    break
+    return session_id, actor_id, session_token
 
 
 # ── Main gate ─────────────────────────────────────────────────────────────
@@ -190,8 +208,15 @@ def enforce_authority(
         )
         return
 
-    session_id, actor_id = extract_identity(arguments or {})
+    session_id, actor_id, session_token = extract_identity(arguments or {})
     required = required_authority_for(tool_name, arguments or {})
+
+    # ── FORGED 2026-07-27 (FI-008 · GEOX authority-sync fix) ──
+    # When the caller presents a session_token (SCT), prefer the SCT path
+    # so we read the real `auth` claim from the signed payload instead
+    # of the kernel's downgraded validate-mode band.
+    if session_token and session_token.startswith("sct_v1."):
+        session_id = session_token
 
     # ── Validate session (SCT or SEAL-*) ──
     # session_enforcement.validate_session handles every error path

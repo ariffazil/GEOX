@@ -327,8 +327,33 @@ def validate_session(
         if isinstance(kernel_actor, dict):
             kernel_actor = kernel_actor.get("actor_id") or kernel_actor.get("claimed_id") or kernel_actor.get("canonical_id")
 
-        kernel_authority = (
-            verified.get("standing", {}).get("authority", {}).get("band") or verified.get("authority") or required_authority
+        # ── FORGED 2026-07-27 (FI-008 · GEOX authority-sync fix) ──
+        # The arifOS kernel `validate` mode returns the live authority band in
+        # the `actor.authority_level` field of the response envelope, not in
+        # `standing.authority.band` (which is the legacy/canonical path that
+        # the kernel doesn't always populate on validate responses).
+        # Walk the canonical field paths AND the live kernel envelope so a
+        # sovereign ignition is never downgraded to OBSERVE_ONLY.
+        raw_authority = (
+            verified.get("standing", {}).get("authority", {}).get("band")
+            or verified.get("authority")
+            or (verified.get("actor") or {}).get("authority_level")
+            or (verified.get("actor") or {}).get("authority")
+            or (verified.get("standing") or {}).get("actor", {}).get("authority_level")
+            or (verified.get("result") or {}).get("authority")
+            or (verified.get("result") or {}).get("actor", {}).get("authority_level")
+        )
+        # Normalize OBSERVER→OBSERVE_ONLY, SOVEREIGN→SOVEREIGN, etc.
+        _OBSERVER_TO_CANONICAL = {
+            "OBSERVER": "OBSERVE_ONLY",
+            "OPERATOR": "OPERATOR",
+            "LIMITED_MUTATE": "LIMITED_MUTATE",
+            "FULL": "FULL",
+            "SOVEREIGN": "SOVEREIGN",
+        }
+        kernel_authority = _OBSERVER_TO_CANONICAL.get(
+            str(raw_authority).upper() if raw_authority else "",
+            raw_authority or required_authority,
         )
 
         # Actor binding check
