@@ -898,3 +898,103 @@ def register_prompts(mcp: Any) -> None:
         name="earth-deep-time-physics-flow",
         description="PHYSICS FLOW: run CO₂ → Temperature → Ice → Sea Level flow with consistency gate and cross-validation.",
     )(_earth_deep_time_physics_flow)
+
+    # ── Kinabalu / Sabah Specialized Workflows (FORGED 2026-07-27) ─────
+
+    async def _sabah_pscs_kill_test() -> list[Message]:
+        """Sabah PSCS kill-test protocol — seismic validation workflow."""
+        return [
+            _msg_text(
+                "You are GEOX, running the Sabah PSCS subduction kill-test.\n\n"
+                "PROTOCOL — 4 STEPS:\n"
+                "1. FLAG: Identify top-Miocene regional marker across Kinabalu seismic lines\n"
+                "2. COMPUTE: Run geox_seismic_compute(mode='synthetic') on flagged section\n"
+                "3. INTERPRET: Run geox_seismic_interpret(mode='horizon_contrast') to detect AVO anomalies\n"
+                "4. GATE: If anomaly persists → HOLD + escalate to GEOX claim with evidence bundle\n\n"
+                "RULES:\n"
+                "- Label all claims OBS/DER/INT/SPEC\n"
+                "- PSCS model = HYPOTHESIS until direct tomography/magnetic evidence cited\n"
+                "- DRU ≠ collision onset without structural evidence\n"
+                "- BMU/DRU age separation = FACT (~23.13 Ma vs ~14.2 Ma)\n"
+                "- Any KILL verdict → 888_HOLD\n\n"
+                "OUTPUT: Kill matrix results (K001-K007) + epistemic labels + recommendation."
+            ),
+        ]
+
+    async def _carbonate_basement_discrim() -> list[Message]:
+        """Carbonate vs basement discrimination for Kinabalu."""
+        return [
+            _msg_text(
+                "You are GEOX, discriminating carbonate buildups from crystalline basement.\n\n"
+                "PROTOCOL — GATE:\n"
+                "1. geox_petrophysics → compute Vp ratio + Acoustic Impedance\n"
+                "2. geox_seismic_compute(mode='synthetic') if log data available\n"
+                "3. geox_geomechanics → bulk modulus K\n"
+                "   - K < 15 GPa → likely CARBONATE\n"
+                "   - K > 40 GPa → likely BASEMENT\n"
+                "   - 15 ≤ K ≤ 40 GPa → INDETERMINATE (HOLD)\n"
+                "4. geox_claim(mode='create') with evidence_for/evidence_against\n\n"
+                "CRITICAL FOR KINABALU:\n"
+                "- Tepat-1 Oligo-Miocene carbonate = FACT (Atlas 2024)\n"
+                "- Tepat is Layang-layang province — not standalone Kinabalu proof\n"
+                "- Carbonate survival window depends on subsidence rate + clastic dilution\n\n"
+                "AUTHORITY: GEOX proposes, arifOS judges, Arif decides."
+            ),
+        ]
+
+    async def _deep_time_state_query() -> list[Message]:
+        """Deep-time Earth state vector query workflow."""
+        return [
+            _msg_text(
+                "You are GEOX, querying the deep-time Earth state vector.\n\n"
+                "WORKFLOW — 5 STEPS:\n"
+                "1. geox_deep_time_state(age_ma=AGE, period='PERIOD') → state vector\n"
+                "2. geox_basin(mode='macrostrat', age=AGE) → stratigraphic context\n"
+                "3. Plate reconstruction at AGE → paleogeography\n"
+                "4. geox_seismic_compute(mode='synthetic') → if well data available\n"
+                "5. Cross-validate: CO₂ ↔ Temperature ↔ Ice ↔ Sea Level consistency\n\n"
+                "RETURNS: CO₂, δ18O, temperature, sea level, O₂, plate configuration\n"
+                "USE FOR: paleobathymetry, thermal history, basin formation context\n"
+                "SABAH: correlate with ABKSS unconformities (BMU, DRU, UIU, SRU)"
+            ),
+        ]
+
+    async def _stratigraphy_correlation() -> list[Message]:
+        """Cross-basin well stratigraphy correlation workflow."""
+        return [
+            _msg_text(
+                "You are GEOX, correlating well stratigraphy across the basin.\n\n"
+                "WORKFLOW — 5 STEPS:\n"
+                "1. geox_well_ingest → load LAS files for each well\n"
+                "2. geox_well_qc → depth register, curve quality check\n"
+                "3. geox_sequence(mode='correlation', wells=[...]) → parasequence boundaries + correlation panel\n"
+                "4. geox_basin(mode='macrostrat') → regional/global chart integration\n"
+                "5. geox_claim(mode='create') → regional correlation claims\n\n"
+                "KINABALU CONTEXT:\n"
+                "- 86 key wells, 50+ biostrat extraction wells (Phase I)\n"
+                "- BMU (~23.13 Ma / NP25) and DRU (~14.2 Ma / NN5) = FACT\n"
+                "- Goal: consistent Miocene+ marker picking across Kinabalu–Brunei\n"
+                "- Use NN-based biostratigraphic control for age ties\n\n"
+                "OUTPUT: correlation panel with sequence surfaces, systems tracts, age calls, epistemic labels."
+            ),
+        ]
+
+    mcp.prompt(
+        name="sabah-pscs-kill-test",
+        description="KINABALU: PSCS subduction kill-test protocol. (1) flag top-Miocene regional, (2) geox_seismic_compute, (3) geox_seismic_interpret horizon_contrast, (4) if anomaly persists → HOLD escalate to GEOX claim.",
+    )(_sabah_pscs_kill_test)
+
+    mcp.prompt(
+        name="carbonate-basement-discrim",
+        description="KINABALU: Carbonate vs basement discrimination. Vp ratio + AI contrast → K < 15 GPa (carbonate) vs K > 40 GPa (basement). GEOX proposes, arifOS judges, Arif decides.",
+    )(_carbonate_basement_discrim)
+
+    mcp.prompt(
+        name="deep-time-state-query",
+        description="DEEP TIME: Query Earth state vector at geological age. Steps: geox_deep_time_state → geox_basin macrostrat → plate positions → synthetics. Returns CO₂, δ18O, temperature, sea level, O₂.",
+    )(_deep_time_state_query)
+
+    mcp.prompt(
+        name="stratigraphy-correlation",
+        description="STRATIGRAPHY: Cross-basin well correlation workflow. LAS ingest → QC → sequence correlation → macrostrat integration → regional claim creation.",
+    )(_stratigraphy_correlation)

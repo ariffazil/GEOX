@@ -1460,6 +1460,42 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
     logger.info(f"geox.resources zen-pass applied to {n_zen} existing resources (v2 contract)")
 
     # =============================================================================
+    # EARTH SYSTEM INTEGRATION — Physics × Chemistry × Biology (FORGED 2026-07-27)
+    # Previously trapped as dead code inside geox_earth_trinity().
+    # Now properly registered. DITEMPA BUKAN DIBERI.
+
+    mcp.resource(
+        "geox://earth-system/physics-flow",
+        description=(
+            "Deep-time physics flow: CO₂ → Temperature → Ice → Sea Level. "
+            "Cross-validated between Miller 2020 and Haq & Ogg 2024. "
+            "Includes physics consistency gate and Sabah boundary correlation."
+        ),
+        mime_type="application/json",
+    )(geox_earth_physics_flow)
+
+    mcp.resource(
+        "geox://earth-system/sabah-correlation",
+        description=(
+            "Sabah unconformity correlation with Haq & Ogg 2024 global sequence boundaries. "
+            "BMU/TCU, DRU, UIU, SRU matched to NgSB1, NgSB9, NgSB11, NgSB13. "
+            "UPDATED 2026-07-27: BMU (~23.13 Ma / NP25) and DRU (~14.2 Ma / NN5) = FACT. "
+            "DRU ≠ collision onset marker without structural evidence."
+        ),
+        mime_type="application/json",
+    )(geox_sabah_correlation)
+
+    mcp.resource(
+        "geox://earth-system/trinity",
+        description=(
+            "Physics × Chemistry × Biology coupling framework. "
+            "The three-body interaction that makes Earth a planet, not a rock. "
+            "Physics sets the stage, chemistry writes the script, biology becomes the co-author."
+        ),
+        mime_type="application/json",
+    )(geox_earth_trinity)
+
+    # =============================================================================
     # EARTH DATA ATLAS — MCP Resource Templates
     # Domain-separation pattern: geox://{domain}/{source}
 
@@ -1880,7 +1916,7 @@ def geox_deeptime_o2():
     return "geox://deep_time/o2"
 
 
-def geox_earth_physics_flow():
+async def geox_earth_physics_flow():
     """Earth physics flow: CO₂ → Temperature → Ice → Sea Level.
     URI: geox://earth-system/physics-flow
     Sources: Rae 2021, Zachos/Westerhold, Holbourn/Pekar, Miller/Haq
@@ -1906,7 +1942,7 @@ def geox_earth_physics_flow():
     )
 
 
-def geox_sabah_correlation():
+async def geox_sabah_correlation():
     """Sabah unconformity correlation with Haq & Ogg 2024.
     URI: geox://earth-system/sabah-correlation
     Sources: Haq & Ogg 2024 (GSA Today v.34), Morley 2024
@@ -1935,7 +1971,7 @@ def geox_sabah_correlation():
     )
 
 
-def geox_earth_trinity():
+async def geox_earth_trinity():
     """Physics × Chemistry × Biology coupling framework.
     URI: geox://earth-system/trinity
     Epistemic: INT — interpreted framework
@@ -1981,95 +2017,12 @@ def geox_earth_trinity():
         },
         indent=2,
     )
-    # ---------------------------------------------------------------------------
-    # EARTH DATA ATLAS — MCP PROMPT TEMPLATES
-    # Reusable parameterized workflow templates (user-controlled)
-    # ---------------------------------------------------------------------------
-
-    mcp.prompt(  # noqa: F821
-        "sabah-pscs-kill-test",
-        description=(
-            "Sabah PSCS kill-test protocol — full pre-stack depth migration sanity check. "
-            "Use after geox_seismic_compute('mode=synthetic') generates suspect AVO. "
-            "Steps: (1) flag top-Miocene regional, (2) run geox_seismic_ingest+compute, "
-            "(3) call geox_seismic_interpret('mode=horizon_contrast'), "
-            "(4) if anomaly persists → HOLD and escalate to GEOX claim. "
-            "Corresponds to: GENESIS/003_CONSTITUTIONAL_ALIGNMENT.md §KILL-MAP §PSCS"
-        ),
-        arguments=[],
-    )
-
-    mcp.prompt(  # noqa: F821
-        "carbonate-basement-discrim",
-        description=(
-            "Carbonate vs basement discrimination protocol. "
-            "Distinguish carbonate buildups from crystalline basement using Vp ratio + AI contrast. "
-            "Workflow: (1) geox_petrophysics → Vp ratio + AI, "
-            "(2) geox_seismic_compute('mode=synthetic') if log data available, "
-            "(3) geox_geomechanics → if K < 15 GPa → likely carbonate; "
-            "if K > 40 GPa → likely basement. "
-            "(4) geox_egs_claim_create with evidence_for/against. "
-            "Authority: GEOX proposes, arifOS judges, Arif decides."
-        ),
-        arguments=[],
-    )
-
-    mcp.prompt(  # noqa: F821
-        "deep-time-state-query",
-        description=(
-            "Query the deep-time Earth state vector at a given geological time. "
-            "Steps: (1) geox_deep_time_state(age_ma=AGE, period='PERIOD') → state vector, "
-            "(2) geox_basin(mode='macrostrat', age=AGE) → stratigraphic context, "
-            "(3) geox_gplates_velocity(reconstruction_age=AGE) → plate positions, "
-            "(4) geox_seismic_compute('mode=synthetic') → synthetics if well data available. "
-            "Returns: deep_time_state with CO₂, δ18O, temperature, sea level, O₂, plate config. "
-            "Use for: paleobathymetry, thermal history, basin formation context."
-        ),
-        arguments=[],
-    )
-
-    mcp.prompt(  # noqa: F821
-        "stratigraphy-correlation",
-        description=(
-            "Correlate well stratigraphy across a basin using sequence stratigraphy principles. "
-            "Workflow: (1) geox_well_ingest for each well (LAS files), "
-            "(2) geox_well_qc → depth/register curves, "
-            "(3) geox_sequence('mode=correlation', wells=[...], zone_top=X, zone_base=Y) → "
-            "parasequence boundaries + correlation panel, "
-            "(4) geox_basin(mode='macrostrat') → regional/global chart integration, "
-            "(5) geox_egs_claim_create for regional correlation claims. "
-            "Output: correlation panel with sequence surfaces, systems tracts, and age calls."
-        ),
-        arguments=[],
-    )
-
-    # ── Earth System Integration Resources ────────────────────────────────
-
-    mcp.resource(
-        "geox://earth-system/physics-flow",
-        description=(
-            "Deep-time physics flow: CO₂ → Temperature → Ice → Sea Level. "
-            "Cross-validated between Miller 2020 and Haq & Ogg 2024. "
-            "Includes physics consistency gate and Sabah boundary correlation."
-        ),
-        mime_type="application/json",
-    )(geox_earth_physics_flow)
-
-    mcp.resource(
-        "geox://earth-system/sabah-correlation",
-        description=(
-            "Sabah unconformity correlation with Haq & Ogg 2024 global sequence boundaries. "
-            "BMU/TCU, DRU, UIU, SRU matched to NgSB1, NgSB9, NgSB11, NgSB13."
-        ),
-        mime_type="application/json",
-    )(geox_sabah_correlation)
-
-    mcp.resource(
-        "geox://earth-system/trinity",
-        description=(
-            "Physics × Chemistry × Biology coupling framework. "
-            "The three-body interaction that makes Earth a planet, not a rock. "
-            "Physics sets the stage, chemistry writes the script, biology becomes the co-author."
-        ),
-        mime_type="application/json",
-    )(geox_earth_trinity)
+    # NOTE: Earth System prompts and resources moved to register_prompts()
+    # and register_resources() respectively — they were unreachable dead code
+    # after the return on line 1983.
+    # See /root/GEOX/src/geox_mcp/prompts/__init__.py for the 4 prompts:
+    #   sabah-pscs-kill-test, carbonate-basement-discrim,
+    #   deep-time-state-query, stratigraphy-correlation
+    # See register_resources() for the 3 resources:
+    #   geox://earth-system/physics-flow, geox://earth-system/sabah-correlation,
+    #   geox://earth-system/trinity
