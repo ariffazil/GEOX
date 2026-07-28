@@ -1,15 +1,15 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-26T21:53:00Z
+last_verified: 2026-07-28T18:00Z
 valid_until: 2026-08-26
-federation_release: v2026.07.26
+federation_release: v2026.07.28
 live_commit: 62994c47
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: 33
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
 
-**SOT:** 2026-07-26 | **seal_seq:** `62994c47` | **Status:** `999_SEAL`
+**SOT:** 2026-07-28 | **seal_seq:** `62994c47` | **Status:** `999_SEAL`
 
 # 🌍 GEOX — Evidence-First Geological Intelligence & Subsurface Coprocessor
 
@@ -18,7 +18,7 @@ epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 
 ![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)
 ![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-33%20Canonical%20Tools-1f6feb)
-![Federation](https://img.shields.io/badge/Federation-v2026.07.26-0a7b83)
+![Federation](https://img.shields.io/badge/Federation-v2026.07.28-0a7b83)
 ![License](https://img.shields.io/github/license/ariffazil/GEOX?label=License)
 
 
@@ -279,7 +279,7 @@ It IS a vendor-neutral layer that can:
 | **HERMES** | Multi-modal bridge | [repo](https://github.com/ariffazil/HERMES) | — | — | — |
 
 **Public:** [arif-fazil.com](https://arif-fazil.com) · **Federation root:** [arifos.arif-fazil.com](https://arifos.arif-fazil.com)
-**SOT:** 2026-07-24
+**SOT:** 2026-07-28
 
 ## License
 
