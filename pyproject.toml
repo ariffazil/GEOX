@@ -221,7 +221,7 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
-addopts = "--import-mode=importlib"
+addopts = "--import-mode=importlib --ignore=CLAUDE.md --ignore=AGENTS.md"
 markers = [
     "integration: Tests that require network access to external APIs (macrostrat.org, etc.)",
     "slow: Tests that take >10s to complete",
