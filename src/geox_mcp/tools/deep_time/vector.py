@@ -485,21 +485,16 @@ def assemble_envelope(
     # Build governance footer
     governance = _build_governance_footer(vector, age_res)
 
-    # Epistemic summary
-    real_vars = sum(
-        1
-        for v in [
-            vector.solar_luminosity_fraction,
-            vector.day_length_hours,
-            vector.orbital_eccentricity,
-            vector.orbital_obliquity_deg,
-            vector.supercontinent_state,
-            vector.biotic_realm,
-            vector.ice_extent,
-            vector.paleogeography_summary,
-        ]
-        if v and v.value is not None
-    )
+    # Epistemic summary — single source of truth for variable counts.
+    # The vector model already records `n_variables_with_real_data` (line 281) using
+    # the same filter (`value is not None AND epistemic_level NOT IN {NO_DATA, UNKNOWN}`).
+    # The previous second computation (line 489-502 of this file) used a narrower
+    # filter (`value is not None` only) over an 8-element subset, which produced a
+    # different count than primary_artifact.n_variables_with_real_data.
+    # Fix (2026-07-28 F2-TRUTH audit): mirror vector.n_variables_with_real_data
+    # exactly. primary_artifact IS the same shape as epistemic_summary for tools
+    # that haven't partitioned fields — divergence breaks external witnesses.
+    real_vars = vector.n_variables_with_real_data
 
     env = EarthStateEnvelope(
         input_query=input_query,
