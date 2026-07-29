@@ -1628,68 +1628,59 @@ tools:
     physics_guard_required: true
 compat_tools:
 - geox_abstraction_guard - geox_attribute_registry_list_tool - geox_basin_profile
-- geox_basin_resolve
-- geox_biostrat_constraint
-- geox_biostrat_falsify
-- geox_biostrat_parse
-- geox_blend_volume_tool
-- geox_blockspace_resolution_tool
-- geox_cascade_pathway
-- geox_claim_challenge
-- geox_claim_create
-- geox_claim_seal
-- geox_claim_validate
-- geox_consequence_footprint
-- geox_contrast_detect
-- geox_coord_transform_tool
-- geox_data_ingest_bundle
-- geox_data_qc_bundle
-- geox_doctrine_anti_beautiful_one
-- geox_doctrine_assumption_register
-- geox_doctrine_godel_review
-- geox_dst_ingest_test
+- name: geox_basin_resolve
+- name: geox_biostrat_constraint
+- name: geox_biostrat_falsify
+- name: geox_biostrat_parse
+- name: geox_blend_volume_tool
+- name: geox_blockspace_resolution_tool
+- name: geox_cascade_pathway
+- name: geox_claim_challenge
+- name: geox_claim_create
+- name: geox_claim_seal
+- name: geox_claim_validate
+- name: geox_consequence_footprint
+- name: geox_contrast_detect
+- name: geox_coord_transform_tool
+- name: geox_data_ingest_bundle
+- name: geox_data_qc_bundle
+- name: geox_doctrine_anti_beautiful_one
+- name: geox_doctrine_assumption_register
+- name: geox_doctrine_godel_review
+- name: geox_dst_ingest_test
 - geox_emag2_ingest
-- geox_evidence_attach
-- geox_evidence_discover
-- geox_evidence_reason
-- geox_fault_stick_ingest_tool
-- geox_feedback_integrity
-- geox_gravity_magnetic_forward
-- geox_gravmag_studio_open
-- geox_gravmag_studio_screen
-- geox_header_inspect
-- geox_horizon_contrast_surface
-- geox_icgem_models
-- geox_joint_inversion
-- geox_las_inspect
-- geox_literature_ingest
-- geox_map_context_scene
-- geox_material_truth_challenge
-- geox_mt_forward
-- geox_optionality_loss
-- geox_prithvi_eo_inference
-- geox_prospect_evaluate
-- geox_query_intake
-- geox_query_macrostrat
-- geox_render_well_panel
-- geox_segy_export_tool
-- geox_seismic_compute_attribute_tool
-- geox_seismic_inversion
-- geox_seismic_segy_inspect
-- geox_sequence_interpret
-- geox_subsurface_generate_candidates
-- geox_subsurface_verify_integrity
-- geox_system_registry_status
-- geox_vision
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
+- name: geox_evidence_attach
+- name: geox_evidence_discover
+- name: geox_evidence_reason
+- name: geox_fault_stick_ingest_tool
+- name: geox_feedback_integrity
+- name: geox_gravity_magnetic_forward
+- name: geox_gravmag_studio_open
+- name: geox_gravmag_studio_screen
+- name: geox_header_inspect
+- name: geox_horizon_contrast_surface
+- name: geox_icgem_models
+- name: geox_joint_inversion
+- name: geox_las_inspect
+- name: geox_literature_ingest
+- name: geox_map_context_scene
+- name: geox_material_truth_challenge
+- name: geox_mt_forward
+- name: geox_optionality_loss
+- name: geox_prithvi_eo_inference
+- name: geox_prospect_evaluate
+- name: geox_query_intake
+- name: geox_query_macrostrat
+- name: geox_render_well_panel
+- name: geox_segy_export_tool
+- name: geox_seismic_compute_attribute_tool
+- name: geox_seismic_inversion
+- name: geox_seismic_segy_inspect
+- name: geox_sequence_interpret
+- name: geox_subsurface_generate_candidates
+- name: geox_subsurface_verify_integrity
+- name: geox_system_registry_status
 - name: geox_h3_spatial_index
-  domain: earth.spatial
-  axis: compute
-  lane: evidence
-  face: surface
   visibility: public
   description: 'H3 hexagonal spatial indexing toolkit. Convert lat/lng to H3 cells,
     aggregate points, query k-ring neighbours. [LEM E2]'
