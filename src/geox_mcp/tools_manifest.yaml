@@ -1,5 +1,6 @@
 manifest_version: 2026.07.24-truth-loop-hardening
-generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction this repair
+generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction this
+  repair
 public_transport: mcp
 tools:
 - name: geox_well_ingest
@@ -8,7 +9,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
+  description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files.
+    Auto-detects format.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -27,8 +29,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes:
-    generate, verify, lem_inference, stoip_feed, qc.'
+  description: 'Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM
+    inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -66,7 +68,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.'
+  description: 'Seismic computation: forward model, well tie, attributes, wavelet
+    extraction, inversion.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -85,10 +88,11 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous
-    SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret
-    (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return
-    PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE
+  description: 'One semantic capability — propose geometry, physics-gate, compare
+    hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks,
+    volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps),
+    interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED
+    + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE
     — arifOS seals only.'
   input_schema_source: callable
   annotations:
@@ -108,7 +112,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Subsurface model building: joint inversion, gravity/magnetic forward, MT forward.'
+  description: 'Subsurface model building: joint inversion, gravity/magnetic forward,
+    MT forward.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -127,8 +132,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal
-    maturity, map context, deep time, tectonic reconstruction.'
+  description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
+    mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -147,8 +152,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Unified stratigraphy: sequence analysis, biostratigraphic parsing and falsification. Modes:
-    correlation, biostrat_parse, biostrat_falsify.'
+  description: 'Unified stratigraphy: sequence analysis, biostratigraphic parsing
+    and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -167,8 +172,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress
-    polygon.'
+  description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic
+    impedance, stress polygon.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -187,7 +192,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Earth State Vector through deep time: GPTS, CO2, sea level, temperature, paleogeography.'
+  description: 'Earth State Vector through deep time: GPTS, CO2, sea level, temperature,
+    paleogeography.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -206,8 +212,8 @@ tools:
   lane: judgment
   face: surface
   visibility: public
-  description: 'Unified claim lifecycle: create, validate, challenge, seal, evidence, consequence, optionality,
-    cascade, feedback integrity, truth challenge.'
+  description: 'Unified claim lifecycle: create, validate, challenge, seal, evidence,
+    consequence, optionality, cascade, feedback integrity, truth challenge.'
   input_schema_source: callable
   annotations:
     read_only: false
@@ -226,7 +232,8 @@ tools:
   lane: judgment
   face: surface
   visibility: public
-  description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.'
+  description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes:
+    screen, evaluate.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -245,7 +252,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.'
+  description: 'Gravity/magnetic studio: forward modeling and screening. Modes: open,
+    screen.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -266,8 +274,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish,
-    render.'
+  description: 'Well desk: interactive view, publish rendered panel, render well panel.
+    Modes: open, publish, render.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -288,7 +296,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Quality control for well data: depth monotonicity, null %, physical range checks.'
+  description: 'Quality control for well data: depth monotonicity, null %, physical
+    range checks.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -307,7 +316,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Well Witness View — hydrate real LAS curves into interactive tracks for WellDesk/Well Witness widgets.'
+  description: Well Witness View — hydrate real LAS curves into interactive tracks
+    for WellDesk/Well Witness widgets.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -349,7 +359,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.'
+  description: 'Unified evidence synthesis: discover, synthesize, abduct, contradict,
+    spatial_block, ingest_literature.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -368,8 +379,8 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: '1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic
-    and total subsidence through time.'
+  description: '1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie
+    1980. Reconstruct tectonic and total subsidence through time.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -426,8 +437,8 @@ tools:
   lane: judgment
   face: surface
   visibility: public
-  description: Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED
-    dependencies.
+  description: Evaluate parent claim validity when child claims fail. DAG evaluation
+    with AND/OR/WEIGHTED dependencies.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -446,8 +457,9 @@ tools:
   lane: judgment
   face: surface
   visibility: public
-  description: 'Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015
-    architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.'
+  description: 'Popperian falsification engine — Kill Matrix K001-K007 + contradiction
+    scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL
+    → rejected. All PASS → PROCEED to 888_JUDGE.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -466,8 +478,9 @@ tools:
   lane: judgment
   face: surface
   visibility: public
-  description: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW)
-    and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
+  description: Scan claims for contradictions using13-type ontology. Classifies severity
+    (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL
+    →888_HOLD.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -486,8 +499,9 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves.
-    Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
+  description: LEM inference — predict rock properties (porosity, Sw, lithology) from
+    well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated
+    weights deploy.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -506,8 +520,8 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2:
-    epistemic_source preserved. F13: blocked nodes rejected.'
+  description: 'Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel
+    input. F2: epistemic_source preserved. F13: blocked nodes rejected.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -526,7 +540,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 3D wellbore geometry from deviation survey using minimum curvature method (wellpathpy).
+  description: 3D wellbore geometry from deviation survey using minimum curvature
+    method (wellpathpy).
   input_schema_source: callable
   annotations:
     read_only: true
@@ -545,7 +560,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Multi-attribute physical reality gate plus horizon and fault extraction from seismic volumes.
+  description: Multi-attribute physical reality gate plus horizon and fault extraction
+    from seismic volumes.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -564,8 +580,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Geological cognition engine: pattern recognition and hypothesis generation from multi-domain
-    data.'
+  description: 'Geological cognition engine: pattern recognition and hypothesis generation
+    from multi-domain data.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -584,7 +600,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Cognitive interpretation dashboard rendering for multi-panel seismic displays.
+  description: Cognitive interpretation dashboard rendering for multi-panel seismic
+    displays.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -603,7 +620,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'SEG-Y trace reality pipeline: validate trace headers, amplitudes, and geometry consistency.'
+  description: 'SEG-Y trace reality pipeline: validate trace headers, amplitudes,
+    and geometry consistency.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -622,8 +640,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie computation: cross-correlation and wavelet extraction for time-depth
-    calibration.'
+  description: 'Well-to-seismic tie computation: cross-correlation and wavelet extraction
+    for time-depth calibration.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -642,7 +660,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 3D structural model construction from 2D picks using GemPy implicit modeling.
+  description: 3D structural model construction from 2D picks using GemPy implicit
+    modeling.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -661,7 +680,8 @@ tools:
   lane: judgment
   face: internal
   visibility: internal
-  description: 'Capital consequence bridge: feed geological parameters to WEALTH organ for economic evaluation.'
+  description: 'Capital consequence bridge: feed geological parameters to WEALTH organ
+    for economic evaluation.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -680,7 +700,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'RSI interpretation: relative stratigraphic interpretation from seismic amplitude data.'
+  description: 'RSI interpretation: relative stratigraphic interpretation from seismic
+    amplitude data.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -699,7 +720,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Render quality audit: verify image integrity and annotation accuracy of seismic displays.'
+  description: 'Render quality audit: verify image integrity and annotation accuracy
+    of seismic displays.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1022,7 +1044,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Seismic cognition: AI-assisted pattern recognition in seismic attribute volumes.'
+  description: 'Seismic cognition: AI-assisted pattern recognition in seismic attribute
+    volumes.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1060,7 +1083,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: Enhance seismic section readability through contrast and frequency enhancement.
+  description: Enhance seismic section readability through contrast and frequency
+    enhancement.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1078,8 +1102,9 @@ tools:
   axis: reason
   lane: reasoning
   face: surface
-  visibility: public
-  description: Generate geological hypotheses across discontinuity gaps in seismic data.
+  visibility: internal
+  description: Generate geological hypotheses across discontinuity gaps in seismic
+    data.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1087,7 +1112,7 @@ tools:
     idempotent: true
   ui: null
   plugin:
-    exposed: true
+    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -1117,7 +1142,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: Rank geological hypotheses by basin-specific prior probability and consistency.
+  description: Rank geological hypotheses by basin-specific prior probability and
+    consistency.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1155,7 +1181,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie via bruges library: cross-correlation and wavelet extraction.'
+  description: 'Well-to-seismic tie via bruges library: cross-correlation and wavelet
+    extraction.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1212,7 +1239,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Bid round screening: evaluate fiscal terms and prospectivity for license rounds.'
+  description: 'Bid round screening: evaluate fiscal terms and prospectivity for license
+    rounds.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1288,8 +1316,9 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'GEOX Workspace — persistent geological context across all tools. Set basin/play/well once;
-    every tool inherits. Modes: set, view, history, evidence, relations, reset.'
+  description: 'GEOX Workspace — persistent geological context across all tools. Set
+    basin/play/well once; every tool inherits. Modes: set, view, history, evidence,
+    relations, reset.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1443,8 +1472,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie receipt: structured record of tie quality metrics and calibration
-    status. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well-to-seismic tie receipt: structured record of tie quality metrics
+    and calibration status. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1463,8 +1492,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-to-seismic tie preflight check: verify data completeness and quality before tie computation.
-    [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well-to-seismic tie preflight check: verify data completeness and
+    quality before tie computation. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1502,8 +1531,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well time-depth calibration: derive checkshot-based time-depth transform from VSP or checkshot
-    data. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well time-depth calibration: derive checkshot-based time-depth transform
+    from VSP or checkshot data. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1522,8 +1551,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Well-seismic mistie analysis: compute RMS mistie between well markers and seismic horizons.
-    [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Well-seismic mistie analysis: compute RMS mistie between well markers
+    and seismic horizons. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1542,8 +1571,8 @@ tools:
   lane: evidence
   face: internal
   visibility: internal
-  description: 'Wavelet extraction: derive source wavelet from well tie using least-squares method. [ZEN
-    2026-07-11 G1: use geox_seismic_compute modes]'
+  description: 'Wavelet extraction: derive source wavelet from well tie using least-squares
+    method. [ZEN 2026-07-11 G1: use geox_seismic_compute modes]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1563,6 +1592,28 @@ tools:
   face: internal
   visibility: internal
   description: Test harness for DST data ingestion pipeline.
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_geological_model_generate
+  domain: earth.subsurface
+  axis: compute
+  lane: evidence
+  face: internal
+  visibility: public
+  description: 'Deterministic geological model renderer. Generates 2D cross-sections
+    from structural parameters (dip, fault throw, strata) using matplotlib. NOT an
+    AI image generator — physics-constrained, computed output. Phase 1: 2D sections.
+    Phase 2: 3D GemPy block models.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1637,11 +1688,11 @@ compat_tools:
 - geox_volume_frame_tool
 - geox_well_desk_open
 - geox_well_desk_publish
-surface_version: geox-public-33-2026.07.25
+surface_version: geox-public-33-2026.07.29
 surface_name: CANONICAL_PUBLIC_33
 public_count_target: 33
 doctrine:
-  public_surface: 32 tools — live operational surface
+  public_surface: 33 tools — clean surface after Zen audit 2026-07-29
   zen15_status: ARCHIVED historical document — not runtime truth
   no_collapse_to_eight: true
   no_surface_reduction_this_repair: true

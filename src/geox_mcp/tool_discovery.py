@@ -361,6 +361,24 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
         acrisk="HOLD",
         is_888_hold=True,
     ),
+    # ── GEOLOGICAL MODEL DOMAIN ──────────────────────────────────────────────────
+    "geox_geological_model_generate": ToolDiscovery(
+        name="geox_geological_model_generate",
+        domain_verb="subsurface.generate_model",
+        description="Deterministic 2D geological cross-section renderer. Generates stratigraphic cross-sections from structural parameters (dip angle, fault throw, strata thicknesses) using matplotlib. F2: physics-constrained, computed output — NOT AI-generated imagery.",
+        use_when="You need a visual geological cross-section from structured parameters (depth, dip, fault throw, layer sequence).",
+        do_not_use_when="You need real Earth data (use geox_basin with macrostrat modes) or 3D block models (Phase 2).",
+        keywords=["cross-section", "geological model", "strata", "fault", "dip", "render", "matplotlib", "subsurface"],
+        examples=[
+            "Render a cross-section with 7 layers, 30° dip, and a 150m fault throw",
+            "Generate a geological section 5km wide, 3km deep with alternating sandstone/shale layers",
+            "Plot a velocity model from well log layer velocities",
+        ],
+        domain="earth.subsurface",
+        modes=["cross_section"],
+        acrisk="QUALIFY",
+        is_888_hold=False,
+    ),
 }
 
 

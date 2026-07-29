@@ -37,6 +37,7 @@ GHOST_TOOLS: set[str] = {
     "geox_rsi_interpret",
     "geox_segy_audit",
     "geox_segy_trace_audit",
+    "geox_visual_generate_hypotheses",  # GHOSTED 2026-07-29 — experimental DL, overlaps seismic_interpret
     "geox_well_desurvey",
 }
 GHOST_COUNT = len(GHOST_TOOLS)
