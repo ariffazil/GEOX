@@ -211,6 +211,17 @@ def enforce_authority(
     session_id, actor_id, session_token = extract_identity(arguments or {})
     required = required_authority_for(tool_name, arguments or {})
 
+    # E2 FIX 2026-07-29: OBSERVE_ONLY tools need no session.
+    # Tools like geox_surface_status and geox_workspace are read-only;
+    # requiring session_id blocks anonymous discovery and workspace
+    # usage in non-governed contexts.
+    if required == "OBSERVE_ONLY":
+        logger.debug(
+            "AUTH_GATE: OBSERVE_ONLY tool=%s — session gate skipped",
+            tool_name,
+        )
+        return
+
     # ── FORGED 2026-07-27 (FI-008 · GEOX authority-sync fix) ──
     # When the caller presents a session_token (SCT), prefer the SCT path
     # so we read the real `auth` claim from the signed payload instead
