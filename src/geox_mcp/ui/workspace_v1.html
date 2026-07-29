@@ -2,9 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html;profile=mcp-app">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GEOX Governed Workbench v1.2</title>
+    <title>GEOX Governed Workbench v1.3</title>
     <style>
       :root {
         color-scheme: light;
@@ -290,50 +289,47 @@
         render();
       }
 
-      // ── MCP App Mode ────────────────────────────────────────
+      // ── MCP App Mode (timeout-guarded, v1.3) ─────────────────
+      const CONNECT_TIMEOUT_MS = 3000;
+
+      // Fallback listener armed UNCONDITIONALLY — SDK is an upgrade, not a prerequisite.
+      window.addEventListener("message", (event) => {
+        if (!ALLOWED_ORIGINS.includes(event.origin) && event.origin !== "null") return;
+        const data = event.data;
+        if (!data || typeof data !== "object") return;
+        if (data.method === "ui/notifications/tool-result") {
+          adoptToolResult(data.params && data.params.result);
+          if (!state.connected) { state.connected = true; setBadge("FALLBACK", "warn"); }
+        }
+        if (data.method === "ui/initialize" && data.params && data.params.toolResult) {
+          adoptToolResult(data.params.toolResult);
+        }
+      });
+
       async function initMCPApp() {
-        const app = new App({ name: "geox-workbench", version: "1.2.0" });
-
-        app.ontoolresult = (result) => {
-          adoptToolResult(result);
-        };
-
+        const app = new App({ name: "geox-workbench", version: "1.3.0" });
+        app.ontoolresult = (result) => { adoptToolResult(result); };
         app.ontoolinput = (input) => {
-          if (input?.structuredContent) {
-            state.structuredContent = input.structuredContent;
-            render();
-          }
+          if (input?.structuredContent) { state.structuredContent = input.structuredContent; render(); }
         };
-
         app.onteardown = async () => ({});
         app.onhostcontextchanged = () => {};
 
-        try {
+        const sdk = (async () => {
           await app.connect(new PostMessageTransport(window.parent, window.parent));
+          return app;
+        })();
+        const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("connect timed out after " + CONNECT_TIMEOUT_MS + "ms")), CONNECT_TIMEOUT_MS));
+
+        try {
+          await Promise.race([sdk, timeout]);
           state.connected = true;
           setBadge("CONNECTED", "ok");
         } catch (err) {
-          console.warn("[Workbench] SDK connect failed, using manual fallback:", err);
-          setupManualFallback();
+          console.warn("[Workbench] SDK unavailable:", err);
+          // Fallback already armed above — will catch any postMessage.
+          if (!state.connected) { state.connected = true; setBadge("FALLBACK", "warn"); }
         }
-      }
-
-      // ── Manual fallback (origin-checked, DOM-safe) ──────────
-      function setupManualFallback() {
-        window.addEventListener("message", (event) => {
-          if (!ALLOWED_ORIGINS.includes(event.origin) && event.origin !== "null") return;
-          const data = event.data;
-          if (!data || typeof data !== "object") return;
-
-          if (data.method === "ui/notifications/tool-result") {
-            adoptToolResult(data.params && data.params.result);
-          }
-          if (data.method === "ui/initialize" && data.params && data.params.toolResult) {
-            adoptToolResult(data.params.toolResult);
-          }
-        });
-        state.connected = true;
-        setBadge("FALLBACK", "warn");
       }
 
       render();
