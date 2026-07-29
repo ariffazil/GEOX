@@ -437,8 +437,8 @@ tools:
   lane: judgment
   face: internal
   visibility: internal
-  description: 'Evaluate parent claim validity when child claims fail. DAG evaluation
-    with AND/OR/WEIGHTED dependencies. [GHOSTED 2026-07-29 — LEM surface maintenance]'
+  description: Evaluate parent claim validity when child claims fail. DAG evaluation
+    with AND/OR/WEIGHTED dependencies. [GHOSTED 2026-07-29 — LEM surface maintenance]
   input_schema_source: callable
   annotations:
     read_only: true
@@ -521,7 +521,8 @@ tools:
   face: internal
   visibility: internal
   description: 'Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel
-    input. F2: epistemic_source preserved. F13: blocked nodes rejected. [GHOSTED 2026-07-29 — LEM surface maintenance]'
+    input. F2: epistemic_source preserved. F13: blocked nodes rejected. [GHOSTED 2026-07-29
+    — LEM surface maintenance]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -740,7 +741,8 @@ tools:
   lane: reasoning
   face: internal
   visibility: internal
-  description: 'Map export: package map layers and annotations into portable formats. [GHOSTED 2026-07-29 — LEM surface maintenance]'
+  description: 'Map export: package map layers and annotations into portable formats.
+    [GHOSTED 2026-07-29 — LEM surface maintenance]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1626,64 +1628,74 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-compat_tools:
-- geox_abstraction_guard - geox_attribute_registry_list_tool - geox_basin_profile
-- name: geox_basin_resolve
-- name: geox_biostrat_constraint
-- name: geox_biostrat_falsify
-- name: geox_biostrat_parse
-- name: geox_blend_volume_tool
-- name: geox_blockspace_resolution_tool
-- name: geox_cascade_pathway
-- name: geox_claim_challenge
-- name: geox_claim_create
-- name: geox_claim_seal
-- name: geox_claim_validate
-- name: geox_consequence_footprint
-- name: geox_contrast_detect
-- name: geox_coord_transform_tool
-- name: geox_data_ingest_bundle
-- name: geox_data_qc_bundle
-- name: geox_doctrine_anti_beautiful_one
-- name: geox_doctrine_assumption_register
-- name: geox_doctrine_godel_review
-- name: geox_dst_ingest_test
-- geox_emag2_ingest
-- name: geox_evidence_attach
-- name: geox_evidence_discover
-- name: geox_evidence_reason
-- name: geox_fault_stick_ingest_tool
-- name: geox_feedback_integrity
-- name: geox_gravity_magnetic_forward
-- name: geox_gravmag_studio_open
-- name: geox_gravmag_studio_screen
-- name: geox_header_inspect
-- name: geox_horizon_contrast_surface
-- name: geox_icgem_models
-- name: geox_joint_inversion
-- name: geox_las_inspect
-- name: geox_literature_ingest
-- name: geox_map_context_scene
-- name: geox_material_truth_challenge
-- name: geox_mt_forward
-- name: geox_optionality_loss
-- name: geox_prithvi_eo_inference
-- name: geox_prospect_evaluate
-- name: geox_query_intake
-- name: geox_query_macrostrat
-- name: geox_render_well_panel
-- name: geox_segy_export_tool
-- name: geox_seismic_compute_attribute_tool
-- name: geox_seismic_inversion
-- name: geox_seismic_segy_inspect
-- name: geox_sequence_interpret
-- name: geox_subsurface_generate_candidates
-- name: geox_subsurface_verify_integrity
-- name: geox_system_registry_status
-- name: geox_h3_spatial_index
+- name: geox_gempy_implicit_3d
+  domain: earth.subsurface
+  axis: compute
+  lane: evidence
+  face: surface
   visibility: public
-  description: 'H3 hexagonal spatial indexing toolkit. Convert lat/lng to H3 cells,
-    aggregate points, query k-ring neighbours. [LEM E2]'
+  description: GemPy implicit 3D structural modeling via universal cokriging scalar
+    potential fields. Returns 3D geological volume with uncertainty. [LEM E1]
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_gempy_implicit_3d
+  domain: earth.subsurface
+  axis: compute
+  lane: evidence
+  face: surface
+  visibility: public
+  description: GemPy implicit 3D structural modeling via universal cokriging scalar
+    potential fields. Returns 3D geological volume with uncertainty. [LEM E1]
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_gempy_implicit_3d
+  domain: earth.subsurface
+  axis: compute
+  lane: evidence
+  face: surface
+  visibility: public
+  description: GemPy implicit 3D structural modeling via universal cokriging scalar
+    potential fields. Returns 3D geological volume with uncertainty. [LEM E1]
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_h3_spatial_index
+  domain: earth.spatial
+  axis: compute
+  lane: evidence
+  face: surface
+  visibility: public
+  description: H3 hexagonal spatial indexing toolkit. Convert lat/lng to H3 cells,
+    aggregate points, query k-ring neighbours. [LEM E2]
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1702,8 +1714,8 @@ compat_tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'LanceDB embedded vector store for earth embeddings. Store/search
-    AlphaEarth/Clay/custom embeddings with H3 cross-reference. [LEM E3]'
+  description: LanceDB embedded vector store for earth embeddings. Store/search AlphaEarth/Clay/custom
+    embeddings with H3 cross-reference. [LEM E3]
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1722,8 +1734,8 @@ compat_tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'STAC catalog discovery for cloud-native geospatial assets. Query
-    COG/GeoParquet/Zarr across federated catalogs. [LEM E4]'
+  description: STAC catalog discovery for cloud-native geospatial assets. Query COG/GeoParquet/Zarr
+    across federated catalogs. [LEM E4]
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1742,8 +1754,8 @@ compat_tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge
-    graph for stratigraphic rules and physical laws. [LEM E5]'
+  description: DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge
+    graph for stratigraphic rules and physical laws. [LEM E5]
   input_schema_source: callable
   annotations:
     read_only: true
