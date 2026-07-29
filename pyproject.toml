@@ -64,7 +64,6 @@ dependencies = [
     # welly requires pkg_resources from older setuptools (setuptools 70+ removed it)
     "setuptools<70",
     "pyproj>=3.7.2",
-
     # ─── P1 CRITICAL: Seismic (2026-06-25 FORGE batch embed) ─────────────────
     # ObsPy — adapter exists in engines/seismic/obspy_adapter.py
     "obspy>=1.4.0",
@@ -78,7 +77,6 @@ dependencies = [
     # "devito>=4.8.22",
     # PyLops — linear operators for seismic inversion (sparse spike, AVAz, rank-reduction)
     "pylops>=2.7.0",
-
     # ─── P1 CRITICAL: Geophysics Inversion ──────────────────────────────────
     # HarmonIC — gravity + magnetics forward (referenced in harmonica_adapter.py)
     "harmonica>=0.7.0",
@@ -89,7 +87,6 @@ dependencies = [
     "simpeg>=0.25.2",
     # PyGIMLi — ERT, induced polarization, traveltime tomography, joint inversion
     "pygimli>=1.4.0",
-
     # ─── P1 CRITICAL: Geospatial & Satellite ────────────────────────────────
     # GDAL — raster/vector geospatial. The Python GDAL binding version must
     # match the system libgdal exactly, which differs across environments
@@ -97,7 +94,6 @@ dependencies = [
     # rasterio/geopandas built-in bindings handle GDAL. See also: gdal-config.
     "geopandas>=1.1.4",
     "rasterio>=1.4.4",
-
     # ─── P1 CRITICAL: Plate Tectonics & Geomodeling ────────────────────────
     # GPlately — plate reconstruction raster/vector through deep time
     "gplately>=2.0.0",
@@ -105,17 +101,14 @@ dependencies = [
     "gempy>=2.0.0",
     # LoopStructural — time-aware structural geology (faults, folds, surfaces)
     "loopstructural>=1.6.27",
-
     # ─── P1 CRITICAL: Hydrology & Climate ───────────────────────────────────
     # FloPy — MODFLOW 6/2000/2005 Python interface (USGS groundwater)
     "flopy>=3.10.0",
     # CDS API — ERA5 climate reanalysis access (ECMEOF/Copernicus)
     "cdsapi>=0.7.0",
-
     # ─── P1 CRITICAL: Geochemistry ─────────────────────────────────────────
     # pyrolite — geochemical data processing (trace elements, spider diagrams)
     "pyrolite>=0.3.7",
-
     # ─── P0 STAGE 2: Artifact spine (2026-07-25 · FI-008) ────────────────────
     # The roadmap requires migration to xarray/zarr/dask with pint units,
     # explicit CRS/datum/TVDSS, and OSDU-aligned lineage. These are CORE
@@ -139,6 +132,8 @@ dependencies = [
     "fsspec>=2026.4.0",
     # netCDF4 — alternative chunked backend for xarray.open_dataset
     "netCDF4>=1.7",
+    "h3>=4.5.0",
+    "lancedb>=0.34.0",
 ]
 
 [project.optional-dependencies]

@@ -1648,46 +1648,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_gempy_implicit_3d
-  domain: earth.subsurface
-  axis: compute
-  lane: evidence
-  face: surface
-  visibility: public
-  description: GemPy implicit 3D structural modeling via universal cokriging scalar
-    potential fields. Returns 3D geological volume with uncertainty. [LEM E1]
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_gempy_implicit_3d
-  domain: earth.subsurface
-  axis: compute
-  lane: evidence
-  face: surface
-  visibility: public
-  description: GemPy implicit 3D structural modeling via universal cokriging scalar
-    potential fields. Returns 3D geological volume with uncertainty. [LEM E1]
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_h3_spatial_index
   domain: earth.spatial
   axis: compute

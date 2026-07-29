@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEOX · Large Earth Model Dashboard</title>
+<style>
+  :root { --bg: #0a0e17; --surface: #111827; --border: #1e293b; --text: #e2e8f0; --muted: #64748b; --gold: #f59e0b; --cyan: #06b6d4; --emerald: #10b981; --rose: #f43f5e; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height:1.5; }
+  .zen-pulse { display:flex; gap:2rem; padding:0.75rem 1.5rem; background:var(--surface); border-bottom:1px solid var(--border); font-size:0.85rem; flex-wrap:wrap; }
+  .zp-item { display:flex; gap:0.5rem; align-items:center; }
+  .zp-ask { color:var(--muted); } .zp-val { color:var(--gold); }
+  .container { max-width:1200px; margin:0 auto; padding:2rem 1.5rem; }
+  header { margin-bottom:2rem; }
+  h1 { font-size:1.75rem; font-weight:700; margin-bottom:0.25rem; }
+  h1 span { color:var(--gold); } .subtitle { color:var(--muted); font-size:0.9rem; }
+  .badge { display:inline-block; background:var(--emerald); color:#000; font-size:0.7rem; padding:0.15rem 0.5rem; border-radius:999px; font-weight:600; margin-left:0.5rem; }
+
+  .intent-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:1rem; margin-bottom:2.5rem; }
+  .intent-card { background:var(--surface); border:1px solid var(--border); border-radius:0.75rem; padding:1.25rem; cursor:pointer; transition:all .2s; }
+  .intent-card:hover { border-color:var(--gold); transform:translateY(-2px); }
+  .intent-card .icon { font-size:1.5rem; margin-bottom:0.5rem; }
+  .intent-card h3 { font-size:1rem; margin-bottom:0.25rem; }
+  .intent-card p { font-size:0.8rem; color:var(--muted); }
+
+  details { background:var(--surface); border:1px solid var(--border); border-radius:0.75rem; margin-bottom:1rem; }
+  details summary { padding:1rem 1.25rem; cursor:pointer; font-weight:600; color:var(--gold); }
+  details .body { padding:0 1.25rem 1.25rem; }
+
+  .tool-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.5rem; }
+  .tool-item { font-size:0.8rem; color:var(--muted); padding:0.35rem 0.5rem; background:rgba(255,255,255,0.03); border-radius:0.4rem; font-family:monospace; }
+  .tool-item .lem { color:var(--gold); font-weight:600; }
+
+  .stat-row { display:flex; gap:2rem; margin:1.5rem 0; flex-wrap:wrap; }
+  .stat { text-align:center; }
+  .stat-num { font-size:2rem; font-weight:700; color:var(--gold); }
+  .stat-label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+
+  footer { text-align:center; padding:2rem; color:var(--muted); font-size:0.75rem; border-top:1px solid var(--border); margin-top:3rem; }
+  @media(max-width:600px) { .zen-pulse { gap:0.75rem; font-size:0.75rem; } .intent-grid { grid-template-columns:1fr; } }
+</style>
+<script src="js/lem-dashboard.js" defer></script>
+</head>
+<body>
+
+<div class="zen-pulse" id="zenPulse">
+  <div class="zp-item"><span class="zp-ask">Where am I?</span><span class="zp-val">GEOX · LEM Dashboard</span></div>
+  <div class="zp-item"><span class="zp-ask">Why care?</span><span class="zp-val">Earth intelligence substrate · 33 tools + 5 LEM engines</span></div>
+  <div class="zp-item"><span class="zp-ask">What next?</span><span class="zp-val" id="nextAction">Pick a verb ↓</span></div>
+</div>
+
+<div class="container">
+  <header>
+    <h1>GEOX <span>LEM</span> <span class="badge">Large Earth Model</span></h1>
+    <p class="subtitle">Deterministic earth intelligence · Forged, not given · v2026.07.24</p>
+  </header>
+
+  <div class="intent-grid">
+    <div class="intent-card" data-verb="explore">
+      <div class="icon">🌍</div>
+      <h3>Explore</h3>
+      <p>3D subsurface volumes via GemPy implicit modeling</p>
+    </div>
+    <div class="intent-card" data-verb="search">
+      <div class="icon">🔎</div>
+      <h3>Search</h3>
+      <p>Earth embeddings via LanceDB vector store</p>
+    </div>
+    <div class="intent-card" data-verb="browse">
+      <div class="icon">🗺️</div>
+      <h3>Browse</h3>
+      <p>STAC catalogs · COG · GeoParquet · Zarr</p>
+    </div>
+    <div class="intent-card" data-verb="analyze">
+      <div class="icon">📐</div>
+      <h3>Analyze</h3>
+      <p>H3 spatial indexing · hexagonal aggregation</p>
+    </div>
+    <div class="intent-card" data-verb="reason">
+      <div class="icon">🧠</div>
+      <h3>Reason</h3>
+      <p>DDE ontology + Macrostrat neuro-symbolic rules</p>
+    </div>
+    <div class="intent-card" data-verb="compare">
+      <div class="icon">⚖️</div>
+      <h3>Compare</h3>
+      <p>Cross-sections · uncertainty volumes · scenarios</p>
+    </div>
+  </div>
+
+  <div class="stat-row" id="stats">
+    <div class="stat"><div class="stat-num">38</div><div class="stat-label">Tools</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">LEM Engines</div></div>
+    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Domains</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Surface Drift</div></div>
+  </div>
+
+  <details open>
+    <summary>🌋 LEM Engines · New (Forged 2026-07-29)</summary>
+    <div class="body tool-grid">
+      <div class="tool-item"><span class="lem">geox_gempy_implicit_3d</span> — GemPy 3D implicit modeling</div>
+      <div class="tool-item"><span class="lem">geox_h3_spatial_index</span> — H3 hexagonal spatial indexing</div>
+      <div class="tool-item"><span class="lem">geox_lancedb_embed_store</span> — LanceDB vector embeddings</div>
+      <div class="tool-item"><span class="lem">geox_stac_discover</span> — STAC catalog discovery</div>
+      <div class="tool-item"><span class="lem">geox_dde_reason</span> — DDE/Macrostrat neuro-symbolic KG</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>📡 All Public Tools (33)</summary>
+    <div class="body tool-grid" id="toolList">
+      <div class="tool-item">Loading...</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🔧 Agent Surface</summary>
+    <div class="body">
+      <p style="margin-bottom:0.75rem;color:var(--muted);font-size:0.85rem;">MCP endpoint for AI agent consumption:</p>
+      <div class="tool-item" style="margin-bottom:0.5rem;">MCP: <code>https://geox.arif-fazil.com/mcp</code></div>
+      <div class="tool-item" style="margin-bottom:0.5rem;">Agent card: <a href="agent.json" style="color:var(--gold);">agent.json</a></div>
+      <div class="tool-item" style="margin-bottom:0.5rem;">AI context: <a href="llms.txt" style="color:var(--gold);">llms.txt</a></div>
+      <div class="tool-item">Health: <code>curl https://geox.arif-fazil.com/health</code></div>
+    </div>
+  </details>
+</div>
+
+<footer>
+  DITEMPA BUKAN DIBERI · Forged, Not Given · arifOS Federation<br>
+  <span style="font-size:0.65rem;">GemPy · H3 · LanceDB · STAC · DDE Ontology · Macrostrat</span>
+</footer>
+
+</body>
+</html>
