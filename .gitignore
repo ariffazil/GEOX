@@ -18,6 +18,9 @@ var/
 wheels/
 *.egg-info/
 .installed.cfg
+
+# Megamemory (LLM cache files)
+.megamemory/
 *.egg
 
 # Virtual environment

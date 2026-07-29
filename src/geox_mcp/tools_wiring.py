@@ -108,6 +108,7 @@ def register_tools_on(mcp):
     ) -> dict[str, Any]:
         """Calibrate relative biostratigraphy into age brackets with evidence and audit receipt."""
         from geox_mcp.tools.biostrat_calibrate import geox_biostrat_calibrate as _impl
+
         return await _impl(
             taxon_name=taxon_name,
             zone_code=zone_code,
@@ -122,7 +123,6 @@ def register_tools_on(mcp):
         )
 
     @mcp.tool(name="geox_well_ingest", annotations=_geox_annotations("geox_well_ingest"))
-
     async def _well_ingest(
         mode: str = "auto",
         source_uri: str | None = None,
@@ -336,17 +336,12 @@ def register_tools_on(mcp):
                     pass
                 for _mnemonic in ("GR", "RES", "RT", "ILD", "DT", "RHOB", "NPHI"):
                     if _mnemonic in _las.keys():
-                        raw = [
-                            float(v) if v == v and float(v) != null_v else float("nan")
-                            for v in _las[_mnemonic]
-                        ]
+                        raw = [float(v) if v == v and float(v) != null_v else float("nan") for v in _las[_mnemonic]]
                         _curves[_mnemonic] = raw[::step]
                 # Prefer RES alias over RT if both missing RES
                 if "RES" not in _curves and "RT" in _curves:
                     _curves["RES"] = _curves["RT"]
-                well_id = wid or (
-                    str(_las.well.WELL.value).strip() if hasattr(_las.well, "WELL") else path.stem
-                ) or path.stem
+                well_id = wid or (str(_las.well.WELL.value).strip() if hasattr(_las.well, "WELL") else path.stem) or path.stem
                 _las_path = str(path)
                 _meta = {
                     "well_id": well_id,
@@ -433,11 +428,12 @@ def register_tools_on(mcp):
                 from geox_mcp.tools._helpers import _register_artifact
 
                 if _las_path and Path(_las_path).is_file():
-                    sha = sha256_for_file(_las_path) or hashlib.sha256(
-                        json.dumps(
-                            {"well_id": well_id, "n": len(_depths)}, sort_keys=True
-                        ).encode()
-                    ).hexdigest()
+                    sha = (
+                        sha256_for_file(_las_path)
+                        or hashlib.sha256(
+                            json.dumps({"well_id": well_id, "n": len(_depths)}, sort_keys=True).encode()
+                        ).hexdigest()
+                    )
                 else:
                     sha = hashlib.sha256(
                         json.dumps(
@@ -449,9 +445,7 @@ def register_tools_on(mcp):
                             sort_keys=True,
                         ).encode()
                     ).hexdigest()
-                _canon_ref = make_artifact_id(
-                    "well_las", f"well:{well_id}", sha
-                )
+                _canon_ref = make_artifact_id("well_las", f"well:{well_id}", sha)
                 try:
                     _register_artifact(
                         f"well_las:{well_id}",
@@ -508,9 +502,7 @@ def register_tools_on(mcp):
             "ok": not _is_err,
             "isError": _is_err,
             "status": (
-                "NOT_FOUND"
-                if _is_err and ("NOT_FOUND" in _text or "No LAS" in _text)
-                else ("ERROR" if _is_err else "OK")
+                "NOT_FOUND" if _is_err and ("NOT_FOUND" in _text or "No LAS" in _text) else ("ERROR" if _is_err else "OK")
             ),
             "well_id": well_id,
             "mode": "view",
@@ -4746,6 +4738,7 @@ def register_tools_on(mcp):
 
     class _StrataUnit(BaseModel):
         """A single stratigraphic unit in the cross-section."""
+
         name: str = Field(..., description="Unit name (e.g. Sandstone, Shale)")
         thickness_m: float = Field(..., gt=0, description="Unit thickness in metres")
         color: str = Field("#888888", description="Hex colour for fill (e.g. #E6A817)")
@@ -4756,11 +4749,18 @@ def register_tools_on(mcp):
         All parameters describe a 2D geological cross-section.
         Zero external data fetching — pure deterministic computation.
         """
+
         grid_width_m: float = Field(2000.0, gt=0, description="Cross-section width in metres")
         grid_depth_m: float = Field(1000.0, gt=0, description="Cross-section depth in metres")
         dip_angle_deg: float = Field(0.0, description="Structural dip in degrees (0 = horizontal)")
-        fault_throw_m: float = Field(0.0, description="Vertical fault displacement in metres. Positive = normal, negative = reverse. 0 = no fault.")
-        fault_x_position_m: float | None = Field(None, ge=0, description="X-coordinate of fault plane intersection with surface. Defaults to midpoint when fault_throw_m != 0.")
+        fault_throw_m: float = Field(
+            0.0, description="Vertical fault displacement in metres. Positive = normal, negative = reverse. 0 = no fault."
+        )
+        fault_x_position_m: float | None = Field(
+            None,
+            ge=0,
+            description="X-coordinate of fault plane intersection with surface. Defaults to midpoint when fault_throw_m != 0.",
+        )
         strata: list[_StrataUnit] = Field(
             default_factory=lambda: [
                 _StrataUnit(name="Layer A", thickness_m=200, color="#d4a574"),
@@ -4807,6 +4807,7 @@ def register_tools_on(mcp):
         from datetime import UTC, datetime
 
         import matplotlib
+
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
         import matplotlib.patches as mpatches
@@ -4843,59 +4844,86 @@ def register_tools_on(mcp):
                 ax.fill(
                     [xl_top, fx, fx, xl_bot],
                     [y_offset, y_offset, y_offset + thick, y_offset + thick],
-                    color=unit.color, edgecolor="black", linewidth=0.5,
+                    color=unit.color,
+                    edgecolor="black",
+                    linewidth=0.5,
                 )
                 # Right polygon (offset by throw)
                 ax.fill(
                     [fx, xr_top, xr_bot, fx],
-                    [y_offset + tp, y_offset + tp,
-                     y_offset + thick + tp, y_offset + thick + tp],
-                    color=unit.color, edgecolor="black", linewidth=0.5,
+                    [y_offset + tp, y_offset + tp, y_offset + thick + tp, y_offset + thick + tp],
+                    color=unit.color,
+                    edgecolor="black",
+                    linewidth=0.5,
                 )
                 # Label both sides
-                ax.text(fx / 2, y_offset + thick / 2, unit.name,
-                        fontsize=8, ha="center", va="center",
-                        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
-                ax.text((gw + fx) / 2, y_offset + thick / 2 + tp / 2, unit.name,
-                        fontsize=8, ha="center", va="center",
-                        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
+                ax.text(
+                    fx / 2,
+                    y_offset + thick / 2,
+                    unit.name,
+                    fontsize=8,
+                    ha="center",
+                    va="center",
+                    bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7),
+                )
+                ax.text(
+                    (gw + fx) / 2,
+                    y_offset + thick / 2 + tp / 2,
+                    unit.name,
+                    fontsize=8,
+                    ha="center",
+                    va="center",
+                    bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7),
+                )
             else:
                 polygon = mpatches.Polygon(
-                    [(xl_top, y_offset), (xr_top, y_offset),
-                     (xr_bot, y_offset + thick), (xl_bot, y_offset + thick)],
-                    closed=True, color=unit.color, edgecolor="black", linewidth=0.5,
+                    [(xl_top, y_offset), (xr_top, y_offset), (xr_bot, y_offset + thick), (xl_bot, y_offset + thick)],
+                    closed=True,
+                    color=unit.color,
+                    edgecolor="black",
+                    linewidth=0.5,
                 )
                 ax.add_patch(polygon)
-                ax.text(gw * 0.25, y_offset + thick / 2, unit.name,
-                        fontsize=8, ha="center", va="center",
-                        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
+                ax.text(
+                    gw * 0.25,
+                    y_offset + thick / 2,
+                    unit.name,
+                    fontsize=8,
+                    ha="center",
+                    va="center",
+                    bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7),
+                )
 
             y_offset += thick
 
         # ── Fault annotation ─────────────────────────────────────────────
         if fx is not None and throw != 0:
             tp = throw * depth_scale
-            ax.axvline(x=fx, color="red", linewidth=2, linestyle="--",
-                       label=f"Fault (throw={throw:.0f}m)")
+            ax.axvline(x=fx, color="red", linewidth=2, linestyle="--", label=f"Fault (throw={throw:.0f}m)")
             ax.annotate(
-                "", xy=(fx + gw * 0.02, y_offset - tp),
+                "",
+                xy=(fx + gw * 0.02, y_offset - tp),
                 xytext=(fx + gw * 0.02, y_offset),
                 arrowprops=dict(arrowstyle="<->", color="red", lw=1.5),
             )
-            ax.text(fx + gw * 0.025, y_offset - tp / 2,
-                    f"Throw\n{throw:.0f}m", fontsize=7, color="red", va="center")
+            ax.text(fx + gw * 0.025, y_offset - tp / 2, f"Throw\n{throw:.0f}m", fontsize=7, color="red", va="center")
 
         # ── Dip annotation ───────────────────────────────────────────────
         if params.dip_angle_deg != 0:
             ax.annotate(
-                "", xy=(gw * 0.1, 0),
-                xytext=(gw * 0.1 + dip_rad * 200 * depth_scale,
-                         -dip_rad * 200 * depth_scale),
+                "",
+                xy=(gw * 0.1, 0),
+                xytext=(gw * 0.1 + dip_rad * 200 * depth_scale, -dip_rad * 200 * depth_scale),
                 arrowprops=dict(arrowstyle="->", color="blue", lw=1.5),
             )
-            ax.text(gw * 0.1 + dip_rad * 100 * depth_scale,
-                    -dip_rad * 100 * depth_scale - 30,
-                    f"Dip {params.dip_angle_deg}°", fontsize=8, color="blue", ha="center")
+            ax.text(
+                gw * 0.1 + dip_rad * 100 * depth_scale,
+                -dip_rad * 100 * depth_scale - 30,
+                f"Dip {params.dip_angle_deg}°",
+                fontsize=8,
+                color="blue",
+                ha="center",
+            )
 
         # ── Axes ─────────────────────────────────────────────────────────
         ax.set_xlim(0, gw)
@@ -4905,10 +4933,15 @@ def register_tools_on(mcp):
         ax.set_title(params.title, fontsize=14, fontweight="bold")
         ax.grid(True, alpha=0.3)
         ax.text(
-            0.98, 0.02,
+            0.98,
+            0.02,
             f"GEOX deterministic render | {datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')}",
-            transform=ax.transAxes, fontsize=6, color="gray",
-            ha="right", va="bottom", style="italic",
+            transform=ax.transAxes,
+            fontsize=6,
+            color="gray",
+            ha="right",
+            va="bottom",
+            style="italic",
         )
         plt.tight_layout()
 
@@ -4920,6 +4953,268 @@ def register_tools_on(mcp):
 
         # F2: return only the absolute path — Hermes handles display
         return out_path
+
+    # ═══════════════════════════════════════════════════════════════════
+    # PHASE 2 — LEM Tools (E1-E5) — LEM Agentic Substrate
+    # Forged 2026-07-29 by OpenCode under Arif F13 directive.
+    # GemPy 3D + H3 Spatial Index + LanceDB + STAC + DDE/Macrostrat
+    # ═══════════════════════════════════════════════════════════════════
+
+    # E1 — GemPy Implicit 3D Structural Modeling
+    try:
+        from geox_mcp.tools.gempy_implicit_3d import geox_gempy_implicit_3d
+
+        @mcp.tool(
+            name="geox_gempy_implicit_3d",
+            annotations=_geox_annotations("geox_gempy_implicit_3d"),
+        )
+        async def _gempy_implicit_3d(
+            surface_points: list | str | None = None,
+            orientations: list | str | None = None,
+            grid_resolution: tuple | list | str | None = None,
+            model_extent: tuple | list | str | None = None,
+            compute_uncertainty: bool = True,
+            uncertainty_realizations: int = 10,
+            fault_groups: list | str | None = None,
+            output_format: str = "json",
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ):
+            """Implicit 3D structural modeling with GemPy.
+
+            Builds a 3D geological volume from surface contact points and
+            orientation measurements using universal cokriging scalar
+            potential field interpolation. Returns lithology block,
+            scalar field, section images, and uncertainty estimates.
+
+            Use when: '3D model', 'GemPy', 'implicit modeling',
+            'structural model', 'geological volume'.
+            """
+            return await geox_gempy_implicit_3d(
+                surface_points=surface_points,
+                orientations=orientations,
+                grid_resolution=grid_resolution,
+                model_extent=model_extent,
+                compute_uncertainty=compute_uncertainty,
+                uncertainty_realizations=uncertainty_realizations,
+                fault_groups=fault_groups,
+                output_format=output_format,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+
+        logger.info("LEM E1: geox_gempy_implicit_3d registered")
+    except Exception as e:
+        logger.warning("LEM E1: geox_gempy_implicit_3d skipped: %s", e)
+
+    # E2 — H3 Hexagonal Spatial Index
+    try:
+        from geox_mcp.tools.h3_spatial_index import geox_h3_spatial_index
+
+        @mcp.tool(
+            name="geox_h3_spatial_index",
+            annotations=_geox_annotations("geox_h3_spatial_index"),
+        )
+        async def _h3_spatial_index(
+            mode: str = "latlng_to_cell",
+            lat: float | None = None,
+            lng: float | None = None,
+            resolution: int = 7,
+            h3_cell: str | None = None,
+            points: list | str | None = None,
+            k: int = 1,
+            polygon: list | str | None = None,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ):
+            """H3 hexagonal spatial indexing for Earth intelligence.
+
+            Convert lat/lng to H3 cells, aggregate points, query
+            k-ring neighbours, fill polygons. Uniform-adjacency hex
+            grid for O(1) spatial retrieval.
+
+            Use when: 'H3 index', 'hexagon', 'spatial index',
+            'latlng to h3', 'cell aggregate'.
+            """
+            return await geox_h3_spatial_index(
+                mode=mode,
+                lat=lat,
+                lng=lng,
+                resolution=resolution,
+                h3_cell=h3_cell,
+                points=points,
+                k=k,
+                polygon=polygon,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+
+        logger.info("LEM E2: geox_h3_spatial_index registered")
+    except Exception as e:
+        logger.warning("LEM E2: geox_h3_spatial_index skipped: %s", e)
+
+    # E3 — LanceDB Embedded Vector Store
+    try:
+        from geox_mcp.tools.lancedb_embed_store import geox_lancedb_embed_store
+
+        @mcp.tool(
+            name="geox_lancedb_embed_store",
+            annotations=_geox_annotations("geox_lancedb_embed_store"),
+        )
+        async def _lancedb_embed_store(
+            mode: str = "search",
+            table_name: str = "geo_embeddings",
+            embeddings: list | str | None = None,
+            metadata: list | str | None = None,
+            k: int = 10,
+            refine_factor: int | None = None,
+            filter_expr: str | None = None,
+            h3_cell: str | None = None,
+            h3_radius: int = 1,
+            create_if_missing: bool = True,
+            drop_table: bool = False,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ):
+            """LanceDB embedded vector store for earth embeddings.
+
+            Store and search AlphaEarth (64-dim), Clay (768-dim),
+            or custom embeddings with H3 spatial cross-reference.
+            PQ compression + refine_factor. Serverless, embedded.
+
+            Use when: 'search embeddings', 'vector store', 'LanceDB',
+            'store earth embeddings', 'similarity search'.
+            """
+            return await geox_lancedb_embed_store(
+                mode=mode,
+                table_name=table_name,
+                embeddings=embeddings,
+                metadata=metadata,
+                k=k,
+                refine_factor=refine_factor,
+                filter_expr=filter_expr,
+                h3_cell=h3_cell,
+                h3_radius=h3_radius,
+                create_if_missing=create_if_missing,
+                drop_table=drop_table,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+
+        logger.info("LEM E3: geox_lancedb_embed_store registered")
+    except Exception as e:
+        logger.warning("LEM E3: geox_lancedb_embed_store skipped: %s", e)
+
+    # E4 — STAC Catalog Discovery
+    try:
+        from geox_mcp.tools.stac_discover import geox_stac_discover
+
+        @mcp.tool(
+            name="geox_stac_discover",
+            annotations=_geox_annotations("geox_stac_discover"),
+        )
+        async def _stac_discover(
+            mode: str = "search",
+            catalog: str = "earthsearch",
+            bbox: list | str | None = None,
+            datetime_range: str | None = None,
+            collections: list | str | None = None,
+            max_items: int = 20,
+            item_id: str | None = None,
+            collection_id: str | None = None,
+            query_bands: list | str | None = None,
+            limit: int = 1,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ):
+            """STAC Catalog query for cloud-native geospatial assets.
+
+            Discover COG, GeoParquet, Zarr datasets by spatial,
+            temporal, and band filters across federated STAC catalogs
+            (Earth Search, Planetary Computer, Copernicus, USGS).
+
+            Use when: 'STAC', 'satellite imagery', 'COG', 'GeoParquet',
+            'cloud-native geospatial', 'discover data'.
+            """
+            return await geox_stac_discover(
+                mode=mode,
+                catalog=catalog,
+                bbox=bbox,
+                datetime_range=datetime_range,
+                collections=collections,
+                max_items=max_items,
+                item_id=item_id,
+                collection_id=collection_id,
+                query_bands=query_bands,
+                limit=limit,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+
+        logger.info("LEM E4: geox_stac_discover registered")
+    except Exception as e:
+        logger.warning("LEM E4: geox_stac_discover skipped: %s", e)
+
+    # E5 — DDE/Macrostrat Neuro-Symbolic Reasoner
+    try:
+        from geox_mcp.tools.dde_reason import geox_dde_reason
+
+        @mcp.tool(
+            name="geox_dde_reason",
+            annotations=_geox_annotations("geox_dde_reason"),
+        )
+        async def _dde_reason(
+            mode: str = "query_stratigraphy",
+            bbox: list | str | None = None,
+            lat: float | None = None,
+            lng: float | None = None,
+            formation: str | None = None,
+            known_units: list | str | None = None,
+            ontology_term: str | None = None,
+            section_params: dict | str | None = None,
+            delta_age_ma: float | None = None,
+            limit: int = 10,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ):
+            """DDE Ontology + Macrostrat neuro-symbolic reasoning.
+
+            Query the Deep-time Digital Earth knowledge graph
+            (62,610 physical rules) for stratigraphic reasoning,
+            infer missing geology, validate cross-sections against
+            physical laws, and explore tectonic context.
+
+            Use when: 'stratigraphy', 'DDE', 'Macrostrat',
+            'infer unit', 'age constraints', 'tectonic context'.
+            """
+            return await geox_dde_reason(
+                mode=mode,
+                bbox=bbox,
+                lat=lat,
+                lng=lng,
+                formation=formation,
+                known_units=known_units,
+                ontology_term=ontology_term,
+                section_params=section_params,
+                delta_age_ma=delta_age_ma,
+                limit=limit,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+
+        logger.info("LEM E5: geox_dde_reason registered")
+    except Exception as e:
+        logger.warning("LEM E5: geox_dde_reason skipped: %s", e)
 
     # ═══════════════════════════════════════════════════════════════════
     try:
@@ -4996,9 +5291,7 @@ def register_tools_on(mcp):
                     "_meta",
                     "_evidence_receipt",
                 }
-                _has_evidence = any(
-                    k not in _meta_keys and result.get(k) is not None for k in result
-                )
+                _has_evidence = any(k not in _meta_keys and result.get(k) is not None for k in result)
                 if not _has_evidence and not _is_err and result.get("ok") is not False:
                     logger.warning(f"EVIDENCE_GAP: {_tool} returned ok but no evidence fields")
                     result["isError"] = True
