@@ -39,6 +39,12 @@ GHOST_TOOLS: set[str] = {
     "geox_segy_trace_audit",
     "geox_visual_generate_hypotheses",  # GHOSTED 2026-07-29 — experimental DL, overlaps seismic_interpret
     "geox_well_desurvey",
+    # GHOSTED 2026-07-29 — LEM surface maintenance (make room for 5 new LEM tools)
+    "geox_gravmag_studio",
+    "geox_sediment_mass_balance",
+    "geox_claim_graph_evaluate",
+    "geox_to_wealth_bridge",
+    "geox_map_export_package",
 }
 GHOST_COUNT = len(GHOST_TOOLS)
 

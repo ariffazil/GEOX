@@ -250,10 +250,10 @@ tools:
   domain: earth.geophysics
   axis: compute
   lane: reasoning
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: 'Gravity/magnetic studio: forward modeling and screening. Modes: open,
-    screen.'
+    screen. [GHOSTED 2026-07-29 — LEM surface maintenance]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -263,7 +263,7 @@ tools:
     resource_uri: ui://geox/gravmag-studio.html
     mime_type: text/html;profile=mcp-app
   plugin:
-    exposed: true
+    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -397,8 +397,8 @@ tools:
   domain: earth.basin
   axis: compute
   lane: reasoning
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: Source-to-sink sediment volume and mass accounting. Peters 2012 framework.
   input_schema_source: callable
   annotations:
@@ -407,7 +407,7 @@ tools:
     idempotent: true
   ui: null
   plugin:
-    exposed: true
+    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -426,7 +426,7 @@ tools:
     idempotent: true
   ui: null
   plugin:
-    exposed: true
+    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -435,10 +435,10 @@ tools:
   domain: governance
   axis: reason
   lane: judgment
-  face: surface
-  visibility: public
-  description: Evaluate parent claim validity when child claims fail. DAG evaluation
-    with AND/OR/WEIGHTED dependencies.
+  face: internal
+  visibility: internal
+  description: 'Evaluate parent claim validity when child claims fail. DAG evaluation
+    with AND/OR/WEIGHTED dependencies. [GHOSTED 2026-07-29 — LEM surface maintenance]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -446,7 +446,7 @@ tools:
     idempotent: true
   ui: null
   plugin:
-    exposed: true
+    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -518,10 +518,10 @@ tools:
   domain: governance.bridge
   axis: reason
   lane: evidence
-  face: surface
-  visibility: public
+  face: internal
+  visibility: internal
   description: 'Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel
-    input. F2: epistemic_source preserved. F13: blocked nodes rejected.'
+    input. F2: epistemic_source preserved. F13: blocked nodes rejected. [GHOSTED 2026-07-29 — LEM surface maintenance]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -529,7 +529,7 @@ tools:
     idempotent: true
   ui: null
   plugin:
-    exposed: true
+    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -738,9 +738,9 @@ tools:
   domain: earth.map
   axis: compute
   lane: reasoning
-  face: surface
-  visibility: public
-  description: 'Map export: package map layers and annotations into portable formats.'
+  face: internal
+  visibility: internal
+  description: 'Map export: package map layers and annotations into portable formats. [GHOSTED 2026-07-29 — LEM surface maintenance]'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -748,7 +748,7 @@ tools:
     idempotent: true
   ui: null
   plugin:
-    exposed: true
+    exposed: false
   governance:
     action_class: OBSERVE
     mutation: false
@@ -1681,18 +1681,87 @@ compat_tools:
 - geox_subsurface_verify_integrity
 - geox_system_registry_status
 - geox_vision
-- geox_vision_audit
-- geox_vision_calibrate
-- geox_vision_minimax_inference
-- geox_vision_perceptual_inventory
-- geox_volume_frame_tool
-- geox_well_desk_open
-- geox_well_desk_publish
-surface_version: geox-public-33-2026.07.29
-surface_name: CANONICAL_PUBLIC_33
-public_count_target: 33
-doctrine:
-  public_surface: 33 tools — clean surface after Zen audit 2026-07-29
-  zen15_status: ARCHIVED historical document — not runtime truth
-  no_collapse_to_eight: true
-  no_surface_reduction_this_repair: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_h3_spatial_index
+  domain: earth.spatial
+  axis: compute
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'H3 hexagonal spatial indexing toolkit. Convert lat/lng to H3 cells,
+    aggregate points, query k-ring neighbours. [LEM E2]'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_lancedb_embed_store
+  domain: earth.ml
+  axis: compute
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'LanceDB embedded vector store for earth embeddings. Store/search
+    AlphaEarth/Clay/custom embeddings with H3 cross-reference. [LEM E3]'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_stac_discover
+  domain: earth.catalog
+  axis: observe
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'STAC catalog discovery for cloud-native geospatial assets. Query
+    COG/GeoParquet/Zarr across federated catalogs. [LEM E4]'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: false
+- name: geox_dde_reason
+  domain: earth.knowledge
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge
+    graph for stratigraphic rules and physical laws. [LEM E5]'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
