@@ -68,6 +68,8 @@ EVIDENCE_CONTRACTS: dict[str, list[str]] = {
     "geox_workspace": ["basin", "play", "well_id", "field"],
     "geox_to_wealth_bridge": ["prospect_ref", "npv_usd", "score_kernel"],
     "geox_prospect": ["prospect_ref", "volumetrics", "pos", "risk"],
+    # ── Geological model ─────────────────────────────────────────────
+    "geox_geological_model_generate": ["image_path", "description", "parameters_used"],
 }
 
 # Tools without an evidence contract yet (NON-COMPLIANT).

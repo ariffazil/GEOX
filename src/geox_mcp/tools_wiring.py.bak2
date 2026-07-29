@@ -4740,186 +4740,229 @@ def register_tools_on(mcp):
     # ═══════════════════════════════════════════════════════════════════
     # PHASE 1 — deterministic 2D geological model renderer
     # Arif directive 2026-07-29: F2 TRUTH — computed, not hallucinated.
-    # Pure matplotlib rendering. Zero external I/O. Zero hallucination.
+    # Hermes sets structural parameters; GEOX renders via matplotlib.
     # ═══════════════════════════════════════════════════════════════════
-    from pydantic import BaseModel, Field
-
-    class _StrataUnit(BaseModel):
-        """A single stratigraphic unit in the cross-section."""
-        name: str = Field(..., description="Unit name (e.g. Sandstone, Shale)")
-        thickness_m: float = Field(..., gt=0, description="Unit thickness in metres")
-        color: str = Field("#888888", description="Hex colour for fill (e.g. #E6A817)")
-
-    class _GeologicalModelParams(BaseModel):
-        """Input schema for geox_geological_model_generate.
-
-        All parameters describe a 2D geological cross-section.
-        Zero external data fetching — pure deterministic computation.
-        """
-        grid_width_m: float = Field(2000.0, gt=0, description="Cross-section width in metres")
-        grid_depth_m: float = Field(1000.0, gt=0, description="Cross-section depth in metres")
-        dip_angle_deg: float = Field(0.0, description="Structural dip in degrees (0 = horizontal)")
-        fault_throw_m: float = Field(0.0, description="Vertical fault displacement in metres. Positive = normal, negative = reverse. 0 = no fault.")
-        fault_x_position_m: float | None = Field(None, ge=0, description="X-coordinate of fault plane intersection with surface. Defaults to midpoint when fault_throw_m != 0.")
-        strata: list[_StrataUnit] = Field(
-            default_factory=lambda: [
-                _StrataUnit(name="Layer A", thickness_m=200, color="#d4a574"),
-                _StrataUnit(name="Layer B", thickness_m=150, color="#b8c9a0"),
-                _StrataUnit(name="Layer C", thickness_m=100, color="#8ab8d4"),
-                _StrataUnit(name="Layer D", thickness_m=80, color="#c9a87c"),
-                _StrataUnit(name="Layer E", thickness_m=60, color="#a0b8c9"),
-                _StrataUnit(name="Layer F", thickness_m=40, color="#74695e"),
-                _StrataUnit(name="Basement", thickness_m=20, color="#4a4a4a"),
-            ],
-            description="Ordered list of stratigraphic units from top to bottom",
-        )
-        title: str = Field("Geological Cross-Section", description="Plot title")
-
     @mcp.tool(
         name="geox_geological_model_generate",
         annotations=_geox_annotations("geox_geological_model_generate"),
     )
     async def _geological_model_generate(
-        params: _GeologicalModelParams,
-        session_id: str | None = None,
-        actor_id: str | None = None,
-        trace_id: str | None = None,
-    ) -> str:
+        section_width_m: float = 2000.0,
+        section_depth_m: float = 1000.0,
+        dip_angle_deg: float = 0.0,
+        fault_throw_m: float = 0.0,
+        fault_x_m: float | None = None,
+        strata_thicknesses_m: str = "200,150,100,80,60,40,20",
+        strata_names: str = "Layer A,Layer B,Layer C,Layer D,Layer E,Layer F,Basement",
+        strata_colors: str = "#d4a574,#b8c9a0,#8ab8d4,#c9a87c,#a0b8c9,#74695e,#4a4a4a",
+        num_units: int = 7,
+        title: str = "Geological Cross-Section",
+        output_path: str = "",
+    ) -> dict[str, Any]:
         """Generate a deterministic 2D geological cross-section using matplotlib.
 
-        Computes layer geometry from structural parameters (dip, fault throw, strata
-        thicknesses) using numpy trigonometry. Renders via matplotlib with Agg backend.
-        NO diffusion models, NO API calls, NO hallucination — pure physics + geometry.
+        Renders strata layers with fault offset, dip angle, and unit labels.
+        ALL coordinates and geometry are computed from physical parameters —
+        no diffusion model, no hallucination.
 
         Args:
-            params: Structured geological model parameters (see _GeologicalModelParams).
-            session_id: Governed session (SEAL-* or sct_v1.*) — required by P0-2 authority gate.
-            actor_id: Claiming actor (F11 non-repudiation).
-            trace_id: Optional correlation id for audit chain.
+            section_width_m: Horizontal extent in metres (default 2000).
+            section_depth_m: Vertical depth in metres (default 1000).
+            dip_angle_deg: Layer dip angle in degrees (default 0 = horizontal).
+            fault_throw_m: Vertical fault displacement in metres (0 = no fault).
+            fault_x_m: Fault horizontal position as fraction of width (0-1).
+                       Defaults to 0.5 (centre) when fault_throw_m > 0.
+            strata_thicknesses_m: Comma-separated thicknesses top→bottom.
+            strata_names: Comma-separated unit names.
+            strata_colors: Comma-separated hex colours.
+            num_units: Number of stratigraphic units.
+            title: Plot title.
+            output_path: Optional explicit save path. Auto-generated if empty.
 
         Returns:
-            Absolute local path to the generated PNG file (/tmp/geox/geox_model_<uuid>.png).
+            dict with keys: ok, image_path, description, parameters_used
         """
-        # Identity consumed by geox_middleware authority gate; keep referenced for audit.
-        _ = (session_id, actor_id, trace_id)
         import os
         import uuid
         from datetime import UTC, datetime
 
+        # ── Parse parameters ─────────────────────────────────────────────
+        try:
+            thicknesses = [float(x.strip()) for x in strata_thicknesses_m.split(",")]
+        except (ValueError, AttributeError):
+            thicknesses = [200, 150, 100, 80, 60, 40, 20]
+
+        try:
+            names = [x.strip() for x in strata_names.split(",")]
+        except (ValueError, AttributeError):
+            names = [f"Unit {i+1}" for i in range(num_units)]
+
+        try:
+            colors = [x.strip() for x in strata_colors.split(",")]
+        except (ValueError, AttributeError):
+            colors = ["#d4a574", "#b8c9a0", "#8ab8d4", "#c9a87c", "#a0b8c9", "#74695e", "#4a4a4a"]
+
+        # Normalise lists to num_units
+        while len(thicknesses) < num_units:
+            thicknesses.append(50)
+        while len(names) < num_units:
+            names.append(f"Unit {len(names)+1}")
+        while len(colors) < num_units:
+            colors.append("#888888")
+
+        thicknesses = thicknesses[:num_units]
+        names = names[:num_units]
+        colors = colors[:num_units]
+
+        dip_rad = dip_angle_deg * 3.14159265 / 180.0
+        total_depth = sum(thicknesses[:num_units])
+
+        # Scale to output dimensions
+        x_scale = section_width_m / max(thicknesses) if thicknesses else 1.0
+        y_scale = section_depth_m / total_depth if total_depth > 0 else 1.0
+
+        # Fault position
+        if fault_throw_m != 0 and fault_x_m is None:
+            fault_x_m = 0.5  # centre
+        fault_x = fault_x_m * section_width_m if fault_x_m is not None else None
+
+        # ── Render ───────────────────────────────────────────────────────
         import matplotlib
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
         import matplotlib.patches as mpatches
         import numpy as np
 
-        # ── Extract parameters ───────────────────────────────────────────
-        gw = params.grid_width_m
-        gd = params.grid_depth_m
-        dip_rad = params.dip_angle_deg * np.pi / 180.0
-        throw = params.fault_throw_m
-        depth_scale = gd / sum(u.thickness_m for u in params.strata)
-
-        # Fault x position: default to centre when fault present
-        fx = params.fault_x_position_m
-        if fx is None and throw != 0:
-            fx = gw / 2
-
-        # ── Render figure ────────────────────────────────────────────────
         fig, ax = plt.subplots(figsize=(12, 6))
+
         y_offset = 0.0
+        legend_patches = []
 
-        for unit in params.strata:
-            thick = unit.thickness_m * depth_scale
-            # Left edge at surface
-            xl_top = dip_rad * y_offset
-            xl_bot = dip_rad * (y_offset + thick)
-            # Right edge at surface
-            xr_top = gw + dip_rad * y_offset
-            xr_bot = gw + dip_rad * (y_offset + thick)
+        for i in range(num_units):
+            thick = thicknesses[i] * y_scale
+            colour = colors[i]
+            label = names[i]
 
-            if fx is not None and throw != 0:
-                tp = throw * depth_scale
-                # Left polygon (unfaulted)
-                ax.fill(
-                    [xl_top, fx, fx, xl_bot],
-                    [y_offset, y_offset, y_offset + thick, y_offset + thick],
-                    color=unit.color, edgecolor="black", linewidth=0.5,
-                )
-                # Right polygon (offset by throw)
-                ax.fill(
-                    [fx, xr_top, xr_bot, fx],
-                    [y_offset + tp, y_offset + tp,
-                     y_offset + thick + tp, y_offset + thick + tp],
-                    color=unit.color, edgecolor="black", linewidth=0.5,
-                )
-                # Label both sides
-                ax.text(fx / 2, y_offset + thick / 2, unit.name,
-                        fontsize=8, ha="center", va="center",
-                        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
-                ax.text((gw + fx) / 2, y_offset + thick / 2 + tp / 2, unit.name,
-                        fontsize=8, ha="center", va="center",
-                        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
+            # Left side top/bottom
+            x_left_top = dip_rad * y_offset
+            x_left_bot = dip_rad * (y_offset + thick)
+            # Right side
+            x_right_top = section_width_m + dip_rad * y_offset
+            x_right_bot = section_width_m + dip_rad * (y_offset + thick)
+
+            if fault_x is not None and fault_throw_m != 0:
+                throw_px = fault_throw_m * y_scale
+                # Left-of-fault polygon
+                left_x = [x_left_top, fault_x, fault_x, x_left_bot]
+                left_y = [y_offset, y_offset, y_offset + thick, y_offset + thick]
+                ax.fill(left_x, left_y, color=colour, edgecolor="black", linewidth=0.5)
+                # Right-of-fault polygon (offset by throw)
+                right_x = [fault_x, x_right_top, x_right_bot, fault_x]
+                right_y = [y_offset + throw_px, y_offset + throw_px, y_offset + thick + throw_px, y_offset + thick + throw_px]
+                ax.fill(right_x, right_y, color=colour, edgecolor="black", linewidth=0.5)
             else:
-                polygon = mpatches.Polygon(
-                    [(xl_top, y_offset), (xr_top, y_offset),
-                     (xr_bot, y_offset + thick), (xl_bot, y_offset + thick)],
-                    closed=True, color=unit.color, edgecolor="black", linewidth=0.5,
-                )
-                ax.add_patch(polygon)
-                ax.text(gw * 0.25, y_offset + thick / 2, unit.name,
-                        fontsize=8, ha="center", va="center",
-                        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
+                verts = [
+                    (x_left_top, y_offset),
+                    (x_right_top, y_offset),
+                    (x_right_bot, y_offset + thick),
+                    (x_left_bot, y_offset + thick),
+                ]
+                xs, ys = zip(*verts)
+                ax.fill(xs, ys, color=colour, edgecolor="black", linewidth=0.5)
 
+            # Label centre of unit
+            cx = fault_x / 2 if fault_x is not None else section_width_m * 0.25
+            cy = y_offset + thick / 2
+            ax.text(cx, cy, label, fontsize=8, ha="center", va="center",
+                    bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
+
+            # Also label right side
+            cx2 = (section_width_m + fault_x) / 2 if fault_x is not None else section_width_m * 0.75
+            cy2 = y_offset + thick / 2
+            if fault_x is not None and fault_throw_m != 0:
+                cy2 += throw_px / 2
+            ax.text(cx2, cy2, label, fontsize=8, ha="center", va="center",
+                    bbox=dict(boxstyle="round,pad=0.2", facecolor="white", alpha=0.7))
+
+            legend_patches.append(mpatches.Patch(color=colour, label=label))
             y_offset += thick
 
-        # ── Fault annotation ─────────────────────────────────────────────
-        if fx is not None and throw != 0:
-            tp = throw * depth_scale
-            ax.axvline(x=fx, color="red", linewidth=2, linestyle="--",
-                       label=f"Fault (throw={throw:.0f}m)")
+        # Draw fault line
+        if fault_x is not None and fault_throw_m != 0:
+            throw_px = fault_throw_m * y_scale
+            ax.plot([fault_x, fault_x], [0, y_offset], color="red", linewidth=2, linestyle="--", label=f"Fault (throw={fault_throw_m:.0f}m)")
+            # Throw indicator
             ax.annotate(
-                "", xy=(fx + gw * 0.02, y_offset - tp),
-                xytext=(fx + gw * 0.02, y_offset),
+                "", xy=(fault_x + section_width_m * 0.02, y_offset - throw_px),
+                xytext=(fault_x + section_width_m * 0.02, y_offset),
                 arrowprops=dict(arrowstyle="<->", color="red", lw=1.5),
             )
-            ax.text(fx + gw * 0.025, y_offset - tp / 2,
-                    f"Throw\n{throw:.0f}m", fontsize=7, color="red", va="center")
+            ax.text(fault_x + section_width_m * 0.025, y_offset - throw_px / 2,
+                    f"Throw\n{fault_throw_m:.0f}m", fontsize=7, color="red", va="center")
 
-        # ── Dip annotation ───────────────────────────────────────────────
-        if params.dip_angle_deg != 0:
+        # Dip angle indicator
+        if dip_angle_deg != 0:
             ax.annotate(
-                "", xy=(gw * 0.1, 0),
-                xytext=(gw * 0.1 + dip_rad * 200 * depth_scale,
-                         -dip_rad * 200 * depth_scale),
+                "", xy=(section_width_m * 0.1, 0),
+                xytext=(section_width_m * 0.1 + dip_rad * 200 * y_scale, -dip_rad * 200 * y_scale),
                 arrowprops=dict(arrowstyle="->", color="blue", lw=1.5),
             )
-            ax.text(gw * 0.1 + dip_rad * 100 * depth_scale,
-                    -dip_rad * 100 * depth_scale - 30,
-                    f"Dip {params.dip_angle_deg}°", fontsize=8, color="blue", ha="center")
+            ax.text(section_width_m * 0.1 + dip_rad * 100 * y_scale,
+                    -dip_rad * 100 * y_scale - 30,
+                    f"Dip {dip_angle_deg}°", fontsize=8, color="blue", ha="center")
 
-        # ── Axes ─────────────────────────────────────────────────────────
-        ax.set_xlim(0, gw)
-        ax.set_ylim(y_offset + 50, -50)
+        ax.set_xlim(0, section_width_m)
+        ax.set_ylim(y_offset + 50, -50)  # inverted Y = depth
         ax.set_xlabel("Distance (m)")
         ax.set_ylabel("Depth (m)")
-        ax.set_title(params.title, fontsize=14, fontweight="bold")
+        ax.set_title(title, fontsize=14, fontweight="bold")
         ax.grid(True, alpha=0.3)
+        ax.legend(handles=legend_patches, loc="lower right", fontsize=7, ncol=2)
+
+        # Add metadata annotation
+        now_utc = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
         ax.text(
             0.98, 0.02,
-            f"GEOX deterministic render | {datetime.now(UTC).strftime('%Y-%m-%d %H:%M UTC')}",
+            f"Generated: {now_utc} | GEOX deterministic render",
             transform=ax.transAxes, fontsize=6, color="gray",
             ha="right", va="bottom", style="italic",
         )
+
         plt.tight_layout()
 
         # ── Save ─────────────────────────────────────────────────────────
         os.makedirs("/tmp/geox/", exist_ok=True)
-        out_path = f"/tmp/geox/geox_model_{uuid.uuid4().hex[:8]}.png"
-        fig.savefig(out_path, dpi=150, bbox_inches="tight")
+        if not output_path:
+            output_path = f"/tmp/geox/geox_model_{uuid.uuid4().hex[:8]}.png"
+        fig.savefig(output_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-        # F2: return only the absolute path — Hermes handles display
-        return out_path
+        # ── Build description ────────────────────────────────────────────
+        desc_parts = [
+            f"2D geological cross-section ({section_width_m:.0f}m × {section_depth_m:.0f}m)",
+            f"Units: {num_units}",
+            f"Dip: {dip_angle_deg}°",
+        ]
+        if fault_throw_m > 0:
+            desc_parts.append(f"Fault throw: {fault_throw_m:.0f}m at {fault_x_m*100:.0f}% width" if fault_x_m is not None else f"Fault throw: {fault_throw_m:.0f}m")
+        else:
+            desc_parts.append("No fault")
+
+        return {
+            "ok": True,
+            "image_path": output_path,
+            "description": " | ".join(desc_parts),
+            "parameters_used": {
+                "section_width_m": section_width_m,
+                "section_depth_m": section_depth_m,
+                "dip_angle_deg": dip_angle_deg,
+                "fault_throw_m": fault_throw_m,
+                "fault_x_m": fault_x_m,
+                "num_units": num_units,
+                "units": names,
+                "thicknesses_m": thicknesses,
+            },
+        }
 
     # ═══════════════════════════════════════════════════════════════════
     try:
