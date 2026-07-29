@@ -1,0 +1,30 @@
+{
+  "@context": "https://agent.arif-fazil.com/agent-card/v1",
+  "name": "GEOX LEM Dashboard",
+  "version": "v2026.07.24",
+  "description": "GEOX Large Earth Model — Earth Intelligence MCP Surface",
+  "url": "https://geox.arif-fazil.com/lem",
+  "federation": "arifOS",
+  "domain": "NATURAL_LAW",
+  "authority": "OBSERVE_ONLY",
+  "capabilities": {
+    "mcp": {
+      "endpoint": "https://geox.arif-fazil.com/mcp",
+      "protocol": "streamable-http",
+      "version": "2025-03-26"
+    }
+  },
+  "tools_public": 33,
+  "lem_engines": 5,
+  "lem_tools": [
+    "geox_gempy_implicit_3d",
+    "geox_h3_spatial_index",
+    "geox_lancedb_embed_store",
+    "geox_stac_discover",
+    "geox_dde_reason"
+  ],
+  "git_version": "de531e63",
+  "forge_date": "2026-07-29",
+  "owner": "Arif (F13 Sovereign)",
+  "tagline": "DITEMPA BUKAN DIBERI"
+}

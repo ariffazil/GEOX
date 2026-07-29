@@ -1,0 +1,48 @@
+# GEOX — Large Earth Model (LEM)
+
+## Agentic Earth Intelligence Substrate
+
+### MCP Endpoint
+- **URL:** `https://geox.arif-fazil.com/mcp`
+- **Protocol:** Streamable HTTP (MCP 2025-03-26)
+- **Port:** 8081 (local) / 443 (public)
+- **Health:** `https://geox.arif-fazil.com/health`
+
+### Tools (33 public, 5 LEM engines)
+
+**LEM Engines (Forged 2026-07-29):**
+- `geox_gempy_implicit_3d` — GemPy 3D implicit structural modeling
+- `geox_h3_spatial_index` — H3 hexagonal spatial indexing
+- `geox_lancedb_embed_store` — LanceDB vector store for earth embeddings
+- `geox_stac_discover` — STAC catalog discovery (COG/GeoParquet/Zarr)
+- `geox_dde_reason` — DDE Ontology + Macrostrat neuro-symbolic reasoning
+
+**Earth Intelligence (33 public):**
+- Subsurface: basin, sequence, geomechanics, petrophysics, prospect
+- Seismic: ingest, compute, interpret
+- Wells: ingest, desk, QC, view
+- Maps: scene plan, layers, render preview
+- Claims: create, validate, falsify, contradiction scan
+- Deep time: state, thermal maturity, backstrip
+- Visual: geological model generate, visual understand
+
+### Governance
+- Domain: NATURAL_LAW
+- Kernel: arifOS :8088 (F1-F13 constitutional)
+- Identity: sha256 (git-version verified)
+- Conservation: ΔS ≤ 0 (F4 CLARITY)
+
+### Agent JSON
+```json
+{
+  "@context": "https://agent.arif-fazil.com/agent-card/v1",
+  "name": "GEOX LEM",
+  "description": "Earth Intelligence MCP Surface",
+  "url": "https://geox.arif-fazil.com",
+  "capabilities": {
+    "mcp": {
+      "endpoint": "https://geox.arif-fazil.com/mcp"
+    }
+  }
+}
+```
