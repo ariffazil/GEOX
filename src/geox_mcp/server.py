@@ -2924,6 +2924,28 @@ async def health_handler(request: Request) -> JSONResponse:
 _SERVICE_STARTED_AT: str = __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat()
 
 
+async def geox_preview_handler(request: Request):
+    """Serve a generated cross-section PNG from /tmp/geox/."""
+    from starlette.responses import FileResponse, PlainTextResponse, Response
+    import os
+
+    path = request.query_params.get("path", "")
+    if not path or ".." in path or path.startswith("/") is False:
+        return PlainTextResponse("Missing or invalid path parameter", status_code=400)
+
+    # Only allow /tmp/geox/ paths
+    resolved = os.path.normpath(path)
+    allowed_prefix = os.path.normpath("/tmp/geox/")
+    if not resolved.startswith(allowed_prefix):
+        return PlainTextResponse("Path outside allowed directory", status_code=403)
+
+    if not os.path.isfile(resolved):
+        return PlainTextResponse("File not found", status_code=404)
+
+    return FileResponse(resolved, media_type="image/png",
+                        headers={"Cache-Control": "public, max-age=60"})
+
+
 async def build_info_handler(request: Request) -> JSONResponse:
     return JSONResponse(
         {
@@ -3489,6 +3511,8 @@ def create_app():
             Route("/mcp/", delete_mcp_handler, methods=["DELETE"]),
             # GET /sse — legacy 2024-11-05 SSE transport backwards compat
             Route("/sse", legacy_sse_handler, methods=["GET"]),
+            # GET /geox-preview — serve generated cross-section images from /tmp/geox/
+            Route("/geox-preview", geox_preview_handler, methods=["GET"]),
             # Native FastMCP streamable-http transport — handles all JSON-RPC
             # methods (initialize, tools/list, tools/call, resources/*, prompts/*)
             # natively. Governance (RT1/RT3/arifOS) enforced by GeoxGovernanceMiddleware.
