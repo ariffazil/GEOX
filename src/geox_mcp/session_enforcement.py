@@ -85,6 +85,68 @@ _KERNEL_VERIFY_TTL_S = 60.0  # cache TTL
 # Three-state sentinel: arifOS unreachable is NOT the same as "valid".
 _TRANSPORT_DEGRADED = object()
 
+# P3 2026-07-31 (FI-008 GEOX jam flow-restore): sync Mcp-Session-Id manager.
+# arifOS MCP requires a valid Mcp-Session-Id for all post-initialize calls.
+# Without it, every validate returns HTTP 400 "Missing session ID" → GEOX
+# caches None and reports SESSION_INVALID for every session.
+_arifos_mcp_session_id: str | None = None
+_arifos_mcp_session_lock = threading.Lock()
+
+
+def _ensure_arifos_mcp_session() -> str | None:
+    """Get a valid arifOS MCP session ID. Initializes on first call or after
+    expiry. Returns the session ID (to use in Mcp-Session-Id header) or None
+    if arifOS is unreachable.
+    """
+    global _arifos_mcp_session_id
+    with _arifos_mcp_session_lock:
+        if _arifos_mcp_session_id:
+            return _arifos_mcp_session_id
+    # No cached session — initialize outside the lock to avoid head-of-line.
+    import httpx as _httpx_init
+    try:
+        r = _httpx_init.post(
+            f"{_ARIFOS_BASE}/mcp",
+            json={
+                "jsonrpc": "2.0",
+                "id": 0,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2025-03-26",
+                    "capabilities": {},
+                    "clientInfo": {"name": "geox-session-enforcement", "version": "1.0"},
+                },
+            },
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json, text/event-stream",
+            },
+            timeout=_ARIFOS_TIMEOUT_S,
+        )
+        sid = r.headers.get("mcp-session-id") or r.headers.get("Mcp-Session-Id")
+        if sid:
+            sid = sid.strip()
+            with _arifos_mcp_session_lock:
+                _arifos_mcp_session_id = sid
+            # Send notifications/initialized (MCP lifecycle requirement)
+            try:
+                _httpx_init.post(
+                    f"{_ARIFOS_BASE}/mcp",
+                    json={"jsonrpc": "2.0", "method": "notifications/initialized"},
+                    headers={
+                        "Content-Type": "application/json",
+                        "Accept": "application/json, text/event-stream",
+                        "Mcp-Session-Id": sid,
+                    },
+                    timeout=_ARIFOS_TIMEOUT_S,
+                )
+            except Exception:
+                pass  # non-blocking
+            return sid
+    except Exception as exc:
+        logger.warning("arifOS MCP initialize failed: %s", exc)
+    return None
+
 _kernel_verify_cache: dict[str, tuple[float, Any]] = {}
 _kernel_verify_lock = threading.Lock()
 
@@ -124,6 +186,18 @@ def _cached_kernel_verify(
         if actor_id:
             validate_args["actor_id"] = actor_id
 
+        # P3 (FI-008): include Mcp-Session-Id header. arifOS MCP REQUIRES it
+        # for post-initialize calls. Without this header, arifOS returns
+        # HTTP 400 "Missing session ID" — and GEOX would cache None for
+        # every session.
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+        arifos_sid = _ensure_arifos_mcp_session()
+        if arifos_sid:
+            headers["Mcp-Session-Id"] = arifos_sid
+
         r = httpx.post(
             f"{_ARIFOS_BASE}/mcp",
             json={
@@ -135,9 +209,31 @@ def _cached_kernel_verify(
                     "arguments": validate_args,
                 },
             },
-            headers={"Content-Type": "application/json", "Accept": "application/json"},
+            headers=headers,
             timeout=_ARIFOS_TIMEOUT_S,
         )
+        # Session expired: invalidate cache, retry once with fresh session
+        if r.status_code in (400, 404) and "session" in r.text.lower():
+            global _arifos_mcp_session_id
+            with _arifos_mcp_session_lock:
+                _arifos_mcp_session_id = None
+            arifos_sid = _ensure_arifos_mcp_session()
+            if arifos_sid:
+                headers["Mcp-Session-Id"] = arifos_sid
+            r = httpx.post(
+                f"{_ARIFOS_BASE}/mcp",
+                json={
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "tools/call",
+                    "params": {
+                        "name": "arif_init",
+                        "arguments": validate_args,
+                    },
+                },
+                headers=headers,
+                timeout=_ARIFOS_TIMEOUT_S,
+            )
         if r.status_code == 200:
             data = r.json()
             result = data.get("result", {}) or {}
@@ -395,10 +491,17 @@ def validate_session(
         )
 
     # ── PATH 3: Unknown format ─────────────────────────────────────────
+    # P4 2026-07-31 (Stage 0.1, FI-008 GEOX public-launch hardening):
+    # Preserve FULL session_id in error_message (was [:16] truncation).
+    # The previous 16-char slice truncated the 21-char SEAL-* format to
+    # 'SEAL-xxxxxxxxxxxx' which leaks signature length and breaks round-trip
+    # audit trails. Per F13 directive Stage 0.1: no id mutation across
+    # middleware hops. The contract test (test_session_id_roundtrip_invariant)
+    # enforces this at the test layer.
     return ValidationResult(
         ok=False,
         error_code="SESSION_INVALID",
-        error_message=f"session_id format not recognized: {session_id[:16]}...",
+        error_message=f"session_id format not recognized: {session_id}",
     )
 
 

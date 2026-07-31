@@ -282,7 +282,7 @@ def enforce_authority(
     logger.info(
         "AUTH_OK: tool=%s session=%s actor=%s authority=%s required=%s",
         tool_name,
-        session_id[:12] if session_id else "anonymous",
+        session_id if session_id else "anonymous",
         result.actor or actor_id or "anonymous",
         result.authority,
         required,
