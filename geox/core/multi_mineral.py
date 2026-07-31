@@ -260,6 +260,81 @@ def compute_matrix_density(
 # ──────────────────────────────────────────────────────────────────────────────
 
 
+def check_borehole_quality(
+    rhob: np.ndarray,
+    drho: np.ndarray | None = None,
+    caliper: np.ndarray | None = None,
+    bit_size: float | None = None,
+    drho_max: float = 0.05,
+    caliper_max_pct: float = 20.0,
+) -> dict:
+    """
+    Flag samples affected by poor borehole conditions before computing porosity.
+
+    DRHO (density correction) is the primary QC indicator:
+      - |DRHO| < 0.05 g/cc → good pad contact
+      - |DRHO| 0.05-0.15 g/cc → moderate rugosity, use with caution
+      - |DRHO| > 0.15 g/cc → poor contact, RHOB unreliable
+
+    Caliper (hole diameter) supplement:
+      - Caliper > bit_size + 20% → washed out, likely rugose
+
+    TEPAT-2 Zone A example: DRHO = -9 → pad completely lost contact.
+    Density porosity from these samples is a borehole artifact, not formation.
+
+    Returns dict with quality flags array and statistics.
+    """
+    n = len(rhob)
+    flags = np.full(n, "good", dtype=object)
+    has_drho = drho is not None and len(drho) >= n
+    has_caliper = caliper is not None and len(caliper) >= n
+
+    if has_drho:
+        drho_arr = np.asarray(drho[:n], dtype=float)
+    if has_caliper:
+        cal_arr = np.asarray(caliper[:n], dtype=float)
+
+    n_bad = 0
+    n_warn = 0
+
+    for i in range(n):
+        if has_drho and not np.isnan(drho_arr[i]):
+            d = abs(float(drho_arr[i]))
+            if d > 0.25:
+                flags[i] = "bad_drho"
+                n_bad += 1
+            elif d > drho_max:
+                flags[i] = "warn_drho"
+                n_warn += 1
+        if has_caliper and bit_size and not np.isnan(cal_arr[i]):
+            c = float(cal_arr[i])
+            if c > bit_size * (1.0 + caliper_max_pct / 100.0):
+                if flags[i] == "good":
+                    flags[i] = "warn_caliper"
+                    n_warn += 1
+                elif flags[i] == "warn_drho":
+                    flags[i] = "bad_drho_caliper"
+                    n_bad += 1
+
+    return {
+        "n_total": n,
+        "n_good": n - n_bad - n_warn,
+        "n_warn": n_warn,
+        "n_bad": n_bad,
+        "flags": flags,
+        "drho_threshold": drho_max,
+        "caliper_threshold_pct": caliper_max_pct,
+        "claim_state": "OBSERVED" if has_drho else "UNMEASURED",
+        "limitation": (
+            "Borehole QC requires DRHO curve. "
+            "Without DRHO, bad density data passes silently into porosity. "
+            "TEPAT-2 Zone A: DRHO=-9 produced PHIE=0pu — correct but for wrong reason."
+        )
+        if not has_drho
+        else "",
+    }
+
+
 def compute_porosity_carbonate_safe(
     rhob: np.ndarray,
     lithology_result: dict,
@@ -389,6 +464,11 @@ def hc_correction_density(
             p_n = float(nphi_arr[i])
             p_d = float(phi_d[i])
             # Strong gas indicator: neutron porosity anomalously low
+            # NOTE (2026-07-31 audit): NPHI < 0.02 threshold is calibrated to
+            # TEPAT-2 carbonate dataset. Tight gas-bearing limestone routinely
+            # sits at 3-5 pu NPHI with real crossover — this rule will miss it.
+            # Treat as SCREENING tool, not definitive gas detection.
+            # TODO(P1): Replace with matrix-corrected neutron-density crossover ratio.
             if p_n < 0.02 and p_d > 0.10 and density_deficit > 0.10:
                 gas_crossover = True
         elif not has_nphi and density_deficit > 0.20:
