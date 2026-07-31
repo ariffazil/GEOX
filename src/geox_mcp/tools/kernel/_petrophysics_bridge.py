@@ -554,14 +554,27 @@ def _multi_mineral_solve(
     # For 2 minerals: v1 = (ρ_ma - ρ2) / (ρ1 - ρ2)
 
     if mineral_names is None:
-        if rho_ma_apparent < 2.60:
-            mineral_names = ["quartz", "clay"]
-        elif rho_ma_apparent < 2.68:
-            mineral_names = ["quartz", "calcite"]
-        elif rho_ma_apparent < 2.79:
-            mineral_names = ["calcite", "dolomite"]
-        else:
+        # Auto-select mineral pair. GR is the primary lithology discriminator in
+        # sedimentary basins. Density discriminates within families.
+        # Bug fix (31 Jul 2026): original only used density, misclassifying
+        # sandstones with calcite cement or limestone-scale NPHI as carbonates.
+        # Now: GR < 60 API → clastic (quartz-dominated, possibly with calcite).
+        #      GR >= 60 API → shaly (quartz+clay).
+        #      Carbonate only when GR < 20 API AND density > 2.68.
+        is_low_gr = gr < 20
+        is_clean = vsh < 0.10
+        is_carbonate_matrix = is_low_gr and is_clean and rho_ma_apparent > 2.68
+
+        if is_carbonate_matrix and rho_ma_apparent > 2.78:
             mineral_names = ["dolomite", "calcite"]
+        elif is_carbonate_matrix:
+            mineral_names = ["calcite", "dolomite"]
+        elif vsh > 0.25:
+            # Shaly — quartz + clay
+            mineral_names = ["quartz", "clay"]
+        else:
+            # Clean to slightly shaly — quartz with possible calcite cement
+            mineral_names = ["quartz", "calcite"]
 
     # Get densities for selected minerals
     mineral_densities = {}

@@ -32,6 +32,7 @@ async def geox_petrophysics(
         "causal_closure",
         "sv_integration",
         "multi_mineral",
+        "multi_mineral_zone",
     ] = "generate",
     # ── subsurface_generate_candidates params ──
     target_class: str | None = None,
@@ -420,7 +421,7 @@ async def geox_petrophysics(
             **result,
         }
 
-    # ── multi_mineral — Chemistry9 Multi-Mineral Solver (X3) ──
+    # ── multi_mineral — Single-point Chemistry9 Multi-Mineral Solver (X3) ──
     if mode == "multi_mineral":
         if rhob_value is None or nphi_value is None or gr_api_value is None:
             return {
@@ -458,6 +459,96 @@ async def geox_petrophysics(
                 "reversible": True,
                 "authority_claim": "ADVISORY",
             },
+        }
+
+    # ── multi_mineral_zone — Zone-level multi-mineral with P10/P50/P90 stats ──
+    if mode == "multi_mineral_zone":
+        if not depth_m or not curves:
+            return {
+                "status": "INVALID",
+                "errors": [
+                    "depth_m and curves required for multi_mineral_zone mode",
+                    "curves must contain 'rhob', 'nphi', 'gr' as lists of floats",
+                    "optional curves: 'dt', 'pef', 'rt'",
+                ],
+            }
+
+        rhob_arr = curves.get("rhob", [])
+        nphi_arr = curves.get("nphi", [])
+        gr_arr = curves.get("gr", [])
+        dt_arr = curves.get("dt")
+        pef_arr = curves.get("pef")
+        rt_arr = curves.get("rt")
+
+        if not rhob_arr or not nphi_arr or not gr_arr:
+            return {
+                "status": "INVALID",
+                "errors": ["curves must include 'rhob', 'nphi', 'gr' as non-empty lists"],
+            }
+
+        from geox_mcp.tools.kernel._petrophysics_bridge import (
+            _multi_mineral_zone,
+        )
+
+        zone_result = _multi_mineral_zone(
+            depth_m=list(depth_m),
+            rhob=list(rhob_arr),
+            nphi=list(nphi_arr),
+            gr=list(gr_arr),
+            dt=list(dt_arr) if dt_arr else None,
+            pef=list(pef_arr) if pef_arr else None,
+            rt=list(rt_arr) if rt_arr else None,
+            mineral_names=mineral_names,
+            gr_clean=gr_clean,
+            gr_shale=gr_shale,
+            well_id=well_id or "unknown",
+            zone_name=basin_context or "zone",
+            depth_top_m=depth_top_m,
+            depth_base_m=depth_bot_m,
+        )
+
+        if zone_result.get("status") == "INVALID":
+            return zone_result
+
+        return {
+            "status": "OK",
+            "mode": "multi_mineral_zone",
+            "well_id": zone_result.get("well"),
+            "zone": zone_result.get("zone"),
+            "depth_range": {
+                "top_m": zone_result.get("depth_top_m"),
+                "base_m": zone_result.get("depth_base_m"),
+            },
+            "n_samples": zone_result.get("n_samples"),
+            "n_valid": zone_result.get("n_valid"),
+            "mineralogy": zone_result.get("mineralogy"),
+            "matrix_density_gcc": zone_result.get("matrix_density_gcc"),
+            "porosity": zone_result.get("phie"),
+            "clay": {
+                "avg_fraction": zone_result.get("avg_clay_fraction"),
+                "dominant_type": zone_result.get("dominant_clay_type"),
+                "avg_cec_meq_100g": zone_result.get("avg_cec_meq_100g"),
+            },
+            "saturation": {
+                "model": zone_result.get("sw_model"),
+                "method": zone_result.get("sw_method"),
+                "confidence": zone_result.get("sw_confidence"),
+            },
+            "solver": {
+                "residual": zone_result.get("solver_residual"),
+                "confidence": zone_result.get("solver_confidence"),
+                "distribution": zone_result.get("confidence_distribution"),
+            },
+            "warnings": zone_result.get("warnings", []),
+            "epistemic": zone_result.get(
+                "epistemic",
+                {
+                    "evidence_layer": "WELL",
+                    "source": "geox_petrophysics.multi_mineral_zone",
+                    "reversible": True,
+                    "authority_claim": "ADVISORY",
+                },
+            ),
         }
 
     # Default: generate
